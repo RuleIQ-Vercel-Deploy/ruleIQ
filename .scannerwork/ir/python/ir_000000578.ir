@@ -1,0 +1,37 @@
+
+"residual_risks"str
+5,"Calculate residual risk across all domains"str
+⁄–"
+        MATCH (risk:Risk)
+        OPTIONAL MATCH (risk)<-[m:MITIGATES]-(ctrl:Control)
+        WITH risk, 
+             risk.risk_score AS inherent_risk,
+             COALESCE(AVG(m.mitigation_percentage), 0) AS avg_mitigation
+        RETURN risk.name AS risk_name,
+               risk.category AS category,
+               inherent_risk,
+               ROUND(inherent_risk * (1 - avg_mitigation/100.0), 2) AS residual_risk,
+               CASE 
+                 WHEN inherent_risk * (1 - avg_mitigation/100.0) >= 15 THEN 'HIGH'
+                 WHEN inherent_risk * (1 - avg_mitigation/100.0) >= 10 THEN 'MEDIUM'
+                 ELSE 'LOW'
+               END AS risk_level
+        ORDER BY residual_risk DESC
+        "strself
+˙' ˙(+"€(
+&
+˝ ˝(‰query"#id#:Bstr#
+!
+
+è è(1"#unknown-value#,
+*
+
+è è(1results"#unknown-value#&
+$
+
+ê ê(*"#new-object#Bdict"
+ 
+
+ê ê()	"	#map-set#:
+
+ê ê(**5/home/omar/Documents/ruleIQ/services/neo4j_service.py

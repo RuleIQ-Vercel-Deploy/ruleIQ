@@ -5,7 +5,9 @@ import pytest
 
 
 @pytest.mark.asyncio
-async def test_fixtures_work(async_db_session, async_sample_user, async_sample_business_profile) -> None:
+async def test_fixtures_work(
+    async_db_session, async_sample_user, async_sample_business_profile
+) -> None:
     """Test if the fixtures work."""
     print(f"✓ async_db_session: {type(async_db_session)}")
     print(f"✓ async_sample_user: {async_sample_user.id}")

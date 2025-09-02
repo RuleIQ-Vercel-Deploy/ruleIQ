@@ -1,0 +1,21 @@
+
+
+0int
+A8"Get list of supported evidence types for this provider"strself
+ü% ü()list"Ä)
+'
+
+ÿ ÿ("#unknown-value#Blist(
+&
+
+ÿ ÿ("
+#is-exact#:Bbool
+
+
+ÿ ÿ("
+#assume#::
+8
+
+ÿ ÿ("#set-field# __collection_size:Bint
+
+ÿ ÿ(*:/home/omar/Documents/ruleIQ/api/clients/base_api_client.py

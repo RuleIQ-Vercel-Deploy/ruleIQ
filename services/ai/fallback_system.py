@@ -227,7 +227,9 @@ We apologize for the inconvenience and are working to restore full service quick
                 return self.templates[template_type]["general"]
         return None
 
-    def get_assessment_help_fallback(self, framework: str = "general") -> FallbackResponse:
+    def get_assessment_help_fallback(
+        self, framework: str = "general"
+    ) -> FallbackResponse:
         """Get fallback response for assessment help"""
         template = self.get_template("assessment_help", framework.lower())
 
@@ -245,7 +247,9 @@ We apologize for the inconvenience and are working to restore full service quick
                 source="default_fallback",
             )
 
-    def get_recommendations_fallback(self, risk_level: str = "medium") -> FallbackResponse:
+    def get_recommendations_fallback(
+        self, risk_level: str = "medium"
+    ) -> FallbackResponse:
         """Get fallback response for recommendations"""
         template = self.get_template("assessment_recommendations", risk_level.lower())
 
@@ -298,7 +302,9 @@ class CacheManager:
 
         return "|".join(key_elements)
 
-    def store_response(self, operation: str, context: Dict[str, Any], response: str) -> None:
+    def store_response(
+        self, operation: str, context: Dict[str, Any], response: str
+    ) -> None:
         """Store a successful AI response in cache"""
         cache_key = self._generate_cache_key(operation, context)
 
@@ -361,7 +367,9 @@ class FallbackSystem:
     Comprehensive fallback system for AI services
     """
 
-    def __init__(self, fallback_level: FallbackLevel = FallbackLevel.COMPREHENSIVE) -> None:
+    def __init__(
+        self, fallback_level: FallbackLevel = FallbackLevel.COMPREHENSIVE
+    ) -> None:
         self.fallback_level = fallback_level
         self.template_manager = FallbackTemplateManager()
         self.cache_manager = CacheManager()
@@ -384,12 +392,20 @@ class FallbackSystem:
             return True
 
         # Use fallback for timeout and overload exceptions
-        from services.ai.exceptions import ModelOverloadedException, ModelTimeoutException
+        from services.ai.exceptions import (
+            ModelOverloadedException,
+            ModelTimeoutException,
+        )
 
-        return bool(isinstance(exception, (ModelTimeoutException, ModelOverloadedException)))
+        return bool(
+            isinstance(exception, (ModelTimeoutException, ModelOverloadedException))
+        )
 
     def get_fallback_response(
-        self, operation: str, context: Dict[str, Any], exception: Optional[Exception] = None
+        self,
+        operation: str,
+        context: Dict[str, Any],
+        exception: Optional[Exception] = None,
     ) -> FallbackResponse:
         """
         Get appropriate fallback response for the given operation and context
@@ -459,7 +475,10 @@ class FallbackSystem:
             content=content,
             confidence=0.4,
             source="basic_fallback",
-            metadata={"operation": operation, "exception": str(exception) if exception else None},
+            metadata={
+                "operation": operation,
+                "exception": str(exception) if exception else None,
+            },
         )
 
     def _update_fallback_stats(self, operation: str, source: str) -> None:
@@ -474,7 +493,9 @@ class FallbackSystem:
             self.fallback_stats["fallback_by_source"][source] = 0
         self.fallback_stats["fallback_by_source"][source] += 1
 
-    def cache_successful_response(self, operation: str, context: Dict[str, Any], response: str) -> None:
+    def cache_successful_response(
+        self, operation: str, context: Dict[str, Any], response: str
+    ) -> None:
         """Cache a successful AI response for future fallback use"""
         if self.fallback_level in [FallbackLevel.CACHED, FallbackLevel.COMPREHENSIVE]:
             self.cache_manager.store_response(operation, context, response)

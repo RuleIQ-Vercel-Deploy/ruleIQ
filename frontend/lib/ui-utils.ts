@@ -28,8 +28,7 @@ export const buttonVariants = {
       'bg-surface-secondary text-text-on-dark border-2 border-teal-500 hover:bg-teal-500 hover:text-white active:bg-teal-600',
 
     // Accent actions - teal brand accent
-    accent:
-      'bg-teal-500 text-white hover:bg-teal-600 active:bg-teal-700 shadow-sm hover:shadow-md',
+    accent: 'bg-teal-500 text-white hover:bg-teal-600 active:bg-teal-700 shadow-sm hover:shadow-md',
 
     // Outlined - minimal emphasis
     outline:
@@ -155,7 +154,8 @@ export const shadowClasses = {
 };
 
 // Skeleton Loading Styles - Updated with Teal Shimmer
-export const skeletonStyles = 'animate-shimmer bg-gradient-to-r from-neutral-200 via-teal-100 to-neutral-200 bg-[length:200%_100%] rounded';
+export const skeletonStyles =
+  'animate-shimmer bg-gradient-to-r from-neutral-200 via-teal-100 to-neutral-200 bg-[length:200%_100%] rounded';
 
 // Trust Indicator Styles
 export const trustStyles = {

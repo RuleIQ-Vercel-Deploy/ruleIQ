@@ -67,7 +67,9 @@ try:
 
         print("\nTesting analytics dashboard endpoint...")
 
-        with patch("services.ai.analytics_monitor.get_analytics_monitor") as mock_monitor:
+        with patch(
+            "services.ai.analytics_monitor.get_analytics_monitor"
+        ) as mock_monitor:
             mock_instance = AsyncMock()
             mock_instance.get_dashboard_data.return_value = {
                 "real_time": {"test": "data"},

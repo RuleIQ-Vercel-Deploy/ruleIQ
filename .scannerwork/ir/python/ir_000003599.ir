@@ -1,0 +1,26 @@
+
+%"Calculate innovation index"str
+0.3float
+	0.9float
+0.12floatself
+ç$ ç(("Ç3
+1
+
+è è(/"#get-field# current_maturity:(
+&
+
+è è(5"#get-field# value:3
+1
+
+è è(<"#dependent-value#*:Bfloat0
+.
+
+è è(="#dependent-value#:Bfloat(
+&
+
+è è(C
+"
+builtinsmin*:	
+
+è è(C
+*I/home/omar/Documents/ruleIQ/services/compliance/cco_strategic_playbook.py

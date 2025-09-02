@@ -20,32 +20,52 @@ class TestUKComplianceFrameworksLoading:
         return [
             {
                 "name": "ICO_GDPR_UK",
-                "display_name": "UK GDPR (ICO Implementation)", 
+                "display_name": "UK GDPR (ICO Implementation)",
                 "description": "Data Protection Act 2018 & UK GDPR requirements as enforced by ICO",
                 "category": "Data Protection",
                 "applicable_indu": ["all"],
                 "employee_thresh": 1,
                 "revenue_thresho": "£0+",
-                "geographic_scop": ["UK", "England", "Scotland", "Wales", "Northern Ireland"],
+                "geographic_scop": [
+                    "UK",
+                    "England",
+                    "Scotland",
+                    "Wales",
+                    "Northern Ireland",
+                ],
                 "key_requirement": [
                     "Lawful basis for processing",
                     "Data subject rights",
                     "Data Protection Impact Assessments",
                     "Breach notification (72 hours to ICO)",
-                    "Privacy by design"
+                    "Privacy by design",
                 ],
-                "control_domains": ["Access Control", "Data Minimization", "Consent Management"],
-                "evidence_types": ["Policies", "Procedures", "Training Records", "Audit Logs"],
+                "control_domains": [
+                    "Access Control",
+                    "Data Minimization",
+                    "Consent Management",
+                ],
+                "evidence_types": [
+                    "Policies",
+                    "Procedures",
+                    "Training Records",
+                    "Audit Logs",
+                ],
                 "complexity_scor": 8,
                 "implementation_": 16,
-                "estimated_cost_": "£15,000-£75,000"
+                "estimated_cost_": "£15,000-£75,000",
             },
             {
                 "name": "FCA_REGULATORY",
                 "display_name": "FCA Regulatory Requirements",
                 "description": "Financial Conduct Authority requirements for financial services",
                 "category": "Financial Services",
-                "applicable_indu": ["financial_services", "fintech", "banking", "insurance"],
+                "applicable_indu": [
+                    "financial_services",
+                    "fintech",
+                    "banking",
+                    "insurance",
+                ],
                 "employee_thresh": 1,
                 "revenue_thresho": "£0+",
                 "geographic_scop": ["UK"],
@@ -54,12 +74,12 @@ class TestUKComplianceFrameworksLoading:
                     "Customer treatment (TCF)",
                     "Operational resilience",
                     "Financial crime prevention",
-                    "Data governance"
+                    "Data governance",
                 ],
                 "complexity_scor": 9,
                 "implementation_": 24,
-                "estimated_cost_": "£25,000-£150,000"
-            }
+                "estimated_cost_": "£25,000-£150,000",
+            },
         ]
 
     def test_load_uk_frameworks_success(self, uk_frameworks_data):
@@ -137,7 +157,7 @@ class TestUKFrameworkAPIIntegration:
             display_name="UK GDPR",
             description="UK implementation",
             category="Data Protection",
-            geographic_scop=["UK"]
+            geographic_scop=["UK"],
         )
         db_session.add(uk_framework)
         db_session.commit()
@@ -158,7 +178,7 @@ class TestUKFrameworkAPIIntegration:
             description="UK implementation",
             category="Data Protection",
             geographic_scop=["UK"],
-            key_requirement=["Data Protection", "Consent Management"]
+            key_requirement=["Data Protection", "Consent Management"],
         )
         db_session.add(uk_framework)
         db_session.commit()
@@ -167,7 +187,7 @@ class TestUKFrameworkAPIIntegration:
         assessment_data = {
             "business_profile_id": "test-profile-id",
             "framework_ids": [str(uk_framework.id)],
-            "assessment_type": "initial"
+            "assessment_type": "initial",
         }
 
         response = client.post("/api/v1/assessments/", json=assessment_data)
@@ -186,11 +206,13 @@ class TestUKComplianceFrameworksDataIntegrity:
         mapper = ISO27001UKMapper()
 
         # Test mapping ISO controls to UK GDPR requirements
-        uk_gdpr_controls = mapper.map_iso_to_uk_gdpr([
-            "A.5.1.1",  # Information security policies
-            "A.8.2.1",  # Data classification
-            "A.12.6.1"  # Secure disposal
-        ])
+        uk_gdpr_controls = mapper.map_iso_to_uk_gdpr(
+            [
+                "A.5.1.1",  # Information security policies
+                "A.8.2.1",  # Data classification
+                "A.12.6.1",  # Secure disposal
+            ]
+        )
 
         assert len(uk_gdpr_controls) == 3
         assert "Data Protection by Design" in uk_gdpr_controls[0]["uk_requirement"]
@@ -200,11 +222,13 @@ class TestUKComplianceFrameworksDataIntegrity:
         framework = ComplianceFramework(
             name="ICO_GDPR_UK",
             version="1.0",
-            description="Initial UK GDPR implementation"
+            description="Initial UK GDPR implementation",
         )
 
         # Test version update
-        updated_framework = framework.create_new_version("1.1", "Updated for ICO guidance 2024")
+        updated_framework = framework.create_new_version(
+            "1.1", "Updated for ICO guidance 2024"
+        )
 
         assert updated_framework.version == "1.1"
         assert "ICO guidance 2024" in updated_framework.description
@@ -257,15 +281,17 @@ class TestUKFrameworksPerformance:
                 display_name=f"UK Framework {i}",
                 description="Test framework",
                 category="Test",
-                geographic_scop=["UK"]
+                geographic_scop=["UK"],
             )
             db_session.add(framework)
         db_session.commit()
 
         start_time = time.time()
-        frameworks = db_session.query(ComplianceFramework)\
-            .filter(ComplianceFramework.geographic_scop.contains(["UK"]))\
+        frameworks = (
+            db_session.query(ComplianceFramework)
+            .filter(ComplianceFramework.geographic_scop.contains(["UK"]))
             .all()
+        )
         query_time = time.time() - start_time
 
         # Query should complete under 100ms

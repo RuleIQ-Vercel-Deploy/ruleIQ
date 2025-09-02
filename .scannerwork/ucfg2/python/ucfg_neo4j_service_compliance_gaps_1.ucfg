@@ -1,0 +1,64 @@
+
+7neo4j_service.Neo4jGraphRAGService.find_compliance_gapsM
+A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.pyÏ Ï(""2*ø
+2
+Ð Ð(<½
+º
+
+Ò Ý(
+query"__id*œ
+
+__unknown_file (ÿü
+ù
+        MATCH (domain:ComplianceDomain)-[:GOVERNS]->(reg:Regulation)
+              -[:REQUIRES]->(req:Requirement)
+        WHERE NOT EXISTS((req)<-[:IMPLEMENTS]-(:Control))
+          AND req.mandatory = true
+        RETURN domain.name AS domain,
+               domain.priority AS priority,
+               reg.name AS regulation,
+               COUNT(req) AS missing_controls,
+               COLLECT(req.title) AS unimplemented_requirements
+        ORDER BY domain.priority, missing_controls DESC
+        Œ
+
+ß ß(1
+%1*B
+
+__unknown_file (&$
+"neo4j_service.Neo4jGraphRAGService*%
+
+__unknown_file (	
+
+query2execute_queryC
+A
+
+ß ß(1	
+results"__id*"
+
+__unknown_file (
+
+%1
+
+à à(+
+%2"dict
+š
+
+à à(*
+%3"__mapSet*"
+
+__unknown_file (
+
+%2*/
+
+__unknown_file (
+compliance_gaps*'
+
+__unknown_file (
+	
+results"
+
+à à(+
+
+%2B&$
+"neo4j_service.Neo4jGraphRAGServiceH

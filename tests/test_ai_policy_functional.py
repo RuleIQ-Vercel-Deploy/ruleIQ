@@ -14,8 +14,11 @@ sys.path.append(str(Path(__file__).parent))
 
 from services.ai.policy_generator import PolicyGenerator
 from api.schemas.ai_policy import (
-    PolicyGenerationRequest, BusinessContext, 
-    PolicyType, CustomizationLevel, TargetAudience
+    PolicyGenerationRequest,
+    BusinessContext,
+    PolicyType,
+    CustomizationLevel,
+    TargetAudience,
 )
 from database.db_setup import get_db
 from database.compliance_framework import ComplianceFramework
@@ -34,12 +37,16 @@ async def test_ai_policy_generation():
         db_session = next(get_db())
 
         # Find UK GDPR framework (should be loaded already)
-        uk_gdpr = db_session.query(ComplianceFramework).filter(
-            ComplianceFramework.name == "ICO_GDPR_UK"
-        ).first()
+        uk_gdpr = (
+            db_session.query(ComplianceFramework)
+            .filter(ComplianceFramework.name == "ICO_GDPR_UK")
+            .first()
+        )
 
         if not uk_gdpr:
-            logger.error("UK GDPR framework not found. Please run load_uk_frameworks.py first")
+            logger.error(
+                "UK GDPR framework not found. Please run load_uk_frameworks.py first"
+            )
             return False
 
         logger.info(f"Found framework: {uk_gdpr.display_name}")
@@ -53,7 +60,7 @@ async def test_ai_policy_generation():
             data_types=["customer_data", "employee_data"],
             geographic_operations=["UK"],
             third_party_processors=True,
-            data_retention_period="5 years"
+            data_retention_period="5 years",
         )
 
         # Create policy generation request
@@ -63,7 +70,7 @@ async def test_ai_policy_generation():
             policy_type=PolicyType.PRIVACY_POLICY,
             customization_level=CustomizationLevel.STANDARD,
             include_templates=True,
-            target_audience=TargetAudience.GENERAL_PUBLIC
+            target_audience=TargetAudience.GENERAL_PUBLIC,
         )
 
         logger.info("Creating PolicyGenerator...")
@@ -77,17 +84,22 @@ async def test_ai_policy_generation():
 
         # Test fallback content generation
         import time
+
         fallback_response = generator._generate_fallback_policy(
             request, uk_gdpr, time.time()
         )
-        logger.info(f"✓ Fallback policy generated: {len(fallback_response.policy_content)} characters")
+        logger.info(
+            f"✓ Fallback policy generated: {len(fallback_response.policy_content)} characters"
+        )
 
         # Test that the system can handle the request structure
         logger.info("✓ AI Policy Generation system is functional")
 
         # Test template processor
         template_processor = generator.template_processor
-        logger.info(f"✓ Template processor initialized with path: {template_processor.templates_path}")
+        logger.info(
+            f"✓ Template processor initialized with path: {template_processor.templates_path}"
+        )
 
         db_session.close()
         return True
@@ -95,6 +107,7 @@ async def test_ai_policy_generation():
     except Exception as e:
         logger.error(f"Test failed: {str(e)}")
         import traceback
+
         traceback.print_exc()
         return False
 

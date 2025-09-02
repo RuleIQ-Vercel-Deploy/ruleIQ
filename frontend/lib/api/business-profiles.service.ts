@@ -1,10 +1,10 @@
 import { BusinessProfileFieldMapper } from './business-profile/field-mapper';
 import { apiClient } from './client';
 
-import type { 
-  BusinessProfile, 
-  BusinessProfileFormData, 
-  FrameworkRecommendation 
+import type {
+  BusinessProfile,
+  BusinessProfileFormData,
+  FrameworkRecommendation,
 } from '@/types/business-profile';
 
 export interface CreateBusinessProfileRequest {
@@ -120,13 +120,13 @@ class BusinessProfileService {
       const existingProfile = await this.getProfile();
 
       if (existingProfile) {
-        // Update existing profile  
+        // Update existing profile
         return await this.updateProfile(existingProfile, data);
       } else {
         // Create new profile - transform to API format
         const apiData = BusinessProfileFieldMapper.transformFormDataForAPI(data);
         const response = await apiClient.post<any>('/business-profiles', apiData);
-        
+
         // Transform response back to frontend format
         const transformed = BusinessProfileFieldMapper.transformAPIResponseForFrontend(response);
         if (!transformed) {
@@ -151,7 +151,10 @@ class BusinessProfileService {
   ): Promise<BusinessProfile> {
     // Create update payload with only changed fields - exclude frontend-only fields
     const { assessment_completed, assessment_data, ...frontendUpdates } = updates;
-    const updatePayload = BusinessProfileFieldMapper.createUpdatePayload(profile, frontendUpdates as Partial<BusinessProfile>);
+    const updatePayload = BusinessProfileFieldMapper.createUpdatePayload(
+      profile,
+      frontendUpdates as Partial<BusinessProfile>,
+    );
     return await this.updateBusinessProfile(profile.id!, updatePayload);
   }
 

@@ -1,0 +1,37 @@
+
+
+0int
+"security_groups"str
+"iam_roles"str
+"cloudtrail_logs"str
+	"config_rules"str
+"ec2_instances"str
+
+"guardduty_findings"str
+"s3_buckets"str
+"compliance_reports"str
+7."Get list of supported evidence types for AWS"str
+"vpc_configuration"str
+"iam_users"str
+"iam_policies"str
+"inspector_findings"strself
+†% †()list"ó)
+'
+
+ˆ •(	"#unknown-value#Blist(
+&
+
+ˆ •(	"
+#is-exact#:Bbool
+
+
+ˆ •(	"
+#assume#::
+8
+
+ˆ •(	"#set-field# __collection_size:Bint-
++
+
+ˆ •(	"?python-unknown?*Blist
+
+ˆ •(	*5/home/omar/Documents/ruleIQ/api/clients/aws_client.py

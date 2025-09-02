@@ -1,0 +1,81 @@
+
+
+1024int
+"S3518"bool
+A8"Get system information for optimal test configuration."str
+"division by zero"bool
+
+3int
+"available_memory_gb"str
+"a"bool
+
+0int
+"memory_gb"str
+"cpu_count"str"î&
+$
+
+ô ù("#new-object#Bdict)
+'
+
+ö ö('"#unknown-value#Bbool-
++
+
+ö ö('"
+psutil	cpu_count:Bint"
+ 
+
+ö ö('"	#map-set#:1
+/
+
+õ õ(,"
+psutilvirtual_memoryBtuple(
+&
+
+õ õ(2	"#get-field# total:)
+'
+
+õ6 õ(="
+#binop **#*2**:
+,
+*
+
+õ õ(>"
+#binop !=#2!=:Bbool"
+ 
+
+õ õ(>"
+#assert#:,
+*
+
+õ õ(>"#dependent-value#*:	"
+ 
+
+õ õ(>"	#map-set#:1
+/
+
+ú ú(6"
+psutilvirtual_memoryBtuple,
+*
+
+ú ú(@"#get-field# available:)
+'
+
+úD ú(K"
+#binop **#*2**:
+,
+*
+
+ú ú(L"
+#binop !=#2!=:Bbool"
+ 
+
+ú ú(L"
+#assert#:,
+*
+
+ú ú(L"#dependent-value#*:"
+ 
+
+ú ú(L"	#map-set#:
+
+ô ù(*8/home/omar/Documents/ruleIQ/scripts/run_tests_chunked.py

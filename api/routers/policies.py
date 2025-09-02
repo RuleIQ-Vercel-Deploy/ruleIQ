@@ -4,12 +4,21 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
-from api.schemas.models import GeneratedPolicyResponse, PolicyGenerateRequest, PolicyListResponse
+from api.schemas.models import (
+    GeneratedPolicyResponse,
+    PolicyGenerateRequest,
+    PolicyListResponse,
+)
 from database.db_setup import get_async_db
 from database.user import User
-from services.policy_service import generate_compliance_policy, get_policy_by_id, get_user_policies
+from services.policy_service import (
+    generate_compliance_policy,
+    get_policy_by_id,
+    get_user_policies,
+)
 
 router = APIRouter()
+
 
 @router.post("/generate", status_code=201)
 async def generate_policy(
@@ -52,12 +61,15 @@ async def generate_policy(
         ],
     }
 
+
 @router.get("/", response_model=PolicyListResponse)
 async def list_policies(
-    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
 ):
     policies = await get_user_policies(db, current_user.id)
     return {"policies": policies}
+
 
 @router.get("/{id}", response_model=GeneratedPolicyResponse)
 async def get_policy(
@@ -69,6 +81,7 @@ async def get_policy(
     if not policy:
         raise HTTPException(status_code=404, detail="Policy not found")
     return policy
+
 
 @router.patch("/{id}/status")
 async def update_policy_status(
@@ -95,10 +108,14 @@ async def update_policy_status(
         "approved": status_update.get("approved", False),
     }
 
+
 @router.put("/{id}/approve")
-async def approve_policy(policy_id: UUID, current_user: User = Depends(get_current_active_user)):
+async def approve_policy(
+    policy_id: UUID, current_user: User = Depends(get_current_active_user)
+):
     # Implementation for policy approval
     return {"message": "Policy approved", "policy_id": policy_id}
+
 
 @router.post("/{id}/regenerate-section")
 async def regenerate_policy_section(
@@ -115,8 +132,9 @@ async def regenerate_policy_section(
         "section": section_name,
         "regenerated": True,
         "content": f"Regenerated content for {section_name} section",
-        "message": f"Section '{section_name}' regenerated successfully"
+        "message": f"Section '{section_name}' regenerated successfully",
     }
+
 
 @router.get("/templates")
 async def get_policy_templates(
@@ -132,25 +150,26 @@ async def get_policy_templates(
                 "name": "GDPR Data Protection Policy",
                 "framework": "GDPR",
                 "sections": 12,
-                "description": "Comprehensive GDPR compliance policy template"
+                "description": "Comprehensive GDPR compliance policy template",
             },
             {
-                "id": "template-2", 
+                "id": "template-2",
                 "name": "ISO 27001 Information Security Policy",
                 "framework": "ISO 27001",
                 "sections": 15,
-                "description": "Complete information security management policy"
+                "description": "Complete information security management policy",
             },
             {
                 "id": "template-3",
                 "name": "SOC 2 Security Policy",
                 "framework": "SOC 2",
                 "sections": 10,
-                "description": "SOC 2 Type II compliance policy template"
-            }
+                "description": "SOC 2 Type II compliance policy template",
+            },
         ],
-        "total": 3
+        "total": 3,
     }
+
 
 @router.post("/{id}/clone")
 async def clone_policy(
@@ -167,8 +186,9 @@ async def clone_policy(
         "cloned_id": "cloned-policy-123",
         "name": new_name,
         "status": "draft",
-        "message": f"Policy cloned successfully as '{new_name}'"
+        "message": f"Policy cloned successfully as '{new_name}'",
     }
+
 
 @router.get("/{id}/versions")
 async def get_policy_versions(
@@ -186,16 +206,16 @@ async def get_policy_versions(
                 "created_at": "2024-01-15T10:00:00Z",
                 "created_by": current_user.email,
                 "changes": "Initial version",
-                "status": "approved"
+                "status": "approved",
             },
             {
                 "version": "1.1",
                 "created_at": "2024-02-01T14:30:00Z",
                 "created_by": current_user.email,
                 "changes": "Updated data retention section",
-                "status": "draft"
-            }
+                "status": "draft",
+            },
         ],
         "current_version": "1.1",
-        "total_versions": 2
+        "total_versions": 2,
     }

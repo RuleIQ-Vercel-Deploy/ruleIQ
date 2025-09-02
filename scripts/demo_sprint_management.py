@@ -12,6 +12,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from sprint_management import SprintManager, Priority, StoryStatus
 
+
 def demo_sprint_management() -> None:
     """Comprehensive demonstration of sprint management capabilities"""
 
@@ -34,7 +35,7 @@ def demo_sprint_management() -> None:
         "end_date": "2025-08-15",
         "capacity_hours": 120.0,
         "velocity_target": 40,
-        "team_members": ["Lead Developer", "Frontend Developer", "AI Engineer"]
+        "team_members": ["Lead Developer", "Frontend Developer", "AI Engineer"],
     }
 
     sprint = manager.init_sprint(sprint_data)
@@ -56,10 +57,12 @@ def demo_sprint_management() -> None:
             Priority.CRITICAL: "🔴",
             Priority.HIGH: "🟠",
             Priority.MEDIUM: "🟡",
-            Priority.LOW: "🟢"
+            Priority.LOW: "🟢",
         }
         print(f"   {priority_icon[story.priority]} {story.id}: {story.title}")
-        print(f"      📊 {story.story_points} points | ⏱️ {story.estimated_hours}h | 🏷️ {story.feature_area}")
+        print(
+            f"      📊 {story.story_points} points | ⏱️ {story.estimated_hours}h | 🏷️ {story.feature_area}"
+        )
     print()
 
     # Step 3: Analyze Stories
@@ -74,19 +77,19 @@ def demo_sprint_management() -> None:
     print()
 
     print("🔥 Priority Distribution:")
-    for priority, count in analysis['priority_breakdown'].items():
+    for priority, count in analysis["priority_breakdown"].items():
         if count > 0:
             print(f"   {priority}: {count} stories")
     print()
 
     print("🏗️ Feature Areas:")
-    for area, data in analysis['feature_area_breakdown'].items():
+    for area, data in analysis["feature_area_breakdown"].items():
         print(f"   {area}: {data['count']} stories ({data['story_points']} pts)")
     print()
 
-    if analysis['recommendations']:
+    if analysis["recommendations"]:
         print("💡 Recommendations:")
-        for rec in analysis['recommendations']:
+        for rec in analysis["recommendations"]:
             print(f"   • {rec}")
         print()
 
@@ -122,11 +125,15 @@ def demo_sprint_management() -> None:
     print(f"   ⏳ Evidence Classifier: PENDING ({stories[2].story_points} points)")
     print()
 
-    completed_points = sum(s.story_points for s in stories if s.status == StoryStatus.DONE)
+    completed_points = sum(
+        s.story_points for s in stories if s.status == StoryStatus.DONE
+    )
     total_points = sum(s.story_points for s in stories)
     completion_rate = (completed_points / total_points) * 100
 
-    print(f"📊 Overall Progress: {completed_points}/{total_points} points ({completion_rate:.1f}%)")
+    print(
+        f"📊 Overall Progress: {completed_points}/{total_points} points ({completion_rate:.1f}%)"
+    )
     print()
 
     # Step 6: Show Recommendations
@@ -138,7 +145,7 @@ def demo_sprint_management() -> None:
         "🎨 Focus on design system testing to ensure quality",
         "🤖 Begin evidence classifier development early",
         "📊 Consider parallel testing of completed features",
-        "⚠️  Monitor scope creep on design system migration"
+        "⚠️  Monitor scope creep on design system migration",
     ]
 
     print("Based on current progress and project context:")
@@ -156,7 +163,7 @@ def demo_sprint_management() -> None:
         "🔍 Advanced evidence analysis capabilities",
         "📈 Performance optimization and monitoring",
         "🧪 Comprehensive end-to-end testing",
-        "📱 Mobile responsiveness improvements"
+        "📱 Mobile responsiveness improvements",
     ]
 
     print("Potential Sprint 3 priorities:")
@@ -175,6 +182,7 @@ def demo_sprint_management() -> None:
     print("   python sprint_cli.py analyze-stories")
     print("   python sprint_cli.py decompose-stories")
 
+
 def demo_cli_commands() -> None:
     """Demonstrate CLI command usage"""
     print("\n🖥️  CLI Commands Demo")
@@ -186,7 +194,7 @@ def demo_cli_commands() -> None:
         ("python sprint_cli.py generate-stories", "Generate user stories"),
         ("python sprint_cli.py analyze-stories", "Analyze story risks"),
         ("python sprint_cli.py decompose-stories", "Break down into tasks"),
-        ("python sprint_cli.py track-progress", "Track implementation progress")
+        ("python sprint_cli.py track-progress", "Track implementation progress"),
     ]
 
     print("Available CLI commands:")
@@ -194,6 +202,7 @@ def demo_cli_commands() -> None:
         print(f"   {cmd}")
         print(f"      {description}")
         print()
+
 
 if __name__ == "__main__":
     try:
@@ -204,4 +213,5 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"\n❌ Demo error: {e}")
         import traceback
+
         traceback.print_exc()

@@ -37,7 +37,13 @@ import {
 } from '@/components/ui/select';
 import { evidenceData, statuses, frameworks } from '@/lib/data/evidence';
 import { cn } from '@/lib/utils';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { FileUploader } from '@/components/evidence/upload/file-uploader';
 
 export default function EvidencePage() {
@@ -320,7 +326,7 @@ export default function EvidencePage() {
                 : 'Upload your first evidence document to get started'}
             </p>
             {!searchQuery && statusFilter === 'all' && frameworkFilter === 'all' && (
-              <Button 
+              <Button
                 className="bg-gold text-navy hover:bg-gold-dark"
                 onClick={() => setUploadDialogOpen(true)}
               >

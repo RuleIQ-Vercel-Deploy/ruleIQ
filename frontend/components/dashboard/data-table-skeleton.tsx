@@ -10,14 +10,10 @@ import {
 
 export function DataTableSkeleton() {
   return (
-    <div
-      className="overflow-hidden rounded-lg border border-border bg-card"
-    >
+    <div className="overflow-hidden rounded-lg border border-border bg-card">
       <Table>
         <TableHeader>
-          <TableRow
-            className="border-b border-border bg-muted/50"
-          >
+          <TableRow className="border-b border-border bg-muted/50">
             <TableHead className="px-6 py-4">
               <Skeleton className="h-5 w-24" />
             </TableHead>
@@ -34,10 +30,7 @@ export function DataTableSkeleton() {
         </TableHeader>
         <TableBody>
           {Array.from({ length: 5 }).map((_, index) => (
-            <TableRow
-              key={index}
-              className="border-b border-border"
-            >
+            <TableRow key={index} className="border-b border-border">
               <TableCell className="px-6 py-4">
                 <Skeleton className="h-5 w-3/4" />
               </TableCell>

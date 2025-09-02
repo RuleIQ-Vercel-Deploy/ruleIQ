@@ -1,0 +1,16 @@
+
+#"Extract domain from URL."strself
+é é(url
+é é(&"«.
+,
+
+ë ë()urlparse"?python-unknown?<
+:
+
+ì ì(parsed"
+urllib.parseurlparse:Btuple)
+'
+
+í í("#get-field# netloc:
+
+í í(*G/home/omar/Documents/ruleIQ/services/ai/evaluation/tools/ingest_docs.py

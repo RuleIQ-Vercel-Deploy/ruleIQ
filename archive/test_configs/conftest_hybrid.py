@@ -283,9 +283,13 @@ def sync_sample_business_profile(
 
     # Ensure the profile is actually in the database
     check_profile = (
-        sync_db_session.query(BusinessProfile).filter(BusinessProfile.id == profile.id).first()
+        sync_db_session.query(BusinessProfile)
+        .filter(BusinessProfile.id == profile.id)
+        .first()
     )
-    assert check_profile is not None, f"Business profile {profile.id} not found in database"
+    assert (
+        check_profile is not None
+    ), f"Business profile {profile.id} not found in database"
 
     return profile
 
@@ -309,7 +313,10 @@ async def async_db_session() -> AsyncGenerator[AsyncSession, None]:
 async def async_sample_user(async_db_session: AsyncSession) -> User:
     """Create a sample user for async tests."""
     user = User(
-        id=uuid4(), email="test@example.com", hashed_password="fake_password_hash", is_active=True
+        id=uuid4(),
+        email="test@example.com",
+        hashed_password="fake_password_hash",
+        is_active=True,
     )
     async_db_session.add(user)
     await async_db_session.commit()
@@ -433,7 +440,9 @@ def authenticated_test_client(sync_db_session, sync_sample_user):
         app.dependency_overrides[get_db] = override_get_db
         app.dependency_overrides[get_async_db] = override_get_async_db
         app.dependency_overrides[get_current_user] = override_get_current_user
-        app.dependency_overrides[get_current_active_user] = override_get_current_active_user
+        app.dependency_overrides[get_current_active_user] = (
+            override_get_current_active_user
+        )
 
         client = TestClient(app)
         yield client

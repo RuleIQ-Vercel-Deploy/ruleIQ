@@ -171,7 +171,7 @@ vi.mock('@/lib/api/auth.service'`,
   );
 
   fs.writeFileSync(testFile, content);
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
 }
 
 // Check and fix evidence store if it exists
@@ -380,7 +380,7 @@ export const useDashboardStore = create<DashboardState>()(
 
 // Main execution
 async function main() {
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
   try {
     fixStoreTests();
     checkEvidenceStore();

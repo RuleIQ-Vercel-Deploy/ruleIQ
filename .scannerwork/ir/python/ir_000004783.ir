@@ -1,0 +1,20 @@
+
+0.1float
+ "Service shutting down"strargs
+©+ ©(0kwargs
+©2 ©(:"dict"è=
+;
+
+ª ª(("
+asyncio.taskssleep:Btyping.Coroutine#
+!
+
+ª ª(("#unknown-value##
+!
+
+« «("#unknown-value#K
+I
+
+« «(E"?python-unknown?:B!asyncio.exceptions.CancelledError2
+
+« «(E*G/home/omar/Documents/ruleIQ/tests/integration/test_ai_error_handling.py

@@ -1,0 +1,239 @@
+
+
+"ISO27001"str
+"question_text"str
+>"GDPR"str
+3"asset_management"str
+"framework_area"str
+	"iso_company_size"str
+	"context"str
+:1"How many employees does your organization have?"str
+M0D"What types of sensitive information does your organization handle?"str
+"iso_industry_type"str
+	"unknown"str
+>5"What industry sector does your business operate in?"str
+8C/"Do you process personal data of EU residents?"str
+truebool
+
+"required"str
+!."iso_information_assets"str
+?6"Load conversation templates for different frameworks"str
+"basic_info"str
+"trust_level_required"str
+A"gdpr_data_processing"str
+;R2"What categories of personal data do you process?"str
+"id"str
+,"compliance_specific"str
+"scope"str
+U"data_processing"str
+P"gdpr_data_categories"str
+
+'0int
+"question_type"strself
+·% ·()$list"ü&
+$
+
+» ð(	"#new-object#Bdict&
+$
+
+¼ Ù("#new-object#Bdict&
+$
+
+¾ Å("#new-object#Bdict"
+ 
+
+¿ ¿(0
+"	#map-set#:	"
+ 
+
+À À(Z"	#map-set#:"
+ 
+
+Á Á(5"	#map-set#:"
+ 
+
+Â Â(1"	#map-set#:"
+ 
+
+Ã Ã(("	#map-set#:"
+ 
+
+Ä Ä(9"	#map-set#:&
+$
+
+Æ Í("#new-object#Bdict"
+ 
+
+Ç Ç(1"	#map-set#:"
+ 
+
+È È(^"	#map-set#:"
+ 
+
+É É(5"	#map-set#:"
+ 
+
+Ê Ê(3 "	#map-set#:"
+ 
+
+Ë Ë((!"	#map-set#:"
+ 
+
+Ì Ì(9""	#map-set#:)
+'
+
+½ Î(#"#unknown-value#Blist(
+&
+
+½ Î(%"
+#is-exact#:#$Bbool
+
+
+½ Î(&"
+#assume#:%:
+8
+
+½ Î(("#set-field# __collection_size:#'Bint(
+&
+
+½ Î()"#array-add-last#:#(
+&
+
+½ Î(*"#array-add-last#:#"
+ 
+
+½ Î(+"	#map-set#:#&
+$
+
+Ð ×(-"#new-object#Bdict"
+ 
+
+Ñ Ñ(6/"	#map-set#:-."
+ 
+
+Ò Ò(m1"	#map-set#:-0"
+ 
+
+Ó Ó(>2"	#map-set#:-,"
+ 
+
+Ô Ô(<4"	#map-set#:-3"
+ 
+
+Õ Õ((5"	#map-set#:-"
+ 
+
+Ö Ö(96"	#map-set#:-)
+'
+
+Ï' Ø(7"#unknown-value#Blist(
+&
+
+Ï' Ø(8"
+#is-exact#:7$Bbool
+
+
+Ï' Ø(9"
+#assume#:8:
+8
+
+Ï' Ø(:"#set-field# __collection_size:7'Bint(
+&
+
+Ï' Ø(;"#array-add-last#:7-"
+ 
+
+Ï Ø(<"	#map-set#:,7"
+ 
+
+¼ Ù(="	#map-set#:&
+$
+
+Ú ï(?"#new-object#Bdict&
+$
+
+Ü ã(@"#new-object#Bdict"
+ 
+
+Ý Ý(4B"	#map-set#:@A"
+ 
+
+Þ Þ(XD"	#map-set#:@C"
+ 
+
+ß ß(5E"	#map-set#:@"
+ 
+
+à à(1F"	#map-set#:@"
+ 
+
+á á((G"	#map-set#:@"
+ 
+
+â â(9H"	#map-set#:@)
+'
+
+Û ä(I"#unknown-value#Blist(
+&
+
+Û ä(J"
+#is-exact#:I$Bbool
+
+
+Û ä(K"
+#assume#:J:
+8
+
+Û ä(L"#set-field# __collection_size:I'Bint(
+&
+
+Û ä(M"#array-add-last#:I@"
+ 
+
+Û ä(N"	#map-set#:?I&
+$
+
+æ í(O"#new-object#Bdict"
+ 
+
+ç ç(4Q"	#map-set#:OP"
+ 
+
+è è([S"	#map-set#:OR"
+ 
+
+é é(>T"	#map-set#:O,"
+ 
+
+ê ê(;V"	#map-set#:OU"
+ 
+
+ë ë((W"	#map-set#:O"
+ 
+
+ì ì(9X"	#map-set#:O)
+'
+
+å' î(Y"#unknown-value#Blist(
+&
+
+å' î(Z"
+#is-exact#:Y$Bbool
+
+
+å' î(["
+#assume#:Z:
+8
+
+å' î(\"#set-field# __collection_size:Y'Bint(
+&
+
+å' î(]"#array-add-last#:YO"
+ 
+
+å î(^"	#map-set#:?,Y"
+ 
+
+Ú ï(_"	#map-set#:>?
+
+» ð(	*:/home/omar/Documents/ruleIQ/services/agentic_assessment.py

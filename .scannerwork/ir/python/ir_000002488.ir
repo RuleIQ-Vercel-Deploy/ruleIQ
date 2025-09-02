@@ -1,0 +1,9 @@
+
+8/"Get all obligations for a specific regulation"strself
+¢& ¢(*regulation_id
+¢, ¢(>"B.
+,
+
+¤ §(	"?python-unknown?:Blist
+
+¤ §(	*G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py

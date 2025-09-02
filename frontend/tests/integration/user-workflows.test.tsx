@@ -659,7 +659,7 @@ describe('User Workflows Integration Tests', () => {
 
       mockAuthStore.isAuthenticated = true;
 
-      const LoginPage = await (await import('@/app/(auth)/login/page')).default;
+      const LoginPage = await(await import('@/app/(auth)/login/page')).default;
       render(
         <TestWrapper>
           <LoginPage />

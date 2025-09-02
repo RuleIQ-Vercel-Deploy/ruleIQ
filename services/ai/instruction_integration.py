@@ -82,9 +82,9 @@ class InstructionManager:
                 metadata={
                     "user_persona": user_persona,
                     "task_complexity": task_complexity,
-                    "business_context": business_profile.get("industry")
-                    if business_profile
-                    else None,
+                    "business_context": (
+                        business_profile.get("industry") if business_profile else None
+                    ),
                     "additional_context": kwargs,
                 },
             )
@@ -315,7 +315,9 @@ class InstructionManager:
         """
         # Create control instruction
         control_id, control_content = self.get_instruction_with_monitoring(
-            instruction_type=instruction_type, framework=framework, task_complexity="medium"
+            instruction_type=instruction_type,
+            framework=framework,
+            task_complexity="medium",
         )
 
         # Create variant instruction with changes
@@ -441,7 +443,10 @@ class InstructionManager:
             )
 
         # Satisfaction optimization suggestions
-        if optimization_type == "satisfaction" and performance.avg_user_satisfaction < 0.75:
+        if (
+            optimization_type == "satisfaction"
+            and performance.avg_user_satisfaction < 0.75
+        ):
             suggestions.append(
                 {
                     "type": "persona_adaptation",

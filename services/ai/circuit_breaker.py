@@ -142,7 +142,9 @@ class AICircuitBreaker:
             # Check if enough time has passed to transition to half-open
             if self._should_attempt_reset(model_name):
                 self._model_states[model_name] = CircuitState.HALF_OPEN
-                self.logger.info(f"Circuit breaker for {model_name} transitioning to half-open")
+                self.logger.info(
+                    f"Circuit breaker for {model_name} transitioning to half-open"
+                )
                 return True
             return False
 
@@ -182,7 +184,10 @@ class AICircuitBreaker:
             )
 
     def record_failure(
-        self, model_name: str, error: Exception, context: Optional[Dict[str, Any]] = None
+        self,
+        model_name: str,
+        error: Exception,
+        context: Optional[Dict[str, Any]] = None,
     ) -> None:
         """Record a failed AI operation"""
         with self._lock:
@@ -250,7 +255,9 @@ class AICircuitBreaker:
 
         cutoff_time = datetime.now() - timedelta(seconds=self.config.time_window)
         self._failures[model_name] = [
-            failure for failure in self._failures[model_name] if failure.timestamp > cutoff_time
+            failure
+            for failure in self._failures[model_name]
+            if failure.timestamp > cutoff_time
         ]
 
     def get_failure_count(self, model_name: str) -> int:
@@ -290,9 +297,11 @@ class AICircuitBreaker:
                     "failed_requests": self.metrics.failed_requests,
                     "failure_rate": self.metrics.failure_rate,
                     "circuit_trips": self.metrics.circuit_trips,
-                    "last_trip_time": self.metrics.last_trip_time.isoformat()
-                    if self.metrics.last_trip_time
-                    else None,
+                    "last_trip_time": (
+                        self.metrics.last_trip_time.isoformat()
+                        if self.metrics.last_trip_time
+                        else None
+                    ),
                 },
                 "models": model_health,
                 "config": {
@@ -324,9 +333,11 @@ class AICircuitBreaker:
                     "failed_requests": self.metrics.failed_requests,
                     "failure_rate": self.metrics.failure_rate,
                     "circuit_trips": self.metrics.circuit_trips,
-                    "last_trip_time": self.metrics.last_trip_time.isoformat()
-                    if self.metrics.last_trip_time
-                    else None,
+                    "last_trip_time": (
+                        self.metrics.last_trip_time.isoformat()
+                        if self.metrics.last_trip_time
+                        else None
+                    ),
                 },
             }
 
@@ -388,7 +399,10 @@ class AICircuitBreaker:
                 message=f"Circuit breaker is OPEN for model {model_name}",
                 service_name="AI Circuit Breaker",
                 error_code="CIRCUIT_OPEN",
-                context={"model_name": model_name, "state": self.get_model_state(model_name).value},
+                context={
+                    "model_name": model_name,
+                    "state": self.get_model_state(model_name).value,
+                },
             )
 
         start_time = time.time()
@@ -426,7 +440,10 @@ class AICircuitBreaker:
                 message=f"Circuit breaker is OPEN for model {model_name}",
                 service_name="AI Circuit Breaker",
                 error_code="CIRCUIT_OPEN",
-                context={"model_name": model_name, "state": self.get_model_state(model_name).value},
+                context={
+                    "model_name": model_name,
+                    "state": self.get_model_state(model_name).value,
+                },
             )
 
         start_time = time.time()

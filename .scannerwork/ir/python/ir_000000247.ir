@@ -1,0 +1,70 @@
+
+"_active_loads"str
+"storage_backend"str
+7."load-{workflow_id}-{int(time.time() * 1000)}"str
+"workflow_id"str
+"start_time"str
+"checkpoint_id"str
+”…"Record the start of a checkpoint load operation.
+        
+        Args:
+            workflow_id: ID of the workflow being loaded
+            checkpoint_id: ID of the checkpoint being loaded
+            storage_backend: Storage backend being used
+            
+        Returns:
+            Load operation ID for tracking
+        "strself
+ˇ ˇ(workflow_id
+Ä Ä(checkpoint_id
+Å Å(storage_backend
+Ç Ç('"Æ)
+'
+
+é é(Aload_id"#id#:Bstr2
+0
+
+ë ë(-	"
+builtinshasattr*:Bbool+
+)
+
+ë ë(-
+"#unaryop !#2!:	Bbool "
+
+ë ë(-
+ *
+ë ë(
+"c&
+$
+
+í! í(#"#new-object#Bdict1
+/
+
+í í("#set-field# _active_loads:"Õ&
+$
+
+î& ô(	"#new-object#Bdict"
+ 
+
+ï ï(&"	#map-set#:"
+ 
+
+ñ ñ(*"	#map-set#:"
+ 
+
+ó ó(."	#map-set#:%
+#
+
+ò ò(%"
+timetimeBfloat"
+ 
+
+ò ò(%"	#map-set#:0
+.
+
+î î("#get-field# _active_loads:&
+$
+
+î ô(	"#array-write#:
+
+õ õ(*D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py

@@ -190,7 +190,9 @@ class DeploymentChecker:
                 )
                 return False
         except requests.exceptions.ConnectionError:
-            self.log_error(f"API health check failed: Could not connect to {health_endpoint}")
+            self.log_error(
+                f"API health check failed: Could not connect to {health_endpoint}"
+            )
             return False
         except Exception as e:
             self.log_error(f"Error during API health check: {e}", exc_info_flag=True)
@@ -295,8 +297,12 @@ def main() -> None:
         action="store_true",
         help="Include health check against running application",
     )
-    parser.add_argument("--host", default="http://localhost:8000", help="Host for health check")
-    parser.add_argument("--create-env", action="store_true", help="Create example environment file")
+    parser.add_argument(
+        "--host", default="http://localhost:8000", help="Host for health check"
+    )
+    parser.add_argument(
+        "--create-env", action="store_true", help="Create example environment file"
+    )
     parser.add_argument("--output", help="Save report to JSON file")
 
     args = parser.parse_args()
@@ -307,7 +313,9 @@ def main() -> None:
 
     # Run deployment checks
     checker = DeploymentChecker()
-    report = checker.run_all_checks(include_health_check=args.health_check, host=args.host)
+    report = checker.run_all_checks(
+        include_health_check=args.health_check, host=args.host
+    )
 
     # Save report if requested
     if args.output:
@@ -316,7 +324,9 @@ def main() -> None:
                 json.dump(report, f, indent=2)
             logger.info(f"\n📄 Report saved to {args.output}")
         except OSError as e:
-            logger.error(f"Failed to save report to {args.output}: {e}", exc_info_flag=True)
+            logger.error(
+                f"Failed to save report to {args.output}: {e}", exc_info_flag=True
+            )
 
     # Exit with appropriate code
     sys.exit(0 if report["overall_status"] in ["READY", "READY_WITH_WARNINGS"] else 1)

@@ -24,14 +24,25 @@ GAP_ANALYSIS_SCHEMA = {
                     "id": {"type": "string"},
                     "title": {"type": "string"},
                     "description": {"type": "string"},
-                    "severity": {"type": "string", "enum": ["low", "medium", "high", "critical"]},
+                    "severity": {
+                        "type": "string",
+                        "enum": ["low", "medium", "high", "critical"],
+                    },
                     "category": {"type": "string"},
                     "framework_reference": {"type": "string"},
                     "current_state": {"type": "string"},
                     "target_state": {"type": "string"},
                     "impact_description": {"type": "string"},
-                    "business_impact_score": {"type": "number", "minimum": 0.0, "maximum": 1.0},
-                    "technical_complexity": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+                    "business_impact_score": {
+                        "type": "number",
+                        "minimum": 0.0,
+                        "maximum": 1.0,
+                    },
+                    "technical_complexity": {
+                        "type": "number",
+                        "minimum": 0.0,
+                        "maximum": 1.0,
+                    },
                     "regulatory_requirement": {"type": "boolean"},
                     "estimated_effort": {
                         "type": "string",
@@ -58,7 +69,10 @@ GAP_ANALYSIS_SCHEMA = {
                 ],
             },
         },
-        "overall_risk_level": {"type": "string", "enum": ["low", "medium", "high", "critical"]},
+        "overall_risk_level": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"],
+        },
         "priority_order": {"type": "array", "items": {"type": "string"}},
         "estimated_total_effort": {"type": "string"},
         "critical_gap_count": {"type": "integer"},
@@ -66,7 +80,11 @@ GAP_ANALYSIS_SCHEMA = {
         "compliance_percentage": {"type": "number", "minimum": 0.0, "maximum": 100.0},
         "framework_coverage": {
             "type": "object",
-            "additionalProperties": {"type": "number", "minimum": 0.0, "maximum": 100.0},
+            "additionalProperties": {
+                "type": "number",
+                "minimum": 0.0,
+                "maximum": 100.0,
+            },
         },
         "summary": {"type": "string"},
         "next_steps": {"type": "array", "items": {"type": "string"}},
@@ -100,9 +118,15 @@ RECOMMENDATION_SCHEMA = {
                     "id": {"type": "string"},
                     "title": {"type": "string"},
                     "description": {"type": "string"},
-                    "priority": {"type": "string", "enum": ["low", "medium", "high", "urgent"]},
+                    "priority": {
+                        "type": "string",
+                        "enum": ["low", "medium", "high", "urgent"],
+                    },
                     "category": {"type": "string"},
-                    "framework_references": {"type": "array", "items": {"type": "string"}},
+                    "framework_references": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
                     "addresses_gaps": {"type": "array", "items": {"type": "string"}},
                     "effort_estimate": {
                         "type": "string",
@@ -111,11 +135,24 @@ RECOMMENDATION_SCHEMA = {
                     "implementation_timeline": {"type": "string"},
                     "impact_score": {"type": "number", "minimum": 0.0, "maximum": 1.0},
                     "cost_estimate": {"type": "string"},
-                    "resource_requirements": {"type": "array", "items": {"type": "string"}},
+                    "resource_requirements": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
                     "success_criteria": {"type": "array", "items": {"type": "string"}},
-                    "potential_challenges": {"type": "array", "items": {"type": "string"}},
-                    "mitigation_strategies": {"type": "array", "items": {"type": "string"}},
-                    "automation_potential": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+                    "potential_challenges": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "mitigation_strategies": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
+                    "automation_potential": {
+                        "type": "number",
+                        "minimum": 0.0,
+                        "maximum": 1.0,
+                    },
                     "roi_estimate": {"type": "string"},
                 },
                 "required": [
@@ -144,10 +181,22 @@ RECOMMENDATION_SCHEMA = {
                             "phase_number": {"type": "integer"},
                             "phase_name": {"type": "string"},
                             "duration_weeks": {"type": "integer"},
-                            "deliverables": {"type": "array", "items": {"type": "string"}},
-                            "dependencies": {"type": "array", "items": {"type": "string"}},
-                            "resources_required": {"type": "array", "items": {"type": "string"}},
-                            "success_criteria": {"type": "array", "items": {"type": "string"}},
+                            "deliverables": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                            },
+                            "dependencies": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                            },
+                            "resources_required": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                            },
+                            "success_criteria": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                            },
                         },
                         "required": [
                             "phase_number",
@@ -194,7 +243,10 @@ ASSESSMENT_ANALYSIS_SCHEMA = {
     "type": "object",
     "properties": {
         "gaps": {"type": "array", "items": {"$ref": "#/$defs/gap"}},
-        "recommendations": {"type": "array", "items": {"$ref": "#/$defs/recommendation"}},
+        "recommendations": {
+            "type": "array",
+            "items": {"$ref": "#/$defs/recommendation"},
+        },
         "risk_assessment": {
             "type": "object",
             "properties": {
@@ -204,10 +256,25 @@ ASSESSMENT_ANALYSIS_SCHEMA = {
                 },
                 "risk_score": {"type": "number", "minimum": 0.0, "maximum": 100.0},
                 "top_risk_factors": {"type": "array", "items": {"type": "string"}},
-                "risk_mitigation_priorities": {"type": "array", "items": {"type": "string"}},
-                "regulatory_compliance_risk": {"type": "number", "minimum": 0.0, "maximum": 100.0},
-                "operational_risk": {"type": "number", "minimum": 0.0, "maximum": 100.0},
-                "reputational_risk": {"type": "number", "minimum": 0.0, "maximum": 100.0},
+                "risk_mitigation_priorities": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                },
+                "regulatory_compliance_risk": {
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 100.0,
+                },
+                "operational_risk": {
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 100.0,
+                },
+                "reputational_risk": {
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 100.0,
+                },
                 "financial_risk": {"type": "number", "minimum": 0.0, "maximum": 100.0},
             },
             "required": [
@@ -253,14 +320,24 @@ ASSESSMENT_ANALYSIS_SCHEMA = {
                     "evidence_type": {"type": "string"},
                     "description": {"type": "string"},
                     "framework_reference": {"type": "string"},
-                    "priority": {"type": "string", "enum": ["low", "medium", "high", "urgent"]},
+                    "priority": {
+                        "type": "string",
+                        "enum": ["low", "medium", "high", "urgent"],
+                    },
                     "collection_method": {"type": "string"},
-                    "automation_potential": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+                    "automation_potential": {
+                        "type": "number",
+                        "minimum": 0.0,
+                        "maximum": 1.0,
+                    },
                     "estimated_effort": {
                         "type": "string",
                         "enum": ["minimal", "low", "medium", "high", "extensive"],
                     },
-                    "validation_criteria": {"type": "array", "items": {"type": "string"}},
+                    "validation_criteria": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
                     "retention_period": {"type": "string"},
                 },
                 "required": [
@@ -276,16 +353,34 @@ ASSESSMENT_ANALYSIS_SCHEMA = {
         "compliance_metrics": {
             "type": "object",
             "properties": {
-                "overall_compliance_score": {"type": "number", "minimum": 0.0, "maximum": 100.0},
+                "overall_compliance_score": {
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 100.0,
+                },
                 "framework_scores": {
                     "type": "object",
-                    "additionalProperties": {"type": "number", "minimum": 0.0, "maximum": 100.0},
+                    "additionalProperties": {
+                        "type": "number",
+                        "minimum": 0.0,
+                        "maximum": 100.0,
+                    },
                 },
                 "maturity_level": {
                     "type": "string",
-                    "enum": ["initial", "developing", "defined", "managed", "optimized"],
+                    "enum": [
+                        "initial",
+                        "developing",
+                        "defined",
+                        "managed",
+                        "optimized",
+                    ],
                 },
-                "coverage_percentage": {"type": "number", "minimum": 0.0, "maximum": 100.0},
+                "coverage_percentage": {
+                    "type": "number",
+                    "minimum": 0.0,
+                    "maximum": 100.0,
+                },
                 "gap_count_by_severity": {
                     "type": "object",
                     "properties": {
@@ -378,7 +473,10 @@ FOLLOWUP_SCHEMA = {
                         "enum": ["text", "boolean", "multiple_choice", "numeric"],
                     },
                     "context": {"type": "string"},
-                    "validation_criteria": {"type": "array", "items": {"type": "string"}},
+                    "validation_criteria": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                    },
                 },
                 "required": [
                     "question_id",

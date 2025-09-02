@@ -51,7 +51,9 @@ async def setup_database():
         print(f"Warning during cleanup: {e}")
 
     # Run Alembic migrations
-    result = subprocess.run(["alembic", "upgrade", "head"], capture_output=True, text=True)
+    result = subprocess.run(
+        ["alembic", "upgrade", "head"], capture_output=True, text=True
+    )
 
     if result.returncode == 0:
         print("✓ Successfully ran Alembic migrations")
@@ -75,7 +77,9 @@ async def setup_database():
             # Check if test user exists
             from sqlalchemy import select
 
-            result = await db.execute(select(User).where(User.email == "test@example.com"))
+            result = await db.execute(
+                select(User).where(User.email == "test@example.com")
+            )
             user = result.scalar_one_or_none()
 
             if not user:

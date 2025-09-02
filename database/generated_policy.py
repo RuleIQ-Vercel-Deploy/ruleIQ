@@ -25,8 +25,12 @@ class GeneratedPolicy(Base):
 
     # Policy metadata
     policy_name = Column(String, nullable=False)
-    framework_name = Column(String, nullable=False)  # Consider deriving from framework_id
-    policy_type = Column(String, default="comprehensive")  # comprehensive, specific, update
+    framework_name = Column(
+        String, nullable=False
+    )  # Consider deriving from framework_id
+    policy_type = Column(
+        String, default="comprehensive"
+    )  # comprehensive, specific, update
 
     # Generation details
     generation_prompt = Column(Text, nullable=False)
@@ -36,7 +40,9 @@ class GeneratedPolicy(Base):
     # Policy content
     policy_content = Column(Text, nullable=False)  # The main policy document
     procedures = Column(PG_JSONB, default=list)  # Specific procedures and controls
-    tool_recommendations = Column(PG_JSONB, default=list)  # Recommended tools and systems
+    tool_recommendations = Column(
+        PG_JSONB, default=list
+    )  # Recommended tools and systems
 
     # Policy structure
     sections = Column(PG_JSONB, default=list)  # Policy sections with content

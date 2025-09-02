@@ -108,7 +108,6 @@ export function AIHelpTooltip({
       });
     } catch (err) {
       // TODO: Replace with proper logging
-
       // // TODO: Replace with proper logging
     }
   };
@@ -231,7 +230,11 @@ export function AIHelpTooltip({
                           </h4>
                           <div className="flex flex-wrap gap-1">
                             {aiResponse.related_topics.map((topic, index) => (
-                              <Badge key={`tooltip-topic-${index}-${topic.substring(0, 15)}`} variant="outline" className="text-xs">
+                              <Badge
+                                key={`tooltip-topic-${index}-${topic.substring(0, 15)}`}
+                                variant="outline"
+                                className="text-xs"
+                              >
                                 {topic}
                               </Badge>
                             ))}
@@ -269,7 +272,10 @@ export function AIHelpTooltip({
                           </h4>
                           <div className="space-y-1">
                             {aiResponse.source_references.map((ref, index) => (
-                              <div key={`tooltip-ref-${index}-${ref.substring(0, 20)}`} className="flex items-center gap-2">
+                              <div
+                                key={`tooltip-ref-${index}-${ref.substring(0, 20)}`}
+                                className="flex items-center gap-2"
+                              >
                                 <ExternalLink className="h-3 w-3 text-muted-foreground" />
                                 <span className="text-xs text-muted-foreground">{ref}</span>
                               </div>

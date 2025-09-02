@@ -1,0 +1,86 @@
+
+=security_headers.SecurityHeadersMiddleware.add_allowed_originF
+:/home/omar/Documents/ruleIQ/middleware/security_headers.pyõ õ("2*Â
+2
+ö û(w
+u
+
+ü ü()
+%4"__id*[
+
+__unknown_file (?*=,
+*security_headers.SecurityHeadersMiddleware"
+cors_config€~
+
+ü ü(<
+%5"__mapGet*"
+
+__unknown_file (
+
+%4*/
+
+__unknown_file (
+allowed_origins2__getitem__nl
+
+ü ü(<
+%6*"
+
+__unknown_file (
+
+%5*&
+
+__unknown_file (
+
+
+origin2__contains__=
+;
+
+ü ü(<
+%7"not*"
+
+__unknown_file (
+
+%6*
+3
+4*;
+3
+security_headers.py"
+ÿ ÿ(
+implicit return*ú
+4
+ý ý(>w
+u
+
+ý ý(
+%1"__id*[
+
+__unknown_file (?*=,
+*security_headers.SecurityHeadersMiddleware"
+cors_config€~
+
+ý ý(/
+%2"__mapGet*"
+
+__unknown_file (
+
+%1*/
+
+__unknown_file (
+allowed_origins2__getitem__hf
+
+ý ý(>
+%3*"
+
+__unknown_file (
+
+%2*&
+
+__unknown_file (
+
+
+origin2append*
+3:
+
+õ! õ(,
+originB.,
+*security_headers.SecurityHeadersMiddlewareH

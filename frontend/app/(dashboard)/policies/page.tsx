@@ -102,7 +102,6 @@ export default function PoliciesPage() {
       }
     } catch (err) {
       // TODO: Replace with proper logging
-
       // // TODO: Replace with proper logging
     }
   };

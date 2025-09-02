@@ -150,7 +150,7 @@ export default function Dashboard() {
     <div className="flex flex-1">
       <AppSidebar />
       <div className="flex-1 overflow-auto bg-gradient-to-br from-neutral-50 to-white">
-        <div className="bg-white border-b border-neutral-200 shadow-sm">
+        <div className="border-b border-neutral-200 bg-white shadow-sm">
           <DashboardHeader />
         </div>
         <div className="space-y-8 p-6">

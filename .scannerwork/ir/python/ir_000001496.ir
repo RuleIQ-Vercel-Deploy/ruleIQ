@@ -1,0 +1,13 @@
+
+%"Fix console.log statements"str
+""(\s*)(console\.error\()"str
+*!"\s*console\.log\([^;]+\);?\s*\n"str
+B9"\1// Development logging - consider proper logger\n\1\2"str
+7."\n    // TODO: Replace with proper logging\n"strcontent (""b'
+%
+ (Mcontent"	
+resub:'
+%
+ (Ycontent"	
+resub:
+ (*//home/omar/Documents/ruleIQ/scripts/fix-lint.py

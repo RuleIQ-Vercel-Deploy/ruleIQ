@@ -52,7 +52,11 @@ except ImportError:
             return {"items": []}
 
 
-from .base.base_integration import AuthenticationError, BaseIntegration, EvidenceCollectionError
+from .base.base_integration import (
+    AuthenticationError,
+    BaseIntegration,
+    EvidenceCollectionError,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -73,7 +77,9 @@ class GoogleWorkspaceIntegration(BaseIntegration):
     async def test_connection(self) -> bool:
         """Tests connection by trying to build a service object."""
         if not GOOGLE_AVAILABLE:
-            logger.warning("Google API libraries not available - using mock implementation")
+            logger.warning(
+                "Google API libraries not available - using mock implementation"
+            )
             return True  # Allow testing without Google APIs
 
         try:
@@ -150,8 +156,12 @@ class GoogleWorkspaceIntegration(BaseIntegration):
             loop = asyncio.get_event_loop()
 
             # Run API calls in parallel
-            login_events_task = loop.run_in_executor(None, self._fetch_activities, service, "login")
-            admin_events_task = loop.run_in_executor(None, self._fetch_activities, service, "admin")
+            login_events_task = loop.run_in_executor(
+                None, self._fetch_activities, service, "login"
+            )
+            admin_events_task = loop.run_in_executor(
+                None, self._fetch_activities, service, "admin"
+            )
 
             login_events, admin_events = await asyncio.gather(
                 login_events_task, admin_events_task, return_exceptions=True
@@ -166,7 +176,10 @@ class GoogleWorkspaceIntegration(BaseIntegration):
                         evidence_type="user_access_logs",
                         title="Google Workspace User Login Events",
                         description="Records of user login activities including successful and failed login attempts.",
-                        raw_data={"events": login_events, "event_count": len(login_events)},
+                        raw_data={
+                            "events": login_events,
+                            "event_count": len(login_events),
+                        },
                         compliance_frameworks=["SOC2", "ISO27001", "GDPR"],
                         control_mappings={
                             "SOC2": "CC6.1 - Logical and Physical Access Controls",
@@ -183,7 +196,10 @@ class GoogleWorkspaceIntegration(BaseIntegration):
                         evidence_type="admin_activity_logs",
                         title="Google Workspace Admin Activity",
                         description="Records of administrative actions including user management, security settings changes, and configuration updates.",
-                        raw_data={"events": admin_events, "event_count": len(admin_events)},
+                        raw_data={
+                            "events": admin_events,
+                            "event_count": len(admin_events),
+                        },
                         compliance_frameworks=["SOC2", "ISO27001"],
                         control_mappings={
                             "SOC2": "CC7.2 - System Monitoring",
@@ -201,7 +217,9 @@ class GoogleWorkspaceIntegration(BaseIntegration):
             if group_evidence:
                 evidence.extend(group_evidence)
 
-            logger.info(f"Collected {len(evidence)} evidence items from Google Workspace")
+            logger.info(
+                f"Collected {len(evidence)} evidence items from Google Workspace"
+            )
             return evidence
 
         except Exception as e:
@@ -215,7 +233,11 @@ class GoogleWorkspaceIntegration(BaseIntegration):
         try:
             results = (
                 service.activities()
-                .list(userKey="all", applicationName=application_name, maxResults=max_results)
+                .list(
+                    userKey="all",
+                    applicationName=application_name,
+                    maxResults=max_results,
+                )
                 .execute()
             )
 
@@ -228,18 +250,27 @@ class GoogleWorkspaceIntegration(BaseIntegration):
         except Exception as e:
             if GOOGLE_AVAILABLE:
                 if isinstance(e, HttpError):
-                    logger.error(f"HTTP error fetching Google {application_name} activities: {e}")
+                    logger.error(
+                        f"HTTP error fetching Google {application_name} activities: {e}"
+                    )
                 else:
-                    logger.error(f"Error fetching Google {application_name} activities: {e}")
+                    logger.error(
+                        f"Error fetching Google {application_name} activities: {e}"
+                    )
             else:
-                logger.info(f"Mock: Fetching {application_name} activities from Google Workspace")
+                logger.info(
+                    f"Mock: Fetching {application_name} activities from Google Workspace"
+                )
                 # Return mock data for testing
                 return [
                     {
                         "id": {"time": "2024-01-15T10:30:00Z"},
                         "actor": {"email": "user@example.com"},
                         "events": [
-                            {"name": f"mock_{application_name}_event", "type": "user_activity"}
+                            {
+                                "name": f"mock_{application_name}_event",
+                                "type": "user_activity",
+                            }
                         ],
                     }
                 ]
@@ -284,7 +315,11 @@ class GoogleWorkspaceIntegration(BaseIntegration):
         try:
             # In a real implementation, this would fetch group data
             if not GOOGLE_AVAILABLE:
-                group_data = {"total_groups": 15, "security_groups": 8, "distribution_groups": 7}
+                group_data = {
+                    "total_groups": 15,
+                    "security_groups": 8,
+                    "distribution_groups": 7,
+                }
             else:
                 # Would implement actual Google Directory API calls here
                 group_data = {"message": "Group data collection not yet implemented"}

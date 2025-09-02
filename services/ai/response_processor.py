@@ -221,13 +221,20 @@ class AIResponseProcessor:
         """Handle schema validation failures with graceful degradation."""
 
         # Try to create a partial response with available data
-        partial_response = self._create_partial_response(response_data, response_type, errors)
+        partial_response = self._create_partial_response(
+            response_data, response_type, errors
+        )
 
         if partial_response:
             self.validation_stats["error_recoveries"] += 1
 
             structured_response = self._create_structured_response(
-                partial_response, response_type, model_used, processing_time_ms, False, errors
+                partial_response,
+                response_type,
+                model_used,
+                processing_time_ms,
+                False,
+                errors,
             )
 
             logger.warning(
@@ -270,7 +277,9 @@ class AIResponseProcessor:
         """Handle unexpected processing exceptions."""
 
         if fallback_data:
-            return self._use_fallback_response(fallback_data, response_type, model_used, 0, errors)
+            return self._use_fallback_response(
+                fallback_data, response_type, model_used, 0, errors
+            )
 
         return False, None, errors
 
@@ -298,7 +307,11 @@ class AIResponseProcessor:
 
         logger.info(
             f"Using fallback response for {response_type}",
-            extra={"response_type": response_type, "model_used": model_used, "fallback_used": True},
+            extra={
+                "response_type": response_type,
+                "model_used": model_used,
+                "fallback_used": True,
+            },
         )
 
         return False, structured_response, errors
@@ -320,13 +333,15 @@ class AIResponseProcessor:
             "timestamp": datetime.utcnow().isoformat(),
             "model_used": model_used,
             "processing_time_ms": processing_time_ms,
-            "confidence_score": payload.get("confidence_score", 0.8 if validation_passed else 0.5),
+            "confidence_score": payload.get(
+                "confidence_score", 0.8 if validation_passed else 0.5
+            ),
             "schema_version": "1.0.0",
-            "validation_status": "valid"
-            if validation_passed and not errors
-            else "invalid"
-            if errors
-            else "partially_valid",
+            "validation_status": (
+                "valid"
+                if validation_passed and not errors
+                else "invalid" if errors else "partially_valid"
+            ),
             "validation_errors": errors,
         }
 
@@ -381,15 +396,23 @@ class AIResponseProcessor:
             if response_type == "gap_analysis":
                 return {
                     "gaps": response_data.get("gaps", []),
-                    "overall_risk_level": response_data.get("overall_risk_level", "medium"),
+                    "overall_risk_level": response_data.get(
+                        "overall_risk_level", "medium"
+                    ),
                     "priority_order": response_data.get("priority_order", []),
                     "estimated_total_effort": response_data.get(
                         "estimated_total_effort", "Unknown"
                     ),
                     "critical_gap_count": response_data.get("critical_gap_count", 0),
-                    "medium_high_gap_count": response_data.get("medium_high_gap_count", 0),
-                    "compliance_percentage": response_data.get("compliance_percentage", 0.0),
-                    "summary": response_data.get("summary", "Analysis partially available"),
+                    "medium_high_gap_count": response_data.get(
+                        "medium_high_gap_count", 0
+                    ),
+                    "compliance_percentage": response_data.get(
+                        "compliance_percentage", 0.0
+                    ),
+                    "summary": response_data.get(
+                        "summary", "Analysis partially available"
+                    ),
                     "next_steps": response_data.get("next_steps", []),
                 }
 
@@ -398,7 +421,11 @@ class AIResponseProcessor:
                     "recommendations": response_data.get("recommendations", []),
                     "implementation_plan": response_data.get(
                         "implementation_plan",
-                        {"total_duration_weeks": 12, "phases": [], "success_metrics": []},
+                        {
+                            "total_duration_weeks": 12,
+                            "phases": [],
+                            "success_metrics": [],
+                        },
                     ),
                     "prioritization_rationale": response_data.get(
                         "prioritization_rationale", "Partial analysis available"
@@ -411,10 +438,14 @@ class AIResponseProcessor:
 
             elif response_type == "guidance":
                 return {
-                    "guidance": response_data.get("guidance", "Guidance partially available"),
+                    "guidance": response_data.get(
+                        "guidance", "Guidance partially available"
+                    ),
                     "confidence_score": response_data.get("confidence_score", 0.5),
                     "related_topics": response_data.get("related_topics", []),
-                    "follow_up_suggestions": response_data.get("follow_up_suggestions", []),
+                    "follow_up_suggestions": response_data.get(
+                        "follow_up_suggestions", []
+                    ),
                     "source_references": response_data.get("source_references", []),
                 }
 
@@ -431,16 +462,22 @@ class AIResponseProcessor:
 
         return {
             **self.validation_stats,
-            "success_rate": self.validation_stats["validation_successes"] / total
-            if total > 0
-            else 0.0,
-            "failure_rate": self.validation_stats["validation_failures"] / total
-            if total > 0
-            else 0.0,
-            "recovery_rate": self.validation_stats["error_recoveries"] / total
-            if total > 0
-            else 0.0,
-            "fallback_rate": self.validation_stats["fallback_uses"] / total if total > 0 else 0.0,
+            "success_rate": (
+                self.validation_stats["validation_successes"] / total
+                if total > 0
+                else 0.0
+            ),
+            "failure_rate": (
+                self.validation_stats["validation_failures"] / total
+                if total > 0
+                else 0.0
+            ),
+            "recovery_rate": (
+                self.validation_stats["error_recoveries"] / total if total > 0 else 0.0
+            ),
+            "fallback_rate": (
+                self.validation_stats["fallback_uses"] / total if total > 0 else 0.0
+            ),
         }
 
     def reset_stats(self) -> None:

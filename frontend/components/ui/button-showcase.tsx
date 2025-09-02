@@ -167,9 +167,7 @@ export function ButtonShowcase() {
           <div className="space-y-6">
             {/* Action Group */}
             <div className="space-y-2">
-              <h4 className="text-sm font-medium text-neutral-900">
-                Action Group
-              </h4>
+              <h4 className="text-sm font-medium text-neutral-900">Action Group</h4>
               <div className="flex flex-wrap items-center gap-3">
                 <Button variant="default" size="default">
                   Save Changes
@@ -185,9 +183,7 @@ export function ButtonShowcase() {
 
             {/* Form Actions */}
             <div className="space-y-2">
-              <h4 className="text-sm font-medium text-neutral-900">
-                Form Actions
-              </h4>
+              <h4 className="text-sm font-medium text-neutral-900">Form Actions</h4>
               <div className="flex flex-wrap items-center gap-3">
                 <Button variant="default" size="lg">
                   <Plus className="h-5 w-5" />
@@ -202,9 +198,7 @@ export function ButtonShowcase() {
 
             {/* Status Actions */}
             <div className="space-y-2">
-              <h4 className="text-sm font-medium text-neutral-900">
-                Status Actions
-              </h4>
+              <h4 className="text-sm font-medium text-neutral-900">Status Actions</h4>
               <div className="flex flex-wrap items-center gap-3">
                 <Button variant="success" size="sm">
                   Approve

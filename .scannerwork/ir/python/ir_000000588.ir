@@ -1,0 +1,40 @@
+
+"risk_name"str
+"mitigation_chain"str
+ª "
+        MATCH (risk:Risk {name: $risk_name})<-[:MITIGATES]-(control:Control)
+        OPTIONAL MATCH (control)<-[:MONITORS]-(tech:Technology)
+        RETURN risk.name AS risk,
+               risk.risk_score AS inherent_risk,
+               control.name AS control,
+               control.automation_level AS automation,
+               tech.name AS technology,
+               tech.category AS tech_category
+        "str
+?6"Trace risk mitigation through controls to technology"strself
+â* â(.	risk_name
+â0 â(>"¯(
+&
+å å(´query"#id#:Bstr.
+,
+
+ð ð()params"#new-object#Bdict"
+ 
+
+ð ð(("	#map-set#:#
+!
+
+ñ ñ(9	"#unknown-value#,
+*
+
+ñ ñ(9
+results"#unknown-value#&
+$
+
+ò ò(,"#new-object#Bdict"
+ 
+
+ò ò(+"	#map-set#:
+
+
+ò ò(,*5/home/omar/Documents/ruleIQ/services/neo4j_service.py

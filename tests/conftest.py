@@ -1,6 +1,7 @@
 """
 Pytest configuration and fixtures for the test suite.
 """
+
 import os
 import pytest
 import asyncio
@@ -42,8 +43,8 @@ def postgres_test_url():
         "TEST_DATABASE_URL",
         os.getenv(
             "DATABASE_URL",
-            "postgresql://postgres:postgres@localhost:5433/compliance_test"
-        )
+            "postgresql://postgres:postgres@localhost:5433/compliance_test",
+        ),
     )
 
 
@@ -51,7 +52,7 @@ def postgres_test_url():
 def postgres_checkpointer(postgres_test_url):
     """
     Create a PostgreSQL checkpointer for LangGraph state persistence.
-    
+
     This fixture handles:
     - Connection setup with proper parameters
     - Table creation if needed
@@ -60,26 +61,26 @@ def postgres_checkpointer(postgres_test_url):
     # Skip if no PostgreSQL is available
     if not os.getenv("DATABASE_URL") and not os.getenv("TEST_DATABASE_URL"):
         pytest.skip("PostgreSQL test database not configured")
-    
+
     try:
         # Create connection with proper settings for PostgresSaver
         conn = psycopg.connect(
             postgres_test_url,
             autocommit=True,  # Required for PostgresSaver
-            row_factory=dict_row  # Required for PostgresSaver
+            row_factory=dict_row,  # Required for PostgresSaver
         )
-        
+
         # Create checkpointer
         checkpointer = PostgresSaver(conn)
-        
+
         # Setup tables (idempotent - won't error if tables exist)
         checkpointer.setup()
-        
+
         yield checkpointer
-        
+
         # Cleanup: Close connection
         conn.close()
-        
+
     except Exception as e:
         pytest.skip(f"PostgreSQL connection failed: {e}")
 
@@ -91,7 +92,7 @@ def postgres_connection(postgres_test_url):
     """
     if not os.getenv("DATABASE_URL") and not os.getenv("TEST_DATABASE_URL"):
         pytest.skip("PostgreSQL test database not configured")
-    
+
     try:
         conn = psycopg.connect(postgres_test_url)
         yield conn
@@ -108,64 +109,67 @@ def db_session():
     """
     # Get database URL from environment
     database_url = os.getenv("DATABASE_URL") or os.getenv("TEST_DATABASE_URL")
-    
+
     # Skip if no database is available
     if not database_url:
         pytest.skip("No database URL configured")
-    
+
     try:
         # Import here to avoid circular imports
         from database import Base
-        
+
         # Convert to SQLAlchemy format
         sqlalchemy_url = database_url
-        
+
         # Handle asyncpg URLs - convert to psycopg2
         if "+asyncpg" in sqlalchemy_url:
             sqlalchemy_url = sqlalchemy_url.replace("+asyncpg", "+psycopg2")
         elif "postgresql://" in sqlalchemy_url and "+" not in sqlalchemy_url:
-            sqlalchemy_url = sqlalchemy_url.replace("postgresql://", "postgresql+psycopg2://")
-        
+            sqlalchemy_url = sqlalchemy_url.replace(
+                "postgresql://", "postgresql+psycopg2://"
+            )
+
         # Remove SSL parameters that cause issues with psycopg2
         if "sslmode=" in sqlalchemy_url:
             from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
+
             parts = urlparse(sqlalchemy_url)
             query_params = parse_qs(parts.query)
             query_params.pop("sslmode", None)
             query_params.pop("channel_binding", None)
             new_query = urlencode(query_params, doseq=True)
             sqlalchemy_url = urlunparse(parts._replace(query=new_query))
-        
+
         # Add SSL args if needed
         connect_args = {}
         if "azure" in sqlalchemy_url or "neon" in sqlalchemy_url:
             connect_args = {"sslmode": "require"}
-        
+
         engine = create_engine(sqlalchemy_url, connect_args=connect_args)
-        
+
         # Create all tables
         Base.metadata.create_all(bind=engine)
-        
+
         # Create session factory
         SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-        
+
         # Create session for test
         session = SessionLocal()
-        
+
         # Start a transaction that will be rolled back
         connection = engine.connect()
         transaction = connection.begin()
-        
+
         # Configure the session to use our connection
         session.bind = connection
-        
+
         yield session
-        
+
         # Rollback the transaction
         session.close()
         transaction.rollback()
         connection.close()
-        
+
     except Exception as e:
         pytest.skip(f"Database session creation failed: {e}")
 
@@ -194,35 +198,34 @@ def clean_test_db(postgres_connection):
     """
     with postgres_connection.cursor() as cursor:
         # Drop existing checkpointing tables if they exist
-        cursor.execute("""
+        cursor.execute(
+            """
             DROP TABLE IF EXISTS checkpoints CASCADE;
             DROP TABLE IF EXISTS checkpoint_blobs CASCADE;
             DROP TABLE IF EXISTS checkpoint_metadata CASCADE;
-        """)
-        postgres_connection.commit()
-    
-    yield
-    
-    # Cleanup after test
-    with postgres_connection.cursor() as cursor:
-        cursor.execute("""
-            DROP TABLE IF EXISTS checkpoints CASCADE;
-            DROP TABLE IF EXISTS checkpoint_blobs CASCADE;
-            DROP TABLE IF EXISTS checkpoint_metadata CASCADE;
-        """)
+        """
+        )
         postgres_connection.commit()
 
+    yield
+
+    # Cleanup after test
+    with postgres_connection.cursor() as cursor:
+        cursor.execute(
+            """
+            DROP TABLE IF EXISTS checkpoints CASCADE;
+            DROP TABLE IF EXISTS checkpoint_blobs CASCADE;
+            DROP TABLE IF EXISTS checkpoint_metadata CASCADE;
+        """
+        )
+        postgres_connection.commit()
 
 
 # Mark slow tests
 def pytest_configure(config):
     """Register custom markers."""
-    config.addinivalue_line(
-        "markers", "integration: mark test as an integration test"
-    )
-    config.addinivalue_line(
-        "markers", "slow: mark test as slow running"
-    )
+    config.addinivalue_line("markers", "integration: mark test as an integration test")
+    config.addinivalue_line("markers", "slow: mark test as slow running")
     config.addinivalue_line(
         "markers", "requires_db: mark test as requiring database connection"
     )
@@ -242,7 +245,7 @@ def client():
     """Create a test client for FastAPI application."""
     from fastapi.testclient import TestClient
     from main import app
-    
+
     with TestClient(app) as test_client:
         yield test_client
 
@@ -253,7 +256,7 @@ def authenticated_headers():
     # Mock JWT token for testing
     return {
         "Authorization": "Bearer test_token_12345",
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
     }
 
 
@@ -261,14 +264,14 @@ def authenticated_headers():
 def sample_business_profile():
     """Create a sample business profile for testing."""
     from unittest.mock import MagicMock
-    
+
     profile = MagicMock()
     profile.id = "550e8400-e29b-41d4-a716-446655440000"
     profile.name = "Test Business"
     profile.industry = "Technology"
     profile.size = "Small"
     profile.location = "US"
-    
+
     return profile
 
 
@@ -276,11 +279,11 @@ def sample_business_profile():
 def sample_user():
     """Create a sample user for testing."""
     from unittest.mock import MagicMock
-    
+
     user = MagicMock()
     user.id = "123e4567-e89b-12d3-a456-426614174000"
     user.email = "test@example.com"
     user.name = "Test User"
     user.is_active = True
-    
+
     return user

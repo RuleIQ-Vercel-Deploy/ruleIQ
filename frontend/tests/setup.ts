@@ -37,7 +37,7 @@ process.env.NEXT_PUBLIC_API_URL = 'http://localhost:8000';
 // Start MSW server before all tests
 beforeAll(() => {
   server.listen({ onUnhandledRequest: 'warn' });
-  
+
   // Other global test setup
   // Mock window.matchMedia
   Object.defineProperty(window, 'matchMedia', {
@@ -86,8 +86,6 @@ beforeAll(() => {
     writable: true,
     value: localStorageMock,
   });
-
-
 });
 
 // Mock Next.js router
@@ -263,8 +261,6 @@ vi.mock('@radix-ui/react-dialog', () => {
     Description: MockDialogDescription,
   };
 });
-
-
 
 // Cleanup after each test
 afterEach(() => {

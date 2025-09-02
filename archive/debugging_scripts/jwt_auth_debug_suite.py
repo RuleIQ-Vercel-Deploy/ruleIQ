@@ -100,7 +100,10 @@ except requests.exceptions.RequestException as e:
 # Step 4: Test token generation and verification
 print("\n4. Testing token generation...")
 
-test_payload = {"sub": "testuser@example.com", "exp": datetime.utcnow() + timedelta(minutes=5)}
+test_payload = {
+    "sub": "testuser@example.com",
+    "exp": datetime.utcnow() + timedelta(minutes=5),
+}
 
 tokens = {}
 if jwt_libs["jose"]:

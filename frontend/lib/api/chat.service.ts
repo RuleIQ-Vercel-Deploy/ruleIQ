@@ -132,7 +132,7 @@ class ChatService {
     contextType: 'comprehensive' | 'guidance' = 'comprehensive',
   ): Promise<any> {
     const response = await apiClient.post<any>(
-      `/chat/context-aware-recommendations?framework=${encodeURIComponent(framework)}&context_type=${encodeURIComponent(contextType)}`
+      `/chat/context-aware-recommendations?framework=${encodeURIComponent(framework)}&context_type=${encodeURIComponent(contextType)}`,
     );
     return response;
   }
@@ -151,7 +151,7 @@ class ChatService {
       ...(controlId && { control_id: controlId }),
     });
     const response = await apiClient.post<any>(
-      `/chat/evidence-collection-workflow?${params.toString()}`
+      `/chat/evidence-collection-workflow?${params.toString()}`,
     );
     return response;
   }
@@ -169,9 +169,7 @@ class ChatService {
       policy_type: policyType,
       ...(customRequirements && { custom_requirements: customRequirements.join(',') }),
     });
-    const response = await apiClient.post<any>(
-      `/chat/generate-policy?${params.toString()}`
-    );
+    const response = await apiClient.post<any>(`/chat/generate-policy?${params.toString()}`);
     return response;
   }
 
@@ -204,7 +202,9 @@ class ChatService {
     pattern: string;
     cleared_at: string;
   }> {
-    const response = await apiClient.delete<any>(`/ai/optimization/cache/clear?pattern=${encodeURIComponent(pattern)}`);
+    const response = await apiClient.delete<any>(
+      `/ai/optimization/cache/clear?pattern=${encodeURIComponent(pattern)}`,
+    );
     return response;
   }
 
@@ -269,7 +269,7 @@ class ChatService {
     this.ws = new WebSocket(wsUrl);
 
     this.ws.onopen = () => {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       this.notifyHandlers({ type: 'connection', data: { status: 'connected' } });
     };
 
@@ -279,7 +279,6 @@ class ChatService {
         this.notifyHandlers({ type: 'message', data: message });
       } catch (error) {
         // TODO: Replace with proper logging
-
         // // TODO: Replace with proper logging
       }
     };
@@ -292,7 +291,7 @@ class ChatService {
     };
 
     this.ws.onclose = () => {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       this.notifyHandlers({ type: 'connection', data: { status: 'disconnected' } });
 
       // Attempt to reconnect after 3 seconds
@@ -312,7 +311,6 @@ class ChatService {
       this.ws.send(JSON.stringify(message));
     } else {
       // TODO: Replace with proper logging
-
       // // TODO: Replace with proper logging
     }
   }

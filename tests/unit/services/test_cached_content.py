@@ -28,7 +28,9 @@ class TestGoogleCachedContentManager:
     @pytest.fixture
     def cache_config(self):
         """Test cache configuration."""
-        return CacheLifecycleConfig(default_ttl_hours=2, max_ttl_hours=8, min_ttl_minutes=15)
+        return CacheLifecycleConfig(
+            default_ttl_hours=2, max_ttl_hours=8, min_ttl_minutes=15
+        )
 
     @pytest.fixture
     def cache_manager(self, cache_config):
@@ -80,13 +82,19 @@ class TestGoogleCachedContentManager:
         )
         assert key1 != key3  # Should be different
 
-    def test_business_profile_cache_key_generation(self, cache_manager, sample_business_profile):
+    def test_business_profile_cache_key_generation(
+        self, cache_manager, sample_business_profile
+    ):
         """Test business profile cache key generation based on similarity."""
-        key1 = cache_manager._generate_business_profile_cache_key(sample_business_profile)
+        key1 = cache_manager._generate_business_profile_cache_key(
+            sample_business_profile
+        )
 
         # Similar profile should generate same key
         similar_profile = sample_business_profile.copy()
-        similar_profile["company_name"] = "Different Corp"  # Name doesn't affect similarity
+        similar_profile["company_name"] = (
+            "Different Corp"  # Name doesn't affect similarity
+        )
         key2 = cache_manager._generate_business_profile_cache_key(similar_profile)
         assert key1 == key2
 
@@ -105,7 +113,9 @@ class TestGoogleCachedContentManager:
         assert cache_manager._get_employee_count_range(500) == "large"
         assert cache_manager._get_employee_count_range(2000) == "enterprise"
 
-    def test_assessment_cache_content_building(self, cache_manager, sample_business_profile):
+    def test_assessment_cache_content_building(
+        self, cache_manager, sample_business_profile
+    ):
         """Test assessment cache content is built correctly."""
         framework_id = "ISO27001"
         assessment_context = {"assessment_type": "analysis"}
@@ -119,9 +129,13 @@ class TestGoogleCachedContentManager:
         assert any("Technology" in part for part in content)
         assert any("handles personal data" in part for part in content)
 
-    def test_business_profile_cache_content_building(self, cache_manager, sample_business_profile):
+    def test_business_profile_cache_content_building(
+        self, cache_manager, sample_business_profile
+    ):
         """Test business profile cache content is built correctly."""
-        content = cache_manager._build_business_profile_cache_content(sample_business_profile)
+        content = cache_manager._build_business_profile_cache_content(
+            sample_business_profile
+        )
 
         assert len(content) > 5  # Should have multiple content parts
         assert any("Test Corp" in part for part in content)
@@ -133,7 +147,9 @@ class TestGoogleCachedContentManager:
         framework_id = "GDPR"
         industry_context = "Technology"
 
-        content = cache_manager._build_framework_cache_content(framework_id, industry_context)
+        content = cache_manager._build_framework_cache_content(
+            framework_id, industry_context
+        )
 
         assert len(content) > 5  # Should have multiple content parts
         assert any("GDPR" in part for part in content)
@@ -142,10 +158,14 @@ class TestGoogleCachedContentManager:
     def test_assessment_ttl_calculation(self, cache_manager, sample_business_profile):
         """Test TTL calculation for assessment cache."""
         # Test stable framework (ISO27001)
-        ttl_stable = cache_manager._calculate_assessment_ttl("ISO27001", sample_business_profile)
+        ttl_stable = cache_manager._calculate_assessment_ttl(
+            "ISO27001", sample_business_profile
+        )
 
         # Test less stable framework
-        ttl_other = cache_manager._calculate_assessment_ttl("CUSTOM", sample_business_profile)
+        ttl_other = cache_manager._calculate_assessment_ttl(
+            "CUSTOM", sample_business_profile
+        )
 
         # Stable frameworks should get longer TTL
         assert ttl_stable >= ttl_other
@@ -153,10 +173,14 @@ class TestGoogleCachedContentManager:
         # Large company should get longer TTL
         large_company_profile = sample_business_profile.copy()
         large_company_profile["employee_count"] = 2000
-        ttl_large = cache_manager._calculate_assessment_ttl("ISO27001", large_company_profile)
+        ttl_large = cache_manager._calculate_assessment_ttl(
+            "ISO27001", large_company_profile
+        )
         assert ttl_large >= ttl_stable
 
-    def test_business_profile_ttl_calculation(self, cache_manager, sample_business_profile):
+    def test_business_profile_ttl_calculation(
+        self, cache_manager, sample_business_profile
+    ):
         """Test TTL calculation for business profile cache."""
         ttl = cache_manager._calculate_business_profile_ttl(sample_business_profile)
         assert ttl >= 1  # Should be at least 1 hour
@@ -178,26 +202,34 @@ class TestGoogleCachedContentManager:
         assert "European Union" in cache_manager._get_framework_regions("GDPR")
         assert "Global" in cache_manager._get_framework_regions("ISO27001")
 
-    def test_data_processing_profile_generation(self, cache_manager, sample_business_profile):
+    def test_data_processing_profile_generation(
+        self, cache_manager, sample_business_profile
+    ):
         """Test data processing profile generation."""
         profile = cache_manager._get_data_processing_profile(sample_business_profile)
         assert "Personal Data" in profile
 
         # Test with multiple data types
         multi_data_profile = sample_business_profile.copy()
-        multi_data_profile.update({"processes_payments": True, "stores_health_data": True})
+        multi_data_profile.update(
+            {"processes_payments": True, "stores_health_data": True}
+        )
         multi_profile = cache_manager._get_data_processing_profile(multi_data_profile)
         assert "Personal Data" in multi_profile
         assert "Payment Data" in multi_profile
         assert "Health Data" in multi_profile
 
-    def test_technology_summary_generation(self, cache_manager, sample_business_profile):
+    def test_technology_summary_generation(
+        self, cache_manager, sample_business_profile
+    ):
         """Test technology stack summary generation."""
         summary = cache_manager._get_technology_summary(sample_business_profile)
         assert "AWS" in summary
         assert "Office365" in summary
 
-    def test_compliance_maturity_assessment(self, cache_manager, sample_business_profile):
+    def test_compliance_maturity_assessment(
+        self, cache_manager, sample_business_profile
+    ):
         """Test compliance maturity assessment."""
         # Single framework
         maturity = cache_manager._get_compliance_maturity(sample_business_profile)
@@ -228,7 +260,9 @@ class TestGoogleCachedContentManager:
         mock_create.return_value = mock_cached_content
 
         framework_id = "ISO27001"
-        result = await cache_manager.create_assessment_cache(framework_id, sample_business_profile)
+        result = await cache_manager.create_assessment_cache(
+            framework_id, sample_business_profile
+        )
 
         assert result is not None
         assert cache_manager.metrics["cache_creates"] == 1
@@ -259,7 +293,9 @@ class TestGoogleCachedContentManager:
         cache_manager.metrics["cache_misses"] = 0
         cache_manager.metrics["cache_creates"] = 0
 
-        result = await cache_manager.create_assessment_cache(framework_id, sample_business_profile)
+        result = await cache_manager.create_assessment_cache(
+            framework_id, sample_business_profile
+        )
 
         assert result is None
         assert cache_manager.metrics["cache_misses"] == 1
@@ -395,7 +431,9 @@ class TestCachedContentEndToEnd:
         # Mock methods that may not exist yet
         assistant.context_manager = Mock()
         assistant.prompt_templates = Mock()
-        assistant._generate_ai_response_with_cache = AsyncMock(return_value="Mock response")
+        assistant._generate_ai_response_with_cache = AsyncMock(
+            return_value="Mock response"
+        )
         assistant._parse_assessment_analysis_response = Mock(
             return_value={"gaps": [], "recommendations": []}
         )
@@ -435,7 +473,9 @@ class TestCachedContentEndToEnd:
             "request_id": str(uuid4()),
             "generated_at": "2024-01-01T00:00:00Z",
         }
-        assistant_with_cache.analyze_assessment_results = AsyncMock(return_value=mock_result)
+        assistant_with_cache.analyze_assessment_results = AsyncMock(
+            return_value=mock_result
+        )
 
         # Test assessment analysis
         assessment_results = {"framework": "ISO27001", "responses": []}
@@ -455,7 +495,9 @@ class TestCachedContentEndToEnd:
     @pytest.mark.asyncio
     async def test_cache_metrics_collection_integration(self, assistant_with_cache):
         """Test cache metrics collection in integration context."""
-        cached_content_manager = await assistant_with_cache._get_cached_content_manager()
+        cached_content_manager = (
+            await assistant_with_cache._get_cached_content_manager()
+        )
 
         # Simulate some cache activity
         cached_content_manager.metrics["cache_hits"] = 5

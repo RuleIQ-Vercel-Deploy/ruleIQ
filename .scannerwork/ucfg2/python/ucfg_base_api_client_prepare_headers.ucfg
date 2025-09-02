@@ -1,0 +1,86 @@
+
+:api.clients.base_api_client.BaseAPIClient._prepare_headersF
+:/home/omar/Documents/ruleIQ/api/clients/base_api_client.py⁄ ⁄("2*Ò
+2
+› ›(S
+
+ﬁ ‚(	
+%2"dict∞
+≠
+
+ﬂ ﬂ(;
+%3"__mapSet*"
+
+__unknown_file (
+
+%2**
+
+__unknown_file (
+
+User-Agent*?
+
+__unknown_file (#!
+ruleIQ-compliance-collector/1.0ù
+ö
+
+‡ ‡((
+%4"__mapSet*"
+
+__unknown_file (
+
+%2*&
+
+__unknown_file (
+
+Accept*0
+
+__unknown_file (
+application/json£
+†
+
+· ·(.
+%5"__mapSet*"
+
+__unknown_file (
+
+%2*,
+
+__unknown_file (
+Content-Type*0
+
+__unknown_file (
+application/jsonC
+A
+
+ﬁ ‚(		
+headers"__id*"
+
+__unknown_file (
+
+%2*
+4
+5**
+4
+Á Á("
+
+Á Á(
+	
+headers*Ø
+5
+Â Â(.òï
+
+Â Â(.
+%1"typing.MutableMapping.update*'
+
+__unknown_file (
+	
+headers*2
+
+__unknown_file (
+
+additional_headers2update*
+4:"
+
+€ €(7
+additional_headersB-+
+)api.clients.base_api_client.BaseAPIClientH

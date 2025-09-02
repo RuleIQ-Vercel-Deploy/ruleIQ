@@ -38,7 +38,7 @@ class TypeScriptFixer {
 
       // Generate report
       this.generateReport();
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
     } catch (error) {
       // Development logging - consider proper logger
 
@@ -109,7 +109,7 @@ class TypeScriptFixer {
 
   private async fixFileIssues(filePath: string, issues: TypeScriptIssue[]) {
     if (!fs.existsSync(filePath)) {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       return;
     }
 
@@ -125,7 +125,7 @@ class TypeScriptFixer {
       if (fix) {
         content = this.applyFix(content, issue, fix);
         modified = true;
-    // TODO: Replace with proper logging
+        // TODO: Replace with proper logging
       }
     }
 
@@ -257,13 +257,13 @@ class TypeScriptFixer {
     }
     // TODO: Replace with proper logging
     for (const [code, count] of issuesByCode.entries()) {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
     }
 
     if (this.fixedFiles.size > 0) {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       for (const file of this.fixedFiles) {
-    // TODO: Replace with proper logging
+        // TODO: Replace with proper logging
       }
     }
 

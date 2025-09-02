@@ -36,9 +36,7 @@
       "findings": [
         {
           "version": "4.0.3",
-          "paths": [
-            ".>axios>form-data"
-          ]
+          "paths": [".>axios>form-data"]
         }
       ],
       "found_by": null,
@@ -51,9 +49,7 @@
       "reported_by": null,
       "title": "form-data uses unsafe random function in form-data for choosing boundary",
       "metadata": null,
-      "cves": [
-        "CVE-2025-7783"
-      ],
+      "cves": ["CVE-2025-7783"],
       "access": "public",
       "severity": "critical",
       "module_name": "form-data",
@@ -66,18 +62,14 @@
         "score": 0,
         "vectorString": null
       },
-      "cwe": [
-        "CWE-330"
-      ],
+      "cwe": ["CWE-330"],
       "url": "https://github.com/advisories/GHSA-fjxv-7rqg-78g4"
     },
     "1106734": {
       "findings": [
         {
           "version": "0.3.3",
-          "paths": [
-            ".>eslint>@eslint/plugin-kit"
-          ]
+          "paths": [".>eslint>@eslint/plugin-kit"]
         }
       ],
       "found_by": null,
@@ -103,9 +95,7 @@
         "score": 0,
         "vectorString": null
       },
-      "cwe": [
-        "CWE-1333"
-      ],
+      "cwe": ["CWE-1333"],
       "url": "https://github.com/advisories/GHSA-xffm-g5w8-qvg7"
     }
   },

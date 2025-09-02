@@ -1,0 +1,13 @@
+
+"cancelled"str
+-$"Check if conversion was cancelled."strself
+“ “("u3
+1
+
+• •($"#get-field# conversion_stage:,
+*
+
+• •(3"
+#binop ==#2==:Bbool
+
+• •(3*8/home/omar/Documents/ruleIQ/database/conversion_event.py

@@ -12,7 +12,7 @@ const CustomClassesComponent = () => (
   <div>
     <button className="hover:bg-primary-dark bg-primary text-white">Primary Button</button>
     <div className="bg-gold text-primary hover:bg-gold-dark">Gold Accent</div>
-    <div className="bg-teal-500 text-primary-dark">Teal Accent</div>
+    <div className="text-primary-dark bg-teal-500">Teal Accent</div>
     <div className="bg-neutral-light border-neutral-medium">Neutral Colors</div>
   </div>
 );
@@ -21,7 +21,7 @@ const RingColorComponent = () => (
   <div>
     <button className="focus:ring-2 focus:ring-primary focus:ring-offset-2">Primary Ring</button>
     <button className="focus:ring-2 focus:ring-gold focus:ring-offset-2">Gold Ring</button>
-    <button className="focus:ring-teal-500 focus:ring-2 focus:ring-opacity-50">Teal Ring</button>
+    <button className="focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50">Teal Ring</button>
     <input className="focus:ring-2 focus:ring-primary/20" placeholder="Input with ring" />
   </div>
 );
@@ -69,7 +69,9 @@ const ExtendedColorComponent = () => (
       <div className="py-2">Item 2</div>
       <div className="py-2">Item 3</div>
     </div>
-    <div className="from-teal-500/20 to-teal-500/5 bg-gradient-to-br">Teal Gradient with Opacity</div>
+    <div className="bg-gradient-to-br from-teal-500/20 to-teal-500/5">
+      Teal Gradient with Opacity
+    </div>
   </div>
 );
 
@@ -296,7 +298,7 @@ describe('Tailwind CSS Integration Tests', () => {
   describe('Utility Class Combinations', () => {
     it('should handle complex state combinations', () => {
       const { container } = render(
-        <button className="hover:bg-primary-dark active:bg-primary-light active:text-teal-500 transform bg-primary text-white transition-all duration-200 ease-in-out hover:scale-105 hover:text-gold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50">
+        <button className="hover:bg-primary-dark active:bg-primary-light transform bg-primary text-white transition-all duration-200 ease-in-out hover:scale-105 hover:text-gold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-95 active:text-teal-500 disabled:cursor-not-allowed disabled:opacity-50">
           Complex Button
         </button>,
       );

@@ -34,7 +34,9 @@ async def generate_implementation_plan(
         raise ValueError("Business profile not found")
 
     # Get compliance framework
-    framework_stmt = select(ComplianceFramework).where(ComplianceFramework.id == framework_id)
+    framework_stmt = select(ComplianceFramework).where(
+        ComplianceFramework.id == framework_id
+    )
     framework_result = await db.execute(framework_stmt)
     framework = framework_result.scalars().first()
     if not framework:
@@ -62,7 +64,9 @@ async def generate_implementation_plan(
         user_id=user.id,
         business_profile_id=profile.id,
         framework_id=framework.id,
-        title=plan_data.get("title", f"Implementation Plan for {framework.display_name}"),
+        title=plan_data.get(
+            "title", f"Implementation Plan for {framework.display_name}"
+        ),
         phases=plan_data.get("phases", []),
         planned_start_date=start_date,
         planned_end_date=end_date,
@@ -87,7 +91,9 @@ async def get_implementation_plan(
     return result.scalars().first()
 
 
-async def list_implementation_plans(db: AsyncSession, user: User) -> List[ImplementationPlan]:
+async def list_implementation_plans(
+    db: AsyncSession, user: User
+) -> List[ImplementationPlan]:
     """List all implementation plans for a user."""
     stmt = select(ImplementationPlan).where(ImplementationPlan.user_id == user.id)
     result = await db.execute(stmt)
@@ -139,7 +145,9 @@ async def get_plan_dashboard(
             if task.get("status") == "completed":
                 completed_tasks += 1
 
-    completion_percentage = (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0
+    completion_percentage = (
+        (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0
+    )
 
     # Calculate timeline status
     days_elapsed = (datetime.utcnow() - plan.created_at).days

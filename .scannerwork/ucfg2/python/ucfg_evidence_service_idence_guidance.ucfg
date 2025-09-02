@@ -1,0 +1,180 @@
+
+?services.evidence_service.EvidenceService.get_evidence_guidanceD
+8/home/omar/Documents/ruleIQ/services/evidence_service.py∂ ∂("2*è
+2
+∑ ∑(S
+
+∏ ≈(	
+%1"dict
+
+π º(
+%2"dict¿
+Ω
+
+∫ ∫(O
+%3"__mapSet*"
+
+__unknown_file (
+
+%2*+
+
+__unknown_file (
+access_logs*N
+
+__unknown_file (20
+.CloudTrail logs, S3 access logs, VPC flow logsÕ
+ 
+
+ª ª(\
+%4"__mapSet*"
+
+__unknown_file (
+
+%2*/
+
+__unknown_file (
+security_config*W
+
+__unknown_file (;9
+7IAM policies, Security Group rules, AWS Config findingså
+â
+
+π º(
+%5"__mapSet*"
+
+__unknown_file (
+
+%1*#
+
+__unknown_file (
+AWS*"
+
+__unknown_file (
+
+%2
+
+Ω ¿(
+%6"dict¡
+æ
+
+æ æ(P
+%7"__mapSet*"
+
+__unknown_file (
+
+%6*+
+
+__unknown_file (
+access_logs*O
+
+__unknown_file (31
+/Azure Monitor logs, Activity Log, NSG flow logsœ
+Ã
+
+ø ø(^
+%8"__mapSet*"
+
+__unknown_file (
+
+%6*/
+
+__unknown_file (
+security_config*Y
+
+__unknown_file (=;
+9Azure Policy assignments, Security Center recommendationsé
+ã
+
+Ω ¿(
+%9"__mapSet*"
+
+__unknown_file (
+
+%1*%
+
+__unknown_file (	
+Azure*"
+
+__unknown_file (
+
+%6
+
+¡ ƒ(
+%10"dictª
+∏
+
+¬ ¬(H
+%11"__mapSet*#
+
+__unknown_file (
+
+%10*+
+
+__unknown_file (
+access_logs*G
+
+__unknown_file (+)
+'Cloud Audit Logs, Cloud Logging exports¬
+ø
+
+√ √(O
+%12"__mapSet*#
+
+__unknown_file (
+
+%10*/
+
+__unknown_file (
+security_config*J
+
+__unknown_file (.,
+*Security Command Center findings, policiesó
+î
+
+¡ ƒ(
+%13"__mapSet*"
+
+__unknown_file (
+
+%1*,
+
+__unknown_file (
+Google Cloud*#
+
+__unknown_file (
+
+%10H
+F
+
+∏ ≈(	
+guidance_map"__id*"
+
+__unknown_file (
+
+%1
+
+∆0 ∆(2
+%14"dict®•
+
+∆ ∆(3
+%15"dict.get*,
+
+__unknown_file (
+
+guidance_map*.
+
+__unknown_file (
+
+cloud_provider*#
+
+__unknown_file (
+
+%142get"
+
+∆ ∆(3
+
+%15:
+
+∂ ∂(1
+cloud_providerB-+
+)services.evidence_service.EvidenceServiceH

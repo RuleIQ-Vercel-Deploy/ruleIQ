@@ -60,7 +60,7 @@ const processEnv = {
 // --------------------------
 
 const merged = serverSchema.merge(clientSchema);
- 
+
 type _MergedInput = z.input<typeof merged>;
 type MergedOutput = z.output<typeof merged>;
 

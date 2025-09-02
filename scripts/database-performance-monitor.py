@@ -12,7 +12,9 @@ from typing import Dict, List, Any
 import os
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -213,9 +215,7 @@ class DatabasePerformanceMonitor:
     def save_report(self, filename: str = None) -> None:
         """Save performance report to file"""
         if filename is None:
-            filename = (
-                f"database-performance-report-{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-            )
+            filename = f"database-performance-report-{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
 
         try:
             with open(filename, "w") as f:
@@ -228,7 +228,9 @@ class DatabasePerformanceMonitor:
 def main() -> None:
     """Main execution function"""
     # Get database URL from environment
-    database_url = os.getenv("DATABASE_URL", "postgresql://user:password@localhost:5432/ruleiq")
+    database_url = os.getenv(
+        "DATABASE_URL", "postgresql://user:password@localhost:5432/ruleiq"
+    )
 
     if not database_url:
         logger.error("DATABASE_URL environment variable not set")
@@ -244,17 +246,23 @@ def main() -> None:
         print("\n📊 Database Performance Summary")
         print("=" * 40)
 
-        if "database_metrics" in report and report["database_metrics"].get("database_size"):
+        if "database_metrics" in report and report["database_metrics"].get(
+            "database_size"
+        ):
             size_info = report["database_metrics"]["database_size"][0]
             print(f"Database Size: {size_info[1]}")
 
         if "table_statistics" in report:
             print(f"Total Tables: {len(report['table_statistics'])}")
-            large_tables = [t for t in report["table_statistics"] if t["live_tuples"] > 10000]
+            large_tables = [
+                t for t in report["table_statistics"] if t["live_tuples"] > 10000
+            ]
             print(f"Large Tables (>10k rows): {len(large_tables)}")
 
         if "optimization_suggestions" in report:
-            print(f"Optimization Suggestions: {len(report['optimization_suggestions'])}")
+            print(
+                f"Optimization Suggestions: {len(report['optimization_suggestions'])}"
+            )
             for suggestion in report["optimization_suggestions"][:3]:
                 print(
                     f"  - {suggestion['type']}: {suggestion.get('table', suggestion.get('index', 'N/A'))}"

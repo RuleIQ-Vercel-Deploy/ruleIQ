@@ -1,0 +1,70 @@
+
+,config.tracing.CustomTracer.add_user_context9
+-/home/omar/Documents/ruleIQ/config/tracing.pyÑ Ñ("2*}
+2
+Ò Ò('d
+b
+
+Ó Ó(
+%3"__id*H
+
+__unknown_file (,**
+config.tracing.CustomTracer"	
+enabled*
+5
+6*0
+3
+
+tracing.py"
+Û Û
+implicit return*Ë
+4
+Ø Ø(J´±
+
+Ø Ø(J
+%1*$
+
+__unknown_file (
+
+span*3
+
+__unknown_file (
+business.profile.id*3
+
+__unknown_file (
+
+business_profile_id2set_attribute*
+3*¶
+5
+Ö Ö(.œ™
+
+Ö Ö(.
+%2*$
+
+__unknown_file (
+
+span*'
+
+__unknown_file (	
+user.id*'
+
+__unknown_file (
+	
+user_id2set_attribute*
+3
+4*'
+6
+Ô Ô("
+
+Ô Ô(
+void:
+
+Ñ Ñ(#
+span:
+
+Ñ% Ñ(1	
+user_id:#
+
+Ñ3 Ñ(\
+business_profile_idB
+config.tracing.CustomTracerH

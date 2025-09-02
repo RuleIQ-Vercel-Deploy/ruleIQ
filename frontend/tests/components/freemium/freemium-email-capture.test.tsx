@@ -1,6 +1,6 @@
 /**
  * Comprehensive tests for FreemiumEmailCapture component
- * 
+ *
  * Tests:
  * - Email validation and format checking
  * - UTM parameter capture from URL
@@ -42,12 +42,12 @@ vi.mock('next/navigation', () => ({
         utm_campaign: 'compliance_assessment',
         utm_medium: 'cpc',
         utm_term: 'gdpr_compliance',
-        utm_content: 'cta_button'
+        utm_content: 'cta_button',
       };
       return params[param] || null;
     }),
-    toString: () => 'utm_source=google&utm_campaign=compliance_assessment'
-  })
+    toString: () => 'utm_source=google&utm_campaign=compliance_assessment',
+  }),
 }));
 
 const queryClient = new QueryClient({
@@ -58,9 +58,7 @@ const queryClient = new QueryClient({
 });
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-  <QueryClientProvider client={queryClient}>
-    {children}
-  </QueryClientProvider>
+  <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
 const defaultStoreState = {
@@ -97,7 +95,7 @@ describe('FreemiumEmailCapture', () => {
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
@@ -110,7 +108,7 @@ describe('FreemiumEmailCapture', () => {
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const emailInput = screen.getByLabelText(/email address/i);
@@ -126,7 +124,7 @@ describe('FreemiumEmailCapture', () => {
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       expect(screen.getByPlaceholderText(/enter your email address/i)).toBeInTheDocument();
@@ -140,11 +138,11 @@ describe('FreemiumEmailCapture', () => {
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const emailInput = screen.getByLabelText(/email address/i);
-      
+
       await user.type(emailInput, 'invalid-email');
       await user.tab(); // Trigger blur
 
@@ -159,11 +157,11 @@ describe('FreemiumEmailCapture', () => {
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const emailInput = screen.getByLabelText(/email address/i);
-      
+
       // Enter invalid email first
       await user.type(emailInput, 'invalid');
       await user.tab();
@@ -189,14 +187,14 @@ describe('FreemiumEmailCapture', () => {
         'test@example.com',
         'user.name+tag@domain.co.uk',
         'test123@test-domain.com',
-        'a@b.co'
+        'a@b.co',
       ];
 
       for (const email of validEmails) {
         render(
           <TestWrapper>
             <FreemiumEmailCapture />
-          </TestWrapper>
+          </TestWrapper>,
         );
 
         const emailInput = screen.getByLabelText(/email address/i);
@@ -219,14 +217,14 @@ describe('FreemiumEmailCapture', () => {
         'missing-at-sign.com',
         'missing.domain@',
         'spaces in@email.com',
-        'double@@domain.com'
+        'double@@domain.com',
       ];
 
       for (const email of invalidEmails) {
         render(
           <TestWrapper>
             <FreemiumEmailCapture />
-          </TestWrapper>
+          </TestWrapper>,
         );
 
         const emailInput = screen.getByLabelText(/email address/i);
@@ -254,7 +252,7 @@ describe('FreemiumEmailCapture', () => {
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       expect(mockSetUtmParams).toHaveBeenCalledWith({
@@ -262,7 +260,7 @@ describe('FreemiumEmailCapture', () => {
         utm_campaign: 'compliance_assessment',
         utm_medium: 'cpc',
         utm_term: 'gdpr_compliance',
-        utm_content: 'cta_button'
+        utm_content: 'cta_button',
       });
     });
 
@@ -270,7 +268,7 @@ describe('FreemiumEmailCapture', () => {
       // Mock empty search params
       vi.mocked(vi.importMock('next/navigation')).useSearchParams.mockReturnValue({
         get: vi.fn(() => null),
-        toString: () => ''
+        toString: () => '',
       });
 
       const mockSetUtmParams = vi.fn();
@@ -282,7 +280,7 @@ describe('FreemiumEmailCapture', () => {
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       expect(mockSetUtmParams).toHaveBeenCalledWith({
@@ -290,7 +288,7 @@ describe('FreemiumEmailCapture', () => {
         utm_campaign: null,
         utm_medium: null,
         utm_term: null,
-        utm_content: null
+        utm_content: null,
       });
     });
   });
@@ -302,7 +300,7 @@ describe('FreemiumEmailCapture', () => {
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const emailInput = screen.getByLabelText(/email address/i);
@@ -324,13 +322,13 @@ describe('FreemiumEmailCapture', () => {
       mockedFreemiumApi.captureEmail.mockResolvedValue({
         success: true,
         token: 'test-token-123',
-        message: 'Email captured successfully'
+        message: 'Email captured successfully',
       });
 
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const emailInput = screen.getByLabelText(/email address/i);
@@ -350,7 +348,7 @@ describe('FreemiumEmailCapture', () => {
           utm_term: 'gdpr_compliance',
           utm_content: 'cta_button',
           consent_marketing: false,
-          consent_terms: true
+          consent_terms: true,
         });
       });
     });
@@ -365,7 +363,7 @@ describe('FreemiumEmailCapture', () => {
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const marketingConsent = screen.getByLabelText(/i agree to receive marketing/i);
@@ -388,19 +386,19 @@ describe('FreemiumEmailCapture', () => {
         ...defaultStoreState,
         setToken: mockSetToken,
         utmSource: 'google',
-        utmCampaign: 'compliance_assessment'
+        utmCampaign: 'compliance_assessment',
       });
 
       mockedFreemiumApi.captureEmail.mockResolvedValue({
         success: true,
         token: 'test-token-123',
-        message: 'Email captured successfully'
+        message: 'Email captured successfully',
       });
 
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const emailInput = screen.getByLabelText(/email address/i);
@@ -422,7 +420,7 @@ describe('FreemiumEmailCapture', () => {
           utm_term: 'gdpr_compliance',
           utm_content: 'cta_button',
           consent_marketing: true,
-          consent_terms: true
+          consent_terms: true,
         });
 
         expect(mockSetToken).toHaveBeenCalledWith('test-token-123');
@@ -433,17 +431,24 @@ describe('FreemiumEmailCapture', () => {
     it('shows loading state during submission', async () => {
       // Mock delayed API response
       mockedFreemiumApi.captureEmail.mockImplementation(
-        () => new Promise(resolve => setTimeout(() => resolve({
-          success: true,
-          token: 'test-token-123',
-          message: 'Email captured successfully'
-        }), 100))
+        () =>
+          new Promise((resolve) =>
+            setTimeout(
+              () =>
+                resolve({
+                  success: true,
+                  token: 'test-token-123',
+                  message: 'Email captured successfully',
+                }),
+              100,
+            ),
+          ),
       );
 
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const emailInput = screen.getByLabelText(/email address/i);
@@ -465,14 +470,12 @@ describe('FreemiumEmailCapture', () => {
     });
 
     it('handles API errors gracefully', async () => {
-      mockedFreemiumApi.captureEmail.mockRejectedValue(
-        new Error('Network error')
-      );
+      mockedFreemiumApi.captureEmail.mockRejectedValue(new Error('Network error'));
 
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const emailInput = screen.getByLabelText(/email address/i);
@@ -496,13 +499,13 @@ describe('FreemiumEmailCapture', () => {
         success: true,
         token: 'existing-token-456',
         message: 'Email already registered',
-        duplicate: true
+        duplicate: true,
       });
 
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const emailInput = screen.getByLabelText(/email address/i);
@@ -527,7 +530,7 @@ describe('FreemiumEmailCapture', () => {
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const emailInput = screen.getByLabelText(/email address/i);
@@ -541,7 +544,7 @@ describe('FreemiumEmailCapture', () => {
       await user.tab();
       expect(marketingConsent).toHaveFocus();
 
-      await user.tab(); 
+      await user.tab();
       expect(termsConsent).toHaveFocus();
 
       await user.tab();
@@ -552,13 +555,13 @@ describe('FreemiumEmailCapture', () => {
       mockedFreemiumApi.captureEmail.mockResolvedValue({
         success: true,
         token: 'test-token-123',
-        message: 'Email captured successfully'
+        message: 'Email captured successfully',
       });
 
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const emailInput = screen.getByLabelText(/email address/i);
@@ -577,11 +580,11 @@ describe('FreemiumEmailCapture', () => {
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const marketingConsent = screen.getByLabelText(/i agree to receive marketing/i);
-      
+
       marketingConsent.focus();
       await user.keyboard(' ');
 
@@ -597,7 +600,7 @@ describe('FreemiumEmailCapture', () => {
       const { unmount } = render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Component should unmount cleanly
@@ -606,15 +609,15 @@ describe('FreemiumEmailCapture', () => {
 
     it('debounces email validation to prevent excessive API calls', async () => {
       const user = userEvent.setup();
-      
+
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const emailInput = screen.getByLabelText(/email address/i);
-      
+
       // Type rapidly
       await user.type(emailInput, 'test');
       await user.type(emailInput, '@example');
@@ -644,7 +647,7 @@ describe('FreemiumEmailCapture', () => {
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const form = screen.getByRole('form');
@@ -664,13 +667,13 @@ describe('FreemiumEmailCapture', () => {
       render(
         <TestWrapper>
           <FreemiumEmailCapture />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       const emailInput = screen.getByLabelText(/email address/i);
-      
+
       await user.type(emailInput, 'test@example.com');
-      
+
       // Should maintain focus and visibility
       expect(emailInput).toHaveFocus();
       expect(emailInput.value).toBe('test@example.com');

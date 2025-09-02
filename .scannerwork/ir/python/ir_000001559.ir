@@ -1,0 +1,7 @@
+
+"Add compliance data."strselfI I( keyI" I(*valueI, I(6"h0
+.
+K K("#get-field# compliance_data:$
+"
+K K()"#array-write#:
+L L(*</home/omar/Documents/ruleIQ/tests/fixtures/state_fixtures.py

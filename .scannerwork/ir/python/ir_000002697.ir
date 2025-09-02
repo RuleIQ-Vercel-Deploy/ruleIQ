@@ -1,0 +1,17 @@
+
+¯¥"
+        Decorator to restrict route to admin users only.
+
+        Args:
+            func: Route function
+
+        Returns:
+            Decorated function
+        "str
+trueboolfunc
+› ›("C/
+-
+
+¥ ¥("#set-field# _admin_only:
+
+¦ ¦(*=/home/omar/Documents/ruleIQ/api/middleware/rbac_middleware.py

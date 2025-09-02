@@ -19,7 +19,10 @@ logger = get_logger(__name__)
 
 
 async def execute_foundation_evidence_collection(
-    collection_id: str, user_id: str, integration_map: Dict[str, Any], evidence_types: List[str]
+    collection_id: str,
+    user_id: str,
+    integration_map: Dict[str, Any],
+    evidence_types: List[str],
 ) -> None:
     """
     Execute foundation evidence collection in background
@@ -42,7 +45,9 @@ async def execute_foundation_evidence_collection(
                 current_activity="Starting evidence collection",
             )
 
-            logger.info(f"Starting evidence collection {collection_id} for user {user_id}")
+            logger.info(
+                f"Starting evidence collection {collection_id} for user {user_id}"
+            )
 
             total_evidence_types = len(evidence_types)
             completed_types = []
@@ -71,7 +76,9 @@ async def execute_foundation_evidence_collection(
 
                     # Get provider-specific evidence types
                     provider_evidence_types = [
-                        et for et in evidence_types if et in client.get_supported_evidence_types()
+                        et
+                        for et in evidence_types
+                        if et in client.get_supported_evidence_types()
                     ]
 
                     if not provider_evidence_types:
@@ -101,9 +108,11 @@ async def execute_foundation_evidence_collection(
                                         resource_name=evidence_result.resource_name,
                                         evidence_data=evidence_result.data,
                                         compliance_controls=evidence_result.compliance_controls,
-                                        quality_score={"overall": evidence_result.quality.value}
-                                        if hasattr(evidence_result.quality, "value")
-                                        else {"overall": 1.0},
+                                        quality_score=(
+                                            {"overall": evidence_result.quality.value}
+                                            if hasattr(evidence_result.quality, "value")
+                                            else {"overall": 1.0}
+                                        ),
                                         collected_at=evidence_result.collected_at,
                                     )
 
@@ -111,7 +120,10 @@ async def execute_foundation_evidence_collection(
 
                             # Update progress
                             progress = min(
-                                100, int((len(completed_types) / total_evidence_types) * 100)
+                                100,
+                                int(
+                                    (len(completed_types) / total_evidence_types) * 100
+                                ),
                             )
                             await evidence_service.update_collection_status(
                                 collection_id=collection_id,
@@ -119,10 +131,14 @@ async def execute_foundation_evidence_collection(
                                 progress_percentage=progress,
                             )
 
-                            logger.info(f"Completed {evidence_type} collection from {provider}")
+                            logger.info(
+                                f"Completed {evidence_type} collection from {provider}"
+                            )
 
                         except Exception as e:
-                            logger.error(f"Failed to collect {evidence_type} from {provider}: {e}")
+                            logger.error(
+                                f"Failed to collect {evidence_type} from {provider}: {e}"
+                            )
                             # Continue with other evidence types
                             continue
 

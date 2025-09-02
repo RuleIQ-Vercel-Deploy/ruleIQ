@@ -1,0 +1,150 @@
+
+	"hits"str
+
+2int
+""misses"str
+7."Get comprehensive cache performance metrics."str
+/"cache_size_mb"str
+ "total_misses"str
+"S3518"bool
+"hit_rate_percentage"str
+!("estimated_cost_savings"str
+*"cost_savings"str
+100int
+"total_requests"str
+1"cache_size_bytes"str
+
+0int
+"division by zero"bool
+
+,4int
+31024int
+"a"bool
+"total_hits"str
+8"ttl_config"strself
+Ï  Ï($"¬*
+(
+
+Ó Ó("#get-field# metrics:$
+"
+
+Ó Ó(-"#array-read#:*
+(
+
+Ó Ó(1"	#binop >#2>:Bbool,"*
+
+Ó Ó(1 *
+Ó Ó(2
+Ô Ô("ô*
+(
+
+Ò Ò("#get-field# metrics:$
+"
+
+Ò Ò(!
+"#array-read#:	*
+(
+
+Ò$ Ò(0"#get-field# metrics:$
+"
+
+Ò$ Ò(B"#array-read#:,
+*
+
+Ò Ò(B"
+#binop !=#2!=:Bbool"
+ 
+
+Ò Ò(B"
+#assert#:3
+1
+
+Ò Ò(B"#dependent-value#*:
+Bfloat3
+1
+
+Ò Ò(H"#dependent-value#*:Bfloat
+
+Ò Ô("
+
+Ò Ô("¨*%
+#
+
+Ñ Õ(	hit_rate"#id#:&
+$
+
+× ß(	"#new-object#Bdict*
+(
+
+Ø# Ø(5"
+builtinsround*:"
+ 
+
+Ø Ø(5"	#map-set#:*
+(
+
+Ù Ù(&"#get-field# metrics:$
+"
+
+Ù Ù(."#array-read#:	"
+ 
+
+Ù Ù(."	#map-set#:*
+(
+
+Ú Ú((!"#get-field# metrics:$
+"
+
+Ú Ú(2#"#array-read#:!""
+ 
+
+Ú Ú(2$"	#map-set#: #*
+(
+
+Û Û(*%"#get-field# metrics:$
+"
+
+Û Û(<&"#array-read#:%"
+ 
+
+Û Û(<'"	#map-set#:&*
+(
+
+Ü, Ü(8)"#get-field# metrics:$
+"
+
+Ü, Ü(H+"#array-read#:)**
+(
+
+Ü& Ü(L-"
+builtinsround*:+,"
+ 
+
+Ü Ü(L."	#map-set#:(-*
+(
+
+Ý# Ý(/0"#get-field# metrics:$
+"
+
+Ý# Ý(C2"#array-read#:013
+1
+
+Ý# Ý(J4"#dependent-value#*:23Bfloat3
+1
+
+Ý# Ý(Q5"#dependent-value#*:43Bfloat*
+(
+
+Ý Ý(U6"
+builtinsround*:5"
+ 
+
+Ý Ý(U7"	#map-set#:/6-
++
+
+Þ Þ(P9"?python-unknown?:Bdict"
+ 
+
+Þ Þ(P:"	#map-set#:89
+
+× ß(	*9/home/omar/Documents/ruleIQ/services/ai/response_cache.py

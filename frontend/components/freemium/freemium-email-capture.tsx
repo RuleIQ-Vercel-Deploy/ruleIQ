@@ -8,7 +8,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui
 import { Label } from '../ui/label';
 import { Alert, AlertDescription } from '../ui/alert';
 import { Loader2, Mail, Shield, Zap } from 'lucide-react';
-import { useFreemiumEmailCapture, useFreemiumUtmCapture } from '../../lib/tanstack-query/hooks/use-freemium';
+import {
+  useFreemiumEmailCapture,
+  useFreemiumUtmCapture,
+} from '../../lib/tanstack-query/hooks/use-freemium';
 import { isValidEmail } from '../../lib/api/freemium.service';
 
 interface FreemiumEmailCaptureProps {
@@ -17,15 +20,15 @@ interface FreemiumEmailCaptureProps {
   className?: string;
 }
 
-export function FreemiumEmailCapture({ 
-  title = "Get Your Free Compliance Assessment",
-  description = "Discover your compliance gaps in under 5 minutes with our AI-powered assessment tool.",
-  className = ""
+export function FreemiumEmailCapture({
+  title = 'Get Your Free Compliance Assessment',
+  description = 'Discover your compliance gaps in under 5 minutes with our AI-powered assessment tool.',
+  className = '',
 }: FreemiumEmailCaptureProps) {
   const [email, setEmail] = useState('');
   const [consentMarketing, setConsentMarketing] = useState(false);
   const [emailError, setEmailError] = useState('');
-  
+
   const emailCaptureMutation = useFreemiumEmailCapture();
   const { captureUtmParams } = useFreemiumUtmCapture();
 
@@ -44,13 +47,13 @@ export function FreemiumEmailCapture({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validate email
     if (!email.trim()) {
       setEmailError('Email address is required');
       return;
     }
-    
+
     if (!isValidEmail(email)) {
       setEmailError('Please enter a valid email address');
       return;
@@ -74,32 +77,28 @@ export function FreemiumEmailCapture({
   };
 
   return (
-    <Card className={`w-full max-w-lg mx-auto ${className}`}>
-      <CardHeader className="text-center space-y-2">
-        <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Shield className="w-6 h-6 text-teal-600" />
+    <Card className={`mx-auto w-full max-w-lg ${className}`}>
+      <CardHeader className="space-y-2 text-center">
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-teal-100">
+          <Shield className="h-6 w-6 text-teal-600" />
         </div>
-        <CardTitle className="text-2xl font-bold text-gray-900">
-          {title}
-        </CardTitle>
-        <CardDescription className="text-gray-600 text-base">
-          {description}
-        </CardDescription>
+        <CardTitle className="text-2xl font-bold text-gray-900">{title}</CardTitle>
+        <CardDescription className="text-base text-gray-600">{description}</CardDescription>
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         {/* Benefits List */}
         <div className="space-y-3">
           <div className="flex items-center space-x-3 text-sm text-gray-600">
-            <Zap className="w-4 h-4 text-teal-500 flex-shrink-0" />
+            <Zap className="h-4 w-4 flex-shrink-0 text-teal-500" />
             <span>AI-powered assessment tailored to your business</span>
           </div>
           <div className="flex items-center space-x-3 text-sm text-gray-600">
-            <Shield className="w-4 h-4 text-teal-500 flex-shrink-0" />
+            <Shield className="h-4 w-4 flex-shrink-0 text-teal-500" />
             <span>Identify critical compliance gaps instantly</span>
           </div>
           <div className="flex items-center space-x-3 text-sm text-gray-600">
-            <Mail className="w-4 h-4 text-teal-500 flex-shrink-0" />
+            <Mail className="h-4 w-4 flex-shrink-0 text-teal-500" />
             <span>Get personalized recommendations via email</span>
           </div>
         </div>
@@ -136,12 +135,12 @@ export function FreemiumEmailCapture({
               className="mt-0.5"
               disabled={emailCaptureMutation.isPending}
             />
-            <Label 
-              htmlFor="marketing-consent" 
-              className="text-sm text-gray-600 leading-5 cursor-pointer"
+            <Label
+              htmlFor="marketing-consent"
+              className="cursor-pointer text-sm leading-5 text-gray-600"
             >
-              I agree to receive email updates about compliance best practices and RuleIQ product news. 
-              You can unsubscribe at any time.
+              I agree to receive email updates about compliance best practices and RuleIQ product
+              news. You can unsubscribe at any time.
             </Label>
           </div>
 
@@ -149,7 +148,8 @@ export function FreemiumEmailCapture({
           {emailCaptureMutation.isError && (
             <Alert variant="destructive">
               <AlertDescription>
-                {emailCaptureMutation.error?.message || 'Failed to start assessment. Please try again.'}
+                {emailCaptureMutation.error?.message ||
+                  'Failed to start assessment. Please try again.'}
               </AlertDescription>
             </Alert>
           )}
@@ -157,12 +157,12 @@ export function FreemiumEmailCapture({
           {/* Submit Button */}
           <Button
             type="submit"
-            className="w-full bg-teal-600 hover:bg-teal-700 text-white font-medium py-3"
+            className="w-full bg-teal-600 py-3 font-medium text-white hover:bg-teal-700"
             disabled={emailCaptureMutation.isPending || !email.trim()}
           >
             {emailCaptureMutation.isPending ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Starting Assessment...
               </>
             ) : (
@@ -172,20 +172,20 @@ export function FreemiumEmailCapture({
         </form>
 
         {/* Trust Indicators */}
-        <div className="pt-4 border-t border-gray-100">
+        <div className="border-t border-gray-100 pt-4">
           <div className="flex items-center justify-center space-x-4 text-xs text-gray-500">
             <div className="flex items-center space-x-1">
-              <Shield className="w-3 h-3" />
+              <Shield className="h-3 w-3" />
               <span>Secure & Private</span>
             </div>
-            <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
+            <div className="h-1 w-1 rounded-full bg-gray-300"></div>
             <div className="flex items-center space-x-1">
-              <Zap className="w-3 h-3" />
+              <Zap className="h-3 w-3" />
               <span>5 Min Assessment</span>
             </div>
-            <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
+            <div className="h-1 w-1 rounded-full bg-gray-300"></div>
             <div className="flex items-center space-x-1">
-              <Mail className="w-3 h-3" />
+              <Mail className="h-3 w-3" />
               <span>No Spam</span>
             </div>
           </div>
@@ -196,11 +196,11 @@ export function FreemiumEmailCapture({
 }
 
 // Lightweight version for embedding in other components
-export function FreemiumEmailCaptureInline({ className = "" }: { className?: string }) {
+export function FreemiumEmailCaptureInline({ className = '' }: { className?: string }) {
   const [email, setEmail] = useState('');
   const [consentMarketing, setConsentMarketing] = useState(false);
   const [emailError, setEmailError] = useState('');
-  
+
   const emailCaptureMutation = useFreemiumEmailCapture();
   const { captureUtmParams } = useFreemiumUtmCapture();
 
@@ -210,12 +210,12 @@ export function FreemiumEmailCaptureInline({ className = "" }: { className?: str
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email.trim()) {
       setEmailError('Email is required');
       return;
     }
-    
+
     if (!isValidEmail(email)) {
       setEmailError('Please enter a valid email address');
       return;
@@ -251,17 +251,17 @@ export function FreemiumEmailCaptureInline({ className = "" }: { className?: str
           />
           <Button
             type="submit"
-            className="bg-teal-600 hover:bg-teal-700 text-white px-6"
+            className="bg-teal-600 px-6 text-white hover:bg-teal-700"
             disabled={emailCaptureMutation.isPending || !email.trim()}
           >
             {emailCaptureMutation.isPending ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               'Start Assessment'
             )}
           </Button>
         </div>
-        
+
         <div className="flex items-start space-x-2">
           <Checkbox
             id="inline-consent"
@@ -270,7 +270,7 @@ export function FreemiumEmailCaptureInline({ className = "" }: { className?: str
             className="mt-0.5"
             disabled={emailCaptureMutation.isPending}
           />
-          <Label htmlFor="inline-consent" className="text-xs text-gray-600 leading-4">
+          <Label htmlFor="inline-consent" className="text-xs leading-4 text-gray-600">
             I agree to receive email updates. Unsubscribe anytime.
           </Label>
         </div>

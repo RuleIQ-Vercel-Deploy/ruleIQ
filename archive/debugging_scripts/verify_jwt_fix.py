@@ -185,7 +185,9 @@ def main() -> Optional[int]:
 
     # Step 1: Check prerequisites
     if not check_prerequisites():
-        print_status("Prerequisites check failed. Please install missing dependencies.", "error")
+        print_status(
+            "Prerequisites check failed. Please install missing dependencies.", "error"
+        )
         return 1
 
     print()
@@ -220,7 +222,9 @@ def main() -> Optional[int]:
             print("\nTroubleshooting steps:")
             print("1. Check that .env.local contains: JWT_SECRET=your-secret-key")
             print("2. Ensure the secret doesn't contain quotes or spaces")
-            print("3. Try restarting with: pkill -f uvicorn && uvicorn api.main:app --reload")
+            print(
+                "3. Try restarting with: pkill -f uvicorn && uvicorn api.main:app --reload"
+            )
             print("4. Check server logs for any startup errors")
             return 1
 

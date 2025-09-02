@@ -38,7 +38,8 @@ class InputValidator:
     # SQL injection patterns
     SQL_INJECTION_PATTERNS = [
         re.compile(
-            r"\b(union|select|insert|update|delete|drop|create|alter|exec|execute)\b", re.IGNORECASE
+            r"\b(union|select|insert|update|delete|drop|create|alter|exec|execute)\b",
+            re.IGNORECASE,
         ),
         re.compile(r"--|#|/\*|\*/", re.IGNORECASE),
         re.compile(r"\b(or|and)\b\s+\d+\s*=\s*\d+", re.IGNORECASE),
@@ -116,7 +117,9 @@ class InputValidator:
                 raise ValidationError("URL must have a scheme")
 
             if allowed_schemes and parsed.scheme not in allowed_schemes:
-                raise ValidationError(f"URL scheme must be one of: {', '.join(allowed_schemes)}")
+                raise ValidationError(
+                    f"URL scheme must be one of: {', '.join(allowed_schemes)}"
+                )
 
             if not parsed.netloc:
                 raise ValidationError("URL must have a domain")
@@ -149,7 +152,9 @@ class InputValidator:
             raise ValidationError("Password must contain at least one digit")
 
         if not re.search(r'[!@#$%^&*(),.?":{}|<>]', password):
-            raise ValidationError("Password must contain at least one special character")
+            raise ValidationError(
+                "Password must contain at least one special character"
+            )
 
         return password
 
@@ -173,7 +178,9 @@ class InputValidator:
 
         for pattern in InputValidator.XSS_PATTERNS:
             if pattern.search(value):
-                raise ValidationError("Input contains potentially dangerous HTML/JavaScript")
+                raise ValidationError(
+                    "Input contains potentially dangerous HTML/JavaScript"
+                )
 
         return value
 
@@ -216,7 +223,9 @@ class InputValidator:
         return file_name
 
     @staticmethod
-    def validate_integer(value: Any, min_value: int = None, max_value: int = None) -> int:
+    def validate_integer(
+        value: Any, min_value: int = None, max_value: int = None
+    ) -> int:
         """Validate integer input"""
         try:
             int_value = int(value)
@@ -232,7 +241,9 @@ class InputValidator:
         return int_value
 
     @staticmethod
-    def validate_float(value: Any, min_value: float = None, max_value: float = None) -> float:
+    def validate_float(
+        value: Any, min_value: float = None, max_value: float = None
+    ) -> float:
         """Validate float input"""
         try:
             float_value = float(value)

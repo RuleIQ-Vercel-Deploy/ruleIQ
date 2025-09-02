@@ -146,11 +146,15 @@ class AIQualityMonitor:
         """
         try:
             # Perform automated quality scoring
-            dimension_scores = await self._perform_automated_scoring(response_text, prompt, context)
+            dimension_scores = await self._perform_automated_scoring(
+                response_text, prompt, context
+            )
 
             # Incorporate user feedback if available
             if user_feedback:
-                dimension_scores = self._incorporate_user_feedback(dimension_scores, user_feedback)
+                dimension_scores = self._incorporate_user_feedback(
+                    dimension_scores, user_feedback
+                )
 
             # Calculate overall score
             overall_score = self._calculate_overall_score(dimension_scores)
@@ -175,7 +179,9 @@ class AIQualityMonitor:
                 metadata={
                     "prompt_length": len(prompt),
                     "response_length": len(response_text),
-                    "content_type": context.get("content_type") if context else "unknown",
+                    "content_type": (
+                        context.get("content_type") if context else "unknown"
+                    ),
                     "framework": context.get("framework") if context else "unknown",
                 },
             )
@@ -269,9 +275,19 @@ class AIQualityMonitor:
         if framework:
             # Framework-specific keywords and concepts
             framework_keywords = {
-                "ISO27001": ["information security", "isms", "risk assessment", "controls"],
+                "ISO27001": [
+                    "information security",
+                    "isms",
+                    "risk assessment",
+                    "controls",
+                ],
                 "GDPR": ["data protection", "privacy", "consent", "data subject"],
-                "SOC2": ["service organization", "trust services", "availability", "security"],
+                "SOC2": [
+                    "service organization",
+                    "trust services",
+                    "availability",
+                    "security",
+                ],
             }
 
             keywords = framework_keywords.get(framework, [])
@@ -315,7 +331,8 @@ class AIQualityMonitor:
 
         # Check for direct question answering
         if "?" in prompt and any(
-            word in response_text.lower() for word in ["yes", "no", "should", "recommend"]
+            word in response_text.lower()
+            for word in ["yes", "no", "should", "recommend"]
         ):
             score += 0.5
 
@@ -379,7 +396,9 @@ class AIQualityMonitor:
 
         # Professional language indicators
         professional_terms = ["implement", "establish", "ensure", "maintain", "monitor"]
-        professional_count = sum(1 for term in professional_terms if term in response_text.lower())
+        professional_count = sum(
+            1 for term in professional_terms if term in response_text.lower()
+        )
         score += professional_count * 0.2
 
         return min(10.0, score)
@@ -405,7 +424,8 @@ class AIQualityMonitor:
 
         # Specific guidance
         if any(
-            indicator in response_text.lower() for indicator in ["step", "procedure", "process"]
+            indicator in response_text.lower()
+            for indicator in ["step", "procedure", "process"]
         ):
             score += 1.5
 
@@ -418,7 +438,8 @@ class AIQualityMonitor:
 
         # Role assignments
         if any(
-            role in response_text.lower() for role in ["manager", "officer", "team", "responsible"]
+            role in response_text.lower()
+            for role in ["manager", "officer", "team", "responsible"]
         ):
             score += 1.0
 
@@ -436,8 +457,19 @@ class AIQualityMonitor:
 
         # Framework-specific compliance terms
         compliance_terms = {
-            "ISO27001": ["control", "annex", "isms", "risk management", "continual improvement"],
-            "GDPR": ["lawful basis", "data subject rights", "privacy by design", "accountability"],
+            "ISO27001": [
+                "control",
+                "annex",
+                "isms",
+                "risk management",
+                "continual improvement",
+            ],
+            "GDPR": [
+                "lawful basis",
+                "data subject rights",
+                "privacy by design",
+                "accountability",
+            ],
             "SOC2": ["trust services criteria", "control environment", "monitoring"],
         }
 
@@ -454,7 +486,9 @@ class AIQualityMonitor:
         return min(10.0, score)
 
     def _incorporate_user_feedback(
-        self, dimension_scores: Dict[QualityDimension, QualityScore], feedback: ResponseFeedback
+        self,
+        dimension_scores: Dict[QualityDimension, QualityScore],
+        feedback: ResponseFeedback,
     ) -> Dict[QualityDimension, QualityScore]:
         """Incorporate user feedback into quality scores."""
 
@@ -468,7 +502,9 @@ class AIQualityMonitor:
                 # Weighted average: 70% automated, 30% user feedback
                 adjusted_score = (score.score * 0.7) + (user_score * 0.3)
                 score.score = min(10.0, max(0.0, adjusted_score))
-                score.confidence = min(1.0, score.confidence + 0.1)  # Increase confidence
+                score.confidence = min(
+                    1.0, score.confidence + 0.1
+                )  # Increase confidence
                 score.automated = False
 
         elif feedback.feedback_type == FeedbackType.THUMBS_UP:
@@ -529,7 +565,9 @@ class AIQualityMonitor:
         for dimension, score in dimension_scores.items():
             if score.score < 6.0:  # Below satisfactory
                 if dimension == QualityDimension.ACCURACY:
-                    suggestions.append("Include more framework-specific terminology and concepts")
+                    suggestions.append(
+                        "Include more framework-specific terminology and concepts"
+                    )
                 elif dimension == QualityDimension.RELEVANCE:
                     suggestions.append(
                         "Better address the specific question or request in the prompt"
@@ -560,10 +598,13 @@ class AIQualityMonitor:
 
         # Update average quality score
         total_score = (
-            self.metrics["average_quality_score"] * (self.metrics["total_assessments"] - 1)
+            self.metrics["average_quality_score"]
+            * (self.metrics["total_assessments"] - 1)
             + assessment.overall_score
         )
-        self.metrics["average_quality_score"] = total_score / self.metrics["total_assessments"]
+        self.metrics["average_quality_score"] = (
+            total_score / self.metrics["total_assessments"]
+        )
 
     async def record_user_feedback(self, feedback: ResponseFeedback) -> None:
         """Record user feedback for quality improvement."""
@@ -603,13 +644,19 @@ class AIQualityMonitor:
             daily_scores[day_key].append(assessment.overall_score)
 
         # Calculate daily averages
-        daily_averages = {day: statistics.mean(scores) for day, scores in daily_scores.items()}
+        daily_averages = {
+            day: statistics.mean(scores) for day, scores in daily_scores.items()
+        }
 
         return {
             "period": {"start": start_date.isoformat(), "end": end_date.isoformat()},
             "total_assessments": len(recent_assessments),
-            "average_quality_score": statistics.mean([a.overall_score for a in recent_assessments]),
-            "quality_distribution": self._calculate_quality_distribution(recent_assessments),
+            "average_quality_score": statistics.mean(
+                [a.overall_score for a in recent_assessments]
+            ),
+            "quality_distribution": self._calculate_quality_distribution(
+                recent_assessments
+            ),
             "daily_trends": daily_averages,
             "improvement_areas": self._identify_improvement_areas(recent_assessments),
         }
@@ -625,7 +672,9 @@ class AIQualityMonitor:
 
         return distribution
 
-    def _identify_improvement_areas(self, assessments: List[QualityAssessment]) -> List[str]:
+    def _identify_improvement_areas(
+        self, assessments: List[QualityAssessment]
+    ) -> List[str]:
         """Identify areas needing improvement based on assessment data."""
 
         # Calculate average scores by dimension

@@ -54,7 +54,9 @@ class MemoryPersistence(InstructionPersistence):
     def load_metrics(self) -> List["InstructionMetric"]:
         return []
 
-    def save_performance_data(self, data: Dict[str, "InstructionPerformanceData"]) -> None:
+    def save_performance_data(
+        self, data: Dict[str, "InstructionPerformanceData"]
+    ) -> None:
         pass  # No-op for memory persistence
 
     def load_performance_data(self) -> Dict[str, "InstructionPerformanceData"]:
@@ -87,7 +89,9 @@ class FilePersistence(InstructionPersistence):
             logger.error(f"Failed to load metrics: {e}")
         return []
 
-    def save_performance_data(self, data: Dict[str, "InstructionPerformanceData"]) -> None:
+    def save_performance_data(
+        self, data: Dict[str, "InstructionPerformanceData"]
+    ) -> None:
         try:
             with open(self.performance_file, "w") as f:
                 json.dump({k: asdict(v) for k, v in data.items()}, f, indent=4)
@@ -198,7 +202,9 @@ class InstructionPerformanceMonitor:
     """Monitors and analyzes instruction performance"""
 
     def __init__(
-        self, max_metrics_history: int = 10000, persistence: Optional[InstructionPersistence] = None
+        self,
+        max_metrics_history: int = 10000,
+        persistence: Optional[InstructionPersistence] = None,
     ) -> None:
         self.persistence = persistence or MemoryPersistence()
         self.metrics_history: deque = deque(maxlen=max_metrics_history)
@@ -248,7 +254,9 @@ class InstructionPerformanceMonitor:
             "version": 1,
         }
 
-        logger.info(f"Registered instruction {instruction_id} with hash {instruction_hash}")
+        logger.info(
+            f"Registered instruction {instruction_id} with hash {instruction_hash}"
+        )
         return instruction_hash
 
     def record_metric(
@@ -309,7 +317,10 @@ class InstructionPerformanceMonitor:
         return self.performance_cache.get(instruction_id)
 
     def compare_instructions(
-        self, instruction_a_id: str, instruction_b_id: str, time_window: Optional[timedelta] = None
+        self,
+        instruction_a_id: str,
+        instruction_b_id: str,
+        time_window: Optional[timedelta] = None,
     ) -> Dict[str, Any]:
         """
         Compare performance between two instructions
@@ -332,14 +343,20 @@ class InstructionPerformanceMonitor:
             "instruction_a": asdict(perf_a),
             "instruction_b": asdict(perf_b),
             "differences": {
-                "response_quality": perf_b.avg_response_quality - perf_a.avg_response_quality,
-                "user_satisfaction": perf_b.avg_user_satisfaction - perf_a.avg_user_satisfaction,
+                "response_quality": perf_b.avg_response_quality
+                - perf_a.avg_response_quality,
+                "user_satisfaction": perf_b.avg_user_satisfaction
+                - perf_a.avg_user_satisfaction,
                 "response_time": perf_b.avg_response_time - perf_a.avg_response_time,
-                "token_efficiency": perf_b.avg_token_efficiency - perf_a.avg_token_efficiency,
+                "token_efficiency": perf_b.avg_token_efficiency
+                - perf_a.avg_token_efficiency,
                 "error_rate": perf_b.error_rate - perf_a.error_rate,
-                "effectiveness": perf_b.effectiveness_score - perf_a.effectiveness_score,
+                "effectiveness": perf_b.effectiveness_score
+                - perf_a.effectiveness_score,
             },
-            "statistical_significance": self._calculate_statistical_significance(perf_a, perf_b),
+            "statistical_significance": self._calculate_statistical_significance(
+                perf_a, perf_b
+            ),
             "recommendation": self._generate_comparison_recommendation(perf_a, perf_b),
         }
 
@@ -454,7 +471,9 @@ class InstructionPerformanceMonitor:
         # Analyze performance patterns
         for instruction_id in matching_instructions:
             perf = self.get_instruction_performance(instruction_id)
-            if perf and perf.sample_size >= 10:  # Minimum sample size for recommendations
+            if (
+                perf and perf.sample_size >= 10
+            ):  # Minimum sample size for recommendations
                 # Generate specific recommendations based on performance
                 if perf.avg_response_quality < 0.7:
                     recommendations.append(
@@ -539,26 +558,38 @@ class InstructionPerformanceMonitor:
 
     def _update_performance_cache(self, instruction_id: str) -> None:
         """Update cached performance data for an instruction"""
-        metrics = [m for m in self.metrics_history if m.instruction_id == instruction_id]
+        metrics = [
+            m for m in self.metrics_history if m.instruction_id == instruction_id
+        ]
 
         if not metrics:
             return
 
         # Calculate aggregated performance metrics
         quality_scores = [
-            m.value for m in metrics if m.metric_type == InstructionMetricType.RESPONSE_QUALITY
+            m.value
+            for m in metrics
+            if m.metric_type == InstructionMetricType.RESPONSE_QUALITY
         ]
         satisfaction_scores = [
-            m.value for m in metrics if m.metric_type == InstructionMetricType.USER_SATISFACTION
+            m.value
+            for m in metrics
+            if m.metric_type == InstructionMetricType.USER_SATISFACTION
         ]
         response_times = [
-            m.value for m in metrics if m.metric_type == InstructionMetricType.RESPONSE_TIME
+            m.value
+            for m in metrics
+            if m.metric_type == InstructionMetricType.RESPONSE_TIME
         ]
         token_efficiency = [
-            m.value for m in metrics if m.metric_type == InstructionMetricType.TOKEN_EFFICIENCY
+            m.value
+            for m in metrics
+            if m.metric_type == InstructionMetricType.TOKEN_EFFICIENCY
         ]
         error_metrics = [
-            m.value for m in metrics if m.metric_type == InstructionMetricType.ERROR_RATE
+            m.value
+            for m in metrics
+            if m.metric_type == InstructionMetricType.ERROR_RATE
         ]
         effectiveness = [
             m.value
@@ -572,14 +603,22 @@ class InstructionPerformanceMonitor:
             instruction_id=instruction_id,
             instruction_hash=instruction_info.get("hash", "unknown"),
             total_uses=len(metrics),
-            avg_response_quality=statistics.mean(quality_scores) if quality_scores else 0.0,
-            avg_user_satisfaction=statistics.mean(satisfaction_scores)
-            if satisfaction_scores
-            else 0.0,
-            avg_response_time=statistics.mean(response_times) if response_times else 0.0,
-            avg_token_efficiency=statistics.mean(token_efficiency) if token_efficiency else 0.0,
+            avg_response_quality=(
+                statistics.mean(quality_scores) if quality_scores else 0.0
+            ),
+            avg_user_satisfaction=(
+                statistics.mean(satisfaction_scores) if satisfaction_scores else 0.0
+            ),
+            avg_response_time=(
+                statistics.mean(response_times) if response_times else 0.0
+            ),
+            avg_token_efficiency=(
+                statistics.mean(token_efficiency) if token_efficiency else 0.0
+            ),
             error_rate=statistics.mean(error_metrics) if error_metrics else 0.0,
-            effectiveness_score=statistics.mean(effectiveness) if effectiveness else 0.0,
+            effectiveness_score=(
+                statistics.mean(effectiveness) if effectiveness else 0.0
+            ),
             last_updated=datetime.now(),
             sample_size=len(metrics),
         )
@@ -640,12 +679,20 @@ class InstructionPerformanceMonitor:
                 improvement = (
                     perf_b.avg_response_quality - perf_a.avg_response_quality
                 ) / perf_a.avg_response_quality
-                winner = "B" if perf_b.avg_response_quality > perf_a.avg_response_quality else "A"
+                winner = (
+                    "B"
+                    if perf_b.avg_response_quality > perf_a.avg_response_quality
+                    else "A"
+                )
             elif primary_metric == InstructionMetricType.USER_SATISFACTION:
                 improvement = (
                     perf_b.avg_user_satisfaction - perf_a.avg_user_satisfaction
                 ) / perf_a.avg_user_satisfaction
-                winner = "B" if perf_b.avg_user_satisfaction > perf_a.avg_user_satisfaction else "A"
+                winner = (
+                    "B"
+                    if perf_b.avg_user_satisfaction > perf_a.avg_user_satisfaction
+                    else "A"
+                )
 
         result = ABTestResult(
             test_id=test_id,
@@ -689,11 +736,15 @@ class InstructionPerformanceMonitor:
 
         # Simple confidence calculation based on sample size and difference
         quality_diff = abs(perf_b.avg_response_quality - perf_a.avg_response_quality)
-        satisfaction_diff = abs(perf_b.avg_user_satisfaction - perf_a.avg_user_satisfaction)
+        satisfaction_diff = abs(
+            perf_b.avg_user_satisfaction - perf_a.avg_user_satisfaction
+        )
 
         # Calculate confidence based on difference magnitude and sample size
         combined_samples = sample_size_a + sample_size_b
-        confidence = min(0.99, (quality_diff + satisfaction_diff) * (combined_samples / 200))
+        confidence = min(
+            0.99, (quality_diff + satisfaction_diff) * (combined_samples / 200)
+        )
 
         return {
             "significant": confidence > 0.95,
@@ -732,19 +783,29 @@ class InstructionPerformanceMonitor:
 
         # Calculate metrics similar to _update_performance_cache but for filtered data
         quality_scores = [
-            m.value for m in metrics if m.metric_type == InstructionMetricType.RESPONSE_QUALITY
+            m.value
+            for m in metrics
+            if m.metric_type == InstructionMetricType.RESPONSE_QUALITY
         ]
         satisfaction_scores = [
-            m.value for m in metrics if m.metric_type == InstructionMetricType.USER_SATISFACTION
+            m.value
+            for m in metrics
+            if m.metric_type == InstructionMetricType.USER_SATISFACTION
         ]
         response_times = [
-            m.value for m in metrics if m.metric_type == InstructionMetricType.RESPONSE_TIME
+            m.value
+            for m in metrics
+            if m.metric_type == InstructionMetricType.RESPONSE_TIME
         ]
         token_efficiency = [
-            m.value for m in metrics if m.metric_type == InstructionMetricType.TOKEN_EFFICIENCY
+            m.value
+            for m in metrics
+            if m.metric_type == InstructionMetricType.TOKEN_EFFICIENCY
         ]
         error_metrics = [
-            m.value for m in metrics if m.metric_type == InstructionMetricType.ERROR_RATE
+            m.value
+            for m in metrics
+            if m.metric_type == InstructionMetricType.ERROR_RATE
         ]
         effectiveness = [
             m.value
@@ -758,20 +819,31 @@ class InstructionPerformanceMonitor:
             instruction_id=instruction_id,
             instruction_hash=instruction_info.get("hash", "unknown"),
             total_uses=len(metrics),
-            avg_response_quality=statistics.mean(quality_scores) if quality_scores else 0.0,
-            avg_user_satisfaction=statistics.mean(satisfaction_scores)
-            if satisfaction_scores
-            else 0.0,
-            avg_response_time=statistics.mean(response_times) if response_times else 0.0,
-            avg_token_efficiency=statistics.mean(token_efficiency) if token_efficiency else 0.0,
+            avg_response_quality=(
+                statistics.mean(quality_scores) if quality_scores else 0.0
+            ),
+            avg_user_satisfaction=(
+                statistics.mean(satisfaction_scores) if satisfaction_scores else 0.0
+            ),
+            avg_response_time=(
+                statistics.mean(response_times) if response_times else 0.0
+            ),
+            avg_token_efficiency=(
+                statistics.mean(token_efficiency) if token_efficiency else 0.0
+            ),
             error_rate=statistics.mean(error_metrics) if error_metrics else 0.0,
-            effectiveness_score=statistics.mean(effectiveness) if effectiveness else 0.0,
+            effectiveness_score=(
+                statistics.mean(effectiveness) if effectiveness else 0.0
+            ),
             last_updated=datetime.now(),
             sample_size=len(metrics),
         )
 
     def _find_matching_instructions(
-        self, instruction_type: str, framework: Optional[str], task_complexity: Optional[str]
+        self,
+        instruction_type: str,
+        framework: Optional[str],
+        task_complexity: Optional[str],
     ) -> List[str]:
         """Find instructions matching the given criteria"""
         matching = []
@@ -795,37 +867,52 @@ class InstructionPerformanceMonitor:
         return {
             "total_interactions": len(recent_metrics),
             "unique_instructions": len({m.instruction_id for m in recent_metrics}),
-            "avg_response_quality": statistics.mean(
-                [
-                    m.value
+            "avg_response_quality": (
+                statistics.mean(
+                    [
+                        m.value
+                        for m in recent_metrics
+                        if m.metric_type == InstructionMetricType.RESPONSE_QUALITY
+                    ]
+                )
+                if any(
+                    m.metric_type == InstructionMetricType.RESPONSE_QUALITY
                     for m in recent_metrics
-                    if m.metric_type == InstructionMetricType.RESPONSE_QUALITY
-                ]
-            )
-            if any(m.metric_type == InstructionMetricType.RESPONSE_QUALITY for m in recent_metrics)
-            else 0,
-            "avg_user_satisfaction": statistics.mean(
-                [
-                    m.value
+                )
+                else 0
+            ),
+            "avg_user_satisfaction": (
+                statistics.mean(
+                    [
+                        m.value
+                        for m in recent_metrics
+                        if m.metric_type == InstructionMetricType.USER_SATISFACTION
+                    ]
+                )
+                if any(
+                    m.metric_type == InstructionMetricType.USER_SATISFACTION
                     for m in recent_metrics
-                    if m.metric_type == InstructionMetricType.USER_SATISFACTION
-                ]
-            )
-            if any(m.metric_type == InstructionMetricType.USER_SATISFACTION for m in recent_metrics)
-            else 0,
-            "overall_error_rate": len(
-                [
-                    m
-                    for m in recent_metrics
-                    if m.metric_type == InstructionMetricType.ERROR_RATE and m.value > 0
-                ]
-            )
-            / len(recent_metrics)
-            if recent_metrics
-            else 0,
+                )
+                else 0
+            ),
+            "overall_error_rate": (
+                len(
+                    [
+                        m
+                        for m in recent_metrics
+                        if m.metric_type == InstructionMetricType.ERROR_RATE
+                        and m.value > 0
+                    ]
+                )
+                / len(recent_metrics)
+                if recent_metrics
+                else 0
+            ),
         }
 
-    def _get_top_performers(self, time_window: timedelta, limit: int = 5) -> List[Dict[str, Any]]:
+    def _get_top_performers(
+        self, time_window: timedelta, limit: int = 5
+    ) -> List[Dict[str, Any]]:
         """Get top performing instructions"""
         performers = []
 
@@ -842,9 +929,13 @@ class InstructionPerformanceMonitor:
                     }
                 )
 
-        return sorted(performers, key=lambda x: x["effectiveness_score"], reverse=True)[:limit]
+        return sorted(performers, key=lambda x: x["effectiveness_score"], reverse=True)[
+            :limit
+        ]
 
-    def _get_underperformers(self, time_window: timedelta, limit: int = 5) -> List[Dict[str, Any]]:
+    def _get_underperformers(
+        self, time_window: timedelta, limit: int = 5
+    ) -> List[Dict[str, Any]]:
         """Get underperforming instructions"""
         performers = []
 
@@ -881,7 +972,9 @@ class InstructionPerformanceMonitor:
         for i in range(time_buckets):
             bucket_start = cutoff_time + (bucket_size * i)
             bucket_end = bucket_start + bucket_size
-            bucket_metrics = [m for m in recent_metrics if bucket_start <= m.timestamp < bucket_end]
+            bucket_metrics = [
+                m for m in recent_metrics if bucket_start <= m.timestamp < bucket_end
+            ]
 
             if bucket_metrics:
                 quality_scores = [
@@ -892,16 +985,21 @@ class InstructionPerformanceMonitor:
                 buckets.append(
                     {
                         "period": f"bucket_{i}",
-                        "avg_quality": statistics.mean(quality_scores) if quality_scores else 0,
+                        "avg_quality": (
+                            statistics.mean(quality_scores) if quality_scores else 0
+                        ),
                         "sample_size": len(bucket_metrics),
                     }
                 )
 
         return {
             "trend_buckets": buckets,
-            "overall_trend": "improving"
-            if len(buckets) >= 2 and buckets[-1]["avg_quality"] > buckets[0]["avg_quality"]
-            else "stable",
+            "overall_trend": (
+                "improving"
+                if len(buckets) >= 2
+                and buckets[-1]["avg_quality"] > buckets[0]["avg_quality"]
+                else "stable"
+            ),
         }
 
     def _get_recent_ab_results(self, limit: int = 3) -> List[Dict[str, Any]]:
@@ -953,9 +1051,11 @@ class InstructionPerformanceMonitor:
 
 # Global instance with file persistence for production
 instruction_monitor = InstructionPerformanceMonitor(
-    persistence=FilePersistence()
-    if os.getenv("ENVIRONMENT") == "production"
-    else MemoryPersistence()
+    persistence=(
+        FilePersistence()
+        if os.getenv("ENVIRONMENT") == "production"
+        else MemoryPersistence()
+    )
 )
 
 

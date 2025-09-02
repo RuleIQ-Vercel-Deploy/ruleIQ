@@ -1,0 +1,125 @@
+
+.services.ai.tools.BaseTool.validate_parameters:
+0/home/omar/Documents/ruleIQ/services/ai/tools.pyW W("2*›
+2X `(ca
+a a(+
+%6*:
+
+__unknown_file (
+services.ai.tools.BaseTool2get_function_schema@
+>
+a a(+
+schema"__id*"
+
+__unknown_file (
+
+%6
+b3 b(5
+%7"dictêç
+b b(6
+%8*&
+
+__unknown_file (
+
+
+schema**
+
+__unknown_file (
+
+parameters*"
+
+__unknown_file (
+
+%72get
+bG b(I
+%9"listãà
+b b(J
+%10*"
+
+__unknown_file (
+
+%8*(
+
+__unknown_file (
+
+required*"
+
+__unknown_file (
+
+%92getJ
+H
+b b(J
+required_params"__id*#
+
+__unknown_file (
+
+%10*
+4
+6*#
+4j j("
+j j(
+
+True* 
+6f f(&sq
+f f(&
+%4**
+
+__unknown_file (
+
+
+parameters*%
+
+__unknown_file (	
+
+param2__contains__;
+9
+f f(&
+%5"not*"
+
+__unknown_file (
+
+%4*	
+4
+6
+7*ï
+7g g(\^
+\
+gO g(X
+%1"__id*D
+
+__unknown_file ((*&
+services.ai.tools.BaseTool"
+nameß
+§
+g g([
+%2"__concat*,
+g g(; 
+Missing required parameter '*
+g< g(A	
+
+param*
+gB g(N
+' for tool '*
+gO g(X
+
+%1*
+gY g(Z
+'ec
+g g(\
+%3*&
+
+__unknown_file (
+
+
+logger*"
+
+__unknown_file (
+
+%22error"
+h h(	
+
+False:
+W" W(<
+
+parametersB
+services.ai.tools.BaseToolH

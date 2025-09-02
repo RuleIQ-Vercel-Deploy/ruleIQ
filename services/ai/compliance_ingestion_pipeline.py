@@ -25,19 +25,19 @@ from tenacity import (
     stop_after_attempt,
     wait_exponential,
     retry_if_exception_type,
-    before_sleep_log
+    before_sleep_log,
 )
 
 # Production logging configuration
 logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
 
 
 class IngestionStatus(Enum):
     """Ingestion status tracking"""
+
     PENDING = "pending"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
@@ -48,6 +48,7 @@ class IngestionStatus(Enum):
 
 class DataQuality(Enum):
     """Data quality indicators"""
+
     HIGH = "high"
     MEDIUM = "medium"
     LOW = "low"
@@ -57,6 +58,7 @@ class DataQuality(Enum):
 @dataclass
 class IngestionMetrics:
     """Track ingestion performance and quality metrics"""
+
     total_items: int = 0
     successful_items: int = 0
     failed_items: int = 0
@@ -69,21 +71,21 @@ class IngestionMetrics:
     errors: List[Dict[str, Any]] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)
     data_quality_scores: Dict[str, float] = field(default_factory=dict)
-    
+
     @property
     def success_rate(self) -> float:
         """Calculate success rate"""
         if self.total_items == 0:
             return 0.0
         return self.successful_items / self.total_items
-    
+
     @property
     def duration_seconds(self) -> Optional[float]:
         """Calculate processing duration"""
         if self.end_time:
             return (self.end_time - self.start_time).total_seconds()
         return None
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for logging/storage"""
         return {
@@ -100,19 +102,23 @@ class IngestionMetrics:
             "end_time": self.end_time.isoformat() if self.end_time else None,
             "error_count": len(self.errors),
             "warning_count": len(self.warnings),
-            "data_quality_avg": np.mean(list(self.data_quality_scores.values())) if self.data_quality_scores else 0
+            "data_quality_avg": (
+                np.mean(list(self.data_quality_scores.values()))
+                if self.data_quality_scores
+                else 0
+            ),
         }
 
 
 class ComplianceDataValidator(BaseModel):
     """Enterprise-grade validation for compliance data"""
-    
+
     id: str = Field(..., min_length=1, max_length=200)
     title: str = Field(..., min_length=1, max_length=500)
     url: Optional[str] = Field(None, pattern="^https?://")
     tags: List[str] = Field(default_factory=list)
     priority: int = Field(..., ge=1, le=5)
-    
+
     # Enhanced metadata
     business_triggers: Optional[Dict[str, Any]] = None
     risk_metadata: Optional[Dict[str, Any]] = None
@@ -120,28 +126,28 @@ class ComplianceDataValidator(BaseModel):
     suggested_controls: Optional[List[str]] = None
     evidence_templates: Optional[List[str]] = None
     implementation_complexity: Optional[int] = Field(None, ge=1, le=10)
-    
-    @validator('business_triggers')
+
+    @validator("business_triggers")
     def validate_business_triggers(cls, v):
         """Validate business trigger structure"""
         if v is not None:
-            required_keys = {'industry', 'data_types', 'jurisdiction'}
+            required_keys = {"industry", "data_types", "jurisdiction"}
             if not any(key in v for key in required_keys):
                 logger.warning(f"Business triggers missing key fields: {v}")
         return v
-    
-    @validator('risk_metadata')
+
+    @validator("risk_metadata")
     def validate_risk_metadata(cls, v):
         """Validate risk metadata structure"""
         if v is not None:
-            if 'base_risk_score' in v:
-                score = v['base_risk_score']
+            if "base_risk_score" in v:
+                score = v["base_risk_score"]
                 if not (0 <= score <= 10):
                     raise ValueError(f"Risk score {score} out of range [0, 10]")
         return v
-    
+
     class Config:
-        extra = 'allow'  # Allow additional fields for flexibility
+        extra = "allow"  # Allow additional fields for flexibility
 
 
 class Neo4jComplianceIngestion:
@@ -149,18 +155,20 @@ class Neo4jComplianceIngestion:
     Production-grade Neo4j ingestion pipeline for compliance data
     Handles millions of nodes with proper error recovery and monitoring
     """
-    
-    def __init__(self, 
-                 neo4j_uri: str,
-                 neo4j_user: str,
-                 neo4j_password: str,
-                 database: str = "neo4j",
-                 max_connection_pool_size: int = 50,
-                 connection_timeout: float = 30.0,
-                 batch_size: int = 100):
+
+    def __init__(
+        self,
+        neo4j_uri: str,
+        neo4j_user: str,
+        neo4j_password: str,
+        database: str = "neo4j",
+        max_connection_pool_size: int = 50,
+        connection_timeout: float = 30.0,
+        batch_size: int = 100,
+    ):
         """
         Initialize ingestion pipeline with production configurations
-        
+
         Args:
             neo4j_uri: Neo4j connection URI
             neo4j_user: Neo4j username
@@ -175,7 +183,7 @@ class Neo4jComplianceIngestion:
         self.password = neo4j_password
         self.database = database
         self.batch_size = batch_size
-        
+
         # Initialize driver with production settings
         self.driver = AsyncGraphDatabase.driver(
             self.uri,
@@ -183,32 +191,32 @@ class Neo4jComplianceIngestion:
             max_connection_pool_size=max_connection_pool_size,
             connection_timeout=connection_timeout,
             max_transaction_retry_time=30.0,
-            keep_alive=True
+            keep_alive=True,
         )
-        
+
         self.metrics = IngestionMetrics()
         self._processed_ids: Set[str] = set()
         self._failed_ids: Set[str] = set()
-        
+
     async def __aenter__(self):
         """Async context manager entry"""
         await self.verify_connection()
         return self
-    
+
     async def __aexit__(self, exc_type, exc_val, exc_tb):
         """Async context manager exit with cleanup"""
         await self.close()
-    
+
     @retry(
         stop=stop_after_attempt(3),
         wait=wait_exponential(multiplier=1, min=4, max=10),
         retry=retry_if_exception_type((ServiceUnavailable, SessionExpired)),
-        before_sleep=before_sleep_log(logger, logging.WARNING)
+        before_sleep=before_sleep_log(logger, logging.WARNING),
     )
     async def verify_connection(self) -> bool:
         """
         Verify Neo4j connection with retry logic
-        
+
         Returns:
             True if connection successful
         """
@@ -221,7 +229,7 @@ class Neo4jComplianceIngestion:
         except Exception as e:
             logger.error(f"Failed to connect to Neo4j: {e}")
             raise
-    
+
     async def create_indexes_and_constraints(self) -> None:
         """
         Create necessary indexes and constraints for optimal performance
@@ -232,23 +240,20 @@ class Neo4jComplianceIngestion:
             "CREATE CONSTRAINT regulation_id IF NOT EXISTS FOR (r:Regulation) REQUIRE r.id IS UNIQUE",
             "CREATE CONSTRAINT control_id IF NOT EXISTS FOR (c:Control) REQUIRE c.id IS UNIQUE",
             "CREATE CONSTRAINT enforcement_id IF NOT EXISTS FOR (e:Enforcement) REQUIRE e.id IS UNIQUE",
-            
             # Performance indexes
             "CREATE INDEX regulation_title IF NOT EXISTS FOR (r:Regulation) ON (r.title)",
             "CREATE INDEX regulation_priority IF NOT EXISTS FOR (r:Regulation) ON (r.priority)",
             "CREATE INDEX regulation_risk IF NOT EXISTS FOR (r:Regulation) ON (r.base_risk_score)",
             "CREATE INDEX control_name IF NOT EXISTS FOR (c:Control) ON (c.name)",
             "CREATE INDEX control_effectiveness IF NOT EXISTS FOR (c:Control) ON (c.effectiveness_score)",
-            
             # Composite indexes for common queries
             "CREATE INDEX regulation_industry_risk IF NOT EXISTS FOR (r:Regulation) ON (r.industry, r.base_risk_score)",
             "CREATE INDEX regulation_jurisdiction_priority IF NOT EXISTS FOR (r:Regulation) ON (r.jurisdiction, r.priority)",
-            
             # Full-text search indexes
             "CREATE FULLTEXT INDEX regulation_search IF NOT EXISTS FOR (r:Regulation) ON EACH [r.title, r.description]",
-            "CREATE FULLTEXT INDEX control_search IF NOT EXISTS FOR (c:Control) ON EACH [c.name, c.description]"
+            "CREATE FULLTEXT INDEX control_search IF NOT EXISTS FOR (c:Control) ON EACH [c.name, c.description]",
         ]
-        
+
         async with self.driver.session(database=self.database) as session:
             for query in index_queries:
                 try:
@@ -256,70 +261,70 @@ class Neo4jComplianceIngestion:
                     logger.info(f"Index/constraint created: {query[:50]}...")
                 except Exception as e:
                     logger.warning(f"Index creation warning (may already exist): {e}")
-    
+
     def _generate_node_hash(self, data: Dict[str, Any]) -> str:
         """
         Generate deterministic hash for deduplication
-        
+
         Args:
             data: Node data
-            
+
         Returns:
             SHA-256 hash of stable fields
         """
         stable_fields = {
-            'id': data.get('id'),
-            'title': data.get('title'),
-            'url': data.get('url')
+            "id": data.get("id"),
+            "title": data.get("title"),
+            "url": data.get("url"),
         }
         stable_string = json.dumps(stable_fields, sort_keys=True)
         return hashlib.sha256(stable_string.encode()).hexdigest()
-    
+
     def _assess_data_quality(self, item: Dict[str, Any]) -> Tuple[DataQuality, float]:
         """
         Assess data quality for monitoring and filtering
-        
+
         Args:
             item: Data item to assess
-            
+
         Returns:
             Tuple of (quality_level, quality_score)
         """
         score = 1.0
-        
+
         # Check required fields
-        required_fields = ['id', 'title']
+        required_fields = ["id", "title"]
         for field in required_fields:
             if not item.get(field):
                 score -= 0.3
-        
+
         # Check enhanced metadata
-        if item.get('business_triggers'):
+        if item.get("business_triggers"):
             score += 0.1
         else:
             score -= 0.1
-            
-        if item.get('risk_metadata'):
+
+        if item.get("risk_metadata"):
             score += 0.1
         else:
             score -= 0.1
-            
-        if item.get('suggested_controls'):
+
+        if item.get("suggested_controls"):
             score += 0.1
-            
-        if item.get('automation_potential') is not None:
+
+        if item.get("automation_potential") is not None:
             score += 0.05
-            
+
         # Check data completeness
         total_fields = len(item)
         if total_fields < 5:
             score -= 0.2
         elif total_fields > 10:
             score += 0.1
-        
+
         # Normalize score
         score = max(0.0, min(1.0, score))
-        
+
         # Determine quality level
         if score >= 0.8:
             quality = DataQuality.HIGH
@@ -329,29 +334,29 @@ class Neo4jComplianceIngestion:
             quality = DataQuality.LOW
         else:
             quality = DataQuality.INVALID
-            
+
         return quality, score
-    
+
     @retry(
         stop=stop_after_attempt(3),
         wait=wait_exponential(multiplier=1, min=2, max=10),
-        retry=retry_if_exception_type(Neo4jError)
+        retry=retry_if_exception_type(Neo4jError),
     )
-    async def _ingest_regulation_batch(self, 
-                                      session: AsyncSession,
-                                      batch: List[Dict[str, Any]]) -> int:
+    async def _ingest_regulation_batch(
+        self, session: AsyncSession, batch: List[Dict[str, Any]]
+    ) -> int:
         """
         Ingest a batch of regulations with transaction management
-        
+
         Args:
             session: Neo4j session
             batch: Batch of regulation data
-            
+
         Returns:
             Number of successfully ingested items
         """
         success_count = 0
-        
+
         # Prepare batch data with validation
         validated_batch = []
         for item in batch:
@@ -359,36 +364,38 @@ class Neo4jComplianceIngestion:
                 # Validate data
                 validator = ComplianceDataValidator(**item)
                 validated_item = validator.dict()
-                
+
                 # Add metadata
-                validated_item['ingested_at'] = datetime.now(timezone.utc).isoformat()
-                validated_item['data_hash'] = self._generate_node_hash(validated_item)
-                
+                validated_item["ingested_at"] = datetime.now(timezone.utc).isoformat()
+                validated_item["data_hash"] = self._generate_node_hash(validated_item)
+
                 # Assess quality
                 quality, score = self._assess_data_quality(validated_item)
-                validated_item['data_quality'] = quality.value
-                validated_item['quality_score'] = score
-                
-                self.metrics.data_quality_scores[validated_item['id']] = score
-                
+                validated_item["data_quality"] = quality.value
+                validated_item["quality_score"] = score
+
+                self.metrics.data_quality_scores[validated_item["id"]] = score
+
                 if quality != DataQuality.INVALID:
                     validated_batch.append(validated_item)
                 else:
                     logger.warning(f"Skipping invalid data: {validated_item.get('id')}")
                     self.metrics.skipped_items += 1
-                    
+
             except ValidationError as e:
                 logger.error(f"Validation error for item {item.get('id')}: {e}")
                 self.metrics.failed_items += 1
-                self.metrics.errors.append({
-                    'item_id': item.get('id'),
-                    'error': str(e),
-                    'timestamp': datetime.now(timezone.utc).isoformat()
-                })
-        
+                self.metrics.errors.append(
+                    {
+                        "item_id": item.get("id"),
+                        "error": str(e),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
+                    }
+                )
+
         if not validated_batch:
             return 0
-        
+
         # Cypher query for MERGE operation with proper updates
         merge_query = """
         UNWIND $batch AS item
@@ -448,64 +455,66 @@ class Neo4jComplianceIngestion:
                r.nodes_created as created,
                r.nodes_updated as updated
         """
-        
+
         try:
             result = await session.run(merge_query, batch=validated_batch)
             records = await result.fetch(1000)  # Fetch all records
-            
+
             for record in records:
-                if record['created']:
+                if record["created"]:
                     self.metrics.nodes_created += 1
-                elif record['updated']:
+                elif record["updated"]:
                     self.metrics.nodes_updated += 1
                 success_count += 1
-                self._processed_ids.add(record['id'])
-            
+                self._processed_ids.add(record["id"])
+
             # Count relationships created (approximate)
-            self.metrics.relationships_created += len(validated_batch) * 3  # Avg relationships per node
-            
+            self.metrics.relationships_created += (
+                len(validated_batch) * 3
+            )  # Avg relationships per node
+
             logger.info(f"Batch ingested: {success_count}/{len(batch)} items")
-            
+
         except Exception as e:
             logger.error(f"Batch ingestion error: {e}")
             # Track failed items for retry
             for item in batch:
-                self._failed_ids.add(item.get('id'))
+                self._failed_ids.add(item.get("id"))
             raise
-        
+
         return success_count
-    
-    async def ingest_compliance_manifest(self, 
-                                        manifest_path: Path,
-                                        validate_only: bool = False) -> IngestionMetrics:
+
+    async def ingest_compliance_manifest(
+        self, manifest_path: Path, validate_only: bool = False
+    ) -> IngestionMetrics:
         """
         Main ingestion entry point with full production safeguards
-        
+
         Args:
             manifest_path: Path to enhanced manifest JSON
             validate_only: If True, only validate without ingesting
-            
+
         Returns:
             IngestionMetrics with complete statistics
         """
         logger.info(f"Starting ingestion from {manifest_path}")
         self.metrics = IngestionMetrics()
-        
+
         try:
             # Load and validate manifest
-            with open(manifest_path, 'r') as f:
+            with open(manifest_path, "r") as f:
                 manifest_data = json.load(f)
-            
-            items = manifest_data.get('items', [])
+
+            items = manifest_data.get("items", [])
             self.metrics.total_items = len(items)
-            
+
             if validate_only:
                 # Validation-only mode
                 for item in items:
                     try:
                         ComplianceDataValidator(**item)
                         quality, score = self._assess_data_quality(item)
-                        self.metrics.data_quality_scores[item.get('id')] = score
+                        self.metrics.data_quality_scores[item.get("id")] = score
                         if quality != DataQuality.INVALID:
                             self.metrics.successful_items += 1
                         else:
@@ -513,19 +522,19 @@ class Neo4jComplianceIngestion:
                     except ValidationError as e:
                         self.metrics.failed_items += 1
                         logger.error(f"Validation failed for {item.get('id')}: {e}")
-                
+
                 self.metrics.end_time = datetime.now(timezone.utc)
                 logger.info(f"Validation complete: {self.metrics.to_dict()}")
                 return self.metrics
-            
+
             # Create indexes for optimal performance
             await self.create_indexes_and_constraints()
-            
+
             # Process in batches for scalability
             async with self.driver.session(database=self.database) as session:
                 for i in range(0, len(items), self.batch_size):
-                    batch = items[i:i + self.batch_size]
-                    
+                    batch = items[i : i + self.batch_size]
+
                     # Use transaction for batch
                     async with session.begin_transaction() as tx:
                         try:
@@ -538,16 +547,20 @@ class Neo4jComplianceIngestion:
                             await tx.rollback()
                             logger.error(f"Transaction rollback for batch {i}: {e}")
                             self.metrics.failed_items += len(batch)
-                    
+
                     # Progress logging
                     if (i + self.batch_size) % 500 == 0:
-                        logger.info(f"Progress: {i + self.batch_size}/{len(items)} items processed")
-            
+                        logger.info(
+                            f"Progress: {i + self.batch_size}/{len(items)} items processed"
+                        )
+
             # Retry failed items once
             if self._failed_ids:
                 logger.info(f"Retrying {len(self._failed_ids)} failed items")
-                retry_items = [item for item in items if item.get('id') in self._failed_ids]
-                
+                retry_items = [
+                    item for item in items if item.get("id") in self._failed_ids
+                ]
+
                 async with self.driver.session(database=self.database) as session:
                     for item in retry_items:
                         try:
@@ -557,52 +570,59 @@ class Neo4jComplianceIngestion:
                             if success:
                                 self.metrics.successful_items += 1
                                 self.metrics.failed_items -= 1
-                                self._failed_ids.remove(item.get('id'))
+                                self._failed_ids.remove(item.get("id"))
                         except Exception as e:
                             logger.error(f"Retry failed for {item.get('id')}: {e}")
-            
+
             self.metrics.end_time = datetime.now(timezone.utc)
-            
+
             # Log final metrics
             logger.info(f"Ingestion complete: {self.metrics.to_dict()}")
-            
+
             # Write metrics to file for monitoring
-            metrics_path = manifest_path.parent / f"ingestion_metrics_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-            with open(metrics_path, 'w') as f:
+            metrics_path = (
+                manifest_path.parent
+                / f"ingestion_metrics_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            )
+            with open(metrics_path, "w") as f:
                 json.dump(self.metrics.to_dict(), f, indent=2)
-            
+
             return self.metrics
-            
+
         except Exception as e:
             logger.error(f"Critical ingestion error: {e}")
             logger.error(traceback.format_exc())
             self.metrics.end_time = datetime.now(timezone.utc)
-            self.metrics.errors.append({
-                'error': str(e),
-                'traceback': traceback.format_exc(),
-                'timestamp': datetime.now(timezone.utc).isoformat()
-            })
+            self.metrics.errors.append(
+                {
+                    "error": str(e),
+                    "traceback": traceback.format_exc(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                }
+            )
             raise
-    
+
     async def ingest_relationships(self, relationships_path: Path) -> IngestionMetrics:
         """
         Ingest regulatory relationships from relationships manifest
-        
+
         Args:
             relationships_path: Path to relationships JSON
-            
+
         Returns:
             IngestionMetrics for relationship ingestion
         """
         logger.info(f"Starting relationship ingestion from {relationships_path}")
         metrics = IngestionMetrics()
-        
+
         try:
-            with open(relationships_path, 'r') as f:
+            with open(relationships_path, "r") as f:
                 relationships_data = json.load(f)
-            
-            regulatory_relationships = relationships_data.get('regulatory_relationships', {})
-            
+
+            regulatory_relationships = relationships_data.get(
+                "regulatory_relationships", {}
+            )
+
             # Cypher query for creating relationships
             relationship_query = """
             UNWIND $relationships AS rel
@@ -617,59 +637,63 @@ class Neo4jComplianceIngestion:
                 r.updated_at = datetime()
             RETURN source.id as source, target.id as target, type(r) as relationship
             """
-            
+
             # Process relationships
             async with self.driver.session(database=self.database) as session:
                 for source_id, source_data in regulatory_relationships.items():
-                    relationships = source_data.get('relationships', [])
-                    
+                    relationships = source_data.get("relationships", [])
+
                     for rel in relationships:
                         try:
                             rel_data = {
-                                'source_id': source_id,
-                                'target_id': rel.get('target'),
-                                'type': rel.get('type'),
-                                'strength': rel.get('strength', 0.5),
-                                'control_overlap': rel.get('control_overlap', 0.0),
-                                'description': rel.get('description', '')
+                                "source_id": source_id,
+                                "target_id": rel.get("target"),
+                                "type": rel.get("type"),
+                                "strength": rel.get("strength", 0.5),
+                                "control_overlap": rel.get("control_overlap", 0.0),
+                                "description": rel.get("description", ""),
                             }
-                            
-                            result = await session.run(relationship_query, relationships=[rel_data])
+
+                            result = await session.run(
+                                relationship_query, relationships=[rel_data]
+                            )
                             await result.consume()
                             metrics.relationships_created += 1
-                            
+
                         except Exception as e:
-                            logger.error(f"Failed to create relationship {source_id} -> {rel.get('target')}: {e}")
+                            logger.error(
+                                f"Failed to create relationship {source_id} -> {rel.get('target')}: {e}"
+                            )
                             metrics.failed_items += 1
-            
+
             metrics.end_time = datetime.now(timezone.utc)
             logger.info(f"Relationship ingestion complete: {metrics.to_dict()}")
             return metrics
-            
+
         except Exception as e:
             logger.error(f"Relationship ingestion error: {e}")
-            metrics.errors.append({'error': str(e)})
+            metrics.errors.append({"error": str(e)})
             raise
-    
+
     async def ingest_enforcement_data(self, enforcement_path: Path) -> IngestionMetrics:
         """
         Ingest enforcement database for evidence and patterns
-        
+
         Args:
             enforcement_path: Path to enforcement JSON
-            
+
         Returns:
             IngestionMetrics for enforcement ingestion
         """
         logger.info(f"Starting enforcement ingestion from {enforcement_path}")
         metrics = IngestionMetrics()
-        
+
         try:
-            with open(enforcement_path, 'r') as f:
+            with open(enforcement_path, "r") as f:
                 enforcement_data = json.load(f)
-            
-            enforcement_actions = enforcement_data.get('enforcement_actions', [])
-            
+
+            enforcement_actions = enforcement_data.get("enforcement_actions", [])
+
             # Cypher query for enforcement nodes
             enforcement_query = """
             UNWIND $actions AS action
@@ -692,57 +716,57 @@ class Neo4jComplianceIngestion:
             
             RETURN e.id as id
             """
-            
+
             async with self.driver.session(database=self.database) as session:
                 for i in range(0, len(enforcement_actions), self.batch_size):
-                    batch = enforcement_actions[i:i + self.batch_size]
-                    
+                    batch = enforcement_actions[i : i + self.batch_size]
+
                     try:
                         result = await session.run(enforcement_query, actions=batch)
                         records = await result.fetch(1000)
                         metrics.nodes_created += len(records)
                         metrics.successful_items += len(records)
-                        
+
                     except Exception as e:
                         logger.error(f"Enforcement batch error: {e}")
                         metrics.failed_items += len(batch)
-            
+
             metrics.end_time = datetime.now(timezone.utc)
             logger.info(f"Enforcement ingestion complete: {metrics.to_dict()}")
             return metrics
-            
+
         except Exception as e:
             logger.error(f"Enforcement ingestion error: {e}")
-            metrics.errors.append({'error': str(e)})
+            metrics.errors.append({"error": str(e)})
             raise
-    
+
     async def verify_ingestion(self) -> Dict[str, Any]:
         """
         Verify ingestion completeness and data integrity
-        
+
         Returns:
             Verification report
         """
         verification_queries = {
-            'regulation_count': "MATCH (r:Regulation) RETURN count(r) as count",
-            'control_count': "MATCH (c:Control) RETURN count(c) as count",
-            'enforcement_count': "MATCH (e:Enforcement) RETURN count(e) as count",
-            'relationship_count': "MATCH ()-[r:RELATES_TO]->() RETURN count(r) as count",
-            'industry_coverage': "MATCH (i:Industry) RETURN collect(i.name) as industries",
-            'high_risk_regulations': """
+            "regulation_count": "MATCH (r:Regulation) RETURN count(r) as count",
+            "control_count": "MATCH (c:Control) RETURN count(c) as count",
+            "enforcement_count": "MATCH (e:Enforcement) RETURN count(e) as count",
+            "relationship_count": "MATCH ()-[r:RELATES_TO]->() RETURN count(r) as count",
+            "industry_coverage": "MATCH (i:Industry) RETURN collect(i.name) as industries",
+            "high_risk_regulations": """
                 MATCH (r:Regulation) 
                 WHERE r.base_risk_score >= 8 
                 RETURN count(r) as count
             """,
-            'automation_ready': """
+            "automation_ready": """
                 MATCH (r:Regulation) 
                 WHERE r.automation_potential >= 0.7 
                 RETURN count(r) as count
-            """
+            """,
         }
-        
+
         verification_report = {}
-        
+
         async with self.driver.session(database=self.database) as session:
             for key, query in verification_queries.items():
                 try:
@@ -752,10 +776,10 @@ class Neo4jComplianceIngestion:
                 except Exception as e:
                     logger.error(f"Verification query failed for {key}: {e}")
                     verification_report[key] = f"Error: {str(e)}"
-        
+
         logger.info(f"Verification report: {verification_report}")
         return verification_report
-    
+
     async def close(self):
         """Close Neo4j driver connection"""
         await self.driver.close()
@@ -768,27 +792,27 @@ class IQComplianceIntegration:
     Integration layer between ingested compliance data and IQ agent
     Provides high-performance queries and intelligent filtering
     """
-    
+
     def __init__(self, neo4j_driver):
         """
         Initialize integration with Neo4j driver
-        
+
         Args:
             neo4j_driver: AsyncNeo4j driver instance
         """
         self.driver = neo4j_driver
         self.query_cache = {}  # Simple query cache
-    
-    async def get_applicable_regulations(self,
-                                        business_profile: Dict[str, Any],
-                                        risk_threshold: float = 5.0) -> List[Dict[str, Any]]:
+
+    async def get_applicable_regulations(
+        self, business_profile: Dict[str, Any], risk_threshold: float = 5.0
+    ) -> List[Dict[str, Any]]:
         """
         Get regulations applicable to a business profile
-        
+
         Args:
             business_profile: Business context data
             risk_threshold: Minimum risk score to include
-            
+
         Returns:
             List of applicable regulations with metadata
         """
@@ -816,29 +840,32 @@ class IQComplianceIntegration:
         ORDER BY regulation.applicability_score DESC, r.base_risk_score DESC
         LIMIT 50
         """
-        
+
         params = {
-            'industry': business_profile.get('industry', ''),
-            'jurisdiction': business_profile.get('jurisdiction', 'UK'),
-            'handles_personal_data': business_profile.get('handles_personal_data', False),
-            'processes_payments': business_profile.get('processes_payments', False),
-            'risk_threshold': risk_threshold
+            "industry": business_profile.get("industry", ""),
+            "jurisdiction": business_profile.get("jurisdiction", "UK"),
+            "handles_personal_data": business_profile.get(
+                "handles_personal_data", False
+            ),
+            "processes_payments": business_profile.get("processes_payments", False),
+            "risk_threshold": risk_threshold,
         }
-        
+
         async with self.driver.session() as session:
             result = await session.run(query, params)
             regulations = await result.fetch(50)
-            
-        return [record['regulation'] for record in regulations]
-    
-    async def calculate_control_overlap(self,
-                                       regulation_ids: List[str]) -> Dict[str, Any]:
+
+        return [record["regulation"] for record in regulations]
+
+    async def calculate_control_overlap(
+        self, regulation_ids: List[str]
+    ) -> Dict[str, Any]:
         """
         Calculate control overlap between regulations
-        
+
         Args:
             regulation_ids: List of regulation IDs to compare
-            
+
         Returns:
             Control overlap analysis
         """
@@ -854,26 +881,26 @@ class IQComplianceIntegration:
         } as overlap
         ORDER BY overlap.count DESC
         """
-        
+
         async with self.driver.session() as session:
             result = await session.run(query, regulation_ids=regulation_ids)
             overlaps = await result.fetch(100)
-            
+
         return {
-            'overlapping_controls': [record['overlap'] for record in overlaps],
-            'deduplication_potential': len(overlaps) / max(len(regulation_ids), 1)
+            "overlapping_controls": [record["overlap"] for record in overlaps],
+            "deduplication_potential": len(overlaps) / max(len(regulation_ids), 1),
         }
-    
-    async def get_enforcement_evidence(self,
-                                      regulation_id: str,
-                                      limit: int = 3) -> List[Dict[str, Any]]:
+
+    async def get_enforcement_evidence(
+        self, regulation_id: str, limit: int = 3
+    ) -> List[Dict[str, Any]]:
         """
         Get enforcement evidence for a regulation
-        
+
         Args:
             regulation_id: Regulation ID
             limit: Maximum evidence items to return
-            
+
         Returns:
             List of enforcement evidence
         """
@@ -886,57 +913,55 @@ class IQComplianceIntegration:
         ORDER BY e.penalty_amount DESC
         LIMIT $limit
         """
-        
+
         async with self.driver.session() as session:
             result = await session.run(query, regulation_id=regulation_id, limit=limit)
             evidence = await result.fetch(limit)
-            
-        return [record['evidence'] for record in evidence]
+
+        return [record["evidence"] for record in evidence]
 
 
 if __name__ == "__main__":
     # Example usage for testing
     import os
     from dotenv import load_dotenv
-    
+
     load_dotenv()
-    
+
     async def test_ingestion():
         """Test the ingestion pipeline"""
-        
+
         # Get credentials from environment
         neo4j_uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
         neo4j_user = os.getenv("NEO4J_USER", "neo4j")
         neo4j_password = os.getenv("NEO4J_PASSWORD", "password")
-        
+
         # Initialize pipeline
         async with Neo4jComplianceIngestion(
-            neo4j_uri=neo4j_uri,
-            neo4j_user=neo4j_user,
-            neo4j_password=neo4j_password
+            neo4j_uri=neo4j_uri, neo4j_user=neo4j_user, neo4j_password=neo4j_password
         ) as pipeline:
-            
+
             # Ingest enhanced manifest
             manifest_path = Path("data/manifests/compliance_ml_manifest_enhanced.json")
             if manifest_path.exists():
                 metrics = await pipeline.ingest_compliance_manifest(manifest_path)
                 print(f"Ingestion metrics: {metrics.to_dict()}")
-            
+
             # Ingest relationships
             relationships_path = Path("data/manifests/regulatory_relationships.json")
             if relationships_path.exists():
                 rel_metrics = await pipeline.ingest_relationships(relationships_path)
                 print(f"Relationship metrics: {rel_metrics.to_dict()}")
-            
+
             # Ingest enforcement data
             enforcement_path = Path("data/enforcement/uk_enforcement_database.json")
             if enforcement_path.exists():
                 enf_metrics = await pipeline.ingest_enforcement_data(enforcement_path)
                 print(f"Enforcement metrics: {enf_metrics.to_dict()}")
-            
+
             # Verify ingestion
             verification = await pipeline.verify_ingestion()
             print(f"Verification: {verification}")
-    
+
     # Run test
     asyncio.run(test_ingestion())

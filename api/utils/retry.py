@@ -75,7 +75,9 @@ class RetryManager:
 
         return isinstance(exception, self.config.exceptions)
 
-    def log_retry_attempt(self, attempt: int, exception: Exception, delay: float) -> None:
+    def log_retry_attempt(
+        self, attempt: int, exception: Exception, delay: float
+    ) -> None:
         """Log retry attempt details."""
         logger.warning(
             f"Retry attempt {attempt}/{self.config.max_attempts} "
@@ -83,7 +85,9 @@ class RetryManager:
             f"Retrying in {delay:.2f} seconds..."
         )
 
-    async def execute_async(self, func: Callable[..., Awaitable[T]], *args, **kwargs) -> T:
+    async def execute_async(
+        self, func: Callable[..., Awaitable[T]], *args, **kwargs
+    ) -> T:
         """Execute async function with retry logic."""
         last_exception = None
 
@@ -256,7 +260,9 @@ database_retry = retry(
 
 
 # Utility functions for manual retry management
-async def retry_async(func: Callable[..., Awaitable[T]], config: RetryConfig, *args, **kwargs) -> T:
+async def retry_async(
+    func: Callable[..., Awaitable[T]], config: RetryConfig, *args, **kwargs
+) -> T:
     """Manually retry an async function with the given configuration."""
     return await RetryManager(config).execute_async(func, *args, **kwargs)
 

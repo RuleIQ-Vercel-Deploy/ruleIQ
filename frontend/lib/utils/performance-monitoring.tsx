@@ -92,7 +92,7 @@ class PerformanceMonitor {
     // In a real app, you'd send this to a service like Sentry, DataDog, etc.
     // For now, we'll just log it
     if (entry.duration > 2000 || !entry.success) {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
     }
   }
 }

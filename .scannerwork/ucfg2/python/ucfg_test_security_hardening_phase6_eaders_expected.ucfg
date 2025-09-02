@@ -1,0 +1,112 @@
+
+Rtests.test_security_hardening_phase6.TestSecurityHeaders.security_headers_expectedO
+C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py‘ ‘(!"2*¡
+
+2
+’ ’('
+
+“ ›(	
+%1"dict¤
+¡
+
+” ”(/
+%2"__mapSet*"
+
+__unknown_file (
+
+%1*6
+
+__unknown_file (
+X-Content-Type-Options*'
+
+__unknown_file (	
+nosniffš
+—
+
+• •(%
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*/
+
+__unknown_file (
+X-Frame-Options*$
+
+__unknown_file (
+DENY¤
+¡
+
+– –(/
+%4"__mapSet*"
+
+__unknown_file (
+
+%1*0
+
+__unknown_file (
+X-XSS-Protection*-
+
+__unknown_file (
+1; mode=blockÃ
+À
+
+— —(N
+%5"__mapSet*"
+
+__unknown_file (
+
+%1*9
+
+__unknown_file (
+Strict-Transport-Security*C
+
+__unknown_file ('%
+#max-age=31536000; includeSubDomains°
+­
+
+˜ ˜(;
+%6"__mapSet*"
+
+__unknown_file (
+
+%1*7
+
+__unknown_file (
+Content-Security-Policy*2
+
+__unknown_file (
+default-src 'self'µ
+²
+
+™ ™(@
+%7"__mapSet*"
+
+__unknown_file (
+
+%1*/
+
+__unknown_file (
+Referrer-Policy*?
+
+__unknown_file (#!
+strict-origin-when-cross-originÁ
+¾
+
+š š(L
+%8"__mapSet*"
+
+__unknown_file (
+
+%1*2
+
+__unknown_file (
+Permissions-Policy*H
+
+__unknown_file (,*
+(geolocation=(), microphone=(), camera=()"
+
+“ ›(	
+
+%1B<:
+8tests.test_security_hardening_phase6.TestSecurityHeadersH

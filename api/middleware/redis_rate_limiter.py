@@ -85,7 +85,9 @@ class RedisRateLimiter:
                 oldest_requests = await redis_client.zrange(key, 0, 0, withscores=True)
                 if oldest_requests:
                     oldest_time = int(oldest_requests[0][1])
-                    retry_after = max(1, self.window_seconds - (current_time - oldest_time))
+                    retry_after = max(
+                        1, self.window_seconds - (current_time - oldest_time)
+                    )
                 else:
                     retry_after = self.window_seconds
                 return False, retry_after
@@ -146,9 +148,13 @@ general_limiter = RedisRateLimiter(
     key_prefix="general",
 )
 
-auth_limiter = RedisRateLimiter(requests_per_window=10, window_seconds=60, key_prefix="auth")
+auth_limiter = RedisRateLimiter(
+    requests_per_window=10, window_seconds=60, key_prefix="auth"
+)
 
-api_limiter = RedisRateLimiter(requests_per_window=100, window_seconds=60, key_prefix="api")
+api_limiter = RedisRateLimiter(
+    requests_per_window=100, window_seconds=60, key_prefix="api"
+)
 
 
 async def redis_rate_limit_middleware(request: Request, call_next):
@@ -192,7 +198,9 @@ async def redis_rate_limit_middleware(request: Request, call_next):
     remaining = await general_limiter.get_remaining_requests(identifier)
     response.headers["X-RateLimit-Limit"] = str(general_limiter.requests_per_window)
     response.headers["X-RateLimit-Remaining"] = str(remaining)
-    response.headers["X-RateLimit-Reset"] = str(int(time.time()) + general_limiter.window_seconds)
+    response.headers["X-RateLimit-Reset"] = str(
+        int(time.time()) + general_limiter.window_seconds
+    )
 
     return response
 

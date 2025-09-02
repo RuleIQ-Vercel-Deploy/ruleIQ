@@ -407,17 +407,26 @@ Catherine is ethics-focused and values transparency, audit trails, and complianc
             instruction_parts.append(framework_info.get("requirements", ""))
 
         # Add persona adaptation
-        if context.user_persona and context.user_persona.lower() in self.persona_adaptations:
-            instruction_parts.append(self.persona_adaptations[context.user_persona.lower()])
+        if (
+            context.user_persona
+            and context.user_persona.lower() in self.persona_adaptations
+        ):
+            instruction_parts.append(
+                self.persona_adaptations[context.user_persona.lower()]
+            )
 
         # Add business context integration
         if context.business_profile:
-            business_context = self._build_business_context_instruction(context.business_profile)
+            business_context = self._build_business_context_instruction(
+                context.business_profile
+            )
             instruction_parts.append(business_context)
 
         # Add task complexity considerations
         if context.task_complexity:
-            complexity_guidance = self._build_complexity_guidance(context.task_complexity)
+            complexity_guidance = self._build_complexity_guidance(
+                context.task_complexity
+            )
             instruction_parts.append(complexity_guidance)
 
         # Add any additional context
@@ -430,7 +439,9 @@ Catherine is ethics-focused and values transparency, audit trails, and complianc
         # Combine all parts with proper spacing
         return "\n\n".join(part.strip() for part in instruction_parts if part.strip())
 
-    def _build_business_context_instruction(self, business_profile: Dict[str, Any]) -> str:
+    def _build_business_context_instruction(
+        self, business_profile: Dict[str, Any]
+    ) -> str:
         """Build business context instruction from business profile"""
         industry = business_profile.get("industry", "Unknown")
         employee_count = business_profile.get("employee_count", 0)
@@ -489,37 +500,45 @@ Focus on:
 
         return complexity_map.get(task_complexity, "")
 
-    def _build_additional_context_instruction(self, additional_context: Dict[str, Any]) -> str:
+    def _build_additional_context_instruction(
+        self, additional_context: Dict[str, Any]
+    ) -> str:
         """Build additional context instruction from provided context"""
         context_parts = []
 
         # Add any specific guidance based on additional context
         if additional_context.get("streaming_mode"):
-            context_parts.append("""
+            context_parts.append(
+                """
 Streaming Mode Considerations:
 - Provide responses in logical chunks suitable for streaming
 - Structure information hierarchically with clear sections
 - Begin with executive summary before detailed analysis
 - Use clear section headers and structured formatting
-""")
+"""
+            )
 
         if additional_context.get("function_calling"):
-            context_parts.append("""
+            context_parts.append(
+                """
 Function Calling Context:
 - Provide structured outputs that can be parsed and processed
 - Use consistent data formats and schemas
 - Include confidence scores and metadata where appropriate
 - Structure responses to support automated processing
-""")
+"""
+            )
 
         if additional_context.get("caching_enabled"):
-            context_parts.append("""
+            context_parts.append(
+                """
 Caching Optimization:
 - Provide consistent, deterministic responses for similar inputs
 - Structure responses to maximize cache efficiency
 - Include version information for cache invalidation
 - Optimize for reusability across similar business contexts
-""")
+"""
+            )
 
         return "\n\n".join(context_parts) if context_parts else ""
 

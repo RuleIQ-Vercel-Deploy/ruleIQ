@@ -125,7 +125,9 @@ class TestAIConfig:
 
     def test_get_optimal_model_simple_task(self, ai_config):
         """Test optimal model selection for simple tasks."""
-        model_type = ai_config.get_optimal_model(task_complexity="simple", prefer_speed=True)
+        model_type = ai_config.get_optimal_model(
+            task_complexity="simple", prefer_speed=True
+        )
 
         # Simple tasks should prefer faster, cheaper models
         ai_config.get_model_metadata(model_type)
@@ -137,7 +139,9 @@ class TestAIConfig:
 
     def test_get_optimal_model_complex_task(self, ai_config):
         """Test optimal model selection for complex tasks."""
-        model_type = ai_config.get_optimal_model(task_complexity="complex", prefer_speed=False)
+        model_type = ai_config.get_optimal_model(
+            task_complexity="complex", prefer_speed=False
+        )
 
         # Complex tasks should prefer more capable models
         assert model_type in [ModelType.GEMINI_25_PRO, ModelType.GEMINI_25_FLASH]
@@ -151,7 +155,9 @@ class TestAIConfig:
             "business_context": {"industry": "healthcare"},
         }
 
-        model_type = ai_config.get_optimal_model(task_complexity="auto", task_context=context)
+        model_type = ai_config.get_optimal_model(
+            task_complexity="auto", task_context=context
+        )
 
         # Should select appropriate model based on context
         assert model_type in MODEL_FALLBACK_CHAIN
@@ -164,7 +170,11 @@ class TestAIConfig:
         assert complexity in ["simple", "medium"]
 
         # Complex context
-        complex_context = {"task_type": "analysis", "prompt_length": 3000, "framework": "gdpr"}
+        complex_context = {
+            "task_type": "analysis",
+            "prompt_length": 3000,
+            "framework": "gdpr",
+        }
         complexity = ai_config._calculate_task_complexity(complex_context)
         assert complexity in ["medium", "complex"]
 
@@ -191,7 +201,10 @@ class TestAIConfig:
         """Test model instantiation with fallback on failure."""
         # First call fails, second succeeds
         mock_model_instance = Mock()
-        mock_genai_model.side_effect = [Exception("Model unavailable"), mock_model_instance]
+        mock_genai_model.side_effect = [
+            Exception("Model unavailable"),
+            mock_model_instance,
+        ]
 
         model = ai_config.get_model(ModelType.GEMINI_25_PRO)
 
@@ -207,7 +220,9 @@ class TestAIConfig:
 
     def test_model_selection_prefer_speed(self, ai_config):
         """Test model selection when preferring speed."""
-        model_type = ai_config.get_optimal_model(task_complexity="medium", prefer_speed=True)
+        model_type = ai_config.get_optimal_model(
+            task_complexity="medium", prefer_speed=True
+        )
 
         metadata = ai_config.get_model_metadata(model_type)
         # Should select a model with good speed score
@@ -215,7 +230,9 @@ class TestAIConfig:
 
     def test_model_selection_prefer_capability(self, ai_config):
         """Test model selection when preferring capability."""
-        model_type = ai_config.get_optimal_model(task_complexity="complex", prefer_speed=False)
+        model_type = ai_config.get_optimal_model(
+            task_complexity="complex", prefer_speed=False
+        )
 
         metadata = ai_config.get_model_metadata(model_type)
         # Should select a model with high capability
@@ -266,7 +283,9 @@ class TestGetAIModel:
         )
 
         assert result == mock_model
-        mock_ai_config.get_optimal_model.assert_called_once_with("complex", False, task_context)
+        mock_ai_config.get_optimal_model.assert_called_once_with(
+            "complex", False, task_context
+        )
 
     @patch("config.ai_config.ai_config")
     def test_get_ai_model_fallback_on_error(self, mock_ai_config):
@@ -303,14 +322,20 @@ class TestModelMetadataIntegration:
             # All scores should be positive
             assert metadata.cost_score > 0, f"Invalid cost score for {model_type}"
             assert metadata.speed_score > 0, f"Invalid speed score for {model_type}"
-            assert metadata.capability_score > 0, f"Invalid capability score for {model_type}"
+            assert (
+                metadata.capability_score > 0
+            ), f"Invalid capability score for {model_type}"
 
             # Scores should be in reasonable ranges (1-10)
-            assert 1 <= metadata.cost_score <= 10, f"Cost score out of range for {model_type}"
-            assert 1 <= metadata.speed_score <= 10, f"Speed score out of range for {model_type}"
-            assert 1 <= metadata.capability_score <= 10, (
-                f"Capability score out of range for {model_type}"
-            )
+            assert (
+                1 <= metadata.cost_score <= 10
+            ), f"Cost score out of range for {model_type}"
+            assert (
+                1 <= metadata.speed_score <= 10
+            ), f"Speed score out of range for {model_type}"
+            assert (
+                1 <= metadata.capability_score <= 10
+            ), f"Capability score out of range for {model_type}"
 
             # Technical specs should be reasonable
             assert metadata.max_tokens > 0, f"Invalid max_tokens for {model_type}"
@@ -325,6 +350,6 @@ class TestModelMetadataIntegration:
 
         # Fallback chain should generally go from high to low capability
         # (allowing for some flexibility in ordering)
-        assert capabilities[0] >= capabilities[-1], (
-            "Fallback chain should start with most capable model"
-        )
+        assert (
+            capabilities[0] >= capabilities[-1]
+        ), "Fallback chain should start with most capable model"

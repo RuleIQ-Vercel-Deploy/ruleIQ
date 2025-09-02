@@ -10,10 +10,8 @@ Provides endpoints for:
 """
 
 from datetime import datetime
-from typing import List, Dict, Any
-from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.dependencies.auth import get_current_active_user
@@ -21,6 +19,7 @@ from database.db_setup import get_async_db
 from database.user import User
 
 router = APIRouter()
+
 
 @router.get("/", summary="Get dashboard overview")
 async def get_dashboard(
@@ -60,6 +59,7 @@ async def get_dashboard(
             "integration_status": "healthy",
         },
     }
+
 
 @router.get("/widgets", summary="Get dashboard widgets")
 async def get_dashboard_widgets(
@@ -123,6 +123,7 @@ async def get_dashboard_widgets(
         },
     }
 
+
 @router.get("/notifications", summary="Get dashboard notifications")
 async def get_dashboard_notifications(
     limit: int = 10,
@@ -164,15 +165,16 @@ async def get_dashboard_notifications(
             "action_url": "/integrations/google-workspace",
         },
     ]
-    
+
     if unread_only:
         notifications = [n for n in notifications if not n["read"]]
-    
+
     return {
         "notifications": notifications[:limit],
         "total": len(notifications),
         "unread_count": sum(1 for n in notifications if not n["read"]),
     }
+
 
 @router.get("/quick-actions", summary="Get quick actions")
 async def get_quick_actions(
@@ -237,6 +239,7 @@ async def get_quick_actions(
             "qa_003",
         ],
     }
+
 
 async def get_recommendations(
     current_user: User = Depends(get_current_active_user),

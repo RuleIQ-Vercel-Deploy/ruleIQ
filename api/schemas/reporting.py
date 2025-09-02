@@ -43,19 +43,29 @@ class ReportParameters(BaseModel):
     frameworks: Optional[List[str]] = Field(
         None, description="List of compliance frameworks to include."
     )
-    start_date: Optional[date] = Field(None, description="Start date for the report's data range.")
-    end_date: Optional[date] = Field(None, description="End date for the report's data range.")
+    start_date: Optional[date] = Field(
+        None, description="Start date for the report's data range."
+    )
+    end_date: Optional[date] = Field(
+        None, description="End date for the report's data range."
+    )
     include_evidence: bool = Field(
         False, description="Whether to attach detailed evidence to the report."
     )
     # Allows for additional, report-specific parameters not yet modeled
     extra_params: Optional[Dict[str, Any]] = Field(
-        default_factory=dict, description="Additional key-value parameters for custom reports."
+        default_factory=dict,
+        description="Additional key-value parameters for custom reports.",
     )
 
     @validator("end_date", always=True)
     def validate_date_range(self, v, values):
-        if "start_date" in values and v and values["start_date"] and v < values["start_date"]:
+        if (
+            "start_date" in values
+            and v
+            and values["start_date"]
+            and v < values["start_date"]
+        ):
             raise ValueError("End date cannot be before start date.")
         return v
 
@@ -64,12 +74,17 @@ class ScheduleConfig(BaseModel):
     """Structured model for schedule configuration."""
 
     day_of_week: Optional[int] = Field(
-        None, ge=0, le=6, description="Day of the week for weekly reports (0=Monday, 6=Sunday)."
+        None,
+        ge=0,
+        le=6,
+        description="Day of the week for weekly reports (0=Monday, 6=Sunday).",
     )
     day_of_month: Optional[int] = Field(
         None, ge=1, le=31, description="Day of the month for monthly reports."
     )
-    time_of_day: str = Field("09:00", description="Time of day to send the report (HH:MM format).")
+    time_of_day: str = Field(
+        "09:00", description="Time of day to send the report (HH:MM format)."
+    )
     cron_expression: Optional[str] = Field(
         None, description="A cron expression for custom scheduling."
     )

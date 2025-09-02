@@ -58,8 +58,12 @@ FILE_SIGNATURES = {
     "image/png": [b"\x89PNG\r\n\x1a\n"],
     "image/gif": [b"GIF87a", b"GIF89a"],
     "application/zip": [b"PK\x03\x04", b"PK\x05\x06", b"PK\x07\x08"],
-    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [b"PK\x03\x04"],
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [b"PK\x03\x04"],
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [
+        b"PK\x03\x04"
+    ],
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
+        b"PK\x03\x04"
+    ],
     "text/plain": None,  # Text files don't have signatures
     "text/csv": None,
 }
@@ -196,7 +200,9 @@ def sanitize_filename(filename: str) -> str:
     return filename
 
 
-def validate_file_content(file_content: bytes, content_type: str, filename: str = "") -> bool:
+def validate_file_content(
+    file_content: bytes, content_type: str, filename: str = ""
+) -> bool:
     """Validate file content matches declared content type."""
     # Check file signatures if available
     signatures = FILE_SIGNATURES.get(content_type)
@@ -271,13 +277,17 @@ def analyze_file_comprehensively(
     # Basic file info
     file_size = len(file_content)
     file_hash = calculate_file_hash(file_content)
-    detected_type = get_file_mime_type(file_content, filename) if file_content else "unknown"
+    detected_type = (
+        get_file_mime_type(file_content, filename) if file_content else "unknown"
+    )
     safe_filename = sanitize_filename(filename)
 
     # Layer 1: File size validation by type
     max_size = TYPE_SIZE_LIMITS.get(content_type, settings.max_file_size)
     if file_size > max_size:
-        threats_detected.append(f"File size ({file_size}) exceeds limit for type {content_type}")
+        threats_detected.append(
+            f"File size ({file_size}) exceeds limit for type {content_type}"
+        )
         security_score += 0.3
 
     # Layer 2: MIME type mismatch detection
@@ -312,7 +322,9 @@ def analyze_file_comprehensively(
             # Check for URL patterns
             url_patterns = re.findall(r'https?://[^\s<>"{}|\^`\[\]]+', text_content)
             if len(url_patterns) > 10:
-                threats_detected.append(f"High number of URLs detected: {len(url_patterns)}")
+                threats_detected.append(
+                    f"High number of URLs detected: {len(url_patterns)}"
+                )
                 security_score += 0.2
 
         except UnicodeDecodeError:
@@ -395,7 +407,9 @@ def get_file_validator(
         if isinstance(allowed_types, str):
             allowed_types = [allowed_types]
 
-    async def validator(file: UploadFile = File(...)) -> Tuple[UploadFile, FileAnalysisReport]:
+    async def validator(
+        file: UploadFile = File(...),
+    ) -> Tuple[UploadFile, FileAnalysisReport]:
         # Layer 1: Basic validations
         if file.size and file.size > max_size:
             raise HTTPException(
@@ -430,7 +444,9 @@ def get_file_validator(
         await file.seek(0)  # Reset file pointer
 
         # Layer 4: Comprehensive file analysis
-        analysis_report = analyze_file_comprehensively(content, file.filename, file.content_type)
+        analysis_report = analyze_file_comprehensively(
+            content, file.filename, file.content_type
+        )
 
         # Apply security level filtering
         if security_level == "strict":
@@ -519,7 +535,9 @@ def quarantine_file(file_content: bytes, analysis_report: FileAnalysisReport) ->
 
     # Create quarantine filename with timestamp and hash
     timestamp = int(time.time())
-    quarantine_filename = f"{timestamp}_{analysis_report.file_hash[:8]}_{analysis_report.filename}"
+    quarantine_filename = (
+        f"{timestamp}_{analysis_report.file_hash[:8]}_{analysis_report.filename}"
+    )
     quarantine_path = quarantine_dir / quarantine_filename
 
     # Write file to quarantine
@@ -549,7 +567,9 @@ def quarantine_file(file_content: bytes, analysis_report: FileAnalysisReport) ->
             indent=2,
         )
 
-    logger.warning(f"File quarantined: {quarantine_filename} - {analysis_report.threats_detected}")
+    logger.warning(
+        f"File quarantined: {quarantine_filename} - {analysis_report.threats_detected}"
+    )
     return str(quarantine_path)
 
 
@@ -598,7 +618,9 @@ class EnhancedFileValidator:
         content = await file.read()
         await file.seek(0)
 
-        analysis_report = analyze_file_comprehensively(content, file.filename, file.content_type)
+        analysis_report = analyze_file_comprehensively(
+            content, file.filename, file.content_type
+        )
         file.filename = analysis_report.filename
 
         quarantine_path = None

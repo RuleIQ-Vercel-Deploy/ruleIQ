@@ -26,6 +26,7 @@ logger = logging.getLogger(__name__)
 
 class RetrievalMode(Enum):
     """Retrieval strategies for different query types"""
+
     LOCAL = "local"  # Specific entity queries
     GLOBAL = "global"  # Cross-jurisdictional synthesis
     HYBRID = "hybrid"  # Combined graph + vector search
@@ -35,6 +36,7 @@ class RetrievalMode(Enum):
 @dataclass
 class ContextPack:
     """Structured context returned by the retriever"""
+
     query_id: str
     retrieval_mode: RetrievalMode
     nodes: List[Dict[str, Any]]
@@ -50,11 +52,11 @@ class ContextPack:
 class GraphRAGRetriever:
     """
     Production-ready GraphRAG Retriever for Compliance Knowledge
-    
+
     This retriever serves as the knowledge access layer for IQ, providing
     grounded, traceable context from the compliance knowledge graph.
     """
-    
+
     # System prompt defining the retriever's behavior
     SYSTEM_PROMPT = """# GraphRAG Retriever for Compliance Knowledge
 
@@ -121,37 +123,37 @@ Always return a ContextPack containing:
         self.neo4j = neo4j_service
         self.embeddings = OpenAIEmbeddings()
         self.retrieval_cache = {}
-        
+
     def get_system_prompt(self) -> str:
         """Return the retriever's system prompt"""
         return self.SYSTEM_PROMPT
-        
+
     async def retrieve(
         self,
         query: str,
         mode: Optional[RetrievalMode] = None,
         jurisdiction: Optional[str] = None,
-        max_nodes: int = 50
+        max_nodes: int = 50,
     ) -> ContextPack:
         """
         Main retrieval method - routes queries to appropriate retrieval strategy
-        
+
         Args:
             query: The compliance query to retrieve context for
             mode: Optional forced retrieval mode
             jurisdiction: Optional jurisdiction filter (UK, EU, US)
             max_nodes: Maximum nodes to return
-            
+
         Returns:
             ContextPack with retrieved compliance knowledge
         """
         # Generate query ID
         query_id = hashlib.md5(f"{query}_{datetime.utcnow()}".encode()).hexdigest()[:12]
-        
+
         # Determine retrieval mode if not specified
         if mode is None:
             mode = self._select_retrieval_mode(query)
-            
+
         # Execute retrieval based on mode
         if mode == RetrievalMode.LOCAL:
             result = await self._local_retrieval(query, jurisdiction, max_nodes)
@@ -163,7 +165,7 @@ Always return a ContextPack containing:
             result = await self._temporal_retrieval(query, jurisdiction, max_nodes)
         else:
             raise ValueError(f"Unknown retrieval mode: {mode}")
-            
+
         # Structure as ContextPack
         return ContextPack(
             query_id=query_id,
@@ -178,34 +180,46 @@ Always return a ContextPack containing:
             query_metadata={
                 "query": query,
                 "jurisdiction": jurisdiction,
-                "max_nodes": max_nodes
-            }
+                "max_nodes": max_nodes,
+            },
         )
-    
+
     def _select_retrieval_mode(self, query: str) -> RetrievalMode:
         """Intelligently select retrieval mode based on query characteristics"""
         query_lower = query.lower()
-        
+
         # Temporal indicators
-        if any(term in query_lower for term in ["change", "update", "amend", "new", "2024", "2025", "recent"]):
+        if any(
+            term in query_lower
+            for term in ["change", "update", "amend", "new", "2024", "2025", "recent"]
+        ):
             return RetrievalMode.TEMPORAL
-            
-        # Global synthesis indicators  
-        if any(term in query_lower for term in ["across", "compare", "landscape", "all jurisdictions", "overview"]):
+
+        # Global synthesis indicators
+        if any(
+            term in query_lower
+            for term in [
+                "across",
+                "compare",
+                "landscape",
+                "all jurisdictions",
+                "overview",
+            ]
+        ):
             return RetrievalMode.GLOBAL
-            
+
         # Specific entity indicators
-        if any(term in query_lower for term in ["article", "section", "requirement", "control for", "specific"]):
+        if any(
+            term in query_lower
+            for term in ["article", "section", "requirement", "control for", "specific"]
+        ):
             return RetrievalMode.LOCAL
-            
+
         # Default to hybrid for ambiguous queries
         return RetrievalMode.HYBRID
-    
+
     async def _local_retrieval(
-        self,
-        query: str,
-        jurisdiction: Optional[str],
-        max_nodes: int
+        self, query: str, jurisdiction: Optional[str], max_nodes: int
     ) -> Dict[str, Any]:
         """
         Local GraphRAG - retrieve specific entities and their immediate context
@@ -246,85 +260,70 @@ Always return a ContextPack containing:
             }]
         } as result
         """
-        
-        params = {
-            "query_term": query,
-            "max_nodes": max_nodes
-        }
-        
+
+        params = {"query_term": query, "max_nodes": max_nodes}
+
         if jurisdiction:
             cypher_query = cypher_query.replace(
                 "WHERE toLower(r.name)",
-                "WHERE r.jurisdiction = $jurisdiction AND toLower(r.name)"
+                "WHERE r.jurisdiction = $jurisdiction AND toLower(r.name)",
             )
             params["jurisdiction"] = jurisdiction
-        
+
         results = await self.neo4j.execute_query(cypher_query, params)
-        
+
         # Process results
         nodes = []
         relationships = []
         sources = []
-        
+
         for record in results:
             result = record.get("result", {})
-            
+
             # Add regulation node
             if result.get("regulation"):
-                nodes.append({
-                    "type": "Regulation",
-                    "properties": result["regulation"]
-                })
-                sources.append({
-                    "type": "primary",
-                    "url": result["regulation"].get("url"),
-                    "jurisdiction": result["regulation"].get("jurisdiction")
-                })
-            
+                nodes.append({"type": "Regulation", "properties": result["regulation"]})
+                sources.append(
+                    {
+                        "type": "primary",
+                        "url": result["regulation"].get("url"),
+                        "jurisdiction": result["regulation"].get("jurisdiction"),
+                    }
+                )
+
             # Add requirement node
             if result.get("requirement"):
-                nodes.append({
-                    "type": "Requirement", 
-                    "properties": result["requirement"]
-                })
-                relationships.append({
-                    "type": "CONTAINS",
-                    "from": "Regulation",
-                    "to": "Requirement"
-                })
-            
+                nodes.append(
+                    {"type": "Requirement", "properties": result["requirement"]}
+                )
+                relationships.append(
+                    {"type": "CONTAINS", "from": "Regulation", "to": "Requirement"}
+                )
+
             # Add control nodes
             for control in result.get("controls", []):
-                nodes.append({
-                    "type": "Control",
-                    "properties": control
-                })
-                relationships.append({
-                    "type": "SATISFIED_BY",
-                    "from": "Requirement",
-                    "to": "Control"
-                })
-        
+                nodes.append({"type": "Control", "properties": control})
+                relationships.append(
+                    {"type": "SATISFIED_BY", "from": "Requirement", "to": "Control"}
+                )
+
         # Identify gaps
         gaps = []
         if not results:
             gaps.append(f"No specific requirements found for query: {query}")
         elif not any(r.get("result", {}).get("controls") for r in results):
             gaps.append("Requirements identified but no controls implemented")
-        
+
         return {
             "nodes": nodes,
             "relationships": relationships,
             "sources": sources,
             "gaps": gaps,
-            "confidence": 0.9 if results else 0.1
+            "confidence": 0.9 if results else 0.1,
         }
-    
+
     async def _global_retrieval(
-        self,
-        query: str,
-        jurisdiction: Optional[str],
-        max_nodes: int
+        self, query: str, jurisdiction: Optional[str], max_nodes: int
     ) -> Dict[str, Any]:
         """
         Global GraphRAG - cross-jurisdictional synthesis and pattern detection
@@ -351,70 +350,72 @@ Always return a ContextPack containing:
             })
         } as pattern
         """
-        
-        params = {
-            "query_term": query,
-            "max_nodes": max_nodes
-        }
-        
+
+        params = {"query_term": query, "max_nodes": max_nodes}
+
         results = await self.neo4j.execute_query(cypher_query, params)
-        
+
         # Aggregate patterns
         patterns = {}
         nodes = []
-        
+
         for record in results:
             pattern = record.get("pattern", {})
             domain = pattern.get("domain")
-            
+
             if domain:
                 if domain not in patterns:
                     patterns[domain] = {
                         "jurisdictions": set(),
                         "regulations": [],
-                        "total_requirements": 0
+                        "total_requirements": 0,
                     }
-                
+
                 for reg in pattern.get("regulations", []):
                     patterns[domain]["jurisdictions"].add(reg.get("jurisdiction"))
                     patterns[domain]["regulations"].append(reg)
-                    patterns[domain]["total_requirements"] += reg.get("requirement_count", 0)
-                
-                nodes.append({
-                    "type": "ComplianceDomain",
-                    "properties": {
-                        "name": domain,
-                        "coverage": list(patterns[domain]["jurisdictions"])
+                    patterns[domain]["total_requirements"] += reg.get(
+                        "requirement_count", 0
+                    )
+
+                nodes.append(
+                    {
+                        "type": "ComplianceDomain",
+                        "properties": {
+                            "name": domain,
+                            "coverage": list(patterns[domain]["jurisdictions"]),
+                        },
                     }
-                })
-        
+                )
+
         # Build synthesis
         synthesis = {
             "patterns_detected": len(patterns),
-            "jurisdictions_covered": list(set().union(*(p["jurisdictions"] for p in patterns.values()))) if patterns else [],
-            "domains": list(patterns.keys())
+            "jurisdictions_covered": (
+                list(set().union(*(p["jurisdictions"] for p in patterns.values())))
+                if patterns
+                else []
+            ),
+            "domains": list(patterns.keys()),
         }
-        
+
         return {
             "nodes": nodes,
             "relationships": [],
             "sources": [{"type": "synthesis", "patterns": synthesis}],
             "gaps": ["Limited cross-jurisdictional data"] if len(patterns) < 2 else [],
-            "confidence": min(0.8, len(patterns) * 0.2)
+            "confidence": min(0.8, len(patterns) * 0.2),
         }
-    
+
     async def _hybrid_retrieval(
-        self,
-        query: str,
-        jurisdiction: Optional[str],
-        max_nodes: int
+        self, query: str, jurisdiction: Optional[str], max_nodes: int
     ) -> Dict[str, Any]:
         """
         Hybrid retrieval - combines vector similarity with graph traversal
         """
         # Get query embedding
         query_embedding = await self._get_embedding(query)
-        
+
         # Vector similarity search
         vector_query = """
         // Hybrid retrieval with vector similarity
@@ -429,13 +430,13 @@ Always return a ContextPack containing:
         }) as connections
         LIMIT $max_nodes
         """
-        
+
         params = {
             "query_vector": query_embedding,
             "k": max_nodes,
-            "max_nodes": max_nodes
+            "max_nodes": max_nodes,
         }
-        
+
         # Fallback to standard search if vector index doesn't exist
         try:
             results = await self.neo4j.execute_query(vector_query, params)
@@ -443,39 +444,34 @@ Always return a ContextPack containing:
             logger.warning(f"Vector search failed, falling back to text search: {e}")
             # Fallback to text-based search
             return await self._local_retrieval(query, jurisdiction, max_nodes)
-        
+
         # Process hybrid results
         nodes = []
         relationships = []
-        
+
         for record in results:
             node = record.get("node", {})
             connections = record.get("connections", [])
-            
-            nodes.append({
-                "type": node.get("label", "Unknown"),
-                "properties": dict(node)
-            })
-            
+
+            nodes.append(
+                {"type": node.get("label", "Unknown"), "properties": dict(node)}
+            )
+
             for conn in connections:
-                relationships.append({
-                    "type": conn.get("relationship"),
-                    "score": conn.get("score")
-                })
-        
+                relationships.append(
+                    {"type": conn.get("relationship"), "score": conn.get("score")}
+                )
+
         return {
             "nodes": nodes,
             "relationships": relationships,
             "sources": [{"type": "hybrid", "method": "vector+graph"}],
             "gaps": [],
-            "confidence": 0.75
+            "confidence": 0.75,
         }
-    
+
     async def _temporal_retrieval(
-        self,
-        query: str,
-        jurisdiction: Optional[str],
-        max_nodes: int
+        self, query: str, jurisdiction: Optional[str], max_nodes: int
     ) -> Dict[str, Any]:
         """
         Temporal retrieval - track regulatory changes over time
@@ -508,51 +504,53 @@ Always return a ContextPack containing:
             END
         } as change
         """
-        
-        params = {
-            "max_nodes": max_nodes
-        }
-        
+
+        params = {"max_nodes": max_nodes}
+
         if jurisdiction:
             cypher_query = cypher_query.replace(
                 "WHERE r.last_updated",
-                "WHERE r.jurisdiction = $jurisdiction AND r.last_updated"
+                "WHERE r.jurisdiction = $jurisdiction AND r.last_updated",
             )
             params["jurisdiction"] = jurisdiction
-        
+
         results = await self.neo4j.execute_query(cypher_query, params)
-        
+
         # Process temporal changes
         nodes = []
         changes = []
-        
+
         for record in results:
             change = record.get("change", {})
-            
-            nodes.append({
-                "type": "Regulation",
-                "properties": change.get("current", {}),
-                "temporal_metadata": {
-                    "change_type": change.get("change_type"),
-                    "superseded": change.get("superseded", []),
-                    "amendments": change.get("amendments", [])
+
+            nodes.append(
+                {
+                    "type": "Regulation",
+                    "properties": change.get("current", {}),
+                    "temporal_metadata": {
+                        "change_type": change.get("change_type"),
+                        "superseded": change.get("superseded", []),
+                        "amendments": change.get("amendments", []),
+                    },
                 }
-            })
-            
-            changes.append({
-                "regulation": change.get("current", {}).get("name"),
-                "type": change.get("change_type"),
-                "date": change.get("current", {}).get("last_updated")
-            })
-        
+            )
+
+            changes.append(
+                {
+                    "regulation": change.get("current", {}).get("name"),
+                    "type": change.get("change_type"),
+                    "date": change.get("current", {}).get("last_updated"),
+                }
+            )
+
         return {
             "nodes": nodes,
             "relationships": [],
             "sources": [{"type": "temporal", "changes": changes}],
             "gaps": ["Historical data limited"] if len(results) < 5 else [],
-            "confidence": 0.85
+            "confidence": 0.85,
         }
-    
+
     async def _get_embedding(self, text: str) -> List[float]:
         """Generate embedding for text using OpenAI"""
         try:
@@ -561,10 +559,9 @@ Always return a ContextPack containing:
         except Exception as e:
             logger.error(f"Failed to generate embedding: {e}")
             return [0.0] * 1536  # Return zero vector as fallback
-    
+
     async def validate_coverage(
-        self,
-        jurisdictions: List[str] = ["UK", "EU", "US"]
+        self, jurisdictions: List[str] = ["UK", "EU", "US"]
     ) -> Dict[str, Any]:
         """
         Validate coverage of regulations across jurisdictions
@@ -584,14 +581,14 @@ Always return a ContextPack containing:
             coverage_ratio: toFloat(control_count) / toFloat(req_count)
         } as coverage
         """
-        
+
         results = await self.neo4j.execute_query(coverage_query)
-        
+
         coverage_report = {
             "timestamp": datetime.utcnow().isoformat(),
-            "jurisdictions": {}
+            "jurisdictions": {},
         }
-        
+
         for record in results:
             cov = record.get("coverage", {})
             jurisdiction = cov.get("jurisdiction")
@@ -600,15 +597,15 @@ Always return a ContextPack containing:
                     "regulations": cov.get("regulations", 0),
                     "requirements": cov.get("requirements", 0),
                     "controls": cov.get("controls", 0),
-                    "coverage_percentage": round(cov.get("coverage_ratio", 0) * 100, 2)
+                    "coverage_percentage": round(cov.get("coverage_ratio", 0) * 100, 2),
                 }
-        
+
         # Identify gaps
         for j in jurisdictions:
             if j not in coverage_report["jurisdictions"]:
                 coverage_report["jurisdictions"][j] = {
                     "status": "NO_DATA",
-                    "message": f"No regulations found for {j}"
+                    "message": f"No regulations found for {j}",
                 }
-        
+
         return coverage_report

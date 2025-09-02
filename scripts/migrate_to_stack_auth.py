@@ -11,57 +11,31 @@ from typing import List
 REPLACEMENTS = [
     # Import replacements
     (
-        r'from api\.dependencies\.auth import get_current_active_user',
-        'from api.dependencies.stack_auth import get_current_stack_user'
+        r"from api\.dependencies\.auth import get_current_active_user",
+        "from api.dependencies.stack_auth import get_current_stack_user",
     ),
     (
-        r'from api\.dependencies\.auth import get_current_user',
-        'from api.dependencies.stack_auth import get_current_stack_user'
+        r"from api\.dependencies\.auth import get_current_user",
+        "from api.dependencies.stack_auth import get_current_stack_user",
     ),
     # Dependency replacements
-    (
-        r'Depends\(get_current_active_user\)',
-        'Depends(get_current_stack_user)'
-    ),
-    (
-        r'Depends\(get_current_user\)',
-        'Depends(get_current_stack_user)'
-    ),
+    (r"Depends\(get_current_active_user\)", "Depends(get_current_stack_user)"),
+    (r"Depends\(get_current_user\)", "Depends(get_current_stack_user)"),
     # Type hint replacements
-    (
-        r'current_user: User = Depends',
-        'current_user: dict = Depends'
-    ),
-    (
-        r'user: User = Depends',
-        'user: dict = Depends'
-    ),
+    (r"current_user: User = Depends", "current_user: dict = Depends"),
+    (r"user: User = Depends", "user: dict = Depends"),
     # User model attribute access replacements
+    (r"current_user\.id", 'current_user["id"]'),
+    (r"user\.id", 'user["id"]'),
     (
-        r'current_user\.id',
-        'current_user["id"]'
+        r"current_user\.email",
+        'current_user.get("primaryEmail", current_user.get("email", ""))',
     ),
-    (
-        r'user\.id',
-        'user["id"]'
-    ),
-    (
-        r'current_user\.email',
-        'current_user.get("primaryEmail", current_user.get("email", ""))'
-    ),
-    (
-        r'user\.email',
-        'user.get("primaryEmail", user.get("email", ""))'
-    ),
-    (
-        r'current_user\.username',
-        'current_user.get("displayName", "")'
-    ),
-    (
-        r'user\.username',
-        'user.get("displayName", "")'
-    ),
+    (r"user\.email", 'user.get("primaryEmail", user.get("email", ""))'),
+    (r"current_user\.username", 'current_user.get("displayName", "")'),
+    (r"user\.username", 'user.get("displayName", "")'),
 ]
+
 
 def get_router_files() -> List[Path]:
     """Get all router files that need migration"""
@@ -75,12 +49,14 @@ def get_router_files() -> List[Path]:
 
     return router_files
 
+
 def backup_file(file_path: Path) -> None:
     """Create a backup of the file before modifying"""
     backup_path = file_path.with_suffix(f"{file_path.suffix}.backup")
     if not backup_path.exists():
         backup_path.write_text(file_path.read_text())
         print(f"✅ Backed up: {file_path} -> {backup_path}")
+
 
 def migrate_file(file_path: Path, dry_run: bool = False) -> List[str]:
     """Migrate a single file from JWT to Stack Auth"""
@@ -91,15 +67,22 @@ def migrate_file(file_path: Path, dry_run: bool = False) -> List[str]:
         matches = list(re.finditer(pattern, content))
         if matches:
             for match in matches:
-                changes.append(f"  - Line {content[:match.start()].count(chr(10)) + 1}: {match.group()} -> {replacement}")
+                changes.append(
+                    f"  - Line {content[:match.start()].count(chr(10)) + 1}: {match.group()} -> {replacement}"
+                )
             content = re.sub(pattern, replacement, content)
 
     # Special handling for User model imports
-    if "from database import User" in content or "from database.models import User" in content:
+    if (
+        "from database import User" in content
+        or "from database.models import User" in content
+    ):
         # Check if User is only used for type hints
-        user_pattern = r'\bUser\b(?!\s*\()'  # Match User not followed by (
+        user_pattern = r"\bUser\b(?!\s*\()"  # Match User not followed by (
         if re.search(user_pattern, content):
-            changes.append("  - Found User model references that may need manual review")
+            changes.append(
+                "  - Found User model references that may need manual review"
+            )
 
     if changes and not dry_run:
         backup_file(file_path)
@@ -109,6 +92,7 @@ def migrate_file(file_path: Path, dry_run: bool = False) -> List[str]:
         print(f"🔍 Would migrate: {file_path} ({len(changes)} changes)")
 
     return changes
+
 
 def generate_migration_report(results: dict) -> None:
     """Generate a detailed migration report"""
@@ -123,7 +107,7 @@ def generate_migration_report(results: dict) -> None:
         f"- Total changes: {sum(len(changes) for changes in results.values())}",
         "",
         "## Details by File",
-        ""
+        "",
     ]
 
     for file_path, changes in results.items():
@@ -134,6 +118,7 @@ def generate_migration_report(results: dict) -> None:
 
     report_path.write_text("\n".join(report))
     print(f"\n📄 Migration report saved to: {report_path}")
+
 
 def main() -> None:
     """Run the migration"""
@@ -146,7 +131,9 @@ def main() -> None:
         return
 
     # Get confirmation
-    response = input("\nThis will migrate all router files from JWT to Stack Auth.\nCreate backups and continue? (yes/no): ")
+    response = input(
+        "\nThis will migrate all router files from JWT to Stack Auth.\nCreate backups and continue? (yes/no): "
+    )
     if response.lower() != "yes":
         print("❌ Migration cancelled")
         return
@@ -166,7 +153,9 @@ def main() -> None:
         return
 
     # Show summary
-    print(f"\n📊 Dry run complete: {sum(len(c) for c in dry_run_results.values())} changes in {len(dry_run_results)} files")
+    print(
+        f"\n📊 Dry run complete: {sum(len(c) for c in dry_run_results.values())} changes in {len(dry_run_results)} files"
+    )
 
     # Confirm actual migration
     response = input("\nProceed with actual migration? (yes/no): ")
@@ -192,6 +181,7 @@ def main() -> None:
     print("3. Run tests: pytest tests/")
     print("4. Test each endpoint manually with Stack Auth tokens")
     print("5. Update any service layer functions that expect User models")
+
 
 if __name__ == "__main__":
     main()

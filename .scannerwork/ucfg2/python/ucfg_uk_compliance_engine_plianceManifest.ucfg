@@ -1,0 +1,80 @@
+
+)uk_compliance_engine.UKComplianceManifestQ
+G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.pyR R("4"5*m
+3
+uk_compliance_engine.py;9
+Z Z(
+%1")uk_compliance_engine.UKComplianceManifest"
+Z Z(
+
+%1*[
+4S S(*G
+E
+S S(*
+%2"__id*-
+
+__unknown_file (
+
+manifest_path*
+6*x
+5S. S(Zd
+b
+S. S(Z
+%2"__id*J
+
+__unknown_file (.,
+*data/manifests/uk_compliance_manifest.json*
+6*¤
+6S. S(Zv
+t
+S S(Z>+
+)uk_compliance_engine.UKComplianceManifest"
+manifest_path"__id*"
+
+__unknown_file (
+
+%2
+T T(
+%3"dictt
+r
+T T(<+
+)uk_compliance_engine.UKComplianceManifest"
+regulations"__id*"
+
+__unknown_file (
+
+%3
+U U(
+%4"dictt
+r
+U U(<+
+)uk_compliance_engine.UKComplianceManifest"
+obligations"__id*"
+
+__unknown_file (
+
+%4
+V V( 
+%5"listw
+u
+V V( ?+
+)uk_compliance_engine.UKComplianceManifest"
+cross_mappings"__id*"
+
+__unknown_file (
+
+%5mk
+W W(
+%6*I
+
+__unknown_file (-+
+)uk_compliance_engine.UKComplianceManifest2_load_manifestvt
+X X(&
+%7*I
+
+__unknown_file (-+
+)uk_compliance_engine.UKComplianceManifest2_build_obligation_index*
+3:
+R R(:
+manifest_pathB-+
+)uk_compliance_engine.UKComplianceManifestH

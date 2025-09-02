@@ -9,6 +9,7 @@ from pydantic import ValidationError
 
 logger = logging.getLogger(__name__)
 
+
 class RuleIQException(Exception):
     """Base exception class for ruleIQ application."""
 
@@ -25,6 +26,7 @@ class RuleIQException(Exception):
         self.status_code = status_code
         self.details = details or {}
 
+
 class ValidationException(RuleIQException):
     """Exception for validation errors."""
 
@@ -36,6 +38,7 @@ class ValidationException(RuleIQException):
             details=details,
         )
 
+
 class AuthenticationException(RuleIQException):
     """Exception for authentication errors."""
 
@@ -46,13 +49,17 @@ class AuthenticationException(RuleIQException):
             status_code=status.HTTP_401_UNAUTHORIZED,
         )
 
+
 class AuthorizationException(RuleIQException):
     """Exception for authorization errors."""
 
     def __init__(self, message: str = "Access denied") -> None:
         super().__init__(
-            message=message, error_code="AUTHORIZATION_ERROR", status_code=status.HTTP_403_FORBIDDEN
+            message=message,
+            error_code="AUTHORIZATION_ERROR",
+            status_code=status.HTTP_403_FORBIDDEN,
         )
+
 
 class ResourceNotFoundException(RuleIQException):
     """Exception for resource not found errors."""
@@ -69,6 +76,7 @@ class ResourceNotFoundException(RuleIQException):
             details={"resource": resource, "identifier": identifier},
         )
 
+
 class DatabaseException(RuleIQException):
     """Exception for database-related errors."""
 
@@ -80,16 +88,20 @@ class DatabaseException(RuleIQException):
             details=details,
         )
 
+
 class IntegrationException(RuleIQException):
     """Exception for third-party integration errors."""
 
-    def __init__(self, service: str, message: str, details: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(
+        self, service: str, message: str, details: Optional[Dict[str, Any]] = None
+    ) -> None:
         super().__init__(
             message=f"Integration error with {service}: {message}",
             error_code="INTEGRATION_ERROR",
             status_code=status.HTTP_502_BAD_GATEWAY,
             details={"service": service, **(details or {})},
         )
+
 
 class RateLimitException(RuleIQException):
     """Exception for rate limiting errors."""
@@ -106,6 +118,7 @@ class RateLimitException(RuleIQException):
             details=details,
         )
 
+
 class SecurityException(RuleIQException):
     """Exception for security-related errors."""
 
@@ -116,6 +129,7 @@ class SecurityException(RuleIQException):
             status_code=status.HTTP_403_FORBIDDEN,
             details=details,
         )
+
 
 class ErrorHandler:
     """Centralized error handling for the application."""
@@ -179,7 +193,9 @@ class ErrorHandler:
 
     @staticmethod
     def log_error(
-        exception: Exception, request: Optional[Request] = None, user_id: Optional[str] = None
+        exception: Exception,
+        request: Optional[Request] = None,
+        user_id: Optional[str] = None,
     ) -> None:
         """Log error with context."""
 
@@ -194,9 +210,13 @@ class ErrorHandler:
         }
 
         if isinstance(exception, RuleIQException):
-            log_data.update({"error_code": exception.error_code, "details": exception.details})
+            log_data.update(
+                {"error_code": exception.error_code, "details": exception.details}
+            )
 
-        logger.error(f"Application error: {str(exception)}", extra=log_data, exc_info=True)
+        logger.error(
+            f"Application error: {str(exception)}", extra=log_data, exc_info=True
+        )
 
     @staticmethod
     def sanitize_error_details(details: Dict[str, Any]) -> Dict[str, Any]:
@@ -223,7 +243,8 @@ class ErrorHandler:
                     sanitized[key] = sanitize_dict(value)
                 elif isinstance(value, list):
                     sanitized[key] = [
-                        sanitize_dict(item) if isinstance(item, dict) else item for item in value
+                        sanitize_dict(item) if isinstance(item, dict) else item
+                        for item in value
                     ]
                 else:
                     sanitized[key] = value
@@ -231,7 +252,10 @@ class ErrorHandler:
 
         return sanitize_dict(details)
 
-async def global_exception_handler(request: Request, exception: Exception) -> JSONResponse:
+
+async def global_exception_handler(
+    request: Request, exception: Exception
+) -> JSONResponse:
     """Global exception handler for FastAPI."""
 
     # Log the error
@@ -252,6 +276,7 @@ async def global_exception_handler(request: Request, exception: Exception) -> JS
 
     return JSONResponse(status_code=status_code, content=error_response)
 
+
 class ValidationUtils:
     """Utility functions for validation and error handling."""
 
@@ -264,11 +289,14 @@ class ValidationUtils:
             return str(uuid.UUID(uuid_str))
         except ValueError:
             raise ValidationException(
-                f"Invalid {field_name} format", details={"field": field_name, "value": uuid_str}
+                f"Invalid {field_name} format",
+                details={"field": field_name, "value": uuid_str},
             )
 
     @staticmethod
-    def validate_required_fields(data: Dict[str, Any], required_fields: List[str]) -> None:
+    def validate_required_fields(
+        data: Dict[str, Any], required_fields: List[str]
+    ) -> None:
         """Validate that required fields are present."""
         missing_fields = [
             field
@@ -282,21 +310,30 @@ class ValidationUtils:
             )
 
     @staticmethod
-    def validate_enum_value(value: str, valid_values: List[str], field_name: str) -> str:
+    def validate_enum_value(
+        value: str, valid_values: List[str], field_name: str
+    ) -> str:
         """Validate that value is in allowed enum values."""
         if value not in valid_values:
             raise ValidationException(
                 f"Invalid {field_name} value",
-                details={"field": field_name, "value": value, "allowed_values": valid_values},
+                details={
+                    "field": field_name,
+                    "value": value,
+                    "allowed_values": valid_values,
+                },
             )
 
         return value
+
 
 class SecurityErrorHandler:
     """Security-focused error handling."""
 
     @staticmethod
-    def handle_authentication_error(details: Optional[Dict[str, Any]] = None) -> NoReturn:
+    def handle_authentication_error(
+        details: Optional[Dict[str, Any]] = None,
+    ) -> NoReturn:
         """Handle authentication errors securely."""
         logger.warning(
             "Authentication attempt failed",
@@ -305,7 +342,9 @@ class SecurityErrorHandler:
         raise AuthenticationException()
 
     @staticmethod
-    def handle_authorization_error(resource: str, action: str, user_id: Optional[str] = None) -> NoReturn:
+    def handle_authorization_error(
+        resource: str, action: str, user_id: Optional[str] = None
+    ) -> NoReturn:
         """Handle authorization errors securely."""
         logger.warning(
             "Authorization attempt failed",
@@ -318,6 +357,7 @@ class SecurityErrorHandler:
         """Handle rate limiting errors."""
         logger.warning("Rate limit exceeded", extra={"retry_after": retry_after})
         raise RateLimitException(retry_after)
+
 
 # Error response templates
 ERROR_TEMPLATES = {
@@ -342,6 +382,7 @@ ERROR_TEMPLATES = {
         "status_code": status.HTTP_409_CONFLICT,
     },
 }
+
 
 def create_error_template(
     code: str, message: str, status_code: int, details: Optional[Dict[str, Any]] = None

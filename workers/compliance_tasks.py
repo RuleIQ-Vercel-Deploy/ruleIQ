@@ -101,12 +101,19 @@ async def _check_compliance_alerts_async() -> Dict[str, Any]:
                         exc_info=True,
                     )
 
-            return {"status": "completed", "alerts_count": len(alerts), "alerts": alerts}
+            return {
+                "status": "completed",
+                "alerts_count": len(alerts),
+                "alerts": alerts,
+            }
         except SQLAlchemyError as e:
             logger.error(
-                f"Database error while fetching profiles for alert check: {e}", exc_info=True
+                f"Database error while fetching profiles for alert check: {e}",
+                exc_info=True,
             )
-            raise DatabaseException("Failed to fetch business profiles for alert check.") from e
+            raise DatabaseException(
+                "Failed to fetch business profiles for alert check."
+            ) from e
 
 
 # --- Celery Tasks ---
@@ -116,13 +123,13 @@ async def _check_compliance_alerts_async() -> Dict[str, Any]:
     bind=True,
     autoretry_for=(DatabaseException, Exception),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 90,  # Start with 90 seconds
+        "max_retries": 5,
+        "countdown": 90,  # Start with 90 seconds
     },
     retry_backoff=True,
     retry_backoff_max=600,
     retry_jitter=True,
-    rate_limit='3/m',  # 3 compliance score updates per minute
+    rate_limit="3/m",  # 3 compliance score updates per minute
 )
 def update_all_compliance_scores(self):
     """Updates compliance scores for all business profiles by running the async helper."""
@@ -136,11 +143,14 @@ def update_all_compliance_scores(self):
         )
     except DatabaseException as e:
         logger.error(
-            "Compliance score update failed with a database error. Retrying...", exc_info=True
+            "Compliance score update failed with a database error. Retrying...",
+            exc_info=True,
         )
         self.retry(exc=e)
     except Exception as e:
-        logger.critical("Unexpected error in compliance score update. Retrying...", exc_info=True)
+        logger.critical(
+            "Unexpected error in compliance score update. Retrying...", exc_info=True
+        )
         self.retry(exc=e)
 
 
@@ -148,13 +158,13 @@ def update_all_compliance_scores(self):
     bind=True,
     autoretry_for=(DatabaseException, Exception),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 60,  # Start with 60 seconds
+        "max_retries": 5,
+        "countdown": 60,  # Start with 60 seconds
     },
     retry_backoff=True,
     retry_backoff_max=600,
     retry_jitter=True,
-    rate_limit='5/m',  # 5 alert checks per minute
+    rate_limit="5/m",  # 5 alert checks per minute
 )
 def check_compliance_alerts(self):
     """Checks for compliance issues that require immediate attention by running the async helper."""
@@ -168,9 +178,12 @@ def check_compliance_alerts(self):
         )
     except DatabaseException as e:
         logger.error(
-            "Compliance alert check failed with a database error. Retrying...", exc_info=True
+            "Compliance alert check failed with a database error. Retrying...",
+            exc_info=True,
         )
         self.retry(exc=e)
     except Exception as e:
-        logger.critical("Unexpected error in compliance alert check. Retrying...", exc_info=True)
+        logger.critical(
+            "Unexpected error in compliance alert check. Retrying...", exc_info=True
+        )
         self.retry(exc=e)

@@ -4,6 +4,7 @@ from typing import Dict, Tuple
 from fastapi import HTTPException, Request, status
 from fastapi.responses import JSONResponse
 
+
 class RateLimiter:
     def __init__(self, requests_per_minute: int = 60) -> None:
         self.requests_per_minute = requests_per_minute
@@ -50,6 +51,7 @@ class RateLimiter:
         }
         self._last_cleanup = current_time
 
+
 # Global rate limiter instances - configured based on environment
 from config.settings import get_settings  # noqa: E402
 
@@ -57,7 +59,9 @@ settings = get_settings()
 
 # Use more relaxed limits for testing environment, but still enforce some limits
 if settings.is_testing:
-    general_limiter = RateLimiter(requests_per_minute=100)  # Relaxed but still enforced for tests
+    general_limiter = RateLimiter(
+        requests_per_minute=100
+    )  # Relaxed but still enforced for tests
     auth_limiter = RateLimiter(requests_per_minute=50)  # Relaxed for auth tests
 else:
     general_limiter = RateLimiter(requests_per_minute=settings.rate_limit_requests)
@@ -65,6 +69,7 @@ else:
 
 # Create a strict rate limiter for testing rate limiting functionality
 strict_test_limiter = RateLimiter(requests_per_minute=4)  # Very strict for testing
+
 
 async def rate_limit_middleware(request: Request, call_next):
     """General rate limiting middleware"""
@@ -113,6 +118,7 @@ async def rate_limit_middleware(request: Request, call_next):
 
     return response
 
+
 def auth_rate_limit():
     """Dependency for auth endpoint rate limiting"""
 
@@ -140,7 +146,7 @@ def auth_rate_limit():
                     "X-RateLimit-Reset": str(int(time.time()) + retry_after),
                 },
             )
-        
+
         # Add rate limit headers to successful responses
         remaining = auth_limiter.requests_per_minute - len(
             auth_limiter.requests.get(client_ip, [])
@@ -152,6 +158,7 @@ def auth_rate_limit():
         }
 
     return check_limit
+
 
 def rate_limit(requests_per_minute: int = 60):
     """Create a custom rate limit dependency with specified limit."""
@@ -177,7 +184,7 @@ def rate_limit(requests_per_minute: int = 60):
                     "X-RateLimit-Reset": str(int(time.time()) + retry_after),
                 },
             )
-        
+
         # Add rate limit headers to successful responses
         remaining = requests_per_minute - len(
             custom_limiter.requests.get(client_ip, [])
@@ -189,6 +196,7 @@ def rate_limit(requests_per_minute: int = 60):
         }
 
     return check_custom_limit
+
 
 class RateLimited:
     """Rate limiting dependency class for FastAPI endpoints"""

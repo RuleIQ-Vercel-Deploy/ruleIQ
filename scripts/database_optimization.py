@@ -196,23 +196,27 @@ class DatabaseOptimizer:
 
     async def check_index_exists(self, session: AsyncSession, index_name: str) -> bool:
         """Check if an index already exists."""
-        query = text("""
+        query = text(
+            """
             SELECT EXISTS (
                 SELECT 1 FROM pg_indexes
                 WHERE indexname = :index_name
             )
-        """)
+        """
+        )
         result = await session.execute(query, {"index_name": index_name})
         return result.scalar()
 
     async def check_table_exists(self, session: AsyncSession, table_name: str) -> bool:
         """Check if a table exists."""
-        query = text("""
+        query = text(
+            """
             SELECT EXISTS (
                 SELECT 1 FROM information_schema.tables
                 WHERE table_name = :table_name
             )
-        """)
+        """
+        )
         result = await session.execute(query, {"table_name": table_name})
         return result.scalar()
 
@@ -232,7 +236,9 @@ class DatabaseOptimizer:
                 logger.error(f"Failed to create extension {extension}: {e}")
                 raise
 
-    async def create_index(self, session: AsyncSession, index_def: Dict[str, Any]) -> bool:
+    async def create_index(
+        self, session: AsyncSession, index_def: Dict[str, Any]
+    ) -> bool:
         """Create a single index."""
         name = index_def["name"]
         table = index_def["table"]
@@ -379,7 +385,9 @@ async def main() -> None:
         if "+psycopg2" in database_url:
             database_url = database_url.replace("+psycopg2", "+asyncpg")
         elif "postgresql://" in database_url:
-            database_url = database_url.replace("postgresql://", "postgresql+asyncpg://")
+            database_url = database_url.replace(
+                "postgresql://", "postgresql+asyncpg://"
+            )
 
     dry_run = os.getenv("DRY_RUN", "false").lower() == "true"
 

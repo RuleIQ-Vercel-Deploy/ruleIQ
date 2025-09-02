@@ -1,0 +1,303 @@
+
+&"GDPR Article 32"str
+?"violations"str
+9"total_obligations"str
+\"level"str
+
+c3int
+s"errors"str
+H"v2"str
+m"obligations"str
+"O"Audit logs not retained"str
+)
+"security"str
+C":"The company must implement data protection requirements."str
+"workflow_id"str
+"report_format"str
+"pdf"str
+"relevant_documents"str
+	
+"metadata"str
+D"title"str
+!"compliance@example.com"str
+j"cleanup_data"str
+B"v1"str
+"E"Missing DPO appointment"str
+"compliance_summary"str
+$J"Incomplete privacy policy"str
+2"compliance_data"str
+"GDPR"str
+785.0float
+6"compliance_score"str
+_"score"str
+:20int
+"company_id"str
+(
+"category"str
+<3"Get a standard mock compliance state for testing."str
+]"MEDIUM"str
+"regulation"str
+A"id"str
+"test-workflow-123"str
+{	"history"str
+Z"risk_assessment"str
+g"report_data"str
+=17int
+y"error_count"str
+b"violation_count"str
+M"v3"str
+"company-456"str
+"report_type"str
+
+0int
+!	"content"str
+%"source"str
+ <"satisfied_obligations"str
+4"check_results"str
+"recipient_emails"str
+`45intlist"¹&
+$
+
+° Ö("#new-object#Bdict"
+ 
+
+± ±(*"	#map-set#:"
+ 
+
+² ²(#"	#map-set#:&
+$
+
+³ ¸(	
+"#new-object#Bdict"
+ 
+
+´ ´( "	#map-set#:
+"
+ 
+
+µ µ(/"	#map-set#:
+"
+ 
+
+¶ ¶(""	#map-set#:
+)
+'
+
+·  ·(:"#unknown-value#Blist(
+&
+
+·  ·(:"
+#is-exact#:Bbool
+
+
+·  ·(:"
+#assume#::
+8
+
+·  ·(:"#set-field# __collection_size:Bint(
+&
+
+·  ·(:"#array-add-last#:"
+ 
+
+· ·(:"	#map-set#:
+"
+ 
+
+³ ¸(	"	#map-set#:	
+&
+$
+
+º ½( "#new-object#Bdict"
+ 
+
+» »(U#"	#map-set#: !"&
+$
+
+¼ ¼(Q$"#new-object#Bdict"
+ 
+
+¼ ¼(8'"	#map-set#:$%&"
+ 
+
+¼: ¼(P*"	#map-set#:$()"
+ 
+
+¼ ¼(Q+"	#map-set#: 	$)
+'
+
+¹ ¾(	,"#unknown-value#Blist(
+&
+
+¹ ¾(	-"
+#is-exact#:,Bbool
+
+
+¹ ¾(	."
+#assume#:-:
+8
+
+¹ ¾(	/"#set-field# __collection_size:,Bint(
+&
+
+¹ ¾(	0"#array-add-last#:, "
+ 
+
+¹ ¾(	1"	#map-set#:,&
+$
+
+¿ Ï(	3"#new-object#Bdict&
+$
+
+À É(5"#new-object#Bdict"
+ 
+
+Á Á((8"	#map-set#:567"
+ 
+
+Â Â(';"	#map-set#:59:"
+ 
+
+Ã Ã(+>"	#map-set#:5<=&
+$
+
+Å Å(D@"#new-object#Bdict"
+ 
+
+Å Å(C"	#map-set#:@AB"
+ 
+
+Å! Å(CF"	#map-set#:@DE&
+$
+
+Æ Æ(FG"#new-object#Bdict"
+ 
+
+Æ Æ(I"	#map-set#:GAH"
+ 
+
+Æ! Æ(EK"	#map-set#:GDJ&
+$
+
+Ç Ç(DL"#new-object#Bdict"
+ 
+
+Ç Ç(N"	#map-set#:LAM"
+ 
+
+Ç! Ç(CP"	#map-set#:LDO)
+'
+
+Ä È(Q"#unknown-value#Blist(
+&
+
+Ä È(R"
+#is-exact#:QBbool
+
+
+Ä È(S"
+#assume#:R:
+8
+
+Ä È(T"#set-field# __collection_size:QBint(
+&
+
+Ä È(U"#array-add-last#:Q@(
+&
+
+Ä È(V"#array-add-last#:QG(
+&
+
+Ä È(W"#array-add-last#:QL"
+ 
+
+Ä È(X"	#map-set#:5?Q"
+ 
+
+À É(Y"	#map-set#:345&
+$
+
+Ê Î(["#new-object#Bdict"
+ 
+
+Ë Ë(!^"	#map-set#:[\]"
+ 
+
+Ì Ì(a"	#map-set#:[_`"
+ 
+
+Í Í($d"	#map-set#:[bc"
+ 
+
+Ê Î(e"	#map-set#:3Z["
+ 
+
+¿ Ï(	f"	#map-set#:23&
+$
+
+Ð Ð(h"#new-object#Bdict"
+ 
+
+Ð Ð(i"	#map-set#:gh&
+$
+
+Ñ Ñ(k"#new-object#Bdict"
+ 
+
+Ñ Ñ(l"	#map-set#:jk)
+'
+
+Ò Ò(n"#unknown-value#Blist(
+&
+
+Ò Ò(o"
+#is-exact#:nBbool
+
+
+Ò Ò(p"
+#assume#:o:
+8
+
+Ò Ò(q"#set-field# __collection_size:nBint"
+ 
+
+Ò Ò(r"	#map-set#:mn)
+'
+
+Ó Ó(t"#unknown-value#Blist(
+&
+
+Ó Ó(u"
+#is-exact#:tBbool
+
+
+Ó Ó(v"
+#assume#:u:
+8
+
+Ó Ó(w"#set-field# __collection_size:tBint"
+ 
+
+Ó Ó(x"	#map-set#:st"
+ 
+
+Ô Ô(z"	#map-set#:y)
+'
+
+Õ Õ(|"#unknown-value#Blist(
+&
+
+Õ Õ(}"
+#is-exact#:|Bbool
+
+
+Õ Õ(~"
+#assume#:}:
+8
+
+Õ Õ("#set-field# __collection_size:|Bint#
+!
+
+Õ Õ(€"	#map-set#:{|
+
+° Ö(*8/home/omar/Documents/ruleIQ/tests/mocks/mock_services.py

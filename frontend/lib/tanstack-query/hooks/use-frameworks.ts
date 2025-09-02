@@ -10,12 +10,7 @@ import {
   type PaginatedResponse,
 } from './base';
 
-import type {
-  Framework,
-  FrameworkControl,
-  FrameworkMapping,
-  FrameworkCategory,
-} from '@/types/api';
+import type { Framework, FrameworkControl, FrameworkMapping, FrameworkCategory } from '@/types/api';
 
 // Query keys
 const FRAMEWORK_KEY = 'frameworks';
@@ -27,13 +22,13 @@ export const frameworkKeys = {
   details: () => [...frameworkKeys.all, 'detail'] as const,
   detail: (id: string) => createQueryKey(FRAMEWORK_KEY, 'detail', { id }),
   controls: (frameworkId: string) => createQueryKey(FRAMEWORK_KEY, 'controls', { frameworkId }),
-  control: (frameworkId: string, controlId: string) => 
+  control: (frameworkId: string, controlId: string) =>
     createQueryKey(FRAMEWORK_KEY, 'control', { frameworkId, controlId }),
   mappings: (frameworkId: string) => createQueryKey(FRAMEWORK_KEY, 'mappings', { frameworkId }),
   categories: (frameworkId: string) => createQueryKey(FRAMEWORK_KEY, 'categories', { frameworkId }),
-  applicable: (businessProfileId?: string) => 
+  applicable: (businessProfileId?: string) =>
     createQueryKey(FRAMEWORK_KEY, 'applicable', { businessProfileId }),
-  recommendations: (businessProfileId?: string) => 
+  recommendations: (businessProfileId?: string) =>
     createQueryKey(FRAMEWORK_KEY, 'recommendations', { businessProfileId }),
 };
 
@@ -151,11 +146,11 @@ export function useEnableFramework(
       frameworkService.enableFramework(frameworkId, businessProfileId),
     onSuccess: (_, variables) => {
       // Invalidate applicable frameworks and framework details
-      queryClient.invalidateQueries({ 
-        queryKey: frameworkKeys.applicable(variables.businessProfileId) 
+      queryClient.invalidateQueries({
+        queryKey: frameworkKeys.applicable(variables.businessProfileId),
       });
-      queryClient.invalidateQueries({ 
-        queryKey: frameworkKeys.detail(variables.frameworkId) 
+      queryClient.invalidateQueries({
+        queryKey: frameworkKeys.detail(variables.frameworkId),
       });
     },
     ...options,
@@ -173,11 +168,11 @@ export function useDisableFramework(
       frameworkService.disableFramework(frameworkId, businessProfileId),
     onSuccess: (_, variables) => {
       // Invalidate applicable frameworks and framework details
-      queryClient.invalidateQueries({ 
-        queryKey: frameworkKeys.applicable(variables.businessProfileId) 
+      queryClient.invalidateQueries({
+        queryKey: frameworkKeys.applicable(variables.businessProfileId),
       });
-      queryClient.invalidateQueries({ 
-        queryKey: frameworkKeys.detail(variables.frameworkId) 
+      queryClient.invalidateQueries({
+        queryKey: frameworkKeys.detail(variables.frameworkId),
       });
     },
     ...options,
@@ -189,10 +184,10 @@ export function useUpdateControlStatus(
   options?: BaseMutationOptions<
     FrameworkControl,
     unknown,
-    { 
-      frameworkId: string; 
-      controlId: string; 
-      status: string; 
+    {
+      frameworkId: string;
+      controlId: string;
+      status: string;
       notes?: string;
     }
   >,
@@ -204,11 +199,11 @@ export function useUpdateControlStatus(
       frameworkService.updateControlStatus(frameworkId, controlId, status, notes),
     onSuccess: (_, variables) => {
       // Invalidate control and controls list
-      queryClient.invalidateQueries({ 
-        queryKey: frameworkKeys.control(variables.frameworkId, variables.controlId) 
+      queryClient.invalidateQueries({
+        queryKey: frameworkKeys.control(variables.frameworkId, variables.controlId),
       });
-      queryClient.invalidateQueries({ 
-        queryKey: frameworkKeys.controls(variables.frameworkId) 
+      queryClient.invalidateQueries({
+        queryKey: frameworkKeys.controls(variables.frameworkId),
       });
     },
     ...options,
@@ -216,9 +211,7 @@ export function useUpdateControlStatus(
 }
 
 // Hook to import framework
-export function useImportFramework(
-  options?: BaseMutationOptions<Framework, unknown, FormData>,
-) {
+export function useImportFramework(options?: BaseMutationOptions<Framework, unknown, FormData>) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -234,22 +227,18 @@ export function useImportFramework(
 // Hook to export framework
 export function useExportFramework() {
   return useMutation({
-    mutationFn: ({ 
-      frameworkId, 
-      format 
-    }: { 
-      frameworkId: string; 
+    mutationFn: ({
+      frameworkId,
+      format,
+    }: {
+      frameworkId: string;
       format: 'json' | 'csv' | 'excel';
-    }) =>
-      frameworkService.exportFramework(frameworkId, format),
+    }) => frameworkService.exportFramework(frameworkId, format),
   });
 }
 
 // Hook to compare frameworks
-export function useCompareFrameworks(
-  frameworkIds: string[],
-  options?: BaseQueryOptions<any>,
-) {
+export function useCompareFrameworks(frameworkIds: string[], options?: BaseQueryOptions<any>) {
   return useQuery({
     queryKey: createQueryKey(FRAMEWORK_KEY, 'compare', { frameworkIds }),
     queryFn: () => frameworkService.compareFrameworks(frameworkIds),

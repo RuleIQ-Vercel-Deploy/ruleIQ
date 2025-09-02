@@ -6,10 +6,11 @@ import asyncio
 from dotenv import load_dotenv
 
 # Load environment variables
-load_dotenv('.env.local')
+load_dotenv(".env.local")
 
 # Import after loading env vars
 from database.db_setup import init_db
+
 
 async def test_neon_and_ai():
     """Simple test for Neon connection and basic AI"""
@@ -44,6 +45,7 @@ async def test_neon_and_ai():
     print("3️⃣ Testing Redis connection...")
     try:
         import redis
+
         r = redis.from_url("redis://localhost:6379/0")
         r.ping()
         print("✅ Redis connected successfully!\n")
@@ -53,10 +55,11 @@ async def test_neon_and_ai():
 
     print("🎉 Basic connectivity tests completed!")
     print("\n📝 Summary:")
-    print("- Neon Database: ✅ Connected") 
+    print("- Neon Database: ✅ Connected")
     print("- Google AI: ✅ Working")
     print("- Redis: Check if running locally")
     print("\nYour AI system is ready to use with Neon!")
+
 
 if __name__ == "__main__":
     asyncio.run(test_neon_and_ai())

@@ -1,11 +1,10 @@
 import { type FullConfig } from '@playwright/test';
 
 async function globalTeardown(config: FullConfig) {
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
   try {
     // Clean up test data if needed
     // await cleanupTestData();
-
     // Clean up test files
     // await cleanupTestFiles();
     // TODO: Replace with proper logging

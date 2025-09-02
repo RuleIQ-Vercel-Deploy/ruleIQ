@@ -45,7 +45,10 @@ class CircuitBreakerOpenException(APIError):
     """Exception when circuit breaker is open."""
 
     def __init__(
-        self, service_name: str, failure_count: int, recovery_time: Optional[float] = None
+        self,
+        service_name: str,
+        failure_count: int,
+        recovery_time: Optional[float] = None,
     ) -> None:
         message = f"Circuit breaker open for {service_name} (failures: {failure_count})"
         if recovery_time:
@@ -91,7 +94,9 @@ class CircuitBreaker:
                 recovery_time = self.config.recovery_timeout - (
                     time.time() - self._last_failure_time
                 )
-                raise CircuitBreakerOpenException(self.name, self._failure_count, recovery_time)
+                raise CircuitBreakerOpenException(
+                    self.name, self._failure_count, recovery_time
+                )
 
         try:
             # Apply timeout if configured
@@ -134,7 +139,9 @@ class CircuitBreaker:
                         f"Circuit breaker {self.name} opened after {self._failure_count} failures"
                     )
 
-    def __call__(self, func: Callable[..., Awaitable[T]]) -> Callable[..., Awaitable[T]]:
+    def __call__(
+        self, func: Callable[..., Awaitable[T]]
+    ) -> Callable[..., Awaitable[T]]:
         """Decorator usage."""
 
         @wraps(func)
@@ -146,13 +153,22 @@ class CircuitBreaker:
 
 # Pre-configured circuit breakers for common services
 openai_breaker = CircuitBreaker(
-    "OpenAI", CircuitBreakerConfig(failure_threshold=3, recovery_timeout=30.0, timeout_seconds=60.0)
+    "OpenAI",
+    CircuitBreakerConfig(
+        failure_threshold=3, recovery_timeout=30.0, timeout_seconds=60.0
+    ),
 )
 
 google_breaker = CircuitBreaker(
-    "Google", CircuitBreakerConfig(failure_threshold=5, recovery_timeout=60.0, timeout_seconds=30.0)
+    "Google",
+    CircuitBreakerConfig(
+        failure_threshold=5, recovery_timeout=60.0, timeout_seconds=30.0
+    ),
 )
 
 aws_breaker = CircuitBreaker(
-    "AWS", CircuitBreakerConfig(failure_threshold=5, recovery_timeout=45.0, timeout_seconds=30.0)
+    "AWS",
+    CircuitBreakerConfig(
+        failure_threshold=5, recovery_timeout=45.0, timeout_seconds=30.0
+    ),
 )

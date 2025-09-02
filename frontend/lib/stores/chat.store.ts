@@ -11,7 +11,7 @@ interface ChatState {
   // Conversations
   conversations: ChatConversation[];
   activeConversationId: string | null;
-  
+
   // Widget-specific conversation
   widgetConversationId: string | null;
 
@@ -41,7 +41,7 @@ interface ChatState {
   setActiveConversation: (conversationId: string | null) => void;
   sendMessage: (message: string, metadata?: Record<string, any>) => Promise<void>;
   deleteConversation: (conversationId: string) => Promise<void>;
-  
+
   // Widget-specific actions
   createWidgetConversation: () => Promise<void>;
   loadWidgetConversation: () => Promise<void>;
@@ -82,14 +82,14 @@ export const useChatStore = create<ChatState>()(
           const authToken = useAuthStore.getState().getToken();
           if (!authToken) {
             // No authentication, just set empty conversations and finish loading
-            set({ 
-              conversations: [], 
+            set({
+              conversations: [],
               isLoadingConversations: false,
-              error: null // Don't show error for no auth, just show empty state
+              error: null, // Don't show error for no auth, just show empty state
             });
             return;
           }
-          
+
           const response = await chatService.getConversations();
           set({ conversations: response.items, isLoadingConversations: false });
         } catch (error: any) {
@@ -99,14 +99,14 @@ export const useChatStore = create<ChatState>()(
             set({
               conversations: [],
               isLoadingConversations: false,
-              error: null // Don't show auth errors, user can still create new conversation
+              error: null, // Don't show auth errors, user can still create new conversation
             });
           } else {
             // Other errors - show briefly but don't block
             set({
               error: error.message || 'Failed to load conversations',
               isLoadingConversations: false,
-              conversations: [] // Still allow UI to render
+              conversations: [], // Still allow UI to render
             });
           }
         }
@@ -179,10 +179,9 @@ export const useChatStore = create<ChatState>()(
 
       sendMessage: async (message: string, metadata?: Record<string, any>) => {
         const state = get();
-        const conversationId = metadata?.source === 'widget' 
-          ? state.widgetConversationId 
-          : state.activeConversationId;
-        
+        const conversationId =
+          metadata?.source === 'widget' ? state.widgetConversationId : state.activeConversationId;
+
         if (!conversationId) return;
 
         set({ isSendingMessage: true, error: null });
@@ -203,10 +202,7 @@ export const useChatStore = create<ChatState>()(
         set((state) => ({
           messages: {
             ...state.messages,
-            [conversationId]: [
-              ...(state.messages[conversationId] || []),
-              tempMessage,
-            ],
+            [conversationId]: [...(state.messages[conversationId] || []), tempMessage],
           },
         }));
 
@@ -245,9 +241,10 @@ export const useChatStore = create<ChatState>()(
             set((state) => ({
               messages: {
                 ...state.messages,
-                [conversationId]: state.messages[conversationId]?.map((msg) => 
-                  msg.id === tempMessage.id ? response : msg
-                ) || [],
+                [conversationId]:
+                  state.messages[conversationId]?.map((msg) =>
+                    msg.id === tempMessage.id ? response : msg,
+                  ) || [],
               },
             }));
           }
@@ -258,9 +255,8 @@ export const useChatStore = create<ChatState>()(
           set((state) => ({
             messages: {
               ...state.messages,
-              [conversationId]: state.messages[conversationId]?.filter((msg) => 
-                msg.id !== tempMessage.id
-              ) || [],
+              [conversationId]:
+                state.messages[conversationId]?.filter((msg) => msg.id !== tempMessage.id) || [],
             },
             error: error.message || 'Failed to send message',
             isSendingMessage: false,

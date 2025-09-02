@@ -197,7 +197,9 @@ class PDFGenerator:
 
         return styles
 
-    async def generate_pdf(self, report_data: Dict[str, Any], output_format: str = "bytes") -> Any:
+    async def generate_pdf(
+        self, report_data: Dict[str, Any], output_format: str = "bytes"
+    ) -> Any:
         """Generate PDF from report data."""
         buffer = BytesIO()
         doc = SimpleDocTemplate(
@@ -235,7 +237,11 @@ class PDFGenerator:
             )
 
         # Build document
-        doc.build(story, onFirstPage=self._add_page_template, onLaterPages=self._add_page_template)
+        doc.build(
+            story,
+            onFirstPage=self._add_page_template,
+            onLaterPages=self._add_page_template,
+        )
 
         buffer.seek(0)
         if output_format == "bytes":
@@ -246,8 +252,14 @@ class PDFGenerator:
 
     def _build_header(self, report_data: Dict) -> List:
         """Build the report header section."""
-        title_text = report_data.get("report_type", "compliance_report").replace("_", " ").title()
-        company_name = report_data.get("business_profile", {}).get("name", "Unknown Company")
+        title_text = (
+            report_data.get("report_type", "compliance_report")
+            .replace("_", " ")
+            .title()
+        )
+        company_name = report_data.get("business_profile", {}).get(
+            "name", "Unknown Company"
+        )
         generated_date = datetime.fromisoformat(report_data["generated_at"]).strftime(
             "%B %d, %Y at %I:%M %p"
         )
@@ -276,7 +288,9 @@ class PDFGenerator:
         story.append(Spacer(1, 0.2 * inch))
 
         # Key metrics section
-        story.append(Paragraph("Key Performance Indicators", self.styles["SectionHeader"]))
+        story.append(
+            Paragraph("Key Performance Indicators", self.styles["SectionHeader"])
+        )
 
         key_metrics = report_data.get("key_metrics", {})
         if key_metrics:
@@ -301,7 +315,9 @@ class PDFGenerator:
         # Framework summary
         summary = report_data.get("summary", {})
         if summary:
-            story.append(Paragraph("Compliance Framework Status", self.styles["SectionHeader"]))
+            story.append(
+                Paragraph("Compliance Framework Status", self.styles["SectionHeader"])
+            )
 
             framework_data = [["Framework", "Score", "Status", "Gaps", "Evidence %"]]
             for framework, data in summary.items():
@@ -317,7 +333,8 @@ class PDFGenerator:
                 )
 
             framework_table = Table(
-                framework_data, colWidths=[1.3 * inch, 1 * inch, 1.2 * inch, 0.8 * inch, 1 * inch]
+                framework_data,
+                colWidths=[1.3 * inch, 1 * inch, 1.2 * inch, 0.8 * inch, 1 * inch],
             )
             framework_table.setStyle(
                 TableStyle(
@@ -346,7 +363,9 @@ class PDFGenerator:
         # Recommendations
         recommendations = report_data.get("recommendations", [])
         if recommendations:
-            story.append(Paragraph("Priority Recommendations", self.styles["SectionHeader"]))
+            story.append(
+                Paragraph("Priority Recommendations", self.styles["SectionHeader"])
+            )
 
             for i, rec in enumerate(recommendations[:5], 1):
                 rec_title = f"{i}. {rec.get('title', 'Recommendation')}"
@@ -382,20 +401,29 @@ class PDFGenerator:
         # Gap details by framework
         gaps = report_data.get("gaps", {})
         if gaps:
-            story.append(Paragraph("Identified Gaps by Framework", self.styles["SubsectionHeader"]))
+            story.append(
+                Paragraph(
+                    "Identified Gaps by Framework", self.styles["SubsectionHeader"]
+                )
+            )
 
-            gap_data = [["Framework", "Category", "Gap Description", "Severity", "Effort"]]
+            gap_data = [
+                ["Framework", "Category", "Gap Description", "Severity", "Effort"]
+            ]
 
             for framework, categories in gaps.items():
                 for category, gap_list in categories.items():
                     for gap in gap_list:
-                        severity_color = self._get_severity_color(gap.get("severity", "medium"))
+                        severity_color = self._get_severity_color(
+                            gap.get("severity", "medium")
+                        )
                         gap_data.append(
                             [
                                 framework.upper(),
                                 category,
                                 Paragraph(
-                                    gap.get("title", "Unknown Gap"), self.styles["ReportBodyText"]
+                                    gap.get("title", "Unknown Gap"),
+                                    self.styles["ReportBodyText"],
                                 ),
                                 Paragraph(
                                     gap.get("severity", "Medium").title(),
@@ -412,7 +440,8 @@ class PDFGenerator:
 
             if len(gap_data) > 1:
                 gap_table = Table(
-                    gap_data, colWidths=[1 * inch, 1 * inch, 2.8 * inch, 0.8 * inch, 0.8 * inch]
+                    gap_data,
+                    colWidths=[1 * inch, 1 * inch, 2.8 * inch, 0.8 * inch, 0.8 * inch],
                 )
                 gap_table.setStyle(
                     TableStyle(
@@ -448,7 +477,11 @@ class PDFGenerator:
         # Remediation plan
         remediation_plan = report_data.get("remediation_plan", [])
         if remediation_plan:
-            story.append(Paragraph("Recommended Remediation Plan", self.styles["SubsectionHeader"]))
+            story.append(
+                Paragraph(
+                    "Recommended Remediation Plan", self.styles["SubsectionHeader"]
+                )
+            )
 
             current_phase = None
             for item in remediation_plan:
@@ -471,14 +504,17 @@ class PDFGenerator:
         """Build the evidence collection report section."""
         story = []
 
-        story.append(Paragraph("Evidence Collection Report", self.styles["SectionHeader"]))
+        story.append(
+            Paragraph("Evidence Collection Report", self.styles["SectionHeader"])
+        )
 
         # Summary by framework
         evidence_summary = report_data.get("evidence_summary", {})
         if evidence_summary:
             story.append(
                 Paragraph(
-                    "Evidence Collection Status by Framework", self.styles["SubsectionHeader"]
+                    "Evidence Collection Status by Framework",
+                    self.styles["SubsectionHeader"],
                 )
             )
 
@@ -526,7 +562,9 @@ class PDFGenerator:
         automation_opportunities = report_data.get("automation_opportunities", [])
         if automation_opportunities:
             story.append(
-                Paragraph("Priority Automation Opportunities", self.styles["SubsectionHeader"])
+                Paragraph(
+                    "Priority Automation Opportunities", self.styles["SubsectionHeader"]
+                )
             )
 
             for opp in automation_opportunities[:10]:  # Show top 10
@@ -544,15 +582,25 @@ class PDFGenerator:
         """Build the audit readiness report section."""
         story = []
 
-        story.append(Paragraph("Audit Readiness Assessment", self.styles["SectionHeader"]))
+        story.append(
+            Paragraph("Audit Readiness Assessment", self.styles["SectionHeader"])
+        )
 
         # Readiness scores
         readiness_scores = report_data.get("readiness_scores", {})
         if readiness_scores:
-            story.append(Paragraph("Framework Readiness Scores", self.styles["SubsectionHeader"]))
+            story.append(
+                Paragraph("Framework Readiness Scores", self.styles["SubsectionHeader"])
+            )
 
             readiness_data = [
-                ["Framework", "Overall Score", "Evidence %", "Policy %", "Gaps Remaining"]
+                [
+                    "Framework",
+                    "Overall Score",
+                    "Evidence %",
+                    "Policy %",
+                    "Gaps Remaining",
+                ]
             ]
             for framework, scores in readiness_scores.items():
                 readiness_data.append(
@@ -566,7 +614,8 @@ class PDFGenerator:
                 )
 
             readiness_table = Table(
-                readiness_data, colWidths=[1.2 * inch, 1 * inch, 1 * inch, 1 * inch, 1 * inch]
+                readiness_data,
+                colWidths=[1.2 * inch, 1 * inch, 1 * inch, 1 * inch, 1 * inch],
             )
             readiness_table.setStyle(
                 TableStyle(
@@ -597,7 +646,8 @@ class PDFGenerator:
         if critical_items:
             story.append(
                 Paragraph(
-                    "Critical Items Requiring Immediate Attention", self.styles["SubsectionHeader"]
+                    "Critical Items Requiring Immediate Attention",
+                    self.styles["SubsectionHeader"],
                 )
             )
 
@@ -617,7 +667,9 @@ class PDFGenerator:
         """Build the compliance status report section."""
         story = []
 
-        story.append(Paragraph("Compliance Status Overview", self.styles["SectionHeader"]))
+        story.append(
+            Paragraph("Compliance Status Overview", self.styles["SectionHeader"])
+        )
 
         # Overall metrics
         overall_metrics = report_data.get("overall_metrics", {})
@@ -633,7 +685,9 @@ class PDFGenerator:
         # Framework status details
         framework_status = report_data.get("framework_status", {})
         if framework_status:
-            story.append(Paragraph("Framework-Specific Status", self.styles["SubsectionHeader"]))
+            story.append(
+                Paragraph("Framework-Specific Status", self.styles["SubsectionHeader"])
+            )
 
             status_data = [["Framework", "Score", "Status", "Last Assessed", "Gaps"]]
             for framework, status in framework_status.items():
@@ -649,7 +703,8 @@ class PDFGenerator:
                 )
 
             status_table = Table(
-                status_data, colWidths=[1.3 * inch, 1 * inch, 1.2 * inch, 1.2 * inch, 0.8 * inch]
+                status_data,
+                colWidths=[1.3 * inch, 1 * inch, 1.2 * inch, 1.2 * inch, 0.8 * inch],
             )
             status_table.setStyle(
                 TableStyle(
@@ -706,18 +761,25 @@ class PDFGenerator:
         # Header
         canvas.setFont("Helvetica-Bold", 8)
         canvas.setFillColor(self.colors["medium_gray"])
-        canvas.drawString(doc.leftMargin, doc.height + doc.topMargin - 30, "ComplianceGPT Report")
+        canvas.drawString(
+            doc.leftMargin, doc.height + doc.topMargin - 30, "ComplianceGPT Report"
+        )
 
         # Footer
         canvas.setFont("Helvetica", 8)
         page_num_text = f"Page {doc.page}"
-        canvas.drawRightString(doc.width + doc.leftMargin, doc.bottomMargin - 20, page_num_text)
+        canvas.drawRightString(
+            doc.width + doc.leftMargin, doc.bottomMargin - 20, page_num_text
+        )
 
         # Footer line
         canvas.setStrokeColor(self.colors["light_gray"])
         canvas.setLineWidth(0.5)
         canvas.line(
-            doc.leftMargin, doc.bottomMargin - 10, doc.width + doc.leftMargin, doc.bottomMargin - 10
+            doc.leftMargin,
+            doc.bottomMargin - 10,
+            doc.width + doc.leftMargin,
+            doc.bottomMargin - 10,
         )
 
         canvas.restoreState()

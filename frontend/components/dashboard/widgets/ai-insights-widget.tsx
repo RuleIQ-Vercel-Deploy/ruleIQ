@@ -19,11 +19,11 @@ interface AIInsightsWidgetProps {
   onRefresh?: () => void;
 }
 
-export function AIInsightsWidget({ 
-  insights = [], 
-  isLoading = false, 
-  onInsightClick, 
-  onRefresh 
+export function AIInsightsWidget({
+  insights = [],
+  isLoading = false,
+  onInsightClick,
+  onRefresh,
 }: AIInsightsWidgetProps) {
   if (isLoading) {
     return (
@@ -56,15 +56,15 @@ export function AIInsightsWidget({
             {insights.map((insight) => (
               <div
                 key={insight.id}
-                className="p-3 border rounded cursor-pointer hover:bg-gray-50"
+                className="cursor-pointer rounded border p-3 hover:bg-gray-50"
                 onClick={() => onInsightClick?.(insight.id)}
               >
                 <div className="flex items-center justify-between">
                   <span className="font-medium">{insight.title}</span>
                   <span className="text-sm text-gray-500">{insight.confidence}%</span>
                 </div>
-                <p className="text-sm text-gray-600 mt-1">{insight.description}</p>
-                <span className="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded">
+                <p className="mt-1 text-sm text-gray-600">{insight.description}</p>
+                <span className="rounded bg-blue-100 px-2 py-1 text-xs text-blue-800">
                   {insight.type}
                 </span>
               </div>

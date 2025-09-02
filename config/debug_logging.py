@@ -17,6 +17,7 @@ from contextlib import contextmanager
 from logging.handlers import RotatingFileHandler
 from pythonjsonlogger import jsonlogger
 
+
 class ContextFilter(logging.Filter):
     """Add contextual information to log records"""
 
@@ -33,11 +34,12 @@ class ContextFilter(logging.Filter):
         record.timestamp = datetime.utcnow().isoformat()
 
         # Add request context if available
-        record.request_id = getattr(record, 'request_id', 'no-request')
-        record.user_id = getattr(record, 'user_id', 'anonymous')
-        record.session_id = getattr(record, 'session_id', 'no-session')
+        record.request_id = getattr(record, "request_id", "no-request")
+        record.user_id = getattr(record, "user_id", "anonymous")
+        record.session_id = getattr(record, "session_id", "no-session")
 
         return True
+
 
 class PerformanceLogger:
     """Track and log performance metrics"""
@@ -62,11 +64,11 @@ class PerformanceLogger:
                 log_level,
                 f"Performance: {operation} took {duration_ms:.2f}ms",
                 extra={
-                    'operation': operation,
-                    'duration_ms': duration_ms,
-                    'over_threshold': duration_ms > threshold_ms,
-                    'event_type': 'performance'
-                }
+                    "operation": operation,
+                    "duration_ms": duration_ms,
+                    "over_threshold": duration_ms > threshold_ms,
+                    "event_type": "performance",
+                },
             )
 
     def log_metric(self, metric_name: str, value: float, unit: str = "count"):
@@ -74,12 +76,13 @@ class PerformanceLogger:
         self.logger.info(
             f"Metric: {metric_name} = {value} {unit}",
             extra={
-                'metric_name': metric_name,
-                'metric_value': value,
-                'metric_unit': unit,
-                'event_type': 'metric'
-            }
+                "metric_name": metric_name,
+                "metric_value": value,
+                "metric_unit": unit,
+                "event_type": "metric",
+            },
         )
+
 
 class DebugLogger:
     """Enhanced logger for debugging and development"""
@@ -101,7 +104,7 @@ class DebugLogger:
         if os.getenv("ENVIRONMENT", "development") == "development":
             console_handler = logging.StreamHandler(sys.stdout)
             console_formatter = logging.Formatter(
-                '%(asctime)s - %(name)s - %(levelname)s - [%(request_id)s] - %(message)s'
+                "%(asctime)s - %(name)s - %(levelname)s - [%(request_id)s] - %(message)s"
             )
             console_handler.setFormatter(console_formatter)
             self.logger.addHandler(console_handler)
@@ -115,12 +118,12 @@ class DebugLogger:
             file_handler = RotatingFileHandler(
                 filename=os.path.join(log_dir, f"{self.name}.log"),
                 maxBytes=10 * 1024 * 1024,  # 10MB
-                backupCount=5
+                backupCount=5,
             )
 
             # JSON formatter for structured logging
             json_formatter = jsonlogger.JsonFormatter(
-                '%(timestamp)s %(name)s %(levelname)s %(request_id)s %(user_id)s %(message)s'
+                "%(timestamp)s %(name)s %(levelname)s %(request_id)s %(user_id)s %(message)s"
             )
             file_handler.setFormatter(json_formatter)
             self.logger.addHandler(file_handler)
@@ -132,62 +135,79 @@ class DebugLogger:
     def set_context(self, **context):
         """Set logging context for this session"""
         for handler in self.logger.handlers:
-            if hasattr(handler, 'filters'):
+            if hasattr(handler, "filters"):
                 for filter_obj in handler.filters:
                     if isinstance(filter_obj, ContextFilter):
                         filter_obj.context.update(context)
 
-    def debug_request(self, request_data: Dict[str, Any], response_data: Optional[Dict[str, Any]] = None):
+    def debug_request(
+        self,
+        request_data: Dict[str, Any],
+        response_data: Optional[Dict[str, Any]] = None,
+    ):
         """Log detailed request/response information"""
         log_data = {
-            'event_type': 'api_request',
-            'request': request_data,
-            'timestamp': datetime.utcnow().isoformat()
+            "event_type": "api_request",
+            "request": request_data,
+            "timestamp": datetime.utcnow().isoformat(),
         }
 
         if response_data:
-            log_data['response'] = response_data
+            log_data["response"] = response_data
 
         self.logger.debug("API Request Debug", extra=log_data)
 
-    def debug_db_query(self, query: str, params: Optional[Dict[str, Any]] = None, duration_ms: Optional[float] = None):
+    def debug_db_query(
+        self,
+        query: str,
+        params: Optional[Dict[str, Any]] = None,
+        duration_ms: Optional[float] = None,
+    ):
         """Log database query information"""
         log_data = {
-            'event_type': 'db_query',
-            'query': query[:500],  # Truncate long queries
-            'params': params or {},
-            'timestamp': datetime.utcnow().isoformat()
+            "event_type": "db_query",
+            "query": query[:500],  # Truncate long queries
+            "params": params or {},
+            "timestamp": datetime.utcnow().isoformat(),
         }
 
         if duration_ms:
-            log_data['duration_ms'] = duration_ms
+            log_data["duration_ms"] = duration_ms
 
         self.logger.debug("Database Query", extra=log_data)
 
-    def debug_external_call(self, service: str, endpoint: str, method: str, response_code: Optional[int] = None):
+    def debug_external_call(
+        self,
+        service: str,
+        endpoint: str,
+        method: str,
+        response_code: Optional[int] = None,
+    ):
         """Log external service calls"""
         log_data = {
-            'event_type': 'external_call',
-            'service': service,
-            'endpoint': endpoint,
-            'method': method,
-            'timestamp': datetime.utcnow().isoformat()
+            "event_type": "external_call",
+            "service": service,
+            "endpoint": endpoint,
+            "method": method,
+            "timestamp": datetime.utcnow().isoformat(),
         }
 
         if response_code:
-            log_data['response_code'] = response_code
+            log_data["response_code"] = response_code
 
         self.logger.debug("External Service Call", extra=log_data)
 
-    def error_with_context(self, message: str, error: Exception, context: Optional[Dict[str, Any]] = None):
+    def error_with_context(
+        self, message: str, error: Exception, context: Optional[Dict[str, Any]] = None
+    ):
         """Log errors with full context and stack trace"""
         error_data = {
-            'event_type': 'error',
-            'error_type': type(error).__name__,
-            'error_message': str(error),
-            'stack_trace': traceback.format_exc(),
-            'context': context or {},
-            'timestamp': datetime.utcnow().isoformat()
+            "event_type": "error",
+            "error_type": type(error).__name__,
+            "error_message": str(error),
+            "stack_trace": traceback.format_exc(),
+            "context": context or {},
+            "timestamp": datetime.utcnow().isoformat(),
         }
 
         self.logger.error(f"Error: {message}", extra=error_data)
@@ -195,26 +215,33 @@ class DebugLogger:
     def security_event(self, event_type: str, details: Dict[str, Any]):
         """Log security-related events"""
         security_data = {
-            'event_type': 'security',
-            'security_event': event_type,
-            'details': details,
-            'timestamp': datetime.utcnow().isoformat()
+            "event_type": "security",
+            "security_event": event_type,
+            "details": details,
+            "timestamp": datetime.utcnow().isoformat(),
         }
 
         self.logger.warning(f"Security Event: {event_type}", extra=security_data)
 
-    def compliance_event(self, action: str, framework: str, result: str, details: Optional[Dict[str, Any]] = None):
+    def compliance_event(
+        self,
+        action: str,
+        framework: str,
+        result: str,
+        details: Optional[Dict[str, Any]] = None,
+    ):
         """Log compliance-related actions"""
         compliance_data = {
-            'event_type': 'compliance',
-            'action': action,
-            'framework': framework,
-            'result': result,
-            'details': details or {},
-            'timestamp': datetime.utcnow().isoformat()
+            "event_type": "compliance",
+            "action": action,
+            "framework": framework,
+            "result": result,
+            "details": details or {},
+            "timestamp": datetime.utcnow().isoformat(),
         }
 
         self.logger.info(f"Compliance: {action} for {framework}", extra=compliance_data)
+
 
 class DebugMiddleware:
     """Middleware to add debug logging to FastAPI"""
@@ -230,6 +257,7 @@ class DebugMiddleware:
 
         # Generate request ID
         import uuid
+
         request_id = str(uuid.uuid4())[:8]
 
         # Set context
@@ -243,90 +271,105 @@ class DebugMiddleware:
 
                 # Log request completion
                 self.logger.performance.log_metric(
-                    f"request_duration_{scope['method'].lower()}",
-                    duration_ms,
-                    "ms"
+                    f"request_duration_{scope['method'].lower()}", duration_ms, "ms"
                 )
 
             await send(message)
 
         # Log request start
         request_data = {
-            'method': scope.get('method'),
-            'path': scope.get('path'),
-            'query_string': scope.get('query_string', b'').decode(),
-            'headers': dict(scope.get('headers', [])),
-            'client': scope.get('client'),
+            "method": scope.get("method"),
+            "path": scope.get("path"),
+            "query_string": scope.get("query_string", b"").decode(),
+            "headers": dict(scope.get("headers", [])),
+            "client": scope.get("client"),
         }
 
         self.logger.debug_request(request_data)
 
         await self.app(scope, receive, send_wrapper)
 
+
 # Debugging decorators
-def debug_function(logger: DebugLogger, include_args: bool = False, include_result: bool = False):
+def debug_function(
+    logger: DebugLogger, include_args: bool = False, include_result: bool = False
+):
     """Decorator to debug function calls"""
+
     def decorator(func):
         @wraps(func)
         def wrapper(*args, **kwargs):
             func_name = f"{func.__module__}.{func.__name__}"
 
-            debug_data = {
-                'function': func_name,
-                'event_type': 'function_call'
-            }
+            debug_data = {"function": func_name, "event_type": "function_call"}
 
             if include_args:
-                debug_data['args'] = str(args)
-                debug_data['kwargs'] = str(kwargs)
+                debug_data["args"] = str(args)
+                debug_data["kwargs"] = str(kwargs)
 
             with logger.performance.timer(f"function.{func_name}"):
                 try:
                     result = func(*args, **kwargs)
 
                     if include_result:
-                        debug_data['result'] = str(result)[:200]  # Truncate large results
+                        debug_data["result"] = str(result)[
+                            :200
+                        ]  # Truncate large results
 
                     logger.logger.debug(f"Function call: {func_name}", extra=debug_data)
                     return result
 
                 except Exception as e:
-                    logger.error_with_context(f"Function {func_name} failed", e, debug_data)
+                    logger.error_with_context(
+                        f"Function {func_name} failed", e, debug_data
+                    )
                     raise
+
         return wrapper
+
     return decorator
 
-def debug_async_function(logger: DebugLogger, include_args: bool = False, include_result: bool = False):
+
+def debug_async_function(
+    logger: DebugLogger, include_args: bool = False, include_result: bool = False
+):
     """Decorator to debug async function calls"""
+
     def decorator(func):
         @wraps(func)
         async def wrapper(*args, **kwargs):
             func_name = f"{func.__module__}.{func.__name__}"
 
-            debug_data = {
-                'function': func_name,
-                'event_type': 'async_function_call'
-            }
+            debug_data = {"function": func_name, "event_type": "async_function_call"}
 
             if include_args:
-                debug_data['args'] = str(args)
-                debug_data['kwargs'] = str(kwargs)
+                debug_data["args"] = str(args)
+                debug_data["kwargs"] = str(kwargs)
 
             with logger.performance.timer(f"async_function.{func_name}"):
                 try:
                     result = await func(*args, **kwargs)
 
                     if include_result:
-                        debug_data['result'] = str(result)[:200]  # Truncate large results
+                        debug_data["result"] = str(result)[
+                            :200
+                        ]  # Truncate large results
 
-                    logger.logger.debug(f"Async function call: {func_name}", extra=debug_data)
+                    logger.logger.debug(
+                        f"Async function call: {func_name}", extra=debug_data
+                    )
                     return result
 
                 except Exception as e:
-                    logger.error_with_context(f"Async function {func_name} failed", e, debug_data)
+                    logger.error_with_context(
+                        f"Async function {func_name} failed", e, debug_data
+                    )
                     raise
+
         return wrapper
+
     return decorator
+
 
 # Global debug logger instances
 api_logger = DebugLogger("ruleiq.api")

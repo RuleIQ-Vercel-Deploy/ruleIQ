@@ -382,9 +382,7 @@ export function FormShowcase() {
           <div className="grid gap-6 md:grid-cols-2">
             {/* Error Examples */}
             <div className="space-y-4">
-              <h4 className="font-semibold text-neutral-900">
-                Error States
-              </h4>
+              <h4 className="font-semibold text-neutral-900">Error States</h4>
 
               <FormField label="Required Field" error="This field is required" required>
                 <Input placeholder="Required field..." error />
@@ -409,9 +407,7 @@ export function FormShowcase() {
 
             {/* Success Examples */}
             <div className="space-y-4">
-              <h4 className="font-semibold text-neutral-900">
-                Success States
-              </h4>
+              <h4 className="font-semibold text-neutral-900">Success States</h4>
 
               <FormField label="Valid Input" success="Input is valid">
                 <Input placeholder="Valid input..." success />

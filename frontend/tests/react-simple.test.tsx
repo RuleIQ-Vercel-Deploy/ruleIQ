@@ -21,12 +21,17 @@ describe('React Testing Library Test', () => {
   it('should handle events', () => {
     let clicked = false;
     const ButtonComponent = () => (
-      <button data-testid="button" onClick={() => { clicked = true; }}>
+      <button
+        data-testid="button"
+        onClick={() => {
+          clicked = true;
+        }}
+      >
         Click me
       </button>
     );
     render(<ButtonComponent />);
-    
+
     const button = screen.getByTestId('button');
     button.click();
     expect(clicked).toBe(true);

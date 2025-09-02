@@ -6,10 +6,9 @@ Create Date: 2025-07-25 03:29:04.463516
 
 """
 
-
 # revision identifiers, used by Alembic.
-revision = '52b4f203af3a'
-down_revision = 'add_check_constraints_data_integrity'
+revision = "52b4f203af3a"
+down_revision = "add_check_constraints_data_integrity"
 branch_labels = None
 depends_on = None
 

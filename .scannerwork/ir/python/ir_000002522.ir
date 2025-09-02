@@ -1,0 +1,99 @@
+
+"financial"str
+"multiple_choice"str
+8"followup_123"str
++"reasoning"str
+(,"Need to understand data types"str
+"value"str
+;"2024-01-01T00:00:00Z"str
+"Financial data"str
+7"request_id"str
+/"high"str
+"ai-q1"str
+"emails"str
+6
+-"What types of personal data do you process?"str
+"names"str
+"Email addresses"str
+"questions"str
+.
+"priority"str
+"type"str
+"label"str
+	"options"str
+"id"str
+:"generated_at"str
+
+%0int
+"Names"str
+	"text"strargsB4 B(9kwargsB; B(C"dict"list"À	$
+"
+C T("#new-object#Bdict$
+"
+E P("#new-object#Bdict 
+
+F F(%"	#map-set#: 
+
+G G(M"	#map-set#:	
+ 
+
+H H(1"	#map-set#:$
+"
+J J(@"#new-object#Bdict 
+
+J J(-"	#map-set#: 
+
+J/ J(?"	#map-set#:$
+"
+K K(K"#new-object#Bdict 
+
+K K(."	#map-set#: 
+
+K0 K(J"	#map-set#:$
+"
+L L(M"#new-object#Bdict 
+
+L L(1"	#map-set#: 
+
+L3 L(L "	#map-set#:'
+%
+I# M(!"#unknown-value#Blist&
+$
+I# M(#"
+#is-exact#:!"Bbool
+
+I# M($"
+#assume#:#8
+6
+I# M(&"#set-field# __collection_size:!%Bint&
+$
+I# M('"#array-add-last#:!&
+$
+I# M(("#array-add-last#:!&
+$
+I# M()"#array-add-last#:! 
+
+I M(*"	#map-set#:! 
+
+N N(D-"	#map-set#:+, 
+
+O O(*0"	#map-set#:./'
+%
+D Q(1"#unknown-value#Blist&
+$
+D Q(2"
+#is-exact#:1"Bbool
+
+D Q(3"
+#assume#:28
+6
+D Q(4"#set-field# __collection_size:1%Bint&
+$
+D Q(5"#array-add-last#:1 
+
+D Q(6"	#map-set#:1 
+
+R R(,9"	#map-set#:78 
+
+S S(6<"	#map-set#::;
+C T(*H/home/omar/Documents/ruleIQ/tests/integration/api/test_ai_assessments.py

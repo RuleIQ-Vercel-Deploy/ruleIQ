@@ -1,0 +1,8 @@
+
+,#"Validate if version is supported."strself? ?(version? ?(+"q3
+1
+A A(1" #get-field# SUPPORTED_VERSIONS:*
+(
+A A(1"
+#binop in#2in:Bbool
+A A(1*</home/omar/Documents/ruleIQ/api/middleware/api_versioning.py

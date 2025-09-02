@@ -59,10 +59,12 @@ def perform_t_test(
         test_name = "Welch's t-test (unequal variances)"
         # Welch-Satterthwaite equation for degrees of freedom
         df = (
-            control_std**2 / len(control_array) + treatment_std**2 / len(treatment_array)
+            control_std**2 / len(control_array)
+            + treatment_std**2 / len(treatment_array)
         ) ** 2 / (
             control_std**4 / (len(control_array) ** 2 * (len(control_array) - 1))
-            + treatment_std**4 / (len(treatment_array) ** 2 * (len(treatment_array) - 1))
+            + treatment_std**4
+            / (len(treatment_array) ** 2 * (len(treatment_array) - 1))
         )
 
     # Confidence interval for mean difference
@@ -91,10 +93,14 @@ def perform_t_test(
         "power": power,
         "means": {"control": control_mean, "treatment": treatment_mean},
         "std_devs": {"control": control_std, "treatment": treatment_std},
-        "sample_sizes": {"control": len(control_array), "treatment": len(treatment_array)},
+        "sample_sizes": {
+            "control": len(control_array),
+            "treatment": len(treatment_array),
+        },
         "equal_variances": equal_var,
         "is_significant": p_value < alpha,
-        "practical_significance": abs(effect_size) >= 0.2,  # Small effect size threshold
+        "practical_significance": abs(effect_size)
+        >= 0.2,  # Small effect size threshold
     }
 
 
@@ -118,7 +124,10 @@ def perform_chi_squared_test(
     treatment_success = sum(treatment_outcomes)
     treatment_failure = len(treatment_outcomes) - treatment_success
 
-    contingency_table = [[control_success, control_failure], [treatment_success, treatment_failure]]
+    contingency_table = [
+        [control_success, control_failure],
+        [treatment_success, treatment_failure],
+    ]
 
     # Perform chi-squared test
     chi2, p_value, dof, expected = chi2_contingency(contingency_table)
@@ -163,7 +172,9 @@ def perform_mann_whitney_test(
     treatment_array = np.array(treatment_data)
 
     # Perform Mann-Whitney U test
-    statistic, p_value = mannwhitneyu(control_array, treatment_array, alternative="two-sided")
+    statistic, p_value = mannwhitneyu(
+        control_array, treatment_array, alternative="two-sided"
+    )
 
     # Calculate effect size (rank-biserial correlation)
     n1, n2 = len(control_array), len(treatment_array)
@@ -193,7 +204,9 @@ def test_statistical_scenarios() -> bool:
     print("1. Testing Clear Difference Scenario")
     np.random.seed(42)
     control_clear = np.random.normal(70, 10, 100)  # Mean 70, std 10
-    treatment_clear = np.random.normal(85, 10, 100)  # Mean 85, std 10 (15-point improvement)
+    treatment_clear = np.random.normal(
+        85, 10, 100
+    )  # Mean 85, std 10 (15-point improvement)
 
     result_clear = perform_t_test(control_clear.tolist(), treatment_clear.tolist())
     print(f"   Test: {result_clear['test_name']}")
@@ -229,8 +242,12 @@ def test_statistical_scenarios() -> bool:
     # Scenario 4: Binary outcomes (Chi-squared test)
     print("\n4. Testing Binary Outcomes (Chi-squared)")
     np.random.seed(123)
-    control_binary = [1 if np.random.random() < 0.30 else 0 for _ in range(200)]  # 30% success
-    treatment_binary = [1 if np.random.random() < 0.40 else 0 for _ in range(200)]  # 40% success
+    control_binary = [
+        1 if np.random.random() < 0.30 else 0 for _ in range(200)
+    ]  # 30% success
+    treatment_binary = [
+        1 if np.random.random() < 0.40 else 0 for _ in range(200)
+    ]  # 40% success
 
     result_binary = perform_chi_squared_test(control_binary, treatment_binary)
     print(f"   Test: {result_binary['test_name']}")
@@ -248,7 +265,9 @@ def test_statistical_scenarios() -> bool:
     control_skewed = np.random.exponential(2, 100) + 10  # Exponential distribution
     treatment_skewed = np.random.exponential(1.5, 100) + 10  # Different shape
 
-    result_nonparam = perform_mann_whitney_test(control_skewed.tolist(), treatment_skewed.tolist())
+    result_nonparam = perform_mann_whitney_test(
+        control_skewed.tolist(), treatment_skewed.tolist()
+    )
     print(f"   Test: {result_nonparam['test_name']}")
     print(f"   P-value: {result_nonparam['p_value']:.4f}")
     print(f"   Effect size: {result_nonparam['effect_size']:.3f}")
@@ -301,7 +320,9 @@ def test_power_analysis() -> bool:
         df = 2 * n - 2
         ncp = effect_size * np.sqrt(n / 2)
         t_critical = stats.t.ppf(1 - alpha / 2, df)
-        power = 1 - stats.nct.cdf(t_critical, df, ncp) + stats.nct.cdf(-t_critical, df, ncp)
+        power = (
+            1 - stats.nct.cdf(t_critical, df, ncp) + stats.nct.cdf(-t_critical, df, ncp)
+        )
         power = max(0.0, min(1.0, power))
 
         print(f"{n:^11} | {power:.3f}")

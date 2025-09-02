@@ -1,0 +1,45 @@
+
+
+1int
+	"iteration_count"str
+"value"str
+
+0intstate
+û û(0"™#
+!
+
+ü ü("#unknown-value#$
+"
+
+ü ü("#array-read#:'
+%
+
+ü ü(!"	#binop +#*2+:#
+!
+
+ü ü("#unknown-value#&
+$
+
+ü ü(!"#array-write#:4
+2
+
+ý ý(-
+"#binop not in#2not in:	Bbool "
+
+ý ý(-
+ *
+ý ý("0&
+$
+
+þ þ(,"#array-write#:	"‡#
+!
+
+ÿ' ÿ(."#unknown-value#$
+"
+
+ÿ' ÿ(7"#array-read#:&
+$
+
+ÿ ÿ(7"#array-write#:	
+
+€ €(*G/home/omar/Documents/ruleIQ/tests/integration/test_state_integration.py

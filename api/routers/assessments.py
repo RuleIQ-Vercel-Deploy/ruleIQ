@@ -8,7 +8,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from api.dependencies.database import get_async_db
 from api.dependencies.auth import get_current_active_user, require_auth
 from database.user import User
-from services.data_access import DataAccess
 from api.schemas.models import (
     AssessmentQuestion,
     AssessmentResponseUpdate,
@@ -17,31 +16,37 @@ from api.schemas.models import (
 )
 from services.assessment_service import AssessmentService
 
+
 class QuickAssessmentRequest(BaseModel):
     business_profile_id: str
     assessment_type: str
     industry_standard: bool
 
+
 class FrameworkInfo(BaseModel):
     name: str
     description: str = ""
+
 
 class QuickRecommendation(BaseModel):
     framework: FrameworkInfo
     priority: str = "medium"
     description: str = ""
 
+
 class QuickAssessmentResponse(BaseModel):
     recommendations: List[QuickRecommendation]
 
+
 router = APIRouter()
+
 
 @router.post("/quick", response_model=QuickAssessmentResponse)
 @require_auth
 async def quick_assessment(
     request: QuickAssessmentRequest,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """Generate quick compliance recommendations based on business profile."""
 
@@ -66,7 +71,8 @@ async def quick_assessment(
         recommendations.append(
             QuickRecommendation(
                 framework=FrameworkInfo(
-                    name="ISO 27001", description="Information security management standard"
+                    name="ISO 27001",
+                    description="Information security management standard",
                 ),
                 priority="medium",
                 description="Industry standard for information security management",
@@ -85,18 +91,22 @@ async def quick_assessment(
 
     return QuickAssessmentResponse(recommendations=recommendations)
 
+
 @router.get("/", response_model=List[AssessmentSessionResponse])
 @require_auth
 async def list_assessments(
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """List all assessment sessions for the current user"""
     assessment_service = AssessmentService()
     sessions = await assessment_service.get_user_assessment_sessions(db, current_user)
     return sessions
 
-@router.post("/", response_model=AssessmentSessionResponse, status_code=status.HTTP_201_CREATED)
+
+@router.post(
+    "/", response_model=AssessmentSessionResponse, status_code=status.HTTP_201_CREATED
+)
 @require_auth
 async def create_assessment(
     session_data: AssessmentSessionCreate,
@@ -110,8 +120,11 @@ async def create_assessment(
     )
     return session
 
+
 @router.post(
-    "/start", response_model=AssessmentSessionResponse, status_code=status.HTTP_201_CREATED
+    "/start",
+    response_model=AssessmentSessionResponse,
+    status_code=status.HTTP_201_CREATED,
 )
 @require_auth
 async def start_assessment(
@@ -125,11 +138,12 @@ async def start_assessment(
     )
     return session
 
+
 @router.get("/current", response_model=AssessmentSessionResponse)
 @require_auth
 async def get_current_session(
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     assessment_service = AssessmentService()
     session = await assessment_service.get_current_assessment_session(db, current_user)
@@ -139,15 +153,16 @@ async def get_current_session(
         )
     return session
 
+
 @router.get("/questions/{stage}", response_model=List[AssessmentQuestion])
 @require_auth
 async def get_questions(
-    stage: int,
-    current_user: User = Depends(get_current_active_user)
+    stage: int, current_user: User = Depends(get_current_active_user)
 ):
     assessment_service = AssessmentService()
     questions = assessment_service.get_assessment_questions(current_user, stage)
     return questions
+
 
 @router.put("/{id}/response")
 @require_auth
@@ -162,6 +177,7 @@ async def update_response(
         db, current_user, session_id, response_data.question_id, response_data.response
     )
     return session
+
 
 @router.post("/{id}/responses")
 @require_auth
@@ -187,6 +203,7 @@ async def update_responses(
     )
     return session
 
+
 @router.get("/{id}", response_model=AssessmentSessionResponse)
 @require_auth
 async def get_assessment_session(
@@ -196,12 +213,15 @@ async def get_assessment_session(
 ):
     """Get a specific assessment session by ID."""
     assessment_service = AssessmentService()
-    session = await assessment_service.get_assessment_session(db, current_user, session_id)
+    session = await assessment_service.get_assessment_session(
+        db, current_user, session_id
+    )
     if not session:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Assessment session not found"
         )
     return session
+
 
 @router.get("/{id}/recommendations")
 @require_auth
@@ -216,7 +236,9 @@ async def get_assessment_recommendations(
     from database.compliance_framework import ComplianceFramework
 
     assessment_service = AssessmentService()
-    session = await assessment_service.get_assessment_session(db, current_user, session_id)
+    session = await assessment_service.get_assessment_session(
+        db, current_user, session_id
+    )
     if not session:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Assessment session not found"
@@ -250,6 +272,7 @@ async def get_assessment_recommendations(
 
     return {"recommendations": recommendations}
 
+
 @router.post("/{id}/complete", response_model=AssessmentSessionResponse)
 @require_auth
 async def complete_assessment(
@@ -258,8 +281,11 @@ async def complete_assessment(
     db: AsyncSession = Depends(get_async_db),
 ):
     assessment_service = AssessmentService()
-    session = await assessment_service.complete_assessment_session(db, current_user, session_id)
+    session = await assessment_service.complete_assessment_session(
+        db, current_user, session_id
+    )
     return session
+
 
 @router.patch("/{id}", response_model=AssessmentSessionResponse)
 @require_auth
@@ -276,10 +302,11 @@ async def update_assessment(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Assessment session not found"
         )
-    
+
     # Placeholder implementation - update session fields
     # In a real implementation, this would update the session in the database
     return session
+
 
 @router.get("/{id}/results", response_model=dict)
 @require_auth
@@ -295,7 +322,7 @@ async def get_assessment_results(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Assessment session not found"
         )
-    
+
     # Placeholder implementation - return assessment results
     return {
         "assessment_id": str(id),
@@ -319,5 +346,9 @@ async def get_assessment_results(
             "Set up user consent workflows",
             "Schedule security training",
         ],
-        "completed_at": session.completed_at.isoformat() if hasattr(session, 'completed_at') and session.completed_at else None,
+        "completed_at": (
+            session.completed_at.isoformat()
+            if hasattr(session, "completed_at") and session.completed_at
+            else None
+        ),
     }

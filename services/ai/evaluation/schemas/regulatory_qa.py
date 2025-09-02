@@ -10,7 +10,7 @@ from .common import RegCitation, SourceMeta, TemporalValidity
 
 class RegulatoryQAPair(BaseModel):
     """Regulatory Q&A pair definition."""
-    
+
     id: str = Field(..., description="Unique Q&A identifier")
     question: str = Field(..., description="The regulatory question")
     authoritative_answer: str = Field(..., description="The authoritative answer")

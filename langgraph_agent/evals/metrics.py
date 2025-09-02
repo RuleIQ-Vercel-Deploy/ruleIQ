@@ -30,7 +30,7 @@ class EvaluationResult:
             "metric_name": self.metric_name,
             "score": self.score,
             "details": self.details,
-            "timestamp": self.timestamp.isoformat()
+            "timestamp": self.timestamp.isoformat(),
         }
 
 
@@ -58,17 +58,15 @@ class RecallAtKEvaluator:
         self.k_values = k_values or [1, 3, 5, 10]
 
     def evaluate(
-        self,
-        predicted_items: List[List[str]],
-        relevant_items: List[List[str]]
+        self, predicted_items: List[List[str]], relevant_items: List[List[str]]
     ) -> Dict[str, EvaluationResult]:
         """
         Calculate recall@k for each k value.
-        
+
         Args:
             predicted_items: List of prediction lists for each query
             relevant_items: List of relevant item lists for each query
-            
+
         Returns:
             Dictionary mapping k values to evaluation results
         """
@@ -104,8 +102,10 @@ class RecallAtKEvaluator:
                         "k": k,
                         "num_queries": len(recall_scores),
                         "individual_scores": recall_scores,
-                        "std_dev": stdev(recall_scores) if len(recall_scores) > 1 else 0.0
-                    }
+                        "std_dev": (
+                            stdev(recall_scores) if len(recall_scores) > 1 else 0.0
+                        ),
+                    },
                 )
 
         return results
@@ -118,16 +118,16 @@ class CitationExactnessEvaluator:
         self,
         responses: List[str],
         expected_citations: List[List[str]],
-        extracted_citations: List[List[str]]
+        extracted_citations: List[List[str]],
     ) -> EvaluationResult:
         """
         Evaluate citation exactness comparing extracted vs expected citations.
-        
+
         Args:
             responses: List of agent responses
             expected_citations: Expected citations for each response
             extracted_citations: Actually extracted citations from responses
-            
+
         Returns:
             Citation exactness evaluation result
         """
@@ -141,7 +141,7 @@ class CitationExactnessEvaluator:
             "partial_matches": 0,
             "no_matches": 0,
             "citation_precision": [],
-            "citation_recall": []
+            "citation_recall": [],
         }
 
         for expected, extracted in zip(expected_citations, extracted_citations):
@@ -184,13 +184,17 @@ class CitationExactnessEvaluator:
 
         # Calculate aggregate metrics
         avg_exactness = mean(exactness_scores) if exactness_scores else 0.0
-        details["avg_precision"] = mean(details["citation_precision"]) if details["citation_precision"] else 0.0
-        details["avg_recall"] = mean(details["citation_recall"]) if details["citation_recall"] else 0.0
+        details["avg_precision"] = (
+            mean(details["citation_precision"])
+            if details["citation_precision"]
+            else 0.0
+        )
+        details["avg_recall"] = (
+            mean(details["citation_recall"]) if details["citation_recall"] else 0.0
+        )
 
         return EvaluationResult(
-            metric_name="citation_exactness",
-            score=avg_exactness,
-            details=details
+            metric_name="citation_exactness", score=avg_exactness, details=details
         )
 
 
@@ -200,22 +204,23 @@ class LinkPrecisionEvaluator:
     def __init__(self, valid_domains: List[str] = None):
         """
         Initialize with valid regulatory domains.
-        
+
         Args:
             valid_domains: List of valid legal/regulatory domains
         """
         self.valid_domains = valid_domains or [
             "ico.org.uk",  # UK Information Commissioner's Office
-            "gov.uk",      # UK Government
+            "gov.uk",  # UK Government
             "eur-lex.europa.eu",  # EU Legal Database
-            "gdpr.eu",     # GDPR Info
-            "legislation.gov.uk"  # UK Legislation
+            "gdpr.eu",  # GDPR Info
+            "legislation.gov.uk",  # UK Legislation
         ]
 
     def extract_links(self, text: str) -> List[str]:
         """Extract URLs from text using basic regex."""
         import re
-        url_pattern = r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+'
+
+        url_pattern = r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\\(\\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+"
         return re.findall(url_pattern, text)
 
     def is_valid_link(self, url: str) -> bool:
@@ -231,10 +236,10 @@ class LinkPrecisionEvaluator:
     def evaluate(self, responses: List[str]) -> EvaluationResult:
         """
         Evaluate link precision across responses.
-        
+
         Args:
             responses: List of agent responses containing links
-            
+
         Returns:
             Link precision evaluation result
         """
@@ -263,13 +268,11 @@ class LinkPrecisionEvaluator:
             "precision": precision,
             "invalid_link_examples": invalid_links[:5],  # First 5 examples
             "valid_link_examples": valid_link_examples[:5],  # First 5 examples
-            "valid_domains": self.valid_domains
+            "valid_domains": self.valid_domains,
         }
 
         return EvaluationResult(
-            metric_name="link_precision",
-            score=precision,
-            details=details
+            metric_name="link_precision", score=precision, details=details
         )
 
 
@@ -279,7 +282,7 @@ class CounselFPREvaluator:
     def __init__(self, counsel_triggers: List[str] = None):
         """
         Initialize with phrases that should trigger counsel recommendations.
-        
+
         Args:
             counsel_triggers: Phrases that should trigger legal counsel advice
         """
@@ -289,16 +292,16 @@ class CounselFPREvaluator:
             "seek legal advice",
             "lawyer consultation",
             "legal professional",
-            "attorney review"
+            "attorney review",
         ]
 
     def should_recommend_counsel(self, context: Dict[str, Any]) -> bool:
         """
         Determine if context should trigger counsel recommendation.
-        
+
         Args:
             context: Context including query complexity, risk level, etc.
-            
+
         Returns:
             True if counsel should be recommended
         """
@@ -308,10 +311,10 @@ class CounselFPREvaluator:
         legal_uncertainty = context.get("legal_uncertainty", False)
 
         return (
-            risk_level in ["high", "critical"] or
-            complexity == "high" or
-            legal_uncertainty or
-            context.get("requires_legal_review", False)
+            risk_level in ["high", "critical"]
+            or complexity == "high"
+            or legal_uncertainty
+            or context.get("requires_legal_review", False)
         )
 
     def contains_counsel_recommendation(self, response: str) -> bool:
@@ -320,17 +323,15 @@ class CounselFPREvaluator:
         return any(trigger in response_lower for trigger in self.counsel_triggers)
 
     def evaluate(
-        self,
-        responses: List[str],
-        contexts: List[Dict[str, Any]]
+        self, responses: List[str], contexts: List[Dict[str, Any]]
     ) -> EvaluationResult:
         """
         Evaluate False Positive Rate for counsel recommendations.
-        
+
         Args:
             responses: Agent responses
             contexts: Context for each response
-            
+
         Returns:
             Counsel FPR evaluation result
         """
@@ -339,7 +340,7 @@ class CounselFPREvaluator:
 
         true_positives = 0  # Should recommend and did recommend
         false_positives = 0  # Shouldn't recommend but did recommend
-        true_negatives = 0   # Shouldn't recommend and didn't recommend
+        true_negatives = 0  # Shouldn't recommend and didn't recommend
         false_negatives = 0  # Should recommend but didn't recommend
 
         for response, context in zip(responses, contexts):
@@ -357,9 +358,21 @@ class CounselFPREvaluator:
 
         # Calculate metrics
         total = len(responses)
-        fpr = false_positives / (false_positives + true_negatives) if (false_positives + true_negatives) > 0 else 0.0
-        precision = true_positives / (true_positives + false_positives) if (true_positives + false_positives) > 0 else 0.0
-        recall = true_positives / (true_positives + false_negatives) if (true_positives + false_negatives) > 0 else 0.0
+        fpr = (
+            false_positives / (false_positives + true_negatives)
+            if (false_positives + true_negatives) > 0
+            else 0.0
+        )
+        precision = (
+            true_positives / (true_positives + false_positives)
+            if (true_positives + false_positives) > 0
+            else 0.0
+        )
+        recall = (
+            true_positives / (true_positives + false_negatives)
+            if (true_positives + false_negatives) > 0
+            else 0.0
+        )
 
         details = {
             "total_cases": total,
@@ -370,13 +383,13 @@ class CounselFPREvaluator:
             "false_positive_rate": fpr,
             "precision": precision,
             "recall": recall,
-            "accuracy": (true_positives + true_negatives) / total if total > 0 else 0.0
+            "accuracy": (true_positives + true_negatives) / total if total > 0 else 0.0,
         }
 
         return EvaluationResult(
             metric_name="counsel_fpr",
             score=1.0 - fpr,  # Score is 1 - FPR (higher is better)
-            details=details
+            details=details,
         )
 
 
@@ -386,7 +399,7 @@ class LatencyEvaluator:
     def __init__(self, slo_p95_ms: float = 2500):
         """
         Initialize with SLO threshold.
-        
+
         Args:
             slo_p95_ms: P95 latency SLO threshold in milliseconds
         """
@@ -423,7 +436,7 @@ class LatencyEvaluator:
             mean_ms=mean_ms,
             max_ms=max_ms,
             min_ms=min_ms,
-            samples=n
+            samples=n,
         )
 
     def evaluate(self) -> EvaluationResult:
@@ -447,14 +460,10 @@ class LatencyEvaluator:
             "samples": metrics.samples,
             "slo_p95_ms": self.slo_p95_ms,
             "meets_slo": metrics.meets_slo(self.slo_p95_ms),
-            "slo_violation_ratio": max(0, metrics.p95_ms / self.slo_p95_ms - 1.0)
+            "slo_violation_ratio": max(0, metrics.p95_ms / self.slo_p95_ms - 1.0),
         }
 
-        return EvaluationResult(
-            metric_name="latency_slo",
-            score=score,
-            details=details
-        )
+        return EvaluationResult(metric_name="latency_slo", score=score, details=details)
 
 
 class AgentPerformanceEvaluator:
@@ -469,11 +478,11 @@ class AgentPerformanceEvaluator:
         error_type: Optional[str] = None,
         latency_ms: float = 0.0,
         user_satisfaction: Optional[float] = None,
-        task_completion: bool = True
+        task_completion: bool = True,
     ) -> None:
         """
         Add an interaction result for evaluation.
-        
+
         Args:
             success: Whether the interaction was successful
             error_type: Type of error if failed
@@ -481,14 +490,16 @@ class AgentPerformanceEvaluator:
             user_satisfaction: User satisfaction score (0-1)
             task_completion: Whether the task was completed
         """
-        self.interaction_results.append({
-            "success": success,
-            "error_type": error_type,
-            "latency_ms": latency_ms,
-            "user_satisfaction": user_satisfaction,
-            "task_completion": task_completion,
-            "timestamp": datetime.utcnow()
-        })
+        self.interaction_results.append(
+            {
+                "success": success,
+                "error_type": error_type,
+                "latency_ms": latency_ms,
+                "user_satisfaction": user_satisfaction,
+                "task_completion": task_completion,
+                "timestamp": datetime.utcnow(),
+            }
+        )
 
     def evaluate(self) -> Dict[str, EvaluationResult]:
         """Evaluate agent performance across multiple dimensions."""
@@ -499,7 +510,9 @@ class AgentPerformanceEvaluator:
         total_interactions = len(self.interaction_results)
 
         # Success Rate
-        successful_interactions = sum(1 for r in self.interaction_results if r["success"])
+        successful_interactions = sum(
+            1 for r in self.interaction_results if r["success"]
+        )
         success_rate = successful_interactions / total_interactions
 
         results["success_rate"] = EvaluationResult(
@@ -508,28 +521,33 @@ class AgentPerformanceEvaluator:
             details={
                 "successful_interactions": successful_interactions,
                 "total_interactions": total_interactions,
-                "failure_rate": 1.0 - success_rate
-            }
+                "failure_rate": 1.0 - success_rate,
+            },
         )
 
         # Error Analysis
         error_counts = Counter(
-            r["error_type"] for r in self.interaction_results
+            r["error_type"]
+            for r in self.interaction_results
             if r["error_type"] is not None
         )
 
         results["error_analysis"] = EvaluationResult(
             metric_name="error_analysis",
-            score=1.0 - len(error_counts) / max(total_interactions, 1),  # Fewer error types is better
+            score=1.0
+            - len(error_counts)
+            / max(total_interactions, 1),  # Fewer error types is better
             details={
                 "error_counts": dict(error_counts),
                 "unique_error_types": len(error_counts),
-                "most_common_errors": error_counts.most_common(5)
-            }
+                "most_common_errors": error_counts.most_common(5),
+            },
         )
 
         # Task Completion Rate
-        completed_tasks = sum(1 for r in self.interaction_results if r["task_completion"])
+        completed_tasks = sum(
+            1 for r in self.interaction_results if r["task_completion"]
+        )
         completion_rate = completed_tasks / total_interactions
 
         results["task_completion_rate"] = EvaluationResult(
@@ -538,13 +556,14 @@ class AgentPerformanceEvaluator:
             details={
                 "completed_tasks": completed_tasks,
                 "total_tasks": total_interactions,
-                "incomplete_rate": 1.0 - completion_rate
-            }
+                "incomplete_rate": 1.0 - completion_rate,
+            },
         )
 
         # User Satisfaction (if available)
         satisfaction_scores = [
-            r["user_satisfaction"] for r in self.interaction_results
+            r["user_satisfaction"]
+            for r in self.interaction_results
             if r["user_satisfaction"] is not None
         ]
 
@@ -556,8 +575,12 @@ class AgentPerformanceEvaluator:
                 details={
                     "average_satisfaction": avg_satisfaction,
                     "satisfaction_samples": len(satisfaction_scores),
-                    "satisfaction_std": stdev(satisfaction_scores) if len(satisfaction_scores) > 1 else 0.0
-                }
+                    "satisfaction_std": (
+                        stdev(satisfaction_scores)
+                        if len(satisfaction_scores) > 1
+                        else 0.0
+                    ),
+                },
             )
 
         return results
@@ -573,7 +596,7 @@ class ComprehensiveEvaluator:
     def __init__(self, slo_p95_ms: float = 2500):
         """
         Initialize comprehensive evaluator.
-        
+
         Args:
             slo_p95_ms: P95 latency SLO threshold in milliseconds
         """
@@ -585,15 +608,14 @@ class ComprehensiveEvaluator:
         self.performance_evaluator = AgentPerformanceEvaluator()
 
     def evaluate_all(
-        self,
-        evaluation_data: Dict[str, Any]
+        self, evaluation_data: Dict[str, Any]
     ) -> Dict[str, EvaluationResult]:
         """
         Run comprehensive evaluation across all metrics.
-        
+
         Args:
             evaluation_data: Dictionary containing all evaluation data
-            
+
         Returns:
             Dictionary of evaluation results by metric name
         """
@@ -603,8 +625,7 @@ class ComprehensiveEvaluator:
         if "recall_data" in evaluation_data:
             recall_data = evaluation_data["recall_data"]
             recall_results = self.recall_evaluator.evaluate(
-                recall_data["predicted_items"],
-                recall_data["relevant_items"]
+                recall_data["predicted_items"], recall_data["relevant_items"]
             )
             results.update(recall_results)
 
@@ -614,23 +635,20 @@ class ComprehensiveEvaluator:
             citation_result = self.citation_evaluator.evaluate(
                 citation_data["responses"],
                 citation_data["expected_citations"],
-                citation_data["extracted_citations"]
+                citation_data["extracted_citations"],
             )
             results[citation_result.metric_name] = citation_result
 
         # Link precision evaluation
         if "responses" in evaluation_data:
-            link_result = self.link_evaluator.evaluate(
-                evaluation_data["responses"]
-            )
+            link_result = self.link_evaluator.evaluate(evaluation_data["responses"])
             results[link_result.metric_name] = link_result
 
         # Counsel FPR evaluation
         if "counsel_data" in evaluation_data:
             counsel_data = evaluation_data["counsel_data"]
             counsel_result = self.counsel_evaluator.evaluate(
-                counsel_data["responses"],
-                counsel_data["contexts"]
+                counsel_data["responses"], counsel_data["contexts"]
             )
             results[counsel_result.metric_name] = counsel_result
 
@@ -645,15 +663,14 @@ class ComprehensiveEvaluator:
         return results
 
     def generate_evaluation_report(
-        self,
-        results: Dict[str, EvaluationResult]
+        self, results: Dict[str, EvaluationResult]
     ) -> Dict[str, Any]:
         """
         Generate comprehensive evaluation report.
-        
+
         Args:
             results: Dictionary of evaluation results
-            
+
         Returns:
             Comprehensive evaluation report
         """
@@ -663,7 +680,7 @@ class ComprehensiveEvaluator:
             "metric_scores": {},
             "slo_compliance": {},
             "recommendations": [],
-            "details": {}
+            "details": {},
         }
 
         # Calculate overall score (weighted average)
@@ -674,12 +691,14 @@ class ComprehensiveEvaluator:
             "task_completion_rate": 0.15,
             "recall@5": 0.10,
             "link_precision": 0.10,
-            "counsel_fpr": 0.05
+            "counsel_fpr": 0.05,
         }
 
         weighted_scores = []
         for metric_name, result in results.items():
-            weight = metric_weights.get(metric_name, 0.05)  # Default weight for unlisted metrics
+            weight = metric_weights.get(
+                metric_name, 0.05
+            )  # Default weight for unlisted metrics
             weighted_scores.append(result.score * weight)
             report["metric_scores"][metric_name] = result.score
             report["details"][metric_name] = result.details
@@ -693,23 +712,34 @@ class ComprehensiveEvaluator:
                 "p95_latency_ms": latency_details["p95_ms"],
                 "slo_threshold_ms": latency_details["slo_p95_ms"],
                 "meets_slo": latency_details["meets_slo"],
-                "violation_ratio": latency_details.get("slo_violation_ratio", 0.0)
+                "violation_ratio": latency_details.get("slo_violation_ratio", 0.0),
             }
 
         # Generate recommendations
         recommendations = []
 
         if report["overall_score"] < 0.8:
-            recommendations.append("Overall performance below target (80%). Review individual metrics.")
+            recommendations.append(
+                "Overall performance below target (80%). Review individual metrics."
+            )
 
         if "success_rate" in results and results["success_rate"].score < 0.95:
-            recommendations.append("Success rate below 95%. Investigate error patterns and improve error handling.")
+            recommendations.append(
+                "Success rate below 95%. Investigate error patterns and improve error handling."
+            )
 
         if "latency_slo" in results and not results["latency_slo"].details["meets_slo"]:
-            recommendations.append("P95 latency exceeds SLO. Optimize critical paths and consider caching.")
+            recommendations.append(
+                "P95 latency exceeds SLO. Optimize critical paths and consider caching."
+            )
 
-        if "citation_exactness" in results and results["citation_exactness"].score < 0.8:
-            recommendations.append("Citation exactness below 80%. Improve source attribution and validation.")
+        if (
+            "citation_exactness" in results
+            and results["citation_exactness"].score < 0.8
+        ):
+            recommendations.append(
+                "Citation exactness below 80%. Improve source attribution and validation."
+            )
 
         report["recommendations"] = recommendations
 
@@ -718,56 +748,49 @@ class ComprehensiveEvaluator:
 
 # Utility functions for evaluation data preparation
 
+
 def prepare_recall_evaluation_data(
-    predictions: List[List[str]],
-    ground_truth: List[List[str]]
+    predictions: List[List[str]], ground_truth: List[List[str]]
 ) -> Dict[str, Any]:
     """Prepare data for recall@k evaluation."""
-    return {
-        "predicted_items": predictions,
-        "relevant_items": ground_truth
-    }
+    return {"predicted_items": predictions, "relevant_items": ground_truth}
 
 
 def prepare_citation_evaluation_data(
     responses: List[str],
     expected_citations: List[List[str]],
-    extracted_citations: List[List[str]]
+    extracted_citations: List[List[str]],
 ) -> Dict[str, Any]:
     """Prepare data for citation exactness evaluation."""
     return {
         "responses": responses,
         "expected_citations": expected_citations,
-        "extracted_citations": extracted_citations
+        "extracted_citations": extracted_citations,
     }
 
 
 def prepare_counsel_evaluation_data(
-    responses: List[str],
-    contexts: List[Dict[str, Any]]
+    responses: List[str], contexts: List[Dict[str, Any]]
 ) -> Dict[str, Any]:
     """Prepare data for counsel FPR evaluation."""
-    return {
-        "responses": responses,
-        "contexts": contexts
-    }
+    return {"responses": responses, "contexts": contexts}
 
 
 async def run_latency_smoke_test(
     graph_function,
     test_inputs: List[Dict[str, Any]],
     target_p95_ms: float = 2500,
-    num_iterations: int = 10
+    num_iterations: int = 10,
 ) -> LatencyMetrics:
     """
     Run latency smoke test on graph function.
-    
+
     Args:
         graph_function: Async function to test
         test_inputs: List of test input dictionaries
         target_p95_ms: Target P95 latency in milliseconds
         num_iterations: Number of test iterations
-        
+
     Returns:
         LatencyMetrics with test results
     """

@@ -1,0 +1,34 @@
+
+1freemium-limits.RateLimitRedisKeys.ai_service_keyO
+C/home/omar/Documents/ruleIQ/config/rate-limiting/freemium-limits.py‡ ‡("2*²
+2
+ˆ ˆ('Š
+‡
+
+‰ ‰(1
+%1"__concat* 
+
+‰ ‰(
+rate_limit:ai:*
+
+‰  ‰('
+	
+service*
+
+‰( ‰(,
+:ip:*
+
+‰- ‰(/
+
+ip"
+
+‰ ‰(1
+
+%1:
+
+‡ ‡(
+ip:
+
+‡  ‡(,	
+serviceB&$
+"freemium-limits.RateLimitRedisKeysH

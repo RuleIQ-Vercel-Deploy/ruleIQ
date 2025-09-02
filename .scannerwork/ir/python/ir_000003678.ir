@@ -1,0 +1,8 @@
+
+6-"Check if P95 latency meets SLO requirement."strself1 1(p95_threshold_ms1 1(6"e'
+%
+3 3("#get-field# p95_ms:*
+(
+3 3(."
+#binop <=#2<=:Bbool
+3 3(.*</home/omar/Documents/ruleIQ/langgraph_agent/evals/metrics.py

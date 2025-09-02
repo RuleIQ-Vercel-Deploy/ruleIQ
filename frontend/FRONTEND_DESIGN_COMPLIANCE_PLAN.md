@@ -19,13 +19,16 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
 ---
 
 ## PHASE 1: CRITICAL FOUNDATION FIXES (Week 1)
-*Priority: CRITICAL - Blocking design system adoption*
+
+_Priority: CRITICAL - Blocking design system adoption_
 
 ### Task 1.1: Configuration Alignment ⚠️ CRITICAL
+
 **Estimated Time**: 1-2 days  
 **Files**: `frontend/tailwind.config.ts`, `frontend/app/globals.css`
 
 #### Subtasks:
+
 - [ ] **1.1.1** Update Tailwind brand colors to teal system
   - Replace `brand.primary: '#7C3AED'` with `'#2C7A7B'` (teal-600)
   - Replace `brand.secondary: '#06B6D4'` with `'#319795'` (teal-500)
@@ -44,10 +47,12 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
   - Check component rendering with updated colors
 
 ### Task 1.2: Legacy Component Removal ❌ CRITICAL
+
 **Estimated Time**: 1 day  
 **Files**: `frontend/components/ui/aceternity/` (entire directory)
 
 #### Subtasks:
+
 - [ ] **1.2.1** Audit aceternity component usage
   - Search codebase: `grep -r "aceternity" frontend/`
   - Document all import references
@@ -65,10 +70,12 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
   - Remove any remaining aceternity dependencies
 
 ### Task 1.3: Feature Flag Implementation ❌ MISSING
+
 **Estimated Time**: 0.5 days  
 **Files**: `lib/features/theme-flags.ts` (new), environment configs
 
 #### Subtasks:
+
 - [ ] **1.3.1** Create feature flag system
   - Create `lib/features/theme-flags.ts`
   - Implement `USE_NEW_THEME` environment variable
@@ -87,13 +94,16 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
 ---
 
 ## PHASE 2: COMPONENT SYSTEM COMPLETION (Week 2)
-*Priority: HIGH - Core user experience*
+
+_Priority: HIGH - Core user experience_
 
 ### Task 2.1: Button Component Enhancement ⚠️ PARTIAL
+
 **Estimated Time**: 1 day  
 **Files**: `frontend/components/ui/button.tsx`
 
 #### Subtasks:
+
 - [ ] **2.1.1** Clean up variant definitions
   - Remove `turquoise` variant (rename to `teal` or `accent`)
   - Ensure all variants use design system tokens
@@ -110,10 +120,12 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
   - Document variant usage guidelines
 
 ### Task 2.2: Navigation Component Refinement ⚠️ PARTIAL
+
 **Estimated Time**: 1 day  
 **Files**: `frontend/components/navigation/app-sidebar.tsx`, `frontend/components/navigation/top-navigation.tsx`
 
 #### Subtasks:
+
 - [ ] **2.2.1** Fix app-sidebar implementation
   - Replace `surface-primary` with design system tokens
   - Fix `gradient-text` class definition
@@ -130,10 +142,12 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
   - Implement notification badge styling
 
 ### Task 2.3: Form Component Implementation ❌ MISSING
+
 **Estimated Time**: 2 days  
 **Files**: `frontend/components/ui/input.tsx`, `frontend/components/ui/form.tsx`, new form components
 
 #### Subtasks:
+
 - [ ] **2.3.1** Input field enhancement
   - Implement teal focus states (`border-color: var(--teal-600)`)
   - Add proper focus ring styling
@@ -150,10 +164,12 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
   - Implement form field grouping patterns
 
 ### Task 2.4: Card Component Standards ⚠️ PARTIAL
+
 **Estimated Time**: 1 day  
 **Files**: `frontend/components/ui/card.tsx`, card variants
 
 #### Subtasks:
+
 - [ ] **2.4.1** Implement design framework card specs
   - Ensure 12px border radius (`--radius-lg`)
   - Add proper shadow system usage
@@ -172,13 +188,16 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
 ---
 
 ## PHASE 3: COLOR SYSTEM MIGRATION (Week 2-3)
-*Priority: HIGH - Visual consistency*
+
+_Priority: HIGH - Visual consistency_
 
 ### Task 3.1: Hardcoded Color Audit ❌ NON-COMPLIANT
+
 **Estimated Time**: 2 days  
 **Files**: Multiple components throughout codebase
 
 #### Subtasks:
+
 - [ ] **3.1.1** Comprehensive color search
   - Search for `#7C3AED` (legacy purple) - Replace with teal variants
   - Search for `#06B6D4` (legacy cyan) - Replace with teal variants
@@ -196,10 +215,12 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
   - Update loading spinners and progress bars
 
 ### Task 3.2: Component-by-Component Migration ⚠️ MIXED STATE
+
 **Estimated Time**: 3 days  
 **Files**: All components in `frontend/components/`
 
 #### Subtasks:
+
 - [ ] **3.2.1** Dashboard components (Priority: HIGH)
   - Metric widgets: Replace purple accents with teal
   - Progress indicators: Use teal-600 for progress bars
@@ -218,13 +239,16 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
 ---
 
 ## PHASE 4: ADVANCED COMPONENTS & PATTERNS (Week 3-4)
-*Priority: MEDIUM - Enhanced user experience*
+
+_Priority: MEDIUM - Enhanced user experience_
 
 ### Task 4.1: Loading States & Skeletons ❌ MISSING
+
 **Estimated Time**: 1.5 days  
 **Files**: New skeleton components, loading patterns
 
 #### Subtasks:
+
 - [ ] **4.1.1** Create skeleton component library
   - Card skeletons with teal shimmer effects
   - Table row skeletons
@@ -241,10 +265,12 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
   - Add to policy generation interface
 
 ### Task 4.2: Modal & Dialog Patterns ⚠️ PARTIAL
+
 **Estimated Time**: 1 day  
 **Files**: `frontend/components/ui/dialog.tsx`, modal components
 
 #### Subtasks:
+
 - [ ] **4.2.1** Update dialog styling
   - Teal accent headers
   - Proper border radius (12px)
@@ -261,10 +287,12 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
   - Policy preview dialogs
 
 ### Task 4.3: Tooltip & Popover Enhancement ⚠️ PARTIAL
+
 **Estimated Time**: 0.5 days  
 **Files**: `frontend/components/ui/tooltip.tsx`, `frontend/components/ui/popover.tsx`
 
 #### Subtasks:
+
 - [ ] **4.3.1** Tooltip styling updates
   - Dark tooltips with teal accents
   - Proper animation timing
@@ -278,13 +306,16 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
 ---
 
 ## PHASE 5: TESTING & OPTIMIZATION (Week 4)
-*Priority: HIGH - Quality assurance*
+
+_Priority: HIGH - Quality assurance_
 
 ### Task 5.1: Visual Regression Testing ❌ MISSING
+
 **Estimated Time**: 1 day  
 **Files**: Visual test suites, Playwright configuration
 
 #### Subtasks:
+
 - [ ] **5.1.1** Set up visual testing infrastructure
   - Configure Playwright visual testing
   - Create baseline screenshots with new theme
@@ -301,10 +332,12 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
   - Settings page visual validation
 
 ### Task 5.2: Accessibility Validation ✅ MAINTAIN
+
 **Estimated Time**: 0.5 days  
 **Files**: Accessibility test suites
 
 #### Subtasks:
+
 - [ ] **5.2.1** Contrast ratio verification
   - Verify teal-600 on white maintains 5.87:1 ratio
   - Test all color combinations
@@ -321,10 +354,12 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
   - Document any accessibility improvements
 
 ### Task 5.3: Performance Optimization ⚠️ IMPROVEMENT NEEDED
+
 **Estimated Time**: 1 day  
 **Files**: Build configuration, CSS optimization
 
 #### Subtasks:
+
 - [ ] **5.3.1** CSS bundle optimization
   - Remove unused legacy styles
   - Optimize Tailwind class usage
@@ -345,6 +380,7 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
 ## QUALITY GATES & VALIDATION
 
 ### Definition of Done (DoD) for Each Task
+
 - [ ] Code implementation complete
 - [ ] Unit tests passing
 - [ ] Visual regression tests passing
@@ -353,6 +389,7 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
 - [ ] Documentation updated
 
 ### Phase Gates
+
 - **Phase 1 Gate**: Configuration fully aligned, legacy components removed
 - **Phase 2 Gate**: Core components 100% compliant with design framework
 - **Phase 3 Gate**: No legacy colors remain in codebase
@@ -360,6 +397,7 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
 - **Phase 5 Gate**: All tests passing, performance optimized
 
 ### Success Metrics
+
 - **Design Token Usage**: 100% (all components use CSS variables)
 - **Color Compliance**: 100% (no legacy purple/cyan references)
 - **Accessibility**: Maintain 98% WCAG 2.2 AA compliance
@@ -371,6 +409,7 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
 ## RISK MITIGATION
 
 ### High-Risk Areas
+
 1. **Breaking Changes**: Configuration updates could break existing components
    - **Mitigation**: Feature flag gradual rollout, comprehensive testing
 2. **Visual Inconsistencies**: Mixed theme usage during migration
@@ -379,6 +418,7 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
    - **Mitigation**: Bundle optimization, performance monitoring
 
 ### Rollback Strategy
+
 - Feature flags allow instant rollback to legacy theme
 - Git branches for each phase enable selective rollback
 - Comprehensive test suite catches regressions early
@@ -388,17 +428,20 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
 ## TEAM COORDINATION
 
 ### Required Roles
+
 - **Frontend Lead**: Overall migration coordination
 - **UI/UX Designer**: Design framework validation
 - **QA Engineer**: Testing and accessibility validation
 - **DevOps**: Build process and deployment support
 
 ### Communication Plan
+
 - **Daily**: Quick standup on migration progress
 - **Weekly**: Phase completion review
 - **Phase Gates**: Stakeholder demo and sign-off
 
 ### Documentation Updates
+
 - Update component library documentation
 - Create migration guide for future developers
 - Document new design system usage patterns
@@ -408,21 +451,25 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
 ## ESTIMATED TIMELINE
 
 ### Week 1: Critical Foundation
+
 - **Days 1-2**: Configuration alignment (Tasks 1.1)
 - **Day 3**: Legacy component removal (Task 1.2)
 - **Day 4**: Feature flag implementation (Task 1.3)
 - **Day 5**: Week 1 validation and testing
 
 ### Week 2: Core Components
+
 - **Days 1-2**: Button and navigation refinement (Tasks 2.1, 2.2)
 - **Days 3-4**: Form component implementation (Task 2.3)
 - **Day 5**: Card components and Week 2 validation (Task 2.4)
 
 ### Week 3: Color Migration
+
 - **Days 1-2**: Color audit and hardcoded replacement (Task 3.1)
 - **Days 3-5**: Component-by-component migration (Task 3.2)
 
 ### Week 4: Advanced Features & QA
+
 - **Days 1-2**: Loading states and modal patterns (Tasks 4.1, 4.2)
 - **Day 3**: Tooltips and final components (Task 4.3)
 - **Days 4-5**: Testing, optimization, and final validation (Task 5.1-5.3)
@@ -434,13 +481,15 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
 ## SUCCESS CRITERIA
 
 ### Phase Completion Criteria
+
 ✅ **Phase 1 Complete**: No configuration mismatches, no legacy components  
 ✅ **Phase 2 Complete**: All core components use teal design system  
 ✅ **Phase 3 Complete**: Zero legacy colors in codebase  
 ✅ **Phase 4 Complete**: Complete component library with design framework compliance  
-✅ **Phase 5 Complete**: All tests passing, optimized performance  
+✅ **Phase 5 Complete**: All tests passing, optimized performance
 
 ### Final Success Validation
+
 - [ ] 100% design framework compliance audit score
 - [ ] All automated tests passing (unit, integration, visual)
 - [ ] Accessibility maintained at 98% WCAG 2.2 AA
@@ -449,6 +498,6 @@ Based on comprehensive analysis of `frontend/design_framework.md` against curren
 
 ---
 
-*Status: Ready for implementation*  
-*Document Version: 1.0*  
-*Last Updated: July 25, 2025*
+_Status: Ready for implementation_  
+_Document Version: 1.0_  
+_Last Updated: July 25, 2025_

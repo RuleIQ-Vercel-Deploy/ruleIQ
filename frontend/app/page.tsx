@@ -47,37 +47,37 @@ const HeroSection = ({ showEmailCapture, setShowEmailCapture }: HeroSectionProps
   const handleEmailSuccess = async (leadId: string, email: string) => {
     // TODO: Replace with proper logging
     try {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       // Start assessment session
       const session = await freemiumService.startAssessment({
         lead_email: email,
         business_type: 'general',
         assessment_type: 'general',
       });
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
 
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       // Hide email capture form before redirecting
       setShowEmailCapture(false);
 
       // Add a small delay to ensure state updates
       setTimeout(() => {
-    // TODO: Replace with proper logging
+        // TODO: Replace with proper logging
 
-    // TODO: Replace with proper logging
+        // TODO: Replace with proper logging
 
-    // TODO: Replace with proper logging
+        // TODO: Replace with proper logging
         // Try Next.js router first
         router.push(`/assessment?token=${session.session_token}`);
-    // TODO: Replace with proper logging
+        // TODO: Replace with proper logging
         // Add fallback navigation after short delay
         setTimeout(() => {
-    // TODO: Replace with proper logging
+          // TODO: Replace with proper logging
           if (window.location.pathname === '/') {
-    // TODO: Replace with proper logging
+            // TODO: Replace with proper logging
             window.location.href = `/assessment?token=${session.session_token}`;
           } else {
-    // TODO: Replace with proper logging
+            // TODO: Replace with proper logging
           }
         }, 500);
       }, 100);
@@ -437,19 +437,28 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-surface-base">
       {/* Skip Links for Accessibility */}
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-teal-600 focus:text-white focus:rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-teal-600 focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+      >
         Skip to main content
       </a>
-      <a href="#features" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-32 focus:z-[100] focus:px-4 focus:py-2 focus:bg-teal-600 focus:text-white focus:rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
+      <a
+        href="#features"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-32 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-teal-600 focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+      >
         Skip to features
       </a>
-      <a href="#pricing" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-56 focus:z-[100] focus:px-4 focus:py-2 focus:bg-teal-600 focus:text-white focus:rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2">
+      <a
+        href="#pricing"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-56 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-teal-600 focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+      >
         Skip to pricing
       </a>
 
       {/* Free Compliance Health Check Banner */}
-      <div className="fixed top-0 left-0 right-0 z-[60] bg-gradient-to-r from-teal-600 to-teal-700 py-2 text-center text-white">
-        <div className="container mx-auto px-4 flex items-center justify-center gap-2 flex-wrap sm:flex-nowrap">
+      <div className="fixed left-0 right-0 top-0 z-[60] bg-gradient-to-r from-teal-600 to-teal-700 py-2 text-center text-white">
+        <div className="container mx-auto flex flex-wrap items-center justify-center gap-2 px-4 sm:flex-nowrap">
           <div className="flex items-center gap-2">
             <Sparkles className="h-4 w-4 animate-pulse" />
             <span className="text-sm font-medium">
@@ -459,7 +468,7 @@ export default function HomePage() {
           <Button
             size="sm"
             variant="secondary"
-            className="bg-white text-teal-600 hover:bg-neutral-100 text-xs px-3 py-1 h-auto min-h-[28px] whitespace-nowrap"
+            className="h-auto min-h-[28px] whitespace-nowrap bg-white px-3 py-1 text-xs text-teal-600 hover:bg-neutral-100"
             onClick={() => {
               const element = document.getElementById('hero-section');
               element?.scrollIntoView({ behavior: 'smooth' });
@@ -472,7 +481,10 @@ export default function HomePage() {
       </div>
 
       {/* Navigation */}
-      <header className="glass-card border-glass-border fixed left-0 right-0 top-12 z-50 border-b" role="banner">
+      <header
+        className="glass-card border-glass-border fixed left-0 right-0 top-12 z-50 border-b"
+        role="banner"
+      >
         <div className="container mx-auto flex items-center justify-between px-4 py-3">
           <Link href="/" className="flex items-center">
             <div className="relative h-8 w-auto">
@@ -535,293 +547,296 @@ export default function HomePage() {
       {/* Main Content */}
       <main id="main-content" role="main">
         {/* Hero Section */}
-        <HeroSection showEmailCapture={showEmailCapture} setShowEmailCapture={setShowEmailCapture} />
+        <HeroSection
+          showEmailCapture={showEmailCapture}
+          setShowEmailCapture={setShowEmailCapture}
+        />
 
-      {/* Stats Section */}
-      <StatsSection />
+        {/* Stats Section */}
+        <StatsSection />
 
-      {/* Features Section */}
-      <section id="features" className="relative py-24">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="mb-16 text-center"
-          >
-            <h2 className="mb-4 text-4xl font-bold md:text-5xl">
-              <span className="gradient-text">Powerful Features</span>
-            </h2>
-            <p className="mx-auto max-w-3xl text-xl text-muted-foreground">
-              Everything you need to automate compliance and reduce risk
-            </p>
-          </motion.div>
-
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <FeatureCard
-              icon={<Zap className="h-8 w-8 text-primary" />}
-              title="AI-Powered Analysis"
-              description="Intelligent gap analysis and automated evidence collection powered by advanced AI"
-              delay={0}
-            />
-            <FeatureCard
-              icon={<Shield className="h-8 w-8 text-primary" />}
-              title="Real-Time Monitoring"
-              description="Continuous compliance tracking with instant alerts for any deviations"
-              delay={0.1}
-            />
-            <FeatureCard
-              icon={<BarChart3 className="h-8 w-8 text-primary" />}
-              title="Smart Reporting"
-              description="Generate comprehensive compliance reports with a single click"
-              delay={0.2}
-            />
-            <FeatureCard
-              icon={<Users className="h-8 w-8 text-primary" />}
-              title="Team Collaboration"
-              description="Streamline workflows and enable seamless team coordination"
-              delay={0.3}
-            />
-            <FeatureCard
-              icon={<FileCheck className="h-8 w-8 text-primary" />}
-              title="Policy Automation"
-              description="Auto-generate and maintain policies aligned with your frameworks"
-              delay={0.4}
-            />
-            <FeatureCard
-              icon={<TrendingUp className="h-8 w-8 text-primary" />}
-              title="Risk Assessment"
-              description="Proactive risk identification and mitigation recommendations"
-              delay={0.5}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section id="testimonials" className="relative py-24">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="mb-16 text-center"
-          >
-            <h2 className="mb-4 text-4xl font-bold md:text-5xl">
-              <span className="gradient-text">Loved by Teams</span>
-            </h2>
-            <p className="mx-auto max-w-3xl text-xl text-muted-foreground">
-              See what compliance professionals are saying about ruleIQ
-            </p>
-          </motion.div>
-
-          <div className="grid gap-8 md:grid-cols-3">
-            <TestimonialCard
-              quote="ruleIQ transformed our compliance process. What used to take weeks now takes days."
-              author="Sarah Chen"
-              role="CISO"
-              company="TechFlow Solutions"
-              rating={5}
-            />
-            <TestimonialCard
-              quote="The AI recommendations are spot-on. It's like having a compliance expert on call 24/7."
-              author="Michael Rodriguez"
-              role="Compliance Officer"
-              company="HealthCare Plus"
-              rating={5}
-            />
-            <TestimonialCard
-              quote="We saved over $200K in compliance costs within the first year. Incredible ROI."
-              author="Jennifer Walsh"
-              role="VP Risk Management"
-              company="Global Finance Corp"
-              rating={5}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section id="pricing" className="relative py-24">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="mb-16 text-center"
-          >
-            <h2 className="mb-4 text-4xl font-bold md:text-5xl">
-              <span className="gradient-text">Simple Pricing</span>
-            </h2>
-            <p className="mx-auto max-w-3xl text-xl text-muted-foreground">
-              Choose the plan that fits your compliance needs
-            </p>
-          </motion.div>
-
-          <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
-            <PricingCard
-              name="Starter"
-              price="£149/mo"
-              description="Perfect for small teams"
-              features={[
-                'Up to 2 frameworks',
-                'Basic AI analysis',
-                'Monthly reports',
-                'Email support',
-                '1 user account',
-              ]}
-              onSelect={() => setShowEmailCapture(true)}
-            />
-            <PricingCard
-              name="Professional"
-              price="£499/mo"
-              description="For growing companies"
-              features={[
-                'Unlimited frameworks',
-                'Advanced AI features',
-                'Real-time monitoring',
-                'Priority support',
-                '5 user accounts',
-                'Custom policies',
-                'API access',
-              ]}
-              popular
-              onSelect={() => setShowEmailCapture(true)}
-            />
-            <PricingCard
-              name="Enterprise"
-              price="Custom"
-              description="For large organizations"
-              features={[
-                'Everything in Pro',
-                'Unlimited users',
-                'Dedicated support',
-                'Custom integrations',
-                'SLA guarantees',
-                'On-premise option',
-                'White-label',
-              ]}
-              onSelect={() => router.push('/contact-sales')}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative py-24">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-            className="gradient-bg rounded-3xl p-16 text-center"
-          >
-            <h2 className="mb-4 text-4xl font-bold text-white md:text-5xl">
-              Ready to Transform Your Compliance?
-            </h2>
-            <p className="mx-auto mb-8 max-w-2xl text-xl text-white/90">
-              Join thousands of companies automating their compliance with AI
-            </p>
-            <Button
-              size="lg"
-              className="bg-white px-8 py-6 text-lg font-semibold text-primary hover:bg-neutral-100"
-              onClick={() => {
-                const element = document.getElementById('hero-section');
-                element?.scrollIntoView({ behavior: 'smooth' });
-                setTimeout(() => setShowEmailCapture(true), 500);
-              }}
+        {/* Features Section */}
+        <section id="features" className="relative py-24">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="mb-16 text-center"
             >
-              Start Free Assessment
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="border-glass-border border-t py-16">
-        <div className="container mx-auto px-4">
-          <div className="mb-8 grid gap-8 md:grid-cols-4">
-            <div>
-              <h3 className="gradient-text mb-4 text-2xl font-bold">ruleIQ</h3>
-              <p className="text-muted-foreground">
-                AI-powered compliance automation for modern businesses
+              <h2 className="mb-4 text-4xl font-bold md:text-5xl">
+                <span className="gradient-text">Powerful Features</span>
+              </h2>
+              <p className="mx-auto max-w-3xl text-xl text-muted-foreground">
+                Everything you need to automate compliance and reduce risk
               </p>
-            </div>
+            </motion.div>
 
-            <div>
-              <h4 className="mb-4 font-semibold text-foreground">Product</h4>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>
-                  <Link href="/features" className="transition-colors hover:text-foreground">
-                    Features
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/pricing" className="transition-colors hover:text-foreground">
-                    Pricing
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/integrations" className="transition-colors hover:text-foreground">
-                    Integrations
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="mb-4 font-semibold text-foreground">Company</h4>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>
-                  <Link href="/about" className="transition-colors hover:text-foreground">
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/blog" className="transition-colors hover:text-foreground">
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/careers" className="transition-colors hover:text-foreground">
-                    Careers
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="mb-4 font-semibold text-foreground">Support</h4>
-              <ul className="space-y-2 text-muted-foreground">
-                <li>
-                  <Link href="/help" className="transition-colors hover:text-foreground">
-                    Help Center
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contact" className="transition-colors hover:text-foreground">
-                    Contact
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/status" className="transition-colors hover:text-foreground">
-                    Status
-                  </Link>
-                </li>
-              </ul>
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              <FeatureCard
+                icon={<Zap className="h-8 w-8 text-primary" />}
+                title="AI-Powered Analysis"
+                description="Intelligent gap analysis and automated evidence collection powered by advanced AI"
+                delay={0}
+              />
+              <FeatureCard
+                icon={<Shield className="h-8 w-8 text-primary" />}
+                title="Real-Time Monitoring"
+                description="Continuous compliance tracking with instant alerts for any deviations"
+                delay={0.1}
+              />
+              <FeatureCard
+                icon={<BarChart3 className="h-8 w-8 text-primary" />}
+                title="Smart Reporting"
+                description="Generate comprehensive compliance reports with a single click"
+                delay={0.2}
+              />
+              <FeatureCard
+                icon={<Users className="h-8 w-8 text-primary" />}
+                title="Team Collaboration"
+                description="Streamline workflows and enable seamless team coordination"
+                delay={0.3}
+              />
+              <FeatureCard
+                icon={<FileCheck className="h-8 w-8 text-primary" />}
+                title="Policy Automation"
+                description="Auto-generate and maintain policies aligned with your frameworks"
+                delay={0.4}
+              />
+              <FeatureCard
+                icon={<TrendingUp className="h-8 w-8 text-primary" />}
+                title="Risk Assessment"
+                description="Proactive risk identification and mitigation recommendations"
+                delay={0.5}
+              />
             </div>
           </div>
+        </section>
 
-          <div className="border-glass-border border-t pt-8 text-center text-muted-foreground">
-            <p>&copy; 2025 ruleIQ. All rights reserved.</p>
+        {/* Testimonials Section */}
+        <section id="testimonials" className="relative py-24">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="mb-16 text-center"
+            >
+              <h2 className="mb-4 text-4xl font-bold md:text-5xl">
+                <span className="gradient-text">Loved by Teams</span>
+              </h2>
+              <p className="mx-auto max-w-3xl text-xl text-muted-foreground">
+                See what compliance professionals are saying about ruleIQ
+              </p>
+            </motion.div>
+
+            <div className="grid gap-8 md:grid-cols-3">
+              <TestimonialCard
+                quote="ruleIQ transformed our compliance process. What used to take weeks now takes days."
+                author="Sarah Chen"
+                role="CISO"
+                company="TechFlow Solutions"
+                rating={5}
+              />
+              <TestimonialCard
+                quote="The AI recommendations are spot-on. It's like having a compliance expert on call 24/7."
+                author="Michael Rodriguez"
+                role="Compliance Officer"
+                company="HealthCare Plus"
+                rating={5}
+              />
+              <TestimonialCard
+                quote="We saved over $200K in compliance costs within the first year. Incredible ROI."
+                author="Jennifer Walsh"
+                role="VP Risk Management"
+                company="Global Finance Corp"
+                rating={5}
+              />
+            </div>
           </div>
-        </div>
-      </footer>
+        </section>
+
+        {/* Pricing Section */}
+        <section id="pricing" className="relative py-24">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="mb-16 text-center"
+            >
+              <h2 className="mb-4 text-4xl font-bold md:text-5xl">
+                <span className="gradient-text">Simple Pricing</span>
+              </h2>
+              <p className="mx-auto max-w-3xl text-xl text-muted-foreground">
+                Choose the plan that fits your compliance needs
+              </p>
+            </motion.div>
+
+            <div className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
+              <PricingCard
+                name="Starter"
+                price="£149/mo"
+                description="Perfect for small teams"
+                features={[
+                  'Up to 2 frameworks',
+                  'Basic AI analysis',
+                  'Monthly reports',
+                  'Email support',
+                  '1 user account',
+                ]}
+                onSelect={() => setShowEmailCapture(true)}
+              />
+              <PricingCard
+                name="Professional"
+                price="£499/mo"
+                description="For growing companies"
+                features={[
+                  'Unlimited frameworks',
+                  'Advanced AI features',
+                  'Real-time monitoring',
+                  'Priority support',
+                  '5 user accounts',
+                  'Custom policies',
+                  'API access',
+                ]}
+                popular
+                onSelect={() => setShowEmailCapture(true)}
+              />
+              <PricingCard
+                name="Enterprise"
+                price="Custom"
+                description="For large organizations"
+                features={[
+                  'Everything in Pro',
+                  'Unlimited users',
+                  'Dedicated support',
+                  'Custom integrations',
+                  'SLA guarantees',
+                  'On-premise option',
+                  'White-label',
+                ]}
+                onSelect={() => router.push('/contact-sales')}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="relative py-24">
+          <div className="container mx-auto px-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="gradient-bg rounded-3xl p-16 text-center"
+            >
+              <h2 className="mb-4 text-4xl font-bold text-white md:text-5xl">
+                Ready to Transform Your Compliance?
+              </h2>
+              <p className="mx-auto mb-8 max-w-2xl text-xl text-white/90">
+                Join thousands of companies automating their compliance with AI
+              </p>
+              <Button
+                size="lg"
+                className="bg-white px-8 py-6 text-lg font-semibold text-primary hover:bg-neutral-100"
+                onClick={() => {
+                  const element = document.getElementById('hero-section');
+                  element?.scrollIntoView({ behavior: 'smooth' });
+                  setTimeout(() => setShowEmailCapture(true), 500);
+                }}
+              >
+                Start Free Assessment
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="border-glass-border border-t py-16">
+          <div className="container mx-auto px-4">
+            <div className="mb-8 grid gap-8 md:grid-cols-4">
+              <div>
+                <h3 className="gradient-text mb-4 text-2xl font-bold">ruleIQ</h3>
+                <p className="text-muted-foreground">
+                  AI-powered compliance automation for modern businesses
+                </p>
+              </div>
+
+              <div>
+                <h4 className="mb-4 font-semibold text-foreground">Product</h4>
+                <ul className="space-y-2 text-muted-foreground">
+                  <li>
+                    <Link href="/features" className="transition-colors hover:text-foreground">
+                      Features
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/pricing" className="transition-colors hover:text-foreground">
+                      Pricing
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/integrations" className="transition-colors hover:text-foreground">
+                      Integrations
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="mb-4 font-semibold text-foreground">Company</h4>
+                <ul className="space-y-2 text-muted-foreground">
+                  <li>
+                    <Link href="/about" className="transition-colors hover:text-foreground">
+                      About
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/blog" className="transition-colors hover:text-foreground">
+                      Blog
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/careers" className="transition-colors hover:text-foreground">
+                      Careers
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="mb-4 font-semibold text-foreground">Support</h4>
+                <ul className="space-y-2 text-muted-foreground">
+                  <li>
+                    <Link href="/help" className="transition-colors hover:text-foreground">
+                      Help Center
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/contact" className="transition-colors hover:text-foreground">
+                      Contact
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/status" className="transition-colors hover:text-foreground">
+                      Status
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="border-glass-border border-t pt-8 text-center text-muted-foreground">
+              <p>&copy; 2025 ruleIQ. All rights reserved.</p>
+            </div>
+          </div>
+        </footer>
       </main>
     </div>
   );

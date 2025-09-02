@@ -25,7 +25,7 @@ export const getSeverityColor = (severity: 'low' | 'medium' | 'high' | 'critical
     low: 'text-blue-600 bg-blue-50',
     medium: 'text-yellow-600 bg-yellow-50',
     high: 'text-orange-600 bg-orange-50',
-    critical: 'text-red-600 bg-red-50'
+    critical: 'text-red-600 bg-red-50',
   };
   return colors[severity] || colors.medium;
 };
@@ -52,7 +52,7 @@ export const formatRiskScore = (score: number): string => {
  */
 export const extractUtmParams = () => {
   if (typeof window === 'undefined') return {};
-  
+
   const urlParams = new URLSearchParams(window.location.search);
   return {
     utm_source: urlParams.get('utm_source'),
@@ -67,12 +67,15 @@ export const extractUtmParams = () => {
 // TYPE EXPORTS
 // ============================================================================
 
-export type { ComplianceGap, AssessmentResultsResponse as FreemiumResultsResponse } from '@/types/freemium';
+export type {
+  ComplianceGap,
+  AssessmentResultsResponse as FreemiumResultsResponse,
+} from '@/types/freemium';
 
 // Additional type aliases for backward compatibility
 export interface FreemiumEmailCaptureRequest extends LeadCaptureRequest {}
-export interface FreemiumEmailCaptureResponse extends LeadResponse { 
-  token?: string; 
+export interface FreemiumEmailCaptureResponse extends LeadResponse {
+  token?: string;
 }
 
 export interface FreemiumAssessmentStartResponse {
@@ -151,19 +154,19 @@ export interface LeadCaptureRequest {
   company_size?: '1-10' | '11-50' | '51-200' | '201-500' | '500+';
   industry?: string;
   phone?: string;
-  
+
   // UTM tracking
   utm_source?: string;
   utm_medium?: string;
   utm_campaign?: string;
   utm_term?: string;
   utm_content?: string;
-  
+
   // Context
   referrer_url?: string;
   landing_page?: string;
   user_agent?: string;
-  
+
   // Consent
   marketing_consent?: boolean;
   newsletter_subscribed?: boolean;
@@ -340,19 +343,25 @@ export const freemiumService = new FreemiumService();
 // BACKWARD COMPATIBILITY API FUNCTIONS
 // ============================================================================
 
-export const captureEmail = (data: FreemiumEmailCaptureRequest): Promise<FreemiumEmailCaptureResponse> =>
-  freemiumService.captureEmail(data);
+export const captureEmail = (
+  data: FreemiumEmailCaptureRequest,
+): Promise<FreemiumEmailCaptureResponse> => freemiumService.captureEmail(data);
 
 export const startAssessment = (token: string): Promise<FreemiumAssessmentStartResponse> =>
   freemiumService.startAssessment({ lead_email: token, business_type: 'default' }) as any;
 
-export const answerQuestion = (token: string, answerData: FreemiumAnswerRequest): Promise<FreemiumAnswerResponse> =>
-  freemiumService.submitAnswer(token, answerData) as any;
+export const answerQuestion = (
+  token: string,
+  answerData: FreemiumAnswerRequest,
+): Promise<FreemiumAnswerResponse> => freemiumService.submitAnswer(token, answerData) as any;
 
 export const getResults = (token: string): Promise<AssessmentResultsResponse> =>
   freemiumService.getResults(token);
 
-export const trackConversion = (token: string, data: ConversionTrackingRequest): Promise<ConversionTrackingResponse> =>
+export const trackConversion = (
+  token: string,
+  data: ConversionTrackingRequest,
+): Promise<ConversionTrackingResponse> =>
   Promise.resolve({
     event_id: 'mock',
     score_applied: 0,

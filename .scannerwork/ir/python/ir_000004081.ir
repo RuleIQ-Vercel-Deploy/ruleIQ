@@ -1,0 +1,53 @@
+
+
+0int
+WN"Assessment Approach: {self._get_framework_assessment_approach(framework_id)}"str
+G>"Framework Category: {self._get_framework_type(framework_id)}"str
+C:"Primary Focus: {self._get_framework_focus(framework_id)}"str
+Q
+H"Key Requirements: {self._get_framework_key_requirements(framework_id)}"str
+B	9"Industry Applicability: {industry_context or 'General'}"str
+5,"Build cache content for framework context."str
+/&"Compliance Framework: {framework_id}"str
+JA"Applicable Regions: {self._get_framework_regions(framework_id)}"strself
+ö ö(framework_id
+ö ö( industry_context
+ö! ö(Glist"˘8
+6
+
+ù •(	content_parts"#unknown-value#Blist(
+&
+
+ù •(	"
+#is-exact#:Bbool
+
+
+ù •(	"
+#assume#::
+8
+
+ù •(	"#set-field# __collection_size:Bint(
+&
+
+ù •(	"#array-add-last#:(
+&
+
+ù •(	"#array-add-last#:(
+&
+
+ù •(	"#array-add-last#:(
+&
+
+ù •(	"#array-add-last#:(
+&
+
+ù •(	"#array-add-last#:	(
+&
+
+ù •(	"#array-add-last#:
+(
+&
+
+ù •(	"#array-add-last#:
+
+ß ß(*9/home/omar/Documents/ruleIQ/services/ai/cached_content.py

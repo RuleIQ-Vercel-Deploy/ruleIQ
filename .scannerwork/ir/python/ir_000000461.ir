@@ -1,0 +1,18 @@
+
+¡∑"
+    Increment a counter value.
+    
+    Args:
+        existing: Current counter value
+        new: Value to add (typically 1)
+        
+    Returns:
+        Incremented counter
+    "strexisting
+Ñ Ñ(#new
+Ñ% Ñ(-"8$
+"
+
+è è("	#binop +#2+:
+
+è è(*C/home/omar/Documents/ruleIQ/langgraph_agent/graph/enhanced_state.py

@@ -24,7 +24,9 @@ class ApplicationException(Exception):
 class DatabaseException(ApplicationException):
     """Raised for general database-related errors."""
 
-    def __init__(self, message: str = "A database error occurred.", status_code: int = 500) -> None:
+    def __init__(
+        self, message: str = "A database error occurred.", status_code: int = 500
+    ) -> None:
         super().__init__(message, status_code)
 
 
@@ -74,7 +76,9 @@ class ValidationException(BusinessLogicException):
 class AuthorizationException(BusinessLogicException):
     """Raised for authorization or permission errors."""
 
-    def __init__(self, message: str = "You do not have permission to perform this action.") -> None:
+    def __init__(
+        self, message: str = "You do not have permission to perform this action."
+    ) -> None:
         super().__init__(message, status_code=403)
 
 
@@ -85,7 +89,9 @@ class IntegrationException(ApplicationException):
     """Raised for errors related to third-party integrations."""
 
     def __init__(
-        self, provider: str, message: str = "An error occurred with an external service."
+        self,
+        provider: str,
+        message: str = "An error occurred with an external service.",
     ) -> None:
         full_message = f"[{provider}] {message}"
         super().__init__(full_message, status_code=502)
@@ -95,7 +101,8 @@ class AIException(ApplicationException):
     """Raised for errors related to AI model interactions."""
 
     def __init__(
-        self, message: str = "An error occurred while communicating with the AI service."
+        self,
+        message: str = "An error occurred while communicating with the AI service.",
     ) -> None:
         super().__init__(message, status_code=503)
 
@@ -106,7 +113,9 @@ class AIException(ApplicationException):
 class APIError(ApplicationException):
     """Base class for API related errors."""
 
-    def __init__(self, message: str = "An API error occurred.", status_code: int = 500) -> None:
+    def __init__(
+        self, message: str = "An API error occurred.", status_code: int = 500
+    ) -> None:
         super().__init__(message, status_code)
 
 
@@ -114,7 +123,9 @@ class ValidationAPIError(APIError):
     """Raised for API input validation errors."""
 
     def __init__(
-        self, message: str = "Invalid input provided to API.", details: Optional[any] = None
+        self,
+        message: str = "Invalid input provided to API.",
+        details: Optional[any] = None,
     ) -> None:
         super().__init__(message, status_code=422)
         self.details = details

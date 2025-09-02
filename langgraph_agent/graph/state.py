@@ -15,14 +15,14 @@ from ..core.models import (
     Obligation,
     EvidenceItem,
     RouteDecision,
-    SafeFallbackResponse
+    SafeFallbackResponse,
 )
 
 
 class ComplianceAgentState(TypedDict):
     """
     State for the compliance agent graph.
-    
+
     This defines the complete state that flows through all nodes in the LangGraph.
     Each node can read from and write to this state.
     """
@@ -83,94 +83,81 @@ def create_initial_state(
     user_input: str,
     thread_id: Optional[str] = None,
     user_id: Optional[UUID] = None,
-    autonomy_level: int = 2
+    autonomy_level: int = 2,
 ) -> ComplianceAgentState:
     """
     Create initial state for a new compliance agent session.
-    
+
     Args:
         company_id: Company UUID for tenancy isolation
         user_input: Initial user message
         thread_id: Optional thread ID for conversation tracking
         user_id: Optional user ID for audit trails
         autonomy_level: Agent autonomy level (1-3)
-    
+
     Returns:
         Initial state with user message and default values
     """
     now = datetime.utcnow()
 
     # Create initial user message
-    initial_message = GraphMessage(
-        role="user",
-        content=user_input,
-        timestamp=now
-    )
+    initial_message = GraphMessage(role="user", content=user_input, timestamp=now)
 
     return ComplianceAgentState(
         # Core conversation
         messages=[initial_message],
-
         # Routing
         route=None,
         current_node=None,
         next_node="router",  # Always start with router
-
         # Business context
         company_id=company_id,
         profile=None,
         thread_id=thread_id,
         user_id=user_id,
-
         # Retrieved content
         retrieved_docs=[],
         relevant_obligations=[],
         collected_evidence=[],
-
         # Tool tracking
         tool_outputs={},
         tool_calls_made=[],
         tool_call_count=0,
-
         # Error handling
         errors=[],
         error_count=0,
-
         # Metadata
         meta={
             "session_id": thread_id,
             "created_at": now.isoformat(),
-            "version": "1.0.0"
+            "version": "1.0.0",
         },
         turn_count=1,
         start_time=now,
         last_updated=now,
-
         # Autonomy
         autonomy_level=autonomy_level,
         requires_human_review=False,
         interrupt_before=None,
         interrupt_reason=None,
-
         # Compliance context
         selected_frameworks=[],
         risk_tolerance="medium",
         geographical_scope=[],
-
         # Performance
         token_usage={"input": 0, "output": 0, "total": 0},
         cost_estimate=0.0,
-        latency_ms=None
+        latency_ms=None,
     )
 
 
 def update_state_metadata(state: ComplianceAgentState) -> ComplianceAgentState:
     """
     Update state metadata with current timestamp and turn count.
-    
+
     Args:
         state: Current state to update
-        
+
     Returns:
         Updated state with fresh metadata
     """
@@ -180,16 +167,15 @@ def update_state_metadata(state: ComplianceAgentState) -> ComplianceAgentState:
 
 
 def add_error_to_state(
-    state: ComplianceAgentState,
-    error: SafeFallbackResponse
+    state: ComplianceAgentState, error: SafeFallbackResponse
 ) -> ComplianceAgentState:
     """
     Add an error to the state and increment error count.
-    
+
     Args:
         state: Current state
         error: SafeFallbackResponse error to add
-        
+
     Returns:
         Updated state with error added
     """
@@ -201,11 +187,11 @@ def add_error_to_state(
 def should_interrupt(state: ComplianceAgentState, node_name: str) -> bool:
     """
     Check if execution should be interrupted before the given node.
-    
+
     Args:
         state: Current state
         node_name: Name of node about to execute
-        
+
     Returns:
         True if should interrupt, False otherwise
     """
@@ -231,10 +217,10 @@ def should_interrupt(state: ComplianceAgentState, node_name: str) -> bool:
 def get_state_summary(state: ComplianceAgentState) -> Dict[str, Any]:
     """
     Get a summary of the current state for logging and debugging.
-    
+
     Args:
         state: Current state
-        
+
     Returns:
         Summary dictionary with key metrics
     """
@@ -253,5 +239,5 @@ def get_state_summary(state: ComplianceAgentState) -> Dict[str, Any]:
         "cost_estimate": state["cost_estimate"],
         "frameworks": state["selected_frameworks"],
         "obligations_found": len(state["relevant_obligations"]),
-        "evidence_collected": len(state["collected_evidence"])
+        "evidence_collected": len(state["collected_evidence"]),
     }

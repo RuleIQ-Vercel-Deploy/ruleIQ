@@ -65,7 +65,7 @@ export function EnhancedMetricCard({
         'cursor-pointer flex-col items-start justify-start p-6',
         'hover-lift transition-all duration-250',
         gradient && 'bg-gradient-to-br from-white to-teal-50/30',
-        className
+        className,
       )}
       glass
     >
@@ -91,23 +91,18 @@ export function EnhancedMetricCard({
         {/* Main value */}
         <div className="space-y-1">
           <div className="flex items-baseline gap-1">
-            <h3 className="text-3xl font-semibold text-neutral-900 tracking-heading">
+            <h3 className="text-3xl font-semibold tracking-heading text-neutral-900">
               {prefix}
               {typeof value === 'number' ? (
-                <NumberTicker 
-                  value={value} 
-                  className="text-3xl font-semibold text-neutral-900" 
-                />
+                <NumberTicker value={value} className="text-3xl font-semibold text-neutral-900" />
               ) : (
                 value
               )}
               {suffix}
             </h3>
           </div>
-          
-          {description && (
-            <p className="text-sm text-neutral-500">{description}</p>
-          )}
+
+          {description && <p className="text-sm text-neutral-500">{description}</p>}
         </div>
       </div>
     </Card>

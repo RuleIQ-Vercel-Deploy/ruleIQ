@@ -100,7 +100,9 @@ class BaseTool(ABC):
         # Check all required parameters are present
         for param in required_params:
             if param not in parameters:
-                logger.error(f"Missing required parameter '{param}' for tool '{self.name}'")
+                logger.error(
+                    f"Missing required parameter '{param}' for tool '{self.name}'"
+                )
                 return False
 
         return True
@@ -145,7 +147,9 @@ class ToolRegistry:
         """Get list of all registered tools"""
         return list(self._tools.values())
 
-    def get_function_schemas(self, tool_names: Optional[List[str]] = None) -> List[Dict[str, Any]]:
+    def get_function_schemas(
+        self, tool_names: Optional[List[str]] = None
+    ) -> List[Dict[str, Any]]:
         """
         Get function schemas for specified tools or all tools
 
@@ -190,7 +194,8 @@ class ToolRegistry:
         return {
             "total_tools": len(self._tools),
             "tools_by_type": {
-                tool_type.value: len(tools) for tool_type, tools in self._tool_by_type.items()
+                tool_type.value: len(tools)
+                for tool_type, tools in self._tool_by_type.items()
             },
             "tool_execution_counts": {
                 name: tool.execution_count for name, tool in self._tools.items()
@@ -217,7 +222,9 @@ class ToolValidator:
         # Check required top-level fields
         for field_name in required_fields:
             if field_name not in schema:
-                logger.error(f"Missing required field '{field_name}' in function schema")
+                logger.error(
+                    f"Missing required field '{field_name}' in function schema"
+                )
                 return False
 
         # Validate parameters structure
@@ -270,7 +277,10 @@ class ToolExecutor:
         self.execution_history: List[Dict[str, Any]] = []
 
     async def execute_tool(
-        self, tool_name: str, parameters: Dict[str, Any], context: Optional[Dict[str, Any]] = None
+        self,
+        tool_name: str,
+        parameters: Dict[str, Any],
+        context: Optional[Dict[str, Any]] = None,
     ) -> ToolResult:
         """
         Execute a tool by name
@@ -289,11 +299,15 @@ class ToolExecutor:
             # Get tool from registry
             tool = self.registry.get_tool(tool_name)
             if not tool:
-                return ToolResult(success=False, error=f"Tool '{tool_name}' not found in registry")
+                return ToolResult(
+                    success=False, error=f"Tool '{tool_name}' not found in registry"
+                )
 
             # Validate parameters
             if not tool.validate_parameters(parameters):
-                return ToolResult(success=False, error=f"Invalid parameters for tool '{tool_name}'")
+                return ToolResult(
+                    success=False, error=f"Invalid parameters for tool '{tool_name}'"
+                )
 
             # Execute tool
             result = await tool.execute(parameters, context)
@@ -311,7 +325,9 @@ class ToolExecutor:
         except Exception as e:
             execution_time = (datetime.now() - start_time).total_seconds()
             error_result = ToolResult(
-                success=False, error=f"Tool execution failed: {e!s}", execution_time=execution_time
+                success=False,
+                error=f"Tool execution failed: {e!s}",
+                execution_time=execution_time,
             )
 
             self._record_execution(tool_name, parameters, error_result, context)
@@ -348,10 +364,13 @@ class ToolExecutor:
             return {"total_executions": 0}
 
         total_executions = len(self.execution_history)
-        successful_executions = sum(1 for exec in self.execution_history if exec["success"])
+        successful_executions = sum(
+            1 for exec in self.execution_history if exec["success"]
+        )
 
         avg_execution_time = (
-            sum(exec["execution_time"] for exec in self.execution_history) / total_executions
+            sum(exec["execution_time"] for exec in self.execution_history)
+            / total_executions
         )
 
         tool_usage = {}
@@ -364,7 +383,9 @@ class ToolExecutor:
         # Calculate success rates
         for tool_name in tool_usage:
             tool_executions = [
-                exec for exec in self.execution_history if exec["tool_name"] == tool_name
+                exec
+                for exec in self.execution_history
+                if exec["tool_name"] == tool_name
             ]
             successes = sum(1 for exec in tool_executions if exec["success"])
             tool_usage[tool_name]["success_rate"] = successes / len(tool_executions)

@@ -61,24 +61,40 @@ def create_test_app() -> FastAPI:
     app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
     app.include_router(users.router, prefix="/api/users", tags=["Users"])
     app.include_router(
-        business_profiles.router, prefix="/api/business-profiles", tags=["Business Profiles"]
+        business_profiles.router,
+        prefix="/api/business-profiles",
+        tags=["Business Profiles"],
     )
-    app.include_router(frameworks.router, prefix="/api/frameworks", tags=["Compliance Frameworks"])
-    app.include_router(assessments.router, prefix="/api/assessments", tags=["Assessments"])
-    app.include_router(readiness.router, prefix="/api/readiness", tags=["Readiness Assessment"])
+    app.include_router(
+        frameworks.router, prefix="/api/frameworks", tags=["Compliance Frameworks"]
+    )
+    app.include_router(
+        assessments.router, prefix="/api/assessments", tags=["Assessments"]
+    )
+    app.include_router(
+        readiness.router, prefix="/api/readiness", tags=["Readiness Assessment"]
+    )
     app.include_router(policies.router, prefix="/api/policies", tags=["Policies"])
-    app.include_router(implementation.router, prefix="/api/implementation", tags=["Implementation"])
+    app.include_router(
+        implementation.router, prefix="/api/implementation", tags=["Implementation"]
+    )
     app.include_router(evidence.router, prefix="/api/evidence", tags=["Evidence"])
     app.include_router(compliance.router, prefix="/api/compliance", tags=["Compliance"])
     app.include_router(reporting.router, prefix="/api/reports", tags=["Reporting"])
     app.include_router(security.router, prefix="/api/security", tags=["Security"])
     app.include_router(monitoring.router, prefix="/api/monitoring", tags=["Monitoring"])
-    app.include_router(integrations.router, prefix="/api/integrations", tags=["Integrations"])
     app.include_router(
-        evidence_collection.router, prefix="/api/evidence-collection", tags=["Evidence Collection"]
+        integrations.router, prefix="/api/integrations", tags=["Integrations"]
     )
     app.include_router(
-        foundation_evidence.router, prefix="/api/foundation-evidence", tags=["Foundation Evidence"]
+        evidence_collection.router,
+        prefix="/api/evidence-collection",
+        tags=["Evidence Collection"],
+    )
+    app.include_router(
+        foundation_evidence.router,
+        prefix="/api/foundation-evidence",
+        tags=["Foundation Evidence"],
     )
     app.include_router(ai_assessments.router, prefix="/api", tags=["AI Assessments"])
     app.include_router(

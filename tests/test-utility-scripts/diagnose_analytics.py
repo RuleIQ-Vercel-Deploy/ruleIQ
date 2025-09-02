@@ -22,7 +22,9 @@ with TestClient(app) as client:
 
     # First test without auth
     response = client.get("/api/chat/analytics/dashboard")
-    print(f"Without auth - Status: {response.status_code}, Response: {response.text[:200]}")
+    print(
+        f"Without auth - Status: {response.status_code}, Response: {response.text[:200]}"
+    )
 
     # Mock auth
     def override_get_current_user():

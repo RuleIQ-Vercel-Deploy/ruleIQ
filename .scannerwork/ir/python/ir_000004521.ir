@@ -1,0 +1,98 @@
+
+
+0int
+$("google.generativeai.types"str
+'"Mock AI response for testing"str
+!"google.generativeai"str
+1("Set up authentication mocks for tests."strlist"Ç#
+!
+
+‡ ‡(&"#unknown-value##
+!
+
+‡/ ‡(7#"#unknown-value##
+!
+
+† †("#unknown-value#!
+
+ ("#unknown-value#!
+
+| |(#
+"#unknown-value#!
+
+z z("#unknown-value#!
+
+y y("#unknown-value#%
+#
+y y("#get-field# mock:J
+H
+y y(*
+mock_genai"?python-unknown?:Bunittest.mock.MagicMock%
+#
+z z(!"#get-field# mock:M
+K
+z z(-mock_response"?python-unknown?:Bunittest.mock.MagicMock&
+$
+{ {(	"#set-field# text:%
+#
+| |(("#get-field# mock:
+>
+<
+| |(4"?python-unknown?:Bunittest.mock.MagicMock'
+%
+| |(5"#unknown-value#Blist&
+$
+| |(5"
+#is-exact#:Bbool
+
+| |(5"
+#assume#:8
+6
+| |(5"#set-field# __collection_size:Bint&
+$
+| |(5"#array-add-last#:'
+%
+| |("#set-field# parts:&
+$
+} }("#get-field# parts:"
+ 
+} }("#array-read#:&
+$
+} }("#set-field# text:%
+#
+ ("#get-field# mock:J
+H
+ (*
+mock_model"?python-unknown?:Bunittest.mock.MagicMock3
+1
+
+€ €("#get-field# generate_content:0
+.
+
+€ €(,"#set-field# return_value:2
+0
+
+ ("#get-field# GenerativeModel:0
+.
+
+ (+"#set-field# return_value:*
+(
+
+† †( "#get-field# modules:&
+$
+
+† †(3""#array-write#: !'
+%
+
+‡/ ‡(<$"#get-field# mock:#@
+>
+
+‡/ ‡(H%"?python-unknown?:$Bunittest.mock.MagicMock*
+(
+
+‡ ‡('"#get-field# modules:&&
+$
+
+‡ ‡(H)"#array-write#:'(%
+
+‰ ‰(*:/home/omar/Documents/ruleIQ/tests/utils/auth_test_utils.py

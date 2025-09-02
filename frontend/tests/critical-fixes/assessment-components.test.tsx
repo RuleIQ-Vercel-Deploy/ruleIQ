@@ -6,7 +6,9 @@ import React from 'react';
 // Mock file upload data
 const mockFiles = [
   new File(['content1'], 'file1.pdf', { type: 'application/pdf' }),
-  new File(['content2'], 'file2.docx', { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' }),
+  new File(['content2'], 'file2.docx', {
+    type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  }),
   new File(['content3'], 'file3.jpg', { type: 'image/jpeg' }),
 ];
 
@@ -62,11 +64,7 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
 
   describe('QuestionRenderer - Key Uniqueness', () => {
     it('should render questions with unique keys and no warnings', () => {
-      const QuestionRenderer = ({ 
-        questions 
-      }: { 
-        questions: typeof mockAssessmentQuestions 
-      }) => {
+      const QuestionRenderer = ({ questions }: { questions: typeof mockAssessmentQuestions }) => {
         return (
           <div data-testid="question-renderer">
             {questions.map((question) => (
@@ -74,15 +72,15 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
                 <label htmlFor={`input-${question.id}`}>{question.text}</label>
                 {question.type === 'yes_no' && (
                   <div>
-                    <input 
-                      type="radio" 
+                    <input
+                      type="radio"
                       id={`input-${question.id}-yes`}
                       name={`question-${question.id}`}
                       value="yes"
                     />
                     <label htmlFor={`input-${question.id}-yes`}>Yes</label>
-                    <input 
-                      type="radio" 
+                    <input
+                      type="radio"
                       id={`input-${question.id}-no`}
                       name={`question-${question.id}`}
                       value="no"
@@ -94,8 +92,8 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
                   <div data-testid={`options-${question.id}`}>
                     {question.options.map((option, index) => (
                       <div key={`${question.id}-option-${index}`}>
-                        <input 
-                          type="checkbox" 
+                        <input
+                          type="checkbox"
                           id={`${question.id}-option-${index}`}
                           value={option}
                         />
@@ -105,10 +103,7 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
                   </div>
                 )}
                 {question.type === 'textarea' && (
-                  <textarea 
-                    id={`input-${question.id}`}
-                    data-testid={`textarea-${question.id}`}
-                  />
+                  <textarea id={`input-${question.id}`} data-testid={`textarea-${question.id}`} />
                 )}
               </div>
             ))}
@@ -138,22 +133,20 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
     });
 
     it('should handle dynamic question filtering with stable keys', () => {
-      const FilterableQuestionRenderer = ({ 
+      const FilterableQuestionRenderer = ({
         questions,
-        filter
-      }: { 
+        filter,
+      }: {
         questions: typeof mockAssessmentQuestions;
         filter?: string;
       }) => {
-        const filteredQuestions = filter 
-          ? questions.filter(q => q.section === filter)
+        const filteredQuestions = filter
+          ? questions.filter((q) => q.section === filter)
           : questions;
 
         return (
           <div data-testid="filterable-questions">
-            <div data-testid="question-count">
-              Showing {filteredQuestions.length} questions
-            </div>
+            <div data-testid="question-count">Showing {filteredQuestions.length} questions</div>
             {filteredQuestions.map((question) => (
               <div key={question.id} data-testid={`filtered-question-${question.id}`}>
                 <h3>{question.text}</h3>
@@ -176,9 +169,9 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
       // Filter to data_processing section
       rerender(
         <TestWrapper>
-          <FilterableQuestionRenderer 
-            questions={mockAssessmentQuestions} 
-            filter="data_processing" 
+          <FilterableQuestionRenderer
+            questions={mockAssessmentQuestions}
+            filter="data_processing"
           />
         </TestWrapper>,
       );
@@ -202,18 +195,18 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
         const currentQuestion = questions[currentStep];
 
         const handleAnswer = (questionId: string, value: any) => {
-          setAnswers(prev => ({ ...prev, [questionId]: value }));
+          setAnswers((prev) => ({ ...prev, [questionId]: value }));
         };
 
         const nextQuestion = () => {
           if (currentStep < questions.length - 1) {
-            setCurrentStep(prev => prev + 1);
+            setCurrentStep((prev) => prev + 1);
           }
         };
 
         const prevQuestion = () => {
           if (currentStep > 0) {
-            setCurrentStep(prev => prev - 1);
+            setCurrentStep((prev) => prev - 1);
           }
         };
 
@@ -222,19 +215,19 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
             <div data-testid="progress">
               Question {currentStep + 1} of {questions.length}
             </div>
-            
+
             <div key={currentQuestion.id} data-testid={`wizard-question-${currentQuestion.id}`}>
               <h2>{currentQuestion.text}</h2>
-              
+
               {currentQuestion.type === 'yes_no' && (
                 <div>
-                  <button 
+                  <button
                     data-testid={`answer-yes-${currentQuestion.id}`}
                     onClick={() => handleAnswer(currentQuestion.id, 'yes')}
                   >
                     Yes
                   </button>
-                  <button 
+                  <button
                     data-testid={`answer-no-${currentQuestion.id}`}
                     onClick={() => handleAnswer(currentQuestion.id, 'no')}
                   >
@@ -242,9 +235,9 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
                   </button>
                 </div>
               )}
-              
+
               {currentQuestion.type === 'textarea' && (
-                <textarea 
+                <textarea
                   data-testid={`answer-textarea-${currentQuestion.id}`}
                   onChange={(e) => handleAnswer(currentQuestion.id, e.target.value)}
                 />
@@ -252,16 +245,12 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
             </div>
 
             <div data-testid="navigation">
-              <button 
-                data-testid="prev-button"
-                onClick={prevQuestion} 
-                disabled={currentStep === 0}
-              >
+              <button data-testid="prev-button" onClick={prevQuestion} disabled={currentStep === 0}>
                 Previous
               </button>
-              <button 
+              <button
                 data-testid="next-button"
-                onClick={nextQuestion} 
+                onClick={nextQuestion}
                 disabled={currentStep === questions.length - 1}
               >
                 Next
@@ -318,7 +307,12 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
     it('should render file upload list with unique keys', async () => {
       const FileUploadComponent = ({ files }: { files: File[] }) => {
         const [uploadedFiles, setUploadedFiles] = React.useState<
-          Array<{ file: File; id: string; status: 'uploading' | 'complete' | 'error'; progress: number }>
+          Array<{
+            file: File;
+            id: string;
+            status: 'uploading' | 'complete' | 'error';
+            progress: number;
+          }>
         >([]);
 
         React.useEffect(() => {
@@ -332,7 +326,7 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
         }, [files]);
 
         const removeFile = (id: string) => {
-          setUploadedFiles(prev => prev.filter(f => f.id !== id));
+          setUploadedFiles((prev) => prev.filter((f) => f.id !== id));
         };
 
         return (
@@ -340,19 +334,15 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
             <div data-testid="file-list">
               {uploadedFiles.map((uploadedFile) => (
                 <div key={uploadedFile.id} data-testid={`file-item-${uploadedFile.id}`}>
-                  <span data-testid={`file-name-${uploadedFile.id}`}>
-                    {uploadedFile.file.name}
-                  </span>
+                  <span data-testid={`file-name-${uploadedFile.id}`}>{uploadedFile.file.name}</span>
                   <span data-testid={`file-size-${uploadedFile.id}`}>
                     {uploadedFile.file.size} bytes
                   </span>
                   <div data-testid={`file-progress-${uploadedFile.id}`}>
                     Progress: {uploadedFile.progress}%
                   </div>
-                  <span data-testid={`file-status-${uploadedFile.id}`}>
-                    {uploadedFile.status}
-                  </span>
-                  <button 
+                  <span data-testid={`file-status-${uploadedFile.id}`}>{uploadedFile.status}</span>
+                  <button
                     data-testid={`remove-file-${uploadedFile.id}`}
                     onClick={() => removeFile(uploadedFile.id)}
                   >
@@ -393,12 +383,14 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
 
     it('should handle file upload progress without duplicate keys', async () => {
       const ProgressiveFileUpload = () => {
-        const [files, setFiles] = React.useState<Array<{
-          id: string;
-          name: string;
-          progress: number;
-          status: 'pending' | 'uploading' | 'complete' | 'error';
-        }>>([]);
+        const [files, setFiles] = React.useState<
+          Array<{
+            id: string;
+            name: string;
+            progress: number;
+            status: 'pending' | 'uploading' | 'complete' | 'error';
+          }>
+        >([]);
 
         const addFile = (name: string) => {
           const newFile = {
@@ -407,8 +399,8 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
             progress: 0,
             status: 'pending' as const,
           };
-          setFiles(prev => [...prev, newFile]);
-          
+          setFiles((prev) => [...prev, newFile]);
+
           // Simulate upload progress
           simulateUpload(newFile.id);
         };
@@ -417,12 +409,14 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
           let progress = 0;
           const interval = setInterval(() => {
             progress += 20;
-            setFiles(prev => prev.map(f => 
-              f.id === fileId 
-                ? { ...f, progress, status: progress >= 100 ? 'complete' : 'uploading' }
-                : f
-            ));
-            
+            setFiles((prev) =>
+              prev.map((f) =>
+                f.id === fileId
+                  ? { ...f, progress, status: progress >= 100 ? 'complete' : 'uploading' }
+                  : f,
+              ),
+            );
+
             if (progress >= 100) {
               clearInterval(interval);
             }
@@ -431,20 +425,24 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
 
         return (
           <div data-testid="progressive-upload">
-            <button 
+            <button
               data-testid="add-file-button"
               onClick={() => addFile(`test-file-${files.length + 1}.pdf`)}
             >
               Add File
             </button>
-            
+
             <div data-testid="upload-list">
               {files.map((file) => (
                 <div key={file.id} data-testid={`upload-item-${file.id}`}>
                   <span>{file.name}</span>
                   <div data-testid={`progress-bar-${file.id}`}>
-                    <div 
-                      style={{ width: `${file.progress}%`, backgroundColor: 'blue', height: '10px' }}
+                    <div
+                      style={{
+                        width: `${file.progress}%`,
+                        backgroundColor: 'blue',
+                        height: '10px',
+                      }}
                       data-testid={`progress-fill-${file.id}`}
                     />
                   </div>
@@ -477,10 +475,13 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
       });
 
       // Wait for uploads to complete
-      await waitFor(() => {
-        const completeStatuses = screen.getAllByText('complete');
-        expect(completeStatuses).toHaveLength(5);
-      }, { timeout: 2000 });
+      await waitFor(
+        () => {
+          const completeStatuses = screen.getAllByText('complete');
+          expect(completeStatuses).toHaveLength(5);
+        },
+        { timeout: 2000 },
+      );
 
       // No key warnings
       expect(consoleErrorSpy).not.toHaveBeenCalledWith(
@@ -489,27 +490,28 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
     });
 
     it('should handle file type filtering with unique keys', () => {
-      const FilteredFileUpload = ({ 
-        files, 
-        allowedTypes = [] 
-      }: { 
+      const FilteredFileUpload = ({
+        files,
+        allowedTypes = [],
+      }: {
         files: File[];
         allowedTypes?: string[];
       }) => {
-        const filteredFiles = allowedTypes.length > 0 
-          ? files.filter(file => allowedTypes.includes(file.type))
-          : files;
+        const filteredFiles =
+          allowedTypes.length > 0
+            ? files.filter((file) => allowedTypes.includes(file.type))
+            : files;
 
         return (
           <div data-testid="filtered-file-upload">
             <div data-testid="allowed-types">
               Allowed types: {allowedTypes.join(', ') || 'All types'}
             </div>
-            
+
             <div data-testid="filtered-file-list">
               {filteredFiles.map((file, index) => (
-                <div 
-                  key={`filtered-${file.name}-${file.size}-${index}`} 
+                <div
+                  key={`filtered-${file.name}-${file.size}-${index}`}
                   data-testid={`filtered-file-${index}`}
                 >
                   <span>{file.name}</span>
@@ -520,16 +522,17 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
             </div>
 
             <div data-testid="rejected-files">
-              {allowedTypes.length > 0 && files
-                .filter(file => !allowedTypes.includes(file.type))
-                .map((file, index) => (
-                  <div 
-                    key={`rejected-${file.name}-${file.size}-${index}`}
-                    data-testid={`rejected-file-${index}`}
-                  >
-                    Rejected: {file.name} (type: {file.type})
-                  </div>
-                ))}
+              {allowedTypes.length > 0 &&
+                files
+                  .filter((file) => !allowedTypes.includes(file.type))
+                  .map((file, index) => (
+                    <div
+                      key={`rejected-${file.name}-${file.size}-${index}`}
+                      data-testid={`rejected-file-${index}`}
+                    >
+                      Rejected: {file.name} (type: {file.type})
+                    </div>
+                  ))}
             </div>
           </div>
         );
@@ -549,10 +552,7 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
       // Filter to only PDFs
       rerender(
         <TestWrapper>
-          <FilteredFileUpload 
-            files={mockFiles} 
-            allowedTypes={['application/pdf']} 
-          />
+          <FilteredFileUpload files={mockFiles} allowedTypes={['application/pdf']} />
         </TestWrapper>,
       );
 
@@ -574,19 +574,17 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
       const AssessmentFlow = () => {
         const [currentStep, setCurrentStep] = React.useState(0);
         const [answers, setAnswers] = React.useState<Record<string, any>>({});
-        const [uploadedFiles, setUploadedFiles] = React.useState<
-          Record<string, File[]>
-        >({});
+        const [uploadedFiles, setUploadedFiles] = React.useState<Record<string, File[]>>({});
 
         const steps = ['Questions', 'Evidence Upload', 'Review'];
         const currentStepName = steps[currentStep];
 
         const handleAnswer = (questionId: string, value: any) => {
-          setAnswers(prev => ({ ...prev, [questionId]: value }));
+          setAnswers((prev) => ({ ...prev, [questionId]: value }));
         };
 
         const handleFileUpload = (questionId: string, files: File[]) => {
-          setUploadedFiles(prev => ({ ...prev, [questionId]: files }));
+          setUploadedFiles((prev) => ({ ...prev, [questionId]: files }));
         };
 
         return (
@@ -594,8 +592,8 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
             {/* Step indicator */}
             <div data-testid="step-indicator">
               {steps.map((step, index) => (
-                <div 
-                  key={`step-${index}`} 
+                <div
+                  key={`step-${index}`}
                   data-testid={`step-indicator-${index}`}
                   className={index === currentStep ? 'active' : ''}
                 >
@@ -612,12 +610,8 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
                     <p>{question.text}</p>
                     {question.type === 'yes_no' && (
                       <div>
-                        <button onClick={() => handleAnswer(question.id, 'yes')}>
-                          Yes
-                        </button>
-                        <button onClick={() => handleAnswer(question.id, 'no')}>
-                          No
-                        </button>
+                        <button onClick={() => handleAnswer(question.id, 'yes')}>Yes</button>
+                        <button onClick={() => handleAnswer(question.id, 'no')}>No</button>
                       </div>
                     )}
                   </div>
@@ -629,17 +623,20 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
             {currentStep === 1 && (
               <div data-testid="evidence-step">
                 {mockAssessmentQuestions.map((question) => (
-                  <div key={`evidence-${question.id}`} data-testid={`evidence-section-${question.id}`}>
+                  <div
+                    key={`evidence-${question.id}`}
+                    data-testid={`evidence-section-${question.id}`}
+                  >
                     <h3>Upload evidence for: {question.text}</h3>
                     {uploadedFiles[question.id]?.map((file, index) => (
-                      <div 
+                      <div
                         key={`${question.id}-file-${index}-${file.name}`}
                         data-testid={`evidence-file-${question.id}-${index}`}
                       >
                         {file.name}
                       </div>
                     ))}
-                    <button 
+                    <button
                       data-testid={`upload-button-${question.id}`}
                       onClick={() => {
                         // Simulate file upload
@@ -658,11 +655,14 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
             {currentStep === 2 && (
               <div data-testid="review-step">
                 <h2>Review Your Assessment</h2>
-                
+
                 <div data-testid="answers-review">
                   <h3>Answers</h3>
                   {Object.entries(answers).map(([questionId, answer]) => (
-                    <div key={`review-answer-${questionId}`} data-testid={`review-answer-${questionId}`}>
+                    <div
+                      key={`review-answer-${questionId}`}
+                      data-testid={`review-answer-${questionId}`}
+                    >
                       Question {questionId}: {String(answer)}
                     </div>
                   ))}
@@ -671,10 +671,13 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
                 <div data-testid="files-review">
                   <h3>Uploaded Evidence</h3>
                   {Object.entries(uploadedFiles).map(([questionId, files]) => (
-                    <div key={`review-files-${questionId}`} data-testid={`review-files-${questionId}`}>
+                    <div
+                      key={`review-files-${questionId}`}
+                      data-testid={`review-files-${questionId}`}
+                    >
                       <h4>Question {questionId}</h4>
                       {files.map((file, index) => (
-                        <div 
+                        <div
                           key={`review-file-${questionId}-${index}`}
                           data-testid={`review-file-${questionId}-${index}`}
                         >
@@ -689,16 +692,16 @@ describe('Assessment Component Tests - Key Uniqueness & File Upload', () => {
 
             {/* Navigation */}
             <div data-testid="flow-navigation">
-              <button 
+              <button
                 data-testid="prev-step"
-                onClick={() => setCurrentStep(prev => Math.max(0, prev - 1))}
+                onClick={() => setCurrentStep((prev) => Math.max(0, prev - 1))}
                 disabled={currentStep === 0}
               >
                 Previous
               </button>
-              <button 
+              <button
                 data-testid="next-step"
-                onClick={() => setCurrentStep(prev => Math.min(steps.length - 1, prev + 1))}
+                onClick={() => setCurrentStep((prev) => Math.min(steps.length - 1, prev + 1))}
                 disabled={currentStep === steps.length - 1}
               >
                 Next

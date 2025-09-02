@@ -1,0 +1,25 @@
+
+«Ω"
+        Decorator to require specific permissions for a route.
+
+        Args:
+            permissions: List of required permissions
+
+        Returns:
+            Route decorator
+        "strpermissions
+ˆ ˆ(2"√#
+!
+
+Ö Ö("#unknown-value#*
+(
+
+Å Ö(%closure"#new-object#/
+-
+
+Å Ö("#set-field# permissions:-
++
+
+Å Ö("?python-partial-apply?:
+
+Ö Ö(*=/home/omar/Documents/ruleIQ/api/middleware/rbac_middleware.py

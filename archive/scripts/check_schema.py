@@ -12,6 +12,7 @@ os.environ["DATABASE_URL"] = (
     "postgresql://neondb_owner:npg_s0JhnfGNy3Ze@ep-wild-grass-a8o37wq8-pooler.eastus2.azure.neon.tech/neondb?sslmode=require"
 )
 
+
 def main() -> None:
     print("=== Schema Comparison Analysis ===")
 
@@ -27,7 +28,7 @@ def main() -> None:
 
     # Check assessment_leads table schema
     print("1. Actual assessment_leads table schema in database:")
-    columns = inspector.get_columns('assessment_leads')
+    columns = inspector.get_columns("assessment_leads")
     for col in columns:
         print(f"  - {col['name']}: {col['type']} (nullable: {col['nullable']})")
 
@@ -50,7 +51,7 @@ def main() -> None:
 
     # Compare
     print("\n3. Schema comparison:")
-    db_columns = {col['name'] for col in columns}
+    db_columns = {col["name"] for col in columns}
     model_columns = {col.name for col in model_table.columns}
 
     missing_in_db = model_columns - db_columns
@@ -71,10 +72,10 @@ def main() -> None:
 
     # Check other freemium tables
     freemium_tables = [
-        'freemium_assessment_sessions',
-        'ai_question_bank',
-        'lead_scoring_events',
-        'conversion_events'
+        "freemium_assessment_sessions",
+        "ai_question_bank",
+        "lead_scoring_events",
+        "conversion_events",
     ]
 
     for table_name in freemium_tables:
@@ -84,6 +85,7 @@ def main() -> None:
             print(f"  ✅ {table_name}: {len(columns)} columns")
         except Exception as e:
             print(f"  ❌ {table_name}: Error - {e}")
+
 
 if __name__ == "__main__":
     main()

@@ -35,7 +35,9 @@ class Colors:
 
 
 class ValidationResult:
-    def __init__(self, test_name: str, passed: bool, message: str = "", details: Dict = None) -> None:
+    def __init__(
+        self, test_name: str, passed: bool, message: str = "", details: Dict = None
+    ) -> None:
         self.test_name = test_name
         self.passed = passed
         self.message = message
@@ -73,7 +75,9 @@ class ProductionValidator:
             # Test importing main FastAPI app
             spec = importlib.util.spec_from_file_location("main", "api/main.py")
             if spec is None or spec.loader is None:
-                return ValidationResult("FastAPI Import", False, "Could not load api/main.py")
+                return ValidationResult(
+                    "FastAPI Import", False, "Could not load api/main.py"
+                )
 
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
@@ -92,7 +96,9 @@ class ProductionValidator:
                 )
 
             return ValidationResult(
-                "FastAPI Import", True, f"Successfully imported FastAPI app: {app.title}"
+                "FastAPI Import",
+                True,
+                f"Successfully imported FastAPI app: {app.title}",
             )
 
         except Exception as e:
@@ -104,18 +110,28 @@ class ProductionValidator:
         """Test database initialization works correctly"""
         try:
             # Test database setup module
-            spec = importlib.util.spec_from_file_location("db_setup", "database/db_setup.py")
+            spec = importlib.util.spec_from_file_location(
+                "db_setup", "database/db_setup.py"
+            )
             if spec is None or spec.loader is None:
                 return ValidationResult(
-                    "Database Initialization", False, "Could not load database/db_setup.py"
+                    "Database Initialization",
+                    False,
+                    "Could not load database/db_setup.py",
                 )
 
             module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(module)
 
             # Check for required functions based on actual db_setup.py
-            required_functions = ["init_db", "test_database_connection", "create_all_tables"]
-            missing_functions = [f for f in required_functions if not hasattr(module, f)]
+            required_functions = [
+                "init_db",
+                "test_database_connection",
+                "create_all_tables",
+            ]
+            missing_functions = [
+                f for f in required_functions if not hasattr(module, f)
+            ]
 
             if missing_functions:
                 return ValidationResult(
@@ -132,14 +148,21 @@ class ProductionValidator:
 
         except Exception as e:
             return ValidationResult(
-                "Database Initialization", False, f"Database initialization failed: {str(e)}"
+                "Database Initialization",
+                False,
+                f"Database initialization failed: {str(e)}",
             )
 
     def test_environment_variables(self) -> ValidationResult:
         """Test if all required environment variables are properly configured"""
         required_vars = ["DATABASE_URL", "SECRET_KEY", "API_BASE_URL", "ENVIRONMENT"]
 
-        optional_vars = ["REDIS_URL", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "SENTRY_DSN"]
+        optional_vars = [
+            "REDIS_URL",
+            "AWS_ACCESS_KEY_ID",
+            "AWS_SECRET_ACCESS_KEY",
+            "SENTRY_DSN",
+        ]
 
         missing_required = [var for var in required_vars if not os.getenv(var)]
         missing_optional = [var for var in optional_vars if not os.getenv(var)]
@@ -168,7 +191,12 @@ class ProductionValidator:
 
     def test_critical_routes(self) -> ValidationResult:
         """Test if all critical routes are accessible"""
-        critical_routes = ["/health", "/api/v1/health", "/api/v1/docs", "/api/v1/openapi.json"]
+        critical_routes = [
+            "/health",
+            "/api/v1/health",
+            "/api/v1/docs",
+            "/api/v1/openapi.json",
+        ]
 
         accessible_routes = []
         failed_routes = []
@@ -209,20 +237,28 @@ class ProductionValidator:
 
             if test_database_connection():
                 return ValidationResult(
-                    "Database Connection", True, "Database connection established successfully"
+                    "Database Connection",
+                    True,
+                    "Database connection established successfully",
                 )
             else:
                 return ValidationResult(
-                    "Database Connection", False, "Database connection verification failed"
+                    "Database Connection",
+                    False,
+                    "Database connection verification failed",
                 )
 
         except ImportError as e:
             return ValidationResult(
-                "Database Connection", False, f"Could not import database verification: {str(e)}"
+                "Database Connection",
+                False,
+                f"Could not import database verification: {str(e)}",
             )
         except Exception as e:
             return ValidationResult(
-                "Database Connection", False, f"Database connection test failed: {str(e)}"
+                "Database Connection",
+                False,
+                f"Database connection test failed: {str(e)}",
             )
 
     def test_health_check_endpoints(self) -> ValidationResult:
@@ -252,7 +288,9 @@ class ProductionValidator:
                             {"endpoint": endpoint, "status": "non-json response"}
                         )
                 else:
-                    failed_endpoints.append(f"{endpoint} (status: {response.status_code})")
+                    failed_endpoints.append(
+                        f"{endpoint} (status: {response.status_code})"
+                    )
 
             except requests.exceptions.RequestException as e:
                 failed_endpoints.append(f"{endpoint} (error: {str(e)})")
@@ -287,20 +325,28 @@ class ProductionValidator:
 
             if "App ready" in stdout:
                 return ValidationResult(
-                    "Application Startup", True, "FastAPI application can be started successfully"
+                    "Application Startup",
+                    True,
+                    "FastAPI application can be started successfully",
                 )
             else:
                 return ValidationResult(
-                    "Application Startup", False, f"Application startup failed: {stderr}"
+                    "Application Startup",
+                    False,
+                    f"Application startup failed: {stderr}",
                 )
 
         except subprocess.TimeoutExpired:
             if "process" in locals():
                 process.kill()
-            return ValidationResult("Application Startup", False, "Application startup timed out")
+            return ValidationResult(
+                "Application Startup", False, "Application startup timed out"
+            )
         except Exception as e:
             return ValidationResult(
-                "Application Startup", False, f"Application startup test failed: {str(e)}"
+                "Application Startup",
+                False,
+                f"Application startup test failed: {str(e)}",
             )
 
     def run_all_tests(self) -> bool:

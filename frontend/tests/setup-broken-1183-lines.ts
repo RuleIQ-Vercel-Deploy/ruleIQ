@@ -1,72 +1,81 @@
 // EMERGENCY: HTMLFormElement.prototype.requestSubmit polyfill
 if (typeof HTMLFormElement !== 'undefined' && !HTMLFormElement.prototype.requestSubmit) {
-  HTMLFormElement.prototype.requestSubmit = function(submitter) {
+  HTMLFormElement.prototype.requestSubmit = function (submitter) {
     if (submitter && submitter.form !== this) {
-      throw new DOMException('The specified element is not a descendant of this form element', 'NotFoundError');
+      throw new DOMException(
+        'The specified element is not a descendant of this form element',
+        'NotFoundError',
+      );
     }
-    
+
     // Create and dispatch submit event
     const submitEvent = new Event('submit', {
       bubbles: true,
-      cancelable: true
+      cancelable: true,
     });
-    
+
     // Set submitter if provided
     if (submitter) {
       Object.defineProperty(submitEvent, 'submitter', {
         value: submitter,
-        configurable: true
+        configurable: true,
       });
     }
-    
+
     this.dispatchEvent(submitEvent);
   };
 }
 // Proper HTMLFormElement.prototype.requestSubmit polyfill
 if (!HTMLFormElement.prototype.requestSubmit) {
-  HTMLFormElement.prototype.requestSubmit = function(submitter) {
+  HTMLFormElement.prototype.requestSubmit = function (submitter) {
     if (submitter && submitter.form !== this) {
-      throw new DOMException('The specified element is not a descendant of this form element', 'NotFoundError');
+      throw new DOMException(
+        'The specified element is not a descendant of this form element',
+        'NotFoundError',
+      );
     }
-    
+
     // Create and dispatch submit event
     const submitEvent = new Event('submit', {
       bubbles: true,
-      cancelable: true
+      cancelable: true,
     });
-    
+
     // Set submitter if provided
     if (submitter) {
       Object.defineProperty(submitEvent, 'submitter', {
         value: submitter,
-        configurable: true
+        configurable: true,
       });
     }
-    
+
     this.dispatchEvent(submitEvent);
   };
 }
 // Proper HTMLFormElement.prototype.requestSubmit polyfill
 if (!HTMLFormElement.prototype.requestSubmit) {
-  HTMLFormElement.prototype.requestSubmit = function(submitter) {
+  HTMLFormElement.prototype.requestSubmit = function (submitter) {
     if (submitter && submitter.form !== this) {
-      throw new DOMException('The specified element is not a descendant of this form element', 'NotFoundError');
+      throw new DOMException(
+        'The specified element is not a descendant of this form element',
+        'NotFoundError',
+      );
     }
-    
+
     // Create and dispatch submit event
     const submitEvent = new Event('submit', {
       bubbles: true,
-      cancelable: true
+      cancelable: true,
     });
-    
+
     // Set submitter if provided
     if (submitter) {
       Object.defineProperty(submitEvent, 'submitter', {
         value: submitter,
-        configurable: true
+        configurable: true,
       });
     }
-    
+
     this.dispatchEvent(submitEvent);
   };
 }
@@ -304,11 +313,11 @@ vi.mock('next/image', () => ({
 
 // Mock Lucide React icons
 vi.mock('lucide-react', () => {
-  const createMockIcon = (name: string) => (props: Record<string, unknown>) => 
+  const createMockIcon = (name: string) => (props: Record<string, unknown>) =>
     React.createElement('svg', {
       'data-testid': `${name}-icon`,
       ...props,
-      children: React.createElement('path', { d: 'M0 0h24v24H0z' })
+      children: React.createElement('path', { d: 'M0 0h24v24H0z' }),
     });
 
   return {
@@ -436,14 +445,14 @@ afterAll(() => {
 });
 
 // MSW Server Setup
-import { setupServer } from 'msw/node'
-import { handlers } from './mocks/handlers'
+import { setupServer } from 'msw/node';
+import { handlers } from './mocks/handlers';
 
-export const server = setupServer(...handlers)
+export const server = setupServer(...handlers);
 
-beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }))
-afterEach(() => server.resetHandlers())
-afterAll(() => server.close())
+beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }));
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
 // Proper File and FileReader mocks
 Object.defineProperty(global, 'File', {
@@ -455,7 +464,7 @@ Object.defineProperty(global, 'File', {
       this.type = options.type || '';
       this.size = bits.reduce((acc, bit) => acc + (bit.length || 0), 0);
     }
-  }
+  },
 });
 
 Object.defineProperty(global, 'FileReader', {
@@ -466,19 +475,19 @@ Object.defineProperty(global, 'FileReader', {
       this.result = null;
       this.error = null;
     }
-    
+
     readAsDataURL(file) {
       this.readyState = 2;
       this.result = 'data:text/plain;base64,dGVzdA==';
       if (this.onload) this.onload();
     }
-    
+
     readAsText(file) {
       this.readyState = 2;
       this.result = 'test content';
       if (this.onload) this.onload();
     }
-  }
+  },
 });
 
 // Import API client setup
@@ -492,10 +501,10 @@ vi.mock('next/navigation', () => ({
     back: vi.fn(),
     forward: vi.fn(),
     refresh: vi.fn(),
-    prefetch: vi.fn()
+    prefetch: vi.fn(),
   })),
   usePathname: vi.fn(() => '/'),
-  useSearchParams: vi.fn(() => new URLSearchParams())
+  useSearchParams: vi.fn(() => new URLSearchParams()),
 }));
 
 // Mock auth store with proper implementation
@@ -505,11 +514,11 @@ vi.mock('@/lib/stores/auth.store', () => ({
       id: 'user-123',
       email: 'test@example.com',
       name: 'Test User',
-      is_active: true
+      is_active: true,
     },
     tokens: {
       access_token: 'mock-access-token',
-      refresh_token: 'mock-refresh-token'
+      refresh_token: 'mock-refresh-token',
     },
     isAuthenticated: true,
     isLoading: false,
@@ -519,34 +528,34 @@ vi.mock('@/lib/stores/auth.store', () => ({
         id: 'user-123',
         email: 'test@example.com',
         name: 'Test User',
-        is_active: true
+        is_active: true,
       },
       tokens: {
         access_token: 'mock-access-token',
-        refresh_token: 'mock-refresh-token'
-      }
+        refresh_token: 'mock-refresh-token',
+      },
     }),
     register: vi.fn().mockResolvedValue({
       user: {
         id: 'user-456',
         email: 'newuser@example.com',
         name: 'New User',
-        is_active: true
+        is_active: true,
       },
       tokens: {
         access_token: 'new-access-token',
-        refresh_token: 'new-refresh-token'
-      }
+        refresh_token: 'new-refresh-token',
+      },
     }),
     logout: vi.fn().mockResolvedValue(undefined),
     getCurrentUser: vi.fn().mockResolvedValue({
       id: 'user-123',
       email: 'test@example.com',
       name: 'Test User',
-      is_active: true
+      is_active: true,
     }),
-    initialize: vi.fn().mockResolvedValue(undefined)
-  }))
+    initialize: vi.fn().mockResolvedValue(undefined),
+  })),
 }));
 
 // Enhanced Lucide React mock with all required icons
@@ -659,33 +668,36 @@ vi.mock('lucide-react', () => ({
   Mic: vi.fn(() => 'div'),
   MicOff: vi.fn(() => 'div'),
   // Default export for any missing icons
-  default: vi.fn(() => 'div')
+  default: vi.fn(() => 'div'),
 }));
 
 // Fix HTMLFormElement.prototype.requestSubmit not implemented in JSDOM
 Object.defineProperty(HTMLFormElement.prototype, 'requestSubmit', {
   writable: true,
-  value: function(submitter) {
+  value: function (submitter) {
     if (submitter && submitter.form !== this) {
-      throw new DOMException('The specified element is not a descendant of this form element', 'NotFoundError');
+      throw new DOMException(
+        'The specified element is not a descendant of this form element',
+        'NotFoundError',
+      );
     }
-    
+
     // Create and dispatch submit event
     const submitEvent = new Event('submit', {
       bubbles: true,
-      cancelable: true
+      cancelable: true,
     });
-    
+
     // Set submitter if provided
     if (submitter) {
       Object.defineProperty(submitEvent, 'submitter', {
         value: submitter,
-        configurable: true
+        configurable: true,
       });
     }
-    
+
     this.dispatchEvent(submitEvent);
-  }
+  },
 });
 
 // Import and use complete Lucide React mock
@@ -700,27 +712,29 @@ import './mocks/business-profile-service';
 // Mock AI services to prevent timeout errors
 vi.mock('@/lib/services/ai-service', () => ({
   AIService: {
-    generateFollowUpQuestions: vi.fn().mockResolvedValue([
-      'What is your data retention policy?',
-      'How do you handle data breaches?',
-      'Do you have employee training programs?'
-    ]),
+    generateFollowUpQuestions: vi
+      .fn()
+      .mockResolvedValue([
+        'What is your data retention policy?',
+        'How do you handle data breaches?',
+        'Do you have employee training programs?',
+      ]),
     getEnhancedResponse: vi.fn().mockResolvedValue({
       response: 'This is a mock AI response',
       confidence: 0.85,
-      suggestions: ['Consider implementing automated data deletion']
+      suggestions: ['Consider implementing automated data deletion'],
     }),
     analyzeCompliance: vi.fn().mockResolvedValue({
       score: 85,
       recommendations: ['Improve data retention policies'],
-      risks: ['Missing employee training records']
-    })
-  }
+      risks: ['Missing employee training records'],
+    }),
+  },
 }));
 
 // Mock network requests to prevent actual API calls
 global.fetch = vi.fn().mockImplementation((url, options = {}) => {
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
   return Promise.resolve({
     ok: true,
     status: 200,
@@ -730,7 +744,7 @@ global.fetch = vi.fn().mockImplementation((url, options = {}) => {
     redirected: false,
     statusText: 'OK',
     type: 'basic',
-    url: url as string
+    url: url as string,
   } as Response);
 });
 
@@ -745,27 +759,30 @@ import './mocks/ai-service-mock';
 // Fix HTMLFormElement.prototype.requestSubmit not implemented in JSDOM
 Object.defineProperty(HTMLFormElement.prototype, 'requestSubmit', {
   writable: true,
-  value: function(submitter) {
+  value: function (submitter) {
     if (submitter && submitter.form !== this) {
-      throw new DOMException('The specified element is not a descendant of this form element', 'NotFoundError');
+      throw new DOMException(
+        'The specified element is not a descendant of this form element',
+        'NotFoundError',
+      );
     }
-    
+
     // Create and dispatch submit event
     const submitEvent = new Event('submit', {
       bubbles: true,
-      cancelable: true
+      cancelable: true,
     });
-    
+
     // Set submitter if provided
     if (submitter) {
       Object.defineProperty(submitEvent, 'submitter', {
         value: submitter,
-        configurable: true
+        configurable: true,
       });
     }
-    
+
     this.dispatchEvent(submitEvent);
-  }
+  },
 });
 
 // Import and use complete Lucide React mock
@@ -780,27 +797,29 @@ import './mocks/business-profile-service';
 // Mock AI services to prevent timeout errors
 vi.mock('@/lib/services/ai-service', () => ({
   AIService: {
-    generateFollowUpQuestions: vi.fn().mockResolvedValue([
-      'What is your data retention policy?',
-      'How do you handle data breaches?',
-      'Do you have employee training programs?'
-    ]),
+    generateFollowUpQuestions: vi
+      .fn()
+      .mockResolvedValue([
+        'What is your data retention policy?',
+        'How do you handle data breaches?',
+        'Do you have employee training programs?',
+      ]),
     getEnhancedResponse: vi.fn().mockResolvedValue({
       response: 'This is a mock AI response',
       confidence: 0.85,
-      suggestions: ['Consider implementing automated data deletion']
+      suggestions: ['Consider implementing automated data deletion'],
     }),
     analyzeCompliance: vi.fn().mockResolvedValue({
       score: 85,
       recommendations: ['Improve data retention policies'],
-      risks: ['Missing employee training records']
-    })
-  }
+      risks: ['Missing employee training records'],
+    }),
+  },
 }));
 
 // Mock network requests to prevent actual API calls
 global.fetch = vi.fn().mockImplementation((url, options = {}) => {
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
   return Promise.resolve({
     ok: true,
     status: 200,
@@ -810,7 +829,7 @@ global.fetch = vi.fn().mockImplementation((url, options = {}) => {
     redirected: false,
     statusText: 'OK',
     type: 'basic',
-    url: url as string
+    url: url as string,
   } as Response);
 });
 
@@ -833,10 +852,10 @@ vi.mock('next/navigation', () => ({
     back: vi.fn(),
     forward: vi.fn(),
     refresh: vi.fn(),
-    prefetch: vi.fn()
+    prefetch: vi.fn(),
   })),
   usePathname: vi.fn(() => '/'),
-  useSearchParams: vi.fn(() => new URLSearchParams())
+  useSearchParams: vi.fn(() => new URLSearchParams()),
 }));
 
 // Mock auth store with proper implementation
@@ -846,11 +865,11 @@ vi.mock('@/lib/stores/auth.store', () => ({
       id: 'user-123',
       email: 'test@example.com',
       name: 'Test User',
-      is_active: true
+      is_active: true,
     },
     tokens: {
       access_token: 'mock-access-token',
-      refresh_token: 'mock-refresh-token'
+      refresh_token: 'mock-refresh-token',
     },
     isAuthenticated: true,
     isLoading: false,
@@ -860,34 +879,34 @@ vi.mock('@/lib/stores/auth.store', () => ({
         id: 'user-123',
         email: 'test@example.com',
         name: 'Test User',
-        is_active: true
+        is_active: true,
       },
       tokens: {
         access_token: 'mock-access-token',
-        refresh_token: 'mock-refresh-token'
-      }
+        refresh_token: 'mock-refresh-token',
+      },
     }),
     register: vi.fn().mockResolvedValue({
       user: {
         id: 'user-456',
         email: 'newuser@example.com',
         name: 'New User',
-        is_active: true
+        is_active: true,
       },
       tokens: {
         access_token: 'new-access-token',
-        refresh_token: 'new-refresh-token'
-      }
+        refresh_token: 'new-refresh-token',
+      },
     }),
     logout: vi.fn().mockResolvedValue(undefined),
     getCurrentUser: vi.fn().mockResolvedValue({
       id: 'user-123',
       email: 'test@example.com',
       name: 'Test User',
-      is_active: true
+      is_active: true,
     }),
-    initialize: vi.fn().mockResolvedValue(undefined)
-  }))
+    initialize: vi.fn().mockResolvedValue(undefined),
+  })),
 }));
 
 // Enhanced Lucide React mock with all required icons
@@ -1000,7 +1019,7 @@ vi.mock('lucide-react', () => ({
   Mic: vi.fn(() => 'div'),
   MicOff: vi.fn(() => 'div'),
   // Default export for any missing icons
-  default: vi.fn(() => 'div')
+  default: vi.fn(() => 'div'),
 }));
 
 // Proper File and FileReader mocks
@@ -1013,7 +1032,7 @@ Object.defineProperty(global, 'File', {
       this.type = options.type || '';
       this.size = bits.reduce((acc, bit) => acc + (bit.length || 0), 0);
     }
-  }
+  },
 });
 
 Object.defineProperty(global, 'FileReader', {
@@ -1024,19 +1043,19 @@ Object.defineProperty(global, 'FileReader', {
       this.result = null;
       this.error = null;
     }
-    
+
     readAsDataURL(file) {
       this.readyState = 2;
       this.result = 'data:text/plain;base64,dGVzdA==';
       if (this.onload) this.onload();
     }
-    
+
     readAsText(file) {
       this.readyState = 2;
       this.result = 'test content';
       if (this.onload) this.onload();
     }
-  }
+  },
 });
 
 // EMERGENCY: Import and use comprehensive Lucide React mock
@@ -1050,7 +1069,7 @@ import { emergencyApiClient } from './mocks/emergency-api-mock';
 // Mock all API-related modules
 vi.mock('@/lib/api/client', () => ({
   APIClient: vi.fn().mockImplementation(() => emergencyApiClient),
-  apiClient: emergencyApiClient
+  apiClient: emergencyApiClient,
 }));
 
 vi.mock('@/lib/api/auth.service', () => ({
@@ -1061,17 +1080,20 @@ vi.mock('@/lib/api/auth.service', () => ({
       }
       return {
         tokens: { access_token: 'mock-token', refresh_token: 'mock-refresh' },
-        user: { id: 'user-123', email: credentials.email, name: 'Test User', is_active: true }
+        user: { id: 'user-123', email: credentials.email, name: 'Test User', is_active: true },
       };
     }),
     register: vi.fn().mockResolvedValue({
       tokens: { access_token: 'new-token', refresh_token: 'new-refresh' },
-      user: { id: 'user-456', email: 'newuser@example.com', name: 'New User', is_active: true }
+      user: { id: 'user-456', email: 'newuser@example.com', name: 'New User', is_active: true },
     }),
     getCurrentUser: vi.fn().mockResolvedValue({
-      id: 'user-123', email: 'test@example.com', name: 'Test User', is_active: true
+      id: 'user-123',
+      email: 'test@example.com',
+      name: 'Test User',
+      is_active: true,
     }),
-    logout: vi.fn().mockResolvedValue(undefined)
+    logout: vi.fn().mockResolvedValue(undefined),
   })),
   authService: {
     login: vi.fn().mockImplementation(async (credentials) => {
@@ -1080,18 +1102,21 @@ vi.mock('@/lib/api/auth.service', () => ({
       }
       return {
         tokens: { access_token: 'mock-token', refresh_token: 'mock-refresh' },
-        user: { id: 'user-123', email: credentials.email, name: 'Test User', is_active: true }
+        user: { id: 'user-123', email: credentials.email, name: 'Test User', is_active: true },
       };
     }),
     register: vi.fn().mockResolvedValue({
       tokens: { access_token: 'new-token', refresh_token: 'new-refresh' },
-      user: { id: 'user-456', email: 'newuser@example.com', name: 'New User', is_active: true }
+      user: { id: 'user-456', email: 'newuser@example.com', name: 'New User', is_active: true },
     }),
     getCurrentUser: vi.fn().mockResolvedValue({
-      id: 'user-123', email: 'test@example.com', name: 'Test User', is_active: true
+      id: 'user-123',
+      email: 'test@example.com',
+      name: 'Test User',
+      is_active: true,
     }),
-    logout: vi.fn().mockResolvedValue(undefined)
-  }
+    logout: vi.fn().mockResolvedValue(undefined),
+  },
 }));
 
 // EMERGENCY: Fix React Testing Library act() warnings
@@ -1112,7 +1137,7 @@ vi.useFakeTimers();
 
 // EMERGENCY: Mock network requests and AI services
 global.fetch = vi.fn().mockImplementation((url, options = {}) => {
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
   return Promise.resolve({
     ok: true,
     status: 200,
@@ -1122,28 +1147,30 @@ global.fetch = vi.fn().mockImplementation((url, options = {}) => {
     redirected: false,
     statusText: 'OK',
     type: 'basic',
-    url: url as string
+    url: url as string,
   } as Response);
 });
 
 // Mock AI services to prevent timeout errors
 vi.mock('@/lib/services/ai-service', () => ({
   AIService: {
-    generateFollowUpQuestions: vi.fn().mockResolvedValue([
-      'What is your data retention policy?',
-      'How do you handle data breaches?'
-    ]),
+    generateFollowUpQuestions: vi
+      .fn()
+      .mockResolvedValue([
+        'What is your data retention policy?',
+        'How do you handle data breaches?',
+      ]),
     getEnhancedResponse: vi.fn().mockResolvedValue({
       response: 'Mock AI response',
       confidence: 0.85,
-      suggestions: ['Consider implementing automated data deletion']
+      suggestions: ['Consider implementing automated data deletion'],
     }),
     analyzeCompliance: vi.fn().mockResolvedValue({
       score: 85,
       recommendations: ['Improve data retention policies'],
-      risks: ['Missing employee training records']
-    })
-  }
+      risks: ['Missing employee training records'],
+    }),
+  },
 }));
 
 // Mock Next.js router
@@ -1154,10 +1181,10 @@ vi.mock('next/navigation', () => ({
     back: vi.fn(),
     forward: vi.fn(),
     refresh: vi.fn(),
-    prefetch: vi.fn()
+    prefetch: vi.fn(),
   })),
   usePathname: vi.fn(() => '/'),
-  useSearchParams: vi.fn(() => new URLSearchParams())
+  useSearchParams: vi.fn(() => new URLSearchParams()),
 }));
 
 // CRITICAL: Import form submission mock
@@ -1165,7 +1192,7 @@ import './mocks/form-submission-mock';
 
 // CRITICAL: Handle unhandled promise rejections in tests
 process.on('unhandledRejection', (reason, promise) => {
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
   // Don't fail tests for unhandled rejections during testing
 });
 

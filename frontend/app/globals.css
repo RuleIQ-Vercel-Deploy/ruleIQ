@@ -394,68 +394,67 @@
   }
 }
 
-
 /* Enhanced Utility Classes for Visual Refresh */
 @layer utilities {
   /* Glass Morphism Effects */
   .glass-white {
-    @apply bg-white/85 backdrop-blur-md border border-white/20;
+    @apply border border-white/20 bg-white/85 backdrop-blur-md;
   }
-  
+
   .glass-elevated {
-    @apply bg-white/95 backdrop-blur-lg shadow-lg;
+    @apply bg-white/95 shadow-lg backdrop-blur-lg;
   }
-  
+
   .glass-overlay {
     @apply bg-black/40 backdrop-blur-sm;
   }
-  
+
   /* Hover Interactions */
   .hover-lift {
     @apply transition-all duration-250 hover:-translate-y-0.5;
   }
-  
+
   .hover-scale {
     @apply transition-transform duration-250 hover:scale-[1.02];
   }
-  
+
   .hover-glow {
     @apply transition-shadow duration-250 hover:shadow-glow-teal;
   }
-  
+
   /* Premium Spacing */
   .section-padding {
-    @apply py-16 px-8 md:py-20 md:px-12 lg:py-24 lg:px-16;
+    @apply px-8 py-16 md:px-12 md:py-20 lg:px-16 lg:py-24;
   }
-  
+
   .card-padding {
     @apply p-6 md:p-8;
   }
-  
+
   .button-padding {
     @apply px-6 py-3;
   }
-  
+
   /* Animation Delays */
   .animation-delay-150 {
     animation-delay: 150ms;
   }
-  
+
   .animation-delay-300 {
     animation-delay: 300ms;
   }
-  
+
   .animation-delay-450 {
     animation-delay: 450ms;
   }
-  
+
   /* Gradient Accent Lines */
   .gradient-accent-top::before {
     content: '';
     @apply absolute inset-x-0 top-0 h-1;
     @apply bg-gradient-to-r from-teal-700 via-teal-600 to-teal-400;
   }
-  
+
   .gradient-accent-left::before {
     content: '';
     @apply absolute inset-y-0 left-0 w-1;
@@ -473,50 +472,50 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  
+
   /* Disable parallax effects */
   .parallax,
   [data-parallax] {
     transform: none !important;
   }
-  
+
   /* Disable auto-playing videos */
   video[autoplay] {
     display: none;
   }
-  
+
   /* Simplify hover states */
   button:hover,
   a:hover {
     transform: none !important;
   }
-  
+
   /* Remove smooth scrolling */
   html {
     scroll-behavior: auto !important;
   }
-  
+
   /* Disable animated gradients */
   .animated-gradient,
   .gradient-animation {
     animation: none !important;
     background-size: auto !important;
   }
-  
+
   /* Disable shimmer effects */
   .shimmer,
-  [class*="shimmer"] {
+  [class*='shimmer'] {
     animation: none !important;
     background: var(--muted) !important;
   }
-  
+
   /* Disable loading spinners - show static state */
   .spinner,
-  [class*="spinner"],
-  [class*="loading"] {
+  [class*='spinner'],
+  [class*='loading'] {
     animation: none !important;
   }
-  
+
   /* Framer Motion specific */
   [data-framer-motion] {
     transform: none !important;

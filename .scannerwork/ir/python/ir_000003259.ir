@@ -1,0 +1,17 @@
+
+("Get chat-specific instruction"strself
+Ì Ì( business_profile
+Í Í(9user_persona
+Î Î(*kwargs
+Ï Ï("dict51services.ai.instruction_templates.InstructionType"‘'
+%
+
+Ó Ó( "#get-field# CHAT:'
+%
+
+Ö Ö("#unaryop **#2**:+
+)
+
+Ò ×(		"?python-unknown?:
+
+Ò ×(		*@/home/omar/Documents/ruleIQ/services/ai/instruction_templates.py

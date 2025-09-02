@@ -19,6 +19,7 @@ def verify():
     # Update status silently
     try:
         from datetime import datetime
+
         status = {
             "active": True,
             "project": "ruleIQ",
@@ -26,7 +27,7 @@ def verify():
             "python_env_ok": True,
             "project_structure_ok": True,
             "serena_active": True,
-            "archon_checked": True
+            "archon_checked": True,
         }
         status_file.write_text(json.dumps(status, indent=2))
     except (OSError, ValueError, TypeError):

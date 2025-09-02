@@ -51,7 +51,9 @@ class QualityScorer:
                 "verifiability": self._score_verifiability(evidence),
             }
 
-            total_score = sum(scores[aspect] * self.weights[aspect] for aspect in scores)
+            total_score = sum(
+                scores[aspect] * self.weights[aspect] for aspect in scores
+            )
             return round(min(max(total_score, 0.0), 100.0), 2)
 
         except (ValueError, TypeError, KeyError) as e:
@@ -68,7 +70,9 @@ class QualityScorer:
                 return 10.0  # Low score if content is not a dictionary
 
             required_fields = ["name", "description", "source", "timestamp"]
-            present_fields = sum(1 for field in required_fields if evidence.content.get(field))
+            present_fields = sum(
+                1 for field in required_fields if evidence.content.get(field)
+            )
 
             # Additional check for meaningful content
             if len(evidence.content.get("description", "")) < 20:
@@ -76,7 +80,9 @@ class QualityScorer:
 
             return (present_fields / len(required_fields)) * 100
         except (TypeError, AttributeError) as e:
-            logger.warning(f"Completeness scoring failed for evidence {evidence.id}: {e}")
+            logger.warning(
+                f"Completeness scoring failed for evidence {evidence.id}: {e}"
+            )
             return 20.0
 
     def _score_freshness(self, evidence: EvidenceItem) -> float:
@@ -106,7 +112,8 @@ class QualityScorer:
             relevance_score = 50.0  # Base score
             description = evidence.content.get("description", "").lower()
             if any(
-                keyword in description for keyword in ["audit", "control", "security", "compliance"]
+                keyword in description
+                for keyword in ["audit", "control", "security", "compliance"]
             ):
                 relevance_score += 25.0
             if evidence.control_id:
@@ -130,7 +137,9 @@ class QualityScorer:
                 return 60.0
             return 30.0
         except AttributeError as e:
-            logger.warning(f"Verifiability scoring failed for evidence {evidence.id}: {e}")
+            logger.warning(
+                f"Verifiability scoring failed for evidence {evidence.id}: {e}"
+            )
             return 20.0
 
     def get_score_breakdown(self, evidence: EvidenceItem) -> Dict[str, Any]:
@@ -144,13 +153,19 @@ class QualityScorer:
             }
             total_score = self.calculate_score(evidence)
 
-            return {"total_score": total_score, "breakdown": scores, "weights": self.weights}
+            return {
+                "total_score": total_score,
+                "breakdown": scores,
+                "weights": self.weights,
+            }
         except (ValueError, TypeError) as e:
             raise BusinessLogicException(
                 f"Failed to get score breakdown for evidence {evidence.id}"
             ) from e
 
-    def calculate_batch_scores(self, evidence_items: List[EvidenceItem]) -> Dict[str, Any]:
+    def calculate_batch_scores(
+        self, evidence_items: List[EvidenceItem]
+    ) -> Dict[str, Any]:
         """Calculates quality scores for multiple evidence items."""
         if not evidence_items:
             return {"total_items": 0, "average_score": 0.0, "score_distribution": {}}
@@ -168,7 +183,8 @@ class QualityScorer:
             }
 
             distribution = {
-                range_name: {"count": 0, "percentage": 0.0} for range_name in score_ranges
+                range_name: {"count": 0, "percentage": 0.0}
+                for range_name in score_ranges
             }
             for score in scores:
                 for range_name, (min_s, max_s) in score_ranges.items():
@@ -178,7 +194,9 @@ class QualityScorer:
 
             for range_name in distribution:
                 count = distribution[range_name]["count"]
-                distribution[range_name]["percentage"] = round(count / len(scores) * 100, 1)
+                distribution[range_name]["percentage"] = round(
+                    count / len(scores) * 100, 1
+                )
 
             return {
                 "total_items": len(evidence_items),
@@ -193,6 +211,7 @@ class QualityScorer:
         """Lazy-load AI model to avoid initialization overhead."""
         if self.ai_model is None:
             from config.ai_config import get_ai_model
+
             self.ai_model = get_ai_model()
         return self.ai_model
 
@@ -209,10 +228,14 @@ class QualityScorer:
             ai_analysis = await self._ai_quality_analysis(evidence)
 
             # Combine scores with weighted approach
-            final_score = self._combine_traditional_and_ai_scores(traditional_scores, ai_analysis)
+            final_score = self._combine_traditional_and_ai_scores(
+                traditional_scores, ai_analysis
+            )
 
             # Determine scoring method based on whether AI analysis succeeded
-            scoring_method = "traditional_fallback" if "error" in ai_analysis else "enhanced_ai"
+            scoring_method = (
+                "traditional_fallback" if "error" in ai_analysis else "enhanced_ai"
+            )
 
             # Set confidence based on scoring method
             if scoring_method == "traditional_fallback":
@@ -230,7 +253,10 @@ class QualityScorer:
             }
 
         except Exception as e:
-            logger.error(f"Enhanced scoring failed for evidence {evidence.id}: {e}", exc_info=True)
+            logger.error(
+                f"Enhanced scoring failed for evidence {evidence.id}: {e}",
+                exc_info=True,
+            )
             # Fall back to traditional scoring
             traditional_score = self.calculate_score(evidence)
             return {
@@ -284,13 +310,17 @@ RECOMMENDATIONS: [list recommendations]"""
 
             # Use asyncio to run the AI model in a thread pool
             loop = asyncio.get_event_loop()
-            response = await loop.run_in_executor(None, model.generate_content, quality_prompt)
+            response = await loop.run_in_executor(
+                None, model.generate_content, quality_prompt
+            )
 
             # Parse AI response
             return self._parse_quality_response(response.text)
 
         except Exception as e:
-            logger.warning(f"AI quality analysis failed for evidence {evidence.id}: {e}")
+            logger.warning(
+                f"AI quality analysis failed for evidence {evidence.id}: {e}"
+            )
             fallback_result = self._fallback_quality_analysis(evidence)
             # Add error indicator to mark this as a fallback result
             fallback_result["error"] = "AI analysis unavailable"
@@ -399,14 +429,20 @@ RECOMMENDATIONS: [list recommendations]"""
 
             # Calculate overall score if not provided
             if result["overall_score"] == 0 and result["scores"]:
-                result["overall_score"] = sum(result["scores"].values()) / len(result["scores"])
+                result["overall_score"] = sum(result["scores"].values()) / len(
+                    result["scores"]
+                )
 
             # If no scores were parsed, return fallback result
             if not result["scores"]:
                 return self._fallback_quality_analysis(None)
 
             # Set confidence based on completeness of analysis
-            if len(result["scores"]) >= 4 and result["strengths"] and result["weaknesses"]:
+            if (
+                len(result["scores"]) >= 4
+                and result["strengths"]
+                and result["weaknesses"]
+            ):
                 result["ai_confidence"] = 85
             elif len(result["scores"]) >= 3:
                 result["ai_confidence"] = 70
@@ -419,7 +455,9 @@ RECOMMENDATIONS: [list recommendations]"""
             logger.warning(f"Failed to parse AI quality response: {e}")
             return self._fallback_quality_analysis(None)
 
-    def _fallback_quality_analysis(self, evidence: Optional[EvidenceItem]) -> Dict[str, Any]:
+    def _fallback_quality_analysis(
+        self, evidence: Optional[EvidenceItem]
+    ) -> Dict[str, Any]:
         """Provide rule-based fallback quality analysis when AI fails."""
         try:
             if evidence is None:
@@ -474,7 +512,9 @@ RECOMMENDATIONS: [list recommendations]"""
                 else:
                     scores["currency"] = 40
                     weaknesses.append("Evidence is getting old")
-                    recommendations.append("Consider updating or re-collecting evidence")
+                    recommendations.append(
+                        "Consider updating or re-collecting evidence"
+                    )
             else:
                 scores["currency"] = 30
                 weaknesses.append("No collection date available")
@@ -521,17 +561,21 @@ RECOMMENDATIONS: [list recommendations]"""
             evidence.description is not None and len(evidence.description) > 10,
             hasattr(evidence, "control_reference")
             and bool(getattr(evidence, "control_reference", None)),
-            hasattr(evidence, "file_path") and bool(getattr(evidence, "file_path", None)),
+            hasattr(evidence, "file_path")
+            and bool(getattr(evidence, "file_path", None)),
             evidence.evidence_type is not None,
         ]
         scores["completeness"] = (
-            sum(int(factor) for factor in completeness_factors) / len(completeness_factors)
+            sum(int(factor) for factor in completeness_factors)
+            / len(completeness_factors)
         ) * 100
 
         # Freshness score (based on age)
         if evidence.collected_at:
             age_days = (datetime.utcnow() - evidence.collected_at).days
-            scores["freshness"] = max(0, 100 - (age_days * 2))  # Decrease 2 points per day
+            scores["freshness"] = max(
+                0, 100 - (age_days * 2)
+            )  # Decrease 2 points per day
         else:
             scores["freshness"] = 50
 
@@ -657,7 +701,12 @@ RECOMMENDATIONS: [list recommendations]"""
             return []
 
     async def _analyze_semantic_similarity(
-        self, model, content1: str, content2: str, evidence1: EvidenceItem, evidence2: EvidenceItem
+        self,
+        model,
+        content1: str,
+        content2: str,
+        evidence1: EvidenceItem,
+        evidence2: EvidenceItem,
     ) -> Dict[str, Any]:
         """Analyze semantic similarity between two pieces of evidence using AI."""
         try:
@@ -691,7 +740,9 @@ RECOMMENDATION: [action]"""
 
             # Use asyncio to run the AI model in a thread pool
             loop = asyncio.get_event_loop()
-            response = await loop.run_in_executor(None, model.generate_content, similarity_prompt)
+            response = await loop.run_in_executor(
+                None, model.generate_content, similarity_prompt
+            )
 
             return self._parse_similarity_response(response.text)
 
@@ -799,7 +850,9 @@ RECOMMENDATION: [action]"""
                     continue
 
                 # Find duplicates for this evidence
-                candidates = evidence_items[i + 1 :]  # Only check items after current one
+                candidates = evidence_items[
+                    i + 1 :
+                ]  # Only check items after current one
                 duplicates = await self.detect_semantic_duplicates(
                     evidence, candidates, similarity_threshold
                 )
@@ -814,7 +867,9 @@ RECOMMENDATION: [action]"""
                         },
                         "duplicates": duplicates,
                         "group_size": len(duplicates) + 1,
-                        "highest_similarity": max(d["similarity_score"] for d in duplicates),
+                        "highest_similarity": max(
+                            d["similarity_score"] for d in duplicates
+                        ),
                     }
                     duplicate_groups.append(group)
 
@@ -823,7 +878,9 @@ RECOMMENDATION: [action]"""
                     for dup in duplicates:
                         processed_ids.add(dup["candidate_id"])
 
-            total_duplicates = sum(group["group_size"] - 1 for group in duplicate_groups)
+            total_duplicates = sum(
+                group["group_size"] - 1 for group in duplicate_groups
+            )
 
             return {
                 "total_items": len(evidence_items),

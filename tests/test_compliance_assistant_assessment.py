@@ -81,7 +81,9 @@ class TestAssessmentHelp:
         """Test successful assessment help generation."""
         # Mock AI response
         with patch.object(compliance_assistant, "_generate_ai_response") as mock_ai:
-            mock_ai.return_value = '{"guidance": "Test guidance", "confidence_score": 0.9}'
+            mock_ai.return_value = (
+                '{"guidance": "Test guidance", "confidence_score": 0.9}'
+            )
 
             result = await compliance_assistant.get_assessment_help(
                 question_id="q1",
@@ -133,7 +135,9 @@ class TestAssessmentFollowup:
         }
 
         with patch.object(compliance_assistant, "_generate_ai_response") as mock_ai:
-            mock_ai.return_value = '{"follow_up_questions": ["Question 1", "Question 2"]}'
+            mock_ai.return_value = (
+                '{"follow_up_questions": ["Question 1", "Question 2"]}'
+            )
 
             result = await compliance_assistant.generate_assessment_followup(
                 current_answers=current_answers,
@@ -182,7 +186,11 @@ class TestAssessmentRecommendations:
     async def test_get_assessment_recommendations_success(self, compliance_assistant):
         """Test successful recommendations generation."""
         gaps = [{"id": "gap1", "title": "Missing privacy policy", "severity": "high"}]
-        business_profile = {"name": "Test Company", "industry": "technology", "employee_count": 50}
+        business_profile = {
+            "name": "Test Company",
+            "industry": "technology",
+            "employee_count": 50,
+        }
 
         with patch.object(compliance_assistant, "_generate_ai_response") as mock_ai:
             mock_ai.return_value = '{"recommendations": [], "implementation_plan": {}}'
@@ -227,7 +235,8 @@ class TestIntentClassification:
 
         # Test gap analysis intent - use more specific pattern
         result = compliance_assistant._classify_intent(
-            "Can you identify gaps in my compliance?", assessment_context={"in_assessment": True}
+            "Can you identify gaps in my compliance?",
+            assessment_context={"in_assessment": True},
         )
 
         assert result["intent"] == "gap_analysis"

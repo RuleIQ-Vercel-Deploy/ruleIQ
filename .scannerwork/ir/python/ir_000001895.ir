@@ -1,0 +1,269 @@
+
+"total_requests"str
+."batching_enabled"str
+A"cost_optimization"str
+""cache_hit_rate"str
+G"estimated_cost"str
+1("Get comprehensive performance metrics."str
+'"current_queue_size"str
+"division by zero"bool
+
+0int
+:"batch_size"str
+
+J4int
+1000int
+`100int
+ C"estimated_token_usage"str
+#"average_response_time_ms"str
+&4"parallel_processing_enabled"str
+c"last_request_time"str
+"7"max_concurrent_requests"str
+ ="batch_timeout_seconds"str
+Y"queue_utilization"str
+
+2int
+1"compression_enabled"str
+ ,"optimization_settings"str
+"S3518"bool
+"request_statistics"str
+U"available_capacity"str
+S"system_health"str
+"a"bool
+M"optimization_savings"strself
+Î& Î(*"¸6
+4
+
+Ò Ò(#"!#get-field# performance_metrics:0
+.
+
+Ò Ò(1"#get-field# request_count:*
+(
+
+Ò Ò(5"	#binop >#2>:Bbool "
+
+Ò Ò(5 *
+Ò Ò(
+"Ü6
+4
+
+Ô Ô(("!#get-field# performance_metrics:6
+4
+
+Ô Ô(<"!#get-field# total_response_time:6
+4
+
+Õ Õ(*	"!#get-field# performance_metrics:0
+.
+
+Õ Õ(8
+"#get-field# request_count:	,
+*
+
+Ô Õ(8"
+#binop !=#2!=:
+Bbool"
+ 
+
+Ô Õ(8"
+#assert#:3
+1
+
+Ô Õ(8"#dependent-value#*:
+Bfloat6
+4
+
+Ó Ó($"!#get-field# performance_metrics:9
+7
+
+Ó Ó(:"#!#set-field# average_response_time:"”&
+$
+
+Ø ó(	"#new-object#Bdict&
+$
+
+Ù" à("#new-object#Bdict6
+4
+
+Ú" Ú(:"!#get-field# performance_metrics:0
+.
+
+Ú" Ú(H"#get-field# request_count:"
+ 
+
+Ú Ú(H"	#map-set#:6
+4
+
+Ü Ü(,"!#get-field# performance_metrics:8
+6
+
+Ü Ü(B"#!#get-field# average_response_time:'
+%
+
+Ü Ü(I"	#binop *#*2*:*
+(
+
+Û, Ý( "
+builtinsround*:"
+ 
+
+Û Ý(!"	#map-set#: 6
+4
+
+Þ( Þ(@#"!#get-field# performance_metrics:1
+/
+
+Þ( Þ(O$"#get-field# cache_hit_rate:#*
+(
+
+Þ" Þ(S%"
+builtinsround*:$"
+ 
+
+Þ Þ(S&"	#map-set#:"%.
+,
+
+ß* ß(:("#get-field# batch_queue:,
+*
+
+ß& ß(;)"
+builtinslen*:(Bint"
+ 
+
+ß ß(;*"	#map-set#:')"
+ 
+
+Ù à(+"	#map-set#:&
+$
+
+á% è(-"#new-object#Bdict2
+0
+
+â$ â(8/"#get-field# enable_batching:"
+ 
+
+â â(80"	#map-set#:-./5
+3
+
+ã' ã(>2" #get-field# enable_compression:"
+ 
+
+ã ã(>3"	#map-set#:-12=
+;
+
+ä/ ä(N5"(&#get-field# enable_parallel_processing:"
+ 
+
+ä ä(N6"	#map-set#:-45:
+8
+
+å+ å(G8"%##get-field# max_concurrent_requests:"
+ 
+
+å å(G9"	#map-set#:-78-
++
+
+æ æ(-;"#get-field# batch_size:"
+ 
+
+æ æ(-<"	#map-set#:-:;0
+.
+
+ç) ç(;>"#get-field# batch_timeout:"
+ 
+
+ç ç(;?"	#map-set#:-=>"
+ 
+
+á è(@"	#map-set#:,-&
+$
+
+é! í(B"#new-object#Bdict6
+4
+
+ê) ê(AD"!#get-field# performance_metrics:.
+,
+
+ê) ê(ME"#get-field# token_usage:D"
+ 
+
+ê ê(MF"	#map-set#:BCE6
+4
+
+ë( ë(@H"!#get-field# performance_metrics:0
+.
+
+ë( ë(NI"#get-field# cost_estimate:H*
+(
+
+ë" ë(RK"
+builtinsround*:IJ"
+ 
+
+ë ë(RL"	#map-set#:BGK6
+4
+
+ì. ì(FN"!#get-field# performance_metrics:7
+5
+
+ì. ì([O"" #get-field# optimization_savings:N*
+(
+
+ì( ì(_P"
+builtinsround*:OJ"
+ 
+
+ì ì(_Q"	#map-set#:BMP"
+ 
+
+é í(R"	#map-set#:AB&
+$
+
+î ò(T"#new-object#Bdict4
+2
+
+ï& ï(<V"#get-field# request_semaphore:)
+'
+
+ï& ï(CW"#get-field# _value:V"
+ 
+
+ï ï(CX"	#map-set#:TUW.
+,
+
+ð) ð(9Z"#get-field# batch_queue:,
+*
+
+ð% ð(:["
+builtinslen*:ZBint-
++
+
+ð= ð(L\"#get-field# batch_size:,
+*
+
+ð% ð(L]"
+#binop !=#2!=:\Bbool"
+ 
+
+ð% ð(L^"
+#assert#:]3
+1
+
+ð% ð(L_"#dependent-value#*:[\Bfloat3
+1
+
+ð% ð(Ra"#dependent-value#*:_`Bfloat"
+ 
+
+ð ð(Rb"	#map-set#:TYa4
+2
+
+ñ% ñ(;d"#get-field# last_request_time:"
+ 
+
+ñ ñ(;e"	#map-set#:Tcd"
+ 
+
+î ò(f"	#map-set#:ST
+
+Ø ó(	*@/home/omar/Documents/ruleIQ/services/ai/performance_optimizer.py

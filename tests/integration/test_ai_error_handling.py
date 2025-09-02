@@ -42,7 +42,9 @@ class TestAIErrorHandling:
             mock_help.side_effect = AITimeoutException(timeout_seconds=30.0)
 
             response = client.post(
-                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help",
+                json=request_data,
+                headers=authenticated_headers,
             )
 
             # Should handle timeout gracefully
@@ -67,7 +69,9 @@ class TestAIErrorHandling:
             mock_help.side_effect = AIQuotaExceededException(quota_type="API requests")
 
             response = client.post(
-                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help",
+                json=request_data,
+                headers=authenticated_headers,
             )
 
             # Should handle quota exceeded gracefully
@@ -90,13 +94,17 @@ class TestAIErrorHandling:
             )
 
             response = client.post(
-                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help",
+                json=request_data,
+                headers=authenticated_headers,
             )
 
             # Should handle content filtering appropriately
             assert response.status_code in [400, 422]
 
-    def test_ai_model_error_fallback(self, client, authenticated_headers, sample_business_profile):
+    def test_ai_model_error_fallback(
+        self, client, authenticated_headers, sample_business_profile
+    ):
         """Test fallback when AI model encounters errors"""
         request_data = {
             "question_id": "model-error-test",
@@ -111,7 +119,9 @@ class TestAIErrorHandling:
             )
 
             response = client.post(
-                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help",
+                json=request_data,
+                headers=authenticated_headers,
             )
 
             # Should handle model errors gracefully
@@ -136,13 +146,17 @@ class TestAIErrorHandling:
             )
 
             response = client.post(
-                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help",
+                json=request_data,
+                headers=authenticated_headers,
             )
 
             # Should handle parsing errors gracefully
             assert response.status_code in [500, 502]
 
-    def test_network_error_fallback(self, client, authenticated_headers, sample_business_profile):
+    def test_network_error_fallback(
+        self, client, authenticated_headers, sample_business_profile
+    ):
         """Test fallback when network errors occur"""
         request_data = {
             "question_id": "network-test",
@@ -155,7 +169,9 @@ class TestAIErrorHandling:
             mock_help.side_effect = ConnectionError("Network connection failed")
 
             response = client.post(
-                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help",
+                json=request_data,
+                headers=authenticated_headers,
             )
 
             # Should handle network errors gracefully
@@ -179,16 +195,23 @@ class TestAIErrorHandling:
                 "question_text": "Do you process personal data?",
                 "user_answer": "yes",
             },
-            "business_context": {"business_profile_id": str(sample_business_profile.id)},
+            "business_context": {
+                "business_profile_id": str(sample_business_profile.id)
+            },
         }
 
         analysis_request = {
             "framework_id": "gdpr",
             "business_profile_id": str(sample_business_profile.id),
-            "assessment_results": {"answers": {"q1": "yes"}, "completion_percentage": 50.0},
+            "assessment_results": {
+                "answers": {"q1": "yes"},
+                "completion_percentage": 50.0,
+            },
         }
 
-        with patch.object(ComplianceAssistant, "get_assessment_help") as mock_help, patch.object(
+        with patch.object(
+            ComplianceAssistant, "get_assessment_help"
+        ) as mock_help, patch.object(
             ComplianceAssistant, "generate_assessment_followup"
         ) as mock_followup:
             # All AI services fail
@@ -197,23 +220,33 @@ class TestAIErrorHandling:
 
             # Test help endpoint
             help_response = client.post(
-                "/api/ai/assessments/gdpr/help", json=help_request, headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help",
+                json=help_request,
+                headers=authenticated_headers,
             )
 
             # Test followup endpoint
             followup_response = client.post(
-                "/api/ai/assessments/followup", json=followup_request, headers=authenticated_headers
+                "/api/ai/assessments/followup",
+                json=followup_request,
+                headers=authenticated_headers,
             )
 
             # Test analysis endpoint
             analysis_response = client.post(
-                "/api/ai/assessments/analysis", json=analysis_request, headers=authenticated_headers
+                "/api/ai/assessments/analysis",
+                json=analysis_request,
+                headers=authenticated_headers,
             )
 
             # All should handle failures gracefully
             assert help_response.status_code in [500, 503]
             assert followup_response.status_code in [500, 503]
-            assert analysis_response.status_code in [200, 500, 503]  # Analysis might have fallback
+            assert analysis_response.status_code in [
+                200,
+                500,
+                503,
+            ]  # Analysis might have fallback
 
     def test_partial_ai_service_degradation(
         self, client, authenticated_headers, sample_business_profile
@@ -222,7 +255,10 @@ class TestAIErrorHandling:
         with patch("services.ai.assistant.ComplianceAssistant") as mock_assistant:
             # Help service works
             mock_assistant.return_value.get_question_help = AsyncMock(
-                return_value={"guidance": "GDPR compliance requires...", "confidence_score": 0.9}
+                return_value={
+                    "guidance": "GDPR compliance requires...",
+                    "confidence_score": 0.9,
+                }
             )
 
             # Follow-up service fails
@@ -251,7 +287,9 @@ class TestAIErrorHandling:
                         "question_text": "Do you process personal data?",
                         "user_answer": "yes",
                     },
-                    "business_context": {"business_profile_id": str(sample_business_profile.id)},
+                    "business_context": {
+                        "business_profile_id": str(sample_business_profile.id)
+                    },
                 },
                 headers=authenticated_headers,
             )
@@ -277,13 +315,18 @@ class TestAIErrorHandling:
             mock_assistant.return_value.get_assessment_help = AsyncMock(
                 side_effect=[
                     AIServiceException("Temporary failure"),
-                    {"guidance": "GDPR compliance requires...", "confidence_score": 0.9},
+                    {
+                        "guidance": "GDPR compliance requires...",
+                        "confidence_score": 0.9,
+                    },
                 ]
             )
 
             # First request should fail
             response1 = client.post(
-                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help",
+                json=request_data,
+                headers=authenticated_headers,
             )
             assert response1.status_code in [500, 503]
 
@@ -311,7 +354,9 @@ class TestAIErrorHandling:
             )
 
             client.post(
-                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help",
+                json=request_data,
+                headers=authenticated_headers,
             )
 
             # Should log the error
@@ -334,7 +379,9 @@ class TestAIErrorHandling:
             )
 
             # Mock the fallback mechanism
-            with patch("api.routers.ai_assessments._get_mock_help_response") as mock_fallback:
+            with patch(
+                "api.routers.ai_assessments._get_mock_help_response"
+            ) as mock_fallback:
                 mock_fallback.return_value = {
                     "guidance": "Mock guidance for GDPR compliance",
                     "confidence_score": 0.7,
@@ -373,11 +420,15 @@ class TestAIErrorHandling:
             }
 
             mock_assistant.return_value.get_assessment_help = AsyncMock(
-                side_effect=AIServiceException("Service error with context", context=error_context)
+                side_effect=AIServiceException(
+                    "Service error with context", context=error_context
+                )
             )
 
             response = client.post(
-                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help",
+                json=request_data,
+                headers=authenticated_headers,
             )
 
             # Error should be handled gracefully
@@ -430,10 +481,14 @@ class TestAIErrorHandling:
 
             with pytest.raises(asyncio.CancelledError):
                 await assistant.get_question_help(
-                    question_id="shutdown-test", question_text="Test question", framework_id="gdpr"
+                    question_id="shutdown-test",
+                    question_text="Test question",
+                    framework_id="gdpr",
                 )
 
-    def test_ai_error_rate_monitoring(self, client, authenticated_headers, sample_business_profile):
+    def test_ai_error_rate_monitoring(
+        self, client, authenticated_headers, sample_business_profile
+    ):
         """Test monitoring of AI error rates"""
         request_data = {
             "question_id": "error-rate-test",

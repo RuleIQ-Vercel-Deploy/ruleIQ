@@ -41,7 +41,10 @@ class DuplicateDetector:
 
     @staticmethod
     async def is_duplicate(
-        db: AsyncSession, user_id: UUID, evidence_data: Dict[str, Any], time_window_hours: int = 24
+        db: AsyncSession,
+        user_id: UUID,
+        evidence_data: Dict[str, Any],
+        time_window_hours: int = 24,
     ) -> bool:
         """Checks if an evidence item is a likely duplicate of one already stored."""
         try:
@@ -54,7 +57,8 @@ class DuplicateDetector:
                     and_(
                         EvidenceItem.user_id == user_id,
                         EvidenceItem.created_at > cutoff_time,
-                        EvidenceItem.metadata["content_hash"].as_string() == content_hash,
+                        EvidenceItem.metadata["content_hash"].as_string()
+                        == content_hash,
                     )
                 )
                 .limit(1)
@@ -78,7 +82,10 @@ class DuplicateDetector:
             cutoff_date = datetime.utcnow() - timedelta(days=days)
 
             total_stmt = select(func.count(EvidenceItem.id)).where(
-                and_(EvidenceItem.user_id == user_id, EvidenceItem.created_at > cutoff_date)
+                and_(
+                    EvidenceItem.user_id == user_id,
+                    EvidenceItem.created_at > cutoff_date,
+                )
             )
             total_res = await db.execute(total_stmt)
             total_items = total_res.scalar_one()
@@ -93,7 +100,9 @@ class DuplicateDetector:
             duplicate_res = await db.execute(duplicate_stmt)
             duplicate_items = duplicate_res.scalar_one()
 
-            duplicate_rate = (duplicate_items / total_items * 100) if total_items > 0 else 0
+            duplicate_rate = (
+                (duplicate_items / total_items * 100) if total_items > 0 else 0
+            )
 
             return {
                 "total_items": total_items,
@@ -105,12 +114,14 @@ class DuplicateDetector:
 
         except SQLAlchemyError as e:
             logger.error(
-                f"Database error getting duplicate stats for user {user_id}: {e}", exc_info=True
+                f"Database error getting duplicate stats for user {user_id}: {e}",
+                exc_info=True,
             )
             raise DatabaseException("Failed to retrieve duplicate statistics.") from e
         except Exception as e:
             logger.error(
-                f"Unexpected error getting duplicate stats for user {user_id}: {e}", exc_info=True
+                f"Unexpected error getting duplicate stats for user {user_id}: {e}",
+                exc_info=True,
             )
             raise BusinessLogicException(
                 "An unexpected error occurred while calculating duplicate statistics."

@@ -56,7 +56,9 @@ class TestMetricsCollector:
 
         self.metrics["resource_usage"].append(metric_point)
 
-    def record_test_execution(self, test_name: str, duration: float, status: str, test_type: str):
+    def record_test_execution(
+        self, test_name: str, duration: float, status: str, test_type: str
+    ):
         """Record individual test execution metrics"""
         execution_record = {
             "test_name": test_name,
@@ -68,7 +70,9 @@ class TestMetricsCollector:
 
         self.metrics["test_executions"].append(execution_record)
 
-    def record_performance_metric(self, metric_name: str, value: float, unit: str = "ms"):
+    def record_performance_metric(
+        self, metric_name: str, value: float, unit: str = "ms"
+    ):
         """Record performance metrics"""
         if metric_name not in self.metrics["performance_data"]:
             self.metrics["performance_data"][metric_name] = []
@@ -103,8 +107,12 @@ class TestMetricsCollector:
 
         # Calculate average duration by type
         for test_type in by_type:
-            type_durations = [e["duration"] for e in executions if e["test_type"] == test_type]
-            by_type[test_type]["avg_duration"] = sum(type_durations) / len(type_durations)
+            type_durations = [
+                e["duration"] for e in executions if e["test_type"] == test_type
+            ]
+            by_type[test_type]["avg_duration"] = sum(type_durations) / len(
+                type_durations
+            )
 
         return {
             "total_tests": total_tests,
@@ -342,12 +350,16 @@ class TestObservability:
         durations = [0.5, 1.2, 0.8, 2.1, 1.0, 0.9, 1.5]
 
         for i, duration in enumerate(durations):
-            metrics_collector.record_test_execution(f"trend_test_{i}", duration, "passed", "unit")
+            metrics_collector.record_test_execution(
+                f"trend_test_{i}", duration, "passed", "unit"
+            )
 
         executions = metrics_collector.metrics["test_executions"]
 
         # Filter executions for trend tests
-        trend_executions = [e for e in executions if e["test_name"].startswith("trend_test_")]
+        trend_executions = [
+            e for e in executions if e["test_name"].startswith("trend_test_")
+        ]
 
         assert len(trend_executions) == 7
 
@@ -372,7 +384,9 @@ class TestMetricsReporting:
         # Add sample data
         collector.record_test_execution("unit_test_1", 0.5, "passed", "unit")
         collector.record_test_execution("unit_test_2", 1.2, "failed", "unit")
-        collector.record_test_execution("integration_test_1", 2.5, "passed", "integration")
+        collector.record_test_execution(
+            "integration_test_1", 2.5, "passed", "integration"
+        )
         collector.record_performance_metric("response_time", 150.0, "ms")
         collector.collect_system_metrics()
 
@@ -403,7 +417,12 @@ class TestMetricsReporting:
         exported_metrics = collector.metrics
 
         # Verify export structure
-        required_keys = ["test_executions", "performance_data", "resource_usage", "error_rates"]
+        required_keys = [
+            "test_executions",
+            "performance_data",
+            "resource_usage",
+            "error_rates",
+        ]
 
         for key in required_keys:
             assert key in exported_metrics
@@ -428,7 +447,9 @@ class TestMetricsReporting:
         }
 
         # Record metrics that violate thresholds
-        collector.record_performance_metric("api_response_time", 250.0, "ms")  # Violation
+        collector.record_performance_metric(
+            "api_response_time", 250.0, "ms"
+        )  # Violation
         collector.record_performance_metric("database_query_time", 75.0, "ms")  # OK
 
         violations = []
@@ -476,7 +497,9 @@ class TestMetricsReporting:
 
         # Analyze trend
         trend_executions = [
-            e for e in collector.metrics["test_executions"] if e["test_name"] == "trend_test"
+            e
+            for e in collector.metrics["test_executions"]
+            if e["test_name"] == "trend_test"
         ]
 
         # Sort by timestamp
@@ -559,7 +582,9 @@ class TestCoverageTracking:
 
         # Verify no regression (each entry should be >= previous)
         for i in range(1, len(coverages)):
-            assert coverages[i] >= coverages[i - 1], f"Coverage regression detected at index {i}"
+            assert (
+                coverages[i] >= coverages[i - 1]
+            ), f"Coverage regression detected at index {i}"
 
     def test_coverage_threshold_compliance(self):
         """Test compliance with coverage thresholds"""
@@ -573,7 +598,10 @@ class TestCoverageTracking:
 
         # Sample coverage data
         module_coverage = {
-            "services.evidence_service": {"coverage": 96.2, "priority": "critical_services"},
+            "services.evidence_service": {
+                "coverage": 96.2,
+                "priority": "critical_services",
+            },
             "services.ai.assistant": {"coverage": 87.5, "priority": "high_priority"},
             "api.routers.evidence": {"coverage": 78.9, "priority": "medium_priority"},
             "utils.helpers": {"coverage": 68.3, "priority": "low_priority"},
@@ -661,13 +689,20 @@ def generate_metrics_dashboard_data(metrics_data: Dict[str, Any]) -> Dict[str, A
     dashboard_data = {
         "summary": {
             "total_tests": len(executions),
-            "avg_test_duration": sum(e["duration"] for e in executions) / len(executions)
-            if executions
-            else 0,
-            "pass_rate": len([e for e in executions if e["status"] == "passed"]) / len(executions)
-            if executions
-            else 0,
-            "performance_metrics_count": sum(len(metrics) for metrics in performance_data.values()),
+            "avg_test_duration": (
+                sum(e["duration"] for e in executions) / len(executions)
+                if executions
+                else 0
+            ),
+            "pass_rate": (
+                len([e for e in executions if e["status"] == "passed"])
+                / len(executions)
+                if executions
+                else 0
+            ),
+            "performance_metrics_count": sum(
+                len(metrics) for metrics in performance_data.values()
+            ),
         },
         "charts": {
             "test_duration_over_time": [

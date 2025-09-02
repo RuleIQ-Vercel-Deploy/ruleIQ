@@ -15,12 +15,12 @@ from .versioning import (
 
 __all__ = [
     # Loaders
-    'GoldenDatasetLoader',
-    'JSONLLoader',
-    'DatasetRegistry',
+    "GoldenDatasetLoader",
+    "JSONLLoader",
+    "DatasetRegistry",
     # Versioning
-    'DatasetVersion',
-    'VersionManager',
-    'VersionMetadata',
-    'is_semver',
+    "DatasetVersion",
+    "VersionManager",
+    "VersionMetadata",
+    "is_semver",
 ]

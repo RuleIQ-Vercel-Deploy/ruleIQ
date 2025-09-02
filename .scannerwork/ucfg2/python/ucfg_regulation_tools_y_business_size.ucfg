@@ -1,0 +1,143 @@
+
+Rservices.ai.regulation_tools.IndustryRegulationLookupTool._filter_by_business_sizeG
+;/home/omar/Documents/ruleIQ/services/ai/regulation_tools.pyÇ Ç( "4"6*.
+4
+Ö Ö("
+
+Ö Ö(
+
+regulations*µ
+6
+Í Í('š
+—
+
+Í Í('
+%7"	__compare*"
+
+__unknown_file (
+==*-
+
+__unknown_file (
+
+business_size*%
+
+__unknown_file (	
+micro*
+7
+12*ú
+7
+Î Î(_àÝ
+
+Î Î(_
+%1"dict.__setitem__**
+
+__unknown_file (
+
+
+regulation*-
+
+__unknown_file (
+size_guidance*O
+
+__unknown_file (31
+/Simplified compliance approach may be available2__setitem__*
+4
+6*û
+8
+Ô Ô(`áÞ
+
+Ô Ô(`
+%2"dict.__setitem__**
+
+__unknown_file (
+
+
+regulation*-
+
+__unknown_file (
+size_guidance*P
+
+__unknown_file (42
+0Full regulatory scrutiny and compliance required2__setitem__*
+4
+6*ù
+9
+Ò Ò(^ßÜ
+
+Ò Ò(^
+%3"dict.__setitem__**
+
+__unknown_file (
+
+
+regulation*-
+
+__unknown_file (
+size_guidance*N
+
+__unknown_file (20
+.Full compliance required with some flexibility2__setitem__*
+4
+6*¶
+10
+Ñ Ñ(*›
+˜
+
+Ñ Ñ(*
+%4"	__compare*"
+
+__unknown_file (
+==*-
+
+__unknown_file (
+
+business_size*&
+
+__unknown_file (
+
+medium*
+8
+9*ö
+11
+Ð Ð(ZÛØ
+
+Ð Ð(Z
+%5"dict.__setitem__**
+
+__unknown_file (
+
+
+regulation*-
+
+__unknown_file (
+size_guidance*J
+
+__unknown_file (.,
+*SME-focused guidance and support available2__setitem__*
+4
+6*·
+12
+Ï Ï()š
+—
+
+Ï Ï()
+%6"	__compare*"
+
+__unknown_file (
+==*-
+
+__unknown_file (
+
+business_size*%
+
+__unknown_file (	
+small*
+10
+11:
+
+È È(/
+regulations:
+
+È1 È(C
+business_sizeB=;
+9services.ai.regulation_tools.IndustryRegulationLookupToolH

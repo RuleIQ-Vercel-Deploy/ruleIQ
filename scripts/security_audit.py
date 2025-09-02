@@ -32,7 +32,9 @@ class SecurityAuditor:
         elif status == "WARN":
             self.results["summary"]["warnings"] += 1
 
-        self.results["details"].append({"check": check_name, "status": status, "details": details})
+        self.results["details"].append(
+            {"check": check_name, "status": status, "details": details}
+        )
 
     def check_environment_variables(self) -> bool:
         """Check for secure environment variable configuration"""
@@ -51,12 +53,16 @@ class SecurityAuditor:
         secret_key = os.getenv("SECRET_KEY", "")
         if len(secret_key) < 32 or "your-secret-key" in secret_key.lower():
             self.log_result(
-                "SECRET_KEY Strength", "FAIL", "SECRET_KEY is too weak or uses default value"
+                "SECRET_KEY Strength",
+                "FAIL",
+                "SECRET_KEY is too weak or uses default value",
             )
             return False
 
         self.log_result(
-            "Environment Variables", "PASS", "All required environment variables are configured"
+            "Environment Variables",
+            "PASS",
+            "All required environment variables are configured",
         )
         return True
 
@@ -83,7 +89,9 @@ class SecurityAuditor:
 
         if all_secure:
             self.log_result(
-                "File Permissions", "PASS", "All sensitive files have secure permissions"
+                "File Permissions",
+                "PASS",
+                "All sensitive files have secure permissions",
             )
 
         return all_secure
@@ -110,18 +118,24 @@ class SecurityAuditor:
 
             if missing_headers:
                 self.log_result(
-                    "Security Headers", "FAIL", f"Missing security headers: {missing_headers}"
+                    "Security Headers",
+                    "FAIL",
+                    f"Missing security headers: {missing_headers}",
                 )
                 return False
 
             self.log_result(
-                "Security Headers", "PASS", "All required security headers are configured"
+                "Security Headers",
+                "PASS",
+                "All required security headers are configured",
             )
             return True
 
         except Exception as e:
             self.log_result(
-                "Security Headers Check", "WARN", f"Could not verify security headers: {str(e)}"
+                "Security Headers Check",
+                "WARN",
+                f"Could not verify security headers: {str(e)}",
             )
             return False
 
@@ -145,16 +159,22 @@ class SecurityAuditor:
 
             if missing_patterns:
                 self.log_result(
-                    "Input Validation", "WARN", f"Missing validation patterns: {missing_patterns}"
+                    "Input Validation",
+                    "WARN",
+                    f"Missing validation patterns: {missing_patterns}",
                 )
                 return False
 
-            self.log_result("Input Validation", "PASS", "Input validation is properly implemented")
+            self.log_result(
+                "Input Validation", "PASS", "Input validation is properly implemented"
+            )
             return True
 
         except Exception as e:
             self.log_result(
-                "Input Validation Check", "WARN", f"Could not verify input validation: {str(e)}"
+                "Input Validation Check",
+                "WARN",
+                f"Could not verify input validation: {str(e)}",
             )
             return False
 
@@ -165,7 +185,9 @@ class SecurityAuditor:
                 content = f.read()
 
             if "RateLimiter" not in content:
-                self.log_result("Rate Limiting", "FAIL", "Rate limiting middleware not found")
+                self.log_result(
+                    "Rate Limiting", "FAIL", "Rate limiting middleware not found"
+                )
                 return False
 
             self.log_result("Rate Limiting", "PASS", "Rate limiting is configured")
@@ -173,7 +195,9 @@ class SecurityAuditor:
 
         except Exception as e:
             self.log_result(
-                "Rate Limiting Check", "WARN", f"Could not verify rate limiting: {str(e)}"
+                "Rate Limiting Check",
+                "WARN",
+                f"Could not verify rate limiting: {str(e)}",
             )
             return False
 
@@ -185,17 +209,23 @@ class SecurityAuditor:
                 content = f.read()
 
             if "text(" in content or "bindparams" in content:
-                self.log_result("Database Security", "PASS", "Parameterized queries are used")
+                self.log_result(
+                    "Database Security", "PASS", "Parameterized queries are used"
+                )
                 return True
             else:
                 self.log_result(
-                    "Database Security", "WARN", "Could not verify parameterized queries"
+                    "Database Security",
+                    "WARN",
+                    "Could not verify parameterized queries",
                 )
                 return False
 
         except Exception as e:
             self.log_result(
-                "Database Security Check", "WARN", f"Could not verify database security: {str(e)}"
+                "Database Security Check",
+                "WARN",
+                f"Could not verify database security: {str(e)}",
             )
             return False
 
@@ -223,13 +253,17 @@ class SecurityAuditor:
                 return True
             else:
                 self.log_result(
-                    "Error Handling Security", "WARN", "Could not verify sensitive data redaction"
+                    "Error Handling Security",
+                    "WARN",
+                    "Could not verify sensitive data redaction",
                 )
                 return False
 
         except Exception as e:
             self.log_result(
-                "Error Handling Check", "WARN", f"Could not verify error handling: {str(e)}"
+                "Error Handling Check",
+                "WARN",
+                f"Could not verify error handling: {str(e)}",
             )
             return False
 
@@ -254,7 +288,9 @@ class SecurityAuditor:
                 )
                 return False
 
-            self.log_result("Credential Encryption", "PASS", "Credential encryption is implemented")
+            self.log_result(
+                "Credential Encryption", "PASS", "Credential encryption is implemented"
+            )
             return True
 
         except Exception as e:

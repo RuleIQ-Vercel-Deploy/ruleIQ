@@ -1,0 +1,29 @@
+
+!"regulatory_convergence"str
+ÛÑ"
+        MATCH (j1:Jurisdiction)-[:ENFORCES]->(r1:Regulation)-[:REQUIRES]->(req1:Requirement)
+        MATCH (j2:Jurisdiction)-[:ENFORCES]->(r2:Regulation)-[:REQUIRES]->(req2:Requirement)
+        WHERE j1.code <> j2.code 
+          AND req1.description = req2.description
+        RETURN DISTINCT req1.title AS common_requirement,
+               COLLECT(DISTINCT j1.code + ':' + r1.name) AS regulations
+        ORDER BY size(COLLECT(DISTINCT j1.code)) DESC
+        "str
+8/"Find common requirements across jurisdictions"strself
+§* §(."Û(
+&
+ª ª(åquery"#id#:Bstr#
+!
+
+´ ´(1"#unknown-value#,
+*
+
+´ ´(1results"#unknown-value#&
+$
+
+µ µ(2"#new-object#Bdict"
+ 
+
+µ µ(1	"	#map-set#:
+
+µ µ(2*5/home/omar/Documents/ruleIQ/services/neo4j_service.py

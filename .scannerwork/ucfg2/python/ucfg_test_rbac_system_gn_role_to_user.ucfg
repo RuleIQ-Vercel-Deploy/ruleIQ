@@ -1,0 +1,147 @@
+
+?tests.test_rbac_system.TestRBACService.test_assign_role_to_userA
+5/home/omar/Documents/ruleIQ/tests/test_rbac_system.py‘ ‘( "2*Ù	
+2
+÷ ÷(*M
+K
+
+ÿ ÿ( 
+%1"__id*1
+
+__unknown_file (*
+
+	test_user"
+id^
+\
+
+Ÿ Ÿ(1
+%2"__id*B
+
+__unknown_file (&*$
+
+test_role_with_permissions"
+idM
+K
+
+⁄ ⁄(#
+%3"__id*1
+
+__unknown_file (*
+
+	test_user"
+idÀ»
+
+◊ €(	
+%4"5services.rbac_service.RBACService.assign_role_to_user*,
+
+__unknown_file (
+
+rbac_service2assign_role_to_user:
+user_id
+
+%1:
+role_id
+
+%2:
+
+granted_by
+
+%3E
+C
+
+◊ €(	
+	user_role"__id*"
+
+__unknown_file (
+
+%4R
+P
+
+ﬁ ﬁ( 
+%5"__id*6
+
+__unknown_file (*
+
+	user_role"	
+user_idM
+K
+
+ﬁ$ ﬁ(0
+%6"__id*1
+
+__unknown_file (*
+
+	test_user"
+idå
+â
+
+ﬁ ﬁ(0
+%7"	__compare*"
+
+__unknown_file (
+==*"
+
+__unknown_file (
+
+%5*"
+
+__unknown_file (
+
+%6R
+P
+
+ﬂ ﬂ( 
+%8"__id*6
+
+__unknown_file (*
+
+	user_role"	
+role_id^
+\
+
+ﬂ$ ﬂ(A
+%9"__id*B
+
+__unknown_file (&*$
+
+test_role_with_permissions"
+idç
+ä
+
+ﬂ ﬂ(A
+%10"	__compare*"
+
+__unknown_file (
+==*"
+
+__unknown_file (
+
+%8*"
+
+__unknown_file (
+
+%9U
+S
+
+‡ ‡("
+%11"__id*8
+
+__unknown_file (*
+
+	user_role"
+	is_active*
+3*;
+3
+test_rbac_system.py"
+‚ ‚(
+implicit return:
+
+‘' ‘(@
+rbac_service:
+
+‘B ‘(Q
+	test_user:*
+
+’  ’(@
+test_role_with_permissionsB*(
+&tests.test_rbac_system.TestRBACServiceH

@@ -179,7 +179,10 @@ async def async_db_session() -> AsyncGenerator[AsyncSession, None]:
 async def sample_user(async_db_session: AsyncSession) -> User:
     """Create a sample user for tests."""
     user = User(
-        id=uuid4(), email="test@example.com", hashed_password="fake_password_hash", is_active=True
+        id=uuid4(),
+        email="test@example.com",
+        hashed_password="fake_password_hash",
+        is_active=True,
     )
     async_db_session.add(user)
     await async_db_session.commit()
@@ -220,7 +223,9 @@ async def sample_business_profile(
 
 
 @pytest.fixture
-async def sample_compliance_framework(async_db_session: AsyncSession) -> ComplianceFramework:
+async def sample_compliance_framework(
+    async_db_session: AsyncSession,
+) -> ComplianceFramework:
     """Create a sample compliance framework for tests."""
     framework = ComplianceFramework(
         id=uuid4(),
@@ -293,7 +298,10 @@ def client() -> TestClient:
 
     # Create a test user that will be returned by all auth overrides
     test_user = User(
-        id=uuid4(), email="test@example.com", hashed_password="fake_password_hash", is_active=True
+        id=uuid4(),
+        email="test@example.com",
+        hashed_password="fake_password_hash",
+        is_active=True,
     )
 
     # Use the existing database manager from this file

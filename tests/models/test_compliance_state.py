@@ -4,6 +4,7 @@ Test suite for ComplianceState Pydantic model following TDD principles.
 WRITTEN BEFORE IMPLEMENTATION - DO NOT MODIFY WITHOUT IMPLEMENTATION.
 This test suite defines the expected behavior of the ComplianceState model.
 """
+
 import pytest
 from datetime import datetime, timezone
 from uuid import UUID, uuid4
@@ -14,20 +15,20 @@ import json
 
 # Import will fail initially - this is expected in TDD
 from langgraph_agent.models.compliance_state import (
-    ComplianceState, 
-    EvidenceItem, 
-    Decision, 
+    ComplianceState,
+    EvidenceItem,
+    Decision,
     CostSnapshot,
     WorkflowStatus,
     ActorType,
     MemoryStore,
-    Context
+    Context,
 )
 
 
 class TestComplianceStateInitialization:
     """Test basic state creation and initialization."""
-    
+
     def test_minimal_state_creation(self):
         """Test creating a state with minimal required fields."""
         # Arrange
@@ -35,12 +36,12 @@ class TestComplianceStateInitialization:
             "case_id": "test-case-001",
             "actor": "PolicyAuthor",
             "objective": "Generate compliance policy",
-            "trace_id": str(uuid4())
+            "trace_id": str(uuid4()),
         }
-        
+
         # Act - Now that ComplianceState is implemented, test actual behavior
         state = ComplianceState(**minimal_data)
-        
+
         # Assert
         assert state.case_id == "test-case-001"
         assert state.actor == "PolicyAuthor"
@@ -48,7 +49,7 @@ class TestComplianceStateInitialization:
         assert state.evidence == []  # Default empty list
         assert state.decisions == []  # Default empty list
         assert state.workflow_status == WorkflowStatus.PENDING  # Default empty list
-    
+
     def test_full_state_creation(self):
         """Test creating a state with all fields."""
         # Arrange
@@ -59,11 +60,11 @@ class TestComplianceStateInitialization:
             "context": {
                 "org_profile": {"name": "TestOrg", "industry": "Finance"},
                 "framework": "ISO 27001",
-                "obligations": ["Data Protection", "Access Control"]
+                "obligations": ["Data Protection", "Access Control"],
             },
             "memory": {
                 "episodic": ["event-001", "event-002"],
-                "semantic": {"policies": ["policy-001"], "evidence": ["evidence-001"]}
+                "semantic": {"policies": ["policy-001"], "evidence": ["evidence-001"]},
             },
             "evidence": [],
             "decisions": [],
@@ -72,15 +73,15 @@ class TestComplianceStateInitialization:
                 "prompt_tokens": 0,
                 "completion_tokens": 0,
                 "estimated_cost": 0.0,
-                "model": "gpt-4"
+                "model": "gpt-4",
             },
             "trace_id": str(uuid4()),
             "workflow_status": "pending",
             "node_execution_times": {},
             "retry_count": 0,
-            "error_count": 0
+            "error_count": 0,
         }
-        
+
         # Act & Assert - Will fail initially
         state = ComplianceState(**full_data)
         assert state.context.framework == "ISO 27001"
@@ -90,93 +91,91 @@ class TestComplianceStateInitialization:
 
 class TestActorValidation:
     """Test actor type constraints and validation."""
-    
+
     def test_valid_actor_types(self):
         """Test all valid actor types are accepted."""
         valid_actors = [
             "PolicyAuthor",
-            "EvidenceCollector", 
+            "EvidenceCollector",
             "RegWatch",
-            "FilingScheduler"
+            "FilingScheduler",
         ]
-        
+
         for actor in valid_actors:
             data = {
                 "case_id": f"test-{actor}",
                 "actor": actor,
                 "objective": f"Test {actor}",
-                "trace_id": str(uuid4())
+                "trace_id": str(uuid4()),
             }
-            
+
             state = ComplianceState(**data)
             assert state.actor == actor
-    
+
     def test_invalid_actor_type_raises_error(self):
         """Test that invalid actor types raise validation error."""
         from pydantic import ValidationError
-        
+
         data = {
             "case_id": "test-invalid",
             "actor": "InvalidActor",
             "objective": "Test invalid",
-            "trace_id": str(uuid4())
+            "trace_id": str(uuid4()),
         }
-        
+
         # Should raise ValidationError when implemented
         with pytest.raises(ValidationError):
             state = ComplianceState(**data)
-    
+
     def test_actor_type_case_sensitive(self):
         """Test that actor validation is case-sensitive."""
         from pydantic import ValidationError
-        
+
         data = {
             "case_id": "test-case",
             "actor": "policyauthor",  # lowercase - should fail
             "objective": "Test case sensitivity",
-            "trace_id": str(uuid4())
+            "trace_id": str(uuid4()),
         }
-        
+
         with pytest.raises(ValidationError):
             state = ComplianceState(**data)
 
 
 class TestEvidenceAccumulation:
     """Test evidence items are properly accumulated, not replaced."""
-    
+
     def test_evidence_initialization_empty(self):
         """Test evidence starts as empty list."""
         data = {
             "case_id": "test-evidence-001",
             "actor": "EvidenceCollector",
             "objective": "Test evidence",
-            "trace_id": str(uuid4())
+            "trace_id": str(uuid4()),
         }
-        
+
         state = ComplianceState(**data)
         assert state.evidence == []
         assert isinstance(state.evidence, list)
-    
+
     def test_evidence_accumulation_preserves_existing(self):
         """Test that evidence accumulation preserves existing items."""
         # This tests the reducer functionality
         initial_evidence = [
-        {"id": "ev-001", "type": "document", "content": "Policy doc"},
-        {"id": "ev-002", "type": "screenshot", "content": "Dashboard"}
+            {"id": "ev-001", "type": "document", "content": "Policy doc"},
+            {"id": "ev-002", "type": "screenshot", "content": "Dashboard"},
         ]
-        
-        new_evidence = [
-        {"id": "ev-003", "type": "log", "content": "Audit log"}
-        ]
-        
+
+        new_evidence = [{"id": "ev-003", "type": "log", "content": "Audit log"}]
+
         data = {
-        "case_id": "test-evidence-002",
-        "actor": "EvidenceCollector",
-        "objective": "Test accumulation",
-        "evidence": initial_evidence,
-        "trace_id": str(uuid4())
+            "case_id": "test-evidence-002",
+            "actor": "EvidenceCollector",
+            "objective": "Test accumulation",
+            "evidence": initial_evidence,
+            "trace_id": str(uuid4()),
         }
-        
+
         state = ComplianceState(**data)
         # Simulate accumulation (this will test reducer logic)
         for item in new_evidence:
@@ -184,90 +183,88 @@ class TestEvidenceAccumulation:
         assert len(state.evidence) == 3
         assert state.evidence[0].id == "ev-001"
         assert state.evidence[2].id == "ev-003"
-    
+
     def test_evidence_item_validation(self):
         """Test evidence items must have required fields."""
         from pydantic import ValidationError
-        
-        invalid_evidence = [
-            {"type": "document"}  # Missing id and content
-        ]
-        
+
+        invalid_evidence = [{"type": "document"}]  # Missing id and content
+
         data = {
             "case_id": "test-evidence-003",
             "actor": "EvidenceCollector",
             "objective": "Test validation",
             "evidence": invalid_evidence,
-            "trace_id": str(uuid4())
+            "trace_id": str(uuid4()),
         }
-        
+
         with pytest.raises((ValidationError, ValueError)):
             state = ComplianceState(**data)
 
 
 class TestCostTracking:
     """Test cost snapshot updates and calculations."""
-    
+
     def test_cost_tracker_initialization(self):
         """Test cost tracker initializes with defaults."""
         data = {
             "case_id": "test-cost-001",
             "actor": "PolicyAuthor",
             "objective": "Test cost",
-            "trace_id": str(uuid4())
+            "trace_id": str(uuid4()),
         }
-        
+
         state = ComplianceState(**data)
         assert state.cost_tracker.total_tokens == 0
         assert state.cost_tracker.prompt_tokens == 0
         assert state.cost_tracker.completion_tokens == 0
         assert state.cost_tracker.estimated_cost == 0.0
-    
+
     def test_cost_tracker_update(self):
         """Test cost tracker can be updated with new values."""
         initial_cost = {
-        "total_tokens": 100,
-        "prompt_tokens": 60,
-        "completion_tokens": 40,
-        "estimated_cost": 0.01,
-        "model": "gpt-4"
+            "total_tokens": 100,
+            "prompt_tokens": 60,
+            "completion_tokens": 40,
+            "estimated_cost": 0.01,
+            "model": "gpt-4",
         }
-        
+
         data = {
-        "case_id": "test-cost-002",
-        "actor": "PolicyAuthor",
-        "objective": "Test cost update",
-        "cost_tracker": initial_cost,
-        "trace_id": str(uuid4())
+            "case_id": "test-cost-002",
+            "actor": "PolicyAuthor",
+            "objective": "Test cost update",
+            "cost_tracker": initial_cost,
+            "trace_id": str(uuid4()),
         }
-        
+
         state = ComplianceState(**data)
         assert state.cost_tracker.total_tokens == 100
         assert state.cost_tracker.estimated_cost == 0.01
-    
+
     def test_cost_accumulation(self):
         """Test costs are accumulated, not replaced."""
         from langgraph_agent.graph.reducers import update_cost_tracker
-        
+
         # Initial cost state
         initial = CostSnapshot(
             total_tokens=100,
             prompt_tokens=60,
             completion_tokens=40,
-            estimated_cost=0.001
+            estimated_cost=0.001,
         )
-        
+
         # Additional costs to add
         additional = CostSnapshot(
             total_tokens=50,
             prompt_tokens=30,
             completion_tokens=20,
-            estimated_cost=0.0005
+            estimated_cost=0.0005,
         )
-        
+
         # Use reducer to accumulate
         result = update_cost_tracker(initial, additional)
-        
+
         assert result.total_tokens == 150
         assert result.prompt_tokens == 90
         assert result.completion_tokens == 60
@@ -276,62 +273,53 @@ class TestCostTracking:
 
 class TestMemoryPersistence:
     """Test episodic and semantic memory storage."""
-    
+
     def test_memory_initialization(self):
         """Test memory initializes with proper structure."""
-        memory_data = {
-            "episodic": [],
-            "semantic": {}
-        }
-        
+        memory_data = {"episodic": [], "semantic": {}}
+
         data = {
             "case_id": "test-memory-001",
             "actor": "PolicyAuthor",
             "objective": "Test memory",
             "memory": memory_data,
-            "trace_id": str(uuid4())
+            "trace_id": str(uuid4()),
         }
-        
+
         state = ComplianceState(**data)
         assert hasattr(state.memory, "episodic")
         assert hasattr(state.memory, "semantic")
         assert isinstance(state.memory.episodic, list)
         assert isinstance(state.memory.semantic, dict)
-    
+
     def test_episodic_memory_append(self):
         """Test episodic memory items can be appended."""
-        memory_data = {
-        "episodic": ["event-001"],
-        "semantic": {}
-        }
-        
+        memory_data = {"episodic": ["event-001"], "semantic": {}}
+
         data = {
-        "case_id": "test-memory-002",
-        "actor": "PolicyAuthor",
-        "objective": "Test episodic",
-        "memory": memory_data,
-        "trace_id": str(uuid4())
+            "case_id": "test-memory-002",
+            "actor": "PolicyAuthor",
+            "objective": "Test episodic",
+            "memory": memory_data,
+            "trace_id": str(uuid4()),
         }
-        
+
         state = ComplianceState(**data)
         state.memory.episodic.append("event-002")
         assert len(state.memory.episodic) == 2
-    
+
     def test_semantic_memory_update(self):
         """Test semantic memory can be updated with new keys."""
-        memory_data = {
-        "episodic": [],
-        "semantic": {"policies": ["pol-001"]}
-        }
-        
+        memory_data = {"episodic": [], "semantic": {"policies": ["pol-001"]}}
+
         data = {
-        "case_id": "test-memory-003",
-        "actor": "PolicyAuthor",
-        "objective": "Test semantic",
-        "memory": memory_data,
-        "trace_id": str(uuid4())
+            "case_id": "test-memory-003",
+            "actor": "PolicyAuthor",
+            "objective": "Test semantic",
+            "memory": memory_data,
+            "trace_id": str(uuid4()),
         }
-        
+
         state = ComplianceState(**data)
         state.memory.semantic["evidence"] = ["ev-001"]
         assert "evidence" in state.memory.semantic
@@ -340,70 +328,74 @@ class TestMemoryPersistence:
 
 class TestDecisionTracking:
     """Test decision audit trail functionality."""
-    
+
     def test_decisions_initialization(self):
         """Test decisions initialize as empty list."""
         data = {
             "case_id": "test-decision-001",
             "actor": "PolicyAuthor",
             "objective": "Test decisions",
-            "trace_id": str(uuid4())
+            "trace_id": str(uuid4()),
         }
-        
+
         state = ComplianceState(**data)
         assert state.decisions == []
         assert isinstance(state.decisions, list)
-    
+
     def test_decision_structure(self):
         """Test decision items have required fields."""
-        decisions = [{
-        "id": "dec-001",
-        "timestamp": datetime.now().isoformat(),
-        "actor": "PolicyAuthor",
-        "action": "approve_policy",
-        "reasoning": "Policy meets all requirements",
-        "confidence": 0.95,
-        "alternatives": ["reject", "request_review"]
-        }]
-        
+        decisions = [
+            {
+                "id": "dec-001",
+                "timestamp": datetime.now().isoformat(),
+                "actor": "PolicyAuthor",
+                "action": "approve_policy",
+                "reasoning": "Policy meets all requirements",
+                "confidence": 0.95,
+                "alternatives": ["reject", "request_review"],
+            }
+        ]
+
         data = {
-        "case_id": "test-decision-002",
-        "actor": "PolicyAuthor",
-        "objective": "Test decision structure",
-        "decisions": decisions,
-        "trace_id": str(uuid4())
+            "case_id": "test-decision-002",
+            "actor": "PolicyAuthor",
+            "objective": "Test decision structure",
+            "decisions": decisions,
+            "trace_id": str(uuid4()),
         }
-        
+
         state = ComplianceState(**data)
         assert len(state.decisions) == 1
         assert state.decisions[0].action == "approve_policy"
         assert state.decisions[0].confidence == 0.95
-    
+
     def test_decision_accumulation(self):
         """Test decisions are accumulated in order."""
         from langgraph_agent.models.compliance_state import Decision
-        
-        initial_decisions = [{
-        "id": "dec-001",
-        "timestamp": datetime.now().isoformat(),
-        "actor": "PolicyAuthor",
-        "action": "draft_policy"
-        }]
-        
+
+        initial_decisions = [
+            {
+                "id": "dec-001",
+                "timestamp": datetime.now().isoformat(),
+                "actor": "PolicyAuthor",
+                "action": "draft_policy",
+            }
+        ]
+
         data = {
-        "case_id": "test-decision-003",
-        "actor": "PolicyAuthor",
-        "objective": "Test accumulation",
-        "decisions": initial_decisions,
-        "trace_id": str(uuid4())
+            "case_id": "test-decision-003",
+            "actor": "PolicyAuthor",
+            "objective": "Test accumulation",
+            "decisions": initial_decisions,
+            "trace_id": str(uuid4()),
         }
-        
+
         state = ComplianceState(**data)
         new_decision = Decision(
             id="dec-002",
             timestamp=datetime.now().isoformat(),
             actor="PolicyAuthor",
-            action="approve_policy"
+            action="approve_policy",
         )
         state.decisions.append(new_decision)
         assert len(state.decisions) == 2
@@ -413,7 +405,7 @@ class TestDecisionTracking:
 
 class TestStateSerialization:
     """Test JSON serialization/deserialization."""
-    
+
     def test_state_to_json(self):
         """Test state can be serialized to JSON."""
         data = {
@@ -423,56 +415,56 @@ class TestStateSerialization:
             "trace_id": str(uuid4()),
             "context": {"framework": "ISO 27001"},
             "evidence": [{"id": "ev-001", "type": "doc"}],
-            "decisions": []
+            "decisions": [],
         }
-        
+
         state = ComplianceState(**data)
         json_str = state.model_dump_json()
         assert isinstance(json_str, str)
         parsed = json.loads(json_str)
         assert parsed["case_id"] == "test-serial-001"
-    
+
     def test_state_from_json(self):
         """Test state can be deserialized from JSON."""
         json_data = {
-        "case_id": "test-serial-002",
-        "actor": "EvidenceCollector",
-        "objective": "Test deserialization",
-        "trace_id": str(uuid4()),
-        "context": {},
-        "memory": {"episodic": [], "semantic": {}},
-        "evidence": [],
-        "decisions": [],
-        "cost_tracker": {
-            "total_tokens": 0,
-            "prompt_tokens": 0,
-            "completion_tokens": 0,
-            "estimated_cost": 0.0,
-            "model": "gpt-4"
-        },
-        "workflow_status": "pending",
-        "node_execution_times": {},
-        "retry_count": 0,
-        "error_count": 0
+            "case_id": "test-serial-002",
+            "actor": "EvidenceCollector",
+            "objective": "Test deserialization",
+            "trace_id": str(uuid4()),
+            "context": {},
+            "memory": {"episodic": [], "semantic": {}},
+            "evidence": [],
+            "decisions": [],
+            "cost_tracker": {
+                "total_tokens": 0,
+                "prompt_tokens": 0,
+                "completion_tokens": 0,
+                "estimated_cost": 0.0,
+                "model": "gpt-4",
+            },
+            "workflow_status": "pending",
+            "node_execution_times": {},
+            "retry_count": 0,
+            "error_count": 0,
         }
-        
+
         json_str = json.dumps(json_data)
-        
+
         state = ComplianceState.model_validate_json(json_str)
         assert state.case_id == "test-serial-002"
         assert state.actor == "EvidenceCollector"
-    
+
     def test_datetime_serialization(self):
         """Test datetime fields serialize properly."""
         data = {
-        "case_id": "test-serial-003",
-        "actor": "PolicyAuthor",
-        "objective": "Test datetime",
-        "trace_id": str(uuid4()),
-        "created_at": datetime.now(),
-        "updated_at": datetime.now()
+            "case_id": "test-serial-003",
+            "actor": "PolicyAuthor",
+            "objective": "Test datetime",
+            "trace_id": str(uuid4()),
+            "created_at": datetime.now(),
+            "updated_at": datetime.now(),
         }
-        
+
         state = ComplianceState(**data)
         json_str = state.model_dump_json()
         parsed = json.loads(json_str)
@@ -483,53 +475,53 @@ class TestStateSerialization:
 
 class TestTraceIdGeneration:
     """Test unique trace ID creation and propagation."""
-    
+
     def test_trace_id_required(self):
         """Test trace_id is a required field."""
         from pydantic import ValidationError
-        
+
         data = {
             "case_id": "test-trace-001",
             "actor": "PolicyAuthor",
-            "objective": "Test trace"
+            "objective": "Test trace",
             # Missing trace_id
         }
-        
+
         with pytest.raises(ValidationError):
             state = ComplianceState(**data)
-    
+
     def test_trace_id_format_validation(self):
         """Test trace_id must be valid UUID format."""
         from pydantic import ValidationError
-        
+
         data = {
-        "case_id": "test-trace-002",
-        "actor": "PolicyAuthor",
-        "objective": "Test trace format",
-        "trace_id": "invalid-uuid"
+            "case_id": "test-trace-002",
+            "actor": "PolicyAuthor",
+            "objective": "Test trace format",
+            "trace_id": "invalid-uuid",
         }
-        
+
         with pytest.raises(ValidationError):
             state = ComplianceState(**data)
-    
+
     def test_trace_id_uniqueness(self):
         """Test trace_id should be unique per state."""
         trace_id = str(uuid4())
-        
+
         data1 = {
-        "case_id": "test-trace-003",
-        "actor": "PolicyAuthor",
-        "objective": "Test uniqueness",
-        "trace_id": trace_id
+            "case_id": "test-trace-003",
+            "actor": "PolicyAuthor",
+            "objective": "Test uniqueness",
+            "trace_id": trace_id,
         }
-        
+
         data2 = {
-        "case_id": "test-trace-004",
-        "actor": "EvidenceCollector",
-        "objective": "Test uniqueness 2",
-        "trace_id": trace_id  # Same trace_id, should be allowed but logged
+            "case_id": "test-trace-004",
+            "actor": "EvidenceCollector",
+            "objective": "Test uniqueness 2",
+            "trace_id": trace_id,  # Same trace_id, should be allowed but logged
         }
-        
+
         state1 = ComplianceState(**data1)
         state2 = ComplianceState(**data2)
         # Both should work but typically trace_ids should be unique
@@ -538,7 +530,7 @@ class TestTraceIdGeneration:
 
 class TestContextValidation:
     """Test org profile, framework, obligations context."""
-    
+
     def test_context_structure(self):
         """Test context has expected structure."""
         context = {
@@ -546,120 +538,114 @@ class TestContextValidation:
                 "name": "TestCorp",
                 "industry": "Technology",
                 "size": "medium",
-                "location": "US"
+                "location": "US",
             },
             "framework": "ISO 27001",
-            "obligations": [
-                "Data Protection",
-                "Access Control",
-                "Incident Management"
-            ]
+            "obligations": ["Data Protection", "Access Control", "Incident Management"],
         }
-        
+
         data = {
             "case_id": "test-context-001",
             "actor": "PolicyAuthor",
             "objective": "Test context",
             "context": context,
-            "trace_id": str(uuid4())
+            "trace_id": str(uuid4()),
         }
-        
+
         state = ComplianceState(**data)
         assert state.context.org_profile["name"] == "TestCorp"
         assert state.context.framework == "ISO 27001"
         assert len(state.context.obligations) == 3
-    
+
     def test_context_optional(self):
         """Test context is optional."""
         data = {
-        "case_id": "test-context-002",
-        "actor": "PolicyAuthor",
-        "objective": "Test optional context",
-        "trace_id": str(uuid4())
+            "case_id": "test-context-002",
+            "actor": "PolicyAuthor",
+            "objective": "Test optional context",
+            "trace_id": str(uuid4()),
         }
-        
+
         state = ComplianceState(**data)
-        assert state.context is not None  # Context object always exists but may have None fields
-    
+        assert (
+            state.context is not None
+        )  # Context object always exists but may have None fields
+
     def test_context_framework_validation(self):
         """Test framework field validation if provided."""
         context = {
-        "framework": "INVALID_FRAMEWORK"  # Should validate against known frameworks
+            "framework": "INVALID_FRAMEWORK"  # Should validate against known frameworks
         }
-        
+
         data = {
-        "case_id": "test-context-003",
-        "actor": "PolicyAuthor",
-        "objective": "Test framework",
-        "context": context,
-        "trace_id": str(uuid4())
+            "case_id": "test-context-003",
+            "actor": "PolicyAuthor",
+            "objective": "Test framework",
+            "context": context,
+            "trace_id": str(uuid4()),
         }
-        
+
         # Depending on implementation, may or may not validate
         state = ComplianceState(**data)
 
 
 class TestStateTransitions:
     """Test valid state transition paths."""
-    
+
     def test_workflow_status_values(self):
         """Test workflow status accepts valid values."""
-        valid_statuses = [
-            "pending",
-            "in_progress",
-            "completed",
-            "failed",
-            "cancelled"
-        ]
-        
+        valid_statuses = ["pending", "in_progress", "completed", "failed", "cancelled"]
+
         for status in valid_statuses:
             data = {
                 "case_id": f"test-status-{status}",
                 "actor": "PolicyAuthor",
                 "objective": "Test status",
                 "trace_id": str(uuid4()),
-                "workflow_status": status
+                "workflow_status": status,
             }
-            
+
             state = ComplianceState(**data)
             assert state.workflow_status == status
-    
+
     def test_invalid_workflow_status(self):
         """Test invalid workflow status raises error."""
         from pydantic import ValidationError
-        
+
         data = {
-        "case_id": "test-status-invalid",
-        "actor": "PolicyAuthor",
-        "objective": "Test invalid status",
-        "trace_id": str(uuid4()),
-        "workflow_status": "invalid_status"
+            "case_id": "test-status-invalid",
+            "actor": "PolicyAuthor",
+            "objective": "Test invalid status",
+            "trace_id": str(uuid4()),
+            "workflow_status": "invalid_status",
         }
-        
+
         with pytest.raises(ValidationError):
             state = ComplianceState(**data)
-    
+
     def test_state_transition_tracking(self):
         """Test state transitions are tracked properly."""
         data = {
-        "case_id": "test-transition-001",
-        "actor": "PolicyAuthor",
-        "objective": "Test transitions",
-        "trace_id": str(uuid4()),
-        "workflow_status": "pending",
-        "state_history": []
+            "case_id": "test-transition-001",
+            "actor": "PolicyAuthor",
+            "objective": "Test transitions",
+            "trace_id": str(uuid4()),
+            "workflow_status": "pending",
+            "state_history": [],
         }
-        
+
         state = ComplianceState(**data)
         # Simulate transition
         old_status = state.workflow_status
         state.workflow_status = "in_progress"
-        state.state_history.append({
-            "from": old_status,
-            "to": state.workflow_status,
-            "timestamp": datetime.now().isoformat(),
-            "actor": state.actor
-        })
+        state.state_history.append(
+            {
+                "from": old_status,
+                "to": state.workflow_status,
+                "timestamp": datetime.now().isoformat(),
+                "actor": state.actor,
+            }
+        )
         assert len(state.state_history) == 1
         assert state.state_history[0]["from"] == "pending"
         assert state.state_history[0]["to"] == "in_progress"
@@ -667,51 +653,51 @@ class TestStateTransitions:
 
 class TestPerformanceMetrics:
     """Test performance tracking fields."""
-    
+
     def test_node_execution_times(self):
         """Test node execution times tracking."""
         exec_times = {
             "policy_generator": 1234,
             "evidence_collector": 5678,
-            "validator": 910
+            "validator": 910,
         }
-        
+
         data = {
             "case_id": "test-perf-001",
             "actor": "PolicyAuthor",
             "objective": "Test performance",
             "trace_id": str(uuid4()),
-            "node_execution_times": exec_times
+            "node_execution_times": exec_times,
         }
-        
+
         state = ComplianceState(**data)
         assert state.node_execution_times["policy_generator"] == 1234
         assert len(state.node_execution_times) == 3
-    
+
     def test_retry_and_error_counts(self):
         """Test retry and error counter fields."""
         data = {
-        "case_id": "test-perf-002",
-        "actor": "PolicyAuthor",
-        "objective": "Test counters",
-        "trace_id": str(uuid4()),
-        "retry_count": 2,
-        "error_count": 1
+            "case_id": "test-perf-002",
+            "actor": "PolicyAuthor",
+            "objective": "Test counters",
+            "trace_id": str(uuid4()),
+            "retry_count": 2,
+            "error_count": 1,
         }
-        
+
         state = ComplianceState(**data)
         assert state.retry_count == 2
         assert state.error_count == 1
-    
+
     def test_counter_defaults(self):
         """Test counters default to zero."""
         data = {
-        "case_id": "test-perf-003",
-        "actor": "PolicyAuthor",
-        "objective": "Test defaults",
-        "trace_id": str(uuid4())
+            "case_id": "test-perf-003",
+            "actor": "PolicyAuthor",
+            "objective": "Test defaults",
+            "trace_id": str(uuid4()),
         }
-        
+
         state = ComplianceState(**data)
         assert state.retry_count == 0
         assert state.error_count == 0
@@ -719,58 +705,58 @@ class TestPerformanceMetrics:
 
 class TestStateValidation:
     """Test comprehensive state validation rules."""
-    
+
     def test_case_id_required(self):
         """Test case_id is required and non-empty."""
         from pydantic import ValidationError
-        
+
         data = {
             "actor": "PolicyAuthor",
             "objective": "Test case_id",
-            "trace_id": str(uuid4())
+            "trace_id": str(uuid4()),
         }
-        
+
         with pytest.raises(ValidationError):
             state = ComplianceState(**data)
-    
+
     def test_objective_required(self):
         """Test objective is required and non-empty."""
         from pydantic import ValidationError
-        
+
         data = {
-        "case_id": "test-val-001",
-        "actor": "PolicyAuthor",
-        "trace_id": str(uuid4())
+            "case_id": "test-val-001",
+            "actor": "PolicyAuthor",
+            "trace_id": str(uuid4()),
         }
-        
+
         with pytest.raises(ValidationError):
             state = ComplianceState(**data)
-    
+
     def test_empty_strings_validation(self):
         """Test empty strings are not allowed for required fields."""
         from pydantic import ValidationError
-        
+
         data = {
-        "case_id": "",  # Empty string should fail
-        "actor": "PolicyAuthor",
-        "objective": "Test empty",
-        "trace_id": str(uuid4())
+            "case_id": "",  # Empty string should fail
+            "actor": "PolicyAuthor",
+            "objective": "Test empty",
+            "trace_id": str(uuid4()),
         }
-        
+
         with pytest.raises(ValidationError):
             state = ComplianceState(**data)
-    
+
     def test_type_coercion(self):
         """Test appropriate type coercion happens."""
         data = {
-        "case_id": "test-val-002",
-        "actor": "PolicyAuthor",
-        "objective": "Test coercion",
-        "trace_id": str(uuid4()),
-        "retry_count": "5",  # String that should coerce to int
-        "error_count": "2"
+            "case_id": "test-val-002",
+            "actor": "PolicyAuthor",
+            "objective": "Test coercion",
+            "trace_id": str(uuid4()),
+            "retry_count": "5",  # String that should coerce to int
+            "error_count": "2",
         }
-        
+
         state = ComplianceState(**data)
         assert isinstance(state.retry_count, int)
         assert state.retry_count == 5
@@ -779,7 +765,7 @@ class TestStateValidation:
 # Integration test placeholder
 class TestLangGraphIntegration:
     """Test integration with LangGraph state management."""
-    
+
     @pytest.mark.integration
     def test_state_with_langgraph_typeddict(self):
         """Test state works as LangGraph TypedDict."""
@@ -788,12 +774,12 @@ class TestLangGraphIntegration:
             case_id="test-123",
             actor="PolicyAuthor",
             objective="Test TypedDict compatibility",
-            trace_id=str(uuid.uuid4())
+            trace_id=str(uuid.uuid4()),
         )
-        
+
         # Convert to dict (simulating TypedDict usage)
         state_dict = state.model_dump()
-        
+
         # Verify all required TypedDict fields are present
         assert "case_id" in state_dict
         assert "actor" in state_dict
@@ -804,21 +790,21 @@ class TestLangGraphIntegration:
         assert "decisions" in state_dict
         assert "cost_tracker" in state_dict
         assert "workflow_status" in state_dict
-        
+
         # Create new state from dict (simulating LangGraph state updates)
         new_state = ComplianceState.model_validate(state_dict)
         assert new_state.case_id == state.case_id
         assert new_state.actor == state.actor
-    
-    @pytest.mark.integration  
+
+    @pytest.mark.integration
     def test_state_reducer_functions(self):
         """Test reducer functions for state aggregation."""
         from langgraph_agent.graph.reducers import (
             accumulate_evidence,
             merge_decisions,
-            update_cost_tracker
+            update_cost_tracker,
         )
-        
+
         # Test evidence accumulation
         existing_evidence = [
             {
@@ -826,7 +812,7 @@ class TestLangGraphIntegration:
                 "source": "source1",
                 "content": "content1",
                 "confidence": 0.9,
-                "timestamp": datetime.now(timezone.utc).isoformat()
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         ]
         new_evidence = [
@@ -835,12 +821,12 @@ class TestLangGraphIntegration:
                 "source": "source2",
                 "content": "content2",
                 "confidence": 0.85,
-                "timestamp": datetime.now(timezone.utc).isoformat()
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         ]
         combined = accumulate_evidence(existing_evidence, new_evidence)
         assert len(combined) == 2
-        
+
         # Test decision merging
         existing_decisions = [
             {
@@ -848,7 +834,7 @@ class TestLangGraphIntegration:
                 "type": "compliance_check",
                 "reasoning": "test",
                 "confidence": 0.9,
-                "timestamp": datetime.now(timezone.utc).isoformat()
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         ]
         new_decisions = [
@@ -857,7 +843,7 @@ class TestLangGraphIntegration:
                 "type": "risk_assessment",
                 "reasoning": "test2",
                 "confidence": 0.8,
-                "timestamp": datetime.now(timezone.utc).isoformat()
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         ]
         merged = merge_decisions(existing_decisions, new_decisions)

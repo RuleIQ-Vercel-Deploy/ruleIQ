@@ -17,7 +17,7 @@ from langgraph_agent.core.constants import SLO_P95_LATENCY_MS
 from langgraph_agent.evals.metrics import (
     LatencyEvaluator,
     LatencyMetrics,
-    run_latency_smoke_test
+    run_latency_smoke_test,
 )
 
 
@@ -27,6 +27,7 @@ class LatencyTestHelper:
     @staticmethod
     def time_async_function(func: Callable) -> Callable:
         """Decorator to time async function execution."""
+
         async def wrapper(*args, **kwargs):
             start_time = time.time()
             result = await func(*args, **kwargs)
@@ -38,6 +39,7 @@ class LatencyTestHelper:
                 result["_execution_time_ms"] = execution_time_ms
 
             return result, execution_time_ms
+
         return wrapper
 
     @staticmethod
@@ -53,7 +55,7 @@ class LatencyTestHelper:
             "p99": sorted_latencies[int(0.99 * len(sorted_latencies))],
             "mean": statistics.mean(sorted_latencies),
             "max": max(sorted_latencies),
-            "min": min(sorted_latencies)
+            "min": min(sorted_latencies),
         }
 
     @staticmethod
@@ -64,32 +66,32 @@ class LatencyTestHelper:
             {
                 "company_id": uuid4(),
                 "user_input": "What GDPR obligations apply to my business?",
-                "autonomy_level": 2
+                "autonomy_level": 2,
             },
             # Complex multi-framework question
             {
                 "company_id": uuid4(),
                 "user_input": "I need a comprehensive compliance analysis for my fintech startup covering GDPR, PCI DSS, and UK financial regulations.",
-                "autonomy_level": 3
+                "autonomy_level": 3,
             },
             # Evidence collection request
             {
                 "company_id": uuid4(),
                 "user_input": "Help me collect and organize compliance evidence for a regulatory audit.",
-                "autonomy_level": 2
+                "autonomy_level": 2,
             },
             # Legal review request
             {
                 "company_id": uuid4(),
                 "user_input": "I need legal review of my privacy policy and data processing agreements.",
-                "autonomy_level": 1
+                "autonomy_level": 1,
             },
             # Short simple question
             {
                 "company_id": uuid4(),
                 "user_input": "Do I need a DPO?",
-                "autonomy_level": 2
-            }
+                "autonomy_level": 2,
+            },
         ]
         return test_inputs
 
@@ -118,7 +120,7 @@ class TestGraphLatency:
         result = await invoke_graph(
             compiled_graph=mock_graph,
             company_id=company_id,
-            user_input="Test GDPR question"
+            user_input="Test GDPR question",
         )
 
         end_time = time.time()
@@ -157,10 +159,7 @@ class TestGraphLatency:
         for test_input in test_inputs:
             start_time = time.time()
 
-            result = await invoke_graph(
-                compiled_graph=mock_graph,
-                **test_input
-            )
+            result = await invoke_graph(compiled_graph=mock_graph, **test_input)
 
             end_time = time.time()
             latency_ms = (end_time - start_time) * 1000
@@ -171,9 +170,13 @@ class TestGraphLatency:
 
         # P95 should meet SLO
         assert percentiles["p95"] < SLO_P95_LATENCY_MS
-        assert percentiles["mean"] < SLO_P95_LATENCY_MS * 0.5  # Mean should be much lower
+        assert (
+            percentiles["mean"] < SLO_P95_LATENCY_MS * 0.5
+        )  # Mean should be much lower
 
-        print(f"Latency results: P50={percentiles['p50']:.1f}ms, P95={percentiles['p95']:.1f}ms")
+        print(
+            f"Latency results: P50={percentiles['p50']:.1f}ms, P95={percentiles['p95']:.1f}ms"
+        )
 
     async def test_streaming_latency_first_token(self):
         """Test streaming latency for first token (time to first byte)."""
@@ -202,7 +205,7 @@ class TestGraphLatency:
         async for chunk in stream_graph(
             compiled_graph=mock_graph,
             company_id=company_id,
-            user_input="Test streaming"
+            user_input="Test streaming",
         ):
             if first_token_time is None:
                 first_token_time = time.time()
@@ -221,7 +224,9 @@ class TestGraphLatency:
 
         async def mock_invoke_concurrent(state, config=None):
             # Simulate realistic processing with some variability
-            await asyncio.sleep(0.1 + (hash(config.configurable["company_id"]) % 100) / 1000)
+            await asyncio.sleep(
+                0.1 + (hash(config.configurable["company_id"]) % 100) / 1000
+            )
             state["current_node"] = "compliance_analyzer"
             return state
 
@@ -252,7 +257,9 @@ class TestGraphLatency:
         for result in results:
             assert result["latency_ms"] < SLO_P95_LATENCY_MS
 
-        print(f"Concurrent execution time: {total_time_ms:.1f}ms for {len(test_inputs)} requests")
+        print(
+            f"Concurrent execution time: {total_time_ms:.1f}ms for {len(test_inputs)} requests"
+        )
 
 
 @pytest.mark.asyncio
@@ -271,23 +278,18 @@ class TestToolLatency:
                 "tool_name": "compliance_analysis",
                 "kwargs": {
                     "business_profile": {"industry": "tech"},
-                    "frameworks": ["GDPR"]
-                }
+                    "frameworks": ["GDPR"],
+                },
             },
             {
                 "tool_name": "document_retrieval",
                 "kwargs": {
                     "query": "GDPR template",
                     "framework": "GDPR",
-                    "doc_type": "template"
-                }
+                    "doc_type": "template",
+                },
             },
-            {
-                "tool_name": "evidence_collection",
-                "kwargs": {
-                    "frameworks": ["GDPR"]
-                }
-            }
+            {"tool_name": "evidence_collection", "kwargs": {"frameworks": ["GDPR"]}},
         ]
 
         latencies = []
@@ -296,9 +298,7 @@ class TestToolLatency:
             start_time = time.time()
 
             result = await manager.execute_tool(
-                company_id=company_id,
-                thread_id=thread_id,
-                **tool_test
+                company_id=company_id, thread_id=thread_id, **tool_test
             )
 
             end_time = time.time()
@@ -315,7 +315,9 @@ class TestToolLatency:
         avg_latency = statistics.mean(latencies)
         assert avg_latency < 200  # Average under 200ms
 
-        print(f"Tool latencies: {[f'{l:.1f}ms' for l in latencies]}, avg: {avg_latency:.1f}ms")
+        print(
+            f"Tool latencies: {[f'{l:.1f}ms' for l in latencies]}, avg: {avg_latency:.1f}ms"
+        )
 
     async def test_parallel_tool_execution_latency(self):
         """Test parallel tool execution latency."""
@@ -328,31 +330,24 @@ class TestToolLatency:
                 "tool": "compliance_analysis",
                 "kwargs": {
                     "business_profile": {"industry": "tech"},
-                    "frameworks": ["GDPR"]
-                }
+                    "frameworks": ["GDPR"],
+                },
             },
             {
                 "tool": "document_retrieval",
                 "kwargs": {
                     "query": "GDPR",
                     "framework": "GDPR",
-                    "doc_type": "template"
-                }
+                    "doc_type": "template",
+                },
             },
-            {
-                "tool": "evidence_collection",
-                "kwargs": {
-                    "frameworks": ["GDPR"]
-                }
-            }
+            {"tool": "evidence_collection", "kwargs": {"frameworks": ["GDPR"]}},
         ]
 
         start_time = time.time()
 
         results = await manager.execute_parallel_tools(
-            tool_configs=tool_configs,
-            company_id=company_id,
-            thread_id=thread_id
+            tool_configs=tool_configs, company_id=company_id, thread_id=thread_id
         )
 
         end_time = time.time()
@@ -365,7 +360,9 @@ class TestToolLatency:
         # Should complete much faster than sum of individual times
         assert parallel_latency_ms < 300  # Under 300ms for 3 parallel tools
 
-        print(f"Parallel tool execution: {parallel_latency_ms:.1f}ms for {len(tool_configs)} tools")
+        print(
+            f"Parallel tool execution: {parallel_latency_ms:.1f}ms for {len(tool_configs)} tools"
+        )
 
     async def test_tool_chain_latency(self):
         """Test tool chain execution latency."""
@@ -378,30 +375,23 @@ class TestToolLatency:
                 "tool": "compliance_analysis",
                 "kwargs": {
                     "business_profile": {"industry": "retail"},
-                    "frameworks": ["GDPR"]
-                }
+                    "frameworks": ["GDPR"],
+                },
             },
-            {
-                "tool": "evidence_collection",
-                "kwargs": {
-                    "frameworks": ["GDPR"]
-                }
-            },
+            {"tool": "evidence_collection", "kwargs": {"frameworks": ["GDPR"]}},
             {
                 "tool": "report_generation",
                 "kwargs": {
                     "report_type": "compliance_assessment",
-                    "frameworks": ["GDPR"]
-                }
-            }
+                    "frameworks": ["GDPR"],
+                },
+            },
         ]
 
         start_time = time.time()
 
         results = await manager.execute_tool_chain(
-            tool_sequence=tool_sequence,
-            company_id=company_id,
-            thread_id=thread_id
+            tool_sequence=tool_sequence, company_id=company_id, thread_id=thread_id
         )
 
         end_time = time.time()
@@ -412,7 +402,9 @@ class TestToolLatency:
         assert all(r.success for r in results)
         assert chain_latency_ms < 1000  # Under 1s for 3-tool chain
 
-        print(f"Tool chain execution: {chain_latency_ms:.1f}ms for {len(tool_sequence)} tools")
+        print(
+            f"Tool chain execution: {chain_latency_ms:.1f}ms for {len(tool_sequence)} tools"
+        )
 
 
 @pytest.mark.asyncio
@@ -433,7 +425,7 @@ class TestLatencyEvaluator:
 
         assert metrics.samples == 10
         assert metrics.p50_ms == 275.0  # Median of sample
-        assert metrics.p95_ms <= 950.0   # 95th percentile
+        assert metrics.p95_ms <= 950.0  # 95th percentile
         assert metrics.mean_ms == 370.0  # Mean of samples
         assert metrics.max_ms == 1000.0
         assert metrics.min_ms == 100.0
@@ -481,8 +473,16 @@ class TestLatencyEvaluator:
 
         # Check required details
         required_keys = [
-            "p50_ms", "p95_ms", "p99_ms", "mean_ms", "max_ms", "min_ms",
-            "samples", "slo_p95_ms", "meets_slo", "slo_violation_ratio"
+            "p50_ms",
+            "p95_ms",
+            "p99_ms",
+            "mean_ms",
+            "max_ms",
+            "min_ms",
+            "samples",
+            "slo_p95_ms",
+            "meets_slo",
+            "slo_violation_ratio",
         ]
         for key in required_keys:
             assert key in result.details
@@ -498,6 +498,7 @@ class TestSmokeTestRunner:
 
     async def test_run_latency_smoke_test(self):
         """Test the latency smoke test runner."""
+
         # Mock graph function with realistic behavior
         async def mock_graph_function(company_id, user_input, **kwargs):
             # Simulate variable processing time
@@ -508,13 +509,16 @@ class TestSmokeTestRunner:
             return {
                 "company_id": company_id,
                 "result": f"Processed: {user_input[:20]}...",
-                "success": True
+                "success": True,
             }
 
         test_inputs = [
             {"company_id": uuid4(), "user_input": "Simple GDPR question"},
-            {"company_id": uuid4(), "user_input": "More complex compliance analysis request"},
-            {"company_id": uuid4(), "user_input": "Short query"}
+            {
+                "company_id": uuid4(),
+                "user_input": "More complex compliance analysis request",
+            },
+            {"company_id": uuid4(), "user_input": "Short query"},
         ]
 
         # Run smoke test
@@ -522,7 +526,7 @@ class TestSmokeTestRunner:
             graph_function=mock_graph_function,
             test_inputs=test_inputs,
             target_p95_ms=1000,  # 1s target for test
-            num_iterations=5
+            num_iterations=5,
         )
 
         # Verify metrics
@@ -536,7 +540,9 @@ class TestSmokeTestRunner:
         # Should meet test SLO
         assert metrics.meets_slo(1000)
 
-        print(f"Smoke test results: P95={metrics.p95_ms:.1f}ms, Mean={metrics.mean_ms:.1f}ms")
+        print(
+            f"Smoke test results: P95={metrics.p95_ms:.1f}ms, Mean={metrics.mean_ms:.1f}ms"
+        )
 
     async def test_smoke_test_with_failures(self):
         """Test smoke test handling of failures."""
@@ -561,7 +567,7 @@ class TestSmokeTestRunner:
             graph_function=failing_graph_function,
             test_inputs=test_inputs,
             target_p95_ms=1000,
-            num_iterations=6  # Will have 2 failures
+            num_iterations=6,  # Will have 2 failures
         )
 
         # Should still collect timing data
@@ -603,7 +609,7 @@ class TestRealisticLatencyBenchmarks:
             "Complex multi-framework compliance analysis",
             "Standard evidence collection request",
             "Legal review requirement",
-            "Quick compliance check"
+            "Quick compliance check",
         ]
 
         latencies = []
@@ -612,9 +618,7 @@ class TestRealisticLatencyBenchmarks:
             start_time = time.time()
 
             result = await invoke_graph(
-                compiled_graph=mock_graph,
-                company_id=uuid4(),
-                user_input=test_case
+                compiled_graph=mock_graph, company_id=uuid4(), user_input=test_case
             )
 
             end_time = time.time()
@@ -631,21 +635,26 @@ class TestRealisticLatencyBenchmarks:
         print(f"  Mean: {percentiles['mean']:.1f}ms")
         print(f"  Max: {percentiles['max']:.1f}ms")
         print(f"  SLO Target: {SLO_P95_LATENCY_MS}ms")
-        print(f"  SLO Compliance: {'✅' if percentiles['p95'] <= SLO_P95_LATENCY_MS else '❌'}")
+        print(
+            f"  SLO Compliance: {'✅' if percentiles['p95'] <= SLO_P95_LATENCY_MS else '❌'}"
+        )
 
         # Assert SLO compliance
-        assert percentiles["p95"] <= SLO_P95_LATENCY_MS, f"P95 latency {percentiles['p95']:.1f}ms exceeds SLO {SLO_P95_LATENCY_MS}ms"
+        assert (
+            percentiles["p95"] <= SLO_P95_LATENCY_MS
+        ), f"P95 latency {percentiles['p95']:.1f}ms exceeds SLO {SLO_P95_LATENCY_MS}ms"
 
         # Additional performance assertions
-        assert percentiles["mean"] <= SLO_P95_LATENCY_MS * 0.6, "Mean latency should be well below P95 SLO"
-        assert percentiles["p50"] <= SLO_P95_LATENCY_MS * 0.4, "P50 latency should be much lower than SLO"
+        assert (
+            percentiles["mean"] <= SLO_P95_LATENCY_MS * 0.6
+        ), "Mean latency should be well below P95 SLO"
+        assert (
+            percentiles["p50"] <= SLO_P95_LATENCY_MS * 0.4
+        ), "P50 latency should be much lower than SLO"
 
 
 # Performance test configuration
-pytestmark = [
-    pytest.mark.asyncio,
-    pytest.mark.performance
-]
+pytestmark = [pytest.mark.asyncio, pytest.mark.performance]
 
 
 def test_slo_constants_reasonable():

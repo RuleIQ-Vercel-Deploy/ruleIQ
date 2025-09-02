@@ -15,9 +15,13 @@ import pytest
 class TestGDPRAccuracy:
     """Test GDPR compliance content accuracy"""
 
-    def test_gdpr_penalty_amounts_accuracy(self, client, mock_ai_client, compliance_golden_dataset):
+    def test_gdpr_penalty_amounts_accuracy(
+        self, client, mock_ai_client, compliance_golden_dataset
+    ):
         """Test accuracy of GDPR penalty information"""
-        gdpr_questions = [q for q in compliance_golden_dataset if q["framework"] == "GDPR"]
+        gdpr_questions = [
+            q for q in compliance_golden_dataset if q["framework"] == "GDPR"
+        ]
         penalty_questions = [q for q in gdpr_questions if q["category"] == "penalties"]
 
         for question_data in penalty_questions:
@@ -38,8 +42,14 @@ class TestGDPRAccuracy:
                 # Validate key facts
                 assert "€20 million" in response_text or "20 million" in response_text
                 assert "4%" in response_text
-                assert "annual turnover" in response_text or "worldwide turnover" in response_text
-                assert "whichever is higher" in response_text or "higher amount" in response_text
+                assert (
+                    "annual turnover" in response_text
+                    or "worldwide turnover" in response_text
+                )
+                assert (
+                    "whichever is higher" in response_text
+                    or "higher amount" in response_text
+                )
 
     def test_gdpr_data_subject_rights_accuracy(self, client, mock_ai_client):
         """Test accuracy of GDPR data subject rights information"""
@@ -99,11 +109,13 @@ class TestGDPRAccuracy:
 
                 # Validate key elements presence
                 matching_elements = sum(
-                    1 for element in test_case["key_elements"] if element.lower() in response_text
+                    1
+                    for element in test_case["key_elements"]
+                    if element.lower() in response_text
                 )
-                assert matching_elements >= len(test_case["key_elements"]) * 0.6, (
-                    f"Missing key elements for {test_case['right']}"
-                )
+                assert (
+                    matching_elements >= len(test_case["key_elements"]) * 0.6
+                ), f"Missing key elements for {test_case['right']}"
 
     def test_gdpr_breach_notification_timeline_accuracy(
         self, client, mock_ai_client, compliance_golden_dataset
@@ -206,7 +218,9 @@ class TestISO27001Accuracy:
             response_text = response.json().get("answer", "").lower()
 
             # Validate key domains are mentioned
-            mentioned_domains = sum(1 for domain in expected_domains if domain in response_text)
+            mentioned_domains = sum(
+                1 for domain in expected_domains if domain in response_text
+            )
             assert mentioned_domains >= 4, "Key security domains should be mentioned"
 
             # Validate Annex A reference
@@ -245,7 +259,9 @@ class TestISO27001Accuracy:
             assert "pdca" in response_text or "plan-do-check-act" in response_text
 
             # Validate key ISMS elements
-            mentioned_elements = sum(1 for element in isms_elements if element in response_text)
+            mentioned_elements = sum(
+                1 for element in isms_elements if element in response_text
+            )
             assert mentioned_elements >= 4, "Key ISMS elements should be mentioned"
 
 
@@ -279,9 +295,18 @@ class TestUKSpecificRegulations:
             assert "2018" in response_text
 
             # Validate UK-specific elements
-            uk_elements = ["law enforcement", "national security", "derogations", "exemptions"]
-            mentioned_uk_elements = sum(1 for element in uk_elements if element in response_text)
-            assert mentioned_uk_elements >= 2, "UK-specific elements should be mentioned"
+            uk_elements = [
+                "law enforcement",
+                "national security",
+                "derogations",
+                "exemptions",
+            ]
+            mentioned_uk_elements = sum(
+                1 for element in uk_elements if element in response_text
+            )
+            assert (
+                mentioned_uk_elements >= 2
+            ), "UK-specific elements should be mentioned"
 
     def test_ico_guidance_accuracy(self, client, mock_ai_client):
         """Test accuracy of ICO (Information Commissioner's Office) guidance references"""
@@ -304,8 +329,13 @@ class TestUKSpecificRegulations:
 
             # Validate ICO role accuracy
             assert "information commissioner" in response_text or "ico" in response_text
-            assert "independent authority" in response_text or "regulator" in response_text
-            assert "information rights" in response_text or "data protection" in response_text
+            assert (
+                "independent authority" in response_text or "regulator" in response_text
+            )
+            assert (
+                "information rights" in response_text
+                or "data protection" in response_text
+            )
             assert "guidance" in response_text
             assert "fines" in response_text or "penalties" in response_text
 
@@ -316,7 +346,13 @@ class TestSectorSpecificCompliance:
 
     def test_financial_services_compliance_accuracy(self, client, mock_ai_client):
         """Test accuracy of financial services compliance requirements"""
-        financial_frameworks = ["PCI DSS", "FCA regulations", "Basel III", "MiFID II", "GDPR"]
+        financial_frameworks = [
+            "PCI DSS",
+            "FCA regulations",
+            "Basel III",
+            "MiFID II",
+            "GDPR",
+        ]
 
         mock_ai_client.generate_content.return_value.text = f"""
         Financial services companies in the UK must comply with multiple frameworks:
@@ -339,10 +375,14 @@ class TestSectorSpecificCompliance:
             mentioned_frameworks = sum(
                 1 for fw in financial_frameworks if fw.lower() in response_text
             )
-            assert mentioned_frameworks >= 3, "Key financial frameworks should be mentioned"
+            assert (
+                mentioned_frameworks >= 3
+            ), "Key financial frameworks should be mentioned"
 
             # Validate regulatory body
-            assert "fca" in response_text or "financial conduct authority" in response_text
+            assert (
+                "fca" in response_text or "financial conduct authority" in response_text
+            )
 
     def test_healthcare_compliance_accuracy(self, client, mock_ai_client):
         """Test accuracy of healthcare sector compliance requirements"""
@@ -376,7 +416,9 @@ class TestSectorSpecificCompliance:
             mentioned_elements = sum(
                 1 for element in healthcare_elements if element in response_text
             )
-            assert mentioned_elements >= 3, "Healthcare-specific elements should be mentioned"
+            assert (
+                mentioned_elements >= 3
+            ), "Healthcare-specific elements should be mentioned"
 
 
 @pytest.mark.compliance
@@ -414,7 +456,8 @@ class TestComplianceContentValidation:
         """
 
         response = client.post(
-            "/api/policies/generate", json={"framework": "GDPR", "policy_type": "data_protection"}
+            "/api/policies/generate",
+            json={"framework": "GDPR", "policy_type": "data_protection"},
         )
 
         if response.status_code == 200:
@@ -438,10 +481,14 @@ class TestComplianceContentValidation:
                 if section not in policy_content.lower():
                     missing_sections.append(section)
 
-            assert len(missing_sections) <= 2, f"Missing essential sections: {missing_sections}"
+            assert (
+                len(missing_sections) <= 2
+            ), f"Missing essential sections: {missing_sections}"
 
             # Validate policy structure
-            assert policy_content.count("#") >= 5, "Policy should have proper heading structure"
+            assert (
+                policy_content.count("#") >= 5
+            ), "Policy should have proper heading structure"
             assert len(policy_content) >= 500, "Policy should have substantial content"
 
     def test_implementation_plan_completeness(self, client, mock_ai_client):
@@ -452,16 +499,26 @@ class TestComplianceContentValidation:
             plan_data = response.json()
 
             # Validate plan structure
-            assert plan_data["total_phases"] >= 3, "Should have multiple implementation phases"
-            assert plan_data["total_tasks"] >= 10, "Should have sufficient task breakdown"
-            assert plan_data["estimated_duration_weeks"] > 0, "Should have realistic timeline"
+            assert (
+                plan_data["total_phases"] >= 3
+            ), "Should have multiple implementation phases"
+            assert (
+                plan_data["total_tasks"] >= 10
+            ), "Should have sufficient task breakdown"
+            assert (
+                plan_data["estimated_duration_weeks"] > 0
+            ), "Should have realistic timeline"
 
             # Validate phases have tasks
             if "phases" in plan_data:
                 for phase in plan_data["phases"]:
                     assert "name" in phase, "Phase should have descriptive name"
-                    assert "duration_weeks" in phase, "Phase should have duration estimate"
-                    assert phase["duration_weeks"] > 0, "Phase duration should be positive"
+                    assert (
+                        "duration_weeks" in phase
+                    ), "Phase should have duration estimate"
+                    assert (
+                        phase["duration_weeks"] > 0
+                    ), "Phase duration should be positive"
 
     def test_risk_assessment_accuracy(self, client, mock_ai_client):
         """Test accuracy of risk assessments and recommendations"""
@@ -483,15 +540,24 @@ class TestComplianceContentValidation:
 
             # Risk level should align with score
             if overall_score >= 80:
-                assert risk_level in ["Low"], f"High score should have low risk, got {risk_level}"
+                assert risk_level in [
+                    "Low"
+                ], f"High score should have low risk, got {risk_level}"
             elif overall_score >= 60:
-                assert risk_level in ["Low", "Medium"], f"Medium score mismatch: {risk_level}"
+                assert risk_level in [
+                    "Low",
+                    "Medium",
+                ], f"Medium score mismatch: {risk_level}"
             elif overall_score >= 40:
-                assert risk_level in ["Medium", "High"], f"Lower score mismatch: {risk_level}"
+                assert risk_level in [
+                    "Medium",
+                    "High",
+                ], f"Lower score mismatch: {risk_level}"
             else:
-                assert risk_level in ["High", "Critical"], (
-                    f"Low score should have high risk: {risk_level}"
-                )
+                assert risk_level in [
+                    "High",
+                    "Critical",
+                ], f"Low score should have high risk: {risk_level}"
 
             # Validate recommendations relevance
             recommendations = assessment_data.get("recommendations", [])
@@ -500,8 +566,12 @@ class TestComplianceContentValidation:
             # Healthcare-specific recommendations
             rec_text = json.dumps(recommendations).lower()
             healthcare_terms = ["patient", "medical", "clinical", "healthcare", "hipaa"]
-            mentioned_healthcare = sum(1 for term in healthcare_terms if term in rec_text)
-            assert mentioned_healthcare >= 1, "Should include healthcare-specific recommendations"
+            mentioned_healthcare = sum(
+                1 for term in healthcare_terms if term in rec_text
+            )
+            assert (
+                mentioned_healthcare >= 1
+            ), "Should include healthcare-specific recommendations"
 
 
 @pytest.mark.compliance

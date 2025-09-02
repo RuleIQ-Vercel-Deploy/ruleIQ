@@ -1,0 +1,43 @@
+
++scripts.fix-api-alignment.APIAlignmentFixerB
+8/home/omar/Documents/ruleIQ/scripts/fix-api-alignment.py ("2*Ñ
+2 (
+ (
+%2"listr
+p
+ (:-
++scripts.fix-api-alignment.APIAlignmentFixer"	
+changes"__id*"
+
+__unknown_file (
+
+%2
+! (#
+%3"dict|
+z
+ (#D-
++scripts.fix-api-alignment.APIAlignmentFixer"
+backend_endpoints"__id*"
+
+__unknown_file (
+
+%3
+" ($
+%4"dict}
+{
+ ($E-
++scripts.fix-api-alignment.APIAlignmentFixer"
+frontend_endpoints"__id*"
+
+__unknown_file (
+
+%4*
+3*l
+3
+fix-api-alignment.py=;
+ (
+%1"+scripts.fix-api-alignment.APIAlignmentFixer"
+ (
+
+%1B/-
++scripts.fix-api-alignment.APIAlignmentFixerH

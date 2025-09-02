@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from main import app
 
+
 def test_phase1_endpoints():
     """Test Phase 1 endpoints with FastAPI TestClient"""
     client = TestClient(app)
@@ -21,7 +22,7 @@ def test_phase1_endpoints():
     # Test endpoints without authentication - should return 401
     endpoints = [
         ("/api/users/me", "Get current user"),
-        ("/api/users/profile", "Get user profile"), 
+        ("/api/users/profile", "Get user profile"),
         ("/api/users/dashboard", "Get user dashboard"),
         ("/api/business-profiles/", "Get business profile"),
     ]
@@ -70,6 +71,7 @@ def test_phase1_endpoints():
     print(f"\n   Results: {passed}/{total} endpoints properly protected")
 
     return passed == total
+
 
 if __name__ == "__main__":
     success = test_phase1_endpoints()

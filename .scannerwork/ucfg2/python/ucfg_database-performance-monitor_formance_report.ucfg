@@ -1,0 +1,122 @@
+
+[scripts.database-performance-monitor.DatabasePerformanceMonitor.generate_performance_reportO
+C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.pyî î(#"2*¶
+2
+ï ï(7èå
+
+ñ ñ(@
+%15*&
+
+__unknown_file (
+
+
+logger*I
+
+__unknown_file (-+
+)Starting database performance analysis...2info*
+7*¨
+7
+ö ö(Jåâ
+
+ö/ ö(J
+%4*_
+
+__unknown_file (CA
+?scripts.database-performance-monitor.DatabasePerformanceMonitor2get_database_metricsâ
+Ü
+
+ö ö(
+%6"__id*l
+
+__unknown_file (P*NA
+?scripts.database-performance-monitor.DatabasePerformanceMonitor"	
+resultsÆ´
+
+ö ö(J
+%5"dict.__setitem__*"
+
+__unknown_file (
+
+%6*0
+
+__unknown_file (
+database_metrics*"
+
+__unknown_file (
+
+%42__setitem__åâ
+
+õ/ õ(J
+%7*_
+
+__unknown_file (CA
+?scripts.database-performance-monitor.DatabasePerformanceMonitor2get_table_statisticsâ
+Ü
+
+õ õ(
+%9"__id*l
+
+__unknown_file (P*NA
+?scripts.database-performance-monitor.DatabasePerformanceMonitor"	
+resultsÆ´
+
+õ õ(J
+%8"dict.__setitem__*"
+
+__unknown_file (
+
+%9*0
+
+__unknown_file (
+table_statistics*"
+
+__unknown_file (
+
+%72__setitem__ãà
+
+ú- ú(F
+%10*_
+
+__unknown_file (CA
+?scripts.database-performance-monitor.DatabasePerformanceMonitor2get_index_analysisä
+á
+
+ú ú(
+%12"__id*l
+
+__unknown_file (P*NA
+?scripts.database-performance-monitor.DatabasePerformanceMonitor"	
+resultsØ¨
+
+ú ú(F
+%11"dict.__setitem__*#
+
+__unknown_file (
+
+%12*.
+
+__unknown_file (
+index_analysis*#
+
+__unknown_file (
+
+%102__setitem__ëé
+
+ü ü(+
+%13*_
+
+__unknown_file (CA
+?scripts.database-performance-monitor.DatabasePerformanceMonitor2generate_recommendationsä
+á
+
+° °(
+%14"__id*l
+
+__unknown_file (P*NA
+?scripts.database-performance-monitor.DatabasePerformanceMonitor"	
+results"
+
+° °(
+
+%14BCA
+?scripts.database-performance-monitor.DatabasePerformanceMonitorH

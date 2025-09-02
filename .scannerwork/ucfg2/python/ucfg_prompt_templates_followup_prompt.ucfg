@@ -1,0 +1,313 @@
+
+Kservices.ai.prompt_templates.PromptTemplates.get_assessment_followup_promptG
+;/home/omar/Documents/ruleIQ/services/ai/prompt_templates.pyË Ë(&"2*Ë
+2
+Ô Ô(LÉ
+Ä
+
+Ò ˇ(
+%1"__concat*>
+
+Ò Ò(H0.
+,You are an expert compliance consultant for *
+
+ÒI Ò(U
+
+framework_id*Å
+
+ÒV ˇ(ÚÔ
+Ï.
+        Based on the user's current assessment responses, generate intelligent follow-up questions
+        that will help complete their compliance assessment.
+
+        Your follow-up questions should:
+        - Build on their existing answers
+        - Identify gaps or areas needing clarification
+        - Be specific to their business context
+        - Help prioritize next steps
+
+        Format your response as JSON with these keys:
+        - follow_up_questions: Array of specific questions
+        - recommendations: Array of immediate recommendations
+        - confidence_score: Float between 0.0-1.0
+        I
+G
+
+Ò ˇ(
+system_prompt"__id*"
+
+__unknown_file (
+
+%1*
+4
+5*b
+4
+Å Å((L
+J
+
+Å Å((
+%2"__id*0
+
+__unknown_file (
+
+business_context*
+6*p
+5
+Å, Å(.
+
+Å, Å(.
+%3"dict>
+<
+
+Å, Å(.
+%2"__id*"
+
+__unknown_file (
+
+%3*
+6*b
+6
+Å- Å(.I
+G
+
+Å Å(.
+business_info"__id*"
+
+__unknown_file (
+
+%2*
+7
+8*d
+7
+Ç Ç(,N
+L
+
+Ç Ç(,
+%4"__id*2
+
+__unknown_file (
+
+assessment_context*
+9*p
+8
+Ç0 Ç(2
+
+Ç0 Ç(2
+%5"dict>
+<
+
+Ç0 Ç(2
+%4"__id*"
+
+__unknown_file (
+
+%5*
+9*à
+9
+Ç1 Ç(2K
+I
+
+Ç Ç(2
+assessment_info"__id*"
+
+__unknown_file (
+
+%4òï
+
+ã ã(8
+%6*-
+
+__unknown_file (
+
+business_info*$
+
+__unknown_file (
+name*'
+
+__unknown_file (	
+Unknown2getúô
+
+å å(=
+%7*-
+
+__unknown_file (
+
+business_info*(
+
+__unknown_file (
+
+industry*'
+
+__unknown_file (	
+Unknown2get¢ü
+
+ç ç(?
+%8*-
+
+__unknown_file (
+
+business_info*.
+
+__unknown_file (
+employee_count*'
+
+__unknown_file (	
+Unknown2get•¢
+
+ê ê(B
+%9*/
+
+__unknown_file (
+
+assessment_info*/
+
+__unknown_file (
+assessment_type*'
+
+__unknown_file (	
+general2getüú
+
+ë ë(?
+%10*/
+
+__unknown_file (
+
+assessment_info*(
+
+__unknown_file (
+
+progress*'
+
+__unknown_file (	
+unknown2get»
+≈
+
+Ñ î(
+%11"__concat*A
+
+Ñ Ü(31
+/
+        Current Assessment Responses:
+        *!
+
+Ü	 Ü(
+
+current_answers*'
+
+Ü à(
+
+
+        Framework: *
+
+à à( 
+
+framework_id*A
+
+à! ã(31
+/
+
+        Business Context:
+        - Company: *
+
+ã ã(8
+
+%6*'
+
+ã9 å(
+
+        - Industry: *
+
+å å(=
+
+%7*#
+
+å> ç(
+
+        - Size: *
+
+ç ç(?
+
+%8*J
+
+ç@ ê(<:
+8 employees
+
+        Assessment Context:
+        - Type: *
+
+ê ê(B
+
+%9*'
+
+êC ë(
+
+        - Progress: *
+
+ë ë(?
+
+%10*Å
+
+ë@ î(sq
+o
+
+        Based on these responses, what follow-up questions should we ask to complete the assessment?
+        H
+F
+
+Ñ î(
+user_prompt"__id*#
+
+__unknown_file (
+
+%11
+
+ñ ñ(=
+%12"dictú
+ô
+
+ñ ñ('
+%13"__mapSet*#
+
+__unknown_file (
+
+%12*&
+
+__unknown_file (
+
+system*-
+
+__unknown_file (
+
+system_promptò
+ï
+
+ñ) ñ(<
+%14"__mapSet*#
+
+__unknown_file (
+
+%12*$
+
+__unknown_file (
+user*+
+
+__unknown_file (
+
+user_prompt"
+
+ñ ñ(=
+
+%12:
+
+Í Í('
+current_answers:
+
+Î Î(
+framework_id: 
+
+Ï Ï(9
+business_context:"
+
+Ì Ì(;
+assessment_contextB0.
+,services.ai.prompt_templates.PromptTemplatesH

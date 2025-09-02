@@ -27,7 +27,7 @@ export function ModalShowcase() {
     setTimeout(() => {
       setIsLoading(false);
       setFeedback(`User "${formState.name}" with email "${formState.email}" has been added.`);
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
     }, 1500);
   };
 

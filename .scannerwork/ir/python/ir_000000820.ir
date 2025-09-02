@@ -1,0 +1,51 @@
+
+E<"Create a fallback fact-check result when AI analysis fails"str
+5,"Unable to verify - AI analysis unavailable"str
+0.5float
+@7"Fact-checking service unavailable, claim not verified"str
+
+0int
+trueboolself
+·$ ·((claim
+·* ·(4	list1-services.rag_fact_checker.FactCheckConfidence"§,
+*
+
+¼ ¼(4"#get-field# UNCERTAIN:)
+'
+
+½ ½(C"#unknown-value#Blist(
+&
+
+½ ½(C
+"
+#is-exact#:	Bbool
+
+
+½ ½(C"
+#assume#:
+:
+8
+
+½ ½(C"#set-field# __collection_size:Bint(
+&
+
+½ ½(C"#array-add-last#:)
+'
+
+¾ ¾("#unknown-value#Blist(
+&
+
+¾ ¾("
+#is-exact#:	Bbool
+
+
+¾ ¾("
+#assume#::
+8
+
+¾ ¾("#set-field# __collection_size:BintW
+U
+
+¹ Á(	"FactCheckResult:B)services.rag_fact_checker.FactCheckResult
+
+¹ Á(	*8/home/omar/Documents/ruleIQ/services/rag_fact_checker.py

@@ -85,7 +85,9 @@ async def generate_compliance_policy(
             policy_data = {
                 "title": f"{framework.name} Policy for {profile.company_name}",
                 "content": policy_content_str,
-                "sections": [{"title": "Policy Content", "content": policy_content_str}],
+                "sections": [
+                    {"title": "Policy Content", "content": policy_content_str}
+                ],
             }
 
         new_policy = GeneratedPolicy(
@@ -110,7 +112,9 @@ async def generate_compliance_policy(
             "Policy generation service is currently unavailable or failing."
         ) from e
     except json.JSONDecodeError as e:
-        raise BusinessLogicException("Failed to parse AI response for policy generation.") from e
+        raise BusinessLogicException(
+            "Failed to parse AI response for policy generation."
+        ) from e
     except SQLAlchemyError as e:
         await db.rollback()
         raise DatabaseException("Failed to save the generated policy.") from e
@@ -121,7 +125,9 @@ async def generate_compliance_policy(
         ) from e
 
 
-async def get_policy_by_id(db: AsyncSession, policy_id: UUID, user_id: UUID) -> GeneratedPolicy:
+async def get_policy_by_id(
+    db: AsyncSession, policy_id: UUID, user_id: UUID
+) -> GeneratedPolicy:
     """Retrieves a policy by its ID, ensuring it belongs to the user."""
     try:
         res = await db.execute(
@@ -140,7 +146,9 @@ async def get_policy_by_id(db: AsyncSession, policy_id: UUID, user_id: UUID) -> 
 async def get_user_policies(db: AsyncSession, user_id: UUID) -> List[GeneratedPolicy]:
     """Retrieves all policies for a given user."""
     try:
-        result = await db.execute(select(GeneratedPolicy).where(GeneratedPolicy.user_id == user_id))
+        result = await db.execute(
+            select(GeneratedPolicy).where(GeneratedPolicy.user_id == user_id)
+        )
         policies = result.scalars().all()
         return policies
     except SQLAlchemyError as e:
@@ -201,7 +209,9 @@ async def regenerate_policy_section(
         return policy
 
     except (CircuitBreakerOpenException, RetryExhaustedError) as e:
-        raise IntegrationException("Policy regeneration service is currently unavailable.") from e
+        raise IntegrationException(
+            "Policy regeneration service is currently unavailable."
+        ) from e
     except SQLAlchemyError as e:
         await db.rollback()
         raise DatabaseException("Failed to save the regenerated policy section.") from e

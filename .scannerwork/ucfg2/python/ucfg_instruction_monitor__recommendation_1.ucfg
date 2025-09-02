@@ -1,0 +1,96 @@
+
+^services.ai.instruction_monitor.InstructionPerformanceMonitor._generate_ab_test_recommendationJ
+>/home/omar/Documents/ruleIQ/services/ai/instruction_monitor.pyÂ Â(("6"7*‚
+4
+Ê Ê(uÚ
+×
+
+Ê Ê(u
+%1"__concat*
+
+Ê Ê(!
+Instruction *
+
+Ê" Ê((
+
+
+winner*2
+
+Ê) Ê(I$"
+  shows significant improvement (*
+
+ÊJ Ê(U
+
+improvement*,
+
+ÊZ Ê(t
+). Recommend implementing."
+
+Ê Ê(u
+
+%1*Ï
+5Ì Ì(œ¥
+¢
+Ì Ì(œ
+%2"__concat*
+
+Ì Ì(!
+Instruction *
+
+Ì" Ì((
+
+
+winner*&
+
+Ì) Ì(=
+ shows improvement (*
+
+Ì> Ì(I
+
+improvement*&
+
+ÌN Ì(b
+) but below target (*$
+
+Ìc Ì(u
+
+target_improvement*4
+Ìz Ì(›%#
+!). Consider further optimization."
+Ì Ì(œ
+
+%2*¿
+6
+É É(,¥
+¢
+
+É É(,
+%3"	__compare*"
+
+__unknown_file (
+>=*+
+
+__unknown_file (
+
+improvement*2
+
+__unknown_file (
+
+target_improvement*
+4
+5*Š
+7
+Ç Ç(|"y
+
+Ç Ç(|ki
+gNo statistically significant difference found. Consider running test longer or with larger sample size.:
+
+Ã Ã(#
+winner:
+
+Ã% Ã(7
+improvement:"
+
+Ã9 Ã(R
+target_improvementBA?
+=services.ai.instruction_monitor.InstructionPerformanceMonitorH

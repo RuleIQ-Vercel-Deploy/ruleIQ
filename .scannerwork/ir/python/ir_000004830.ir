@@ -1,0 +1,42 @@
+
+"current_node"str
+100int
+
+1000int
+"compliance_analyzer"str
+0.1float
+"company_id"strstate
+Þ) Þ(.config
+Þ0 Þ(;"´/
+-
+
+à, à(?"#get-field# configurable:$
+"
+
+à, à(M"#array-read#:-
++
+
+à' à(N"
+builtinshash*:Bint'
+%
+
+à' à(T	"	#binop %#*2%:3
+1
+
+à& à(\"#dependent-value#*:	
+Bfloat0
+.
+
+à  à(\"#dependent-value#:Bfloat=
+;
+
+à à(]"
+asyncio.taskssleep:Btyping.Coroutine#
+!
+
+à à(]"#unknown-value#&
+$
+
+á á(9"#array-write#:
+
+â â(*G/home/omar/Documents/ruleIQ/langgraph_agent/tests/test_latency_smoke.py

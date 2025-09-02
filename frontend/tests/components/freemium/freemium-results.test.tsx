@@ -1,6 +1,6 @@
 /**
  * Comprehensive tests for FreemiumResults component
- * 
+ *
  * Tests:
  * - Results display and formatting
  * - Compliance gaps visualization
@@ -36,9 +36,9 @@ const mockPush = vi.fn();
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: mockPush }),
   useSearchParams: () => ({
-    get: vi.fn((param) => param === 'token' ? 'test-token-123' : null),
-    toString: () => 'token=test-token-123'
-  })
+    get: vi.fn((param) => (param === 'token' ? 'test-token-123' : null)),
+    toString: () => 'token=test-token-123',
+  }),
 }));
 
 // Mock clipboard API
@@ -56,9 +56,7 @@ const queryClient = new QueryClient({
 });
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-  <QueryClientProvider client={queryClient}>
-    {children}
-  </QueryClientProvider>
+  <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
 const defaultStoreState = {
@@ -67,11 +65,11 @@ const defaultStoreState = {
   utmSource: 'google',
   utmCampaign: 'compliance_assessment',
   responses: {
-    'q1_business_type': 'SaaS',
-    'q2_employee_count': '11-50',
-    'q3_data_handling': 'Customer personal data',
-    'q4_current_compliance': 'GDPR partially',
-    'q5_compliance_goals': 'Full GDPR and ISO 27001'
+    q1_business_type: 'SaaS',
+    q2_employee_count: '11-50',
+    q3_data_handling: 'Customer personal data',
+    q4_current_compliance: 'GDPR partially',
+    q5_compliance_goals: 'Full GDPR and ISO 27001',
   },
   reset: vi.fn(),
 };
@@ -85,7 +83,7 @@ const mockResults = {
       impact_score: 8.5,
       remediation_effort: 'medium',
       potential_fine: '€20,000,000 or 4% of annual turnover',
-      priority: 1
+      priority: 1,
     },
     {
       framework: 'ISO 27001',
@@ -94,7 +92,7 @@ const mockResults = {
       impact_score: 6.2,
       remediation_effort: 'low',
       potential_fine: 'Certification failure',
-      priority: 2
+      priority: 2,
     },
     {
       framework: 'GDPR',
@@ -103,8 +101,8 @@ const mockResults = {
       impact_score: 3.1,
       remediation_effort: 'low',
       potential_fine: '€10,000,000 or 2% of annual turnover',
-      priority: 3
-    }
+      priority: 3,
+    },
   ],
   risk_score: 7.3,
   risk_level: 'high',
@@ -114,12 +112,12 @@ const mockResults = {
     'Establish formal risk management processes',
     'Create incident response procedures',
     'Conduct regular privacy impact assessments',
-    'Train staff on data protection requirements'
+    'Train staff on data protection requirements',
   ],
   priority_actions: [
     'Complete GDPR Article 30 documentation within 30 days',
     'Conduct privacy impact assessments for high-risk processing',
-    'Update privacy policy and consent mechanisms'
+    'Update privacy policy and consent mechanisms',
   ],
   frameworks_analyzed: ['GDPR', 'ISO 27001'],
   assessment_date: '2025-01-15T10:30:00Z',
@@ -132,14 +130,14 @@ const mockResults = {
       'Complete compliance assessment',
       'Action plan with deadlines',
       'Document templates',
-      'Expert support'
-    ]
+      'Expert support',
+    ],
   },
   sharing: {
     enabled: true,
     share_url: 'https://ruleiq.com/share/results/test-token-123',
-    pdf_download_url: 'https://api.ruleiq.com/freemium/results/test-token-123/pdf'
-  }
+    pdf_download_url: 'https://api.ruleiq.com/freemium/results/test-token-123/pdf',
+  },
 };
 
 describe('FreemiumResults', () => {
@@ -157,13 +155,13 @@ describe('FreemiumResults', () => {
   describe('Initial Loading and Data Display', () => {
     it('shows loading state initially', () => {
       mockedFreemiumApi.getResults.mockImplementation(
-        () => new Promise(() => {}) // Never resolves
+        () => new Promise(() => {}), // Never resolves
       );
 
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       expect(screen.getByText(/loading your results/i)).toBeInTheDocument();
@@ -176,7 +174,7 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -194,7 +192,7 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -211,7 +209,7 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -236,7 +234,7 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -252,13 +250,13 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
         const gapElements = screen.getAllByTestId(/compliance-gap-/);
         expect(gapElements).toHaveLength(3);
-        
+
         // First gap should be highest priority (GDPR Article 30)
         expect(gapElements[0]).toHaveTextContent(/missing data processing records/i);
         expect(gapElements[1]).toHaveTextContent(/incomplete risk assessment/i);
@@ -272,7 +270,7 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -289,13 +287,13 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
         expect(screen.getByText(/7\.3/)).toBeInTheDocument();
         expect(screen.getByText(/high risk/i)).toBeInTheDocument();
-        
+
         // Risk level should have appropriate styling
         const riskElement = screen.getByTestId('risk-level');
         expect(riskElement).toHaveClass(/high/i);
@@ -308,7 +306,7 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -321,7 +319,7 @@ describe('FreemiumResults', () => {
       const lowRiskResults = {
         ...mockResults,
         risk_score: 2.1,
-        risk_level: 'low'
+        risk_level: 'low',
       };
 
       mockedFreemiumApi.getResults.mockResolvedValue(lowRiskResults);
@@ -329,12 +327,12 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
         expect(screen.getByText(/low risk/i)).toBeInTheDocument();
-        
+
         const riskElement = screen.getByTestId('risk-level');
         expect(riskElement).toHaveClass(/low/i);
       });
@@ -348,7 +346,7 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -366,26 +364,32 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
         expect(screen.getByText(/priority actions/i)).toBeInTheDocument();
-        expect(screen.getByText(/complete gdpr article 30 documentation within 30 days/i)).toBeInTheDocument();
-        expect(screen.getByText(/conduct privacy impact assessments for high-risk processing/i)).toBeInTheDocument();
-        expect(screen.getByText(/update privacy policy and consent mechanisms/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/complete gdpr article 30 documentation within 30 days/i),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByText(/conduct privacy impact assessments for high-risk processing/i),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByText(/update privacy policy and consent mechanisms/i),
+        ).toBeInTheDocument();
       });
     });
 
     it('allows expanding/collapsing recommendation details', async () => {
       const user = userEvent.setup();
-      
+
       mockedFreemiumApi.getResults.mockResolvedValue(mockResults);
 
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -407,7 +411,7 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -425,7 +429,7 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -438,14 +442,14 @@ describe('FreemiumResults', () => {
 
     it('tracks conversion when CTA is clicked', async () => {
       const user = userEvent.setup();
-      
+
       mockedFreemiumApi.getResults.mockResolvedValue(mockResults);
       mockedFreemiumApi.trackConversion.mockResolvedValue({ success: true, event_id: 'evt_123' });
 
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -461,7 +465,7 @@ describe('FreemiumResults', () => {
         conversion_value: 30,
         page_url: expect.any(String),
         user_agent: expect.any(String),
-        metadata: expect.any(Object)
+        metadata: expect.any(Object),
       });
     });
 
@@ -471,7 +475,7 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -488,7 +492,7 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -499,13 +503,13 @@ describe('FreemiumResults', () => {
 
     it('copies share URL to clipboard', async () => {
       const user = userEvent.setup();
-      
+
       mockedFreemiumApi.getResults.mockResolvedValue(mockResults);
 
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -516,7 +520,7 @@ describe('FreemiumResults', () => {
       await user.click(shareButton);
 
       expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
-        'https://ruleiq.com/share/results/test-token-123'
+        'https://ruleiq.com/share/results/test-token-123',
       );
 
       await waitFor(() => {
@@ -526,17 +530,17 @@ describe('FreemiumResults', () => {
 
     it('initiates PDF download', async () => {
       const user = userEvent.setup();
-      
+
       // Mock window.open
       const mockOpen = vi.fn();
       vi.stubGlobal('open', mockOpen);
-      
+
       mockedFreemiumApi.getResults.mockResolvedValue(mockResults);
 
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -548,7 +552,7 @@ describe('FreemiumResults', () => {
 
       expect(mockOpen).toHaveBeenCalledWith(
         'https://api.ruleiq.com/freemium/results/test-token-123/pdf',
-        '_blank'
+        '_blank',
       );
     });
 
@@ -556,8 +560,8 @@ describe('FreemiumResults', () => {
       const resultsWithoutSharing = {
         ...mockResults,
         sharing: {
-          enabled: false
-        }
+          enabled: false,
+        },
       };
 
       mockedFreemiumApi.getResults.mockResolvedValue(resultsWithoutSharing);
@@ -565,7 +569,7 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -577,14 +581,12 @@ describe('FreemiumResults', () => {
 
   describe('Error Handling', () => {
     it('handles API errors gracefully', async () => {
-      mockedFreemiumApi.getResults.mockRejectedValue(
-        new Error('Failed to load results')
-      );
+      mockedFreemiumApi.getResults.mockRejectedValue(new Error('Failed to load results'));
 
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -595,7 +597,7 @@ describe('FreemiumResults', () => {
 
     it('retries failed API calls', async () => {
       const user = userEvent.setup();
-      
+
       mockedFreemiumApi.getResults
         .mockRejectedValueOnce(new Error('Network error'))
         .mockResolvedValueOnce(mockResults);
@@ -603,7 +605,7 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -621,14 +623,12 @@ describe('FreemiumResults', () => {
     });
 
     it('handles invalid token error', async () => {
-      mockedFreemiumApi.getResults.mockRejectedValue(
-        new Error('Invalid or expired token')
-      );
+      mockedFreemiumApi.getResults.mockRejectedValue(new Error('Invalid or expired token'));
 
       render(
         <TestWrapper>
           <FreemiumResults token="invalid-token" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -643,7 +643,7 @@ describe('FreemiumResults', () => {
         risk_score: 0,
         risk_level: 'unknown',
         recommendations: [],
-        priority_actions: []
+        priority_actions: [],
       };
 
       mockedFreemiumApi.getResults.mockResolvedValue(emptyResults);
@@ -651,7 +651,7 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -668,7 +668,7 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -686,7 +686,7 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -700,13 +700,13 @@ describe('FreemiumResults', () => {
 
     it('supports keyboard navigation', async () => {
       const user = userEvent.setup();
-      
+
       mockedFreemiumApi.getResults.mockResolvedValue(mockResults);
 
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -734,7 +734,7 @@ describe('FreemiumResults', () => {
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -751,7 +751,7 @@ describe('FreemiumResults', () => {
       const { rerender } = render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -764,7 +764,7 @@ describe('FreemiumResults', () => {
       rerender(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       expect(mockedFreemiumApi.getResults).toHaveBeenCalledTimes(1); // No additional calls
@@ -776,7 +776,7 @@ describe('FreemiumResults', () => {
       const { unmount } = render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       expect(() => unmount()).not.toThrow();
@@ -786,13 +786,13 @@ describe('FreemiumResults', () => {
   describe('Social Media Integration', () => {
     it('provides social sharing options', async () => {
       const user = userEvent.setup();
-      
+
       mockedFreemiumApi.getResults.mockResolvedValue(mockResults);
 
       render(
         <TestWrapper>
           <FreemiumResults token="test-token-123" />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {

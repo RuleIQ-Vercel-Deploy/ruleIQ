@@ -60,7 +60,9 @@ class ReportGenerator:
 
             builder = report_builders.get(report_type)
             if not builder:
-                raise BusinessLogicException(f"Report type '{report_type}' is not supported.")
+                raise BusinessLogicException(
+                    f"Report type '{report_type}' is not supported."
+                )
 
             logger.info(
                 f"Generating report '{report_type}' for business profile {business_profile_id}"
@@ -71,7 +73,9 @@ class ReportGenerator:
                 f"Database error during report generation for profile {business_profile_id}: {e}",
                 exc_info=True,
             )
-            raise DatabaseException("A database error occurred while generating the report.") from e
+            raise DatabaseException(
+                "A database error occurred while generating the report."
+            ) from e
         except BusinessLogicException as e:
             logger.warning(
                 f"Business logic error during report generation for profile {business_profile_id}: {e}"
@@ -118,7 +122,9 @@ class ReportGenerator:
         """Generates a gap analysis report showing missing evidence or policies."""
         framework_id = params.get("framework_id")
         if not framework_id:
-            raise BusinessLogicException("Framework ID is required for gap analysis report.")
+            raise BusinessLogicException(
+                "Framework ID is required for gap analysis report."
+            )
 
         all_controls = await self._get_all_controls(UUID(framework_id))
         linked_evidence = await self._get_linked_evidence(profile.id)
@@ -147,25 +153,34 @@ class ReportGenerator:
         """Helper to get all controls for a framework."""
         try:
             framework_res = await self.db.execute(
-                select(ComplianceFramework).where(ComplianceFramework.id == framework_id)
+                select(ComplianceFramework).where(
+                    ComplianceFramework.id == framework_id
+                )
             )
             framework = framework_res.scalars().first()
             if not framework or not framework.controls:
                 return []
             return framework.controls
         except SQLAlchemyError as e:
-            logger.error(f"Failed to get controls for framework {framework_id}: {e}", exc_info=True)
+            logger.error(
+                f"Failed to get controls for framework {framework_id}: {e}",
+                exc_info=True,
+            )
             raise DatabaseException("Failed to retrieve framework controls.") from e
 
     async def _get_linked_evidence(self, profile_id: UUID) -> List[EvidenceItem]:
         """Helper to get all evidence linked to a business profile."""
         try:
             evidence_res = await self.db.execute(
-                select(EvidenceItem).where(EvidenceItem.business_profile_id == profile_id)
+                select(EvidenceItem).where(
+                    EvidenceItem.business_profile_id == profile_id
+                )
             )
             return evidence_res.scalars().all()
         except SQLAlchemyError as e:
-            logger.error(f"Failed to get evidence for profile {profile_id}: {e}", exc_info=True)
+            logger.error(
+                f"Failed to get evidence for profile {profile_id}: {e}", exc_info=True
+            )
             raise DatabaseException("Failed to retrieve linked evidence.") from e
 
     async def _generate_evidence_report(
@@ -219,7 +234,9 @@ class ReportGenerator:
             active_evidence = active_evidence_res.scalar_one()
             total_policies = policies_res.scalar_one()
 
-            evidence_score = (active_evidence / total_evidence * 100) if total_evidence > 0 else 0
+            evidence_score = (
+                (active_evidence / total_evidence * 100) if total_evidence > 0 else 0
+            )
             policy_score = 100 if total_policies > 5 else (total_policies / 5 * 100)
             overall_score = (evidence_score + policy_score) / 2
 
@@ -232,7 +249,8 @@ class ReportGenerator:
             }
         except SQLAlchemyError as e:
             logger.error(
-                f"Failed to calculate key metrics for profile {profile_id}: {e}", exc_info=True
+                f"Failed to calculate key metrics for profile {profile_id}: {e}",
+                exc_info=True,
             )
             raise DatabaseException("Failed to calculate key metrics.") from e
 

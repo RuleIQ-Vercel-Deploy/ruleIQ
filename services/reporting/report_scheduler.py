@@ -60,7 +60,9 @@ class ReportScheduler:
             )
             schedule = res.scalars().first()
             if not schedule:
-                raise NotFoundException(f"Report schedule with ID {schedule_id} not found.")
+                raise NotFoundException(
+                    f"Report schedule with ID {schedule_id} not found."
+                )
             return schedule
         except SQLAlchemyError as e:
             raise DatabaseException("Failed to retrieve report schedule.") from e
@@ -88,7 +90,9 @@ class ReportScheduler:
         self.db.add(schedule)
         await self.db.commit()
 
-    async def update_schedule(self, schedule_id: UUID, updates: Dict[str, Any]) -> ReportSchedule:
+    async def update_schedule(
+        self, schedule_id: UUID, updates: Dict[str, Any]
+    ) -> ReportSchedule:
         """Updates an existing report schedule."""
         schedule = await self.get_schedule(schedule_id)
         try:

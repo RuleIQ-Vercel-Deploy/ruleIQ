@@ -17,7 +17,7 @@ export async function onRequestError(
     path: string;
     method: string;
     headers: Record<string, string>;
-  }
+  },
 ) {
   Sentry.captureRequestError(error, request, {
     // mechanism property removed in newer versions

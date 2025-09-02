@@ -26,6 +26,7 @@ logger = get_logger(__name__)
 
 class UsageType(Enum):
     """Types of AI usage for categorization."""
+
     POLICY_GENERATION = "policy_generation"
     ASSESSMENT_ANALYSIS = "assessment_analysis"
     CHAT_ASSISTANCE = "chat_assistance"
@@ -39,6 +40,7 @@ class UsageType(Enum):
 
 class AlertType(Enum):
     """Types of cost alerts."""
+
     BUDGET_WARNING = "budget_warning"
     BUDGET_EXCEEDED = "budget_exceeded"
     COST_SPIKE = "cost_spike"
@@ -51,6 +53,7 @@ class AlertType(Enum):
 
 class OptimizationStrategy(Enum):
     """Cost optimization strategies."""
+
     MODEL_SWITCH = "model_switch"
     CACHING_IMPROVEMENT = "caching_improvement"
     BATCH_PROCESSING = "batch_processing"
@@ -63,6 +66,7 @@ class OptimizationStrategy(Enum):
 @dataclass
 class ModelCostConfig:
     """Cost configuration for AI models."""
+
     model_name: str
     provider: str
     input_cost_per_million: Decimal  # Cost per million input tokens
@@ -87,7 +91,7 @@ class ModelCostConfig:
     @classmethod
     def get_gemini_config(cls, model_name: str = "gemini-2.5-pro") -> "ModelCostConfig":
         """Get cost configuration for Gemini models.
-        
+
         **DO NOT CHANGE THESE MODEL NAMES WITHOUT EXPRESS PERMISSION**
         **THESE ARE THE CORRECT GEMINI 2.5 MODELS AS OF JANUARY 2025**
         """
@@ -98,7 +102,7 @@ class ModelCostConfig:
                 input_cost_per_million=Decimal("3.50"),
                 output_cost_per_million=Decimal("10.50"),
                 context_window=2_097_152,
-                max_output_tokens=8192
+                max_output_tokens=8192,
             ),
             "gemini-2.5-flash": cls(
                 model_name="gemini-2.5-flash",
@@ -106,7 +110,7 @@ class ModelCostConfig:
                 input_cost_per_million=Decimal("0.075"),
                 output_cost_per_million=Decimal("0.30"),
                 context_window=1_048_576,
-                max_output_tokens=8192
+                max_output_tokens=8192,
             ),
             "gemini-2.5-flash-lite": cls(
                 model_name="gemini-2.5-flash-lite",
@@ -114,7 +118,7 @@ class ModelCostConfig:
                 input_cost_per_million=Decimal("0.03"),  # Even cheaper than flash
                 output_cost_per_million=Decimal("0.10"),
                 context_window=1_048_576,
-                max_output_tokens=8192
+                max_output_tokens=8192,
             ),
             # Legacy models kept for backward compatibility only
             "gemini-1.5-pro": cls(
@@ -123,7 +127,7 @@ class ModelCostConfig:
                 input_cost_per_million=Decimal("3.50"),
                 output_cost_per_million=Decimal("10.50"),
                 context_window=1_048_576,
-                max_output_tokens=8192
+                max_output_tokens=8192,
             ),
             "gemini-1.5-flash": cls(
                 model_name="gemini-1.5-flash",
@@ -131,8 +135,8 @@ class ModelCostConfig:
                 input_cost_per_million=Decimal("0.075"),
                 output_cost_per_million=Decimal("0.30"),
                 context_window=1_048_576,
-                max_output_tokens=8192
-            )
+                max_output_tokens=8192,
+            ),
         }
         return configs.get(model_name, configs["gemini-2.5-pro"])
 
@@ -146,7 +150,7 @@ class ModelCostConfig:
                 input_cost_per_million=Decimal("10.00"),
                 output_cost_per_million=Decimal("30.00"),
                 context_window=128_000,
-                max_output_tokens=4096
+                max_output_tokens=4096,
             ),
             "gpt-4o": cls(
                 model_name="gpt-4o",
@@ -154,7 +158,7 @@ class ModelCostConfig:
                 input_cost_per_million=Decimal("5.00"),
                 output_cost_per_million=Decimal("15.00"),
                 context_window=128_000,
-                max_output_tokens=4096
+                max_output_tokens=4096,
             ),
             "gpt-3.5-turbo": cls(
                 model_name="gpt-3.5-turbo",
@@ -162,8 +166,8 @@ class ModelCostConfig:
                 input_cost_per_million=Decimal("0.50"),
                 output_cost_per_million=Decimal("1.50"),
                 context_window=16_385,
-                max_output_tokens=4096
-            )
+                max_output_tokens=4096,
+            ),
         }
         return configs.get(model_name, configs["gpt-4-turbo"])
 
@@ -171,6 +175,7 @@ class ModelCostConfig:
 @dataclass
 class AIUsageMetrics:
     """Metrics for a single AI usage event."""
+
     service_name: str
     model_name: str
     input_tokens: int
@@ -210,8 +215,13 @@ class AIUsageMetrics:
 
     def aggregate(self, other: "AIUsageMetrics") -> "AIUsageMetrics":
         """Aggregate this metrics with another."""
-        if self.service_name != other.service_name or self.model_name != other.model_name:
-            raise ValueError("Cannot aggregate metrics from different services or models")
+        if (
+            self.service_name != other.service_name
+            or self.model_name != other.model_name
+        ):
+            raise ValueError(
+                "Cannot aggregate metrics from different services or models"
+            )
 
         return AIUsageMetrics(
             service_name=self.service_name,
@@ -223,13 +233,14 @@ class AIUsageMetrics:
             cost_usd=self.cost_usd + other.cost_usd,
             timestamp=max(self.timestamp, other.timestamp),
             cache_hit=self.cache_hit or other.cache_hit,
-            error_occurred=self.error_occurred or other.error_occurred
+            error_occurred=self.error_occurred or other.error_occurred,
         )
 
 
 @dataclass
 class CostMetrics:
     """Aggregated cost metrics for a time period."""
+
     total_cost: Decimal
     total_requests: int
     total_tokens: int
@@ -258,6 +269,7 @@ class CostMetrics:
 @dataclass
 class BudgetAlert:
     """Budget alert notification."""
+
     alert_type: AlertType
     severity: str  # "info", "warning", "critical"
     message: str
@@ -271,6 +283,7 @@ class BudgetAlert:
 @dataclass
 class CostOptimization:
     """Cost optimization recommendation."""
+
     strategy: OptimizationStrategy
     recommendation: str
     potential_savings: Decimal
@@ -303,7 +316,12 @@ class CostTrackingService:
         configs = {}
 
         # Gemini models
-        gemini_models = ["gemini-1.5-pro", "gemini-1.5-flash", "gemini-2.5-pro", "gemini-2.5-flash"]
+        gemini_models = [
+            "gemini-1.5-pro",
+            "gemini-1.5-flash",
+            "gemini-2.5-pro",
+            "gemini-2.5-flash",
+        ]
         for model in gemini_models:
             configs[model] = ModelCostConfig.get_gemini_config(model)
 
@@ -327,14 +345,16 @@ class CostTrackingService:
         response_time_ms: Optional[float] = None,
         cache_hit: bool = False,
         error_occurred: bool = False,
-        request_metadata: Optional[Dict[str, Any]] = None
+        request_metadata: Optional[Dict[str, Any]] = None,
     ) -> AIUsageMetrics:
         """Track AI usage and calculate costs."""
 
         # Calculate cost
         model_config = self.model_configs.get(model_name)
         if not model_config:
-            logger.warning(f"Unknown model {model_name}, using default cost calculation")
+            logger.warning(
+                f"Unknown model {model_name}, using default cost calculation"
+            )
             # Use Gemini Pro as default
             model_config = ModelCostConfig.get_gemini_config("gemini-1.5-pro")
 
@@ -357,7 +377,7 @@ class CostTrackingService:
             response_time_ms=response_time_ms,
             cache_hit=cache_hit,
             error_occurred=error_occurred,
-            metadata=request_metadata or {}
+            metadata=request_metadata or {},
         )
 
         # Store in Redis for real-time tracking
@@ -380,7 +400,11 @@ class CostTrackingService:
         hour_key = f"ai_usage:hourly:{timestamp.strftime('%Y-%m-%d:%H')}"
         service_key = f"ai_usage:service:{usage.service_name}:{timestamp.date()}"
         model_key = f"ai_usage:model:{usage.model_name}:{timestamp.date()}"
-        user_key = f"ai_usage:user:{usage.user_id}:{timestamp.date()}" if usage.user_id else None
+        user_key = (
+            f"ai_usage:user:{usage.user_id}:{timestamp.date()}"
+            if usage.user_id
+            else None
+        )
 
         # Prepare data
         usage_data = {
@@ -395,7 +419,7 @@ class CostTrackingService:
             "session_id": usage.session_id,
             "request_id": usage.request_id,
             "cache_hit": usage.cache_hit,
-            "error_occurred": usage.error_occurred
+            "error_occurred": usage.error_occurred,
         }
 
         # Store individual usage record
@@ -445,14 +469,16 @@ class CostTrackingService:
             return
 
         # In production, this would write to database
-        logger.info(f"Flushing {len(self.usage_buffer)} usage records to persistent storage")
+        logger.info(
+            f"Flushing {len(self.usage_buffer)} usage records to persistent storage"
+        )
         self.usage_buffer.clear()
 
     async def get_usage_by_service(
         self,
         service_name: str,
         start_date: Optional[date] = None,
-        end_date: Optional[date] = None
+        end_date: Optional[date] = None,
     ) -> List[AIUsageMetrics]:
         """Get usage metrics by service for date range."""
         if not start_date:
@@ -468,16 +494,18 @@ class CostTrackingService:
             data = await self.redis.hgetall(service_key)
 
             if data:
-                usage_metrics.append(AIUsageMetrics(
-                    service_name=service_name,
-                    model_name="aggregated",
-                    input_tokens=0,  # Would need separate tracking for input/output breakdown
-                    output_tokens=0,
-                    total_tokens=int(data.get("total_tokens", 0)),
-                    request_count=int(data.get("total_requests", 0)),
-                    cost_usd=Decimal(data.get("total_cost", "0")),
-                    timestamp=datetime.combine(current_date, datetime.min.time())
-                ))
+                usage_metrics.append(
+                    AIUsageMetrics(
+                        service_name=service_name,
+                        model_name="aggregated",
+                        input_tokens=0,  # Would need separate tracking for input/output breakdown
+                        output_tokens=0,
+                        total_tokens=int(data.get("total_tokens", 0)),
+                        request_count=int(data.get("total_requests", 0)),
+                        cost_usd=Decimal(data.get("total_cost", "0")),
+                        timestamp=datetime.combine(current_date, datetime.min.time()),
+                    )
+                )
 
             current_date += timedelta(days=1)
 
@@ -487,7 +515,7 @@ class CostTrackingService:
         self,
         start_time: datetime,
         end_time: datetime,
-        service_name: Optional[str] = None
+        service_name: Optional[str] = None,
     ) -> List[AIUsageMetrics]:
         """Get usage metrics for specific time range."""
         usage_metrics = []
@@ -504,16 +532,18 @@ class CostTrackingService:
 
             data = await self.redis.hgetall(key)
             if data:
-                usage_metrics.append(AIUsageMetrics(
-                    service_name=service_name or "all",
-                    model_name="aggregated",
-                    input_tokens=0,
-                    output_tokens=0,
-                    total_tokens=int(data.get("total_tokens", 0)),
-                    request_count=int(data.get("total_requests", 0)),
-                    cost_usd=Decimal(data.get("total_cost", "0")),
-                    timestamp=datetime.combine(current_date, datetime.min.time())
-                ))
+                usage_metrics.append(
+                    AIUsageMetrics(
+                        service_name=service_name or "all",
+                        model_name="aggregated",
+                        input_tokens=0,
+                        output_tokens=0,
+                        total_tokens=int(data.get("total_tokens", 0)),
+                        request_count=int(data.get("total_requests", 0)),
+                        cost_usd=Decimal(data.get("total_cost", "0")),
+                        timestamp=datetime.combine(current_date, datetime.min.time()),
+                    )
+                )
 
             current_date += timedelta(days=1)
 
@@ -530,7 +560,7 @@ class CostTrackingService:
                 "total_requests": 0,
                 "total_tokens": 0,
                 "service_breakdown": {},
-                "model_breakdown": {}
+                "model_breakdown": {},
             }
 
         # Get service breakdown
@@ -543,7 +573,7 @@ class CostTrackingService:
                 service_breakdown[service_name] = {
                     "cost": Decimal(service_data.get("total_cost", "0")),
                     "requests": int(service_data.get("total_requests", 0)),
-                    "tokens": int(service_data.get("total_tokens", 0))
+                    "tokens": int(service_data.get("total_tokens", 0)),
                 }
 
         # Get model breakdown
@@ -556,7 +586,7 @@ class CostTrackingService:
                 model_breakdown[model_name] = {
                     "cost": Decimal(model_data.get("total_cost", "0")),
                     "requests": int(model_data.get("total_requests", 0)),
-                    "tokens": int(model_data.get("total_tokens", 0))
+                    "tokens": int(model_data.get("total_tokens", 0)),
                 }
 
         return {
@@ -564,32 +594,32 @@ class CostTrackingService:
             "total_requests": int(daily_data.get("total_requests", 0)),
             "total_tokens": int(daily_data.get("total_tokens", 0)),
             "service_breakdown": service_breakdown,
-            "model_breakdown": model_breakdown
+            "model_breakdown": model_breakdown,
         }
 
     async def get_cost_trends(self, days: int = 7) -> List[Dict[str, Any]]:
         """Get cost trends over specified number of days."""
         trends = []
         end_date = date.today()
-        start_date = end_date - timedelta(days=days-1)
+        start_date = end_date - timedelta(days=days - 1)
 
         current_date = start_date
         while current_date <= end_date:
             daily_costs = await self.calculate_daily_costs(current_date)
-            trends.append({
-                "date": current_date.isoformat(),
-                "cost": daily_costs["total_cost"],
-                "requests": daily_costs["total_requests"],
-                "tokens": daily_costs["total_tokens"]
-            })
+            trends.append(
+                {
+                    "date": current_date.isoformat(),
+                    "cost": daily_costs["total_cost"],
+                    "requests": daily_costs["total_requests"],
+                    "tokens": daily_costs["total_tokens"],
+                }
+            )
             current_date += timedelta(days=1)
 
         return trends
 
     async def identify_cost_anomalies(
-        self,
-        threshold_multiplier: float = 2.0,
-        lookback_days: int = 7
+        self, threshold_multiplier: float = 2.0, lookback_days: int = 7
     ) -> List[Dict[str, Any]]:
         """Identify cost anomalies based on historical patterns."""
         trends = await self.get_cost_trends(lookback_days)
@@ -608,13 +638,15 @@ class CostTrackingService:
 
         anomalies = []
         if today_cost > threshold:
-            anomalies.append({
-                "type": "cost_spike",
-                "date": trends[-1]["date"],
-                "cost": trends[-1]["cost"],
-                "threshold": Decimal(str(threshold)),
-                "severity": "high" if today_cost > threshold * 1.5 else "medium"
-            })
+            anomalies.append(
+                {
+                    "type": "cost_spike",
+                    "date": trends[-1]["date"],
+                    "cost": trends[-1]["cost"],
+                    "threshold": Decimal(str(threshold)),
+                    "severity": "high" if today_cost > threshold * 1.5 else "medium",
+                }
+            )
 
         return anomalies
 
@@ -662,7 +694,7 @@ class BudgetAlertService:
 
         return {
             "daily_limit": Decimal(daily_limit) if daily_limit else None,
-            "monthly_limit": Decimal(monthly_limit) if monthly_limit else None
+            "monthly_limit": Decimal(monthly_limit) if monthly_limit else None,
         }
 
     async def check_budget_status(self, usage: CostMetrics) -> Dict[str, Any]:
@@ -688,7 +720,7 @@ class BudgetAlertService:
             "usage_percentage": float(usage_percentage),
             "remaining_budget": remaining_budget,
             "alert_level": alert_level,
-            "budget_limit": budget["daily_limit"]
+            "budget_limit": budget["daily_limit"],
         }
 
     async def check_budget_alerts(self, usage: CostMetrics) -> List[BudgetAlert]:
@@ -697,21 +729,25 @@ class BudgetAlertService:
         budget_status = await self.check_budget_status(usage)
 
         if budget_status.get("alert_level") == "warning":
-            alerts.append(BudgetAlert(
-                alert_type=AlertType.BUDGET_WARNING,
-                severity="warning",
-                message=f"Daily budget 80% used: ${usage.total_cost:.2f} of ${budget_status['budget_limit']:.2f}",
-                current_usage=usage.total_cost,
-                budget_limit=budget_status["budget_limit"]
-            ))
+            alerts.append(
+                BudgetAlert(
+                    alert_type=AlertType.BUDGET_WARNING,
+                    severity="warning",
+                    message=f"Daily budget 80% used: ${usage.total_cost:.2f} of ${budget_status['budget_limit']:.2f}",
+                    current_usage=usage.total_cost,
+                    budget_limit=budget_status["budget_limit"],
+                )
+            )
         elif budget_status.get("alert_level") == "critical":
-            alerts.append(BudgetAlert(
-                alert_type=AlertType.BUDGET_EXCEEDED,
-                severity="critical",
-                message=f"Daily budget exceeded: ${usage.total_cost:.2f} of ${budget_status['budget_limit']:.2f}",
-                current_usage=usage.total_cost,
-                budget_limit=budget_status["budget_limit"]
-            ))
+            alerts.append(
+                BudgetAlert(
+                    alert_type=AlertType.BUDGET_EXCEEDED,
+                    severity="critical",
+                    message=f"Daily budget exceeded: ${usage.total_cost:.2f} of ${budget_status['budget_limit']:.2f}",
+                    current_usage=usage.total_cost,
+                    budget_limit=budget_status["budget_limit"],
+                )
+            )
 
         return alerts
 
@@ -719,7 +755,7 @@ class BudgetAlertService:
         self,
         current_cost: Decimal,
         baseline_costs: List[Decimal],
-        spike_threshold: float = 3.0
+        spike_threshold: float = 3.0,
     ) -> bool:
         """Detect if current cost represents a spike."""
         if not baseline_costs:
@@ -729,9 +765,7 @@ class BudgetAlertService:
         return current_cost > avg_baseline * Decimal(str(spike_threshold))
 
     async def check_service_budget(
-        self,
-        service_name: str,
-        usage: CostMetrics
+        self, service_name: str, usage: CostMetrics
     ) -> List[BudgetAlert]:
         """Check budget alerts for specific service."""
         service_budget_str = await self.redis.get(f"budget:service:{service_name}")
@@ -743,14 +777,16 @@ class BudgetAlertService:
 
         alerts = []
         if usage_percentage >= 80:
-            alerts.append(BudgetAlert(
-                alert_type=AlertType.SERVICE_BUDGET_WARNING,
-                severity="warning" if usage_percentage < 100 else "critical",
-                message=f"Service {service_name} budget {usage_percentage:.1f}% used",
-                current_usage=usage.total_cost,
-                budget_limit=service_budget,
-                service_name=service_name
-            ))
+            alerts.append(
+                BudgetAlert(
+                    alert_type=AlertType.SERVICE_BUDGET_WARNING,
+                    severity="warning" if usage_percentage < 100 else "critical",
+                    message=f"Service {service_name} budget {usage_percentage:.1f}% used",
+                    current_usage=usage.total_cost,
+                    budget_limit=service_budget,
+                    service_name=service_name,
+                )
+            )
 
         return alerts
 
@@ -772,8 +808,7 @@ class CostOptimizationService:
             return None
 
     async def analyze_model_efficiency(
-        self,
-        usage_data: List[AIUsageMetrics]
+        self, usage_data: List[AIUsageMetrics]
     ) -> CostOptimization:
         """Analyze model efficiency and recommend optimal models."""
 
@@ -794,7 +829,7 @@ class CostOptimizationService:
                 "efficiency": efficiency,
                 "cost": total_cost,
                 "quality": avg_quality,
-                "usage_count": len(usages)
+                "usage_count": len(usages),
             }
 
         # Find most efficient model
@@ -811,12 +846,15 @@ class CostOptimizationService:
             potential_savings=max(Decimal("0"), estimated_savings),
             confidence_score=0.8,
             implementation_effort="low",
-            priority="high" if estimated_savings > current_cost * Decimal("0.2") else "medium"
+            priority=(
+                "high"
+                if estimated_savings > current_cost * Decimal("0.2")
+                else "medium"
+            ),
         )
 
     async def analyze_caching_opportunities(
-        self,
-        similar_requests: List[Dict[str, Any]]
+        self, similar_requests: List[Dict[str, Any]]
     ) -> CostOptimization:
         """Analyze caching opportunities for repeated similar requests."""
 
@@ -833,12 +871,11 @@ class CostOptimizationService:
             potential_savings=total_savings,
             confidence_score=0.9,
             implementation_effort="medium",
-            priority="high" if total_savings > Decimal("10") else "medium"
+            priority="high" if total_savings > Decimal("10") else "medium",
         )
 
     async def analyze_batch_opportunities(
-        self,
-        individual_requests: List[Dict[str, Any]]
+        self, individual_requests: List[Dict[str, Any]]
     ) -> CostOptimization:
         """Analyze opportunities for batch processing."""
 
@@ -847,8 +884,10 @@ class CostOptimizationService:
         current_group = []
 
         for request in sorted(individual_requests, key=lambda x: x["timestamp"]):
-            if (not current_group or
-                (request["timestamp"] - current_group[-1]["timestamp"]).seconds < 300):  # 5 minutes
+            if (
+                not current_group
+                or (request["timestamp"] - current_group[-1]["timestamp"]).seconds < 300
+            ):  # 5 minutes
                 current_group.append(request)
             else:
                 if len(current_group) > 1:
@@ -873,12 +912,11 @@ class CostOptimizationService:
             potential_savings=total_savings,
             confidence_score=0.7,
             implementation_effort="high",
-            priority="medium"
+            priority="medium",
         )
 
     async def analyze_prompt_efficiency(
-        self,
-        prompt_metrics: Dict[str, Any]
+        self, prompt_metrics: Dict[str, Any]
     ) -> CostOptimization:
         """Analyze prompt efficiency and recommend optimizations."""
 
@@ -890,26 +928,41 @@ class CostOptimizationService:
         potential_savings = Decimal("0")
 
         if avg_input_tokens > 2000:
-            recommendations.append("Reduce input token count through prompt compression")
-            potential_savings += cost_per_success * Decimal("0.3")  # 30% savings from compression
+            recommendations.append(
+                "Reduce input token count through prompt compression"
+            )
+            potential_savings += cost_per_success * Decimal(
+                "0.3"
+            )  # 30% savings from compression
 
         if success_rate < 0.9:
             recommendations.append("Improve prompt clarity to reduce retries")
-            retry_cost = cost_per_success * Decimal(str(1 - success_rate)) / Decimal(str(success_rate))
+            retry_cost = (
+                cost_per_success
+                * Decimal(str(1 - success_rate))
+                / Decimal(str(success_rate))
+            )
             potential_savings += retry_cost
 
         return CostOptimization(
             strategy=OptimizationStrategy.PROMPT_OPTIMIZATION,
-            recommendation="; ".join(recommendations) if recommendations else "Prompts are well optimized",
+            recommendation=(
+                "; ".join(recommendations)
+                if recommendations
+                else "Prompts are well optimized"
+            ),
             potential_savings=potential_savings,
             confidence_score=0.8,
             implementation_effort="medium",
-            priority="high" if potential_savings > cost_per_success * Decimal("0.2") else "low"
+            priority=(
+                "high"
+                if potential_savings > cost_per_success * Decimal("0.2")
+                else "low"
+            ),
         )
 
     async def generate_optimization_report(
-        self,
-        analysis_data: Dict[str, Any]
+        self, analysis_data: Dict[str, Any]
     ) -> Dict[str, Any]:
         """Generate comprehensive optimization report."""
 
@@ -917,23 +970,27 @@ class CostOptimizationService:
         total_potential_savings = Decimal("0")
 
         # Mock analysis for comprehensive report
-        optimizations.append(CostOptimization(
-            strategy=OptimizationStrategy.MODEL_SWITCH,
-            recommendation="Switch to Gemini Flash for simple tasks",
-            potential_savings=Decimal("25.50"),
-            confidence_score=0.85,
-            implementation_effort="low",
-            priority="high"
-        ))
+        optimizations.append(
+            CostOptimization(
+                strategy=OptimizationStrategy.MODEL_SWITCH,
+                recommendation="Switch to Gemini Flash for simple tasks",
+                potential_savings=Decimal("25.50"),
+                confidence_score=0.85,
+                implementation_effort="low",
+                priority="high",
+            )
+        )
 
-        optimizations.append(CostOptimization(
-            strategy=OptimizationStrategy.CACHING_IMPROVEMENT,
-            recommendation="Implement semantic caching for policy generation",
-            potential_savings=Decimal("15.30"),
-            confidence_score=0.9,
-            implementation_effort="medium",
-            priority="high"
-        ))
+        optimizations.append(
+            CostOptimization(
+                strategy=OptimizationStrategy.CACHING_IMPROVEMENT,
+                recommendation="Implement semantic caching for policy generation",
+                potential_savings=Decimal("15.30"),
+                confidence_score=0.9,
+                implementation_effort="medium",
+                priority="high",
+            )
+        )
 
         total_potential_savings = sum(opt.potential_savings for opt in optimizations)
 
@@ -941,7 +998,7 @@ class CostOptimizationService:
         priority_recommendations = sorted(
             optimizations,
             key=lambda x: (x.priority == "high", x.potential_savings),
-            reverse=True
+            reverse=True,
         )
 
         return {
@@ -953,7 +1010,7 @@ class CostOptimizationService:
                     "potential_savings": opt.potential_savings,
                     "confidence_score": opt.confidence_score,
                     "implementation_effort": opt.implementation_effort,
-                    "priority": opt.priority
+                    "priority": opt.priority,
                 }
                 for opt in optimizations
             ],
@@ -961,15 +1018,16 @@ class CostOptimizationService:
                 {
                     "strategy": opt.strategy.value,
                     "recommendation": opt.recommendation,
-                    "potential_savings": opt.potential_savings
+                    "potential_savings": opt.potential_savings,
                 }
                 for opt in priority_recommendations[:3]
             ],
             "roi_analysis": {
                 "current_monthly_cost": analysis_data.get("total_cost", Decimal("0")),
-                "projected_monthly_savings": total_potential_savings * 30,  # Extrapolate daily to monthly
-                "payback_period_days": 30  # Assume optimization implementation cost
-            }
+                "projected_monthly_savings": total_potential_savings
+                * 30,  # Extrapolate daily to monthly
+                "payback_period_days": 30,  # Assume optimization implementation cost
+            },
         }
 
 
@@ -1006,7 +1064,7 @@ class AICostManager:
         response_time_ms: Optional[float] = None,
         cache_hit: bool = False,
         error_occurred: bool = False,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         """Track a complete AI request with cost calculation."""
 
@@ -1022,7 +1080,7 @@ class AICostManager:
             response_time_ms=response_time_ms,
             cache_hit=cache_hit,
             error_occurred=error_occurred,
-            request_metadata=metadata
+            request_metadata=metadata,
         )
 
         # Check budget alerts
@@ -1032,7 +1090,7 @@ class AICostManager:
             "usage_id": usage.request_id,
             "cost_usd": usage.cost_usd,
             "efficiency_score": usage.calculate_efficiency_score(),
-            "cost_per_token": usage.cost_per_token
+            "cost_per_token": usage.cost_per_token,
         }
 
     async def _check_real_time_budget_alerts(self, usage: AIUsageMetrics) -> None:
@@ -1045,7 +1103,7 @@ class AICostManager:
             total_requests=today_costs["total_requests"],
             total_tokens=today_costs["total_tokens"],
             period_start=datetime.now().replace(hour=0, minute=0, second=0),
-            period_end=datetime.now()
+            period_end=datetime.now(),
         )
 
         alerts = await self.budget_service.check_budget_alerts(usage_metrics)
@@ -1064,15 +1122,23 @@ class AICostManager:
 
         # Calculate efficiency metrics
         efficiency_metrics = {
-            "cost_per_request": daily_costs["total_cost"] / daily_costs["total_requests"] if daily_costs["total_requests"] > 0 else Decimal("0"),
-            "cost_per_token": daily_costs["total_cost"] / daily_costs["total_tokens"] if daily_costs["total_tokens"] > 0 else Decimal("0")
+            "cost_per_request": (
+                daily_costs["total_cost"] / daily_costs["total_requests"]
+                if daily_costs["total_requests"] > 0
+                else Decimal("0")
+            ),
+            "cost_per_token": (
+                daily_costs["total_cost"] / daily_costs["total_tokens"]
+                if daily_costs["total_tokens"] > 0
+                else Decimal("0")
+            ),
         }
 
         return {
             **daily_costs,
             "cost_trends": trends,
             "efficiency_metrics": efficiency_metrics,
-            "date": target_date.isoformat()
+            "date": target_date.isoformat(),
         }
 
     async def set_daily_budget(self, amount: Decimal) -> None:
@@ -1092,7 +1158,7 @@ class AICostManager:
             total_requests=today_costs["total_requests"],
             total_tokens=today_costs["total_tokens"],
             period_start=datetime.now().replace(hour=0, minute=0, second=0),
-            period_end=datetime.now()
+            period_end=datetime.now(),
         )
 
         return await self.budget_service.check_budget_alerts(usage_metrics)
@@ -1105,14 +1171,16 @@ class AICostManager:
 
         usage_data = await self.cost_tracker.get_usage_by_time_range(
             datetime.combine(start_date, datetime.min.time()),
-            datetime.combine(end_date, datetime.max.time())
+            datetime.combine(end_date, datetime.max.time()),
         )
 
         if not usage_data:
             return []
 
         # Analyze model efficiency
-        model_optimization = await self.optimization_service.analyze_model_efficiency(usage_data)
+        model_optimization = await self.optimization_service.analyze_model_efficiency(
+            usage_data
+        )
 
         return [
             {
@@ -1121,7 +1189,7 @@ class AICostManager:
                 "potential_savings": model_optimization.potential_savings,
                 "confidence_score": model_optimization.confidence_score,
                 "implementation_effort": model_optimization.implementation_effort,
-                "priority": model_optimization.priority
+                "priority": model_optimization.priority,
             }
         ]
 
@@ -1143,10 +1211,7 @@ class AICostManager:
         current_date = start_date
         while current_date <= end_date:
             daily_data = await self.cost_tracker.calculate_daily_costs(current_date)
-            daily_breakdown.append({
-                "date": current_date.isoformat(),
-                **daily_data
-            })
+            daily_breakdown.append({"date": current_date.isoformat(), **daily_data})
             total_cost += daily_data["total_cost"]
             total_requests += daily_data["total_requests"]
             total_tokens += daily_data["total_tokens"]
@@ -1154,7 +1219,9 @@ class AICostManager:
 
         # Get optimization opportunities
         analysis_data = {"total_cost": total_cost}
-        optimization_report = await self.optimization_service.generate_optimization_report(analysis_data)
+        optimization_report = (
+            await self.optimization_service.generate_optimization_report(analysis_data)
+        )
 
         return {
             "period": f"{year}-{month:02d}",
@@ -1163,7 +1230,7 @@ class AICostManager:
             "total_tokens": total_tokens,
             "daily_breakdown": daily_breakdown,
             "service_analysis": {},  # Would aggregate from daily breakdowns
-            "optimization_opportunities": optimization_report
+            "optimization_opportunities": optimization_report,
         }
 
 
@@ -1178,16 +1245,18 @@ class IntelligentModelRouter:
         self,
         task_description: str,
         task_type: str,
-        max_cost_per_request: Optional[Decimal] = None
+        max_cost_per_request: Optional[Decimal] = None,
     ) -> Dict[str, Any]:
         """Select optimal model based on task complexity and cost constraints.
-        
+
         **DO NOT CHANGE MODEL NAMES WITHOUT EXPRESS PERMISSION**
         **USES GEMINI 2.5 MODELS: gemini-2.5-flash-lite, gemini-2.5-flash, gemini-2.5-pro**
         """
 
         # Simple complexity scoring based on task description length and type
-        complexity_score = len(task_description.split()) / 100  # Normalize by word count
+        complexity_score = (
+            len(task_description.split()) / 100
+        )  # Normalize by word count
 
         if task_type in ["policy_generation", "assessment_analysis"]:
             complexity_score += 0.5
@@ -1215,20 +1284,19 @@ class IntelligentModelRouter:
             recommended_models = filtered_models or recommended_models
 
         return {
-            "model": recommended_models[0] if recommended_models else "gemini-2.5-flash",
+            "model": (
+                recommended_models[0] if recommended_models else "gemini-2.5-flash"
+            ),
             "alternatives": recommended_models[1:],
             "complexity_score": complexity_score,
-            "reasoning": f"Selected based on task complexity ({complexity_score:.2f}) and cost constraints"
+            "reasoning": f"Selected based on task complexity ({complexity_score:.2f}) and cost constraints",
         }
 
 
 class DynamicCacheManager:
     """Manages dynamic caching decisions based on cost-benefit analysis."""
 
-    async def should_cache_request(
-        self,
-        request_data: Dict[str, Any]
-    ) -> bool:
+    async def should_cache_request(self, request_data: Dict[str, Any]) -> bool:
         """Determine if request should be cached based on cost-benefit analysis."""
 
         estimated_cost = request_data.get("estimated_cost", Decimal("0"))
@@ -1270,10 +1338,7 @@ class PromptOptimizer:
 class BatchRequestOptimizer:
     """Optimizes multiple requests through batching."""
 
-    async def optimize_batch(
-        self,
-        requests: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+    async def optimize_batch(self, requests: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Optimize multiple requests through intelligent batching."""
 
         if len(requests) < 2:
@@ -1292,7 +1357,7 @@ class BatchRequestOptimizer:
             "batched": True,
             "combined_prompt": combined_prompt,
             "cost_savings": individual_cost - batch_cost,
-            "original_count": len(requests)
+            "original_count": len(requests),
         }
 
 
@@ -1301,31 +1366,34 @@ class CostAnalyticsDashboard:
     """Generates executive-level cost analytics and dashboards."""
 
     async def generate_executive_summary(
-        self,
-        cost_data: Dict[str, Any]
+        self, cost_data: Dict[str, Any]
     ) -> Dict[str, Any]:
         """Generate executive summary of AI costs."""
 
         current_month = cost_data.get("current_month", Decimal("0"))
         previous_month = cost_data.get("previous_month", Decimal("0"))
 
-        growth_rate = float((current_month - previous_month) / previous_month * 100) if previous_month > 0 else 0
+        growth_rate = (
+            float((current_month - previous_month) / previous_month * 100)
+            if previous_month > 0
+            else 0
+        )
 
         return {
             "cost_growth_rate": growth_rate,
             "monthly_trend": "increasing" if growth_rate > 0 else "decreasing",
             "roi_analysis": {
                 "cost_per_customer": current_month / 100,  # Assume 100 customers
-                "efficiency_score": 85.5  # Mock efficiency score
+                "efficiency_score": 85.5,  # Mock efficiency score
             },
             "optimization_impact": {
                 "potential_monthly_savings": current_month * Decimal("0.2"),
-                "implemented_savings": current_month * Decimal("0.1")
+                "implemented_savings": current_month * Decimal("0.1"),
             },
             "budget_utilization": {
                 "percentage_used": 75.5,
-                "projected_month_end": current_month * Decimal("1.33")
-            }
+                "projected_month_end": current_month * Decimal("1.33"),
+            },
         }
 
 
@@ -1333,9 +1401,7 @@ class CostAttributionAnalyzer:
     """Analyzes cost attribution across multiple dimensions."""
 
     async def analyze_cost_attribution(
-        self,
-        time_period: Dict[str, datetime],
-        dimensions: List[str]
+        self, time_period: Dict[str, datetime], dimensions: List[str]
     ) -> Dict[str, Any]:
         """Analyze cost attribution across specified dimensions."""
 
@@ -1343,29 +1409,29 @@ class CostAttributionAnalyzer:
             "user_breakdown": {
                 "top_users": [
                     {"user_id": "user_123", "cost": Decimal("45.20"), "requests": 245},
-                    {"user_id": "user_456", "cost": Decimal("38.50"), "requests": 198}
+                    {"user_id": "user_456", "cost": Decimal("38.50"), "requests": 198},
                 ]
             },
             "service_breakdown": {
                 "policy_generation": {"cost": Decimal("125.30"), "percentage": 42.5},
                 "assessment_analysis": {"cost": Decimal("89.70"), "percentage": 30.4},
-                "chat_assistance": {"cost": Decimal("79.80"), "percentage": 27.1}
+                "chat_assistance": {"cost": Decimal("79.80"), "percentage": 27.1},
             },
             "model_breakdown": {
                 "gemini-1.5-pro": {"cost": Decimal("156.20"), "percentage": 53.0},
                 "gemini-1.5-flash": {"cost": Decimal("89.40"), "percentage": 30.3},
-                "gpt-4-turbo": {"cost": Decimal("49.20"), "percentage": 16.7}
+                "gpt-4-turbo": {"cost": Decimal("49.20"), "percentage": 16.7},
             },
             "feature_breakdown": {
                 "ai_policy_generation": {"cost": Decimal("98.40"), "percentage": 33.4},
                 "compliance_assessment": {"cost": Decimal("87.20"), "percentage": 29.6},
-                "evidence_analysis": {"cost": Decimal("65.80"), "percentage": 22.3}
+                "evidence_analysis": {"cost": Decimal("65.80"), "percentage": 22.3},
             },
             "cost_drivers": [
                 "High usage of premium models for simple tasks",
                 "Lack of caching for repeated policy templates",
-                "Inefficient prompt engineering leading to higher token usage"
-            ]
+                "Inefficient prompt engineering leading to higher token usage",
+            ],
         }
 
 
@@ -1377,7 +1443,7 @@ class PredictiveCostModeler:
         historical_data: List[Dict[str, Any]],
         prediction_horizon_days: int,
         include_seasonality: bool = True,
-        include_growth_trends: bool = True
+        include_growth_trends: bool = True,
     ) -> Dict[str, Any]:
         """Predict future costs based on historical patterns."""
 
@@ -1410,19 +1476,19 @@ class PredictiveCostModeler:
 
         return {
             "predicted_costs": [
-                {"day": i+1, "cost": Decimal(str(cost))}
+                {"day": i + 1, "cost": Decimal(str(cost))}
                 for i, cost in enumerate(predicted_costs)
             ],
             "total_predicted": Decimal(str(total_predicted)),
             "confidence_intervals": {
                 "lower_bound": Decimal(str(total_predicted * 0.8)),
-                "upper_bound": Decimal(str(total_predicted * 1.2))
+                "upper_bound": Decimal(str(total_predicted * 1.2)),
             },
             "confidence_score": confidence,
             "cost_drivers": [
                 "Increasing user adoption",
                 "Seasonal business cycles",
-                "New feature rollouts"
+                "New feature rollouts",
             ],
-            "recommended_budget": Decimal(str(total_predicted * 1.15))  # 15% buffer
+            "recommended_budget": Decimal(str(total_predicted * 1.15)),  # 15% buffer
         }

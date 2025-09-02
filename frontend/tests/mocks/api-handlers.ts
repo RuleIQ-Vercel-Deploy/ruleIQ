@@ -447,29 +447,35 @@ export const errorHandlers = {
 // Enhanced auth response handlers
 export const authHandlers = [
   http.post('/api/auth/login', () => {
-    return HttpResponse.json({
-      access_token: 'mock-access-token',
-      token_type: 'bearer',
-      expires_in: 3600,
-      user: {
-        id: 'user-123',
-        email: 'test@example.com',
-        name: 'Test User'
-      }
-    }, { status: 200 });
+    return HttpResponse.json(
+      {
+        access_token: 'mock-access-token',
+        token_type: 'bearer',
+        expires_in: 3600,
+        user: {
+          id: 'user-123',
+          email: 'test@example.com',
+          name: 'Test User',
+        },
+      },
+      { status: 200 },
+    );
   }),
 
   http.post('/api/auth/register', () => {
-    return HttpResponse.json({
-      access_token: 'mock-access-token',
-      token_type: 'bearer',
-      expires_in: 3600,
-      user: {
-        id: 'user-456',
-        email: 'newuser@example.com',
-        name: 'New User'
-      }
-    }, { status: 201 });
+    return HttpResponse.json(
+      {
+        access_token: 'mock-access-token',
+        token_type: 'bearer',
+        expires_in: 3600,
+        user: {
+          id: 'user-456',
+          email: 'newuser@example.com',
+          name: 'New User',
+        },
+      },
+      { status: 201 },
+    );
   }),
 
   http.get('/api/auth/me', ({ request }) => {
@@ -477,63 +483,54 @@ export const authHandlers = [
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       return HttpResponse.json({ detail: 'No authentication token available' }, { status: 401 });
     }
-    
-    return HttpResponse.json({
-      id: 'user-123',
-      email: 'test@example.com',
-      name: 'Test User'
-    }, { status: 200 });
+
+    return HttpResponse.json(
+      {
+        id: 'user-123',
+        email: 'test@example.com',
+        name: 'Test User',
+      },
+      { status: 200 },
+    );
   }),
-  
+
   // Freemium endpoints
   http.post(`${baseURL}/freemium/capture-email`, async ({ request }) => {
-    const body = await request.json() as any;
-    
+    const body = (await request.json()) as any;
+
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!body.email || !emailRegex.test(body.email)) {
-      return HttpResponse.json(
-        { detail: 'Invalid email format' },
-        { status: 400 }
-      );
+      return HttpResponse.json({ detail: 'Invalid email format' }, { status: 400 });
     }
-    
+
     // Validate consent
     if (!body.consent) {
-      return HttpResponse.json(
-        { detail: 'Consent is required' },
-        { status: 400 }
-      );
+      return HttpResponse.json({ detail: 'Consent is required' }, { status: 400 });
     }
-    
+
     return HttpResponse.json({
       success: true,
       token: 'mock-session-token',
       session_id: 'session-123',
     });
   }),
-  
+
   http.post(`${baseURL}/freemium/sessions`, async ({ request }) => {
-    const body = await request.json() as any;
-    
+    const body = (await request.json()) as any;
+
     // Validate business type
     const validBusinessTypes = ['technology', 'retail', 'healthcare', 'finance', 'other'];
     if (!body.business_type || !validBusinessTypes.includes(body.business_type)) {
-      return HttpResponse.json(
-        { detail: 'Invalid business type' },
-        { status: 400 }
-      );
+      return HttpResponse.json({ detail: 'Invalid business type' }, { status: 400 });
     }
-    
+
     // Validate company size
     const validSizes = ['1-10', '10-50', '50-200', '200-500', '500+'];
     if (!body.company_size || !validSizes.includes(body.company_size)) {
-      return HttpResponse.json(
-        { detail: 'Invalid company size' },
-        { status: 400 }
-      );
+      return HttpResponse.json({ detail: 'Invalid company size' }, { status: 400 });
     }
-    
+
     return HttpResponse.json({
       session_id: 'session-123',
       session_token: 'mock-session-token',
@@ -547,17 +544,14 @@ export const authHandlers = [
       },
     });
   }),
-  
+
   http.post(`${baseURL}/freemium/answer-question`, async ({ request }) => {
-    const body = await request.json() as any;
-    
+    const body = (await request.json()) as any;
+
     if (!body.session_token || !body.question_id || !body.answer) {
-      return HttpResponse.json(
-        { detail: 'Missing required fields' },
-        { status: 400 }
-      );
+      return HttpResponse.json({ detail: 'Missing required fields' }, { status: 400 });
     }
-    
+
     return HttpResponse.json({
       next_question: {
         question_id: 'q2',
@@ -572,7 +566,7 @@ export const authHandlers = [
       },
     });
   }),
-  
+
   http.get(`${baseURL}/freemium/results/:token`, ({ params }) => {
     return HttpResponse.json({
       compliance_score: 75,

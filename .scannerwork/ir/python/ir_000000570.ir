@@ -1,0 +1,24 @@
+
+>	5"{alert_data.get("details", "No details provided")}."str
+<3"Prepares the subject and body for an alert email."str
+C:"Compliance Alert: {alert_type.replace('_', ' ').title()}"str
+]T"Dear {user.full_name or "User"},
+
+A new compliance alert requires your attention: "str
+alert_type1 1(
+alert_data1 1(/user11 1(;"†'
+%
+4 4(Isubject"#id#:Bstr$
+"
+5 7(3body"#id#:Bstr+
+)
+8 8(F
+body"	#binop +#*2+:	(
+&
+9 9("#unknown-value#Btuple&
+$
+9 9("#array-add-last#:&
+$
+9 9("#array-add-last#:
+
+9 9(*9/home/omar/Documents/ruleIQ/workers/notification_tasks.py

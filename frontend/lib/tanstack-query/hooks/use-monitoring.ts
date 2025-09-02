@@ -2,11 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { monitoringService } from '@/lib/api/monitoring.service';
 
-import {
-  createQueryKey,
-  type BaseQueryOptions,
-  type BaseMutationOptions,
-} from './base';
+import { createQueryKey, type BaseQueryOptions, type BaseMutationOptions } from './base';
 
 // Query keys
 const MONITORING_KEY = 'monitoring';
@@ -165,9 +161,7 @@ export function useResolveAlert(
 }
 
 // Hook to create alert
-export function useCreateAlert(
-  options?: BaseMutationOptions<any, unknown, any>,
-) {
+export function useCreateAlert(options?: BaseMutationOptions<any, unknown, any>) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -183,29 +177,22 @@ export function useCreateAlert(
 // Hook to export logs
 export function useExportLogs() {
   return useMutation({
-    mutationFn: ({ 
-      type, 
-      format, 
-      params 
-    }: { 
+    mutationFn: ({
+      type,
+      format,
+      params,
+    }: {
       type: 'audit' | 'error' | 'all';
       format: 'csv' | 'json' | 'pdf';
       params?: any;
-    }) =>
-      monitoringService.exportLogs(type, format, params),
+    }) => monitoringService.exportLogs(type, format, params),
   });
 }
 
 // Hook to test alert notification
 export function useTestAlertNotification() {
   return useMutation({
-    mutationFn: ({ 
-      channel, 
-      config 
-    }: { 
-      channel: 'email' | 'slack' | 'webhook';
-      config: any;
-    }) =>
+    mutationFn: ({ channel, config }: { channel: 'email' | 'slack' | 'webhook'; config: any }) =>
       monitoringService.testAlertNotification(channel, config),
   });
 }

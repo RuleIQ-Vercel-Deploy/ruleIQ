@@ -1,0 +1,105 @@
+
+$config.base.BaseConfig.get_db_config6
+*/home/omar/Documents/ruleIQ/config/base.pyô ô("2*≥
+2
+ö ö(-
+
+õ †(	
+%1"dictd
+b
+
+ú ú($
+%2"__id*H
+
+__unknown_file (,**
+config.base.BaseConfig"
+DATABASE_URLå
+â
+
+ú ú($
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*#
+
+__unknown_file (
+url*"
+
+__unknown_file (
+
+%2d
+b
+
+ù ù(*
+%4"__id*H
+
+__unknown_file (,**
+config.base.BaseConfig"
+DB_POOL_SIZEí
+è
+
+ù ù(*
+%5"__mapSet*"
+
+__unknown_file (
+
+%1*)
+
+__unknown_file (
+	pool_size*"
+
+__unknown_file (
+
+%4g
+e
+
+û û(0
+%6"__id*K
+
+__unknown_file (/*-
+config.base.BaseConfig"
+DB_MAX_OVERFLOWï
+í
+
+û û(0
+%7"__mapSet*"
+
+__unknown_file (
+
+%1*,
+
+__unknown_file (
+max_overflow*"
+
+__unknown_file (
+
+%6g
+e
+
+ü ü(0
+%8"__id*K
+
+__unknown_file (/*-
+config.base.BaseConfig"
+DB_POOL_TIMEOUTï
+í
+
+ü ü(0
+%9"__mapSet*"
+
+__unknown_file (
+
+%1*,
+
+__unknown_file (
+pool_timeout*"
+
+__unknown_file (
+
+%8"
+
+õ †(	
+
+%1B
+config.base.BaseConfigH

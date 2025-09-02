@@ -48,6 +48,7 @@ logger = get_logger(__name__)
 
 router = APIRouter()
 
+
 @router.post("/", status_code=201, response_model=EvidenceResponse)
 async def create_new_evidence(
     evidence_data: EvidenceCreate,
@@ -60,7 +61,9 @@ async def create_new_evidence(
     from database.business_profile import BusinessProfile
 
     # Get user's business profile automatically
-    profile_stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user.id))
+    profile_stmt = select(BusinessProfile).where(
+        BusinessProfile.user_id == str(current_user.id)
+    )
     profile_result = await db.execute(profile_stmt)
     profile = profile_result.scalars().first()
     if not profile:
@@ -78,6 +81,7 @@ async def create_new_evidence(
     )
     # Convert EvidenceItem to expected response format
     return EvidenceService._convert_evidence_item_to_response(evidence)
+
 
 @router.get("/")
 async def list_evidence(
@@ -106,7 +110,10 @@ async def list_evidence(
     )
 
     # Convert EvidenceItem objects to expected response format
-    results = [EvidenceService._convert_evidence_item_to_response(item) for item in evidence_list]
+    results = [
+        EvidenceService._convert_evidence_item_to_response(item)
+        for item in evidence_list
+    ]
 
     # Calculate pagination info
     total_pages = (total_count + page_size - 1) // page_size  # Ceiling division
@@ -128,14 +135,18 @@ async def list_evidence(
         # Return simple list for backward compatibility
         return results
 
+
 @router.get("/stats", response_model=EvidenceStatisticsResponse)
 async def get_evidence_statistics(
     db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
 ):
     """Get evidence statistics for the current user."""
-    stats = await EvidenceService.get_evidence_statistics(db=db, user_id=UUID(str(str(current_user.id))))
+    stats = await EvidenceService.get_evidence_statistics(
+        db=db, user_id=UUID(str(str(current_user.id)))
+    )
     return stats
+
 
 @router.get("/search", response_model=EvidenceSearchResponse)
 async def search_evidence_items(
@@ -182,6 +193,7 @@ async def search_evidence_items(
         "page_size": page_size,
     }
 
+
 @router.post("/validate", response_model=EvidenceValidationResult)
 async def validate_evidence_quality(
     evidence_data: dict,
@@ -192,13 +204,18 @@ async def validate_evidence_quality(
     # Placeholder implementation
     return {
         "quality_score": 85,
-        "validation_results": {"completeness": "good", "relevance": "high", "accuracy": "verified"},
+        "validation_results": {
+            "completeness": "good",
+            "relevance": "high",
+            "accuracy": "verified",
+        },
         "issues": [],
         "recommendations": [
             "Consider adding more detailed metadata",
             "Include version control information",
         ],
     }
+
 
 @router.get("/requirements/{framework_id}", response_model=EvidenceRequirementsResponse)
 async def get_evidence_requirements(
@@ -226,6 +243,7 @@ async def get_evidence_requirements(
     ]
     return {"requirements": requirements}
 
+
 @router.post("/requirements", response_model=EvidenceRequirementsResponse)
 async def identify_evidence_requirements(
     request_data: dict,
@@ -243,9 +261,11 @@ async def identify_evidence_requirements(
             "automation_possible": True,
         },
         {
-            "control_id": request_data.get("control_ids", ["", ""])[1]
-            if len(request_data.get("control_ids", [])) > 1
-            else "",
+            "control_id": (
+                request_data.get("control_ids", ["", ""])[1]
+                if len(request_data.get("control_ids", [])) > 1
+                else ""
+            ),
             "evidence_type": "log",
             "title": "Access Logs",
             "description": "System access logs for audit trail",
@@ -253,6 +273,7 @@ async def identify_evidence_requirements(
         },
     ]
     return {"requirements": requirements}
+
 
 @router.get("/{id}", response_model=EvidenceResponse)
 async def get_evidence_details(
@@ -272,6 +293,7 @@ async def get_evidence_details(
 
     # Convert EvidenceItem to expected response format
     return EvidenceService._convert_evidence_item_to_response(evidence)
+
 
 @router.put("/{id}", response_model=EvidenceResponse)
 async def update_evidence_item(
@@ -293,10 +315,13 @@ async def update_evidence_item(
     elif status == "unauthorized":
         raise HTTPException(status_code=403, detail="Access denied")
     elif status.startswith("validation_error"):
-        raise HTTPException(status_code=400, detail=status.replace("validation_error: ", ""))
+        raise HTTPException(
+            status_code=400, detail=status.replace("validation_error: ", "")
+        )
 
     # Convert EvidenceItem to expected response format
     return EvidenceService._convert_evidence_item_to_response(evidence)
+
 
 @router.patch("/{id}", response_model=EvidenceResponse)
 async def update_evidence_status(
@@ -318,10 +343,13 @@ async def update_evidence_status(
     elif status == "unauthorized":
         raise HTTPException(status_code=403, detail="Access denied")
     elif status.startswith("validation_error"):
-        raise HTTPException(status_code=400, detail=status.replace("validation_error: ", ""))
+        raise HTTPException(
+            status_code=400, detail=status.replace("validation_error: ", "")
+        )
 
     # Convert EvidenceItem to expected response format
     return EvidenceService._convert_evidence_item_to_response(evidence)
+
 
 @router.delete("/{id}", status_code=204)
 async def delete_evidence_item(
@@ -339,6 +367,7 @@ async def delete_evidence_item(
     elif status == "unauthorized":
         raise HTTPException(status_code=403, detail="Access denied")
 
+
 @router.post("/bulk-update", response_model=EvidenceBulkUpdateResponse)
 async def bulk_update_evidence_status(
     bulk_update: EvidenceBulkUpdate,
@@ -346,12 +375,14 @@ async def bulk_update_evidence_status(
     current_user: User = Depends(get_current_active_user),
 ):
     """Bulk update evidence status for multiple items."""
-    updated_count, failed_count, failed_ids = await EvidenceService.bulk_update_evidence_status(
-        db=db,
-        user=current_user,
-        evidence_ids=bulk_update.evidence_ids,
-        status=bulk_update.status,
-        reason=bulk_update.reason,
+    updated_count, failed_count, failed_ids = (
+        await EvidenceService.bulk_update_evidence_status(
+            db=db,
+            user=current_user,
+            evidence_ids=bulk_update.evidence_ids,
+            status=bulk_update.status,
+            reason=bulk_update.reason,
+        )
     )
 
     return EvidenceBulkUpdateResponse(
@@ -359,6 +390,7 @@ async def bulk_update_evidence_status(
         failed_count=failed_count,
         failed_ids=failed_ids if failed_ids else None,
     )
+
 
 @router.post("/{id}/automation", response_model=EvidenceAutomationResponse)
 async def configure_evidence_automation(
@@ -385,6 +417,7 @@ async def configure_evidence_automation(
         "test_connection": True,
         "next_collection": "2024-01-02T00:00:00Z",
     }
+
 
 @router.post("/{id}/upload", response_model=EvidenceResponse)
 async def upload_evidence_file_route(
@@ -416,7 +449,9 @@ async def upload_evidence_file_route(
     )
 
     # Validate and analyze file
-    validated_file, analysis_report, quarantine_path = await validator.validate_and_analyze(file)
+    validated_file, analysis_report, quarantine_path = (
+        await validator.validate_and_analyze(file)
+    )
 
     # Log security analysis
     logger.info(
@@ -452,9 +487,11 @@ async def upload_evidence_file_route(
             "validation_time": analysis_report.validation_time,
             "quarantine_path": quarantine_path,
             "original_filename": analysis_report.original_filename,
-            "threats_detected": analysis_report.threats_detected
-            if analysis_report.threats_detected
-            else None,
+            "threats_detected": (
+                analysis_report.threats_detected
+                if analysis_report.threats_detected
+                else None
+            ),
         },
     )
 
@@ -462,7 +499,9 @@ async def upload_evidence_file_route(
         # Clean up uploaded file on failure
         if secure_path.exists():
             secure_path.unlink()
-        raise HTTPException(status_code=404, detail="Failed to upload or link file to evidence")
+        raise HTTPException(
+            status_code=404, detail="Failed to upload or link file to evidence"
+        )
 
     # Return enhanced response with security information
     response = EvidenceService._convert_evidence_item_to_response(evidence)
@@ -479,6 +518,7 @@ async def upload_evidence_file_route(
 
     return response
 
+
 @router.get("/dashboard/{framework_id}", response_model=EvidenceDashboardResponse)
 async def get_evidence_dashboard(
     framework_id: UUID,
@@ -491,7 +531,9 @@ async def get_evidence_dashboard(
     )
     return dashboard_data
 
+
 # AI Classification Endpoints
+
 
 @router.post("/{id}/classify", response_model=EvidenceClassificationResponse)
 async def classify_evidence_with_ai(
@@ -525,8 +567,12 @@ async def classify_evidence_with_ai(
                 ai_classification=existing_classification,
                 apply_suggestion=False,
                 confidence=existing_classification.get("confidence", 0),
-                suggested_controls=existing_classification.get("suggested_controls", []),
-                reasoning=existing_classification.get("reasoning", "Previously classified"),
+                suggested_controls=existing_classification.get(
+                    "suggested_controls", []
+                ),
+                reasoning=existing_classification.get(
+                    "reasoning", "Previously classified"
+                ),
             )
 
         # Process with AI
@@ -556,6 +602,7 @@ async def classify_evidence_with_ai(
         logger.error(f"Error classifying evidence {id}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Classification failed")
 
+
 @router.post("/classify/bulk", response_model=BulkClassificationResponse)
 async def bulk_classify_evidence(
     request: BulkClassificationRequest,
@@ -575,8 +622,12 @@ async def bulk_classify_evidence(
         for evidence_id in request.evidence_ids:
             try:
                 # Verify evidence exists and user has access
-                evidence, status = await EvidenceService.get_evidence_item_with_auth_check(
-                    db=db, user_id=UUID(str(str(current_user.id))), evidence_id=evidence_id
+                evidence, status = (
+                    await EvidenceService.get_evidence_item_with_auth_check(
+                        db=db,
+                        user_id=UUID(str(str(current_user.id))),
+                        evidence_id=evidence_id,
+                    )
                 )
 
                 if status != "success":
@@ -668,6 +719,7 @@ async def bulk_classify_evidence(
         logger.error(f"Error in bulk classification: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Bulk classification failed")
 
+
 @router.post("/{id}/control-mapping", response_model=ControlMappingResponse)
 async def get_control_mapping_suggestions(
     evidence_id: UUID,
@@ -709,7 +761,10 @@ async def get_control_mapping_suggestions(
                 mappings = [
                     control
                     for control in classification["suggested_controls"]
-                    if any(control.startswith(prefix) for prefix in ["CC", "PI", "PR", "CA", "MA"])
+                    if any(
+                        control.startswith(prefix)
+                        for prefix in ["CC", "PI", "PR", "CA", "MA"]
+                    )
                 ]
                 confidence_scores[framework] = max(classification["confidence"] - 10, 0)
             elif framework.upper() == "GDPR":
@@ -739,6 +794,7 @@ async def get_control_mapping_suggestions(
         )
         raise HTTPException(status_code=500, detail="Control mapping failed")
 
+
 @router.get("/classification/stats", response_model=ClassificationStatsResponse)
 async def get_classification_statistics(
     db: AsyncSession = Depends(get_async_db),
@@ -751,7 +807,9 @@ async def get_classification_statistics(
         from api.schemas.evidence_classification import ClassificationStatsResponse
 
         # Get all evidence for user
-        evidence_items = await EvidenceService.list_all_evidence_items(db=db, user=current_user)
+        evidence_items = await EvidenceService.list_all_evidence_items(
+            db=db, user=current_user
+        )
 
         total_evidence = len(evidence_items)
         classified_evidence = 0
@@ -768,7 +826,9 @@ async def get_classification_statistics(
 
                 # Count by type
                 evidence_type = evidence.evidence_type or "unknown"
-                type_distribution[evidence_type] = type_distribution.get(evidence_type, 0) + 1
+                type_distribution[evidence_type] = (
+                    type_distribution.get(evidence_type, 0) + 1
+                )
 
                 # Count by confidence
                 confidence = evidence.metadata["ai_classification"].get("confidence", 0)
@@ -780,7 +840,9 @@ async def get_classification_statistics(
                     confidence_distribution["low"] += 1
 
                 # Check if recent
-                processed_at_str = evidence.metadata["ai_classification"].get("ai_processed_at")
+                processed_at_str = evidence.metadata["ai_classification"].get(
+                    "ai_processed_at"
+                )
                 if processed_at_str:
                     try:
                         processed_at = datetime.fromisoformat(
@@ -808,9 +870,13 @@ async def get_classification_statistics(
 
     except Exception as e:
         logger.error(f"Error getting classification statistics: {e}", exc_info=True)
-        raise HTTPException(status_code=500, detail="Failed to get classification statistics")
+        raise HTTPException(
+            status_code=500, detail="Failed to get classification statistics"
+        )
+
 
 # Quality Analysis Endpoints
+
 
 @router.get("/{id}/quality-analysis", response_model=QualityAnalysisResponse)
 async def get_evidence_quality_analysis(
@@ -867,7 +933,9 @@ async def get_evidence_quality_analysis(
                 overall_score=quality_analysis["ai_analysis"].get("overall_score", 50),
                 strengths=quality_analysis["ai_analysis"].get("strengths", []),
                 weaknesses=quality_analysis["ai_analysis"].get("weaknesses", []),
-                recommendations=quality_analysis["ai_analysis"].get("recommendations", []),
+                recommendations=quality_analysis["ai_analysis"].get(
+                    "recommendations", []
+                ),
                 ai_confidence=quality_analysis["ai_analysis"].get("ai_confidence", 50),
             ),
             scoring_method=quality_analysis["scoring_method"],
@@ -882,6 +950,7 @@ async def get_evidence_quality_analysis(
         logger.error(f"Error analyzing evidence quality {id}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Quality analysis failed")
 
+
 # Alias for frontend compatibility
 @router.get("/{id}/quality", response_model=QualityAnalysisResponse)
 async def get_evidence_quality(
@@ -892,10 +961,9 @@ async def get_evidence_quality(
     """Get quality analysis for evidence item (alias for frontend compatibility)."""
     # Delegate to the main quality analysis function
     return await get_evidence_quality_analysis(
-        evidence_id=id,
-        db=db,
-        current_user=current_user
+        evidence_id=id, db=db, current_user=current_user
     )
+
 
 @router.post("/{id}/duplicate-detection", response_model=DuplicateDetectionResponse)
 async def detect_evidence_duplicates(
@@ -921,10 +989,14 @@ async def detect_evidence_duplicates(
             raise HTTPException(status_code=403, detail="Access denied")
 
         # Get candidate evidence items for comparison
-        all_evidence = await EvidenceService.list_all_evidence_items(db=db, user=current_user)
+        all_evidence = await EvidenceService.list_all_evidence_items(
+            db=db, user=current_user
+        )
 
         # Limit candidates and exclude the target evidence
-        candidates = [e for e in all_evidence if e.id != evidence_id][: request.max_candidates]
+        candidates = [e for e in all_evidence if e.id != evidence_id][
+            : request.max_candidates
+        ]
 
         # Perform duplicate detection
         scorer = QualityScorer()
@@ -944,10 +1016,15 @@ async def detect_evidence_duplicates(
         )
 
     except Exception as e:
-        logger.error(f"Error detecting duplicates for evidence {id}: {e}", exc_info=True)
+        logger.error(
+            f"Error detecting duplicates for evidence {id}: {e}", exc_info=True
+        )
         raise HTTPException(status_code=500, detail="Duplicate detection failed")
 
-@router.post("/duplicate-detection/batch", response_model=BatchDuplicateDetectionResponse)
+
+@router.post(
+    "/duplicate-detection/batch", response_model=BatchDuplicateDetectionResponse
+)
 async def batch_duplicate_detection(
     request: BatchDuplicateDetectionRequest,
     db: AsyncSession = Depends(get_async_db),
@@ -969,7 +1046,9 @@ async def batch_duplicate_detection(
                 evidence_items.append(evidence)
 
         if len(evidence_items) < 2:
-            raise HTTPException(status_code=400, detail="At least 2 valid evidence items required")
+            raise HTTPException(
+                status_code=400, detail="At least 2 valid evidence items required"
+            )
 
         # Perform batch duplicate detection
         scorer = QualityScorer()
@@ -990,6 +1069,7 @@ async def batch_duplicate_detection(
         logger.error(f"Error in batch duplicate detection: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Batch duplicate detection failed")
 
+
 @router.get("/quality/benchmark", response_model=QualityBenchmarkResponse)
 async def get_quality_benchmark(
     request: QualityBenchmarkRequest = Depends(),
@@ -1001,10 +1081,14 @@ async def get_quality_benchmark(
         from services.automation.quality_scorer import QualityScorer
 
         # Get user's evidence
-        user_evidence = await EvidenceService.list_all_evidence_items(db=db, user=current_user)
+        user_evidence = await EvidenceService.list_all_evidence_items(
+            db=db, user=current_user
+        )
 
         if not user_evidence:
-            raise HTTPException(status_code=400, detail="No evidence found for benchmarking")
+            raise HTTPException(
+                status_code=400, detail="No evidence found for benchmarking"
+            )
 
         # Calculate user's average quality scores
         scorer = QualityScorer()
@@ -1018,7 +1102,10 @@ async def get_quality_benchmark(
                 and evidence.framework != request.framework
             ):
                 continue
-            if request.evidence_type and evidence.evidence_type != request.evidence_type:
+            if (
+                request.evidence_type
+                and evidence.evidence_type != request.evidence_type
+            ):
                 continue
 
             score = scorer.calculate_score(evidence)
@@ -1061,7 +1148,10 @@ async def get_quality_benchmark(
             score_distribution=score_ranges,
             improvement_areas=improvement_areas,
             top_performers=[
-                {"name": evidence.evidence_name, "score": scorer.calculate_score(evidence)}
+                {
+                    "name": evidence.evidence_name,
+                    "score": scorer.calculate_score(evidence),
+                }
                 for evidence in sorted(
                     user_evidence, key=lambda e: scorer.calculate_score(e), reverse=True
                 )[:3]
@@ -1071,6 +1161,7 @@ async def get_quality_benchmark(
     except Exception as e:
         logger.error(f"Error getting quality benchmark: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Quality benchmarking failed")
+
 
 @router.get("/quality/trends", response_model=QualityTrendResponse)
 async def get_quality_trends(
@@ -1088,13 +1179,21 @@ async def get_quality_trends(
         end_date = datetime.utcnow()
         start_date = end_date - timedelta(days=request.days)
 
-        user_evidence = await EvidenceService.list_all_evidence_items(db=db, user=current_user)
+        user_evidence = await EvidenceService.list_all_evidence_items(
+            db=db, user=current_user
+        )
 
         # Filter by date and type
         filtered_evidence = []
         for evidence in user_evidence:
-            if evidence.collected_at and start_date <= evidence.collected_at <= end_date:
-                if not request.evidence_type or evidence.evidence_type == request.evidence_type:
+            if (
+                evidence.collected_at
+                and start_date <= evidence.collected_at <= end_date
+            ):
+                if (
+                    not request.evidence_type
+                    or evidence.evidence_type == request.evidence_type
+                ):
                     filtered_evidence.append(evidence)
 
         if not filtered_evidence:
@@ -1156,9 +1255,11 @@ async def get_quality_trends(
             average_score_change=round(score_change, 2),
             daily_scores=daily_data,
             insights=insights,
-            recommendations=["Focus on evidence completeness", "Improve documentation quality"]
-            if avg_score < 75
-            else [],
+            recommendations=(
+                ["Focus on evidence completeness", "Improve documentation quality"]
+                if avg_score < 75
+                else []
+            ),
         )
 
     except Exception as e:

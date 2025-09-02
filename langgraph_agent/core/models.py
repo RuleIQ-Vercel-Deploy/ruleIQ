@@ -13,6 +13,7 @@ from pydantic import BaseModel, Field, ConfigDict, field_validator, model_valida
 
 class ComplianceFramework(str, Enum):
     """Supported compliance frameworks."""
+
     GDPR = "GDPR"
     UK_GDPR = "UK_GDPR"
     DPA_2018 = "DPA_2018"
@@ -26,6 +27,7 @@ class ComplianceFramework(str, Enum):
 
 class BusinessSector(str, Enum):
     """Business sectors for compliance profiling."""
+
     RETAIL = "retail"
     HEALTHCARE = "healthcare"
     FINANCE = "finance"
@@ -40,6 +42,7 @@ class BusinessSector(str, Enum):
 
 class RiskLevel(str, Enum):
     """Risk assessment levels."""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -48,6 +51,7 @@ class RiskLevel(str, Enum):
 
 class EvidenceType(str, Enum):
     """Types of compliance evidence."""
+
     POLICY_DOCUMENT = "policy_document"
     TRAINING_RECORD = "training_record"
     AUDIT_LOG = "audit_log"
@@ -62,9 +66,7 @@ class ComplianceProfile(BaseModel):
     """Business compliance profile and requirements."""
 
     model_config = ConfigDict(
-        str_strip_whitespace=True,
-        validate_assignment=True,
-        extra="forbid"
+        str_strip_whitespace=True, validate_assignment=True, extra="forbid"
     )
 
     company_id: UUID
@@ -87,17 +89,20 @@ class ComplianceProfile(BaseModel):
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
-    @field_validator('frameworks')
+    @field_validator("frameworks")
     @classmethod
     def validate_frameworks(cls, v):
         if not v:
             raise ValueError("At least one compliance framework is required")
         return v
 
-    @model_validator(mode='after')
+    @model_validator(mode="after")
     def validate_profile(self):
         # GDPR-specific validations
-        if ComplianceFramework.GDPR in self.frameworks or ComplianceFramework.UK_GDPR in self.frameworks:
+        if (
+            ComplianceFramework.GDPR in self.frameworks
+            or ComplianceFramework.UK_GDPR in self.frameworks
+        ):
             if not self.geographical_scope:
                 raise ValueError("Geographical scope required for GDPR compliance")
         return self
@@ -107,9 +112,7 @@ class Obligation(BaseModel):
     """Individual compliance obligation or requirement."""
 
     model_config = ConfigDict(
-        str_strip_whitespace=True,
-        validate_assignment=True,
-        extra="forbid"
+        str_strip_whitespace=True, validate_assignment=True, extra="forbid"
     )
 
     obligation_id: str = Field(..., min_length=1)
@@ -136,13 +139,15 @@ class Obligation(BaseModel):
     # Scoring for retrieval
     relevance_score: Optional[float] = Field(None, ge=0.0, le=1.0)
 
-    @field_validator('obligation_id')
+    @field_validator("obligation_id")
     @classmethod
     def validate_obligation_id(cls, v):
         # Format: FRAMEWORK_CATEGORY_NUMBER (e.g., GDPR_DATA_001)
-        parts = v.split('_')
+        parts = v.split("_")
         if len(parts) < 3:
-            raise ValueError("Obligation ID must follow format: FRAMEWORK_CATEGORY_NUMBER")
+            raise ValueError(
+                "Obligation ID must follow format: FRAMEWORK_CATEGORY_NUMBER"
+            )
         return v
 
 
@@ -150,9 +155,7 @@ class EvidenceItem(BaseModel):
     """Compliance evidence or documentation."""
 
     model_config = ConfigDict(
-        str_strip_whitespace=True,
-        validate_assignment=True,
-        extra="forbid"
+        str_strip_whitespace=True, validate_assignment=True, extra="forbid"
     )
 
     evidence_id: UUID = Field(default_factory=uuid4)
@@ -180,10 +183,10 @@ class EvidenceItem(BaseModel):
     verification_date: Optional[datetime] = None
     verification_notes: Optional[str] = None
 
-    @field_validator('file_path')
+    @field_validator("file_path")
     @classmethod
     def validate_file_path(cls, v):
-        if v and not v.startswith(('http://', 'https://', '/')):
+        if v and not v.startswith(("http://", "https://", "/")):
             raise ValueError("File path must be absolute or URL")
         return v
 
@@ -192,9 +195,7 @@ class LegalReviewTicket(BaseModel):
     """Legal review request and tracking."""
 
     model_config = ConfigDict(
-        str_strip_whitespace=True,
-        validate_assignment=True,
-        extra="forbid"
+        str_strip_whitespace=True, validate_assignment=True, extra="forbid"
     )
 
     ticket_id: UUID = Field(default_factory=uuid4)
@@ -222,7 +223,7 @@ class LegalReviewTicket(BaseModel):
     updated_at: datetime = Field(default_factory=datetime.utcnow)
     reviewed_at: Optional[datetime] = None
 
-    @field_validator('status')
+    @field_validator("status")
     @classmethod
     def validate_status(cls, v):
         allowed_statuses = ["pending", "in_review", "approved", "rejected", "cancelled"]
@@ -235,9 +236,7 @@ class SafeFallbackResponse(BaseModel):
     """Standardized fallback response for validation failures and errors."""
 
     model_config = ConfigDict(
-        str_strip_whitespace=True,
-        validate_assignment=True,
-        extra="forbid"
+        str_strip_whitespace=True, validate_assignment=True, extra="forbid"
     )
 
     status: str = Field(default="needs_review", pattern="^needs_review$")
@@ -254,11 +253,11 @@ class SafeFallbackResponse(BaseModel):
     suggested_action: Optional[str] = None
     retry_after_seconds: Optional[int] = Field(None, ge=0)
 
-    @field_validator('error_details')
+    @field_validator("error_details")
     @classmethod
     def validate_error_details(cls, v):
         # Ensure no sensitive information leaks
-        sensitive_keys = ['password', 'token', 'secret', 'key', 'credential']
+        sensitive_keys = ["password", "token", "secret", "key", "credential"]
         for key in v.keys():
             if any(sens in key.lower() for sens in sensitive_keys):
                 raise ValueError(f"Error details cannot contain sensitive key: {key}")
@@ -269,9 +268,7 @@ class GraphMessage(BaseModel):
     """Message format for LangGraph state."""
 
     model_config = ConfigDict(
-        str_strip_whitespace=True,
-        validate_assignment=True,
-        extra="forbid"
+        str_strip_whitespace=True, validate_assignment=True, extra="forbid"
     )
 
     role: str = Field(..., pattern="^(user|assistant|system|tool)$")
@@ -288,9 +285,7 @@ class RouteDecision(BaseModel):
     """Router decision with confidence and reasoning."""
 
     model_config = ConfigDict(
-        str_strip_whitespace=True,
-        validate_assignment=True,
-        extra="forbid"
+        str_strip_whitespace=True, validate_assignment=True, extra="forbid"
     )
 
     route: str = Field(..., min_length=1)
@@ -308,9 +303,7 @@ class ComplianceAnalysisRequest(BaseModel):
     """Request for compliance analysis."""
 
     model_config = ConfigDict(
-        str_strip_whitespace=True,
-        validate_assignment=True,
-        extra="forbid"
+        str_strip_whitespace=True, validate_assignment=True, extra="forbid"
     )
 
     company_id: UUID
@@ -328,9 +321,7 @@ class ComplianceAnalysisResponse(BaseModel):
     """Response from compliance analysis."""
 
     model_config = ConfigDict(
-        str_strip_whitespace=True,
-        validate_assignment=True,
-        extra="forbid"
+        str_strip_whitespace=True, validate_assignment=True, extra="forbid"
     )
 
     company_id: UUID

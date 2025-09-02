@@ -18,6 +18,7 @@ os.environ["DATABASE_URL"] = (
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
+
 def test_freemium_model_directly() -> Optional[bool]:
     """Test freemium models directly without pytest overhead."""
     print("=== Direct Freemium Model Test ===")
@@ -42,16 +43,15 @@ def test_freemium_model_directly() -> Optional[bool]:
 
         # Test 1: Create AssessmentLead
         print("\n1. Testing AssessmentLead creation...")
-        lead = AssessmentLead(
-            email="test@example.com",
-            consent_marketing=True
-        )
+        lead = AssessmentLead(email="test@example.com", consent_marketing=True)
         session.add(lead)
         session.commit()
         print(f"✅ AssessmentLead created with ID: {lead.id}")
 
         # Verify it exists
-        found_lead = session.query(AssessmentLead).filter_by(email="test@example.com").first()
+        found_lead = (
+            session.query(AssessmentLead).filter_by(email="test@example.com").first()
+        )
         assert found_lead is not None, "Lead not found in database"
         assert found_lead.email == "test@example.com"
         assert found_lead.consent_marketing is True
@@ -60,11 +60,12 @@ def test_freemium_model_directly() -> Optional[bool]:
         # Test 2: Create FreemiumAssessmentSession
         print("\n2. Testing FreemiumAssessmentSession creation...")
         from datetime import datetime, timedelta
+
         session_obj = FreemiumAssessmentSession(
             lead_id=lead.id,
             business_type="technology",
             company_size="11-50",
-            expires_at=datetime.utcnow() + timedelta(hours=24)
+            expires_at=datetime.utcnow() + timedelta(hours=24),
         )
         session.add(session_obj)
         session.commit()
@@ -73,14 +74,20 @@ def test_freemium_model_directly() -> Optional[bool]:
         # Test 3: Create AIQuestionBank
         print("\n3. Testing AIQuestionBank creation...")
         from decimal import Decimal
+
         question = AIQuestionBank(
             category="data_protection",
             question_text="How do you currently handle customer data deletion requests?",
             question_type="multiple_choice",
-            options=["Manual process", "Automated system", "No process", "Not applicable"],
+            options=[
+                "Manual process",
+                "Automated system",
+                "No process",
+                "Not applicable",
+            ],
             context_tags=["gdpr", "data_rights", "deletion"],
             difficulty_level=5,
-            compliance_weight=Decimal('0.85')
+            compliance_weight=Decimal("0.85"),
         )
         session.add(question)
         session.commit()
@@ -93,7 +100,7 @@ def test_freemium_model_directly() -> Optional[bool]:
             event_type="assessment_start",
             event_category="engagement",
             event_action="started_assessment",
-            score_impact=10
+            score_impact=10,
         )
         session.add(event)
         session.commit()
@@ -105,8 +112,8 @@ def test_freemium_model_directly() -> Optional[bool]:
             lead_id=lead.id,
             session_id=session_obj.id,
             conversion_type="trial_signup",
-            conversion_value=Decimal('99.00'),
-            conversion_source="freemium_results_page"
+            conversion_value=Decimal("99.00"),
+            conversion_source="freemium_results_page",
         )
         session.add(conversion)
         session.commit()
@@ -117,15 +124,16 @@ def test_freemium_model_directly() -> Optional[bool]:
         # Test unique constraint on AssessmentLead email
         try:
             duplicate_lead = AssessmentLead(
-                email="test@example.com",  # Same email
-                consent_marketing=False
+                email="test@example.com", consent_marketing=False  # Same email
             )
             session.add(duplicate_lead)
             session.commit()
             print("❌ Unique constraint test FAILED - duplicate email was allowed")
         except Exception as e:
             session.rollback()
-            print(f"✅ Unique constraint test PASSED - duplicate email rejected: {type(e).__name__}")
+            print(
+                f"✅ Unique constraint test PASSED - duplicate email rejected: {type(e).__name__}"
+            )
 
         # Cleanup
         print("\n7. Cleaning up test data...")
@@ -154,6 +162,7 @@ def test_freemium_model_directly() -> Optional[bool]:
             pass
 
         return False
+
 
 if __name__ == "__main__":
     success = test_freemium_model_directly()

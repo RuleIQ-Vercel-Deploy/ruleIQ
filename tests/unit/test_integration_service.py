@@ -7,8 +7,15 @@ from unittest.mock import AsyncMock, MagicMock, patch
 from datetime import datetime
 import uuid
 
-from database.services.integration_service import IntegrationService, EvidenceCollectionService
-from database.models.integrations import Integration, EvidenceCollection, IntegrationEvidenceItem
+from database.services.integration_service import (
+    IntegrationService,
+    EvidenceCollectionService,
+)
+from database.models.integrations import (
+    Integration,
+    EvidenceCollection,
+    IntegrationEvidenceItem,
+)
 from api.clients.base_api_client import APICredentials, AuthType
 
 
@@ -98,7 +105,9 @@ class TestIntegrationService:
         )
 
         # Verify database operations
-        assert integration_service.db.add.call_count == 3  # Integration, HealthLog, and AuditLog
+        assert (
+            integration_service.db.add.call_count == 3
+        )  # Integration, HealthLog, and AuditLog
         integration_service.db.refresh.assert_called_once()
         # No manual commit assertion - using transaction context manager
 
@@ -202,7 +211,9 @@ class TestIntegrationService:
         integration_service.db.execute.return_value = result_mock
 
         # Call the method
-        integration = await integration_service.get_integration_by_id(integration_id, user_id)
+        integration = await integration_service.get_integration_by_id(
+            integration_id, user_id
+        )
 
         # Verify result
         assert integration == expected_integration
@@ -219,7 +230,9 @@ class TestIntegrationService:
         )
 
         # Call the method
-        credentials = await integration_service.decrypt_integration_credentials(integration)
+        credentials = await integration_service.decrypt_integration_credentials(
+            integration
+        )
 
         # Verify result
         assert credentials.provider == "aws"
@@ -458,7 +471,9 @@ class TestEvidenceCollectionService:
         evidence_service.db.execute.return_value = result_mock
 
         # Call the method
-        collection = await evidence_service.get_collection_status(str(collection_id), user_id)
+        collection = await evidence_service.get_collection_status(
+            str(collection_id), user_id
+        )
 
         # Verify result
         assert collection == expected_collection

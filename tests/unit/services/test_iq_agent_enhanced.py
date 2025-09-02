@@ -61,7 +61,7 @@ class TestIQComplianceAgentEnhanced:
             company_size="51-200",
             handles_personal_data=True,
             data_processing_activities=["customer_support", "analytics"],
-            created_at=profile.created_at
+            created_at=profile.created_at,
         )
         return profile
 
@@ -80,7 +80,7 @@ class TestIQComplianceAgentEnhanced:
                 description=f"Test evidence item {i+1}",
                 file_path=f"/evidence/item_{i+1}.pdf",
                 evidence_type="document",
-                created_at=created_at
+                created_at=created_at,
             )
             items.append(item)
         return items
@@ -91,40 +91,45 @@ class TestIQComplianceAgentEnhanced:
         return {
             "regulations": [
                 {"code": "GDPR", "name": "General Data Protection Regulation"},
-                {"code": "DPA2018", "name": "Data Protection Act 2018"}
+                {"code": "DPA2018", "name": "Data Protection Act 2018"},
             ],
             "requirements": [
                 {
                     "id": "req_1",
                     "title": "Data Protection Officer",
                     "risk_level": "high",
-                    "regulation": "GDPR"
+                    "regulation": "GDPR",
                 },
                 {
-                    "id": "req_2", 
+                    "id": "req_2",
                     "title": "Privacy Policy",
                     "risk_level": "medium",
-                    "regulation": "GDPR"
-                }
+                    "regulation": "GDPR",
+                },
             ],
             "gaps": [
                 {
                     "gap_id": "gap_1",
-                    "requirement": {"title": "Data Protection Officer", "risk_level": "high"},
+                    "requirement": {
+                        "title": "Data Protection Officer",
+                        "risk_level": "high",
+                    },
                     "regulation": {"code": "GDPR"},
-                    "gap_severity_score": 8.5
+                    "gap_severity_score": 8.5,
                 }
-            ]
+            ],
         }
 
     @pytest.mark.asyncio
-    async def test_agent_initialization_with_dual_db(self, mock_neo4j_service, mock_postgres_session):
+    async def test_agent_initialization_with_dual_db(
+        self, mock_neo4j_service, mock_postgres_session
+    ):
         """Test agent initializes with both database connections."""
         # Create agent with both database connections
         agent = IQComplianceAgent(
             neo4j_service=mock_neo4j_service,
             postgres_session=mock_postgres_session,
-            llm_model="gpt-4"
+            llm_model="gpt-4",
         )
 
         assert agent.neo4j == mock_neo4j_service
@@ -133,18 +138,18 @@ class TestIQComplianceAgentEnhanced:
 
     @pytest.mark.asyncio
     async def test_query_combines_both_databases(
-        self, 
-        mock_neo4j_service, 
+        self,
+        mock_neo4j_service,
         mock_postgres_session,
         mock_business_profile,
         mock_evidence_items,
-        mock_neo4j_compliance_data
+        mock_neo4j_compliance_data,
     ):
         """Test that queries combine data from both PostgreSQL and Neo4j."""
         # Setup Neo4j mock responses
         mock_neo4j_service.execute_query.return_value = {
             "data": mock_neo4j_compliance_data["gaps"],
-            "metadata": {"total_gaps": 1, "critical_gaps": 1}
+            "metadata": {"total_gaps": 1, "critical_gaps": 1},
         }
 
         # Setup PostgreSQL mock responses
@@ -180,8 +185,7 @@ class TestIQComplianceAgentEnhanced:
 
         # Create agent
         agent = IQComplianceAgent(
-            neo4j_service=mock_neo4j_service,
-            postgres_session=mock_postgres_session
+            neo4j_service=mock_neo4j_service, postgres_session=mock_postgres_session
         )
 
         # Mock the _count_available_evidence method directly to avoid issues
@@ -197,7 +201,7 @@ class TestIQComplianceAgentEnhanced:
                     "company_size": mock_business_profile.company_size,
                     "handles_personal_data": mock_business_profile.handles_personal_data,
                     "data_processing_activities": mock_business_profile.data_processing_activities,
-                    "created_at": mock_business_profile.created_at.isoformat()
+                    "created_at": mock_business_profile.created_at.isoformat(),
                 },
                 "evidence": [
                     {
@@ -206,23 +210,25 @@ class TestIQComplianceAgentEnhanced:
                         "description": item.description,
                         "file_path": item.file_path,
                         "evidence_type": item.evidence_type,
-                        "created_at": item.created_at.isoformat()
+                        "created_at": item.created_at.isoformat(),
                     }
                     for item in mock_evidence_items
                 ],
-                "evidence_count": len(mock_evidence_items)
+                "evidence_count": len(mock_evidence_items),
             }
 
         agent.retrieve_business_context = mock_retrieve_business_context
 
         # Mock LLM response
-        with patch.object(agent, 'llm') as mock_llm:
-            mock_llm.ainvoke = AsyncMock(return_value=MagicMock(content="Test response"))
+        with patch.object(agent, "llm") as mock_llm:
+            mock_llm.ainvoke = AsyncMock(
+                return_value=MagicMock(content="Test response")
+            )
 
             # Process query with business context
             result = await agent.process_query_with_context(
                 user_query="What are my GDPR compliance gaps?",
-                business_profile_id=str(mock_business_profile.id)
+                business_profile_id=str(mock_business_profile.id),
             )
 
         # Verify both databases were queried
@@ -232,19 +238,22 @@ class TestIQComplianceAgentEnhanced:
         # Verify result contains data from both sources
         assert result["status"] == "success"
         assert "business_context" in result
-        assert result["business_context"]["profile"]["company_name"] == "Test Company Ltd"
+        assert (
+            result["business_context"]["profile"]["company_name"] == "Test Company Ltd"
+        )
         assert "compliance_gaps" in result["artifacts"]
         assert len(result["artifacts"]["compliance_gaps"]) > 0
         assert "evidence" in result
         assert result["evidence"]["available_evidence"] == 3
 
     @pytest.mark.asyncio
-    async def test_fallback_to_neo4j_only(self, mock_neo4j_service, mock_neo4j_compliance_data):
+    async def test_fallback_to_neo4j_only(
+        self, mock_neo4j_service, mock_neo4j_compliance_data
+    ):
         """Test agent works with Neo4j only when PostgreSQL is not available."""
         # Create agent without PostgreSQL
         agent = IQComplianceAgent(
-            neo4j_service=mock_neo4j_service,
-            postgres_session=None
+            neo4j_service=mock_neo4j_service, postgres_session=None
         )
 
         assert agent.has_postgres_access is False
@@ -252,17 +261,17 @@ class TestIQComplianceAgentEnhanced:
         # Setup Neo4j mock
         mock_neo4j_service.execute_query.return_value = {
             "data": mock_neo4j_compliance_data["requirements"],
-            "metadata": {"total_requirements": 2}
+            "metadata": {"total_requirements": 2},
         }
 
         # Mock LLM
-        with patch.object(agent, 'llm') as mock_llm:
-            mock_llm.ainvoke = AsyncMock(return_value=MagicMock(content="Test response"))
+        with patch.object(agent, "llm") as mock_llm:
+            mock_llm.ainvoke = AsyncMock(
+                return_value=MagicMock(content="Test response")
+            )
 
             # Process query without business context
-            result = await agent.process_query(
-                user_query="What are GDPR requirements?"
-            )
+            result = await agent.process_query(user_query="What are GDPR requirements?")
 
         assert result["status"] == "success"
         assert "business_context" not in result  # No PostgreSQL data
@@ -274,7 +283,7 @@ class TestIQComplianceAgentEnhanced:
         mock_neo4j_service,
         mock_postgres_session,
         mock_business_profile,
-        mock_evidence_items
+        mock_evidence_items,
     ):
         """Test retrieving business profile and evidence from PostgreSQL."""
         # Setup PostgreSQL mock
@@ -285,8 +294,7 @@ class TestIQComplianceAgentEnhanced:
 
         # Create agent
         agent = IQComplianceAgent(
-            neo4j_service=mock_neo4j_service,
-            postgres_session=mock_postgres_session
+            neo4j_service=mock_neo4j_service, postgres_session=mock_postgres_session
         )
 
         # Retrieve business context
@@ -304,7 +312,7 @@ class TestIQComplianceAgentEnhanced:
         mock_neo4j_service,
         mock_postgres_session,
         mock_business_profile,
-        mock_neo4j_compliance_data
+        mock_neo4j_compliance_data,
     ):
         """Test compliance assessment uses business context from PostgreSQL."""
         # Setup mocks
@@ -314,75 +322,77 @@ class TestIQComplianceAgentEnhanced:
 
         mock_neo4j_service.execute_query.return_value = {
             "data": mock_neo4j_compliance_data["gaps"],
-            "metadata": {"total_gaps": 1}
+            "metadata": {"total_gaps": 1},
         }
 
         # Create agent
         agent = IQComplianceAgent(
-            neo4j_service=mock_neo4j_service,
-            postgres_session=mock_postgres_session
+            neo4j_service=mock_neo4j_service, postgres_session=mock_postgres_session
         )
 
         # Mock LLM
-        with patch.object(agent, 'llm') as mock_llm:
-            mock_llm.ainvoke = AsyncMock(return_value=MagicMock(content="Contextualized response"))
+        with patch.object(agent, "llm") as mock_llm:
+            mock_llm.ainvoke = AsyncMock(
+                return_value=MagicMock(content="Contextualized response")
+            )
 
             # Assess compliance with business context
             result = await agent.assess_compliance_with_context(
-                business_profile_id=str(mock_business_profile.id),
-                regulations=["GDPR"]
+                business_profile_id=str(mock_business_profile.id), regulations=["GDPR"]
             )
 
         assert result["status"] == "success"
-        assert result["business_context"]["profile"]["company_name"] == "Test Company Ltd"
+        assert (
+            result["business_context"]["profile"]["company_name"] == "Test Company Ltd"
+        )
         assert result["business_context"]["profile"]["handles_personal_data"] is True
         assert "compliance_assessment" in result
         assert result["compliance_assessment"]["applicable_regulations"] == ["GDPR"]
 
     @pytest.mark.asyncio
     async def test_error_handling_postgres_failure(
-        self,
-        mock_neo4j_service,
-        mock_postgres_session,
-        mock_neo4j_compliance_data
+        self, mock_neo4j_service, mock_postgres_session, mock_neo4j_compliance_data
     ):
         """Test graceful handling when PostgreSQL query fails."""
         # Setup PostgreSQL to fail
-        mock_postgres_session.execute.side_effect = Exception("Database connection error")
+        mock_postgres_session.execute.side_effect = Exception(
+            "Database connection error"
+        )
 
         # Setup Neo4j to work
         mock_neo4j_service.execute_query.return_value = {
             "data": mock_neo4j_compliance_data["requirements"],
-            "metadata": {"total": 2}
+            "metadata": {"total": 2},
         }
 
         # Create agent
         agent = IQComplianceAgent(
-            neo4j_service=mock_neo4j_service,
-            postgres_session=mock_postgres_session
+            neo4j_service=mock_neo4j_service, postgres_session=mock_postgres_session
         )
 
         # Mock LLM
-        with patch.object(agent, 'llm') as mock_llm:
-            mock_llm.ainvoke = AsyncMock(return_value=MagicMock(content="Response without context"))
+        with patch.object(agent, "llm") as mock_llm:
+            mock_llm.ainvoke = AsyncMock(
+                return_value=MagicMock(content="Response without context")
+            )
 
             # Process query - should fallback gracefully
             result = await agent.process_query_with_context(
                 user_query="What are my compliance requirements?",
-                business_profile_id="test-id"
+                business_profile_id="test-id",
             )
 
         assert result["status"] == "success"
         assert "business_context" in result
         # The error message comes from retrieve_business_context method
         assert result["business_context"]["error"] == "Database connection error"
-        assert "artifacts" in result  # Neo4j data still available  # Neo4j data still available
+        assert (
+            "artifacts" in result
+        )  # Neo4j data still available  # Neo4j data still available
 
     @pytest.mark.asyncio
     async def test_session_history_integration(
-        self,
-        mock_neo4j_service,
-        mock_postgres_session
+        self, mock_neo4j_service, mock_postgres_session
     ):
         """Test integration with assessment session history from PostgreSQL."""
         # Mock assessment session
@@ -399,8 +409,7 @@ class TestIQComplianceAgentEnhanced:
 
         # Create agent
         agent = IQComplianceAgent(
-            neo4j_service=mock_neo4j_service,
-            postgres_session=mock_postgres_session
+            neo4j_service=mock_neo4j_service, postgres_session=mock_postgres_session
         )
 
         # Retrieve session context
@@ -414,24 +423,22 @@ class TestIQComplianceAgentEnhanced:
 
     @pytest.mark.asyncio
     async def test_combined_search_capabilities(
-        self,
-        mock_neo4j_service,
-        mock_postgres_session
+        self, mock_neo4j_service, mock_postgres_session
     ):
         """Test searching across both databases for comprehensive results."""
         # Setup Neo4j mock for regulations
         mock_neo4j_service.execute_query.return_value = {
             "data": [
                 {"regulation": "GDPR", "matches": 3},
-                {"regulation": "DPA2018", "matches": 2}
+                {"regulation": "DPA2018", "matches": 2},
             ],
-            "metadata": {"total_matches": 5}
+            "metadata": {"total_matches": 5},
         }
 
         # Setup PostgreSQL mock for evidence - should return tuples
         mock_evidence = [
             ("Privacy Policy", "Policy document for data protection"),
-            ("Data Processing Agreement", "Agreement for data processing activities")
+            ("Data Processing Agreement", "Agreement for data processing activities"),
         ]
         mock_result = MagicMock()
         mock_result.all.return_value = mock_evidence
@@ -439,19 +446,18 @@ class TestIQComplianceAgentEnhanced:
 
         # Create agent
         agent = IQComplianceAgent(
-            neo4j_service=mock_neo4j_service,
-            postgres_session=mock_postgres_session
+            neo4j_service=mock_neo4j_service, postgres_session=mock_postgres_session
         )
 
         # Search across both databases
         results = await agent.search_compliance_resources(
-            query="data protection",
-            include_evidence=True,
-            include_regulations=True
+            query="data protection", include_evidence=True, include_regulations=True
         )
 
         assert "regulations" in results
         assert "evidence" in results
         assert len(results["regulations"]) == 2
         assert len(results["evidence"]) == 2
-        assert results["total_results"] == 7  # 5 from Neo4j (3+2 matches) + 2 from PostgreSQL  # 5 from Neo4j + 2 from PostgreSQL
+        assert (
+            results["total_results"] == 7
+        )  # 5 from Neo4j (3+2 matches) + 2 from PostgreSQL  # 5 from Neo4j + 2 from PostgreSQL

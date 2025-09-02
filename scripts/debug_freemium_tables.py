@@ -16,6 +16,7 @@ os.environ["DATABASE_URL"] = (
 # Add project to path
 sys.path.insert(0, "/home/omar/Documents/ruleIQ")
 
+
 def main() -> None:
     print("=== Freemium Database Table Debug Script ===")
 
@@ -50,7 +51,7 @@ def main() -> None:
             "freemium_assessment_sessions",
             "ai_question_bank",
             "lead_scoring_events",
-            "conversion_events"  # Fixed: should be plural
+            "conversion_events",  # Fixed: should be plural
         ]
 
         print("\n3. Checking freemium table status...")
@@ -63,6 +64,7 @@ def main() -> None:
         print("\n4. Testing model imports...")
         try:
             from database.assessment_lead import AssessmentLead
+
             print("✅ AssessmentLead imported successfully")
         except Exception as e:
             print(f"❌ AssessmentLead import failed: {e}")
@@ -96,6 +98,7 @@ def main() -> None:
         print("\n5. Testing Base.metadata.create_all...")
         try:
             from database.db_setup import Base
+
             Base.metadata.create_all(bind=engine)
             print("✅ Base.metadata.create_all executed without error")
         except Exception as e:
@@ -123,10 +126,7 @@ def main() -> None:
             session = Session()
 
             # Try to create a test record
-            lead = AssessmentLead(
-                email="debug@test.com",
-                consent_marketing=True
-            )
+            lead = AssessmentLead(email="debug@test.com", consent_marketing=True)
             session.add(lead)
             session.commit()
             print("✅ Test AssessmentLead record created successfully")
@@ -149,6 +149,7 @@ def main() -> None:
     except Exception as e:
         print(f"❌ Script failed: {e}")
         traceback.print_exc()
+
 
 if __name__ == "__main__":
     main()

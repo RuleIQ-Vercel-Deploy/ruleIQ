@@ -187,7 +187,9 @@ class AIResponseCache:
             logger.warning(f"Cache storage error: {e}")
             return False
 
-    def _generate_cache_key(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:
+    def _generate_cache_key(
+        self, prompt: str, context: Optional[Dict[str, Any]] = None
+    ) -> str:
         """Generate a unique cache key for the prompt and context."""
         # Normalize prompt (remove extra whitespace, lowercase)
         normalized_prompt = re.sub(r"\s+", " ", prompt.strip().lower())
@@ -231,26 +233,37 @@ class AIResponseCache:
             return ContentType.RECOMMENDATION
         elif any(
             keyword in response_lower
-            for keyword in ["policy", "procedure", "governance", "compliance requirement"]
+            for keyword in [
+                "policy",
+                "procedure",
+                "governance",
+                "compliance requirement",
+            ]
         ):
             return ContentType.POLICY
         elif any(
-            keyword in response_lower for keyword in ["workflow", "step", "phase", "implementation"]
+            keyword in response_lower
+            for keyword in ["workflow", "step", "phase", "implementation"]
         ):
             return ContentType.WORKFLOW
         elif any(
-            keyword in response_lower for keyword in ["analysis", "assessment", "evaluation", "gap"]
+            keyword in response_lower
+            for keyword in ["analysis", "assessment", "evaluation", "gap"]
         ):
             return ContentType.ANALYSIS
         elif any(
-            keyword in response_lower for keyword in ["guidance", "help", "how to", "best practice"]
+            keyword in response_lower
+            for keyword in ["guidance", "help", "how to", "best practice"]
         ):
             return ContentType.GUIDANCE
         else:
             return ContentType.GENERAL
 
     def _calculate_intelligent_ttl(
-        self, content_type: ContentType, response: str, context: Optional[Dict[str, Any]] = None
+        self,
+        content_type: ContentType,
+        response: str,
+        context: Optional[Dict[str, Any]] = None,
     ) -> int:
         """Calculate intelligent TTL based on content type and characteristics."""
         base_ttl = self.ttl_config[content_type]
@@ -300,7 +313,9 @@ class AIResponseCache:
             logger.warning(f"Similarity search error: {e}")
             return None
 
-    def _summarize_context(self, context: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    def _summarize_context(
+        self, context: Optional[Dict[str, Any]] = None
+    ) -> Dict[str, Any]:
         """Create a summary of context for cache metadata."""
         if not context:
             return {}

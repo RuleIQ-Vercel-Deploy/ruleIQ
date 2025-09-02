@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test Phase 3 Stack Auth endpoints using FastAPI TestClient  
+Test Phase 3 Stack Auth endpoints using FastAPI TestClient
 Phase 3: Evidence & Compliance Endpoints
 """
 import sys
@@ -11,6 +11,7 @@ from fastapi.testclient import TestClient
 sys.path.insert(0, str(Path(__file__).parent))
 
 from main import app
+
 
 def test_phase3_endpoints():
     """Test Phase 3 endpoints with FastAPI TestClient"""
@@ -24,26 +25,21 @@ def test_phase3_endpoints():
     endpoints = [
         # Evidence endpoints (sample)
         ("/api/evidence/", "Evidence Create", "POST"),
-        ("/api/evidence/stats", "Evidence Statistics", "GET"), 
+        ("/api/evidence/stats", "Evidence Statistics", "GET"),
         ("/api/evidence/search", "Evidence Search", "GET"),
         ("/api/evidence/validate", "Evidence Validation", "POST"),
         ("/api/evidence/requirements", "Evidence Requirements", "GET"),
-
         # Compliance endpoints
         ("/api/compliance/status", "Compliance Status", "GET"),
         ("/api/compliance/query", "Compliance Query", "POST"),
-
-        # Readiness endpoints  
+        # Readiness endpoints
         ("/api/readiness/assessment", "Readiness Assessment", "GET"),
         ("/api/readiness/history", "Assessment History", "GET"),
         ("/api/readiness/report", "Generate Report", "POST"),
-
         # UK Compliance endpoints
         ("/api/v1/compliance/frameworks/load", "UK Frameworks Load", "POST"),
-
         # Frameworks endpoints (sample)
         ("/api/frameworks/", "Frameworks List", "GET"),
-
         # Evidence Collection endpoints
         ("/api/evidence-collection/plans", "Collection Plans", "POST"),
         ("/api/evidence-collection/plans", "Collection Plans List", "GET"),
@@ -78,7 +74,9 @@ def test_phase3_endpoints():
                 results.append((endpoint, True))
             elif "422" in str(e):
                 # Validation error - endpoint is accessible but needs data
-                print("   ⚠️  Validation error - endpoint accessible but needs valid data")
+                print(
+                    "   ⚠️  Validation error - endpoint accessible but needs valid data"
+                )
                 print("   ✅ Authentication working (passed auth, failed validation)")
                 results.append((endpoint, True))
             else:
@@ -101,12 +99,15 @@ def test_phase3_endpoints():
 
     return passed == total
 
+
 if __name__ == "__main__":
     success = test_phase3_endpoints()
 
     if success:
         print("\n🎉 Phase 3 migration successful!")
-        print("   All Evidence & Compliance endpoints are properly protected by Stack Auth")
+        print(
+            "   All Evidence & Compliance endpoints are properly protected by Stack Auth"
+        )
     else:
         print("\n⚠️  Phase 3 migration needs attention")
         print("   Some endpoints are not properly protected")

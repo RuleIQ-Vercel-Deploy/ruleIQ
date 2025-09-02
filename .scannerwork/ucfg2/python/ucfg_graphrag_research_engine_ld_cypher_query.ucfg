@@ -1,0 +1,218 @@
+
+Cgraphrag_research_engine.GraphRAGResearchEngine._build_cypher_queryW
+K/home/omar/Documents/ruleIQ/services/compliance/graphrag_research_engine.py‘ ‘("2*í
+2
+’ ’(>
+
+÷ Ñ(	
+%1"dict|
+z
+
+◊ ◊(.
+%2"__id*`
+
+__unknown_file (D*B'
+%graphrag_research_engine.ResearchType"
+OBLIGATION_EXTRACTIONè
+å
+
+◊ ﬁ(
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*"
+
+__unknown_file (
+
+%2*•
+
+__unknown_file (àÖ
+Ç
+                MATCH (r:Regulation {jurisdiction: 'UK'})-[:CONTAINS]->(o:Obligation)
+                WHERE o.text CONTAINS $query OR o.title CONTAINS $query
+                OPTIONAL MATCH (o)-[:REQUIRES]->(c:Control)
+                OPTIONAL MATCH (o)-[:HAS_PENALTY]->(p:Penalty)
+                RETURN o, collect(DISTINCT c), collect(DISTINCT p)
+                LIMIT 50
+            v
+t
+
+‡ ‡((
+%4"__id*Z
+
+__unknown_file (>*<'
+%graphrag_research_engine.ResearchType"
+CONTROL_MAPPING√
+¿
+
+‡ Ê(
+%5"__mapSet*"
+
+__unknown_file (
+
+%1*"
+
+__unknown_file (
+
+%4*Ÿ
+
+__unknown_file (ºπ
+∂
+                MATCH (o:Obligation)-[:REQUIRES]->(c:Control)
+                WHERE o.id IN $obligation_ids
+                OPTIONAL MATCH (c)-[:MAPS_TO]->(f:Framework)
+                OPTIONAL MATCH (c)-[:TESTED_BY]->(t:Test)
+                RETURN o, c, collect(DISTINCT f), collect(DISTINCT t)
+            v
+t
+
+Ë Ë((
+%6"__id*Z
+
+__unknown_file (>*<'
+%graphrag_research_engine.ResearchType"
+RISK_ASSESSMENT§
+°
+
+Ë (
+%7"__mapSet*"
+
+__unknown_file (
+
+%1*"
+
+__unknown_file (
+
+%6*∫
+
+__unknown_file (ùö
+ó
+                MATCH (r:Risk)-[:AFFECTS]->(o:Obligation)
+                WHERE r.industry = $industry OR r.type = 'universal'
+                OPTIONAL MATCH (r)-[:MITIGATED_BY]->(c:Control)
+                OPTIONAL MATCH (r)-[:RESULTED_IN]->(e:Enforcement)
+                RETURN r, o, collect(DISTINCT c), collect(DISTINCT e)
+                ORDER BY r.severity DESC
+                LIMIT 25
+            w
+u
+
+Ú Ú()
+%8"__id*[
+
+__unknown_file (?*='
+%graphrag_research_engine.ResearchType"
+CROSS_REGULATION¢
+ü
+
+Ú ˘(
+%9"__mapSet*"
+
+__unknown_file (
+
+%1*"
+
+__unknown_file (
+
+%8*∏
+
+__unknown_file (õò
+ï
+                MATCH (r1:Regulation)-[:CONTAINS]->(o1:Obligation)
+                MATCH (r2:Regulation)-[:CONTAINS]->(o2:Obligation)
+                WHERE r1.id <> r2.id 
+                AND (o1.requirement CONTAINS $query OR o2.requirement CONTAINS $query)
+                AND (o1)-[:CONFLICTS_WITH|:OVERLAPS_WITH]-(o2)
+                RETURN r1, r2, o1, o2, type(o1-[]-o2) as relationship
+            z
+x
+
+˚ ˚(+
+%10"__id*]
+
+__unknown_file (A*?'
+%graphrag_research_engine.ResearchType"
+ENFORCEMENT_TRENDS˙
+˜
+
+˚ É(
+%11"__mapSet*"
+
+__unknown_file (
+
+%1*#
+
+__unknown_file (
+
+%10*é
+
+__unknown_file (ÒÓ
+Î
+                MATCH (e:Enforcement)-[:FOR_VIOLATION_OF]->(o:Obligation)
+                WHERE e.date >= date({year: date().year - 2})
+                AND e.jurisdiction = 'UK'
+                OPTIONAL MATCH (e)-[:AGAINST]->(org:Organization)
+                RETURN e, o, org
+                ORDER BY e.penalty_amount DESC
+                LIMIT 100
+            K
+I
+
+÷ Ñ(	
+query_templates"__id*"
+
+__unknown_file (
+
+%1U
+S
+
+á á(
+%12"__id*8
+
+__unknown_file (*
+
+query"
+research_type}
+{
+
+à à(>
+%13"__id*`
+
+__unknown_file (D*B'
+%graphrag_research_engine.ResearchType"
+OBLIGATION_EXTRACTIONÉÄ
+
+à à(?
+%14"__mapGet*/
+
+__unknown_file (
+
+query_templates*#
+
+__unknown_file (
+
+%132__getitem__†ù
+
+Ü â(	
+%15"dict.get*/
+
+__unknown_file (
+
+query_templates*#
+
+__unknown_file (
+
+%12*#
+
+__unknown_file (
+
+%142get"
+
+Ü â(	
+
+%15:
+
+‘" ‘(6
+queryB31
+/graphrag_research_engine.GraphRAGResearchEngineH

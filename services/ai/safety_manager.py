@@ -59,9 +59,15 @@ class SafetyProfile:
 
     # Google AI Safety Settings
     harassment_threshold: HarmBlockThreshold = HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
-    hate_speech_threshold: HarmBlockThreshold = HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
-    sexually_explicit_threshold: HarmBlockThreshold = HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
-    dangerous_content_threshold: HarmBlockThreshold = HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
+    hate_speech_threshold: HarmBlockThreshold = (
+        HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
+    )
+    sexually_explicit_threshold: HarmBlockThreshold = (
+        HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
+    )
+    dangerous_content_threshold: HarmBlockThreshold = (
+        HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
+    )
 
     # Confidence thresholds
     min_confidence_threshold: float = 0.7
@@ -259,7 +265,10 @@ class AdvancedSafetyManager:
         self.safety_profiles["strict"] = SafetyProfile(
             name="Strict Regulatory",
             level=SafetyLevel.STRICT,
-            content_types=[ContentType.REGULATORY_INTERPRETATION, ContentType.POLICY_GENERATION],
+            content_types=[
+                ContentType.REGULATORY_INTERPRETATION,
+                ContentType.POLICY_GENERATION,
+            ],
             harassment_threshold=HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
             hate_speech_threshold=HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
             sexually_explicit_threshold=HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
@@ -309,7 +318,9 @@ class AdvancedSafetyManager:
         user_permissions = self.role_permissions.get(self.user_role, {})
         return user_permissions.get(permission, False)
 
-    def require_permission(self, permission: str, action_description: str = None) -> None:
+    def require_permission(
+        self, permission: str, action_description: str = None
+    ) -> None:
         """Require a specific permission or raise an exception."""
         if not self.check_permission(permission):
             action = action_description or permission
@@ -349,19 +360,30 @@ class AdvancedSafetyManager:
             return "permissive"
         elif self.user_role == "compliance_officer":
             return "balanced"
-        elif content_type in [ContentType.REGULATORY_INTERPRETATION, ContentType.POLICY_GENERATION]:
+        elif content_type in [
+            ContentType.REGULATORY_INTERPRETATION,
+            ContentType.POLICY_GENERATION,
+        ]:
             return "strict"
         else:
             return "standard"
 
     def log_authorization_decision(
-        self, action: str, permission: str, granted: bool, context: Optional[Dict[str, Any]] = None
+        self,
+        action: str,
+        permission: str,
+        granted: bool,
+        context: Optional[Dict[str, Any]] = None,
     ) -> None:
         """Log authorization decisions for audit purposes."""
         decision_record = SafetyDecisionRecord(
             decision_id=str(uuid4()),
             user_id=self.user_id,
-            content_type=ContentType.GENERAL_QUESTION if context and context.get("content_type") == "unknown" else ContentType.GENERAL_INQUIRY,
+            content_type=(
+                ContentType.GENERAL_QUESTION
+                if context and context.get("content_type") == "unknown"
+                else ContentType.GENERAL_INQUIRY
+            ),
             safety_profile="standard",
             input_content=f"AUTHORIZATION: {action}",
             decision=SafetyDecision.ALLOW if granted else SafetyDecision.BLOCK,
@@ -430,7 +452,9 @@ class AdvancedSafetyManager:
         Returns:
             Dictionary of safety settings for Google AI
         """
-        profile = self.safety_profiles.get(profile_name, self.safety_profiles["standard"])
+        profile = self.safety_profiles.get(
+            profile_name, self.safety_profiles["standard"]
+        )
 
         # Dynamic adjustment based on context
         settings = {
@@ -441,7 +465,10 @@ class AdvancedSafetyManager:
         }
 
         # Adjust for high-risk content types
-        if content_type in [ContentType.REGULATORY_INTERPRETATION, ContentType.POLICY_GENERATION]:
+        if content_type in [
+            ContentType.REGULATORY_INTERPRETATION,
+            ContentType.POLICY_GENERATION,
+        ]:
             for category in settings:
                 if settings[category] == HarmBlockThreshold.BLOCK_ONLY_HIGH:
                     settings[category] = HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE
@@ -507,7 +534,9 @@ class AdvancedSafetyManager:
 
         # Step 4: Get role-specific content filters
         self.get_content_filters_for_role()
-        profile = self.safety_profiles.get(profile_name, self.safety_profiles["standard"])
+        profile = self.safety_profiles.get(
+            profile_name, self.safety_profiles["standard"]
+        )
 
         # Check if user can evaluate content at this risk level
         user_permissions = self.role_permissions.get(self.user_role, {})
@@ -564,7 +593,9 @@ class AdvancedSafetyManager:
             applied_filters.append("min_confidence")
 
         # Check blocked keywords
-        blocked_found = self._check_blocked_content(input_content + " " + response_content, profile)
+        blocked_found = self._check_blocked_content(
+            input_content + " " + response_content, profile
+        )
         if blocked_found:
             if decision == SafetyDecision.ALLOW:
                 decision = SafetyDecision.MODIFY
@@ -575,9 +606,7 @@ class AdvancedSafetyManager:
         if len(response_content) > profile.max_response_length:
             if decision == SafetyDecision.ALLOW:
                 decision = SafetyDecision.MODIFY
-                reasoning = (
-                    f"Response too long: {len(response_content)} > {profile.max_response_length}"
-                )
+                reasoning = f"Response too long: {len(response_content)} > {profile.max_response_length}"
             applied_filters.append("length_filter")
 
         # Check regulatory context requirement
@@ -713,7 +742,9 @@ class AdvancedSafetyManager:
             self.metrics.avg_confidence_score * (self.metrics.total_decisions - 1)
             + record.confidence_score
         )
-        self.metrics.avg_confidence_score = total_confidence / self.metrics.total_decisions
+        self.metrics.avg_confidence_score = (
+            total_confidence / self.metrics.total_decisions
+        )
 
         # Update profile usage
         if record.safety_profile not in self.metrics.profile_usage:
@@ -779,7 +810,10 @@ class AdvancedSafetyManager:
                     "modified_rate": 0.0,
                     "escalated_rate": 0.0,
                 },
-                "confidence_metrics": {"average_confidence": 0.0, "low_confidence_rate": 0.0},
+                "confidence_metrics": {
+                    "average_confidence": 0.0,
+                    "low_confidence_rate": 0.0,
+                },
                 "profile_usage": {},
                 "content_type_distribution": {},
             }
@@ -845,7 +879,10 @@ class AdvancedSafetyManager:
         ]
 
     async def create_custom_profile(
-        self, name: str, base_profile: str = "standard", overrides: Optional[Dict[str, Any]] = None
+        self,
+        name: str,
+        base_profile: str = "standard",
+        overrides: Optional[Dict[str, Any]] = None,
     ) -> str:
         """Create a custom safety profile."""
         # Check permission
@@ -906,12 +943,16 @@ class AdvancedSafetyManager:
         analysis = get_security_analysis(prompt_text, context_type)
 
         # Check if content should be blocked based on role permissions
-        if not self.check_permission("process_sensitive_content") and analysis["threat_level"] in [
+        if not self.check_permission("process_sensitive_content") and analysis[
+            "threat_level"
+        ] in [
             "suspicious",
             "malicious",
         ]:
             analysis["recommended_action"] = "ESCALATE_FOR_REVIEW"
-            analysis["reason"] = "Insufficient permissions for handling suspicious content"
+            analysis["reason"] = (
+                "Insufficient permissions for handling suspicious content"
+            )
 
         # Log security event
         self.log_authorization_decision(
@@ -935,7 +976,9 @@ _safety_managers: Dict[str, AdvancedSafetyManager] = {}
 _default_safety_manager = AdvancedSafetyManager()
 
 
-def get_safety_manager(user_context: Optional[Dict[str, Any]] = None) -> AdvancedSafetyManager:
+def get_safety_manager(
+    user_context: Optional[Dict[str, Any]] = None,
+) -> AdvancedSafetyManager:
     """Get safety manager instance for user context.
 
     Args:

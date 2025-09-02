@@ -1,0 +1,120 @@
+
+btests.test_uk_compliance_integration.TestUKComplianceAssessmentEngine.test_assess_compliance_basicO
+C/home/omar/Documents/ruleIQ/tests/test_uk_compliance_integration.py« «(*"2*ù
+2
+¬ ¬(.Ž
+‹
+
+­ ­("
+%1"__id*q
+
+__unknown_file (U*SG
+Etests.test_uk_compliance_integration.TestUKComplianceAssessmentEngine"
+engine™
+–
+
+® ®("
+%2"__id*|
+
+__unknown_file (`*^G
+Etests.test_uk_compliance_integration.TestUKComplianceAssessmentEngine"
+test_organization¿¼
+
+­ ±(	
+%3*"
+
+__unknown_file (
+
+%1*"
+
+__unknown_file (
+
+%2*'
+
+__unknown_file (	
+UK_GDPR*$
+
+__unknown_file (
+full2assess_complianceB
+@
+
+­ ±(	
+result"__id*"
+
+__unknown_file (
+
+%3µ²
+
+³ ³($
+%4*e
+
+__unknown_file (IG
+Etests.test_uk_compliance_integration.TestUKComplianceAssessmentEngine*&
+
+__unknown_file (
+
+
+result2assertIsNotNoneÜÙ
+
+´ ´(-
+%5*e
+
+__unknown_file (IG
+Etests.test_uk_compliance_integration.TestUKComplianceAssessmentEngine*,
+
+__unknown_file (
+organization*&
+
+__unknown_file (
+
+
+result2assertInÚ×
+
+µ µ(+
+%6*e
+
+__unknown_file (IG
+Etests.test_uk_compliance_integration.TestUKComplianceAssessmentEngine**
+
+__unknown_file (
+
+regulation*&
+
+__unknown_file (
+
+
+result2assertInÝÚ
+
+¶ ¶(.
+%7*e
+
+__unknown_file (IG
+Etests.test_uk_compliance_integration.TestUKComplianceAssessmentEngine*-
+
+__unknown_file (
+overall_score*&
+
+__unknown_file (
+
+
+result2assertInÛØ
+
+· ·(,
+%8*e
+
+__unknown_file (IG
+Etests.test_uk_compliance_integration.TestUKComplianceAssessmentEngine*+
+
+__unknown_file (
+risk_rating*&
+
+__unknown_file (
+
+
+result2assertIn*
+3*I
+3#
+!test_uk_compliance_integration.py"
+¹ ¹(
+implicit returnBIG
+Etests.test_uk_compliance_integration.TestUKComplianceAssessmentEngineH

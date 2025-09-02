@@ -1,0 +1,28 @@
+
++""Generate a secure session token."strself
+Æ  Æ($"À*
+(
+
+È È("
+uuiduuid4B	uuid.UUID&
+$
+
+È È("#get-field# hex:.
+,
+
+È È("?python-partial-apply?:*
+(
+
+È" È(."
+uuiduuid4B	uuid.UUID&
+$
+
+È" È(2"#get-field# hex:.
+,
+
+È" È(2"?python-partial-apply?:$
+"
+
+È È(2	"	#binop +#2+:
+
+È È(2	*C/home/omar/Documents/ruleIQ/services/freemium_assessment_service.py

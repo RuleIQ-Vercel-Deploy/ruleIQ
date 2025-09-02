@@ -1,0 +1,30 @@
+
+50int
+D;"Get AI configuration for more creative content generation"str
+"temperature"str
+"top_p"str
+"max_output_tokens"str
+2048int
+0.9float
+
+"top_k"str
+0.8floatself
+ô ô( " &
+$
+
+õ †(	"#new-object#Bdict"
+ 
+
+ú ú("	#map-set#:"
+ 
+
+ù ù(	"	#map-set#:"
+ 
+
+û û("	#map-set#:
+"
+ 
+
+ü ü(%"	#map-set#:
+
+õ †(	*//home/omar/Documents/ruleIQ/config/ai_config.py

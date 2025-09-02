@@ -21,7 +21,9 @@ class AssessmentSession(Base):
     )
 
     # Session metadata
-    session_type = Column(String, default="compliance_scoping")  # scoping, readiness, etc.
+    session_type = Column(
+        String, default="compliance_scoping"
+    )  # scoping, readiness, etc.
     status = Column(String, default="in_progress")  # in_progress, completed, abandoned
 
     # Assessment progress
@@ -33,7 +35,9 @@ class AssessmentSession(Base):
     # Assessment data
     responses = Column(PG_JSONB, default=dict)  # Question ID -> Answer mapping
     calculated_scores = Column(PG_JSONB, default=dict)
-    recommendations = Column(PG_JSONB, default=list)  # Recommended frameworks with scores
+    recommendations = Column(
+        PG_JSONB, default=list
+    )  # Recommended frameworks with scores
 
     # Session state
     started_at = Column(DateTime, default=datetime.utcnow)

@@ -1,0 +1,125 @@
+
+;tests.test_security.TestAPISecurity.test_cors_configuration>
+2/home/omar/Documents/ruleIQ/tests/test_security.py¡ ¡("2*ˆ
+2
+¢ ¢(/
+
+¥ ¨(
+%3"dict§
+¤
+
+¦ ¦(6
+%4"__mapSet*"
+
+__unknown_file (
+
+%3*&
+
+__unknown_file (
+
+Origin*:
+
+__unknown_file (
+https://malicious-site.com§
+¤
+
+§ §(6
+%5"__mapSet*"
+
+__unknown_file (
+
+%3*=
+
+__unknown_file (!
+Access-Control-Request-Method*#
+
+__unknown_file (
+GETŠ‡
+
+£ ©(	
+%6*&
+
+__unknown_file (
+
+
+client*/
+
+__unknown_file (
+/api/frameworks2options:
+headers
+
+%3D
+B
+
+£ ©(	
+
+response"__id*"
+
+__unknown_file (
+
+%6Q
+O
+
+« «('
+%7"__id*5
+
+__unknown_file (*
+
+
+response"	
+headersH
+F
+
+« «('
+cors_headers"__id*"
+
+__unknown_file (
+
+%7Ž‹
+
+¬ ¬(8
+%8*,
+
+__unknown_file (
+
+cors_headers*;
+
+__unknown_file (
+Access-Control-Allow-Origin2__contains__*
+3
+4*8
+3
+test_security.py"
+° °(
+implicit return*¼
+4
+® ®(E—”
+
+® ®(>
+%1"__mapGet*,
+
+__unknown_file (
+
+cors_headers*;
+
+__unknown_file (
+Access-Control-Allow-Origin2__getitem__‹
+ˆ
+
+® ®(E
+%2"	__compare*"
+
+__unknown_file (
+!=*"
+
+__unknown_file (
+
+%1*!
+
+__unknown_file (
+**
+3:
+
+¡& ¡(,
+clientB'%
+#tests.test_security.TestAPISecurityH

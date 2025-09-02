@@ -1,0 +1,43 @@
+
+ìâ"
+        Validate that geographic scope is appropriate for UK frameworks.
+
+        Args:
+            geographic_scope: List of geographic regions
+
+        Returns:
+            True if valid UK scope, False otherwise
+        "str
+falseboolself
+Û Û( geographic_scope
+Û  Û(;"|+
+)
+
+å å("
+__bool__*:BboolH+
+)
+
+å å("#unaryop !#2!:Bbool "
+
+å å( *
+å å(
+"
+
+æ æ("É,
+*
+
+é é()"
+builtinsset*:Bset-
++
+
+é, é(;"#get-field# UK_REGIONS:#
+!
+
+é é(;	"#unknown-value#1
+/
+
+é é(<
+"#dependent-value#*:	Bbool
+
+é é(<
+*9/home/omar/Documents/ruleIQ/services/compliance_loader.py

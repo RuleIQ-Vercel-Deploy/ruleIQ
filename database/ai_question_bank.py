@@ -2,6 +2,7 @@
 AIQuestionBank model for storing and managing AI-generated assessment questions.
 Supports dynamic question generation with context tags and difficulty weighting.
 """
+
 import uuid
 from datetime import datetime
 from decimal import Decimal
@@ -24,6 +25,7 @@ class AIQuestionBank(Base):
     Model for AI-generated assessment questions with context-aware categorization.
     Stores questions, options, metadata, and compliance weighting for dynamic selection.
     """
+
     __tablename__ = "ai_question_bank"
 
     # Primary identifier
@@ -32,16 +34,22 @@ class AIQuestionBank(Base):
     # Question core data
     category = Column(String(100), nullable=False, index=True)
     question_text = Column(Text, nullable=False)
-    question_type = Column(String(50), nullable=False)  # multiple_choice, text, boolean, scale
+    question_type = Column(
+        String(50), nullable=False
+    )  # multiple_choice, text, boolean, scale
 
     # Question options and metadata (JSONB for flexibility)
     options = Column(JSONB, nullable=True)  # For multiple choice questions
     correct_answers = Column(JSONB, nullable=True)  # Expected/ideal answers
-    context_tags = Column(JSONB, nullable=False, default=list)  # Tags for question selection
+    context_tags = Column(
+        JSONB, nullable=False, default=list
+    )  # Tags for question selection
 
     # Question weighting and difficulty
     difficulty_level = Column(Integer, default=5, nullable=False)  # 1-10 scale
-    compliance_weight = Column(Numeric(4, 3), default=Decimal('0.500'), nullable=False)  # 0.000-1.000
+    compliance_weight = Column(
+        Numeric(4, 3), default=Decimal("0.500"), nullable=False
+    )  # 0.000-1.000
     usage_frequency = Column(Integer, default=0, nullable=False)  # Track how often used
 
     # AI generation metadata
@@ -61,7 +69,9 @@ class AIQuestionBank(Base):
 
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    updated_at = Column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
 
     def __init__(self, **kwargs) -> None:
         """Initialize question with default values and validation."""

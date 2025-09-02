@@ -97,8 +97,12 @@ class AIAnalyticsMonitor:
         self.active_sessions: Dict[str, Dict[str, Any]] = {}
 
         # Aggregated metrics for quick access
-        self.hourly_metrics: Dict[str, Dict[str, float]] = defaultdict(lambda: defaultdict(float))
-        self.daily_metrics: Dict[str, Dict[str, float]] = defaultdict(lambda: defaultdict(float))
+        self.hourly_metrics: Dict[str, Dict[str, float]] = defaultdict(
+            lambda: defaultdict(float)
+        )
+        self.daily_metrics: Dict[str, Dict[str, float]] = defaultdict(
+            lambda: defaultdict(float)
+        )
 
         # Alert thresholds
         self.alert_thresholds = {
@@ -154,11 +158,15 @@ class AIAnalyticsMonitor:
         day_key = event.timestamp.strftime("%Y-%m-%d")
 
         # Update hourly metrics
-        self.hourly_metrics[hour_key][f"{event.metric_type.value}.{event.name}"] += event.value
+        self.hourly_metrics[hour_key][
+            f"{event.metric_type.value}.{event.name}"
+        ] += event.value
         self.hourly_metrics[hour_key]["count"] += 1
 
         # Update daily metrics
-        self.daily_metrics[day_key][f"{event.metric_type.value}.{event.name}"] += event.value
+        self.daily_metrics[day_key][
+            f"{event.metric_type.value}.{event.name}"
+        ] += event.value
         self.daily_metrics[day_key]["count"] += 1
 
     async def _check_alert_conditions(self, event: MetricEvent) -> None:
@@ -180,12 +188,18 @@ class AIAnalyticsMonitor:
             )
 
         # Cost alerts
-        if event.name == "cost_estimate" and event.value > self.alert_thresholds["cost_per_hour"]:
+        if (
+            event.name == "cost_estimate"
+            and event.value > self.alert_thresholds["cost_per_hour"]
+        ):
             await self._create_alert(
                 AlertLevel.WARNING,
                 "High Cost Usage",
                 f"Hourly cost of ${event.value:.2f} exceeds threshold of ${self.alert_thresholds['cost_per_hour']:.2f}",
-                {"metric_value": event.value, "threshold": self.alert_thresholds["cost_per_hour"]},
+                {
+                    "metric_value": event.value,
+                    "threshold": self.alert_thresholds["cost_per_hour"],
+                },
             )
 
     async def _create_alert(
@@ -219,16 +233,25 @@ class AIAnalyticsMonitor:
         recent_metrics = [m for m in self.metrics if m.timestamp >= last_hour]
 
         if not recent_metrics:
-            return {"status": "no_data", "message": "No metrics available for the last hour"}
+            return {
+                "status": "no_data",
+                "message": "No metrics available for the last hour",
+            }
 
         # Calculate real-time statistics
-        response_times = [m.value for m in recent_metrics if m.name == "response_time_ms"]
-        error_count = len([m for m in recent_metrics if m.metric_type == MetricType.ERROR])
+        response_times = [
+            m.value for m in recent_metrics if m.name == "response_time_ms"
+        ]
+        error_count = len(
+            [m for m in recent_metrics if m.metric_type == MetricType.ERROR]
+        )
         cache_hits = len([m for m in recent_metrics if m.name == "cache_hit"])
         cache_misses = len([m for m in recent_metrics if m.name == "cache_miss"])
 
         total_requests = len(recent_metrics)
-        avg_response_time = sum(response_times) / len(response_times) if response_times else 0
+        avg_response_time = (
+            sum(response_times) / len(response_times) if response_times else 0
+        )
         error_rate = (error_count / total_requests * 100) if total_requests > 0 else 0
         cache_hit_rate = (
             (cache_hits / (cache_hits + cache_misses) * 100)
@@ -282,7 +305,9 @@ class AIAnalyticsMonitor:
         start_time = end_time - timedelta(days=days)
 
         # Filter metrics for the period
-        period_metrics = [m for m in self.metrics if start_time <= m.timestamp <= end_time]
+        period_metrics = [
+            m for m in self.metrics if start_time <= m.timestamp <= end_time
+        ]
 
         # Framework usage analysis
         framework_usage = defaultdict(int)
@@ -304,7 +329,11 @@ class AIAnalyticsMonitor:
             daily_usage[day_key] += 1
 
         return {
-            "period": {"start": start_time.isoformat(), "end": end_time.isoformat(), "days": days},
+            "period": {
+                "start": start_time.isoformat(),
+                "end": end_time.isoformat(),
+                "days": days,
+            },
             "total_requests": len(period_metrics),
             "framework_usage": dict(
                 sorted(framework_usage.items(), key=lambda x: x[1], reverse=True)
@@ -314,7 +343,9 @@ class AIAnalyticsMonitor:
             ),
             "daily_usage_trend": dict(sorted(daily_usage.items())),
             "active_users": len(user_activity),
-            "top_users": dict(sorted(user_activity.items(), key=lambda x: x[1], reverse=True)[:10]),
+            "top_users": dict(
+                sorted(user_activity.items(), key=lambda x: x[1], reverse=True)[:10]
+            ),
         }
 
     async def get_cost_analytics(self, days: int = 30) -> Dict[str, Any]:
@@ -353,12 +384,18 @@ class AIAnalyticsMonitor:
         optimization_savings = await self._calculate_optimization_savings()
 
         return {
-            "period": {"start": start_time.isoformat(), "end": end_time.isoformat(), "days": days},
+            "period": {
+                "start": start_time.isoformat(),
+                "end": end_time.isoformat(),
+                "days": days,
+            },
             "cost_summary": {
                 "total_cost": round(total_cost, 4),
                 "average_daily_cost": round(total_cost / days, 4),
                 "total_tokens": int(total_tokens),
-                "cost_per_token": round(total_cost / total_tokens, 6) if total_tokens > 0 else 0,
+                "cost_per_token": (
+                    round(total_cost / total_tokens, 6) if total_tokens > 0 else 0
+                ),
             },
             "daily_cost_trend": dict(sorted(daily_costs.items())),
             "cost_by_content_type": dict(
@@ -379,7 +416,9 @@ class AIAnalyticsMonitor:
 
     async def _calculate_optimization_savings(self) -> float:
         """Calculate estimated savings from optimization."""
-        optimized_requests = len([m for m in self.metrics if "optimization_metadata" in m.metadata])
+        optimized_requests = len(
+            [m for m in self.metrics if "optimization_metadata" in m.metadata]
+        )
         estimated_savings_per_optimization = 0.0005  # $0.0005 per optimization
         return optimized_requests * estimated_savings_per_optimization
 

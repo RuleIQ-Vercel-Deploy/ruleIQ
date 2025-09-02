@@ -1,0 +1,44 @@
+
+<tests.test_rbac_system.TestUserWithRoles.test_has_permissionA
+5/home/omar/Documents/ruleIQ/tests/test_rbac_system.pyÙ Ù("2*Ú
+2
+Ú Ú('º·
+
+Û Û(:
+%1"7api.dependencies.rbac_auth.UserWithRoles.has_permission*/
+
+__unknown_file (
+
+user_with_roles*)
+
+__unknown_file (
+	user_list2has_permission¼¹
+
+Ü Ü(<
+%2"7api.dependencies.rbac_auth.UserWithRoles.has_permission*/
+
+__unknown_file (
+
+user_with_roles*+
+
+__unknown_file (
+user_create2has_permissionÇÄ
+
+Ý Ý(G
+%3"7api.dependencies.rbac_auth.UserWithRoles.has_permission*/
+
+__unknown_file (
+
+user_with_roles*6
+
+__unknown_file (
+nonexistent_permission2has_permission*
+3*;
+3
+test_rbac_system.py"
+ß ß(
+implicit return:
+
+Ù" Ù(@
+user_with_rolesB,*
+(tests.test_rbac_system.TestUserWithRolesH

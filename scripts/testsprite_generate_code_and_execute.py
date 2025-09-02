@@ -16,6 +16,7 @@ from datetime import datetime
 project_root = Path(__file__).parent.parent
 sys.path.append(str(project_root))
 
+
 class TestSpriteExecutor:
     def __init__(self) -> None:
         self.project_root = project_root
@@ -30,31 +31,31 @@ class TestSpriteExecutor:
         # Load frontend test plan
         frontend_plan_path = self.testsprite_dir / "testsprite_frontend_test_plan.json"
         if frontend_plan_path.exists():
-            with open(frontend_plan_path, 'r') as f:
-                test_plans['frontend'] = json.load(f)
+            with open(frontend_plan_path, "r") as f:
+                test_plans["frontend"] = json.load(f)
                 print(f"✅ Loaded {len(test_plans['frontend'])} frontend test cases")
 
         # Load standard PRD
         prd_path = self.testsprite_dir / "standard_prd.json"
         if prd_path.exists():
-            with open(prd_path, 'r') as f:
-                test_plans['prd'] = json.load(f)
+            with open(prd_path, "r") as f:
+                test_plans["prd"] = json.load(f)
                 print("✅ Loaded PRD specifications")
 
         return test_plans
 
     def generate_pytest_code(self, test_case: Dict[str, Any]) -> str:
         """Generate pytest code from a TestSprite test case"""
-        test_id = test_case.get('id', 'unknown')
-        title = test_case.get('title', 'Unknown Test')
-        description = test_case.get('description', '')
-        category = test_case.get('category', 'functional')
-        priority = test_case.get('priority', 'Medium')
-        steps = test_case.get('steps', [])
+        test_id = test_case.get("id", "unknown")
+        title = test_case.get("title", "Unknown Test")
+        description = test_case.get("description", "")
+        category = test_case.get("category", "functional")
+        priority = test_case.get("priority", "Medium")
+        steps = test_case.get("steps", [])
 
         # Generate test function name
         func_name = f"test_{test_id.lower()}_{title.lower().replace(' ', '_').replace('-', '_')}"
-        func_name = ''.join(c for c in func_name if c.isalnum() or c == '_')
+        func_name = "".join(c for c in func_name if c.isalnum() or c == "_")
 
         # Generate test code
         test_code = f'''
@@ -71,21 +72,21 @@ def {func_name}():
 '''
 
         for i, step in enumerate(steps, 1):
-            step_type = step.get('type', 'action')
-            step_desc = step.get('description', '')
+            step_type = step.get("type", "action")
+            step_desc = step.get("description", "")
 
-            if step_type == 'action':
-                test_code += f'''
+            if step_type == "action":
+                test_code += f"""
     # Step {i}: {step_desc}
     # TODO: Implement action step
     pass
-'''
-            elif step_type == 'assertion':
-                test_code += f'''
+"""
+            elif step_type == "assertion":
+                test_code += f"""
     # Step {i}: {step_desc}
     # TODO: Implement assertion
     assert True, "Assertion not implemented"
-'''
+"""
 
         return test_code
 
@@ -195,13 +196,15 @@ Generated on: {datetime.now().isoformat()}
         print(f"✅ Generated authentication tests: {auth_test_file}")
 
         # Generate tests from frontend test plan
-        if 'frontend' in test_plans:
+        if "frontend" in test_plans:
             frontend_tests = []
-            for test_case in test_plans['frontend'][:5]:  # Limit to first 5 for now
+            for test_case in test_plans["frontend"][:5]:  # Limit to first 5 for now
                 test_code = self.generate_pytest_code(test_case)
                 frontend_tests.append(test_code)
 
-            frontend_test_file = self.generated_tests_dir / "test_frontend_testsprite.py"
+            frontend_test_file = (
+                self.generated_tests_dir / "test_frontend_testsprite.py"
+            )
             frontend_content = f'''"""
 TestSprite Generated Frontend Tests
 Generated on: {datetime.now().isoformat()}
@@ -232,8 +235,21 @@ class TestFrontendFlow:
             venv_python = "python"  # Fallback to system python
 
         test_commands = [
-            [str(venv_python), "-m", "pytest", str(self.generated_tests_dir), "-v", "--tb=short"],
-            [str(venv_python), "-m", "pytest", str(self.generated_tests_dir / "test_authentication_testsprite.py"), "-v"]
+            [
+                str(venv_python),
+                "-m",
+                "pytest",
+                str(self.generated_tests_dir),
+                "-v",
+                "--tb=short",
+            ],
+            [
+                str(venv_python),
+                "-m",
+                "pytest",
+                str(self.generated_tests_dir / "test_authentication_testsprite.py"),
+                "-v",
+            ],
         ]
 
         for i, cmd in enumerate(test_commands, 1):
@@ -245,15 +261,17 @@ class TestFrontendFlow:
                     cwd=str(self.project_root),
                     capture_output=True,
                     text=True,
-                    timeout=300  # 5 minute timeout
+                    timeout=300,  # 5 minute timeout
                 )
 
-                self.results.append({
-                    "command": " ".join(cmd),
-                    "return_code": result.returncode,
-                    "stdout": result.stdout,
-                    "stderr": result.stderr
-                })
+                self.results.append(
+                    {
+                        "command": " ".join(cmd),
+                        "return_code": result.returncode,
+                        "stdout": result.stdout,
+                        "stderr": result.stderr,
+                    }
+                )
 
                 if result.returncode == 0:
                     print(f"✅ Test command {i} passed")
@@ -283,11 +301,11 @@ class TestFrontendFlow:
             "summary": {
                 "total_commands": len(self.results),
                 "passed": len([r for r in self.results if r["return_code"] == 0]),
-                "failed": len([r for r in self.results if r["return_code"] != 0])
-            }
+                "failed": len([r for r in self.results if r["return_code"] != 0]),
+            },
         }
 
-        with open(report_file, 'w') as f:
+        with open(report_file, "w") as f:
             json.dump(report, f, indent=2)
 
         print(f"\n📊 Execution report saved to: {report_file}")
@@ -297,6 +315,7 @@ class TestFrontendFlow:
         print(f"   Total Commands: {report['summary']['total_commands']}")
         print(f"   Passed: {report['summary']['passed']}")
         print(f"   Failed: {report['summary']['failed']}")
+
 
 async def main() -> None:
     """Main execution function"""
@@ -323,6 +342,7 @@ async def main() -> None:
     executor.generate_report()
 
     print("\n✅ TestSprite execution complete!")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -108,7 +108,9 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
         """Authenticate with Google Workspace using OAuth2."""
         try:
             if not GOOGLE_AVAILABLE:
-                logger.warning("Google API libraries not available - using mock authentication")
+                logger.warning(
+                    "Google API libraries not available - using mock authentication"
+                )
                 self.authenticated = True
                 return True
 
@@ -182,7 +184,9 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
             service = self._get_service("admin", "directory_v1")
 
             # Get users
-            users_result = service.users().list(customer="my_customer", maxResults=500).execute()
+            users_result = (
+                service.users().list(customer="my_customer", maxResults=500).execute()
+            )
             users = users_result.get("users", [])
 
             # Calculate quality score
@@ -190,7 +194,9 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
             mfa_enabled = sum(1 for user in users if user.get("isEnforcedIn2Sv", False))
             suspended_users = sum(1 for user in users if user.get("suspended", False))
 
-            quality_score = self._calculate_users_quality(total_users, mfa_enabled, suspended_users)
+            quality_score = self._calculate_users_quality(
+                total_users, mfa_enabled, suspended_users
+            )
 
             evidence_data = {
                 "users": users,
@@ -199,9 +205,9 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
                     "active_users": total_users - suspended_users,
                     "suspended_users": suspended_users,
                     "mfa_enabled_users": mfa_enabled,
-                    "mfa_compliance_rate": (mfa_enabled / total_users * 100)
-                    if total_users > 0
-                    else 0,
+                    "mfa_compliance_rate": (
+                        (mfa_enabled / total_users * 100) if total_users > 0 else 0
+                    ),
                 },
             }
 
@@ -229,17 +235,23 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
             service = self._get_service("admin", "directory_v1")
 
             # Get groups
-            groups_result = service.groups().list(customer="my_customer", maxResults=200).execute()
+            groups_result = (
+                service.groups().list(customer="my_customer", maxResults=200).execute()
+            )
             groups = groups_result.get("groups", [])
 
             # Get group memberships
             group_memberships = {}
             for group in groups:
                 try:
-                    members_result = service.members().list(groupKey=group["id"]).execute()
+                    members_result = (
+                        service.members().list(groupKey=group["id"]).execute()
+                    )
                     group_memberships[group["id"]] = members_result.get("members", [])
                 except Exception as e:
-                    logger.warning(f"Failed to get members for group {group['id']}: {e}")
+                    logger.warning(
+                        f"Failed to get members for group {group['id']}: {e}"
+                    )
                     group_memberships[group["id"]] = []
 
             quality_score = self._calculate_groups_quality(groups, group_memberships)
@@ -253,7 +265,11 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
                         [g for g in groups if "security" in g.get("name", "").lower()]
                     ),
                     "distribution_groups": len(
-                        [g for g in groups if "distribution" in g.get("name", "").lower()]
+                        [
+                            g
+                            for g in groups
+                            if "distribution" in g.get("name", "").lower()
+                        ]
                     ),
                 },
             }
@@ -282,11 +298,18 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
             service = self._get_service("admin", "reports_v1")
 
             # Get admin activities from last 7 days
-            start_time = (datetime.utcnow() - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+            start_time = (datetime.utcnow() - timedelta(days=7)).strftime(
+                "%Y-%m-%dT%H:%M:%S.%fZ"
+            )
 
             activities_result = (
                 service.activities()
-                .list(userKey="all", applicationName="admin", startTime=start_time, maxResults=1000)
+                .list(
+                    userKey="all",
+                    applicationName="admin",
+                    startTime=start_time,
+                    maxResults=1000,
+                )
                 .execute()
             )
 
@@ -336,11 +359,18 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
             service = self._get_service("admin", "reports_v1")
 
             # Get login activities from last 7 days
-            start_time = (datetime.utcnow() - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+            start_time = (datetime.utcnow() - timedelta(days=7)).strftime(
+                "%Y-%m-%dT%H:%M:%S.%fZ"
+            )
 
             activities_result = (
                 service.activities()
-                .list(userKey="all", applicationName="login", startTime=start_time, maxResults=1000)
+                .list(
+                    userKey="all",
+                    applicationName="login",
+                    startTime=start_time,
+                    maxResults=1000,
+                )
                 .execute()
             )
 
@@ -446,14 +476,20 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
         else:
             return EvidenceQuality.LOW
 
-    def _calculate_groups_quality(self, groups: List[Dict], memberships: Dict) -> EvidenceQuality:
+    def _calculate_groups_quality(
+        self, groups: List[Dict], memberships: Dict
+    ) -> EvidenceQuality:
         """Calculate quality score for groups evidence."""
         if not groups:
             return EvidenceQuality.LOW
 
         # Check for proper group organization
-        has_security_groups = any("security" in g.get("name", "").lower() for g in groups)
-        has_proper_naming = sum(1 for g in groups if len(g.get("name", "")) > 5) / len(groups) > 0.8
+        has_security_groups = any(
+            "security" in g.get("name", "").lower() for g in groups
+        )
+        has_proper_naming = (
+            sum(1 for g in groups if len(g.get("name", "")) > 5) / len(groups) > 0.8
+        )
 
         if has_security_groups and has_proper_naming:
             return EvidenceQuality.HIGH
@@ -473,7 +509,9 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
             for act in activities
             if (
                 datetime.utcnow()
-                - datetime.fromisoformat(act.get("id", {}).get("time", "").replace("Z", "+00:00"))
+                - datetime.fromisoformat(
+                    act.get("id", {}).get("time", "").replace("Z", "+00:00")
+                )
             ).days
             < 3
         )
@@ -528,7 +566,9 @@ class GoogleWorkspaceAPIClient(BaseAPIClient):
                 result = await collector()
                 results.append(result)
             except Exception as e:
-                logger.error(f"Failed to collect evidence with {collector.__name__}: {e}")
+                logger.error(
+                    f"Failed to collect evidence with {collector.__name__}: {e}"
+                )
                 continue
 
         return results

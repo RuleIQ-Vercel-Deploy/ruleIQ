@@ -26,13 +26,17 @@ class ComplianceFramework(Base):
     name = Column(String, nullable=False, unique=True)  # GDPR, FCA, CQC, etc.
     display_name = Column(String, nullable=False)
     description = Column(Text, nullable=False)
-    category = Column(String, nullable=False)  # Data Protection, Financial, Healthcare, etc.
+    category = Column(
+        String, nullable=False
+    )  # Data Protection, Financial, Healthcare, etc.
 
     # Framework characteristics (truncated column names to match database)
     applicable_indu = Column(PG_JSONB, default=list)  # applicable_industries truncated
     employee_thresh = Column(Integer, nullable=True)  # employee_threshold truncated
     revenue_thresho = Column(String, nullable=True)  # revenue_threshold truncated
-    geographic_scop = Column(PG_JSONB, default=lambda: ["UK"])  # geographic_scope truncated
+    geographic_scop = Column(
+        PG_JSONB, default=lambda: ["UK"]
+    )  # geographic_scope truncated
 
     # Requirements and controls (truncated column names to match database)
     key_requirement = Column(PG_JSONB, default=list)  # key_requirements truncated
@@ -43,7 +47,9 @@ class ComplianceFramework(Base):
     relevance_facto = Column(PG_JSONB, default=dict)  # relevance_factors truncated
     complexity_scor = Column(Integer, default=1)  # complexity_score truncated
     implementation_ = Column(Integer, default=12)  # implementation_time_weeks truncated
-    estimated_cost_ = Column(String, default="£5,000-£25,000")  # estimated_cost_range truncated
+    estimated_cost_ = Column(
+        String, default="£5,000-£25,000"
+    )  # estimated_cost_range truncated
 
     # Content templates (truncated column names to match database)
     policy_template = Column(Text, default="")

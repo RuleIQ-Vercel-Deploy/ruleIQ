@@ -1,0 +1,193 @@
+
+8authorization.AuthorizationService._get_user_permissionsJ
+>/home/omar/Documents/ruleIQ/services/security/authorization.py§ §("2*À
+2
+• •(>
+
+¶ ¶(
+%14"setH
+F
+
+¶ ¶(
+permissions"__id*#
+
+__unknown_file (
+
+%14L
+J
+
+® ®(
+%15"__id*/
+
+__unknown_file (*
+
+user"
+roles*
+4
+6*.
+4
+≥ ≥("
+
+≥ ≥(
+
+permissions*ä
+6
+™ ™(Dw
+u
+
+™ ™(1
+%5"__id*[
+
+__unknown_file (?*=$
+"authorization.AuthorizationService"
+DEFAULT_PERMISSIONSJ
+H
+
+™6 ™(?
+%6"__id*.
+
+__unknown_file (*
+
+role"
+name
+
+™A ™(C
+%7"listÜÉ
+
+™ ™(D
+%8*"
+
+__unknown_file (
+
+%5*"
+
+__unknown_file (
+
+%6*"
+
+__unknown_file (
+
+%72getF
+D
+
+™ ™(D
+
+role_perms"__id*"
+
+__unknown_file (
+
+%8Å
+
+´ ´(*
+%9"
+set.update*+
+
+__unknown_file (
+
+permissions**
+
+__unknown_file (
+
+
+role_perms2updates
+q
+
+Æ Æ(1
+%10"__id*V
+
+__unknown_file (:*8$
+"authorization.AuthorizationService"
+ROLE_HIERARCHYK
+I
+
+Æ6 Æ(?
+%11"__id*.
+
+__unknown_file (*
+
+role"
+name
+
+ÆA Æ(C
+%12"listäá
+
+Æ Æ(D
+%13*#
+
+__unknown_file (
+
+%10*#
+
+__unknown_file (
+
+%11*#
+
+__unknown_file (
+
+%122getL
+J
+
+Æ Æ(D
+inherited_roles"__id*#
+
+__unknown_file (
+
+%13*	
+4
+6
+8*ñ
+8
+∞ ∞(Mw
+u
+
+∞" ∞(:
+%1"__id*[
+
+__unknown_file (?*=$
+"authorization.AuthorizationService"
+DEFAULT_PERMISSIONS
+
+∞J ∞(L
+%2"listçä
+
+∞" ∞(M
+%3*"
+
+__unknown_file (
+
+%1*)
+
+__unknown_file (
+
+	inherited*"
+
+__unknown_file (
+
+%22getK
+I
+
+∞ ∞(M
+inherited_perms"__id*"
+
+__unknown_file (
+
+%3áÑ
+
+± ±(3
+%4"
+set.update*+
+
+__unknown_file (
+
+permissions*/
+
+__unknown_file (
+
+inherited_perms2update*	
+4
+6
+8:
+
+§$ §(.
+userB&$
+"authorization.AuthorizationServiceH

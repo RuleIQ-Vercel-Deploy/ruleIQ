@@ -52,7 +52,7 @@ describe('Form Components Accessibility', () => {
           <div id="error-message" role="status" aria-live="assertive">
             Error message
           </div>
-        </div>
+        </div>,
       );
       const liveRegion = screen.getByRole('status');
       expect(liveRegion).toHaveAttribute('aria-live', 'assertive');
@@ -147,10 +147,10 @@ describe('Form Components Accessibility', () => {
     it('should have minimum 16x16px click target', () => {
       render(<Checkbox />);
       const checkbox = screen.getByRole('checkbox');
-      
+
       // Check that the checkbox has the correct Tailwind classes
       expect(checkbox).toHaveClass('h-4', 'w-4');
-      
+
       // h-4 and w-4 are 16px in Tailwind, satisfying the minimum requirement
       expect(checkbox.className).toMatch(/h-4/);
       expect(checkbox.className).toMatch(/w-4/);

@@ -16,7 +16,7 @@ export default function AuthCallbackPage() {
   useEffect(() => {
     const handleCallback = async () => {
       if (!searchParams) return;
-      
+
       const accessToken = searchParams.get('access_token');
       const refreshToken = searchParams.get('refresh_token');
       const isNewUser = searchParams.get('new_user') === 'true';

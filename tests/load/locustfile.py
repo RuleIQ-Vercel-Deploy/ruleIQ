@@ -143,7 +143,9 @@ class ComplianceGPTUser(HttpUser):
     def check_readiness_score(self):
         """Simulates checking compliance readiness."""
         with self.client.get(
-            f"/api/readiness/{self.business_profile_id}", headers=self.headers, catch_response=True
+            f"/api/readiness/{self.business_profile_id}",
+            headers=self.headers,
+            catch_response=True,
         ) as response:
             if response.status_code in [200, 401, 404]:
                 response.success()
@@ -197,13 +199,19 @@ class ComplianceGPTUser(HttpUser):
         """Simulates integration-related operations."""
         operations = [
             ("GET", "/api/integrations", {}),
-            ("POST", "/api/integrations/google_workspace/test", {"credentials": {"test": True}}),
+            (
+                "POST",
+                "/api/integrations/google_workspace/test",
+                {"credentials": {"test": True}},
+            ),
         ]
 
         method, endpoint, data = random.choice(operations)
 
         if method == "GET":
-            with self.client.get(endpoint, headers=self.headers, catch_response=True) as response:
+            with self.client.get(
+                endpoint, headers=self.headers, catch_response=True
+            ) as response:
                 if response.status_code in [200, 401]:
                     response.success()
                 else:
@@ -212,7 +220,11 @@ class ComplianceGPTUser(HttpUser):
             with self.client.post(
                 endpoint, json=data, headers=self.headers, catch_response=True
             ) as response:
-                if response.status_code in [200, 401, 400]:  # 400 expected for test credentials
+                if response.status_code in [
+                    200,
+                    401,
+                    400,
+                ]:  # 400 expected for test credentials
                     response.success()
                 else:
                     response.failure(f"Integration POST failed: {response.status_code}")
@@ -249,11 +261,15 @@ class AdminUser(HttpUser):
         endpoints = ["/api/reports/stats", "/api/evidence/stats", "/health"]
 
         for endpoint in random.sample(endpoints, k=random.randint(1, len(endpoints))):
-            with self.client.get(endpoint, headers=self.headers, catch_response=True) as response:
+            with self.client.get(
+                endpoint, headers=self.headers, catch_response=True
+            ) as response:
                 if response.status_code in [200, 401, 404]:
                     response.success()
                 else:
-                    response.failure(f"Stats endpoint {endpoint} failed: {response.status_code}")
+                    response.failure(
+                        f"Stats endpoint {endpoint} failed: {response.status_code}"
+                    )
 
     @task(2)
     def bulk_operations(self):

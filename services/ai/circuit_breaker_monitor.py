@@ -66,7 +66,9 @@ class CircuitBreakerMonitor:
     """
 
     def __init__(
-        self, circuit_breaker: AICircuitBreaker, config: Optional[MonitoringConfig] = None
+        self,
+        circuit_breaker: AICircuitBreaker,
+        config: Optional[MonitoringConfig] = None,
     ) -> None:
         self.circuit_breaker = circuit_breaker
         self.config = config or MonitoringConfig()
@@ -138,7 +140,9 @@ class CircuitBreakerMonitor:
 
             # Keep only last 24 hours of metrics
             cutoff_time = datetime.now() - timedelta(hours=24)
-            self.metrics_history = [m for m in self.metrics_history if m["timestamp"] > cutoff_time]
+            self.metrics_history = [
+                m for m in self.metrics_history if m["timestamp"] > cutoff_time
+            ]
 
             # Update performance trends
             self._update_performance_trends(metrics)
@@ -158,7 +162,9 @@ class CircuitBreakerMonitor:
 
         # Keep only last 100 data points
         if len(self.performance_trends["failure_rate"]) > 100:
-            self.performance_trends["failure_rate"] = self.performance_trends["failure_rate"][-100:]
+            self.performance_trends["failure_rate"] = self.performance_trends[
+                "failure_rate"
+            ][-100:]
 
     async def _check_health(self) -> None:
         """Perform health checks and generate alerts if needed"""
@@ -193,7 +199,10 @@ class CircuitBreakerMonitor:
                         model_name=model_name,
                         context=model_info,
                     )
-                elif model_info["failure_count"] >= self.config.consecutive_failures_threshold:
+                elif (
+                    model_info["failure_count"]
+                    >= self.config.consecutive_failures_threshold
+                ):
                     await self._create_alert(
                         severity=AlertSeverity.WARNING,
                         title=f"Model Degraded: {model_name}",
@@ -210,7 +219,9 @@ class CircuitBreakerMonitor:
         # Clean up old resolved alerts
         cutoff_time = datetime.now() - timedelta(hours=24)
         self.alerts = [
-            alert for alert in self.alerts if not alert.resolved or alert.timestamp > cutoff_time
+            alert
+            for alert in self.alerts
+            if not alert.resolved or alert.timestamp > cutoff_time
         ]
 
         # Move resolved alerts to history
@@ -232,7 +243,9 @@ class CircuitBreakerMonitor:
         # Check cooldown period
         if alert_key in self.last_alert_times:
             last_time = self.last_alert_times[alert_key]
-            if (datetime.now() - last_time).total_seconds() < self.config.alert_cooldown_period:
+            if (
+                datetime.now() - last_time
+            ).total_seconds() < self.config.alert_cooldown_period:
                 return  # Skip duplicate alert
 
         # Create alert
@@ -297,16 +310,22 @@ class CircuitBreakerMonitor:
 
         try:
             async with aiohttp.ClientSession() as session, session.post(
-                self.config.webhook_url, json=payload, timeout=aiohttp.ClientTimeout(total=10)
+                self.config.webhook_url,
+                json=payload,
+                timeout=aiohttp.ClientTimeout(total=10),
             ) as response:
                 if response.status == 200:
                     self.logger.debug(f"Webhook alert sent successfully for {alert.id}")
                 else:
-                    self.logger.warning(f"Webhook alert failed with status {response.status}")
+                    self.logger.warning(
+                        f"Webhook alert failed with status {response.status}"
+                    )
         except Exception as e:
             self.logger.error(f"Error sending webhook alert: {e}")
 
-    def get_active_alerts(self, severity: Optional[AlertSeverity] = None) -> List[Alert]:
+    def get_active_alerts(
+        self, severity: Optional[AlertSeverity] = None
+    ) -> List[Alert]:
         """Get list of active alerts, optionally filtered by severity"""
         alerts = [alert for alert in self.alerts if not alert.resolved]
 
@@ -354,15 +373,19 @@ class CircuitBreakerMonitor:
             "active_alerts": len(self.get_active_alerts()),
             "critical_alerts": len(self.get_active_alerts(AlertSeverity.CRITICAL)),
             "metrics_summary": {
-                "total_requests_24h": sum(m["total_requests"] for m in recent_metrics[-24:]),
+                "total_requests_24h": sum(
+                    m["total_requests"] for m in recent_metrics[-24:]
+                ),
                 "failure_rate_trend": failure_rate_trend,
-                "average_failure_rate": sum(m["failure_rate"] for m in recent_metrics)
-                / len(recent_metrics)
-                if recent_metrics
-                else 0,
+                "average_failure_rate": (
+                    sum(m["failure_rate"] for m in recent_metrics) / len(recent_metrics)
+                    if recent_metrics
+                    else 0
+                ),
             },
             "model_availability": {
-                model: info["available"] for model, info in health_status["models"].items()
+                model: info["available"]
+                for model, info in health_status["models"].items()
             },
             "performance_trends": self.performance_trends,
             "last_updated": datetime.now().isoformat(),
@@ -373,7 +396,9 @@ class CircuitBreakerMonitor:
 _monitor_instance: Optional[CircuitBreakerMonitor] = None
 
 
-def get_circuit_breaker_monitor(circuit_breaker: AICircuitBreaker) -> CircuitBreakerMonitor:
+def get_circuit_breaker_monitor(
+    circuit_breaker: AICircuitBreaker,
+) -> CircuitBreakerMonitor:
     """Get global circuit breaker monitor instance"""
     global _monitor_instance
     if _monitor_instance is None:

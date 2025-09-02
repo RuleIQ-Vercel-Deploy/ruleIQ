@@ -57,7 +57,7 @@ test.describe('Browser Automation Setup', () => {
           !text.includes('ResizeObserver')
         ) {
           hasErrors = true;
-    // TODO: Replace with proper logging
+          // TODO: Replace with proper logging
         }
       }
     });
@@ -65,7 +65,7 @@ test.describe('Browser Automation Setup', () => {
     // Listen for page errors
     page.on('pageerror', (err) => {
       hasErrors = true;
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
     });
 
     // Navigate to the page
@@ -91,7 +91,7 @@ test.describe('Browser Automation Setup', () => {
       // Verify page renders at different sizes
       const bodyVisible = await page.isVisible('body');
       expect(bodyVisible).toBe(true);
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
     }
   });
 
@@ -105,7 +105,7 @@ test.describe('Browser Automation Setup', () => {
       expect(page.url()).toBeTruthy();
     } catch {
       // If timeout occurs, verify it's handled gracefully
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       expect(error).toBeDefined();
     }
   });

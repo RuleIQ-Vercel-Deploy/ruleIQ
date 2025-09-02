@@ -1,0 +1,58 @@
+
+
+"evidence"str
+"error_message"str
+1000int
+"source_id"str
+"data"str
+ "Convert to dictionary"str
+"status"str
+"collection_time_ms"str
+
+"duration"strselfc c($	 orchestrator_v2.CollectionStatus"ð$
+"
+e m(	"#new-object#Bdict*
+(
+f f('"#get-field# source_id: 
+
+f f('"	#map-set#:'
+%
+g6 g(A"#get-field# status:)
+'
+g+ g(T
+"#is-instance#:	Bbool&"$
+g+ g(T
+ *g( g(*2gU g(Y"c'
+%
+g g(!"#get-field# status:&
+$
+g g('"#get-field# value:
+g g(e";'
+%
+gZ g(e"#get-field# status:
+g g(e"ó* 
+
+g g(e"	#map-set#:)
+'
+h h(%"#get-field# evidence: 
+
+h h(%"	#map-set#:)
+'
+i i(!"#get-field# evidence: 
+
+i i(!"	#map-set#:.
+,
+j j(/"#get-field# error_message: 
+
+j j(/"	#map-set#:)
+'
+k k(%"#get-field# duration: 
+
+k k(%"	#map-set#:)
+'
+l" l(/"#get-field# duration:%
+#
+l" l(6"	#binop *#*2*: 
+
+l l(6 "	#map-set#:
+e m(	*@/home/omar/Documents/ruleIQ/services/evidence/orchestrator_v2.py

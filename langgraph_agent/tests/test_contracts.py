@@ -13,22 +13,19 @@ from langgraph_agent.core.models import (
     GraphMessage,
     SafeFallbackResponse,
     ComplianceAnalysisRequest,
-    ComplianceAnalysisResponse
+    ComplianceAnalysisResponse,
 )
-from langgraph_agent.graph.state import (
-    create_initial_state,
-    update_state_metadata
-)
+from langgraph_agent.graph.state import create_initial_state, update_state_metadata
 from langgraph_agent.agents.tool_manager import (
     ToolResult,
     ToolError,
     ToolCategory,
-    ToolPriority
+    ToolPriority,
 )
 from langgraph_agent.core.constants import (
     GRAPH_NODES,
     AUTONOMY_LEVELS,
-    SLO_P95_LATENCY_MS
+    SLO_P95_LATENCY_MS,
 )
 
 
@@ -39,9 +36,7 @@ class TestCoreModelContracts:
         """Test GraphMessage schema validation."""
         # Valid message
         valid_msg = GraphMessage(
-            role="user",
-            content="Test message",
-            timestamp=datetime.utcnow()
+            role="user", content="Test message", timestamp=datetime.utcnow()
         )
         assert valid_msg.role == "user"
         assert valid_msg.content == "Test message"
@@ -58,7 +53,7 @@ class TestCoreModelContracts:
             GraphMessage(
                 role="invalid_role",  # Should be "user" or "assistant"
                 content="Test",
-                timestamp=datetime.utcnow()
+                timestamp=datetime.utcnow(),
             )
 
         # Test required fields
@@ -75,7 +70,7 @@ class TestCoreModelContracts:
             error_message="Test error",
             error_details={"test": "details"},
             company_id=company_id,
-            thread_id=thread_id
+            thread_id=thread_id,
         )
 
         assert fallback.error_message == "Test error"
@@ -94,7 +89,7 @@ class TestCoreModelContracts:
         with pytest.raises(ValidationError):
             SafeFallbackResponse(
                 error_message="Test",
-                company_id=company_id
+                company_id=company_id,
                 # Missing thread_id
             )
 
@@ -108,10 +103,10 @@ class TestCoreModelContracts:
             business_profile={
                 "industry": "technology",
                 "employees": 50,
-                "revenue": 1000000
+                "revenue": 1000000,
             },
             frameworks=["GDPR", "UK_GDPR"],
-            analysis_type="full"
+            analysis_type="full",
         )
 
         assert request.company_id == company_id
@@ -121,8 +116,7 @@ class TestCoreModelContracts:
 
         # Test default values
         minimal_request = ComplianceAnalysisRequest(
-            company_id=company_id,
-            business_profile={"industry": "retail"}
+            company_id=company_id, business_profile={"industry": "retail"}
         )
         assert minimal_request.frameworks == []
         assert minimal_request.analysis_type == "basic"
@@ -132,7 +126,7 @@ class TestCoreModelContracts:
             ComplianceAnalysisRequest(
                 company_id=company_id,
                 business_profile={"industry": "retail"},
-                analysis_type="invalid_type"
+                analysis_type="invalid_type",
             )
 
     def test_compliance_analysis_response_schema(self):
@@ -144,15 +138,10 @@ class TestCoreModelContracts:
             company_id=company_id,
             applicable_frameworks=["GDPR", "UK_GDPR"],
             compliance_score=0.85,
-            priority_obligations=[
-                "GDPR Article 13 - Information to be provided"
-            ],
+            priority_obligations=["GDPR Article 13 - Information to be provided"],
             risk_areas=["Data processing without consent"],
             recommendations=["Implement privacy policy"],
-            detailed_analysis={
-                "gdpr_score": 0.9,
-                "risk_level": "medium"
-            }
+            detailed_analysis={"gdpr_score": 0.9, "risk_level": "medium"},
         )
 
         assert response.company_id == company_id
@@ -168,7 +157,7 @@ class TestCoreModelContracts:
                 compliance_score=1.5,  # Invalid: > 1.0
                 priority_obligations=[],
                 risk_areas=[],
-                recommendations=[]
+                recommendations=[],
             )
 
         with pytest.raises(ValidationError):
@@ -178,7 +167,7 @@ class TestCoreModelContracts:
                 compliance_score=-0.1,  # Invalid: < 0.0
                 priority_obligations=[],
                 risk_areas=[],
-                recommendations=[]
+                recommendations=[],
             )
 
 
@@ -190,17 +179,26 @@ class TestStateContracts:
         company_id = uuid4()
         user_input = "Test GDPR question"
 
-        state = create_initial_state(
-            company_id=company_id,
-            user_input=user_input
-        )
+        state = create_initial_state(company_id=company_id, user_input=user_input)
 
         # Test required fields exist
         required_fields = [
-            "company_id", "thread_id", "user_id", "messages", "current_node",
-            "next_node", "conversation_history", "context_data", "tool_results",
-            "errors", "metadata", "turn_count", "error_count", "autonomy_level",
-            "created_at", "updated_at"
+            "company_id",
+            "thread_id",
+            "user_id",
+            "messages",
+            "current_node",
+            "next_node",
+            "conversation_history",
+            "context_data",
+            "tool_results",
+            "errors",
+            "metadata",
+            "turn_count",
+            "error_count",
+            "autonomy_level",
+            "created_at",
+            "updated_at",
         ]
 
         for field in required_fields:
@@ -230,16 +228,14 @@ class TestStateContracts:
 
     def test_state_update_metadata_contract(self):
         """Test state metadata update contract."""
-        state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test"
-        )
+        state = create_initial_state(company_id=uuid4(), user_input="Test")
 
         original_turn_count = state["turn_count"]
         original_updated_at = state["updated_at"]
 
         # Add small delay to ensure timestamp changes
         import time
+
         time.sleep(0.001)
 
         updated_state = update_state_metadata(state)
@@ -255,16 +251,11 @@ class TestStateContracts:
 
     def test_state_immutability_protection(self):
         """Test that state modifications don't break structure."""
-        state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test"
-        )
+        state = create_initial_state(company_id=uuid4(), user_input="Test")
 
         # Add new message
         new_message = GraphMessage(
-            role="assistant",
-            content="Response",
-            timestamp=datetime.utcnow()
+            role="assistant", content="Response", timestamp=datetime.utcnow()
         )
         state["messages"].append(new_message)
 
@@ -287,7 +278,7 @@ class TestToolContracts:
             tool_name="test_tool",
             success=True,
             result={"test": "data"},
-            execution_time_ms=250
+            execution_time_ms=250,
         )
 
         assert result.tool_name == "test_tool"
@@ -312,7 +303,7 @@ class TestToolContracts:
             tool_name="failing_tool",
             success=False,
             error="Test error message",
-            execution_time_ms=100
+            execution_time_ms=100,
         )
 
         assert error_result.success is False
@@ -329,7 +320,7 @@ class TestToolContracts:
             tool_name="failing_tool",
             error_type="validation_error",
             message="Input validation failed",
-            details={"field": "business_profile", "issue": "missing"}
+            details={"field": "business_profile", "issue": "missing"},
         )
 
         assert error.tool_name == "failing_tool"
@@ -358,7 +349,7 @@ class TestToolContracts:
             "REPORT_GENERATION",
             "DATA_PROCESSING",
             "INTEGRATION",
-            "UTILITY"
+            "UTILITY",
         ]
 
         for category_name in expected_categories:
@@ -397,7 +388,7 @@ class TestConstantsContracts:
             "compliance_analyzer",
             "obligation_finder",
             "evidence_collector",
-            "legal_reviewer"
+            "legal_reviewer",
         ]
 
         for node_name in expected_nodes:
@@ -412,11 +403,7 @@ class TestConstantsContracts:
     def test_autonomy_levels_contract(self):
         """Test AUTONOMY_LEVELS constant structure."""
         # Test expected autonomy levels exist
-        expected_levels = [
-            "human_in_loop",
-            "trusted_advisor",
-            "autonomous"
-        ]
+        expected_levels = ["human_in_loop", "trusted_advisor", "autonomous"]
 
         for level_name in expected_levels:
             assert level_name in AUTONOMY_LEVELS
@@ -447,6 +434,7 @@ class TestAPIContracts:
 
         # Test function signature (should not raise)
         import inspect
+
         sig = inspect.signature(invoke_graph)
 
         expected_params = [
@@ -455,7 +443,7 @@ class TestAPIContracts:
             "user_input",
             "thread_id",
             "user_id",
-            "autonomy_level"
+            "autonomy_level",
         ]
 
         for param_name in expected_params:
@@ -477,6 +465,7 @@ class TestAPIContracts:
 
         # Test function signature
         import inspect
+
         sig = inspect.signature(stream_graph)
 
         # Should have same parameters as invoke_graph
@@ -486,7 +475,7 @@ class TestAPIContracts:
             "user_input",
             "thread_id",
             "user_id",
-            "autonomy_level"
+            "autonomy_level",
         ]
 
         for param_name in expected_params:
@@ -498,17 +487,14 @@ class TestIntegrationContracts:
 
     def test_state_tool_result_integration(self):
         """Test that tool results integrate properly with state."""
-        state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test"
-        )
+        state = create_initial_state(company_id=uuid4(), user_input="Test")
 
         # Create tool result
         tool_result = ToolResult(
             tool_name="test_tool",
             success=True,
             result={"compliance_score": 0.85},
-            execution_time_ms=200
+            execution_time_ms=200,
         )
 
         # Add to state
@@ -531,7 +517,7 @@ class TestIntegrationContracts:
         tool_error = ToolError(
             tool_name="failing_tool",
             error_type="timeout",
-            message="Tool execution timed out"
+            message="Tool execution timed out",
         )
 
         # Convert to fallback
@@ -539,9 +525,7 @@ class TestIntegrationContracts:
 
         # Add to state
         state = create_initial_state(
-            company_id=company_id,
-            user_input="Test",
-            thread_id=thread_id
+            company_id=company_id, user_input="Test", thread_id=thread_id
         )
         state["errors"].append(fallback)
         state["error_count"] += 1
@@ -558,8 +542,7 @@ class TestBackwardCompatibility:
     def test_state_serialization_compatibility(self):
         """Test that state can be serialized and maintains compatibility."""
         state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test compatibility"
+            company_id=uuid4(), user_input="Test compatibility"
         )
 
         # Should be able to extract key data without errors
@@ -582,18 +565,16 @@ class TestBackwardCompatibility:
         """Test that message format remains compatible."""
         # Create message using current format
         msg = GraphMessage(
-            role="user",
-            content="Test message",
-            timestamp=datetime.utcnow()
+            role="user", content="Test message", timestamp=datetime.utcnow()
         )
 
         # Should be able to access required fields
-        assert hasattr(msg, 'role')
-        assert hasattr(msg, 'content')
-        assert hasattr(msg, 'timestamp')
+        assert hasattr(msg, "role")
+        assert hasattr(msg, "content")
+        assert hasattr(msg, "timestamp")
 
         # Should serialize to expected format
         msg_dict = msg.model_dump()
-        assert 'role' in msg_dict
-        assert 'content' in msg_dict
-        assert 'timestamp' in msg_dict
+        assert "role" in msg_dict
+        assert "content" in msg_dict
+        assert "timestamp" in msg_dict

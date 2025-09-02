@@ -30,7 +30,9 @@ class ChatMessage(Base):
     role = Column(String(20), nullable=False)  # 'user' or 'assistant'
     content = Column(Text, nullable=False)
     message_metadata = Column(JSON, default=dict)  # Store intent, confidence, etc.
-    sequence_number = Column(Integer, nullable=False)  # Order of messages in conversation
+    sequence_number = Column(
+        Integer, nullable=False
+    )  # Order of messages in conversation
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     # Relationships

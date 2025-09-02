@@ -1,0 +1,152 @@
+
+Ouk_compliance_ingestion_pipeline.UKComplianceGraphIngestion._process_components_
+S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipeline.py… …(!"2*l
+2
+   (*SQ
+
+À" À(4
+%8"
+dict.items**
+
+__unknown_file (
+
+
+components2items*
+3
+5*K
+3%
+#uk_compliance_ingestion_pipeline.py"
+‚ ‚(
+implicit return*˚
+5
+Ã Ã(5h
+f
+
+Ã  Ã(5
+%2"__concat*
+
+Ã# Ã()
+
+
+reg_id*
+
+Ã* Ã(+
+_*
+
+Ã, Ã(3
+	
+comp_idM
+K
+
+Ã Ã(5
+component_full_id"__id*"
+
+__unknown_file (
+
+%2ki
+
+Ÿ Ÿ(,
+%3*)
+
+__unknown_file (
+
+	component*%
+
+__unknown_file (	
+title2gettr
+
+⁄ ⁄(>
+%4*)
+
+__unknown_file (
+
+	component*.
+
+__unknown_file (
+effective_date2getçä
+
+œ ‹(
+%5*'
+
+__unknown_file (
+	
+session*‰
+
+__unknown_file («ƒ
+¡
+                MERGE (c:Component {id: $comp_id})
+                SET c.title = $title,
+                    c.effective_date = $effective_date,
+                    c.regulation_id = $reg_id
+                WITH c
+                MATCH (r:Regulation {id: $reg_id})
+                MERGE (r)-[:CONTAINS]->(c)
+            2run: 
+comp_id
+
+component_full_id:
+title
+
+%3:
+effective_date
+
+%4:
+reg_id
+
+
+reg_id
+
+ﬂ; ﬂ(=
+%6"listñì
+
+ﬂ ﬂ(>
+%7*)
+
+__unknown_file (
+
+	component*+
+
+__unknown_file (
+obligations*"
+
+__unknown_file (
+
+%62get*	
+3
+5
+7*∞
+7
+‡ ‡(Zìê
+
+‡ ‡(Z
+%1*[
+
+__unknown_file (?=
+;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion*'
+
+__unknown_file (
+	
+session**
+
+__unknown_file (
+
+
+obligation*1
+
+__unknown_file (
+
+component_full_id2_create_obligation_node*	
+3
+5
+7:
+
+…( …(/	
+session:
+
+…1 …(<
+reg_id:
+
+…> …(N
+
+componentsB?=
+;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestionH

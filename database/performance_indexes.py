@@ -11,7 +11,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 # Define performance indexes
 PERFORMANCE_INDEXES = [
     # Evidence table indexes for faster queries
-    Index("idx_evidence_user_status", "evidence_items.user_id", "evidence_items.status"),
+    Index(
+        "idx_evidence_user_status", "evidence_items.user_id", "evidence_items.status"
+    ),
     Index("idx_evidence_framework", "evidence_items.framework_id"),
     Index("idx_evidence_business_profile", "evidence_items.business_profile_id"),
     Index("idx_evidence_created_at", "evidence_items.created_at"),
@@ -30,7 +32,9 @@ PERFORMANCE_INDEXES = [
     Index("idx_business_profile_industry", "business_profiles.industry"),
     # Assessment session indexes
     Index(
-        "idx_assessment_user_status", "assessment_sessions.user_id", "assessment_sessions.status"
+        "idx_assessment_user_status",
+        "assessment_sessions.user_id",
+        "assessment_sessions.status",
     ),
     Index("idx_assessment_business_profile", "assessment_sessions.business_profil"),
     Index("idx_assessment_created_at", "assessment_sessions.created_at"),
@@ -64,7 +68,10 @@ async def create_performance_indexes(db: AsyncSession) -> None:
                 columns = [str(col) for col in index.columns]
 
                 # Build CREATE INDEX statement
-                if hasattr(index, "postgresql_using") and index.postgresql_using == "gin":
+                if (
+                    hasattr(index, "postgresql_using")
+                    and index.postgresql_using == "gin"
+                ):
                     # GIN index for text search
                     create_sql = f"""
                     CREATE INDEX IF NOT EXISTS {index_name}

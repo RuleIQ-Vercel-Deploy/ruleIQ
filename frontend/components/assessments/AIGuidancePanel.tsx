@@ -254,7 +254,11 @@ export function AIGuidancePanel({
                       <h4 className="text-sm font-medium">Related Topics</h4>
                       <div className="flex flex-wrap gap-2">
                         {aiResponse.related_topics.map((topic, index) => (
-                          <Badge key={`topic-${index}-${topic.substring(0, 20)}`} variant="secondary" className="text-xs">
+                          <Badge
+                            key={`topic-${index}-${topic.substring(0, 20)}`}
+                            variant="secondary"
+                            className="text-xs"
+                          >
                             {topic}
                           </Badge>
                         ))}
@@ -272,7 +276,10 @@ export function AIGuidancePanel({
                         </h4>
                         <div className="space-y-2">
                           {aiResponse.follow_up_suggestions.map((suggestion, index) => (
-                            <div key={`suggestion-${index}-${suggestion.substring(0, 25)}`} className="flex items-start gap-3 text-sm">
+                            <div
+                              key={`suggestion-${index}-${suggestion.substring(0, 25)}`}
+                              className="flex items-start gap-3 text-sm"
+                            >
                               <div className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
                               <span className="text-muted-foreground">{suggestion}</span>
                             </div>

@@ -33,7 +33,7 @@ export function EvidenceFilters({ filters = {}, onFiltersChange }: EvidenceFilte
     frameworkFilter,
     fileTypeFilter,
     fromDate,
-    toDate
+    toDate,
   ].filter(Boolean).length;
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -41,7 +41,7 @@ export function EvidenceFilters({ filters = {}, onFiltersChange }: EvidenceFilte
     setStatusFilter(newStatus);
     onFiltersChange?.({
       ...filters,
-      status: newStatus
+      status: newStatus,
     });
   };
 
@@ -50,7 +50,7 @@ export function EvidenceFilters({ filters = {}, onFiltersChange }: EvidenceFilte
     setFrameworkFilter(newFramework);
     onFiltersChange?.({
       ...filters,
-      framework: newFramework
+      framework: newFramework,
     });
   };
 
@@ -61,8 +61,8 @@ export function EvidenceFilters({ filters = {}, onFiltersChange }: EvidenceFilte
       ...filters,
       dateRange: {
         from: newFromDate ? new Date(newFromDate) : undefined,
-        to: toDate ? new Date(toDate) : undefined
-      }
+        to: toDate ? new Date(toDate) : undefined,
+      },
     });
   };
 
@@ -79,8 +79,8 @@ export function EvidenceFilters({ filters = {}, onFiltersChange }: EvidenceFilte
       fileType: '',
       dateRange: {
         from: undefined,
-        to: undefined
-      }
+        to: undefined,
+      },
     });
   };
 
@@ -90,9 +90,7 @@ export function EvidenceFilters({ filters = {}, onFiltersChange }: EvidenceFilte
         <CardTitle>
           Filters
           {activeFiltersCount > 0 && (
-            <span className="ml-2 text-sm text-gray-500">
-              {activeFiltersCount} filters active
-            </span>
+            <span className="ml-2 text-sm text-gray-500">{activeFiltersCount} filters active</span>
           )}
         </CardTitle>
       </CardHeader>
@@ -116,7 +114,7 @@ export function EvidenceFilters({ filters = {}, onFiltersChange }: EvidenceFilte
             </label>
             <select
               id="status"
-              className="w-full p-2 border rounded"
+              className="w-full rounded border p-2"
               value={statusFilter}
               onChange={handleStatusChange}
             >
@@ -133,7 +131,7 @@ export function EvidenceFilters({ filters = {}, onFiltersChange }: EvidenceFilte
             </label>
             <select
               id="framework"
-              className="w-full p-2 border rounded"
+              className="w-full rounded border p-2"
               value={frameworkFilter}
               onChange={handleFrameworkChange}
             >
@@ -149,12 +147,7 @@ export function EvidenceFilters({ filters = {}, onFiltersChange }: EvidenceFilte
               <label htmlFor="fromDate" className="text-sm font-medium">
                 From Date
               </label>
-              <Input
-                id="fromDate"
-                type="date"
-                value={fromDate}
-                onChange={handleFromDateChange}
-              />
+              <Input id="fromDate" type="date" value={fromDate} onChange={handleFromDateChange} />
             </div>
             <div>
               <label htmlFor="toDate" className="text-sm font-medium">
@@ -170,15 +163,9 @@ export function EvidenceFilters({ filters = {}, onFiltersChange }: EvidenceFilte
           </div>
 
           <div className="flex gap-2">
-            <Button className="flex-1">
-              Apply Filters
-            </Button>
+            <Button className="flex-1">Apply Filters</Button>
             {activeFiltersCount > 0 && (
-              <Button
-                variant="outline"
-                onClick={handleClearFilters}
-                className="flex-1"
-              >
+              <Button variant="outline" onClick={handleClearFilters} className="flex-1">
                 Clear Filters
               </Button>
             )}

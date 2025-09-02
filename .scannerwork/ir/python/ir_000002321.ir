@@ -1,0 +1,39 @@
+
+ÕË"
+        MATCH (ctrl:Control)
+        OPTIONAL MATCH (ctrl)-[impl:IMPLEMENTS]->(req:Requirement)
+        OPTIONAL MATCH (ctrl)-[mit:MITIGATES]->(risk:Risk)
+        OPTIONAL MATCH (metric:Metric)-[:MEASURES]->(ctrl)
+        RETURN ctrl.name AS control,
+               ctrl.automation_level AS automation,
+               ctrl.implementation_status AS status,
+               COUNT(DISTINCT req) AS requirements_addressed,
+               COUNT(DISTINCT risk) AS risks_mitigated,
+               COLLECT(DISTINCT metric.name) AS metrics,
+               CASE ctrl.automation_level
+                 WHEN 'FULLY_AUTOMATED' THEN 3
+                 WHEN 'SEMI_AUTOMATED' THEN 2
+                 WHEN 'MANUAL' THEN 1
+                 ELSE 0
+               END AS automation_score
+        ORDER BY COUNT(DISTINCT req) DESC, automation_score DESC
+        "str
+ "control_effectiveness"str
+>5"Analyze control effectiveness and automation levels"strself
+», »(0"Û(
+&
+¾ ¾(ßquery"#id#:Bstr#
+!
+
+Ò Ò(1"#unknown-value#,
+*
+
+Ò Ò(1results"#unknown-value#&
+$
+
+Ó Ó(1"#new-object#Bdict"
+ 
+
+Ó Ó(0	"	#map-set#:
+
+Ó Ó(1*A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py

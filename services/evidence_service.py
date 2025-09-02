@@ -60,7 +60,9 @@ class EvidenceService:
             db.delete(obj)
 
     @staticmethod
-    def _convert_evidence_item_to_response(evidence_item: EvidenceItem) -> Dict[str, Any]:
+    def _convert_evidence_item_to_response(
+        evidence_item: EvidenceItem,
+    ) -> Dict[str, Any]:
         """Convert EvidenceItem model to expected response format."""
         return {
             "id": evidence_item.id,
@@ -80,7 +82,9 @@ class EvidenceService:
         }
 
     @staticmethod
-    async def create_evidence(user_id: UUID, evidence_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def create_evidence(
+        user_id: UUID, evidence_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Placeholder for creating evidence. Mocked in tests."""
         pass
 
@@ -135,7 +139,9 @@ class EvidenceService:
         pass
 
     @staticmethod
-    def identify_requirements(framework_id: UUID, control_ids: List[str]) -> List[Dict[str, Any]]:
+    def identify_requirements(
+        framework_id: UUID, control_ids: List[str]
+    ) -> List[Dict[str, Any]]:
         """Placeholder for identifying evidence requirements. Mocked in tests."""
         pass
 
@@ -147,7 +153,9 @@ class EvidenceService:
         pass
 
     @staticmethod
-    def update_status(evidence_id: UUID, new_status: str, reason: str) -> Dict[str, Any]:
+    def update_status(
+        evidence_id: UUID, new_status: str, reason: str
+    ) -> Dict[str, Any]:
         """Placeholder for updating evidence status. Mocked in tests."""
         pass
 
@@ -186,7 +194,9 @@ class EvidenceService:
         existing_items_stmt = select(EvidenceItem).where(
             EvidenceItem.user_id == user.id, EvidenceItem.framework_id == framework_id
         )
-        existing_items_res = await EvidenceService._execute_query(db, existing_items_stmt)
+        existing_items_res = await EvidenceService._execute_query(
+            db, existing_items_stmt
+        )
         existing_items = existing_items_res.scalars().all()
         if existing_items:
             return existing_items
@@ -197,7 +207,9 @@ class EvidenceService:
         if not profile:
             raise ValueError("Business profile not found")
 
-        framework_stmt = select(ComplianceFramework).where(ComplianceFramework.id == framework_id)
+        framework_stmt = select(ComplianceFramework).where(
+            ComplianceFramework.id == framework_id
+        )
         framework_res = await EvidenceService._execute_query(db, framework_stmt)
         framework = framework_res.scalars().first()
         if not framework:
@@ -338,7 +350,10 @@ class EvidenceService:
 
     @staticmethod
     async def update_evidence_item(
-        db: Union[AsyncSession, Session], user: User, evidence_id: UUID, update_data: Dict[str, Any]
+        db: Union[AsyncSession, Session],
+        user: User,
+        evidence_id: UUID,
+        update_data: Dict[str, Any],
     ) -> tuple[Optional[EvidenceItem], str]:
         """
         Update an evidence item with provided data using secure validation.
@@ -403,13 +418,21 @@ class EvidenceService:
         return True, "deleted"
 
     @staticmethod
-    async def get_evidence_summary(db: Union[AsyncSession, Session], user: User) -> Dict[str, Any]:
+    async def get_evidence_summary(
+        db: Union[AsyncSession, Session], user: User
+    ) -> Dict[str, Any]:
         """Get a summary of evidence status asynchronously."""
         stmt = select(EvidenceItem).where(EvidenceItem.user_id == user.id)
         result = await EvidenceService._execute_query(db, stmt)
         items = result.scalars().all()
 
-        status_counts = {"pending": 0, "collected": 0, "in_review": 0, "approved": 0, "rejected": 0}
+        status_counts = {
+            "pending": 0,
+            "collected": 0,
+            "in_review": 0,
+            "approved": 0,
+            "rejected": 0,
+        }
         for item in items:
             if item.status in status_counts:
                 status_counts[item.status] += 1
@@ -486,7 +509,10 @@ class EvidenceService:
                 joinedload(EvidenceItem.business_profile),
                 joinedload(EvidenceItem.framework),
             )
-            .where(EvidenceItem.user_id == user.id, EvidenceItem.framework_id == framework_id)
+            .where(
+                EvidenceItem.user_id == user.id,
+                EvidenceItem.framework_id == framework_id,
+            )
         )
         result = await EvidenceService._execute_query(db, stmt)
         return result.scalars().all()
@@ -576,7 +602,9 @@ class EvidenceService:
         # Get total count for pagination info (optimized count query)
         from sqlalchemy import func
 
-        count_stmt = select(func.count(EvidenceItem.id)).where(EvidenceItem.user_id == user.id)
+        count_stmt = select(func.count(EvidenceItem.id)).where(
+            EvidenceItem.user_id == user.id
+        )
         if framework_id:
             count_stmt = count_stmt.where(EvidenceItem.framework_id == framework_id)
         if evidence_type:
@@ -604,7 +632,9 @@ class EvidenceService:
         """Get dashboard data for evidence collection status with caching."""
         # Try to get from cache first
         cache = await get_cache_manager()
-        cached_dashboard = await cache.get_evidence_dashboard(str(user.id), str(framework_id))
+        cached_dashboard = await cache.get_evidence_dashboard(
+            str(user.id), str(framework_id)
+        )
         if cached_dashboard:
             return cached_dashboard
 
@@ -617,7 +647,13 @@ class EvidenceService:
             )
             return dashboard_data
 
-        status_counts = {"pending": 0, "collected": 0, "in_review": 0, "approved": 0, "rejected": 0}
+        status_counts = {
+            "pending": 0,
+            "collected": 0,
+            "in_review": 0,
+            "approved": 0,
+            "rejected": 0,
+        }
         for item in items:
             if item.status in status_counts:
                 status_counts[item.status] += 1
@@ -636,14 +672,18 @@ class EvidenceService:
                     "id": str(item.id),
                     "title": item.evidence_name,
                     "status": item.status,
-                    "updated_at": item.updated_at.isoformat() if item.updated_at else None,
+                    "updated_at": (
+                        item.updated_at.isoformat() if item.updated_at else None
+                    ),
                 }
                 for item in sorted(items, key=lambda x: x.updated_at, reverse=True)[:5]
             ],
         }
 
         # Cache the dashboard data for 5 minutes
-        await cache.set_evidence_dashboard(str(user.id), str(framework_id), dashboard_data, ttl=300)
+        await cache.set_evidence_dashboard(
+            str(user.id), str(framework_id), dashboard_data, ttl=300
+        )
 
         return dashboard_data
 

@@ -1,6 +1,15 @@
 'use client';
 
-import { BarChart3, Download, FileText, Eye, RefreshCw, Filter, Plus, AlertCircle } from 'lucide-react';
+import {
+  BarChart3,
+  Download,
+  FileText,
+  Eye,
+  RefreshCw,
+  Filter,
+  Plus,
+  AlertCircle,
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -9,19 +18,27 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { useReports, useDownloadReport, useGenerateReport } from '@/lib/tanstack-query/hooks/use-reports';
+import {
+  useReports,
+  useDownloadReport,
+  useGenerateReport,
+} from '@/lib/tanstack-query/hooks/use-reports';
 import { useToast } from '@/hooks/use-toast';
 
 export default function ReportsPage() {
   const router = useRouter();
   const { toast } = useToast();
-  
+
   // Fetch reports using API hook
-  const { data: reportsData, isLoading, error } = useReports({
+  const {
+    data: reportsData,
+    isLoading,
+    error,
+  } = useReports({
     page: 1,
     page_size: 50,
   });
-  
+
   const downloadReportMutation = useDownloadReport();
   const generateReportMutation = useGenerateReport();
 
@@ -146,13 +163,16 @@ export default function ReportsPage() {
                 <div className="space-y-2 text-sm text-muted-foreground">
                   <div className="flex items-center justify-between">
                     <span>Type</span>
-                    <span className="font-medium text-foreground">{report.report_type || 'compliance'}</span>
+                    <span className="font-medium text-foreground">
+                      {report.report_type || 'compliance'}
+                    </span>
                   </div>
                   {report.date_range && (
                     <div className="flex items-center justify-between">
                       <span>Period</span>
                       <span className="font-medium text-foreground">
-                        {new Date(report.date_range.start_date).toLocaleDateString()} - {new Date(report.date_range.end_date).toLocaleDateString()}
+                        {new Date(report.date_range.start_date).toLocaleDateString()} -{' '}
+                        {new Date(report.date_range.end_date).toLocaleDateString()}
                       </span>
                     </div>
                   )}
@@ -172,9 +192,9 @@ export default function ReportsPage() {
 
                 {/* Actions */}
                 <div className="flex items-center gap-2 pt-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     className="flex-1"
                     onClick={() => handleViewReport(report.id)}
                   >

@@ -12,8 +12,8 @@ export const mockBusinessProfileService = {
       handles_personal_data: true,
       gdpr_applicable: true,
       created_at: '2024-01-01T00:00:00Z',
-      updated_at: '2024-01-01T00:00:00Z'
-    }
+      updated_at: '2024-01-01T00:00:00Z',
+    },
   ]),
 
   getProfile: vi.fn().mockResolvedValue({
@@ -26,7 +26,7 @@ export const mockBusinessProfileService = {
     handles_personal_data: true,
     gdpr_applicable: true,
     created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
+    updated_at: '2024-01-01T00:00:00Z',
   }),
 
   createBusinessProfile: vi.fn().mockImplementation(async (data) => ({
@@ -37,7 +37,7 @@ export const mockBusinessProfileService = {
     handles_personal_data: data.handles_personal_data || true,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
-    ...data
+    ...data,
   })),
 
   updateBusinessProfile: vi.fn().mockImplementation(async (id, data) => ({
@@ -47,12 +47,12 @@ export const mockBusinessProfileService = {
     employee_count: data.employee_count || '1-10',
     handles_personal_data: data.handles_personal_data || true,
     updated_at: new Date().toISOString(),
-    ...data
-  }))
+    ...data,
+  })),
 };
 
 // Mock the business profile service module
 vi.mock('@/lib/api/business-profiles.service', () => ({
   BusinessProfileService: vi.fn().mockImplementation(() => mockBusinessProfileService),
-  businessProfileService: mockBusinessProfileService
+  businessProfileService: mockBusinessProfileService,
 }));

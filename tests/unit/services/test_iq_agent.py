@@ -35,16 +35,22 @@ class TestIQComplianceAgent:
         service.connect = AsyncMock()
         service.close = AsyncMock()
         # Fix: Return actual data instead of AsyncMock to prevent serialization errors
-        service.execute_query = AsyncMock(return_value={
-            "data": [
-                {
-                    "regulation": "GDPR",
-                    "requirements": [
-                        {"id": "req_1", "title": "Data Protection", "risk_level": "HIGH"}
-                    ]
-                }
-            ]
-        })
+        service.execute_query = AsyncMock(
+            return_value={
+                "data": [
+                    {
+                        "regulation": "GDPR",
+                        "requirements": [
+                            {
+                                "id": "req_1",
+                                "title": "Data Protection",
+                                "risk_level": "HIGH",
+                            }
+                        ],
+                    }
+                ]
+            }
+        )
         service.test_connection = AsyncMock()
         service.get_graph_statistics = AsyncMock(return_value={"total_nodes": 100})
         return service
@@ -56,22 +62,24 @@ class TestIQComplianceAgent:
         manager.store_conversation_memory = AsyncMock(return_value="mem_12345")
         manager.store_knowledge_graph_memory = AsyncMock(return_value="mem_67890")
         manager.retrieve_contextual_memories = AsyncMock()
-        manager.consolidate_compliance_knowledge = AsyncMock(return_value={"status": "success"})
+        manager.consolidate_compliance_knowledge = AsyncMock(
+            return_value={"status": "success"}
+        )
         return manager
 
     @pytest.fixture
     async def iq_agent(self, mock_neo4j_service):
         """Create IQ agent instance for testing"""
-        with patch('services.iq_agent.ChatOpenAI') as mock_llm:
+        with patch("services.iq_agent.ChatOpenAI") as mock_llm:
             # Create a proper mock response
             mock_response = Mock()
             mock_response.content = "Test compliance guidance response"
-            
+
             # Mock the LLM class and its instance methods
             mock_llm_instance = Mock()
             mock_llm_instance.ainvoke = AsyncMock(return_value=mock_response)
             mock_llm.return_value = mock_llm_instance
-            
+
             agent = IQComplianceAgent(mock_neo4j_service)
             return agent
 
@@ -91,8 +99,12 @@ class TestIQComplianceAgent:
 
         # Test the actual structure returned by the simplified implementation
         assert result["status"] == "success"
-        assert result["summary"]["compliance_score"] == 0.7  # Fixed value in implementation
-        assert result["summary"]["risk_posture"] == "MEDIUM"  # Fixed value in implementation
+        assert (
+            result["summary"]["compliance_score"] == 0.7
+        )  # Fixed value in implementation
+        assert (
+            result["summary"]["risk_posture"] == "MEDIUM"
+        )  # Fixed value in implementation
         assert len(result["summary"]["top_gaps"]) >= 0
         assert len(result["summary"]["immediate_actions"]) > 0
         assert "artifacts" in result
@@ -105,7 +117,9 @@ class TestIQComplianceAgent:
         query = "Invalid query that causes error"
 
         # Mock Neo4j to raise an exception to test error handling
-        with patch.object(iq_agent.neo4j, 'execute_query', side_effect=Exception("Test Neo4j error")):
+        with patch.object(
+            iq_agent.neo4j, "execute_query", side_effect=Exception("Test Neo4j error")
+        ):
             result = await iq_agent.process_query(query)
 
             # The method should handle errors gracefully and still return success
@@ -126,7 +140,7 @@ class TestIQComplianceAgent:
             evidence_collected=[],
             memories_accessed=[],
             patterns_detected=[],
-            messages=[]
+            messages=[],
         )
 
         # Mock compliance query results
@@ -139,12 +153,16 @@ class TestIQComplianceAgent:
             {
                 "gap_id": "gap_1",
                 "requirement": {"title": "Consent Management", "risk_level": "high"},
-                "regulation": {"code": "GDPR"}
+                "regulation": {"code": "GDPR"},
             }
         ]
-        mock_gap_result.metadata = {"total_gaps": 1, "critical_gaps": 0, "high_risk_gaps": 1}
+        mock_gap_result.metadata = {
+            "total_gaps": 1,
+            "critical_gaps": 0,
+            "high_risk_gaps": 1,
+        }
 
-        with patch('services.iq_agent.execute_compliance_query') as mock_query:
+        with patch("services.iq_agent.execute_compliance_query") as mock_query:
             mock_query.side_effect = [mock_coverage_result, mock_gap_result]
 
             result_state = await iq_agent._perceive_node(state)
@@ -162,18 +180,24 @@ class TestIQComplianceAgent:
                 "compliance_gaps": [
                     {
                         "gap_id": "gap_1",
-                        "requirement": {"title": "Consent Management", "risk_level": "critical"},
+                        "requirement": {
+                            "title": "Consent Management",
+                            "risk_level": "critical",
+                        },
                         "regulation": {"code": "GDPR"},
                         "domain": {"name": "Data Protection"},
-                        "gap_severity_score": 8.5
+                        "gap_severity_score": 8.5,
                     },
                     {
-                        "gap_id": "gap_2", 
-                        "requirement": {"title": "Data Retention", "risk_level": "medium"},
+                        "gap_id": "gap_2",
+                        "requirement": {
+                            "title": "Data Retention",
+                            "risk_level": "medium",
+                        },
                         "regulation": {"code": "GDPR"},
                         "domain": {"name": "Data Protection"},
-                        "gap_severity_score": 5.0
-                    }
+                        "gap_severity_score": 5.0,
+                    },
                 ]
             },
             compliance_posture={"overall_coverage": 0.6},
@@ -182,7 +206,7 @@ class TestIQComplianceAgent:
             evidence_collected=[],
             memories_accessed=[],
             patterns_detected=[],
-            messages=[]
+            messages=[],
         )
 
         # Mock query results for planning
@@ -193,7 +217,7 @@ class TestIQComplianceAgent:
         mock_temporal_result.data = [{"change": "new_requirement"}]
         mock_temporal_result.metadata = {"recent_changes": 2}
 
-        with patch('services.iq_agent.execute_compliance_query') as mock_query:
+        with patch("services.iq_agent.execute_compliance_query") as mock_query:
             mock_query.side_effect = [mock_risk_result, mock_temporal_result]
 
             result_state = await iq_agent._plan_node(state)
@@ -220,41 +244,49 @@ class TestIQComplianceAgent:
                     "priority": "high",
                     "severity_score": 6.0,  # Below threshold
                     "cost_estimate": 5000.0,  # Below budget
-                    "target": "Implement consent management"
+                    "target": "Implement consent management",
                 },
                 {
-                    "action_id": "action_2", 
+                    "action_id": "action_2",
                     "priority": "critical",
                     "severity_score": 9.0,  # Above threshold
                     "cost_estimate": 15000.0,  # Above budget
-                    "target": "Complete audit overhaul"
-                }
+                    "target": "Complete audit overhaul",
+                },
             ],
             evidence_collected=[],
             memories_accessed=[],
             patterns_detected=[],
-            messages=[]
+            messages=[],
         )
 
         # Mock execution methods
         iq_agent._should_auto_execute = AsyncMock(side_effect=[True, False])
-        iq_agent._execute_action = AsyncMock(return_value={
-            "action_id": "action_1",
-            "status": "executed",
-            "result": "success"
-        })
-        iq_agent._create_escalation = AsyncMock(return_value={
-            "action_id": "action_2", 
-            "status": "escalated",
-            "reason": "Requires manual approval"
-        })
+        iq_agent._execute_action = AsyncMock(
+            return_value={
+                "action_id": "action_1",
+                "status": "executed",
+                "result": "success",
+            }
+        )
+        iq_agent._create_escalation = AsyncMock(
+            return_value={
+                "action_id": "action_2",
+                "status": "escalated",
+                "reason": "Requires manual approval",
+            }
+        )
         iq_agent._store_execution_evidence = AsyncMock()
 
         result_state = await iq_agent._act_node(state)
 
         assert len(result_state.evidence_collected) == 2
-        executed_actions = [e for e in result_state.evidence_collected if e.get("status") == "executed"]
-        escalated_actions = [e for e in result_state.evidence_collected if e.get("status") == "escalated"]
+        executed_actions = [
+            e for e in result_state.evidence_collected if e.get("status") == "executed"
+        ]
+        escalated_actions = [
+            e for e in result_state.evidence_collected if e.get("status") == "escalated"
+        ]
 
         assert len(executed_actions) == 1
         assert len(escalated_actions) == 1
@@ -266,9 +298,9 @@ class TestIQComplianceAgent:
             graph_context={
                 "compliance_gaps": [
                     {"domain": {"name": "Data Protection"}},
-                    {"domain": {"name": "Data Protection"}}, 
                     {"domain": {"name": "Data Protection"}},
-                    {"domain": {"name": "Data Protection"}}  # 4 gaps in same domain
+                    {"domain": {"name": "Data Protection"}},
+                    {"domain": {"name": "Data Protection"}},  # 4 gaps in same domain
                 ]
             },
             compliance_posture={},
@@ -279,14 +311,16 @@ class TestIQComplianceAgent:
             ],
             memories_accessed=[],
             patterns_detected=[],
-            messages=[]
+            messages=[],
         )
 
         # Mock enforcement learning query
         mock_enforcement_result = Mock()
-        mock_enforcement_result.data = [{"case": "GDPR_violation", "lesson": "implement_consent"}]
+        mock_enforcement_result.data = [
+            {"case": "GDPR_violation", "lesson": "implement_consent"}
+        ]
 
-        with patch('services.iq_agent.execute_compliance_query') as mock_query:
+        with patch("services.iq_agent.execute_compliance_query") as mock_query:
             mock_query.return_value = mock_enforcement_result
 
             result_state = await iq_agent._learn_node(state)
@@ -294,15 +328,20 @@ class TestIQComplianceAgent:
             assert len(result_state.patterns_detected) > 0
             # Check for high gap concentration pattern
             gap_pattern = next(
-                (p for p in result_state.patterns_detected 
-                 if p.get("pattern_type") == "HIGH_GAP_CONCENTRATION"), 
-                None
+                (
+                    p
+                    for p in result_state.patterns_detected
+                    if p.get("pattern_type") == "HIGH_GAP_CONCENTRATION"
+                ),
+                None,
             )
             assert gap_pattern is not None
             assert gap_pattern["domain"] == "Data Protection"
             assert gap_pattern["gap_count"] == 4
 
-    async def test_remember_node_memory_consolidation(self, iq_agent, mock_memory_manager):
+    async def test_remember_node_memory_consolidation(
+        self, iq_agent, mock_memory_manager
+    ):
         """Test REMEMBER node - memory storage and consolidation"""
         iq_agent.memory_manager = mock_memory_manager
 
@@ -314,20 +353,17 @@ class TestIQComplianceAgent:
             action_plan=[],
             evidence_collected=[],
             memories_accessed=[],
-            patterns_detected=[
-                {"pattern_type": "HIGH_RISK", "confidence": 0.8}
-            ],
+            patterns_detected=[{"pattern_type": "HIGH_RISK", "confidence": 0.8}],
             messages=[],
-            step_count=10  # Trigger consolidation
+            step_count=10,  # Trigger consolidation
         )
 
         # Mock memory retrieval
         mock_memory_result = Mock()
-        mock_memory_result.retrieved_memories = [
-            Mock(id="mem_1"),
-            Mock(id="mem_2")
-        ]
-        mock_memory_manager.retrieve_contextual_memories.return_value = mock_memory_result
+        mock_memory_result.retrieved_memories = [Mock(id="mem_1"), Mock(id="mem_2")]
+        mock_memory_manager.retrieve_contextual_memories.return_value = (
+            mock_memory_result
+        )
 
         result_state = await iq_agent._remember_node(state)
 
@@ -345,21 +381,21 @@ class TestIQComplianceAgent:
         low_risk_action = {
             "severity_score": 5.0,  # Below threshold (7.0)
             "cost_estimate": 8000.0,  # Below budget (10000.0)
-            "priority": "high"
+            "priority": "high",
         }
         assert await iq_agent._should_auto_execute(low_risk_action) == True
 
         high_risk_action = {
             "severity_score": 8.0,  # Above threshold
             "cost_estimate": 5000.0,  # Below budget
-            "priority": "critical"
+            "priority": "critical",
         }
         assert await iq_agent._should_auto_execute(high_risk_action) == False
 
         high_cost_action = {
             "severity_score": 5.0,  # Below threshold
             "cost_estimate": 15000.0,  # Above budget
-            "priority": "high"
+            "priority": "high",
         }
         assert await iq_agent._should_auto_execute(high_cost_action) == False
 
@@ -406,18 +442,14 @@ class TestIQComplianceAgent:
 
     async def test_cost_and_timeline_estimation(self, iq_agent):
         """Test action cost and timeline estimation"""
-        critical_gap = {
-            "requirement": {"risk_level": "critical"}
-        }
+        critical_gap = {"requirement": {"risk_level": "critical"}}
         cost = iq_agent._estimate_action_cost(critical_gap)
         timeline = iq_agent._estimate_timeline(critical_gap)
 
         assert cost == 15000.0  # base_cost * 3.0 multiplier
         assert timeline == "30_days"
 
-        medium_gap = {
-            "requirement": {"risk_level": "medium"}
-        }
+        medium_gap = {"requirement": {"risk_level": "medium"}}
         cost = iq_agent._estimate_action_cost(medium_gap)
         timeline = iq_agent._estimate_timeline(medium_gap)
 
@@ -432,22 +464,23 @@ class TestIQComplianceAgent:
                 "coverage_analysis": [{"domain": "Test"}],
                 "compliance_gaps": [
                     {"requirement": {"title": "Test Requirement 1"}},
-                    {"requirement": {"title": "Test Requirement 2"}}
-                ]
+                    {"requirement": {"title": "Test Requirement 2"}},
+                ],
             },
             compliance_posture={"overall_coverage": 0.85},
             risk_assessment={},
             action_plan=[
                 {"target": "Action 1", "priority": "high", "graph_reference": "ref_1"},
-                {"target": "Action 2", "priority": "medium", "graph_reference": "ref_2"}
+                {
+                    "target": "Action 2",
+                    "priority": "medium",
+                    "graph_reference": "ref_2",
+                },
             ],
-            evidence_collected=[
-                {"status": "executed"},
-                {"status": "escalated"}
-            ],
+            evidence_collected=[{"status": "executed"}, {"status": "escalated"}],
             memories_accessed=["mem_1", "mem_2"],
             patterns_detected=[{"type": "pattern1"}],
-            messages=[Mock(content="Test response")]
+            messages=[Mock(content="Test response")],
         )
 
         response = iq_agent._format_response(mock_state)
@@ -502,8 +535,8 @@ class TestIQAgentIntegration:
         await service.close()
 
     @pytest.mark.skipif(
-        not os.environ.get("NEO4J_URI"), 
-        reason="Neo4j not configured for integration tests"
+        not os.environ.get("NEO4J_URI"),
+        reason="Neo4j not configured for integration tests",
     )
     async def test_create_iq_agent_factory(self, neo4j_service):
         """Test IQ agent factory function with real Neo4j"""
@@ -515,7 +548,7 @@ class TestIQAgentIntegration:
 
     @pytest.mark.skipif(
         not os.environ.get("NEO4J_URI"),
-        reason="Neo4j not configured for integration tests"
+        reason="Neo4j not configured for integration tests",
     )
     async def test_end_to_end_compliance_query(self, neo4j_service):
         """Test complete end-to-end compliance query processing"""
@@ -523,10 +556,12 @@ class TestIQAgentIntegration:
 
         query = "What are our current GDPR compliance gaps?"
 
-        with patch('services.iq_agent.ChatOpenAI') as mock_llm:
-            mock_llm.return_value.ainvoke = AsyncMock(return_value=Mock(
-                content="Based on the analysis, here are the key GDPR compliance gaps..."
-            ))
+        with patch("services.iq_agent.ChatOpenAI") as mock_llm:
+            mock_llm.return_value.ainvoke = AsyncMock(
+                return_value=Mock(
+                    content="Based on the analysis, here are the key GDPR compliance gaps..."
+                )
+            )
 
             result = await agent.process_query(query)
 
@@ -538,7 +573,7 @@ class TestIQAgentIntegration:
 
 
 @pytest.mark.performance
-@pytest.mark.asyncio 
+@pytest.mark.asyncio
 class TestIQAgentPerformance:
     """Performance tests for IQ Agent"""
 
@@ -549,7 +584,7 @@ class TestIQAgentPerformance:
         query = "Analyze our compliance posture across all domains"
 
         # Mock fast responses
-        with patch.object(iq_agent, 'workflow') as mock_workflow:
+        with patch.object(iq_agent, "workflow") as mock_workflow:
             mock_state = Mock()
             mock_state.compliance_posture = {"overall_coverage": 0.8}
             mock_state.action_plan = []
@@ -583,10 +618,10 @@ class TestIQAgentPerformance:
             "What are our GDPR gaps?",
             "Analyze operational risk controls",
             "Review AML compliance status",
-            "Check data protection measures"
+            "Check data protection measures",
         ]
 
-        with patch.object(iq_agent, 'workflow') as mock_workflow:
+        with patch.object(iq_agent, "workflow") as mock_workflow:
             mock_state = Mock()
             mock_state.compliance_posture = {"overall_coverage": 0.8}
             mock_state.action_plan = []
@@ -607,6 +642,3 @@ class TestIQAgentPerformance:
 
         # Memory growth should be reasonable (less than 50MB for mocked processing)
         assert memory_growth < 50 * 1024 * 1024  # 50MB
-
-
-

@@ -1,0 +1,27 @@
+
+5,"Decorator for endpoint permission checking"strself
+¢ ¢(#required_permission
+£ £( resource_type
+¤ ¤(+"¨#
+!
+
+Ë Ë(
+"#unknown-value#*
+(
+
+§ Ë(%closure"#new-object#(
+&
+
+§ Ë("#set-field# self:1
+/
+
+§ Ë("#set-field# resource_type:7
+5
+
+§ Ë("!#set-field# required_permission:-
++
+
+§ Ë(	"?python-partial-apply?:
+
+Ë Ë(
+*>/home/omar/Documents/ruleIQ/services/security/authorization.py

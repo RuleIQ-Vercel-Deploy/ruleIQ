@@ -19,6 +19,7 @@ from core.exceptions import ApplicationException
 
 logger = get_logger(__name__)
 
+
 async def error_handler_middleware(request: Request, call_next):
     """
     Global error handling middleware.
@@ -52,7 +53,8 @@ async def error_handler_middleware(request: Request, call_next):
     except ValidationError as exc:
         # Handle Pydantic's input validation errors
         logger.warning(
-            "ValidationError caught", extra={"request_id": request_id, "errors": exc.errors()}
+            "ValidationError caught",
+            extra={"request_id": request_id, "errors": exc.errors()},
         )
         return JSONResponse(
             status_code=422,  # Unprocessable Entity

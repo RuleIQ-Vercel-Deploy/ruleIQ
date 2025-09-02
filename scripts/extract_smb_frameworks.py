@@ -24,16 +24,16 @@ SMB_FRAMEWORKS = {
                 "requirement": "Organizations must establish, implement, maintain and continually improve an information security management system",
                 "smb_guidance": "Scale ISMS implementation to organization size and complexity",
                 "category": "ISMS Establishment",
-                "priority": "critical"
+                "priority": "critical",
             },
             {
-                "id": "ISO27001-SMB-002", 
+                "id": "ISO27001-SMB-002",
                 "title": "Risk-Based Security Approach",
                 "description": "Apply a risk management process adapted to organization's size",
                 "requirement": "Implement risk assessment and treatment processes to identify and address security risks",
                 "smb_guidance": "Use simplified risk assessment methodology appropriate for SMB resources",
                 "category": "Risk Management",
-                "priority": "critical"
+                "priority": "critical",
             },
             {
                 "id": "ISO27001-SMB-003",
@@ -42,7 +42,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Protection must cover all forms of information regardless of storage medium",
                 "smb_guidance": "Focus on most critical information assets first",
                 "category": "Information Protection",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO27001-SMB-004",
@@ -51,7 +51,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Integrate security awareness and controls across human, process and technical dimensions",
                 "smb_guidance": "Prioritize employee training and basic technical controls",
                 "category": "Security Integration",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO27001-SMB-005",
@@ -60,7 +60,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Top management must demonstrate leadership and commitment to the ISMS",
                 "smb_guidance": "Assign clear security responsibilities even in small teams",
                 "category": "Leadership",
-                "priority": "critical"
+                "priority": "critical",
             },
             {
                 "id": "ISO27001-SMB-006",
@@ -69,7 +69,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Organization must understand its context and stakeholder requirements",
                 "smb_guidance": "Document key business relationships and dependencies",
                 "category": "Context",
-                "priority": "medium"
+                "priority": "medium",
             },
             {
                 "id": "ISO27001-SMB-007",
@@ -78,7 +78,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Clearly define what is included and excluded from ISMS scope",
                 "smb_guidance": "Start with core business processes and expand gradually",
                 "category": "Scope",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO27001-SMB-008",
@@ -87,7 +87,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Implement processes for continual improvement of the ISMS",
                 "smb_guidance": "Regular quarterly reviews suitable for SMBs",
                 "category": "Improvement",
-                "priority": "medium"
+                "priority": "medium",
             },
             {
                 "id": "ISO27001-SMB-009",
@@ -96,7 +96,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Define and implement information security incident management processes",
                 "smb_guidance": "Create simple incident response checklist and contact list",
                 "category": "Incident Management",
-                "priority": "critical"
+                "priority": "critical",
             },
             {
                 "id": "ISO27001-SMB-010",
@@ -105,14 +105,19 @@ SMB_FRAMEWORKS = {
                 "requirement": "Limit access to information and information processing facilities",
                 "smb_guidance": "Use role-based access control with regular reviews",
                 "category": "Access Management",
-                "priority": "critical"
-            }
-        ]
+                "priority": "critical",
+            },
+        ],
     },
     "ISO 9001:2015": {
         "title": "Quality Management System",
         "source": "https://www.iso.org/standard/62085.html",
-        "core_principles": ["Customer Focus", "Leadership", "Process Approach", "Improvement"],
+        "core_principles": [
+            "Customer Focus",
+            "Leadership",
+            "Process Approach",
+            "Improvement",
+        ],
         "obligations": [
             {
                 "id": "ISO9001-SMB-001",
@@ -121,7 +126,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Organization must determine external and internal issues relevant to its purpose",
                 "smb_guidance": "Simple SWOT analysis sufficient for SMBs",
                 "category": "Context",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO9001-SMB-002",
@@ -130,7 +135,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Top management shall demonstrate leadership and commitment to the quality management system",
                 "smb_guidance": "Owner/CEO involvement essential in SMBs",
                 "category": "Leadership",
-                "priority": "critical"
+                "priority": "critical",
             },
             {
                 "id": "ISO9001-SMB-003",
@@ -139,7 +144,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Organization shall establish quality objectives at relevant functions and levels",
                 "smb_guidance": "3-5 measurable quality goals appropriate for SMBs",
                 "category": "Planning",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO9001-SMB-004",
@@ -148,7 +153,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Organization shall determine and provide resources needed for QMS",
                 "smb_guidance": "Focus resources on customer-critical processes",
                 "category": "Support",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO9001-SMB-005",
@@ -157,7 +162,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Organization shall determine and meet customer requirements",
                 "smb_guidance": "Regular customer feedback surveys and reviews",
                 "category": "Operation",
-                "priority": "critical"
+                "priority": "critical",
             },
             {
                 "id": "ISO9001-SMB-006",
@@ -166,7 +171,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Organization shall monitor, measure, analyze and evaluate QMS performance",
                 "smb_guidance": "Monthly KPI dashboard tracking key metrics",
                 "category": "Performance",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO9001-SMB-007",
@@ -175,7 +180,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Organization shall continually improve the QMS",
                 "smb_guidance": "Implement simple PDCA cycle for improvements",
                 "category": "Improvement",
-                "priority": "medium"
+                "priority": "medium",
             },
             {
                 "id": "ISO9001-SMB-008",
@@ -184,7 +189,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Control documents and records required by the QMS",
                 "smb_guidance": "Use cloud-based document management for SMBs",
                 "category": "Documentation",
-                "priority": "medium"
+                "priority": "medium",
             },
             {
                 "id": "ISO9001-SMB-009",
@@ -193,7 +198,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Determine risks and opportunities that need to be addressed",
                 "smb_guidance": "Simple risk register with quarterly updates",
                 "category": "Risk Management",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO9001-SMB-010",
@@ -202,14 +207,18 @@ SMB_FRAMEWORKS = {
                 "requirement": "Organization shall conduct internal audits",
                 "smb_guidance": "Annual internal audit cycle sufficient for SMBs",
                 "category": "Audit",
-                "priority": "medium"
-            }
-        ]
+                "priority": "medium",
+            },
+        ],
     },
     "ISO 14001:2015": {
         "title": "Environmental Management System",
         "source": "https://www.iso.org/standard/60857.html",
-        "core_principles": ["Environmental Protection", "Legal Compliance", "Continual Improvement"],
+        "core_principles": [
+            "Environmental Protection",
+            "Legal Compliance",
+            "Continual Improvement",
+        ],
         "obligations": [
             {
                 "id": "ISO14001-SMB-001",
@@ -218,7 +227,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Determine environmental aspects of activities, products and services",
                 "smb_guidance": "Focus on main environmental impacts of core operations",
                 "category": "Environmental Aspects",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO14001-SMB-002",
@@ -227,7 +236,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Identify and have access to applicable legal requirements",
                 "smb_guidance": "Use compliance calendar for key environmental regulations",
                 "category": "Compliance",
-                "priority": "critical"
+                "priority": "critical",
             },
             {
                 "id": "ISO14001-SMB-003",
@@ -236,7 +245,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Top management shall establish an environmental policy",
                 "smb_guidance": "One-page policy covering key environmental commitments",
                 "category": "Leadership",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO14001-SMB-004",
@@ -245,7 +254,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Implement actions to address environmental aspects",
                 "smb_guidance": "Start with energy, waste, and water reduction",
                 "category": "Environmental Performance",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO14001-SMB-005",
@@ -254,7 +263,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Establish processes to prepare for and respond to emergencies",
                 "smb_guidance": "Simple spill response and emergency contact procedures",
                 "category": "Emergency Response",
-                "priority": "critical"
+                "priority": "critical",
             },
             {
                 "id": "ISO14001-SMB-006",
@@ -263,7 +272,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Establish environmental objectives at relevant functions",
                 "smb_guidance": "3-5 SMART environmental goals per year",
                 "category": "Planning",
-                "priority": "medium"
+                "priority": "medium",
             },
             {
                 "id": "ISO14001-SMB-007",
@@ -272,7 +281,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Establish operational controls for environmental aspects",
                 "smb_guidance": "Focus controls on highest impact activities",
                 "category": "Operation",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO14001-SMB-008",
@@ -281,9 +290,9 @@ SMB_FRAMEWORKS = {
                 "requirement": "Monitor and measure key environmental performance indicators",
                 "smb_guidance": "Track basic metrics: energy, waste, water monthly",
                 "category": "Monitoring",
-                "priority": "medium"
-            }
-        ]
+                "priority": "medium",
+            },
+        ],
     },
     "ISO 31000:2018": {
         "title": "Risk Management Guidelines",
@@ -297,7 +306,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Organization should establish a framework for managing risk",
                 "smb_guidance": "Simple risk register and quarterly review process",
                 "category": "Framework",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO31000-SMB-002",
@@ -306,7 +315,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Identify risks that could affect objectives",
                 "smb_guidance": "Brainstorming sessions with key staff quarterly",
                 "category": "Risk Assessment",
-                "priority": "critical"
+                "priority": "critical",
             },
             {
                 "id": "ISO31000-SMB-003",
@@ -315,7 +324,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Understand the nature of risk and determine risk level",
                 "smb_guidance": "Use simple likelihood x impact matrix",
                 "category": "Risk Assessment",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO31000-SMB-004",
@@ -324,7 +333,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Compare risk analysis results with risk criteria",
                 "smb_guidance": "Focus on top 10 risks for SMBs",
                 "category": "Risk Assessment",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO31000-SMB-005",
@@ -333,7 +342,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Select and implement appropriate risk treatment options",
                 "smb_guidance": "Accept, avoid, reduce or transfer based on resources",
                 "category": "Risk Treatment",
-                "priority": "critical"
+                "priority": "critical",
             },
             {
                 "id": "ISO31000-SMB-006",
@@ -342,7 +351,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Ensure risk information is communicated to stakeholders",
                 "smb_guidance": "Monthly risk updates to management team",
                 "category": "Communication",
-                "priority": "medium"
+                "priority": "medium",
             },
             {
                 "id": "ISO31000-SMB-007",
@@ -351,14 +360,19 @@ SMB_FRAMEWORKS = {
                 "requirement": "Regularly monitor and review risk management process",
                 "smb_guidance": "Quarterly risk register review and update",
                 "category": "Monitoring",
-                "priority": "medium"
-            }
-        ]
+                "priority": "medium",
+            },
+        ],
     },
     "ISO 37301:2021": {
         "title": "Compliance Management System",
         "source": "https://www.upguard.com/blog/iso-37301-guide",
-        "core_principles": ["Ethics", "Compliance Culture", "Risk-Based", "Continuous Improvement"],
+        "core_principles": [
+            "Ethics",
+            "Compliance Culture",
+            "Risk-Based",
+            "Continuous Improvement",
+        ],
         "obligations": [
             {
                 "id": "ISO37301-SMB-001",
@@ -367,7 +381,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Identify and assess compliance risks",
                 "smb_guidance": "Annual compliance risk assessment with quarterly updates",
                 "category": "Risk Assessment",
-                "priority": "critical"
+                "priority": "critical",
             },
             {
                 "id": "ISO37301-SMB-002",
@@ -376,7 +390,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Assign compliance management responsibilities",
                 "smb_guidance": "Part-time compliance role acceptable for SMBs",
                 "category": "Leadership",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO37301-SMB-003",
@@ -385,7 +399,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Establish compliance objectives and planning to achieve them",
                 "smb_guidance": "3-5 key compliance goals annually",
                 "category": "Planning",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO37301-SMB-004",
@@ -394,7 +408,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Establish and maintain compliance controls",
                 "smb_guidance": "Focus on high-risk compliance areas first",
                 "category": "Operation",
-                "priority": "critical"
+                "priority": "critical",
             },
             {
                 "id": "ISO37301-SMB-005",
@@ -403,7 +417,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Ensure compliance awareness and competence",
                 "smb_guidance": "Annual compliance training for all staff",
                 "category": "Support",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO37301-SMB-006",
@@ -412,7 +426,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Monitor compliance performance",
                 "smb_guidance": "Annual audit cycle with spot checks",
                 "category": "Performance Evaluation",
-                "priority": "medium"
+                "priority": "medium",
             },
             {
                 "id": "ISO37301-SMB-007",
@@ -421,7 +435,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Foster ethical behavior and compliance culture",
                 "smb_guidance": "Lead by example with clear tone from the top",
                 "category": "Culture",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "ISO37301-SMB-008",
@@ -430,14 +444,21 @@ SMB_FRAMEWORKS = {
                 "requirement": "Enable reporting of compliance concerns",
                 "smb_guidance": "Simple anonymous reporting channel",
                 "category": "Communication",
-                "priority": "critical"
-            }
-        ]
+                "priority": "critical",
+            },
+        ],
     },
     "NIST CSF 2.0": {
         "title": "NIST Cybersecurity Framework",
         "source": "https://www.nist.gov/cyberframework",
-        "core_principles": ["Identify", "Protect", "Detect", "Respond", "Recover", "Govern"],
+        "core_principles": [
+            "Identify",
+            "Protect",
+            "Detect",
+            "Respond",
+            "Recover",
+            "Govern",
+        ],
         "obligations": [
             {
                 "id": "NIST-SMB-001",
@@ -446,7 +467,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Maintain inventory of organizational systems, assets, and data",
                 "smb_guidance": "Simple spreadsheet of critical IT assets and data",
                 "category": "Identify",
-                "priority": "critical"
+                "priority": "critical",
             },
             {
                 "id": "NIST-SMB-002",
@@ -455,7 +476,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Identify and assess cybersecurity risks to operations and assets",
                 "smb_guidance": "Annual cybersecurity risk assessment",
                 "category": "Identify",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "NIST-SMB-003",
@@ -464,7 +485,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Limit access to assets and facilities to authorized users",
                 "smb_guidance": "Implement MFA and least privilege access",
                 "category": "Protect",
-                "priority": "critical"
+                "priority": "critical",
             },
             {
                 "id": "NIST-SMB-004",
@@ -473,7 +494,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Implement data protection measures",
                 "smb_guidance": "Encrypt sensitive data and use secure connections",
                 "category": "Protect",
-                "priority": "critical"
+                "priority": "critical",
             },
             {
                 "id": "NIST-SMB-005",
@@ -482,7 +503,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Provide cybersecurity awareness training",
                 "smb_guidance": "Quarterly security awareness training",
                 "category": "Protect",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "NIST-SMB-006",
@@ -491,7 +512,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Implement continuous monitoring capabilities",
                 "smb_guidance": "Basic SIEM or log monitoring tools",
                 "category": "Detect",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "NIST-SMB-007",
@@ -500,7 +521,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Maintain and test incident response procedures",
                 "smb_guidance": "Simple incident response checklist and contacts",
                 "category": "Respond",
-                "priority": "critical"
+                "priority": "critical",
             },
             {
                 "id": "NIST-SMB-008",
@@ -509,7 +530,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Maintain recovery plans and procedures",
                 "smb_guidance": "Basic backup and recovery procedures",
                 "category": "Recover",
-                "priority": "high"
+                "priority": "high",
             },
             {
                 "id": "NIST-SMB-009",
@@ -518,7 +539,7 @@ SMB_FRAMEWORKS = {
                 "requirement": "Assess and manage supply chain risks",
                 "smb_guidance": "Vendor security questionnaire for critical suppliers",
                 "category": "Identify",
-                "priority": "medium"
+                "priority": "medium",
             },
             {
                 "id": "NIST-SMB-010",
@@ -527,15 +548,16 @@ SMB_FRAMEWORKS = {
                 "requirement": "Define roles and responsibilities for cybersecurity",
                 "smb_guidance": "Clear security roles even in small teams",
                 "category": "Govern",
-                "priority": "high"
-            }
-        ]
-    }
+                "priority": "high",
+            },
+        ],
+    },
 }
+
 
 def extract_smb_framework_obligations():
     """Extract SMB-relevant obligations from frameworks."""
-    
+
     all_obligations = []
     framework_summary = {
         "title": "SMB Compliance Framework Suite",
@@ -543,17 +565,19 @@ def extract_smb_framework_obligations():
         "created_at": datetime.now().isoformat(),
         "total_frameworks": len(SMB_FRAMEWORKS),
         "total_obligations": 0,
-        "frameworks": {}
+        "frameworks": {},
     }
-    
+
     for framework_name, framework_data in SMB_FRAMEWORKS.items():
         print(f"\nProcessing {framework_name}...")
-        
+
         framework_obligations = []
         for obligation in framework_data["obligations"]:
             # Create unique ID
-            obl_hash = hashlib.md5(f"{framework_name}_{obligation['id']}".encode()).hexdigest()[:8]
-            
+            obl_hash = hashlib.md5(
+                f"{framework_name}_{obligation['id']}".encode()
+            ).hexdigest()[:8]
+
             obligation_entry = {
                 "obligation_id": f"SMB-{obl_hash}",
                 "framework": framework_name,
@@ -568,28 +592,30 @@ def extract_smb_framework_obligations():
                 "priority": obligation["priority"],
                 "core_principles": framework_data.get("core_principles", []),
                 "implementation_level": "SMB",
-                "created_at": datetime.now().isoformat()
+                "created_at": datetime.now().isoformat(),
             }
-            
+
             framework_obligations.append(obligation_entry)
             all_obligations.append(obligation_entry)
-        
+
         framework_summary["frameworks"][framework_name] = {
             "title": framework_data["title"],
             "source": framework_data["source"],
             "core_principles": framework_data.get("core_principles", []),
             "obligation_count": len(framework_obligations),
-            "categories": list(set(o["category"] for o in framework_obligations))
+            "categories": list(set(o["category"] for o in framework_obligations)),
         }
-        
+
         print(f"  - Extracted {len(framework_obligations)} obligations")
-    
+
     framework_summary["total_obligations"] = len(all_obligations)
-    
+
     # Save the manifest
-    manifest_path = Path("/home/omar/Documents/ruleIQ/data/manifests/smb_frameworks_manifest.json")
+    manifest_path = Path(
+        "/home/omar/Documents/ruleIQ/data/manifests/smb_frameworks_manifest.json"
+    )
     manifest_path.parent.mkdir(parents=True, exist_ok=True)
-    
+
     manifest = {
         "title": "SMB Framework Compliance Manifest",
         "description": "Extracted obligations from ISO standards and frameworks for SMBs",
@@ -597,25 +623,26 @@ def extract_smb_framework_obligations():
         "source": "Official ISO and framework documentation",
         "total_obligations": len(all_obligations),
         "frameworks": framework_summary["frameworks"],
-        "obligations": all_obligations
+        "obligations": all_obligations,
     }
-    
-    with open(manifest_path, 'w') as f:
+
+    with open(manifest_path, "w") as f:
         json.dump(manifest, f, indent=2)
-    
+
     print(f"\n{'='*80}")
     print(f"SMB FRAMEWORK EXTRACTION COMPLETE")
     print(f"{'='*80}")
     print(f"Total Frameworks: {len(SMB_FRAMEWORKS)}")
     print(f"Total Obligations: {len(all_obligations)}")
     print(f"Manifest saved to: {manifest_path}")
-    
+
     # Print breakdown
     print(f"\nFramework Breakdown:")
     for framework, details in framework_summary["frameworks"].items():
         print(f"  - {framework}: {details['obligation_count']} obligations")
-    
+
     return manifest
+
 
 if __name__ == "__main__":
     extract_smb_framework_obligations()

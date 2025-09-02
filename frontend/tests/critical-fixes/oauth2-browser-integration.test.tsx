@@ -37,10 +37,10 @@ describe('OAuth2 Browser Integration Tests', () => {
     vi.clearAllMocks();
     mockPush.mockClear();
     mockReplace.mockClear();
-    
+
     // Clear auth store state
     useAuthStore.getState().logout();
-    
+
     // Clear localStorage
     localStorage.clear();
   });
@@ -64,7 +64,7 @@ describe('OAuth2 Browser Integration Tests', () => {
             email: 'test@example.com',
             password: 'password123',
           });
-          
+
           return HttpResponse.json({
             access_token: 'mock-access-token-12345',
             refresh_token: 'mock-refresh-token-67890',
@@ -74,7 +74,7 @@ describe('OAuth2 Browser Integration Tests', () => {
         http.get('http://localhost:8000/api/v1/auth/me', ({ request }) => {
           const authHeader = request.headers.get('Authorization');
           expect(authHeader).toBe('Bearer mock-access-token-12345');
-          
+
           return HttpResponse.json({
             id: 'user-123',
             email: 'test@example.com',
@@ -89,7 +89,7 @@ describe('OAuth2 Browser Integration Tests', () => {
       render(
         <TestWrapper>
           <LoginPage />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Verify login form is rendered
@@ -115,9 +115,12 @@ describe('OAuth2 Browser Integration Tests', () => {
       });
 
       // Wait for login to complete
-      await waitFor(() => {
-        expect(mockPush).toHaveBeenCalledWith('/dashboard');
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          expect(mockPush).toHaveBeenCalledWith('/dashboard');
+        },
+        { timeout: 5000 },
+      );
 
       // Verify tokens are stored in auth store
       const authState = useAuthStore.getState();
@@ -130,17 +133,14 @@ describe('OAuth2 Browser Integration Tests', () => {
     it('should handle login with invalid credentials', async () => {
       server.use(
         http.post('http://localhost:8000/api/v1/auth/login', () => {
-          return HttpResponse.json(
-            { detail: 'Invalid credentials' },
-            { status: 401 }
-          );
+          return HttpResponse.json({ detail: 'Invalid credentials' }, { status: 401 });
         }),
       );
 
       render(
         <TestWrapper>
           <LoginPage />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Fill in invalid credentials
@@ -194,7 +194,7 @@ describe('OAuth2 Browser Integration Tests', () => {
         http.post('http://localhost:8000/api/v1/auth/refresh', async ({ request }) => {
           const body = await request.json();
           expect(body).toEqual({ refresh_token: 'valid-refresh-token' });
-          
+
           return HttpResponse.json({
             access_token: 'new-access-token',
             refresh_token: 'new-refresh-token',
@@ -230,10 +230,7 @@ describe('OAuth2 Browser Integration Tests', () => {
       // Mock failed token refresh
       server.use(
         http.post('http://localhost:8000/api/v1/auth/refresh', () => {
-          return HttpResponse.json(
-            { detail: 'Invalid refresh token' },
-            { status: 401 }
-          );
+          return HttpResponse.json({ detail: 'Invalid refresh token' }, { status: 401 });
         }),
       );
 
@@ -294,7 +291,7 @@ describe('OAuth2 Browser Integration Tests', () => {
           <AuthGuard requireAuth={true}>
             <ProtectedComponent />
           </AuthGuard>
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Should show protected content
@@ -314,7 +311,7 @@ describe('OAuth2 Browser Integration Tests', () => {
           <AuthGuard requireAuth={true}>
             <ProtectedComponent />
           </AuthGuard>
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Should redirect to login
@@ -430,7 +427,7 @@ describe('OAuth2 Browser Integration Tests', () => {
       render(
         <TestWrapper>
           <LoginPage />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Fill and submit form
@@ -461,7 +458,7 @@ describe('OAuth2 Browser Integration Tests', () => {
                 { loc: ['body', 'email'], msg: 'field required', type: 'value_error.missing' },
               ],
             },
-            { status: 422 }
+            { status: 422 },
           );
         }),
       );
@@ -469,7 +466,7 @@ describe('OAuth2 Browser Integration Tests', () => {
       render(
         <TestWrapper>
           <LoginPage />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Submit form with empty email
@@ -517,7 +514,7 @@ describe('OAuth2 Browser Integration Tests', () => {
       render(
         <TestWrapper>
           <LoginPage />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Perform login
@@ -539,11 +536,11 @@ describe('OAuth2 Browser Integration Tests', () => {
         ...consoleSpy.mock.calls.flat(),
         ...consoleErrorSpy.mock.calls.flat(),
       ];
-      
-      const hasTokenInLogs = allConsoleCalls.some(call => 
-        typeof call === 'string' && call.includes('secret-access-token')
+
+      const hasTokenInLogs = allConsoleCalls.some(
+        (call) => typeof call === 'string' && call.includes('secret-access-token'),
       );
-      
+
       expect(hasTokenInLogs).toBe(false);
 
       consoleSpy.mockRestore();

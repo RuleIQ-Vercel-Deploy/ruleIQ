@@ -1,0 +1,106 @@
+
+Xservices.freemium_assessment_service.FreemiumAssessmentService._generate_recommendationsO
+C/home/omar/Documents/ruleIQ/services/freemium_assessment_service.py¾ ¾('"9*™
+7
+Ç Ë(Š
+‡
+
+Ç( Ç(6
+%5"__id*m
+
+__unknown_file (Q*O@
+>services.freemium_assessment_service.FreemiumAssessmentService"
+	assistantØÕ
+
+Ç( Ë(
+%6*"
+
+__unknown_file (
+
+%52 get_personalized_recommendations:,
+assessment_context
+
+assessment_context:#
+analysis_results
+
+ai_analysis:(
+compliance_score
+
+compliance_scoreK
+I
+
+Ç Ë(
+recommendations"__id*"
+
+__unknown_file (
+
+%6
+
+Ì> Ì(@
+%7"list 
+
+Ì Ì(A
+%8*/
+
+__unknown_file (
+
+recommendations*/
+
+__unknown_file (
+recommendations*"
+
+__unknown_file (
+
+%72get"
+
+Ì Ì(A
+
+%8*î
+8
+Î Î(KÆÃ
+
+Î Î(K
+%9*^
+
+__unknown_file (B@
+>services.freemium_assessment_service.FreemiumAssessmentService*0
+
+__unknown_file (
+
+compliance_score2_get_fallback_recommendations"
+
+Î Î(K
+
+%9*®
+9
+Æ Æ(J‘
+Ž
+
+Æ Æ(#
+%10"__id*s
+
+__unknown_file (W*U@
+>services.freemium_assessment_service.FreemiumAssessmentService"
+circuit_breaker€~
+
+Æ Æ(J
+%11*#
+
+__unknown_file (
+
+%10*0
+
+__unknown_file (
+gemini-2.5-flash2is_model_available*
+7
+8:"
+
+À À(*
+assessment_context:
+
+Á Á(#
+ai_analysis: 
+
+Â Â(
+compliance_scoreBB@
+>services.freemium_assessment_service.FreemiumAssessmentServiceH

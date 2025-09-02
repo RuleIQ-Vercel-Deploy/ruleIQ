@@ -67,7 +67,11 @@ class DatabaseAlert:
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
-        return {**asdict(self), "timestamp": self.timestamp.isoformat(), "level": self.level.value}
+        return {
+            **asdict(self),
+            "timestamp": self.timestamp.isoformat(),
+            "level": self.level.value,
+        }
 
 
 class DatabaseMonitor:
@@ -99,7 +103,9 @@ class DatabaseMonitor:
 
             # Focus on async pool as it's primary for the application
             if not engine_info.get("async_engine_initialized"):
-                logger.warning("Async engine not initialized, cannot collect pool metrics")
+                logger.warning(
+                    "Async engine not initialized, cannot collect pool metrics"
+                )
                 return None
 
             pool_size = engine_info.get("async_pool_size", 0)
@@ -235,7 +241,12 @@ class DatabaseMonitor:
             )
 
     def _create_alert(
-        self, level: AlertLevel, metric: str, value: float, threshold: float, message: str
+        self,
+        level: AlertLevel,
+        metric: str,
+        value: float,
+        threshold: float,
+        message: str,
     ) -> None:
         """Create and store an alert."""
         alert = DatabaseAlert(
@@ -266,7 +277,9 @@ class DatabaseMonitor:
         """Remove old metrics to prevent memory growth."""
         cutoff = datetime.utcnow() - timedelta(hours=self.metrics_retention_hours)
 
-        self.pool_metrics_history = [m for m in self.pool_metrics_history if m.timestamp > cutoff]
+        self.pool_metrics_history = [
+            m for m in self.pool_metrics_history if m.timestamp > cutoff
+        ]
         self.session_metrics_history = [
             m for m in self.session_metrics_history if m.timestamp > cutoff
         ]
@@ -278,7 +291,9 @@ class DatabaseMonitor:
 
         # Get recent alerts (last hour)
         recent_alerts = [
-            a for a in self.alerts if a.timestamp > datetime.utcnow() - timedelta(hours=1)
+            a
+            for a in self.alerts
+            if a.timestamp > datetime.utcnow() - timedelta(hours=1)
         ]
 
         return {
@@ -287,8 +302,12 @@ class DatabaseMonitor:
             "session_metrics": session_metrics.to_dict(),
             "recent_alerts": [a.to_dict() for a in recent_alerts],
             "alert_counts": {
-                "critical": len([a for a in recent_alerts if a.level == AlertLevel.CRITICAL]),
-                "warning": len([a for a in recent_alerts if a.level == AlertLevel.WARNING]),
+                "critical": len(
+                    [a for a in recent_alerts if a.level == AlertLevel.CRITICAL]
+                ),
+                "warning": len(
+                    [a for a in recent_alerts if a.level == AlertLevel.WARNING]
+                ),
                 "info": len([a for a in recent_alerts if a.level == AlertLevel.INFO]),
             },
             "thresholds": self.thresholds,

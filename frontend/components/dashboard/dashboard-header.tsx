@@ -90,9 +90,7 @@ export function DashboardHeader() {
           <div className="flex items-center space-x-2 rounded-lg bg-teal-50 px-3 py-1">
             <Clock className="h-4 w-4 text-teal-600" />
             <div className="flex items-center space-x-1 font-mono text-sm text-neutral-700">
-              <span className="text-xs text-neutral-500">
-                Next Audit:
-              </span>
+              <span className="text-xs text-neutral-500">Next Audit:</span>
               <span className="font-semibold">{formatTime(timeUntilAudit.days)}d</span>
               <span className="text-neutral-400">:</span>
               <span className="font-semibold">{formatTime(timeUntilAudit.hours)}h</span>

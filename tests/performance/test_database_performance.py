@@ -172,7 +172,9 @@ class TestDatabaseQueryPerformance:
 
             # Count by type
             type_counts = (
-                db_session.query(EvidenceItem.evidence_type, func.count(EvidenceItem.id))
+                db_session.query(
+                    EvidenceItem.evidence_type, func.count(EvidenceItem.id)
+                )
                 .filter(EvidenceItem.user_id == sample_user.id)
                 .group_by(EvidenceItem.evidence_type)
                 .all()
@@ -237,10 +239,14 @@ class TestDatabaseQueryPerformance:
 
             result = (
                 db_session.query(EvidenceItem, BusinessProfile)
-                .join(BusinessProfile, EvidenceItem.business_profile_id == BusinessProfile.id)
+                .join(
+                    BusinessProfile,
+                    EvidenceItem.business_profile_id == BusinessProfile.id,
+                )
                 .filter(
                     EvidenceItem.user_id == sample_user.id,
-                    BusinessProfile.industry == "Technology",  # Use correct industry from fixture
+                    BusinessProfile.industry
+                    == "Technology",  # Use correct industry from fixture
                     EvidenceItem.status == "collected",
                 )
                 .limit(50)
@@ -262,7 +268,11 @@ class TestDatabaseConnectionPerformance:
     """Test database connection handling performance"""
 
     def test_connection_pool_performance(
-        self, db_session: Session, sample_user, sample_business_profile, sample_compliance_framework
+        self,
+        db_session: Session,
+        sample_user,
+        sample_business_profile,
+        sample_compliance_framework,
     ):
         """Test connection pool performance under load"""
 
@@ -279,7 +289,9 @@ class TestDatabaseConnectionPerformance:
                 # Simulate typical database operations (reduced workload)
                 for i in range(3):
                     # Query operation
-                    result = thread_session.execute(text("SELECT 1 as test_value")).fetchone()
+                    result = thread_session.execute(
+                        text("SELECT 1 as test_value")
+                    ).fetchone()
                     assert result.test_value == 1
 
                     # Insert operation
@@ -304,7 +316,11 @@ class TestDatabaseConnectionPerformance:
                 thread_session.commit()
                 end_time = time.time()
 
-                return {"thread_id": thread_id, "duration": end_time - start_time, "success": True}
+                return {
+                    "thread_id": thread_id,
+                    "duration": end_time - start_time,
+                    "success": True,
+                }
 
             except Exception as e:
                 thread_session.rollback()
@@ -320,7 +336,9 @@ class TestDatabaseConnectionPerformance:
         # Test with multiple concurrent connections
         num_threads = 20
         with ThreadPoolExecutor(max_workers=num_threads) as executor:
-            futures = [executor.submit(database_operation, i) for i in range(num_threads)]
+            futures = [
+                executor.submit(database_operation, i) for i in range(num_threads)
+            ]
             results = [future.result() for future in as_completed(futures)]
 
         # Analyze results
@@ -332,9 +350,13 @@ class TestDatabaseConnectionPerformance:
 
         # Performance assertions (adjusted for concurrent session creation overhead)
         assert len(successful) >= num_threads * 0.8  # At least 80% success rate
-        assert avg_duration < 10.0  # Average operation < 10s (includes session creation)
+        assert (
+            avg_duration < 10.0
+        )  # Average operation < 10s (includes session creation)
         assert max_duration < 15.0  # No operation > 15s
-        assert len(failed) <= num_threads * 0.2  # Allow some failures due to concurrency
+        assert (
+            len(failed) <= num_threads * 0.2
+        )  # Allow some failures due to concurrency
 
     def test_transaction_performance(
         self,
@@ -372,7 +394,9 @@ class TestDatabaseConnectionPerformance:
             # Update all records
             for evidence in evidence_items:
                 evidence.status = "reviewed"
-                evidence.compliance_score_impact = 80.0 + (evidence_items.index(evidence) % 20)
+                evidence.compliance_score_impact = 80.0 + (
+                    evidence_items.index(evidence) % 20
+                )
 
             # Perform aggregation within transaction
             count = (
@@ -505,7 +529,10 @@ class TestDatabaseIndexPerformance:
             # Query by status (commonly filtered field)
             valid_evidence = (
                 db_session.query(EvidenceItem)
-                .filter(EvidenceItem.user_id == sample_user.id, EvidenceItem.status == "collected")
+                .filter(
+                    EvidenceItem.user_id == sample_user.id,
+                    EvidenceItem.status == "collected",
+                )
                 .limit(50)
                 .all()
             )
@@ -516,7 +543,10 @@ class TestDatabaseIndexPerformance:
             yesterday = datetime.utcnow() - timedelta(days=1)
             recent_evidence = (
                 db_session.query(EvidenceItem)
-                .filter(EvidenceItem.user_id == sample_user.id, EvidenceItem.created_at > yesterday)
+                .filter(
+                    EvidenceItem.user_id == sample_user.id,
+                    EvidenceItem.created_at > yesterday,
+                )
                 .order_by(EvidenceItem.created_at.desc())
                 .limit(20)
                 .all()
@@ -538,7 +568,11 @@ class TestDatabaseIndexPerformance:
         assert benchmark.stats["max"] < 1.0  # Max < 1s
 
     def test_unindexed_query_performance(
-        self, db_session: Session, sample_user, sample_business_profile, sample_compliance_framework
+        self,
+        db_session: Session,
+        sample_user,
+        sample_business_profile,
+        sample_compliance_framework,
     ):
         """Test performance of queries without proper indexes (to identify issues)"""
 
@@ -611,7 +645,11 @@ class TestDatabaseConcurrencyPerformance:
         reason="SQLAlchemy session sharing across threads not supported - requires separate sessions per thread"
     )
     def test_concurrent_read_performance(
-        self, db_session: Session, sample_user, sample_business_profile, sample_compliance_framework
+        self,
+        db_session: Session,
+        sample_user,
+        sample_business_profile,
+        sample_compliance_framework,
     ):
         """Test read performance with concurrent access"""
 
@@ -645,12 +683,16 @@ class TestDatabaseConcurrencyPerformance:
                 .count(),
                 # List query
                 lambda: db_session.query(EvidenceItem)
-                .filter(EvidenceItem.user_id == sample_user.id, EvidenceItem.status == "collected")
+                .filter(
+                    EvidenceItem.user_id == sample_user.id,
+                    EvidenceItem.status == "collected",
+                )
                 .limit(10)
                 .all(),
                 # Aggregation query
                 lambda: db_session.query(
-                    func.count(EvidenceItem.id), func.avg(EvidenceItem.compliance_score_impact)
+                    func.count(EvidenceItem.id),
+                    func.avg(EvidenceItem.compliance_score_impact),
                 )
                 .filter(EvidenceItem.user_id == sample_user.id)
                 .first(),
@@ -675,13 +717,18 @@ class TestDatabaseConcurrencyPerformance:
         # Run concurrent read operations
         num_threads = 15
         with ThreadPoolExecutor(max_workers=num_threads) as executor:
-            futures = [executor.submit(concurrent_read_operation, i) for i in range(num_threads)]
+            futures = [
+                executor.submit(concurrent_read_operation, i)
+                for i in range(num_threads)
+            ]
             results = [future.result() for future in as_completed(futures)]
 
         # Analyze results
         avg_total_time = sum(r["total_time"] for r in results) / len(results)
         max_total_time = max(r["total_time"] for r in results)
-        avg_operation_time = sum(r["avg_operation_time"] for r in results) / len(results)
+        avg_operation_time = sum(r["avg_operation_time"] for r in results) / len(
+            results
+        )
 
         # Performance assertions for concurrent reads
         assert avg_total_time < 1.0  # Average total time < 1s
@@ -692,7 +739,11 @@ class TestDatabaseConcurrencyPerformance:
         reason="SQLAlchemy session sharing across threads not supported - requires separate sessions per thread"
     )
     def test_concurrent_write_performance(
-        self, db_session: Session, sample_user, sample_business_profile, sample_compliance_framework
+        self,
+        db_session: Session,
+        sample_user,
+        sample_business_profile,
+        sample_compliance_framework,
     ):
         """Test write performance with concurrent access"""
 
@@ -751,14 +802,21 @@ class TestDatabaseConcurrencyPerformance:
         # Run concurrent write operations
         num_threads = 10
         with ThreadPoolExecutor(max_workers=num_threads) as executor:
-            futures = [executor.submit(concurrent_write_operation, i) for i in range(num_threads)]
+            futures = [
+                executor.submit(concurrent_write_operation, i)
+                for i in range(num_threads)
+            ]
             results = [future.result() for future in as_completed(futures)]
 
         # Analyze results
         successful = [r for r in results if r["success"]]
         [r for r in results if not r["success"]]
 
-        avg_duration = sum(r["duration"] for r in successful) / len(successful) if successful else 0
+        avg_duration = (
+            sum(r["duration"] for r in successful) / len(successful)
+            if successful
+            else 0
+        )
         max_duration = max(r["duration"] for r in successful) if successful else 0
 
         # Performance assertions for concurrent writes
@@ -779,7 +837,9 @@ class TestDatabaseConcurrencyPerformance:
         )
 
         expected_items = sum(r["items_created"] for r in successful)
-        assert total_created == expected_items  # All successful items should be in database
+        assert (
+            total_created == expected_items
+        )  # All successful items should be in database
 
 
 @pytest.mark.performance
@@ -788,7 +848,11 @@ class TestDatabaseResourceUsage:
     """Test database resource usage and optimization"""
 
     def test_memory_usage_optimization(
-        self, db_session: Session, sample_user, sample_business_profile, sample_compliance_framework
+        self,
+        db_session: Session,
+        sample_user,
+        sample_business_profile,
+        sample_compliance_framework,
     ):
         """Test memory usage during large result set processing"""
         import os
@@ -798,7 +862,9 @@ class TestDatabaseResourceUsage:
         # Clean up any existing evidence items for this user to ensure clean test
         from database.evidence_item import EvidenceItem
 
-        db_session.query(EvidenceItem).filter(EvidenceItem.user_id == sample_user.id).delete()
+        db_session.query(EvidenceItem).filter(
+            EvidenceItem.user_id == sample_user.id
+        ).delete()
         db_session.commit()
 
         process = psutil.Process(os.getpid())

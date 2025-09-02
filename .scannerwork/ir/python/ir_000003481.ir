@@ -1,0 +1,27 @@
+
+Å»"
+        Get count of active sessions for a user
+        
+        Args:
+            user_id: User identifier
+            
+        Returns:
+            Number of active sessions
+        "strself
+Ç' Ç(+user_id
+Ç- Ç(9"Ã#
+!
+
+Ñ Ñ(O"#unknown-value#-
++
+
+Ñ Ñ(Osessions"#unknown-value#-
++
+
+Ò Ò(U"?python-unknown?:Blist,
+*
+
+Ò Ò(V"
+builtinslen*:Bint
+
+Ò Ò(V*:/home/omar/Documents/ruleIQ/services/session_management.py

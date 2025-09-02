@@ -22,19 +22,26 @@ logger = get_logger(__name__)
 
 router = APIRouter(tags=["AI Cost WebSocket"])
 
+
 class WebSocketMessage(BaseModel):
     """Base WebSocket message structure."""
+
     type: str
     timestamp: str
     data: Dict[str, Any]
 
+
 class CostUpdateMessage(WebSocketMessage):
     """Real-time cost update message."""
+
     type: str = "cost_update"
+
 
 class BudgetAlertMessage(WebSocketMessage):
     """Budget alert message."""
+
     type: str = "budget_alert"
+
 
 class ConnectionManager:
     """Manages WebSocket connections for real-time cost monitoring."""
@@ -46,10 +53,7 @@ class ConnectionManager:
         self.cost_tracker = CostTrackingService()
 
     async def connect(
-        self,
-        websocket: WebSocket,
-        user_id: str,
-        connection_type: str = "dashboard"
+        self, websocket: WebSocket, user_id: str, connection_type: str = "dashboard"
     ) -> str:
         """Accept new WebSocket connection."""
         await websocket.accept()
@@ -62,7 +66,7 @@ class ConnectionManager:
             "connection_type": connection_type,
             "connected_at": datetime.now(),
             "last_ping": datetime.now(),
-            "subscriptions": set()
+            "subscriptions": set(),
         }
 
         # Track user connections
@@ -70,7 +74,9 @@ class ConnectionManager:
             self.user_connections[user_id] = []
         self.user_connections[user_id].append(connection_id)
 
-        logger.info(f"WebSocket connection {connection_id} established for user {user_id}")
+        logger.info(
+            f"WebSocket connection {connection_id} established for user {user_id}"
+        )
 
         # Send initial cost data
         await self._send_initial_data(connection_id)
@@ -86,7 +92,8 @@ class ConnectionManager:
             # Remove from user connections
             if user_id in self.user_connections:
                 self.user_connections[user_id] = [
-                    cid for cid in self.user_connections[user_id]
+                    cid
+                    for cid in self.user_connections[user_id]
                     if cid != connection_id
                 ]
                 if not self.user_connections[user_id]:
@@ -103,6 +110,7 @@ class ConnectionManager:
 
             # Get recent cost data
             from datetime import date
+
             today = date.today()
             daily_summary = await self.cost_manager.get_daily_summary(today)
 
@@ -120,29 +128,33 @@ class ConnectionManager:
                     "service_breakdown": {
                         k: {
                             "cost": str(v["cost"]) if isinstance(v, dict) else str(v),
-                            "requests": v.get("requests", 0) if isinstance(v, dict) else 0
+                            "requests": (
+                                v.get("requests", 0) if isinstance(v, dict) else 0
+                            ),
                         }
                         for k, v in daily_summary.get("service_breakdown", {}).items()
-                    }
+                    },
                 },
                 "cost_trends": [
                     {
                         "date": trend["date"],
                         "cost": str(trend["cost"]),
-                        "requests": trend["requests"]
+                        "requests": trend["requests"],
                     }
                     for trend in trends
                 ],
                 "budget_status": {
                     "daily_limit": (
                         str(budget_config.get("daily_limit"))
-                        if budget_config.get("daily_limit") else None
+                        if budget_config.get("daily_limit")
+                        else None
                     ),
                     "monthly_limit": (
                         str(budget_config.get("monthly_limit"))
-                        if budget_config.get("monthly_limit") else None
-                    )
-                }
+                        if budget_config.get("monthly_limit")
+                        else None
+                    ),
+                },
             }
 
             await self.send_personal_message(
@@ -150,14 +162,16 @@ class ConnectionManager:
                 {
                     "type": "initial_data",
                     "timestamp": datetime.now().isoformat(),
-                    "data": initial_data
-                }
+                    "data": initial_data,
+                },
             )
 
         except Exception as e:
             logger.error(f"Failed to send initial data to {connection_id}: {str(e)}")
 
-    async def send_personal_message(self, connection_id: str, message: Dict[str, Any]) -> None:
+    async def send_personal_message(
+        self, connection_id: str, message: Dict[str, Any]
+    ) -> None:
         """Send message to specific connection."""
         if connection_id in self.active_connections:
             try:
@@ -176,7 +190,9 @@ class ConnectionManager:
             for connection_id in self.user_connections[user_id].copy():
                 await self.send_personal_message(connection_id, message)
 
-    async def broadcast(self, message: Dict[str, Any], connection_type: Optional[str] = None) -> None:
+    async def broadcast(
+        self, message: Dict[str, Any], connection_type: Optional[str] = None
+    ) -> None:
         """Broadcast message to all connections or specific connection type."""
         disconnected = []
 
@@ -198,23 +214,29 @@ class ConnectionManager:
         for connection_id in disconnected:
             await self.disconnect(connection_id)
 
-    async def subscribe_to_events(self, connection_id: str, event_types: List[str]) -> None:
+    async def subscribe_to_events(
+        self, connection_id: str, event_types: List[str]
+    ) -> None:
         """Subscribe connection to specific event types."""
         if connection_id in self.active_connections:
             self.active_connections[connection_id]["subscriptions"].update(event_types)
 
-    async def unsubscribe_from_events(self, connection_id: str, event_types: List[str]) -> None:
+    async def unsubscribe_from_events(
+        self, connection_id: str, event_types: List[str]
+    ) -> None:
         """Unsubscribe connection from specific event types."""
         if connection_id in self.active_connections:
             for event_type in event_types:
-                self.active_connections[connection_id]["subscriptions"].discard(event_type)
+                self.active_connections[connection_id]["subscriptions"].discard(
+                    event_type
+                )
 
     async def ping_connections(self) -> None:
         """Send ping to all connections to keep them alive."""
         ping_message = {
             "type": "ping",
             "timestamp": datetime.now().isoformat(),
-            "data": {}
+            "data": {},
         }
 
         await self.broadcast(ping_message)
@@ -236,17 +258,21 @@ class ConnectionManager:
             "connections_by_user": {
                 user_id: len(connections)
                 for user_id, connections in self.user_connections.items()
-            }
+            },
         }
+
 
 # Global connection manager
 connection_manager = ConnectionManager()
+
 
 @router.websocket("/realtime-dashboard")
 async def realtime_cost_dashboard(
     websocket: WebSocket,
     user_id: str = Query(..., description="User ID for connection"),
-    dashboard_type: str = Query("general", description="Type of dashboard (general, admin, service)")
+    dashboard_type: str = Query(
+        "general", description="Type of dashboard (general, admin, service)"
+    ),
 ) -> None:
     """
     WebSocket endpoint for real-time cost monitoring dashboard.
@@ -262,10 +288,12 @@ async def realtime_cost_dashboard(
         connection_id = await connection_manager.connect(
             websocket=websocket,
             user_id=user_id,
-            connection_type=f"dashboard_{dashboard_type}"
+            connection_type=f"dashboard_{dashboard_type}",
         )
 
-        logger.info(f"User {user_id} connected to real-time cost dashboard ({dashboard_type})")
+        logger.info(
+            f"User {user_id} connected to real-time cost dashboard ({dashboard_type})"
+        )
 
         # Keep connection alive and handle messages
         while True:
@@ -279,11 +307,15 @@ async def realtime_cost_dashboard(
 
             except asyncio.TimeoutError:
                 # Send ping to keep connection alive
-                await websocket.send_text(json.dumps({
-                    "type": "ping",
-                    "timestamp": datetime.now().isoformat(),
-                    "data": {}
-                }))
+                await websocket.send_text(
+                    json.dumps(
+                        {
+                            "type": "ping",
+                            "timestamp": datetime.now().isoformat(),
+                            "data": {},
+                        }
+                    )
+                )
 
             except WebSocketDisconnect:
                 logger.info(f"User {user_id} disconnected from cost dashboard")
@@ -296,10 +328,11 @@ async def realtime_cost_dashboard(
         if connection_id:
             await connection_manager.disconnect(connection_id)
 
+
 @router.websocket("/budget-alerts")
 async def budget_alerts_websocket(
     websocket: WebSocket,
-    user_id: str = Query(..., description="User ID for connection")
+    user_id: str = Query(..., description="User ID for connection"),
 ) -> None:
     """
     WebSocket endpoint for real-time budget alerts.
@@ -310,13 +343,13 @@ async def budget_alerts_websocket(
 
     try:
         connection_id = await connection_manager.connect(
-            websocket=websocket,
-            user_id=user_id,
-            connection_type="budget_alerts"
+            websocket=websocket, user_id=user_id, connection_type="budget_alerts"
         )
 
         # Subscribe to budget alert events
-        await connection_manager.subscribe_to_events(connection_id, ["budget_alert", "cost_spike"])
+        await connection_manager.subscribe_to_events(
+            connection_id, ["budget_alert", "cost_spike"]
+        )
 
         logger.info(f"User {user_id} connected to budget alerts WebSocket")
 
@@ -329,19 +362,27 @@ async def budget_alerts_websocket(
                 # Handle subscription changes
                 if data.get("type") == "subscribe":
                     event_types = data.get("events", [])
-                    await connection_manager.subscribe_to_events(connection_id, event_types)
+                    await connection_manager.subscribe_to_events(
+                        connection_id, event_types
+                    )
 
                 elif data.get("type") == "unsubscribe":
                     event_types = data.get("events", [])
-                    await connection_manager.unsubscribe_from_events(connection_id, event_types)
+                    await connection_manager.unsubscribe_from_events(
+                        connection_id, event_types
+                    )
 
             except asyncio.TimeoutError:
                 # Send ping
-                await websocket.send_text(json.dumps({
-                    "type": "ping",
-                    "timestamp": datetime.now().isoformat(),
-                    "data": {}
-                }))
+                await websocket.send_text(
+                    json.dumps(
+                        {
+                            "type": "ping",
+                            "timestamp": datetime.now().isoformat(),
+                            "data": {},
+                        }
+                    )
+                )
 
             except WebSocketDisconnect:
                 break
@@ -353,11 +394,12 @@ async def budget_alerts_websocket(
         if connection_id:
             await connection_manager.disconnect(connection_id)
 
+
 @router.websocket("/service-monitoring/{service_name}")
 async def service_cost_monitoring(
     websocket: WebSocket,
     service_name: str,
-    user_id: str = Query(..., description="User ID for connection")
+    user_id: str = Query(..., description="User ID for connection"),
 ) -> None:
     """
     WebSocket endpoint for monitoring specific service costs.
@@ -370,10 +412,12 @@ async def service_cost_monitoring(
         connection_id = await connection_manager.connect(
             websocket=websocket,
             user_id=user_id,
-            connection_type=f"service_{service_name}"
+            connection_type=f"service_{service_name}",
         )
 
-        logger.info(f"User {user_id} connected to service monitoring for {service_name}")
+        logger.info(
+            f"User {user_id} connected to service monitoring for {service_name}"
+        )
 
         # Send initial service data
         await send_service_initial_data(connection_id, service_name)
@@ -388,21 +432,28 @@ async def service_cost_monitoring(
                     await send_service_stats(connection_id, service_name)
 
             except asyncio.TimeoutError:
-                await websocket.send_text(json.dumps({
-                    "type": "ping",
-                    "timestamp": datetime.now().isoformat(),
-                    "data": {}
-                }))
+                await websocket.send_text(
+                    json.dumps(
+                        {
+                            "type": "ping",
+                            "timestamp": datetime.now().isoformat(),
+                            "data": {},
+                        }
+                    )
+                )
 
             except WebSocketDisconnect:
                 break
 
     except Exception as e:
-        logger.error(f"Error in service monitoring WebSocket for {service_name}: {str(e)}")
+        logger.error(
+            f"Error in service monitoring WebSocket for {service_name}: {str(e)}"
+        )
 
     finally:
         if connection_id:
             await connection_manager.disconnect(connection_id)
+
 
 async def handle_websocket_message(connection_id: str, message: Dict[str, Any]) -> None:
     """Handle incoming WebSocket messages."""
@@ -426,7 +477,10 @@ async def handle_websocket_message(connection_id: str, message: Dict[str, Any]) 
     elif message_type == "pong":
         # Update last ping time
         if connection_id in connection_manager.active_connections:
-            connection_manager.active_connections[connection_id]["last_ping"] = datetime.now()
+            connection_manager.active_connections[connection_id][
+                "last_ping"
+            ] = datetime.now()
+
 
 async def send_current_stats(connection_id: str) -> None:
     """Send current cost statistics to connection."""
@@ -434,6 +488,7 @@ async def send_current_stats(connection_id: str) -> None:
     try:
         # Get today's stats
         from datetime import date
+
         today = date.today()
         daily_summary = await connection_manager.cost_manager.get_daily_summary(today)
 
@@ -447,14 +502,15 @@ async def send_current_stats(connection_id: str) -> None:
                 "daily_total": str(daily_summary["total_cost"]),
                 "hourly_breakdown": hourly_costs,
                 "top_services": daily_summary.get("service_breakdown", {}),
-                "efficiency_metrics": daily_summary.get("efficiency_metrics", {})
-            }
+                "efficiency_metrics": daily_summary.get("efficiency_metrics", {}),
+            },
         }
 
         await connection_manager.send_personal_message(connection_id, stats_message)
 
     except Exception as e:
         logger.error(f"Failed to send current stats: {str(e)}")
+
 
 async def send_cost_forecast(connection_id: str) -> None:
     """Send cost forecast to connection."""
@@ -465,24 +521,25 @@ async def send_cost_forecast(connection_id: str) -> None:
             "next_7_days": [
                 {
                     "date": (datetime.now() + timedelta(days=i)).date().isoformat(),
-                    "predicted_cost": f"{25.0 + i * 2.5:.2f}"
+                    "predicted_cost": f"{25.0 + i * 2.5:.2f}",
                 }
                 for i in range(7)
             ],
             "confidence_level": 85.5,
-            "factors": ["increasing usage", "new user onboarding", "seasonal patterns"]
+            "factors": ["increasing usage", "new user onboarding", "seasonal patterns"],
         }
 
         forecast_message = {
             "type": "cost_forecast",
             "timestamp": datetime.now().isoformat(),
-            "data": forecast_data
+            "data": forecast_data,
         }
 
         await connection_manager.send_personal_message(connection_id, forecast_message)
 
     except Exception as e:
         logger.error(f"Failed to send cost forecast: {str(e)}")
+
 
 async def send_service_initial_data(connection_id: str, service_name: str) -> None:
     """Send initial data for service monitoring."""
@@ -495,9 +552,7 @@ async def send_service_initial_data(connection_id: str, service_name: str) -> No
         start_date = end_date - timedelta(days=7)
 
         service_usage = await connection_manager.cost_tracker.get_usage_by_service(
-            service_name=service_name,
-            start_date=start_date,
-            end_date=end_date
+            service_name=service_name, start_date=start_date, end_date=end_date
         )
 
         # Calculate service metrics
@@ -515,22 +570,23 @@ async def send_service_initial_data(connection_id: str, service_name: str) -> No
                 {
                     "date": usage.timestamp.date().isoformat(),
                     "cost": str(usage.cost_usd),
-                    "requests": usage.request_count
+                    "requests": usage.request_count,
                 }
                 for usage in service_usage
-            ]
+            ],
         }
 
         message = {
             "type": "service_initial_data",
             "timestamp": datetime.now().isoformat(),
-            "data": service_data
+            "data": service_data,
         }
 
         await connection_manager.send_personal_message(connection_id, message)
 
     except Exception as e:
         logger.error(f"Failed to send service initial data: {str(e)}")
+
 
 async def send_service_stats(connection_id: str, service_name: str) -> None:
     """Send current service statistics."""
@@ -542,22 +598,20 @@ async def send_service_stats(connection_id: str, service_name: str) -> None:
             "requests_this_hour": 156,
             "average_response_time": 1250.5,
             "error_rate": 2.3,
-            "cache_hit_rate": 78.5
+            "cache_hit_rate": 78.5,
         }
 
         message = {
             "type": "service_stats",
             "timestamp": datetime.now().isoformat(),
-            "data": {
-                "service_name": service_name,
-                **stats
-            }
+            "data": {"service_name": service_name, **stats},
         }
 
         await connection_manager.send_personal_message(connection_id, message)
 
     except Exception as e:
         logger.error(f"Failed to send service stats: {str(e)}")
+
 
 # Background task for broadcasting cost updates
 async def broadcast_cost_updates() -> None:
@@ -567,8 +621,11 @@ async def broadcast_cost_updates() -> None:
         try:
             # Get current cost data
             from datetime import date
+
             today = date.today()
-            daily_summary = await connection_manager.cost_manager.get_daily_summary(today)
+            daily_summary = await connection_manager.cost_manager.get_daily_summary(
+                today
+            )
 
             # Broadcast to dashboard connections
             update_message = {
@@ -578,8 +635,8 @@ async def broadcast_cost_updates() -> None:
                     "current_daily_cost": str(daily_summary["total_cost"]),
                     "requests_today": daily_summary["total_requests"],
                     "last_hour_cost": "5.25",  # Would calculate from hourly data
-                    "cost_trend": "stable"  # Would calculate from recent trends
-                }
+                    "cost_trend": "stable",  # Would calculate from recent trends
+                },
             }
 
             await connection_manager.broadcast(update_message, "dashboard")
@@ -591,29 +648,32 @@ async def broadcast_cost_updates() -> None:
             logger.error(f"Error in broadcast cost updates: {str(e)}")
             await asyncio.sleep(60)  # Wait longer on error
 
+
 # Background task management for WebSocket cost updates
 _background_task: Optional[asyncio.Task] = None
 
+
 async def start_websocket_background_tasks() -> None:
     """Start background tasks for WebSocket cost monitoring.
-    
+
     This should be called during application startup.
     """
     global _background_task
-    
+
     if _background_task is None or _background_task.done():
         _background_task = asyncio.create_task(broadcast_cost_updates())
         logger.info("Started WebSocket cost monitoring background task")
     else:
         logger.warning("WebSocket background task already running")
 
+
 async def stop_websocket_background_tasks() -> None:
     """Stop background tasks for WebSocket cost monitoring.
-    
+
     This should be called during application shutdown.
     """
     global _background_task
-    
+
     if _background_task and not _background_task.done():
         _background_task.cancel()
         try:
@@ -622,6 +682,7 @@ async def stop_websocket_background_tasks() -> None:
             pass
         logger.info("Stopped WebSocket cost monitoring background task")
 
+
 # HTTP endpoint to manually start/stop background tasks (for development)
 @router.post("/admin/background-tasks/start")
 async def start_background_tasks():
@@ -629,17 +690,20 @@ async def start_background_tasks():
     await start_websocket_background_tasks()
     return {"message": "Background tasks started"}
 
-@router.post("/admin/background-tasks/stop") 
+
+@router.post("/admin/background-tasks/stop")
 async def stop_background_tasks():
     """Stop WebSocket background tasks manually."""
     await stop_websocket_background_tasks()
     return {"message": "Background tasks stopped"}
+
 
 # HTTP endpoints for WebSocket management
 @router.get("/connections/stats")
 async def get_connection_stats():
     """Get statistics about active WebSocket connections."""
     return connection_manager.get_connection_stats()
+
 
 @router.post("/broadcast/alert")
 async def broadcast_budget_alert(alert_data: Dict[str, Any]):
@@ -648,13 +712,14 @@ async def broadcast_budget_alert(alert_data: Dict[str, Any]):
     alert_message = {
         "type": "budget_alert",
         "timestamp": datetime.now().isoformat(),
-        "data": alert_data
+        "data": alert_data,
     }
 
     await connection_manager.broadcast(alert_message, "dashboard")
     await connection_manager.broadcast(alert_message, "budget_alerts")
 
     return {"message": "Alert broadcasted successfully"}
+
 
 @router.post("/broadcast/cost-spike")
 async def broadcast_cost_spike(spike_data: Dict[str, Any]):
@@ -663,7 +728,7 @@ async def broadcast_cost_spike(spike_data: Dict[str, Any]):
     spike_message = {
         "type": "cost_spike",
         "timestamp": datetime.now().isoformat(),
-        "data": spike_data
+        "data": spike_data,
     }
 
     await connection_manager.broadcast(spike_message)

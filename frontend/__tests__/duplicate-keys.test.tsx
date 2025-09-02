@@ -29,7 +29,7 @@ describe('Duplicate Key Detection Tests', () => {
   describe('Homepage Components', () => {
     it('should render HomePage without duplicate keys', () => {
       const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
-      
+
       try {
         render(
           <TestWrapper>
@@ -37,7 +37,7 @@ describe('Duplicate Key Detection Tests', () => {
           </TestWrapper>,
         );
       } catch {
-    // TODO: Replace with proper logging
+        // TODO: Replace with proper logging
         throw error;
       } finally {
         consoleError.mockRestore();

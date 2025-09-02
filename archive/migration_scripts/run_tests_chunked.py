@@ -289,11 +289,15 @@ def get_system_info() -> Dict:
 def optimize_parallelism(base_workers: int, system_info: Dict) -> int:
     """Optimize number of parallel workers based on system resources."""
     cpu_workers = min(base_workers, system_info["cpu_count"])
-    memory_workers = max(1, int(system_info["available_memory_gb"] / 2))  # 2GB per worker
+    memory_workers = max(
+        1, int(system_info["available_memory_gb"] / 2)
+    )  # 2GB per worker
     return min(cpu_workers, memory_workers)
 
 
-async def run_test_chunk(chunk: Dict, system_info: Dict) -> Tuple[str, bool, str, float]:
+async def run_test_chunk(
+    chunk: Dict, system_info: Dict
+) -> Tuple[str, bool, str, float]:
     """Run a single test chunk and return results."""
     start_time = time.time()
     chunk_name = chunk["name"]
@@ -304,10 +308,14 @@ async def run_test_chunk(chunk: Dict, system_info: Dict) -> Tuple[str, bool, str
         n_index = command.index("-n")
         if n_index + 1 < len(command):
             if command[n_index + 1] == "auto":
-                command[n_index + 1] = str(optimize_parallelism(psutil.cpu_count(), system_info))
+                command[n_index + 1] = str(
+                    optimize_parallelism(psutil.cpu_count(), system_info)
+                )
             elif command[n_index + 1].isdigit():
                 original_workers = int(command[n_index + 1])
-                command[n_index + 1] = str(optimize_parallelism(original_workers, system_info))
+                command[n_index + 1] = str(
+                    optimize_parallelism(original_workers, system_info)
+                )
 
     print(f"🚀 Starting: {chunk_name}")
     print(f"   Command: {' '.join(command)}")
@@ -320,7 +328,9 @@ async def run_test_chunk(chunk: Dict, system_info: Dict) -> Tuple[str, bool, str
             cwd=Path(__file__).parent.parent,
         )
 
-        stdout, _ = await asyncio.wait_for(process.communicate(), timeout=chunk.get("timeout", 600))
+        stdout, _ = await asyncio.wait_for(
+            process.communicate(), timeout=chunk.get("timeout", 600)
+        )
 
         duration = time.time() - start_time
         success = process.returncode == 0
@@ -334,14 +344,21 @@ async def run_test_chunk(chunk: Dict, system_info: Dict) -> Tuple[str, bool, str
     except asyncio.TimeoutError:
         duration = time.time() - start_time
         print(f"⏰ TIMEOUT: {chunk_name} ({duration:.1f}s)")
-        return chunk_name, False, f"Test chunk timed out after {duration:.1f}s", duration
+        return (
+            chunk_name,
+            False,
+            f"Test chunk timed out after {duration:.1f}s",
+            duration,
+        )
     except Exception as e:
         duration = time.time() - start_time
         print(f"💥 ERROR: {chunk_name} - {e!s}")
         return chunk_name, False, f"Error: {e!s}", duration
 
 
-async def run_chunks_parallel(chunks: List[Dict], max_concurrent: int = 3) -> List[Tuple]:
+async def run_chunks_parallel(
+    chunks: List[Dict], max_concurrent: int = 3
+) -> List[Tuple]:
     """Run test chunks with controlled parallelism."""
     system_info = get_system_info()
     print(
@@ -366,7 +383,8 @@ async def run_chunks_parallel(chunks: List[Dict], max_concurrent: int = 3) -> Li
                 return await run_test_chunk(chunk, system_info)
 
         parallel_results = await asyncio.gather(
-            *[run_with_semaphore(chunk) for chunk in parallel_chunks], return_exceptions=True
+            *[run_with_semaphore(chunk) for chunk in parallel_chunks],
+            return_exceptions=True,
         )
         results.extend(parallel_results)
 
@@ -407,7 +425,9 @@ def print_summary(results: List[Tuple], total_time: float) -> None:
                 if output:
                     lines = output.strip().split("\n")
                     relevant_lines = [
-                        l for l in lines[-10:] if "FAILED" in l or "ERROR" in l or "assert" in l
+                        l
+                        for l in lines[-10:]
+                        if "FAILED" in l or "ERROR" in l or "assert" in l
                     ]
                     if relevant_lines:
                         print(f"    {relevant_lines[-1][:100]}...")
@@ -417,14 +437,21 @@ def print_summary(results: List[Tuple], total_time: float) -> None:
 
 async def main() -> None:
     """Main execution function."""
-    parser = argparse.ArgumentParser(description="Run NexCompli tests in optimized chunks")
+    parser = argparse.ArgumentParser(
+        description="Run NexCompli tests in optimized chunks"
+    )
     parser.add_argument(
-        "--mode", choices=list(TEST_CONFIGS.keys()), default="fast", help="Test execution mode"
+        "--mode",
+        choices=list(TEST_CONFIGS.keys()),
+        default="fast",
+        help="Test execution mode",
     )
     parser.add_argument(
         "--max-concurrent", type=int, default=3, help="Maximum concurrent test chunks"
     )
-    parser.add_argument("--list-modes", action="store_true", help="List available test modes")
+    parser.add_argument(
+        "--list-modes", action="store_true", help="List available test modes"
+    )
 
     args = parser.parse_args()
 

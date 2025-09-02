@@ -61,7 +61,11 @@ describe('Auth Service', () => {
 
       await authService.register('test@example.com', 'password123', 'Test User');
 
-      expect(mockStore.register).toHaveBeenCalledWith('test@example.com', 'password123', 'Test User');
+      expect(mockStore.register).toHaveBeenCalledWith(
+        'test@example.com',
+        'password123',
+        'Test User',
+      );
     });
   });
 

@@ -8,6 +8,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class APIVersioning:
     """API versioning support for backward compatibility."""
 
@@ -27,7 +28,9 @@ class APIVersioning:
 
         self.version_routes[version] = routes
 
-    def mark_deprecated(self, endpoint: str, version: str, replacement: Optional[str] = None) -> None:
+    def mark_deprecated(
+        self, endpoint: str, version: str, replacement: Optional[str] = None
+    ) -> None:
         """Mark an endpoint as deprecated."""
         self.deprecated_endpoints[endpoint] = {
             "version": version,
@@ -83,13 +86,15 @@ class APIVersioning:
 
         # Add deprecation warning if applicable
         if version != self.LATEST_VERSION:
-            response["meta"]["warning"] = (
-                f"API version {version} is deprecated. Use {self.LATEST_VERSION} instead."
-            )
+            response["meta"][
+                "warning"
+            ] = f"API version {version} is deprecated. Use {self.LATEST_VERSION} instead."
 
         return response
 
-    def check_deprecation_warning(self, endpoint: str, version: str) -> Optional[Dict[str, str]]:
+    def check_deprecation_warning(
+        self, endpoint: str, version: str
+    ) -> Optional[Dict[str, str]]:
         """Check if endpoint is deprecated."""
         if endpoint in self.deprecated_endpoints:
             deprecation = self.deprecated_endpoints[endpoint]
@@ -98,6 +103,7 @@ class APIVersioning:
                 "replacement": deprecation.get("replacement", "Use latest version"),
             }
         return None
+
 
 class VersionMiddleware:
     """FastAPI middleware for API versioning."""
@@ -133,26 +139,36 @@ class VersionMiddleware:
         response.headers["X-API-Latest-Version"] = self.versioning.LATEST_VERSION
 
         # Add deprecation warning if applicable
-        deprecation = self.versioning.check_deprecation_warning(request.url.path, version)
+        deprecation = self.versioning.check_deprecation_warning(
+            request.url.path, version
+        )
         if deprecation:
             response.headers["X-API-Deprecation-Warning"] = deprecation["warning"]
 
         return response
 
+
 # Global API versioning instance
 api_versioning = APIVersioning()
 
 # Configure versioning
-api_versioning.register_version("v1", {"description": "Initial API version", "status": "stable"})
+api_versioning.register_version(
+    "v1", {"description": "Initial API version", "status": "stable"}
+)
 
 api_versioning.register_version(
     "v2", {"description": "Enhanced API with improved performance", "status": "latest"}
 )
 
 # Mark deprecated endpoints
-api_versioning.mark_deprecated("/api/v1/evidence/bulk-upload", "v1", "/api/v2/evidence/upload")
+api_versioning.mark_deprecated(
+    "/api/v1/evidence/bulk-upload", "v1", "/api/v2/evidence/upload"
+)
 
-api_versioning.mark_deprecated("/api/v1/assessments/create", "v1", "/api/v2/assessments")
+api_versioning.mark_deprecated(
+    "/api/v1/assessments/create", "v1", "/api/v2/assessments"
+)
+
 
 def version_route(version: str):
     """Decorator for version-specific routes."""
@@ -162,6 +178,7 @@ def version_route(version: str):
         return func
 
     return decorator
+
 
 class VersionRouter:
     """Router that handles version-specific endpoints."""
@@ -177,17 +194,30 @@ class VersionRouter:
         if version not in self.routes:
             self.routes[version] = []
 
-        self.routes[version].append({"path": version_path, "endpoint": endpoint, "kwargs": kwargs})
+        self.routes[version].append(
+            {"path": version_path, "endpoint": endpoint, "kwargs": kwargs}
+        )
 
     def get_routes(self, version: str) -> List[Dict[str, Any]]:
         """Get all routes for a specific version."""
         return self.routes.get(version, [])
 
+
 # Version-specific response schemas
 VERSION_RESPONSE_SCHEMAS = {
     "v1": {
-        "evidence": {"id": "uuid", "name": "string", "status": "string", "created_at": "datetime"},
-        "assessment": {"id": "uuid", "title": "string", "status": "string", "progress": "integer"},
+        "evidence": {
+            "id": "uuid",
+            "name": "string",
+            "status": "string",
+            "created_at": "datetime",
+        },
+        "assessment": {
+            "id": "uuid",
+            "title": "string",
+            "status": "string",
+            "progress": "integer",
+        },
     },
     "v2": {
         "evidence": {
@@ -209,9 +239,11 @@ VERSION_RESPONSE_SCHEMAS = {
     },
 }
 
+
 def get_response_schema(version: str, resource_type: str) -> Dict[str, str]:
     """Get response schema for specific version and resource."""
     return VERSION_RESPONSE_SCHEMAS.get(version, {}).get(resource_type, {})
+
 
 # Migration helpers
 class MigrationHelper:
@@ -226,6 +258,7 @@ class MigrationHelper:
     def v1_to_v2_assessment(v1_data: Dict[str, Any]) -> Dict[str, Any]:
         """Convert v1 assessment format to v2."""
         return {**v1_data, "ai_insights": {}, "recommendations": [], "risk_score": None}
+
 
 # Usage example:
 # from api.middleware.api_versioning import api_versioning, version_route

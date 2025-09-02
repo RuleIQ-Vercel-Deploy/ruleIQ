@@ -29,9 +29,13 @@ class ChatConversation(Base):
         UUID(as_uuid=True), ForeignKey("business_profiles.id"), nullable=False
     )
     title = Column(String(255), nullable=False)
-    status = Column(SAEnum(ConversationStatus), default=ConversationStatus.ACTIVE, nullable=False)
+    status = Column(
+        SAEnum(ConversationStatus), default=ConversationStatus.ACTIVE, nullable=False
+    )
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    updated_at = Column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
 
     # Relationships
     messages = relationship(

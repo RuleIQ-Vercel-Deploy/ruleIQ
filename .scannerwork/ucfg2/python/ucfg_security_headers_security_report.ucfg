@@ -1,0 +1,153 @@
+
+>security_headers.SecurityHeadersMiddleware.get_security_reportF
+:/home/omar/Documents/ruleIQ/middleware/security_headers.py‰ ‰("2*®
+2
+Š (
+
+ —(	
+%1"dictw
+u
+
+‘ ‘(+
+%2"__id*[
+
+__unknown_file (?*=,
+*security_headers.SecurityHeadersMiddleware"
+csp_enabled”
+‘
+
+‘ ‘(+
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*+
+
+__unknown_file (
+csp_enabled*"
+
+__unknown_file (
+
+%2x
+v
+
+’ ’(-
+%4"__id*\
+
+__unknown_file (@*>,
+*security_headers.SecurityHeadersMiddleware"
+cors_enabled•
+’
+
+’ ’(-
+%5"__mapSet*"
+
+__unknown_file (
+
+%1*,
+
+__unknown_file (
+cors_enabled*"
+
+__unknown_file (
+
+%4y
+w
+
+“ “(/
+%6"__id*]
+
+__unknown_file (A*?,
+*security_headers.SecurityHeadersMiddleware"
+nonce_enabled–
+“
+
+“ “(/
+%7"__mapSet*"
+
+__unknown_file (
+
+%1*-
+
+__unknown_file (
+nonce_enabled*"
+
+__unknown_file (
+
+%6w
+u
+
+” ”(.
+%8"__id*[
+
+__unknown_file (?*=,
+*security_headers.SecurityHeadersMiddleware"
+default_csp—
+”
+
+” ”(.
+%9"__mapSet*"
+
+__unknown_file (
+
+%1*.
+
+__unknown_file (
+csp_directives*"
+
+__unknown_file (
+
+%8x
+v
+
+• •(+
+%10"__id*[
+
+__unknown_file (?*=,
+*security_headers.SecurityHeadersMiddleware"
+cors_config–
+“
+
+• •(+
+%11"__mapSet*"
+
+__unknown_file (
+
+%1*+
+
+__unknown_file (
+cors_config*#
+
+__unknown_file (
+
+%10w
+u
+
+– –()
+%12"__id*Z
+
+__unknown_file (>*<,
+*security_headers.SecurityHeadersMiddleware"
+
+report_uri•
+’
+
+– –()
+%13"__mapSet*"
+
+__unknown_file (
+
+%1**
+
+__unknown_file (
+
+report_uri*#
+
+__unknown_file (
+
+%12"
+
+ —(	
+
+%1B.,
+*security_headers.SecurityHeadersMiddlewareH

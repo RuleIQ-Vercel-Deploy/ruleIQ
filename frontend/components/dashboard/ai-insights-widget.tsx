@@ -132,7 +132,6 @@ export function AIInsightsWidget({
         await dashboardService.dismissInsight(insightId);
       } catch (error) {
         // TODO: Replace with proper logging
-
         // // TODO: Replace with proper logging
       }
     }
@@ -156,7 +155,6 @@ export function AIInsightsWidget({
         await dashboardService.bookmarkInsight(insightId);
       } catch (error) {
         // TODO: Replace with proper logging
-
         // // TODO: Replace with proper logging
       }
     }
@@ -268,7 +266,7 @@ export function AIInsightsWidget({
           <div
             key={insight.id}
             className={cn(
-              'group rounded-lg border border-l-4 border-glass-border bg-glass-white p-4 transition-all hover:border-glass-border-hover hover:bg-glass-white-hover',
+              'border-glass-border hover:border-glass-border-hover group rounded-lg border border-l-4 bg-glass-white p-4 transition-all hover:bg-glass-white-hover',
               getPriorityColor(insight.priority),
             )}
           >
@@ -318,7 +316,7 @@ export function AIInsightsWidget({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-auto border border-glass-border px-3 py-1.5 text-xs hover:border-glass-border-hover hover:bg-glass-white"
+                  className="border-glass-border hover:border-glass-border-hover h-auto border px-3 py-1.5 text-xs hover:bg-glass-white"
                   onClick={() =>
                     insight.action?.route && (window.location.href = insight.action.route)
                   }
@@ -342,7 +340,7 @@ export function AIInsightsWidget({
         )}
 
         {insights.length > maxInsights && (
-          <div className="border-t border-glass-border pt-2">
+          <div className="border-glass-border border-t pt-2">
             <Button variant="ghost" size="sm" className="w-full hover:bg-glass-white">
               View All Insights ({insights.length})
             </Button>

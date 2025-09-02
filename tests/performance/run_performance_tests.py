@@ -152,7 +152,9 @@ class PerformanceTestRunner:
             "--headless",
         ]
 
-        print(f"Running Locust with {users} users, spawn rate {spawn_rate}/s for {duration}")
+        print(
+            f"Running Locust with {users} users, spawn rate {spawn_rate}/s for {duration}"
+        )
         subprocess.run(cmd, capture_output=True, text=True, cwd=project_root)
 
         # Parse Locust results
@@ -160,7 +162,16 @@ class PerformanceTestRunner:
 
     def run_memory_tests(self) -> Dict[str, Any]:
         """Run memory usage tests"""
-        cmd = ["python", "-m", "pytest", "tests/performance/", "-k", "memory", "-v", "--tb=short"]
+        cmd = [
+            "python",
+            "-m",
+            "pytest",
+            "tests/performance/",
+            "-k",
+            "memory",
+            "-v",
+            "--tb=short",
+        ]
 
         # Monitor memory during tests
         initial_memory = psutil.virtual_memory().percent
@@ -280,16 +291,20 @@ class PerformanceTestRunner:
                         {
                             "total_requests": int(total_requests),
                             "total_failures": int(total_failures),
-                            "failure_rate": total_failures / total_requests
-                            if total_requests > 0
-                            else 0,
+                            "failure_rate": (
+                                total_failures / total_requests
+                                if total_requests > 0
+                                else 0
+                            ),
                             "average_response_time": avg_response_time,
                             "endpoints_tested": len(df),
                         }
                     )
 
                     # Identify slow endpoints
-                    slow_endpoints = df[df["Average Response Time"] > 2000]  # > 2 seconds
+                    slow_endpoints = df[
+                        df["Average Response Time"] > 2000
+                    ]  # > 2 seconds
                     if not slow_endpoints.empty:
                         results["slow_endpoints"] = slow_endpoints[
                             ["Name", "Average Response Time"]
@@ -333,7 +348,10 @@ class PerformanceTestRunner:
 
         # Analyze results and generate recommendations
         for suite_name, suite_results in self.results.items():
-            if isinstance(suite_results, dict) and "performance_issues" in suite_results:
+            if (
+                isinstance(suite_results, dict)
+                and "performance_issues" in suite_results
+            ):
                 for issue in suite_results["performance_issues"]:
                     if issue["issue"] == "slow_mean_time":
                         recommendations.append(
@@ -406,7 +424,9 @@ class PerformanceTestRunner:
         # System metrics
         system_metrics = summary["system_metrics"]
         print(f"💻 Peak CPU Usage: {system_metrics.get('max_cpu_percent', 0):.1f}%")
-        print(f"🧠 Peak Memory Usage: {system_metrics.get('max_memory_percent', 0):.1f}%")
+        print(
+            f"🧠 Peak Memory Usage: {system_metrics.get('max_memory_percent', 0):.1f}%"
+        )
 
         # Results summary
         print("\n📈 RESULTS BY SUITE:")
@@ -416,7 +436,9 @@ class PerformanceTestRunner:
                     print(f"❌ {suite_name}: FAILED - {results['error']}")
                 elif "total_benchmarks" in results:
                     issues = len(results.get("performance_issues", []))
-                    print(f"✅ {suite_name}: {results['total_benchmarks']} tests, {issues} issues")
+                    print(
+                        f"✅ {suite_name}: {results['total_benchmarks']} tests, {issues} issues"
+                    )
                 elif "total_requests" in results:
                     failure_rate = results.get("failure_rate", 0)
                     print(
@@ -432,7 +454,12 @@ class PerformanceTestRunner:
         if recommendations:
             print(f"\n💡 RECOMMENDATIONS ({len(recommendations)}):")
             for rec in recommendations[:5]:  # Show top 5
-                priority_emoji = {"critical": "🚨", "high": "⚠️", "medium": "💛", "low": "💚"}
+                priority_emoji = {
+                    "critical": "🚨",
+                    "high": "⚠️",
+                    "medium": "💛",
+                    "low": "💚",
+                }
                 emoji = priority_emoji.get(rec["priority"], "📝")
                 print(f"{emoji} {rec['priority'].upper()}: {rec['description']}")
         else:
@@ -477,11 +504,13 @@ class SystemMonitor:
         return {
             "duration": self.metrics.get("end_time", time.time())
             - self.metrics.get("start_time", time.time()),
-            "avg_cpu_percent": sum(cpu_samples) / len(cpu_samples) if cpu_samples else 0,
+            "avg_cpu_percent": (
+                sum(cpu_samples) / len(cpu_samples) if cpu_samples else 0
+            ),
             "max_cpu_percent": max(cpu_samples) if cpu_samples else 0,
-            "avg_memory_percent": sum(memory_samples) / len(memory_samples)
-            if memory_samples
-            else 0,
+            "avg_memory_percent": (
+                sum(memory_samples) / len(memory_samples) if memory_samples else 0
+            ),
             "max_memory_percent": max(memory_samples) if memory_samples else 0,
             "sample_count": len(cpu_samples),
         }
@@ -511,19 +540,26 @@ def load_config(config_file: Optional[str] = None) -> Dict[str, Any]:
 
 def main():
     """Main entry point for performance test runner"""
-    parser = argparse.ArgumentParser(description="ComplianceGPT Performance Test Runner")
+    parser = argparse.ArgumentParser(
+        description="ComplianceGPT Performance Test Runner"
+    )
     parser.add_argument("--config", "-c", help="Configuration file path")
     parser.add_argument("--include", nargs="+", help="Test suites to include")
     parser.add_argument("--exclude", nargs="+", help="Test suites to exclude")
     parser.add_argument("--load-tests", action="store_true", help="Run load tests")
     parser.add_argument(
-        "--users", type=int, default=10, help="Number of concurrent users for load tests"
+        "--users",
+        type=int,
+        default=10,
+        help="Number of concurrent users for load tests",
     )
     parser.add_argument("--duration", default="60s", help="Load test duration")
     parser.add_argument(
         "--host", default="http://localhost:8000", help="Target host for load tests"
     )
-    parser.add_argument("--benchmark-compare", help="Compare with previous benchmark results")
+    parser.add_argument(
+        "--benchmark-compare", help="Compare with previous benchmark results"
+    )
 
     args = parser.parse_args()
 
@@ -541,15 +577,21 @@ def main():
         config["benchmark_compare"] = args.benchmark_compare
 
     # Update Locust configuration
-    config["locust"].update({"users": args.users, "duration": args.duration, "host": args.host})
+    config["locust"].update(
+        {"users": args.users, "duration": args.duration, "host": args.host}
+    )
 
     # Run performance tests
     runner = PerformanceTestRunner(config)
     results = runner.run_all_tests()
 
     # Exit with appropriate code
-    has_errors = any("error" in r for r in results["results"].values() if isinstance(r, dict))
-    critical_recommendations = any(r["priority"] == "critical" for r in results["recommendations"])
+    has_errors = any(
+        "error" in r for r in results["results"].values() if isinstance(r, dict)
+    )
+    critical_recommendations = any(
+        r["priority"] == "critical" for r in results["recommendations"]
+    )
 
     if has_errors or critical_recommendations:
         sys.exit(1)

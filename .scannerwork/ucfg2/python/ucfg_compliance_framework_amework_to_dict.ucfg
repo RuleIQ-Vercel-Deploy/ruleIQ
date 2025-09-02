@@ -1,0 +1,134 @@
+
+9database.compliance_framework.ComplianceFramework.to_dictF
+</home/omar/Documents/ruleIQ/database/compliance_framework.py? ?("2*ž
+2@ @(@
+A H(	
+%1"dicts
+q
+B B(
+%2"__id*Y
+
+__unknown_file (=*;3
+1database.compliance_framework.ComplianceFramework"
+id‰
+†
+B B(
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*"
+
+__unknown_file (
+id*"
+
+__unknown_file (
+
+%2u
+s
+C C(
+%4"__id*[
+
+__unknown_file (?*=3
+1database.compliance_framework.ComplianceFramework"
+name‹
+ˆ
+C C(
+%5"__mapSet*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+name*"
+
+__unknown_file (
+
+%4|
+z
+D D(+
+%6"__id*b
+
+__unknown_file (F*D3
+1database.compliance_framework.ComplianceFramework"
+description’
+
+D D(+
+%7"__mapSet*"
+
+__unknown_file (
+
+%1*+
+
+__unknown_file (
+description*"
+
+__unknown_file (
+
+%6y
+w
+E E(%
+%8"__id*_
+
+__unknown_file (C*A3
+1database.compliance_framework.ComplianceFramework"
+
+category
+Œ
+E E(%
+%9"__mapSet*"
+
+__unknown_file (
+
+%1*(
+
+__unknown_file (
+
+category*"
+
+__unknown_file (
+
+%8y
+w
+F F(#
+%10"__id*^
+
+__unknown_file (B*@3
+1database.compliance_framework.ComplianceFramework"	
+version
+
+F F(#
+%11"__mapSet*"
+
+__unknown_file (
+
+%1*'
+
+__unknown_file (	
+version*#
+
+__unknown_file (
+
+%10
+G G(
+%12"list‘
+Ž
+G G(
+%13"__mapSet*"
+
+__unknown_file (
+
+%1*(
+
+__unknown_file (
+
+controls*#
+
+__unknown_file (
+
+%12"
+A H(	
+
+%1B53
+1database.compliance_framework.ComplianceFrameworkH

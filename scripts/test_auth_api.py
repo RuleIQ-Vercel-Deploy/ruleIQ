@@ -8,6 +8,7 @@ import asyncio
 import aiohttp
 from typing import Dict, Optional
 
+
 class APITester:
     def __init__(self, base_url: str = "http://localhost:8000"):
         self.base_url = base_url
@@ -30,12 +31,11 @@ class APITester:
                 "password": "TestPassword123!",
                 "first_name": "Test",
                 "last_name": "User",
-                "company_name": "Test Company"
+                "company_name": "Test Company",
             }
 
             async with self.session.post(
-                f"{self.base_url}/api/v1/auth/register",
-                json=register_data
+                f"{self.base_url}/api/v1/auth/register", json=register_data
             ) as response:
                 if response.status == 201:
                     print("✅ Test user registered successfully")
@@ -55,14 +55,10 @@ class APITester:
     async def login(self) -> bool:
         """Login with test user credentials."""
         try:
-            login_data = {
-                "email": "test@example.com",
-                "password": "TestPassword123!"
-            }
+            login_data = {"email": "test@example.com", "password": "TestPassword123!"}
 
             async with self.session.post(
-                f"{self.base_url}/api/v1/auth/login",
-                json=login_data
+                f"{self.base_url}/api/v1/auth/login", json=login_data
             ) as response:
                 if response.status == 200:
                     data = await response.json()
@@ -77,7 +73,9 @@ class APITester:
             print(f"❌ Login error: {e}")
             return False
 
-    async def test_authenticated_endpoint(self, method: str, endpoint: str, data: Optional[Dict] = None) -> bool:
+    async def test_authenticated_endpoint(
+        self, method: str, endpoint: str, data: Optional[Dict] = None
+    ) -> bool:
         """Test an endpoint with authentication."""
         if not self.auth_token:
             print(f"❌ No auth token for {endpoint}")
@@ -87,21 +85,21 @@ class APITester:
 
         try:
             async with self.session.request(
-                method,
-                f"{self.base_url}{endpoint}",
-                headers=headers,
-                json=data
+                method, f"{self.base_url}{endpoint}", headers=headers, json=data
             ) as response:
                 if response.status < 400:
                     print(f"✅ {method} {endpoint} - Status: {response.status}")
                     return True
                 else:
                     text = await response.text()
-                    print(f"❌ {method} {endpoint} - Status: {response.status} - {text}")
+                    print(
+                        f"❌ {method} {endpoint} - Status: {response.status} - {text}"
+                    )
                     return False
         except Exception as e:
             print(f"❌ {method} {endpoint} - Error: {e}")
             return False
+
 
 async def main():
     """Run authenticated API tests."""
@@ -133,7 +131,10 @@ async def main():
             if await tester.test_authenticated_endpoint(method, endpoint):
                 success_count += 1
 
-        print(f"\n📊 Results: {success_count}/{len(endpoints_to_test)} endpoints working")
+        print(
+            f"\n📊 Results: {success_count}/{len(endpoints_to_test)} endpoints working"
+        )
+
 
 if __name__ == "__main__":
     asyncio.run(main())

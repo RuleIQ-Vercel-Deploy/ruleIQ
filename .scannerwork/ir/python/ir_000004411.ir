@@ -1,0 +1,27 @@
+
+?6"Decorator to automatically track errors in functions"strcategory
+þ þ(,severity
+ÿ ÿ(,context
+€ €(,"›#
+!
+
+   (
+"#unknown-value#*
+(
+
+ƒ  (%closure"#new-object#+
+)
+
+ƒ  ("#set-field# context:,
+*
+
+ƒ  ("#set-field# category:,
+*
+
+ƒ  ("#set-field# severity:-
++
+
+ƒ  (	"?python-partial-apply?:
+
+   (
+*4/home/omar/Documents/ruleIQ/config/error_tracking.py

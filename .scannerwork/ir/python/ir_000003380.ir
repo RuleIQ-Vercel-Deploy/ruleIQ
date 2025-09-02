@@ -1,0 +1,10 @@
+
+&"Generate a secure CSP nonce"str
+16intself
+ç ç("F2
+0
+
+é é(("
+secretstoken_urlsafe:Bstr
+
+é é((*:/home/omar/Documents/ruleIQ/middleware/security_headers.py

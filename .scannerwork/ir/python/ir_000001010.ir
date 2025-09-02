@@ -1,0 +1,6 @@
+
+!"String representation."str
+e\"ComplianceState(case_id={self.case_id}, actor={self.actor}, status={self.workflow_status})"strself
+¹ ¹("
+
+» »(l*F/home/omar/Documents/ruleIQ/langgraph_agent/models/compliance_state.py

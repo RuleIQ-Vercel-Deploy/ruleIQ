@@ -25,7 +25,6 @@ export default function PricingPage() {
       }
     } catch (error) {
       // TODO: Replace with proper logging
-
       // // TODO: Replace with proper logging
     } finally {
       setLoading(false);
@@ -51,7 +50,6 @@ export default function PricingPage() {
       }
     } catch (error) {
       // TODO: Replace with proper logging
-
       // // TODO: Replace with proper logging
     }
   };

@@ -20,6 +20,7 @@ from database.user import User
 
 router = APIRouter(prefix="/api/v1/admin/tokens", tags=["admin", "token-management"])
 
+
 class BlacklistStatsResponse(BaseModel):
     """Response model for blacklist statistics."""
 
@@ -30,6 +31,7 @@ class BlacklistStatsResponse(BaseModel):
     suspicious_patterns_detected: int
     bulk_operations_count: int
     last_cleanup: Optional[str]
+
 
 class BlacklistEntryResponse(BaseModel):
     """Response model for blacklist entry details."""
@@ -44,11 +46,13 @@ class BlacklistEntryResponse(BaseModel):
     user_agent: Optional[str]
     metadata: Optional[Dict]
 
+
 class TokenActionRequest(BaseModel):
     """Request model for token actions."""
 
     token: str
     reason: Optional[str] = "administrative_action"
+
 
 class BulkTokenActionRequest(BaseModel):
     """Request model for bulk token actions."""
@@ -56,6 +60,7 @@ class BulkTokenActionRequest(BaseModel):
     user_id: str
     reason: str = "security_action"
     exclude_current_token: Optional[str] = None
+
 
 def require_admin_role(current_user: User = Depends(get_current_active_user)) -> User:
     """Require admin role for access."""
@@ -67,6 +72,7 @@ def require_admin_role(current_user: User = Depends(get_current_active_user)) ->
         )
     return current_user
 
+
 @router.get("/statistics", response_model=BlacklistStatsResponse)
 async def get_blacklist_statistics(admin_user: User = Depends(require_admin_role)):
     """Get comprehensive blacklist statistics."""
@@ -74,6 +80,7 @@ async def get_blacklist_statistics(admin_user: User = Depends(require_admin_role
     stats = await blacklist.get_blacklist_statistics()
 
     return BlacklistStatsResponse(**stats)
+
 
 @router.get("/entry/{token_hash}")
 async def get_blacklist_entry(
@@ -89,6 +96,7 @@ async def get_blacklist_entry(
 
     # Token hash not found in blacklist
     return None
+
 
 @router.post("/blacklist")
 async def blacklist_token_admin(
@@ -106,10 +114,12 @@ async def blacklist_token_admin(
 
     if not success:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to blacklist token"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to blacklist token",
         )
 
     return {"message": "Token successfully blacklisted", "reason": request.reason}
+
 
 @router.delete("/blacklist")
 async def remove_token_from_blacklist(
@@ -126,6 +136,7 @@ async def remove_token_from_blacklist(
         )
 
     return {"message": "Token removed from blacklist"}
+
 
 @router.post("/blacklist/user")
 async def blacklist_user_tokens(
@@ -146,6 +157,7 @@ async def blacklist_user_tokens(
         "reason": request.reason,
     }
 
+
 @router.post("/cleanup")
 async def cleanup_expired_tokens(admin_user: User = Depends(require_admin_role)):
     """Manually trigger cleanup of expired tokens."""
@@ -158,6 +170,7 @@ async def cleanup_expired_tokens(admin_user: User = Depends(require_admin_role))
         "tokens_cleaned": cleaned_count,
         "cleanup_time": datetime.utcnow().isoformat(),
     }
+
 
 async def get_blacklist_health(admin_user: User = Depends(require_admin_role)):
     """Get health status of the token blacklist system."""
@@ -192,6 +205,7 @@ async def get_blacklist_health(admin_user: User = Depends(require_admin_role)):
             "issues": [f"Blacklist system error: {str(e)}"],
             "last_check": datetime.utcnow().isoformat(),
         }
+
 
 @router.get("/patterns")
 async def get_suspicious_patterns(

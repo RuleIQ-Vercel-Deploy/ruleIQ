@@ -38,7 +38,9 @@ class TestEvidenceEndpoints:
             "evidence_type": "policy_document",  # Added missing field
         }
 
-        response = client.post("/api/evidence", json=evidence_data, headers=authenticated_headers)
+        response = client.post(
+            "/api/evidence", json=evidence_data, headers=authenticated_headers
+        )
 
         assert response.status_code == 201
         assert_api_response_security(response)
@@ -48,14 +50,20 @@ class TestEvidenceEndpoints:
         assert response_data["description"] == evidence_data["description"]
         assert response_data["control_id"] == evidence_data["control_id"]
         assert response_data["framework_id"] == evidence_data["framework_id"]
-        assert response_data["business_profile_id"] == evidence_data["business_profile_id"]
+        assert (
+            response_data["business_profile_id"] == evidence_data["business_profile_id"]
+        )
         assert response_data["source"] == evidence_data["source"]
         assert "id" in response_data
         assert "created_at" in response_data
         assert "status" in response_data
 
     def test_create_evidence_item_validation_error(
-        self, client, authenticated_headers, sample_business_profile, sample_compliance_framework
+        self,
+        client,
+        authenticated_headers,
+        sample_business_profile,
+        sample_compliance_framework,
     ):
         """Test creating evidence item with invalid data"""
         invalid_data = {
@@ -64,11 +72,15 @@ class TestEvidenceEndpoints:
             "control_id": "",  # Invalid: empty control_id
             "source": "",  # Invalid: empty source
             "framework_id": str(sample_compliance_framework.id),  # Use real framework
-            "business_profile_id": str(sample_business_profile.id),  # Use real business profile
+            "business_profile_id": str(
+                sample_business_profile.id
+            ),  # Use real business profile
             "evidence_type": "document",  # Added missing field
         }
 
-        response = client.post("/api/evidence", json=invalid_data, headers=authenticated_headers)
+        response = client.post(
+            "/api/evidence", json=invalid_data, headers=authenticated_headers
+        )
 
         assert response.status_code == 422
         response_data = response.json()
@@ -146,7 +158,9 @@ class TestEvidenceEndpoints:
 
         # Create auth headers for this user
         token_data = {"sub": str(empty_user.id)}
-        token = create_access_token(data=token_data, expires_delta=timedelta(minutes=30))
+        token = create_access_token(
+            data=token_data, expires_delta=timedelta(minutes=30)
+        )
         empty_headers = {"Authorization": f"Bearer {token}"}
 
         response = client.get("/api/evidence", headers=empty_headers)
@@ -161,7 +175,9 @@ class TestEvidenceEndpoints:
     ):
         """Test retrieving evidence items with query filters"""
         # Test filtering by evidence type
-        response = client.get("/api/evidence?evidence_type=document", headers=authenticated_headers)
+        response = client.get(
+            "/api/evidence?evidence_type=document", headers=authenticated_headers
+        )
 
         assert response.status_code == 200
         response_data = response.json()
@@ -171,7 +187,9 @@ class TestEvidenceEndpoints:
             assert item["evidence_type"] == "document"
 
         # Test filtering by status
-        response = client.get("/api/evidence?status=valid", headers=authenticated_headers)
+        response = client.get(
+            "/api/evidence?status=valid", headers=authenticated_headers
+        )
 
         assert response.status_code == 200
         response_data = response.json()
@@ -180,7 +198,9 @@ class TestEvidenceEndpoints:
             assert item["status"] == "valid"
 
         # Test filtering by framework
-        response = client.get("/api/evidence?framework=ISO27001", headers=authenticated_headers)
+        response = client.get(
+            "/api/evidence?framework=ISO27001", headers=authenticated_headers
+        )
 
         assert response.status_code == 200
         # Response should include items mapped to ISO27001
@@ -191,7 +211,9 @@ class TestEvidenceEndpoints:
         """Test retrieving specific evidence item by ID"""
         evidence_id = evidence_item_instance.id
 
-        response = client.get(f"/api/evidence/{evidence_id}", headers=authenticated_headers)
+        response = client.get(
+            f"/api/evidence/{evidence_id}", headers=authenticated_headers
+        )
 
         assert response.status_code == 200
         assert_api_response_security(response)
@@ -205,7 +227,9 @@ class TestEvidenceEndpoints:
         """Test retrieving non-existent evidence item"""
         non_existent_id = uuid4()
 
-        response = client.get(f"/api/evidence/{non_existent_id}", headers=authenticated_headers)
+        response = client.get(
+            f"/api/evidence/{non_existent_id}", headers=authenticated_headers
+        )
 
         assert response.status_code == 404
         assert "not found" in response.json()["detail"].lower()
@@ -216,7 +240,9 @@ class TestEvidenceEndpoints:
         """Test user cannot access another user's evidence"""
         evidence_id = evidence_item_instance.id
 
-        response = client.get(f"/api/evidence/{evidence_id}", headers=another_authenticated_headers)
+        response = client.get(
+            f"/api/evidence/{evidence_id}", headers=another_authenticated_headers
+        )
 
         # Accept both 403 (Forbidden) and 404 (Not Found) for security reasons
         # 404 is preferred to avoid revealing resource existence to unauthorized users
@@ -239,7 +265,9 @@ class TestEvidenceEndpoints:
         }
 
         response = client.put(
-            f"/api/evidence/{evidence_id}", json=update_data, headers=authenticated_headers
+            f"/api/evidence/{evidence_id}",
+            json=update_data,
+            headers=authenticated_headers,
         )
 
         assert response.status_code == 200
@@ -259,7 +287,9 @@ class TestEvidenceEndpoints:
         update_data = {"status": "expired", "notes": "Evidence expired due to age"}
 
         response = client.patch(
-            f"/api/evidence/{evidence_id}", json=update_data, headers=authenticated_headers
+            f"/api/evidence/{evidence_id}",
+            json=update_data,
+            headers=authenticated_headers,
         )
 
         assert response.status_code == 200
@@ -274,12 +304,16 @@ class TestEvidenceEndpoints:
         """Test deleting evidence item"""
         evidence_id = evidence_item_instance.id
 
-        response = client.delete(f"/api/evidence/{evidence_id}", headers=authenticated_headers)
+        response = client.delete(
+            f"/api/evidence/{evidence_id}", headers=authenticated_headers
+        )
 
         assert response.status_code == 204
 
         # Verify evidence item is deleted
-        get_response = client.get(f"/api/evidence/{evidence_id}", headers=authenticated_headers)
+        get_response = client.get(
+            f"/api/evidence/{evidence_id}", headers=authenticated_headers
+        )
         assert get_response.status_code == 404
 
     def test_delete_evidence_item_unauthorized(
@@ -339,7 +373,9 @@ class TestEvidenceEndpoints:
         }
 
         response = client.post(
-            "/api/evidence/bulk-update", json=bulk_update_data, headers=authenticated_headers
+            "/api/evidence/bulk-update",
+            json=bulk_update_data,
+            headers=authenticated_headers,
         )
 
         assert response.status_code == 200
@@ -349,11 +385,15 @@ class TestEvidenceEndpoints:
 
         # Verify all items were updated
         for evidence_id in evidence_ids:
-            get_response = client.get(f"/api/evidence/{evidence_id}", headers=authenticated_headers)
+            get_response = client.get(
+                f"/api/evidence/{evidence_id}", headers=authenticated_headers
+            )
             assert get_response.status_code == 200
             assert get_response.json()["status"] == "reviewed"
 
-    def test_get_evidence_statistics(self, client, authenticated_headers, evidence_item_instance):
+    def test_get_evidence_statistics(
+        self, client, authenticated_headers, evidence_item_instance
+    ):
         """Test retrieving evidence statistics"""
         response = client.get("/api/evidence/stats", headers=authenticated_headers)
 
@@ -371,7 +411,9 @@ class TestEvidenceEndpoints:
         assert isinstance(response_data["by_status"], dict)
         assert isinstance(response_data["by_type"], dict)
 
-    def test_search_evidence_items(self, client, authenticated_headers, evidence_item_instance):
+    def test_search_evidence_items(
+        self, client, authenticated_headers, evidence_item_instance
+    ):
         """Test searching evidence items"""
         search_params = {
             "q": "security",  # Search term
@@ -450,7 +492,9 @@ class TestEvidenceValidationEndpoints:
         }
 
         response = client.post(
-            "/api/evidence/requirements", json=request_data, headers=authenticated_headers
+            "/api/evidence/requirements",
+            json=request_data,
+            headers=authenticated_headers,
         )
 
         assert response.status_code == 200
@@ -533,7 +577,9 @@ class TestEvidencePaginationAndSorting:
         db_session.commit()
 
         # Test first page
-        response = client.get("/api/evidence?page=1&page_size=10", headers=authenticated_headers)
+        response = client.get(
+            "/api/evidence?page=1&page_size=10", headers=authenticated_headers
+        )
 
         assert response.status_code == 200
         response_data = response.json()
@@ -548,7 +594,9 @@ class TestEvidencePaginationAndSorting:
         assert response_data["total_pages"] == expected_pages
 
         # Test second page
-        response = client.get("/api/evidence?page=2&page_size=10", headers=authenticated_headers)
+        response = client.get(
+            "/api/evidence?page=2&page_size=10", headers=authenticated_headers
+        )
 
         assert response.status_code == 200
         response_data = response.json()
@@ -562,7 +610,8 @@ class TestEvidencePaginationAndSorting:
         total_pages = first_response.json()["total_pages"]
 
         response = client.get(
-            f"/api/evidence?page={total_pages}&page_size=10", headers=authenticated_headers
+            f"/api/evidence?page={total_pages}&page_size=10",
+            headers=authenticated_headers,
         )
 
         assert response.status_code == 200
@@ -625,7 +674,8 @@ class TestEvidencePaginationAndSorting:
 
         # Test sorting by creation date
         response = client.get(
-            "/api/evidence?sort_by=created_at&sort_order=desc", headers=authenticated_headers
+            "/api/evidence?sort_by=created_at&sort_order=desc",
+            headers=authenticated_headers,
         )
 
         assert response.status_code == 200

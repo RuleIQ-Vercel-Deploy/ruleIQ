@@ -1,0 +1,297 @@
+
+4+"config.logging_config.CustomJsonFormatter"str
+N	"loggers"str
+8/"Defines the logging configuration dictionary."str
+/&&"logging.handlers.RotatingFileHandler"str
+ë
+"database"str
+)"logs/app.log"str
+"class"str
+"json"str
+"stream"str
+^
+"gunicorn"str
+!"formatter"str
+RI"%(timestamp)s %(level)s %(name)s %(message)s %(request_id)s %(user_id)s"str
+@"root"str
+"format"str
+6"logs/error.log"str
++
+"maxBytes"str
+Y"INFO"str
+
+F0int
+["propagate"str
+
+/5int
+
+"handlers"str
+j"celery"str
+v"api"str
+falsebool
+P	"uvicorn"str
+ö	"WARNING"str
+,10485760int
+(
+"filename"str
+<"ERROR"str
+;"level"str
+Ñ
+"services"str
+
+1int
+#"disable_existing_loggers"str
+3"error_file"str
+	"console"str
+
+"formatters"str
+Ä"DEBUG"str
+ "logging.StreamHandler"str
+	"version"str
+$"file"str
+."backupCount"str
+"()"str	log_level* *(%Clist"Ä"$
+"
+, c("#new-object#Bdict 
+
+- -("	#map-set#: 
+
+. .()	"	#map-set#:$
+"
+/ 4(	"#new-object#Bdict$
+"
+0 3("#new-object#Bdict 
+
+1 1(A"	#map-set#: 
+
+2 2(c"	#map-set#: 
+
+0 3("	#map-set#: 
+
+/ 4(	"	#map-set#:
+$
+"
+5 J(	"#new-object#Bdict$
+"
+6 :("#new-object#Bdict 
+
+7 7(0"	#map-set#:!
+
+8 8("#unknown-value#'
+%
+8 8($"#get-field# stdout: 
+
+8 8($ "	#map-set#: 
+
+9 9(#""	#map-set#:! 
+
+6 :(#"	#map-set#:$
+"
+; A(%"#new-object#Bdict 
+
+< <(?'"	#map-set#:%& 
+
+= =(**"	#map-set#:%() 
+
+> >($-"	#map-set#:%+, 
+
+? ?( 0"	#map-set#:%./ 
+
+@ @(#1"	#map-set#:%! 
+
+; A(2"	#map-set#:$%$
+"
+B I(4"#new-object#Bdict 
+
+C C(?5"	#map-set#:4& 
+
+D D(,7"	#map-set#:4(6 
+
+E E($8"	#map-set#:4+, 
+
+F F( 9"	#map-set#:4./ 
+
+G G(#:"	#map-set#:4! 
+
+H H( ="	#map-set#:4;< 
+
+B I(>"	#map-set#:34 
+
+5 J(	?"	#map-set#:$
+"
+K N(	A"#new-object#Bdict'
+%
+L L(9B"#unknown-value#Blist&
+$
+L L(9D"
+#is-exact#:BCBbool
+
+L L(9E"
+#assume#:D8
+6
+L L(9G"#set-field# __collection_size:BFBint&
+$
+L L(9H"#array-add-last#:B&
+$
+L L(9I"#array-add-last#:B$&
+$
+L L(9J"#array-add-last#:B3 
+
+L L(9K"	#map-set#:AB 
+
+M M(L"	#map-set#:A; 
+
+K N(	M"	#map-set#:@A$
+"
+O b(	O"#new-object#Bdict$
+"
+P P(]Q"#new-object#Bdict'
+%
+P$ P(7R"#unknown-value#Blist&
+$
+P$ P(7S"
+#is-exact#:RCBbool
+
+P$ P(7T"
+#assume#:S8
+6
+P$ P(7U"#set-field# __collection_size:RFBint&
+$
+P$ P(7V"#array-add-last#:R&
+$
+P$ P(7W"#array-add-last#:R$ 
+
+P P(7X"	#map-set#:QR 
+
+P9 P(HZ"	#map-set#:Q;Y 
+
+PJ P(\\"	#map-set#:Q[ 
+
+P P(]]"	#map-set#:OPQ$
+"
+Q Q(^_"#new-object#Bdict'
+%
+Q% Q(8`"#unknown-value#Blist&
+$
+Q% Q(8a"
+#is-exact#:`CBbool
+
+Q% Q(8b"
+#assume#:a8
+6
+Q% Q(8c"#set-field# __collection_size:`FBint&
+$
+Q% Q(8d"#array-add-last#:`&
+$
+Q% Q(8e"#array-add-last#:`$ 
+
+Q Q(8f"	#map-set#:_` 
+
+Q: Q(Ig"	#map-set#:_;Y 
+
+QK Q(]h"	#map-set#:_[ 
+
+Q Q(^i"	#map-set#:O^_$
+"
+R R(\k"#new-object#Bdict'
+%
+R# R(6l"#unknown-value#Blist&
+$
+R# R(6m"
+#is-exact#:lCBbool
+
+R# R(6n"
+#assume#:m8
+6
+R# R(6o"#set-field# __collection_size:lFBint&
+$
+R# R(6p"#array-add-last#:l&
+$
+R# R(6q"#array-add-last#:l$ 
+
+R R(6r"	#map-set#:kl 
+
+R8 R(Gs"	#map-set#:k;Y 
+
+RI R([t"	#map-set#:k[ 
+
+R R(\u"	#map-set#:Ojk$
+"
+S W(w"#new-object#Bdict'
+%
+T T(=x"#unknown-value#Blist&
+$
+T T(=y"
+#is-exact#:xCBbool
+
+T T(=z"
+#assume#:y8
+6
+T T(={"#set-field# __collection_size:xFBint&
+$
+T T(=|"#array-add-last#:x&
+$
+T T(=}"#array-add-last#:x$&
+$
+T T(=~"#array-add-last#:x3 
+
+T T(="	#map-set#:wx"
+ 
+U U( Å"	#map-set#:w;Ä!
+
+V V("Ç"	#map-set#:w[!
+
+S W(É"	#map-set#:Ovw%
+#
+X \(Ö"#new-object#Bdict(
+&
+Y Y(=Ü"#unknown-value#Blist(
+&
+Y Y(=á"
+#is-exact#:ÜCBbool
+
+Y Y(=à"
+#assume#:á:
+8
+Y Y(=â"#set-field# __collection_size:ÜFBint(
+&
+Y Y(=ä"#array-add-last#:Ü(
+&
+Y Y(=ã"#array-add-last#:Ü$(
+&
+Y Y(=å"#array-add-last#:Ü3#
+!
+Y Y(=ç"	#map-set#:ÖÜ"
+ 
+Z Z(é"	#map-set#:Ö;Y"
+ 
+[ [("è"	#map-set#:Ö[#
+!
+X \(ê"	#map-set#:OÑÖ%
+#
+] a(í"#new-object#Bdict(
+&
+^ ^(2ì"#unknown-value#Blist(
+&
+^ ^(2î"
+#is-exact#:ìCBbool
+
+^ ^(2ï"
+#assume#:î:
+8
+^ ^(2ñ"#set-field# __collection_size:ìFBint(
+&
+^ ^(2ó"#array-add-last#:ì$(
+&
+^ ^(2ò"#array-add-last#:ì3#
+!
+^ ^(2ô"	#map-set#:íì#
+!
+_ _("õ"	#map-set#:í;ö"
+ 
+` `("ú"	#map-set#:í[#
+!
+] a(ù"	#map-set#:Oëí!
+
+O b(	û"	#map-set#:NO
+, c(*4/home/omar/Documents/ruleIQ/config/logging_config.py

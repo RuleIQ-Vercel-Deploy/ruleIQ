@@ -21,7 +21,7 @@ interface EvidenceListProps {
 export function EvidenceList({
   evidence = [],
   onEvidenceClick,
-  onStatusChange
+  onStatusChange,
 }: EvidenceListProps) {
   const defaultEvidence: Evidence[] = [
     {
@@ -29,15 +29,15 @@ export function EvidenceList({
       name: 'Privacy Policy.pdf',
       type: 'document',
       uploadDate: '2024-01-15',
-      status: 'approved'
+      status: 'approved',
     },
     {
       id: '2',
       name: 'Data Processing Agreement.docx',
       type: 'document',
       uploadDate: '2024-01-14',
-      status: 'pending'
-    }
+      status: 'pending',
+    },
   ];
 
   const displayEvidence = evidence.length > 0 ? evidence : defaultEvidence;
@@ -52,7 +52,7 @@ export function EvidenceList({
           {displayEvidence.map((item) => (
             <div
               key={item.id}
-              className="flex items-center justify-between p-3 border rounded"
+              className="flex items-center justify-between rounded border p-3"
               role="listitem"
             >
               <div>
@@ -60,11 +60,15 @@ export function EvidenceList({
                 <div className="text-sm text-gray-500">{item.uploadDate}</div>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`px-2 py-1 rounded text-xs ${
-                  item.status === 'approved' ? 'bg-green-100 text-green-800' :
-                  item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-red-100 text-red-800'
-                }`}>
+                <span
+                  className={`rounded px-2 py-1 text-xs ${
+                    item.status === 'approved'
+                      ? 'bg-green-100 text-green-800'
+                      : item.status === 'pending'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-red-100 text-red-800'
+                  }`}
+                >
                   {item.status}
                 </span>
                 <Button

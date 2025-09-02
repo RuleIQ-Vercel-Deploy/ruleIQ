@@ -1,0 +1,26 @@
+
+	1.0float
+0.1float
+0.5float
+3*"Calculate compliance effectiveness score"strself
+Å, Å(0"Ç3
+1
+
+É É(/"#get-field# current_maturity:(
+&
+
+É É(5"#get-field# value:3
+1
+
+É É(;"#dependent-value#*:Bfloat0
+.
+
+É É(<"#dependent-value#:Bfloat(
+&
+
+É É(B
+"
+builtinsmin*:	
+
+É É(B
+*I/home/omar/Documents/ruleIQ/services/compliance/cco_strategic_playbook.py

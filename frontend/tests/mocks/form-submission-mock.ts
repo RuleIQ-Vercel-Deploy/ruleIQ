@@ -5,11 +5,11 @@ export const mockFormSubmission = () => {
   // Mock form validation
   HTMLFormElement.prototype.checkValidity = vi.fn().mockReturnValue(true);
   HTMLFormElement.prototype.reportValidity = vi.fn().mockReturnValue(true);
-  
+
   // Mock input validation
   HTMLInputElement.prototype.checkValidity = vi.fn().mockReturnValue(true);
   HTMLInputElement.prototype.setCustomValidity = vi.fn();
-  
+
   // Mock form data
   global.FormData = vi.fn().mockImplementation(() => ({
     append: vi.fn(),
@@ -19,7 +19,7 @@ export const mockFormSubmission = () => {
     delete: vi.fn(),
     entries: vi.fn().mockReturnValue([]),
     keys: vi.fn().mockReturnValue([]),
-    values: vi.fn().mockReturnValue([])
+    values: vi.fn().mockReturnValue([]),
   }));
 };
 

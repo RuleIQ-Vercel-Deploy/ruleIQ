@@ -1,0 +1,110 @@
+
+1monitoring.error_handler.ApplicationError.to_dictJ
+@/home/omar/Documents/ruleIQ/app/core/monitoring/error_handler.py( (("2*ð	
+2) )(*
+* 1(	
+%1"dict
++ 0(
+%2"dictm
+k
+, ,(!
+%3"__id*S
+
+__unknown_file (7*5+
+)monitoring.error_handler.ApplicationError"
+code‹
+ˆ
+, ,(!
+%4"__mapSet*"
+
+__unknown_file (
+
+%2*$
+
+__unknown_file (
+code*"
+
+__unknown_file (
+
+%3p
+n
+- -('
+%5"__id*V
+
+__unknown_file (:*8+
+)monitoring.error_handler.ApplicationError"	
+messageŽ
+‹
+- -('
+%6"__mapSet*"
+
+__unknown_file (
+
+%2*'
+
+__unknown_file (	
+message*"
+
+__unknown_file (
+
+%5p
+n
+. .('
+%7"__id*V
+
+__unknown_file (:*8+
+)monitoring.error_handler.ApplicationError"	
+detailsŽ
+‹
+. .('
+%8"__mapSet*"
+
+__unknown_file (
+
+%2*'
+
+__unknown_file (	
+details*"
+
+__unknown_file (
+
+%7r
+p
+/ /(+
+%9"__id*X
+
+__unknown_file (<*:+
+)monitoring.error_handler.ApplicationError"
+	timestamp‘
+Ž
+/ /(+
+%10"__mapSet*"
+
+__unknown_file (
+
+%2*)
+
+__unknown_file (
+	timestamp*"
+
+__unknown_file (
+
+%9
+Š
++ 0(
+%11"__mapSet*"
+
+__unknown_file (
+
+%1*%
+
+__unknown_file (	
+error*"
+
+__unknown_file (
+
+%2"
+* 1(	
+
+%1B-+
+)monitoring.error_handler.ApplicationErrorH

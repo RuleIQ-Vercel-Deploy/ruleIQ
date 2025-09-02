@@ -21,7 +21,9 @@ class TestComplianceAssistant:
     """Test AI assistant business logic"""
 
     @pytest.mark.asyncio
-    async def test_process_message_compliance_question(self, db_session, mock_ai_client):
+    async def test_process_message_compliance_question(
+        self, db_session, mock_ai_client
+    ):
         """Test processing compliance-related message"""
         conversation_id = uuid4()
         business_profile_id = uuid4()
@@ -54,9 +56,13 @@ class TestComplianceAssistant:
             assistant = ComplianceAssistant.__new__(ComplianceAssistant)
             assistant.model = mock_ai_client
             assistant.context_manager = Mock()
-            assistant.context_manager.get_conversation_context = AsyncMock(return_value={})
+            assistant.context_manager.get_conversation_context = AsyncMock(
+                return_value={}
+            )
             assistant.prompt_templates = Mock()
-            assistant.prompt_templates.get_main_prompt = Mock(return_value="test prompt")
+            assistant.prompt_templates.get_main_prompt = Mock(
+                return_value="test prompt"
+            )
             assistant.safety_settings = {}
             assistant.ai_cache = None
             assistant.circuit_breaker = Mock()
@@ -112,9 +118,13 @@ class TestComplianceAssistant:
             assistant = ComplianceAssistant.__new__(ComplianceAssistant)
             assistant.model = mock_ai_client
             assistant.context_manager = Mock()
-            assistant.context_manager.get_conversation_context = AsyncMock(return_value={})
+            assistant.context_manager.get_conversation_context = AsyncMock(
+                return_value={}
+            )
             assistant.prompt_templates = Mock()
-            assistant.prompt_templates.get_main_prompt = Mock(return_value="test prompt")
+            assistant.prompt_templates.get_main_prompt = Mock(
+                return_value="test prompt"
+            )
             assistant.safety_settings = {}
             assistant.ai_cache = None
             assistant.circuit_breaker = Mock()
@@ -246,13 +256,17 @@ class TestComplianceAssistant:
             mock_generate.return_value = mock_response
 
             assistant = ComplianceAssistant(db_session)
-            result = await assistant._generate_response(user_message, business_context, {}, {})
+            result = await assistant._generate_response(
+                user_message, business_context, {}, {}
+            )
 
             assert "healthcare" in result.lower()
             assert "GDPR" in result
             assert "ISO 27001" in result
             assert "HIPAA" in result
-            mock_generate.assert_called_once_with(user_message, business_context, {}, {})
+            mock_generate.assert_called_once_with(
+                user_message, business_context, {}, {}
+            )
 
     def test_handle_adversarial_input(self, db_session, mock_ai_client):
         """Test handling adversarial input attempts"""
@@ -262,7 +276,9 @@ class TestComplianceAssistant:
             "<script>alert('xss')</script>What are GDPR requirements?",
         ]
 
-        with patch.object(ComplianceAssistant, "_handle_adversarial_input") as mock_handle:
+        with patch.object(
+            ComplianceAssistant, "_handle_adversarial_input"
+        ) as mock_handle:
             mock_handle.return_value = {
                 "is_adversarial": True,
                 "response": "I'm designed to provide helpful compliance guidance. I can assist you with understanding GDPR requirements and implementation strategies. What specific aspect of GDPR compliance would you like to discuss?",
@@ -282,9 +298,13 @@ class TestComplianceAssistant:
         """Test response safety validation"""
         safe_response = "GDPR requires organizations to implement appropriate technical and organizational measures to ensure data protection."
 
-        unsafe_response = "You can bypass GDPR by storing data offshore and not telling anyone."
+        unsafe_response = (
+            "You can bypass GDPR by storing data offshore and not telling anyone."
+        )
 
-        with patch.object(ComplianceAssistant, "_validate_response_safety") as mock_validate:
+        with patch.object(
+            ComplianceAssistant, "_validate_response_safety"
+        ) as mock_validate:
             # Test safe response
             mock_validate.return_value = {
                 "is_safe": True,
@@ -343,7 +363,9 @@ class TestComplianceAssistant:
             "business_industry": "fintech",
         }
 
-        with patch.object(ComplianceAssistant, "_generate_follow_ups") as mock_follow_ups:
+        with patch.object(
+            ComplianceAssistant, "_generate_follow_ups"
+        ) as mock_follow_ups:
             mock_follow_ups.return_value = [
                 "Would you like me to help you create a data mapping template?",
                 "Should I explain the specific requirements for financial data under GDPR?",
@@ -427,7 +449,10 @@ class TestComplianceAssistant:
 
         conversation_history = [
             {"role": "user", "content": "What is GDPR?"},
-            {"role": "assistant", "content": "GDPR is the General Data Protection Regulation..."},
+            {
+                "role": "assistant",
+                "content": "GDPR is the General Data Protection Regulation...",
+            },
             {"role": "user", "content": "What are the penalties?"},
         ]
 
@@ -458,7 +483,9 @@ class TestAIResponseValidation:
         response = "GDPR requires breach notification within 72 hours to supervisory authorities"
         framework = "GDPR"
 
-        with patch("services.ai.assistant.ComplianceAssistant._validate_accuracy") as mock_validate:
+        with patch(
+            "services.ai.assistant.ComplianceAssistant._validate_accuracy"
+        ) as mock_validate:
             mock_validate.return_value = {
                 "accuracy_score": 0.95,
                 "fact_checks": [
@@ -485,7 +512,9 @@ class TestAIResponseValidation:
 
     def test_detect_hallucination(self, db_session):
         """Test detecting AI hallucinations in compliance responses"""
-        hallucinated_response = "GDPR requires companies to pay a €50,000 registration fee annually"
+        hallucinated_response = (
+            "GDPR requires companies to pay a €50,000 registration fee annually"
+        )
 
         with patch(
             "services.ai.assistant.ComplianceAssistant._detect_hallucination"
@@ -508,9 +537,7 @@ class TestAIResponseValidation:
         """Test validating appropriate compliance tone"""
         professional_response = "Organizations should implement appropriate technical and organizational measures to ensure GDPR compliance."
 
-        casual_response = (
-            "Just throw some privacy policies together and you'll probably be fine for GDPR."
-        )
+        casual_response = "Just throw some privacy policies together and you'll probably be fine for GDPR."
 
         with patch(
             "services.ai.assistant.ComplianceAssistant._validate_tone"
@@ -567,7 +594,10 @@ class TestAIEnhancements:
                         "priority": "medium",
                     },
                 ],
-                "critical_gaps": ["Access control documentation", "Incident response plan"],
+                "critical_gaps": [
+                    "Access control documentation",
+                    "Incident response plan",
+                ],
                 "risk_level": "Medium",
             }
         )
@@ -584,8 +614,14 @@ class TestAIEnhancements:
                         "employee_count": 50,
                     },
                     "recent_evidence": [
-                        {"evidence_type": "policy", "created_at": "2024-01-01T00:00:00Z"},
-                        {"evidence_type": "procedure", "created_at": "2024-01-15T00:00:00Z"},
+                        {
+                            "evidence_type": "policy",
+                            "created_at": "2024-01-01T00:00:00Z",
+                        },
+                        {
+                            "evidence_type": "procedure",
+                            "created_at": "2024-01-15T00:00:00Z",
+                        },
                     ],
                 }
             )
@@ -600,7 +636,9 @@ class TestAIEnhancements:
                 return_value=(mock_ai_client, "test_instruction")
             )
 
-            result = await assistant.analyze_evidence_gap(business_profile_id, framework)
+            result = await assistant.analyze_evidence_gap(
+                business_profile_id, framework
+            )
 
             assert result["framework"] == framework
             assert result["completion_percentage"] == 65
@@ -646,7 +684,9 @@ class TestAIEnhancements:
                 return_value=(mock_ai_client, "test_instruction")
             )
 
-            result = await assistant.analyze_evidence_gap(business_profile_id, framework)
+            result = await assistant.analyze_evidence_gap(
+                business_profile_id, framework
+            )
 
             # Should use fallback values
             assert result["framework"] == framework

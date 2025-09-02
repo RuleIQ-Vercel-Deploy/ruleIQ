@@ -22,7 +22,7 @@ export default function AssessmentPage() {
   useEffect(() => {
     // TODO: Replace with proper logging
     if (!token) {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       router.push('/');
       return;
     }
@@ -56,11 +56,11 @@ export default function AssessmentPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-neutral-50 flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-teal-50 via-white to-neutral-50">
         <Card className="w-full max-w-md">
           <CardContent className="p-8 text-center">
-            <Brain className="h-12 w-12 mx-auto mb-4 text-teal-600 animate-pulse" />
-            <h2 className="text-xl font-semibold mb-2">Loading Your Assessment</h2>
+            <Brain className="mx-auto mb-4 h-12 w-12 animate-pulse text-teal-600" />
+            <h2 className="mb-2 text-xl font-semibold">Loading Your Assessment</h2>
             <p className="text-muted-foreground">
               Preparing your personalized AI-driven assessment...
             </p>
@@ -72,20 +72,18 @@ export default function AssessmentPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-neutral-50 flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-teal-50 via-white to-neutral-50">
         <Card className="w-full max-w-md">
           <CardContent className="p-8 text-center">
-            <AlertCircle className="h-12 w-12 mx-auto mb-4 text-destructive" />
-            <h2 className="text-xl font-semibold mb-2">Assessment Unavailable</h2>
-            <p className="text-muted-foreground mb-6">{error}</p>
-            <div className="flex gap-2 justify-center">
+            <AlertCircle className="mx-auto mb-4 h-12 w-12 text-destructive" />
+            <h2 className="mb-2 text-xl font-semibold">Assessment Unavailable</h2>
+            <p className="mb-6 text-muted-foreground">{error}</p>
+            <div className="flex justify-center gap-2">
               <Button variant="outline" onClick={() => router.push('/')}>
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to Home
               </Button>
-              <Button onClick={loadSession}>
-                Try Again
-              </Button>
+              <Button onClick={loadSession}>Try Again</Button>
             </div>
           </CardContent>
         </Card>
@@ -95,12 +93,12 @@ export default function AssessmentPage() {
 
   if (!sessionData) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-neutral-50 flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-teal-50 via-white to-neutral-50">
         <Card className="w-full max-w-md">
           <CardContent className="p-8 text-center">
-            <AlertCircle className="h-12 w-12 mx-auto mb-4 text-amber-500" />
-            <h2 className="text-xl font-semibold mb-2">Session Not Found</h2>
-            <p className="text-muted-foreground mb-6">
+            <AlertCircle className="mx-auto mb-4 h-12 w-12 text-amber-500" />
+            <h2 className="mb-2 text-xl font-semibold">Session Not Found</h2>
+            <p className="mb-6 text-muted-foreground">
               The assessment session could not be found or has expired.
             </p>
             <Button onClick={() => router.push('/')}>
@@ -116,15 +114,11 @@ export default function AssessmentPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-neutral-50">
       {/* Header */}
-      <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
+      <header className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => router.push('/')}
-              >
+              <Button variant="ghost" size="sm" onClick={() => router.push('/')}>
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back
               </Button>
@@ -136,12 +130,17 @@ export default function AssessmentPage() {
 
             <div className="flex items-center gap-4">
               <div className="text-sm text-muted-foreground">
-                <Clock className="inline h-4 w-4 mr-1" />
+                <Clock className="mr-1 inline h-4 w-4" />
                 Session expires in{' '}
-                {sessionData.expires_at ? 
-                  Math.max(0, Math.ceil((new Date(sessionData.expires_at).getTime() - Date.now()) / (1000 * 60)))
-                  : 60
-                } min
+                {sessionData.expires_at
+                  ? Math.max(
+                      0,
+                      Math.ceil(
+                        (new Date(sessionData.expires_at).getTime() - Date.now()) / (1000 * 60),
+                      ),
+                    )
+                  : 60}{' '}
+                min
               </div>
             </div>
           </div>
@@ -149,34 +148,29 @@ export default function AssessmentPage() {
       </header>
 
       {/* Progress Bar */}
-      <div className="bg-white/80 backdrop-blur-sm border-b">
+      <div className="border-b bg-white/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between mb-2">
+          <div className="mb-2 flex items-center justify-between">
             <span className="text-sm font-medium">Assessment Progress</span>
             <span className="text-sm text-muted-foreground">
               {sessionData.questions_answered} of {sessionData.total_questions} questions
             </span>
           </div>
-          <Progress 
-            value={sessionData.progress_percentage} 
-            className="h-2"
-          />
+          <Progress value={sessionData.progress_percentage} className="h-2" />
         </div>
       </div>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto">
+        <div className="mx-auto max-w-3xl">
           {sessionData.status === 'completed' ? (
-            <Card className="text-center p-8">
-              <CheckCircle className="h-16 w-16 mx-auto mb-4 text-teal-600" />
-              <h2 className="text-2xl font-bold mb-2">Assessment Complete!</h2>
-              <p className="text-muted-foreground mb-6">
+            <Card className="p-8 text-center">
+              <CheckCircle className="mx-auto mb-4 h-16 w-16 text-teal-600" />
+              <h2 className="mb-2 text-2xl font-bold">Assessment Complete!</h2>
+              <p className="mb-6 text-muted-foreground">
                 Your AI-powered compliance assessment has been completed successfully.
               </p>
-              <Button onClick={handleAssessmentComplete}>
-                View Results
-              </Button>
+              <Button onClick={handleAssessmentComplete}>View Results</Button>
             </Card>
           ) : (
             <Card>
@@ -186,13 +180,13 @@ export default function AssessmentPage() {
                   AI-Powered Compliance Assessment
                 </CardTitle>
                 <p className="text-muted-foreground">
-                  Our AI will ask you personalized questions based on your responses to provide 
-                  the most accurate compliance assessment for your organization.
+                  Our AI will ask you personalized questions based on your responses to provide the
+                  most accurate compliance assessment for your organization.
                 </p>
               </CardHeader>
               <CardContent>
-                <FreemiumAssessmentFlow 
-                  token={token ?? undefined} 
+                <FreemiumAssessmentFlow
+                  token={token ?? undefined}
                   onComplete={handleAssessmentComplete}
                 />
               </CardContent>
@@ -202,7 +196,7 @@ export default function AssessmentPage() {
       </main>
 
       {/* Footer */}
-      <footer className="mt-auto bg-white/50 border-t">
+      <footer className="mt-auto border-t bg-white/50">
         <div className="container mx-auto px-4 py-6">
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
@@ -210,10 +204,10 @@ export default function AssessmentPage() {
               <span>Powered by ruleIQ AI</span>
             </div>
             <div className="flex gap-4">
-              <a href="/privacy" className="hover:text-foreground transition-colors">
+              <a href="/privacy" className="transition-colors hover:text-foreground">
                 Privacy Policy
               </a>
-              <a href="/terms" className="hover:text-foreground transition-colors">
+              <a href="/terms" className="transition-colors hover:text-foreground">
                 Terms of Service
               </a>
             </div>

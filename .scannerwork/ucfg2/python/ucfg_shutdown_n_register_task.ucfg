@@ -1,0 +1,64 @@
+
+2monitoring.shutdown.GracefulShutdown.register_taskE
+;/home/omar/Documents/ruleIQ/app/core/monitoring/shutdown.py+ +("1*‡
+2, 1(i
+g
+2 2(
+%2"__id*O
+
+__unknown_file (3*1&
+$monitoring.shutdown.GracefulShutdown"
+tasksa_
+2 2(
+%3*"
+
+__unknown_file (
+
+%2*$
+
+__unknown_file (
+
+task2addi
+g
+3 3()
+%4"__id*O
+
+__unknown_file (3*1&
+$monitoring.shutdown.GracefulShutdown"
+tasksI
+G
+3 3(1
+%5"__id*/
+
+__unknown_file (*
+
+%4"	
+discardom
+3 3(2
+%6*$
+
+__unknown_file (
+
+task*"
+
+__unknown_file (
+
+%52add_done_callback*
+3*1
+3
+shutdown.py"
+5 5(
+implicit return*_
+1+ +(.K
+I
++" +(.
+%1"__id*1
+
+__unknown_file (*
+	
+asyncio"
+Task*
+2:
++ +(.
+taskB(&
+$monitoring.shutdown.GracefulShutdownH

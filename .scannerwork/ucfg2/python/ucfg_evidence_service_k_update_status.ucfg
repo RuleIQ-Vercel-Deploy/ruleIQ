@@ -1,0 +1,21 @@
+
+<services.evidence_service.EvidenceService.bulk_update_statusD
+8/home/omar/Documents/ruleIQ/services/evidence_service.py§ §("3*;
+3
+evidence_service.py"
+­ ­(
+implicit return:
+
+¨ ¨(
+evidence_ids:
+
+¨! ¨(0
+
+new_status:
+
+¨2 ¨(=
+reason:
+
+¨? ¨(L	
+user_idB-+
+)services.evidence_service.EvidenceServiceH

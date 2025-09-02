@@ -1,0 +1,244 @@
+
+bscripts.add_supersedes_relationships.SupersedesRelationshipBuilder.verify_supersedes_relationshipsO
+C/home/omar/Documents/ruleIQ/scripts/add_supersedes_relationships.pyî î(-"2*Á
+2
+ï ï(@Š
+
+ð ð(>
+%15*&
+
+__unknown_file (
+
+
+logger*G
+
+__unknown_file (+)
+'\nVerifying SUPERSEDES relationships...2infoŒ
+‰
+
+ò ò(
+%16"__id*n
+
+__unknown_file (R*PD
+Bscripts.add_supersedes_relationships.SupersedesRelationshipBuilder"
+driverCA
+
+ò ò((
+%17*#
+
+__unknown_file (
+
+%162sessionD
+B
+
+ò ò(3	
+session"__id*#
+
+__unknown_file (
+
+%17*
+3
+6*E
+3!
+add_supersedes_relationships.py"
+ˆ ˆ
+implicit return*»
+5
+„ „(L|z
+
+„! „(2
+%1"__mapGet*&
+
+__unknown_file (
+
+
+record*'
+
+__unknown_file (	
+new_reg2__getitem__|z
+
+„8 „(I
+%2"__mapGet*&
+
+__unknown_file (
+
+
+record*'
+
+__unknown_file (	
+old_reg2__getitem__x
+v
+
+„ „(K
+%3"__concat*
+
+„ „( 
+  *
+
+„! „(2
+
+%1*
+
+„3 „(7
+ -> *
+
+„8 „(I
+
+%2fd
+
+„ „(L
+%4*&
+
+__unknown_file (
+
+
+logger*"
+
+__unknown_file (
+
+%32info€~
+
+…0 …(E
+%5"__mapGet*&
+
+__unknown_file (
+
+
+record*+
+
+__unknown_file (
+description2__getitem__Y
+W
+
+… …(G
+%6"__concat*#
+
+… …(/
+    Description: *
+
+…0 …(E
+
+%5fd
+
+… …(H
+%7*&
+
+__unknown_file (
+
+
+logger*"
+
+__unknown_file (
+
+%62info*
+3
+5*…
+
+6
+ô ÷(ÈÅ
+
+ô ÷(
+%8*'
+
+__unknown_file (
+	
+session*‚
+
+__unknown_file (fd
+b
+                MATCH ()-[s:SUPERSEDES]->()
+                RETURN count(s) as count
+            2runB
+@
+
+ô ÷(
+result"__id*"
+
+__unknown_file (
+
+%8DB
+
+ø ø()
+%9*&
+
+__unknown_file (
+
+
+result2singleA
+?
+
+ø ø()
+count"__id*"
+
+__unknown_file (
+
+%9zx
+
+ù; ù(I
+%10"__mapGet*%
+
+__unknown_file (	
+
+count*%
+
+__unknown_file (	
+count2__getitem__j
+h
+
+ù ù(K
+%11"__concat*2
+
+ù ù(:$"
+ Total SUPERSEDES relationships: *
+
+ù; ù(I
+
+%10hf
+
+ù ù(L
+%12*&
+
+__unknown_file (
+
+
+logger*#
+
+__unknown_file (
+
+%112info±®
+
+ü €(
+%13*'
+
+__unknown_file (
+	
+session*ê
+
+__unknown_file (ÍÊ
+Ç
+                MATCH (new:Regulation)-[s:SUPERSEDES]->(old:Regulation)
+                RETURN new.id as new_reg, old.id as old_reg, s.description as description
+                LIMIT 5
+            2runC
+A
+
+ü €(
+result"__id*#
+
+__unknown_file (
+
+%13ˆ…
+
+‚ ‚(=
+%14*&
+
+__unknown_file (
+
+
+logger*B
+
+__unknown_file (&$
+"\nSample SUPERSEDES relationships:2info*
+3
+5BFD
+Bscripts.add_supersedes_relationships.SupersedesRelationshipBuilderH

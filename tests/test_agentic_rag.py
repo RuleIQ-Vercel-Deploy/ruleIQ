@@ -14,6 +14,7 @@ sys.path.insert(0, str(project_root))
 
 from services.agentic_integration import get_agentic_service
 
+
 async def test_agentic_rag():
     """Test the agentic RAG system"""
     print("🚀 Testing Agentic RAG Integration")
@@ -40,7 +41,7 @@ async def test_agentic_rag():
         doc_result = await service.query_documentation(
             query="How do I create a state graph in LangGraph?",
             source_filter="langgraph",
-            query_type="documentation"
+            query_type="documentation",
         )
         print(f"Answer: {doc_result['answer'][:200]}...")
         print(f"Confidence: {doc_result['confidence']}")
@@ -50,7 +51,7 @@ async def test_agentic_rag():
         print("\n💻 Testing code examples search...")
         code_result = await service.find_code_examples(
             task_description="state management with checkpointing",
-            framework="langgraph"
+            framework="langgraph",
         )
         print(f"Found {len(code_result['examples'])} examples")
         print(f"Explanation: {code_result['explanation'][:200]}...")
@@ -60,7 +61,7 @@ async def test_agentic_rag():
         compliance_result = await service.process_compliance_request(
             request="What are the key GDPR requirements for data processing?",
             user_id="test_user",
-            trust_level=1
+            trust_level=1,
         )
         print(f"Recommendation: {compliance_result.recommendation[:200]}...")
         print(f"Risk level: {compliance_result.risk_level}")
@@ -70,8 +71,7 @@ async def test_agentic_rag():
         # Test implementation guidance
         print("\n📖 Testing implementation guidance...")
         guidance = await service.get_implementation_guidance(
-            topic="agent design patterns",
-            framework="pydantic_ai"
+            topic="agent design patterns", framework="pydantic_ai"
         )
         print(f"Guidance: {guidance[:200]}...")
 
@@ -81,11 +81,15 @@ async def test_agentic_rag():
     except Exception as e:
         print(f"❌ Test failed with error: {e}")
         import traceback
+
         traceback.print_exc()
+
 
 if __name__ == "__main__":
     # Set environment variables for testing
-    os.environ.setdefault("DATABASE_URL", "postgresql://postgres:password@localhost:5432/compliancegpt")
+    os.environ.setdefault(
+        "DATABASE_URL", "postgresql://postgres:password@localhost:5432/compliancegpt"
+    )
     os.environ.setdefault("REDIS_URL", "redis://localhost:6379")
     os.environ.setdefault("OPENAI_API_KEY", "your-openai-key-here")
 

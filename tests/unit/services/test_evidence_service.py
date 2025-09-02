@@ -29,7 +29,9 @@ class TestEvidenceService:
             "framework_mappings": ["ISO27001.A.5.1.1"],
         }
 
-        with patch("services.evidence_service.EvidenceService.create_evidence") as mock_create:
+        with patch(
+            "services.evidence_service.EvidenceService.create_evidence"
+        ) as mock_create:
             mock_create.return_value = {
                 **evidence_data,
                 "id": str(uuid4()),
@@ -39,7 +41,9 @@ class TestEvidenceService:
                 "quality_score": 85.0,
             }
 
-            result = await EvidenceService.create_evidence(sample_user.id, evidence_data)
+            result = await EvidenceService.create_evidence(
+                sample_user.id, evidence_data
+            )
 
             assert result["title"] == evidence_data["title"]
             assert result["user_id"] == str(sample_user.id)
@@ -55,7 +59,9 @@ class TestEvidenceService:
             "evidence_type": "invalid_type",  # Invalid: not in allowed types
         }
 
-        with patch("services.evidence_service.EvidenceService.create_evidence") as mock_create:
+        with patch(
+            "services.evidence_service.EvidenceService.create_evidence"
+        ) as mock_create:
             mock_create.side_effect = ValidationAPIError("Invalid evidence data")
 
             with pytest.raises(ValidationAPIError):
@@ -121,7 +127,11 @@ class TestEvidenceService:
                     "timeliness": "outdated",
                     "authenticity": "unverified",
                 },
-                "issues": ["Title too vague", "Content too brief", "Evidence is outdated"],
+                "issues": [
+                    "Title too vague",
+                    "Content too brief",
+                    "Evidence is outdated",
+                ],
                 "recommendations": [
                     "Provide more specific title",
                     "Add detailed content",
@@ -201,7 +211,9 @@ class TestEvidenceService:
                 "collection_schedule": "daily at 02:00 UTC",
             }
 
-            result = EvidenceService.configure_automation(evidence_id, automation_config)
+            result = EvidenceService.configure_automation(
+                evidence_id, automation_config
+            )
 
             assert result["configuration_successful"] is True
             assert result["automation_enabled"] is True
@@ -234,7 +246,9 @@ class TestEvidenceService:
                 ],
             }
 
-            result = EvidenceService.configure_automation(evidence_id, automation_config)
+            result = EvidenceService.configure_automation(
+                evidence_id, automation_config
+            )
 
             assert result["configuration_successful"] is False
             assert result["automation_enabled"] is False
@@ -287,7 +301,9 @@ class TestEvidenceService:
         new_status = "expired"
         reason = "Evidence older than 6 months"
 
-        with patch("services.evidence_service.EvidenceService.update_status") as mock_update:
+        with patch(
+            "services.evidence_service.EvidenceService.update_status"
+        ) as mock_update:
             mock_update.return_value = {
                 "evidence_id": str(evidence_id),
                 "old_status": "valid",
@@ -308,9 +324,15 @@ class TestEvidenceService:
     def test_search_evidence_by_framework(self, db_session, sample_user):
         """Test searching evidence items by framework"""
         framework = "ISO27001"
-        search_filters = {"evidence_type": "document", "status": "valid", "min_quality_score": 80}
+        search_filters = {
+            "evidence_type": "document",
+            "status": "valid",
+            "min_quality_score": 80,
+        }
 
-        with patch("services.evidence_service.EvidenceService.search_by_framework") as mock_search:
+        with patch(
+            "services.evidence_service.EvidenceService.search_by_framework"
+        ) as mock_search:
             mock_search.return_value = [
                 {
                     "id": str(uuid4()),
@@ -330,18 +352,24 @@ class TestEvidenceService:
                 },
             ]
 
-            result = EvidenceService.search_by_framework(sample_user.id, framework, search_filters)
+            result = EvidenceService.search_by_framework(
+                sample_user.id, framework, search_filters
+            )
 
             assert len(result) == 2
             assert all(framework in str(item["framework_mappings"]) for item in result)
             assert all(item["quality_score"] >= 80 for item in result)
-            mock_search.assert_called_once_with(sample_user.id, framework, search_filters)
+            mock_search.assert_called_once_with(
+                sample_user.id, framework, search_filters
+            )
 
     def test_delete_evidence_item_success(self, db_session, sample_user):
         """Test deleting evidence item"""
         evidence_id = uuid4()
 
-        with patch("services.evidence_service.EvidenceService.delete_evidence") as mock_delete:
+        with patch(
+            "services.evidence_service.EvidenceService.delete_evidence"
+        ) as mock_delete:
             mock_delete.return_value = {
                 "deleted": True,
                 "evidence_id": str(evidence_id),
@@ -359,7 +387,9 @@ class TestEvidenceService:
         """Test deleting non-existent evidence item"""
         evidence_id = uuid4()
 
-        with patch("services.evidence_service.EvidenceService.delete_evidence") as mock_delete:
+        with patch(
+            "services.evidence_service.EvidenceService.delete_evidence"
+        ) as mock_delete:
             mock_delete.side_effect = NotFoundAPIError("Evidence item", evidence_id)
 
             with pytest.raises(NotFoundAPIError):
@@ -396,11 +426,18 @@ class TestEvidenceService:
 
     def test_get_evidence_statistics(self, db_session, sample_user):
         """Test getting evidence statistics for user"""
-        with patch("services.evidence_service.EvidenceService.get_statistics") as mock_stats:
+        with patch(
+            "services.evidence_service.EvidenceService.get_statistics"
+        ) as mock_stats:
             mock_stats.return_value = {
                 "total_evidence_items": 42,
                 "by_status": {"valid": 35, "expired": 5, "pending": 2},
-                "by_type": {"document": 25, "log": 12, "screenshot": 3, "configuration": 2},
+                "by_type": {
+                    "document": 25,
+                    "log": 12,
+                    "screenshot": 3,
+                    "configuration": 2,
+                },
                 "by_framework": {"ISO27001": 28, "GDPR": 20, "SOC2": 15},
                 "average_quality_score": 84.7,
                 "automation_coverage": 65.0,

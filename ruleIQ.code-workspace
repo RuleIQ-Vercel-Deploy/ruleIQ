@@ -35,6 +35,7 @@
         "source.organizeImports": "never"
       }
     },
-    "svg.preview.background": "custom"
+    "svg.preview.background": "custom",
+    "claudeCodeChat.permissions.yoloMode": true
   }
 }

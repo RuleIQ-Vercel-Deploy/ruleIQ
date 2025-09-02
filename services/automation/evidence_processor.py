@@ -27,7 +27,9 @@ class EvidenceProcessor:
 
     def __init__(self, db: AsyncSession) -> None:
         self.db = db
-        self.quality_scorer = QualityScorer()  # QualityScorer is synchronous and CPU-bound
+        self.quality_scorer = (
+            QualityScorer()
+        )  # QualityScorer is synchronous and CPU-bound
         self.ai_model = None  # Lazy-loaded AI model
 
     def process_evidence(self, evidence: EvidenceItem) -> None:
@@ -69,7 +71,8 @@ class EvidenceProcessor:
 
         except (TypeError, ValueError, AttributeError, json.JSONDecodeError) as e:
             logger.error(
-                f"Failed to process evidence {evidence.id} due to data error: {e}", exc_info=True
+                f"Failed to process evidence {evidence.id} due to data error: {e}",
+                exc_info=True,
             )
             metadata = evidence.metadata or {}
             metadata.update({"processed": False, "error": str(e)})
@@ -77,7 +80,9 @@ class EvidenceProcessor:
             flag_modified(evidence, "metadata")
             # Do not re-raise to allow batch processing to continue
 
-    async def get_processing_stats(self, user_id: UUID, days: int = 30) -> Dict[str, Any]:
+    async def get_processing_stats(
+        self, user_id: UUID, days: int = 30
+    ) -> Dict[str, Any]:
         """Retrieves processing statistics for a given user."""
         try:
             cutoff_date = datetime.utcnow() - timedelta(days=days)
@@ -98,7 +103,9 @@ class EvidenceProcessor:
                 if item.metadata and "quality_score" in item.metadata
             ]
 
-            avg_quality_score = sum(quality_scores) / len(quality_scores) if quality_scores else 0
+            avg_quality_score = (
+                sum(quality_scores) / len(quality_scores) if quality_scores else 0
+            )
 
             return {
                 "processed_items": len(processed_items),
@@ -119,7 +126,8 @@ class EvidenceProcessor:
             raise DatabaseException("Failed to retrieve processing statistics.") from e
         except Exception as e:
             logger.error(
-                f"Unexpected error getting processing stats for user {user_id}: {e}", exc_info=True
+                f"Unexpected error getting processing stats for user {user_id}: {e}",
+                exc_info=True,
             )
             raise BusinessLogicException(
                 "An unexpected error occurred while calculating statistics."
@@ -129,6 +137,7 @@ class EvidenceProcessor:
         """Lazy-load AI model to avoid initialization overhead."""
         if self.ai_model is None:
             from config.ai_config import get_ai_model
+
             self.ai_model = get_ai_model()
         return self.ai_model
 
@@ -244,14 +253,18 @@ REASONING: [brief explanation]"""
                     controls_text = line.replace("CONTROLS:", "").strip()
                     if controls_text:
                         # Split by comma and clean up
-                        controls = [c.strip() for c in controls_text.split(",") if c.strip()]
+                        controls = [
+                            c.strip() for c in controls_text.split(",") if c.strip()
+                        ]
                         result["suggested_controls"] = controls[:3]  # Limit to 3
                         valid_fields_found = True
 
                 elif line.startswith("CONFIDENCE:"):
                     try:
                         confidence = int(line.replace("CONFIDENCE:", "").strip())
-                        result["confidence"] = max(0, min(100, confidence))  # Clamp to 0-100
+                        result["confidence"] = max(
+                            0, min(100, confidence)
+                        )  # Clamp to 0-100
                         valid_fields_found = True
                     except ValueError:
                         result["confidence"] = 0
@@ -402,7 +415,9 @@ REASONING: [brief explanation]"""
             return evidence
 
         except Exception as e:
-            logger.error(f"Failed to enrich evidence {evidence.id} with AI: {e}", exc_info=True)
+            logger.error(
+                f"Failed to enrich evidence {evidence.id} with AI: {e}", exc_info=True
+            )
             # Don't fail the entire process, just log the error
             return evidence
 
@@ -424,7 +439,8 @@ REASONING: [brief explanation]"""
 
         except Exception as e:
             logger.error(
-                f"Failed to process evidence {evidence.id} with AI preparation: {e}", exc_info=True
+                f"Failed to process evidence {evidence.id} with AI preparation: {e}",
+                exc_info=True,
             )
             # Fall back to regular processing
             self.process_evidence(evidence)

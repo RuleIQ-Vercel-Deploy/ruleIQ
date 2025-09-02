@@ -4,6 +4,7 @@ and generates intelligent responses asynchronously.
 """
 
 import asyncio
+import json
 from datetime import datetime
 from typing import Any, AsyncIterator, Dict, List, Optional, Tuple
 from uuid import UUID, uuid4
@@ -43,13 +44,17 @@ logger = get_logger(__name__)
 class ComplianceAssistant:
     """AI-powered compliance assistant using Google Gemini, with full async support."""
 
-    def __init__(self, db: AsyncSession, user_context: Optional[Dict[str, Any]] = None) -> None:
+    def __init__(
+        self, db: AsyncSession, user_context: Optional[Dict[str, Any]] = None
+    ) -> None:
         self.db = db
         self.user_context = user_context or {}
         self.model = None  # Will be selected dynamically based on task
         self.context_manager = ContextManager(db)
         self.prompt_templates = PromptTemplates()
-        self.instruction_manager = get_instruction_manager()  # System instruction integration
+        self.instruction_manager = (
+            get_instruction_manager()
+        )  # System instruction integration
         self.ai_cache = None  # Will be initialized on first use
         self.cached_content_manager = None  # Google cached content manager
         self.performance_optimizer = None  # Will be initialized on first use
@@ -128,7 +133,9 @@ class ComplianceAssistant:
             model, instruction_id = self.instruction_manager.get_model_with_instruction(
                 instruction_type=task_type,
                 framework=context.get("framework") if context else None,
-                business_profile=context.get("business_context", {}) if context else None,
+                business_profile=(
+                    context.get("business_context", {}) if context else None
+                ),
                 task_complexity=complexity,
                 tools=tools,
                 prefer_speed=prefer_speed,
@@ -199,7 +206,9 @@ class ComplianceAssistant:
                 logger.info(f"Using cached content for assessment: {framework_id}")
                 return cached_content
             else:
-                logger.warning(f"Failed to create cached content for assessment: {framework_id}")
+                logger.warning(
+                    f"Failed to create cached content for assessment: {framework_id}"
+                )
                 return None
 
         except Exception as e:
@@ -233,7 +242,9 @@ class ComplianceAssistant:
 
                             # Extract function name and parameters
                             function_name = function_call.name
-                            function_args = dict(function_call.args) if function_call.args else {}
+                            function_args = (
+                                dict(function_call.args) if function_call.args else {}
+                            )
 
                             logger.info(
                                 f"Executing function call: {function_name} with args: {function_args}"
@@ -241,7 +252,9 @@ class ComplianceAssistant:
 
                             # Execute the function using tool executor
                             result = await tool_executor.execute_tool(
-                                tool_name=function_name, parameters=function_args, context=context
+                                tool_name=function_name,
+                                parameters=function_args,
+                                context=context,
                             )
 
                             function_results.append(
@@ -259,7 +272,9 @@ class ComplianceAssistant:
                                     f"Function {function_name} executed successfully in {result.execution_time:.2f}s"
                                 )
                             else:
-                                logger.error(f"Function {function_name} failed: {result.error}")
+                                logger.error(
+                                    f"Function {function_name} failed: {result.error}"
+                                )
 
             return {
                 "has_function_calls": len(function_results) > 0,
@@ -303,9 +318,13 @@ class ComplianceAssistant:
                 tools = self._get_tools_for_task(task_type)
 
             # Get model with tools and instruction ID
-            model, instruction_id = self._get_task_appropriate_model(task_type, context, tools)
+            model, instruction_id = self._get_task_appropriate_model(
+                task_type, context, tools
+            )
 
-            logger.info(f"Generating response with {len(tools)} tools for task: {task_type}")
+            logger.info(
+                f"Generating response with {len(tools)} tools for task: {task_type}"
+            )
 
             # Generate response
             response = model.generate_content(prompt)
@@ -335,7 +354,9 @@ class ComplianceAssistant:
                     context={
                         "task_type": task_type,
                         "tools_used": len(tools),
-                        "function_calls": function_call_results.get("has_function_calls", False),
+                        "function_calls": function_call_results.get(
+                            "has_function_calls", False
+                        ),
                     },
                 )
             except Exception as e:
@@ -375,8 +396,14 @@ class ComplianceAssistant:
         task_tool_mapping = {
             "gap_analysis": ["extract_compliance_gaps"],
             "recommendations": ["generate_compliance_recommendations"],
-            "regulation_lookup": ["lookup_industry_regulations", "check_compliance_requirements"],
-            "assessment": ["extract_compliance_gaps", "generate_compliance_recommendations"],
+            "regulation_lookup": [
+                "lookup_industry_regulations",
+                "check_compliance_requirements",
+            ],
+            "assessment": [
+                "extract_compliance_gaps",
+                "generate_compliance_recommendations",
+            ],
             "analysis": ["extract_compliance_gaps", "lookup_industry_regulations"],
             "help": ["lookup_industry_regulations", "check_compliance_requirements"],
             "guidance": ["check_compliance_requirements"],
@@ -409,28 +436,33 @@ class ComplianceAssistant:
                     "context_used": False,
                     "safety_triggered": True,
                     "intent": "adversarial_blocked",
-                    "processing_time_ms": 0
+                    "processing_time_ms": 0,
                 }
 
             # Step 2: Execute independent operations in parallel for speed
             parallel_tasks = [
                 asyncio.create_task(asyncio.to_thread(self._classify_intent, message)),
                 asyncio.create_task(asyncio.to_thread(self._extract_entities, message)),
-                asyncio.create_task(self.context_manager.get_conversation_context(
-                    conversation_id, business_profile_id
-                ))
+                asyncio.create_task(
+                    self.context_manager.get_conversation_context(
+                        conversation_id, business_profile_id
+                    )
+                ),
             ]
 
             # Wait for all parallel tasks with timeout
             try:
                 intent_result, entities, context = await asyncio.wait_for(
-                    asyncio.gather(*parallel_tasks),
-                    timeout=5.0
+                    asyncio.gather(*parallel_tasks), timeout=5.0
                 )
             except asyncio.TimeoutError:
                 logger.warning("Parallel processing timed out, using fallbacks")
                 # Use basic fallbacks
-                intent_result = {"intent": "general", "confidence": 0.5, "framework": None}
+                intent_result = {
+                    "intent": "general",
+                    "confidence": 0.5,
+                    "framework": None,
+                }
                 entities = {}
                 context = {"company_size": "unknown", "industry": "unknown"}
 
@@ -438,23 +470,27 @@ class ComplianceAssistant:
             optimized_context = {
                 **context,
                 "timeout": 8.0,  # Aggressive timeout
-                "priority": "speed"
+                "priority": "speed",
             }
 
             try:
                 response_text = await asyncio.wait_for(
-                    self._generate_response(message, optimized_context, intent_result, entities),
-                    timeout=10.0
+                    self._generate_response(
+                        message, optimized_context, intent_result, entities
+                    ),
+                    timeout=10.0,
                 )
             except asyncio.TimeoutError:
                 logger.warning("Response generation timed out, using fallback")
-                response_text = self._get_fallback_response_text(message, optimized_context)
+                response_text = self._get_fallback_response_text(
+                    message, optimized_context
+                )
 
             # Step 4: Quick safety validation with timeout
             try:
                 safety_check = await asyncio.wait_for(
                     asyncio.to_thread(self._validate_response_safety, response_text),
-                    timeout=1.0
+                    timeout=1.0,
                 )
                 if not safety_check["is_safe"]:
                     response_text = safety_check["modified_response"]
@@ -464,11 +500,10 @@ class ComplianceAssistant:
 
             # Step 5: Generate follow-ups asynchronously (don't block)
             follow_up_task = asyncio.create_task(
-                asyncio.to_thread(self._generate_follow_ups, {
-                    "intent": intent_result,
-                    "entities": entities,
-                    "context": context
-                })
+                asyncio.to_thread(
+                    self._generate_follow_ups,
+                    {"intent": intent_result, "entities": entities, "context": context},
+                )
             )
 
             processing_end = datetime.utcnow()
@@ -494,7 +529,7 @@ class ComplianceAssistant:
                 "follow_up_suggestions": follow_ups,
                 "processing_time_ms": int(processing_time * 1000),
                 "optimized": True,
-                "performance_mode": "fast"
+                "performance_mode": "fast",
             }
 
             return response_text, metadata
@@ -515,7 +550,7 @@ class ComplianceAssistant:
                 "error": "Processing failed",
                 "intent": "fallback",
                 "processing_time_ms": 1000,
-                "optimized": False
+                "optimized": False,
             }
 
     async def _generate_gemini_response(
@@ -542,13 +577,12 @@ class ComplianceAssistant:
             try:
                 cached_response = await asyncio.wait_for(
                     self.ai_cache.get_cached_response(prompt, safe_context),
-                    timeout=0.5  # Quick cache check
+                    timeout=0.5,  # Quick cache check
                 )
                 if cached_response:
                     logger.debug("Using cached AI response (fast path)")
                     await self.analytics_monitor.record_metric(
-                        MetricType.CACHE, "cache_hit", 1,
-                        metadata={"fast_path": True}
+                        MetricType.CACHE, "cache_hit", 1, metadata={"fast_path": True}
                     )
                     return cached_response["response"]
             except asyncio.TimeoutError:
@@ -557,7 +591,9 @@ class ComplianceAssistant:
             # Optimize prompt with timeout
             try:
                 optimization_task = asyncio.create_task(
-                    self.performance_optimizer.optimize_ai_request(prompt, safe_context, priority)
+                    self.performance_optimizer.optimize_ai_request(
+                        prompt, safe_context, priority
+                    )
                 )
                 optimized_prompt, optimization_metadata = await asyncio.wait_for(
                     optimization_task, timeout=2.0
@@ -569,15 +605,13 @@ class ComplianceAssistant:
 
             # Record cache miss
             await self.analytics_monitor.record_metric(
-                MetricType.CACHE, "cache_miss", 1,
-                metadata={"fast_path": True}
+                MetricType.CACHE, "cache_miss", 1, metadata={"fast_path": True}
             )
 
             # Apply rate limiting with shorter timeout
             try:
                 await asyncio.wait_for(
-                    self.performance_optimizer.apply_rate_limiting(),
-                    timeout=1.0
+                    self.performance_optimizer.apply_rate_limiting(), timeout=1.0
                 )
             except asyncio.TimeoutError:
                 logger.warning("Rate limiting check timed out")
@@ -593,7 +627,7 @@ class ComplianceAssistant:
                     "temperature": 0.3,  # Lower for consistency and speed
                     "max_output_tokens": 800,  # Reasonable limit
                     "top_p": 0.8,
-                    "top_k": 20
+                    "top_k": 20,
                 }
 
                 # Generate with timeout
@@ -604,13 +638,15 @@ class ComplianceAssistant:
                         model.generate_content,
                         optimized_prompt,
                         safety_settings=self.safety_settings,
-                        generation_config=generation_config
+                        generation_config=generation_config,
                     )
                 )
 
                 # Use aggressive timeout for initial response
                 timeout_seconds = safe_context.get("timeout", 8.0)
-                response = await asyncio.wait_for(generation_task, timeout=timeout_seconds)
+                response = await asyncio.wait_for(
+                    generation_task, timeout=timeout_seconds
+                )
 
                 end_time = datetime.utcnow()
                 response_time = (end_time - start_time).total_seconds()
@@ -621,20 +657,27 @@ class ComplianceAssistant:
                 except Exception as extract_error:
                     logger.error(f"Response extraction failed: {extract_error}")
                     # Use fallback response
-                    response_text = self._get_fallback_response_text(optimized_prompt, safe_context)
+                    response_text = self._get_fallback_response_text(
+                        optimized_prompt, safe_context
+                    )
 
                 # Log performance metrics
                 logger.info(f"AI response generated in {response_time:.3f}s")
 
                 # Update performance metrics
                 estimated_tokens = len(optimized_prompt) // 4 + len(response_text) // 4
-                if hasattr(self.performance_optimizer, 'update_performance_metrics'):
-                    self.performance_optimizer.update_performance_metrics(response_time, estimated_tokens)
+                if hasattr(self.performance_optimizer, "update_performance_metrics"):
+                    self.performance_optimizer.update_performance_metrics(
+                        response_time, estimated_tokens
+                    )
 
                 # Record analytics asynchronously (don't block)
                 asyncio.create_task(
                     self._record_ai_analytics(
-                        response_time, estimated_tokens, safe_context, optimization_metadata
+                        response_time,
+                        estimated_tokens,
+                        safe_context,
+                        optimization_metadata,
                     )
                 )
 
@@ -645,11 +688,13 @@ class ComplianceAssistant:
                     "response_length": len(response_text),
                     "model": "gemini",
                     "optimized": True,
-                    "generation_config": generation_config
+                    "generation_config": generation_config,
                 }
 
                 asyncio.create_task(
-                    self.ai_cache.cache_response(prompt, response_text, safe_context, cache_metadata)
+                    self.ai_cache.cache_response(
+                        prompt, response_text, safe_context, cache_metadata
+                    )
                 )
 
                 # Quality assessment in background
@@ -663,12 +708,14 @@ class ComplianceAssistant:
                 return response_text
 
             except asyncio.TimeoutError:
-                logger.warning(f"AI generation timed out after {timeout_seconds}s, using fallback")
+                logger.warning(
+                    f"AI generation timed out after {timeout_seconds}s, using fallback"
+                )
                 return self._get_fallback_response_text(optimized_prompt, safe_context)
 
             finally:
                 # Always release rate limiting
-                if hasattr(self.performance_optimizer, 'release_rate_limit'):
+                if hasattr(self.performance_optimizer, "release_rate_limit"):
                     self.performance_optimizer.release_rate_limit()
 
         except Exception as e:
@@ -732,7 +779,9 @@ Please try your question again or contact support for immediate assistance."""
                 "response_time_ms",
                 response_time * 1000,
                 metadata={
-                    "content_type": context.get("content_type") if context else "unknown",
+                    "content_type": (
+                        context.get("content_type") if context else "unknown"
+                    ),
                     "framework": context.get("framework") if context else "unknown",
                     "optimization_applied": bool(optimization_metadata),
                 },
@@ -744,7 +793,9 @@ Please try your question again or contact support for immediate assistance."""
                 "token_usage",
                 token_count,
                 metadata={
-                    "content_type": context.get("content_type") if context else "unknown",
+                    "content_type": (
+                        context.get("content_type") if context else "unknown"
+                    ),
                     "framework": context.get("framework") if context else "unknown",
                 },
             )
@@ -756,7 +807,9 @@ Please try your question again or contact support for immediate assistance."""
                 "cost_estimate",
                 estimated_cost,
                 metadata={
-                    "content_type": context.get("content_type") if context else "unknown",
+                    "content_type": (
+                        context.get("content_type") if context else "unknown"
+                    ),
                     "framework": context.get("framework") if context else "unknown",
                     "token_count": token_count,
                 },
@@ -769,7 +822,9 @@ Please try your question again or contact support for immediate assistance."""
                 "response_quality",
                 quality_score,
                 metadata={
-                    "content_type": context.get("content_type") if context else "unknown",
+                    "content_type": (
+                        context.get("content_type") if context else "unknown"
+                    ),
                     "framework": context.get("framework") if context else "unknown",
                 },
             )
@@ -790,7 +845,10 @@ Please try your question again or contact support for immediate assistance."""
                 return
 
             assessment = await self.quality_monitor.assess_response_quality(
-                response_id=response_id, response_text=response_text, prompt=prompt, context=context
+                response_id=response_id,
+                response_text=response_text,
+                prompt=prompt,
+                context=context,
             )
 
             # Record quality metric in analytics
@@ -800,7 +858,9 @@ Please try your question again or contact support for immediate assistance."""
                 assessment.overall_score,
                 metadata={
                     "quality_level": assessment.quality_level.value,
-                    "content_type": context.get("content_type") if context else "unknown",
+                    "content_type": (
+                        context.get("content_type") if context else "unknown"
+                    ),
                     "framework": context.get("framework") if context else "unknown",
                     "response_id": response_id,
                 },
@@ -878,11 +938,17 @@ Please try your question again or contact support for immediate assistance."""
             )
 
             # Get evidence gaps analysis
-            gaps_analysis = await self.analyze_evidence_gap(business_profile_id, framework)
+            gaps_analysis = await self.analyze_evidence_gap(
+                business_profile_id, framework
+            )
 
             # Generate contextual recommendations
             recommendations = await self._generate_contextual_recommendations(
-                business_context, existing_evidence, maturity_analysis, gaps_analysis, framework
+                business_context,
+                existing_evidence,
+                maturity_analysis,
+                gaps_analysis,
+                framework,
             )
 
             # Prioritize recommendations based on business context
@@ -899,28 +965,43 @@ Please try your question again or contact support for immediate assistance."""
                     "maturity_level": maturity_analysis.get("maturity_level", "Basic"),
                 },
                 "current_status": {
-                    "completion_percentage": gaps_analysis.get("completion_percentage", 0),
+                    "completion_percentage": gaps_analysis.get(
+                        "completion_percentage", 0
+                    ),
                     "evidence_collected": len(existing_evidence),
                     "critical_gaps_count": len(gaps_analysis.get("critical_gaps", [])),
                 },
                 "recommendations": prioritized_recommendations,
-                "next_steps": self._generate_next_steps(prioritized_recommendations[:3]),
-                "estimated_effort": self._calculate_total_effort(prioritized_recommendations),
+                "next_steps": self._generate_next_steps(
+                    prioritized_recommendations[:3]
+                ),
+                "estimated_effort": self._calculate_total_effort(
+                    prioritized_recommendations
+                ),
                 "generated_at": datetime.utcnow().isoformat(),
             }
 
         except Exception as e:
-            logger.error(f"Error generating context-aware recommendations: {e}", exc_info=True)
-            raise BusinessLogicException("Unable to generate context-aware recommendations") from e
+            logger.error(
+                f"Error generating context-aware recommendations: {e}", exc_info=True
+            )
+            raise BusinessLogicException(
+                "Unable to generate context-aware recommendations"
+            ) from e
 
     async def _analyze_compliance_maturity(
-        self, business_context: Dict[str, Any], existing_evidence: List[Dict], framework: str
+        self,
+        business_context: Dict[str, Any],
+        existing_evidence: List[Dict],
+        framework: str,
     ) -> Dict[str, Any]:
         """Analyze the organization's compliance maturity level."""
         try:
             # Calculate maturity indicators
             evidence_count = len(existing_evidence)
-            evidence_types = len({item.get("evidence_type", "") for item in existing_evidence})
+            evidence_types = len(
+                {item.get("evidence_type", "") for item in existing_evidence}
+            )
 
             # Industry-specific maturity expectations
             industry = business_context.get("industry", "").lower()
@@ -989,11 +1070,17 @@ Please try your question again or contact support for immediate assistance."""
         try:
             # Build context-aware prompt
             prompt_dict = self._build_contextual_recommendation_prompt(
-                business_context, existing_evidence, maturity_analysis, gaps_analysis, framework
+                business_context,
+                existing_evidence,
+                maturity_analysis,
+                gaps_analysis,
+                framework,
             )
 
             # Combine system and user prompts into a single string
-            combined_prompt = f"System: {prompt_dict['system']}\n\nUser: {prompt_dict['user']}"
+            combined_prompt = (
+                f"System: {prompt_dict['system']}\n\nUser: {prompt_dict['user']}"
+            )
 
             # Prepare cache context
             cache_context = {
@@ -1004,7 +1091,9 @@ Please try your question again or contact support for immediate assistance."""
             }
 
             # Generate AI recommendations with caching
-            response = await self._generate_gemini_response(combined_prompt, cache_context)
+            response = await self._generate_gemini_response(
+                combined_prompt, cache_context
+            )
 
             # Parse and structure recommendations
             recommendations = self._parse_ai_recommendations(response, framework)
@@ -1096,7 +1185,9 @@ Please try your question again or contact support for immediate assistance."""
 
         return "\n".join(summary)
 
-    def _parse_ai_recommendations(self, response: str, framework: str) -> List[Dict[str, Any]]:
+    def _parse_ai_recommendations(
+        self, response: str, framework: str
+    ) -> List[Dict[str, Any]]:
         """Parse AI response into structured recommendations."""
         try:
             import json
@@ -1113,9 +1204,13 @@ Please try your question again or contact support for immediate assistance."""
 
         except Exception as e:
             logger.warning(f"Error parsing AI recommendations: {e}")
-            return self._get_fallback_recommendations(framework, {"maturity_level": "Basic"})
+            return self._get_fallback_recommendations(
+                framework, {"maturity_level": "Basic"}
+            )
 
-    def _parse_text_recommendations(self, response: str, framework: str) -> List[Dict[str, Any]]:
+    def _parse_text_recommendations(
+        self, response: str, framework: str
+    ) -> List[Dict[str, Any]]:
         """Parse text-based recommendations as fallback."""
         recommendations = []
         lines = response.split("\n")
@@ -1175,7 +1270,9 @@ Please try your question again or contact support for immediate assistance."""
 
             # Add automation guidance
             if automation_possible:
-                rec["automation_guidance"] = self._get_automation_guidance(rec, business_context)
+                rec["automation_guidance"] = self._get_automation_guidance(
+                    rec, business_context
+                )
 
             enhanced_recommendations.append(rec)
 
@@ -1186,7 +1283,9 @@ Please try your question again or contact support for immediate assistance."""
     ) -> str:
         """Provide specific automation guidance for a recommendation."""
         control_type = recommendation.get("title", "").lower()
-        org_size = self._categorize_organization_size(business_context.get("employee_count", 0))
+        org_size = self._categorize_organization_size(
+            business_context.get("employee_count", 0)
+        )
 
         if "policy" in control_type:
             return f"Use policy templates and automated policy management tools. For {org_size} organizations, consider document management systems with version control."
@@ -1257,9 +1356,13 @@ Please try your question again or contact support for immediate assistance."""
         for rec in recommendations:
             rec["priority_score"] = calculate_priority_score(rec)
 
-        return sorted(recommendations, key=lambda x: x.get("priority_score", 0), reverse=True)
+        return sorted(
+            recommendations, key=lambda x: x.get("priority_score", 0), reverse=True
+        )
 
-    def _generate_next_steps(self, top_recommendations: List[Dict[str, Any]]) -> List[str]:
+    def _generate_next_steps(
+        self, top_recommendations: List[Dict[str, Any]]
+    ) -> List[str]:
         """Generate actionable next steps from top recommendations."""
         next_steps = []
 
@@ -1270,24 +1373,32 @@ Please try your question again or contact support for immediate assistance."""
             if rec.get("automation_possible", False):
                 step = f"{i}. Start with {title} (Est. {effort}h) - Consider automation tools"
             else:
-                step = f"{i}. Implement {title} (Est. {effort}h) - Manual process required"
+                step = (
+                    f"{i}. Implement {title} (Est. {effort}h) - Manual process required"
+                )
 
             next_steps.append(step)
 
         return next_steps
 
-    def _calculate_total_effort(self, recommendations: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _calculate_total_effort(
+        self, recommendations: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """Calculate total effort estimates for recommendations."""
         total_hours = sum(rec.get("effort_hours", 4) for rec in recommendations)
         high_priority_hours = sum(
-            rec.get("effort_hours", 4) for rec in recommendations if rec.get("priority") == "High"
+            rec.get("effort_hours", 4)
+            for rec in recommendations
+            if rec.get("priority") == "High"
         )
 
         return {
             "total_hours": total_hours,
             "high_priority_hours": high_priority_hours,
             "estimated_weeks": round(total_hours / 40, 1),
-            "quick_wins": len([r for r in recommendations if r.get("effort_hours", 4) <= 2]),
+            "quick_wins": len(
+                [r for r in recommendations if r.get("effort_hours", 4) <= 2]
+            ),
         }
 
     def _get_fallback_recommendations(
@@ -1305,7 +1416,11 @@ Please try your question again or contact support for immediate assistance."""
                     "effort_hours": 8,
                     "automation_possible": True,
                     "business_justification": "Required for GDPR compliance",
-                    "implementation_steps": ["Draft policy", "Review with legal", "Implement"],
+                    "implementation_steps": [
+                        "Draft policy",
+                        "Review with legal",
+                        "Implement",
+                    ],
                 },
                 {
                     "control_id": "GDPR-2",
@@ -1315,7 +1430,11 @@ Please try your question again or contact support for immediate assistance."""
                     "effort_hours": 12,
                     "automation_possible": True,
                     "business_justification": "Essential for GDPR compliance",
-                    "implementation_steps": ["Design workflow", "Create forms", "Train staff"],
+                    "implementation_steps": [
+                        "Design workflow",
+                        "Create forms",
+                        "Train staff",
+                    ],
                 },
             ],
             "ISO27001": [
@@ -1327,7 +1446,11 @@ Please try your question again or contact support for immediate assistance."""
                     "effort_hours": 6,
                     "automation_possible": True,
                     "business_justification": "Foundation of ISO 27001 compliance",
-                    "implementation_steps": ["Draft policy", "Management approval", "Communicate"],
+                    "implementation_steps": [
+                        "Draft policy",
+                        "Management approval",
+                        "Communicate",
+                    ],
                 },
                 {
                     "control_id": "ISO-A.9.1",
@@ -1375,11 +1498,17 @@ Please try your question again or contact support for immediate assistance."""
 
             # Generate workflow based on context
             workflow = await self._generate_contextual_workflow(
-                framework, control_id, business_context, maturity_analysis, workflow_type
+                framework,
+                control_id,
+                business_context,
+                maturity_analysis,
+                workflow_type,
             )
 
             # Add automation recommendations
-            workflow = self._enhance_workflow_with_automation(workflow, business_context)
+            workflow = self._enhance_workflow_with_automation(
+                workflow, business_context
+            )
 
             # Calculate effort and timeline
             workflow["effort_estimation"] = self._calculate_workflow_effort(workflow)
@@ -1387,8 +1516,12 @@ Please try your question again or contact support for immediate assistance."""
             return workflow
 
         except Exception as e:
-            logger.error(f"Error generating evidence collection workflow: {e}", exc_info=True)
-            raise BusinessLogicException("Unable to generate evidence collection workflow") from e
+            logger.error(
+                f"Error generating evidence collection workflow: {e}", exc_info=True
+            )
+            raise BusinessLogicException(
+                "Unable to generate evidence collection workflow"
+            ) from e
 
     async def _generate_contextual_workflow(
         self,
@@ -1401,7 +1534,11 @@ Please try your question again or contact support for immediate assistance."""
         """Generate a contextual workflow using AI."""
         try:
             prompt = self._build_workflow_generation_prompt(
-                framework, control_id, business_context, maturity_analysis, workflow_type
+                framework,
+                control_id,
+                business_context,
+                maturity_analysis,
+                workflow_type,
             )
 
             # Prepare cache context for workflow
@@ -1514,7 +1651,9 @@ Please try your question again or contact support for immediate assistance."""
                 workflow = json.loads(json_match.group())
 
                 # Validate and enhance workflow structure
-                workflow = self._validate_workflow_structure(workflow, framework, control_id)
+                workflow = self._validate_workflow_structure(
+                    workflow, framework, control_id
+                )
                 return workflow
 
             # Fallback to text parsing
@@ -1522,7 +1661,9 @@ Please try your question again or contact support for immediate assistance."""
 
         except Exception as e:
             logger.warning(f"Error parsing workflow response: {e}")
-            return self._get_fallback_workflow(framework, control_id, {"maturity_level": "Basic"})
+            return self._get_fallback_workflow(
+                framework, control_id, {"maturity_level": "Basic"}
+            )
 
     def _validate_workflow_structure(
         self, workflow: Dict[str, Any], framework: str, control_id: str
@@ -1587,7 +1728,9 @@ Please try your question again or contact support for immediate assistance."""
                     "estimated_hours": 8,
                     "steps": [],
                 }
-            elif line.startswith("Step") or line.startswith("-") or line.startswith("*"):
+            elif (
+                line.startswith("Step") or line.startswith("-") or line.startswith("*")
+            ):
                 if current_phase:
                     step = {
                         "step_id": f"step_{len(current_phase['steps']) + 1}",
@@ -1612,7 +1755,9 @@ Please try your question again or contact support for immediate assistance."""
     ) -> Dict[str, Any]:
         """Enhance workflow with automation recommendations."""
 
-        org_size = self._categorize_organization_size(business_context.get("employee_count", 0))
+        org_size = self._categorize_organization_size(
+            business_context.get("employee_count", 0)
+        )
         industry = business_context.get("industry", "").lower()
 
         # Add automation insights to each step
@@ -1623,15 +1768,21 @@ Please try your question again or contact support for immediate assistance."""
                 )
 
                 # Adjust effort estimates based on automation
-                if step["automation_opportunities"].get("high_automation_potential", False):
+                if step["automation_opportunities"].get(
+                    "high_automation_potential", False
+                ):
                     step["estimated_hours_with_automation"] = max(
                         1, step.get("estimated_hours", 2) * 0.3
                     )
                 else:
-                    step["estimated_hours_with_automation"] = step.get("estimated_hours", 2)
+                    step["estimated_hours_with_automation"] = step.get(
+                        "estimated_hours", 2
+                    )
 
         # Add overall automation summary
-        workflow["automation_summary"] = self._calculate_workflow_automation_potential(workflow)
+        workflow["automation_summary"] = self._calculate_workflow_automation_potential(
+            workflow
+        )
 
         return workflow
 
@@ -1644,14 +1795,25 @@ Please try your question again or contact support for immediate assistance."""
         step_description = step.get("description", "").lower()
 
         automation_keywords = {
-            "high": ["policy", "template", "scan", "monitor", "log", "report", "backup"],
+            "high": [
+                "policy",
+                "template",
+                "scan",
+                "monitor",
+                "log",
+                "report",
+                "backup",
+            ],
             "medium": ["review", "assess", "document", "configure", "test"],
             "low": ["interview", "training", "meeting", "approval", "sign-off"],
         }
 
         automation_level = "low"
         for level, keywords in automation_keywords.items():
-            if any(keyword in step_title or keyword in step_description for keyword in keywords):
+            if any(
+                keyword in step_title or keyword in step_description
+                for keyword in keywords
+            ):
                 automation_level = level
                 break
 
@@ -1659,16 +1821,22 @@ Please try your question again or contact support for immediate assistance."""
         if org_size in ["enterprise", "medium"] and automation_level == "medium":
             automation_level = "high"
 
-        automation_tools = self._suggest_automation_tools(step_title, org_size, industry)
+        automation_tools = self._suggest_automation_tools(
+            step_title, org_size, industry
+        )
 
         return {
             "automation_level": automation_level,
             "high_automation_potential": automation_level == "high",
             "suggested_tools": automation_tools,
-            "effort_reduction_percentage": {"high": 70, "medium": 40, "low": 10}[automation_level],
+            "effort_reduction_percentage": {"high": 70, "medium": 40, "low": 10}[
+                automation_level
+            ],
         }
 
-    def _suggest_automation_tools(self, step_title: str, org_size: str, industry: str) -> List[str]:
+    def _suggest_automation_tools(
+        self, step_title: str, org_size: str, industry: str
+    ) -> List[str]:
         """Suggest specific automation tools for a step."""
 
         tools = []
@@ -1687,13 +1855,17 @@ Please try your question again or contact support for immediate assistance."""
 
         # Add size-appropriate tools
         if org_size in ["enterprise", "medium"]:
-            tools.extend(["Enterprise workflow platforms", "Compliance management suites"])
+            tools.extend(
+                ["Enterprise workflow platforms", "Compliance management suites"]
+            )
         else:
             tools.extend(["Cloud-based automation tools", "SaaS compliance platforms"])
 
         return list(set(tools))  # Remove duplicates
 
-    def _calculate_workflow_automation_potential(self, workflow: Dict[str, Any]) -> Dict[str, Any]:
+    def _calculate_workflow_automation_potential(
+        self, workflow: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Calculate overall automation potential for the workflow."""
 
         total_steps = 0
@@ -1705,12 +1877,16 @@ Please try your question again or contact support for immediate assistance."""
             for step in phase.get("steps", []):
                 total_steps += 1
                 manual_hours = step.get("estimated_hours", 2)
-                automated_hours = step.get("estimated_hours_with_automation", manual_hours)
+                automated_hours = step.get(
+                    "estimated_hours_with_automation", manual_hours
+                )
 
                 total_manual_hours += manual_hours
                 total_automated_hours += automated_hours
 
-                if step.get("automation_opportunities", {}).get("high_automation_potential", False):
+                if step.get("automation_opportunities", {}).get(
+                    "high_automation_potential", False
+                ):
                     high_automation_steps += 1
 
         automation_percentage = (
@@ -1750,7 +1926,9 @@ Please try your question again or contact support for immediate assistance."""
 
             for step in phase.get("steps", []):
                 manual_hours = step.get("estimated_hours", 2)
-                automated_hours = step.get("estimated_hours_with_automation", manual_hours)
+                automated_hours = step.get(
+                    "estimated_hours_with_automation", manual_hours
+                )
 
                 phase_manual_hours += manual_hours
                 phase_automated_hours += automated_hours
@@ -1777,11 +1955,16 @@ Please try your question again or contact support for immediate assistance."""
             "phase_breakdown": phase_efforts,
             "effort_savings": {
                 "hours_saved": total_manual_hours - total_automated_hours,
-                "percentage_saved": round(
-                    (total_manual_hours - total_automated_hours) / total_manual_hours * 100, 1
-                )
-                if total_manual_hours > 0
-                else 0,
+                "percentage_saved": (
+                    round(
+                        (total_manual_hours - total_automated_hours)
+                        / total_manual_hours
+                        * 100,
+                        1,
+                    )
+                    if total_manual_hours > 0
+                    else 0
+                ),
             },
         }
 
@@ -1832,7 +2015,9 @@ Please try your question again or contact support for immediate assistance."""
                             "estimated_hours": 4,
                             "dependencies": ["phase_1"],
                             "tools_needed": ["Document management system"],
-                            "validation_criteria": ["All documents collected and verified"],
+                            "validation_criteria": [
+                                "All documents collected and verified"
+                            ],
                         }
                     ],
                 },
@@ -1893,8 +2078,10 @@ Please try your question again or contact support for immediate assistance."""
             )
 
             # Add implementation guidance
-            policy["implementation_guidance"] = self._generate_policy_implementation_guidance(
-                policy, business_context, maturity_analysis
+            policy["implementation_guidance"] = (
+                self._generate_policy_implementation_guidance(
+                    policy, business_context, maturity_analysis
+                )
             )
 
             # Add compliance mapping
@@ -1919,7 +2106,11 @@ Please try your question again or contact support for immediate assistance."""
         """Generate a contextual policy using AI."""
         try:
             prompt = self._build_policy_generation_prompt(
-                framework, policy_type, business_context, maturity_analysis, customization_options
+                framework,
+                policy_type,
+                business_context,
+                maturity_analysis,
+                customization_options,
             )
 
             # Prepare cache context for policy
@@ -2011,7 +2202,9 @@ Please try your question again or contact support for immediate assistance."""
         }}"""
 
         industry_context = business_context.get("industry", "Unknown")
-        company_size = self._categorize_organization_size(business_context.get("employee_count", 0))
+        company_size = self._categorize_organization_size(
+            business_context.get("employee_count", 0)
+        )
 
         user_prompt = f"""
         Generate a {policy_type} policy for {framework} compliance.
@@ -2096,7 +2289,9 @@ Please try your question again or contact support for immediate assistance."""
 
         return policy
 
-    def _parse_text_policy(self, response: str, framework: str, policy_type: str) -> Dict[str, Any]:
+    def _parse_text_policy(
+        self, response: str, framework: str, policy_type: str
+    ) -> Dict[str, Any]:
         """Parse text-based policy as fallback."""
 
         policy = {
@@ -2162,12 +2357,16 @@ Please try your question again or contact support for immediate assistance."""
             policy = self._apply_technology_customizations(policy)
 
         # Apply size-specific customizations
-        org_size = self._categorize_organization_size(business_context.get("employee_count", 0))
+        org_size = self._categorize_organization_size(
+            business_context.get("employee_count", 0)
+        )
         policy = self._apply_size_customizations(policy, org_size)
 
         return policy
 
-    def _apply_healthcare_customizations(self, policy: Dict[str, Any]) -> Dict[str, Any]:
+    def _apply_healthcare_customizations(
+        self, policy: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Apply healthcare industry-specific customizations."""
 
         # Add HIPAA considerations
@@ -2180,7 +2379,11 @@ Please try your question again or contact support for immediate assistance."""
                     "subsection_id": "hipaa_compliance",
                     "title": "HIPAA Compliance",
                     "content": "Procedures for handling protected health information (PHI) in accordance with HIPAA requirements.",
-                    "controls": ["PHI access controls", "Audit logging", "Breach notification"],
+                    "controls": [
+                        "PHI access controls",
+                        "Audit logging",
+                        "Breach notification",
+                    ],
                 }
             ],
         }
@@ -2224,7 +2427,11 @@ Please try your question again or contact support for immediate assistance."""
                     "subsection_id": "sox_compliance",
                     "title": "Sarbanes-Oxley Compliance",
                     "content": "Controls for financial reporting and internal controls over financial reporting.",
-                    "controls": ["Financial controls", "Audit trails", "Segregation of duties"],
+                    "controls": [
+                        "Financial controls",
+                        "Audit trails",
+                        "Segregation of duties",
+                    ],
                 }
             ],
         }
@@ -2255,7 +2462,9 @@ Please try your question again or contact support for immediate assistance."""
 
         return policy
 
-    def _apply_technology_customizations(self, policy: Dict[str, Any]) -> Dict[str, Any]:
+    def _apply_technology_customizations(
+        self, policy: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Apply technology industry-specific customizations."""
 
         # Add technology-specific section
@@ -2303,7 +2512,9 @@ Please try your question again or contact support for immediate assistance."""
 
         return policy
 
-    def _apply_size_customizations(self, policy: Dict[str, Any], org_size: str) -> Dict[str, Any]:
+    def _apply_size_customizations(
+        self, policy: Dict[str, Any], org_size: str
+    ) -> Dict[str, Any]:
         """Apply organization size-specific customizations."""
 
         if org_size == "micro":
@@ -2342,7 +2553,9 @@ Please try your question again or contact support for immediate assistance."""
     ) -> Dict[str, Any]:
         """Generate implementation guidance for the policy."""
 
-        org_size = self._categorize_organization_size(business_context.get("employee_count", 0))
+        org_size = self._categorize_organization_size(
+            business_context.get("employee_count", 0)
+        )
         maturity_analysis.get("maturity_level", "Basic")
 
         return {
@@ -2472,14 +2685,22 @@ Please try your question again or contact support for immediate assistance."""
             "roles_responsibilities": [
                 {
                     "role": "Policy Owner",
-                    "responsibilities": ["Maintain policy", "Ensure compliance", "Regular reviews"],
+                    "responsibilities": [
+                        "Maintain policy",
+                        "Ensure compliance",
+                        "Regular reviews",
+                    ],
                 }
             ],
             "procedures": [
                 {
                     "procedure_id": "proc_1",
                     "title": "Policy Review Procedure",
-                    "steps": ["Annual review", "Update as needed", "Communicate changes"],
+                    "steps": [
+                        "Annual review",
+                        "Update as needed",
+                        "Communicate changes",
+                    ],
                 }
             ],
             "compliance_requirements": [
@@ -2567,7 +2788,14 @@ Please try your question again or contact support for immediate assistance."""
                 r"security.*risks",
                 r"vulnerability.*assessment",
             ],
-            "out_of_scope": [r"weather", r"joke", r"pasta", r"recipe", r"sports", r"movie"],
+            "out_of_scope": [
+                r"weather",
+                r"joke",
+                r"pasta",
+                r"recipe",
+                r"sports",
+                r"movie",
+            ],
         }
 
         # Framework detection
@@ -2597,7 +2825,9 @@ Please try your question again or contact support for immediate assistance."""
                         for pattern in patterns:
                             if re.search(pattern, message_lower):
                                 detected_intent = intent
-                                confidence = 0.9  # Higher confidence in assessment context
+                                confidence = (
+                                    0.9  # Higher confidence in assessment context
+                                )
                                 break
                         if detected_intent != "general_query":
                             break
@@ -2718,7 +2948,9 @@ Please try your question again or contact support for immediate assistance."""
             if assessment_context.get("framework_id"):
                 frameworks.append(assessment_context["framework_id"])
             if assessment_context.get("section_id"):
-                assessment_entities.append(f"section_{assessment_context['section_id']}")
+                assessment_entities.append(
+                    f"section_{assessment_context['section_id']}"
+                )
 
         return {
             "frameworks": frameworks,
@@ -2827,8 +3059,13 @@ Please try your question again or contact support for immediate assistance."""
             )
 
             # Convert safety decision to response format
-            is_safe = safety_record.decision in [SafetyDecision.ALLOW, SafetyDecision.MODIFY]
-            safety_score = confidence_score * (1.0 - (safety_record.confidence_score or 0.0))
+            is_safe = safety_record.decision in [
+                SafetyDecision.ALLOW,
+                SafetyDecision.MODIFY,
+            ]
+            safety_score = confidence_score * (
+                1.0 - (safety_record.confidence_score or 0.0)
+            )
 
             modified_response = response
             if safety_record.decision == SafetyDecision.BLOCK:
@@ -2883,7 +3120,14 @@ Please try your question again or contact support for immediate assistance."""
         if len(response.strip()) < 10:
             safety_score = 0.5
 
-        compliance_terms = ["compliance", "regulation", "framework", "policy", "audit", "evidence"]
+        compliance_terms = [
+            "compliance",
+            "regulation",
+            "framework",
+            "policy",
+            "audit",
+            "evidence",
+        ]
         if not any(term in response_lower for term in compliance_terms):
             safety_score = max(safety_score - 0.2, 0.0)
 
@@ -2984,7 +3228,9 @@ Please try your question again or contact support for immediate assistance."""
         """Manages conversation context and maintains topic continuity."""
         # Limit context window to last 6 messages for performance
         context_window = (
-            conversation_history[-6:] if len(conversation_history) > 6 else conversation_history
+            conversation_history[-6:]
+            if len(conversation_history) > 6
+            else conversation_history
         )
 
         # Analyze topic continuity
@@ -3050,12 +3296,18 @@ Please try your question again or contact support for immediate assistance."""
         for claim, pattern in framework_patterns.items():
             verified = bool(re.search(pattern, response_lower))
             fact_checks.append(
-                {"claim": claim, "verified": verified, "source": f"{framework} regulations"}
+                {
+                    "claim": claim,
+                    "verified": verified,
+                    "source": f"{framework} regulations",
+                }
             )
             if verified:
                 verified_count += 1
 
-        accuracy_score = verified_count / len(framework_patterns) if framework_patterns else 0.8
+        accuracy_score = (
+            verified_count / len(framework_patterns) if framework_patterns else 0.8
+        )
 
         return {
             "accuracy_score": accuracy_score,
@@ -3093,7 +3345,9 @@ Please try your question again or contact support for immediate assistance."""
             "confidence": confidence,
             "suspicious_claims": suspicious_claims,
             "verified_claims": [],  # Would be populated by fact-checking service
-            "recommendation": "flag_for_review" if hallucination_detected else "approved",
+            "recommendation": (
+                "flag_for_review" if hallucination_detected else "approved"
+            ),
         }
 
     async def analyze_evidence_gap(
@@ -3143,7 +3397,9 @@ Please try your question again or contact support for immediate assistance."""
                     parsed_response = json.loads(response)
 
                     # Extract structured data
-                    completion_percentage = parsed_response.get("completion_percentage", 50)
+                    completion_percentage = parsed_response.get(
+                        "completion_percentage", 50
+                    )
                     recommendations = parsed_response.get("recommendations", [])
                     critical_gaps = parsed_response.get("critical_gaps", [])
                     risk_level = parsed_response.get("risk_level", "Medium")
@@ -3282,9 +3538,7 @@ Please try your question again or contact support for immediate assistance."""
             # Context would include: {"framework_id": framework_id, "question_id": question_id}
 
             # Use faster prompt generation for help requests
-            system_prompt = (
-                f"You are a {framework_id} compliance expert. Provide concise, actionable guidance."
-            )
+            system_prompt = f"You are a {framework_id} compliance expert. Provide concise, actionable guidance."
             user_prompt = f"Question: {question_text}\n\nProvide brief, practical guidance in JSON format with 'guidance' and 'confidence_score' fields."
 
             # Generate AI response with timeout for performance
@@ -3316,7 +3570,9 @@ Please try your question again or contact support for immediate assistance."""
             return structured_response
 
         except asyncio.TimeoutError:
-            logger.warning(f"AI help request timed out for {question_id}, using fast fallback")
+            logger.warning(
+                f"AI help request timed out for {question_id}, using fast fallback"
+            )
 
             # Record timeout error for monitoring
             if self.analytics_monitor:
@@ -3335,7 +3591,9 @@ Please try your question again or contact support for immediate assistance."""
                 except Exception:
                     pass  # Don't let analytics errors break the flow
 
-            return self._get_fast_fallback_help(question_text, framework_id, question_id)
+            return self._get_fast_fallback_help(
+                question_text, framework_id, question_id
+            )
         except Exception as e:
             logger.error(f"Error generating assessment help: {e}")
 
@@ -3392,7 +3650,9 @@ Please try your question again or contact support for immediate assistance."""
             )
 
             # Generate AI response
-            response = await self._generate_ai_response(prompt_data["system"], prompt_data["user"])
+            response = await self._generate_ai_response(
+                prompt_data["system"], prompt_data["user"]
+            )
 
             # Parse and structure the response
             structured_response = self._parse_assessment_followup_response(response)
@@ -3413,7 +3673,10 @@ Please try your question again or contact support for immediate assistance."""
             return self._get_fallback_assessment_followup(framework_id)
 
     async def analyze_assessment_results(
-        self, assessment_results: Dict[str, Any], framework_id: str, business_profile_id: UUID
+        self,
+        assessment_results: Dict[str, Any],
+        framework_id: str,
+        business_profile_id: UUID,
     ) -> Dict[str, Any]:
         """
         Perform comprehensive AI analysis of assessment results.
@@ -3513,18 +3776,27 @@ Please try your question again or contact support for immediate assistance."""
             )
 
             # Generate AI response
-            response = await self._generate_ai_response(prompt_data["system"], prompt_data["user"])
+            response = await self._generate_ai_response(
+                prompt_data["system"], prompt_data["user"]
+            )
 
             # Parse and structure the response
-            structured_response = self._parse_assessment_recommendations_response(response)
+            structured_response = self._parse_assessment_recommendations_response(
+                response
+            )
 
             # Debug logging
             logger.info(f"Structured response type: {type(structured_response)}")
             logger.info(
                 f"Structured response keys: {structured_response.keys() if isinstance(structured_response, dict) else 'Not a dict'}"
             )
-            if isinstance(structured_response, dict) and "recommendations" in structured_response:
-                logger.info(f"Recommendations count: {len(structured_response['recommendations'])}")
+            if (
+                isinstance(structured_response, dict)
+                and "recommendations" in structured_response
+            ):
+                logger.info(
+                    f"Recommendations count: {len(structured_response['recommendations'])}"
+                )
                 if structured_response["recommendations"]:
                     logger.info(
                         f"First recommendation type: {type(structured_response['recommendations'][0])}"
@@ -3548,7 +3820,9 @@ Please try your question again or contact support for immediate assistance."""
             logger.error(f"Error generating assessment recommendations: {e}")
             return self._get_fallback_assessment_recommendations(framework_id)
 
-    def _get_evidence_types_summary(self, evidence_items: List[Dict[str, Any]]) -> Dict[str, int]:
+    def _get_evidence_types_summary(
+        self, evidence_items: List[Dict[str, Any]]
+    ) -> Dict[str, int]:
         """Summarize evidence types from evidence items."""
         type_counts = {}
         for item in evidence_items:
@@ -3594,15 +3868,21 @@ Please try your question again or contact support for immediate assistance."""
             if cached_content:
                 logger.debug(f"Using cached content for {task_type} task")
                 # With cached content, the model.generate_content() will be more efficient
-                response = model.generate_content(conversation_parts, cached_content=cached_content)
+                response = model.generate_content(
+                    conversation_parts, cached_content=cached_content
+                )
             else:
                 # Fallback to regular generation
                 logger.debug(f"No cached content available for {task_type} task")
-                logger.info(f"Generating response with model: {model.model_name if hasattr(model, 'model_name') else 'unknown'}")
+                logger.info(
+                    f"Generating response with model: {model.model_name if hasattr(model, 'model_name') else 'unknown'}"
+                )
                 logger.info(f"System prompt: {system_prompt[:100]}...")
                 logger.info(f"User prompt: {user_prompt[:200]}...")
                 response = model.generate_content(conversation_parts)
-                logger.info(f"Got response object: {response is not None}, type: {type(response)}")
+                logger.info(
+                    f"Got response object: {response is not None}, type: {type(response)}"
+                )
 
             # Calculate response time
             response_time_ms = int((datetime.now() - start_time).total_seconds() * 1000)
@@ -3624,14 +3904,18 @@ Please try your question again or contact support for immediate assistance."""
 
             # Extract and return response text
             response_text = self._extract_response_text(response)
-            logger.debug(f"Response text for {task_type}: {response_text[:200] if response_text else 'EMPTY'}")
+            logger.debug(
+                f"Response text for {task_type}: {response_text[:200] if response_text else 'EMPTY'}"
+            )
             return response_text
 
         except Exception as e:
             # Record circuit breaker failure
             try:
                 model_name = (
-                    getattr(model, "model_name", "unknown") if "model" in locals() else "unknown"
+                    getattr(model, "model_name", "unknown")
+                    if "model" in locals()
+                    else "unknown"
                 )
                 self.circuit_breaker.record_failure(model_name)
             except:
@@ -3641,6 +3925,7 @@ Please try your question again or contact support for immediate assistance."""
             logger.error(f"Exception type: {type(e).__name__}")
             logger.error(f"Exception details: {str(e)}")
             import traceback
+
             logger.error(f"Traceback: {traceback.format_exc()}")
             # Fallback to regular generation without cache
             return await self._generate_ai_response(system_prompt, user_prompt)
@@ -3690,7 +3975,7 @@ Please try your question again or contact support for immediate assistance."""
         logger.info(f"Raw response type: {type(response)}")
         logger.info(f"Response has text attr: {hasattr(response, 'text')}")
         logger.info(f"Response object: {response}")
-        
+
         try:
             # First try the quick accessor
             if hasattr(response, "text"):
@@ -3709,66 +3994,96 @@ Please try your question again or contact support for immediate assistance."""
         # Detailed inspection of response structure
         logger.info(f"=== DEBUG: Detailed response inspection ===")
         try:
-            if hasattr(response, '__dict__'):
+            if hasattr(response, "__dict__"):
                 logger.info(f"Response attributes: {list(response.__dict__.keys())}")
-            
+
             # Check candidates structure
             if hasattr(response, "candidates"):
-                logger.info(f"Has candidates: {len(response.candidates) if response.candidates else 0}")
+                logger.info(
+                    f"Has candidates: {len(response.candidates) if response.candidates else 0}"
+                )
                 if response.candidates:
                     candidate = response.candidates[0]
                     logger.info(f"Candidate type: {type(candidate)}")
-                    logger.info(f"Candidate attributes: {list(candidate.__dict__.keys()) if hasattr(candidate, '__dict__') else 'No __dict__'}")
-                    
+                    logger.info(
+                        f"Candidate attributes: {list(candidate.__dict__.keys()) if hasattr(candidate, '__dict__') else 'No __dict__'}"
+                    )
+
                     # Check finish reason
                     if hasattr(candidate, "finish_reason"):
                         logger.info(f"Finish reason: {candidate.finish_reason}")
-                        logger.info(f"Finish reason type: {type(candidate.finish_reason)}")
-                        
+                        logger.info(
+                            f"Finish reason type: {type(candidate.finish_reason)}"
+                        )
+
                         # Log detailed finish reason analysis
                         if candidate.finish_reason == 1:  # STOP
                             logger.info("Finish reason: STOP (normal completion)")
                         elif candidate.finish_reason == 2:  # MAX_TOKENS
-                            logger.warning("Finish reason: MAX_TOKENS (response truncated)")
+                            logger.warning(
+                                "Finish reason: MAX_TOKENS (response truncated)"
+                            )
                         elif candidate.finish_reason == 3:  # SAFETY
                             logger.warning("Finish reason: SAFETY (content filtered)")
                         elif candidate.finish_reason == 4:  # RECITATION
-                            logger.warning("Finish reason: RECITATION (content blocked)")
+                            logger.warning(
+                                "Finish reason: RECITATION (content blocked)"
+                            )
                         elif candidate.finish_reason == 5:  # OTHER
                             logger.warning("Finish reason: OTHER (unknown issue)")
                         else:
-                            logger.info(f"Finish reason: {candidate.finish_reason} (unknown code)")
-                    
+                            logger.info(
+                                f"Finish reason: {candidate.finish_reason} (unknown code)"
+                            )
+
                     # Check content structure
                     if hasattr(candidate, "content"):
                         logger.info(f"Has content: {candidate.content is not None}")
                         if candidate.content:
                             logger.info(f"Content type: {type(candidate.content)}")
-                            if hasattr(candidate.content, '__dict__'):
-                                logger.info(f"Content attributes: {list(candidate.content.__dict__.keys())}")
-                            
+                            if hasattr(candidate.content, "__dict__"):
+                                logger.info(
+                                    f"Content attributes: {list(candidate.content.__dict__.keys())}"
+                                )
+
                             # Check parts
                             if hasattr(candidate.content, "parts"):
-                                logger.info(f"Has parts: {len(candidate.content.parts) if candidate.content.parts else 0}")
+                                logger.info(
+                                    f"Has parts: {len(candidate.content.parts) if candidate.content.parts else 0}"
+                                )
                                 if candidate.content.parts:
                                     for i, part in enumerate(candidate.content.parts):
                                         logger.info(f"Part {i} type: {type(part)}")
-                                        if hasattr(part, 'text'):
-                                            logger.info(f"Part {i} text: {repr(part.text)}")
-                                        if hasattr(part, '__dict__'):
-                                            logger.info(f"Part {i} attributes: {list(part.__dict__.keys())}")
-            
+                                        if hasattr(part, "text"):
+                                            logger.info(
+                                                f"Part {i} text: {repr(part.text)}"
+                                            )
+                                        if hasattr(part, "__dict__"):
+                                            logger.info(
+                                                f"Part {i} attributes: {list(part.__dict__.keys())}"
+                                            )
+
             # Check prompt feedback for safety issues
             if hasattr(response, "prompt_feedback"):
-                logger.info(f"Has prompt_feedback: {response.prompt_feedback is not None}")
+                logger.info(
+                    f"Has prompt_feedback: {response.prompt_feedback is not None}"
+                )
                 if response.prompt_feedback:
-                    logger.info(f"Prompt feedback type: {type(response.prompt_feedback)}")
-                    if hasattr(response.prompt_feedback, '__dict__'):
-                        logger.info(f"Prompt feedback attributes: {list(response.prompt_feedback.__dict__.keys())}")
+                    logger.info(
+                        f"Prompt feedback type: {type(response.prompt_feedback)}"
+                    )
+                    if hasattr(response.prompt_feedback, "__dict__"):
+                        logger.info(
+                            f"Prompt feedback attributes: {list(response.prompt_feedback.__dict__.keys())}"
+                        )
                     if hasattr(response.prompt_feedback, "block_reason"):
-                        logger.info(f"Block reason: {response.prompt_feedback.block_reason}")
+                        logger.info(
+                            f"Block reason: {response.prompt_feedback.block_reason}"
+                        )
                     if hasattr(response.prompt_feedback, "safety_ratings"):
-                        logger.info(f"Safety ratings: {response.prompt_feedback.safety_ratings}")
+                        logger.info(
+                            f"Safety ratings: {response.prompt_feedback.safety_ratings}"
+                        )
 
         except Exception as inspect_error:
             logger.error(f"Error during response inspection: {inspect_error}")
@@ -3780,14 +4095,29 @@ Please try your question again or contact support for immediate assistance."""
 
                 # Check finish reason with enhanced Google API bug handling
                 if hasattr(candidate, "finish_reason"):
-                    if candidate.finish_reason in [2, 3, 4, 5]:  # SAFETY, MAX_TOKENS, RECITATION, OTHER
-                        logger.warning(f"Response blocked with finish_reason: {candidate.finish_reason}")
-                        
+                    if candidate.finish_reason in [
+                        2,
+                        3,
+                        4,
+                        5,
+                    ]:  # SAFETY, MAX_TOKENS, RECITATION, OTHER
+                        logger.warning(
+                            f"Response blocked with finish_reason: {candidate.finish_reason}"
+                        )
+
                         # Check if this is actually a recitation issue (Google bug #331677495)
-                        if hasattr(response, "prompt_feedback") and response.prompt_feedback:
+                        if (
+                            hasattr(response, "prompt_feedback")
+                            and response.prompt_feedback
+                        ):
                             if hasattr(response.prompt_feedback, "block_reason"):
-                                if response.prompt_feedback.block_reason == "RECITATION":
-                                    logger.warning("AI response blocked due to Google API recitation bug - providing fallback")
+                                if (
+                                    response.prompt_feedback.block_reason
+                                    == "RECITATION"
+                                ):
+                                    logger.warning(
+                                        "AI response blocked due to Google API recitation bug - providing fallback"
+                                    )
                                     return "Content temporarily unavailable due to system limitations. Please rephrase your question and I'll provide original compliance insights."
 
                         # Return appropriate fallback based on finish reason
@@ -3798,7 +4128,9 @@ Please try your question again or contact support for immediate assistance."""
                             logger.warning("AI response blocked by safety filters")
                             return "I understand you're asking about compliance matters. Let me provide general guidance: For regulatory compliance, it's important to follow established frameworks, maintain proper documentation, and ensure regular audits. Could you please rephrase your question to be more specific about the compliance area you need help with?"
                         elif candidate.finish_reason == 4:  # RECITATION
-                            logger.warning("AI response blocked due to recitation concerns")
+                            logger.warning(
+                                "AI response blocked due to recitation concerns"
+                            )
                             return "I can help with compliance guidance using my own analysis. Please rephrase your question and I'll provide original insights based on compliance best practices."
                         else:  # OTHER or unknown
                             logger.warning("AI response blocked for other reasons")
@@ -3813,19 +4145,23 @@ Please try your question again or contact support for immediate assistance."""
                                 text_parts.append(part.text.strip())
                         if text_parts:
                             result_text = "\n".join(text_parts).strip()
-                            logger.info(f"SUCCESS: Extracted text from parts: {len(result_text)} chars")
+                            logger.info(
+                                f"SUCCESS: Extracted text from parts: {len(result_text)} chars"
+                            )
                             return result_text
 
             # Fallback response
-            logger.error("CRITICAL: No valid response text found after all extraction attempts")
+            logger.error(
+                "CRITICAL: No valid response text found after all extraction attempts"
+            )
             return "I apologize, but I'm unable to provide a response at this time. Please try rephrasing your question."
 
         except Exception as e:
             logger.error(f"Error extracting response text: {e}")
             import traceback
+
             logger.error(f"Traceback: {traceback.format_exc()}")
             return "I apologize, but I'm unable to provide a response at this time. Please try again later."
-
 
     async def _stream_response(
         self,
@@ -3847,7 +4183,9 @@ Please try your question again or contact support for immediate assistance."""
             )
 
             # Get task-appropriate model with circuit breaker protection
-            model, instruction_id = self._get_task_appropriate_model(task_type, context, tools)
+            model, instruction_id = self._get_task_appropriate_model(
+                task_type, context, tools
+            )
             model_name = getattr(model, "model_name", "unknown")
 
             # Construct full prompt
@@ -3882,7 +4220,9 @@ Please try your question again or contact support for immediate assistance."""
             logger.error(f"Model {model_name} unavailable for streaming: {e}")
             yield "I apologize, but the AI service is temporarily unavailable. Please try again in a few moments."
         except Exception as e:
-            logger.error(f"Error generating streaming AI response with model {model_name}: {e}")
+            logger.error(
+                f"Error generating streaming AI response with model {model_name}: {e}"
+            )
             # Record failure for circuit breaker
             if model:
                 self.circuit_breaker.record_failure(model_name, e)
@@ -4105,7 +4445,11 @@ Please try your question again or contact support for immediate assistance."""
         except json.JSONDecodeError:
             pass
 
-        return {"follow_up_questions": [response], "recommendations": [], "confidence_score": 0.8}
+        return {
+            "follow_up_questions": [response],
+            "recommendations": [],
+            "confidence_score": 0.8,
+        }
 
     def _parse_assessment_analysis_response(self, response: str) -> Dict[str, Any]:
         """Parse AI response for assessment analysis into structured format."""
@@ -4125,7 +4469,9 @@ Please try your question again or contact support for immediate assistance."""
             "evidence_requirements": [],
         }
 
-    def _parse_assessment_recommendations_response(self, response: str) -> Dict[str, Any]:
+    def _parse_assessment_recommendations_response(
+        self, response: str
+    ) -> Dict[str, Any]:
         """Parse AI response for assessment recommendations into structured format."""
         try:
             import json
@@ -4290,7 +4636,10 @@ Please try your question again or contact support for immediate assistance."""
             "guidance": guidance,
             "confidence_score": 0.7,  # Higher than fallback since it's framework-specific
             "related_topics": [framework_id, "compliance requirements"],
-            "follow_up_suggestions": ["Review specific requirements", "Consult documentation"],
+            "follow_up_suggestions": [
+                "Review specific requirements",
+                "Consult documentation",
+            ],
             "source_references": [f"{framework_id} standards"],
             "request_id": f"fast_fallback_{framework_id}_{question_id}",
             "generated_at": datetime.utcnow().isoformat(),
@@ -4349,7 +4698,9 @@ Please try your question again or contact support for immediate assistance."""
             "generated_at": datetime.utcnow().isoformat(),
         }
 
-    def _get_fallback_assessment_recommendations(self, framework_id: str) -> Dict[str, Any]:
+    def _get_fallback_assessment_recommendations(
+        self, framework_id: str
+    ) -> Dict[str, Any]:
         """Provide fallback response when AI assessment recommendations fail."""
         return {
             "recommendations": [
@@ -4457,13 +4808,19 @@ Please try your question again or contact support for immediate assistance."""
         response_lower = response.lower()
 
         professional_count = sum(
-            1 for pattern in professional_indicators if re.search(pattern, response_lower)
+            1
+            for pattern in professional_indicators
+            if re.search(pattern, response_lower)
         )
-        casual_count = sum(1 for pattern in casual_patterns if re.search(pattern, response_lower))
+        casual_count = sum(
+            1 for pattern in casual_patterns if re.search(pattern, response_lower)
+        )
 
         # Calculate tone score
         total_indicators = len(professional_indicators)
-        professional_score = professional_count / total_indicators if total_indicators > 0 else 0
+        professional_score = (
+            professional_count / total_indicators if total_indicators > 0 else 0
+        )
 
         # Penalize for casual language
         tone_score = max(0, professional_score - (casual_count * 0.2))
@@ -4546,16 +4903,16 @@ Please try your question again or contact support for immediate assistance."""
         self,
         business_context: Dict[str, Any],
         max_questions: int = 8,
-        difficulty_level: str = "mixed"
+        difficulty_level: str = "mixed",
     ) -> Dict[str, Any]:
         """
         Generate dynamic assessment questions based on business context.
-        
+
         Args:
             business_context: Business information including type, size, etc.
             max_questions: Maximum number of questions to generate
             difficulty_level: Question difficulty (easy, medium, hard, mixed)
-            
+
         Returns:
             Dictionary containing generated questions and metadata
         """
@@ -4611,11 +4968,13 @@ Please try your question again or contact support for immediate assistance."""
                 system_prompt=system_prompt,
                 user_prompt=user_prompt,
                 task_type="question_generation",
-                context={"business_type": business_type, "company_size": company_size}
+                context={"business_type": business_type, "company_size": company_size},
             )
 
             # Parse the response
-            questions_data = self._parse_questions_response(response, max_questions, assessment_type)
+            questions_data = self._parse_questions_response(
+                response, max_questions, assessment_type
+            )
 
             return questions_data
 
@@ -4630,11 +4989,11 @@ Please try your question again or contact support for immediate assistance."""
         previous_messages: Optional[List[Dict[str, Any]]] = None,
         previous_answers: Optional[List[Dict[str, Any]]] = None,
         question_type: str = "multiple_choice",
-        difficulty: str = "medium"
+        difficulty: str = "medium",
     ) -> Dict[str, Any]:
         """
         Generate a single contextual question based on business context and previous answers.
-        
+
         Args:
             context: Assessment context (for compatibility with assessment_agent)
             business_context: Business information including type, size, etc.
@@ -4642,7 +5001,7 @@ Please try your question again or contact support for immediate assistance."""
             previous_answers: List of previous Q&A pairs for context
             question_type: Type of question (multiple_choice, boolean, text)
             difficulty: Question difficulty level
-            
+
         Returns:
             Dictionary containing generated question and metadata
         """
@@ -4650,23 +5009,27 @@ Please try your question again or contact support for immediate assistance."""
             # Use context parameter if business_context not provided (for compatibility)
             if business_context is None and context is not None:
                 business_context = context
-            
+
             # Convert previous_messages to previous_answers format if needed
             if previous_answers is None and previous_messages is not None:
                 previous_answers = []
                 for msg in previous_messages[-6:]:  # Last 3 Q&A pairs
-                    if hasattr(msg, 'content') and hasattr(msg, 'additional_kwargs'):
-                        previous_answers.append({
-                            'question': msg.additional_kwargs.get('question_id', 'Question'),
-                            'answer': msg.content
-                        })
-            
+                    if hasattr(msg, "content") and hasattr(msg, "additional_kwargs"):
+                        previous_answers.append(
+                            {
+                                "question": msg.additional_kwargs.get(
+                                    "question_id", "Question"
+                                ),
+                                "answer": msg.content,
+                            }
+                        )
+
             # Extract business context
             business_context = business_context or {}
             business_type = business_context.get("business_type", "general")
             company_size = business_context.get("company_size", "small")
             assessment_type = business_context.get("assessment_type", "compliance")
-            
+
             # Build context from previous answers
             context_info = ""
             if previous_answers:
@@ -4711,60 +5074,81 @@ Please try your question again or contact support for immediate assistance."""
                 system_prompt=system_prompt,
                 user_prompt=user_prompt,
                 task_type="contextual_question_generation",
-                context={"business_type": business_type, "company_size": company_size, "previous_count": len(previous_answers or [])}
+                context={
+                    "business_type": business_type,
+                    "company_size": company_size,
+                    "previous_count": len(previous_answers or []),
+                },
             )
 
             # Parse the response
             try:
                 import json
                 import re
-                
-                logger.debug(f"Raw response before parsing: {response[:500] if response else 'EMPTY'}")
-                
+
+                logger.debug(
+                    f"Raw response before parsing: {response[:500] if response else 'EMPTY'}"
+                )
+
                 if isinstance(response, str):
                     # Clean up the response - remove markdown code blocks if present
                     cleaned_response = response.strip()
-                    
+
                     # Remove markdown code blocks
                     if cleaned_response.startswith("```"):
                         # Remove opening and closing code blocks
-                        cleaned_response = re.sub(r'^```(?:json)?\s*', '', cleaned_response)
-                        cleaned_response = re.sub(r'\s*```$', '', cleaned_response)
-                    
+                        cleaned_response = re.sub(
+                            r"^```(?:json)?\s*", "", cleaned_response
+                        )
+                        cleaned_response = re.sub(r"\s*```$", "", cleaned_response)
+
                     # Extract JSON object from response
-                    json_match = re.search(r'\{[\s\S]*\}', cleaned_response)
+                    json_match = re.search(r"\{[\s\S]*\}", cleaned_response)
                     if json_match:
                         cleaned_response = json_match.group()
-                    
-                    logger.debug(f"Cleaned response for parsing: {cleaned_response[:200] if cleaned_response else 'EMPTY'}")
+
+                    logger.debug(
+                        f"Cleaned response for parsing: {cleaned_response[:200] if cleaned_response else 'EMPTY'}"
+                    )
                     parsed_response = json.loads(cleaned_response)
                 else:
                     parsed_response = response
 
                 # Return in expected format for assessment_agent
                 return {
-                    "question_text": parsed_response.get("question_text", "How does your organization ensure data protection compliance?"),
+                    "question_text": parsed_response.get(
+                        "question_text",
+                        "How does your organization ensure data protection compliance?",
+                    ),
                     "question_id": parsed_response.get("question_id", "ctx_fallback_1"),
-                    "question_type": parsed_response.get("question_type", question_type),
+                    "question_type": parsed_response.get(
+                        "question_type", question_type
+                    ),
                     "options": parsed_response.get("options"),
                     "category": parsed_response.get("category", "data_protection"),
                     "difficulty": parsed_response.get("difficulty", difficulty),
                     "compliance_weight": parsed_response.get("compliance_weight", 1.0),
-                    "contextual": True
+                    "contextual": True,
                 }
 
             except (json.JSONDecodeError, KeyError) as parse_error:
-                logger.warning(f"Failed to parse contextual question response: {parse_error}")
+                logger.warning(
+                    f"Failed to parse contextual question response: {parse_error}"
+                )
                 # Return structured fallback
                 return {
                     "question_text": f"What compliance measures are most important for your {business_type} organization?",
                     "question_id": "ctx_fallback_2",
                     "question_type": question_type,
-                    "options": ["Documentation", "Training", "Monitoring", "All of the above"] if question_type == "multiple_choice" else None,
+                    "options": (
+                        ["Documentation", "Training", "Monitoring", "All of the above"]
+                        if question_type == "multiple_choice"
+                        else None
+                    ),
                     "category": "general_compliance",
                     "difficulty": difficulty,
                     "compliance_weight": 1.0,
-                    "contextual": True
+                    "contextual": True,
                 }
 
         except Exception as e:
@@ -4778,7 +5162,7 @@ Please try your question again or contact support for immediate assistance."""
                 "category": "documentation",
                 "difficulty": "easy",
                 "compliance_weight": 1.0,
-                "contextual": True
+                "contextual": True,
             }
 
     async def generate_recommendations(
@@ -4786,17 +5170,17 @@ Please try your question again or contact support for immediate assistance."""
         business_profile: Dict[str, Any],
         compliance_needs: List[str],
         identified_risks: List[Dict[str, Any]],
-        compliance_score: float
+        compliance_score: float,
     ) -> List[Dict[str, Any]]:
         """
         Generate compliance recommendations based on assessment results.
-        
+
         Args:
             business_profile: Business profile information
             compliance_needs: List of identified compliance needs
             identified_risks: List of identified compliance risks
             compliance_score: Overall compliance score (0.0 to 1.0)
-            
+
         Returns:
             List of recommendation dictionaries with actions and priorities
         """
@@ -4805,7 +5189,7 @@ Please try your question again or contact support for immediate assistance."""
             business_type = business_profile.get("business_type", "general")
             company_size = business_profile.get("company_size", "small")
             industry = business_profile.get("industry", "general")
-            
+
             # Build risk context
             risk_context = ""
             if identified_risks:
@@ -4814,12 +5198,12 @@ Please try your question again or contact support for immediate assistance."""
                     severity = risk.get("severity", "medium")
                     description = risk.get("description", "Risk identified")
                     risk_context += f"- {severity.upper()}: {description}\n"
-            
+
             # Build compliance needs context
             needs_context = ""
             if compliance_needs:
                 needs_context = f"\nCompliance frameworks needed: {', '.join(compliance_needs[:3])}\n"
-            
+
             # Determine urgency based on compliance score
             if compliance_score < 0.4:
                 urgency = "critical"
@@ -4830,7 +5214,7 @@ Please try your question again or contact support for immediate assistance."""
             else:
                 urgency = "medium"
                 action_priority = "improve over next quarter"
-                
+
             system_prompt = """You are a compliance expert providing actionable recommendations. Generate practical, specific recommendations that businesses can implement to improve their compliance posture."""
 
             user_prompt = f"""
@@ -4868,7 +5252,10 @@ Please try your question again or contact support for immediate assistance."""
             # Get appropriate model for recommendations task
             model_instance, instruction_id = self._get_task_appropriate_model(
                 task_type="recommendations",
-                context={"business_profile": business_profile, "compliance_score": compliance_score}
+                context={
+                    "business_profile": business_profile,
+                    "compliance_score": compliance_score,
+                },
             )
 
             try:
@@ -4879,59 +5266,72 @@ Please try your question again or contact support for immediate assistance."""
                         "temperature": 0.3,  # Lower temperature for consistent recommendations
                         "max_output_tokens": 2000,
                         "top_p": 0.8,
-                        "top_k": 40
-                    }
+                        "top_k": 40,
+                    },
                 )
 
                 # Parse response
                 response_text = response.text.strip()
-                
+
                 # Try to extract JSON
                 import json
                 import re
-                
+
                 # Find JSON in response
-                json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
+                json_match = re.search(r"\{.*\}", response_text, re.DOTALL)
                 if json_match:
                     try:
                         recommendations_data = json.loads(json_match.group())
-                        recommendations = recommendations_data.get("recommendations", [])
-                        
+                        recommendations = recommendations_data.get(
+                            "recommendations", []
+                        )
+
                         # Validate and enhance recommendations
                         validated_recommendations = []
                         for rec in recommendations[:5]:  # Max 5 recommendations
                             if isinstance(rec, dict) and rec.get("title"):
                                 validated_rec = {
                                     "id": f"rec_{len(validated_recommendations) + 1}",
-                                    "title": rec.get("title", "Compliance Recommendation"),
-                                    "description": rec.get("description", "Implement compliance measures"),
+                                    "title": rec.get(
+                                        "title", "Compliance Recommendation"
+                                    ),
+                                    "description": rec.get(
+                                        "description", "Implement compliance measures"
+                                    ),
                                     "priority": rec.get("priority", "medium"),
                                     "timeline": rec.get("timeline", "60 days"),
-                                    "compliance_impact": rec.get("compliance_impact", "Improves overall compliance"),
+                                    "compliance_impact": rec.get(
+                                        "compliance_impact",
+                                        "Improves overall compliance",
+                                    ),
                                     "category": rec.get("category", "general"),
                                     "effort_level": rec.get("effort_level", "medium"),
                                     "business_context": {
                                         "business_type": business_type,
                                         "company_size": company_size,
-                                        "compliance_score": compliance_score
-                                    }
+                                        "compliance_score": compliance_score,
+                                    },
                                 }
                                 validated_recommendations.append(validated_rec)
-                        
+
                         if validated_recommendations:
-                            logger.info(f"Generated {len(validated_recommendations)} recommendations for assessment")
+                            logger.info(
+                                f"Generated {len(validated_recommendations)} recommendations for assessment"
+                            )
                             return validated_recommendations
-                    
+
                     except json.JSONDecodeError as e:
                         logger.warning(f"Failed to parse recommendations JSON: {e}")
-                
+
             except Exception as model_error:
-                logger.warning(f"AI model failed to generate recommendations: {model_error}")
-                
+                logger.warning(
+                    f"AI model failed to generate recommendations: {model_error}"
+                )
+
             # Fallback recommendations based on compliance score and context
             logger.info("Using fallback recommendations")
             fallback_recommendations = []
-            
+
             # Critical score - security and documentation focus
             if compliance_score < 0.4:
                 fallback_recommendations = [
@@ -4943,28 +5343,28 @@ Please try your question again or contact support for immediate assistance."""
                         "timeline": "14 days",
                         "compliance_impact": "Essential for GDPR compliance and data breach prevention",
                         "category": "documentation",
-                        "effort_level": "high"
+                        "effort_level": "high",
                     },
                     {
-                        "id": "rec_critical_2", 
+                        "id": "rec_critical_2",
                         "title": "Implement Access Controls",
                         "description": "Set up role-based access controls and user authentication systems to protect sensitive data.",
                         "priority": "critical",
-                        "timeline": "21 days", 
+                        "timeline": "21 days",
                         "compliance_impact": "Addresses security requirements across multiple frameworks",
                         "category": "security",
-                        "effort_level": "high"
+                        "effort_level": "high",
                     },
                     {
                         "id": "rec_critical_3",
-                        "title": "Conduct Security Training", 
+                        "title": "Conduct Security Training",
                         "description": "Provide mandatory security awareness training for all employees handling personal data.",
                         "priority": "high",
                         "timeline": "30 days",
                         "compliance_impact": "Required for ISO 27001 and reduces human error risks",
                         "category": "training",
-                        "effort_level": "medium"
-                    }
+                        "effort_level": "medium",
+                    },
                 ]
             # Medium score - improvement focus
             elif compliance_score < 0.7:
@@ -4973,24 +5373,24 @@ Please try your question again or contact support for immediate assistance."""
                         "id": "rec_medium_1",
                         "title": "Enhance Incident Response Plan",
                         "description": "Develop and test a comprehensive incident response plan including breach notification procedures.",
-                        "priority": "high", 
+                        "priority": "high",
                         "timeline": "45 days",
-                        "compliance_impact": "Required for GDPR Article 33 and improves overall security posture", 
+                        "compliance_impact": "Required for GDPR Article 33 and improves overall security posture",
                         "category": "procedures",
-                        "effort_level": "medium"
+                        "effort_level": "medium",
                     },
                     {
                         "id": "rec_medium_2",
                         "title": "Regular Compliance Audits",
                         "description": "Establish quarterly internal audits to identify and address compliance gaps proactively.",
                         "priority": "medium",
-                        "timeline": "60 days", 
+                        "timeline": "60 days",
                         "compliance_impact": "Maintains ongoing compliance and identifies improvement areas",
-                        "category": "monitoring", 
-                        "effort_level": "medium"
-                    }
+                        "category": "monitoring",
+                        "effort_level": "medium",
+                    },
                 ]
-            # Good score - optimization focus  
+            # Good score - optimization focus
             else:
                 fallback_recommendations = [
                     {
@@ -5000,19 +5400,19 @@ Please try your question again or contact support for immediate assistance."""
                         "priority": "medium",
                         "timeline": "90 days",
                         "compliance_impact": "Enhances privacy posture and demonstrates best practices",
-                        "category": "optimization", 
-                        "effort_level": "low"
+                        "category": "optimization",
+                        "effort_level": "low",
                     }
                 ]
-                
+
             # Add business context to all recommendations
             for rec in fallback_recommendations:
                 rec["business_context"] = {
                     "business_type": business_type,
                     "company_size": company_size,
-                    "compliance_score": compliance_score
+                    "compliance_score": compliance_score,
                 }
-                
+
             return fallback_recommendations
 
         except Exception as e:
@@ -5023,46 +5423,49 @@ Please try your question again or contact support for immediate assistance."""
                     "id": "rec_error_fallback",
                     "title": "Review Compliance Status",
                     "description": "Conduct a comprehensive review of current compliance measures and identify areas for improvement.",
-                    "priority": "medium", 
+                    "priority": "medium",
                     "timeline": "30 days",
                     "compliance_impact": "Establishes baseline for compliance improvements",
                     "category": "assessment",
                     "effort_level": "low",
                     "business_context": {
-                        "business_type": business_profile.get("business_type", "general"),
-                        "company_size": business_profile.get("company_size", "small"), 
-                        "compliance_score": compliance_score
-                    }
+                        "business_type": business_profile.get(
+                            "business_type", "general"
+                        ),
+                        "company_size": business_profile.get("company_size", "small"),
+                        "compliance_score": compliance_score,
+                    },
                 }
             ]
 
     async def analyze_conversation_context(
-        self,
-        messages: List[Dict[str, str]],
-        business_profile: Dict[str, Any]
+        self, messages: List[Dict[str, str]], business_profile: Dict[str, Any]
     ) -> Dict[str, Any]:
         """
         Analyze conversation context to extract insights and identify compliance needs.
-        
+
         Args:
             messages: List of conversation messages
             business_profile: Current business profile
-            
+
         Returns:
             Dictionary containing insights, compliance needs, expertise level, and follow-up needed flag
         """
         try:
             # Prepare conversation context
-            conversation = "\n".join([
-                f"{getattr(msg, 'type', 'user')}: {getattr(msg, 'content', '')}"
-                for msg in messages if hasattr(msg, 'content') and msg.content
-            ])
-            
+            conversation = "\n".join(
+                [
+                    f"{getattr(msg, 'type', 'user')}: {getattr(msg, 'content', '')}"
+                    for msg in messages
+                    if hasattr(msg, "content") and msg.content
+                ]
+            )
+
             # Extract business context
             business_type = business_profile.get("business_type", "general")
             company_size = business_profile.get("company_size", "small")
             industry = business_profile.get("industry", "general")
-            
+
             # Create analysis prompt
             system_prompt = """You are an AI compliance analyst. Analyze the conversation to extract:
 1. Key business insights and characteristics
@@ -5093,48 +5496,52 @@ Analyze this conversation and provide insights in JSON format."""
                     "insights": {
                         "business_type": business_type,
                         "company_size": company_size,
-                        "industry": industry
+                        "industry": industry,
                     },
                     "compliance_needs": ["GDPR", "data_protection"],
                     "expertise_level": "intermediate",
-                    "follow_up_needed": True
+                    "follow_up_needed": True,
                 }
-            
+
             # Generate AI response
             response = await self._generate_ai_response(system_prompt, user_prompt)
-            
+
             # Parse JSON response
             import json
             import re
-            
+
             # Extract JSON from response
-            json_match = re.search(r'\{[\s\S]*\}', response)
+            json_match = re.search(r"\{[\s\S]*\}", response)
             if json_match:
                 try:
                     analysis = json.loads(json_match.group())
-                    
+
                     # Validate and clean the response
                     return {
                         "insights": analysis.get("insights", {}),
-                        "compliance_needs": analysis.get("compliance_needs", ["GDPR", "data_protection"]),
-                        "expertise_level": analysis.get("expertise_level", "intermediate"),
-                        "follow_up_needed": analysis.get("follow_up_needed", True)
+                        "compliance_needs": analysis.get(
+                            "compliance_needs", ["GDPR", "data_protection"]
+                        ),
+                        "expertise_level": analysis.get(
+                            "expertise_level", "intermediate"
+                        ),
+                        "follow_up_needed": analysis.get("follow_up_needed", True),
                     }
                 except json.JSONDecodeError:
                     logger.warning("Failed to parse AI analysis response as JSON")
-            
+
             # Return default analysis if parsing fails
             return {
                 "insights": {
                     "business_type": business_type,
                     "company_size": company_size,
-                    "industry": industry
+                    "industry": industry,
                 },
                 "compliance_needs": ["GDPR", "data_protection"],
                 "expertise_level": "intermediate",
-                "follow_up_needed": True
+                "follow_up_needed": True,
             }
-            
+
         except Exception as e:
             logger.error(f"Error analyzing conversation context: {str(e)}")
             # Return safe default analysis
@@ -5142,23 +5549,23 @@ Analyze this conversation and provide insights in JSON format."""
                 "insights": business_profile,
                 "compliance_needs": ["GDPR", "data_protection", "ISO27001"],
                 "expertise_level": "intermediate",
-                "follow_up_needed": True
+                "follow_up_needed": True,
             }
 
     async def get_personalized_recommendations(
         self,
         assessment_context: Dict[str, Any],
         analysis_results: Dict[str, Any],
-        compliance_score: float
+        compliance_score: float,
     ) -> Dict[str, Any]:
         """
         Generate personalized recommendations based on assessment results.
-        
+
         Args:
             assessment_context: Context from the assessment including business profile
             analysis_results: Results from the assessment analysis
             compliance_score: Overall compliance score
-            
+
         Returns:
             Dictionary containing personalized recommendations
         """
@@ -5168,21 +5575,29 @@ Analyze this conversation and provide insights in JSON format."""
             business_type = business_profile.get("business_type", "general")
             company_size = business_profile.get("company_size", "small")
             industry = business_profile.get("industry", "general")
-            
+
             # Determine priority areas based on score
             if compliance_score < 30:
                 priority_level = "critical"
-                focus_areas = ["immediate_compliance", "risk_mitigation", "basic_policies"]
+                focus_areas = [
+                    "immediate_compliance",
+                    "risk_mitigation",
+                    "basic_policies",
+                ]
             elif compliance_score < 60:
                 priority_level = "high"
                 focus_areas = ["compliance_gaps", "policy_development", "training"]
             elif compliance_score < 80:
                 priority_level = "medium"
-                focus_areas = ["optimization", "advanced_compliance", "continuous_improvement"]
+                focus_areas = [
+                    "optimization",
+                    "advanced_compliance",
+                    "continuous_improvement",
+                ]
             else:
                 priority_level = "low"
                 focus_areas = ["maintenance", "best_practices", "innovation"]
-            
+
             # Build prompt for AI
             prompt = f"""
             Generate personalized compliance recommendations for a {company_size} {business_type} business in the {industry} industry.
@@ -5220,26 +5635,26 @@ Analyze this conversation and provide insights in JSON format."""
                 ]
             }}
             """
-            
+
             # Get AI response
             response = await self._get_ai_response_with_fallback(prompt)
-            
+
             # Parse response
             import json
             import re
-            
-            json_match = re.search(r'\{[\s\S]*\}', response)
+
+            json_match = re.search(r"\{[\s\S]*\}", response)
             if json_match:
                 try:
                     recommendations_data = json.loads(json_match.group())
-                    
+
                     # Validate and enhance recommendations
                     recommendations = recommendations_data.get("recommendations", [])
-                    
+
                     # Ensure we have at least some recommendations
                     if not recommendations:
                         raise ValueError("No recommendations generated")
-                    
+
                     # Add additional context to each recommendation
                     for i, rec in enumerate(recommendations):
                         rec["id"] = f"rec_{i+1}"
@@ -5247,28 +5662,28 @@ Analyze this conversation and provide insights in JSON format."""
                             "business_type": business_type,
                             "company_size": company_size,
                             "industry": industry,
-                            "compliance_score": compliance_score
+                            "compliance_score": compliance_score,
                         }
-                    
+
                     return {
                         "recommendations": recommendations,
                         "priority_level": priority_level,
                         "focus_areas": focus_areas,
-                        "generated_at": datetime.utcnow().isoformat()
+                        "generated_at": datetime.utcnow().isoformat(),
                     }
-                    
+
                 except json.JSONDecodeError:
                     logger.warning("Failed to parse recommendations response as JSON")
-            
+
             # Fallback recommendations if AI fails
             return self._get_fallback_recommendations(
-                compliance_score, 
-                business_type, 
+                compliance_score,
+                business_type,
                 company_size,
                 priority_level,
-                focus_areas
+                focus_areas,
             )
-            
+
         except Exception as e:
             logger.error(f"Error generating personalized recommendations: {str(e)}")
             # Return basic fallback recommendations
@@ -5283,142 +5698,154 @@ Analyze this conversation and provide insights in JSON format."""
                         "steps": [
                             "Review current policies and procedures",
                             "Identify applicable regulations",
-                            "Document compliance gaps"
+                            "Document compliance gaps",
                         ],
                         "expected_outcome": "Clear understanding of compliance status",
                         "resources_needed": "Internal team time or external consultant",
                         "compliance_impact": "Establishes baseline for improvements",
                         "business_context": {
-                            "business_type": assessment_context.get("business_profile", {}).get("business_type", "general"),
-                            "company_size": assessment_context.get("business_profile", {}).get("company_size", "small"),
-                            "compliance_score": compliance_score
-                        }
+                            "business_type": assessment_context.get(
+                                "business_profile", {}
+                            ).get("business_type", "general"),
+                            "company_size": assessment_context.get(
+                                "business_profile", {}
+                            ).get("company_size", "small"),
+                            "compliance_score": compliance_score,
+                        },
                     }
                 ],
                 "priority_level": "medium",
                 "focus_areas": ["assessment", "planning"],
-                "generated_at": datetime.utcnow().isoformat()
+                "generated_at": datetime.utcnow().isoformat(),
             }
-    
+
     def _get_fallback_recommendations(
-        self, 
-        compliance_score: float, 
-        business_type: str, 
+        self,
+        compliance_score: float,
+        business_type: str,
         company_size: str,
         priority_level: str,
-        focus_areas: List[str]
+        focus_areas: List[str],
     ) -> Dict[str, Any]:
         """Generate fallback recommendations when AI is unavailable."""
         from typing import List
-        
+
         recommendations = []
-        
+
         # Critical recommendations for low scores
         if compliance_score < 30:
-            recommendations.extend([
-                {
-                    "id": "rec_critical_1",
-                    "title": "Implement Basic Data Protection Measures",
-                    "description": "Establish fundamental data protection policies and procedures to meet minimum legal requirements.",
-                    "priority": "critical",
-                    "timeline": "immediate",
-                    "steps": [
-                        "Create data inventory",
-                        "Implement access controls",
-                        "Document data processing activities"
-                    ],
-                    "expected_outcome": "Basic GDPR compliance",
-                    "resources_needed": "Data protection officer or consultant",
-                    "compliance_impact": "Reduces risk of regulatory penalties"
-                },
-                {
-                    "id": "rec_critical_2",
-                    "title": "Develop Privacy Policy",
-                    "description": "Create comprehensive privacy policy covering data collection, use, and user rights.",
-                    "priority": "critical",
-                    "timeline": "immediate",
-                    "steps": [
-                        "Review data practices",
-                        "Draft privacy policy",
-                        "Publish and communicate to users"
-                    ],
-                    "expected_outcome": "Transparent data practices",
-                    "resources_needed": "Legal review",
-                    "compliance_impact": "Meets transparency requirements"
-                }
-            ])
-        
+            recommendations.extend(
+                [
+                    {
+                        "id": "rec_critical_1",
+                        "title": "Implement Basic Data Protection Measures",
+                        "description": "Establish fundamental data protection policies and procedures to meet minimum legal requirements.",
+                        "priority": "critical",
+                        "timeline": "immediate",
+                        "steps": [
+                            "Create data inventory",
+                            "Implement access controls",
+                            "Document data processing activities",
+                        ],
+                        "expected_outcome": "Basic GDPR compliance",
+                        "resources_needed": "Data protection officer or consultant",
+                        "compliance_impact": "Reduces risk of regulatory penalties",
+                    },
+                    {
+                        "id": "rec_critical_2",
+                        "title": "Develop Privacy Policy",
+                        "description": "Create comprehensive privacy policy covering data collection, use, and user rights.",
+                        "priority": "critical",
+                        "timeline": "immediate",
+                        "steps": [
+                            "Review data practices",
+                            "Draft privacy policy",
+                            "Publish and communicate to users",
+                        ],
+                        "expected_outcome": "Transparent data practices",
+                        "resources_needed": "Legal review",
+                        "compliance_impact": "Meets transparency requirements",
+                    },
+                ]
+            )
+
         # Standard recommendations for medium scores
         elif compliance_score < 70:
-            recommendations.extend([
-                {
-                    "id": "rec_medium_1",
-                    "title": "Enhance Security Controls",
-                    "description": "Strengthen security measures to better protect sensitive data.",
-                    "priority": "high",
-                    "timeline": "30-days",
-                    "steps": [
-                        "Conduct security assessment",
-                        "Implement multi-factor authentication",
-                        "Regular security training"
-                    ],
-                    "expected_outcome": "Improved data security",
-                    "resources_needed": "Security tools and training",
-                    "compliance_impact": "Reduces breach risk"
-                },
-                {
-                    "id": "rec_medium_2",
-                    "title": "Establish Compliance Monitoring",
-                    "description": "Set up regular compliance reviews and monitoring processes.",
-                    "priority": "medium",
-                    "timeline": "60-days",
-                    "steps": [
-                        "Define compliance metrics",
-                        "Schedule regular audits",
-                        "Create reporting dashboard"
-                    ],
-                    "expected_outcome": "Ongoing compliance visibility",
-                    "resources_needed": "Compliance management tools",
-                    "compliance_impact": "Maintains compliance over time"
-                }
-            ])
-        
+            recommendations.extend(
+                [
+                    {
+                        "id": "rec_medium_1",
+                        "title": "Enhance Security Controls",
+                        "description": "Strengthen security measures to better protect sensitive data.",
+                        "priority": "high",
+                        "timeline": "30-days",
+                        "steps": [
+                            "Conduct security assessment",
+                            "Implement multi-factor authentication",
+                            "Regular security training",
+                        ],
+                        "expected_outcome": "Improved data security",
+                        "resources_needed": "Security tools and training",
+                        "compliance_impact": "Reduces breach risk",
+                    },
+                    {
+                        "id": "rec_medium_2",
+                        "title": "Establish Compliance Monitoring",
+                        "description": "Set up regular compliance reviews and monitoring processes.",
+                        "priority": "medium",
+                        "timeline": "60-days",
+                        "steps": [
+                            "Define compliance metrics",
+                            "Schedule regular audits",
+                            "Create reporting dashboard",
+                        ],
+                        "expected_outcome": "Ongoing compliance visibility",
+                        "resources_needed": "Compliance management tools",
+                        "compliance_impact": "Maintains compliance over time",
+                    },
+                ]
+            )
+
         # Optimization recommendations for higher scores
         else:
-            recommendations.extend([
-                {
-                    "id": "rec_optimize_1",
-                    "title": "Pursue Certification",
-                    "description": f"Consider pursuing ISO 27001 or SOC 2 certification to demonstrate compliance maturity.",
-                    "priority": "low",
-                    "timeline": "90-days",
-                    "steps": [
-                        "Gap analysis against standard",
-                        "Implement required controls",
-                        "Engage certification body"
-                    ],
-                    "expected_outcome": "Industry-recognized certification",
-                    "resources_needed": "Certification consultant and auditor",
-                    "compliance_impact": "Demonstrates compliance excellence"
-                }
-            ])
-        
+            recommendations.extend(
+                [
+                    {
+                        "id": "rec_optimize_1",
+                        "title": "Pursue Certification",
+                        "description": f"Consider pursuing ISO 27001 or SOC 2 certification to demonstrate compliance maturity.",
+                        "priority": "low",
+                        "timeline": "90-days",
+                        "steps": [
+                            "Gap analysis against standard",
+                            "Implement required controls",
+                            "Engage certification body",
+                        ],
+                        "expected_outcome": "Industry-recognized certification",
+                        "resources_needed": "Certification consultant and auditor",
+                        "compliance_impact": "Demonstrates compliance excellence",
+                    }
+                ]
+            )
+
         # Add business context to all recommendations
         for rec in recommendations:
             rec["business_context"] = {
                 "business_type": business_type,
                 "company_size": company_size,
-                "compliance_score": compliance_score
+                "compliance_score": compliance_score,
             }
-        
+
         return {
             "recommendations": recommendations,
             "priority_level": priority_level,
             "focus_areas": focus_areas,
-            "generated_at": datetime.utcnow().isoformat()
+            "generated_at": datetime.utcnow().isoformat(),
         }
 
-    def _parse_questions_response(self, response: str, max_questions: int, assessment_type: str) -> Dict[str, Any]:
+    def _parse_questions_response(
+        self, response: str, max_questions: int, assessment_type: str
+    ) -> Dict[str, Any]:
         """Parse AI response to extract questions data."""
         try:
             import json
@@ -5427,7 +5854,9 @@ Analyze this conversation and provide insights in JSON format."""
             logger.debug(f"=== DEBUG: Parsing questions response ===")
             logger.debug(f"Response type: {type(response)}")
             logger.debug(f"Response length: {len(response) if response else 0}")
-            logger.debug(f"Response content: {repr(response[:500]) if response else 'EMPTY'}")
+            logger.debug(
+                f"Response content: {repr(response[:500]) if response else 'EMPTY'}"
+            )
 
             # Check if response is empty or None
             if not response or not response.strip():
@@ -5435,37 +5864,50 @@ Analyze this conversation and provide insights in JSON format."""
                 return self._get_fallback_questions_data(max_questions, assessment_type)
 
             # Try to extract JSON from response
-            json_match = re.search(r'\{.*\}', response, re.DOTALL)
+            json_match = re.search(r"\{.*\}", response, re.DOTALL)
             if json_match:
                 json_text = json_match.group()
                 logger.debug(f"Found JSON match: {json_text[:200]}...")
-                
+
                 try:
                     questions_data = json.loads(json_text)
-                    logger.debug(f"Successfully parsed JSON. Keys: {list(questions_data.keys())}")
+                    logger.debug(
+                        f"Successfully parsed JSON. Keys: {list(questions_data.keys())}"
+                    )
                 except json.JSONDecodeError as json_error:
                     logger.error(f"JSON decode error: {json_error}")
                     logger.error(f"Problematic JSON: {json_text}")
-                    return self._get_fallback_questions_data(max_questions, assessment_type)
+                    return self._get_fallback_questions_data(
+                        max_questions, assessment_type
+                    )
 
-                if "questions" in questions_data and isinstance(questions_data["questions"], list):
+                if "questions" in questions_data and isinstance(
+                    questions_data["questions"], list
+                ):
                     logger.debug(f"Found {len(questions_data['questions'])} questions")
 
                     # Ensure all questions have question_id field
                     for i, question in enumerate(questions_data["questions"]):
                         logger.debug(f"Question {i} keys: {list(question.keys())}")
                         if "id" in question and "question_id" not in question:
-                            logger.debug(f"Converting 'id' to 'question_id' for question {i}")
+                            logger.debug(
+                                f"Converting 'id' to 'question_id' for question {i}"
+                            )
                             question["question_id"] = question["id"]
                         elif "question_id" not in question:
-                            logger.warning(f"Question {i} missing both 'id' and 'question_id', adding fallback ID")
+                            logger.warning(
+                                f"Question {i} missing both 'id' and 'question_id', adding fallback ID"
+                            )
                             question["question_id"] = f"q{i+1}"
-                        
+
                         # Ensure required fields exist
-                        if "question" not in question and "question_text" not in question:
+                        if (
+                            "question" not in question
+                            and "question_text" not in question
+                        ):
                             logger.warning(f"Question {i} missing question text")
                             question["question"] = f"Question {i+1} content missing"
-                        
+
                         # Standardize question field name
                         if "question_text" in question and "question" not in question:
                             question["question"] = question["question_text"]
@@ -5473,7 +5915,9 @@ Analyze this conversation and provide insights in JSON format."""
                     logger.debug(f"Final questions structure validated")
                     return questions_data
                 else:
-                    logger.warning("Response has no 'questions' array or it's not a list")
+                    logger.warning(
+                        "Response has no 'questions' array or it's not a list"
+                    )
 
             logger.debug("No valid JSON found, falling back to text parsing")
             # Fallback: parse text format
@@ -5481,15 +5925,20 @@ Analyze this conversation and provide insights in JSON format."""
 
         except Exception as e:
             logger.error(f"Exception parsing questions response: {str(e)}")
-            logger.error(f"Response that caused error: {repr(response) if response else 'None'}")
+            logger.error(
+                f"Response that caused error: {repr(response) if response else 'None'}"
+            )
             import traceback
+
             logger.error(f"Traceback: {traceback.format_exc()}")
             return self._get_fallback_questions_data(max_questions, assessment_type)
 
-    def _parse_text_questions(self, response: str, max_questions: int, assessment_type: str) -> Dict[str, Any]:
+    def _parse_text_questions(
+        self, response: str, max_questions: int, assessment_type: str
+    ) -> Dict[str, Any]:
         """Parse text-format questions from AI response."""
         questions = []
-        lines = response.split('\n')
+        lines = response.split("\n")
         current_question = {}
         question_count = 0
 
@@ -5499,7 +5948,10 @@ Analyze this conversation and provide insights in JSON format."""
                 continue
 
             # Look for question patterns
-            if line.startswith(('1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.')) and question_count < max_questions:
+            if (
+                line.startswith(("1.", "2.", "3.", "4.", "5.", "6.", "7.", "8."))
+                and question_count < max_questions
+            ):
                 if current_question:
                     questions.append(current_question)
 
@@ -5511,7 +5963,7 @@ Analyze this conversation and provide insights in JSON format."""
                     "options": ["Yes", "No", "Partially", "Not Applicable"],
                     "category": "compliance",
                     "difficulty": "medium",
-                    "compliance_weight": 1.0
+                    "compliance_weight": 1.0,
                 }
 
         if current_question:
@@ -5520,10 +5972,12 @@ Analyze this conversation and provide insights in JSON format."""
         return {
             "questions": questions[:max_questions],
             "total_questions": min(len(questions), max_questions),
-            "assessment_context": assessment_type
+            "assessment_context": assessment_type,
         }
 
-    def _get_fallback_questions_data(self, max_questions: int, assessment_type: str) -> Dict[str, Any]:
+    def _get_fallback_questions_data(
+        self, max_questions: int, assessment_type: str
+    ) -> Dict[str, Any]:
         """Generate fallback questions when AI generation fails."""
         fallback_questions = [
             {
@@ -5533,7 +5987,7 @@ Analyze this conversation and provide insights in JSON format."""
                 "options": ["Yes, comprehensive", "Yes, basic", "In development", "No"],
                 "category": "data_protection",
                 "difficulty": "easy",
-                "compliance_weight": 1.5
+                "compliance_weight": 1.5,
             },
             {
                 "question_id": "q2",
@@ -5542,25 +5996,35 @@ Analyze this conversation and provide insights in JSON format."""
                 "options": ["Monthly", "Quarterly", "Annually", "Never"],
                 "category": "security",
                 "difficulty": "medium",
-                "compliance_weight": 1.2
+                "compliance_weight": 1.2,
             },
             {
                 "question_id": "q3",
                 "question": "Do you have processes for handling data subject access requests?",
                 "type": "multiple_choice",
-                "options": ["Yes, automated", "Yes, manual", "Informal process", "No process"],
+                "options": [
+                    "Yes, automated",
+                    "Yes, manual",
+                    "Informal process",
+                    "No process",
+                ],
                 "category": "data_protection",
                 "difficulty": "medium",
-                "compliance_weight": 1.8
+                "compliance_weight": 1.8,
             },
             {
                 "question_id": "q4",
                 "question": "How do you monitor and log access to sensitive data?",
                 "type": "multiple_choice",
-                "options": ["Comprehensive logging", "Basic logging", "Limited logging", "No logging"],
+                "options": [
+                    "Comprehensive logging",
+                    "Basic logging",
+                    "Limited logging",
+                    "No logging",
+                ],
                 "category": "security",
                 "difficulty": "hard",
-                "compliance_weight": 1.4
+                "compliance_weight": 1.4,
             },
             {
                 "question_id": "q5",
@@ -5569,16 +6033,21 @@ Analyze this conversation and provide insights in JSON format."""
                 "options": ["Yes, regularly", "Yes, occasionally", "Planning to", "No"],
                 "category": "risk_management",
                 "difficulty": "medium",
-                "compliance_weight": 1.3
+                "compliance_weight": 1.3,
             },
             {
                 "question_id": "q6",
                 "question": "How do you ensure third-party vendors comply with data protection requirements?",
                 "type": "multiple_choice",
-                "options": ["Formal agreements", "Basic requirements", "Verbal agreements", "No requirements"],
+                "options": [
+                    "Formal agreements",
+                    "Basic requirements",
+                    "Verbal agreements",
+                    "No requirements",
+                ],
                 "category": "vendor_management",
                 "difficulty": "hard",
-                "compliance_weight": 1.6
+                "compliance_weight": 1.6,
             },
             {
                 "question_id": "q7",
@@ -5587,7 +6056,7 @@ Analyze this conversation and provide insights in JSON format."""
                 "options": ["Yes, tested", "Yes, documented", "In development", "No"],
                 "category": "incident_response",
                 "difficulty": "medium",
-                "compliance_weight": 1.7
+                "compliance_weight": 1.7,
             },
             {
                 "question_id": "q8",
@@ -5596,8 +6065,8 @@ Analyze this conversation and provide insights in JSON format."""
                 "options": ["Quarterly", "Annually", "As needed", "Never"],
                 "category": "governance",
                 "difficulty": "easy",
-                "compliance_weight": 1.1
-            }
+                "compliance_weight": 1.1,
+            },
         ]
 
         selected_questions = fallback_questions[:max_questions]
@@ -5606,7 +6075,7 @@ Analyze this conversation and provide insights in JSON format."""
             "questions": selected_questions,
             "total_questions": len(selected_questions),
             "assessment_context": assessment_type,
-            "fallback_used": True
+            "fallback_used": True,
         }
 
     async def select_optimal_model(
@@ -5667,13 +6136,17 @@ Analyze this conversation and provide insights in JSON format."""
     # Cache Strategy Optimization Helpers
     # ==============================
 
-    def _generate_cache_key_for_context(self, context: Dict[str, Any], task_type: str) -> str:
+    def _generate_cache_key_for_context(
+        self, context: Dict[str, Any], task_type: str
+    ) -> str:
         """Generate cache key for performance tracking."""
         business_profile_id = context.get("business_profile", {}).get("id", "unknown")
         framework_id = context.get("framework_id", "unknown")
         return f"cache_perf:{task_type}:{framework_id}:{business_profile_id}"
 
-    async def _add_to_cache_warming_queue(self, context: Dict[str, Any], task_type: str) -> None:
+    async def _add_to_cache_warming_queue(
+        self, context: Dict[str, Any], task_type: str
+    ) -> None:
         """Add context to cache warming queue for proactive caching."""
         if not self.cached_content_manager:
             return
@@ -5694,19 +6167,27 @@ Analyze this conversation and provide insights in JSON format."""
             "business_profile_id": context.get("business_profile", {}).get("id"),
             "business_profile": context.get("business_profile"),
             "assessment_context": context.get("assessment_context"),
-            "industry_context": context.get("business_profile", {}).get("industry", "General"),
+            "industry_context": context.get("business_profile", {}).get(
+                "industry", "General"
+            ),
         }
 
-        self.cached_content_manager.add_to_warming_queue(content_type, warming_context, priority)
+        self.cached_content_manager.add_to_warming_queue(
+            content_type, warming_context, priority
+        )
 
         logger.debug(f"Added {task_type} context to cache warming queue")
 
-    async def trigger_cache_invalidation(self, trigger_type: str, context: Dict[str, Any]) -> None:
+    async def trigger_cache_invalidation(
+        self, trigger_type: str, context: Dict[str, Any]
+    ) -> None:
         """Trigger intelligent cache invalidation."""
         if not self.cached_content_manager:
             return
 
-        self.cached_content_manager.trigger_intelligent_invalidation(trigger_type, context)
+        self.cached_content_manager.trigger_intelligent_invalidation(
+            trigger_type, context
+        )
 
     async def process_cache_warming_queue(self) -> int:
         """Process pending cache warming requests."""

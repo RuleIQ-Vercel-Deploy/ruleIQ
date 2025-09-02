@@ -5,58 +5,54 @@ const mockResponses = {
   '/auth/login': {
     tokens: {
       access_token: 'mock-access-token',
-      refresh_token: 'mock-refresh-token'
+      refresh_token: 'mock-refresh-token',
     },
     user: {
       id: 'user-123',
       email: 'test@example.com',
       name: 'Test User',
-      is_active: true
-    }
+      is_active: true,
+    },
   },
   '/auth/register': {
     tokens: {
       access_token: 'new-access-token',
-      refresh_token: 'new-refresh-token'
+      refresh_token: 'new-refresh-token',
     },
     user: {
       id: 'user-456',
       email: 'newuser@example.com',
       name: 'New User',
-      is_active: true
-    }
+      is_active: true,
+    },
   },
   '/auth/me': {
     id: 'user-123',
     email: 'test@example.com',
     name: 'Test User',
-    is_active: true
+    is_active: true,
   },
   '/assessments': {
     items: [
       { id: 'assess-1', name: 'Test Assessment 1' },
-      { id: 'assess-2', name: 'Test Assessment 2' }
+      { id: 'assess-2', name: 'Test Assessment 2' },
     ],
     total: 2,
     page: 1,
-    size: 20
+    size: 20,
   },
   '/business-profiles': {
-    items: [
-      { id: 'profile-1', company_name: 'Test Company' }
-    ],
+    items: [{ id: 'profile-1', company_name: 'Test Company' }],
     total: 1,
     page: 1,
-    size: 20
+    size: 20,
   },
   '/evidence': {
-    items: [
-      { id: 'evidence-1', name: 'Test Evidence', status: 'approved' }
-    ],
+    items: [{ id: 'evidence-1', name: 'Test Evidence', status: 'approved' }],
     total: 1,
     page: 1,
-    size: 20
-  }
+    size: 20,
+  },
 };
 
 // Create mock API client
@@ -76,11 +72,11 @@ export const createMockApiClient = () => ({
     if (url.includes('/evidence')) {
       return Promise.resolve(mockResponses['/evidence']);
     }
-    
+
     // Default response
     return Promise.resolve({ success: true });
   }),
-  
+
   post: vi.fn().mockImplementation((url, data, options = {}) => {
     // TODO: Replace with proper logging
     if (url.includes('/auth/login')) {
@@ -103,24 +99,24 @@ export const createMockApiClient = () => ({
         name: 'New Assessment',
         status: 'draft',
         framework_id: 'gdpr',
-        business_profile_id: 'profile-123'
+        business_profile_id: 'profile-123',
       });
     }
-    
+
     // Default response
     return Promise.resolve({ success: true, id: 'new-item' });
   }),
-  
+
   put: vi.fn().mockImplementation((url, data, options = {}) => {
     // TODO: Replace with proper logging
     return Promise.resolve({ success: true, ...data });
   }),
-  
+
   delete: vi.fn().mockImplementation((url, options = {}) => {
     // TODO: Replace with proper logging
     return Promise.resolve({ success: true });
   }),
-  
+
   request: vi.fn().mockImplementation((method, url, options = {}) => {
     // TODO: Replace with proper logging
     const mockClient = createMockApiClient();
@@ -136,7 +132,7 @@ export const createMockApiClient = () => ({
       default:
         return Promise.resolve({ success: true });
     }
-  })
+  }),
 });
 
 // Global API client mock

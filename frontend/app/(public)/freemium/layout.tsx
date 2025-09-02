@@ -6,7 +6,8 @@ export const metadata: Metadata = {
     template: '%s | RuleIQ Freemium Assessment',
     default: 'Free AI Compliance Assessment | RuleIQ',
   },
-  description: 'Get a personalized compliance assessment in under 5 minutes. AI-powered analysis identifies your critical compliance gaps and provides actionable recommendations.',
+  description:
+    'Get a personalized compliance assessment in under 5 minutes. AI-powered analysis identifies your critical compliance gaps and provides actionable recommendations.',
   keywords: [
     'compliance assessment',
     'GDPR compliance',
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
     'risk assessment',
     'compliance gaps',
     'data protection',
-    'cybersecurity compliance'
+    'cybersecurity compliance',
   ],
   authors: [{ name: 'RuleIQ' }],
   creator: 'RuleIQ',
@@ -39,7 +40,8 @@ export const metadata: Metadata = {
     url: 'https://ruleiq.com/freemium',
     siteName: 'RuleIQ',
     title: 'Free AI Compliance Assessment | RuleIQ',
-    description: 'Discover your compliance gaps in under 5 minutes with our AI-powered assessment tool.',
+    description:
+      'Discover your compliance gaps in under 5 minutes with our AI-powered assessment tool.',
     images: [
       {
         url: '/og-freemium-assessment.png', // This would need to be created
@@ -52,7 +54,8 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Free AI Compliance Assessment | RuleIQ',
-    description: 'Discover your compliance gaps in under 5 minutes with our AI-powered assessment tool.',
+    description:
+      'Discover your compliance gaps in under 5 minutes with our AI-powered assessment tool.',
     images: ['/og-freemium-assessment.png'],
     creator: '@RuleIQApp',
   },
@@ -61,11 +64,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function FreemiumLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function FreemiumLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       {/* Structured Data for SEO */}
@@ -76,7 +75,8 @@ export default function FreemiumLayout({
             '@context': 'https://schema.org',
             '@type': 'Service',
             name: 'RuleIQ Compliance Assessment',
-            description: 'AI-powered compliance assessment tool that identifies gaps and provides recommendations',
+            description:
+              'AI-powered compliance assessment tool that identifies gaps and provides recommendations',
             provider: {
               '@type': 'Organization',
               name: 'RuleIQ',
@@ -104,9 +104,9 @@ export default function FreemiumLayout({
           }),
         }}
       />
-      
+
       {/* Analytics and tracking scripts would go here */}
-      
+
       {children}
     </>
   );

@@ -1,0 +1,32 @@
+
+>5"Regulatory Requirements: {regulatory_context or []}"str
+E<"Business Profile: {json.dumps(business_profile, indent=2)}"str
+8/"Prepare content for business profile caching."str
+
+0intself
+® ®( business_profile
+® ®($"regulatory_context
+®& ®(Tlist"¡2
+0
+
+± ´(	content"#unknown-value#Blist(
+&
+
+± ´(		"
+#is-exact#:Bbool
+
+
+± ´(	
+"
+#assume#:	:
+8
+
+± ´(	"#set-field# __collection_size:Bint(
+&
+
+± ´(	"#array-add-last#:(
+&
+
+± ´(	"#array-add-last#:
+
+¶ ¶(*@/home/omar/Documents/ruleIQ/services/ai/google_cached_content.py

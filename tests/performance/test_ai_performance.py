@@ -33,7 +33,9 @@ class TestAIPerformance:
             "framework_id": "gdpr",
         }
 
-        with patch("api.routers.ai_assessments.ComplianceAssistant") as mock_assistant_class:
+        with patch(
+            "api.routers.ai_assessments.ComplianceAssistant"
+        ) as mock_assistant_class:
             # Create a mock instance
             mock_assistant = Mock()
             mock_assistant.get_assessment_help = AsyncMock(
@@ -51,7 +53,9 @@ class TestAIPerformance:
 
             start_time = time.time()
             response = client.post(
-                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help",
+                json=request_data,
+                headers=authenticated_headers,
             )
             end_time = time.time()
 
@@ -71,7 +75,9 @@ class TestAIPerformance:
             "framework_id": "gdpr",
         }
 
-        with patch("api.routers.ai_assessments.ComplianceAssistant") as mock_assistant_class:
+        with patch(
+            "api.routers.ai_assessments.ComplianceAssistant"
+        ) as mock_assistant_class:
             mock_assistant = Mock()
             mock_assistant.get_assessment_help = AsyncMock(
                 return_value={
@@ -128,7 +134,9 @@ class TestAIPerformance:
 
         start_time = time.time()
         response = client.post(
-            "/api/ai/assessments/analysis", json=request_data, headers=authenticated_headers
+            "/api/ai/assessments/analysis",
+            json=request_data,
+            headers=authenticated_headers,
         )
         end_time = time.time()
 
@@ -172,7 +180,9 @@ class TestAIPerformance:
             "framework_id": "gdpr",
         }
 
-        with patch("api.routers.ai_assessments.ComplianceAssistant") as mock_assistant_class:
+        with patch(
+            "api.routers.ai_assessments.ComplianceAssistant"
+        ) as mock_assistant_class:
             mock_assistant = Mock()
             mock_assistant.get_assessment_help = AsyncMock(
                 return_value={
@@ -190,14 +200,18 @@ class TestAIPerformance:
             # First request (cache miss)
             start_time = time.time()
             response1 = client.post(
-                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help",
+                json=request_data,
+                headers=authenticated_headers,
             )
             first_request_time = time.time() - start_time
 
             # Second identical request (should be cached)
             start_time = time.time()
             response2 = client.post(
-                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help",
+                json=request_data,
+                headers=authenticated_headers,
             )
             second_request_time = time.time() - start_time
 
@@ -223,7 +237,9 @@ class TestAIRateLimiting:
             "framework_id": "gdpr",
         }
 
-        with patch("api.routers.ai_assessments.ComplianceAssistant") as mock_assistant_class:
+        with patch(
+            "api.routers.ai_assessments.ComplianceAssistant"
+        ) as mock_assistant_class:
             mock_assistant = Mock()
             mock_assistant.get_assessment_help = AsyncMock(
                 return_value={
@@ -262,7 +278,9 @@ class TestAIRateLimiting:
 
             # Should have some rate limiting if requests were made quickly
             if total_time < 60:  # If all requests made within a minute
-                assert len(rate_limited_responses) > 0, "Expected some requests to be rate limited"
+                assert (
+                    len(rate_limited_responses) > 0
+                ), "Expected some requests to be rate limited"
                 assert len(success_responses) <= 12, "Too many requests succeeded"
 
     def test_ai_analysis_stricter_rate_limit(
@@ -272,7 +290,10 @@ class TestAIRateLimiting:
         request_data = {
             "framework_id": "gdpr",
             "business_profile_id": str(sample_business_profile.id),
-            "assessment_results": {"answers": {"q1": "yes"}, "completion_percentage": 50.0},
+            "assessment_results": {
+                "answers": {"q1": "yes"},
+                "completion_percentage": 50.0,
+            },
         }
 
         responses = []
@@ -280,7 +301,9 @@ class TestAIRateLimiting:
         # Make 6 requests rapidly (exceeding 3/min limit)
         for _i in range(6):
             response = client.post(
-                "/api/ai/assessments/analysis", json=request_data, headers=authenticated_headers
+                "/api/ai/assessments/analysis",
+                json=request_data,
+                headers=authenticated_headers,
             )
             responses.append(response)
             time.sleep(0.1)
@@ -290,8 +313,12 @@ class TestAIRateLimiting:
         rate_limited_responses = [r for r in responses if r.status_code == 429]
 
         # Should have stricter limiting than help endpoint
-        assert len(success_responses) <= 4, "Analysis endpoint should have stricter rate limiting"
-        assert len(rate_limited_responses) >= 2, "Expected multiple requests to be rate limited"
+        assert (
+            len(success_responses) <= 4
+        ), "Analysis endpoint should have stricter rate limiting"
+        assert (
+            len(rate_limited_responses) >= 2
+        ), "Expected multiple requests to be rate limited"
 
     def test_regular_endpoints_higher_rate_limits(self, client, authenticated_headers):
         """Test that regular assessment endpoints have higher rate limits (100 req/min)"""
@@ -307,10 +334,12 @@ class TestAIRateLimiting:
         rate_limited_responses = [r for r in responses if r.status_code == 429]
 
         # Regular endpoints should handle more requests
-        assert len(success_responses) >= 15, "Regular endpoints should handle more requests"
-        assert len(rate_limited_responses) <= 2, (
-            "Regular endpoints should have minimal rate limiting"
-        )
+        assert (
+            len(success_responses) >= 15
+        ), "Regular endpoints should handle more requests"
+        assert (
+            len(rate_limited_responses) <= 2
+        ), "Regular endpoints should have minimal rate limiting"
 
     def test_rate_limit_headers_present(
         self, client, authenticated_headers, sample_business_profile
@@ -322,7 +351,9 @@ class TestAIRateLimiting:
             "framework_id": "gdpr",
         }
 
-        with patch("api.routers.ai_assessments.ComplianceAssistant") as mock_assistant_class:
+        with patch(
+            "api.routers.ai_assessments.ComplianceAssistant"
+        ) as mock_assistant_class:
             mock_assistant = Mock()
             mock_assistant.get_assessment_help = AsyncMock(
                 return_value={
@@ -338,11 +369,17 @@ class TestAIRateLimiting:
             mock_assistant_class.return_value = mock_assistant
 
             response = client.post(
-                "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
+                "/api/ai/assessments/gdpr/help",
+                json=request_data,
+                headers=authenticated_headers,
             )
 
             # Check for rate limiting headers (if implemented)
-            expected_headers = ["X-RateLimit-Limit", "X-RateLimit-Remaining", "X-RateLimit-Reset"]
+            expected_headers = [
+                "X-RateLimit-Limit",
+                "X-RateLimit-Remaining",
+                "X-RateLimit-Reset",
+            ]
 
             # Note: This test may need adjustment based on actual rate limiting implementation
             for header in expected_headers:
@@ -359,7 +396,9 @@ class TestAIRateLimiting:
             "framework_id": "gdpr",
         }
 
-        with patch("api.routers.ai_assessments.ComplianceAssistant") as mock_assistant_class:
+        with patch(
+            "api.routers.ai_assessments.ComplianceAssistant"
+        ) as mock_assistant_class:
             mock_assistant = Mock()
             mock_assistant.get_assessment_help = AsyncMock(
                 return_value={
@@ -394,7 +433,10 @@ class TestAIRateLimiting:
             )
 
             # Should succeed after reset (or at least not be rate limited for this reason)
-            assert response.status_code in [200, 500]  # 500 might be from other issues, but not 429
+            assert response.status_code in [
+                200,
+                500,
+            ]  # 500 might be from other issues, but not 429
 
 
 @pytest.mark.performance
@@ -412,7 +454,9 @@ class TestAILoadTesting:
             "framework_id": "gdpr",
         }
 
-        with patch("api.routers.ai_assessments.ComplianceAssistant") as mock_assistant_class:
+        with patch(
+            "api.routers.ai_assessments.ComplianceAssistant"
+        ) as mock_assistant_class:
             mock_assistant = Mock()
             mock_assistant.get_assessment_help = AsyncMock(
                 return_value={
@@ -436,7 +480,10 @@ class TestAILoadTesting:
                 while time.time() - start_time < duration_seconds:
                     response = client.post(
                         "/api/ai/assessments/gdpr/help",
-                        json={**request_data, "question_id": f"load-test-{request_count}"},
+                        json={
+                            **request_data,
+                            "question_id": f"load-test-{request_count}",
+                        },
                         headers=authenticated_headers,
                     )
                     responses.append(response)
@@ -478,7 +525,9 @@ class TestAILoadTesting:
             "framework_id": "gdpr",
         }
 
-        with patch("api.routers.ai_assessments.ComplianceAssistant") as mock_assistant_class:
+        with patch(
+            "api.routers.ai_assessments.ComplianceAssistant"
+        ) as mock_assistant_class:
             mock_assistant = Mock()
             mock_assistant.get_assessment_help = AsyncMock(
                 return_value={
@@ -509,6 +558,6 @@ class TestAILoadTesting:
             memory_increase = final_memory - initial_memory
 
             # Memory increase should be reasonable (less than 100MB for 50 requests)
-            assert memory_increase < 100 * 1024 * 1024, (
-                f"Memory usage increased by {memory_increase / 1024 / 1024:.2f}MB"
-            )
+            assert (
+                memory_increase < 100 * 1024 * 1024
+            ), f"Memory usage increased by {memory_increase / 1024 / 1024:.2f}MB"

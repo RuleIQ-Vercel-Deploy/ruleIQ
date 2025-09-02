@@ -18,21 +18,27 @@ from tests.conftest import assert_api_response_security
 class TestChatEndpoints:
     """Test chat API endpoints integration"""
 
-    def test_create_conversation(self, client, authenticated_headers, sample_business_profile):
+    def test_create_conversation(
+        self, client, authenticated_headers, sample_business_profile
+    ):
         """Test creating a new conversation"""
         conversation_data = {
             "title": "Test Compliance Conversation",
             "initial_message": "What are the GDPR requirements for my business?",
         }
 
-        with patch("services.ai.assistant.ComplianceAssistant.process_message") as mock_ai:
+        with patch(
+            "services.ai.assistant.ComplianceAssistant.process_message"
+        ) as mock_ai:
             mock_ai.return_value = (
                 "GDPR requires several key implementations including data protection policies, consent management, and breach notification procedures.",
                 {"intent": "guidance_request", "framework": "GDPR", "confidence": 0.9},
             )
 
             response = client.post(
-                "/api/chat/conversations", json=conversation_data, headers=authenticated_headers
+                "/api/chat/conversations",
+                json=conversation_data,
+                headers=authenticated_headers,
             )
 
             # Should work with business profile available
@@ -53,14 +59,18 @@ class TestChatEndpoints:
         # First create a conversation
         conversation_data = {"title": "Test Conversation"}
 
-        with patch("services.ai.assistant.ComplianceAssistant.process_message") as mock_ai:
+        with patch(
+            "services.ai.assistant.ComplianceAssistant.process_message"
+        ) as mock_ai:
             mock_ai.return_value = (
                 "I can help you with compliance requirements.",
                 {"intent": "general_query", "confidence": 0.8},
             )
 
             create_response = client.post(
-                "/api/chat/conversations", json=conversation_data, headers=authenticated_headers
+                "/api/chat/conversations",
+                json=conversation_data,
+                headers=authenticated_headers,
             )
 
             if create_response.status_code == 200:
@@ -71,7 +81,11 @@ class TestChatEndpoints:
 
                 mock_ai.return_value = (
                     "ISO 27001 is an information security management standard that requires implementing security controls and risk management processes.",
-                    {"intent": "guidance_request", "framework": "ISO27001", "confidence": 0.95},
+                    {
+                        "intent": "guidance_request",
+                        "framework": "ISO27001",
+                        "confidence": 0.95,
+                    },
                 )
 
                 response = client.post(
@@ -123,11 +137,15 @@ class TestChatEndpoints:
                 # Business profile may be required
                 assert response.status_code == 400
 
-    def test_compliance_analysis(self, client, authenticated_headers, sample_business_profile):
+    def test_compliance_analysis(
+        self, client, authenticated_headers, sample_business_profile
+    ):
         """Test compliance gap analysis endpoint"""
         request_data = {"framework": "GDPR"}
 
-        with patch("services.ai.assistant.ComplianceAssistant.analyze_evidence_gap") as mock_ai:
+        with patch(
+            "services.ai.assistant.ComplianceAssistant.analyze_evidence_gap"
+        ) as mock_ai:
             mock_ai.return_value = {
                 "framework": "GDPR",
                 "completion_percentage": 65,
@@ -151,7 +169,9 @@ class TestChatEndpoints:
             }
 
             response = client.post(
-                "/api/chat/compliance-analysis", json=request_data, headers=authenticated_headers
+                "/api/chat/compliance-analysis",
+                json=request_data,
+                headers=authenticated_headers,
             )
 
             if response.status_code == 200:
@@ -188,7 +208,8 @@ class TestChatEndpoints:
         fake_conversation_id = str(uuid4())
 
         response = client.get(
-            f"/api/chat/conversations/{fake_conversation_id}", headers=authenticated_headers
+            f"/api/chat/conversations/{fake_conversation_id}",
+            headers=authenticated_headers,
         )
 
         assert response.status_code == 404
@@ -222,7 +243,9 @@ class TestChatValidation:
         request_data = {"framework": ""}
 
         response = client.post(
-            "/api/chat/compliance-analysis", json=request_data, headers=authenticated_headers
+            "/api/chat/compliance-analysis",
+            json=request_data,
+            headers=authenticated_headers,
         )
 
         # May return 400 (business logic) or 422 (validation)
@@ -232,11 +255,15 @@ class TestChatValidation:
         """Test sending empty message"""
         conversation_data = {"title": "Test Conversation"}
 
-        with patch("services.ai.assistant.ComplianceAssistant.process_message") as mock_ai:
+        with patch(
+            "services.ai.assistant.ComplianceAssistant.process_message"
+        ) as mock_ai:
             mock_ai.return_value = ("Response", {})
 
             create_response = client.post(
-                "/api/chat/conversations", json=conversation_data, headers=authenticated_headers
+                "/api/chat/conversations",
+                json=conversation_data,
+                headers=authenticated_headers,
             )
 
             if create_response.status_code == 200:
@@ -257,11 +284,15 @@ class TestChatValidation:
         """Test handling of AI assistant errors"""
         request_data = {"framework": "ISO27001"}
 
-        with patch("services.ai.assistant.ComplianceAssistant.analyze_evidence_gap") as mock_ai:
+        with patch(
+            "services.ai.assistant.ComplianceAssistant.analyze_evidence_gap"
+        ) as mock_ai:
             mock_ai.side_effect = Exception("AI service temporarily unavailable")
 
             response = client.post(
-                "/api/chat/compliance-analysis", json=request_data, headers=authenticated_headers
+                "/api/chat/compliance-analysis",
+                json=request_data,
+                headers=authenticated_headers,
             )
 
             # May return 400 (business profile missing) or 500 (AI error)

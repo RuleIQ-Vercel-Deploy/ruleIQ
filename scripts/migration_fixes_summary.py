@@ -6,7 +6,8 @@ This script documents the fixes made to ensure Alembic migrations are idempotent
 and can be run safely multiple times.
 """
 
-print("""
+print(
+    """
 === Alembic Migration Fixes Summary ===
 
 1. Migration 004 (integration_configs):
@@ -43,7 +44,8 @@ Database State Management:
 - When tables are created outside migrations, use 'alembic stamp head'
 - This marks the database as being at the latest migration version
 - Prevents migration conflicts when tables already exist
-""")
+"""
+)
 
 if __name__ == "__main__":
     print("\nAll migrations are now idempotent and can be run safely!")

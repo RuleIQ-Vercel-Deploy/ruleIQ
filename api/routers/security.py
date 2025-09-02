@@ -14,21 +14,25 @@ from database.user import User
 
 router = APIRouter()
 
+
 # Request/Response Models
 class RoleCheckRequest(BaseModel):
     resource: str
     action: str
     context: Dict[str, Any] = {}
 
+
 class SecurityTestRequest(BaseModel):
     test_type: str
     parameters: Dict[str, Any] = {}
+
 
 class SecurityTestResponse(BaseModel):
     test_passed: bool
     vulnerabilities: List[Dict[str, Any]]
     recommendations: List[str]
     risk_level: str
+
 
 @router.get("/role-based-access-control")
 async def role_based_access_control(
@@ -71,6 +75,7 @@ async def role_based_access_control(
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"RBAC check failed: {str(e)}")
+
 
 @router.post("/business-logic-vulnerabilities")
 async def business_logic_vulnerabilities(
@@ -130,6 +135,7 @@ async def business_logic_vulnerabilities(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Security test failed: {str(e)}")
 
+
 @router.get("/security-status")
 async def security_status(current_user: User = Depends(get_current_active_user)):
     """
@@ -149,9 +155,14 @@ async def security_status(current_user: User = Depends(get_current_active_user))
             ],
         }
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Security status check failed: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Security status check failed: {str(e)}"
+        )
 
-@router.get("/rate-limit-test", dependencies=[Depends(rate_limit(requests_per_minute=5))])
+
+@router.get(
+    "/rate-limit-test", dependencies=[Depends(rate_limit(requests_per_minute=5))]
+)
 async def rate_limit_test(current_user: User = Depends(get_current_active_user)):
     """
     Test endpoint for rate limiting functionality.
@@ -164,19 +175,19 @@ async def rate_limit_test(current_user: User = Depends(get_current_active_user))
         "rate_limit": "5 requests per minute",
     }
 
+
 # Initialize CSP violation handler
 from middleware.security_headers import CSPViolationHandler
-from datetime import datetime
-import json
 
 # Global handler instance with in-memory storage
 csp_handler = CSPViolationHandler()
+
 
 @router.post("/csp-report", status_code=204, include_in_schema=False)
 async def handle_csp_violation(request: Request):
     """
     Handle Content Security Policy violation reports
-    
+
     This endpoint receives CSP violation reports from browsers when content
     violates the configured Content Security Policy.
     """
@@ -184,12 +195,10 @@ async def handle_csp_violation(request: Request):
 
 
 @router.get("/csp-violations", response_model=Dict[str, Any])
-async def get_csp_violations(
-    current_user: User = Depends(get_current_active_user)
-):
+async def get_csp_violations(current_user: User = Depends(get_current_active_user)):
     """
     Get CSP violation summary (Admin only)
-    
+
     Returns a summary of Content Security Policy violations including:
     - Total violation count
     - Violations grouped by directive
@@ -200,25 +209,23 @@ async def get_csp_violations(
     if current_user.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only administrators can view CSP violations"
+            detail="Only administrators can view CSP violations",
         )
     return csp_handler.get_violations_summary()
 
 
 @router.delete("/csp-violations", response_model=Dict[str, str])
-async def clear_csp_violations(
-    current_user: User = Depends(get_current_active_user)
-):
+async def clear_csp_violations(current_user: User = Depends(get_current_active_user)):
     """
     Clear CSP violation history (Admin only)
-    
+
     Clears all stored CSP violation reports from memory.
     """
     # Check if user has admin role
     if current_user.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only administrators can clear CSP violations"
+            detail="Only administrators can clear CSP violations",
         )
     csp_handler.violations.clear()
     return {"message": "CSP violation history cleared successfully"}

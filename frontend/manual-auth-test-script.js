@@ -33,7 +33,7 @@ const testAuth = {
         console.log('✅ Auth data found in localStorage:', {
           hasUser: !!parsed.state?.user,
           hasTokens: !!parsed.state?.tokens,
-          isAuthenticated: parsed.state?.isAuthenticated
+          isAuthenticated: parsed.state?.isAuthenticated,
         });
         return parsed;
       } else {
@@ -59,7 +59,7 @@ const testAuth = {
       form: !!loginForm,
       emailInput: !!emailInput,
       passwordInput: !!passwordInput,
-      loginButton: !!loginButton
+      loginButton: !!loginButton,
     });
 
     return isLoginPage;
@@ -68,7 +68,7 @@ const testAuth = {
   // Test 4: Simulate login process
   async simulateLogin(email = 'test@example.com', password = 'password123') {
     console.log('📋 Test 4: Simulating login process...');
-    
+
     const emailInput = document.querySelector('input[type="email"], input[id="email"]');
     const passwordInput = document.querySelector('input[type="password"], input[id="password"]');
     const loginButton = document.querySelector('button[type="submit"]');
@@ -95,7 +95,7 @@ const testAuth = {
       console.log('✅ Login button clicked');
 
       // Wait for response
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       return true;
     } catch (error) {
@@ -107,26 +107,26 @@ const testAuth = {
   // Test 5: Check network requests
   monitorNetworkRequests() {
     console.log('📋 Test 5: Setting up network request monitoring...');
-    
+
     // Override fetch to monitor requests
     const originalFetch = window.fetch;
     const requests = [];
 
-    window.fetch = function(...args) {
+    window.fetch = function (...args) {
       const url = args[0];
       const options = args[1] || {};
-      
+
       requests.push({
         url,
         method: options.method || 'GET',
         headers: options.headers || {},
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       console.log('🌐 Network Request:', {
         method: options.method || 'GET',
         url: url,
-        hasAuth: !!(options.headers && options.headers['Authorization'])
+        hasAuth: !!(options.headers && options.headers['Authorization']),
       });
 
       return originalFetch.apply(this, args);
@@ -134,29 +134,31 @@ const testAuth = {
 
     return {
       getRequests: () => requests,
-      restore: () => { window.fetch = originalFetch; }
+      restore: () => {
+        window.fetch = originalFetch;
+      },
     };
   },
 
   // Test 6: Check protected route access
   async testProtectedRoute() {
     console.log('📋 Test 6: Testing protected route access...');
-    
+
     try {
       // Try to navigate to dashboard
       const currentUrl = window.location.href;
       window.history.pushState({}, '', '/dashboard');
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       const newUrl = window.location.href;
       const wasRedirected = newUrl !== currentUrl + 'dashboard' && newUrl.includes('/dashboard');
-      
+
       console.log(`${wasRedirected ? '✅' : 'ℹ️'} Protected route test:`, {
         originalUrl: currentUrl,
         attemptedUrl: currentUrl + 'dashboard',
         finalUrl: newUrl,
-        accessGranted: newUrl.includes('/dashboard')
+        accessGranted: newUrl.includes('/dashboard'),
       });
 
       return newUrl.includes('/dashboard');
@@ -169,21 +171,21 @@ const testAuth = {
   // Test 7: Full authentication flow test
   async runFullTest() {
     console.log('🎯 Running full authentication flow test...');
-    
+
     const results = {
       authStoreAvailable: this.checkAuthStore(),
       localStorageData: this.checkLocalStorage(),
       isOnLoginPage: this.checkLoginPage(),
-      networkMonitor: this.monitorNetworkRequests()
+      networkMonitor: this.monitorNetworkRequests(),
     };
 
     if (results.isOnLoginPage) {
       console.log('🔐 Attempting login...');
       const loginSuccess = await this.simulateLogin();
       results.loginAttempted = loginSuccess;
-      
+
       if (loginSuccess) {
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        await new Promise((resolve) => setTimeout(resolve, 3000));
         results.postLoginStorage = this.checkLocalStorage();
         results.protectedRouteAccess = await this.testProtectedRoute();
       }
@@ -195,17 +197,20 @@ const testAuth = {
 
     console.log('📊 Test Results Summary:', results);
     return results;
-  }
+  },
 };
 
 // Auto-run full test
 console.log('🎬 Auto-running full authentication test...');
-testAuth.runFullTest().then(results => {
-  console.log('🏁 Test completed!');
-  console.log('📋 Final Results:', JSON.stringify(results, null, 2));
-}).catch(error => {
-  console.error('💥 Test failed:', error);
-});
+testAuth
+  .runFullTest()
+  .then((results) => {
+    console.log('🏁 Test completed!');
+    console.log('📋 Final Results:', JSON.stringify(results, null, 2));
+  })
+  .catch((error) => {
+    console.error('💥 Test failed:', error);
+  });
 
 // Make testAuth available globally for manual testing
 window.testAuth = testAuth;

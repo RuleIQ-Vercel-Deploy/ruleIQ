@@ -1,0 +1,119 @@
+
+[tests.test_security_integration_e2e.TestSecurityIntegrationE2E.test_content_security_policyL
+B/home/omar/Documents/ruleIQ/tests/test_security_integration_e2e.pyi i($"2*ì	
+2j j(+hf
+k k((
+%1*&
+
+__unknown_file (
+
+
+client*'
+
+__unknown_file (	
+/health2getB
+@
+k k((
+
+response"__id*"
+
+__unknown_file (
+
+%1O
+M
+m, m(<
+%2"__id*5
+
+__unknown_file (*
+
+
+response"	
+headers}{
+m m(<
+%3*"
+
+__unknown_file (
+
+%2*7
+
+__unknown_file (
+Content-Security-Policy2__contains__O
+M
+n n(
+%4"__id*5
+
+__unknown_file (*
+
+
+response"	
+headers‡„
+n n(9
+%5"__mapGet*"
+
+__unknown_file (
+
+%4*7
+
+__unknown_file (
+Content-Security-Policy2__getitem__=
+;
+n n(9
+csp"__id*"
+
+__unknown_file (
+
+%5rp
+q q(#
+%6*#
+
+__unknown_file (
+
+csp*+
+
+__unknown_file (
+default-src2__contains__qo
+r r("
+%7*#
+
+__unknown_file (
+
+csp**
+
+__unknown_file (
+
+script-src2__contains__pn
+s s(!
+%8*#
+
+__unknown_file (
+
+csp*)
+
+__unknown_file (
+	style-src2__contains__nl
+t t(
+%9*#
+
+__unknown_file (
+
+csp*'
+
+__unknown_file (	
+img-src2__contains__wu
+u u('
+%10*#
+
+__unknown_file (
+
+csp*/
+
+__unknown_file (
+frame-ancestors2__contains__*
+3*F
+3"
+ test_security_integration_e2e.py"
+w w(
+implicit return:
+i+ i(1
+clientBB@
+>tests.test_security_integration_e2e.TestSecurityIntegrationE2EH

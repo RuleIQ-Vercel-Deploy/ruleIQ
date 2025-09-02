@@ -23,7 +23,9 @@ class TestAnalyticsEndpoints:
         print("DEBUG: Testing analytics dashboard endpoint")
         print(f"DEBUG: Authenticated headers: {authenticated_headers}")
 
-        with patch("services.ai.analytics_monitor.get_analytics_monitor") as mock_monitor:
+        with patch(
+            "services.ai.analytics_monitor.get_analytics_monitor"
+        ) as mock_monitor:
             mock_instance = AsyncMock()
             mock_instance.get_dashboard_data.return_value = {
                 "real_time": {
@@ -47,7 +49,11 @@ class TestAnalyticsEndpoints:
                     },
                     "total_requests": 1250,
                     "framework_usage": {"ISO27001": 450, "GDPR": 380, "SOC2": 420},
-                    "content_type_usage": {"recommendation": 500, "policy": 300, "workflow": 450},
+                    "content_type_usage": {
+                        "recommendation": 500,
+                        "policy": 300,
+                        "workflow": 450,
+                    },
                     "active_users": 45,
                 },
                 "cost_analytics": {
@@ -70,7 +76,11 @@ class TestAnalyticsEndpoints:
                 },
                 "quality_metrics": {
                     "overall_quality_score": 8.5,
-                    "quality_trends": {"recommendations": 8.7, "policies": 8.9, "workflows": 8.3},
+                    "quality_trends": {
+                        "recommendations": 8.7,
+                        "policies": 8.9,
+                        "workflows": 8.3,
+                    },
                     "feedback_summary": {"satisfaction_rate": 85.0},
                 },
                 "alerts": [],
@@ -82,7 +92,9 @@ class TestAnalyticsEndpoints:
             }
             mock_monitor.return_value = mock_instance
 
-            response = client.get("/api/chat/analytics/dashboard", headers=authenticated_headers)
+            response = client.get(
+                "/api/chat/analytics/dashboard", headers=authenticated_headers
+            )
 
             print(f"DEBUG: Response status code: {response.status_code}")
             print(f"DEBUG: Response content: {response.text[:500]}")
@@ -117,7 +129,9 @@ class TestAnalyticsEndpoints:
     def test_usage_analytics_endpoint(self, client, authenticated_headers):
         """Test usage analytics endpoint with different time periods"""
 
-        with patch("services.ai.analytics_monitor.get_analytics_monitor") as mock_monitor:
+        with patch(
+            "services.ai.analytics_monitor.get_analytics_monitor"
+        ) as mock_monitor:
             mock_instance = AsyncMock()
             mock_instance.get_usage_analytics.return_value = {
                 "period": {
@@ -126,14 +140,23 @@ class TestAnalyticsEndpoints:
                     "days": 14,
                 },
                 "total_requests": 2100,
-                "framework_usage": {"ISO27001": 750, "GDPR": 650, "SOC2": 500, "HIPAA": 200},
+                "framework_usage": {
+                    "ISO27001": 750,
+                    "GDPR": 650,
+                    "SOC2": 500,
+                    "HIPAA": 200,
+                },
                 "content_type_usage": {
                     "recommendation": 800,
                     "policy": 600,
                     "workflow": 500,
                     "analysis": 200,
                 },
-                "daily_usage_trend": {"2024-01-01": 150, "2024-01-02": 145, "2024-01-03": 160},
+                "daily_usage_trend": {
+                    "2024-01-01": 150,
+                    "2024-01-02": 145,
+                    "2024-01-03": 160,
+                },
                 "active_users": 67,
                 "top_users": {"user_123": 45, "user_456": 38, "user_789": 32},
             }
@@ -157,7 +180,9 @@ class TestAnalyticsEndpoints:
     def test_cost_analytics_endpoint(self, client, authenticated_headers):
         """Test cost analytics endpoint"""
 
-        with patch("services.ai.analytics_monitor.get_analytics_monitor") as mock_monitor:
+        with patch(
+            "services.ai.analytics_monitor.get_analytics_monitor"
+        ) as mock_monitor:
             mock_instance = AsyncMock()
             mock_instance.get_cost_analytics.return_value = {
                 "period": {
@@ -171,7 +196,11 @@ class TestAnalyticsEndpoints:
                     "total_tokens": 4900000,
                     "cost_per_token": 0.00005,
                 },
-                "daily_cost_trend": {"2024-01-01": 8.50, "2024-01-02": 7.25, "2024-01-03": 9.10},
+                "daily_cost_trend": {
+                    "2024-01-01": 8.50,
+                    "2024-01-02": 7.25,
+                    "2024-01-03": 9.10,
+                },
                 "cost_by_content_type": {
                     "recommendation": 98.32,
                     "policy": 73.74,
@@ -186,7 +215,9 @@ class TestAnalyticsEndpoints:
             }
             mock_monitor.return_value = mock_instance
 
-            response = client.get("/api/chat/analytics/cost?days=30", headers=authenticated_headers)
+            response = client.get(
+                "/api/chat/analytics/cost?days=30", headers=authenticated_headers
+            )
 
             assert response.status_code == 200
             assert_api_response_security(response)
@@ -195,12 +226,16 @@ class TestAnalyticsEndpoints:
             assert data["cost_summary"]["total_cost"] == 245.80
             assert "daily_cost_trend" in data
             assert "optimization_opportunities" in data
-            assert data["optimization_opportunities"]["total_potential_savings"] == 43.95
+            assert (
+                data["optimization_opportunities"]["total_potential_savings"] == 43.95
+            )
 
     def test_system_alerts_endpoint(self, client, authenticated_headers):
         """Test system alerts endpoint"""
 
-        with patch("services.ai.analytics_monitor.get_analytics_monitor") as mock_monitor:
+        with patch(
+            "services.ai.analytics_monitor.get_analytics_monitor"
+        ) as mock_monitor:
             mock_instance = AsyncMock()
             mock_instance.get_alerts.return_value = [
                 {
@@ -225,7 +260,9 @@ class TestAnalyticsEndpoints:
             mock_monitor.return_value = mock_instance
 
             # Test getting all alerts
-            response = client.get("/api/chat/analytics/alerts", headers=authenticated_headers)
+            response = client.get(
+                "/api/chat/analytics/alerts", headers=authenticated_headers
+            )
 
             assert response.status_code == 200
             assert_api_response_security(response)
@@ -245,13 +282,16 @@ class TestAnalyticsEndpoints:
     def test_resolve_alert_endpoint(self, client, authenticated_headers):
         """Test alert resolution endpoint"""
 
-        with patch("services.ai.analytics_monitor.get_analytics_monitor") as mock_monitor:
+        with patch(
+            "services.ai.analytics_monitor.get_analytics_monitor"
+        ) as mock_monitor:
             mock_instance = AsyncMock()
             mock_instance.resolve_alert.return_value = True
             mock_monitor.return_value = mock_instance
 
             response = client.post(
-                "/api/chat/analytics/alerts/alert_001/resolve", headers=authenticated_headers
+                "/api/chat/analytics/alerts/alert_001/resolve",
+                headers=authenticated_headers,
             )
 
             assert response.status_code == 200
@@ -265,7 +305,9 @@ class TestAnalyticsEndpoints:
     def test_resolve_nonexistent_alert(self, client, authenticated_headers):
         """Test resolving a non-existent alert"""
 
-        with patch("services.ai.analytics_monitor.get_analytics_monitor") as mock_monitor:
+        with patch(
+            "services.ai.analytics_monitor.get_analytics_monitor"
+        ) as mock_monitor:
             mock_instance = AsyncMock()
             mock_instance.resolve_alert.return_value = False
             mock_monitor.return_value = mock_instance
@@ -288,7 +330,9 @@ class TestPerformanceEndpoints:
     def test_performance_metrics_endpoint(self, client, authenticated_headers):
         """Test performance metrics endpoint"""
 
-        with patch("services.ai.performance_optimizer.get_performance_optimizer") as mock_optimizer:
+        with patch(
+            "services.ai.performance_optimizer.get_performance_optimizer"
+        ) as mock_optimizer:
             with patch("services.ai.response_cache.get_ai_cache") as mock_cache:
                 # Mock performance optimizer
                 mock_perf_instance = AsyncMock()
@@ -309,7 +353,10 @@ class TestPerformanceEndpoints:
                         "estimated_cost": 150.0,
                         "optimization_savings": 25.5,
                     },
-                    "system_health": {"available_capacity": 7, "queue_utilization": 60.0},
+                    "system_health": {
+                        "available_capacity": 7,
+                        "queue_utilization": 60.0,
+                    },
                 }
                 mock_optimizer.return_value = mock_perf_instance
 
@@ -344,7 +391,9 @@ class TestPerformanceEndpoints:
     def test_optimize_performance_endpoint(self, client, authenticated_headers):
         """Test performance optimization configuration endpoint"""
 
-        with patch("services.ai.performance_optimizer.get_performance_optimizer") as mock_optimizer:
+        with patch(
+            "services.ai.performance_optimizer.get_performance_optimizer"
+        ) as mock_optimizer:
             mock_instance = AsyncMock()
             mock_instance.enable_batching = True
             mock_instance.enable_compression = True
@@ -388,11 +437,17 @@ class TestCacheEndpoints:
                 "total_requests": 2000,
                 "estimated_cost_savings": 28.75,
                 "cache_size_mb": 15.2,
-                "ttl_config": {"recommendation": 7200, "policy": 86400, "workflow": 14400},
+                "ttl_config": {
+                    "recommendation": 7200,
+                    "policy": 86400,
+                    "workflow": 14400,
+                },
             }
             mock_cache.return_value = mock_instance
 
-            response = client.get("/api/chat/cache/metrics", headers=authenticated_headers)
+            response = client.get(
+                "/api/chat/cache/metrics", headers=authenticated_headers
+            )
 
             assert response.status_code == 200
             assert_api_response_security(response)
@@ -415,7 +470,8 @@ class TestCacheEndpoints:
             mock_cache.return_value = mock_instance
 
             response = client.delete(
-                "/api/chat/cache/clear?pattern=recommendation*", headers=authenticated_headers
+                "/api/chat/cache/clear?pattern=recommendation*",
+                headers=authenticated_headers,
             )
 
             assert response.status_code == 200
@@ -429,10 +485,14 @@ class TestCacheEndpoints:
     def test_analytics_error_handling(self, client, authenticated_headers):
         """Test error handling in analytics endpoints"""
 
-        with patch("services.ai.analytics_monitor.get_analytics_monitor") as mock_monitor:
+        with patch(
+            "services.ai.analytics_monitor.get_analytics_monitor"
+        ) as mock_monitor:
             mock_monitor.side_effect = Exception("Analytics service unavailable")
 
-            response = client.get("/api/chat/analytics/dashboard", headers=authenticated_headers)
+            response = client.get(
+                "/api/chat/analytics/dashboard", headers=authenticated_headers
+            )
 
             assert response.status_code == 500
             data = response.json()

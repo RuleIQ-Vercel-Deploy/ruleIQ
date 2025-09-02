@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 async function globalSetup(config: FullConfig) {
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
   // Ensure test results directories exist
   const dirs = ['test-results', 'test-results/screenshots', 'playwright-report'];
   for (const dir of dirs) {
@@ -35,7 +35,7 @@ async function globalSetup(config: FullConfig) {
   // Set up console logging for debugging
   page.on('console', (msg) => {
     if (msg.type() === 'error') {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
     }
   });
 
@@ -63,7 +63,7 @@ async function globalSetup(config: FullConfig) {
           isReady = true;
         }
       } catch {
-    // TODO: Replace with proper logging
+        // TODO: Replace with proper logging
         retries--;
         if (retries > 0) {
           await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -112,7 +112,7 @@ async function globalSetup(config: FullConfig) {
     await context.close();
     await browser.close();
   }
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
 }
 
 // Helper function to create test user (uncomment if needed)

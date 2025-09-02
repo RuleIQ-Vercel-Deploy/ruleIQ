@@ -10,6 +10,7 @@ from datetime import datetime
 
 class PolicyType(str, Enum):
     """Types of policies that can be generated"""
+
     PRIVACY_POLICY = "privacy_policy"
     INFORMATION_SECURITY_POLICY = "information_security_policy"
     DATA_RETENTION_POLICY = "data_retention_policy"
@@ -20,6 +21,7 @@ class PolicyType(str, Enum):
 
 class CustomizationLevel(str, Enum):
     """Levels of policy customization"""
+
     BASIC = "basic"
     STANDARD = "standard"
     DETAILED = "detailed"
@@ -28,6 +30,7 @@ class CustomizationLevel(str, Enum):
 
 class TargetAudience(str, Enum):
     """Target audience for the policy"""
+
     GENERAL_PUBLIC = "general_public"
     EMPLOYEES = "employees"
     CUSTOMERS = "customers"
@@ -37,6 +40,7 @@ class TargetAudience(str, Enum):
 
 class BusinessContext(BaseModel):
     """Business context for policy customization"""
+
     organization_name: str = Field(..., min_length=1, max_length=200)
     industry: str = Field(..., min_length=1, max_length=100)
     employee_count: Optional[int] = Field(None, ge=1, le=1000000)
@@ -58,6 +62,7 @@ class BusinessContext(BaseModel):
 
 class PolicyGenerationRequest(BaseModel):
     """Request schema for policy generation"""
+
     framework_id: str = Field(..., description="ID of the compliance framework")
     business_context: BusinessContext
     policy_type: PolicyType
@@ -66,24 +71,30 @@ class PolicyGenerationRequest(BaseModel):
     include_templates: bool = Field(default=True)
     language: str = Field(default="en-GB", description="Policy language (ISO 639-1)")
 
-    @validator('language')
+    @validator("language")
     def validate_language(cls, v):
         supported_languages = ["en-GB", "en-US"]
         if v not in supported_languages:
-            raise ValueError(f"Language {v} not supported. Supported: {supported_languages}")
+            raise ValueError(
+                f"Language {v} not supported. Supported: {supported_languages}"
+            )
         return v
 
 
 class PolicyRefinementRequest(BaseModel):
     """Request schema for policy refinement"""
+
     original_policy: str = Field(..., min_length=50)
     feedback: List[str] = Field(..., min_items=1, max_items=10)
     framework_id: str
-    refinement_type: str = Field(default="general", pattern="^(general|legal|technical|formatting)$")
+    refinement_type: str = Field(
+        default="general", pattern="^(general|legal|technical|formatting)$"
+    )
 
 
 class PolicyValidationResult(BaseModel):
     """Result of policy validation"""
+
     is_valid: bool
     compliance_score: float = Field(ge=0.0, le=1.0)
     errors: List[str] = Field(default_factory=list)
@@ -94,6 +105,7 @@ class PolicyValidationResult(BaseModel):
 
 class PolicyGenerationResponse(BaseModel):
     """Response schema for policy generation"""
+
     success: bool
     policy_content: str
     confidence_score: float = Field(ge=0.0, le=1.0)
@@ -117,6 +129,7 @@ class PolicyGenerationResponse(BaseModel):
 
 class PolicyRefinementResponse(BaseModel):
     """Response schema for policy refinement"""
+
     success: bool
     refined_content: str
     changes_made: List[str]
@@ -130,6 +143,7 @@ class PolicyRefinementResponse(BaseModel):
 
 class PolicyTemplate(BaseModel):
     """Schema for policy templates"""
+
     id: str
     name: str
     description: str
@@ -142,6 +156,7 @@ class PolicyTemplate(BaseModel):
 
 class PolicyTemplatesResponse(BaseModel):
     """Response schema for available policy templates"""
+
     templates: List[PolicyTemplate]
     total_count: int
     supported_frameworks: List[str]
@@ -150,6 +165,7 @@ class PolicyTemplatesResponse(BaseModel):
 
 class CircuitBreakerStatus(BaseModel):
     """Circuit breaker status for AI providers"""
+
     google_status: str  # "CLOSED", "OPEN", "HALF_OPEN"
     openai_status: str
     last_failure_time: Optional[str] = None
@@ -159,6 +175,7 @@ class CircuitBreakerStatus(BaseModel):
 
 class AIProviderMetrics(BaseModel):
     """Metrics for AI provider performance"""
+
     provider: str
     requests_total: int = Field(default=0)
     requests_successful: int = Field(default=0)
@@ -171,6 +188,7 @@ class AIProviderMetrics(BaseModel):
 
 class PolicyGenerationMetrics(BaseModel):
     """Overall policy generation metrics"""
+
     total_policies_generated: int = Field(default=0)
     success_rate: float = Field(ge=0.0, le=1.0, default=0.0)
     average_generation_time_ms: float = Field(default=0.0)
@@ -186,34 +204,32 @@ class PolicyGenerationMetrics(BaseModel):
 # Streaming Response Models
 class PolicyStreamingChunk(BaseModel):
     """Individual chunk of streaming policy generation data."""
-    
+
     chunk_id: str = Field(..., description="Unique identifier for this chunk")
     content: str = Field(..., description="Text content of this chunk")
     chunk_type: str = Field(
-        default="content", 
-        description="Type of chunk: content, metadata, section_header, complete, error"
+        default="content",
+        description="Type of chunk: content, metadata, section_header, complete, error",
     )
     section_name: Optional[str] = Field(
-        None, 
-        description="Name of the policy section being generated"
+        None, description="Name of the policy section being generated"
     )
     timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
     progress: Optional[float] = Field(
-        None, 
-        ge=0.0, 
-        le=1.0, 
-        description="Progress percentage (0.0 to 1.0)"
+        None, ge=0.0, le=1.0, description="Progress percentage (0.0 to 1.0)"
     )
 
 
 class PolicyStreamingMetadata(BaseModel):
     """Metadata for streaming policy generation response."""
-    
+
     session_id: str = Field(..., description="Unique session identifier")
     policy_type: PolicyType = Field(..., description="Type of policy being generated")
     framework_id: str = Field(..., description="Framework ID for the policy")
     organization_name: str = Field(..., description="Organization name")
     started_at: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
     stream_type: str = Field(default="policy_generation", description="Type of stream")
-    estimated_sections: int = Field(default=5, description="Estimated number of sections")
+    estimated_sections: int = Field(
+        default=5, description="Estimated number of sections"
+    )
     provider: str = Field(default="google", description="AI provider being used")

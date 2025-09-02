@@ -41,13 +41,21 @@ content = content.replace('prefix="/auth"', 'prefix="/api/v1/auth"')
 content = content.replace('prefix="/users"', 'prefix="/api/v1/users"')
 content = content.replace('prefix="/assessments"', 'prefix="/api/v1/assessments"')
 content = content.replace('prefix="/ai-assessments"', 'prefix="/api/v1/ai-assessments"')
-content = content.replace('prefix="/ai-optimization"', 'prefix="/api/v1/ai-optimization"')
-content = content.replace('prefix="/business-profiles"', 'prefix="/api/v1/business-profiles"')
+content = content.replace(
+    'prefix="/ai-optimization"', 'prefix="/api/v1/ai-optimization"'
+)
+content = content.replace(
+    'prefix="/business-profiles"', 'prefix="/api/v1/business-profiles"'
+)
 content = content.replace('prefix="/chat"', 'prefix="/api/v1/chat"')
 content = content.replace('prefix="/compliance"', 'prefix="/api/v1/compliance"')
 content = content.replace('prefix="/evidence"', 'prefix="/api/v1/evidence"')
-content = content.replace('prefix="/evidence-collection"', 'prefix="/api/v1/evidence-collection"')
-content = content.replace('prefix="/foundation-evidence"', 'prefix="/api/v1/foundation-evidence"')
+content = content.replace(
+    'prefix="/evidence-collection"', 'prefix="/api/v1/evidence-collection"'
+)
+content = content.replace(
+    'prefix="/foundation-evidence"', 'prefix="/api/v1/foundation-evidence"'
+)
 content = content.replace('prefix="/frameworks"', 'prefix="/api/v1/frameworks"')
 content = content.replace('prefix="/implementation"', 'prefix="/api/v1/implementation"')
 content = content.replace('prefix="/integrations"', 'prefix="/api/v1/integrations"')
@@ -58,7 +66,9 @@ content = content.replace('prefix="/reporting"', 'prefix="/api/v1/reporting"')
 content = content.replace('prefix="/security"', 'prefix="/api/v1/security"')
 
 # Remove the mount line
-content = content.replace('\n# Mount API v1 sub-application\napp.mount("/api/v1", api_v1)', "")
+content = content.replace(
+    '\n# Mount API v1 sub-application\napp.mount("/api/v1", api_v1)', ""
+)
 
 # Write back
 with open("api/main.py", "w") as f:

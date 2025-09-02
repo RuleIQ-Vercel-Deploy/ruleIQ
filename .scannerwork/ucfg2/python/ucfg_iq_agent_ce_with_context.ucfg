@@ -1,0 +1,298 @@
+
+Bservices.iq_agent.IQComplianceAgent.assess_compliance_with_context<
+0/home/omar/Documents/ruleIQ/services/iq_agent.pyë ë(,"2*˛
+2
+ñ ü(
+
+° °(
+%20"dictM
+K
+
+° °(
+business_context"__id*#
+
+__unknown_file (
+
+%20y
+w
+
+¢ ¢(#
+%21"__id*\
+
+__unknown_file (@*>%
+#services.iq_agent.IQComplianceAgent"
+has_postgres_access*
+4
+5*Ê
+4
+¶ ∞(’
+“
+
+¶ ∞(
+%1"__concat*n
+
+¶ ®(`^
+\
+        MATCH (r:Regulation)-[:HAS_REQUIREMENT]->(req:Requirement)
+        WHERE r.code IN *
+
+® ®($
+
+regulations*§
+
+®% ∞(ïí
+è
+        RETURN r.code as regulation, 
+               collect({{
+                   id: req.id,
+                   title: req.title,
+                   description: req.description,
+                   risk_level: req.risk_level
+               }}) as requirements
+        L
+J
+
+¶ ∞(
+regulation_query"__id*"
+
+__unknown_file (
+
+%1j
+h
+
+≤ ≤('
+%2"__id*N
+
+__unknown_file (2*0%
+#services.iq_agent.IQComplianceAgent"
+neo4jyw
+
+≤ ≤(G
+%3*"
+
+__unknown_file (
+
+%2*0
+
+__unknown_file (
+
+regulation_query2execute_queryH
+F
+
+≤ ≤(G
+neo4j_result"__id*"
+
+__unknown_file (
+
+%3
+
+µ ¡(	
+%4"dictî
+ë
+
+∂ ∂(
+%5"__mapSet*"
+
+__unknown_file (
+
+%4*&
+
+__unknown_file (
+
+status*'
+
+__unknown_file (	
+successß
+§
+
+∑ ∑(0
+%6"__mapSet*"
+
+__unknown_file (
+
+%4*0
+
+__unknown_file (
+business_context*0
+
+__unknown_file (
+
+business_context
+
+∏% ¿(
+%7"dict®
+•
+
+π π(5
+%8"__mapSet*"
+
+__unknown_file (
+
+%7*6
+
+__unknown_file (
+applicable_regulations*+
+
+__unknown_file (
+
+regulations¶£
+
+∫+ ∫(Z
+%9*C
+
+__unknown_file ('%
+#services.iq_agent.IQComplianceAgent*0
+
+__unknown_file (
+
+business_context2_identify_business_risks°
+û
+
+∫ ∫(Z
+%10"__mapSet*"
+
+__unknown_file (
+
+%7*7
+
+__unknown_file (
+business_specific_risks*"
+
+__unknown_file (
+
+%9
+
+ªB ª(D
+%11"listîë
+
+ª) ª(E
+%12*,
+
+__unknown_file (
+
+neo4j_result*$
+
+__unknown_file (
+data*#
+
+__unknown_file (
+
+%112get†
+ù
+
+ª ª(E
+%13"__mapSet*"
+
+__unknown_file (
+
+%7*5
+
+__unknown_file (
+requirements_analysis*#
+
+__unknown_file (
+
+%12
+
+æ- æ(/
+%14"listîë
+
+æ æ(0
+%15*,
+
+__unknown_file (
+
+neo4j_result*$
+
+__unknown_file (
+data*#
+
+__unknown_file (
+
+%142get‹Ÿ
+
+º# ø(
+%16*C
+
+__unknown_file ('%
+#services.iq_agent.IQComplianceAgent*0
+
+__unknown_file (
+
+business_context*#
+
+__unknown_file (
+
+%152(_generate_contextualized_recommendationsö
+ó
+
+º ø(
+%17"__mapSet*"
+
+__unknown_file (
+
+%7*/
+
+__unknown_file (
+recommendations*#
+
+__unknown_file (
+
+%16ü
+ú
+
+∏ ¿(
+%18"__mapSet*"
+
+__unknown_file (
+
+%4*5
+
+__unknown_file (
+compliance_assessment*"
+
+__unknown_file (
+
+%7F
+D
+
+µ ¡(	
+
+assessment"__id*"
+
+__unknown_file (
+
+%4"
+
+√ √(
+
+
+assessment*ë
+5
+£ £(X´®
+
+£% £(X
+%19*C
+
+__unknown_file ('%
+#services.iq_agent.IQComplianceAgent*3
+
+__unknown_file (
+
+business_profile_id2retrieve_business_contextM
+K
+
+£ £(X
+business_context"__id*#
+
+__unknown_file (
+
+%19*
+4:#
+
+ì ì( 
+business_profile_id:
+
+î î(
+regulationsB'%
+#services.iq_agent.IQComplianceAgentH

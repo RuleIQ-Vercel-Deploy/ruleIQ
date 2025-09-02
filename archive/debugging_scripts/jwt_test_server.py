@@ -72,7 +72,9 @@ async def debug_config():
 
 
 @app.post("/api/v1/ai-assessments/soc2/help")
-async def test_ai_endpoint(request: TestRequest, current_user: str = Depends(get_current_user)):
+async def test_ai_endpoint(
+    request: TestRequest, current_user: str = Depends(get_current_user)
+):
     """Test endpoint that requires authentication"""
     return {
         "status": "success",

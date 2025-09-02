@@ -1,0 +1,157 @@
+
+*config.tracing.CustomTracer.trace_api_call9
+-/home/omar/Documents/ruleIQ/config/tracing.pyí í("2*“
+2
+ì ì(&
+
+î ò(	
+%6"dictò
+ï
+
+ï ï(!
+%7"__mapSet*"
+
+__unknown_file (
+
+%6*+
+
+__unknown_file (
+http.method*&
+
+__unknown_file (
+
+
+methodô
+ñ
+
+ñ ñ("
+%8"__mapSet*"
+
+__unknown_file (
+
+%6**
+
+__unknown_file (
+
+http.route*(
+
+__unknown_file (
+
+
+endpointù
+ö
+
+ó ó((
+%9"__mapSet*"
+
+__unknown_file (
+
+%6*,
+
+__unknown_file (
+service.name**
+
+__unknown_file (
+
+ruleiq-apiF
+D
+
+î ò(	
+
+attributes"__id*"
+
+__unknown_file (
+
+%6*
+4
+5*‡
+4
+ù °(	i
+g
+
+û û("
+%1"__concat*
+
+û û(
+
+
+method*
+
+û û(
+ *
+
+û û( 
+
+
+endpointO
+M
+
+† †(
+%2"__id*3
+
+__unknown_file (*
+
+trace"
+
+SpanKindJ
+H
+
+† †(&
+%3"__id*.
+
+__unknown_file (*
+
+%2"
+SERVER∞≠
+
+ù °(	
+%4*;
+
+__unknown_file (
+config.tracing.CustomTracer*"
+
+__unknown_file (
+
+%12
+start_span:
+
+attributes
+
+
+attributes:
+kind
+
+%3"
+
+ù °(	
+
+%4*…
+5
+õ õ(+≤Ø
+
+õ õ(+
+%5"dict.__setitem__**
+
+__unknown_file (
+
+
+attributes*'
+
+__unknown_file (	
+user.id*'
+
+__unknown_file (
+	
+user_id2__setitem__*
+4:
+
+í í(*
+
+endpoint:
+
+í, í(7
+method:
+
+í9 í(V	
+user_idB
+config.tracing.CustomTracerH

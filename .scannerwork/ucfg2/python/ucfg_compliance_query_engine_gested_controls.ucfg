@@ -1,0 +1,100 @@
+
+Pservices.ai.compliance_query_engine.ComplianceQueryEngine.get_suggested_controlsL
+B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.py] ]($"2*À
+2^ f(£
+ 
+g j(
+query"__id*„
+
+__unknown_file (hf
+d
+        MATCH (r:Regulation {id: $reg_id})
+        RETURN r.suggested_controls as controls
+        
+}
+l l(
+%5"__id*e
+
+__unknown_file (I*G;
+9services.ai.compliance_query_engine.ComplianceQueryEngine"
+driver?=
+l l((
+%6*"
+
+__unknown_file (
+
+%52sessionA
+?
+l l(3	
+session"__id*"
+
+__unknown_file (
+
+%6*
+3
+6*@
+3
+compliance_query_engine.py"
+s s(
+implicit return*;
+4q q(
+q q(
+%1"list"
+q q(
+
+%1*ž
+5p p(){y
+p p()
+%2"__mapGet*&
+
+__unknown_file (
+
+
+record*(
+
+__unknown_file (
+
+controls2__getitem__"
+p p()
+
+%2*å
+6m m(C…‚
+m m(C
+%3*'
+
+__unknown_file (
+	
+session*%
+
+__unknown_file (	
+
+query2run:
+reg_id
+
+regulation_id@
+>
+m m(C
+result"__id*"
+
+__unknown_file (
+
+%3B@
+n n(*
+%4*&
+
+__unknown_file (
+
+
+result2single@
+>
+n n(*
+record"__id*"
+
+__unknown_file (
+
+%4*
+4
+5:
+]+ ](=
+regulation_idB=;
+9services.ai.compliance_query_engine.ComplianceQueryEngineH

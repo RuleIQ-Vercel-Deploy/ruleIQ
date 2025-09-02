@@ -47,25 +47,31 @@ class QueryOptimizer:
                 "description": item.description,
                 "status": item.status,
                 "created_at": item.created_at.isoformat() if item.created_at else None,
-                "business_profile": {
-                    "id": str(item.business_profile.id),
-                    "company_name": item.business_profile.company_name,
-                    "industry": item.business_profile.industry,
-                }
-                if item.business_profile
-                else None,
-                "framework": {
-                    "id": str(item.framework.id),
-                    "name": item.framework.name,
-                    "category": item.framework.category,
-                }
-                if item.framework
-                else None,
+                "business_profile": (
+                    {
+                        "id": str(item.business_profile.id),
+                        "company_name": item.business_profile.company_name,
+                        "industry": item.business_profile.industry,
+                    }
+                    if item.business_profile
+                    else None
+                ),
+                "framework": (
+                    {
+                        "id": str(item.framework.id),
+                        "name": item.framework.name,
+                        "category": item.framework.category,
+                    }
+                    if item.framework
+                    else None
+                ),
             }
             for item in evidence_items
         ]
 
-    async def get_business_profile_with_counts(self, user_id: str) -> Optional[Dict[str, Any]]:
+    async def get_business_profile_with_counts(
+        self, user_id: str
+    ) -> Optional[Dict[str, Any]]:
         """
         Get business profile with aggregated counts in a single query.
 
@@ -81,9 +87,12 @@ class QueryOptimizer:
                 func.count(EvidenceItem.id).label("evidence_count"),
                 func.count(AssessmentSession.id).label("assessment_count"),
             )
-            .outerjoin(EvidenceItem, EvidenceItem.business_profile_id == BusinessProfile.id)
             .outerjoin(
-                AssessmentSession, AssessmentSession.business_profile_id == BusinessProfile.id
+                EvidenceItem, EvidenceItem.business_profile_id == BusinessProfile.id
+            )
+            .outerjoin(
+                AssessmentSession,
+                AssessmentSession.business_profile_id == BusinessProfile.id,
             )
             .where(BusinessProfile.user_id == user_id)
             .group_by(BusinessProfile.id)
@@ -104,7 +113,9 @@ class QueryOptimizer:
             "company_size": profile.company_size,
             "evidence_count": evidence_count,
             "assessment_count": assessment_count,
-            "created_at": profile.created_at.isoformat() if profile.created_at else None,
+            "created_at": (
+                profile.created_at.isoformat() if profile.created_at else None
+            ),
         }
 
     async def get_frameworks_with_usage_counts(self) -> List[Dict[str, Any]]:
@@ -117,8 +128,14 @@ class QueryOptimizer:
         from database.assessment_session import AssessmentSession
 
         query = (
-            select(ComplianceFramework, func.count(AssessmentSession.id).label("usage_count"))
-            .outerjoin(AssessmentSession, AssessmentSession.framework_id == ComplianceFramework.id)
+            select(
+                ComplianceFramework,
+                func.count(AssessmentSession.id).label("usage_count"),
+            )
+            .outerjoin(
+                AssessmentSession,
+                AssessmentSession.framework_id == ComplianceFramework.id,
+            )
             .where(ComplianceFramework.is_active)
             .group_by(ComplianceFramework.id)
             .order_by(func.count(AssessmentSession.id).desc())
@@ -158,7 +175,8 @@ class QueryOptimizer:
         base_query = (
             select(EvidenceItem)
             .options(
-                selectinload(EvidenceItem.business_profile), selectinload(EvidenceItem.framework)
+                selectinload(EvidenceItem.business_profile),
+                selectinload(EvidenceItem.framework),
             )
             .where(EvidenceItem.user_id == user_id)
         )
@@ -196,15 +214,19 @@ class QueryOptimizer:
                 "description": item.description,
                 "status": item.status,
                 "created_at": item.created_at.isoformat() if item.created_at else None,
-                "business_profile": {
-                    "id": str(item.business_profile.id),
-                    "company_name": item.business_profile.company_name,
-                }
-                if item.business_profile
-                else None,
-                "framework": {"id": str(item.framework.id), "name": item.framework.name}
-                if item.framework
-                else None,
+                "business_profile": (
+                    {
+                        "id": str(item.business_profile.id),
+                        "company_name": item.business_profile.company_name,
+                    }
+                    if item.business_profile
+                    else None
+                ),
+                "framework": (
+                    {"id": str(item.framework.id), "name": item.framework.name}
+                    if item.framework
+                    else None
+                ),
             }
             for item in evidence_items
         ]
@@ -239,10 +261,14 @@ class QueryOptimizer:
                 suggestions.append("Query is slow - consider adding indexes")
 
             if "Seq Scan" in str(plan_data):
-                suggestions.append("Sequential scan detected - consider adding appropriate indexes")
+                suggestions.append(
+                    "Sequential scan detected - consider adding appropriate indexes"
+                )
 
             if "Nested Loop" in str(plan_data) and rows_returned > 1000:
-                suggestions.append("Nested loop with many rows - consider hash join optimization")
+                suggestions.append(
+                    "Nested loop with many rows - consider hash join optimization"
+                )
 
             return {
                 "execution_time": execution_time,
@@ -251,7 +277,7 @@ class QueryOptimizer:
                 "rows_returned": rows_returned,
                 "query_plan": plan_data,
                 "index_suggestions": suggestions,
-                "performance_rating": "slow" if actual_time > 100 else "fast"
+                "performance_rating": "slow" if actual_time > 100 else "fast",
             }
 
         except Exception as e:
@@ -259,7 +285,7 @@ class QueryOptimizer:
             return {
                 "execution_time": 0,
                 "error": str(e),
-                "index_suggestions": ["Unable to analyze query"]
+                "index_suggestions": ["Unable to analyze query"],
             }
 
     async def get_slow_queries(self, threshold_ms: float = 100) -> List[Dict[str, Any]]:
@@ -269,7 +295,8 @@ class QueryOptimizer:
         Requires pg_stat_statements extension to be enabled.
         """
         try:
-            query = text("""
+            query = text(
+                """
                 SELECT
                     query,
                     calls,
@@ -283,20 +310,25 @@ class QueryOptimizer:
                 WHERE mean_exec_time > :threshold
                 ORDER BY mean_exec_time DESC
                 LIMIT 20
-            """)
+            """
+            )
 
             result = await self.db.execute(query, {"threshold": threshold_ms})
             rows = result.fetchall()
 
             return [
                 {
-                    "query": row.query[:200] + "..." if len(row.query) > 200 else row.query,
+                    "query": (
+                        row.query[:200] + "..." if len(row.query) > 200 else row.query
+                    ),
                     "calls": row.calls,
                     "total_time_ms": float(row.total_exec_time),
                     "avg_time_ms": float(row.mean_exec_time),
                     "max_time_ms": float(row.max_exec_time),
                     "rows_avg": float(row.rows) if row.rows else 0,
-                    "cache_hit_percent": float(row.hit_percent) if row.hit_percent else 0
+                    "cache_hit_percent": (
+                        float(row.hit_percent) if row.hit_percent else 0
+                    ),
                 }
                 for row in rows
             ]
@@ -312,7 +344,8 @@ class QueryOptimizer:
         Get index usage statistics to identify unused indexes.
         """
         try:
-            query = text("""
+            query = text(
+                """
                 SELECT
                     schemaname,
                     tablename,
@@ -323,7 +356,8 @@ class QueryOptimizer:
                     pg_size_pretty(pg_relation_size(indexrelid)) as size
                 FROM pg_stat_user_indexes
                 ORDER BY idx_scan ASC, pg_relation_size(indexrelid) DESC
-            """)
+            """
+            )
 
             result = await self.db.execute(query)
             rows = result.fetchall()
@@ -337,7 +371,7 @@ class QueryOptimizer:
                     "tuples_read": row.idx_tup_read,
                     "tuples_fetched": row.idx_tup_fetch,
                     "size": row.size,
-                    "usage_status": "unused" if row.idx_scan < 10 else "active"
+                    "usage_status": "unused" if row.idx_scan < 10 else "active",
                 }
                 for row in rows
             ]
@@ -352,7 +386,8 @@ class QueryOptimizer:
         """
         try:
             # Get current connection stats
-            query = text("""
+            query = text(
+                """
                 SELECT
                     count(*) as total_connections,
                     count(*) FILTER (WHERE state = 'active') as active_connections,
@@ -360,7 +395,8 @@ class QueryOptimizer:
                     count(*) FILTER (WHERE state = 'idle in transaction') as idle_in_transaction
                 FROM pg_stat_activity
                 WHERE datname = current_database()
-            """)
+            """
+            )
 
             result = await self.db.execute(query)
             row = result.fetchone()
@@ -386,7 +422,9 @@ class QueryOptimizer:
                 )
 
             if idle > total * 0.5:
-                recommendations.append("Many idle connections - consider reducing pool size")
+                recommendations.append(
+                    "Many idle connections - consider reducing pool size"
+                )
 
             return {
                 "total_connections": total,
@@ -395,7 +433,9 @@ class QueryOptimizer:
                 "idle_in_transaction": idle_in_tx,
                 "utilization_percent": utilization * 100,
                 "recommendations": recommendations,
-                "pool_health": "good" if 0.3 <= utilization <= 0.7 else "needs_attention"
+                "pool_health": (
+                    "good" if 0.3 <= utilization <= 0.7 else "needs_attention"
+                ),
             }
 
         except Exception as e:
@@ -411,38 +451,46 @@ class QueryOptimizer:
         # Analyze slow queries
         slow_queries = await self.get_slow_queries()
         if slow_queries:
-            suggestions.append({
-                "category": "queries",
-                "priority": "high",
-                "issue": f"Found {len(slow_queries)} slow queries",
-                "recommendation": (
-                    "Review and optimize slow queries with indexes or query restructuring"
-                ),
-                "impact": "Significant improvement in API response times"
-            })
+            suggestions.append(
+                {
+                    "category": "queries",
+                    "priority": "high",
+                    "issue": f"Found {len(slow_queries)} slow queries",
+                    "recommendation": (
+                        "Review and optimize slow queries with indexes or query restructuring"
+                    ),
+                    "impact": "Significant improvement in API response times",
+                }
+            )
 
         # Analyze index usage
         index_stats = await self.get_index_usage_stats()
         unused_indexes = [idx for idx in index_stats if idx["usage_status"] == "unused"]
         if unused_indexes:
-            suggestions.append({
-                "category": "indexes",
-                "priority": "medium",
-                "issue": f"Found {len(unused_indexes)} unused indexes",
-                "recommendation": "Consider dropping unused indexes to improve write performance",
-                "impact": "Faster INSERT/UPDATE operations, reduced storage"
-            })
+            suggestions.append(
+                {
+                    "category": "indexes",
+                    "priority": "medium",
+                    "issue": f"Found {len(unused_indexes)} unused indexes",
+                    "recommendation": "Consider dropping unused indexes to improve write performance",
+                    "impact": "Faster INSERT/UPDATE operations, reduced storage",
+                }
+            )
 
         # Analyze connection pool
         pool_analysis = await self.optimize_connection_pool()
         if pool_analysis.get("pool_health") == "needs_attention":
-            suggestions.append({
-                "category": "connections",
-                "priority": "high",
-                "issue": "Connection pool needs optimization",
-                "recommendation": "; ".join(pool_analysis.get("recommendations", [])),
-                "impact": "Better concurrency handling and resource utilization"
-            })
+            suggestions.append(
+                {
+                    "category": "connections",
+                    "priority": "high",
+                    "issue": "Connection pool needs optimization",
+                    "recommendation": "; ".join(
+                        pool_analysis.get("recommendations", [])
+                    ),
+                    "impact": "Better concurrency handling and resource utilization",
+                }
+            )
 
         return suggestions
 
@@ -453,7 +501,9 @@ class BatchQueryOptimizer:
     def __init__(self, db: AsyncSession) -> None:
         self.db = db
 
-    async def batch_update_evidence_status(self, evidence_ids: List[str], new_status: str) -> int:
+    async def batch_update_evidence_status(
+        self, evidence_ids: List[str], new_status: str
+    ) -> int:
         """
         Update multiple evidence items in a single query.
 
@@ -492,7 +542,9 @@ class BatchQueryOptimizer:
 
         return result.rowcount
 
-    async def get_evidence_batch_by_ids(self, evidence_ids: List[str]) -> List[Dict[str, Any]]:
+    async def get_evidence_batch_by_ids(
+        self, evidence_ids: List[str]
+    ) -> List[Dict[str, Any]]:
         """
         Get multiple evidence items by IDs in a single query.
 
@@ -503,7 +555,8 @@ class BatchQueryOptimizer:
         query = (
             select(EvidenceItem)
             .options(
-                selectinload(EvidenceItem.business_profile), selectinload(EvidenceItem.framework)
+                selectinload(EvidenceItem.business_profile),
+                selectinload(EvidenceItem.framework),
             )
             .where(EvidenceItem.id.in_(evidence_ids))
         )

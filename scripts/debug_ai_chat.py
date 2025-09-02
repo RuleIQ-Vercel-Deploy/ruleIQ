@@ -5,7 +5,8 @@ Debug AI chat conversation creation by testing ComplianceAssistant directly
 
 import asyncio
 import sys
-sys.path.append('/home/omar/Documents/ruleIQ')
+
+sys.path.append("/home/omar/Documents/ruleIQ")
 
 from database.db_setup import get_async_db
 from database.user import User
@@ -13,6 +14,7 @@ from database.business_profile import BusinessProfile
 from services.ai import ComplianceAssistant
 from sqlalchemy.future import select
 import uuid
+
 
 async def debug_ai_chat():
     """Debug the AI chat conversation creation by testing each step"""
@@ -22,7 +24,9 @@ async def debug_ai_chat():
 
             # Step 1: Get test user
             print("Step 1: Getting test user...")
-            result = await db.execute(select(User).where(User.email == 'test@ruleiq.dev'))
+            result = await db.execute(
+                select(User).where(User.email == "test@ruleiq.dev")
+            )
             user = result.scalars().first()
 
             if not user:
@@ -33,7 +37,9 @@ async def debug_ai_chat():
 
             # Step 2: Get business profile
             print("Step 2: Getting business profile...")
-            profile_result = await db.execute(select(BusinessProfile).where(BusinessProfile.user_id == str(user.id)))
+            profile_result = await db.execute(
+                select(BusinessProfile).where(BusinessProfile.user_id == str(user.id))
+            )
             business_profile = profile_result.scalars().first()
 
             if not business_profile:
@@ -51,6 +57,7 @@ async def debug_ai_chat():
                 print(f"❌ Failed to initialize ComplianceAssistant: {e}")
                 print(f"Exception type: {type(e)}")
                 import traceback
+
                 traceback.print_exc()
                 return
 
@@ -76,7 +83,9 @@ async def debug_ai_chat():
                 )
 
                 print("   Calling process_message with 10 second timeout...")
-                response_text, metadata = await asyncio.wait_for(response_task, timeout=10.0)
+                response_text, metadata = await asyncio.wait_for(
+                    response_task, timeout=10.0
+                )
 
                 print("✅ process_message completed successfully!")
                 print(f"Response length: {len(response_text)} characters")
@@ -90,6 +99,7 @@ async def debug_ai_chat():
                 print(f"❌ process_message failed: {e}")
                 print(f"Exception type: {type(e)}")
                 import traceback
+
                 traceback.print_exc()
 
             break
@@ -97,8 +107,10 @@ async def debug_ai_chat():
         except Exception as e:
             print(f"❌ Debug failed: {e}")
             import traceback
+
             traceback.print_exc()
             break
+
 
 if __name__ == "__main__":
     asyncio.run(debug_ai_chat())

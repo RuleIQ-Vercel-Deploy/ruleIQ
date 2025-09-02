@@ -106,7 +106,8 @@ def categorize_test_issues(failures, errors):
         elif any(keyword in test.lower() for keyword in ["fixture", "conftest"]):
             categories["fixture_issues"].append(test)
         elif any(
-            keyword in test.lower() for keyword in ["ai_", "cached_content", "cache_strategy"]
+            keyword in test.lower()
+            for keyword in ["ai_", "cached_content", "cache_strategy"]
         ):
             categories["ai_service_issues"].append(test)
         elif any(keyword in test.lower() for keyword in ["cache", "redis"]):
@@ -126,25 +127,37 @@ def generate_fix_strategy(categories):
     # Priority order based on impact
     if categories["fixture_issues"]:
         strategy["priority_order"].append("fixture_issues")
-        strategy["fix_approaches"]["fixture_issues"] = "Fix test configuration and setup"
-        strategy["agent_assignments"]["fixture_issues"] = "Test Infrastructure Specialist"
+        strategy["fix_approaches"][
+            "fixture_issues"
+        ] = "Fix test configuration and setup"
+        strategy["agent_assignments"][
+            "fixture_issues"
+        ] = "Test Infrastructure Specialist"
 
     if categories["database_issues"]:
         strategy["priority_order"].append("database_issues")
-        strategy["fix_approaches"]["database_issues"] = (
-            "Fix database connections and async handling"
-        )
+        strategy["fix_approaches"][
+            "database_issues"
+        ] = "Fix database connections and async handling"
         strategy["agent_assignments"]["database_issues"] = "Database & Async Specialist"
 
     if categories["import_issues"]:
         strategy["priority_order"].append("import_issues")
-        strategy["fix_approaches"]["import_issues"] = "Fix module imports and dependencies"
-        strategy["agent_assignments"]["import_issues"] = "Import & Dependency Specialist"
+        strategy["fix_approaches"][
+            "import_issues"
+        ] = "Fix module imports and dependencies"
+        strategy["agent_assignments"][
+            "import_issues"
+        ] = "Import & Dependency Specialist"
 
     if categories["ai_service_issues"]:
         strategy["priority_order"].append("ai_service_issues")
-        strategy["fix_approaches"]["ai_service_issues"] = "Fix AI service mocking and caching"
-        strategy["agent_assignments"]["ai_service_issues"] = "AI Service Testing Specialist"
+        strategy["fix_approaches"][
+            "ai_service_issues"
+        ] = "Fix AI service mocking and caching"
+        strategy["agent_assignments"][
+            "ai_service_issues"
+        ] = "AI Service Testing Specialist"
 
     if categories["cache_issues"]:
         strategy["priority_order"].append("cache_issues")
@@ -153,14 +166,18 @@ def generate_fix_strategy(categories):
 
     if categories["authentication_issues"]:
         strategy["priority_order"].append("authentication_issues")
-        strategy["fix_approaches"]["authentication_issues"] = (
-            "Fix authentication and user management"
-        )
-        strategy["agent_assignments"]["authentication_issues"] = "Auth & Security Specialist"
+        strategy["fix_approaches"][
+            "authentication_issues"
+        ] = "Fix authentication and user management"
+        strategy["agent_assignments"][
+            "authentication_issues"
+        ] = "Auth & Security Specialist"
 
     if categories["async_issues"]:
         strategy["priority_order"].append("async_issues")
-        strategy["fix_approaches"]["async_issues"] = "Fix async/await patterns and event loops"
+        strategy["fix_approaches"][
+            "async_issues"
+        ] = "Fix async/await patterns and event loops"
         strategy["agent_assignments"]["async_issues"] = "Async & Concurrency Specialist"
 
     if categories["other_issues"]:

@@ -1,0 +1,31 @@
+
+ "automation_candidates"str
+?6"Find manual controls that need technology enablement"str
+òè"
+        MATCH (ctrl:Control {automation_level: 'MANUAL'})
+        WHERE ctrl.implementation_status IN ['NOT_STARTED', 'IN_PROGRESS']
+        OPTIONAL MATCH (ctrl)-[:IMPLEMENTS]->(req:Requirement {mandatory: true})
+        RETURN ctrl.name AS manual_control,
+               ctrl.type AS control_type,
+               COUNT(req) AS mandatory_requirements,
+               ctrl.description AS description,
+               ctrl.frequency AS frequency
+        ORDER BY COUNT(req) DESC
+        "strself
+Õ5 Õ(9"Û(
+&
+Ø Ø(üquery"#id#:Bstr#
+!
+
+ä ä(1"#unknown-value#,
+*
+
+ä ä(1results"#unknown-value#&
+$
+
+å å(1"#new-object#Bdict"
+ 
+
+å å(0	"	#map-set#:
+
+å å(1*A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py

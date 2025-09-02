@@ -15,7 +15,7 @@ function ResultsContent() {
   const { loadSession } = useFreemiumStore();
   const { hasSession, sessionData, canViewResults } = useFreemiumSession();
   const [hasSharedResults, setHasSharedResults] = useState(false);
-  
+
   const tokenFromUrl = searchParams?.get('token');
   const errorFromUrl = searchParams?.get('error');
 
@@ -29,23 +29,22 @@ function ResultsContent() {
   // Handle error states
   if (errorFromUrl === 'expired') {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4">
         <Card className="w-full max-w-md">
-          <CardContent className="py-8 text-center space-y-4">
-            <AlertTriangle className="w-12 h-12 text-orange-500 mx-auto" />
+          <CardContent className="space-y-4 py-8 text-center">
+            <AlertTriangle className="mx-auto h-12 w-12 text-orange-500" />
             <div className="space-y-2">
-              <h2 className="text-xl font-semibold text-gray-900">
-                Results Expired
-              </h2>
+              <h2 className="text-xl font-semibold text-gray-900">Results Expired</h2>
               <p className="text-gray-600">
-                Your assessment results have expired. Please take the assessment again to get fresh results.
+                Your assessment results have expired. Please take the assessment again to get fresh
+                results.
               </p>
             </div>
-            <Button 
+            <Button
               onClick={() => router.push('/freemium')}
               className="bg-teal-600 hover:bg-teal-700"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
+              <ArrowLeft className="mr-2 h-4 w-4" />
               Take New Assessment
             </Button>
           </CardContent>
@@ -63,11 +62,11 @@ function ResultsContent() {
       // No token, redirect to landing page
       router.push('/freemium');
     }
-    
+
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center space-y-4">
-          <Loader2 className="w-8 h-8 animate-spin text-teal-600 mx-auto" />
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="space-y-4 text-center">
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-teal-600" />
           <p className="text-gray-600">Redirecting to assessment...</p>
         </div>
       </div>
@@ -106,7 +105,7 @@ function ResultsContent() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
+      <div className="border-b border-gray-200 bg-white">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -116,7 +115,7 @@ function ResultsContent() {
                 size="sm"
                 className="text-gray-600 hover:text-gray-900"
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
+                <ArrowLeft className="mr-2 h-4 w-4" />
                 Take Another Assessment
               </Button>
               <div>
@@ -128,16 +127,16 @@ function ResultsContent() {
                 </p>
               </div>
             </div>
-            
+
             {/* Action buttons for desktop */}
-            <div className="hidden md:flex items-center space-x-2">
+            <div className="hidden items-center space-x-2 md:flex">
               <Button
                 onClick={handleShareResults}
                 variant="outline"
                 size="sm"
                 className="text-gray-600 hover:text-gray-900"
               >
-                <Share2 className="w-4 h-4 mr-2" />
+                <Share2 className="mr-2 h-4 w-4" />
                 {hasSharedResults ? 'Shared!' : 'Share Results'}
               </Button>
               <Button
@@ -146,21 +145,21 @@ function ResultsContent() {
                 size="sm"
                 className="text-gray-600 hover:text-gray-900"
               >
-                <Download className="w-4 h-4 mr-2" />
+                <Download className="mr-2 h-4 w-4" />
                 Download Report
               </Button>
             </div>
           </div>
-          
+
           {/* Action buttons for mobile */}
-          <div className="md:hidden mt-4 flex space-x-2">
+          <div className="mt-4 flex space-x-2 md:hidden">
             <Button
               onClick={handleShareResults}
               variant="outline"
               size="sm"
               className="flex-1 text-gray-600 hover:text-gray-900"
             >
-              <Share2 className="w-4 h-4 mr-2" />
+              <Share2 className="mr-2 h-4 w-4" />
               {hasSharedResults ? 'Shared!' : 'Share'}
             </Button>
             <Button
@@ -169,7 +168,7 @@ function ResultsContent() {
               size="sm"
               className="flex-1 text-gray-600 hover:text-gray-900"
             >
-              <Download className="w-4 h-4 mr-2" />
+              <Download className="mr-2 h-4 w-4" />
               Download
             </Button>
           </div>
@@ -182,18 +181,18 @@ function ResultsContent() {
       </div>
 
       {/* Footer */}
-      <div className="bg-white border-t border-gray-200 py-6">
+      <div className="border-t border-gray-200 bg-white py-6">
         <div className="container mx-auto px-4">
-          <div className="text-center space-y-4">
-            <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-6 text-sm text-gray-500">
+          <div className="space-y-4 text-center">
+            <div className="flex flex-col items-center justify-center space-y-2 text-sm text-gray-500 sm:flex-row sm:space-x-6 sm:space-y-0">
               <span>🔒 Your data is secure and never shared</span>
               <span>📧 Results saved to {sessionData.email}</span>
               <span>🚀 Powered by RuleIQ AI</span>
             </div>
-            
+
             {/* Call to action for additional assessments */}
-            <div className="pt-4 border-t border-gray-100">
-              <p className="text-sm text-gray-600 mb-3">
+            <div className="border-t border-gray-100 pt-4">
+              <p className="mb-3 text-sm text-gray-600">
                 Want to assess another business unit or framework?
               </p>
               <Button
@@ -213,11 +212,11 @@ function ResultsContent() {
 
 export default function FreemiumResultsPage() {
   return (
-    <Suspense 
+    <Suspense
       fallback={
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center space-y-4">
-            <Loader2 className="w-8 h-8 animate-spin text-teal-600 mx-auto" />
+        <div className="flex min-h-screen items-center justify-center bg-gray-50">
+          <div className="space-y-4 text-center">
+            <Loader2 className="mx-auto h-8 w-8 animate-spin text-teal-600" />
             <p className="text-gray-600">Loading your results...</p>
           </div>
         </div>

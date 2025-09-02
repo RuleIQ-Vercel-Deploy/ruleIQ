@@ -19,11 +19,16 @@ from api.context import user_id_var
 from core.exceptions import NotAuthenticatedException
 from database.db_setup import get_async_db
 from database.user import User
+from utils.logging import get_logger
+from config.settings import settings
+
+# Initialize logger early before any function calls
+logger = get_logger(__name__)
 
 # Security configuration
 # Enforce proper secret management in production
 import sys
-from config.settings import settings
+
 
 def get_jwt_secret_key() -> str:
     """Get JWT secret key with production enforcement."""
@@ -31,7 +36,7 @@ def get_jwt_secret_key() -> str:
     if settings.is_production:
         secret_key = os.getenv("JWT_SECRET_KEY")
         doppler_token = os.getenv("DOPPLER_TOKEN")
-        
+
         if not secret_key and not doppler_token:
             error_msg = (
                 "CRITICAL: Production environment requires proper secret configuration. "
@@ -41,22 +46,25 @@ def get_jwt_secret_key() -> str:
             )
             logger.error(error_msg)
             sys.exit(1)
-        
+
         if not secret_key:
             # Doppler is configured, try to get from there
             secret_key = settings.jwt_secret_key
             if secret_key == "insecure-dev-key-change-in-production":
                 logger.error("CRITICAL: Invalid JWT secret in production")
                 sys.exit(1)
-                
+
         return secret_key
     else:
         # Development/testing: allow fallback but warn
         secret_key = os.getenv("JWT_SECRET_KEY", settings.jwt_secret_key)
         if secret_key == "insecure-dev-key-change-in-production":
-            logger.warning("Using insecure development JWT secret - DO NOT use in production")
+            logger.warning(
+                "Using insecure development JWT secret - DO NOT use in production"
+            )
             secret_key = secrets.token_urlsafe(32)
         return secret_key
+
 
 SECRET_KEY = get_jwt_secret_key()
 ALGORITHM = "HS256"
@@ -98,7 +106,10 @@ def validate_password(password: str) -> tuple[bool, str]:
     # Example: check for special character (you might want a more robust check)
     special_characters = "!@#$%^&*()-+?_=,<>/"
     if not any(char in special_characters for char in password):
-        return False, f"Password must contain at least one special character: {special_characters}"
+        return (
+            False,
+            f"Password must contain at least one special character: {special_characters}",
+        )
     return True, "Password is valid."
 
 
@@ -110,7 +121,9 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def create_token(data: dict, token_type: str, expires_delta: Optional[timedelta] = None) -> str:
+def create_token(
+    data: dict, token_type: str, expires_delta: Optional[timedelta] = None
+) -> str:
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
@@ -167,7 +180,8 @@ def decode_token(token: str) -> Optional[Dict]:
 
 
 async def get_current_user(
-    token: Optional[str] = Depends(oauth2_scheme), db: AsyncSession = Depends(get_async_db)
+    token: Optional[str] = Depends(oauth2_scheme),
+    db: AsyncSession = Depends(get_async_db),
 ) -> Optional[User]:
     if token is None:
         return None
@@ -203,12 +217,16 @@ async def get_current_user(
     return user
 
 
-async def get_current_active_user(current_user: User = Depends(get_current_user)) -> User:
+async def get_current_active_user(
+    current_user: User = Depends(get_current_user),
+) -> User:
     if current_user is None:
         raise NotAuthenticatedException("Not authenticated")
 
     if not current_user.is_active:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Inactive user")
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail="Inactive user"
+        )
 
     # Set user_id in contextvar for logging
     user_id_var.set(UUID(str(current_user.id)))
@@ -217,7 +235,8 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
 
 
 async def get_current_user_from_refresh_token(
-    token: Optional[str] = Depends(oauth2_scheme), db: AsyncSession = Depends(get_async_db)
+    token: Optional[str] = Depends(oauth2_scheme),
+    db: AsyncSession = Depends(get_async_db),
 ) -> Optional[User]:
     if (
         token is None
@@ -262,63 +281,63 @@ def require_auth(func):
     Use with @require_auth on route functions.
     """
     from functools import wraps
-    
+
     @wraps(func)
     async def wrapper(*args, **kwargs):
         # The actual auth check happens via Depends(get_current_user)
         # This decorator is mainly for clarity and future enhancements
         return await func(*args, **kwargs)
-    
+
     return wrapper
 
 
 async def get_api_key_auth(
     request: Request,
     x_api_key: str = Header(None, alias="X-API-Key"),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ) -> dict:
     """
     Dependency for API key authentication.
-    
+
     Returns metadata about the authenticated API key.
     Raises HTTPException if authentication fails.
     """
     from services.api_key_management import APIKeyManager
     from services.redis_client import get_redis_client
-    
+
     if not x_api_key:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="API key required",
-            headers={"WWW-Authenticate": "ApiKey"}
+            headers={"WWW-Authenticate": "ApiKey"},
         )
-    
+
     try:
         redis_client = await get_redis_client()
         manager = APIKeyManager(db, redis_client)
-        
+
         # Validate the API key
         is_valid, metadata, error = await manager.validate_api_key(
             api_key=x_api_key,
             request_ip=request.client.host if request.client else None,
             request_origin=request.headers.get("Origin"),
             endpoint=str(request.url.path),
-            method=request.method
+            method=request.method,
         )
-        
+
         if not is_valid:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail=error or "Invalid API key"
+                detail=error or "Invalid API key",
             )
-        
-        return metadata.__dict__ if hasattr(metadata, '__dict__') else metadata
-        
+
+        return metadata.__dict__ if hasattr(metadata, "__dict__") else metadata
+
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"API key authentication error: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Authentication service unavailable"
+            detail="Authentication service unavailable",
         )

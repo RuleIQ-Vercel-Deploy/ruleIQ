@@ -12,10 +12,11 @@ sys.path.insert(0, str(Path(__file__).parent))
 from tests.test_notification_migration_tdd import TestNotificationStateTransitions
 from langgraph_agent.nodes.notification_nodes import EnhancedNotificationNode
 
+
 async def main():
     """Run a single test method"""
     test_instance = TestNotificationStateTransitions()
-    
+
     # Create node and base state
     notification_node = EnhancedNotificationNode()
     base_state = {
@@ -24,17 +25,21 @@ async def main():
         "task_status": "pending",
         "task_params": {},
         "retry_count": 0,
-        "max_retries": 3
+        "max_retries": 3,
     }
-    
+
     print("Testing: pending -> running state transition")
     try:
-        await test_instance.test_state_transition_pending_to_running(notification_node, base_state)
+        await test_instance.test_state_transition_pending_to_running(
+            notification_node, base_state
+        )
         print("✅ Test passed: pending -> running transition")
     except Exception as e:
         print(f"❌ Test failed: {e}")
         import traceback
+
         traceback.print_exc()
+
 
 if __name__ == "__main__":
     asyncio.run(main())

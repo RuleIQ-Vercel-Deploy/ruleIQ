@@ -1,0 +1,123 @@
+
+
+"Allow"str
+G>"Generate IAM policy for RuleIQ application to access secrets"str
+
+0int
+QH"arn:aws:secretsmanager:{self.region_name}:*:secret:{self.secret_name}*"str
+"Statement"str
+$40int
+("secretsmanager:GetSecretValue"str
+	"Version"str
+#"="str
+"2012-10-17"str
+("secretsmanager:DescribeSecret"str
+2!)"üîê IAM Policy for RuleIQ Application:"str
+	"Effect"str
+
+'2int
+
+"Resource"str
+"Action"str
+T-K"üìù Save this policy and attach it to your RuleIQ application's IAM role"strself
+Ü Ü(list"Ö
+.
+,
+
+à î(	policy"#new-object#Bdict"
+ 
+
+â â(#"	#map-set#:&
+$
+
+ã í("#new-object#Bdict"
+ 
+
+å å(%"	#map-set#:	
+)
+'
+
+ç ê("#unknown-value#Blist(
+&
+
+ç ê("
+#is-exact#:Bbool
+
+
+ç ê("
+#assume#::
+8
+
+ç ê("#set-field# __collection_size:Bint(
+&
+
+ç ê("#array-add-last#:(
+&
+
+ç ê("#array-add-last#:"
+ 
+
+ç ê("	#map-set#:"
+ 
+
+ë ë(i"	#map-set#:)
+'
+
+ä ì("#unknown-value#Blist(
+&
+
+ä ì("
+#is-exact#:Bbool
+
+
+ä ì("
+#assume#::
+8
+
+ä ì("#set-field# __collection_size:Bint(
+&
+
+ä ì("#array-add-last#:"
+ 
+
+ä ì( "	#map-set#:3
+1
+
+ñ ñ(6""
+builtinsprint*:!BNoneType'
+%
+
+ó ó(%"	#binop *#*2*:#$3
+1
+
+ó ó(&"
+builtinsprint*:%BNoneType#
+!
+
+ò ò(("#unknown-value#.
+,
+
+ò ò(*)"?python-unknown?:('Bstr3
+1
+
+ò ò(+*"
+builtinsprint*:)BNoneType'
+%
+
+ô ô(+"	#binop *#*2*:#$3
+1
+
+ô ô(,"
+builtinsprint*:+BNoneType3
+1
+
+ö ö(X."
+builtinsprint*:-BNoneType#
+!
+
+ú ú(/"#unknown-value#.
+,
+
+ú ú(+0"?python-unknown?:/'Bstr
+
+ú ú(+0*:/home/omar/Documents/ruleIQ/scripts/setup_secrets_vault.py

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Test Phase 2 Stack Auth endpoints using FastAPI TestClient  
+Test Phase 2 Stack Auth endpoints using FastAPI TestClient
 Phase 2: Assessment & AI Endpoints
 """
 import sys
@@ -11,6 +11,7 @@ from fastapi.testclient import TestClient
 sys.path.insert(0, str(Path(__file__).parent))
 
 from main import app
+
 
 def test_phase2_endpoints():
     """Test Phase 2 endpoints with FastAPI TestClient"""
@@ -24,19 +25,16 @@ def test_phase2_endpoints():
     endpoints = [
         # AI Assessments endpoints (sample)
         ("/api/gdpr/help", "AI Assessment Help", "POST"),
-        ("/api/analysis", "AI Analysis", "POST"), 
+        ("/api/analysis", "AI Analysis", "POST"),
         ("/api/recommendations", "AI Recommendations", "POST"),
         ("/api/feedback", "AI Feedback", "POST"),
         ("/api/metrics", "AI Metrics", "GET"),
-
         # AI Optimization endpoints
         ("/api/ai/model-selection", "AI Model Selection", "POST"),
         ("/api/ai/model-health", "AI Model Health", "GET"),
         ("/api/ai/performance-metrics", "AI Performance Metrics", "GET"),
-
-        # Agentic Assessments endpoints  
+        # Agentic Assessments endpoints
         ("/api/agentic-assessments/predicted-needs", "Agentic Predicted Needs", "GET"),
-
         # Agentic RAG endpoints
         ("/api/agentic-rag/find-examples", "Agentic RAG Examples", "POST"),
         ("/api/agentic-rag/fact-check", "Agentic RAG Fact Check", "POST"),
@@ -71,7 +69,9 @@ def test_phase2_endpoints():
                 results.append((endpoint, True))
             elif "422" in str(e):
                 # Validation error - endpoint is accessible but needs data
-                print("   ⚠️  Validation error - endpoint accessible but needs valid data")
+                print(
+                    "   ⚠️  Validation error - endpoint accessible but needs valid data"
+                )
                 print("   ✅ Authentication working (passed auth, failed validation)")
                 results.append((endpoint, True))
             else:
@@ -93,6 +93,7 @@ def test_phase2_endpoints():
     print(f"\n   Results: {passed}/{total} endpoints properly protected")
 
     return passed == total
+
 
 if __name__ == "__main__":
     success = test_phase2_endpoints()

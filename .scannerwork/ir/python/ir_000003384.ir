@@ -1,0 +1,57 @@
+
+"report_uri"str
+
+"nonce_enabled"str
+"csp_enabled"str
+"csp_directives"str
+"cors_enabled"str
+"cors_config"str
+®û"
+        Get a report of current security header configuration
+        
+        Returns:
+            Dictionary with security configuration details
+        "strself
+â â( "¥&
+$
+
+ê ó(	"#new-object#Bdict.
+,
+
+ë ë(+"#get-field# csp_enabled:"
+ 
+
+ë ë(+"	#map-set#:/
+-
+
+í í(-"#get-field# cors_enabled:"
+ 
+
+í í(-	"	#map-set#:0
+.
+
+ì ì(/"#get-field# nonce_enabled:"
+ 
+
+ì ì(/"	#map-set#:
+.
+,
+
+î î(."#get-field# default_csp:"
+ 
+
+î î(."	#map-set#:.
+,
+
+ï ï(+"#get-field# cors_config:"
+ 
+
+ï ï(+"	#map-set#:-
++
+
+ñ ñ()"#get-field# report_uri:"
+ 
+
+ñ ñ()"	#map-set#:
+
+ê ó(	*:/home/omar/Documents/ruleIQ/middleware/security_headers.py

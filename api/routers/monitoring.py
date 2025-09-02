@@ -9,14 +9,15 @@ Provides API endpoints for system monitoring including:
 """
 
 from datetime import datetime
-from typing import Dict, List, Any
-from fastapi import APIRouter, Depends, HTTPException
+from typing import Dict, Any
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from api.dependencies.auth import get_current_active_user
 from database.db_setup import get_async_db
 from database.user import User
 
 router = APIRouter()
+
 
 @router.get("/database/status", summary="Get database status")
 async def get_database_status(
@@ -41,6 +42,7 @@ async def get_database_status(
         "timestamp": datetime.utcnow().isoformat(),
     }
 
+
 @router.patch("/alerts/{id}/resolve", summary="Resolve alert")
 async def resolve_alert(
     id: str,
@@ -52,14 +54,15 @@ async def resolve_alert(
     # Placeholder implementation
     notes = resolution_data.get("notes", "")
     resolved_by = current_user.email
-    
+
     return {
-        "alert_id": alertId,
+        "alert_id": id,
         "status": "resolved",
         "resolved_by": resolved_by,
         "resolved_at": datetime.utcnow().isoformat(),
         "notes": notes,
     }
+
 
 @router.get("/metrics", summary="Get system metrics")
 async def get_system_metrics(
@@ -90,6 +93,7 @@ async def get_system_metrics(
         },
         "timestamp": datetime.utcnow().isoformat(),
     }
+
 
 @router.get("/api-performance", summary="Get API performance metrics")
 async def get_api_performance(
@@ -125,6 +129,7 @@ async def get_api_performance(
         "timestamp": datetime.utcnow().isoformat(),
     }
 
+
 @router.get("/error-logs", summary="Get error logs")
 async def get_error_logs(
     limit: int = 100,
@@ -154,6 +159,7 @@ async def get_error_logs(
         "limit": limit,
     }
 
+
 @router.get("/health", summary="Health check")
 async def health_check():
     """Basic health check endpoint - no authentication required."""
@@ -165,6 +171,7 @@ async def health_check():
         "service": "ruleIQ API",
         "version": "1.0.0",
     }
+
 
 @router.get("/audit-logs", summary="Get audit logs")
 async def get_audit_logs(

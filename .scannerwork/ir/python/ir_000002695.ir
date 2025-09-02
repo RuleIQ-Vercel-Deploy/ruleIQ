@@ -1,0 +1,30 @@
+
+íã"
+        Decorator to require framework access for a route.
+
+        Args:
+            framework_id: Framework ID to check
+            access_level: Required access level
+
+        Returns:
+            Route decorator
+        "strframework_id
+ˆ! ˆ(2access_level
+ˆ4 ˆ(N"ö#
+!
+
+˜ ˜("#unknown-value#*
+(
+
+” ˜(%closure"#new-object#0
+.
+
+” ˜("#set-field# framework_id:0
+.
+
+” ˜("#set-field# access_level:-
++
+
+” ˜("?python-partial-apply?:
+
+˜ ˜(*=/home/omar/Documents/ruleIQ/api/middleware/rbac_middleware.py

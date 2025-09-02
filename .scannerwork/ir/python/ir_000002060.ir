@@ -1,0 +1,604 @@
+
+,#"Title of the evidence requirement"str
+!–"resource_requirements"str
+6"enum"str
+U	"monthly"str
+
+?0int
+'"framework"str
+›"tools_and_systems"str
+:z1"Who is responsible for collecting this evidence"str
+:"interview"str
+"items"str
+3a*"How often evidence needs to be collected"str
+S"annual"str
+7
+"document"str
+;2"Map evidence requirements to compliance controls"str
+$Ω"automation_opportunities"str
+:$1"Detailed description of what evidence is needed"str
+8	"process"str
+%È"Estimated effort required"str
+<√2"Opportunities for automating evidence collection"str
+1∫'"Ongoing evidence collection processes"str
+00'"Specific control or article reference"str
+ "evidence_requirements"str
+i"medium"str
+3"evidence_type"str
+9Ô/"Budget considerations for evidence collection"str
+‘"personnel"str
+û"collection_plan"str
+"object"str
+"string"str
+!Ï"budget_considerations"str
+I"collection_method"str
+R
+"one-time"str
+g
+"critical"str
+-"control_reference"str
+"properties"str
+h"high"str
+"array"str
+1t("Priority level for evidence collection"str
+9"technical"str
+8ä."Potential for automating evidence collection"str
+4⁄*"Personnel needed for evidence collection"str
+j"low"str
+"title"str
+("List of evidence requirements"str
+LC"Get the function schema for Google Generative AI function calling"str
+"±"Actions for 1-3 months"str
+/L&"How the evidence should be collected"str
+w"responsible_party"str
+}"automation_potential"str
+$"map_evidence_requirements"str
+"name"str
+3®)"Actions to take immediately (0-30 days)"str
+´"short_term_actions"str
+Ê"estimated_effort"str
+Ä"none"str
+
+"parameters"str
+:*1"Compliance framework (e.g., 'GDPR', 'ISO27001')"str
+"type"str
+"description"str
+¥"ongoing_processes"str
+$„"Tools and systems needed"str
+$F"Type of evidence required"str
+¢"immediate_actions"str
+V"continuous"str
+d
+"priority"str
+O"frequency"str
+é
+"required"str
+T"quarterly"strselfR R( <list"‡;%
+#
+	T ÿ(	"#new-object#Bdict 
+
+U U(/"	#map-set#: 
+
+V V(M	"	#map-set#:%
+#
+	W ◊("#new-object#Bdict 
+
+X X( "	#map-set#:%
+#
+	Y ’("#new-object#Bdict%
+#
+	Z- û("#new-object#Bdict 
+
+[ [('"	#map-set#: 
+
+\ \(F"	#map-set#:%
+#
+	]! ù("#new-object#Bdict 
+
+^ ^(,"	#map-set#:%
+#
+	_* í("#new-object#Bdict$
+"
+`) c(!"#new-object#Bdict 
+
+a$ a(4"	#map-set#: 
+
+b$ b(V "	#map-set#: 
+
+`  c(!!"	#map-set#:$
+"
+d/ g(!""#new-object#Bdict 
+
+e$ e(4#"	#map-set#:" 
+
+f$ f(d%"	#map-set#:"$ 
+
+d  g(!&"	#map-set#:"$
+"
+h- k(!("#new-object#Bdict 
+
+i$ i(4)"	#map-set#:( 
+
+j$ j(d+"	#map-set#:(* 
+
+h  k(!,"	#map-set#:'($
+"
+l5 o(!."#new-object#Bdict 
+
+m$ m(4/"	#map-set#:. 
+
+n$ n(Z1"	#map-set#:.0 
+
+l  o(!2"	#map-set#:-.$
+"
+p1 t(!4"#new-object#Bdict 
+
+q$ q(45"	#map-set#:4'
+%
+r, r(];"#unknown-value#Blist&
+$
+r, r(]="
+#is-exact#:;<Bbool
+
+r, r(]>"
+#assume#:=8
+6
+r, r(]@"#set-field# __collection_size:;?Bint&
+$
+r, r(]A"#array-add-last#:;7&
+$
+r, r(]B"#array-add-last#:;8&
+$
+r, r(]C"#array-add-last#:;9&
+$
+r, r(]D"#array-add-last#:;: 
+
+r$ r(]E"	#map-set#:46; 
+
+s$ s(NG"	#map-set#:4F 
+
+p  t(!H"	#map-set#:34$
+"
+u5 x(!J"#new-object#Bdict 
+
+v$ v(4K"	#map-set#:J 
+
+w$ w(YM"	#map-set#:JL 
+
+u  x(!N"	#map-set#:IJ%
+#
+	y- É(!P"#new-object#Bdict 
+
+z$ z(4Q"	#map-set#:P(
+&
+	{, Å(%W"#unknown-value#Blist'
+%
+	{, Å(%X"
+#is-exact#:W<Bbool
+
+	{, Å(%Y"
+#assume#:X9
+7
+	{, Å(%Z"#set-field# __collection_size:W?Bint'
+%
+	{, Å(%["#array-add-last#:WR'
+%
+	{, Å(%\"#array-add-last#:WS'
+%
+	{, Å(%]"#array-add-last#:WT'
+%
+	{, Å(%^"#array-add-last#:WU'
+%
+	{, Å(%_"#array-add-last#:WV!
+
+	{$ Å(%`"	#map-set#:P6W"
+ 
+
+Ç$ Ç(]b"	#map-set#:Pa!
+
+	y  É(!c"	#map-set#:OP&
+$
+
+Ñ, à(!e"#new-object#Bdict"
+ 
+
+Ö$ Ö(4f"	#map-set#:e)
+'
+
+Ü, Ü(Qk"#unknown-value#Blist(
+&
+
+Ü, Ü(Ql"
+#is-exact#:k<Bbool
+
+
+Ü, Ü(Qm"
+#assume#:l:
+8
+
+Ü, Ü(Qn"#set-field# __collection_size:k?Bint(
+&
+
+Ü, Ü(Qo"#array-add-last#:kg(
+&
+
+Ü, Ü(Qp"#array-add-last#:kh(
+&
+
+Ü, Ü(Qq"#array-add-last#:ki(
+&
+
+Ü, Ü(Qr"#array-add-last#:kj"
+ 
+
+Ü$ Ü(Qs"	#map-set#:e6k"
+ 
+
+á$ á([u"	#map-set#:et"
+ 
+
+Ñ  à(!v"	#map-set#:de&
+$
+
+â5 å(!x"#new-object#Bdict"
+ 
+
+ä$ ä(4y"	#map-set#:x"
+ 
+
+ã$ ã(d{"	#map-set#:xz"
+ 
+
+â  å(!|"	#map-set#:wx&
+$
+
+ç8 ë(!~"#new-object#Bdict"
+ 
+
+é$ é(4"	#map-set#:~*
+(
+
+è, è(MÅ"#unknown-value#Blist*
+(
+
+è, è(MÇ"
+#is-exact#:Å<Bbool!
+
+
+è, è(MÉ"
+#assume#:Ç<
+:
+
+è, è(MÑ"#set-field# __collection_size:Å?Bint*
+(
+
+è, è(MÖ"#array-add-last#:Åh*
+(
+
+è, è(MÜ"#array-add-last#:Åi*
+(
+
+è, è(Má"#array-add-last#:Åj+
+)
+
+è, è(Mà"#array-add-last#:ÅÄ$
+"
+
+è$ è(Mâ"	#map-set#:~6Å$
+"
+
+ê$ ê(aã"	#map-set#:~ä#
+!
+
+ç  ë(!å"	#map-set#:}~"
+ 
+	_ í(ç"	#map-set#:*
+(
+
+ì( ú(è"#unknown-value#Blist*
+(
+
+ì( ú(ê"
+#is-exact#:è<Bbool!
+
+
+ì( ú(ë"
+#assume#:ê<
+:
+
+ì( ú(í"#set-field# __collection_size:è?Bint*
+(
+
+ì( ú(ì"#array-add-last#:è*
+(
+
+ì( ú(î"#array-add-last#:è*
+(
+
+ì( ú(ï"#array-add-last#:è'*
+(
+
+ì( ú(ñ"#array-add-last#:è-*
+(
+
+ì( ú(ó"#array-add-last#:è3*
+(
+
+ì( ú(ò"#array-add-last#:èI*
+(
+
+ì( ú(ô"#array-add-last#:èO*
+(
+
+ì( ú(ö"#array-add-last#:èd%
+#
+
+ì ú(õ"	#map-set#:éè"
+ 
+	] ù(ú"	#map-set#:"
+ 
+	Z û(ù"	#map-set#:'
+%
+
+ü' º(ü"#new-object#Bdict$
+"
+
+† †((†"	#map-set#:ü'
+%
+
+°& ∂(°"#new-object#Bdict'
+%
+
+¢1 ¶(£"#new-object#Bdict$
+"
+
+£  £(/§"	#map-set#:£'
+%
+
+§) §(;•"#new-object#Bdict$
+"
+
+§* §(:¶"	#map-set#:•%
+#
+
+§  §(;ß"	#map-set#:£•%
+#
+
+•  •(X©"	#map-set#:£®&
+$
+
+¢ ¶(™"	#map-set#:°¢£'
+%
+
+ß2 ´(¨"#new-object#Bdict$
+"
+
+®  ®(/≠"	#map-set#:¨'
+%
+
+©) ©(;Æ"#new-object#Bdict$
+"
+
+©* ©(:Ø"	#map-set#:Æ%
+#
+
+©  ©(;∞"	#map-set#:¨Æ%
+#
+
+™  ™(G≤"	#map-set#:¨±&
+$
+
+ß ´(≥"	#map-set#:°´¨'
+%
+
+¨1 ∞(µ"#new-object#Bdict$
+"
+
+≠  ≠(/∂"	#map-set#:µ'
+%
+
+Æ) Æ(;∑"#new-object#Bdict$
+"
+
+Æ* Æ(:∏"	#map-set#:∑%
+#
+
+Æ  Æ(;π"	#map-set#:µ∑%
+#
+
+Ø  Ø(Vª"	#map-set#:µ∫&
+$
+
+¨ ∞(º"	#map-set#:°¥µ'
+%
+
+±8 µ(æ"#new-object#Bdict$
+"
+
+≤  ≤(/ø"	#map-set#:æ'
+%
+
+≥) ≥(;¿"#new-object#Bdict$
+"
+
+≥* ≥(:¡"	#map-set#:¿%
+#
+
+≥  ≥(;¬"	#map-set#:æ¿%
+#
+
+¥  ¥(aƒ"	#map-set#:æ√&
+$
+
+± µ(≈"	#map-set#:°Ωæ%
+#
+
+° ∂(∆"	#map-set#:ü°*
+(
+
+∑$ ª(«"#unknown-value#Blist*
+(
+
+∑$ ª(»"
+#is-exact#:«<Bbool!
+
+
+∑$ ª(…"
+#assume#:»<
+:
+
+∑$ ª( "#set-field# __collection_size:«?Bint+
+)
+
+∑$ ª(À"#array-add-last#:«¢+
+)
+
+∑$ ª(Ã"#array-add-last#:«´+
+)
+
+∑$ ª(Õ"#array-add-last#:«¥&
+$
+
+∑ ª(Œ"	#map-set#:üé«%
+#
+
+ü º(œ"	#map-set#:ûü'
+%
+
+Ω- ‘(—"#new-object#Bdict$
+"
+
+æ æ((“"	#map-set#:—'
+%
+
+ø& “(”"#new-object#Bdict'
+%
+
+¿) ƒ(’"#new-object#Bdict$
+"
+
+¡  ¡(/÷"	#map-set#:’'
+%
+
+¬) ¬(;◊"#new-object#Bdict$
+"
+
+¬* ¬(:ÿ"	#map-set#:◊%
+#
+
+¬  ¬(;Ÿ"	#map-set#:’◊%
+#
+
+√  √(Y€"	#map-set#:’⁄&
+$
+
+¿ ƒ(‹"	#map-set#:”‘’'
+%
+
+≈1 …(ﬁ"#new-object#Bdict$
+"
+
+∆  ∆(/ﬂ"	#map-set#:ﬁ'
+%
+
+«) «(;‡"#new-object#Bdict$
+"
+
+«* «(:·"	#map-set#:‡%
+#
+
+«  «(;‚"	#map-set#:ﬁ‡%
+#
+
+»  »(I‰"	#map-set#:ﬁ„&
+$
+
+≈ …(Â"	#map-set#:”›ﬁ'
+%
+
+ 0 Õ(Á"#new-object#Bdict$
+"
+
+À  À(0Ë"	#map-set#:Á%
+#
+
+Ã  Ã(JÍ"	#map-set#:ÁÈ&
+$
+
+  Õ(Î"	#map-set#:”ÊÁ'
+%
+
+Œ5 —(Ì"#new-object#Bdict$
+"
+
+œ  œ(0Ó"	#map-set#:Ì%
+#
+
+–  –(^"	#map-set#:ÌÔ&
+$
+
+Œ —(Ò"	#map-set#:”ÏÌ%
+#
+
+ø “(Ú"	#map-set#:—”*
+(
+
+”$ ”(ZÛ"#unknown-value#Blist*
+(
+
+”$ ”(ZÙ"
+#is-exact#:Û<Bbool!
+
+
+”$ ”(Zı"
+#assume#:Ù<
+:
+
+”$ ”(Zˆ"#set-field# __collection_size:Û?Bint+
+)
+
+”$ ”(Z˜"#array-add-last#:Û‘+
+)
+
+”$ ”(Z¯"#array-add-last#:Û›+
+)
+
+”$ ”(Z˘"#array-add-last#:ÛÊ&
+$
+
+” ”(Z˙"	#map-set#:—éÛ%
+#
+
+Ω ‘(˚"	#map-set#:–—"
+ 
+	Y ’(¸"	#map-set#:*
+(
+
+÷ ÷(a˝"#unknown-value#Blist*
+(
+
+÷ ÷(a˛"
+#is-exact#:˝<Bbool!
+
+
+÷ ÷(aˇ"
+#assume#:˛<
+:
+
+÷ ÷(aÄ"#set-field# __collection_size:˝?Bint*
+(
+
+÷ ÷(aÅ"#array-add-last#:˝+
+)
+
+÷ ÷(aÇ"#array-add-last#:˝û+
+)
+
+÷ ÷(aÉ"#array-add-last#:˝–%
+#
+
+÷ ÷(aÑ"	#map-set#:é˝"
+ 
+	W ◊(Ö"	#map-set#:
+
+	T ÿ(	*9/home/omar/Documents/ruleIQ/services/ai/evidence_tools.py

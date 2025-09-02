@@ -1,0 +1,34 @@
+
+"2024-01-01T00:00:00Z"str
+"test-request-id"str
+"generated_at"str
+"followup_questions"str
+"request_id"str
+
+0int
+"question1"str
+"question2"strargs;3 ;(8kwargs;: ;(B"dictlist"–$
+"
+< @("#new-object#Bdict'
+%
+=& =(@"#unknown-value#Blist&
+$
+=& =(@	"
+#is-exact#:Bbool
+
+=& =(@
+"
+#assume#:	8
+6
+=& =(@"#set-field# __collection_size:Bint&
+$
+=& =(@"#array-add-last#:&
+$
+=& =(@"#array-add-last#: 
+
+= =(@"	#map-set#: 
+
+> >(/"	#map-set#: 
+
+? ?(6"	#map-set#:
+< @(*H/home/omar/Documents/ruleIQ/tests/integration/api/test_ai_assessments.py

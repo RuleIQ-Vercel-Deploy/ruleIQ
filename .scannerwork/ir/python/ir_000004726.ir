@@ -1,0 +1,837 @@
+
+A"--dist=worksteal"str
+o500int
+’ˆ"
+Chunked Test Execution Script for NexCompli
+
+This script provides optimized test execution strategies for different scenarios:
+- Fast: Unit tests only with high parallelism
+- Integration: Integration tests with medium parallelism
+- Full: All tests in optimized chunks
+- CI: Optimized for CI/CD environments
+- Performance: Performance tests with minimal parallelism
+
+Usage:
+    python scripts/run_tests_chunked.py --mode fast
+    python scripts/run_tests_chunked.py --mode integration
+    python scripts/run_tests_chunked.py --mode full
+    python scripts/run_tests_chunked.py --mode ci
+    python scripts/run_tests_chunked.py --mode performance
+"str
+Ö
+"__main__"str
+!€"API Performance Tests"str
+&"Database Performance Tests"str
+(—"not slow and not performance"str
+,ç""AI and compliance accuracy tests"str
+
+"Fast unit tests only"str
+"pytest"str
+"fast"str
++300int
+%¯"End-to-end workflow tests"str
+2´("tests/e2e/test_user_onboarding_flow.py"str
+1Õ'"tests/security/test_authentication.py"str
+–"4"str
+	"description"str
+%N"Database Integration Tests"str
+ƒ"--maxfail=3"str
+!>"tests/integration/api/"str
++“!"Fast Tests (Unit + Integration)"str
+"unit"str
+ê"AI Compliance Tests"str
+"tests/unit/"str
+-Ð#"Security and authentication tests"str
+"--disable-warnings"str
+"--tb=short"str
+¢1200int
+ <"API Integration Tests"str
+­"e2e"str
+$f"Service Integration Tests"str
+	"command"str
+b400int
+2h)"tests/integration/test_evidence_flow.py"str
+* "CI/CD optimized test execution"str
+£"tests/e2e/"str
+@"2"str
+å"ai"str
+*9!"Integration tests with database"str
+"-m"str
+R
+"database"str
+¤"smoke or critical"str
+Œ1800int
+3ý)"Complete test suite in optimized chunks"str
+"Unit Tests"str
+I600int
+"name"str
+•"tests/integration/"str
+²"User Onboarding E2E"str
+&P"tests/integration/database/"str
+{"performance"str
+*	"timeout"str
+?"-n"str
+B"--maxfail=5"str
+NoneNoneType
+"full"str
+7"integration"str
+!…"--benchmark-sort=mean"str
+"python"str
+ Ó"Authentication Tests"str
+Ktruebool
+5‚+"tests/performance/test_api_performance.py"str
+"chunks"str
+¡"Critical E2E Tests"str
+-
+"parallel"str
+
+0int
+Q"1"str
+½"ci"str
+Ä900int
+"--maxfail=10"str
+.falsebool
+%}"Performance and load tests"str
+„"--benchmark-only"str
+0ì&"tests/ai/test_compliance_accuracy.py"str
+:’0"tests/performance/test_database_performance.py"str
+Î
+"security"strlist"ÿV&
+$
+ (Path"?python-unknown?&
+$
+ ($Dict"?python-unknown?&
+$
+ ($List"?python-unknown?'
+%
+ ($Tuple"?python-unknown?3
+1
+	 Û(TEST_CONFIGS"#new-object#Bdict$
+"
+ 3("#new-object#Bdict 
+
+   (-"	#map-set#:	
+$
+"
+" 1("#new-object#Bdict 
+
+# #($"	#map-set#:'
+%
+$ .("#unknown-value#Blist&
+$
+$ .("
+#is-exact#:Bbool
+
+$ .("
+#assume#:8
+6
+$ .("#set-field# __collection_size:Bint&
+$
+$ .( "#array-add-last#:&
+$
+$ .(!"#array-add-last#:&
+$
+$ .(""#array-add-last#:&
+$
+$ .(#"#array-add-last#:&
+$
+$ .($"#array-add-last#:&
+$
+$ .(%"#array-add-last#:&
+$
+$ .(&"#array-add-last#:&
+$
+$ .('"#array-add-last#:&
+$
+$ .(("#array-add-last#: 
+
+$ .()"	#map-set#: 
+
+/ /(,"	#map-set#:*+ 
+
+0 0(!/"	#map-set#:-.'
+%
+! 2(	0"#unknown-value#Blist&
+$
+! 2(	1"
+#is-exact#:0Bbool
+
+! 2(	2"
+#assume#:18
+6
+! 2(	3"#set-field# __collection_size:0Bint&
+$
+! 2(	4"#array-add-last#:0 
+
+! 2(	5"	#map-set#:0 
+
+ 3(6"	#map-set#:$
+"
+4 m(8"#new-object#Bdict 
+
+5 5(8:"	#map-set#:8	9$
+"
+7 H(;"#new-object#Bdict 
+
+8 8(/="	#map-set#:;<'
+%
+9 E(C"#unknown-value#Blist&
+$
+9 E(D"
+#is-exact#:CBbool
+
+9 E(E"
+#assume#:D8
+6
+9 E(F"#set-field# __collection_size:CBint+
+)
+9 E(G"?python-unknown?*Blist 
+
+9 E(H"	#map-set#:;G 
+
+F F(J"	#map-set#:;*I 
+
+G G( L"	#map-set#:;-K$
+"
+I Y(M"#new-object#Bdict 
+
+J J(4O"	#map-set#:MN'
+%
+K V(S"#unknown-value#Blist&
+$
+K V(T"
+#is-exact#:SBbool
+
+K V(U"
+#assume#:T8
+6
+K V(V"#set-field# __collection_size:SBint&
+$
+K V(W"#array-add-last#:S&
+$
+K V(X"#array-add-last#:S&
+$
+K V(Y"#array-add-last#:S&
+$
+K V(Z"#array-add-last#:SP&
+$
+K V(["#array-add-last#:S?&
+$
+K V(\"#array-add-last#:SQ&
+$
+K V(]"#array-add-last#:S&
+$
+K V(^"#array-add-last#:SR&
+$
+K V(_"#array-add-last#:S&
+$
+K V(`"#array-add-last#:SB 
+
+K V(a"	#map-set#:MS 
+
+W W(c"	#map-set#:M*b 
+
+X X(!d"	#map-set#:M-.$
+"
+Z k(e"#new-object#Bdict 
+
+[ [(3g"	#map-set#:ef'
+%
+\ h(i"#unknown-value#Blist&
+$
+\ h(j"
+#is-exact#:iBbool
+
+\ h(k"
+#assume#:j8
+6
+\ h(l"#set-field# __collection_size:iBint+
+)
+\ h(m"?python-unknown?*Blist 
+
+\ h(n"	#map-set#:em 
+
+i i(p"	#map-set#:e*o 
+
+j j( q"	#map-set#:e-K'
+%
+6 l(	r"#unknown-value#Blist&
+$
+6 l(	s"
+#is-exact#:rBbool
+
+6 l(	t"
+#assume#:s8
+6
+6 l(	u"#set-field# __collection_size:rBint&
+$
+6 l(	v"#array-add-last#:r;&
+$
+6 l(	w"#array-add-last#:rM&
+$
+6 l(	x"#array-add-last#:re 
+
+6 l(	y"	#map-set#:8r 
+
+4 m(z"	#map-set#:78%
+#
+	n –(|"#new-object#Bdict 
+
+o o(3~"	#map-set#:|	}%
+#
+	q ƒ("#new-object#Bdict"
+ 
+r r(/"	#map-set#:€)
+'
+	s €(†"#unknown-value#Blist)
+'
+	s €(‡"
+#is-exact#:†Bbool 
+
+	s €(ˆ"
+#assume#:‡;
+9
+	s €(‰"#set-field# __collection_size:†Bint-
++
+	s €(Š"?python-unknown?*Blist#
+!
+	s €(‹"	#map-set#:Š$
+"
+
+ ("	#map-set#:*Œ#
+!
+
+‚ ‚(!Ž"	#map-set#:-.'
+%
+
+„ ”("#new-object#Bdict%
+#
+
+… …(4‘"	#map-set#:*
+(
+
+† ‘(“"#unknown-value#Blist*
+(
+
+† ‘(”"
+#is-exact#:“Bbool!
+
+
+† ‘(•"
+#assume#:”<
+:
+
+† ‘(–"#set-field# __collection_size:“Bint*
+(
+
+† ‘(—"#array-add-last#:“*
+(
+
+† ‘(˜"#array-add-last#:“*
+(
+
+† ‘(™"#array-add-last#:“+
+)
+
+† ‘(š"#array-add-last#:“’*
+(
+
+† ‘(›"#array-add-last#:“?*
+(
+
+† ‘(œ"#array-add-last#:“Q*
+(
+
+† ‘("#array-add-last#:“*
+(
+
+† ‘(ž"#array-add-last#:“{*
+(
+
+† ‘(Ÿ"#array-add-last#:“+
+)
+
+† ‘( "#array-add-last#:“ƒ%
+#
+
+† ‘(¡"	#map-set#:“%
+#
+
+’ ’(£"	#map-set#:*¢$
+"
+
+“ “(!¤"	#map-set#:-.)
+'
+	p •(	¥"#unknown-value#Blist)
+'
+	p •(	¦"
+#is-exact#:¥Bbool 
+
+	p •(	§"
+#assume#:¦;
+9
+	p •(	¨"#set-field# __collection_size:¥Bint)
+'
+	p •(	©"#array-add-last#:¥*
+(
+	p •(	ª"#array-add-last#:¥#
+!
+	p •(	«"	#map-set#:|¥"
+ 
+	n –(¬"	#map-set#:{|'
+%
+
+— ¬(®"#new-object#Bdict%
+#
+
+˜ ˜(2°"	#map-set#:®	¯'
+%
+
+š ª(±"#new-object#Bdict%
+#
+
+› ›(-³"	#map-set#:±²*
+(
+
+œ §(µ"#unknown-value#Blist*
+(
+
+œ §(¶"
+#is-exact#:µBbool!
+
+
+œ §(·"
+#assume#:¶<
+:
+
+œ §(¸"#set-field# __collection_size:µBint*
+(
+
+œ §(¹"#array-add-last#:µ*
+(
+
+œ §(º"#array-add-last#:µ*
+(
+
+œ §(»"#array-add-last#:µ+
+)
+
+œ §(¼"#array-add-last#:µ´*
+(
+
+œ §(½"#array-add-last#:µ?*
+(
+
+œ §(¾"#array-add-last#:µQ*
+(
+
+œ §(¿"#array-add-last#:µ+
+)
+
+œ §(À"#array-add-last#:µ­*
+(
+
+œ §(Á"#array-add-last#:µ+
+)
+
+œ §(Â"#array-add-last#:µƒ%
+#
+
+œ §(Ã"	#map-set#:±µ%
+#
+
+¨ ¨(Å"	#map-set#:±*Ä$
+"
+
+© ©(!Æ"	#map-set#:±-.*
+(
+
+™ «(	Ç"#unknown-value#Blist*
+(
+
+™ «(	È"
+#is-exact#:ÇBbool!
+
+
+™ «(	É"
+#assume#:È<
+:
+
+™ «(	Ê"#set-field# __collection_size:ÇBint+
+)
+
+™ «(	Ë"#array-add-last#:Ç±%
+#
+
+™ «(	Ì"	#map-set#:®Ç%
+#
+
+— ¬(Í"	#map-set#:­®'
+%
+
+­ Ã(Ï"#new-object#Bdict%
+#
+
+® ®(:Ñ"	#map-set#:Ï	Ð'
+%
+
+° Á(Ò"#new-object#Bdict%
+#
+
+± ±(.Ô"	#map-set#:ÒÓ*
+(
+
+² ¾(Ö"#unknown-value#Blist*
+(
+
+² ¾(×"
+#is-exact#:ÖBbool!
+
+
+² ¾(Ø"
+#assume#:×<
+:
+
+² ¾(Ù"#set-field# __collection_size:ÖBint.
+,
+
+² ¾(Ú"?python-unknown?*Blist%
+#
+
+² ¾(Û"	#map-set#:ÒÚ$
+"
+
+¿ ¿(Ü"	#map-set#:Ò*b$
+"
+
+À À( Ý"	#map-set#:Ò-K*
+(
+
+¯ Â(	Þ"#unknown-value#Blist*
+(
+
+¯ Â(	ß"
+#is-exact#:ÞBbool!
+
+
+¯ Â(	à"
+#assume#:ß<
+:
+
+¯ Â(	á"#set-field# __collection_size:ÞBint+
+)
+
+¯ Â(	â"#array-add-last#:ÞÒ%
+#
+
+¯ Â(	ã"	#map-set#:ÏÞ%
+#
+
+­ Ã(ä"	#map-set#:ÎÏ'
+%
+
+Ä
+ Ú(æ"#new-object#Bdict%
+#
+
+Å Å(9è"	#map-set#:æ	ç'
+%
+
+Ç Ø(é"#new-object#Bdict%
+#
+
+È È(-ë"	#map-set#:éê*
+(
+
+É Õ(í"#unknown-value#Blist*
+(
+
+É Õ(î"
+#is-exact#:íBbool!
+
+
+É Õ(ï"
+#assume#:î<
+:
+
+É Õ(ð"#set-field# __collection_size:íBint.
+,
+
+É Õ(ñ"?python-unknown?*Blist%
+#
+
+É Õ(ò"	#map-set#:éñ$
+"
+
+Ö Ö(ó"	#map-set#:é*I$
+"
+
+× ×( ô"	#map-set#:é-K*
+(
+
+Æ Ù(	õ"#unknown-value#Blist*
+(
+
+Æ Ù(	ö"
+#is-exact#:õBbool!
+
+
+Æ Ù(	÷"
+#assume#:ö<
+:
+
+Æ Ù(	ø"#set-field# __collection_size:õBint+
+)
+
+Æ Ù(	ù"#array-add-last#:õé%
+#
+
+Æ Ù(	ú"	#map-set#:æõ%
+#
+
+Ä Ú(û"	#map-set#:åæ'
+%
+
+Þ è(ü"#new-object#Bdict%
+#
+
+ß ß(<þ"	#map-set#:ü	ý%
+#
+
+á á(ÿ"#array-read#:&
+$
+
+á á(&€"#array-read#:ÿ%
+#
+
+â
+ â(%"#array-read#:7&
+$
+
+â
+ â(/‚"#array-read#:&
+$
+
+ã
+ ã("ƒ"#array-read#:Î&
+$
+
+ã
+ ã(,„"#array-read#:ƒ&
+$
+
+ä
+ ä(…"#array-read#:å&
+$
+
+ä
+ ä(&†"#array-read#:…&
+$
+
+å
+ å(‡"#array-read#:­&
+$
+
+å
+ å('ˆ"#array-read#:‡%
+#
+
+æ
+ æ(%‰"#array-read#:{&
+$
+
+æ
+ æ(/Š"#array-read#:‰/
+-
+
+á æ(/‹"	#binop +#2+:€‚„†ˆŠ%
+#
+
+à ç(Œ"	#map-set#:ü‹'
+%
+Þ è(Ž"#array-write#:ü'
+%
+
+ë ”("#new-object#Bdict%
+#
+
+ì ì(3‘"	#map-set#:	'
+%
+
+î (	’"#new-object#Bdict%
+#
+
+ï ï(5”"	#map-set#:’“*
+(
+
+ð þ(˜"#unknown-value#Blist*
+(
+
+ð þ(™"
+#is-exact#:˜Bbool!
+
+
+ð þ(š"
+#assume#:™<
+:
+
+ð þ(›"#set-field# __collection_size:˜Bint.
+,
+
+ð þ(œ"?python-unknown?*Blist%
+#
+
+ð þ("	#map-set#:’œ$
+"
+
+ÿ ÿ(ž"	#map-set#:’*I$
+"
+
+€ €(Ÿ"	#map-set#:’-K'
+%
+
+‚ ’(	 "#new-object#Bdict%
+#
+
+ƒ ƒ((¢"	#map-set#: ¡*
+(
+
+„ (¥"#unknown-value#Blist*
+(
+
+„ (¦"
+#is-exact#:¥Bbool!
+
+
+„ (§"
+#assume#:¦<
+:
+
+„ (¨"#set-field# __collection_size:¥Bint*
+(
+
+„ (©"#array-add-last#:¥*
+(
+
+„ (ª"#array-add-last#:¥*
+(
+
+„ («"#array-add-last#:¥+
+)
+
+„ (¬"#array-add-last#:¥£*
+(
+
+„ (­"#array-add-last#:¥?*
+(
+
+„ (®"#array-add-last#:¥Q*
+(
+
+„ (¯"#array-add-last#:¥+
+)
+
+„ (°"#array-add-last#:¥¤*
+(
+
+„ (±"#array-add-last#:¥+
+)
+
+„ (²"#array-add-last#:¥ƒ%
+#
+
+„ (³"	#map-set#: ¥$
+"
+
+ (´"	#map-set#: *b$
+"
+
+‘ ‘(µ"	#map-set#: -.*
+(
+
+í “(¶"#unknown-value#Blist*
+(
+
+í “(·"
+#is-exact#:¶Bbool!
+
+
+í “(¸"
+#assume#:·<
+:
+
+í “(¹"#set-field# __collection_size:¶Bint+
+)
+
+í “(º"#array-add-last#:¶’+
+)
+
+í “(»"#array-add-last#:¶ %
+#
+
+í “(¼"	#map-set#:¶'
+%
+ë ”(¾"#array-write#:½'
+%
+—  ¿%closure"#new-object#&
+$
+—  À"#set-field# Dict:¿+
+)
+—  Á"?python-partial-apply?:¿'
+%
+  §Â%closure"#new-object#&
+$
+  §Ã"#set-field# Dict:Â+
+)
+  §Ä"?python-partial-apply?:Â'
+%
+§ ×Å%closure"#new-object#&
+$
+§ ×Æ"#set-field# Dict:Å'
+%
+§ ×Ç"#set-field# Tuple:Å+
+)
+§ ×È"?python-partial-apply?:Å'
+%
+× þÉ%closure"#new-object#&
+$
+× þÊ"#set-field# List:É&
+$
+× þË"#set-field# Dict:É'
+%
+× þÌ"#set-field# Tuple:É+
+)
+× þÍ"?python-partial-apply?:É'
+%
+þ ¡Î%closure"#new-object#&
+$
+þ ¡Ï"#set-field# List:Î'
+%
+þ ¡Ð"#set-field# Tuple:Î+
+)
+þ ¡Ñ"?python-partial-apply?:Î'
+%
+¡ ÄÒ%closure"#new-object#.
+,
+¡ ÄÓ"#set-field# TEST_CONFIGS:Ò+
+)
+¡ ÄÔ"?python-partial-apply?:Ò$
+"
+
+Ä Ä(Õ"#unknown-value#/
+-
+
+Ä Ä(×"
+#binop ==#2==:ÕÖBbool"
+
+Ä Ä(× *Ä Ä("…$
+"
+
+Å Å(Ø"#unknown-value#$
+"
+
+Å Å(Ù"#unknown-value#/
+-
+
+Å Å(Ú"
+asyncio.runnersrun:ØÙ" *8/home/omar/Documents/ruleIQ/scripts/run_tests_chunked.py

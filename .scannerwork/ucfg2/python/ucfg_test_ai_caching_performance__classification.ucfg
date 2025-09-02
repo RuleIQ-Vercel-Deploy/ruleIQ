@@ -1,0 +1,147 @@
+
+dtests.unit.services.test_ai_caching_performance.TestAIResponseCache.test_content_type_classificationX
+N/home/omar/Documents/ruleIQ/tests/unit/services/test_ai_caching_performance.py2 2(."2*
+23 3(Ft
+r
+6 6(I
+rec_response"__id*P
+
+__unknown_file (42
+0I recommend implementing access control policies‰†
+7 7(F
+%1*.
+
+__unknown_file (
+
+cache_instance*,
+
+__unknown_file (
+
+rec_response2_classify_content_typeB
+@
+7 7(F
+
+rec_type"__id*"
+
+__unknown_file (
+
+%1t
+r
+8 8(5
+%2"__id*Z
+
+__unknown_file (>*<(
+&services.ai.response_cache.ContentType"
+RECOMMENDATION
+
+8 8(5
+%3"	__compare*"
+
+__unknown_file (
+==*(
+
+__unknown_file (
+
+
+rec_type*"
+
+__unknown_file (
+
+%2t
+r
+; ;(I
+policy_response"__id*M
+
+__unknown_file (1/
+-This policy establishes governance proceduresŒ‰
+< <(L
+%4*.
+
+__unknown_file (
+
+cache_instance*/
+
+__unknown_file (
+
+policy_response2_classify_content_typeE
+C
+< <(L
+policy_type"__id*"
+
+__unknown_file (
+
+%4l
+j
+= =(0
+%5"__id*R
+
+__unknown_file (6*4(
+&services.ai.response_cache.ContentType"
+POLICY“
+
+= =(0
+%6"	__compare*"
+
+__unknown_file (
+==*+
+
+__unknown_file (
+
+policy_type*"
+
+__unknown_file (
+
+%5l
+j
+@ @(A
+workflow_response"__id*C
+
+__unknown_file ('%
+#Step 1: Define scope and objectivesŽ‹
+A A(P
+%7*.
+
+__unknown_file (
+
+cache_instance*1
+
+__unknown_file (
+
+workflow_response2_classify_content_typeG
+E
+A A(P
+workflow_type"__id*"
+
+__unknown_file (
+
+%7n
+l
+B  B(4
+%8"__id*T
+
+__unknown_file (8*6(
+&services.ai.response_cache.ContentType"
+
+WORKFLOW•
+’
+B B(4
+%9"	__compare*"
+
+__unknown_file (
+==*-
+
+__unknown_file (
+
+workflow_type*"
+
+__unknown_file (
+
+%8*
+3*D
+3 
+test_ai_caching_performance.py"
+D D(
+implicit return:
+25 2(C
+cache_instanceBGE
+Ctests.unit.services.test_ai_caching_performance.TestAIResponseCacheH

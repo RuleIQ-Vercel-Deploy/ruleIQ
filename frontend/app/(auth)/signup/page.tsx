@@ -74,7 +74,6 @@ interface UserFormData {
 // Answer type for question responses
 type QuestionAnswer = string | string[] | boolean | undefined;
 
- 
 interface Question {
   id: string;
   type: QuestionType;
@@ -90,7 +89,6 @@ interface Question {
   icon?: React.ReactNode;
   priority?: 'high' | 'medium' | 'low';
 }
- 
 
 // Question Bank - Smart, Dynamic Questions
 const questionBank: Record<string, Question> = {
@@ -1045,7 +1043,7 @@ export default function AIGuidedSignupPage() {
 
         <CardContent className="space-y-4">
           {/* Chat Messages */}
-          <div className="h-[400px] space-y-4 overflow-y-auto rounded-lg border border-glass-border bg-surface-secondary/30 p-4">
+          <div className="border-glass-border h-[400px] space-y-4 overflow-y-auto rounded-lg border bg-surface-secondary/30 p-4">
             <AnimatePresence>
               {messages.map((message) => (
                 <motion.div
@@ -1144,7 +1142,7 @@ export default function AIGuidedSignupPage() {
                                       size="sm"
                                       variant="outline"
                                       onClick={() => handleNext([])}
-                                      className="flex-1 border-glass-border bg-surface-secondary/50 hover:border-glass-border-hover hover:bg-surface-secondary/70"
+                                      className="border-glass-border hover:border-glass-border-hover flex-1 bg-surface-secondary/50 hover:bg-surface-secondary/70"
                                     >
                                       Skip this question
                                       <ChevronRight className="ml-1 h-3 w-3" />
@@ -1192,7 +1190,7 @@ export default function AIGuidedSignupPage() {
                                   variant="outline"
                                   size="sm"
                                   onClick={() => handleChoice(option)}
-                                  className="block w-full border-glass-border bg-surface-secondary/50 text-left transition-colors hover:border-glass-border-hover hover:bg-surface-secondary/70 hover:text-primary"
+                                  className="border-glass-border hover:border-glass-border-hover block w-full bg-surface-secondary/50 text-left transition-colors hover:bg-surface-secondary/70 hover:text-primary"
                                   disabled={isTyping}
                                 >
                                   {option}
@@ -1224,7 +1222,7 @@ export default function AIGuidedSignupPage() {
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 placeholder="Type your answer..."
-                className="flex-1 border-glass-border bg-surface-secondary/50 focus:border-primary"
+                className="border-glass-border flex-1 bg-surface-secondary/50 focus:border-primary"
                 disabled={isLoading}
               />
               <Button
@@ -1238,7 +1236,7 @@ export default function AIGuidedSignupPage() {
           )}
 
           {/* Alternative signup option */}
-          <div className="border-t border-glass-border pt-4 text-center">
+          <div className="border-glass-border border-t pt-4 text-center">
             <Link
               href="/signup-traditional"
               className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-primary"

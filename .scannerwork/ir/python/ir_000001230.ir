@@ -1,0 +1,45 @@
+
+2.0float
+1.5float
+1.0float
+0.3float
+
+5int
+	10000000int
+B9"Calculate risk multiplier based on enforcement patterns"str
+0.5floatselfu# u('	penaltiesu) u(?	frequencyuA u(O"t)
+'
+w w("
+__bool__*:BboolH)
+'
+w w("#unaryop !#2!:Bbool"
+w w( *w w(
+"
+x x("½2
+0
+z z(0avg_penalty"
+
+statisticsmean:1
+/
+} }(3
+"#dependent-value#*:	Bfloat6
+4
+} }(9penalty_factor"
+builtinsmin*:
+1
+/
+~ ~(,"#dependent-value#*:Bfloat8
+6
+~ ~(2frequency_factor"
+builtinsmin*:3
+1
+
+€ €(*"#dependent-value#*:Bfloat3
+1
+
+€/ €(E"#dependent-value#*:Bfloat1
+/
+
+€ €(F"#dependent-value#:Bfloat
+
+€ €(F*?/home/omar/Documents/ruleIQ/services/ai/enforcement_analyzer.py

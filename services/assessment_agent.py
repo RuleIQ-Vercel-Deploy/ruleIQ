@@ -38,6 +38,7 @@ logger = get_logger(__name__)
 
 class AssessmentPhase(Enum):
     """Phases of the assessment conversation."""
+
     INTRODUCTION = "introduction"
     BUSINESS_CONTEXT = "business_context"
     COMPLIANCE_DISCOVERY = "compliance_discovery"
@@ -52,6 +53,7 @@ class AssessmentState(TypedDict):
     State for the assessment agent graph.
     Maintains all context throughout the assessment conversation.
     """
+
     # Conversation history
     messages: Annotated[List[Any], add_messages]
 
@@ -88,7 +90,6 @@ class AssessmentState(TypedDict):
     fallback_mode: bool
 
 
-
 class AssessmentAgent:
     """
     LangGraph-based conversational assessment agent.
@@ -98,7 +99,7 @@ class AssessmentAgent:
         self.db = db_session
         self.assistant = ComplianceAssistant(db_session)
         self.circuit_breaker = AICircuitBreaker()
-        
+
         # Initialize persistent checkpointer
         self.checkpointer = self._initialize_checkpointer()
 
@@ -126,7 +127,7 @@ class AssessmentAgent:
         instance.db = db_session
         instance.assistant = ComplianceAssistant(db_session)
         instance.circuit_breaker = AICircuitBreaker()
-        
+
         # Initialize persistent checkpointer asynchronously
         instance.checkpointer = await instance._initialize_checkpointer()
 
@@ -143,7 +144,7 @@ class AssessmentAgent:
         instance.graph = instance._build_graph()
         # Compile without recursion_limit as it's not supported in this version
         instance.app = instance.graph.compile(checkpointer=instance.checkpointer)
-        
+
         return instance
 
     async def _initialize_checkpointer(self):
@@ -155,46 +156,50 @@ class AssessmentAgent:
             # Get database URL from settings
             settings = get_settings()
             database_url = settings.database_url
-            
+
             if database_url:
                 # Convert asyncpg URL to psycopg format if needed
                 if "asyncpg" in database_url:
-                    database_url = database_url.replace("postgresql+asyncpg://", "postgresql://")
-                
+                    database_url = database_url.replace(
+                        "postgresql+asyncpg://", "postgresql://"
+                    )
+
                 # Import psycopg for PostgreSQL connection
                 import psycopg
                 from psycopg.rows import dict_row
-                
+
                 # Create connection with proper parameters for AsyncPostgresSaver
                 # AsyncPostgresSaver expects a psycopg connection with autocommit and dict_row
                 conn = await psycopg.AsyncConnection.connect(
-                    database_url,
-                    autocommit=True,
-                    row_factory=dict_row
+                    database_url, autocommit=True, row_factory=dict_row
                 )
-                
+
                 # Use the official AsyncPostgresSaver with the connection
                 checkpointer = AsyncPostgresSaver(conn)
-                
+
                 # Ensure the checkpoint tables exist
                 await checkpointer.setup()
                 logger.info("Async checkpoint tables created or verified")
-                logger.info("Initialized official AsyncPostgresSaver for persistent state storage")
-                
+                logger.info(
+                    "Initialized official AsyncPostgresSaver for persistent state storage"
+                )
+
                 # Store connection to prevent it from being garbage collected
                 self._db_conn = conn
-                
+
                 return checkpointer
             else:
                 # Fallback to in-memory storage for development
-                logger.warning("DATABASE_URL not found, using in-memory checkpointer (state won't persist between requests)")
+                logger.warning(
+                    "DATABASE_URL not found, using in-memory checkpointer (state won't persist between requests)"
+                )
                 return MemorySaver()
-                
+
         except Exception as e:
             logger.error(f"Failed to initialize AsyncPostgresSaver: {e}")
             logger.warning("Falling back to in-memory checkpointer")
             return MemorySaver()
-    
+
     def _configure_tracing(self):
         """Configure LangSmith tracing for observability."""
         # Check if tracing is enabled via environment variables
@@ -206,7 +211,9 @@ class AssessmentAgent:
             project = os.getenv("LANGCHAIN_PROJECT", "ruleiq-assessment")
 
             if not api_key:
-                logger.warning("LANGCHAIN_TRACING_V2 is enabled but LANGCHAIN_API_KEY is not set")
+                logger.warning(
+                    "LANGCHAIN_TRACING_V2 is enabled but LANGCHAIN_API_KEY is not set"
+                )
                 return
 
             # Set project name if not already set
@@ -215,7 +222,9 @@ class AssessmentAgent:
             logger.info(f"LangSmith tracing enabled for project: {project}")
             logger.info("Traces will be available at: https://smith.langchain.com")
         else:
-            logger.debug("LangSmith tracing is disabled. Set LANGCHAIN_TRACING_V2=true to enable.")
+            logger.debug(
+                "LangSmith tracing is disabled. Set LANGCHAIN_TRACING_V2=true to enable."
+            )
 
     def _build_graph(self) -> StateGraph:
         """Build the LangGraph state graph for assessment flow."""
@@ -236,15 +245,15 @@ class AssessmentAgent:
         # Modified flow: introduction → analyze_context → generate first question
         graph.add_edge("introduction", "analyze_context")
         graph.add_edge("analyze_context", "generate_question")
-        
+
         # After generating a question, we should END and wait for user input
         # The process_answer node should only be triggered when we have actual user input
         # For now, we'll end after generating the question
         graph.add_edge("generate_question", END)
-        
+
         # These edges would be used when processing actual user answers
         # graph.add_edge("process_answer", "determine_next")
-        
+
         # Conditional routing from determine_next
         graph.add_conditional_edges(
             "determine_next",
@@ -252,8 +261,8 @@ class AssessmentAgent:
             {
                 "continue": "generate_question",
                 "complete": "generate_results",
-                "error": "completion"
-            }
+                "error": "completion",
+            },
         )
 
         graph.add_edge("generate_results", "completion")
@@ -262,7 +271,8 @@ class AssessmentAgent:
 
     async def _introduction_node(self, state: AssessmentState) -> AssessmentState:
         """Initialize the assessment with a friendly introduction."""
-        intro_message = AIMessage(content="""
+        intro_message = AIMessage(
+            content="""
 Hello! I'm IQ, your AI compliance assistant. I'm here to help you understand your compliance needs 
 and identify areas where we can strengthen your compliance posture.
 
@@ -272,7 +282,8 @@ of your needs.
 
 Let's start with understanding your business context. What type of business do you operate, and 
 what's your primary industry?
-        """)
+        """
+        )
 
         state["messages"].append(intro_message)
         state["current_phase"] = AssessmentPhase.BUSINESS_CONTEXT
@@ -286,11 +297,14 @@ what's your primary industry?
         messages = state["messages"]
 
         # Use AI to analyze if available
-        if self.circuit_breaker.is_model_available("gemini-2.5-flash") and not state["fallback_mode"]:
+        if (
+            self.circuit_breaker.is_model_available("gemini-2.5-flash")
+            and not state["fallback_mode"]
+        ):
             try:
                 analysis = await self.assistant.analyze_conversation_context(
                     messages=messages[-10:],  # Last 10 messages for context
-                    business_profile=state["business_profile"]
+                    business_profile=state["business_profile"],
                 )
 
                 # Update business profile with new insights
@@ -303,7 +317,9 @@ what's your primary industry?
                         state["compliance_needs"].append(need)
 
                 # Determine expertise level from responses
-                state["expertise_level"] = analysis.get("expertise_level", "intermediate")
+                state["expertise_level"] = analysis.get(
+                    "expertise_level", "intermediate"
+                )
 
                 # Check if we need follow-up questions
                 state["follow_up_needed"] = analysis.get("follow_up_needed", False)
@@ -330,7 +346,7 @@ what's your primary industry?
                 "gdpr": ["personal data", "eu", "privacy", "gdpr"],
                 "security": ["security", "breach", "cyber", "hack"],
                 "iso": ["iso", "certification", "audit"],
-                "data": ["data protection", "backup", "storage"]
+                "data": ["data protection", "backup", "storage"],
             }
 
             answer_lower = recent_answer.lower()
@@ -344,7 +360,7 @@ what's your primary industry?
     @traceable(
         name="generate_question",
         tags=["node", "question_generation"],
-        metadata={"node_type": "question_generator"}
+        metadata={"node_type": "question_generator"},
     )
     async def _generate_question_node(self, state: AssessmentState) -> AssessmentState:
         """Generate the next question based on accumulated context."""
@@ -353,7 +369,10 @@ what's your primary industry?
         questions_answered = state["questions_answered"]
 
         # Try AI-powered question generation
-        if self.circuit_breaker.is_model_available("gemini-2.5-flash") and not state["fallback_mode"]:
+        if (
+            self.circuit_breaker.is_model_available("gemini-2.5-flash")
+            and not state["fallback_mode"]
+        ):
             try:
                 # Build context for question generation
                 context = {
@@ -364,18 +383,20 @@ what's your primary industry?
                     "expertise_level": state["expertise_level"],
                     "questions_answered": questions_answered,
                     "min_questions": self.MIN_QUESTIONS,
-                    "max_questions": self.MAX_QUESTIONS
+                    "max_questions": self.MAX_QUESTIONS,
                 }
 
                 # Generate contextual question
                 question_data = await self.assistant.generate_contextual_question(
                     context=context,
-                    previous_messages=state["messages"][-6:]  # Last 3 Q&A pairs
+                    previous_messages=state["messages"][-6:],  # Last 3 Q&A pairs
                 )
 
                 if question_data:
                     question_text = question_data.get("question_text")
-                    question_id = question_data.get("question_id", f"dyn_{uuid.uuid4().hex[:8]}")
+                    question_id = question_data.get(
+                        "question_id", f"dyn_{uuid.uuid4().hex[:8]}"
+                    )
 
                     # Add question to conversation
                     ai_message = AIMessage(
@@ -383,8 +404,8 @@ what's your primary industry?
                         additional_kwargs={
                             "question_id": question_id,
                             "question_type": question_data.get("question_type", "open"),
-                            "phase": phase.value
-                        }
+                            "phase": phase.value,
+                        },
                     )
 
                     state["messages"].append(ai_message)
@@ -411,8 +432,8 @@ what's your primary industry?
                     additional_kwargs={
                         "question_id": question["id"],
                         "question_type": "fallback",
-                        "phase": phase.value
-                    }
+                        "phase": phase.value,
+                    },
                 )
 
                 state["messages"].append(ai_message)
@@ -428,10 +449,7 @@ what's your primary industry?
         state["questions_answered"] += 1
 
         # Update progress
-        progress = min(
-            (state["questions_answered"] / self.MIN_QUESTIONS) * 100,
-            100
-        )
+        progress = min((state["questions_answered"] / self.MIN_QUESTIONS) * 100, 100)
 
         # Extract key information from answer
         if state["messages"]:
@@ -486,7 +504,7 @@ what's your primary industry?
                     business_profile=state["business_profile"],
                     compliance_needs=state["compliance_needs"],
                     identified_risks=state["identified_risks"],
-                    compliance_score=state["compliance_score"]
+                    compliance_score=state["compliance_score"],
                 )
                 state["recommendations"] = recommendations
             except Exception as e:
@@ -499,7 +517,8 @@ what's your primary industry?
 
     async def _completion_node(self, state: AssessmentState) -> AssessmentState:
         """Complete the assessment with a summary."""
-        summary_message = AIMessage(content=f"""
+        summary_message = AIMessage(
+            content=f"""
 Thank you for completing the assessment! Here's what I've learned about your compliance needs:
 
 **Compliance Score:** {state['compliance_score']:.1f}%
@@ -516,7 +535,8 @@ approach to compliance management. Our platform can help automate many of these 
 ensure you stay compliant with minimal effort.
 
 Would you like to schedule a demo to see how we can help address your specific needs?
-        """)
+        """
+        )
 
         state["messages"].append(summary_message)
         state["current_phase"] = AssessmentPhase.COMPLETION
@@ -531,7 +551,14 @@ Would you like to schedule a demo to see how we can help address your specific n
         has_compliance_needs = len(state["compliance_needs"]) > 0
         has_enough_answers = state["questions_answered"] >= self.MIN_QUESTIONS
 
-        return all([has_business_type, has_company_size, has_compliance_needs, has_enough_answers])
+        return all(
+            [
+                has_business_type,
+                has_company_size,
+                has_compliance_needs,
+                has_enough_answers,
+            ]
+        )
 
     def _calculate_compliance_score(self, state: AssessmentState) -> float:
         """Calculate compliance score based on answers."""
@@ -546,11 +573,9 @@ Would you like to schedule a demo to see how we can help address your specific n
         base_score += needs_bonus
 
         # Adjust based on expertise level
-        expertise_bonus = {
-            "beginner": -10,
-            "intermediate": 0,
-            "expert": 10
-        }.get(state["expertise_level"], 0)
+        expertise_bonus = {"beginner": -10, "intermediate": 0, "expert": 10}.get(
+            state["expertise_level"], 0
+        )
 
         base_score += expertise_bonus
 
@@ -568,24 +593,50 @@ Would you like to schedule a demo to see how we can help address your specific n
         else:
             return "critical"
 
-    def _get_fallback_question(self, state: AssessmentState) -> Optional[Dict[str, Any]]:
+    def _get_fallback_question(
+        self, state: AssessmentState
+    ) -> Optional[Dict[str, Any]]:
         """Get a fallback question when AI is unavailable."""
         fallback_questions = {
             AssessmentPhase.BUSINESS_CONTEXT: [
-                {"id": "fb_biz_1", "text": "How many employees does your organization have?"},
-                {"id": "fb_biz_2", "text": "Do you operate in multiple countries or just domestically?"},
-                {"id": "fb_biz_3", "text": "What are your main products or services?"}
+                {
+                    "id": "fb_biz_1",
+                    "text": "How many employees does your organization have?",
+                },
+                {
+                    "id": "fb_biz_2",
+                    "text": "Do you operate in multiple countries or just domestically?",
+                },
+                {"id": "fb_biz_3", "text": "What are your main products or services?"},
             ],
             AssessmentPhase.COMPLIANCE_DISCOVERY: [
-                {"id": "fb_comp_1", "text": "Do you currently follow any compliance frameworks (like ISO, SOC 2, GDPR)?"},
-                {"id": "fb_comp_2", "text": "Have you had any compliance audits in the past year?"},
-                {"id": "fb_comp_3", "text": "Do you handle sensitive customer data like payment information or health records?"}
+                {
+                    "id": "fb_comp_1",
+                    "text": "Do you currently follow any compliance frameworks (like ISO, SOC 2, GDPR)?",
+                },
+                {
+                    "id": "fb_comp_2",
+                    "text": "Have you had any compliance audits in the past year?",
+                },
+                {
+                    "id": "fb_comp_3",
+                    "text": "Do you handle sensitive customer data like payment information or health records?",
+                },
             ],
             AssessmentPhase.RISK_ASSESSMENT: [
-                {"id": "fb_risk_1", "text": "Have you experienced any security incidents or data breaches?"},
-                {"id": "fb_risk_2", "text": "How do you currently manage access to sensitive systems?"},
-                {"id": "fb_risk_3", "text": "Do you have a documented incident response plan?"}
-            ]
+                {
+                    "id": "fb_risk_1",
+                    "text": "Have you experienced any security incidents or data breaches?",
+                },
+                {
+                    "id": "fb_risk_2",
+                    "text": "How do you currently manage access to sensitive systems?",
+                },
+                {
+                    "id": "fb_risk_3",
+                    "text": "Do you have a documented incident response plan?",
+                },
+            ],
         }
 
         phase_questions = fallback_questions.get(state["current_phase"], [])
@@ -599,10 +650,14 @@ Would you like to schedule a demo to see how we can help address your specific n
         phase_order = [
             AssessmentPhase.BUSINESS_CONTEXT,
             AssessmentPhase.COMPLIANCE_DISCOVERY,
-            AssessmentPhase.RISK_ASSESSMENT
+            AssessmentPhase.RISK_ASSESSMENT,
         ]
 
-        current_index = phase_order.index(state["current_phase"]) if state["current_phase"] in phase_order else 0
+        current_index = (
+            phase_order.index(state["current_phase"])
+            if state["current_phase"] in phase_order
+            else 0
+        )
 
         if current_index < len(phase_order) - 1:
             state["current_phase"] = phase_order[current_index + 1]
@@ -610,7 +665,9 @@ Would you like to schedule a demo to see how we can help address your specific n
 
         return None
 
-    def _get_fallback_recommendations(self, state: AssessmentState) -> List[Dict[str, Any]]:
+    def _get_fallback_recommendations(
+        self, state: AssessmentState
+    ) -> List[Dict[str, Any]]:
         """Get fallback recommendations when AI is unavailable."""
         score = state["compliance_score"]
 
@@ -619,49 +676,49 @@ Would you like to schedule a demo to see how we can help address your specific n
                 {
                     "priority": "high",
                     "title": "Implement Basic Compliance Framework",
-                    "description": "Start with ISO 27001 basics to establish foundational security controls"
+                    "description": "Start with ISO 27001 basics to establish foundational security controls",
                 },
                 {
                     "priority": "high",
                     "title": "Conduct Risk Assessment",
-                    "description": "Identify and document your key compliance risks and vulnerabilities"
+                    "description": "Identify and document your key compliance risks and vulnerabilities",
                 },
                 {
                     "priority": "medium",
                     "title": "Develop Security Policies",
-                    "description": "Create and document essential security and data protection policies"
-                }
+                    "description": "Create and document essential security and data protection policies",
+                },
             ]
         elif score < 70:
             return [
                 {
                     "priority": "medium",
                     "title": "Enhance Current Controls",
-                    "description": "Strengthen existing compliance measures and fill identified gaps"
+                    "description": "Strengthen existing compliance measures and fill identified gaps",
                 },
                 {
                     "priority": "medium",
                     "title": "Implement Monitoring",
-                    "description": "Set up continuous compliance monitoring and alerting"
+                    "description": "Set up continuous compliance monitoring and alerting",
                 },
                 {
                     "priority": "low",
                     "title": "Prepare for Certification",
-                    "description": "Work towards formal compliance certification"
-                }
+                    "description": "Work towards formal compliance certification",
+                },
             ]
         else:
             return [
                 {
                     "priority": "low",
                     "title": "Maintain Excellence",
-                    "description": "Continue regular reviews and updates to maintain high compliance standards"
+                    "description": "Continue regular reviews and updates to maintain high compliance standards",
                 },
                 {
                     "priority": "low",
                     "title": "Automate Processes",
-                    "description": "Look for opportunities to automate compliance workflows"
-                }
+                    "description": "Look for opportunities to automate compliance workflows",
+                },
             ]
 
     def _format_list(self, items: List[str]) -> str:
@@ -685,19 +742,16 @@ Would you like to schedule a demo to see how we can help address your specific n
         return "\n".join(formatted)
 
     async def start_assessment(
-        self,
-        session_id: str,
-        lead_id: str,
-        initial_context: Dict[str, Any]
+        self, session_id: str, lead_id: str, initial_context: Dict[str, Any]
     ) -> AssessmentState:
         """
         Start a new assessment session using LangGraph.
-        
+
         Args:
             session_id: Unique session identifier
             lead_id: Lead identifier
             initial_context: Initial business context
-            
+
         Returns:
             Initial assessment state
         """
@@ -723,34 +777,40 @@ Would you like to schedule a demo to see how we can help address your specific n
             gaps_identified=[],
             should_continue=True,
             error_count=0,
-            fallback_mode=not self.circuit_breaker.is_model_available("gemini-2.5-flash")
+            fallback_mode=not self.circuit_breaker.is_model_available(
+                "gemini-2.5-flash"
+            ),
         )
 
         # Run the introduction node with tracing context
         # Add recursion_limit to config to prevent infinite loops
         config = {
             "configurable": {"thread_id": initial_state["thread_id"]},
-            "recursion_limit": self.RECURSION_LIMIT
+            "recursion_limit": self.RECURSION_LIMIT,
         }
 
         try:
             # Fixed: Remove metadata parameter that's not supported in newer LangSmith
             with tracing_v2_enabled(
                 project_name=os.getenv("LANGCHAIN_PROJECT", "ruleiq-assessment"),
-                tags=["assessment_start", f"session:{session_id}"]
+                tags=["assessment_start", f"session:{session_id}"],
             ):
                 # Use async invoke now that we have AsyncPostgresSaver wrapper
                 result = await self.app.ainvoke(initial_state, config)
 
             return result
-            
+
         except NotImplementedError as e:
             logger.error(f"PostgresSaver NotImplementedError in start_assessment: {e}")
-            logger.error("This indicates LangGraph async/sync compatibility issues with PostgresSaver")
-            
+            logger.error(
+                "This indicates LangGraph async/sync compatibility issues with PostgresSaver"
+            )
+
             # Try fallback without checkpointer state persistence
             try:
-                logger.warning("Attempting fallback execution without state persistence")
+                logger.warning(
+                    "Attempting fallback execution without state persistence"
+                )
                 # Create a temporary app without checkpointer for this request
                 fallback_app = self.graph.compile()  # No checkpointer
                 result = await fallback_app.ainvoke(initial_state, config)
@@ -758,51 +818,51 @@ Would you like to schedule a demo to see how we can help address your specific n
                 return result
             except Exception as fallback_error:
                 logger.error(f"Fallback execution also failed: {fallback_error}")
-                raise Exception(f"Assessment failed due to checkpointer issues: {str(e)}")
-                
+                raise Exception(
+                    f"Assessment failed due to checkpointer issues: {str(e)}"
+                )
+
         except Exception as e:
             logger.error(f"Unexpected error in start_assessment: {e}")
             logger.error(f"Error type: {type(e).__name__}")
             import traceback
+
             logger.error(f"Traceback: {traceback.format_exc()}")
             raise
 
     async def process_user_answer(
-        self,
-        session_id: str,
-        answer: str,
-        current_state: AssessmentState
+        self, session_id: str, answer: str, current_state: AssessmentState
     ) -> AssessmentState:
         """
         Process a user's answer and continue the assessment flow.
-        
+
         Args:
             session_id: Session identifier
             answer: User's answer to the previous question
             current_state: Current assessment state
-            
+
         Returns:
             Updated assessment state
         """
         # Add user answer as a message
         current_state["messages"].append(HumanMessage(content=answer))
-        
+
         # Create a new graph that starts from process_answer
         graph = StateGraph(AssessmentState)
-        
+
         # Add all nodes
         graph.add_node("process_answer", self._process_answer_node)
         graph.add_node("determine_next", self._determine_next_node)
         graph.add_node("generate_question", self._generate_question_node)
         graph.add_node("generate_results", self._generate_results_node)
         graph.add_node("completion", self._completion_node)
-        
+
         # Set entry point to process the answer
         graph.set_entry_point("process_answer")
-        
+
         # Define flow
         graph.add_edge("process_answer", "determine_next")
-        
+
         # Conditional routing
         graph.add_conditional_edges(
             "determine_next",
@@ -810,50 +870,47 @@ Would you like to schedule a demo to see how we can help address your specific n
             {
                 "continue": "generate_question",
                 "complete": "generate_results",
-                "error": "completion"
-            }
+                "error": "completion",
+            },
         )
-        
+
         graph.add_edge("generate_question", END)
         graph.add_edge("generate_results", "completion")
         graph.add_edge("completion", END)
-        
+
         # Compile the graph
         app = graph.compile(checkpointer=self.checkpointer)
-        
+
         # Run with the current state and recursion limit
         config = {
             "configurable": {"thread_id": current_state["thread_id"]},
-            "recursion_limit": self.RECURSION_LIMIT
+            "recursion_limit": self.RECURSION_LIMIT,
         }
-        
+
         with tracing_v2_enabled(
             project_name=os.getenv("LANGCHAIN_PROJECT", "ruleiq-assessment"),
-            tags=["process_answer", f"session:{session_id}"]
+            tags=["process_answer", f"session:{session_id}"],
         ):
             result = await app.ainvoke(current_state, config)
-        
+
         return result
 
     @traceable(
         name="process_user_response",
         tags=["langgraph", "assessment", "freemium"],
-        metadata={"agent": "AssessmentAgent", "action": "process_response"}
+        metadata={"agent": "AssessmentAgent", "action": "process_response"},
     )
     async def process_user_response(
-        self,
-        session_id: str,
-        user_response: str,
-        confidence: Optional[str] = None
+        self, session_id: str, user_response: str, confidence: Optional[str] = None
     ) -> AssessmentState:
         """
         Process a user response and continue the assessment.
-        
+
         Args:
             session_id: Session identifier
             user_response: User's answer to the question
             confidence: User's confidence level
-            
+
         Returns:
             Updated assessment state
         """
@@ -862,24 +919,25 @@ Would you like to schedule a demo to see how we can help address your specific n
 
         # Add user message to state
         user_message = HumanMessage(
-            content=user_response,
-            additional_kwargs={"confidence": confidence}
+            content=user_response, additional_kwargs={"confidence": confidence}
         )
 
         # Try to get existing state from checkpointer first
         try:
             # Get the current state from the checkpointer
             checkpoint_tuple = self.checkpointer.get_tuple(config)
-            
+
             if checkpoint_tuple and checkpoint_tuple.checkpoint:
                 # The checkpoint is a dict containing the actual state data
                 checkpoint_data = checkpoint_tuple.checkpoint
-                
+
                 # Check if it's a string (the error case) or a dict (expected)
                 if isinstance(checkpoint_data, str):
-                    logger.error(f"Checkpoint returned string instead of dict: {checkpoint_data}")
+                    logger.error(
+                        f"Checkpoint returned string instead of dict: {checkpoint_data}"
+                    )
                     raise ValueError("Invalid checkpoint format")
-                
+
                 # Get the channel values which contains our state
                 if "channel_values" in checkpoint_data:
                     # This is the correct structure
@@ -890,31 +948,41 @@ Would you like to schedule a demo to see how we can help address your specific n
                 else:
                     # The checkpoint might BE the state directly
                     existing_state = checkpoint_data
-                
+
                 # Ensure we have messages list
                 if "messages" not in existing_state:
                     existing_state["messages"] = []
-                
+
                 existing_state["messages"].append(user_message)
-                
+
                 # Increment questions answered
-                existing_state["questions_answered"] = existing_state.get("questions_answered", 0) + 1
-                
+                existing_state["questions_answered"] = (
+                    existing_state.get("questions_answered", 0) + 1
+                )
+
                 # Update fallback mode if needed
-                existing_state["fallback_mode"] = not self.circuit_breaker.is_model_available("gemini-2.5-flash")
-                
+                existing_state["fallback_mode"] = (
+                    not self.circuit_breaker.is_model_available("gemini-2.5-flash")
+                )
+
                 # Ensure current_phase is an enum value
                 if "current_phase" in existing_state:
                     phase_value = existing_state["current_phase"]
                     if isinstance(phase_value, str):
                         # Convert string to enum
                         try:
-                            existing_state["current_phase"] = AssessmentPhase(phase_value)
+                            existing_state["current_phase"] = AssessmentPhase(
+                                phase_value
+                            )
                         except ValueError:
-                            existing_state["current_phase"] = AssessmentPhase.BUSINESS_CONTEXT
-                
-                logger.info(f"Retrieved existing state for session {session_id}: phase={existing_state.get('current_phase')}, answered={existing_state.get('questions_answered')}")
-                
+                            existing_state["current_phase"] = (
+                                AssessmentPhase.BUSINESS_CONTEXT
+                            )
+
+                logger.info(
+                    f"Retrieved existing state for session {session_id}: phase={existing_state.get('current_phase')}, answered={existing_state.get('questions_answered')}"
+                )
+
                 # Check if we should complete the assessment
                 if existing_state["questions_answered"] >= self.MIN_QUESTIONS:
                     # Determine if we have enough information
@@ -922,10 +990,12 @@ Would you like to schedule a demo to see how we can help address your specific n
                         existing_state["current_phase"] = AssessmentPhase.COMPLETION
                         existing_state["assessment_complete"] = True
                         logger.info(f"Assessment ready for completion: {session_id}")
-                
+
                 initial_state = existing_state
             else:
-                logger.warning(f"No existing state found for session {session_id}, creating new state")
+                logger.warning(
+                    f"No existing state found for session {session_id}, creating new state"
+                )
                 # Create initial state with all required fields if no state exists
                 initial_state = {
                     "messages": [user_message],
@@ -949,9 +1019,11 @@ Would you like to schedule a demo to see how we can help address your specific n
                     "compliance_score": 0.0,
                     "risk_level": "medium",
                     "gaps_identified": [],
-                    "fallback_mode": not self.circuit_breaker.is_model_available("gemini-2.5-flash"),
+                    "fallback_mode": not self.circuit_breaker.is_model_available(
+                        "gemini-2.5-flash"
+                    ),
                     "should_continue": True,
-                    "error_count": 0
+                    "error_count": 0,
                 }
         except Exception as e:
             logger.error(f"Error retrieving state from checkpointer: {e}")
@@ -978,20 +1050,19 @@ Would you like to schedule a demo to see how we can help address your specific n
                 "compliance_score": 0.0,
                 "risk_level": "medium",
                 "gaps_identified": [],
-                "fallback_mode": not self.circuit_breaker.is_model_available("gemini-2.5-flash"),
+                "fallback_mode": not self.circuit_breaker.is_model_available(
+                    "gemini-2.5-flash"
+                ),
                 "should_continue": True,
-                "error_count": 0
+                "error_count": 0,
             }
 
         # Fixed: Remove metadata parameter that's not supported in newer LangSmith
         with tracing_v2_enabled(
             project_name=os.getenv("LANGCHAIN_PROJECT", "ruleiq-assessment"),
-            tags=["assessment_response", f"session:{session_id}"]
+            tags=["assessment_response", f"session:{session_id}"],
         ):
             # Pass the full state, not just messages
-            result = await self.app.ainvoke(
-                initial_state,
-                config
-            )
+            result = await self.app.ainvoke(initial_state, config)
 
         return result

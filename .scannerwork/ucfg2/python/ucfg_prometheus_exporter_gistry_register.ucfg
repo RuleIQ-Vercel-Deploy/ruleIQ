@@ -1,0 +1,30 @@
+
+9monitoring.prometheus_exporter.CollectorRegistry.registerP
+F/home/omar/Documents/ruleIQ/app/core/monitoring/prometheus_exporter.py ("2*ù
+2   (#z
+x
+! !(
+%1"__id*`
+
+__unknown_file (D*B2
+0monitoring.prometheus_exporter.CollectorRegistry"
+
+collectorsig
+! !()
+%2*"
+
+__unknown_file (
+
+%1*)
+
+__unknown_file (
+
+	collector2append*
+3*<
+3
+prometheus_exporter.py"
+# #(
+implicit return:
+ ( 
+	collectorB42
+0monitoring.prometheus_exporter.CollectorRegistryH

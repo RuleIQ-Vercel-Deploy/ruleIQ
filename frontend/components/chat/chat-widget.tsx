@@ -1,6 +1,19 @@
 'use client';
 
-import { Bot, MessageSquare, Mic, MicOff, Phone, PhoneOff, Send, X, Minimize2, Maximize2, Volume2, VolumeX } from 'lucide-react';
+import {
+  Bot,
+  MessageSquare,
+  Mic,
+  MicOff,
+  Phone,
+  PhoneOff,
+  Send,
+  X,
+  Minimize2,
+  Maximize2,
+  Volume2,
+  VolumeX,
+} from 'lucide-react';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -26,7 +39,7 @@ interface ChatWidgetProps {
   };
 }
 
-export function ChatWidget({ 
+export function ChatWidget({
   position = 'bottom-right',
   defaultOpen = false,
   enableVoice = true,
@@ -34,8 +47,8 @@ export function ChatWidget({
     autoStart: false,
     language: 'en-US',
     voiceType: 'neutral',
-    speechRate: 1.0
-  }
+    speechRate: 1.0,
+  },
 }: ChatWidgetProps) {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -108,7 +121,7 @@ export function ChatWidget({
   // Voice control handlers
   const handleVoiceToggle = useCallback(() => {
     if (!isVoiceSupported) {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       return;
     }
 
@@ -123,7 +136,7 @@ export function ChatWidget({
 
   const handleVoiceCall = useCallback(() => {
     if (!voiceCapabilities?.calling) {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       return;
     }
 
@@ -133,11 +146,18 @@ export function ChatWidget({
     } else {
       startVoiceCall({
         conversationId: widgetConversationId || undefined,
-        ...voiceConfig
+        ...voiceConfig,
       });
       setIsVoiceCall(true);
     }
-  }, [isVoiceCall, widgetConversationId, voiceCapabilities, voiceConfig, startVoiceCall, endVoiceCall]);
+  }, [
+    isVoiceCall,
+    widgetConversationId,
+    voiceCapabilities,
+    voiceConfig,
+    startVoiceCall,
+    endVoiceCall,
+  ]);
 
   const handleMuteToggle = useCallback(() => {
     toggleMute();
@@ -149,7 +169,7 @@ export function ChatWidget({
     'bottom-right': 'bottom-4 right-4',
     'bottom-left': 'bottom-4 left-4',
     'top-right': 'top-20 right-4',
-    'top-left': 'top-20 left-4'
+    'top-left': 'top-20 left-4',
   };
 
   return (
@@ -169,11 +189,11 @@ export function ChatWidget({
                   <Button
                     onClick={() => setIsOpen(true)}
                     size="lg"
-                    className="h-14 w-14 rounded-full bg-gold text-navy shadow-lg hover:bg-gold-dark hover:scale-110 transition-all"
+                    className="h-14 w-14 rounded-full bg-gold text-navy shadow-lg transition-all hover:scale-110 hover:bg-gold-dark"
                   >
                     <Bot className="h-6 w-6" />
                     {typingUsers.length > 0 && (
-                      <span className="absolute -top-1 -right-1 h-3 w-3 bg-green-500 rounded-full animate-pulse" />
+                      <span className="absolute -right-1 -top-1 h-3 w-3 animate-pulse rounded-full bg-green-500" />
                     )}
                   </Button>
                 </TooltipTrigger>
@@ -198,21 +218,21 @@ export function ChatWidget({
               'fixed z-50',
               positionClasses[position],
               isMinimized ? 'w-80' : 'w-96',
-              'max-w-[calc(100vw-2rem)]'
+              'max-w-[calc(100vw-2rem)]',
             )}
           >
-            <Card className="flex flex-col shadow-2xl border-2 border-navy/10 overflow-hidden">
+            <Card className="flex flex-col overflow-hidden border-2 border-navy/10 shadow-2xl">
               {/* Header */}
-              <div className="flex items-center justify-between p-3 bg-gradient-to-r from-navy to-navy-dark text-white">
+              <div className="to-navy-dark flex items-center justify-between bg-gradient-to-r from-navy p-3 text-white">
                 <div className="flex items-center gap-2">
                   <Bot className="h-5 w-5" />
                   <span className="font-semibold">IQ Assistant</span>
                   {isConnected ? (
-                    <Badge variant="secondary" className="bg-green-500/20 text-green-300 text-xs">
+                    <Badge variant="secondary" className="bg-green-500/20 text-xs text-green-300">
                       Online
                     </Badge>
                   ) : (
-                    <Badge variant="secondary" className="bg-red-500/20 text-red-300 text-xs">
+                    <Badge variant="secondary" className="bg-red-500/20 text-xs text-red-300">
                       Offline
                     </Badge>
                   )}
@@ -261,9 +281,7 @@ export function ChatWidget({
                             )}
                           </Button>
                         </TooltipTrigger>
-                        <TooltipContent>
-                          {isMuted ? 'Unmute' : 'Mute'}
-                        </TooltipContent>
+                        <TooltipContent>{isMuted ? 'Unmute' : 'Mute'}</TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   )}
@@ -285,9 +303,7 @@ export function ChatWidget({
                           )}
                         </Button>
                       </TooltipTrigger>
-                      <TooltipContent>
-                        {isMinimized ? 'Expand' : 'Minimize'}
-                      </TooltipContent>
+                      <TooltipContent>{isMinimized ? 'Expand' : 'Minimize'}</TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
 
@@ -312,9 +328,9 @@ export function ChatWidget({
 
               {/* Voice Status Bar (Future) */}
               {isVoiceCall && (
-                <div className="flex items-center justify-between px-3 py-2 bg-gold/10 border-b">
+                <div className="flex items-center justify-between border-b bg-gold/10 px-3 py-2">
                   <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 bg-green-500 rounded-full animate-pulse" />
+                    <div className="h-2 w-2 animate-pulse rounded-full bg-green-500" />
                     <span className="text-xs text-muted-foreground">Voice call active</span>
                   </div>
                   <span className="text-xs text-muted-foreground">00:00</span>
@@ -323,18 +339,18 @@ export function ChatWidget({
 
               {/* Messages */}
               {!isMinimized && (
-                <div className="flex-1 h-96 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-background to-muted/20">
+                <div className="h-96 flex-1 space-y-4 overflow-y-auto bg-gradient-to-b from-background to-muted/20 p-4">
                   {widgetMessages.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center h-full text-center">
-                      <MessageSquare className="h-10 w-10 text-muted-foreground mb-3" />
+                    <div className="flex h-full flex-col items-center justify-center text-center">
+                      <MessageSquare className="mb-3 h-10 w-10 text-muted-foreground" />
                       <p className="text-sm text-muted-foreground">
                         Hi! I'm your AI compliance assistant.
                       </p>
-                      <p className="text-xs text-muted-foreground mt-1">
+                      <p className="mt-1 text-xs text-muted-foreground">
                         Ask me anything about compliance, policies, or regulations.
                       </p>
                       {enableVoice && isVoiceSupported && (
-                        <p className="text-xs text-muted-foreground mt-2">
+                        <p className="mt-2 text-xs text-muted-foreground">
                           🎤 Voice input available - click the mic to speak
                         </p>
                       )}
@@ -353,9 +369,9 @@ export function ChatWidget({
 
               {/* Input Area */}
               {!isMinimized && (
-                <div className="border-t p-3 bg-background">
+                <div className="border-t bg-background p-3">
                   <div className="flex items-end gap-2">
-                    <div className="flex-1 relative">
+                    <div className="relative flex-1">
                       <textarea
                         ref={inputRef}
                         value={message}
@@ -366,16 +382,16 @@ export function ChatWidget({
                             handleSendMessage();
                           }
                         }}
-                        placeholder={isListening ? "Listening..." : "Type your message..."}
-                        className="w-full resize-none rounded-lg border bg-background px-3 py-2 text-sm min-h-[40px] max-h-[120px] focus:outline-none focus:ring-2 focus:ring-gold"
+                        placeholder={isListening ? 'Listening...' : 'Type your message...'}
+                        className="max-h-[120px] min-h-[40px] w-full resize-none rounded-lg border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gold"
                         disabled={!isConnected || isProcessing}
                       />
                       {isListening && (
-                        <div className="absolute top-2 right-2">
+                        <div className="absolute right-2 top-2">
                           <div className="flex gap-1">
-                            <span className="h-2 w-2 bg-red-500 rounded-full animate-pulse" />
-                            <span className="h-2 w-2 bg-red-500 rounded-full animate-pulse delay-75" />
-                            <span className="h-2 w-2 bg-red-500 rounded-full animate-pulse delay-150" />
+                            <span className="h-2 w-2 animate-pulse rounded-full bg-red-500" />
+                            <span className="h-2 w-2 animate-pulse rounded-full bg-red-500 delay-75" />
+                            <span className="h-2 w-2 animate-pulse rounded-full bg-red-500 delay-150" />
                           </div>
                         </div>
                       )}
@@ -388,10 +404,10 @@ export function ChatWidget({
                           <TooltipTrigger asChild>
                             <Button
                               size="sm"
-                              variant={isListening ? "default" : "outline"}
+                              variant={isListening ? 'default' : 'outline'}
                               className={cn(
-                                "h-10 w-10 p-0",
-                                isListening && "bg-red-500 hover:bg-red-600"
+                                'h-10 w-10 p-0',
+                                isListening && 'bg-red-500 hover:bg-red-600',
                               )}
                               onClick={handleVoiceToggle}
                               disabled={!isConnected || isProcessing}
@@ -416,7 +432,7 @@ export function ChatWidget({
                         <TooltipTrigger asChild>
                           <Button
                             size="sm"
-                            className="h-10 w-10 p-0 bg-gold hover:bg-gold-dark text-navy"
+                            className="h-10 w-10 bg-gold p-0 text-navy hover:bg-gold-dark"
                             onClick={handleSendMessage}
                             disabled={!message.trim() || !isConnected || isProcessing}
                           >
@@ -430,14 +446,14 @@ export function ChatWidget({
 
                   {/* Voice Processing Indicator */}
                   {isProcessing && (
-                    <div className="mt-2 text-xs text-muted-foreground text-center">
+                    <div className="mt-2 text-center text-xs text-muted-foreground">
                       Processing voice input...
                     </div>
                   )}
 
                   {/* Voice Speaking Indicator */}
                   {isSpeaking && (
-                    <div className="mt-2 text-xs text-muted-foreground text-center flex items-center justify-center gap-2">
+                    <div className="mt-2 flex items-center justify-center gap-2 text-center text-xs text-muted-foreground">
                       <Volume2 className="h-3 w-3 animate-pulse" />
                       Speaking response...
                     </div>

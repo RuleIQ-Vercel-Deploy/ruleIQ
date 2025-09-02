@@ -82,7 +82,9 @@ class TestPerformanceFixes:
 
         # Test connection pooling
         assert hasattr(settings, "database_url")
-        assert "pool_size" in str(settings.database_url) or hasattr(settings, "db_pool_size")
+        assert "pool_size" in str(settings.database_url) or hasattr(
+            settings, "db_pool_size"
+        )
 
     def test_query_performance_monitoring(self):
         """Test query performance monitoring"""

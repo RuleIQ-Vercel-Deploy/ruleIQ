@@ -1,0 +1,113 @@
+
+:1"Analyze compliance requirements for a business."str
+,(#"Conduct privacy impact assessment"str
+
+0int
+"compliance_score"str
+ "applicable_frameworks"str
+"priority_obligations"str
+=4"GDPR Article 30 - Records of processing activities"str
+%"recommendations"str
+	0.85float
+*!"Data processing without consent"str
+"risk_areas"str
+,'#"Establish data retention schedule"str
+6-"UK GDPR - Data Protection Impact Assessment"str
+1&("Implement comprehensive privacy policy"str
+""Missing privacy notices"str
+-$"Inadequate data retention policies"str
+7."GDPR Article 13 - Information to be provided"strself
+× ×( business_profile
+× ×(=
+frameworks
+×? ×(Tlist"ˆ	0
+.
+
+Ú ì(	analysis"#new-object#Bdict"
+ 
+
+Û Û(/"	#map-set#:"
+ 
+
+Ü Ü($
+"	#map-set#:	)
+'
+
+Ý$ á("#unknown-value#Blist(
+&
+
+Ý$ á("
+#is-exact#:Bbool
+
+
+Ý$ á("
+#assume#::
+8
+
+Ý$ á("#set-field# __collection_size:Bint(
+&
+
+Ý$ á("#array-add-last#:(
+&
+
+Ý$ á("#array-add-last#:(
+&
+
+Ý$ á("#array-add-last#:"
+ 
+
+Ý á("	#map-set#:)
+'
+
+â æ("#unknown-value#Blist(
+&
+
+â æ("
+#is-exact#:Bbool
+
+
+â æ("
+#assume#::
+8
+
+â æ( "#set-field# __collection_size:Bint(
+&
+
+â æ(!"#array-add-last#:(
+&
+
+â æ(""#array-add-last#:(
+&
+
+â æ(#"#array-add-last#:"
+ 
+
+â æ($"	#map-set#:)
+'
+
+ç ë()"#unknown-value#Blist(
+&
+
+ç ë(*"
+#is-exact#:)Bbool
+
+
+ç ë(+"
+#assume#:*:
+8
+
+ç ë(,"#set-field# __collection_size:)Bint(
+&
+
+ç ë(-"#array-add-last#:)&(
+&
+
+ç ë(."#array-add-last#:)'(
+&
+
+ç ë(/"#array-add-last#:)("
+ 
+
+ç ë(0"	#map-set#:%)
+
+î î(*B/home/omar/Documents/ruleIQ/langgraph_agent/agents/tool_manager.py

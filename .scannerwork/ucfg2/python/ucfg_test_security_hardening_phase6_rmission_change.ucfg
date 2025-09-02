@@ -1,0 +1,96 @@
+
+stests.test_security_hardening_phase6.TestAuditLogging.test_security_event_logging.AuditLogger.log_permission_changeO
+C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py¢ ¢(%"2*ü
+2
+§ §(0
+
+© ≠(
+%1"dictó
+î
+
+™ ™(,
+%2"__mapSet*"
+
+__unknown_file (
+
+%1*(
+
+__unknown_file (
+
+admin_id*(
+
+__unknown_file (
+
+
+admin_idó
+î
+
+´ ´(,
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*(
+
+__unknown_file (
+
+old_role*(
+
+__unknown_file (
+
+
+old_roleó
+î
+
+¨ ¨(,
+%4"__mapSet*"
+
+__unknown_file (
+
+%1*(
+
+__unknown_file (
+
+new_role*(
+
+__unknown_file (
+
+
+new_roleçä
+
+• Æ(
+%5*}
+
+__unknown_file (a_
+]tests.test_security_hardening_phase6.TestAuditLogging.test_security_event_logging.AuditLogger2	log_event:
+
+event_type
+AUTHORIZATION:
+user_id
+	
+user_id:
+action
+PERMISSION_CHANGE:
+metadata
+
+%1"
+
+• Æ(
+
+%5:
+
+¢, ¢(8	
+user_id:
+
+¢: ¢(G
+
+admin_id:
+
+£% £(2
+
+old_role:
+
+£4 £(A
+
+new_roleBa_
+]tests.test_security_hardening_phase6.TestAuditLogging.test_security_event_logging.AuditLoggerH

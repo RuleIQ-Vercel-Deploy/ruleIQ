@@ -174,7 +174,9 @@ class TestEnhancedChatEndpoints:
             else:
                 assert response.status_code == 400
 
-    def test_policy_generation(self, client, authenticated_headers, sample_business_profile):
+    def test_policy_generation(
+        self, client, authenticated_headers, sample_business_profile
+    ):
         """Test policy generation endpoint"""
 
         with patch(
@@ -206,7 +208,10 @@ class TestEnhancedChatEndpoints:
                 "roles_responsibilities": [
                     {
                         "role": "Information Security Officer",
-                        "responsibilities": ["Oversee security program", "Manage incidents"],
+                        "responsibilities": [
+                            "Oversee security program",
+                            "Manage incidents",
+                        ],
                     }
                 ],
                 "procedures": [
@@ -367,11 +372,14 @@ class TestEnhancedChatEndpoints:
 
         # Create auth token for this user
         token_data = {"sub": str(test_user.id)}
-        token = create_access_token(data=token_data, expires_delta=timedelta(minutes=30))
+        token = create_access_token(
+            data=token_data, expires_delta=timedelta(minutes=30)
+        )
         headers = {"Authorization": f"Bearer {token}"}
 
         response = client.post(
-            "/api/chat/context-aware-recommendations?framework=ISO27001", headers=headers
+            "/api/chat/context-aware-recommendations?framework=ISO27001",
+            headers=headers,
         )
 
         # Should return 400 when business profile is missing
@@ -403,7 +411,8 @@ class TestEnhancedChatEndpoints:
         """Test validation of framework parameter"""
 
         response = client.post(
-            "/api/chat/context-aware-recommendations?framework=", headers=authenticated_headers
+            "/api/chat/context-aware-recommendations?framework=",
+            headers=authenticated_headers,
         )
 
         # Should return validation error for empty framework
@@ -415,7 +424,9 @@ class TestEnhancedChatEndpoints:
 class TestEnhancedChatValidation:
     """Test enhanced chat API validation and error handling"""
 
-    def test_workflow_generation_parameter_validation(self, client, authenticated_headers):
+    def test_workflow_generation_parameter_validation(
+        self, client, authenticated_headers
+    ):
         """Test workflow generation parameter validation"""
 
         # Missing required framework parameter
@@ -425,11 +436,15 @@ class TestEnhancedChatValidation:
 
         assert response.status_code == 422
 
-    def test_policy_generation_parameter_validation(self, client, authenticated_headers):
+    def test_policy_generation_parameter_validation(
+        self, client, authenticated_headers
+    ):
         """Test policy generation parameter validation"""
 
         # Missing required parameters
-        response = client.post("/api/chat/generate-policy", headers=authenticated_headers)
+        response = client.post(
+            "/api/chat/generate-policy", headers=authenticated_headers
+        )
 
         assert response.status_code == 422
 
@@ -437,6 +452,8 @@ class TestEnhancedChatValidation:
         """Test smart guidance parameter validation"""
 
         # Invalid framework in path
-        response = client.get("/api/chat/smart-guidance/", headers=authenticated_headers)
+        response = client.get(
+            "/api/chat/smart-guidance/", headers=authenticated_headers
+        )
 
         assert response.status_code == 404

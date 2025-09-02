@@ -1,0 +1,27 @@
+
+
+"error_type"str
++""Convert to SafeFallbackResponse."str
+90"Tool '{self.tool_name}' failed: {self.message}"str
+"tool_name"strselfN N(!
+company_idN# N(3	thread_idN5 N(C"ò$
+"
+R V("#new-object#Bdict*
+(
+S S(+"#get-field# tool_name: 
+
+S S(+	"	#map-set#:+
+)
+T T(-"#get-field# error_type: 
+
+T T(-"	#map-set#:
+(
+&
+U U("#get-field# details:%
+#
+U U("#unaryop **#2**:#
+!
+U U("#map-set-all#:'
+%
+P Y(	"#unknown-value#:
+P Y(	*B/home/omar/Documents/ruleIQ/langgraph_agent/agents/tool_manager.py

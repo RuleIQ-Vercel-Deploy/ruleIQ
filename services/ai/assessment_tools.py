@@ -144,7 +144,12 @@ class GapAnalysisTool(BaseTool):
                         "description": "Estimated total effort to address all gaps",
                     },
                 },
-                "required": ["gaps", "overall_risk_level", "priority_order", "estimated_effort"],
+                "required": [
+                    "gaps",
+                    "overall_risk_level",
+                    "priority_order",
+                    "estimated_effort",
+                ],
             },
         }
 
@@ -169,7 +174,9 @@ class GapAnalysisTool(BaseTool):
                     impact=gap_data.get("impact", ""),
                     current_state=gap_data.get("current_state", ""),
                     target_state=gap_data.get("target_state", ""),
-                    priority=self._calculate_priority(gap_data.get("severity", "medium"), i),
+                    priority=self._calculate_priority(
+                        gap_data.get("severity", "medium"), i
+                    ),
                 )
                 processed_gaps.append(gap.to_dict())
 
@@ -203,7 +210,9 @@ class GapAnalysisTool(BaseTool):
 
         except Exception as e:
             logger.error(f"Gap analysis failed: {e}")
-            return ToolResult(success=False, error=f"Gap analysis execution failed: {e!s}")
+            return ToolResult(
+                success=False, error=f"Gap analysis execution failed: {e!s}"
+            )
 
     def _calculate_priority(self, severity: str, index: int) -> int:
         """Calculate priority score for gap ordering"""
@@ -226,10 +235,14 @@ class GapAnalysisTool(BaseTool):
         recommendations = []
 
         # Count high severity gaps
-        high_severity_count = sum(1 for gap in gaps if gap.get("severity") in ["critical", "high"])
+        high_severity_count = sum(
+            1 for gap in gaps if gap.get("severity") in ["critical", "high"]
+        )
 
         if high_severity_count > 0:
-            recommendations.append(f"Address {high_severity_count} high-priority gaps immediately")
+            recommendations.append(
+                f"Address {high_severity_count} high-priority gaps immediately"
+            )
 
         if len(gaps) > 5:
             recommendations.append(
@@ -242,7 +255,9 @@ class GapAnalysisTool(BaseTool):
             recommendations.append("Focus on GDPR compliance as regulatory priority")
 
         if any("ISO 27001" in section for section in sections):
-            recommendations.append("Implement ISO 27001 security controls systematically")
+            recommendations.append(
+                "Implement ISO 27001 security controls systematically"
+            )
 
         return recommendations
 
@@ -343,12 +358,23 @@ class RecommendationGenerationTool(BaseTool):
                         "properties": {
                             "low_estimate": {"type": "string"},
                             "high_estimate": {"type": "string"},
-                            "key_cost_drivers": {"type": "array", "items": {"type": "string"}},
+                            "key_cost_drivers": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                            },
                         },
-                        "required": ["low_estimate", "high_estimate", "key_cost_drivers"],
+                        "required": [
+                            "low_estimate",
+                            "high_estimate",
+                            "key_cost_drivers",
+                        ],
                     },
                 },
-                "required": ["recommendations", "implementation_roadmap", "budget_estimate"],
+                "required": [
+                    "recommendations",
+                    "implementation_roadmap",
+                    "budget_estimate",
+                ],
             },
         }
 
@@ -369,7 +395,9 @@ class RecommendationGenerationTool(BaseTool):
                     title=rec_data.get("title", ""),
                     description=rec_data.get("description", ""),
                     priority=rec_data.get("priority", "medium"),
-                    implementation_effort=rec_data.get("implementation_effort", "Unknown"),
+                    implementation_effort=rec_data.get(
+                        "implementation_effort", "Unknown"
+                    ),
                     cost_impact=rec_data.get("cost_impact", "medium"),
                     timeline=rec_data.get("timeline", "TBD"),
                     dependencies=rec_data.get("dependencies", []),
@@ -386,12 +414,16 @@ class RecommendationGenerationTool(BaseTool):
             result_data = {
                 "recommendations": processed_recommendations,
                 "recommendation_count": len(processed_recommendations),
-                "priority_breakdown": self._analyze_priority_breakdown(processed_recommendations),
+                "priority_breakdown": self._analyze_priority_breakdown(
+                    processed_recommendations
+                ),
                 "implementation_roadmap": roadmap,
                 "budget_estimate": budget,
                 "analysis_timestamp": datetime.now().isoformat(),
                 "quick_wins": self._identify_quick_wins(processed_recommendations),
-                "major_initiatives": self._identify_major_initiatives(processed_recommendations),
+                "major_initiatives": self._identify_major_initiatives(
+                    processed_recommendations
+                ),
             }
 
             logger.info(
@@ -415,10 +447,13 @@ class RecommendationGenerationTool(BaseTool):
         except Exception as e:
             logger.error(f"Recommendation generation failed: {e}")
             return ToolResult(
-                success=False, error=f"Recommendation generation execution failed: {e!s}"
+                success=False,
+                error=f"Recommendation generation execution failed: {e!s}",
             )
 
-    def _analyze_priority_breakdown(self, recommendations: List[Dict[str, Any]]) -> Dict[str, int]:
+    def _analyze_priority_breakdown(
+        self, recommendations: List[Dict[str, Any]]
+    ) -> Dict[str, int]:
         """Analyze breakdown of recommendation priorities"""
         breakdown = {"critical": 0, "high": 0, "medium": 0, "low": 0}
         for rec in recommendations:
@@ -427,7 +462,9 @@ class RecommendationGenerationTool(BaseTool):
                 breakdown[priority] += 1
         return breakdown
 
-    def _identify_quick_wins(self, recommendations: List[Dict[str, Any]]) -> List[Dict[str, str]]:
+    def _identify_quick_wins(
+        self, recommendations: List[Dict[str, Any]]
+    ) -> List[Dict[str, str]]:
         """Identify quick win recommendations"""
         quick_wins = []
         for rec in recommendations:
@@ -435,7 +472,10 @@ class RecommendationGenerationTool(BaseTool):
             cost = rec.get("cost_impact", "").lower()
 
             # Quick wins: low effort, low cost, but meaningful impact
-            if any(term in effort for term in ["day", "week", "quick", "easy"]) and cost == "low":
+            if (
+                any(term in effort for term in ["day", "week", "quick", "easy"])
+                and cost == "low"
+            ):
                 quick_wins.append(
                     {
                         "title": rec["title"],
@@ -457,7 +497,10 @@ class RecommendationGenerationTool(BaseTool):
 
             # Major initiatives: high effort or critical priority
             if (
-                any(term in effort for term in ["month", "quarter", "major", "significant"])
+                any(
+                    term in effort
+                    for term in ["month", "quarter", "major", "significant"]
+                )
                 or priority == "critical"
             ):
                 major_initiatives.append(

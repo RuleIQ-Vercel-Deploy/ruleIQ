@@ -1,0 +1,25 @@
+
+ÝÓ"
+    Dependency factory for requiring any of the specified permissions.
+
+    Args:
+        permissions: List of permission names (user needs at least one)
+
+    Returns:
+        FastAPI dependency function
+    "strpermissions
+ý ý(1"Ã#
+!
+
+’ ’("#unknown-value#*
+(
+
+ˆ ’(%closure"#new-object#/
+-
+
+ˆ ’("#set-field# permissions:-
++
+
+ˆ ’("?python-partial-apply?:
+
+’ ’(*9/home/omar/Documents/ruleIQ/api/dependencies/rbac_auth.py

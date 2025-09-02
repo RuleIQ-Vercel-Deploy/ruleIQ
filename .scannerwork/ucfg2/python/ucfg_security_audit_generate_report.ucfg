@@ -1,0 +1,452 @@
+
+6scripts.security_audit.SecurityAuditor.generate_reportA
+5/home/omar/Documents/ruleIQ/scripts/security_audit.py≠ ≠("2*
+2
+Æ Æ(5p
+n
+
+± ±(
+%16"__id*S
+
+__unknown_file (7*5(
+&scripts.security_audit.SecurityAuditor"	
+results|z
+
+± ±(%
+%17"__mapGet*#
+
+__unknown_file (
+
+%16*)
+
+__unknown_file (
+	timestamp2__getitem__p
+n
+
+¥ ¥(
+%18"__id*S
+
+__unknown_file (7*5(
+&scripts.security_audit.SecurityAuditor"	
+resultszx
+
+¥ ¥((
+%19"__mapGet*#
+
+__unknown_file (
+
+%18*'
+
+__unknown_file (	
+summary2__getitem__}
+
+¥ ¥(8
+%20"__mapGet*#
+
+__unknown_file (
+
+%19*,
+
+__unknown_file (
+total_checks2__getitem__p
+n
+
+µ µ(
+%21"__id*S
+
+__unknown_file (7*5(
+&scripts.security_audit.SecurityAuditor"	
+resultszx
+
+µ µ("
+%22"__mapGet*#
+
+__unknown_file (
+
+%21*'
+
+__unknown_file (	
+summary2__getitem__yw
+
+µ µ(,
+%23"__mapGet*#
+
+__unknown_file (
+
+%22*&
+
+__unknown_file (
+
+passed2__getitem__p
+n
+
+∂ ∂(
+%24"__id*S
+
+__unknown_file (7*5(
+&scripts.security_audit.SecurityAuditor"	
+resultszx
+
+∂ ∂("
+%25"__mapGet*#
+
+__unknown_file (
+
+%24*'
+
+__unknown_file (	
+summary2__getitem__yw
+
+∂ ∂(,
+%26"__mapGet*#
+
+__unknown_file (
+
+%25*&
+
+__unknown_file (
+
+failed2__getitem__p
+n
+
+∑ ∑(
+%27"__id*S
+
+__unknown_file (7*5(
+&scripts.security_audit.SecurityAuditor"	
+resultszx
+
+∑ ∑($
+%28"__mapGet*#
+
+__unknown_file (
+
+%27*'
+
+__unknown_file (	
+summary2__getitem__{y
+
+∑ ∑(0
+%29"__mapGet*#
+
+__unknown_file (
+
+%28*(
+
+__unknown_file (
+
+warnings2__getitem__É
+Ä
+
+Ø ∫(
+%30"__concat*6
+
+Ø ±((&
+$
+# Security Audit Report
+Generated: *
+
+± ±(%
+
+%17*/
+
+±& ¥(!
+
+
+## Summary
+- Total Checks: *
+
+¥ ¥(8
+
+%20*
+
+¥9 µ(
+
+
+- Passed: *
+
+µ µ(,
+
+%23*
+
+µ- ∂(
+
+
+- Failed: *
+
+∂ ∂(,
+
+%26*
+
+∂- ∑(
+
+- Warnings: *
+
+∑ ∑(0
+
+%29*&
+∑1 ∫
+
+
+## Detailed Results
+C
+A
+
+Ø ∫(
+report"__id*#
+
+__unknown_file (
+
+%30p
+n
+
+º º("
+%31"__id*S
+
+__unknown_file (7*5(
+&scripts.security_audit.SecurityAuditor"	
+results*
+4
+6*)
+4
+ƒ ƒ("
+
+ƒ ƒ(
+
+
+report*⁄
+6
+Ω Ω(C
+
+Ω Ω(C
+%4"dicté
+ã
+
+Ω Ω('
+%5"__mapSet*"
+
+__unknown_file (
+
+%4*$
+
+__unknown_file (
+PASS*#
+
+__unknown_file (
+‚úÖé
+ã
+
+Ω) Ω(4
+%6"__mapSet*"
+
+__unknown_file (
+
+%4*$
+
+__unknown_file (
+FAIL*#
+
+__unknown_file (
+‚ùåë
+é
+
+Ω6 Ω(B
+%7"__mapSet*"
+
+__unknown_file (
+
+%4*$
+
+__unknown_file (
+WARN*&
+
+__unknown_file (
+
+‚ö†Ô∏èH
+F
+
+Ω Ω(C
+status_emoji"__id*"
+
+__unknown_file (
+
+%4{y
+
+ø, ø(<
+%8"__mapGet*&
+
+__unknown_file (
+
+
+detail*&
+
+__unknown_file (
+
+status2__getitem__}{
+
+ø ø(=
+%9"__mapGet*,
+
+__unknown_file (
+
+status_emoji*"
+
+__unknown_file (
+
+%82__getitem__{y
+
+ø@ ø(O
+%10"__mapGet*&
+
+__unknown_file (
+
+
+detail*%
+
+__unknown_file (	
+check2__getitem__í
+è
+
+ø ø(S
+%11"__concat*
+
+ø ø(
+
+\n### *
+
+ø ø(=
+
+%9*
+
+ø> ø(?
+ *
+
+ø@ ø(O
+
+%10*
+
+øP ø(R
+\nP
+N
+
+ø ø(S
+%12"__concat*
+
+ø ø(
+
+
+report*
+
+ø ø(S
+
+%11C
+A
+
+ø ø(S
+report"__id*#
+
+__unknown_file (
+
+%12|z
+
+¿! ¿(1
+%13"__mapGet*&
+
+__unknown_file (
+
+
+detail*&
+
+__unknown_file (
+
+status2__getitem__h
+f
+
+¿ ¿(5
+%14"__concat*
+
+¿ ¿( 
+
+Status: *
+
+¿! ¿(1
+
+%13*
+
+¿2 ¿(4
+\nP
+N
+
+¿ ¿(5
+%15"__concat*
+
+¿ ¿(
+
+
+report*
+
+¿ ¿(5
+
+%14C
+A
+
+¿ ¿(5
+report"__id*#
+
+__unknown_file (
+
+%15*	
+4
+6
+7*í
+7
+¬ ¬(;|z
+
+¬& ¬(7
+%1"__mapGet*&
+
+__unknown_file (
+
+
+detail*'
+
+__unknown_file (	
+details2__getitem__g
+e
+
+¬ ¬(;
+%2"__concat*
+
+¬ ¬(%
+	Details: *
+
+¬& ¬(7
+
+%1*
+
+¬8 ¬(:
+\nN
+L
+
+¬ ¬(;
+%3"__concat*
+
+¬ ¬(
+
+
+report*
+
+¬ ¬(;
+
+%2B
+@
+
+¬ ¬(;
+report"__id*"
+
+__unknown_file (
+
+%3*
+4
+6B*(
+&scripts.security_audit.SecurityAuditorH

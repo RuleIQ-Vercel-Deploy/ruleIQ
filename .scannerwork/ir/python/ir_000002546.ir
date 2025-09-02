@@ -1,0 +1,104 @@
+
+"source_references"str
+&"request_id"str
+)"generated_at"str
+
+0int
+"Review policies"str
+0.1float
+ "follow_up_suggestions"str
+"related_topics"str
+'"test_request_123"str
+"GDPR Article 6"str
+"data protection"str
+	"confidence_score"str
+"Test guidance"str
+
+0.9float
+*"2024-01-01T00:00:00Z"str
+
+"guidance"str_args
+õ õ($_kwargs
+õ& õ(/"dictlist"ø,
+*
+
+ö ö("
+timesleep:BNoneType&
+$
+
+÷ ÿ("#new-object#Bdict"
+ 
+
+ø ø(/"	#map-set#:"
+ 
+
+ù ù(+"	#map-set#:	
+)
+'
+
+ú& ú(9"#unknown-value#Blist(
+&
+
+ú& ú(9"
+#is-exact#:Bbool
+
+
+ú& ú(9"
+#assume#::
+8
+
+ú& ú(9"#set-field# __collection_size:Bint(
+&
+
+ú& ú(9"#array-add-last#:"
+ 
+
+ú ú(9"	#map-set#:)
+'
+
+û- û(@"#unknown-value#Blist(
+&
+
+û- û(@"
+#is-exact#:Bbool
+
+
+û- û(@"
+#assume#::
+8
+
+û- û(@"#set-field# __collection_size:Bint(
+&
+
+û- û(@"#array-add-last#:"
+ 
+
+û û(@"	#map-set#:)
+'
+
+ü) ü(; "#unknown-value#Blist(
+&
+
+ü) ü(;!"
+#is-exact#: Bbool
+
+
+ü) ü(;""
+#assume#:!:
+8
+
+ü) ü(;#"#set-field# __collection_size: Bint(
+&
+
+ü) ü(;$"#array-add-last#: "
+ 
+
+ü ü(;%"	#map-set#: "
+ 
+
+ý ý(4("	#map-set#:&'"
+ 
+
+þ þ(:+"	#map-set#:)*
+
+÷ ÿ(*H/home/omar/Documents/ruleIQ/tests/integration/api/test_ai_assessments.py

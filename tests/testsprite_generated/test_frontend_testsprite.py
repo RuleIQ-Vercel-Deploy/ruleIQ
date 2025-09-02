@@ -2,9 +2,11 @@
 TestSprite Generated Frontend Tests
 Generated on: 2025-08-01T22:39:51.374123
 """
+
 import pytest
 from fastapi.testclient import TestClient
 from main import app
+
 
 class TestFrontendFlow:
     """Frontend tests generated from TestSprite plans"""
@@ -41,6 +43,7 @@ def test_tc001_user_registration_with_valid_data():
     # TODO: Implement assertion
     assert True, "Assertion not implemented"
 
+
 def test_tc002_user_login_with_correct_credentials():
     """
     User Login with Correct Credentials
@@ -67,6 +70,7 @@ def test_tc002_user_login_with_correct_credentials():
     # Step 4: Verify successful login and access to the user dashboard.
     # TODO: Implement assertion
     assert True, "Assertion not implemented"
+
 
 def test_tc003_user_login_with_invalid_credentials():
     """
@@ -95,6 +99,7 @@ def test_tc003_user_login_with_invalid_credentials():
     # TODO: Implement assertion
     assert True, "Assertion not implemented"
 
+
 def test_tc004_jwt_token_refresh_flow():
     """
     JWT Token Refresh Flow
@@ -122,6 +127,7 @@ def test_tc004_jwt_token_refresh_flow():
     # TODO: Implement assertion
     assert True, "Assertion not implemented"
 
+
 def test_tc005_oauth_login_integration():
     """
     OAuth Login Integration
@@ -148,4 +154,3 @@ def test_tc005_oauth_login_integration():
     # Step 4: Verify successful login and access to user dashboard.
     # TODO: Implement assertion
     assert True, "Assertion not implemented"
-

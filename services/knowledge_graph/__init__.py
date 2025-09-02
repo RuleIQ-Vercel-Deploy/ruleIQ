@@ -11,10 +11,10 @@ from .models import GraphNode, GraphRelationship, GraphQuery
 
 __all__ = [
     "GraphManager",
-    "ObligationMapper", 
+    "ObligationMapper",
     "EvidenceLinker",
     "MemoryIntegration",
     "GraphNode",
     "GraphRelationship",
-    "GraphQuery"
+    "GraphQuery",
 ]

@@ -5,7 +5,9 @@ import subprocess
 import re
 
 # Run pytest and capture output
-result = subprocess.run(["python", "-m", "pytest", "--tb=no", "-q"], capture_output=True, text=True)
+result = subprocess.run(
+    ["python", "-m", "pytest", "--tb=no", "-q"], capture_output=True, text=True
+)
 
 # Parse output
 output = result.stdout + result.stderr

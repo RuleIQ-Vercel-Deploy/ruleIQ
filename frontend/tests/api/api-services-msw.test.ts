@@ -1,9 +1,9 @@
-import { setupAuthMocks } from "../mocks/auth-setup";
-import "../mocks/api-client-setup";
-import { setupAuthMocks } from "../mocks/auth-setup";
+import { setupAuthMocks } from '../mocks/auth-setup';
+import '../mocks/api-client-setup';
+import { setupAuthMocks } from '../mocks/auth-setup';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-    setupAuthMocks();
-    setupAuthMocks();
+setupAuthMocks();
+setupAuthMocks();
 import { http, HttpResponse } from 'msw';
 import { server } from '../mocks/server';
 import { authService } from '@/lib/api/auth.service';

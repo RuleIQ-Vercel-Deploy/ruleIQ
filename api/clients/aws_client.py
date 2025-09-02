@@ -49,7 +49,9 @@ class AWSAPIClient(BaseAPIClient):
                 # Access key authentication
                 self.aws_session = boto3.Session(
                     aws_access_key_id=self.credentials.credentials["access_key_id"],
-                    aws_secret_access_key=self.credentials.credentials["secret_access_key"],
+                    aws_secret_access_key=self.credentials.credentials[
+                        "secret_access_key"
+                    ],
                     region_name=self.region,
                 )
 
@@ -64,7 +66,9 @@ class AWSAPIClient(BaseAPIClient):
 
                 # Add external ID if provided
                 if "external_id" in self.credentials.credentials:
-                    assume_role_params["ExternalId"] = self.credentials.credentials["external_id"]
+                    assume_role_params["ExternalId"] = self.credentials.credentials[
+                        "external_id"
+                    ]
 
                 response = sts_client.assume_role(**assume_role_params)
 
@@ -80,7 +84,9 @@ class AWSAPIClient(BaseAPIClient):
                 self.credentials.expires_at = credentials["Expiration"]
 
             else:
-                raise AWSAPIException(f"Unsupported AWS auth type: {self.credentials.auth_type}")
+                raise AWSAPIException(
+                    f"Unsupported AWS auth type: {self.credentials.auth_type}"
+                )
 
             # Test authentication by getting caller identity
             sts = self.aws_session.client("sts")
@@ -218,11 +224,14 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
                     try:
                         # Get the policy document
                         policy_version = iam_client.get_policy_version(
-                            PolicyArn=policy["Arn"], VersionId=policy["DefaultVersionId"]
+                            PolicyArn=policy["Arn"],
+                            VersionId=policy["DefaultVersionId"],
                         )
 
                         # Get entities attached to this policy
-                        entities = iam_client.list_entities_for_policy(PolicyArn=policy["Arn"])
+                        entities = iam_client.list_entities_for_policy(
+                            PolicyArn=policy["Arn"]
+                        )
 
                         evidence_item = self.create_evidence_item(
                             evidence_type="iam_policy",
@@ -233,7 +242,9 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
                                 "policy_id": policy["PolicyId"],
                                 "arn": policy["Arn"],
                                 "path": policy["Path"],
-                                "policy_document": policy_version["PolicyVersion"]["Document"],
+                                "policy_document": policy_version["PolicyVersion"][
+                                    "Document"
+                                ],
                                 "default_version_id": policy["DefaultVersionId"],
                                 "attachment_count": policy["AttachmentCount"],
                                 "permissions_boundary_usage_count": policy.get(
@@ -244,13 +255,16 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
                                 "create_date": policy["CreateDate"].isoformat(),
                                 "update_date": policy["UpdateDate"].isoformat(),
                                 "attached_users": [
-                                    user["UserName"] for user in entities.get("PolicyUsers", [])
+                                    user["UserName"]
+                                    for user in entities.get("PolicyUsers", [])
                                 ],
                                 "attached_groups": [
-                                    group["GroupName"] for group in entities.get("PolicyGroups", [])
+                                    group["GroupName"]
+                                    for group in entities.get("PolicyGroups", [])
                                 ],
                                 "attached_roles": [
-                                    role["RoleName"] for role in entities.get("PolicyRoles", [])
+                                    role["RoleName"]
+                                    for role in entities.get("PolicyRoles", [])
                                 ],
                             },
                             compliance_controls=[
@@ -290,13 +304,19 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
                         user_policies = iam_client.list_attached_user_policies(
                             UserName=user["UserName"]
                         )
-                        user_groups = iam_client.get_groups_for_user(UserName=user["UserName"])
+                        user_groups = iam_client.get_groups_for_user(
+                            UserName=user["UserName"]
+                        )
 
                         # Get access keys
-                        access_keys = iam_client.list_access_keys(UserName=user["UserName"])
+                        access_keys = iam_client.list_access_keys(
+                            UserName=user["UserName"]
+                        )
 
                         # Get MFA devices
-                        mfa_devices = iam_client.list_mfa_devices(UserName=user["UserName"])
+                        mfa_devices = iam_client.list_mfa_devices(
+                            UserName=user["UserName"]
+                        )
 
                         # Get login profile (console access)
                         has_console_access = False
@@ -316,15 +336,20 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
                                 "arn": user["Arn"],
                                 "path": user["Path"],
                                 "create_date": user["CreateDate"].isoformat(),
-                                "password_last_used": user.get("PasswordLastUsed", "").isoformat()
-                                if user.get("PasswordLastUsed")
-                                else None,
+                                "password_last_used": (
+                                    user.get("PasswordLastUsed", "").isoformat()
+                                    if user.get("PasswordLastUsed")
+                                    else None
+                                ),
                                 "has_console_access": has_console_access,
                                 "attached_policies": [
                                     policy["PolicyName"]
                                     for policy in user_policies["AttachedPolicies"]
                                 ],
-                                "groups": [group["GroupName"] for group in user_groups["Groups"]],
+                                "groups": [
+                                    group["GroupName"]
+                                    for group in user_groups["Groups"]
+                                ],
                                 "access_keys": [
                                     {
                                         "access_key_id": key["AccessKeyId"],
@@ -348,7 +373,9 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
                                 "CC6.7",
                             ],  # SOC 2 user access controls
                             quality_score=self._calculate_user_quality_score(
-                                user, mfa_devices["MFADevices"], access_keys["AccessKeyMetadata"]
+                                user,
+                                mfa_devices["MFADevices"],
+                                access_keys["AccessKeyMetadata"],
                             ),
                         )
 
@@ -381,7 +408,9 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
                         )
 
                         # Get inline policies
-                        inline_policies = iam_client.list_role_policies(RoleName=role["RoleName"])
+                        inline_policies = iam_client.list_role_policies(
+                            RoleName=role["RoleName"]
+                        )
 
                         evidence_item = self.create_evidence_item(
                             evidence_type="iam_role",
@@ -392,16 +421,24 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
                                 "role_id": role["RoleId"],
                                 "arn": role["Arn"],
                                 "path": role["Path"],
-                                "assume_role_policy_document": role["AssumeRolePolicyDocument"],
+                                "assume_role_policy_document": role[
+                                    "AssumeRolePolicyDocument"
+                                ],
                                 "description": role.get("Description", ""),
-                                "max_session_duration": role.get("MaxSessionDuration", 3600),
+                                "max_session_duration": role.get(
+                                    "MaxSessionDuration", 3600
+                                ),
                                 "create_date": role["CreateDate"].isoformat(),
-                                "last_used": role.get("RoleLastUsed", {})
-                                .get("LastUsedDate", "")
-                                .isoformat()
-                                if role.get("RoleLastUsed", {}).get("LastUsedDate")
-                                else None,
-                                "last_used_region": role.get("RoleLastUsed", {}).get("Region"),
+                                "last_used": (
+                                    role.get("RoleLastUsed", {})
+                                    .get("LastUsedDate", "")
+                                    .isoformat()
+                                    if role.get("RoleLastUsed", {}).get("LastUsedDate")
+                                    else None
+                                ),
+                                "last_used_region": role.get("RoleLastUsed", {}).get(
+                                    "Region"
+                                ),
                                 "attached_policies": [
                                     policy["PolicyName"]
                                     for policy in role_policies["AttachedPolicies"]
@@ -429,7 +466,9 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
 
         return evidence
 
-    def _calculate_policy_quality_score(self, policy: Dict, policy_document: Any) -> float:
+    def _calculate_policy_quality_score(
+        self, policy: Dict, policy_document: Any
+    ) -> float:
         """Calculate quality score for IAM policy"""
         score = 1.0
 
@@ -557,7 +596,9 @@ class AWSCloudTrailCollector(BaseEvidenceCollector):
                 ]
 
                 for event in security_events:
-                    lookup_attributes.append({"AttributeKey": "EventName", "AttributeValue": event})
+                    lookup_attributes.append(
+                        {"AttributeKey": "EventName", "AttributeValue": event}
+                    )
 
             # Collect events (CloudTrail lookup_events has limitations, so we'll collect in batches)
             for lookup_attr in lookup_attributes[:5]:  # Limit to avoid API limits
@@ -583,14 +624,20 @@ class AWSCloudTrailCollector(BaseEvidenceCollector):
                                 "event_time": event["EventTime"].isoformat(),
                                 "username": event.get("Username"),
                                 "user_identity": event_detail.get("userIdentity", {}),
-                                "source_ip_address": event_detail.get("sourceIPAddress"),
+                                "source_ip_address": event_detail.get(
+                                    "sourceIPAddress"
+                                ),
                                 "user_agent": event_detail.get("userAgent"),
                                 "aws_region": event_detail.get("awsRegion"),
                                 "event_source": event_detail.get("eventSource"),
                                 "event_type": event_detail.get("eventType"),
                                 "api_version": event_detail.get("apiVersion"),
-                                "request_parameters": event_detail.get("requestParameters", {}),
-                                "response_elements": event_detail.get("responseElements", {}),
+                                "request_parameters": event_detail.get(
+                                    "requestParameters", {}
+                                ),
+                                "response_elements": event_detail.get(
+                                    "responseElements", {}
+                                ),
                                 "resources": event.get("Resources", []),
                                 "error_code": event_detail.get("errorCode"),
                                 "error_message": event_detail.get("errorMessage"),
@@ -600,7 +647,9 @@ class AWSCloudTrailCollector(BaseEvidenceCollector):
                                 "CC7.2",
                                 "CC7.3",
                             ],  # SOC 2 monitoring and logging
-                            quality_score=self._calculate_log_quality_score(event_detail),
+                            quality_score=self._calculate_log_quality_score(
+                                event_detail
+                            ),
                         )
 
                         evidence.append(evidence_item)
@@ -622,8 +671,15 @@ class AWSCloudTrailCollector(BaseEvidenceCollector):
         score = 1.0
 
         # Check if essential fields are present
-        required_fields = ["userIdentity", "sourceIPAddress", "eventTime", "eventSource"]
-        missing_fields = [field for field in required_fields if not event_detail.get(field)]
+        required_fields = [
+            "userIdentity",
+            "sourceIPAddress",
+            "eventTime",
+            "eventSource",
+        ]
+        missing_fields = [
+            field for field in required_fields if not event_detail.get(field)
+        ]
 
         if missing_fields:
             score -= 0.2 * len(missing_fields)
@@ -685,7 +741,10 @@ class AWSSecurityGroupCollector(BaseEvidenceCollector):
                         ],
                         "tags": sg.get("Tags", []),
                     },
-                    compliance_controls=["CC6.1", "CC6.6"],  # SOC 2 network security controls
+                    compliance_controls=[
+                        "CC6.1",
+                        "CC6.6",
+                    ],  # SOC 2 network security controls
                     quality_score=self._calculate_security_group_quality_score(sg),
                 )
 
@@ -706,7 +765,9 @@ class AWSSecurityGroupCollector(BaseEvidenceCollector):
             for ip_range in rule.get("IpRanges", []):
                 if ip_range.get("CidrIp") == "0.0.0.0/0":
                     # Penalize rules open to the internet
-                    if rule.get("FromPort") == 22 or rule.get("FromPort") == 3389:  # SSH or RDP
+                    if (
+                        rule.get("FromPort") == 22 or rule.get("FromPort") == 3389
+                    ):  # SSH or RDP
                         score -= 0.5  # Very dangerous
                     else:
                         score -= 0.2  # Moderately dangerous

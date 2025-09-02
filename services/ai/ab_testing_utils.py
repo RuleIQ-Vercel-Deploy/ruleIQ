@@ -161,10 +161,15 @@ class PromptOptimizationTester:
             name=f"Prompt Optimization: {task_type}",
             description=f"Compare prompt effectiveness for {task_type} tasks",
             experiment_type=ExperimentType.PROMPT_OPTIMIZATION,
-            metric_type=MetricType.CONTINUOUS
-            if metric
-            in [ComplianceMetric.TASK_COMPLETION_TIME, ComplianceMetric.ASSESSMENT_ACCURACY]
-            else MetricType.BINARY,
+            metric_type=(
+                MetricType.CONTINUOUS
+                if metric
+                in [
+                    ComplianceMetric.TASK_COMPLETION_TIME,
+                    ComplianceMetric.ASSESSMENT_ACCURACY,
+                ]
+                else MetricType.BINARY
+            ),
             primary_metric=metric.value,
             secondary_metrics=["user_satisfaction", "response_relevance"],
             min_effect_size=0.1,
@@ -175,7 +180,9 @@ class PromptOptimizationTester:
 
         experiment_id = self.framework.create_experiment(config)
 
-        logger.info(f"Set up prompt optimization test for {task_type} (exp: {experiment_id})")
+        logger.info(
+            f"Set up prompt optimization test for {task_type} (exp: {experiment_id})"
+        )
         return experiment_id
 
     def get_prompt_variant(self, experiment_id: str, user_id: str) -> str:
@@ -296,7 +303,9 @@ class ComplianceEffectivenessTester:
             True if recorded successfully
         """
         # Calculate improvement percentage
-        improvement_percentage = ((improvement_score - baseline_score) / baseline_score) * 100
+        improvement_percentage = (
+            (improvement_score - baseline_score) / baseline_score
+        ) * 100
 
         enhanced_context = context or {}
         enhanced_context.update(
@@ -375,7 +384,9 @@ class ABTestingManager:
 
         return experiment_id
 
-    def get_experiment_results(self, experiment_type: Optional[str] = None) -> List[Dict[str, Any]]:
+    def get_experiment_results(
+        self, experiment_type: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
         """Get results for all experiments of a given type."""
         experiments_to_analyze = []
 
@@ -437,7 +448,9 @@ class ABTestingManager:
 
         return power_analysis
 
-    def _estimate_additional_samples_needed(self, current_power: float, effect_size: float) -> int:
+    def _estimate_additional_samples_needed(
+        self, current_power: float, effect_size: float
+    ) -> int:
         """Estimate additional samples needed to reach 80% power."""
         # Simplified estimation - in practice would use more sophisticated power calculations
         if current_power >= 0.8:

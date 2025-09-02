@@ -85,16 +85,15 @@ describe('Authentication Service Integration', () => {
     it('should handle invalid credentials (401) correctly', async () => {
       server.use(
         http.post('http://localhost:8000/api/v1/auth/login', () => {
-          return HttpResponse.json(
-            { detail: 'Invalid credentials' },
-            { status: 401 },
-          );
+          return HttpResponse.json({ detail: 'Invalid credentials' }, { status: 401 });
         }),
       );
 
       const { authService } = await import('@/lib/api/auth.service');
 
-      await expect(authService.login('wrong@example.com', 'wrongpassword')).rejects.toThrow('Invalid credentials');
+      await expect(authService.login('wrong@example.com', 'wrongpassword')).rejects.toThrow(
+        'Invalid credentials',
+      );
     });
 
     it('should fetch user data after successful token response', async () => {

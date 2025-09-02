@@ -28,7 +28,10 @@ class TestEvidenceProcessorAI:
         evidence.description = "Security policy document outlining access controls"
         evidence.evidence_name = "access_control_policy.pdf"
         evidence.raw_data = json.dumps(
-            {"file_type": "pdf", "content": "This policy defines access control procedures..."}
+            {
+                "file_type": "pdf",
+                "content": "This policy defines access control procedures...",
+            }
         )
         evidence.metadata = {}
         return evidence
@@ -41,7 +44,9 @@ class TestEvidenceProcessorAI:
         return processor
 
     @pytest.mark.asyncio
-    async def test_ai_classify_evidence_success(self, mock_processor, mock_evidence_item):
+    async def test_ai_classify_evidence_success(
+        self, mock_processor, mock_evidence_item
+    ):
         """Test successful AI classification of evidence."""
         # Mock AI response
         mock_response = Mock()
@@ -61,10 +66,14 @@ REASONING: Document contains policy language and access control procedures"""
         assert "policy language" in result["reasoning"]
 
     @pytest.mark.asyncio
-    async def test_ai_classify_evidence_fallback(self, mock_processor, mock_evidence_item):
+    async def test_ai_classify_evidence_fallback(
+        self, mock_processor, mock_evidence_item
+    ):
         """Test fallback classification when AI fails."""
         # Mock AI failure
-        mock_processor.ai_model.generate_content.side_effect = Exception("AI service unavailable")
+        mock_processor.ai_model.generate_content.side_effect = Exception(
+            "AI service unavailable"
+        )
 
         result = await mock_processor._ai_classify_evidence(mock_evidence_item)
 
@@ -73,28 +82,38 @@ REASONING: Document contains policy language and access control procedures"""
         assert result["confidence"] == 40  # Lower confidence for rule-based
         assert result["reasoning"] == "Rule-based classification (AI unavailable)"
 
-    def test_parse_classification_response_valid(self, mock_processor, mock_evidence_item):
+    def test_parse_classification_response_valid(
+        self, mock_processor, mock_evidence_item
+    ):
         """Test parsing valid AI classification response."""
         response_text = """TYPE: training_record
 CONTROLS: A.7.2.2, A.7.2.3
 CONFIDENCE: 92
 REASONING: Contains training completion certificates and attendance records"""
 
-        result = mock_processor._parse_classification_response(response_text, mock_evidence_item)
+        result = mock_processor._parse_classification_response(
+            response_text, mock_evidence_item
+        )
 
         assert result["suggested_type"] == "training_record"
         assert result["confidence"] == 92
         assert len(result["suggested_controls"]) == 2
         assert "training completion" in result["reasoning"]
 
-    def test_parse_classification_response_invalid(self, mock_processor, mock_evidence_item):
+    def test_parse_classification_response_invalid(
+        self, mock_processor, mock_evidence_item
+    ):
         """Test parsing invalid AI response falls back gracefully."""
         response_text = "Invalid response format"
 
-        result = mock_processor._parse_classification_response(response_text, mock_evidence_item)
+        result = mock_processor._parse_classification_response(
+            response_text, mock_evidence_item
+        )
 
         # Should fall back to rule-based classification (detects "policy" in description)
-        assert result["suggested_type"] == "policy_document"  # Rule-based classification result
+        assert (
+            result["suggested_type"] == "policy_document"
+        )  # Rule-based classification result
         assert result["confidence"] == 40  # Fallback confidence
         assert "Rule-based classification" in result["reasoning"]
 
@@ -159,7 +178,9 @@ REASONING: Contains training completion certificates and attendance records"""
         assert result.metadata["ai_classification"]["confidence"] == 85
 
     @pytest.mark.asyncio
-    async def test_enrich_evidence_with_ai_low_confidence(self, mock_processor, mock_evidence_item):
+    async def test_enrich_evidence_with_ai_low_confidence(
+        self, mock_processor, mock_evidence_item
+    ):
         """Test evidence enrichment with low confidence AI classification."""
         original_type = mock_evidence_item.evidence_type
 
@@ -225,12 +246,16 @@ REASONING: Contains training completion certificates and attendance records"""
         """Test that confidence scores are properly clamped to 0-100 range."""
         response_text = "TYPE: policy_document\nCONFIDENCE: 150\nREASONING: Test"
 
-        result = mock_processor._parse_classification_response(response_text, mock_evidence_item)
+        result = mock_processor._parse_classification_response(
+            response_text, mock_evidence_item
+        )
 
         assert result["confidence"] == 100  # Should be clamped to 100
 
         response_text = "TYPE: policy_document\nCONFIDENCE: -10\nREASONING: Test"
 
-        result = mock_processor._parse_classification_response(response_text, mock_evidence_item)
+        result = mock_processor._parse_classification_response(
+            response_text, mock_evidence_item
+        )
 
         assert result["confidence"] == 0  # Should be clamped to 0

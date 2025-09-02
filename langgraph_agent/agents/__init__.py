@@ -10,6 +10,7 @@ from .tool_manager import ToolManager, ToolResult, ToolError
 # Conditional imports for optional dependencies
 try:
     from .memory_manager import MemoryManager, MemoryType, ConversationSummary
+
     _memory_available = True
 except ImportError:
     # Mock classes for when Graphiti is not available
@@ -27,6 +28,7 @@ except ImportError:
 
 try:
     from .rag_system import RAGSystem, DocumentChunk, RetrievalStrategy
+
     _rag_available = True
 except ImportError:
     # Mock classes for when dependencies are missing
@@ -44,12 +46,15 @@ except ImportError:
 
 try:
     from .observability import ObservabilityManager, AgentCallback, PerformanceMetrics
+
     _observability_available = True
 except ImportError:
     # Mock classes for when observability dependencies are missing
     class ObservabilityManager:
         def __init__(self, *args, **kwargs):
-            raise ImportError(f"ObservabilityManager requires additional dependencies: {e}")
+            raise ImportError(
+                f"ObservabilityManager requires additional dependencies: {e}"
+            )
 
     class AgentCallback:
         pass
@@ -64,31 +69,27 @@ __all__ = [
     "ComplianceAgent",
     "AgentConfig",
     "AgentMetrics",
-
     # Tool management (always available)
     "ToolManager",
     "ToolResult",
     "ToolError",
-
     # Memory systems (conditional)
     "MemoryManager",
     "MemoryType",
     "ConversationSummary",
-
     # RAG integration (conditional)
     "RAGSystem",
     "DocumentChunk",
     "RetrievalStrategy",
-
     # Observability (conditional)
     "ObservabilityManager",
     "AgentCallback",
-    "PerformanceMetrics"
+    "PerformanceMetrics",
 ]
 
 # Availability flags for runtime checks
 FEATURES = {
     "memory": _memory_available,
     "rag": _rag_available,
-    "observability": _observability_available
+    "observability": _observability_available,
 }

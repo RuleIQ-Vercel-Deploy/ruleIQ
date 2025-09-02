@@ -1,0 +1,180 @@
+
+(+"Implement additional controls"str
+>"status"str
+\"to"str
+6"test"str
+!"Data exposure"str
+ 	"factors"str
+G	"proceed"str
+
+0.95float
+"level"str
+_"relates_to"str
+"assessment"str
+P	"Entity2"str
+O	"Entity1"str
+Z"from"str
+?	"success"str
+1"data_collection"str
+*"mitigation"str
+<"json"str
+I"validation"str
+'7"Test response for validation"str
+
+0int
+	"confidence"str
+
+"evidence"str
+L	"extract"str
+F
+"decision"str
+"Document reviewed"str
+4
+"approved"str
+N
+"entities"str
+A"data"str
+J"valid"str
+"risk"str
+3"transition"str
+X"relationships"str
+0"next_step"str
+"compliance"str
+$:"Error simulation response"str
+^"type"str
+"medium"str
+9"error"str
+=4"Get default response mappings for common patterns."str
+"compliant"str
+"Controls validated"str
+#""Third-party dependencies"strself& &(#list"‚$
+"
+( K(	"#new-object#Bdict$
+"
+*% .("#new-object#Bdict 
+
++ +()"	#map-set#: 
+
+, ,(""	#map-set#:	
+'
+%
+- -(G"#unknown-value#Blist&
+$
+- -(G"
+#is-exact#:Bbool
+
+- -(G"
+#assume#:8
+6
+- -(G"#set-field# __collection_size:Bint&
+$
+- -(G"#array-add-last#:&
+$
+- -(G"#array-add-last#: 
+
+- -(G"	#map-set#:!
+
+* *("#unknown-value#+
+)
+* .("?python-unknown?:Bstr 
+
+* .("	#map-set#:$
+"
+1 5("#new-object#Bdict 
+
+2 2(!"	#map-set#:'
+%
+3 3(H#"#unknown-value#Blist&
+$
+3 3(H$"
+#is-exact#:#Bbool
+
+3 3(H%"
+#assume#:$8
+6
+3 3(H&"#set-field# __collection_size:#Bint&
+$
+3 3(H'"#array-add-last#:#!&
+$
+3 3(H("#array-add-last#:#" 
+
+3 3(H)"	#map-set#: # 
+
+4 4(=,"	#map-set#:*+!
+
+1 1(-"#unknown-value#+
+)
+1 5(."?python-unknown?:-Bstr 
+
+1 5(/"	#map-set#:. 
+
+8 8(*2"	#map-set#:01 
+
+9 9($5"	#map-set#:34 
+
+< <(28"	#map-set#:67 
+
+= =(0;"	#map-set#:9:$
+"
+@ @(D="#new-object#Bdict 
+
+@  @(3@"	#map-set#:=>? 
+
+@5 @(CB"	#map-set#:=A6!
+
+@ @(C"#unknown-value#+
+)
+@ @(ED"?python-unknown?:C=Bstr 
+
+@ @(EE"	#map-set#:<D 
+
+C C(!H"	#map-set#:FG 
+
+D D(!K"	#map-set#:IJ$
+"
+G" J(M"#new-object#Bdict'
+%
+H H(2Q"#unknown-value#Blist&
+$
+H H(2R"
+#is-exact#:QBbool
+
+H H(2S"
+#assume#:R8
+6
+H H(2T"#set-field# __collection_size:QBint&
+$
+H H(2U"#array-add-last#:QO&
+$
+H H(2V"#array-add-last#:QP 
+
+H H(2W"	#map-set#:MNQ$
+"
+I" I(\Y"#new-object#Bdict 
+
+I# I(4["	#map-set#:YZO 
+
+I6 I(E]"	#map-set#:Y\P 
+
+IG I([`"	#map-set#:Y^_'
+%
+I! I(]a"#unknown-value#Blist&
+$
+I! I(]b"
+#is-exact#:aBbool
+
+I! I(]c"
+#assume#:b8
+6
+I! I(]d"#set-field# __collection_size:aBint&
+$
+I! I(]e"#array-add-last#:aY 
+
+I I(]f"	#map-set#:MXa!
+
+G G(g"#unknown-value#+
+)
+G J(h"?python-unknown?:gMBstr 
+
+G J(i"	#map-set#:Lh
+( K(	*6/home/omar/Documents/ruleIQ/tests/fixtures/mock_llm.py

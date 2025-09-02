@@ -85,12 +85,8 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
           <div className="flex min-w-fit items-center space-x-2">
             <Link href="/" className="flex items-center space-x-1">
               <div className="flex items-center space-x-1">
-                <span className="text-xl font-bold text-neutral-700">
-                  rule
-                </span>
-                <span className="text-xl font-bold text-teal-600">
-                  IQ
-                </span>
+                <span className="text-xl font-bold text-neutral-700">rule</span>
+                <span className="text-xl font-bold text-teal-600">IQ</span>
               </div>
             </Link>
           </div>
@@ -170,7 +166,7 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
               <Button
                 variant="ghost"
                 size="icon"
-                className="relative text-neutral-600 hover:text-neutral-900 hover:bg-neutral-100"
+                className="relative text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900"
               >
                 <Bell className="h-5 w-5" />
                 <Badge className="absolute -right-1 -top-1 flex h-5 w-5 animate-pulse items-center justify-center rounded-full bg-red-600 p-0 text-xs text-white">
@@ -179,10 +175,7 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
                 <span className="sr-only">View alerts (5 new)</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="w-96 bg-white border-neutral-200"
-            >
+            <DropdownMenuContent align="end" className="w-96 border-neutral-200 bg-white">
               <DropdownMenuLabel className="flex items-center justify-between text-neutral-900">
                 <span>Alerts & Notifications</span>
                 <Badge variant="secondary" className="text-xs">
@@ -203,9 +196,7 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
                           The quarterly GDPR assessment was due 2 days ago. Please complete
                           immediately.
                         </div>
-                        <div className="text-xs text-neutral-500">
-                          2 hours ago
-                        </div>
+                        <div className="text-xs text-neutral-500">2 hours ago</div>
                       </div>
                     </div>
                   </div>
@@ -220,9 +211,7 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
                           Your overall compliance score has increased to 98% (+2.5% from last
                           month).
                         </div>
-                        <div className="text-xs text-neutral-500">
-                          4 hours ago
-                        </div>
+                        <div className="text-xs text-neutral-500">4 hours ago</div>
                       </div>
                     </div>
                   </div>
@@ -237,9 +226,7 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
                           New financial regulations require immediate policy updates. Review
                           required by March 20.
                         </div>
-                        <div className="text-xs text-neutral-500">
-                          6 hours ago
-                        </div>
+                        <div className="text-xs text-neutral-500">6 hours ago</div>
                       </div>
                     </div>
                   </div>
@@ -253,9 +240,7 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
                         <div className="text-xs text-neutral-600">
                           Your February compliance report is ready for review and download.
                         </div>
-                        <div className="text-xs text-neutral-500">
-                          1 day ago
-                        </div>
+                        <div className="text-xs text-neutral-500">1 day ago</div>
                       </div>
                     </div>
                   </div>
@@ -269,9 +254,7 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
                         <div className="text-xs text-neutral-600">
                           Sarah Johnson has been added to your compliance team as a Risk Analyst.
                         </div>
-                        <div className="text-xs text-neutral-500">
-                          2 days ago
-                        </div>
+                        <div className="text-xs text-neutral-500">2 days ago</div>
                       </div>
                     </div>
                   </div>
@@ -279,7 +262,10 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
               </div>
               <DropdownMenuSeparator />
               <div className="p-2">
-                <Button variant="ghost" className="w-full text-sm text-teal-600 hover:text-teal-700 hover:bg-teal-50">
+                <Button
+                  variant="ghost"
+                  className="w-full text-sm text-teal-600 hover:bg-teal-50 hover:text-teal-700"
+                >
                   View All Alerts
                 </Button>
               </div>
@@ -298,7 +284,7 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
-              className="w-64 bg-white border-neutral-200"
+              className="w-64 border-neutral-200 bg-white"
               align="end"
               forceMount
             >
@@ -309,17 +295,13 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
                       <User className="h-5 w-5 text-teal-600" />
                     </div>
                     <div className="flex flex-col">
-                      <p className="text-sm font-medium leading-none text-neutral-900">
-                        John Doe
-                      </p>
+                      <p className="text-sm font-medium leading-none text-neutral-900">John Doe</p>
                       <p className="mt-1 text-xs leading-none text-neutral-600">
                         Compliance Manager
                       </p>
                     </div>
                   </div>
-                  <div className="text-xs text-neutral-600">
-                    john.doe@company.com
-                  </div>
+                  <div className="text-xs text-neutral-600">john.doe@company.com</div>
                   <div className="flex items-center justify-between text-xs">
                     <span className="text-neutral-600">Last login:</span>
                     <span className="text-neutral-900">Today, 9:15 AM</span>
@@ -340,7 +322,7 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
                 <span>Notification Preferences</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-600 hover:text-red-700 hover:bg-red-50">
+              <DropdownMenuItem className="text-red-600 hover:bg-red-50 hover:text-red-700">
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Sign Out</span>
               </DropdownMenuItem>

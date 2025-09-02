@@ -11,10 +11,11 @@ from services.framework_service import get_framework_by_id, get_relevant_framewo
 
 router = APIRouter()
 
+
 @router.get("/", response_model=List[ComplianceFrameworkResponse])
 async def list_frameworks(
     current_user: UserWithRoles = Depends(require_permission("user_list")),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """List all available frameworks - simplified for compliance wizard."""
     from database.compliance_framework import ComplianceFramework
@@ -37,15 +38,16 @@ async def list_frameworks(
             description=fw.description or "",
             category=fw.category or "general",
             version=fw.version or "1.0",
-            controls=[]  # Simplified for compliance wizard
+            controls=[],  # Simplified for compliance wizard
         )
         for fw in active_frameworks
     ]
 
+
 @router.get("/recommendations", response_model=List[FrameworkRecommendation])
 async def get_framework_recommendations(
     current_user: UserWithRoles = Depends(require_permission("framework_list")),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """Get framework recommendations filtered by user's access permissions."""
     recommendations = await get_relevant_frameworks(db, current_user)
@@ -58,8 +60,7 @@ async def get_framework_recommendations(
 
         # Check if user has access to this specific framework
         has_access = any(
-            af["id"] == framework_id
-            for af in current_user.accessible_frameworks
+            af["id"] == framework_id for af in current_user.accessible_frameworks
         )
 
         if has_access:
@@ -74,7 +75,11 @@ async def get_framework_recommendations(
 
     return accessible_recommendations
 
-@router.get("/recommendations/{business_profile_id}", response_model=List[FrameworkRecommendation])
+
+@router.get(
+    "/recommendations/{business_profile_id}",
+    response_model=List[FrameworkRecommendation],
+)
 async def get_framework_recommendations_for_profile(
     business_profile_id: UUID,
     current_user: UserWithRoles = Depends(require_permission("framework_list")),
@@ -91,8 +96,7 @@ async def get_framework_recommendations_for_profile(
 
         # Check if user has access to this specific framework
         has_access = any(
-            af["id"] == framework_id
-            for af in current_user.accessible_frameworks
+            af["id"] == framework_id for af in current_user.accessible_frameworks
         )
 
         if has_access:
@@ -107,10 +111,11 @@ async def get_framework_recommendations_for_profile(
 
     return accessible_recommendations
 
+
 @router.get("/all-public", response_model=List[ComplianceFrameworkResponse])
 async def list_all_public_frameworks(
     current_user: UserWithRoles = Depends(require_permission("user_list")),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """List all available frameworks without RBAC restrictions - for compliance wizard."""
     from database.compliance_framework import ComplianceFramework
@@ -118,7 +123,7 @@ async def list_all_public_frameworks(
 
     # Get all active frameworks directly from database
     result = await db.execute(
-        select(ComplianceFramework).where(ComplianceFramework.is_active == True)
+        select(ComplianceFramework).where(ComplianceFramework.is_active)
     )
     frameworks = result.scalars().all()
 
@@ -130,10 +135,11 @@ async def list_all_public_frameworks(
             description=fw.description or "",
             category=fw.category or "general",
             version=fw.version or "1.0",
-            controls=[]  # Simplified for compliance wizard
+            controls=[],  # Simplified for compliance wizard
         )
         for fw in frameworks
     ]
+
 
 @router.get("/{id}", response_model=ComplianceFrameworkResponse)
 async def get_framework(
@@ -145,14 +151,13 @@ async def get_framework(
     framework_id = id  # Use 'id' from path but keep 'framework_id' internally
     # Check if user has access to this specific framework
     has_access = any(
-        af["id"] == str(framework_id)
-        for af in current_user.accessible_frameworks
+        af["id"] == str(framework_id) for af in current_user.accessible_frameworks
     )
 
     if not has_access:
         raise HTTPException(
             status_code=403,
-            detail="Access denied: You don't have permission to access this framework"
+            detail="Access denied: You don't have permission to access this framework",
         )
 
     framework = await get_framework_by_id(db, current_user, framework_id)
@@ -176,6 +181,7 @@ async def get_framework(
         controls=controls,
     )
 
+
 @router.get("/{framework_id}/controls")
 async def get_framework_controls(
     framework_id: UUID,
@@ -192,25 +198,26 @@ async def get_framework_controls(
                 "name": "Access Control",
                 "description": "Implement proper access control mechanisms",
                 "category": "Security",
-                "required": True
+                "required": True,
             },
             {
                 "id": "ctrl-2",
                 "name": "Data Encryption",
                 "description": "Encrypt data at rest and in transit",
                 "category": "Security",
-                "required": True
+                "required": True,
             },
             {
                 "id": "ctrl-3",
                 "name": "Audit Logging",
                 "description": "Maintain comprehensive audit logs",
                 "category": "Compliance",
-                "required": False
-            }
+                "required": False,
+            },
         ],
-        "total": 3
+        "total": 3,
     }
+
 
 @router.get("/{framework_id}/implementation-guide")
 async def get_framework_implementation_guide(
@@ -229,28 +236,33 @@ async def get_framework_implementation_guide(
                     "phase": 1,
                     "name": "Assessment",
                     "duration": "2-4 weeks",
-                    "tasks": ["Gap analysis", "Risk assessment", "Resource planning"]
+                    "tasks": ["Gap analysis", "Risk assessment", "Resource planning"],
                 },
                 {
                     "phase": 2,
                     "name": "Implementation",
                     "duration": "8-12 weeks",
-                    "tasks": ["Control implementation", "Process documentation", "Training"]
+                    "tasks": [
+                        "Control implementation",
+                        "Process documentation",
+                        "Training",
+                    ],
                 },
                 {
                     "phase": 3,
                     "name": "Validation",
                     "duration": "2-3 weeks",
-                    "tasks": ["Internal audit", "Remediation", "Certification prep"]
-                }
+                    "tasks": ["Internal audit", "Remediation", "Certification prep"],
+                },
             ],
             "resources": [
                 "Implementation checklist",
                 "Control templates",
-                "Policy templates"
-            ]
-        }
+                "Policy templates",
+            ],
+        },
     }
+
 
 @router.get("/{framework_id}/compliance-status")
 async def get_framework_compliance_status(
@@ -268,11 +280,12 @@ async def get_framework_compliance_status(
             "compliant": 15,
             "partial": 5,
             "non_compliant": 3,
-            "not_applicable": 2
+            "not_applicable": 2,
         },
         "last_assessment": "2024-01-15T10:00:00Z",
-        "next_review": "2024-04-15T10:00:00Z"
+        "next_review": "2024-04-15T10:00:00Z",
     }
+
 
 @router.post("/compare")
 async def compare_frameworks(
@@ -282,7 +295,7 @@ async def compare_frameworks(
 ):
     """Compare multiple frameworks."""
     framework_ids = comparison_data.get("framework_ids", [])
-    
+
     # Placeholder implementation
     return {
         "frameworks": framework_ids,
@@ -290,19 +303,24 @@ async def compare_frameworks(
             "common_controls": 45,
             "unique_controls": {
                 framework_ids[0] if len(framework_ids) > 0 else "framework1": 12,
-                framework_ids[1] if len(framework_ids) > 1 else "framework2": 8
+                framework_ids[1] if len(framework_ids) > 1 else "framework2": 8,
             },
             "complexity": {
                 framework_ids[0] if len(framework_ids) > 0 else "framework1": "High",
-                framework_ids[1] if len(framework_ids) > 1 else "framework2": "Medium"
+                framework_ids[1] if len(framework_ids) > 1 else "framework2": "Medium",
             },
             "implementation_time": {
-                framework_ids[0] if len(framework_ids) > 0 else "framework1": "6-8 months",
-                framework_ids[1] if len(framework_ids) > 1 else "framework2": "4-6 months"
-            }
+                (
+                    framework_ids[0] if len(framework_ids) > 0 else "framework1"
+                ): "6-8 months",
+                (
+                    framework_ids[1] if len(framework_ids) > 1 else "framework2"
+                ): "4-6 months",
+            },
         },
-        "recommendation": "Consider implementing both frameworks in phases"
+        "recommendation": "Consider implementing both frameworks in phases",
     }
+
 
 @router.get("/{framework_id}/maturity-assessment")
 async def get_framework_maturity_assessment(
@@ -321,12 +339,12 @@ async def get_framework_maturity_assessment(
             "2": {"name": "Managed", "achieved": True},
             "3": {"name": "Defined", "achieved": True},
             "4": {"name": "Quantitatively Managed", "achieved": False},
-            "5": {"name": "Optimizing", "achieved": False}
+            "5": {"name": "Optimizing", "achieved": False},
         },
         "recommendations": [
             "Implement continuous monitoring",
             "Automate compliance checks",
-            "Establish metrics and KPIs"
+            "Establish metrics and KPIs",
         ],
-        "next_steps": "Focus on quantitative management and metrics"
+        "next_steps": "Focus on quantitative management and metrics",
     }

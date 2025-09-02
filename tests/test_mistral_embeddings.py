@@ -16,6 +16,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from services.agentic_rag import AgenticRAGSystem
 
+
 async def test_mistral_embeddings():
     """Test Mistral embeddings in the RAG system"""
     print("🚀 Testing Mistral Embeddings Integration")
@@ -25,8 +26,12 @@ async def test_mistral_embeddings():
     mistral_key = os.getenv("MISTRAL_API_KEY")
     openai_key = os.getenv("OPENAI_API_KEY")
 
-    print(f"🔑 Mistral API Key: {'Set' if mistral_key and mistral_key != 'your-mistral-api-key' else 'Missing'}")
-    print(f"🔑 OpenAI API Key: {'Set' if openai_key and openai_key != 'your-openai-api-key' else 'Missing'}")
+    print(
+        f"🔑 Mistral API Key: {'Set' if mistral_key and mistral_key != 'your-mistral-api-key' else 'Missing'}"
+    )
+    print(
+        f"🔑 OpenAI API Key: {'Set' if openai_key and openai_key != 'your-openai-api-key' else 'Missing'}"
+    )
 
     try:
         # Initialize the RAG system
@@ -38,8 +43,12 @@ async def test_mistral_embeddings():
         print("\n🤖 Embedding Configuration:")
         print(f"   Model: {rag_system.embedding_model}")
         print(f"   Using Mistral: {rag_system.use_mistral_embeddings}")
-        print(f"   Mistral Client: {'Available' if rag_system.mistral_client else 'Not available'}")
-        print(f"   OpenAI Client: {'Available' if rag_system.openai_client else 'Not available'}")
+        print(
+            f"   Mistral Client: {'Available' if rag_system.mistral_client else 'Not available'}"
+        )
+        print(
+            f"   OpenAI Client: {'Available' if rag_system.openai_client else 'Not available'}"
+        )
 
         # Test embedding generation (if API keys available)
         if rag_system.use_mistral_embeddings and rag_system.mistral_client:
@@ -68,7 +77,9 @@ async def test_mistral_embeddings():
         print("\n🎯 System Status:")
         print("   • Supabase: Connected")
         print("   • Database: Schema ready")
-        print(f"   • Embeddings: {'Mistral ready' if rag_system.use_mistral_embeddings else 'OpenAI fallback'}")
+        print(
+            f"   • Embeddings: {'Mistral ready' if rag_system.use_mistral_embeddings else 'OpenAI fallback'}"
+        )
         print("   • RAG Features: All enabled")
 
         print("\n🎉 Mistral embeddings integration test completed!")
@@ -77,6 +88,7 @@ async def test_mistral_embeddings():
     except Exception as e:
         print(f"❌ Test failed with error: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -86,6 +98,7 @@ async def test_mistral_embeddings():
             rag_system.close()
         except:
             pass
+
 
 if __name__ == "__main__":
     asyncio.run(test_mistral_embeddings())

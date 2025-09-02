@@ -11,11 +11,11 @@ interface AuthGuardProps {
   fallback?: React.ReactNode;
 }
 
-export function AuthGuard({ 
-  children, 
-  requireAuth = true, 
+export function AuthGuard({
+  children,
+  requireAuth = true,
   redirectTo = '/auth/login',
-  fallback 
+  fallback,
 }: AuthGuardProps) {
   const router = useRouter();
   const { isAuthenticated, isLoading, checkAuthStatus } = useAuthStore();
@@ -31,7 +31,7 @@ export function AuthGuard({
         setIsCheckingAuth(false);
       }
     };
-    
+
     performAuthCheck();
   }, [checkAuthStatus]);
 

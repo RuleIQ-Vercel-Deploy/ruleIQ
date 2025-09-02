@@ -30,7 +30,10 @@ class TestEnhancedQualityScorer:
         evidence.evidence_type = "policy_document"
         evidence.collected_at = datetime.utcnow() - timedelta(days=10)
         evidence.raw_data = json.dumps(
-            {"file_type": "pdf", "content": "This policy establishes security controls..."}
+            {
+                "file_type": "pdf",
+                "content": "This policy establishes security controls...",
+            }
         )
         # Mock hasattr and getattr for traditional scoring
         evidence.control_reference = "ISO27001-A.5.1.1"
@@ -45,7 +48,9 @@ class TestEnhancedQualityScorer:
         return scorer
 
     @pytest.mark.asyncio
-    async def test_calculate_enhanced_score_success(self, mock_scorer, mock_evidence_item):
+    async def test_calculate_enhanced_score_success(
+        self, mock_scorer, mock_evidence_item
+    ):
         """Test successful enhanced quality scoring with AI."""
         # Mock AI response
         mock_response = Mock()
@@ -73,10 +78,14 @@ RECOMMENDATIONS: Add implementation examples"""
         assert len(result["ai_analysis"]["recommendations"]) > 0
 
     @pytest.mark.asyncio
-    async def test_calculate_enhanced_score_fallback(self, mock_scorer, mock_evidence_item):
+    async def test_calculate_enhanced_score_fallback(
+        self, mock_scorer, mock_evidence_item
+    ):
         """Test enhanced scoring with AI failure fallback."""
         # Mock AI failure
-        mock_scorer.ai_model.generate_content.side_effect = Exception("AI service unavailable")
+        mock_scorer.ai_model.generate_content.side_effect = Exception(
+            "AI service unavailable"
+        )
 
         result = await mock_scorer.calculate_enhanced_score(mock_evidence_item)
 
@@ -165,10 +174,14 @@ RECOMMENDATIONS: Add more details"""
 
         assert 0 <= combined_score <= 100
         # Should be weighted toward AI score due to high confidence
-        assert abs(combined_score - 85) < abs(combined_score - 81.25)  # AI score vs traditional avg
+        assert abs(combined_score - 85) < abs(
+            combined_score - 81.25
+        )  # AI score vs traditional avg
 
     @pytest.mark.asyncio
-    async def test_detect_semantic_duplicates_success(self, mock_scorer, mock_evidence_item):
+    async def test_detect_semantic_duplicates_success(
+        self, mock_scorer, mock_evidence_item
+    ):
         """Test successful semantic duplicate detection."""
         # Create candidate evidence
         candidate = Mock(spec=EvidenceItem)
@@ -201,7 +214,9 @@ RECOMMENDATION: review_manually"""
         assert duplicates[0]["similarity_type"] == "substantial_overlap"
 
     @pytest.mark.asyncio
-    async def test_detect_semantic_duplicates_no_matches(self, mock_scorer, mock_evidence_item):
+    async def test_detect_semantic_duplicates_no_matches(
+        self, mock_scorer, mock_evidence_item
+    ):
         """Test duplicate detection with no matches."""
         # Create dissimilar candidate
         candidate = Mock(spec=EvidenceItem)
@@ -304,7 +319,9 @@ RECOMMENDATION: keep_both"""
 
         mock_scorer.ai_model.generate_content.side_effect = mock_generate_content
 
-        result = await mock_scorer.batch_duplicate_detection([evidence1, evidence2, evidence3], 0.8)
+        result = await mock_scorer.batch_duplicate_detection(
+            [evidence1, evidence2, evidence3], 0.8
+        )
 
         assert result["total_items"] == 3
         assert result["potential_duplicates"] == 1  # Policy B is duplicate of Policy A

@@ -12,10 +12,7 @@ def test_assessment_lead_creation(db_session):
     email = "test.lead@example.com"
 
     # Create assessment lead
-    lead = AssessmentLead(
-        email=email,
-        marketing_consent=True
-    )
+    lead = AssessmentLead(email=email, marketing_consent=True)
 
     # Add to session and commit
     db_session.add(lead)
@@ -49,7 +46,7 @@ def test_assessment_lead_with_all_fields(db_session):
         utm_campaign="test-campaign",
         marketing_consent=True,
         newsletter_subscribed=True,
-        lead_score=10
+        lead_score=10,
     )
 
     # Add to session and commit

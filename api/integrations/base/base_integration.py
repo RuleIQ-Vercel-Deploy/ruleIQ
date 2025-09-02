@@ -79,13 +79,16 @@ class BaseIntegration(ABC):
 
     async def validate_credentials(self, credentials_to_test: Dict[str, Any]) -> bool:
         original_creds = self.config.credentials
-        self.config.credentials = credentials_to_test  # Temporarily set for test_connection
+        self.config.credentials = (
+            credentials_to_test  # Temporarily set for test_connection
+        )
         try:
             result = await self.test_connection()
             return result
         except Exception as e:
             logger.error(
-                f"Error validating credentials for {self.provider_name}: {e}", exc_info=True
+                f"Error validating credentials for {self.provider_name}: {e}",
+                exc_info=True,
             )
             return False
         finally:
@@ -93,7 +96,9 @@ class BaseIntegration(ABC):
 
     def encrypt_credentials_to_str(self, credentials_dict: Dict[str, Any]) -> str:
         if not self.cipher:
-            logger.error("Cannot encrypt credentials: Fernet cipher is not initialized.")
+            logger.error(
+                "Cannot encrypt credentials: Fernet cipher is not initialized."
+            )
             raise IntegrationError(
                 "Encryption cipher not available. Cannot save credentials securely."
             )
@@ -109,9 +114,13 @@ class BaseIntegration(ABC):
             logger.error(f"Failed to encrypt credentials: {e}", exc_info=True)
             raise IntegrationError(f"Failed to encrypt credentials: {e}") from e
 
-    def decrypt_credentials_from_str(self, encrypted_credentials_str: str) -> Dict[str, Any]:
+    def decrypt_credentials_from_str(
+        self, encrypted_credentials_str: str
+    ) -> Dict[str, Any]:
         if not self.cipher:
-            logger.error("Cannot decrypt credentials: Fernet cipher is not initialized.")
+            logger.error(
+                "Cannot decrypt credentials: Fernet cipher is not initialized."
+            )
             raise IntegrationError(
                 "Decryption cipher not available. Cannot load credentials securely."
             )

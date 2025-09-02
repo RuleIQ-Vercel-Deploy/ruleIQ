@@ -1,0 +1,520 @@
+
+
+30int
+|	"phase_1"str
+"properties"str
+"array"str
+-"high"str
+,"medium"str
+"recommendations"str
+&"Title of the recommendation"str
+Ö	"phase_2"str
++"low"str
+,:#"Priority level for implementation"str
+"title"str
+;@2"Estimated effort (e.g., '2-4 weeks', '1-2 days')"str
+?$6"Detailed description of what needs to be implemented"str
+LC"Get the function schema for Google Generative AI function calling"str
+`"resources_required"str
+*"enum"str
+"items"str
+é	"phase_3"str
+.f%"Resources needed for implementation"str
+*Ç "Immediate actions (0-3 months)"str
+j
+"required"str
+"name"str
+W"dependencies"str
+
+"parameters"str
+C"cost_impact"str
+"type"str
+ ="implementation_effort"str
+Q
+"timeline"str
+"description"str
+•"low_estimate"str
+-$"List of compliance recommendations"str
+)î"Long-term actions (6+ months)"str
++ã!"Short-term actions (3-6 months)"str
+:1"Generate prioritized compliance recommendations"str
+!x"implementation_roadmap"str
+°"budget_estimate"str
+.
+"critical"str
+"object"str
+≠"key_cost_drivers"str
+.%"generate_compliance_recommendations"str
+"string"str
+N"Expected cost impact"str
+'
+"priority"str
+.T%"Recommended implementation timeline"str
+©"high_estimate"str
+4]+"Dependencies that must be addressed first"strself
+É É( 0list"Ú.&
+$
+
+Ö ·(	"#new-object#Bdict"
+ 
+
+Ü Ü(9"	#map-set#:"
+ 
+
+á á(L	"	#map-set#:&
+$
+
+à ‡("#new-object#Bdict"
+ 
+
+â â( "	#map-set#:&
+$
+
+ä ﬁ("#new-object#Bdict&
+$
+
+ã' ø("#new-object#Bdict"
+ 
+
+å å('"	#map-set#:"
+ 
+
+ç ç(K"	#map-set#:&
+$
+
+é! æ("#new-object#Bdict"
+ 
+
+è è(,"	#map-set#:&
+$
+
+ê* µ("#new-object#Bdict&
+$
+
+ë) î(!"#new-object#Bdict"
+ 
+
+í$ í(4"	#map-set#:"
+ 
+
+ì$ ì(P "	#map-set#:"
+ 
+
+ë  î(!!"	#map-set#:&
+$
+
+ï/ ò(!""#new-object#Bdict"
+ 
+
+ñ$ ñ(4#"	#map-set#:""
+ 
+
+ó$ ó(i%"	#map-set#:"$"
+ 
+
+ï  ò(!&"	#map-set#:"&
+$
+
+ô, ù(!("#new-object#Bdict"
+ 
+
+ö$ ö(4)"	#map-set#:()
+'
+
+õ, õ(Q/"#unknown-value#Blist(
+&
+
+õ, õ(Q1"
+#is-exact#:/0Bbool
+
+
+õ, õ(Q2"
+#assume#:1:
+8
+
+õ, õ(Q4"#set-field# __collection_size:/3Bint(
+&
+
+õ, õ(Q5"#array-add-last#:/+(
+&
+
+õ, õ(Q6"#array-add-last#:/,(
+&
+
+õ, õ(Q7"#array-add-last#:/-(
+&
+
+õ, õ(Q8"#array-add-last#:/."
+ 
+
+õ$ õ(Q9"	#map-set#:(*/"
+ 
+
+ú$ ú(V;"	#map-set#:(:"
+ 
+
+ô  ù(!<"	#map-set#:'(&
+$
+
+û9 °(!>"#new-object#Bdict"
+ 
+
+ü$ ü(4?"	#map-set#:>"
+ 
+
+†$ †(eA"	#map-set#:>@"
+ 
+
+û  °(!B"	#map-set#:=>&
+$
+
+¢/ ¶(!D"#new-object#Bdict"
+ 
+
+£$ £(4E"	#map-set#:D)
+'
+
+§, §(EF"#unknown-value#Blist(
+&
+
+§, §(EG"
+#is-exact#:F0Bbool
+
+
+§, §(EH"
+#assume#:G:
+8
+
+§, §(EI"#set-field# __collection_size:F3Bint(
+&
+
+§, §(EJ"#array-add-last#:F+(
+&
+
+§, §(EK"#array-add-last#:F,(
+&
+
+§, §(EL"#array-add-last#:F-"
+ 
+
+§$ §(EM"	#map-set#:D*F"
+ 
+
+•$ •(IO"	#map-set#:DN"
+ 
+
+¢  ¶(!P"	#map-set#:CD&
+$
+
+ß, ™(!R"#new-object#Bdict"
+ 
+
+®$ ®(4S"	#map-set#:R"
+ 
+
+©$ ©(XU"	#map-set#:RT"
+ 
+
+ß  ™(!V"	#map-set#:QR&
+$
+
+´0 Ø(!X"#new-object#Bdict"
+ 
+
+¨$ ¨(3Y"	#map-set#:X&
+$
+
+≠- ≠(?Z"#new-object#Bdict"
+ 
+
+≠. ≠(>["	#map-set#:Z"
+ 
+
+≠$ ≠(?\"	#map-set#:XZ"
+ 
+
+Æ$ Æ(^^"	#map-set#:X]"
+ 
+
+´  Ø(!_"	#map-set#:WX&
+$
+
+∞6 ¥(!a"#new-object#Bdict"
+ 
+
+±$ ±(3b"	#map-set#:a&
+$
+
+≤- ≤(?c"#new-object#Bdict"
+ 
+
+≤. ≤(>d"	#map-set#:c"
+ 
+
+≤$ ≤(?e"	#map-set#:ac"
+ 
+
+≥$ ≥(Xg"	#map-set#:af"
+ 
+
+∞  ¥(!h"	#map-set#:`a"
+ 
+
+ê µ(i"	#map-set#:)
+'
+
+∂( Ω(k"#unknown-value#Blist(
+&
+
+∂( Ω(l"
+#is-exact#:k0Bbool
+
+
+∂( Ω(m"
+#assume#:l:
+8
+
+∂( Ω(n"#set-field# __collection_size:k3Bint(
+&
+
+∂( Ω(o"#array-add-last#:k(
+&
+
+∂( Ω(p"#array-add-last#:k(
+&
+
+∂( Ω(q"#array-add-last#:k'(
+&
+
+∂( Ω(r"#array-add-last#:k=(
+&
+
+∂( Ω(s"#array-add-last#:kC(
+&
+
+∂( Ω(t"#array-add-last#:kQ"
+ 
+
+∂ Ω(u"	#map-set#:jk"
+ 
+
+é æ(v"	#map-set#:"
+ 
+
+ã ø(w"	#map-set#:&
+$
+
+¿. ‘(y"#new-object#Bdict"
+ 
+
+¡ ¡((z"	#map-set#:y&
+$
+
+¬& “({"#new-object#Bdict&
+$
+
+√' «(}"#new-object#Bdict"
+ 
+
+ƒ  ƒ(/~"	#map-set#:}&
+$
+
+≈) ≈(;"#new-object#Bdict#
+!
+
+≈* ≈(:Ä"	#map-set#:#
+!
+
+≈  ≈(;Å"	#map-set#:}$
+"
+
+∆  ∆(OÉ"	#map-set#:}Ç#
+!
+
+√ «(Ñ"	#map-set#:{|}'
+%
+
+»' Ã(Ü"#new-object#Bdict$
+"
+
+…  …(/á"	#map-set#:Ü'
+%
+
+ )  (;à"#new-object#Bdict$
+"
+
+ *  (:â"	#map-set#:à%
+#
+
+    (;ä"	#map-set#:Üà%
+#
+
+À  À(På"	#map-set#:Üã%
+#
+
+» Ã(ç"	#map-set#:{ÖÜ'
+%
+
+Õ' —(è"#new-object#Bdict$
+"
+
+Œ  Œ(/ê"	#map-set#:è'
+%
+
+œ) œ(;ë"#new-object#Bdict$
+"
+
+œ* œ(:í"	#map-set#:ë%
+#
+
+œ  œ(;ì"	#map-set#:èë%
+#
+
+–  –(Nï"	#map-set#:èî%
+#
+
+Õ —(ñ"	#map-set#:{éè#
+!
+
+¬ “(ó"	#map-set#:y{*
+(
+
+”$ ”(Eò"#unknown-value#Blist*
+(
+
+”$ ”(Eô"
+#is-exact#:ò0Bbool!
+
+
+”$ ”(Eö"
+#assume#:ô<
+:
+
+”$ ”(Eõ"#set-field# __collection_size:ò3Bint*
+(
+
+”$ ”(Eú"#array-add-last#:ò|+
+)
+
+”$ ”(Eù"#array-add-last#:òÖ+
+)
+
+”$ ”(Eû"#array-add-last#:òé$
+"
+
+” ”(Eü"	#map-set#:yjò#
+!
+
+¿ ‘(†"	#map-set#:xy'
+%
+
+’' ›(¢"#new-object#Bdict$
+"
+
+÷ ÷((£"	#map-set#:¢'
+%
+
+◊& €(§"#new-object#Bdict'
+%
+
+ÿ, ÿ(>¶"#new-object#Bdict$
+"
+
+ÿ- ÿ(=ß"	#map-set#:¶&
+$
+
+ÿ ÿ(>®"	#map-set#:§•¶'
+%
+
+Ÿ- Ÿ(?™"#new-object#Bdict$
+"
+
+Ÿ. Ÿ(>´"	#map-set#:™&
+$
+
+Ÿ Ÿ(?¨"	#map-set#:§©™'
+%
+
+⁄0 ⁄(^Æ"#new-object#Bdict$
+"
+
+⁄1 ⁄(@Ø"	#map-set#:Æ'
+%
+
+⁄K ⁄(]∞"#new-object#Bdict$
+"
+
+⁄L ⁄(\±"	#map-set#:∞%
+#
+
+⁄B ⁄(]≤"	#map-set#:Æ∞&
+$
+
+⁄ ⁄(^≥"	#map-set#:§≠Æ%
+#
+
+◊ €(¥"	#map-set#:¢§*
+(
+
+‹$ ‹(Yµ"#unknown-value#Blist*
+(
+
+‹$ ‹(Y∂"
+#is-exact#:µ0Bbool!
+
+
+‹$ ‹(Y∑"
+#assume#:∂<
+:
+
+‹$ ‹(Y∏"#set-field# __collection_size:µ3Bint+
+)
+
+‹$ ‹(Yπ"#array-add-last#:µ•+
+)
+
+‹$ ‹(Y∫"#array-add-last#:µ©+
+)
+
+‹$ ‹(Yª"#array-add-last#:µ≠%
+#
+
+‹ ‹(Yº"	#map-set#:¢jµ%
+#
+
+’ ›(Ω"	#map-set#:°¢#
+!
+
+ä ﬁ(æ"	#map-set#:*
+(
+
+ﬂ ﬂ(\ø"#unknown-value#Blist*
+(
+
+ﬂ ﬂ(\¿"
+#is-exact#:ø0Bbool!
+
+
+ﬂ ﬂ(\¡"
+#assume#:¿<
+:
+
+ﬂ ﬂ(\¬"#set-field# __collection_size:ø3Bint*
+(
+
+ﬂ ﬂ(\√"#array-add-last#:ø*
+(
+
+ﬂ ﬂ(\ƒ"#array-add-last#:øx+
+)
+
+ﬂ ﬂ(\≈"#array-add-last#:ø°$
+"
+
+ﬂ ﬂ(\∆"	#map-set#:jø#
+!
+
+à ‡(«"	#map-set#:
+
+
+Ö ·(	*;/home/omar/Documents/ruleIQ/services/ai/assessment_tools.py

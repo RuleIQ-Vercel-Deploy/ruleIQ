@@ -1,0 +1,4 @@
+
+90"Convert query to Cypher query language (Neo4j)"str
+`W"MATCH (n) WHERE n.type = '{self.filters.get('type', '')}' RETURN n LIMIT {self.limit}"strselfs s("
+w w(g*>/home/omar/Documents/ruleIQ/services/knowledge_graph/models.py

@@ -42,7 +42,7 @@ describe('React Key Uniqueness Tests', () => {
         mutations: { retry: false },
       },
     });
-    
+
     // Spy on console.error to catch React warnings
     consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
@@ -107,7 +107,10 @@ describe('React Key Uniqueness Tests', () => {
               <div key={section} data-testid={`section-${section}`}>
                 <h2>{section}</h2>
                 {sectionQuestions.map((question) => (
-                  <div key={`${section}-${question.id}`} data-testid={`grouped-question-${question.id}`}>
+                  <div
+                    key={`${section}-${question.id}`}
+                    data-testid={`grouped-question-${question.id}`}
+                  >
                     <p>{question.text}</p>
                   </div>
                 ))}
@@ -139,21 +142,21 @@ describe('React Key Uniqueness Tests', () => {
     });
 
     it('should handle dynamic question rendering with stable keys', () => {
-      const DynamicQuestionRenderer = ({ 
-        questions, 
-        filter 
-      }: { 
+      const DynamicQuestionRenderer = ({
+        questions,
+        filter,
+      }: {
         questions: typeof mockQuestions;
         filter?: string;
       }) => {
-        const filteredQuestions = filter 
-          ? questions.filter(q => q.section === filter)
+        const filteredQuestions = filter
+          ? questions.filter((q) => q.section === filter)
           : questions;
 
         return (
           <div data-testid="dynamic-questions">
             {filteredQuestions.map((question, index) => (
-              <div 
+              <div
                 key={question.id} // Use stable ID, not index
                 data-testid={`dynamic-question-${question.id}`}
                 data-index={index}
@@ -229,9 +232,9 @@ describe('React Key Uniqueness Tests', () => {
     });
 
     it('should handle file upload progress with unique keys', () => {
-      const FileUploadProgress = ({ 
-        files 
-      }: { 
+      const FileUploadProgress = ({
+        files,
+      }: {
         files: Array<{ id: string; name: string; progress: number; status: string }>;
       }) => {
         return (
@@ -240,7 +243,7 @@ describe('React Key Uniqueness Tests', () => {
               <div key={`upload-${file.id}`} data-testid={`upload-${file.id}`}>
                 <div>{file.name}</div>
                 <div data-testid={`progress-${file.id}`}>
-                  <div 
+                  <div
                     style={{ width: `${file.progress}%` }}
                     data-testid={`progress-bar-${file.id}`}
                   >
@@ -284,21 +287,23 @@ describe('React Key Uniqueness Tests', () => {
 
   describe('Assessment Flow Component Keys', () => {
     it('should render assessment steps with unique keys', () => {
-      const AssessmentWizard = ({ 
-        steps 
-      }: { 
+      const AssessmentWizard = ({
+        steps,
+      }: {
         steps: Array<{ id: string; title: string; completed: boolean }>;
       }) => {
         return (
           <div data-testid="assessment-wizard">
             <div data-testid="step-list">
               {steps.map((step, index) => (
-                <div 
-                  key={step.id} 
+                <div
+                  key={step.id}
                   data-testid={`step-${step.id}`}
                   className={step.completed ? 'completed' : 'pending'}
                 >
-                  <span>{index + 1}. {step.title}</span>
+                  <span>
+                    {index + 1}. {step.title}
+                  </span>
                   {step.completed && <span data-testid={`checkmark-${step.id}`}>✓</span>}
                 </div>
               ))}
@@ -337,9 +342,9 @@ describe('React Key Uniqueness Tests', () => {
     });
 
     it('should handle nested assessment content with unique keys', () => {
-      const NestedAssessmentContent = ({ 
-        sections 
-      }: { 
+      const NestedAssessmentContent = ({
+        sections,
+      }: {
         sections: Array<{
           id: string;
           title: string;
@@ -353,8 +358,8 @@ describe('React Key Uniqueness Tests', () => {
                 <h2>{section.title}</h2>
                 <div data-testid={`questions-${section.id}`}>
                   {section.questions.map((question) => (
-                    <div 
-                      key={`${section.id}-question-${question.id}`} 
+                    <div
+                      key={`${section.id}-question-${question.id}`}
                       data-testid={`question-${section.id}-${question.id}`}
                     >
                       <p>{question.text}</p>
@@ -412,9 +417,9 @@ describe('React Key Uniqueness Tests', () => {
 
   describe('Fragment Key Handling', () => {
     it('should handle React.Fragment with keys correctly', () => {
-      const FragmentComponent = ({ 
-        items 
-      }: { 
+      const FragmentComponent = ({
+        items,
+      }: {
         items: Array<{ id: string; title: string; content: string }>;
       }) => {
         return (
@@ -523,9 +528,7 @@ describe('React Key Uniqueness Tests', () => {
       expect(screen.getByTestId('proper-c3')).toBeInTheDocument();
 
       // No key warnings
-      expect(consoleErrorSpy).not.toHaveBeenCalledWith(
-        expect.stringContaining('Warning'),
-      );
+      expect(consoleErrorSpy).not.toHaveBeenCalledWith(expect.stringContaining('Warning'));
     });
   });
 });

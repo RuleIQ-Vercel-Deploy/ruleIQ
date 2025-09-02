@@ -1,6 +1,7 @@
 """
 Models for LangGraph agent implementation.
 """
+
 from .compliance_state import (
     ComplianceState,
     ActorType,
@@ -9,16 +10,16 @@ from .compliance_state import (
     Decision,
     CostSnapshot,
     MemoryStore,
-    Context
+    Context,
 )
 
 __all__ = [
     "ComplianceState",
-    "ActorType", 
+    "ActorType",
     "WorkflowStatus",
     "EvidenceItem",
     "Decision",
     "CostSnapshot",
     "MemoryStore",
-    "Context"
+    "Context",
 ]

@@ -1,0 +1,77 @@
+
+	"deleted"str
+truebool
+falsebool
+
+2int
+
+0int
+
+
+1int
+†ñ"
+        Delete an evidence item asynchronously.
+        Returns (success, status) where status is:
+        - 'deleted': Evidence deleted successfully
+        - 'not_found': Evidence doesn't exist
+        - 'unauthorized': Evidence exists but user doesn't have access
+        "str
+"found"strdb
+Ç Ç((user
+Ç* Ç(4evidence_id
+Ç6 Ç(G"Ç#
+!
+
+ã ç(	"#unknown-value#)
+'
+
+ã ç(	item"#unknown-value#.
+,
+
+ã ç(		item"#python-unpack#:0
+.
+
+ã ç(	status"#python-unpack#:
+,
+*
+
+é é("
+#binop !=#2!=:Bbool "
+
+é é( *
+é é(
+"î*
+(
+
+è è( "#unknown-value#Btuple(
+&
+
+è è( "#array-add-last#:(
+&
+
+è è( "#array-add-last#:
+
+è è( "®#
+!
+
+ë ë(6"#unknown-value##
+!
+
+ë ë(6"#unknown-value##
+!
+
+í í(1"#unknown-value##
+!
+
+í í(1"#unknown-value#*
+(
+
+ì ì("#unknown-value#Btuple(
+&
+
+ì ì("#array-add-last#:(
+&
+
+ì ì("#array-add-last#:
+
+ì ì(*8/home/omar/Documents/ruleIQ/services/evidence_service.py

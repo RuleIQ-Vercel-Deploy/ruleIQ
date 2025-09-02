@@ -1,0 +1,38 @@
+
+ÙÏ"
+    Decorator to track costs for LangGraph nodes.
+    
+    Args:
+        node_name: Name of the node (defaults to function name)
+        service_name: Service identifier for cost tracking
+        model_name: AI model being used (if applicable)
+        track_tokens: Whether to track token usage
+        
+    Returns:
+        Decorated function that tracks costs
+        
+    Example:
+        @track_node_cost(node_name="compliance_check", model_name="gpt-4")
+        async def compliance_check_node(state: AgentState) -> AgentState:
+            # Node implementation
+            pass
+    "str	node_name$ $(#service_name% %(#
+model_name& &($track_tokens' '("Ï#
+!
+
+ô ô("#unknown-value#)
+'
+	; ô(%closure"#new-object#,
+*
+	; ô("#set-field# node_name:/
+-
+	; ô("#set-field# track_tokens:-
++
+	; ô(	"#set-field# model_name:/
+-
+	; ô(
+"#set-field# service_name:,
+*
+	; ô("?python-partial-apply?:
+
+ô ô(*B/home/omar/Documents/ruleIQ/langgraph_agent/utils/cost_tracking.py

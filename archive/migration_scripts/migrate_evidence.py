@@ -33,7 +33,9 @@ DATABASE_URL = os.getenv(
 )  # Ensure this is an asyncpg URL, e.g., postgresql+asyncpg://...
 
 if not DATABASE_URL:
-    logger.error("DATABASE_URL environment variable not set. Please set it for asyncpg.")
+    logger.error(
+        "DATABASE_URL environment variable not set. Please set it for asyncpg."
+    )
     sys.exit(1)
 
 async_engine = create_async_engine(DATABASE_URL)
@@ -78,7 +80,9 @@ async def add_integration_columns_to_evidence() -> Optional[bool]:
                 "ALTER TABLE evidence_items ADD COLUMN auto_collected BOOLEAN DEFAULT FALSE"
             )
         if "collection_details" not in columns:
-            ddl_statements.append("ALTER TABLE evidence_items ADD COLUMN collection_details JSONB")
+            ddl_statements.append(
+                "ALTER TABLE evidence_items ADD COLUMN collection_details JSONB"
+            )
         if "last_verified_at" not in columns:
             ddl_statements.append(
                 "ALTER TABLE evidence_items ADD COLUMN last_verified_at TIMESTAMP WITHOUT TIME ZONE"
@@ -92,10 +96,14 @@ async def add_integration_columns_to_evidence() -> Optional[bool]:
                 await conn.commit()
             logger.info("Integration columns added/verified in evidence_items table.")
         else:
-            logger.info("All integration columns already exist in evidence_items table.")
+            logger.info(
+                "All integration columns already exist in evidence_items table."
+            )
         return True
     except Exception as e:
-        logger.error(f"Error adding integration columns to evidence_items: {e}", exc_info=True)
+        logger.error(
+            f"Error adding integration columns to evidence_items: {e}", exc_info=True
+        )
         return False
 
 
@@ -170,18 +178,22 @@ async def verify_migration() -> bool:
     """Verify that the migration steps were successful asynchronously."""
     logger.info("Verifying migration...")
     # Add specific checks, e.g., count of backfilled items, presence of new columns
-    if not await check_table_exists("chat_conversations") or not await check_table_exists(
-        "chat_messages"
-    ):
+    if not await check_table_exists(
+        "chat_conversations"
+    ) or not await check_table_exists("chat_messages"):
         logger.error("Chat tables not found post-migration.")
         return False
-    logger.info("Migration verification checks passed (basic). Add more specific checks as needed.")
+    logger.info(
+        "Migration verification checks passed (basic). Add more specific checks as needed."
+    )
     return True
 
 
 def create_alembic_migration_template() -> Optional[bool]:
     """Creates a template for an Alembic migration script."""
-    logger.info("Creating Alembic migration template (alembic_migration_template.txt)...")
+    logger.info(
+        "Creating Alembic migration template (alembic_migration_template.txt)..."
+    )
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     template_content = f"""from alembic import op
 import sqlalchemy as sa

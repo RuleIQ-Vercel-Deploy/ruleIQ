@@ -91,7 +91,9 @@ class MockComplianceAssistant:
         framework_id = assessment_context.get("framework_id", "gdpr")
 
         # Generate contextual follow-up questions
-        follow_ups = self._generate_followup_questions(question_text, user_answer, framework_id)
+        follow_ups = self._generate_followup_questions(
+            question_text, user_answer, framework_id
+        )
 
         return {
             "follow_up_questions": follow_ups,
@@ -101,7 +103,10 @@ class MockComplianceAssistant:
         }
 
     async def analyze_assessment_results(
-        self, framework_id: str, business_profile_id: str, assessment_results: Dict[str, Any]
+        self,
+        framework_id: str,
+        business_profile_id: str,
+        assessment_results: Dict[str, Any],
     ) -> Dict[str, Any]:
         """Mock AI assessment analysis"""
         await self._simulate_delay()
@@ -140,14 +145,20 @@ class MockComplianceAssistant:
         size = business_profile.get("size", "small")
 
         return {
-            "recommendations": self._generate_personalized_recommendations(gaps, industry, size),
-            "implementation_plan": self._create_implementation_plan(timeline_preferences),
+            "recommendations": self._generate_personalized_recommendations(
+                gaps, industry, size
+            ),
+            "implementation_plan": self._create_implementation_plan(
+                timeline_preferences
+            ),
             "success_metrics": self._define_success_metrics(gaps),
             "request_id": f"mock-rec-{uuid4().hex[:8]}",
             "generated_at": datetime.utcnow().isoformat(),
         }
 
-    def _generate_contextual_guidance(self, question_text: str, framework_id: str) -> str:
+    def _generate_contextual_guidance(
+        self, question_text: str, framework_id: str
+    ) -> str:
         """Generate contextual guidance based on question and framework"""
         question_lower = question_text.lower()
 
@@ -196,7 +207,9 @@ class MockComplianceAssistant:
                 "Technical Safeguards",
             ],
         }
-        return topics_map.get(framework_id.lower(), ["Compliance", "Risk Management", "Controls"])
+        return topics_map.get(
+            framework_id.lower(), ["Compliance", "Risk Management", "Controls"]
+        )
 
     def _get_follow_up_suggestions(self, question_text: str) -> List[str]:
         """Generate follow-up suggestions based on question"""
@@ -308,7 +321,9 @@ class MockComplianceAssistant:
 
         return gaps
 
-    def _generate_recommendations(self, completion: float, framework_id: str) -> List[Dict]:
+    def _generate_recommendations(
+        self, completion: float, framework_id: str
+    ) -> List[Dict]:
         """Generate recommendations based on completion and framework"""
         recommendations = []
 
@@ -349,9 +364,11 @@ class MockComplianceAssistant:
         return {
             "level": level,
             "score": risk_score,
-            "factors": ["Incomplete assessment", "Missing controls"]
-            if risk_score > 50
-            else ["Minor gaps identified"],
+            "factors": (
+                ["Incomplete assessment", "Missing controls"]
+                if risk_score > 50
+                else ["Minor gaps identified"]
+            ),
         }
 
     def _generate_insights(self, answers: Dict, framework_id: str) -> List[str]:
@@ -411,12 +428,20 @@ class MockComplianceAssistant:
                 {
                     "name": "Assessment and Planning",
                     "duration_weeks": max(1, total_weeks // 4),
-                    "tasks": ["Gap analysis", "Resource planning", "Timeline development"],
+                    "tasks": [
+                        "Gap analysis",
+                        "Resource planning",
+                        "Timeline development",
+                    ],
                 },
                 {
                     "name": "Implementation",
                     "duration_weeks": max(2, total_weeks // 2),
-                    "tasks": ["Policy development", "Control implementation", "Training delivery"],
+                    "tasks": [
+                        "Policy development",
+                        "Control implementation",
+                        "Training delivery",
+                    ],
                 },
                 {
                     "name": "Validation and Monitoring",
@@ -477,7 +502,9 @@ class MockAIServiceFailures:
         mock = MockComplianceAssistant(fail_rate=1.0)
 
         async def filter_method(*args, **kwargs):
-            raise AIContentFilterException(filter_reason="Inappropriate content detected")
+            raise AIContentFilterException(
+                filter_reason="Inappropriate content detected"
+            )
 
         mock.get_question_help = filter_method
         return mock

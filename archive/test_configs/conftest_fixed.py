@@ -31,7 +31,9 @@ from fastapi.testclient import TestClient
 warnings.filterwarnings("ignore", message=".*bcrypt.*", category=UserWarning)
 warnings.filterwarnings("ignore", message=".*bcrypt.*", category=DeprecationWarning)
 warnings.filterwarnings("ignore", message=".*bcrypt.*", category=RuntimeWarning)
-warnings.filterwarnings("ignore", message=".*Event loop is closed.*", category=RuntimeWarning)
+warnings.filterwarnings(
+    "ignore", message=".*Event loop is closed.*", category=RuntimeWarning
+)
 warnings.filterwarnings(
     "ignore", message=".*attached to a different loop.*", category=RuntimeWarning
 )
@@ -85,7 +87,9 @@ def mock_stream_generator():
         yield chunk
 
 
-mock_model.generate_content_stream.side_effect = lambda *args, **kwargs: mock_stream_generator()
+mock_model.generate_content_stream.side_effect = (
+    lambda *args, **kwargs: mock_stream_generator()
+)
 
 # Mock caching
 mock_cached_content = unittest.mock.MagicMock()
@@ -211,7 +215,9 @@ def async_engine():
 
     # Handle SSL
     if "sslmode=require" in async_url:
-        async_url = async_url.replace("?sslmode=require", "").replace("&sslmode=require", "")
+        async_url = async_url.replace("?sslmode=require", "").replace(
+            "&sslmode=require", ""
+        )
         ssl_config = {"ssl": "require"}
     else:
         ssl_config = {}
@@ -251,7 +257,9 @@ async def setup_test_database(async_engine):
     try:
         # Check if frameworks exist
         async with AsyncSession(async_engine, expire_on_commit=False) as session:
-            result = await session.execute(text("SELECT COUNT(*) FROM compliance_frameworks"))
+            result = await session.execute(
+                text("SELECT COUNT(*) FROM compliance_frameworks")
+            )
             count = result.scalar()
 
             if count == 0:
@@ -518,7 +526,9 @@ def sample_compliance_framework(db_session):
 
 
 @pytest.fixture
-def sample_evidence_item(db_session, sample_business_profile, sample_compliance_framework):
+def sample_evidence_item(
+    db_session, sample_business_profile, sample_compliance_framework
+):
     """Create a sample evidence item for tests."""
     evidence = EvidenceItem(
         id=uuid4(),
@@ -619,7 +629,9 @@ def sample_business_profile_data():
 @pytest.fixture
 def compliance_golden_dataset():
     """Load comprehensive compliance questions from golden dataset JSON files."""
-    dataset_path = Path(__file__).parent / "ai" / "golden_datasets" / "gdpr_questions.json"
+    dataset_path = (
+        Path(__file__).parent / "ai" / "golden_datasets" / "gdpr_questions.json"
+    )
 
     if dataset_path.exists():
         with open(dataset_path, "r") as f:

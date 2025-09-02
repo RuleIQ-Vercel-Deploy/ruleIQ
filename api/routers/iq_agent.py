@@ -49,6 +49,7 @@ router = APIRouter(prefix="/api/v1", tags=["IQ Agent - GraphRAG Intelligence"])
 _iq_agent: Optional[IQComplianceAgent] = None
 _neo4j_service: Optional[Neo4jGraphRAGService] = None
 
+
 async def get_iq_agent() -> IQComplianceAgent:
     """Get or create IQ agent instance"""
     global _iq_agent, _neo4j_service
@@ -67,10 +68,11 @@ async def get_iq_agent() -> IQComplianceAgent:
             logger.error(f"Failed to initialize IQ Agent: {str(e)}")
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail=f"IQ Agent initialization failed: {str(e)}"
+                detail=f"IQ Agent initialization failed: {str(e)}",
             )
 
     return _iq_agent
+
 
 async def get_neo4j_service() -> Neo4jGraphRAGService:
     """Get Neo4j service instance"""
@@ -85,10 +87,11 @@ async def get_neo4j_service() -> Neo4jGraphRAGService:
             logger.error(f"Failed to initialize Neo4j service: {str(e)}")
             raise HTTPException(
                 status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail=f"Neo4j service initialization failed: {str(e)}"
+                detail=f"Neo4j service initialization failed: {str(e)}",
             )
 
     return _neo4j_service
+
 
 @router.post(
     "/query",
@@ -96,7 +99,7 @@ async def get_neo4j_service() -> Neo4jGraphRAGService:
     summary="Query IQ Agent for Compliance Analysis",
     description="""
     Submit a natural language compliance query to IQ for comprehensive GraphRAG analysis.
-    
+
     IQ leverages Neo4j graph database to provide:
     - Compliance gap analysis across regulations
     - Risk convergence detection and mitigation
@@ -104,7 +107,7 @@ async def get_neo4j_service() -> Neo4jGraphRAGService:
     - Temporal regulatory change analysis
     - Enforcement learning from historical cases
     - Prioritized action plans with cost estimates
-    
+
     Example queries:
     - "What are our GDPR compliance gaps in customer data processing?"
     - "How does the new DORA regulation affect our operational risk controls?"
@@ -116,25 +119,26 @@ async def get_neo4j_service() -> Neo4jGraphRAGService:
         503: {"description": "IQ Agent service unavailable"},
         429: {"description": "Rate limit exceeded"},
     },
-    dependencies=[Depends(ai_analysis_rate_limit)]
+    dependencies=[Depends(ai_analysis_rate_limit)],
 )
 async def query_compliance_analysis(
     request: ComplianceQueryRequest,
     background_tasks: BackgroundTasks,
     iq_agent: IQComplianceAgent = Depends(get_iq_agent),
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ) -> ComplianceQueryResponse:
     """
     Process compliance query through IQ's GraphRAG intelligence loop
     """
     try:
-        logger.info(f"Processing compliance query from user {current_user.id}: {request.query[:100]}...")
+        logger.info(
+            f"Processing compliance query from user {current_user.id}: {request.query[:100]}..."
+        )
 
         # Process query through IQ's intelligence loop
         result = await iq_agent.process_query(
-            user_query=request.query,
-            context=request.context
+            user_query=request.query, context=request.context
         )
 
         # Convert IQ response to API schema
@@ -146,7 +150,7 @@ async def query_compliance_analysis(
             graph_context=result["graph_context"],
             evidence=result["evidence"],
             next_actions=result["next_actions"],
-            llm_response=result["llm_response"]
+            llm_response=result["llm_response"],
         )
 
         # Log successful query for monitoring
@@ -155,28 +159,29 @@ async def query_compliance_analysis(
             user_id=current_user.id,
             query=request.query,
             response_status=result["status"],
-            nodes_traversed=result["graph_context"]["nodes_traversed"]
+            nodes_traversed=result["graph_context"]["nodes_traversed"],
         )
 
         return ComplianceQueryResponse(
             success=True,
             data=iq_response,
-            message="Compliance analysis completed successfully"
+            message="Compliance analysis completed successfully",
         )
 
     except AIServiceException as e:
         logger.error(f"AI service error in compliance query: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_502_BAD_GATEWAY,
-            detail=f"AI analysis failed: {str(e)}"
+            detail=f"AI analysis failed: {str(e)}",
         )
 
     except Exception as e:
         logger.error(f"Unexpected error in compliance query: {str(e)}", exc_info=True)
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Internal server error during compliance analysis"
+            detail="Internal server error during compliance analysis",
         )
+
 
 @router.post(
     "/memory/store",
@@ -184,7 +189,7 @@ async def query_compliance_analysis(
     summary="Store Knowledge in IQ's Memory",
     description="""
     Store compliance insights, patterns, or knowledge in IQ's persistent memory system.
-    
+
     Memory types supported:
     - compliance_insight: Key compliance findings or patterns
     - enforcement_case: Lessons from enforcement actions
@@ -196,7 +201,7 @@ async def query_compliance_analysis(
 async def store_compliance_memory(
     request: MemoryStoreRequest,
     iq_agent: IQComplianceAgent = Depends(get_iq_agent),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> MemoryStoreResponse:
     """
     Store knowledge in IQ's memory system for future retrieval
@@ -207,21 +212,22 @@ async def store_compliance_memory(
             user_query=f"Knowledge storage by {current_user.email}",
             agent_response=str(request.content),
             compliance_context=request.content,
-            importance_score=request.importance_score
+            importance_score=request.importance_score,
         )
 
         return MemoryStoreResponse(
             success=True,
             data={"memory_id": memory_id, "status": "stored"},
-            message="Knowledge stored successfully in IQ's memory"
+            message="Knowledge stored successfully in IQ's memory",
         )
 
     except Exception as e:
         logger.error(f"Error storing compliance memory: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to store memory: {str(e)}"
+            detail=f"Failed to store memory: {str(e)}",
         )
+
 
 @router.post(
     "/memory/retrieve",
@@ -229,7 +235,7 @@ async def store_compliance_memory(
     summary="Retrieve Relevant Memories",
     description="""
     Retrieve relevant memories from IQ's knowledge base based on query context.
-    
+
     Uses sophisticated retrieval strategies:
     - Entity-based matching for regulations, domains, jurisdictions
     - Tag-based categorical retrieval
@@ -241,7 +247,7 @@ async def store_compliance_memory(
 async def retrieve_compliance_memories(
     request: MemoryRetrievalRequest,
     iq_agent: IQComplianceAgent = Depends(get_iq_agent),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> MemoryRetrievalResponseWrapper:
     """
     Retrieve contextually relevant memories from IQ's knowledge base
@@ -252,21 +258,22 @@ async def retrieve_compliance_memories(
             query=request.query,
             context={},
             max_memories=request.max_memories,
-            relevance_threshold=request.relevance_threshold
+            relevance_threshold=request.relevance_threshold,
         )
 
         return MemoryRetrievalResponseWrapper(
             success=True,
             data=result,
-            message=f"Retrieved {len(result.retrieved_memories)} relevant memories"
+            message=f"Retrieved {len(result.retrieved_memories)} relevant memories",
         )
 
     except Exception as e:
         logger.error(f"Error retrieving compliance memories: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to retrieve memories: {str(e)}"
+            detail=f"Failed to retrieve memories: {str(e)}",
         )
+
 
 @router.post(
     "/graph/initialize",
@@ -274,14 +281,14 @@ async def retrieve_compliance_memories(
     summary="Initialize Compliance Graph",
     description="""
     Initialize or refresh the Neo4j compliance graph with CCO playbook data.
-    
+
     This endpoint:
     - Creates graph schema with 20+ node types
     - Loads compliance domains, regulations, requirements, controls
     - Establishes relationships between entities
     - Populates enforcement cases and risk assessments
     - Sets up temporal patterns for regulatory changes
-    
+
     **Warning**: This operation may take several minutes and will affect ongoing queries.
     """,
 )
@@ -289,7 +296,7 @@ async def initialize_compliance_graph_endpoint(
     request: GraphInitializationRequest,
     background_tasks: BackgroundTasks,
     neo4j_service: Neo4jGraphRAGService = Depends(get_neo4j_service),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> GraphInitializationResponseWrapper:
     """
     Initialize compliance graph with CCO data
@@ -301,7 +308,7 @@ async def initialize_compliance_graph_endpoint(
         background_tasks.add_task(
             _initialize_graph_background,
             clear_existing=request.clear_existing,
-            load_sample_data=request.load_sample_data
+            load_sample_data=request.load_sample_data,
         )
 
         # Return immediate response
@@ -312,17 +319,18 @@ async def initialize_compliance_graph_endpoint(
                 "timestamp": datetime.utcnow().isoformat(),
                 "nodes_created": {},
                 "relationships_created": 0,
-                "message": "Graph initialization started in background"
+                "message": "Graph initialization started in background",
             },
-            message="Compliance graph initialization initiated"
+            message="Compliance graph initialization initiated",
         )
 
     except Exception as e:
         logger.error(f"Error initiating graph initialization: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to initialize graph: {str(e)}"
+            detail=f"Failed to initialize graph: {str(e)}",
         )
+
 
 @router.get(
     "/health",
@@ -339,8 +347,7 @@ async def initialize_compliance_graph_endpoint(
 )
 async def iq_agent_health_check(
     include_stats: bool = Query(
-        default=True,
-        description="Include detailed statistics in response"
+        default=True, description="Include detailed statistics in response"
     )
 ) -> IQHealthCheckResponse:
     """
@@ -375,10 +382,12 @@ async def iq_agent_health_check(
                 memory_stats = {
                     "total_memories": len(iq_agent.memory_manager.memory_store),
                     "clusters": len(iq_agent.memory_manager.clusters),
-                    "memory_types": list(set(
-                        memory.memory_type.value
-                        for memory in iq_agent.memory_manager.memory_store.values()
-                    ))
+                    "memory_types": list(
+                        set(
+                            memory.memory_type.value
+                            for memory in iq_agent.memory_manager.memory_store.values()
+                        )
+                    ),
                 }
 
         except Exception as e:
@@ -398,13 +407,13 @@ async def iq_agent_health_check(
             neo4j_connected=neo4j_connected,
             graph_statistics=graph_stats,
             memory_statistics=memory_stats,
-            last_query_time=last_query_time
+            last_query_time=last_query_time,
         )
 
         return IQHealthCheckResponse(
             success=True,
             data=health_response,
-            message=f"IQ Agent status: {overall_status}"
+            message=f"IQ Agent status: {overall_status}",
         )
 
     except Exception as e:
@@ -415,10 +424,11 @@ async def iq_agent_health_check(
                 status="error",
                 neo4j_connected=False,
                 graph_statistics={},
-                memory_statistics={}
+                memory_statistics={},
             ),
-            message=f"Health check failed: {str(e)}"
+            message=f"Health check failed: {str(e)}",
         )
+
 
 @router.get(
     "/status",
@@ -441,7 +451,7 @@ async def iq_agent_status():
             "status": "operational",
             "timestamp": datetime.utcnow().isoformat(),
             "agent": "IQ",
-            "version": "1.0.0"
+            "version": "1.0.0",
         }
 
     except Exception as e:
@@ -450,16 +460,15 @@ async def iq_agent_status():
             "status": "degraded",
             "timestamp": datetime.utcnow().isoformat(),
             "agent": "IQ",
-            "error": str(e)
+            "error": str(e),
         }
+
 
 # Background task functions
 
+
 async def _log_query_metrics(
-    user_id: UUID,
-    query: str,
-    response_status: str,
-    nodes_traversed: int
+    user_id: UUID, query: str, response_status: str, nodes_traversed: int
 ) -> None:
     """Log query metrics for monitoring"""
     try:
@@ -470,9 +479,9 @@ async def _log_query_metrics(
     except Exception as e:
         logger.error(f"Failed to log query metrics: {str(e)}")
 
+
 async def _initialize_graph_background(
-    clear_existing: bool = False,
-    load_sample_data: bool = True
+    clear_existing: bool = False, load_sample_data: bool = True
 ) -> None:
     """Initialize compliance graph in background"""
     try:
@@ -482,6 +491,7 @@ async def _initialize_graph_background(
 
     except Exception as e:
         logger.error(f"Background graph initialization failed: {str(e)}")
+
 
 # Cleanup function for application shutdown
 async def cleanup_iq_agent() -> None:

@@ -37,7 +37,9 @@ async def create_tables() -> Optional[bool]:
 
         # Run alembic upgrade to latest
         result = subprocess.run(
-            [sys.executable, "-m", "alembic", "upgrade", "head"], capture_output=True, text=True
+            [sys.executable, "-m", "alembic", "upgrade", "head"],
+            capture_output=True,
+            text=True,
         )
 
         if result.returncode != 0:
@@ -86,7 +88,9 @@ async def main() -> bool:
 
     database_url = os.getenv("DATABASE_URL")
     if not database_url:
-        logger.error("DATABASE_URL environment variable not set. Please set it in your .env file.")
+        logger.error(
+            "DATABASE_URL environment variable not set. Please set it in your .env file."
+        )
         return False
 
     logger.info(f"Database URL: {database_url}")

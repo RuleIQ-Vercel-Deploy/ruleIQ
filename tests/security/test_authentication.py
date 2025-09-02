@@ -39,9 +39,10 @@ class TestAuthenticationSecurity:
                 response = unauthenticated_test_client.delete(endpoint)
 
             # Some endpoints might return 422 if they validate request body before auth
-            assert response.status_code in [401, 422], (
-                f"Endpoint {method} {endpoint} should require authentication or validate input (got {response.status_code})"
-            )
+            assert response.status_code in [
+                401,
+                422,
+            ], f"Endpoint {method} {endpoint} should require authentication or validate input (got {response.status_code})"
             # Only check authentication message for 401 responses
             if response.status_code == 401:
                 response_data = response.json()
@@ -71,9 +72,13 @@ class TestAuthenticationSecurity:
 
         for token in invalid_tokens:
             headers = {"Authorization": token} if token else {}
-            response = unauthenticated_test_client.get("/api/business-profiles", headers=headers)
+            response = unauthenticated_test_client.get(
+                "/api/business-profiles", headers=headers
+            )
 
-            assert response.status_code == 401, f"Invalid token should be rejected: {token}"
+            assert (
+                response.status_code == 401
+            ), f"Invalid token should be rejected: {token}"
             response_data = response.json()
             assert "detail" in response_data
 
@@ -84,7 +89,9 @@ class TestAuthenticationSecurity:
     def test_expired_token_handling(self, unauthenticated_test_client, expired_token):
         """Test proper handling of expired tokens"""
         headers = {"Authorization": f"Bearer {expired_token}"}
-        response = unauthenticated_test_client.get("/api/business-profiles", headers=headers)
+        response = unauthenticated_test_client.get(
+            "/api/business-profiles", headers=headers
+        )
 
         assert response.status_code == 401
         response_data = response.json()
@@ -97,7 +104,9 @@ class TestAuthenticationSecurity:
     def test_token_without_bearer_prefix(self, unauthenticated_test_client, auth_token):
         """Test that tokens without Bearer prefix are rejected"""
         headers = {"Authorization": auth_token}  # Missing "Bearer " prefix
-        response = unauthenticated_test_client.get("/api/business-profiles", headers=headers)
+        response = unauthenticated_test_client.get(
+            "/api/business-profiles", headers=headers
+        )
 
         assert response.status_code == 401
 
@@ -114,7 +123,9 @@ class TestAuthenticationSecurity:
         ]
 
         for headers in malformed_headers:
-            response = unauthenticated_test_client.get("/api/business-profiles", headers=headers)
+            response = unauthenticated_test_client.get(
+                "/api/business-profiles", headers=headers
+            )
             assert response.status_code == 401
 
     def test_password_strength_validation(self, client):
@@ -140,13 +151,17 @@ class TestAuthenticationSecurity:
 
             response = client.post("/api/auth/register", json=registration_data)
 
-            assert response.status_code == 422, f"Weak password should be rejected: {weak_password}"
+            assert (
+                response.status_code == 422
+            ), f"Weak password should be rejected: {weak_password}"
             response_data = response.json()
             assert "detail" in response_data
 
             # Check that password validation errors are present
             password_errors = [
-                error for error in response_data["detail"] if "password" in str(error).lower()
+                error
+                for error in response_data["detail"]
+                if "password" in str(error).lower()
             ]
             assert len(password_errors) > 0
 
@@ -175,11 +190,12 @@ class TestAuthenticationSecurity:
                 password_errors = [
                     error
                     for error in response_data["detail"]
-                    if "password" in str(error).lower() and "strength" in str(error).lower()
+                    if "password" in str(error).lower()
+                    and "strength" in str(error).lower()
                 ]
-                assert len(password_errors) == 0, (
-                    f"Strong password should not be rejected for strength: {strong_password}"
-                )
+                assert (
+                    len(password_errors) == 0
+                ), f"Strong password should not be rejected for strength: {strong_password}"
 
     @pytest.mark.skip(
         reason="Account lockout is implemented via rate limiting which is disabled in test environment"
@@ -191,7 +207,10 @@ class TestAuthenticationSecurity:
         assert register_response.status_code in [200, 201]  # Accept both success codes
 
         # Attempt multiple failed logins
-        failed_login_data = {"email": sample_user_data["email"], "password": "wrong_password"}
+        failed_login_data = {
+            "email": sample_user_data["email"],
+            "password": "wrong_password",
+        }
 
         # Try failed logins multiple times
         for attempt in range(6):  # Assuming 5 attempts trigger lockout
@@ -267,7 +286,10 @@ class TestAuthenticationSecurity:
             start_time = time.time()
             client.post(
                 "/api/auth/login",
-                json={"email": f"fake-{uuid4()}@example.com", "password": "wrong_password"},
+                json={
+                    "email": f"fake-{uuid4()}@example.com",
+                    "password": "wrong_password",
+                },
             )
             non_existent_email_times.append(time.time() - start_time)
 
@@ -276,10 +298,12 @@ class TestAuthenticationSecurity:
         avg_non_existent = sum(non_existent_email_times) / len(non_existent_email_times)
 
         # Times should not differ by more than 50% (adjust threshold as needed)
-        time_difference = abs(avg_existing - avg_non_existent) / max(avg_existing, avg_non_existent)
-        assert time_difference < 0.5, (
-            "Response times differ too much between existing and non-existent emails"
+        time_difference = abs(avg_existing - avg_non_existent) / max(
+            avg_existing, avg_non_existent
         )
+        assert (
+            time_difference < 0.5
+        ), "Response times differ too much between existing and non-existent emails"
 
     def test_session_management_security(self, client, sample_user_data):
         """Test secure session management"""
@@ -287,7 +311,10 @@ class TestAuthenticationSecurity:
         client.post("/api/auth/register", json=sample_user_data)
         login_response = client.post(
             "/api/auth/login",
-            json={"email": sample_user_data["email"], "password": sample_user_data["password"]},
+            json={
+                "email": sample_user_data["email"],
+                "password": sample_user_data["password"],
+            },
         )
 
         assert login_response.status_code == 200
@@ -311,7 +338,10 @@ class TestAuthenticationSecurity:
         client.post("/api/auth/register", json=sample_user_data)
         login_response = client.post(
             "/api/auth/login",
-            json={"email": sample_user_data["email"], "password": sample_user_data["password"]},
+            json={
+                "email": sample_user_data["email"],
+                "password": sample_user_data["password"],
+            },
         )
 
         token = login_response.json()["access_token"]
@@ -333,14 +363,20 @@ class TestAuthenticationSecurity:
             # Old password should no longer work
             old_login_response = client.post(
                 "/api/auth/login",
-                json={"email": sample_user_data["email"], "password": sample_user_data["password"]},
+                json={
+                    "email": sample_user_data["email"],
+                    "password": sample_user_data["password"],
+                },
             )
             assert old_login_response.status_code == 401
 
             # New password should work
             new_login_response = client.post(
                 "/api/auth/login",
-                json={"email": sample_user_data["email"], "password": "NewSecurePass123!"},
+                json={
+                    "email": sample_user_data["email"],
+                    "password": "NewSecurePass123!",
+                },
             )
             assert new_login_response.status_code == 200
 
@@ -349,7 +385,10 @@ class TestAuthenticationSecurity:
         # Register user
         client.post("/api/auth/register", json=sample_user_data)
 
-        login_data = {"email": sample_user_data["email"], "password": sample_user_data["password"]}
+        login_data = {
+            "email": sample_user_data["email"],
+            "password": sample_user_data["password"],
+        }
 
         # Create multiple sessions
         sessions = []
@@ -383,7 +422,10 @@ class TestTokenSecurity:
         client.post("/api/auth/register", json=sample_user_data)
         login_response = client.post(
             "/api/auth/login",
-            json={"email": sample_user_data["email"], "password": sample_user_data["password"]},
+            json={
+                "email": sample_user_data["email"],
+                "password": sample_user_data["password"],
+            },
         )
 
         token = login_response.json()["access_token"]
@@ -404,9 +446,16 @@ class TestTokenSecurity:
                 token_data = json.loads(decoded)
 
                 # Check that sensitive data is not in token
-                sensitive_fields = ["password", "password_hash", "secret", "private_key"]
+                sensitive_fields = [
+                    "password",
+                    "password_hash",
+                    "secret",
+                    "private_key",
+                ]
                 for field in sensitive_fields:
-                    assert field not in token_data, f"Token contains sensitive field: {field}"
+                    assert (
+                        field not in token_data
+                    ), f"Token contains sensitive field: {field}"
 
                 # Token should contain minimal necessary information
                 expected_fields = ["sub", "exp", "iat"]  # subject, expiry, issued at
@@ -425,7 +474,10 @@ class TestTokenSecurity:
         client.post("/api/auth/register", json=sample_user_data)
         login_response = client.post(
             "/api/auth/login",
-            json={"email": sample_user_data["email"], "password": sample_user_data["password"]},
+            json={
+                "email": sample_user_data["email"],
+                "password": sample_user_data["password"],
+            },
         )
 
         token = login_response.json()["access_token"]
@@ -439,13 +491,18 @@ class TestTokenSecurity:
         immediate_response = client.get("/api/users/me", headers=headers)
         assert immediate_response.status_code == 200
 
-    def test_token_signature_validation(self, unauthenticated_test_client, sample_user_data):
+    def test_token_signature_validation(
+        self, unauthenticated_test_client, sample_user_data
+    ):
         """Test that tokens with invalid signatures are rejected"""
         # Get a valid token
         unauthenticated_test_client.post("/api/auth/register", json=sample_user_data)
         login_response = unauthenticated_test_client.post(
             "/api/auth/login",
-            json={"email": sample_user_data["email"], "password": sample_user_data["password"]},
+            json={
+                "email": sample_user_data["email"],
+                "password": sample_user_data["password"],
+            },
         )
 
         valid_token = login_response.json()["access_token"]
@@ -462,7 +519,9 @@ class TestTokenSecurity:
             # Should be rejected due to invalid signature
             assert response.status_code == 401
 
-    def test_token_algorithm_confusion(self, unauthenticated_test_client, sample_user_data):
+    def test_token_algorithm_confusion(
+        self, unauthenticated_test_client, sample_user_data
+    ):
         """Test protection against JWT algorithm confusion attacks"""
         # This is a complex test that would require crafting specific JWT tokens
         # For now, we test that only expected algorithms are accepted
@@ -497,7 +556,9 @@ class TestAuthorizationSecurity:
             "/api/auth/login",
             json={"email": user1_data["email"], "password": user1_data["password"]},
         )
-        user1_headers = {"Authorization": f"Bearer {login1_response.json()['access_token']}"}
+        user1_headers = {
+            "Authorization": f"Bearer {login1_response.json()['access_token']}"
+        }
 
         # Register second user
         user2_data = {
@@ -510,7 +571,9 @@ class TestAuthorizationSecurity:
             "/api/auth/login",
             json={"email": user2_data["email"], "password": user2_data["password"]},
         )
-        user2_headers = {"Authorization": f"Bearer {login2_response.json()['access_token']}"}
+        user2_headers = {
+            "Authorization": f"Bearer {login2_response.json()['access_token']}"
+        }
 
         # User 1 creates business profile
         profile_data = {
@@ -550,9 +613,14 @@ class TestAuthorizationSecurity:
         client.post("/api/auth/register", json=sample_user_data)
         login_response = client.post(
             "/api/auth/login",
-            json={"email": sample_user_data["email"], "password": sample_user_data["password"]},
+            json={
+                "email": sample_user_data["email"],
+                "password": sample_user_data["password"],
+            },
         )
-        user_headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
+        user_headers = {
+            "Authorization": f"Bearer {login_response.json()['access_token']}"
+        }
 
         # Try to access admin endpoints (if they exist)
         admin_endpoints = [
@@ -565,9 +633,10 @@ class TestAuthorizationSecurity:
         for endpoint in admin_endpoints:
             response = client.get(endpoint, headers=user_headers)
             # Should be forbidden or not found (but not unauthorized, since user is authenticated)
-            assert response.status_code in [403, 404], (
-                f"Regular user should not access admin endpoint: {endpoint}"
-            )
+            assert response.status_code in [
+                403,
+                404,
+            ], f"Regular user should not access admin endpoint: {endpoint}"
 
     def test_role_based_access_control(self, client, sample_user_data):
         """Test role-based access control if implemented"""
@@ -579,9 +648,14 @@ class TestAuthorizationSecurity:
         if register_response.status_code == 201:
             login_response = client.post(
                 "/api/auth/login",
-                json={"email": sample_user_data["email"], "password": sample_user_data["password"]},
+                json={
+                    "email": sample_user_data["email"],
+                    "password": sample_user_data["password"],
+                },
             )
-            headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
+            headers = {
+                "Authorization": f"Bearer {login_response.json()['access_token']}"
+            }
 
             # Test access to role-appropriate endpoints
             profile_response = client.get("/api/users/me", headers=headers)
@@ -597,7 +671,10 @@ class TestAuthorizationSecurity:
         client.post("/api/auth/register", json=sample_user_data)
         login_response = client.post(
             "/api/auth/login",
-            json={"email": sample_user_data["email"], "password": sample_user_data["password"]},
+            json={
+                "email": sample_user_data["email"],
+                "password": sample_user_data["password"],
+            },
         )
         headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
 
@@ -625,7 +702,10 @@ class TestAuthorizationSecurity:
         client.post("/api/auth/register", json=sample_user_data)
         login_response = client.post(
             "/api/auth/login",
-            json={"email": sample_user_data["email"], "password": sample_user_data["password"]},
+            json={
+                "email": sample_user_data["email"],
+                "password": sample_user_data["password"],
+            },
         )
         headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
 
@@ -646,4 +726,6 @@ class TestAuthorizationSecurity:
             # Should not include malicious origin in Access-Control-Allow-Origin
             if "Access-Control-Allow-Origin" in response.headers:
                 allowed_origin = response.headers["Access-Control-Allow-Origin"]
-                assert allowed_origin != origin, f"Malicious origin should not be allowed: {origin}"
+                assert (
+                    allowed_origin != origin
+                ), f"Malicious origin should not be allowed: {origin}"

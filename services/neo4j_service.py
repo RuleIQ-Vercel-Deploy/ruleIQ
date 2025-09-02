@@ -38,7 +38,7 @@ class Neo4jGraphRAGService:
                 auth=(self.username, self.password),
                 max_connection_lifetime=3600,
                 max_connection_pool_size=50,
-                connection_acquisition_timeout=60
+                connection_acquisition_timeout=60,
             )
 
             # Verify connection
@@ -57,6 +57,7 @@ class Neo4jGraphRAGService:
 
     async def _verify_connection(self) -> bool:
         """Verify Neo4j connection is working"""
+
         def _test_connection() -> bool:
             if self.driver is None:
                 return False
@@ -78,34 +79,56 @@ class Neo4jGraphRAGService:
         """Initialize Neo4j schema with indexes and constraints"""
         # Node indexes for performance
         indexes = [
-            ("CREATE INDEX regulation_jurisdiction IF NOT EXISTS "
-             "FOR (r:Regulation) ON (r.jurisdiction)"),
-            ("CREATE INDEX requirement_mandatory IF NOT EXISTS "
-             "FOR (req:Requirement) ON (req.mandatory)"),
-            ("CREATE INDEX control_status IF NOT EXISTS "
-             "FOR (c:Control) ON (c.implementation_status)"),
+            (
+                "CREATE INDEX regulation_jurisdiction IF NOT EXISTS "
+                "FOR (r:Regulation) ON (r.jurisdiction)"
+            ),
+            (
+                "CREATE INDEX requirement_mandatory IF NOT EXISTS "
+                "FOR (req:Requirement) ON (req.mandatory)"
+            ),
+            (
+                "CREATE INDEX control_status IF NOT EXISTS "
+                "FOR (c:Control) ON (c.implementation_status)"
+            ),
             "CREATE INDEX risk_score IF NOT EXISTS FOR (r:Risk) ON (r.risk_score)",
             "CREATE INDEX metric_type IF NOT EXISTS FOR (m:Metric) ON (m.type)",
-            ("CREATE INDEX vendor_criticality IF NOT EXISTS "
-             "FOR (v:Vendor) ON (v.criticality)"),
-            ("CREATE INDEX milestone_timeline IF NOT EXISTS "
-             "FOR (m:Milestone) ON (m.timeline)"),
-            ("CREATE INDEX domain_priority IF NOT EXISTS "
-             "FOR (d:ComplianceDomain) ON (d.priority)")
+            (
+                "CREATE INDEX vendor_criticality IF NOT EXISTS "
+                "FOR (v:Vendor) ON (v.criticality)"
+            ),
+            (
+                "CREATE INDEX milestone_timeline IF NOT EXISTS "
+                "FOR (m:Milestone) ON (m.timeline)"
+            ),
+            (
+                "CREATE INDEX domain_priority IF NOT EXISTS "
+                "FOR (d:ComplianceDomain) ON (d.priority)"
+            ),
         ]
 
         # Unique constraints
         constraints = [
-            ("CREATE CONSTRAINT regulation_name IF NOT EXISTS "
-             "FOR (r:Regulation) REQUIRE r.name IS UNIQUE"),
-            ("CREATE CONSTRAINT requirement_id IF NOT EXISTS "
-             "FOR (req:Requirement) REQUIRE req.id IS UNIQUE"),
-            ("CREATE CONSTRAINT control_id IF NOT EXISTS "
-             "FOR (c:Control) REQUIRE c.id IS UNIQUE"),
-            ("CREATE CONSTRAINT risk_id IF NOT EXISTS "
-             "FOR (r:Risk) REQUIRE r.id IS UNIQUE"),
-            ("CREATE CONSTRAINT domain_name IF NOT EXISTS "
-             "FOR (d:ComplianceDomain) REQUIRE d.name IS UNIQUE")
+            (
+                "CREATE CONSTRAINT regulation_name IF NOT EXISTS "
+                "FOR (r:Regulation) REQUIRE r.name IS UNIQUE"
+            ),
+            (
+                "CREATE CONSTRAINT requirement_id IF NOT EXISTS "
+                "FOR (req:Requirement) REQUIRE req.id IS UNIQUE"
+            ),
+            (
+                "CREATE CONSTRAINT control_id IF NOT EXISTS "
+                "FOR (c:Control) REQUIRE c.id IS UNIQUE"
+            ),
+            (
+                "CREATE CONSTRAINT risk_id IF NOT EXISTS "
+                "FOR (r:Risk) REQUIRE r.id IS UNIQUE"
+            ),
+            (
+                "CREATE CONSTRAINT domain_name IF NOT EXISTS "
+                "FOR (d:ComplianceDomain) REQUIRE d.name IS UNIQUE"
+            ),
         ]
 
         def _create_schema() -> None:
@@ -141,7 +164,7 @@ class Neo4jGraphRAGService:
         self,
         query: str,
         parameters: Optional[Dict[str, Any]] = None,
-        read_only: bool = True
+        read_only: bool = True,
     ) -> List[Dict[str, Any]]:
         """Execute a Cypher query and return results"""
 
@@ -167,8 +190,7 @@ class Neo4jGraphRAGService:
             raise
 
     async def execute_transaction(
-        self,
-        queries: List[Tuple[str, Dict[str, Any]]]
+        self, queries: List[Tuple[str, Dict[str, Any]]]
     ) -> bool:
         """Execute multiple queries in a transaction"""
 
@@ -195,7 +217,9 @@ class Neo4jGraphRAGService:
     # COMPLIANCE COVERAGE ANALYSIS
     # ============================================
 
-    async def get_compliance_coverage(self, domain_name: Optional[str] = None) -> Dict[str, Any]:
+    async def get_compliance_coverage(
+        self, domain_name: Optional[str] = None
+    ) -> Dict[str, Any]:
         """Get compliance coverage analysis for a domain"""
 
         if domain_name:
@@ -412,9 +436,7 @@ class Neo4jGraphRAGService:
     # ============================================
 
     async def query_by_domain_and_jurisdiction(
-        self,
-        domain: str,
-        jurisdiction: str
+        self, domain: str, jurisdiction: str
     ) -> Dict[str, Any]:
         """Natural language query: What are the requirements for [DOMAIN] in [JURISDICTION]?"""
 
@@ -504,11 +526,11 @@ class Neo4jGraphRAGService:
     async def bulk_load_compliance_data(self, data_file: str) -> bool:
         """Load compliance data from JSON file"""
         try:
-            with open(data_file, 'r') as f:
+            with open(data_file, "r") as f:
                 data = json.load(f)
 
             # Load domains
-            if 'domains' in data:
+            if "domains" in data:
                 query = """
                 UNWIND $domains AS d 
                 CREATE (domain:ComplianceDomain {
@@ -518,10 +540,12 @@ class Neo4jGraphRAGService:
                     regulatory_severity: d.regulatory_severity
                 })
                 """
-                await self.execute_query(query, {"domains": data['domains']}, read_only=False)
+                await self.execute_query(
+                    query, {"domains": data["domains"]}, read_only=False
+                )
 
             # Load regulations
-            if 'regulations' in data:
+            if "regulations" in data:
                 query = """
                 UNWIND $regulations AS r 
                 CREATE (reg:Regulation {
@@ -535,7 +559,9 @@ class Neo4jGraphRAGService:
                     status: r.status
                 })
                 """
-                await self.execute_query(query, {"regulations": data['regulations']}, read_only=False)
+                await self.execute_query(
+                    query, {"regulations": data["regulations"]}, read_only=False
+                )
 
             logger.info(f"Successfully loaded compliance data from {data_file}")
             return True

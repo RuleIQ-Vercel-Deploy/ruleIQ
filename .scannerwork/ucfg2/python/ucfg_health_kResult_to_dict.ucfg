@@ -1,0 +1,169 @@
+
++monitoring.health.HealthCheckResult.to_dictC
+9/home/omar/Documents/ruleIQ/app/core/monitoring/health.py/ /("2*Õ	
+20 0($
+1 6(	
+%6"dictg
+e
+2 2(
+%7"__id*M
+
+__unknown_file (1*/%
+#monitoring.health.HealthCheckResult"
+name‹
+ˆ
+2 2(
+%8"__mapSet*"
+
+__unknown_file (
+
+%6*$
+
+__unknown_file (
+name*"
+
+__unknown_file (
+
+%7i
+g
+3 3(!
+%9"__id*O
+
+__unknown_file (3*1%
+#monitoring.health.HealthCheckResult"
+statusŽ
+‹
+3 3(!
+%10"__mapSet*"
+
+__unknown_file (
+
+%6*&
+
+__unknown_file (
+
+status*"
+
+__unknown_file (
+
+%9k
+i
+4 4(#
+%11"__id*P
+
+__unknown_file (4*2%
+#monitoring.health.HealthCheckResult"	
+message
+
+4 4(#
+%12"__mapSet*"
+
+__unknown_file (
+
+%6*'
+
+__unknown_file (	
+message*#
+
+__unknown_file (
+
+%11m
+k
+5 5('
+%13"__id*R
+
+__unknown_file (6*4%
+#monitoring.health.HealthCheckResult"
+	timestamp’
+
+5 5('
+%14"__mapSet*"
+
+__unknown_file (
+
+%6*)
+
+__unknown_file (
+	timestamp*#
+
+__unknown_file (
+
+%13@
+>
+1 6(	
+result"__id*"
+
+__unknown_file (
+
+%6k
+i
+7 7(
+%15"__id*P
+
+__unknown_file (4*2%
+#monitoring.health.HealthCheckResult"	
+details*
+6
+7*%
+4; ;("
+; ;(
+
+
+result*°
+5: :(4n
+l
+:$ :(4
+%1"__id*T
+
+__unknown_file (8*6%
+#monitoring.health.HealthCheckResult"
+duration_ms«¨
+: :(4
+%2"dict.__setitem__*&
+
+__unknown_file (
+
+
+result*+
+
+__unknown_file (
+duration_ms*"
+
+__unknown_file (
+
+%12__setitem__*
+4*…
+69 9('n
+l
+9 9(
+%3"__id*T
+
+__unknown_file (8*6%
+#monitoring.health.HealthCheckResult"
+duration_ms*
+4
+5*¨
+78 8(,j
+h
+8  8(,
+%4"__id*P
+
+__unknown_file (4*2%
+#monitoring.health.HealthCheckResult"	
+details§¤
+8 8(,
+%5"dict.__setitem__*&
+
+__unknown_file (
+
+
+result*'
+
+__unknown_file (	
+details*"
+
+__unknown_file (
+
+%42__setitem__*
+6B'%
+#monitoring.health.HealthCheckResultH

@@ -1,0 +1,130 @@
+
+Gservices.ai.evaluation.tools.ingest_docs.DocumentFetcher.fetch_documentQ
+G/home/omar/Documents/ruleIQ/services/ai/evaluation/tools/ingest_docs.pyq q("2*†
+2r r(7‰
+†
+s s(>
+%11"__concat*
+s s(
+	Fetching *
+s  s((
+
+
+doc_type*
+s) s(8
+ document from *
+s9 s(<
+
+urlfd
+s s(?
+%12*&
+
+__unknown_file (
+
+
+logger*#
+
+__unknown_file (
+
+%112info*
+9*™
+7z z(?O
+M
+z. z(>
+%3"__id*5
+
+__unknown_file (*
+
+
+response"	
+content¤¡
+z z(?
+%4*X
+
+__unknown_file (<:
+8services.ai.evaluation.tools.ingest_docs.DocumentFetcher*"
+
+__unknown_file (
+
+%32_extract_pdf_text"
+z z(?
+
+%4*—
+8| |(=L
+J
+|/ |(<
+%5"__id*2
+
+__unknown_file (*
+
+
+response"
+text¥¢
+| |(=
+%6*X
+
+__unknown_file (<:
+8services.ai.evaluation.tools.ingest_docs.DocumentFetcher*"
+
+__unknown_file (
+
+%52_extract_html_text"
+| |(=
+
+%6*²
+9v v(8
+}
+v v(#
+%7"__id*e
+
+__unknown_file (I*G:
+8services.ai.evaluation.tools.ingest_docs.DocumentFetcher"	
+sessionqo
+v v(8
+%8*"
+
+__unknown_file (
+
+%7*#
+
+__unknown_file (
+
+url2get:
+timeout2B
+@
+v v(8
+
+response"__id*"
+
+__unknown_file (
+
+%8NL
+w w('
+%9*(
+
+__unknown_file (
+
+
+response2raise_for_status’
+
+y y( 
+%10"	__compare*"
+
+__unknown_file (
+==*(
+
+__unknown_file (
+
+
+doc_type*#
+
+__unknown_file (
+pdf*
+7
+8:
+q q(%
+url:
+q' q(=
+
+doc_typeB<:
+8services.ai.evaluation.tools.ingest_docs.DocumentFetcherH

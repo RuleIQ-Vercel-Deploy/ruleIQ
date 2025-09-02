@@ -83,5 +83,5 @@ if (isValidDsn) {
     },
   });
 } else {
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
 }

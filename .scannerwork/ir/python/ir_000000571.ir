@@ -1,0 +1,26 @@
+
+T
+K"- Average Quality Score: {summary_data.get('avg_quality_score', 'N/A')}\n"str
+`W"Dear {user.full_name or "User"},
+
+Here is your compliance summary for the past week:
+"str
+NE"- New Evidence Items: {summary_data.get('new_evidence_count', 0)}\n"str
+I@"Formats the weekly summary data into an email-friendly format."str
+) "Your Weekly Compliance Summary"strsummary_data< <(7user<9 <(C"³'
+%
+> >(.subject"#id#:Bstr$
+"
+? B(body"#id#:Bstr+
+)
+C C(R	body"	#binop +#*2+:+
+)
+D D(Xbody"	#binop +#*2+:	
+(
+&
+E E("#unknown-value#Btuple&
+$
+E E("#array-add-last#:&
+$
+E E("#array-add-last#:
+E E(*9/home/omar/Documents/ruleIQ/workers/notification_tasks.py

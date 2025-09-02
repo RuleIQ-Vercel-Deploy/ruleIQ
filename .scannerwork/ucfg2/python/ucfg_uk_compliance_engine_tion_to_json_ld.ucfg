@@ -1,0 +1,294 @@
+
+4uk_compliance_engine.ComplianceObligation.to_json_ldQ
+G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py8 8("2*Ì
+29 9(;
+: I(	
+%1"dict´
+±
+; ;(A
+%2"__mapSet*"
+
+__unknown_file (
+
+%1*(
+
+__unknown_file (
+
+@context*G
+
+__unknown_file (+)
+'https://schema.org/ComplianceObligationž
+›
+< <(+
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*%
+
+__unknown_file (	
+@type*4
+
+__unknown_file (
+ComplianceObligationv
+t
+= =(%
+%4"__id*\
+
+__unknown_file (@*>+
+)uk_compliance_engine.ComplianceObligation"
+obligation_idŠ
+‡
+= =(%
+%5"__mapSet*"
+
+__unknown_file (
+
+%1*#
+
+__unknown_file (
+@id*"
+
+__unknown_file (
+
+%4w
+u
+> >(-
+%6"__id*]
+
+__unknown_file (A*?+
+)uk_compliance_engine.ComplianceObligation"
+regulation_ref‘
+Ž
+> >(-
+%7"__mapSet*"
+
+__unknown_file (
+
+%1**
+
+__unknown_file (
+
+regulation*"
+
+__unknown_file (
+
+%6n
+l
+? ?(
+%8"__id*T
+
+__unknown_file (8*6+
+)uk_compliance_engine.ComplianceObligation"
+title‹
+ˆ
+? ?(
+%9"__mapSet*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+name*"
+
+__unknown_file (
+
+%8u
+s
+@ @(+
+%10"__id*Z
+
+__unknown_file (>*<+
+)uk_compliance_engine.ComplianceObligation"
+description”
+‘
+@ @(+
+%11"__mapSet*"
+
+__unknown_file (
+
+%1*+
+
+__unknown_file (
+description*#
+
+__unknown_file (
+
+%10z
+x
+A  A(5
+%12"__id*_
+
+__unknown_file (C*A+
+)uk_compliance_engine.ComplianceObligation"
+requirement_type™
+–
+A A(5
+%13"__mapSet*"
+
+__unknown_file (
+
+%1*0
+
+__unknown_file (
+requirementLevel*#
+
+__unknown_file (
+
+%12}
+{
+B B(4
+%14"__id*b
+
+__unknown_file (F*D+
+)uk_compliance_engine.ComplianceObligation"
+applicable_entities•
+’
+B B(4
+%15"__mapSet*"
+
+__unknown_file (
+
+%1*,
+
+__unknown_file (
+applicableTo*#
+
+__unknown_file (
+
+%14€
+~
+C C(2
+%16"__id*e
+
+__unknown_file (I*G+
+)uk_compliance_engine.ComplianceObligation"
+implementation_actions
+
+C C(2
+%17"__mapSet*"
+
+__unknown_file (
+
+%1*'
+
+__unknown_file (	
+actions*#
+
+__unknown_file (
+
+%16
+}
+D$ D(>
+%18"__id*d
+
+__unknown_file (H*F+
+)uk_compliance_engine.ComplianceObligation"
+verification_criteria
+š
+D D(>
+%19"__mapSet*"
+
+__unknown_file (
+
+%1*4
+
+__unknown_file (
+verificationCriteria*#
+
+__unknown_file (
+
+%18r
+p
+E E(%
+%20"__id*W
+
+__unknown_file (;*9+
+)uk_compliance_engine.ComplianceObligation"
+
+controls‘
+Ž
+E E(%
+%21"__mapSet*"
+
+__unknown_file (
+
+%1*(
+
+__unknown_file (
+
+controls*#
+
+__unknown_file (
+
+%20r
+p
+F F(%
+%22"__id*W
+
+__unknown_file (;*9+
+)uk_compliance_engine.ComplianceObligation"
+
+timeline‘
+Ž
+F F(%
+%23"__mapSet*"
+
+__unknown_file (
+
+%1*(
+
+__unknown_file (
+
+deadline*#
+
+__unknown_file (
+
+%22s
+q
+G G('
+%24"__id*X
+
+__unknown_file (<*:+
+)uk_compliance_engine.ComplianceObligation"
+	penalties’
+
+G G('
+%25"__mapSet*"
+
+__unknown_file (
+
+%1*)
+
+__unknown_file (
+	penalties*#
+
+__unknown_file (
+
+%24~
+|
+H H(8
+%26"__id*c
+
+__unknown_file (G*E+
+)uk_compliance_engine.ComplianceObligation"
+automation_potential˜
+•
+H H(8
+%27"__mapSet*"
+
+__unknown_file (
+
+%1*/
+
+__unknown_file (
+automationScore*#
+
+__unknown_file (
+
+%26"
+: I(	
+
+%1B-+
+)uk_compliance_engine.ComplianceObligationH

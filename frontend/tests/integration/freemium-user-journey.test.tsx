@@ -1,6 +1,6 @@
 /**
  * Integration tests for complete freemium user journey
- * 
+ *
  * Tests the entire flow from email capture to conversion:
  * 1. Landing page with UTM parameters
  * 2. Email capture and validation
@@ -8,7 +8,7 @@
  * 4. Results display and analysis
  * 5. Conversion CTA interaction
  * 6. Error recovery and edge cases
- * 
+ *
  * This test suite ensures all components work together seamlessly
  * and covers the critical user paths for the freemium strategy.
  */
@@ -39,19 +39,20 @@ vi.mock('react-router-dom', async (importOriginal) => {
     useNavigate: () => mockNavigate,
     useLocation: () => ({
       search: '?utm_source=google&utm_campaign=compliance_assessment&utm_medium=cpc',
-      pathname: '/freemium'
-    })
+      pathname: '/freemium',
+    }),
   };
 });
 
 // Mock window.location for UTM parameter extraction
 Object.defineProperty(window, 'location', {
   value: {
-    search: '?utm_source=google&utm_campaign=compliance_assessment&utm_medium=cpc&utm_term=gdpr_compliance&utm_content=hero_cta',
+    search:
+      '?utm_source=google&utm_campaign=compliance_assessment&utm_medium=cpc&utm_term=gdpr_compliance&utm_content=hero_cta',
     href: 'https://ruleiq.com/freemium?utm_source=google&utm_campaign=compliance_assessment',
-    origin: 'https://ruleiq.com'
+    origin: 'https://ruleiq.com',
   },
-  writable: true
+  writable: true,
 });
 
 const queryClient = new QueryClient({
@@ -83,7 +84,7 @@ const mockAssessmentFlow = {
       options: ['E-commerce', 'SaaS', 'Healthcare', 'Financial Services', 'Other'],
       help_text: 'Select the category that best describes your primary business model.',
       validation_rules: { required: true },
-      progress: 0
+      progress: 0,
     },
     {
       question_id: 'q2_employee_count',
@@ -92,25 +93,36 @@ const mockAssessmentFlow = {
       options: ['1-10', '11-50', '51-200', '200+'],
       help_text: 'Include full-time, part-time, and contractors.',
       validation_rules: { required: true },
-      progress: 25
+      progress: 25,
     },
     {
       question_id: 'q3_data_handling',
       question_text: 'What type of data does your business process?',
       question_type: 'multi_select',
-      options: ['Customer personal data', 'Payment information', 'Health records', 'Employee data', 'Marketing data'],
+      options: [
+        'Customer personal data',
+        'Payment information',
+        'Health records',
+        'Employee data',
+        'Marketing data',
+      ],
       help_text: 'Select all that apply to your business operations.',
       validation_rules: { required: true, min_selections: 1 },
-      progress: 50
+      progress: 50,
     },
     {
       question_id: 'q4_current_compliance',
       question_text: 'What is your current compliance status?',
       question_type: 'multiple_choice',
-      options: ['Fully compliant', 'Partially compliant', 'Starting compliance journey', 'Not sure'],
+      options: [
+        'Fully compliant',
+        'Partially compliant',
+        'Starting compliance journey',
+        'Not sure',
+      ],
       help_text: 'Be honest - this helps us provide better recommendations.',
       validation_rules: { required: true },
-      progress: 75
+      progress: 75,
     },
     {
       question_id: 'q5_compliance_goals',
@@ -119,15 +131,15 @@ const mockAssessmentFlow = {
       options: ['GDPR', 'ISO 27001', 'SOC 2', 'HIPAA', 'PCI DSS', 'Other'],
       help_text: 'Select your priority frameworks for the next 12 months.',
       validation_rules: { required: true, min_selections: 1 },
-      progress: 100
-    }
+      progress: 100,
+    },
   ],
   expectedAnswers: {
-    'q1_business_type': 'SaaS',
-    'q2_employee_count': '11-50',
-    'q3_data_handling': ['Customer personal data', 'Payment information'],
-    'q4_current_compliance': 'Partially compliant',
-    'q5_compliance_goals': ['GDPR', 'ISO 27001']
+    q1_business_type: 'SaaS',
+    q2_employee_count: '11-50',
+    q3_data_handling: ['Customer personal data', 'Payment information'],
+    q4_current_compliance: 'Partially compliant',
+    q5_compliance_goals: ['GDPR', 'ISO 27001'],
   },
   finalResults: {
     compliance_gaps: [
@@ -137,7 +149,7 @@ const mockAssessmentFlow = {
         gap_description: 'Missing data processing records under Article 30',
         impact_score: 8.5,
         remediation_effort: 'medium',
-        potential_fine: '€20,000,000 or 4% of annual turnover'
+        potential_fine: '€20,000,000 or 4% of annual turnover',
       },
       {
         framework: 'ISO 27001',
@@ -145,8 +157,8 @@ const mockAssessmentFlow = {
         gap_description: 'Incomplete risk assessment documentation',
         impact_score: 6.2,
         remediation_effort: 'low',
-        potential_fine: 'Certification failure'
-      }
+        potential_fine: 'Certification failure',
+      },
     ],
     risk_score: 7.3,
     risk_level: 'high',
@@ -155,19 +167,19 @@ const mockAssessmentFlow = {
       'Implement comprehensive data mapping under Article 30',
       'Establish formal risk management processes',
       'Create incident response procedures',
-      'Conduct regular privacy impact assessments'
+      'Conduct regular privacy impact assessments',
     ],
     priority_actions: [
       'Complete GDPR Article 30 documentation within 30 days',
-      'Conduct privacy impact assessments for high-risk processing'
+      'Conduct privacy impact assessments for high-risk processing',
     ],
     trial_offer: {
       discount_percentage: 30,
       trial_days: 14,
       cta_text: 'Get Compliant Now - 30% Off',
-      payment_link: 'https://billing.ruleiq.com/subscribe?plan=pro&discount=30&token=test-token'
-    }
-  }
+      payment_link: 'https://billing.ruleiq.com/subscribe?plan=pro&discount=30&token=test-token',
+    },
+  },
 };
 
 describe('Freemium User Journey Integration', () => {
@@ -175,7 +187,7 @@ describe('Freemium User Journey Integration', () => {
     queryClient.clear();
     vi.clearAllMocks();
     mockNavigate.mockClear();
-    
+
     // Reset store state
     useFreemiumStore.getState().reset();
   });
@@ -187,12 +199,12 @@ describe('Freemium User Journey Integration', () => {
   describe('Complete Happy Path Journey', () => {
     it('completes full freemium flow from email capture to conversion', async () => {
       const user = userEvent.setup();
-      
+
       // Mock API responses for complete journey
       mockedFreemiumApi.captureEmail.mockResolvedValue({
         success: true,
         token: 'journey-token-123',
-        message: 'Email captured successfully'
+        message: 'Email captured successfully',
       });
 
       mockedFreemiumApi.startAssessment.mockResolvedValue(mockAssessmentFlow.questions[0]);
@@ -203,7 +215,7 @@ describe('Freemium User Journey Integration', () => {
         mockedFreemiumApi.answerQuestion.mockResolvedValueOnce({
           answer_recorded: true,
           ...nextQuestion,
-          assessment_complete: false
+          assessment_complete: false,
         });
       });
 
@@ -212,14 +224,14 @@ describe('Freemium User Journey Integration', () => {
         answer_recorded: true,
         assessment_complete: true,
         redirect_to_results: true,
-        progress: 100
+        progress: 100,
       });
 
       mockedFreemiumApi.getResults.mockResolvedValue(mockAssessmentFlow.finalResults);
       mockedFreemiumApi.trackConversion.mockResolvedValue({
         tracked: true,
         event_id: 'conversion-123',
-        message: 'Conversion tracked'
+        message: 'Conversion tracked',
       });
 
       // 1. Start at landing page with UTM parameters
@@ -235,7 +247,7 @@ describe('Freemium User Journey Integration', () => {
 
       // 2. Email capture flow
       expect(screen.getByText(/start your free compliance assessment/i)).toBeInTheDocument();
-      
+
       const emailInput = screen.getByLabelText(/email address/i);
       const marketingConsent = screen.getByLabelText(/marketing communications/i);
       const termsConsent = screen.getByLabelText(/terms of service/i);
@@ -256,7 +268,7 @@ describe('Freemium User Journey Integration', () => {
           utm_term: 'gdpr_compliance',
           utm_content: 'hero_cta',
           consent_marketing: true,
-          consent_terms: true
+          consent_terms: true,
         });
       });
 
@@ -283,7 +295,7 @@ describe('Freemium User Journey Integration', () => {
           expect(screen.getByText(new RegExp(question.question_text, 'i'))).toBeInTheDocument();
         });
 
-        // Verify progress indicator 
+        // Verify progress indicator
         expect(screen.getByText(new RegExp(`${question.progress}%`, 'i'))).toBeInTheDocument();
 
         // Answer based on question type
@@ -308,8 +320,8 @@ describe('Freemium User Journey Integration', () => {
             'journey-token-123',
             expect.objectContaining({
               question_id: question.question_id,
-              answer: answer
-            })
+              answer: answer,
+            }),
           );
         });
       }
@@ -350,8 +362,8 @@ describe('Freemium User Journey Integration', () => {
           expect.objectContaining({
             event_type: 'cta_click',
             cta_text: 'Get Compliant Now - 30% Off',
-            conversion_value: 30
-          })
+            conversion_value: 30,
+          }),
         );
       });
 
@@ -373,7 +385,7 @@ describe('Freemium User Journey Integration', () => {
       mockedFreemiumApi.captureEmail.mockResolvedValue({
         success: true,
         token: 'error-recovery-token',
-        message: 'Email captured successfully'
+        message: 'Email captured successfully',
       });
 
       // Mock assessment start failure then success
@@ -421,15 +433,13 @@ describe('Freemium User Journey Integration', () => {
       mockedFreemiumApi.captureEmail.mockResolvedValue({
         success: true,
         token: 'expiring-token',
-        message: 'Email captured successfully'
+        message: 'Email captured successfully',
       });
 
       mockedFreemiumApi.startAssessment.mockResolvedValue(mockAssessmentFlow.questions[0]);
 
       // Mock token expiration during answer submission
-      mockedFreemiumApi.answerQuestion.mockRejectedValue(
-        new Error('Token expired')
-      );
+      mockedFreemiumApi.answerQuestion.mockRejectedValue(new Error('Token expired'));
 
       render(<TestApp initialRoute="/freemium" />);
 
@@ -469,21 +479,21 @@ describe('Freemium User Journey Integration', () => {
       mockedFreemiumApi.captureEmail.mockResolvedValue({
         success: true,
         token: 'fallback-token',
-        message: 'Email captured successfully'
+        message: 'Email captured successfully',
       });
 
       // Mock AI service unavailable, use fallback
       mockedFreemiumApi.startAssessment.mockResolvedValue({
         ...mockAssessmentFlow.questions[0],
         fallback_mode: true,
-        ai_service_available: false
+        ai_service_available: false,
       });
 
       mockedFreemiumApi.answerQuestion.mockResolvedValue({
         answer_recorded: true,
         ...mockAssessmentFlow.questions[1],
         fallback_mode: true,
-        assessment_complete: false
+        assessment_complete: false,
       });
 
       render(<TestApp initialRoute="/freemium" />);
@@ -532,9 +542,9 @@ describe('Freemium User Journey Integration', () => {
         options: ['Customer personal data', 'Payment information', 'Health records'],
         progress: 50,
         previous_responses: {
-          'q1_business_type': 'SaaS',
-          'q2_employee_count': '11-50'
-        }
+          q1_business_type: 'SaaS',
+          q2_employee_count: '11-50',
+        },
       });
 
       // Set existing session state
@@ -544,10 +554,10 @@ describe('Freemium User Journey Integration', () => {
           token: 'resume-token-123',
           assessmentStarted: true,
           responses: {
-            'q1_business_type': 'SaaS',
-            'q2_employee_count': '11-50'
+            q1_business_type: 'SaaS',
+            q2_employee_count: '11-50',
           },
-          progress: 50
+          progress: 50,
         });
       });
 
@@ -555,15 +565,17 @@ describe('Freemium User Journey Integration', () => {
 
       await waitFor(() => {
         expect(screen.getByText(/welcome back/i)).toBeInTheDocument();
-        expect(screen.getByText(/what type of data does your business process/i)).toBeInTheDocument();
+        expect(
+          screen.getByText(/what type of data does your business process/i),
+        ).toBeInTheDocument();
         expect(screen.getByText(/50%/i)).toBeInTheDocument();
       });
 
       // Verify previous responses are maintained
       const store = useFreemiumStore.getState();
       expect(store.responses).toEqual({
-        'q1_business_type': 'SaaS',
-        'q2_employee_count': '11-50'
+        q1_business_type: 'SaaS',
+        q2_employee_count: '11-50',
       });
     });
 
@@ -573,20 +585,20 @@ describe('Freemium User Journey Integration', () => {
         'freemium-email': 'persistent@example.com',
         'freemium-utm': JSON.stringify({
           utm_source: 'linkedin',
-          utm_campaign: 'retargeting'
+          utm_campaign: 'retargeting',
         }),
         'freemium-consent': JSON.stringify({
           marketing: true,
-          terms: true
-        })
+          terms: true,
+        }),
       };
 
       const mockSessionStorage = {
         'freemium-token': 'persistent-token-456',
         'freemium-responses': JSON.stringify({
-          'q1_business_type': 'Healthcare',
-          'q2_employee_count': '51-200'
-        })
+          q1_business_type: 'Healthcare',
+          q2_employee_count: '51-200',
+        }),
       };
 
       // Mock storage methods
@@ -602,8 +614,8 @@ describe('Freemium User Journey Integration', () => {
       expect(result.current.utmSource).toBe('linkedin');
       expect(result.current.consentMarketing).toBe(true);
       expect(result.current.responses).toEqual({
-        'q1_business_type': 'Healthcare',
-        'q2_employee_count': '51-200'
+        q1_business_type: 'Healthcare',
+        q2_employee_count: '51-200',
       });
     });
   });
@@ -615,14 +627,14 @@ describe('Freemium User Journey Integration', () => {
       mockedFreemiumApi.captureEmail.mockResolvedValue({
         success: true,
         token: 'optimization-token',
-        message: 'Email captured successfully'
+        message: 'Email captured successfully',
       });
 
       mockedFreemiumApi.getResults.mockResolvedValue(mockAssessmentFlow.finalResults);
       mockedFreemiumApi.trackConversion.mockResolvedValue({
         tracked: true,
         event_id: 'behavior-tracking-123',
-        message: 'Event tracked'
+        message: 'Event tracked',
       });
 
       render(<TestApp initialRoute="/freemium/results" />);
@@ -639,7 +651,7 @@ describe('Freemium User Journey Integration', () => {
       // Simulate user exploring results
       await user.hover(shareButton);
       await user.hover(downloadButton);
-      
+
       // Scroll through recommendations (simulated)
       fireEvent.scroll(window, { target: { scrollY: 500 } });
 
@@ -649,15 +661,15 @@ describe('Freemium User Journey Integration', () => {
       // Verify detailed tracking
       await waitFor(() => {
         expect(mockedFreemiumApi.trackConversion).toHaveBeenCalledWith(
-          'optimization-token', 
+          'optimization-token',
           expect.objectContaining({
             event_type: 'cta_click',
             metadata: expect.objectContaining({
               time_on_page: expect.any(Number),
               scroll_depth: expect.any(Number),
-              results_viewed: true
-            })
-          })
+              results_viewed: true,
+            }),
+          }),
         );
       });
     });
@@ -672,20 +684,20 @@ describe('Freemium User Journey Integration', () => {
           discount_percentage: 20,
           trial_days: 7,
           cta_text: 'Maintain Compliance - 20% Off',
-          payment_link: 'https://billing.ruleiq.com/subscribe?plan=basic&discount=20'
-        }
+          payment_link: 'https://billing.ruleiq.com/subscribe?plan=basic&discount=20',
+        },
       });
 
       mockedFreemiumApi.trackConversion.mockResolvedValue({
         tracked: true,
         event_id: 'low-risk-conversion',
-        message: 'Conversion tracked'
+        message: 'Conversion tracked',
       });
 
       act(() => {
         useFreemiumStore.setState({
           token: 'low-risk-token',
-          assessmentCompleted: true
+          assessmentCompleted: true,
         });
       });
 
@@ -704,8 +716,8 @@ describe('Freemium User Journey Integration', () => {
         'low-risk-token',
         expect.objectContaining({
           event_type: 'cta_click',
-          conversion_value: 20
-        })
+          conversion_value: 20,
+        }),
       );
     });
   });
@@ -724,7 +736,7 @@ describe('Freemium User Journey Integration', () => {
       mockedFreemiumApi.captureEmail.mockResolvedValue({
         success: true,
         token: 'mobile-token',
-        message: 'Email captured successfully'
+        message: 'Email captured successfully',
       });
 
       render(<TestApp initialRoute="/freemium" />);
@@ -744,8 +756,8 @@ describe('Freemium User Journey Integration', () => {
       await waitFor(() => {
         expect(mockedFreemiumApi.captureEmail).toHaveBeenCalledWith(
           expect.objectContaining({
-            email: 'mobile@example.com'
-          })
+            email: 'mobile@example.com',
+          }),
         );
       });
     });
@@ -758,23 +770,24 @@ describe('Freemium User Journey Integration', () => {
       // Set initial UTM parameters
       Object.defineProperty(window, 'location', {
         value: {
-          search: '?utm_source=facebook&utm_campaign=retargeting&utm_medium=social&utm_term=compliance_software&utm_content=video_ad',
+          search:
+            '?utm_source=facebook&utm_campaign=retargeting&utm_medium=social&utm_term=compliance_software&utm_content=video_ad',
           href: 'https://ruleiq.com/freemium?utm_source=facebook',
-          origin: 'https://ruleiq.com'
+          origin: 'https://ruleiq.com',
         },
-        writable: true
+        writable: true,
       });
 
       mockedFreemiumApi.captureEmail.mockResolvedValue({
         success: true,
         token: 'attribution-token',
-        message: 'Email captured successfully'
+        message: 'Email captured successfully',
       });
 
       mockedFreemiumApi.trackConversion.mockResolvedValue({
         tracked: true,
         event_id: 'attribution-123',
-        message: 'Conversion tracked'
+        message: 'Conversion tracked',
       });
 
       render(<TestApp initialRoute="/freemium" />);
@@ -796,8 +809,8 @@ describe('Freemium User Journey Integration', () => {
             utm_campaign: 'retargeting',
             utm_medium: 'social',
             utm_term: 'compliance_software',
-            utm_content: 'video_ad'
-          })
+            utm_content: 'video_ad',
+          }),
         );
       });
 

@@ -1,0 +1,27 @@
+
+,#"Decorator to debug function calls"strlogger
+ã ã(&include_args
+ã( ã(Binclude_result
+ãD ã(`"§#
+!
+
+© ©(
+"#unknown-value#*
+(
+
+ç ©(%closure"#new-object#0
+.
+
+ç ©("#set-field# include_args:*
+(
+
+ç ©("#set-field# logger:2
+0
+
+ç ©("#set-field# include_result:-
++
+
+ç ©(	"?python-partial-apply?:
+
+© ©(
+*3/home/omar/Documents/ruleIQ/config/debug_logging.py

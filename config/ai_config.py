@@ -195,11 +195,15 @@ class AIConfig:
 
         # Offline mode configuration
         self.offline_config = {
-            "mode": os.getenv("AI_OFFLINE_MODE", "enhanced"),  # disabled, basic, enhanced, full
+            "mode": os.getenv(
+                "AI_OFFLINE_MODE", "enhanced"
+            ),  # disabled, basic, enhanced, full
             "database_path": os.getenv("AI_OFFLINE_DB_PATH", "data/offline_ai.db"),
             "cache_ttl_hours": int(os.getenv("AI_OFFLINE_CACHE_TTL", "24")),
             "max_history_size": int(os.getenv("AI_OFFLINE_HISTORY_SIZE", "1000")),
-            "enable_request_queuing": os.getenv("AI_OFFLINE_QUEUE_REQUESTS", "true").lower()
+            "enable_request_queuing": os.getenv(
+                "AI_OFFLINE_QUEUE_REQUESTS", "true"
+            ).lower()
             == "true",
         }
 
@@ -314,6 +318,7 @@ class AIConfig:
         """
 
         from services.ai.response_formats import get_schema_for_response_type
+
         schema = get_schema_for_response_type(schema_type)
         return self.get_structured_output_config(schema)
 
@@ -401,7 +406,9 @@ class AIConfig:
         """Get metadata for a specific model"""
         return MODEL_METADATA.get(model_type, MODEL_METADATA[ModelType.GEMINI_25_FLASH])
 
-    def get_fallback_models(self, preferred_model: Optional[ModelType] = None) -> List[ModelType]:
+    def get_fallback_models(
+        self, preferred_model: Optional[ModelType] = None
+    ) -> List[ModelType]:
         """Get ordered list of fallback models starting from preferred model"""
         if preferred_model and preferred_model in MODEL_FALLBACK_CHAIN:
             # Start from preferred model and continue with rest of chain
@@ -507,7 +514,9 @@ class AIConfig:
         # Model selection decision tree
         if task_complexity == "simple":
             selected_model = (
-                ModelType.GEMINI_25_FLASH_LIGHT if prefer_speed else ModelType.GEMINI_25_FLASH
+                ModelType.GEMINI_25_FLASH_LIGHT
+                if prefer_speed
+                else ModelType.GEMINI_25_FLASH
             )
         elif task_complexity == "complex":
             selected_model = ModelType.GEMINI_25_PRO
@@ -558,6 +567,7 @@ class AIConfig:
         # If no models available, raise exception
 
         from services.ai.exceptions import AIServiceException
+
         raise AIServiceException(
             message="No AI models available - all circuits are open",
             service_name="AI Model Selection",
@@ -592,12 +602,16 @@ def get_ai_model(
     if model_type is None:
         # Use intelligent model selection
         try:
-            model_type = ai_config.get_optimal_model(task_complexity, prefer_speed, task_context)
+            model_type = ai_config.get_optimal_model(
+                task_complexity, prefer_speed, task_context
+            )
         except Exception:
             # Fall back to default model if selection fails
             model_type = ai_config.default_model_type
 
-    return ai_config.get_model(model_type, system_instruction=system_instruction, tools=tools)
+    return ai_config.get_model(
+        model_type, system_instruction=system_instruction, tools=tools
+    )
 
 
 def get_structured_ai_model(
@@ -623,7 +637,9 @@ def get_structured_ai_model(
     """
     if model_type is None:
         # Use intelligent model selection
-        model_type = ai_config.get_optimal_model(task_complexity, prefer_speed, task_context)
+        model_type = ai_config.get_optimal_model(
+            task_complexity, prefer_speed, task_context
+        )
 
     return ai_config.get_model_with_schema(
         model_type=model_type,
@@ -633,7 +649,9 @@ def get_structured_ai_model(
     )
 
 
-async def generate_compliance_content(prompt: str, model_type: Optional[ModelType] = None) -> str:
+async def generate_compliance_content(
+    prompt: str, model_type: Optional[ModelType] = None
+) -> str:
     """Generate compliance-focused content using optimized settings"""
     model = get_ai_model(model_type)
 
@@ -649,7 +667,9 @@ async def generate_compliance_content(prompt: str, model_type: Optional[ModelTyp
         ai_config.generation_config = original_config
 
 
-def generate_creative_content(prompt: str, model_type: Optional[ModelType] = None) -> str:
+def generate_creative_content(
+    prompt: str, model_type: Optional[ModelType] = None
+) -> str:
     """Generate creative content using higher temperature settings"""
     model = get_ai_model(model_type)
 

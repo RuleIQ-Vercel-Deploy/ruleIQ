@@ -9,10 +9,9 @@ Provides endpoints for:
 """
 
 from datetime import datetime
-from typing import List, Dict, Any, Optional
-from uuid import UUID
+from typing import Dict, Any, Optional
 
-from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
+from fastapi import APIRouter, Depends, UploadFile, File
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -22,6 +21,7 @@ from database.user import User
 
 router = APIRouter()
 
+
 # Pydantic models for requests/responses
 class ReportRequest(BaseModel):
     name: str
@@ -30,11 +30,13 @@ class ReportRequest(BaseModel):
     parameters: Dict[str, Any]
     schedule: Optional[str] = None  # cron expression for scheduled reports
 
+
 class ReportTemplate(BaseModel):
     name: str
     description: str
     type: str
     parameters: Dict[str, Any]
+
 
 @router.get("/", summary="List all reports")
 async def list_reports(
@@ -73,6 +75,7 @@ async def list_reports(
         "offset": offset,
     }
 
+
 async def generate_report(
     report_request: ReportRequest,
     current_user: User = Depends(get_current_active_user),
@@ -81,9 +84,9 @@ async def generate_report(
     """Generate a new report based on specified parameters."""
     # Placeholder implementation
     from uuid import uuid4
-    
+
     report_id = str(uuid4())
-    
+
     return {
         "report_id": report_id,
         "name": report_request.name,
@@ -94,6 +97,7 @@ async def generate_report(
         "message": "Report generation initiated",
     }
 
+
 @router.get("/{id}", summary="Get report details")
 async def get_report(
     id: str,
@@ -103,7 +107,7 @@ async def get_report(
     """Get details of a specific report."""
     # Placeholder implementation
     return {
-        "report_id": reportId,
+        "report_id": id,
         "name": "GDPR Compliance Report Q1 2024",
         "type": "compliance",
         "format": "pdf",
@@ -121,6 +125,7 @@ async def get_report(
         "download_url": f"/api/v1/reports/{id}/download",
     }
 
+
 @router.get("/{id}/download", summary="Download report")
 async def download_report(
     id: str,
@@ -131,12 +136,13 @@ async def download_report(
     # Placeholder implementation
     # In a real implementation, this would return the actual file
     return {
-        "report_id": reportId,
+        "report_id": id,
         "download_url": f"https://storage.example.com/reports/{id}.pdf",
         "expires_at": "2024-01-15T11:00:00Z",
         "content_type": "application/pdf",
         "filename": "GDPR_Compliance_Report_Q1_2024.pdf",
     }
+
 
 @router.delete("/{id}", summary="Delete report")
 async def delete_report(
@@ -147,11 +153,12 @@ async def delete_report(
     """Delete a report."""
     # Placeholder implementation
     return {
-        "report_id": reportId,
+        "report_id": id,
         "status": "deleted",
         "message": "Report deleted successfully",
         "deleted_at": datetime.utcnow().isoformat(),
     }
+
 
 @router.get("/templates/list", summary="List report templates")
 async def list_report_templates(
@@ -187,6 +194,7 @@ async def list_report_templates(
         "total": 3,
     }
 
+
 @router.post("/templates", summary="Create report template")
 async def create_report_template(
     template: ReportTemplate,
@@ -196,9 +204,9 @@ async def create_report_template(
     """Create a new report template."""
     # Placeholder implementation
     from uuid import uuid4
-    
+
     template_id = str(uuid4())
-    
+
     return {
         "template_id": template_id,
         "name": template.name,
@@ -208,6 +216,7 @@ async def create_report_template(
         "created_at": datetime.utcnow().isoformat(),
         "created_by": current_user.email,
     }
+
 
 @router.post("/preview", summary="Preview report")
 async def preview_report(
@@ -220,7 +229,7 @@ async def preview_report(
     report_type = preview_request.get("type", "compliance")
     framework = preview_request.get("framework", "gdpr")
     period = preview_request.get("period", "last_30_days")
-    
+
     return {
         "preview": {
             "type": report_type,
@@ -242,6 +251,7 @@ async def preview_report(
         },
     }
 
+
 @router.post("/schedule", summary="Schedule report generation")
 async def schedule_report(
     schedule_request: dict,
@@ -253,10 +263,11 @@ async def schedule_report(
     report_name = schedule_request.get("name", "Scheduled Report")
     schedule = schedule_request.get("schedule", "0 0 * * MON")  # Weekly on Monday
     report_type = schedule_request.get("type", "compliance")
-    
+
     from uuid import uuid4
+
     schedule_id = str(uuid4())
-    
+
     return {
         "schedule_id": schedule_id,
         "report_name": report_name,
@@ -266,6 +277,7 @@ async def schedule_report(
         "next_run": "2024-01-22T00:00:00Z",
         "created_at": datetime.utcnow().isoformat(),
     }
+
 
 @router.get("/history/{period}", summary="Get report history")
 async def get_report_history(
@@ -303,6 +315,7 @@ async def get_report_history(
         ],
     }
 
+
 @router.post("/upload", summary="Upload external report")
 async def upload_report(
     file: UploadFile = File(...),
@@ -313,14 +326,14 @@ async def upload_report(
     """Upload an external report to the system."""
     # Placeholder implementation
     from uuid import uuid4
-    
+
     report_id = str(uuid4())
-    
+
     return {
         "report_id": report_id,
         "filename": file.filename,
         "type": report_type,
-        "size": file.size if hasattr(file, 'size') else 0,
+        "size": file.size if hasattr(file, "size") else 0,
         "status": "uploaded",
         "uploaded_at": datetime.utcnow().isoformat(),
         "uploaded_by": current_user.email,

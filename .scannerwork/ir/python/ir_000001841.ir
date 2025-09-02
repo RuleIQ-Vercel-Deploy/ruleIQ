@@ -1,0 +1,12 @@
+
+("Get count of active sessions."strself
+ã" ã(&"t2
+0
+
+ç ç('"#get-field# active_sessions:,
+*
+
+ç ç(("
+builtinslen*:Bint
+
+ç ç((*@/home/omar/Documents/ruleIQ/langgraph_agent/agents/agent_core.py

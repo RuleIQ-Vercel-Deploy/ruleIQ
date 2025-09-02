@@ -1,0 +1,119 @@
+
+Lservices.neo4j_service.Neo4jGraphRAGService.query_by_domain_and_jurisdictionA
+5/home/omar/Documents/ruleIQ/services/neo4j_service.pyû û(."2*«
+2
+£ £(_ø
+º
+
+• ±(
+query"__id*û
+
+__unknown_file (Å˛
+˚
+        MATCH (domain:ComplianceDomain {name: $domain})
+              -[:GOVERNS]->(reg:Regulation {jurisdiction: $jurisdiction})
+              -[:REQUIRES]->(req:Requirement)
+        RETURN reg.name AS regulation,
+               COLLECT({
+                 title: req.title,
+                 description: req.description,
+                 mandatory: req.mandatory,
+                 deadline: req.deadline,
+                 article_reference: req.article_reference
+               }) AS requirements
+        
+
+≥ ≥(A
+%1"dictì
+ê
+
+≥ ≥("
+%2"__mapSet*"
+
+__unknown_file (
+
+%1*&
+
+__unknown_file (
+
+domain*&
+
+__unknown_file (
+
+
+domainü
+ú
+
+≥$ ≥(@
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*,
+
+__unknown_file (
+jurisdiction*,
+
+__unknown_file (
+
+jurisdictionB
+@
+
+≥ ≥(A
+params"__id*"
+
+__unknown_file (
+
+%1¿Ω
+
+¥ ¥(9
+%4*K
+
+__unknown_file (/-
++services.neo4j_service.Neo4jGraphRAGService*%
+
+__unknown_file (	
+
+query*&
+
+__unknown_file (
+
+
+params2execute_queryC
+A
+
+¥ ¥(9	
+results"__id*"
+
+__unknown_file (
+
+%4
+
+µ µ(/
+%5"dict°
+û
+
+µ µ(.
+%6"__mapSet*"
+
+__unknown_file (
+
+%5*3
+
+__unknown_file (
+domain_requirements*'
+
+__unknown_file (
+	
+results"
+
+µ µ(/
+
+%5:
+
+† †(
+domain:
+
+° °(
+jurisdictionB/-
++services.neo4j_service.Neo4jGraphRAGServiceH

@@ -202,7 +202,8 @@ const mockAIResponses = {
       {
         id: 'gap_1',
         questionId: 'q1',
-        questionText: 'Do you have documented data retention policies with defined periods for different data categories?',
+        questionText:
+          'Do you have documented data retention policies with defined periods for different data categories?',
         section: 'Data Protection',
         category: 'Data Protection',
         severity: 'high' as const,
@@ -223,12 +224,7 @@ const mockAIResponses = {
         description:
           'Create and document formal data retention policies with specific timeframes for different data categories, automated deletion processes, and regular compliance reviews.',
         estimatedEffort: '3-4 weeks',
-        resources: [
-          'Data Protection Officer',
-          'Legal Team',
-          'IT Department',
-          'Compliance Manager',
-        ],
+        resources: ['Data Protection Officer', 'Legal Team', 'IT Department', 'Compliance Manager'],
         relatedFrameworks: ['GDPR', 'ISO 27001'],
         category: 'Data Protection',
         impact: 'High - Reduces GDPR violation risk and improves data governance',
@@ -536,11 +532,10 @@ Can you provide guidance on how to answer this question correctly?`;
           ...feedback,
         });
       } else {
-    // TODO: Replace with proper logging
+        // TODO: Replace with proper logging
       }
     } catch (error) {
       // TODO: Replace with proper logging
-
       // // TODO: Replace with proper logging
       // Non-blocking - don't throw error for feedback submission
     }

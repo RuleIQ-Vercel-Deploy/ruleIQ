@@ -1,0 +1,72 @@
+
+"frequency"str
+0.8float
+25int
+15int
+0.6float
+"similarity"str
+
+0int
+"policy_generation"str
+"operation"str
+10int
+40int
+"evidence_analysis"str
+B9"Analyze AI request patterns for batching opportunities."str
+
+	"avg_gap"strself
+ß( ß(,list"ˆ&
+$
+
+ä é("#new-object#Bdict"
+ 
+
+å å(0"	#map-set#:"
+ 
+
+æ æ(	"	#map-set#:"
+ 
+
+ç ç("	#map-set#:
+"
+ 
+
+è è(!"	#map-set#:&
+$
+
+ê ï("#new-object#Bdict"
+ 
+
+ë ë(0"	#map-set#:"
+ 
+
+ì ì("	#map-set#:"
+ 
+
+í í("	#map-set#:
+"
+ 
+
+î î(!"	#map-set#:)
+'
+
+ã ð(	"#unknown-value#Blist(
+&
+
+ã ð(	"
+#is-exact#:Bbool
+
+
+ã ð(	"
+#assume#::
+8
+
+ã ð(	"#set-field# __collection_size:Bint(
+&
+
+ã ð(	"#array-add-last#:(
+&
+
+ã ð(	 "#array-add-last#:
+
+ã ð(	*@/home/omar/Documents/ruleIQ/services/ai_performance_optimizer.py

@@ -1,0 +1,96 @@
+
+>neo4j_service.Neo4jGraphRAGService.trace_risk_mitigation_chainM
+A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.pyâ â()"2*Â	
+2
+ã ã(Bâ
+ß
+
+å î(
+query"__id*Á
+
+__unknown_file (¤¡
+ž
+        MATCH (risk:Risk {name: $risk_name})<-[:MITIGATES]-(control:Control)
+        OPTIONAL MATCH (control)<-[:MONITORS]-(tech:Technology)
+        RETURN risk.name AS risk,
+               risk.risk_score AS inherent_risk,
+               control.name AS control,
+               control.automation_level AS automation,
+               tech.name AS technology,
+               tech.category AS tech_category
+        
+
+ð ð()
+%1"dict™
+–
+
+ð ð((
+%2"__mapSet*"
+
+__unknown_file (
+
+%1*)
+
+__unknown_file (
+	risk_name*)
+
+__unknown_file (
+
+	risk_nameB
+@
+
+ð ð()
+params"__id*"
+
+__unknown_file (
+
+%1·´
+
+ñ ñ(9
+%3*B
+
+__unknown_file (&$
+"neo4j_service.Neo4jGraphRAGService*%
+
+__unknown_file (	
+
+query*&
+
+__unknown_file (
+
+
+params2execute_queryC
+A
+
+ñ ñ(9	
+results"__id*"
+
+__unknown_file (
+
+%3
+
+ò ò(,
+%4"dictž
+›
+
+ò ò(+
+%5"__mapSet*"
+
+__unknown_file (
+
+%4*0
+
+__unknown_file (
+mitigation_chain*'
+
+__unknown_file (
+	
+results"
+
+ò ò(,
+
+%4:
+
+â0 â(>
+	risk_nameB&$
+"neo4j_service.Neo4jGraphRAGServiceH

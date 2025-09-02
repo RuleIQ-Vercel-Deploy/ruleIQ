@@ -1,6 +1,6 @@
 /**
  * Basic tests for Form components
- * 
+ *
  * Tests core form rendering and structure:
  * - Form components render correctly
  * - Accessibility attributes are present
@@ -24,7 +24,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 
-const SimpleForm = ({ 
+const SimpleForm = ({
   includeDescription = false,
   customClassName,
 }: {
@@ -50,11 +50,7 @@ const SimpleForm = ({
               <FormControl>
                 <Input placeholder="Enter username" {...field} />
               </FormControl>
-              {includeDescription && (
-                <FormDescription>
-                  Choose a unique username.
-                </FormDescription>
-              )}
+              {includeDescription && <FormDescription>Choose a unique username.</FormDescription>}
               <FormMessage />
             </FormItem>
           )}
@@ -162,7 +158,7 @@ describe('Form Components - Basic Tests', () => {
       render(<SimpleForm includeDescription />);
 
       const usernameInput = screen.getByLabelText('Username');
-      
+
       expect(usernameInput).toHaveAttribute('aria-describedby');
       expect(usernameInput).toHaveAttribute('aria-invalid', 'false');
     });
@@ -209,12 +205,12 @@ describe('Form Components - Basic Tests', () => {
 
       const usernameInput = screen.getByLabelText('Username');
       const formItem = usernameInput.closest('.space-y-2');
-      
+
       expect(formItem).toBeInTheDocument();
-      
+
       const label = screen.getByText('Username');
       const description = screen.getByText('Choose a unique username.');
-      
+
       expect(formItem).toContainElement(label);
       expect(formItem).toContainElement(usernameInput);
       expect(formItem).toContainElement(description);
@@ -225,7 +221,7 @@ describe('Form Components - Basic Tests', () => {
 
       const usernameInput = screen.getByLabelText('Username');
       const emailInput = screen.getByLabelText('Email');
-      
+
       expect(usernameInput).toBeInTheDocument();
       expect(emailInput).toBeInTheDocument();
       expect(usernameInput.id).not.toBe(emailInput.id);
@@ -236,7 +232,7 @@ describe('Form Components - Basic Tests', () => {
 
       const usernameInput = screen.getByLabelText('Username');
       const emailInput = screen.getByLabelText('Email');
-      
+
       expect(usernameInput).toHaveValue('');
       expect(emailInput).toHaveValue('');
     });
@@ -246,7 +242,7 @@ describe('Form Components - Basic Tests', () => {
     it('accepts custom className on FormDescription', () => {
       const CustomForm = () => {
         const form = useForm({ defaultValues: { test: '' } });
-        
+
         return (
           <Form {...form}>
             <FormField
@@ -269,7 +265,7 @@ describe('Form Components - Basic Tests', () => {
       };
 
       render(<CustomForm />);
-      
+
       const description = screen.getByText('Custom description');
       expect(description).toHaveClass('text-sm', 'text-muted-foreground', 'custom-description');
     });
@@ -287,7 +283,7 @@ describe('Form Components - Basic Tests', () => {
 
       const formItem = screen.getByLabelText('Username').closest('.custom');
       const description = screen.getByText('Choose a unique username.');
-      
+
       expect(formItem).toHaveClass('space-y-2', 'custom');
       expect(description).toHaveClass('text-sm', 'text-muted-foreground');
     });
@@ -299,15 +295,15 @@ describe('Form Components - Basic Tests', () => {
         <div>
           <SimpleForm />
           <SimpleForm />
-        </div>
+        </div>,
       );
 
       const usernameInputs = screen.getAllByLabelText('Username');
       const emailInputs = screen.getAllByLabelText('Email');
-      
+
       expect(usernameInputs).toHaveLength(2);
       expect(emailInputs).toHaveLength(2);
-      
+
       expect(usernameInputs[0].id).not.toBe(usernameInputs[1].id);
       expect(emailInputs[0].id).not.toBe(emailInputs[1].id);
     });
@@ -325,18 +321,18 @@ describe('Form Components - Basic Tests', () => {
       };
 
       render(<EmptyForm />);
-      
+
       expect(screen.getByText('Empty form')).toBeInTheDocument();
     });
 
     it('maintains component structure consistency', () => {
       const { rerender } = render(<SimpleForm />);
-      
+
       const initialUsername = screen.getByLabelText('Username');
       const initialUsernameId = initialUsername.id;
-      
+
       rerender(<SimpleForm includeDescription />);
-      
+
       const updatedUsername = screen.getByLabelText('Username');
       expect(updatedUsername.id).toBe(initialUsernameId); // ID should remain stable
       expect(screen.getByText('Choose a unique username.')).toBeInTheDocument();

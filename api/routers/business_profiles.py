@@ -10,20 +10,26 @@ from api.dependencies.auth import get_current_user, require_auth
 from services.data_access import DataAccess
 from services.security.audit_logging import AuditLoggingService as AuditLogger
 from database.db_setup import get_db
-from api.schemas.models import BusinessProfileCreate, BusinessProfileResponse, BusinessProfileUpdate
+from api.schemas.models import (
+    BusinessProfileCreate,
+    BusinessProfileResponse,
+    BusinessProfileUpdate,
+)
 from database.business_profile import BusinessProfile
-from database.user import User
 from utils.input_validation import validate_business_profile_update, ValidationError
 
 router = APIRouter()
 
 # Field mapping no longer needed - column names match API field names after migration
 
-@router.post("/", response_model=BusinessProfileResponse, status_code=status.HTTP_201_CREATED)
+
+@router.post(
+    "/", response_model=BusinessProfileResponse, status_code=status.HTTP_201_CREATED
+)
 @require_auth
 async def create_business_profile(
     profile: BusinessProfileCreate,
-    current_user = Depends(get_current_user),
+    current_user=Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     # Check if profile already exists
@@ -70,17 +76,19 @@ async def create_business_profile(
         except ValidationError as e:
             raise HTTPException(status_code=400, detail=str(e))
 
-        db_profile = BusinessProfile(id=uuid4(), user_id=current_user.id, **validated_data)
+        db_profile = BusinessProfile(
+            id=uuid4(), user_id=current_user.id, **validated_data
+        )
         db.add(db_profile)
         await db.commit()
         await db.refresh(db_profile)
         return db_profile
 
+
 @router.get("/", response_model=BusinessProfileResponse)
 @require_auth
 async def get_business_profile(
-    current_user = Depends(get_current_user),
-    db: AsyncSession = Depends(get_async_db)
+    current_user=Depends(get_current_user), db: AsyncSession = Depends(get_async_db)
 ):
     stmt = select(BusinessProfile).where(BusinessProfile.user_id == current_user.id)
     result = await db.execute(stmt)
@@ -91,11 +99,12 @@ async def get_business_profile(
         )
     return profile
 
+
 @router.get("/{id}", response_model=BusinessProfileResponse)
 @require_auth
 async def get_business_profile_by_id(
     id: UUID,
-    current_user = Depends(get_current_user),
+    current_user=Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
     sync_db: Session = Depends(get_db),
 ):
@@ -104,7 +113,7 @@ async def get_business_profile_by_id(
     profile = await DataAccess.ensure_owner_async(
         db, BusinessProfile, id, current_user, "business profile"
     )
-    
+
     # Log access for compliance
     audit_service = AuditLogger(sync_db)
     await audit_service.log_data_access(
@@ -112,16 +121,17 @@ async def get_business_profile_by_id(
         resource="business_profile",
         resource_id=str(id),
         action="read",
-        db=sync_db
+        db=sync_db,
     )
-    
+
     return profile
+
 
 @router.put("/", response_model=BusinessProfileResponse)
 @require_auth
 async def update_business_profile(
     profile_update: BusinessProfileUpdate,
-    current_user = Depends(get_current_user),
+    current_user=Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
     sync_db: Session = Depends(get_db),
 ):
@@ -135,7 +145,9 @@ async def update_business_profile(
 
     update_data = profile_update.model_dump(exclude_unset=True)
     # Remove fields that are not in the BusinessProfile model
-    update_data.pop("data_sensitivity", None)  # Temporarily removed until migration is run
+    update_data.pop(
+        "data_sensitivity", None
+    )  # Temporarily removed until migration is run
 
     # Validate input data against whitelist and security patterns
     try:
@@ -162,12 +174,13 @@ async def update_business_profile(
 
     return profile
 
+
 @router.put("/{id}", response_model=BusinessProfileResponse)
 @require_auth
 async def update_business_profile_by_id(
     profile_id: UUID,
     profile_update: BusinessProfileUpdate,
-    current_user = Depends(get_current_user),
+    current_user=Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
     sync_db: Session = Depends(get_db),
 ):
@@ -179,7 +192,9 @@ async def update_business_profile_by_id(
 
     update_data = profile_update.model_dump(exclude_unset=True)
     # Remove fields that are not in the BusinessProfile model
-    update_data.pop("data_sensitivity", None)  # Temporarily removed until migration is run
+    update_data.pop(
+        "data_sensitivity", None
+    )  # Temporarily removed until migration is run
 
     # Validate input data against whitelist and security patterns
     try:
@@ -208,7 +223,7 @@ async def update_business_profile_by_id(
         resource_id=str(profile_id),
         action="update",
         metadata={"changed_fields": list(validated_data.keys())},
-        db=sync_db
+        db=sync_db,
     )
 
     # The updated_at field is automatically handled by the database
@@ -217,11 +232,12 @@ async def update_business_profile_by_id(
 
     return profile
 
+
 @router.delete("/{id}")
 @require_auth
 async def delete_business_profile_by_id(
     profile_id: UUID,
-    current_user = Depends(get_current_user),
+    current_user=Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
     sync_db: Session = Depends(get_db),
 ):
@@ -230,7 +246,7 @@ async def delete_business_profile_by_id(
     await DataAccess.delete_owned_async(
         db, BusinessProfile, profile_id, current_user, "business profile"
     )
-    
+
     # Log deletion for compliance
     audit_service = AuditLogger(sync_db)
     await audit_service.log_data_access(
@@ -238,17 +254,18 @@ async def delete_business_profile_by_id(
         resource="business_profile",
         resource_id=str(profile_id),
         action="delete",
-        db=sync_db
+        db=sync_db,
     )
 
     return {"message": "Business profile deleted successfully"}
+
 
 @router.get("/list", summary="List all business profiles")
 @require_auth
 async def list_business_profiles(
     limit: int = 10,
     offset: int = 0,
-    current_user = Depends(get_current_user),
+    current_user=Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """List all business profiles owned by the current user (SMB model)."""
@@ -256,7 +273,7 @@ async def list_business_profiles(
     profiles = await DataAccess.list_owned_async(
         db, BusinessProfile, current_user, limit, offset
     )
-    
+
     return {
         "profiles": [
             {
@@ -264,8 +281,16 @@ async def list_business_profiles(
                 "company_name": profile.company_name,
                 "industry": profile.industry,
                 "company_size": profile.company_size,
-                "created_at": profile.created_at.isoformat() if hasattr(profile, 'created_at') else None,
-                "updated_at": profile.updated_at.isoformat() if hasattr(profile, 'updated_at') else None,
+                "created_at": (
+                    profile.created_at.isoformat()
+                    if hasattr(profile, "created_at")
+                    else None
+                ),
+                "updated_at": (
+                    profile.updated_at.isoformat()
+                    if hasattr(profile, "updated_at")
+                    else None
+                ),
             }
             for profile in profiles
         ],
@@ -274,17 +299,18 @@ async def list_business_profiles(
         "offset": offset,
     }
 
+
 @router.get("/{id}/compliance-status", summary="Get compliance status for profile")
 @require_auth
 async def get_profile_compliance_status(
     profile_id: UUID,
-    current_user = Depends(get_current_user),
+    current_user=Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
     sync_db: Session = Depends(get_db),
 ):
     """Get compliance status for a specific business profile."""
     # Ensure ownership
-    profile = await DataAccess.ensure_owner_async(
+    await DataAccess.ensure_owner_async(
         db, BusinessProfile, profile_id, current_user, "business profile"
     )
 
@@ -295,7 +321,7 @@ async def get_profile_compliance_status(
         resource="compliance_status",
         resource_id=str(profile_id),
         action="read",
-        db=sync_db
+        db=sync_db,
     )
 
     # Placeholder implementation
@@ -320,16 +346,17 @@ async def get_profile_compliance_status(
         "action_items": 5,
     }
 
+
 @router.get("/{id}/team", summary="Get team members for profile")
 @require_auth
 async def get_profile_team(
     profile_id: UUID,
-    current_user = Depends(get_current_user),
+    current_user=Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
 ):
     """Get team members associated with a business profile (SMB: typically 1-5 users)."""
     # Ensure ownership
-    profile = await DataAccess.ensure_owner_async(
+    await DataAccess.ensure_owner_async(
         db, BusinessProfile, profile_id, current_user, "business profile"
     )
 
@@ -350,18 +377,19 @@ async def get_profile_team(
         "pending_invites": 0,
     }
 
+
 @router.post("/{id}/invite", summary="Invite team member to profile")
 @require_auth
 async def invite_team_member(
     profile_id: UUID,
     invite_data: dict,
-    current_user = Depends(get_current_user),
+    current_user=Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
     sync_db: Session = Depends(get_db),
 ):
     """Invite a team member to a business profile (future feature for SMBs)."""
     # Ensure ownership
-    profile = await DataAccess.ensure_owner_async(
+    await DataAccess.ensure_owner_async(
         db, BusinessProfile, profile_id, current_user, "business profile"
     )
 
@@ -373,17 +401,18 @@ async def invite_team_member(
         resource_id=str(profile_id),
         action="create",
         metadata={"invited_email": invite_data.get("email", "")},
-        db=sync_db
+        db=sync_db,
     )
 
     # Placeholder implementation - future feature for SMB team collaboration
     email = invite_data.get("email", "")
     role = invite_data.get("role", "viewer")
-    
+
     from uuid import uuid4
     from datetime import datetime
+
     invite_id = str(uuid4())
-    
+
     return {
         "invite_id": invite_id,
         "profile_id": str(profile_id),
@@ -393,27 +422,27 @@ async def invite_team_member(
         "invited_by": current_user.email,
         "invited_at": datetime.utcnow().isoformat(),
         "expires_at": "2024-01-22T00:00:00Z",
-        "note": "Team invites coming soon for SMB collaboration"
+        "note": "Team invites coming soon for SMB collaboration",
     }
+
 
 @router.get("/{id}/activity", summary="Get activity log for profile")
 @require_auth
 async def get_profile_activity(
     profile_id: UUID,
     limit: int = 20,
-    current_user = Depends(get_current_user),
+    current_user=Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
     sync_db: Session = Depends(get_db),
 ):
     """Get activity log for a business profile."""
     # Ensure ownership
-    profile = await DataAccess.ensure_owner_async(
+    await DataAccess.ensure_owner_async(
         db, BusinessProfile, profile_id, current_user, "business profile"
     )
 
     # Future: pull from actual audit log
-    from datetime import datetime
-    
+
     return {
         "profile_id": str(profile_id),
         "activities": [
@@ -443,12 +472,13 @@ async def get_profile_activity(
         "limit": limit,
     }
 
+
 @router.patch("/{id}", response_model=BusinessProfileResponse)
 @require_auth
 async def patch_business_profile(
     profile_id: UUID,
     profile_update: BusinessProfileUpdate,
-    current_user = Depends(get_current_user),
+    current_user=Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
     sync_db: Session = Depends(get_db),
 ):
@@ -460,7 +490,9 @@ async def patch_business_profile(
 
     update_data = profile_update.model_dump(exclude_unset=True)
     # Remove fields that are not in the BusinessProfile model
-    update_data.pop("data_sensitivity", None)  # Temporarily removed until migration is run
+    update_data.pop(
+        "data_sensitivity", None
+    )  # Temporarily removed until migration is run
 
     # Handle version-based optimistic locking if version is provided
     if "version" in update_data:
@@ -470,7 +502,9 @@ async def patch_business_profile(
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
                 detail={
-                    "error": {"message": "Conflict: Profile has been modified by another user"}
+                    "error": {
+                        "message": "Conflict: Profile has been modified by another user"
+                    }
                 },
             )
 
@@ -501,7 +535,7 @@ async def patch_business_profile(
         resource_id=str(profile_id),
         action="update",
         metadata={"changed_fields": list(validated_data.keys())},
-        db=sync_db
+        db=sync_db,
     )
 
     # The updated_at field is automatically handled by the database
@@ -510,20 +544,21 @@ async def patch_business_profile(
 
     return profile
 
+
 @router.get("/{id}/compliance", summary="Get compliance status for business profile")
 @require_auth
 async def get_profile_compliance(
     id: UUID,
-    current_user = Depends(get_current_user),
+    current_user=Depends(get_current_user),
     db: AsyncSession = Depends(get_async_db),
     sync_db: Session = Depends(get_db),
 ):
     """Get compliance status for a specific business profile."""
     # Ensure ownership
-    profile = await DataAccess.ensure_owner_async(
+    await DataAccess.ensure_owner_async(
         db, BusinessProfile, id, current_user, "business profile"
     )
-    
+
     # Log access for compliance
     audit_service = AuditLogger(sync_db)
     await audit_service.log_data_access(
@@ -531,9 +566,9 @@ async def get_profile_compliance(
         resource="compliance_report",
         resource_id=str(id),
         action="view",
-        db=sync_db
+        db=sync_db,
     )
-    
+
     # Placeholder implementation
     return {
         "profile_id": str(id),

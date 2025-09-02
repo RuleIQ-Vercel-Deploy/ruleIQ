@@ -16,7 +16,7 @@ from langgraph_agent.agents.tool_manager import (
     EvidenceCollectionTool,
     ReportGenerationTool,
     ToolCategory,
-    ToolPriority
+    ToolPriority,
 )
 from langgraph_agent.core.models import SafeFallbackResponse
 
@@ -29,7 +29,10 @@ class TestToolCreation:
         tool = ComplianceAnalysisTool()
 
         assert tool.name == "compliance_analysis"
-        assert tool.description == "Analyze business compliance requirements and applicable frameworks"
+        assert (
+            tool.description
+            == "Analyze business compliance requirements and applicable frameworks"
+        )
         assert tool.category == ToolCategory.COMPLIANCE_ANALYSIS
         assert tool.priority == ToolPriority.HIGH
 
@@ -38,7 +41,10 @@ class TestToolCreation:
         tool = DocumentRetrievalTool()
 
         assert tool.name == "document_retrieval"
-        assert tool.description == "Retrieve compliance documents, templates, and guidance materials"
+        assert (
+            tool.description
+            == "Retrieve compliance documents, templates, and guidance materials"
+        )
         assert tool.category == ToolCategory.DOCUMENT_RETRIEVAL
         assert tool.priority == ToolPriority.MEDIUM  # Default
 
@@ -47,7 +53,10 @@ class TestToolCreation:
         tool = EvidenceCollectionTool()
 
         assert tool.name == "evidence_collection"
-        assert tool.description == "Collect and organize compliance evidence and documentation"
+        assert (
+            tool.description
+            == "Collect and organize compliance evidence and documentation"
+        )
         assert tool.category == ToolCategory.EVIDENCE_COLLECTION
 
     def test_report_generation_tool_creation(self):
@@ -55,7 +64,10 @@ class TestToolCreation:
         tool = ReportGenerationTool()
 
         assert tool.name == "report_generation"
-        assert tool.description == "Generate comprehensive compliance reports and assessments"
+        assert (
+            tool.description
+            == "Generate comprehensive compliance reports and assessments"
+        )
         assert tool.category == ToolCategory.REPORT_GENERATION
         assert tool.priority == ToolPriority.MEDIUM
 
@@ -65,17 +77,17 @@ class TestToolCreation:
             ComplianceAnalysisTool(),
             DocumentRetrievalTool(),
             EvidenceCollectionTool(),
-            ReportGenerationTool()
+            ReportGenerationTool(),
         ]
 
         for tool in tools:
             # Check required attributes
-            assert hasattr(tool, 'name')
-            assert hasattr(tool, 'description')
+            assert hasattr(tool, "name")
+            assert hasattr(tool, "description")
 
             # Check required methods
-            assert hasattr(tool, '_run')
-            assert hasattr(tool, '_arun')
+            assert hasattr(tool, "_run")
+            assert hasattr(tool, "_arun")
             assert callable(tool._run)
             assert callable(tool._arun)
 
@@ -128,7 +140,9 @@ class TestToolManager:
         assert "compliance_analysis" in high_priority
 
         medium_priority = manager.get_tools_by_priority(ToolPriority.MEDIUM)
-        assert len(medium_priority) >= 1  # At least document_retrieval and report_generation
+        assert (
+            len(medium_priority) >= 1
+        )  # At least document_retrieval and report_generation
 
 
 @pytest.mark.asyncio
@@ -142,7 +156,7 @@ class TestToolExecution:
         business_profile = {
             "industry": "retail",
             "employees": 50,
-            "data_processing": ["customer_data", "employee_data"]
+            "data_processing": ["customer_data", "employee_data"],
         }
         frameworks = ["GDPR", "UK_GDPR"]
 
@@ -166,9 +180,7 @@ class TestToolExecution:
         tool = DocumentRetrievalTool()
 
         result = await tool._execute(
-            query="GDPR privacy policy",
-            framework="GDPR",
-            doc_type="template"
+            query="GDPR privacy policy", framework="GDPR", doc_type="template"
         )
 
         assert isinstance(result, dict)
@@ -191,8 +203,7 @@ class TestToolExecution:
         tool = EvidenceCollectionTool()
 
         result = await tool._execute(
-            company_id="test_company_123",
-            frameworks=["GDPR", "UK_GDPR"]
+            company_id="test_company_123", frameworks=["GDPR", "UK_GDPR"]
         )
 
         assert isinstance(result, dict)
@@ -218,7 +229,7 @@ class TestToolExecution:
         result = await tool._execute(
             company_id="test_company_123",
             report_type="compliance_assessment",
-            frameworks=["GDPR"]
+            frameworks=["GDPR"],
         )
 
         assert isinstance(result, dict)
@@ -259,7 +270,7 @@ class TestToolManagerExecution:
             company_id=company_id,
             thread_id=thread_id,
             business_profile={"industry": "tech"},
-            frameworks=["GDPR"]
+            frameworks=["GDPR"],
         )
 
         assert isinstance(result, ToolResult)
@@ -275,9 +286,7 @@ class TestToolManagerExecution:
         thread_id = "test_thread"
 
         result = await manager.execute_tool(
-            tool_name="nonexistent_tool",
-            company_id=company_id,
-            thread_id=thread_id
+            tool_name="nonexistent_tool", company_id=company_id, thread_id=thread_id
         )
 
         assert isinstance(result, SafeFallbackResponse)
@@ -297,8 +306,8 @@ class TestToolManagerExecution:
                 "args": [],
                 "kwargs": {
                     "business_profile": {"industry": "retail"},
-                    "frameworks": ["GDPR"]
-                }
+                    "frameworks": ["GDPR"],
+                },
             },
             {
                 "tool": "document_retrieval",
@@ -306,16 +315,14 @@ class TestToolManagerExecution:
                 "kwargs": {
                     "query": "GDPR template",
                     "framework": "GDPR",
-                    "doc_type": "template"
+                    "doc_type": "template",
                 },
-                "use_context": []  # No context dependency for this test
-            }
+                "use_context": [],  # No context dependency for this test
+            },
         ]
 
         results = await manager.execute_tool_chain(
-            tool_sequence=tool_sequence,
-            company_id=company_id,
-            thread_id=thread_id
+            tool_sequence=tool_sequence, company_id=company_id, thread_id=thread_id
         )
 
         assert len(results) == 2
@@ -333,22 +340,20 @@ class TestToolManagerExecution:
                 "tool": "compliance_analysis",
                 "kwargs": {
                     "business_profile": {"industry": "tech"},
-                    "frameworks": ["GDPR"]
-                }
+                    "frameworks": ["GDPR"],
+                },
             },
             {
                 "tool": "evidence_collection",
                 "kwargs": {
                     "company_id": str(company_id),  # Tool expects company_id as string
-                    "frameworks": ["GDPR"]
-                }
-            }
+                    "frameworks": ["GDPR"],
+                },
+            },
         ]
 
         results = await manager.execute_parallel_tools(
-            tool_configs=tool_configs,
-            company_id=company_id,
-            thread_id=thread_id
+            tool_configs=tool_configs, company_id=company_id, thread_id=thread_id
         )
 
         assert len(results) == 2
@@ -430,6 +435,7 @@ class TestRateLimiting:
 
         # Simulate time passing (reset period)
         from datetime import datetime, timedelta
+
         tool._last_reset = datetime.utcnow() - timedelta(seconds=61)
         assert tool._check_rate_limit() == True
         assert tool._execution_count == 0  # Should reset counter
@@ -447,20 +453,24 @@ class TestSignatureValidation:
         # Generate valid signature
         import hmac
         import hashlib
+
         expected_signature = hmac.new(
-            secret.encode(),
-            input_data.encode(),
-            hashlib.sha256
+            secret.encode(), input_data.encode(), hashlib.sha256
         ).hexdigest()
 
         # Test valid signature
         assert tool._validate_signature(input_data, expected_signature, secret) == True
 
         # Test invalid signature
-        assert tool._validate_signature(input_data, "invalid_signature", secret) == False
+        assert (
+            tool._validate_signature(input_data, "invalid_signature", secret) == False
+        )
 
         # Test with different secret
-        assert tool._validate_signature(input_data, expected_signature, "wrong_secret") == False
+        assert (
+            tool._validate_signature(input_data, expected_signature, "wrong_secret")
+            == False
+        )
 
 
 @pytest.mark.asyncio
@@ -482,8 +492,7 @@ class TestErrorHandling:
 
         with pytest.raises(ToolError) as exc_info:
             await tool._safe_execute(
-                business_profile={"test": "data"},
-                frameworks=["GDPR"]
+                business_profile={"test": "data"}, frameworks=["GDPR"]
             )
 
         assert exc_info.value.error_type == "timeout"
@@ -500,8 +509,7 @@ class TestErrorHandling:
         tool._execute = failing_execute
 
         result = await tool._safe_execute(
-            business_profile={"test": "data"},
-            frameworks=["GDPR"]
+            business_profile={"test": "data"}, frameworks=["GDPR"]
         )
 
         assert isinstance(result, ToolResult)

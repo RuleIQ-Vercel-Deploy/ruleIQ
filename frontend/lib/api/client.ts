@@ -6,7 +6,7 @@ export class APIError extends Error {
   constructor(
     message: string,
     public status: number,
-    public response?: any
+    public response?: any,
   ) {
     super(message);
     this.name = 'APIError';
@@ -16,7 +16,7 @@ export class APIError extends Error {
 class APIClient {
   private async getAuthHeaders(): Promise<HeadersInit> {
     const { tokens, refreshToken } = useAuthStore.getState();
-    
+
     if (!tokens?.access_token) {
       throw new APIError('No authentication token available', 401);
     }
@@ -25,7 +25,7 @@ class APIClient {
     try {
       return {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${tokens.access_token}`,
+        Authorization: `Bearer ${tokens.access_token}`,
       };
     } catch {
       // If we have a refresh token, try to refresh
@@ -35,7 +35,7 @@ class APIClient {
           const newTokens = useAuthStore.getState().tokens;
           return {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${newTokens?.access_token}`,
+            Authorization: `Bearer ${newTokens?.access_token}`,
           };
         } catch (refreshError) {
           throw new APIError('Authentication failed', 401);
@@ -45,17 +45,14 @@ class APIClient {
     }
   }
 
-  async request<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
+  async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     // Automatically prepend /api/v1 to endpoints unless they already start with /api
     const normalizedEndpoint = endpoint.startsWith('/api') ? endpoint : `/api/v1${endpoint}`;
     const url = `${API_BASE_URL}${normalizedEndpoint}`;
-    
+
     try {
       const headers = await this.getAuthHeaders();
-      
+
       const response = await fetch(url, {
         ...options,
         headers: {
@@ -69,7 +66,7 @@ class APIClient {
         throw new APIError(
           errorData.detail || `HTTP ${response.status}: ${response.statusText}`,
           response.status,
-          errorData
+          errorData,
         );
       }
 
@@ -78,16 +75,13 @@ class APIClient {
       if (contentType && contentType.includes('application/json')) {
         return response.json();
       }
-      
+
       return response.text() as unknown as T;
     } catch {
       if (error instanceof APIError) {
         throw error;
       }
-      throw new APIError(
-        error instanceof Error ? error.message : 'Network error',
-        0
-      );
+      throw new APIError(error instanceof Error ? error.message : 'Network error', 0);
     }
   }
 
@@ -98,17 +92,14 @@ class APIClient {
   }
 
   // Public request method for unauthenticated endpoints (like freemium)
-  async publicRequest<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
+  async publicRequest<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     // Automatically prepend /api/v1 to endpoints unless they already start with /api
     const normalizedEndpoint = endpoint.startsWith('/api') ? endpoint : `/api/v1${endpoint}`;
     const url = `${API_BASE_URL}${normalizedEndpoint}`;
-    
+
     try {
       const headers = this.getPublicHeaders();
-      
+
       const response = await fetch(url, {
         ...options,
         headers: {
@@ -122,7 +113,7 @@ class APIClient {
         throw new APIError(
           errorData.detail || `HTTP ${response.status}: ${response.statusText}`,
           response.status,
-          errorData
+          errorData,
         );
       }
 
@@ -131,23 +122,20 @@ class APIClient {
       if (contentType && contentType.includes('application/json')) {
         return response.json();
       }
-      
+
       return response.text() as unknown as T;
     } catch {
       if (error instanceof APIError) {
         throw error;
       }
-      throw new APIError(
-        error instanceof Error ? error.message : 'Network error',
-        0
-      );
+      throw new APIError(error instanceof Error ? error.message : 'Network error', 0);
     }
   }
 
   // Convenience methods
   async get<T>(endpoint: string, options?: { params?: Record<string, any> }): Promise<T> {
     let url = endpoint;
-    
+
     // Add query parameters if provided
     if (options?.params) {
       const searchParams = new URLSearchParams();
@@ -161,7 +149,7 @@ class APIClient {
         url += (endpoint.includes('?') ? '&' : '?') + queryString;
       }
     }
-    
+
     return this.request<T>(url, { method: 'GET' });
   }
 
@@ -193,10 +181,10 @@ class APIClient {
   async download(endpoint: string, filename: string): Promise<void> {
     const normalizedEndpoint = endpoint.startsWith('/api') ? endpoint : `/api/v1${endpoint}`;
     const url = `${API_BASE_URL}${normalizedEndpoint}`;
-    
+
     try {
       const headers = await this.getAuthHeaders();
-      
+
       const response = await fetch(url, {
         method: 'GET',
         headers,
@@ -207,7 +195,7 @@ class APIClient {
         throw new APIError(
           errorData.detail || `HTTP ${response.status}: ${response.statusText}`,
           response.status,
-          errorData
+          errorData,
         );
       }
 
@@ -225,32 +213,29 @@ class APIClient {
       if (error instanceof APIError) {
         throw error;
       }
-      throw new APIError(
-        error instanceof Error ? error.message : 'Network error',
-        0
-      );
+      throw new APIError(error instanceof Error ? error.message : 'Network error', 0);
     }
   }
 
   async upload<T>(endpoint: string, file: File, additionalData?: Record<string, any>): Promise<T> {
     const normalizedEndpoint = endpoint.startsWith('/api') ? endpoint : `/api/v1${endpoint}`;
     const url = `${API_BASE_URL}${normalizedEndpoint}`;
-    
+
     try {
       const headers = await this.getAuthHeaders();
       // Remove Content-Type header to let browser set it with boundary for FormData
       delete (headers as any)['Content-Type'];
-      
+
       const formData = new FormData();
       formData.append('file', file);
-      
+
       // Add any additional data
       if (additionalData) {
         Object.entries(additionalData).forEach(([key, value]) => {
           formData.append(key, String(value));
         });
       }
-      
+
       const response = await fetch(url, {
         method: 'POST',
         headers,
@@ -262,7 +247,7 @@ class APIClient {
         throw new APIError(
           errorData.detail || `HTTP ${response.status}: ${response.statusText}`,
           response.status,
-          errorData
+          errorData,
         );
       }
 
@@ -271,23 +256,20 @@ class APIClient {
       if (contentType && contentType.includes('application/json')) {
         return response.json();
       }
-      
+
       return response.text() as unknown as T;
     } catch {
       if (error instanceof APIError) {
         throw error;
       }
-      throw new APIError(
-        error instanceof Error ? error.message : 'Network error',
-        0
-      );
+      throw new APIError(error instanceof Error ? error.message : 'Network error', 0);
     }
   }
 
   // Public convenience methods for unauthenticated endpoints
   async publicGet<T>(endpoint: string, options?: { params?: Record<string, any> }): Promise<T> {
     let url = endpoint;
-    
+
     // Add query parameters if provided
     if (options?.params) {
       const searchParams = new URLSearchParams();
@@ -301,7 +283,7 @@ class APIClient {
         url += (endpoint.includes('?') ? '&' : '?') + queryString;
       }
     }
-    
+
     return this.publicRequest<T>(url, { method: 'GET' });
   }
 

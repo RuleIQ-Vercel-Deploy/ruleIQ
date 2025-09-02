@@ -1,0 +1,15 @@
+
+<3"Create a FastAPI dependency for AI rate limiting."strlimiterl$ l(:operation_namel< l(O"ï#
+!
+
+Ÿ Ÿ("#unknown-value#)
+'
+	o Ÿ(%closure"#new-object#*
+(
+	o Ÿ("#set-field# limiter:1
+/
+	o Ÿ("#set-field# operation_name:,
+*
+	o Ÿ("?python-partial-apply?:
+
+Ÿ Ÿ(*=/home/omar/Documents/ruleIQ/api/middleware/ai_rate_limiter.py

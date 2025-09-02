@@ -22,9 +22,15 @@ class EvidenceClassificationResponse(BaseModel):
 
     evidence_id: UUID
     current_type: str
-    ai_classification: Dict[str, Any] = Field(..., description="AI classification results")
-    apply_suggestion: bool = Field(..., description="Whether to apply the AI suggestion")
-    confidence: int = Field(..., ge=0, le=100, description="Classification confidence score")
+    ai_classification: Dict[str, Any] = Field(
+        ..., description="AI classification results"
+    )
+    apply_suggestion: bool = Field(
+        ..., description="Whether to apply the AI suggestion"
+    )
+    confidence: int = Field(
+        ..., ge=0, le=100, description="Classification confidence score"
+    )
     suggested_controls: List[str] = Field(
         default_factory=list, description="Suggested compliance controls"
     )
@@ -68,7 +74,9 @@ class BulkClassificationResponse(BaseModel):
     total_processed: int
     successful_classifications: int
     failed_classifications: int
-    auto_applied: int = Field(0, description="Number of suggestions automatically applied")
+    auto_applied: int = Field(
+        0, description="Number of suggestions automatically applied"
+    )
     results: List[ClassificationResult]
 
 
@@ -89,7 +97,9 @@ class ControlMappingResponse(BaseModel):
     framework_mappings: Dict[str, List[str]] = Field(
         ..., description="Control mappings by framework"
     )
-    confidence_scores: Dict[str, int] = Field(..., description="Confidence scores by framework")
+    confidence_scores: Dict[str, int] = Field(
+        ..., description="Confidence scores by framework"
+    )
     reasoning: str
 
 
@@ -102,8 +112,12 @@ class ClassificationStatsResponse(BaseModel):
     classification_accuracy: float = Field(
         ..., ge=0, le=100, description="Overall classification accuracy"
     )
-    type_distribution: Dict[str, int] = Field(..., description="Distribution of evidence types")
+    type_distribution: Dict[str, int] = Field(
+        ..., description="Distribution of evidence types"
+    )
     confidence_distribution: Dict[str, int] = Field(
         ..., description="Distribution of confidence scores"
     )
-    recent_classifications: int = Field(..., description="Classifications in last 30 days")
+    recent_classifications: int = Field(
+        ..., description="Classifications in last 30 days"
+    )

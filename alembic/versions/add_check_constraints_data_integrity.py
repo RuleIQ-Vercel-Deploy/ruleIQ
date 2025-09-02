@@ -24,403 +24,477 @@ def upgrade() -> None:
     # 1. BUSINESS PROFILE CONSTRAINTS
     try:
         # Employee count validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE business_profiles
             ADD CONSTRAINT ck_business_profile_employee_count
             CHECK (employee_count >= 1 AND employee_count <= 1000000)
-        """)
+        """
+        )
     except Exception:
         pass  # Constraint may already exist
 
     try:
         # Company name validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE business_profiles
             ADD CONSTRAINT ck_business_profile_company_name_length
             CHECK (length(company_name) >= 2 AND length(company_name) <= 255)
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Data sensitivity validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE business_profiles
             ADD CONSTRAINT ck_business_profile_data_sensitivity
             CHECK (data_sensitivity IN ('Low', 'Medium', 'High', 'Critical'))
-        """)
+        """
+        )
     except Exception:
         pass
 
     # 2. COMPLIANCE FRAMEWORK CONSTRAINTS
     try:
         # Complexity score validation (1-10 scale)
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE compliance_frameworks
             ADD CONSTRAINT ck_compliance_framework_complexity
             CHECK (complexity_score >= 1 AND complexity_score <= 10)
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Implementation time validation (1-260 weeks, max 5 years)
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE compliance_frameworks
             ADD CONSTRAINT ck_compliance_framework_implementation_time
             CHECK (implementation_time_weeks >= 1 AND implementation_time_weeks <= 260)
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Employee threshold validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE compliance_frameworks
             ADD CONSTRAINT ck_compliance_framework_employee_threshold
             CHECK (
                 employee_threshold IS NULL OR 
                 (employee_threshold > 0 AND employee_threshold <= 1000000)
             )
-        """)
+        """
+        )
     except Exception:
         pass
 
     # 3. EVIDENCE ITEM CONSTRAINTS
     try:
         # Evidence name length validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE evidence_items
             ADD CONSTRAINT ck_evidence_item_name_length
             CHECK (length(evidence_name) >= 2 AND length(evidence_name) <= 255)
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Evidence type validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE evidence_items
             ADD CONSTRAINT ck_evidence_item_type
             CHECK (evidence_type IN (
                 'Policy', 'Procedure', 'Log', 'Certificate', 
                 'Configuration', 'Audit Report', 'Training Record', 'Other'
             ))
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Status validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE evidence_items
             ADD CONSTRAINT ck_evidence_item_status
             CHECK (status IN (
                 'not_started', 'in_progress', 'collected', 'under_review', 
                 'approved', 'rejected', 'expired'
             ))
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Priority validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE evidence_items
             ADD CONSTRAINT ck_evidence_item_priority
             CHECK (priority IN ('low', 'medium', 'high', 'critical'))
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Collection method validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE evidence_items
             ADD CONSTRAINT ck_evidence_item_method
             CHECK (collection_method IN ('manual', 'automated', 'semi_automated'))
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Collection frequency validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE evidence_items
             ADD CONSTRAINT ck_evidence_item_frequency
             CHECK (collection_frequency IN (
                 'once', 'daily', 'weekly', 'monthly', 'quarterly', 'annually'
             ))
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Compliance score impact validation (0-100%)
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE evidence_items
             ADD CONSTRAINT ck_evidence_item_score_impact
             CHECK (compliance_score_impact >= 0.0 AND compliance_score_impact <= 100.0)
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # File size validation (max 5GB)
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE evidence_items
             ADD CONSTRAINT ck_evidence_item_file_size
             CHECK (
                 file_size_bytes IS NULL OR 
                 (file_size_bytes >= 0 AND file_size_bytes <= 5368709120)
             )
-        """)
+        """
+        )
     except Exception:
         pass
 
     # 4. ASSESSMENT SESSION CONSTRAINTS
     try:
         # Session type validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE assessment_sessions
             ADD CONSTRAINT ck_assessment_session_type
             CHECK (session_type IN (
                 'compliance_scoping', 'readiness_assessment', 
                 'gap_analysis', 'risk_assessment'
             ))
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Status validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE assessment_sessions
             ADD CONSTRAINT ck_assessment_session_status
             CHECK (status IN ('in_progress', 'completed', 'abandoned', 'paused'))
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Stage validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE assessment_sessions
             ADD CONSTRAINT ck_assessment_session_stages
             CHECK (current_stage >= 1 AND current_stage <= total_stages)
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Total stages validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE assessment_sessions
             ADD CONSTRAINT ck_assessment_session_total_stages
             CHECK (total_stages >= 1 AND total_stages <= 50)
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Questions validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE assessment_sessions
             ADD CONSTRAINT ck_assessment_session_questions
             CHECK (questions_answered >= 0 AND questions_answered <= total_questions)
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Total questions validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE assessment_sessions
             ADD CONSTRAINT ck_assessment_session_total_questions
             CHECK (total_questions >= 0 AND total_questions <= 1000)
-        """)
+        """
+        )
     except Exception:
         pass
 
     # 5. READINESS ASSESSMENT CONSTRAINTS
     try:
         # Overall score validation (0-100%)
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE readiness_assessments
             ADD CONSTRAINT ck_readiness_assessment_overall_score
             CHECK (overall_score >= 0.0 AND overall_score <= 100.0)
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Score trend validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE readiness_assessments
             ADD CONSTRAINT ck_readiness_assessment_trend
             CHECK (score_trend IN ('improving', 'stable', 'declining', 'unknown'))
-        """)
+        """
+        )
     except Exception:
         pass
 
     # 6. INTEGRATION CONSTRAINTS
     try:
         # Integration provider validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE integrations
             ADD CONSTRAINT ck_integration_provider
             CHECK (provider IN (
                 'aws', 'okta', 'google_workspace', 'microsoft_365', 
                 'azure', 'github', 'gitlab'
             ))
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Provider length validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE integrations
             ADD CONSTRAINT ck_integration_provider_length
             CHECK (length(provider) >= 2 AND length(provider) <= 50)
-        """)
+        """
+        )
     except Exception:
         pass
 
     # 7. EVIDENCE COLLECTION CONSTRAINTS
     try:
         # Evidence collection status validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE evidence_collections
             ADD CONSTRAINT ck_evidence_collection_status
             CHECK (status IN ('pending', 'running', 'completed', 'failed', 'cancelled'))
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Progress percentage validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE evidence_collections
             ADD CONSTRAINT ck_evidence_collection_progress
             CHECK (progress_percentage >= 0 AND progress_percentage <= 100)
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Collection mode validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE evidence_collections
             ADD CONSTRAINT ck_evidence_collection_mode
             CHECK (collection_mode IN ('immediate', 'scheduled', 'streaming'))
-        """)
+        """
+        )
     except Exception:
         pass
 
     # 8. INTEGRATION EVIDENCE ITEM CONSTRAINTS
     try:
         # Source system validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE integration_evidence_items
             ADD CONSTRAINT ck_integration_evidence_source
             CHECK (source_system IN (
                 'aws', 'okta', 'google_workspace', 'microsoft_365', 
                 'azure', 'github', 'gitlab', 'manual'
             ))
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Data classification validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE integration_evidence_items
             ADD CONSTRAINT ck_integration_evidence_classification
             CHECK (data_classification IN ('public', 'internal', 'confidential', 'restricted'))
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Retention policy validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE integration_evidence_items
             ADD CONSTRAINT ck_integration_evidence_retention
             CHECK (retention_policy IN ('standard', 'extended', 'permanent', 'minimal'))
-        """)
+        """
+        )
     except Exception:
         pass
 
     # 9. GENERATED POLICY CONSTRAINTS
     try:
         # Policy status validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE generated_policies
             ADD CONSTRAINT ck_generated_policy_status
             CHECK (status IN ('draft', 'reviewed', 'approved', 'implemented', 'deprecated'))
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Policy type validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE generated_policies
             ADD CONSTRAINT ck_generated_policy_type
             CHECK (policy_type IN ('comprehensive', 'specific', 'update', 'template'))
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Generation time validation (0.1 seconds to 1 hour)
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE generated_policies
             ADD CONSTRAINT ck_generated_policy_generation_time
             CHECK (generation_time_seconds >= 0.1 AND generation_time_seconds <= 3600)
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Word count validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE generated_policies
             ADD CONSTRAINT ck_generated_policy_word_count
             CHECK (word_count >= 0 AND word_count <= 100000)
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Compliance coverage validation (0-1 score)
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE generated_policies
             ADD CONSTRAINT ck_generated_policy_coverage
             CHECK (compliance_coverage >= 0.0 AND compliance_coverage <= 1.0)
-        """)
+        """
+        )
     except Exception:
         pass
 
     # 10. CHAT CONVERSATION CONSTRAINTS
     try:
         # Chat conversation status validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE chat_conversations
             ADD CONSTRAINT ck_chat_conversation_status_values
             CHECK (status IN ('active', 'archived', 'deleted'))
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
         # Title length validation
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE chat_conversations
             ADD CONSTRAINT ck_chat_conversation_title_length
             CHECK (length(title) >= 1 AND length(title) <= 255)
-        """)
+        """
+        )
     except Exception:
         pass
 
@@ -428,96 +502,116 @@ def upgrade() -> None:
 
     # Evidence items date logic
     try:
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE evidence_items
             ADD CONSTRAINT ck_evidence_item_collection_dates
             CHECK (collected_at IS NULL OR collected_at >= created_at)
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE evidence_items
             ADD CONSTRAINT ck_evidence_item_review_dates
             CHECK (reviewed_at IS NULL OR collected_at IS NULL OR reviewed_at >= collected_at)
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE evidence_items
             ADD CONSTRAINT ck_evidence_item_approval_dates
             CHECK (approved_at IS NULL OR reviewed_at IS NULL OR approved_at >= reviewed_at)
-        """)
+        """
+        )
     except Exception:
         pass
 
     # Assessment session date logic
     try:
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE assessment_sessions
             ADD CONSTRAINT ck_assessment_session_activity_dates
             CHECK (last_activity >= started_at)
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE assessment_sessions
             ADD CONSTRAINT ck_assessment_session_completion_dates
             CHECK (completed_at IS NULL OR completed_at >= started_at)
-        """)
+        """
+        )
     except Exception:
         pass
 
     # Evidence collection date logic
     try:
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE evidence_collections
             ADD CONSTRAINT ck_evidence_collection_dates
             CHECK (started_at IS NULL OR started_at >= created_at)
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE evidence_collections
             ADD CONSTRAINT ck_evidence_collection_completion_dates
             CHECK (completed_at IS NULL OR started_at IS NULL OR completed_at >= started_at)
-        """)
+        """
+        )
     except Exception:
         pass
 
     # Generated policy date logic
     try:
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE generated_policies
             ADD CONSTRAINT ck_generated_policy_review_dates
             CHECK (reviewed_at IS NULL OR reviewed_at >= generated_at)
-        """)
+        """
+        )
     except Exception:
         pass
 
     try:
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE generated_policies
             ADD CONSTRAINT ck_generated_policy_approval_dates
             CHECK (approved_at IS NULL OR reviewed_at IS NULL OR approved_at >= reviewed_at)
-        """)
+        """
+        )
     except Exception:
         pass
 
     # Chat conversation date logic
     try:
-        op.execute("""
+        op.execute(
+            """
             ALTER TABLE chat_conversations
             ADD CONSTRAINT ck_chat_conversation_update_dates
             CHECK (updated_at >= created_at)
-        """)
+        """
+        )
     except Exception:
         pass
 
@@ -622,7 +716,9 @@ def downgrade() -> None:
     for table_name, constraints in constraint_tables:
         for constraint_name in constraints:
             try:
-                op.execute(f"ALTER TABLE {table_name} DROP CONSTRAINT {constraint_name}")
+                op.execute(
+                    f"ALTER TABLE {table_name} DROP CONSTRAINT {constraint_name}"
+                )
             except Exception:
                 pass  # Constraint may not exist
 

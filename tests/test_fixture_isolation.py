@@ -5,7 +5,9 @@ Test fixture isolation to debug the test client issue.
 import pytest
 
 
-def test_authenticated_client_works(client, authenticated_headers, sample_business_profile):
+def test_authenticated_client_works(
+    client, authenticated_headers, sample_business_profile
+):
     """Test that authenticated client works properly."""
     print(f"Business profile ID: {sample_business_profile.id}")
     print(f"User ID: {sample_business_profile.user_id}")
@@ -36,7 +38,9 @@ def test_authenticated_client_works(client, authenticated_headers, sample_busine
         }
 
         response = client.post(
-            "/api/ai/assessments/gdpr/help", json=request_data, headers=authenticated_headers
+            "/api/ai/assessments/gdpr/help",
+            json=request_data,
+            headers=authenticated_headers,
         )
 
         print(f"Response status: {response.status_code}")
@@ -53,12 +57,16 @@ def test_unauthenticated_client_fails(unauthenticated_test_client):
         "framework_id": "gdpr",
     }
 
-    response = unauthenticated_test_client.post("/api/ai/assessments/gdpr/help", json=request_data)
+    response = unauthenticated_test_client.post(
+        "/api/ai/assessments/gdpr/help", json=request_data
+    )
     print(f"Response status: {response.status_code}")
     assert response.status_code == 401
 
 
-def test_authenticated_client_works_again(client, authenticated_headers, sample_business_profile):
+def test_authenticated_client_works_again(
+    client, authenticated_headers, sample_business_profile
+):
     """Test that authenticated client still works after unauthenticated test."""
     print(f"Business profile ID: {sample_business_profile.id}")
     print(f"User ID: {sample_business_profile.user_id}")

@@ -23,7 +23,7 @@ export function EvidenceUpload({ onUpload }: EvidenceUploadProps) {
     if (files.length > 0) {
       onUpload?.(files, {
         name: evidenceName,
-        description: description
+        description: description,
       });
     }
   };
@@ -65,15 +65,11 @@ export function EvidenceUpload({ onUpload }: EvidenceUploadProps) {
           type="file"
           multiple
           onChange={handleFileChange}
-          className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+          className="block w-full text-sm text-gray-500 file:mr-4 file:rounded-full file:border-0 file:bg-blue-50 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-blue-700 hover:file:bg-blue-100"
         />
       </div>
 
-      <Button
-        onClick={handleUpload}
-        disabled={files.length === 0}
-        tabIndex={0}
-      >
+      <Button onClick={handleUpload} disabled={files.length === 0} tabIndex={0}>
         Upload Files
       </Button>
     </div>

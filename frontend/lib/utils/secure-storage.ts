@@ -295,10 +295,9 @@ class SecureStorage {
       sessionStorage.removeItem('ruleiq_auth_token');
       sessionStorage.removeItem('ruleiq_refresh_token');
       sessionStorage.removeItem('ruleiq_session_expiry');
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
     } catch (error) {
       // TODO: Replace with proper logging
-
       // // TODO: Replace with proper logging
     }
   }

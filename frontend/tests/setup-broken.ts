@@ -683,7 +683,7 @@ vi.mock('@/lib/services/ai-service', () => ({
 
 // Mock network requests to prevent actual API calls
 global.fetch = vi.fn().mockImplementation((url, options = {}) => {
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
   return Promise.resolve({
     ok: true,
     status: 200,
@@ -768,7 +768,7 @@ vi.mock('@/lib/services/ai-service', () => ({
 
 // Mock network requests to prevent actual API calls
 global.fetch = vi.fn().mockImplementation((url, options = {}) => {
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
   return Promise.resolve({
     ok: true,
     status: 200,
@@ -1086,7 +1086,7 @@ vi.useFakeTimers();
 
 // EMERGENCY: Mock network requests and AI services
 global.fetch = vi.fn().mockImplementation((url, options = {}) => {
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
   return Promise.resolve({
     ok: true,
     status: 200,
@@ -1141,7 +1141,7 @@ import './mocks/form-submission-mock';
 
 // CRITICAL: Handle unhandled promise rejections in tests
 process.on('unhandledRejection', (reason, promise) => {
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
   // Don't fail tests for unhandled rejections during testing
 });
 

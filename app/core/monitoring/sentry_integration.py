@@ -20,7 +20,7 @@ logger = get_logger(__name__)
 
 class SentryConfig:
     """Sentry configuration."""
-    
+
     def __init__(
         self,
         dsn: Optional[str] = None,
@@ -31,7 +31,7 @@ class SentryConfig:
         profiles_sample_rate: float = 0.1,
         attach_stacktrace: bool = True,
         send_default_pii: bool = False,
-        debug: bool = False
+        debug: bool = False,
     ):
         """Initialize Sentry configuration."""
         self.dsn = dsn or os.getenv("SENTRY_DSN")
@@ -48,36 +48,45 @@ class SentryConfig:
 def setup_sentry(config: Optional[SentryConfig] = None) -> bool:
     """
     Setup Sentry error tracking and performance monitoring.
-    
+
     Args:
         config: Sentry configuration
-    
+
     Returns:
         True if Sentry was initialized successfully
     """
     if not config:
         config = SentryConfig()
-    
+
     if not config.dsn:
         logger.warning("Sentry DSN not configured, skipping Sentry initialization")
         return False
-    
+
     try:
         # Configure integrations
         integrations = [
             FastApiIntegration(
                 transaction_style="endpoint",
-                failed_request_status_codes=[400, 401, 403, 404, 405, 422, 429, 500, 502, 503, 504]
+                failed_request_status_codes=[
+                    400,
+                    401,
+                    403,
+                    404,
+                    405,
+                    422,
+                    429,
+                    500,
+                    502,
+                    503,
+                    504,
+                ],
             ),
             SqlalchemyIntegration(),
             RedisIntegration(),
             AioHttpIntegration(),
-            LoggingIntegration(
-                level=logging.INFO,
-                event_level=logging.ERROR
-            )
+            LoggingIntegration(level=logging.INFO, event_level=logging.ERROR),
         ]
-        
+
         # Initialize Sentry
         sentry_sdk.init(
             dsn=config.dsn,
@@ -91,102 +100,102 @@ def setup_sentry(config: Optional[SentryConfig] = None) -> bool:
             debug=config.debug,
             integrations=integrations,
             before_send=before_send_filter,
-            before_send_transaction=before_send_transaction_filter
+            before_send_transaction=before_send_transaction_filter,
         )
-        
+
         # Set additional tags
         sentry_sdk.set_tag("app", "ruleiq")
         sentry_sdk.set_tag("component", "backend")
-        
+
         logger.info(f"Sentry initialized for environment: {config.environment}")
         return True
-        
+
     except Exception as e:
         logger.error(f"Failed to initialize Sentry: {str(e)}")
         return False
 
 
-def before_send_filter(event: Dict[str, Any], hint: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+def before_send_filter(
+    event: Dict[str, Any], hint: Dict[str, Any]
+) -> Optional[Dict[str, Any]]:
     """
     Filter events before sending to Sentry.
-    
+
     Args:
         event: The event dictionary
         hint: Additional information about the event
-    
+
     Returns:
         The event or None to drop it
     """
     # Filter out certain errors
-    if 'exc_info' in hint:
-        exc_type, exc_value, tb = hint['exc_info']
-        
+    if "exc_info" in hint:
+        exc_type, exc_value, tb = hint["exc_info"]
+
         # Skip certain exception types
-        skip_exceptions = [
-            'KeyboardInterrupt',
-            'SystemExit',
-            'GeneratorExit'
-        ]
-        
+        skip_exceptions = ["KeyboardInterrupt", "SystemExit", "GeneratorExit"]
+
         if exc_type.__name__ in skip_exceptions:
             return None
-        
+
         # Skip 404 errors for certain paths
-        if hasattr(exc_value, 'status_code') and exc_value.status_code == 404:
-            if 'request' in event:
-                url = event['request'].get('url', '')
-                skip_paths = ['/favicon.ico', '/robots.txt', '/.well-known/']
+        if hasattr(exc_value, "status_code") and exc_value.status_code == 404:
+            if "request" in event:
+                url = event["request"].get("url", "")
+                skip_paths = ["/favicon.ico", "/robots.txt", "/.well-known/"]
                 if any(path in url for path in skip_paths):
                     return None
-    
+
     # Sanitize sensitive data
-    if 'request' in event:
+    if "request" in event:
         # Remove sensitive headers
-        if 'headers' in event['request']:
-            sensitive_headers = ['authorization', 'cookie', 'x-api-key', 'x-auth-token']
+        if "headers" in event["request"]:
+            sensitive_headers = ["authorization", "cookie", "x-api-key", "x-auth-token"]
             for header in sensitive_headers:
-                if header in event['request']['headers']:
-                    event['request']['headers'][header] = '[REDACTED]'
-        
+                if header in event["request"]["headers"]:
+                    event["request"]["headers"][header] = "[REDACTED]"
+
         # Remove sensitive query parameters
-        if 'query_string' in event['request']:
-            sensitive_params = ['token', 'api_key', 'secret', 'password']
-            query_string = event['request']['query_string']
+        if "query_string" in event["request"]:
+            sensitive_params = ["token", "api_key", "secret", "password"]
+            query_string = event["request"]["query_string"]
             for param in sensitive_params:
                 if param in query_string:
-                    event['request']['query_string'] = '[REDACTED]'
-    
+                    event["request"]["query_string"] = "[REDACTED]"
+
     return event
 
 
-def before_send_transaction_filter(event: Dict[str, Any], hint: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+def before_send_transaction_filter(
+    event: Dict[str, Any], hint: Dict[str, Any]
+) -> Optional[Dict[str, Any]]:
     """
     Filter transactions before sending to Sentry.
-    
+
     Args:
         event: The transaction event
         hint: Additional information
-    
+
     Returns:
         The event or None to drop it
     """
     # Skip health check transactions
-    if 'transaction' in event:
-        skip_transactions = ['/health', '/healthz', '/ready', '/metrics']
-        if any(path in event['transaction'] for path in skip_transactions):
+    if "transaction" in event:
+        skip_transactions = ["/health", "/healthz", "/ready", "/metrics"]
+        if any(path in event["transaction"] for path in skip_transactions):
             return None
-    
+
     return event
 
 
 def capture_exception(exception: Optional[Exception] = None, **kwargs) -> Optional[str]:
     """
     Capture an exception and send to Sentry.
-    
+
     Args:
         exception: The exception to capture
         **kwargs: Additional context
-    
+
     Returns:
         Event ID if sent successfully
     """
@@ -195,13 +204,13 @@ def capture_exception(exception: Optional[Exception] = None, **kwargs) -> Option
             # Add extra context
             for key, value in kwargs.items():
                 scope.set_extra(key, value)
-            
+
             # Capture the exception
             event_id = sentry_sdk.capture_exception(exception)
-            
+
             if event_id:
                 logger.debug(f"Exception sent to Sentry: {event_id}")
-            
+
             return event_id
     except Exception as e:
         logger.error(f"Failed to send exception to Sentry: {str(e)}")
@@ -211,12 +220,12 @@ def capture_exception(exception: Optional[Exception] = None, **kwargs) -> Option
 def capture_message(message: str, level: str = "info", **kwargs) -> Optional[str]:
     """
     Capture a message and send to Sentry.
-    
+
     Args:
         message: The message to capture
         level: Log level (debug, info, warning, error, fatal)
         **kwargs: Additional context
-    
+
     Returns:
         Event ID if sent successfully
     """
@@ -225,13 +234,13 @@ def capture_message(message: str, level: str = "info", **kwargs) -> Optional[str
             # Add extra context
             for key, value in kwargs.items():
                 scope.set_extra(key, value)
-            
+
             # Capture the message
             event_id = sentry_sdk.capture_message(message, level=level)
-            
+
             if event_id:
                 logger.debug(f"Message sent to Sentry: {event_id}")
-            
+
             return event_id
     except Exception as e:
         logger.error(f"Failed to send message to Sentry: {str(e)}")
@@ -243,11 +252,11 @@ def set_user_context(
     username: Optional[str] = None,
     email: Optional[str] = None,
     ip_address: Optional[str] = None,
-    **kwargs
+    **kwargs,
 ) -> None:
     """
     Set user context for Sentry.
-    
+
     Args:
         user_id: User ID
         username: Username
@@ -256,25 +265,25 @@ def set_user_context(
         **kwargs: Additional user data
     """
     user_data = {
-        'id': user_id,
-        'username': username,
-        'email': email,
-        'ip_address': ip_address
+        "id": user_id,
+        "username": username,
+        "email": email,
+        "ip_address": ip_address,
     }
-    
+
     # Add additional data
     user_data.update(kwargs)
-    
+
     # Remove None values
     user_data = {k: v for k, v in user_data.items() if v is not None}
-    
+
     sentry_sdk.set_user(user_data)
 
 
 def set_context(name: str, context: Dict[str, Any]) -> None:
     """
     Set additional context for Sentry.
-    
+
     Args:
         name: Context name
         context: Context data
@@ -285,7 +294,7 @@ def set_context(name: str, context: Dict[str, Any]) -> None:
 def set_tag(key: str, value: str) -> None:
     """
     Set a tag for Sentry.
-    
+
     Args:
         key: Tag key
         value: Tag value
@@ -297,11 +306,11 @@ def add_breadcrumb(
     message: str,
     category: Optional[str] = None,
     level: str = "info",
-    data: Optional[Dict[str, Any]] = None
+    data: Optional[Dict[str, Any]] = None,
 ) -> None:
     """
     Add a breadcrumb for Sentry.
-    
+
     Args:
         message: Breadcrumb message
         category: Category (e.g., 'auth', 'database')
@@ -309,10 +318,7 @@ def add_breadcrumb(
         data: Additional data
     """
     sentry_sdk.add_breadcrumb(
-        message=message,
-        category=category,
-        level=level,
-        data=data
+        message=message, category=category, level=level, data=data
     )
 
 
@@ -320,21 +326,17 @@ def add_breadcrumb(
 def sentry_transaction(operation: str, name: str, **kwargs):
     """
     Context manager for Sentry transactions.
-    
+
     Args:
         operation: Operation type (e.g., 'http', 'task')
         name: Transaction name
         **kwargs: Additional transaction data
-    
+
     Yields:
         Transaction object
     """
-    transaction = sentry_sdk.start_transaction(
-        op=operation,
-        name=name,
-        **kwargs
-    )
-    
+    transaction = sentry_sdk.start_transaction(op=operation, name=name, **kwargs)
+
     try:
         with sentry_sdk.configure_scope() as scope:
             scope.set_span(transaction)
@@ -352,19 +354,16 @@ def sentry_transaction(operation: str, name: str, **kwargs):
 def sentry_span(operation: str, description: str):
     """
     Context manager for Sentry spans.
-    
+
     Args:
         operation: Operation type
         description: Span description
-    
+
     Yields:
         Span object
     """
-    span = sentry_sdk.start_span(
-        op=operation,
-        description=description
-    )
-    
+    span = sentry_sdk.start_span(op=operation, description=description)
+
     try:
         yield span
     except Exception:

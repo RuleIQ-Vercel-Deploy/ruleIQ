@@ -15,59 +15,55 @@ from typing import Dict, List
 # Define route mapping corrections
 ROUTE_MAPPINGS = {
     # AI Assessment routes
-    '/api/v1/ai/assessments': '/api/v1/ai-assessments',
-    '/api/v1/ai/health': '/api/v1/ai-assessments/health',
-
+    "/api/v1/ai/assessments": "/api/v1/ai-assessments",
+    "/api/v1/ai/health": "/api/v1/ai-assessments/health",
     # AI Policy routes (these are correctly mounted at /api/v1/ai)
-    '/api/v1/ai/policies/generate': '/api/v1/ai/policies/generate',
-    '/api/v1/ai/policies/templates': '/api/v1/ai/policies/templates',
-
+    "/api/v1/ai/policies/generate": "/api/v1/ai/policies/generate",
+    "/api/v1/ai/policies/templates": "/api/v1/ai/policies/templates",
     # AI Cost Monitoring routes (correctly mounted at /api/v1/ai)
-    '/api/v1/ai/costs': '/api/v1/ai/costs',
-
+    "/api/v1/ai/costs": "/api/v1/ai/costs",
     # Chat routes (correctly mounted)
-    '/api/v1/chat/messages': '/api/v1/chat/messages',
-
+    "/api/v1/chat/messages": "/api/v1/chat/messages",
     # Compliance routes (need to verify exact endpoints)
-    '/api/v1/compliance/score': '/api/v1/compliance/score',
-    '/api/v1/compliance/check': '/api/v1/compliance/run-check',
-
+    "/api/v1/compliance/score": "/api/v1/compliance/score",
+    "/api/v1/compliance/check": "/api/v1/compliance/run-check",
     # Monitoring routes (correctly mounted)
-    '/api/v1/monitoring/health': '/api/v1/monitoring/health',
-    '/api/v1/monitoring/metrics': '/api/v1/monitoring/metrics',
-
+    "/api/v1/monitoring/health": "/api/v1/monitoring/health",
+    "/api/v1/monitoring/metrics": "/api/v1/monitoring/metrics",
     # Integrations routes (correctly mounted)
-    '/api/v1/integrations': '/api/v1/integrations',
-
+    "/api/v1/integrations": "/api/v1/integrations",
     # Reporting routes (correctly mounted)
-    '/api/v1/reporting/reports': '/api/v1/reporting/reports',
+    "/api/v1/reporting/reports": "/api/v1/reporting/reports",
 }
+
 
 def find_api_service_files() -> List[Path]:
     """Find all API service files in the frontend."""
-    frontend_path = Path('frontend/lib/api')
+    frontend_path = Path("frontend/lib/api")
     if not frontend_path.exists():
         print(f"❌ Frontend API path not found: {frontend_path}")
         return []
 
-    service_files = list(frontend_path.glob('*.ts'))
+    service_files = list(frontend_path.glob("*.ts"))
     print(f"📁 Found {len(service_files)} API service files:")
     for f in service_files:
         print(f"   - {f}")
     return service_files
 
+
 def find_hook_files() -> List[Path]:
     """Find all TanStack Query hook files."""
-    hooks_path = Path('frontend/lib/tanstack-query/hooks')
+    hooks_path = Path("frontend/lib/tanstack-query/hooks")
     if not hooks_path.exists():
         print(f"❌ Hooks path not found: {hooks_path}")
         return []
 
-    hook_files = list(hooks_path.glob('use-*.ts'))
+    hook_files = list(hooks_path.glob("use-*.ts"))
     print(f"📁 Found {len(hook_files)} hook files:")
     for f in hook_files:
         print(f"   - {f}")
     return hook_files
+
 
 def update_api_routes_in_file(file_path: Path, route_mappings: Dict[str, str]) -> bool:
     """Update API routes in a single file."""
@@ -106,9 +102,10 @@ def update_api_routes_in_file(file_path: Path, route_mappings: Dict[str, str]) -
         print(f"❌ Error updating {file_path}: {e}")
         return False
 
+
 def update_debug_analysis_tool():
     """Update the debug analysis tool with correct route mappings."""
-    debug_file = Path('debug_api_analysis.py')
+    debug_file = Path("debug_api_analysis.py")
     if not debug_file.exists():
         print("❌ debug_api_analysis.py not found")
         return False
@@ -143,6 +140,7 @@ def update_debug_analysis_tool():
     except Exception as e:
         print(f"❌ Error updating debug analysis: {e}")
         return False
+
 
 def create_auth_test_script():
     """Create a script to test endpoints with proper authentication."""
@@ -288,10 +286,11 @@ if __name__ == "__main__":
     asyncio.run(main())
 '''
 
-    script_path = Path('test_auth_api.py')
+    script_path = Path("test_auth_api.py")
     script_path.write_text(script_content)
     script_path.chmod(0o755)
     print("✅ Created authenticated API test script: test_auth_api.py")
+
 
 def main():
     """Main execution function."""
@@ -333,6 +332,7 @@ def main():
     print("1. Run: python test_auth_api.py (to test with authentication)")
     print("2. Run: python debug_api_analysis.py (to verify fixed routes)")
     print("3. Test frontend compliance wizard integration")
+
 
 if __name__ == "__main__":
     main()

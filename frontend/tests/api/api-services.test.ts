@@ -1,9 +1,9 @@
-import { setupAuthMocks } from "../mocks/auth-setup";
-import "../mocks/api-client-setup";
-import { setupAuthMocks } from "../mocks/auth-setup";
+import { setupAuthMocks } from '../mocks/auth-setup';
+import '../mocks/api-client-setup';
+import { setupAuthMocks } from '../mocks/auth-setup';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-    setupAuthMocks();
-    setupAuthMocks();
+setupAuthMocks();
+setupAuthMocks();
 
 // Mock fetch globally
 const mockFetch = vi.fn();

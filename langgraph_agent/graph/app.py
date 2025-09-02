@@ -17,7 +17,7 @@ from ..core.constants import (
     GRAPH_NODES,
     SLO_P95_LATENCY_MS,
     DATABASE_CONFIG,
-    AUTONOMY_LEVELS
+    AUTONOMY_LEVELS,
 )
 from ..core.models import GraphMessage, SafeFallbackResponse
 
@@ -26,6 +26,7 @@ logger = logging.getLogger(__name__)
 
 
 # Minimal Node Functions (to be expanded in later chunks)
+
 
 async def router_node(state: ComplianceAgentState) -> ComplianceAgentState:
     """
@@ -48,7 +49,9 @@ async def router_node(state: ComplianceAgentState) -> ComplianceAgentState:
     # Basic keyword-based routing
     if any(word in content_lower for word in ["gdpr", "privacy", "data protection"]):
         state["next_node"] = GRAPH_NODES["compliance_analyzer"]
-    elif any(word in content_lower for word in ["obligation", "requirement", "must do"]):
+    elif any(
+        word in content_lower for word in ["obligation", "requirement", "must do"]
+    ):
         state["next_node"] = GRAPH_NODES["obligation_finder"]
     elif any(word in content_lower for word in ["evidence", "document", "proof"]):
         state["next_node"] = GRAPH_NODES["evidence_collector"]
@@ -74,7 +77,7 @@ async def compliance_analyzer_node(state: ComplianceAgentState) -> ComplianceAge
     response_msg = GraphMessage(
         role="assistant",
         content="I'm analyzing your compliance requirements. Based on your inquiry, I'll help identify applicable frameworks and obligations.",
-        timestamp=datetime.utcnow()
+        timestamp=datetime.utcnow(),
     )
 
     state["messages"].append(response_msg)
@@ -95,7 +98,7 @@ async def obligation_finder_node(state: ComplianceAgentState) -> ComplianceAgent
     response_msg = GraphMessage(
         role="assistant",
         content="I'm searching for specific compliance obligations relevant to your business. This will include requirements from applicable frameworks.",
-        timestamp=datetime.utcnow()
+        timestamp=datetime.utcnow(),
     )
 
     state["messages"].append(response_msg)
@@ -116,7 +119,7 @@ async def evidence_collector_node(state: ComplianceAgentState) -> ComplianceAgen
     response_msg = GraphMessage(
         role="assistant",
         content="I'm helping you collect and organize compliance evidence. This includes policies, procedures, and documentation.",
-        timestamp=datetime.utcnow()
+        timestamp=datetime.utcnow(),
     )
 
     state["messages"].append(response_msg)
@@ -137,7 +140,7 @@ async def legal_reviewer_node(state: ComplianceAgentState) -> ComplianceAgentSta
     response_msg = GraphMessage(
         role="assistant",
         content="I'm preparing materials for legal review. This ensures compliance decisions meet legal standards.",
-        timestamp=datetime.utcnow()
+        timestamp=datetime.utcnow(),
     )
 
     state["messages"].append(response_msg)
@@ -149,7 +152,7 @@ async def legal_reviewer_node(state: ComplianceAgentState) -> ComplianceAgentSta
 def create_graph() -> StateGraph:
     """
     Create the LangGraph StateGraph with minimal node structure.
-    
+
     Returns:
         Configured StateGraph ready for compilation
     """
@@ -178,8 +181,8 @@ def create_graph() -> StateGraph:
             GRAPH_NODES["obligation_finder"]: GRAPH_NODES["obligation_finder"],
             GRAPH_NODES["evidence_collector"]: GRAPH_NODES["evidence_collector"],
             GRAPH_NODES["legal_reviewer"]: GRAPH_NODES["legal_reviewer"],
-            "__end__": END
-        }
+            "__end__": END,
+        },
     )
 
     # All specialized nodes end the conversation for now
@@ -194,16 +197,15 @@ def create_graph() -> StateGraph:
 def create_checkpointer(database_url: str) -> PostgresSaver:
     """
     Create PostgreSQL checkpointer for state persistence.
-    
+
     Args:
         database_url: PostgreSQL connection string
-        
+
     Returns:
         Configured PostgresSaver
     """
     checkpointer = PostgresSaver.from_conn_string(
-        conn_string=database_url,
-        **DATABASE_CONFIG
+        conn_string=database_url, **DATABASE_CONFIG
     )
     return checkpointer
 
@@ -211,16 +213,16 @@ def create_checkpointer(database_url: str) -> PostgresSaver:
 def compile_graph(
     database_url: str,
     interrupt_before: Optional[list] = None,
-    interrupt_after: Optional[list] = None
+    interrupt_after: Optional[list] = None,
 ) -> Any:
     """
     Compile the LangGraph with PostgreSQL checkpointer.
-    
+
     Args:
         database_url: PostgreSQL connection string
         interrupt_before: Optional list of nodes to interrupt before
         interrupt_after: Optional list of nodes to interrupt after
-        
+
     Returns:
         Compiled graph ready for execution
     """
@@ -229,9 +231,7 @@ def compile_graph(
     checkpointer = create_checkpointer(database_url)
 
     # Set up interrupts for human review
-    compile_kwargs = {
-        "checkpointer": checkpointer
-    }
+    compile_kwargs = {"checkpointer": checkpointer}
 
     if interrupt_before:
         compile_kwargs["interrupt_before"] = interrupt_before
@@ -252,11 +252,11 @@ async def invoke_graph(
     user_input: str,
     thread_id: Optional[str] = None,
     user_id: Optional[UUID] = None,
-    autonomy_level: int = AUTONOMY_LEVELS["trusted_advisor"]
+    autonomy_level: int = AUTONOMY_LEVELS["trusted_advisor"],
 ) -> Dict[str, Any]:
     """
     Invoke the compiled graph with a new user input.
-    
+
     Args:
         compiled_graph: Compiled LangGraph
         company_id: Company UUID for tenancy
@@ -264,7 +264,7 @@ async def invoke_graph(
         thread_id: Optional thread ID for conversation continuity
         user_id: Optional user ID for audit trails
         autonomy_level: Agent autonomy level
-        
+
     Returns:
         Final state after graph execution
     """
@@ -278,15 +278,12 @@ async def invoke_graph(
         user_input=user_input,
         thread_id=thread_id,
         user_id=user_id,
-        autonomy_level=autonomy_level
+        autonomy_level=autonomy_level,
     )
 
     # Create runnable config with thread ID for checkpointing
     config = RunnableConfig(
-        configurable={
-            "thread_id": thread_id,
-            "company_id": str(company_id)
-        }
+        configurable={"thread_id": thread_id, "company_id": str(company_id)}
     )
 
     # Track execution time for SLO monitoring
@@ -319,7 +316,7 @@ async def invoke_graph(
             error_message=f"Graph execution failed: {str(e)}",
             error_details={"exception_type": type(e).__name__},
             company_id=company_id,
-            thread_id=thread_id
+            thread_id=thread_id,
         )
 
         # Add error to state
@@ -335,11 +332,11 @@ async def stream_graph(
     user_input: str,
     thread_id: Optional[str] = None,
     user_id: Optional[UUID] = None,
-    autonomy_level: int = AUTONOMY_LEVELS["trusted_advisor"]
+    autonomy_level: int = AUTONOMY_LEVELS["trusted_advisor"],
 ):
     """
     Stream graph execution for real-time updates.
-    
+
     Args:
         compiled_graph: Compiled LangGraph
         company_id: Company UUID for tenancy
@@ -347,7 +344,7 @@ async def stream_graph(
         thread_id: Optional thread ID for conversation continuity
         user_id: Optional user ID for audit trails
         autonomy_level: Agent autonomy level
-        
+
     Yields:
         State updates during graph execution
     """
@@ -361,15 +358,12 @@ async def stream_graph(
         user_input=user_input,
         thread_id=thread_id,
         user_id=user_id,
-        autonomy_level=autonomy_level
+        autonomy_level=autonomy_level,
     )
 
     # Create runnable config
     config = RunnableConfig(
-        configurable={
-            "thread_id": thread_id,
-            "company_id": str(company_id)
-        }
+        configurable={"thread_id": thread_id, "company_id": str(company_id)}
     )
 
     try:
@@ -387,7 +381,7 @@ async def stream_graph(
             error_message=f"Graph streaming failed: {str(e)}",
             error_details={"exception_type": type(e).__name__},
             company_id=company_id,
-            thread_id=thread_id
+            thread_id=thread_id,
         )
 
         yield {"error": error_response}
@@ -400,10 +394,10 @@ _compiled_graph = None
 def get_compiled_graph(database_url: str) -> Any:
     """
     Get or create the compiled graph instance.
-    
+
     Args:
         database_url: PostgreSQL connection string
-        
+
     Returns:
         Compiled graph instance
     """

@@ -18,7 +18,6 @@ import { ShimmerButton } from '@/components/magicui/shimmer-button';
 import { EnhancedMetricCard } from '@/components/dashboard/enhanced-metric-card';
 import { NumberTicker } from '@/components/magicui/number-ticker';
 
-
 export default function MarketingPage() {
   const typewriterWords = [
     { text: 'For UK SMBs', className: 'text-teal-600' },
@@ -124,70 +123,70 @@ export default function MarketingPage() {
       <section className="relative h-screen w-full overflow-hidden">
         {/* Clean background for optimal text readability */}
         <div className="absolute inset-0 bg-gradient-to-br from-white via-teal-50/10 to-white" />
-        
+
         <div className="relative z-20 flex h-full flex-col items-center justify-center px-4">
           <div className="space-y-8 text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="text-sm font-semibold text-teal-600 uppercase tracking-widest mb-4"
+              transition={{ duration: 0.8, ease: 'easeOut' }}
+              className="mb-4 text-sm font-semibold uppercase tracking-widest text-teal-600"
             >
               AI-Powered Compliance Platform
             </motion.div>
-            
+
             <TextEffect
               per="word"
               preset="fade-in-blur"
-              className="text-5xl font-bold md:text-7xl lg:text-8xl leading-tight text-foreground"
+              className="text-5xl font-bold leading-tight text-foreground md:text-7xl lg:text-8xl"
             >
               Automate Compliance, Eliminate Risk
             </TextEffect>
-            
+
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="text-xl md:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed"
+              className="mx-auto max-w-4xl text-xl leading-relaxed text-muted-foreground md:text-2xl"
             >
-              Transform your compliance workflow with intelligent automation. 
-              Built specifically for UK SMBs navigating ISO 27001, GDPR, and SOC 2.
+              Transform your compliance workflow with intelligent automation. Built specifically for
+              UK SMBs navigating ISO 27001, GDPR, and SOC 2.
             </motion.p>
-            
+
             <TypewriterEffect words={typewriterWords} />
             <div className="relative flex items-center justify-center space-x-4">
               <ShimmerButton
-                className="z-10 bg-teal-600 text-lg px-8 py-4 h-auto rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group"
+                className="group z-10 h-auto transform rounded-xl bg-teal-600 px-8 py-4 text-lg shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
                 shimmerColor="#4FD1C5"
                 background="linear-gradient(135deg, #2C7A7B 0%, #319795 100%)"
               >
-                <span className="flex items-center gap-2 text-white font-semibold">
+                <span className="flex items-center gap-2 font-semibold text-white">
                   Start Free Trial
                   <motion.span
-                    className="group-hover:translate-x-1 transition-transform duration-200"
+                    className="transition-transform duration-200 group-hover:translate-x-1"
                     initial={{ x: 0 }}
                     animate={{ x: [0, 3, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                   >
                     →
                   </motion.span>
                 </span>
               </ShimmerButton>
-              <Button 
-                variant="outline" 
-                size="lg" 
-                className="z-10 border-2 border-teal-600 text-teal-600 hover:bg-teal-50 hover:border-teal-700 text-lg px-8 py-4 h-auto rounded-xl transition-all duration-300"
+              <Button
+                variant="outline"
+                size="lg"
+                className="z-10 h-auto rounded-xl border-2 border-teal-600 px-8 py-4 text-lg text-teal-600 transition-all duration-300 hover:border-teal-700 hover:bg-teal-50"
               >
                 Watch 2-min Demo
               </Button>
             </div>
-            
+
             {/* Trust indicators */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.9 }}
-              className="text-sm text-muted-foreground font-medium"
+              className="text-sm font-medium text-muted-foreground"
             >
               No credit card required • 14-day free trial • Setup in 5 minutes
             </motion.div>
@@ -228,18 +227,18 @@ export default function MarketingPage() {
       </section>
 
       {/* Metrics Section */}
-      <section className="py-20 bg-gradient-to-r from-teal-50 to-white">
+      <section className="bg-gradient-to-r from-teal-50 to-white py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-neutral-900 mb-4">
+          <div className="mb-12 text-center">
+            <h2 className="mb-4 text-3xl font-bold text-neutral-900">
               Trusted by Growing Businesses
             </h2>
-            <p className="text-neutral-600 max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-neutral-600">
               Join hundreds of UK SMBs who have transformed their compliance operations with ruleIQ
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+          <div className="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-4">
             <EnhancedMetricCard
               title="Active Users"
               value={500}
@@ -292,9 +291,9 @@ export default function MarketingPage() {
               transition={{ duration: 0.5, delay: i * 0.1 }}
               viewport={{ once: true }}
             >
-              <Card className="p-6 text-center transition-shadow hover:shadow-lg bg-white border border-teal-100 hover:border-teal-300">
+              <Card className="border border-teal-100 bg-white p-6 text-center transition-shadow hover:border-teal-300 hover:shadow-lg">
                 <CardContent className="space-y-4">
-                  <div className="mx-auto w-16 h-16 bg-teal-600 rounded-lg flex items-center justify-center mb-4">
+                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-teal-600">
                     {feature.icon}
                   </div>
                   <h3 className="text-xl font-bold">{feature.title}</h3>
@@ -360,9 +359,9 @@ export default function MarketingPage() {
                 viewport={{ once: true }}
                 className="text-center"
               >
-                <Card className="p-6 transition-shadow hover:shadow-lg bg-white border border-teal-100 hover:border-teal-300">
+                <Card className="border border-teal-100 bg-white p-6 transition-shadow hover:border-teal-300 hover:shadow-lg">
                   <CardContent className="space-y-4">
-                    <div className="w-12 h-12 bg-teal-600 rounded-lg flex items-center justify-center mb-4">
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-teal-600">
                       {item.icon}
                     </div>
                     <h3 className="text-xl font-bold">{item.title}</h3>
@@ -376,7 +375,7 @@ export default function MarketingPage() {
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="relative py-20 bg-gray-50">
+      <section id="testimonials" className="relative bg-gray-50 py-20">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
             <h2 className="mb-4 text-2xl font-bold md:text-4xl lg:text-7xl">
@@ -433,11 +432,11 @@ export default function MarketingPage() {
                 className="border-teal-300 bg-background/50 focus:border-teal-600 focus:ring-teal-600"
               />
               <ShimmerButton
-                className="w-full sm:w-auto bg-teal-600 hover:bg-teal-700"
+                className="w-full bg-teal-600 hover:bg-teal-700 sm:w-auto"
                 shimmerColor="#4FD1C5"
                 background="linear-gradient(135deg, #2C7A7B 0%, #319795 100%)"
               >
-                <span className="text-white font-semibold">Get Started Free</span>
+                <span className="font-semibold text-white">Get Started Free</span>
               </ShimmerButton>
             </div>
             <p className="mt-2 text-xs text-muted-foreground">No credit card required.</p>

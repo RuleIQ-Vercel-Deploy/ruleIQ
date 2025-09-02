@@ -1,7 +1,16 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import Boolean, Column, DateTime, Float, ForeignKey, Integer, String, Text
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    Float,
+    ForeignKey,
+    Integer,
+    String,
+    Text,
+)
 from sqlalchemy.dialects.postgresql import JSONB as PG_JSONB, UUID as PG_UUID
 from sqlalchemy.orm import relationship
 
@@ -25,16 +34,24 @@ class EvidenceItem(Base):
 
     # Evidence metadata
     evidence_name = Column(String, nullable=False)
-    evidence_type = Column(String, nullable=False)  # Policy, Procedure, Log, Certificate, etc.
-    control_reference = Column(String, nullable=False)  # Which control this evidence supports
+    evidence_type = Column(
+        String, nullable=False
+    )  # Policy, Procedure, Log, Certificate, etc.
+    control_reference = Column(
+        String, nullable=False
+    )  # Which control this evidence supports
 
     # Requirements
     description = Column(Text, nullable=False)
     required_for_audit = Column(Boolean, default=True)
-    collection_frequency = Column(String, default="once")  # once, monthly, quarterly, annually
+    collection_frequency = Column(
+        String, default="once"
+    )  # once, monthly, quarterly, annually
 
     # Collection details
-    collection_method = Column(String, default="manual")  # manual, automated, semi_automated
+    collection_method = Column(
+        String, default="manual"
+    )  # manual, automated, semi_automated
     automation_source = Column(String, nullable=True)  # AWS, Office365, GitHub, etc.
     automation_guidance = Column(Text, default="")
 
@@ -100,7 +117,9 @@ class EvidenceItem(Base):
             "collection_notes": self.collection_notes,
             "review_notes": self.review_notes,
             "collected_by": self.collected_by,
-            "collected_at": self.collected_at.isoformat() if self.collected_at else None,
+            "collected_at": (
+                self.collected_at.isoformat() if self.collected_at else None
+            ),
             "reviewed_by": self.reviewed_by,
             "reviewed_at": self.reviewed_at.isoformat() if self.reviewed_at else None,
             "approved_by": self.approved_by,

@@ -31,6 +31,7 @@ logger = logging.getLogger(__name__)
 
 class MemoryType(Enum):
     """Types of memory in the compliance system"""
+
     CONVERSATION = "conversation"
     KNOWLEDGE_GRAPH = "knowledge_graph"
     TEMPORAL_PATTERN = "temporal_pattern"
@@ -43,6 +44,7 @@ class MemoryType(Enum):
 @dataclass
 class MemoryNode:
     """Individual memory node structure"""
+
     id: str
     memory_type: MemoryType
     content: Dict[str, Any]
@@ -59,6 +61,7 @@ class MemoryNode:
 @dataclass
 class MemoryCluster:
     """Cluster of related memories"""
+
     cluster_id: str
     theme: str
     memory_ids: List[str]
@@ -71,6 +74,7 @@ class MemoryCluster:
 @dataclass
 class MemoryRetrievalResult:
     """Result of memory retrieval operation"""
+
     query_id: str
     retrieved_memories: List[MemoryNode]
     cluster_context: List[MemoryCluster]
@@ -95,7 +99,7 @@ class ComplianceMemoryManager:
         user_query: str,
         agent_response: str,
         compliance_context: Dict[str, Any],
-        importance_score: float = 0.5
+        importance_score: float = 0.5,
     ) -> str:
         """Store conversation memory with compliance context"""
 
@@ -117,7 +121,7 @@ class ComplianceMemoryManager:
                 "compliance_context": compliance_context,
                 "query_category": compliance_context.get("query_category"),
                 "regulations_mentioned": compliance_context.get("regulations", []),
-                "risk_level": compliance_context.get("risk_level", "medium")
+                "risk_level": compliance_context.get("risk_level", "medium"),
             },
             timestamp=datetime.utcnow(),
             importance_score=importance_score,
@@ -125,7 +129,7 @@ class ComplianceMemoryManager:
             last_accessed=datetime.utcnow(),
             tags=tags,
             related_entities=related_entities,
-            confidence_score=0.9
+            confidence_score=0.9,
         )
 
         # Store in memory
@@ -144,13 +148,12 @@ class ComplianceMemoryManager:
         self,
         graph_query_result: Dict[str, Any],
         query_category: QueryCategory,
-        importance_score: float = 0.8
+        importance_score: float = 0.8,
     ) -> str:
         """Store knowledge graph query results as structured memory"""
 
         memory_id = self._generate_memory_id(
-            str(graph_query_result),
-            query_category.value
+            str(graph_query_result), query_category.value
         )
 
         # Extract key insights from graph results
@@ -164,7 +167,7 @@ class ComplianceMemoryManager:
                 "graph_data": graph_query_result.get("data", []),
                 "metadata": graph_query_result.get("metadata", {}),
                 "insights": insights,
-                "confidence_score": graph_query_result.get("confidence_score", 0.8)
+                "confidence_score": graph_query_result.get("confidence_score", 0.8),
             },
             timestamp=datetime.utcnow(),
             importance_score=importance_score,
@@ -172,7 +175,7 @@ class ComplianceMemoryManager:
             last_accessed=datetime.utcnow(),
             tags=[query_category.value, "graph_analysis", "structured_knowledge"],
             related_entities=self._extract_entities_from_graph_data(graph_query_result),
-            confidence_score=graph_query_result.get("confidence_score", 0.8)
+            confidence_score=graph_query_result.get("confidence_score", 0.8),
         )
 
         self.memory_store[memory_id] = memory_node
@@ -183,10 +186,7 @@ class ComplianceMemoryManager:
         return memory_id
 
     async def store_temporal_pattern_memory(
-        self,
-        pattern_data: Dict[str, Any],
-        pattern_type: str,
-        confidence_score: float
+        self, pattern_data: Dict[str, Any], pattern_type: str, confidence_score: float
     ) -> str:
         """Store temporal compliance patterns"""
 
@@ -201,7 +201,7 @@ class ComplianceMemoryManager:
                 "time_range": pattern_data.get("time_range"),
                 "trend_direction": pattern_data.get("trend_direction"),
                 "significance_level": pattern_data.get("significance_level"),
-                "prediction_horizon": pattern_data.get("prediction_horizon")
+                "prediction_horizon": pattern_data.get("prediction_horizon"),
             },
             timestamp=datetime.utcnow(),
             importance_score=0.7,
@@ -209,7 +209,7 @@ class ComplianceMemoryManager:
             last_accessed=datetime.utcnow(),
             tags=["temporal", "pattern", pattern_type, "predictive"],
             related_entities=pattern_data.get("related_entities", []),
-            confidence_score=confidence_score
+            confidence_score=confidence_score,
         )
 
         self.memory_store[memory_id] = memory_node
@@ -224,7 +224,7 @@ class ComplianceMemoryManager:
         query: str,
         context: Dict[str, Any],
         max_memories: int = 10,
-        relevance_threshold: float = 0.5
+        relevance_threshold: float = 0.5,
     ) -> MemoryRetrievalResult:
         """Retrieve contextually relevant memories for compliance analysis"""
 
@@ -276,9 +276,7 @@ class ComplianceMemoryManager:
 
         # Sort by relevance
         sorted_pairs = sorted(
-            zip(relevant_memories, relevance_scores),
-            key=lambda x: x[1],
-            reverse=True
+            zip(relevant_memories, relevance_scores), key=lambda x: x[1], reverse=True
         )
 
         if sorted_pairs:
@@ -298,12 +296,11 @@ class ComplianceMemoryManager:
             relevance_scores=relevance_scores,
             total_memories_searched=len(all_candidate_memories),
             retrieval_strategy="multi_strategy_hybrid",
-            confidence_score=np.mean(relevance_scores) if relevance_scores else 0.0
+            confidence_score=np.mean(relevance_scores) if relevance_scores else 0.0,
         )
 
     async def consolidate_compliance_knowledge(
-        self,
-        time_window_days: int = 30
+        self, time_window_days: int = 30
     ) -> Dict[str, Any]:
         """Consolidate compliance knowledge from recent memories"""
 
@@ -311,7 +308,8 @@ class ComplianceMemoryManager:
 
         # Get recent memories
         recent_memories = [
-            memory for memory in self.memory_store.values()
+            memory
+            for memory in self.memory_store.values()
             if memory.timestamp >= cutoff_date
         ]
 
@@ -331,11 +329,13 @@ class ComplianceMemoryManager:
                         domain_knowledge[domain] = {
                             "memories": [],
                             "risk_levels": [],
-                            "recent_queries": []
+                            "recent_queries": [],
                         }
                     domain_knowledge[domain]["memories"].append(memory.id)
                     if "risk_level" in content:
-                        domain_knowledge[domain]["risk_levels"].append(content["risk_level"])
+                        domain_knowledge[domain]["risk_levels"].append(
+                            content["risk_level"]
+                        )
 
             # Extract regulation insights
             regulations = content.get("regulations_mentioned", [])
@@ -344,7 +344,7 @@ class ComplianceMemoryManager:
                     regulation_insights[regulation] = {
                         "mention_count": 0,
                         "contexts": [],
-                        "risk_assessments": []
+                        "risk_assessments": [],
                     }
                 regulation_insights[regulation]["mention_count"] += 1
                 regulation_insights[regulation]["contexts"].append(memory.id)
@@ -362,21 +362,23 @@ class ComplianceMemoryManager:
             "consolidation_period": {
                 "start_date": cutoff_date.isoformat(),
                 "end_date": datetime.utcnow().isoformat(),
-                "memories_analyzed": len(recent_memories)
+                "memories_analyzed": len(recent_memories),
             },
             "domain_analysis": self._analyze_domain_knowledge(domain_knowledge),
-            "regulation_insights": self._analyze_regulation_insights(regulation_insights),
+            "regulation_insights": self._analyze_regulation_insights(
+                regulation_insights
+            ),
             "risk_pattern_analysis": self._analyze_risk_patterns(risk_patterns),
             "trending_topics": self._identify_trending_topics(recent_memories),
             "knowledge_gaps": self._identify_knowledge_gaps(recent_memories),
-            "consolidation_score": self._calculate_consolidation_score(recent_memories)
+            "consolidation_score": self._calculate_consolidation_score(recent_memories),
         }
 
         # Store consolidation as knowledge graph memory
         await self.store_knowledge_graph_memory(
             consolidation_result,
             QueryCategory.REGULATORY_COVERAGE,
-            importance_score=0.9
+            importance_score=0.9,
         )
 
         logger.info(f"Consolidated knowledge from {len(recent_memories)} memories")
@@ -385,7 +387,7 @@ class ComplianceMemoryManager:
     async def prune_old_memories(
         self,
         max_age_days: Optional[int] = None,
-        min_importance_score: Optional[float] = None
+        min_importance_score: Optional[float] = None,
     ) -> Dict[str, int]:
         """Prune old and low-importance memories"""
 
@@ -404,14 +406,19 @@ class ComplianceMemoryManager:
                 should_remove = True
 
             # Importance-based pruning (but keep recent memories)
-            elif (memory.importance_score < min_importance and
-                  memory.access_count < 2 and
-                  memory.timestamp < datetime.utcnow() - timedelta(days=7)):
+            elif (
+                memory.importance_score < min_importance
+                and memory.access_count < 2
+                and memory.timestamp < datetime.utcnow() - timedelta(days=7)
+            ):
                 should_remove = True
 
             # Never remove critical compliance memories
-            if (memory.memory_type in [MemoryType.COMPLIANCE_RULE, MemoryType.REGULATORY_CHANGE] or
-                memory.importance_score > 0.8):
+            if (
+                memory.memory_type
+                in [MemoryType.COMPLIANCE_RULE, MemoryType.REGULATORY_CHANGE]
+                or memory.importance_score > 0.8
+            ):
                 should_remove = False
 
             if should_remove:
@@ -441,8 +448,8 @@ class ComplianceMemoryManager:
             "remaining_memories": len(self.memory_store),
             "pruning_criteria": {
                 "max_age_days": max_age,
-                "min_importance_score": min_importance
-            }
+                "min_importance_score": min_importance,
+            },
         }
 
         logger.info(f"Pruned {len(memories_to_remove)} memories from store")
@@ -476,10 +483,7 @@ class ComplianceMemoryManager:
         return list(set(entities))  # Remove duplicates
 
     def _generate_tags(
-        self,
-        user_query: str,
-        agent_response: str,
-        context: Dict[str, Any]
+        self, user_query: str, agent_response: str, context: Dict[str, Any]
     ) -> List[str]:
         """Generate tags for memory indexing"""
         tags = []
@@ -506,9 +510,21 @@ class ComplianceMemoryManager:
         """Extract key terms from text for tagging"""
         # Simple keyword extraction - in production, use NLP
         compliance_keywords = [
-            "compliance", "regulation", "risk", "audit", "control",
-            "gdpr", "aml", "kyc", "dora", "mifid", "requirement",
-            "penalty", "enforcement", "jurisdiction", "assessment"
+            "compliance",
+            "regulation",
+            "risk",
+            "audit",
+            "control",
+            "gdpr",
+            "aml",
+            "kyc",
+            "dora",
+            "mifid",
+            "requirement",
+            "penalty",
+            "enforcement",
+            "jurisdiction",
+            "assessment",
         ]
 
         text_lower = text.lower()
@@ -535,17 +551,19 @@ class ComplianceMemoryManager:
                 centroid_embedding=[],
                 importance_score=0.0,
                 created_at=datetime.utcnow(),
-                last_updated=datetime.utcnow()
+                last_updated=datetime.utcnow(),
             )
 
         cluster = self.clusters[cluster_key]
         cluster.memory_ids.append(memory_node.id)
         cluster.last_updated = datetime.utcnow()
-        cluster.importance_score = np.mean([
-            self.memory_store[mid].importance_score
-            for mid in cluster.memory_ids
-            if mid in self.memory_store
-        ])
+        cluster.importance_score = np.mean(
+            [
+                self.memory_store[mid].importance_score
+                for mid in cluster.memory_ids
+                if mid in self.memory_store
+            ]
+        )
 
     async def _persist_memory_to_graph(self, memory_node: MemoryNode) -> None:
         """Persist memory to Neo4j graph"""
@@ -563,29 +581,34 @@ class ComplianceMemoryManager:
         })
         """
 
-        await self.neo4j.execute_query(query, {
-            "id": memory_node.id,
-            "memory_type": memory_node.memory_type.value,
-            "content": json.dumps(memory_node.content),
-            "timestamp": memory_node.timestamp.isoformat(),
-            "importance_score": memory_node.importance_score,
-            "access_count": memory_node.access_count,
-            "tags": memory_node.tags,
-            "related_entities": memory_node.related_entities,
-            "confidence_score": memory_node.confidence_score
-        })
+        await self.neo4j.execute_query(
+            query,
+            {
+                "id": memory_node.id,
+                "memory_type": memory_node.memory_type.value,
+                "content": json.dumps(memory_node.content),
+                "timestamp": memory_node.timestamp.isoformat(),
+                "importance_score": memory_node.importance_score,
+                "access_count": memory_node.access_count,
+                "tags": memory_node.tags,
+                "related_entities": memory_node.related_entities,
+                "confidence_score": memory_node.confidence_score,
+            },
+        )
 
     async def _retrieve_by_entities(self, entities: List[str]) -> List[str]:
         """Retrieve memories by related entities"""
         return [
-            memory_id for memory_id, memory in self.memory_store.items()
+            memory_id
+            for memory_id, memory in self.memory_store.items()
             if any(entity in memory.related_entities for entity in entities)
         ]
 
     async def _retrieve_by_tags(self, tags: List[str]) -> List[str]:
         """Retrieve memories by tags"""
         return [
-            memory_id for memory_id, memory in self.memory_store.items()
+            memory_id
+            for memory_id, memory in self.memory_store.items()
             if any(tag in memory.tags for tag in tags)
         ]
 
@@ -594,12 +617,15 @@ class ComplianceMemoryManager:
         # Placeholder for semantic similarity - implement with embeddings
         return []
 
-    async def _retrieve_by_temporal_relevance(self, context: Dict[str, Any]) -> List[str]:
+    async def _retrieve_by_temporal_relevance(
+        self, context: Dict[str, Any]
+    ) -> List[str]:
         """Retrieve temporally relevant memories"""
         recent_cutoff = datetime.utcnow() - timedelta(days=30)
 
         return [
-            memory_id for memory_id, memory in self.memory_store.items()
+            memory_id
+            for memory_id, memory in self.memory_store.items()
             if memory.timestamp >= recent_cutoff and memory.access_count > 0
         ]
 
@@ -609,7 +635,7 @@ class ComplianceMemoryManager:
         query: str,
         query_entities: List[str],
         query_tags: List[str],
-        context: Dict[str, Any]
+        context: Dict[str, Any],
     ) -> float:
         """Calculate relevance score for memory retrieval"""
 
@@ -649,7 +675,9 @@ class ComplianceMemoryManager:
         """Generate tags from text"""
         return self._extract_key_terms(text)
 
-    async def _get_cluster_context(self, memories: List[MemoryNode]) -> List[MemoryCluster]:
+    async def _get_cluster_context(
+        self, memories: List[MemoryNode]
+    ) -> List[MemoryCluster]:
         """Get cluster context for retrieved memories"""
         memory_ids = [memory.id for memory in memories]
 
@@ -682,7 +710,9 @@ class ComplianceMemoryManager:
 
         return insights
 
-    def _extract_entities_from_graph_data(self, graph_result: Dict[str, Any]) -> List[str]:
+    def _extract_entities_from_graph_data(
+        self, graph_result: Dict[str, Any]
+    ) -> List[str]:
         """Extract entities from graph query results"""
         entities = []
 
@@ -709,8 +739,12 @@ class ComplianceMemoryManager:
             risk_levels = data["risk_levels"]
             analysis[domain] = {
                 "memory_count": len(data["memories"]),
-                "dominant_risk_level": max(set(risk_levels), key=risk_levels.count) if risk_levels else "unknown",
-                "query_frequency": len(data["recent_queries"])
+                "dominant_risk_level": (
+                    max(set(risk_levels), key=risk_levels.count)
+                    if risk_levels
+                    else "unknown"
+                ),
+                "query_frequency": len(data["recent_queries"]),
             }
 
         return analysis
@@ -723,7 +757,7 @@ class ComplianceMemoryManager:
             analysis[regulation] = {
                 "mention_frequency": data["mention_count"],
                 "context_diversity": len(set(data["contexts"])),
-                "attention_score": data["mention_count"] * len(set(data["contexts"]))
+                "attention_score": data["mention_count"] * len(set(data["contexts"])),
             }
 
         return analysis
@@ -737,7 +771,7 @@ class ComplianceMemoryManager:
             "risk_distribution": {
                 level: len(memories) / total_assessments if total_assessments > 0 else 0
                 for level, memories in risk_patterns.items()
-            }
+            },
         }
 
         return analysis
@@ -787,12 +821,15 @@ class ComplianceMemoryManager:
 
         # Recency score
         recent_memories = sum(
-            1 for memory in memories
+            1
+            for memory in memories
             if memory.timestamp >= datetime.utcnow() - timedelta(days=7)
         )
         recency_score = recent_memories / len(memories)
 
-        consolidation_score = (avg_importance * 0.5 + diversity_score * 0.3 + recency_score * 0.2)
+        consolidation_score = (
+            avg_importance * 0.5 + diversity_score * 0.3 + recency_score * 0.2
+        )
         return round(consolidation_score, 3)
 
     async def _remove_memory_from_graph(self, memory_id: str) -> None:
@@ -808,8 +845,7 @@ class ComplianceMemoryManager:
         for cluster_id, cluster in self.clusters.items():
             # Keep only clusters with existing memories
             valid_memory_ids = [
-                mid for mid in cluster.memory_ids
-                if mid in self.memory_store
+                mid for mid in cluster.memory_ids if mid in self.memory_store
             ]
 
             if valid_memory_ids:

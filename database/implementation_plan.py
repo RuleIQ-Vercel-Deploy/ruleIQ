@@ -21,7 +21,9 @@ class ImplementationPlan(Base):
     )
 
     title = Column(String, nullable=False)
-    status = Column(String, default="not_started")  # e.g., not_started, in_progress, completed
+    status = Column(
+        String, default="not_started"
+    )  # e.g., not_started, in_progress, completed
 
     phases = Column(JSON, default=list)  # Stores the detailed plan phases and tasks
 

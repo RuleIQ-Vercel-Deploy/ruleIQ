@@ -171,10 +171,14 @@ class ServiceHealthMonitor:
 
         # Start monitoring tasks for each service
         for service_name, health_check in self.health_checks.items():
-            task = asyncio.create_task(self._monitoring_loop(service_name, health_check))
+            task = asyncio.create_task(
+                self._monitoring_loop(service_name, health_check)
+            )
             self.monitoring_tasks[service_name] = task
 
-        self.logger.info(f"Started health monitoring for {len(self.health_checks)} services")
+        self.logger.info(
+            f"Started health monitoring for {len(self.health_checks)} services"
+        )
 
     async def stop_monitoring(self) -> None:
         """Stop health monitoring"""
@@ -186,12 +190,16 @@ class ServiceHealthMonitor:
 
         # Wait for tasks to complete
         if self.monitoring_tasks:
-            await asyncio.gather(*self.monitoring_tasks.values(), return_exceptions=True)
+            await asyncio.gather(
+                *self.monitoring_tasks.values(), return_exceptions=True
+            )
 
         self.monitoring_tasks.clear()
         self.logger.info("Stopped health monitoring")
 
-    async def _monitoring_loop(self, service_name: str, health_check: HealthCheck) -> None:
+    async def _monitoring_loop(
+        self, service_name: str, health_check: HealthCheck
+    ) -> None:
         """Main monitoring loop for a service"""
         try:
             while self.is_monitoring:
@@ -200,9 +208,13 @@ class ServiceHealthMonitor:
         except asyncio.CancelledError:
             self.logger.info(f"Health monitoring stopped for {service_name}")
         except Exception as e:
-            self.logger.error(f"Error in health monitoring loop for {service_name}: {e}")
+            self.logger.error(
+                f"Error in health monitoring loop for {service_name}: {e}"
+            )
 
-    async def _perform_health_check(self, service_name: str, health_check: HealthCheck) -> None:
+    async def _perform_health_check(
+        self, service_name: str, health_check: HealthCheck
+    ) -> None:
         """Perform a single health check"""
         self.services[service_name]
         start_time = time.time()
@@ -216,7 +228,10 @@ class ServiceHealthMonitor:
                     health_check.endpoint, health_check.timeout
                 )
             else:
-                result = {"healthy": False, "error": "No test function or endpoint configured"}
+                result = {
+                    "healthy": False,
+                    "error": "No test function or endpoint configured",
+                }
 
             response_time = (time.time() - start_time) * 1000  # Convert to milliseconds
 
@@ -252,7 +267,9 @@ class ServiceHealthMonitor:
             # Update status based on thresholds
             if metrics.consecutive_successes >= health_check.success_threshold:
                 if metrics.status in [ServiceStatus.UNHEALTHY, ServiceStatus.DEGRADED]:
-                    self.logger.info(f"Service {service_name} recovered - marking as healthy")
+                    self.logger.info(
+                        f"Service {service_name} recovered - marking as healthy"
+                    )
                 metrics.status = ServiceStatus.HEALTHY
         else:
             metrics.consecutive_failures += 1
@@ -266,7 +283,9 @@ class ServiceHealthMonitor:
 
             # Update error patterns
             error_type = type(result.get("exception", Exception())).__name__
-            metrics.error_patterns[error_type] = metrics.error_patterns.get(error_type, 0) + 1
+            metrics.error_patterns[error_type] = (
+                metrics.error_patterns.get(error_type, 0) + 1
+            )
 
             # Update status based on thresholds
             if metrics.consecutive_failures >= health_check.failure_threshold:
@@ -294,7 +313,9 @@ class ServiceHealthMonitor:
         # Calculate success/error rates from recent history
         recent_checks = history[-50:] if len(history) >= 50 else history
         if recent_checks:
-            successful_checks = sum(1 for check in recent_checks if check.get("success", False))
+            successful_checks = sum(
+                1 for check in recent_checks if check.get("success", False)
+            )
             metrics.success_rate = (successful_checks / len(recent_checks)) * 100
             metrics.error_rate = 100 - metrics.success_rate
 
@@ -309,10 +330,14 @@ class ServiceHealthMonitor:
                 p99_index = int(len(sorted_times) * 0.99)
 
                 metrics.p95_response_time = (
-                    sorted_times[p95_index] if p95_index < len(sorted_times) else sorted_times[-1]
+                    sorted_times[p95_index]
+                    if p95_index < len(sorted_times)
+                    else sorted_times[-1]
                 )
                 metrics.p99_response_time = (
-                    sorted_times[p99_index] if p99_index < len(sorted_times) else sorted_times[-1]
+                    sorted_times[p99_index]
+                    if p99_index < len(sorted_times)
+                    else sorted_times[-1]
                 )
 
     def _store_health_history(
@@ -337,7 +362,9 @@ class ServiceHealthMonitor:
                 -self.max_history_size :
             ]
 
-    async def _check_endpoint_health(self, endpoint: str, timeout: int) -> Dict[str, Any]:
+    async def _check_endpoint_health(
+        self, endpoint: str, timeout: int
+    ) -> Dict[str, Any]:
         """Check health of an HTTP endpoint"""
         try:
             async with aiohttp.ClientSession() as session:
@@ -396,7 +423,12 @@ class ServiceHealthMonitor:
                 }
 
         except Exception as e:
-            return {"healthy": False, "error": str(e), "model": model_type.value, "exception": e}
+            return {
+                "healthy": False,
+                "error": str(e),
+                "model": model_type.value,
+                "exception": e,
+            }
 
     async def _check_circuit_breaker_health(self) -> Dict[str, Any]:
         """Check circuit breaker health"""
@@ -436,7 +468,9 @@ class ServiceHealthMonitor:
                 "response_time": metrics.response_time,
                 "success_rate": metrics.success_rate,
                 "consecutive_failures": metrics.consecutive_failures,
-                "last_check": metrics.last_check.isoformat() if metrics.last_check else None,
+                "last_check": (
+                    metrics.last_check.isoformat() if metrics.last_check else None
+                ),
             }
 
             if metrics.status == ServiceStatus.UNHEALTHY:
@@ -453,7 +487,11 @@ class ServiceHealthMonitor:
             "summary": {
                 "total_services": len(self.services),
                 "healthy_services": len(
-                    [s for s in self.services.values() if s.status == ServiceStatus.HEALTHY]
+                    [
+                        s
+                        for s in self.services.values()
+                        if s.status == ServiceStatus.HEALTHY
+                    ]
                 ),
                 "degraded_services": len(degraded_services),
                 "unhealthy_services": len(unhealthy_services),
@@ -465,7 +503,9 @@ class ServiceHealthMonitor:
             "last_updated": datetime.now().isoformat(),
         }
 
-    def get_service_history(self, service_name: str, hours: int = 24) -> List[Dict[str, Any]]:
+    def get_service_history(
+        self, service_name: str, hours: int = 24
+    ) -> List[Dict[str, Any]]:
         """Get health history for a service"""
         if service_name not in self.health_history:
             return []
@@ -491,24 +531,27 @@ class ServiceHealthMonitor:
                 first_half = recent_history[: len(recent_history) // 2]
                 second_half = recent_history[len(recent_history) // 2 :]
 
-                first_half_success = sum(1 for h in first_half if h.get("success", False)) / len(
-                    first_half
-                )
-                second_half_success = sum(1 for h in second_half if h.get("success", False)) / len(
-                    second_half
-                )
+                first_half_success = sum(
+                    1 for h in first_half if h.get("success", False)
+                ) / len(first_half)
+                second_half_success = sum(
+                    1 for h in second_half if h.get("success", False)
+                ) / len(second_half)
 
                 trend_direction = (
                     "improving"
                     if second_half_success > first_half_success
-                    else "declining"
-                    if second_half_success < first_half_success
-                    else "stable"
+                    else (
+                        "declining"
+                        if second_half_success < first_half_success
+                        else "stable"
+                    )
                 )
 
                 trends[service_name] = {
                     "trend_direction": trend_direction,
-                    "success_rate_change": (second_half_success - first_half_success) * 100,
+                    "success_rate_change": (second_half_success - first_half_success)
+                    * 100,
                     "current_success_rate": metrics.success_rate,
                     "avg_response_time": metrics.avg_response_time,
                 }
@@ -529,7 +572,9 @@ class ServiceHealthMonitor:
             "service": service_name,
             "status": metrics.status.value,
             "response_time": metrics.response_time,
-            "last_check": metrics.last_check.isoformat() if metrics.last_check else None,
+            "last_check": (
+                metrics.last_check.isoformat() if metrics.last_check else None
+            ),
             "consecutive_failures": metrics.consecutive_failures,
             "consecutive_successes": metrics.consecutive_successes,
         }

@@ -12,15 +12,13 @@ from enum import Enum
 
 from langchain_core.runnables import RunnableConfig
 
-from ..core.models import (
-    SafeFallbackResponse
-)
+from ..core.models import SafeFallbackResponse
 from ..core.constants import (
     SLO_P95_LATENCY_MS,
     MODEL_CONFIG,
     AUTONOMY_LEVELS,
     EXECUTION_LIMITS,
-    COST_LIMITS
+    COST_LIMITS,
 )
 from ..graph.state import create_initial_state
 
@@ -29,6 +27,7 @@ logger = logging.getLogger(__name__)
 
 class AgentMode(str, Enum):
     """Agent operation modes."""
+
     INTERACTIVE = "interactive"
     AUTONOMOUS = "autonomous"
     BATCH = "batch"
@@ -37,6 +36,7 @@ class AgentMode(str, Enum):
 
 class PriorityLevel(str, Enum):
     """Task priority levels."""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -65,7 +65,9 @@ class AgentConfig:
     streaming_enabled: bool = True
 
     # Cost management
-    max_cost_per_session: float = COST_LIMITS["max_per_1k_tokens"] * 50  # $17.50 per session
+    max_cost_per_session: float = (
+        COST_LIMITS["max_per_1k_tokens"] * 50
+    )  # $17.50 per session
     cost_tracking_enabled: bool = True
 
     # Memory configuration
@@ -156,14 +158,14 @@ class AgentMetrics:
             "total_cost": self.total_cost,
             "error_rate": self.error_count / max(self.total_turns, 1),
             "slo_compliant": self.is_slo_compliant(),
-            "cost_per_token": self.cost_per_token
+            "cost_per_token": self.cost_per_token,
         }
 
 
 class ComplianceAgent:
     """
     Production-ready compliance agent with LangGraph state machine.
-    
+
     Features:
     - Multi-agent coordination
     - Advanced tool selection
@@ -180,7 +182,7 @@ class ComplianceAgent:
         tool_manager: Optional[Any] = None,
         memory_manager: Optional[Any] = None,
         rag_system: Optional[Any] = None,
-        observability_manager: Optional[Any] = None
+        observability_manager: Optional[Any] = None,
     ):
         self.config = config
         self.database_url = database_url
@@ -215,8 +217,7 @@ class ComplianceAgent:
             interrupt_before = ["legal_reviewer"]
 
         self.compiled_graph = graph.compile(
-            checkpointer=checkpointer,
-            interrupt_before=interrupt_before
+            checkpointer=checkpointer, interrupt_before=interrupt_before
         )
 
         logger.info("LangGraph compiled successfully")
@@ -240,16 +241,16 @@ class ComplianceAgent:
         self,
         company_id: UUID,
         user_id: Optional[UUID] = None,
-        session_context: Optional[Dict[str, Any]] = None
+        session_context: Optional[Dict[str, Any]] = None,
     ) -> str:
         """
         Start a new agent session.
-        
+
         Args:
             company_id: Company UUID for tenancy
             user_id: Optional user ID
             session_context: Optional session context
-            
+
         Returns:
             Session ID for tracking
         """
@@ -272,25 +273,25 @@ class ComplianceAgent:
         message: str,
         company_id: UUID,
         priority: PriorityLevel = PriorityLevel.MEDIUM,
-        context: Optional[Dict[str, Any]] = None
+        context: Optional[Dict[str, Any]] = None,
     ) -> Union[str, SafeFallbackResponse]:
         """
         Process a user message and return response.
-        
+
         Args:
             session_id: Session ID for tracking
             message: User input message
             company_id: Company UUID for tenancy
             priority: Message priority level
             context: Optional additional context
-            
+
         Returns:
             Agent response or fallback response
         """
         if session_id not in self.active_sessions:
             return SafeFallbackResponse(
                 error_message="Invalid session ID",
-                error_details={"session_id": session_id}
+                error_details={"session_id": session_id},
             )
 
         metrics = self.active_sessions[session_id]
@@ -301,13 +302,13 @@ class ComplianceAgent:
             if metrics.total_turns >= self.config.max_turns:
                 return SafeFallbackResponse(
                     error_message="Session turn limit exceeded",
-                    error_details={"max_turns": self.config.max_turns}
+                    error_details={"max_turns": self.config.max_turns},
                 )
 
             if metrics.total_cost >= self.config.max_cost_per_session:
                 return SafeFallbackResponse(
                     error_message="Session cost limit exceeded",
-                    error_details={"max_cost": self.config.max_cost_per_session}
+                    error_details={"max_cost": self.config.max_cost_per_session},
                 )
 
             # Create initial state
@@ -315,7 +316,7 @@ class ComplianceAgent:
                 company_id=company_id,
                 user_input=message,
                 thread_id=session_id,
-                autonomy_level=self.config.autonomy_level
+                autonomy_level=self.config.autonomy_level,
             )
 
             # Add context from memory and RAG
@@ -333,11 +334,8 @@ class ComplianceAgent:
 
             # Configure runnable
             config = RunnableConfig(
-                configurable={
-                    "thread_id": session_id,
-                    "company_id": str(company_id)
-                },
-                callbacks=self.callbacks
+                configurable={"thread_id": session_id, "company_id": str(company_id)},
+                callbacks=self.callbacks,
             )
 
             # Execute graph
@@ -372,10 +370,10 @@ class ComplianceAgent:
                 error_message=f"Processing failed: {str(e)}",
                 error_details={
                     "session_id": session_id,
-                    "error_type": type(e).__name__
+                    "error_type": type(e).__name__,
                 },
                 company_id=company_id,
-                thread_id=session_id
+                thread_id=session_id,
             )
 
     async def stream_response(
@@ -383,17 +381,17 @@ class ComplianceAgent:
         session_id: str,
         message: str,
         company_id: UUID,
-        priority: PriorityLevel = PriorityLevel.MEDIUM
+        priority: PriorityLevel = PriorityLevel.MEDIUM,
     ) -> AsyncGenerator[Dict[str, Any], None]:
         """
         Stream agent response in real-time.
-        
+
         Args:
             session_id: Session ID for tracking
             message: User input message
             company_id: Company UUID for tenancy
             priority: Message priority level
-            
+
         Yields:
             Streaming response chunks
         """
@@ -401,7 +399,7 @@ class ComplianceAgent:
             yield {
                 "error": SafeFallbackResponse(
                     error_message="Invalid session ID",
-                    error_details={"session_id": session_id}
+                    error_details={"session_id": session_id},
                 )
             }
             return
@@ -416,16 +414,13 @@ class ComplianceAgent:
                 company_id=company_id,
                 user_input=message,
                 thread_id=session_id,
-                autonomy_level=self.config.autonomy_level
+                autonomy_level=self.config.autonomy_level,
             )
 
             # Configure runnable
             config = RunnableConfig(
-                configurable={
-                    "thread_id": session_id,
-                    "company_id": str(company_id)
-                },
-                callbacks=self.callbacks
+                configurable={"thread_id": session_id, "company_id": str(company_id)},
+                callbacks=self.callbacks,
             )
 
             # Stream graph execution
@@ -433,7 +428,9 @@ class ComplianceAgent:
                 # Record first token time
                 if first_token_time is None:
                     first_token_time = datetime.utcnow()
-                    first_token_latency = int((first_token_time - start_time).total_seconds() * 1000)
+                    first_token_latency = int(
+                        (first_token_time - start_time).total_seconds() * 1000
+                    )
                     metrics.first_token_latency_ms = first_token_latency
 
                 yield chunk
@@ -454,7 +451,7 @@ class ComplianceAgent:
                     error_message=f"Streaming failed: {str(e)}",
                     error_details={"session_id": session_id},
                     company_id=company_id,
-                    thread_id=session_id
+                    thread_id=session_id,
                 )
             }
 
@@ -468,10 +465,10 @@ class ComplianceAgent:
     async def end_session(self, session_id: str) -> Dict[str, Any]:
         """
         End an agent session and return final metrics.
-        
+
         Args:
             session_id: Session ID to end
-            
+
         Returns:
             Final session metrics
         """
@@ -497,7 +494,7 @@ class ComplianceAgent:
             "agent": "healthy",
             "timestamp": datetime.utcnow().isoformat(),
             "active_sessions": len(self.active_sessions),
-            "components": {}
+            "components": {},
         }
 
         # Check graph compilation
@@ -527,11 +524,11 @@ class ComplianceAgent:
     async def interrupt_session(self, session_id: str, reason: str) -> bool:
         """
         Interrupt an active session for human review.
-        
+
         Args:
             session_id: Session to interrupt
             reason: Reason for interruption
-            
+
         Returns:
             True if successfully interrupted
         """
@@ -542,14 +539,16 @@ class ComplianceAgent:
         logger.info(f"Interrupted session {session_id}: {reason}")
         return True
 
-    async def resume_session(self, session_id: str, human_input: Optional[str] = None) -> bool:
+    async def resume_session(
+        self, session_id: str, human_input: Optional[str] = None
+    ) -> bool:
         """
         Resume an interrupted session.
-        
+
         Args:
             session_id: Session to resume
             human_input: Optional human input to continue with
-            
+
         Returns:
             True if successfully resumed
         """

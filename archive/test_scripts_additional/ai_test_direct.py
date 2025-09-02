@@ -122,7 +122,9 @@ async def test_assessment_ai() -> Optional[bool]:
 
         # Simulate help endpoint
         help_response = await assistant.generate_assessment_help(
-            framework_id=test_framework, question=test_question, context={"business_type": "SaaS"}
+            framework_id=test_framework,
+            question=test_question,
+            context={"business_type": "SaaS"},
         )
 
         print("✅ Assessment help test completed")
@@ -232,7 +234,9 @@ async def run_comprehensive_ai_test():
 
     # Test 1: Google API Key
     api_key_ok = test_google_api_key()
-    results["tests"].append({"test": "google_api_key", "status": "pass" if api_key_ok else "fail"})
+    results["tests"].append(
+        {"test": "google_api_key", "status": "pass" if api_key_ok else "fail"}
+    )
 
     # Test 2: AI Model Initialization
     init_ok = await test_ai_model_initialization()
@@ -266,7 +270,9 @@ async def run_comprehensive_ai_test():
 
     # Test 7: Circuit Breaker
     breaker_ok = await test_circuit_breaker()
-    results["tests"].append({"test": "circuit_breaker", "status": "pass" if breaker_ok else "fail"})
+    results["tests"].append(
+        {"test": "circuit_breaker", "status": "pass" if breaker_ok else "fail"}
+    )
 
     # Summary
     total_tests = len(results["tests"])

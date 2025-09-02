@@ -71,9 +71,9 @@ class TestComplianceAccuracy:
 
         # Require 85% accuracy on basic questions
         accuracy = correct_answers / total_questions
-        assert accuracy >= 0.85, (
-            f"Basic GDPR accuracy too low: {accuracy:.2%} ({correct_answers}/{total_questions})"
-        )
+        assert (
+            accuracy >= 0.85
+        ), f"Basic GDPR accuracy too low: {accuracy:.2%} ({correct_answers}/{total_questions})"
 
     @pytest.mark.asyncio
     async def test_gdpr_intermediate_questions_accuracy(
@@ -81,7 +81,6 @@ class TestComplianceAccuracy:
         db_session,
         mock_ai_client,
         gdpr_golden_dataset,
-
     ):
         """Test AI accuracy on intermediate GDPR questions"""
         assistant = ComplianceAssistant(db_session)
@@ -118,9 +117,9 @@ class TestComplianceAccuracy:
 
         # Require 75% accuracy on intermediate questions
         accuracy = correct_answers / total_questions
-        assert accuracy >= 0.75, (
-            f"Intermediate GDPR accuracy too low: {accuracy:.2%} ({correct_answers}/{total_questions})"
-        )
+        assert (
+            accuracy >= 0.75
+        ), f"Intermediate GDPR accuracy too low: {accuracy:.2%} ({correct_answers}/{total_questions})"
 
     @pytest.mark.asyncio
     async def test_gdpr_advanced_questions_accuracy(
@@ -128,12 +127,13 @@ class TestComplianceAccuracy:
         db_session,
         mock_ai_client,
         gdpr_golden_dataset,
-
     ):
         """Test AI accuracy on advanced GDPR questions"""
         assistant = ComplianceAssistant(db_session)
 
-        advanced_questions = [q for q in gdpr_golden_dataset if q["difficulty"] == "advanced"]
+        advanced_questions = [
+            q for q in gdpr_golden_dataset if q["difficulty"] == "advanced"
+        ]
         correct_answers = 0
         total_questions = len(advanced_questions)
 
@@ -163,9 +163,9 @@ class TestComplianceAccuracy:
 
         # Require 65% accuracy on advanced questions
         accuracy = correct_answers / total_questions
-        assert accuracy >= 0.65, (
-            f"Advanced GDPR accuracy too low: {accuracy:.2%} ({correct_answers}/{total_questions})"
-        )
+        assert (
+            accuracy >= 0.65
+        ), f"Advanced GDPR accuracy too low: {accuracy:.2%} ({correct_answers}/{total_questions})"
 
     @pytest.mark.asyncio
     async def test_source_citation_accuracy(
@@ -173,7 +173,6 @@ class TestComplianceAccuracy:
         db_session,
         mock_ai_client,
         gdpr_golden_dataset,
-
     ):
         """Test that AI responses include accurate source citations"""
         assistant = ComplianceAssistant(db_session)
@@ -215,9 +214,9 @@ class TestComplianceAccuracy:
 
         # Require 80% accurate source citations
         citation_accuracy = correct_citations / len(questions_with_sources)
-        assert citation_accuracy >= 0.8, (
-            f"Source citation accuracy too low: {citation_accuracy:.2%}"
-        )
+        assert (
+            citation_accuracy >= 0.8
+        ), f"Source citation accuracy too low: {citation_accuracy:.2%}"
 
     @pytest.mark.asyncio
     async def test_response_completeness(
@@ -225,7 +224,6 @@ class TestComplianceAccuracy:
         db_session,
         mock_ai_client,
         gdpr_golden_dataset,
-
     ):
         """Test that AI responses are comprehensive and complete"""
         assistant = ComplianceAssistant(db_session)
@@ -253,10 +251,12 @@ class TestComplianceAccuracy:
 
                 # Check response completeness criteria
                 assert len(response) >= 100, "Response too short to be comprehensive"
-                assert self._contains_key_information(response, question_data), (
-                    "Response missing key information"
-                )
-                assert self._has_practical_guidance(response), "Response lacks practical guidance"
+                assert self._contains_key_information(
+                    response, question_data
+                ), "Response missing key information"
+                assert self._has_practical_guidance(
+                    response
+                ), "Response lacks practical guidance"
 
     @pytest.mark.asyncio
     async def test_framework_specific_terminology(
@@ -264,7 +264,6 @@ class TestComplianceAccuracy:
         db_session,
         mock_ai_client,
         gdpr_golden_dataset,
-
     ):
         """Test that AI uses correct framework-specific terminology"""
         assistant = ComplianceAssistant(db_session)
@@ -280,7 +279,9 @@ class TestComplianceAccuracy:
         ]
 
         for question_data in gdpr_golden_dataset[:3]:
-            mock_response = self._generate_mock_response(question_data, include_terminology=True)
+            mock_response = self._generate_mock_response(
+                question_data, include_terminology=True
+            )
             mock_ai_client.generate_content.return_value.text = mock_response
 
             with patch.object(assistant, "process_message") as mock_process:
@@ -309,10 +310,12 @@ class TestComplianceAccuracy:
                 ]
 
                 if relevant_terms:
-                    found_terms = [term for term in relevant_terms if term in response_lower]
-                    assert len(found_terms) > 0, (
-                        f"Response should use GDPR terminology for question about {question_data['category']}"
-                    )
+                    found_terms = [
+                        term for term in relevant_terms if term in response_lower
+                    ]
+                    assert (
+                        len(found_terms) > 0
+                    ), f"Response should use GDPR terminology for question about {question_data['category']}"
 
     @pytest.mark.asyncio
     async def test_consistency_across_similar_questions(
@@ -320,7 +323,6 @@ class TestComplianceAccuracy:
         db_session,
         mock_ai_client,
         gdpr_golden_dataset,
-
     ):
         """Test that AI provides consistent answers to similar questions"""
         assistant = ComplianceAssistant(db_session)
@@ -362,9 +364,9 @@ class TestComplianceAccuracy:
                     responses.append(response)
 
             # Check for consistency in key concepts across responses
-            assert self._check_conceptual_consistency(responses, category), (
-                f"Inconsistent responses in category: {category}"
-            )
+            assert self._check_conceptual_consistency(
+                responses, category
+            ), f"Inconsistent responses in category: {category}"
 
     @pytest.mark.asyncio
     async def test_regulatory_compliance_alignment(
@@ -372,7 +374,6 @@ class TestComplianceAccuracy:
         db_session,
         mock_ai_client,
         gdpr_golden_dataset,
-
     ):
         """Test that AI responses align with current regulatory requirements"""
         assistant = ComplianceAssistant(db_session)
@@ -409,13 +410,20 @@ class TestComplianceAccuracy:
 
                 # Check that response doesn't contain regulatory violations
                 response_lower = response.lower()
-                violations_found = [v for v in regulatory_violations if v in response_lower]
-                assert len(violations_found) == 0, (
-                    f"Response contains regulatory violations: {violations_found}"
-                )
+                violations_found = [
+                    v for v in regulatory_violations if v in response_lower
+                ]
+                assert (
+                    len(violations_found) == 0
+                ), f"Response contains regulatory violations: {violations_found}"
 
                 # Check that response encourages compliance
-                compliance_indicators = ["should comply", "required", "mandatory", "must implement"]
+                compliance_indicators = [
+                    "should comply",
+                    "required",
+                    "mandatory",
+                    "must implement",
+                ]
                 has_compliance_guidance = any(
                     indicator in response_lower for indicator in compliance_indicators
                 )
@@ -442,7 +450,9 @@ class TestComplianceAccuracy:
 
         # Add some keywords naturally
         if len(keywords) > 2:
-            response_parts.extend(["", f"Key considerations include: {', '.join(keywords[:3])}."])
+            response_parts.extend(
+                ["", f"Key considerations include: {', '.join(keywords[:3])}."]
+            )
 
         if include_terminology and question_data["framework"] == "GDPR":
             response_parts.extend(
@@ -472,7 +482,9 @@ class TestComplianceAccuracy:
 
         return base_response + "\n".join(practical_guidance)
 
-    def _validate_response_accuracy(self, response: str, question_data: Dict[str, Any]) -> bool:
+    def _validate_response_accuracy(
+        self, response: str, question_data: Dict[str, Any]
+    ) -> bool:
         """Validate if response contains accurate information"""
         response_lower = response.lower()
         keywords = [kw.lower() for kw in question_data["keywords"]]
@@ -487,7 +499,9 @@ class TestComplianceAccuracy:
         # Consider response accurate if it has good keyword coverage and mentions framework
         return keyword_accuracy >= 0.6 and framework_mentioned
 
-    def _contains_key_information(self, response: str, question_data: Dict[str, Any]) -> bool:
+    def _contains_key_information(
+        self, response: str, question_data: Dict[str, Any]
+    ) -> bool:
         """Check if response contains key information from expected answer"""
         expected_words = question_data["expected_answer"].lower().split()
         response_words = response.lower().split()
@@ -513,11 +527,15 @@ class TestComplianceAccuracy:
         ]
 
         response_lower = response.lower()
-        guidance_count = sum(1 for indicator in practical_indicators if indicator in response_lower)
+        guidance_count = sum(
+            1 for indicator in practical_indicators if indicator in response_lower
+        )
 
         return guidance_count >= 2  # At least 2 practical guidance indicators
 
-    def _check_conceptual_consistency(self, responses: List[str], category: str) -> bool:
+    def _check_conceptual_consistency(
+        self, responses: List[str], category: str
+    ) -> bool:
         """Check conceptual consistency across responses in same category"""
         # Extract key concepts from all responses
         all_words = []
@@ -552,9 +570,7 @@ class TestFrameworkCoverage:
     """Test AI coverage across different compliance frameworks"""
 
     @pytest.mark.asyncio
-    async def test_framework_identification_accuracy(
-        self, db_session, mock_ai_client
-    ):
+    async def test_framework_identification_accuracy(self, db_session, mock_ai_client):
         """Test AI accurately identifies relevant compliance frameworks"""
         assistant = ComplianceAssistant(db_session)
 
@@ -579,9 +595,7 @@ class TestFrameworkCoverage:
         for test_case in framework_test_cases:
             # Mock response that identifies correct frameworks
             frameworks_text = ", ".join(test_case["expected_frameworks"])
-            mock_response = (
-                f"Based on your requirements, the relevant frameworks are: {frameworks_text}."
-            )
+            mock_response = f"Based on your requirements, the relevant frameworks are: {frameworks_text}."
             mock_ai_client.generate_content.return_value.text = mock_response
 
             with patch.object(assistant, "process_message") as mock_process:
@@ -603,20 +617,16 @@ class TestFrameworkCoverage:
 
                 # Verify correct frameworks are identified
                 for framework in test_case["expected_frameworks"]:
-                    assert framework.lower() in response.lower(), (
-                        f"Response should identify {framework} framework"
-                    )
+                    assert (
+                        framework.lower() in response.lower()
+                    ), f"Response should identify {framework} framework"
 
     @pytest.mark.asyncio
-    async def test_cross_framework_guidance(
-        self, db_session, mock_ai_client
-    ):
+    async def test_cross_framework_guidance(self, db_session, mock_ai_client):
         """Test AI provides guidance when multiple frameworks apply"""
         assistant = ComplianceAssistant(db_session)
 
-        multi_framework_question = (
-            "We're a fintech company processing EU customer data. What compliance frameworks apply?"
-        )
+        multi_framework_question = "We're a fintech company processing EU customer data. What compliance frameworks apply?"
 
         mock_response = """
         For a fintech company processing EU customer data, multiple compliance frameworks apply:
@@ -652,9 +662,9 @@ class TestFrameworkCoverage:
             frameworks = ["GDPR", "PCI DSS", "ISO 27001", "SOC 2"]
             mentioned_frameworks = [fw for fw in frameworks if fw in response]
 
-            assert len(mentioned_frameworks) >= 3, (
-                f"Should mention multiple frameworks, found: {mentioned_frameworks}"
-            )
+            assert (
+                len(mentioned_frameworks) >= 3
+            ), f"Should mention multiple frameworks, found: {mentioned_frameworks}"
 
             # Check that response explains relationships between frameworks
             relationship_indicators = ["complement", "overlap", "common", "together"]

@@ -9,8 +9,7 @@ Provides endpoints for:
 """
 
 from datetime import datetime
-from typing import List, Dict, Any, Optional
-from uuid import UUID
+from typing import Dict, Any, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
@@ -22,15 +21,18 @@ from database.user import User
 
 router = APIRouter()
 
+
 # Pydantic models for requests/responses
 class PaymentMethodRequest(BaseModel):
     type: str  # card, bank_account, etc.
     details: Dict[str, Any]
     is_default: Optional[bool] = False
 
+
 class CouponApplyRequest(BaseModel):
     coupon_code: str
     subscription_id: Optional[str] = None
+
 
 @router.post("/subscription/cancel", summary="Cancel subscription")
 async def cancel_subscription(
@@ -42,15 +44,18 @@ async def cancel_subscription(
     # Placeholder implementation
     reason = cancellation_data.get("reason", "")
     immediate = cancellation_data.get("immediate", False)
-    
+
     return {
         "subscription_id": f"sub_{current_user.id}",
         "status": "cancelled",
         "cancelled_at": datetime.utcnow().isoformat(),
-        "effective_date": datetime.utcnow().isoformat() if immediate else "end_of_billing_period",
+        "effective_date": (
+            datetime.utcnow().isoformat() if immediate else "end_of_billing_period"
+        ),
         "reason": reason,
         "message": "Subscription cancelled successfully",
     }
+
 
 @router.post("/subscription/reactivate", summary="Reactivate subscription")
 async def reactivate_subscription(
@@ -61,7 +66,7 @@ async def reactivate_subscription(
     """Reactivate a cancelled subscription."""
     # Placeholder implementation
     plan_id = reactivation_data.get("plan_id", "pro")
-    
+
     return {
         "subscription_id": f"sub_{current_user.id}",
         "status": "active",
@@ -69,6 +74,7 @@ async def reactivate_subscription(
         "plan": plan_id,
         "message": "Subscription reactivated successfully",
     }
+
 
 @router.post("/payment-methods", summary="Add payment method")
 async def add_payment_method(
@@ -86,6 +92,7 @@ async def add_payment_method(
         "created_at": datetime.utcnow().isoformat(),
         "message": "Payment method added successfully",
     }
+
 
 @router.get("/invoices", summary="Get invoices")
 async def get_invoices(
@@ -122,6 +129,7 @@ async def get_invoices(
         "offset": offset,
     }
 
+
 @router.get("/invoices/upcoming", summary="Get upcoming invoice")
 async def get_upcoming_invoice(
     current_user: User = Depends(get_current_active_user),
@@ -152,6 +160,7 @@ async def get_upcoming_invoice(
         },
     }
 
+
 @router.post("/coupons/apply", summary="Apply coupon")
 async def apply_coupon(
     coupon_data: CouponApplyRequest,
@@ -178,6 +187,7 @@ async def apply_coupon(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid or expired coupon code",
         )
+
 
 @router.get("/subscription/limits", summary="Get subscription limits")
 async def get_subscription_limits(

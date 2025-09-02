@@ -16,11 +16,11 @@ logger = logging.getLogger(__name__)
 class AbacusAIClient:
     """
     Secure Abacus AI client using Doppler for secrets management.
-    
+
     This client fetches credentials from Doppler at runtime,
     ensuring no hardcoded secrets exist in the codebase.
     """
-    
+
     def __init__(self):
         """Initialize the Abacus AI client with Doppler-managed secrets."""
         self.doppler = DopplerConfig()
@@ -28,7 +28,7 @@ class AbacusAIClient:
         self._deployment_id: Optional[str] = None
         self._deployment_token: Optional[str] = None
         self._initialize_credentials()
-    
+
     def _initialize_credentials(self) -> None:
         """
         Load credentials from Doppler.
@@ -39,7 +39,7 @@ class AbacusAIClient:
             self._api_key = self.secrets.get("ABACUS_AI_API_KEY")
             self._deployment_id = self.secrets.get("ABACUS_AI_DEPLOYMENT_ID")
             self._deployment_token = self.secrets.get("ABACUS_AI_DEPLOYMENT_TOKEN")
-            
+
             # Validate credentials exist
             if not all([self._api_key, self._deployment_id, self._deployment_token]):
                 missing = []
@@ -49,18 +49,18 @@ class AbacusAIClient:
                     missing.append("ABACUS_AI_DEPLOYMENT_ID")
                 if not self._deployment_token:
                     missing.append("ABACUS_AI_DEPLOYMENT_TOKEN")
-                
+
                 raise ValueError(
                     f"Missing required Abacus AI credentials in Doppler: {', '.join(missing)}. "
                     f"Please run: scripts/setup_doppler_secrets.sh"
                 )
-            
+
             logger.info("Abacus AI credentials loaded successfully from Doppler")
-            
+
         except Exception as e:
             logger.error(f"Failed to load Abacus AI credentials: {e}")
             raise
-    
+
     def get_credentials(self) -> Dict[str, str]:
         """
         Get the current credentials (for debugging purposes only).
@@ -70,28 +70,30 @@ class AbacusAIClient:
             "has_api_key": bool(self._api_key),
             "has_deployment_id": bool(self._deployment_id),
             "has_deployment_token": bool(self._deployment_token),
-            "deployment_id_prefix": self._deployment_id[:4] + "****" if self._deployment_id else None
+            "deployment_id_prefix": (
+                self._deployment_id[:4] + "****" if self._deployment_id else None
+            ),
         }
-    
+
     def call_api(self, endpoint: str, data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Make an API call to Abacus AI.
-        
+
         Args:
             endpoint: The API endpoint to call
             data: The data to send
-            
+
         Returns:
             API response
         """
         # Implementation would go here
         # This is a placeholder that would use self._api_key, self._deployment_id, etc.
         logger.info(f"Calling Abacus AI endpoint: {endpoint}")
-        
+
         # Ensure credentials are available
         if not all([self._api_key, self._deployment_id, self._deployment_token]):
             raise RuntimeError("Abacus AI credentials not properly initialized")
-        
+
         # API implementation here...
         return {"status": "success", "message": "Placeholder response"}
 

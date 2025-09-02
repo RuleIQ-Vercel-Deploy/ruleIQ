@@ -1,0 +1,26 @@
+
+	1.0float
+0.3float
+,#"Calculate process automation rate"str
+0.15floatself
+ü# ü('"‚3
+1
+
+ÿ ÿ(/"#get-field# current_maturity:(
+&
+
+ÿ ÿ(5"#get-field# value:3
+1
+
+ÿ ÿ(<"#dependent-value#*:Bfloat0
+.
+
+ÿ ÿ(="#dependent-value#:Bfloat(
+&
+
+ÿ ÿ(C
+"
+builtinsmin*:	
+
+ÿ ÿ(C
+*I/home/omar/Documents/ruleIQ/services/compliance/cco_strategic_playbook.py

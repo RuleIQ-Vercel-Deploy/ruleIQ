@@ -94,7 +94,9 @@ class TestAIRateLimiter:
         future_time = current_time + 61  # 61 seconds later (past the window)
 
         with patch("time.time", return_value=future_time):
-            with patch("api.middleware.ai_rate_limiter.time.time", return_value=future_time):
+            with patch(
+                "api.middleware.ai_rate_limiter.time.time", return_value=future_time
+            ):
                 # Should be allowed again
                 allowed, retry_after = await rate_limiter.check_rate_limit(user_id)
                 assert allowed is True

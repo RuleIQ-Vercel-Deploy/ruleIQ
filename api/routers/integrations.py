@@ -25,11 +25,13 @@ from database.models.integrations import Integration
 logger = get_logger(__name__)
 router = APIRouter()
 
+
 # Pydantic models for requests/responses
 class IntegrationCredentials(BaseModel):
     provider: str
     credentials: Dict[str, Any]
     settings: Optional[Dict[str, Any]] = None
+
 
 class IntegrationResponse(BaseModel):
     provider: str
@@ -39,9 +41,11 @@ class IntegrationResponse(BaseModel):
     last_sync_at: Optional[datetime] = None
     last_sync_status: Optional[str] = None
 
+
 class IntegrationListResponse(BaseModel):
     available_providers: List[Dict[str, Any]]
     configured_integrations: List[IntegrationResponse]
+
 
 # A simple integration factory would be better, but for now, we can use a dummy instance
 # to access the encryption/decryption methods which don't depend on the provider specifics.
@@ -64,14 +68,18 @@ class GenericIntegration(BaseIntegration):
     async def get_available_evidence_types(self) -> List:
         return []
 
+
 # Available integration providers (simplified for now)
 AVAILABLE_PROVIDERS = {
     "google_workspace": {"name": "Google Workspace"},
     "microsoft_365": {"name": "Microsoft 365"},
 }
 
+
 @router.post(
-    "/connect", response_model=IntegrationResponse, summary="Connect or Update Integration"
+    "/connect",
+    response_model=IntegrationResponse,
+    summary="Connect or Update Integration",
 )
 async def connect_integration(
     payload: IntegrationCredentials,
@@ -81,16 +89,21 @@ async def connect_integration(
     provider = payload.provider.lower()
     if provider not in AVAILABLE_PROVIDERS:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail=f"Provider '{provider}' not supported."
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Provider '{provider}' not supported.",
         )
 
     try:
         # Use a generic integration instance to access encryption methods
-        temp_config = IntegrationConfig(user_id=str(current_user.id), provider=provider, credentials={})
+        temp_config = IntegrationConfig(
+            user_id=str(current_user.id), provider=provider, credentials={}
+        )
         integration_handler = GenericIntegration(temp_config)
 
         # Encrypt the credentials
-        encrypted_creds = integration_handler.encrypt_credentials_to_str(payload.credentials)
+        encrypted_creds = integration_handler.encrypt_credentials_to_str(
+            payload.credentials
+        )
         if not encrypted_creds:
             logger.error(
                 f"Credential encryption failed for user {str(current_user.id)}, provider {provider}. Aborting connection."
@@ -116,7 +129,9 @@ async def connect_integration(
             config.is_enabled = True
             config.updated_at = datetime.utcnow()
             message = f"Successfully updated and reconnected {provider} integration."
-            logger.info(f"Integration updated for user {str(current_user.id)}, provider {provider}")
+            logger.info(
+                f"Integration updated for user {str(current_user.id)}, provider {provider}"
+            )
         else:
             # Create new configuration
             config = Integration(
@@ -129,13 +144,18 @@ async def connect_integration(
             )
             db.add(config)
             message = f"Successfully connected {provider} integration."
-            logger.info(f"New integration created for user {str(current_user.id)}, provider {provider}")
+            logger.info(
+                f"New integration created for user {str(current_user.id)}, provider {provider}"
+            )
 
         await db.commit()
         await db.refresh(config)
 
         return IntegrationResponse(
-            provider=provider, status=config.status, message=message, is_enabled=config.is_enabled
+            provider=provider,
+            status=config.status,
+            message=message,
+            is_enabled=config.is_enabled,
         )
     except SQLAlchemyError as e:
         await db.rollback()
@@ -144,7 +164,8 @@ async def connect_integration(
             exc_info=True,
         )
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database operation failed."
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Database operation failed.",
         )
     except Exception as e:
         await db.rollback()
@@ -152,10 +173,15 @@ async def connect_integration(
             f"Error connecting integration for user {str(current_user.id)}, provider {provider}: {e}",
             exc_info=True,
         )
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
+        )
+
 
 @router.delete(
-    "/{provider}", summary="Disconnect integration", status_code=status.HTTP_204_NO_CONTENT
+    "/{provider}",
+    summary="Disconnect integration",
+    status_code=status.HTTP_204_NO_CONTENT,
 )
 async def disconnect_integration(
     provider: str,
@@ -165,7 +191,8 @@ async def disconnect_integration(
     provider_key = provider.lower()
     if provider_key not in AVAILABLE_PROVIDERS:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Provider '{provider}' not found."
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Provider '{provider}' not found.",
         )
 
     try:
@@ -184,7 +211,9 @@ async def disconnect_integration(
 
         await db.delete(config)
         await db.commit()
-        logger.info(f"Integration {provider_key} disconnected for user {str(current_user.id)}")
+        logger.info(
+            f"Integration {provider_key} disconnected for user {str(current_user.id)}"
+        )
     except SQLAlchemyError as e:
         await db.rollback()
         logger.error(
@@ -192,11 +221,15 @@ async def disconnect_integration(
             exc_info=True,
         )
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database operation failed."
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Database operation failed.",
         )
 
+
 @router.get(
-    "/{provider}/status", response_model=IntegrationResponse, summary="Get integration status"
+    "/{provider}/status",
+    response_model=IntegrationResponse,
+    summary="Get integration status",
 )
 async def get_integration_status(
     provider: str,
@@ -206,7 +239,8 @@ async def get_integration_status(
     provider_key = provider.lower()
     if provider_key not in AVAILABLE_PROVIDERS:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Provider '{provider}' not supported."
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Provider '{provider}' not supported.",
         )
 
     try:
@@ -235,8 +269,10 @@ async def get_integration_status(
             exc_info=True,
         )
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Database operation failed."
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Database operation failed.",
         )
+
 
 @router.get("/", summary="List all available integrations")
 async def list_integrations(
@@ -247,11 +283,16 @@ async def list_integrations(
     # Placeholder implementation
     return {
         "available_providers": [
-            {"provider": "google_workspace", "name": "Google Workspace", "configured": False},
+            {
+                "provider": "google_workspace",
+                "name": "Google Workspace",
+                "configured": False,
+            },
             {"provider": "microsoft_365", "name": "Microsoft 365", "configured": False},
         ],
         "configured_count": 0,
     }
+
 
 @router.get("/connected", summary="Get connected integrations")
 async def get_connected_integrations(
@@ -264,6 +305,7 @@ async def get_connected_integrations(
         "connected_integrations": [],
         "total": 0,
     }
+
 
 @router.post("/{integrationId}/test", summary="Test integration connection")
 async def test_integration(
@@ -279,6 +321,7 @@ async def test_integration(
         "message": "Connection test successful",
         "timestamp": datetime.utcnow().isoformat(),
     }
+
 
 @router.get("/{integrationId}/sync-history", summary="Get sync history")
 async def get_sync_history(
@@ -307,6 +350,7 @@ async def get_sync_history(
         "total_syncs": 2,
     }
 
+
 @router.post("/{integrationId}/webhooks", summary="Configure webhooks")
 async def configure_webhooks(
     integrationId: str,
@@ -318,7 +362,7 @@ async def configure_webhooks(
     # Placeholder implementation
     webhook_url = webhook_config.get("url", "")
     events = webhook_config.get("events", [])
-    
+
     return {
         "integration_id": integrationId,
         "webhook_url": webhook_url,
@@ -326,6 +370,7 @@ async def configure_webhooks(
         "status": "configured",
         "message": "Webhook configured successfully",
     }
+
 
 @router.get("/{integrationId}/logs", summary="Get integration logs")
 async def get_integration_logs(
@@ -354,6 +399,7 @@ async def get_integration_logs(
         "total_logs": 2,
     }
 
+
 @router.post("/oauth/callback", summary="Handle OAuth callback")
 async def oauth_callback(
     callback_data: dict,
@@ -363,9 +409,9 @@ async def oauth_callback(
     """Handle OAuth callback from integration providers."""
     # Placeholder implementation
     code = callback_data.get("code", "")
-    state = callback_data.get("state", "")
+    callback_data.get("state", "")
     provider = callback_data.get("provider", "")
-    
+
     return {
         "provider": provider,
         "status": "success",

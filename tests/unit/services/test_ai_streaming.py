@@ -96,10 +96,14 @@ def mock_complex_chunks():
     """Mock complex streaming chunks with candidates structure."""
     return [
         MockChunk(
-            candidates=[MockCandidate(content=MockContent(parts=[MockPart(text="Complex ")]))]
+            candidates=[
+                MockCandidate(content=MockContent(parts=[MockPart(text="Complex ")]))
+            ]
         ),
         MockChunk(
-            candidates=[MockCandidate(content=MockContent(parts=[MockPart(text="streaming ")]))]
+            candidates=[
+                MockCandidate(content=MockContent(parts=[MockPart(text="streaming ")]))
+            ]
         ),
         MockChunk(text="response."),
     ]
@@ -109,9 +113,13 @@ class TestAIStreaming:
     """Test suite for AI streaming functionality."""
 
     @pytest.mark.asyncio
-    async def test_stream_response_basic(self, compliance_assistant, mock_streaming_chunks):
+    async def test_stream_response_basic(
+        self, compliance_assistant, mock_streaming_chunks
+    ):
         """Test basic streaming response functionality."""
-        with patch.object(compliance_assistant, "_get_task_appropriate_model") as mock_get_model:
+        with patch.object(
+            compliance_assistant, "_get_task_appropriate_model"
+        ) as mock_get_model:
             mock_model = Mock()
             mock_model.generate_content_stream.return_value = MockStreamingResponse(
                 mock_streaming_chunks
@@ -119,7 +127,9 @@ class TestAIStreaming:
             mock_get_model.return_value = (mock_model, "test_instruction_id")
 
             with patch.object(
-                compliance_assistant.circuit_breaker, "is_model_available", return_value=True
+                compliance_assistant.circuit_breaker,
+                "is_model_available",
+                return_value=True,
             ):
                 chunks = []
                 async for chunk in compliance_assistant._stream_response(
@@ -135,7 +145,9 @@ class TestAIStreaming:
         self, compliance_assistant, mock_complex_chunks
     ):
         """Test streaming response with complex candidate structure."""
-        with patch.object(compliance_assistant, "_get_task_appropriate_model") as mock_get_model:
+        with patch.object(
+            compliance_assistant, "_get_task_appropriate_model"
+        ) as mock_get_model:
             mock_model = Mock()
             mock_model.generate_content_stream.return_value = MockStreamingResponse(
                 mock_complex_chunks
@@ -143,7 +155,9 @@ class TestAIStreaming:
             mock_get_model.return_value = (mock_model, "test_instruction_id")
 
             with patch.object(
-                compliance_assistant.circuit_breaker, "is_model_available", return_value=True
+                compliance_assistant.circuit_breaker,
+                "is_model_available",
+                return_value=True,
             ):
                 chunks = []
                 async for chunk in compliance_assistant._stream_response(
@@ -157,13 +171,17 @@ class TestAIStreaming:
     @pytest.mark.asyncio
     async def test_stream_response_circuit_breaker_open(self, compliance_assistant):
         """Test streaming response when circuit breaker is open."""
-        with patch.object(compliance_assistant, "_get_task_appropriate_model") as mock_get_model:
+        with patch.object(
+            compliance_assistant, "_get_task_appropriate_model"
+        ) as mock_get_model:
             mock_model = Mock()
             mock_model.model_name = "test-model"
             mock_get_model.return_value = (mock_model, "test_instruction_id")
 
             with patch.object(
-                compliance_assistant.circuit_breaker, "is_model_available", return_value=False
+                compliance_assistant.circuit_breaker,
+                "is_model_available",
+                return_value=False,
             ):
                 chunks = []
                 async for chunk in compliance_assistant._stream_response(
@@ -177,13 +195,17 @@ class TestAIStreaming:
     @pytest.mark.asyncio
     async def test_stream_response_model_error(self, compliance_assistant):
         """Test streaming response with model error."""
-        with patch.object(compliance_assistant, "_get_task_appropriate_model") as mock_get_model:
+        with patch.object(
+            compliance_assistant, "_get_task_appropriate_model"
+        ) as mock_get_model:
             mock_model = Mock()
             mock_model.generate_content_stream.side_effect = Exception("Model error")
             mock_get_model.return_value = (mock_model, "test_instruction_id")
 
             with patch.object(
-                compliance_assistant.circuit_breaker, "is_model_available", return_value=True
+                compliance_assistant.circuit_breaker,
+                "is_model_available",
+                return_value=True,
             ):
                 chunks = []
                 async for chunk in compliance_assistant._stream_response(
@@ -195,7 +217,9 @@ class TestAIStreaming:
                 assert "unable to provide a response" in chunks[0]
 
     @pytest.mark.asyncio
-    async def test_stream_response_task_context(self, compliance_assistant, mock_streaming_chunks):
+    async def test_stream_response_task_context(
+        self, compliance_assistant, mock_streaming_chunks
+    ):
         """Test streaming response with task context."""
         context = {
             "framework": "gdpr",
@@ -203,7 +227,9 @@ class TestAIStreaming:
             "prompt_length": 500,
         }
 
-        with patch.object(compliance_assistant, "_get_task_appropriate_model") as mock_get_model:
+        with patch.object(
+            compliance_assistant, "_get_task_appropriate_model"
+        ) as mock_get_model:
             mock_model = Mock()
             mock_model.generate_content_stream.return_value = MockStreamingResponse(
                 mock_streaming_chunks
@@ -211,7 +237,9 @@ class TestAIStreaming:
             mock_get_model.return_value = (mock_model, "test_instruction_id")
 
             with patch.object(
-                compliance_assistant.circuit_breaker, "is_model_available", return_value=True
+                compliance_assistant.circuit_breaker,
+                "is_model_available",
+                return_value=True,
             ):
                 chunks = []
                 async for chunk in compliance_assistant._stream_response(
@@ -241,11 +269,17 @@ class TestAIStreaming:
             ) as mock_prompt:
                 mock_prompt.return_value = {"user": "Analysis prompt"}
 
-                with patch.object(compliance_assistant, "_stream_response") as mock_stream:
-                    mock_stream.return_value = async_generator_from_list(["Analysis ", "result"])
+                with patch.object(
+                    compliance_assistant, "_stream_response"
+                ) as mock_stream:
+                    mock_stream.return_value = async_generator_from_list(
+                        ["Analysis ", "result"]
+                    )
 
                     chunks = []
-                    async for chunk in compliance_assistant.analyze_assessment_results_stream(
+                    async for (
+                        chunk
+                    ) in compliance_assistant.analyze_assessment_results_stream(
                         assessment_responses, "gdpr", uuid4()
                     ):
                         chunks.append(chunk)
@@ -267,17 +301,22 @@ class TestAIStreaming:
             mock_context.return_value = {"business_profile": {"industry": "tech"}}
 
             with patch.object(
-                compliance_assistant.prompt_templates, "get_assessment_recommendations_prompt"
+                compliance_assistant.prompt_templates,
+                "get_assessment_recommendations_prompt",
             ) as mock_prompt:
                 mock_prompt.return_value = {"user": "Recommendations prompt"}
 
-                with patch.object(compliance_assistant, "_stream_response") as mock_stream:
+                with patch.object(
+                    compliance_assistant, "_stream_response"
+                ) as mock_stream:
                     mock_stream.return_value = async_generator_from_list(
                         ["Recommendation ", "content"]
                     )
 
                     chunks = []
-                    async for chunk in compliance_assistant.get_assessment_recommendations_stream(
+                    async for (
+                        chunk
+                    ) in compliance_assistant.get_assessment_recommendations_stream(
                         assessment_gaps, "gdpr", uuid4()
                     ):
                         chunks.append(chunk)
@@ -298,8 +337,12 @@ class TestAIStreaming:
             ) as mock_prompt:
                 mock_prompt.return_value = {"user": "Help prompt"}
 
-                with patch.object(compliance_assistant, "_stream_response") as mock_stream:
-                    mock_stream.return_value = async_generator_from_list(["Help ", "content"])
+                with patch.object(
+                    compliance_assistant, "_stream_response"
+                ) as mock_stream:
+                    mock_stream.return_value = async_generator_from_list(
+                        ["Help ", "content"]
+                    )
 
                     chunks = []
                     async for chunk in compliance_assistant.get_assessment_help_stream(
@@ -330,8 +373,12 @@ class TestAIStreaming:
     @pytest.mark.asyncio
     async def test_streaming_circuit_breaker_integration(self, compliance_assistant):
         """Test circuit breaker integration in streaming."""
-        with patch.object(compliance_assistant, "_get_task_appropriate_model") as mock_get_model:
-            mock_get_model.side_effect = ModelUnavailableException("test-model", "Circuit open")
+        with patch.object(
+            compliance_assistant, "_get_task_appropriate_model"
+        ) as mock_get_model:
+            mock_get_model.side_effect = ModelUnavailableException(
+                "test-model", "Circuit open"
+            )
 
             chunks = []
             async for chunk in compliance_assistant._stream_response(
@@ -343,9 +390,13 @@ class TestAIStreaming:
             assert "temporarily unavailable" in chunks[0]
 
     @pytest.mark.asyncio
-    async def test_streaming_success_recording(self, compliance_assistant, mock_streaming_chunks):
+    async def test_streaming_success_recording(
+        self, compliance_assistant, mock_streaming_chunks
+    ):
         """Test that streaming successes are recorded in circuit breaker."""
-        with patch.object(compliance_assistant, "_get_task_appropriate_model") as mock_get_model:
+        with patch.object(
+            compliance_assistant, "_get_task_appropriate_model"
+        ) as mock_get_model:
             mock_model = Mock()
             mock_model.model_name = "test-model"
             mock_model.generate_content_stream.return_value = MockStreamingResponse(
@@ -354,7 +405,9 @@ class TestAIStreaming:
             mock_get_model.return_value = (mock_model, "test_instruction_id")
 
             with patch.object(
-                compliance_assistant.circuit_breaker, "is_model_available", return_value=True
+                compliance_assistant.circuit_breaker,
+                "is_model_available",
+                return_value=True,
             ):
                 with patch.object(
                     compliance_assistant.circuit_breaker, "record_success"
@@ -371,7 +424,9 @@ class TestAIStreaming:
     @pytest.mark.asyncio
     async def test_streaming_failure_recording(self, compliance_assistant):
         """Test that streaming failures are recorded in circuit breaker."""
-        with patch.object(compliance_assistant, "_get_task_appropriate_model") as mock_get_model:
+        with patch.object(
+            compliance_assistant, "_get_task_appropriate_model"
+        ) as mock_get_model:
             mock_model = Mock()
             mock_model.model_name = "test-model"
             error = Exception("Streaming error")
@@ -379,7 +434,9 @@ class TestAIStreaming:
             mock_get_model.return_value = (mock_model, "test_instruction_id")
 
             with patch.object(
-                compliance_assistant.circuit_breaker, "is_model_available", return_value=True
+                compliance_assistant.circuit_breaker,
+                "is_model_available",
+                return_value=True,
             ):
                 with patch.object(
                     compliance_assistant.circuit_breaker, "record_failure"
@@ -409,7 +466,9 @@ class TestStreamingPerformance:
         """Test streaming response latency."""
         import time
 
-        with patch.object(compliance_assistant, "_get_task_appropriate_model") as mock_get_model:
+        with patch.object(
+            compliance_assistant, "_get_task_appropriate_model"
+        ) as mock_get_model:
             mock_model = Mock()
             mock_model.generate_content_stream.return_value = MockStreamingResponse(
                 mock_streaming_chunks
@@ -417,7 +476,9 @@ class TestStreamingPerformance:
             mock_get_model.return_value = (mock_model, "test_instruction_id")
 
             with patch.object(
-                compliance_assistant.circuit_breaker, "is_model_available", return_value=True
+                compliance_assistant.circuit_breaker,
+                "is_model_available",
+                return_value=True,
             ):
                 start_time = time.time()
 
@@ -441,13 +502,19 @@ class TestStreamingPerformance:
         # Create a large number of small chunks
         large_chunks = [MockChunk(text=f"Chunk {i} ") for i in range(100)]
 
-        with patch.object(compliance_assistant, "_get_task_appropriate_model") as mock_get_model:
+        with patch.object(
+            compliance_assistant, "_get_task_appropriate_model"
+        ) as mock_get_model:
             mock_model = Mock()
-            mock_model.generate_content_stream.return_value = MockStreamingResponse(large_chunks)
+            mock_model.generate_content_stream.return_value = MockStreamingResponse(
+                large_chunks
+            )
             mock_get_model.return_value = (mock_model, "test_instruction_id")
 
             with patch.object(
-                compliance_assistant.circuit_breaker, "is_model_available", return_value=True
+                compliance_assistant.circuit_breaker,
+                "is_model_available",
+                return_value=True,
             ):
                 chunk_count = 0
                 async for _chunk in compliance_assistant._stream_response(
@@ -459,7 +526,9 @@ class TestStreamingPerformance:
                 assert chunk_count == 100
 
     @pytest.mark.asyncio
-    async def test_streaming_concurrent_requests(self, compliance_assistant, mock_streaming_chunks):
+    async def test_streaming_concurrent_requests(
+        self, compliance_assistant, mock_streaming_chunks
+    ):
         """Test handling multiple concurrent streaming requests."""
 
         async def single_stream_request():
@@ -473,7 +542,9 @@ class TestStreamingPerformance:
                 mock_get_model.return_value = (mock_model, "test_instruction_id")
 
                 with patch.object(
-                    compliance_assistant.circuit_breaker, "is_model_available", return_value=True
+                    compliance_assistant.circuit_breaker,
+                    "is_model_available",
+                    return_value=True,
                 ):
                     chunks = []
                     async for chunk in compliance_assistant._stream_response(

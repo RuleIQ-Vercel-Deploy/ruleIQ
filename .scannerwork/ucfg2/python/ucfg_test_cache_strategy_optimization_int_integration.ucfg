@@ -1,0 +1,87 @@
+
+Çtests.unit.services.test_cache_strategy_optimization.TestCacheStrategyIntegration.test_cache_strategy_metrics_endpoint_integration_
+S/home/omar/Documents/ruleIQ/tests/unit/services/test_cache_strategy_optimization.pyÅ Å(>"2*Ê
+2
+Ñ Ñ(Hpn
+
+Ü Ü(S
+%1*>
+
+__unknown_file ("
+ 
+assistant_with_optimized_cache2get_cache_strategy_metricsC
+A
+
+Ü Ü(S	
+metrics"__id*"
+
+__unknown_file (
+
+%1ÉÄ
+
+â â(1
+%2*'
+
+__unknown_file (
+	
+metrics*5
+
+__unknown_file (
+strategy_optimization2__contains__åâ
+
+ã ã(?
+%3"__mapGet*'
+
+__unknown_file (
+	
+metrics*5
+
+__unknown_file (
+strategy_optimization2__getitem__P
+N
+
+ã ã(?
+optimization_metrics"__id*"
+
+__unknown_file (
+
+%3êç
+
+å å(>
+%4*4
+
+__unknown_file (
+
+optimization_metrics*5
+
+__unknown_file (
+performance_based_ttl2__contains__àÖ
+
+ç ç(6
+%5*4
+
+__unknown_file (
+
+optimization_metrics*-
+
+__unknown_file (
+cache_warming2__contains__ìê
+
+é é(A
+%6*4
+
+__unknown_file (
+
+optimization_metrics*8
+
+__unknown_file (
+intelligent_invalidation2__contains__*
+3*K
+3%
+#test_cache_strategy_optimization.py"
+ê ê(
+implicit return:.
+
+Ç Ç(, 
+assistant_with_optimized_cacheBUS
+Qtests.unit.services.test_cache_strategy_optimization.TestCacheStrategyIntegrationH

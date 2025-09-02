@@ -31,6 +31,7 @@ logger = get_logger(__name__)
 
 router = APIRouter()
 
+
 async def create_collection_plan(
     plan_request: CollectionPlanCreate,
     db: AsyncSession = Depends(get_async_db),
@@ -57,26 +58,24 @@ async def create_collection_plan(
             # Fetch existing evidence from database
             from sqlalchemy import select
             from database.models import Evidence
-            
+
             # Query existing evidence for this business profile and framework
             evidence_query = select(Evidence).where(
                 Evidence.business_profile_id == profile.id
             )
             if plan_request.framework:
                 # Filter by framework if specified
-                evidence_query = evidence_query.join(
-                    "compliance_frameworks"
-                ).where(
+                evidence_query = evidence_query.join("compliance_frameworks").where(
                     Evidence.framework_id.in_(
                         select("compliance_frameworks.id").where(
                             "compliance_frameworks.name" == plan_request.framework
                         )
                     )
                 )
-            
+
             result = await db.execute(evidence_query)
             evidence_records = result.scalars().all()
-            
+
             # Convert to format expected by smart_evidence_collector
             existing_evidence = [
                 {
@@ -88,7 +87,7 @@ async def create_collection_plan(
                     "status": evidence.status,
                     "tags": evidence.tags or [],
                     "created_at": evidence.created_at,
-                    "metadata": evidence.ai_metadata or {}
+                    "metadata": evidence.ai_metadata or {},
                 }
                 for evidence in evidence_records
             ]
@@ -144,13 +143,16 @@ async def create_collection_plan(
                 )
                 for task in plan.tasks
             ],
-            automation_opportunities=AutomationOpportunities(**plan.automation_opportunities),
+            automation_opportunities=AutomationOpportunities(
+                **plan.automation_opportunities
+            ),
             created_at=plan.created_at,
         )
 
     except Exception as e:
         logger.error(f"Error creating collection plan: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.get("/plans/{plan_id}", response_model=CollectionPlanResponse)
 async def get_collection_plan(
@@ -197,9 +199,12 @@ async def get_collection_plan(
             )
             for task in plan.tasks
         ],
-        automation_opportunities=AutomationOpportunities(**plan.automation_opportunities),
+        automation_opportunities=AutomationOpportunities(
+            **plan.automation_opportunities
+        ),
         created_at=plan.created_at,
     )
+
 
 async def list_collection_plans(
     framework: Optional[str] = Query(None, description="Filter by framework"),
@@ -222,7 +227,9 @@ async def list_collection_plans(
                 continue
 
             # Calculate plan status
-            completed_tasks = len([t for t in plan.tasks if t.status == CollectionStatus.COMPLETED])
+            completed_tasks = len(
+                [t for t in plan.tasks if t.status == CollectionStatus.COMPLETED]
+            )
             if completed_tasks == plan.total_tasks:
                 plan_status = "completed"
             elif any(t.status == CollectionStatus.IN_PROGRESS for t in plan.tasks):
@@ -248,7 +255,10 @@ async def list_collection_plans(
 
     return user_plans
 
-@router.get("/plans/{plan_id}/priority-tasks", response_model=List[EvidenceTaskResponse])
+
+@router.get(
+    "/plans/{plan_id}/priority-tasks", response_model=List[EvidenceTaskResponse]
+)
 async def get_priority_tasks(
     plan_id: str,
     limit: int = Query(5, ge=1, le=20, description="Number of tasks to return"),
@@ -266,7 +276,9 @@ async def get_priority_tasks(
         raise HTTPException(status_code=403, detail="Access denied")
 
     # Get priority tasks
-    priority_tasks = await smart_evidence_collector.get_next_priority_tasks(plan_id, limit)
+    priority_tasks = await smart_evidence_collector.get_next_priority_tasks(
+        plan_id, limit
+    )
 
     # Convert to response model
     return [
@@ -289,6 +301,7 @@ async def get_priority_tasks(
         )
         for task in priority_tasks
     ]
+
 
 @router.patch("/plans/{plan_id}/tasks/{task_id}", response_model=EvidenceTaskResponse)
 async def update_task_status(
@@ -341,6 +354,7 @@ async def update_task_status(
             )
 
     raise HTTPException(status_code=404, detail="Task not found")
+
 
 @router.get("/automation-recommendations/{framework}")
 async def get_automation_recommendations(

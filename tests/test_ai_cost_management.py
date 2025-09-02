@@ -41,7 +41,7 @@ class TestAIUsageMetrics:
             total_tokens=1500,
             request_count=1,
             cost_usd=Decimal("0.015"),
-            timestamp=datetime.now()
+            timestamp=datetime.now(),
         )
 
         assert metrics.service_name == "policy_generation"
@@ -63,7 +63,7 @@ class TestAIUsageMetrics:
             total_tokens=1500,
             request_count=1,
             cost_usd=Decimal("0.015"),
-            timestamp=datetime.now()
+            timestamp=datetime.now(),
         )
 
         metrics2 = AIUsageMetrics(
@@ -74,7 +74,7 @@ class TestAIUsageMetrics:
             total_tokens=1200,
             request_count=1,
             cost_usd=Decimal("0.012"),
-            timestamp=datetime.now()
+            timestamp=datetime.now(),
         )
 
         aggregated = metrics1.aggregate(metrics2)
@@ -95,7 +95,7 @@ class TestAIUsageMetrics:
             total_tokens=3000,
             request_count=1,
             cost_usd=Decimal("0.120"),
-            timestamp=datetime.now()
+            timestamp=datetime.now(),
         )
 
         assert metrics.cost_per_token == Decimal("0.00004")  # 0.120 / 3000
@@ -111,7 +111,7 @@ class TestAIUsageMetrics:
             request_count=1,
             cost_usd=Decimal("0.002"),
             timestamp=datetime.now(),
-            response_quality_score=0.85
+            response_quality_score=0.85,
         )
 
         efficiency = metrics.calculate_efficiency_score()
@@ -129,12 +129,16 @@ class TestModelCostConfig:
 
         # Test input cost calculation
         input_cost = config.calculate_input_cost(1000)
-        expected_input = Decimal("1000") / Decimal("1000000") * config.input_cost_per_million
+        expected_input = (
+            Decimal("1000") / Decimal("1000000") * config.input_cost_per_million
+        )
         assert input_cost == expected_input
 
         # Test output cost calculation
         output_cost = config.calculate_output_cost(500)
-        expected_output = Decimal("500") / Decimal("1000000") * config.output_cost_per_million
+        expected_output = (
+            Decimal("500") / Decimal("1000000") * config.output_cost_per_million
+        )
         assert output_cost == expected_output
 
     def test_openai_cost_calculation(self):
@@ -143,8 +147,12 @@ class TestModelCostConfig:
 
         total_cost = config.calculate_total_cost(input_tokens=1500, output_tokens=750)
 
-        input_cost = Decimal("1500") / Decimal("1000000") * config.input_cost_per_million
-        output_cost = Decimal("750") / Decimal("1000000") * config.output_cost_per_million
+        input_cost = (
+            Decimal("1500") / Decimal("1000000") * config.input_cost_per_million
+        )
+        output_cost = (
+            Decimal("750") / Decimal("1000000") * config.output_cost_per_million
+        )
         expected_total = input_cost + output_cost
 
         assert total_cost == expected_total
@@ -157,7 +165,7 @@ class TestModelCostConfig:
             input_cost_per_million=Decimal("5.00"),
             output_cost_per_million=Decimal("10.00"),
             context_window=8192,
-            max_output_tokens=4096
+            max_output_tokens=4096,
         )
 
         assert config.model_name == "custom-model"
@@ -185,7 +193,7 @@ class TestCostTrackingService:
             output_tokens=500,
             user_id="user_123",
             session_id="session_456",
-            request_metadata={"endpoint": "/api/v1/ai/generate-policy"}
+            request_metadata={"endpoint": "/api/v1/ai/generate-policy"},
         )
 
         assert usage.service_name == "policy_generation"
@@ -203,7 +211,9 @@ class TestCostTrackingService:
         # Track multiple usage events
         await cost_tracker.track_usage("policy_generation", "gemini-2.5-pro", 1000, 500)
         await cost_tracker.track_usage("policy_generation", "gpt-4-turbo", 800, 400)
-        await cost_tracker.track_usage("assessment_analysis", "gemini-2.5-flash", 600, 300)
+        await cost_tracker.track_usage(
+            "assessment_analysis", "gemini-2.5-flash", 600, 300
+        )
 
         # Get usage for specific service
         policy_usage = await cost_tracker.get_usage_by_service("policy_generation")
@@ -232,10 +242,7 @@ class TestCostTrackingService:
         # Simulate usage throughout the day
         for i in range(10):
             await cost_tracker.track_usage(
-                f"service_{i % 3}",
-                "gemini-2.5-pro",
-                1000 + i * 100,
-                500 + i * 50
+                f"service_{i % 3}", "gemini-2.5-pro", 1000 + i * 100, 500 + i * 50
             )
 
         daily_costs = await cost_tracker.calculate_daily_costs(datetime.now().date())
@@ -254,9 +261,11 @@ class TestCostTrackingService:
             date = base_date - timedelta(days=day_offset)
             timestamp = datetime.combine(date, datetime.min.time())
 
-            with patch('datetime.datetime') as mock_datetime:
+            with patch("datetime.datetime") as mock_datetime:
                 mock_datetime.now.return_value = timestamp
-                await cost_tracker.track_usage("policy_generation", "gemini-2.5-pro", 1000, 500)
+                await cost_tracker.track_usage(
+                    "policy_generation", "gemini-2.5-pro", 1000, 500
+                )
 
         trends = await cost_tracker.get_cost_trends(days=7)
 
@@ -268,7 +277,9 @@ class TestCostTrackingService:
         """Test cost anomaly detection."""
         # Simulate normal usage
         for _ in range(10):
-            await cost_tracker.track_usage("policy_generation", "gemini-2.5-pro", 1000, 500)
+            await cost_tracker.track_usage(
+                "policy_generation", "gemini-2.5-pro", 1000, 500
+            )
 
         # Simulate anomalous usage (high token count to trigger > $0.50 cost)
         await cost_tracker.track_usage("policy_generation", "gpt-4-turbo", 30000, 20000)
@@ -307,7 +318,7 @@ class TestBudgetAlertService:
             total_requests=100,
             total_tokens=50000,
             period_start=datetime.now().replace(hour=0, minute=0, second=0),
-            period_end=datetime.now()
+            period_end=datetime.now(),
         )
 
         budget_status = await alert_service.check_budget_status(usage)
@@ -326,7 +337,7 @@ class TestBudgetAlertService:
             total_requests=200,
             total_tokens=100000,
             period_start=datetime.now().replace(hour=0, minute=0, second=0),
-            period_end=datetime.now()
+            period_end=datetime.now(),
         )
 
         alerts = await alert_service.check_budget_alerts(usage)
@@ -339,7 +350,12 @@ class TestBudgetAlertService:
     async def test_cost_spike_detection(self, alert_service):
         """Test detection of unusual cost spikes."""
         # Set baseline usage
-        baseline_costs = [Decimal("5.00"), Decimal("6.00"), Decimal("5.50"), Decimal("5.25")]
+        baseline_costs = [
+            Decimal("5.00"),
+            Decimal("6.00"),
+            Decimal("5.50"),
+            Decimal("5.25"),
+        ]
 
         # Detect spike
         spike_cost = Decimal("25.00")
@@ -360,10 +376,12 @@ class TestBudgetAlertService:
             total_tokens=25000,
             period_start=datetime.now().replace(hour=0, minute=0, second=0),
             period_end=datetime.now(),
-            service_name="policy_generation"
+            service_name="policy_generation",
         )
 
-        alerts = await alert_service.check_service_budget("policy_generation", service_usage)
+        alerts = await alert_service.check_service_budget(
+            "policy_generation", service_usage
+        )
 
         assert len(alerts) >= 1
         assert alerts[0].alert_type == AlertType.SERVICE_BUDGET_WARNING
@@ -390,7 +408,7 @@ class TestCostOptimizationService:
                 request_count=1,
                 cost_usd=Decimal("0.120"),
                 timestamp=datetime.now(),
-                response_quality_score=0.95
+                response_quality_score=0.95,
             ),
             AIUsageMetrics(
                 service_name="policy_generation",
@@ -401,8 +419,8 @@ class TestCostOptimizationService:
                 request_count=1,
                 cost_usd=Decimal("0.015"),
                 timestamp=datetime.now(),
-                response_quality_score=0.90
-            )
+                response_quality_score=0.90,
+            ),
         ]
 
         optimization = await optimization_service.analyze_model_efficiency(usage_data)
@@ -416,19 +434,13 @@ class TestCostOptimizationService:
         """Test caching strategy recommendations."""
         # Simulate repeated similar requests
         similar_requests = [
-            {
-                "input_hash": "hash_123",
-                "cost": Decimal("0.015"),
-                "count": 5
-            },
-            {
-                "input_hash": "hash_456",
-                "cost": Decimal("0.012"),
-                "count": 3
-            }
+            {"input_hash": "hash_123", "cost": Decimal("0.015"), "count": 5},
+            {"input_hash": "hash_456", "cost": Decimal("0.012"), "count": 3},
         ]
 
-        optimization = await optimization_service.analyze_caching_opportunities(similar_requests)
+        optimization = await optimization_service.analyze_caching_opportunities(
+            similar_requests
+        )
 
         assert optimization.strategy == OptimizationStrategy.CACHING_IMPROVEMENT
         assert optimization.potential_savings > 0
@@ -441,7 +453,9 @@ class TestCostOptimizationService:
             for _ in range(10)
         ]
 
-        optimization = await optimization_service.analyze_batch_opportunities(individual_requests)
+        optimization = await optimization_service.analyze_batch_opportunities(
+            individual_requests
+        )
 
         assert optimization.strategy == OptimizationStrategy.BATCH_PROCESSING
         assert optimization.potential_savings > 0
@@ -453,10 +467,12 @@ class TestCostOptimizationService:
             "avg_input_tokens": 2001,
             "avg_output_tokens": 500,
             "success_rate": 0.85,
-            "cost_per_success": Decimal("0.025")
+            "cost_per_success": Decimal("0.025"),
         }
 
-        optimization = await optimization_service.analyze_prompt_efficiency(prompt_metrics)
+        optimization = await optimization_service.analyze_prompt_efficiency(
+            prompt_metrics
+        )
 
         assert optimization.strategy == OptimizationStrategy.PROMPT_OPTIMIZATION
         assert "reduce input token" in optimization.recommendation.lower()
@@ -465,11 +481,17 @@ class TestCostOptimizationService:
     async def test_comprehensive_optimization_report(self, optimization_service):
         """Test generation of comprehensive optimization report."""
         report_data = {
-            "time_period": {"start": datetime.now() - timedelta(days=7), "end": datetime.now()},
+            "time_period": {
+                "start": datetime.now() - timedelta(days=7),
+                "end": datetime.now(),
+            },
             "total_cost": Decimal("150.00"),
             "request_count": 1000,
             "model_distribution": {"gemini-2.5-pro": 0.6, "gpt-4-turbo": 0.4},
-            "service_costs": {"policy_generation": Decimal("90.00"), "assessment_analysis": Decimal("60.00")}
+            "service_costs": {
+                "policy_generation": Decimal("90.00"),
+                "assessment_analysis": Decimal("60.00"),
+            },
         }
 
         report = await optimization_service.generate_optimization_report(report_data)
@@ -502,7 +524,7 @@ class TestAICostManager:
             user_id="user_123",
             request_id="req_123",  # Add request_id for usage_id
             response_quality_score=0.95,  # Add quality score for efficiency calculation
-            metadata={"endpoint": "/api/v1/ai/generate-policy"}
+            metadata={"endpoint": "/api/v1/ai/generate-policy"},
         )
 
         assert result["cost_usd"] > 0
@@ -521,7 +543,7 @@ class TestAICostManager:
                 response_content="Test response",
                 input_tokens=500 + i * 100,
                 output_tokens=250 + i * 50,
-                user_id=f"user_{i}"
+                user_id=f"user_{i}",
             )
 
         summary = await cost_manager.get_daily_summary(datetime.now().date())
@@ -546,13 +568,16 @@ class TestAICostManager:
                 response_content="Large response " * 200,
                 input_tokens=200000,  # High tokens to trigger budget alerts
                 output_tokens=100000,  # $2 + $3 = $5 per request
-                user_id="user_123"
+                user_id="user_123",
             )
 
         alerts = await cost_manager.check_budget_alerts()
 
         assert len(alerts) > 0
-        assert any(alert.alert_type in [AlertType.BUDGET_WARNING, AlertType.BUDGET_EXCEEDED] for alert in alerts)
+        assert any(
+            alert.alert_type in [AlertType.BUDGET_WARNING, AlertType.BUDGET_EXCEEDED]
+            for alert in alerts
+        )
 
     @pytest.mark.asyncio
     async def test_optimization_recommendations(self, cost_manager):
@@ -567,21 +592,22 @@ class TestAICostManager:
                 response_content="Test response",
                 input_tokens=1000 + i * 50,
                 output_tokens=500 + i * 25,
-                user_id="user_123"
+                user_id="user_123",
             )
 
         recommendations = await cost_manager.get_optimization_recommendations()
 
         assert len(recommendations) > 0
-        assert all("strategy" in rec and "potential_savings" in rec for rec in recommendations)
+        assert all(
+            "strategy" in rec and "potential_savings" in rec for rec in recommendations
+        )
 
     @pytest.mark.asyncio
     async def test_cost_reporting_endpoints(self, cost_manager):
         """Test various cost reporting endpoints."""
         # Monthly report
         monthly_report = await cost_manager.generate_monthly_report(
-            year=datetime.now().year,
-            month=datetime.now().month
+            year=datetime.now().year, month=datetime.now().month
         )
 
         assert "total_cost" in monthly_report
@@ -593,7 +619,7 @@ class TestAICostManager:
     @pytest.mark.skip(reason="WebSocket manager not yet implemented")
     async def test_real_time_cost_monitoring(self, cost_manager):
         """Test real-time cost monitoring and alerts."""
-        with patch('services.ai.cost_management.websocket_manager') as mock_ws:
+        with patch("services.ai.cost_management.websocket_manager") as mock_ws:
             await cost_manager.track_ai_request(
                 service_name="policy_generation",
                 model_name="gpt-4-turbo",
@@ -601,7 +627,7 @@ class TestAICostManager:
                 response_content="Expensive response",
                 input_tokens=5000,
                 output_tokens=2500,
-                user_id="user_123"
+                user_id="user_123",
             )
 
             # Verify real-time updates were sent
@@ -622,7 +648,7 @@ class TestAICostManager:
                     response_content="Expensive response",
                     input_tokens=2000,
                     output_tokens=1000,
-                    user_id="user_123"
+                    user_id="user_123",
                 )
         except Exception as e:
             assert "cost limit exceeded" in str(e).lower()
@@ -634,7 +660,7 @@ class TestAICostManager:
         # Simulate historical usage
         for day in range(30):
             date = datetime.now() - timedelta(days=day)
-            with patch('datetime.datetime') as mock_datetime:
+            with patch("datetime.datetime") as mock_datetime:
                 mock_datetime.now.return_value = date
                 await cost_manager.track_ai_request(
                     service_name="policy_generation",
@@ -643,7 +669,7 @@ class TestAICostManager:
                     response_content="Historical response",
                     input_tokens=1000,
                     output_tokens=500,
-                    user_id="user_123"
+                    user_id="user_123",
                 )
 
         forecast = await cost_manager.generate_cost_forecast(days_ahead=30)
@@ -665,16 +691,22 @@ class TestCostOptimizationStrategies:
 
         # Simple task should route to cheaper model
         simple_task = "What is GDPR?"
-        model_choice = await router.select_optimal_model(simple_task, "question_answering")
+        model_choice = await router.select_optimal_model(
+            simple_task, "question_answering"
+        )
         assert model_choice["model"] in ["gemini-2.5-flash-lite", "gpt-3.5-turbo"]
 
         # Complex task should route to more capable model
-        complex_task = ("Generate a comprehensive 20-page privacy policy document that covers "
-                       "data collection, storage, processing, sharing, retention, user rights, "
-                       "cookie policies, third-party integrations, international data transfers, "
-                       "children's privacy, security measures, breach notifications, and compliance "
-                       "with GDPR, CCPA, and other relevant privacy regulations worldwide")
-        model_choice = await router.select_optimal_model(complex_task, "policy_generation")
+        complex_task = (
+            "Generate a comprehensive 20-page privacy policy document that covers "
+            "data collection, storage, processing, sharing, retention, user rights, "
+            "cookie policies, third-party integrations, international data transfers, "
+            "children's privacy, security measures, breach notifications, and compliance "
+            "with GDPR, CCPA, and other relevant privacy regulations worldwide"
+        )
+        model_choice = await router.select_optimal_model(
+            complex_task, "policy_generation"
+        )
         assert model_choice["model"] in ["gemini-2.5-pro", "gpt-4-turbo"]
 
     @pytest.mark.asyncio
@@ -689,7 +721,7 @@ class TestCostOptimizationStrategies:
             "prompt": "Generate complex analysis",
             "model": "gpt-4-turbo",
             "estimated_cost": Decimal("2.00"),
-            "frequency": 10
+            "frequency": 10,
         }
 
         should_cache = await cache_manager.should_cache_request(expensive_request)
@@ -700,7 +732,7 @@ class TestCostOptimizationStrategies:
             "prompt": "Simple question",
             "model": "gemini-2.5-flash",
             "estimated_cost": Decimal("0.001"),
-            "frequency": 1
+            "frequency": 1,
         }
 
         should_cache = await cache_manager.should_cache_request(cheap_request)
@@ -770,8 +802,8 @@ class TestCostReportingAndAnalytics:
             "top_services": [
                 {"name": "policy_generation", "cost": Decimal("180.00")},
                 {"name": "assessment_analysis", "cost": Decimal("150.00")},
-                {"name": "chat_assistance", "cost": Decimal("120.00")}
-            ]
+                {"name": "chat_assistance", "cost": Decimal("120.00")},
+            ],
         }
 
         report = await dashboard.generate_executive_summary(cost_data)
@@ -789,8 +821,11 @@ class TestCostReportingAndAnalytics:
         analyzer = CostAttributionAnalyzer()
 
         attribution = await analyzer.analyze_cost_attribution(
-            time_period={"start": datetime.now() - timedelta(days=30), "end": datetime.now()},
-            dimensions=["user_id", "service_name", "model_name", "feature"]
+            time_period={
+                "start": datetime.now() - timedelta(days=30),
+                "end": datetime.now(),
+            },
+            dimensions=["user_id", "service_name", "model_name", "feature"],
         )
 
         assert "user_breakdown" in attribution
@@ -808,7 +843,10 @@ class TestCostReportingAndAnalytics:
 
         # Historical data simulation
         historical_data = [
-            {"date": datetime.now() - timedelta(days=i), "cost": Decimal(f"{100 + i * 5}.00")}
+            {
+                "date": datetime.now() - timedelta(days=i),
+                "cost": Decimal(f"{100 + i * 5}.00"),
+            }
             for i in range(90)
         ]
 
@@ -816,7 +854,7 @@ class TestCostReportingAndAnalytics:
             historical_data=historical_data,
             prediction_horizon_days=30,
             include_seasonality=True,
-            include_growth_trends=True
+            include_growth_trends=True,
         )
 
         assert "predicted_costs" in prediction
@@ -828,7 +866,7 @@ class TestCostReportingAndAnalytics:
 # Integration tests with real AI services
 class TestIntegrationWithAIServices:
     """Test integration with actual AI services."""
-    
+
     @pytest.mark.asyncio
     async def test_budget_alert_integration(self):
         """Test budget alerts trigger during API calls."""
@@ -836,14 +874,14 @@ class TestIntegrationWithAIServices:
         cost_manager = AICostManager(redis_client=mock_redis)
 
         # Mock the actual AI call but track real cost calculation
-        with patch.object(ComplianceAssistant, 'generate_response') as mock_generate:
+        with patch.object(ComplianceAssistant, "generate_response") as mock_generate:
             mock_generate.return_value = {
                 "content": "Privacy policy content...",
                 "usage": {
                     "input_tokens": 1200,
                     "output_tokens": 800,
-                    "total_tokens": 2000
-                }
+                    "total_tokens": 2000,
+                },
             }
 
             result = await cost_manager.track_ai_request(
@@ -853,7 +891,7 @@ class TestIntegrationWithAIServices:
                 response_content="Privacy policy content...",
                 input_tokens=1200,
                 output_tokens=800,
-                user_id="integration_test_user"
+                user_id="integration_test_user",
             )
 
             assert result["cost_usd"] > 0
@@ -880,7 +918,7 @@ class TestIntegrationWithAIServices:
                 response_content="Test response " * 100,  # Large response
                 input_tokens=1500,
                 output_tokens=750,
-                user_id="integration_test_user"
+                user_id="integration_test_user",
             )
 
         alerts = await cost_manager.check_budget_alerts()

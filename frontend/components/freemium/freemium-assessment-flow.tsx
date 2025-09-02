@@ -9,14 +9,14 @@ import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
 import { Slider } from '../ui/slider';
-import { 
-  Loader2, 
-  ArrowRight, 
-  ArrowLeft, 
+import {
+  Loader2,
+  ArrowRight,
+  ArrowLeft,
   CheckCircle,
   AlertCircle,
   Brain,
-  Clock
+  Clock,
 } from 'lucide-react';
 import { freemiumService } from '../../lib/api/freemium.service';
 
@@ -34,7 +34,11 @@ interface FreemiumAssessmentFlowProps {
   onComplete?: () => void;
 }
 
-export function FreemiumAssessmentFlow({ token, className = "", onComplete }: FreemiumAssessmentFlowProps) {
+export function FreemiumAssessmentFlow({
+  token,
+  className = '',
+  onComplete,
+}: FreemiumAssessmentFlowProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,24 +56,24 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
 
   const loadSessionData = async () => {
     if (!token) return;
-    
+
     try {
       setIsLoading(true);
       setError(null);
-      
+
       // Get session progress to see current state
       const progress = await freemiumService.getSessionProgress(token);
       setSessionProgress(progress);
-      
+
       // If there's a current question in the session, use it
       if (progress.current_question_id) {
         // The session response should contain the current question data
         // For now, extract from the progress response
         const question: AssessmentQuestion = {
           question_id: progress.current_question_id,
-          question_text: progress.question_text || "Please describe your compliance needs",
+          question_text: progress.question_text || 'Please describe your compliance needs',
           question_type: progress.question_type || 'text',
-          answer_options: progress.answer_options
+          answer_options: progress.answer_options,
         };
         setCurrentQuestion(question);
       } else {
@@ -113,11 +117,11 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
     try {
       const response = await freemiumService.submitAnswer(token, {
         question_id: currentQuestion.question_id,
-        answer_text: currentAnswer.toString(),  // Changed from 'answer' to 'answer_text'
+        answer_text: currentAnswer.toString(), // Changed from 'answer' to 'answer_text'
         answer_confidence: 'medium',
         time_spent_seconds: 30,
       });
-      
+
       // Check response for next question or completion
       if (response.assessment_complete || response.redirect_to_results) {
         // Assessment is complete, redirect to results
@@ -131,12 +135,12 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
         // There's a next question, update the current question
         const nextQuestion: AssessmentQuestion = {
           question_id: response.next_question_id,
-          question_text: response.next_question_text || "Please provide your answer",
+          question_text: response.next_question_text || 'Please provide your answer',
           question_type: response.next_question_type || 'text',
-          answer_options: response.next_answer_options
+          answer_options: response.next_answer_options,
         };
         setCurrentQuestion(nextQuestion);
-        
+
         // Update progress if provided
         if (response.progress) {
           setSessionProgress(response.progress);
@@ -164,14 +168,10 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
           >
             {question.answer_options?.map((option, index) => (
               <div key={option} className="flex items-center space-x-3">
-                <RadioGroupItem 
-                  value={option} 
-                  id={`option-${index}`}
-                  disabled={isSubmitting}
-                />
-                <Label 
-                  htmlFor={`option-${index}`} 
-                  className="text-sm font-medium cursor-pointer flex-1"
+                <RadioGroupItem value={option} id={`option-${index}`} disabled={isSubmitting} />
+                <Label
+                  htmlFor={`option-${index}`}
+                  className="flex-1 cursor-pointer text-sm font-medium"
                 >
                   {option}
                 </Label>
@@ -201,13 +201,13 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
           >
             <div className="flex items-center space-x-3">
               <RadioGroupItem value="true" id="yes" disabled={isSubmitting} />
-              <Label htmlFor="yes" className="text-sm font-medium cursor-pointer">
+              <Label htmlFor="yes" className="cursor-pointer text-sm font-medium">
                 Yes
               </Label>
             </div>
             <div className="flex items-center space-x-3">
               <RadioGroupItem value="false" id="no" disabled={isSubmitting} />
-              <Label htmlFor="no" className="text-sm font-medium cursor-pointer">
+              <Label htmlFor="no" className="cursor-pointer text-sm font-medium">
                 No
               </Label>
             </div>
@@ -228,11 +228,9 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
                 disabled={isSubmitting}
               />
             </div>
-            <div className="flex justify-between text-xs text-gray-500 px-3">
+            <div className="flex justify-between px-3 text-xs text-gray-500">
               <span>1 (Very Low)</span>
-              <span className="font-medium text-teal-600">
-                {currentAnswer || 1}
-              </span>
+              <span className="font-medium text-teal-600">{currentAnswer || 1}</span>
               <span>10 (Very High)</span>
             </div>
           </div>
@@ -253,20 +251,18 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
   // Loading state
   if (isLoading) {
     return (
-      <Card className={`w-full max-w-2xl mx-auto ${className}`}>
-        <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
-          <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
-            <Brain className="w-6 h-6 text-teal-600 animate-pulse" />
+      <Card className={`mx-auto w-full max-w-2xl ${className}`}>
+        <CardContent className="flex flex-col items-center justify-center space-y-4 py-12">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-teal-100">
+            <Brain className="h-6 w-6 animate-pulse text-teal-600" />
           </div>
-          <div className="text-center space-y-2">
-            <h3 className="text-lg font-semibold text-gray-900">
-              Loading Your Assessment
-            </h3>
+          <div className="space-y-2 text-center">
+            <h3 className="text-lg font-semibold text-gray-900">Loading Your Assessment</h3>
             <p className="text-gray-600">
               Preparing personalized questions based on your business...
             </p>
           </div>
-          <Loader2 className="w-6 h-6 animate-spin text-teal-600" />
+          <Loader2 className="h-6 w-6 animate-spin text-teal-600" />
         </CardContent>
       </Card>
     );
@@ -275,7 +271,7 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
   // Error state
   if (error) {
     return (
-      <Card className={`w-full max-w-2xl mx-auto ${className}`}>
+      <Card className={`mx-auto w-full max-w-2xl ${className}`}>
         <CardContent className="py-8">
           <Alert variant="destructive">
             <AlertCircle className="h-4 w-4" />
@@ -284,8 +280,8 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
             </AlertDescription>
           </Alert>
           <div className="mt-6 text-center">
-            <Button 
-              onClick={() => window.location.reload()} 
+            <Button
+              onClick={() => window.location.reload()}
               className="bg-teal-600 hover:bg-teal-700"
             >
               Try Again
@@ -299,13 +295,11 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
   // No question loaded
   if (!currentQuestion) {
     return (
-      <Card className={`w-full max-w-2xl mx-auto ${className}`}>
+      <Card className={`mx-auto w-full max-w-2xl ${className}`}>
         <CardContent className="py-8 text-center">
           <Alert>
             <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              Assessment not found. Please start over.
-            </AlertDescription>
+            <AlertDescription>Assessment not found. Please start over.</AlertDescription>
           </Alert>
         </CardContent>
       </Card>
@@ -313,26 +307,26 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
   }
 
   return (
-    <Card className={`w-full max-w-2xl mx-auto ${className}`}>
+    <Card className={`mx-auto w-full max-w-2xl ${className}`}>
       {/* Progress Header */}
       <CardHeader className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Brain className="w-5 h-5 text-teal-600" />
-            <span className="text-sm font-medium text-gray-600">
-              AI Compliance Assessment
-            </span>
+            <Brain className="h-5 w-5 text-teal-600" />
+            <span className="text-sm font-medium text-gray-600">AI Compliance Assessment</span>
           </div>
           <div className="flex items-center space-x-2 text-sm text-gray-500">
-            <Clock className="w-4 h-4" />
+            <Clock className="h-4 w-4" />
             <span>~{Math.max(1, 5 - (sessionProgress?.questions_answered || 0))} min left</span>
           </div>
         </div>
-        
+
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-gray-600">Progress</span>
-            <span className="font-medium text-teal-600">{Math.round(sessionProgress?.progress_percentage || 0)}%</span>
+            <span className="font-medium text-teal-600">
+              {Math.round(sessionProgress?.progress_percentage || 0)}%
+            </span>
           </div>
           <Progress value={sessionProgress?.progress_percentage || 0} className="h-2" />
         </div>
@@ -341,13 +335,13 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
       <CardContent className="space-y-6">
         {/* Question */}
         <div className="space-y-4">
-          <CardTitle className="text-xl font-semibold text-gray-900 leading-7">
+          <CardTitle className="text-xl font-semibold leading-7 text-gray-900">
             {currentQuestion.question_text}
           </CardTitle>
-          
+
           {/* Question Type Indicator */}
           <div className="flex items-center space-x-2 text-sm text-gray-500">
-            <div className="w-2 h-2 bg-teal-500 rounded-full"></div>
+            <div className="h-2 w-2 rounded-full bg-teal-500"></div>
             <span>
               {currentQuestion.question_type === 'multiple_choice' && 'Select one option'}
               {currentQuestion.question_type === 'text' && 'Enter your response'}
@@ -360,7 +354,7 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
         {/* Answer Input */}
         <div className="space-y-4">
           {renderQuestion(currentQuestion)}
-          
+
           {answerError && (
             <Alert variant="destructive">
               <AlertDescription>{answerError}</AlertDescription>
@@ -369,33 +363,33 @@ export function FreemiumAssessmentFlow({ token, className = "", onComplete }: Fr
         </div>
 
         {/* Navigation */}
-        <div className="flex justify-between items-center pt-6 border-t border-gray-100">
+        <div className="flex items-center justify-between border-t border-gray-100 pt-6">
           <div className="text-sm text-gray-500">
             Question {(sessionProgress?.questions_answered || 0) + 1}
           </div>
-          
+
           <Button
             onClick={handleSubmit}
             disabled={isSubmitting || currentAnswer === ''}
-            className="bg-teal-600 hover:bg-teal-700 text-white px-8"
+            className="bg-teal-600 px-8 text-white hover:bg-teal-700"
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Processing...
               </>
             ) : (
               <>
                 Next
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="ml-2 h-4 w-4" />
               </>
             )}
           </Button>
         </div>
 
         {/* AI Indicator */}
-        <div className="flex items-center justify-center space-x-2 text-xs text-gray-400 pt-2">
-          <Brain className="w-3 h-3" />
+        <div className="flex items-center justify-center space-x-2 pt-2 text-xs text-gray-400">
+          <Brain className="h-3 w-3" />
           <span>Questions are generated by AI based on your responses</span>
         </div>
       </CardContent>
@@ -411,15 +405,15 @@ interface FreemiumAssessmentProgressProps {
 export function FreemiumAssessmentProgress({ sessionProgress }: FreemiumAssessmentProgressProps) {
   const progress = sessionProgress?.progress_percentage || 0;
   const questionsAnswered = sessionProgress?.questions_answered || 0;
-  
+
   return (
-    <div className="w-full max-w-sm mx-auto space-y-2">
+    <div className="mx-auto w-full max-w-sm space-y-2">
       <div className="flex justify-between text-sm">
         <span className="text-gray-600">Assessment Progress</span>
         <span className="font-medium text-teal-600">{Math.round(progress)}%</span>
       </div>
       <Progress value={progress} className="h-2" />
-      <div className="text-xs text-gray-500 text-center">
+      <div className="text-center text-xs text-gray-500">
         {questionsAnswered} questions answered
       </div>
     </div>

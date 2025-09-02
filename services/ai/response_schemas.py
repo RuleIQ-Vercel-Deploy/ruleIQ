@@ -380,7 +380,11 @@ class IntentClassification(TypedDict):
     """User intent classification result."""
 
     intent_type: Literal[
-        "evidence_query", "compliance_check", "guidance_request", "general_query", "assessment_help"
+        "evidence_query",
+        "compliance_check",
+        "guidance_request",
+        "general_query",
+        "assessment_help",
     ]
     confidence: float
     entities: Dict[str, List[str]]

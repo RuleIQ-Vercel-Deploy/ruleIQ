@@ -24,7 +24,9 @@ class OAuth2Config(BaseSettings):
     MICROSOFT_CLIENT_ID: str = ""
     MICROSOFT_CLIENT_SECRET: str = ""
     MICROSOFT_TENANT_ID: str = ""
-    MICROSOFT_REDIRECT_URI: str = "http://localhost:8000/api/integrations/microsoft/callback"
+    MICROSOFT_REDIRECT_URI: str = (
+        "http://localhost:8000/api/integrations/microsoft/callback"
+    )
     MICROSOFT_SCOPES: list = ["https://graph.microsoft.com/.default"]
 
     # AWS (uses different auth method)

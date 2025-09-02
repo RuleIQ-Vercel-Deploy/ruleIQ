@@ -1,0 +1,74 @@
+
+16int
+
+9int
+
+5int
+.%"Get statistics about migrated tasks"str
+
+7int
+
+"evidence"str
+"on_demand_tasks"str
+truebool
+"scheduled_tasks"str
+	"compliance"str
+"monitoring"str
+"migration_complete"str
+!"coverage_percentage"str
+"reporting"str
+"task_categories"str
+"100.0float
+
+
+2int
+"notification"str
+"total_tasks_migrated"str
+
+3int
+
+4intself
+ð ð( "î&
+$
+
+ò ÿ(	"#new-object#Bdict"
+ 
+
+ó ó(&"	#map-set#:&
+$
+
+ô ú("#new-object#Bdict"
+ 
+
+õ õ("	#map-set#:	
+"
+ 
+
+ö ö("	#map-set#:
+"
+ 
+
+÷ ÷(!"	#map-set#:"
+ 
+
+ø ø("	#map-set#:"
+ 
+
+ù ù("	#map-set#:"
+ 
+
+ô ú("	#map-set#:"
+ 
+
+û û( "	#map-set#:"
+ 
+
+ü ü( "	#map-set#:"
+ 
+
+ý ý(& "	#map-set#:"
+ 
+
+þ þ((#"	#map-set#:!"
+
+ò ÿ(	*K/home/omar/Documents/ruleIQ/langgraph_agent/graph/celery_migration_graph.py

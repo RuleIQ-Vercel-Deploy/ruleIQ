@@ -1,5 +1,6 @@
 # ruleIQ Agentic Systems Overview
-*Generated: 2025-08-14*
+
+_Generated: 2025-08-14_
 
 ## Executive Summary
 
@@ -8,24 +9,28 @@ ruleIQ is implementing a comprehensive **agentic transformation** to evolve from
 ## 1. Core Agentic Vision
 
 ### Philosophy: "Building Agents, Not Tools"
+
 - **From**: Static interactions → **To**: Continuous relationship building
-- **From**: Task execution → **To**: Goal understanding and achievement  
+- **From**: Task execution → **To**: Goal understanding and achievement
 - **From**: Reactive responses → **To**: Proactive assistance
 - **From**: Feature delivery → **To**: Trust development
 
 ### Trust Gradient Implementation
 
 #### Level 1: Transparent Helper (Current State)
+
 - Shows all reasoning and confidence levels
 - Asks for confirmation before actions
 - Explains decisions with transparent logic
 
 #### Level 2: Trusted Advisor (6 months)
+
 - Makes confident suggestions based on patterns
 - Learns user preferences over time
 - Predicts compliance needs proactively
 
 #### Level 3: Autonomous Partner (12 months)
+
 - Takes initiative with high-confidence actions
 - Manages workflows autonomously
 - Prevents issues before they occur
@@ -33,6 +38,7 @@ ruleIQ is implementing a comprehensive **agentic transformation** to evolve from
 ## 2. IQ Agent - GraphRAG Compliance Orchestrator
 
 ### Architecture Overview
+
 ```python
 IQComplianceAgent:
   - Knowledge Base: Neo4j graph with 20+ node types
@@ -69,6 +75,7 @@ IQComplianceAgent:
    - Build knowledge base
 
 ### Key Capabilities
+
 - **Gap Analysis**: Identify missing controls for regulations
 - **Risk Assessment**: Calculate dynamic risk scores from patterns
 - **Coverage Analysis**: Measure compliance across domains
@@ -79,18 +86,21 @@ IQComplianceAgent:
 ### Implementation Details
 
 #### Location: `services/iq_agent.py`
+
 - 700+ lines of production-ready code
 - LangGraph StateGraph workflow
 - Async/await architecture
 - Comprehensive error handling
 
 #### API Integration: `api/routers/iq_agent.py`
+
 - RESTful endpoints for agent interaction
 - Rate limiting and authentication
 - Background task processing
 - WebSocket support for streaming
 
 #### Database Integration
+
 - Neo4j graph database for knowledge storage
 - PostgreSQL for state persistence
 - Redis for caching and session management
@@ -98,11 +108,13 @@ IQComplianceAgent:
 ## 3. RAG Self-Critic System
 
 ### Purpose
+
 Ensures response accuracy, reliability, and quality through automated fact-checking and self-criticism.
 
 ### Components
 
 #### Core Fact-Checking Engine (`services/rag_fact_checker.py`)
+
 - Multi-source fact verification
 - Cross-reference validation
 - Source reliability assessment
@@ -111,6 +123,7 @@ Ensures response accuracy, reliability, and quality through automated fact-check
 - Bias detection
 
 #### Command Interface (`services/rag_self_critic.py`)
+
 ```bash
 # Quick fact-check (2-5 seconds)
 python services/rag_self_critic.py quick-check --query "..."
@@ -123,20 +136,22 @@ python services/rag_self_critic.py critique --query "..."
 ```
 
 ### Quality Thresholds
+
 - **Production Approval**: 0.75+ overall score
 - **High Stakes**: 0.85+ overall score
 - **Quick Check**: Boolean reliability for real-time
 
 ### Integration Points
+
 ```python
 @app.post("/rag/query-with-validation")
 async def query_with_validation(query: str):
     # Get RAG response
     rag_response = await rag_system.query_documentation(query)
-    
+
     # Validate response
     validation = await critic.quick_check_command(query)
-    
+
     return {
         "response": rag_response.answer,
         "validated": validation["is_reliable"],
@@ -150,6 +165,7 @@ async def query_with_validation(query: str):
 ### Architecture: `langgraph_agent/`
 
 #### Core Components
+
 - **StateGraph**: Manages agent workflow state
 - **PostgreSQL Checkpointer**: Persistent state storage
 - **Router Node**: Intelligent routing between specialized agents
@@ -160,6 +176,7 @@ async def query_with_validation(query: str):
   - Legal Reviewer
 
 #### State Management
+
 ```python
 ComplianceAgentState:
   - company_id: UUID
@@ -173,6 +190,7 @@ ComplianceAgentState:
 ```
 
 #### Workflow Example
+
 ```python
 workflow = StateGraph(ComplianceAgentState)
 workflow.add_node("router", router_node)
@@ -189,21 +207,25 @@ workflow.add_edge("compliance_analyzer", END)
 ### Types of Memory
 
 #### 1. Conversation Memory
+
 - User queries and agent responses
 - Context from interactions
 - Importance scoring
 
 #### 2. Knowledge Graph Memory
+
 - Graph query results
 - Pattern discoveries
 - Regulatory insights
 
 #### 3. Pattern Memory
+
 - Detected compliance patterns
 - Risk convergence insights
 - Enforcement precedents
 
 ### Memory Manager (`services/compliance_memory_manager.py`)
+
 ```python
 class ComplianceMemoryManager:
     async def store_conversation_memory()
@@ -217,6 +239,7 @@ class ComplianceMemoryManager:
 ### Current Implementation Status
 
 #### ✅ Completed
+
 - IQ Agent core intelligence loop
 - GraphRAG knowledge base
 - RAG Self-Critic system
@@ -224,12 +247,14 @@ class ComplianceMemoryManager:
 - LangGraph workflow structure
 
 #### 🔄 In Progress
+
 - Continuous conversation flow
 - Advanced pattern recognition
 - Autonomous action execution
 - Trust score tracking
 
 #### 📋 Planned
+
 - Predictive compliance monitoring
 - Auto-updating policies
 - Proactive risk alerts
@@ -238,6 +263,7 @@ class ComplianceMemoryManager:
 ## 7. Technical Integration
 
 ### Backend Services
+
 ```
 services/
 ├── iq_agent.py                 # Main IQ Agent implementation
@@ -249,6 +275,7 @@ services/
 ```
 
 ### API Endpoints
+
 ```
 /api/v1/iq/
 ├── query                # Process compliance query
@@ -259,12 +286,13 @@ services/
 ```
 
 ### Frontend Integration
+
 ```typescript
 // lib/api/iq-agent.ts
 export const useIQAgent = () => {
   return useQuery({
     queryKey: ['iq-agent', query],
-    queryFn: () => processComplianceQuery(query)
+    queryFn: () => processComplianceQuery(query),
   });
 };
 ```
@@ -272,18 +300,21 @@ export const useIQAgent = () => {
 ## 8. Performance Characteristics
 
 ### Response Times
+
 - **Quick Check**: ~2-5 seconds
 - **Standard Query**: ~10-30 seconds
 - **Complex Analysis**: ~15-45 seconds
 - **Full Assessment**: ~1-3 minutes
 
 ### Scalability
+
 - Async/await architecture
 - Redis caching layer
 - Connection pooling
 - Background task processing
 
 ### Reliability
+
 - Circuit breaker pattern
 - Fallback responses
 - Error recovery
@@ -292,12 +323,14 @@ export const useIQAgent = () => {
 ## 9. Success Metrics
 
 ### Traditional Metrics
+
 - User retention: Target >80%
 - Assessment completion: Target >90%
 - Policy accuracy: Target >95%
 - System uptime: Target 99.9%
 
 ### Agentic Metrics
+
 - **Trust Score**: User delegation willingness
 - **Context Accuracy**: Memory recall precision
 - **Prediction Success**: Proactive suggestion accuracy
@@ -307,21 +340,25 @@ export const useIQAgent = () => {
 ## 10. Future Roadmap
 
 ### Phase 1: Memory Foundation (Weeks 1-2) ✅
+
 - Context storage in database
 - Session continuity
 - Basic preference learning
 
 ### Phase 2: Conversational Assessment (Weeks 3-6) 🔄
+
 - Replace forms with conversations
 - Follow-up question generation
 - Assessment resumption
 
 ### Phase 3: Predictive Intelligence (Weeks 7-12)
+
 - Regulatory change monitoring
 - Proactive suggestions
 - Risk prediction
 
 ### Phase 4: Autonomous Actions (Weeks 13-24)
+
 - Policy auto-updates
 - Workflow automation
 - Predictive generation
@@ -329,6 +366,7 @@ export const useIQAgent = () => {
 ## 11. Development Principles
 
 ### For Every Feature
+
 1. How does this build relationships vs transactions?
 2. What context can we learn and remember?
 3. How can this become more autonomous?
@@ -336,6 +374,7 @@ export const useIQAgent = () => {
 5. How does this deepen compliance intelligence?
 
 ### Architecture Principles
+
 - Every action generates learnable context
 - Every response includes confidence levels
 - Every automation includes transparent reasoning
@@ -345,6 +384,7 @@ export const useIQAgent = () => {
 ## 12. Competitive Advantages
 
 ### Why Agentic Architecture Wins
+
 1. **Switching Cost**: Users won't abandon AI that knows their patterns
 2. **Network Effect**: System improves with every interaction
 3. **Data Moat**: Accumulated intelligence becomes irreplaceable
@@ -358,4 +398,4 @@ The architecture is production-ready with clear paths for enhancement, ensuring 
 
 ---
 
-*"We're not just adding AI features to existing tools. We're fundamentally reimagining compliance management as an ongoing partnership between humans and intelligent agents."*
+_"We're not just adding AI features to existing tools. We're fundamentally reimagining compliance management as an ongoing partnership between humans and intelligent agents."_

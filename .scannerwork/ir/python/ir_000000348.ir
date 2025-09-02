@@ -1,0 +1,73 @@
+
+"auth"str
+"confidential"str
+
+0int
+"token"str
+		"private"str
+
+"sensitive"str
+"key"str
+
+"password"str
+"credential"str
+"secret"str
+A8"Sanitize error details to prevent information leakage."strdetails
+Þ Þ(6list"·9
+7
+
+á ë(	sensitive_keys"#unknown-value#Blist(
+&
+
+á ë(	"
+#is-exact#:Bbool
+
+
+á ë(	"
+#assume#::
+8
+
+á ë(	"#set-field# __collection_size:Bint(
+&
+
+á ë(	"#array-add-last#:(
+&
+
+á ë(	"#array-add-last#:(
+&
+
+á ë(	"#array-add-last#:(
+&
+
+á ë(	"#array-add-last#:(
+&
+
+á ë(	"#array-add-last#:(
+&
+
+á ë(	"#array-add-last#:(
+&
+
+á ë(	"#array-add-last#:	(
+&
+
+á ë(	"#array-add-last#:
+(
+&
+
+á ë(	"#array-add-last#:*
+(
+
+í ý(%closure"#new-object#2
+0
+
+í ý("#set-field# sensitive_keys:-
++
+
+í ý("?python-partial-apply?:X
+V
+
+ý ý(%"C
+2error_handlers.ErrorHandler.sanitize_error_detailssanitize_dict:
+
+ý ý(%*7/home/omar/Documents/ruleIQ/api/utils/error_handlers.py

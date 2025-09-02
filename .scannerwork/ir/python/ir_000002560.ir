@@ -1,0 +1,31 @@
+
+0.0float
+"division by zero"bool
+
+"S3518"bool
+
+0int
+"a"bool
+!"Calculate success rate"strselfJ J("x,
+*
+L L("#get-field# total_items:*
+(
+L L( "
+#binop ==#2==:Bbool"
+L L(  *L L(
+"
+M M("ô1
+/
+N N($"#get-field# successful_items:,
+*
+N' N(7"#get-field# total_items:*
+(
+N N(7	"
+#binop !=#2!=:Bbool 
+
+N N(7"
+#assert#:	
+1
+/
+N N(7"#dependent-value#*:Bfloat
+N N(7*H/home/omar/Documents/ruleIQ/services/ai/compliance_ingestion_pipeline.py

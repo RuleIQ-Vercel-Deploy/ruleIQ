@@ -11,7 +11,7 @@ from langgraph_agent.graph.state import (
     update_state_metadata,
     add_error_to_state,
     should_interrupt,
-    get_state_summary
+    get_state_summary,
 )
 from langgraph_agent.core.models import SafeFallbackResponse
 
@@ -24,10 +24,7 @@ class TestCreateInitialState:
         company_id = uuid4()
         user_input = "What GDPR obligations apply to my retail business?"
 
-        state = create_initial_state(
-            company_id=company_id,
-            user_input=user_input
-        )
+        state = create_initial_state(company_id=company_id, user_input=user_input)
 
         assert state["company_id"] == company_id
         assert len(state["messages"]) == 1
@@ -52,7 +49,7 @@ class TestCreateInitialState:
             user_input=user_input,
             thread_id=thread_id,
             user_id=user_id,
-            autonomy_level=autonomy_level
+            autonomy_level=autonomy_level,
         )
 
         assert state["thread_id"] == thread_id
@@ -65,10 +62,7 @@ class TestCreateInitialState:
         company_id = uuid4()
         before_creation = datetime.utcnow()
 
-        state = create_initial_state(
-            company_id=company_id,
-            user_input="Test input"
-        )
+        state = create_initial_state(company_id=company_id, user_input="Test input")
 
         after_creation = datetime.utcnow()
 
@@ -82,10 +76,7 @@ class TestUpdateStateMetadata:
 
     def test_update_metadata_increments_turn_count(self):
         """Test metadata update increments turn count."""
-        state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test"
-        )
+        state = create_initial_state(company_id=uuid4(), user_input="Test")
 
         original_turn_count = state["turn_count"]
         original_time = state["last_updated"]
@@ -97,10 +88,7 @@ class TestUpdateStateMetadata:
 
     def test_update_metadata_preserves_other_fields(self):
         """Test metadata update doesn't change other fields."""
-        state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test"
-        )
+        state = create_initial_state(company_id=uuid4(), user_input="Test")
 
         original_company_id = state["company_id"]
         original_messages = state["messages"].copy()
@@ -116,14 +104,10 @@ class TestAddErrorToState:
 
     def test_add_error_to_state(self):
         """Test adding error to state."""
-        state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test"
-        )
+        state = create_initial_state(company_id=uuid4(), user_input="Test")
 
         error = SafeFallbackResponse(
-            error_message="Test error occurred",
-            error_details={"field": "test_field"}
+            error_message="Test error occurred", error_details={"field": "test_field"}
         )
 
         original_error_count = state["error_count"]
@@ -135,20 +119,11 @@ class TestAddErrorToState:
 
     def test_multiple_errors_accumulate(self):
         """Test multiple errors accumulate correctly."""
-        state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test"
-        )
+        state = create_initial_state(company_id=uuid4(), user_input="Test")
 
-        error1 = SafeFallbackResponse(
-            error_message="First error",
-            error_details={}
-        )
+        error1 = SafeFallbackResponse(error_message="First error", error_details={})
 
-        error2 = SafeFallbackResponse(
-            error_message="Second error",
-            error_details={}
-        )
+        error2 = SafeFallbackResponse(error_message="Second error", error_details={})
 
         state = add_error_to_state(state, error1)
         state = add_error_to_state(state, error2)
@@ -164,10 +139,7 @@ class TestShouldInterrupt:
 
     def test_should_interrupt_with_explicit_interrupt(self):
         """Test interrupt when explicitly requested."""
-        state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test"
-        )
+        state = create_initial_state(company_id=uuid4(), user_input="Test")
 
         state["interrupt_before"] = "legal_reviewer"
 
@@ -176,10 +148,7 @@ class TestShouldInterrupt:
 
     def test_should_interrupt_with_human_review(self):
         """Test interrupt when human review required."""
-        state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test"
-        )
+        state = create_initial_state(company_id=uuid4(), user_input="Test")
 
         state["requires_human_review"] = True
 
@@ -187,27 +156,18 @@ class TestShouldInterrupt:
 
     def test_should_interrupt_with_error_threshold(self):
         """Test interrupt when error threshold exceeded."""
-        state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test"
-        )
+        state = create_initial_state(company_id=uuid4(), user_input="Test")
 
         # Add 3 errors to hit threshold
         for i in range(3):
-            error = SafeFallbackResponse(
-                error_message=f"Error {i}",
-                error_details={}
-            )
+            error = SafeFallbackResponse(error_message=f"Error {i}", error_details={})
             state = add_error_to_state(state, error)
 
         assert should_interrupt(state, "any_node") is True
 
     def test_should_interrupt_with_turn_limit(self):
         """Test interrupt when turn limit exceeded."""
-        state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test"
-        )
+        state = create_initial_state(company_id=uuid4(), user_input="Test")
 
         state["turn_count"] = 20  # Hit turn limit
 
@@ -215,10 +175,7 @@ class TestShouldInterrupt:
 
     def test_should_not_interrupt_normal_conditions(self):
         """Test no interrupt under normal conditions."""
-        state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test"
-        )
+        state = create_initial_state(company_id=uuid4(), user_input="Test")
 
         assert should_interrupt(state, "any_node") is False
 
@@ -229,10 +186,7 @@ class TestGetStateSummary:
     def test_get_basic_state_summary(self):
         """Test basic state summary generation."""
         company_id = uuid4()
-        state = create_initial_state(
-            company_id=company_id,
-            user_input="Test input"
-        )
+        state = create_initial_state(company_id=company_id, user_input="Test input")
 
         summary = get_state_summary(state)
 
@@ -251,10 +205,7 @@ class TestGetStateSummary:
         """Test state summary with route decision."""
         from langgraph_agent.core.models import RouteDecision
 
-        state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test input"
-        )
+        state = create_initial_state(company_id=uuid4(), user_input="Test input")
 
         route = RouteDecision(
             route="compliance_analyzer",
@@ -262,7 +213,7 @@ class TestGetStateSummary:
             reasoning="High confidence match",
             method="rules",
             input_text="Test input",
-            company_id=state["company_id"]
+            company_id=state["company_id"],
         )
 
         state["route"] = route
@@ -275,12 +226,14 @@ class TestGetStateSummary:
 
     def test_get_state_summary_with_obligations_and_evidence(self):
         """Test state summary with obligations and evidence."""
-        from langgraph_agent.core.models import Obligation, EvidenceItem, ComplianceFramework, EvidenceType
-
-        state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test input"
+        from langgraph_agent.core.models import (
+            Obligation,
+            EvidenceItem,
+            ComplianceFramework,
+            EvidenceType,
         )
+
+        state = create_initial_state(company_id=uuid4(), user_input="Test input")
 
         # Add mock obligation
         obligation = Obligation(
@@ -288,7 +241,7 @@ class TestGetStateSummary:
             framework=ComplianceFramework.GDPR,
             title="Test Obligation",
             description="Test description",
-            category="data_processing"
+            category="data_processing",
         )
         state["relevant_obligations"] = [obligation]
 
@@ -297,7 +250,7 @@ class TestGetStateSummary:
             company_id=state["company_id"],
             title="Test Evidence",
             evidence_type=EvidenceType.POLICY_DOCUMENT,
-            created_by=uuid4()
+            created_by=uuid4(),
         )
         state["collected_evidence"] = [evidence]
 

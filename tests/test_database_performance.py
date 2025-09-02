@@ -2,6 +2,7 @@
 Database Performance Testing Suite
 Tests connection pool behavior, query performance, and optimization strategies
 """
+
 import asyncio
 import time
 import pytest
@@ -12,10 +13,12 @@ from database.db_setup import get_db, get_async_db, get_engine_info
 from database.user import User
 from database.models.evidence import Evidence as EvidenceItem
 from database.business_profile import BusinessProfile
+
 # from database.performance_indexes import QueryOptimizer  # Not implemented yet
 import threading
 from concurrent.futures import ThreadPoolExecutor
 import statistics
+
 
 class TestDatabasePerformance:
     """Test suite for database performance optimization."""
@@ -39,14 +42,18 @@ class TestDatabasePerformance:
         total_time = end_time - start_time
 
         # Performance assertions
-        assert len([r for r in results if not isinstance(r, Exception)]) >= concurrent_requests * 0.95
+        assert (
+            len([r for r in results if not isinstance(r, Exception)])
+            >= concurrent_requests * 0.95
+        )
         assert total_time < 5.0  # Should complete within 5 seconds
 
         return {
             "concurrent_requests": concurrent_requests,
             "total_time": total_time,
-            "success_rate": len([r for r in results if not isinstance(r, Exception)]) / concurrent_requests,
-            "avg_time_per_request": total_time / concurrent_requests
+            "success_rate": len([r for r in results if not isinstance(r, Exception)])
+            / concurrent_requests,
+            "avg_time_per_request": total_time / concurrent_requests,
         }
 
     @pytest.mark.asyncio
@@ -54,8 +61,14 @@ class TestDatabasePerformance:
         """Establish baseline query performance metrics."""
         queries_to_test = [
             ("SELECT COUNT(*) FROM users", "user_count"),
-            ("SELECT COUNT(*) FROM evidence_items WHERE status = 'pending'", "pending_evidence"),
-            ("SELECT u.email, COUNT(e.id) FROM users u LEFT JOIN evidence_items e ON u.id = e.user_id GROUP BY u.id, u.email LIMIT 10", "user_evidence_summary"),
+            (
+                "SELECT COUNT(*) FROM evidence_items WHERE status = 'pending'",
+                "pending_evidence",
+            ),
+            (
+                "SELECT u.email, COUNT(e.id) FROM users u LEFT JOIN evidence_items e ON u.id = e.user_id GROUP BY u.id, u.email LIMIT 10",
+                "user_evidence_summary",
+            ),
         ]
 
         performance_results = {}
@@ -72,15 +85,17 @@ class TestDatabasePerformance:
                     "avg_time": statistics.mean(times),
                     "min_time": min(times),
                     "max_time": max(times),
-                    "std_dev": statistics.stdev(times) if len(times) > 1 else 0
+                    "std_dev": statistics.stdev(times) if len(times) > 1 else 0,
                 }
 
                 # Performance assertion: queries should complete within 100ms on average
-                assert performance_results[name]["avg_time"] < 0.1, f"Query {name} too slow: {performance_results[name]['avg_time']:.3f}s"
+                assert (
+                    performance_results[name]["avg_time"] < 0.1
+                ), f"Query {name} too slow: {performance_results[name]['avg_time']:.3f}s"
 
         return performance_results
 
-    @pytest.mark.asyncio 
+    @pytest.mark.asyncio
     async def test_n_plus_one_detection(self):
         """Test for N+1 query problems in common operations."""
         query_count = 0
@@ -104,7 +119,12 @@ class TestDatabasePerformance:
             # Count queries for evidence loading
             start_queries = counter.count
             for user_id in user_ids:
-                await db.execute(text("SELECT COUNT(*) FROM evidence_items WHERE user_id = :user_id"), {"user_id": user_id})
+                await db.execute(
+                    text(
+                        "SELECT COUNT(*) FROM evidence_items WHERE user_id = :user_id"
+                    ),
+                    {"user_id": user_id},
+                )
             end_queries = counter.count
 
             # Should ideally be done in one query with JOIN
@@ -160,32 +180,46 @@ class TestDatabasePerformance:
             start_time = time.time()
             for i in range(test_records):
                 await db.execute(
-                    text("INSERT INTO evidence_items (evidence_name, user_id, status) VALUES (:name, 1, 'draft')"),
-                    {"name": f"test_evidence_{i}"}
+                    text(
+                        "INSERT INTO evidence_items (evidence_name, user_id, status) VALUES (:name, 1, 'draft')"
+                    ),
+                    {"name": f"test_evidence_{i}"},
                 )
             await db.commit()
             individual_time = time.time() - start_time
 
             # Cleanup
-            await db.execute(text("DELETE FROM evidence_items WHERE evidence_name LIKE 'test_evidence_%'"))
+            await db.execute(
+                text(
+                    "DELETE FROM evidence_items WHERE evidence_name LIKE 'test_evidence_%'"
+                )
+            )
             await db.commit()
 
             # Bulk insert timing (if supported)
             start_time = time.time()
             values = [{"name": f"bulk_evidence_{i}"} for i in range(test_records)]
             await db.execute(
-                text("INSERT INTO evidence_items (evidence_name, user_id, status) VALUES " + 
-                     ",".join([f"('{v['name']}', 1, 'draft')" for v in values]))
+                text(
+                    "INSERT INTO evidence_items (evidence_name, user_id, status) VALUES "
+                    + ",".join([f"('{v['name']}', 1, 'draft')" for v in values])
+                )
             )
             await db.commit()
             bulk_time = time.time() - start_time
 
             # Cleanup
-            await db.execute(text("DELETE FROM evidence_items WHERE evidence_name LIKE 'bulk_evidence_%'"))
+            await db.execute(
+                text(
+                    "DELETE FROM evidence_items WHERE evidence_name LIKE 'bulk_evidence_%'"
+                )
+            )
             await db.commit()
 
             # Bulk should be significantly faster
-            assert bulk_time < individual_time * 0.5, f"Bulk operations not optimized: {bulk_time:.3f}s vs {individual_time:.3f}s"
+            assert (
+                bulk_time < individual_time * 0.5
+            ), f"Bulk operations not optimized: {bulk_time:.3f}s vs {individual_time:.3f}s"
 
     @pytest.mark.asyncio
     async def test_cache_performance_impact(self):
@@ -216,7 +250,10 @@ class TestDatabasePerformance:
 
             # Cache should be significantly faster
             assert cached_result == db_result
-            assert cache_time < db_time * 0.1, f"Cache not providing performance benefit: {cache_time:.6f}s vs {db_time:.6f}s"
+            assert (
+                cache_time < db_time * 0.1
+            ), f"Cache not providing performance benefit: {cache_time:.6f}s vs {db_time:.6f}s"
+
 
 class TestDatabaseOptimizationRecommendations:
     """Generate optimization recommendations based on test results."""
@@ -229,16 +266,17 @@ class TestDatabaseOptimizationRecommendations:
             "connection_pool": {
                 "current_size": 10,
                 "recommended_size": 25,
-                "reasoning": "Based on concurrent request patterns, increase pool size to handle peak load"
+                "reasoning": "Based on concurrent request patterns, increase pool size to handle peak load",
             },
             "slow_queries": [],
             "index_recommendations": [],
             "caching_opportunities": [],
-            "optimization_priority": "high"
+            "optimization_priority": "high",
         }
 
         assert report["optimization_priority"] in ["low", "medium", "high"]
         return report
+
 
 # Performance benchmarking utilities
 class DatabasePerformanceBenchmark:
@@ -259,6 +297,7 @@ class DatabasePerformanceBenchmark:
             "cache_hit_rate": 0.85,  # 85%
         }
         return thresholds
+
 
 if __name__ == "__main__":
     # Run performance tests

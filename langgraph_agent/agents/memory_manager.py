@@ -21,21 +21,23 @@ logger = logging.getLogger(__name__)
 
 class MemoryType(str, Enum):
     """Types of memory storage."""
-    SHORT_TERM = "short_term"        # Recent conversation context
-    LONG_TERM = "long_term"          # Persistent user/company knowledge
-    EPISODIC = "episodic"            # Specific events and interactions
-    SEMANTIC = "semantic"            # Facts and knowledge entities
-    PROCEDURAL = "procedural"        # Process and workflow memories
-    CONTEXTUAL = "contextual"        # Situational context and preferences
+
+    SHORT_TERM = "short_term"  # Recent conversation context
+    LONG_TERM = "long_term"  # Persistent user/company knowledge
+    EPISODIC = "episodic"  # Specific events and interactions
+    SEMANTIC = "semantic"  # Facts and knowledge entities
+    PROCEDURAL = "procedural"  # Process and workflow memories
+    CONTEXTUAL = "contextual"  # Situational context and preferences
 
 
 class MemoryImportance(str, Enum):
     """Memory importance levels for retention."""
-    CRITICAL = "critical"    # Never forget
-    HIGH = "high"           # Long retention
-    MEDIUM = "medium"       # Standard retention
-    LOW = "low"            # Short retention
-    MINIMAL = "minimal"     # Cache-like, disposable
+
+    CRITICAL = "critical"  # Never forget
+    HIGH = "high"  # Long retention
+    MEDIUM = "medium"  # Standard retention
+    LOW = "low"  # Short retention
+    MINIMAL = "minimal"  # Cache-like, disposable
 
 
 @dataclass
@@ -98,7 +100,7 @@ class MemoryEntry:
             "confidence": self.confidence,
             "related_memories": self.related_memories,
             "source_type": self.source_type,
-            "metadata": self.metadata
+            "metadata": self.metadata,
         }
 
 
@@ -133,7 +135,7 @@ class ConversationSummary:
 class MemoryManager:
     """
     Advanced memory management with Graphiti vector database.
-    
+
     Features:
     - Multi-layered memory architecture
     - Entity-based knowledge graphs
@@ -149,7 +151,7 @@ class MemoryManager:
         neo4j_password: str,
         max_memory_entries: int = 10000,
         cleanup_interval_hours: int = 24,
-        store_raw_content: bool = True
+        store_raw_content: bool = True,
     ):
         self.neo4j_uri = neo4j_uri
         self.neo4j_user = neo4j_user
@@ -182,7 +184,7 @@ class MemoryManager:
                 uri=self.neo4j_uri,
                 user=self.neo4j_user,
                 password=self.neo4j_password,
-                store_raw_episode_content=self.store_raw_content
+                store_raw_episode_content=self.store_raw_content,
             )
 
             # Build indices and constraints
@@ -202,11 +204,11 @@ class MemoryManager:
         user_message: str,
         agent_response: str,
         user_id: Optional[UUID] = None,
-        context: Optional[Dict[str, Any]] = None
+        context: Optional[Dict[str, Any]] = None,
     ) -> List[MemoryEntry]:
         """
         Store conversation turn with entity extraction and embedding.
-        
+
         Args:
             company_id: Company identifier
             session_id: Session identifier
@@ -214,7 +216,7 @@ class MemoryManager:
             agent_response: Agent's response
             user_id: Optional user identifier
             context: Optional additional context
-            
+
         Returns:
             List of created memory entries
         """
@@ -232,7 +234,7 @@ class MemoryManager:
                     "timestamp": datetime.utcnow().isoformat(),
                     "session_id": session_id,
                     "company_id": str(company_id),
-                    "user_id": str(user_id) if user_id else None
+                    "user_id": str(user_id) if user_id else None,
                 }
             }
 
@@ -243,7 +245,7 @@ class MemoryManager:
                 "company_id": str(company_id),
                 "user_id": str(user_id) if user_id else None,
                 "session_id": session_id,
-                "source_type": "conversation_turn"
+                "source_type": "conversation_turn",
             }
 
             if context:
@@ -258,7 +260,7 @@ class MemoryManager:
                 group_id=str(company_id),  # Use company_id for grouping
                 source_description=f"Conversation turn for company {company_id}",
                 reference_time=datetime.utcnow(),
-                metadata=episode_metadata
+                metadata=episode_metadata,
             )
 
             # Create memory entry for tracking
@@ -271,7 +273,7 @@ class MemoryManager:
                 user_id=user_id,
                 session_id=session_id,
                 source_type="conversation_turn",
-                metadata=episode_metadata
+                metadata=episode_metadata,
             )
 
             memories.append(memory_entry)
@@ -284,7 +286,9 @@ class MemoryManager:
 
             # Maintain cache size
             if len(self.short_term_cache[session_key]) > 20:
-                self.short_term_cache[session_key] = self.short_term_cache[session_key][-20:]
+                self.short_term_cache[session_key] = self.short_term_cache[session_key][
+                    -20:
+                ]
 
             logger.info(f"Stored conversation turn: {len(memories)} memories created")
             return memories
@@ -301,11 +305,11 @@ class MemoryManager:
         max_results: int = 10,
         similarity_threshold: float = 0.7,
         user_id: Optional[UUID] = None,
-        session_id: Optional[str] = None
+        session_id: Optional[str] = None,
     ) -> List[MemoryEntry]:
         """
         Retrieve relevant memories based on semantic similarity.
-        
+
         Args:
             company_id: Company identifier
             query: Query text for similarity search
@@ -314,7 +318,7 @@ class MemoryManager:
             similarity_threshold: Minimum similarity score
             user_id: Optional user filter
             session_id: Optional session filter
-            
+
         Returns:
             List of relevant memory entries
         """
@@ -327,7 +331,7 @@ class MemoryManager:
                 query=query,
                 group_ids=[str(company_id)],  # Filter by company
                 limit=max_results,
-                search_config=NODE_HYBRID_SEARCH_RRF
+                search_config=NODE_HYBRID_SEARCH_RRF,
             )
 
             relevant_memories = []
@@ -335,27 +339,29 @@ class MemoryManager:
             for result in search_results:
                 try:
                     # Extract metadata from search result
-                    metadata = getattr(result, 'metadata', {})
+                    metadata = getattr(result, "metadata", {})
 
                     # Filter by company access
-                    if metadata.get('company_id') != str(company_id):
+                    if metadata.get("company_id") != str(company_id):
                         continue
 
                     # Filter by memory types if specified
                     if memory_types:
-                        result_memory_type = metadata.get('memory_type')
+                        result_memory_type = metadata.get("memory_type")
                         if result_memory_type not in [mt.value for mt in memory_types]:
                             continue
 
                     # Filter by user if specified
-                    if user_id and metadata.get('user_id') != str(user_id):
+                    if user_id and metadata.get("user_id") != str(user_id):
                         continue
 
                     # Create memory entry from search result
                     memory = self._create_memory_from_search_result(result, company_id)
                     if memory:
                         # Add similarity score
-                        memory.metadata["similarity_score"] = getattr(result, 'score', 0.0)
+                        memory.metadata["similarity_score"] = getattr(
+                            result, "score", 0.0
+                        )
                         memory.update_access()
                         relevant_memories.append(memory)
 
@@ -373,7 +379,9 @@ class MemoryManager:
                             relevant_memories.insert(0, memory)
 
             # Sort by relevance and limit results
-            relevant_memories.sort(key=lambda m: self._calculate_relevance_score(m), reverse=True)
+            relevant_memories.sort(
+                key=lambda m: self._calculate_relevance_score(m), reverse=True
+            )
             result = relevant_memories[:max_results]
 
             logger.info(f"Retrieved {len(result)} relevant memories for query")
@@ -388,7 +396,7 @@ class MemoryManager:
         session_id: str,
         company_id: UUID,
         summary: ConversationSummary,
-        user_id: Optional[UUID] = None
+        user_id: Optional[UUID] = None,
     ) -> Optional[MemoryEntry]:
         """Store conversation summary as long-term memory."""
         if not self._initialized:
@@ -402,7 +410,9 @@ class MemoryManager:
                     "company_id": str(company_id),
                     "user_id": str(user_id) if user_id else None,
                     "start_time": summary.start_time.isoformat(),
-                    "end_time": summary.end_time.isoformat() if summary.end_time else None,
+                    "end_time": (
+                        summary.end_time.isoformat() if summary.end_time else None
+                    ),
                     "key_topics": summary.key_topics,
                     "main_outcomes": summary.main_outcomes,
                     "action_items": summary.action_items,
@@ -410,7 +420,7 @@ class MemoryManager:
                     "total_turns": summary.total_turns,
                     "sentiment_trend": summary.sentiment_trend,
                     "context_for_next": summary.context_for_next,
-                    "unresolved_questions": summary.unresolved_questions
+                    "unresolved_questions": summary.unresolved_questions,
                 }
             }
 
@@ -421,7 +431,7 @@ class MemoryManager:
                 "company_id": str(company_id),
                 "user_id": str(user_id) if user_id else None,
                 "session_id": session_id,
-                "source_type": "session_summary"
+                "source_type": "session_summary",
             }
 
             # Add summary episode to Graphiti
@@ -433,7 +443,7 @@ class MemoryManager:
                 group_id=str(company_id),
                 source_description=f"Session summary for {session_id}",
                 reference_time=summary.end_time or datetime.utcnow(),
-                metadata=episode_metadata
+                metadata=episode_metadata,
             )
 
             # Create memory entry
@@ -449,7 +459,7 @@ class MemoryManager:
                 entities=summary.entities_mentioned,
                 keywords=summary.key_topics,
                 source_type="session_summary",
-                metadata=episode_metadata
+                metadata=episode_metadata,
             )
 
             # Clean up short-term cache for this session
@@ -468,7 +478,7 @@ class MemoryManager:
         self,
         company_id: UUID,
         user_id: Optional[UUID] = None,
-        context_window_days: int = 30
+        context_window_days: int = 30,
     ) -> Dict[str, Any]:
         """Load user context and preferences from memory."""
         if not self._initialized:
@@ -484,7 +494,7 @@ class MemoryManager:
                 query=context_query,
                 group_ids=[str(company_id)],
                 limit=50,
-                search_config=NODE_HYBRID_SEARCH_RRF
+                search_config=NODE_HYBRID_SEARCH_RRF,
             )
 
             # Extract user context
@@ -494,19 +504,19 @@ class MemoryManager:
                 "past_interactions": [],
                 "entities_of_interest": [],
                 "communication_style": "professional",
-                "expertise_level": "intermediate"
+                "expertise_level": "intermediate",
             }
 
             for result in search_results:
                 try:
-                    metadata = getattr(result, 'metadata', {})
+                    metadata = getattr(result, "metadata", {})
 
                     # Filter by user if specified
-                    if user_id and metadata.get('user_id') != str(user_id):
+                    if user_id and metadata.get("user_id") != str(user_id):
                         continue
 
                     # Extract content and analyze
-                    content = getattr(result, 'content', '')
+                    content = getattr(result, "content", "")
                     if isinstance(content, dict):
                         content = json.dumps(content)
 
@@ -516,11 +526,13 @@ class MemoryManager:
                         context["user_preferences"].update(prefs)
 
                     # Track topics and entities
-                    if hasattr(result, 'keywords'):
-                        context["recent_topics"].extend(getattr(result, 'keywords', []))
+                    if hasattr(result, "keywords"):
+                        context["recent_topics"].extend(getattr(result, "keywords", []))
 
-                    if hasattr(result, 'entities'):
-                        context["entities_of_interest"].extend(getattr(result, 'entities', []))
+                    if hasattr(result, "entities"):
+                        context["entities_of_interest"].extend(
+                            getattr(result, "entities", [])
+                        )
 
                 except Exception as e:
                     logger.warning(f"Failed to process context result: {e}")
@@ -528,9 +540,13 @@ class MemoryManager:
 
             # Deduplicate and limit
             context["recent_topics"] = list(set(context["recent_topics"]))[:10]
-            context["entities_of_interest"] = list(set(context["entities_of_interest"]))[:15]
+            context["entities_of_interest"] = list(
+                set(context["entities_of_interest"])
+            )[:15]
 
-            logger.info(f"Loaded user context: {len(search_results)} memories processed")
+            logger.info(
+                f"Loaded user context: {len(search_results)} memories processed"
+            )
             return context
 
         except Exception as e:
@@ -546,7 +562,7 @@ class MemoryManager:
             "expired_removed": 0,
             "low_importance_removed": 0,
             "duplicates_removed": 0,
-            "total_remaining": 0
+            "total_remaining": 0,
         }
 
         try:
@@ -559,7 +575,10 @@ class MemoryManager:
 
             for session_key, memories in self.short_term_cache.items():
                 # Remove sessions older than 24 hours
-                if memories and (current_time - memories[-1].created_at).total_seconds() > 86400:
+                if (
+                    memories
+                    and (current_time - memories[-1].created_at).total_seconds() > 86400
+                ):
                     sessions_to_remove.append(session_key)
 
             for session_key in sessions_to_remove:
@@ -584,15 +603,14 @@ class MemoryManager:
             "graphiti_connected": False,
             "cache_size": len(self.short_term_cache),
             "last_cleanup": self.last_cleanup.isoformat(),
-            "total_sessions": len(self.short_term_cache)
+            "total_sessions": len(self.short_term_cache),
         }
 
         try:
             if self.graphiti and self._initialized:
                 # Test Graphiti connection by performing a simple search
                 test_results = await self.graphiti.search(
-                    query="test connection",
-                    limit=1
+                    query="test connection", limit=1
                 )
                 health["graphiti_connected"] = True
                 health["test_search_results"] = len(test_results)
@@ -618,29 +636,35 @@ class MemoryManager:
     # Private helper methods
 
     def _create_memory_from_search_result(
-        self,
-        result: Any,
-        company_id: UUID
+        self, result: Any, company_id: UUID
     ) -> Optional[MemoryEntry]:
         """Create MemoryEntry from Graphiti search result."""
         try:
-            metadata = getattr(result, 'metadata', {})
-            content = getattr(result, 'content', '')
+            metadata = getattr(result, "metadata", {})
+            content = getattr(result, "content", "")
 
             if isinstance(content, dict):
                 content = json.dumps(content)
 
             return MemoryEntry(
-                id=metadata.get('id', str(uuid4())),
+                id=metadata.get("id", str(uuid4())),
                 content=str(content),
-                memory_type=MemoryType(metadata.get('memory_type', MemoryType.EPISODIC.value)),
-                importance=MemoryImportance(metadata.get('importance', MemoryImportance.MEDIUM.value)),
+                memory_type=MemoryType(
+                    metadata.get("memory_type", MemoryType.EPISODIC.value)
+                ),
+                importance=MemoryImportance(
+                    metadata.get("importance", MemoryImportance.MEDIUM.value)
+                ),
                 company_id=company_id,
-                user_id=UUID(metadata['user_id']) if metadata.get('user_id') else None,
-                session_id=metadata.get('session_id'),
-                created_at=datetime.fromisoformat(metadata['created_at']) if metadata.get('created_at') else datetime.utcnow(),
-                source_type=metadata.get('source_type', 'unknown'),
-                metadata=metadata
+                user_id=UUID(metadata["user_id"]) if metadata.get("user_id") else None,
+                session_id=metadata.get("session_id"),
+                created_at=(
+                    datetime.fromisoformat(metadata["created_at"])
+                    if metadata.get("created_at")
+                    else datetime.utcnow()
+                ),
+                source_type=metadata.get("source_type", "unknown"),
+                metadata=metadata,
             )
         except Exception as e:
             logger.error(f"Failed to create memory from search result: {e}")
@@ -651,7 +675,9 @@ class MemoryManager:
         base_score = memory.metadata.get("similarity_score", 0.0)
 
         # Recency boost (newer memories get higher scores)
-        hours_since_creation = (datetime.utcnow() - memory.created_at).total_seconds() / 3600
+        hours_since_creation = (
+            datetime.utcnow() - memory.created_at
+        ).total_seconds() / 3600
         recency_score = max(0, 1 - (hours_since_creation / (24 * 7)))  # Week decay
 
         # Importance boost
@@ -660,14 +686,19 @@ class MemoryManager:
             MemoryImportance.HIGH: 0.8,
             MemoryImportance.MEDIUM: 0.6,
             MemoryImportance.LOW: 0.4,
-            MemoryImportance.MINIMAL: 0.2
+            MemoryImportance.MINIMAL: 0.2,
         }
         importance_score = importance_weights.get(memory.importance, 0.5)
 
         # Access frequency boost
         access_score = min(0.2, memory.access_count * 0.01)
 
-        return base_score * 0.6 + recency_score * 0.2 + importance_score * 0.15 + access_score * 0.05
+        return (
+            base_score * 0.6
+            + recency_score * 0.2
+            + importance_score * 0.15
+            + access_score * 0.05
+        )
 
     def _format_session_summary(self, summary: ConversationSummary) -> str:
         """Format conversation summary into readable text."""
@@ -686,7 +717,7 @@ class MemoryManager:
             *[f"- {item}" for item in summary.action_items],
             "",
             "Entities Mentioned:",
-            *[f"- {entity}" for entity in summary.entities_mentioned]
+            *[f"- {entity}" for entity in summary.entities_mentioned],
         ]
 
         if summary.context_for_next:

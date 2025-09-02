@@ -201,7 +201,9 @@ class ContextMonitor:
 
         return changes_by_area
 
-    def analyze_change_impact(self, changes_by_area: Dict[str, List[Path]]) -> List[Dict]:
+    def analyze_change_impact(
+        self, changes_by_area: Dict[str, List[Path]]
+    ) -> List[Dict]:
         """Analyze the impact of detected changes."""
         impact_analysis = []
 
@@ -211,17 +213,23 @@ class ContextMonitor:
             analysis = {
                 "area": area,
                 "impact_level": area_config["impact"],
-                "changed_files": [str(f.relative_to(self.project_root)) for f in changed_files],
+                "changed_files": [
+                    str(f.relative_to(self.project_root)) for f in changed_files
+                ],
                 "context_files_affected": area_config["context_files"],
                 "timestamp": datetime.now().isoformat(),
-                "recommendations": self._get_update_recommendations(area, changed_files),
+                "recommendations": self._get_update_recommendations(
+                    area, changed_files
+                ),
             }
 
             impact_analysis.append(analysis)
 
         return impact_analysis
 
-    def _get_update_recommendations(self, area: str, changed_files: List[Path]) -> List[str]:
+    def _get_update_recommendations(
+        self, area: str, changed_files: List[Path]
+    ) -> List[str]:
         """Generate context update recommendations for changed files."""
         recommendations = []
 
@@ -278,9 +286,13 @@ class ContextMonitor:
             if file_name.endswith(".py") and "test" not in file_name:
                 recommendations.append(f"Review business logic changes in {file_name}")
             elif file_name.endswith(".tsx") or file_name.endswith(".ts"):
-                recommendations.append(f"Review frontend component changes in {file_name}")
+                recommendations.append(
+                    f"Review frontend component changes in {file_name}"
+                )
             elif file_name.endswith(".json") and "package" in file_name:
-                recommendations.append("Review dependency changes and security implications")
+                recommendations.append(
+                    "Review dependency changes and security implications"
+                )
 
         return list(set(recommendations))  # Remove duplicates
 
@@ -344,11 +356,15 @@ class ContextMonitor:
 
         report_lines.extend(["", "### Medium Priority (Update Within Week)", ""])
 
-        medium_impact_areas = [a for a in sorted_analysis if a["impact_level"] == "medium"]
+        medium_impact_areas = [
+            a for a in sorted_analysis if a["impact_level"] == "medium"
+        ]
         if medium_impact_areas:
             for analysis in medium_impact_areas:
                 for context_file in analysis["context_files_affected"]:
-                    report_lines.append(f"- [ ] Review and update `docs/context/{context_file}`")
+                    report_lines.append(
+                        f"- [ ] Review and update `docs/context/{context_file}`"
+                    )
         else:
             report_lines.append("- No medium-impact changes requiring weekly updates")
 
@@ -439,7 +455,8 @@ class ContextMonitor:
 def main() -> None:
     """Main entry point for context monitoring."""
     if len(sys.argv) > 1 and sys.argv[1] == "--help":
-        print("""
+        print(
+            """
 Context Monitor Usage:
 
 python scripts/context_monitor.py [--help]
@@ -455,7 +472,8 @@ The script monitors:
 
 It categorizes changes by impact level and generates actionable recommendations
 for updating context documentation.
-        """)
+        """
+        )
         return
 
     try:

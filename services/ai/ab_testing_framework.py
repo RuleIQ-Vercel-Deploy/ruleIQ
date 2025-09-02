@@ -33,8 +33,7 @@ class ExperimentType(Enum):
     COMPLIANCE_EFFECTIVENESS = "compliance_effectiveness"
     ASSESSMENT_METHODOLOGY = "assessment_methodology"
 
-
-# MetricType imported from analytics_monitor above
+    # MetricType imported from analytics_monitor above
     CATEGORICAL = "categorical"  # User preferences, status categories
     COUNT = "count"  # Number of actions, events
 
@@ -81,7 +80,9 @@ class ExperimentConfig:
     traffic_split: Dict[str, float] = field(
         default_factory=lambda: {"control": 0.5, "treatment": 0.5}
     )
-    stratification_keys: List[str] = field(default_factory=list)  # User segments, regions, etc.
+    stratification_keys: List[str] = field(
+        default_factory=list
+    )  # User segments, regions, etc.
 
     # Duration and sample size
     min_sample_size: int = 100
@@ -131,7 +132,9 @@ class ExperimentData:
 
     # Metric values
     primary_metric_value: Union[float, int, str, bool]
-    secondary_metrics: Dict[str, Union[float, int, str, bool]] = field(default_factory=dict)
+    secondary_metrics: Dict[str, Union[float, int, str, bool]] = field(
+        default_factory=dict
+    )
 
     # Context
     user_segments: Dict[str, str] = field(default_factory=dict)
@@ -264,7 +267,9 @@ class ABTestingFramework:
 
         # Add stratification if configured
         if config.stratification_keys and context:
-            strata_values = [str(context.get(key, "unknown")) for key in config.stratification_keys]
+            strata_values = [
+                str(context.get(key, "unknown")) for key in config.stratification_keys
+            ]
             hash_input += ":" + ":".join(strata_values)
 
         # Generate hash and convert to assignment
@@ -369,7 +374,9 @@ class ABTestingFramework:
         test_type = self._select_statistical_test(config.metric_type, variant_data)
 
         # Perform statistical analysis
-        result = self._perform_statistical_test(test_type, variant_data, config, confidence_level)
+        result = self._perform_statistical_test(
+            test_type, variant_data, config, confidence_level
+        )
 
         # Store result
         self.experiment_results[experiment_id].append(result)
@@ -536,11 +543,15 @@ class ABTestingFramework:
             test_name = "Two-sample t-test (equal variances)"
 
         elif test_type == StatisticalTest.WELCH_T_TEST:
-            statistic, p_value = ttest_ind(control_data, treatment_data, equal_var=False)
+            statistic, p_value = ttest_ind(
+                control_data, treatment_data, equal_var=False
+            )
             test_name = "Welch's t-test (unequal variances)"
 
         elif test_type == StatisticalTest.MANN_WHITNEY:
-            statistic, p_value = mannwhitneyu(control_data, treatment_data, alternative="two-sided")
+            statistic, p_value = mannwhitneyu(
+                control_data, treatment_data, alternative="two-sided"
+            )
             test_name = "Mann-Whitney U test"
 
         elif test_type == StatisticalTest.CHI_SQUARED:
@@ -567,17 +578,20 @@ class ABTestingFramework:
         if test_type in [StatisticalTest.T_TEST, StatisticalTest.WELCH_T_TEST]:
             mean_diff = treatment_mean - control_mean
             pooled_se = np.sqrt(
-                control_std**2 / len(control_data) + treatment_std**2 / len(treatment_data)
+                control_std**2 / len(control_data)
+                + treatment_std**2 / len(treatment_data)
             )
 
             if test_type == StatisticalTest.T_TEST:
                 df = len(control_data) + len(treatment_data) - 2
             else:  # Welch's t-test
                 df = (
-                    control_std**2 / len(control_data) + treatment_std**2 / len(treatment_data)
+                    control_std**2 / len(control_data)
+                    + treatment_std**2 / len(treatment_data)
                 ) ** 2 / (
                     control_std**4 / (len(control_data) ** 2 * (len(control_data) - 1))
-                    + treatment_std**4 / (len(treatment_data) ** 2 * (len(treatment_data) - 1))
+                    + treatment_std**4
+                    / (len(treatment_data) ** 2 * (len(treatment_data) - 1))
                 )
 
             t_critical = stats.t.ppf(1 - alpha / 2, df)
@@ -611,7 +625,10 @@ class ABTestingFramework:
             is_significant=is_significant,
             practical_significance=practical_significance,
             recommendation=recommendation,
-            sample_sizes={variants[0]: len(control_data), variants[1]: len(treatment_data)},
+            sample_sizes={
+                variants[0]: len(control_data),
+                variants[1]: len(treatment_data),
+            },
             means={variants[0]: control_mean, variants[1]: treatment_mean},
             std_devs={variants[0]: control_std, variants[1]: treatment_std},
             metadata={
@@ -628,7 +645,9 @@ class ABTestingFramework:
             counts[str(value)] += 1
         return dict(counts)
 
-    def _calculate_power(self, effect_size: float, n1: int, n2: int, alpha: float) -> float:
+    def _calculate_power(
+        self, effect_size: float, n1: int, n2: int, alpha: float
+    ) -> float:
         """
         Calculate statistical power for the test.
 
@@ -678,9 +697,7 @@ class ABTestingFramework:
             return f"INSUFFICIENT DATA: Low power ({power:.2f}). Collect more data or increase effect size."
 
         elif not is_significant and power >= 0.8:
-            return (
-                f"NO EFFECT: Well-powered test shows no significant difference (power={power:.2f})"
-            )
+            return f"NO EFFECT: Well-powered test shows no significant difference (power={power:.2f})"
 
         else:
             return f"CONTINUE MONITORING: p={p_value:.4f}, effect size={effect_size:.3f}, power={power:.2f}"
@@ -759,7 +776,10 @@ def get_ab_testing_framework() -> ABTestingFramework:
 
 
 def create_ai_model_experiment(
-    model_a: str, model_b: str, metric: str = "response_quality", min_effect_size: float = 0.1
+    model_a: str,
+    model_b: str,
+    metric: str = "response_quality",
+    min_effect_size: float = 0.1,
 ) -> str:
     """
     Create an A/B experiment for comparing AI models.

@@ -1,0 +1,267 @@
+
+'8"Staff training and awareness"str
+#"Wales"str
+P"Data Retention"str
+"applicable_indu"str
+b"Privacy Policy"str
+â16int
+"Data Protection"str
+d"DPIA Documentation"str
+R"Staff Training"str
+&g"Breach Notification Records"str
+
+1int
+à"implementation_"str
+I"control_domains"str
+í"1.0"str
+É6int
+$6"Data processor agreements"str
+y"data_processing"str
+L"Consent Management"str
+	"description"str
+52,"Data Protection Impact Assessments (DPIAs)"str
+!Q"Third Party Management"str
+å"¬£15,000-¬£75,000"str
+/9&"Data retention and disposal policies"str
+!"cross_border_transfers"str
+%i"Consent Management Records"str
+"ICO_GDPR_UK"str
+H3?"Breach notification (72 hours to ICO, 30 days to individuals)"str
++5""Records of processing activities"str
+"¬£0+"str
+"all"str
+17("International data transfer safeguards"str
+Ä7int
+f"Audit Logs"str
+!	"England"str
+M"Data Subject Rights"str
+a"evidence_types"str
+Ü"complexity_scor"str
+$O"Privacy Impact Assessment"str
+"c"Data Processing Records"str
+â
+ˇ"
+        Data Protection Act 2018 & UK GDPR requirements as enforced by the Information Commissioner's Office (ICO).
+        Covers data protection, privacy rights, and security requirements for organizations processing personal data in the UK.
+        "str
+N"Breach Management"str
+z10int
+ã"estimated_cost_"str
+&"Load UK GDPR framework data"str
+"geographic_scop"str
+é"policy_template"str
+
+}8int
+Êè€"
+        # UK GDPR Privacy Policy Template
+
+        ## 1. Data Controller Information
+        [Organization Name]
+        [Address]
+        [ICO Registration Number]
+
+        ## 2. Legal Basis for Processing
+        We process personal data under the following legal bases:
+        - Consent (Article 6(1)(a))
+        - Contract performance (Article 6(1)(b))
+        - Legal obligation (Article 6(1)(c))
+        - Legitimate interests (Article 6(1)(f))
+
+        ## 3. Data Subject Rights
+        You have the right to:
+        - Access your personal data
+        - Rectify inaccurate data
+        - Erasure ("right to be forgotten")
+        - Data portability
+        - Object to processing
+        - Restrict processing
+        "str
+ë	"version"str
+"display_name"str
+!e"Staff Training Records"str
+"employee_thresh"str
+"
+"Scotland"str
+|"personal_data_volume"str
+L1C"Data subject rights (access, rectification, erasure, portability)"str
+40+"Lawful basis for processing personal data"str
+/"key_requirement"str
+"name"str
+%Ç"automated_decision_making"str
+
+0int
+"revenue_thresho"str
+w"relevance_facto"str
+
+"category"str
+J"Access Control"str
+$"Northern Ireland"str
+ "UK"str
+$h"Data Processor Agreements"str
+K"Data Minimization"str
+'"UK GDPR (ICO Implementation)"str
++4""Privacy by design and by default"strlist"∂$
+"
+ ]("#new-object#Bdict 
+
+ ("	#map-set#: 
+
+ (6"	#map-set#:!
+
+	 (ö"	#map-set#:	
+ 
+
+   (%"	#map-set#:'
+%
+! !(""#unknown-value#Blist&
+$
+! !(""
+#is-exact#:Bbool
+
+! !(""
+#assume#:8
+6
+! !(""#set-field# __collection_size:Bint&
+$
+! !(""#array-add-last#: 
+
+! !(""	#map-set#: 
+
+" "("	#map-set#: 
+
+# #( "	#map-set#:'
+%
+$ $(U%"#unknown-value#Blist&
+$
+$ $(U&"
+#is-exact#:%Bbool
+
+$ $(U'"
+#assume#:&8
+6
+$ $(U("#set-field# __collection_size:%Bint&
+$
+$ $(U)"#array-add-last#:% &
+$
+$ $(U*"#array-add-last#:%!&
+$
+$ $(U+"#array-add-last#:%"&
+$
+$ $(U,"#array-add-last#:%#&
+$
+$ $(U-"#array-add-last#:%$ 
+
+$ $(U."	#map-set#:%'
+%
+% 0(	:"#unknown-value#Blist&
+$
+% 0(	;"
+#is-exact#::Bbool
+
+% 0(	<"
+#assume#:;8
+6
+% 0(	="#set-field# __collection_size::Bint&
+$
+% 0(	>"#array-add-last#::0&
+$
+% 0(	?"#array-add-last#::1&
+$
+% 0(	@"#array-add-last#::2&
+$
+% 0(	A"#array-add-last#::3&
+$
+% 0(	B"#array-add-last#::4&
+$
+% 0(	C"#array-add-last#::5&
+$
+% 0(	D"#array-add-last#::6&
+$
+% 0(	E"#array-add-last#::7&
+$
+% 0(	F"#array-add-last#::8&
+$
+% 0(	G"#array-add-last#::9 
+
+% 0(	H"	#map-set#:/:'
+%
+1 5(	S"#unknown-value#Blist&
+$
+1 5(	T"
+#is-exact#:SBbool
+
+1 5(	U"
+#assume#:T8
+6
+1 5(	V"#set-field# __collection_size:SBint&
+$
+1 5(	W"#array-add-last#:SJ&
+$
+1 5(	X"#array-add-last#:SK&
+$
+1 5(	Y"#array-add-last#:SL&
+$
+1 5(	Z"#array-add-last#:SM&
+$
+1 5(	["#array-add-last#:SN&
+$
+1 5(	\"#array-add-last#:SO&
+$
+1 5(	]"#array-add-last#:SP&
+$
+1 5(	^"#array-add-last#:SQ&
+$
+1 5(	_"#array-add-last#:SR 
+
+1 5(	`"	#map-set#:IS'
+%
+6 :(	j"#unknown-value#Blist&
+$
+6 :(	k"
+#is-exact#:jBbool
+
+6 :(	l"
+#assume#:k8
+6
+6 :(	m"#set-field# __collection_size:jBint&
+$
+6 :(	n"#array-add-last#:jb&
+$
+6 :(	o"#array-add-last#:jc&
+$
+6 :(	p"#array-add-last#:jd&
+$
+6 :(	q"#array-add-last#:je&
+$
+6 :(	r"#array-add-last#:jf&
+$
+6 :(	s"#array-add-last#:jg&
+$
+6 :(	t"#array-add-last#:jh&
+$
+6 :(	u"#array-add-last#:ji 
+
+6 :(	v"	#map-set#:aj$
+"
+; @(	x"#new-object#Bdict 
+
+< <(!{"	#map-set#:xyz 
+
+= =(%~"	#map-set#:x|}"
+ 
+> >('Å"	#map-set#:xÄ#
+!
+? ?(*Ñ"	#map-set#:xÇÉ!
+
+; @(	Ö"	#map-set#:wx"
+ 
+A A(á"	#map-set#:Ü}#
+!
+B B(ä"	#map-set#:àâ#
+!
+C C(,ç"	#map-set#:ãå$
+"
+	D D(˙ê"	#map-set#:éè#
+!
+\ \(ì"	#map-set#:ëí
+ ](*9/home/omar/Documents/ruleIQ/scripts/load_uk_frameworks.py

@@ -27,13 +27,18 @@ logger = get_task_logger(__name__)
 
 
 async def _process_evidence_item_async(
-    evidence_data: Dict[str, Any], user_id: UUID, business_profile_id: UUID, integration_id: str
+    evidence_data: Dict[str, Any],
+    user_id: UUID,
+    business_profile_id: UUID,
+    integration_id: str,
 ) -> Dict[str, Any]:
     """Async helper to process a single piece of evidence."""
     async for db in get_async_db():
         try:
             if await DuplicateDetector.is_duplicate(db, user_id, evidence_data):
-                logger.info(f"Duplicate evidence detected and skipped for user {user_id}.")
+                logger.info(
+                    f"Duplicate evidence detected and skipped for user {user_id}."
+                )
                 return {"status": "skipped", "reason": "duplicate"}
 
             processor = EvidenceProcessor(db)
@@ -64,9 +69,12 @@ async def _process_evidence_item_async(
         except SQLAlchemyError as e:
             await db.rollback()
             logger.error(
-                f"Database error while processing evidence for user {user_id}: {e}", exc_info=True
+                f"Database error while processing evidence for user {user_id}: {e}",
+                exc_info=True,
             )
-            raise DatabaseException("Failed to process evidence due to a database error.") from e
+            raise DatabaseException(
+                "Failed to process evidence due to a database error."
+            ) from e
         except Exception as e:
             await db.rollback()
             logger.error(
@@ -85,7 +93,10 @@ async def _sync_evidence_status_async() -> Dict[str, int]:
             cutoff_date = datetime.utcnow() - timedelta(days=90)
             stmt = (
                 update(EvidenceItem)
-                .where(EvidenceItem.status == "active", EvidenceItem.collected_at < cutoff_date)
+                .where(
+                    EvidenceItem.status == "active",
+                    EvidenceItem.collected_at < cutoff_date,
+                )
                 .values(status="stale")
                 .execution_options(synchronize_session=False)
             )
@@ -93,11 +104,15 @@ async def _sync_evidence_status_async() -> Dict[str, int]:
             await db.commit()
 
             updated_count = result.rowcount
-            logger.info(f"Evidence status sync completed. Marked {updated_count} items as stale.")
+            logger.info(
+                f"Evidence status sync completed. Marked {updated_count} items as stale."
+            )
             return {"updated_count": updated_count}
         except SQLAlchemyError as e:
             await db.rollback()
-            logger.error(f"Database error during evidence status sync: {e}", exc_info=True)
+            logger.error(
+                f"Database error during evidence status sync: {e}", exc_info=True
+            )
             raise DatabaseException(
                 "Failed to sync evidence status due to a database error."
             ) from e
@@ -110,13 +125,13 @@ async def _sync_evidence_status_async() -> Dict[str, int]:
     bind=True,
     autoretry_for=(DatabaseException, Exception),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 60,  # Start with 60 seconds
+        "max_retries": 5,
+        "countdown": 60,  # Start with 60 seconds
     },
     retry_backoff=True,
     retry_backoff_max=600,  # Max 10 minutes
     retry_jitter=True,
-    rate_limit='5/m',  # 5 tasks per minute for evidence processing
+    rate_limit="5/m",  # 5 tasks per minute for evidence processing
 )
 def process_evidence_item(
     self,
@@ -126,7 +141,9 @@ def process_evidence_item(
     integration_id: str,
 ):
     """Processes a single evidence item by running the async helper."""
-    logger.info(f"Processing evidence from integration '{integration_id}' for user '{user_id_str}'")
+    logger.info(
+        f"Processing evidence from integration '{integration_id}' for user '{user_id_str}'"
+    )
     try:
         user_id = UUID(user_id_str)
         business_profile_id = UUID(business_profile_id_str)
@@ -136,10 +153,15 @@ def process_evidence_item(
             )
         )
     except BusinessLogicException as e:
-        logger.error(f"Business logic error processing evidence, not retrying: {e}", exc_info=True)
+        logger.error(
+            f"Business logic error processing evidence, not retrying: {e}",
+            exc_info=True,
+        )
         # Do not retry, let the task fail
     except Exception as e:
-        logger.critical(f"Unexpected, non-retriable error processing evidence: {e}", exc_info=True)
+        logger.critical(
+            f"Unexpected, non-retriable error processing evidence: {e}", exc_info=True
+        )
         raise e
 
 
@@ -147,13 +169,13 @@ def process_evidence_item(
     bind=True,
     autoretry_for=(DatabaseException, Exception),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 120,  # Start with 2 minutes for sync tasks
+        "max_retries": 5,
+        "countdown": 120,  # Start with 2 minutes for sync tasks
     },
     retry_backoff=True,
     retry_backoff_max=600,
     retry_jitter=True,
-    rate_limit='3/m',  # 3 sync tasks per minute
+    rate_limit="3/m",  # 3 sync tasks per minute
 )
 def sync_evidence_status(self):
     """Periodically syncs the status of evidence items by running the async helper."""
@@ -162,6 +184,7 @@ def sync_evidence_status(self):
         return asyncio.run(_sync_evidence_status_async())
     except Exception as e:
         logger.critical(
-            f"Unexpected, non-retriable error in evidence status sync: {e}", exc_info=True
+            f"Unexpected, non-retriable error in evidence status sync: {e}",
+            exc_info=True,
         )
         raise e

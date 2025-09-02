@@ -27,7 +27,9 @@ class ContextManager:
     ) -> Dict[str, Any]:
         """Assembles the full context for a given conversation asynchronously."""
         try:
-            profile_stmt = select(BusinessProfile).where(BusinessProfile.id == business_profile_id)
+            profile_stmt = select(BusinessProfile).where(
+                BusinessProfile.id == business_profile_id
+            )
             profile_res = await self.db.execute(profile_stmt)
             profile = profile_res.scalars().first()
 
@@ -41,7 +43,8 @@ class ContextManager:
                     .where(
                         and_(
                             EvidenceItem.user_id == profile.user_id,
-                            EvidenceItem.created_at > datetime.utcnow() - timedelta(days=30),
+                            EvidenceItem.created_at
+                            > datetime.utcnow() - timedelta(days=30),
                         )
                     )
                     .order_by(desc(EvidenceItem.created_at))
@@ -55,7 +58,10 @@ class ContextManager:
                 recent_evidence = []
 
             # In a real app, this would call the async readiness service
-            compliance_status = {"overall_score": 75, "framework_scores": {"ISO27001": 80}}
+            compliance_status = {
+                "overall_score": 75,
+                "framework_scores": {"ISO27001": 80},
+            }
 
             return {
                 "conversation_id": str(conversation_id),
@@ -71,7 +77,9 @@ class ContextManager:
             }
 
         except Exception as context_error:
-            logger.error(f"Error assembling conversation context: {context_error}", exc_info=True)
+            logger.error(
+                f"Error assembling conversation context: {context_error}", exc_info=True
+            )
             # Fallback to default context if anything goes wrong
             return self._get_default_context(conversation_id, business_profile_id)
 

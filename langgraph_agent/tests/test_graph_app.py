@@ -15,7 +15,7 @@ from langgraph_agent.graph.app import (
     legal_reviewer_node,
     create_graph,
     invoke_graph,
-    stream_graph
+    stream_graph,
 )
 from langgraph_agent.graph.state import create_initial_state
 from langgraph_agent.core.constants import GRAPH_NODES
@@ -28,8 +28,7 @@ class TestNodeFunctions:
     async def test_router_node_gdpr_keyword(self):
         """Test router routes GDPR keywords to compliance analyzer."""
         state = create_initial_state(
-            company_id=uuid4(),
-            user_input="What GDPR obligations apply to my business?"
+            company_id=uuid4(), user_input="What GDPR obligations apply to my business?"
         )
 
         result = await router_node(state)
@@ -42,8 +41,7 @@ class TestNodeFunctions:
     async def test_router_node_obligation_keyword(self):
         """Test router routes obligation keywords to obligation finder."""
         state = create_initial_state(
-            company_id=uuid4(),
-            user_input="What are my data processing obligations?"
+            company_id=uuid4(), user_input="What are my data processing obligations?"
         )
 
         result = await router_node(state)
@@ -55,7 +53,7 @@ class TestNodeFunctions:
         """Test router routes evidence keywords to evidence collector."""
         state = create_initial_state(
             company_id=uuid4(),
-            user_input="I need to collect compliance evidence documents"
+            user_input="I need to collect compliance evidence documents",
         )
 
         result = await router_node(state)
@@ -66,8 +64,7 @@ class TestNodeFunctions:
     async def test_router_node_legal_keyword(self):
         """Test router routes legal keywords to legal reviewer."""
         state = create_initial_state(
-            company_id=uuid4(),
-            user_input="I need a legal review of my privacy policy"
+            company_id=uuid4(), user_input="I need a legal review of my privacy policy"
         )
 
         result = await router_node(state)
@@ -78,8 +75,7 @@ class TestNodeFunctions:
     async def test_router_node_default_route(self):
         """Test router defaults to compliance analyzer for unknown input."""
         state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Hello there, how are you today?"
+            company_id=uuid4(), user_input="Hello there, how are you today?"
         )
 
         result = await router_node(state)
@@ -89,10 +85,7 @@ class TestNodeFunctions:
     @pytest.mark.asyncio
     async def test_router_node_empty_messages(self):
         """Test router handles empty messages gracefully."""
-        state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test"
-        )
+        state = create_initial_state(company_id=uuid4(), user_input="Test")
         state["messages"] = []  # Clear messages
 
         result = await router_node(state)
@@ -103,8 +96,7 @@ class TestNodeFunctions:
     async def test_compliance_analyzer_node(self):
         """Test compliance analyzer node execution."""
         state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Analyze my compliance requirements"
+            company_id=uuid4(), user_input="Analyze my compliance requirements"
         )
 
         result = await compliance_analyzer_node(state)
@@ -119,8 +111,7 @@ class TestNodeFunctions:
     async def test_obligation_finder_node(self):
         """Test obligation finder node execution."""
         state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Find my compliance obligations"
+            company_id=uuid4(), user_input="Find my compliance obligations"
         )
 
         result = await obligation_finder_node(state)
@@ -135,8 +126,7 @@ class TestNodeFunctions:
     async def test_evidence_collector_node(self):
         """Test evidence collector node execution."""
         state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Help me collect evidence"
+            company_id=uuid4(), user_input="Help me collect evidence"
         )
 
         result = await evidence_collector_node(state)
@@ -151,8 +141,7 @@ class TestNodeFunctions:
     async def test_legal_reviewer_node(self):
         """Test legal reviewer node execution."""
         state = create_initial_state(
-            company_id=uuid4(),
-            user_input="I need legal review"
+            company_id=uuid4(), user_input="I need legal review"
         )
 
         result = await legal_reviewer_node(state)
@@ -172,7 +161,16 @@ class TestGraphCreation:
         graph = create_graph()
 
         # Check all nodes are added
-        node_names = [GRAPH_NODES[key] for key in ["router", "compliance_analyzer", "obligation_finder", "evidence_collector", "legal_reviewer"]]
+        node_names = [
+            GRAPH_NODES[key]
+            for key in [
+                "router",
+                "compliance_analyzer",
+                "obligation_finder",
+                "evidence_collector",
+                "legal_reviewer",
+            ]
+        ]
 
         # The graph object doesn't expose nodes directly in a simple way
         # So we'll just ensure the graph compiles without errors
@@ -184,7 +182,9 @@ class TestGraphCreation:
 
         # Should be able to call compile without errors
         # We'll mock the checkpointer since we don't have a real DB connection
-        with patch('langgraph_agent.graph.app.create_checkpointer') as mock_checkpointer:
+        with patch(
+            "langgraph_agent.graph.app.create_checkpointer"
+        ) as mock_checkpointer:
             mock_checkpointer.return_value = Mock()
 
             try:
@@ -203,8 +203,7 @@ class TestGraphInvocation:
         # Mock the compiled graph behavior
         mock_compiled_graph = AsyncMock()
         mock_final_state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test GDPR question"
+            company_id=uuid4(), user_input="Test GDPR question"
         )
         mock_final_state["current_node"] = "compliance_analyzer"
         mock_final_state["next_node"] = "END"
@@ -215,7 +214,7 @@ class TestGraphInvocation:
         result = await invoke_graph(
             compiled_graph=mock_compiled_graph,
             company_id=company_id,
-            user_input="What GDPR obligations apply to my business?"
+            user_input="What GDPR obligations apply to my business?",
         )
 
         # Check invocation was called
@@ -230,8 +229,7 @@ class TestGraphInvocation:
         """Test graph invocation with specific thread ID."""
         mock_compiled_graph = AsyncMock()
         mock_final_state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test input"
+            company_id=uuid4(), user_input="Test input"
         )
         mock_compiled_graph.ainvoke.return_value = mock_final_state
 
@@ -242,7 +240,7 @@ class TestGraphInvocation:
             compiled_graph=mock_compiled_graph,
             company_id=company_id,
             user_input="Test input",
-            thread_id=thread_id
+            thread_id=thread_id,
         )
 
         # Check config was passed with thread_id
@@ -260,7 +258,7 @@ class TestGraphInvocation:
         result = await invoke_graph(
             compiled_graph=mock_compiled_graph,
             company_id=company_id,
-            user_input="Test input"
+            user_input="Test input",
         )
 
         # Should return state with error
@@ -272,16 +270,15 @@ class TestGraphInvocation:
         """Test SLO monitoring in graph invocation."""
         mock_compiled_graph = AsyncMock()
         mock_final_state = create_initial_state(
-            company_id=uuid4(),
-            user_input="Test input"
+            company_id=uuid4(), user_input="Test input"
         )
         mock_compiled_graph.ainvoke.return_value = mock_final_state
 
-        with patch('langgraph_agent.graph.app.logger') as mock_logger:
+        with patch("langgraph_agent.graph.app.logger") as mock_logger:
             result = await invoke_graph(
                 compiled_graph=mock_compiled_graph,
                 company_id=uuid4(),
-                user_input="Test input"
+                user_input="Test input",
             )
 
             # Should log execution time
@@ -306,7 +303,7 @@ class TestGraphInvocation:
         async for chunk in stream_graph(
             compiled_graph=mock_compiled_graph,
             company_id=company_id,
-            user_input="Test streaming"
+            user_input="Test streaming",
         ):
             chunks.append(chunk)
 
@@ -331,7 +328,7 @@ class TestGraphInvocation:
         async for chunk in stream_graph(
             compiled_graph=mock_compiled_graph,
             company_id=company_id,
-            user_input="Test error"
+            user_input="Test error",
         ):
             chunks.append(chunk)
 
@@ -350,7 +347,7 @@ class TestIntegrationFlow:
         """Test full flow from router to compliance analyzer."""
         state = create_initial_state(
             company_id=uuid4(),
-            user_input="What GDPR requirements apply to my retail business?"
+            user_input="What GDPR requirements apply to my retail business?",
         )
 
         # Execute router
@@ -367,7 +364,7 @@ class TestIntegrationFlow:
         """Test full flow from router to obligation finder."""
         state = create_initial_state(
             company_id=uuid4(),
-            user_input="What obligations must I implement for data processing?"
+            user_input="What obligations must I implement for data processing?",
         )
 
         # Execute router
@@ -385,9 +382,7 @@ class TestIntegrationFlow:
         thread_id = "test_thread_456"
 
         state = create_initial_state(
-            company_id=company_id,
-            user_input="Test consistency",
-            thread_id=thread_id
+            company_id=company_id, user_input="Test consistency", thread_id=thread_id
         )
 
         original_company_id = state["company_id"]

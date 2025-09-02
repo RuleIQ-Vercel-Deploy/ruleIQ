@@ -75,7 +75,9 @@ try:
     print(f"  Server algorithm: {settings.jwt_algorithm}")
 
     # Verify token with server settings
-    server_decoded = jwt.decode(token, settings.jwt_secret, algorithms=[settings.jwt_algorithm])
+    server_decoded = jwt.decode(
+        token, settings.jwt_secret, algorithms=[settings.jwt_algorithm]
+    )
     print("✓ Server-side verification would succeed!")
 
     # Check if secrets match

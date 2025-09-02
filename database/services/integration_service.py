@@ -19,7 +19,10 @@ from database.models.integrations import (
     EvidenceAuditLog,
 )
 from api.clients.base_api_client import APICredentials, AuthType
-from core.security.credential_encryption import get_credential_encryption, CredentialDecryptionError
+from core.security.credential_encryption import (
+    get_credential_encryption,
+    CredentialDecryptionError,
+)
 from config.logging_config import get_logger
 
 logger = get_logger(__name__)
@@ -67,13 +70,17 @@ class IntegrationService:
                 raise ValueError("health_info must be a non-empty dictionary")
 
             # Encrypt credentials before storage
-            encrypted_creds = self.encryption.encrypt_credentials(credentials.credentials)
+            encrypted_creds = self.encryption.encrypt_credentials(
+                credentials.credentials
+            )
 
             # Use proper transaction handling
             async with self.db.begin():
                 # Check if integration already exists for this user/provider
                 stmt = select(Integration).where(
-                    and_(Integration.user_id == user_id, Integration.provider == provider)
+                    and_(
+                        Integration.user_id == user_id, Integration.provider == provider
+                    )
                 )
                 result = await self.db.execute(stmt)
                 existing_integration = result.scalar_one_or_none()
@@ -82,7 +89,9 @@ class IntegrationService:
                     # Update existing integration
                     existing_integration.encrypted_credentials = encrypted_creds
                     existing_integration.health_status = health_info
-                    existing_integration.configuration_metadata = configuration_metadata or {}
+                    existing_integration.configuration_metadata = (
+                        configuration_metadata or {}
+                    )
                     existing_integration.updated_at = datetime.utcnow()
                     existing_integration.is_active = True
 
@@ -101,7 +110,9 @@ class IntegrationService:
                     )
 
                     self.db.add(integration)
-                    logger.info(f"Created new integration {provider} for user {user_id}")
+                    logger.info(
+                        f"Created new integration {provider} for user {user_id}"
+                    )
 
                 # Flush to get the ID
                 await self.db.flush()
@@ -119,7 +130,10 @@ class IntegrationService:
                 action="create" if not existing_integration else "update",
                 resource_type="integration",
                 resource_id=str(integration.id),
-                details={"provider": provider, "health_status": health_info.get("status")},
+                details={
+                    "provider": provider,
+                    "health_status": health_info.get("status"),
+                },
             )
 
             return integration
@@ -156,7 +170,9 @@ class IntegrationService:
             result = await self.db.execute(stmt)
             integrations = result.scalars().all()
 
-            logger.debug(f"Retrieved {len(integrations)} integrations for user {user_id}")
+            logger.debug(
+                f"Retrieved {len(integrations)} integrations for user {user_id}"
+            )
             return list(integrations)
 
         except Exception as e:
@@ -196,7 +212,9 @@ class IntegrationService:
             logger.error(f"Failed to get integration by ID: {e}")
             raise
 
-    async def decrypt_integration_credentials(self, integration: Integration) -> APICredentials:
+    async def decrypt_integration_credentials(
+        self, integration: Integration
+    ) -> APICredentials:
         """
         Decrypt stored integration credentials
 
@@ -208,7 +226,9 @@ class IntegrationService:
         """
         try:
             # Decrypt credentials
-            decrypted_creds = self.encryption.decrypt_credentials(integration.encrypted_credentials)
+            decrypted_creds = self.encryption.decrypt_credentials(
+                integration.encrypted_credentials
+            )
 
             # Reconstruct APICredentials object
             api_credentials = APICredentials(
@@ -222,14 +242,19 @@ class IntegrationService:
             return api_credentials
 
         except CredentialDecryptionError as e:
-            logger.error(f"Failed to decrypt credentials for integration {integration.id}: {e}")
+            logger.error(
+                f"Failed to decrypt credentials for integration {integration.id}: {e}"
+            )
             raise
         except Exception as e:
             logger.error(f"Unexpected error decrypting credentials: {e}")
             raise
 
     async def update_integration_health(
-        self, integration_id: str, health_data: Dict[str, Any], user_id: Optional[str] = None
+        self,
+        integration_id: str,
+        health_data: Dict[str, Any],
+        user_id: Optional[str] = None,
     ) -> bool:
         """
         Update integration health status
@@ -246,7 +271,9 @@ class IntegrationService:
             # Verify integration exists and user has access
             integration = await self.get_integration_by_id(integration_id, user_id)
             if not integration:
-                logger.warning(f"Integration {integration_id} not found for health update")
+                logger.warning(
+                    f"Integration {integration_id} not found for health update"
+                )
                 return False
 
             # Update health status
@@ -309,7 +336,9 @@ class IntegrationService:
             logger.error(f"Failed to delete integration: {e}")
             raise
 
-    async def _log_health_check(self, integration_id: str, health_data: Dict[str, Any]) -> None:
+    async def _log_health_check(
+        self, integration_id: str, health_data: Dict[str, Any]
+    ) -> None:
         """Log health check result"""
         try:
             health_log = IntegrationHealthLog(
@@ -424,7 +453,9 @@ class EvidenceCollectionService:
     ) -> bool:
         """Update evidence collection status"""
         try:
-            stmt = select(EvidenceCollection).where(EvidenceCollection.id == collection_id)
+            stmt = select(EvidenceCollection).where(
+                EvidenceCollection.id == collection_id
+            )
             result = await self.db.execute(stmt)
             collection = result.scalar_one_or_none()
 
@@ -507,7 +538,9 @@ class EvidenceCollectionService:
     ) -> Optional[EvidenceCollection]:
         """Get evidence collection status"""
         try:
-            stmt = select(EvidenceCollection).where(EvidenceCollection.id == collection_id)
+            stmt = select(EvidenceCollection).where(
+                EvidenceCollection.id == collection_id
+            )
 
             if user_id:
                 stmt = stmt.where(EvidenceCollection.user_id == user_id)
@@ -534,7 +567,9 @@ class EvidenceCollectionService:
             )
 
             if evidence_type:
-                stmt = stmt.where(IntegrationEvidenceItem.evidence_type == evidence_type)
+                stmt = stmt.where(
+                    IntegrationEvidenceItem.evidence_type == evidence_type
+                )
 
             # Count total items
             count_stmt = select(func.count()).select_from(stmt.subquery())
@@ -592,7 +627,9 @@ async def decrypt_integration_credentials(integration: Integration) -> APICreden
     encryption = get_credential_encryption()
 
     try:
-        decrypted_creds = encryption.decrypt_credentials(integration.encrypted_credentials)
+        decrypted_creds = encryption.decrypt_credentials(
+            integration.encrypted_credentials
+        )
 
         return APICredentials(
             provider=integration.provider,
@@ -601,7 +638,9 @@ async def decrypt_integration_credentials(integration: Integration) -> APICreden
             region=decrypted_creds.get("region"),
         )
     except Exception as e:
-        logger.error(f"Failed to decrypt credentials for integration {integration.id}: {e}")
+        logger.error(
+            f"Failed to decrypt credentials for integration {integration.id}: {e}"
+        )
         raise
 
 

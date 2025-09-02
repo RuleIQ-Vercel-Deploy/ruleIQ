@@ -6,11 +6,15 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from database.business_profile import BusinessProfile as BusinessProfileModel
-from database.compliance_framework import ComplianceFramework as ComplianceFrameworkModel
+from database.compliance_framework import (
+    ComplianceFramework as ComplianceFrameworkModel,
+)
 from database.evidence_item import EvidenceItem as EvidenceItemModel
 from database.generated_policy import GeneratedPolicy as GeneratedPolicyModel
 from database.implementation_plan import ImplementationPlan as ImplementationPlanModel
-from database.readiness_assessment import ReadinessAssessment as ReadinessAssessmentModel
+from database.readiness_assessment import (
+    ReadinessAssessment as ReadinessAssessmentModel,
+)
 from database.user import User as UserModel
 
 
@@ -43,7 +47,9 @@ def analyze_readiness_details(policy_score, implementation_score, evidence_score
         "priority_actions": [
             {"action": "Improve policy coverage", "urgency": "high", "impact": "high"}
         ],
-        "quick_wins": [{"action": "Upload missing evidence for control X", "effort": "low"}],
+        "quick_wins": [
+            {"action": "Upload missing evidence for control X", "effort": "low"}
+        ],
         "estimated_readiness_date": datetime.utcnow() + timedelta(days=90),
     }
 
@@ -75,7 +81,9 @@ async def generate_compliance_report(
                 "generated_at": datetime.utcnow().isoformat(),
             },
             "summary": "This is a placeholder compliance report.",
-            "recommendations": "Implement all the things." if include_recommendations else "N/A",
+            "recommendations": (
+                "Implement all the things." if include_recommendations else "N/A"
+            ),
             "evidence": "Evidence included." if include_evidence else "N/A",
         }
 
@@ -95,7 +103,9 @@ async def generate_readiness_assessment(
     """Generate a comprehensive compliance readiness assessment asynchronously."""
 
     # Get business profile
-    profile_stmt = select(BusinessProfileModel).where(BusinessProfileModel.user_id == user.id)
+    profile_stmt = select(BusinessProfileModel).where(
+        BusinessProfileModel.user_id == user.id
+    )
     profile_res = await db.execute(profile_stmt)
     profile = profile_res.scalars().first()
     if not profile:
@@ -112,7 +122,8 @@ async def generate_readiness_assessment(
 
     # Get related artifacts
     policies_stmt = select(GeneratedPolicyModel).where(
-        GeneratedPolicyModel.user_id == user.id, GeneratedPolicyModel.framework_id == framework_id
+        GeneratedPolicyModel.user_id == user.id,
+        GeneratedPolicyModel.framework_id == framework_id,
     )
     policies_res = await db.execute(policies_stmt)
     policies = policies_res.scalars().all()
@@ -125,7 +136,8 @@ async def generate_readiness_assessment(
     implementation_plans = impl_plans_res.scalars().all()
 
     evidence_stmt = select(EvidenceItemModel).where(
-        EvidenceItemModel.user_id == user.id, EvidenceItemModel.framework_id == framework_id
+        EvidenceItemModel.user_id == user.id,
+        EvidenceItemModel.framework_id == framework_id,
     )
     evidence_res = await db.execute(evidence_stmt)
     evidence_items = evidence_res.scalars().all()
@@ -138,7 +150,9 @@ async def generate_readiness_assessment(
     overall_score = (policy_score + implementation_score + evidence_score) / 3
 
     # Analyze for actions and readiness date
-    analysis = analyze_readiness_details(policy_score, implementation_score, evidence_score)
+    analysis = analyze_readiness_details(
+        policy_score, implementation_score, evidence_score
+    )
 
     # Create and save assessment
     new_assessment = ReadinessAssessmentModel(

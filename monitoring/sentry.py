@@ -31,6 +31,8 @@ def init_sentry() -> None:
             traces_sample_rate=1.0,  # Capture 100% of transactions for performance monitoring
             profiles_sample_rate=1.0,  # Capture 100% of profiles for performance monitoring
         )
-        logger.info(f"Sentry initialized for environment: {settings.sentry_environment}")
+        logger.info(
+            f"Sentry initialized for environment: {settings.sentry_environment}"
+        )
     except Exception as e:
         logger.error(f"Failed to initialize Sentry: {e}", exc_info=True)

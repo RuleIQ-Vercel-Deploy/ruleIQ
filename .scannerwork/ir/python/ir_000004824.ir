@@ -1,0 +1,99 @@
+
+#"Do I need a DPO?"str
+;2"Generate varied test inputs for latency testing."str
+"user_input"str
+SJ"Help me collect and organize compliance evidence for a regulatory audit."str
+
+1int
+‚y"I need a comprehensive compliance analysis for my fintech startup covering GDPR, PCI DSS, and UK financial regulations."str
+SJ"I need legal review of my privacy policy and data processing agreements."str
+	"autonomy_level"str
+6-"What GDPR obligations apply to my business?"str
+
+
+2int
+
+*0int
+
+3int
+"company_id"str'list"ž
+$
+"
+@ D("#new-object#Bdict(
+&
+A A(%"
+uuiduuid4B	uuid.UUID 
+
+A A(%"	#map-set#: 
+
+B B(K"	#map-set#: 
+
+C C(#"	#map-set#:	
+$
+"
+F J("#new-object#Bdict(
+&
+G G(%"
+uuiduuid4B	uuid.UUID 
+
+G G(%"	#map-set#:!
+
+	H H(—"	#map-set#: 
+
+I I(#"	#map-set#:	$
+"
+L P("#new-object#Bdict(
+&
+M M(%"
+uuiduuid4B	uuid.UUID 
+
+M M(%"	#map-set#: 
+
+N N(h"	#map-set#: 
+
+O O(#"	#map-set#:	
+$
+"
+R V("#new-object#Bdict(
+&
+S S(%"
+uuiduuid4B	uuid.UUID 
+
+S S(%"	#map-set#: 
+
+T T(h"	#map-set#: 
+
+U U(#"	#map-set#:	$
+"
+X \( "#new-object#Bdict(
+&
+Y Y(%!"
+uuiduuid4B	uuid.UUID 
+
+Y Y(%""	#map-set#: ! 
+
+Z Z(0$"	#map-set#: # 
+
+[ [(#%"	#map-set#: 	
+4
+2
+> ](	&test_inputs"#unknown-value#Blist&
+$
+> ](	("
+#is-exact#:&'Bbool
+
+> ](	)"
+#assume#:(8
+6
+> ](	+"#set-field# __collection_size:&*Bint&
+$
+> ](	,"#array-add-last#:&&
+$
+> ](	-"#array-add-last#:&&
+$
+> ](	."#array-add-last#:&&
+$
+> ](	/"#array-add-last#:&&
+$
+> ](	0"#array-add-last#:& 
+^ ^(&*G/home/omar/Documents/ruleIQ/langgraph_agent/tests/test_latency_smoke.py

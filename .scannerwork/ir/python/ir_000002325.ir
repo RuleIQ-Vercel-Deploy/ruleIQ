@@ -1,0 +1,48 @@
+
+
+"jurisdiction"str
+"domain"str
+"domain_requirements"str
+\S"Natural language query: What are the requirements for [DOMAIN] in [JURISDICTION]?"str
+‡ý"
+        MATCH (domain:ComplianceDomain {name: $domain})
+              -[:GOVERNS]->(reg:Regulation {jurisdiction: $jurisdiction})
+              -[:REQUIRES]->(req:Requirement)
+        RETURN reg.name AS regulation,
+               COLLECT({
+                 title: req.title,
+                 description: req.description,
+                 mandatory: req.mandatory,
+                 deadline: req.deadline,
+                 article_reference: req.article_reference
+               }) AS requirements
+        "strself
+Ÿ Ÿ(domain
+   (jurisdiction
+¡ ¡("Ó(
+&
+¥ ¥(‘query"#id#:Bstr.
+,
+
+³ ³(Aparams"#new-object#Bdict"
+ 
+
+³ ³("	"	#map-set#:"
+ 
+
+³$ ³(@"	#map-set#:
+#
+!
+
+´ ´(9"#unknown-value#,
+*
+
+´ ´(9results"#unknown-value#&
+$
+
+µ µ(/"#new-object#Bdict"
+ 
+
+µ µ(."	#map-set#:
+
+µ µ(/*A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py

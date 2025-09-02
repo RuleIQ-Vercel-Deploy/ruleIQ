@@ -40,7 +40,8 @@ class FieldValidator:
         r"^https?://(?:[-\w.])+(?:\:[0-9]+)?(?:/(?:[\w/_.])*(?:\?(?:[\w&=%.])*)?(?:\#(?:[\w.])*)?)?$"
     )
     UUID_PATTERN = re.compile(
-        r"^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$", re.IGNORECASE
+        r"^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+        re.IGNORECASE,
     )
 
     # Safe string pattern (alphanumeric, spaces, basic punctuation only)
@@ -72,9 +73,13 @@ class FieldValidator:
 
         # Check length
         if len(value) < min_length:
-            raise ValidationError(f"String must be at least {min_length} characters long")
+            raise ValidationError(
+                f"String must be at least {min_length} characters long"
+            )
         if len(value) > max_length:
-            raise ValidationError(f"String must be at most {max_length} characters long")
+            raise ValidationError(
+                f"String must be at most {max_length} characters long"
+            )
 
         # Check for potentially dangerous characters
         if not FieldValidator.SAFE_STRING_PATTERN.match(value):
@@ -294,7 +299,11 @@ class WhitelistValidator:
                     ],
                     "required": False,
                 },
-                "tags": {"type": FieldType.LIST, "required": False, "allow_empty": True},
+                "tags": {
+                    "type": FieldType.LIST,
+                    "required": False,
+                    "allow_empty": True,
+                },
                 "notes": {  # Alias for collection_notes
                     "type": FieldType.STRING,
                     "max_length": 2000,
@@ -375,16 +384,45 @@ class WhitelistValidator:
                 "handles_personal_data": {"type": FieldType.BOOLEAN, "required": False},
                 "processes_payments": {"type": FieldType.BOOLEAN, "required": False},
                 "stores_health_data": {"type": FieldType.BOOLEAN, "required": False},
-                "provides_financial_services": {"type": FieldType.BOOLEAN, "required": False},
-                "operates_critical_infrastructure": {"type": FieldType.BOOLEAN, "required": False},
-                "has_international_operations": {"type": FieldType.BOOLEAN, "required": False},
+                "provides_financial_services": {
+                    "type": FieldType.BOOLEAN,
+                    "required": False,
+                },
+                "operates_critical_infrastructure": {
+                    "type": FieldType.BOOLEAN,
+                    "required": False,
+                },
+                "has_international_operations": {
+                    "type": FieldType.BOOLEAN,
+                    "required": False,
+                },
                 # Technology stack
-                "cloud_providers": {"type": FieldType.LIST, "max_items": 20, "required": False},
-                "saas_tools": {"type": FieldType.LIST, "max_items": 50, "required": False},
-                "development_tools": {"type": FieldType.LIST, "max_items": 30, "required": False},
+                "cloud_providers": {
+                    "type": FieldType.LIST,
+                    "max_items": 20,
+                    "required": False,
+                },
+                "saas_tools": {
+                    "type": FieldType.LIST,
+                    "max_items": 50,
+                    "required": False,
+                },
+                "development_tools": {
+                    "type": FieldType.LIST,
+                    "max_items": 30,
+                    "required": False,
+                },
                 # Current compliance state
-                "existing_frameworks": {"type": FieldType.LIST, "max_items": 20, "required": False},
-                "planned_frameworks": {"type": FieldType.LIST, "max_items": 20, "required": False},
+                "existing_frameworks": {
+                    "type": FieldType.LIST,
+                    "max_items": 20,
+                    "required": False,
+                },
+                "planned_frameworks": {
+                    "type": FieldType.LIST,
+                    "max_items": 20,
+                    "required": False,
+                },
                 "compliance_budget": {
                     "type": FieldType.STRING,
                     "max_length": 50,
@@ -401,7 +439,11 @@ class WhitelistValidator:
                 },
                 # Assessment status
                 "assessment_completed": {"type": FieldType.BOOLEAN, "required": False},
-                "assessment_data": {"type": FieldType.DICT, "max_keys": 100, "required": False},
+                "assessment_data": {
+                    "type": FieldType.DICT,
+                    "max_keys": 100,
+                    "required": False,
+                },
             },
             "User": {
                 "name": {
@@ -464,7 +506,9 @@ class WhitelistValidator:
                     item_validator=field_def.get("item_validator"),
                 )
             elif field_type == FieldType.DICT:
-                return FieldValidator.validate_dict(value, max_keys=field_def.get("max_keys", 50))
+                return FieldValidator.validate_dict(
+                    value, max_keys=field_def.get("max_keys", 50)
+                )
             else:
                 raise ValidationError(f"Unsupported field type: {field_type}")
 
@@ -527,7 +571,9 @@ class SecurityValidator:
         def check_value(val) -> None:
             if isinstance(val, str):
                 if SecurityValidator.scan_for_dangerous_patterns(val):
-                    raise ValidationError("Input contains potentially dangerous content")
+                    raise ValidationError(
+                        "Input contains potentially dangerous content"
+                    )
             elif isinstance(val, dict):
                 for v in val.values():
                     check_value(v)

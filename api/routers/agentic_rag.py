@@ -17,27 +17,32 @@ from api.schemas.base import StandardResponse
 logger = logging.getLogger(__name__)
 router = APIRouter(tags=["Agentic RAG"])
 
+
 # Request schemas
 class DocumentationQueryRequest(BaseModel):
     query: str = Field(
-        ..., min_length=1, max_length=1000,
-        description="Question about LangGraph or Pydantic AI"
+        ...,
+        min_length=1,
+        max_length=1000,
+        description="Question about LangGraph or Pydantic AI",
     )
     source_filter: Optional[str] = Field(
         None, description="Filter by source: 'langgraph', 'pydantic_ai', etc."
     )
     query_type: str = Field(
         "documentation",
-        description="Type of query: 'documentation', 'code_examples', 'hybrid'"
+        description="Type of query: 'documentation', 'code_examples', 'hybrid'",
     )
     max_results: int = Field(
         5, ge=1, le=20, description="Maximum number of results to return"
     )
 
+
 class ProcessDocumentationRequest(BaseModel):
     force_reprocess: bool = Field(
         False, description="Force reprocessing even if already indexed"
     )
+
 
 class FrameworkGuidanceRequest(BaseModel):
     topic: str = Field(
@@ -45,8 +50,10 @@ class FrameworkGuidanceRequest(BaseModel):
     )
     framework: str = Field(..., description="Framework: 'langgraph' or 'pydantic_ai'")
 
+
 # Initialize the RAG system (singleton pattern)
 _rag_system = None
+
 
 def get_rag_system() -> AgenticRAGSystem:
     """Get or create the RAG system instance"""
@@ -55,15 +62,16 @@ def get_rag_system() -> AgenticRAGSystem:
         _rag_system = AgenticRAGSystem()
     return _rag_system
 
+
 @router.post(
     "/find-examples",
     response_model=StandardResponse[AgenticRAGResponse],
-    dependencies=[Depends(rate_limit(requests_per_minute=20))]
+    dependencies=[Depends(rate_limit(requests_per_minute=20))],
 )
 async def find_code_examples(
     request: FrameworkGuidanceRequest,
     current_user: User = Depends(get_current_active_user),
-    rag_system: AgenticRAGSystem = Depends(get_rag_system)
+    rag_system: AgenticRAGSystem = Depends(get_rag_system),
 ) -> StandardResponse[AgenticRAGResponse]:
     """
     Find specific code examples for a task
@@ -78,7 +86,7 @@ async def find_code_examples(
         if not rag_system.use_agentic_rag:
             raise HTTPException(
                 status_code=503,
-                detail="Code example search requires agentic RAG to be enabled"
+                detail="Code example search requires agentic RAG to be enabled",
             )
 
         # Create task-specific query
@@ -89,29 +97,34 @@ async def find_code_examples(
             query=example_query,
             source_filter=request.framework,
             query_type="code_examples",
-            max_results=5
+            max_results=5,
         )
 
         return StandardResponse(
             success=True,
             data=result,
-            message=f"Found {len(result.sources)} relevant code examples"
+            message=f"Found {len(result.sources)} relevant code examples",
         )
 
     except Exception as e:
         logger.error(f"Error finding examples: {str(e)}")
-        raise HTTPException(status_code=500, detail=f"Failed to find examples: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to find examples: {str(e)}"
+        )
+
 
 @router.post(
     "/fact-check",
     response_model=Dict[str, Any],
     summary="Fact-check a RAG response",
-    description="Run fact-checking and self-criticism analysis on a RAG response"
+    description="Run fact-checking and self-criticism analysis on a RAG response",
 )
 async def fact_check_response(
     request: DocumentationQueryRequest,
-    quick_check: bool = Query(True, description="Use quick fact-check for faster response"),
-    current_user: User = Depends(get_current_active_user)
+    quick_check: bool = Query(
+        True, description="Use quick fact-check for faster response"
+    ),
+    current_user: User = Depends(get_current_active_user),
 ) -> Dict[str, Any]:
     """
     Fact-check a RAG response using the self-critic system
@@ -128,13 +141,14 @@ async def fact_check_response(
 
         # Get agentic integration service
         from services.agentic_integration import get_agentic_service
+
         agentic_service = await get_agentic_service()
 
         # Get RAG response first
         rag_response = await agentic_service.query_documentation(
             query=request.query,
             source_filter=request.source_filter,
-            query_type=getattr(request, 'query_type', 'documentation')
+            query_type=getattr(request, "query_type", "documentation"),
         )
 
         # Run fact-checking
@@ -142,7 +156,7 @@ async def fact_check_response(
             response_text=rag_response["answer"],
             sources=rag_response["sources"],
             original_query=request.query,
-            quick_check=quick_check
+            quick_check=quick_check,
         )
 
         return {
@@ -154,30 +168,30 @@ async def fact_check_response(
                 "fact_check_type": fact_check_result.get("fact_check_type", "quick"),
                 "approved": fact_check_result["approved"],
                 "confidence": fact_check_result["confidence"],
-                "recommendations": fact_check_result.get("recommendations", [])
-            }
+                "recommendations": fact_check_result.get("recommendations", []),
+            },
         }
 
     except Exception as e:
         logger.error(f"Error in fact-check endpoint: {e}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Fact-checking failed: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Fact-checking failed: {str(e)}")
+
 
 @router.post(
     "/query-with-validation",
     response_model=Dict[str, Any],
     summary="Query documentation with automatic validation",
-    description="Query RAG system with built-in fact-checking and validation"
+    description="Query RAG system with built-in fact-checking and validation",
 )
 async def query_with_validation(
     request: DocumentationQueryRequest,
-    enable_fact_check: bool = Query(True, description="Enable fact-checking validation"),
+    enable_fact_check: bool = Query(
+        True, description="Enable fact-checking validation"
+    ),
     quick_validation: bool = Query(
         True, description="Use quick validation for better performance"
     ),
-    current_user: User = Depends(get_current_active_user)
+    current_user: User = Depends(get_current_active_user),
 ) -> Dict[str, Any]:
     """
     Query documentation with automatic fact-checking validation
@@ -198,15 +212,16 @@ async def query_with_validation(
 
         # Get agentic integration service
         from services.agentic_integration import get_agentic_service
+
         agentic_service = await get_agentic_service()
 
         # Query with validation
         result = await agentic_service.query_documentation_with_validation(
             query=request.query,
             source_filter=request.source_filter,
-            query_type=getattr(request, 'query_type', 'documentation'),
+            query_type=getattr(request, "query_type", "documentation"),
             enable_fact_check=enable_fact_check,
-            quick_validation=quick_validation
+            quick_validation=quick_validation,
         )
 
         return {
@@ -222,13 +237,10 @@ async def query_with_validation(
             "metadata": {
                 "query_type": result["query_type"],
                 "fact_check_enabled": enable_fact_check,
-                "validation_type": "quick" if quick_validation else "comprehensive"
-            }
+                "validation_type": "quick" if quick_validation else "comprehensive",
+            },
         }
 
     except Exception as e:
         logger.error(f"Error in validated query endpoint: {e}")
-        raise HTTPException(
-            status_code=500,
-            detail=f"Validated query failed: {str(e)}"
-        )
+        raise HTTPException(status_code=500, detail=f"Validated query failed: {str(e)}")

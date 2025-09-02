@@ -1,0 +1,9 @@
+
+"engagement"str
+5,"Check if this is an engagement-type event."strselfa a( "m/
+-
+c c(""#get-field# event_category:*
+(
+c c(2"
+#binop ==#2==:Bbool
+c c(2*:/home/omar/Documents/ruleIQ/database/lead_scoring_event.py

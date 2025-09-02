@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -11,11 +11,7 @@ import { ChatWidget } from '@/components/chat/chat-widget';
 import { useAuthStore } from '@/lib/stores/auth.store';
 import { Loader2 } from 'lucide-react';
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { isAuthenticated, isLoading, checkAuthStatus } = useAuthStore();
 
@@ -38,11 +34,7 @@ export default function DashboardLayout({
         <QuickActionsPanel />
         <KeyboardShortcutsDialog />
         <CommandPalette />
-        <ChatWidget 
-          position="bottom-right" 
-          defaultOpen={false}
-          enableVoice={true}
-        />
+        <ChatWidget position="bottom-right" defaultOpen={false} enableVoice={true} />
       </SidebarInset>
     </SidebarProvider>
   );

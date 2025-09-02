@@ -31,7 +31,9 @@ def run_tests_and_analyze():
         print("No test report generated. Running with basic output...")
         # Fallback to basic run
         result = subprocess.run(
-            [sys.executable, "-m", "pytest", "-v", "--tb=short"], capture_output=True, text=True
+            [sys.executable, "-m", "pytest", "-v", "--tb=short"],
+            capture_output=True,
+            text=True,
         )
 
         # Parse output for failures

@@ -63,10 +63,7 @@ export function useIntegration(id: string, options?: BaseQueryOptions<Integratio
 }
 
 // Hook to fetch integration status
-export function useIntegrationStatus(
-  id: string,
-  options?: BaseQueryOptions<IntegrationStatus>,
-) {
+export function useIntegrationStatus(id: string, options?: BaseQueryOptions<IntegrationStatus>) {
   return useQuery({
     queryKey: integrationKeys.status(id),
     queryFn: () => integrationService.getIntegrationStatus(id),
@@ -132,10 +129,7 @@ export function useProviderConfigs(
 }
 
 // Hook to fetch sync history
-export function useSyncHistory(
-  id: string,
-  options?: BaseQueryOptions<SyncResult[]>,
-) {
+export function useSyncHistory(id: string, options?: BaseQueryOptions<SyncResult[]>) {
   return useQuery({
     queryKey: integrationKeys.syncHistory(id),
     queryFn: () => integrationService.getSyncHistory(id),
@@ -145,9 +139,7 @@ export function useSyncHistory(
 }
 
 // Hook to create integration
-export function useCreateIntegration(
-  options?: BaseMutationOptions<Integration, unknown, any>,
-) {
+export function useCreateIntegration(options?: BaseMutationOptions<Integration, unknown, any>) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -204,9 +196,7 @@ export function useTestIntegrationConnection(
 }
 
 // Hook to enable integration
-export function useEnableIntegration(
-  options?: BaseMutationOptions<Integration, unknown, string>,
-) {
+export function useEnableIntegration(options?: BaseMutationOptions<Integration, unknown, string>) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -222,9 +212,7 @@ export function useEnableIntegration(
 }
 
 // Hook to disable integration
-export function useDisableIntegration(
-  options?: BaseMutationOptions<Integration, unknown, string>,
-) {
+export function useDisableIntegration(options?: BaseMutationOptions<Integration, unknown, string>) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -257,9 +245,7 @@ export function useSyncIntegration(
 }
 
 // Hook to refresh integration credentials
-export function useRefreshCredentials(
-  options?: BaseMutationOptions<Integration, unknown, string>,
-) {
+export function useRefreshCredentials(options?: BaseMutationOptions<Integration, unknown, string>) {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -276,28 +262,20 @@ export function useRefreshCredentials(
 // Hook to export integration data
 export function useExportIntegrationData() {
   return useMutation({
-    mutationFn: ({ 
-      id, 
-      format 
-    }: { 
-      id: string; 
-      format: 'json' | 'csv' | 'excel';
-    }) =>
+    mutationFn: ({ id, format }: { id: string; format: 'json' | 'csv' | 'excel' }) =>
       integrationService.exportData(id, format),
   });
 }
 
 // Hook to bulk sync multiple integrations
-export function useBulkSync(
-  options?: BaseMutationOptions<SyncResult[], unknown, string[]>,
-) {
+export function useBulkSync(options?: BaseMutationOptions<SyncResult[], unknown, string[]>) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (integrationIds: string[]) => integrationService.bulkSync(integrationIds),
     onSuccess: (_, integrationIds) => {
       // Invalidate status and sync history for all integrations
-      integrationIds.forEach(id => {
+      integrationIds.forEach((id) => {
         queryClient.invalidateQueries({ queryKey: integrationKeys.status(id) });
         queryClient.invalidateQueries({ queryKey: integrationKeys.syncHistory(id) });
       });

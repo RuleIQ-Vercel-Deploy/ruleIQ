@@ -1,0 +1,1370 @@
+
+_	"gen_005"str
+¸"Automated process"str
+GM>"Do you conduct regular security training for your employees?"str
+û"Automated tools"str
+=å3"Do you maintain records of processing activities?"str
+ •"Yes, over a year ago"str
+ë
+"Annually"str
+õ"monitoring"str
+g"Department-based"str
+"ƒ"During onboarding only"str
+'
+"security"str
+≤"Yes, assigned roles"str
+ˇ"Never received any"str
+"data_protection"str
+ È"Yes, fully compliant"str
+’"Rarely"str
+˙"Manual tracking"str
+6á,"Do you have network segmentation in place?"str
+ë"Yes, partial"str
+!ˆ"credential_management"str
+ê"Yes, comprehensive"str
+"yes_no"str
+F‰<"Do you have a privacy policy that meets GDPR requirements?"str
+T"Planning to start"str
+≥"Outsourced"str
+;˜1"How do you handle data subject access requests?"str
+>"No formal backup"str
+§"data_security"str
+—
+"gdpr_002"str
+ñ	"sec_006"str
+:“0"Do you maintain an inventory of all IT assets?"str
+‘"Immediately"str
+
+"question_text"str
+Jü@"Have you conducted a Data Protection Impact Assessment (DPIA)?"str
+≈"scope"str
+◊"Yes, automated"str
+Ò	"sec_004"str
+'¶"Yes, at rest and in transit"str
+;52"How do you currently back up your business data?"str
+±"Yes, dedicated team"str
+˝"Manual process"str
+Î"Yes, fully"str
+"Yes"str
+?a6"How do you manage access to sensitive business data?"str
+æ"gdpr"str
+"question_id"str
+;"Cloud backup"str
+C:"Get hardcoded fallback questions when AI is unavailable."str
+<"Local backup"str
+Í"Yes, needs updating"str
+¿
+"gdpr_001"str
+u	"gen_006"str
+9¬/"Do you process personal data of EU residents?"str
+’"asset_management"str
+	"gen_001"str
+9"data_management"str
+¢"assessment"str
+˘"Single sign-on"str
+6ò,"How do you monitor for security incidents?"str
+à	"gen_007"str
+|"Yes, documented"str
+A¿7"How often do you conduct security awareness training?"str
+z"incident_response"str
+ß"Yes, partially"str
+˙"data_rights"str
+‰	"sec_010"str
+S"Yes, occasionally"str
+¯"Password manager"str
+ù
+"gdpr_006"str
+Ö	"sec_005"str
+"question_type"str
+ü	"gen_008"str
+"	"gen_002"str
+=Û3"How do you manage user passwords and credentials?"str
+)"In development"str
+È"architecture"str
+¬"Yes, everywhere"str
+"Unsure"str
+“"maintenance"str
+ÿ"Not required"str
+ä
+"gdpr_005"str
+·	"sec_003"str
+f"Role-based access"str
+7"multiple_choice"str
+ü"Manual reviews"str
+÷"governance"str
+@Ê6"Have you implemented Zero Trust security principles?"str
+2≠("Do you have an incident response team?"str
+–	"sec_009"str
+}"Yes, informal"str
+F„<"Do you perform regular security vulnerability assessments?"str
+ÿ"Yes, manual"str
+h"Everyone has access"str
+@$7"Do you have documented information security policies?"str
+ ¶"Not sure if required"str
+	"options"str
+í"Never"str
+ù
+"24/7 SOC"str
+>œ4"How often do you update your software and systems?"str
+R"Yes, regularly"str
+B”8"Do you have a Data Protection Officer (DPO) appointed?"str
+3w*"Do you have a data breach response plan?"str
+ †"No active monitoring"str
+«
+"Possibly"str
+˛"No formal process"str
+è	"Monthly"str
+?"Don't know"str
+ı
+"gdpr_004"str
+d"access_control"str
+´	"sec_007"str
+§"Yes, recently"str
+ì"Ad-hoc basis"str
+ç"compliance_review"str
+;ä1"How often do you review your compliance status?"str
+º	"sec_001"str
+Á"documentation"str
+Hæ>"Do you use multi-factor authentication for business systems?"str
+5°+"Do you use encryption for sensitive data?"str
+Ÿ	"Partial"str
+3	"gen_003"str
+SJ"Does your organization handle personal data from customers or employees?"str
+="Both"str
+ä"network_security"str
+K	"gen_004"str
+i"No formal system"str
+
+"category"str
+
+0int
+!í"Planning to implement"str
+æ	"sec_008"str
+"No"str
+	"general"str
+Õ	"sec_002"str
+P
+"training"str
+ê"Quarterly"str
+‚
+"gdpr_003"strself
+Ó  Ó($assessment_type
+Ó& Ó(:list"Ç~:
+8
+
+ ü(	fallback_questions"#new-object#Bdict&
+$
+
+Ú ¯("#new-object#Bdict"
+ 
+
+Û Û(,	"	#map-set#:"
+ 
+
+Ù Ù(o"	#map-set#:
+"
+ 
+
+ı ı(-"	#map-set#:"
+ 
+
+ˆ ˆ(1"	#map-set#:)
+'
+
+˜ ˜(6"#unknown-value#Blist(
+&
+
+˜ ˜(6"
+#is-exact#:Bbool
+
+
+˜ ˜(6"
+#assume#::
+8
+
+˜ ˜(6"#set-field# __collection_size:Bint(
+&
+
+˜ ˜(6"#array-add-last#:(
+&
+
+˜ ˜(6"#array-add-last#:(
+&
+
+˜ ˜(6"#array-add-last#:"
+ 
+
+˜ ˜(6 "	#map-set#:&
+$
+
+˘ ˇ(!"#new-object#Bdict"
+ 
+
+˙ ˙(,#"	#map-set#:!""
+ 
+
+˚ ˚(\%"	#map-set#:!
+$"
+ 
+
+¸ ¸(-&"	#map-set#:!"
+ 
+
+˝ ˝(*("	#map-set#:!')
+'
+
+˛ ˛(>*"#unknown-value#Blist(
+&
+
+˛ ˛(>+"
+#is-exact#:*Bbool
+
+
+˛ ˛(>,"
+#assume#:+:
+8
+
+˛ ˛(>-"#set-field# __collection_size:*Bint(
+&
+
+˛ ˛(>."#array-add-last#:*(
+&
+
+˛ ˛(>/"#array-add-last#:*(
+&
+
+˛ ˛(>0"#array-add-last#:*)"
+ 
+
+˛ ˛(>1"	#map-set#:!*&
+$
+
+Ä Ü(2"#new-object#Bdict"
+ 
+
+Å Å(,4"	#map-set#:23"
+ 
+
+Ç Ç(W6"	#map-set#:2
+5"
+ 
+
+É É(68"	#map-set#:27"
+ 
+
+Ñ Ñ(1:"	#map-set#:29)
+'
+
+Ö Ö(i@"#unknown-value#Blist(
+&
+
+Ö Ö(iA"
+#is-exact#:@Bbool
+
+
+Ö Ö(iB"
+#assume#:A:
+8
+
+Ö Ö(iC"#set-field# __collection_size:@Bint(
+&
+
+Ö Ö(iD"#array-add-last#:@;(
+&
+
+Ö Ö(iE"#array-add-last#:@<(
+&
+
+Ö Ö(iF"#array-add-last#:@=(
+&
+
+Ö Ö(iG"#array-add-last#:@>(
+&
+
+Ö Ö(iH"#array-add-last#:@?"
+ 
+
+Ö Ö(iI"	#map-set#:2@&
+$
+
+á ç(J"#new-object#Bdict"
+ 
+
+à à(,L"	#map-set#:JK"
+ 
+
+â â(cN"	#map-set#:J
+M"
+ 
+
+ä ä(-O"	#map-set#:J"
+ 
+
+ã ã(*Q"	#map-set#:JP)
+'
+
+å å(aU"#unknown-value#Blist(
+&
+
+å å(aV"
+#is-exact#:UBbool
+
+
+å å(aW"
+#assume#:V:
+8
+
+å å(aX"#set-field# __collection_size:UBint(
+&
+
+å å(aY"#array-add-last#:UR(
+&
+
+å å(aZ"#array-add-last#:US(
+&
+
+å å(a["#array-add-last#:U(
+&
+
+å å(a\"#array-add-last#:UT"
+ 
+
+å å(a]"	#map-set#:JU&
+$
+
+é î(^"#new-object#Bdict"
+ 
+
+è è(,`"	#map-set#:^_"
+ 
+
+ê ê([b"	#map-set#:^
+a"
+ 
+
+ë ë(6c"	#map-set#:^7"
+ 
+
+í í(0e"	#map-set#:^d)
+'
+
+ì ì(}j"#unknown-value#Blist(
+&
+
+ì ì(}k"
+#is-exact#:jBbool
+
+
+ì ì(}l"
+#assume#:k:
+8
+
+ì ì(}m"#set-field# __collection_size:jBint(
+&
+
+ì ì(}n"#array-add-last#:jf(
+&
+
+ì ì(}o"#array-add-last#:jg(
+&
+
+ì ì(}p"#array-add-last#:jh(
+&
+
+ì ì(}q"#array-add-last#:ji(
+&
+
+ì ì(}r"#array-add-last#:j"
+ 
+
+ì ì(}s"	#map-set#:^j&
+$
+
+ï õ(t"#new-object#Bdict"
+ 
+
+ñ ñ(,v"	#map-set#:tu"
+ 
+
+ó ó(Ox"	#map-set#:t
+w"
+ 
+
+ò ò(-y"	#map-set#:t"
+ 
+
+ô ô(3{"	#map-set#:tz)
+'
+
+ö ö([~"#unknown-value#Blist(
+&
+
+ö ö(["
+#is-exact#:~Bbool 
+
+
+ö ö([Ä"
+#assume#:;
+9
+
+ö ö([Å"#set-field# __collection_size:~Bint)
+'
+
+ö ö([Ç"#array-add-last#:~|)
+'
+
+ö ö([É"#array-add-last#:~})
+'
+
+ö ö([Ñ"#array-add-last#:~)
+'
+
+ö ö([Ö"#array-add-last#:~)#
+!
+
+ö ö([Ü"	#map-set#:t~'
+%
+
+ú ¢(á"#new-object#Bdict%
+#
+
+ù ù(,â"	#map-set#:áà%
+#
+
+û û(Vã"	#map-set#:á
+ä$
+"
+
+ü ü(6å"	#map-set#:á7%
+#
+
+† †(3é"	#map-set#:áç*
+(
+
+° °(\î"#unknown-value#Blist*
+(
+
+° °(\ï"
+#is-exact#:îBbool!
+
+
+° °(\ñ"
+#assume#:ï<
+:
+
+° °(\ó"#set-field# __collection_size:îBint+
+)
+
+° °(\ò"#array-add-last#:îè+
+)
+
+° °(\ô"#array-add-last#:îê+
+)
+
+° °(\ö"#array-add-last#:îë+
+)
+
+° °(\õ"#array-add-last#:îí+
+)
+
+° °(\ú"#array-add-last#:îì%
+#
+
+° °(\ù"	#map-set#:áî'
+%
+
+£ ©(û"#new-object#Bdict%
+#
+
+§ §(,†"	#map-set#:ûü%
+#
+
+• •(P¢"	#map-set#:û
+°$
+"
+
+¶ ¶(-£"	#map-set#:û%
+#
+
+ß ß(/•"	#map-set#:û§*
+(
+
+® ®(d®"#unknown-value#Blist*
+(
+
+® ®(d©"
+#is-exact#:®Bbool!
+
+
+® ®(d™"
+#assume#:©<
+:
+
+® ®(d´"#set-field# __collection_size:®Bint+
+)
+
+® ®(d¨"#array-add-last#:®¶+
+)
+
+® ®(d≠"#array-add-last#:®ß*
+(
+
+® ®(dÆ"#array-add-last#:®*
+(
+
+® ®(dØ"#array-add-last#:®?%
+#
+
+® ®(d∞"	#map-set#:û®*
+(
+
+Ò ™(±"#unknown-value#Blist*
+(
+
+Ò ™(≤"
+#is-exact#:±Bbool!
+
+
+Ò ™(≥"
+#assume#:≤<
+:
+
+Ò ™(¥"#set-field# __collection_size:±Bint*
+(
+
+Ò ™(µ"#array-add-last#:±*
+(
+
+Ò ™(∂"#array-add-last#:±!*
+(
+
+Ò ™(∑"#array-add-last#:±2*
+(
+
+Ò ™(∏"#array-add-last#:±J*
+(
+
+Ò ™(π"#array-add-last#:±^*
+(
+
+Ò ™(∫"#array-add-last#:±t+
+)
+
+Ò ™(ª"#array-add-last#:±á+
+)
+
+Ò ™(º"#array-add-last#:±û$
+"
+
+Ò ™(Ω"	#map-set#:±'
+%
+
+¨ ≤(ø"#new-object#Bdict%
+#
+
+≠ ≠(-¡"	#map-set#:ø¿%
+#
+
+Æ Æ(T√"	#map-set#:ø
+¬$
+"
+
+Ø Ø(-ƒ"	#map-set#:ø%
+#
+
+∞ ∞('∆"	#map-set#:ø≈*
+(
+
+± ±(8»"#unknown-value#Blist*
+(
+
+± ±(8…"
+#is-exact#:»Bbool!
+
+
+± ±(8 "
+#assume#:…<
+:
+
+± ±(8À"#set-field# __collection_size:»Bint*
+(
+
+± ±(8Ã"#array-add-last#:»*
+(
+
+± ±(8Õ"#array-add-last#:»+
+)
+
+± ±(8Œ"#array-add-last#:»«%
+#
+
+± ±(8œ"	#map-set#:ø»'
+%
+
+≥ π(–"#new-object#Bdict%
+#
+
+¥ ¥(-“"	#map-set#:–—%
+#
+
+µ µ(]‘"	#map-set#:–
+”$
+"
+
+∂ ∂(-’"	#map-set#:–%
+#
+
+∑ ∑(,◊"	#map-set#:–÷*
+(
+
+∏ ∏(<Ÿ"#unknown-value#Blist*
+(
+
+∏ ∏(<⁄"
+#is-exact#:ŸBbool!
+
+
+∏ ∏(<€"
+#assume#:⁄<
+:
+
+∏ ∏(<‹"#set-field# __collection_size:ŸBint*
+(
+
+∏ ∏(<›"#array-add-last#:Ÿ*
+(
+
+∏ ∏(<ﬁ"#array-add-last#:Ÿ+
+)
+
+∏ ∏(<ﬂ"#array-add-last#:Ÿÿ%
+#
+
+∏ ∏(<‡"	#map-set#:–Ÿ'
+%
+
+∫ ¿(·"#new-object#Bdict%
+#
+
+ª ª(-„"	#map-set#:·‚%
+#
+
+º º(aÂ"	#map-set#:·
+‰$
+"
+
+Ω Ω(-Ê"	#map-set#:·%
+#
+
+æ æ(/Ë"	#map-set#:·Á*
+(
+
+ø ø(^Î"#unknown-value#Blist*
+(
+
+ø ø(^Ï"
+#is-exact#:ÎBbool!
+
+
+ø ø(^Ì"
+#assume#:Ï<
+:
+
+ø ø(^Ó"#set-field# __collection_size:ÎBint+
+)
+
+ø ø(^Ô"#array-add-last#:ÎÈ+
+)
+
+ø ø(^"#array-add-last#:ÎÍ*
+(
+
+ø ø(^Ò"#array-add-last#:Î*
+(
+
+ø ø(^Ú"#array-add-last#:Î%
+#
+
+ø ø(^Û"	#map-set#:·Î'
+%
+
+¡ «(Ù"#new-object#Bdict%
+#
+
+¬ ¬(-ˆ"	#map-set#:Ùı%
+#
+
+√ √(V¯"	#map-set#:Ù
+˜$
+"
+
+ƒ ƒ(6˘"	#map-set#:Ù7%
+#
+
+≈ ≈(-˚"	#map-set#:Ù˙*
+(
+
+∆ ∆(qÄ"#unknown-value#Blist*
+(
+
+∆ ∆(qÅ"
+#is-exact#:ÄBbool!
+
+
+∆ ∆(qÇ"
+#assume#:Å<
+:
+
+∆ ∆(qÉ"#set-field# __collection_size:ÄBint+
+)
+
+∆ ∆(qÑ"#array-add-last#:Ä¸+
+)
+
+∆ ∆(qÖ"#array-add-last#:Ä˝+
+)
+
+∆ ∆(qÜ"#array-add-last#:Ä˛+
+)
+
+∆ ∆(qá"#array-add-last#:Äˇ%
+#
+
+∆ ∆(qà"	#map-set#:ÙÄ'
+%
+
+» Œ(â"#new-object#Bdict%
+#
+
+… …(-ã"	#map-set#:âä%
+#
+
+   (Xç"	#map-set#:â
+å$
+"
+
+À À(-é"	#map-set#:â%
+#
+
+Ã Ã(/è"	#map-set#:âÁ*
+(
+
+Õ Õ(dì"#unknown-value#Blist*
+(
+
+Õ Õ(dî"
+#is-exact#:ìBbool!
+
+
+Õ Õ(dï"
+#assume#:î<
+:
+
+Õ Õ(dñ"#set-field# __collection_size:ìBint+
+)
+
+Õ Õ(dó"#array-add-last#:ìê+
+)
+
+Õ Õ(dò"#array-add-last#:ìë*
+(
+
+Õ Õ(dô"#array-add-last#:ì+
+)
+
+Õ Õ(dö"#array-add-last#:ìí%
+#
+
+Õ Õ(dõ"	#map-set#:âì'
+%
+
+œ ’(ú"#new-object#Bdict%
+#
+
+– –(-û"	#map-set#:úù%
+#
+
+— —(e†"	#map-set#:ú
+ü$
+"
+
+“ “(-°"	#map-set#:ú%
+#
+
+” ”(,£"	#map-set#:ú¢*
+(
+
+‘ ‘(fß"#unknown-value#Blist*
+(
+
+‘ ‘(f®"
+#is-exact#:ßBbool!
+
+
+‘ ‘(f©"
+#assume#:®<
+:
+
+‘ ‘(f™"#set-field# __collection_size:ßBint+
+)
+
+‘ ‘(f´"#array-add-last#:ß§+
+)
+
+‘ ‘(f¨"#array-add-last#:ß•*
+(
+
+‘ ‘(f≠"#array-add-last#:ß+
+)
+
+‘ ‘(fÆ"#array-add-last#:ß¶%
+#
+
+‘ ‘(fØ"	#map-set#:úß*
+(
+
+´ ÷(∞"#unknown-value#Blist*
+(
+
+´ ÷(±"
+#is-exact#:∞Bbool!
+
+
+´ ÷(≤"
+#assume#:±<
+:
+
+´ ÷(≥"#set-field# __collection_size:∞Bint+
+)
+
+´ ÷(¥"#array-add-last#:∞ø+
+)
+
+´ ÷(µ"#array-add-last#:∞–+
+)
+
+´ ÷(∂"#array-add-last#:∞·+
+)
+
+´ ÷(∑"#array-add-last#:∞Ù+
+)
+
+´ ÷(∏"#array-add-last#:∞â+
+)
+
+´ ÷(π"#array-add-last#:∞ú%
+#
+
+´ ÷(∫"	#map-set#:æ∞'
+%
+
+ÿ ﬁ(ª"#new-object#Bdict%
+#
+
+Ÿ Ÿ(,Ω"	#map-set#:ªº%
+#
+
+⁄ ⁄(cø"	#map-set#:ª
+æ$
+"
+
+€ €(-¿"	#map-set#:ª$
+"
+
+‹ ‹(0¡"	#map-set#:ªd*
+(
+
+› ›(X√"#unknown-value#Blist*
+(
+
+› ›(Xƒ"
+#is-exact#:√Bbool!
+
+
+› ›(X≈"
+#assume#:ƒ<
+:
+
+› ›(X∆"#set-field# __collection_size:√Bint+
+)
+
+› ›(X«"#array-add-last#:√¬+
+)
+
+› ›(X»"#array-add-last#:√ß*
+(
+
+› ›(X…"#array-add-last#:√*
+(
+
+› ›(X "#array-add-last#:√?%
+#
+
+› ›(XÀ"	#map-set#:ª√'
+%
+
+ﬂ Â(Ã"#new-object#Bdict%
+#
+
+‡ ‡(,Œ"	#map-set#:ÃÕ%
+#
+
+· ·(Y–"	#map-set#:Ã
+œ$
+"
+
+‚ ‚(6—"	#map-set#:Ã7%
+#
+
+„ „(-”"	#map-set#:Ã“*
+(
+
+‰ ‰(\÷"#unknown-value#Blist*
+(
+
+‰ ‰(\◊"
+#is-exact#:÷Bbool!
+
+
+‰ ‰(\ÿ"
+#assume#:◊<
+:
+
+‰ ‰(\Ÿ"#set-field# __collection_size:÷Bint+
+)
+
+‰ ‰(\⁄"#array-add-last#:÷‘+
+)
+
+‰ ‰(\€"#array-add-last#:÷è+
+)
+
+‰ ‰(\‹"#array-add-last#:÷ê+
+)
+
+‰ ‰(\›"#array-add-last#:÷ë+
+)
+
+‰ ‰(\ﬁ"#array-add-last#:÷’%
+#
+
+‰ ‰(\ﬂ"	#map-set#:Ã÷'
+%
+
+Ê Ï(‡"#new-object#Bdict%
+#
+
+Á Á(,‚"	#map-set#:‡·%
+#
+
+Ë Ë(a‰"	#map-set#:‡
+„$
+"
+
+È È(-Â"	#map-set#:‡%
+#
+
+Í Í(,Ê"	#map-set#:‡¢*
+(
+
+Î Î(aÁ"#unknown-value#Blist*
+(
+
+Î Î(aË"
+#is-exact#:ÁBbool!
+
+
+Î Î(aÈ"
+#assume#:Ë<
+:
+
+Î Î(aÍ"#set-field# __collection_size:ÁBint*
+(
+
+Î Î(aÎ"#array-add-last#:ÁR*
+(
+
+Î Î(aÏ"#array-add-last#:ÁS*
+(
+
+Î Î(aÌ"#array-add-last#:Á*
+(
+
+Î Î(aÓ"#array-add-last#:ÁT%
+#
+
+Î Î(aÔ"	#map-set#:‡Á'
+%
+
+Ì Û("#new-object#Bdict%
+#
+
+Ó Ó(,Ú"	#map-set#:Ò%
+#
+
+Ô Ô(XÙ"	#map-set#:
+Û$
+"
+
+ (6ı"	#map-set#:7%
+#
+
+Ò Ò(7˜"	#map-set#:ˆ*
+(
+
+Ú Ú(l˚"#unknown-value#Blist*
+(
+
+Ú Ú(l¸"
+#is-exact#:˚Bbool!
+
+
+Ú Ú(l˝"
+#assume#:¸<
+:
+
+Ú Ú(l˛"#set-field# __collection_size:˚Bint+
+)
+
+Ú Ú(lˇ"#array-add-last#:˚¯+
+)
+
+Ú Ú(lÄ"#array-add-last#:˚˘+
+)
+
+Ú Ú(lÅ"#array-add-last#:˚˙*
+(
+
+Ú Ú(lÇ"#array-add-last#:˚i%
+#
+
+Ú Ú(lÉ"	#map-set#:˚'
+%
+
+Ù ˙(Ñ"#new-object#Bdict%
+#
+
+ı ı(,Ü"	#map-set#:ÑÖ%
+#
+
+ˆ ˆ(Qà"	#map-set#:Ñ
+á$
+"
+
+˜ ˜(-â"	#map-set#:Ñ%
+#
+
+¯ ¯(2ã"	#map-set#:Ñä*
+(
+
+˘ ˘(Yå"#unknown-value#Blist*
+(
+
+˘ ˘(Yç"
+#is-exact#:åBbool!
+
+
+˘ ˘(Yé"
+#assume#:ç<
+:
+
+˘ ˘(Yè"#set-field# __collection_size:åBint+
+)
+
+˘ ˘(Yê"#array-add-last#:åê+
+)
+
+˘ ˘(Yë"#array-add-last#:åë*
+(
+
+˘ ˘(Yí"#array-add-last#:å*
+(
+
+˘ ˘(Yì"#array-add-last#:å?%
+#
+
+˘ ˘(Yî"	#map-set#:Ñå'
+%
+
+˚ Å(ï"#new-object#Bdict%
+#
+
+¸ ¸(,ó"	#map-set#:ïñ%
+#
+
+˝ ˝(Qô"	#map-set#:ï
+ò$
+"
+
+˛ ˛(6ö"	#map-set#:ï7%
+#
+
+ˇ ˇ(,ú"	#map-set#:ïõ*
+(
+
+Ä Ä(h°"#unknown-value#Blist*
+(
+
+Ä Ä(h¢"
+#is-exact#:°Bbool!
+
+
+Ä Ä(h£"
+#assume#:¢<
+:
+
+Ä Ä(h§"#set-field# __collection_size:°Bint+
+)
+
+Ä Ä(h•"#array-add-last#:°ù+
+)
+
+Ä Ä(h¶"#array-add-last#:°û+
+)
+
+Ä Ä(hß"#array-add-last#:°ü+
+)
+
+Ä Ä(h®"#array-add-last#:°†%
+#
+
+Ä Ä(h©"	#map-set#:ï°'
+%
+
+Ç à(™"#new-object#Bdict%
+#
+
+É É(,¨"	#map-set#:™´%
+#
+
+Ñ Ñ(MÆ"	#map-set#:™
+≠$
+"
+
+Ö Ö(-Ø"	#map-set#:™$
+"
+
+Ü Ü(3∞"	#map-set#:™z*
+(
+
+á á(a¥"#unknown-value#Blist*
+(
+
+á á(aµ"
+#is-exact#:¥Bbool!
+
+
+á á(a∂"
+#assume#:µ<
+:
+
+á á(a∑"#set-field# __collection_size:¥Bint+
+)
+
+á á(a∏"#array-add-last#:¥±+
+)
+
+á á(aπ"#array-add-last#:¥≤*
+(
+
+á á(a∫"#array-add-last#:¥+
+)
+
+á á(aª"#array-add-last#:¥≥%
+#
+
+á á(aº"	#map-set#:™¥'
+%
+
+â è(Ω"#new-object#Bdict%
+#
+
+ä ä(,ø"	#map-set#:Ωæ%
+#
+
+ã ã(\¡"	#map-set#:Ω
+¿$
+"
+
+å å(6¬"	#map-set#:Ω7$
+"
+
+ç ç(*√"	#map-set#:ΩP*
+(
+
+é é(f≈"#unknown-value#Blist*
+(
+
+é é(f∆"
+#is-exact#:≈Bbool!
+
+
+é é(f«"
+#assume#:∆<
+:
+
+é é(f»"#set-field# __collection_size:≈Bint+
+)
+
+é é(f…"#array-add-last#:≈è+
+)
+
+é é(f "#array-add-last#:≈ê+
+)
+
+é é(fÀ"#array-add-last#:≈ë+
+)
+
+é é(fÃ"#array-add-last#:≈ƒ+
+)
+
+é é(fÕ"#array-add-last#:≈í%
+#
+
+é é(fŒ"	#map-set#:Ω≈'
+%
+
+ê ñ(œ"#new-object#Bdict%
+#
+
+ë ë(,—"	#map-set#:œ–%
+#
+
+í í(U”"	#map-set#:œ
+“$
+"
+
+ì ì(-‘"	#map-set#:œ%
+#
+
+î î(2÷"	#map-set#:œ’*
+(
+
+ï ï(Q⁄"#unknown-value#Blist*
+(
+
+ï ï(Q€"
+#is-exact#:⁄Bbool!
+
+
+ï ï(Q‹"
+#assume#:€<
+:
+
+ï ï(Q›"#set-field# __collection_size:⁄Bint+
+)
+
+ï ï(Qﬁ"#array-add-last#:⁄◊+
+)
+
+ï ï(Qﬂ"#array-add-last#:⁄ÿ+
+)
+
+ï ï(Q‡"#array-add-last#:⁄Ÿ*
+(
+
+ï ï(Q·"#array-add-last#:⁄%
+#
+
+ï ï(Q‚"	#map-set#:œ⁄'
+%
+
+ó ù(„"#new-object#Bdict%
+#
+
+ò ò(,Â"	#map-set#:„‰%
+#
+
+ô ô([Á"	#map-set#:„
+Ê$
+"
+
+ö ö(-Ë"	#map-set#:„%
+#
+
+õ õ(.Í"	#map-set#:„È*
+(
+
+ú ú(^Ï"#unknown-value#Blist*
+(
+
+ú ú(^Ì"
+#is-exact#:ÏBbool!
+
+
+ú ú(^Ó"
+#assume#:Ì<
+:
+
+ú ú(^Ô"#set-field# __collection_size:ÏBint+
+)
+
+ú ú(^"#array-add-last#:ÏÎ+
+)
+
+ú ú(^Ò"#array-add-last#:Ïß*
+(
+
+ú ú(^Ú"#array-add-last#:Ï+
+)
+
+ú ú(^Û"#array-add-last#:Ïí%
+#
+
+ú ú(^Ù"	#map-set#:„Ï*
+(
+
+◊ û(ı"#unknown-value#Blist*
+(
+
+◊ û(ˆ"
+#is-exact#:ıBbool!
+
+
+◊ û(˜"
+#assume#:ˆ<
+:
+
+◊ û(¯"#set-field# __collection_size:ıBint+
+)
+
+◊ û(˘"#array-add-last#:ıª+
+)
+
+◊ û(˙"#array-add-last#:ıÃ+
+)
+
+◊ û(˚"#array-add-last#:ı‡+
+)
+
+◊ û(¸"#array-add-last#:ı+
+)
+
+◊ û(˝"#array-add-last#:ıÑ+
+)
+
+◊ û(˛"#array-add-last#:ıï+
+)
+
+◊ û(ˇ"#array-add-last#:ı™+
+)
+
+◊ û(Ä"#array-add-last#:ıΩ+
+)
+
+◊ û(Å"#array-add-last#:ıœ+
+)
+
+◊ û(Ç"#array-add-last#:ı„$
+"
+
+◊ û(É"	#map-set#:'ı%
+#
+
+°7 °(TÑ"#array-read#:+
+)
+
+° °(UÖ"
+dictget* :ÑH
+
+° °(UÖ*C/home/omar/Documents/ruleIQ/services/freemium_assessment_service.py

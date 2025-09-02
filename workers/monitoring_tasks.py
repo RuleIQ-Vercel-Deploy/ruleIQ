@@ -45,7 +45,11 @@ def collect_database_metrics() -> Dict[str, Any]:
     except Exception as e:
         error_msg = f"Failed to collect database metrics: {e}"
         logger.error(error_msg)
-        return {"timestamp": datetime.utcnow().isoformat(), "status": "error", "error": str(e)}
+        return {
+            "timestamp": datetime.utcnow().isoformat(),
+            "status": "error",
+            "error": str(e),
+        }
 
 
 @celery_app.task(name="database_health_check")
@@ -81,15 +85,23 @@ def database_health_check() -> Dict[str, Any]:
         if status["pool_metrics"]:
             pool_util = status["pool_metrics"]["utilization_percent"]
             if pool_util > 80:
-                recommendations.append("Consider increasing database connection pool size")
+                recommendations.append(
+                    "Consider increasing database connection pool size"
+                )
             if status["pool_metrics"]["overflow"] > 0:
-                recommendations.append("Pool overflow detected - monitor for connection leaks")
+                recommendations.append(
+                    "Pool overflow detected - monitor for connection leaks"
+                )
 
         if status["session_metrics"]["long_running_sessions"] > 0:
-            recommendations.append("Long-running sessions detected - review query performance")
+            recommendations.append(
+                "Long-running sessions detected - review query performance"
+            )
 
         if status["session_metrics"]["active_sessions"] > 50:
-            recommendations.append("High number of active sessions - check for session leaks")
+            recommendations.append(
+                "High number of active sessions - check for session leaks"
+            )
 
         result = {
             "timestamp": datetime.utcnow().isoformat(),
@@ -114,7 +126,11 @@ def database_health_check() -> Dict[str, Any]:
     except Exception as e:
         error_msg = f"Database health check failed: {e}"
         logger.error(error_msg)
-        return {"timestamp": datetime.utcnow().isoformat(), "status": "error", "error": str(e)}
+        return {
+            "timestamp": datetime.utcnow().isoformat(),
+            "status": "error",
+            "error": str(e),
+        }
 
 
 @celery_app.task(name="cleanup_monitoring_data")
@@ -145,7 +161,8 @@ def cleanup_monitoring_data() -> Dict[str, Any]:
             "timestamp": datetime.utcnow().isoformat(),
             "cleanup_summary": {
                 "pool_metrics_removed": pool_metrics_before - pool_metrics_after,
-                "session_metrics_removed": session_metrics_before - session_metrics_after,
+                "session_metrics_removed": session_metrics_before
+                - session_metrics_after,
                 "alerts_removed": alerts_before - alerts_after,
                 "pool_metrics_remaining": pool_metrics_after,
                 "session_metrics_remaining": session_metrics_after,
@@ -160,7 +177,11 @@ def cleanup_monitoring_data() -> Dict[str, Any]:
     except Exception as e:
         error_msg = f"Monitoring data cleanup failed: {e}"
         logger.error(error_msg)
-        return {"timestamp": datetime.utcnow().isoformat(), "status": "error", "error": str(e)}
+        return {
+            "timestamp": datetime.utcnow().isoformat(),
+            "status": "error",
+            "error": str(e),
+        }
 
 
 @celery_app.task(name="system_metrics_collection")
@@ -207,13 +228,19 @@ def system_metrics_collection() -> Dict[str, Any]:
             "status": "success",
         }
 
-        logger.info(f"System metrics collected: CPU {cpu_percent}%, Memory {memory.percent}%")
+        logger.info(
+            f"System metrics collected: CPU {cpu_percent}%, Memory {memory.percent}%"
+        )
         return result
 
     except Exception as e:
         error_msg = f"System metrics collection failed: {e}"
         logger.error(error_msg)
-        return {"timestamp": datetime.utcnow().isoformat(), "status": "error", "error": str(e)}
+        return {
+            "timestamp": datetime.utcnow().isoformat(),
+            "status": "error",
+            "error": str(e),
+        }
 
 
 # Celery beat schedule for monitoring tasks

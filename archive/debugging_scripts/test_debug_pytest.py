@@ -11,12 +11,16 @@ from services.ai.assistant import ComplianceAssistant
 
 
 @pytest.mark.asyncio
-async def test_simple_debug(async_db_session, async_sample_user, async_sample_business_profile) -> None:
+async def test_simple_debug(
+    async_db_session, async_sample_user, async_sample_business_profile
+) -> None:
     """Simple debug test to see what's failing."""
     try:
         print(f"✓ Got async_db_session: {type(async_db_session)}")
         print(f"✓ Got async_sample_user: {async_sample_user.id}")
-        print(f"✓ Got async_sample_business_profile: {async_sample_business_profile.id}")
+        print(
+            f"✓ Got async_sample_business_profile: {async_sample_business_profile.id}"
+        )
 
         # Create assistant
         assistant = ComplianceAssistant(async_db_session)
@@ -24,7 +28,11 @@ async def test_simple_debug(async_db_session, async_sample_user, async_sample_bu
 
         # Load golden dataset
         dataset_path = (
-            Path(__file__).parent / "tests" / "ai" / "golden_datasets" / "gdpr_questions.json"
+            Path(__file__).parent
+            / "tests"
+            / "ai"
+            / "golden_datasets"
+            / "gdpr_questions.json"
         )
         with open(dataset_path) as f:
             data = json.load(f)

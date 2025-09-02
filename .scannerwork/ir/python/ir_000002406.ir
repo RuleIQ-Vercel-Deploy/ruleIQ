@@ -1,0 +1,205 @@
+
+ )"detailed_gap_analysis"str
+"formatting"str
+L"collection_schedule"str
+"name"str
+!"include_details"str
+"Executive Summary"str
+%E"Evidence Collection Report"str
+C"evidence_collection"str
+2
+"timeline"str
+"falsebool
+ e"preparation_checklist"str
+truebool
+ +"Detailed Gap Analysis"str
+"recommendations"str
+
+%5int
+"include_charts"str
+8a/"Assessment of readiness for compliance audits"str
+	"description"str
+c"readiness_scores"str
+%_"Audit Readiness Assessment"str
+4-+"Comprehensive analysis of compliance gaps"str
+"key_metrics"str
+1"remediation_plan"str
+$"max_recommendations"str
+]"audit_readiness"str
+?"group_by_severity"str
+s"highlight_critical"str
+
+0int
+I"collection_summary"str
+K"outstanding_items"str
+"executive_summary"str
+"framework_status"str
+/"gap_summary"str
+Y"show_automation"str
+("Load default report templates"str
+d"critical_items"str
+#J"automation_opportunities"str
+0"gap_details"str
+5G,"Status and progress of evidence collection"str
+
+"sections"str
+f"timeline_to_audit"str
+>
+5"High-level overview for executives and stakeholders"str
+"executive_overview"strself  ($list"Î$
+"
+ H(	"#new-object#Bdict$
+"
+! ("#new-object#Bdict 
+
+ (+"	#map-set#: 
+
+ (T"	#map-set#:	
+'
+%
+ ("#unknown-value#Blist&
+$
+ ("
+#is-exact#:Bbool
+
+ ("
+#assume#:8
+6
+ ("#set-field# __collection_size:Bint&
+$
+ ("#array-add-last#:&
+$
+ ("#array-add-last#:&
+$
+ ("#array-add-last#:&
+$
+ ("#array-add-last#: 
+
+ ("	#map-set#:$
+"
+ ("#new-object#Bdict 
+
+ (* "	#map-set#: 
+
+ (,#"	#map-set#:!" 
+
+ (,&"	#map-set#:$% 
+
+ ('"	#map-set#: 
+
+ (("	#map-set#:$
+"
+ % )(*"#new-object#Bdict 
+
+! !(/,"	#map-set#:*+ 
+
+" "(J."	#map-set#:*	-'
+%
+# #(Z3"#unknown-value#Blist&
+$
+# #(Z4"
+#is-exact#:3Bbool
+
+# #(Z5"
+#assume#:48
+6
+# #(Z6"#set-field# __collection_size:3Bint&
+$
+# #(Z7"#array-add-last#:3/&
+$
+# #(Z8"#array-add-last#:30&
+$
+# #(Z9"#array-add-last#:31&
+$
+# #(Z:"#array-add-last#:32 
+
+# #(Z;"	#map-set#:*3$
+"
+$ ((<"#new-object#Bdict 
+
+% %(*="	#map-set#:< 
+
+& &(+>"	#map-set#:<! 
+
+' '(-@"	#map-set#:<? 
+
+$ ((A"	#map-set#:*< 
+
+  )(B"	#map-set#:)*$
+"
+*# 8(D"#new-object#Bdict 
+
++ +(4F"	#map-set#:DE 
+
+, ,(KH"	#map-set#:D	G'
+%
+- 2(M"#unknown-value#Blist&
+$
+- 2(N"
+#is-exact#:MBbool
+
+- 2(O"
+#assume#:N8
+6
+- 2(P"#set-field# __collection_size:MBint&
+$
+- 2(Q"#array-add-last#:MI&
+$
+- 2(R"#array-add-last#:MJ&
+$
+- 2(S"#array-add-last#:MK&
+$
+- 2(T"#array-add-last#:ML 
+
+- 2(U"	#map-set#:DM$
+"
+3 7(V"#new-object#Bdict 
+
+4 4(*W"	#map-set#:V 
+
+5 5(+X"	#map-set#:V! 
+
+6 6(+Z"	#map-set#:VY 
+
+3 7(["	#map-set#:DV 
+
+* 8(\"	#map-set#:CD$
+"
+9 G(^"#new-object#Bdict 
+
+: :(4`"	#map-set#:^_ 
+
+; ;(Nb"	#map-set#:^	a'
+%
+< A(g"#unknown-value#Blist&
+$
+< A(h"
+#is-exact#:gBbool
+
+< A(i"
+#assume#:h8
+6
+< A(j"#set-field# __collection_size:gBint&
+$
+< A(k"#array-add-last#:gc&
+$
+< A(l"#array-add-last#:gd&
+$
+< A(m"#array-add-last#:ge&
+$
+< A(n"#array-add-last#:gf 
+
+< A(o"	#map-set#:^g$
+"
+B F(p"#new-object#Bdict 
+
+C C(*q"	#map-set#:p 
+
+D D(+r"	#map-set#:p! 
+
+E E(.t"	#map-set#:ps 
+
+B F(u"	#map-set#:^p 
+
+9 G(v"	#map-set#:]^
+ H(	*B/home/omar/Documents/ruleIQ/services/reporting/template_manager.py

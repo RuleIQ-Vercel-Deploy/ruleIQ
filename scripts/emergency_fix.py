@@ -3,6 +3,7 @@ import subprocess
 import sys
 import os
 
+
 def install_missing_dependencies() -> None:
     """Install all missing dependencies"""
     print("🔧 Installing missing dependencies...")
@@ -31,11 +32,12 @@ def install_missing_dependencies() -> None:
 
     print("✅ All dependencies installed!")
 
+
 def create_minimal_backend() -> None:
     """Create a minimal working backend"""
     print("🚀 Creating minimal backend...")
 
-    minimal_backend = '''# minimal_backend.py - Emergency backend to test with
+    minimal_backend = """# minimal_backend.py - Emergency backend to test with
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -118,12 +120,13 @@ async def get_me():
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
-'''
+"""
 
     with open("minimal_backend.py", "w") as f:
         f.write(minimal_backend)
 
     print("✅ Minimal backend created!")
+
 
 def main() -> None:
     print("🚨 RuleIQ Emergency Fix Script")
@@ -147,6 +150,7 @@ def main() -> None:
     print("3. Implement Stack Auth for a permanent solution")
     print("\n🎯 To run minimal backend:")
     print("   python3 minimal_backend.py")
+
 
 if __name__ == "__main__":
     main()

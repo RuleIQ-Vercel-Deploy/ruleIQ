@@ -1,0 +1,130 @@
+
+Cservices.neo4j_service.Neo4jGraphRAGService.get_compliance_coverageA
+5/home/omar/Documents/ruleIQ/services/neo4j_service.pyÆ Æ(%"5"6*ë
+4
+ã ã(9À½
+
+ã ã(9
+%1*K
+
+__unknown_file (/-
++services.neo4j_service.Neo4jGraphRAGService*%
+
+__unknown_file (	
+
+query*&
+
+__unknown_file (
+
+
+params2execute_queryC
+A
+
+ã ã(9	
+results"__id*"
+
+__unknown_file (
+
+%1
+
+ä ä(-
+%2"dictŸ
+œ
+
+ä ä(,
+%3"__mapSet*"
+
+__unknown_file (
+
+%2*1
+
+__unknown_file (
+coverage_analysis*'
+
+__unknown_file (
+	
+results"
+
+ä ä(-
+
+%2*Î
+5
+Ê Ó(·
+´
+
+Ê Ó(
+query"__id*–
+
+__unknown_file (ùö
+ó
+            MATCH (domain:ComplianceDomain {name: $domain_name})-[:GOVERNS]->(reg:Regulation)
+                  -[:REQUIRES]->(req:Requirement)
+            OPTIONAL MATCH (req)<-[:IMPLEMENTS]-(ctrl:Control)
+            RETURN domain.name AS domain,
+                   reg.name AS regulation,
+                   COUNT(req) AS total_requirements,
+                   COUNT(ctrl) AS implemented_controls,
+                   ROUND(100.0 * COUNT(ctrl) / COUNT(req), 2) AS coverage_percentage
+            
+
+Ô Ô(1
+%4"dict
+š
+
+Ô Ô(0
+%5"__mapSet*"
+
+__unknown_file (
+
+%4*+
+
+__unknown_file (
+domain_name*+
+
+__unknown_file (
+
+domain_nameB
+@
+
+Ô Ô(1
+params"__id*"
+
+__unknown_file (
+
+%4*
+4*Ø
+6
+Ö à(á
+Þ
+
+Ö à(
+query"__id*À
+
+__unknown_file (£ 
+
+            MATCH (domain:ComplianceDomain)-[:GOVERNS]->(reg:Regulation)
+                  -[:REQUIRES]->(req:Requirement)
+            OPTIONAL MATCH (req)<-[:IMPLEMENTS]-(ctrl:Control)
+            RETURN domain.name AS domain,
+                   reg.name AS regulation,
+                   COUNT(req) AS total_requirements,
+                   COUNT(ctrl) AS implemented_controls,
+                   ROUND(100.0 * COUNT(ctrl) / COUNT(req), 2) AS coverage_percentage
+            ORDER BY domain.priority, coverage_percentage DESC
+            
+
+á á(
+%6"dictB
+@
+
+á á(
+params"__id*"
+
+__unknown_file (
+
+%6*
+4:
+
+Æ, Æ(M
+domain_nameB/-
++services.neo4j_service.Neo4jGraphRAGServiceH

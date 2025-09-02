@@ -1,0 +1,201 @@
+
+5api.middleware.api_versioning.VersionRouter.add_routeH
+</home/omar/Documents/ruleIQ/api/middleware/api_versioning.py¾ ¾("2*‚
+2
+¿ ¿(+t
+r
+
+À À(%
+%11"__id*W
+
+__unknown_file (;*9-
++api.middleware.api_versioning.VersionRouter"
+prefix~
+|
+
+À À(7
+%12"__concat*
+
+À À(%
+
+%11*
+
+À& À('
+/*
+
+À( À(/
+	
+version*
+
+À1 À(5
+
+pathI
+G
+
+À À(7
+version_path"__id*#
+
+__unknown_file (
+
+%12t
+r
+
+Â Â(%
+%13"__id*W
+
+__unknown_file (;*9-
++api.middleware.api_versioning.VersionRouter"
+routesqo
+
+Â Â(%
+%14*#
+
+__unknown_file (
+
+%13*'
+
+__unknown_file (
+	
+version2__contains__?
+=
+
+Â Â(%
+%15"not*#
+
+__unknown_file (
+
+%14*
+4
+5*9
+3
+api_versioning.py"
+É É(
+implicit return*Ï
+4
+Å Ç(	s
+q
+
+Å Å(
+%1"__id*W
+
+__unknown_file (;*9-
++api.middleware.api_versioning.VersionRouter"
+routesxv
+
+Å Å(
+%2"__mapGet*"
+
+__unknown_file (
+
+%1*'
+
+__unknown_file (
+	
+version2__getitem__
+
+Æ Æ(J
+%3"dict—
+”
+
+Æ Æ(!
+%4"__mapSet*"
+
+__unknown_file (
+
+%3*$
+
+__unknown_file (
+path*,
+
+__unknown_file (
+
+version_path—
+”
+
+Æ# Æ(7
+%5"__mapSet*"
+
+__unknown_file (
+
+%3*(
+
+__unknown_file (
+
+endpoint*(
+
+__unknown_file (
+
+
+endpoint“
+
+
+Æ9 Æ(I
+%6"__mapSet*"
+
+__unknown_file (
+
+%3*&
+
+__unknown_file (
+
+kwargs*&
+
+__unknown_file (
+
+
+kwargsdb
+
+Å Ç(	
+%7*"
+
+__unknown_file (
+
+%2*"
+
+__unknown_file (
+
+%32append*
+3*Ï
+5
+Ã Ã(%
+
+Ã# Ã(%
+%8"listt
+r
+
+Ã Ã(
+%10"__id*W
+
+__unknown_file (;*9-
++api.middleware.api_versioning.VersionRouter"
+routes¦£
+
+Ã Ã(%
+%9"dict.__setitem__*#
+
+__unknown_file (
+
+%10*'
+
+__unknown_file (
+	
+version*"
+
+__unknown_file (
+
+%82__setitem__*
+4:
+
+¾ ¾(!
+path:
+
+¾# ¾(0
+
+endpoint:
+
+¾2 ¾(>	
+version:
+
+¾@ ¾(H
+kwargsB/-
++api.middleware.api_versioning.VersionRouterH

@@ -351,11 +351,9 @@ export function logError(error: EnhancedApiError, additionalContext?: any): void
   if (process.env.NODE_ENV === 'production') {
     // TODO: Send to Sentry or similar service
     // TODO: Replace with proper logging
-
     // // TODO: Replace with proper logging
   } else {
     // TODO: Replace with proper logging
-
     // // TODO: Replace with proper logging
   }
 }

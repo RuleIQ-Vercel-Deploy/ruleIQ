@@ -1,9 +1,11 @@
 # OAuth2 Authentication Flow - Comprehensive Test Plan
 
 ## Overview
+
 This test plan covers comprehensive testing of the OAuth2 authentication flow for the ruleIQ application running at http://localhost:3000.
 
 ## Test Environment
+
 - Frontend: http://localhost:3000 (Next.js 15)
 - Backend API: http://localhost:8000 (FastAPI)
 - Authentication: JWT-based OAuth2 with refresh tokens
@@ -12,9 +14,11 @@ This test plan covers comprehensive testing of the OAuth2 authentication flow fo
 ## Test Categories
 
 ### 1. Login Flow Tests
+
 **Objective**: Verify complete login functionality with OAuth2 token handling
 
 #### Test Cases:
+
 1. **Successful Login with Valid Credentials**
    - Navigate to login page
    - Enter valid email/password
@@ -39,9 +43,11 @@ This test plan covers comprehensive testing of the OAuth2 authentication flow fo
    - Verify form disable during request
 
 ### 2. Token Management Tests
+
 **Objective**: Verify OAuth2 token handling, storage, and refresh
 
 #### Test Cases:
+
 1. **Token Storage and Retrieval**
    - Login successfully
    - Verify access_token in localStorage
@@ -60,9 +66,11 @@ This test plan covers comprehensive testing of the OAuth2 authentication flow fo
    - Verify no token leakage in console/network
 
 ### 3. Protected Route Access Tests
+
 **Objective**: Verify route protection and AuthGuard functionality
 
 #### Test Cases:
+
 1. **Authenticated User Access**
    - Login successfully
    - Navigate to protected routes
@@ -82,9 +90,11 @@ This test plan covers comprehensive testing of the OAuth2 authentication flow fo
    - Verify no re-login required
 
 ### 4. Logout Flow Tests
+
 **Objective**: Verify complete logout functionality
 
 #### Test Cases:
+
 1. **Manual Logout**
    - Login successfully
    - Click logout button
@@ -98,9 +108,11 @@ This test plan covers comprehensive testing of the OAuth2 authentication flow fo
    - Verify subsequent protected route access denied
 
 ### 5. User State Management Tests
+
 **Objective**: Verify user state consistency and updates
 
 #### Test Cases:
+
 1. **User Data Persistence**
    - Login successfully
    - Verify user data available in store
@@ -113,9 +125,11 @@ This test plan covers comprehensive testing of the OAuth2 authentication flow fo
    - Verify error state handling
 
 ### 6. Error Handling Tests
+
 **Objective**: Verify comprehensive error handling
 
 #### Test Cases:
+
 1. **Network Errors**
    - Simulate network failures
    - Verify error messages displayed
@@ -135,16 +149,19 @@ This test plan covers comprehensive testing of the OAuth2 authentication flow fo
 ## Test Data
 
 ### Valid Test Credentials
+
 - Email: test@example.com
 - Password: password123
 
 ### Invalid Test Credentials
+
 - Email: invalid@example.com
 - Password: wrongpassword
 
 ## Expected Results
 
 ### Successful Authentication Flow:
+
 1. Login form accepts valid credentials
 2. API returns access_token and refresh_token
 3. Tokens stored securely in localStorage
@@ -153,6 +170,7 @@ This test plan covers comprehensive testing of the OAuth2 authentication flow fo
 6. User state persists across page refreshes
 
 ### Security Requirements:
+
 1. Tokens properly formatted (JWT)
 2. Secure storage implementation
 3. Automatic token refresh
@@ -169,6 +187,7 @@ This test plan covers comprehensive testing of the OAuth2 authentication flow fo
 - [ ] Local storage inspection ready
 
 ## Browser Testing Notes
+
 - Test in Chrome/Chromium for dev tools access
 - Monitor Network tab for API calls
 - Check Application tab for localStorage

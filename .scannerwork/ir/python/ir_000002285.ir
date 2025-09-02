@@ -1,0 +1,29 @@
+
+"division by zero"bool
+8/"Calculate efficiency as capability/cost ratio"str
+
+0int
+	"S3518"bool
+
+"a"boolself@ @("+
+)
+B: B(I"#get-field# cost_score:(
+&
+B: B(M"	#binop >#2>:Bbool&"$
+B: B(M *B7 B(92BN B(R"ì1
+/
+B B($"#get-field# capability_score:+
+)
+B' B(6"#get-field# cost_score:*
+(
+B B(6"
+#binop !=#2!=:Bbool 
+
+B B(6"
+#assert#:	
+*
+(
+B B(6"#dependent-value#*:
+B B(T"
+B B(T"$*
+B B(T*//home/omar/Documents/ruleIQ/config/ai_config.py

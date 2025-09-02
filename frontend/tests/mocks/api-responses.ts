@@ -6,17 +6,17 @@ export const mockApiResponses = {
     data: {
       tokens: {
         access_token: 'mock-access-token',
-        refresh_token: 'mock-refresh-token'
+        refresh_token: 'mock-refresh-token',
       },
       user: {
         id: 'user-123',
         email: 'test@example.com',
         name: 'Test User',
-        is_active: true
-      }
-    }
+        is_active: true,
+      },
+    },
   },
-  
+
   // Business profile responses
   businessProfiles: {
     data: {
@@ -31,28 +31,28 @@ export const mockApiResponses = {
           handles_personal_data: true,
           gdpr_applicable: true,
           created_at: '2024-01-01T00:00:00Z',
-          updated_at: '2024-01-01T00:00:00Z'
-        }
+          updated_at: '2024-01-01T00:00:00Z',
+        },
       ],
       total: 1,
       page: 1,
-      size: 20
-    }
+      size: 20,
+    },
   },
-  
+
   // Assessment responses
   assessments: {
     data: {
       items: [
         { id: 'assess-1', name: 'Test Assessment 1', status: 'draft' },
-        { id: 'assess-2', name: 'Test Assessment 2', status: 'completed' }
+        { id: 'assess-2', name: 'Test Assessment 2', status: 'completed' },
       ],
       total: 2,
       page: 1,
-      size: 20
-    }
+      size: 20,
+    },
   },
-  
+
   // Specific assessment response
   assessment: (id: string) => ({
     data: {
@@ -62,10 +62,10 @@ export const mockApiResponses = {
       framework_id: 'gdpr',
       business_profile_id: 'profile-123',
       created_at: '2024-01-01T00:00:00Z',
-      updated_at: '2024-01-01T00:00:00Z'
-    }
+      updated_at: '2024-01-01T00:00:00Z',
+    },
   }),
-  
+
   // Evidence responses
   evidence: {
     data: {
@@ -77,14 +77,14 @@ export const mockApiResponses = {
           status: 'approved',
           type: 'document',
           uploadDate: '2024-01-01',
-          fileType: 'pdf'
-        }
+          fileType: 'pdf',
+        },
       ],
       total: 1,
       page: 1,
-      size: 20
-    }
-  }
+      size: 20,
+    },
+  },
 };
 
 // Error response helper

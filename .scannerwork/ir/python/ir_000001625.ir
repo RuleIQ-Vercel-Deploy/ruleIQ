@@ -1,0 +1,45 @@
+
+&"Simulated streaming failure"str
+
+1intself   (StopIteration"ž(
+&
+! !("#get-field# current:(
+&
+! !('"#get-field# fail_at:*
+(
+! !('"
+#binop ==#2==:Bbool"
+! !(' *! !(
+"J6
+4
+" "(:"
+builtins	Exception*:B	Exception2
+" "(:"Ë(
+&
+$ $("#get-field# current:'
+%
+$ $(*"#get-field# chunks:*
+(
+$ $(+	"
+builtinslen*:Bint*
+(
+$ $(+
+"
+#binop >=#2>=:	Bbool"
+$ $(+
+ *$ $(
+"2
+% %("Œ'
+%
+' '("#get-field# chunks:(
+&
+' '(("#get-field# current:)
+'
+' '()chunk"#array-read#:(
+&
+( (("#get-field# current:%
+#
+( (("	#binop +#*2+:)
+'
+( (("#set-field# current:
+) )(*D/home/omar/Documents/ruleIQ/tests/unit/services/test_ai_streaming.py

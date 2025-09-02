@@ -82,7 +82,9 @@ class TestCacheStrategyOptimization:
         adjustment = cache_manager._calculate_ttl_adjustment(cache_key_slow, 2500)
         assert adjustment == -0.2  # Should decrease TTL for slow responses
 
-    def test_cache_warming_queue_management(self, cache_manager, sample_business_profile):
+    def test_cache_warming_queue_management(
+        self, cache_manager, sample_business_profile
+    ):
         """Test cache warming queue operations."""
         # Add items to warming queue with different priorities
         cache_manager.add_to_warming_queue(
@@ -135,7 +137,9 @@ class TestCacheStrategyOptimization:
 
     @pytest.mark.asyncio
     @patch("google.generativeai.caching.CachedContent.create")
-    async def test_process_warming_queue(self, mock_create, cache_manager, sample_business_profile):
+    async def test_process_warming_queue(
+        self, mock_create, cache_manager, sample_business_profile
+    ):
         """Test processing of cache warming queue."""
         # Mock successful cache creation
         mock_cached_content = Mock()
@@ -159,7 +163,9 @@ class TestCacheStrategyOptimization:
         assert processed == 1
         assert len(cache_manager.cache_warming_queue) == 0
 
-    def test_intelligent_invalidation_triggers(self, cache_manager, sample_business_profile):
+    def test_intelligent_invalidation_triggers(
+        self, cache_manager, sample_business_profile
+    ):
         """Test intelligent cache invalidation triggers."""
         business_profile_id = sample_business_profile["id"]
 
@@ -184,11 +190,14 @@ class TestCacheStrategyOptimization:
 
         # Test business profile update invalidation
         context = {"business_profile_id": business_profile_id}
-        cache_manager.trigger_intelligent_invalidation("business_profile_update", context)
+        cache_manager.trigger_intelligent_invalidation(
+            "business_profile_update", context
+        )
 
         # Verify invalidation trigger was recorded
         assert any(
-            "business_profile_update" in key for key in cache_manager.invalidation_triggers.keys()
+            "business_profile_update" in key
+            for key in cache_manager.invalidation_triggers.keys()
         )
 
     def test_framework_invalidation(self, cache_manager):
@@ -282,7 +291,9 @@ class TestCacheStrategyOptimization:
         # Add more than 100 items to test size limit
         for i in range(110):
             cache_manager.add_to_warming_queue(
-                CacheContentType.FRAMEWORK_CONTEXT, {"framework_id": f"framework_{i}"}, priority=5
+                CacheContentType.FRAMEWORK_CONTEXT,
+                {"framework_id": f"framework_{i}"},
+                priority=5,
             )
 
         # Verify queue is limited to 100 items
@@ -319,10 +330,15 @@ class TestCacheStrategyOptimization:
 
     def test_disabled_optimization_features(self):
         """Test behavior when optimization features are disabled."""
-        from services.ai.cached_content import GoogleCachedContentManager, CacheLifecycleConfig
+        from services.ai.cached_content import (
+            GoogleCachedContentManager,
+            CacheLifecycleConfig,
+        )
 
         config = CacheLifecycleConfig(
-            performance_based_ttl=False, cache_warming_enabled=False, intelligent_invalidation=False
+            performance_based_ttl=False,
+            cache_warming_enabled=False,
+            intelligent_invalidation=False,
         )
         cache_manager = GoogleCachedContentManager(config)
 
@@ -332,7 +348,9 @@ class TestCacheStrategyOptimization:
 
         # Test warming queue (should be no-op)
         cache_manager.add_to_warming_queue(
-            CacheContentType.ASSESSMENT_CONTEXT, {"framework_id": "ISO27001"}, priority=1
+            CacheContentType.ASSESSMENT_CONTEXT,
+            {"framework_id": "ISO27001"},
+            priority=1,
         )
         assert len(cache_manager.cache_warming_queue) == 0
 
@@ -361,7 +379,9 @@ class TestCacheStrategyIntegration:
 
         # Create optimized cache config
         config = CacheLifecycleConfig(
-            performance_based_ttl=True, cache_warming_enabled=True, intelligent_invalidation=True
+            performance_based_ttl=True,
+            cache_warming_enabled=True,
+            intelligent_invalidation=True,
         )
 
         # Mock the cache-related methods
@@ -406,7 +426,9 @@ class TestCacheStrategyIntegration:
         }
 
         # Add to warming queue
-        await assistant_with_optimized_cache._add_to_cache_warming_queue(context, "assessment")
+        await assistant_with_optimized_cache._add_to_cache_warming_queue(
+            context, "assessment"
+        )
 
         # Process warming queue
         processed = await assistant_with_optimized_cache.process_cache_warming_queue()

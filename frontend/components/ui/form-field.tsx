@@ -43,11 +43,20 @@ export function FormField({
       )}
 
       <div className="relative">
-        {React.cloneElement(children as React.ReactElement, {
-          id: fieldId,
-          'aria-describedby': error ? `${fieldId}-error` : success ? `${fieldId}-success` : description ? `${fieldId}-description` : undefined,
-          'aria-invalid': hasError,
-        } as any)}
+        {React.cloneElement(
+          children as React.ReactElement,
+          {
+            id: fieldId,
+            'aria-describedby': error
+              ? `${fieldId}-error`
+              : success
+                ? `${fieldId}-success`
+                : description
+                  ? `${fieldId}-description`
+                  : undefined,
+            'aria-invalid': hasError,
+          } as any,
+        )}
       </div>
 
       {description && !error && !success && (

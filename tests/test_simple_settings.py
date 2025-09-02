@@ -35,8 +35,8 @@ class TestSettings(BaseSettings):
     simple_list: List[str] = Field(default=["a", "b"])
 
     # Test with annotation
-    annotated_list: Annotated[List[str], BeforeValidator(parse_list_from_string)] = Field(
-        default=["c", "d"]
+    annotated_list: Annotated[List[str], BeforeValidator(parse_list_from_string)] = (
+        Field(default=["c", "d"])
     )
 
     model_config = SettingsConfigDict(

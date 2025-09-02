@@ -47,7 +47,9 @@ class SecurityMiddleware(BaseHTTPMiddleware):
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
         response.headers["X-XSS-Protection"] = "1; mode=block"
-        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        response.headers["Strict-Transport-Security"] = (
+            "max-age=31536000; includeSubDomains"
+        )
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         response.headers["X-Request-ID"] = request_id
 
@@ -84,15 +86,20 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         # Clean old requests
         window_start = current_time - self.window_seconds
         self.requests[client_ip] = [
-            req_time for req_time in self.requests.get(client_ip, []) if req_time > window_start
+            req_time
+            for req_time in self.requests.get(client_ip, [])
+            if req_time > window_start
         ]
 
         # Check rate limit
         if len(self.requests.get(client_ip, [])) >= self.max_requests:
             logger.warning(
-                "Rate limit exceeded", extra={"client_ip": client_ip, "path": request.url.path}
+                "Rate limit exceeded",
+                extra={"client_ip": client_ip, "path": request.url.path},
             )
-            return JSONResponse(status_code=429, content={"detail": "Rate limit exceeded"})
+            return JSONResponse(
+                status_code=429, content={"detail": "Rate limit exceeded"}
+            )
 
         # Record request
         if client_ip not in self.requests:
@@ -118,8 +125,12 @@ class CORSMiddleware(BaseHTTPMiddleware):
             response = Response()
             if origin and origin in self.allowed_origins:
                 response.headers["Access-Control-Allow-Origin"] = origin
-                response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-                response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+                response.headers["Access-Control-Allow-Methods"] = (
+                    "GET, POST, PUT, DELETE, OPTIONS"
+                )
+                response.headers["Access-Control-Allow-Headers"] = (
+                    "Content-Type, Authorization"
+                )
                 response.headers["Access-Control-Allow-Credentials"] = "true"
             return response
 

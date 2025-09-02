@@ -26,15 +26,23 @@ logger = get_task_logger(__name__)
 # --- Email Sending (Synchronous) ---
 
 
-def _send_email_notification(recipient_email: str, subject: str, body: str) -> Dict[str, Any]:
+def _send_email_notification(
+    recipient_email: str, subject: str, body: str
+) -> Dict[str, Any]:
     """Sends an email notification. This remains a synchronous function."""
     try:
         # This is a mock implementation. In a real app, use a robust email service.
-        logger.info(f"Mock sending email to {recipient_email} with subject: '{subject}'")
+        logger.info(
+            f"Mock sending email to {recipient_email} with subject: '{subject}'"
+        )
         return {"method": "email", "status": "sent"}
     except smtplib.SMTPException as e:
-        logger.error(f"SMTP error while sending email to {recipient_email}: {e}", exc_info=True)
-        raise IntegrationException(f"Failed to send email due to SMTP error: {e}") from e
+        logger.error(
+            f"SMTP error while sending email to {recipient_email}: {e}", exc_info=True
+        )
+        raise IntegrationException(
+            f"Failed to send email due to SMTP error: {e}"
+        ) from e
     except Exception as e:
         logger.error(f"Failed to send email to {recipient_email}: {e}", exc_info=True)
         raise IntegrationException(
@@ -88,7 +96,8 @@ async def _send_compliance_alert_async(
             return _send_email_notification(user.email, subject, body)
         except SQLAlchemyError as e:
             logger.error(
-                f"Database error while fetching user {user_id} for alert: {e}", exc_info=True
+                f"Database error while fetching user {user_id} for alert: {e}",
+                exc_info=True,
             )
             raise DatabaseException(f"Failed to fetch user {user_id} for alert.") from e
 
@@ -103,14 +112,20 @@ async def _send_weekly_summary_async(user_id_str: str) -> Dict[str, Any]:
             if not user:
                 raise NotFoundException(f"User with ID {user_id} not found.")
 
-            summary_data = {"new_evidence_count": 5, "avg_quality_score": 85.5}  # Mock data
+            summary_data = {
+                "new_evidence_count": 5,
+                "avg_quality_score": 85.5,
+            }  # Mock data
             subject, body = _format_weekly_summary(summary_data, user)
             return _send_email_notification(user.email, subject, body)
         except SQLAlchemyError as e:
             logger.error(
-                f"Database error while fetching user {user_id} for summary: {e}", exc_info=True
+                f"Database error while fetching user {user_id} for summary: {e}",
+                exc_info=True,
             )
-            raise DatabaseException(f"Failed to fetch user {user_id} for summary.") from e
+            raise DatabaseException(
+                f"Failed to fetch user {user_id} for summary."
+            ) from e
 
 
 async def _broadcast_notification_async(subject: str, message: str) -> int:
@@ -134,19 +149,23 @@ async def _broadcast_notification_async(subject: str, message: str) -> int:
     bind=True,
     autoretry_for=(DatabaseException, Exception),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 30,  # Start with 30 seconds for notifications
+        "max_retries": 5,
+        "countdown": 30,  # Start with 30 seconds for notifications
     },
     retry_backoff=True,
     retry_backoff_max=300,  # Max 5 minutes for notifications
     retry_jitter=True,
-    rate_limit='20/m',  # 20 notifications per minute
+    rate_limit="20/m",  # 20 notifications per minute
 )
-def send_compliance_alert(self, user_id: str, alert_type: str, alert_data: Dict[str, Any]):
+def send_compliance_alert(
+    self, user_id: str, alert_type: str, alert_data: Dict[str, Any]
+):
     """Sends a compliance alert to a specific user."""
     logger.info(f"Sending compliance alert '{alert_type}' to user {user_id}")
     try:
-        return asyncio.run(_send_compliance_alert_async(user_id, alert_type, alert_data))
+        return asyncio.run(
+            _send_compliance_alert_async(user_id, alert_type, alert_data)
+        )
     except (NotFoundException, BusinessLogicException) as e:
         logger.warning(
             f"Business logic error for compliance alert to user {user_id}, not retrying: {e}"
@@ -163,13 +182,13 @@ def send_compliance_alert(self, user_id: str, alert_type: str, alert_data: Dict[
     bind=True,
     autoretry_for=(DatabaseException, Exception),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 45,  # Start with 45 seconds for weekly summaries
+        "max_retries": 5,
+        "countdown": 45,  # Start with 45 seconds for weekly summaries
     },
     retry_backoff=True,
     retry_backoff_max=300,
     retry_jitter=True,
-    rate_limit='10/m',  # 10 weekly summaries per minute
+    rate_limit="10/m",  # 10 weekly summaries per minute
 )
 def send_weekly_summary(self, user_id: str):
     """Sends a weekly compliance summary to a user."""
@@ -192,13 +211,13 @@ def send_weekly_summary(self, user_id: str):
     bind=True,
     autoretry_for=(DatabaseException, Exception),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 60,  # Start with 60 seconds for broadcasts
+        "max_retries": 5,
+        "countdown": 60,  # Start with 60 seconds for broadcasts
     },
     retry_backoff=True,
     retry_backoff_max=300,
     retry_jitter=True,
-    rate_limit='5/m',  # 5 broadcast notifications per minute
+    rate_limit="5/m",  # 5 broadcast notifications per minute
 )
 def broadcast_notification(self, subject: str, message: str):
     """Broadcasts a notification to all active users."""
@@ -207,5 +226,7 @@ def broadcast_notification(self, subject: str, message: str):
         user_count = asyncio.run(_broadcast_notification_async(subject, message))
         return {"status": "completed", "users_notified": user_count}
     except Exception as e:
-        logger.critical(f"Unexpected, non-retriable error during broadcast: {e}", exc_info=True)
+        logger.critical(
+            f"Unexpected, non-retriable error during broadcast: {e}", exc_info=True
+        )
         raise

@@ -1,0 +1,69 @@
+
+@api.dependencies.rbac_auth.RBACMiddleware.check_path_permissionsE
+9/home/omar/Documents/ruleIQ/api/dependencies/rbac_auth.pyº º($"2*Ô
+2
+» Ä(z
+x
+
+Å4 Å(H
+%3"__id*^
+
+__unknown_file (B*@+
+)api.dependencies.rbac_auth.RBACMiddleware"
+protected_paths?=
+
+Å4 Å(P
+%4*"
+
+__unknown_file (
+
+%32items*
+4
+6*'
+4
+É É("
+
+É É(
+
+True*¤
+6
+Æ Æ(.‡„
+
+Æ Æ(.
+%2"str.startswith*$
+
+__unknown_file (
+
+path*.
+
+__unknown_file (
+
+protected_path2
+startswith*	
+4
+6
+7*ê
+7
+Ç Ç(DÂ¿
+
+Ç Ç(D
+%1";api.dependencies.rbac_auth.UserWithRoles.has_any_permission*$
+
+__unknown_file (
+
+user*4
+
+__unknown_file (
+
+required_permissions2has_any_permission"
+
+Ç Ç(D
+
+%1:
+
+º+ º(4
+path:
+
+º6 º(I
+userB-+
+)api.dependencies.rbac_auth.RBACMiddlewareH

@@ -10,7 +10,7 @@ import * as freemiumApi from '../lib/api/freemium.service';
 jest.mock('../lib/api/freemium.service');
 const mockedFreemiumApi = jest.mocked(freemiumApi);
 
-// Mock the store 
+// Mock the store
 jest.mock('../lib/stores/freemium-store');
 const mockedUseFreemiumStore = jest.mocked(useFreemiumStore);
 
@@ -22,9 +22,7 @@ const queryClient = new QueryClient({
 });
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-  <QueryClientProvider client={queryClient}>
-    {children}
-  </QueryClientProvider>
+  <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
 describe('FreemiumEmailCapture', () => {
@@ -46,7 +44,7 @@ describe('FreemiumEmailCapture', () => {
     render(
       <TestWrapper>
         <FreemiumEmailCapture />
-      </TestWrapper>
+      </TestWrapper>,
     );
 
     expect(screen.getByLabelText(/email address/i)).toBeInTheDocument();
@@ -58,7 +56,7 @@ describe('FreemiumEmailCapture', () => {
     render(
       <TestWrapper>
         <FreemiumEmailCapture />
-      </TestWrapper>
+      </TestWrapper>,
     );
 
     const emailInput = screen.getByLabelText(/email address/i);
@@ -95,16 +93,16 @@ describe('FreemiumEmailCapture', () => {
     render(
       <TestWrapper>
         <FreemiumEmailCapture />
-      </TestWrapper>
+      </TestWrapper>,
     );
 
     expect(mockSetUtmParams).toHaveBeenCalledWith('google', 'compliance_assessment');
   });
 
   it('submits email with consent and starts assessment', async () => {
-    const mockCaptureEmail = jest.fn().mockResolvedValue({ 
-      success: true, 
-      token: 'test-token-123'
+    const mockCaptureEmail = jest.fn().mockResolvedValue({
+      success: true,
+      token: 'test-token-123',
     });
     mockedFreemiumApi.captureEmail = mockCaptureEmail;
 
@@ -123,7 +121,7 @@ describe('FreemiumEmailCapture', () => {
     render(
       <TestWrapper>
         <FreemiumEmailCapture />
-      </TestWrapper>
+      </TestWrapper>,
     );
 
     const emailInput = screen.getByLabelText(/email address/i);
@@ -167,7 +165,7 @@ describe('FreemiumAssessmentFlow', () => {
     render(
       <TestWrapper>
         <FreemiumAssessmentFlow />
-      </TestWrapper>
+      </TestWrapper>,
     );
 
     expect(screen.getByText(/loading your assessment/i)).toBeInTheDocument();
@@ -186,7 +184,7 @@ describe('FreemiumAssessmentFlow', () => {
     render(
       <TestWrapper>
         <FreemiumAssessmentFlow />
-      </TestWrapper>
+      </TestWrapper>,
     );
 
     await waitFor(() => {
@@ -219,7 +217,7 @@ describe('FreemiumAssessmentFlow', () => {
     render(
       <TestWrapper>
         <FreemiumAssessmentFlow />
-      </TestWrapper>
+      </TestWrapper>,
     );
 
     // Wait for first question
@@ -257,7 +255,7 @@ describe('FreemiumAssessmentFlow', () => {
     render(
       <TestWrapper>
         <FreemiumAssessmentFlow />
-      </TestWrapper>
+      </TestWrapper>,
     );
 
     await waitFor(() => {
@@ -283,7 +281,7 @@ describe('FreemiumAssessmentFlow', () => {
     render(
       <TestWrapper>
         <FreemiumAssessmentFlow />
-      </TestWrapper>
+      </TestWrapper>,
     );
 
     // This would need to be triggered after initial render
@@ -334,7 +332,7 @@ describe('FreemiumResults', () => {
     render(
       <TestWrapper>
         <FreemiumResults token="test-token-123" />
-      </TestWrapper>
+      </TestWrapper>,
     );
 
     await waitFor(() => {
@@ -352,7 +350,7 @@ describe('FreemiumResults', () => {
     render(
       <TestWrapper>
         <FreemiumResults token="test-token-123" />
-      </TestWrapper>
+      </TestWrapper>,
     );
 
     await waitFor(() => {
@@ -368,7 +366,7 @@ describe('FreemiumResults', () => {
     render(
       <TestWrapper>
         <FreemiumResults token="test-token-123" />
-      </TestWrapper>
+      </TestWrapper>,
     );
 
     await waitFor(() => {
@@ -385,7 +383,7 @@ describe('FreemiumResults', () => {
     render(
       <TestWrapper>
         <FreemiumResults token="test-token-123" />
-      </TestWrapper>
+      </TestWrapper>,
     );
 
     await waitFor(() => {
@@ -393,7 +391,7 @@ describe('FreemiumResults', () => {
       expect(screen.getByText(/14.*day.*trial/i)).toBeInTheDocument();
       expect(screen.getByRole('link', { name: /get compliant now/i })).toHaveAttribute(
         'href',
-        'https://billing.ruleiq.com/subscribe?plan=pro&discount=30'
+        'https://billing.ruleiq.com/subscribe?plan=pro&discount=30',
       );
     });
   });
@@ -407,7 +405,7 @@ describe('FreemiumResults', () => {
     render(
       <TestWrapper>
         <FreemiumResults token="test-token-123" />
-      </TestWrapper>
+      </TestWrapper>,
     );
 
     await waitFor(() => {
@@ -429,7 +427,7 @@ describe('FreemiumResults', () => {
     render(
       <TestWrapper>
         <FreemiumResults token="test-token-123" />
-      </TestWrapper>
+      </TestWrapper>,
     );
 
     // Initial loading state

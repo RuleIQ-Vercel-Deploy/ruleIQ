@@ -33,7 +33,10 @@ class TestCircuitBreakerStates:
     def test_circuit_breaker_custom_config(self):
         """Test circuit breaker with custom configuration"""
         config = CircuitBreakerConfig(
-            failure_threshold=3, recovery_timeout=30.0, success_threshold=2, timeout_seconds=10.0
+            failure_threshold=3,
+            recovery_timeout=30.0,
+            success_threshold=2,
+            timeout_seconds=10.0,
         )
 
         breaker = CircuitBreaker("test_service", config)
@@ -261,7 +264,9 @@ class TestCircuitBreakerExceptionHandling:
     @pytest.mark.asyncio
     async def test_circuit_breaker_ignores_unexpected_exceptions(self):
         """Test circuit breaker doesn't count unexpected exceptions as failures"""
-        config = CircuitBreakerConfig(failure_threshold=1, expected_exception=(ConnectionError,))
+        config = CircuitBreakerConfig(
+            failure_threshold=1, expected_exception=(ConnectionError,)
+        )
         breaker = CircuitBreaker("test_service", config)
 
         async def function_with_unexpected_error():
@@ -278,7 +283,8 @@ class TestCircuitBreakerExceptionHandling:
     async def test_circuit_breaker_handles_multiple_exception_types(self):
         """Test circuit breaker handles multiple expected exception types"""
         config = CircuitBreakerConfig(
-            failure_threshold=3, expected_exception=(ConnectionError, TimeoutError, OSError)
+            failure_threshold=3,
+            expected_exception=(ConnectionError, TimeoutError, OSError),
         )
         breaker = CircuitBreaker("test_service", config)
 
@@ -357,7 +363,9 @@ class TestCircuitBreakerMetrics:
         failure_count = 5
         recovery_time = 45.5
 
-        exception = CircuitBreakerOpenException(service_name, failure_count, recovery_time)
+        exception = CircuitBreakerOpenException(
+            service_name, failure_count, recovery_time
+        )
 
         assert service_name in str(exception)
         assert str(failure_count) in str(exception)

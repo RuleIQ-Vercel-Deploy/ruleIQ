@@ -1,0 +1,55 @@
+
+Uservices.compliance_graph_initializer.ComplianceGraphInitializer._clear_existing_dataP
+D/home/omar/Documents/ruleIQ/services/compliance_graph_initializer.py¢ ¢(""2*Â
+2
+£ £(7À
+»
+
+§ ´(
+query"__id*™
+
+__unknown_file (çä
+á
+        MATCH (n) 
+        WHERE any(label IN labels(n) WHERE label IN [
+            'ComplianceDomain', 'Jurisdiction', 'Regulation', 'Requirement',
+            'Control', 'Metric', 'RiskAssessment', 'EnforcementCase'
+        ])
+        DETACH DELETE n
+        à
+Ö
+
+¨ ¨(
+%1"__id*k
+
+__unknown_file (O*MB
+@services.compliance_graph_initializer.ComplianceGraphInitializer"
+neo4jnl
+
+¨ ¨(-
+%2*"
+
+__unknown_file (
+
+%1*%
+
+__unknown_file (	
+
+query2execute_queryÖÇ
+
+≠ ≠(7
+%3*&
+
+__unknown_file (
+
+
+logger*@
+
+__unknown_file ($"
+ Cleared existing compliance data2info*
+3*G
+3!
+compliance_graph_initializer.py"
+Ø Ø(
+implicit returnBDB
+@services.compliance_graph_initializer.ComplianceGraphInitializerH

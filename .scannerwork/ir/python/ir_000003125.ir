@@ -1,0 +1,28 @@
+
+0'"Decorator to profile database queries"strself
+À À(
+query_type
+À À(+table
+À- À(C"—#
+!
+
+Ý Ý(
+"#unknown-value#*
+(
+
+Â Ý(%closure"#new-object#.
+,
+
+Â Ý("#set-field# query_type:)
+'
+
+Â Ý("#set-field# table:(
+&
+
+Â Ý("#set-field# self:-
++
+
+Â Ý(	"?python-partial-apply?:
+
+Ý Ý(
+*:/home/omar/Documents/ruleIQ/config/performance_profiler.py

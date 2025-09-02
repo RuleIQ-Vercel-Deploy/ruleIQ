@@ -32,10 +32,12 @@ async def clean_database() -> Optional[bool]:
             # Drop all tables
             print("Dropping all tables...")
             result = await conn.execute(
-                text("""
+                text(
+                    """
                 SELECT tablename FROM pg_tables
                 WHERE schemaname = 'public'
-            """)
+            """
+                )
             )
             tables = [row[0] for row in result]
 
@@ -46,11 +48,13 @@ async def clean_database() -> Optional[bool]:
             # Drop all custom types (enums)
             print("\nDropping all custom types...")
             result = await conn.execute(
-                text("""
+                text(
+                    """
                 SELECT typname FROM pg_type
                 WHERE typnamespace = (SELECT oid FROM pg_namespace WHERE nspname = 'public')
                 AND typtype = 'e'
-            """)
+            """
+                )
             )
             types = [row[0] for row in result]
 

@@ -1,0 +1,167 @@
+
+aservices.ai.instruction_monitor.InstructionPerformanceMonitor._generate_comparison_recommendationJ
+>/home/omar/Documents/ruleIQ/services/ai/instruction_monitor.pyÜ Ü(+"2*ä
+2
+ß ß(H\
+Z
+
+à à(%
+%10"__id*?
+
+__unknown_file (#*!
+
+perf_b"
+effectiveness_score\
+Z
+
+à( à(B
+%11"__id*?
+
+__unknown_file (#*!
+
+perf_a"
+effectiveness_scoreŽ
+‹
+
+à à(B
+%12"	__compare*!
+
+__unknown_file (
+>*#
+
+__unknown_file (
+
+%10*#
+
+__unknown_file (
+
+%11*
+4
+7*¨
+4á á(Ž[
+Y
+
+áH á(b
+%1"__id*?
+
+__unknown_file (#*!
+
+perf_b"
+effectiveness_score\
+Z
+ál á(†
+%2"__id*?
+
+__unknown_file (#*!
+
+perf_a"
+effectiveness_scoreÃ
+À
+á á(Ž
+%3"__concat*D
+
+á á(G64
+2Instruction B shows better overall effectiveness (*
+
+áH á(b
+
+%1*
+
+ág á(k
+ vs *
+ál á(†
+
+%2*
+á‹ á(
+)."
+á á(Ž
+
+%3*N
+5
+å å(@"=
+
+å å(@/-
++Both instructions have similar performance.*¨
+6ã ã(Ž[
+Y
+
+ãH ã(b
+%4"__id*?
+
+__unknown_file (#*!
+
+perf_a"
+effectiveness_score\
+Z
+ãl ã(†
+%5"__id*?
+
+__unknown_file (#*!
+
+perf_b"
+effectiveness_scoreÃ
+À
+ã ã(Ž
+%6"__concat*D
+
+ã ã(G64
+2Instruction A shows better overall effectiveness (*
+
+ãH ã(b
+
+%4*
+
+ãg ã(k
+ vs *
+ãl ã(†
+
+%5*
+ã‹ ã(
+)."
+ã ã(Ž
+
+%6*ß
+7
+â â(D[
+Y
+
+â â('
+%7"__id*?
+
+__unknown_file (#*!
+
+perf_a"
+effectiveness_score[
+Y
+
+â* â(D
+%8"__id*?
+
+__unknown_file (#*!
+
+perf_b"
+effectiveness_score‹
+ˆ
+
+â â(D
+%9"	__compare*!
+
+__unknown_file (
+>*"
+
+__unknown_file (
+
+%7*"
+
+__unknown_file (
+
+%8*
+5
+6:
+
+Ý Ý(0
+perf_a:
+
+Ý2 Ý(T
+perf_bBA?
+=services.ai.instruction_monitor.InstructionPerformanceMonitorH

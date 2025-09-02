@@ -1,0 +1,155 @@
+
+'("ICO Guide to Data Protection"str
+5"regulations"str
+"policy_template"str
+'"Retrieve relevant documents."str
+'
+"GDPR Privacy Policy Template"str
+"url"str
+.%"/templates/gdpr-privacy-policy.docx"str
+"contract_template"str
+	"title"str
+7"UK GDPR Text"str
+:"Full regulation text"str
+"type"str
+*"source"str
+-$"Data Processing Agreement Template"str
+"templates"str
+-<$"/regulations/uk-gdpr-full-text.pdf"str
+"GDPR"str
+
+!0int
+9	"article"str
++"ICO"str
+I-@"https://ico.org.uk/for-organisations/guide-to-data-protection/"str
+"framework"str
+'"/templates/dpa-template.docx"str
+&
+"guidance"strself
+ø ø(query
+ø ø('	framework
+ø) ø(7doc_type
+ø9 ø(Flist"‡1
+/
+
+û ˜(		documents"#new-object#Bdict&
+$
+
+ý ‚("#new-object#Bdict"
+ 
+
+þ þ(;"	#map-set#:	
+"
+ 
+
+ÿ ÿ(-"	#map-set#:"
+ 
+
+€ €('"	#map-set#:"
+ 
+
+ (@"	#map-set#:&
+$
+
+ƒ ˆ("#new-object#Bdict"
+ 
+
+„ „(A"	#map-set#:	"
+ 
+
+… …(/"	#map-set#:"
+ 
+
+† †('"	#map-set#:"
+ 
+
+‡ ‡(9"	#map-set#:)
+'
+
+ü ‰("#unknown-value#Blist(
+&
+
+ü ‰("
+#is-exact#:Bbool
+
+
+ü ‰( "
+#assume#::
+8
+
+ü ‰(""#set-field# __collection_size:!Bint(
+&
+
+ü ‰(#"#array-add-last#:(
+&
+
+ü ‰($"#array-add-last#:"
+ 
+
+ü ‰(%"	#map-set#:&
+$
+
+‹ ('"#new-object#Bdict"
+ 
+
+Œ Œ(;)"	#map-set#:'	("
+ 
+
+ (#,"	#map-set#:'*+"
+ 
+
+Ž Ž([."	#map-set#:'-)
+'
+
+Š (/"#unknown-value#Blist(
+&
+
+Š (0"
+#is-exact#:/Bbool
+
+
+Š (1"
+#assume#:0:
+8
+
+Š (2"#set-field# __collection_size:/!Bint(
+&
+
+Š (3"#array-add-last#:/'"
+ 
+
+Š (4"	#map-set#:&/&
+$
+
+’ –(6"#new-object#Bdict"
+ 
+
+“ “(+8"	#map-set#:6	7"
+ 
+
+” ”(5;"	#map-set#:69:"
+ 
+
+• •(?="	#map-set#:6<)
+'
+
+‘ —(>"#unknown-value#Blist(
+&
+
+‘ —(?"
+#is-exact#:>Bbool
+
+
+‘ —(@"
+#assume#:?:
+8
+
+‘ —(A"#set-field# __collection_size:>!Bint(
+&
+
+‘ —(B"#array-add-last#:>6"
+ 
+
+‘ —(C"	#map-set#:5>
+
+š š(*B/home/omar/Documents/ruleIQ/langgraph_agent/agents/tool_manager.py

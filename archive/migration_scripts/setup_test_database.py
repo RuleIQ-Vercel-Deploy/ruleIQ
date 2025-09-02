@@ -42,7 +42,9 @@ async def create_tables() -> Optional[bool]:
     else:
         ssl_config = {}
 
-    engine = create_async_engine(async_url, poolclass=NullPool, echo=True, connect_args=ssl_config)
+    engine = create_async_engine(
+        async_url, poolclass=NullPool, echo=True, connect_args=ssl_config
+    )
 
     try:
         # Drop all tables first (for clean slate)
@@ -58,12 +60,14 @@ async def create_tables() -> Optional[bool]:
         # Verify tables were created
         async with engine.begin() as conn:
             result = await conn.execute(
-                text("""
+                text(
+                    """
                 SELECT table_name
                 FROM information_schema.tables
                 WHERE table_schema = 'public'
                 ORDER BY table_name
-            """)
+            """
+                )
             )
             tables = [row[0] for row in result]
             print(f"\nCreated {len(tables)} tables:")
@@ -74,7 +78,9 @@ async def create_tables() -> Optional[bool]:
         print("\nInitializing default frameworks...")
         from services.framework_service import initialize_default_frameworks
 
-        AsyncSessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
+        AsyncSessionLocal = sessionmaker(
+            bind=engine, class_=AsyncSession, expire_on_commit=False
+        )
 
         async with AsyncSessionLocal() as session:
             await initialize_default_frameworks(session)

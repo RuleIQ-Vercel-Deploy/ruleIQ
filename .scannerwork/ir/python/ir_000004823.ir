@@ -1,0 +1,71 @@
+
+"p99"str
+"p50"str
+0.95float
+"p95"str
+"min"str
+) "Calculate latency percentiles."str
+"max"str
+"mean"str
+0.99float	latencies, ,(4"t)
+'
+. .("
+__bool__*:BboolH)
+'
+. .("#unaryop !#2!:Bbool"
+. .( *. .(
+"8$
+"
+/ /("#new-object#Bdict
+/ /("Ê@
+>
+1 1(,sorted_latencies"
+builtinssorted*:Blist$
+"
+2 9(	"#new-object#Bdict'
+%
+3 3(6	"
+
+statisticsmedian: 
+
+3 3(6
+"	#map-set#:	*
+(
+4/ 4(D"
+builtinslen*:Bint1
+/
+4( 4(D"#dependent-value#*:Bfloat.
+,
+4$ 4(E"#dependent-value#*:Bint"
+ 
+4 4(F"#array-read#: 
+
+4 4(F"	#map-set#:*
+(
+5/ 5(D"
+builtinslen*:Bint1
+/
+5( 5(D"#dependent-value#*:Bfloat.
+,
+5$ 5(E"#dependent-value#*:Bint"
+ 
+5 5(F"#array-read#: 
+
+5 5(F"	#map-set#:%
+#
+6 6(5"
+
+statisticsmean: 
+
+6 6(5"	#map-set#:%
+#
+7 7(("
+builtinsmax*: 
+
+7 7(("	#map-set#:%
+#
+8 8(( "
+builtinsmin*: 
+
+8 8((!"	#map-set#: 
+2 9(	*G/home/omar/Documents/ruleIQ/langgraph_agent/tests/test_latency_smoke.py

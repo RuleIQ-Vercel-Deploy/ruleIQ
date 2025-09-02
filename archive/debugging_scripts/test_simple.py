@@ -70,7 +70,9 @@ async def test_basic_functionality() -> Optional[bool]:
 
         async with async_session_maker() as session:
             # Create test user
-            user = User(id=uuid4(), email="test@example.com", hashed_password="test_hash")
+            user = User(
+                id=uuid4(), email="test@example.com", hashed_password="test_hash"
+            )
             session.add(user)
             await session.commit()
             print(f"✓ User created: {user.id}")

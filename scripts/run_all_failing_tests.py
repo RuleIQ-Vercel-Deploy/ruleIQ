@@ -37,7 +37,9 @@ def run_test_category(category_name, test_files):
     for test_file in test_files:
         if not Path(test_file).exists():
             print(f"\n❌ {test_file} - FILE NOT FOUND")
-            results.append({"file": test_file, "passed": False, "error": "File not found"})
+            results.append(
+                {"file": test_file, "passed": False, "error": "File not found"}
+            )
             continue
 
         print(f"\n▶ Running {test_file}...")
@@ -73,7 +75,9 @@ def run_test_category(category_name, test_files):
 
             # Show first few error lines
             error_lines = [
-                line for line in output.split("\n") if "FAILED" in line or "ERROR" in line
+                line
+                for line in output.split("\n")
+                if "FAILED" in line or "ERROR" in line
             ][:3]
             for line in error_lines:
                 print(f"     {line.strip()}")

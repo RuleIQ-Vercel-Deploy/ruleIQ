@@ -103,7 +103,10 @@ class TestRunner:
         try:
             # Run the tests
             process = await asyncio.create_subprocess_exec(
-                *cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE, cwd=Path.cwd()
+                *cmd,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+                cwd=Path.cwd(),
             )
 
             stdout, stderr = await process.communicate()
@@ -191,7 +194,9 @@ class TestRunner:
         # Create tasks for all groups
         tasks = []
         for group_name, test_paths in TEST_GROUPS.items():
-            task = asyncio.create_task(self.run_test_group(group_name, test_paths), name=group_name)
+            task = asyncio.create_task(
+                self.run_test_group(group_name, test_paths), name=group_name
+            )
             tasks.append(task)
 
         # Wait for all groups to complete

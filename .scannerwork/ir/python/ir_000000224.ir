@@ -1,0 +1,20 @@
+
+¾´"Check if a workflow is currently active.
+        
+        Args:
+            workflow_id: Workflow ID
+            
+        Returns:
+            True if workflow is active
+        "strself
+Ø Ø(workflow_id
+Ø! Ø(1"v4
+2
+
+á á(4"#get-field# _active_workflows:,
+*
+
+á á(4"
+#binop in#2in:Bbool
+
+á á(4*D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py

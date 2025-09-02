@@ -56,7 +56,9 @@ class CredentialEncryption:
     MIN_KEY_LENGTH = 32  # Minimum master key length
     SALT_LENGTH = 32  # Salt length for key derivation
 
-    def __init__(self, master_key: Optional[str] = None, salt: Optional[bytes] = None) -> None:
+    def __init__(
+        self, master_key: Optional[str] = None, salt: Optional[bytes] = None
+    ) -> None:
         """
         Initialize credential encryption system
 
@@ -160,7 +162,9 @@ class CredentialEncryption:
             }
 
             # Serialize to JSON
-            cred_json = json.dumps(credential_package, sort_keys=True, separators=(",", ":"))
+            cred_json = json.dumps(
+                credential_package, sort_keys=True, separators=(",", ":")
+            )
 
             # Encrypt using Fernet (includes HMAC for integrity)
             encrypted_bytes = self.cipher.encrypt(cred_json.encode("utf-8"))
@@ -169,7 +173,8 @@ class CredentialEncryption:
             encrypted_b64 = base64.urlsafe_b64encode(encrypted_bytes).decode("ascii")
 
             logger.debug(
-                "Credentials encrypted successfully", extra={"credential_count": len(credentials)}
+                "Credentials encrypted successfully",
+                extra={"credential_count": len(credentials)},
             )
 
             return encrypted_b64
@@ -198,7 +203,9 @@ class CredentialEncryption:
 
             # Decode from base64
             try:
-                encrypted_bytes = base64.urlsafe_b64decode(encrypted_creds.encode("ascii"))
+                encrypted_bytes = base64.urlsafe_b64decode(
+                    encrypted_creds.encode("ascii")
+                )
             except Exception as e:
                 raise ValueError(f"Invalid base64 encoding: {e}")
 
@@ -234,7 +241,8 @@ class CredentialEncryption:
                     raise CredentialDecryptionError("Credential integrity check failed")
 
             logger.debug(
-                "Credentials decrypted successfully", extra={"credential_count": len(credentials)}
+                "Credentials decrypted successfully",
+                extra={"credential_count": len(credentials)},
             )
 
             return credentials
@@ -295,7 +303,10 @@ class CredentialEncryption:
         """
         try:
             # Test encryption/decryption with sample data
-            test_data = {"test_key": "test_value", "timestamp": datetime.utcnow().isoformat()}
+            test_data = {
+                "test_key": "test_value",
+                "timestamp": datetime.utcnow().isoformat(),
+            }
 
             start_time = datetime.utcnow()
 
@@ -309,7 +320,9 @@ class CredentialEncryption:
 
             # Verify data integrity
             if decrypted != test_data:
-                raise CredentialEncryptionError("Test data mismatch after encryption/decryption")
+                raise CredentialEncryptionError(
+                    "Test data mismatch after encryption/decryption"
+                )
 
             response_time = (end_time - start_time).total_seconds()
 

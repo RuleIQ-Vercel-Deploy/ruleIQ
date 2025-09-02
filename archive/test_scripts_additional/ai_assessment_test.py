@@ -29,7 +29,10 @@ BASE_URL = "http://localhost:8000/api/v1"
 
 def create_test_token():
     """Creates a JWT token for a test user."""
-    payload = {"sub": "testuser@example.com", "exp": datetime.utcnow() + timedelta(minutes=5)}
+    payload = {
+        "sub": "testuser@example.com",
+        "exp": datetime.utcnow() + timedelta(minutes=5),
+    }
     return jwt.encode(payload, JWT_SECRET, algorithm="HS256")
 
 
@@ -63,7 +66,10 @@ if __name__ == "__main__":
         "framework_id": "soc2",
     }
 
-    followup_payload = {"framework_id": "soc2", "current_answers": {"test-q1": "We use RBAC."}}
+    followup_payload = {
+        "framework_id": "soc2",
+        "current_answers": {"test-q1": "We use RBAC."},
+    }
 
     analysis_payload = {
         "assessment_results": {"test-q1": "We use RBAC."},
@@ -83,4 +89,6 @@ if __name__ == "__main__":
     test_endpoint("/analysis", analysis_payload, token)
     test_endpoint("/analysis/stream", analysis_payload, token, stream=True)
     test_endpoint("/recommendations", recommendations_payload, token)
-    test_endpoint("/recommendations/stream", recommendations_payload, token, stream=True)
+    test_endpoint(
+        "/recommendations/stream", recommendations_payload, token, stream=True
+    )

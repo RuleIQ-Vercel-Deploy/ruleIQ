@@ -32,18 +32,24 @@ logger = get_logger(__name__)
 async def check_index_exists(db, index_name: str, table_name: str) -> bool:
     """Check if an index already exists."""
     try:
-        query = text("""
+        query = text(
+            """
             SELECT 1 FROM pg_indexes
             WHERE indexname = :index_name AND tablename = :table_name
-        """)
-        result = await db.execute(query, {"index_name": index_name, "table_name": table_name})
+        """
+        )
+        result = await db.execute(
+            query, {"index_name": index_name, "table_name": table_name}
+        )
         return result.fetchone() is not None
     except Exception as e:
         logger.warning(f"Error checking index {index_name}: {e}")
         return False
 
 
-async def create_index_safely(db, index_sql: str, index_name: str, table_name: str) -> bool:
+async def create_index_safely(
+    db, index_sql: str, index_name: str, table_name: str
+) -> bool:
     """Create an index safely, checking if it already exists."""
     try:
         # Check if index already exists
@@ -164,7 +170,11 @@ async def apply_performance_indexes():
             "business_profiles",
         ),
         # Users table indexes
-        ("CREATE INDEX IF NOT EXISTS idx_users_email ON users (email)", "idx_users_email", "users"),
+        (
+            "CREATE INDEX IF NOT EXISTS idx_users_email ON users (email)",
+            "idx_users_email",
+            "users",
+        ),
         (
             "CREATE INDEX IF NOT EXISTS idx_users_is_active ON users (is_active)",
             "idx_users_is_active",

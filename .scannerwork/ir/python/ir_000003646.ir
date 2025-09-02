@@ -1,0 +1,386 @@
+
+""high"str
+ã
+"task_008"str
+%T"Create compliance policies"str
+"description"str
+à20int
+*!"Analyze compliance requirements"str
+Æ
+"task_010"str
+
+"phases"str
+√4int
+(≥"Establish ongoing monitoring"str
+'º"Create maintenance schedule"str
+
+D0int
+"duration_weeks"str
+[
+"task_005"str
+"K"Phase 2: Implementation"str
+´1int
+±"Setup monitoring"str
+"tasks"str
+
+2int
+R"Develop policies"str
+$ê"Review all documentation"str
+	"pending"str
+
+|3int
+	"task_id"str
+116int
+(
+"task_002"str
++"Assess current state"str
+%-"Evaluate existing controls"str
+
+"task_007"str
+!
+"priority"str
+7"Gap analysis"str
+*Ñ "Validate control effectiveness"str
++""AI Generated Implementation Plan"str
+ æ"Plan regular reviews"str
+>12int
+"id"str
+π
+"task_011"str
+
+"task_001"str
+"name"str
+O
+"task_004"str
+^"Implement controls"str
+$"estimated_hours"str
+-©#"Phase 4: Monitoring & Maintenance"str
+) "Phase 1: Assessment & Planning"str
+$`"Deploy technical controls"str
+X24int
+ñ
+"task_009"str
+7."Placeholder function for AI plan generation."str
+ô"Internal audit"str
+<"medium"str
+(z"Phase 3: Testing & Validation"str
+"status"str
+-õ#"Conduct internal compliance audit"str
+4
+"task_003"str
+"title"str
+d40int
+(l"Train employees on compliance"str
+Ç"Test controls"str
+
+%8int
+g
+"task_006"str
+j"Staff training"str
+""Understand requirements"str
+#9"Identify compliance gaps"str
+ é"Documentation review"str
+¡"low"str
+db_session  (*business_profile, (<framework_id> (Juser_idL (SAlist"ﬁ)%
+#
+		 à("#new-object#Bdict 
+
+
+ 
+(3	"	#map-set#:$
+"
+ ,("#new-object#Bdict 
+
+ (8"	#map-set#: 
+
+ (#"	#map-set#:$
+"
+ ("#new-object#Bdict 
+
+ (("	#map-set#: 
+
+ (-"	#map-set#: 
+
+ (:"	#map-set#: 
+
+ (H"	#map-set#: 
+
+ (+ "	#map-set#: 
+
+ (*#"	#map-set#:!" 
+
+ (,&"	#map-set#:$%$
+"
+ !('"#new-object#Bdict 
+
+ (()"	#map-set#:'( 
+
+ (-*"	#map-set#:'( 
+
+ (7,"	#map-set#:'+ 
+
+ (C."	#map-set#:'- 
+
+ (+/"	#map-set#:' 
+
+ (*0"	#map-set#:'!" 
+
+   (-2"	#map-set#:'$1$
+"
+" *(3"#new-object#Bdict 
+
+# #((5"	#map-set#:34 
+
+$ $(-6"	#map-set#:34 
+
+% %(/8"	#map-set#:37 
+
+& &(A:"	#map-set#:39 
+
+' '(+;"	#map-set#:3 
+
+( ((,="	#map-set#:3!< 
+
+) )(-?"	#map-set#:3$>'
+%
+ +(@"#unknown-value#Blist&
+$
+ +(B"
+#is-exact#:@ABbool
+
+ +(C"
+#assume#:B8
+6
+ +(E"#set-field# __collection_size:@DBint&
+$
+ +(F"#array-add-last#:@&
+$
+ +(G"#array-add-last#:@'&
+$
+ +(H"#array-add-last#:@3 
+
+ +(I"	#map-set#:@$
+"
+- M(J"#new-object#Bdict 
+
+. .(1L"	#map-set#:JK 
+
+/ /(#M"	#map-set#:J%$
+"
+1 9(N"#new-object#Bdict 
+
+2 2((P"	#map-set#:NO 
+
+3 3(-Q"	#map-set#:NO 
+
+4 4(3S"	#map-set#:NR 
+
+5 5(CU"	#map-set#:NT 
+
+6 6(+V"	#map-set#:N 
+
+7 7(*W"	#map-set#:N!" 
+
+8 8(-Y"	#map-set#:N$X$
+"
+: B(Z"#new-object#Bdict 
+
+; ;((\"	#map-set#:Z[ 
+
+< <(-]"	#map-set#:Z[ 
+
+= =(5_"	#map-set#:Z^ 
+
+> >(Ba"	#map-set#:Z` 
+
+? ?(+b"	#map-set#:Z 
+
+@ @(*c"	#map-set#:Z!" 
+
+A A(-e"	#map-set#:Z$d$
+"
+C K(f"#new-object#Bdict 
+
+D D((h"	#map-set#:fg 
+
+E E(-i"	#map-set#:fg 
+
+F F(1k"	#map-set#:fj 
+
+G G(Fm"	#map-set#:fl 
+
+H H(+n"	#map-set#:f 
+
+I I(,o"	#map-set#:f!< 
+
+J J(-p"	#map-set#:f$1'
+%
+0 L(q"#unknown-value#Blist&
+$
+0 L(r"
+#is-exact#:qABbool
+
+0 L(s"
+#assume#:r8
+6
+0 L(t"#set-field# __collection_size:qDBint&
+$
+0 L(u"#array-add-last#:qN&
+$
+0 L(v"#array-add-last#:qZ&
+$
+0 L(w"#array-add-last#:qf 
+
+0 L(x"	#map-set#:Jq$
+"
+N n(y"#new-object#Bdict 
+
+O O(7{"	#map-set#:yz 
+
+P P(#}"	#map-set#:y|$
+"
+R Z(~"#new-object#Bdict!
+
+S S((Ä"	#map-set#:~!
+
+T T(-Å"	#map-set#:~"
+ 
+U U(0É"	#map-set#:~Ç"
+ 
+V V(GÖ"	#map-set#:~Ñ!
+
+W W(+Ü"	#map-set#:~!
+
+X X(*á"	#map-set#:~!""
+ 
+Y Y(-â"	#map-set#:~$à%
+#
+[ c(ä"#new-object#Bdict#
+!
+\ \((å"	#map-set#:äã#
+!
+] ](-ç"	#map-set#:äã#
+!
+^ ^(7è"	#map-set#:äé#
+!
+_ _(Aë"	#map-set#:äê"
+ 
+` `(+í"	#map-set#:ä"
+ 
+a a(,ì"	#map-set#:ä!<"
+ 
+b b(-î"	#map-set#:ä$>%
+#
+d l(ï"#new-object#Bdict#
+!
+e e((ó"	#map-set#:ïñ#
+!
+f f(-ò"	#map-set#:ïñ#
+!
+g g(1ö"	#map-set#:ïô#
+!
+h h(Jú"	#map-set#:ïõ"
+ 
+i i(+ù"	#map-set#:ï"
+ 
+j j(*û"	#map-set#:ï!""
+ 
+k k(-ü"	#map-set#:ï$1(
+&
+Q m(†"#unknown-value#Blist(
+&
+Q m(°"
+#is-exact#:†ABbool
+
+Q m(¢"
+#assume#:°:
+8
+Q m(£"#set-field# __collection_size:†DBint(
+&
+Q m(§"#array-add-last#:†~)
+'
+Q m(•"#array-add-last#:†ä)
+'
+Q m(¶"#array-add-last#:†ï"
+ 
+Q m(ß"	#map-set#:y†&
+$
+	o Ü(®"#new-object#Bdict#
+!
+p p(;™"	#map-set#:®©#
+!
+q q(#¨"	#map-set#:®´%
+#
+s {(≠"#new-object#Bdict#
+!
+t t((Ø"	#map-set#:≠Æ#
+!
+u u(-∞"	#map-set#:≠Æ#
+!
+v v(3≤"	#map-set#:≠±#
+!
+w w(E¥"	#map-set#:≠≥"
+ 
+x x(+µ"	#map-set#:≠"
+ 
+y y(,∂"	#map-set#:≠!<"
+ 
+z z(,∑"	#map-set#:≠$%&
+$
+	| Ñ(∏"#new-object#Bdict#
+!
+} }((∫"	#map-set#:∏π#
+!
+~ ~(-ª"	#map-set#:∏π#
+!
+ (>Ω"	#map-set#:∏º%
+#
+
+Ä Ä(=ø"	#map-set#:∏æ$
+"
+
+Å Å(+¿"	#map-set#:∏%
+#
+
+Ç Ç()¬"	#map-set#:∏!¡%
+#
+
+É É(,ƒ"	#map-set#:∏$√)
+'
+	r Ö(≈"#unknown-value#Blist)
+'
+	r Ö(∆"
+#is-exact#:≈ABbool 
+
+	r Ö(«"
+#assume#:∆;
+9
+	r Ö(»"#set-field# __collection_size:≈DBint*
+(
+	r Ö(…"#array-add-last#:≈≠*
+(
+	r Ö( "#array-add-last#:≈∏$
+"
+	r Ö(À"	#map-set#:®≈)
+'
+	 á(	Ã"#unknown-value#Blist)
+'
+	 á(	Õ"
+#is-exact#:ÃABbool 
+
+	 á(	Œ"
+#assume#:Õ;
+9
+	 á(	œ"#set-field# __collection_size:ÃDBint)
+'
+	 á(	–"#array-add-last#:Ã)
+'
+	 á(	—"#array-add-last#:ÃJ)
+'
+	 á(	“"#array-add-last#:Ãy*
+(
+	 á(	”"#array-add-last#:Ã®#
+!
+	 á(	‘"	#map-set#:
+Ã
+		 à(*9/home/omar/Documents/ruleIQ/services/ai/plan_generator.py

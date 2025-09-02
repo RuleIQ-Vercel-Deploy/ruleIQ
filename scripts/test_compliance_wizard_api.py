@@ -7,6 +7,7 @@ Verifies that the frontend can successfully connect to backend APIs.
 import asyncio
 import aiohttp
 
+
 class ComplianceWizardTester:
     def __init__(self):
         self.base_url = "http://localhost:8000"
@@ -24,12 +25,11 @@ class ComplianceWizardTester:
 
     async def authenticate(self):
         """Authenticate with test user credentials."""
-        login_data = {
-            "email": "test@ruleiq.dev",
-            "password": "TestPassword123!"
-        }
+        login_data = {"email": "test@ruleiq.dev", "password": "TestPassword123!"}
 
-        async with self.session.post(f"{self.base_url}/api/v1/auth/login", json=login_data) as response:
+        async with self.session.post(
+            f"{self.base_url}/api/v1/auth/login", json=login_data
+        ) as response:
             if response.status == 200:
                 data = await response.json()
                 self.auth_token = data.get("access_token")
@@ -48,16 +48,22 @@ class ComplianceWizardTester:
         """Test the frameworks endpoint that compliance wizard uses."""
         print("📋 Testing frameworks endpoint...")
 
-        async with self.session.get(f"{self.base_url}/api/v1/frameworks", headers=self.get_headers()) as response:
+        async with self.session.get(
+            f"{self.base_url}/api/v1/frameworks", headers=self.get_headers()
+        ) as response:
             if response.status == 200:
                 data = await response.json()
                 if isinstance(data, list):
                     frameworks_count = len(data)
-                    print(f"✅ Frameworks endpoint: {frameworks_count} frameworks available")
+                    print(
+                        f"✅ Frameworks endpoint: {frameworks_count} frameworks available"
+                    )
                     return data
                 else:
                     frameworks_count = len(data.get("items", []))
-                    print(f"✅ Frameworks endpoint: {frameworks_count} frameworks available")
+                    print(
+                        f"✅ Frameworks endpoint: {frameworks_count} frameworks available"
+                    )
                     return data.get("items", [])
             else:
                 text = await response.text()
@@ -68,20 +74,26 @@ class ComplianceWizardTester:
         """Test business profile endpoint."""
         print("👤 Testing business profiles endpoint...")
 
-        async with self.session.get(f"{self.base_url}/api/v1/business-profiles", headers=self.get_headers()) as response:
+        async with self.session.get(
+            f"{self.base_url}/api/v1/business-profiles", headers=self.get_headers()
+        ) as response:
             if response.status == 200:
                 data = await response.json()
                 profiles = data.get("items", [])
                 if profiles:
                     self.business_profile_id = profiles[0].get("id")
-                    print(f"✅ Business profiles endpoint: {len(profiles)} profiles found")
+                    print(
+                        f"✅ Business profiles endpoint: {len(profiles)} profiles found"
+                    )
                     return profiles[0]
                 else:
                     print("ℹ️ No business profiles found, will create one")
                     return await self.create_business_profile()
             else:
                 text = await response.text()
-                print(f"❌ Business profiles endpoint failed: {response.status} - {text}")
+                print(
+                    f"❌ Business profiles endpoint failed: {response.status} - {text}"
+                )
                 return None
 
     async def create_business_profile(self):
@@ -90,11 +102,14 @@ class ComplianceWizardTester:
             "company_name": "Test Company Ltd",
             "industry": "Technology",
             "company_size": "11-50",
-            "description": "Test company for compliance wizard testing"
+            "description": "Test company for compliance wizard testing",
         }
 
-        async with self.session.post(f"{self.base_url}/api/v1/business-profiles",
-                                    json=profile_data, headers=self.get_headers()) as response:
+        async with self.session.post(
+            f"{self.base_url}/api/v1/business-profiles",
+            json=profile_data,
+            headers=self.get_headers(),
+        ) as response:
             if response.status == 201:
                 data = await response.json()
                 self.business_profile_id = data.get("id")
@@ -102,7 +117,9 @@ class ComplianceWizardTester:
                 return data
             else:
                 text = await response.text()
-                print(f"❌ Failed to create business profile: {response.status} - {text}")
+                print(
+                    f"❌ Failed to create business profile: {response.status} - {text}"
+                )
                 return None
 
     async def test_compliance_status(self):
@@ -113,9 +130,11 @@ class ComplianceWizardTester:
 
         print("📊 Testing compliance status endpoint...")
 
-        async with self.session.get(f"{self.base_url}/api/v1/compliance/status",
-                                   params={"business_profile_id": self.business_profile_id},
-                                   headers=self.get_headers()) as response:
+        async with self.session.get(
+            f"{self.base_url}/api/v1/compliance/status",
+            params={"business_profile_id": self.business_profile_id},
+            headers=self.get_headers(),
+        ) as response:
             if response.status == 200:
                 data = await response.json()
                 print("✅ Compliance status endpoint working")
@@ -135,11 +154,14 @@ class ComplianceWizardTester:
 
         check_data = {
             "business_profile_id": self.business_profile_id,
-            "framework_id": framework_id
+            "framework_id": framework_id,
         }
 
-        async with self.session.post(f"{self.base_url}/api/v1/compliance/run-check",
-                                    json=check_data, headers=self.get_headers()) as response:
+        async with self.session.post(
+            f"{self.base_url}/api/v1/compliance/run-check",
+            json=check_data,
+            headers=self.get_headers(),
+        ) as response:
             if response.status == 200:
                 data = await response.json()
                 print("✅ Compliance check endpoint working")
@@ -148,6 +170,7 @@ class ComplianceWizardTester:
                 text = await response.text()
                 print(f"❌ Compliance check failed: {response.status} - {text}")
                 return None
+
 
 async def main():
     """Run the complete compliance wizard API test."""
@@ -188,6 +211,7 @@ async def main():
         print("  ✓ Compliance Status API")
         print("  ✓ Compliance Check API (main integration)")
         print("\n💡 The compliance wizard should now work correctly!")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

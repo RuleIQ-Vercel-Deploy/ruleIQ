@@ -1,54 +1,59 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/lib/stores/auth.store";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2 } from "lucide-react";
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/lib/stores/auth.store';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Loader2 } from 'lucide-react';
 
 export default function RegisterPage() {
   const router = useRouter();
   const { register, isLoading, error: authError } = useAuthStore();
   const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    company_name: "",
+    email: '',
+    password: '',
+    confirmPassword: '',
+    company_name: '',
   });
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      setError('Passwords do not match');
       return;
     }
-    
-    setError("");
+
+    setError('');
 
     try {
       await register(formData.email, formData.password, formData.company_name);
       // Registration successful, redirect to dashboard
-      router.push("/dashboard");
+      router.push('/dashboard');
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred");
+      setError(err instanceof Error ? err.message : 'An error occurred');
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-background">
+    <div className="flex min-h-screen items-center justify-center bg-background">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Create Account</CardTitle>
-          <CardDescription>
-            Join ruleIQ to streamline your compliance management
-          </CardDescription>
+          <CardDescription>Join ruleIQ to streamline your compliance management</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
@@ -113,11 +118,11 @@ export default function RegisterPage() {
                   Creating account...
                 </>
               ) : (
-                "Create Account"
+                'Create Account'
               )}
             </Button>
-            <div className="text-sm text-center text-muted-foreground">
-              Already have an account?{" "}
+            <div className="text-center text-sm text-muted-foreground">
+              Already have an account?{' '}
               <Link href="/login" className="text-primary hover:underline">
                 Login
               </Link>

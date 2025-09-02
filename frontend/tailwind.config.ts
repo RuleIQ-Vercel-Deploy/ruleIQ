@@ -201,18 +201,18 @@ const config = {
       },
       // Enhanced Shadow System (3-tier elevation)
       boxShadow: {
-        'xs': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-        'sm': '0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04)',
-        'md': '0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.04)',
-        'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05)',
-        'xl': '0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05)',
+        xs: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+        sm: '0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04)',
+        md: '0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.04)',
+        lg: '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05)',
+        xl: '0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.05)',
         '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.15)',
         // New elevation system
         'elevation-low': '0 2px 8px rgba(0, 0, 0, 0.08)',
         'elevation-medium': '0 4px 16px rgba(0, 0, 0, 0.10)',
         'elevation-high': '0 8px 24px rgba(0, 0, 0, 0.12)',
         // Glass morphism shadows
-        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.12)',
+        glass: '0 8px 32px 0 rgba(31, 38, 135, 0.12)',
         'glass-hover': '0 12px 40px 0 rgba(31, 38, 135, 0.16)',
         // Brand glow effect
         'glow-teal': '0 0 20px rgba(44, 122, 123, 0.15)',
@@ -220,22 +220,22 @@ const config = {
       },
       // Varied Border Radius for Visual Interest
       borderRadius: {
-        'none': '0',
-        'sm': '0.25rem', // 4px - for small elements
-        'DEFAULT': '0.375rem', // 6px - buttons
-        'md': '0.5rem', // 8px - inputs
-        'lg': '0.75rem', // 12px - cards
-        'xl': '1rem', // 16px - modals
+        none: '0',
+        sm: '0.25rem', // 4px - for small elements
+        DEFAULT: '0.375rem', // 6px - buttons
+        md: '0.5rem', // 8px - inputs
+        lg: '0.75rem', // 12px - cards
+        xl: '1rem', // 16px - modals
         '2xl': '1.5rem', // 24px - hero sections
-        'full': '9999px',
+        full: '9999px',
       },
       // Backdrop Filters for Glass Effect
       backdropBlur: {
-        'xs': '2px',
-        'sm': '4px',
-        'md': '8px',
-        'lg': '12px',
-        'xl': '16px',
+        xs: '2px',
+        sm: '4px',
+        md: '8px',
+        lg: '12px',
+        xl: '16px',
         '2xl': '24px',
       },
       // Glass Morphism Backgrounds
@@ -247,7 +247,7 @@ const config = {
       },
       // Glass Morphism Borders
       borderColor: {
-        'glass': 'rgba(255, 255, 255, 0.18)',
+        glass: 'rgba(255, 255, 255, 0.18)',
         'glass-strong': 'rgba(255, 255, 255, 0.3)',
       },
       // Enhanced Animation Timing
@@ -260,15 +260,15 @@ const config = {
       },
       // Spring Animations for Micro-interactions
       transitionTimingFunction: {
-        'spring': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+        spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
         'bounce-in': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
+        smooth: 'cubic-bezier(0.4, 0, 0.2, 1)',
       },
       // Letter Spacing for Premium Typography
       letterSpacing: {
-        'heading': '0.025em', // For all headings
-        'body': '0em',
-        'wide': '0.05em',
+        heading: '0.025em', // For all headings
+        body: '0em',
+        wide: '0.05em',
       },
       keyframes: {
         'accordion-down': {
@@ -306,7 +306,7 @@ const config = {
           '100%': { transform: 'scale(1)', opacity: '1' },
         },
         // Enhanced micro-interaction animations
-        'float': {
+        float: {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-10px)' },
         },
@@ -314,7 +314,7 @@ const config = {
           '0%, 100%': { boxShadow: '0 0 20px rgba(44, 122, 123, 0.15)' },
           '50%': { boxShadow: '0 0 30px rgba(44, 122, 123, 0.3)' },
         },
-        'shimmer': {
+        shimmer: {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
         },
@@ -340,9 +340,9 @@ const config = {
         'scale-in': 'scale-in 0.2s ease-out',
         'pulse-subtle': 'pulse-subtle 2s ease-in-out infinite',
         // New enhanced animations
-        'float': 'float 3s ease-in-out infinite',
+        float: 'float 3s ease-in-out infinite',
         'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
-        'shimmer': 'shimmer 2s linear infinite',
+        shimmer: 'shimmer 2s linear infinite',
         'slide-up-fade': 'slide-up-fade 0.3s ease-out',
       },
     },

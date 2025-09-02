@@ -1,0 +1,543 @@
+
+Gservices.ai.circuit_breaker_monitor.CircuitBreakerMonitor._check_healthN
+B/home/omar/Documents/ruleIQ/services/ai/circuit_breaker_monitor.py£ £("16*‰
+13
+¨ ±(y
+w
+
+≠ ≠(0
+%19"__id*\
+
+__unknown_file (@*>3
+1services.ai.circuit_breaker_monitor.AlertSeverity"
+ERRORÉ
+Ä
+
+Øk Ø(v
+%20"__id*e
+
+__unknown_file (I*G;
+9services.ai.circuit_breaker_monitor.CircuitBreakerMonitor"
+configc
+a
+Øk Ø(ì
+%21"__id*E
+
+__unknown_file ()*'
+
+%20"
+failure_rate_error_thresholdª
+∏
+Ø Ø(ô
+%22"__concat*-
+
+Ø Ø(9
+AI service failure rate is *
+
+Ø: Ø(F
+
+failure_rate*1
+
+ØK Ø(j#!
+, exceeding error threshold of *
+Øk Ø(ì
+
+%21
+
+∞ ∞(:
+%23"dict°
+û
+
+∞ ∞(9
+%24"__mapSet*#
+
+__unknown_file (
+
+%23*,
+
+__unknown_file (
+failure_rate*,
+
+__unknown_file (
+
+failure_rateÊ„
+
+¨ ±(
+%25*Y
+
+__unknown_file (=;
+9services.ai.circuit_breaker_monitor.CircuitBreakerMonitor2_create_alert:
+severity
+
+%19:'
+title
+High Failure Rate Detected:
+message
+
+%22:
+context
+
+%23*
+12*Â
+14
+≥ ∏({
+y
+
+¥ ¥(2
+%26"__id*^
+
+__unknown_file (B*@3
+1services.ai.circuit_breaker_monitor.AlertSeverity"	
+WARNINGÉ
+Ä
+
+∂m ∂(x
+%27"__id*e
+
+__unknown_file (I*G;
+9services.ai.circuit_breaker_monitor.CircuitBreakerMonitor"
+confige
+c
+∂m ∂(ó
+%28"__id*G
+
+__unknown_file (+*)
+
+%27" 
+failure_rate_warning_thresholdΩ
+∫
+∂ ∂(ù
+%29"__concat*-
+
+∂ ∂(9
+AI service failure rate is *
+
+∂: ∂(F
+
+failure_rate*3
+
+∂K ∂(l%#
+!, exceeding warning threshold of *
+∂m ∂(ó
+
+%28
+
+∑ ∑(:
+%30"dict°
+û
+
+∑ ∑(9
+%31"__mapSet*#
+
+__unknown_file (
+
+%30*,
+
+__unknown_file (
+failure_rate*,
+
+__unknown_file (
+
+failure_rate·ﬁ
+
+≥ ∏(
+%32*Y
+
+__unknown_file (=;
+9services.ai.circuit_breaker_monitor.CircuitBreakerMonitor2_create_alert:
+severity
+
+%26:"
+title
+Elevated Failure Rate:
+message
+
+%29:
+context
+
+%30*
+12*B
+3
+circuit_breaker_monitor.py"
+– –(
+implicit return*°
+15
+≤ ≤(KÉ
+Ä
+
+≤! ≤(,
+%33"__id*e
+
+__unknown_file (I*G;
+9services.ai.circuit_breaker_monitor.CircuitBreakerMonitor"
+configd
+b
+
+≤! ≤(K
+%34"__id*G
+
+__unknown_file (+*)
+
+%33" 
+failure_rate_warning_thresholdò
+ï
+
+≤ ≤(K
+%35"	__compare*"
+
+__unknown_file (
+>=*,
+
+__unknown_file (
+
+failure_rate*#
+
+__unknown_file (
+
+%34*
+14
+12*·
+4
+Œ Œ(@Å
+
+
+Œ Œ(
+%1"__id*e
+
+__unknown_file (I*G;
+9services.ai.circuit_breaker_monitor.CircuitBreakerMonitor"
+loggerb
+`
+
+Œ Œ(?
+%2"__concat*-
+
+Œ  Œ(;
+Error during health check: *
+
+Œ< Œ(=
+
+eca
+
+Œ Œ(@
+%3*"
+
+__unknown_file (
+
+%1*"
+
+__unknown_file (
+
+%22error*
+3*ù
+16
+¶ ¶(Då
+â
+
+¶ ¶(0
+%36"__id*n
+
+__unknown_file (R*P;
+9services.ai.circuit_breaker_monitor.CircuitBreakerMonitor"
+circuit_breakerMK
+
+¶ ¶(D
+%37*#
+
+__unknown_file (
+
+%362get_health_statusJ
+H
+
+¶ ¶(D
+health_status"__id*#
+
+__unknown_file (
+
+%37ÖÇ
+
+© ©(3
+%38"__mapGet*-
+
+__unknown_file (
+
+health_status*'
+
+__unknown_file (	
+metrics2__getitem__}
+
+© ©(C
+%39"__mapGet*#
+
+__unknown_file (
+
+%38*,
+
+__unknown_file (
+failure_rate2__getitem__I
+G
+
+© ©(C
+failure_rate"__id*#
+
+__unknown_file (
+
+%39É
+Ä
+
+´ ´(*
+%40"__id*e
+
+__unknown_file (I*G;
+9services.ai.circuit_breaker_monitor.CircuitBreakerMonitor"
+configb
+`
+
+´ ´(G
+%41"__id*E
+
+__unknown_file ()*'
+
+%40"
+failure_rate_error_thresholdò
+ï
+
+´ ´(G
+%42"	__compare*"
+
+__unknown_file (
+>=*,
+
+__unknown_file (
+
+failure_rate*#
+
+__unknown_file (
+
+%41*
+13
+15*è
+9
+Ω √({
+y
+
+æ! æ(7
+%4"__id*_
+
+__unknown_file (C*A3
+1services.ai.circuit_breaker_monitor.AlertSeverity"
+
+CRITICALc
+a
+
+ø ø(@
+%5"__concat*%
+
+ø  ø(3
+Model Unavailable: *
+
+ø4 ø(>
+
+
+model_nameô
+ñ
+
+¿  ¿(c
+%6"__concat*
+
+¿" ¿(+
+	AI model *
+
+¿, ¿(6
+
+
+model_name*=
+
+¿7 ¿(b/-
++ is unavailable due to circuit breaker tripÌ
+
+Ω √(
+%7*Y
+
+__unknown_file (=;
+9services.ai.circuit_breaker_monitor.CircuitBreakerMonitor2_create_alert:
+severity
+
+%4:
+title
+
+%5:
+message
+
+%6:
+
+model_name
+
+
+model_name:
+context
+
+
+model_info*
+3
+4
+9
+11*Ø
+10
+≈ À(z
+x
+
+∆! ∆(6
+%8"__id*^
+
+__unknown_file (B*@3
+1services.ai.circuit_breaker_monitor.AlertSeverity"	
+WARNING`
+^
+
+« «(=
+%9"__concat*"
+
+«  «(0
+Model Degraded: *
+
+«1 «(;
+
+
+model_nameàÖ
+
+»= »(X
+%10"__mapGet**
+
+__unknown_file (
+
+
+model_info*-
+
+__unknown_file (
+failure_count2__getitem__Ø
+¨
+
+»  »(j
+%11"__concat*
+
+»" »(+
+	AI model *
+
+», »(6
+
+
+model_name*
+
+»7 »(<	
+ has *
+
+»= »(X
+
+%10*"
+
+»Y »(i
+ recent failuresÚÔ
+
+≈ À(
+%12*Y
+
+__unknown_file (=;
+9services.ai.circuit_breaker_monitor.CircuitBreakerMonitor2_create_alert:
+severity
+
+%8:
+title
+
+%9:
+message
+
+%11:
+
+model_name
+
+
+model_name:
+context
+
+
+model_info*
+3
+4
+9
+11*¨
+11
+ƒ ƒ(^àÖ
+
+ƒ ƒ(0
+%13"__mapGet**
+
+__unknown_file (
+
+
+model_info*-
+
+__unknown_file (
+failure_count2__getitem__É
+Ä
+
+ƒ4 ƒ(?
+%14"__id*e
+
+__unknown_file (I*G;
+9services.ai.circuit_breaker_monitor.CircuitBreakerMonitor"
+configd
+b
+
+ƒ4 ƒ(^
+%15"__id*G
+
+__unknown_file (+*)
+
+%14" 
+consecutive_failures_thresholdè
+å
+
+ƒ ƒ(^
+%16"	__compare*"
+
+__unknown_file (
+>=*#
+
+__unknown_file (
+
+%13*#
+
+__unknown_file (
+
+%15*
+3
+4
+9
+10
+11*È
+12
+ª* ª(IÑÅ
+
+ª* ª(A
+%17"__mapGet*-
+
+__unknown_file (
+
+health_status*&
+
+__unknown_file (
+
+models2__getitem__A?
+
+ª* ª(I
+%18*#
+
+__unknown_file (
+
+%172items*
+3
+4
+9
+11B=;
+9services.ai.circuit_breaker_monitor.CircuitBreakerMonitorH

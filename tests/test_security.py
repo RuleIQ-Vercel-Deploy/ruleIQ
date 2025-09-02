@@ -18,12 +18,16 @@ import pytest
 class TestInputValidation:
     """Test input validation and sanitization"""
 
-    def test_sql_injection_prevention(self, client, security_test_payloads, authenticated_headers):
+    def test_sql_injection_prevention(
+        self, client, security_test_payloads, authenticated_headers
+    ):
         """Test SQL injection prevention in API endpoints"""
         for payload in security_test_payloads["sql_injection"]:
             # Test various endpoints with SQL injection payloads
             response = client.get(f"/api/frameworks?search={payload}")
-            assert response.status_code != 500, "SQL injection may have caused server error"
+            assert (
+                response.status_code != 500
+            ), "SQL injection may have caused server error"
 
             # Test POST endpoints with authentication
             response = client.post(
@@ -33,15 +37,22 @@ class TestInputValidation:
             )
             # Should either reject the input (400/422) or process it safely (200/201)
             # The key is that it shouldn't cause a 500 server error
-            assert response.status_code != 500, "SQL injection may have caused server error"
+            assert (
+                response.status_code != 500
+            ), "SQL injection may have caused server error"
 
-    def test_xss_prevention(self, client, security_test_payloads, authenticated_headers):
+    def test_xss_prevention(
+        self, client, security_test_payloads, authenticated_headers
+    ):
         """Test XSS prevention in API responses"""
         for payload in security_test_payloads["xss_payloads"]:
             response = client.post(
                 "/api/business-profiles",
                 headers=authenticated_headers,
-                json={"company_name": f"Test Company {payload}", "industry": "Technology"},
+                json={
+                    "company_name": f"Test Company {payload}",
+                    "industry": "Technology",
+                },
             )
 
             if response.status_code in [200, 201]:
@@ -75,7 +86,11 @@ class TestInputValidation:
         for payload in security_test_payloads["path_traversal"]:
             # Test file access endpoints
             response = client.get(f"/api/evidence/download/{payload}")
-            assert response.status_code in [400, 404, 403], "Path traversal should be blocked"
+            assert response.status_code in [
+                400,
+                404,
+                403,
+            ], "Path traversal should be blocked"
 
 
 @pytest.mark.security
@@ -93,7 +108,9 @@ class TestAuthentication:
 
         for endpoint in protected_endpoints:
             response = client.get(endpoint)
-            assert response.status_code == 401, f"Endpoint {endpoint} should require authentication"
+            assert (
+                response.status_code == 401
+            ), f"Endpoint {endpoint} should require authentication"
 
     def test_invalid_token_rejected(self, client):
         """Test that invalid tokens are rejected"""
@@ -108,7 +125,9 @@ class TestAuthentication:
         for token in invalid_tokens:
             headers = {"Authorization": token} if token else {}
             response = client.get("/api/users/me", headers=headers)
-            assert response.status_code == 401, f"Invalid token {token} should be rejected"
+            assert (
+                response.status_code == 401
+            ), f"Invalid token {token} should be rejected"
 
     def test_token_expiry_enforcement(self, client, sample_user):
         """Test that expired tokens are rejected"""
@@ -143,7 +162,9 @@ class TestAuthentication:
                     "full_name": "Test User",
                 },
             )
-            assert response.status_code == 422, f"Weak password {weak_password} should be rejected"
+            assert (
+                response.status_code == 422
+            ), f"Weak password {weak_password} should be rejected"
 
 
 @pytest.mark.security
@@ -159,7 +180,11 @@ class TestAuthorization:
             "email": "manager@example.com",
             "role": "compliance_manager",
         }
-        viewer_user = {**sample_user_data, "email": "viewer@example.com", "role": "viewer"}
+        viewer_user = {
+            **sample_user_data,
+            "email": "viewer@example.com",
+            "role": "viewer",
+        }
 
         # Register users
         for user in [admin_user, manager_user, viewer_user]:
@@ -171,11 +196,15 @@ class TestAuthorization:
         viewer_token = self._get_auth_token(client, viewer_user)
 
         # Admin should have access to user management
-        response = client.get("/api/users", headers={"Authorization": f"Bearer {admin_token}"})
+        response = client.get(
+            "/api/users", headers={"Authorization": f"Bearer {admin_token}"}
+        )
         assert response.status_code == 200
 
         # Manager should not have access to user management
-        response = client.get("/api/users", headers={"Authorization": f"Bearer {manager_token}"})
+        response = client.get(
+            "/api/users", headers={"Authorization": f"Bearer {manager_token}"}
+        )
         assert response.status_code == 403
 
         # Viewer should not have write access
@@ -189,7 +218,8 @@ class TestAuthorization:
     def _get_auth_token(self, client, user_data):
         """Helper to get authentication token"""
         response = client.post(
-            "/api/auth/login", json={"email": user_data["email"], "password": user_data["password"]}
+            "/api/auth/login",
+            json={"email": user_data["email"], "password": user_data["password"]},
         )
         return response.json()["access_token"]
 
@@ -204,7 +234,10 @@ class TestDataProtection:
         client.post("/api/auth/register", json=sample_user_data)
         client.post(
             "/api/auth/login",
-            json={"email": sample_user_data["email"], "password": sample_user_data["password"]},
+            json={
+                "email": sample_user_data["email"],
+                "password": sample_user_data["password"],
+            },
         )
 
         # Check logs for sensitive data
@@ -221,7 +254,11 @@ class TestDataProtection:
         # Check that password is hashed in database
         from database.user import User
 
-        user = db_session.query(User).filter(User.email == sample_user_data["email"]).first()
+        user = (
+            db_session.query(User)
+            .filter(User.email == sample_user_data["email"])
+            .first()
+        )
         assert user.hashed_password != sample_user_data["password"]
         assert len(user.hashed_password) > 50  # Hashed passwords are longer
         assert user.hashed_password.startswith("$2b$")  # bcrypt hash
@@ -263,9 +300,9 @@ class TestRateLimiting:
         # Should eventually get rate limited (429) or at least not all be successful
         # Rate limiting might not be fully implemented, so we check for either 429 or mixed responses
         unique_responses = set(responses)
-        assert len(unique_responses) > 1 or 429 in responses, (
-            f"Rate limiting should be enforced, got responses: {unique_responses}"
-        )
+        assert (
+            len(unique_responses) > 1 or 429 in responses
+        ), f"Rate limiting should be enforced, got responses: {unique_responses}"
 
     def test_rate_limiting_per_user(self, client, authenticated_headers):
         """Test rate limiting is applied per user"""
@@ -308,9 +345,10 @@ class TestAPISecurity:
 
         for endpoint in deprecated_endpoints:
             response = client.get(endpoint)
-            assert response.status_code in [404, 410], (
-                f"Deprecated endpoint {endpoint} should not be accessible"
-            )
+            assert response.status_code in [
+                404,
+                410,
+            ], f"Deprecated endpoint {endpoint} should not be accessible"
 
     def test_information_disclosure_prevention(self, client):
         """Test that error messages don't disclose sensitive information"""
@@ -362,13 +400,19 @@ class TestPenetrationTesting:
             endpoints = ["/api/frameworks", "/api/policies/generate"]
             for endpoint in endpoints:
                 try:
-                    response = client.post(endpoint, json={"data": test_case["payload"]})
+                    response = client.post(
+                        endpoint, json={"data": test_case["payload"]}
+                    )
                     if "root:x:" in response.text:  # Signs of file disclosure
-                        vulnerabilities_found.append(f"{test_case['type']} in {endpoint}")
+                        vulnerabilities_found.append(
+                            f"{test_case['type']} in {endpoint}"
+                        )
                 except Exception:
                     pass  # Expected for many payloads
 
-        assert len(vulnerabilities_found) == 0, f"Vulnerabilities found: {vulnerabilities_found}"
+        assert (
+            len(vulnerabilities_found) == 0
+        ), f"Vulnerabilities found: {vulnerabilities_found}"
 
     def test_business_logic_vulnerabilities(self, client, authenticated_headers):
         """Test for business logic vulnerabilities"""
@@ -376,12 +420,15 @@ class TestPenetrationTesting:
         response = client.patch(
             "/api/users/1/role", headers=authenticated_headers, json={"role": "admin"}
         )
-        assert response.status_code == 403, (
-            "Users should not be able to escalate their own privileges"
-        )
+        assert (
+            response.status_code == 403
+        ), "Users should not be able to escalate their own privileges"
 
         # Test resource access controls
-        response = client.get("/api/business-profiles/999999", headers=authenticated_headers)
-        assert response.status_code in [403, 404], (
-            "Users should not access other organizations' data"
+        response = client.get(
+            "/api/business-profiles/999999", headers=authenticated_headers
         )
+        assert response.status_code in [
+            403,
+            404,
+        ], "Users should not access other organizations' data"

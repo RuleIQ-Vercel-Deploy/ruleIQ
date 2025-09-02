@@ -111,7 +111,12 @@ class EvidenceMapperTool(BaseTool):
                                 },
                                 "evidence_type": {
                                     "type": "string",
-                                    "enum": ["document", "process", "technical", "interview"],
+                                    "enum": [
+                                        "document",
+                                        "process",
+                                        "technical",
+                                        "interview",
+                                    ],
                                     "description": "Type of evidence required",
                                 },
                                 "collection_method": {
@@ -208,10 +213,18 @@ class EvidenceMapperTool(BaseTool):
                                 "description": "Budget considerations for evidence collection",
                             },
                         },
-                        "required": ["personnel", "tools_and_systems", "estimated_effort"],
+                        "required": [
+                            "personnel",
+                            "tools_and_systems",
+                            "estimated_effort",
+                        ],
                     },
                 },
-                "required": ["evidence_requirements", "collection_plan", "resource_requirements"],
+                "required": [
+                    "evidence_requirements",
+                    "collection_plan",
+                    "resource_requirements",
+                ],
             },
         }
 
@@ -237,8 +250,12 @@ class EvidenceMapperTool(BaseTool):
                     collection_method=evidence_data_item.get("collection_method", ""),
                     frequency=evidence_data_item.get("frequency", "annual"),
                     priority=evidence_data_item.get("priority", "medium"),
-                    responsible_party=evidence_data_item.get("responsible_party", "TBD"),
-                    automation_potential=evidence_data_item.get("automation_potential", "low"),
+                    responsible_party=evidence_data_item.get(
+                        "responsible_party", "TBD"
+                    ),
+                    automation_potential=evidence_data_item.get(
+                        "automation_potential", "low"
+                    ),
                 )
                 processed_evidence.append(evidence.to_dict())
 
@@ -277,9 +294,13 @@ class EvidenceMapperTool(BaseTool):
 
         except Exception as e:
             logger.error(f"Evidence mapping failed: {e}")
-            return ToolResult(success=False, error=f"Evidence mapping execution failed: {e!s}")
+            return ToolResult(
+                success=False, error=f"Evidence mapping execution failed: {e!s}"
+            )
 
-    def _analyze_evidence_requirements(self, evidence_list: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _analyze_evidence_requirements(
+        self, evidence_list: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """Analyze evidence requirements for insights"""
         analysis = {
             "by_type": {},
@@ -292,19 +313,27 @@ class EvidenceMapperTool(BaseTool):
         for evidence in evidence_list:
             # Count by type
             evidence_type = evidence.get("evidence_type", "unknown")
-            analysis["by_type"][evidence_type] = analysis["by_type"].get(evidence_type, 0) + 1
+            analysis["by_type"][evidence_type] = (
+                analysis["by_type"].get(evidence_type, 0) + 1
+            )
 
             # Count by frequency
             frequency = evidence.get("frequency", "unknown")
-            analysis["by_frequency"][frequency] = analysis["by_frequency"].get(frequency, 0) + 1
+            analysis["by_frequency"][frequency] = (
+                analysis["by_frequency"].get(frequency, 0) + 1
+            )
 
             # Count by priority
             priority = evidence.get("priority", "unknown")
-            analysis["by_priority"][priority] = analysis["by_priority"].get(priority, 0) + 1
+            analysis["by_priority"][priority] = (
+                analysis["by_priority"].get(priority, 0) + 1
+            )
 
             # Count by framework
             framework = evidence.get("framework", "unknown")
-            analysis["by_framework"][framework] = analysis["by_framework"].get(framework, 0) + 1
+            analysis["by_framework"][framework] = (
+                analysis["by_framework"].get(framework, 0) + 1
+            )
 
             # Count automation potential
             automation = evidence.get("automation_potential", "unknown")
@@ -495,7 +524,9 @@ class ComplianceScoringTool(BaseTool):
             weighted_score = self._apply_weighting(base_score, weighting_factors)
 
             # Determine maturity level
-            maturity_level = self._determine_maturity_level(weighted_score, assessment_results)
+            maturity_level = self._determine_maturity_level(
+                weighted_score, assessment_results
+            )
 
             # Calculate risk level
             risk_level = self._calculate_risk_level(
@@ -531,7 +562,9 @@ class ComplianceScoringTool(BaseTool):
                     "base_score": base_score,
                     "weighted_score": weighted_score,
                     "weighting_applied": weighting_factors,
-                    "score_calculation": self._explain_score_calculation(assessment_results),
+                    "score_calculation": self._explain_score_calculation(
+                        assessment_results
+                    ),
                 },
                 "improvement_recommendations": improvement_recommendations,
                 "benchmark_comparison": benchmark_comparison,
@@ -558,7 +591,9 @@ class ComplianceScoringTool(BaseTool):
 
         except Exception as e:
             logger.error(f"Compliance scoring failed: {e}")
-            return ToolResult(success=False, error=f"Compliance scoring execution failed: {e!s}")
+            return ToolResult(
+                success=False, error=f"Compliance scoring execution failed: {e!s}"
+            )
 
     def _calculate_base_score(self, assessment_results: Dict[str, Any]) -> float:
         """Calculate base compliance score"""
@@ -574,7 +609,9 @@ class ComplianceScoringTool(BaseTool):
 
         return (total_points / total) * 100
 
-    def _apply_weighting(self, base_score: float, weighting_factors: Dict[str, Any]) -> float:
+    def _apply_weighting(
+        self, base_score: float, weighting_factors: Dict[str, Any]
+    ) -> float:
         """Apply weighting factors to base score"""
         # Default weights
         critical_weight = weighting_factors.get("critical_controls_weight", 1.0)
@@ -589,7 +626,9 @@ class ComplianceScoringTool(BaseTool):
 
         return round(weighted_score, 1)
 
-    def _determine_maturity_level(self, score: float, assessment_results: Dict[str, Any]) -> str:
+    def _determine_maturity_level(
+        self, score: float, assessment_results: Dict[str, Any]
+    ) -> str:
         """Determine maturity level based on score and assessment details"""
         if score >= 90:
             return "optimized"
@@ -603,7 +642,10 @@ class ComplianceScoringTool(BaseTool):
             return "initial"
 
     def _calculate_risk_level(
-        self, score: float, assessment_results: Dict[str, Any], context_factors: Dict[str, Any]
+        self,
+        score: float,
+        assessment_results: Dict[str, Any],
+        context_factors: Dict[str, Any],
     ) -> str:
         """Calculate overall risk level"""
         non_compliant = assessment_results.get("non_compliant_controls", 0)
@@ -664,7 +706,10 @@ class ComplianceScoringTool(BaseTool):
         return min(1.0, base_confidence)
 
     def _generate_improvement_recommendations(
-        self, score: float, assessment_results: Dict[str, Any], context_factors: Dict[str, Any]
+        self,
+        score: float,
+        assessment_results: Dict[str, Any],
+        context_factors: Dict[str, Any],
     ) -> List[Dict[str, str]]:
         """Generate recommendations for score improvement"""
         recommendations = []
@@ -737,7 +782,9 @@ class ComplianceScoringTool(BaseTool):
             "percentile_rank": self._calculate_percentile_rank(score, benchmark),
         }
 
-    def _calculate_percentile_rank(self, score: float, benchmark: Dict[str, float]) -> int:
+    def _calculate_percentile_rank(
+        self, score: float, benchmark: Dict[str, float]
+    ) -> int:
         """Calculate approximate percentile rank"""
         if score >= benchmark["excellent"]:
             return 90
@@ -757,7 +804,9 @@ class ComplianceScoringTool(BaseTool):
         else:
             return "12-18 months - Annual assessments for maintenance"
 
-    def _explain_score_calculation(self, assessment_results: Dict[str, Any]) -> Dict[str, Any]:
+    def _explain_score_calculation(
+        self, assessment_results: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Explain how the score was calculated"""
         total = assessment_results.get("total_controls", 0)
         compliant = assessment_results.get("compliant_controls", 0)

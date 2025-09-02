@@ -60,7 +60,9 @@ class OfflineDatabase:
             try:
                 from config.ai_config import ai_config
 
-                db_path = ai_config.get_offline_config().get("database_path", "data/offline_ai.db")
+                db_path = ai_config.get_offline_config().get(
+                    "database_path", "data/offline_ai.db"
+                )
             except ImportError:
                 db_path = "data/offline_ai.db"
 
@@ -75,7 +77,8 @@ class OfflineDatabase:
             cursor = conn.cursor()
 
             # Offline requests table
-            cursor.execute("""
+            cursor.execute(
+                """
                 CREATE TABLE IF NOT EXISTS offline_requests (
                     id TEXT PRIMARY KEY,
                     operation TEXT NOT NULL,
@@ -86,10 +89,12 @@ class OfflineDatabase:
                     priority INTEGER DEFAULT 1,
                     created_at TEXT DEFAULT CURRENT_TIMESTAMP
                 )
-            """)
+            """
+            )
 
             # Cached responses table
-            cursor.execute("""
+            cursor.execute(
+                """
                 CREATE TABLE IF NOT EXISTS cached_responses (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     operation TEXT NOT NULL,
@@ -101,10 +106,12 @@ class OfflineDatabase:
                     use_count INTEGER DEFAULT 0,
                     UNIQUE(operation, context_hash)
                 )
-            """)
+            """
+            )
 
             # Offline templates table
-            cursor.execute("""
+            cursor.execute(
+                """
                 CREATE TABLE IF NOT EXISTS offline_templates (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     template_type TEXT NOT NULL,
@@ -115,10 +122,12 @@ class OfflineDatabase:
                     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
                     UNIQUE(template_type, subtype)
                 )
-            """)
+            """
+            )
 
             # Service status table
-            cursor.execute("""
+            cursor.execute(
+                """
                 CREATE TABLE IF NOT EXISTS service_status (
                     service_name TEXT PRIMARY KEY,
                     status TEXT NOT NULL,
@@ -126,7 +135,8 @@ class OfflineDatabase:
                     consecutive_failures INTEGER DEFAULT 0,
                     last_success TEXT
                 )
-            """)
+            """
+            )
 
             conn.commit()
             self.logger.info("Offline database initialized")
@@ -156,11 +166,13 @@ class OfflineDatabase:
         """Get all pending offline requests"""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
-            cursor.execute("""
+            cursor.execute(
+                """
                 SELECT id, operation, context, timestamp, user_id, status, priority
                 FROM offline_requests                WHERE status = 'pending'
                 ORDER BY priority DESC, timestamp ASC
-            """)
+            """
+            )
 
             requests = []
             for row in cursor.fetchall():
@@ -214,7 +226,9 @@ class OfflineDatabase:
             )
             conn.commit()
 
-    def get_cached_response(self, operation: str, context_hash: str) -> Optional[Tuple[str, float]]:
+    def get_cached_response(
+        self, operation: str, context_hash: str
+    ) -> Optional[Tuple[str, float]]:
         """Get a cached response for offline use"""
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.cursor()
@@ -313,7 +327,9 @@ class OfflineAssessmentTools:
 
     def get_basic_assessment(self, framework: str = "general") -> Dict[str, Any]:
         """Get basic offline assessment for a framework"""
-        framework_data = self.frameworks.get(framework.lower(), self.frameworks["general"])
+        framework_data = self.frameworks.get(
+            framework.lower(), self.frameworks["general"]
+        )
 
         return {
             "framework": framework_data["name"],
@@ -336,7 +352,9 @@ This is a basic offline assessment. Answer each question with 'Yes' or 'No':
 
     def calculate_basic_score(self, framework: str, yes_answers: int) -> Dict[str, Any]:
         """Calculate basic assessment score"""
-        framework_data = self.frameworks.get(framework.lower(), self.frameworks["general"])
+        framework_data = self.frameworks.get(
+            framework.lower(), self.frameworks["general"]
+        )
         total_questions = len(framework_data["basic_questions"])
 
         if yes_answers <= 3:
@@ -415,7 +433,9 @@ class OfflineModeManager:
 
     def is_offline_mode_active(self) -> bool:
         """Check if offline mode is currently active"""
-        return not self.service_status["ai_service"] and self.mode != OfflineMode.DISABLED
+        return (
+            not self.service_status["ai_service"] and self.mode != OfflineMode.DISABLED
+        )
 
     def get_offline_capabilities(self) -> List[OfflineCapability]:
         """Get list of available offline capabilities"""
@@ -518,7 +538,11 @@ class OfflineModeManager:
                 content=response_text,
                 confidence=confidence,
                 source="offline_cache",
-                metadata={"operation": operation, "cache_hit": True, "offline_mode": True},
+                metadata={
+                    "operation": operation,
+                    "cache_hit": True,
+                    "offline_mode": True,
+                },
             )
 
         return None
@@ -563,7 +587,11 @@ class OfflineModeManager:
             content=content,
             confidence=0.7,
             source="offline_assessment",
-            metadata={"framework": framework, "offline_mode": True, "assessment_type": "basic"},
+            metadata={
+                "framework": framework,
+                "offline_mode": True,
+                "assessment_type": "basic",
+            },
         )
 
     def _handle_assessment_help(self, context: Dict[str, Any]) -> FallbackResponse:
@@ -582,7 +610,9 @@ class OfflineModeManager:
         """Handle complex operations that require queuing"""
         if self.mode == OfflineMode.FULL:
             # Queue the request for later processing
-            request_id = f"offline_{operation}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            request_id = (
+                f"offline_{operation}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            )
             offline_request = OfflineRequest(
                 id=request_id,
                 operation=operation,
@@ -611,7 +641,11 @@ You will be notified when the analysis is complete. In the meantime, you can:
                 content=content,
                 confidence=0.9,
                 source="offline_queue",
-                metadata={"request_id": request_id, "queued": True, "offline_mode": True},
+                metadata={
+                    "request_id": request_id,
+                    "queued": True,
+                    "offline_mode": True,
+                },
             )
         else:
             return FallbackResponse(
@@ -656,8 +690,12 @@ You will be notified when the analysis is complete. In the meantime, you can:
             return {
                 "pending_requests": len(pending_requests),
                 "sync_status": "ready",
-                "high_priority_requests": len([r for r in pending_requests if r.priority >= 3]),
-                "oldest_request": min((r.timestamp for r in pending_requests), default=None),
+                "high_priority_requests": len(
+                    [r for r in pending_requests if r.priority >= 3]
+                ),
+                "oldest_request": min(
+                    (r.timestamp for r in pending_requests), default=None
+                ),
             }
 
         return {"sync_status": "service_unavailable"}
@@ -672,7 +710,9 @@ You will be notified when the analysis is complete. In the meantime, you can:
                 # Trigger sync if we have pending requests
                 sync_status = self.sync_offline_requests()
                 if sync_status["pending_requests"] > 0:
-                    self.logger.info(f"Syncing {sync_status['pending_requests']} offline requests")
+                    self.logger.info(
+                        f"Syncing {sync_status['pending_requests']} offline requests"
+                    )
 
             self.service_status["ai_service"] = True
             self.service_status["consecutive_failures"] = 0

@@ -29,12 +29,16 @@ async def manage_test_database_schema():
 
         # Change to project root
         original_dir = os.getcwd()
-        project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        project_root = os.path.dirname(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        )
         os.chdir(project_root)
 
         try:
             result = subprocess.run(
-                [sys.executable, "-m", "alembic", "upgrade", "head"], capture_output=True, text=True
+                [sys.executable, "-m", "alembic", "upgrade", "head"],
+                capture_output=True,
+                text=True,
             )
             if result.returncode != 0:
                 raise RuntimeError(f"Alembic migration failed: {result.stderr}")
@@ -73,7 +77,11 @@ class TestEvidenceCollectionFlow:
     @pytest.mark.integration
     @patch("api.integrations.google_workspace_integration.GoogleWorkspaceIntegration")
     def test_full_evidence_and_reporting_flow(
-        self, mock_gws_integration, sample_business_profile, authenticated_headers, client
+        self,
+        mock_gws_integration,
+        sample_business_profile,
+        authenticated_headers,
+        client,
     ):
         """
         Tests the end-to-end flow of connecting an integration,
@@ -97,7 +105,9 @@ class TestEvidenceCollectionFlow:
                 "auto_collected": True,
             },
         ]
-        mock_gws_integration.return_value = mock_instance  # Fixed: use correct variable name
+        mock_gws_integration.return_value = (
+            mock_instance  # Fixed: use correct variable name
+        )
 
         # Step 1: Connect a new integration (mocking the OAuth redirect)
         with patch("api.dependencies.auth.get_current_user") as mock_auth:
@@ -120,7 +130,8 @@ class TestEvidenceCollectionFlow:
         # Step 2: Trigger evidence collection manually
         # This simulates what would happen via a scheduled Celery task
         response = client.post(
-            f"/api/integrations/collect/{sample_business_profile.id}", headers=authenticated_headers
+            f"/api/integrations/collect/{sample_business_profile.id}",
+            headers=authenticated_headers,
         )
 
         # Verify the collection was triggered
@@ -155,7 +166,9 @@ class TestEvidenceCollectionFlow:
         """Test the AI assistant's ability to query and analyze evidence."""
 
         # Test AI assistant conversation (simplified without database operations)
-        with patch("services.ai.assistant.ComplianceAssistant.process_message") as mock_ai:
+        with patch(
+            "services.ai.assistant.ComplianceAssistant.process_message"
+        ) as mock_ai:
             mock_ai.return_value = (
                 "I found 2 evidence items related to ISO27001 compliance. You have security policies and training records documented.",
                 {"intent": "evidence_query", "evidence_found": 2},
@@ -202,7 +215,8 @@ class TestEvidenceCollectionFlow:
 
             # Test manual execution of the schedule
             response = client.post(
-                f"/api/reports/schedules/{schedule_id}/execute", headers=authenticated_headers
+                f"/api/reports/schedules/{schedule_id}/execute",
+                headers=authenticated_headers,
             )
 
             if response.status_code == 200:
@@ -216,13 +230,18 @@ class TestAPIEndpointsIntegration:
 
     @pytest.mark.integration
     def test_business_profile_to_evidence_workflow(
-        self, sample_business_profile, sample_compliance_framework, authenticated_headers, client
+        self,
+        sample_business_profile,
+        sample_compliance_framework,
+        authenticated_headers,
+        client,
     ):
         """Test the workflow from business profile setup to evidence collection."""
 
         # Get business profile
         response = client.get(
-            f"/api/business-profiles/{sample_business_profile.id}", headers=authenticated_headers
+            f"/api/business-profiles/{sample_business_profile.id}",
+            headers=authenticated_headers,
         )
 
         if response.status_code == 200:
@@ -265,7 +284,8 @@ class TestAPIEndpointsIntegration:
 
             # Test readiness assessment
             response = client.get(
-                f"/api/readiness/{sample_business_profile.id}", headers=authenticated_headers
+                f"/api/readiness/{sample_business_profile.id}",
+                headers=authenticated_headers,
             )
 
             if response.status_code == 200:
@@ -284,7 +304,10 @@ class TestErrorHandlingAndResilience:
         # Test with invalid provider to trigger a 400 error
         response = client.post(
             "/api/integrations/connect",
-            json={"provider": "invalid_provider", "credentials": {"token": "expired_token"}},
+            json={
+                "provider": "invalid_provider",
+                "credentials": {"token": "expired_token"},
+            },
             headers=authenticated_headers,
         )
 

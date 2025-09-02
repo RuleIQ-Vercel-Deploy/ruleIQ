@@ -99,12 +99,16 @@ class DatabaseConfig:
 
         # Derive SYNC_DATABASE_URL
         sync_db_url = db_url
-        if "+asyncpg" in sync_db_url:  # If it's an asyncpg URL, convert to psycopg2 for sync
+        if (
+            "+asyncpg" in sync_db_url
+        ):  # If it's an asyncpg URL, convert to psycopg2 for sync
             sync_db_url = sync_db_url.replace("+asyncpg", "+psycopg2")
         elif (
             "postgresql://" in sync_db_url and "+psycopg2" not in sync_db_url
         ):  # If it's generic, assume psycopg2
-            sync_db_url = sync_db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+            sync_db_url = sync_db_url.replace(
+                "postgresql://", "postgresql+psycopg2://", 1
+            )
 
         # Derive ASYNC_DATABASE_URL
         async_db_url = db_url
@@ -126,7 +130,9 @@ class DatabaseConfig:
                 and "+psycopg2" not in async_db_url
                 and "+asyncpg" not in async_db_url
             ):
-                async_db_url = async_db_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+                async_db_url = async_db_url.replace(
+                    "postgresql://", "postgresql+asyncpg://", 1
+                )
 
         # Remove sslmode from async_db_url to avoid conflicts with connect_args
         if "sslmode=require" in async_db_url:
@@ -201,7 +207,9 @@ def _init_sync_db() -> None:
             engine_kwargs = DatabaseConfig.get_engine_kwargs(is_async=False)
 
             _ENGINE = create_engine(sync_db_url, **engine_kwargs)
-            _SESSION_LOCAL = sessionmaker(autocommit=False, autoflush=False, bind=_ENGINE)
+            _SESSION_LOCAL = sessionmaker(
+                autocommit=False, autoflush=False, bind=_ENGINE
+            )
             logger.info("Synchronous database engine initialized successfully")
         except Exception as e:
             logger.error(f"Failed to initialize synchronous database engine: {e}")

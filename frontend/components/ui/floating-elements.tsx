@@ -30,7 +30,7 @@ export function FloatingElements({ className = '', density = 15 }: FloatingEleme
   }));
 
   return (
-    <div className={`absolute inset-0 overflow-hidden pointer-events-none ${className}`}>
+    <div className={`pointer-events-none absolute inset-0 overflow-hidden ${className}`}>
       {elements.map((element) => (
         <motion.div
           key={element.id}

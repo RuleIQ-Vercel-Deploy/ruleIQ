@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 class AuditEventType(Enum):
     """Types of audit events"""
+
     AUTHENTICATION = "authentication"
     AUTHORIZATION = "authorization"
     DATA_ACCESS = "data_access"
@@ -34,6 +35,7 @@ class AuditEventType(Enum):
 
 class AuditEventAction(Enum):
     """Audit event actions"""
+
     # Authentication
     LOGIN = "login"
     LOGOUT = "logout"
@@ -41,13 +43,13 @@ class AuditEventAction(Enum):
     PASSWORD_CHANGE = "password_change"
     MFA_ENABLED = "mfa_enabled"
     MFA_DISABLED = "mfa_disabled"
-    
+
     # Authorization
     PERMISSION_GRANTED = "permission_granted"
     PERMISSION_DENIED = "permission_denied"
     ROLE_ASSIGNED = "role_assigned"
     ROLE_REMOVED = "role_removed"
-    
+
     # Data operations
     CREATE = "create"
     READ = "read"
@@ -55,7 +57,7 @@ class AuditEventAction(Enum):
     DELETE = "delete"
     EXPORT = "export"
     IMPORT = "import"
-    
+
     # System
     CONFIG_CHANGE = "config_change"
     SERVICE_START = "service_start"
@@ -64,17 +66,16 @@ class AuditEventAction(Enum):
     RESTORE = "restore"
 
 
-
 class AuditLoggingService:
     """Service for comprehensive audit logging"""
-    
+
     def __init__(self, cache_service: Optional[CacheService] = None):
         """Initialize audit logging service"""
         self.cache = cache_service or CacheService()
         self.retention_days = settings.audit_log_retention_days or 90
         self.real_time_alerts_enabled = settings.real_time_security_alerts or True
         self.previous_hash = None  # For hash chain
-    
+
     async def log_event(
         self,
         event_type: AuditEventType,
@@ -87,20 +88,22 @@ class AuditLoggingService:
         result: str = "SUCCESS",
         error_message: Optional[str] = None,
         metadata: Optional[Dict[str, Any]] = None,
-        db: Optional[Session] = None
+        db: Optional[Session] = None,
     ) -> str:
         """
         Log an audit event
-        
+
         Returns:
             Event ID
         """
         event_id = self._generate_event_id()
-        
+
         # Create audit log entry compatible with existing schema
         # Truncate resource_type to fit database constraint (50 chars)
-        truncated_resource = resource[:50] if resource and len(resource) > 50 else resource
-        
+        truncated_resource = (
+            resource[:50] if resource and len(resource) > 50 else resource
+        )
+
         audit_log = {
             "user_id": user_id,
             "action": f"{event_type.value}:{action.value}",
@@ -109,33 +112,35 @@ class AuditLoggingService:
             "ip_address": ip_address,
             "user_agent": user_agent,
             "severity": "error" if result == "FAILURE" else "info",
-            "details": json.dumps({
-                "event_id": event_id,
-                "event_type": event_type.value,
-                "action": action.value,
-                "result": result,
-                "error_message": error_message,
-                "metadata": metadata or {}
-            })
+            "details": json.dumps(
+                {
+                    "event_id": event_id,
+                    "event_type": event_type.value,
+                    "action": action.value,
+                    "result": result,
+                    "error_message": error_message,
+                    "metadata": metadata or {},
+                }
+            ),
         }
-        
+
         # Store in database if session provided
         if db:
             db_log = AuditLog(**audit_log)
             db.add(db_log)
             db.commit()
-        
+
         # Cache for real-time access
         await self._cache_event(audit_log)
-        
+
         # Check for security alerts
         await self._check_security_alerts(audit_log)
-        
+
         # Log to application logger
         logger.info(f"Audit Event: {action.value} by {user_id or 'system'}")
-        
+
         return event_id
-    
+
     async def log_authentication(
         self,
         user_id: str,
@@ -144,7 +149,7 @@ class AuditLoggingService:
         ip_address: str,
         user_agent: str = None,
         metadata: Dict[str, Any] = None,
-        db: Session = None
+        db: Session = None,
     ) -> str:
         """Log authentication events"""
         return await self.log_event(
@@ -155,9 +160,9 @@ class AuditLoggingService:
             user_agent=user_agent,
             result="SUCCESS" if success else "FAILURE",
             metadata=metadata,
-            db=db
+            db=db,
         )
-    
+
     async def log_authorization(
         self,
         user_id: str,
@@ -165,19 +170,23 @@ class AuditLoggingService:
         permission: str,
         granted: bool,
         metadata: Dict[str, Any] = None,
-        db: Session = None
+        db: Session = None,
     ) -> str:
         """Log authorization events"""
         return await self.log_event(
             event_type=AuditEventType.AUTHORIZATION,
-            action=AuditEventAction.PERMISSION_GRANTED if granted else AuditEventAction.PERMISSION_DENIED,
+            action=(
+                AuditEventAction.PERMISSION_GRANTED
+                if granted
+                else AuditEventAction.PERMISSION_DENIED
+            ),
             user_id=user_id,
             resource=resource,
             result="SUCCESS" if granted else "DENIED",
             metadata={**{"permission": permission}, **(metadata or {})},
-            db=db
+            db=db,
         )
-    
+
     async def log_data_access(
         self,
         user_id: str,
@@ -185,7 +194,7 @@ class AuditLoggingService:
         resource_id: str,
         action: str,
         metadata: Dict[str, Any] = None,
-        db: Session = None
+        db: Session = None,
     ) -> str:
         """Log data access events"""
         action_map = {
@@ -193,9 +202,9 @@ class AuditLoggingService:
             "read": AuditEventAction.READ,
             "update": AuditEventAction.UPDATE,
             "delete": AuditEventAction.DELETE,
-            "export": AuditEventAction.EXPORT
+            "export": AuditEventAction.EXPORT,
         }
-        
+
         return await self.log_event(
             event_type=AuditEventType.DATA_ACCESS,
             action=action_map.get(action.lower(), AuditEventAction.READ),
@@ -203,9 +212,9 @@ class AuditLoggingService:
             resource=resource,
             resource_id=resource_id,
             metadata=metadata,
-            db=db
+            db=db,
         )
-    
+
     async def log_configuration_change(
         self,
         user_id: str,
@@ -213,7 +222,7 @@ class AuditLoggingService:
         old_value: Any,
         new_value: Any,
         metadata: Dict[str, Any] = None,
-        db: Session = None
+        db: Session = None,
     ) -> str:
         """Log configuration changes"""
         return await self.log_event(
@@ -224,138 +233,127 @@ class AuditLoggingService:
             metadata={
                 "old_value": old_value,
                 "new_value": new_value,
-                **(metadata or {})
+                **(metadata or {}),
             },
-            db=db
+            db=db,
         )
-    
+
     async def get_user_events(
-        self,
-        user_id: str,
-        limit: int = 100,
-        db: Session = None
+        self, user_id: str, limit: int = 100, db: Session = None
     ) -> List[Dict[str, Any]]:
         """Get audit events for a specific user"""
         if db:
-            events = db.query(AuditLog).filter(
-                AuditLog.user_id == user_id
-            ).order_by(
-                AuditLog.timestamp.desc()
-            ).limit(limit).all()
-            
+            events = (
+                db.query(AuditLog)
+                .filter(AuditLog.user_id == user_id)
+                .order_by(AuditLog.timestamp.desc())
+                .limit(limit)
+                .all()
+            )
+
             return [self._log_to_dict(event) for event in events]
-        
+
         # Fallback to cache
         cached_events = await self.cache.get(f"audit:user:{user_id}")
         return cached_events or []
-    
+
     async def get_failed_logins(
-        self,
-        user_id: Optional[str] = None,
-        hours: int = 24,
-        db: Session = None
+        self, user_id: Optional[str] = None, hours: int = 24, db: Session = None
     ) -> List[Dict[str, Any]]:
         """Get failed login attempts"""
         since = datetime.utcnow() - timedelta(hours=hours)
-        
+
         if db:
             query = db.query(AuditLog).filter(
                 AuditLog.action == AuditEventAction.LOGIN_FAILED.value,
-                AuditLog.timestamp >= since
+                AuditLog.timestamp >= since,
             )
-            
+
             if user_id:
                 query = query.filter(AuditLog.user_id == user_id)
-            
+
             events = query.all()
             return [self._log_to_dict(event) for event in events]
-        
+
         return []
-    
+
     async def get_security_events(
-        self,
-        hours: int = 24,
-        db: Session = None
+        self, hours: int = 24, db: Session = None
     ) -> List[Dict[str, Any]]:
         """Get security-related events"""
         since = datetime.utcnow() - timedelta(hours=hours)
-        
+
         security_actions = [
             AuditEventAction.LOGIN_FAILED.value,
             AuditEventAction.PERMISSION_DENIED.value,
-            AuditEventAction.MFA_DISABLED.value
+            AuditEventAction.MFA_DISABLED.value,
         ]
-        
+
         if db:
-            events = db.query(AuditLog).filter(
-                AuditLog.action.in_(security_actions),
-                AuditLog.timestamp >= since
-            ).all()
-            
+            events = (
+                db.query(AuditLog)
+                .filter(
+                    AuditLog.action.in_(security_actions), AuditLog.timestamp >= since
+                )
+                .all()
+            )
+
             return [self._log_to_dict(event) for event in events]
-        
+
         return []
-    
-    async def verify_log_integrity(
-        self,
-        event_id: str,
-        db: Session
-    ) -> bool:
+
+    async def verify_log_integrity(self, event_id: str, db: Session) -> bool:
         """Verify audit log hasn't been tampered with"""
-        log = db.query(AuditLog).filter(
-            AuditLog.event_id == event_id
-        ).first()
-        
+        log = db.query(AuditLog).filter(AuditLog.event_id == event_id).first()
+
         if not log:
             return False
-        
+
         # Recalculate hash
         log_dict = self._log_to_dict(log)
         expected_hash = self._calculate_hash(log_dict)
-        
+
         return expected_hash == log.hash_chain
-    
+
     async def cleanup_old_logs(self, db: Session) -> int:
         """Clean up logs older than retention period"""
         cutoff_date = datetime.utcnow() - timedelta(days=self.retention_days)
-        
+
         # Archive before deletion (optional)
-        old_logs = db.query(AuditLog).filter(
-            AuditLog.timestamp < cutoff_date
-        ).all()
-        
+        old_logs = db.query(AuditLog).filter(AuditLog.timestamp < cutoff_date).all()
+
         # Could archive to S3 or other storage here
         count = len(old_logs)
-        
+
         # Delete old logs
-        db.query(AuditLog).filter(
-            AuditLog.timestamp < cutoff_date
-        ).delete()
+        db.query(AuditLog).filter(AuditLog.timestamp < cutoff_date).delete()
         db.commit()
-        
-        logger.info(f"Cleaned up {count} audit logs older than {self.retention_days} days")
+
+        logger.info(
+            f"Cleaned up {count} audit logs older than {self.retention_days} days"
+        )
         return count
-    
+
     def _generate_event_id(self) -> str:
         """Generate unique event ID"""
         return f"evt_{uuid.uuid4().hex[:16]}"
-    
+
     def _generate_hash_chain(self, log_entry: Dict[str, Any]) -> str:
         """Generate hash for tamper detection"""
         # Include previous hash in chain
         if self.previous_hash:
             log_entry["previous_hash"] = self.previous_hash
-        
+
         hash_value = self._calculate_hash(log_entry)
         self.previous_hash = hash_value
         return hash_value
-    
+
     def _calculate_hash(self, log_entry: Dict[str, Any]) -> str:
         """Calculate SHA256 hash of log entry"""
         # Create deterministic string representation
         content = json.dumps(log_entry, sort_keys=True, default=str)
         return hashlib.sha256(content.encode()).hexdigest()
-    
+
     async def _cache_event(self, log_entry: Dict[str, Any]) -> None:
         """Cache event for real-time access"""
         # Cache by user
@@ -366,66 +364,67 @@ class AuditLoggingService:
             # Keep only last 100 events
             user_events = user_events[:100]
             await self.cache.set(user_key, user_events, expire_seconds=3600)
-        
+
         # Cache security events
         if log_entry["action"] in [
             AuditEventAction.LOGIN_FAILED.value,
-            AuditEventAction.PERMISSION_DENIED.value
+            AuditEventAction.PERMISSION_DENIED.value,
         ]:
             security_key = "audit:security:recent"
             security_events = await self.cache.get(security_key) or []
             security_events.insert(0, log_entry)
             security_events = security_events[:50]
             await self.cache.set(security_key, security_events, expire_seconds=3600)
-    
+
     async def _check_security_alerts(self, log_entry: Dict[str, Any]) -> None:
         """Check if event triggers security alerts"""
         if not self.real_time_alerts_enabled:
             return
-        
+
         # Check for suspicious patterns
         alerts = []
-        
+
         # Multiple failed logins
         if log_entry["action"] == AuditEventAction.LOGIN_FAILED.value:
             user_id = log_entry.get("user_id")
             if user_id:
                 recent_failures = await self.get_failed_logins(user_id, hours=1)
                 if len(recent_failures) >= 5:
-                    alerts.append({
-                        "type": "MULTIPLE_FAILED_LOGINS",
-                        "user_id": user_id,
-                        "count": len(recent_failures)
-                    })
-        
+                    alerts.append(
+                        {
+                            "type": "MULTIPLE_FAILED_LOGINS",
+                            "user_id": user_id,
+                            "count": len(recent_failures),
+                        }
+                    )
+
         # Privilege escalation attempts
         if log_entry["action"] == AuditEventAction.PERMISSION_DENIED.value:
             if "admin" in str(log_entry.get("event_metadata", {})).lower():
-                alerts.append({
-                    "type": "PRIVILEGE_ESCALATION_ATTEMPT",
-                    "user_id": log_entry.get("user_id"),
-                    "resource": log_entry.get("resource")
-                })
-        
+                alerts.append(
+                    {
+                        "type": "PRIVILEGE_ESCALATION_ATTEMPT",
+                        "user_id": log_entry.get("user_id"),
+                        "resource": log_entry.get("resource"),
+                    }
+                )
+
         # Send alerts
         for alert in alerts:
             await self._send_security_alert(alert)
-    
+
     async def _send_security_alert(self, alert: Dict[str, Any]) -> None:
         """Send security alert notification"""
         # Log alert
         logger.warning(f"SECURITY ALERT: {alert}")
-        
+
         # Could send to monitoring service, email, Slack, etc.
         # For now, cache it
         alerts_key = "audit:alerts:active"
         alerts = await self.cache.get(alerts_key) or []
-        alerts.append({
-            **alert,
-            "timestamp": datetime.utcnow().isoformat()
-        })
+        alerts.append({**alert, "timestamp": datetime.utcnow().isoformat()})
         await self.cache.set(alerts_key, alerts, expire_seconds=3600)
-    
+
     def _log_to_dict(self, log: AuditLog) -> Dict[str, Any]:
         """Convert database log to dictionary"""
         details = json.loads(log.details) if log.details else {}
@@ -442,7 +441,7 @@ class AuditLoggingService:
             "result": details.get("result"),
             "error_message": details.get("error_message"),
             "metadata": details.get("metadata"),
-            "severity": log.severity
+            "severity": log.severity,
         }
 
 

@@ -1,0 +1,10 @@
+
+8/"Check if circuit is closed (normal operation)"strself{ {(%!services.ai.ai_types.CircuitState"Ž'
+%
+} }("#get-field# _state:'
+%
+} }(1"#get-field# CLOSED:*
+(
+} }(1"
+#binop ==#2==:Bbool
+} }(1*:/home/omar/Documents/ruleIQ/services/ai/circuit_breaker.py

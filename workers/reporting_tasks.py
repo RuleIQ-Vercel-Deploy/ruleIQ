@@ -36,7 +36,9 @@ def _send_email_sync(
     """Sends an email. This remains synchronous as smtplib is blocking."""
     # This is a mock implementation. In a real app, use a robust email service.
     try:
-        logger.info(f"Mock sending email to {', '.join(recipient_emails)} with subject: {subject}")
+        logger.info(
+            f"Mock sending email to {', '.join(recipient_emails)} with subject: {subject}"
+        )
         if attachments:
             logger.info(f"With {len(attachments)} attachments.")
         return True
@@ -91,7 +93,9 @@ async def _generate_and_distribute_report_async(schedule_id_str: str):
                 attachments=[attachment] if attachment else None,
             )
 
-            await scheduler.update_schedule_status(schedule_id, "success", distribution_success)
+            await scheduler.update_schedule_status(
+                schedule_id, "success", distribution_success
+            )
             return {
                 "status": "completed",
                 "schedule_id": str(schedule_id),
@@ -109,7 +113,8 @@ async def _generate_and_distribute_report_async(schedule_id_str: str):
 
         except Exception:
             logger.critical(
-                f"An unexpected error occurred for schedule {schedule_id}", exc_info=True
+                f"An unexpected error occurred for schedule {schedule_id}",
+                exc_info=True,
             )
             try:
                 await scheduler.update_schedule_status(schedule_id, "failed")
@@ -164,20 +169,22 @@ async def _send_report_summary_notifications_async():
     bind=True,
     autoretry_for=(DatabaseException, Exception),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 120,  # Start with 2 minutes for report generation
+        "max_retries": 5,
+        "countdown": 120,  # Start with 2 minutes for report generation
     },
     retry_backoff=True,
     retry_backoff_max=600,  # Max 10 minutes for reports
     retry_jitter=True,
-    rate_limit='2/m',  # 2 report generations per minute
+    rate_limit="2/m",  # 2 report generations per minute
 )
 def generate_and_distribute_report(self, schedule_id: str):
     """Celery task to generate and distribute a report by running the async helper."""
     try:
         return asyncio.run(_generate_and_distribute_report_async(schedule_id))
     except ApplicationException as e:
-        logger.warning(f"Report generation for {schedule_id} failed with a handled error: {e}")
+        logger.warning(
+            f"Report generation for {schedule_id} failed with a handled error: {e}"
+        )
         # Do not retry for handled exceptions like NotFoundException
     except Exception as e:
         logger.error(
@@ -191,13 +198,13 @@ def generate_and_distribute_report(self, schedule_id: str):
     bind=True,
     autoretry_for=(Exception,),
     retry_kwargs={
-        'max_retries': 3,
-        'countdown': 90,  # Start with 90 seconds for on-demand reports
+        "max_retries": 3,
+        "countdown": 90,  # Start with 90 seconds for on-demand reports
     },
     retry_backoff=True,
     retry_backoff_max=400,
     retry_jitter=True,
-    rate_limit='5/m',  # 5 on-demand reports per minute
+    rate_limit="5/m",  # 5 on-demand reports per minute
 )
 def generate_report_on_demand(
     self, user_id: str, profile_id: str, report_type: str, recipients: List[str]
@@ -205,7 +212,9 @@ def generate_report_on_demand(
     """Mock task for on-demand report generation."""
     logger.info(f"On-demand report for user {user_id}, profile {profile_id}")
     _send_email_sync(
-        recipients, f"Your On-Demand Report: {report_type}", "Here is your on-demand report."
+        recipients,
+        f"Your On-Demand Report: {report_type}",
+        "Here is your on-demand report.",
     )
     return {"status": "completed"}
 
@@ -214,13 +223,13 @@ def generate_report_on_demand(
     bind=True,
     autoretry_for=(Exception,),
     retry_kwargs={
-        'max_retries': 3,
-        'countdown': 60,
+        "max_retries": 3,
+        "countdown": 60,
     },
     retry_backoff=True,
     retry_backoff_max=300,
     retry_jitter=True,
-    rate_limit='1/h',  # 1 cleanup task per hour
+    rate_limit="1/h",  # 1 cleanup task per hour
 )
 def cleanup_old_reports(self):
     """Mock task for cleaning up old reports."""
@@ -232,13 +241,13 @@ def cleanup_old_reports(self):
     bind=True,
     autoretry_for=(Exception,),
     retry_kwargs={
-        'max_retries': 5,
-        'countdown': 45,
+        "max_retries": 5,
+        "countdown": 45,
     },
     retry_backoff=True,
     retry_backoff_max=300,
     retry_jitter=True,
-    rate_limit='10/m',  # 10 summary notifications per minute
+    rate_limit="10/m",  # 10 summary notifications per minute
 )
 def send_report_summary_notifications(self):
     """Celery task to send summary notifications by running the async helper."""

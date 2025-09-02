@@ -1,9 +1,9 @@
 /**
  * Budget Alert Panel Component
- * 
+ *
  * Displays budget alerts, warnings, and optimization recommendations.
  * This is a placeholder component for Phase 2.2: Cost Tracking & Token Budgets
- * 
+ *
  * TODO: Implement the following:
  * - Real-time alert streaming via WebSocket
  * - Alert acknowledgment and dismissal
@@ -16,14 +16,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { 
-  AlertTriangle, 
-  TrendingUp, 
-  Lightbulb, 
-  X,
-  Bell,
-  DollarSign 
-} from 'lucide-react';
+import { AlertTriangle, TrendingUp, Lightbulb, X, Bell, DollarSign } from 'lucide-react';
 
 interface BudgetAlert {
   id: string;
@@ -41,7 +34,7 @@ interface BudgetAlertPanelProps {
 
 export const BudgetAlertPanel: React.FC<BudgetAlertPanelProps> = ({
   className = '',
-  maxAlerts = 5
+  maxAlerts = 5,
 }) => {
   // TODO: Connect to budget alert service
   // const { data: alerts, acknowledge, dismiss } = useBudgetAlerts();
@@ -54,7 +47,7 @@ export const BudgetAlertPanel: React.FC<BudgetAlertPanelProps> = ({
       title: 'Approaching Daily Budget Limit',
       message: 'You have used 85% of your daily AI budget ($85 of $100)',
       timestamp: new Date(),
-      acknowledged: false
+      acknowledged: false,
     },
     {
       id: '2',
@@ -62,7 +55,7 @@ export const BudgetAlertPanel: React.FC<BudgetAlertPanelProps> = ({
       title: 'High Cost Spike Detected',
       message: 'Cost per request increased by 150% in the last hour',
       timestamp: new Date(Date.now() - 3600000),
-      acknowledged: false
+      acknowledged: false,
     },
     {
       id: '3',
@@ -70,8 +63,8 @@ export const BudgetAlertPanel: React.FC<BudgetAlertPanelProps> = ({
       title: 'Cost Optimization Available',
       message: 'Switch to GPT-3.5 for routine queries to save ~40% on costs',
       timestamp: new Date(Date.now() - 7200000),
-      acknowledged: true
-    }
+      acknowledged: true,
+    },
   ];
 
   const getAlertIcon = (type: BudgetAlert['type']) => {
@@ -103,15 +96,13 @@ export const BudgetAlertPanel: React.FC<BudgetAlertPanelProps> = ({
           <Bell className="h-5 w-5" />
           Budget Alerts
         </CardTitle>
-        <CardDescription>
-          Cost warnings and optimization recommendations
-        </CardDescription>
+        <CardDescription>Cost warnings and optimization recommendations</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
           {placeholderAlerts.slice(0, maxAlerts).map((alert) => (
-            <Alert 
-              key={alert.id} 
+            <Alert
+              key={alert.id}
               variant={getAlertVariant(alert.type)}
               className={alert.acknowledged ? 'opacity-60' : ''}
             >
@@ -119,13 +110,9 @@ export const BudgetAlertPanel: React.FC<BudgetAlertPanelProps> = ({
                 <div className="flex gap-2">
                   {getAlertIcon(alert.type)}
                   <div className="space-y-1">
-                    <AlertTitle className="text-sm font-medium">
-                      {alert.title}
-                    </AlertTitle>
-                    <AlertDescription className="text-xs">
-                      {alert.message}
-                    </AlertDescription>
-                    <div className="flex items-center gap-2 mt-2">
+                    <AlertTitle className="text-sm font-medium">{alert.title}</AlertTitle>
+                    <AlertDescription className="text-xs">{alert.message}</AlertDescription>
+                    <div className="mt-2 flex items-center gap-2">
                       <Badge variant="outline" className="text-xs">
                         {alert.type}
                       </Badge>
@@ -151,7 +138,7 @@ export const BudgetAlertPanel: React.FC<BudgetAlertPanelProps> = ({
           ))}
 
           {/* Budget Settings Quick Access */}
-          <div className="mt-4 p-3 border rounded-lg bg-muted/50">
+          <div className="mt-4 rounded-lg border bg-muted/50 p-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <DollarSign className="h-4 w-4 text-muted-foreground" />
@@ -167,10 +154,9 @@ export const BudgetAlertPanel: React.FC<BudgetAlertPanelProps> = ({
           </div>
 
           {/* Placeholder Message */}
-          <div className="mt-4 p-3 bg-muted rounded-lg">
-            <p className="text-xs text-muted-foreground text-center">
-              🚧 Alert system placeholder. 
-              Connect to WebSocket for real-time budget alerts.
+          <div className="mt-4 rounded-lg bg-muted p-3">
+            <p className="text-center text-xs text-muted-foreground">
+              🚧 Alert system placeholder. Connect to WebSocket for real-time budget alerts.
             </p>
           </div>
         </div>

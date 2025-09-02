@@ -1,0 +1,167 @@
+
+"validation_successes"str
+%"Get validation statistics."str
+&"error_recoveries"str
+0"fallback_uses"str
+"failure_rate"str
+"division by zero"bool
+"total_processed"str
+
+"success_rate"str
+-"fallback_rate"str
+#"recovery_rate"str
+0.0float
+"validation_failures"str
+
+0int
+"S3518"bool
+"a"boolself
+¬ ¬(!"é3
+1
+
+® ®(%"#get-field# validation_stats:+
+)
+
+® ®(8total"#array-read#:&
+$
+
+° ¼(	"#new-object#Bdict3
+1
+
+± ±(#"#get-field# validation_stats:'
+%
+
+± ±(#"#unaryop **#2**:%
+#
+
+± ±(#	"#map-set-all#:*
+(
+
+³ ³("	#binop >#2>:Bbool,"*
+
+³ ³( *
+³ ³(2
+´ ´("ö3
+1
+
+² ²(1"#get-field# validation_stats:$
+"
+
+² ²(I"#array-read#:,
+*
+
+² ²(Q"
+#binop !=#2!=:Bbool"
+ 
+
+² ²(Q"
+#assert#:3
+1
+
+² ²(Q"#dependent-value#*:Bfloat
+
+² ´("
+
+² ´("’*"
+ 
+
+² ´("	#map-set#:
+*
+(
+
+¶ ¶("	#binop >#2>:Bbool,"*
+
+¶ ¶( *
+¶ ¶(2
+· ·("ö3
+1
+
+µ µ(1"#get-field# validation_stats:$
+"
+
+µ µ(H"#array-read#:,
+*
+
+µ µ(P"
+#binop !=#2!=:Bbool"
+ 
+
+µ µ(P"
+#assert#:3
+1
+
+µ µ(P "#dependent-value#*:Bfloat
+
+µ ·("
+
+µ ·("’*! "
+ 
+
+µ ·(""	#map-set#:!*
+(
+
+¹ ¹($"	#binop >#2>:Bbool,"*
+
+¹ ¹($ *
+¹ ¹(2
+º º("ö3
+1
+
+¸ ¸(2%"#get-field# validation_stats:$
+"
+
+¸ ¸(F'"#array-read#:%&,
+*
+
+¸ ¸(N("
+#binop !=#2!=:Bbool"
+ 
+
+¸ ¸(N)"
+#assert#:(3
+1
+
+¸ ¸(N*"#dependent-value#*:'Bfloat
+
+¸ º(	"
+
+¸ º(	"’	*+*"
+ 
+
+¸ º(,"	#map-set#:#+*
+(
+
+»O »(X."	#binop >#2>:Bbool,"*
+
+»O »(X.
+ *
+»L »(N2
+»Y »(]"ö
+3
+1
+
+» »(2/"#get-field# validation_stats:$
+"
+
+» »(C1"#array-read#:/0,
+*
+
+» »(K2"
+#binop !=#2!=:Bbool"
+ 
+
+» »(K3"
+#assert#:23
+1
+
+» »(K4"#dependent-value#*:1Bfloat
+
+» »(a"
+
+» »(a"J*5
+4"
+ 
+
+» »(a6"	#map-set#:-5
+
+° ¼(	*=/home/omar/Documents/ruleIQ/services/ai/response_processor.py

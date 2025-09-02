@@ -24,8 +24,13 @@ export default function ForgotPasswordPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  
-  const { register, handleSubmit, formState: { errors }, getValues } = useForm<ForgotPasswordForm>({
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getValues,
+  } = useForm<ForgotPasswordForm>({
     resolver: zodResolver(forgotPasswordSchema),
   });
 
@@ -51,8 +56,8 @@ export default function ForgotPasswordPage() {
 
   if (isSubmitted) {
     return (
-      <div className="container relative min-h-screen flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-        <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
+      <div className="container relative grid min-h-screen flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0">
+        <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
           <div className="absolute inset-0 bg-gradient-to-br from-navy via-turquoise to-gold" />
           <div className="relative z-20 flex items-center text-lg font-medium">
             <div className="mr-2 h-6 w-6 rounded bg-white/20" />
@@ -61,7 +66,9 @@ export default function ForgotPasswordPage() {
           <div className="relative z-20 mt-auto">
             <blockquote className="space-y-2">
               <p className="text-lg">Password reset instructions sent to your email.</p>
-              <footer className="text-sm">Check your inbox and follow the instructions to reset your password.</footer>
+              <footer className="text-sm">
+                Check your inbox and follow the instructions to reset your password.
+              </footer>
             </blockquote>
           </div>
         </div>
@@ -69,10 +76,10 @@ export default function ForgotPasswordPage() {
           <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
             <Card>
               <CardHeader className="space-y-1">
-                <div className="flex items-center justify-center w-12 h-12 mx-auto mb-4 rounded-full bg-green-100">
-                  <Mail className="w-6 h-6 text-green-600" />
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                  <Mail className="h-6 w-6 text-green-600" />
                 </div>
-                <CardTitle className="text-2xl text-center">Check your email</CardTitle>
+                <CardTitle className="text-center text-2xl">Check your email</CardTitle>
                 <p className="text-center text-sm text-muted-foreground">
                   We've sent password reset instructions to <strong>{getValues('email')}</strong>
                 </p>
@@ -82,7 +89,7 @@ export default function ForgotPasswordPage() {
                   <p>Didn't receive the email? Check your spam folder or</p>
                   <Button
                     variant="link"
-                    className="p-0 h-auto font-normal"
+                    className="h-auto p-0 font-normal"
                     onClick={() => setIsSubmitted(false)}
                   >
                     try again with a different email
@@ -91,7 +98,7 @@ export default function ForgotPasswordPage() {
                 <div className="flex items-center justify-center">
                   <Link href="/auth/login">
                     <Button variant="ghost" className="flex items-center gap-2">
-                      <ArrowLeft className="w-4 h-4" />
+                      <ArrowLeft className="h-4 w-4" />
                       Back to login
                     </Button>
                   </Link>
@@ -105,8 +112,8 @@ export default function ForgotPasswordPage() {
   }
 
   return (
-    <div className="container relative min-h-screen flex-col items-center justify-center grid lg:max-w-none lg:grid-cols-2 lg:px-0">
-      <div className="relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r">
+    <div className="container relative grid min-h-screen flex-col items-center justify-center lg:max-w-none lg:grid-cols-2 lg:px-0">
+      <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">
         <div className="absolute inset-0 bg-gradient-to-br from-navy via-turquoise to-gold" />
         <div className="relative z-20 flex items-center text-lg font-medium">
           <div className="mr-2 h-6 w-6 rounded bg-white/20" />
@@ -114,8 +121,12 @@ export default function ForgotPasswordPage() {
         </div>
         <div className="relative z-20 mt-auto">
           <blockquote className="space-y-2">
-            <p className="text-lg">Reset your password securely and get back to managing your compliance.</p>
-            <footer className="text-sm">Enter your email address and we'll send you reset instructions.</footer>
+            <p className="text-lg">
+              Reset your password securely and get back to managing your compliance.
+            </p>
+            <footer className="text-sm">
+              Enter your email address and we'll send you reset instructions.
+            </footer>
           </blockquote>
         </div>
       </div>
@@ -152,7 +163,7 @@ export default function ForgotPasswordPage() {
           <div className="flex items-center justify-center">
             <Link href="/auth/login">
               <Button variant="ghost" className="flex items-center gap-2">
-                <ArrowLeft className="w-4 h-4" />
+                <ArrowLeft className="h-4 w-4" />
                 Back to login
               </Button>
             </Link>

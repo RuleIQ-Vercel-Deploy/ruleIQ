@@ -58,7 +58,9 @@ class TestSecurityFixes:
 
         # Test allowed file types
         assert validator.is_allowed_file_type("test.pdf", "application/pdf")
-        assert not validator.is_allowed_file_type("test.exe", "application/x-msdownload")
+        assert not validator.is_allowed_file_type(
+            "test.exe", "application/x-msdownload"
+        )
 
         # Test file size limits
         assert validator.is_allowed_file_size(1024 * 1024)  # 1MB
@@ -68,7 +70,8 @@ class TestSecurityFixes:
         """Test rate limiting is properly implemented"""
         # Test authentication rate limiting
         response = client.post(
-            "/api/v1/auth/login", json={"email": "test@example.com", "password": "wrongpassword"}
+            "/api/v1/auth/login",
+            json={"email": "test@example.com", "password": "wrongpassword"},
         )
 
         # Multiple failed attempts should trigger rate limiting
@@ -157,7 +160,9 @@ class TestIntegrationFixes:
 
     def test_google_workspace_integration(self):
         """Test Google Workspace integration fixes"""
-        from api.integrations.google_workspace_integration import GoogleWorkspaceIntegration
+        from api.integrations.google_workspace_integration import (
+            GoogleWorkspaceIntegration,
+        )
 
         integration = GoogleWorkspaceIntegration()
         # Test missing format_evidence method is added

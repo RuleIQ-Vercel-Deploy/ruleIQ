@@ -13,12 +13,7 @@ from pathlib import Path
 
 def check_project_structure():
     """Verify ruleIQ project structure exists"""
-    required_paths = [
-        "api/routers",
-        "frontend/components",
-        "services",
-        "database"
-    ]
+    required_paths = ["api/routers", "frontend/components", "services", "database"]
 
     missing = []
     for path in required_paths:
@@ -41,12 +36,12 @@ def check_python_environment():
             [
                 sys.executable,
                 "-c",
-                "import fastapi, sqlalchemy, pydantic; print('imports ok')"
+                "import fastapi, sqlalchemy, pydantic; print('imports ok')",
             ],
             capture_output=True,
             text=True,
             timeout=5,
-            check=False
+            check=False,
         )
 
         if result.returncode == 0 and "imports ok" in result.stdout:
@@ -70,7 +65,7 @@ def check_archon_health():
         # Check if Archon configuration exists
         archon_indicators = [
             ".agent-os/product/mission.md",
-            ".agent-os/product/roadmap.md"
+            ".agent-os/product/roadmap.md",
         ]
 
         archon_available = any(
@@ -86,7 +81,7 @@ def check_archon_health():
                 "project": "ruleIQ",
                 "last_check": datetime.utcnow().isoformat(),
                 "knowledge_base": "available",
-                "task_management": "ready"
+                "task_management": "ready",
             }
 
             # Write Archon status
@@ -132,7 +127,7 @@ def set_persistence_flags():
             "python_env_ok": True,
             "project_structure_ok": True,
             "serena_active": True,
-            "archon_checked": True
+            "archon_checked": True,
         }
 
         with open(status_file, "w", encoding="utf-8") as f:
@@ -151,14 +146,16 @@ def check_mcp_servers():
 
     # Check Serena
     serena_status = (
-        "✅ Active" if Path(".claude/serena-active.flag").exists()
+        "✅ Active"
+        if Path(".claude/serena-active.flag").exists()
         else "⚠️  Not initialized"
     )
     print(f"  Serena MCP: {serena_status}")
 
     # Check Archon
     archon_status = (
-        "✅ Active" if Path(".claude/archon-active.flag").exists()
+        "✅ Active"
+        if Path(".claude/archon-active.flag").exists()
         else "⚠️  Not initialized"
     )
     print(f"  Archon MCP: {archon_status}")
@@ -208,7 +205,7 @@ def main():
             "serena": "active",
             "archon": "checked",
             "project": "ruleIQ",
-            "workflow": "archon-first"
+            "workflow": "archon-first",
         }
         with open(verification_marker, "w", encoding="utf-8") as f:
             json.dump(verification_data, f, indent=2)

@@ -143,11 +143,14 @@ class TestUserOnboardingFlow:
         assert register_response.status_code == 201
 
         login_response = client.post(
-            "/api/auth/login", json={"email": user_data["email"], "password": user_data["password"]}
+            "/api/auth/login",
+            json={"email": user_data["email"], "password": user_data["password"]},
         )
         assert login_response.status_code == 200
 
-        auth_headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
+        auth_headers = {
+            "Authorization": f"Bearer {login_response.json()['access_token']}"
+        }
 
         # Create business profile inline
         business_profile_data = {
@@ -219,11 +222,16 @@ class TestUserOnboardingFlow:
         # Login
         login_response = client.post(
             "/api/auth/login",
-            json={"email": minimal_user_data["email"], "password": minimal_user_data["password"]},
+            json={
+                "email": minimal_user_data["email"],
+                "password": minimal_user_data["password"],
+            },
         )
         assert login_response.status_code == 200
 
-        auth_headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
+        auth_headers = {
+            "Authorization": f"Bearer {login_response.json()['access_token']}"
+        }
 
         # Create minimal business profile
         minimal_profile = {
@@ -255,7 +263,10 @@ class TestUserOnboardingFlow:
         assert len(quick_result["recommendations"]) > 0
 
         # Should still get basic framework recommendations
-        assert any("GDPR" in rec["framework"]["name"] for rec in quick_result["recommendations"])
+        assert any(
+            "GDPR" in rec["framework"]["name"]
+            for rec in quick_result["recommendations"]
+        )
 
     def test_user_onboarding_error_recovery(self, client):
         """Test user onboarding with error recovery scenarios"""
@@ -278,24 +289,31 @@ class TestUserOnboardingFlow:
 
         # Successful login with existing account
         login_response = client.post(
-            "/api/auth/login", json={"email": user_data["email"], "password": user_data["password"]}
+            "/api/auth/login",
+            json={"email": user_data["email"], "password": user_data["password"]},
         )
         assert login_response.status_code == 200
 
-        auth_headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
+        auth_headers = {
+            "Authorization": f"Bearer {login_response.json()['access_token']}"
+        }
 
         # Test invalid login attempt (wrong password)
         invalid_login_response = client.post(
-            "/api/auth/login", json={"email": user_data["email"], "password": "WrongPassword123!"}
+            "/api/auth/login",
+            json={"email": user_data["email"], "password": "WrongPassword123!"},
         )
         assert invalid_login_response.status_code == 401  # Unauthorized
 
         # Test successful login again (error recovery)
         valid_login_response = client.post(
-            "/api/auth/login", json={"email": user_data["email"], "password": user_data["password"]}
+            "/api/auth/login",
+            json={"email": user_data["email"], "password": user_data["password"]},
         )
         assert valid_login_response.status_code == 200
-        auth_headers = {"Authorization": f"Bearer {valid_login_response.json()['access_token']}"}
+        auth_headers = {
+            "Authorization": f"Bearer {valid_login_response.json()['access_token']}"
+        }
 
         # Test accessing protected endpoint with valid token
         profile_response = client.get("/api/users/profile", headers=auth_headers)
@@ -334,10 +352,13 @@ class TestOnboardingIntegration:
         assert register_response.status_code == 201
 
         login_response = client.post(
-            "/api/auth/login", json={"email": user_data["email"], "password": user_data["password"]}
+            "/api/auth/login",
+            json={"email": user_data["email"], "password": user_data["password"]},
         )
         assert login_response.status_code == 200
-        auth_headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
+        auth_headers = {
+            "Authorization": f"Bearer {login_response.json()['access_token']}"
+        }
 
         # Create business profile inline
         business_profile_data = {
@@ -401,7 +422,9 @@ class TestOnboardingIntegration:
             "/api/auth/login",
             json={"email": unique_email, "password": user_data["password"]},
         )
-        auth_headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
+        auth_headers = {
+            "Authorization": f"Bearer {login_response.json()['access_token']}"
+        }
 
         business_profile_data = {
             "company_name": sample_business_profile.company_name,
@@ -417,7 +440,9 @@ class TestOnboardingIntegration:
             "operates_critical_infrastructure": sample_business_profile.operates_critical_infrastructure,
             "has_international_operations": sample_business_profile.has_international_operations,
         }
-        client.post("/api/business-profiles", json=business_profile_data, headers=auth_headers)
+        client.post(
+            "/api/business-profiles", json=business_profile_data, headers=auth_headers
+        )
 
         # Check audit trail
         audit_response = client.get("/api/audit/trail", headers=auth_headers)
@@ -464,12 +489,17 @@ class TestOnboardingIntegration:
         assert register_response.status_code == 201
 
         login_response = client.post(
-            "/api/auth/login", json={"email": user_data["email"], "password": user_data["password"]}
+            "/api/auth/login",
+            json={"email": user_data["email"], "password": user_data["password"]},
         )
-        auth_headers = {"Authorization": f"Bearer {login_response.json()['access_token']}"}
+        auth_headers = {
+            "Authorization": f"Bearer {login_response.json()['access_token']}"
+        }
 
         # Check that preferences were saved (if endpoint exists)
-        preferences_response = client.get("/api/users/preferences", headers=auth_headers)
+        preferences_response = client.get(
+            "/api/users/preferences", headers=auth_headers
+        )
         if preferences_response.status_code == 200:
             preferences_response.json()
             # Basic verification - exact structure may vary

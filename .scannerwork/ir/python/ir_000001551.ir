@@ -1,0 +1,51 @@
+
+©Ÿ"
+    Convenience function to execute AI operations with cost tracking and circuit breaker protection.
+
+    Args:
+        model_name: Name of the AI model
+        service_name: Name of the service
+        operation: Function to execute
+        input_tokens: Number of input tokens
+        output_tokens: Number of output tokens
+        user_id: User identifier
+        session_id: Session identifier
+        request_id: Request identifier
+        *args, **kwargs: Arguments for the operation
+
+    Returns:
+        Result of the operation
+    "str
+model_name
+Ü Ü(service_name
+Ý Ý(	operation
+Þ Þ(input_tokens
+ß ß(output_tokens
+à à(user_id
+á á(!
+session_id
+â â($
+request_id
+ã ã($	args
+ä ä(	
+kwargs
+å å("dict"§k
+i
+
+ù ù(6circuit_breaker"H
+&services.ai.cost_aware_circuit_breakerget_cost_aware_circuit_breaker%
+#
+
+„ „("#unaryop *#2*:	'
+%
+
+… …("#unaryop **#2**:
+1
+/
+
+û †("?python-unknown?:#
+!
+
+û †("#unknown-value#
+
+û †(*E/home/omar/Documents/ruleIQ/services/ai/cost_aware_circuit_breaker.py

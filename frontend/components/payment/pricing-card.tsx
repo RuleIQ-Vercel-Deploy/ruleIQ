@@ -54,7 +54,6 @@ export function PricingCard({
       }
     } catch (error) {
       // TODO: Replace with proper logging
-
       // // TODO: Replace with proper logging
     } finally {
       setIsLoading(false);

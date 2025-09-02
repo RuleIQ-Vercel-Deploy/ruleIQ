@@ -47,7 +47,7 @@ describe('AuthGuard Component - Route Protection', () => {
       },
     });
     vi.clearAllMocks();
-    
+
     // Reset auth state
     mockAuthState = {
       isAuthenticated: false,
@@ -225,9 +225,9 @@ describe('AuthGuard Component - Route Protection', () => {
     });
 
     it('should show loading fallback while auth check is in progress', async () => {
-      const mockCheckAuth = vi.fn().mockImplementation(
-        () => new Promise((resolve) => setTimeout(resolve, 100)),
-      );
+      const mockCheckAuth = vi
+        .fn()
+        .mockImplementation(() => new Promise((resolve) => setTimeout(resolve, 100)));
       mockAuthState.checkAuth = mockCheckAuth;
       mockAuthState.isAuthenticated = false;
       mockAuthState.isLoading = false;
@@ -266,9 +266,12 @@ describe('AuthGuard Component - Route Protection', () => {
       });
 
       // Should still redirect to login even if auth check fails
-      await waitFor(() => {
-        expect(mockPush).toHaveBeenCalledWith('/auth/login?redirect=%2Fdashboard');
-      }, { timeout: 2000 });
+      await waitFor(
+        () => {
+          expect(mockPush).toHaveBeenCalledWith('/auth/login?redirect=%2Fdashboard');
+        },
+        { timeout: 2000 },
+      );
     });
   });
 

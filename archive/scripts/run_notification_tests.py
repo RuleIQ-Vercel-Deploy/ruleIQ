@@ -21,15 +21,16 @@ from tests.test_notification_migration_tdd import (
     TestObservabilityAndMetrics,
     TestStatePersistenceAndRecovery,
     TestCostGovernance,
-    TestComplianceAndSecurity
+    TestComplianceAndSecurity,
 )
+
 
 def run_tests():
     """Run all notification migration TDD tests"""
-    
+
     # Create test suite
     suite = unittest.TestSuite()
-    
+
     # Add test classes
     test_classes = [
         TestNotificationStateTransitions,
@@ -41,30 +42,34 @@ def run_tests():
         TestObservabilityAndMetrics,
         TestStatePersistenceAndRecovery,
         TestCostGovernance,
-        TestComplianceAndSecurity
+        TestComplianceAndSecurity,
     ]
-    
+
     for test_class in test_classes:
         tests = unittest.TestLoader().loadTestsFromTestCase(test_class)
         suite.addTests(tests)
-    
+
     # Run tests with verbose output
     runner = unittest.TextTestRunner(verbosity=2)
     result = runner.run(suite)
-    
+
     # Print summary
-    print("\n" + "="*70)
+    print("\n" + "=" * 70)
     print(f"Tests run: {result.testsRun}")
     print(f"Failures: {len(result.failures)}")
     print(f"Errors: {len(result.errors)}")
     print(f"Skipped: {len(result.skipped)}")
-    
+
     # Print coverage info
     if result.testsRun > 0:
-        success_rate = ((result.testsRun - len(result.failures) - len(result.errors)) / result.testsRun) * 100
+        success_rate = (
+            (result.testsRun - len(result.failures) - len(result.errors))
+            / result.testsRun
+        ) * 100
         print(f"Success rate: {success_rate:.1f}%")
-    
+
     return result.wasSuccessful()
+
 
 if __name__ == "__main__":
     success = run_tests()

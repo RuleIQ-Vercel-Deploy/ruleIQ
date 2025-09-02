@@ -25,7 +25,7 @@ export function RecentActivityWidget({ activities = [], onViewAll }: RecentActiv
       title: 'GDPR Assessment Completed',
       description: 'Assessment completed: GDPR Compliance',
       timestamp: '10:00',
-      user: 'John Smith'
+      user: 'John Smith',
     },
     {
       id: '2',
@@ -33,7 +33,7 @@ export function RecentActivityWidget({ activities = [], onViewAll }: RecentActiv
       title: 'Security Policy Updated',
       description: 'Evidence uploaded: Privacy Policy',
       timestamp: '15:30',
-      user: 'Jane Doe'
+      user: 'Jane Doe',
     },
     {
       id: '3',
@@ -41,8 +41,8 @@ export function RecentActivityWidget({ activities = [], onViewAll }: RecentActiv
       title: 'Q4 Report Generated',
       description: 'Report generated: Q4 2024',
       timestamp: '5 minutes ago',
-      user: 'System'
-    }
+      user: 'System',
+    },
   ];
 
   const displayActivities = activities.length > 0 ? activities : defaultActivities;
@@ -64,10 +64,15 @@ export function RecentActivityWidget({ activities = [], onViewAll }: RecentActiv
           <div className="space-y-2">
             {displayActivities.map((activity) => (
               <div key={activity.id} className="flex items-center space-x-3">
-                <div data-testid={`${activity.type === 'assessment' ? 'check' : activity.type === 'evidence' ? 'file' : 'report'}-icon`} className="w-4 h-4 bg-blue-500 rounded" />
+                <div
+                  data-testid={`${activity.type === 'assessment' ? 'check' : activity.type === 'evidence' ? 'file' : 'report'}-icon`}
+                  className="h-4 w-4 rounded bg-blue-500"
+                />
                 <div className="flex-1">
                   <div className="text-sm">{activity.description}</div>
-                  <div className="text-xs text-gray-500">{activity.timestamp} • {activity.user}</div>
+                  <div className="text-xs text-gray-500">
+                    {activity.timestamp} • {activity.user}
+                  </div>
                 </div>
               </div>
             ))}

@@ -10,7 +10,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 
 async function verifySetup() {
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
   const results = {
     playwright: false,
     browsers: false,
@@ -86,20 +86,15 @@ async function verifySetup() {
   }
 
   // Summary
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
   const allPassed = Object.values(results).every((v) => v);
 
   if (allPassed) {
     // TODO: Replace with proper logging
-
     // TODO: Replace with proper logging
-
     // TODO: Replace with proper logging
-
     // TODO: Replace with proper logging
-
     // TODO: Replace with proper logging
-
     // TODO: Replace with proper logging
   } else {
     // TODO: Replace with proper logging

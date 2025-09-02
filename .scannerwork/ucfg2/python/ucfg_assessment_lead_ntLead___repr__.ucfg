@@ -1,0 +1,38 @@
+
+0database.assessment_lead.AssessmentLead.__repr__A
+7/home/omar/Documents/ruleIQ/database/assessment_lead.pyA A("2*¢
+2B B(Ql
+j
+B) B(3
+%1"__id*R
+
+__unknown_file (6*4)
+'database.assessment_lead.AssessmentLead"
+emailq
+o
+B> B(M
+%2"__id*W
+
+__unknown_file (;*9)
+'database.assessment_lead.AssessmentLead"
+
+lead_score
+š
+B B(Q
+%3"__concat*'
+B B((
+<AssessmentLead(email='*
+B) B(3
+
+%1*
+B4 B(=
+	', score=*
+B> B(M
+
+%2*
+BN B(P
+)>"
+B B(Q
+
+%3B+)
+'database.assessment_lead.AssessmentLeadH

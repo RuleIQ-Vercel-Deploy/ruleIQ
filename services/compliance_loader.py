@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class LoadResult:
     """Result of framework loading operation"""
+
     success: bool
     loaded_frameworks: List[ComplianceFramework]
     skipped_frameworks: List[str]
@@ -65,9 +66,11 @@ class UKComplianceLoader:
         for framework_data in frameworks_data:
             try:
                 # Check if framework already exists
-                existing = self.db_session.query(ComplianceFramework)\
-                    .filter(ComplianceFramework.name == framework_data.get("name"))\
+                existing = (
+                    self.db_session.query(ComplianceFramework)
+                    .filter(ComplianceFramework.name == framework_data.get("name"))
                     .first()
+                )
 
                 if existing:
                     self.skipped_frameworks.append(framework_data["name"])
@@ -102,7 +105,7 @@ class UKComplianceLoader:
             loaded_frameworks=self.loaded_frameworks.copy(),
             skipped_frameworks=self.skipped_frameworks.copy(),
             errors=self.errors.copy(),
-            total_processed=len(frameworks_data)
+            total_processed=len(frameworks_data),
         )
 
     def create_framework(self, data: Dict[str, Any]) -> ComplianceFramework:
@@ -134,33 +137,28 @@ class UKComplianceLoader:
             display_name=data["display_name"],
             description=data.get("description", ""),
             category=data["category"],
-
             # Truncated column mappings
             applicable_indu=data.get("applicable_indu", []),
             employee_thresh=data.get("employee_thresh"),
             revenue_thresho=data.get("revenue_thresho"),
             geographic_scop=data.get("geographic_scop", ["UK"]),
-
             key_requirement=data.get("key_requirement", []),
             control_domains=data.get("control_domains", []),
             evidence_types=data.get("evidence_types", []),
-
             # Assessment criteria
             relevance_facto=data.get("relevance_facto", {}),
             complexity_scor=data.get("complexity_scor", 1),
             implementation_=data.get("implementation_", 12),
             estimated_cost_=data.get("estimated_cost_", "£5,000-£25,000"),
-
             # Templates
             policy_template=data.get("policy_template", ""),
             control_templat=data.get("control_templat", {}),
             evidence_templa=data.get("evidence_templa", {}),
-
             # Metadata
             is_active=data.get("is_active", True),
             version=data.get("version", "1.0"),
             created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow()
+            updated_at=datetime.utcnow(),
         )
 
         return framework
@@ -172,15 +170,18 @@ class UKComplianceLoader:
         Returns:
             List of UK compliance frameworks
         """
-        return self.db_session.query(ComplianceFramework)\
+        return (
+            self.db_session.query(ComplianceFramework)
             .filter(
                 ComplianceFramework.is_active,
-                ComplianceFramework.geographic_scop.contains(["UK"])
-            )\
+                ComplianceFramework.geographic_scop.contains(["UK"]),
+            )
             .all()
+        )
 
-    def update_framework_version(self, framework_name: str, new_version: str,
-                               description_update: str = "") -> ComplianceFramework:
+    def update_framework_version(
+        self, framework_name: str, new_version: str, description_update: str = ""
+    ) -> ComplianceFramework:
         """
         Update framework version and description.
 
@@ -195,9 +196,11 @@ class UKComplianceLoader:
         Raises:
             ValueError: If framework not found
         """
-        framework = self.db_session.query(ComplianceFramework)\
-            .filter(ComplianceFramework.name == framework_name)\
+        framework = (
+            self.db_session.query(ComplianceFramework)
+            .filter(ComplianceFramework.name == framework_name)
             .first()
+        )
 
         if not framework:
             raise ValueError(f"Framework not found: {framework_name}")
@@ -239,16 +242,16 @@ class ISO27001UKMapper:
     ISO_TO_UK_GDPR_MAPPING = {
         "A.5.1.1": {
             "uk_requirement": "Data Protection by Design and Default",
-            "ico_guidance": "Implement appropriate technical and organisational measures"
+            "ico_guidance": "Implement appropriate technical and organisational measures",
         },
         "A.8.2.1": {
             "uk_requirement": "Data Classification and Handling",
-            "ico_guidance": "Classify personal data based on sensitivity and risk"
+            "ico_guidance": "Classify personal data based on sensitivity and risk",
         },
         "A.12.6.1": {
             "uk_requirement": "Secure Data Disposal",
-            "ico_guidance": "Securely delete personal data when no longer needed"
-        }
+            "ico_guidance": "Securely delete personal data when no longer needed",
+        },
     }
 
     def map_iso_to_uk_gdpr(self, iso_controls: List[str]) -> List[Dict[str, str]]:
@@ -267,9 +270,11 @@ class ISO27001UKMapper:
                 mappings.append(self.ISO_TO_UK_GDPR_MAPPING[control])
             else:
                 # Default mapping for unmapped controls
-                mappings.append({
-                    "uk_requirement": f"General Data Protection Requirement for {control}",
-                    "ico_guidance": "Refer to ICO guidance for specific implementation"
-                })
+                mappings.append(
+                    {
+                        "uk_requirement": f"General Data Protection Requirement for {control}",
+                        "ico_guidance": "Refer to ICO guidance for specific implementation",
+                    }
+                )
 
         return mappings

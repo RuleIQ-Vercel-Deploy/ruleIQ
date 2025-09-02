@@ -1,0 +1,39 @@
+
+"type"str
+"properties"str
+
+"metadata"str
+%"Convert node to dictionary"str
+"id"strself4 4(,	(services.knowledge_graph.models.NodeType"ç$
+"
+6 ;(	"#new-object#Bdict#
+!
+7 7("#get-field# id: 
+
+7 7("	#map-set#:%
+#
+82 8(;"#get-field# type:)
+'
+8' 8(F
+"#is-instance#:	Bbool&"$
+8' 8(F
+ *8$ 8(&28G 8(K"a%
+#
+8 8("#get-field# type:&
+$
+8 8(#"#get-field# value:
+8 8(U"9%
+#
+8L 8(U"#get-field# type:
+8 8(U"â* 
+
+8 8(U"	#map-set#:+
+)
+9 9()"#get-field# properties: 
+
+9 9()"	#map-set#:)
+'
+: :(%"#get-field# metadata: 
+
+: :(%"	#map-set#:
+6 ;(	*>/home/omar/Documents/ruleIQ/services/knowledge_graph/models.py

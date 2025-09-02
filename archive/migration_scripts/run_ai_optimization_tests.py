@@ -46,7 +46,9 @@ class AIOptimizationTestRunner:
         ]
 
         start_time = time.time()
-        result = subprocess.run(cmd, cwd=self.project_root, capture_output=True, text=True)
+        result = subprocess.run(
+            cmd, cwd=self.project_root, capture_output=True, text=True
+        )
         duration = time.time() - start_time
 
         return {
@@ -74,7 +76,9 @@ class AIOptimizationTestRunner:
         ]
 
         start_time = time.time()
-        result = subprocess.run(cmd, cwd=self.project_root, capture_output=True, text=True)
+        result = subprocess.run(
+            cmd, cwd=self.project_root, capture_output=True, text=True
+        )
         duration = time.time() - start_time
 
         return {
@@ -104,7 +108,9 @@ class AIOptimizationTestRunner:
         ]
 
         start_time = time.time()
-        result = subprocess.run(cmd, cwd=self.project_root, capture_output=True, text=True)
+        result = subprocess.run(
+            cmd, cwd=self.project_root, capture_output=True, text=True
+        )
         duration = time.time() - start_time
 
         return {
@@ -115,14 +121,25 @@ class AIOptimizationTestRunner:
             "errors": result.stderr,
         }
 
-    def run_specific_test(self, test_path: str, verbose: bool = False) -> Dict[str, Any]:
+    def run_specific_test(
+        self, test_path: str, verbose: bool = False
+    ) -> Dict[str, Any]:
         """Run a specific test file."""
         print(f"🎯 Running specific test: {test_path}")
 
-        cmd = ["python", "-m", "pytest", test_path, "-v" if verbose else "-q", "--tb=short"]
+        cmd = [
+            "python",
+            "-m",
+            "pytest",
+            test_path,
+            "-v" if verbose else "-q",
+            "--tb=short",
+        ]
 
         start_time = time.time()
-        result = subprocess.run(cmd, cwd=self.project_root, capture_output=True, text=True)
+        result = subprocess.run(
+            cmd, cwd=self.project_root, capture_output=True, text=True
+        )
         duration = time.time() - start_time
 
         return {
@@ -206,7 +223,13 @@ Detailed Results:
         """Check if all test dependencies are available."""
         print("🔍 Checking test dependencies...")
 
-        required_packages = ["pytest", "pytest-asyncio", "pytest-cov", "httpx", "psutil"]
+        required_packages = [
+            "pytest",
+            "pytest-asyncio",
+            "pytest-cov",
+            "httpx",
+            "psutil",
+        ]
 
         missing_packages = []
 
@@ -245,10 +268,16 @@ def main() -> None:
     parser.add_argument(
         "--integration", "-i", action="store_true", help="Run only integration tests"
     )
-    parser.add_argument("--perf-only", action="store_true", help="Run only performance tests")
+    parser.add_argument(
+        "--perf-only", action="store_true", help="Run only performance tests"
+    )
     parser.add_argument("--test", "-t", type=str, help="Run specific test file")
-    parser.add_argument("--report", "-r", action="store_true", help="Generate detailed report")
-    parser.add_argument("--check-deps", action="store_true", help="Check test dependencies only")
+    parser.add_argument(
+        "--report", "-r", action="store_true", help="Generate detailed report"
+    )
+    parser.add_argument(
+        "--check-deps", action="store_true", help="Check test dependencies only"
+    )
 
     args = parser.parse_args()
 

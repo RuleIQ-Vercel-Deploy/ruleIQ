@@ -53,7 +53,7 @@ export function AppSidebar() {
   const isSettingsActive = settingsSubMenu.some((item) => pathname?.startsWith(item.href) ?? false);
 
   return (
-    <Sidebar className="border-r border-glass-border bg-background">
+    <Sidebar className="border-glass-border border-r bg-background">
       <SidebarHeader className="p-4">
         <Link href="/" className="flex items-center gap-2">
           <span className="gradient-text text-2xl font-bold">ruleIQ</span>

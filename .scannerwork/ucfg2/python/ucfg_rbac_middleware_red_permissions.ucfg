@@ -1,0 +1,79 @@
+
+Gapi.middleware.rbac_middleware.RBACMiddleware._get_required_permissionsI
+=/home/omar/Documents/ruleIQ/api/middleware/rbac_middleware.pyÚ Ú(!"2*Û
+2
+Û ä(€
+~
+
+å+ å(A
+%5"__id*d
+
+__unknown_file (H*F/
+-api.middleware.rbac_middleware.RBACMiddleware"
+route_permissions?=
+
+å+ å(I
+%6*"
+
+__unknown_file (
+
+%52items*
+4
+6*A
+4
+é é(
+
+é é(
+%1"list"
+
+é é(
+
+%1*†
+6
+æ æ("jh
+
+æ æ("
+%4*'
+
+__unknown_file (
+	
+pattern*$
+
+__unknown_file (
+
+path2match*	
+4
+6
+7*Þ
+7
+ç ç(9
+
+ç6 ç(8
+%2"listš—
+
+ç ç(9
+%3*2
+
+__unknown_file (
+
+method_permissions*&
+
+__unknown_file (
+
+
+method*"
+
+__unknown_file (
+
+%22get"
+
+ç ç(9
+
+%3:
+
+Ú( Ú(1
+path:
+
+Ú3 Ú(>
+methodB1/
+-api.middleware.rbac_middleware.RBACMiddlewareH

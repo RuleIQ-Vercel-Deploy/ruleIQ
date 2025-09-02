@@ -1,0 +1,53 @@
+
+mock_services.MockNeo4jSessionB
+8/home/omar/Documents/ruleIQ/tests/mocks/mock_services.py ("4"5*[
+3
+mock_services.py0.
+ (
+%1"mock_services.MockNeo4jSession"
+ (
+
+%1*W
+4 ("C
+A
+ ("
+%2"__id*)
+
+__unknown_file (
+
+	mock_data*
+6*j
+5& ((
+& ((
+%3"dict<
+:
+& ((
+%2"__id*"
+
+__unknown_file (
+
+%3*
+6*…
+6' ((g
+e
+ ((/ 
+mock_services.MockNeo4jSession"
+	mock_data"__id*"
+
+__unknown_file (
+
+%2
+  ("
+%4"listn
+l
+ ("6 
+mock_services.MockNeo4jSession"
+queries_executed"__id*"
+
+__unknown_file (
+
+%4*
+3:
+ (7
+	mock_dataB" 
+mock_services.MockNeo4jSessionH

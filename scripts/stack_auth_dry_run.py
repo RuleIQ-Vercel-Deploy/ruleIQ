@@ -20,6 +20,7 @@ from datetime import datetime
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
+
 class StackAuthDryRunValidator:
     """Validates Stack Auth conversion readiness without making changes"""
 
@@ -36,7 +37,7 @@ class StackAuthDryRunValidator:
             "severity": severity,
             "file": file_path,
             "message": message,
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
 
         if severity == "ERROR":
@@ -57,20 +58,20 @@ class StackAuthDryRunValidator:
             "endpoints_count": 0,
             "protected_endpoints": 0,
             "mixed_auth": False,
-            "conversion_ready": False
+            "conversion_ready": False,
         }
 
         try:
-            with open(router_path, 'r', encoding='utf-8') as f:
+            with open(router_path, "r", encoding="utf-8") as f:
                 content = f.read()
 
             # Check for JWT imports
             jwt_patterns = [
-                r'from api\.auth import.*oauth2_scheme',
-                r'from api\.dependencies\.auth import.*get_current_user',
-                r'from api\.auth import.*get_current_user',
-                r'oauth2_scheme',
-                r'get_current_user.*=.*Depends'
+                r"from api\.auth import.*oauth2_scheme",
+                r"from api\.dependencies\.auth import.*get_current_user",
+                r"from api\.auth import.*get_current_user",
+                r"oauth2_scheme",
+                r"get_current_user.*=.*Depends",
             ]
 
             for pattern in jwt_patterns:
@@ -81,10 +82,10 @@ class StackAuthDryRunValidator:
 
             # Check for Stack Auth imports
             stack_auth_patterns = [
-                r'from api\.dependencies\.stack_auth import',
-                r'get_current_stack_user',
-                r'get_current_user_id',
-                r'get_current_user_email'
+                r"from api\.dependencies\.stack_auth import",
+                r"get_current_stack_user",
+                r"get_current_user_id",
+                r"get_current_user_email",
             ]
 
             for pattern in stack_auth_patterns:
@@ -95,8 +96,8 @@ class StackAuthDryRunValidator:
 
             # Count endpoints and protected endpoints
             endpoint_patterns = [
-                r'@router\.(get|post|put|delete|patch)',
-                r'@\w+\.route'
+                r"@router\.(get|post|put|delete|patch)",
+                r"@\w+\.route",
             ]
 
             for pattern in endpoint_patterns:
@@ -105,9 +106,9 @@ class StackAuthDryRunValidator:
 
             # Count protected endpoints (those with Depends for auth)
             protected_patterns = [
-                r'Depends\(get_current_user\)',
-                r'Depends\(get_current_stack_user\)',
-                r'Depends\(oauth2_scheme\)'
+                r"Depends\(get_current_user\)",
+                r"Depends\(get_current_stack_user\)",
+                r"Depends\(oauth2_scheme\)",
             ]
 
             for pattern in protected_patterns:
@@ -115,7 +116,9 @@ class StackAuthDryRunValidator:
                 results["protected_endpoints"] += len(matches)
 
             # Check for mixed auth (both JWT and Stack Auth)
-            results["mixed_auth"] = results["has_jwt_imports"] and results["has_stack_auth_imports"]
+            results["mixed_auth"] = (
+                results["has_jwt_imports"] and results["has_stack_auth_imports"]
+            )
 
             # Determine conversion readiness
             if results["has_stack_auth_imports"] and not results["has_jwt_imports"]:
@@ -139,32 +142,52 @@ class StackAuthDryRunValidator:
         print("\n=== Validating Stack Auth Dependencies ===")
 
         # Check Stack Auth dependency file
-        stack_auth_dep_path = self.project_root / "api" / "dependencies" / "stack_auth.py"
+        stack_auth_dep_path = (
+            self.project_root / "api" / "dependencies" / "stack_auth.py"
+        )
         if not stack_auth_dep_path.exists():
-            self.log_issue("ERROR", "api/dependencies/stack_auth.py", "Stack Auth dependencies file missing")
+            self.log_issue(
+                "ERROR",
+                "api/dependencies/stack_auth.py",
+                "Stack Auth dependencies file missing",
+            )
             return False
 
         # Check Stack Auth middleware
-        stack_auth_middleware_path = self.project_root / "api" / "middleware" / "stack_auth_middleware.py"
+        stack_auth_middleware_path = (
+            self.project_root / "api" / "middleware" / "stack_auth_middleware.py"
+        )
         if not stack_auth_middleware_path.exists():
-            self.log_issue("ERROR", "api/middleware/stack_auth_middleware.py", "Stack Auth middleware file missing")
+            self.log_issue(
+                "ERROR",
+                "api/middleware/stack_auth_middleware.py",
+                "Stack Auth middleware file missing",
+            )
             return False
 
         # Check main.py has Stack Auth middleware registered
         main_py_path = self.project_root / "main.py"
         try:
-            with open(main_py_path, 'r') as f:
+            with open(main_py_path, "r") as f:
                 main_content = f.read()
 
             if "StackAuthMiddleware" not in main_content:
-                self.log_issue("ERROR", "main.py", "Stack Auth middleware not registered")
+                self.log_issue(
+                    "ERROR", "main.py", "Stack Auth middleware not registered"
+                )
                 return False
 
             if "app.add_middleware(StackAuthMiddleware" not in main_content:
-                self.log_issue("WARNING", "main.py", "Stack Auth middleware may not be properly added")
+                self.log_issue(
+                    "WARNING",
+                    "main.py",
+                    "Stack Auth middleware may not be properly added",
+                )
 
         except Exception as e:
-            self.log_issue("ERROR", "main.py", f"Could not verify Stack Auth middleware: {e}")
+            self.log_issue(
+                "ERROR", "main.py", f"Could not verify Stack Auth middleware: {e}"
+            )
             return False
 
         print("✅ Stack Auth dependencies validated")
@@ -174,10 +197,7 @@ class StackAuthDryRunValidator:
         """Validate required environment variables"""
         print("\n=== Validating Environment Variables ===")
 
-        required_vars = [
-            "STACK_PROJECT_ID",
-            "STACK_SECRET_SERVER_KEY"
-        ]
+        required_vars = ["STACK_PROJECT_ID", "STACK_SECRET_SERVER_KEY"]
 
         missing_vars = []
         for var in required_vars:
@@ -185,7 +205,11 @@ class StackAuthDryRunValidator:
                 missing_vars.append(var)
 
         if missing_vars:
-            self.log_issue("ERROR", ".env", f"Missing environment variables: {', '.join(missing_vars)}")
+            self.log_issue(
+                "ERROR",
+                ".env",
+                f"Missing environment variables: {', '.join(missing_vars)}",
+            )
             return False
 
         print("✅ Environment variables validated")
@@ -196,7 +220,7 @@ class StackAuthDryRunValidator:
         print(f"\n--- Simulating conversion for {router_path.name} ---")
 
         try:
-            with open(router_path, 'r', encoding='utf-8') as f:
+            with open(router_path, "r", encoding="utf-8") as f:
                 original_content = f.read()
 
             simulated_content = original_content
@@ -204,9 +228,9 @@ class StackAuthDryRunValidator:
 
             # Simulate JWT import removal
             jwt_import_patterns = [
-                (r'from api\.auth import.*oauth2_scheme.*\n', ''),
-                (r'from api\.dependencies\.auth import.*get_current_user.*\n', ''),
-                (r'from api\.auth import.*get_current_user.*\n', ''),
+                (r"from api\.auth import.*oauth2_scheme.*\n", ""),
+                (r"from api\.dependencies\.auth import.*get_current_user.*\n", ""),
+                (r"from api\.auth import.*get_current_user.*\n", ""),
             ]
 
             for pattern, replacement in jwt_import_patterns:
@@ -217,25 +241,39 @@ class StackAuthDryRunValidator:
             # Simulate Stack Auth import addition
             if "from api.dependencies.stack_auth import" not in simulated_content:
                 # Find FastAPI imports to insert after
-                fastapi_import_match = re.search(r'(from fastapi import.*\n)', simulated_content)
+                fastapi_import_match = re.search(
+                    r"(from fastapi import.*\n)", simulated_content
+                )
                 if fastapi_import_match:
                     insert_pos = fastapi_import_match.end()
                     stack_auth_import = "from api.dependencies.stack_auth import get_current_stack_user\n"
-                    simulated_content = simulated_content[:insert_pos] + stack_auth_import + simulated_content[insert_pos:]
+                    simulated_content = (
+                        simulated_content[:insert_pos]
+                        + stack_auth_import
+                        + simulated_content[insert_pos:]
+                    )
                     changes_made.append("Add Stack Auth import")
 
             # Simulate JWT dependency replacement
             jwt_dependency_patterns = [
-                (r'Depends\(oauth2_scheme\)', 'Depends(get_current_stack_user)'),
-                (r'Depends\(get_current_user\)', 'Depends(get_current_stack_user)'),
-                (r'current_user:\s*User\s*=\s*Depends\(get_current_user\)', 'current_user: dict = Depends(get_current_stack_user)'),
-                (r'token:\s*str\s*=\s*Depends\(oauth2_scheme\)', 'current_user: dict = Depends(get_current_stack_user)')
+                (r"Depends\(oauth2_scheme\)", "Depends(get_current_stack_user)"),
+                (r"Depends\(get_current_user\)", "Depends(get_current_stack_user)"),
+                (
+                    r"current_user:\s*User\s*=\s*Depends\(get_current_user\)",
+                    "current_user: dict = Depends(get_current_stack_user)",
+                ),
+                (
+                    r"token:\s*str\s*=\s*Depends\(oauth2_scheme\)",
+                    "current_user: dict = Depends(get_current_stack_user)",
+                ),
             ]
 
             for pattern, replacement in jwt_dependency_patterns:
                 if re.search(pattern, simulated_content):
                     simulated_content = re.sub(pattern, replacement, simulated_content)
-                    changes_made.append(f"Replace dependency: {pattern} -> {replacement}")
+                    changes_made.append(
+                        f"Replace dependency: {pattern} -> {replacement}"
+                    )
 
             # Check if simulated content would be valid Python
             try:
@@ -243,15 +281,19 @@ class StackAuthDryRunValidator:
                 syntax_valid = True
             except SyntaxError as e:
                 syntax_valid = False
-                self.log_issue("ERROR", str(router_path), f"Simulated conversion would create syntax error: {e}")
+                self.log_issue(
+                    "ERROR",
+                    str(router_path),
+                    f"Simulated conversion would create syntax error: {e}",
+                )
 
             return {
                 "file": str(router_path.relative_to(self.project_root)),
                 "changes_made": changes_made,
                 "syntax_valid": syntax_valid,
-                "original_lines": len(original_content.split('\n')),
-                "simulated_lines": len(simulated_content.split('\n')),
-                "simulation_successful": syntax_valid and len(changes_made) > 0
+                "original_lines": len(original_content.split("\n")),
+                "simulated_lines": len(simulated_content.split("\n")),
+                "simulation_successful": syntax_valid and len(changes_made) > 0,
             }
 
         except Exception as e:
@@ -259,7 +301,7 @@ class StackAuthDryRunValidator:
             return {
                 "file": str(router_path.relative_to(self.project_root)),
                 "error": str(e),
-                "simulation_successful": False
+                "simulation_successful": False,
             }
 
     def run_tests_dry_run(self) -> bool:
@@ -273,14 +315,18 @@ class StackAuthDryRunValidator:
                 cwd=self.project_root,
                 capture_output=True,
                 text=True,
-                timeout=300  # 5 minutes timeout
+                timeout=300,  # 5 minutes timeout
             )
 
             if result.returncode == 0:
                 print("✅ Current tests pass - safe to proceed with conversion")
                 return True
             else:
-                self.log_issue("ERROR", "tests/", f"Tests failing before conversion: {result.stdout}\n{result.stderr}")
+                self.log_issue(
+                    "ERROR",
+                    "tests/",
+                    f"Tests failing before conversion: {result.stdout}\n{result.stderr}",
+                )
                 return False
 
         except subprocess.TimeoutExpired:
@@ -290,18 +336,28 @@ class StackAuthDryRunValidator:
             self.log_issue("ERROR", "tests/", f"Could not run tests: {e}")
             return False
 
-    def generate_conversion_plan(self, router_analyses: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def generate_conversion_plan(
+        self, router_analyses: List[Dict[str, Any]]
+    ) -> Dict[str, Any]:
         """Generate a prioritized conversion plan"""
         print("\n=== Generating Conversion Plan ===")
 
-        needs_conversion = [r for r in router_analyses if r.get("status") == "NEEDS_CONVERSION"]
+        needs_conversion = [
+            r for r in router_analyses if r.get("status") == "NEEDS_CONVERSION"
+        ]
         mixed_auth = [r for r in router_analyses if r.get("status") == "MIXED_AUTH"]
-        already_converted = [r for r in router_analyses if r.get("status") == "CONVERTED"]
+        already_converted = [
+            r for r in router_analyses if r.get("status") == "CONVERTED"
+        ]
         no_auth = [r for r in router_analyses if r.get("status") == "NO_AUTH"]
 
         # Priority order: smallest files first, then by endpoint count
-        needs_conversion.sort(key=lambda x: (x.get("endpoints_count", 0), x.get("protected_endpoints", 0)))
-        mixed_auth.sort(key=lambda x: (x.get("endpoints_count", 0), x.get("protected_endpoints", 0)))
+        needs_conversion.sort(
+            key=lambda x: (x.get("endpoints_count", 0), x.get("protected_endpoints", 0))
+        )
+        mixed_auth.sort(
+            key=lambda x: (x.get("endpoints_count", 0), x.get("protected_endpoints", 0))
+        )
 
         plan = {
             "total_routers": len(router_analyses),
@@ -312,10 +368,10 @@ class StackAuthDryRunValidator:
             "conversion_order": {
                 "phase_1_mixed_auth": [r["file"] for r in mixed_auth],
                 "phase_2_jwt_only": [r["file"] for r in needs_conversion],
-                "phase_3_validation": [r["file"] for r in already_converted]
+                "phase_3_validation": [r["file"] for r in already_converted],
             },
             "estimated_time_minutes": len(needs_conversion) * 5 + len(mixed_auth) * 10,
-            "risk_level": "LOW" if len(mixed_auth) == 0 else "MEDIUM"
+            "risk_level": "LOW" if len(mixed_auth) == 0 else "MEDIUM",
         }
 
         return plan
@@ -334,7 +390,11 @@ class StackAuthDryRunValidator:
 
         # Analyze all router files
         router_files = list(self.api_routers_path.glob("*.py"))
-        router_files = [f for f in router_files if f.name != "__init__.py" and ".backup" not in f.name]
+        router_files = [
+            f
+            for f in router_files
+            if f.name != "__init__.py" and ".backup" not in f.name
+        ]
 
         print(f"\n📁 Found {len(router_files)} router files to analyze")
 
@@ -369,7 +429,7 @@ class StackAuthDryRunValidator:
             "simulation_results": simulation_results,
             "conversion_plan": conversion_plan,
             "issues": self.issues,
-            "warnings": self.warnings
+            "warnings": self.warnings,
         }
 
         return summary
@@ -388,9 +448,15 @@ def main() -> Optional[int]:
 
         if results["validation_successful"]:
             print("✅ Dry run PASSED - Ready for conversion")
-            print(f"📊 Routers needing conversion: {results['conversion_plan']['needs_conversion']}")
-            print(f"📊 Routers with mixed auth: {results['conversion_plan']['mixed_auth']}")
-            print(f"⏱️  Estimated conversion time: {results['conversion_plan']['estimated_time_minutes']} minutes")
+            print(
+                f"📊 Routers needing conversion: {results['conversion_plan']['needs_conversion']}"
+            )
+            print(
+                f"📊 Routers with mixed auth: {results['conversion_plan']['mixed_auth']}"
+            )
+            print(
+                f"⏱️  Estimated conversion time: {results['conversion_plan']['estimated_time_minutes']} minutes"
+            )
             print(f"⚠️  Risk level: {results['conversion_plan']['risk_level']}")
         else:
             print("❌ Dry run FAILED - Issues must be resolved first")
@@ -407,8 +473,9 @@ def main() -> Optional[int]:
 
         # Save detailed results
         import json
+
         results_file = validator.project_root / "stack_auth_dry_run_results.json"
-        with open(results_file, 'w') as f:
+        with open(results_file, "w") as f:
             json.dump(results, f, indent=2)
         print(f"📝 Detailed results saved to: {results_file}")
 

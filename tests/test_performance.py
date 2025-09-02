@@ -42,7 +42,9 @@ class TestAPIResponseTimes:
                 elif method == "POST":
                     # Use appropriate test data for POST endpoints
                     test_data = self._get_test_data_for_endpoint(endpoint)
-                    response = client.post(endpoint, headers=authenticated_headers, json=test_data)
+                    response = client.post(
+                        endpoint, headers=authenticated_headers, json=test_data
+                    )
 
                 end_time = time.time()
                 response_time = end_time - start_time
@@ -57,19 +59,21 @@ class TestAPIResponseTimes:
                 ]  # 95th percentile
 
                 # Assert response times meet requirements
-                assert avg_response_time <= expected_times["api_calls"], (
-                    f"Average response time for {endpoint} ({avg_response_time:.2f}s) exceeds limit"
-                )
+                assert (
+                    avg_response_time <= expected_times["api_calls"]
+                ), f"Average response time for {endpoint} ({avg_response_time:.2f}s) exceeds limit"
 
-                assert p95_response_time <= expected_times["api_calls"] * 1.5, (
-                    f"95th percentile response time for {endpoint} ({p95_response_time:.2f}s) too high"
-                )
+                assert (
+                    p95_response_time <= expected_times["api_calls"] * 1.5
+                ), f"95th percentile response time for {endpoint} ({p95_response_time:.2f}s) too high"
 
     def test_database_query_performance(
         self, client, authenticated_headers, db_session, performance_test_data
     ):
         """Test database query performance"""
-        expected_db_time = performance_test_data["expected_response_times"]["database_queries"]
+        expected_db_time = performance_test_data["expected_response_times"][
+            "database_queries"
+        ]
 
         # Test complex queries that might be slow
         complex_endpoints = [
@@ -91,9 +95,9 @@ class TestAPIResponseTimes:
 
             if query_times:
                 avg_query_time = statistics.mean(query_times)
-                assert avg_query_time <= expected_db_time * 3, (
-                    f"Database query time for {endpoint} ({avg_query_time:.2f}s) too slow"
-                )
+                assert (
+                    avg_query_time <= expected_db_time * 3
+                ), f"Database query time for {endpoint} ({avg_query_time:.2f}s) too slow"
 
     def _get_test_data_for_endpoint(self, endpoint: str) -> dict:
         """Get appropriate test data for POST endpoints"""
@@ -118,7 +122,9 @@ class TestAIGenerationPerformance:
         self, client, authenticated_headers, mock_ai_client, performance_test_data
     ):
         """Test AI generation response times"""
-        expected_ai_time = performance_test_data["expected_response_times"]["ai_generation"]
+        expected_ai_time = performance_test_data["expected_response_times"][
+            "ai_generation"
+        ]
 
         # Mock AI with realistic delay
         def mock_ai_with_delay(*args, **kwargs):
@@ -142,7 +148,9 @@ class TestAIGenerationPerformance:
                 start_time = time.time()
 
                 test_data = self._get_ai_test_data(endpoint)
-                response = client.post(endpoint, headers=authenticated_headers, json=test_data)
+                response = client.post(
+                    endpoint, headers=authenticated_headers, json=test_data
+                )
 
                 end_time = time.time()
 
@@ -151,11 +159,13 @@ class TestAIGenerationPerformance:
 
             if ai_times:
                 avg_ai_time = statistics.mean(ai_times)
-                assert avg_ai_time <= expected_ai_time, (
-                    f"AI generation time for {endpoint} ({avg_ai_time:.2f}s) exceeds limit"
-                )
+                assert (
+                    avg_ai_time <= expected_ai_time
+                ), f"AI generation time for {endpoint} ({avg_ai_time:.2f}s) exceeds limit"
 
-    def test_ai_content_caching_performance(self, client, authenticated_headers, mock_ai_client):
+    def test_ai_content_caching_performance(
+        self, client, authenticated_headers, mock_ai_client
+    ):
         """Test AI content caching improves performance"""
         mock_ai_client.generate_content.return_value.text = "Cached content test"
 
@@ -180,11 +190,13 @@ class TestAIGenerationPerformance:
         if response_1.status_code == 201 and response_2.status_code == 201:
             # Second request should be significantly faster due to caching
             speed_improvement = first_request_time / second_request_time
-            assert speed_improvement >= 1.5, (
-                f"Caching should improve performance, got {speed_improvement:.2f}x speedup"
-            )
+            assert (
+                speed_improvement >= 1.5
+            ), f"Caching should improve performance, got {speed_improvement:.2f}x speedup"
 
-    def test_batch_ai_processing_efficiency(self, client, authenticated_headers, mock_ai_client):
+    def test_batch_ai_processing_efficiency(
+        self, client, authenticated_headers, mock_ai_client
+    ):
         """Test batch processing of AI requests"""
         mock_ai_client.generate_content.return_value.text = "Batch processed content"
 
@@ -213,9 +225,9 @@ class TestAIGenerationPerformance:
         if batch_response.status_code == 201:
             total_single_time = sum(single_times)
             efficiency_ratio = total_single_time / batch_time
-            assert efficiency_ratio >= 1.2, (
-                f"Batch processing should be more efficient, got {efficiency_ratio:.2f}x improvement"
-            )
+            assert (
+                efficiency_ratio >= 1.2
+            ), f"Batch processing should be more efficient, got {efficiency_ratio:.2f}x improvement"
 
     def _get_ai_test_data(self, endpoint: str) -> dict:
         """Get test data for AI endpoints"""
@@ -239,7 +251,9 @@ class TestAIGenerationPerformance:
 class TestConcurrentUserLoad:
     """Test system performance under concurrent user load"""
 
-    def test_concurrent_user_simulation(self, client, authenticated_headers, performance_test_data):
+    def test_concurrent_user_simulation(
+        self, client, authenticated_headers, performance_test_data
+    ):
         """Test system behavior with multiple concurrent users"""
         concurrent_users = performance_test_data["concurrent_users"]
 
@@ -250,14 +264,14 @@ class TestConcurrentUserLoad:
                 )
 
                 # Verify success rate under load
-                assert success_rates["success_rate"] >= 0.95, (
-                    f"Success rate {success_rates['success_rate']:.2f} too low for {user_count} users"
-                )
+                assert (
+                    success_rates["success_rate"] >= 0.95
+                ), f"Success rate {success_rates['success_rate']:.2f} too low for {user_count} users"
 
                 # Verify response times don't degrade too much
-                assert success_rates["avg_response_time"] <= 5.0, (
-                    f"Response time {success_rates['avg_response_time']:.2f}s too high under load"
-                )
+                assert (
+                    success_rates["avg_response_time"] <= 5.0
+                ), f"Response time {success_rates['avg_response_time']:.2f}s too high under load"
 
     def test_database_connection_pooling(self, client, authenticated_headers):
         """Test database connection pooling under load"""
@@ -272,9 +286,9 @@ class TestConcurrentUserLoad:
             results = [future.result() for future in as_completed(futures)]
 
         success_rate = sum(results) / len(results)
-        assert success_rate >= 0.9, (
-            f"Database connection pooling failed, success rate: {success_rate:.2f}"
-        )
+        assert (
+            success_rate >= 0.9
+        ), f"Database connection pooling failed, success rate: {success_rate:.2f}"
 
     def test_memory_usage_under_load(self, client, authenticated_headers):
         """Test memory usage doesn't grow excessively under load"""
@@ -290,7 +304,9 @@ class TestConcurrentUserLoad:
         memory_increase = final_memory - initial_memory
 
         # Memory shouldn't increase by more than 50MB under normal load
-        assert memory_increase <= 50, f"Memory usage increased by {memory_increase:.2f}MB"
+        assert (
+            memory_increase <= 50
+        ), f"Memory usage increased by {memory_increase:.2f}MB"
 
     def _simulate_concurrent_users(self, client, headers, user_count: int) -> dict:
         """Simulate concurrent users and return performance metrics"""
@@ -364,13 +380,15 @@ class TestSoakTesting:
 
         # Verify system stability
         error_rate = error_count / request_count if request_count > 0 else 1
-        assert error_rate <= 0.05, f"Error rate {error_rate:.2f} too high during soak test"
+        assert (
+            error_rate <= 0.05
+        ), f"Error rate {error_rate:.2f} too high during soak test"
 
         if response_times:
             avg_response_time = statistics.mean(response_times)
-            assert avg_response_time <= 3.0, (
-                f"Average response time degraded to {avg_response_time:.2f}s"
-            )
+            assert (
+                avg_response_time <= 3.0
+            ), f"Average response time degraded to {avg_response_time:.2f}s"
 
     def test_memory_leak_detection(self, client, authenticated_headers):
         """Test for memory leaks during extended operation"""
@@ -398,9 +416,9 @@ class TestSoakTesting:
 
             memory_growth = avg_second_half - avg_first_half
             # Memory shouldn't grow by more than 20MB over test period
-            assert memory_growth <= 20, (
-                f"Potential memory leak detected: {memory_growth:.2f}MB growth"
-            )
+            assert (
+                memory_growth <= 20
+            ), f"Potential memory leak detected: {memory_growth:.2f}MB growth"
 
     def test_connection_pool_exhaustion(self, client, authenticated_headers):
         """Test behavior when connection pool is exhausted"""
@@ -408,7 +426,9 @@ class TestSoakTesting:
         def make_long_request():
             try:
                 # Simulate slow endpoint
-                response = client.get("/api/readiness/assessment", headers=authenticated_headers)
+                response = client.get(
+                    "/api/readiness/assessment", headers=authenticated_headers
+                )
                 return response.status_code
             except Exception:
                 return 500
@@ -422,9 +442,9 @@ class TestSoakTesting:
         success_codes = [code for code in status_codes if code in [200, 429, 503]]
         success_rate = len(success_codes) / len(status_codes)
 
-        assert success_rate >= 0.8, (
-            f"System should handle connection exhaustion gracefully, got {success_rate:.2f}"
-        )
+        assert (
+            success_rate >= 0.8
+        ), f"System should handle connection exhaustion gracefully, got {success_rate:.2f}"
 
 
 @pytest.mark.performance
@@ -444,7 +464,11 @@ class TestResourceUtilization:
                 client.post(
                     "/api/business-profiles",
                     headers=authenticated_headers,
-                    json={"company_name": "Test", "industry": "Tech", "employee_count": 25},
+                    json={
+                        "company_name": "Test",
+                        "industry": "Tech",
+                        "employee_count": 25,
+                    },
                 )
 
         # Start load generation
@@ -480,7 +504,11 @@ class TestResourceUtilization:
             client.post(
                 "/api/readiness/reports",
                 headers=authenticated_headers,
-                json={"title": "Test Report", "report_type": "executive", "format": "pdf"},
+                json={
+                    "title": "Test Report",
+                    "report_type": "executive",
+                    "format": "pdf",
+                },
             )
 
         # Get final I/O stats
@@ -498,23 +526,28 @@ class TestResourceUtilization:
         """Test response compression reduces bandwidth usage"""
         # Request with compression
         compressed_response = client.get(
-            "/api/frameworks", headers={**authenticated_headers, "Accept-Encoding": "gzip"}
+            "/api/frameworks",
+            headers={**authenticated_headers, "Accept-Encoding": "gzip"},
         )
 
         # Request without compression
         uncompressed_response = client.get(
-            "/api/frameworks", headers={**authenticated_headers, "Accept-Encoding": "identity"}
+            "/api/frameworks",
+            headers={**authenticated_headers, "Accept-Encoding": "identity"},
         )
 
-        if compressed_response.status_code == 200 and uncompressed_response.status_code == 200:
+        if (
+            compressed_response.status_code == 200
+            and uncompressed_response.status_code == 200
+        ):
             compressed_size = len(compressed_response.content)
             uncompressed_size = len(uncompressed_response.content)
 
             if uncompressed_size > 1024:  # Only test for responses > 1KB
                 compression_ratio = uncompressed_size / compressed_size
-                assert compression_ratio >= 1.2, (
-                    f"Compression should reduce size, got {compression_ratio:.2f}x ratio"
-                )
+                assert (
+                    compression_ratio >= 1.2
+                ), f"Compression should reduce size, got {compression_ratio:.2f}x ratio"
 
 
 @pytest.mark.performance
@@ -541,7 +574,9 @@ class TestScalabilityLimits:
             results = [future.result() for future in as_completed(futures)]
 
         success_rate = sum(results) / len(results)
-        assert success_rate >= 0.8, f"Assessment creation success rate {success_rate:.2f} too low"
+        assert (
+            success_rate >= 0.8
+        ), f"Assessment creation success rate {success_rate:.2f} too low"
 
     def test_large_data_set_handling(self, client, authenticated_headers):
         """Test handling of large data sets"""
@@ -563,7 +598,9 @@ class TestScalabilityLimits:
         processing_time = time.time() - start_time
 
         assert response.status_code == 201, "Should handle large data sets"
-        assert processing_time <= 5.0, f"Large data processing too slow: {processing_time:.2f}s"
+        assert (
+            processing_time <= 5.0
+        ), f"Large data processing too slow: {processing_time:.2f}s"
 
     def test_pagination_performance(self, client, authenticated_headers):
         """Test pagination performance with large result sets"""
@@ -573,15 +610,16 @@ class TestScalabilityLimits:
         for page_size in page_sizes:
             start_time = time.time()
             response = client.get(
-                f"/api/audit/trail?page=1&size={page_size}", headers=authenticated_headers
+                f"/api/audit/trail?page=1&size={page_size}",
+                headers=authenticated_headers,
             )
             response_time = time.time() - start_time
 
             if response.status_code == 200:
                 # Larger page sizes shouldn't be drastically slower
-                assert response_time <= 3.0, (
-                    f"Pagination with page_size={page_size} too slow: {response_time:.2f}s"
-                )
+                assert (
+                    response_time <= 3.0
+                ), f"Pagination with page_size={page_size} too slow: {response_time:.2f}s"
 
                 # Verify pagination metadata
                 data = response.json()

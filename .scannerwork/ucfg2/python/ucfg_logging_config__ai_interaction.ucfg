@@ -1,0 +1,117 @@
+
+9config.logging_config.ComplianceLogger.log_ai_interaction@
+4/home/omar/Documents/ruleIQ/config/logging_config.pyè è("2*Ô
+2
+ê ê((n
+l
+
+ë ë(
+%1"__id*R
+
+__unknown_file (6*4(
+&config.logging_config.ComplianceLogger"
+logger_
+]
+
+í í(*
+%2"__concat*&
+
+í í("
+AI interaction with *
+
+í# í((	
+
+model
+
+ì ò(
+%3"dictü
+ú
+
+î î(.
+%4"__mapSet*"
+
+__unknown_file (
+
+%3**
+
+__unknown_file (
+
+event_type*.
+
+__unknown_file (
+ai_interactionî
+ë
+
+ï ï(!
+%5"__mapSet*"
+
+__unknown_file (
+
+%3*(
+
+__unknown_file (
+
+ai_model*%
+
+__unknown_file (	
+
+modelù
+ö
+
+ñ ñ(*
+%6"__mapSet*"
+
+__unknown_file (
+
+%3*+
+
+__unknown_file (
+prompt_type*+
+
+__unknown_file (
+
+prompt_typeù
+ö
+
+ó ó(*
+%7"__mapSet*"
+
+__unknown_file (
+
+%3*+
+
+__unknown_file (
+tokens_used*+
+
+__unknown_file (
+
+tokens_usedsq
+
+ë ô(	
+%8*"
+
+__unknown_file (
+
+%1*"
+
+__unknown_file (
+
+%22info:
+extra
+
+%3*
+3*9
+3
+logging_config.py"
+õ õ(
+implicit return:
+
+è! è(+
+model:
+
+è- è(=
+prompt_type:
+
+è? è(`
+tokens_usedB*(
+&config.logging_config.ComplianceLoggerH

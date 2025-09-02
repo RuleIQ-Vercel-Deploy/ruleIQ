@@ -9,6 +9,7 @@ from enum import Enum
 
 class FrameworkCategory(str, Enum):
     """Categories of compliance frameworks"""
+
     DATA_PROTECTION = "Data Protection"
     FINANCIAL_SERVICES = "Financial Services"
     HEALTHCARE = "Healthcare"
@@ -18,6 +19,7 @@ class FrameworkCategory(str, Enum):
 
 class GeographicRegion(str, Enum):
     """Geographic regions for frameworks"""
+
     UK = "UK"
     ENGLAND = "England"
     SCOTLAND = "Scotland"
@@ -61,12 +63,16 @@ class UKFrameworkSchema(BaseModel):
     version: str = Field(default="1.0", pattern=r"^\d+\.\d+(\.\d+)?$")
     is_active: bool = Field(default=True)
 
-    @validator('geographic_scope')
+    @validator("geographic_scope")
     def validate_uk_scope(cls, v):
         """Ensure at least one UK region is included"""
-        uk_regions = {GeographicRegion.UK, GeographicRegion.ENGLAND,
-                     GeographicRegion.SCOTLAND, GeographicRegion.WALES,
-                     GeographicRegion.NORTHERN_IRELAND}
+        uk_regions = {
+            GeographicRegion.UK,
+            GeographicRegion.ENGLAND,
+            GeographicRegion.SCOTLAND,
+            GeographicRegion.WALES,
+            GeographicRegion.NORTHERN_IRELAND,
+        }
         if not set(v) & uk_regions:
             raise ValueError("UK frameworks must include at least one UK region")
         return v
@@ -110,7 +116,7 @@ class FrameworkLoadRequest(BaseModel):
     frameworks: List[UKFrameworkSchema]
     overwrite_existing: bool = Field(default=False)
 
-    @validator('frameworks')
+    @validator("frameworks")
     def validate_frameworks_not_empty(cls, v):
         if not v:
             raise ValueError("At least one framework must be provided")
@@ -140,9 +146,13 @@ class FrameworkQueryParams(BaseModel):
     complexity_max: Optional[int] = Field(None, ge=1, le=10)
     active_only: bool = Field(True, description="Include only active frameworks")
 
-    @validator('complexity_max')
+    @validator("complexity_max")
     def validate_complexity_range(cls, v, values):
-        if v is not None and 'complexity_min' in values and values['complexity_min'] is not None:
-            if v < values['complexity_min']:
+        if (
+            v is not None
+            and "complexity_min" in values
+            and values["complexity_min"] is not None
+        ):
+            if v < values["complexity_min"]:
                 raise ValueError("complexity_max must be >= complexity_min")
         return v

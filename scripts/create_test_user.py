@@ -4,13 +4,15 @@ Create a test user for API testing
 """
 import asyncio
 import sys
-sys.path.append('/home/omar/Documents/ruleIQ')
+
+sys.path.append("/home/omar/Documents/ruleIQ")
 
 from database.db_setup import get_async_db
 from database.user import User
 from api.dependencies.auth import get_password_hash
 from sqlalchemy.future import select
 import uuid
+
 
 async def create_test_user():
     """Create a test user for API testing"""
@@ -39,7 +41,7 @@ async def create_test_user():
                     email=email,
                     hashed_password=get_password_hash("TestPassword123!"),
                     is_active=True,
-                    is_superuser=False
+                    is_superuser=False,
                 )
                 db.add(new_user)
                 await db.commit()
@@ -56,6 +58,7 @@ async def create_test_user():
             print(f"❌ Error creating/updating user: {e}")
             await db.rollback()
             break
+
 
 if __name__ == "__main__":
     asyncio.run(create_test_user())

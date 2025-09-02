@@ -1,11 +1,9 @@
 import { Inter } from 'next/font/google';
 
-
 import { GlobalErrorBoundary } from '@/components/error-boundary-global';
 import { ThemeProvider } from '@/hooks/use-theme';
 import { QueryProvider } from '@/lib/tanstack-query/provider';
 import { cn } from '@/lib/utils';
-
 
 import type { Metadata } from 'next';
 import type React from 'react';

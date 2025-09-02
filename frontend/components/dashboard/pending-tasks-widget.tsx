@@ -203,7 +203,7 @@ export function PendingTasksWidget({
           return (
             <div
               key={task.id}
-              className="group rounded-lg border border-glass-border p-3 transition-all hover:border-glass-border-hover hover:bg-glass-white"
+              className="border-glass-border hover:border-glass-border-hover group rounded-lg border p-3 transition-all hover:bg-glass-white"
             >
               {/* Task Header */}
               <div className="mb-2 flex items-start justify-between">
@@ -279,7 +279,7 @@ export function PendingTasksWidget({
         )}
 
         {tasks.length > maxTasks && (
-          <div className="border-t border-glass-border pt-2">
+          <div className="border-glass-border border-t pt-2">
             <Button variant="ghost" size="sm" className="w-full hover:bg-glass-white">
               View All {tasks.length} Tasks
             </Button>

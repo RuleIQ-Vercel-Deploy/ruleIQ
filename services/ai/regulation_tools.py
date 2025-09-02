@@ -294,8 +294,12 @@ class IndustryRegulationLookupTool(BaseTool):
             result_data = {
                 "applicable_regulations": filtered_regulations,
                 "regulation_count": len(filtered_regulations),
-                "priority_breakdown": self._analyze_priority_breakdown(filtered_regulations),
-                "compliance_timeline": self._generate_compliance_timeline(filtered_regulations),
+                "priority_breakdown": self._analyze_priority_breakdown(
+                    filtered_regulations
+                ),
+                "compliance_timeline": self._generate_compliance_timeline(
+                    filtered_regulations
+                ),
                 "industry_context": {
                     "industry": industry,
                     "business_size": business_size,
@@ -322,7 +326,9 @@ class IndustryRegulationLookupTool(BaseTool):
 
         except Exception as e:
             logger.error(f"Regulation lookup failed: {e}")
-            return ToolResult(success=False, error=f"Regulation lookup execution failed: {e!s}")
+            return ToolResult(
+                success=False, error=f"Regulation lookup execution failed: {e!s}"
+            )
 
     def _filter_by_business_size(
         self, regulations: List[Dict[str, Any]], business_size: str
@@ -331,17 +337,27 @@ class IndustryRegulationLookupTool(BaseTool):
         # All regulations apply, but add size-specific guidance
         for regulation in regulations:
             if business_size == "micro":
-                regulation["size_guidance"] = "Simplified compliance approach may be available"
+                regulation["size_guidance"] = (
+                    "Simplified compliance approach may be available"
+                )
             elif business_size == "small":
-                regulation["size_guidance"] = "SME-focused guidance and support available"
+                regulation["size_guidance"] = (
+                    "SME-focused guidance and support available"
+                )
             elif business_size == "medium":
-                regulation["size_guidance"] = "Full compliance required with some flexibility"
+                regulation["size_guidance"] = (
+                    "Full compliance required with some flexibility"
+                )
             else:  # large
-                regulation["size_guidance"] = "Full regulatory scrutiny and compliance required"
+                regulation["size_guidance"] = (
+                    "Full regulatory scrutiny and compliance required"
+                )
 
         return regulations
 
-    def _get_activity_specific_regulations(self, activities: List[str]) -> List[Dict[str, Any]]:
+    def _get_activity_specific_regulations(
+        self, activities: List[str]
+    ) -> List[Dict[str, Any]]:
         """Get regulations specific to business activities"""
         activity_regs = []
 
@@ -384,7 +400,9 @@ class IndustryRegulationLookupTool(BaseTool):
 
         return activity_regs
 
-    def _analyze_priority_breakdown(self, regulations: List[Dict[str, Any]]) -> Dict[str, int]:
+    def _analyze_priority_breakdown(
+        self, regulations: List[Dict[str, Any]]
+    ) -> Dict[str, int]:
         """Analyze breakdown of regulation priorities"""
         breakdown = {"critical": 0, "high": 0, "medium": 0, "low": 0}
         for reg in regulations:
@@ -464,8 +482,14 @@ class ComplianceRequirementsTool(BaseTool):
                         "properties": {
                             "industry": {"type": "string"},
                             "employee_count": {"type": "number"},
-                            "data_types": {"type": "array", "items": {"type": "string"}},
-                            "geographic_regions": {"type": "array", "items": {"type": "string"}},
+                            "data_types": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                            },
+                            "geographic_regions": {
+                                "type": "array",
+                                "items": {"type": "string"},
+                            },
                         },
                         "required": ["industry", "employee_count"],
                     },
@@ -498,8 +522,12 @@ class ComplianceRequirementsTool(BaseTool):
                 "applicable_requirements": requirements,
                 "requirement_count": len(requirements),
                 "business_context": business_context,
-                "compliance_checklist": self._generate_compliance_checklist(requirements),
-                "implementation_priorities": self._prioritize_requirements(requirements),
+                "compliance_checklist": self._generate_compliance_checklist(
+                    requirements
+                ),
+                "implementation_priorities": self._prioritize_requirements(
+                    requirements
+                ),
                 "analysis_timestamp": datetime.now().isoformat(),
             }
 
@@ -520,11 +548,15 @@ class ComplianceRequirementsTool(BaseTool):
         except Exception as e:
             logger.error(f"Compliance requirements check failed: {e}")
             return ToolResult(
-                success=False, error=f"Compliance requirements check execution failed: {e!s}"
+                success=False,
+                error=f"Compliance requirements check execution failed: {e!s}",
             )
 
     def _get_framework_requirements(
-        self, framework: str, business_context: Dict[str, Any], specific_areas: List[str]
+        self,
+        framework: str,
+        business_context: Dict[str, Any],
+        specific_areas: List[str],
     ) -> List[Dict[str, Any]]:
         """Get requirements for specific framework"""
         requirements = []
@@ -646,7 +678,9 @@ class ComplianceRequirementsTool(BaseTool):
 
         return checklist
 
-    def _prioritize_requirements(self, requirements: List[Dict[str, Any]]) -> List[Dict[str, str]]:
+    def _prioritize_requirements(
+        self, requirements: List[Dict[str, Any]]
+    ) -> List[Dict[str, str]]:
         """Prioritize requirements for implementation"""
         priorities = []
 

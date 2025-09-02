@@ -1,0 +1,33 @@
+
+"Real Estate"str
+	"Non-profit"str
+
+0int
+"Healthcare"str
+"Financial Services"str
+ 
+"Professional Services"str
+"Manufacturing"str
+"Hospitality"str
+"Transportation"str
+"Retail"str
+"Energy"str
+"Other"str
+"Education"str
+B9"Get list of supported industries for business profiles."str
+"Government"str
+"Technology"str
+"Media"strlist"ç'
+%
+P `("#unknown-value#Blist&
+$
+P `("
+#is-exact#:Bbool
+
+P `("
+#assume#:8
+6
+P `("#set-field# __collection_size:Bint+
+)
+P `("?python-unknown?*Blist
+P `(*8/home/omar/Documents/ruleIQ/services/business_service.py

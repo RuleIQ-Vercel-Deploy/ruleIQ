@@ -1,0 +1,18 @@
+
+öê"
+        Alias for generate_assessment_followup method.
+        Provides backward compatibility for tests expecting this method name.
+        "strself
+±# ±#(current_answers
+≤# ≤#('framework_id
+≥# ≥#(#business_profile_id
+¥# ¥#(!"assessment_context
+µ# µ#(;"\#
+!
+
+ª# ¿#(	"#unknown-value##
+!
+
+ª# ¿#(	"#unknown-value#
+
+ª# ¿#(	*4/home/omar/Documents/ruleIQ/services/ai/assistant.py

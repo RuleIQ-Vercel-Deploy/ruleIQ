@@ -16,11 +16,11 @@ class TestPolicyGeneratorBasic:
         generator = PolicyGenerator()
 
         # Test that it initializes with expected attributes
-        assert hasattr(generator, 'primary_provider')
-        assert hasattr(generator, 'fallback_provider')
-        assert hasattr(generator, 'circuit_breaker')
-        assert hasattr(generator, 'template_processor')
-        assert hasattr(generator, 'cache')
+        assert hasattr(generator, "primary_provider")
+        assert hasattr(generator, "fallback_provider")
+        assert hasattr(generator, "circuit_breaker")
+        assert hasattr(generator, "template_processor")
+        assert hasattr(generator, "cache")
 
     def test_template_processor_initialization(self):
         """Test TemplateProcessor can be instantiated"""
@@ -28,9 +28,9 @@ class TestPolicyGeneratorBasic:
 
         # Test that it initializes
         assert processor is not None
-        assert hasattr(processor, 'iso27001_templates_path')
+        assert hasattr(processor, "iso27001_templates_path")
 
-    @patch('services.ai.policy_generator.PolicyGenerator')
+    @patch("services.ai.policy_generator.PolicyGenerator")
     def test_mock_policy_generation(self, mock_generator_class):
         """Test that we can mock policy generation for testing"""
         # Create mock instance
@@ -83,8 +83,7 @@ class TestPolicyGeneratorBasic:
 
         # Test fallback content generation
         fallback_content = generator._generate_fallback_content(
-            "privacy_policy", 
-            "TestCorp"
+            "privacy_policy", "TestCorp"
         )
 
         assert fallback_content is not None
@@ -114,7 +113,7 @@ class TestPolicyGeneratorIntegration:
         assert generator.template_processor is not None
 
         # Test template processor has ISO 27001 path configured
-        assert hasattr(generator.template_processor, 'iso27001_templates_path')
+        assert hasattr(generator.template_processor, "iso27001_templates_path")
 
 
 if __name__ == "__main__":

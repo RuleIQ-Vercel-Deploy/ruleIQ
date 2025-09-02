@@ -34,7 +34,11 @@ class TestQualityAnalysisAPI:
         }
 
     def test_get_evidence_quality_analysis(
-        self, client, authenticated_headers, sample_business_profile, sample_evidence_data
+        self,
+        client,
+        authenticated_headers,
+        sample_business_profile,
+        sample_evidence_data,
     ):
         """Test getting AI-powered quality analysis for evidence."""
         # Create evidence
@@ -83,7 +87,8 @@ class TestQualityAnalysisAPI:
             }
 
             response = client.get(
-                f"/api/evidence/{evidence_id}/quality-analysis", headers=authenticated_headers
+                f"/api/evidence/{evidence_id}/quality-analysis",
+                headers=authenticated_headers,
             )
 
             assert response.status_code == 200
@@ -234,7 +239,9 @@ class TestQualityAnalysisAPI:
             assert response_data["unique_items"] == 2
             assert len(response_data["duplicate_groups"]) == 1
 
-    def test_get_quality_benchmark(self, client, authenticated_headers, sample_business_profile):
+    def test_get_quality_benchmark(
+        self, client, authenticated_headers, sample_business_profile
+    ):
         """Test quality benchmarking endpoint."""
         # Create some evidence first
         evidence_data = {
@@ -250,7 +257,9 @@ class TestQualityAnalysisAPI:
         if create_response.status_code != 200:
             pytest.skip("Evidence creation failed")
 
-        response = client.get("/api/evidence/quality/benchmark", headers=authenticated_headers)
+        response = client.get(
+            "/api/evidence/quality/benchmark", headers=authenticated_headers
+        )
 
         assert response.status_code == 200
         assert_api_response_security(response)
@@ -263,7 +272,9 @@ class TestQualityAnalysisAPI:
         assert "improvement_areas" in response_data
         assert "top_performers" in response_data
 
-    def test_get_quality_trends(self, client, authenticated_headers, sample_business_profile):
+    def test_get_quality_trends(
+        self, client, authenticated_headers, sample_business_profile
+    ):
         """Test quality trend analysis endpoint."""
         # Create some evidence first
         evidence_data = {
@@ -279,7 +290,9 @@ class TestQualityAnalysisAPI:
         if create_response.status_code != 200:
             pytest.skip("Evidence creation failed")
 
-        response = client.get("/api/evidence/quality/trends?days=30", headers=authenticated_headers)
+        response = client.get(
+            "/api/evidence/quality/trends?days=30", headers=authenticated_headers
+        )
 
         assert response.status_code == 200
         assert_api_response_security(response)
@@ -297,12 +310,15 @@ class TestQualityAnalysisAPI:
         fake_evidence_id = str(uuid4())
 
         response = client.get(
-            f"/api/evidence/{fake_evidence_id}/quality-analysis", headers=authenticated_headers
+            f"/api/evidence/{fake_evidence_id}/quality-analysis",
+            headers=authenticated_headers,
         )
 
         assert response.status_code == 404
 
-    def test_duplicate_detection_insufficient_evidence(self, client, authenticated_headers):
+    def test_duplicate_detection_insufficient_evidence(
+        self, client, authenticated_headers
+    ):
         """Test batch duplicate detection with insufficient evidence."""
         batch_request = {
             "evidence_ids": [str(uuid4())],  # Only one ID
@@ -341,7 +357,9 @@ class TestQualityAnalysisValidation:
 
         assert response.status_code == 422  # Validation error
 
-    def test_batch_duplicate_detection_too_many_items(self, client, authenticated_headers):
+    def test_batch_duplicate_detection_too_many_items(
+        self, client, authenticated_headers
+    ):
         """Test batch duplicate detection with too many evidence items."""
         evidence_ids = [str(uuid4()) for _ in range(101)]  # Exceeds limit of 100
 
@@ -391,7 +409,8 @@ class TestQualityAnalysisValidation:
             mock_analysis.side_effect = Exception("AI service temporarily unavailable")
 
             response = client.get(
-                f"/api/evidence/{evidence_id}/quality-analysis", headers=authenticated_headers
+                f"/api/evidence/{evidence_id}/quality-analysis",
+                headers=authenticated_headers,
             )
 
             assert response.status_code == 500

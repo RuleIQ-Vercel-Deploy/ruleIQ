@@ -1,0 +1,63 @@
+
+"0"str
+82.3float
+75.5float
+"core"str
+
+
+0int
+"1"str	tuplelist"$
+"
+r r(("#new-object#Bdict 
+
+r r('"	#map-set#:(
+&
+r r()"#unknown-value#Btuple&
+$
+r r()"
+#is-exact#:Bbool
+
+r r()	"
+#assume#:8
+6
+r r()"#set-field# __collection_size:
+Bint&
+$
+r r()"#array-add-last#:&
+$
+r r()"#array-add-last#:$
+"
+r2 r(?"#new-object#Bdict 
+
+r3 r(>"	#map-set#:(
+&
+r+ r(@"#unknown-value#Btuple&
+$
+r+ r(@"
+#is-exact#:Bbool
+
+r+ r(@"
+#assume#:8
+6
+r+ r(@"#set-field# __collection_size:
+Bint&
+$
+r+ r(@"#array-add-last#:&
+$
+r+ r(@"#array-add-last#:'
+%
+r r(A"#unknown-value#Blist&
+$
+r r(A"
+#is-exact#:Bbool
+
+r r(A"
+#assume#:8
+6
+r r(A"#set-field# __collection_size:
+Bint&
+$
+r r(A"#array-add-last#:&
+$
+r r(A"#array-add-last#:
+r r(A*J/home/omar/Documents/ruleIQ/tests/monitoring/test_opentelemetry_metrics.py

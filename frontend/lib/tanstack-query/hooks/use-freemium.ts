@@ -18,8 +18,7 @@ export const useFreemiumEmailCapture = () => {
   const { setEmail, setToken, utmSource, utmCampaign } = useFreemiumStore();
 
   return useMutation({
-    mutationFn: (data: freemiumApi.FreemiumEmailCaptureRequest) => 
-      freemiumApi.captureEmail(data),
+    mutationFn: (data: freemiumApi.FreemiumEmailCaptureRequest) => freemiumApi.captureEmail(data),
     onSuccess: (response, variables) => {
       setEmail(variables.email);
       setToken(response.token);
@@ -28,7 +27,6 @@ export const useFreemiumEmailCapture = () => {
     },
     onError: (error) => {
       // TODO: Replace with proper logging
-
       // // TODO: Replace with proper logging
     },
   });
@@ -66,36 +64,32 @@ export const useFreemiumStartAssessment = (token: string | null) => {
 export const useFreemiumAnswerQuestion = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { 
-    token, 
-    setCurrentQuestion, 
-    incrementProgress, 
-    markAssessmentComplete 
-  } = useFreemiumStore();
+  const { token, setCurrentQuestion, incrementProgress, markAssessmentComplete } =
+    useFreemiumStore();
 
   return useMutation({
     mutationFn: (answerData: freemiumApi.FreemiumAnswerRequest) =>
       freemiumApi.answerQuestion(token!, answerData),
     onSuccess: (response) => {
       incrementProgress(response.progress);
-      
+
       if (response.assessment_complete || response.redirect_to_results) {
         markAssessmentComplete();
         router.push(`/freemium/results?token=${token}`);
       } else if (response.question_id) {
         setCurrentQuestion(response.question_id);
       }
-      
+
       // Invalidate assessment query to get fresh data
-      queryClient.invalidateQueries({ 
-        queryKey: freemiumKeys.assessment(token || '') 
+      queryClient.invalidateQueries({
+        queryKey: freemiumKeys.assessment(token || ''),
       });
     },
     onError: (error: unknown) => {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
-      
+
       // Handle session expiration
       if (error?.message?.includes('expired')) {
         router.push('/freemium?error=session_expired');
@@ -156,7 +150,7 @@ export const useFreemiumConversionTracking = () => {
 export const useFreemiumAssessmentFlow = (token: string | null) => {
   const startAssessmentQuery = useFreemiumStartAssessment(token);
   const answerMutation = useFreemiumAnswerQuestion();
-  
+
   const currentQuestion = startAssessmentQuery.data;
   const isLoading = startAssessmentQuery.isLoading || answerMutation.isPending;
   const error = startAssessmentQuery.error || answerMutation.error;

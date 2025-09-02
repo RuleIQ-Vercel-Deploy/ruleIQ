@@ -28,7 +28,11 @@ def test_environment_setup():
     print("=== AI Service Testing - Phase 1: Environment & Configuration ===")
     print()
 
-    results = {"phase": "environment", "timestamp": datetime.utcnow().isoformat(), "tests": []}
+    results = {
+        "phase": "environment",
+        "timestamp": datetime.utcnow().isoformat(),
+        "tests": [],
+    }
 
     # Test 1: Google API Key
     google_key = os.getenv("GOOGLE_AI_API_KEY")
@@ -74,7 +78,11 @@ def test_api_endpoints():
     print("\n=== AI Service Testing - Phase 2: API Endpoints ===")
     print()
 
-    results = {"phase": "api_endpoints", "timestamp": datetime.utcnow().isoformat(), "tests": []}
+    results = {
+        "phase": "api_endpoints",
+        "timestamp": datetime.utcnow().isoformat(),
+        "tests": [],
+    }
 
     base_url = "http://localhost:8000"
 
@@ -102,7 +110,9 @@ def test_api_endpoints():
                     print(f"✅ Backend Health: Responding with status '{status}'")
                     if status == "degraded":
                         print("   Component Status:")
-                        for component, comp_status in response_json.get("components", {}).items():
+                        for component, comp_status in response_json.get(
+                            "components", {}
+                        ).items():
                             print(f"   - {component}: {comp_status}")
                 else:
                     results["tests"].append(
@@ -204,7 +214,10 @@ def test_api_endpoints():
                     "test": "ai_help_endpoint",
                     "status": "fail",
                     "message": "AI help endpoint failed.",
-                    "details": {"error": result.stderr.strip(), "response": response_text},
+                    "details": {
+                        "error": result.stderr.strip(),
+                        "response": response_text,
+                    },
                 }
             )
             print("❌ AI Help Endpoint: Failed")
@@ -227,7 +240,11 @@ def run_all_tests() -> None:
     print("🚀 Starting AI Service Test Suite")
     print("=" * 40)
 
-    all_results = {"summary": {}, "phases": [], "timestamp": datetime.utcnow().isoformat()}
+    all_results = {
+        "summary": {},
+        "phases": [],
+        "timestamp": datetime.utcnow().isoformat(),
+    }
 
     # Phase 1
     env_results = test_environment_setup()
@@ -240,14 +257,19 @@ def run_all_tests() -> None:
     # Summary
     total_tests = sum(len(phase["tests"]) for phase in all_results["phases"])
     passed_tests = sum(
-        1 for phase in all_results["phases"] for test in phase["tests"] if test["status"] == "pass"
+        1
+        for phase in all_results["phases"]
+        for test in phase["tests"]
+        if test["status"] == "pass"
     )
 
     all_results["summary"] = {
         "total_tests": total_tests,
         "passed": passed_tests,
         "failed": total_tests - passed_tests,
-        "success_rate": f"{(passed_tests / total_tests * 100):.2f}%" if total_tests > 0 else "N/A",
+        "success_rate": (
+            f"{(passed_tests / total_tests * 100):.2f}%" if total_tests > 0 else "N/A"
+        ),
     }
 
     print("\n" + "=" * 40)

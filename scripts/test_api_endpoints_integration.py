@@ -10,20 +10,20 @@ from datetime import datetime
 
 BASE_URL = "http://localhost:8000"
 
+
 def test_login():
     """Login and get auth token"""
     print("🔐 Testing Login...")
 
     # Try with the test user
-    login_data = {
-        "email": "test@ruleiq.dev",
-        "password": "TestPassword123!"
-    }
+    login_data = {"email": "test@ruleiq.dev", "password": "TestPassword123!"}
 
-    response = requests.post(f"{BASE_URL}/api/v1/auth/login", json=login_data, timeout=10)
+    response = requests.post(
+        f"{BASE_URL}/api/v1/auth/login", json=login_data, timeout=10
+    )
 
     if response.status_code == 200:
-        token = response.json().get('access_token')
+        token = response.json().get("access_token")
         print("✅ Login successful - Token obtained")
         return token
     else:
@@ -33,18 +33,21 @@ def test_login():
         print("\n🔐 Attempting to register new test user...")
         register_data = {
             "email": f"test-{datetime.now().timestamp()}@ruleiq.dev",
-            "password": "TestPassword123!"
+            "password": "TestPassword123!",
         }
 
-        response = requests.post(f"{BASE_URL}/api/v1/auth/register", json=register_data, timeout=10)
+        response = requests.post(
+            f"{BASE_URL}/api/v1/auth/register", json=register_data, timeout=10
+        )
         if response.status_code == 200:
-            tokens = response.json().get('tokens', {})
-            token = tokens.get('access_token')
+            tokens = response.json().get("tokens", {})
+            token = tokens.get("access_token")
             print("✅ Registration successful - Token obtained")
             return token
         else:
             print(f"❌ Registration failed: {response.status_code} - {response.text}")
             return None
+
 
 def test_business_profiles(token):
     """Test business profiles endpoints"""
@@ -54,14 +57,18 @@ def test_business_profiles(token):
 
     # Test GET /api/v1/business-profiles/
     print("\n1. GET /api/v1/business-profiles/")
-    response = requests.get(f"{BASE_URL}/api/v1/business-profiles/", headers=headers, timeout=10)
+    response = requests.get(
+        f"{BASE_URL}/api/v1/business-profiles/", headers=headers, timeout=10
+    )
 
     if response.status_code == 200:
         print(f"✅ Business profiles endpoint working - Status: {response.status_code}")
         data = response.json()
         print(f"   Response: {json.dumps(data, indent=2)[:500]}")
     elif response.status_code == 404:
-        print(f"⚠️  Business profile not found (expected for new user) - Status: {response.status_code}")
+        print(
+            f"⚠️  Business profile not found (expected for new user) - Status: {response.status_code}"
+        )
         print("   This is normal - user needs to create a profile first")
     else:
         print(f"❌ Business profiles endpoint failed - Status: {response.status_code}")
@@ -78,19 +85,28 @@ def test_business_profiles(token):
         "stores_health_data": False,
         "provides_financial_services": False,
         "operates_critical_infrastructure": False,
-        "has_international_operations": False
+        "has_international_operations": False,
     }
 
-    response = requests.post(f"{BASE_URL}/api/v1/business-profiles/", json=profile_data, headers=headers, timeout=10)
+    response = requests.post(
+        f"{BASE_URL}/api/v1/business-profiles/",
+        json=profile_data,
+        headers=headers,
+        timeout=10,
+    )
 
     if response.status_code in [200, 201]:
-        print(f"✅ Business profile created successfully - Status: {response.status_code}")
-        profile_id = response.json().get('id')
+        print(
+            f"✅ Business profile created successfully - Status: {response.status_code}"
+        )
+        profile_id = response.json().get("id")
         print(f"   Profile ID: {profile_id}")
 
         # Now test GET again
         print("\n3. GET /api/v1/business-profiles/ (After creation)")
-        response = requests.get(f"{BASE_URL}/api/v1/business-profiles/", headers=headers, timeout=10)
+        response = requests.get(
+            f"{BASE_URL}/api/v1/business-profiles/", headers=headers, timeout=10
+        )
         if response.status_code == 200:
             print(f"✅ Can now retrieve profile - Status: {response.status_code}")
 
@@ -101,6 +117,7 @@ def test_business_profiles(token):
         print(f"❌ Failed to create profile - Status: {response.status_code}")
         print(f"   Error: {response.text[:500]}")
 
+
 def test_frameworks(token):
     """Test frameworks endpoints"""
     print("\n🎯 Testing Frameworks Endpoints...")
@@ -109,7 +126,9 @@ def test_frameworks(token):
 
     # Test GET /api/v1/frameworks/
     print("\n1. GET /api/v1/frameworks/")
-    response = requests.get(f"{BASE_URL}/api/v1/frameworks/", headers=headers, timeout=10)
+    response = requests.get(
+        f"{BASE_URL}/api/v1/frameworks/", headers=headers, timeout=10
+    )
 
     if response.status_code == 200:
         print(f"✅ Frameworks endpoint working - Status: {response.status_code}")
@@ -123,7 +142,9 @@ def test_frameworks(token):
 
     # Test public frameworks endpoint
     print("\n2. GET /api/v1/frameworks/all-public")
-    response = requests.get(f"{BASE_URL}/api/v1/frameworks/all-public", headers=headers, timeout=10)
+    response = requests.get(
+        f"{BASE_URL}/api/v1/frameworks/all-public", headers=headers, timeout=10
+    )
 
     if response.status_code == 200:
         print(f"✅ Public frameworks endpoint working - Status: {response.status_code}")
@@ -134,6 +155,7 @@ def test_frameworks(token):
     else:
         print(f"❌ Public frameworks endpoint failed - Status: {response.status_code}")
         print(f"   Error: {response.text[:200]}")
+
 
 def test_compliance_wizard_requirements(token):
     """Test specific endpoints needed by compliance wizard"""
@@ -149,27 +171,40 @@ def test_compliance_wizard_requirements(token):
     print("\n1. Testing complete flow for compliance wizard:")
 
     # Check if user has profile
-    response = requests.get(f"{BASE_URL}/api/v1/business-profiles/", headers=headers, timeout=10)
+    response = requests.get(
+        f"{BASE_URL}/api/v1/business-profiles/", headers=headers, timeout=10
+    )
     has_profile = response.status_code == 200
 
     if has_profile:
-        print("✅ User has business profile - can proceed with framework recommendations")
+        print(
+            "✅ User has business profile - can proceed with framework recommendations"
+        )
 
         # Try to get framework recommendations
         print("\n2. GET /api/v1/frameworks/recommendations")
-        response = requests.get(f"{BASE_URL}/api/v1/frameworks/recommendations", headers=headers, timeout=10)
+        response = requests.get(
+            f"{BASE_URL}/api/v1/frameworks/recommendations", headers=headers, timeout=10
+        )
 
         if response.status_code == 200:
-            print(f"✅ Framework recommendations working - Status: {response.status_code}")
+            print(
+                f"✅ Framework recommendations working - Status: {response.status_code}"
+            )
             data = response.json()
             print(f"   Recommendations: {json.dumps(data, indent=2)[:300]}")
         elif response.status_code == 404:
-            print(f"⚠️  Recommendations endpoint might not be implemented - Status: {response.status_code}")
+            print(
+                f"⚠️  Recommendations endpoint might not be implemented - Status: {response.status_code}"
+            )
         else:
             print(f"❌ Recommendations failed - Status: {response.status_code}")
             print(f"   Error: {response.text[:200]}")
     else:
-        print("⚠️  No business profile - compliance wizard would show profile creation form first")
+        print(
+            "⚠️  No business profile - compliance wizard would show profile creation form first"
+        )
+
 
 def main():
     print("🚀 Testing Fixed API Routes for Business Profiles and Frameworks")
@@ -208,9 +243,12 @@ def main():
 
     print("\n💡 Next Steps:")
     print("   1. If business-profiles returns 404, that's normal for new users")
-    print("   2. If frameworks returns empty list, check if frameworks are loaded in DB")
+    print(
+        "   2. If frameworks returns empty list, check if frameworks are loaded in DB"
+    )
     print("   3. Check frontend is using correct API paths (/api/v1/...)")
     print("   4. Ensure frontend is sending Authorization header with Bearer token")
+
 
 if __name__ == "__main__":
     main()

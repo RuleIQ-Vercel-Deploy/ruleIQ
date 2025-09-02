@@ -1,6 +1,6 @@
 /**
  * Comprehensive tests for FreemiumAssessmentFlow component
- * 
+ *
  * Tests:
  * - Dynamic question loading and progression
  * - Answer submission and validation
@@ -36,8 +36,8 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: mockPush }),
   useSearchParams: () => ({
     get: vi.fn(() => null),
-    toString: () => ''
-  })
+    toString: () => '',
+  }),
 }));
 
 const queryClient = new QueryClient({
@@ -48,9 +48,7 @@ const queryClient = new QueryClient({
 });
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-  <QueryClientProvider client={queryClient}>
-    {children}
-  </QueryClientProvider>
+  <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 
 const defaultStoreState = {
@@ -77,7 +75,7 @@ const mockQuestion = {
   help_text: 'Select the category that best describes your primary business model.',
   validation_rules: { required: true },
   progress: 0,
-  total_questions: null
+  total_questions: null,
 };
 
 describe('FreemiumAssessmentFlow', () => {
@@ -95,13 +93,13 @@ describe('FreemiumAssessmentFlow', () => {
   describe('Initial Loading and Question Display', () => {
     it('shows loading state initially', () => {
       mockedFreemiumApi.startAssessment.mockImplementation(
-        () => new Promise(() => {}) // Never resolves
+        () => new Promise(() => {}), // Never resolves
       );
 
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       expect(screen.getByText(/loading your assessment/i)).toBeInTheDocument();
@@ -114,7 +112,7 @@ describe('FreemiumAssessmentFlow', () => {
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -133,7 +131,7 @@ describe('FreemiumAssessmentFlow', () => {
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -144,13 +142,13 @@ describe('FreemiumAssessmentFlow', () => {
     it('handles missing token gracefully', async () => {
       mockedUseFreemiumStore.mockReturnValue({
         ...defaultStoreState,
-        token: null
+        token: null,
       });
 
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -169,7 +167,7 @@ describe('FreemiumAssessmentFlow', () => {
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -189,7 +187,7 @@ describe('FreemiumAssessmentFlow', () => {
         question_text: 'What is your company name?',
         question_type: 'text_input',
         options: undefined,
-        validation_rules: { required: true, min_length: 2, max_length: 100 }
+        validation_rules: { required: true, min_length: 2, max_length: 100 },
       };
 
       mockedFreemiumApi.startAssessment.mockResolvedValue(textQuestion);
@@ -197,7 +195,7 @@ describe('FreemiumAssessmentFlow', () => {
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -217,7 +215,7 @@ describe('FreemiumAssessmentFlow', () => {
         question_text: 'Which compliance frameworks are you interested in?',
         question_type: 'multi_select',
         options: ['GDPR', 'ISO 27001', 'SOC 2', 'HIPAA', 'PCI DSS'],
-        validation_rules: { required: true, min_selections: 1 }
+        validation_rules: { required: true, min_selections: 1 },
       };
 
       mockedFreemiumApi.startAssessment.mockResolvedValue(multiSelectQuestion);
@@ -225,7 +223,7 @@ describe('FreemiumAssessmentFlow', () => {
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -248,8 +246,14 @@ describe('FreemiumAssessmentFlow', () => {
         question_id: 'q_data_sensitivity',
         question_text: 'How sensitive is the data you handle?',
         question_type: 'scale',
-        options: ['Not sensitive', 'Somewhat sensitive', 'Moderately sensitive', 'Highly sensitive', 'Extremely sensitive'],
-        validation_rules: { required: true, min: 1, max: 5 }
+        options: [
+          'Not sensitive',
+          'Somewhat sensitive',
+          'Moderately sensitive',
+          'Highly sensitive',
+          'Extremely sensitive',
+        ],
+        validation_rules: { required: true, min: 1, max: 5 },
       };
 
       mockedFreemiumApi.startAssessment.mockResolvedValue(scaleQuestion);
@@ -257,7 +261,7 @@ describe('FreemiumAssessmentFlow', () => {
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -276,14 +280,14 @@ describe('FreemiumAssessmentFlow', () => {
 
     it('submits answer and loads next question', async () => {
       mockedFreemiumApi.startAssessment.mockResolvedValue(mockQuestion);
-      
+
       const nextQuestion = {
         question_id: 'q2_employee_count',
         question_text: 'How many employees do you have?',
         question_type: 'multiple_choice',
         options: ['1-10', '11-50', '51-200', '200+'],
         progress: 20,
-        assessment_complete: false
+        assessment_complete: false,
       };
 
       mockedFreemiumApi.answerQuestion.mockResolvedValue(nextQuestion);
@@ -296,13 +300,13 @@ describe('FreemiumAssessmentFlow', () => {
         ...defaultStoreState,
         setCurrentQuestion: mockSetCurrentQuestion,
         addResponse: mockAddResponse,
-        setProgress: mockSetProgress
+        setProgress: mockSetProgress,
       });
 
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       // Wait for first question
@@ -322,7 +326,7 @@ describe('FreemiumAssessmentFlow', () => {
         expect(mockedFreemiumApi.answerQuestion).toHaveBeenCalledWith('valid-token-123', {
           question_id: 'q1_business_type',
           answer: 'SaaS',
-          answer_metadata: expect.any(Object)
+          answer_metadata: expect.any(Object),
         });
 
         expect(screen.getByText(/how many employees do you have/i)).toBeInTheDocument();
@@ -337,7 +341,7 @@ describe('FreemiumAssessmentFlow', () => {
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -357,11 +361,11 @@ describe('FreemiumAssessmentFlow', () => {
 
     it('redirects to results when assessment is complete', async () => {
       mockedFreemiumApi.startAssessment.mockResolvedValue(mockQuestion);
-      
+
       const completeResponse = {
         assessment_complete: true,
         redirect_to_results: true,
-        progress: 100
+        progress: 100,
       };
 
       mockedFreemiumApi.answerQuestion.mockResolvedValue(completeResponse);
@@ -369,7 +373,7 @@ describe('FreemiumAssessmentFlow', () => {
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -392,7 +396,7 @@ describe('FreemiumAssessmentFlow', () => {
     it('displays progress bar with correct percentage', async () => {
       const questionWithProgress = {
         ...mockQuestion,
-        progress: 40
+        progress: 40,
       };
 
       mockedFreemiumApi.startAssessment.mockResolvedValue(questionWithProgress);
@@ -400,7 +404,7 @@ describe('FreemiumAssessmentFlow', () => {
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -415,7 +419,7 @@ describe('FreemiumAssessmentFlow', () => {
         ...mockQuestion,
         progress: 20,
         current_step: 2,
-        total_questions: 10
+        total_questions: 10,
       };
 
       mockedFreemiumApi.startAssessment.mockResolvedValue(questionWithTotal);
@@ -423,7 +427,7 @@ describe('FreemiumAssessmentFlow', () => {
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -435,7 +439,7 @@ describe('FreemiumAssessmentFlow', () => {
       const questionWithProgress = {
         ...mockQuestion,
         progress: 50,
-        estimated_time_remaining: '2-3 minutes'
+        estimated_time_remaining: '2-3 minutes',
       };
 
       mockedFreemiumApi.startAssessment.mockResolvedValue(questionWithProgress);
@@ -443,7 +447,7 @@ describe('FreemiumAssessmentFlow', () => {
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -454,14 +458,12 @@ describe('FreemiumAssessmentFlow', () => {
 
   describe('Error Handling and Resilience', () => {
     it('handles API errors gracefully', async () => {
-      mockedFreemiumApi.startAssessment.mockRejectedValue(
-        new Error('Network error')
-      );
+      mockedFreemiumApi.startAssessment.mockRejectedValue(new Error('Network error'));
 
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -472,7 +474,7 @@ describe('FreemiumAssessmentFlow', () => {
 
     it('retries failed API calls', async () => {
       const user = userEvent.setup();
-      
+
       mockedFreemiumApi.startAssessment
         .mockRejectedValueOnce(new Error('Network error'))
         .mockResolvedValueOnce(mockQuestion);
@@ -480,7 +482,7 @@ describe('FreemiumAssessmentFlow', () => {
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -499,16 +501,14 @@ describe('FreemiumAssessmentFlow', () => {
 
     it('handles token expiration during assessment', async () => {
       mockedFreemiumApi.startAssessment.mockResolvedValue(mockQuestion);
-      mockedFreemiumApi.answerQuestion.mockRejectedValue(
-        new Error('Token expired')
-      );
+      mockedFreemiumApi.answerQuestion.mockRejectedValue(new Error('Token expired'));
 
       const user = userEvent.setup();
 
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -531,13 +531,13 @@ describe('FreemiumAssessmentFlow', () => {
       mockedFreemiumApi.startAssessment.mockResolvedValue({
         ...mockQuestion,
         fallback_mode: true,
-        ai_service_available: false
+        ai_service_available: false,
       });
 
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -556,9 +556,9 @@ describe('FreemiumAssessmentFlow', () => {
         progress: 60,
         session_resumed: true,
         previous_responses: {
-          'q1_business_type': 'SaaS',
-          'q2_employee_count': '11-50'
-        }
+          q1_business_type: 'SaaS',
+          q2_employee_count: '11-50',
+        },
       };
 
       mockedFreemiumApi.startAssessment.mockResolvedValue(resumedQuestion);
@@ -566,7 +566,7 @@ describe('FreemiumAssessmentFlow', () => {
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -578,13 +578,13 @@ describe('FreemiumAssessmentFlow', () => {
 
     it('auto-saves responses periodically', async () => {
       const user = userEvent.setup();
-      
+
       mockedFreemiumApi.startAssessment.mockResolvedValue(mockQuestion);
 
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -608,7 +608,7 @@ describe('FreemiumAssessmentFlow', () => {
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -625,13 +625,13 @@ describe('FreemiumAssessmentFlow', () => {
 
     it('supports keyboard navigation', async () => {
       const user = userEvent.setup();
-      
+
       mockedFreemiumApi.startAssessment.mockResolvedValue(mockQuestion);
 
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -651,20 +651,20 @@ describe('FreemiumAssessmentFlow', () => {
 
     it('announces progress changes to screen readers', async () => {
       const user = userEvent.setup();
-      
+
       mockedFreemiumApi.startAssessment.mockResolvedValue(mockQuestion);
       mockedFreemiumApi.answerQuestion.mockResolvedValue({
         question_id: 'q2_employee_count',
         question_text: 'How many employees do you have?',
         question_type: 'multiple_choice',
         options: ['1-10', '11-50', '51-200', '200+'],
-        progress: 20
+        progress: 20,
       });
 
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -687,7 +687,7 @@ describe('FreemiumAssessmentFlow', () => {
   describe('Performance Optimization', () => {
     it('does not re-render unnecessarily', async () => {
       const renderSpy = vi.fn();
-      
+
       const TestComponent = () => {
         renderSpy();
         return <FreemiumAssessmentFlow />;
@@ -698,7 +698,7 @@ describe('FreemiumAssessmentFlow', () => {
       render(
         <TestWrapper>
           <TestComponent />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {
@@ -714,14 +714,14 @@ describe('FreemiumAssessmentFlow', () => {
         ...mockQuestion,
         next_question_preview: {
           question_id: 'q2_employee_count',
-          question_text: 'How many employees do you have?'
-        }
+          question_text: 'How many employees do you have?',
+        },
       });
 
       render(
         <TestWrapper>
           <FreemiumAssessmentFlow />
-        </TestWrapper>
+        </TestWrapper>,
       );
 
       await waitFor(() => {

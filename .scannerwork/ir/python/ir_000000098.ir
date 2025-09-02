@@ -1,0 +1,47 @@
+
+
+1000int
+.%"Make CollectionResult subscriptable"str
+"collection_time_ms"str
+"data"str
+"status"strselfP P(keyP P($ orchestrator_v2.CollectionStatus"T*
+(
+S S("
+#binop ==#2==:Bbool&"$
+S S( *S S(
+2U U("=)
+'
+T T( "#get-field# evidence:
+T T( "V*
+(
+U U(("
+#binop ==#2==:Bbool&"$
+U U(( *U U(2W W("d)
+'
+V V( 	"#get-field# duration:%
+#
+V V('"	#binop *#*2*:	
+
+V V('"L*
+(
+W W("
+#binop ==#2==:Bbool"
+W W( *W W("~'
+%
+Y3 Y(>"#get-field# status:)
+'
+Y( Y(Q"#is-instance#:Bbool&"$
+Y( Y(Q *Y% Y('2YR Y(V">*
+(
+Z Z(!"
+builtinsgetattr*:
+Z Z(!"c'
+%
+Y Y("#get-field# status:&
+$
+Y Y($"#get-field# value:
+Y Y(b	";'
+%
+YW Y(b"#get-field# status:
+Y Y(b	"$	*
+Y Y(b*@/home/omar/Documents/ruleIQ/services/evidence/orchestrator_v2.py

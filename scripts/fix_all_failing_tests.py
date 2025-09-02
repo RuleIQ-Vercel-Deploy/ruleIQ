@@ -108,7 +108,10 @@ def fix_cache_strategy_tests() -> None:
                 content = f.read()
 
             # Check if fixtures are outside classes
-            if "@pytest.fixture" in content and "def optimized_cache_config():" in content:
+            if (
+                "@pytest.fixture" in content
+                and "def optimized_cache_config():" in content
+            ):
                 print(f"  ✓ {test_file.name} already fixed")
             else:
                 fix_fixture_scope_in_file(test_file)

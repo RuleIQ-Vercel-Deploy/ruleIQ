@@ -55,15 +55,15 @@ export const createUltimateApiClient = () => ({
         data: {
           tokens: {
             access_token: 'new-access-token',
-            refresh_token: 'new-refresh-token'
+            refresh_token: 'new-refresh-token',
           },
           user: {
             id: 'user-456',
             email: data.email,
             name: data.name,
-            is_active: true
-          }
-        }
+            is_active: true,
+          },
+        },
       };
     }
 
@@ -75,8 +75,8 @@ export const createUltimateApiClient = () => ({
           name: data.name || 'New Assessment',
           status: 'draft',
           framework_id: data.framework_id || 'gdpr',
-          business_profile_id: data.business_profile_id || 'profile-123'
-        }
+          business_profile_id: data.business_profile_id || 'profile-123',
+        },
       };
     }
 
@@ -87,8 +87,8 @@ export const createUltimateApiClient = () => ({
           id: 'evidence-new',
           title: data.title || 'New Evidence',
           status: 'pending',
-          type: 'document'
-        }
+          type: 'document',
+        },
       };
     }
 
@@ -100,8 +100,8 @@ export const createUltimateApiClient = () => ({
           company_name: data.company_name || 'New Company',
           industry: data.industry || 'Technology',
           employee_count: data.employee_count || '1-10',
-          handles_personal_data: data.handles_personal_data || true
-        }
+          handles_personal_data: data.handles_personal_data || true,
+        },
       };
     }
 
@@ -126,8 +126,8 @@ export const createUltimateApiClient = () => ({
         data: {
           id: url.split('/evidence/')[1],
           status: data.status || 'updated',
-          ...data
-        }
+          ...data,
+        },
       };
     }
 
@@ -157,7 +157,7 @@ export const createUltimateApiClient = () => ({
       default:
         return { data: { success: true } };
     }
-  })
+  }),
 });
 
 export const ultimateApiClient = createUltimateApiClient();

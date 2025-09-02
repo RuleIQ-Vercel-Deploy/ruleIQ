@@ -38,7 +38,9 @@ print("\nTesting environment variable loading...")
 if os.path.exists(".env.local"):
     load_dotenv(".env.local")
     jwt_secret_1 = os.getenv("JWT_SECRET")
-    print(f"Method 1 (.env.local): JWT_SECRET = {jwt_secret_1[:10] if jwt_secret_1 else 'None'}...")
+    print(
+        f"Method 1 (.env.local): JWT_SECRET = {jwt_secret_1[:10] if jwt_secret_1 else 'None'}..."
+    )
 
 # Method 2: Absolute path
 env_path = Path(__file__).parent / ".env.local"
@@ -51,7 +53,9 @@ if env_path.exists():
 
 # Method 3: Check if already in environment
 jwt_secret_3 = os.getenv("JWT_SECRET")
-print(f"Method 3 (direct env): JWT_SECRET = {jwt_secret_3[:10] if jwt_secret_3 else 'None'}...")
+print(
+    f"Method 3 (direct env): JWT_SECRET = {jwt_secret_3[:10] if jwt_secret_3 else 'None'}..."
+)
 
 print("\n" + "=" * 50)
 

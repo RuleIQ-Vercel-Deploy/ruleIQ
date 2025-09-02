@@ -22,6 +22,7 @@ from difflib import SequenceMatcher
 
 class SourceStatus(Enum):
     """Source availability status"""
+
     HEALTHY = "healthy"
     DEGRADED = "degraded"
     UNAVAILABLE = "unavailable"
@@ -30,6 +31,7 @@ class SourceStatus(Enum):
 
 class CollectionStatus(Enum):
     """Evidence collection status"""
+
     SUCCESS = "success"
     ERROR = "error"
     TIMEOUT = "timeout"
@@ -39,6 +41,7 @@ class CollectionStatus(Enum):
 @dataclass
 class EvidenceSource:
     """Evidence source configuration"""
+
     source_id: str
     source_type: str
     priority: int = 99
@@ -51,11 +54,12 @@ class EvidenceSource:
     last_health_check: Optional[datetime] = None
     average_latency_ms: float = 0.0
     success_rate: float = 1.0
-    
+
 
 @dataclass
 class EvidenceItem:
     """Individual evidence item"""
+
     evidence_id: str
     source_id: str
     content: Any
@@ -71,12 +75,13 @@ class EvidenceItem:
 @dataclass
 class CollectionResult:
     """Result from evidence collection"""
+
     source_id: str
     status: CollectionStatus
     evidence: List[Dict[str, Any]] = field(default_factory=list)
     error_message: Optional[str] = None
     duration: float = 0.0
-    
+
     def __getitem__(self, key):
         """Make CollectionResult subscriptable"""
         # Support both attribute names and legacy field names
@@ -86,38 +91,46 @@ class CollectionResult:
             return self.duration * 1000
         elif key == "status":
             # Return string value for compatibility
-            return self.status.value if isinstance(self.status, CollectionStatus) else self.status
+            return (
+                self.status.value
+                if isinstance(self.status, CollectionStatus)
+                else self.status
+            )
         return getattr(self, key)
-    
+
     def __contains__(self, key):
         """Support 'in' operator"""
         # Support both actual attributes and legacy names
         if key in ["data", "collection_time_ms"]:
             return True
         return hasattr(self, key)
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary"""
         return {
             "source_id": self.source_id,
-            "status": self.status.value if isinstance(self.status, CollectionStatus) else self.status,
+            "status": (
+                self.status.value
+                if isinstance(self.status, CollectionStatus)
+                else self.status
+            ),
             "evidence": self.evidence,
             "data": self.evidence,  # Include for backward compatibility
             "error_message": self.error_message,
             "duration": self.duration,
-            "collection_time_ms": self.duration * 1000
+            "collection_time_ms": self.duration * 1000,
         }
 
 
 class EvidenceCache:
     """In-memory evidence cache with TTL"""
-    
+
     def __init__(self, default_ttl_seconds: int = 3600):
         self._cache: Dict[str, Tuple[Any, datetime]] = {}
         self._default_ttl = timedelta(seconds=default_ttl_seconds)
         self._hit_count = 0
         self._miss_count = 0
-    
+
     def get(self, key: str) -> Optional[Any]:
         """Get item from cache if not expired"""
         if key in self._cache:
@@ -129,17 +142,17 @@ class EvidenceCache:
                 del self._cache[key]
         self._miss_count += 1
         return None
-    
+
     def set(self, key: str, value: Any, ttl: Optional[timedelta] = None):
         """Set item in cache with TTL"""
         ttl = ttl or self._default_ttl
         expiry = datetime.now() + ttl
         self._cache[key] = (value, expiry)
-    
+
     def invalidate(self, key: str):
         """Remove item from cache"""
         self._cache.pop(key, None)
-    
+
     def invalidate_pattern(self, pattern: Dict[str, Any]):
         """Invalidate all keys matching pattern"""
         to_remove = []
@@ -149,7 +162,7 @@ class EvidenceCache:
                 to_remove.append(key)
         for key in to_remove:
             self.invalidate(key)
-    
+
     def invalidate_older_than(self, age: timedelta):
         """Invalidate all items older than specified age"""
         cutoff = datetime.now() - age
@@ -159,7 +172,7 @@ class EvidenceCache:
                 to_remove.append(key)
         for key in to_remove:
             self.invalidate(key)
-    
+
     def get_stats(self) -> Dict[str, Any]:
         """Get cache statistics"""
         total = self._hit_count + self._miss_count
@@ -168,7 +181,7 @@ class EvidenceCache:
             "size": len(self._cache),
             "hit_count": self._hit_count,
             "miss_count": self._miss_count,
-            "hit_rate": hit_rate
+            "hit_rate": hit_rate,
         }
 
 
@@ -176,7 +189,7 @@ class EvidenceOrchestratorV2:
     """
     Next-generation evidence orchestrator with advanced capabilities
     """
-    
+
     def __init__(self):
         self._sources: Dict[str, EvidenceSource] = {}
         self._cache = EvidenceCache()
@@ -188,13 +201,13 @@ class EvidenceOrchestratorV2:
             "timeout_collections": 0,
             "cache_hits": 0,
             "max_concurrent": 0,
-            "total_time_ms": 0
+            "total_time_ms": 0,
         }
         self._deduplication_enabled = False
         self._seen_fingerprints: Set[str] = set()
-        
+
     # === Source Management ===
-    
+
     def register_source(self, config: Dict[str, Any]) -> Dict[str, Any]:
         """Register a new evidence source"""
         # Store response_time_ms and simulate_error in metadata if provided
@@ -203,7 +216,7 @@ class EvidenceOrchestratorV2:
             metadata["response_time_ms"] = config["response_time_ms"]
         if "simulate_error" in config:
             metadata["simulate_error"] = config["simulate_error"]
-        
+
         source = EvidenceSource(
             source_id=config["source_id"],
             source_type=config.get("source_type", "database"),  # Default to database
@@ -212,17 +225,17 @@ class EvidenceOrchestratorV2:
             verified=config.get("verified", False),
             capabilities=config.get("capabilities", []),
             connection=config.get("connection", {}),
-            metadata=metadata
+            metadata=metadata,
         )
-        
+
         self._sources[source.source_id] = source
-        
+
         return {
             "success": True,
             "source_id": source.source_id,
-            "message": f"Source '{source.source_id}' registered successfully"
+            "message": f"Source '{source.source_id}' registered successfully",
         }
-    
+
     def list_sources(self) -> List[Dict[str, Any]]:
         """List all registered sources"""
         return [
@@ -232,73 +245,79 @@ class EvidenceOrchestratorV2:
                 "priority": s.priority,
                 "trust_level": s.trust_level,
                 "health_status": s.health_status.value,
-                "capabilities": s.capabilities
+                "capabilities": s.capabilities,
             }
             for s in self._sources.values()
         ]
-    
+
     def discover_sources(self) -> List[Dict[str, Any]]:
         """Automatically discover available evidence sources"""
         discovered = []
-        
+
         # Check for Supabase
         if os.getenv("SUPABASE_URL"):
-            discovered.append({
-                "source_id": "supabase_auto",
-                "source_type": "supabase",
-                "connection": {
-                    "url": os.getenv("SUPABASE_URL"),
-                    "key": os.getenv("SUPABASE_KEY", "")
+            discovered.append(
+                {
+                    "source_id": "supabase_auto",
+                    "source_type": "supabase",
+                    "connection": {
+                        "url": os.getenv("SUPABASE_URL"),
+                        "key": os.getenv("SUPABASE_KEY", ""),
+                    },
                 }
-            })
-        
+            )
+
         # Check for Neo4j
         if os.getenv("NEO4J_URI"):
-            discovered.append({
-                "source_id": "neo4j_auto",
-                "source_type": "neo4j",
-                "connection": {
-                    "uri": os.getenv("NEO4J_URI"),
-                    "user": os.getenv("NEO4J_USER", "neo4j")
+            discovered.append(
+                {
+                    "source_id": "neo4j_auto",
+                    "source_type": "neo4j",
+                    "connection": {
+                        "uri": os.getenv("NEO4J_URI"),
+                        "user": os.getenv("NEO4J_USER", "neo4j"),
+                    },
                 }
-            })
-        
+            )
+
         # Check for Redis
         if os.getenv("REDIS_URL"):
-            discovered.append({
-                "source_id": "redis_auto",
-                "source_type": "redis",
-                "connection": {
-                    "url": os.getenv("REDIS_URL")
+            discovered.append(
+                {
+                    "source_id": "redis_auto",
+                    "source_type": "redis",
+                    "connection": {"url": os.getenv("REDIS_URL")},
                 }
-            })
-        
+            )
+
         return discovered
-    
+
     def check_source_health(self, source_id: str) -> Dict[str, Any]:
         """Check health status of a source"""
         if source_id not in self._sources:
             return {"error": f"Source '{source_id}' not found"}
-        
+
         source = self._sources[source_id]
         start_time = time.time()
-        
+
         # Simulate health check (in real implementation, would ping the source)
         # For now, we'll use a simple heuristic
         is_healthy = source.trust_level > 0.3
         latency_ms = (time.time() - start_time) * 1000
-        
-        source.health_status = SourceStatus.HEALTHY if is_healthy else SourceStatus.DEGRADED
+
+        source.health_status = (
+            SourceStatus.HEALTHY if is_healthy else SourceStatus.DEGRADED
+        )
         source.last_health_check = datetime.now()
         source.average_latency_ms = (source.average_latency_ms + latency_ms) / 2
-        
+
         return {
             "source_id": source_id,
             "status": source.health_status.value,
             "latency_ms": latency_ms,
-            "last_check": source.last_health_check.isoformat()
+            "last_check": source.last_health_check.isoformat(),
         }
-    
+
     def get_sources_by_priority(self) -> List[Dict[str, Any]]:
         """Get sources ordered by priority"""
         sorted_sources = sorted(self._sources.values(), key=lambda s: s.priority)
@@ -306,48 +325,44 @@ class EvidenceOrchestratorV2:
             {
                 "source_id": s.source_id,
                 "priority": s.priority,
-                "source_type": s.source_type
+                "source_type": s.source_type,
             }
             for s in sorted_sources
         ]
-    
+
     # === Parallel Collection ===
-    
+
     async def collect_parallel(
-        self,
-        query: Dict[str, Any],
-        sources: List[str],
-        timeout: float = 5.0
+        self, query: Dict[str, Any], sources: List[str], timeout: float = 5.0
     ) -> List[CollectionResult]:
         """Collect evidence from multiple sources in parallel"""
         self._collection_metrics["total_collections"] += 1
-        
+
         # Create tasks for each source
         tasks = []
         for source_id in sources:
             if source_id in self._sources:
                 task = self._collect_from_source(source_id, query, timeout)
                 tasks.append(task)
-        
+
         # Execute with concurrency limit
         results = []
         if self._concurrency_limit:
             # Track maximum concurrent collections correctly
             self._collection_metrics["max_concurrent"] = min(
-                self._concurrency_limit,
-                len(tasks)
+                self._concurrency_limit, len(tasks)
             )
-            
+
             # Process in batches
             for i in range(0, len(tasks), self._concurrency_limit):
-                batch = tasks[i:i + self._concurrency_limit]
+                batch = tasks[i : i + self._concurrency_limit]
                 batch_results = await asyncio.gather(*batch, return_exceptions=True)
                 results.extend(batch_results)
         else:
             # No limit, all tasks run concurrently
             self._collection_metrics["max_concurrent"] = len(tasks)
             results = await asyncio.gather(*tasks, return_exceptions=True)
-        
+
         # Process results
         collection_results = []
         for result in results:
@@ -356,7 +371,7 @@ class EvidenceOrchestratorV2:
                     CollectionResult(
                         source_id="unknown",
                         status=CollectionStatus.ERROR,
-                        error_message=str(result)
+                        error_message=str(result),
                     )
                 )
                 self._collection_metrics["failed_collections"] += 1
@@ -366,87 +381,86 @@ class EvidenceOrchestratorV2:
                     self._collection_metrics["successful_collections"] += 1
                 elif result.status == CollectionStatus.TIMEOUT:
                     self._collection_metrics["timeout_collections"] += 1
-        
+
         return collection_results
-    
+
     async def _collect_from_source(
-        self,
-        source_id: str,
-        query: Dict[str, Any],
-        timeout: float
+        self, source_id: str, query: Dict[str, Any], timeout: float
     ) -> CollectionResult:
         """Collect evidence from a single source"""
         start_time = time.time()
-        
+
         try:
             # Create the actual collection task
             async def do_collection():
                 source = self._sources[source_id]
-                
+
                 # Check if source simulates slow response
                 if "response_time_ms" in source.metadata:
                     delay = source.metadata["response_time_ms"] / 1000
                     await asyncio.sleep(delay)
-                
+
                 # Check if source simulates error
                 if source.metadata.get("simulate_error", False):
                     raise Exception("Simulated source error")
-                
+
                 # Simulate successful collection
-                evidence = [{
-                    "source": source_id,
-                    "query": query,
-                    "results": f"Evidence from {source_id}",
-                    "timestamp": datetime.now().isoformat()
-                }]
-                
+                evidence = [
+                    {
+                        "source": source_id,
+                        "query": query,
+                        "results": f"Evidence from {source_id}",
+                        "timestamp": datetime.now().isoformat(),
+                    }
+                ]
+
                 return evidence
-            
+
             # Execute with timeout
             evidence = await asyncio.wait_for(do_collection(), timeout=timeout)
-            
+
             return CollectionResult(
                 source_id=source_id,
                 status=CollectionStatus.SUCCESS,
                 evidence=evidence,
-                duration=(time.time() - start_time)
+                duration=(time.time() - start_time),
             )
-            
+
         except asyncio.TimeoutError:
             return CollectionResult(
                 source_id=source_id,
                 status=CollectionStatus.TIMEOUT,
-                duration=(time.time() - start_time)
+                duration=(time.time() - start_time),
             )
         except Exception as e:
             return CollectionResult(
                 source_id=source_id,
                 status=CollectionStatus.ERROR,
                 error_message=str(e),
-                duration=(time.time() - start_time)
+                duration=(time.time() - start_time),
             )
-    
+
     def set_concurrency_limit(self, limit: int):
         """Set maximum concurrent collections"""
         self._concurrency_limit = limit
-    
+
     def get_collection_metrics(self) -> Dict[str, Any]:
         """Get collection performance metrics"""
         return self._collection_metrics.copy()
-    
+
     # === Validation and Scoring ===
-    
+
     def validate_evidence(self, evidence: Dict[str, Any]) -> Dict[str, Any]:
         """Validate evidence structure and content"""
         errors = []
         warnings = []
-        
+
         # Check required fields
         required_fields = ["evidence_id", "source_id", "type", "content"]
         for field in required_fields:
             if field not in evidence:
                 errors.append(f"Missing required field: {field}")
-        
+
         # Check metadata
         if "metadata" in evidence:
             if not isinstance(evidence["metadata"], dict):
@@ -457,117 +471,118 @@ class EvidenceOrchestratorV2:
                 for field in recommended:
                     if field not in evidence["metadata"]:
                         warnings.append(f"Missing recommended metadata field: {field}")
-        
-        return {
-            "is_valid": len(errors) == 0,
-            "errors": errors,
-            "warnings": warnings
-        }
-    
+
+        return {"is_valid": len(errors) == 0, "errors": errors, "warnings": warnings}
+
     def score_evidence_quality(self, evidence: Dict[str, Any]) -> Dict[str, Any]:
         """Score evidence quality based on multiple factors"""
         scores = {}
-        
+
         # Completeness score
         required_fields = ["evidence_id", "source_id", "type", "content", "metadata"]
         present_fields = sum(1 for f in required_fields if f in evidence)
         scores["completeness_score"] = present_fields / len(required_fields)
-        
+
         # Freshness score
         if "metadata" in evidence:
             created_at = evidence["metadata"].get("created_at")
             if created_at:
                 age_days = (datetime.now() - datetime.fromisoformat(created_at)).days
-                scores["freshness_score"] = max(0, 1 - (age_days / 365))  # Decay over 1 year
+                scores["freshness_score"] = max(
+                    0, 1 - (age_days / 365)
+                )  # Decay over 1 year
             else:
                 scores["freshness_score"] = 0.5
         else:
             scores["freshness_score"] = 0.5
-        
+
         # Source reliability score
         source_id = evidence.get("source_id")
         if source_id in self._sources:
             scores["source_reliability_score"] = self._sources[source_id].trust_level
         else:
             scores["source_reliability_score"] = 0.5
-        
+
         # Reference score
         references = evidence.get("metadata", {}).get("references", [])
         scores["reference_score"] = min(1.0, len(references) / 3)  # Cap at 3 references
-        
+
         # Calculate overall score
         weights = {
             "completeness_score": 0.25,
             "freshness_score": 0.25,
             "source_reliability_score": 0.3,
-            "reference_score": 0.2
+            "reference_score": 0.2,
         }
-        
+
         overall_score = sum(scores[k] * weights[k] for k in scores)
         scores["overall_score"] = overall_score
-        
+
         return scores
-    
-    def score_relevance(self, evidence: Dict[str, Any], query: Dict[str, Any]) -> Dict[str, Any]:
+
+    def score_relevance(
+        self, evidence: Dict[str, Any], query: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Score evidence relevance to a specific query"""
         score = 0.0
         matches = []
-        
+
         # Check regulation match
         if "regulation" in query and "metadata" in evidence:
             ev_reg = evidence["metadata"].get("regulation", "")
             if ev_reg == query["regulation"]:
                 score += 0.5
                 matches.append("regulation")
-        
+
         # Check topic match
         if "topic" in query:
             content = evidence.get("content", "").lower()
             topics = evidence.get("metadata", {}).get("topics", [])
-            
+
             if query["topic"] in topics:
                 score += 0.3
                 matches.append("exact_topic")
             elif query["topic"].lower() in content:
                 score += 0.2
                 matches.append("content_mention")
-        
-        return {
-            "score": min(1.0, score),
-            "matches": matches
-        }
-    
-    def calculate_similarity(self, evidence1: Dict[str, Any], evidence2: Dict[str, Any]) -> float:
+
+        return {"score": min(1.0, score), "matches": matches}
+
+    def calculate_similarity(
+        self, evidence1: Dict[str, Any], evidence2: Dict[str, Any]
+    ) -> float:
         """Calculate similarity between two pieces of evidence"""
         content1 = str(evidence1.get("content", "")).lower()
         content2 = str(evidence2.get("content", "")).lower()
-        
+
         # If contents are identical
         if content1 == content2:
             return 1.0
-        
+
         # Use word-based similarity for better semantic comparison
         words1 = set(content1.split())
         words2 = set(content2.split())
-        
+
         # Calculate Jaccard similarity
         intersection = words1.intersection(words2)
         union = words1.union(words2)
-        
+
         if not union:
             return 0.0
-            
+
         jaccard = len(intersection) / len(union)
-        
+
         # Also use sequence similarity
         sequence_sim = SequenceMatcher(None, content1, content2).ratio()
-        
+
         # Weighted average (prefer word-based for semantic comparison)
         return (jaccard * 0.7) + (sequence_sim * 0.3)
-    
+
     # === Aggregation ===
-    
-    def aggregate_by_field(self, evidence_list: List[Dict], field: str) -> Dict[str, List]:
+
+    def aggregate_by_field(
+        self, evidence_list: List[Dict], field: str
+    ) -> Dict[str, List]:
         """Aggregate evidence by a specific field"""
         aggregated = defaultdict(list)
         for evidence in evidence_list:
@@ -575,55 +590,51 @@ class EvidenceOrchestratorV2:
             if key:
                 aggregated[key].append(evidence)
         return dict(aggregated)
-    
+
     def merge_duplicates(
-        self,
-        evidence_list: List[Dict],
-        similarity_threshold: float = 0.8
+        self, evidence_list: List[Dict], similarity_threshold: float = 0.8
     ) -> List[Dict]:
         """Merge duplicate evidence based on similarity"""
         if not evidence_list:
             return []
-        
+
         merged = []
         processed = set()
-        
+
         for i, evidence in enumerate(evidence_list):
             if i in processed:
                 continue
-            
+
             # Find similar evidence
             similar = []
-            for j, other in enumerate(evidence_list[i+1:], i+1):
+            for j, other in enumerate(evidence_list[i + 1 :], i + 1):
                 if j not in processed:
                     similarity = self.calculate_similarity(evidence, other)
                     if similarity >= similarity_threshold:
                         similar.append(j)
                         processed.add(j)
-            
+
             # Create merged evidence
             if similar:
                 merged_evidence = evidence.copy()
                 merged_evidence["merged_from"] = [
                     evidence["evidence_id"],
-                    *[evidence_list[j]["evidence_id"] for j in similar]
+                    *[evidence_list[j]["evidence_id"] for j in similar],
                 ]
                 merged.append(merged_evidence)
             else:
                 merged.append(evidence)
-            
+
             processed.add(i)
-        
+
         return merged
-    
+
     def aggregate_hierarchical(
-        self,
-        evidence_list: List[Dict],
-        levels: List[str]
+        self, evidence_list: List[Dict], levels: List[str]
     ) -> Dict:
         """Create hierarchical aggregation of evidence"""
         hierarchy = {}
-        
+
         for evidence in evidence_list:
             current = hierarchy
             for level in levels[:-1]:
@@ -632,20 +643,18 @@ class EvidenceOrchestratorV2:
                     if key not in current:
                         current[key] = {}
                     current = current[key]
-            
+
             # Add evidence at the leaf level
             leaf_key = evidence.get(levels[-1])
             if leaf_key:
                 if leaf_key not in current:
                     current[leaf_key] = []
                 current[leaf_key].append(evidence)
-        
+
         return hierarchy
-    
+
     def aggregate_weighted(
-        self,
-        evidence_list: List[Dict],
-        weight_factors: Dict[str, float]
+        self, evidence_list: List[Dict], weight_factors: Dict[str, float]
     ) -> List[Dict]:
         """Aggregate evidence with weighted scoring"""
         for evidence in evidence_list:
@@ -654,176 +663,158 @@ class EvidenceOrchestratorV2:
                 if factor in evidence:
                     weighted_score += evidence[factor] * weight
             evidence["weighted_score"] = weighted_score
-        
+
         # Sort by weighted score
-        return sorted(evidence_list, key=lambda e: e.get("weighted_score", 0), reverse=True)
-    
+        return sorted(
+            evidence_list, key=lambda e: e.get("weighted_score", 0), reverse=True
+        )
+
     # === Caching and Deduplication ===
-    
+
     async def collect_with_cache(self, query: Dict[str, Any]) -> Dict[str, Any]:
         """Collect evidence with caching"""
         cache_key = json.dumps(query, sort_keys=True)
-        
+
         # Check cache
         cached_result = self._cache.get(cache_key)
         if cached_result:
             self._collection_metrics["cache_hits"] += 1
-            return {
-                "cache_hit": True,
-                "data": cached_result,
-                "collection_time_ms": 0
-            }
-        
+            return {"cache_hit": True, "data": cached_result, "collection_time_ms": 0}
+
         # Collect from sources
         start_time = time.time()
         # Simulate collection
         await asyncio.sleep(0.1)  # Simulate work
         data = {"query": query, "results": "Fresh evidence"}
-        
+
         # Cache result
         self._cache.set(cache_key, data)
-        
+
         return {
             "cache_hit": False,
             "data": data,
-            "collection_time_ms": (time.time() - start_time) * 1000
+            "collection_time_ms": (time.time() - start_time) * 1000,
         }
-    
+
     def cache_evidence(self, query: Dict[str, Any], data: Any):
         """Cache evidence for a query"""
         cache_key = json.dumps(query, sort_keys=True)
         self._cache.set(cache_key, data)
-    
+
     def is_cached(self, query: Dict[str, Any]) -> bool:
         """Check if query result is cached"""
         cache_key = json.dumps(query, sort_keys=True)
         return self._cache.get(cache_key) is not None
-    
+
     def invalidate_cache_older_than(self, age: timedelta):
         """Invalidate cache entries older than specified age"""
         self._cache.invalidate_older_than(age)
-    
+
     def invalidate_cache_by_pattern(self, pattern: Dict[str, Any]):
         """Invalidate cache entries matching pattern"""
         self._cache.invalidate_pattern(pattern)
-    
+
     def generate_fingerprint(self, evidence: Dict[str, Any]) -> str:
         """Generate fingerprint for evidence deduplication"""
         # Use content for fingerprinting, ignore metadata
         content = evidence.get("content", "")
         return hashlib.sha256(content.encode()).hexdigest()
-    
+
     def enable_deduplication(self):
         """Enable evidence deduplication"""
         self._deduplication_enabled = True
         self._seen_fingerprints.clear()
-    
+
     def add_evidence_batch(self, evidence_batch: List[Dict]) -> List[Dict]:
         """Add evidence batch with deduplication"""
         if not self._deduplication_enabled:
             return evidence_batch
-        
+
         deduplicated = []
         for evidence in evidence_batch:
             fingerprint = self.generate_fingerprint(evidence)
             if fingerprint not in self._seen_fingerprints:
                 self._seen_fingerprints.add(fingerprint)
                 deduplicated.append(evidence)
-        
+
         return deduplicated
-    
+
     # === Confidence Calculations ===
-    
+
     def calculate_confidence(self, evidence: Dict[str, Any]) -> Dict[str, Any]:
         """Calculate confidence based on source"""
         source_id = evidence.get("source_id")
-        
+
         if source_id in self._sources:
             source = self._sources[source_id]
             return {
                 "source_confidence": source.trust_level,
-                "source_verified": source.verified
+                "source_verified": source.verified,
             }
-        
-        return {
-            "source_confidence": 0.5,
-            "source_verified": False
-        }
-    
+
+        return {"source_confidence": 0.5, "source_verified": False}
+
     def calculate_temporal_confidence(
-        self,
-        evidence: Dict[str, Any],
-        half_life_days: int = 30
+        self, evidence: Dict[str, Any], half_life_days: int = 30
     ) -> Dict[str, Any]:
         """Calculate confidence decay over time"""
         created_at = evidence.get("created_at")
         if not created_at:
             return {"temporal_confidence": 0.5}
-        
+
         # Calculate age in days
         created_dt = datetime.fromisoformat(created_at)
         age_days = (datetime.now() - created_dt).days
-        
+
         # Exponential decay
         confidence = math.exp(-0.693 * age_days / half_life_days)
-        
+
         return {"temporal_confidence": confidence}
-    
+
     def calculate_corroboration_confidence(
         self,
         primary_evidence: Dict[str, Any],
-        corroborating_evidence: List[Dict[str, Any]]
+        corroborating_evidence: List[Dict[str, Any]],
     ) -> Dict[str, Any]:
         """Calculate confidence based on corroboration"""
         if not corroborating_evidence:
-            return {
-                "corroboration_score": 0.3,
-                "corroborating_sources": 0
-            }
-        
+            return {"corroboration_score": 0.3, "corroborating_sources": 0}
+
         # Count unique sources
         sources = set()
         for evidence in corroborating_evidence:
             sources.add(evidence.get("source_id"))
-        
+
         # More sources = higher confidence
         # Adjusted formula: base 0.4, +0.3 per source (up to 1.0)
         score = min(1.0, 0.4 + (len(sources) * 0.3))
-        
-        return {
-            "corroboration_score": score,
-            "corroborating_sources": len(sources)
-        }
-    
+
+        return {"corroboration_score": score, "corroborating_sources": len(sources)}
+
     def calculate_composite_confidence(
-        self,
-        evidence: Dict[str, Any],
-        weights: Dict[str, float]
+        self, evidence: Dict[str, Any], weights: Dict[str, float]
     ) -> Dict[str, Any]:
         """Calculate composite confidence score"""
         factors = {}
-        
+
         # Source confidence
         source_conf = self.calculate_confidence(evidence)
         factors["source"] = source_conf["source_confidence"]
-        
+
         # Temporal confidence
         temporal_conf = self.calculate_temporal_confidence(evidence)
         factors["temporal"] = temporal_conf["temporal_confidence"]
-        
+
         # Quality confidence
         quality_scores = self.score_evidence_quality(evidence)
         factors["quality"] = quality_scores["overall_score"]
-        
+
         # Corroboration (simplified for this example)
         corroborated_by = evidence.get("metadata", {}).get("corroborated_by", [])
         corr_score = min(1.0, 0.3 + len(corroborated_by) * 0.2)
         factors["corroboration"] = corr_score
-        
+
         # Calculate weighted average
         overall = sum(factors[k] * weights.get(k, 0) for k in factors)
-        
-        return {
-            "overall_confidence": overall,
-            "confidence_factors": factors
-        }
+
+        return {"overall_confidence": overall, "confidence_factors": factors}

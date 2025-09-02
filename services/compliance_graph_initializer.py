@@ -26,6 +26,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class ComplianceDomain:
     """Core compliance domain structure"""
+
     name: str
     description: str
     risk_level: str  # high, medium, low
@@ -37,6 +38,7 @@ class ComplianceDomain:
 @dataclass
 class Jurisdiction:
     """Legal jurisdiction structure"""
+
     name: str
     code: str  # ISO country codes
     regulatory_authority: str
@@ -48,6 +50,7 @@ class Jurisdiction:
 @dataclass
 class Regulation:
     """Regulatory framework structure"""
+
     name: str
     code: str
     jurisdiction: str
@@ -62,6 +65,7 @@ class Regulation:
 @dataclass
 class Requirement:
     """Specific regulatory requirement"""
+
     regulation_code: str
     section: str
     title: str
@@ -75,6 +79,7 @@ class Requirement:
 @dataclass
 class Control:
     """Control measure for compliance"""
+
     name: str
     control_type: str  # preventive, detective, corrective
     requirements: List[str]  # requirement IDs
@@ -87,6 +92,7 @@ class Control:
 @dataclass
 class ComplianceMetric:
     """Compliance measurement and KPI"""
+
     name: str
     metric_type: str  # effectiveness, efficiency, coverage
     calculation_method: str
@@ -142,10 +148,10 @@ class ComplianceGraphInitializer:
                     "controls": controls_created,
                     "metrics": metrics_created,
                     "risk_assessments": risks_created,
-                    "enforcement_cases": enforcement_created
+                    "enforcement_cases": enforcement_created,
                 },
                 "relationships_created": relationships_created + temporal_created,
-                "message": "Compliance graph initialization completed successfully"
+                "message": "Compliance graph initialization completed successfully",
             }
 
             logger.info(f"Compliance graph initialization completed: {result}")
@@ -156,7 +162,7 @@ class ComplianceGraphInitializer:
             return {
                 "status": "error",
                 "error": str(e),
-                "timestamp": datetime.utcnow().isoformat()
+                "timestamp": datetime.utcnow().isoformat(),
             }
 
     async def _clear_existing_data(self) -> None:
@@ -180,14 +186,14 @@ class ComplianceGraphInitializer:
             "CREATE CONSTRAINT regulation_code IF NOT EXISTS FOR (r:Regulation) REQUIRE r.code IS UNIQUE",
             "CREATE CONSTRAINT requirement_id IF NOT EXISTS FOR (req:Requirement) REQUIRE req.id IS UNIQUE",
             "CREATE CONSTRAINT control_name IF NOT EXISTS FOR (c:Control) REQUIRE c.name IS UNIQUE",
-            "CREATE CONSTRAINT metric_name IF NOT EXISTS FOR (m:Metric) REQUIRE m.name IS UNIQUE"
+            "CREATE CONSTRAINT metric_name IF NOT EXISTS FOR (m:Metric) REQUIRE m.name IS UNIQUE",
         ]
 
         indexes = [
             "CREATE INDEX regulation_jurisdiction IF NOT EXISTS FOR (r:Regulation) ON (r.jurisdiction)",
             "CREATE INDEX requirement_risk IF NOT EXISTS FOR (req:Requirement) ON (req.risk_level)",
             "CREATE INDEX control_type IF NOT EXISTS FOR (c:Control) ON (c.control_type)",
-            "CREATE INDEX metric_type IF NOT EXISTS FOR (m:Metric) ON (m.metric_type)"
+            "CREATE INDEX metric_type IF NOT EXISTS FOR (m:Metric) ON (m.metric_type)",
         ]
 
         for constraint in constraints:
@@ -213,7 +219,7 @@ class ComplianceGraphInitializer:
                 risk_level="high",
                 regulatory_scope=["6AMLD", "MLR2017", "FATF"],
                 business_impact="critical",
-                oversight_body="FCA"
+                oversight_body="FCA",
             ),
             ComplianceDomain(
                 name="Data Protection",
@@ -221,7 +227,7 @@ class ComplianceGraphInitializer:
                 risk_level="high",
                 regulatory_scope=["GDPR", "DPA2018", "PECR"],
                 business_impact="critical",
-                oversight_body="ICO"
+                oversight_body="ICO",
             ),
             ComplianceDomain(
                 name="Operational Risk",
@@ -229,7 +235,7 @@ class ComplianceGraphInitializer:
                 risk_level="high",
                 regulatory_scope=["DORA", "PRA", "FCA"],
                 business_impact="significant",
-                oversight_body="PRA"
+                oversight_body="PRA",
             ),
             ComplianceDomain(
                 name="Consumer Protection",
@@ -237,7 +243,7 @@ class ComplianceGraphInitializer:
                 risk_level="medium",
                 regulatory_scope=["FCA_PRIN", "CONC", "MCOB"],
                 business_impact="significant",
-                oversight_body="FCA"
+                oversight_body="FCA",
             ),
             ComplianceDomain(
                 name="Market Conduct",
@@ -245,7 +251,7 @@ class ComplianceGraphInitializer:
                 risk_level="medium",
                 regulatory_scope=["MiFID2", "MAR", "COBS"],
                 business_impact="moderate",
-                oversight_body="FCA"
+                oversight_body="FCA",
             ),
             ComplianceDomain(
                 name="Financial Crime",
@@ -253,8 +259,8 @@ class ComplianceGraphInitializer:
                 risk_level="high",
                 regulatory_scope=["PCA2002", "FSMA", "SFO"],
                 business_impact="critical",
-                oversight_body="SFO"
-            )
+                oversight_body="SFO",
+            ),
         ]
 
         query = """
@@ -284,7 +290,7 @@ class ComplianceGraphInitializer:
                 regulatory_authority="FCA, PRA, ICO",
                 enforcement_approach="principles-based",
                 penalties_framework="proportionate",
-                data_localization=False
+                data_localization=False,
             ),
             Jurisdiction(
                 name="European Union",
@@ -292,7 +298,7 @@ class ComplianceGraphInitializer:
                 regulatory_authority="EBA, ESMA, EIOPA",
                 enforcement_approach="rules-based",
                 penalties_framework="standardized",
-                data_localization=True
+                data_localization=True,
             ),
             Jurisdiction(
                 name="United States",
@@ -300,8 +306,8 @@ class ComplianceGraphInitializer:
                 regulatory_authority="FinCEN, CFTC, SEC",
                 enforcement_approach="enforcement-led",
                 penalties_framework="punitive",
-                data_localization=False
-            )
+                data_localization=False,
+            ),
         ]
 
         query = """
@@ -334,7 +340,7 @@ class ComplianceGraphInitializer:
                 last_updated="2024-01-15",
                 risk_rating="critical",
                 penalty_framework="up to 4 years imprisonment",
-                extraterritorial_reach=True
+                extraterritorial_reach=True,
             ),
             Regulation(
                 name="General Data Protection Regulation",
@@ -345,7 +351,7 @@ class ComplianceGraphInitializer:
                 last_updated="2024-03-01",
                 risk_rating="critical",
                 penalty_framework="up to 4% of annual turnover",
-                extraterritorial_reach=True
+                extraterritorial_reach=True,
             ),
             Regulation(
                 name="Digital Operational Resilience Act",
@@ -356,7 +362,7 @@ class ComplianceGraphInitializer:
                 last_updated="2024-12-15",
                 risk_rating="high",
                 penalty_framework="up to 1% of annual turnover",
-                extraterritorial_reach=False
+                extraterritorial_reach=False,
             ),
             Regulation(
                 name="Bank Secrecy Act",
@@ -367,7 +373,7 @@ class ComplianceGraphInitializer:
                 last_updated="2024-06-01",
                 risk_rating="critical",
                 penalty_framework="criminal and civil penalties",
-                extraterritorial_reach=True
+                extraterritorial_reach=True,
             ),
             Regulation(
                 name="Money Laundering Regulations 2017",
@@ -378,7 +384,7 @@ class ComplianceGraphInitializer:
                 last_updated="2024-02-20",
                 risk_rating="critical",
                 penalty_framework="unlimited fines and imprisonment",
-                extraterritorial_reach=False
+                extraterritorial_reach=False,
             ),
             Regulation(
                 name="Data Protection Act 2018",
@@ -389,8 +395,8 @@ class ComplianceGraphInitializer:
                 last_updated="2024-01-10",
                 risk_rating="high",
                 penalty_framework="up to £17.5m or 4% of turnover",
-                extraterritorial_reach=False
-            )
+                extraterritorial_reach=False,
+            ),
         ]
 
         query = """
@@ -426,7 +432,7 @@ class ComplianceGraphInitializer:
                 mandatory=True,
                 deadline_type="ongoing",
                 risk_level="critical",
-                business_function="onboarding"
+                business_function="onboarding",
             ),
             Requirement(
                 regulation_code="6AMLD",
@@ -436,7 +442,7 @@ class ComplianceGraphInitializer:
                 mandatory=True,
                 deadline_type="ongoing",
                 risk_level="high",
-                business_function="operations"
+                business_function="operations",
             ),
             # GDPR Requirements
             Requirement(
@@ -447,7 +453,7 @@ class ComplianceGraphInitializer:
                 mandatory=True,
                 deadline_type="ongoing",
                 risk_level="high",
-                business_function="data_processing"
+                business_function="data_processing",
             ),
             Requirement(
                 regulation_code="GDPR",
@@ -457,7 +463,7 @@ class ComplianceGraphInitializer:
                 mandatory=True,
                 deadline_type="event-driven",
                 risk_level="critical",
-                business_function="incident_response"
+                business_function="incident_response",
             ),
             # DORA Requirements
             Requirement(
@@ -468,7 +474,7 @@ class ComplianceGraphInitializer:
                 mandatory=True,
                 deadline_type="ongoing",
                 risk_level="high",
-                business_function="technology"
+                business_function="technology",
             ),
             Requirement(
                 regulation_code="DORA",
@@ -478,8 +484,8 @@ class ComplianceGraphInitializer:
                 mandatory=True,
                 deadline_type="event-driven",
                 risk_level="high",
-                business_function="incident_response"
-            )
+                business_function="incident_response",
+            ),
         ]
 
         query = """
@@ -513,7 +519,7 @@ class ComplianceGraphInitializer:
                 implementation_guidance="Risk-based approach with enhanced verification for high-risk customers",
                 testing_frequency="quarterly",
                 automation_level="semi-automated",
-                cost_impact="medium"
+                cost_impact="medium",
             ),
             Control(
                 name="Real-time Transaction Monitoring",
@@ -522,7 +528,7 @@ class ComplianceGraphInitializer:
                 implementation_guidance="AI-powered transaction monitoring with configurable rules",
                 testing_frequency="continuous",
                 automation_level="fully-automated",
-                cost_impact="high"
+                cost_impact="high",
             ),
             Control(
                 name="Consent Management System",
@@ -531,7 +537,7 @@ class ComplianceGraphInitializer:
                 implementation_guidance="Granular consent with audit trail and withdrawal mechanisms",
                 testing_frequency="monthly",
                 automation_level="fully-automated",
-                cost_impact="medium"
+                cost_impact="medium",
             ),
             Control(
                 name="Data Breach Response Plan",
@@ -540,7 +546,7 @@ class ComplianceGraphInitializer:
                 implementation_guidance="Automated breach detection with escalation procedures",
                 testing_frequency="semi-annually",
                 automation_level="semi-automated",
-                cost_impact="low"
+                cost_impact="low",
             ),
             Control(
                 name="ICT Risk Assessment Framework",
@@ -549,8 +555,8 @@ class ComplianceGraphInitializer:
                 implementation_guidance="Comprehensive risk assessment covering all ICT assets",
                 testing_frequency="annually",
                 automation_level="manual",
-                cost_impact="medium"
-            )
+                cost_impact="medium",
+            ),
         ]
 
         query = """
@@ -582,7 +588,7 @@ class ComplianceGraphInitializer:
                 target_value="< 30% high-risk customers",
                 reporting_frequency="monthly",
                 data_source="CRM system",
-                controls=["Enhanced Customer Due Diligence"]
+                controls=["Enhanced Customer Due Diligence"],
             ),
             ComplianceMetric(
                 name="Suspicious Transaction Detection Rate",
@@ -591,7 +597,7 @@ class ComplianceGraphInitializer:
                 target_value="> 95% accuracy",
                 reporting_frequency="daily",
                 data_source="Transaction monitoring system",
-                controls=["Real-time Transaction Monitoring"]
+                controls=["Real-time Transaction Monitoring"],
             ),
             ComplianceMetric(
                 name="Consent Withdrawal Response Time",
@@ -600,7 +606,7 @@ class ComplianceGraphInitializer:
                 target_value="< 24 hours",
                 reporting_frequency="weekly",
                 data_source="Consent management system",
-                controls=["Consent Management System"]
+                controls=["Consent Management System"],
             ),
             ComplianceMetric(
                 name="Data Breach Notification Compliance",
@@ -609,8 +615,8 @@ class ComplianceGraphInitializer:
                 target_value="100% compliance",
                 reporting_frequency="incident-based",
                 data_source="Incident management system",
-                controls=["Data Breach Response Plan"]
-            )
+                controls=["Data Breach Response Plan"],
+            ),
         ]
 
         query = """
@@ -641,48 +647,42 @@ class ComplianceGraphInitializer:
             WHERE r.compliance_domain = d.name
             CREATE (r)-[:GOVERNED_BY]->(d)
             """,
-
             # Jurisdiction to Regulation relationships
             """
             MATCH (j:Jurisdiction), (r:Regulation)
             WHERE r.jurisdiction = j.code OR r.jurisdiction = j.name
             CREATE (r)-[:ENFORCED_IN]->(j)
             """,
-
             # Regulation to Requirement relationships
             """
             MATCH (reg:Regulation), (req:Requirement)
             WHERE req.regulation_code = reg.code
             CREATE (req)-[:MANDATED_BY]->(reg)
             """,
-
             # Requirement to Control relationships
             """
             MATCH (req:Requirement), (c:Control)
             WHERE req.id IN c.requirements
             CREATE (c)-[:ADDRESSES]->(req)
             """,
-
             # Control to Metric relationships
             """
             MATCH (c:Control), (m:Metric)
             WHERE c.name IN m.controls
             CREATE (m)-[:MEASURES]->(c)
             """,
-
             # Risk level relationships
             """
             MATCH (req1:Requirement), (req2:Requirement)
             WHERE req1.risk_level = req2.risk_level AND req1 <> req2
             CREATE (req1)-[:SIMILAR_RISK]->(req2)
             """,
-
             # Business function relationships
             """
             MATCH (req1:Requirement), (req2:Requirement)
             WHERE req1.business_function = req2.business_function AND req1 <> req2
             CREATE (req1)-[:SAME_FUNCTION]->(req2)
-            """
+            """,
         ]
 
         total_relationships = 0

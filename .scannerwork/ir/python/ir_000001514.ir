@@ -1,0 +1,23 @@
+
+tk"
+    Decorator to require authentication for a route.
+    Use with @require_auth on route functions.
+    "strfunc
+ñ ñ("È#
+!
+
+£ £("#unknown-value#+
+)
+
+õ õ(wraps"?python-unknown?*
+(
+
+ù £(%closure"#new-object#(
+&
+
+ù £("#set-field# func:-
++
+
+ù £("?python-partial-apply?:
+
+£ £(*4/home/omar/Documents/ruleIQ/api/dependencies/auth.py

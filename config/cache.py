@@ -56,7 +56,9 @@ class CacheManager:
             logger.info("Redis cache initialized successfully")
 
         except Exception as e:
-            logger.warning(f"Failed to connect to Redis: {e}. Using in-memory cache fallback")
+            logger.warning(
+                f"Failed to connect to Redis: {e}. Using in-memory cache fallback"
+            )
             self.redis_client = None
 
     def _generate_cache_key(self, prefix: str, **kwargs) -> str:
@@ -144,7 +146,9 @@ class CacheManager:
                 return len(keys)
             else:
                 # Memory cache pattern matching
-                keys_to_delete = [k for k in self.memory_cache if pattern.replace("*", "") in k]
+                keys_to_delete = [
+                    k for k in self.memory_cache if pattern.replace("*", "") in k
+                ]
                 for key in keys_to_delete:
                     del self.memory_cache[key]
                 return len(keys_to_delete)
@@ -176,7 +180,11 @@ class CacheManager:
         return await self.get(key)
 
     async def set_evidence_dashboard(
-        self, user_id: str, framework_id: str, dashboard_data: Dict[str, Any], ttl: int = 300
+        self,
+        user_id: str,
+        framework_id: str,
+        dashboard_data: Dict[str, Any],
+        ttl: int = 300,
     ) -> bool:
         """Cache evidence dashboard data (5 min TTL)."""
         key = self._generate_cache_key(
@@ -230,7 +238,9 @@ class CacheManager:
 
         now = datetime.utcnow()
         expired_keys = [
-            key for key, entry in self.memory_cache.items() if now >= entry["expires_at"]
+            key
+            for key, entry in self.memory_cache.items()
+            if now >= entry["expires_at"]
         ]
 
         for key in expired_keys:
@@ -268,7 +278,9 @@ def cache_result(ttl: int = 300, key_prefix: str = "func"):
             # Generate cache key from function name and arguments
             func_name = f"{func.__module__}.{func.__name__}"
             cache_key = cache._generate_cache_key(
-                f"{key_prefix}:{func_name}", args=str(args), kwargs=str(sorted(kwargs.items()))
+                f"{key_prefix}:{func_name}",
+                args=str(args),
+                kwargs=str(sorted(kwargs.items())),
             )
 
             # Try to get from cache

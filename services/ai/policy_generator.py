@@ -17,9 +17,10 @@ from dataclasses import dataclass
 from services.ai.circuit_breaker import AICircuitBreaker
 from database.compliance_framework import ComplianceFramework
 from api.schemas.ai_policy import (
-    PolicyGenerationRequest, PolicyGenerationResponse,
+    PolicyGenerationRequest,
+    PolicyGenerationResponse,
     PolicyRefinementResponse,
-    PolicyValidationResult
+    PolicyValidationResult,
 )
 
 
@@ -29,6 +30,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class TemplateSection:
     """Represents a section from an ISO 27001 template"""
+
     name: str
     content: str
     variables: List[str]
@@ -38,6 +40,7 @@ class TemplateSection:
 @dataclass
 class ParsedTemplate:
     """Result of template parsing"""
+
     success: bool
     template_type: str
     sections: Dict[str, TemplateSection]
@@ -71,7 +74,7 @@ class TemplateProcessor:
                     template_type="unknown",
                     sections={},
                     variables=[],
-                    error_message=f"Template not found: {template_path}"
+                    error_message=f"Template not found: {template_path}",
                 )
 
             # For DOCX files, we would use python-docx
@@ -85,7 +88,7 @@ class TemplateProcessor:
                 success=True,
                 template_type=template_type,
                 sections=sections,
-                variables=variables
+                variables=variables,
             )
 
             # Cache for performance
@@ -99,7 +102,7 @@ class TemplateProcessor:
                 template_type="unknown",
                 sections={},
                 variables=[],
-                error_message=str(e)
+                error_message=str(e),
             )
 
     def _extract_template_type(self, template_path: str) -> str:
@@ -117,7 +120,9 @@ class TemplateProcessor:
         else:
             return "general_policy"
 
-    def _parse_template_content(self, file_path: Path, template_type: str) -> Dict[str, TemplateSection]:
+    def _parse_template_content(
+        self, file_path: Path, template_type: str
+    ) -> Dict[str, TemplateSection]:
         """Parse template content into sections"""
         # Simplified implementation - in production would use python-docx or similar
         sections = {}
@@ -128,20 +133,20 @@ class TemplateProcessor:
                     name="Policy Statement",
                     content="[Organization Name] is committed to protecting information assets...",
                     variables=["organization_name", "effective_date"],
-                    requirements=["Clear commitment statement", "Management approval"]
+                    requirements=["Clear commitment statement", "Management approval"],
                 ),
                 "scope": TemplateSection(
                     name="Scope",
                     content="This policy applies to all [scope_description]...",
                     variables=["scope_description", "applicable_systems"],
-                    requirements=["Define boundaries", "Include all relevant systems"]
+                    requirements=["Define boundaries", "Include all relevant systems"],
                 ),
                 "responsibilities": TemplateSection(
                     name="Responsibilities",
                     content="The following roles have information security responsibilities...",
                     variables=["security_officer", "department_heads"],
-                    requirements=["Clear role definitions", "Accountability measures"]
-                )
+                    requirements=["Clear role definitions", "Accountability measures"],
+                ),
             }
         elif template_type == "privacy_policy":
             sections = {
@@ -149,20 +154,24 @@ class TemplateProcessor:
                     name="Data Controller Information",
                     content="[Organization Name]\n[Address]\nICO Registration: [ico_number]",
                     variables=["organization_name", "address", "ico_number"],
-                    requirements=["Legal entity name", "Contact details", "ICO registration"]
+                    requirements=[
+                        "Legal entity name",
+                        "Contact details",
+                        "ICO registration",
+                    ],
                 ),
                 "legal_basis": TemplateSection(
                     name="Legal Basis for Processing",
                     content="We process personal data under the following legal bases:",
                     variables=["processing_purposes", "legal_bases"],
-                    requirements=["Specific legal bases", "Processing purposes"]
+                    requirements=["Specific legal bases", "Processing purposes"],
                 ),
                 "data_subject_rights": TemplateSection(
                     name="Data Subject Rights",
                     content="You have the following rights regarding your personal data:",
                     variables=["contact_email", "response_timeframe"],
-                    requirements=["All GDPR rights listed", "Exercise procedures"]
-                )
+                    requirements=["All GDPR rights listed", "Exercise procedures"],
+                ),
             }
 
         return sections
@@ -209,9 +218,7 @@ class PolicyGenerator:
             self.openai_client = None
 
     def generate_policy(
-        self,
-        request: PolicyGenerationRequest,
-        framework: ComplianceFramework
+        self, request: PolicyGenerationRequest, framework: ComplianceFramework
     ) -> PolicyGenerationResponse:
         """
         Generate compliance policy using AI with dual provider fallback.
@@ -265,13 +272,11 @@ class PolicyGenerator:
         return self._generate_fallback_policy(request, framework, start_time)
 
     async def generate_policy_stream(
-        self,
-        request: "PolicyGenerationRequest",
-        framework: "ComplianceFramework"
+        self, request: "PolicyGenerationRequest", framework: "ComplianceFramework"
     ):
         """
         Generate policy with streaming support for real-time updates.
-        
+
         Yields chunks of the policy as they are generated, allowing for
         real-time display in the UI.
         """
@@ -286,7 +291,7 @@ class PolicyGenerator:
             "policy_type": request.policy_type,
             "framework_id": str(framework.id),
             "organization_name": request.business_context.organization_name,
-            "provider": self.primary_provider
+            "provider": self.primary_provider,
         }
 
         # Build the prompt
@@ -294,7 +299,7 @@ class PolicyGenerator:
 
         # Track if we successfully streamed
         stream_success = False
-        
+
         # Try primary provider first
         if self.primary_provider == "google" and self.google_client:
             try:
@@ -311,7 +316,7 @@ class PolicyGenerator:
                 stream_success = True
             except Exception as e:
                 logger.warning(f"OpenAI streaming failed: {e}, trying fallback")
-        
+
         # If primary failed, try fallback provider
         if not stream_success:
             # Determine fallback provider (opposite of primary)
@@ -329,7 +334,7 @@ class PolicyGenerator:
                     stream_success = True
                 except Exception as e:
                     logger.error(f"Google fallback streaming failed: {e}")
-        
+
         # If all streaming failed, try non-streaming fallback
         if not stream_success:
             try:
@@ -337,36 +342,35 @@ class PolicyGenerator:
                 policy_response = self.generate_policy(request, framework)
 
                 # Simulate streaming by breaking the policy into sections
-                sections = policy_response.policy_content.split('\n\n')
+                sections = policy_response.policy_content.split("\n\n")
                 for i, section in enumerate(sections):
                     yield {
                         "type": "content",
                         "content": section + "\n\n",
-                        "progress": (i + 1) / len(sections)
+                        "progress": (i + 1) / len(sections),
                     }
                 stream_success = True
-                
+
             except Exception as e:
                 logger.error(f"All policy generation methods failed: {e}")
-                yield {
-                    "type": "error",
-                    "error": str(e)
-                }
+                yield {"type": "error", "error": str(e)}
                 return
 
         # Yield completion chunk if successful
         if stream_success:
             yield {
                 "type": "complete",
-                "message": "Policy generation completed successfully"
+                "message": "Policy generation completed successfully",
             }
 
-    async def _stream_with_google(self, prompt: str, request: "PolicyGenerationRequest"):
+    async def _stream_with_google(
+        self, prompt: str, request: "PolicyGenerationRequest"
+    ):
         """Stream policy generation using Google AI."""
         try:
             import google.generativeai as genai
 
-            model = genai.GenerativeModel('gemini-pro')
+            model = genai.GenerativeModel("gemini-pro")
 
             # Generate with streaming
             response = model.generate_content(
@@ -376,7 +380,7 @@ class PolicyGenerator:
                     temperature=0.7,
                     top_p=0.9,
                     max_output_tokens=4000,
-                )
+                ),
             )
 
             accumulated_text = ""
@@ -392,26 +396,31 @@ class PolicyGenerator:
                         "type": "content",
                         "content": chunk.text,
                         "chunk_id": f"google-{chunk_count}",
-                        "progress": min(chunk_count * 0.1, 0.95)  # Estimate progress
+                        "progress": min(chunk_count * 0.1, 0.95),  # Estimate progress
                     }
 
         except Exception as e:
             logger.error(f"Google streaming error: {e}")
             raise
 
-    async def _stream_with_openai(self, prompt: str, request: "PolicyGenerationRequest"):
+    async def _stream_with_openai(
+        self, prompt: str, request: "PolicyGenerationRequest"
+    ):
         """Stream policy generation using OpenAI."""
         try:
             # Create streaming completion
             stream = await self.openai_client.chat.completions.create(
                 model="gpt-4-turbo-preview",
                 messages=[
-                    {"role": "system", "content": "You are a compliance policy expert."},
-                    {"role": "user", "content": prompt}
+                    {
+                        "role": "system",
+                        "content": "You are a compliance policy expert.",
+                    },
+                    {"role": "user", "content": prompt},
                 ],
                 temperature=0.7,
                 max_tokens=4000,
-                stream=True
+                stream=True,
             )
 
             chunk_count = 0
@@ -428,7 +437,7 @@ class PolicyGenerator:
                         "type": "content",
                         "content": content,
                         "chunk_id": f"openai-{chunk_count}",
-                        "progress": min(chunk_count * 0.05, 0.95)  # Estimate progress
+                        "progress": min(chunk_count * 0.05, 0.95),  # Estimate progress
                     }
 
         except Exception as e:
@@ -436,9 +445,7 @@ class PolicyGenerator:
             raise
 
     def _generate_with_google(
-        self,
-        request: PolicyGenerationRequest,
-        framework: ComplianceFramework
+        self, request: PolicyGenerationRequest, framework: ComplianceFramework
     ) -> PolicyGenerationResponse:
         """Generate policy using Google AI"""
         prompt = self._build_policy_prompt(request, framework)
@@ -451,7 +458,7 @@ class PolicyGenerator:
                 confidence_score=0.92,
                 provider_used="google",
                 generated_sections=["mock_section"],
-                compliance_checklist=["mock_compliance"]
+                compliance_checklist=["mock_compliance"],
             )
 
         result = self.google_client.generate_policy(prompt, request.customization_level)
@@ -464,13 +471,11 @@ class PolicyGenerator:
             generated_sections=result["generated_sections"],
             compliance_checklist=result["compliance_checklist"],
             estimated_cost=result.get("estimated_cost", 0.0),
-            tokens_used=result.get("tokens_used", 0)
+            tokens_used=result.get("tokens_used", 0),
         )
 
     def _generate_with_openai(
-        self,
-        request: PolicyGenerationRequest,
-        framework: ComplianceFramework
+        self, request: PolicyGenerationRequest, framework: ComplianceFramework
     ) -> PolicyGenerationResponse:
         """Generate policy using OpenAI as fallback"""
         prompt = self._build_policy_prompt(request, framework)
@@ -479,11 +484,12 @@ class PolicyGenerator:
             # Mock response for testing
             return PolicyGenerationResponse(
                 success=True,
-                policy_content=self._generate_mock_policy(request, framework) + " (OpenAI fallback)",
+                policy_content=self._generate_mock_policy(request, framework)
+                + " (OpenAI fallback)",
                 confidence_score=0.88,
                 provider_used="openai",
                 generated_sections=["fallback_section"],
-                compliance_checklist=["fallback_compliance"]
+                compliance_checklist=["fallback_compliance"],
             )
 
         result = self.openai_client.generate_policy(prompt, request.customization_level)
@@ -496,20 +502,22 @@ class PolicyGenerator:
             generated_sections=result["generated_sections"],
             compliance_checklist=result["compliance_checklist"],
             estimated_cost=result.get("estimated_cost", 0.0),
-            tokens_used=result.get("tokens_used", 0)
+            tokens_used=result.get("tokens_used", 0),
         )
 
     def _generate_fallback_policy(
         self,
         request: PolicyGenerationRequest,
         framework: ComplianceFramework,
-        start_time: float
+        start_time: float,
     ) -> PolicyGenerationResponse:
         """Generate fallback policy when all AI providers fail"""
 
         # Use template-based generation
         template_content = self._get_template_fallback(request.policy_type, framework)
-        customized_content = self._customize_template(template_content, request.business_context)
+        customized_content = self._customize_template(
+            template_content, request.business_context
+        )
 
         return PolicyGenerationResponse(
             success=False,
@@ -520,13 +528,11 @@ class PolicyGenerator:
             compliance_checklist=[],
             error_message="All AI providers failed",
             fallback_content=customized_content,
-            generation_time_ms=int((time.time() - start_time) * 1000)
+            generation_time_ms=int((time.time() - start_time) * 1000),
         )
 
     def _build_policy_prompt(
-        self,
-        request: PolicyGenerationRequest,
-        framework: ComplianceFramework
+        self, request: PolicyGenerationRequest, framework: ComplianceFramework
     ) -> str:
         """Build AI prompt for policy generation"""
 
@@ -564,9 +570,7 @@ class PolicyGenerator:
         return prompt.strip()
 
     def _generate_mock_policy(
-        self,
-        request: PolicyGenerationRequest,
-        framework: ComplianceFramework
+        self, request: PolicyGenerationRequest, framework: ComplianceFramework
     ) -> str:
         """Generate mock policy for testing"""
         context = request.business_context
@@ -590,9 +594,11 @@ class PolicyGenerator:
         Effective Date: {datetime.now().strftime('%Y-%m-%d')}
         """
 
-    def _get_template_fallback(self, policy_type: str, framework: ComplianceFramework) -> str:
+    def _get_template_fallback(
+        self, policy_type: str, framework: ComplianceFramework
+    ) -> str:
         """Get template-based fallback content"""
-        if hasattr(framework, 'policy_template') and framework.policy_template:
+        if hasattr(framework, "policy_template") and framework.policy_template:
             return framework.policy_template
 
         # Default template based on policy type
@@ -621,21 +627,23 @@ class PolicyGenerator:
 
             ## Responsibilities
             All staff must follow security procedures.
-            """
+            """,
         }
 
-        return templates.get(policy_type, "# Basic Policy Template\n\nPolicy content to be customized.")
+        return templates.get(
+            policy_type, "# Basic Policy Template\n\nPolicy content to be customized."
+        )
 
     def _customize_template(self, template: str, context) -> str:
         """Customize template with business context"""
         customized = template.replace("[Organization Name]", context.organization_name)
-        customized = customized.replace("[Address]", getattr(context, 'address', 'Address not provided'))
+        customized = customized.replace(
+            "[Address]", getattr(context, "address", "Address not provided")
+        )
         return customized
 
     def _generate_cache_key(
-        self,
-        request: PolicyGenerationRequest,
-        framework: ComplianceFramework
+        self, request: PolicyGenerationRequest, framework: ComplianceFramework
     ) -> str:
         """Generate cache key for policy request"""
         key_data = {
@@ -643,17 +651,14 @@ class PolicyGenerator:
             "policy_type": request.policy_type,
             "customization_level": request.customization_level,
             "org_name": request.business_context.organization_name,
-            "industry": request.business_context.industry
+            "industry": request.business_context.industry,
         }
 
         key_string = json.dumps(key_data, sort_keys=True)
         return hashlib.md5(key_string.encode()).hexdigest()
 
     def refine_policy(
-        self,
-        original_policy: str,
-        feedback: List[str],
-        framework: ComplianceFramework
+        self, original_policy: str, feedback: List[str], framework: ComplianceFramework
     ) -> PolicyRefinementResponse:
         """
         Refine existing policy based on feedback.
@@ -671,7 +676,9 @@ class PolicyGenerator:
         # Try primary provider first
         if self.circuit_breaker.get_state(self.primary_provider) != "OPEN":
             try:
-                prompt = self._build_refinement_prompt(original_policy, feedback, framework)
+                prompt = self._build_refinement_prompt(
+                    original_policy, feedback, framework
+                )
 
                 if self.google_client:
                     result = self.google_client.refine_policy(prompt)
@@ -680,7 +687,7 @@ class PolicyGenerator:
                     result = {
                         "refined_content": f"Enhanced version of:\n{original_policy}\n\nImprovements: {', '.join(feedback)}",
                         "changes_made": feedback,
-                        "confidence_score": 0.94
+                        "confidence_score": 0.94,
                     }
 
                 return PolicyRefinementResponse(
@@ -689,7 +696,7 @@ class PolicyGenerator:
                     changes_made=result["changes_made"],
                     confidence_score=result["confidence_score"],
                     provider_used="google",
-                    generation_time_ms=int((time.time() - start_time) * 1000)
+                    generation_time_ms=int((time.time() - start_time) * 1000),
                 )
 
             except Exception as e:
@@ -704,14 +711,11 @@ class PolicyGenerator:
             confidence_score=0.0,
             provider_used="none",
             error_message="AI refinement unavailable",
-            generation_time_ms=int((time.time() - start_time) * 1000)
+            generation_time_ms=int((time.time() - start_time) * 1000),
         )
 
     def _build_refinement_prompt(
-        self,
-        original_policy: str,
-        feedback: List[str],
-        framework: ComplianceFramework
+        self, original_policy: str, feedback: List[str], framework: ComplianceFramework
     ) -> str:
         """Build prompt for policy refinement"""
         return f"""
@@ -729,9 +733,7 @@ class PolicyGenerator:
         """
 
     def validate_uk_policy(
-        self,
-        policy_content: str,
-        framework: ComplianceFramework
+        self, policy_content: str, framework: ComplianceFramework
     ) -> PolicyValidationResult:
         """
         Validate policy against UK-specific requirements.
@@ -750,10 +752,16 @@ class PolicyGenerator:
 
         # Check for UK-specific requirements
         if framework.name == "ICO_GDPR_UK":
-            if "ICO Registration" not in policy_content and "ICO registration" not in policy_content:
+            if (
+                "ICO Registration" not in policy_content
+                and "ICO registration" not in policy_content
+            ):
                 errors.append("ICO registration number missing")
 
-            if not any(contact in policy_content.lower() for contact in ["address", "contact", "email"]):
+            if not any(
+                contact in policy_content.lower()
+                for contact in ["address", "contact", "email"]
+            ):
                 errors.append("Contact details incomplete")
 
             required_rights = ["access", "rectify", "erase", "portability"]
@@ -762,7 +770,9 @@ class PolicyGenerator:
                     missing_sections.append(f"Data subject right: {right}")
 
         # Calculate compliance score
-        total_checks = len(framework.key_requirement) if framework.key_requirement else 5
+        total_checks = (
+            len(framework.key_requirement) if framework.key_requirement else 5
+        )
         failed_checks = len(errors) + len(missing_sections)
         compliance_score = max(0.0, (total_checks - failed_checks) / total_checks)
 
@@ -772,5 +782,5 @@ class PolicyGenerator:
             errors=errors,
             warnings=warnings,
             suggestions=suggestions,
-            missing_sections=missing_sections
+            missing_sections=missing_sections,
         )

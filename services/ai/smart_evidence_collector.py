@@ -183,13 +183,19 @@ class SmartEvidenceCollector:
             )
 
             # Create prioritized tasks
-            tasks = await self._create_prioritized_tasks(evidence_gaps, business_context, framework)
+            tasks = await self._create_prioritized_tasks(
+                evidence_gaps, business_context, framework
+            )
 
             # Optimize task scheduling
-            optimized_tasks = self._optimize_task_scheduling(tasks, target_completion_weeks)
+            optimized_tasks = self._optimize_task_scheduling(
+                tasks, target_completion_weeks
+            )
 
             # Calculate automation opportunities
-            automation_opportunities = self._calculate_automation_opportunities(optimized_tasks)
+            automation_opportunities = self._calculate_automation_opportunities(
+                optimized_tasks
+            )
 
             # Create collection plan
             plan = CollectionPlan(
@@ -197,8 +203,11 @@ class SmartEvidenceCollector:
                 business_profile_id=business_profile_id,
                 framework=framework,
                 total_tasks=len(optimized_tasks),
-                estimated_total_hours=sum(task.estimated_effort_hours for task in optimized_tasks),
-                completion_target_date=datetime.utcnow() + timedelta(weeks=target_completion_weeks),
+                estimated_total_hours=sum(
+                    task.estimated_effort_hours for task in optimized_tasks
+                ),
+                completion_target_date=datetime.utcnow()
+                + timedelta(weeks=target_completion_weeks),
                 tasks=optimized_tasks,
                 automation_opportunities=automation_opportunities,
             )
@@ -206,7 +215,9 @@ class SmartEvidenceCollector:
             # Store the plan
             self.active_plans[plan.plan_id] = plan
 
-            logger.info(f"Created collection plan {plan.plan_id} with {len(optimized_tasks)} tasks")
+            logger.info(
+                f"Created collection plan {plan.plan_id} with {len(optimized_tasks)} tasks"
+            )
             return plan
 
         except Exception as e:
@@ -361,7 +372,9 @@ class SmartEvidenceCollector:
         return base_requirements
 
     def _analyze_evidence_gaps(
-        self, requirements: List[Dict[str, Any]], existing_evidence: List[Dict[str, Any]]
+        self,
+        requirements: List[Dict[str, Any]],
+        existing_evidence: List[Dict[str, Any]],
     ) -> List[Dict[str, Any]]:
         """Analyze gaps between requirements and existing evidence."""
 
@@ -391,7 +404,10 @@ class SmartEvidenceCollector:
         return gaps
 
     async def _create_prioritized_tasks(
-        self, evidence_gaps: List[Dict[str, Any]], business_context: Dict[str, Any], framework: str
+        self,
+        evidence_gaps: List[Dict[str, Any]],
+        business_context: Dict[str, Any],
+        framework: str,
     ) -> List[EvidenceTask]:
         """Create prioritized evidence collection tasks."""
 
@@ -401,7 +417,8 @@ class SmartEvidenceCollector:
             # Determine automation level and effort
             evidence_type = gap.get("evidence_type", "unknown")
             automation_info = self.automation_rules.get(
-                evidence_type, {"automation_level": AutomationLevel.MANUAL, "effort_reduction": 0.0}
+                evidence_type,
+                {"automation_level": AutomationLevel.MANUAL, "effort_reduction": 0.0},
             )
 
             # Calculate base effort
@@ -423,7 +440,9 @@ class SmartEvidenceCollector:
                 title=gap.get("title", f"Evidence Collection Task {i + 1}"),
                 description=f"Collect evidence for {gap.get('title', 'compliance requirement')}",
                 priority=priority,
-                automation_level=automation_info.get("automation_level", AutomationLevel.MANUAL),
+                automation_level=automation_info.get(
+                    "automation_level", AutomationLevel.MANUAL
+                ),
                 estimated_effort_hours=estimated_effort,
                 metadata={
                     "automation_tools": automation_info.get("tools", []),
@@ -438,7 +457,9 @@ class SmartEvidenceCollector:
         # Sort by priority and effort
         return sorted(tasks, key=lambda t: (t.priority.value, t.estimated_effort_hours))
 
-    def _estimate_base_effort(self, evidence_type: str, business_context: Dict[str, Any]) -> float:
+    def _estimate_base_effort(
+        self, evidence_type: str, business_context: Dict[str, Any]
+    ) -> float:
         """Estimate base effort hours for evidence collection."""
 
         # Base effort by evidence type
@@ -533,7 +554,9 @@ class SmartEvidenceCollector:
 
         return optimized_tasks
 
-    def _calculate_automation_opportunities(self, tasks: List[EvidenceTask]) -> Dict[str, Any]:
+    def _calculate_automation_opportunities(
+        self, tasks: List[EvidenceTask]
+    ) -> Dict[str, Any]:
         """Calculate automation opportunities across all tasks."""
 
         total_tasks = len(tasks)
@@ -553,15 +576,17 @@ class SmartEvidenceCollector:
 
         effort_savings = total_manual_effort - total_optimized_effort
         savings_percentage = (
-            (effort_savings / total_manual_effort * 100) if total_manual_effort > 0 else 0
+            (effort_savings / total_manual_effort * 100)
+            if total_manual_effort > 0
+            else 0
         )
 
         return {
             "total_tasks": total_tasks,
             "automatable_tasks": automated_tasks,
-            "automation_percentage": round(automated_tasks / total_tasks * 100, 1)
-            if total_tasks > 0
-            else 0,
+            "automation_percentage": (
+                round(automated_tasks / total_tasks * 100, 1) if total_tasks > 0 else 0
+            ),
             "effort_savings_hours": round(effort_savings, 1),
             "effort_savings_percentage": round(savings_percentage, 1),
             "recommended_tools": self._get_recommended_automation_tools(tasks),
@@ -609,7 +634,9 @@ class SmartEvidenceCollector:
 
         return False
 
-    async def get_next_priority_tasks(self, plan_id: str, limit: int = 5) -> List[EvidenceTask]:
+    async def get_next_priority_tasks(
+        self, plan_id: str, limit: int = 5
+    ) -> List[EvidenceTask]:
         """Get the next priority tasks for execution."""
 
         plan = self.active_plans.get(plan_id)
@@ -617,11 +644,17 @@ class SmartEvidenceCollector:
             return []
 
         # Get pending tasks sorted by priority and due date
-        pending_tasks = [task for task in plan.tasks if task.status == CollectionStatus.PENDING]
+        pending_tasks = [
+            task for task in plan.tasks if task.status == CollectionStatus.PENDING
+        ]
 
         # Sort by priority and due date
         pending_tasks.sort(
-            key=lambda t: (t.priority.value, t.due_date or datetime.max, t.estimated_effort_hours)
+            key=lambda t: (
+                t.priority.value,
+                t.due_date or datetime.max,
+                t.estimated_effort_hours,
+            )
         )
 
         return pending_tasks[:limit]

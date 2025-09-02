@@ -1,0 +1,79 @@
+
+	"100%"str
+!"Define success metrics"str
+"metric"str
+$"Staff training completion"str
+"target"str
+!"Control implementation"str
+"95%"str
+"Gap closure rate"str
+
+0int
+"Policy completion"strself
+³  ³($gaps
+³& ³(6list"¬&
+$
+
+¶ ¶(<"#new-object#Bdict"
+ 
+
+¶ ¶()"	#map-set#:"
+ 
+
+¶+ ¶(;
+"	#map-set#:	&
+$
+
+· ·(="#new-object#Bdict"
+ 
+
+· ·(*"	#map-set#:"
+ 
+
+·, ·(<"	#map-set#:	&
+$
+
+¸ ¸(D"#new-object#Bdict"
+ 
+
+¸ ¸(2"	#map-set#:"
+ 
+
+¸4 ¸(C"	#map-set#:&
+$
+
+¹ ¹(B"#new-object#Bdict"
+ 
+
+¹ ¹(/"	#map-set#:"
+ 
+
+¹1 ¹(A"	#map-set#:	)
+'
+
+µ º(	"#unknown-value#Blist(
+&
+
+µ º(	"
+#is-exact#:Bbool
+
+
+µ º(	"
+#assume#::
+8
+
+µ º(	"#set-field# __collection_size:Bint(
+&
+
+µ º(	"#array-add-last#:(
+&
+
+µ º(	"#array-add-last#:(
+&
+
+µ º(	 "#array-add-last#:(
+&
+
+µ º(	!"#array-add-last#:
+
+µ º(	*;/home/omar/Documents/ruleIQ/tests/mocks/ai_service_mocks.py

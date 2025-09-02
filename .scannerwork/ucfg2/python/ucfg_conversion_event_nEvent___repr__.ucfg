@@ -1,0 +1,65 @@
+
+2database.conversion_event.ConversionEvent.__repr__D
+8/home/omar/Documents/ruleIQ/database/conversion_event.pyÕ Õ("2*è
+2
+Œ —(	z
+x
+
+œ& œ(:
+%1"__id*^
+
+__unknown_file (B*@+
+)database.conversion_event.ConversionEvent"
+conversion_type{
+y
+
+– –(+
+%2"__id*_
+
+__unknown_file (C*A+
+)database.conversion_event.ConversionEvent"
+conversion_stage{
+y
+
+–6 –(K
+%3"__id*_
+
+__unknown_file (C*A+
+)database.conversion_event.ConversionEvent"
+conversion_valueÒ
+Ó
+
+œ –(O
+%4"__concat*)
+
+œ œ(%
+<ConversionEvent(type='*
+
+œ& œ(:
+
+%1*
+
+œ; œ(>
+', *
+
+– –(	
+stage='*
+
+– –(+
+
+%2*
+
+–, –(5
+	', value=*
+
+–6 –(K
+
+%3*
+
+–L –(N
+)>"
+
+Œ —(	
+
+%4B-+
+)database.conversion_event.ConversionEventH

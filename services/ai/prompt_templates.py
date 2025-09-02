@@ -140,7 +140,9 @@ class AdvancedPromptSanitizer:
             "immediate action required",
         ]
 
-    def analyze_input(self, input_string: str, context: str = "general") -> SecurityAnalysis:
+    def analyze_input(
+        self, input_string: str, context: str = "general"
+    ) -> SecurityAnalysis:
         """Comprehensive security analysis of input."""
         original_hash = hashlib.sha256(input_string.encode()).hexdigest()
         threats_detected = []
@@ -153,7 +155,11 @@ class AdvancedPromptSanitizer:
                 matches = re.findall(pattern, input_string, re.IGNORECASE | re.DOTALL)
                 if matches:
                     threats_detected.append(f"{category}: {pattern}")
-                    if category in ["instruction_override", "jailbreak", "code_injection"]:
+                    if category in [
+                        "instruction_override",
+                        "jailbreak",
+                        "code_injection",
+                    ]:
                         threat_level = ThreatLevel.MALICIOUS
                         confidence = max(confidence, 0.9)
                     elif category in ["role_manipulation", "escape_attempts"]:
@@ -171,7 +177,9 @@ class AdvancedPromptSanitizer:
         for trigger in self.semantic_triggers:
             if trigger.lower() in input_string.lower():
                 threats_detected.append(f"semantic: {trigger}")
-                threat_level = max(threat_level, ThreatLevel.SUSPICIOUS, key=lambda x: x.value)
+                threat_level = max(
+                    threat_level, ThreatLevel.SUSPICIOUS, key=lambda x: x.value
+                )
                 confidence = max(confidence, 0.6)
 
         # Statistical analysis
@@ -189,7 +197,9 @@ class AdvancedPromptSanitizer:
         threats_detected.extend(context_threats)
 
         if context_threats:
-            threat_level = max(threat_level, ThreatLevel.SUSPICIOUS, key=lambda x: x.value)
+            threat_level = max(
+                threat_level, ThreatLevel.SUSPICIOUS, key=lambda x: x.value
+            )
             confidence = max(confidence, 0.6)
 
         # Sanitize the content
@@ -264,7 +274,9 @@ class AdvancedPromptSanitizer:
 
         return threats
 
-    def _sanitize_content(self, content: str, threat_level: ThreatLevel, context: str) -> str:
+    def _sanitize_content(
+        self, content: str, threat_level: ThreatLevel, context: str
+    ) -> str:
         """Sanitize content based on threat level."""
         if threat_level == ThreatLevel.BLOCKED:
             return "[CONTENT BLOCKED]"
@@ -279,15 +291,21 @@ class AdvancedPromptSanitizer:
             # Aggressive sanitization for malicious content
             for category, patterns in self.injection_patterns.items():
                 for pattern in patterns:
-                    sanitized = re.sub(pattern, "[FILTERED]", sanitized, flags=re.IGNORECASE)
+                    sanitized = re.sub(
+                        pattern, "[FILTERED]", sanitized, flags=re.IGNORECASE
+                    )
 
         elif threat_level == ThreatLevel.SUSPICIOUS:
             # Moderate sanitization for suspicious content
             # Remove common injection patterns but preserve more content
             for pattern in self.injection_patterns["instruction_override"]:
-                sanitized = re.sub(pattern, "[FILTERED]", sanitized, flags=re.IGNORECASE)
+                sanitized = re.sub(
+                    pattern, "[FILTERED]", sanitized, flags=re.IGNORECASE
+                )
             for pattern in self.injection_patterns["escape_attempts"]:
-                sanitized = re.sub(pattern, "[FILTERED]", sanitized, flags=re.IGNORECASE)
+                sanitized = re.sub(
+                    pattern, "[FILTERED]", sanitized, flags=re.IGNORECASE
+                )
 
         # Context-specific sanitization
         if context == "code":
@@ -436,7 +454,9 @@ def validate_prompt_safety(
 
     # Log validation results
     if not validation_report["safe"]:
-        logger.warning(f"Prompt safety validation failed: {validation_report['threats_detected']}")
+        logger.warning(
+            f"Prompt safety validation failed: {validation_report['threats_detected']}"
+        )
 
     return validation_report
 
@@ -460,7 +480,8 @@ def get_security_analysis(input_text: str, context: str = "general") -> Dict[str
         "threats_detected": analysis.threats_detected,
         "input_hash": analysis.original_hash,
         "metadata": analysis.analysis_metadata,
-        "safe_to_proceed": analysis.threat_level in [ThreatLevel.CLEAN, ThreatLevel.SUSPICIOUS],
+        "safe_to_proceed": analysis.threat_level
+        in [ThreatLevel.CLEAN, ThreatLevel.SUSPICIOUS],
         "recommended_action": _get_recommended_action(analysis),
     }
 
@@ -490,7 +511,10 @@ class PromptTemplates:
         self._safety_enabled = True  # Enable safety validation by default
 
     def _validate_and_secure_prompt(
-        self, prompt_dict: Dict[str, str], context: Dict[str, Any], prompt_type: str = "general"
+        self,
+        prompt_dict: Dict[str, str],
+        context: Dict[str, Any],
+        prompt_type: str = "general",
     ) -> Dict[str, str]:
         """
         Validate prompt safety and return secured version.
@@ -508,12 +532,15 @@ class PromptTemplates:
 
         validation_result = validate_prompt_safety(prompt_dict, context)
         if not validation_result["safe"]:
-            logger.error(f"{prompt_type} prompt failed safety validation: {validation_result}")
+            logger.error(
+                f"{prompt_type} prompt failed safety validation: {validation_result}"
+            )
             # Return a safe fallback prompt
             return {
                 "system": "You are a helpful AI assistant. Respond safely and appropriately.",
                 "user": create_safety_fence(
-                    "[UNSAFE PROMPT BLOCKED - Request contains suspicious content]", "user"
+                    "[UNSAFE PROMPT BLOCKED - Request contains suspicious content]",
+                    "user",
                 ),
             }
 
@@ -586,7 +613,9 @@ class PromptTemplates:
         prompt_parts = [f'User message: """{sanitize_input(message)}"""']
 
         if business_info:
-            prompt_parts.append(f"Business context: {json.dumps(business_info, indent=2)}")
+            prompt_parts.append(
+                f"Business context: {json.dumps(business_info, indent=2)}"
+            )
 
         if context.get("recent_evidence"):
             prompt_parts.append(
@@ -604,7 +633,10 @@ class PromptTemplates:
         system_instruction = get_system_instruction(
             "general",  # Use general instruction for intent classification
             business_profile=context.get("business_profile"),
-            additional_context={"intent_classification": True, "expected_output": "JSON"},
+            additional_context={
+                "intent_classification": True,
+                "expected_output": "JSON",
+            },
         )
 
         user_prompt = f'''
@@ -628,7 +660,9 @@ class PromptTemplates:
             "user": user_prompt,
         }
 
-        return self._validate_and_secure_prompt(prompt_dict, context, "intent_classification")
+        return self._validate_and_secure_prompt(
+            prompt_dict, context, "intent_classification"
+        )
 
     def get_evidence_query_prompt(
         self, message: str, evidence_items: List[Any], context: Dict[str, Any]
@@ -639,7 +673,10 @@ class PromptTemplates:
         system_instruction = get_system_instruction(
             "evidence",
             business_profile=context.get("business_profile"),
-            additional_context={"evidence_analysis": True, "task_type": "evidence_query"},
+            additional_context={
+                "evidence_analysis": True,
+                "task_type": "evidence_query",
+            },
         )
 
         evidence_summary = json.dumps(
@@ -681,7 +718,9 @@ class PromptTemplates:
 
         return self._validate_and_secure_prompt(prompt_dict, context, "evidence_query")
 
-    def get_compliance_check_prompt(self, message: str, context: Dict[str, Any]) -> Dict[str, str]:
+    def get_compliance_check_prompt(
+        self, message: str, context: Dict[str, Any]
+    ) -> Dict[str, str]:
         """Creates the prompt for compliance status checks."""
         system_prompt = """
         You are ComplianceGPT, a compliance expert. Provide a comprehensive compliance status overview based on the user's current state.
@@ -718,7 +757,9 @@ class PromptTemplates:
 
         return {"system": system_prompt, "user": user_prompt}
 
-    def get_guidance_request_prompt(self, message: str, context: Dict[str, Any]) -> Dict[str, str]:
+    def get_guidance_request_prompt(
+        self, message: str, context: Dict[str, Any]
+    ) -> Dict[str, str]:
         """Creates the prompt for providing compliance guidance."""
         system_prompt = """
         You are ComplianceGPT, a knowledgeable compliance consultant. Provide expert guidance and recommendations based on the user's specific needs.
@@ -1057,7 +1098,10 @@ If you need clarification on any aspect of their request, feel free to ask follo
         system_instruction = get_system_instruction(
             "general",
             business_profile=context.get("business_profile"),
-            additional_context={"conversation_mode": True, "comprehensive_response": True},
+            additional_context={
+                "conversation_mode": True,
+                "comprehensive_response": True,
+            },
         )
 
         business_info = context.get("business_profile", {})
@@ -1148,7 +1192,11 @@ If you need clarification on any aspect of their request, feel free to ask follo
         return {"system": system_prompt, "user": user_prompt}
 
     def get_workflow_generation_prompt(
-        self, framework: str, control_id: str, business_context: Dict[str, Any], workflow_type: str
+        self,
+        framework: str,
+        control_id: str,
+        business_context: Dict[str, Any],
+        workflow_type: str,
     ) -> Dict[str, str]:
         """Creates prompts for intelligent workflow generation."""
 

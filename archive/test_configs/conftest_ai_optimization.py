@@ -30,7 +30,10 @@ def event_loop():
 def circuit_breaker_config():
     """Circuit breaker configuration for testing."""
     return CircuitBreakerConfig(
-        failure_threshold=3, timeout_seconds=60, half_open_max_calls=2, success_threshold=2
+        failure_threshold=3,
+        timeout_seconds=60,
+        half_open_max_calls=2,
+        success_threshold=2,
     )
 
 
@@ -86,7 +89,9 @@ async def mock_compliance_assistant():
         yield "Mock streaming response"
 
     assistant.analyze_assessment_results_stream = AsyncMock(return_value=mock_stream())
-    assistant.get_assessment_recommendations_stream = AsyncMock(return_value=mock_stream())
+    assistant.get_assessment_recommendations_stream = AsyncMock(
+        return_value=mock_stream()
+    )
     assistant.get_assessment_help_stream = AsyncMock(return_value=mock_stream())
 
     return assistant
@@ -140,7 +145,11 @@ def mock_business_context():
         "framework_context": {
             "framework_id": "gdpr",
             "version": "2018",
-            "applicable_sections": ["data_protection", "consent", "breach_notification"],
+            "applicable_sections": [
+                "data_protection",
+                "consent",
+                "breach_notification",
+            ],
         },
     }
 
@@ -223,10 +232,14 @@ def mock_context_manager():
     """Mock context manager for testing."""
     context_manager = Mock()
     context_manager.get_conversation_context = AsyncMock(
-        return_value={"business_profile": {"industry": "technology", "company_size": "small"}}
+        return_value={
+            "business_profile": {"industry": "technology", "company_size": "small"}
+        }
     )
     context_manager.get_business_context = AsyncMock(
-        return_value={"business_profile": {"industry": "technology", "company_size": "small"}}
+        return_value={
+            "business_profile": {"industry": "technology", "company_size": "small"}
+        }
     )
     return context_manager
 
@@ -262,7 +275,11 @@ def mock_ai_dependencies():
 def test_task_contexts():
     """Various task contexts for testing model selection."""
     return {
-        "simple_help": {"task_type": "help", "prompt_length": 100, "complexity": "simple"},
+        "simple_help": {
+            "task_type": "help",
+            "prompt_length": 100,
+            "complexity": "simple",
+        },
         "complex_analysis": {
             "task_type": "analysis",
             "prompt_length": 2000,

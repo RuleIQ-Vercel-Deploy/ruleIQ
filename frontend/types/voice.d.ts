@@ -1,6 +1,6 @@
 /**
  * Voice Interface Types for Future Voice Integration
- * 
+ *
  * This file defines the types and interfaces for voice functionality
  * that will be implemented in future versions of the application.
  * The structure is designed to support:
@@ -18,24 +18,24 @@ export interface VoiceState {
   isListening: boolean;
   isProcessing: boolean;
   isSpeaking: boolean;
-  
+
   // Call state
   isInCall: boolean;
   callDuration: number;
   callParticipants: VoiceParticipant[];
-  
+
   // Audio state
   volume: number;
   isMuted: boolean;
   noiseSuppressionEnabled: boolean;
   echoCancellationEnabled: boolean;
-  
+
   // Recognition state
   transcript: string;
   interimTranscript: string;
   confidence: number;
   language: string;
-  
+
   // Error state
   error: VoiceError | null;
   lastErrorTime: Date | null;
@@ -47,7 +47,7 @@ export interface VoiceCapabilities {
   speechSynthesis: boolean;
   mediaDevices: boolean;
   webRTC: boolean;
-  
+
   // Feature capabilities
   continuousRecognition: boolean;
   interimResults: boolean;
@@ -55,7 +55,7 @@ export interface VoiceCapabilities {
   calling: boolean;
   voiceCommands: boolean;
   wakeWord: boolean;
-  
+
   // Audio processing
   noiseSuppression: boolean;
   echoCancellation: boolean;
@@ -69,18 +69,18 @@ export interface VoiceConfig {
   interimResults: boolean;
   maxAlternatives: number;
   confidenceThreshold: number;
-  
+
   // Synthesis settings
   voiceType: 'male' | 'female' | 'neutral';
   speechRate: number;
   pitch: number;
   volume: number;
-  
+
   // Audio processing
   noiseSuppression: boolean;
   echoCancellation: boolean;
   automaticGainControl: boolean;
-  
+
   // Advanced features
   wakeWord?: string;
   voiceCommands?: VoiceCommand[];
@@ -135,25 +135,25 @@ export enum VoiceErrorCode {
   // Permission errors
   PERMISSION_DENIED = 'PERMISSION_DENIED',
   MICROPHONE_NOT_FOUND = 'MICROPHONE_NOT_FOUND',
-  
+
   // Recognition errors
   RECOGNITION_FAILED = 'RECOGNITION_FAILED',
   LANGUAGE_NOT_SUPPORTED = 'LANGUAGE_NOT_SUPPORTED',
   NO_SPEECH_DETECTED = 'NO_SPEECH_DETECTED',
-  
+
   // Synthesis errors
   SYNTHESIS_FAILED = 'SYNTHESIS_FAILED',
   VOICE_NOT_AVAILABLE = 'VOICE_NOT_AVAILABLE',
-  
+
   // Connection errors
   NETWORK_ERROR = 'NETWORK_ERROR',
   SERVER_ERROR = 'SERVER_ERROR',
   TIMEOUT = 'TIMEOUT',
-  
+
   // Call errors
   CALL_FAILED = 'CALL_FAILED',
   PEER_CONNECTION_FAILED = 'PEER_CONNECTION_FAILED',
-  
+
   // General errors
   NOT_SUPPORTED = 'NOT_SUPPORTED',
   UNKNOWN_ERROR = 'UNKNOWN_ERROR',
@@ -164,15 +164,15 @@ export interface VoiceAnalytics {
   totalTranscriptions: number;
   totalSynthesisRequests: number;
   totalCallMinutes: number;
-  
+
   // Quality metrics
   averageConfidence: number;
   recognitionAccuracy: number;
-  
+
   // Performance metrics
   averageLatency: number;
   processingTime: number;
-  
+
   // User preferences
   preferredLanguage: string;
   preferredVoice: string;

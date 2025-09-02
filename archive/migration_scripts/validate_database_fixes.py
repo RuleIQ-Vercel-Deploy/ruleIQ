@@ -28,13 +28,15 @@ class DatabaseValidator:
         """Check if a table exists in the database."""
         async with self.async_engine.begin() as conn:
             result = await conn.execute(
-                text("""
+                text(
+                    """
                 SELECT EXISTS (
                     SELECT FROM information_schema.tables
                     WHERE table_schema = 'public'
                     AND table_name = :table_name
                 )
-            """),
+            """
+                ),
                 {"table_name": table_name},
             )
 
@@ -44,12 +46,14 @@ class DatabaseValidator:
         """Get all column names for a table."""
         async with self.async_engine.begin() as conn:
             result = await conn.execute(
-                text("""
+                text(
+                    """
                 SELECT column_name
                 FROM information_schema.columns
                 WHERE table_name = :table_name
                 ORDER BY ordinal_position
-            """),
+            """
+                ),
                 {"table_name": table_name},
             )
 
@@ -76,7 +80,10 @@ class DatabaseValidator:
         }
 
         if not await self.check_table_exists("assessment_sessions"):
-            return {"status": "ERROR", "message": "assessment_sessions table does not exist"}
+            return {
+                "status": "ERROR",
+                "message": "assessment_sessions table does not exist",
+            }
 
         all_columns = set(await self.get_table_columns("assessment_sessions"))
 
@@ -130,7 +137,10 @@ class DatabaseValidator:
         }
 
         if not await self.check_table_exists("business_profiles"):
-            return {"status": "ERROR", "message": "business_profiles table does not exist"}
+            return {
+                "status": "ERROR",
+                "message": "business_profiles table does not exist",
+            }
 
         all_columns = set(await self.get_table_columns("business_profiles"))
 
@@ -166,7 +176,8 @@ class DatabaseValidator:
         async with self.async_engine.begin() as conn:
             # Check assessment_sessions -> business_profiles foreign key
             fk_result = await conn.execute(
-                text("""
+                text(
+                    """
                 SELECT
                     tc.table_name,
                     kcu.column_name,
@@ -182,7 +193,8 @@ class DatabaseValidator:
                 WHERE tc.constraint_type = 'FOREIGN KEY'
                     AND tc.table_name = 'assessment_sessions'
                     AND kcu.column_name = 'business_profile_id'
-            """)
+            """
+                )
             )
 
             fk_constraints = fk_result.fetchall()
@@ -207,7 +219,8 @@ class DatabaseValidator:
             async with self.async_engine.begin() as conn:
                 # Test assessment_sessions query
                 await conn.execute(
-                    text("""
+                    text(
+                        """
                     SELECT
                         business_profile_id,
                         questions_answered,
@@ -215,19 +228,22 @@ class DatabaseValidator:
                         recommended_frameworks
                     FROM assessment_sessions
                     LIMIT 1
-                """)
+                """
+                    )
                 )
 
                 # Test business_profiles query
                 await conn.execute(
-                    text("""
+                    text(
+                        """
                     SELECT
                         handles_personal_data,
                         processes_payments,
                         stores_health_data
                     FROM business_profiles
                     LIMIT 1
-                """)
+                """
+                    )
                 )
 
                 return {
@@ -246,9 +262,11 @@ class DatabaseValidator:
         try:
             async with self.async_engine.begin() as conn:
                 result = await conn.execute(
-                    text("""
+                    text(
+                        """
                     SELECT version_num FROM alembic_version
-                """)
+                """
+                    )
                 )
 
                 version = result.scalar()
@@ -267,7 +285,10 @@ class DatabaseValidator:
                     }
 
         except Exception as e:
-            return {"status": "ERROR", "message": f"Could not check migration version: {str(e)}"}
+            return {
+                "status": "ERROR",
+                "message": f"Could not check migration version: {str(e)}",
+            }
 
     async def run_full_validation(self) -> Dict[str, Any]:
         """Run complete database validation."""
@@ -279,7 +300,9 @@ class DatabaseValidator:
         results["migration_version"] = await self.check_migration_version()
 
         # Validate assessment_sessions schema
-        results["assessment_sessions"] = await self.validate_assessment_sessions_schema()
+        results["assessment_sessions"] = (
+            await self.validate_assessment_sessions_schema()
+        )
 
         # Validate business_profiles schema
         results["business_profiles"] = await self.validate_business_profiles_schema()

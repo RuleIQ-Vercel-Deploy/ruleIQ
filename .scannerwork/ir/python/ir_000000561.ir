@@ -1,0 +1,39 @@
+
+C:"Check if test suite should be run based on configuration"str
+truebool
+
+"exclude_suites"str
+"include_suites"strselfA A(
+suite_nameA A(."s'
+%
+C C(*"#get-field# config:*
+(
+C C(*"
+#binop in#2in:Bbool"
+C C(* *C C(
+"‹'
+%
+D! D(,"#get-field# config:"
+ 
+D! D(>"#array-read#:*
+(
+D D(>	"
+#binop in#2in:Bbool
+D D(>	"u'
+%
+E E(*"#get-field# config:*
+(
+E E(*"
+#binop in#2in:
+Bbool"
+E E(* *E E(
+"“'
+%
+F% F(0"#get-field# config:"
+ 
+F% F(B"#array-read#:
+2
+0
+F F(B"#binop not in#2not in:Bbool
+F F(B"
+G G(*F/home/omar/Documents/ruleIQ/tests/performance/run_performance_tests.py

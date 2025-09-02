@@ -7,7 +7,7 @@ describe('Dialog Import Test', () => {
   it('should import Dialog components without error', async () => {
     // Try to import the Dialog components
     const dialogModule = await import('@/components/ui/dialog');
-    
+
     expect(dialogModule.Dialog).toBeDefined();
     expect(dialogModule.DialogContent).toBeDefined();
     expect(dialogModule.DialogTitle).toBeDefined();

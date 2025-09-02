@@ -1,0 +1,82 @@
+
+\services.ai.instruction_templates.SystemInstructionTemplates._initialize_persona_adaptationsL
+@/home/omar/Documents/ruleIQ/services/ai/instruction_templates.pyã ã('"2*É
+2
+ä ä(A
+
+å „(	
+%1"dict„
+
+
+æ ï(
+%2"__mapSet*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+alex*˜
+
+__unknown_file (ûø
+õ
+Persona Adaptation for Alex (Analytical):
+Alex is data-driven and values customization, control, and detailed analysis. Adapt your responses to:
+- Provide detailed metrics, scores, and quantitative analysis
+- Include advanced filtering options and data export capabilities
+- Offer customization options and configuration choices
+- Present information in structured, analytical formats
+- Include comparative analysis and benchmarking data
+- Provide detailed technical implementation guidance
+ë
+è
+
+ð ù(
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*#
+
+__unknown_file (
+ben*€
+
+__unknown_file (ãà
+Ý
+Persona Adaptation for Ben (Cautious):
+Ben is risk-averse and needs guidance, reassurance, and step-by-step support. Adapt your responses to:
+- Use step-by-step wizards and guided processes
+- Provide extensive help text, tooltips, and explanations
+- Include confirmation dialogs and safety checks
+- Offer auto-save features and progress preservation
+- Present clear progress indicators and completion status
+- Provide reassuring language and risk mitigation guidance
+
+
+
+ú ƒ(
+%4"__mapSet*"
+
+__unknown_file (
+
+%1*)
+
+__unknown_file (
+	catherine*Ÿ
+
+__unknown_file (‚ÿ
+ü
+Persona Adaptation for Catherine (Principled):
+Catherine is ethics-focused and values transparency, audit trails, and compliance documentation. Adapt your responses to:
+- Emphasize audit trails and version history
+- Show compliance status prominently and clearly
+- Include policy documentation links and references
+- Provide transparent reasoning and decision explanations
+- Include ethical considerations and compliance implications
+- Offer comprehensive documentation and record-keeping guidance
+"
+
+å „(	
+
+%1B@>
+<services.ai.instruction_templates.SystemInstructionTemplatesH

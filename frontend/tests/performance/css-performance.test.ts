@@ -23,7 +23,7 @@ test.describe('CSS Performance Tests', () => {
     // Check CSS load times
     for (const [url, duration] of Object.entries(cssLoadTimes)) {
       expect(duration).toBeLessThan(500); // CSS should load in under 500ms
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
     }
 
     // Verify critical CSS is inlined or loaded first
@@ -88,7 +88,7 @@ test.describe('CSS Performance Tests', () => {
 
     // Log sample of unused selectors for optimization
     if (unusedSelectors.length > 0) {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
     }
   });
 
@@ -231,7 +231,7 @@ test.describe('CSS Performance Tests', () => {
     expect(specificityAnalysis.overlySpecific.length).toBeLessThan(20);
 
     if (specificityAnalysis.deeplyNested.length > 0) {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
     }
   });
 

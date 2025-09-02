@@ -1,0 +1,124 @@
+
+"S3518"bool
+†ü"Calculate throughput for a workflow type.
+        
+        Args:
+            workflow_type: Type of workflow
+            time_window_seconds: Time window in seconds for calculation
+            
+        Returns:
+            Throughput metrics
+        "str
+0.0float
+"division by zero"bool
+60int
+'"average_duration_ms"str
+
+	0int
+"a"bool
+  "throughput_per_minute"str
+%"workflows_per_minute"str
+#"workflows_per_second"strself
+™ ™(!workflow_type
+™# ™(5#time_window_seconds
+™7 ™(T"Ú%
+#
+
+£ £(!"
+timetimeBfloat@
+>
+
+£ £(7cutoff_time"#dependent-value#*:BfloatA
+?
+
+¤ §(	recent_workflows"?python-unknown?:Blist<
+:
+
+ª ª(.workflow_count"
+builtinslen*:Bint@
+>
+
+­G ­(^
+workflows_per_second"	#binop >#2>:	Bbool,"*
+
+­G ­(^
+ *
+­D ­(F2
+­_ ­(c"›,
+*
+
+­ ­(C"
+#binop !=#2!=:	Bbool"
+ 
+
+­ ­(C"
+#assert#:3
+1
+
+­ ­(C"#dependent-value#*:Bfloat
+
+­ ­(e"
+
+­ ­(e"°&*$workflows_per_second	=
+;
+
+® ®(8workflows_per_minute"	#binop *#*2*:A
+?
+
+± ·(	recent_completed"?python-unknown?:Blist3
+1
+
+¹ ¹(avg_duration_ms"#id#:Bfloat+
+)
+
+º º("
+__bool__*:BboolH "
+
+º º( *
+º º(
+"±8
+6
+
+» »(Y	durations"?python-unknown?:Blist'
+%
+
+¼ ¼(,"
+builtinssum*:,
+*
+
+¼/ ¼(="
+builtinslen*:Bint,
+*
+
+¼ ¼(="
+#binop !=#2!=:	Bbool"
+ 
+
+¼ ¼(="
+#assert#:D
+B
+
+¼ ¼(=avg_duration_ms"#dependent-value#*:Bfloat"Ô!*(avg_duration_ms2
+0
+
+¿ ¿($"#get-field# _workflow_stats:+
+)
+
+¿ ¿(3stats"#array-read#:&
+$
+
+À À(=!"#array-write#: &
+$
+
+Â Æ(	""#new-object#Bdict"
+ 
+
+Ã Ã(8$"	#map-set#:"#"
+ 
+
+Ä Ä(8&"	#map-set#:"%"
+ 
+
+Å Å(2)"	#map-set#:"'(
+
+Â Æ(	"*D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py

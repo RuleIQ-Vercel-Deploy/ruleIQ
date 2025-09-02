@@ -106,14 +106,10 @@ export function LoadingShowcase() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col items-center justify-center gap-4 rounded-lg bg-white p-8 shadow-sm border border-neutral-200">
+          <div className="flex flex-col items-center justify-center gap-4 rounded-lg border border-neutral-200 bg-white p-8 shadow-sm">
             <div className="flex items-center space-x-2">
-              <span className="text-2xl font-bold text-neutral-700">
-                rule
-              </span>
-              <span className="text-2xl font-bold text-teal-600">
-                IQ
-              </span>
+              <span className="text-2xl font-bold text-neutral-700">rule</span>
+              <span className="text-2xl font-bold text-teal-600">IQ</span>
             </div>
             <Loader2 className="h-6 w-6 animate-spin text-teal-600" />
             <p className="text-neutral-600">Simulating page load...</p>

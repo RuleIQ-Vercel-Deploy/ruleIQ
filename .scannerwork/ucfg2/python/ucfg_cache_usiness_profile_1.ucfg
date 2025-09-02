@@ -1,0 +1,57 @@
+
+.config.cache.CacheManager.set_business_profile7
++/home/omar/Documents/ruleIQ/config/cache.pyÌ Ì(""2*è
+2
+Ï Ï(2¯¬
+
+Ð Ð(K
+%1*9
+
+__unknown_file (
+config.cache.CacheManager*0
+
+__unknown_file (
+business_profile2_generate_cache_key:
+user_id
+	
+user_id?
+=
+
+Ð Ð(K
+key"__id*"
+
+__unknown_file (
+
+%1ÍÊ
+
+Ñ Ñ(5
+%2*9
+
+__unknown_file (
+config.cache.CacheManager*#
+
+__unknown_file (
+
+key*,
+
+__unknown_file (
+
+profile_data*#
+
+__unknown_file (
+
+ttl2set"
+
+Ñ Ñ(5
+
+%2:
+
+Í Í(	
+user_id:
+
+Í Í(8
+profile_data:
+
+Í: Í(I
+ttlB
+config.cache.CacheManagerH

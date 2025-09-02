@@ -1,0 +1,153 @@
+
+Fsecurity_headers.SecurityHeadersMiddleware._add_basic_security_headersF
+:/home/omar/Documents/ruleIQ/middleware/security_headers.pyÉ É(#"2*Ö
+2
+Ñ Ñ((Q
+O
+
+Ü Ü(
+%2"__id*5
+
+__unknown_file (*
+
+
+response"	
+headersπ∂
+
+Ü Ü(>
+%1"dict.__setitem__*"
+
+__unknown_file (
+
+%2*6
+
+__unknown_file (
+X-Content-Type-Options*'
+
+__unknown_file (	
+nosniff2__setitem__Q
+O
+
+â â(
+%4"__id*5
+
+__unknown_file (*
+
+
+response"	
+headersπ∂
+
+â â(>
+%3"dict.__setitem__*"
+
+__unknown_file (
+
+%4*0
+
+__unknown_file (
+X-XSS-Protection*-
+
+__unknown_file (
+1; mode=block2__setitem__Q
+O
+
+å å(
+%6"__id*5
+
+__unknown_file (*
+
+
+response"	
+headersØ¨
+
+å å(4
+%5"dict.__setitem__*"
+
+__unknown_file (
+
+%6*/
+
+__unknown_file (
+X-Frame-Options*$
+
+__unknown_file (
+DENY2__setitem__Q
+O
+
+è è(
+%8"__id*5
+
+__unknown_file (*
+
+
+response"	
+headers «
+
+è è(O
+%7"dict.__setitem__*"
+
+__unknown_file (
+
+%8*/
+
+__unknown_file (
+Referrer-Policy*?
+
+__unknown_file (#!
+strict-origin-when-cross-origin2__setitem__R
+P
+
+í í(
+%10"__id*5
+
+__unknown_file (*
+
+
+response"	
+headers‚ﬂ
+
+í í(f
+%9"dict.__setitem__*#
+
+__unknown_file (
+
+%10*9
+
+__unknown_file (
+Strict-Transport-Security*L
+
+__unknown_file (0.
+,max-age=31536000; includeSubDomains; preload2__setitem__R
+P
+
+ï ï(
+%12"__id*5
+
+__unknown_file (*
+
+
+response"	
+headersûõ
+
+ï ò(	
+%11"dict.__setitem__*#
+
+__unknown_file (
+
+%12*2
+
+__unknown_file (
+Permissions-Policy*ç
+
+__unknown_file (qo
+maccelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()2__setitem__*
+3*;
+3
+security_headers.py"
+ö ö(
+implicit return:
+
+É* É(<
+
+responseB.,
+*security_headers.SecurityHeadersMiddlewareH

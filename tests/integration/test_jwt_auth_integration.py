@@ -19,7 +19,7 @@ def test_user_data():
     return {
         "email": "test@example.com",
         "password": "TestPassword123!",
-        "full_name": "Test User"
+        "full_name": "Test User",
     }
 
 
@@ -31,7 +31,7 @@ def existing_user(db_session: Session, test_user_data):
         id=uuid4(),
         email=test_user_data["email"],
         hashed_password=hashed_password,
-        is_active=True
+        is_active=True,
     )
     db_session.add(user)
     db_session.commit()
@@ -45,11 +45,14 @@ class TestJWTAuthenticationFlow:
     def test_user_registration_flow(self, test_client: TestClient, test_user_data):
         """Test user registration with JWT token generation"""
         # Register new user
-        response = test_client.post("/api/v1/auth/register", json={
-            "email": test_user_data["email"],
-            "password": test_user_data["password"],
-            "full_name": test_user_data["full_name"]
-        })
+        response = test_client.post(
+            "/api/v1/auth/register",
+            json={
+                "email": test_user_data["email"],
+                "password": test_user_data["password"],
+                "full_name": test_user_data["full_name"],
+            },
+        )
 
         assert response.status_code == 201
         data = response.json()
@@ -62,13 +65,18 @@ class TestJWTAuthenticationFlow:
         assert "refresh_token" in data["tokens"]
         assert data["tokens"]["token_type"] == "bearer"
 
-    def test_user_login_flow(self, test_client: TestClient, existing_user, test_user_data):
+    def test_user_login_flow(
+        self, test_client: TestClient, existing_user, test_user_data
+    ):
         """Test user login with JWT token generation"""
         # Login with existing user
-        response = test_client.post("/api/v1/auth/login", json={
-            "email": test_user_data["email"],
-            "password": test_user_data["password"]
-        })
+        response = test_client.post(
+            "/api/v1/auth/login",
+            json={
+                "email": test_user_data["email"],
+                "password": test_user_data["password"],
+            },
+        )
 
         assert response.status_code == 200
         data = response.json()
@@ -80,13 +88,18 @@ class TestJWTAuthenticationFlow:
 
         return data["access_token"]
 
-    def test_protected_endpoint_access(self, test_client: TestClient, existing_user, test_user_data):
+    def test_protected_endpoint_access(
+        self, test_client: TestClient, existing_user, test_user_data
+    ):
         """Test accessing protected endpoints with JWT token"""
         # First login to get token
-        login_response = test_client.post("/api/v1/auth/login", json={
-            "email": test_user_data["email"],
-            "password": test_user_data["password"]
-        })
+        login_response = test_client.post(
+            "/api/v1/auth/login",
+            json={
+                "email": test_user_data["email"],
+                "password": test_user_data["password"],
+            },
+        )
 
         assert login_response.status_code == 200
         token = login_response.json()["access_token"]
@@ -100,21 +113,26 @@ class TestJWTAuthenticationFlow:
         assert user_data["email"] == test_user_data["email"]
         assert user_data["is_active"] is True
 
-    def test_token_refresh_flow(self, test_client: TestClient, existing_user, test_user_data):
+    def test_token_refresh_flow(
+        self, test_client: TestClient, existing_user, test_user_data
+    ):
         """Test JWT token refresh functionality"""
         # Login to get tokens
-        login_response = test_client.post("/api/v1/auth/login", json={
-            "email": test_user_data["email"],
-            "password": test_user_data["password"]
-        })
+        login_response = test_client.post(
+            "/api/v1/auth/login",
+            json={
+                "email": test_user_data["email"],
+                "password": test_user_data["password"],
+            },
+        )
 
         assert login_response.status_code == 200
         tokens = login_response.json()
 
         # Refresh token
-        refresh_response = test_client.post("/api/v1/auth/refresh", json={
-            "refresh_token": tokens["refresh_token"]
-        })
+        refresh_response = test_client.post(
+            "/api/v1/auth/refresh", json={"refresh_token": tokens["refresh_token"]}
+        )
 
         assert refresh_response.status_code == 200
         new_tokens = refresh_response.json()
@@ -126,10 +144,13 @@ class TestJWTAuthenticationFlow:
     def test_logout_flow(self, test_client: TestClient, existing_user, test_user_data):
         """Test user logout and token invalidation"""
         # Login to get token
-        login_response = test_client.post("/api/v1/auth/login", json={
-            "email": test_user_data["email"],
-            "password": test_user_data["password"]
-        })
+        login_response = test_client.post(
+            "/api/v1/auth/login",
+            json={
+                "email": test_user_data["email"],
+                "password": test_user_data["password"],
+            },
+        )
 
         assert login_response.status_code == 200
         token = login_response.json()["access_token"]
@@ -141,34 +162,41 @@ class TestJWTAuthenticationFlow:
         assert logout_response.status_code == 200
         assert logout_response.json()["message"] == "Successfully logged out"
 
-    def test_invalid_credentials_rejection(self, test_client: TestClient, existing_user):
+    def test_invalid_credentials_rejection(
+        self, test_client: TestClient, existing_user
+    ):
         """Test rejection of invalid credentials"""
         # Try login with wrong password
-        response = test_client.post("/api/v1/auth/login", json={
-            "email": existing_user.email,
-            "password": "WrongPassword123!"
-        })
+        response = test_client.post(
+            "/api/v1/auth/login",
+            json={"email": existing_user.email, "password": "WrongPassword123!"},
+        )
 
         assert response.status_code == 401
         assert "Invalid credentials" in response.json()["detail"]
 
     def test_nonexistent_user_rejection(self, test_client: TestClient):
         """Test rejection of non-existent user"""
-        response = test_client.post("/api/v1/auth/login", json={
-            "email": "nonexistent@example.com",
-            "password": "SomePassword123!"
-        })
+        response = test_client.post(
+            "/api/v1/auth/login",
+            json={"email": "nonexistent@example.com", "password": "SomePassword123!"},
+        )
 
         assert response.status_code == 401
         assert "Invalid credentials" in response.json()["detail"]
 
-    def test_duplicate_registration_rejection(self, test_client: TestClient, existing_user):
+    def test_duplicate_registration_rejection(
+        self, test_client: TestClient, existing_user
+    ):
         """Test rejection of duplicate email registration"""
-        response = test_client.post("/api/v1/auth/register", json={
-            "email": existing_user.email,
-            "password": "NewPassword123!",
-            "full_name": "Another User"
-        })
+        response = test_client.post(
+            "/api/v1/auth/register",
+            json={
+                "email": existing_user.email,
+                "password": "NewPassword123!",
+                "full_name": "Another User",
+            },
+        )
 
         assert response.status_code == 409
         assert "Email already exists" in response.json()["detail"]
@@ -188,13 +216,18 @@ class TestJWTAuthenticationFlow:
 class TestBusinessProfileIntegration:
     """Test JWT authentication with business profile endpoints"""
 
-    def test_business_profile_access_with_auth(self, test_client: TestClient, existing_user, test_user_data):
+    def test_business_profile_access_with_auth(
+        self, test_client: TestClient, existing_user, test_user_data
+    ):
         """Test accessing business profile endpoints with JWT authentication"""
         # Login to get token
-        login_response = test_client.post("/api/v1/auth/login", json={
-            "email": test_user_data["email"],
-            "password": test_user_data["password"]
-        })
+        login_response = test_client.post(
+            "/api/v1/auth/login",
+            json={
+                "email": test_user_data["email"],
+                "password": test_user_data["password"],
+            },
+        )
 
         assert login_response.status_code == 200
         token = login_response.json()["access_token"]
@@ -215,13 +248,18 @@ class TestBusinessProfileIntegration:
 class TestRAGSystemIntegration:
     """Test JWT authentication with RAG system endpoints"""
 
-    def test_chat_endpoint_with_auth(self, test_client: TestClient, existing_user, test_user_data):
+    def test_chat_endpoint_with_auth(
+        self, test_client: TestClient, existing_user, test_user_data
+    ):
         """Test chat endpoint access with JWT authentication"""
         # Login to get token
-        login_response = test_client.post("/api/v1/auth/login", json={
-            "email": test_user_data["email"],
-            "password": test_user_data["password"]
-        })
+        login_response = test_client.post(
+            "/api/v1/auth/login",
+            json={
+                "email": test_user_data["email"],
+                "password": test_user_data["password"],
+            },
+        )
 
         assert login_response.status_code == 200
         token = login_response.json()["access_token"]
@@ -248,7 +286,7 @@ class TestAuthenticationSystemIntegration:
         user_data = {
             "email": f"journey_test_{uuid4()}@example.com",
             "password": "JourneyTest123!",
-            "full_name": "Journey Test User"
+            "full_name": "Journey Test User",
         }
 
         # 1. Register
@@ -269,10 +307,10 @@ class TestAuthenticationSystemIntegration:
         assert logout_response.status_code == 200
 
         # 4. Login again
-        login_response = test_client.post("/api/v1/auth/login", json={
-            "email": user_data["email"],
-            "password": user_data["password"]
-        })
+        login_response = test_client.post(
+            "/api/v1/auth/login",
+            json={"email": user_data["email"], "password": user_data["password"]},
+        )
         assert login_response.status_code == 200
 
         # 5. Access protected endpoint with new token
@@ -293,9 +331,11 @@ class TestAuthenticationSystemIntegration:
         protected_endpoints = [
             "/api/v1/auth/me",
             "/api/v1/business-profiles",
-            "/api/v1/chat/conversations"
+            "/api/v1/chat/conversations",
         ]
 
         for endpoint in protected_endpoints:
             response = test_client.get(endpoint)
-            assert response.status_code == 401, f"Endpoint {endpoint} should require authentication"
+            assert (
+                response.status_code == 401
+            ), f"Endpoint {endpoint} should require authentication"

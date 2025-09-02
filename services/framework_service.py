@@ -45,11 +45,15 @@ async def get_framework_by_id(
             raise NotFoundException("Framework", framework_id)
         return framework
     except SQLAlchemyError as e:
-        logger.error(f"Database error while getting framework {framework_id}: {e}", exc_info=True)
+        logger.error(
+            f"Database error while getting framework {framework_id}: {e}", exc_info=True
+        )
         raise DatabaseException("Failed to retrieve framework by ID.") from e
 
 
-async def get_framework_by_name(db: AsyncSession, name: str) -> Optional[ComplianceFramework]:
+async def get_framework_by_name(
+    db: AsyncSession, name: str
+) -> Optional[ComplianceFramework]:
     """Get a specific compliance framework by name."""
     try:
         result = await db.execute(
@@ -57,7 +61,10 @@ async def get_framework_by_name(db: AsyncSession, name: str) -> Optional[Complia
         )
         return result.scalars().first()
     except SQLAlchemyError as e:
-        logger.error(f"Database error while getting framework by name '{name}': {e}", exc_info=True)
+        logger.error(
+            f"Database error while getting framework by name '{name}': {e}",
+            exc_info=True,
+        )
         raise DatabaseException("Failed to retrieve framework by name.") from e
 
 
@@ -68,9 +75,15 @@ def calculate_framework_relevance(
     score = 0.0
     if profile.industry in framework.applicable_indu:
         score += 50
-    if framework.employee_thresh and profile.employee_count >= framework.employee_thresh:
+    if (
+        framework.employee_thresh
+        and profile.employee_count >= framework.employee_thresh
+    ):
         score += 25
-    if profile.data_sensitivity in ["High", "Medium"] and framework.category == "Data Protection":
+    if (
+        profile.data_sensitivity in ["High", "Medium"]
+        and framework.category == "Data Protection"
+    ):
         score += 25
     return score
 
@@ -101,7 +114,9 @@ async def get_relevant_frameworks(db: AsyncSession, user: User) -> List[Dict]:
                         "relevance_score": relevance_score,
                     }
                 )
-        return sorted(relevant_frameworks, key=lambda x: x["relevance_score"], reverse=True)
+        return sorted(
+            relevant_frameworks, key=lambda x: x["relevance_score"], reverse=True
+        )
     except SQLAlchemyError as e:
         logger.error(
             f"Database error while getting relevant frameworks for user {user.id}: {e}",
@@ -205,5 +220,7 @@ async def initialize_default_frameworks(db: AsyncSession) -> None:
         await db.commit()
     except SQLAlchemyError as e:
         await db.rollback()
-        logger.error(f"Database error while initializing default frameworks: {e}", exc_info=True)
+        logger.error(
+            f"Database error while initializing default frameworks: {e}", exc_info=True
+        )
         raise DatabaseException("Failed to initialize default frameworks.") from e

@@ -443,11 +443,10 @@ class AISelfReviewService {
           ...feedback,
         });
       } else {
-    // TODO: Replace with proper logging
+        // TODO: Replace with proper logging
       }
     } catch (error) {
       // TODO: Replace with proper logging
-
       // // TODO: Replace with proper logging
       // Non-blocking - don't throw error for feedback submission
     }

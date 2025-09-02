@@ -18,6 +18,7 @@ from services.readiness_service import (
 
 router = APIRouter()
 
+
 @router.get("/assessment")
 async def get_readiness_assessment(
     framework_id: Optional[UUID] = None,
@@ -34,7 +35,9 @@ async def get_readiness_assessment(
         framework_result = await db.execute(framework_stmt)
         framework = framework_result.scalars().first()
         if not framework:
-            raise HTTPException(status_code=400, detail="No compliance frameworks available")
+            raise HTTPException(
+                status_code=400, detail="No compliance frameworks available"
+            )
         framework_id = framework.id
 
     assessment = await generate_readiness_assessment(
@@ -77,6 +80,7 @@ async def get_readiness_assessment(
 
     return assessment_dict
 
+
 @router.get("/history")
 async def get_assessment_history(
     framework_id: Optional[UUID] = None,
@@ -86,9 +90,11 @@ async def get_assessment_history(
     history = get_historical_assessments(current_user, framework_id, limit)
     return history
 
+
 @router.post("/report")
 async def generate_report(
-    report_config: ComplianceReport, current_user: User = Depends(get_current_active_user)
+    report_config: ComplianceReport,
+    current_user: User = Depends(get_current_active_user),
 ):
     report_data = await generate_compliance_report(
         current_user,
@@ -103,10 +109,13 @@ async def generate_report(
         return StreamingResponse(
             io.BytesIO(report_data),
             media_type="application/pdf",
-            headers={"Content-Disposition": "attachment; filename=compliance_report.pdf"},
+            headers={
+                "Content-Disposition": "attachment; filename=compliance_report.pdf"
+            },
         )
     else:
         return report_data
+
 
 @router.post("/reports", status_code=201)
 async def generate_compliance_report_endpoint(
@@ -136,6 +145,7 @@ async def generate_compliance_report_endpoint(
         "format": report_request.format,
     }
 
+
 @router.get("/reports/{report_id}/download")
 async def download_compliance_report(
     report_id: str, current_user: User = Depends(get_current_active_user)
@@ -151,7 +161,10 @@ async def download_compliance_report(
         "size": 1024,
     }
 
-@router.get("/{business_profile_id}", summary="Get readiness assessment for business profile")
+
+@router.get(
+    "/{business_profile_id}", summary="Get readiness assessment for business profile"
+)
 async def get_readiness_by_profile(
     business_profile_id: str,
     current_user: User = Depends(get_current_active_user),
@@ -178,7 +191,10 @@ async def get_readiness_by_profile(
         "next_assessment_due": "2024-02-15T10:00:00Z",
     }
 
-@router.get("/gaps/{business_profile_id}", summary="Get compliance gaps for business profile")
+
+@router.get(
+    "/gaps/{business_profile_id}", summary="Get compliance gaps for business profile"
+)
 async def get_compliance_gaps(
     business_profile_id: str,
     current_user: User = Depends(get_current_active_user),
@@ -209,6 +225,7 @@ async def get_compliance_gaps(
         "estimated_total_effort": "3 weeks",
     }
 
+
 @router.post("/roadmap", summary="Generate compliance roadmap")
 async def generate_compliance_roadmap(
     roadmap_request: dict,
@@ -220,7 +237,7 @@ async def generate_compliance_roadmap(
     business_profile_id = roadmap_request.get("business_profile_id", "")
     target_frameworks = roadmap_request.get("frameworks", ["GDPR"])
     timeline = roadmap_request.get("timeline", "6_months")
-    
+
     return {
         "roadmap_id": f"roadmap_{business_profile_id}",
         "business_profile_id": business_profile_id,
@@ -261,6 +278,7 @@ async def generate_compliance_roadmap(
         "created_at": "2024-01-15T10:00:00Z",
     }
 
+
 @router.post("/quick-assessment", summary="Perform quick readiness assessment")
 async def quick_readiness_assessment(
     assessment_request: dict,
@@ -270,9 +288,9 @@ async def quick_readiness_assessment(
     """Perform a quick readiness assessment based on minimal inputs."""
     # Placeholder implementation
     business_type = assessment_request.get("business_type", "technology")
-    size = assessment_request.get("size", "small")
-    regions = assessment_request.get("regions", ["EU"])
-    
+    assessment_request.get("size", "small")
+    assessment_request.get("regions", ["EU"])
+
     return {
         "assessment_id": f"quick_{current_user.id}",
         "business_type": business_type,
@@ -298,6 +316,7 @@ async def quick_readiness_assessment(
         ],
         "assessment_date": "2024-01-15T10:00:00Z",
     }
+
 
 @router.get("/trends/{business_profile_id}", summary="Get readiness trends")
 async def get_readiness_trends(
@@ -335,6 +354,7 @@ async def get_readiness_trends(
             "Overall compliance posture strengthening",
         ],
     }
+
 
 @router.get("/benchmarks", summary="Get industry benchmarks")
 async def get_industry_benchmarks(

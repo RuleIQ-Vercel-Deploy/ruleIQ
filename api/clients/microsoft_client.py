@@ -87,7 +87,9 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
     async def _refresh_access_token(self, creds: MicrosoftCredentials) -> bool:
         """Refresh access token using refresh token."""
         try:
-            token_url = f"https://login.microsoftonline.com/{creds.tenant_id}/oauth2/v2.0/token"
+            token_url = (
+                f"https://login.microsoftonline.com/{creds.tenant_id}/oauth2/v2.0/token"
+            )
 
             data = {
                 "grant_type": "refresh_token",
@@ -103,7 +105,9 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                         token_data = await response.json()
                         self.access_token = token_data["access_token"]
                         expires_in = token_data.get("expires_in", 3600)
-                        self.token_expires_at = datetime.utcnow() + timedelta(seconds=expires_in)
+                        self.token_expires_at = datetime.utcnow() + timedelta(
+                            seconds=expires_in
+                        )
 
                         logger.info("Microsoft Graph access token refreshed")
                         return True
@@ -119,7 +123,9 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
     async def _client_credentials_flow(self, creds: MicrosoftCredentials) -> bool:
         """Get access token using client credentials flow."""
         try:
-            token_url = f"https://login.microsoftonline.com/{creds.tenant_id}/oauth2/v2.0/token"
+            token_url = (
+                f"https://login.microsoftonline.com/{creds.tenant_id}/oauth2/v2.0/token"
+            )
 
             data = {
                 "grant_type": "client_credentials",
@@ -134,7 +140,9 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                         token_data = await response.json()
                         self.access_token = token_data["access_token"]
                         expires_in = token_data.get("expires_in", 3600)
-                        self.token_expires_at = datetime.utcnow() + timedelta(seconds=expires_in)
+                        self.token_expires_at = datetime.utcnow() + timedelta(
+                            seconds=expires_in
+                        )
 
                         logger.info("Microsoft Graph access token obtained")
                         return True
@@ -173,7 +181,9 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
             logger.error(f"Microsoft Graph connection test failed: {e}")
             return False, str(e)
 
-    async def _make_graph_request(self, endpoint: str, params: Optional[Dict] = None) -> Dict:
+    async def _make_graph_request(
+        self, endpoint: str, params: Optional[Dict] = None
+    ) -> Dict:
         """Make an authenticated request to Microsoft Graph API."""
         if not await self.authenticate():
             raise Exception("Authentication failed")
@@ -210,14 +220,18 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
 
             # Calculate quality metrics
             total_users = len(users)
-            enabled_users = sum(1 for user in users if user.get("accountEnabled", False))
+            enabled_users = sum(
+                1 for user in users if user.get("accountEnabled", False)
+            )
             users_with_recent_signin = sum(
                 1
                 for user in users
                 if user.get("lastSignInDateTime")
                 and (
                     datetime.utcnow()
-                    - datetime.fromisoformat(user["lastSignInDateTime"].replace("Z", "+00:00"))
+                    - datetime.fromisoformat(
+                        user["lastSignInDateTime"].replace("Z", "+00:00")
+                    )
                 ).days
                 < 30
             )
@@ -233,9 +247,11 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                     "enabled_users": enabled_users,
                     "disabled_users": total_users - enabled_users,
                     "users_with_recent_signin": users_with_recent_signin,
-                    "activity_rate": (users_with_recent_signin / total_users * 100)
-                    if total_users > 0
-                    else 0,
+                    "activity_rate": (
+                        (users_with_recent_signin / total_users * 100)
+                        if total_users > 0
+                        else 0
+                    ),
                 },
             }
 
@@ -280,10 +296,12 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                     "total_groups": len(groups),
                     "security_groups": len(security_groups),
                     "dynamic_groups": len(dynamic_groups),
-                    "distribution_groups": len([g for g in groups if g.get("mailEnabled", False)]),
-                    "security_group_ratio": (len(security_groups) / len(groups) * 100)
-                    if groups
-                    else 0,
+                    "distribution_groups": len(
+                        [g for g in groups if g.get("mailEnabled", False)]
+                    ),
+                    "security_group_ratio": (
+                        (len(security_groups) / len(groups) * 100) if groups else 0
+                    ),
                 },
             }
 
@@ -327,7 +345,9 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
 
             service_principals = sp_data.get("value", [])
 
-            quality_score = self._calculate_applications_quality(applications, service_principals)
+            quality_score = self._calculate_applications_quality(
+                applications, service_principals
+            )
 
             evidence_data = {
                 "applications": applications,
@@ -336,7 +356,11 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                     "total_applications": len(applications),
                     "total_service_principals": len(service_principals),
                     "enabled_service_principals": len(
-                        [sp for sp in service_principals if sp.get("accountEnabled", False)]
+                        [
+                            sp
+                            for sp in service_principals
+                            if sp.get("accountEnabled", False)
+                        ]
                     ),
                     "multi_tenant_apps": len(
                         [
@@ -367,7 +391,9 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
         """Collect Azure AD sign-in logs evidence."""
         try:
             # Get sign-in logs from the last 7 days
-            start_date = (datetime.utcnow() - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+            start_date = (datetime.utcnow() - timedelta(days=7)).strftime(
+                "%Y-%m-%dT%H:%M:%S.%fZ"
+            )
 
             logs_data = await self._make_graph_request(
                 "auditLogs/signIns",
@@ -381,9 +407,15 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
             sign_ins = logs_data.get("value", [])
 
             # Analyze sign-in patterns
-            successful_signins = [s for s in sign_ins if s.get("status", {}).get("errorCode") == 0]
-            failed_signins = [s for s in sign_ins if s.get("status", {}).get("errorCode") != 0]
-            risky_signins = [s for s in sign_ins if s.get("riskLevel") not in ["none", "low"]]
+            successful_signins = [
+                s for s in sign_ins if s.get("status", {}).get("errorCode") == 0
+            ]
+            failed_signins = [
+                s for s in sign_ins if s.get("status", {}).get("errorCode") != 0
+            ]
+            risky_signins = [
+                s for s in sign_ins if s.get("riskLevel") not in ["none", "low"]
+            ]
 
             quality_score = self._calculate_signin_logs_quality(
                 sign_ins, successful_signins, failed_signins
@@ -396,11 +428,17 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                     "successful_signins": len(successful_signins),
                     "failed_signins": len(failed_signins),
                     "risky_signins": len(risky_signins),
-                    "success_rate": (len(successful_signins) / len(sign_ins) * 100)
-                    if sign_ins
-                    else 0,
-                    "unique_users": len(set(s.get("userPrincipalName", "") for s in sign_ins)),
-                    "unique_apps": len(set(s.get("appDisplayName", "") for s in sign_ins)),
+                    "success_rate": (
+                        (len(successful_signins) / len(sign_ins) * 100)
+                        if sign_ins
+                        else 0
+                    ),
+                    "unique_users": len(
+                        set(s.get("userPrincipalName", "") for s in sign_ins)
+                    ),
+                    "unique_apps": len(
+                        set(s.get("appDisplayName", "") for s in sign_ins)
+                    ),
                 },
             }
 
@@ -423,7 +461,9 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
         """Collect Azure AD audit logs evidence."""
         try:
             # Get audit logs from the last 7 days
-            start_date = (datetime.utcnow() - timedelta(days=7)).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+            start_date = (datetime.utcnow() - timedelta(days=7)).strftime(
+                "%Y-%m-%dT%H:%M:%S.%fZ"
+            )
 
             logs_data = await self._make_graph_request(
                 "auditLogs/directoryAudits",
@@ -437,9 +477,15 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
             audit_logs = logs_data.get("value", [])
 
             # Categorize activities
-            user_activities = [log for log in audit_logs if log.get("category") == "UserManagement"]
-            role_activities = [log for log in audit_logs if log.get("category") == "RoleManagement"]
-            policy_activities = [log for log in audit_logs if log.get("category") == "Policy"]
+            user_activities = [
+                log for log in audit_logs if log.get("category") == "UserManagement"
+            ]
+            role_activities = [
+                log for log in audit_logs if log.get("category") == "RoleManagement"
+            ]
+            policy_activities = [
+                log for log in audit_logs if log.get("category") == "Policy"
+            ]
 
             quality_score = self._calculate_audit_logs_quality(audit_logs)
 
@@ -452,7 +498,9 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                     "policy_events": len(policy_activities),
                     "unique_initiators": len(
                         set(
-                            log.get("initiatedBy", {}).get("user", {}).get("userPrincipalName", "")
+                            log.get("initiatedBy", {})
+                            .get("user", {})
+                            .get("userPrincipalName", "")
                             for log in audit_logs
                         )
                     ),
@@ -501,7 +549,9 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                     "display_name": organization.get("displayName"),
                     "verified_domains": len(organization.get("verifiedDomains", [])),
                     "created_datetime": organization.get("createdDateTime"),
-                    "security_defaults_enabled": organization.get("securityDefaultsEnabled", False),
+                    "security_defaults_enabled": organization.get(
+                        "securityDefaultsEnabled", False
+                    ),
                 },
             }
 
@@ -520,7 +570,9 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
             logger.error(f"Failed to collect organization evidence: {e}")
             raise
 
-    def _calculate_users_quality(self, total: int, enabled: int, active: int) -> EvidenceQuality:
+    def _calculate_users_quality(
+        self, total: int, enabled: int, active: int
+    ) -> EvidenceQuality:
         """Calculate quality score for users evidence."""
         if total == 0:
             return EvidenceQuality.LOW
@@ -559,7 +611,9 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
             return EvidenceQuality.LOW
 
         total_apps = len(apps) + len(service_principals)
-        enabled_sps = sum(1 for sp in service_principals if sp.get("accountEnabled", False))
+        enabled_sps = sum(
+            1 for sp in service_principals if sp.get("accountEnabled", False)
+        )
 
         if total_apps > 0 and enabled_sps / len(service_principals) > 0.8:
             return EvidenceQuality.HIGH
@@ -642,7 +696,9 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                 result = await collector()
                 results.append(result)
             except Exception as e:
-                logger.error(f"Failed to collect evidence with {collector.__name__}: {e}")
+                logger.error(
+                    f"Failed to collect evidence with {collector.__name__}: {e}"
+                )
                 continue
 
         return results

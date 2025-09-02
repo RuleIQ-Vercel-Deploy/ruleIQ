@@ -1,0 +1,10 @@
+
+;2"Decorator for routes requiring framework access."strframework_id
+´ ´(.access_level
+´0 ´(J"wc
+a
+
+¶ ¶(R"M
+1api.middleware.rbac_middleware.RBACRouteProtectorrequire_framework_access:
+
+¶ ¶(R*=/home/omar/Documents/ruleIQ/api/middleware/rbac_middleware.py

@@ -22,13 +22,13 @@ from langgraph_agent.core.models import (
     RiskLevel,
     EvidenceType,
     get_model_schemas,
-    get_safe_fallback_schema
+    get_safe_fallback_schema,
 )
 from langgraph_agent.core.constants import (
     SLO_P95_LATENCY_MS,
     ROUTER_THRESHOLDS,
     GRAPH_NODES,
-    COMPLIANCE_FRAMEWORKS
+    COMPLIANCE_FRAMEWORKS,
 )
 
 
@@ -44,8 +44,13 @@ class TestConstants:
     def test_graph_nodes_defined(self):
         """Test all required graph nodes are defined."""
         required_nodes = [
-            "router", "compliance_analyzer", "obligation_finder",
-            "evidence_collector", "legal_reviewer", "autonomy_policy", "model"
+            "router",
+            "compliance_analyzer",
+            "obligation_finder",
+            "evidence_collector",
+            "legal_reviewer",
+            "autonomy_policy",
+            "model",
         ]
         for node in required_nodes:
             assert node in GRAPH_NODES.values()
@@ -69,7 +74,7 @@ class TestComplianceProfile:
             frameworks=[ComplianceFramework.GDPR, ComplianceFramework.UK_GDPR],
             geographical_scope=["UK", "EU"],
             employee_count=50,
-            risk_tolerance=RiskLevel.MEDIUM
+            risk_tolerance=RiskLevel.MEDIUM,
         )
 
         assert profile.business_name == "Test Company Ltd"
@@ -85,7 +90,7 @@ class TestComplianceProfile:
                 business_name="Test Company Ltd",
                 sector=BusinessSector.RETAIL,
                 frameworks=[ComplianceFramework.GDPR],
-                geographical_scope=[]  # Missing required scope
+                geographical_scope=[],  # Missing required scope
             )
 
     def test_frameworks_required(self):
@@ -95,7 +100,7 @@ class TestComplianceProfile:
                 company_id=uuid4(),
                 business_name="Test Company Ltd",
                 sector=BusinessSector.RETAIL,
-                frameworks=[]  # Empty frameworks not allowed
+                frameworks=[],  # Empty frameworks not allowed
             )
 
 
@@ -112,7 +117,7 @@ class TestObligation:
             category="data_processing",
             mandatory=True,
             risk_level=RiskLevel.HIGH,
-            applicable_sectors=[BusinessSector.RETAIL, BusinessSector.FINANCE]
+            applicable_sectors=[BusinessSector.RETAIL, BusinessSector.FINANCE],
         )
 
         assert obligation.obligation_id == "GDPR_DATA_001"
@@ -128,7 +133,7 @@ class TestObligation:
                 framework=ComplianceFramework.GDPR,
                 title="Test Obligation",
                 description="Test description",
-                category="test"
+                category="test",
             )
 
 
@@ -139,7 +144,7 @@ class TestSafeFallbackResponse:
         """Test SafeFallbackResponse exactly as specified."""
         response = SafeFallbackResponse(
             error_message="Validation failed for user input",
-            error_details={"field": "business_name", "issue": "too_short"}
+            error_details={"field": "business_name", "issue": "too_short"},
         )
 
         assert response.status == "needs_review"
@@ -153,7 +158,7 @@ class TestSafeFallbackResponse:
             SafeFallbackResponse(
                 status="invalid_status",  # Must be "needs_review"
                 error_message="Test error",
-                error_details={}
+                error_details={},
             )
 
     def test_safe_fallback_no_sensitive_data(self):
@@ -161,7 +166,7 @@ class TestSafeFallbackResponse:
         with pytest.raises(ValidationError, match="cannot contain sensitive key"):
             SafeFallbackResponse(
                 error_message="Test error",
-                error_details={"password": "secret123"}  # Sensitive key not allowed
+                error_details={"password": "secret123"},  # Sensitive key not allowed
             )
 
 
@@ -178,7 +183,7 @@ class TestEvidenceItem:
             created_by=uuid4(),
             file_path="/documents/privacy_policy.pdf",
             frameworks=[ComplianceFramework.GDPR],
-            related_obligations=["GDPR_PRIVACY_001"]
+            related_obligations=["GDPR_PRIVACY_001"],
         )
 
         assert evidence.title == "Privacy Policy Document"
@@ -194,7 +199,7 @@ class TestEvidenceItem:
                 title="Test Evidence",
                 evidence_type=EvidenceType.POLICY_DOCUMENT,
                 created_by=uuid4(),
-                file_path="relative/path.pdf"  # Invalid relative path
+                file_path="relative/path.pdf",  # Invalid relative path
             )
 
 
@@ -209,7 +214,7 @@ class TestLegalReviewTicket:
             description="Review updated privacy policy for GDPR compliance",
             requested_by=uuid4(),
             content_type="policy",
-            priority=RiskLevel.HIGH
+            priority=RiskLevel.HIGH,
         )
 
         assert ticket.title == "Privacy Policy Review"
@@ -226,7 +231,7 @@ class TestLegalReviewTicket:
                 description="Test description",
                 requested_by=uuid4(),
                 content_type="policy",
-                status="invalid_status"  # Not in allowed list
+                status="invalid_status",  # Not in allowed list
             )
 
 
@@ -238,7 +243,7 @@ class TestGraphMessage:
         message = GraphMessage(
             role="user",
             content="What GDPR obligations apply to my retail business?",
-            tool_calls=None
+            tool_calls=None,
         )
 
         assert message.role == "user"
@@ -250,7 +255,7 @@ class TestGraphMessage:
         with pytest.raises(ValidationError, match="String should match pattern"):
             GraphMessage(
                 role="invalid_role",  # Must be user/assistant/system/tool
-                content="Test message"
+                content="Test message",
             )
 
 
@@ -265,7 +270,7 @@ class TestRouteDecision:
             reasoning="High confidence match for compliance analysis keywords",
             method="rules",
             input_text="Analyze my business for GDPR compliance",
-            company_id=uuid4()
+            company_id=uuid4(),
         )
 
         assert decision.route == "compliance_analyzer"
@@ -282,7 +287,7 @@ class TestRouteDecision:
                 reasoning="Test reasoning",
                 method="rules",
                 input_text="Test input",
-                company_id=uuid4()
+                company_id=uuid4(),
             )
 
 
@@ -294,8 +299,11 @@ class TestJSONSchemaExport:
         schemas = get_model_schemas()
 
         required_models = [
-            "ComplianceProfile", "Obligation", "EvidenceItem",
-            "LegalReviewTicket", "SafeFallbackResponse"
+            "ComplianceProfile",
+            "Obligation",
+            "EvidenceItem",
+            "LegalReviewTicket",
+            "SafeFallbackResponse",
         ]
 
         for model_name in required_models:

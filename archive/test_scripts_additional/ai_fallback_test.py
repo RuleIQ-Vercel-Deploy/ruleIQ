@@ -48,7 +48,9 @@ class TestAIFallback(unittest.TestCase):
         # Act
         assistant = ComplianceAssistant(db=MagicMock())
         # This call should now trigger the full fallback logic
-        model, instruction_id = assistant._get_task_appropriate_model(task_type="analysis")
+        model, instruction_id = assistant._get_task_appropriate_model(
+            task_type="analysis"
+        )
 
         # Assert
         # Check that the returned model is the fallback model

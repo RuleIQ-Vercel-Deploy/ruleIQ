@@ -16,13 +16,17 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from services.agentic_rag import AgenticRAGSystem
 
+
 async def test_rag_processing():
     """Test the RAG system's document processing and querying"""
     print("🚀 Testing Agentic RAG Document Processing")
     print("=" * 50)
 
     # Check if OpenAI API key is set
-    if not os.getenv("OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY") == "your-openai-api-key":
+    if (
+        not os.getenv("OPENAI_API_KEY")
+        or os.getenv("OPENAI_API_KEY") == "your-openai-api-key"
+    ):
         print("⚠️  OpenAI API key not set - skipping embedding tests")
         print("✅ Basic Supabase connection test passed")
         return True
@@ -85,20 +89,18 @@ This enables automatic state persistence between workflow runs.
         print("\n💾 Testing chunk storage...")
         await rag_system._store_documentation_chunk(
             chunk_id="test_chunk_1",
-            content=chunks[0]['content'] if chunks else "Test content",
+            content=chunks[0]["content"] if chunks else "Test content",
             embedding=embedding,
             metadata={"framework": "langgraph", "test": True},
             source="test",
-            chunk_type="documentation"
+            chunk_type="documentation",
         )
         print("✅ Successfully stored test chunk")
 
         # Test querying
         print("\n🔍 Testing RAG query...")
         response = await rag_system.query_documentation(
-            "How do I set up state in LangGraph?",
-            source_filter="test",
-            max_results=2
+            "How do I set up state in LangGraph?", source_filter="test", max_results=2
         )
 
         print("💬 Query response:")
@@ -117,6 +119,7 @@ This enables automatic state persistence between workflow runs.
     except Exception as e:
         print(f"❌ Test failed with error: {e}")
         import traceback
+
         traceback.print_exc()
         return False
 
@@ -126,6 +129,7 @@ This enables automatic state persistence between workflow runs.
             rag_system.close()
         except:
             pass
+
 
 if __name__ == "__main__":
     asyncio.run(test_rag_processing())

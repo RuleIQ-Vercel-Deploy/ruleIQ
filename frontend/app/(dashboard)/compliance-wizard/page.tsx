@@ -31,7 +31,7 @@ import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useAppStore } from '@/lib/stores/app.store';
 import { useBusinessProfileStore } from '@/lib/stores/business-profile.store';
-import { 
+import {
   useComplianceStatus,
   useComplianceRequirements,
   useFrameworks,
@@ -262,7 +262,6 @@ export default function ComplianceWizardPage() {
         });
       } catch (error) {
         // TODO: Replace with proper logging
-
         // // TODO: Replace with proper logging
       }
     }
@@ -270,11 +269,11 @@ export default function ComplianceWizardPage() {
 
   // Update framework selection question with API data
   const processedQuestions = React.useMemo(() => {
-    return questions.map(question => {
+    return questions.map((question) => {
       if (question.id === 'framework_selection' && frameworksData?.items) {
         return {
           ...question,
-          options: frameworksData.items.map(framework => framework.name),
+          options: frameworksData.items.map((framework) => framework.name),
         };
       }
       return question;
@@ -304,8 +303,12 @@ export default function ComplianceWizardPage() {
     }));
 
     // Track framework selection for API compliance check
-    if (questionId === 'framework_selection' && typeof value === 'string' && frameworksData?.items) {
-      const framework = frameworksData.items.find(f => f.name === value);
+    if (
+      questionId === 'framework_selection' &&
+      typeof value === 'string' &&
+      frameworksData?.items
+    ) {
+      const framework = frameworksData.items.find((f) => f.name === value);
       if (framework) {
         setSelectedFramework(framework.id);
       }
@@ -376,7 +379,7 @@ export default function ComplianceWizardPage() {
                     isLocal: true,
                   }),
                 );
-                
+
                 addNotification({
                   type: 'warning',
                   title: 'Assessment Complete (Offline)',
@@ -386,7 +389,7 @@ export default function ComplianceWizardPage() {
 
                 resolve();
               },
-            }
+            },
           );
         });
       } else {
@@ -412,7 +415,7 @@ export default function ComplianceWizardPage() {
 
       // Clear draft
       localStorage.removeItem('compliance_assessment_draft');
-      
+
       // Redirect to results page
       router.push('/compliance-wizard/results');
     } catch (error) {
@@ -560,9 +563,9 @@ export default function ComplianceWizardPage() {
   if (frameworksLoading) {
     return (
       <div className="container mx-auto max-w-4xl px-4 py-8">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center space-y-4">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+        <div className="flex min-h-[400px] items-center justify-center">
+          <div className="space-y-4 text-center">
+            <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
             <p className="text-muted-foreground">Loading compliance frameworks...</p>
           </div>
         </div>
@@ -594,11 +597,12 @@ export default function ComplianceWizardPage() {
         </div>
 
         {selectedFramework && (
-          <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+          <div className="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-950/20">
             <div className="flex items-center gap-2 text-sm text-blue-700 dark:text-blue-300">
               <Sparkles className="h-4 w-4" />
               <span>
-                You've selected a framework for detailed compliance analysis. We'll run a comprehensive API check when you complete the assessment.
+                You've selected a framework for detailed compliance analysis. We'll run a
+                comprehensive API check when you complete the assessment.
               </span>
             </div>
           </div>
@@ -700,7 +704,10 @@ export default function ComplianceWizardPage() {
                 </Button>
 
                 {currentCategoryIndex === questionCategories.length - 1 ? (
-                  <Button onClick={handleComplete} disabled={!isCategoryComplete() || isLoading || isRunningCheck}>
+                  <Button
+                    onClick={handleComplete}
+                    disabled={!isCategoryComplete() || isLoading || isRunningCheck}
+                  >
                     {isLoading || isRunningCheck ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />

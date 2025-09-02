@@ -142,10 +142,15 @@ class GoogleCachedContentManager:
             ttl = timedelta(hours=ttl_hours)
 
             # Create cached content
-            display_name = f"assessment_{framework_id}_{business_profile.get('id', 'unknown')[:8]}"
+            display_name = (
+                f"assessment_{framework_id}_{business_profile.get('id', 'unknown')[:8]}"
+            )
 
             cached_content = genai.caching.CachedContent.create(
-                model=model_type.value, contents=cache_content, ttl=ttl, display_name=display_name
+                model=model_type.value,
+                contents=cache_content,
+                ttl=ttl,
+                display_name=display_name,
             )
 
             # Store cache reference and metadata
@@ -164,7 +169,9 @@ class GoogleCachedContentManager:
                 "size_estimate_mb"
             ]
 
-            logger.info(f"Created assessment cache: {display_name} with {ttl_hours}h TTL")
+            logger.info(
+                f"Created assessment cache: {display_name} with {ttl_hours}h TTL"
+            )
             return cached_content
 
         except Exception as e:
@@ -173,7 +180,9 @@ class GoogleCachedContentManager:
             return None
 
     async def create_business_profile_cache(
-        self, business_profile: Dict[str, Any], model_type: ModelType = ModelType.GEMINI_25_FLASH
+        self,
+        business_profile: Dict[str, Any],
+        model_type: ModelType = ModelType.GEMINI_25_FLASH,
     ) -> Optional[genai.caching.CachedContent]:
         """
         Create cached content for business profile context.
@@ -207,10 +216,15 @@ class GoogleCachedContentManager:
             ttl = timedelta(hours=ttl_hours)
 
             # Create cached content
-            display_name = f"business_profile_{business_profile.get('id', 'unknown')[:8]}"
+            display_name = (
+                f"business_profile_{business_profile.get('id', 'unknown')[:8]}"
+            )
 
             cached_content = genai.caching.CachedContent.create(
-                model=model_type.value, contents=cache_content, ttl=ttl, display_name=display_name
+                model=model_type.value,
+                contents=cache_content,
+                ttl=ttl,
+                display_name=display_name,
             )
 
             # Store cache reference and metadata
@@ -229,7 +243,9 @@ class GoogleCachedContentManager:
                 "size_estimate_mb"
             ]
 
-            logger.info(f"Created business profile cache: {display_name} with {ttl_hours}h TTL")
+            logger.info(
+                f"Created business profile cache: {display_name} with {ttl_hours}h TTL"
+            )
             return cached_content
 
         except Exception as e:
@@ -257,7 +273,9 @@ class GoogleCachedContentManager:
         try:
             # Generate cache key
             cache_key = self._generate_cache_key(
-                CacheContentType.FRAMEWORK_CONTEXT, framework_id, industry_context or "general"
+                CacheContentType.FRAMEWORK_CONTEXT,
+                framework_id,
+                industry_context or "general",
             )
 
             # Check for existing cache
@@ -271,7 +289,9 @@ class GoogleCachedContentManager:
                     await self._remove_cache(cache_key)
 
             # Build framework cache content
-            cache_content = self._build_framework_cache_content(framework_id, industry_context)
+            cache_content = self._build_framework_cache_content(
+                framework_id, industry_context
+            )
 
             # Framework information is relatively stable - longer TTL
             ttl_hours = 12  # 12 hour TTL for framework context
@@ -281,7 +301,10 @@ class GoogleCachedContentManager:
             display_name = f"framework_{framework_id}_{industry_context or 'general'}"
 
             cached_content = genai.caching.CachedContent.create(
-                model=model_type.value, contents=cache_content, ttl=ttl, display_name=display_name
+                model=model_type.value,
+                contents=cache_content,
+                ttl=ttl,
+                display_name=display_name,
             )
 
             # Store cache reference and metadata
@@ -300,7 +323,9 @@ class GoogleCachedContentManager:
                 "size_estimate_mb"
             ]
 
-            logger.info(f"Created framework cache: {display_name} with {ttl_hours}h TTL")
+            logger.info(
+                f"Created framework cache: {display_name} with {ttl_hours}h TTL"
+            )
             return cached_content
 
         except Exception as e:
@@ -309,7 +334,10 @@ class GoogleCachedContentManager:
             return None
 
     def get_cached_content(
-        self, content_type: CacheContentType, identifier: str, secondary_key: Optional[str] = None
+        self,
+        content_type: CacheContentType,
+        identifier: str,
+        secondary_key: Optional[str] = None,
     ) -> Optional[genai.caching.CachedContent]:
         """
         Get existing cached content by type and identifier.
@@ -399,7 +427,11 @@ class GoogleCachedContentManager:
     def get_cache_metrics(self) -> Dict[str, Any]:
         """Get comprehensive cache performance metrics."""
         total_requests = self.metrics["cache_hits"] + self.metrics["cache_misses"]
-        hit_rate = (self.metrics["cache_hits"] / total_requests * 100) if total_requests > 0 else 0
+        hit_rate = (
+            (self.metrics["cache_hits"] / total_requests * 100)
+            if total_requests > 0
+            else 0
+        )
 
         return {
             "hit_rate_percentage": round(hit_rate, 2),
@@ -413,14 +445,21 @@ class GoogleCachedContentManager:
             "estimated_cost_savings": round(self.metrics["total_cost_savings"], 4),
             "cache_types": {
                 cache_type.value: len(
-                    [k for k, m in self.cache_metadata.items() if m.get("type") == cache_type.value]
+                    [
+                        k
+                        for k, m in self.cache_metadata.items()
+                        if m.get("type") == cache_type.value
+                    ]
                 )
                 for cache_type in CacheContentType
             },
         }
 
     def _generate_cache_key(
-        self, content_type: CacheContentType, identifier: str, secondary_key: Optional[str] = None
+        self,
+        content_type: CacheContentType,
+        identifier: str,
+        secondary_key: Optional[str] = None,
     ) -> str:
         """Generate unique cache key for content."""
         key_parts = [content_type.value, identifier]
@@ -430,7 +469,9 @@ class GoogleCachedContentManager:
         combined_key = "|".join(key_parts)
         return f"gai_cache:{hashlib.sha256(combined_key.encode()).hexdigest()[:16]}"
 
-    def _generate_business_profile_cache_key(self, business_profile: Dict[str, Any]) -> str:
+    def _generate_business_profile_cache_key(
+        self, business_profile: Dict[str, Any]
+    ) -> str:
         """Generate cache key based on business profile similarity factors."""
         # Create similarity hash based on key characteristics
         similarity_factors = {
@@ -438,11 +479,15 @@ class GoogleCachedContentManager:
             "employee_count_range": self._get_employee_count_range(
                 business_profile.get("employee_count", 0)
             ),
-            "existing_frameworks": sorted(business_profile.get("existing_frameworks", [])),
+            "existing_frameworks": sorted(
+                business_profile.get("existing_frameworks", [])
+            ),
             "has_international_operations": business_profile.get(
                 "has_international_operations", False
             ),
-            "handles_personal_data": business_profile.get("handles_personal_data", False),
+            "handles_personal_data": business_profile.get(
+                "handles_personal_data", False
+            ),
         }
 
         similarity_key = json.dumps(similarity_factors, sort_keys=True)
@@ -475,12 +520,18 @@ class GoogleCachedContentManager:
 
         # Framework information
         content_parts.append(f"Compliance Framework: {framework_id}")
-        content_parts.append(f"Framework Type: {self._get_framework_type(framework_id)}")
+        content_parts.append(
+            f"Framework Type: {self._get_framework_type(framework_id)}"
+        )
 
         # Business profile context
-        content_parts.append(f"Company: {business_profile.get('company_name', 'Unknown')}")
+        content_parts.append(
+            f"Company: {business_profile.get('company_name', 'Unknown')}"
+        )
         content_parts.append(f"Industry: {business_profile.get('industry', 'Unknown')}")
-        content_parts.append(f"Employee Count: {business_profile.get('employee_count', 0)}")
+        content_parts.append(
+            f"Employee Count: {business_profile.get('employee_count', 0)}"
+        )
         content_parts.append(f"Country: {business_profile.get('country', 'Unknown')}")
 
         # Business characteristics
@@ -499,7 +550,9 @@ class GoogleCachedContentManager:
             characteristics.append("has international operations")
 
         if characteristics:
-            content_parts.append(f"Business Characteristics: {', '.join(characteristics)}")
+            content_parts.append(
+                f"Business Characteristics: {', '.join(characteristics)}"
+            )
 
         # Technology stack
         if business_profile.get("cloud_providers"):
@@ -507,7 +560,9 @@ class GoogleCachedContentManager:
                 f"Cloud Providers: {', '.join(business_profile['cloud_providers'])}"
             )
         if business_profile.get("saas_tools"):
-            content_parts.append(f"SaaS Tools: {', '.join(business_profile['saas_tools'])}")
+            content_parts.append(
+                f"SaaS Tools: {', '.join(business_profile['saas_tools'])}"
+            )
 
         # Existing compliance
         if business_profile.get("existing_frameworks"):
@@ -517,11 +572,15 @@ class GoogleCachedContentManager:
 
         # Assessment context
         if assessment_context:
-            content_parts.append(f"Assessment Context: {json.dumps(assessment_context, indent=2)}")
+            content_parts.append(
+                f"Assessment Context: {json.dumps(assessment_context, indent=2)}"
+            )
 
         return content_parts
 
-    def _build_business_profile_cache_content(self, business_profile: Dict[str, Any]) -> List[str]:
+    def _build_business_profile_cache_content(
+        self, business_profile: Dict[str, Any]
+    ) -> List[str]:
         """Build cache content for business profile."""
         return [
             "Business Profile Analysis:",
@@ -550,7 +609,9 @@ class GoogleCachedContentManager:
 
         return content_parts
 
-    def _calculate_assessment_ttl(self, framework_id: str, business_profile: Dict[str, Any]) -> int:
+    def _calculate_assessment_ttl(
+        self, framework_id: str, business_profile: Dict[str, Any]
+    ) -> int:
         """Calculate TTL for assessment cache based on stability factors."""
         base_ttl = self.config.default_ttl_hours
 
@@ -567,7 +628,9 @@ class GoogleCachedContentManager:
             base_ttl = int(base_ttl * 0.8)  # Smaller orgs change more frequently
 
         # Ensure TTL is within bounds
-        return max(self.config.min_ttl_minutes // 60, min(self.config.max_ttl_hours, base_ttl))
+        return max(
+            self.config.min_ttl_minutes // 60, min(self.config.max_ttl_hours, base_ttl)
+        )
 
     def _calculate_business_profile_ttl(self, business_profile: Dict[str, Any]) -> int:
         """Calculate TTL for business profile cache."""
@@ -576,7 +639,9 @@ class GoogleCachedContentManager:
         # Business profiles are generally stable
         employee_count = business_profile.get("employee_count", 0)
         if employee_count > 500:
-            return min(self.config.max_ttl_hours, base_ttl * 2)  # Large orgs are more stable
+            return min(
+                self.config.max_ttl_hours, base_ttl * 2
+            )  # Large orgs are more stable
         elif employee_count < 25:
             return max(1, base_ttl // 2)  # Very small orgs change more
         else:
@@ -605,7 +670,9 @@ class GoogleCachedContentManager:
 
                 if cache_key in self.cache_metadata:
                     metadata = self.cache_metadata[cache_key]
-                    self.metrics["total_size_cached_mb"] -= metadata.get("size_estimate_mb", 0)
+                    self.metrics["total_size_cached_mb"] -= metadata.get(
+                        "size_estimate_mb", 0
+                    )
                     del self.cache_metadata[cache_key]
 
                 logger.debug(f"Removed cache: {cache_key}")
@@ -622,7 +689,9 @@ class GoogleCachedContentManager:
 
                 if cache_key in self.cache_metadata:
                     metadata = self.cache_metadata[cache_key]
-                    self.metrics["total_size_cached_mb"] -= metadata.get("size_estimate_mb", 0)
+                    self.metrics["total_size_cached_mb"] -= metadata.get(
+                        "size_estimate_mb", 0
+                    )
                     del self.cache_metadata[cache_key]
         except Exception as e:
             logger.warning(f"Error removing cache {cache_key}: {e}")
@@ -678,7 +747,9 @@ class GoogleCachedContentManager:
             "SOX": "Internal controls, financial reporting processes, management assessment, auditor attestation",
             "NIST": "Identify, protect, detect, respond, recover functions",
         }
-        return requirements.get(framework_id, "Risk assessment, control implementation, monitoring")
+        return requirements.get(
+            framework_id, "Risk assessment, control implementation, monitoring"
+        )
 
     def _get_framework_assessment_approach(self, framework_id: str) -> str:
         """Get assessment approach for framework."""
@@ -719,7 +790,11 @@ class GoogleCachedContentManager:
         if saas_tools:
             tech_components.append(f"SaaS: {', '.join(saas_tools[:3])}")
 
-        return "; ".join(tech_components) if tech_components else "Traditional IT Infrastructure"
+        return (
+            "; ".join(tech_components)
+            if tech_components
+            else "Traditional IT Infrastructure"
+        )
 
     def _get_compliance_maturity(self, business_profile: Dict[str, Any]) -> str:
         """Get compliance maturity assessment."""
@@ -736,7 +811,9 @@ class GoogleCachedContentManager:
     # Cache Strategy Optimization
     # ==============================
 
-    def record_cache_performance(self, cache_key: str, response_time_ms: int, hit: bool = True) -> None:
+    def record_cache_performance(
+        self, cache_key: str, response_time_ms: int, hit: bool = True
+    ) -> None:
         """Record cache performance for TTL optimization."""
         if not self.config.performance_based_ttl:
             return
@@ -755,7 +832,9 @@ class GoogleCachedContentManager:
 
         # Keep only last 50 records per cache key
         if len(self.performance_history[cache_key]) > 50:
-            self.performance_history[cache_key] = self.performance_history[cache_key][-50:]
+            self.performance_history[cache_key] = self.performance_history[cache_key][
+                -50:
+            ]
 
         # Calculate TTL adjustment based on performance
         ttl_adjustment = self._calculate_ttl_adjustment(cache_key, response_time_ms)
@@ -775,7 +854,9 @@ class GoogleCachedContentManager:
         if len(recent_records) < 3:
             return 0.0
 
-        avg_response_time = sum(r["response_time_ms"] for r in recent_records) / len(recent_records)
+        avg_response_time = sum(r["response_time_ms"] for r in recent_records) / len(
+            recent_records
+        )
 
         # Fast responses → increase TTL (cache longer)
         if avg_response_time < self.config.fast_response_threshold_ms:
@@ -817,7 +898,9 @@ class GoogleCachedContentManager:
         if len(self.cache_warming_queue) > 100:
             self.cache_warming_queue = self.cache_warming_queue[:100]
 
-        logger.debug(f"Added {content_type.value} to cache warming queue with priority {priority}")
+        logger.debug(
+            f"Added {content_type.value} to cache warming queue with priority {priority}"
+        )
 
     async def process_warming_queue(self, max_items: int = 5) -> int:
         """Process cache warming queue to proactively create cache entries."""
@@ -838,7 +921,9 @@ class GoogleCachedContentManager:
 
             except Exception as e:
                 entry["attempts"] += 1
-                logger.warning(f"Cache warming failed for {entry['content_type'].value}: {e}")
+                logger.warning(
+                    f"Cache warming failed for {entry['content_type'].value}: {e}"
+                )
 
                 # Remove after 3 failed attempts
                 if entry["attempts"] >= 3:
@@ -860,7 +945,9 @@ class GoogleCachedContentManager:
 
         # Don't warm if recently created
         cache_key = self._generate_cache_key(
-            content_type, context.get("framework_id", ""), context.get("business_profile_id", "")
+            content_type,
+            context.get("framework_id", ""),
+            context.get("business_profile_id", ""),
         )
 
         if cache_key in self.active_caches:
@@ -904,12 +991,16 @@ class GoogleCachedContentManager:
             logger.error(f"Failed to warm cache for {content_type.value}: {e}")
             raise
 
-    def trigger_intelligent_invalidation(self, trigger_type: str, context: Dict[str, Any]) -> None:
+    def trigger_intelligent_invalidation(
+        self, trigger_type: str, context: Dict[str, Any]
+    ) -> None:
         """Trigger intelligent cache invalidation based on business logic."""
         if not self.config.intelligent_invalidation:
             return
 
-        invalidation_key = f"{trigger_type}:{context.get('business_profile_id', 'global')}"
+        invalidation_key = (
+            f"{trigger_type}:{context.get('business_profile_id', 'global')}"
+        )
         self.invalidation_triggers[invalidation_key] = datetime.now()
 
         # Define invalidation rules
@@ -951,7 +1042,9 @@ class GoogleCachedContentManager:
 
         self._invalidate_cache_keys(keys_to_invalidate, "framework_update")
 
-    def _invalidate_assessment_caches(self, framework_id: str, business_profile_id: str) -> None:
+    def _invalidate_assessment_caches(
+        self, framework_id: str, business_profile_id: str
+    ) -> None:
         """Invalidate assessment-specific caches."""
         keys_to_invalidate = []
 
@@ -995,7 +1088,9 @@ class GoogleCachedContentManager:
                     logger.error(f"Failed to invalidate cache {cache_key}: {e}")
 
         if invalidated_count > 0:
-            logger.info(f"Invalidated {invalidated_count} cache entries due to {reason}")
+            logger.info(
+                f"Invalidated {invalidated_count} cache entries due to {reason}"
+            )
 
     def get_cache_strategy_metrics(self) -> Dict[str, Any]:
         """Get cache strategy optimization metrics."""

@@ -32,7 +32,9 @@ class SessionManager:
 
         if self._redis_client is None:
             try:
-                self._redis_client = redis.from_url(settings.redis_url, decode_responses=True)
+                self._redis_client = redis.from_url(
+                    settings.redis_url, decode_responses=True
+                )
                 # Test the connection
                 await self._redis_client.ping()
                 self._redis_available = True
@@ -214,9 +216,13 @@ class AuthService:
             "login_time": datetime.utcnow().isoformat(),
         }
 
-        return await self.session_manager.create_session(user.id, token, session_metadata)
+        return await self.session_manager.create_session(
+            user.id, token, session_metadata
+        )
 
-    async def validate_session(self, session_id: str, db: AsyncSession) -> Optional[User]:
+    async def validate_session(
+        self, session_id: str, db: AsyncSession
+    ) -> Optional[User]:
         """Validate a session and return the associated user."""
         session_data = await self.session_manager.get_session(session_id)
         if not session_data:

@@ -26,12 +26,19 @@ class TestEvidenceClassificationAPI:
             "description": "Comprehensive information security policy covering access controls and data protection",
             "evidence_type": "unknown",
             "raw_data": json.dumps(
-                {"file_type": "pdf", "content": "This policy establishes security controls..."}
+                {
+                    "file_type": "pdf",
+                    "content": "This policy establishes security controls...",
+                }
             ),
         }
 
     def test_classify_single_evidence(
-        self, client, authenticated_headers, sample_business_profile, sample_evidence_data
+        self,
+        client,
+        authenticated_headers,
+        sample_business_profile,
+        sample_evidence_data,
     ):
         """Test classifying a single evidence item."""
         # First create evidence
@@ -70,11 +77,19 @@ class TestEvidenceClassificationAPI:
             response_data = response.json()
             assert response_data["evidence_id"] == evidence_id
             assert response_data["confidence"] == 85
-            assert response_data["suggested_controls"] == ["A.5.1.1", "A.5.1.2", "A.9.1.1"]
+            assert response_data["suggested_controls"] == [
+                "A.5.1.1",
+                "A.5.1.2",
+                "A.9.1.1",
+            ]
             assert response_data["apply_suggestion"] is True  # High confidence
 
     def test_classify_evidence_force_reclassify(
-        self, client, authenticated_headers, sample_business_profile, sample_evidence_data
+        self,
+        client,
+        authenticated_headers,
+        sample_business_profile,
+        sample_evidence_data,
     ):
         """Test force reclassification of already classified evidence."""
         # Create evidence
@@ -132,9 +147,13 @@ class TestEvidenceClassificationAPI:
                 )
 
                 if response3.status_code == 200:
-                    assert response3.json()["reasoning"] == "Reclassified as audit report"
+                    assert (
+                        response3.json()["reasoning"] == "Reclassified as audit report"
+                    )
 
-    def test_bulk_classify_evidence(self, client, authenticated_headers, sample_business_profile):
+    def test_bulk_classify_evidence(
+        self, client, authenticated_headers, sample_business_profile
+    ):
         """Test bulk classification of multiple evidence items."""
         # Create multiple evidence items
         evidence_ids = []
@@ -175,7 +194,9 @@ class TestEvidenceClassificationAPI:
             }
 
             response = client.post(
-                "/api/evidence/classify/bulk", json=bulk_request, headers=authenticated_headers
+                "/api/evidence/classify/bulk",
+                json=bulk_request,
+                headers=authenticated_headers,
             )
 
             assert response.status_code == 200
@@ -184,10 +205,16 @@ class TestEvidenceClassificationAPI:
             response_data = response.json()
             assert response_data["total_processed"] == len(evidence_ids)
             assert response_data["successful_classifications"] > 0
-            assert response_data["auto_applied"] > 0  # Should auto-apply due to confidence >= 70
+            assert (
+                response_data["auto_applied"] > 0
+            )  # Should auto-apply due to confidence >= 70
 
     def test_get_control_mapping_suggestions(
-        self, client, authenticated_headers, sample_business_profile, sample_evidence_data
+        self,
+        client,
+        authenticated_headers,
+        sample_business_profile,
+        sample_evidence_data,
     ):
         """Test getting control mapping suggestions for evidence."""
         # Create evidence
@@ -237,7 +264,9 @@ class TestEvidenceClassificationAPI:
         self, client, authenticated_headers, sample_business_profile
     ):
         """Test getting classification statistics."""
-        response = client.get("/api/evidence/classification/stats", headers=authenticated_headers)
+        response = client.get(
+            "/api/evidence/classification/stats", headers=authenticated_headers
+        )
 
         assert response.status_code == 200
         assert_api_response_security(response)
@@ -253,7 +282,8 @@ class TestEvidenceClassificationAPI:
 
         # Verify data consistency
         assert (
-            response_data["classified_evidence"] + response_data["unclassified_evidence"]
+            response_data["classified_evidence"]
+            + response_data["unclassified_evidence"]
             == response_data["total_evidence"]
         )
 
@@ -283,7 +313,9 @@ class TestEvidenceClassificationAPI:
         }
 
         response = client.post(
-            "/api/evidence/classify/bulk", json=bulk_request, headers=authenticated_headers
+            "/api/evidence/classify/bulk",
+            json=bulk_request,
+            headers=authenticated_headers,
         )
 
         assert response.status_code == 200  # Should handle gracefully
@@ -306,7 +338,9 @@ class TestEvidenceClassificationValidation:
         bulk_request = {"evidence_ids": evidence_ids, "force_reclassify": False}
 
         response = client.post(
-            "/api/evidence/classify/bulk", json=bulk_request, headers=authenticated_headers
+            "/api/evidence/classify/bulk",
+            json=bulk_request,
+            headers=authenticated_headers,
         )
 
         assert response.status_code == 422  # Validation error
@@ -319,7 +353,9 @@ class TestEvidenceClassificationValidation:
         }
 
         response = client.post(
-            "/api/evidence/classify/bulk", json=bulk_request, headers=authenticated_headers
+            "/api/evidence/classify/bulk",
+            json=bulk_request,
+            headers=authenticated_headers,
         )
 
         assert response.status_code == 422  # Validation error

@@ -41,7 +41,9 @@ class AssessmentService:
 
             # Get business profile if not provided
             if not business_profile_id:
-                stmt_profile = select(BusinessProfile).where(BusinessProfile.user_id == user.id)
+                stmt_profile = select(BusinessProfile).where(
+                    BusinessProfile.user_id == user.id
+                )
                 result_profile = await db.execute(stmt_profile)
                 business_profile = result_profile.scalars().first()
                 business_profile_id = business_profile.id if business_profile else None
@@ -81,7 +83,9 @@ class AssessmentService:
             return session
         except sa.exc.SQLAlchemyError as e:
             # Log error appropriately
-            raise DatabaseException(f"Error retrieving assessment session {session_id}: {e}")
+            raise DatabaseException(
+                f"Error retrieving assessment session {session_id}: {e}"
+            )
 
     async def get_current_assessment_session(
         self, db: AsyncSession, user: User
@@ -118,10 +122,17 @@ class AssessmentService:
             return sessions
         except sa.exc.SQLAlchemyError as e:
             # Log error appropriately
-            raise DatabaseException(f"Error retrieving assessment sessions for user {user.id}: {e}")
+            raise DatabaseException(
+                f"Error retrieving assessment sessions for user {user.id}: {e}"
+            )
 
     async def update_assessment_response(
-        self, db: AsyncSession, user: User, session_id: UUID, question_id: str, answer: Dict
+        self,
+        db: AsyncSession,
+        user: User,
+        session_id: UUID,
+        question_id: str,
+        answer: Dict,
     ) -> AssessmentSession:
         """Update an assessment response."""
         try:
@@ -205,9 +216,7 @@ class AssessmentService:
                             }
                         )
 
-            session.recommendations = (
-                recommendations  # Ensure AssessmentSession model has this field as JSON or similar
-            )
+            session.recommendations = recommendations  # Ensure AssessmentSession model has this field as JSON or similar
 
             db.add(session)
             await db.commit()
@@ -216,7 +225,9 @@ class AssessmentService:
         except sa.exc.SQLAlchemyError as e:
             await db.rollback()
             # Log error appropriately
-            raise DatabaseException(f"Error completing assessment session {session_id}: {e}")
+            raise DatabaseException(
+                f"Error completing assessment session {session_id}: {e}"
+            )
         except NotFoundException:  # Re-raise
             raise
         except ValueError:  # Re-raise specific domain error
@@ -337,14 +348,27 @@ class AssessmentService:
                     "id": "planned_frameworks",
                     "question": "Which compliance frameworks is your company planning to achieve?",
                     "type": "checkbox",
-                    "options": ["GDPR", "ISO 27001", "Cyber Essentials", "FCA", "PCI DSS", "SOC 2"],
+                    "options": [
+                        "GDPR",
+                        "ISO 27001",
+                        "Cyber Essentials",
+                        "FCA",
+                        "PCI DSS",
+                        "SOC 2",
+                    ],
                     "required": False,
                 },
                 {
                     "id": "compliance_budget",
                     "question": "What is your budget range for compliance initiatives?",
                     "type": "select",
-                    "options": ["Under £10K", "£10K-£25K", "£25K-£50K", "£50K-£100K", "Over £100K"],
+                    "options": [
+                        "Under £10K",
+                        "£10K-£25K",
+                        "£25K-£50K",
+                        "£50K-£100K",
+                        "Over £100K",
+                    ],
                     "required": False,
                 },
             ],

@@ -1,0 +1,117 @@
+
+100int
+"level"str
+"low"str
+"medium"str
+"high"str
+"score"str
+	70int
+<3"Assess risk level based on completion and answers"str
+40int
+"Missing controls"str
+
+0int
+ "Incomplete assessment"str
+ %"Minor gaps identified"str
+	"factors"str
+50intself
+Ò Ò(
+completion
+Ò! Ò(2answers
+Ò4 Ò(Alist"¹'
+%
+
+Ô Ô(,"	#binop -#*2-:4
+2
+
+Ô Ô(-
+risk_score"
+builtinsmax*:*
+(
+
+Ö Ö(
+"	#binop >#2>:	Bbool,"*
+
+Ö Ö(
+ *
+Ö Ö(
+2
+Ø Ø("1'
+%
+
+× ×(level"#id#:Bstr"\*
+(
+
+Ø Ø("	#binop >#2>:Bbool,"*
+
+Ø Ø( *
+Ø Ø(2
+Ú Ú("1'
+%
+
+Ù Ù(level"#id#:Bstr"1'
+%
+
+Û Û(level"#id#:Bstr"ë*level&
+$
+
+Ý ã(	"#new-object#Bdict"
+ 
+
+Þ Þ("	#map-set#:"
+ 
+
+ß ß("	#map-set#:*
+(
+
+á á("	#binop >#2>:Bbool,"*
+
+á á( *
+á á(2
+â â("š)
+'
+
+à à(D"#unknown-value#Blist(
+&
+
+à à(D "
+#is-exact#:Bbool
+
+
+à à(D!"
+#assume#: :
+8
+
+à à(D""#set-field# __collection_size:Bint(
+&
+
+à à(D#"#array-add-last#:(
+&
+
+à à(D$"#array-add-last#:
+
+à â(*"ð)
+'
+
+â â(*&"#unknown-value#Blist(
+&
+
+â â(*'"
+#is-exact#:&Bbool
+
+
+â â(*("
+#assume#:':
+8
+
+â â(*)"#set-field# __collection_size:&Bint(
+&
+
+â â(**"#array-add-last#:&%
+
+à â(*"J*+&"
+ 
+
+à â(*,"	#map-set#:+
+
+Ý ã(	*;/home/omar/Documents/ruleIQ/tests/mocks/ai_service_mocks.py

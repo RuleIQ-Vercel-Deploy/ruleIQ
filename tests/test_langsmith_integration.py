@@ -28,7 +28,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config.langsmith_config import (
     LangSmithConfig,
     with_langsmith_tracing,
-    LANGSMITH_SETUP_INSTRUCTIONS
+    LANGSMITH_SETUP_INSTRUCTIONS,
 )
 
 
@@ -87,7 +87,7 @@ class TestLangSmithConfiguration:
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "true")
         monkeypatch.setenv("LANGCHAIN_API_KEY", "ls__valid_key")
         monkeypatch.setenv("LANGCHAIN_PROJECT", "test-project")
-        
+
         assert LangSmithConfig.validate_configuration() is True
         assert "LangSmith tracing configured" in caplog.text
         assert "Project: test-project" in caplog.text
@@ -95,9 +95,10 @@ class TestLangSmithConfiguration:
     def test_validate_configuration_disabled(self, monkeypatch, caplog):
         """Test validation when tracing is disabled."""
         import logging
+
         caplog.set_level(logging.DEBUG)
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "false")
-        
+
         assert LangSmithConfig.validate_configuration() is False
         assert "LangSmith tracing is disabled" in caplog.text
 
@@ -105,7 +106,7 @@ class TestLangSmithConfiguration:
         """Test validation with missing API key."""
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "true")
         monkeypatch.delenv("LANGCHAIN_API_KEY", raising=False)
-        
+
         assert LangSmithConfig.validate_configuration() is False
         assert "LANGCHAIN_API_KEY is not set" in caplog.text
 
@@ -113,7 +114,7 @@ class TestLangSmithConfiguration:
         """Test validation with invalid API key format."""
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "true")
         monkeypatch.setenv("LANGCHAIN_API_KEY", "invalid_key_format")
-        
+
         assert LangSmithConfig.validate_configuration() is False
         assert "should start with 'ls__'" in caplog.text
 
@@ -124,9 +125,9 @@ class TestLangSmithMetadata:
     def test_get_trace_metadata_basic(self, monkeypatch):
         """Test basic metadata generation."""
         monkeypatch.setenv("ENVIRONMENT", "testing")
-        
+
         metadata = LangSmithConfig.get_trace_metadata()
-        
+
         assert metadata["application"] == "ruleiq"
         assert metadata["component"] == "assessment_agent"
         assert metadata["environment"] == "testing"
@@ -134,10 +135,9 @@ class TestLangSmithMetadata:
     def test_get_trace_metadata_with_session(self):
         """Test metadata with session ID."""
         metadata = LangSmithConfig.get_trace_metadata(
-            session_id="test-session-123",
-            lead_id="lead-456"
+            session_id="test-session-123", lead_id="lead-456"
         )
-        
+
         assert metadata["session_id"] == "test-session-123"
         assert metadata["lead_id"] == "lead-456"
 
@@ -146,9 +146,9 @@ class TestLangSmithMetadata:
         metadata = LangSmithConfig.get_trace_metadata(
             session_id="session-1",
             custom_field="custom_value",
-            phase="evidence_collection"
+            phase="evidence_collection",
         )
-        
+
         assert metadata["session_id"] == "session-1"
         assert metadata["custom_field"] == "custom_value"
         assert metadata["phase"] == "evidence_collection"
@@ -156,7 +156,7 @@ class TestLangSmithMetadata:
     def test_get_trace_tags_basic(self):
         """Test basic tag generation."""
         tags = LangSmithConfig.get_trace_tags("test_operation")
-        
+
         assert "ruleiq" in tags
         assert "assessment" in tags
         assert "langgraph" in tags
@@ -164,23 +164,17 @@ class TestLangSmithMetadata:
 
     def test_get_trace_tags_with_phase(self):
         """Test tags with phase."""
-        tags = LangSmithConfig.get_trace_tags(
-            "evidence_collection",
-            phase="initial"
-        )
-        
+        tags = LangSmithConfig.get_trace_tags("evidence_collection", phase="initial")
+
         assert "phase:initial" in tags
         assert "evidence_collection" in tags
 
     def test_get_trace_tags_with_custom(self):
         """Test tags with custom values."""
         tags = LangSmithConfig.get_trace_tags(
-            "validation",
-            phase="final",
-            priority="high",
-            source="api"
+            "validation", phase="final", priority="high", source="api"
         )
-        
+
         assert "phase:final" in tags
         assert "priority:high" in tags
         assert "source:api" in tags
@@ -193,17 +187,17 @@ class TestTracingDecorator:
     async def test_decorator_with_tracing_disabled(self, monkeypatch):
         """Test decorator behavior when tracing is disabled."""
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "false")
-        
+
         call_count = 0
-        
+
         @with_langsmith_tracing("test_op")
         async def test_function(arg1, arg2):
             nonlocal call_count
             call_count += 1
             return arg1 + arg2
-        
+
         result = await test_function(1, 2)
-        
+
         assert result == 3
         assert call_count == 1
 
@@ -212,22 +206,22 @@ class TestTracingDecorator:
         """Test decorator behavior when tracing is enabled."""
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "true")
         monkeypatch.setenv("LANGCHAIN_API_KEY", "ls__test_key")
-        
+
         with patch("langchain_core.tracers.context.tracing_v2_enabled") as mock_tracing:
             mock_context = MagicMock()
             mock_context.__enter__ = MagicMock(return_value=None)
             mock_context.__exit__ = MagicMock(return_value=None)
             mock_tracing.return_value = mock_context
-            
+
             @with_langsmith_tracing("test_operation")
             async def test_function(session_id, value):
                 return {"result": value * 2}
-            
+
             result = await test_function(session_id="test-123", value=5)
-            
+
             assert result == {"result": 10}
             mock_tracing.assert_called_once()
-            
+
             call_kwargs = mock_tracing.call_args[1]
             assert call_kwargs["project_name"] == "ruleiq-assessment"
             assert "test_operation" in call_kwargs["tags"]
@@ -238,27 +232,29 @@ class TestTracingDecorator:
         """Test decorator extracting context from state."""
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "true")
         monkeypatch.setenv("LANGCHAIN_API_KEY", "ls__test_key")
-        
+
         with patch("langchain_core.tracers.context.tracing_v2_enabled") as mock_tracing:
             mock_context = MagicMock()
             mock_context.__enter__ = MagicMock(return_value=None)
             mock_context.__exit__ = MagicMock(return_value=None)
             mock_tracing.return_value = mock_context
-            
-            @with_langsmith_tracing("process_state", include_input=True, include_output=True)
+
+            @with_langsmith_tracing(
+                "process_state", include_input=True, include_output=True
+            )
             async def test_function(state):
                 return {"processed": True}
-            
+
             test_state = {
                 "session_id": "state-session-789",
                 "current_phase": "evidence_collection",
-                "data": "test_data"
+                "data": "test_data",
             }
-            
+
             result = await test_function(state=test_state)
-            
+
             assert result == {"processed": True}
-            
+
             call_kwargs = mock_tracing.call_args[1]
             assert "session:state-session-789" in call_kwargs["tags"]
             assert "phase:evidence_collection" in call_kwargs["tags"]
@@ -269,19 +265,19 @@ class TestTracingDecorator:
         """Test decorator handles errors gracefully."""
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "true")
         monkeypatch.setenv("LANGCHAIN_API_KEY", "ls__test_key")
-        
+
         with patch("langchain_core.tracers.context.tracing_v2_enabled") as mock_tracing:
             # Simulate tracing initialization error
             mock_tracing.side_effect = Exception("Tracing setup failed")
-            
+
             @with_langsmith_tracing("error_test")
             async def test_function():
                 return "success"
-            
+
             # Should not propagate tracing errors
             with pytest.raises(Exception) as exc_info:
                 await test_function()
-            
+
             assert str(exc_info.value) == "Tracing setup failed"
 
 
@@ -292,16 +288,16 @@ class TestPerformanceImpact:
     async def test_performance_without_tracing(self, monkeypatch):
         """Measure performance without tracing."""
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "false")
-        
+
         @with_langsmith_tracing("perf_test")
         async def test_function():
             await asyncio.sleep(0.01)  # Simulate work
             return "done"
-        
+
         start_time = time.perf_counter()
         await test_function()
         elapsed = time.perf_counter() - start_time
-        
+
         # Should be close to sleep time (0.01s) with minimal overhead
         assert elapsed < 0.02  # Allow 10ms overhead
 
@@ -310,22 +306,22 @@ class TestPerformanceImpact:
         """Measure performance with tracing enabled."""
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "true")
         monkeypatch.setenv("LANGCHAIN_API_KEY", "ls__test_key")
-        
+
         with patch("langchain_core.tracers.context.tracing_v2_enabled") as mock_tracing:
             mock_context = MagicMock()
             mock_context.__enter__ = MagicMock(return_value=None)
             mock_context.__exit__ = MagicMock(return_value=None)
             mock_tracing.return_value = mock_context
-            
+
             @with_langsmith_tracing("perf_test")
             async def test_function():
                 await asyncio.sleep(0.01)
                 return "done"
-            
+
             start_time = time.perf_counter()
             await test_function()
             elapsed = time.perf_counter() - start_time
-            
+
             # Should have minimal overhead even with tracing
             assert elapsed < 0.03  # Allow 20ms overhead for tracing
 
@@ -334,25 +330,25 @@ class TestPerformanceImpact:
         """Test performance with multiple traced operations."""
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "true")
         monkeypatch.setenv("LANGCHAIN_API_KEY", "ls__test_key")
-        
+
         with patch("langchain_core.tracers.context.tracing_v2_enabled") as mock_tracing:
             mock_context = MagicMock()
             mock_context.__enter__ = MagicMock(return_value=None)
             mock_context.__exit__ = MagicMock(return_value=None)
             mock_tracing.return_value = mock_context
-            
+
             @with_langsmith_tracing("bulk_test")
             async def test_function(index):
                 return index * 2
-            
+
             start_time = time.perf_counter()
-            
+
             # Run 100 traced operations
             tasks = [test_function(i) for i in range(100)]
             results = await asyncio.gather(*tasks)
-            
+
             elapsed = time.perf_counter() - start_time
-            
+
             assert len(results) == 100
             assert results[50] == 100
             # Should complete 100 operations quickly
@@ -367,9 +363,9 @@ class TestErrorScenarios:
         """Test handling of invalid API key."""
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "true")
         monkeypatch.setenv("LANGCHAIN_API_KEY", "invalid_key")
-        
+
         result = LangSmithConfig.validate_configuration()
-        
+
         assert result is False
         assert "should start with 'ls__'" in caplog.text
 
@@ -378,15 +374,15 @@ class TestErrorScenarios:
         """Test handling of network errors during tracing."""
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "true")
         monkeypatch.setenv("LANGCHAIN_API_KEY", "ls__test_key")
-        
+
         with patch("langchain_core.tracers.context.tracing_v2_enabled") as mock_tracing:
             # Simulate network error
             mock_tracing.side_effect = ConnectionError("Network unreachable")
-            
+
             @with_langsmith_tracing("network_test")
             async def test_function():
                 return "should_still_work"
-            
+
             with pytest.raises(ConnectionError):
                 await test_function()
 
@@ -395,27 +391,25 @@ class TestErrorScenarios:
         """Test handling of malformed metadata."""
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "true")
         monkeypatch.setenv("LANGCHAIN_API_KEY", "ls__test_key")
-        
+
         with patch("langchain_core.tracers.context.tracing_v2_enabled") as mock_tracing:
             mock_context = MagicMock()
             mock_context.__enter__ = MagicMock(return_value=None)
             mock_context.__exit__ = MagicMock(return_value=None)
             mock_tracing.return_value = mock_context
-            
+
             @with_langsmith_tracing("metadata_test")
             async def test_function(**kwargs):
                 return "success"
-            
+
             # Test with various malformed inputs
             circular_ref = {}
             circular_ref["self"] = circular_ref
-            
+
             result = await test_function(
-                circular_data=circular_ref,
-                none_value=None,
-                large_string="x" * 10000
+                circular_data=circular_ref, none_value=None, large_string="x" * 10000
             )
-            
+
             assert result == "success"
             # Should handle malformed data gracefully
 
@@ -424,30 +418,27 @@ class TestErrorScenarios:
         """Test concurrent traced operations."""
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "true")
         monkeypatch.setenv("LANGCHAIN_API_KEY", "ls__test_key")
-        
+
         with patch("langchain_core.tracers.context.tracing_v2_enabled") as mock_tracing:
             mock_context = MagicMock()
             mock_context.__enter__ = MagicMock(return_value=None)
             mock_context.__exit__ = MagicMock(return_value=None)
             mock_tracing.return_value = mock_context
-            
+
             @with_langsmith_tracing("concurrent_test")
             async def test_function(session_id, delay):
                 await asyncio.sleep(delay)
                 return session_id
-            
+
             # Run multiple concurrent operations
-            tasks = [
-                test_function(f"session-{i}", 0.01)
-                for i in range(10)
-            ]
-            
+            tasks = [test_function(f"session-{i}", 0.01) for i in range(10)]
+
             results = await asyncio.gather(*tasks)
-            
+
             assert len(results) == 10
             assert results[0] == "session-0"
             assert results[9] == "session-9"
-            
+
             # Check that all operations were traced
             assert mock_tracing.call_count == 10
 
@@ -458,23 +449,21 @@ class TestTraceDataStructure:
     def test_trace_metadata_structure(self):
         """Validate metadata structure matches LangSmith requirements."""
         metadata = LangSmithConfig.get_trace_metadata(
-            session_id="test-session",
-            lead_id="test-lead",
-            custom_field="value"
+            session_id="test-session", lead_id="test-lead", custom_field="value"
         )
-        
+
         # Required fields
         assert "application" in metadata
         assert "component" in metadata
         assert "environment" in metadata
-        
+
         # Session tracking
         assert "session_id" in metadata
         assert "lead_id" in metadata
-        
+
         # Custom fields
         assert "custom_field" in metadata
-        
+
         # All values should be serializable
         json_str = json.dumps(metadata)
         assert json_str  # Should not raise
@@ -482,15 +471,13 @@ class TestTraceDataStructure:
     def test_trace_tags_structure(self):
         """Validate tags structure."""
         tags = LangSmithConfig.get_trace_tags(
-            "test_op",
-            phase="testing",
-            priority="high"
+            "test_op", phase="testing", priority="high"
         )
-        
+
         # Should be a list of strings
         assert isinstance(tags, list)
         assert all(isinstance(tag, str) for tag in tags)
-        
+
         # Should contain expected tags
         assert len(tags) >= 4
         assert any("phase:" in tag for tag in tags)
@@ -501,28 +488,31 @@ class TestTraceDataStructure:
         """Test trace output includes expected structure."""
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "true")
         monkeypatch.setenv("LANGCHAIN_API_KEY", "ls__test_key")
-        
+
         trace_calls = []
-        
+
         with patch("langchain_core.tracers.context.tracing_v2_enabled") as mock_tracing:
+
             def capture_trace(**kwargs):
                 trace_calls.append(kwargs)
                 mock_context = MagicMock()
                 mock_context.__enter__ = MagicMock(return_value=None)
                 mock_context.__exit__ = MagicMock(return_value=None)
                 return mock_context
-            
+
             mock_tracing.side_effect = capture_trace
-            
-            @with_langsmith_tracing("struct_test", include_input=True, include_output=True)
+
+            @with_langsmith_tracing(
+                "struct_test", include_input=True, include_output=True
+            )
             async def test_function(data):
                 return {"processed": data, "timestamp": "2024-01-01"}
-            
+
             result = await test_function(data={"input": "test"})
-            
+
             assert len(trace_calls) == 1
             trace = trace_calls[0]
-            
+
             # Validate trace structure
             assert "project_name" in trace
             assert "tags" in trace
@@ -539,32 +529,32 @@ class TestIntegrationWithLangGraph:
         """Test tracing integration with LangGraph nodes."""
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "true")
         monkeypatch.setenv("LANGCHAIN_API_KEY", "ls__test_key")
-        
+
         with patch("langchain_core.tracers.context.tracing_v2_enabled") as mock_tracing:
             mock_context = MagicMock()
             mock_context.__enter__ = MagicMock(return_value=None)
             mock_context.__exit__ = MagicMock(return_value=None)
             mock_tracing.return_value = mock_context
-            
+
             # Simulate a LangGraph node
             class TestNode:
                 @with_langsmith_tracing("node_operation")
                 async def process(self, state: Dict[str, Any]) -> Dict[str, Any]:
                     state["processed"] = True
                     return state
-            
+
             node = TestNode()
             test_state = {
                 "session_id": "node-session-123",
                 "current_phase": "testing",
-                "data": "test"
+                "data": "test",
             }
-            
+
             # Pass state as keyword argument to match decorator expectations
             result = await node.process(state=test_state)
-            
+
             assert result["processed"] is True
-            
+
             # Verify tracing was called with node context
             call_kwargs = mock_tracing.call_args[1]
             assert "session:node-session-123" in call_kwargs["tags"]
@@ -575,31 +565,31 @@ class TestIntegrationWithLangGraph:
         """Test tracing of checkpoint operations."""
         monkeypatch.setenv("LANGCHAIN_TRACING_V2", "true")
         monkeypatch.setenv("LANGCHAIN_API_KEY", "ls__test_key")
-        
+
         with patch("langchain_core.tracers.context.tracing_v2_enabled") as mock_tracing:
             mock_context = MagicMock()
             mock_context.__enter__ = MagicMock(return_value=None)
             mock_context.__exit__ = MagicMock(return_value=None)
             mock_tracing.return_value = mock_context
-            
+
             @with_langsmith_tracing("checkpoint_save")
             async def save_checkpoint(session_id: str, state: Dict) -> bool:
                 # Simulate checkpoint save
                 return True
-            
+
             @with_langsmith_tracing("checkpoint_load")
             async def load_checkpoint(session_id: str) -> Dict:
                 # Simulate checkpoint load
                 return {"restored": True}
-            
+
             # Test save operation
             save_result = await save_checkpoint("ckpt-123", {"data": "test"})
             assert save_result is True
-            
+
             # Test load operation
             load_result = await load_checkpoint("ckpt-123")
             assert load_result["restored"] is True
-            
+
             # Both operations should be traced
             assert mock_tracing.call_count == 2
 
@@ -615,21 +605,18 @@ class TestMockTracingCallbacks:
         mock_handler.on_llm_end = Mock()
         mock_handler.on_chain_start = Mock()
         mock_handler.on_chain_end = Mock()
-        
+
         # Simulate callback invocations
         mock_handler.on_chain_start(
-            serialized={"name": "test_chain"},
-            inputs={"query": "test"}
+            serialized={"name": "test_chain"}, inputs={"query": "test"}
         )
-        
-        mock_handler.on_chain_end(
-            outputs={"result": "success"}
-        )
-        
+
+        mock_handler.on_chain_end(outputs={"result": "success"})
+
         # Verify callbacks were called
         assert mock_handler.on_chain_start.called
         assert mock_handler.on_chain_end.called
-        
+
         # Check call arguments
         chain_start_args = mock_handler.on_chain_start.call_args[1]
         assert chain_start_args["serialized"]["name"] == "test_chain"
@@ -639,16 +626,13 @@ class TestMockTracingCallbacks:
     async def test_async_mock_callbacks(self):
         """Test async mock callbacks."""
         mock_handler = AsyncMock()
-        
+
         await mock_handler.on_tool_start(
-            serialized={"name": "test_tool"},
-            input_str="test input"
+            serialized={"name": "test_tool"}, input_str="test input"
         )
-        
-        await mock_handler.on_tool_end(
-            output="test output"
-        )
-        
+
+        await mock_handler.on_tool_end(output="test output")
+
         assert mock_handler.on_tool_start.called
         assert mock_handler.on_tool_end.called
 

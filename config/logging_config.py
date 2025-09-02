@@ -77,9 +77,21 @@ def get_logging_config(log_level: str) -> Dict[str, Any]:
             "level": log_level,
         },
         "loggers": {
-            "uvicorn": {"handlers": ["console", "file"], "level": "INFO", "propagate": False},
-            "gunicorn": {"handlers": ["console", "file"], "level": "INFO", "propagate": False},
-            "celery": {"handlers": ["console", "file"], "level": "INFO", "propagate": False},
+            "uvicorn": {
+                "handlers": ["console", "file"],
+                "level": "INFO",
+                "propagate": False,
+            },
+            "gunicorn": {
+                "handlers": ["console", "file"],
+                "level": "INFO",
+                "propagate": False,
+            },
+            "celery": {
+                "handlers": ["console", "file"],
+                "level": "INFO",
+                "propagate": False,
+            },
             "api": {
                 "handlers": ["console", "file", "error_file"],
                 "level": "DEBUG",
@@ -114,7 +126,9 @@ class ComplianceLogger:
     def __init__(self, name: str) -> None:
         self.logger = logging.getLogger(name)
 
-    def log_user_action(self, user_id: str, action: str, details: Optional[Dict[str, Any]] = None) -> None:
+    def log_user_action(
+        self, user_id: str, action: str, details: Optional[Dict[str, Any]] = None
+    ) -> None:
         """Log user actions for audit purposes."""
         self.logger.info(
             f"User action: {action}",
@@ -140,7 +154,9 @@ class ComplianceLogger:
             },
         )
 
-    def log_ai_interaction(self, model: str, prompt_type: str, tokens_used: Optional[int] = None) -> None:
+    def log_ai_interaction(
+        self, model: str, prompt_type: str, tokens_used: Optional[int] = None
+    ) -> None:
         """Log AI model interactions."""
         self.logger.info(
             f"AI interaction with {model}",
@@ -152,7 +168,9 @@ class ComplianceLogger:
             },
         )
 
-    def log_error(self, error: Exception, context: Optional[Dict[str, Any]] = None) -> None:
+    def log_error(
+        self, error: Exception, context: Optional[Dict[str, Any]] = None
+    ) -> None:
         """Log errors with additional context."""
         self.logger.error(
             f"Error: {type(error).__name__}",

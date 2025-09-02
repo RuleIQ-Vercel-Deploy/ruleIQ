@@ -32,7 +32,12 @@ class TemplateManager:
             "detailed_gap_analysis": {
                 "name": "Detailed Gap Analysis",
                 "description": "Comprehensive analysis of compliance gaps",
-                "sections": ["gap_summary", "gap_details", "remediation_plan", "timeline"],
+                "sections": [
+                    "gap_summary",
+                    "gap_details",
+                    "remediation_plan",
+                    "timeline",
+                ],
                 "formatting": {
                     "include_charts": True,
                     "include_details": True,
@@ -78,11 +83,17 @@ class TemplateManager:
     def list_templates(self) -> List[Dict[str, str]]:
         """List all available templates"""
         return [
-            {"name": name, "display_name": template["name"], "description": template["description"]}
+            {
+                "name": name,
+                "display_name": template["name"],
+                "description": template["description"],
+            }
             for name, template in self.templates.items()
         ]
 
-    def customize_template(self, template_name: str, customizations: Dict[str, Any]) -> Dict:
+    def customize_template(
+        self, template_name: str, customizations: Dict[str, Any]
+    ) -> Dict:
         """Apply customizations to a template"""
         template = self.get_template(template_name)
         if not template:
@@ -111,7 +122,9 @@ class TemplateManager:
 
         return customized
 
-    def get_section_content(self, section_name: str, report_data: Dict[str, Any]) -> Dict[str, Any]:
+    def get_section_content(
+        self, section_name: str, report_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Get content for a specific report section"""
         section_builders = {
             "executive_overview": self._build_executive_overview,
@@ -202,7 +215,9 @@ class TemplateManager:
             "data": report_data.get("evidence_summary", {}),
         }
 
-    def _build_automation_opportunities(self, report_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _build_automation_opportunities(
+        self, report_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Build automation opportunities section"""
         return {
             "title": "Automation Opportunities",

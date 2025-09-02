@@ -1,0 +1,50 @@
+
+truebool
+"division by zero"bool
+
+"S3518"bool
+
+0int
+7."Check if performance meets SLO requirements."str
+"a"boolself
+ã ã("Ä.
+,
+
+ç ç("#get-field# total_turns:,
+*
+
+ç ç( "
+#binop ==#2==:Bbool "
+
+ç ç(  *
+ç ç(
+"
+
+é é("Ÿ3
+1
+
+è è(+"#get-field# total_latency_ms:.
+,
+
+è. è(>"#get-field# total_turns:,
+*
+
+è è(>	"
+#binop !=#2!=:Bbool"
+ 
+
+è è(>"
+#assert#:	
+9
+7
+
+è è(>avg_latency"#dependent-value#*:#
+!
+
+ê ê(0"#unknown-value#,
+*
+
+ê ê(0"
+#binop <=#2<=:Bbool
+
+ê ê(0*@/home/omar/Documents/ruleIQ/langgraph_agent/agents/agent_core.py

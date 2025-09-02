@@ -461,7 +461,9 @@ class TestCacheStrategyIntegration:
     print("✓ Fixed fixture scope issues")
 
     # Fix the cached_content test file similarly
-    cached_test_file = os.path.join(project_root, "tests/unit/services/test_cached_content.py")
+    cached_test_file = os.path.join(
+        project_root, "tests/unit/services/test_cached_content.py"
+    )
     print(f"\nFixing {cached_test_file}...")
 
     # Read and check if it has similar issues

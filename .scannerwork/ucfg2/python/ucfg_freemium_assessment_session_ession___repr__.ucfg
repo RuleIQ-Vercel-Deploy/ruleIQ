@@ -1,0 +1,62 @@
+
+Gdatabase.freemium_assessment_session.FreemiumAssessmentSession.__repr__O
+C/home/omar/Documents/ruleIQ/database/freemium_assessment_session.py„ „("2*½
+2
+… …(ƒ
+€
+
+…1 …(8
+%1"__id*f
+
+__unknown_file (J*H@
+>database.freemium_assessment_session.FreemiumAssessmentSession"
+id‡
+„
+
+…E …(P
+%2"__id*j
+
+__unknown_file (N*L@
+>database.freemium_assessment_session.FreemiumAssessmentSession"
+status
+
+
+…f …(z
+%3"__id*s
+
+__unknown_file (W*U@
+>database.freemium_assessment_session.FreemiumAssessmentSession"
+assessment_typeò
+ï
+
+… …(
+%4"__concat*1
+
+… …(0#!
+<FreemiumAssessmentSession(id='*
+
+…1 …(8
+
+%1*
+
+…9 …(D
+', status='*
+
+…E …(P
+
+%2*&
+
+…Q …(e
+', assessment_type='*
+
+…f …(z
+
+%3*
+
+…{ …(~
+')>"
+
+… …(
+
+%4BB@
+>database.freemium_assessment_session.FreemiumAssessmentSessionH

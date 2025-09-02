@@ -1,0 +1,496 @@
+
+”"transport"str
+2500int
+Ü"primary_model"str
+0.95float
+Ü"validation_error"str
+g"hmac_algorithm"str
+"rules_confidence"str
+2500.0float
+`"similarity_threshold"str
+0"router"str
+õ"langgraph_writes"str
+≠"min_relevance_score"str
+°0.1float
+0.70float
+F"obligation_search"str
+
+N0int
+)"user_id_header"str
+˙"framework_type"str
+®200int
+2"compliance_analyzer"str
+h"sha256"str
+I"risk_assessment"str
+á"gemini-1.5-pro"str
+∞"enable_reranking"str
+Z"max_fanout"str
+$|"auth_endpoints_per_minute"str
+„"transparent_helper"str
+"unknown_threshold"str
+œ"education"str
+ó"checkpointer_table"str
+í"timeout_error"str
+ç"gpt-4o"str
+6"evidence_collector"str
+d8000int
+¯"model_name"str
+“"construction"str
+?"legal_review"str
+G"evidence_collection"str
+¢"max_overflow"str
+%s"max_tool_calls_per_session"str
+û4000int
+W"default_k"str
+â"fallback_model"str
+ê"retrieval_error"str
+*j!"signature_replay_window_seconds"str
+!Ï"max_turns_per_session"str
+*"X-User-ID"str
+ù"isolation_level"str
+c"max_context_tokens"str
+Ê"trusted_advisor"str
+"monthly_budget_usd"str
+ä"gpt-4o-mini"str
+!"llm_fallback_threshold"str
+{r"
+Core constants for LangGraph compliance agent.
+Defines SLOs, cost limits, router thresholds, and tenancy keys.
+"str
+A"evidence_validation"str
+∫	"PCI_DSS"str
+´10int
+q24int
+§"chunk_size"str
+Ã	"finance"str
+–"hospitality"str
+C"framework_selection"str
+
+0.20float
+µ	"UK_GDPR"str
+#"company_id_header"str
+""max_tokens_per_session"str
+≤"cache_ttl_hours"str
+^1536int
+0.999float
+Æ0.5float
+!ò"langgraph_checkpoints"str
+ä"authorization_error"str
+
+[3int
+∂
+"DPA_2018"str
+#Û"session_timeout_minutes"str
+ˆ"company_id"str
+ï"json_mode_models"str
+ö"writes_table"str
+0.35float
+∑"PECR"str
+û"READ_COMMITTED"str
+Õ"technology"str
+$"X-Company-ID"str
+È"autonomous_partner"str
+ 0.50float
+a0.7float
+100.0float
+Ñ"mistral-embed"str
+º"FCA_Handbook"str
+"y"ai_endpoints_per_minute"str
+E"compliance_analysis"str
+ à"authentication_error"str
+À"healthcare"str
+t100int
+n"HS256"str
+500int
+]"vector_dimension"str
+!—"professional_services"str
+"daily_budget_usd"str
+∏"ISO_27001"str
+H"policy_generation"str
+p"jwt_expiry_hours"str
+Ä30int
+"max_per_1k_tokens"str
+	"min_per_1k_tokens"str
+π"NIST_Cybersecurity"str
+-truebool
+ª"SOX"str
+å"rate_limit_error"str
+Œ"manufacturing"str
+î"unknown_error"str
+#Ó"max_tool_calls_per_turn"str
+ù"max_tokens"str
+¥"GDPR"str
+:"autonomy_policy"str
+ı"node_type"str
+™"max_results"str
+ß"chunk_overlap"str
+m"jwt_algorithm"str
+‰1int
+†"temperature"str
+NoneNoneType
+å"streaming_models"str
+4"obligation_finder"str
+8"legal_reviewer"str
+0.80float
+ "retail"str
+ "classifier_confidence"str
+
+X6int
+˘"autonomy_level"str
+é"model_error"str
+É"embedding_model"str
+
+}5int
+<"model"str
+'"X-Thread-ID"str
+"langgraph_per_minute"str
+•1000int
+k60int
+˜"route_type"str
+&"thread_id_header"str
+Á2int
+†"pool_size"str
+Ò50000int
+$,"tenant_isolation_required"str
+z20int
+w"general_per_minute"strKlist"ø/0
+.
+ (SLO_P95_LATENCY_MS"#id#:Bint0
+.
+	 	(SLO_FIRST_TOKEN_MS"#id#:Bint0
+.
+
+ 
+(SLO_AVAILABILITY"#id#:Bfloat1
+/
+ (COST_LIMITS"#new-object#Bdict 
+
+ ("	#map-set#:	
+ 
+
+ ("	#map-set#: 
+
+ ("	#map-set#: 
+
+ ( "	#map-set#:7
+5
+ (ROUTER_THRESHOLDS"#new-object#Bdict 
+
+ ("	#map-set#: 
+
+ (!"	#map-set#: 
+
+ (""	#map-set#: 
+
+ (!"	#map-set#: 2
+0
+ "("TENANCY_KEYS"#new-object#Bdict 
+
+ ('%"	#map-set#:"#$ 
+
+ (%("	#map-set#:"&' 
+
+   (!+"	#map-set#:")* 
+
+! !(%."	#map-set#:",-1
+/
+% -(/GRAPH_NODES"#new-object#Bdict 
+
+& &(1"	#map-set#:/00 
+
+' '(03"	#map-set#:/22 
+
+( ((,5"	#map-set#:/44 
+
+) )(.7"	#map-set#:/66 
+
+* *(&9"	#map-set#:/88 
+
++ +((;"	#map-set#:/:: 
+
+, ,(="	#map-set#:/<<5
+3
+0 4(>INTERRUPT_TYPES"#new-object#Bdict 
+
+1 1("@"	#map-set#:>?? 
+
+2 2(0B"	#map-set#:>AA 
+
+3 3(0D"	#map-set#:>CC4
+2
+7 >(JROUTE_TYPES"#unknown-value#Blist&
+$
+7 >(L"
+#is-exact#:JKBbool
+
+7 >(M"
+#assume#:L8
+6
+7 >(O"#set-field# __collection_size:JNBint&
+$
+7 >(P"#array-add-last#:JE&
+$
+7 >(Q"#array-add-last#:JF&
+$
+7 >(R"#array-add-last#:JG&
+$
+7 >(S"#array-add-last#:J?&
+$
+7 >(T"#array-add-last#:JH&
+$
+7 >(U"#array-add-last#:JI6
+4
+A G(VRETRIEVAL_CONFIG"#new-object#Bdict 
+
+B B(Y"	#map-set#:VWX 
+
+C C(\"	#map-set#:VZ[ 
+
+D D(_"	#map-set#:V]^ 
+
+E E(b"	#map-set#:V`a 
+
+F F(e"	#map-set#:Vcd5
+3
+J P(fSECURITY_CONFIG"#new-object#Bdict 
+
+K K(i"	#map-set#:fgh 
+
+L L()l"	#map-set#:fjk 
+
+M M(o"	#map-set#:fmn 
+
+N N(r"	#map-set#:fpq 
+
+O O(%u"	#map-set#:fst1
+/
+S X(vRATE_LIMITS"#new-object#Bdict 
+
+T T(x"	#map-set#:vwt 
+
+U U(!{"	#map-set#:vyz 
+
+V V("~"	#map-set#:v|}"
+ 
+W W(Å"	#map-set#:vÄ3
+1
+[ c(ÇMODEL_CONFIG"#new-object#Bdict$
+"
+\ \(&Ö"	#map-set#:ÇÉÑ$
+"
+] ](%à"	#map-set#:ÇÜá$
+"
+^ ^(#ã"	#map-set#:Çâä(
+&
+_ _(4é"#unknown-value#Blist(
+&
+_ _(4è"
+#is-exact#:éKBbool
+
+_ _(4ê"
+#assume#:è:
+8
+_ _(4ë"#set-field# __collection_size:éNBint)
+'
+_ _(4í"#array-add-last#:éá)
+'
+_ _(4ì"#array-add-last#:éç$
+"
+_ _(4î"	#map-set#:Çåé(
+&
+` `(1ñ"#unknown-value#Blist(
+&
+` `(1ó"
+#is-exact#:ñKBbool
+
+` `(1ò"
+#assume#:ó:
+8
+` `(1ô"#set-field# __collection_size:ñNBint)
+'
+` `(1ö"#array-add-last#:ñç)
+'
+` `(1õ"#array-add-last#:ñä$
+"
+` `(1ú"	#map-set#:Çïñ$
+"
+a a(ü"	#map-set#:Çùû$
+"
+b b(¢"	#map-set#:Ç†°1
+/
+f m(£
+RAG_CONFIG"#new-object#Bdict$
+"
+g g(¶"	#map-set#:£§•$
+"
+h h(©"	#map-set#:£ß®$
+"
+i i(¨"	#map-set#:£™´$
+"
+j j(Ø"	#map-set#:£≠Æ#
+!
+k k(±"	#map-set#:£∞-#
+!
+l l(≥"	#map-set#:£≤q?
+=
+p z(ΩCOMPLIANCE_FRAMEWORKS"#unknown-value#Blist(
+&
+p z(æ"
+#is-exact#:ΩKBbool
+
+p z(ø"
+#assume#:æ:
+8
+p z(¿"#set-field# __collection_size:ΩNBint)
+'
+p z(¡"#array-add-last#:Ω¥)
+'
+p z(¬"#array-add-last#:Ωµ)
+'
+p z(√"#array-add-last#:Ω∂)
+'
+p z(ƒ"#array-add-last#:Ω∑)
+'
+p z(≈"#array-add-last#:Ω∏)
+'
+p z(∆"#array-add-last#:Ωπ)
+'
+p z(«"#array-add-last#:Ω∫)
+'
+p z(»"#array-add-last#:Ωª)
+'
+p z(…"#array-add-last#:Ωº;
+9
+	} à(‘BUSINESS_SECTORS"#unknown-value#Blist)
+'
+	} à(’"
+#is-exact#:‘KBbool 
+
+	} à(÷"
+#assume#:’;
+9
+	} à(◊"#set-field# __collection_size:‘NBint*
+(
+	} à(ÿ"#array-add-last#:‘ *
+(
+	} à(Ÿ"#array-add-last#:‘À*
+(
+	} à(⁄"#array-add-last#:‘Ã*
+(
+	} à(€"#array-add-last#:‘Õ*
+(
+	} à(‹"#array-add-last#:‘Œ*
+(
+	} à(›"#array-add-last#:‘œ*
+(
+	} à(ﬁ"#array-add-last#:‘–*
+(
+	} à(ﬂ"#array-add-last#:‘—*
+(
+	} à(‡"#array-add-last#:‘“*
+(
+	} à(·"#array-add-last#:‘”8
+6
+
+ã è(‚AUTONOMY_LEVELS"#new-object#Bdict&
+$
+
+å å(Â"	#map-set#:‚„‰&
+$
+
+ç ç(Ë"	#map-set#:‚ÊÁ%
+#
+
+é é(Í"	#map-set#:‚È[9
+7
+
+í ó(ÎEXECUTION_LIMITS"#new-object#Bdict%
+#
+
+ì ì(Ì"	#map-set#:ÎÏz%
+#
+
+î î( Ô"	#map-set#:ÎÓ}&
+$
+
+ï ï(#Ú"	#map-set#:ÎÒ&
+$
+
+ñ ñ(!Ù"	#map-set#:ÎÛÄ7
+5
+
+ö °(˚METRIC_TAGS"#unknown-value#Blist*
+(
+
+ö °(¸"
+#is-exact#:˚KBbool!
+
+
+ö °(˝"
+#assume#:¸<
+:
+
+ö °(˛"#set-field# __collection_size:˚NBint+
+)
+
+ö °(ˇ"#array-add-last#:˚ı+
+)
+
+ö °(Ä"#array-add-last#:˚ˆ+
+)
+
+ö °(Å"#array-add-last#:˚˜+
+)
+
+ö °(Ç"#array-add-last#:˚¯+
+)
+
+ö °(É"#array-add-last#:˚˘+
+)
+
+ö °(Ñ"#array-add-last#:˚˙9
+7
+
+§ ≠(ÖERROR_CATEGORIES"#new-object#Bdict&
+$
+
+• •(*á"	#map-set#:ÖÜÜ&
+$
+
+¶ ¶(2â"	#map-set#:Öàà&
+$
+
+ß ß(0ã"	#map-set#:Öää&
+$
+
+® ®(*ç"	#map-set#:Öåå&
+$
+
+© ©( è"	#map-set#:Öéé&
+$
+
+™ ™((ë"	#map-set#:Öêê&
+$
+
+´ ´($ì"	#map-set#:Öíí&
+$
+
+¨ ¨($ï"	#map-set#:Öîî8
+6
+
+∞ ∂(ñDATABASE_CONFIG"#new-object#Bdict&
+$
+
+± ±(1ô"	#map-set#:ñóò&
+$
+
+≤ ≤(&ú"	#map-set#:ñöõ&
+$
+
+≥ ≥('ü"	#map-set#:ñùû%
+#
+
+¥ ¥(°"	#map-set#:ñ†}&
+$
+
+µ µ(£"	#map-set#:ñ¢´ *=/home/omar/Documents/ruleIQ/langgraph_agent/core/constants.py

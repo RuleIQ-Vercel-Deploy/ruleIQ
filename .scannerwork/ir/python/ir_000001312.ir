@@ -1,0 +1,108 @@
+
+
+00int
+ "overall_quality_score"str
+$"satisfaction_rate"str
+"total_feedback_items"str
+"negative_feedback"str
+$+"Workflow step granularity"str
+"positive_feedback"str
+("improvement_areas"str
+1*("Industry-specific terminology accuracy"str
+"feedback_summary"str
+150int
+
+"policies"str
+A8"Get AI response quality metrics and feedback analysis."str
+
+"analysis"str
+8.1float
+7)."Response specificity for small organizations"str
+"50int
+8.3float
+%85.0float
+"workflows"str
+8.9float
+!"neutral_feedback"str
+
+8.7float
+"quality_trends"str
+	"recommendations"str
+15int
+8.5float
+85intself
+Ç" Ç(&-list"é&
+$
+
+à ú(	"#new-object#Bdict"
+ 
+
+â â(("	#map-set#:&
+$
+
+ä è("#new-object#Bdict"
+ 
+
+ã ã(&"	#map-set#:	
+"
+ 
+
+å å("	#map-set#:"
+ 
+
+ç ç( "	#map-set#:"
+ 
+
+é é("	#map-set#:"
+ 
+
+ä è("	#map-set#:&
+$
+
+ê  ñ("#new-object#Bdict"
+ 
+
+ë ë(+"	#map-set#:"
+ 
+
+í í('"	#map-set#:"
+ 
+
+ì ì(' "	#map-set#:"
+ 
+
+î î(&#"	#map-set#:!""
+ 
+
+ï ï()&"	#map-set#:$%"
+ 
+
+ê ñ('"	#map-set#:)
+'
+
+ó! õ(,"#unknown-value#Blist(
+&
+
+ó! õ(."
+#is-exact#:,-Bbool
+
+
+ó! õ(/"
+#assume#:.:
+8
+
+ó! õ(1"#set-field# __collection_size:,0Bint(
+&
+
+ó! õ(2"#array-add-last#:,)(
+&
+
+ó! õ(3"#array-add-last#:,*(
+&
+
+ó! õ(4"#array-add-last#:,+"
+ 
+
+ó õ(5"	#map-set#:(,
+
+à ú(	*</home/omar/Documents/ruleIQ/services/ai/analytics_monitor.py

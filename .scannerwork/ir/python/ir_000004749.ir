@@ -1,0 +1,8 @@
+
+:1"Get the history of all calls made to this mock."strself
+¤ ¤("C/
+-
+
+¦ ¦( "#get-field# call_history:
+
+¦ ¦( *6/home/omar/Documents/ruleIQ/tests/fixtures/mock_llm.py

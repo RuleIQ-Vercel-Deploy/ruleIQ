@@ -1,0 +1,116 @@
+
+%"development"str
+F="Test that we can override config with environment variables"str
+0#'"\n3. Testing with development config:"str
+$"ENVIRONMENT OVERRIDE TEST"str
+"DATABASE_URL"str
+,#"\n2. Checking if override worked:"str
+-truebool
+4+"‚úÖ DATABASE_URL successfully overridden!"str
+>5"postgresql://testuser:testpass@testhost:5432/testdb"str
+A)8"‚úÖ Development config also uses environment override!"str
+60int
+"ENVIRONMENT"str
+"="str
+	"testing"str
+N!E"‚ùå DATABASE_URL not overridden. Got: {config.DATABASE_URL[:50]}..."str
+4++"‚ùå Development config not using override"str
+6-"\n1. Setting DATABASE_URL to: {test_db_url}"str
+"\n"str"Ä%
+#
+w w("	#binop *#*2*:"
+ 
+w
+ w("	#binop +#2+:1
+/
+w w("
+builtinsprint*:BNoneType1
+/
+x x(&	"
+builtinsprint*:BNoneType%
+#
+y
+ y(
+"	#binop *#*2*:1
+/
+y y("
+builtinsprint*:
+BNoneType+
+)
+| |(Gtest_db_url"#id#:Bstr!
+
+} }("#unknown-value#(
+&
+} }("#get-field# environ:$
+"
+} }(,"#array-write#:!
+
+~ ~("#unknown-value#(
+&
+~ ~("#get-field# environ:$
+"
+~ ~()"#array-write#:3
+1
+
+Ä Ä(9"
+builtinsprint*:BNoneType3
+1
+
+É É($reload_config"?python-unknown?4
+2
+
+Ñ Ñ(%config"
+configreload_config:3
+1
+
+Ü Ü(."
+builtinsprint*:BNoneType/
+-
+
+á á("#get-field# DATABASE_URL:,
+*
+
+á á()"
+#binop ==#2==:Bbool,"*
+
+á á() *
+á á(2
+â â("=3
+1
+
+à à(9 "
+builtinsprint*:BNoneType"=3
+1
+
+ä ä(S""
+builtinsprint*:!BNoneType"˛3
+1
+
+ç ç(2$"
+builtinsprint*:#BNoneType8
+6
+
+é é(-&
+config_dev"
+configreload_config:%/
+-
+
+è è('"#get-field# DATABASE_URL:&,
+*
+
+è è(-("
+#binop ==#2==:'Bbool,"*
+
+è è(-( *
+è è(2
+ë ë("=3
+1
+
+ê ê(F*"
+builtinsprint*:)BNoneType"=3
+1
+
+í í(9,"
+builtinsprint*:+BNoneType"
+
+î î(-*4/home/omar/Documents/ruleIQ/tests/test_config_env.py

@@ -50,7 +50,9 @@ class OktaAPIClient(BaseAPIClient):
             if not self.session:
                 self.session = aiohttp.ClientSession()
 
-            async with self.session.get(f"{self.base_url}/users/me", headers=headers) as response:
+            async with self.session.get(
+                f"{self.base_url}/users/me", headers=headers
+            ) as response:
                 if response.status == 200:
                     user_info = await response.json()
                     logger.info(
@@ -61,7 +63,9 @@ class OktaAPIClient(BaseAPIClient):
                     logger.error("Okta authentication failed: Invalid API token")
                     return False
                 else:
-                    logger.error(f"Okta authentication failed with status: {response.status}")
+                    logger.error(
+                        f"Okta authentication failed with status: {response.status}"
+                    )
                     return False
 
         except Exception as e:
@@ -72,7 +76,9 @@ class OktaAPIClient(BaseAPIClient):
         """Okta API tokens don't typically expire, but we can validate them"""
         return await self.authenticate()
 
-    async def _prepare_headers(self, additional_headers: Dict[str, str] = None) -> Dict[str, str]:
+    async def _prepare_headers(
+        self, additional_headers: Dict[str, str] = None
+    ) -> Dict[str, str]:
         """Prepare headers with API token"""
         headers = {
             "Authorization": f"SSWS {self.credentials.credentials['api_token']}",
@@ -130,26 +136,40 @@ class OktaUserCollector(BaseEvidenceCollector):
             params = {"limit": 200}
 
             while url:
-                users_request = APIRequest("GET", url, params=params if url == "/users" else None)
+                users_request = APIRequest(
+                    "GET", url, params=params if url == "/users" else None
+                )
                 response = await self.api_client.make_request(users_request)
 
                 for user in response.data:
                     try:
                         # Get user groups
-                        groups_request = APIRequest("GET", f"/users/{user['id']}/groups")
-                        groups_response = await self.api_client.make_request(groups_request)
+                        groups_request = APIRequest(
+                            "GET", f"/users/{user['id']}/groups"
+                        )
+                        groups_response = await self.api_client.make_request(
+                            groups_request
+                        )
 
                         # Get user applications
-                        apps_request = APIRequest("GET", f"/users/{user['id']}/appLinks")
+                        apps_request = APIRequest(
+                            "GET", f"/users/{user['id']}/appLinks"
+                        )
                         apps_response = await self.api_client.make_request(apps_request)
 
                         # Get user roles
                         roles_request = APIRequest("GET", f"/users/{user['id']}/roles")
-                        roles_response = await self.api_client.make_request(roles_request)
+                        roles_response = await self.api_client.make_request(
+                            roles_request
+                        )
 
                         # Get MFA factors
-                        factors_request = APIRequest("GET", f"/users/{user['id']}/factors")
-                        factors_response = await self.api_client.make_request(factors_request)
+                        factors_request = APIRequest(
+                            "GET", f"/users/{user['id']}/factors"
+                        )
+                        factors_response = await self.api_client.make_request(
+                            factors_request
+                        )
 
                         evidence_item = self.create_evidence_item(
                             evidence_type="identity_user",
@@ -172,17 +192,23 @@ class OktaUserCollector(BaseEvidenceCollector):
                                 "password_changed": user.get("passwordChanged"),
                                 "profile": user["profile"],
                                 "credentials": {
-                                    "password": user.get("credentials", {}).get("password", {}),
-                                    "recovery_question": user.get("credentials", {}).get(
-                                        "recovery_question", {}
+                                    "password": user.get("credentials", {}).get(
+                                        "password", {}
                                     ),
-                                    "provider": user.get("credentials", {}).get("provider", {}),
+                                    "recovery_question": user.get(
+                                        "credentials", {}
+                                    ).get("recovery_question", {}),
+                                    "provider": user.get("credentials", {}).get(
+                                        "provider", {}
+                                    ),
                                 },
                                 "groups": [
                                     {
                                         "id": group["id"],
                                         "name": group["profile"]["name"],
-                                        "description": group["profile"].get("description"),
+                                        "description": group["profile"].get(
+                                            "description"
+                                        ),
                                     }
                                     for group in groups_response.data
                                 ],
@@ -290,7 +316,9 @@ class OktaUserCollector(BaseEvidenceCollector):
         # Check if user has logged in recently
         if user.get("lastLogin"):
             try:
-                last_login = datetime.fromisoformat(user["lastLogin"].replace("Z", "+00:00"))
+                last_login = datetime.fromisoformat(
+                    user["lastLogin"].replace("Z", "+00:00")
+                )
                 days_since_login = (datetime.now(last_login.tzinfo) - last_login).days
                 if days_since_login > 90:  # Inactive user
                     score -= 0.3
@@ -322,22 +350,32 @@ class OktaGroupCollector(BaseEvidenceCollector):
             params = {"limit": 200}
 
             while url:
-                groups_request = APIRequest("GET", url, params=params if url == "/groups" else None)
+                groups_request = APIRequest(
+                    "GET", url, params=params if url == "/groups" else None
+                )
                 response = await self.api_client.make_request(groups_request)
 
                 for group in response.data:
                     try:
                         # Get group members
-                        members_request = APIRequest("GET", f"/groups/{group['id']}/users")
-                        members_response = await self.api_client.make_request(members_request)
+                        members_request = APIRequest(
+                            "GET", f"/groups/{group['id']}/users"
+                        )
+                        members_response = await self.api_client.make_request(
+                            members_request
+                        )
 
                         # Get group applications
                         apps_request = APIRequest("GET", f"/groups/{group['id']}/apps")
                         apps_response = await self.api_client.make_request(apps_request)
 
                         # Get group roles
-                        roles_request = APIRequest("GET", f"/groups/{group['id']}/roles")
-                        roles_response = await self.api_client.make_request(roles_request)
+                        roles_request = APIRequest(
+                            "GET", f"/groups/{group['id']}/roles"
+                        )
+                        roles_response = await self.api_client.make_request(
+                            roles_request
+                        )
 
                         evidence_item = self.create_evidence_item(
                             evidence_type="identity_group",
@@ -350,7 +388,9 @@ class OktaGroupCollector(BaseEvidenceCollector):
                                 "type": group["type"],
                                 "created": group["created"],
                                 "last_updated": group["lastUpdated"],
-                                "last_membership_updated": group.get("lastMembershipUpdated"),
+                                "last_membership_updated": group.get(
+                                    "lastMembershipUpdated"
+                                ),
                                 "object_class": group.get("objectClass", []),
                                 "profile": group["profile"],
                                 "members": [
@@ -381,7 +421,10 @@ class OktaGroupCollector(BaseEvidenceCollector):
                                     for role in roles_response.data
                                 ],
                             },
-                            compliance_controls=["CC6.1", "CC6.2"],  # SOC 2 group access controls
+                            compliance_controls=[
+                                "CC6.1",
+                                "CC6.2",
+                            ],  # SOC 2 group access controls
                             quality_score=self._calculate_group_quality_score(
                                 group, members_response.data
                             ),
@@ -449,18 +492,24 @@ class OktaApplicationCollector(BaseEvidenceCollector):
             params = {"limit": 200}
 
             while url:
-                apps_request = APIRequest("GET", url, params=params if url == "/apps" else None)
+                apps_request = APIRequest(
+                    "GET", url, params=params if url == "/apps" else None
+                )
                 response = await self.api_client.make_request(apps_request)
 
                 for app in response.data:
                     try:
                         # Get application users
                         users_request = APIRequest("GET", f"/apps/{app['id']}/users")
-                        users_response = await self.api_client.make_request(users_request)
+                        users_response = await self.api_client.make_request(
+                            users_request
+                        )
 
                         # Get application groups
                         groups_request = APIRequest("GET", f"/apps/{app['id']}/groups")
-                        groups_response = await self.api_client.make_request(groups_request)
+                        groups_response = await self.api_client.make_request(
+                            groups_request
+                        )
 
                         evidence_item = self.create_evidence_item(
                             evidence_type="identity_application",
@@ -481,7 +530,9 @@ class OktaApplicationCollector(BaseEvidenceCollector):
                                 "assigned_users": [
                                     {
                                         "id": user["id"],
-                                        "username": user.get("credentials", {}).get("userName"),
+                                        "username": user.get("credentials", {}).get(
+                                            "userName"
+                                        ),
                                         "status": user.get("status"),
                                         "created": user.get("created"),
                                         "last_updated": user.get("lastUpdated"),
@@ -490,7 +541,10 @@ class OktaApplicationCollector(BaseEvidenceCollector):
                                 ],
                                 "user_count": len(users_response.data),
                                 "assigned_groups": [
-                                    {"id": group["id"], "priority": group.get("priority")}
+                                    {
+                                        "id": group["id"],
+                                        "priority": group.get("priority"),
+                                    }
                                     for group in groups_response.data
                                 ],
                                 "group_count": len(groups_response.data),
@@ -583,7 +637,9 @@ class OktaLogsCollector(BaseEvidenceCollector):
             url = "/logs"
 
             while url and len(evidence) < 10000:  # Limit to avoid too much data
-                logs_request = APIRequest("GET", url, params=params if url == "/logs" else None)
+                logs_request = APIRequest(
+                    "GET", url, params=params if url == "/logs" else None
+                )
                 response = await self.api_client.make_request(logs_request)
 
                 for log_entry in response.data:
@@ -599,28 +655,44 @@ class OktaLogsCollector(BaseEvidenceCollector):
                             "severity": log_entry.get("severity"),
                             "legacy_event_type": log_entry.get("legacyEventType"),
                             "display_message": log_entry.get("displayMessage"),
-                            "actor": {
-                                "id": log_entry.get("actor", {}).get("id"),
-                                "type": log_entry.get("actor", {}).get("type"),
-                                "alternate_id": log_entry.get("actor", {}).get("alternateId"),
-                                "display_name": log_entry.get("actor", {}).get("displayName"),
-                                "detail": log_entry.get("actor", {}).get("detail", {}),
-                            }
-                            if log_entry.get("actor")
-                            else None,
-                            "client": {
-                                "user_agent": log_entry.get("client", {}).get("userAgent", {}),
-                                "zone": log_entry.get("client", {}).get("zone"),
-                                "device": log_entry.get("client", {}).get("device"),
-                                "id": log_entry.get("client", {}).get("id"),
-                                "ip_address": log_entry.get("client", {}).get("ipAddress"),
-                                "geographical_context": log_entry.get("client", {}).get(
-                                    "geographicalContext", {}
-                                ),
-                            }
-                            if log_entry.get("client")
-                            else None,
-                            "authentication_context": log_entry.get("authenticationContext", {}),
+                            "actor": (
+                                {
+                                    "id": log_entry.get("actor", {}).get("id"),
+                                    "type": log_entry.get("actor", {}).get("type"),
+                                    "alternate_id": log_entry.get("actor", {}).get(
+                                        "alternateId"
+                                    ),
+                                    "display_name": log_entry.get("actor", {}).get(
+                                        "displayName"
+                                    ),
+                                    "detail": log_entry.get("actor", {}).get(
+                                        "detail", {}
+                                    ),
+                                }
+                                if log_entry.get("actor")
+                                else None
+                            ),
+                            "client": (
+                                {
+                                    "user_agent": log_entry.get("client", {}).get(
+                                        "userAgent", {}
+                                    ),
+                                    "zone": log_entry.get("client", {}).get("zone"),
+                                    "device": log_entry.get("client", {}).get("device"),
+                                    "id": log_entry.get("client", {}).get("id"),
+                                    "ip_address": log_entry.get("client", {}).get(
+                                        "ipAddress"
+                                    ),
+                                    "geographical_context": log_entry.get(
+                                        "client", {}
+                                    ).get("geographicalContext", {}),
+                                }
+                                if log_entry.get("client")
+                                else None
+                            ),
+                            "authentication_context": log_entry.get(
+                                "authenticationContext", {}
+                            ),
                             "security_context": log_entry.get("securityContext", {}),
                             "target": [
                                 {
@@ -634,12 +706,18 @@ class OktaLogsCollector(BaseEvidenceCollector):
                             ],
                             "transaction": log_entry.get("transaction", {}),
                             "debug_context": log_entry.get("debugContext", {}),
-                            "outcome": {
-                                "result": log_entry.get("outcome", {}).get("result"),
-                                "reason": log_entry.get("outcome", {}).get("reason"),
-                            }
-                            if log_entry.get("outcome")
-                            else None,
+                            "outcome": (
+                                {
+                                    "result": log_entry.get("outcome", {}).get(
+                                        "result"
+                                    ),
+                                    "reason": log_entry.get("outcome", {}).get(
+                                        "reason"
+                                    ),
+                                }
+                                if log_entry.get("outcome")
+                                else None
+                            ),
                             "request": log_entry.get("request", {}),
                         },
                         compliance_controls=[
@@ -677,7 +755,9 @@ class OktaLogsCollector(BaseEvidenceCollector):
 
         # Check if essential fields are present
         required_fields = ["actor", "client", "eventType", "published"]
-        missing_fields = [field for field in required_fields if not log_entry.get(field)]
+        missing_fields = [
+            field for field in required_fields if not log_entry.get(field)
+        ]
 
         if missing_fields:
             score -= 0.2 * len(missing_fields)

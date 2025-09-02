@@ -1,0 +1,106 @@
+
+	"title"str
+"obligation_id"str
+
+0int
+"score"str
+"status"str
+%"Assess a single obligation"str
+%"recommendations"str
+"gaps"str
+
+"evidence"str
+0.0float
+"controls_assessed"strself
+¯ ¯(organization
+° °($
+obligation
+± ±((list)%uk_compliance_engine.ComplianceStatus"Ú&
+$
+
+µ ¾(	"#new-object#Bdict0
+.
+
+¶ ¶(5"#get-field# obligation_id:"
+ 
+
+¶ ¶(5"	#map-set#:(
+&
+
+· ·(%
+"#get-field# title:"
+ 
+
+· ·(%"	#map-set#:	
+5
+3
+
+¸ ¸(9" #get-field# PENDING_ASSESSMENT:(
+&
+
+¸ ¸(?"#get-field# value:"
+ 
+
+¸ ¸(?"	#map-set#:"
+ 
+
+¹ ¹("	#map-set#:)
+'
+
+º º("#unknown-value#Blist(
+&
+
+º º("
+#is-exact#:Bbool
+
+
+º º("
+#assume#::
+8
+
+º º("#set-field# __collection_size:Bint"
+ 
+
+º º("	#map-set#:+
+)
+
+»! »(4"#get-field# controls:"
+ 
+
+» »(4"	#map-set#:)
+'
+
+¼ ¼( "#unknown-value#Blist(
+&
+
+¼ ¼(!"
+#is-exact#: Bbool
+
+
+¼ ¼(""
+#assume#:!:
+8
+
+¼ ¼(#"#set-field# __collection_size: Bint"
+ 
+
+¼ ¼($"	#map-set#: )
+'
+
+½ ½(!&"#unknown-value#Blist(
+&
+
+½ ½(!'"
+#is-exact#:&Bbool
+
+
+½ ½(!("
+#assume#:':
+8
+
+½ ½(!)"#set-field# __collection_size:&Bint"
+ 
+
+½ ½(!*"	#map-set#:%&
+
+µ ¾(	*G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py

@@ -1,0 +1,40 @@
+
+falsebool
+-$"Check if circuit should be opened."str
+
+"failures"strself
+è è(!	node_name
+è# è(1"…3
+1
+
+ê ê(-"#get-field# circuit_breakers:,
+*
+
+ê ê(-"
+#binop in#2in:Bbool "
+
+ê ê(- *
+ê ê(
+"‚3
+1
+
+ë ë(+"#get-field# circuit_breakers:-
++
+
+ë ë(6breaker"#array-read#:$
+"
+
+ì ì(&	"#array-read#:4
+2
+
+ì* ì(@
+"#get-field# failure_threshold:,
+*
+
+ì ì(@"
+#binop >=#2>=:	
+Bbool
+
+ì ì(@"
+
+í í(*M/home/omar/Documents/ruleIQ/langgraph_agent/graph/integrated_error_handler.py

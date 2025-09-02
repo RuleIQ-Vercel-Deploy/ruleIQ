@@ -202,13 +202,13 @@ export interface FreemiumState {
   email: string | null;
   leadScore: number;
   leadStatus: string;
-  
+
   // Session management
   session: FreemiumSession | null;
   sessionToken: string | null;
   sessionExpiry: string | null;
   token: string | null; // Add for test compatibility
-  
+
   // Assessment state
   currentQuestion: AssessmentQuestion | null;
   currentQuestionId: string | null; // Add for test compatibility
@@ -218,22 +218,22 @@ export interface FreemiumState {
   isAssessmentComplete: boolean;
   assessmentStarted: boolean; // Add for test compatibility
   assessmentCompleted: boolean; // Add for test compatibility
-  
+
   // Results
   results: AssessmentResultsResponse | null;
   hasViewedResults: boolean;
-  
+
   // UI state
   isLoading: boolean;
   error: string | null;
-  
+
   // Consent and compliance
   hasMarketingConsent: boolean;
   hasNewsletterConsent: boolean;
   consentDate: string | null;
   consentMarketing: boolean; // Add for test compatibility
   consentTerms: boolean; // Add for test compatibility
-  
+
   // Analytics and tracking
   timeStarted: string | null;
   totalTimeSpent: number;
@@ -243,14 +243,14 @@ export interface FreemiumState {
     metadata?: Record<string, any>;
   }>;
   lastActivity: number | null; // Add for test compatibility
-  
+
   // UTM parameters for test compatibility
   utmSource: string | null;
   utmCampaign: string | null;
   utmMedium: string | null;
   utmTerm: string | null;
   utmContent: string | null;
-  
+
   // Computed properties for test compatibility
   isSessionExpired: boolean;
   canStartAssessment: boolean;
@@ -267,46 +267,46 @@ export interface FreemiumActions {
   captureLead: (leadData: LeadCaptureRequest) => Promise<void>;
   setLeadInfo: (leadId: string, email: string) => void;
   updateLeadScore: (score: number) => void;
-  
+
   // Session management
   startAssessment: (startData: AssessmentStartRequest) => Promise<void>;
   loadSession: (sessionToken: string) => Promise<void>;
   clearSession: () => void;
-  
+
   // Question flow
   submitAnswer: (answerData: AssessmentAnswerRequest) => Promise<void>;
   skipQuestion: () => void;
   goToPreviousQuestion: () => void;
-  
+
   // Results
   generateResults: (includeDetails?: boolean) => Promise<void>;
   markResultsViewed: () => void;
-  
+
   // Progress tracking
   updateProgress: (progress: Partial<AssessmentProgress>) => void;
   trackTimeSpent: (seconds: number) => void;
-  
+
   // Consent management
   setMarketingConsent: (consent: boolean) => void;
   setNewsletterConsent: (consent: boolean) => void;
   updateConsent: (marketing: boolean, newsletter: boolean) => void;
-  
+
   // Analytics
   trackEvent: (eventType: string, metadata?: Record<string, any>) => void;
   recordBehavioralEvent: (eventData: any) => Promise<void>;
-  
+
   // Utility methods
   isSessionExpired: () => boolean;
   canStartAssessment: () => boolean;
   hasValidSession: () => boolean;
   getCompletionPercentage: () => number;
   getResponseCount: () => number;
-  
+
   // State management
   reset: (options?: { keepEmail?: boolean; keepUtm?: boolean }) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
-  
+
   // Test compatibility methods
   setEmail: (email: string) => void;
   setToken: (token: string | null) => void;
@@ -363,7 +363,7 @@ export interface LeadCaptureFormProps {
 
 export type AssessmentStatus = 'not_started' | 'in_progress' | 'completed' | 'expired' | 'error';
 
-export type ConversionEvent = 
+export type ConversionEvent =
   | 'email_captured'
   | 'assessment_started'
   | 'assessment_completed'

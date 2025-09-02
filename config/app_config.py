@@ -37,7 +37,9 @@ elif len(FERNET_KEY.encode()) != 44:  # Fernet keys are base64 encoded and 44 by
 else:
     try:
         cipher_suite = Fernet(FERNET_KEY.encode())  # Key needs to be bytes
-        logger.info("Fernet cipher suite initialized successfully for credential encryption.")
+        logger.info(
+            "Fernet cipher suite initialized successfully for credential encryption."
+        )
     except Exception as e:
         logger.critical(
             f"Failed to initialize Fernet cipher suite with the provided FERNET_KEY: {e}",
@@ -55,7 +57,9 @@ else:
 def get_cipher_suite() -> Fernet | None:
     """Returns the initialized Fernet cipher suite."""
     if cipher_suite is None:
-        logger.error("Fernet cipher suite is not available. Encryption/decryption will fail.")
+        logger.error(
+            "Fernet cipher suite is not available. Encryption/decryption will fail."
+        )
     return cipher_suite
 
 

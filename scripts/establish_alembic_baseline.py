@@ -39,7 +39,10 @@ def main() -> bool:
 
     # Step 2: Remove the empty initial migration file
     empty_migration = (
-        project_root / "alembic" / "versions" / "cdd9337435cf_initial_empty_migration.py"
+        project_root
+        / "alembic"
+        / "versions"
+        / "cdd9337435cf_initial_empty_migration.py"
     )
     if empty_migration.exists():
         print("🗑️ Removing empty initial migration...")
@@ -61,7 +64,9 @@ def main() -> bool:
             content = f.read()
 
         # Update the down_revision to None to make it the baseline
-        updated_content = content.replace("down_revision = 'cdd9337435cf'", "down_revision = None")
+        updated_content = content.replace(
+            "down_revision = 'cdd9337435cf'", "down_revision = None"
+        )
 
         # Update the revision message to indicate it's the baseline
         updated_content = updated_content.replace(
@@ -78,7 +83,9 @@ def main() -> bool:
     # Step 4: Generate fresh Alembic revision history
     print("🔄 Updating Alembic revision history...")
     result = subprocess.run(
-        [sys.executable, "-m", "alembic", "stamp", "head"], capture_output=True, text=True
+        [sys.executable, "-m", "alembic", "stamp", "head"],
+        capture_output=True,
+        text=True,
     )
 
     if result.returncode != 0:

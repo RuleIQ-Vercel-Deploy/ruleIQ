@@ -53,7 +53,7 @@ def assign_business_user_roles():
             try:
                 # Check if user already has the role
                 existing_roles = rbac.get_user_roles(user.id)
-                if any(role['name'] == 'business_user' for role in existing_roles):
+                if any(role["name"] == "business_user" for role in existing_roles):
                     print(f"  ⭕ User {user.email} already has business_user role")
                     already_assigned += 1
                     continue
@@ -62,7 +62,7 @@ def assign_business_user_roles():
                 rbac.assign_role_to_user(
                     user_id=user.id,
                     role_id=business_user_role.id,
-                    granted_by=user.id  # Self-assignment for this script
+                    granted_by=user.id,  # Self-assignment for this script
                 )
 
                 print(f"  ✅ Assigned business_user role to {user.email}")

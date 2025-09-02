@@ -1,0 +1,64 @@
+
+0'"Check if a request should be removed."str
+"url"str
+	"raw"str
+90"  Removing deprecated endpoint: {removed_path}"str
+truebool
+falsebool
+	"removed"str
+	"updated"strrequestJ J(1dict"R2
+0
+L L("#binop not in#2not in:Bbool"
+L L( *L L("
+M M("j'
+%
+O
+ O(url"#array-read#:)
+'
+P P("#is-instance#:Bbool"
+P P( ">*
+(
+P! P(-
+"
+#binop in#2in:	Bbool
+P P(-"2*
+"
+P P(- *P P("ø+
+)
+Q Q(raw_url"#array-read#:	!
+
+T T(,"#unknown-value#"
+ 
+T T(7"#array-read#:7
+5
+T T(7"
+builtinsiter*:Btyping.Iterator
+T T(7"
+Y Y("q*raw_url2
+0
+T T(7"
+builtins
+__has_next*:Bbool"
+T T(7 	*T T(H"x4
+2
+U Y(removed_path"
+builtinsnext*:*
+(
+U U(&"
+#binop in#2in:Bbool"
+U U(&
+ "	"ç
+!
+
+U? U(O"#unknown-value#"
+ 
+U? U(Z"#array-read#:2
+0
+U+ U(Z"#binop not in#2not in:Bbool
+U U(Z"2*
+"
+U U(Z *U U("E1
+/
+V V(H"
+builtinsprint*:BNoneType
+W W("*@/home/omar/Documents/ruleIQ/scripts/update-postman-collection.py

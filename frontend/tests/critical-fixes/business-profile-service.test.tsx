@@ -10,13 +10,13 @@ vi.mock('@/lib/stores/auth.store', () => ({
         id: 'user-123',
         email: 'test@example.com',
         name: 'Test User',
-        is_active: true
+        is_active: true,
       },
       tokens: {
         access_token: 'mock-access-token',
         refresh_token: 'mock-refresh-token',
         token_type: 'bearer',
-        expires_in: 3600
+        expires_in: 3600,
       },
       isAuthenticated: true,
       isLoading: false,
@@ -25,11 +25,11 @@ vi.mock('@/lib/stores/auth.store', () => ({
       register: vi.fn(),
       logout: vi.fn(),
       refreshToken: vi.fn(),
-      checkAuth: vi.fn()
+      checkAuth: vi.fn(),
     })),
     setState: vi.fn(),
-    subscribe: vi.fn()
-  }
+    subscribe: vi.fn(),
+  },
 }));
 
 // Import the service after mocking the auth store
@@ -56,28 +56,30 @@ describe('BusinessProfileService Integration Tests', () => {
               storage_location: 'UK',
               operates_in_uk: true,
               uk_data_subjects: true,
-              regulatory_requirements: ['GDPR']
-            }
+              regulatory_requirements: ['GDPR'],
+            },
           ]);
-        })
+        }),
       );
 
       const profiles = await businessProfileService.getBusinessProfiles();
-      
+
       expect(profiles).toHaveLength(1);
       // Verify core fields are correctly transformed
-      expect(profiles[0]).toEqual(expect.objectContaining({
-        id: 'profile-123',
-        company_name: 'Test Company',
-        industry: 'Technology',
-        employee_count: 50,
-        data_types: ['personal'],
-        storage_location: 'UK',
-        operates_in_uk: true,
-        uk_data_subjects: true,
-        regulatory_requirements: ['GDPR']
-      }));
-      
+      expect(profiles[0]).toEqual(
+        expect.objectContaining({
+          id: 'profile-123',
+          company_name: 'Test Company',
+          industry: 'Technology',
+          employee_count: 50,
+          data_types: ['personal'],
+          storage_location: 'UK',
+          operates_in_uk: true,
+          uk_data_subjects: true,
+          regulatory_requirements: ['GDPR'],
+        }),
+      );
+
       // Verify that field mapper added default arrays
       expect(Array.isArray(profiles[0].cloud_providers)).toBe(true);
       expect(Array.isArray(profiles[0].saas_tools)).toBe(true);
@@ -90,11 +92,11 @@ describe('BusinessProfileService Integration Tests', () => {
       server.use(
         http.get('http://localhost:8000/api/v1/business-profiles', () => {
           return HttpResponse.json([]);
-        })
+        }),
       );
 
       const profiles = await businessProfileService.getBusinessProfiles();
-      
+
       expect(profiles).toHaveLength(0);
       expect(Array.isArray(profiles)).toBe(true);
     });
@@ -108,15 +110,15 @@ describe('BusinessProfileService Integration Tests', () => {
                 id: 'profile-456',
                 company_name: 'Wrapped Company',
                 industry: 'Finance',
-                employee_count: 100
-              }
-            ]
+                employee_count: 100,
+              },
+            ],
           });
-        })
+        }),
       );
 
       const profiles = await businessProfileService.getBusinessProfiles();
-      
+
       expect(profiles).toHaveLength(1);
       expect(profiles[0].company_name).toBe('Wrapped Company');
     });
@@ -125,20 +127,20 @@ describe('BusinessProfileService Integration Tests', () => {
   describe('getBusinessProfile', () => {
     it('should fetch a specific business profile by ID', async () => {
       const profileId = 'profile-123';
-      
+
       server.use(
         http.get(`http://localhost:8000/api/v1/business-profiles/${profileId}`, () => {
           return HttpResponse.json({
             id: profileId,
             company_name: 'Specific Company',
             industry: 'Healthcare',
-            employee_count: 25
+            employee_count: 25,
           });
-        })
+        }),
       );
 
       const profile = await businessProfileService.getBusinessProfile(profileId);
-      
+
       expect(profile.id).toBe(profileId);
       expect(profile.company_name).toBe('Specific Company');
       expect(profile.industry).toBe('Healthcare');
@@ -156,30 +158,33 @@ describe('BusinessProfileService Integration Tests', () => {
         storage_location: 'UK',
         operates_in_uk: true,
         uk_data_subjects: true,
-        regulatory_requirements: ['GDPR', 'DPA']
+        regulatory_requirements: ['GDPR', 'DPA'],
       };
 
       server.use(
         http.post('http://localhost:8000/api/v1/business-profiles', async ({ request }) => {
           const body = await request.json();
-          
-          return HttpResponse.json({
-            id: 'profile-new',
-            company_name: body.company_name,
-            industry: body.industry,
-            employee_count: body.employee_count,
-            data_types: body.data_types,
-            storage_location: body.storage_location,
-            operates_in_uk: body.operates_in_uk,
-            uk_data_subjects: body.uk_data_subjects,
-            regulatory_requirements: body.regulatory_requirements,
-            created_at: new Date().toISOString()
-          }, { status: 201 });
-        })
+
+          return HttpResponse.json(
+            {
+              id: 'profile-new',
+              company_name: body.company_name,
+              industry: body.industry,
+              employee_count: body.employee_count,
+              data_types: body.data_types,
+              storage_location: body.storage_location,
+              operates_in_uk: body.operates_in_uk,
+              uk_data_subjects: body.uk_data_subjects,
+              regulatory_requirements: body.regulatory_requirements,
+              created_at: new Date().toISOString(),
+            },
+            { status: 201 },
+          );
+        }),
       );
 
       const createdProfile = await businessProfileService.createBusinessProfile(newProfileData);
-      
+
       expect(createdProfile.id).toBe('profile-new');
       expect(createdProfile.company_name).toBe('New Company');
       expect(createdProfile.industry).toBe('Technology');
@@ -192,25 +197,31 @@ describe('BusinessProfileService Integration Tests', () => {
       const updateData = {
         company_name: 'Updated Company',
         industry: 'Updated Industry',
-        employee_count: 150
+        employee_count: 150,
       };
 
       server.use(
-        http.put(`http://localhost:8000/api/v1/business-profiles/${profileId}`, async ({ request }) => {
-          const body = await request.json();
-          
-          return HttpResponse.json({
-            id: profileId,
-            company_name: body.company_name,
-            industry: body.industry,
-            employee_count: body.employee_count,
-            updated_at: new Date().toISOString()
-          });
-        })
+        http.put(
+          `http://localhost:8000/api/v1/business-profiles/${profileId}`,
+          async ({ request }) => {
+            const body = await request.json();
+
+            return HttpResponse.json({
+              id: profileId,
+              company_name: body.company_name,
+              industry: body.industry,
+              employee_count: body.employee_count,
+              updated_at: new Date().toISOString(),
+            });
+          },
+        ),
       );
 
-      const updatedProfile = await businessProfileService.updateBusinessProfile(profileId, updateData);
-      
+      const updatedProfile = await businessProfileService.updateBusinessProfile(
+        profileId,
+        updateData,
+      );
+
       expect(updatedProfile.id).toBe(profileId);
       expect(updatedProfile.company_name).toBe('Updated Company');
       expect(updatedProfile.industry).toBe('Updated Industry');
@@ -222,11 +233,8 @@ describe('BusinessProfileService Integration Tests', () => {
     it('should handle API authentication errors', async () => {
       server.use(
         http.get('http://localhost:8000/api/v1/business-profiles', () => {
-          return HttpResponse.json(
-            { detail: 'Authentication required' },
-            { status: 401 }
-          );
-        })
+          return HttpResponse.json({ detail: 'Authentication required' }, { status: 401 });
+        }),
       );
 
       await expect(businessProfileService.getBusinessProfiles()).rejects.toThrow();
@@ -235,11 +243,8 @@ describe('BusinessProfileService Integration Tests', () => {
     it('should handle API server errors', async () => {
       server.use(
         http.get('http://localhost:8000/api/v1/business-profiles', () => {
-          return HttpResponse.json(
-            { detail: 'Internal server error' },
-            { status: 500 }
-          );
-        })
+          return HttpResponse.json({ detail: 'Internal server error' }, { status: 500 });
+        }),
       );
 
       await expect(businessProfileService.getBusinessProfiles()).rejects.toThrow();
@@ -249,7 +254,7 @@ describe('BusinessProfileService Integration Tests', () => {
       server.use(
         http.get('http://localhost:8000/api/v1/business-profiles', () => {
           return HttpResponse.error();
-        })
+        }),
       );
 
       await expect(businessProfileService.getBusinessProfiles()).rejects.toThrow();

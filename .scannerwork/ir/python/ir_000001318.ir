@@ -1,0 +1,83 @@
+
+$"üîç DRY RUN: {file_path}"str
+
+0int
+truebool
+"--file"str
+("Run dry run for a single file"str
+/&"scripts/migrate_stack_auth_single.py"str
+"{'=' * 80}"str
+!falsebool
+ "‚ùå Error in dry run:"str
+"--dry-run"str
+"\n{'=' * 80}"str	file_path (list"§1
+/
+ ("
+builtinsprint*:BNoneType1
+/
+ (%"
+builtinsprint*:BNoneType1
+/
+ ("
+builtinsprint*:BNoneType!
+
+ (	"#unknown-value#+
+)
+ (
+"#get-field# executable:	,
+*
+
+ (cmd"#unknown-value#Blist&
+$
+
+ ("
+#is-exact#:Bbool
+
+
+ ("
+#assume#:8
+6
+
+ ("#set-field# __collection_size:Bint&
+$
+
+ ("#array-add-last#:
+&
+$
+
+ ("#array-add-last#:&
+$
+
+ ("#array-add-last#:&
+$
+
+ ("#array-add-last#:&
+$
+
+ ("#array-add-last#:K
+I
+ (@result"
+
+subprocessrun:Bsubprocess.CompletedProcess+
+)
+   ("#get-field# returncode:*
+(
+   ("
+#binop !=#2!=:Bbool"
+   ( *   ("°1
+/
+! !($"
+builtinsprint*:BNoneType'
+%
+" "("#get-field# stderr:1
+/
+" "( "
+builtinsprint*:BNoneType
+# #(!"n'
+%
+%
+ %(""#get-field# stdout:1
+/
+% %(#"
+builtinsprint*:"BNoneType
+& &(*</home/omar/Documents/ruleIQ/scripts/test_phase1_migration.py

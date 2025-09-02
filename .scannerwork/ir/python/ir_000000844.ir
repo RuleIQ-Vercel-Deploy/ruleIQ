@@ -1,0 +1,15 @@
+
+*!"Check if in testing environment"strself
+Å Å(config.base.Environment"œ.
+,
+
+Ç Ç("#get-field# ENVIRONMENT:*
+(
+
+Ç# Ç(6"#get-field# TESTING:,
+*
+
+Ç Ç(6"
+#binop ==#2==:Bbool
+
+Ç Ç(6**/home/omar/Documents/ruleIQ/config/base.py

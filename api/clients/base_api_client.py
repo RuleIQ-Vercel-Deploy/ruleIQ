@@ -20,7 +20,7 @@ logger = get_logger(__name__)
 class AuthType(str, Enum):
     OAUTH2 = "oauth2"
     API_KEY = "api_key"
-    BEARER_TOKEN = "bearer_token"
+    BEARER_TOKEN = "bearer_token"  # noqa: S105 - This is an enum value, not a password
     BASIC_AUTH = "basic_auth"
     ROLE_ASSUMPTION = "role_assumption"
     CERTIFICATE = "certificate"
@@ -185,7 +185,9 @@ class BaseAPIClient(ABC):
 
         # Ensure authentication
         if not await self.ensure_authenticated():
-            raise APIAuthenticationException(f"Authentication failed for {self.provider_name}")
+            raise APIAuthenticationException(
+                f"Authentication failed for {self.provider_name}"
+            )
 
         # Execute request with retry logic
         last_exception = None
@@ -199,7 +201,9 @@ class BaseAPIClient(ABC):
             except APIRateLimitException as e:
                 # Handle rate limiting with exponential backoff
                 if attempt < request.retry_attempts - 1:
-                    wait_time = (2**attempt) + (attempt * 0.1)  # Exponential backoff with jitter
+                    wait_time = (2**attempt) + (
+                        attempt * 0.1
+                    )  # Exponential backoff with jitter
                     logger.warning(
                         f"Rate limited by {self.provider_name}, retrying in {wait_time}s"
                     )
@@ -253,7 +257,11 @@ class BaseAPIClient(ABC):
             )
 
             # Execute request
-            url = f"{self.base_url}{request.endpoint}" if self.base_url else request.endpoint
+            url = (
+                f"{self.base_url}{request.endpoint}"
+                if self.base_url
+                else request.endpoint
+            )
 
             async with self.session.request(
                 method=request.method,
@@ -304,7 +312,9 @@ class BaseAPIClient(ABC):
                 f"Request to {self.provider_name} timed out after {request.timeout}s"
             )
         except aiohttp.ClientError as e:
-            raise APIConnectionException(f"Connection error to {self.provider_name}: {str(e)}")
+            raise APIConnectionException(
+                f"Connection error to {self.provider_name}: {str(e)}"
+            )
         except Exception as e:
             if isinstance(
                 e,
@@ -318,7 +328,9 @@ class BaseAPIClient(ABC):
             ):
                 raise e
             else:
-                raise APIException(f"Unexpected error calling {self.provider_name}: {str(e)}")
+                raise APIException(
+                    f"Unexpected error calling {self.provider_name}: {str(e)}"
+                )
 
     async def _parse_response(self, response: aiohttp.ClientResponse) -> Any:
         """Parse API response data"""
@@ -331,7 +343,9 @@ class BaseAPIClient(ABC):
         else:
             return await response.read()
 
-    async def _prepare_headers(self, additional_headers: Dict[str, str] = None) -> Dict[str, str]:
+    async def _prepare_headers(
+        self, additional_headers: Dict[str, str] = None
+    ) -> Dict[str, str]:
         """Prepare headers with authentication - to be implemented by subclasses"""
         headers = {
             "User-Agent": "ruleIQ-compliance-collector/1.0",
@@ -347,9 +361,11 @@ class BaseAPIClient(ABC):
     def _generate_request_id(self, request: APIRequest) -> str:
         """Generate unique request ID for tracking"""
         request_data = f"{request.method}:{request.endpoint}:{time.time()}"
-        return hashlib.md5(request_data.encode()).hexdigest()[:12]
+        return hashlib.sha256(request_data.encode()).hexdigest()[:12]
 
-    async def collect_evidence(self, evidence_type: str, **kwargs) -> List[EvidenceItem]:
+    async def collect_evidence(
+        self, evidence_type: str, **kwargs
+    ) -> List[EvidenceItem]:
         """Collect specific evidence type from this API"""
         evidence_collector = self.get_evidence_collector(evidence_type)
         if not evidence_collector:

@@ -104,7 +104,8 @@ class GoogleCachedContentManager:
                 framework_id=framework_id,
                 business_profile_id=business_profile.get("id", "unknown"),
                 created_at=datetime.utcnow(),
-                expires_at=datetime.utcnow() + self.ttl_strategies["assessment_context"],
+                expires_at=datetime.utcnow()
+                + self.ttl_strategies["assessment_context"],
             )
 
             self.cache_registry[cache_key] = metadata
@@ -258,7 +259,9 @@ class GoogleCachedContentManager:
             Dictionary with cache statistics
         """
         total_caches = len(self.cache_registry)
-        total_hits = sum(metadata.hit_count for metadata in self.cache_registry.values())
+        total_hits = sum(
+            metadata.hit_count for metadata in self.cache_registry.values()
+        )
 
         # Calculate hit rates by type
         framework_caches = [m for m in self.cache_registry.values() if m.framework_id]
@@ -269,7 +272,9 @@ class GoogleCachedContentManager:
             "total_hits": total_hits,
             "framework_caches": len(framework_caches),
             "profile_caches": len(profile_caches),
-            "average_hits_per_cache": total_hits / total_caches if total_caches > 0 else 0,
+            "average_hits_per_cache": (
+                total_hits / total_caches if total_caches > 0 else 0
+            ),
             "cache_registry_size": len(self.cache_registry),
         }
 

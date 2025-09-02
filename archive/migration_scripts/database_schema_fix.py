@@ -34,24 +34,30 @@ class DatabaseSchemaFixer:
         async with self.async_engine.begin() as conn:
             # Check assessment_sessions table columns
             assessment_result = await conn.execute(
-                text("""
+                text(
+                    """
                 SELECT column_name
                 FROM information_schema.columns
                 WHERE table_name = 'assessment_sessions'
                 AND column_name IN ('business_profil', 'questions_answe', 'calculated_scor', 'recommended_fra')
-            """)
+            """
+                )
             )
 
-            truncated_assessment_columns = [row[0] for row in assessment_result.fetchall()]
+            truncated_assessment_columns = [
+                row[0] for row in assessment_result.fetchall()
+            ]
 
             # Check business_profiles table columns
             business_result = await conn.execute(
-                text("""
+                text(
+                    """
                 SELECT column_name
                 FROM information_schema.columns
                 WHERE table_name = 'business_profiles'
                 AND column_name IN ('handles_persona', 'processes_payme', 'stores_health_d')
-            """)
+            """
+                )
             )
 
             truncated_business_columns = [row[0] for row in business_result.fetchall()]
@@ -68,24 +74,30 @@ class DatabaseSchemaFixer:
         async with self.async_engine.begin() as conn:
             # Check if alembic_version table exists
             table_exists = await conn.execute(
-                text("""
+                text(
+                    """
                 SELECT EXISTS (
                     SELECT FROM information_schema.tables
                     WHERE table_schema = 'public'
                     AND table_name = 'alembic_version'
                 )
-            """)
+            """
+                )
             )
 
             if not table_exists.scalar():
-                logger.warning("Alembic version table not found - database may not be initialized")
+                logger.warning(
+                    "Alembic version table not found - database may not be initialized"
+                )
                 return {"migration_008": False, "migration_009": False}
 
             # Check current migration version
             version_result = await conn.execute(
-                text("""
+                text(
+                    """
                 SELECT version_num FROM alembic_version
-            """)
+            """
+                )
             )
 
             current_version = version_result.scalar()
@@ -122,18 +134,22 @@ class DatabaseSchemaFixer:
             async with self.async_engine.begin() as conn:
                 # Backup assessment_sessions table
                 await conn.execute(
-                    text("""
+                    text(
+                        """
                     CREATE TABLE IF NOT EXISTS assessment_sessions_backup_20250109
                     AS SELECT * FROM assessment_sessions
-                """)
+                """
+                    )
                 )
 
                 # Backup business_profiles table
                 await conn.execute(
-                    text("""
+                    text(
+                        """
                     CREATE TABLE IF NOT EXISTS business_profiles_backup_20250109
                     AS SELECT * FROM business_profiles
-                """)
+                """
+                    )
                 )
 
                 await conn.commit()
@@ -153,24 +169,30 @@ class DatabaseSchemaFixer:
             async with self.async_engine.begin() as conn:
                 # Check that assessment_sessions has correct column names
                 assessment_result = await conn.execute(
-                    text("""
+                    text(
+                        """
                     SELECT column_name
                     FROM information_schema.columns
                     WHERE table_name = 'assessment_sessions'
                     AND column_name IN ('business_profile_id', 'questions_answered', 'calculated_scores', 'recommended_frameworks')
-                """)
+                """
+                    )
                 )
 
-                fixed_assessment_columns = [row[0] for row in assessment_result.fetchall()]
+                fixed_assessment_columns = [
+                    row[0] for row in assessment_result.fetchall()
+                ]
 
                 # Check that business_profiles has correct column names
                 business_result = await conn.execute(
-                    text("""
+                    text(
+                        """
                     SELECT column_name
                     FROM information_schema.columns
                     WHERE table_name = 'business_profiles'
                     AND column_name IN ('handles_personal_data', 'processes_payments', 'stores_health_data')
-                """)
+                """
+                    )
                 )
 
                 fixed_business_columns = [row[0] for row in business_result.fetchall()]
@@ -188,7 +210,9 @@ class DatabaseSchemaFixer:
                     "stores_health_data",
                 }
 
-                assessment_success = set(fixed_assessment_columns) == expected_assessment
+                assessment_success = (
+                    set(fixed_assessment_columns) == expected_assessment
+                )
                 business_success = set(fixed_business_columns) == expected_business
 
                 if assessment_success and business_success:

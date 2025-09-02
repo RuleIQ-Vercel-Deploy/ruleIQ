@@ -37,14 +37,18 @@ def setup_test_database() -> Optional[bool]:
 
     # Create test user
     print("\n1. Creating test user...")
-    success, output = run_sql_command("CREATE USER test_user WITH PASSWORD 'test_pass';")
+    success, output = run_sql_command(
+        "CREATE USER test_user WITH PASSWORD 'test_pass';"
+    )
     if not success and "already exists" not in output:
         print("Failed to create user")
         return False
 
     # Create test database
     print("\n2. Creating test database...")
-    success, output = run_sql_command("CREATE DATABASE test_compliancegpt OWNER test_user;")
+    success, output = run_sql_command(
+        "CREATE DATABASE test_compliancegpt OWNER test_user;"
+    )
     if not success and "already exists" not in output:
         print("Failed to create database")
         return False

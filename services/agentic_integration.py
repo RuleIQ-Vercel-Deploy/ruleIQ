@@ -12,10 +12,11 @@ from services.agentic_rag import AgenticRAGSystem
 from services.agents.pydantic_ai_framework import (
     AgentOrchestrator,
     AgentContext,
-    ComplianceAgentResponse
+    ComplianceAgentResponse,
 )
 
 logger = logging.getLogger(__name__)
+
 
 class AgenticIntegrationService:
     """
@@ -32,19 +33,22 @@ class AgenticIntegrationService:
             0: AgentOrchestrator(trust_level=0, rag_system=self.rag_system),
             1: AgentOrchestrator(trust_level=1, rag_system=self.rag_system),
             2: AgentOrchestrator(trust_level=2, rag_system=self.rag_system),
-            3: AgentOrchestrator(trust_level=3, rag_system=self.rag_system)
+            3: AgentOrchestrator(trust_level=3, rag_system=self.rag_system),
         }
 
         # Track active sessions
         self.active_sessions = {}
 
         # Configuration
-        self.auto_process_docs = os.getenv("AUTO_PROCESS_DOCS", "true").lower() == "true"
-
+        self.auto_process_docs = (
+            os.getenv("AUTO_PROCESS_DOCS", "true").lower() == "true"
+        )
 
         # Initialize fact-checker and self-critic system
         self.fact_checker = None
-        self.self_critic_enabled = os.getenv("ENABLE_RAG_SELF_CRITIC", "true").lower() == "true"
+        self.self_critic_enabled = (
+            os.getenv("ENABLE_RAG_SELF_CRITIC", "true").lower() == "true"
+        )
 
     async def initialize(self) -> None:
         """Initialize the service and process documentation if needed"""
@@ -54,16 +58,21 @@ class AgenticIntegrationService:
             # Check if documentation is already processed
             stats = await self.rag_system.get_framework_statistics()
 
-            if stats.get('total_chunks', 0) == 0 and self.auto_process_docs:
-                logger.info("No documentation found, processing LangGraph and Pydantic AI docs...")
+            if stats.get("total_chunks", 0) == 0 and self.auto_process_docs:
+                logger.info(
+                    "No documentation found, processing LangGraph and Pydantic AI docs..."
+                )
                 await self.rag_system.process_documentation_files()
                 logger.info("Documentation processing completed")
             else:
-                logger.info(f"Found {stats.get('total_chunks', 0)} documentation chunks and {stats.get('total_code_examples', 0)} code examples")
+                logger.info(
+                    f"Found {stats.get('total_chunks', 0)} documentation chunks and {stats.get('total_code_examples', 0)} code examples"
+                )
 
             # Initialize fact-checker if enabled
             if self.self_critic_enabled:
                 from .rag_fact_checker import RAGFactChecker
+
                 self.fact_checker = RAGFactChecker()
                 logger.info("RAG self-critic and fact-checker initialized")
 
@@ -79,7 +88,7 @@ class AgenticIntegrationService:
         user_id: str,
         session_id: Optional[str] = None,
         trust_level: int = 1,
-        business_context: Optional[Dict[str, Any]] = None
+        business_context: Optional[Dict[str, Any]] = None,
     ) -> ComplianceAgentResponse:
         """
         Process a compliance request using the appropriate agent
@@ -104,13 +113,15 @@ class AgenticIntegrationService:
                 user_id=user_id,
                 session_id=session_id,
                 trust_level=trust_level,
-                business_context=business_context or {}
+                business_context=business_context or {},
             )
 
             # Validate trust level
             if trust_level not in self.agent_orchestrators:
                 trust_level = 1  # Default to trust level 1
-                logger.warning(f"Invalid trust level provided, defaulting to {trust_level}")
+                logger.warning(
+                    f"Invalid trust level provided, defaulting to {trust_level}"
+                )
 
             # Process request through agent orchestrator
             orchestrator = self.agent_orchestrators[trust_level]
@@ -135,14 +146,14 @@ class AgenticIntegrationService:
                 reasoning=f"System error: {str(e)}",
                 risk_level="medium",
                 requires_human_approval=True,
-                sources=["system_error"]
+                sources=["system_error"],
             )
 
     async def query_documentation(
         self,
         query: str,
         source_filter: Optional[str] = None,
-        query_type: str = "documentation"
+        query_type: str = "documentation",
     ) -> Dict[str, Any]:
         """
         Query the RAG documentation system directly
@@ -160,7 +171,7 @@ class AgenticIntegrationService:
                 query=query,
                 source_filter=source_filter,
                 query_type=query_type,
-                max_results=5
+                max_results=5,
             )
 
             return {
@@ -168,7 +179,7 @@ class AgenticIntegrationService:
                 "confidence": result.confidence,
                 "sources": result.sources,
                 "processing_time": result.processing_time,
-                "query_type": result.query_type
+                "query_type": result.query_type,
             }
 
         except Exception as e:
@@ -178,13 +189,11 @@ class AgenticIntegrationService:
                 "confidence": 0.0,
                 "sources": [],
                 "processing_time": 0.0,
-                "query_type": query_type
+                "query_type": query_type,
             }
 
     async def get_implementation_guidance(
-        self,
-        topic: str,
-        framework: str = "langgraph"
+        self, topic: str, framework: str = "langgraph"
     ) -> str:
         """
         Get specific implementation guidance for LangGraph or Pydantic AI
@@ -203,7 +212,7 @@ class AgenticIntegrationService:
                 query=guidance_query,
                 source_filter=framework,
                 query_type="hybrid",
-                max_results=3
+                max_results=3,
             )
 
             return result.answer
@@ -213,9 +222,7 @@ class AgenticIntegrationService:
             return f"I apologize, but I couldn't retrieve guidance for {topic} in {framework}. Please check the documentation directly or try rephrasing your request."
 
     async def find_code_examples(
-        self,
-        task_description: str,
-        framework: Optional[str] = None
+        self, task_description: str, framework: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         Find specific code examples for a task
@@ -234,13 +241,13 @@ class AgenticIntegrationService:
                 query=example_query,
                 source_filter=framework,
                 query_type="code_examples",
-                max_results=5
+                max_results=5,
             )
 
             return {
                 "examples": result.sources,
                 "explanation": result.answer,
-                "confidence": result.confidence
+                "confidence": result.confidence,
             }
 
         except Exception as e:
@@ -248,13 +255,10 @@ class AgenticIntegrationService:
             return {
                 "examples": [],
                 "explanation": f"I couldn't find code examples for: {task_description}",
-                "confidence": 0.0
+                "confidence": 0.0,
             }
 
-    async def validate_implementation_approach(
-        self,
-        approach_description: str
-    ) -> str:
+    async def validate_implementation_approach(self, approach_description: str) -> str:
         """
         Validate a technical approach against best practices
 
@@ -277,7 +281,7 @@ class AgenticIntegrationService:
                 query=validation_query,
                 source_filter=None,
                 query_type="hybrid",
-                max_results=5
+                max_results=5,
             )
 
             return result.answer
@@ -286,13 +290,12 @@ class AgenticIntegrationService:
             logger.error(f"Error validating approach: {e}")
             return f"I couldn't validate your approach due to an error: {str(e)}"
 
-
     async def fact_check_response(
         self,
         response_text: str,
         sources: List[Dict[str, Any]],
         original_query: str,
-        quick_check: bool = False
+        quick_check: bool = False,
     ) -> Dict[str, Any]:
         """
         Fact-check a RAG response using the self-critic system
@@ -308,19 +311,20 @@ class AgenticIntegrationService:
         """
         try:
             if not self.fact_checker:
-                logger.warning("Fact-checker not initialized, returning basic validation")
+                logger.warning(
+                    "Fact-checker not initialized, returning basic validation"
+                )
                 return {
                     "approved": True,
                     "confidence": 0.7,
                     "fact_check_available": False,
-                    "message": "Fact-checking service not available"
+                    "message": "Fact-checking service not available",
                 }
 
             if quick_check:
                 # Quick fact-check for real-time usage
                 is_reliable = await self.fact_checker.quick_fact_check(
-                    response_text=response_text,
-                    sources=sources
+                    response_text=response_text, sources=sources
                 )
 
                 return {
@@ -328,14 +332,14 @@ class AgenticIntegrationService:
                     "confidence": 0.8 if is_reliable else 0.4,
                     "fact_check_type": "quick",
                     "fact_check_available": True,
-                    "message": "Quick fact-check completed"
+                    "message": "Quick fact-check completed",
                 }
             else:
                 # Comprehensive fact-checking
                 assessment = await self.fact_checker.comprehensive_fact_check(
                     response_text=response_text,
                     sources=sources,
-                    original_query=original_query
+                    original_query=original_query,
                 )
 
                 return {
@@ -349,7 +353,7 @@ class AgenticIntegrationService:
                     "recommendations": assessment.recommendations,
                     "fact_check_results": len(assessment.fact_check_results),
                     "self_critiques": len(assessment.self_critiques),
-                    "message": "Comprehensive fact-check completed"
+                    "message": "Comprehensive fact-check completed",
                 }
 
         except Exception as e:
@@ -359,7 +363,7 @@ class AgenticIntegrationService:
                 "confidence": 0.5,
                 "fact_check_available": False,
                 "error": str(e),
-                "message": "Fact-checking failed, proceeding with caution"
+                "message": "Fact-checking failed, proceeding with caution",
             }
 
     async def query_documentation_with_validation(
@@ -368,7 +372,7 @@ class AgenticIntegrationService:
         source_filter: Optional[str] = None,
         query_type: str = "documentation",
         enable_fact_check: bool = True,
-        quick_validation: bool = True
+        quick_validation: bool = True,
     ) -> Dict[str, Any]:
         """
         Query documentation with automatic fact-checking validation
@@ -386,9 +390,7 @@ class AgenticIntegrationService:
         try:
             # Get standard RAG response
             rag_result = await self.query_documentation(
-                query=query,
-                source_filter=source_filter,
-                query_type=query_type
+                query=query, source_filter=source_filter, query_type=query_type
             )
 
             # Add validation if enabled and fact-checker available
@@ -397,25 +399,29 @@ class AgenticIntegrationService:
                     response_text=rag_result["answer"],
                     sources=rag_result["sources"],
                     original_query=query,
-                    quick_check=quick_validation
+                    quick_check=quick_validation,
                 )
 
                 # Combine results
-                rag_result.update({
-                    "validation": validation_result,
-                    "trust_score": validation_result["confidence"],
-                    "approved_for_use": validation_result["approved"]
-                })
+                rag_result.update(
+                    {
+                        "validation": validation_result,
+                        "trust_score": validation_result["confidence"],
+                        "approved_for_use": validation_result["approved"],
+                    }
+                )
             else:
                 # Add default validation info
-                rag_result.update({
-                    "validation": {
-                        "fact_check_available": False,
-                        "message": "Fact-checking disabled or unavailable"
-                    },
-                    "trust_score": rag_result["confidence"],
-                    "approved_for_use": True
-                })
+                rag_result.update(
+                    {
+                        "validation": {
+                            "fact_check_available": False,
+                            "message": "Fact-checking disabled or unavailable",
+                        },
+                        "trust_score": rag_result["confidence"],
+                        "approved_for_use": True,
+                    }
+                )
 
             return rag_result
 
@@ -427,12 +433,9 @@ class AgenticIntegrationService:
                 "sources": [],
                 "processing_time": 0.0,
                 "query_type": query_type,
-                "validation": {
-                    "fact_check_available": False,
-                    "error": str(e)
-                },
+                "validation": {"fact_check_available": False, "error": str(e)},
                 "trust_score": 0.0,
-                "approved_for_use": False
+                "approved_for_use": False,
             }
 
     def _get_session_context(
@@ -440,7 +443,7 @@ class AgenticIntegrationService:
         user_id: str,
         session_id: str,
         trust_level: int,
-        business_context: Dict[str, Any]
+        business_context: Dict[str, Any],
     ) -> AgentContext:
         """Get or create session context"""
 
@@ -457,16 +460,13 @@ class AgenticIntegrationService:
                 trust_level=trust_level,
                 business_context=business_context,
                 interaction_history=[],
-                preferences={}
+                preferences={},
             )
 
         return context
 
     async def _log_request(
-        self,
-        request: str,
-        response: ComplianceAgentResponse,
-        context: AgentContext
+        self, request: str, response: ComplianceAgentResponse, context: AgentContext
     ) -> None:
         """Log request for analytics and improvement"""
         try:
@@ -479,7 +479,7 @@ class AgenticIntegrationService:
                 "request_type": "compliance",
                 "confidence": response.confidence,
                 "risk_level": response.risk_level,
-                "required_approval": response.requires_human_approval
+                "required_approval": response.requires_human_approval,
             }
 
             logger.info(f"Request logged: {log_entry}")
@@ -500,30 +500,34 @@ class AgenticIntegrationService:
                 "status": "healthy",
                 "timestamp": datetime.utcnow().isoformat(),
                 "rag_system": {
-                    "total_chunks": rag_stats.get('total_chunks', 0),
-                    "total_code_examples": rag_stats.get('total_code_examples', 0),
+                    "total_chunks": rag_stats.get("total_chunks", 0),
+                    "total_code_examples": rag_stats.get("total_code_examples", 0),
                     "available_sources": sources,
                     "capabilities": {
                         "contextual_embeddings": self.rag_system.use_contextual_embeddings,
                         "hybrid_search": self.rag_system.use_hybrid_search,
                         "agentic_rag": self.rag_system.use_agentic_rag,
-                        "knowledge_graph": self.rag_system.use_knowledge_graph
-                    }
+                        "knowledge_graph": self.rag_system.use_knowledge_graph,
+                    },
                 },
                 "agents": {
                     "available_trust_levels": list(self.agent_orchestrators.keys()),
-                    "active_sessions": len(self.active_sessions)
+                    "active_sessions": len(self.active_sessions),
                 },
                 "fact_checker": {
                     "enabled": self.self_critic_enabled,
                     "available": self.fact_checker is not None,
-                    "capabilities": {
-                        "quick_fact_check": True,
-                        "comprehensive_analysis": True,
-                        "self_criticism": True,
-                        "quality_scoring": True
-                    } if self.fact_checker else {}
-                }
+                    "capabilities": (
+                        {
+                            "quick_fact_check": True,
+                            "comprehensive_analysis": True,
+                            "self_criticism": True,
+                            "quality_scoring": True,
+                        }
+                        if self.fact_checker
+                        else {}
+                    ),
+                },
             }
 
         except Exception as e:
@@ -531,7 +535,7 @@ class AgenticIntegrationService:
             return {
                 "status": "error",
                 "timestamp": datetime.utcnow().isoformat(),
-                "error": str(e)
+                "error": str(e),
             }
 
     def cleanup_inactive_sessions(self, max_age_hours: int = 24) -> None:
@@ -560,8 +564,10 @@ class AgenticIntegrationService:
         except Exception as e:
             logger.warning(f"Error cleaning up sessions: {e}")
 
+
 # Global service instance
 _agentic_service = None
+
 
 def get_agentic_service() -> AgenticIntegrationService:
     """Get or create the global agentic service instance"""
@@ -569,6 +575,7 @@ def get_agentic_service() -> AgenticIntegrationService:
     if _agentic_service is None:
         _agentic_service = AgenticIntegrationService()
     return _agentic_service
+
 
 async def initialize_agentic_service():
     """Initialize the global agentic service"""

@@ -1,0 +1,13 @@
+
+*!"Check if mock directory exists."strself
+£ £(path
+£ £(("p.
+,
+
+¥ ¥('"#get-field# directories:,
+*
+
+¥ ¥('"
+#binop in#2in:Bbool
+
+¥ ¥('*8/home/omar/Documents/ruleIQ/tests/mocks/mock_services.py

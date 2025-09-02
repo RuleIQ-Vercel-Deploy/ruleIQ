@@ -329,9 +329,11 @@ class EnhancedTokenBlacklist:
                 "expired_tokens_cleaned": self.metrics.expired_tokens_cleaned,
                 "suspicious_patterns_detected": self.metrics.suspicious_patterns_detected,
                 "bulk_operations_count": self.metrics.bulk_operations_count,
-                "last_cleanup": self.metrics.last_cleanup.isoformat()
-                if self.metrics.last_cleanup
-                else None,
+                "last_cleanup": (
+                    self.metrics.last_cleanup.isoformat()
+                    if self.metrics.last_cleanup
+                    else None
+                ),
             }
 
         except Exception as e:
@@ -363,11 +365,15 @@ class EnhancedTokenBlacklist:
         try:
             metrics_data = {
                 **asdict(self.metrics),
-                "last_cleanup": self.metrics.last_cleanup.isoformat()
-                if self.metrics.last_cleanup
-                else None,
+                "last_cleanup": (
+                    self.metrics.last_cleanup.isoformat()
+                    if self.metrics.last_cleanup
+                    else None
+                ),
             }
-            await self.cache_manager.set(BLACKLIST_METRICS_KEY, json.dumps(metrics_data), ttl=86400)
+            await self.cache_manager.set(
+                BLACKLIST_METRICS_KEY, json.dumps(metrics_data), ttl=86400
+            )
 
         except Exception as e:
             logger.error(f"Failed to save metrics: {e}")

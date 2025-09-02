@@ -1,0 +1,28 @@
+
+
+1int
+""Validate employee count"str
+,#"Employee count must be at least 1"str
++	""Employee count seems unrealistic"str
+1000000intvalue@  @(*"H(
+&
+B B("	#binop <#2<:Bbool"
+B B( *B B(
+"B.
+,
+C C(A"
+ValueError*:B
+ValueError2
+C C(A"J(
+&
+D D("	#binop >#2>:Bbool"
+D D( *D D(
+"B.
+,
+E E(@
+"
+ValueError*:	B
+ValueError2
+E E(@
+"
+F F(*3/home/omar/Documents/ruleIQ/api/utils/validators.py

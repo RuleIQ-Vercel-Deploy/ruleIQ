@@ -34,7 +34,10 @@ class AITimeoutException(AIServiceException):
     ) -> None:
         message = f"{service_name} request timed out after {timeout_seconds} seconds"
         super().__init__(
-            message=message, service_name=service_name, error_code="AI_TIMEOUT", context=context
+            message=message,
+            service_name=service_name,
+            error_code="AI_TIMEOUT",
+            context=context,
         )
         self.timeout_seconds = timeout_seconds
 
@@ -70,7 +73,10 @@ class AIModelException(AIServiceException):
     ) -> None:
         message = f"{service_name} model '{model_name}' error: {model_error}"
         super().__init__(
-            message=message, service_name=service_name, error_code="AI_MODEL_ERROR", context=context
+            message=message,
+            service_name=service_name,
+            error_code="AI_MODEL_ERROR",
+            context=context,
         )
         self.model_name = model_name
         self.model_error = model_error
@@ -164,7 +170,10 @@ class ModelTimeoutException(AIServiceException):
     ) -> None:
         message = f"Model '{model_name}' timed out after {timeout_seconds}s during {operation}"
         super().__init__(
-            message=message, service_name=service_name, error_code="MODEL_TIMEOUT", context=context
+            message=message,
+            service_name=service_name,
+            error_code="MODEL_TIMEOUT",
+            context=context,
         )
         self.model_name = model_name
         self.timeout_seconds = timeout_seconds
@@ -285,9 +294,7 @@ class SchemaValidationException(AIServiceException):
         if not self.validation_errors:
             return "No specific validation errors available"
 
-        summary = (
-            f"Schema validation failed for {self.response_type} with {self.error_count} errors:\n"
-        )
+        summary = f"Schema validation failed for {self.response_type} with {self.error_count} errors:\n"
         for i, error in enumerate(self.validation_errors[:5], 1):
             summary += f"  {i}. {error}\n"
 
@@ -375,7 +382,9 @@ ERROR_PATTERN_MAPPING = {
 
 
 def map_gemini_error(
-    error: Exception, model_name: str = "unknown", context: Optional[Dict[str, Any]] = None
+    error: Exception,
+    model_name: str = "unknown",
+    context: Optional[Dict[str, Any]] = None,
 ) -> AIServiceException:
     """Map Google Gemini errors to our AI exceptions."""
     error_message = str(error)
@@ -453,7 +462,9 @@ def map_gemini_error(
                 )
             elif exception_class == AIContentFilterException:
                 return AIContentFilterException(
-                    filter_reason=error_message, service_name="Google Gemini", context=context
+                    filter_reason=error_message,
+                    service_name="Google Gemini",
+                    context=context,
                 )
 
     # Default to generic AI service exception

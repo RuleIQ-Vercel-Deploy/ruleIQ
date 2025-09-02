@@ -1,0 +1,40 @@
+
+Gapi.middleware.api_key_auth.APIKeyAuthMiddleware._requires_api_key_authD
+:/home/omar/Documents/ruleIQ/api/middleware/api_key_auth.pyb b("2*›
+2c c(@ƒ
+€
+d d(-
+%2"__id*h
+
+__unknown_file (L*J2
+0api.middleware.api_key_auth.APIKeyAuthMiddleware"
+protected_prefixes*
+4
+6*$
+4g g("
+g g(	
+
+False*–
+6e e(&|z
+e e(&
+%1"str.startswith*$
+
+__unknown_file (
+
+path*&
+
+__unknown_file (
+
+
+prefix2
+startswith*	
+4
+6
+7*#
+7f f("
+f f(
+
+True:
+b% b(.
+pathB42
+0api.middleware.api_key_auth.APIKeyAuthMiddlewareH

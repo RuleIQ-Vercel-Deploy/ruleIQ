@@ -32,7 +32,7 @@ class AuthAPIClient {
     return {
       'Content-Type': 'application/json',
       ...(tokens?.access_token && {
-        'Authorization': `Bearer ${tokens.access_token}`,
+        Authorization: `Bearer ${tokens.access_token}`,
       }),
     };
   }
@@ -103,7 +103,7 @@ class AuthAPIClient {
 
   async logout(): Promise<void> {
     const tokens = useAuthStore.getState().tokens;
-    
+
     if (tokens?.access_token) {
       try {
         await fetch(`${API_BASE_URL}/api/v1/auth/logout`, {

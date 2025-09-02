@@ -56,17 +56,22 @@ class RecommendationDetail(BaseModel):
     """A specific recommendation for improving compliance posture."""
 
     title: str = Field(..., description="The title of the recommendation.")
-    description: str = Field(..., description="A detailed description of the recommendation.")
+    description: str = Field(
+        ..., description="A detailed description of the recommendation."
+    )
     priority: str = Field(
         ...,
         pattern=r"^(Low|Medium|High)$",
         description="The priority for implementing the recommendation.",
     )
     estimated_effort: str = Field(
-        ..., pattern=r"^(Low|Medium|High)$", description="Estimated effort to implement."
+        ...,
+        pattern=r"^(Low|Medium|High)$",
+        description="Estimated effort to implement.",
     )
     related_controls: List[str] = Field(
-        default_factory=list, description="List of control IDs this recommendation addresses."
+        default_factory=list,
+        description="List of control IDs this recommendation addresses.",
     )
 
 
@@ -87,11 +92,15 @@ class BusinessProfileBase(BaseModel):
     handles_personal_data: bool = Field(..., description="Handles personal data")
     processes_payments: bool = Field(..., description="Processes payments")
     stores_health_data: bool = Field(..., description="Stores health data")
-    provides_financial_services: bool = Field(..., description="Provides financial services")
+    provides_financial_services: bool = Field(
+        ..., description="Provides financial services"
+    )
     operates_critical_infrastructure: bool = Field(
         ..., description="Operates critical infrastructure"
     )
-    has_international_operations: bool = Field(..., description="Has international operations")
+    has_international_operations: bool = Field(
+        ..., description="Has international operations"
+    )
 
     # Optional JSONB fields with defaults
     existing_frameworks: Optional[List[str]] = Field(default_factory=list)
@@ -116,7 +125,9 @@ class BusinessProfileCreate(BaseModel):
     )  # Re-added for framework relevance
 
     # Optional boolean fields with defaults (for minimal profile creation)
-    handles_personal_data: bool = Field(default=False, description="Handles personal data")
+    handles_personal_data: bool = Field(
+        default=False, description="Handles personal data"
+    )
     processes_payments: bool = Field(default=False, description="Processes payments")
     stores_health_data: bool = Field(default=False, description="Stores health data")
     provides_financial_services: bool = Field(
@@ -230,10 +241,15 @@ class PolicyListResponse(BaseModel):
 # Evidence Schemas
 class EvidenceCreate(BaseModel):
     title: str = Field(
-        ..., min_length=1, max_length=255, description="A descriptive title for the evidence."
+        ...,
+        min_length=1,
+        max_length=255,
+        description="A descriptive title for the evidence.",
     )
     description: Optional[str] = Field(
-        None, max_length=2000, description="A detailed description of the evidence content."
+        None,
+        max_length=2000,
+        description="A detailed description of the evidence content.",
     )
     control_id: str = Field(
         ...,
@@ -253,7 +269,9 @@ class EvidenceCreate(BaseModel):
         min_length=1,
         description="The source of the evidence (e.g., 'manual_upload', 'integration:jira').",
     )
-    tags: Optional[List[str]] = Field(None, description="Keywords for searching and filtering.")
+    tags: Optional[List[str]] = Field(
+        None, description="Keywords for searching and filtering."
+    )
     evidence_type: str = Field(
         "document",
         description="The type of evidence (e.g., 'document', 'policy_document', 'screenshot', 'log_file').",
@@ -262,13 +280,22 @@ class EvidenceCreate(BaseModel):
 
 class EvidenceUpdate(BaseModel):
     title: Optional[str] = Field(
-        None, min_length=1, max_length=255, description="A descriptive title for the evidence."
+        None,
+        min_length=1,
+        max_length=255,
+        description="A descriptive title for the evidence.",
     )
     description: Optional[str] = Field(
-        None, max_length=2000, description="A detailed description of the evidence content."
+        None,
+        max_length=2000,
+        description="A detailed description of the evidence content.",
     )
-    status: Optional[str] = Field(None, description="The review status of the evidence.")
-    tags: Optional[List[str]] = Field(None, description="Keywords for searching and filtering.")
+    status: Optional[str] = Field(
+        None, description="The review status of the evidence."
+    )
+    tags: Optional[List[str]] = Field(
+        None, description="Keywords for searching and filtering."
+    )
     evidence_type: Optional[str] = Field(None, description="The type of evidence.")
 
 
@@ -294,7 +321,9 @@ class EvidenceStatusUpdate(BaseModel):
         pattern=r"^(pending_review|approved|rejected)$",
         description="The new review status for the evidence.",
     )
-    notes: Optional[str] = Field(None, description="Optional notes about the status update.")
+    notes: Optional[str] = Field(
+        None, description="Optional notes about the status update."
+    )
 
 
 class EvidenceResponse(EvidenceCreate):
@@ -417,7 +446,9 @@ class AssessmentQuestion(BaseModel):
     question_id: str = Field(..., description="Unique identifier for the question.")
     text: str = Field(..., description="The text of the assessment question.")
     question_type: str = Field(
-        ..., pattern=r"^(multiple_choice|free_text|yes_no)$", description="The type of question."
+        ...,
+        pattern=r"^(multiple_choice|free_text|yes_no)$",
+        description="The type of question.",
     )
     options: Optional[List[Dict[str, str]]] = Field(
         None,
@@ -487,7 +518,9 @@ class ImplementationPlanResponse(BaseModel):
     total_phases: Optional[int] = None
     total_tasks: Optional[int] = None
     estimated_duration_weeks: Optional[int] = None
-    tasks: Optional[List[Dict[str, Any]]] = None  # Flattened tasks for test compatibility
+    tasks: Optional[List[Dict[str, Any]]] = (
+        None  # Flattened tasks for test compatibility
+    )
 
     class Config:
         from_attributes = True
@@ -498,8 +531,12 @@ class ImplementationTaskUpdate(BaseModel):
         None,
         description="New status of the task (e.g., 'pending', 'in_progress', 'completed', 'blocked')",
     )
-    notes: Optional[str] = Field(None, description="Additional notes for the task update.")
-    assignee_id: Optional[UUID] = Field(None, description="ID of the user assigned to the task.")
+    notes: Optional[str] = Field(
+        None, description="Additional notes for the task update."
+    )
+    assignee_id: Optional[UUID] = Field(
+        None, description="ID of the user assigned to the task."
+    )
     due_date: Optional[date] = Field(None, description="New due date for the task.")
     completion_percentage: Optional[int] = Field(
         None, ge=0, le=100, description="Percentage of task completion."
@@ -541,10 +578,13 @@ class ComplianceReport(BaseModel):
         description="Type of report to generate (e.g., 'summary', 'detailed', 'attestation').",
     )
     format: str = Field(
-        default="pdf", pattern=r"^(pdf|json|docx)$", description="The output format for the report."
+        default="pdf",
+        pattern=r"^(pdf|json|docx)$",
+        description="The output format for the report.",
     )
     include_evidence: bool = Field(
-        default=False, description="Whether to include evidence summaries in the report."
+        default=False,
+        description="Whether to include evidence summaries in the report.",
     )
     include_recommendations: bool = Field(
         default=True, description="Whether to include actionable recommendations."

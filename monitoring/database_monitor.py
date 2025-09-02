@@ -27,6 +27,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class PoolMetrics:
     """Database pool metrics snapshot."""
+
     timestamp: datetime
     pool_type: str  # 'sync' or 'async'
     pool_size: int
@@ -40,13 +41,14 @@ class PoolMetrics:
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         result = asdict(self)
-        result['timestamp'] = self.timestamp.isoformat()
+        result["timestamp"] = self.timestamp.isoformat()
         return result
 
 
 @dataclass
 class ConnectionHealthCheck:
     """Database connection health check result."""
+
     timestamp: datetime
     pool_type: str
     success: bool
@@ -56,13 +58,14 @@ class ConnectionHealthCheck:
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         result = asdict(self)
-        result['timestamp'] = self.timestamp.isoformat()
+        result["timestamp"] = self.timestamp.isoformat()
         return result
 
 
 @dataclass
 class AlertThresholds:
     """Alert thresholds for database monitoring."""
+
     pool_utilization_warning: float = 70.0  # %
     pool_utilization_critical: float = 85.0  # %
     overflow_warning: float = 50.0  # %
@@ -103,7 +106,9 @@ class DatabaseMonitor:
                 checked_out=checked_out,
                 overflow=overflow,
                 total_connections=total_connections,
-                utilization_percent=(checked_out / pool_size * 100) if pool_size > 0 else 0,
+                utilization_percent=(
+                    (checked_out / pool_size * 100) if pool_size > 0 else 0
+                ),
                 overflow_percent=(overflow / pool_size * 100) if pool_size > 0 else 0,
             )
 
@@ -122,7 +127,9 @@ class DatabaseMonitor:
                 checked_out=checked_out,
                 overflow=overflow,
                 total_connections=total_connections,
-                utilization_percent=(checked_out / pool_size * 100) if pool_size > 0 else 0,
+                utilization_percent=(
+                    (checked_out / pool_size * 100) if pool_size > 0 else 0
+                ),
                 overflow_percent=(overflow / pool_size * 100) if pool_size > 0 else 0,
             )
 
@@ -132,7 +139,7 @@ class DatabaseMonitor:
 
         # Trim history if needed
         if len(self.metrics_history) > self.max_history_size:
-            self.metrics_history = self.metrics_history[-self.max_history_size:]
+            self.metrics_history = self.metrics_history[-self.max_history_size :]
 
         return metrics
 
@@ -153,7 +160,7 @@ class DatabaseMonitor:
                     timestamp=timestamp,
                     pool_type="sync",
                     success=True,
-                    response_time_ms=response_time
+                    response_time_ms=response_time,
                 )
                 self.consecutive_failures["sync"] = 0
 
@@ -163,7 +170,7 @@ class DatabaseMonitor:
                     pool_type="sync",
                     success=False,
                     response_time_ms=0.0,
-                    error_message=str(e)
+                    error_message=str(e),
                 )
                 self.consecutive_failures["sync"] += 1
                 logger.error(f"Sync database health check failed: {e}")
@@ -174,7 +181,7 @@ class DatabaseMonitor:
 
         # Trim history if needed
         if len(self.health_history) > self.max_history_size:
-            self.health_history = self.health_history[-self.max_history_size:]
+            self.health_history = self.health_history[-self.max_history_size :]
 
         return results
 
@@ -194,7 +201,7 @@ class DatabaseMonitor:
                 timestamp=timestamp,
                 pool_type="async",
                 success=True,
-                response_time_ms=response_time
+                response_time_ms=response_time,
             )
             self.consecutive_failures["async"] = 0
 
@@ -204,7 +211,7 @@ class DatabaseMonitor:
                 pool_type="async",
                 success=False,
                 response_time_ms=0.0,
-                error_message=str(e)
+                error_message=str(e),
             )
             self.consecutive_failures["async"] += 1
             logger.error(f"Async database health check failed: {e}")
@@ -213,7 +220,7 @@ class DatabaseMonitor:
 
         # Trim history if needed
         if len(self.health_history) > self.max_history_size:
-            self.health_history = self.health_history[-self.max_history_size:]
+            self.health_history = self.health_history[-self.max_history_size :]
 
         return result
 
@@ -223,61 +230,77 @@ class DatabaseMonitor:
 
         for pool_type, metric in metrics.items():
             # Pool utilization alerts
-            if metric.utilization_percent >= self.alert_thresholds.pool_utilization_critical:
-                alerts.append({
-                    "severity": "critical",
-                    "pool_type": pool_type,
-                    "alert_type": "pool_utilization",
-                    "message": f"{pool_type.title()} pool utilization critical: {metric.utilization_percent:.1f}%",
-                    "value": metric.utilization_percent,
-                    "threshold": self.alert_thresholds.pool_utilization_critical,
-                    "timestamp": metric.timestamp.isoformat()
-                })
-            elif metric.utilization_percent >= self.alert_thresholds.pool_utilization_warning:
-                alerts.append({
-                    "severity": "warning",
-                    "pool_type": pool_type,
-                    "alert_type": "pool_utilization",
-                    "message": f"{pool_type.title()} pool utilization warning: {metric.utilization_percent:.1f}%",
-                    "value": metric.utilization_percent,
-                    "threshold": self.alert_thresholds.pool_utilization_warning,
-                    "timestamp": metric.timestamp.isoformat()
-                })
+            if (
+                metric.utilization_percent
+                >= self.alert_thresholds.pool_utilization_critical
+            ):
+                alerts.append(
+                    {
+                        "severity": "critical",
+                        "pool_type": pool_type,
+                        "alert_type": "pool_utilization",
+                        "message": f"{pool_type.title()} pool utilization critical: {metric.utilization_percent:.1f}%",
+                        "value": metric.utilization_percent,
+                        "threshold": self.alert_thresholds.pool_utilization_critical,
+                        "timestamp": metric.timestamp.isoformat(),
+                    }
+                )
+            elif (
+                metric.utilization_percent
+                >= self.alert_thresholds.pool_utilization_warning
+            ):
+                alerts.append(
+                    {
+                        "severity": "warning",
+                        "pool_type": pool_type,
+                        "alert_type": "pool_utilization",
+                        "message": f"{pool_type.title()} pool utilization warning: {metric.utilization_percent:.1f}%",
+                        "value": metric.utilization_percent,
+                        "threshold": self.alert_thresholds.pool_utilization_warning,
+                        "timestamp": metric.timestamp.isoformat(),
+                    }
+                )
 
             # Overflow alerts
             if metric.overflow_percent >= self.alert_thresholds.overflow_critical:
-                alerts.append({
-                    "severity": "critical",
-                    "pool_type": pool_type,
-                    "alert_type": "overflow",
-                    "message": f"{pool_type.title()} pool overflow critical: {metric.overflow_percent:.1f}%",
-                    "value": metric.overflow_percent,
-                    "threshold": self.alert_thresholds.overflow_critical,
-                    "timestamp": metric.timestamp.isoformat()
-                })
+                alerts.append(
+                    {
+                        "severity": "critical",
+                        "pool_type": pool_type,
+                        "alert_type": "overflow",
+                        "message": f"{pool_type.title()} pool overflow critical: {metric.overflow_percent:.1f}%",
+                        "value": metric.overflow_percent,
+                        "threshold": self.alert_thresholds.overflow_critical,
+                        "timestamp": metric.timestamp.isoformat(),
+                    }
+                )
             elif metric.overflow_percent >= self.alert_thresholds.overflow_warning:
-                alerts.append({
-                    "severity": "warning",
-                    "pool_type": pool_type,
-                    "alert_type": "overflow",
-                    "message": f"{pool_type.title()} pool overflow warning: {metric.overflow_percent:.1f}%",
-                    "value": metric.overflow_percent,
-                    "threshold": self.alert_thresholds.overflow_warning,
-                    "timestamp": metric.timestamp.isoformat()
-                })
+                alerts.append(
+                    {
+                        "severity": "warning",
+                        "pool_type": pool_type,
+                        "alert_type": "overflow",
+                        "message": f"{pool_type.title()} pool overflow warning: {metric.overflow_percent:.1f}%",
+                        "value": metric.overflow_percent,
+                        "threshold": self.alert_thresholds.overflow_warning,
+                        "timestamp": metric.timestamp.isoformat(),
+                    }
+                )
 
         # Connection failure alerts
         for pool_type, failures in self.consecutive_failures.items():
             if failures >= self.alert_thresholds.failed_connections_threshold:
-                alerts.append({
-                    "severity": "critical",
-                    "pool_type": pool_type,
-                    "alert_type": "connection_failures",
-                    "message": f"{pool_type.title()} pool has {failures} consecutive connection failures",
-                    "value": failures,
-                    "threshold": self.alert_thresholds.failed_connections_threshold,
-                    "timestamp": datetime.utcnow().isoformat()
-                })
+                alerts.append(
+                    {
+                        "severity": "critical",
+                        "pool_type": pool_type,
+                        "alert_type": "connection_failures",
+                        "message": f"{pool_type.title()} pool has {failures} consecutive connection failures",
+                        "value": failures,
+                        "threshold": self.alert_thresholds.failed_connections_threshold,
+                        "timestamp": datetime.utcnow().isoformat(),
+                    }
+                )
 
         return alerts
 
@@ -289,15 +312,21 @@ class DatabaseMonitor:
 
         # Calculate recent averages (last 10 minutes)
         recent_cutoff = datetime.utcnow() - timedelta(minutes=10)
-        recent_metrics = [m for m in self.metrics_history if m.timestamp >= recent_cutoff]
+        recent_metrics = [
+            m for m in self.metrics_history if m.timestamp >= recent_cutoff
+        ]
 
         recent_averages = {}
         if recent_metrics:
             for pool_type in ["sync", "async"]:
                 pool_metrics = [m for m in recent_metrics if m.pool_type == pool_type]
                 if pool_metrics:
-                    recent_averages[f"{pool_type}_avg_utilization"] = sum(m.utilization_percent for m in pool_metrics) / len(pool_metrics)
-                    recent_averages[f"{pool_type}_avg_overflow"] = sum(m.overflow_percent for m in pool_metrics) / len(pool_metrics)
+                    recent_averages[f"{pool_type}_avg_utilization"] = sum(
+                        m.utilization_percent for m in pool_metrics
+                    ) / len(pool_metrics)
+                    recent_averages[f"{pool_type}_avg_overflow"] = sum(
+                        m.overflow_percent for m in pool_metrics
+                    ) / len(pool_metrics)
 
         return {
             "timestamp": datetime.utcnow().isoformat(),
@@ -308,13 +337,15 @@ class DatabaseMonitor:
             "alert_thresholds": asdict(self.alert_thresholds),
             "history_size": {
                 "metrics": len(self.metrics_history),
-                "health_checks": len(self.health_history)
-            }
+                "health_checks": len(self.health_history),
+            },
         }
 
     async def start_monitoring_loop(self, interval_seconds: int = 30) -> None:
         """Start continuous monitoring loop."""
-        logger.info(f"Starting database monitoring loop with {interval_seconds}s interval")
+        logger.info(
+            f"Starting database monitoring loop with {interval_seconds}s interval"
+        )
 
         while True:
             try:
@@ -333,7 +364,9 @@ class DatabaseMonitor:
                 # Log summary every 5 minutes (10 cycles at 30s interval)
                 if len(self.metrics_history) % 10 == 0:
                     self.get_monitoring_summary()
-                    logger.info(f"Database monitoring summary: {len(alerts)} active alerts")
+                    logger.info(
+                        f"Database monitoring summary: {len(alerts)} active alerts"
+                    )
 
                 await asyncio.sleep(interval_seconds)
 

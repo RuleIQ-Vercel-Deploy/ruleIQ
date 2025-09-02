@@ -21,11 +21,11 @@ def setup_monitoring(
     enable_sentry: bool = True,
     enable_metrics: bool = True,
     enable_health_checks: bool = True,
-    slow_request_threshold: float = 1.0
+    slow_request_threshold: float = 1.0,
 ) -> None:
     """
     Setup comprehensive monitoring for FastAPI application.
-    
+
     Args:
         app: FastAPI application instance
         environment: Environment name (development, staging, production)
@@ -37,14 +37,11 @@ def setup_monitoring(
         slow_request_threshold: Threshold for slow request warnings (seconds)
     """
     # Setup logging
-    setup_logging(
-        log_level=log_level,
-        json_logs=(environment != "development")
-    )
-    
+    setup_logging(log_level=log_level, json_logs=(environment != "development"))
+
     logger = logging.getLogger(__name__)
     logger.info(f"Setting up monitoring for {environment} environment")
-    
+
     # Setup Sentry
     if enable_sentry and sentry_dsn:
         config = SentryConfig(
@@ -52,18 +49,18 @@ def setup_monitoring(
             environment=environment,
             traces_sample_rate=0.1 if environment == "production" else 1.0,
             profiles_sample_rate=0.1 if environment == "production" else 0.5,
-            debug=(environment == "development")
+            debug=(environment == "development"),
         )
-        
+
         if setup_sentry(config):
             logger.info("Sentry integration enabled")
         else:
             logger.warning("Sentry integration failed or skipped")
-    
+
     # Setup error handling
     setup_error_handling(app)
     logger.info("Error handling configured")
-    
+
     # Setup middleware
     setup_middleware(
         app,
@@ -73,39 +70,38 @@ def setup_monitoring(
         enable_metrics=enable_metrics,
         enable_performance=True,
         enable_security_headers=True,
-        slow_request_threshold=slow_request_threshold
+        slow_request_threshold=slow_request_threshold,
     )
     logger.info("Middleware stack configured")
-    
+
     # Setup metrics collection
     if enable_metrics:
         collector = get_metrics_collector()
-        logger.info(f"Metrics collector initialized with {len(collector.metrics)} default metrics")
-    
+        logger.info(
+            f"Metrics collector initialized with {len(collector.metrics)} default metrics"
+        )
+
     # Register monitoring endpoints
     if enable_health_checks or enable_metrics:
         from app.api.monitoring import router as monitoring_router
-        app.include_router(
-            monitoring_router,
-            prefix="/monitoring",
-            tags=["monitoring"]
-        )
+
+        app.include_router(monitoring_router, prefix="/monitoring", tags=["monitoring"])
         logger.info("Monitoring endpoints registered")
-    
+
     # Log monitoring setup completion
     logger.info("Monitoring setup completed successfully")
-    
+
     # Add startup and shutdown events
     @app.on_event("startup")
     async def monitoring_startup():
         """Initialize monitoring on application startup."""
         logger.info("Application starting up")
-        
+
         # Start collecting system metrics
         if enable_metrics:
             import asyncio
             from .metrics import get_metrics_collector
-            
+
             async def collect_system_metrics():
                 """Periodically collect system metrics."""
                 collector = get_metrics_collector()
@@ -116,40 +112,41 @@ def setup_monitoring(
                     except Exception as e:
                         logger.error(f"Error collecting system metrics: {e}")
                         await asyncio.sleep(60)  # Back off on error
-            
+
             # Start background task
             asyncio.create_task(collect_system_metrics())
             logger.info("System metrics collection started")
-    
+
     @app.on_event("shutdown")
     async def monitoring_shutdown():
         """Cleanup monitoring on application shutdown."""
         logger.info("Application shutting down")
-        
+
         # Flush any pending logs
         for handler in logger.handlers:
             handler.flush()
-        
+
         # Flush Sentry events
         if enable_sentry:
             import sentry_sdk
+
             client = sentry_sdk.get_client()
             if client:
                 client.flush(timeout=2.0)
                 logger.info("Sentry events flushed")
-        
+
         logger.info("Monitoring cleanup completed")
 
 
 def configure_from_settings(app: FastAPI) -> None:
     """
     Configure monitoring from application settings.
-    
+
     Args:
         app: FastAPI application instance
     """
     from config.settings import settings
-    
+
     setup_monitoring(
         app=app,
         environment=getattr(settings, "environment", "development"),
@@ -158,5 +155,5 @@ def configure_from_settings(app: FastAPI) -> None:
         enable_sentry=getattr(settings, "enable_sentry", True),
         enable_metrics=getattr(settings, "enable_metrics", True),
         enable_health_checks=getattr(settings, "enable_health_checks", True),
-        slow_request_threshold=getattr(settings, "slow_request_threshold", 1.0)
+        slow_request_threshold=getattr(settings, "slow_request_threshold", 1.0),
     )

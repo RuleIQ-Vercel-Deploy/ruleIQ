@@ -81,7 +81,9 @@ class TestAIFollowupEndpoint:
         """Test AI followup endpoint calls ComplianceAssistant correctly."""
 
         # Mock only the AI service call to avoid external API dependencies
-        with patch.object(ComplianceAssistant, "generate_assessment_followup") as mock_followup:
+        with patch.object(
+            ComplianceAssistant, "generate_assessment_followup"
+        ) as mock_followup:
             mock_followup.return_value = {
                 "questions": [
                     {
@@ -113,7 +115,10 @@ class TestAIFollowupEndpoint:
                 "/api/ai/assessments/followup",
                 json={
                     "framework_id": "gdpr",
-                    "current_answers": {"company_size": "50-100", "industry": "technology"},
+                    "current_answers": {
+                        "company_size": "50-100",
+                        "industry": "technology",
+                    },
                     "business_context": {"progress": 50},
                     "max_questions": 3,
                 },
@@ -141,7 +146,9 @@ class TestAIAnalysisEndpoint:
         """Test AI analysis endpoint calls ComplianceAssistant correctly."""
 
         # Mock only the AI service call to avoid external API dependencies
-        with patch.object(ComplianceAssistant, "analyze_assessment_results") as mock_analysis:
+        with patch.object(
+            ComplianceAssistant, "analyze_assessment_results"
+        ) as mock_analysis:
             mock_analysis.return_value = {
                 "gaps": [
                     {
@@ -182,7 +189,10 @@ class TestAIAnalysisEndpoint:
                 "/api/ai/assessments/analysis",
                 json={
                     "framework_id": "gdpr",
-                    "assessment_results": {"privacy_policy": "missing", "data_mapping": "partial"},
+                    "assessment_results": {
+                        "privacy_policy": "missing",
+                        "data_mapping": "partial",
+                    },
                     "business_profile_id": str(sample_business_profile.id),
                 },
                 headers=authenticated_headers,
@@ -253,7 +263,10 @@ class TestAIRecommendationsEndpoint:
                 "/api/ai/assessments/recommendations",
                 json={
                     "gaps": [{"id": "gap1", "title": "Missing data mapping"}],
-                    "business_profile": {"name": "Test Company", "industry": "technology"},
+                    "business_profile": {
+                        "name": "Test Company",
+                        "industry": "technology",
+                    },
                     "existing_policies": ["security_policy"],
                     "industry_context": "technology",
                     "timeline_preferences": "standard",

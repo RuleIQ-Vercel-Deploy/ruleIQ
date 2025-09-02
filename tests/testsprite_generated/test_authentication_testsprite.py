@@ -8,6 +8,7 @@ import requests
 from fastapi.testclient import TestClient
 from main import app
 
+
 class TestAuthenticationFlow:
     """Authentication tests generated from TestSprite plans"""
 
@@ -20,7 +21,7 @@ class TestAuthenticationFlow:
         return {
             "email": "testsprite@example.com",
             "password": "TestSprite123!",
-            "full_name": "TestSprite User"
+            "full_name": "TestSprite User",
         }
 
     def test_user_registration_valid_data(self, client, test_user_data):
@@ -49,7 +50,7 @@ class TestAuthenticationFlow:
         # Then login
         login_data = {
             "email": test_user_data["email"],
-            "password": test_user_data["password"]
+            "password": test_user_data["password"],
         }
         response = client.post("/api/v1/auth/login", json=login_data)
 
@@ -66,10 +67,13 @@ class TestAuthenticationFlow:
         """
         # Register and login
         client.post("/api/v1/auth/register", json=test_user_data)
-        login_response = client.post("/api/v1/auth/login", json={
-            "email": test_user_data["email"],
-            "password": test_user_data["password"]
-        })
+        login_response = client.post(
+            "/api/v1/auth/login",
+            json={
+                "email": test_user_data["email"],
+                "password": test_user_data["password"],
+            },
+        )
 
         token = login_response.json()["access_token"]
         headers = {"Authorization": f"Bearer {token}"}
@@ -80,4 +84,3 @@ class TestAuthenticationFlow:
 
         user_data = response.json()
         assert user_data["email"] == test_user_data["email"]
-

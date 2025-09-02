@@ -25,19 +25,18 @@ const COMPLIANCE_KEY = 'compliance';
 
 export const complianceKeys = {
   all: [COMPLIANCE_KEY] as const,
-  status: (businessProfileId?: string) => 
+  status: (businessProfileId?: string) =>
     createQueryKey(COMPLIANCE_KEY, 'status', { businessProfileId }),
-  score: (businessProfileId?: string, frameworkId?: string) => 
+  score: (businessProfileId?: string, frameworkId?: string) =>
     createQueryKey(COMPLIANCE_KEY, 'score', { businessProfileId, frameworkId }),
-  requirements: (frameworkId: string) => 
+  requirements: (frameworkId: string) =>
     createQueryKey(COMPLIANCE_KEY, 'requirements', { frameworkId }),
-  summary: (businessProfileId?: string) => 
+  summary: (businessProfileId?: string) =>
     createQueryKey(COMPLIANCE_KEY, 'summary', { businessProfileId }),
-  gaps: (businessProfileId?: string, frameworkId?: string) => 
+  gaps: (businessProfileId?: string, frameworkId?: string) =>
     createQueryKey(COMPLIANCE_KEY, 'gaps', { businessProfileId, frameworkId }),
-  tasks: (params?: PaginationParams) => 
-    createQueryKey(COMPLIANCE_KEY, 'tasks', params),
-  evidence: (requirementId: string) => 
+  tasks: (params?: PaginationParams) => createQueryKey(COMPLIANCE_KEY, 'tasks', params),
+  evidence: (requirementId: string) =>
     createQueryKey(COMPLIANCE_KEY, 'evidence', { requirementId }),
   frameworks: () => createQueryKey(COMPLIANCE_KEY, 'frameworks'),
 };
@@ -190,11 +189,7 @@ export function useUpdateComplianceTask(
 
 // Hook to attach evidence to requirement
 export function useAttachEvidence(
-  options?: BaseMutationOptions<
-    void,
-    unknown,
-    { requirementId: string; evidenceId: string }
-  >,
+  options?: BaseMutationOptions<void, unknown, { requirementId: string; evidenceId: string }>,
 ) {
   const queryClient = useQueryClient();
 
@@ -225,9 +220,11 @@ export function useRunComplianceCheck(
     onSuccess: (_, variables) => {
       // Invalidate all compliance data
       queryClient.invalidateQueries({ queryKey: complianceKeys.all });
-      queryClient.invalidateQueries({ queryKey: complianceKeys.status(variables.businessProfileId) });
-      queryClient.invalidateQueries({ 
-        queryKey: complianceKeys.score(variables.businessProfileId, variables.frameworkId) 
+      queryClient.invalidateQueries({
+        queryKey: complianceKeys.status(variables.businessProfileId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: complianceKeys.score(variables.businessProfileId, variables.frameworkId),
       });
     },
     ...options,
@@ -237,15 +234,14 @@ export function useRunComplianceCheck(
 // Hook to export compliance report
 export function useExportComplianceReport() {
   return useMutation({
-    mutationFn: ({ 
-      businessProfileId, 
-      frameworkId, 
-      format 
-    }: { 
-      businessProfileId?: string; 
-      frameworkId?: string; 
-      format: 'pdf' | 'excel' | 'csv' 
-    }) =>
-      complianceService.exportComplianceReport(businessProfileId, frameworkId, format),
+    mutationFn: ({
+      businessProfileId,
+      frameworkId,
+      format,
+    }: {
+      businessProfileId?: string;
+      frameworkId?: string;
+      format: 'pdf' | 'excel' | 'csv';
+    }) => complianceService.exportComplianceReport(businessProfileId, frameworkId, format),
   });
 }

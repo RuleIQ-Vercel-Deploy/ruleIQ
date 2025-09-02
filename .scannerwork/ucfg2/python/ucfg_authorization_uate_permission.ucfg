@@ -1,0 +1,194 @@
+
+7authorization.AuthorizationService._evaluate_permissionH
+>/home/omar/Documents/ruleIQ/services/security/authorization.pyy y(""2*(
+13
+à à("
+
+à à(
+
+True*ñ
+2
+Å Å(1˜Ù
+
+Ñ Ñ(R
+%7*B
+
+__unknown_file (&$
+"authorization.AuthorizationService*$
+
+__unknown_file (
+
+user*-
+
+__unknown_file (
+
+resource_type*/
+
+__unknown_file (
+
+permission_type2_check_role_permission*
+15
+9
+11*ñ
+14
+á á(TÌÍ
+
+á á(T
+%4*B
+
+__unknown_file (&$
+"authorization.AuthorizationService*$
+
+__unknown_file (
+
+user*-
+
+__unknown_file (
+
+resource_type*+
+
+__unknown_file (
+
+resource_id2_check_ownership"
+
+á á(T
+
+%4*°
+15
+Ü Ü(Iñì
+
+Ü) Ü(I
+%5*B
+
+__unknown_file (&$
+"authorization.AuthorizationService*$
+
+__unknown_file (
+
+user2_get_user_permissionslj
+
+Ü Ü(I
+%6*"
+
+__unknown_file (
+
+%5*$
+
+__unknown_file (
+:own2__contains__*
+13
+14*(
+4
+û û("
+
+û û(	
+
+False*'
+5
+ú ú("
+
+ú ú(
+
+True*Ω
+6
+ô õ(£†
+
+ô õ(
+%1*B
+
+__unknown_file (&$
+"authorization.AuthorizationService*$
+
+__unknown_file (
+
+user*-
+
+__unknown_file (
+
+resource_type*/
+
+__unknown_file (
+
+permission_type*'
+
+__unknown_file (
+	
+context2_check_dynamic_permission*
+4
+5*'
+8
+ï ï("
+
+ï ï(
+
+True*∆
+9
+í î(	©¶
+
+í î(	
+%2*B
+
+__unknown_file (&$
+"authorization.AuthorizationService*$
+
+__unknown_file (
+
+user*-
+
+__unknown_file (
+
+resource_type*/
+
+__unknown_file (
+
+permission_type*+
+
+__unknown_file (
+
+resource_id2_check_delegated_permission*	
+4
+6
+8*(
+10
+è è("
+
+è è(
+
+True*ƒ
+11
+å é(®•
+
+å é(
+%3*B
+
+__unknown_file (&$
+"authorization.AuthorizationService*$
+
+__unknown_file (
+
+user*-
+
+__unknown_file (
+
+resource_type*/
+
+__unknown_file (
+
+permission_type*+
+
+__unknown_file (
+
+resource_id2_check_resource_permission*
+9
+10:
+{ {(
+user:
+| |(
+resource_type:
+} }(
+permission_type:
+~ ~()
+resource_id:
+ (0	
+contextB&$
+"authorization.AuthorizationServiceH

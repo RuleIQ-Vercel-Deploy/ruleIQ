@@ -8,11 +8,12 @@ import requests
 import sys
 from typing import Optional
 
+
 def test_frontend_csrf() -> Optional[bool]:
     """Test CSRF token endpoint"""
     print("🔐 Testing CSRF token endpoint...")
     try:
-        response = requests.get('http://localhost:3000/api/csrf-token', timeout=10)
+        response = requests.get("http://localhost:3000/api/csrf-token", timeout=10)
         if response.status_code == 200:
             print("✅ CSRF token endpoint working")
             return True
@@ -23,32 +24,30 @@ def test_frontend_csrf() -> Optional[bool]:
         print(f"❌ CSRF endpoint error: {e}")
         return False
 
+
 def test_backend_auth() -> Optional[bool]:
     """Test backend authentication"""
     print("🔐 Testing backend authentication...")
     try:
         # Test login
-        login_data = {
-            'username': 'test@example.com',
-            'password': 'testpassword123'
-        }
+        login_data = {"username": "test@example.com", "password": "testpassword123"}
         response = requests.post(
-            'http://localhost:8000/api/v1/auth/token',
+            "http://localhost:8000/api/v1/auth/token",
             data=login_data,
-            headers={'Content-Type': 'application/x-www-form-urlencoded'},
-            timeout=10
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            timeout=10,
         )
 
         if response.status_code == 200:
             token_data = response.json()
-            access_token = token_data.get('access_token')
+            access_token = token_data.get("access_token")
             print("✅ Backend login successful")
 
             # Test /me endpoint
             me_response = requests.get(
-                'http://localhost:8000/api/v1/auth/me',
-                headers={'Authorization': f'Bearer {access_token}'},
-                timeout=10
+                "http://localhost:8000/api/v1/auth/me",
+                headers={"Authorization": f"Bearer {access_token}"},
+                timeout=10,
             )
 
             if me_response.status_code == 200:
@@ -67,13 +66,14 @@ def test_backend_auth() -> Optional[bool]:
         print(f"❌ Backend auth error: {e}")
         return False
 
+
 def test_page_loads():
     """Test that key pages load"""
     print("📱 Testing page loads...")
     pages = [
-        ('http://localhost:3000/', 'Home page'),
-        ('http://localhost:3000/login', 'Login page'),
-        ('http://localhost:3000/register', 'Register page')
+        ("http://localhost:3000/", "Home page"),
+        ("http://localhost:3000/login", "Login page"),
+        ("http://localhost:3000/register", "Register page"),
     ]
 
     all_passed = True
@@ -90,6 +90,7 @@ def test_page_loads():
             all_passed = False
 
     return all_passed
+
 
 def main() -> int:
     """Run all validation tests"""
@@ -119,5 +120,6 @@ def main() -> int:
         print("🔧 Please fix issues before running TestSprite")
         return 1
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     sys.exit(main())

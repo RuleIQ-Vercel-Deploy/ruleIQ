@@ -1,0 +1,293 @@
+
+Rservices.ai.evaluation.tools.ingestion_fixed.GoldenDatasetIngestion.search_similarW
+K/home/omar/Documents/ruleIQ/services/ai/evaluation/tools/ingestion_fixed.py¨ ¨("2*„
+2
+© ©(@˜
+•
+
+« «(0
+%14"__id*z
+
+__unknown_file (^*\E
+Cservices.ai.evaluation.tools.ingestion_fixed.GoldenDatasetIngestion"
+embedding_serviceus
+
+« «(J
+%15*#
+
+__unknown_file (
+
+%14*%
+
+__unknown_file (	
+
+query2generate_embeddingL
+J
+
+« «(J
+query_embedding"__id*#
+
+__unknown_file (
+
+%15Œ
+‰
+
+­ ­(
+%16"__id*n
+
+__unknown_file (R*PE
+Cservices.ai.evaluation.tools.ingestion_fixed.GoldenDatasetIngestion"
+neo4jFD
+
+­ ­((
+%17*#
+
+__unknown_file (
+
+%162
+get_driverC
+A
+
+­ ­((
+driver"__id*#
+
+__unknown_file (
+
+%17
+
+® ®(
+%18"listD
+B
+
+® ®(	
+results"__id*#
+
+__unknown_file (
+
+%18FD
+
+° °(
+%19*&
+
+__unknown_file (
+
+
+driver2sessionD
+B
+
+° °((	
+session"__id*#
+
+__unknown_file (
+
+%19*
+4
+7**
+4
+É É("
+
+É É(
+	
+results*þ
+6
+Á Ç(
+
+Á Ç(
+%1"dict}{
+
+Â  Â(2
+%2"__mapGet*&
+
+__unknown_file (
+
+
+record*(
+
+__unknown_file (
+
+chunk_id2__getitem__‘
+Ž
+
+Â Â(2
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*(
+
+__unknown_file (
+
+chunk_id*"
+
+__unknown_file (
+
+%2|z
+
+Ã Ã(0
+%4"__mapGet*&
+
+__unknown_file (
+
+
+record*'
+
+__unknown_file (	
+content2__getitem__
+
+
+Ã Ã(0
+%5"__mapSet*"
+
+__unknown_file (
+
+%1*'
+
+__unknown_file (	
+content*"
+
+__unknown_file (
+
+%4{y
+
+Ä Ä(.
+%6"__mapGet*&
+
+__unknown_file (
+
+
+record*&
+
+__unknown_file (
+
+doc_id2__getitem__
+Œ
+
+Ä Ä(.
+%7"__mapSet*"
+
+__unknown_file (
+
+%1*&
+
+__unknown_file (
+
+doc_id*"
+
+__unknown_file (
+
+%6{y
+
+Å Å(.
+%8"__mapGet*&
+
+__unknown_file (
+
+
+record*&
+
+__unknown_file (
+
+source2__getitem__
+Œ
+
+Å Å(.
+%9"__mapSet*"
+
+__unknown_file (
+
+%1*&
+
+__unknown_file (
+
+source*"
+
+__unknown_file (
+
+%8{y
+
+Æ Æ(,
+%10"__mapGet*&
+
+__unknown_file (
+
+
+record*%
+
+__unknown_file (	
+score2__getitem__
+
+
+Æ Æ(,
+%11"__mapSet*"
+
+__unknown_file (
+
+%1*%
+
+__unknown_file (	
+score*#
+
+__unknown_file (
+
+%10wu
+
+Á Ç(
+%12"list.append*'
+
+__unknown_file (
+	
+results*"
+
+__unknown_file (
+
+%12append*
+4
+6*Ž
+7
+± ¾(>¯¬
+
+± ¾(>
+%13*'
+
+__unknown_file (
+	
+session*¬
+
+__unknown_file (Œ
+‰
+                CALL db.index.vector.queryNodes(
+                    'golden_chunk_embeddings',
+                    $limit,
+                    $query_embedding
+                ) YIELD node, score
+                MATCH (d:GoldenDocument)-[:HAS_CHUNK]->(node)
+                RETURN node.chunk_id as chunk_id,
+                       node.content as content,
+                       d.doc_id as doc_id,
+                       d.source as source,
+                       score
+                ORDER BY score DESC
+            2run:
+limit	
+
+limit:&
+query_embedding
+
+query_embeddingC
+A
+
+± ¾(>
+result"__id*#
+
+__unknown_file (
+
+%13*
+4
+6:
+
+¨ ¨('
+query:
+
+¨) ¨(7
+limitBGE
+Cservices.ai.evaluation.tools.ingestion_fixed.GoldenDatasetIngestionH

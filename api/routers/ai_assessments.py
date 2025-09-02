@@ -49,6 +49,7 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["AI Assessment Assistant"])
 
+
 # Request/Response Models
 class AIHelpRequest(BaseModel):
     question_id: str
@@ -56,6 +57,7 @@ class AIHelpRequest(BaseModel):
     framework_id: str
     section_id: Optional[str] = None
     user_context: Optional[Dict[str, Any]] = None
+
 
 class AIHelpResponse(BaseModel):
     guidance: str
@@ -66,11 +68,13 @@ class AIHelpResponse(BaseModel):
     request_id: str
     generated_at: str
 
+
 class AIFollowUpRequest(BaseModel):
     framework_id: str
     current_answers: Dict[str, Any]
     business_context: Optional[Dict[str, Any]] = None
     max_questions: int = Field(default=3, ge=1, le=10)
+
 
 class AIFollowUpQuestion(BaseModel):
     id: str
@@ -80,16 +84,19 @@ class AIFollowUpQuestion(BaseModel):
     reasoning: str
     priority: str
 
+
 class AIFollowUpResponse(BaseModel):
     questions: List[AIFollowUpQuestion]
     total_generated: int
     request_id: str
     generated_at: str
 
+
 class AIAnalysisRequest(BaseModel):
     assessment_results: Dict[str, Any]
     framework_id: str
     business_profile_id: str
+
 
 class Gap(BaseModel):
     id: str
@@ -99,6 +106,7 @@ class Gap(BaseModel):
     impact: str
     current_state: str
     target_state: str
+
 
 class Recommendation(BaseModel):
     id: str
@@ -110,6 +118,7 @@ class Recommendation(BaseModel):
     resources: Optional[List[str]] = None
     implementation_steps: Optional[List[str]] = None
 
+
 class AIAnalysisResponse(BaseModel):
     gaps: List[Gap]
     recommendations: List[Recommendation]
@@ -119,12 +128,14 @@ class AIAnalysisResponse(BaseModel):
     request_id: str
     generated_at: str
 
+
 class AIRecommendationRequest(BaseModel):
     gaps: List[Dict[str, Any]]
     business_profile: Dict[str, Any]
     existing_policies: Optional[List[str]] = None
     industry_context: Optional[str] = None
     timeline_preferences: Optional[str] = "standard"
+
 
 class ImplementationPhase(BaseModel):
     phase_number: int
@@ -133,10 +144,12 @@ class ImplementationPhase(BaseModel):
     tasks: List[str]
     dependencies: List[str]
 
+
 class ImplementationPlan(BaseModel):
     phases: List[ImplementationPhase]
     total_timeline_weeks: int
     resource_requirements: List[str]
+
 
 class AIRecommendationResponse(BaseModel):
     recommendations: List[Recommendation]
@@ -145,6 +158,7 @@ class AIRecommendationResponse(BaseModel):
     request_id: str
     generated_at: str
 
+
 class AIFeedbackRequest(BaseModel):
     interaction_id: str
     helpful: bool
@@ -152,12 +166,14 @@ class AIFeedbackRequest(BaseModel):
     comments: Optional[str] = None
     improvement_suggestions: Optional[List[str]] = None
 
+
 class AIMetricsResponse(BaseModel):
     response_times: Dict[str, float]
     accuracy_score: float
     user_satisfaction: float
     total_interactions: int
     quota_usage: Dict[str, Any]
+
 
 # Streaming Response Models
 class StreamingChunk(BaseModel):
@@ -170,6 +186,7 @@ class StreamingChunk(BaseModel):
     )
     timestamp: str = Field(default_factory=lambda: datetime.utcnow().isoformat())
 
+
 class StreamingMetadata(BaseModel):
     """Metadata for streaming response."""
 
@@ -179,13 +196,14 @@ class StreamingMetadata(BaseModel):
     started_at: str
     stream_type: str  # "analysis", "recommendations", "help"
 
+
 # Helper function to get business profile with ownership check
 async def get_user_business_profile(
     user: User, db: AsyncSession, business_profile_id: Optional[str] = None
 ) -> BusinessProfile:
     """Get business profile for the current user with ownership check."""
     from services.data_access import DataAccess
-    
+
     if business_profile_id:
         # Get specific business profile with ownership check
         profile = await DataAccess.ensure_owner_async(
@@ -197,13 +215,15 @@ async def get_user_business_profile(
             select(BusinessProfile).where(BusinessProfile.user_id == user.id)
         )
         profile = result.scalars().first()
-        
+
         if not profile:
             raise NotFoundException("Business profile", str(user.id))
 
     return profile
 
+
 # AI Assessment Endpoints
+
 
 @router.post("/{framework_id}/help", response_model=AIHelpResponse)
 async def get_question_help(
@@ -220,7 +240,7 @@ async def get_question_help(
     """
     # Check rate limit
     await RateLimitService.check_rate_limit(db, current_user, "ai_assessment")
-    
+
     try:
         # Get business profile for context
         profile = await get_user_business_profile(current_user, db)
@@ -240,10 +260,12 @@ async def get_question_help(
 
         # Track usage for rate limiting
         await RateLimitService.track_usage(
-            db, current_user, "ai_assessment",
-            metadata={"framework_id": framework_id, "question_id": request.question_id}
+            db,
+            current_user,
+            "ai_assessment",
+            metadata={"framework_id": framework_id, "question_id": request.question_id},
         )
-        
+
         # Record request for statistics
         ai_rate_limit_stats.record_request("help", rate_limited=False)
 
@@ -299,6 +321,7 @@ async def get_question_help(
             detail="Unable to provide AI assistance at this time",
         )
 
+
 @router.post("/{framework_id}/help/stream")
 async def get_question_help_stream(
     framework_id: str,
@@ -334,7 +357,9 @@ async def get_question_help_stream(
 
             # Send metadata chunk
             metadata_chunk = StreamingChunk(
-                chunk_id="metadata", content=metadata.model_dump_json(), chunk_type="metadata"
+                chunk_id="metadata",
+                content=metadata.model_dump_json(),
+                chunk_type="metadata",
             )
             yield f"data: {metadata_chunk.model_dump_json()}\n\n"
 
@@ -358,14 +383,18 @@ async def get_question_help_stream(
 
             # Send completion chunk
             completion_chunk = StreamingChunk(
-                chunk_id="complete", content="Help guidance complete", chunk_type="complete"
+                chunk_id="complete",
+                content="Help guidance complete",
+                chunk_type="complete",
             )
             yield f"data: {completion_chunk.model_dump_json()}\n\n"
 
         except AIServiceException as e:
             logger.error(f"AI service error in streaming question help: {e}")
             error_chunk = StreamingChunk(
-                chunk_id="error", content=f"Unable to provide help: {e.message}", chunk_type="error"
+                chunk_id="error",
+                content=f"Unable to provide help: {e.message}",
+                chunk_type="error",
             )
             yield f"data: {error_chunk.model_dump_json()}\n\n"
         except Exception as e:
@@ -386,6 +415,7 @@ async def get_question_help_stream(
             "X-Accel-Buffering": "no",  # Disable nginx buffering
         },
     )
+
 
 @router.post("/self-review", summary="AI self-review of assessment")
 async def ai_self_review(
@@ -414,6 +444,7 @@ async def ai_self_review(
         "timestamp": datetime.utcnow().isoformat(),
     }
 
+
 @router.post("/quick-confidence-check", summary="Quick AI confidence check")
 async def quick_confidence_check(
     responses: dict,
@@ -440,6 +471,7 @@ async def quick_confidence_check(
         "timestamp": datetime.utcnow().isoformat(),
     }
 
+
 @router.post("/assessments/followup", response_model=AIFollowUpResponse)
 async def generate_assessment_followup_questions(
     request: AIFollowUpRequest,
@@ -454,11 +486,14 @@ async def generate_assessment_followup_questions(
     # Delegate to the existing followup endpoint logic
     return await generate_followup_questions(request, current_user, db, _)
 
+
 @router.get("/assessments/metrics", response_model=AIMetricsResponse)
 async def get_assessment_ai_metrics(
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
-    days: int = Query(default=30, ge=1, le=365, description="Number of days to include in metrics"),
+    days: int = Query(
+        default=30, ge=1, le=365, description="Number of days to include in metrics"
+    ),
 ):
     """
     Get AI metrics specifically for assessments.
@@ -466,6 +501,7 @@ async def get_assessment_ai_metrics(
     """
     # Delegate to the existing metrics endpoint logic
     return await get_ai_metrics(current_user, db, days)
+
 
 @router.post("/followup", response_model=AIFollowUpResponse)
 async def generate_followup_questions(
@@ -514,7 +550,9 @@ async def generate_followup_questions(
         return AIFollowUpResponse(
             questions=questions,
             total_generated=len(questions),
-            request_id=followup_response.get("request_id", f"followup_{request.framework_id}"),
+            request_id=followup_response.get(
+                "request_id", f"followup_{request.framework_id}"
+            ),
             generated_at=followup_response.get("generated_at", ""),
         )
 
@@ -564,6 +602,7 @@ async def generate_followup_questions(
             detail="Unable to generate follow-up questions at this time",
         )
 
+
 @router.post("/analysis", response_model=AIAnalysisResponse)
 async def analyze_assessment_results(
     request: AIAnalysisRequest,
@@ -579,7 +618,9 @@ async def analyze_assessment_results(
     """
     try:
         # Get business profile
-        profile = await get_user_business_profile(current_user, db, request.business_profile_id)
+        profile = await get_user_business_profile(
+            current_user, db, request.business_profile_id
+        )
 
         # Initialize AI assistant
         assistant = ComplianceAssistant(db)
@@ -626,7 +667,9 @@ async def analyze_assessment_results(
             risk_assessment=analysis_response["risk_assessment"],
             compliance_insights=analysis_response["compliance_insights"],
             evidence_requirements=analysis_response["evidence_requirements"],
-            request_id=analysis_response.get("request_id", f"analysis_{request.framework_id}"),
+            request_id=analysis_response.get(
+                "request_id", f"analysis_{request.framework_id}"
+            ),
             generated_at=analysis_response.get("generated_at", ""),
         )
 
@@ -646,6 +689,7 @@ async def analyze_assessment_results(
             detail="Unable to analyze assessment results at this time",
         )
 
+
 @router.post("/analysis/stream")
 async def analyze_assessment_results_stream(
     request: AIAnalysisRequest,
@@ -664,7 +708,9 @@ async def analyze_assessment_results_stream(
     async def generate_analysis_stream():
         try:
             # Get business profile
-            profile = await get_user_business_profile(current_user, db, request.business_profile_id)
+            profile = await get_user_business_profile(
+                current_user, db, request.business_profile_id
+            )
 
             # Initialize AI assistant
             assistant = ComplianceAssistant(db)
@@ -680,7 +726,9 @@ async def analyze_assessment_results_stream(
 
             # Send metadata chunk
             metadata_chunk = StreamingChunk(
-                chunk_id="metadata", content=metadata.model_dump_json(), chunk_type="metadata"
+                chunk_id="metadata",
+                content=metadata.model_dump_json(),
+                chunk_type="metadata",
             )
             yield f"data: {metadata_chunk.model_dump_json()}\n\n"
 
@@ -731,6 +779,7 @@ async def analyze_assessment_results_stream(
             "X-Accel-Buffering": "no",  # Disable nginx buffering
         },
     )
+
 
 async def generate_personalized_recommendations(
     request: AIRecommendationRequest,
@@ -787,15 +836,21 @@ async def generate_personalized_recommendations(
 
         implementation_plan = ImplementationPlan(
             phases=phases,
-            total_timeline_weeks=rec_response["implementation_plan"]["total_timeline_weeks"],
-            resource_requirements=rec_response["implementation_plan"]["resource_requirements"],
+            total_timeline_weeks=rec_response["implementation_plan"][
+                "total_timeline_weeks"
+            ],
+            resource_requirements=rec_response["implementation_plan"][
+                "resource_requirements"
+            ],
         )
 
         return AIRecommendationResponse(
             recommendations=recommendations,
             implementation_plan=implementation_plan,
             success_metrics=rec_response["success_metrics"],
-            request_id=rec_response.get("request_id", f"recommendations_{current_user.id}"),
+            request_id=rec_response.get(
+                "request_id", f"recommendations_{current_user.id}"
+            ),
             generated_at=rec_response.get("generated_at", ""),
         )
 
@@ -811,6 +866,7 @@ async def generate_personalized_recommendations(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Unable to generate recommendations at this time",
         )
+
 
 @router.post("/recommendations/stream")
 async def generate_personalized_recommendations_stream(
@@ -851,7 +907,9 @@ async def generate_personalized_recommendations_stream(
 
             # Send metadata chunk
             metadata_chunk = StreamingChunk(
-                chunk_id="metadata", content=metadata.model_dump_json(), chunk_type="metadata"
+                chunk_id="metadata",
+                content=metadata.model_dump_json(),
+                chunk_type="metadata",
             )
             yield f"data: {metadata_chunk.model_dump_json()}\n\n"
 
@@ -873,10 +931,12 @@ async def generate_personalized_recommendations_stream(
 
             # Send completion chunk
             completion_chunk = StreamingChunk(
-                chunk_id="complete", content="Recommendations complete", chunk_type="complete"
+                chunk_id="complete",
+                content="Recommendations complete",
+                chunk_type="complete",
             )
             yield f"data: {completion_chunk.model_dump_json()}\n\n"
-            
+
             # Track usage for rate limiting after successful completion
             await RateLimitService.track_usage(
                 db,
@@ -885,8 +945,8 @@ async def generate_personalized_recommendations_stream(
                 metadata={
                     "framework_id": getattr(request, "framework_id", "unknown"),
                     "business_profile_id": str(profile.id),
-                    "chunks_generated": chunk_counter
-                }
+                    "chunks_generated": chunk_counter,
+                },
             )
 
         except AIServiceException as e:
@@ -915,6 +975,7 @@ async def generate_personalized_recommendations_stream(
             "X-Accel-Buffering": "no",  # Disable nginx buffering
         },
     )
+
 
 @router.post("/feedback")
 async def submit_ai_feedback(
@@ -948,10 +1009,13 @@ async def submit_ai_feedback(
             detail="Unable to submit feedback at this time",
         )
 
+
 async def get_ai_metrics(
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
-    days: int = Query(default=30, ge=1, le=365, description="Number of days to include in metrics"),
+    days: int = Query(
+        default=30, ge=1, le=365, description="Number of days to include in metrics"
+    ),
 ):
     """
     Get AI performance metrics for admin users.
@@ -987,8 +1051,11 @@ async def get_ai_metrics(
             detail="Unable to retrieve AI metrics at this time",
         )
 
+
 @router.get("/rate-limit-stats")
-async def get_rate_limit_statistics(current_user: User = Depends(get_current_active_user)):
+async def get_rate_limit_statistics(
+    current_user: User = Depends(get_current_active_user),
+):
     """
     Get AI rate limiting statistics.
 
@@ -1022,8 +1089,11 @@ async def get_rate_limit_statistics(current_user: User = Depends(get_current_act
             detail="Failed to retrieve rate limit statistics",
         )
 
+
 # Helper methods for AI service integration
-async def _get_mock_guidance_response(question_text: str, framework: str) -> Dict[str, Any]:
+async def _get_mock_guidance_response(
+    question_text: str, framework: str
+) -> Dict[str, Any]:
     """Mock AI guidance response - replace with actual AI service call"""
     return {
         "guidance": (
@@ -1032,7 +1102,11 @@ async def _get_mock_guidance_response(question_text: str, framework: str) -> Dic
             "and that all stakeholders understand their responsibilities."
         ),
         "confidence_score": 0.85,
-        "related_topics": ["Documentation", "Policy Management", "Stakeholder Training"],
+        "related_topics": [
+            "Documentation",
+            "Policy Management",
+            "Stakeholder Training",
+        ],
         "follow_up_suggestions": [
             "Do you have documented procedures for this process?",
             "How often do you review and update these policies?",
@@ -1042,6 +1116,7 @@ async def _get_mock_guidance_response(question_text: str, framework: str) -> Dic
         "request_id": f"help_{framework}_{hash(question_text) % 10000}",
         "generated_at": datetime.utcnow().isoformat(),
     }
+
 
 async def _get_mock_help_response(question_text: str, framework: str) -> Dict[str, Any]:
     """Mock AI help response for fallback scenarios"""
@@ -1053,13 +1128,19 @@ async def _get_mock_help_response(question_text: str, framework: str) -> Dict[st
         ),
         "confidence_score": 0.5,
         "related_topics": [framework, "compliance guidance"],
-        "follow_up_suggestions": ["Review framework documentation", "Consult compliance expert"],
+        "follow_up_suggestions": [
+            "Review framework documentation",
+            "Consult compliance expert",
+        ],
         "source_references": [f"{framework} official documentation"],
         "request_id": f"mock_help_{framework}_{hash(question_text) % 10000}",
         "generated_at": datetime.utcnow().isoformat(),
     }
 
-async def _get_mock_followup_response(framework: str, answers: Dict[str, Any]) -> Dict[str, Any]:
+
+async def _get_mock_followup_response(
+    framework: str, answers: Dict[str, Any]
+) -> Dict[str, Any]:
     """Mock follow-up questions response - replace with actual AI service call"""
     return {
         "questions": [
@@ -1083,10 +1164,13 @@ async def _get_mock_followup_response(framework: str, answers: Dict[str, Any]) -
         "generated_at": datetime.utcnow().isoformat(),
     }
 
+
 # AI Health and Circuit Breaker Endpoints
 
+
 async def get_ai_service_health(
-    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
 ) -> Dict[str, Any]:
     """
     Get comprehensive AI service health status including circuit breaker states.
@@ -1099,9 +1183,9 @@ async def get_ai_service_health(
 
         # Get overall health
         health_status = {
-            "service_status": "healthy"
-            if circuit_status["overall_state"] == "CLOSED"
-            else "degraded",
+            "service_status": (
+                "healthy" if circuit_status["overall_state"] == "CLOSED" else "degraded"
+            ),
             "circuit_breaker": circuit_status,
             "timestamp": datetime.utcnow().isoformat(),
             "uptime_percentage": 99.5,  # Mock - calculate from actual metrics
@@ -1117,20 +1201,20 @@ async def get_ai_service_health(
             detail="Failed to retrieve AI service health",
         )
 
-# REMOVED: Duplicate endpoint
-# REMOVED: Duplicate endpoint
-# # @router.get("/circuit-breaker/status")
-# # async def get_circuit_breaker_status(
-# #     current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
-# # ) -> Dict[str, Any]:
-# #     """
-# #     Get detailed circuit breaker status for all AI models.
-# #     """
-# #     try:
-# #         assistant = ComplianceAssistant(db)
-# #         circuit_status = assistant.circuit_breaker.get_health_status()
-# #
-#
+        # REMOVED: Duplicate endpoint
+        # REMOVED: Duplicate endpoint
+        # # @router.get("/circuit-breaker/status")
+        # # async def get_circuit_breaker_status(
+        # #     current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
+        # # ) -> Dict[str, Any]:
+        # #     """
+        # #     Get detailed circuit breaker status for all AI models.
+        # #     """
+        # #     try:
+        # #         assistant = ComplianceAssistant(db)
+        # #         circuit_status = assistant.circuit_breaker.get_health_status()
+        # #
+        #
 
         return {
             "status": "success",
@@ -1144,6 +1228,7 @@ async def get_ai_service_health(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to retrieve circuit breaker status",
         )
+
 
 # REMOVED: Duplicate endpoint
 # REMOVED: Duplicate endpoint
@@ -1161,19 +1246,19 @@ async def get_ai_service_health(
 # #         assistant.circuit_breaker.reset_circuit(model_name)
 # #
 #
+#         return {
+#             "status": "success",
+#             "message": f"Circuit breaker reset for model: {model_name}",
+#             "timestamp": datetime.utcnow().isoformat(),
+#         }
+#
+#     except Exception as e:
+#         logger.error(f"Error resetting circuit breaker: {e}")
+#         raise HTTPException(
+#             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+#             detail="Failed to reset circuit breaker",
+#         )
 
-        return {
-            "status": "success",
-            "message": f"Circuit breaker reset for model: {model}",
-            "timestamp": datetime.utcnow().isoformat(),
-        }
-
-    except Exception as e:
-        logger.error(f"Error resetting circuit breaker: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to reset circuit breaker",
-        )
 
 @router.get("/models/{model}/health")
 async def get_model_health(
@@ -1206,6 +1291,7 @@ async def get_model_health(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Failed to retrieve model health",
         )
+
 
 async def _get_mock_analysis_response(
     framework: str, assessment_results: Dict[str, Any]
@@ -1261,7 +1347,10 @@ async def _get_mock_analysis_response(
         "generated_at": datetime.utcnow().isoformat(),
     }
 
-async def _get_mock_recommendations_response(gaps: List[Dict[str, Any]]) -> Dict[str, Any]:
+
+async def _get_mock_recommendations_response(
+    gaps: List[Dict[str, Any]],
+) -> Dict[str, Any]:
     """Mock recommendations response - replace with actual AI service call"""
     return {
         "recommendations": [
@@ -1288,7 +1377,11 @@ async def _get_mock_recommendations_response(gaps: List[Dict[str, Any]]) -> Dict
                     "phase_number": 1,
                     "phase_name": "Foundation & Documentation",
                     "duration_weeks": 4,
-                    "tasks": ["Document current practices", "Create policy", "Get approval"],
+                    "tasks": [
+                        "Document current practices",
+                        "Create policy",
+                        "Get approval",
+                    ],
                     "dependencies": [],
                 }
             ],
@@ -1302,6 +1395,7 @@ async def _get_mock_recommendations_response(gaps: List[Dict[str, Any]]) -> Dict
         "request_id": f"recommendations_{hash(str(gaps)) % 10000}",
         "generated_at": datetime.utcnow().isoformat(),
     }
+
 
 # REMOVED: Duplicate endpoint
 # REMOVED: Duplicate endpoint
@@ -1340,14 +1434,14 @@ async def _get_mock_recommendations_response(gaps: List[Dict[str, Any]]) -> Dict
 # #         # Legacy AI cache metrics (if still in use)
 # #         try:
 # #             from services.ai.response_cache import get_ai_cache
-# # 
+# #
 # #             ai_cache = await get_ai_cache()
 # #             legacy_cache_metrics = await ai_cache.get_cache_metrics()
 # #             metrics["legacy_cache"] = legacy_cache_metrics
 # #         except Exception as e:
 # #             logger.warning(f"Failed to get legacy cache metrics: {e}")
 # #             metrics["legacy_cache"] = {"error": "Metrics unavailable"}
-# # 
+# #
 # #         # Overall cache status
 # #         metrics["cache_status"] = {
 # #             "google_cached_content_enabled": "google_cached_content" in metrics
@@ -1356,7 +1450,7 @@ async def _get_mock_recommendations_response(gaps: List[Dict[str, Any]]) -> Dict
 # #             and "error" not in metrics["legacy_cache"],
 # #             "timestamp": datetime.utcnow().isoformat(),
 # #         }
-# # 
+# #
 # #         # Calculate combined hit rate if both caches are available
 # #         if (
 # #             metrics["cache_status"]["google_cached_content_enabled"]
@@ -1366,21 +1460,21 @@ async def _get_mock_recommendations_response(gaps: List[Dict[str, Any]]) -> Dict
 # #             google_total = metrics["google_cached_content"].get("total_requests", 0)
 # #             legacy_hits = metrics["legacy_cache"].get("total_hits", 0)
 # #             legacy_total = metrics["legacy_cache"].get("total_requests", 0)
-# # 
+# #
 # #             total_hits = google_hits + legacy_hits
 # #             total_requests = google_total + legacy_total
-# # 
+# #
 # #             if total_requests > 0:
 # #                 metrics["combined_hit_rate"] = round(total_hits / total_requests * 100, 2)
 # #             else:
 # #                 metrics["combined_hit_rate"] = 0.0
-# # 
+# #
 # #         return {
 # #             "cache_metrics": metrics,
 # #             "request_id": f"cache_metrics_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}",
 # #             "generated_at": datetime.utcnow().isoformat(),
 # #         }
-# # 
+# #
 # #     except Exception as e:
 # #         logger.error(f"Error retrieving cache metrics: {e}")
 # #         raise HTTPException(

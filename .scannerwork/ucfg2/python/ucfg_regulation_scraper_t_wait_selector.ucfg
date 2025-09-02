@@ -1,0 +1,124 @@
+
+7regulation_scraper.RegulationScraper._get_wait_selectorM
+C/home/omar/Documents/ruleIQ/services/scrapers/regulation_scraper.py- -("2*˜
+138 8(-~|
+8 8(-
+%5*)
+
+__unknown_file (
+
+	url_lower*1
+
+__unknown_file (
+eur-lex.europa.eu2__contains__*
+11
+12*@
+146 6(5"0
+6 6(5$"
+ .main-content, .content, article*‘
+155 5(&wu
+5 5(&
+%6*)
+
+__unknown_file (
+
+	url_lower**
+
+__unknown_file (
+
+ico.org.uk2__contains__*
+13
+14*§
+2. .(?IG
+/ /(
+%7"	str.lower*#
+
+__unknown_file (
+
+url2lowerC
+A
+/ /(
+	url_lower"__id*"
+
+__unknown_file (
+
+%7}
+2 2(,
+%8*)
+
+__unknown_file (
+
+	url_lower*2
+
+__unknown_file (
+legislation.gov.uk2__contains__*
+4
+15*J
+43 3(@";
+3 3(@/-
++.LegSnippet, .LegClearFix, #viewLegContents*#
+5E E("
+E E(
+body*J
+6B B(@";
+B B(@/-
++.page-content, #main-content, .text-content*Œ
+7A A($us
+A A($
+%1*)
+
+__unknown_file (
+
+	url_lower*(
+
+__unknown_file (
+
+nist.gov2__contains__*
+5
+6*J
+8? ?(@";
+? ?(@/-
++.content, .generated-content, #main-content*†
+9> >(Bus
+> >($
+%2*)
+
+__unknown_file (
+
+	url_lower*(
+
+__unknown_file (
+
+ecfr.gov2__contains__xv
+>( >(B
+%3*)
+
+__unknown_file (
+
+	url_lower*+
+
+__unknown_file (
+govinfo.gov2__contains__*
+7
+8*J
+10< <(?":
+< <(?.,
+*.handbook-content, .rule-content, #content*š
+11; ;(/€~
+; ;(/
+%4*)
+
+__unknown_file (
+
+	url_lower*3
+
+__unknown_file (
+handbook.fca.org.uk2__contains__*
+9
+10*G
+129 9(<"7
+9 9(<+)
+'#TexteOnly, .eli-main-title, #document1:
+-! -()
+urlB(&
+$regulation_scraper.RegulationScraperH

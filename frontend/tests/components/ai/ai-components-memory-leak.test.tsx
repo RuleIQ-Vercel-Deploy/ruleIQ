@@ -295,7 +295,7 @@ describe('AI Components - Memory Leak Detection', () => {
 
       // Get memory report before unmount
       const beforeUnmount = leakDetector.getReport();
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       unmount();
 
       // Final check

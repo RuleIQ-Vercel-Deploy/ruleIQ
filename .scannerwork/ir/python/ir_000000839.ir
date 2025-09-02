@@ -1,0 +1,38 @@
+
+"pool_size"str
+"url"str
+
+"max_overflow"str
+"pool_timeout"str
+*!"Get database configuration dict"strself
+ô ô("î&
+$
+
+õ †(	"#new-object#Bdict/
+-
+
+ú ú($"#get-field# DATABASE_URL:"
+ 
+
+ú ú($"	#map-set#:/
+-
+
+ù ù(*"#get-field# DB_POOL_SIZE:"
+ 
+
+ù ù(*	"	#map-set#:2
+0
+
+û û(0"#get-field# DB_MAX_OVERFLOW:"
+ 
+
+û û(0"	#map-set#:
+2
+0
+
+ü ü(0"#get-field# DB_POOL_TIMEOUT:"
+ 
+
+ü ü(0"	#map-set#:
+
+õ †(	**/home/omar/Documents/ruleIQ/config/base.py

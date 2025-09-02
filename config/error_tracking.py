@@ -19,15 +19,19 @@ from functools import wraps
 
 logger = logging.getLogger(__name__)
 
+
 class ErrorSeverity(Enum):
     """Error severity levels"""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
     CRITICAL = "critical"
 
+
 class ErrorCategory(Enum):
     """Error categories for classification"""
+
     API = "api"
     DATABASE = "database"
     AI_SERVICE = "ai_service"
@@ -38,9 +42,11 @@ class ErrorCategory(Enum):
     PERFORMANCE = "performance"
     UNKNOWN = "unknown"
 
+
 @dataclass
 class ErrorReport:
     """Individual error report"""
+
     id: str
     timestamp: datetime
     severity: ErrorSeverity
@@ -56,9 +62,11 @@ class ErrorReport:
     resolved: bool = False
     resolution_notes: Optional[str] = None
 
+
 @dataclass
 class ErrorPattern:
     """Pattern of recurring errors"""
+
     signature: str
     count: int
     first_seen: datetime
@@ -69,6 +77,7 @@ class ErrorPattern:
     examples: List[str] = field(default_factory=list)
     affected_endpoints: List[str] = field(default_factory=list)
     affected_users: List[str] = field(default_factory=list)
+
 
 class ErrorTracker:
     """Comprehensive error tracking system"""
@@ -86,9 +95,12 @@ class ErrorTracker:
     def generate_error_id(self) -> str:
         """Generate unique error ID"""
         import uuid
+
         return f"err_{int(time.time())}_{str(uuid.uuid4())[:8]}"
 
-    def get_error_signature(self, error_type: str, message: str, endpoint: Optional[str] = None) -> str:
+    def get_error_signature(
+        self, error_type: str, message: str, endpoint: Optional[str] = None
+    ) -> str:
         """Generate error signature for pattern matching"""
         # Normalize the message by removing dynamic parts
         normalized_message = self._normalize_error_message(message)
@@ -98,14 +110,23 @@ class ErrorTracker:
     def _normalize_error_message(self, message: str) -> str:
         """Normalize error messages by removing dynamic content"""
         import re
+
         # Remove UUIDs, timestamps, numbers, file paths
-        normalized = re.sub(r'\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b', '<UUID>', message)
-        normalized = re.sub(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}', '<TIMESTAMP>', normalized)
-        normalized = re.sub(r'\d+', '<NUMBER>', normalized)
-        normalized = re.sub(r'/[a-zA-Z0-9_/]+\.py', '<FILE>', normalized)
+        normalized = re.sub(
+            r"\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b",
+            "<UUID>",
+            message,
+        )
+        normalized = re.sub(
+            r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}", "<TIMESTAMP>", normalized
+        )
+        normalized = re.sub(r"\d+", "<NUMBER>", normalized)
+        normalized = re.sub(r"/[a-zA-Z0-9_/]+\.py", "<FILE>", normalized)
         return normalized[:200]  # Truncate for consistency
 
-    def categorize_error(self, error_type: str, message: str, context: Dict[str, Any]) -> ErrorCategory:
+    def categorize_error(
+        self, error_type: str, message: str, context: Dict[str, Any]
+    ) -> ErrorCategory:
         """Automatically categorize errors based on type and context"""
         error_lower = error_type.lower()
         message_lower = message.lower()
@@ -115,52 +136,80 @@ class ErrorTracker:
             return ErrorCategory.API
 
         # Database errors
-        if any(db_term in error_lower for db_term in ["sql", "database", "connection", "postgresql"]):
+        if any(
+            db_term in error_lower
+            for db_term in ["sql", "database", "connection", "postgresql"]
+        ):
             return ErrorCategory.DATABASE
 
         # Authentication errors
-        if any(auth_term in message_lower for auth_term in ["auth", "token", "permission", "unauthorized"]):
+        if any(
+            auth_term in message_lower
+            for auth_term in ["auth", "token", "permission", "unauthorized"]
+        ):
             return ErrorCategory.AUTHENTICATION
 
         # AI Service errors
-        if any(ai_term in message_lower for ai_term in ["ai", "model", "openai", "google", "gemini"]):
+        if any(
+            ai_term in message_lower
+            for ai_term in ["ai", "model", "openai", "google", "gemini"]
+        ):
             return ErrorCategory.AI_SERVICE
 
         # Validation errors
-        if any(val_term in error_lower for val_term in ["validation", "schema", "pydantic"]):
+        if any(
+            val_term in error_lower for val_term in ["validation", "schema", "pydantic"]
+        ):
             return ErrorCategory.VALIDATION
 
         # Security errors
-        if any(sec_term in message_lower for sec_term in ["security", "csrf", "xss", "injection"]):
+        if any(
+            sec_term in message_lower
+            for sec_term in ["security", "csrf", "xss", "injection"]
+        ):
             return ErrorCategory.SECURITY
 
         # Performance errors
-        if any(perf_term in message_lower for perf_term in ["timeout", "memory", "performance", "slow"]):
+        if any(
+            perf_term in message_lower
+            for perf_term in ["timeout", "memory", "performance", "slow"]
+        ):
             return ErrorCategory.PERFORMANCE
 
         return ErrorCategory.UNKNOWN
 
-    def determine_severity(self, error_type: str, message: str, context: Dict[str, Any]) -> ErrorSeverity:
+    def determine_severity(
+        self, error_type: str, message: str, context: Dict[str, Any]
+    ) -> ErrorSeverity:
         """Automatically determine error severity"""
         error_lower = error_type.lower()
         message_lower = message.lower()
 
         # Critical errors
-        if any(critical_term in message_lower for critical_term in [
-            "database", "connection", "authentication", "security", "critical"
-        ]):
+        if any(
+            critical_term in message_lower
+            for critical_term in [
+                "database",
+                "connection",
+                "authentication",
+                "security",
+                "critical",
+            ]
+        ):
             return ErrorSeverity.CRITICAL
 
         # High severity errors
-        if any(high_term in message_lower for high_term in [
-            "server error", "500", "failed", "exception"
-        ]):
+        if any(
+            high_term in message_lower
+            for high_term in ["server error", "500", "failed", "exception"]
+        ):
             return ErrorSeverity.HIGH
 
         # Medium severity errors
-        if any(medium_term in message_lower for medium_term in [
-            "warning", "404", "validation", "timeout"
-        ]):
+        if any(
+            medium_term in message_lower
+            for medium_term in ["warning", "404", "validation", "timeout"]
+        ):
             return ErrorSeverity.MEDIUM
 
         return ErrorSeverity.LOW
@@ -174,7 +223,7 @@ class ErrorTracker:
         request_id: Optional[str] = None,
         endpoint: Optional[str] = None,
         severity: Optional[ErrorSeverity] = None,
-        category: Optional[ErrorCategory] = None
+        category: Optional[ErrorCategory] = None,
     ) -> ErrorReport:
         """Track a new error"""
         with self._lock:
@@ -203,13 +252,13 @@ class ErrorTracker:
                 user_id=user_id,
                 session_id=session_id,
                 request_id=request_id,
-                endpoint=endpoint
+                endpoint=endpoint,
             )
 
             # Add to errors list
             self.errors.append(error_report)
             if len(self.errors) > self.max_errors:
-                self.errors = self.errors[-self.max_errors:]  # Keep only recent errors
+                self.errors = self.errors[-self.max_errors :]  # Keep only recent errors
 
             # Update counters
             self.error_counts_by_category[category] += 1
@@ -226,8 +275,8 @@ class ErrorTracker:
                     "error_id": error_report.id,
                     "error_category": category.value,
                     "error_severity": severity.value,
-                    "context": error_context
-                }
+                    "context": error_context,
+                },
             )
 
             return error_report
@@ -246,10 +295,16 @@ class ErrorTracker:
                 pattern.examples.append(error_report.id)
 
             # Track affected endpoints and users
-            if error_report.endpoint and error_report.endpoint not in pattern.affected_endpoints:
+            if (
+                error_report.endpoint
+                and error_report.endpoint not in pattern.affected_endpoints
+            ):
                 pattern.affected_endpoints.append(error_report.endpoint)
 
-            if error_report.user_id and error_report.user_id not in pattern.affected_users:
+            if (
+                error_report.user_id
+                and error_report.user_id not in pattern.affected_users
+            ):
                 pattern.affected_users.append(error_report.user_id)
         else:
             self.error_patterns[signature] = ErrorPattern(
@@ -261,8 +316,10 @@ class ErrorTracker:
                 category=error_report.category,
                 severity=error_report.severity,
                 examples=[error_report.id],
-                affected_endpoints=[error_report.endpoint] if error_report.endpoint else [],
-                affected_users=[error_report.user_id] if error_report.user_id else []
+                affected_endpoints=(
+                    [error_report.endpoint] if error_report.endpoint else []
+                ),
+                affected_users=[error_report.user_id] if error_report.user_id else [],
             )
 
     def get_error_patterns(self, min_count: Optional[int] = None) -> List[ErrorPattern]:
@@ -273,7 +330,9 @@ class ErrorTracker:
                 patterns = [p for p in patterns if p.count >= min_count]
             return sorted(patterns, key=lambda p: p.count, reverse=True)
 
-    def get_recent_errors(self, hours: int = 24, severity: Optional[ErrorSeverity] = None) -> List[ErrorReport]:
+    def get_recent_errors(
+        self, hours: int = 24, severity: Optional[ErrorSeverity] = None
+    ) -> List[ErrorReport]:
         """Get recent errors within specified time window"""
         with self._lock:
             cutoff = datetime.utcnow() - timedelta(hours=hours)
@@ -291,14 +350,20 @@ class ErrorTracker:
         return {
             "summary": {
                 "total_errors": len(recent_errors),
-                "critical_errors": len([e for e in recent_errors if e.severity == ErrorSeverity.CRITICAL]),
-                "high_errors": len([e for e in recent_errors if e.severity == ErrorSeverity.HIGH]),
+                "critical_errors": len(
+                    [e for e in recent_errors if e.severity == ErrorSeverity.CRITICAL]
+                ),
+                "high_errors": len(
+                    [e for e in recent_errors if e.severity == ErrorSeverity.HIGH]
+                ),
                 "error_rate": len(recent_errors) / hours if hours > 0 else 0,
-                "time_window_hours": hours
+                "time_window_hours": hours,
             },
             "by_category": dict(Counter(e.category.value for e in recent_errors)),
             "by_severity": dict(Counter(e.severity.value for e in recent_errors)),
-            "top_endpoints": dict(Counter(e.endpoint for e in recent_errors if e.endpoint).most_common(10)),
+            "top_endpoints": dict(
+                Counter(e.endpoint for e in recent_errors if e.endpoint).most_common(10)
+            ),
             "affected_users": len(set(e.user_id for e in recent_errors if e.user_id)),
             "top_patterns": [
                 {
@@ -306,10 +371,10 @@ class ErrorTracker:
                     "count": p.count,
                     "error_type": p.error_type,
                     "category": p.category.value,
-                    "severity": p.severity.value
+                    "severity": p.severity.value,
                 }
                 for p in self.get_error_patterns(min_count=2)[:10]
-            ]
+            ],
         }
 
     def resolve_error(self, error_id: str, resolution_notes: str):
@@ -327,6 +392,7 @@ class ErrorTracker:
             cutoff = datetime.utcnow() - timedelta(days=days)
             self.errors = [e for e in self.errors if e.timestamp > cutoff]
 
+
 class ErrorAlertingSystem:
     """Alert system for critical errors"""
 
@@ -334,8 +400,8 @@ class ErrorAlertingSystem:
         self.error_tracker = error_tracker
         self.alert_thresholds = {
             ErrorSeverity.CRITICAL: 1,  # Alert immediately
-            ErrorSeverity.HIGH: 5,      # Alert after 5 occurrences
-            ErrorSeverity.MEDIUM: 20,   # Alert after 20 occurrences
+            ErrorSeverity.HIGH: 5,  # Alert after 5 occurrences
+            ErrorSeverity.MEDIUM: 20,  # Alert after 20 occurrences
         }
         self.alert_callbacks: List[Callable] = []
 
@@ -351,20 +417,24 @@ class ErrorAlertingSystem:
         for severity, threshold in self.alert_thresholds.items():
             count = len([e for e in recent_errors if e.severity == severity])
             if count >= threshold:
-                self._trigger_alert(f"High error rate: {count} {severity.value} errors in the last hour")
+                self._trigger_alert(
+                    f"High error rate: {count} {severity.value} errors in the last hour"
+                )
 
         # Check for new critical patterns
         patterns = self.error_tracker.get_error_patterns(min_count=3)
         for pattern in patterns:
             if pattern.severity == ErrorSeverity.CRITICAL:
-                self._trigger_alert(f"Critical error pattern detected: {pattern.signature} ({pattern.count} occurrences)")
+                self._trigger_alert(
+                    f"Critical error pattern detected: {pattern.signature} ({pattern.count} occurrences)"
+                )
 
     def _trigger_alert(self, message: str):
         """Trigger alert to all registered callbacks"""
         alert_data = {
             "timestamp": datetime.utcnow().isoformat(),
             "message": message,
-            "source": "ruleiq-error-tracker"
+            "source": "ruleiq-error-tracker",
         }
 
         for callback in self.alert_callbacks:
@@ -373,78 +443,84 @@ class ErrorAlertingSystem:
             except Exception as e:
                 logger.error(f"Alert callback failed: {e}")
 
+
 # Global error tracker instance
 global_error_tracker = ErrorTracker()
 error_alerting = ErrorAlertingSystem(global_error_tracker)
+
 
 # Decorators for automatic error tracking
 def track_errors(
     category: Optional[ErrorCategory] = None,
     severity: Optional[ErrorSeverity] = None,
-    context: Optional[Dict[str, Any]] = None
+    context: Optional[Dict[str, Any]] = None,
 ):
     """Decorator to automatically track errors in functions"""
+
     def decorator(func):
         if asyncio.iscoroutinefunction(func):
+
             @wraps(func)
             async def async_wrapper(*args, **kwargs):
                 try:
                     return await func(*args, **kwargs)
                 except Exception as e:
                     global_error_tracker.track_error(
-                        error=e,
-                        context=context,
-                        category=category,
-                        severity=severity
+                        error=e, context=context, category=category, severity=severity
                     )
                     raise
+
             return async_wrapper
         else:
+
             @wraps(func)
             def sync_wrapper(*args, **kwargs):
                 try:
                     return func(*args, **kwargs)
                 except Exception as e:
                     global_error_tracker.track_error(
-                        error=e,
-                        context=context,
-                        category=category,
-                        severity=severity
+                        error=e, context=context, category=category, severity=severity
                     )
                     raise
+
             return sync_wrapper
+
     return decorator
+
 
 def track_api_errors(endpoint: str):
     """Decorator specifically for API endpoint error tracking"""
-    return track_errors(
-        category=ErrorCategory.API,
-        context={"endpoint": endpoint}
-    )
+    return track_errors(category=ErrorCategory.API, context={"endpoint": endpoint})
+
 
 def track_db_errors(operation: str, table: str = "unknown"):
     """Decorator specifically for database operation error tracking"""
     return track_errors(
         category=ErrorCategory.DATABASE,
-        context={"operation": operation, "table": table}
+        context={"operation": operation, "table": table},
     )
+
 
 # Convenience functions
 def get_error_dashboard_data() -> Dict[str, Any]:
     """Get comprehensive error data for dashboard display"""
     return {
         "recent_summary": global_error_tracker.get_error_summary(hours=24),
-        "critical_errors": global_error_tracker.get_recent_errors(hours=24, severity=ErrorSeverity.CRITICAL),
+        "critical_errors": global_error_tracker.get_recent_errors(
+            hours=24, severity=ErrorSeverity.CRITICAL
+        ),
         "top_patterns": global_error_tracker.get_error_patterns(min_count=2)[:10],
         "error_trends": {
             "last_hour": len(global_error_tracker.get_recent_errors(hours=1)),
             "last_6_hours": len(global_error_tracker.get_recent_errors(hours=6)),
-            "last_24_hours": len(global_error_tracker.get_recent_errors(hours=24))
-        }
+            "last_24_hours": len(global_error_tracker.get_recent_errors(hours=24)),
+        },
     }
+
 
 def setup_basic_alerting():
     """Set up basic console alerting"""
+
     def console_alert(alert_data):
         print(f"🚨 ALERT: {alert_data['message']} at {alert_data['timestamp']}")
 

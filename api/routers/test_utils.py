@@ -9,19 +9,21 @@ from sqlalchemy.orm import Session
 
 from database.db_setup import get_db
 from database import User
+
 # Remove unused import
 
 router = APIRouter()
+
 
 def is_test_environment() -> bool:
     """Check if we're running in a test environment."""
     env = os.getenv("ENVIRONMENT", "production").lower()
     return env in ["development", "test", "testing", "local"]
 
+
 @router.delete("/cleanup-test-users")
 async def cleanup_test_users(
-    email_pattern: str = "@example.com",
-    db: Session = Depends(get_db)
+    email_pattern: str = "@example.com", db: Session = Depends(get_db)
 ):
     """
     Clean up test users from the database.
@@ -36,7 +38,7 @@ async def cleanup_test_users(
     if not is_test_environment():
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="This endpoint is only available in test environments"
+            detail="This endpoint is only available in test environments",
         )
 
     try:
@@ -49,22 +51,41 @@ async def cleanup_test_users(
 
         # Clean up related data first to avoid foreign key constraints
         from database import (
-            AuditLog, UserSession, UserRole, BusinessProfile,
-            AssessmentSession, GeneratedPolicy, ChatConversation,
-            ReportSchedule, EvidenceItem, ImplementationPlan,
-            ReadinessAssessment
+            AuditLog,
+            UserSession,
+            UserRole,
+            BusinessProfile,
+            AssessmentSession,
+            GeneratedPolicy,
+            ChatConversation,
+            ReportSchedule,
+            EvidenceItem,
+            ImplementationPlan,
+            ReadinessAssessment,
         )
 
         for user in test_users:
             # Delete business-related data
-            db.query(BusinessProfile).filter(BusinessProfile.user_id == user.id).delete()
-            db.query(AssessmentSession).filter(AssessmentSession.user_id == user.id).delete()
-            db.query(GeneratedPolicy).filter(GeneratedPolicy.user_id == user.id).delete()
-            db.query(ChatConversation).filter(ChatConversation.user_id == user.id).delete()
+            db.query(BusinessProfile).filter(
+                BusinessProfile.user_id == user.id
+            ).delete()
+            db.query(AssessmentSession).filter(
+                AssessmentSession.user_id == user.id
+            ).delete()
+            db.query(GeneratedPolicy).filter(
+                GeneratedPolicy.user_id == user.id
+            ).delete()
+            db.query(ChatConversation).filter(
+                ChatConversation.user_id == user.id
+            ).delete()
             db.query(ReportSchedule).filter(ReportSchedule.user_id == user.id).delete()
             db.query(EvidenceItem).filter(EvidenceItem.user_id == user.id).delete()
-            db.query(ImplementationPlan).filter(ImplementationPlan.user_id == user.id).delete()
-            db.query(ReadinessAssessment).filter(ReadinessAssessment.user_id == user.id).delete()
+            db.query(ImplementationPlan).filter(
+                ImplementationPlan.user_id == user.id
+            ).delete()
+            db.query(ReadinessAssessment).filter(
+                ReadinessAssessment.user_id == user.id
+            ).delete()
 
             # Delete RBAC and audit data
             db.query(AuditLog).filter(AuditLog.user_id == user.id).delete()
@@ -82,14 +103,13 @@ async def cleanup_test_users(
         db.rollback()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to cleanup test users: {str(e)}"
+            detail=f"Failed to cleanup test users: {str(e)}",
         )
+
 
 @router.post("/create-test-user")
 async def create_test_user(
-    email: str,
-    password: str = "TestPassword123!",
-    db: Session = Depends(get_db)
+    email: str, password: str = "TestPassword123!", db: Session = Depends(get_db)
 ):
     """
     Create a test user for testing purposes.
@@ -105,7 +125,7 @@ async def create_test_user(
     if not is_test_environment():
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="This endpoint is only available in test environments"
+            detail="This endpoint is only available in test environments",
         )
 
     # Check if user already exists
@@ -121,10 +141,7 @@ async def create_test_user(
 
     hashed_password = get_password_hash(password)
     db_user = User(
-        id=uuid4(),
-        email=email,
-        hashed_password=hashed_password,
-        is_active=True
+        id=uuid4(), email=email, hashed_password=hashed_password, is_active=True
     )
     db.add(db_user)
     db.commit()
@@ -133,8 +150,9 @@ async def create_test_user(
     return {
         "id": str(db_user.id),
         "email": db_user.email,
-        "is_active": db_user.is_active
+        "is_active": db_user.is_active,
     }
+
 
 @router.post("/clear-rate-limits")
 async def clear_rate_limits():
@@ -148,7 +166,7 @@ async def clear_rate_limits():
     if not is_test_environment():
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="This endpoint is only available in test environments"
+            detail="This endpoint is only available in test environments",
         )
 
     # Import rate limiters

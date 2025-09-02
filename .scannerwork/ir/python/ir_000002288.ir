@@ -1,0 +1,30 @@
+
+KB"Get AI configuration optimized for compliance content generation"str
+"temperature"str
+"top_p"str
+0.3float
+4096int
+"max_output_tokens"str
+0.8float
+
+"top_k"str
+40intself
+ê( ê(," &
+$
+
+í ó(	"#new-object#Bdict"
+ 
+
+ì ì("	#map-set#:"
+ 
+
+î î(	"	#map-set#:"
+ 
+
+ï ï("	#map-set#:
+"
+ 
+
+ñ ñ(%"	#map-set#:
+
+í ó(	*//home/omar/Documents/ruleIQ/config/ai_config.py

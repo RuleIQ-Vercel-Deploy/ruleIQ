@@ -22,10 +22,7 @@ class TestStateTenancy:
         """Test that state creation requires company_id."""
         company_id = uuid4()
 
-        state = create_initial_state(
-            company_id=company_id,
-            user_input="Test message"
-        )
+        state = create_initial_state(company_id=company_id, user_input="Test message")
 
         assert state["company_id"] == company_id
         assert isinstance(state["company_id"], UUID)
@@ -36,15 +33,11 @@ class TestStateTenancy:
         company_b = uuid4()
 
         state_a = create_initial_state(
-            company_id=company_a,
-            user_input="Company A message",
-            thread_id="thread_a"
+            company_id=company_a, user_input="Company A message", thread_id="thread_a"
         )
 
         state_b = create_initial_state(
-            company_id=company_b,
-            user_input="Company B message",
-            thread_id="thread_b"
+            company_id=company_b, user_input="Company B message", thread_id="thread_b"
         )
 
         # States should be completely separate
@@ -61,21 +54,19 @@ class TestStateTenancy:
         company_id = uuid4()
 
         state_thread1 = create_initial_state(
-            company_id=company_id,
-            user_input="Thread 1 message",
-            thread_id="thread_1"
+            company_id=company_id, user_input="Thread 1 message", thread_id="thread_1"
         )
 
         state_thread2 = create_initial_state(
-            company_id=company_id,
-            user_input="Thread 2 message",
-            thread_id="thread_2"
+            company_id=company_id, user_input="Thread 2 message", thread_id="thread_2"
         )
 
         # Same company, different threads
         assert state_thread1["company_id"] == state_thread2["company_id"]
         assert state_thread1["thread_id"] != state_thread2["thread_id"]
-        assert state_thread1["messages"][0].content != state_thread2["messages"][0].content
+        assert (
+            state_thread1["messages"][0].content != state_thread2["messages"][0].content
+        )
 
     def test_state_user_isolation(self):
         """Test user isolation within company and thread."""
@@ -88,14 +79,14 @@ class TestStateTenancy:
             company_id=company_id,
             user_input="User A message",
             thread_id=thread_id,
-            user_id=user_a
+            user_id=user_a,
         )
 
         state_user_b = create_initial_state(
             company_id=company_id,
             user_input="User B message",
             thread_id=thread_id,
-            user_id=user_b
+            user_id=user_b,
         )
 
         # Different user IDs but potentially shared thread
@@ -115,14 +106,16 @@ class TestToolTenancy:
         thread_id = "test_thread"
 
         # Mock tool execution to verify company_id is passed
-        with patch.object(manager.tools["evidence_collection"], "_execute") as mock_execute:
+        with patch.object(
+            manager.tools["evidence_collection"], "_execute"
+        ) as mock_execute:
             mock_execute.return_value = {"result": "success"}
 
             await manager.execute_tool(
                 tool_name="evidence_collection",
                 company_id=company_id,
                 thread_id=thread_id,
-                frameworks=["GDPR"]
+                frameworks=["GDPR"],
             )
 
             # Verify company_id was injected
@@ -144,7 +137,7 @@ class TestToolTenancy:
             company_id=company_id,
             thread_id=thread_id,
             business_profile={"industry": "tech"},
-            frameworks=["GDPR"]
+            frameworks=["GDPR"],
         )
 
         # Result should be successful and include company context
@@ -166,8 +159,8 @@ class TestToolTenancy:
                 "tool": "compliance_analysis",
                 "kwargs": {
                     "business_profile": {"industry": "retail"},
-                    "frameworks": ["GDPR"]
-                }
+                    "frameworks": ["GDPR"],
+                },
             }
         ]
 
@@ -176,15 +169,15 @@ class TestToolTenancy:
                 "tool": "compliance_analysis",
                 "kwargs": {
                     "business_profile": {"industry": "finance"},
-                    "frameworks": ["PCI_DSS"]
-                }
+                    "frameworks": ["PCI_DSS"],
+                },
             }
         ]
 
         # Execute for both companies in parallel
         results_a, results_b = await asyncio.gather(
             manager.execute_parallel_tools(tool_configs_a, company_a, thread_a),
-            manager.execute_parallel_tools(tool_configs_b, company_b, thread_b)
+            manager.execute_parallel_tools(tool_configs_b, company_b, thread_b),
         )
 
         # Both should succeed
@@ -209,7 +202,7 @@ class TestToolTenancy:
             company_a,
             "thread_a",
             business_profile={"industry": "tech"},
-            frameworks=["GDPR"]
+            frameworks=["GDPR"],
         )
 
         await manager.execute_tool(
@@ -217,7 +210,7 @@ class TestToolTenancy:
             company_b,
             "thread_b",
             business_profile={"industry": "retail"},
-            frameworks=["GDPR"]
+            frameworks=["GDPR"],
         )
 
         # Tool stats should reflect both executions
@@ -244,24 +237,24 @@ class TestGraphTenancy:
             company_id = UUID(config.configurable["company_id"])
             state["company_id"] = company_id
             if company_id == company_a:
-                state["messages"].append(Mock(role="assistant", content="Response for Company A"))
+                state["messages"].append(
+                    Mock(role="assistant", content="Response for Company A")
+                )
             else:
-                state["messages"].append(Mock(role="assistant", content="Response for Company B"))
+                state["messages"].append(
+                    Mock(role="assistant", content="Response for Company B")
+                )
             return state
 
         mock_graph.ainvoke.side_effect = mock_invoke
 
         # Invoke for both companies
         result_a = await invoke_graph(
-            compiled_graph=mock_graph,
-            company_id=company_a,
-            user_input="Test input A"
+            compiled_graph=mock_graph, company_id=company_a, user_input="Test input A"
         )
 
         result_b = await invoke_graph(
-            compiled_graph=mock_graph,
-            company_id=company_b,
-            user_input="Test input B"
+            compiled_graph=mock_graph, company_id=company_b, user_input="Test input B"
         )
 
         # Verify company isolation
@@ -292,7 +285,7 @@ class TestGraphTenancy:
             compiled_graph=mock_graph,
             company_id=company_id,
             user_input="Test input",
-            thread_id=thread_id
+            thread_id=thread_id,
         )
 
         # Verify config contains tenancy information
@@ -321,7 +314,7 @@ class TestGraphTenancy:
             compiled_graph=mock_graph,
             company_id=company_id,
             user_input="Test stream",
-            thread_id=thread_id
+            thread_id=thread_id,
         ):
             chunks.append(chunk)
 
@@ -343,7 +336,7 @@ class TestErrorTenancy:
             error_message="Test error",
             error_details={"error_type": "validation"},
             company_id=company_id,
-            thread_id=thread_id
+            thread_id=thread_id,
         )
 
         assert fallback.company_id == company_id
@@ -363,9 +356,7 @@ class TestErrorTenancy:
 
         # Execute non-existent tool to trigger error
         result = await manager.execute_tool(
-            tool_name="nonexistent_tool",
-            company_id=company_id,
-            thread_id=thread_id
+            tool_name="nonexistent_tool", company_id=company_id, thread_id=thread_id
         )
 
         # Should return SafeFallbackResponse with proper tenancy
@@ -386,7 +377,7 @@ class TestErrorTenancy:
             compiled_graph=mock_graph,
             company_id=company_id,
             user_input="Test error",
-            thread_id=thread_id
+            thread_id=thread_id,
         )
 
         # Result should be initial state with error
@@ -411,55 +402,51 @@ class TestDataIsolation:
 
         # Create states with conversation history
         state_a = create_initial_state(
-            company_id=company_a,
-            user_input="Company A conversation"
+            company_id=company_a, user_input="Company A conversation"
         )
-        state_a["conversation_history"].append({
-            "role": "assistant",
-            "content": "Company A response"
-        })
+        state_a["conversation_history"].append(
+            {"role": "assistant", "content": "Company A response"}
+        )
 
         state_b = create_initial_state(
-            company_id=company_b,
-            user_input="Company B conversation"
+            company_id=company_b, user_input="Company B conversation"
         )
-        state_b["conversation_history"].append({
-            "role": "assistant",
-            "content": "Company B response"
-        })
+        state_b["conversation_history"].append(
+            {"role": "assistant", "content": "Company B response"}
+        )
 
         # Histories should be completely separate
         assert len(state_a["conversation_history"]) == 1
         assert len(state_b["conversation_history"]) == 1
-        assert state_a["conversation_history"][0]["content"] != state_b["conversation_history"][0]["content"]
+        assert (
+            state_a["conversation_history"][0]["content"]
+            != state_b["conversation_history"][0]["content"]
+        )
 
     def test_context_data_isolation(self):
         """Test context data isolation between companies."""
         company_a = uuid4()
         company_b = uuid4()
 
-        state_a = create_initial_state(
-            company_id=company_a,
-            user_input="Test A"
-        )
+        state_a = create_initial_state(company_id=company_a, user_input="Test A")
         state_a["context_data"]["business_profile"] = {
             "industry": "technology",
-            "employees": 100
+            "employees": 100,
         }
 
-        state_b = create_initial_state(
-            company_id=company_b,
-            user_input="Test B"
-        )
+        state_b = create_initial_state(company_id=company_b, user_input="Test B")
         state_b["context_data"]["business_profile"] = {
             "industry": "retail",
-            "employees": 50
+            "employees": 50,
         }
 
         # Context data should be isolated
         assert state_a["context_data"]["business_profile"]["industry"] == "technology"
         assert state_b["context_data"]["business_profile"]["industry"] == "retail"
-        assert state_a["context_data"]["business_profile"]["employees"] != state_b["context_data"]["business_profile"]["employees"]
+        assert (
+            state_a["context_data"]["business_profile"]["employees"]
+            != state_b["context_data"]["business_profile"]["employees"]
+        )
 
     def test_tool_results_isolation(self):
         """Test tool results isolation between companies."""
@@ -476,14 +463,14 @@ class TestDataIsolation:
             tool_name="compliance_analysis",
             success=True,
             result={"compliance_score": 0.85},
-            execution_time_ms=200
+            execution_time_ms=200,
         )
 
         result_b = ToolResult(
             tool_name="compliance_analysis",
             success=True,
             result={"compliance_score": 0.72},
-            execution_time_ms=250
+            execution_time_ms=250,
         )
 
         state_a["tool_results"].append(result_a)
@@ -492,7 +479,10 @@ class TestDataIsolation:
         # Tool results should be isolated
         assert len(state_a["tool_results"]) == 1
         assert len(state_b["tool_results"]) == 1
-        assert state_a["tool_results"][0].result["compliance_score"] != state_b["tool_results"][0].result["compliance_score"]
+        assert (
+            state_a["tool_results"][0].result["compliance_score"]
+            != state_b["tool_results"][0].result["compliance_score"]
+        )
 
 
 class TestCrossCompanySecurityValidation:
@@ -509,29 +499,25 @@ class TestCrossCompanySecurityValidation:
 
         # Should not be able to call execute_tool without company_id
         with pytest.raises(TypeError):
-            asyncio.run(manager.execute_tool(
-                tool_name="compliance_analysis",
-                # Missing company_id
-                thread_id="test",
-                business_profile={"industry": "tech"}
-            ))
+            asyncio.run(
+                manager.execute_tool(
+                    tool_name="compliance_analysis",
+                    # Missing company_id
+                    thread_id="test",
+                    business_profile={"industry": "tech"},
+                )
+            )
 
     def test_uuid_validation(self):
         """Test that company_id must be valid UUID."""
         # Valid UUID should work
         valid_uuid = uuid4()
-        state = create_initial_state(
-            company_id=valid_uuid,
-            user_input="test"
-        )
+        state = create_initial_state(company_id=valid_uuid, user_input="test")
         assert state["company_id"] == valid_uuid
 
         # Invalid UUID should raise error
         with pytest.raises((TypeError, ValueError)):
-            create_initial_state(
-                company_id="invalid-uuid-string",
-                user_input="test"
-            )
+            create_initial_state(company_id="invalid-uuid-string", user_input="test")
 
     def test_thread_id_isolation_enforcement(self):
         """Test that thread_id isolation is enforced."""
@@ -539,15 +525,11 @@ class TestCrossCompanySecurityValidation:
 
         # Same company, different threads should be isolated
         state1 = create_initial_state(
-            company_id=company_id,
-            user_input="message 1",
-            thread_id="thread-001"
+            company_id=company_id, user_input="message 1", thread_id="thread-001"
         )
 
         state2 = create_initial_state(
-            company_id=company_id,
-            user_input="message 2",
-            thread_id="thread-002"
+            company_id=company_id, user_input="message 2", thread_id="thread-002"
         )
 
         # Should be completely separate despite same company
@@ -572,7 +554,7 @@ class TestAuditTrails:
             company_id=company_id,
             user_input="Audit test",
             thread_id=thread_id,
-            user_id=user_id
+            user_id=user_id,
         )
 
         # Metadata should be available for audit trails
@@ -599,7 +581,7 @@ class TestAuditTrails:
             error_message="Audit test error",
             error_details={"test": "audit"},
             company_id=company_id,
-            thread_id=thread_id
+            thread_id=thread_id,
         )
 
         # Error should include full audit context

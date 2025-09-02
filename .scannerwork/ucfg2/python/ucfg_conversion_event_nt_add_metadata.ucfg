@@ -1,0 +1,57 @@
+
+6database.conversion_event.ConversionEvent.add_metadataB
+8/home/omar/Documents/ruleIQ/database/conversion_event.py^ ^("2*“
+2_ _(3|
+z
+` `('
+%4"__id*b
+
+__unknown_file (F*D+
+)database.conversion_event.ConversionEvent"
+conversion_metadata*
+4
+5*9
+3
+conversion_event.py"
+d d(
+implicit return*µ
+4b b(-|
+z
+b b( 
+%2"__id*b
+
+__unknown_file (F*D+
+)database.conversion_event.ConversionEvent"
+conversion_metadata¢Ÿ
+b b(-
+%1"dict.__setitem__*"
+
+__unknown_file (
+
+%2*#
+
+__unknown_file (
+
+key*%
+
+__unknown_file (	
+
+value2__setitem__*
+3*ª
+5a a()
+a' a()
+%3"dict|
+z
+a a()D+
+)database.conversion_event.ConversionEvent"
+conversion_metadata"__id*"
+
+__unknown_file (
+
+%3*
+4:
+^ ^(#
+key:
+^% ^(*
+valueB-+
+)database.conversion_event.ConversionEventH

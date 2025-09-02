@@ -1,0 +1,91 @@
+
+-$"Convert to dictionary for logging."str
+"max_relevance_score"str
+"document_sources"str
+"retrieval_time_ms"str
+#"chunks"str
+ "frameworks_covered"str
+"total_results"str
+
+
+"strategy"str
+"rerank_time_ms"str
+"avg_relevance_score"str
+"query"str
+"min_relevance_score"strself
+ê ê("Ÿ&
+$
+
+ì ø(	"#new-object#Bdict0
+.
+
+í í(/"#get-field# total_results:"
+ 
+
+í í(/"	#map-set#:(
+&
+
+î î("#get-field# query:"
+ 
+
+î î(	"	#map-set#:+
+)
+
+ï ï(%"#get-field# strategy:(
+&
+
+ï ï(+"#get-field# value:"
+ 
+
+ï ï(+"	#map-set#:
+4
+2
+
+ð! ð(7"#get-field# retrieval_time_ms:"
+ 
+
+ð ð(7"	#map-set#:1
+/
+
+ñ ñ(1"#get-field# rerank_time_ms:"
+ 
+
+ñ ñ(1"	#map-set#:6
+4
+
+ò# ò(;"!#get-field# avg_relevance_score:"
+ 
+
+ò ò(;"	#map-set#:6
+4
+
+ó# ó(;"!#get-field# min_relevance_score:"
+ 
+
+ó ó(;"	#map-set#:6
+4
+
+ô# ô(;"!#get-field# max_relevance_score:"
+ 
+
+ô ô(;"	#map-set#:-
++
+
+õ  õ(H"?python-unknown?:Blist"
+ 
+
+õ õ(H"	#map-set#:5
+3
+
+ö" ö(9!" #get-field# frameworks_covered:"
+ 
+
+ö ö(9""	#map-set#: !-
++
+
+÷ ÷(@$"?python-unknown?:Blist"
+ 
+
+÷ ÷(@%"	#map-set#:#$
+
+ì ø(	*@/home/omar/Documents/ruleIQ/langgraph_agent/agents/rag_system.py

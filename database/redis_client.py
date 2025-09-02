@@ -1,11 +1,13 @@
 """
 Redis client for API key management
 """
+
 import redis.asyncio as redis
 from typing import Optional
 from config.settings import settings
 
 _redis_client: Optional[redis.Redis] = None
+
 
 async def get_redis_client() -> redis.Redis:
     """Get Redis client instance"""

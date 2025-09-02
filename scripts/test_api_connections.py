@@ -7,6 +7,7 @@ import requests
 
 BASE_URL = "http://localhost:8000"
 
+
 def test_endpoint(method, endpoint, data=None, headers=None, description=""):
     """Test a single endpoint"""
     url = f"{BASE_URL}{endpoint}"
@@ -24,7 +25,7 @@ def test_endpoint(method, endpoint, data=None, headers=None, description=""):
 
         if status_code >= 400:
             try:
-                error_detail = response.json().get('detail', 'No detail')
+                error_detail = response.json().get("detail", "No detail")
                 print(f"    Error: {error_detail}")
             except:
                 print(f"    Error: {response.text[:100]}")
@@ -34,6 +35,7 @@ def test_endpoint(method, endpoint, data=None, headers=None, description=""):
     except Exception as e:
         print(f"❌ {method} {endpoint} -> ERROR: {e}")
         return False, None
+
 
 def main():
     print("🚀 Testing API Connections - Backend to Frontend Integration")
@@ -50,33 +52,70 @@ def main():
     # Register a test user
     register_data = {
         "email": f"test-api-connection-{int(1754520948)}@debugtest.com",
-        "password": "TestPassword123@"
+        "password": "TestPassword123@",
     }
 
-    success, response = test_endpoint("POST", "/api/v1/auth/register", register_data, description="User registration")
+    success, response = test_endpoint(
+        "POST", "/api/v1/auth/register", register_data, description="User registration"
+    )
 
     if success and response:
         try:
-            token = response.json()['tokens']['access_token']
+            token = response.json()["tokens"]["access_token"]
             print("    ✅ Auth token obtained")
 
             # Test authenticated endpoints with the token
             auth_headers = {"Authorization": f"Bearer {token}"}
 
             print("\n📋 Previously Failing Endpoints (403 errors):")
-            test_endpoint("GET", "/api/v1/business-profiles/", headers=auth_headers, description="Business profiles list")
-            test_endpoint("GET", "/api/v1/assessments/", headers=auth_headers, description="Assessments list")
-            test_endpoint("GET", "/api/v1/frameworks/", headers=auth_headers, description="Frameworks list")
+            test_endpoint(
+                "GET",
+                "/api/v1/business-profiles/",
+                headers=auth_headers,
+                description="Business profiles list",
+            )
+            test_endpoint(
+                "GET",
+                "/api/v1/assessments/",
+                headers=auth_headers,
+                description="Assessments list",
+            )
+            test_endpoint(
+                "GET",
+                "/api/v1/frameworks/",
+                headers=auth_headers,
+                description="Frameworks list",
+            )
 
             print("\n🤖 AI Endpoints (Previously 404 errors):")
-            test_endpoint("GET", "/api/v1/ai/generate-policy", headers=auth_headers, description="AI policy generation")
-            test_endpoint("GET", "/api/v1/ai/cost-monitoring", headers=auth_headers, description="AI cost monitoring")
+            test_endpoint(
+                "GET",
+                "/api/v1/ai/generate-policy",
+                headers=auth_headers,
+                description="AI policy generation",
+            )
+            test_endpoint(
+                "GET",
+                "/api/v1/ai/cost-monitoring",
+                headers=auth_headers,
+                description="AI cost monitoring",
+            )
 
             print("\n💬 Chat Endpoints:")
-            test_endpoint("GET", "/api/v1/chat/", headers=auth_headers, description="Chat endpoint")
+            test_endpoint(
+                "GET",
+                "/api/v1/chat/",
+                headers=auth_headers,
+                description="Chat endpoint",
+            )
 
             print("\n🎯 Freemium Endpoints:")
-            test_endpoint("POST", "/api/v1/freemium/capture-lead", {"email": "test@example.com", "consent": True}, description="Freemium lead capture")
+            test_endpoint(
+                "POST",
+                "/api/v1/freemium/capture-lead",
+                {"email": "test@example.com", "consent": True},
+                description="Freemium lead capture",
+            )
 
         except Exception as e:
             print(f"    ❌ Could not extract token: {e}")
@@ -85,6 +124,7 @@ def main():
     print("✅ API Connection Test Complete")
     print("   - Check results above to see what's working vs broken")
     print("   - ✅ = Working, ❌ = Needs attention")
+
 
 if __name__ == "__main__":
     main()

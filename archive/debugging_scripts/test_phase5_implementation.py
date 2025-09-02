@@ -12,7 +12,10 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from services.ai.instruction_integration import InstructionManager
-from services.ai.instruction_monitor import InstructionMetricType, InstructionPerformanceMonitor
+from services.ai.instruction_monitor import (
+    InstructionMetricType,
+    InstructionPerformanceMonitor,
+)
 from services.ai.instruction_templates import (
     FrameworkType,
     InstructionType,

@@ -1,14 +1,14 @@
 import { vi } from 'vitest';
 
 // Create a comprehensive mock for all Lucide React icons
-const createIconMock = (name: string) => 
+const createIconMock = (name: string) =>
   vi.fn().mockImplementation((props = {}) => ({
     type: 'svg',
     props: {
       className: props.className || '',
       'data-testid': `${name.toLowerCase()}-icon`,
-      ...props
-    }
+      ...props,
+    },
   }));
 
 // Export ALL possible Lucide icons (comprehensive list)
@@ -18,7 +18,7 @@ export const LucideIconMocks = {
   BarChart3: createIconMock('BarChart3'),
   Shield: createIconMock('Shield'),
   Filter: createIconMock('Filter'),
-  
+
   // Comprehensive icon list
   Activity: createIconMock('Activity'),
   AlertTriangle: createIconMock('AlertTriangle'),
@@ -127,9 +127,9 @@ export const LucideIconMocks = {
   X: createIconMock('X'),
   XCircle: createIconMock('XCircle'),
   Zap: createIconMock('Zap'),
-  
+
   // Default fallback for any missing icons
-  default: createIconMock('Default')
+  default: createIconMock('Default'),
 };
 
 // Create a proxy to handle any missing icons dynamically
@@ -141,5 +141,5 @@ export const LucideProxy = new Proxy(LucideIconMocks, {
     // Create a mock for any missing icon on the fly
     // TODO: Replace with proper logging
     return createIconMock(String(prop));
-  }
+  },
 });

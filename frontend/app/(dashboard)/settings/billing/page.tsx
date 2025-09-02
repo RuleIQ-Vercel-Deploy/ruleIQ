@@ -55,7 +55,6 @@ export default function BillingPage() {
       window.location.href = response.url;
     } catch (error) {
       // TODO: Replace with proper logging
-
       // // TODO: Replace with proper logging
     }
   };
@@ -74,7 +73,6 @@ export default function BillingPage() {
       await fetchBillingData();
     } catch (error) {
       // TODO: Replace with proper logging
-
       // // TODO: Replace with proper logging
     }
   };
@@ -85,7 +83,6 @@ export default function BillingPage() {
       await fetchBillingData();
     } catch (error) {
       // TODO: Replace with proper logging
-
       // // TODO: Replace with proper logging
     }
   };

@@ -1,0 +1,21 @@
+
+1("Decorator to trace database operations"str	operation
+ì ì(%table
+ì' ì(1"ì#
+!
+
+ö ö("#unknown-value#*
+(
+
+î ö(%closure"#new-object#-
++
+
+î ö("#set-field# operation:)
+'
+
+î ö("#set-field# table:-
++
+
+î ö("?python-partial-apply?:
+
+ö ö(*-/home/omar/Documents/ruleIQ/config/tracing.py

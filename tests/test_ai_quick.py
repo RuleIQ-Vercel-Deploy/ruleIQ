@@ -7,7 +7,8 @@ import os
 from dotenv import load_dotenv
 
 # Load environment variables
-load_dotenv('.env.local')
+load_dotenv(".env.local")
+
 
 async def test_ai_direct():
     """Test AI components directly"""
@@ -16,16 +17,17 @@ async def test_ai_direct():
     # Test Google AI API key
     print("1️⃣ Testing Google AI API...")
     try:
-        api_key = os.getenv('GOOGLE_AI_API_KEY')
+        api_key = os.getenv("GOOGLE_AI_API_KEY")
         if not api_key:
             print("❌ GOOGLE_AI_API_KEY not found in .env.local")
             return
 
         import google.generativeai as genai
+
         genai.configure(api_key=api_key)
 
         # Create model
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel("gemini-1.5-flash")
 
         # Test prompt
         response = model.generate_content("Say 'AI is working with Neon database!'")
@@ -42,7 +44,7 @@ async def test_ai_direct():
     try:
         from openai import OpenAI
 
-        api_key = os.getenv('OPENAI_API_KEY')
+        api_key = os.getenv("OPENAI_API_KEY")
         if not api_key:
             print("❌ OPENAI_API_KEY not found")
             return
@@ -52,7 +54,7 @@ async def test_ai_direct():
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": "Say 'OpenAI is ready!'"}],
-            max_tokens=50
+            max_tokens=50,
         )
 
         print(f"✅ OpenAI Response: {response.choices[0].message.content}")
@@ -78,10 +80,11 @@ async def test_ai_direct():
     print("🎉 AI component tests completed!")
     print("\n📊 Summary:")
     print("- Google AI API: Test individual response")
-    print("- OpenAI API: Test individual response") 
+    print("- OpenAI API: Test individual response")
     print("- Circuit Breaker: Test initialization")
     print("- Database: Already tested with Neon ✅")
     print("\nYour AI system is ready!")
+
 
 if __name__ == "__main__":
     asyncio.run(test_ai_direct())

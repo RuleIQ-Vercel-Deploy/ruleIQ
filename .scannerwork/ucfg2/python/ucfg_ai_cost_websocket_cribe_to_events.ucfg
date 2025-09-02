@@ -1,0 +1,80 @@
+
+Capi.routers.ai_cost_websocket.ConnectionManager.subscribe_to_eventsH
+</home/omar/Documents/ruleIQ/api/routers/ai_cost_websocket.pyÙ Ù(!"2*•
+2
+Ü Ü(;„
+
+
+Ý Ý(3
+%5"__id*g
+
+__unknown_file (K*I1
+/api.routers.ai_cost_websocket.ConnectionManager"
+active_connectionsus
+
+Ý Ý(3
+%6*"
+
+__unknown_file (
+
+%5*-
+
+__unknown_file (
+
+connection_id2__contains__*
+3
+4*<
+3
+ai_cost_websocket.py"
+à à(
+implicit return*Š
+4
+Þ Þ(W„
+
+
+Þ Þ(#
+%1"__id*g
+
+__unknown_file (K*I1
+/api.routers.ai_cost_websocket.ConnectionManager"
+active_connections~|
+
+Þ Þ(2
+%2"__mapGet*"
+
+__unknown_file (
+
+%1*-
+
+__unknown_file (
+
+connection_id2__getitem__~|
+
+Þ Þ(C
+%3"__mapGet*"
+
+__unknown_file (
+
+%2*-
+
+__unknown_file (
+subscriptions2__getitem__mk
+
+Þ Þ(W
+%4*"
+
+__unknown_file (
+
+%3*+
+
+__unknown_file (
+
+event_types2update*
+3:
+
+Ú Ú( 
+connection_id:
+
+Ú" Ú(8
+event_typesB31
+/api.routers.ai_cost_websocket.ConnectionManagerH

@@ -1,0 +1,159 @@
+
+3audit_logging.AuditLoggingService.log_authorizationJ
+>/home/omar/Documents/ruleIQ/services/security/audit_logging.py¡ ¡("2*„
+2
+ª ª(&k
+i
+
+¬ ¬(3
+%1"__id*O
+
+__unknown_file (3*1
+audit_logging.AuditEventType"
+AUTHORIZATION*
+4
+5*Ë
+4
+­ ­(6r
+p
+
+­ ­(6
+%3"__id*V
+
+__unknown_file (:*8 
+audit_logging.AuditEventAction"
+PERMISSION_GRANTED>
+<
+
+­ ­(6
+%2"__id*"
+
+__unknown_file (
+
+%3*
+7
+8*Ê
+5
+­G ­(iq
+o
+
+­G ­(i
+%4"__id*U
+
+__unknown_file (9*7 
+audit_logging.AuditEventAction"
+PERMISSION_DENIED>
+<
+
+­G ­(i
+%2"__id*"
+
+__unknown_file (
+
+%4*
+7
+8*Y
+7
+° °(C
+A
+
+° °(
+%5"__id*'
+
+__unknown_file (	
+SUCCESS*
+9*X
+8
+°- °(5B
+@
+
+°- °(5
+%5"__id*&
+
+__unknown_file (
+
+DENIED*
+9*
+9
+°- °(5
+
+± ±(G
+%6"dict
+
+± ±(2
+%7"dict›
+˜
+
+± ±(1
+%8"__mapSet*"
+
+__unknown_file (
+
+%7**
+
+__unknown_file (
+
+permission**
+
+__unknown_file (
+
+
+permission
+
+±C ±(E
+%9"dictòï
+
+« ³(	
+%10*A
+
+__unknown_file (%#
+!audit_logging.AuditLoggingService2	log_event:
+
+event_type
+
+%1:
+action
+
+%2:
+user_id
+	
+user_id:
+resource
+
+
+resource:
+result
+
+%5:
+metadata
+
+%6:
+db
+
+db"
+
+« ³(	
+
+%10:
+
+£ £(	
+user_id:
+
+¤ ¤(
+
+resource:
+
+¥ ¥(
+
+permission:
+
+¦ ¦(	
+granted:
+
+§ §('
+
+metadata:
+
+¨ ¨(
+dbB%#
+!audit_logging.AuditLoggingServiceH

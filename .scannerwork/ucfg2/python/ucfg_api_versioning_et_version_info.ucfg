@@ -1,0 +1,129 @@
+
+<api.middleware.api_versioning.APIVersioning.get_version_infoF
+</home/omar/Documents/ruleIQ/api/middleware/api_versioning.pyC C("2*“
+2D D(0
+E J(	
+%1"dict“
+
+F F(
+%2"__mapSet*"
+
+__unknown_file (
+
+%1*'
+
+__unknown_file (	
+version*'
+
+__unknown_file (
+	
+version}
+{
+G$ G(;
+%3"__id*c
+
+__unknown_file (G*E-
++api.middleware.api_versioning.APIVersioning"
+SUPPORTED_VERSIONSmk
+G G(;
+%4*"
+
+__unknown_file (
+
+%3*'
+
+__unknown_file (
+	
+version2__contains__
+
+G G(;
+%5"__mapSet*"
+
+__unknown_file (
+
+%1*)
+
+__unknown_file (
+	supported*"
+
+__unknown_file (
+
+%4y
+w
+H! H(4
+%6"__id*_
+
+__unknown_file (C*A-
++api.middleware.api_versioning.APIVersioning"
+LATEST_VERSION
+Œ
+H H(4
+%7"	__compare*"
+
+__unknown_file (
+==*'
+
+__unknown_file (
+	
+version*"
+
+__unknown_file (
+
+%6
+Š
+H H(4
+%8"__mapSet*"
+
+__unknown_file (
+
+%1*&
+
+__unknown_file (
+
+latest*"
+
+__unknown_file (
+
+%7y
+w
+I% I(8
+%9"__id*_
+
+__unknown_file (C*A-
++api.middleware.api_versioning.APIVersioning"
+LATEST_VERSION
+
+I I(8
+%10"	__compare*"
+
+__unknown_file (
+!=*'
+
+__unknown_file (
+	
+version*"
+
+__unknown_file (
+
+%9“
+
+I I(8
+%11"__mapSet*"
+
+__unknown_file (
+
+%1**
+
+__unknown_file (
+
+deprecated*#
+
+__unknown_file (
+
+%10"
+E J(	
+
+%1:
+C C(+	
+versionB/-
++api.middleware.api_versioning.APIVersioningH

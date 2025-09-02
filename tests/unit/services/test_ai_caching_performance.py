@@ -12,7 +12,10 @@ from unittest.mock import AsyncMock
 import pytest
 
 from services.ai.analytics_monitor import AIAnalyticsMonitor, AlertLevel, MetricType
-from services.ai.performance_optimizer import AIPerformanceOptimizer, OptimizationStrategy
+from services.ai.performance_optimizer import (
+    AIPerformanceOptimizer,
+    OptimizationStrategy,
+)
 from services.ai.response_cache import AIResponseCache, ContentType
 
 
@@ -75,7 +78,9 @@ class TestAIResponseCache:
         )
 
         # Test general TTL (should be shorter)
-        general_ttl = cache_instance._calculate_intelligent_ttl(ContentType.GENERAL, "A" * 500, {})
+        general_ttl = cache_instance._calculate_intelligent_ttl(
+            ContentType.GENERAL, "A" * 500, {}
+        )
 
         assert policy_ttl > general_ttl
         assert cache_instance.min_ttl <= policy_ttl <= cache_instance.max_ttl
@@ -153,7 +158,10 @@ class TestAIPerformanceOptimizer:
     async def test_prompt_optimization(self, optimizer_instance):
         """Test prompt optimization functionality"""
 
-        long_prompt = "Generate ISO 27001 recommendations with lots of redundant information " * 50
+        long_prompt = (
+            "Generate ISO 27001 recommendations with lots of redundant information "
+            * 50
+        )
         context = {"framework": "ISO27001"}
 
         optimized = await optimizer_instance._optimize_prompt(long_prompt, context)
@@ -233,7 +241,10 @@ class TestAIAnalyticsMonitor:
         initial_count = len(monitor_instance.metrics)
 
         await monitor_instance.record_metric(
-            MetricType.PERFORMANCE, "response_time_ms", 1500.0, metadata={"framework": "ISO27001"}
+            MetricType.PERFORMANCE,
+            "response_time_ms",
+            1500.0,
+            metadata={"framework": "ISO27001"},
         )
 
         assert len(monitor_instance.metrics) == initial_count + 1
@@ -304,7 +315,9 @@ class TestAIAnalyticsMonitor:
 
         # Add some cost metrics
         for i in range(10):
-            await monitor_instance.record_metric(MetricType.COST, "cost_estimate", 0.01 * (i + 1))
+            await monitor_instance.record_metric(
+                MetricType.COST, "cost_estimate", 0.01 * (i + 1)
+            )
 
         cost_analytics = await monitor_instance.get_cost_analytics(30)
 
@@ -317,7 +330,9 @@ class TestAIAnalyticsMonitor:
         """Test alert resolution functionality"""
 
         # Create an alert
-        await monitor_instance._create_alert(AlertLevel.WARNING, "Test Alert", "Test description")
+        await monitor_instance._create_alert(
+            AlertLevel.WARNING, "Test Alert", "Test description"
+        )
 
         alert_id = monitor_instance.alerts[-1].id
 
@@ -332,7 +347,9 @@ class TestAIAnalyticsMonitor:
         """Test comprehensive dashboard data generation"""
 
         # Add some test data
-        await monitor_instance.record_metric(MetricType.PERFORMANCE, "response_time_ms", 1200.0)
+        await monitor_instance.record_metric(
+            MetricType.PERFORMANCE, "response_time_ms", 1200.0
+        )
         await monitor_instance.record_metric(MetricType.COST, "cost_estimate", 0.05)
 
         dashboard = await monitor_instance.get_dashboard_data()
@@ -383,7 +400,9 @@ class TestSmartEvidenceCollector:
 
         assert len(iso_requirements) > 0
         assert any(req["control_id"] == "A.5.1.1" for req in iso_requirements)
-        assert any(req["evidence_type"] == "policy_document" for req in iso_requirements)
+        assert any(
+            req["evidence_type"] == "policy_document" for req in iso_requirements
+        )
 
     def test_evidence_gap_analysis(self, collector_instance):
         """Test evidence gap analysis"""
@@ -394,9 +413,13 @@ class TestSmartEvidenceCollector:
             {"control_id": "A.12.4.1", "evidence_type": "log_analysis"},
         ]
 
-        existing_evidence = [{"control_id": "A.5.1.1", "evidence_type": "policy_document"}]
+        existing_evidence = [
+            {"control_id": "A.5.1.1", "evidence_type": "policy_document"}
+        ]
 
-        gaps = collector_instance._analyze_evidence_gaps(requirements, existing_evidence)
+        gaps = collector_instance._analyze_evidence_gaps(
+            requirements, existing_evidence
+        )
 
         assert len(gaps) == 2
         assert any(gap["control_id"] == "A.9.1.1" for gap in gaps)
@@ -410,7 +433,10 @@ class TestSmartEvidenceCollector:
         business_context = {"employee_count": 100}
 
         # High priority control
-        high_priority_gap = {"control_id": "A.5.1.1", "evidence_type": "policy_document"}
+        high_priority_gap = {
+            "control_id": "A.5.1.1",
+            "evidence_type": "policy_document",
+        }
         priority = collector_instance._calculate_task_priority(
             high_priority_gap, business_context, "ISO27001"
         )
@@ -486,7 +512,10 @@ class TestSmartEvidenceCollector:
         if plan.tasks:
             task_id = plan.tasks[0].task_id
             success = await collector_instance.update_task_status(
-                plan.plan_id, task_id, CollectionStatus.COMPLETED, "Task completed successfully"
+                plan.plan_id,
+                task_id,
+                CollectionStatus.COMPLETED,
+                "Task completed successfully",
             )
 
             assert success is True
@@ -538,9 +567,7 @@ class TestQualityMonitor:
         """Test accuracy scoring for different response types"""
 
         # High accuracy response with framework keywords
-        accurate_response = (
-            "ISO 27001 requires implementing ISMS controls for information security management"
-        )
+        accurate_response = "ISO 27001 requires implementing ISMS controls for information security management"
         context = {"framework": "ISO27001"}
 
         accuracy_score = monitor_instance._score_accuracy(
@@ -581,8 +608,12 @@ class TestQualityMonitor:
 
         # Create initial dimension scores
         dimension_scores = {
-            QualityDimension.ACCURACY: QualityScore(QualityDimension.ACCURACY, 7.0, 0.8),
-            QualityDimension.RELEVANCE: QualityScore(QualityDimension.RELEVANCE, 6.0, 0.8),
+            QualityDimension.ACCURACY: QualityScore(
+                QualityDimension.ACCURACY, 7.0, 0.8
+            ),
+            QualityDimension.RELEVANCE: QualityScore(
+                QualityDimension.RELEVANCE, 6.0, 0.8
+            ),
         }
 
         # Create positive feedback
@@ -627,7 +658,9 @@ class TestQualityMonitor:
 
         # Create low scores for testing
         low_dimension_scores = {
-            QualityDimension.ACCURACY: QualityScore(QualityDimension.ACCURACY, 4.0, 0.8),
+            QualityDimension.ACCURACY: QualityScore(
+                QualityDimension.ACCURACY, 4.0, 0.8
+            ),
             QualityDimension.CLARITY: QualityScore(QualityDimension.CLARITY, 3.0, 0.8),
         }
 
@@ -636,8 +669,12 @@ class TestQualityMonitor:
         )
 
         assert len(suggestions) >= 2
-        assert any("framework-specific" in suggestion.lower() for suggestion in suggestions)
-        assert any("clearer language" in suggestion.lower() for suggestion in suggestions)
+        assert any(
+            "framework-specific" in suggestion.lower() for suggestion in suggestions
+        )
+        assert any(
+            "clearer language" in suggestion.lower() for suggestion in suggestions
+        )
 
     @pytest.mark.asyncio
     async def test_quality_trends_calculation(self, monitor_instance):

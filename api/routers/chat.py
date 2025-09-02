@@ -32,13 +32,14 @@ from database.chat_conversation import ChatConversation, ConversationStatus
 from database.chat_message import ChatMessage
 from database.db_setup import get_async_db, get_db
 from services.ai import ComplianceAssistant
-from services.iq_agent import create_iq_agent, IQComplianceAgent
+from services.iq_agent import IQComplianceAgent
 from services.neo4j_service import Neo4jGraphRAGService
 
 # Set up logging
 logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["Chat Assistant"])
+
 
 @router.post("/conversations", response_model=dict)
 async def create_conversation(
@@ -54,15 +55,21 @@ async def create_conversation(
         user_id_str = str(current_user.id)
 
         # Use a single query with subquery for better performance
-        profile_stmt = select(BusinessProfile).where(BusinessProfile.user_id == user_id_str)
-        count_stmt = select(func.count(ChatConversation.id)).where(ChatConversation.user_id == user_id_str)
+        profile_stmt = select(BusinessProfile).where(
+            BusinessProfile.user_id == user_id_str
+        )
+        count_stmt = select(func.count(ChatConversation.id)).where(
+            ChatConversation.user_id == user_id_str
+        )
 
         # Execute both queries concurrently
         profile_task = asyncio.create_task(db.execute(profile_stmt))
         count_task = asyncio.create_task(db.execute(count_stmt))
 
         try:
-            profile_result, count_result = await asyncio.gather(profile_task, count_task)
+            profile_result, count_result = await asyncio.gather(
+                profile_task, count_task
+            )
         except Exception as e:
             logger.error(f"Database query failed: {e}")
             raise HTTPException(status_code=500, detail="Database query failed")
@@ -105,7 +112,9 @@ async def create_conversation(
                 db.add(user_message)
 
                 # Generate assistant response with enhanced error handling and timeout
-                logger.info(f"Processing initial message for conversation {conversation.id}")
+                logger.info(
+                    f"Processing initial message for conversation {conversation.id}"
+                )
 
                 # Use asyncio timeout to prevent hanging
                 try:
@@ -119,16 +128,20 @@ async def create_conversation(
                     )
 
                     # Aggressive timeout for conversation creation
-                    response_text, metadata = await asyncio.wait_for(response_task, timeout=12.0)
+                    response_text, metadata = await asyncio.wait_for(
+                        response_task, timeout=12.0
+                    )
 
                 except asyncio.TimeoutError:
-                    logger.warning(f"AI processing timed out for conversation {conversation.id}")
+                    logger.warning(
+                        f"AI processing timed out for conversation {conversation.id}"
+                    )
                     # Use fallback response
                     response_text = """I understand you'd like to discuss compliance matters. Due to high demand, I'm providing a quick response:
 
 I'm here to help with compliance questions about GDPR, ISO 27001, and other frameworks. Please feel free to ask specific questions about:
 • Data protection requirements
-• Security controls and policies  
+• Security controls and policies
 • Risk assessments
 • Audit preparations
 
@@ -139,7 +152,7 @@ What specific compliance topic would you like to explore?"""
                         "fallback_used": True,
                         "timeout_occurred": True,
                         "intent": "general",
-                        "processing_time_ms": 12000
+                        "processing_time_ms": 12000,
                     }
 
                 # Add assistant message
@@ -155,7 +168,10 @@ What specific compliance topic would you like to explore?"""
                 messages = [user_message, assistant_message]
 
             except Exception as ai_error:
-                logger.error(f"AI processing failed for conversation {conversation.id}: {ai_error}", exc_info=True)
+                logger.error(
+                    f"AI processing failed for conversation {conversation.id}: {ai_error}",
+                    exc_info=True,
+                )
 
                 # Still add the user message but provide a fallback response
                 user_message = ChatMessage(
@@ -185,7 +201,7 @@ What specific compliance area can I assist you with?"""
                         "timestamp": datetime.utcnow().isoformat(),
                         "fallback_used": True,
                         "ai_error": str(ai_error),
-                        "intent": "fallback"
+                        "intent": "fallback",
                     },
                     sequence_number=2,
                 )
@@ -223,6 +239,7 @@ What specific compliance area can I assist you with?"""
         logger.error(f"Unexpected error creating conversation: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to create conversation")
 
+
 @router.get("/conversations", response_model=ConversationListResponse)
 async def list_conversations(
     page: int = Query(1, ge=1),
@@ -259,7 +276,9 @@ async def list_conversations(
         conversation_summaries = []
         for conv in conversations:
             message_count = (
-                db.query(ChatMessage).filter(ChatMessage.conversation_id == conv.id).count()
+                db.query(ChatMessage)
+                .filter(ChatMessage.conversation_id == conv.id)
+                .count()
             )
 
             last_message = (
@@ -281,12 +300,16 @@ async def list_conversations(
             )
 
         return ConversationListResponse(
-            conversations=conversation_summaries, total=total, page=page, per_page=per_page
+            conversations=conversation_summaries,
+            total=total,
+            page=page,
+            per_page=per_page,
         )
 
     except Exception as e:
         logger.error(f"Error listing conversations: {e}")
         raise HTTPException(status_code=500, detail="Failed to list conversations")
+
 
 @router.get("/conversations/{conversation_id}", response_model=ConversationResponse)
 async def get_conversation(
@@ -299,7 +322,8 @@ async def get_conversation(
         conversation = (
             db.query(ChatConversation)
             .filter(
-                ChatConversation.id == conversation_id, ChatConversation.user_id == str(current_user.id)
+                ChatConversation.id == conversation_id,
+                ChatConversation.user_id == str(current_user.id),
             )
             .first()
         )
@@ -329,7 +353,10 @@ async def get_conversation(
         logger.error(f"Error getting conversation: {e}")
         raise HTTPException(status_code=500, detail="Failed to get conversation")
 
-@router.post("/conversations/{conversation_id}/messages", response_model=MessageResponse)
+
+@router.post(
+    "/conversations/{conversation_id}/messages", response_model=MessageResponse
+)
 async def send_message(
     conversation_id: UUID,
     request: SendMessageRequest,
@@ -338,7 +365,7 @@ async def send_message(
 ):
     """Send a message in a conversation."""
     try:
-        from sqlalchemy import desc, select, func
+        from sqlalchemy import desc, select
 
         # Verify conversation exists and belongs to user
         conv_stmt = select(ChatConversation).where(
@@ -350,10 +377,14 @@ async def send_message(
         conversation = conv_result.scalars().first()
 
         if not conversation:
-            raise HTTPException(status_code=404, detail="Conversation not found or inactive")
+            raise HTTPException(
+                status_code=404, detail="Conversation not found or inactive"
+            )
 
         # Get business profile
-        bp_stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
+        bp_stmt = select(BusinessProfile).where(
+            BusinessProfile.user_id == str(str(current_user.id))
+        )
         bp_result = await db.execute(bp_stmt)
         business_profile = bp_result.scalars().first()
 
@@ -416,6 +447,7 @@ async def send_message(
         logger.error(f"Error sending message: {e}")
         raise HTTPException(status_code=500, detail="Failed to send message")
 
+
 @router.delete("/conversations/{conversation_id}")
 async def delete_conversation(
     conversation_id: UUID,
@@ -427,7 +459,8 @@ async def delete_conversation(
         conversation = (
             db.query(ChatConversation)
             .filter(
-                ChatConversation["id"] == conversation_id, ChatConversation.user_id == str(current_user.id)
+                ChatConversation["id"] == conversation_id,
+                ChatConversation.user_id == str(current_user.id),
             )
             .first()
         )
@@ -447,7 +480,10 @@ async def delete_conversation(
         logger.error(f"Error deleting conversation: {e}")
         raise HTTPException(status_code=500, detail="Failed to delete conversation")
 
-@router.post("/evidence-recommendations", response_model=List[EvidenceRecommendationResponse])
+
+@router.post(
+    "/evidence-recommendations", response_model=List[EvidenceRecommendationResponse]
+)
 async def get_evidence_recommendations(
     request: EvidenceRecommendationRequest,
     db: AsyncSession = Depends(get_async_db),
@@ -456,7 +492,9 @@ async def get_evidence_recommendations(
     """Get AI-powered evidence collection recommendations."""
     try:
         # Use async query for business profile
-        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
+        stmt = select(BusinessProfile).where(
+            BusinessProfile.user_id == str(str(current_user.id))
+        )
         result = await db.execute(stmt)
         business_profile = result.scalars().first()
 
@@ -478,6 +516,7 @@ async def get_evidence_recommendations(
         logger.error(f"Error getting evidence recommendations: {e}")
         raise HTTPException(status_code=500, detail="Failed to get recommendations")
 
+
 @router.post("/compliance-analysis", response_model=ComplianceAnalysisResponse)
 async def analyze_compliance_gap(
     request: ComplianceAnalysisRequest,
@@ -489,7 +528,9 @@ async def analyze_compliance_gap(
         from sqlalchemy import select
 
         # Use async query for business profile
-        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
+        stmt = select(BusinessProfile).where(
+            BusinessProfile.user_id == str(str(current_user.id))
+        )
         result = await db.execute(stmt)
         business_profile = result.scalars().first()
 
@@ -498,7 +539,8 @@ async def analyze_compliance_gap(
 
         assistant = ComplianceAssistant(db)
         analysis = await assistant.analyze_evidence_gap(
-            business_profile_id=UUID(str(business_profile.id)), framework=request.framework
+            business_profile_id=UUID(str(business_profile.id)),
+            framework=request.framework,
         )
 
         return ComplianceAnalysisResponse(**analysis)
@@ -509,10 +551,15 @@ async def analyze_compliance_gap(
         logger.error(f"Error analyzing compliance gap: {e}")
         raise HTTPException(status_code=500, detail="Failed to analyze compliance gap")
 
+
 @router.post("/context-aware-recommendations")
 async def get_context_aware_recommendations(
-    framework: str = Query(..., min_length=1, description="Framework to get recommendations for"),
-    context_type: str = Query(default="comprehensive", description="Type of context analysis"),
+    framework: str = Query(
+        ..., min_length=1, description="Framework to get recommendations for"
+    ),
+    context_type: str = Query(
+        default="comprehensive", description="Type of context analysis"
+    ),
     db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
 ):
@@ -526,7 +573,9 @@ async def get_context_aware_recommendations(
     """
     try:
         # Use async query for business profile
-        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
+        stmt = select(BusinessProfile).where(
+            BusinessProfile.user_id == str(str(current_user.id))
+        )
         result = await db.execute(stmt)
         business_profile = result.scalars().first()
 
@@ -547,12 +596,19 @@ async def get_context_aware_recommendations(
         raise
     except Exception as e:
         logger.error(f"Error getting context-aware recommendations: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get context-aware recommendations")
+        raise HTTPException(
+            status_code=500, detail="Failed to get context-aware recommendations"
+        )
+
 
 @router.post("/evidence-collection-workflow")
 async def generate_evidence_collection_workflow(
-    framework: str = Query(..., min_length=1, description="Framework for workflow generation"),
-    control_id: Optional[str] = Query(None, description="Specific control ID (optional)"),
+    framework: str = Query(
+        ..., min_length=1, description="Framework for workflow generation"
+    ),
+    control_id: Optional[str] = Query(
+        None, description="Specific control ID (optional)"
+    ),
     workflow_type: str = Query(default="comprehensive", description="Type of workflow"),
     db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
@@ -563,7 +619,9 @@ async def generate_evidence_collection_workflow(
     """
     try:
         # Use async query for business profile
-        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
+        stmt = select(BusinessProfile).where(
+            BusinessProfile.user_id == str(str(current_user.id))
+        )
         result = await db.execute(stmt)
         business_profile = result.scalars().first()
 
@@ -589,13 +647,18 @@ async def generate_evidence_collection_workflow(
             status_code=500, detail="Failed to generate evidence collection workflow"
         )
 
+
 async def generate_customized_policy(
     framework: str = Query(..., description="Framework for policy generation"),
     policy_type: str = Query(..., description="Type of policy to generate"),
     tone: str = Query(default="Professional", description="Policy tone"),
     detail_level: str = Query(default="Standard", description="Level of detail"),
-    include_templates: bool = Query(default=True, description="Include implementation templates"),
-    geographic_scope: str = Query(default="Single location", description="Geographic scope"),
+    include_templates: bool = Query(
+        default=True, description="Include implementation templates"
+    ),
+    geographic_scope: str = Query(
+        default="Single location", description="Geographic scope"
+    ),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
@@ -640,12 +703,17 @@ async def generate_customized_policy(
         raise
     except Exception as e:
         logger.error(f"Error generating customized policy: {e}")
-        raise HTTPException(status_code=500, detail="Failed to generate customized policy")
+        raise HTTPException(
+            status_code=500, detail="Failed to generate customized policy"
+        )
+
 
 @router.get("/smart-guidance/{framework}")
 async def get_smart_compliance_guidance(
     framework: str,
-    guidance_type: str = Query(default="getting_started", description="Type of guidance needed"),
+    guidance_type: str = Query(
+        default="getting_started", description="Type of guidance needed"
+    ),
     db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
 ):
@@ -658,7 +726,9 @@ async def get_smart_compliance_guidance(
     """
     try:
         # Use async query for business profile
-        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
+        stmt = select(BusinessProfile).where(
+            BusinessProfile.user_id == str(str(current_user.id))
+        )
         result = await db.execute(stmt)
         business_profile = result.scalars().first()
 
@@ -713,7 +783,10 @@ async def get_smart_compliance_guidance(
         raise
     except Exception as e:
         logger.error(f"Error getting smart compliance guidance: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get smart compliance guidance")
+        raise HTTPException(
+            status_code=500, detail="Failed to get smart compliance guidance"
+        )
+
 
 # REMOVED: Duplicate endpoint
 # REMOVED: Duplicate endpoint
@@ -729,19 +802,19 @@ async def get_smart_compliance_guidance(
 # #         from services.ai.response_cache import get_ai_cache
 # #
 #
+#         ai_cache = await get_ai_cache()
+#         metrics = await ai_cache.get_cache_metrics()
+#
+#         return {
+#             "cache_performance": metrics,
+#             "status": "active",
+#             "generated_at": datetime.utcnow().isoformat(),
+#         }
+#
+#     except Exception as e:
+#         logger.error(f"Error getting cache metrics: {e}")
+#         raise HTTPException(status_code=500, detail="Failed to get cache metrics")
 
-        ai_cache = await get_ai_cache()
-        metrics = await ai_cache.get_cache_metrics()
-
-        return {
-            "cache_performance": metrics,
-            "status": "active",
-            "generated_at": datetime.utcnow().isoformat(),
-        }
-
-    except Exception as e:
-        logger.error(f"Error getting cache metrics: {e}")
-        raise HTTPException(status_code=500, detail="Failed to get cache metrics")
 
 @router.delete("/cache/clear")
 async def clear_ai_cache(
@@ -768,8 +841,11 @@ async def clear_ai_cache(
         logger.error(f"Error clearing cache: {e}")
         raise HTTPException(status_code=500, detail="Failed to clear cache")
 
+
 @router.get("/performance/metrics")
-async def get_ai_performance_metrics(current_user: User = Depends(get_current_active_user)):
+async def get_ai_performance_metrics(
+    current_user: User = Depends(get_current_active_user),
+):
     """
     Get comprehensive AI performance metrics including:
     - Response time statistics
@@ -800,10 +876,13 @@ async def get_ai_performance_metrics(current_user: User = Depends(get_current_ac
         logger.error(f"Error getting performance metrics: {e}")
         raise HTTPException(status_code=500, detail="Failed to get performance metrics")
 
+
 @router.post("/performance/optimize")
 async def optimize_ai_performance(
     enable_batching: bool = Query(default=True, description="Enable request batching"),
-    enable_compression: bool = Query(default=True, description="Enable prompt compression"),
+    enable_compression: bool = Query(
+        default=True, description="Enable prompt compression"
+    ),
     max_concurrent: int = Query(default=10, description="Maximum concurrent requests"),
     current_user: User = Depends(get_current_active_user),
 ):
@@ -837,10 +916,15 @@ async def optimize_ai_performance(
 
     except Exception as e:
         logger.error(f"Error updating performance settings: {e}")
-        raise HTTPException(status_code=500, detail="Failed to update performance settings")
+        raise HTTPException(
+            status_code=500, detail="Failed to update performance settings"
+        )
+
 
 @router.get("/analytics/dashboard")
-async def get_analytics_dashboard(current_user: User = Depends(get_current_active_user)):
+async def get_analytics_dashboard(
+    current_user: User = Depends(get_current_active_user),
+):
     """
     Get comprehensive analytics dashboard data including:
     - Real-time performance metrics
@@ -860,6 +944,7 @@ async def get_analytics_dashboard(current_user: User = Depends(get_current_activ
     except Exception as e:
         logger.error(f"Error getting analytics dashboard: {e}")
         raise HTTPException(status_code=500, detail="Failed to get analytics dashboard")
+
 
 @router.get("/analytics/usage")
 async def get_usage_analytics(
@@ -885,6 +970,7 @@ async def get_usage_analytics(
         logger.error(f"Error getting usage analytics: {e}")
         raise HTTPException(status_code=500, detail="Failed to get usage analytics")
 
+
 @router.get("/analytics/cost")
 async def get_cost_analytics(
     days: int = Query(default=30, description="Number of days to analyze"),
@@ -909,9 +995,12 @@ async def get_cost_analytics(
         logger.error(f"Error getting cost analytics: {e}")
         raise HTTPException(status_code=500, detail="Failed to get cost analytics")
 
+
 @router.get("/analytics/alerts")
 async def get_system_alerts(
-    resolved: Optional[bool] = Query(default=None, description="Filter by resolution status"),
+    resolved: Optional[bool] = Query(
+        default=None, description="Filter by resolution status"
+    ),
     current_user: User = Depends(get_current_active_user),
 ):
     """
@@ -934,8 +1023,11 @@ async def get_system_alerts(
         logger.error(f"Error getting system alerts: {e}")
         raise HTTPException(status_code=500, detail="Failed to get system alerts")
 
+
 @router.post("/analytics/alerts/{alert_id}/resolve")
-async def resolve_system_alert(alert_id: str, current_user: User = Depends(get_current_active_user)):
+async def resolve_system_alert(
+    alert_id: str, current_user: User = Depends(get_current_active_user)
+):
     """
     Mark a system alert as resolved.
     """
@@ -959,6 +1051,7 @@ async def resolve_system_alert(alert_id: str, current_user: User = Depends(get_c
     except Exception as e:
         logger.error(f"Error resolving alert: {e}")
         raise HTTPException(status_code=500, detail="Failed to resolve alert")
+
 
 @router.post("/smart-evidence/create-plan")
 async def create_smart_evidence_plan(
@@ -1033,10 +1126,15 @@ async def create_smart_evidence_plan(
         raise
     except Exception as e:
         logger.error(f"Error creating smart evidence plan: {e}")
-        raise HTTPException(status_code=500, detail="Failed to create smart evidence plan")
+        raise HTTPException(
+            status_code=500, detail="Failed to create smart evidence plan"
+        )
+
 
 @router.get("/smart-evidence/plan/{id}")
-async def get_smart_evidence_plan(id: str, current_user: User = Depends(get_current_active_user)):
+async def get_smart_evidence_plan(
+    id: str, current_user: User = Depends(get_current_active_user)
+):
     """
     Get details of a smart evidence collection plan.
     """
@@ -1044,7 +1142,7 @@ async def get_smart_evidence_plan(id: str, current_user: User = Depends(get_curr
         from services.ai.smart_evidence_collector import get_smart_evidence_collector
 
         collector = await get_smart_evidence_collector()
-        plan = await collector.get_collection_plan(plan_id)
+        plan = await collector.get_collection_plan(id)
 
         if not plan:
             raise HTTPException(status_code=404, detail="Collection plan not found")
@@ -1080,6 +1178,7 @@ async def get_smart_evidence_plan(id: str, current_user: User = Depends(get_curr
         logger.error(f"Error getting smart evidence plan: {e}")
         raise HTTPException(status_code=500, detail="Failed to get smart evidence plan")
 
+
 @router.get("/smart-evidence/next-tasks/{id}")
 async def get_next_priority_tasks(
     id: str,
@@ -1093,10 +1192,10 @@ async def get_next_priority_tasks(
         from services.ai.smart_evidence_collector import get_smart_evidence_collector
 
         collector = await get_smart_evidence_collector()
-        tasks = await collector.get_next_priority_tasks(plan_id, limit)
+        tasks = await collector.get_next_priority_tasks(id, limit)
 
         return {
-            "plan_id": plan_id,
+            "plan_id": id,
             "next_tasks": [
                 {
                     "task_id": task.task_id,
@@ -1118,6 +1217,7 @@ async def get_next_priority_tasks(
     except Exception as e:
         logger.error(f"Error getting next priority tasks: {e}")
         raise HTTPException(status_code=500, detail="Failed to get next priority tasks")
+
 
 @router.post("/smart-evidence/update-task/{plan_id}/{task_id}")
 async def update_evidence_task_status(
@@ -1164,6 +1264,7 @@ async def update_evidence_task_status(
         logger.error(f"Error updating task status: {e}")
         raise HTTPException(status_code=500, detail="Failed to update task status")
 
+
 # REMOVED: Duplicate endpoint
 # REMOVED: Duplicate endpoint
 # # @router.get("/quality/trends")
@@ -1182,17 +1283,17 @@ async def update_evidence_task_status(
 # #     """
 # #     try:
 # #         from services.ai.quality_monitor import get_quality_monitor
-# # 
+# #
 # #         monitor = await get_quality_monitor()
 # #         trends = await monitor.get_quality_trends(days)
-# # 
+# #
 # #         return trends
-# # 
+# #
 # #     except Exception as e:
 # #         logger.error(f"Error getting quality trends: {e}")
 # #         raise HTTPException(status_code=500, detail="Failed to get quality trends")
-# # 
-# # 
+# #
+# #
 # # @router.post("/quality/feedback")
 # # async def submit_quality_feedback(
 # #     response_id: str = Query(..., description="Response ID to provide feedback for"),
@@ -1203,7 +1304,7 @@ async def update_evidence_task_status(
 # # ):
 # #     """
 # #     Submit user feedback for AI response quality improvement.
-# # 
+# #
 # #     Feedback types:
 # #     - thumbs_up: Positive feedback
 # #     - thumbs_down: Negative feedback
@@ -1213,17 +1314,17 @@ async def update_evidence_task_status(
 # #     """
 # #     try:
 # #         from services.ai.quality_monitor import FeedbackType, ResponseFeedback, get_quality_monitor
-# # 
+# #
 # #         # Validate feedback type
 # #         try:
 # #             feedback_type_enum = FeedbackType(feedback_type)
 # #         except ValueError:
 # #             raise HTTPException(status_code=400, detail=f"Invalid feedback type: {feedback_type}")
-# # 
+# #
 # #         # Validate rating if provided
 # #         if rating is not None and not (1.0 <= rating <= 5.0):
 # #             raise HTTPException(status_code=400, detail="Rating must be between 1.0 and 5.0")
-# # 
+# #
 # #         # Create feedback object
 # #         feedback = ResponseFeedback(
 # #             feedback_id=f"fb_{response_id}_{int(datetime.utcnow().timestamp())}",
@@ -1234,10 +1335,10 @@ async def update_evidence_task_status(
 # #             text_feedback=text_feedback,
 # #             metadata={"user_email": current_user.get("primaryEmail", current_user.get("email", "")), "submitted_via": "api"},
 # #         )
-# # 
+# #
 # #         monitor = await get_quality_monitor()
 # #         await monitor.record_user_feedback(feedback)
-# # 
+# #
 # #         return {
 # #             "feedback_id": feedback.feedback_id,
 # #             "response_id": response_id,
@@ -1245,14 +1346,14 @@ async def update_evidence_task_status(
 # #             "status": "recorded",
 # #             "submitted_at": feedback.timestamp.isoformat(),
 # #         }
-# # 
+# #
 # #     except HTTPException:
 # #         raise
 # #     except Exception as e:
 # #         logger.error(f"Error submitting quality feedback: {e}")
 # #         raise HTTPException(status_code=500, detail="Failed to submit quality feedback")
-# # 
-# # 
+# #
+# #
 # # @router.get("/quality/assessment/{response_id}")
 # # async def get_quality_assessment(response_id: str, current_user: User = Depends(get_current_active_user)):
 # #     """
@@ -1260,14 +1361,14 @@ async def update_evidence_task_status(
 # #     """
 # #     try:
 # #         from services.ai.quality_monitor import get_quality_monitor
-# # 
+# #
 # #         monitor = await get_quality_monitor()
-# # 
+# #
 # #         if response_id not in monitor.quality_assessments:
 # #             raise HTTPException(status_code=404, detail="Quality assessment not found")
-# # 
+# #
 # #         assessment = monitor.quality_assessments[response_id]
-# # 
+# #
 # #         return {
 # #             "assessment_id": assessment.assessment_id,
 # #             "response_id": assessment.response_id,
@@ -1287,13 +1388,14 @@ async def update_evidence_task_status(
 # #             "timestamp": assessment.timestamp.isoformat(),
 # #             "metadata": assessment.metadata,
 # #         }
-# # 
+# #
 # #     except HTTPException:
 # #         raise
 # #     except Exception as e:
 # #         logger.error(f"Error getting quality assessment: {e}")
 # #         raise HTTPException(status_code=500, detail="Failed to get quality assessment")
-# # 
+# #
+
 
 @router.post("/compliance-gap-analysis", summary="Analyze compliance gaps")
 async def compliance_gap_analysis(
@@ -1316,8 +1418,8 @@ async def compliance_gap_analysis(
                 "recommendations": [
                     "Develop comprehensive information security policy",
                     "Get executive approval and sign-off",
-                    "Distribute to all employees"
-                ]
+                    "Distribute to all employees",
+                ],
             },
             {
                 "control_id": "2.3",
@@ -1327,16 +1429,17 @@ async def compliance_gap_analysis(
                 "required_state": "optimized",
                 "recommendations": [
                     "Implement multi-factor authentication",
-                    "Regular access reviews"
-                ]
-            }
+                    "Regular access reviews",
+                ],
+            },
         ],
         "overall_compliance": 67,
         "critical_gaps": 2,
         "total_controls": 15,
         "estimated_remediation_time": "3-6 months",
-        "generated_at": datetime.utcnow().isoformat()
+        "generated_at": datetime.utcnow().isoformat(),
     }
+
 
 @router.get("/smart-compliance-guidance", summary="Get smart compliance guidance")
 async def get_smart_compliance_guidance_endpoint(
@@ -1353,50 +1456,51 @@ async def get_smart_compliance_guidance_endpoint(
                 "Understand the framework requirements",
                 "Assess current compliance state",
                 "Identify critical gaps",
-                "Create implementation roadmap"
+                "Create implementation roadmap",
             ],
             "quick_wins": [
                 {
                     "action": "Document existing policies",
                     "effort": "low",
                     "impact": "high",
-                    "estimated_time": "1 week"
+                    "estimated_time": "1 week",
                 },
                 {
                     "action": "Enable audit logging",
                     "effort": "low",
                     "impact": "medium",
-                    "estimated_time": "2 days"
-                }
+                    "estimated_time": "2 days",
+                },
             ],
             "priority_actions": [
                 {
                     "priority": 1,
                     "action": "Complete risk assessment",
                     "reason": "Foundation for all other controls",
-                    "dependencies": []
+                    "dependencies": [],
                 },
                 {
                     "priority": 2,
                     "action": "Implement access controls",
                     "reason": "Critical security requirement",
-                    "dependencies": ["risk assessment"]
-                }
+                    "dependencies": ["risk assessment"],
+                },
             ],
             "automation_opportunities": [
                 "Automated evidence collection from cloud providers",
                 "Continuous compliance monitoring",
-                "Automated policy generation"
-            ]
+                "Automated policy generation",
+            ],
         },
         "estimated_timeline": {
             "initial_assessment": "1-2 weeks",
             "gap_remediation": "2-3 months",
             "full_compliance": "4-6 months",
-            "certification_ready": "6-8 months"
+            "certification_ready": "6-8 months",
         },
-        "generated_at": datetime.utcnow().isoformat()
+        "generated_at": datetime.utcnow().isoformat(),
     }
+
 
 @router.delete("/cache/clear", summary="Clear AI cache")
 async def clear_cache_with_pattern(
@@ -1406,16 +1510,17 @@ async def clear_cache_with_pattern(
     """Clear AI response cache entries matching a specific pattern."""
     # Placeholder implementation
     import random
-    
+
     cleared_count = random.randint(10, 100)
-    
+
     return {
         "pattern": pattern,
         "cleared_entries": cleared_count,
         "cache_status": "cleared",
         "message": f"Successfully cleared {cleared_count} cache entries matching pattern '{pattern}'",
-        "cleared_at": datetime.utcnow().isoformat()
+        "cleared_at": datetime.utcnow().isoformat(),
     }
+
 
 @router.get("/quality/metrics")
 async def get_quality_metrics(current_user: User = Depends(get_current_active_user)):
@@ -1430,7 +1535,8 @@ async def get_quality_metrics(current_user: User = Depends(get_current_active_us
         return {
             "overall_metrics": monitor.metrics,
             "quality_thresholds": {
-                level.value: threshold for level, threshold in monitor.quality_thresholds.items()
+                level.value: threshold
+                for level, threshold in monitor.quality_thresholds.items()
             },
             "total_assessments": len(monitor.quality_assessments),
             "total_feedback_items": len(monitor.feedback_history),
@@ -1442,33 +1548,35 @@ async def get_quality_metrics(current_user: User = Depends(get_current_active_us
         logger.error(f"Error getting quality metrics: {e}")
         raise HTTPException(status_code=500, detail="Failed to get quality metrics")
 
+
 # Global IQ agent instance (shared with iq_agent router)
 _iq_agent: Optional[IQComplianceAgent] = None
 _neo4j_service: Optional[Neo4jGraphRAGService] = None
 
+
 async def get_iq_agent_for_chat(db: AsyncSession) -> IQComplianceAgent:
     """Get or create IQ agent instance for chat"""
     global _iq_agent, _neo4j_service
-    
+
     if _iq_agent is None:
         try:
             # Initialize Neo4j service
             _neo4j_service = Neo4jGraphRAGService()
             await _neo4j_service.connect()
-            
+
             # Create IQ agent with PostgreSQL session
             _iq_agent = IQComplianceAgent(
-                neo4j_service=_neo4j_service,
-                postgres_session=db
+                neo4j_service=_neo4j_service, postgres_session=db
             )
             logger.info("IQ Agent initialized successfully for chat")
-            
+
         except Exception as e:
             logger.error(f"Failed to initialize IQ Agent: {str(e)}")
             # Fallback to regular assistant if IQ Agent fails
             return None
-    
+
     return _iq_agent
+
 
 @router.post("/iq-chat/{conversation_id}/messages", response_model=MessageResponse)
 async def send_iq_message(
@@ -1483,21 +1591,22 @@ async def send_iq_message(
         result = await db.execute(
             select(ChatConversation).where(
                 ChatConversation.id == conversation_id,
-                ChatConversation.user_id == str(current_user.id)
+                ChatConversation.user_id == str(current_user.id),
             )
         )
         conversation = result.scalars().first()
-        
+
         if not conversation:
             raise HTTPException(status_code=404, detail="Conversation not found")
-        
+
         # Get next sequence number
         seq_result = await db.execute(
-            select(func.max(ChatMessage.sequence_number))
-            .where(ChatMessage.conversation_id == conversation_id)
+            select(func.max(ChatMessage.sequence_number)).where(
+                ChatMessage.conversation_id == conversation_id
+            )
         )
         max_seq = seq_result.scalar() or 0
-        
+
         # Add user message
         user_message = ChatMessage(
             conversation_id=conversation_id,
@@ -1507,53 +1616,63 @@ async def send_iq_message(
         )
         db.add(user_message)
         await db.flush()
-        
+
         # Try to get IQ Agent
         iq_agent = await get_iq_agent_for_chat(db)
-        
+
         if iq_agent:
             try:
                 # Process with IQ Agent's GraphRAG capabilities
-                logger.info(f"Processing message with IQ Agent for conversation {conversation_id}")
-                
+                logger.info(
+                    f"Processing message with IQ Agent for conversation {conversation_id}"
+                )
+
                 # Build context from business profile
-                business_context = await iq_agent.retrieve_business_context(str(current_user.id))
-                
+                business_context = await iq_agent.retrieve_business_context(
+                    str(current_user.id)
+                )
+
                 # Process query through IQ Agent
                 result = await iq_agent.process_query(
                     user_query=request.message,
                     context={
                         "user_id": str(current_user.id),
                         "conversation_id": str(conversation_id),
-                        "business_context": business_context
-                    }
+                        "business_context": business_context,
+                    },
                 )
-                
+
                 # Extract response text
                 response_text = result.get("llm_response", "")
-                
+
                 # Add metadata from IQ processing
                 metadata = {
                     "timestamp": datetime.utcnow().isoformat(),
                     "iq_agent": True,
-                    "graph_nodes_traversed": result.get("graph_context", {}).get("nodes_traversed", 0),
-                    "graph_relationships": result.get("graph_context", {}).get("relationships_explored", 0),
+                    "graph_nodes_traversed": result.get("graph_context", {}).get(
+                        "nodes_traversed", 0
+                    ),
+                    "graph_relationships": result.get("graph_context", {}).get(
+                        "relationships_explored", 0
+                    ),
                     "evidence_found": len(result.get("evidence", [])),
                     "artifacts_generated": len(result.get("artifacts", [])),
-                    "processing_time_ms": result.get("processing_time_ms", 0)
+                    "processing_time_ms": result.get("processing_time_ms", 0),
                 }
-                
+
                 # Add next actions as part of response if available
                 if result.get("next_actions"):
                     response_text += "\n\n**Recommended Next Steps:**\n"
                     for action in result["next_actions"]:
                         response_text += f"• {action}\n"
-                
+
             except Exception as iq_error:
-                logger.warning(f"IQ Agent processing failed, falling back to regular assistant: {iq_error}")
+                logger.warning(
+                    f"IQ Agent processing failed, falling back to regular assistant: {iq_error}"
+                )
                 # Fallback to regular assistant
                 assistant = ComplianceAssistant(db)
-                
+
                 # Handle case where conversation has no business profile
                 if conversation.business_profile_id:
                     response_text, metadata = await assistant.process_message(
@@ -1571,13 +1690,13 @@ async def send_iq_message(
                     )
                     metadata = {
                         "timestamp": datetime.utcnow().isoformat(),
-                        "no_business_profile": True
+                        "no_business_profile": True,
                     }
                 metadata["iq_agent_fallback"] = True
         else:
             # Use regular assistant if IQ Agent not available
             assistant = ComplianceAssistant(db)
-            
+
             # Handle case where conversation has no business profile
             if conversation.business_profile_id:
                 response_text, metadata = await assistant.process_message(
@@ -1595,10 +1714,10 @@ async def send_iq_message(
                 )
                 metadata = {
                     "timestamp": datetime.utcnow().isoformat(),
-                    "no_business_profile": True
+                    "no_business_profile": True,
                 }
             metadata["iq_agent"] = False
-        
+
         # Add assistant message
         assistant_message = ChatMessage(
             conversation_id=conversation_id,
@@ -1608,14 +1727,14 @@ async def send_iq_message(
             sequence_number=max_seq + 2,
         )
         db.add(assistant_message)
-        
+
         # Update conversation timestamp
         conversation.updated_at = datetime.utcnow()
-        
+
         await db.commit()
-        
+
         return MessageResponse.from_orm(assistant_message)
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -1623,34 +1742,41 @@ async def send_iq_message(
         logger.error(f"Error sending IQ message: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to send message")
 
+
 @router.get("/iq-agent/status")
 async def get_iq_agent_status(
     current_user: User = Depends(get_current_active_user),
 ):
     """Check IQ Agent availability and status"""
     global _iq_agent, _neo4j_service
-    
+
     status = {
         "iq_agent_available": _iq_agent is not None,
         "neo4j_connected": False,
         "graph_initialized": False,
         "nodes_count": 0,
         "relationships_count": 0,
-        "message": "IQ Agent not initialized"
+        "message": "IQ Agent not initialized",
     }
-    
+
     if _neo4j_service:
         try:
             # Check Neo4j connection
             stats = await _neo4j_service.get_graph_statistics()
-            status.update({
-                "neo4j_connected": True,
-                "graph_initialized": stats.get("nodes", 0) > 0,
-                "nodes_count": stats.get("nodes", 0),
-                "relationships_count": stats.get("relationships", 0),
-                "message": "IQ Agent operational" if _iq_agent else "IQ Agent not initialized"
-            })
+            status.update(
+                {
+                    "neo4j_connected": True,
+                    "graph_initialized": stats.get("nodes", 0) > 0,
+                    "nodes_count": stats.get("nodes", 0),
+                    "relationships_count": stats.get("relationships", 0),
+                    "message": (
+                        "IQ Agent operational"
+                        if _iq_agent
+                        else "IQ Agent not initialized"
+                    ),
+                }
+            )
         except Exception as e:
             status["message"] = f"Neo4j connection error: {str(e)}"
-    
+
     return status

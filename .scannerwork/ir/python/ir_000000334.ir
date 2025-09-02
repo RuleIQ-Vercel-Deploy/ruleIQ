@@ -1,0 +1,47 @@
+
+"user_access_logs"str
+"applications"str
+"admin_activity_logs"str
+"access_groups"str
+0'"Get list of supported evidence types."str
+%"organization_configuration"str
+
+0int
+"user_directory"strself
+ù% ù()
+list"¿)
+'
+
+ü ¶(		"#unknown-value#Blist(
+&
+
+ü ¶(	"
+#is-exact#:	
+Bbool
+
+
+ü ¶(	"
+#assume#::
+8
+
+ü ¶(	"#set-field# __collection_size:	Bint(
+&
+
+ü ¶(	"#array-add-last#:	(
+&
+
+ü ¶(	"#array-add-last#:	(
+&
+
+ü ¶(	"#array-add-last#:	(
+&
+
+ü ¶(	"#array-add-last#:	(
+&
+
+ü ¶(	"#array-add-last#:	(
+&
+
+ü ¶(	"#array-add-last#:	
+
+ü ¶(		*;/home/omar/Documents/ruleIQ/api/clients/microsoft_client.py

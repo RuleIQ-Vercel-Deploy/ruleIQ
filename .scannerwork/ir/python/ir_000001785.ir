@@ -1,0 +1,49 @@
+
+"type"str
+
+"metadata"str
+-$"Convert relationship to dictionary"str
+"target_id"str
+"properties"str
+"source_id"str
+"id"strselfX X(4	0services.knowledge_graph.models.RelationshipType"ç$
+"
+Z a(	"#new-object#Bdict#
+!
+[ [("#get-field# id: 
+
+[ [("	#map-set#:%
+#
+\2 \(;"#get-field# type:)
+'
+\' \(N
+"#is-instance#:	Bbool&"$
+\' \(N
+ *\$ \(&2\O \(S"a%
+#
+\ \("#get-field# type:&
+$
+\ \(#"#get-field# value:
+\ \(]"9%
+#
+\T \(]"#get-field# type:
+\ \(]"þ* 
+
+\ \(]"	#map-set#:*
+(
+] ]('"#get-field# source_id: 
+
+] ]('"	#map-set#:*
+(
+^ ^('"#get-field# target_id: 
+
+^ ^('"	#map-set#:+
+)
+_ _()"#get-field# properties: 
+
+_ _()"	#map-set#:)
+'
+` `(%"#get-field# metadata: 
+
+` `(%"	#map-set#:
+Z a(	*>/home/omar/Documents/ruleIQ/services/knowledge_graph/models.py

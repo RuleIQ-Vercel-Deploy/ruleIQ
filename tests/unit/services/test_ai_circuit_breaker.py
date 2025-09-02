@@ -27,7 +27,10 @@ class TestAICircuitBreaker:
     def circuit_breaker_config(self):
         """Circuit breaker configuration for testing."""
         return CircuitBreakerConfig(
-            failure_threshold=3, recovery_timeout=60, success_threshold=2, time_window=60
+            failure_threshold=3,
+            recovery_timeout=60,
+            success_threshold=2,
+            time_window=60,
         )
 
     @pytest.fixture
@@ -177,7 +180,9 @@ class TestAICircuitBreaker:
             return "should_not_execute"
 
         with pytest.raises(AIServiceException) as exc_info:
-            await circuit_breaker.async_call_with_circuit_breaker(model_name, mock_async_operation)
+            await circuit_breaker.async_call_with_circuit_breaker(
+                model_name, mock_async_operation
+            )
 
         assert "Circuit breaker is OPEN" in str(exc_info.value)
 
@@ -206,7 +211,9 @@ class TestAICircuitBreaker:
         circuit_breaker.record_failure(model_name, error)
 
         # Manually set old timestamp
-        circuit_breaker._failures[model_name][0].timestamp = datetime.utcnow() - timedelta(
+        circuit_breaker._failures[model_name][
+            0
+        ].timestamp = datetime.utcnow() - timedelta(
             seconds=circuit_breaker.config.timeout_seconds + 1
         )
 

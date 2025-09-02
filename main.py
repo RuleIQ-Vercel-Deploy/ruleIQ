@@ -78,11 +78,13 @@ async def lifespan(app: FastAPI):
 
     # Initialize cache manager
     from config.cache import get_cache_manager
+
     await get_cache_manager()
     logger.info("Cache manager initialized.")
 
     # Initialize agentic integration service
     from services.agentic_integration import initialize_agentic_service
+
     try:
         await initialize_agentic_service()
         logger.info("Agentic RAG service initialized.")
@@ -96,7 +98,9 @@ async def lifespan(app: FastAPI):
     try:
         # Start the database monitoring background task
         monitor = get_database_monitor()
-        monitoring_task = asyncio.create_task(monitor.start_monitoring_loop(interval_seconds=30))
+        monitoring_task = asyncio.create_task(
+            monitor.start_monitoring_loop(interval_seconds=30)
+        )
         logger.info("Database monitoring service started with 30s interval")
 
         # Store the task reference for cleanup
@@ -112,7 +116,7 @@ async def lifespan(app: FastAPI):
     logger.info("Shutting down ComplianceGPT API...")
 
     # Cancel monitoring task if it exists
-    if hasattr(app.state, 'monitoring_task'):
+    if hasattr(app.state, "monitoring_task"):
         try:
             app.state.monitoring_task.cancel()
             await app.state.monitoring_task
@@ -157,22 +161,13 @@ app = FastAPI(
     contact={
         "name": "ruleIQ API Support",
         "url": "https://docs.ruleiq.com",
-        "email": "api-support@ruleiq.com"
+        "email": "api-support@ruleiq.com",
     },
-    license_info={
-        "name": "Proprietary",
-        "url": "https://ruleiq.com/license"
-    },
+    license_info={"name": "Proprietary", "url": "https://ruleiq.com/license"},
     servers=[
-        {
-            "url": "http://localhost:8000",
-            "description": "Development server"
-        },
-        {
-            "url": "https://api.ruleiq.com",
-            "description": "Production server"
-        }
-    ]
+        {"url": "http://localhost:8000", "description": "Development server"},
+        {"url": "https://api.ruleiq.com", "description": "Production server"},
+    ],
 )
 
 
@@ -214,7 +209,7 @@ app.add_middleware(
     csp_enabled=True,
     cors_enabled=False,  # Already handled by CORSMiddleware
     nonce_enabled=True,
-    report_uri="/api/security/csp-report"
+    report_uri="/api/security/csp-report",
 )
 
 # Add integrated security middleware (auth, authz, audit, encryption, SQL protection)
@@ -232,54 +227,85 @@ security_middleware = SecurityMiddleware(
         "/api/v1/auth/login",
         "/api/v1/auth/register",
         "/api/v1/freemium/leads",
-        "/api/v1/freemium/sessions"
-    ]
+        "/api/v1/freemium/sessions",
+    ],
 )
 app.middleware("http")(security_middleware)
+
 
 # Add rate limit headers from request.state to responses
 @app.middleware("http")
 async def add_rate_limit_headers_middleware(request: Request, call_next):
     """Add rate limit headers from request.state to responses."""
     response = await call_next(request)
-    
+
     # Add rate limit headers if they were set by rate limit dependencies
     if hasattr(request.state, "rate_limit_headers"):
         for header, value in request.state.rate_limit_headers.items():
             response.headers[header] = value
-    
+
     return response
+
 
 # Include routers
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Authentication"])
-app.include_router(google_auth.router, prefix="/api/v1/auth/google", tags=["Google OAuth"])
-app.include_router(rbac_auth.router, prefix="/api/v1/auth", tags=["RBAC Authentication"])
+app.include_router(
+    google_auth.router, prefix="/api/v1/auth/google", tags=["Google OAuth"]
+)
+app.include_router(
+    rbac_auth.router, prefix="/api/v1/auth", tags=["RBAC Authentication"]
+)
 app.include_router(users.router, prefix="/api/v1/users", tags=["Users"])
 app.include_router(
-    business_profiles.router, prefix="/api/v1/business-profiles", tags=["Business Profiles"]
+    business_profiles.router,
+    prefix="/api/v1/business-profiles",
+    tags=["Business Profiles"],
 )
-app.include_router(assessments.router, prefix="/api/v1/assessments", tags=["Assessments"])
+app.include_router(
+    assessments.router, prefix="/api/v1/assessments", tags=["Assessments"]
+)
 # Usage tracking dashboard for SMB owners
 from api.routers import usage_dashboard, audit_export
+
 app.include_router(usage_dashboard.router, prefix="/api/v1", tags=["Usage Dashboard"])
 app.include_router(audit_export.router, prefix="/api/v1", tags=["Audit Export"])
 app.include_router(freemium.router, prefix="/api/v1", tags=["Freemium Assessment"])
 # New consolidated AI assessments namespace
-app.include_router(ai_assessments.router, prefix="/api/v1/ai", tags=["AI Assessment Assistant"])
-app.include_router(ai_optimization.router, prefix="/api/v1/ai/optimization", tags=["AI Optimization"])
-app.include_router(frameworks.router, prefix="/api/v1/frameworks", tags=["Compliance Frameworks"])
+app.include_router(
+    ai_assessments.router, prefix="/api/v1/ai", tags=["AI Assessment Assistant"]
+)
+app.include_router(
+    ai_optimization.router, prefix="/api/v1/ai/optimization", tags=["AI Optimization"]
+)
+app.include_router(
+    frameworks.router, prefix="/api/v1/frameworks", tags=["Compliance Frameworks"]
+)
 app.include_router(policies.router, prefix="/api/v1/policies", tags=["Policies"])
 app.include_router(
-    implementation.router, prefix="/api/v1/implementation", tags=["Implementation Plans"]
+    implementation.router,
+    prefix="/api/v1/implementation",
+    tags=["Implementation Plans"],
 )
 app.include_router(evidence.router, prefix="/api/v1/evidence", tags=["Evidence"])
-app.include_router(evidence_collection.router, prefix="/api/v1/evidence-collection", tags=["Evidence Collection"])
-app.include_router(compliance.router, prefix="/api/v1/compliance", tags=["Compliance Status"])
-app.include_router(readiness.router, prefix="/api/v1/readiness", tags=["Readiness Assessment"])
-app.include_router(reports.router, prefix="/api/v1/reports", tags=["Reports"])
-app.include_router(integrations.router, prefix="/api/v1/integrations", tags=["Integrations"])
 app.include_router(
-    foundation_evidence.router, prefix="/api/v1/foundation/evidence", tags=["Foundation Evidence Collection"]
+    evidence_collection.router,
+    prefix="/api/v1/evidence-collection",
+    tags=["Evidence Collection"],
+)
+app.include_router(
+    compliance.router, prefix="/api/v1/compliance", tags=["Compliance Status"]
+)
+app.include_router(
+    readiness.router, prefix="/api/v1/readiness", tags=["Readiness Assessment"]
+)
+app.include_router(reports.router, prefix="/api/v1/reports", tags=["Reports"])
+app.include_router(
+    integrations.router, prefix="/api/v1/integrations", tags=["Integrations"]
+)
+app.include_router(
+    foundation_evidence.router,
+    prefix="/api/v1/foundation/evidence",
+    tags=["Foundation Evidence Collection"],
 )
 app.include_router(dashboard.router, prefix="/api/v1/dashboard", tags=["Dashboard"])
 app.include_router(payment.router, prefix="/api/v1/payments", tags=["Payments"])
@@ -289,26 +315,48 @@ app.include_router(api_keys.router, tags=["API Keys"])
 app.include_router(webhooks.router, tags=["Webhooks"])
 app.include_router(secrets_vault.router, tags=["🔐 Secrets Vault"])
 app.include_router(chat.router, prefix="/api/v1/chat", tags=["AI Assistant"])
-app.include_router(ai_cost_monitoring.router, prefix="/api/v1/ai/cost", tags=["AI Cost Monitoring"])
+app.include_router(
+    ai_cost_monitoring.router, prefix="/api/v1/ai/cost", tags=["AI Cost Monitoring"]
+)
 app.include_router(feedback.router, prefix="/api/v1/feedback", tags=["Human Feedback"])
-app.include_router(ai_cost_websocket.router, prefix="/api/v1/ai/cost-websocket", tags=["AI Cost WebSocket"])
-app.include_router(ai_policy.router, prefix="/api/v1/ai/policies", tags=["AI Policy Generation"])
-app.include_router(performance_monitoring.router, prefix="/api/v1/performance", tags=["Performance Monitoring"])
-app.include_router(uk_compliance.router, prefix="/api/v1/uk-compliance", tags=["UK Compliance"])
+app.include_router(
+    ai_cost_websocket.router,
+    prefix="/api/v1/ai/cost-websocket",
+    tags=["AI Cost WebSocket"],
+)
+app.include_router(
+    ai_policy.router, prefix="/api/v1/ai/policies", tags=["AI Policy Generation"]
+)
+app.include_router(
+    performance_monitoring.router,
+    prefix="/api/v1/performance",
+    tags=["Performance Monitoring"],
+)
+app.include_router(
+    uk_compliance.router, prefix="/api/v1/uk-compliance", tags=["UK Compliance"]
+)
 app.include_router(iq_agent.router, prefix="/api/v1/iq-agent", tags=["IQ Agent"])
-app.include_router(agentic_rag.router, prefix="/api/v1/agentic-rag", tags=["Agentic RAG"])
+app.include_router(
+    agentic_rag.router, prefix="/api/v1/agentic-rag", tags=["Agentic RAG"]
+)
 app.include_router(admin_router)
 
 # Test utilities (only in development/test environments)
 import os
-if os.getenv("ENVIRONMENT", "production").lower() in ["development", "test", "testing", "local"]:
-    app.include_router(test_utils.router, prefix="/api/test-utils", tags=["Test Utilities"])
+
+if os.getenv("ENVIRONMENT", "production").lower() in [
+    "development",
+    "test",
+    "testing",
+    "local",
+]:
+    app.include_router(
+        test_utils.router, prefix="/api/test-utils", tags=["Test Utilities"]
+    )
 
 
 @app.get("/api/dashboard")
-async def get_dashboard(
-    current_user: User = Depends(get_current_active_user)
-):
+async def get_dashboard(current_user: User = Depends(get_current_active_user)):
     """Get user dashboard data"""
     # For now, return a simple response
     # In production, you'd fetch real data based on the user
@@ -316,21 +364,23 @@ async def get_dashboard(
         "user": {
             "id": current_user["id"],
             "email": current_user["primaryEmail"],
-            "name": current_user.get("displayName", "")
+            "name": current_user.get("displayName", ""),
         },
         "stats": {
             "assessments": 0,
             "policies": 0,
             "compliance_score": 0,
-            "recent_activities": []
-        }
+            "recent_activities": [],
+        },
     }
 
 
 @app.get("/", response_model=APIInfoResponse, summary="API Information")
 async def root():
     """Get basic API information"""
-    return APIInfoResponse(message="ComplianceGPT API", version="1.0.0", status="operational")
+    return APIInfoResponse(
+        message="ComplianceGPT API", version="1.0.0", status="operational"
+    )
 
 
 @app.get("/health", response_model=HealthCheckResponse, summary="Health Check")
@@ -376,7 +426,9 @@ async def health_check():
 
         for pool_type, metrics in current_metrics.items():
             if metrics:
-                pool_utilization = max(pool_utilization, metrics.get("utilization_percent", 0))
+                pool_utilization = max(
+                    pool_utilization, metrics.get("utilization_percent", 0)
+                )
 
         # Get session metrics if available
         recent_averages = monitoring_summary.get("recent_averages", {})
@@ -390,23 +442,29 @@ async def health_check():
             "status": status,
             "message": message,
             "database": {
-                "engine_initialized": engine_info.get("async_engine_initialized", False),
+                "engine_initialized": engine_info.get(
+                    "async_engine_initialized", False
+                ),
                 "pool_utilization": pool_utilization,
                 "active_sessions": active_sessions,
                 "recent_alerts": {
                     "critical": critical_alerts,
                     "warning": warning_alerts,
-                    "total": len(alerts)
+                    "total": len(alerts),
                 },
             },
-            "timestamp": monitoring_summary.get("timestamp", datetime.utcnow().isoformat()),
+            "timestamp": monitoring_summary.get(
+                "timestamp", datetime.utcnow().isoformat()
+            ),
         }
 
         return HealthCheckResponse(**health_data)
 
     except Exception as e:
         logger.error(f"Health check failed: {e}")
-        return HealthCheckResponse(status="error", message=f"Health check failed: {e!s}")
+        return HealthCheckResponse(
+            status="error", message=f"Health check failed: {e!s}"
+        )
 
 
 @app.get("/debug-suite", include_in_schema=False)
@@ -422,19 +480,26 @@ async def serve_debug_suite():
         raise HTTPException(status_code=404, detail="Debug suite not found")
 
 
-@app.get("/api/v1/health", response_model=HealthCheckResponse, summary="API v1 Health Check")
+@app.get(
+    "/api/v1/health", response_model=HealthCheckResponse, summary="API v1 Health Check"
+)
 async def api_health_check():
     """API v1 health check endpoint"""
     from datetime import datetime
+
     return HealthCheckResponse(
         status="healthy",
         message="API v1 operational",
         timestamp=datetime.utcnow().isoformat(),
-        version="2.0.0"
+        version="2.0.0",
     )
 
 
-@app.get("/api/v1/health/detailed", response_model=HealthCheckResponse, summary="Detailed API v1 Health Check")
+@app.get(
+    "/api/v1/health/detailed",
+    response_model=HealthCheckResponse,
+    summary="Detailed API v1 Health Check",
+)
 async def api_detailed_health_check():
     """Detailed API v1 health check with component status"""
     try:
@@ -485,11 +550,13 @@ async def api_detailed_health_check():
             "version": "2.0.0",
             "api_version": "v1",
             "database": {
-                "engine_initialized": engine_info.get("async_engine_initialized", False),
+                "engine_initialized": engine_info.get(
+                    "async_engine_initialized", False
+                ),
                 "recent_alerts": {
                     "critical": critical_alerts,
                     "warning": warning_alerts,
-                    "total": len(alerts)
+                    "total": len(alerts),
                 },
             },
             # 🔐 SecretsVault status in health check - easily identifiable
@@ -498,7 +565,9 @@ async def api_detailed_health_check():
                 "enabled": vault_health.get("enabled", False),
                 "vault_type": vault_health.get("vault_type", "None"),
                 "region": vault_health.get("region", settings.secrets_vault_region),
-                "message": vault_health.get("message", "No vault information available")
+                "message": vault_health.get(
+                    "message", "No vault information available"
+                ),
             },
         }
 
@@ -510,9 +579,14 @@ async def api_detailed_health_check():
             status="error",
             message=f"API v1 health check failed: {e!s}",
             timestamp=datetime.utcnow().isoformat(),
-            version="2.0.0"
+            version="2.0.0",
         )
 
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host=settings.host, port=settings.port, reload=settings.is_development)
+    uvicorn.run(
+        "main:app",
+        host=settings.host,
+        port=settings.port,
+        reload=settings.is_development,
+    )

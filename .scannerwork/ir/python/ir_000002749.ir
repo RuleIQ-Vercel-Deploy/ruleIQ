@@ -1,0 +1,68 @@
+
+"S3518"bool
+"division by zero"bool
+2)"Calculate average automation potential."str
+
+0int
+0.5float
+"a"bool
+
+2intself
+ş( ş(,regulations
+ş. ş(E"|+
+)
+
+€ €("
+__bool__*:BboolH+
+)
+
+€ €("#unaryop !#2!:Bbool "
+
+€ €( *
+€ €(
+"
+
+ ("”5
+3
+
+‚ ‚(^scores"?python-unknown?:Blist+
+)
+
+ƒ6 ƒ(<"
+__bool__*:BboolH,"*
+
+ƒ6 ƒ(< *
+ƒ3 ƒ(52
+ƒ= ƒ(A"—'
+%
+
+ƒ ƒ( 	"
+builtinssum*:,
+*
+
+ƒ# ƒ(.
+"
+builtinslen*:Bint,
+*
+
+ƒ ƒ(."
+#binop !=#2!=:
+Bbool"
+ 
+
+ƒ ƒ(."
+#assert#:,
+*
+
+ƒ ƒ(."#dependent-value#*:	
+*
+(
+
+ƒ ƒ(2"
+builtinsround*:
+
+ƒ ƒ(E"
+
+ƒ ƒ(E"&*
+
+ƒ ƒ(E*?/home/omar/Documents/ruleIQ/services/ai/iq_neo4j_integration.py

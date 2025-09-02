@@ -138,7 +138,7 @@
     "jspdf-autotable": "^5.0.2",
     "lucide-react": "^0.454.0",
     "motion": "^12.23.12",
-    "next": "15.2.4",
+    "next": "15.4.7",
     "next-themes": "^0.4.4",
     "react": "^19",
     "react-aria-live": "^2.0.5",

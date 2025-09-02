@@ -17,9 +17,11 @@ from services.evidence_service import EvidenceService
 
 router = APIRouter()
 
+
 @router.get("/status", response_model=ComplianceStatusResponse)
 async def get_compliance_status(
-    current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
 ) -> Dict[str, Any]:
     """
     Get overall compliance status for the current user.
@@ -32,7 +34,9 @@ async def get_compliance_status(
     """
     try:
         # Get user's business profile
-        profile_stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user.id))
+        profile_stmt = select(BusinessProfile).where(
+            BusinessProfile.user_id == str(current_user.id)
+        )
         profile_result = await db.execute(profile_stmt)
         profile = profile_result.scalars().first()
 
@@ -53,7 +57,9 @@ async def get_compliance_status(
             }
 
         # Get evidence statistics
-        evidence_stats = await EvidenceService.get_evidence_statistics(db, str(current_user.id))
+        evidence_stats = await EvidenceService.get_evidence_statistics(
+            db, str(current_user.id)
+        )
 
         # Get all frameworks and calculate scores
         frameworks_stmt = select(ComplianceFramework)
@@ -68,7 +74,8 @@ async def get_compliance_status(
         for framework in all_frameworks:
             # Get evidence for this framework
             framework_evidence_stmt = select(EvidenceItem).where(
-                EvidenceItem.user_id == str(current_user.id), EvidenceItem.framework_id == framework["id"]
+                EvidenceItem.user_id == str(current_user.id),
+                EvidenceItem.framework_id == framework["id"],
             )
             framework_evidence_result = await db.execute(framework_evidence_stmt)
             framework_evidence = framework_evidence_result.scalars().all()
@@ -91,7 +98,9 @@ async def get_compliance_status(
             else:
                 # Calculate basic score based on evidence
                 evidence_count = len(framework_evidence)
-                approved_evidence = len([e for e in framework_evidence if e.status == "approved"])
+                approved_evidence = len(
+                    [e for e in framework_evidence if e.status == "approved"]
+                )
                 framework_score = (
                     (approved_evidence / max(evidence_count, 1)) * 100
                     if evidence_count > 0
@@ -107,7 +116,9 @@ async def get_compliance_status(
 
         # Calculate overall score
         overall_score = (
-            round(total_score / max(framework_count, 1), 1) if framework_count > 0 else 0.0
+            round(total_score / max(framework_count, 1), 1)
+            if framework_count > 0
+            else 0.0
         )
 
         # Determine status based on overall score
@@ -127,7 +138,8 @@ async def get_compliance_status(
         recent_evidence_stmt = (
             select(EvidenceItem)
             .where(
-                EvidenceItem.user_id == str(current_user.id), EvidenceItem.updated_at >= recent_cutoff
+                EvidenceItem.user_id == str(current_user.id),
+                EvidenceItem.updated_at >= recent_cutoff,
             )
             .order_by(EvidenceItem.updated_at.desc())
             .limit(10)
@@ -191,20 +203,23 @@ async def get_compliance_status(
 
     except Exception as e:
         # Log the error in a real application
-        raise HTTPException(status_code=500, detail=f"Failed to retrieve compliance status: {e!s}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to retrieve compliance status: {e!s}"
+        )
+
 
 @router.get("/status/{framework_id}", response_model=ComplianceStatusResponse)
 async def get_framework_compliance_status(
     framework_id: str,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ) -> Dict[str, Any]:
     """
     Get compliance status for a specific framework.
-    
+
     Args:
         framework_id: The ID of the compliance framework
-    
+
     Returns:
         Compliance status specific to the requested framework
     """
@@ -213,11 +228,12 @@ async def get_framework_compliance_status(
     # In production, this would filter by specific framework
     return await get_compliance_status(current_user, db)
 
+
 @router.post("/tasks")
 async def create_compliance_task(
     task_data: dict,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """Create a new compliance task."""
     # Placeholder implementation
@@ -230,32 +246,34 @@ async def create_compliance_task(
         "framework_id": task_data.get("framework_id"),
         "due_date": task_data.get("due_date"),
         "created_at": datetime.utcnow().isoformat(),
-        "updated_at": datetime.utcnow().isoformat()
+        "updated_at": datetime.utcnow().isoformat(),
     }
+
 
 @router.patch("/tasks/{id}")
 async def update_compliance_task(
     id: str,
     update_data: dict,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """Update an existing compliance task."""
     # Placeholder implementation
     return {
-        "id": task_id,
+        "id": id,
         "title": update_data.get("title", "Updated Task"),
         "description": update_data.get("description"),
         "status": update_data.get("status", "in_progress"),
         "priority": update_data.get("priority", "medium"),
-        "updated_at": datetime.utcnow().isoformat()
+        "updated_at": datetime.utcnow().isoformat(),
     }
+
 
 @router.post("/risks")
 async def create_compliance_risk(
     risk_data: dict,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """Create a new compliance risk."""
     # Placeholder implementation
@@ -268,15 +286,16 @@ async def create_compliance_risk(
         "status": "identified",
         "framework_id": risk_data.get("framework_id"),
         "mitigation_plan": risk_data.get("mitigation_plan"),
-        "created_at": datetime.utcnow().isoformat()
+        "created_at": datetime.utcnow().isoformat(),
     }
+
 
 @router.patch("/risks/{risk_id}")
 async def update_compliance_risk(
     risk_id: str,
     update_data: dict,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """Update an existing compliance risk."""
     # Placeholder implementation
@@ -288,14 +307,15 @@ async def update_compliance_risk(
         "impact": update_data.get("impact", "medium"),
         "status": update_data.get("status", "mitigated"),
         "mitigation_plan": update_data.get("mitigation_plan"),
-        "updated_at": datetime.utcnow().isoformat()
+        "updated_at": datetime.utcnow().isoformat(),
     }
+
 
 @router.get("/timeline")
 async def get_compliance_timeline(
     framework_id: str = None,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """Get compliance timeline and milestones."""
     # Placeholder implementation
@@ -307,49 +327,52 @@ async def get_compliance_timeline(
                 "title": "Initial Assessment",
                 "date": "2024-01-15",
                 "status": "completed",
-                "description": "Complete initial compliance assessment"
+                "description": "Complete initial compliance assessment",
             },
             {
                 "id": "milestone-2",
                 "title": "Evidence Collection",
                 "date": "2024-02-01",
                 "status": "in_progress",
-                "description": "Gather all required evidence"
+                "description": "Gather all required evidence",
             },
             {
                 "id": "milestone-3",
                 "title": "Gap Analysis",
                 "date": "2024-02-15",
                 "status": "pending",
-                "description": "Identify and address compliance gaps"
+                "description": "Identify and address compliance gaps",
             },
             {
                 "id": "milestone-4",
                 "title": "Certification Audit",
                 "date": "2024-03-01",
                 "status": "pending",
-                "description": "External certification audit"
-            }
+                "description": "External certification audit",
+            },
         ],
         "current_phase": "evidence_collection",
         "estimated_completion": "2024-03-01",
-        "progress_percentage": 45
+        "progress_percentage": 45,
     }
+
 
 async def get_compliance_dashboard(
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """Get compliance dashboard data."""
     # Get basic compliance status
     status_data = await get_compliance_status(current_user, db)
-    
+
     # Add dashboard-specific data
     return {
         **status_data,
         "dashboard_metrics": {
             "active_frameworks": len(status_data.get("framework_scores", {})),
-            "total_evidence": status_data.get("evidence_summary", {}).get("total_items", 0),
+            "total_evidence": status_data.get("evidence_summary", {}).get(
+                "total_items", 0
+            ),
             "pending_tasks": 5,  # Placeholder
             "identified_risks": 3,  # Placeholder
             "upcoming_deadlines": 2,  # Placeholder
@@ -358,25 +381,26 @@ async def get_compliance_dashboard(
             {"action": "Upload Evidence", "path": "/evidence/upload"},
             {"action": "Start Assessment", "path": "/assessments/new"},
             {"action": "Review Tasks", "path": "/compliance/tasks"},
-            {"action": "View Risks", "path": "/compliance/risks"}
+            {"action": "View Risks", "path": "/compliance/risks"},
         ],
         "compliance_trends": {
             "30_day_change": 5.2,  # Placeholder percentage
             "trend_direction": "improving",
-            "forecast": "on_track"
-        }
+            "forecast": "on_track",
+        },
     }
+
 
 @router.post("/certificate/generate")
 async def generate_compliance_certificate(
     request_data: dict,
     current_user: User = Depends(get_current_active_user),
-    db: AsyncSession = Depends(get_async_db)
+    db: AsyncSession = Depends(get_async_db),
 ):
     """Generate a compliance certificate."""
     framework_id = request_data.get("framework_id")
     certificate_type = request_data.get("type", "attestation")
-    
+
     # Placeholder implementation
     return {
         "certificate_id": "cert-789",
@@ -386,14 +410,15 @@ async def generate_compliance_certificate(
         "issue_date": datetime.utcnow().isoformat(),
         "expiry_date": (datetime.utcnow() + timedelta(days=365)).isoformat(),
         "compliance_score": 85.5,
-        "certificate_url": f"/api/v1/compliance/certificate/cert-789/download",
+        "certificate_url": "/api/v1/compliance/certificate/cert-789/download",
         "verification_code": "VERIFY-2024-0001",
         "issuer": "RuleIQ Compliance Platform",
         "recipient": {
             "organization": "User Organization",
-            "contact": current_user.email
-        }
+            "contact": current_user.email,
+        },
     }
+
 
 @router.post("/query")
 async def query_compliance(
@@ -466,7 +491,14 @@ async def query_compliance(
 
         if not is_compliance_related:
             # Check for out-of-scope topics
-            out_of_scope_keywords = ["weather", "pasta", "cooking", "joke", "recipe", "sports"]
+            out_of_scope_keywords = [
+                "weather",
+                "pasta",
+                "cooking",
+                "joke",
+                "recipe",
+                "sports",
+            ]
             if any(keyword in question.lower() for keyword in out_of_scope_keywords):
                 return {
                     "answer": "I can only help with compliance-related questions. Please ask about regulations, frameworks, or compliance requirements.",
@@ -490,7 +522,11 @@ async def query_compliance(
             "framework": framework,
             "confidence": "high",
             "sources": [
-                f"{framework} official documentation" if framework else "Compliance best practices"
+                (
+                    f"{framework} official documentation"
+                    if framework
+                    else "Compliance best practices"
+                )
             ],
             "generated_at": datetime.utcnow().isoformat(),
         }
@@ -498,4 +534,6 @@ async def query_compliance(
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to process compliance query: {e!s}")
+        raise HTTPException(
+            status_code=500, detail=f"Failed to process compliance query: {e!s}"
+        )

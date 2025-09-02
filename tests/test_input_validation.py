@@ -20,7 +20,9 @@ class TestFieldValidator:
 
     def test_validate_string_success(self):
         """Test successful string validation."""
-        result = FieldValidator.validate_string("Hello World", min_length=1, max_length=20)
+        result = FieldValidator.validate_string(
+            "Hello World", min_length=1, max_length=20
+        )
         assert result == "Hello World"
 
     def test_validate_string_length_error(self):
@@ -76,7 +78,9 @@ class TestFieldValidator:
 
     def test_validate_enum_success(self):
         """Test enum validation."""
-        result = FieldValidator.validate_enum("pending", ["pending", "approved", "rejected"])
+        result = FieldValidator.validate_enum(
+            "pending", ["pending", "approved", "rejected"]
+        )
         assert result == "pending"
 
     def test_validate_enum_error(self):
@@ -102,9 +106,9 @@ class TestSecurityValidator:
         ]
 
         for dangerous_input in dangerous_inputs:
-            assert SecurityValidator.scan_for_dangerous_patterns(dangerous_input), (
-                f"Failed to detect dangerous pattern: {dangerous_input}"
-            )
+            assert SecurityValidator.scan_for_dangerous_patterns(
+                dangerous_input
+            ), f"Failed to detect dangerous pattern: {dangerous_input}"
 
     def test_safe_patterns(self):
         """Test that safe patterns are not flagged."""
@@ -116,9 +120,9 @@ class TestSecurityValidator:
         ]
 
         for safe_input in safe_inputs:
-            assert not SecurityValidator.scan_for_dangerous_patterns(safe_input), (
-                f"Incorrectly flagged safe input: {safe_input}"
-            )
+            assert not SecurityValidator.scan_for_dangerous_patterns(
+                safe_input
+            ), f"Incorrectly flagged safe input: {safe_input}"
 
     def test_validate_no_dangerous_content(self):
         """Test comprehensive dangerous content validation."""
@@ -163,7 +167,10 @@ class TestWhitelistValidator:
         """Test rejection of invalid fields."""
         validator = WhitelistValidator("EvidenceItem")
 
-        invalid_data = {"evidence_name": "Test Evidence", "malicious_field": "should be rejected"}
+        invalid_data = {
+            "evidence_name": "Test Evidence",
+            "malicious_field": "should be rejected",
+        }
 
         with pytest.raises(ValidationError, match="not allowed for updates"):
             validator.validate_update_data(invalid_data)
@@ -196,7 +203,10 @@ class TestWhitelistValidator:
         """Test rejection of invalid business profile fields."""
         validator = WhitelistValidator("BusinessProfile")
 
-        invalid_data = {"company_name": "Test Company", "secret_admin_field": "should be rejected"}
+        invalid_data = {
+            "company_name": "Test Company",
+            "secret_admin_field": "should be rejected",
+        }
 
         with pytest.raises(ValidationError, match="not allowed for updates"):
             validator.validate_update_data(invalid_data)
@@ -228,7 +238,10 @@ class TestConvenienceFunctions:
 
     def test_validate_evidence_update_whitelist_error(self):
         """Test evidence update with whitelist violation."""
-        invalid_data = {"evidence_name": "Test Evidence", "admin_only_field": "should be rejected"}
+        invalid_data = {
+            "evidence_name": "Test Evidence",
+            "admin_only_field": "should be rejected",
+        }
 
         with pytest.raises(ValidationError, match="not allowed"):
             validate_evidence_update(invalid_data)
@@ -242,7 +255,10 @@ class TestConvenienceFunctions:
 
     def test_validate_business_profile_update_error(self):
         """Test business profile update with validation error."""
-        invalid_data = {"company_name": "Test Company", "employee_count": "not a number"}
+        invalid_data = {
+            "company_name": "Test Company",
+            "employee_count": "not a number",
+        }
 
         with pytest.raises(ValidationError):
             validate_business_profile_update(invalid_data)

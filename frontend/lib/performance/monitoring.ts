@@ -202,7 +202,7 @@ class PerformanceMonitor {
     // For example: Google Analytics, DataDog, New Relic, etc.
 
     if (process.env.NODE_ENV === 'development') {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
     }
 
     // Example: Send to Google Analytics
@@ -231,7 +231,6 @@ class PerformanceMonitor {
         await fn();
       } catch (error) {
         // TODO: Replace with proper logging
-
         // // TODO: Replace with proper logging
       }
 

@@ -1,0 +1,94 @@
+
+Ttests.test_phase3_rag_standardization_simple.TestStandardizedRAG.test_get_statisticsW
+K/home/omar/Documents/ruleIQ/tests/test_phase3_rag_standardization_simple.py… …(!"2*∆
+2
+   (&RP
+
+À À(3
+%1*,
+
+__unknown_file (
+
+standard_rag2get_statisticsA
+?
+
+À À(3
+stats"__id*"
+
+__unknown_file (
+
+%1us
+
+Õ Õ($
+%2*%
+
+__unknown_file (	
+
+stats**
+
+__unknown_file (
+
+company_id2__contains__zx
+
+Œ Œ()
+%3*%
+
+__unknown_file (	
+
+stats*/
+
+__unknown_file (
+collection_name2__contains__{y
+
+œ œ(*
+%4*%
+
+__unknown_file (	
+
+stats*0
+
+__unknown_file (
+embeddings_model2__contains__ÖÇ
+
+– –((
+%5"__mapGet*%
+
+__unknown_file (	
+
+stats*0
+
+__unknown_file (
+embeddings_model2__getitem__†
+ù
+
+– –(D
+%6"	__compare*"
+
+__unknown_file (
+==*"
+
+__unknown_file (
+
+%5*6
+
+__unknown_file (
+text-embedding-3-small~|
+
+— —(-
+%7*%
+
+__unknown_file (	
+
+stats*3
+
+__unknown_file (
+multi_query_enabled2__contains__*
+3*O
+3+
+)test_phase3_rag_standardization_simple.py"
+’ ’
+implicit return:
+
+…( …(4
+standard_ragBDB
+@tests.test_phase3_rag_standardization_simple.TestStandardizedRAGH

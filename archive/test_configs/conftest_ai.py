@@ -57,7 +57,9 @@ def content_filter_ai_assistant():
 @pytest.fixture
 def mock_ai_service_patch(mock_ai_assistant):
     """Patch AI services with mock implementation"""
-    with patch("services.ai.assistant.ComplianceAssistant", return_value=mock_ai_assistant):
+    with patch(
+        "services.ai.assistant.ComplianceAssistant", return_value=mock_ai_assistant
+    ):
         yield mock_ai_assistant
 
 
@@ -65,8 +67,13 @@ def mock_ai_service_patch(mock_ai_assistant):
 def mock_ai_endpoints_patch(mock_ai_assistant):
     """Patch AI endpoints with mock implementation"""
     patches = [
-        patch("api.routers.ai_assessments.ComplianceAssistant", return_value=mock_ai_assistant),
-        patch("services.ai.assistant.ComplianceAssistant", return_value=mock_ai_assistant),
+        patch(
+            "api.routers.ai_assessments.ComplianceAssistant",
+            return_value=mock_ai_assistant,
+        ),
+        patch(
+            "services.ai.assistant.ComplianceAssistant", return_value=mock_ai_assistant
+        ),
     ]
 
     with patches[0], patches[1]:
@@ -147,7 +154,9 @@ def ai_test_data():
                 "guidance": "Personal data under GDPR includes any information relating to an identified or identifiable natural person.",
                 "confidence_score": 0.95,
                 "related_topics": ["Data Protection", "Privacy Rights"],
-                "follow_up_suggestions": ["What types of personal data do you process?"],
+                "follow_up_suggestions": [
+                    "What types of personal data do you process?"
+                ],
                 "source_references": ["GDPR Article 4"],
             },
             "iso27001_help": {
@@ -240,7 +249,11 @@ def ai_quality_metrics():
             "min_guidance_length": 50,  # characters
             "max_guidance_length": 2000,
             "required_sections": ["guidance", "confidence_score"],
-            "optional_sections": ["related_topics", "follow_up_suggestions", "source_references"],
+            "optional_sections": [
+                "related_topics",
+                "follow_up_suggestions",
+                "source_references",
+            ],
         },
     }
 
@@ -417,7 +430,11 @@ def ai_compliance_test_cases():
         "cross_framework_cases": [
             {
                 "question": "How do GDPR and ISO 27001 relate to each other?",
-                "expected_keywords": ["data protection", "information security", "complementary"],
+                "expected_keywords": [
+                    "data protection",
+                    "information security",
+                    "complementary",
+                ],
                 "frameworks": ["gdpr", "iso27001"],
                 "difficulty": "advanced",
             }
@@ -426,18 +443,24 @@ def ai_compliance_test_cases():
 
 
 # Utility functions for AI testing
-def assert_ai_response_quality(response: Dict[str, Any], min_confidence: float = 0.7) -> None:
+def assert_ai_response_quality(
+    response: Dict[str, Any], min_confidence: float = 0.7
+) -> None:
     """Assert that AI response meets quality standards"""
     assert "guidance" in response, "Response must include guidance"
     assert "confidence_score" in response, "Response must include confidence score"
-    assert isinstance(response["confidence_score"], (int, float)), (
-        "Confidence score must be numeric"
-    )
-    assert 0 <= response["confidence_score"] <= 1, "Confidence score must be between 0 and 1"
-    assert response["confidence_score"] >= min_confidence, (
-        f"Confidence score {response['confidence_score']} below minimum {min_confidence}"
-    )
-    assert len(response["guidance"]) >= 50, "Guidance must be substantial (at least 50 characters)"
+    assert isinstance(
+        response["confidence_score"], (int, float)
+    ), "Confidence score must be numeric"
+    assert (
+        0 <= response["confidence_score"] <= 1
+    ), "Confidence score must be between 0 and 1"
+    assert (
+        response["confidence_score"] >= min_confidence
+    ), f"Confidence score {response['confidence_score']} below minimum {min_confidence}"
+    assert (
+        len(response["guidance"]) >= 50
+    ), "Guidance must be substantial (at least 50 characters)"
 
 
 def assert_ai_response_structure(response: Dict[str, Any]) -> None:
@@ -454,4 +477,6 @@ def assert_ai_response_structure(response: Dict[str, Any]) -> None:
 
 def assert_ai_performance(response_time: float, max_time: float = 10.0) -> None:
     """Assert that AI response time meets performance requirements"""
-    assert response_time <= max_time, f"Response time {response_time}s exceeds maximum {max_time}s"
+    assert (
+        response_time <= max_time
+    ), f"Response time {response_time}s exceeds maximum {max_time}s"

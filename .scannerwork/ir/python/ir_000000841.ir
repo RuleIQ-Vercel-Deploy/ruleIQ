@@ -1,0 +1,84 @@
+
+"anthropic"str
+"google"str
+	"model"str
+"temperature"str
+	"api_key"str
+"max_tokens"str
+("Get AI services configuration"str
+"ai_api_key"str
+"openai"strself
+ª ª("ß&
+$
+
+¬ »(	"#new-object#Bdict&
+$
+
+­ ²("#new-object#Bdict1
+/
+
+® ®(."#get-field# OPENAI_API_KEY:"
+ 
+
+® ®(."	#map-set#:/
+-
+
+¯ ¯(*
+"#get-field# OPENAI_MODEL:"
+ 
+
+¯ ¯(*"	#map-set#:	
+5
+3
+
+° °(6" #get-field# OPENAI_TEMPERATURE:"
+ 
+
+° °(6"	#map-set#:4
+2
+
+± ±(4"#get-field# OPENAI_MAX_TOKENS:"
+ 
+
+± ±(4"	#map-set#:"
+ 
+
+­ ²("	#map-set#:&
+$
+
+³ ¶("#new-object#Bdict1
+/
+
+´ ´(."#get-field# GOOGLE_API_KEY:"
+ 
+
+´ ´(."	#map-set#:4
+2
+
+µ µ(4"#get-field# GOOGLE_AI_API_KEY:"
+ 
+
+µ µ(4"	#map-set#:"
+ 
+
+³ ¶("	#map-set#:&
+$
+
+· º("#new-object#Bdict4
+2
+
+¸ ¸(1"#get-field# ANTHROPIC_API_KEY:"
+ 
+
+¸ ¸(1"	#map-set#:/
+-
+
+¹ ¹(*"#get-field# CLAUDE_MODEL:"
+ 
+
+¹ ¹(* "	#map-set#:	"
+ 
+
+· º(!"	#map-set#:
+
+¬ »(	**/home/omar/Documents/ruleIQ/config/base.py

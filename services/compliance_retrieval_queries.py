@@ -1,12 +1,12 @@
 """
 Compliance Retrieval Queries for IQ Agent GraphRAG System
 
-This module implements 14 categories of production-ready queries for 
+This module implements 14 categories of production-ready queries for
 intelligent compliance analysis using Neo4j graph traversal patterns.
 
 Query Categories:
 1. Regulatory Coverage Analysis
-2. Cross-jurisdictional Impact Assessment  
+2. Cross-jurisdictional Impact Assessment
 3. Risk Convergence Detection
 4. Compliance Gap Analysis
 5. Temporal Regulatory Changes
@@ -35,6 +35,7 @@ logger = logging.getLogger(__name__)
 
 class QueryCategory(Enum):
     """Enumeration of query categories for compliance analysis"""
+
     REGULATORY_COVERAGE = "regulatory_coverage"
     CROSS_JURISDICTIONAL = "cross_jurisdictional"
     RISK_CONVERGENCE = "risk_convergence"
@@ -54,6 +55,7 @@ class QueryCategory(Enum):
 @dataclass
 class QueryResult:
     """Standardized query result structure"""
+
     category: str
     query_id: str
     timestamp: str
@@ -70,9 +72,7 @@ class ComplianceRetrievalQueries:
 
     # 1. Regulatory Coverage Analysis
     async def get_regulatory_coverage_analysis(
-        self,
-        domain_name: Optional[str] = None,
-        jurisdiction: Optional[str] = None
+        self, domain_name: Optional[str] = None, jurisdiction: Optional[str] = None
     ) -> QueryResult:
         """Analyze compliance coverage across domains and jurisdictions"""
 
@@ -109,8 +109,7 @@ class ComplianceRetrievalQueries:
         """
 
         result = await self.neo4j.execute_query(
-            query,
-            {"domain": domain_name, "jurisdiction": jurisdiction}
+            query, {"domain": domain_name, "jurisdiction": jurisdiction}
         )
 
         # Calculate overall coverage metrics
@@ -122,19 +121,21 @@ class ComplianceRetrievalQueries:
             domain = record["domain"]
             coverage_ratio = record["coverage_ratio"]
 
-            coverage_data.append({
-                "domain": domain,
-                "domain_risk": record["domain_risk"],
-                "regulation": {
-                    "code": record["regulation_code"],
-                    "name": record["regulation_name"]
-                },
-                "jurisdiction": record["jurisdiction"],
-                "requirements_count": record["requirements_count"],
-                "controls_count": record["controls_count"],
-                "risk_levels": record["risk_levels"],
-                "coverage_ratio": round(coverage_ratio, 3)
-            })
+            coverage_data.append(
+                {
+                    "domain": domain,
+                    "domain_risk": record["domain_risk"],
+                    "regulation": {
+                        "code": record["regulation_code"],
+                        "name": record["regulation_name"],
+                    },
+                    "jurisdiction": record["jurisdiction"],
+                    "requirements_count": record["requirements_count"],
+                    "controls_count": record["controls_count"],
+                    "risk_levels": record["risk_levels"],
+                    "coverage_ratio": round(coverage_ratio, 3),
+                }
+            )
 
             if domain not in domain_coverage:
                 domain_coverage[domain] = []
@@ -142,11 +143,15 @@ class ComplianceRetrievalQueries:
 
         # Calculate aggregate metrics
         for domain, ratios in domain_coverage.items():
-            domain_coverage[domain] = round(sum(ratios) / len(ratios), 3) if ratios else 0.0
+            domain_coverage[domain] = (
+                round(sum(ratios) / len(ratios), 3) if ratios else 0.0
+            )
 
-        overall_coverage = round(
-            sum(domain_coverage.values()) / len(domain_coverage), 3
-        ) if domain_coverage else 0.0
+        overall_coverage = (
+            round(sum(domain_coverage.values()) / len(domain_coverage), 3)
+            if domain_coverage
+            else 0.0
+        )
 
         return QueryResult(
             category=QueryCategory.REGULATORY_COVERAGE.value,
@@ -157,18 +162,14 @@ class ComplianceRetrievalQueries:
                 "overall_coverage": overall_coverage,
                 "domain_coverage": domain_coverage,
                 "total_domains": len(domain_coverage),
-                "filter_applied": {
-                    "domain": domain_name,
-                    "jurisdiction": jurisdiction
-                }
+                "filter_applied": {"domain": domain_name, "jurisdiction": jurisdiction},
             },
-            confidence_score=0.95
+            confidence_score=0.95,
         )
 
     # 2. Cross-jurisdictional Impact Assessment
     async def analyze_cross_jurisdictional_impact(
-        self,
-        regulation_codes: List[str]
+        self, regulation_codes: List[str]
     ) -> QueryResult:
         """Analyze impact of regulations across multiple jurisdictions"""
 
@@ -204,8 +205,7 @@ class ComplianceRetrievalQueries:
         """
 
         result = await self.neo4j.execute_query(
-            query,
-            {"regulation_codes": regulation_codes}
+            query, {"regulation_codes": regulation_codes}
         )
 
         impact_data = []
@@ -222,29 +222,31 @@ class ComplianceRetrievalQueries:
             if record["extraterritorial"]:
                 extraterritorial_regulations.append(regulation_code)
 
-            impact_data.append({
-                "regulation": {
-                    "code": regulation_code,
-                    "name": record["regulation_name"],
-                    "extraterritorial_reach": record["extraterritorial"]
-                },
-                "jurisdictional_scope": {
-                    "primary_jurisdiction": record["primary_jurisdiction"],
-                    "enforcement_style": record["enforcement_style"],
-                    "applicable_jurisdictions": applicable_jurisdictions,
-                    "scope_breadth": len(applicable_jurisdictions)
-                },
-                "compliance_complexity": {
-                    "requirements_count": record["requirements_count"],
-                    "controls_count": record["controls_count"],
-                    "affected_functions": record["affected_functions"]
-                },
-                "enforcement_risk": {
-                    "historical_cases": record["enforcement_cases"],
-                    "average_penalty": record["avg_penalty_amount"],
-                    "latest_enforcement": record["latest_enforcement"]
+            impact_data.append(
+                {
+                    "regulation": {
+                        "code": regulation_code,
+                        "name": record["regulation_name"],
+                        "extraterritorial_reach": record["extraterritorial"],
+                    },
+                    "jurisdictional_scope": {
+                        "primary_jurisdiction": record["primary_jurisdiction"],
+                        "enforcement_style": record["enforcement_style"],
+                        "applicable_jurisdictions": applicable_jurisdictions,
+                        "scope_breadth": len(applicable_jurisdictions),
+                    },
+                    "compliance_complexity": {
+                        "requirements_count": record["requirements_count"],
+                        "controls_count": record["controls_count"],
+                        "affected_functions": record["affected_functions"],
+                    },
+                    "enforcement_risk": {
+                        "historical_cases": record["enforcement_cases"],
+                        "average_penalty": record["avg_penalty_amount"],
+                        "latest_enforcement": record["latest_enforcement"],
+                    },
                 }
-            })
+            )
 
         return QueryResult(
             category=QueryCategory.CROSS_JURISDICTIONAL.value,
@@ -254,16 +256,16 @@ class ComplianceRetrievalQueries:
             metadata={
                 "total_jurisdictions_affected": len(total_jurisdictions),
                 "extraterritorial_regulations": extraterritorial_regulations,
-                "jurisdictional_complexity_score": len(total_jurisdictions) * len(extraterritorial_regulations),
-                "regulations_analyzed": len(regulation_codes)
+                "jurisdictional_complexity_score": len(total_jurisdictions)
+                * len(extraterritorial_regulations),
+                "regulations_analyzed": len(regulation_codes),
             },
-            confidence_score=0.92
+            confidence_score=0.92,
         )
 
     # 3. Risk Convergence Detection
     async def detect_risk_convergence_patterns(
-        self,
-        risk_threshold: str = "high"
+        self, risk_threshold: str = "high"
     ) -> QueryResult:
         """Detect convergence patterns in regulatory risks"""
 
@@ -340,33 +342,38 @@ class ComplianceRetrievalQueries:
             if control_status == "uncontrolled":
                 uncontrolled_risks += 1
 
-            convergence_data.append({
-                "convergence_id": f"{record['requirement_1_id']}_{record['requirement_2_id']}",
-                "convergence_type": convergence_type,
-                "requirement_1": {
-                    "id": record["requirement_1_id"],
-                    "title": record["requirement_1_title"],
-                    "regulation": record["regulation_1"],
-                    "domain": record["domain_1"],
-                    "business_function": record["function_1"],
-                    "controls_count": record["controls_req1"]
-                },
-                "requirement_2": {
-                    "id": record["requirement_2_id"],
-                    "title": record["requirement_2_title"],
-                    "regulation": record["regulation_2"],
-                    "domain": record["domain_2"],
-                    "business_function": record["function_2"],
-                    "controls_count": record["controls_req2"]
-                },
-                "risk_analysis": {
-                    "control_status": control_status,
-                    "shared_control_types": record["shared_control_types"],
-                    "control_overlap_ratio": record["shared_control_types"] / max(
-                        len(record["control_types_1"]) + len(record["control_types_2"]), 1
-                    )
+            convergence_data.append(
+                {
+                    "convergence_id": f"{record['requirement_1_id']}_{record['requirement_2_id']}",
+                    "convergence_type": convergence_type,
+                    "requirement_1": {
+                        "id": record["requirement_1_id"],
+                        "title": record["requirement_1_title"],
+                        "regulation": record["regulation_1"],
+                        "domain": record["domain_1"],
+                        "business_function": record["function_1"],
+                        "controls_count": record["controls_req1"],
+                    },
+                    "requirement_2": {
+                        "id": record["requirement_2_id"],
+                        "title": record["requirement_2_title"],
+                        "regulation": record["regulation_2"],
+                        "domain": record["domain_2"],
+                        "business_function": record["function_2"],
+                        "controls_count": record["controls_req2"],
+                    },
+                    "risk_analysis": {
+                        "control_status": control_status,
+                        "shared_control_types": record["shared_control_types"],
+                        "control_overlap_ratio": record["shared_control_types"]
+                        / max(
+                            len(record["control_types_1"])
+                            + len(record["control_types_2"]),
+                            1,
+                        ),
+                    },
                 }
-            })
+            )
 
         return QueryResult(
             category=QueryCategory.RISK_CONVERGENCE.value,
@@ -378,15 +385,15 @@ class ComplianceRetrievalQueries:
                 "same_domain_convergences": same_domain_convergences,
                 "cross_domain_convergences": cross_domain_convergences,
                 "uncontrolled_risks": uncontrolled_risks,
-                "risk_convergence_ratio": cross_domain_convergences / max(len(convergence_data), 1)
+                "risk_convergence_ratio": cross_domain_convergences
+                / max(len(convergence_data), 1),
             },
-            confidence_score=0.88
+            confidence_score=0.88,
         )
 
     # 4. Compliance Gap Analysis
     async def analyze_compliance_gaps(
-        self,
-        business_functions: Optional[List[str]] = None
+        self, business_functions: Optional[List[str]] = None
     ) -> QueryResult:
         """Identify compliance gaps where requirements lack controls"""
 
@@ -440,8 +447,7 @@ class ComplianceRetrievalQueries:
         """
 
         result = await self.neo4j.execute_query(
-            query,
-            {"functions": business_functions}
+            query, {"functions": business_functions}
         )
 
         gap_data = []
@@ -461,50 +467,53 @@ class ComplianceRetrievalQueries:
             total_penalty_exposure += penalty_observed
 
             # Calculate gap severity score
-            severity_multiplier = {
-                "critical": 4,
-                "high": 3,
-                "medium": 2,
-                "low": 1
-            }.get(risk_level, 1)
+            severity_multiplier = {"critical": 4, "high": 3, "medium": 2, "low": 1}.get(
+                risk_level, 1
+            )
 
             enforcement_multiplier = min(record["historical_violations"] * 0.5, 2.0)
 
             gap_severity = severity_multiplier * (1 + enforcement_multiplier)
 
-            gap_data.append({
-                "gap_id": record["requirement_id"],
-                "requirement": {
-                    "id": record["requirement_id"],
-                    "title": record["requirement_title"],
-                    "description": record["requirement_description"],
-                    "risk_level": risk_level,
-                    "business_function": record["business_function"],
-                    "deadline_type": record["deadline_type"],
-                    "mandatory": record["mandatory"]
-                },
-                "regulation": {
-                    "code": record["regulation_code"],
-                    "name": record["regulation_name"],
-                    "risk_rating": record["regulation_risk"],
-                    "penalty_framework": record["penalty_framework"]
-                },
-                "domain": {
-                    "name": record["domain_name"],
-                    "business_impact": record["domain_impact"]
-                },
-                "risk_assessment": {
-                    "current_assessment": record["current_risk_assessment"],
-                    "residual_risk": record["residual_risk_level"],
-                    "next_review": record["next_risk_review"]
-                },
-                "enforcement_history": {
-                    "historical_violations": record["historical_violations"],
-                    "max_penalty_observed": penalty_observed
-                },
-                "gap_severity_score": round(gap_severity, 2),
-                "priority_level": "critical" if gap_severity >= 8 else "high" if gap_severity >= 5 else "medium"
-            })
+            gap_data.append(
+                {
+                    "gap_id": record["requirement_id"],
+                    "requirement": {
+                        "id": record["requirement_id"],
+                        "title": record["requirement_title"],
+                        "description": record["requirement_description"],
+                        "risk_level": risk_level,
+                        "business_function": record["business_function"],
+                        "deadline_type": record["deadline_type"],
+                        "mandatory": record["mandatory"],
+                    },
+                    "regulation": {
+                        "code": record["regulation_code"],
+                        "name": record["regulation_name"],
+                        "risk_rating": record["regulation_risk"],
+                        "penalty_framework": record["penalty_framework"],
+                    },
+                    "domain": {
+                        "name": record["domain_name"],
+                        "business_impact": record["domain_impact"],
+                    },
+                    "risk_assessment": {
+                        "current_assessment": record["current_risk_assessment"],
+                        "residual_risk": record["residual_risk_level"],
+                        "next_review": record["next_risk_review"],
+                    },
+                    "enforcement_history": {
+                        "historical_violations": record["historical_violations"],
+                        "max_penalty_observed": penalty_observed,
+                    },
+                    "gap_severity_score": round(gap_severity, 2),
+                    "priority_level": (
+                        "critical"
+                        if gap_severity >= 8
+                        else "high" if gap_severity >= 5 else "medium"
+                    ),
+                }
+            )
 
         return QueryResult(
             category=QueryCategory.COMPLIANCE_GAPS.value,
@@ -518,17 +527,17 @@ class ComplianceRetrievalQueries:
                 "total_penalty_exposure": total_penalty_exposure,
                 "business_functions_analyzed": business_functions or "all",
                 "average_gap_severity": round(
-                    sum(gap["gap_severity_score"] for gap in gap_data) / max(len(gap_data), 1), 2
-                )
+                    sum(gap["gap_severity_score"] for gap in gap_data)
+                    / max(len(gap_data), 1),
+                    2,
+                ),
             },
-            confidence_score=0.94
+            confidence_score=0.94,
         )
 
     # 5. Temporal Regulatory Changes
     async def analyze_temporal_regulatory_changes(
-        self,
-        lookback_months: int = 12,
-        forecast_months: int = 6
+        self, lookback_months: int = 12, forecast_months: int = 6
     ) -> QueryResult:
         """Analyze temporal patterns in regulatory changes"""
 
@@ -578,8 +587,8 @@ class ComplianceRetrievalQueries:
             query,
             {
                 "lookback_date": lookback_date.strftime("%Y-%m-%d"),
-                "forecast_date": forecast_date.strftime("%Y-%m-%d")
-            }
+                "forecast_date": forecast_date.strftime("%Y-%m-%d"),
+            },
         )
 
         temporal_data = []
@@ -601,29 +610,33 @@ class ComplianceRetrievalQueries:
             if regulation_maturity == "new":
                 new_regulations += 1
 
-            temporal_data.append({
-                "regulation": {
-                    "code": record["regulation_code"],
-                    "name": record["regulation_name"],
-                    "jurisdiction": record["jurisdiction"]
-                },
-                "temporal_analysis": {
-                    "effective_date": record["effective_date"],
-                    "last_updated": record["last_updated"],
-                    "regulation_age_months": record["regulation_age_months"],
-                    "months_since_update": record["months_since_update"],
-                    "change_recency": change_recency,
-                    "regulation_maturity": regulation_maturity
-                },
-                "impact_scope": {
-                    "affected_requirements": record["affected_requirements"],
-                    "upcoming_reviews": reviews_count,
-                    "next_review_date": record["next_review_date"]
-                },
-                "change_velocity": round(
-                    record["affected_requirements"] / max(record["months_since_update"], 1), 2
-                )
-            })
+            temporal_data.append(
+                {
+                    "regulation": {
+                        "code": record["regulation_code"],
+                        "name": record["regulation_name"],
+                        "jurisdiction": record["jurisdiction"],
+                    },
+                    "temporal_analysis": {
+                        "effective_date": record["effective_date"],
+                        "last_updated": record["last_updated"],
+                        "regulation_age_months": record["regulation_age_months"],
+                        "months_since_update": record["months_since_update"],
+                        "change_recency": change_recency,
+                        "regulation_maturity": regulation_maturity,
+                    },
+                    "impact_scope": {
+                        "affected_requirements": record["affected_requirements"],
+                        "upcoming_reviews": reviews_count,
+                        "next_review_date": record["next_review_date"],
+                    },
+                    "change_velocity": round(
+                        record["affected_requirements"]
+                        / max(record["months_since_update"], 1),
+                        2,
+                    ),
+                }
+            )
 
         return QueryResult(
             category=QueryCategory.TEMPORAL_CHANGES.value,
@@ -633,23 +646,24 @@ class ComplianceRetrievalQueries:
             metadata={
                 "analysis_period": {
                     "lookback_months": lookback_months,
-                    "forecast_months": forecast_months
+                    "forecast_months": forecast_months,
                 },
                 "change_summary": {
                     "recent_changes": recent_changes,
                     "upcoming_reviews": upcoming_reviews,
                     "new_regulations": new_regulations,
-                    "total_regulations_analyzed": len(temporal_data)
+                    "total_regulations_analyzed": len(temporal_data),
                 },
-                "change_intensity": round(recent_changes / max(len(temporal_data), 1), 2)
+                "change_intensity": round(
+                    recent_changes / max(len(temporal_data), 1), 2
+                ),
             },
-            confidence_score=0.90
+            confidence_score=0.90,
         )
 
     # Helper method for enforcement learning patterns
     async def analyze_enforcement_learning_patterns(
-        self,
-        violation_types: Optional[List[str]] = None
+        self, violation_types: Optional[List[str]] = None
     ) -> QueryResult:
         """Learn from enforcement cases to predict compliance risks"""
 
@@ -692,8 +706,7 @@ class ComplianceRetrievalQueries:
         """
 
         result = await self.neo4j.execute_query(
-            query,
-            {"violation_types": violation_types}
+            query, {"violation_types": violation_types}
         )
 
         enforcement_data = []
@@ -711,42 +724,48 @@ class ComplianceRetrievalQueries:
                     "count": 0,
                     "total_penalty": 0,
                     "organizations": set(),
-                    "jurisdictions": set()
+                    "jurisdictions": set(),
                 }
 
             violation_patterns[violation_type]["count"] += 1
             violation_patterns[violation_type]["total_penalty"] += penalty_amount
-            violation_patterns[violation_type]["organizations"].add(record["organization_type"])
-            violation_patterns[violation_type]["jurisdictions"].add(record["jurisdiction"])
+            violation_patterns[violation_type]["organizations"].add(
+                record["organization_type"]
+            )
+            violation_patterns[violation_type]["jurisdictions"].add(
+                record["jurisdiction"]
+            )
 
-            enforcement_data.append({
-                "case": {
-                    "id": record["case_id"],
-                    "violation_type": violation_type,
-                    "jurisdiction": record["jurisdiction"],
-                    "organization_type": record["organization_type"],
-                    "case_date": record["case_date"]
-                },
-                "financial_impact": {
-                    "penalty_amount": penalty_amount,
-                    "penalty_currency": record["penalty_currency"]
-                },
-                "violation_details": {
-                    "summary": record["violation_summary"],
-                    "lessons_learned": record["lessons_learned"],
-                    "preventive_measures": record["preventive_measures"]
-                },
-                "regulation": {
-                    "code": record["regulation_code"],
-                    "name": record["regulation_name"]
-                },
-                "control_analysis": {
-                    "affected_requirements": record["affected_requirements"],
-                    "existing_controls": record["existing_controls"],
-                    "control_types": record["control_types"],
-                    "control_adequacy": record["control_adequacy"]
+            enforcement_data.append(
+                {
+                    "case": {
+                        "id": record["case_id"],
+                        "violation_type": violation_type,
+                        "jurisdiction": record["jurisdiction"],
+                        "organization_type": record["organization_type"],
+                        "case_date": record["case_date"],
+                    },
+                    "financial_impact": {
+                        "penalty_amount": penalty_amount,
+                        "penalty_currency": record["penalty_currency"],
+                    },
+                    "violation_details": {
+                        "summary": record["violation_summary"],
+                        "lessons_learned": record["lessons_learned"],
+                        "preventive_measures": record["preventive_measures"],
+                    },
+                    "regulation": {
+                        "code": record["regulation_code"],
+                        "name": record["regulation_name"],
+                    },
+                    "control_analysis": {
+                        "affected_requirements": record["affected_requirements"],
+                        "existing_controls": record["existing_controls"],
+                        "control_types": record["control_types"],
+                        "control_adequacy": record["control_adequacy"],
+                    },
                 }
-            })
+            )
 
         # Process violation patterns
         processed_patterns = {}
@@ -757,7 +776,9 @@ class ComplianceRetrievalQueries:
                 "average_penalty": data["total_penalty"] / data["count"],
                 "organization_types": list(data["organizations"]),
                 "jurisdictions": list(data["jurisdictions"]),
-                "risk_score": min(data["count"] * (data["total_penalty"] / 1000000), 10)
+                "risk_score": min(
+                    data["count"] * (data["total_penalty"] / 1000000), 10
+                ),
             }
 
         return QueryResult(
@@ -770,17 +791,15 @@ class ComplianceRetrievalQueries:
                 "total_penalties": total_penalties,
                 "violation_patterns": processed_patterns,
                 "average_penalty": total_penalties / max(len(enforcement_data), 1),
-                "violation_types_analyzed": violation_types or "all"
+                "violation_types_analyzed": violation_types or "all",
             },
-            confidence_score=0.87
+            confidence_score=0.87,
         )
 
 
 # Factory function for query execution
 async def execute_compliance_query(
-    query_category: QueryCategory,
-    neo4j_service: Neo4jGraphRAGService,
-    **kwargs
+    query_category: QueryCategory, neo4j_service: Neo4jGraphRAGService, **kwargs
 ) -> QueryResult:
     """Factory function to execute compliance queries by category"""
 

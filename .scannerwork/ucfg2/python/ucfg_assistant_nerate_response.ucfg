@@ -1,0 +1,161 @@
+
+<services.ai.assistant.ComplianceAssistant._generate_response@
+4/home/omar/Documents/ruleIQ/services/ai/assistant.pyÚ Ú( "2*ï
+2
+á á(K{
+y
+
+ã ã(&
+%1"__id*_
+
+__unknown_file (C*A+
+)services.ai.assistant.ComplianceAssistant"
+prompt_templatesœ™
+
+ã ã(H
+%2*"
+
+__unknown_file (
+
+%1*'
+
+__unknown_file (
+	
+message*'
+
+__unknown_file (
+	
+context2get_main_promptB
+@
+
+ã ã(H
+prompt"__id*"
+
+__unknown_file (
+
+%2ƒ€
+
+ç ç(-
+%3"__mapGet*-
+
+__unknown_file (
+
+intent_result*&
+
+__unknown_file (
+
+intent2__getitem__š—
+
+è è(C
+%4*-
+
+__unknown_file (
+
+intent_result*)
+
+__unknown_file (
+	framework*$
+
+__unknown_file (
+None2get‡„
+
+é é(0
+%5"__mapGet*-
+
+__unknown_file (
+
+intent_result**
+
+__unknown_file (
+
+confidence2__getitem__¾
+»
+
+æ ï(
+%6"__concat*(
+
+æ ç(
+
+        User Intent: *
+
+ç ç(-
+
+%3*/
+
+ç. è(!
+
+        Detected Framework: *
+
+è è(C
+
+%4*'
+
+èD é(
+
+        Confidence: *
+
+é é(0
+
+%5*%
+
+é1 ê(
+
+        Entities: *
+
+ê ê(
+
+
+entities*
+
+ê ì(
+
+
+
+        *
+
+ì	 ì(
+
+
+prompt*Û
+
+ì ï(ÌÉ
+Æ
+
+        Please provide a comprehensive response that addresses the user's specific intent and includes relevant compliance requirements, implementation guidance, and practical next steps.
+        K
+I
+
+æ ï(
+enhanced_prompt"__id*"
+
+__unknown_file (
+
+%6¬©
+
+ò ò(D
+%7*I
+
+__unknown_file (-+
+)services.ai.assistant.ComplianceAssistant*/
+
+__unknown_file (
+
+enhanced_prompt2_generate_gemini_response"
+
+ò ò(D
+
+%7:
+
+Ü Ü(	
+message:
+
+Ý Ý(	
+context:
+
+Þ Þ(%
+intent_result:
+
+ß ß( 
+
+entitiesB-+
+)services.ai.assistant.ComplianceAssistantH

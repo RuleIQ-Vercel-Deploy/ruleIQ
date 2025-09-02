@@ -1,0 +1,21 @@
+
+"evidence_dashboard"str
+5,"Cache evidence dashboard data (5 min TTL)."strself
+≥ ≥(user_id
+≥ ≥(framework_id
+≥ ≥(-dashboard_data
+≥/ ≥(Mttl
+≥O ≥(]"ç/
+-
+
+∂ ∏(	key"?python-unknown?:#
+!
+
+π π(7	"#unknown-value##
+!
+
+π π(7
+"#unknown-value#
+
+π π(7
+*+/home/omar/Documents/ruleIQ/config/cache.py

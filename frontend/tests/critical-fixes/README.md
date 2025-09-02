@@ -5,31 +5,37 @@ This directory contains comprehensive tests to verify that the critical frontend
 ## 🎯 Issues Being Tested
 
 ### 1. OAuth2 Token Endpoint Integration (422 Errors)
+
 - **Problem**: Authentication was failing with 422 validation errors
 - **Fix**: Proper OAuth2 form data formatting for `/auth/token` endpoint
 - **Tests**: `auth-oauth2-token.test.ts`
 
 ### 2. Dashboard Route Protection (404 Errors)
+
 - **Problem**: Users getting 404 errors when accessing dashboard routes
 - **Fix**: Proper AuthGuard implementation with redirect logic
 - **Tests**: `auth-guard-protection.test.tsx`
 
 ### 3. Hydration Safety (SSR/Client Mismatches)
+
 - **Problem**: Hydration warnings due to server/client state differences
 - **Fix**: Proper mount state tracking and localStorage access delays
 - **Tests**: `hydration-safety.test.tsx`
 
 ### 4. React Key Uniqueness (Console Warnings)
+
 - **Problem**: Duplicate key warnings in QuestionRenderer and file components
 - **Fix**: Unique key generation for all list items and fragments
 - **Tests**: `react-key-uniqueness.test.tsx`
 
 ### 5. Assessment Component Issues
+
 - **Problem**: File upload and question rendering key conflicts
 - **Fix**: Stable key generation for dynamic content
 - **Tests**: `assessment-components.test.tsx`
 
 ### 6. Complete E2E Authentication Flow
+
 - **Problem**: End-to-end flow breaking with various errors
 - **Fix**: Comprehensive error handling and user journey optimization
 - **Tests**: `complete-auth-flow.e2e.test.ts`
@@ -37,6 +43,7 @@ This directory contains comprehensive tests to verify that the critical frontend
 ## 🧪 Running the Tests
 
 ### Unit Tests (Vitest)
+
 ```bash
 # Run all critical fix tests
 pnpm test:critical-fixes
@@ -52,6 +59,7 @@ pnpm vitest tests/critical-fixes/ --coverage
 ```
 
 ### E2E Tests (Playwright)
+
 ```bash
 # Run E2E critical fix tests
 pnpm test:critical-fixes:e2e
@@ -64,6 +72,7 @@ pnpm playwright test tests/critical-fixes/complete-auth-flow.e2e.test.ts --debug
 ```
 
 ### Full Test Suite
+
 ```bash
 # Run all tests (unit + E2E)
 pnpm test:all
@@ -75,6 +84,7 @@ pnpm test:critical-fixes && pnpm test:critical-fixes:e2e
 ## 📋 Test Coverage
 
 ### Authentication Flow Coverage
+
 - ✅ OAuth2 token request formatting
 - ✅ 422 error handling and validation
 - ✅ Token storage and retrieval
@@ -83,6 +93,7 @@ pnpm test:critical-fixes && pnpm test:critical-fixes:e2e
 - ✅ Network error recovery
 
 ### Route Protection Coverage
+
 - ✅ AuthGuard redirect for unauthenticated users
 - ✅ Return URL preservation
 - ✅ Loading states during auth checks
@@ -91,6 +102,7 @@ pnpm test:critical-fixes && pnpm test:critical-fixes:e2e
 - ✅ Custom redirect URL handling
 
 ### Hydration Safety Coverage
+
 - ✅ localStorage access during hydration
 - ✅ Theme provider hydration safety
 - ✅ Auth store hydration handling
@@ -99,6 +111,7 @@ pnpm test:critical-fixes && pnpm test:critical-fixes:e2e
 - ✅ Conditional rendering safety
 
 ### React Key Coverage
+
 - ✅ Question renderer unique keys
 - ✅ File upload component keys
 - ✅ Assessment wizard navigation keys
@@ -107,6 +120,7 @@ pnpm test:critical-fixes && pnpm test:critical-fixes:e2e
 - ✅ Anti-pattern detection
 
 ### Assessment Component Coverage
+
 - ✅ Question rendering with unique keys
 - ✅ File upload progress tracking
 - ✅ Assessment wizard navigation
@@ -115,6 +129,7 @@ pnpm test:critical-fixes && pnpm test:critical-fixes:e2e
 - ✅ Dynamic filtering with stable keys
 
 ### E2E Integration Coverage
+
 - ✅ Complete authentication flow
 - ✅ Dashboard navigation without 404s
 - ✅ Error boundary testing
@@ -147,6 +162,7 @@ describe('Feature Name - Critical Fix Verification', () => {
 ## 🛠️ Mock Setup
 
 Tests use comprehensive mocking:
+
 - **MSW** for API request/response mocking
 - **Vitest mocks** for React hooks and utilities
 - **Playwright** for real browser testing
@@ -155,6 +171,7 @@ Tests use comprehensive mocking:
 ## 📊 Success Criteria
 
 All tests must pass with:
+
 - ✅ No console errors or warnings
 - ✅ No 422 authentication errors
 - ✅ No 404 dashboard routing errors
@@ -166,6 +183,7 @@ All tests must pass with:
 ## 🚀 CI/CD Integration
 
 These tests are designed to:
+
 1. Run in CI/CD pipelines
 2. Block deployments if critical issues exist
 3. Provide detailed failure reporting
@@ -175,12 +193,14 @@ These tests are designed to:
 ## 🔧 Maintenance
 
 ### Adding New Tests
+
 1. Follow the existing naming convention
 2. Include both positive and negative test cases
 3. Add proper mocking and cleanup
 4. Update this README with new coverage
 
 ### Updating Tests
+
 1. Maintain backward compatibility
 2. Update mocks when APIs change
 3. Keep test data realistic

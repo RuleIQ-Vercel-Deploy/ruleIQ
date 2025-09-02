@@ -14,30 +14,35 @@
 ## 🚨 Critical Issues Identified
 
 ### 1. Mock Configuration Failures (BLOCKING)
+
 **Issue**: Lucide React icons not properly mocked
 **Impact**: 6+ unhandled exceptions, component rendering failures
 **Root Cause**: Vitest module mocking not working with current setup
 
 **Failing Icons**:
+
 - `ThumbsUp`, `ThumbsDown` (feedback buttons)
 - `CalendarIcon` (analytics page)
 - `Bot`, `Loader2`, `Lightbulb` (AI components)
 
 ### 2. Test Selector Mismatches (HIGH)
+
 **Issue**: Tests looking for outdated selectors
 **Example**: Looking for `[data-testid="answer-yes"]` but components render `[data-testid="answer-option-0"]`
 **Impact**: Integration tests failing to find elements
 
 ### 3. Component State Issues (MEDIUM)
+
 **Issue**: AI components not rendering content properly in tests
 **Impact**: Tests can't find expected text content
 
 ## 🎯 Fix Strategy
 
 ### Phase 1: Infrastructure Fixes (IMMEDIATE)
+
 1. **Fix Vitest Mock Configuration**
    - Update vitest.config.ts to properly handle module mocks
-   - Ensure __mocks__ directory is correctly configured
+   - Ensure **mocks** directory is correctly configured
    - Add proper React component mocking
 
 2. **Update Mock Implementation**
@@ -46,6 +51,7 @@
    - Test mock loading in isolation
 
 ### Phase 2: Test Updates (NEXT)
+
 1. **Update Test Selectors**
    - Align test selectors with actual component output
    - Update assessment component tests
@@ -57,6 +63,7 @@
    - Add proper error boundary testing
 
 ### Phase 3: Quality Gates (FINAL)
+
 1. **Implement Test Organization**
    - Group tests into logical suites
    - Add parallel test execution
@@ -70,6 +77,7 @@
 ## 🔧 Immediate Actions Required
 
 ### 1. Fix Vitest Configuration
+
 ```typescript
 // vitest.config.ts updates needed
 export default defineConfig({
@@ -84,15 +92,17 @@ export default defineConfig({
       '@': path.resolve(__dirname, './'),
     },
   },
-})
+});
 ```
 
 ### 2. Update Mock Strategy
-- Move from __mocks__ to inline vi.mock() calls
+
+- Move from **mocks** to inline vi.mock() calls
 - Use proper React component mocking
 - Ensure all icons are available
 
 ### 3. Test Selector Audit
+
 - Review all failing tests for selector mismatches
 - Update component test IDs to match actual output
 - Standardize test ID naming convention
@@ -100,12 +110,14 @@ export default defineConfig({
 ## 📈 Success Metrics
 
 **Target Goals**:
+
 - 95%+ test pass rate
 - <2 minute test suite execution
 - Zero unhandled errors
 - 100% critical path coverage
 
 **Quality Gates**:
+
 - All infrastructure tests passing
 - No mock-related failures
 - Consistent test execution
@@ -120,4 +132,4 @@ export default defineConfig({
 
 ---
 
-*This plan addresses the critical infrastructure issues blocking our test suite. Once these are resolved, we can focus on expanding coverage and implementing advanced testing strategies.*
+_This plan addresses the critical infrastructure issues blocking our test suite. Once these are resolved, we can focus on expanding coverage and implementing advanced testing strategies._

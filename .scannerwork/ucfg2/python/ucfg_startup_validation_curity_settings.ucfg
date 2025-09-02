@@ -1,0 +1,219 @@
+
+Fconfig.startup_validation.StartupValidator._validate_security_settingsD
+8/home/omar/Documents/ruleIQ/config/startup_validation.pyô ô(#"2*·
+2
+ö ö(.ÜÉ
+
+õ õ(7
+%18*&
+
+__unknown_file (
+
+
+logger*?
+
+__unknown_file (#!
+Validating security settings...2debugs
+q
+
+ù ù(
+%19"__id*V
+
+__unknown_file (:*8,
+*config.startup_validation.StartupValidator"
+configIG
+
+ù ù(&
+%20*#
+
+__unknown_file (
+
+%192is_production*
+3
+11*=
+3
+startup_validation.py"
+≠ ≠(
+implicit return*ó
+4
+´ ´(Ot
+r
+
+´ ´(
+%1"__id*X
+
+__unknown_file (<*:,
+*config.startup_validation.StartupValidator"
+
+warningsäá
+
+´ ´(O
+%2*"
+
+__unknown_file (
+
+%1*G
+
+__unknown_file (+)
+'Rate limiting is disabled in production2append*
+3*„
+5
+™ ™(1r
+p
+
+™ ™(
+%3"__id*V
+
+__unknown_file (:*8,
+*config.startup_validation.StartupValidator"
+configV
+T
+
+™ ™(1
+%4"__id*:
+
+__unknown_file (*
+
+%3"
+RATE_LIMIT_ENABLED*
+3
+4*ü
+6
+ß ß(Wt
+r
+
+ß ß(
+%5"__id*X
+
+__unknown_file (<*:,
+*config.startup_validation.StartupValidator"
+
+warningsíè
+
+ß ß(W
+%6*"
+
+__unknown_file (
+
+%5*O
+
+__unknown_file (31
+/Session cookies are not HTTP-only in production2append*
+5*Ë
+7
+¶ ¶(6r
+p
+
+¶ ¶(
+%7"__id*V
+
+__unknown_file (:*8,
+*config.startup_validation.StartupValidator"
+config[
+Y
+
+¶ ¶(6
+%8"__id*?
+
+__unknown_file (#*!
+
+%7"
+SESSION_COOKIE_HTTPONLY*
+5
+6*ù
+8
+§ §(Tt
+r
+
+§ §(
+%9"__id*X
+
+__unknown_file (<*:,
+*config.startup_validation.StartupValidator"
+
+warningsêç
+
+§ §(T
+%10*"
+
+__unknown_file (
+
+%9*L
+
+__unknown_file (0.
+,Session cookies are not secure in production2append*
+7*È
+9
+£ £(4s
+q
+
+£ £(
+%11"__id*V
+
+__unknown_file (:*8,
+*config.startup_validation.StartupValidator"
+config[
+Y
+
+£ £(4
+%12"__id*>
+
+__unknown_file ("* 
+
+%11"
+SESSION_COOKIE_SECURE*
+7
+8*ó
+10
+† †(Ks
+q
+
+† †(
+%13"__id*V
+
+__unknown_file (:*8,
+*config.startup_validation.StartupValidator"
+errorsäá
+
+† †(K
+%14*#
+
+__unknown_file (
+
+%13*E
+
+__unknown_file ()'
+%CORS allows all origins in production2append*
+9*œ
+11
+ü ü(.s
+q
+
+ü ü(!
+%15"__id*V
+
+__unknown_file (:*8,
+*config.startup_validation.StartupValidator"
+configR
+P
+
+ü ü(.
+%16"__id*5
+
+__unknown_file (*
+
+%15"
+CORS_ORIGINSki
+
+ü ü(.
+%17*#
+
+__unknown_file (
+
+%16*!
+
+__unknown_file (
+*2__contains__*
+9
+10B.,
+*config.startup_validation.StartupValidatorH

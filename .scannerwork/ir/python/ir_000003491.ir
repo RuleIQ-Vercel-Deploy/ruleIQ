@@ -1,0 +1,32 @@
+
+6-"Check if IP is a TOR exit node (simplified)"str
+
+	0int
+"198.96.155.3"strself
+é é(ip
+é  é('list"¨5
+3
+
+í ï(	
+tor_ranges"#unknown-value#Blist(
+&
+
+í ï(	"
+#is-exact#:Bbool
+
+
+í ï(	"
+#assume#::
+8
+
+í ï(	
+"#set-field# __collection_size:	Bint(
+&
+
+í ï(	"#array-add-last#:,
+*
+
+ð ð("
+#binop in#2in:Bbool
+
+ð ð(*:/home/omar/Documents/ruleIQ/services/session_management.py

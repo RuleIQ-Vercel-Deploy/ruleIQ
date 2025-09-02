@@ -10,10 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 import redis.asyncio as redis
 
 from database.db_setup import get_db
-from services.api_key_management import (
-    APIKeyManager, APIKeyMetadata, APIKeyType, 
-    APIKeyStatus
-)
+from services.api_key_management import APIKeyManager, APIKeyType, APIKeyStatus
 from api.dependencies.auth import get_current_active_user, get_api_key_auth
 from database.user import User
 from database.redis_client import get_redis_client
@@ -28,8 +25,10 @@ router = APIRouter(
 
 # Pydantic models for API requests/responses
 
+
 class CreateAPIKeyRequest(BaseModel):
     """Request model for creating an API key"""
+
     organization_name: str = Field(..., min_length=1, max_length=255)
     key_type: APIKeyType = Field(default=APIKeyType.STANDARD)
     expires_in_days: Optional[int] = Field(None, ge=1, le=365)
@@ -38,11 +37,12 @@ class CreateAPIKeyRequest(BaseModel):
     scopes: Optional[List[str]] = Field(default_factory=list)
     rate_limit: Optional[int] = Field(None, ge=1, le=10000)
     metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
-    
-    @validator('allowed_ips')
+
+    @validator("allowed_ips")
     def validate_ips(cls, v):
         """Validate IP addresses and CIDR blocks"""
         import ipaddress
+
         for ip in v:
             try:
                 if "/" in ip:
@@ -56,6 +56,7 @@ class CreateAPIKeyRequest(BaseModel):
 
 class CreateAPIKeyResponse(BaseModel):
     """Response model for API key creation"""
+
     api_key: str = Field(..., description="The complete API key (only shown once)")
     key_id: str = Field(..., description="The key identifier")
     organization_id: str
@@ -64,11 +65,14 @@ class CreateAPIKeyResponse(BaseModel):
     expires_at: Optional[datetime]
     scopes: List[str]
     rate_limit: int
-    message: str = "API key created successfully. Store this key securely - it cannot be retrieved again."
+    message: str = (
+        "API key created successfully. Store this key securely - it cannot be retrieved again."
+    )
 
 
 class APIKeyInfo(BaseModel):
     """API key information (without secret)"""
+
     key_id: str
     organization_id: str
     organization_name: str
@@ -87,11 +91,13 @@ class APIKeyInfo(BaseModel):
 
 class RotateAPIKeyRequest(BaseModel):
     """Request model for rotating an API key"""
+
     expires_old_in_hours: int = Field(default=24, ge=1, le=168)  # Max 1 week
 
 
 class UpdateAPIKeyRequest(BaseModel):
     """Request model for updating API key settings"""
+
     allowed_ips: Optional[List[str]] = None
     allowed_origins: Optional[List[str]] = None
     scopes: Optional[List[str]] = None
@@ -101,6 +107,7 @@ class UpdateAPIKeyRequest(BaseModel):
 
 class APIKeyUsageStats(BaseModel):
     """API key usage statistics"""
+
     key_id: str
     period_days: int
     total_requests: int
@@ -112,27 +119,28 @@ class APIKeyUsageStats(BaseModel):
 
 # API Endpoints
 
+
 @router.post("/", response_model=CreateAPIKeyResponse)
 async def create_api_key(
     request: CreateAPIKeyRequest,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db),
-    redis_client: redis.Redis = Depends(get_redis_client)
+    redis_client: redis.Redis = Depends(get_redis_client),
 ):
     """
     Create a new API key for B2B integrations.
-    
+
     Requires admin role or organization owner privileges.
     """
     # Check permissions
     if current_user.role not in ["admin", "organization_owner"]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Insufficient permissions to create API keys"
+            detail="Insufficient permissions to create API keys",
         )
-    
+
     manager = APIKeyManager(db, redis_client)
-    
+
     try:
         api_key, key_id, metadata = await manager.generate_api_key(
             organization_id=current_user.organization_id or str(current_user.id),
@@ -143,9 +151,9 @@ async def create_api_key(
             allowed_origins=request.allowed_origins,
             scopes=request.scopes,
             rate_limit=request.rate_limit,
-            metadata=request.metadata
+            metadata=request.metadata,
         )
-        
+
         return CreateAPIKeyResponse(
             api_key=api_key,
             key_id=key_id,
@@ -154,13 +162,13 @@ async def create_api_key(
             key_type=metadata.key_type,
             expires_at=metadata.expires_at,
             scopes=metadata.scopes,
-            rate_limit=metadata.rate_limit
+            rate_limit=metadata.rate_limit,
         )
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to create API key: {str(e)}"
+            detail=f"Failed to create API key: {str(e)}",
         )
 
 
@@ -169,16 +177,16 @@ async def list_api_keys(
     include_revoked: bool = False,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db),
-    redis_client: redis.Redis = Depends(get_redis_client)
+    redis_client: redis.Redis = Depends(get_redis_client),
 ):
     """
     List all API keys for the current organization.
     """
     manager = APIKeyManager(db, redis_client)
-    
+
     organization_id = current_user.organization_id or str(current_user.id)
     keys = await manager.list_organization_keys(organization_id, include_revoked)
-    
+
     return [
         APIKeyInfo(
             key_id=key.key_id,
@@ -194,7 +202,7 @@ async def list_api_keys(
             scopes=key.scopes,
             rate_limit=key.rate_limit,
             rate_limit_window=key.rate_limit_window,
-            metadata=key.key_metadata
+            metadata=key.key_metadata,
         )
         for key in keys
     ]
@@ -205,29 +213,28 @@ async def get_api_key(
     key_id: str,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db),
-    redis_client: redis.Redis = Depends(get_redis_client)
+    redis_client: redis.Redis = Depends(get_redis_client),
 ):
     """
     Get details of a specific API key.
     """
     manager = APIKeyManager(db, redis_client)
-    
+
     metadata = await manager._load_key_metadata(key_id)
-    
+
     if not metadata:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="API key not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
         )
-    
+
     # Check ownership
     organization_id = current_user.organization_id or str(current_user.id)
     if metadata.organization_id != organization_id and current_user.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied to this API key"
+            detail="Access denied to this API key",
         )
-    
+
     return APIKeyInfo(
         key_id=metadata.key_id,
         organization_id=metadata.organization_id,
@@ -242,7 +249,7 @@ async def get_api_key(
         scopes=metadata.scopes,
         rate_limit=metadata.rate_limit,
         rate_limit_window=metadata.rate_limit_window,
-        metadata=metadata.metadata
+        metadata=metadata.metadata,
     )
 
 
@@ -252,34 +259,32 @@ async def rotate_api_key(
     request: RotateAPIKeyRequest,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db),
-    redis_client: redis.Redis = Depends(get_redis_client)
+    redis_client: redis.Redis = Depends(get_redis_client),
 ):
     """
     Rotate an API key, creating a new one and scheduling the old one for expiration.
     """
     manager = APIKeyManager(db, redis_client)
-    
+
     # Check ownership
     metadata = await manager._load_key_metadata(key_id)
     if not metadata:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="API key not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
         )
-    
+
     organization_id = current_user.organization_id or str(current_user.id)
     if metadata.organization_id != organization_id and current_user.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied to this API key"
+            detail="Access denied to this API key",
         )
-    
+
     try:
         new_api_key, new_key_id, new_metadata = await manager.rotate_api_key(
-            key_id=key_id,
-            expires_old_in_hours=request.expires_old_in_hours
+            key_id=key_id, expires_old_in_hours=request.expires_old_in_hours
         )
-        
+
         return CreateAPIKeyResponse(
             api_key=new_api_key,
             key_id=new_key_id,
@@ -289,13 +294,13 @@ async def rotate_api_key(
             expires_at=new_metadata.expires_at,
             scopes=new_metadata.scopes,
             rate_limit=new_metadata.rate_limit,
-            message=f"API key rotated successfully. Old key will expire in {request.expires_old_in_hours} hours."
+            message=f"API key rotated successfully. Old key will expire in {request.expires_old_in_hours} hours.",
         )
-        
+
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to rotate API key: {str(e)}"
+            detail=f"Failed to rotate API key: {str(e)}",
         )
 
 
@@ -305,36 +310,35 @@ async def revoke_api_key(
     reason: str = "Manual revocation",
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db),
-    redis_client: redis.Redis = Depends(get_redis_client)
+    redis_client: redis.Redis = Depends(get_redis_client),
 ):
     """
     Revoke an API key immediately.
     """
     manager = APIKeyManager(db, redis_client)
-    
+
     # Check ownership
     metadata = await manager._load_key_metadata(key_id)
     if not metadata:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="API key not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
         )
-    
+
     organization_id = current_user.organization_id or str(current_user.id)
     if metadata.organization_id != organization_id and current_user.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied to this API key"
+            detail="Access denied to this API key",
         )
-    
+
     success = await manager.revoke_api_key(key_id, reason)
-    
+
     if not success:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to revoke API key"
+            detail="Failed to revoke API key",
         )
-    
+
     return {"message": f"API key {key_id} has been revoked"}
 
 
@@ -344,36 +348,35 @@ async def suspend_api_key(
     reason: str = "Manual suspension",
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db),
-    redis_client: redis.Redis = Depends(get_redis_client)
+    redis_client: redis.Redis = Depends(get_redis_client),
 ):
     """
     Temporarily suspend an API key.
     """
     manager = APIKeyManager(db, redis_client)
-    
+
     # Check ownership
     metadata = await manager._load_key_metadata(key_id)
     if not metadata:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="API key not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
         )
-    
+
     organization_id = current_user.organization_id or str(current_user.id)
     if metadata.organization_id != organization_id and current_user.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied to this API key"
+            detail="Access denied to this API key",
         )
-    
+
     success = await manager.suspend_api_key(key_id, reason)
-    
+
     if not success:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to suspend API key"
+            detail="Failed to suspend API key",
         )
-    
+
     return {"message": f"API key {key_id} has been suspended"}
 
 
@@ -382,36 +385,35 @@ async def reactivate_api_key(
     key_id: str,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db),
-    redis_client: redis.Redis = Depends(get_redis_client)
+    redis_client: redis.Redis = Depends(get_redis_client),
 ):
     """
     Reactivate a suspended API key.
     """
     manager = APIKeyManager(db, redis_client)
-    
+
     # Check ownership
     metadata = await manager._load_key_metadata(key_id)
     if not metadata:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="API key not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
         )
-    
+
     organization_id = current_user.organization_id or str(current_user.id)
     if metadata.organization_id != organization_id and current_user.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied to this API key"
+            detail="Access denied to this API key",
         )
-    
+
     success = await manager.reactivate_api_key(key_id)
-    
+
     if not success:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Cannot reactivate this API key (only suspended keys can be reactivated)"
+            detail="Cannot reactivate this API key (only suspended keys can be reactivated)",
         )
-    
+
     return {"message": f"API key {key_id} has been reactivated"}
 
 
@@ -421,30 +423,29 @@ async def get_api_key_usage(
     days: int = 30,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_db),
-    redis_client: redis.Redis = Depends(get_redis_client)
+    redis_client: redis.Redis = Depends(get_redis_client),
 ):
     """
     Get usage statistics for an API key.
     """
     manager = APIKeyManager(db, redis_client)
-    
+
     # Check ownership
     metadata = await manager._load_key_metadata(key_id)
     if not metadata:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="API key not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="API key not found"
         )
-    
+
     organization_id = current_user.organization_id or str(current_user.id)
     if metadata.organization_id != organization_id and current_user.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access denied to this API key"
+            detail="Access denied to this API key",
         )
-    
+
     stats = await manager.get_usage_statistics(key_id, days)
-    
+
     return APIKeyUsageStats(**stats)
 
 
@@ -453,16 +454,16 @@ async def get_api_key_usage(
 async def test_api_key_auth(
     request: Request,
     api_key_metadata: dict = Depends(get_api_key_auth),
-    x_api_key: str = Header(..., alias="X-API-Key")
+    x_api_key: str = Header(..., alias="X-API-Key"),
 ):
     """
     Test endpoint for API key authentication.
-    
+
     Requires a valid API key in the X-API-Key header.
     """
     return {
         "message": "API key is valid",
         "api_key_prefix": x_api_key[:10] if x_api_key else None,
         "metadata": api_key_metadata,
-        "timestamp": datetime.utcnow().isoformat()
+        "timestamp": datetime.utcnow().isoformat(),
     }

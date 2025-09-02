@@ -1,0 +1,44 @@
+
+6tests.test_rbac_system.TestUserWithRoles.test_has_roleA
+5/home/omar/Documents/ruleIQ/tests/test_rbac_system.pyë ë("2*¥
+2
+ì ì(!ª§
+
+í í(0
+%1"1api.dependencies.rbac_auth.UserWithRoles.has_role*/
+
+__unknown_file (
+
+user_with_roles*%
+
+__unknown_file (	
+admin2has_role©¦
+
+î î(/
+%2"1api.dependencies.rbac_auth.UserWithRoles.has_role*/
+
+__unknown_file (
+
+user_with_roles*$
+
+__unknown_file (
+user2has_roleµ²
+
+ï ï(;
+%3"1api.dependencies.rbac_auth.UserWithRoles.has_role*/
+
+__unknown_file (
+
+user_with_roles*0
+
+__unknown_file (
+nonexistent_role2has_role*
+3*;
+3
+test_rbac_system.py"
+ñ ñ(
+implicit return:
+
+ë ë(:
+user_with_rolesB,*
+(tests.test_rbac_system.TestUserWithRolesH

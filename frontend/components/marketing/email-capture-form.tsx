@@ -4,7 +4,13 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { ArrowRight, Loader2, Mail, Building, Users } from 'lucide-react';
@@ -16,7 +22,11 @@ interface EmailCaptureFormProps {
   variant?: 'inline' | 'modal' | 'hero';
 }
 
-export function EmailCaptureForm({ onSuccess, className = '', variant = 'hero' }: EmailCaptureFormProps) {
+export function EmailCaptureForm({
+  onSuccess,
+  className = '',
+  variant = 'hero',
+}: EmailCaptureFormProps) {
   const [formData, setFormData] = useState<Partial<LeadCaptureRequest>>({
     email: '',
     first_name: '',
@@ -56,9 +66,9 @@ export function EmailCaptureForm({ onSuccess, className = '', variant = 'hero' }
         ...formData,
         ...utmData,
       } as LeadCaptureRequest);
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
 
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       onSuccess(response.lead_id, response.email);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to capture email');
@@ -68,7 +78,7 @@ export function EmailCaptureForm({ onSuccess, className = '', variant = 'hero' }
   };
 
   const updateFormData = (field: keyof LeadCaptureRequest, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   if (variant === 'inline') {
@@ -162,7 +172,7 @@ export function EmailCaptureForm({ onSuccess, className = '', variant = 'hero' }
           <Label htmlFor="company_size">Company Size</Label>
           <Select onValueChange={(value) => updateFormData('company_size', value)}>
             <SelectTrigger className="mt-1">
-              <Users className="h-4 w-4 text-muted-foreground mr-2" />
+              <Users className="mr-2 h-4 w-4 text-muted-foreground" />
               <SelectValue placeholder="Select size" />
             </SelectTrigger>
             <SelectContent>
@@ -210,9 +220,9 @@ export function EmailCaptureForm({ onSuccess, className = '', variant = 'hero' }
         </Label>
       </div>
 
-      <Button 
-        type="submit" 
-        className="w-full group" 
+      <Button
+        type="submit"
+        className="group w-full"
         size="lg"
         disabled={isLoading || !formData.email}
       >
@@ -229,11 +239,15 @@ export function EmailCaptureForm({ onSuccess, className = '', variant = 'hero' }
         )}
       </Button>
 
-      <p className="text-xs text-muted-foreground text-center">
+      <p className="text-center text-xs text-muted-foreground">
         By submitting this form, you agree to our{' '}
-        <a href="/privacy" className="underline hover:text-foreground">Privacy Policy</a>
-        {' '}and{' '}
-        <a href="/terms" className="underline hover:text-foreground">Terms of Service</a>
+        <a href="/privacy" className="underline hover:text-foreground">
+          Privacy Policy
+        </a>{' '}
+        and{' '}
+        <a href="/terms" className="underline hover:text-foreground">
+          Terms of Service
+        </a>
       </p>
     </form>
   );

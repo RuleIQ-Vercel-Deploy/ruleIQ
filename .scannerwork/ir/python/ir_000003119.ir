@@ -1,0 +1,53 @@
+
+0.0float
+%"Calculate percentile value"str
+
+1intdata
+… …(%
+percentile
+…' …(8"|+
+)
+
+‡ ‡("
+__bool__*:BboolH+
+)
+
+‡ ‡("#unaryop !#2!:Bbool "
+
+‡ ‡( *
+‡ ‡(
+"
+
+ˆ ˆ("Š=
+;
+
+‰ ‰("sorted_data"
+builtinssorted*:Blist,
+*
+
+Š Š($"
+builtinslen*:Bint'
+%
+
+Š Š(1	"	#binop *#*2*:7
+5
+
+Š Š(2
+index"#dependent-value#*:	Bint,
+*
+
+‹& ‹(6"
+builtinslen*:Bint'
+%
+
+‹& ‹(:"	#binop -#*2-:(
+&
+
+‹ ‹(;"
+builtinsmin*:
+$
+"
+
+‹ ‹(<"#array-read#:
+
+‹ ‹(<*:/home/omar/Documents/ruleIQ/config/performance_profiler.py

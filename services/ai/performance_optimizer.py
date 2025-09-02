@@ -124,15 +124,25 @@ class AIPerformanceOptimizer:
             print("========================\n")
 
             # Determine optimization strategy
-            strategy = self._select_optimization_strategy(optimized_prompt, context, priority)
+            strategy = self._select_optimization_strategy(
+                optimized_prompt, context, priority
+            )
 
             # Apply strategy-specific optimizations
-            if strategy == OptimizationStrategy.BATCH_PROCESSING and self.enable_batching:
+            if (
+                strategy == OptimizationStrategy.BATCH_PROCESSING
+                and self.enable_batching
+            ):
                 optimized_prompt = await self._apply_batch_optimization(
                     optimized_prompt, context, priority
                 )
-            elif strategy == OptimizationStrategy.PROMPT_COMPRESSION and self.enable_compression:
-                optimized_prompt = await self._apply_compression_optimization(optimized_prompt)
+            elif (
+                strategy == OptimizationStrategy.PROMPT_COMPRESSION
+                and self.enable_compression
+            ):
+                optimized_prompt = await self._apply_compression_optimization(
+                    optimized_prompt
+                )
 
             # Record optimization metrics
             optimization_time = time.time() - start_time
@@ -141,9 +151,9 @@ class AIPerformanceOptimizer:
                 "optimization_time_ms": round(optimization_time * 1000, 2),
                 "original_length": len(prompt),
                 "optimized_length": len(optimized_prompt),
-                "compression_ratio": len(optimized_prompt) / len(prompt)
-                if len(prompt) > 0
-                else 1.0,
+                "compression_ratio": (
+                    len(optimized_prompt) / len(prompt) if len(prompt) > 0 else 1.0
+                ),
             }
 
             return optimized_prompt, metadata
@@ -152,7 +162,9 @@ class AIPerformanceOptimizer:
             logger.warning(f"Optimization failed, using original prompt: {e}")
             return prompt, {"optimization_strategy": "none", "error": str(e)}
 
-    async def _optimize_prompt(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> str:
+    async def _optimize_prompt(
+        self, prompt: str, context: Optional[Dict[str, Any]] = None
+    ) -> str:
         """Apply intelligent prompt optimization."""
 
         # Remove redundant whitespace
@@ -165,9 +177,13 @@ class AIPerformanceOptimizer:
             # Framework-specific optimizations
             if framework == "ISO27001":
                 optimized = optimized.replace("ISO 27001", "ISO27001")
-                optimized = optimized.replace("information security management system", "ISMS")
+                optimized = optimized.replace(
+                    "information security management system", "ISMS"
+                )
             elif framework == "GDPR":
-                optimized = optimized.replace("General Data Protection Regulation", "GDPR")
+                optimized = optimized.replace(
+                    "General Data Protection Regulation", "GDPR"
+                )
                 optimized = optimized.replace("data protection officer", "DPO")
             elif framework == "SOC2":
                 optimized = optimized.replace("Service Organization Control", "SOC")
@@ -189,7 +205,9 @@ class AIPerformanceOptimizer:
             keep_end = self.max_prompt_length // 3
             middle_compressed = "...[content compressed]..."
 
-            optimized = optimized[:keep_start] + middle_compressed + optimized[-keep_end:]
+            optimized = (
+                optimized[:keep_start] + middle_compressed + optimized[-keep_end:]
+            )
 
         return optimized
 
@@ -213,7 +231,9 @@ class AIPerformanceOptimizer:
         # Default to parallel execution for better responsiveness
         return OptimizationStrategy.PARALLEL_EXECUTION
 
-    def _can_batch_request(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> bool:
+    def _can_batch_request(
+        self, prompt: str, context: Optional[Dict[str, Any]] = None
+    ) -> bool:
         """Determine if request can be batched with others."""
 
         # Don't batch high-priority or time-sensitive requests
@@ -250,7 +270,10 @@ class AIPerformanceOptimizer:
         self.batch_queue.append(batch_request)
 
         # Process batch if conditions are met
-        if len(self.batch_queue) >= self.batch_size or self._should_process_batch_timeout():
+        if (
+            len(self.batch_queue) >= self.batch_size
+            or self._should_process_batch_timeout()
+        ):
             await self._process_batch()
 
         return prompt
@@ -272,7 +295,9 @@ class AIPerformanceOptimizer:
             compressed = re.sub(phrase_pattern, "", compressed, flags=re.IGNORECASE)
 
         # Compress repeated information
-        compressed = re.sub(r"\b(\w+)\s+\1\b", r"\1", compressed)  # Remove word repetitions
+        compressed = re.sub(
+            r"\b(\w+)\s+\1\b", r"\1", compressed
+        )  # Remove word repetitions
         compressed = re.sub(r"\s+", " ", compressed)  # Normalize whitespace
 
         return compressed.strip()
@@ -361,7 +386,9 @@ class AIPerformanceOptimizer:
             "cost_optimization": {
                 "estimated_token_usage": self.performance_metrics.token_usage,
                 "estimated_cost": round(self.performance_metrics.cost_estimate, 4),
-                "optimization_savings": round(self.performance_metrics.optimization_savings, 4),
+                "optimization_savings": round(
+                    self.performance_metrics.optimization_savings, 4
+                ),
             },
             "system_health": {
                 "available_capacity": self.request_semaphore._value,
@@ -370,7 +397,9 @@ class AIPerformanceOptimizer:
             },
         }
 
-    def update_performance_metrics(self, response_time: float, token_count: int = 0) -> None:
+    def update_performance_metrics(
+        self, response_time: float, token_count: int = 0
+    ) -> None:
         """Update performance metrics with new data."""
         self.performance_metrics.request_count += 1
         self.performance_metrics.total_response_time += response_time

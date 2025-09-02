@@ -1,0 +1,24 @@
+
+‰⁄"Check if a metric name is valid according to Prometheus naming rules.
+        
+        Args:
+            name: Metric name to validate
+            
+        Returns:
+            True if valid, False otherwise
+        "str
+%"^[a-zA-Z_:][a-zA-Z0-9_:]*$"strself
+Ö Ö(!name
+Ö# Ö(,"ì)
+'
+
+ê ê(/pattern"#id#:Bstr!
+
+
+ë ë(+"
+rematch:1
+/
+
+ë ë(,"#dependent-value#*:Bbool
+
+ë ë(,*F/home/omar/Documents/ruleIQ/app/core/monitoring/prometheus_exporter.py

@@ -11,7 +11,9 @@ circuit_breaker = AICircuitBreaker()
 
 
 @router.post("/model-selection")
-async def model_selection(request: ModelSelectionRequest, current_user=Depends(get_current_user)):
+async def model_selection(
+    request: ModelSelectionRequest, current_user=Depends(get_current_user)
+):
     """Select the optimal AI model based on task requirements."""
     try:
         selected_model = ComplianceAssistant.select_optimal_model(

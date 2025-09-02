@@ -79,8 +79,12 @@ async def test_langsmith_tracing():
             print("❌ DATABASE_URL not configured")
             return False
 
-        engine = create_async_engine(DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://"))
-        AsyncSessionLocal = sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+        engine = create_async_engine(
+            DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
+        )
+        AsyncSessionLocal = sessionmaker(
+            engine, class_=AsyncSession, expire_on_commit=False
+        )
 
         async with AsyncSessionLocal() as db:
             # Create assessment agent
@@ -92,7 +96,7 @@ async def test_langsmith_tracing():
             test_context = {
                 "business_type": "Software Company",
                 "company_size": "11-50",
-                "industry": "Technology"
+                "industry": "Technology",
             }
 
             print(f"   Starting test assessment: {test_session_id}")
@@ -101,7 +105,7 @@ async def test_langsmith_tracing():
             result = await agent.start_assessment(
                 session_id=test_session_id,
                 lead_id=test_lead_id,
-                initial_context=test_context
+                initial_context=test_context,
             )
 
             print("   Assessment started successfully")
@@ -109,14 +113,14 @@ async def test_langsmith_tracing():
             print(f"   Messages: {len(result.get('messages', []))}")
 
             # Test processing a response
-            if result.get('messages'):
+            if result.get("messages"):
                 print("\n   Testing response processing...")
                 test_response = "We handle customer data and payment information"
 
                 result2 = await agent.process_user_response(
                     session_id=test_session_id,
                     user_response=test_response,
-                    confidence="high"
+                    confidence="high",
                 )
 
                 print("   Response processed successfully")
@@ -141,6 +145,7 @@ async def main():
 
     # Load environment variables
     from dotenv import load_dotenv
+
     load_dotenv()
 
     success = await test_langsmith_tracing()

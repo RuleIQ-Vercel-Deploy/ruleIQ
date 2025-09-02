@@ -1,0 +1,129 @@
+
+/config.tracing.CustomTracer.trace_external_call9
+-/home/omar/Documents/ruleIQ/config/tracing.py´ ´("2*ƒ
+2
+µ µ(*
+
+¶ º(	
+%1"dict˜
+•
+
+· ·(!
+%2"__mapSet*"
+
+__unknown_file (
+
+%1*+
+
+__unknown_file (
+http.method*&
+
+__unknown_file (
+
+
+method—
+”
+
+¸ ¸( 
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*(
+
+__unknown_file (
+
+http.url*(
+
+__unknown_file (
+
+
+endpointš
+—
+
+¹ ¹(#
+%4"__mapSet*"
+
+__unknown_file (
+
+%1*,
+
+__unknown_file (
+service.name*'
+
+__unknown_file (
+	
+serviceF
+D
+
+¶ º(	
+
+attributes"__id*"
+
+__unknown_file (
+
+%1V
+T
+
+½ ½(!
+%5"__concat*
+
+½ ½(
+	external.*
+
+½ ½(
+	
+serviceO
+M
+
+¿ ¿(
+%6"__id*3
+
+__unknown_file (*
+
+trace"
+
+SpanKindJ
+H
+
+¿ ¿(&
+%7"__id*.
+
+__unknown_file (*
+
+%6"
+CLIENT°­
+
+¼ À(	
+%8*;
+
+__unknown_file (
+config.tracing.CustomTracer*"
+
+__unknown_file (
+
+%52
+start_span:
+
+attributes
+
+
+attributes:
+kind
+
+%7"
+
+¼ À(	
+
+%8:
+
+´" ´(.	
+service:
+
+´0 ´(=
+
+endpoint:
+
+´? ´(R
+methodB
+config.tracing.CustomTracerH

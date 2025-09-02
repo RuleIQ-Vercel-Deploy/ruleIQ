@@ -1,9 +1,9 @@
 /**
  * Cost Analytics Widget Component
- * 
+ *
  * Displays AI cost tracking metrics and analytics in the dashboard.
  * This is a placeholder component for Phase 2.2: Cost Tracking & Token Budgets
- * 
+ *
  * TODO: Implement the following features:
  * - Real-time cost tracking display
  * - Token usage metrics
@@ -21,9 +21,9 @@ interface CostAnalyticsWidgetProps {
   timeRange?: 'day' | 'week' | 'month';
 }
 
-export const CostAnalyticsWidget: React.FC<CostAnalyticsWidgetProps> = ({ 
+export const CostAnalyticsWidget: React.FC<CostAnalyticsWidgetProps> = ({
   className = '',
-  timeRange = 'day' 
+  timeRange = 'day',
 }) => {
   // TODO: Connect to backend cost tracking API
   // const { data: costData, isLoading } = useCostAnalytics(timeRange);
@@ -35,7 +35,7 @@ export const CostAnalyticsWidget: React.FC<CostAnalyticsWidgetProps> = ({
     avgCostPerRequest: 0.23,
     budgetUsed: 65,
     trend: '+12%',
-    alerts: 2
+    alerts: 2,
   };
 
   return (
@@ -45,9 +45,7 @@ export const CostAnalyticsWidget: React.FC<CostAnalyticsWidgetProps> = ({
           <DollarSign className="h-5 w-5" />
           AI Cost Analytics
         </CardTitle>
-        <CardDescription>
-          Token usage and cost tracking for {timeRange}
-        </CardDescription>
+        <CardDescription>Token usage and cost tracking for {timeRange}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid gap-4">
@@ -59,7 +57,7 @@ export const CostAnalyticsWidget: React.FC<CostAnalyticsWidgetProps> = ({
             </div>
             <div className="text-right">
               <p className="text-2xl font-bold">${placeholderData.totalCost}</p>
-              <p className="text-xs text-muted-foreground flex items-center gap-1">
+              <p className="flex items-center gap-1 text-xs text-muted-foreground">
                 <TrendingUp className="h-3 w-3" />
                 {placeholderData.trend} from last {timeRange}
               </p>
@@ -90,9 +88,7 @@ export const CostAnalyticsWidget: React.FC<CostAnalyticsWidgetProps> = ({
             </div>
             <div className="text-right">
               <p className="text-lg font-semibold">{placeholderData.budgetUsed}%</p>
-              <p className="text-xs text-muted-foreground">
-                {placeholderData.alerts} alerts
-              </p>
+              <p className="text-xs text-muted-foreground">{placeholderData.alerts} alerts</p>
             </div>
           </div>
 
@@ -102,8 +98,8 @@ export const CostAnalyticsWidget: React.FC<CostAnalyticsWidgetProps> = ({
               <span>Budget Usage</span>
               <span>{placeholderData.budgetUsed}% of limit</span>
             </div>
-            <div className="h-2 bg-secondary rounded-full overflow-hidden">
-              <div 
+            <div className="h-2 overflow-hidden rounded-full bg-secondary">
+              <div
                 className="h-full bg-primary transition-all"
                 style={{ width: `${placeholderData.budgetUsed}%` }}
               />
@@ -111,10 +107,10 @@ export const CostAnalyticsWidget: React.FC<CostAnalyticsWidgetProps> = ({
           </div>
 
           {/* Placeholder Message */}
-          <div className="mt-4 p-3 bg-muted rounded-lg">
-            <p className="text-xs text-muted-foreground text-center">
-              🚧 This is a placeholder component. 
-              Connect to the cost tracking API to display real data.
+          <div className="mt-4 rounded-lg bg-muted p-3">
+            <p className="text-center text-xs text-muted-foreground">
+              🚧 This is a placeholder component. Connect to the cost tracking API to display real
+              data.
             </p>
           </div>
         </div>

@@ -131,7 +131,7 @@ function fixComprehensiveStoreTest() {
   );
 
   fs.writeFileSync(testFile, content);
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
 }
 
 // Fix 2: Add missing mock implementations for AI integration tests
@@ -155,7 +155,7 @@ function fixAIIntegrationTest() {
   );
 
   fs.writeFileSync(testFile, content);
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
 }
 
 // Fix 3: Update auth flow test to handle form submission properly
@@ -183,7 +183,7 @@ function fixAuthFlowTest() {
   );
 
   fs.writeFileSync(testFile, content);
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
 }
 
 // Fix 4: Create missing test utilities for assessment wizard
@@ -248,7 +248,7 @@ export const createMockAssessmentContext = () => ({
   }
 
   fs.writeFileSync(utilsFile, utilsContent);
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
 }
 
 // Fix 5: Update vitest config to handle long-running tests
@@ -273,12 +273,12 @@ function updateVitestConfig() {
   }
 
   fs.writeFileSync(configFile, content);
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
 }
 
 // Main execution
 async function main() {
-    // TODO: Replace with proper logging
+  // TODO: Replace with proper logging
   try {
     fixComprehensiveStoreTest();
     fixAIIntegrationTest();

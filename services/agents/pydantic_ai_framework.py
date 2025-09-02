@@ -13,8 +13,10 @@ from services.agentic_rag import AgenticRAGSystem
 
 logger = logging.getLogger(__name__)
 
+
 class AgentContext(BaseModel):
     """Context passed to agents during execution"""
+
     user_id: str
     session_id: str
     trust_level: int = Field(ge=0, le=3, description="Agent trust level (0-3)")
@@ -22,8 +24,10 @@ class AgentContext(BaseModel):
     interaction_history: List[Dict[str, Any]] = Field(default_factory=list)
     preferences: Dict[str, Any] = Field(default_factory=dict)
 
+
 class AgentResponse(BaseModel):
     """Standard response from Pydantic AI agents"""
+
     recommendation: str
     confidence: float = Field(ge=0.0, le=1.0)
     trust_level_required: int = Field(ge=0, le=3)
@@ -32,12 +36,15 @@ class AgentResponse(BaseModel):
     next_actions: List[str] = Field(default_factory=list)
     requires_human_approval: bool = False
 
+
 class ComplianceAgentResponse(AgentResponse):
     """Response from compliance-specific agents"""
+
     risk_level: Literal["low", "medium", "high", "critical"]
     compliance_gaps: List[str] = Field(default_factory=list)
     recommended_policies: List[str] = Field(default_factory=list)
     implementation_steps: List[str] = Field(default_factory=list)
+
 
 class BaseComplianceAgent:
     """
@@ -50,15 +57,17 @@ class BaseComplianceAgent:
     - Level 3: Take autonomous actions
     """
 
-    def __init__(self, trust_level: int, rag_system: Optional[AgenticRAGSystem] = None) -> None:
+    def __init__(
+        self, trust_level: int, rag_system: Optional[AgenticRAGSystem] = None
+    ) -> None:
         self.trust_level = trust_level
         self.rag_system = rag_system
 
         # Initialize Pydantic AI agent
         self.agent = Agent(
-            'gemini-1.5-pro',
+            "gemini-1.5-pro",
             result_type=ComplianceAgentResponse,
-            system_prompt=self._build_system_prompt()
+            system_prompt=self._build_system_prompt(),
         )
 
     def _build_system_prompt(self) -> str:
@@ -87,22 +96,24 @@ class BaseComplianceAgent:
             0: "Focus on observation and pattern identification. Avoid making specific recommendations.",
             1: "Provide detailed suggestions with explanations. Always explain why you recommend each action.",
             2: "Propose specific actions and collaborate on implementation. You can suggest concrete steps.",
-            3: "Take autonomous actions within your defined scope. Be proactive but always explain your reasoning."
+            3: "Take autonomous actions within your defined scope. Be proactive but always explain your reasoning.",
         }
 
-        return base_prompt + f"\n\nTrust Level {self.trust_level} Specific Guidance:\n{trust_level_specifics.get(self.trust_level, '')}"
+        return (
+            base_prompt
+            + f"\n\nTrust Level {self.trust_level} Specific Guidance:\n{trust_level_specifics.get(self.trust_level, '')}"
+        )
 
-    async def process_request(self, request: str, context: AgentContext) -> ComplianceAgentResponse:
+    async def process_request(
+        self, request: str, context: AgentContext
+    ) -> ComplianceAgentResponse:
         """Process a compliance request with RAG enhancement"""
         try:
             # Enhance request with RAG knowledge if available
             enhanced_request = await self._enhance_with_rag(request, context)
 
             # Run the agent with context
-            result = await self.agent.run(
-                enhanced_request,
-                deps=context.model_dump()
-            )
+            result = await self.agent.run(enhanced_request, deps=context.model_dump())
 
             # Adjust response based on trust level
             adjusted_result = self._adjust_response_for_trust_level(result, context)
@@ -121,7 +132,7 @@ class BaseComplianceAgent:
                 trust_level_required=1,
                 reasoning=f"Error occurred during processing: {str(e)}",
                 risk_level="medium",
-                requires_human_approval=True
+                requires_human_approval=True,
             )
 
     async def _enhance_with_rag(self, request: str, context: AgentContext) -> str:
@@ -136,7 +147,7 @@ class BaseComplianceAgent:
                 query=rag_query,
                 source_filter=None,  # Search all sources
                 query_type="hybrid",
-                max_results=3
+                max_results=3,
             )
 
             if rag_result.confidence > 0.3:  # Only use if reasonably confident
@@ -158,21 +169,25 @@ class BaseComplianceAgent:
         return request
 
     def _adjust_response_for_trust_level(
-        self,
-        response: ComplianceAgentResponse,
-        context: AgentContext
+        self, response: ComplianceAgentResponse, context: AgentContext
     ) -> ComplianceAgentResponse:
         """Adjust response appropriateness based on trust level"""
 
         if self.trust_level == 0:
             # Observational mode - convert recommendations to observations
-            response.recommendation = f"Based on my analysis, I observe that: {response.recommendation}"
+            response.recommendation = (
+                f"Based on my analysis, I observe that: {response.recommendation}"
+            )
             response.requires_human_approval = True
-            response.next_actions = ["Review these observations with a compliance expert"]
+            response.next_actions = [
+                "Review these observations with a compliance expert"
+            ]
 
         elif self.trust_level == 1:
             # Suggestive mode - ensure all recommendations are suggestions
-            if not response.recommendation.lower().startswith(("i suggest", "consider", "you might", "i recommend")):
+            if not response.recommendation.lower().startswith(
+                ("i suggest", "consider", "you might", "i recommend")
+            ):
                 response.recommendation = f"I suggest: {response.recommendation}"
             response.requires_human_approval = True
 
@@ -185,15 +200,14 @@ class BaseComplianceAgent:
             # Autonomous mode - can take actions but still flag critical items
             if response.risk_level == "critical":
                 response.requires_human_approval = True
-                response.next_actions.insert(0, "CRITICAL: Immediate human review required")
+                response.next_actions.insert(
+                    0, "CRITICAL: Immediate human review required"
+                )
 
         return response
 
     async def _log_interaction(
-        self,
-        request: str,
-        response: ComplianceAgentResponse,
-        context: AgentContext
+        self, request: str, response: ComplianceAgentResponse, context: AgentContext
     ) -> None:
         """Log interaction for learning and audit purposes"""
         try:
@@ -206,7 +220,7 @@ class BaseComplianceAgent:
                 "response_summary": response.recommendation[:200],
                 "confidence": response.confidence,
                 "risk_level": response.risk_level,
-                "required_approval": response.requires_human_approval
+                "required_approval": response.requires_human_approval,
             }
 
             # Store in context for pattern learning
@@ -218,6 +232,7 @@ class BaseComplianceAgent:
 
         except Exception as e:
             logger.warning(f"Failed to log interaction: {e}")
+
 
 class GDPRComplianceAgent(BaseComplianceAgent):
     """Specialized agent for GDPR compliance"""
@@ -248,6 +263,7 @@ class GDPRComplianceAgent(BaseComplianceAgent):
 
         return base_prompt + gdpr_specifics
 
+
 class CompaniesHouseAgent(BaseComplianceAgent):
     """Specialized agent for Companies House compliance"""
 
@@ -276,6 +292,7 @@ class CompaniesHouseAgent(BaseComplianceAgent):
         """
 
         return base_prompt + companies_house_specifics
+
 
 class EmploymentLawAgent(BaseComplianceAgent):
     """Specialized agent for employment law compliance"""
@@ -306,12 +323,15 @@ class EmploymentLawAgent(BaseComplianceAgent):
 
         return base_prompt + employment_specifics
 
+
 class AgentOrchestrator:
     """
     Orchestrates multiple specialized agents based on request type
     """
 
-    def __init__(self, trust_level: int, rag_system: Optional[AgenticRAGSystem] = None) -> None:
+    def __init__(
+        self, trust_level: int, rag_system: Optional[AgenticRAGSystem] = None
+    ) -> None:
         self.trust_level = trust_level
         self.rag_system = rag_system
 
@@ -320,16 +340,20 @@ class AgentOrchestrator:
             "gdpr": GDPRComplianceAgent(trust_level, rag_system),
             "companies_house": CompaniesHouseAgent(trust_level, rag_system),
             "employment": EmploymentLawAgent(trust_level, rag_system),
-            "general": BaseComplianceAgent(trust_level, rag_system)
+            "general": BaseComplianceAgent(trust_level, rag_system),
         }
 
-    async def route_request(self, request: str, context: AgentContext) -> ComplianceAgentResponse:
+    async def route_request(
+        self, request: str, context: AgentContext
+    ) -> ComplianceAgentResponse:
         """Route request to appropriate specialized agent"""
         try:
             # Determine which agent to use based on request content
             agent_type = self._classify_request(request)
 
-            logger.info(f"Routing request to {agent_type} agent (trust level {self.trust_level})")
+            logger.info(
+                f"Routing request to {agent_type} agent (trust level {self.trust_level})"
+            )
 
             # Get response from specialized agent
             response = await self.agents[agent_type].process_request(request, context)
@@ -350,34 +374,64 @@ class AgentOrchestrator:
 
         # GDPR/Data Protection keywords
         gdpr_keywords = [
-            "gdpr", "data protection", "privacy", "consent", "personal data",
-            "data subject", "data breach", "data transfer", "cookies", "tracking"
+            "gdpr",
+            "data protection",
+            "privacy",
+            "consent",
+            "personal data",
+            "data subject",
+            "data breach",
+            "data transfer",
+            "cookies",
+            "tracking",
         ]
 
         # Companies House keywords
         companies_keywords = [
-            "companies house", "filing", "accounts", "confirmation statement",
-            "director", "shareholder", "registered office", "company name",
-            "incorporation", "dissolution", "statutory"
+            "companies house",
+            "filing",
+            "accounts",
+            "confirmation statement",
+            "director",
+            "shareholder",
+            "registered office",
+            "company name",
+            "incorporation",
+            "dissolution",
+            "statutory",
         ]
 
         # Employment Law keywords
         employment_keywords = [
-            "employment", "employee", "worker", "contract", "payroll",
-            "holiday", "sick pay", "minimum wage", "working time",
-            "discrimination", "disciplinary", "redundancy", "tribunal"
+            "employment",
+            "employee",
+            "worker",
+            "contract",
+            "payroll",
+            "holiday",
+            "sick pay",
+            "minimum wage",
+            "working time",
+            "discrimination",
+            "disciplinary",
+            "redundancy",
+            "tribunal",
         ]
 
         # Count keyword matches
         gdpr_score = sum(1 for keyword in gdpr_keywords if keyword in request_lower)
-        companies_score = sum(1 for keyword in companies_keywords if keyword in request_lower)
-        employment_score = sum(1 for keyword in employment_keywords if keyword in request_lower)
+        companies_score = sum(
+            1 for keyword in companies_keywords if keyword in request_lower
+        )
+        employment_score = sum(
+            1 for keyword in employment_keywords if keyword in request_lower
+        )
 
         # Return agent with highest score
         scores = {
             "gdpr": gdpr_score,
             "companies_house": companies_score,
-            "employment": employment_score
+            "employment": employment_score,
         }
 
         max_score = max(scores.values())
@@ -386,11 +440,12 @@ class AgentOrchestrator:
 
         return "general"  # Default to general agent
 
+
 # Convenience factory functions
 def create_compliance_agent(
     trust_level: int,
     agent_type: str = "general",
-    rag_system: Optional[AgenticRAGSystem] = None
+    rag_system: Optional[AgenticRAGSystem] = None,
 ) -> BaseComplianceAgent:
     """Factory function to create specialized compliance agents"""
 
@@ -398,15 +453,15 @@ def create_compliance_agent(
         "gdpr": GDPRComplianceAgent,
         "companies_house": CompaniesHouseAgent,
         "employment": EmploymentLawAgent,
-        "general": BaseComplianceAgent
+        "general": BaseComplianceAgent,
     }
 
     agent_class = agent_classes.get(agent_type, BaseComplianceAgent)
     return agent_class(trust_level, rag_system)
 
+
 def create_agent_orchestrator(
-    trust_level: int,
-    rag_system: Optional[AgenticRAGSystem] = None
+    trust_level: int, rag_system: Optional[AgenticRAGSystem] = None
 ) -> AgentOrchestrator:
     """Factory function to create agent orchestrator"""
     return AgentOrchestrator(trust_level, rag_system)

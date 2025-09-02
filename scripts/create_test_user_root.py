@@ -5,6 +5,7 @@ Create a test user for TestSprite testing
 import requests
 from typing import Optional
 
+
 def create_test_user() -> Optional[bool]:
     """Create test user via API"""
     url = "http://localhost:8000/api/v1/auth/register"
@@ -12,12 +13,10 @@ def create_test_user() -> Optional[bool]:
     payload = {
         "email": "testuser@testsprite.com",
         "password": "TestSprite123@",
-        "full_name": "TestSprite User"
+        "full_name": "TestSprite User",
     }
 
-    headers = {
-        "Content-Type": "application/json"
-    }
+    headers = {"Content-Type": "application/json"}
 
     try:
         response = requests.post(url, json=payload, headers=headers)
@@ -37,6 +36,7 @@ def create_test_user() -> Optional[bool]:
     except Exception as e:
         print(f"❌ Error creating user: {e}")
         return False
+
 
 if __name__ == "__main__":
     create_test_user()

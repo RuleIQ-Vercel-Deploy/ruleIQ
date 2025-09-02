@@ -1,0 +1,178 @@
+
+:services.ai.regulation_tools.ComplianceRequirement.to_dictE
+;/home/omar/Documents/ruleIQ/services/ai/regulation_tools.py8 8("2*˙
+29 B(	
+9 B(	
+%1"dictÄ
+~
+: :(1
+%2"__id*f
+
+__unknown_file (J*H4
+2services.ai.regulation_tools.ComplianceRequirement"
+requirement_idï
+í
+: :(1
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*.
+
+__unknown_file (
+requirement_id*"
+
+__unknown_file (
+
+%2w
+u
+; ;(
+%4"__id*]
+
+__unknown_file (A*?4
+2services.ai.regulation_tools.ComplianceRequirement"
+titleå
+â
+; ;(
+%5"__mapSet*"
+
+__unknown_file (
+
+%1*%
+
+__unknown_file (	
+title*"
+
+__unknown_file (
+
+%4}
+{
+< <(+
+%6"__id*c
+
+__unknown_file (G*E4
+2services.ai.regulation_tools.ComplianceRequirement"
+descriptioní
+è
+< <(+
+%7"__mapSet*"
+
+__unknown_file (
+
+%1*+
+
+__unknown_file (
+description*"
+
+__unknown_file (
+
+%6{
+y
+= =('
+%8"__id*a
+
+__unknown_file (E*C4
+2services.ai.regulation_tools.ComplianceRequirement"
+	mandatoryê
+ç
+= =('
+%9"__mapSet*"
+
+__unknown_file (
+
+%1*)
+
+__unknown_file (
+	mandatory*"
+
+__unknown_file (
+
+%8|
+z
+> >('
+%10"__id*a
+
+__unknown_file (E*C4
+2services.ai.regulation_tools.ComplianceRequirement"
+	frameworkí
+è
+> >('
+%11"__mapSet*"
+
+__unknown_file (
+
+%1*)
+
+__unknown_file (
+	framework*#
+
+__unknown_file (
+
+%10z
+x
+? ?(#
+%12"__id*_
+
+__unknown_file (C*A4
+2services.ai.regulation_tools.ComplianceRequirement"	
+sectionê
+ç
+? ?(#
+%13"__mapSet*"
+
+__unknown_file (
+
+%1*'
+
+__unknown_file (	
+section*#
+
+__unknown_file (
+
+%12ã
+à
+@' @(C
+%14"__id*o
+
+__unknown_file (S*Q4
+2services.ai.regulation_tools.ComplianceRequirement"
+implementation_guidance†
+ù
+@ @(C
+%15"__mapSet*"
+
+__unknown_file (
+
+%1*7
+
+__unknown_file (
+implementation_guidance*#
+
+__unknown_file (
+
+%14Ö
+Ç
+A! A(7
+%16"__id*i
+
+__unknown_file (M*K4
+2services.ai.regulation_tools.ComplianceRequirement"
+evidence_requiredö
+ó
+A A(7
+%17"__mapSet*"
+
+__unknown_file (
+
+%1*1
+
+__unknown_file (
+evidence_required*#
+
+__unknown_file (
+
+%16"
+9 B(	
+
+%1B64
+2services.ai.regulation_tools.ComplianceRequirementH

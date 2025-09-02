@@ -33,6 +33,7 @@ from .generated_policy import GeneratedPolicy
 from .chat_conversation import ChatConversation
 from .chat_message import ChatMessage
 from .report_schedule import ReportSchedule
+
 # Freemium models
 from .assessment_lead import AssessmentLead
 from .freemium_assessment_session import FreemiumAssessmentSession

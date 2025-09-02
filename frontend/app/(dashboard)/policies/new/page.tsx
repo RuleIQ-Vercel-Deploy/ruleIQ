@@ -147,24 +147,21 @@ export default function NewPolicyPage() {
         return (
           <form className="max-w-3xl space-y-8">
             <FormField label="Company Name" description="This will be used in the policy document.">
-              <Input 
-                value={companyName}
-                onChange={(e) => setCompanyName(e.target.value)}
-              />
+              <Input value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
             </FormField>
             <div className="space-y-3">
               <Label>Policy Scope</Label>
               <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
                 {scopeOptions.map((scope) => (
                   <div key={scope} className="flex items-center space-x-2">
-                    <Checkbox 
+                    <Checkbox
                       id={`scope-${scope}`}
                       checked={selectedScopes.includes(scope)}
                       onCheckedChange={(checked) => {
                         if (checked) {
-                          setSelectedScopes(prev => [...prev, scope]);
+                          setSelectedScopes((prev) => [...prev, scope]);
                         } else {
-                          setSelectedScopes(prev => prev.filter(s => s !== scope));
+                          setSelectedScopes((prev) => prev.filter((s) => s !== scope));
                         }
                       }}
                     />
@@ -179,8 +176,8 @@ export default function NewPolicyPage() {
               label="Additional Requirements"
               description="Specify any custom clauses or requirements you need to include."
             >
-              <Textarea 
-                placeholder="e.g., All data must be stored within the EU." 
+              <Textarea
+                placeholder="e.g., All data must be stored within the EU."
                 rows={5}
                 value={additionalRequirements}
                 onChange={(e) => setAdditionalRequirements(e.target.value)}
@@ -222,7 +219,11 @@ export default function NewPolicyPage() {
 
           {currentStep < 4 && (
             <div className="mt-12 flex justify-between border-t border-white/10 pt-6">
-              <Button variant="secondary" onClick={handleBack} disabled={currentStep === 1 || isGenerating}>
+              <Button
+                variant="secondary"
+                onClick={handleBack}
+                disabled={currentStep === 1 || isGenerating}
+              >
                 Back
               </Button>
               <Button

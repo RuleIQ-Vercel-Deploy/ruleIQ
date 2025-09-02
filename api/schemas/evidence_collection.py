@@ -13,7 +13,9 @@ from pydantic import BaseModel, Field
 class CollectionPlanCreate(BaseModel):
     """Request model for creating a collection plan."""
 
-    framework: str = Field(..., description="Compliance framework (ISO27001, GDPR, SOC2, etc.)")
+    framework: str = Field(
+        ..., description="Compliance framework (ISO27001, GDPR, SOC2, etc.)"
+    )
     target_completion_weeks: Optional[int] = Field(
         12, ge=1, le=52, description="Target completion timeframe in weeks"
     )
@@ -84,9 +86,12 @@ class TaskStatusUpdate(BaseModel):
     """Request model for updating task status."""
 
     status: str = Field(
-        ..., description="New status: pending, in_progress, completed, blocked, cancelled"
+        ...,
+        description="New status: pending, in_progress, completed, blocked, cancelled",
     )
-    completion_notes: Optional[str] = Field(None, description="Notes about task completion")
+    completion_notes: Optional[str] = Field(
+        None, description="Notes about task completion"
+    )
 
 
 class AutomationRecommendation(BaseModel):

@@ -36,7 +36,6 @@ export const queryClient = new QueryClient({
       // Show error notifications by default
       onError: (error: unknown) => {
         // TODO: Replace with proper logging
-
         // // TODO: Replace with proper logging
         // TODO: Integrate with toast notification system
       },

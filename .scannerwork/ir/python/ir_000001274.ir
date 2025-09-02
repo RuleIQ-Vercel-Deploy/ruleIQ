@@ -1,0 +1,25 @@
+
+¤š"
+    Dependency factory for requiring specific roles.
+
+    Args:
+        role: Required role name
+
+    Returns:
+        FastAPI dependency function
+    "strrole
+® ®("¼#
+!
+
+Â Â("#unknown-value#*
+(
+
+¹ Â(%closure"#new-object#(
+&
+
+¹ Â("#set-field# role:-
++
+
+¹ Â("?python-partial-apply?:
+
+Â Â(*9/home/omar/Documents/ruleIQ/api/dependencies/rbac_auth.py

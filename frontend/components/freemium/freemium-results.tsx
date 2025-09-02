@@ -5,7 +5,7 @@ import { Button } from '../ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Alert, AlertDescription } from '../ui/alert';
-import { 
+import {
   ExternalLink,
   AlertTriangle,
   CheckCircle,
@@ -16,13 +16,13 @@ import {
   Clock,
   Users,
   Loader2,
-  RefreshCw
+  RefreshCw,
 } from 'lucide-react';
 import { useFreemiumStore } from '../../lib/stores/freemium-store';
-import { 
-  getSeverityColor, 
-  getRiskScoreColor, 
-  formatRiskScore
+import {
+  getSeverityColor,
+  getRiskScoreColor,
+  formatRiskScore,
 } from '../../lib/api/freemium.service';
 import type { ComplianceGap } from '../../types/freemium';
 
@@ -31,7 +31,7 @@ interface FreemiumResultsProps {
   className?: string;
 }
 
-export function FreemiumResults({ token, className = "" }: FreemiumResultsProps) {
+export function FreemiumResults({ token, className = '' }: FreemiumResultsProps) {
   const { results, isLoading, error, generateResults, trackEvent } = useFreemiumStore();
   const [hasTrackedView, setHasTrackedView] = useState(false);
 
@@ -43,7 +43,7 @@ export function FreemiumResults({ token, className = "" }: FreemiumResultsProps)
 
   const handleConversionClick = (conversionCta: any) => {
     if (!conversionCta) return;
-    
+
     // Track conversion click
     trackEvent('cta_click', {
       cta_text: conversionCta.cta_button_text,
@@ -55,10 +55,13 @@ export function FreemiumResults({ token, className = "" }: FreemiumResultsProps)
 
   const handleEmailShare = () => {
     if (!results) return;
-    
+
     const subject = 'My Compliance Assessment Results';
-    const body = `I just completed a compliance assessment and found ${results.compliance_gaps.length} gaps with a risk score of ${formatRiskScore(results.risk_score)}.\n\nKey recommendations:\n${results.recommendations.slice(0, 3).map(r => `• ${r.title}`).join('\n')}\n\nGet your free assessment: ${window.location.origin}/freemium`;
-    
+    const body = `I just completed a compliance assessment and found ${results.compliance_gaps.length} gaps with a risk score of ${formatRiskScore(results.risk_score)}.\n\nKey recommendations:\n${results.recommendations
+      .slice(0, 3)
+      .map((r) => `• ${r.title}`)
+      .join('\n')}\n\nGet your free assessment: ${window.location.origin}/freemium`;
+
     const mailtoLink = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     window.location.href = mailtoLink;
 
@@ -69,20 +72,18 @@ export function FreemiumResults({ token, className = "" }: FreemiumResultsProps)
   // Loading state
   if (isLoading) {
     return (
-      <Card className={`w-full max-w-4xl mx-auto ${className}`}>
-        <CardContent className="flex flex-col items-center justify-center py-12 space-y-4">
-          <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
-            <Shield className="w-6 h-6 text-teal-600 animate-pulse" />
+      <Card className={`mx-auto w-full max-w-4xl ${className}`}>
+        <CardContent className="flex flex-col items-center justify-center space-y-4 py-12">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-teal-100">
+            <Shield className="h-6 w-6 animate-pulse text-teal-600" />
           </div>
-          <div className="text-center space-y-2">
-            <h3 className="text-lg font-semibold text-gray-900">
-              Analyzing Your Results
-            </h3>
+          <div className="space-y-2 text-center">
+            <h3 className="text-lg font-semibold text-gray-900">Analyzing Your Results</h3>
             <p className="text-gray-600">
               AI is processing your responses and generating compliance insights...
             </p>
           </div>
-          <Loader2 className="w-6 h-6 animate-spin text-teal-600" />
+          <Loader2 className="h-6 w-6 animate-spin text-teal-600" />
         </CardContent>
       </Card>
     );
@@ -91,8 +92,8 @@ export function FreemiumResults({ token, className = "" }: FreemiumResultsProps)
   // Error state
   if (error) {
     return (
-      <Card className={`w-full max-w-4xl mx-auto ${className}`}>
-        <CardContent className="py-8 space-y-4">
+      <Card className={`mx-auto w-full max-w-4xl ${className}`}>
+        <CardContent className="space-y-4 py-8">
           <Alert variant="destructive">
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription className="text-base">
@@ -100,16 +101,12 @@ export function FreemiumResults({ token, className = "" }: FreemiumResultsProps)
             </AlertDescription>
           </Alert>
           <div className="text-center">
-            <Button 
-              onClick={() => generateResults()}
-              variant="outline"
-              className="mr-4"
-            >
-              <RefreshCw className="w-4 h-4 mr-2" />
+            <Button onClick={() => generateResults()} variant="outline" className="mr-4">
+              <RefreshCw className="mr-2 h-4 w-4" />
               Try Again
             </Button>
-            <Button 
-              onClick={() => window.location.href = '/freemium'}
+            <Button
+              onClick={() => (window.location.href = '/freemium')}
               className="bg-teal-600 hover:bg-teal-700"
             >
               Start New Assessment
@@ -125,20 +122,18 @@ export function FreemiumResults({ token, className = "" }: FreemiumResultsProps)
   }
 
   return (
-    <div className={`w-full max-w-4xl mx-auto space-y-6 ${className}`}>
+    <div className={`mx-auto w-full max-w-4xl space-y-6 ${className}`}>
       {/* Results Header */}
       <Card>
-        <CardHeader className="text-center space-y-4">
-          <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto">
-            <Shield className="w-8 h-8 text-teal-600" />
+        <CardHeader className="space-y-4 text-center">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-teal-100">
+            <Shield className="h-8 w-8 text-teal-600" />
           </div>
           <div>
             <CardTitle className="text-2xl font-bold text-gray-900">
               Your Compliance Assessment Results
             </CardTitle>
-            <p className="text-gray-600 mt-2">
-              AI-powered analysis of your compliance posture
-            </p>
+            <p className="mt-2 text-gray-600">AI-powered analysis of your compliance posture</p>
           </div>
         </CardHeader>
       </Card>
@@ -147,7 +142,7 @@ export function FreemiumResults({ token, className = "" }: FreemiumResultsProps)
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <TrendingUp className="w-5 h-5 text-teal-600" />
+            <TrendingUp className="h-5 w-5 text-teal-600" />
             <span>Overall Risk Score</span>
           </CardTitle>
         </CardHeader>
@@ -159,20 +154,27 @@ export function FreemiumResults({ token, className = "" }: FreemiumResultsProps)
               </div>
               <div className="space-y-1">
                 <p className="font-medium text-gray-900">Risk Level</p>
-                <Badge 
-                  variant={results.risk_score >= 7 ? "destructive" : results.risk_score >= 5 ? "secondary" : "default"}
+                <Badge
+                  variant={
+                    results.risk_score >= 7
+                      ? 'destructive'
+                      : results.risk_score >= 5
+                        ? 'secondary'
+                        : 'default'
+                  }
                   className="text-xs"
                 >
-                  {results.risk_score >= 7 ? 'High Risk' : 
-                   results.risk_score >= 5 ? 'Medium Risk' : 'Low Risk'}
+                  {results.risk_score >= 7
+                    ? 'High Risk'
+                    : results.risk_score >= 5
+                      ? 'Medium Risk'
+                      : 'Low Risk'}
                 </Badge>
               </div>
             </div>
-            <div className="text-right space-y-1">
+            <div className="space-y-1 text-right">
               <p className="text-sm text-gray-600">Compliance Gaps Found</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {results.compliance_gaps.length}
-              </p>
+              <p className="text-2xl font-bold text-gray-900">{results.compliance_gaps.length}</p>
             </div>
           </div>
         </CardContent>
@@ -182,18 +184,16 @@ export function FreemiumResults({ token, className = "" }: FreemiumResultsProps)
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <AlertTriangle className="w-5 h-5 text-orange-500" />
+            <AlertTriangle className="h-5 w-5 text-orange-500" />
             <span>Critical Compliance Gaps</span>
           </CardTitle>
-          <p className="text-sm text-gray-600">
-            Priority areas that need immediate attention
-          </p>
+          <p className="text-sm text-gray-600">Priority areas that need immediate attention</p>
         </CardHeader>
         <CardContent className="space-y-4">
           {results.compliance_gaps.slice(0, 3).map((gap, index) => (
             <ComplianceGapCard key={index} gap={gap} />
           ))}
-          
+
           {results.compliance_gaps.length > 3 && (
             <Alert>
               <AlertTriangle className="h-4 w-4" />
@@ -210,7 +210,7 @@ export function FreemiumResults({ token, className = "" }: FreemiumResultsProps)
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <CheckCircle className="w-5 h-5 text-green-500" />
+            <CheckCircle className="h-5 w-5 text-green-500" />
             <span>Priority Recommendations</span>
           </CardTitle>
         </CardHeader>
@@ -218,18 +218,12 @@ export function FreemiumResults({ token, className = "" }: FreemiumResultsProps)
           <div className="space-y-3">
             {results.recommendations.slice(0, 4).map((recommendation, index) => (
               <div key={index} className="flex items-start space-x-3">
-                <div className="w-6 h-6 bg-teal-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <span className="text-xs font-semibold text-teal-600">
-                    {index + 1}
-                  </span>
+                <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-teal-100">
+                  <span className="text-xs font-semibold text-teal-600">{index + 1}</span>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-sm font-medium text-gray-900">
-                    {recommendation.title}
-                  </p>
-                  <p className="text-sm text-gray-700 leading-5">
-                    {recommendation.description}
-                  </p>
+                  <p className="text-sm font-medium text-gray-900">{recommendation.title}</p>
+                  <p className="text-sm leading-5 text-gray-700">{recommendation.description}</p>
                 </div>
               </div>
             ))}
@@ -239,7 +233,7 @@ export function FreemiumResults({ token, className = "" }: FreemiumResultsProps)
 
       {/* Conversion CTA */}
       {results.conversion_cta && (
-        <ConversionCTA 
+        <ConversionCTA
           conversionCta={results.conversion_cta}
           onCtaClick={() => handleConversionClick(results.conversion_cta)}
           onEmailShare={handleEmailShare}
@@ -254,26 +248,20 @@ export function FreemiumResults({ token, className = "" }: FreemiumResultsProps)
 // Individual compliance gap component
 function ComplianceGapCard({ gap }: { gap: ComplianceGap }) {
   const severityClasses = getSeverityColor(gap.severity);
-  
+
   return (
-    <div className="border border-gray-200 rounded-lg p-4 space-y-3">
+    <div className="space-y-3 rounded-lg border border-gray-200 p-4">
       <div className="flex items-start justify-between">
         <div className="space-y-1">
           <div className="flex items-center space-x-2">
-            <Badge className={`text-xs ${severityClasses}`}>
-              {gap.severity.toUpperCase()}
-            </Badge>
+            <Badge className={`text-xs ${severityClasses}`}>{gap.severity.toUpperCase()}</Badge>
             <span className="font-medium text-gray-900">{gap.category}</span>
           </div>
-          <p className="text-sm text-gray-700 leading-5">
-            {gap.description}
-          </p>
+          <p className="text-sm leading-5 text-gray-700">{gap.description}</p>
         </div>
         <div className="text-right">
           <p className="text-xs text-gray-500">Effort</p>
-          <p className="text-sm font-medium text-gray-900">
-            {gap.estimated_effort}
-          </p>
+          <p className="text-sm font-medium text-gray-900">{gap.estimated_effort}</p>
         </div>
       </div>
     </div>
@@ -294,56 +282,52 @@ interface ConversionCTAProps {
   riskScore: number;
 }
 
-function ConversionCTA({ 
-  conversionCta, 
-  onCtaClick, 
-  onEmailShare, 
-  gapsCount, 
-  riskScore 
+function ConversionCTA({
+  conversionCta,
+  onCtaClick,
+  onEmailShare,
+  gapsCount,
+  riskScore,
 }: ConversionCTAProps) {
   return (
     <Card className="border-teal-200 bg-gradient-to-r from-teal-50 to-teal-100">
       <CardContent className="py-8">
-        <div className="text-center space-y-6">
+        <div className="space-y-6 text-center">
           <div className="space-y-2">
-            <h3 className="text-xl font-bold text-gray-900">
-              {conversionCta.primary_message}
-            </h3>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              {conversionCta.secondary_message}
-            </p>
+            <h3 className="text-xl font-bold text-gray-900">{conversionCta.primary_message}</h3>
+            <p className="mx-auto max-w-2xl text-gray-600">{conversionCta.secondary_message}</p>
           </div>
 
           {/* Features Preview */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
-            <div className="text-center space-y-2">
-              <Shield className="w-8 h-8 text-teal-600 mx-auto" />
+          <div className="mx-auto grid max-w-2xl grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="space-y-2 text-center">
+              <Shield className="mx-auto h-8 w-8 text-teal-600" />
               <div>
-                <p className="font-medium text-sm text-gray-900">Complete Analysis</p>
+                <p className="text-sm font-medium text-gray-900">Complete Analysis</p>
                 <p className="text-xs text-gray-600">Full gap analysis & remediation</p>
               </div>
             </div>
-            <div className="text-center space-y-2">
-              <Clock className="w-8 h-8 text-teal-600 mx-auto" />
+            <div className="space-y-2 text-center">
+              <Clock className="mx-auto h-8 w-8 text-teal-600" />
               <div>
-                <p className="font-medium text-sm text-gray-900">Live Monitoring</p>
+                <p className="text-sm font-medium text-gray-900">Live Monitoring</p>
                 <p className="text-xs text-gray-600">Real-time compliance tracking</p>
               </div>
             </div>
-            <div className="text-center space-y-2">
-              <Users className="w-8 h-8 text-teal-600 mx-auto" />
+            <div className="space-y-2 text-center">
+              <Users className="mx-auto h-8 w-8 text-teal-600" />
               <div>
-                <p className="font-medium text-sm text-gray-900">Expert Support</p>
+                <p className="text-sm font-medium text-gray-900">Expert Support</p>
                 <p className="text-xs text-gray-600">Compliance experts on-demand</p>
               </div>
             </div>
           </div>
 
           {/* Call to Action */}
-          <div className="bg-white rounded-lg p-6 space-y-4 max-w-lg mx-auto border border-teal-200">
-            <div className="text-center space-y-2">
+          <div className="mx-auto max-w-lg space-y-4 rounded-lg border border-teal-200 bg-white p-6">
+            <div className="space-y-2 text-center">
               {conversionCta.urgency_indicator && (
-                <Badge className="bg-teal-600 text-white text-sm px-3 py-1">
+                <Badge className="bg-teal-600 px-3 py-1 text-sm text-white">
                   {conversionCta.urgency_indicator}
                 </Badge>
               )}
@@ -351,30 +335,26 @@ function ConversionCTA({
 
             <Button
               onClick={onCtaClick}
-              className="w-full bg-teal-600 hover:bg-teal-700 text-white font-semibold py-3 text-base"
+              className="w-full bg-teal-600 py-3 text-base font-semibold text-white hover:bg-teal-700"
               size="lg"
             >
               {conversionCta.cta_button_text}
-              <ArrowRight className="w-4 h-4 ml-2" />
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
 
-            <p className="text-xs text-gray-500 text-center">
+            <p className="text-center text-xs text-gray-500">
               No commitment • Cancel anytime • Secure payment
             </p>
           </div>
 
           {/* Secondary Actions */}
-          <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-4">
-            <Button
-              onClick={onEmailShare}
-              variant="outline"
-              className="text-sm"
-            >
-              <ExternalLink className="w-4 h-4 mr-2" />
+          <div className="flex flex-col items-center justify-center space-y-2 sm:flex-row sm:space-x-4 sm:space-y-0">
+            <Button onClick={onEmailShare} variant="outline" className="text-sm">
+              <ExternalLink className="mr-2 h-4 w-4" />
               Email Results to Team
             </Button>
             <Button
-              onClick={() => window.location.href = '/freemium'}
+              onClick={() => (window.location.href = '/freemium')}
               variant="ghost"
               className="text-sm text-gray-600"
             >

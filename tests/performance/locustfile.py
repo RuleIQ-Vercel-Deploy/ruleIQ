@@ -65,7 +65,10 @@ class AuthenticatedUser(HttpUser):
         # Login and get token
         login_response = self.client.post(
             "/api/auth/login",
-            json={"email": self.user_data["email"], "password": self.user_data["password"]},
+            json={
+                "email": self.user_data["email"],
+                "password": self.user_data["password"],
+            },
         )
 
         if login_response.status_code == 200:
@@ -110,7 +113,9 @@ class UserOnboardingFlow(SequentialTaskSet):
                 self.business_profile_id = response.json()["id"]
                 response.success()
             else:
-                response.failure(f"Failed to create business profile: {response.status_code}")
+                response.failure(
+                    f"Failed to create business profile: {response.status_code}"
+                )
 
     @task
     def start_assessment(self):
@@ -145,9 +150,15 @@ class UserOnboardingFlow(SequentialTaskSet):
         # Simulate answering assessment questions
         questions = [
             {"question_id": "data_processing", "response": "yes"},
-            {"question_id": "data_types", "response": ["personal_data", "financial_data"]},
+            {
+                "question_id": "data_types",
+                "response": ["personal_data", "financial_data"],
+            },
             {"question_id": "international_transfers", "response": "yes"},
-            {"question_id": "security_measures", "response": ["encryption", "access_controls"]},
+            {
+                "question_id": "security_measures",
+                "response": ["encryption", "access_controls"],
+            },
             {"question_id": "compliance_experience", "response": "basic"},
         ]
 
@@ -175,7 +186,9 @@ class UserOnboardingFlow(SequentialTaskSet):
             if response.status_code == 200:
                 response.success()
             else:
-                response.failure(f"Failed to complete assessment: {response.status_code}")
+                response.failure(
+                    f"Failed to complete assessment: {response.status_code}"
+                )
 
     @task
     def get_recommendations(self):
@@ -196,7 +209,9 @@ class UserOnboardingFlow(SequentialTaskSet):
                 else:
                     response.failure("No recommendations returned")
             else:
-                response.failure(f"Failed to get recommendations: {response.status_code}")
+                response.failure(
+                    f"Failed to get recommendations: {response.status_code}"
+                )
 
 
 class ComplianceUser(AuthenticatedUser):
@@ -219,7 +234,11 @@ class ComplianceUser(AuthenticatedUser):
                 f"ISO27001.A.{random.randint(5, 18)}.{random.randint(1, 5)}.{random.randint(1, 10)}"
             ],
             "tags": ["load_test", "performance"],
-            "metadata": {"created_by": "load_test", "version": "1.0", "test_data": True},
+            "metadata": {
+                "created_by": "load_test",
+                "version": "1.0",
+                "test_data": True,
+            },
         }
 
         self.client.post("/api/evidence", json=evidence_data, headers=self.headers)
@@ -308,7 +327,9 @@ class AIAssistantUser(AuthenticatedUser):
                 self.conversation_id = response.json()["conversation_id"]
                 response.success()
             else:
-                response.failure(f"Failed to create conversation: {response.status_code}")
+                response.failure(
+                    f"Failed to create conversation: {response.status_code}"
+                )
 
 
 class ReportingUser(AuthenticatedUser):
@@ -323,14 +344,19 @@ class ReportingUser(AuthenticatedUser):
             "report_type": random.choice(
                 ["gap_analysis", "readiness_assessment", "evidence_summary"]
             ),
-            "frameworks": random.sample(["GDPR", "ISO 27001", "SOC 2"], random.randint(1, 2)),
+            "frameworks": random.sample(
+                ["GDPR", "ISO 27001", "SOC 2"], random.randint(1, 2)
+            ),
             "format": random.choice(["pdf", "html", "json"]),
             "include_sections": ["summary", "findings", "recommendations"],
             "filters": {"date_range": {"start": "2024-01-01", "end": "2024-12-31"}},
         }
 
         with self.client.post(
-            "/api/reports/generate", json=report_data, headers=self.headers, catch_response=True
+            "/api/reports/generate",
+            json=report_data,
+            headers=self.headers,
+            catch_response=True,
         ) as response:
             if response.status_code == 202:  # Accepted for async processing
                 task_id = response.json().get("task_id")
@@ -428,7 +454,9 @@ class StressTestUser(AuthenticatedUser):
             "reason": "Bulk stress test update",
         }
 
-        self.client.post("/api/evidence/bulk-update", json=bulk_data, headers=self.headers)
+        self.client.post(
+            "/api/evidence/bulk-update", json=bulk_data, headers=self.headers
+        )
 
 
 # Performance test configurations
@@ -504,7 +532,10 @@ class ChatWebSocketUser(HttpUser):
         self.client.post("/api/auth/register", json=self.user_data)
         login_response = self.client.post(
             "/api/auth/login",
-            json={"email": self.user_data["email"], "password": self.user_data["password"]},
+            json={
+                "email": self.user_data["email"],
+                "password": self.user_data["password"],
+            },
         )
 
         if login_response.status_code == 200:
@@ -564,7 +595,9 @@ class DatabaseStressUser(AuthenticatedUser):
             "page_size": 50,
         }
 
-        self.client.get("/api/evidence/search", params=search_params, headers=self.headers)
+        self.client.get(
+            "/api/evidence/search", params=search_params, headers=self.headers
+        )
 
     @task(3)
     def aggregate_analytics(self):
@@ -575,7 +608,9 @@ class DatabaseStressUser(AuthenticatedUser):
             "time_range": "90d",
         }
 
-        self.client.get("/api/analytics/aggregate", params=analytics_params, headers=self.headers)
+        self.client.get(
+            "/api/analytics/aggregate", params=analytics_params, headers=self.headers
+        )
 
     @task(2)
     def concurrent_updates(self):
@@ -634,7 +669,9 @@ class PeakTrafficScenario(AuthenticatedUser):
             "priority": "urgent",
         }
 
-        self.client.post("/api/reports/generate", json=report_data, headers=self.headers)
+        self.client.post(
+            "/api/reports/generate", json=report_data, headers=self.headers
+        )
 
         # Multiple evidence uploads
         for _ in range(3):

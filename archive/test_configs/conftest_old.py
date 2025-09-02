@@ -58,7 +58,9 @@ if True:  # Always enable in tests
             yield chunk
 
     # Set up the mock to return a new generator each time it's called
-    mock_model.generate_content_stream.side_effect = lambda *args, **kwargs: mock_stream_generator()
+    mock_model.generate_content_stream.side_effect = (
+        lambda *args, **kwargs: mock_stream_generator()
+    )
 
     # Set up genai module mock
     mock_genai.GenerativeModel.return_value = mock_model
@@ -147,7 +149,9 @@ def db_session():
     if "+asyncpg" in test_db_url:
         test_sync_url = test_db_url.replace("+asyncpg", "+psycopg2")
     else:
-        test_sync_url = test_db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+        test_sync_url = test_db_url.replace(
+            "postgresql://", "postgresql+psycopg2://", 1
+        )
 
     # Create isolated test engine and session
     test_engine = create_engine(test_sync_url, pool_pre_ping=True, echo=False)
@@ -296,7 +300,9 @@ async def initialized_frameworks(async_db_session) -> bool:
 
 
 @pytest.fixture
-def sample_evidence_item(db_session, sample_business_profile, sample_compliance_framework):
+def sample_evidence_item(
+    db_session, sample_business_profile, sample_compliance_framework
+):
     """Create a sample evidence item for tests."""
     evidence = EvidenceItem(
         id=uuid4(),
@@ -501,8 +507,16 @@ def sample_assessment_data():
         "business_profile_id": str(uuid4()),
         "framework_id": "ISO27001",
         "responses": [
-            {"control_id": "A.5.1", "status": "implemented", "evidence_ids": [str(uuid4())]},
-            {"control_id": "A.6.1", "status": "partially_implemented", "notes": "Work in progress"},
+            {
+                "control_id": "A.5.1",
+                "status": "implemented",
+                "evidence_ids": [str(uuid4())],
+            },
+            {
+                "control_id": "A.6.1",
+                "status": "partially_implemented",
+                "notes": "Work in progress",
+            },
         ],
         "overall_notes": "Initial assessment for ISO27001.",
     }
@@ -698,7 +712,11 @@ def gdpr_golden_dataset():
             "difficulty": "basic",
             "question": "What is the maximum fine for GDPR violations?",
             "expected_answer": "The maximum fine for GDPR violations is €20 million or 4% of annual global turnover, whichever is higher.",
-            "key_points": ["€20 million", "4% of annual global turnover", "whichever is higher"],
+            "key_points": [
+                "€20 million",
+                "4% of annual global turnover",
+                "whichever is higher",
+            ],
             "category": "penalties",
         },
         {
@@ -758,7 +776,11 @@ def compliance_golden_dataset():
             "framework": "SOX",
             "question": "What does Section 404 of SOX require?",
             "expected_answer": "Section 404 requires management to assess and report on the effectiveness of internal controls over financial reporting.",
-            "key_points": ["internal controls", "financial reporting", "management assessment"],
+            "key_points": [
+                "internal controls",
+                "financial reporting",
+                "management assessment",
+            ],
             "category": "requirements",
         },
         {
@@ -766,7 +788,11 @@ def compliance_golden_dataset():
             "framework": "HIPAA",
             "question": "What is PHI under HIPAA?",
             "expected_answer": "PHI (Protected Health Information) is individually identifiable health information held or transmitted by covered entities.",
-            "key_points": ["individually identifiable", "health information", "covered entities"],
+            "key_points": [
+                "individually identifiable",
+                "health information",
+                "covered entities",
+            ],
             "category": "definitions",
         },
     ]
@@ -787,7 +813,9 @@ def assert_no_sensitive_data_in_logs(log_capture) -> None:
     for record in log_capture.records:
         log_message = record.getMessage().lower()
         for keyword in sensitive_keywords:
-            assert keyword not in log_message, f"Sensitive keyword '{keyword}' found in logs."
+            assert (
+                keyword not in log_message
+            ), f"Sensitive keyword '{keyword}' found in logs."
     pass
 
 

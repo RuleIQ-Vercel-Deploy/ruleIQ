@@ -1,0 +1,31 @@
+
+'"Get Redis configuration dict"str
+"max_connections"str
+"url"str
+
+"decode_responses"strself
+¢ ¢("É&
+$
+
+¤ ¨(	"#new-object#Bdict,
+*
+
+¥ ¥(!"#get-field# REDIS_URL:"
+ 
+
+¥ ¥(!"	#map-set#:8
+6
+
+¦ ¦(9"#!#get-field# REDIS_MAX_CONNECTIONS:"
+ 
+
+¦ ¦(9	"	#map-set#:9
+7
+
+§  §(;"$"#get-field# REDIS_DECODE_RESPONSES:"
+ 
+
+§ §(;"	#map-set#:
+
+
+¤ ¨(	**/home/omar/Documents/ruleIQ/config/base.py

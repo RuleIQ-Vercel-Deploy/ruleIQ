@@ -22,7 +22,8 @@ class TestCredentialEncryption:
     def test_encryption_initialization(self):
         """Test encryption system initialization"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             encryption = CredentialEncryption()
             assert encryption.master_key == "test-key-32-characters-long-abc123"
@@ -44,7 +45,8 @@ class TestCredentialEncryption:
     def test_encrypt_decrypt_credentials(self):
         """Test basic encryption and decryption"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             encryption = CredentialEncryption()
 
@@ -66,7 +68,8 @@ class TestCredentialEncryption:
     def test_encrypt_empty_credentials(self):
         """Test encryption fails with empty credentials"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             encryption = CredentialEncryption()
 
@@ -76,7 +79,8 @@ class TestCredentialEncryption:
     def test_encrypt_invalid_type(self):
         """Test encryption fails with invalid type"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             encryption = CredentialEncryption()
 
@@ -86,7 +90,8 @@ class TestCredentialEncryption:
     def test_decrypt_invalid_data(self):
         """Test decryption fails with invalid data"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             encryption = CredentialEncryption()
 
@@ -96,7 +101,8 @@ class TestCredentialEncryption:
     def test_decrypt_empty_string(self):
         """Test decryption fails with empty string"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             encryption = CredentialEncryption()
 
@@ -106,11 +112,15 @@ class TestCredentialEncryption:
     def test_credential_integrity_check(self):
         """Test credential integrity checking"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             encryption = CredentialEncryption()
 
-            test_credentials = {"api_token": "test-token-123", "domain": "example.okta.com"}
+            test_credentials = {
+                "api_token": "test-token-123",
+                "domain": "example.okta.com",
+            }
 
             # Encrypt
             encrypted = encryption.encrypt_credentials(test_credentials)
@@ -122,7 +132,8 @@ class TestCredentialEncryption:
     def test_encryption_versioning(self):
         """Test encryption includes versioning metadata"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             encryption = CredentialEncryption()
 
@@ -136,7 +147,8 @@ class TestCredentialEncryption:
     def test_key_rotation(self):
         """Test key rotation functionality"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             encryption1 = CredentialEncryption()
 
@@ -159,7 +171,8 @@ class TestCredentialEncryption:
     def test_encryption_health_check(self):
         """Test encryption health verification"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             encryption = CredentialEncryption()
 
@@ -179,7 +192,8 @@ class TestConvenienceFunctions:
     def test_encrypt_credentials_function(self):
         """Test encrypt_credentials convenience function"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             test_credentials = {"key": "value"}
             encrypted = encrypt_credentials(test_credentials)
@@ -190,7 +204,8 @@ class TestConvenienceFunctions:
     def test_decrypt_credentials_function(self):
         """Test decrypt_credentials convenience function"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             test_credentials = {"key": "value"}
 
@@ -202,7 +217,8 @@ class TestConvenienceFunctions:
     def test_verify_encryption_health_function(self):
         """Test verify_encryption_health convenience function"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             health = verify_encryption_health()
 
@@ -216,7 +232,8 @@ class TestEdgeCases:
     def test_large_credentials(self):
         """Test encryption with large credential data"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             encryption = CredentialEncryption()
 
@@ -235,7 +252,8 @@ class TestEdgeCases:
     def test_unicode_credentials(self):
         """Test encryption with unicode characters"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             encryption = CredentialEncryption()
 
@@ -253,7 +271,8 @@ class TestEdgeCases:
     def test_special_characters(self):
         """Test encryption with special characters"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             encryption = CredentialEncryption()
 
@@ -295,7 +314,8 @@ class TestSecurityProperties:
     def test_same_data_different_ciphertexts(self):
         """Test that same data produces different ciphertexts (due to nonce)"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             encryption = CredentialEncryption()
 
@@ -316,7 +336,8 @@ class TestSecurityProperties:
     def test_tampered_ciphertext_detection(self):
         """Test that tampered ciphertexts are detected"""
         with patch.dict(
-            "os.environ", {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"}
+            "os.environ",
+            {"CREDENTIAL_MASTER_KEY": "test-key-32-characters-long-abc123"},
         ):
             encryption = CredentialEncryption()
 

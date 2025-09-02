@@ -99,7 +99,9 @@ def run_test_group(group_name, group_config):
     start_time = time.time()
 
     try:
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True, cwd=Path.cwd())
+        result = subprocess.run(
+            cmd, shell=True, capture_output=True, text=True, cwd=Path.cwd()
+        )
 
         duration = time.time() - start_time
 
@@ -239,8 +241,12 @@ if __name__ == "__main__":
         print("Usage:")
         print("  python test_groups.py list                    # List all groups")
         print("  python test_groups.py <group_name>            # Run single group")
-        print("  python test_groups.py all                     # Run all groups sequentially")
-        print("  python test_groups.py parallel                # Run all groups in parallel")
+        print(
+            "  python test_groups.py all                     # Run all groups sequentially"
+        )
+        print(
+            "  python test_groups.py parallel                # Run all groups in parallel"
+        )
         sys.exit(1)
 
     command = sys.argv[1]

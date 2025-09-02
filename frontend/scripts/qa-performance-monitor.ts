@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Ava's Performance Budget Monitor
- * 
+ *
  * Monitors performance metrics against defined budgets
  * Prevents performance regressions and ensures optimal user experience
  */
@@ -18,24 +18,24 @@ interface PerformanceBudget {
     seo: number;
   };
   coreWebVitals: {
-    cls: number;        // Cumulative Layout Shift
-    fid: number;        // First Input Delay (ms)
-    lcp: number;        // Largest Contentful Paint (ms)
-    fcp: number;        // First Contentful Paint (ms)
-    ttfb: number;       // Time to First Byte (ms)
+    cls: number; // Cumulative Layout Shift
+    fid: number; // First Input Delay (ms)
+    lcp: number; // Largest Contentful Paint (ms)
+    fcp: number; // First Contentful Paint (ms)
+    ttfb: number; // Time to First Byte (ms)
   };
   bundleSize: {
-    maxTotalSize: number;    // KB
-    maxJSSize: number;       // KB
-    maxCSSSize: number;      // KB
+    maxTotalSize: number; // KB
+    maxJSSize: number; // KB
+    maxCSSSize: number; // KB
     maxChunks: number;
   };
   buildTime: {
-    maxBuildTime: number;    // seconds
+    maxBuildTime: number; // seconds
   };
   runtime: {
-    maxMemoryUsage: number;  // MB
-    maxCPUUsage: number;     // percentage
+    maxMemoryUsage: number; // MB
+    maxCPUUsage: number; // percentage
   };
 }
 
@@ -133,28 +133,28 @@ class AvaPerformanceMonitor {
         performance: 90,
         accessibility: 100,
         bestPractices: 90,
-        seo: 90
+        seo: 90,
       },
       coreWebVitals: {
         cls: 0.1,
         fid: 100,
         lcp: 2500,
         fcp: 1800,
-        ttfb: 600
+        ttfb: 600,
       },
       bundleSize: {
-        maxTotalSize: 500,  // 500KB
-        maxJSSize: 350,     // 350KB
-        maxCSSSize: 50,     // 50KB
-        maxChunks: 10
+        maxTotalSize: 500, // 500KB
+        maxJSSize: 350, // 350KB
+        maxCSSSize: 50, // 50KB
+        maxChunks: 10,
       },
       buildTime: {
-        maxBuildTime: 120   // 2 minutes
+        maxBuildTime: 120, // 2 minutes
       },
       runtime: {
         maxMemoryUsage: 100, // 100MB
-        maxCPUUsage: 80      // 80%
-      }
+        maxCPUUsage: 80, // 80%
+      },
     };
 
     if (existsSync(this.budgetPath)) {
@@ -188,7 +188,7 @@ class AvaPerformanceMonitor {
       buildTime: await this.measureBuildTime(),
       runtime: await this.measureRuntimeMetrics(url),
       violations: [],
-      score: 0
+      score: 0,
     };
 
     results.violations = this.checkBudgetViolations(results);
@@ -223,8 +223,8 @@ class AvaPerformanceMonitor {
           fid: audits['max-potential-fid'].numericValue,
           ttfb: audits['server-response-time'].numericValue,
           speedIndex: audits['speed-index'].numericValue,
-          totalBlockingTime: audits['total-blocking-time'].numericValue
-        }
+          totalBlockingTime: audits['total-blocking-time'].numericValue,
+        },
       };
     } catch {
       console.warn('⚠️ Lighthouse audit failed, using fallback values');
@@ -234,7 +234,7 @@ class AvaPerformanceMonitor {
         bestPractices: 0,
         seo: 0,
         pwa: 0,
-        details: { fcp: 0, lcp: 0, cls: 0, fid: 0, ttfb: 0, speedIndex: 0, totalBlockingTime: 0 }
+        details: { fcp: 0, lcp: 0, cls: 0, fid: 0, ttfb: 0, speedIndex: 0, totalBlockingTime: 0 },
       };
     }
   }
@@ -259,16 +259,17 @@ class AvaPerformanceMonitor {
 
       // For now, use Lighthouse values as fallback
       const lighthouse = await this.runLighthouseAudit(url);
-      
+
       const cls = lighthouse.details.cls;
       const fid = lighthouse.details.fid;
       const lcp = lighthouse.details.lcp;
       const fcp = lighthouse.details.fcp;
       const ttfb = lighthouse.details.ttfb;
 
-      const passed = cls <= this.budget.coreWebVitals.cls &&
-                    fid <= this.budget.coreWebVitals.fid &&
-                    lcp <= this.budget.coreWebVitals.lcp;
+      const passed =
+        cls <= this.budget.coreWebVitals.cls &&
+        fid <= this.budget.coreWebVitals.fid &&
+        lcp <= this.budget.coreWebVitals.lcp;
 
       return { cls, fid, lcp, fcp, ttfb, passed };
     } catch {
@@ -281,7 +282,7 @@ class AvaPerformanceMonitor {
     // TODO: Replace with proper logging
     try {
       const buildOutput = execSync('pnpm build', { encoding: 'utf8', cwd: this.frontendPath });
-      
+
       // Parse Next.js build output
       const sizePattern = /(\S+)\s+(\d+(?:\.\d+)?)\s*(kB|B)/g;
       const breakdown: BundleBreakdown[] = [];
@@ -300,7 +301,7 @@ class AvaPerformanceMonitor {
         breakdown.push({
           name,
           size: sizeInKB,
-          type: name.endsWith('.js') ? 'js' : name.endsWith('.css') ? 'css' : 'other'
+          type: name.endsWith('.js') ? 'js' : name.endsWith('.css') ? 'css' : 'other',
         });
 
         totalSize += sizeInKB;
@@ -315,7 +316,7 @@ class AvaPerformanceMonitor {
         cssSize,
         imageSize: 0, // TODO: Calculate image sizes
         chunks,
-        breakdown
+        breakdown,
       };
     } catch {
       console.warn('⚠️ Bundle size analysis failed');
@@ -325,7 +326,7 @@ class AvaPerformanceMonitor {
         cssSize: 0,
         imageSize: 0,
         chunks: 0,
-        breakdown: []
+        breakdown: [],
       };
     }
   }
@@ -340,7 +341,7 @@ class AvaPerformanceMonitor {
       return {
         buildTime,
         compileTime: buildTime * 0.7, // Estimate
-        optimizationTime: buildTime * 0.3 // Estimate
+        optimizationTime: buildTime * 0.3, // Estimate
       };
     } catch {
       console.warn('⚠️ Build time measurement failed');
@@ -371,8 +372,8 @@ class AvaPerformanceMonitor {
       // For now, return mock values
       return {
         memoryUsage: 50, // MB
-        cpuUsage: 30,    // %
-        loadTime: 1500   // ms
+        cpuUsage: 30, // %
+        loadTime: 1500, // ms
       };
     } catch {
       console.warn('⚠️ Runtime metrics measurement failed');
@@ -392,7 +393,7 @@ class AvaPerformanceMonitor {
         budget: this.budget.lighthouse.performance,
         severity: 'ERROR',
         impact: 'Poor user experience and SEO ranking',
-        recommendation: 'Optimize images, reduce bundle size, improve loading performance'
+        recommendation: 'Optimize images, reduce bundle size, improve loading performance',
       });
     }
 
@@ -405,7 +406,7 @@ class AvaPerformanceMonitor {
         budget: this.budget.coreWebVitals.cls,
         severity: 'CRITICAL',
         impact: 'Poor user experience, affects Google ranking',
-        recommendation: 'Add size attributes to images, reserve space for dynamic content'
+        recommendation: 'Add size attributes to images, reserve space for dynamic content',
       });
     }
 
@@ -417,7 +418,7 @@ class AvaPerformanceMonitor {
         budget: this.budget.coreWebVitals.lcp,
         severity: 'ERROR',
         impact: 'Slow perceived loading performance',
-        recommendation: 'Optimize largest content element, improve server response time'
+        recommendation: 'Optimize largest content element, improve server response time',
       });
     }
 
@@ -430,7 +431,7 @@ class AvaPerformanceMonitor {
         budget: this.budget.bundleSize.maxTotalSize,
         severity: 'WARNING',
         impact: 'Slower loading on slow connections',
-        recommendation: 'Code splitting, tree shaking, remove unused dependencies'
+        recommendation: 'Code splitting, tree shaking, remove unused dependencies',
       });
     }
 
@@ -443,7 +444,7 @@ class AvaPerformanceMonitor {
         budget: this.budget.buildTime.maxBuildTime,
         severity: 'WARNING',
         impact: 'Slower CI/CD pipeline',
-        recommendation: 'Optimize build process, use incremental builds'
+        recommendation: 'Optimize build process, use incremental builds',
       });
     }
 
@@ -455,27 +456,40 @@ class AvaPerformanceMonitor {
       lighthouse: 0.4,
       coreWebVitals: 0.3,
       bundleSize: 0.2,
-      buildTime: 0.1
+      buildTime: 0.1,
     };
 
-    const lighthouseScore = (results.lighthouse.performance + 
-                           results.lighthouse.accessibility + 
-                           results.lighthouse.bestPractices) / 3;
+    const lighthouseScore =
+      (results.lighthouse.performance +
+        results.lighthouse.accessibility +
+        results.lighthouse.bestPractices) /
+      3;
 
-    const coreWebVitalsScore = results.coreWebVitals.passed ? 100 : 
-      Math.max(0, 100 - results.violations.filter(v => v.category === 'Core Web Vitals').length * 20);
+    const coreWebVitalsScore = results.coreWebVitals.passed
+      ? 100
+      : Math.max(
+          0,
+          100 - results.violations.filter((v) => v.category === 'Core Web Vitals').length * 20,
+        );
 
-    const bundleSizeScore = results.bundleSize.totalSize <= this.budget.bundleSize.maxTotalSize ? 100 :
-      Math.max(0, 100 - ((results.bundleSize.totalSize - this.budget.bundleSize.maxTotalSize) / 10));
+    const bundleSizeScore =
+      results.bundleSize.totalSize <= this.budget.bundleSize.maxTotalSize
+        ? 100
+        : Math.max(
+            0,
+            100 - (results.bundleSize.totalSize - this.budget.bundleSize.maxTotalSize) / 10,
+          );
 
-    const buildTimeScore = results.buildTime.buildTime <= this.budget.buildTime.maxBuildTime ? 100 :
-      Math.max(0, 100 - ((results.buildTime.buildTime - this.budget.buildTime.maxBuildTime) / 5));
+    const buildTimeScore =
+      results.buildTime.buildTime <= this.budget.buildTime.maxBuildTime
+        ? 100
+        : Math.max(0, 100 - (results.buildTime.buildTime - this.budget.buildTime.maxBuildTime) / 5);
 
     return Math.round(
       lighthouseScore * weights.lighthouse +
-      coreWebVitalsScore * weights.coreWebVitals +
-      bundleSizeScore * weights.bundleSize +
-      buildTimeScore * weights.buildTime
+        coreWebVitalsScore * weights.coreWebVitals +
+        bundleSizeScore * weights.bundleSize +
+        buildTimeScore * weights.buildTime,
     );
   }
 
@@ -498,40 +512,40 @@ class AvaPerformanceMonitor {
 
     // TODO: Replace with proper logging
     if (results.violations.length > 0) {
-    // TODO: Replace with proper logging
-      results.violations.forEach(violation => {
-        const emoji = violation.severity === 'CRITICAL' ? '🔴' : 
-                     violation.severity === 'ERROR' ? '🟠' : '🟡';
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
+      results.violations.forEach((violation) => {
+        const emoji =
+          violation.severity === 'CRITICAL' ? '🔴' : violation.severity === 'ERROR' ? '🟠' : '🟡';
+        // TODO: Replace with proper logging
 
-    // TODO: Replace with proper logging
+        // TODO: Replace with proper logging
 
-    // TODO: Replace with proper logging
+        // TODO: Replace with proper logging
       });
     } else {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
     }
   }
 
   async enforceQualityGates(): Promise<boolean> {
     // TODO: Replace with proper logging
     const results = await this.monitorPerformance();
-    
-    const criticalViolations = results.violations.filter(v => v.severity === 'CRITICAL');
-    const errorViolations = results.violations.filter(v => v.severity === 'ERROR');
+
+    const criticalViolations = results.violations.filter((v) => v.severity === 'CRITICAL');
+    const errorViolations = results.violations.filter((v) => v.severity === 'ERROR');
 
     if (criticalViolations.length > 0) {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       return false;
     }
 
     if (errorViolations.length > 2) {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       return false;
     }
 
     if (results.score < 70) {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       return false;
     }
     // TODO: Replace with proper logging
@@ -543,16 +557,16 @@ class AvaPerformanceMonitor {
 async function main() {
   const url = process.argv[2] || 'http://localhost:3000';
   const enforceGates = process.argv.includes('--enforce-gates');
-  
+
   const monitor = new AvaPerformanceMonitor();
-  
+
   try {
     if (enforceGates) {
       const passed = await monitor.enforceQualityGates();
       process.exit(passed ? 0 : 1);
     } else {
       await monitor.monitorPerformance(url);
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
     }
   } catch (error) {
     // Development logging - consider proper logger

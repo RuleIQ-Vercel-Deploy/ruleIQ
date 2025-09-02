@@ -128,7 +128,9 @@ class RetryHandler:
     def calculate_delay(self, attempt_number: int) -> float:
         """Calculate delay for the given attempt number"""
         if self.config.strategy == RetryStrategy.EXPONENTIAL_BACKOFF:
-            delay = self.config.base_delay * (self.config.exponential_base ** (attempt_number - 1))
+            delay = self.config.base_delay * (
+                self.config.exponential_base ** (attempt_number - 1)
+            )
         elif self.config.strategy == RetryStrategy.LINEAR_BACKOFF:
             delay = self.config.base_delay * attempt_number
         elif self.config.strategy == RetryStrategy.FIBONACCI_BACKOFF:
@@ -361,12 +363,15 @@ class RetryHandler:
             "successful_attempts": len(successful_attempts),
             "failed_attempts": len(failed_attempts),
             "success_rate": len(successful_attempts) / len(self.retry_history),
-            "average_attempts_to_success": sum(a.attempt_number for a in successful_attempts)
-            / len(successful_attempts)
-            if successful_attempts
-            else 0,
+            "average_attempts_to_success": (
+                sum(a.attempt_number for a in successful_attempts)
+                / len(successful_attempts)
+                if successful_attempts
+                else 0
+            ),
             "common_exceptions": self._get_common_exceptions(),
-            "average_delay": sum(a.delay for a in self.retry_history) / len(self.retry_history),
+            "average_delay": sum(a.delay for a in self.retry_history)
+            / len(self.retry_history),
             "total_retry_time": sum(a.delay for a in self.retry_history),
         }
 
@@ -376,7 +381,9 @@ class RetryHandler:
         for attempt in self.retry_history:
             if attempt.exception:
                 exception_type = type(attempt.exception).__name__
-                exception_counts[exception_type] = exception_counts.get(exception_type, 0) + 1
+                exception_counts[exception_type] = (
+                    exception_counts.get(exception_type, 0) + 1
+                )
 
         # Sort by frequency
         return dict(sorted(exception_counts.items(), key=lambda x: x[1], reverse=True))
@@ -411,7 +418,11 @@ def retry_on_failure(
                 )
                 handler = RetryHandler(config)
                 return await handler.retry_async(
-                    func, *args, model_name=model_name, operation_name=func.__name__, **kwargs
+                    func,
+                    *args,
+                    model_name=model_name,
+                    operation_name=func.__name__,
+                    **kwargs,
                 )
 
             return async_wrapper
@@ -423,7 +434,11 @@ def retry_on_failure(
                 )
                 handler = RetryHandler(config)
                 return handler.retry_sync(
-                    func, *args, model_name=model_name, operation_name=func.__name__, **kwargs
+                    func,
+                    *args,
+                    model_name=model_name,
+                    operation_name=func.__name__,
+                    **kwargs,
                 )
 
             return sync_wrapper
@@ -437,11 +452,17 @@ DEFAULT_RETRY_CONFIG = RetryConfig(
 )
 
 AGGRESSIVE_RETRY_CONFIG = RetryConfig(
-    max_attempts=5, base_delay=0.5, max_delay=30.0, strategy=RetryStrategy.EXPONENTIAL_BACKOFF
+    max_attempts=5,
+    base_delay=0.5,
+    max_delay=30.0,
+    strategy=RetryStrategy.EXPONENTIAL_BACKOFF,
 )
 
 CONSERVATIVE_RETRY_CONFIG = RetryConfig(
-    max_attempts=2, base_delay=2.0, max_delay=10.0, strategy=RetryStrategy.LINEAR_BACKOFF
+    max_attempts=2,
+    base_delay=2.0,
+    max_delay=10.0,
+    strategy=RetryStrategy.LINEAR_BACKOFF,
 )
 
 # Global instances

@@ -28,7 +28,9 @@ class ReadinessAssessment(Base):
     estimated_readiness_date = Column(DateTime, nullable=True)
 
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    updated_at = Column(
+        DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False
+    )
 
     user = relationship(
         "User", back_populates="readiness_assessments", overlaps="readiness_assessments"

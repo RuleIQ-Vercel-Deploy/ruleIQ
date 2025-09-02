@@ -14,6 +14,7 @@ PHASE_1_FILES = [
     # main.py already done
 ]
 
+
 def run_dry_run(file_path: str) -> bool:
     """Run dry run for a single file"""
     print(f"\n{'=' * 80}")
@@ -23,8 +24,9 @@ def run_dry_run(file_path: str) -> bool:
     cmd = [
         sys.executable,
         "scripts/migrate_stack_auth_single.py",
-        "--file", file_path,
-        "--dry-run"
+        "--file",
+        file_path,
+        "--dry-run",
     ]
 
     result = subprocess.run(cmd, capture_output=True, text=True)
@@ -36,6 +38,7 @@ def run_dry_run(file_path: str) -> bool:
 
     print(result.stdout)
     return True
+
 
 def main() -> int:
     print("🚀 Stack Auth Migration - Phase 1 Test")
@@ -70,6 +73,7 @@ def main() -> int:
     print("4. Test with real Stack Auth tokens")
 
     return 0
+
 
 if __name__ == "__main__":
     sys.exit(main())

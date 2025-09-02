@@ -1,0 +1,49 @@
+
+"name"str
+	"version"str
+
+"controls"str
+
+0int
+
+"description"str
+
+"category"str
+=4"Convert framework to dictionary for API responses."str
+"id"strself? ?(list"û$
+"
+A H(	"#new-object#Bdict#
+!
+B B("#get-field# id: 
+
+B B("	#map-set#:%
+#
+C C("#get-field# name: 
+
+C C(	"	#map-set#:,
+*
+D D(+"#get-field# description: 
+
+D D(+"	#map-set#:
+)
+'
+E E(%"#get-field# category: 
+
+E E(%"	#map-set#:(
+&
+F F(#"#get-field# version: 
+
+F F(#"	#map-set#:'
+%
+G G("#unknown-value#Blist&
+$
+G G("
+#is-exact#:Bbool
+
+G G("
+#assume#:8
+6
+G G("#set-field# __collection_size:Bint 
+
+G G("	#map-set#:
+A H(	*</home/omar/Documents/ruleIQ/database/compliance_framework.py

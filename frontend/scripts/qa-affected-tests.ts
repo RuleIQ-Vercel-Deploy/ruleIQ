@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Ava's Affected Tests Runner
- * 
+ *
  * Intelligently runs only tests affected by PR changes
  * Provides fast feedback while maintaining comprehensive coverage
  */
@@ -61,21 +61,25 @@ class AvaAffectedTestsRunner {
     const affectedTestFiles = this.findAffectedTests(changedFiles);
     // TODO: Replace with proper logging
     this.planTestExecution(affectedTestFiles);
-    
+
     const results = await this.executeTests();
-    
+
     await this.generateReport(results, prNumber);
-    
+
     return results;
   }
 
   private getChangedFiles(): string[] {
     try {
       const gitDiff = execSync('git diff --name-only HEAD~1', { encoding: 'utf8' });
-      return gitDiff.trim().split('\n').filter(file => 
-        file.startsWith('frontend/') && 
-        (file.endsWith('.tsx') || file.endsWith('.ts') || file.endsWith('.js'))
-      );
+      return gitDiff
+        .trim()
+        .split('\n')
+        .filter(
+          (file) =>
+            file.startsWith('frontend/') &&
+            (file.endsWith('.tsx') || file.endsWith('.ts') || file.endsWith('.js')),
+        );
     } catch {
       console.warn('⚠️ Could not get git diff, running all tests');
       return [];
@@ -84,16 +88,16 @@ class AvaAffectedTestsRunner {
 
   private findAffectedTests(changedFiles: string[]): string[] {
     const affectedTests = new Set<string>();
-    
-    changedFiles.forEach(filePath => {
+
+    changedFiles.forEach((filePath) => {
       const componentName = this.extractComponentName(filePath);
       const testFiles = this.findTestFilesForComponent(componentName, filePath);
-      
-      testFiles.forEach(testFile => affectedTests.add(testFile));
-      
+
+      testFiles.forEach((testFile) => affectedTests.add(testFile));
+
       // Also find tests that import this component
       const dependentTests = this.findDependentTests(filePath);
-      dependentTests.forEach(testFile => affectedTests.add(testFile));
+      dependentTests.forEach((testFile) => affectedTests.add(testFile));
     });
 
     return Array.from(affectedTests);
@@ -106,7 +110,7 @@ class AvaAffectedTestsRunner {
 
   private findTestFilesForComponent(componentName: string, filePath: string): string[] {
     const testFiles: string[] = [];
-    
+
     // Direct test files
     const possibleTestPaths = [
       `tests/components/${componentName}.test.tsx`,
@@ -116,7 +120,7 @@ class AvaAffectedTestsRunner {
       `tests/accessibility/${componentName}.test.tsx`,
       `tests/visual/${componentName}.test.ts`,
       `tests/performance/${componentName}.test.ts`,
-      `__tests__/${componentName}.test.tsx`
+      `__tests__/${componentName}.test.tsx`,
     ];
 
     // Check for nested component tests
@@ -126,7 +130,7 @@ class AvaAffectedTestsRunner {
       possibleTestPaths.push(`tests/${componentDir}/${componentName}.test.tsx`);
     }
 
-    possibleTestPaths.forEach(testPath => {
+    possibleTestPaths.forEach((testPath) => {
       if (existsSync(join(this.frontendPath, testPath))) {
         testFiles.push(testPath);
       }
@@ -137,16 +141,19 @@ class AvaAffectedTestsRunner {
 
   private findDependentTests(filePath: string): string[] {
     const dependentTests: string[] = [];
-    
+
     try {
       // Search for tests that import this component
       const searchPattern = filePath.replace('frontend/', '').replace(/\.(tsx?|jsx?)$/, '');
       const grepCommand = `grep -r "from.*${searchPattern}" ${this.testsPath} --include="*.test.*" -l`;
-      
+
       const grepOutput = execSync(grepCommand, { encoding: 'utf8' });
-      const foundFiles = grepOutput.trim().split('\n').filter(f => f.trim());
-      
-      foundFiles.forEach(file => {
+      const foundFiles = grepOutput
+        .trim()
+        .split('\n')
+        .filter((f) => f.trim());
+
+      foundFiles.forEach((file) => {
         const relativePath = file.replace(this.frontendPath + '/', '');
         dependentTests.push(relativePath);
       });
@@ -161,12 +168,12 @@ class AvaAffectedTestsRunner {
     this.testExecutions = [];
 
     // Group tests by category
-    const unitTests = affectedTestFiles.filter(f => f.includes('components/'));
-    const integrationTests = affectedTestFiles.filter(f => f.includes('integration/'));
-    const e2eTests = affectedTestFiles.filter(f => f.includes('e2e/'));
-    const accessibilityTests = affectedTestFiles.filter(f => f.includes('accessibility/'));
-    const visualTests = affectedTestFiles.filter(f => f.includes('visual/'));
-    const performanceTests = affectedTestFiles.filter(f => f.includes('performance/'));
+    const unitTests = affectedTestFiles.filter((f) => f.includes('components/'));
+    const integrationTests = affectedTestFiles.filter((f) => f.includes('integration/'));
+    const e2eTests = affectedTestFiles.filter((f) => f.includes('e2e/'));
+    const accessibilityTests = affectedTestFiles.filter((f) => f.includes('accessibility/'));
+    const visualTests = affectedTestFiles.filter((f) => f.includes('visual/'));
+    const performanceTests = affectedTestFiles.filter((f) => f.includes('performance/'));
 
     // Plan unit tests
     if (unitTests.length > 0) {
@@ -176,7 +183,7 @@ class AvaAffectedTestsRunner {
         files: unitTests,
         estimatedTime: unitTests.length * 2,
         required: true,
-        status: 'pending'
+        status: 'pending',
       });
     }
 
@@ -188,7 +195,7 @@ class AvaAffectedTestsRunner {
         files: integrationTests,
         estimatedTime: integrationTests.length * 5,
         required: true,
-        status: 'pending'
+        status: 'pending',
       });
     }
 
@@ -200,7 +207,7 @@ class AvaAffectedTestsRunner {
         files: e2eTests,
         estimatedTime: e2eTests.length * 10,
         required: true,
-        status: 'pending'
+        status: 'pending',
       });
     }
 
@@ -212,7 +219,7 @@ class AvaAffectedTestsRunner {
         files: accessibilityTests,
         estimatedTime: accessibilityTests.length * 3,
         required: true,
-        status: 'pending'
+        status: 'pending',
       });
     }
 
@@ -224,7 +231,7 @@ class AvaAffectedTestsRunner {
         files: visualTests,
         estimatedTime: visualTests.length * 4,
         required: false,
-        status: 'pending'
+        status: 'pending',
       });
     }
 
@@ -236,7 +243,7 @@ class AvaAffectedTestsRunner {
         files: performanceTests,
         estimatedTime: performanceTests.length * 8,
         required: false,
-        status: 'pending'
+        status: 'pending',
       });
     }
     // TODO: Replace with proper logging
@@ -250,54 +257,54 @@ class AvaAffectedTestsRunner {
       skippedTests: 0,
       totalDuration: 0,
       coverage: { statements: 0, branches: 0, functions: 0, lines: 0, threshold: false },
-      failures: []
+      failures: [],
     };
 
     const startTime = Date.now();
 
     for (const execution of this.testExecutions) {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       execution.status = 'running';
-      
+
       const executionStart = Date.now();
-      
+
       try {
-        const output = execSync(execution.command, { 
+        const output = execSync(execution.command, {
           encoding: 'utf8',
           cwd: this.frontendPath,
-          timeout: execution.estimatedTime * 60 * 1000 // Convert to milliseconds
+          timeout: execution.estimatedTime * 60 * 1000, // Convert to milliseconds
         });
-        
+
         execution.output = output;
         execution.duration = Date.now() - executionStart;
         execution.status = 'passed';
-        
+
         // Parse test results from output
         const testCount = this.parseTestCount(output);
         results.totalTests += testCount;
         results.passedTests += testCount;
-    // TODO: Replace with proper logging
+        // TODO: Replace with proper logging
       } catch (error: unknown) {
         execution.status = 'failed';
         execution.output = error.stdout || error.message;
         execution.duration = Date.now() - executionStart;
-        
+
         const failure = this.parseTestFailure(execution, error);
         results.failures.push(failure);
         results.failedTests++;
-    // TODO: Replace with proper logging
+        // TODO: Replace with proper logging
         // Stop on required test failures
         if (execution.required) {
-    // TODO: Replace with proper logging
+          // TODO: Replace with proper logging
           break;
         }
       }
     }
 
     results.totalDuration = Date.now() - startTime;
-    
+
     // Parse coverage from the last unit test execution
-    const unitTestExecution = this.testExecutions.find(e => e.category === 'Unit Tests');
+    const unitTestExecution = this.testExecutions.find((e) => e.category === 'Unit Tests');
     if (unitTestExecution?.output) {
       results.coverage = this.parseCoverage(unitTestExecution.output);
     }
@@ -315,7 +322,7 @@ class AvaAffectedTestsRunner {
       testFile: execution.files[0] || 'unknown',
       testName: execution.category,
       error: error.message || 'Test execution failed',
-      stackTrace: error.stack || ''
+      stackTrace: error.stack || '',
     };
   }
 
@@ -325,7 +332,7 @@ class AvaAffectedTestsRunner {
       branches: 0,
       functions: 0,
       lines: 0,
-      threshold: false
+      threshold: false,
     };
 
     // Parse coverage percentages from output
@@ -340,23 +347,27 @@ class AvaAffectedTestsRunner {
     if (linesMatch) coverage.lines = parseFloat(linesMatch[1]);
 
     // Check if coverage meets thresholds (80% for all)
-    coverage.threshold = coverage.statements >= 80 && 
-                        coverage.branches >= 75 && 
-                        coverage.functions >= 80 && 
-                        coverage.lines >= 80;
+    coverage.threshold =
+      coverage.statements >= 80 &&
+      coverage.branches >= 75 &&
+      coverage.functions >= 80 &&
+      coverage.lines >= 80;
 
     return coverage;
   }
 
   private async generateReport(results: TestResults, prNumber?: number): Promise<void> {
-    const reportPath = join(this.frontendPath, 'test-results', 
-      `affected-tests-${prNumber || 'local'}-${Date.now()}.json`);
-    
+    const reportPath = join(
+      this.frontendPath,
+      'test-results',
+      `affected-tests-${prNumber || 'local'}-${Date.now()}.json`,
+    );
+
     const report = {
       timestamp: new Date().toISOString(),
       prNumber,
       results,
-      executions: this.testExecutions
+      executions: this.testExecutions,
     };
 
     require('fs').writeFileSync(reportPath, JSON.stringify(report, null, 2));
@@ -381,19 +392,19 @@ class AvaAffectedTestsRunner {
 // CLI execution
 async function main() {
   const prNumber = process.argv[2] ? parseInt(process.argv[2]) : undefined;
-  
+
   const runner = new AvaAffectedTestsRunner();
-  
+
   try {
     const results = await runner.runAffectedTests(prNumber);
-    
+
     if (results.failedTests > 0) {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       process.exit(1);
     }
-    
+
     if (!results.coverage.threshold) {
-    // TODO: Replace with proper logging
+      // TODO: Replace with proper logging
       process.exit(1);
     }
     // TODO: Replace with proper logging

@@ -1,0 +1,17 @@
+
+3*"Custom from_orm to handle field mapping."strclsz z(objz z("ä#
+!
+} }("#get-field# id:&
+$
+~ ~("#get-field# email:+
+)
+ (%"#get-field# lead_score:.
+,
+
+Ä Ä('"#get-field# lead_status:-
++
+
+Å Å(%"#get-field# created_at:
+
+	| Ç(		"cls:
+	| Ç(		*3/home/omar/Documents/ruleIQ/api/routers/freemium.py
