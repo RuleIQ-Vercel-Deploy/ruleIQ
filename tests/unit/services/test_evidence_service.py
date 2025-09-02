@@ -16,12 +16,14 @@ import pytest
 from core.exceptions import NotFoundAPIError, ValidationAPIError
 from services.evidence_service import EvidenceService
 
+# Note: Using fast_db_session from conftest_optimized for performance
+
 
 @pytest.mark.unit
 class TestEvidenceService:
     """Test evidence service business logic"""
 
-    async def test_create_evidence_item_success(self, db_session, sample_user):
+    async def test_create_evidence_item_success(self, fast_db_session, sample_user):
         """Test creating evidence item with valid data"""
         evidence_data = {'title': 'Security Policy', 'description':
             'Company security policy document', 'evidence_type': 'document',
@@ -40,7 +42,7 @@ class TestEvidenceService:
             assert result['quality_score'] > 0
             mock_create.assert_called_once_with(sample_user.id, evidence_data)
 
-    async def test_create_evidence_item_validation_error(self, db_session,
+    async def test_create_evidence_item_validation_error(self, fast_db_session,
         sample_user):
         """Test creating evidence item with invalid data raises validation error"""
         invalid_data = {'title': '', 'description': 'x' * 10000,
@@ -53,7 +55,7 @@ class TestEvidenceService:
                 await EvidenceService.create_evidence(sample_user.id,
                     invalid_data)
 
-    def test_validate_evidence_quality_high_score(self, db_session):
+    def test_validate_evidence_quality_high_score(self, fast_db_session):
         """Test evidence quality validation returns high score for good evidence"""
         evidence_data = {'title': 'Comprehensive Security Policy',
             'description':
@@ -77,7 +79,7 @@ class TestEvidenceService:
             assert len(result['issues']) == 0
             mock_validate.assert_called_once_with(evidence_data)
 
-    def test_validate_evidence_quality_low_score(self, db_session):
+    def test_validate_evidence_quality_low_score(self, fast_db_session):
         """Test evidence quality validation returns low score for poor evidence"""
         poor_evidence_data = {'title': 'Policy', 'description':
             'Some policy', 'evidence_type': 'document', 'file_content':
@@ -100,7 +102,7 @@ class TestEvidenceService:
             assert len(result['issues']) > 0
             mock_validate.assert_called_once_with(poor_evidence_data)
 
-    def test_identify_evidence_requirements_success(self, db_session):
+    def test_identify_evidence_requirements_success(self, fast_db_session):
         """Test identifying evidence requirements for framework controls"""
         framework_id = uuid4()
         control_ids = [str(uuid4()), str(uuid4())]
@@ -128,7 +130,7 @@ class TestEvidenceService:
             assert any(item['automation_possible'] for item in result)
             mock_identify.assert_called_once_with(framework_id, control_ids)
 
-    def test_configure_automation_success(self, db_session):
+    def test_configure_automation_success(self, fast_db_session):
         """Test configuring automated evidence collection"""
         evidence_id = uuid4()
         automation_config = {'source_type': 'google_workspace', 'endpoint':
@@ -153,7 +155,7 @@ class TestEvidenceService:
             mock_configure.assert_called_once_with(evidence_id,
                 automation_config)
 
-    def test_configure_automation_connection_failure(self, db_session):
+    def test_configure_automation_connection_failure(self, fast_db_session):
         """Test automation configuration with connection failure"""
         evidence_id = uuid4()
         automation_config = {'source_type': 'google_workspace', 'endpoint':
@@ -178,7 +180,7 @@ class TestEvidenceService:
             mock_configure.assert_called_once_with(evidence_id,
                 automation_config)
 
-    def test_get_user_evidence_items_success(self, db_session, sample_user):
+    def test_get_user_evidence_items_success(self, fast_db_session, sample_user):
         """Test retrieving evidence items for a user"""
         with patch('services.evidence_service.get_user_evidence_items'
             ) as mock_get:
@@ -195,7 +197,7 @@ class TestEvidenceService:
             assert all('quality_score' in item for item in result)
             mock_get.assert_called_once_with(sample_user.id)
 
-    def test_get_user_evidence_items_empty(self, db_session, sample_user):
+    def test_get_user_evidence_items_empty(self, fast_db_session, sample_user):
         """Test retrieving evidence items when user has none"""
         with patch('services.evidence_service.get_user_evidence_items'
             ) as mock_get:
@@ -204,7 +206,7 @@ class TestEvidenceService:
             assert len(result) == 0
             mock_get.assert_called_once_with(sample_user.id)
 
-    def test_update_evidence_status_success(self, db_session):
+    def test_update_evidence_status_success(self, fast_db_session):
         """Test updating evidence item status"""
         evidence_id = uuid4()
         new_status = 'expired'
@@ -224,7 +226,7 @@ class TestEvidenceService:
             mock_update.assert_called_once_with(evidence_id, new_status, reason
                 )
 
-    def test_search_evidence_by_framework(self, db_session, sample_user):
+    def test_search_evidence_by_framework(self, fast_db_session, sample_user):
         """Test searching evidence items by framework"""
         framework = 'ISO27001'
         search_filters = {'evidence_type': 'document', 'status': 'valid',
@@ -249,7 +251,7 @@ class TestEvidenceService:
             mock_search.assert_called_once_with(sample_user.id, framework,
                 search_filters)
 
-    def test_delete_evidence_item_success(self, db_session, sample_user):
+    def test_delete_evidence_item_success(self, fast_db_session, sample_user):
         """Test deleting evidence item"""
         evidence_id = uuid4()
         with patch('services.evidence_service.EvidenceService.delete_evidence'
@@ -263,7 +265,7 @@ class TestEvidenceService:
             assert result['cleanup_performed'] is True
             mock_delete.assert_called_once_with(evidence_id, sample_user.id)
 
-    def test_delete_evidence_item_not_found(self, db_session, sample_user):
+    def test_delete_evidence_item_not_found(self, fast_db_session, sample_user):
         """Test deleting non-existent evidence item"""
         evidence_id = uuid4()
         with patch('services.evidence_service.EvidenceService.delete_evidence'
@@ -273,7 +275,7 @@ class TestEvidenceService:
             with pytest.raises(NotFoundAPIError):
                 EvidenceService.delete_evidence(evidence_id, sample_user.id)
 
-    def test_bulk_update_evidence_status(self, db_session, sample_user):
+    def test_bulk_update_evidence_status(self, fast_db_session, sample_user):
         """Test bulk updating evidence status"""
         evidence_ids = [str(uuid4()) for _ in range(5)]
         new_status = 'reviewed'
@@ -293,7 +295,7 @@ class TestEvidenceService:
             mock_bulk_update.assert_called_once_with(evidence_ids,
                 new_status, reason, sample_user.id)
 
-    def test_get_evidence_statistics(self, db_session, sample_user):
+    def test_get_evidence_statistics(self, fast_db_session, sample_user):
         """Test getting evidence statistics for user"""
         with patch('services.evidence_service.EvidenceService.get_statistics'
             ) as mock_stats:

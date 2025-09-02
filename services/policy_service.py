@@ -176,7 +176,7 @@ async def regenerate_policy_section(
             (
                 s.get("content")
                 for s in policy.content.get("sections", [])
-                if s.get("title") == section_title,
+                if s.get("title") == section_title
             ),
             "Section not found",
         )

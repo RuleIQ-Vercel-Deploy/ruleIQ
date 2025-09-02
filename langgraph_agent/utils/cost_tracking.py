@@ -11,6 +11,10 @@ import asyncio
 import functools
 import time
 from typing import Any, Callable, Dict, Optional, TypeVar, Union
+try:
+    from typing import Self
+except ImportError:
+    from typing_extensions import Self
 from datetime import datetime, timezone
 import logging
 from services.ai.cost_management import AICostManager, AIUsageMetrics

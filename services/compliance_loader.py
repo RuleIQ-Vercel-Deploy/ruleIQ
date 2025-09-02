@@ -239,7 +239,7 @@ class GeographicValidator:
 class ISO27001UKMapper:
     """Mapper for ISO 27001 controls to UK regulatory requirements"""
 
-#     ISO_TO_UK_GDPR_MAPPING = {  # Unused variable
+    ISO_TO_UK_GDPR_MAPPING = {
         "A.5.1.1": {
             "uk_requirement": "Data Protection by Design and Default",
             "ico_guidance": "Implement appropriate technical and organisational measures",

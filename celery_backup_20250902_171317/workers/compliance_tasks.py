@@ -8,7 +8,6 @@ from typing import Any, Dict
 from celery.utils.log import get_task_logger
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
-from celery_app import celery_app
 from core.exceptions import ApplicationException, BusinessLogicException, DatabaseException
 from database.db_setup import get_async_db
 from database.business_profile import BusinessProfile

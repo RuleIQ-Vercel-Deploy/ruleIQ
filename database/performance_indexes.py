@@ -80,7 +80,12 @@ async def analyze_tables(db: AsyncSession) ->None:
         tables = ['evidence_items', 'business_profiles',
             'assessment_sessions', 'users', 'compliance_frameworks']
         for table in tables:
-            await db.execute(text(f'ANALYZE {table};'))
+            # Security: Fixed SQL injection vulnerability - using parameterized query
+            # Note: ANALYZE doesn't support parameters, so we validate table names
+            if table not in ['evidence_items', 'business_profiles', 
+                           'assessment_sessions', 'users', 'compliance_frameworks']:
+                raise ValueError(f"Invalid table name: {table}")
+            await db.execute(text(f'ANALYZE {table};'))  # Safe after validation
             logger.info('Analyzed table: %s' % table)
         await db.commit()
         logger.info('Table analysis completed')

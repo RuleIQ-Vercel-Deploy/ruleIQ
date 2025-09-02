@@ -31,7 +31,7 @@ class TestUserOnboardingFlow:
             "company": sample_business_profile.company_name,
         }
 
-        register_response = client.post("/api/auth/register", json=registration_data)
+        register_response = client.post("/api/v1/auth/register", json=registration_data)
         assert register_response.status_code == 201
         # Skip security header checks in test mode
         # # assert_api_response_security(register_response)
@@ -48,7 +48,10 @@ class TestUserOnboardingFlow:
             "password": registration_data["password"],
         }
 
-        login_response = client.post("/api/auth/login", json=login_data)
+        login_response = client.post("/api/v1/auth/login", json=login_data)
+        if login_response.status_code != 200:
+            print(f"Login failed with status {login_response.status_code}")
+            print(f"Response: {login_response.json()}")
         assert login_response.status_code == 200
         # assert_api_response_security(login_response)
 
@@ -77,7 +80,7 @@ class TestUserOnboardingFlow:
         }
 
         profile_response = client.post(
-            "/api/business-profiles", json=business_profile_data, headers=auth_headers,
+            "/api/v1/business-profiles", json=business_profile_data, headers=auth_headers,
         )
         assert profile_response.status_code == 201
         # assert_api_response_security(profile_response)
@@ -97,7 +100,7 @@ class TestUserOnboardingFlow:
         }
 
         assessment_response = client.post(
-            "/api/assessments/quick", json=assessment_data, headers=auth_headers,
+            "/api/v1/assessments/quick", json=assessment_data, headers=auth_headers,
         )
         assert assessment_response.status_code == 200
         # assert_api_response_security(assessment_response)
@@ -120,7 +123,7 @@ class TestUserOnboardingFlow:
         assert any("GDPR" in rec["framework"]["name"] for rec in recommendations)
 
         # Step 6: Verify Dashboard Shows Basic Setup
-        dashboard_response = client.get("/api/users/dashboard", headers=auth_headers)
+        dashboard_response = client.get("/api/v1/users/dashboard", headers=auth_headers)
         if dashboard_response.status_code == 200:
             dashboard_response.json()
             # Basic verification that dashboard is accessible
@@ -139,11 +142,11 @@ class TestUserOnboardingFlow:
         }
 
         # Complete registration and login
-        register_response = client.post("/api/auth/register", json=user_data)
+        register_response = client.post("/api/v1/auth/register", json=user_data)
         assert register_response.status_code == 201
 
         login_response = client.post(
-            "/api/auth/login",
+            "/api/v1/auth/login",
             json={"email": user_data["email"], "password": user_data["password"]},
         )
         assert login_response.status_code == 200
@@ -168,7 +171,7 @@ class TestUserOnboardingFlow:
             "has_international_operations": False,
         }
         profile_response = client.post(
-            "/api/business-profiles", json=business_profile_data, headers=auth_headers,
+            "/api/v1/business-profiles", json=business_profile_data, headers=auth_headers,
         )
         assert profile_response.status_code == 201
         business_profile_id = profile_response.json()["id"]
@@ -181,7 +184,7 @@ class TestUserOnboardingFlow:
         }
 
         assessment_response = client.post(
-            "/api/assessments/quick", json=assessment_data, headers=auth_headers,
+            "/api/v1/assessments/quick", json=assessment_data, headers=auth_headers,
         )
         assert assessment_response.status_code == 200
 
@@ -198,7 +201,7 @@ class TestUserOnboardingFlow:
 
         # Test "restart" by running assessment again (simulating restart)
         restart_response = client.post(
-            "/api/assessments/quick", json=assessment_data, headers=auth_headers,
+            "/api/v1/assessments/quick", json=assessment_data, headers=auth_headers,
         )
         assert restart_response.status_code == 200
 
@@ -216,12 +219,12 @@ class TestUserOnboardingFlow:
             "full_name": "Minimal User",
         }
 
-        register_response = client.post("/api/auth/register", json=minimal_user_data)
+        register_response = client.post("/api/v1/auth/register", json=minimal_user_data)
         assert register_response.status_code == 201
 
         # Login
         login_response = client.post(
-            "/api/auth/login",
+            "/api/v1/auth/login",
             json={
                 "email": minimal_user_data["email"],
                 "password": minimal_user_data["password"],
@@ -241,7 +244,7 @@ class TestUserOnboardingFlow:
         }
 
         profile_response = client.post(
-            "/api/business-profiles", json=minimal_profile, headers=auth_headers,
+            "/api/v1/business-profiles", json=minimal_profile, headers=auth_headers,
         )
         assert profile_response.status_code == 201
         business_profile_id = profile_response.json()["id"]
@@ -254,7 +257,7 @@ class TestUserOnboardingFlow:
         }
 
         quick_response = client.post(
-            "/api/assessments/quick", json=quick_assessment_data, headers=auth_headers,
+            "/api/v1/assessments/quick", json=quick_assessment_data, headers=auth_headers,
         )
         assert quick_response.status_code == 200
 
@@ -279,17 +282,17 @@ class TestUserOnboardingFlow:
         }
 
         # Test registration with existing email
-        register_response1 = client.post("/api/auth/register", json=user_data)
+        register_response1 = client.post("/api/v1/auth/register", json=user_data)
         assert register_response1.status_code == 201
 
         # Attempt to register with same email
-        register_response2 = client.post("/api/auth/register", json=user_data)
+        register_response2 = client.post("/api/v1/auth/register", json=user_data)
         assert register_response2.status_code == 409  # Conflict
         assert "already exists" in register_response2.json()["detail"]
 
         # Successful login with existing account
         login_response = client.post(
-            "/api/auth/login",
+            "/api/v1/auth/login",
             json={"email": user_data["email"], "password": user_data["password"]},
         )
         assert login_response.status_code == 200
@@ -300,14 +303,14 @@ class TestUserOnboardingFlow:
 
         # Test invalid login attempt (wrong password)
         invalid_login_response = client.post(
-            "/api/auth/login",
+            "/api/v1/auth/login",
             json={"email": user_data["email"], "password": "WrongPassword123!"},
         )
         assert invalid_login_response.status_code == 401  # Unauthorized
 
         # Test successful login again (error recovery)
         valid_login_response = client.post(
-            "/api/auth/login",
+            "/api/v1/auth/login",
             json={"email": user_data["email"], "password": user_data["password"]},
         )
         assert valid_login_response.status_code == 200
@@ -316,12 +319,12 @@ class TestUserOnboardingFlow:
         }
 
         # Test accessing protected endpoint with valid token
-        profile_response = client.get("/api/users/profile", headers=auth_headers)
+        profile_response = client.get("/api/v1/users/profile", headers=auth_headers)
         # Accept various responses since endpoint may not be fully implemented
         assert profile_response.status_code in [200, 404, 501]
 
         # Continue with successful onboarding (if endpoint exists)
-        dashboard_response = client.get("/api/users/dashboard", headers=auth_headers)
+        dashboard_response = client.get("/api/v1/users/dashboard", headers=auth_headers)
         if dashboard_response.status_code == 200:
             # Dashboard endpoint exists and works
             pass
@@ -348,11 +351,11 @@ class TestOnboardingIntegration:
         }
 
         # Complete basic onboarding
-        register_response = client.post("/api/auth/register", json=user_data)
+        register_response = client.post("/api/v1/auth/register", json=user_data)
         assert register_response.status_code == 201
 
         login_response = client.post(
-            "/api/auth/login",
+            "/api/v1/auth/login",
             json={"email": user_data["email"], "password": user_data["password"]},
         )
         assert login_response.status_code == 200
@@ -377,7 +380,7 @@ class TestOnboardingIntegration:
         }
 
         profile_response = client.post(
-            "/api/business-profiles", json=business_profile_data, headers=auth_headers,
+            "/api/v1/business-profiles", json=business_profile_data, headers=auth_headers,
         )
         assert profile_response.status_code == 201
         business_profile_id = profile_response.json()["id"]
@@ -390,7 +393,7 @@ class TestOnboardingIntegration:
         }
 
         assessment_response = client.post(
-            "/api/assessments/quick", json=assessment_data, headers=auth_headers,
+            "/api/v1/assessments/quick", json=assessment_data, headers=auth_headers,
         )
         assert assessment_response.status_code == 200
 
@@ -417,9 +420,9 @@ class TestOnboardingIntegration:
         }
 
         # Complete onboarding
-        client.post("/api/auth/register", json=user_data)
+        client.post("/api/v1/auth/register", json=user_data)
         login_response = client.post(
-            "/api/auth/login",
+            "/api/v1/auth/login",
             json={"email": unique_email, "password": user_data["password"]},
         )
         auth_headers = {
@@ -441,7 +444,7 @@ class TestOnboardingIntegration:
             "has_international_operations": sample_business_profile.has_international_operations,
         }
         client.post(
-            "/api/business-profiles", json=business_profile_data, headers=auth_headers,
+            "/api/v1/business-profiles", json=business_profile_data, headers=auth_headers,
         )
 
         # Check audit trail
@@ -485,11 +488,11 @@ class TestOnboardingIntegration:
             },
         }
 
-        register_response = client.post("/api/auth/register", json=registration_data)
+        register_response = client.post("/api/v1/auth/register", json=registration_data)
         assert register_response.status_code == 201
 
         login_response = client.post(
-            "/api/auth/login",
+            "/api/v1/auth/login",
             json={"email": user_data["email"], "password": user_data["password"]},
         )
         auth_headers = {
@@ -498,7 +501,7 @@ class TestOnboardingIntegration:
 
         # Check that preferences were saved (if endpoint exists)
         preferences_response = client.get(
-            "/api/users/preferences", headers=auth_headers,
+            "/api/v1/users/preferences", headers=auth_headers,
         )
         if preferences_response.status_code == 200:
             preferences_response.json()

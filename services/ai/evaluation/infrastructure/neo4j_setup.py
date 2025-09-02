@@ -1,7 +1,7 @@
 """Neo4j Community Edition setup and connection management."""
+from __future__ import annotations
 import logging
 logger = logging.getLogger(__name__)
-from __future__ import annotations
 logger.info('[MODULE LOAD] neo4j_setup.py is being loaded...')
 logger.info('[MODULE LOAD] __file__ = %s' % __file__)
 import os

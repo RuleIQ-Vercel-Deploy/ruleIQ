@@ -34,13 +34,72 @@ from services.reporting.pdf_generator import PDFGenerator
 from langgraph_agent.graph.state import ComplianceAgentState
 from langgraph_agent.utils.cost_tracking import track_node_cost
 from services.reporting.report_scheduler import ReportScheduler
-from workers.reporting_tasks import _send_email_sync
 from database.report_schedule import ReportSchedule as ReportScheduleModel
 from config.settings import settings
 from core.exceptions import NotFoundException, DatabaseException, BusinessLogicException
 
 logger = logging.getLogger(__name__)
 
+def _send_email_directly(
+    recipients: List[str],
+    subject: str,
+    body: str,
+    attachments: Optional[List[Dict[str, Any]]] = None
+) -> bool:
+    """
+    Send email directly without Celery (migration complete).
+    
+    Args:
+        recipients: List of email addresses
+        subject: Email subject
+        body: Email body content
+        attachments: Optional list of attachments
+    
+    Returns:
+        True if email sent successfully, False otherwise
+    """
+    try:
+        # Get SMTP configuration from settings
+        smtp_host = getattr(settings, 'SMTP_HOST', 'localhost')
+        smtp_port = getattr(settings, 'SMTP_PORT', 587)
+        smtp_user = getattr(settings, 'SMTP_USER', '')
+        smtp_password = getattr(settings, 'SMTP_PASSWORD', '')
+        smtp_from = getattr(settings, 'SMTP_FROM', 'noreply@ruleiq.com')
+        
+        # Create message
+        msg = MIMEMultipart()
+        msg['From'] = smtp_from
+        msg['To'] = ', '.join(recipients)
+        msg['Subject'] = subject
+        
+        # Add body
+        msg.attach(MIMEText(body, 'plain'))
+        
+        # Add attachments if provided
+        if attachments:
+            for attachment in attachments:
+                part = MIMEBase('application', 'octet-stream')
+                part.set_payload(attachment['content'])
+                encoders.encode_base64(part)
+                part.add_header(
+                    'Content-Disposition',
+                    f'attachment; filename={attachment["filename"]}'
+                )
+                msg.attach(part)
+        
+        # Send email
+        with smtplib.SMTP(smtp_host, smtp_port) as server:
+            if smtp_user and smtp_password:
+                server.starttls()
+                server.login(smtp_user, smtp_password)
+            server.send_message(msg)
+        
+        logger.info(f"Email sent successfully to {recipients}")
+        return True
+        
+    except Exception as e:
+        logger.error(f"Failed to send email: {e}")
+        return False
 
 async def get_user_for_profile(
     db: AsyncSession, profile: BusinessProfileModel
@@ -52,7 +111,6 @@ async def get_user_for_profile(
         raise NotFoundException(f"User not found for profile {profile.id}")
     return user
 
-
 async def get_default_framework(db: AsyncSession) -> ComplianceFrameworkModel:
     """Get a default compliance framework (first available)."""
     result = await db.execute(select(ComplianceFrameworkModel).limit(1))
@@ -60,7 +118,6 @@ async def get_default_framework(db: AsyncSession) -> ComplianceFrameworkModel:
     if not framework:
         raise NotFoundException("No compliance frameworks found in database")
     return framework
-
 
 async def generate_scheduled_reports_node(
     state: ComplianceAgentState,
@@ -204,7 +261,6 @@ async def generate_scheduled_reports_node(
         raise
 
     return state
-
 
 async def generate_on_demand_report_node(
     state: ComplianceAgentState,
@@ -363,7 +419,6 @@ async def generate_on_demand_report_node(
 
     return state
 
-
 async def send_summary_notifications_node(
     state: ComplianceAgentState,
 ) -> ComplianceAgentState:
@@ -495,7 +550,6 @@ async def send_summary_notifications_node(
 
     return state
 
-
 def should_run_schedule(schedule: ReportScheduleModel) -> bool:
     """
     Check if a schedule should run now based on frequency and last run time.
@@ -525,7 +579,6 @@ def should_run_schedule(schedule: ReportScheduleModel) -> bool:
 
     return False
 
-
 async def save_report_file(content: bytes, filename: str) -> str:
     """
     Save report content to file.
@@ -546,7 +599,6 @@ async def save_report_file(content: bytes, filename: str) -> str:
         await f.write(content)
 
     return str(file_path)
-
 
 async def send_scheduled_report_email(
     recipients: List[str],
@@ -604,7 +656,6 @@ async def send_scheduled_report_email(
         logger.error(f"Failed to send scheduled report email: {e}")
         return False
 
-
 async def send_on_demand_report_email(
     recipients: List[str],
     report_type: str,
@@ -659,7 +710,6 @@ async def send_on_demand_report_email(
         logger.error(f"Failed to send on-demand report email: {e}")
         return False
 
-
 def prepare_summary_content(summary: Dict[str, Any]) -> str:
     """
     Prepare summary content for notification email.
@@ -689,7 +739,6 @@ def prepare_summary_content(summary: Dict[str, Any]) -> str:
     
     All reports are being generated and distributed according to schedule.
     """
-
 
 async def send_summary_email(
     recipient: str, user_name: str, summary_content: str
@@ -728,7 +777,6 @@ async def send_summary_email(
         logger.error(f"Failed to send summary email: {e}")
         return False
 
-
 async def send_email_with_attachment(
     recipients: List[str],
     subject: str,
@@ -753,7 +801,7 @@ async def send_email_with_attachment(
     if attachment_data and attachment_name:
         attachments.append({"filename": attachment_name, "content": attachment_data})
 
-    # Use the synchronous email sender from workers
-    return _send_email_sync(
+    # Send email directly (Celery migration complete)
+    return _send_email_directly(
         recipients, subject, body, attachments if attachments else None
     )

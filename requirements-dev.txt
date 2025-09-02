@@ -28,7 +28,6 @@ sphinx-rtd-theme==3.0.4
 
 # Type Checking
 mypy==1.14.1
-types-redis==4.6.0.20250827
 types-requests==2.32.0.20250827
 
 # Security Testing

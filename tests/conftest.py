@@ -4,6 +4,10 @@ from __future__ import annotations
 Pytest configuration and fixtures for the test suite.
 """
 
+# Setup test environment before anything else
+from tests.setup_test_env import setup_test_database_urls
+setup_test_database_urls()
+
 import os
 import pytest
 import asyncio
@@ -241,7 +245,6 @@ def temporary_env_var(key: str, value: str):
     try:
         yield
     finally:
-        session.close()
         if old_value is None:
             os.environ.pop(key, None)
         else:
@@ -326,9 +329,20 @@ def sample_business_profile():
     profile = MagicMock()
     profile.id = "550e8400-e29b-41d4-a716-446655440000"
     profile.name = "Test Business"
+    profile.company_name = "Test Company Inc."
     profile.industry = "Technology"
     profile.size = "Small"
+    profile.employee_count = "50-100"
     profile.location = "US"
+    profile.country = "United States"
+    profile.existing_frameworks = ["ISO 27001", "SOC 2"]
+    profile.planned_frameworks = ["GDPR", "HIPAA"]
+    profile.handles_personal_data = True
+    profile.processes_payments = True
+    profile.stores_health_data = False
+    profile.provides_financial_services = False
+    profile.operates_critical_infrastructure = False
+    profile.has_international_operations = True
 
     return profile
 
@@ -345,3 +359,92 @@ def sample_user():
     user.is_active = True
 
     return user
+
+# Import optimized fixtures if available
+try:
+    from database import Base
+    from sqlalchemy import create_engine, event
+    from sqlalchemy.orm import sessionmaker, Session
+    from sqlalchemy.pool import StaticPool
+    
+    @pytest.fixture(scope="session")
+    def sqlite_engine():
+        """
+        Create a shared in-memory SQLite database engine.
+        Uses StaticPool to ensure the same connection is reused across tests.
+        """
+        from sqlalchemy.dialects import sqlite
+        from sqlalchemy.dialects.postgresql import JSONB
+        
+        # Register JSONB as JSON for SQLite
+        import sqlalchemy.dialects.sqlite
+        sqlalchemy.dialects.sqlite.JSON = JSONB
+        
+        engine = create_engine(
+            "sqlite:///:memory:",
+            connect_args={"check_same_thread": False},
+            poolclass=StaticPool,
+            echo=False
+        )
+        
+        # Create all tables with JSON instead of JSONB for SQLite
+        with engine.begin() as conn:
+            # Override JSONB to use JSON for SQLite
+            @event.listens_for(engine, "before_execute", once=True)
+            def receive_before_execute(conn, clauseelement, multiparams, params, execution_options):
+                if hasattr(clauseelement, 'element'):
+                    pass
+        
+        Base.metadata.create_all(bind=engine)
+        return engine
+    
+    @pytest.fixture(scope="function")
+    def fast_db_session(sqlite_engine) -> Generator[Session, None, None]:
+        """
+        Fast database session using transaction rollback.
+        
+        Each test runs in a transaction that's rolled back after completion,
+        ensuring test isolation without expensive table drops/creates.
+        """
+        connection = sqlite_engine.connect()
+        transaction = connection.begin()
+        
+        # Configure session with connection
+        SessionLocal = sessionmaker(
+            autocommit=False,
+            autoflush=False,
+            bind=connection
+        )
+        session = SessionLocal()
+        
+        # Begin nested transaction for additional safety
+        nested = connection.begin_nested()
+        
+        @event.listens_for(session, "after_transaction_end")
+        def restart_savepoint(session, transaction):
+            if transaction.nested and not transaction._parent.nested:
+                nested = connection.begin_nested()
+        
+        yield session
+        
+        # Rollback and cleanup
+        session.close()
+        transaction.rollback()
+        connection.close()
+except ImportError:
+    # Fallback to regular db_session if optimized fixtures not available
+    @pytest.fixture
+    def fast_db_session(db_session):
+        return db_session
+
+
+@pytest.fixture
+def sample_user_data():
+    """Create sample user data for testing."""
+    return {
+        "email": "test@example.com",
+        "password": "TestPassword123!",
+        "full_name": "Test User",
+        "company": "Test Company",
+        "role": "compliance_manager"
+    }

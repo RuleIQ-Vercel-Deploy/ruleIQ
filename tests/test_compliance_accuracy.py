@@ -20,7 +20,7 @@ class TestGDPRAccuracy:
     ):
         """Test accuracy of GDPR penalty information"""
         gdpr_questions = [
-            q for q in compliance_golden_dataset if q["framework"] == "GDPR",
+            q for q in compliance_golden_dataset if q["framework"] == "GDPR"
         ]
         penalty_questions = [q for q in gdpr_questions if q["category"] == "penalties"]
 
@@ -111,7 +111,7 @@ class TestGDPRAccuracy:
                 matching_elements = sum(
                     1
                     for element in test_case["key_elements"]
-                    if element.lower() in response_text,
+                    if element.lower() in response_text
                 )
                 assert (
                     matching_elements >= len(test_case["key_elements"]) * 0.6
@@ -124,7 +124,7 @@ class TestGDPRAccuracy:
         breach_questions = [
             q
             for q in compliance_golden_dataset
-            if q["framework"] == "GDPR" and q["category"] == "breach_notification",
+            if q["framework"] == "GDPR" and q["category"] == "breach_notification"
         ]
 
         for question_data in breach_questions:
@@ -373,7 +373,7 @@ class TestSectorSpecificCompliance:
 
             # Validate key frameworks
             mentioned_frameworks = sum(
-                1 for fw in financial_frameworks if fw.lower() in response_text,
+                1 for fw in financial_frameworks if fw.lower() in response_text
             )
             assert (
                 mentioned_frameworks >= 3
@@ -689,6 +689,6 @@ class TestSMEValidationFramework:
             # Check specific flags
             flags = validation_result["accuracy_flags"]
             penalty_flagged = any(
-                "penalty" in flag.lower() or "fine" in flag.lower() for flag in flags,
+                "penalty" in flag.lower() or "fine" in flag.lower() for flag in flags
             )
             assert penalty_flagged, "Should flag incorrect penalty amounts"

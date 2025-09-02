@@ -716,7 +716,7 @@ class TestBusinessContinuityWorkflows:
 
                 # Should have upcoming deadline alert
                 deadline_alerts = [
-                    alert for alert in alerts if "deadline" in alert["type"],
+                    alert for alert in alerts if "deadline" in alert["type"]
                 ]
                 assert len(deadline_alerts) > 0, "Should alert about upcoming deadlines"
 

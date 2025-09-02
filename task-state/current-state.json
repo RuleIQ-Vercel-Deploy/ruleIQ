@@ -1,0 +1,90 @@
+{
+  "current_priority": "P0",
+  "started_at": "2025-01-02T10:00:00Z",
+  "gate_status": {
+    "P0": "in_progress",
+    "P1": "blocked",
+    "P2": "blocked",
+    "P3": "blocked",
+    "P4": "blocked",
+    "P5": "blocked",
+    "P6": "blocked",
+    "P7": "blocked"
+  },
+  "tasks": {
+    "a02d81dc": {
+      "title": "Fix env var configuration for tests",
+      "priority": "P0",
+      "status": "pending",
+      "assigned_to": null,
+      "started_at": null,
+      "deadline": null,
+      "attempts": 0,
+      "last_error": null
+    },
+    "2ef17163": {
+      "title": "Configure test DB & connections",
+      "priority": "P0",
+      "status": "pending",
+      "assigned_to": null,
+      "started_at": null,
+      "deadline": null,
+      "attempts": 0,
+      "last_error": null
+    },
+    "d28d8c18": {
+      "title": "Fix datetime & missing import errors",
+      "priority": "P0",
+      "status": "pending",
+      "assigned_to": null,
+      "started_at": null,
+      "deadline": null,
+      "attempts": 0,
+      "last_error": null
+    },
+    "a681da5e": {
+      "title": "Fix remaining generator expression syntax errors",
+      "priority": "P0",
+      "status": "pending",
+      "assigned_to": null,
+      "started_at": null,
+      "deadline": null,
+      "attempts": 0,
+      "last_error": null
+    },
+    "5d753858": {
+      "title": "Fix test class initialization errors",
+      "priority": "P0",
+      "status": "pending",
+      "assigned_to": null,
+      "started_at": null,
+      "deadline": null,
+      "attempts": 0,
+      "last_error": null
+    },
+    "799f27b3": {
+      "title": "Add missing test fixtures & mocks",
+      "priority": "P0",
+      "status": "pending",
+      "assigned_to": null,
+      "started_at": null,
+      "deadline": null,
+      "attempts": 0,
+      "last_error": null
+    }
+  },
+  "active_agents": [],
+  "completed_tasks": [],
+  "escalations": [],
+  "timeframe_alerts": {
+    "P0": {
+      "deadline": "2025-01-03T10:00:00Z",
+      "escalate_at": "2025-01-02T22:00:00Z"
+    }
+  },
+  "metrics": {
+    "tasks_completed_today": 0,
+    "average_completion_time": null,
+    "current_velocity": 0
+  }
+}

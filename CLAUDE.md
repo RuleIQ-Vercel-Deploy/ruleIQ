@@ -598,3 +598,28 @@ archon:manage_task(
 - Active config: `doppler configs` (usually dev/dev_personal)
 - DO NOT modify .env.local or other env files - they're only fallbacks
 - For Neo4j and all other passwords: Always check Doppler first
+
+# SERENA HOOK VERIFICATION SYSTEM
+
+**CRITICAL: This system ensures Serena MCP is ALWAYS active**
+
+## Automatic Verification Points:
+1. **Session Start**: Serena starts automatically when Claude Code opens
+2. **Before Every Prompt**: Verification runs before processing user input  
+3. **Before Tool Calls**: Especially Serena tools are verified
+4. **Continuous Monitoring**: Background process keeps Serena alive
+5. **Pre-Action Checks**: Every significant action triggers verification
+
+## Manual Commands (if needed):
+```bash
+# Check status
+bash .claude/serena-session-manager.sh status
+
+# Manual start
+bash .claude/serena-session-manager.sh start
+
+# View monitor logs
+tail -f /tmp/serena-hooks/monitor.log
+```
+
+## Hook System Active Since: $(date '+%Y-%m-%d %H:%M:%S')

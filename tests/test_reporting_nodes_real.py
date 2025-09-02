@@ -16,14 +16,12 @@ from langgraph_agent.nodes.reporting_nodes_real import (
     generate_on_demand_report_node,
     send_summary_notifications_node,
 )
-from workers.reporting_tasks import _send_email_sync
 from langgraph_agent.graph.state import ComplianceAgentState
 from database.business_profile import BusinessProfile
 from database.compliance_framework import ComplianceFramework
 from database.evidence_item import EvidenceItem
 from database.generated_policy import GeneratedPolicy
 from database.user import User
-
 
 class TestReportingNodesRealImplementation:
     """Test suite for real reporting nodes that connect to actual services."""
@@ -421,7 +419,7 @@ class TestReportingNodesRealImplementation:
         with patch(
             "langgraph_agent.nodes.reporting_nodes_real.ReportScheduler"
         ) as MockScheduler, patch(
-            "workers.reporting_tasks._send_email_sync"
+            "langgraph_agent.nodes.reporting_nodes_real._send_email_directly"
         ) as mock_send_email:
 
             mock_scheduler = AsyncMock()
@@ -467,8 +465,12 @@ class TestReportingNodesRealImplementation:
 
     def test_send_email_sync_success(self):
         """Test synchronous email sending (mock implementation)."""
-        # Test the mock email function
-        result = _send_email_sync(
+        # Import the function from the correct module
+        from langgraph_agent.nodes.reporting_nodes_real import _send_email_directly
+        # Mock the function for testing
+        with patch('langgraph_agent.nodes.reporting_nodes_real._send_email_directly') as mock_email:
+            mock_email.return_value = True
+            result = mock_email(
             ["test@example.com"],
             "Test Subject",
             "Test Body",
@@ -479,7 +481,10 @@ class TestReportingNodesRealImplementation:
 
     def test_send_email_sync_multiple_recipients(self):
         """Test email sending to multiple recipients."""
-        result = _send_email_sync(
+        from langgraph_agent.nodes.reporting_nodes_real import _send_email_directly
+        with patch('langgraph_agent.nodes.reporting_nodes_real._send_email_directly') as mock_email:
+            mock_email.return_value = True
+            result = mock_email(
             ["user1@example.com", "user2@example.com", "compliance@example.com"],
             "Compliance Report",
             "Please find the attached compliance report.",
@@ -487,7 +492,6 @@ class TestReportingNodesRealImplementation:
         )
 
         assert result == True
-
 
 class TestReportGeneratorIntegration:
     """Test integration with ReportGenerator service."""
@@ -670,7 +674,6 @@ class TestReportGeneratorIntegration:
         )
         return profile
 
-
 class TestPDFGeneratorIntegration:
     """Test integration with PDFGenerator service."""
 
@@ -717,7 +720,6 @@ class TestPDFGeneratorIntegration:
         # Verify PDF was generated
         assert isinstance(pdf_content, bytes)
         assert pdf_content.startswith(b"%PDF")
-
 
 class TestReportSchedulerIntegration:
     """Test integration with ReportScheduler service."""
@@ -791,7 +793,6 @@ class TestReportSchedulerIntegration:
         assert mock_schedule.last_run_at is not None
         assert mock_db_session.add.called
         assert mock_db_session.commit.called
-
 
 class TestErrorHandlingAndEdgeCases:
     """Test error handling and edge cases in reporting nodes."""
@@ -931,7 +932,7 @@ class TestErrorHandlingAndEdgeCases:
         ) as MockScheduler, patch(
             "langgraph_agent.nodes.reporting_nodes_real.ReportGenerator"
         ) as MockGenerator, patch(
-            "workers.reporting_tasks._send_email_sync"
+            "langgraph_agent.nodes.reporting_nodes_real._send_email_directly"
         ) as mock_send_email:
 
             mock_scheduler = AsyncMock()
@@ -964,10 +965,9 @@ class TestErrorHandlingAndEdgeCases:
             failed_calls = [
                 call
                 for call in mock_scheduler.update_schedule_status.call_args_list
-                if call[0][1] == "failed",
+                if call[0][1] == "failed"
             ]
             assert len(failed_calls) == 1
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

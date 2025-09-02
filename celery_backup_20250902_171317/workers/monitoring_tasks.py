@@ -16,8 +16,6 @@ from services.monitoring.database_monitor import database_monitor
 logger = get_logger(__name__)
 
 # Import celery app
-from celery_app import celery_app  # noqa: E402
-
 
 @celery_app.task(name="collect_database_metrics")
 def collect_database_metrics() -> Dict[str, Any]:
@@ -53,7 +51,6 @@ def collect_database_metrics() -> Dict[str, Any]:
             "status": "error",
             "error": str(e),
         }
-
 
 @celery_app.task(name="database_health_check")
 def database_health_check() -> Dict[str, Any]:
@@ -135,7 +132,6 @@ def database_health_check() -> Dict[str, Any]:
             "error": str(e),
         }
 
-
 @celery_app.task(name="cleanup_monitoring_data")
 def cleanup_monitoring_data() -> Dict[str, Any]:
     """
@@ -185,7 +181,6 @@ def cleanup_monitoring_data() -> Dict[str, Any]:
             "status": "error",
             "error": str(e),
         }
-
 
 @celery_app.task(name="system_metrics_collection")
 def system_metrics_collection() -> Dict[str, Any]:
@@ -245,7 +240,6 @@ def system_metrics_collection() -> Dict[str, Any]:
             "error": str(e),
         }
 
-
 # Celery beat schedule for monitoring tasks
 monitoring_schedule = {
     # Collect database metrics every 30 seconds
@@ -270,11 +264,9 @@ monitoring_schedule = {
     },
 }
 
-
 def register_monitoring_tasks() -> None:
     """Register monitoring tasks with Celery beat scheduler."""
     try:
-        from celery_app import celery_app
 
         # Update the beat schedule
         if hasattr(celery_app.conf, "beat_schedule"):
@@ -286,7 +278,6 @@ def register_monitoring_tasks() -> None:
 
     except (ValueError, TypeError) as e:
         logger.error(f"Failed to register monitoring tasks: {e}")
-
 
 # Auto-register tasks when module is imported
 register_monitoring_tasks()

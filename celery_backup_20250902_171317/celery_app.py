@@ -7,7 +7,6 @@ evidence collection, processing, and compliance monitoring.
 
 import os
 
-from celery import Celery
 from celery.schedules import crontab
 from dotenv import load_dotenv
 
@@ -168,7 +167,6 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 def safe_autodiscover() -> None:
     """Safely discover tasks with error handling to prevent startup failures."""
     try:
@@ -203,7 +201,6 @@ def safe_autodiscover() -> None:
         traceback.print_exc()
         # Don't fail completely, continue with manually imported tasks
         logger.warning("Continuing with manually imported task modules")
-
 
 # Run safe autodiscovery
 safe_autodiscover()

@@ -421,7 +421,7 @@ class TestSecurityValidation:
         # Should handle without hanging due to pre-compiled patterns
         assert isinstance(results, list)
         assert any(
-            "ID exceeds maximum allowed length" in str(r.errors) for r in results,
+            ("ID exceeds maximum allowed length" in str(r.errors) for r in results)
         )
 
     def test_sanitized_error_messages(self):

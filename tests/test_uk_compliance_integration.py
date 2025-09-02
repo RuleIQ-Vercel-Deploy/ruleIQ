@@ -149,7 +149,7 @@ class TestUKComplianceManifest(unittest.TestCase):
                 m
                 for m in self.manifest.cross_mappings
                 if "UK_GDPR" in m["regulations"]
-                and "DATA_PROTECTION_ACT" in m["regulations"],
+                and "DATA_PROTECTION_ACT" in m["regulations"]
             ),
             None,
         )

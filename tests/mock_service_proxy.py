@@ -44,13 +44,19 @@ class ServiceProxy:
         original_psycopg2_connect = psycopg2.connect
 
         def psycopg2_connect_wrapper(*args, **kwargs):
-            kwargs.update({'host': self.test_config['postgres']['host'],
-                'port': self.test_config['postgres']['port'], 'database':
-                self.test_config['postgres']['database'], 'user': self.
-                test_config['postgres']['user'], 'password': self.
-                test_config['postgres']['password']})
+            # Remove conflicting parameters
             if 'dsn' in kwargs:
                 del kwargs['dsn']
+            if 'database' in kwargs:
+                del kwargs['database']
+            # Set test database parameters using dbname (psycopg2 standard)
+            kwargs.update({
+                'host': self.test_config['postgres']['host'],
+                'port': self.test_config['postgres']['port'], 
+                'dbname': self.test_config['postgres']['database'], 
+                'user': self.test_config['postgres']['user'], 
+                'password': self.test_config['postgres']['password']
+            })
             return original_psycopg2_connect(*args, **kwargs)
         original_psycopg_connect = psycopg.connect
 

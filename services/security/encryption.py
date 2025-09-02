@@ -83,7 +83,8 @@ class EncryptionService:
     def _initialize_key_versions(self):
         """Load or initialize key versions for rotation"""
         try:
-            key_versions_path = os.path.join(settings.data_dir,
+            data_dir = getattr(settings, 'data_dir', './data')
+            key_versions_path = os.path.join(data_dir,
                 '.key_versions.json')
             if os.path.exists(key_versions_path):
                 with open(key_versions_path, 'r') as f:
@@ -101,7 +102,8 @@ class EncryptionService:
     def _save_key_versions(self):
         """Save key versions to disk"""
         try:
-            key_versions_path = os.path.join(settings.data_dir,
+            data_dir = getattr(settings, 'data_dir', './data')
+            key_versions_path = os.path.join(data_dir,
                 '.key_versions.json')
             versions_data = {str(k): base64.b64encode(v).decode() for k, v in
                 self._key_versions.items()}

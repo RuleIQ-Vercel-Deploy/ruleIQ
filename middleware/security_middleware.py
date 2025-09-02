@@ -1,9 +1,9 @@
 """
-from __future__ import annotations
-import requests
-
 Integrated Security Middleware combining all security services
 """
+from __future__ import annotations
+
+import requests
 from typing import Optional, Dict, Any, List
 from fastapi import Request, Response, HTTPException
 from fastapi.responses import JSONResponse

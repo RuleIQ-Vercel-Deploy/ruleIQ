@@ -128,12 +128,12 @@ class TestLangSmithIntegrationE2E:
 
             # Verify phase tracking
             evidence_traces = [
-                t for t in traced_operations if "mock.process_evidence" in t["tags"],
+                t for t in traced_operations if "mock.process_evidence" in t["tags"]
             ]
             assert "phase:evidence_collection" in evidence_traces[0]["tags"]
 
             compliance_traces = [
-                t for t in traced_operations if "mock.check_compliance" in t["tags"],
+                t for t in traced_operations if "mock.check_compliance" in t["tags"]
             ]
             assert "phase:compliance_check" in compliance_traces[0]["tags"]
 
@@ -191,7 +191,7 @@ class TestLangSmithIntegrationE2E:
 
             # Execute nodes concurrently
             tasks = [
-                evidence_nodes[i].process_evidence(state=states[i]) for i in range(3),
+                evidence_nodes[i].process_evidence(state=states[i]) for i in range(3)
             ]
 
             results = await asyncio.gather(*tasks)
@@ -203,7 +203,7 @@ class TestLangSmithIntegrationE2E:
             assert len(traced_operations) == 3
             for i, trace in enumerate(traced_operations):
                 assert any(
-                    f"session-{j}" in tag for j in range(3) for tag in trace["tags"],
+                    (f"session-{j}" in tag for j in range(3) for tag in trace["tags"])
                 )
 
     async def test_error_handling_with_tracing(self, monkeypatch):

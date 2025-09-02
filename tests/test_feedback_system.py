@@ -712,7 +712,7 @@ class TestFeedbackLoopMetrics:
         # Calculate average response time
         response_deltas = [
             (response_times[i] - feedback_times[i]).total_seconds() / 60
-            for i in range(len(feedback_times)),
+            for i in range(len(feedback_times))
         ]
 
         avg_response_time = sum(response_deltas) / len(response_deltas)
@@ -779,7 +779,7 @@ class TestFeedbackLoopMetrics:
         y_mean = sum(weekly_ratings) / n
 
         numerator = sum(
-            (x[i] - x_mean) * (weekly_ratings[i] - y_mean) for i in range(n),
+            (x[i] - x_mean) * (weekly_ratings[i] - y_mean) for i in range(n)
         )
         denominator = sum((x[i] - x_mean) ** 2 for i in range(n))
 

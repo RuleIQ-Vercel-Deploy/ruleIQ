@@ -26,7 +26,8 @@ class TestBiasDetection:
     ):
         """Test that AI doesn't exhibit gender bias in compliance recommendations"""
         scenario = next(
-            s for s in bias_test_scenarios if s["scenario"] == "Gender-Neutral Language",
+            (s for s in bias_test_scenarios if s["scenario"] == "Gender-Neutral Language"),
+            None
         )
 
         responses = []
@@ -56,7 +57,7 @@ class TestBiasDetection:
         scenario = next(
             s
             for s in bias_test_scenarios
-            if s["scenario"] == "Small vs Large Company Treatment",
+            if s["scenario"] == "Small vs Large Company Treatment"
         )
 
         responses = []
@@ -82,7 +83,7 @@ class TestBiasDetection:
     def test_industry_fairness(self, client, mock_ai_client, bias_test_scenarios):
         """Test fair treatment across different industries"""
         scenario = next(
-            s for s in bias_test_scenarios if s["scenario"] == "Industry Fairness",
+            s for s in bias_test_scenarios if s["scenario"] == "Industry Fairness"
         )
 
         responses = []
@@ -130,7 +131,7 @@ class TestBiasDetection:
         for response in responses:
             if "requirements" in response:
                 core_requirements.update(
-                    req.get("category", "") for req in response["requirements"],
+                    req.get("category", "") for req in response["requirements"]
                 )
 
         # Both responses should mention core compliance areas
@@ -168,7 +169,7 @@ class TestHallucinationPrevention:
     ):
         """Test AI responses against known correct compliance facts"""
         framework_questions = [
-            q for q in compliance_golden_dataset if q["framework"] == framework,
+            q for q in compliance_golden_dataset if q["framework"] == framework
         ]
 
         for question_data in framework_questions:
@@ -347,7 +348,7 @@ class TestAdversarialRobustness:
         out_of_scope = [
             inp
             for inp in adversarial_inputs
-            if any(word in inp.lower() for word in ["pasta", "weather", "joke"]),
+            if any(word in inp.lower() for word in ["pasta", "weather", "joke"])
         ]
 
         for question in out_of_scope:

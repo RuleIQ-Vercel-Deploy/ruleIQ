@@ -63,7 +63,7 @@ class TestNodeExecutionOrder:
         # Verify timestamps are sequential
         timestamps = [entry["timestamp"] for entry in result.execution_history]
         assert all(
-            timestamps[i] <= timestamps[i + 1] for i in range(len(timestamps) - 1),
+            (timestamps[i] <= timestamps[i + 1] for i in range(len(timestamps) - 1))
         )
 
     def test_parallel_execution_order(self, graph_test_harness):

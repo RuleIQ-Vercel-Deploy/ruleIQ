@@ -6,8 +6,10 @@ Tracks regulation changes, deadlines, and temporal patterns in compliance requir
 
 import asyncio
 import logging
+import os
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta
 from enum import Enum
 import re
 
@@ -804,8 +806,12 @@ async def main():
 
     # Neo4j connection details
     neo4j_uri = "bolt://localhost:7688"
-    neo4j_user = "neo4j"
-    neo4j_password = "ruleiq123"
+    # Security: Credentials now loaded from environment via Doppler
+    neo4j_user = os.getenv("NEO4J_USER", "neo4j")
+    neo4j_password = os.getenv("NEO4J_PASSWORD")
+    
+    if not neo4j_password:
+        raise ValueError("NEO4J_PASSWORD environment variable not set. Configure via Doppler.")
 
     async with TemporalTracker(neo4j_uri, neo4j_user, neo4j_password) as tracker:
 

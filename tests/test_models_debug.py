@@ -5,12 +5,8 @@ import os
 import sys
 
 # Force the test database URL before any imports
-os.environ["DATABASE_URL"] = (
-    "postgresql://postgres:postgres@localhost:5433/compliance_test",
-)
-os.environ["TEST_DATABASE_URL"] = (
-    "postgresql://postgres:postgres@localhost:5433/compliance_test",
-)
+os.environ["DATABASE_URL"] = "postgresql://postgres:postgres@localhost:5433/compliance_test"
+os.environ["TEST_DATABASE_URL"] = "postgresql://postgres:postgres@localhost:5433/compliance_test"
 
 # Remove any Doppler variables
 for key in list(os.environ.keys()):

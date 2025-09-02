@@ -1,3 +1,4 @@
+import os
 """
 from __future__ import annotations
 
@@ -277,7 +278,9 @@ async def test_single_regulation() ->None:
     """Test scraping a single regulation."""
     neo4j_uri = 'bolt://localhost:7688'
     neo4j_user = 'neo4j'
-    neo4j_password = 'ruleiq123'
+    neo4j_password = os.getenv("NEO4J_PASSWORD")
+    if not neo4j_password:
+        raise ValueError("NEO4J_PASSWORD environment variable not set. Configure via Doppler.")
     scraper = RegulationScraper(neo4j_uri, neo4j_user, neo4j_password)
     try:
         await scraper.initialize()

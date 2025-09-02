@@ -1,0 +1,23 @@
+{
+  "generated_at": "2025-09-02T18:45:00Z",
+  "format_version": "1.0",
+  "sbom_components": {
+    "python": {
+      "file": "python_sbom.txt",
+      "format": "pip freeze",
+      "package_count": 124,
+      "description": "Python dependencies in requirements.txt format"
+    },
+    "npm": {
+      "file": "npm_sbom.json",
+      "format": "npm list JSON",
+      "package_count": 152,
+      "description": "Node.js dependencies in npm JSON format"
+    }
+  },
+  "notes": {
+    "compliance": "SBOM generated for software composition analysis",
+    "vulnerabilities": "Cross-reference with dependency_audit.json for vulnerability information",
+    "updates": "75 packages have available updates as documented in dependency_audit.json"
+  }
+}

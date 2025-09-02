@@ -1,4 +1,17 @@
 """
+Comprehensive tests for AI Assessment Freemium Strategy API endpoints.
+
+Tests all freemium-related endpoints:
+- POST /api/v1/freemium/capture-email
+- POST /api/v1/freemium/start-assessment
+- POST /api/v1/freemium/answer-question
+- GET /api/v1/freemium/results/{token}
+- POST /api/v1/freemium/track-conversion
+
+Coverage: 95%+ for freemium endpoints
+Performance: All endpoints under 200ms
+Security: Rate limiting and input validation
+"""
 from __future__ import annotations
 
 # Constants
@@ -13,21 +26,6 @@ DEFAULT_TIMEOUT = 30
 DEFAULT_LIMIT = 100
 DEFAULT_RETRIES = 5
 MAX_RETRIES = 3
-
-
-Comprehensive tests for AI Assessment Freemium Strategy API endpoints.
-
-Tests all freemium-related endpoints:
-- POST /api/v1/freemium/capture-email
-- POST /api/v1/freemium/start-assessment
-- POST /api/v1/freemium/answer-question
-- GET /api/v1/freemium/results/{token}
-- POST /api/v1/freemium/track-conversion
-
-Coverage: 95%+ for freemium endpoints
-Performance: All endpoints under 200ms
-Security: Rate limiting and input validation
-"""
 import pytest
 import asyncio
 from datetime import datetime, timedelta, timezone

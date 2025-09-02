@@ -577,7 +577,7 @@ class FeedbackAnalyzer:
             if len(timestamps) > 1:
                 gaps = [
                     (timestamps[i + 1] - timestamps[i]).total_seconds() / 3600
-                    for i in range(len(timestamps) - 1),
+                    for i in range(len(timestamps) - 1)
                 ]
                 avg_gap = statistics.mean(gaps)
                 if avg_gap < 1:  # Less than 1 hour average gap

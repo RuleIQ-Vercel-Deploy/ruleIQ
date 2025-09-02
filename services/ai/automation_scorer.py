@@ -6,6 +6,7 @@ Analyzes regulations for automation potential and generates strategic recommenda
 
 import asyncio
 import logging
+import os
 from typing import Dict, List, Any
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field
@@ -561,7 +562,7 @@ class AutomationScorer:
                 for opp in opportunities
                 if opp.complexity
                 in [AutomationComplexity.TRIVIAL, AutomationComplexity.SIMPLE]
-                and opp.automation_score > 0.6,
+                and opp.automation_score > 0.6
             ]
 
             strategic = [
@@ -569,7 +570,7 @@ class AutomationScorer:
                 for opp in opportunities
                 if opp.complexity
                 in [AutomationComplexity.COMPLEX, AutomationComplexity.STRATEGIC]
-                or opp.automation_score > 0.8,
+                or opp.automation_score > 0.8
             ]
 
             # Sort by ROI
@@ -869,8 +870,12 @@ async def main():
 
     # Neo4j connection details
     neo4j_uri = "bolt://localhost:7688"
-    neo4j_user = "neo4j"
-    neo4j_password = "ruleiq123"
+    # Security: Credentials now loaded from environment via Doppler
+    neo4j_user = os.getenv("NEO4J_USER", "neo4j")
+    neo4j_password = os.getenv("NEO4J_PASSWORD")
+    
+    if not neo4j_password:
+        raise ValueError("NEO4J_PASSWORD environment variable not set. Configure via Doppler.")
 
     async with AutomationScorer(neo4j_uri, neo4j_user, neo4j_password) as scorer:
 

@@ -86,7 +86,20 @@ async def google_callback(request: Request, code: Optional[str]=None, state: Opt
     is_new_user = False
     if not db_user:
         is_new_user = True
-        db_user = User(id=uuid4(), email=user_info.email, hashed_password='', is_active=True, full_name=user_info.name, google_id=user_info.id)
+        # Security: Generate secure random password hash for OAuth users
+        # This prevents authentication bypass vulnerabilities
+        import hashlib
+        random_password = secrets.token_urlsafe(32)
+        secure_hash = hashlib.sha256(f"{random_password}{user_info.email}".encode()).hexdigest()
+        
+        db_user = User(
+            id=uuid4(), 
+            email=user_info.email, 
+            hashed_password=secure_hash,  # Secure hash instead of empty string
+            is_active=True, 
+            full_name=user_info.name, 
+            google_id=user_info.id
+        )
         db.add(db_user)
         db.commit()
         db.refresh(db_user)
@@ -126,7 +139,20 @@ async def google_mobile_login(google_token: str, db: Session=Depends(get_db), _:
     is_new_user = False
     if not db_user:
         is_new_user = True
-        db_user = User(id=uuid4(), email=user_info.email, hashed_password='', is_active=True, full_name=user_info.name, google_id=user_info.id)
+        # Security: Generate secure random password hash for OAuth users
+        # This prevents authentication bypass vulnerabilities
+        import hashlib
+        random_password = secrets.token_urlsafe(32)
+        secure_hash = hashlib.sha256(f"{random_password}{user_info.email}".encode()).hexdigest()
+        
+        db_user = User(
+            id=uuid4(), 
+            email=user_info.email, 
+            hashed_password=secure_hash,  # Secure hash instead of empty string
+            is_active=True, 
+            full_name=user_info.name, 
+            google_id=user_info.id
+        )
         db.add(db_user)
         db.commit()
         db.refresh(db_user)

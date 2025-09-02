@@ -148,7 +148,7 @@ class TestEvidenceStateManagement:
         # Verify both items are preserved
         assert all(
             item.get("evidence_type") == "document"
-            for item in sample_state.evidence_items,
+            for item in sample_state.evidence_items
         )
 
     async def test_state_transition_tracking(self, sample_state):
@@ -293,7 +293,7 @@ class TestRetryAndFallbackMechanisms:
 
         # Verify delays increase with some variance
         assert all(
-            retry_delays[i] < retry_delays[i + 1] for i in range(len(retry_delays) - 1),
+            retry_delays[i] < retry_delays[i + 1] for i in range(len(retry_delays) - 1)
         )
 
     async def test_fallback_to_cache(self, sample_evidence_data):
@@ -683,7 +683,7 @@ class TestIntegrationWithLangGraph:
                 return "collect_more"
 
             valid_count = sum(
-                1 for e in state.evidence_items if e.get("validation_status") == "valid",
+                1 for e in state.evidence_items if e.get("validation_status") == "valid"
             )
 
             if valid_count >= 3:

@@ -236,7 +236,7 @@ class TestPolicyStreamingService:
 
                 # Should fall back to OpenAI
                 content = "".join(
-                    c.content for c in chunks if c.chunk_type == "content",
+                    c.content for c in chunks if c.chunk_type == "content"
                 )
                 assert "Fallback content from OpenAI" in content
 

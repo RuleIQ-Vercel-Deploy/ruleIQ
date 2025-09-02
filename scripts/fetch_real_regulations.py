@@ -1,3 +1,4 @@
+import os
 """
 from __future__ import annotations
 
@@ -24,7 +25,9 @@ class RegulationDataFetcher:
     def __init__(self):
         self.neo4j_uri = 'bolt://localhost:7688'
         self.neo4j_user = 'neo4j'
-        self.neo4j_password = 'ruleiq123'
+        self.neo4j_password = os.getenv("NEO4J_PASSWORD")
+    if not neo4j_password:
+        raise ValueError("NEO4J_PASSWORD environment variable not set. Configure via Doppler.")
         self.driver = AsyncGraphDatabase.driver(self.neo4j_uri, auth=(self.
             neo4j_user, self.neo4j_password))
 

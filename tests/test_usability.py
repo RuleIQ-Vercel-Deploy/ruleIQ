@@ -633,7 +633,7 @@ class TestUserWorkflowEfficiency:
 
             if "actions" in quick_actions:
                 available_actions = [
-                    action["id"] for action in quick_actions["actions"],
+                    action["id"] for action in quick_actions["actions"]
                 ]
                 matching_actions = sum(
                     1 for action in expected_actions if action in available_actions

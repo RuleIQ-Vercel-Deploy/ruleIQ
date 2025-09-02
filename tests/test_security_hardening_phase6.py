@@ -152,7 +152,7 @@ class TestEnhancedAuthentication:
                 # Clean old attempts (older than lockout duration)
                 cutoff = datetime.now(timezone.utc) - self.lockout_duration
                 self.attempts[user_id] = [
-                    attempt for attempt in self.attempts[user_id] if attempt > cutoff,
+                    attempt for attempt in self.attempts[user_id] if attempt > cutoff
                 ]
 
                 # Check if should lock
@@ -216,7 +216,7 @@ class TestEnhancedAuthentication:
 
                 # Check concurrent session limit
                 user_sessions = [
-                    s for s in self.sessions.values() if s["user_id"] == user_id,
+                    s for s in self.sessions.values() if s["user_id"] == user_id
                 ]
                 if len(user_sessions) >= self.max_concurrent:
                     # Remove oldest session

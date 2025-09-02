@@ -1,0 +1,116 @@
+version: '3.8'
+
+# Test environment Docker Compose
+# This configuration is optimized for running tests with coverage reporting
+
+services:
+  # Test Database
+  test-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: ruleiq_test
+    ports:
+      - "5433:5432"  # Different port to avoid conflicts
+    volumes:
+      - test-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test_user -d ruleiq_test"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - test-network
+
+  # Redis for test caching
+  test-redis:
+    image: redis:7-alpine
+    ports:
+      - "6380:6379"  # Different port to avoid conflicts
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - test-network
+
+  # Test runner with coverage
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: |
+      bash -c "
+        echo 'Waiting for services...'
+        sleep 5
+        echo 'Running tests with coverage...'
+        pytest --cov=. \
+               --cov-report=xml \
+               --cov-report=html \
+               --cov-report=term \
+               --junit-xml=test-results.xml \
+               -v
+      "
+    environment:
+      # Database configuration
+      DATABASE_URL: postgresql://test_user:test_password@test-db:5432/ruleiq_test
+      TEST_DATABASE_URL: postgresql://test_user:test_password@test-db:5432/ruleiq_test
+      
+      # Redis configuration
+      REDIS_URL: redis://test-redis:6379/0
+      
+      # Test environment flags
+      TESTING: "true"
+      PYTHONDONTWRITEBYTECODE: 1
+      PYTHONUNBUFFERED: 1
+      
+      # Coverage settings
+      COVERAGE_CORE: sysmon
+      
+      # Disable external services in tests
+      DISABLE_EXTERNAL_APIS: "true"
+      
+      # Use Doppler for other secrets
+      DOPPLER_CONFIG: dev
+    volumes:
+      - .:/app
+      - ./coverage:/app/coverage
+      - ./test-results:/app/test-results
+    depends_on:
+      test-db:
+        condition: service_healthy
+      test-redis:
+        condition: service_healthy
+    networks:
+      - test-network
+
+  # SonarCloud scanner
+  sonar-scanner:
+    image: sonarsource/sonar-scanner-cli:latest
+    environment:
+      SONAR_HOST_URL: https://sonarcloud.io
+      SONAR_TOKEN: ${SONAR_TOKEN}  # Set in Doppler or CI/CD
+    volumes:
+      - .:/usr/src
+    command: |
+      -Dsonar.projectKey=ruleiq
+      -Dsonar.organization=your-org
+      -Dsonar.sources=.
+      -Dsonar.exclusions=**/*_test.py,**/tests/**,**/test_*.py
+      -Dsonar.tests=tests
+      -Dsonar.python.coverage.reportPaths=coverage.xml
+      -Dsonar.python.xunit.reportPath=test-results.xml
+    depends_on:
+      test-runner:
+        condition: service_completed_successfully
+    networks:
+      - test-network
+
+volumes:
+  test-db-data:
+
+networks:
+  test-network:
+    driver: bridge

@@ -136,14 +136,15 @@ csp_handler = CSPViolationHandler()
 
 
 @router.post('/csp-report', status_code=204, include_in_schema=False)
-async def handle_csp_violation(request: Request) ->Any:
+async def handle_csp_violation(request: Request) ->None:
     """
     Handle Content Security Policy violation reports
 
     This endpoint receives CSP violation reports from browsers when content
     violates the configured Content Security Policy.
     """
-    return await csp_handler.handle_violation(request)
+    await csp_handler.handle_violation(request)
+    # Return None for 204 No Content response
 
 
 @router.get('/csp-violations', response_model=Dict[str, Any])

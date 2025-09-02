@@ -9,7 +9,6 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 from uuid import UUID
 from celery.utils.log import get_task_logger
-from celery_app import celery_app
 from core.exceptions import ApplicationException, BusinessLogicException, DatabaseException, IntegrationException, NotFoundException
 from database.db_setup import get_async_db
 from services.reporting.pdf_generator import PDFGenerator
