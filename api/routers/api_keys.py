@@ -12,9 +12,9 @@ import redis.asyncio as redis
 from database.db_setup import get_db
 from services.api_key_management import (
     APIKeyManager, APIKeyMetadata, APIKeyType, 
-    APIKeyStatus, get_api_key_auth
+    APIKeyStatus
 )
-from api.dependencies.auth import get_current_active_user
+from api.dependencies.auth import get_current_active_user, get_api_key_auth
 from database.user import User
 from database.redis_client import get_redis_client
 
@@ -449,9 +449,10 @@ async def get_api_key_usage(
 
 
 # API Key Authentication Endpoint (for testing)
-@router.get("/validate/test", dependencies=[Depends(get_api_key_auth)])
+@router.get("/validate/test")
 async def test_api_key_auth(
     request: Request,
+    api_key_metadata: dict = Depends(get_api_key_auth),
     x_api_key: str = Header(..., alias="X-API-Key")
 ):
     """
@@ -462,5 +463,6 @@ async def test_api_key_auth(
     return {
         "message": "API key is valid",
         "api_key_prefix": x_api_key[:10] if x_api_key else None,
+        "metadata": api_key_metadata,
         "timestamp": datetime.utcnow().isoformat()
     }

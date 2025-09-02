@@ -14,7 +14,7 @@ import redis.asyncio as redis
 
 from database.db_setup import get_db
 from services.webhook_verification import WebhookVerificationService, verify_webhook_signature
-from services.redis_client import get_redis_client
+from database.redis_client import get_redis_client
 from config.logging_config import get_logger
 
 logger = get_logger(__name__)

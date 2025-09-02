@@ -38,7 +38,7 @@ import { PendingTasksWidget } from './pending-tasks-widget';
 
 // Import CSS for react-grid-layout
 import 'react-grid-layout/css/styles.css';
-import 'react-resizable/css/styles.css';
+// import 'react-resizable/css/styles.css'; // TODO: Install react-resizable
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 

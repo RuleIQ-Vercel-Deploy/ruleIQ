@@ -30,7 +30,7 @@ export default function ChatPage() {
     clearError,
   } = useChatStore();
 
-  const activeConversation = conversations.find((c) => c.id === activeConversationId);
+  const activeConversation = conversations?.find((c) => c.id === activeConversationId);
   const activeMessages = activeConversationId ? messages[activeConversationId] || [] : [];
 
   useEffect(() => {
@@ -83,7 +83,7 @@ export default function ChatPage() {
           </Button>
         </div>
         <ConversationSidebar
-          conversations={conversations}
+          conversations={conversations || []}
           activeConversationId={activeConversationId}
           onSelectConversation={setActiveConversation}
           onDeleteConversation={useChatStore.getState().deleteConversation}

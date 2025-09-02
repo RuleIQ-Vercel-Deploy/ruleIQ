@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat Test</title>
+</head>
+<body>
+    <h1>Chat API Test</h1>
+    <div id="status"></div>
+    <button onclick="testChat()">Test Chat API</button>
+    <pre id="output"></pre>
+
+    <script>
+        const statusEl = document.getElementById('status');
+        const outputEl = document.getElementById('output');
+
+        async function getToken() {
+            const response = await fetch('http://localhost:8000/api/v1/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: 'iqtest@ruleiq.com',
+                    password: 'TestPassword123!'
+                })
+            });
+            const data = await response.json();
+            return data.access_token;
+        }
+
+        async function testChat() {
+            try {
+                statusEl.textContent = 'Getting token...';
+                const token = await getToken();
+                
+                statusEl.textContent = 'Creating conversation...';
+                const createResponse = await fetch('http://localhost:8000/api/v1/chat/conversations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        title: 'Test from HTML'
+                    })
+                });
+                
+                const conversation = await createResponse.json();
+                
+                statusEl.textContent = 'Sending message...';
+                const messageResponse = await fetch(`http://localhost:8000/api/v1/chat/conversations/${conversation.conversation.id}/messages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        content: 'Hello, can you help me with GDPR compliance?'
+                    })
+                });
+                
+                const message = await messageResponse.json();
+                
+                statusEl.textContent = 'Success!';
+                outputEl.textContent = JSON.stringify({
+                    conversation: conversation,
+                    message: message
+                }, null, 2);
+                
+            } catch (error) {
+                statusEl.textContent = 'Error: ' + error.message;
+                outputEl.textContent = error.stack;
+            }
+        }
+    </script>
+</body>
+</html>

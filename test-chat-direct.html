@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Direct Chat Test</title>
+</head>
+<body>
+    <h1>Direct Chat Page Test</h1>
+    <button onclick="testChatPage()">Test Chat Page</button>
+    <button onclick="createConversation()">Create Conversation Directly</button>
+    <pre id="output"></pre>
+    <iframe 
+        id="chatFrame" 
+        src="http://localhost:3000/chat" 
+        style="width: 100%; height: 600px; border: 1px solid #ccc; margin-top: 20px;">
+    </iframe>
+
+    <script>
+        const outputEl = document.getElementById('output');
+
+        async function testChatPage() {
+            try {
+                const response = await fetch('http://localhost:3000/chat');
+                const text = await response.text();
+                
+                // Check if specific elements exist
+                const hasInput = text.includes('textarea') || text.includes('ChatInput');
+                const hasButton = text.includes('New Conversation') || text.includes('Start New');
+                
+                outputEl.textContent = `
+Chat page loaded: ${response.ok}
+Has input field: ${hasInput}
+Has conversation button: ${hasButton}
+Response length: ${text.length} characters
+                `;
+            } catch (error) {
+                outputEl.textContent = 'Error: ' + error.message;
+            }
+        }
+
+        async function createConversation() {
+            try {
+                // First login
+                const loginResponse = await fetch('http://localhost:8000/api/v1/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'iqtest@ruleiq.com',
+                        password: 'TestPassword123!'
+                    })
+                });
+                const loginData = await loginResponse.json();
+                const token = loginData.access_token;
+
+                // Create conversation
+                const convResponse = await fetch('http://localhost:8000/api/v1/chat/conversations', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        title: 'Test Conversation'
+                    })
+                });
+                
+                const conversation = await convResponse.json();
+                outputEl.textContent = 'Conversation created: ' + JSON.stringify(conversation, null, 2);
+                
+                // Store conversation ID for the frontend to use
+                localStorage.setItem('activeConversationId', conversation.conversation.id);
+                
+            } catch (error) {
+                outputEl.textContent = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

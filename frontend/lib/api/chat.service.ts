@@ -224,6 +224,32 @@ class ChatService {
   }
 
   /**
+   * Send a message using IQ Agent (GraphRAG)
+   */
+  async sendIQMessage(conversationId: string, data: SendMessageRequest): Promise<ChatMessage> {
+    const response = await apiClient.post<ChatMessage>(
+      `/chat/iq-chat/${conversationId}/messages`,
+      data,
+    );
+    return response;
+  }
+
+  /**
+   * Check IQ Agent status
+   */
+  async getIQAgentStatus(): Promise<{
+    iq_agent_available: boolean;
+    neo4j_connected: boolean;
+    graph_initialized: boolean;
+    nodes_count: number;
+    relationships_count: number;
+    message: string;
+  }> {
+    const response = await apiClient.get<any>('/chat/iq-agent/status');
+    return response;
+  }
+
+  /**
    * WebSocket connection for real-time chat
    */
   connectWebSocket(conversationId: string): void {

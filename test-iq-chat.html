@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IQ Agent Chat Test</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .panel {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .chat-container {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #fafafa;
+        }
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .message.user {
+            background: #007bff;
+            color: white;
+            margin-left: 20%;
+        }
+        .message.assistant {
+            background: #e9ecef;
+            color: #333;
+            margin-right: 20%;
+        }
+        .message.system {
+            background: #fff3cd;
+            color: #856404;
+            font-size: 14px;
+            font-style: italic;
+        }
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .metadata {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+            padding: 5px;
+            background: #f8f9fa;
+            border-radius: 3px;
+        }
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #007bff;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 10px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🤖 IQ Agent Chat Test</h1>
+    
+    <div class="container">
+        <div class="panel">
+            <h2>Authentication</h2>
+            <div id="authStatus" class="status warning">Not authenticated</div>
+            <div class="input-group">
+                <input type="text" id="email" placeholder="Email" value="test@example.com">
+                <input type="password" id="password" placeholder="Password" value="Test123!">
+                <button onclick="login()">Login</button>
+            </div>
+            
+            <h2 style="margin-top: 30px;">IQ Agent Status</h2>
+            <div id="iqStatus" class="status warning">Not checked</div>
+            <button onclick="checkIQAgent()">Check IQ Agent</button>
+            
+            <h2 style="margin-top: 30px;">System Info</h2>
+            <pre id="systemInfo">No system info yet</pre>
+        </div>
+        
+        <div class="panel">
+            <h2>Chat with IQ Agent</h2>
+            <div class="chat-container" id="chatContainer">
+                <div class="message system">Welcome! Login and check IQ Agent status to start chatting.</div>
+            </div>
+            <div class="input-group">
+                <input type="text" id="messageInput" placeholder="Type your message..." disabled>
+                <button id="sendButton" onclick="sendMessage()" disabled>Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api/v1';
+        let authToken = null;
+        let conversationId = null;
+        let useIQAgent = false;
+
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                const response = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    authToken = data.access_token;
+                    document.getElementById('authStatus').className = 'status success';
+                    document.getElementById('authStatus').textContent = `Authenticated as: ${email}`;
+                    
+                    // Create a new conversation
+                    await createConversation();
+                    
+                    // Check IQ Agent status
+                    await checkIQAgent();
+                    
+                    // Enable chat
+                    document.getElementById('messageInput').disabled = false;
+                    document.getElementById('sendButton').disabled = false;
+                    
+                    addSystemMessage('Authentication successful! You can now chat.');
+                } else {
+                    const error = await response.json();
+                    document.getElementById('authStatus').className = 'status error';
+                    document.getElementById('authStatus').textContent = `Login failed: ${error.detail || 'Unknown error'}`;
+                }
+            } catch (error) {
+                document.getElementById('authStatus').className = 'status error';
+                document.getElementById('authStatus').textContent = `Error: ${error.message}`;
+            }
+        }
+
+        async function createConversation() {
+            try {
+                const response = await fetch(`${API_BASE}/chat/conversations`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        title: 'IQ Agent Test Chat',
+                        type: 'compliance'
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    conversationId = data.id;
+                    addSystemMessage(`Conversation created: ${conversationId}`);
+                    updateSystemInfo({ conversationId });
+                }
+            } catch (error) {
+                addSystemMessage(`Error creating conversation: ${error.message}`);
+            }
+        }
+
+        async function checkIQAgent() {
+            if (!authToken) {
+                document.getElementById('iqStatus').className = 'status error';
+                document.getElementById('iqStatus').textContent = 'Please login first';
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/chat/iq-agent/status`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    useIQAgent = data.available;
+                    
+                    if (data.available) {
+                        document.getElementById('iqStatus').className = 'status success';
+                        document.getElementById('iqStatus').innerHTML = `
+                            IQ Agent: <strong>AVAILABLE</strong><br>
+                            Neo4j: ${data.neo4j_connected ? '✅' : '❌'}<br>
+                            GraphRAG: ${data.graphrag_enabled ? '✅' : '❌'}
+                        `;
+                        addSystemMessage('IQ Agent with GraphRAG is available! Your messages will be enhanced with compliance knowledge graph.');
+                    } else {
+                        document.getElementById('iqStatus').className = 'status warning';
+                        document.getElementById('iqStatus').textContent = 'IQ Agent not available - using standard assistant';
+                        addSystemMessage('IQ Agent is not available. Using standard compliance assistant.');
+                    }
+                    
+                    updateSystemInfo(data);
+                } else {
+                    document.getElementById('iqStatus').className = 'status error';
+                    document.getElementById('iqStatus').textContent = 'Failed to check IQ Agent status';
+                }
+            } catch (error) {
+                document.getElementById('iqStatus').className = 'status error';
+                document.getElementById('iqStatus').textContent = `Error: ${error.message}`;
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message || !conversationId) return;
+            
+            // Add user message to chat
+            addMessage(message, 'user');
+            input.value = '';
+            
+            // Show loading
+            const loaderId = addLoadingMessage();
+            
+            try {
+                // Choose endpoint based on IQ Agent availability
+                const endpoint = useIQAgent 
+                    ? `${API_BASE}/chat/iq-chat/${conversationId}/messages`
+                    : `${API_BASE}/chat/conversations/${conversationId}/messages`;
+                
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({
+                        content: message,
+                        message_type: 'user'
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    removeLoadingMessage(loaderId);
+                    
+                    // Add assistant response
+                    addMessage(data.content, 'assistant', data.metadata);
+                    
+                    // If using IQ Agent, show GraphRAG metadata
+                    if (useIQAgent && data.metadata) {
+                        if (data.metadata.graph_context) {
+                            console.log('GraphRAG Context:', data.metadata.graph_context);
+                        }
+                        if (data.metadata.neo4j_query) {
+                            console.log('Neo4j Query:', data.metadata.neo4j_query);
+                        }
+                    }
+                } else {
+                    removeLoadingMessage(loaderId);
+                    const error = await response.json();
+                    addSystemMessage(`Error: ${error.detail || 'Failed to send message'}`);
+                }
+            } catch (error) {
+                removeLoadingMessage(loaderId);
+                addSystemMessage(`Error: ${error.message}`);
+            }
+        }
+
+        function addMessage(content, type, metadata = null) {
+            const container = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = content;
+            
+            if (metadata) {
+                const metaDiv = document.createElement('div');
+                metaDiv.className = 'metadata';
+                
+                if (metadata.processing_time) {
+                    metaDiv.innerHTML += `⏱️ ${metadata.processing_time}s `;
+                }
+                if (metadata.model) {
+                    metaDiv.innerHTML += `🤖 ${metadata.model} `;
+                }
+                if (metadata.graph_nodes) {
+                    metaDiv.innerHTML += `🔗 ${metadata.graph_nodes} nodes `;
+                }
+                if (metadata.confidence_score) {
+                    metaDiv.innerHTML += `📊 ${(metadata.confidence_score * 100).toFixed(1)}% confidence`;
+                }
+                
+                if (metaDiv.innerHTML) {
+                    messageDiv.appendChild(metaDiv);
+                }
+            }
+            
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function addSystemMessage(content) {
+            const container = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message system';
+            messageDiv.textContent = `ℹ️ ${content}`;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function addLoadingMessage() {
+            const container = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            const id = 'loading-' + Date.now();
+            messageDiv.id = id;
+            messageDiv.className = 'message assistant';
+            messageDiv.innerHTML = 'Thinking<span class="loader"></span>';
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+            return id;
+        }
+
+        function removeLoadingMessage(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.remove();
+            }
+        }
+
+        function updateSystemInfo(data) {
+            const info = document.getElementById('systemInfo');
+            info.textContent = JSON.stringify(data, null, 2);
+        }
+
+        // Allow Enter key to send message
+        document.getElementById('messageInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

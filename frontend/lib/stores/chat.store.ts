@@ -78,13 +78,37 @@ export const useChatStore = create<ChatState>()(
       loadConversations: async () => {
         set({ isLoadingConversations: true, error: null });
         try {
+          // Check if user is authenticated before attempting to load
+          const authToken = useAuthStore.getState().getToken();
+          if (!authToken) {
+            // No authentication, just set empty conversations and finish loading
+            set({ 
+              conversations: [], 
+              isLoadingConversations: false,
+              error: null // Don't show error for no auth, just show empty state
+            });
+            return;
+          }
+          
           const response = await chatService.getConversations();
           set({ conversations: response.items, isLoadingConversations: false });
-        } catch (error: unknown) {
-          set({
-            error: error.message || 'Failed to load conversations',
-            isLoadingConversations: false,
-          });
+        } catch (error: any) {
+          // Handle authentication errors gracefully
+          if (error?.response?.status === 401 || error?.response?.status === 403) {
+            // Auth error - just show empty state, don't block the UI
+            set({
+              conversations: [],
+              isLoadingConversations: false,
+              error: null // Don't show auth errors, user can still create new conversation
+            });
+          } else {
+            // Other errors - show briefly but don't block
+            set({
+              error: error.message || 'Failed to load conversations',
+              isLoadingConversations: false,
+              conversations: [] // Still allow UI to render
+            });
+          }
         }
       },
 
@@ -194,9 +218,28 @@ export const useChatStore = create<ChatState>()(
               data: { content: message, metadata },
             });
           } else {
-            const response = await chatService.sendMessage(conversationId, {
-              content: message,
-            });
+            // Check if IQ Agent is available and use it
+            let response;
+            try {
+              // First check IQ Agent status
+              const iqStatus = await chatService.getIQAgentStatus();
+              if (iqStatus.iq_agent_available && iqStatus.neo4j_connected) {
+                // Use IQ Agent for enhanced GraphRAG responses
+                response = await chatService.sendIQMessage(conversationId, {
+                  content: message,
+                });
+              } else {
+                // Fallback to regular chat
+                response = await chatService.sendMessage(conversationId, {
+                  content: message,
+                });
+              }
+            } catch (error) {
+              // If IQ status check fails, fallback to regular chat
+              response = await chatService.sendMessage(conversationId, {
+                content: message,
+              });
+            }
 
             // Replace temp message with real one
             set((state) => ({
