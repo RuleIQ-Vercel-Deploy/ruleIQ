@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+
 Setup local test database for pytest.
 This creates the test database and user needed for local testing.
 """

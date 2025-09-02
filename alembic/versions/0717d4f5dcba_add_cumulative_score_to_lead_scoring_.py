@@ -1,5 +1,7 @@
 """Add cumulative_score to lead_scoring_events
 
+from __future__ import annotations
+
 Revision ID: 0717d4f5dcba
 Revises: b405cc54d9a0
 Create Date: 2025-08-06 06:41:46.805037

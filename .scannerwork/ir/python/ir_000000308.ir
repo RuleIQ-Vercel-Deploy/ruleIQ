@@ -1,7 +1,9 @@
 
-3*"Get the global quality monitor instance."str"7#
-!
-
-Ä Ä("#unknown-value#
-
-Ä Ä(*:/home/omar/Documents/ruleIQ/services/ai/quality_monitor.py
+,#"Check if conversion is completed."str
+"completed"strselfi i("o1
+/
+k k($"#get-field# conversion_stage:*
+(
+k k(3"
+#binop ==#2==:Bbool
+k k(3*8/home/omar/Documents/ruleIQ/database/conversion_event.py

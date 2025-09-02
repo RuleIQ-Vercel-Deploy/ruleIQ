@@ -1,7 +1,9 @@
 """Integration tests for evidence_nodes module."""
 
+from __future__ import annotations
+
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, AsyncGenerator, Dict
 from unittest.mock import AsyncMock, MagicMock, Mock, patch
 from uuid import uuid4
@@ -44,7 +46,7 @@ def evidence_data() -> Dict[str, Any]:
         "source": "manual",
         "type": "document",
         "content": "This is a comprehensive security policy covering all aspects of information security in our organization.",
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "metadata": {"version": "1.0", "approved": True},
     }
 
@@ -75,7 +77,7 @@ class TestEvidenceCollectionNodeIntegration:
         mock_detector = Mock()
 
         node = EvidenceCollectionNode(
-            processor=mock_processor, duplicate_detector=mock_detector
+            processor=mock_processor, duplicate_detector=mock_detector,
         )
 
         assert node.processor == mock_processor
@@ -174,7 +176,7 @@ class TestEvidenceCollectionNodeIntegration:
         mock_session = MagicMock(spec=AsyncSession)
         mock_result = MagicMock()
         mock_result.scalars = MagicMock(
-            return_value=MagicMock(all=MagicMock(return_value=[]))
+            return_value=MagicMock(all=MagicMock(return_value=[])),
         )
         mock_session.execute = AsyncMock(return_value=mock_result)
         mock_get_db.return_value = async_generator([mock_session])
@@ -195,7 +197,7 @@ class TestEvidenceCollectionNodeIntegration:
         # Create mock evidence items
         expired_evidence = MagicMock(spec=EvidenceItem)
         expired_evidence.id = "expired_id"
-        expired_evidence.collected_at = datetime.utcnow() - timedelta(days=100)
+        expired_evidence.collected_at = datetime.now(timezone.utc) - timedelta(days=100)
         expired_evidence.collection_frequency = "monthly"
         expired_evidence.to_dict = MagicMock(
             return_value={
@@ -203,13 +205,13 @@ class TestEvidenceCollectionNodeIntegration:
                 "evidence_name": "Expired Doc",
                 "status": "collected",
                 "collected_at": expired_evidence.collected_at.isoformat(),
-            }
+            },
         )
 
         mock_session = MagicMock(spec=AsyncSession)
         mock_result = MagicMock()
         mock_result.scalars = MagicMock(
-            return_value=MagicMock(all=MagicMock(return_value=[expired_evidence]))
+            return_value=MagicMock(all=MagicMock(return_value=[expired_evidence])),
         )
         mock_session.execute = AsyncMock(return_value=mock_result)
         mock_session.commit = AsyncMock()
@@ -252,7 +254,7 @@ class TestEvidenceCollectionNodeIntegration:
             "type": "document",
             "content": "A" * 150,
             "source": {"verified": True},
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "metadata": {"key": "value"},
         }
 
@@ -369,7 +371,7 @@ class TestEvidenceCollectionNodeIntegration:
         # Try to process evidence - should fail but handle gracefully
         try:
             await node.sync_evidence_status(minimal_state)
-        except:
+        except (ValueError, TypeError):
             pass
 
         # Circuit breaker state might change based on failure handling

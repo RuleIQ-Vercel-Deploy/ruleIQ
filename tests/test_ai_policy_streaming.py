@@ -117,12 +117,12 @@ class TestPolicyStreamingService:
                     Mock(text="Section 1: "),
                     Mock(text="Privacy Policy\n"),
                     Mock(text="This policy describes..."),
-                ]
-            )
+                ],
+            ),
         )
 
         policy_generator.google_model.generate_content_async = AsyncMock(
-            return_value=mock_response
+            return_value=mock_response,
         )
 
         chunks = []
@@ -149,12 +149,12 @@ class TestPolicyStreamingService:
             Mock(choices=[Mock(delta=Mock(content="Privacy "))]),
             Mock(choices=[Mock(delta=Mock(content="Policy "))]),
             Mock(choices=[Mock(delta=Mock(content="Content"))]),
-            Mock(choices=[Mock(delta=Mock(content=None))]),  # End of stream
+            Mock(choices=[Mock(delta=Mock(content=None))]),  # End of stream,
         ]
         mock_stream.__aiter__ = Mock(return_value=iter(mock_chunks))
 
         policy_generator.openai_client.chat.completions.create = AsyncMock(
-            return_value=mock_stream
+            return_value=mock_stream,
         )
 
         chunks = []
@@ -181,7 +181,7 @@ class TestPolicyStreamingService:
         # Mock Google to raise an error
         async def mock_google_error(*args, **kwargs):
             yield PolicyStreamingChunk(
-                chunk_id="1", content="Partial content", chunk_type="content"
+                chunk_id="1", content="Partial content", chunk_type="content",
             )
             raise Exception("Network error during streaming")
 
@@ -211,7 +211,7 @@ class TestPolicyStreamingService:
         # Mock circuit breaker as open for Google
         with patch("services.ai.policy_generator.google_breaker") as mock_breaker:
             mock_breaker.call = AsyncMock(
-                side_effect=Exception("Circuit breaker is open")
+                side_effect=Exception("Circuit breaker is open"),
             )
 
             # Mock OpenAI as backup
@@ -222,7 +222,7 @@ class TestPolicyStreamingService:
                     chunk_type="content",
                 )
                 yield PolicyStreamingChunk(
-                    chunk_id="2", content="", chunk_type="complete"
+                    chunk_id="2", content="", chunk_type="complete",
                 )
 
             with patch.object(
@@ -236,7 +236,7 @@ class TestPolicyStreamingService:
 
                 # Should fall back to OpenAI
                 content = "".join(
-                    c.content for c in chunks if c.chunk_type == "content"
+                    c.content for c in chunks if c.chunk_type == "content",
                 )
                 assert "Fallback content from OpenAI" in content
 
@@ -265,7 +265,7 @@ class TestPolicyStreamingService:
                 )
 
             yield PolicyStreamingChunk(
-                chunk_id="complete", content="", chunk_type="complete", progress=1.0
+                chunk_id="complete", content="", chunk_type="complete", progress=1.0,
             )
 
         with patch.object(
@@ -321,13 +321,13 @@ class TestPolicyStreamingAPI:
 
             async def mock_stream(*args, **kwargs):
                 yield PolicyStreamingChunk(
-                    chunk_id="1", content='{"test": "metadata"}', chunk_type="metadata"
+                    chunk_id="1", content='{"test": "metadata"}', chunk_type="metadata",
                 )
                 yield PolicyStreamingChunk(
-                    chunk_id="2", content="Test content", chunk_type="content"
+                    chunk_id="2", content="Test content", chunk_type="content",
                 )
                 yield PolicyStreamingChunk(
-                    chunk_id="3", content="", chunk_type="complete"
+                    chunk_id="3", content="", chunk_type="complete",
                 )
 
             mock_generator.generate_policy_stream = mock_stream
@@ -370,7 +370,7 @@ class TestPolicyStreamingAPI:
 
             async def mock_stream(*args, **kwargs):
                 yield PolicyStreamingChunk(
-                    chunk_id="1", content="Test", chunk_type="content"
+                    chunk_id="1", content="Test", chunk_type="content",
                 )
 
             mock_generator.generate_policy_stream = mock_stream
@@ -392,7 +392,7 @@ class TestPolicyStreamingAPI:
 
             # Check headers
             assert (
-                response.headers["content-type"] == "text/event-stream; charset=utf-8"
+                response.headers["content-type"] == "text/event-stream; charset=utf-8",
             )
             assert response.headers["cache-control"] == "no-cache"
             assert response.headers["connection"] == "keep-alive"
@@ -408,7 +408,7 @@ class TestPolicyStreamingAPI:
 
             async def mock_stream_with_error(*args, **kwargs):
                 yield PolicyStreamingChunk(
-                    chunk_id="1", content="Partial content", chunk_type="content"
+                    chunk_id="1", content="Partial content", chunk_type="content",
                 )
                 raise Exception("Streaming error")
 
@@ -465,7 +465,7 @@ class TestPolicyStreamingAPI:
         with patch("api.routers.ai_policy.RateLimiter") as MockRateLimiter:
             mock_limiter = MockRateLimiter.return_value
             mock_limiter.check_rate_limit = AsyncMock(
-                side_effect=HTTPException(status_code=429, detail="Rate limit exceeded")
+                side_effect=HTTPException(status_code=429, detail="Rate limit exceeded"),
             )
 
             response = client.post(
@@ -581,11 +581,11 @@ class TestPolicyStreamingPerformance:
 
         async def mock_slow_stream(*args, **kwargs):
             yield PolicyStreamingChunk(
-                chunk_id="1", content="First chunk", chunk_type="content"
+                chunk_id="1", content="First chunk", chunk_type="content",
             )
             await asyncio.sleep(1)  # Simulate slow generation
             yield PolicyStreamingChunk(
-                chunk_id="2", content="Second chunk", chunk_type="content"
+                chunk_id="2", content="Second chunk", chunk_type="content",
             )
             yield PolicyStreamingChunk(chunk_id="3", content="", chunk_type="complete")
 
@@ -620,7 +620,7 @@ class TestPolicyStreamingPerformance:
                     chunk_type="content",
                 )
             yield PolicyStreamingChunk(
-                chunk_id="complete", content="", chunk_type="complete"
+                chunk_id="complete", content="", chunk_type="complete",
             )
 
         with patch.object(

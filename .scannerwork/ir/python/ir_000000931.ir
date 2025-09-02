@@ -1,506 +1,25 @@
 
-ˆaÏ"Configure and enforce quality gates in CI/CD.
-
-Quality Gate Criteria:
-- New code coverage > 80%
-- Duplicated lines < 3%
-- Maintainability rating >= A
-- Reliability rating >= B
-- Security rating >= B
-- No new blockers or criticals
-
-Implementation:
-1. Configure quality gate in SonarCloud
-2. Add to GitHub Actions
-3. Block PRs that fail gate
-4. Setup notifications"str
-$"Fix Top 100 Critical Bugs"str
-(_"Setup SonarCloud Quality Gate"str
-õ1int
-G70int
-	"feature"str
-*!"Fix 16 Security Vulnerabilities"str
-#"Bug Fixes"str
--û#"‚úÖ Created: {task_data['title']}"str
-+9""Remove 458 TODO Comments (S1135)"str
-R	"Testing"str
-70."Fix Python Type Hints (845 S6903 violations)"str
-}"project_id"str
-Ç"{ARCHON_URL}/tasks"str
-	"task_order"str
-=75int
-ËNﬁ"Implement comprehensive test coverage.
-Current: 0%
-Target: 80% minimum
-
-Test Strategy:
-1. Unit tests for all services (Jest/Pytest)
-2. Integration tests for APIs
-3. Component tests for React
-4. E2E tests for critical flows
-
-Priority order:
-- Authentication/Authorization
-- Payment processing
-- Core business logic
-- API endpoints
-- React components"str
-›”"Fix all 62 blocker-level issues identified by SonarCloud.
-These are the most critical issues that could cause application crashes or severe security vulnerabilities.
-
-Priority: HIGHEST
-Estimated Time: 2-3 days
-Impact: Prevents critical failures and security breaches
-
-Steps:
-1. Run SonarCloud analysis to get blocker issue list
-2. Group blockers by type (bugs, vulnerabilities, security hotspots)
-3. Fix each blocker with proper testing
-4. Verify fixes with re-scan"str
- "Fix 62 BLOCKER Issues"str
-
-100int
-/'&"Review and Fix 369 Security Hotspots"str
-A¢7"   Response: {response.status_code} - {response.text}"str
-6†,"‚ùå Failed to create: {task_data['title']}"str
-?"Technical Debt"str
-í200int
-¿∂"Address all 16 security vulnerabilities detected by SonarCloud.
-Current Security Rating: E (worst)
-Target: Achieve Security Rating B or better
-
-Categories likely include:
-- SQL injection risks
-- XSS vulnerabilities
-- Insecure cryptography
-- Authentication bypasses
-- Information disclosure
-
-Steps:
-1. Review each vulnerability in SonarCloud dashboard
-2. Implement security best practices
-3. Add security tests
-4. Re-scan to verify fixes"str
-¿X∂"Refactor 198 functions with excessive cognitive complexity.
-
-Functions are too complex to understand and maintain.
-Target: Max complexity of 15 per function.
-
-Refactoring techniques:
-- Extract methods
-- Early returns
-- Replace conditionals with polymorphism
-- Use guard clauses
-- Simplify boolean expressions"str
-
-"Security"str
-e"CI/CD"str
-
-l0int
-480int
-c55int
- E¿"Current duplication: 5.9%
-Target: <3% (SonarCloud standard)
-
-High duplication areas to refactor:
-- API endpoint handlers
-- Test fixtures and utilities
-- Component patterns
-- Database queries
-
-Approach:
-1. Identify duplication hotspots
-2. Extract common utilities
-3. Create shared components
-4. Implement DRY principles"str
-3C*"Reduce Code Duplication from 5.9% to <3%"str
-"todo"str
-Ä
-"assignee"str
-+85int
-"Development Team"str
-ì201int
-¿)∂"Review all 369 security hotspots for potential vulnerabilities.
-
-Security hotspots are code patterns that need manual review to determine if they're vulnerable.
-
-Common hotspots:
-- Hardcoded credentials
-- Weak cryptography
-- File system access
-- Command injection risks
-- Unvalidated redirects
-
-Process:
-1. Review each hotspot in SonarCloud
-2. Mark as 'Safe' or 'Fix needed'
-3. Fix all vulnerable hotspots
-4. Document security decisions"str
-+L""Add Test Coverage (Currently 0%)"str
-Z60int
-ø;µ"Address or remove 458 TODO comments in TypeScript files.
-
-TODOs indicate incomplete implementation or technical debt.
-#2 most common issue in codebase.
-
-Actions:
-1. Review each TODO comment
-2. Either implement the TODO or create a proper task
-3. Remove resolved TODOs
-4. Document decisions for deferred work"str
-6V-"Fix Cognitive Complexity Issues (198 S3776)"str
-"description"str
-!90int
-"title"str
-P65int
-"status"str
-?6"Create new sprint tasks based on SonarCloud analysis"str
-Å˜"Fix the most critical bugs from the 358 total bugs.
-Current Reliability Rating: E (worst)
-Target: Reduce bugs by 50% minimum
-
-Focus on:
-- Null pointer exceptions
-- Resource leaks
-- Race conditions
-- Logic errors causing incorrect behavior
-
-Approach:
-1. Sort bugs by impact and frequency
-2. Fix in batches of 20
-3. Add unit tests for each fix
-4. Track progress in SonarCloud"str
-"Code Quality"str
-95int
-Ä2ˆ"Add missing type hints to 845 Python functions/methods.
-
-This is the #1 rule violation in the codebase.
-Benefits:
-- Better IDE support
-- Catch type errors early
-- Improve code documentation
-- Enable better static analysis
-
-Strategy:
-1. Start with API endpoints and core services
-2. Use mypy to validate type hints
-3. Add to CI/CD pipeline
-4. Gradually type entire codebase"strilist"”$
-"
-I Z(	"#new-object#Bdict 
-
-J J(,"	#map-set#: 
-
-K V("	#map-set#: 
-
-W W("	#map-set#:	
- 
-
-X X(%"	#map-set#: 
-
-Y Y("	#map-set#:$
-"
-[ p(	"#new-object#Bdict 
-
-\ \(6"	#map-set#: 
-
-] l("	#map-set#: 
-
-m m("	#map-set#:	 
-
-n n(!"	#map-set#: 
-
-o o("	#map-set#:%
-#
-	q Ö(	"#new-object#Bdict 
-
-r r(0"	#map-set#:!
-
-	s Å(" "	#map-set#:"
- 
-
-Ç Ç(""	#map-set#:	!"
- 
-
-É É("$"	#map-set#:#"
- 
-
-Ñ Ñ(%"	#map-set#:&
-$
-
-Ü õ(	&"#new-object#Bdict"
- 
-
-á á(;("	#map-set#:&'"
- 
-
-à ó(!*"	#map-set#:&)"
- 
-
-ò ò(,"	#map-set#:&	+"
- 
-
-ô ô(!-"	#map-set#:&"
- 
-
-ö ö(."	#map-set#:&&
-$
-
-ú Ø(	/"#new-object#Bdict"
- 
-
-ù ù(C1"	#map-set#:/0"
- 
-
-û ´($3"	#map-set#:/2"
- 
-
-¨ ¨(5"	#map-set#:/	4"
- 
-
-≠ ≠(%6"	#map-set#:/"
- 
-
-Æ Æ(7"	#map-set#:/&
-$
-
-∞ ø(	8"#new-object#Bdict"
- 
-
-± ±(7:"	#map-set#:89"
- 
-
-≤ ª(*<"	#map-set#:8;"
- 
-
-º º(>"	#map-set#:8	="
- 
-
-Ω Ω('@"	#map-set#:8?"
- 
-
-æ æ(A"	#map-set#:8&
-$
-
-¿ ”(	B"#new-object#Bdict"
- 
-
-¡ ¡(?D"	#map-set#:BC"
- 
-
-¬ œ(F"	#map-set#:BE"
- 
-
-– –(H"	#map-set#:B	G"
- 
-
-— —(%I"	#map-set#:B"
- 
-
-“ “(J"	#map-set#:B&
-$
-
-‘ È(	K"#new-object#Bdict"
- 
-
-’ ’(7M"	#map-set#:KL"
- 
-
-÷ Â(O"	#map-set#:KN"
- 
-
-Ê Ê(Q"	#map-set#:K	P"
- 
-
-Á Á( S"	#map-set#:KR"
- 
-
-Ë Ë(T"	#map-set#:K&
-$
-
-Í ˙(	U"#new-object#Bdict"
- 
-
-Î Î(BW"	#map-set#:UV"
- 
-
-Ï ˆ(!Y"	#map-set#:UX"
- 
-
-˜ ˜(["	#map-set#:U	Z"
- 
-
-¯ ¯(%\"	#map-set#:U"
- 
-
-˘ ˘(]"	#map-set#:U&
-$
-
-˚ è(	^"#new-object#Bdict"
- 
-
-¸ ¸(4`"	#map-set#:^_"
- 
-
-˝ ã(b"	#map-set#:^a"
- 
-
-å å(d"	#map-set#:^	c"
- 
-
-ç ç(f"	#map-set#:^e"
- 
-
-é é(g"	#map-set#:^9
-7
-	H ê(htasks_to_create"#unknown-value#Blist'
-%
-	H ê(j"
-#is-exact#:hiBbool
-
-	H ê(k"
-#assume#:j9
-7
-	H ê(m"#set-field# __collection_size:hlBint'
-%
-	H ê(n"#array-add-last#:h'
-%
-	H ê(o"#array-add-last#:h'
-%
-	H ê(p"#array-add-last#:h'
-%
-	H ê(q"#array-add-last#:h&'
-%
-	H ê(r"#array-add-last#:h/'
-%
-	H ê(s"#array-add-last#:h8'
-%
-	H ê(t"#array-add-last#:hB'
-%
-	H ê(u"#array-add-last#:hK'
-%
-	H ê(v"#array-add-last#:hU'
-%
-	H ê(w"#array-add-last#:h^/
--
-
-í í(xcreated_count"#id#:lBint9
-7
-
-ì ì($y"
-builtinsiter*:hBtyping.Iterator
-
-ì ì($"!*úcreated_count x§4
-2
-
-ì ì($z"
-builtins
-__has_next*:yBbool"" 
-
-ì ì($z *
-ì ì(H"≥	3
-1
-
-î ü({	task_data"
-builtinsnext*:y#
+À¡"
+    Dependency factory for requiring any of the specified roles.
+
+    Args:
+        roles: List of role names (user needs at least one)
+
+    Returns:
+        FastAPI dependency function
+    "strroles
+Ç Ç(%"Ω#
 !
 
-î" î(,|"#unknown-value#&
-$
-
-î î(,~"#array-write#:{}|(
-&
-
-ï ï(2Å"#array-write#:{Ä$
-"
-
-ó ó(GÉ"#unknown-value#$
-"
-
-ó ó(GÑ"#unknown-value#$
-"
-
-ó ó(GÖ"#unknown-value#$
-"
-
-ó ó(GÜ"#unknown-value#$
-"
-
-ó ó(Gá"#unknown-value#$
-"
-
-ó ó(Gà"#unknown-value#$
-"
-
-ó ó(Gâ"#unknown-value#*
+ì ì("#unknown-value#*
 (
 
-ó ó(Gä"#unknown-value#Bbool$
-"
+ç ì(%closure"#new-object#)
+'
 
-ó ó(Gã"#unknown-value#$
-"
+ç ì("#set-field# roles:-
++
 
-ó ó(Gå"#unknown-value#$
-"
+ç ì("?python-partial-apply?:
 
-ó ó(Gç"#unknown-value#$
-"
-
-ó ó(Gé"#unknown-value#$
-"
-
-ó ó(Gè"#unknown-value#j
-h
-
-ó ó(Gêresponse"
-requests.apipost:ÇÉ{ÑÖÜáàâäãåçéèBrequests.models.Response0
-.
-
-ò ò(ë"#get-field# status_code:ê*
-(
-
-ò# ò(-î"#unknown-value#Blist*
-(
-
-ò# ò(-ï"
-#is-exact#:îiBbool!
-
-
-ò# ò(-ñ"
-#assume#:ï<
-:
-
-ò# ò(-ó"#set-field# __collection_size:îlBint+
-)
-
-ò# ò(-ò"#array-add-last#:îí+
-)
-
-ò# ò(-ô"#array-add-last#:îì/
--
-
-ò ò(-ö"
-#binop in#2in:ëîBbool-"+
-
-ò ò(-ö *
-ò ò(
-2
-õ õ("
-
-ü ü(ú"z9
-7
-
-ô ô(ùcreated_count"	#binop +#*2+:úõ5
-3
-
-ö ö(5ü"
-builtinsprint*:ûBNoneType"v5
-3
-
-ú ú(>°"
-builtinsprint*:†BNoneType5
-3
-
-ù ù(K£"
-builtinsprint*:¢BNoneType","* §created_countùú*=/home/omar/Documents/ruleIQ/sonarcloud/update_archon_tasks.py
+ì ì(*9/home/omar/Documents/ruleIQ/api/dependencies/rbac_auth.py

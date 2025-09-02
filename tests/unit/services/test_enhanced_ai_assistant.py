@@ -108,10 +108,10 @@ class TestContextAwareRecommendations:
                             "implementation_steps": [
                                 "Draft policy",
                                 "Review",
-                                "Approve",
-                            ],
-                        }
-                    ]
+                                "Approve"
+                            ]
+                        },
+                    ],
                 )
 
                 # Mock analyze_evidence_gap
@@ -161,7 +161,7 @@ class TestContextAwareRecommendations:
         ]
 
         result = await assistant._analyze_compliance_maturity(
-            sample_business_context, existing_evidence, "ISO27001"
+            sample_business_context, existing_evidence, "ISO27001",
         )
 
         assert "maturity_level" in result
@@ -210,7 +210,7 @@ class TestContextAwareRecommendations:
         ]
 
         prioritized = assistant._prioritize_recommendations(
-            recommendations, sample_business_context, sample_maturity_analysis
+            recommendations, sample_business_context, sample_maturity_analysis,
         )
 
         # Check that high priority quick win is first
@@ -251,7 +251,7 @@ class TestContextAwareRecommendations:
         ]
 
         enhanced = assistant._add_automation_insights(
-            recommendations, sample_business_context
+            recommendations, sample_business_context,
         )
 
         # Check automation insights were added
@@ -297,7 +297,7 @@ class TestContextAwareRecommendations:
         assistant = ComplianceAssistant(mock_db_session)
 
         fallback = assistant._get_fallback_recommendations(
-            "ISO27001", {"maturity_level": "Basic"}
+            "ISO27001", {"maturity_level": "Basic"},
         )
 
         assert len(fallback) > 0
@@ -357,11 +357,11 @@ class TestWorkflowGeneration:
                                         "step_id": "step_1",
                                         "title": "Define scope",
                                         "estimated_hours": 2,
-                                    }
+                                    },
                                 ],
-                            }
+                            },
                         ],
-                    }
+                    },
                 )
 
                 result = await assistant.generate_evidence_collection_workflow(
@@ -387,14 +387,14 @@ class TestWorkflowGeneration:
                     "steps": [
                         {"estimated_hours": 4, "estimated_hours_with_automation": 2},
                         {"estimated_hours": 6, "estimated_hours_with_automation": 4},
-                    ]
+                    ],
                 },
                 {
                     "steps": [
-                        {"estimated_hours": 8, "estimated_hours_with_automation": 6}
-                    ]
+                        {"estimated_hours": 8, "estimated_hours_with_automation": 6},
+                    ],
                 },
-            ]
+            ],
         }
 
         effort = assistant._calculate_workflow_effort(workflow)
@@ -464,12 +464,12 @@ class TestPolicyGeneration:
                                 "title": "Purpose",
                                 "content": "Policy purpose",
                                 "subsections": [],
-                            }
+                            },
                         ],
                         "roles_responsibilities": [],
                         "procedures": [],
                         "compliance_requirements": [],
-                    }
+                    },
                 )
 
                 result = await assistant.generate_customized_policy(
@@ -543,7 +543,7 @@ class TestPolicyGeneration:
 
         # Test enterprise organization
         enterprise_policy = assistant._apply_size_customizations(
-            policy.copy(), "enterprise"
+            policy.copy(), "enterprise",
         )
         assert "implementation_notes" in enterprise_policy
         assert any(
@@ -561,7 +561,7 @@ class TestPolicyGeneration:
         maturity_analysis = {"maturity_level": "Intermediate"}
 
         guidance = assistant._generate_policy_implementation_guidance(
-            policy, business_context, maturity_analysis
+            policy, business_context, maturity_analysis,
         )
 
         assert "implementation_phases" in guidance
@@ -582,7 +582,7 @@ class TestPolicyGeneration:
         policy = {}
 
         mapping = assistant._generate_compliance_mapping(
-            policy, "ISO27001", "information_security"
+            policy, "ISO27001", "information_security",
         )
 
         assert mapping["framework"] == "ISO27001"
@@ -602,7 +602,7 @@ class TestPolicyGeneration:
         business_context = {"company_name": "Test Corp", "industry": "Technology"}
 
         fallback = assistant._get_fallback_policy(
-            "ISO27001", "information_security", business_context
+            "ISO27001", "information_security", business_context,
         )
 
         assert fallback["framework"] == "ISO27001"

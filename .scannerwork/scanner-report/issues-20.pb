@@ -1,5 +1,5 @@
 ‘
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-ªª
+ÐÐ
  !:'
-%ªª This function is async.
+%ÐÐ This function is async.

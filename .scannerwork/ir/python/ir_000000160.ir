@@ -1,41 +1,119 @@
 
-¥™"
-    Enhanced decorator for adding LangSmith tracing to async functions.
+"S3518"bool
+ÚË"Calculate throughput for a workflow type.
 
-    Args:
-        operation: Name of the operation being traced
-        include_input: Whether to include function inputs in metadata
-        include_output: Whether to include function outputs in metadata
-        custom_name: Optional custom name for the run (overrides operation)
+        Args:
+            workflow_type: Type of workflow
+            time_window_seconds: Time window in seconds for calculation
 
-    Returns:
-        Decorated function with LangSmith tracing
-    "str	operation
-◊ ◊(include_input
-ÿ ÿ(include_output
-Ÿ Ÿ(custom_name
-⁄ ⁄(%"Ÿ#
-!
+        Returns:
+            Throughput metrics
+        "str
+0.0float
+"division by zero"bool
+60int
+'"average_duration_ms"str
 
-≥ ≥("#unknown-value#*
-(
+	0int
+"a"bool
+  "throughput_per_minute"str
+%"workflows_per_minute"str
+#"workflows_per_second"strself
+É É(!workflow_type
+É# É(5#time_window_seconds
+É7 É(R"€%
+#
 
-È ≥(%closure"#new-object#-
-+
+ç ç(!"
+timetimeBfloat@
+>
 
-È ≥("#set-field# operation:1
-/
+ç ç(7cutoff_time"#dependent-value#*:BfloatB
+@
+é é(árecent_workflows"?python-unknown?:Blist<
+:
 
-È ≥("#set-field# include_input:/
--
+è è(.workflow_count"
+builtinslen*:Bint@
+>
 
-È ≥(	"#set-field# custom_name:2
+êG ê(^
+workflows_per_second"	#binop >#2>:	Bbool,"*
+
+êG ê(^
+ *
+êD ê(F2
+ê_ ê(c"õ,
+*
+
+ê ê(C"
+#binop !=#2!=:	Bbool"
+ 
+
+ê ê(C"
+#assert#:3
+1
+
+ê ê(C"#dependent-value#*:Bfloat
+
+ê ê(e"
+
+ê ê(e"±&*$workflows_per_second	=
+;
+
+ë ë(8workflows_per_minute"	#binop *#*2*:B
+@
+í í(ªrecent_completed"?python-unknown?:Blist3
+1
+
+ì ì(avg_duration_ms"#id#:Bfloat+
+)
+
+î î("
+__bool__*:BboolH "
+
+î î( *
+î î(
+"±8
+6
+
+ï ï(Y	durations"?python-unknown?:Blist'
+%
+
+ñ ñ(,"
+builtinssum*:,
+*
+
+ñ/ ñ(="
+builtinslen*:Bint,
+*
+
+ñ ñ(="
+#binop !=#2!=:	Bbool"
+ 
+
+ñ ñ(="
+#assert#:D
+B
+
+ñ ñ(=avg_duration_ms"#dependent-value#*:Bfloat"◊!*(avg_duration_ms2
 0
 
-È ≥(
-"#set-field# include_output:-
-+
+ó ó($"#get-field# _workflow_stats:+
+)
 
-È ≥("?python-partial-apply?:
+ó ó(3stats"#array-read#:&
+$
 
-≥ ≥(*6/home/omar/Documents/ruleIQ/config/langsmith_config.py
+ò ò(=!"#array-write#: '
+%
+ô ô(ì""#new-object#Bdict"
+ 
+
+ô ô(<$"	#map-set#:"#"
+ 
+
+ô> ô(j&"	#map-set#:"%#
+!
+ôl ô(í)"	#map-set#:"'(
+ô ô(ì"*D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py

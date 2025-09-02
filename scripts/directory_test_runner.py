@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Run tests directory by directory to isolate issues."""
 
+from __future__ import annotations
+
 import subprocess
 import os
 from pathlib import Path
@@ -55,7 +57,7 @@ def run_tests_in_directory(directory: Path) -> Dict:
                     if part == "collected" and i + 1 < len(parts):
                         try:
                             stats["collected"] = int(parts[i + 1])
-                        except:
+                        except (ValueError, KeyError, IndexError):
                             pass
                     if "error" in line.lower():
                         if "/" in line:
@@ -63,7 +65,7 @@ def run_tests_in_directory(directory: Path) -> Dict:
                             if "error" in error_part:
                                 try:
                                     stats["errors"] = int(error_part.split()[0])
-                                except:
+                                except (ValueError, KeyError, IndexError):
                                     pass
 
     print(f"Collected: {stats['collected']} tests")

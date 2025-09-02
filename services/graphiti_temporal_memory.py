@@ -3,14 +3,12 @@ Graphiti Temporal Memory Framework for ruleIQ
 Implements time-aware knowledge graphs for regulatory tracking
 """
 
-from typing import Dict, List, Optional, Any, Tuple
-from dataclasses import dataclass, field
+from typing import Dict, List, Optional, Anyfrom dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
 import json
 import logging
 from neo4j import GraphDatabase
-import asyncio
 from collections import defaultdict
 
 logger = logging.getLogger(__name__)
@@ -280,14 +278,14 @@ class GraphitiTemporalMemory:
                     {
                         "node_id": node_data["node_id"],
                         "regulation_id": json.loads(node_data["content"])[
-                            "regulation_id"
+                            "regulation_id",
                         ],
                         "description": json.loads(node_data["content"])["description"],
                         "jurisdiction": node_data["jurisdiction"],
                         "change_type": node_data["change_type"],
                         "valid_from": node_data["valid_from"],
                         "metadata": json.loads(node_data["metadata"]),
-                    }
+                    },
                 )
 
             return timeline
@@ -343,7 +341,7 @@ class GraphitiTemporalMemory:
 
         # Get changes in window
         timeline = await self.get_regulatory_timeline(
-            jurisdiction=jurisdiction, start_date=start_date, end_date=datetime.now()
+            jurisdiction=jurisdiction, start_date=start_date, end_date=datetime.now(),
         )
 
         # Group by change type
@@ -385,16 +383,16 @@ class GraphitiTemporalMemory:
                     c
                     for c in timeline
                     if datetime.fromisoformat(c["valid_from"])
-                    > datetime.now() - timedelta(days=30)
-                ]
+                    > datetime.now() - timedelta(days=30),
+                ],
             )
             older_rate = len(
                 [
                     c
                     for c in timeline
                     if datetime.fromisoformat(c["valid_from"])
-                    <= datetime.now() - timedelta(days=30)
-                ]
+                    <= datetime.now() - timedelta(days=30),
+                ],
             )
 
             if recent_rate > older_rate * 1.5:
@@ -404,7 +402,7 @@ class GraphitiTemporalMemory:
                         "description": "Regulatory change rate increasing",
                         "recent_monthly_rate": recent_rate,
                         "previous_rate": older_rate / 2,
-                    }
+                    },
                 )
 
         # Detect jurisdiction hotspots
@@ -421,7 +419,7 @@ class GraphitiTemporalMemory:
                     "description": f"High activity in {hotspot}",
                     "jurisdiction": hotspot,
                     "change_count": jurisdiction_counts[hotspot],
-                }
+                },
             )
 
         return patterns
@@ -435,7 +433,7 @@ class GraphitiTemporalMemory:
                 "change_type": node.change_type.value if node.change_type else None,
                 "jurisdiction": node.jurisdiction,
                 "content": node.content,
-            }
+            },
         )
 
     def _dict_to_temporal_node(self, data: Dict) -> TemporalNode:
@@ -446,28 +444,28 @@ class GraphitiTemporalMemory:
             content=(
                 json.loads(data["content"])
                 if isinstance(data["content"], str)
-                else data["content"]
+                else data["content"],
             ),
             valid_from=(
                 datetime.fromisoformat(data["valid_from"])
                 if isinstance(data["valid_from"], str)
-                else data["valid_from"]
+                else data["valid_from"],
             ),
             valid_to=(
                 datetime.fromisoformat(data["valid_to"])
                 if data.get("valid_to") and isinstance(data["valid_to"], str)
-                else data.get("valid_to")
+                else data.get("valid_to"),
             ),
             confidence=data.get("confidence", 1.0),
             source_ids=data.get("source_ids", []),
             change_type=(
-                ChangeType(data["change_type"]) if data.get("change_type") else None
+                ChangeType(data["change_type"]) if data.get("change_type") else None,
             ),
             jurisdiction=data.get("jurisdiction"),
             metadata=(
                 json.loads(data["metadata"])
                 if isinstance(data.get("metadata", {}), str)
-                else data.get("metadata", {})
+                else data.get("metadata", {}),
             ),
         )
 
@@ -550,7 +548,7 @@ class TemporalMemoryIntegration:
 
         # Get upcoming deadlines
         timeline = await self.memory.get_regulatory_timeline(
-            start_date=datetime.now(), end_date=future_date
+            start_date=datetime.now(), end_date=future_date,
         )
 
         upcoming_deadlines = [

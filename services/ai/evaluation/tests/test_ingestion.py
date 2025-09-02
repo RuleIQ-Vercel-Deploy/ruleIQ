@@ -1,5 +1,8 @@
 """Test ingestion tool for Golden Dataset."""
 
+from __future__ import annotations
+
+from typing import Any, Dict, List, Optional
 import pytest
 from pathlib import Path
 from unittest.mock import Mock, patch, MagicMock
@@ -25,7 +28,7 @@ from services.ai.evaluation.schemas.common import (
 class TestDocumentProcessor:
     """Test document processing functionality."""
 
-    def test_load_golden_dataset(self):
+    def test_load_golden_dataset(self) -> Any:
         """Test loading golden dataset from JSON file."""
         processor = DocumentProcessor()
 
@@ -41,13 +44,13 @@ class TestDocumentProcessor:
                         "fetched_at": "2025-01-01T00:00:00Z",
                         "trust_score": 0.9,
                     },
-                }
-            ]
+                },
+            ],
         }
 
         with patch("builtins.open", create=True) as mock_open:
             mock_open.return_value.__enter__.return_value.read.return_value = (
-                json.dumps(test_data)
+                json.dumps(test_data),
             )
 
             documents = processor.load_golden_dataset("test.json")
@@ -57,7 +60,7 @@ class TestDocumentProcessor:
             assert documents[0].content == "Test document content."
             assert documents[0].source_meta.trust_score == 0.9
 
-    def test_validate_document_schema(self):
+    def test_validate_document_schema(self) -> Any:
         """Test document schema validation."""
         processor = DocumentProcessor()
 
@@ -80,7 +83,7 @@ class TestDocumentProcessor:
             invalid_doc = {"doc_id": "doc1"}  # Missing content
             processor.validate_document(invalid_doc)
 
-    def test_preprocess_document_content(self):
+    def test_preprocess_document_content(self) -> Any:
         """Test document content preprocessing."""
         processor = DocumentProcessor()
 
@@ -96,10 +99,10 @@ class TestDocumentProcessor:
 class TestChunkProcessor:
     """Test document chunking functionality."""
 
-    def test_chunk_document_basic(self):
+    def test_chunk_document_basic(self) -> Any:
         """Test basic document chunking."""
         processor = ChunkProcessor(
-            chunk_size=100, overlap=10  # ~25 tokens  # ~2-3 tokens
+            chunk_size=100, overlap=10  # ~25 tokens  # ~2-3 tokens,
         )
 
         # Create a document with enough content to chunk
@@ -121,7 +124,7 @@ class TestChunkProcessor:
         assert all(chunk.doc_id == "doc1" for chunk in chunks)
         assert all(chunk.chunk_index >= 0 for chunk in chunks)
 
-    def test_chunk_overlap(self):
+    def test_chunk_overlap(self) -> Any:
         """Test chunk overlap functionality."""
         processor = ChunkProcessor(chunk_size=50, overlap=10)
 
@@ -148,7 +151,7 @@ class TestChunkProcessor:
                 overlap = set(chunk1_end) & set(chunk2_start)
                 assert len(overlap) > 0
 
-    def test_chunk_metadata_preservation(self):
+    def test_chunk_metadata_preservation(self) -> Any:
         """Test that chunk preserves document metadata."""
         processor = ChunkProcessor()
 
@@ -166,12 +169,12 @@ class TestChunkProcessor:
                     framework="ISO 27001",
                     article="A.12.1",
                     label="Operational procedures",
-                )
+                ),
             ],
             expected_outcomes=[
                 ExpectedOutcome(
-                    outcome_id="out1", description="Test outcome", tags=["security"]
-                )
+                    outcome_id="out1", description="Test outcome", tags=["security"],
+                ),
             ],
         )
 
@@ -188,7 +191,7 @@ class TestEmbeddingGenerator:
     """Test embedding generation functionality."""
 
     @patch("sentence_transformers.SentenceTransformer")
-    def test_initialize_model(self, mock_st):
+    def test_initialize_model(self, mock_st: Any) -> Any:
         """Test model initialization."""
         generator = EmbeddingGenerator()
 
@@ -197,7 +200,7 @@ class TestEmbeddingGenerator:
         assert generator.dimension == 384
 
     @patch("sentence_transformers.SentenceTransformer")
-    def test_generate_embedding_single(self, mock_st):
+    def test_generate_embedding_single(self, mock_st: Any) -> Any:
         """Test single text embedding generation."""
         mock_model = Mock()
         mock_model.encode.return_value = [[0.1] * 384]
@@ -211,7 +214,7 @@ class TestEmbeddingGenerator:
         mock_model.encode.assert_called_once()
 
     @patch("sentence_transformers.SentenceTransformer")
-    def test_generate_embeddings_batch(self, mock_st):
+    def test_generate_embeddings_batch(self, mock_st: Any) -> Any:
         """Test batch embedding generation."""
         mock_model = Mock()
         mock_model.encode.return_value = [[0.1] * 384, [0.2] * 384, [0.3] * 384]
@@ -226,7 +229,7 @@ class TestEmbeddingGenerator:
         mock_model.encode.assert_called_once_with(texts, convert_to_tensor=False)
 
     @patch("sentence_transformers.SentenceTransformer")
-    def test_embedding_normalization(self, mock_st):
+    def test_embedding_normalization(self, mock_st: Any) -> Any:
         """Test that embeddings are normalized."""
         import numpy as np
 
@@ -247,7 +250,7 @@ class TestGraphIngestion:
     """Test Neo4j graph ingestion functionality."""
 
     @patch("services.ai.evaluation.infrastructure.neo4j_setup.Neo4jConnection")
-    def test_initialize_connection(self, mock_conn_class):
+    def test_initialize_connection(self, mock_conn_class: Any) -> Any:
         """Test Neo4j connection initialization."""
         mock_conn = Mock()
         mock_conn_class.return_value = mock_conn
@@ -258,7 +261,7 @@ class TestGraphIngestion:
         mock_conn_class.assert_called_once()
 
     @patch("services.ai.evaluation.infrastructure.neo4j_setup.Neo4jConnection")
-    def test_ingest_document(self, mock_conn_class):
+    def test_ingest_document(self, mock_conn_class: Any) -> Any:
         """Test document ingestion to Neo4j."""
         mock_conn = Mock()
         mock_conn_class.return_value = mock_conn
@@ -288,7 +291,7 @@ class TestGraphIngestion:
         assert "Document" in call_args[0]
 
     @patch("services.ai.evaluation.infrastructure.neo4j_setup.Neo4jConnection")
-    def test_ingest_chunk(self, mock_conn_class):
+    def test_ingest_chunk(self, mock_conn_class: Any) -> Any:
         """Test chunk ingestion to Neo4j."""
         mock_conn = Mock()
         mock_conn_class.return_value = mock_conn
@@ -317,7 +320,7 @@ class TestGraphIngestion:
         assert mock_conn.execute_query.call_count >= 1
 
     @patch("services.ai.evaluation.infrastructure.neo4j_setup.Neo4jConnection")
-    def test_create_chunk_relationships(self, mock_conn_class):
+    def test_create_chunk_relationships(self, mock_conn_class: Any) -> Any:
         """Test creating relationships between chunks."""
         mock_conn = Mock()
         mock_conn_class.return_value = mock_conn
@@ -381,7 +384,7 @@ class TestGoldenDatasetIngestion:
                     fetched_at=datetime.now(),
                     trust_score=0.9,
                 ),
-            )
+            ),
         ]
         mock_doc_inst.load_golden_dataset.return_value = test_docs
 
@@ -393,7 +396,7 @@ class TestGoldenDatasetIngestion:
                 chunk_index=0,
                 content="Test chunk",
                 source_meta=test_docs[0].source_meta,
-            )
+            ),
         ]
         mock_chunk_inst.chunk_document.return_value = test_chunks
 
@@ -421,7 +424,7 @@ class TestGoldenDatasetIngestion:
 
     @patch("services.ai.evaluation.tools.ingestion.GraphIngestion")
     @patch("services.ai.evaluation.tools.ingestion.EmbeddingGenerator")
-    def test_error_handling(self, mock_embed_gen, mock_graph):
+    def test_error_handling(self, mock_embed_gen: Any, mock_graph: Any) -> Any:
         """Test error handling in ingestion pipeline."""
         mock_embed_inst = Mock()
         mock_graph_inst = Mock()

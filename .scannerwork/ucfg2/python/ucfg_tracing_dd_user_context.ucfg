@@ -1,11 +1,11 @@
 
 ,config.tracing.CustomTracer.add_user_context9
--/home/omar/Documents/ruleIQ/config/tracing.pyÏ Ï("2*}
+-/home/omar/Documents/ruleIQ/config/tracing.py’ ’("2*}
 2
-Ò Ò('d
+” ”('d
 b
 
-Ó Ó(
+• •(
 %3"__id*H
 
 __unknown_file (,**
@@ -16,12 +16,12 @@ b
 3
 
 tracing.py"
-Ü Ü
+œ œ
 implicit return*Ë
 4
-Ø Ø(J´±
+™ ™(J´±
 
-Ø Ø(J
+™ ™(J
 %1*$
 
 __unknown_file (
@@ -36,9 +36,9 @@ tracing.py"
 business_profile_id2set_attribute*
 3*¶
 5
-Ö Ö(.œ™
+— —(.œ™
 
-Ö Ö(.
+— —(.
 %2*$
 
 __unknown_file (
@@ -54,17 +54,17 @@ tracing.py"
 3
 4*'
 6
-Ô Ô("
+– –("
 
-Ô Ô(
+– –(
 void:
 
-Ð Ð(
+’ ’(#
 span:
 
-Ð Ð( 	
+’% ’(1	
 user_id:#
 
-Ð" Ð(K
+’3 “(
 business_profile_idB
 config.tracing.CustomTracerH

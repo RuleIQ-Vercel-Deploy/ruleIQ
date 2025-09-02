@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+
 Comprehensive Backend Test Suite Audit
 =======================================
 This script analyzes and executes the complete test suite to identify gaps
@@ -132,7 +134,7 @@ class TestSuiteAuditor:
 
         except subprocess.TimeoutExpired:
             return -1, []
-        except Exception as e:
+        except (OSError, KeyError, IndexError) as e:
             print(f"Error collecting from {test_file}: {e}")
             return -1, []
 
@@ -197,17 +199,17 @@ class TestSuiteAuditor:
                         if "passed" in part and i > 0:
                             try:
                                 result["passed"] = int(parts[i - 1])
-                            except:
+                            except (ValueError, KeyError, IndexError):
                                 pass
                         elif "failed" in part and i > 0:
                             try:
                                 result["failed"] = int(parts[i - 1])
-                            except:
+                            except (ValueError, KeyError, IndexError):
                                 pass
                         elif "skipped" in part and i > 0:
                             try:
                                 result["skipped"] = int(parts[i - 1])
-                            except:
+                            except (ValueError, KeyError, IndexError):
                                 pass
 
             # If no tests were found in parsing, check return code
@@ -218,7 +220,7 @@ class TestSuiteAuditor:
             result["errors"] = 1
             result["execution_time"] = 60
 
-        except Exception as e:
+        except (ValueError, KeyError, IndexError) as e:
             result["errors"] = 1
             result["execution_time"] = time.time() - start_time
             print(f"Error running {test_file}: {e}")
@@ -330,7 +332,7 @@ class TestSuiteAuditor:
                 if file_result["failures"]:
                     for failure in file_result["failures"]:
                         failed_by_category[category].append(
-                            {"file": file_result["file"], "test": failure}
+                            {"file": file_result["file"], "test": failure},
                         )
 
         if failed_by_category:
@@ -365,14 +367,14 @@ class TestSuiteAuditor:
 
         if results["pass_rate"] < 95:
             report += (
-                f"1. **Fix {results['failed']} failing tests** to improve pass rate\n"
+                f"1. **Fix {results['failed']} failing tests** to improve pass rate\n",
             )
             report += f"2. **Resolve {results['collection_errors']} collection errors** to enable more tests\n"
             report += f"3. **Review {results['skipped']} skipped tests** - enable if possible\n"
 
         if results["collection_errors"] > 0:
             report += (
-                "4. **Fix import errors and missing dependencies** in test files\n"
+                "4. **Fix import errors and missing dependencies** in test files\n",
             )
 
         report += "\n## Next Steps\n\n"

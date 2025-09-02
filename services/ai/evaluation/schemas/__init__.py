@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Golden Dataset schemas package."""
 
+from typing import Any, Dict, List, Optional
 from .common import (
     RegCitation,
     SourceMeta,

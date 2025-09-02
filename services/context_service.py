@@ -17,7 +17,7 @@ Part of the ruleIQ Agentic Transformation Vision 2025
 import json
 import asyncio
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, asdict
 from enum import Enum
@@ -29,32 +29,32 @@ logger = logging.getLogger(__name__)
 
 
 class InteractionType(str, Enum):
-    ASSESSMENT_START = "assessment_start"
-    ASSESSMENT_CONTINUE = "assessment_continue"
-    ASSESSMENT_COMPLETE = "assessment_complete"
-    POLICY_GENERATION = "policy_generation"
-    POLICY_APPROVAL = "policy_approval"
-    BUSINESS_PROFILE_UPDATE = "business_profile_update"
-    QUESTION_ASKED = "question_asked"
-    RECOMMENDATION_ACCEPTED = "recommendation_accepted"
-    RECOMMENDATION_REJECTED = "recommendation_rejected"
-    AUTOMATION_DELEGATED = "automation_delegated"
-    ERROR_ENCOUNTERED = "error_encountered"
+#     ASSESSMENT_START = "assessment_start"  # Unused variable
+#     ASSESSMENT_CONTINUE = "assessment_continue"  # Unused variable
+#     ASSESSMENT_COMPLETE = "assessment_complete"  # Unused variable
+#     POLICY_GENERATION = "policy_generation"  # Unused variable
+#     POLICY_APPROVAL = "policy_approval"  # Unused variable
+#     BUSINESS_PROFILE_UPDATE = "business_profile_update"  # Unused variable
+#     QUESTION_ASKED = "question_asked"  # Unused variable
+#     RECOMMENDATION_ACCEPTED = "recommendation_accepted"  # Unused variable
+#     RECOMMENDATION_REJECTED = "recommendation_rejected"  # Unused variable
+#     AUTOMATION_DELEGATED = "automation_delegated"  # Unused variable
+#     ERROR_ENCOUNTERED = "error_encountered"  # Unused variable
 
 
 class TrustLevel(str, Enum):
-    UNKNOWN = "unknown"  # New user, no history
-    SKEPTICAL = "skeptical"  # User questions recommendations
-    CAUTIOUS = "cautious"  # User reviews before accepting
-    TRUSTING = "trusting"  # User accepts most recommendations
-    DELEGATING = "delegating"  # User delegates tasks to system
+#     UNKNOWN = "unknown"  # New user, no history  # Unused variable
+#     SKEPTICAL = "skeptical"  # User questions recommendations  # Unused variable
+#     CAUTIOUS = "cautious"  # User reviews before accepting  # Unused variable
+#     TRUSTING = "trusting"  # User accepts most recommendations  # Unused variable
+#     DELEGATING = "delegating"  # User delegates tasks to system  # Unused variable
 
 
 class CommunicationStyle(str, Enum):
-    FORMAL = "formal"  # Business formal language
-    CASUAL = "casual"  # Friendly, conversational
-    TECHNICAL = "technical"  # Technical jargon, detailed explanations
-    CONCISE = "concise"  # Brief, to-the-point responses
+#     FORMAL = "formal"  # Business formal language  # Unused variable
+#     CASUAL = "casual"  # Friendly, conversational  # Unused variable
+#     TECHNICAL = "technical"  # Technical jargon, detailed explanations  # Unused variable
+#     CONCISE = "concise"  # Brief, to-the-point responses  # Unused variable
 
 
 @dataclass
@@ -149,7 +149,7 @@ class UserContextService:
         try:
             # Initialize Redis connection for session state
             self.redis_client = redis.Redis(
-                host="localhost", port=6379, decode_responses=True
+                host="localhost", port=6379, decode_responses=True,
             )
             await self.redis_client.ping()
             logger.info("Context service initialized successfully")
@@ -184,7 +184,7 @@ class UserContextService:
             interaction = UserInteraction(
                 user_id=user_id,
                 interaction_type=interaction_type,
-                timestamp=datetime.utcnow(),
+                timestamp=datetime.now(timezone.utc),
                 context=context,
                 session_id=session_id,
                 outcome=outcome,
@@ -193,7 +193,7 @@ class UserContextService:
 
             # Store in Redis for fast access (TTL: 30 days)
             redis_key = (
-                f"user_interaction:{user_id}:{interaction.timestamp.timestamp()}"
+                f"user_interaction:{user_id}:{interaction.timestamp.timestamp()}",
             )
             interaction_data = asdict(interaction)
             # Convert datetime to ISO string for JSON serialization
@@ -210,7 +210,7 @@ class UserContextService:
             await self.redis_client.lpush(recent_key, redis_key)
             await self.redis_client.ltrim(recent_key, 0, 99)  # Keep last 100
             await self.redis_client.expire(
-                recent_key, int(timedelta(days=30).total_seconds())
+                recent_key, int(timedelta(days=30).total_seconds()),
             )
 
             # Update user patterns asynchronously
@@ -242,7 +242,7 @@ class UserContextService:
                 pattern_data = json.loads(cached_data)
                 # Convert ISO strings back to datetime
                 pattern_data["last_updated"] = datetime.fromisoformat(
-                    pattern_data["last_updated"]
+                    pattern_data["last_updated"],
                 )
                 return UserPattern(**pattern_data)
 
@@ -253,7 +253,7 @@ class UserContextService:
                 pattern_data = asdict(patterns)
                 pattern_data["last_updated"] = patterns.last_updated.isoformat()
                 await self.cache_service.set(
-                    cache_key, json.dumps(pattern_data), ttl=3600
+                    cache_key, json.dumps(pattern_data), ttl=3600,
                 )
 
             return patterns
@@ -315,14 +315,14 @@ class UserContextService:
             # Store updated patterns
             current_patterns.trust_level = trust_level
             current_patterns.confidence_score = new_score
-            current_patterns.last_updated = datetime.utcnow()
+            current_patterns.last_updated = datetime.now(timezone.utc)
 
             # Clear cache to force regeneration
             cache_key = f"user_patterns:{user_id}"
             await self.cache_service.delete(cache_key)
 
             logger.info(
-                f"Updated trust score for user {user_id}: {trust_level} ({new_score:.2f})"
+                f"Updated trust score for user {user_id}: {trust_level} ({new_score:.2f})",
             )
             return True
 
@@ -353,11 +353,11 @@ class UserContextService:
             # Predict based on common patterns
             if "assessment" in patterns.common_tasks:
                 last_assessment = await self._get_last_interaction_of_type(
-                    user_id, InteractionType.ASSESSMENT_COMPLETE
+                    user_id, InteractionType.ASSESSMENT_COMPLETE,
                 )
                 if (
                     last_assessment
-                    and (datetime.utcnow() - last_assessment.timestamp).days > 90
+                    and (datetime.now(timezone.utc) - last_assessment.timestamp).days > 90
                 ):
                     predictions.append(
                         PredictedNeed(
@@ -366,7 +366,7 @@ class UserContextService:
                             reasoning="User typically conducts assessments every 3 months",
                             suggested_action="Offer to start quarterly compliance review",
                             urgency=7,
-                        )
+                        ),
                     )
 
             # Predict policy updates based on business profile changes
@@ -378,7 +378,7 @@ class UserContextService:
                         reasoning="User frequently generates policies and may need updates",
                         suggested_action="Check for regulatory changes affecting user's industry",
                         urgency=5,
-                    )
+                    ),
                 )
 
             # Predict automation opportunities for high-trust users
@@ -391,11 +391,11 @@ class UserContextService:
                             reasoning="User has high trust level and prefers automation",
                             suggested_action="Suggest automating recurring compliance tasks",
                             urgency=4,
-                        )
+                        ),
                     )
 
             return sorted(
-                predictions, key=lambda x: x.confidence * x.urgency, reverse=True
+                predictions, key=lambda x: x.confidence * x.urgency, reverse=True,
             )
 
         except Exception as e:
@@ -415,7 +415,7 @@ class UserContextService:
         """
         try:
             session_context = SessionContext(
-                session_id=session_id, user_id=user_id, start_time=datetime.utcnow()
+                session_id=session_id, user_id=user_id, start_time=datetime.now(timezone.utc),
             )
 
             # Store in memory for fast access
@@ -461,7 +461,7 @@ class UserContextService:
             if context_data:
                 parsed_data = json.loads(context_data)
                 parsed_data["start_time"] = datetime.fromisoformat(
-                    parsed_data["start_time"]
+                    parsed_data["start_time"],
                 )
                 session_context = SessionContext(**parsed_data)
 
@@ -538,7 +538,7 @@ class UserContextService:
                     success_patterns=[],
                     session_duration_avg=15.0,
                     questions_per_session_avg=5.0,
-                    last_updated=datetime.utcnow(),
+                    last_updated=datetime.now(timezone.utc),
                     confidence_score=0.1,
                 )
 
@@ -555,7 +555,7 @@ class UserContextService:
                 # Collect error/success patterns
                 if not interaction.success:
                     error_patterns.append(
-                        interaction.context.get("error_type", "unknown")
+                        interaction.context.get("error_type", "unknown"),
                     )
                 else:
                     success_patterns.append(task_type)
@@ -565,7 +565,7 @@ class UserContextService:
 
             # Estimate trust level based on interaction success rate
             success_rate = len([i for i in interactions if i.success]) / len(
-                interactions
+                interactions,
             )
             if success_rate > 0.9:
                 trust_level = TrustLevel.TRUSTING
@@ -593,7 +593,7 @@ class UserContextService:
                 success_patterns=list(set(success_patterns)),
                 session_duration_avg=20.0,  # Placeholder
                 questions_per_session_avg=6.0,  # Placeholder
-                last_updated=datetime.utcnow(),
+                last_updated=datetime.now(timezone.utc),
                 confidence_score=confidence,
             )
 
@@ -615,11 +615,11 @@ class UserContextService:
                 if interaction_data:
                     parsed_data = json.loads(interaction_data)
                     parsed_data["timestamp"] = datetime.fromisoformat(
-                        parsed_data["timestamp"]
+                        parsed_data["timestamp"],
                     )
 
                     # Filter by date
-                    if (datetime.utcnow() - parsed_data["timestamp"]).days <= days:
+                    if (datetime.now(timezone.utc) - parsed_data["timestamp"]).days <= days:
                         interactions.append(UserInteraction(**parsed_data))
 
             return sorted(interactions, key=lambda x: x.timestamp, reverse=True)

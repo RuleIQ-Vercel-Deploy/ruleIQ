@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Phase 4: Celery Task Migration to LangGraph Nodes
 Migrates all 16 Celery tasks to LangGraph workflow nodes
 """
@@ -6,7 +8,7 @@ Migrates all 16 Celery tasks to LangGraph workflow nodes
 import asyncio
 import logging
 from typing import Any, Dict, List, Optional, TypedDict
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 
 from langgraph.graph import StateGraph, END
@@ -82,7 +84,7 @@ class ComplianceTaskNode:
                     "SOC2": 91.1,
                     "HIPAA": 85.7,
                 },
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
 
             state["task_result"] = result
@@ -133,7 +135,7 @@ class ComplianceTaskNode:
                 "status": "completed",
                 "alerts_found": len(alerts),
                 "alerts": alerts,
-                "next_check": (datetime.utcnow() + timedelta(hours=6)).isoformat(),
+                "next_check": (datetime.now(timezone.utc) + timedelta(hours=6)).isoformat(),
             }
 
             state["task_result"] = result
@@ -160,7 +162,7 @@ class ComplianceTaskNode:
             state["errors"].append(
                 {
                     "error": f"Unknown compliance task type: {task_type}",
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                 }
             )
             return state
@@ -241,7 +243,7 @@ class EvidenceTaskNode:
                     "pending": 2,
                     "failed": 0,
                 },
-                "last_sync": datetime.utcnow().isoformat(),
+                "last_sync": datetime.now(timezone.utc).isoformat(),
             }
 
             state["task_result"] = result
@@ -700,7 +702,7 @@ class MonitoringTaskNode:
                     "records_deleted": 45678,
                     "space_freed_mb": 234,
                     "oldest_record_kept": (
-                        datetime.utcnow() - timedelta(hours=retention_hours)
+                        datetime.now(timezone.utc) - timedelta(hours=retention_hours)
                     ).isoformat(),
                 },
             }

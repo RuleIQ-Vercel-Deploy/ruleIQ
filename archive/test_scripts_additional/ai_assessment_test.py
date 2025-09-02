@@ -1,7 +1,11 @@
+from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
+
 import requests
 import os
 from pathlib import Path
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 
 # Import jose instead of jwt to match the server
@@ -9,20 +13,20 @@ from jose import jwt
 
 # Get absolute path to .env.local
 env_path = Path(__file__).parent / ".env.local"
-print(f"Loading env from: {env_path}")
-print(f"File exists: {env_path.exists()}")
+logger.info(f"Loading env from: {env_path}")
+logger.info(f"File exists: {env_path.exists()}")
 
 # Load environment variables
 load_dotenv(env_path)
 
 # Get JWT_SECRET from environment
 JWT_SECRET = os.getenv("JWT_SECRET")
-print(f"JWT_SECRET loaded: {JWT_SECRET[:10] if JWT_SECRET else 'None'}...")
+logger.info(f"JWT_SECRET loaded: {JWT_SECRET[:10] if JWT_SECRET else 'None'}...")
 
 # Fallback to the default value used in settings.py if not set
 if not JWT_SECRET:
     JWT_SECRET = "dev-secret-key-change-in-production"
-    print("Using fallback JWT_SECRET")
+    logger.info("Using fallback JWT_SECRET")
 
 BASE_URL = "http://localhost:8000/api/v1"
 
@@ -31,7 +35,7 @@ def create_test_token():
     """Creates a JWT token for a test user."""
     payload = {
         "sub": "testuser@example.com",
-        "exp": datetime.utcnow() + timedelta(minutes=5),
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=5),
     }
     return jwt.encode(payload, JWT_SECRET, algorithm="HS256")
 
@@ -40,21 +44,21 @@ def test_endpoint(endpoint, payload, token, stream=False) -> None:
     """Helper function to test an endpoint."""
     url = f"{BASE_URL}/ai-assessments{endpoint}"
     headers = {"Authorization": f"Bearer {token}"}
-    print(f"--- Testing {url} ---")
+    logger.info(f"--- Testing {url} ---")
     try:
         if stream:
             with requests.post(url, json=payload, headers=headers, stream=True) as r:
-                print(f"Status Code: {r.status_code}")
+                logger.info(f"Status Code: {r.status_code}")
                 for chunk in r.iter_content(chunk_size=None):
                     if chunk:
-                        print(f"Received chunk: {chunk.decode('utf-8')}")
+                        logger.info(f"Received chunk: {chunk.decode('utf-8')}")
         else:
             r = requests.post(url, json=payload, headers=headers)
-            print(f"Status Code: {r.status_code}")
-            print(f"Response: {r.json()}")
+            logger.info(f"Status Code: {r.status_code}")
+            logger.info(f"Response: {r.json()}")
     except requests.exceptions.RequestException as e:
-        print(f"Error: {e}")
-    print("-" * 20)
+        logger.info(f"Error: {e}")
+    logger.info("-" * 20)
 
 
 if __name__ == "__main__":

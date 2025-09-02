@@ -1,20 +1,0 @@
-
-"items"str
-
-0intself3 3(list"‚$
-"
-4 4( "#new-object#Bdict'
-%
-4 4("#unknown-value#Blist&
-$
-4 4("
-#is-exact#:Bbool
-
-4 4("
-#assume#:8
-6
-4 4(	"#set-field# __collection_size:Bint 
-
-4 4(
-"	#map-set#:
-4 4( *L/home/omar/Documents/ruleIQ/api/integrations/google_workspace_integration.py

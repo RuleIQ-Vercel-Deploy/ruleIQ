@@ -1,150 +1,66 @@
 
-	"hits"str
-
-2int
-""misses"str
-7."Get comprehensive cache performance metrics."str
-/"cache_size_mb"str
- "total_misses"str
-"S3518"bool
-"hit_rate_percentage"str
-!("estimated_cost_savings"str
-*"cost_savings"str
-100int
-"total_requests"str
-1"cache_size_bytes"str
-
-0int
-"division by zero"bool
-
-,4int
-31024int
-"a"bool
-"total_hits"str
-8"ttl_config"strself
-Þ  Þ($"¬*
-(
-
-â â("#get-field# metrics:$
+""Server"str
+0'"Add security headers to all responses"str
+$"Strict-Transport-Security"str
+"1; mode=block"str
+.%"max-age=31536000; includeSubDomains"str
+	"nosniff"str
+"X-XSS-Protection"str
+""Content-Security-Policy"str
+!"X-Content-Type-Options"str
+ "Permissions-Policy"str
+3*"geolocation=(), microphone=(), camera=()"str
+
+"DENY"str
+"Referrer-Policy"str
+"X-Frame-Options"str
+*!"strict-origin-when-cross-origin"str
+"default-src 'self'"strrequest& (6	call_next8 (A"ò
+
+ ('"	call_next:+
+)
+ ('response"#unknown-value#(
+&
+ ("#get-field# headers:$
 "
-
-â â(-"#array-read#:*
-(
-
-â â(1"	#binop >#2>:Bbool,"*
-
-â â(1 *
-â â(2
-ã ã("ô*
-(
-
-á á("#get-field# metrics:$
+ (:	"#array-write#:(
+&
+	 	("#get-field# headers:$
 "
-
-á á(!
-"#array-read#:	*
-(
-
-á$ á(0"#get-field# metrics:$
+	 	(0"#array-write#:
+(
+&
+
+ 
+("#get-field# headers:$
 "
-
-á$ á(B"#array-read#:,
-*
-
-á á(B"
-#binop !=#2!=:Bbool"
- 
-
-á á(B"
-#assert#:3
-1
-
-á á(B"#dependent-value#*:
-Bfloat3
-1
-
-á á(H"#dependent-value#*:Bfloat
-
-á ã("
-
-á ã("¨*%
-#
-
-à ä(	hit_rate"#id#:&
-$
-
-æ î(	"#new-object#Bdict*
-(
-
-ç# ç(5"
-builtinsround*:"
- 
-
-ç ç(5"	#map-set#:*
-(
-
-è è(&"#get-field# metrics:$
+
+ 
+(:"#array-write#:(
+&
+ ("#get-field# headers:$
 "
-
-è è(."#array-read#:	"
- 
-
-è è(."	#map-set#:*
-(
-
-é é((!"#get-field# metrics:$
+ (Y"#array-write#:(
+&
+ ("#get-field# headers:$
 "
-
-é é(2#"#array-read#:!""
- 
-
-é é(2$"	#map-set#: #*
-(
-
-ê ê(*%"#get-field# metrics:$
+ (F"#array-write#:(
+&
+ ("#get-field# headers:$
 "
-
-ê ê(<&"#array-read#:%"
- 
-
-ê ê(<'"	#map-set#:&*
-(
-
-ë, ë(8)"#get-field# metrics:$
+ (K"#array-write#:(
+&
+ ("#get-field# headers:$
 "
-
-ë, ë(H+"#array-read#:)**
+ (W!"#array-write#: (
+&
+ (##"#get-field# headers:*
 (
-
-ë& ë(L-"
-builtinsround*:+,"
- 
-
-ë ë(L."	#map-set#:(-*
-(
-
-ì# ì(/0"#get-field# metrics:$
-"
-
-ì# ì(C2"#array-read#:013
-1
-
-ì# ì(J4"#dependent-value#*:23Bfloat3
-1
-
-ì# ì(Q5"#dependent-value#*:43Bfloat*
-(
-
-ì ì(U6"
-builtinsround*:5"
- 
-
-ì ì(U7"	#map-set#:/6-
-+
-
-í í(P9"?python-unknown?:Bdict"
- 
-
-í í(P:"	#map-set#:89
-
-æ î(	*9/home/omar/Documents/ruleIQ/services/ai/response_cache.py
+ (#$"
+#binop in#2in:"#Bbool"
+ (#$ * ("\(
+&
+ (%"#get-field# headers:(
+&
+ (&&"#python-array-del#:%""
+ (*>/home/omar/Documents/ruleIQ/api/middleware/security_headers.py

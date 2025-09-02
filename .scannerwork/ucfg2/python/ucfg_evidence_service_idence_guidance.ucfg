@@ -1,17 +1,17 @@
 
 ?services.evidence_service.EvidenceService.get_evidence_guidanceD
-8/home/omar/Documents/ruleIQ/services/evidence_service.pyÕ Õ("2*è
+8/home/omar/Documents/ruleIQ/services/evidence_service.pyœ œ("2*è
 2
-Œ Œ(S
+– –(S
 
-œ ‹(	
+— ﬁ(	
 %1"dict
 
-– ”(
+“ ’(
 %2"dict¿
 Ω
 
-— —(O
+” ”(O
 %3"__mapSet*"
 
 __unknown_file (
@@ -25,7 +25,7 @@
 .CloudTrail logs, S3 access logs, VPC flow logsÕ
  
 
-“ “(\
+‘ ‘(\
 %4"__mapSet*"
 
 __unknown_file (
@@ -39,7 +39,7 @@
 7IAM policies, Security Group rules, AWS Config findingså
 â
 
-– ”(
+“ ’(
 %5"__mapSet*"
 
 __unknown_file (
@@ -53,11 +53,11 @@
 
 %2
 
-‘ ◊(
+÷ Ÿ(
 %6"dict¡
 æ
 
-’ ’(P
+◊ ◊(P
 %7"__mapSet*"
 
 __unknown_file (
@@ -71,7 +71,7 @@
 /Azure Monitor logs, Activity Log, NSG flow logsœ
 Ã
 
-÷ ÷(^
+ÿ ÿ(^
 %8"__mapSet*"
 
 __unknown_file (
@@ -85,7 +85,7 @@
 9Azure Policy assignments, Security Center recommendationsé
 ã
 
-‘ ◊(
+÷ Ÿ(
 %9"__mapSet*"
 
 __unknown_file (
@@ -99,11 +99,11 @@
 
 %6
 
-ÿ €(
+⁄ ›(
 %10"dictª
 ∏
 
-Ÿ Ÿ(H
+€ €(H
 %11"__mapSet*#
 
 __unknown_file (
@@ -117,7 +117,7 @@
 'Cloud Audit Logs, Cloud Logging exports¬
 ø
 
-⁄ ⁄(O
+‹ ‹(O
 %12"__mapSet*#
 
 __unknown_file (
@@ -131,7 +131,7 @@
 *Security Command Center findings, policiesó
 î
 
-ÿ €(
+⁄ ›(
 %13"__mapSet*"
 
 __unknown_file (
@@ -146,17 +146,17 @@
 %10H
 F
 
-œ ‹(	
+— ﬁ(	
 guidance_map"__id*"
 
 __unknown_file (
 
 %1
 
-›0 ›(2
+ﬂ0 ﬂ(2
 %14"dict®•
 
-› ›(3
+ﬂ ﬂ(3
 %15"dict.get*,
 
 __unknown_file (
@@ -171,10 +171,10 @@ F
 
 %142get"
 
-› ›(3
+ﬂ ﬂ(3
 
 %15:
 
-Õ Õ(1
+œ œ(1
 cloud_providerB-+
 )services.evidence_service.EvidenceServiceH

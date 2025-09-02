@@ -6,16 +6,13 @@ Tracks regulation changes, deadlines, and temporal patterns in compliance requir
 
 import asyncio
 import logging
-from typing import Dict, List, Any, Optional, Tuple
-from datetime import datetime, timedelta, date
+from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
 from enum import Enum
-import json
-from pathlib import Path
 import re
 
 from neo4j import AsyncGraphDatabase
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field
 import numpy as np
 
 logger = logging.getLogger(__name__)
@@ -146,7 +143,7 @@ class TemporalTracker:
         """Establish connection to Neo4j"""
         try:
             self.driver = AsyncGraphDatabase.driver(
-                self.neo4j_uri, auth=(self.neo4j_user, self.neo4j_password)
+                self.neo4j_uri, auth=(self.neo4j_user, self.neo4j_password),
             )
             # Verify connectivity
             async with self.driver.session() as session:
@@ -241,7 +238,7 @@ class TemporalTracker:
                             action_required="Ensure full compliance implementation",
                             impact_score=regulation.get("base_risk_score", 5.0),
                             estimated_effort_hours=self._estimate_effort_from_complexity(
-                                regulation.get("implementation_complexity", 5)
+                                regulation.get("implementation_complexity", 5),
                             ),
                         )
                         events.append(event)
@@ -265,7 +262,7 @@ class TemporalTracker:
                         action_required="Complete implementation",
                         impact_score=regulation.get("base_risk_score", 5.0),
                         estimated_effort_hours=self._estimate_effort_from_complexity(
-                            regulation.get("implementation_complexity", 5)
+                            regulation.get("implementation_complexity", 5),
                         ),
                     )
                     events.append(event)
@@ -278,12 +275,12 @@ class TemporalTracker:
 
         # Parse month-based timelines
         month_match = re.search(
-            r"(\d+)[-\s]*(?:to[-\s]*)?(\d+)?\s*month", timeline_lower
+            r"(\d+)[-\s]*(?:to[-\s]*)?(\d+)?\s*month", timeline_lower,
         )
         if month_match:
             min_months = int(month_match.group(1))
             max_months = (
-                int(month_match.group(2)) if month_match.group(2) else min_months
+                int(month_match.group(2)) if month_match.group(2) else min_months,
             )
             avg_months = (min_months + max_months) / 2
             return int(avg_months * 30)
@@ -358,7 +355,7 @@ class TemporalTracker:
         async with self.driver.session() as session:
             # Get applicable regulations
             regulations = await self._get_applicable_regulations(
-                business_profile, session
+                business_profile, session,
             )
 
             # Extract all temporal events
@@ -369,7 +366,7 @@ class TemporalTracker:
 
             # Add enforcement-based events
             enforcement_events = await self._get_enforcement_events(
-                business_profile, session, horizon_date
+                business_profile, session, horizon_date,
             )
             all_events.extend(enforcement_events)
 
@@ -394,7 +391,7 @@ class TemporalTracker:
 
             # Get upcoming amendments
             amendments = await self._get_upcoming_amendments(
-                [reg["id"] for reg in regulations], session
+                [reg["id"] for reg in regulations], session,
             )
 
             # Analyze seasonal patterns
@@ -402,7 +399,7 @@ class TemporalTracker:
 
             # Generate resource forecast
             resource_forecast = self._generate_resource_forecast(
-                all_events, horizon_days
+                all_events, horizon_days,
             )
 
             return ComplianceTimeline(
@@ -454,7 +451,7 @@ class TemporalTracker:
         """
 
         result = await session.run(
-            query, start_date=(datetime.now() - timedelta(days=365)).isoformat()
+            query, start_date=(datetime.now() - timedelta(days=365)).isoformat(),
         )
 
         events = []
@@ -530,7 +527,7 @@ class TemporalTracker:
                         "period": pattern_name,
                         "months": pattern["months"],
                         "impact_multiplier": pattern["impact_multiplier"],
-                    }
+                    },
                 )
 
         return {
@@ -562,7 +559,7 @@ class TemporalTracker:
 
         peak_names = [month_names[m] for m in peak_months]
 
-        return f"Plan for increased compliance workload in {', '.join(peak_names)}. Consider temporary resource augmentation."
+        return f"Plan for increased compliance workload in {', '.join(peak_names)}. Consider temporary resource augmentation."  # noqa: E501
 
     def _generate_resource_forecast(
         self, events: List[ComplianceEvent], horizon_days: int
@@ -577,7 +574,7 @@ class TemporalTracker:
             if (event.event_date - current_date).days <= horizon_days:
                 month_key = f"{event.event_date.year}-{event.event_date.month:02d}"
                 monthly_hours[month_key] = (
-                    monthly_hours.get(month_key, 0) + event.estimated_effort_hours
+                    monthly_hours.get(month_key, 0) + event.estimated_effort_hours,
                 )
 
         # Calculate team capacity
@@ -586,7 +583,7 @@ class TemporalTracker:
             * self.resource_params["days_per_week"]
             * 4
             * self.resource_params["compliance_team_size"]
-            * (1 - self.resource_params["buffer_percentage"])
+            * (1 - self.resource_params["buffer_percentage"]),
         )
 
         # Identify resource constraints
@@ -606,7 +603,7 @@ class TemporalTracker:
             "constrained_months": constrained_months,
             "average_utilization": avg_utilization,
             "recommendation": self._generate_resource_recommendation(
-                avg_utilization, constrained_months
+                avg_utilization, constrained_months,
             ),
         }
 
@@ -619,7 +616,7 @@ class TemporalTracker:
             return "Critical: Team is over-capacity. Immediate resource augmentation required."
         elif avg_utilization > 0.7:
             if constrained_months:
-                return f"High utilization with constraints in {len(constrained_months)} months. Plan for temporary resources."
+                return f"High utilization with constraints in {len(constrained_months)} months. Plan for temporary resources."  # noqa: E501
             else:
                 return "High but manageable utilization. Monitor closely for changes."
         elif avg_utilization > 0.5:
@@ -643,7 +640,7 @@ class TemporalTracker:
         async with self.driver.session() as session:
             # Simulate amendment history (in production, would query real data)
             amendment_history = self._simulate_amendment_history(
-                regulation_id, lookback_years
+                regulation_id, lookback_years,
             )
 
             # Analyze patterns
@@ -651,7 +648,7 @@ class TemporalTracker:
                 "total_amendments": len(amendment_history),
                 "amendments_per_year": len(amendment_history) / lookback_years,
                 "average_days_between": self._calculate_avg_days_between(
-                    amendment_history
+                    amendment_history,
                 ),
                 "trend": self._analyze_amendment_trend(amendment_history),
                 "next_predicted": self._predict_next_amendment(amendment_history),
@@ -680,7 +677,7 @@ class TemporalTracker:
                     "date": amendment_date,
                     "type": np.random.choice(["major", "minor", "clarification"]),
                     "description": f"Amendment {i+1} for {regulation_id}",
-                }
+                },
             )
 
         history.sort(key=lambda x: x["date"])
@@ -716,10 +713,10 @@ class TemporalTracker:
 
         # Compare frequency
         first_rate = len(first_half) / (
-            (first_half[-1]["date"] - first_half[0]["date"]).days / 365
+            (first_half[-1]["date"] - first_half[0]["date"]).days / 365,
         )
         second_rate = len(second_half) / (
-            (second_half[-1]["date"] - second_half[0]["date"]).days / 365
+            (second_half[-1]["date"] - second_half[0]["date"]).days / 365,
         )
 
         if second_rate > first_rate * 1.2:
@@ -776,7 +773,7 @@ class TemporalTracker:
             Calendar organized by month
         """
         timeline = await self.generate_compliance_timeline(
-            business_profile, horizon_days=months_ahead * 30
+            business_profile, horizon_days=months_ahead * 30,
         )
 
         # Organize events by month
@@ -786,7 +783,7 @@ class TemporalTracker:
             + timeline.events_30_days
             + timeline.events_90_days
             + timeline.events_180_days
-            + timeline.events_365_days
+            + timeline.events_365_days,
         )
 
         for event in all_events:
@@ -843,7 +840,7 @@ async def main():
                 days_overdue = (datetime.now() - event.event_date).days
                 logger.info(f"  • {event.regulation_title}")
                 logger.info(
-                    f"    {days_overdue} days overdue - {event.action_required}"
+                    f"    {days_overdue} days overdue - {event.action_required}",
                 )
 
         if timeline.events_30_days:
@@ -859,24 +856,24 @@ async def main():
             logger.info(f"\n📊 Seasonal Patterns:")
             logger.info(f"  Peak Months: {timeline.seasonal_patterns['peak_months']}")
             logger.info(
-                f"  Recommendation: {timeline.seasonal_patterns['recommendation']}"
+                f"  Recommendation: {timeline.seasonal_patterns['recommendation']}",
             )
 
         # Resource forecast
         if timeline.resource_forecast:
             logger.info(f"\n👥 Resource Forecast:")
             logger.info(
-                f"  Average Utilization: {timeline.resource_forecast['average_utilization']:.1%}"
+                f"  Average Utilization: {timeline.resource_forecast['average_utilization']:.1%}",
             )
             logger.info(
-                f"  Monthly Capacity: {timeline.resource_forecast['monthly_capacity']} hours"
+                f"  Monthly Capacity: {timeline.resource_forecast['monthly_capacity']} hours",
             )
             if timeline.resource_forecast["constrained_months"]:
                 logger.info(
-                    f"  Constrained Months: {len(timeline.resource_forecast['constrained_months'])}"
+                    f"  Constrained Months: {len(timeline.resource_forecast['constrained_months'])}",
                 )
             logger.info(
-                f"  Recommendation: {timeline.resource_forecast['recommendation']}"
+                f"  Recommendation: {timeline.resource_forecast['recommendation']}",
             )
 
         # Test amendment tracking
@@ -892,14 +889,14 @@ async def main():
         logger.info(f"  Stability Score: {patterns['stability_score']:.2f}")
         if patterns["next_predicted"]:
             logger.info(
-                f"  Next Predicted: {patterns['next_predicted'].strftime('%Y-%m-%d')}"
+                f"  Next Predicted: {patterns['next_predicted'].strftime('%Y-%m-%d')}",
             )
 
         # Generate compliance calendar
         logger.info(f"\n📆 Compliance Calendar (Next 3 Months):")
 
         calendar = await tracker.generate_compliance_calendar(
-            business_profile, months_ahead=3
+            business_profile, months_ahead=3,
         )
 
         for month_key in sorted(list(calendar.keys()))[:3]:
@@ -907,10 +904,10 @@ async def main():
             logger.info(f"\n  {month_key}:")
             for event in events[:3]:
                 logger.info(
-                    f"    • {event.event_date.strftime('%d')}: {event.regulation_title[:50]}"
+                    f"    • {event.event_date.strftime('%d')}: {event.regulation_title[:50]}",
                 )
                 logger.info(
-                    f"      {event.urgency.value.upper()} - {event.action_required[:50]}"
+                    f"      {event.urgency.value.upper()} - {event.action_required[:50]}",
                 )
 
 

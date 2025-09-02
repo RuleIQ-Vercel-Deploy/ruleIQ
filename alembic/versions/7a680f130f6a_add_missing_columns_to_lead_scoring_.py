@@ -1,5 +1,7 @@
 """Add missing columns to lead_scoring_events
 
+from __future__ import annotations
+
 Revision ID: 7a680f130f6a
 Revises: 0717d4f5dcba
 Create Date: 2025-08-06 06:46:33.669772

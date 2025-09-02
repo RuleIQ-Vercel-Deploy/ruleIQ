@@ -1,20 +1,0 @@
-
-.%"Get assessment-specific instruction"strself
-Ä Ä(	framework
-Å Å(  business_profile
-Æ Æ((user_persona
-Ç Ç(*kwargs
-È È("dict51services.ai.instruction_templates.InstructionType"˜-
-+
-
-Ì Ì(&"#get-field# ASSESSMENT:'
-%
-
-Ð Ð(	"#unaryop **#2**:,
-*
-
-Ë Ñ(	
-"?python-unknown?:	
-
-Ë Ñ(	
-*@/home/omar/Documents/ruleIQ/services/ai/instruction_templates.py

@@ -1,10 +1,10 @@
 
 Eservices.ai.assistant.ComplianceAssistant._get_fallback_response_text@
-4/home/omar/Documents/ruleIQ/services/ai/assistant.pyÖ Ö(#"2*©
+4/home/omar/Documents/ruleIQ/services/ai/assistant.pyã ã(#"2*©
 2
-× ×(CNL
+å å(CNL
 
-Ù Ù(%
+æ æ(%
 %3"	str.lower*&
 
 __unknown_file (
@@ -13,14 +13,14 @@ Eservices.ai.assistant.ComplianceAssistant._get_fallback_response_text@
 prompt2lowerH
 F
 
-Ù Ù(%
+æ æ(%
 prompt_lower"__id*"
 
 __unknown_file (
 
 %3vt
 
-Û Û(!
+ç ç(!
 %4*,
 
 __unknown_file (
@@ -32,9 +32,9 @@ F
 4
 7*®
 4
-Ü ä(R"œ
+è ð(R"œ
 
-Ü ä(RŠ
+è ð(RŠ
 ‡Based on GDPR requirements, here are key considerations:
             
 â€¢ Lawful basis for processing personal data
@@ -45,9 +45,9 @@ F
 
 I recommend consulting with a data protection specialist for specific guidance.*–
 5
-ò ú(N"„
+ü „(N"„
 
-ò ú(Nõò
+ü „(Nõò
 ïI'm currently experiencing high demand. Here's general compliance guidance:
             
 â€¢ Identify applicable regulations for your industry
@@ -58,9 +58,9 @@ I recommend consulting with a data protection specialist for specific guidance.*
 
 Please try your question again or contact support for immediate assistance.*À
 6
-ç ï(I"®
+ò ú(I"®
 
-ç ï(IŸœ
+ò ú(IŸœ
 ™For ISO 27001 implementation:
             
 â€¢ Risk assessment and treatment
@@ -71,9 +71,9 @@ Please try your question again or contact support for immediate assistance.*À
 
 Consider engaging an ISO 27001 consultant for detailed implementation.*‡
 7
-æ æ(>us
+ñ ñ(>us
 
-æ æ("
+ñ ñ("
 %1*,
 
 __unknown_file (
@@ -83,7 +83,7 @@ Consider engaging an ISO 27001 consultant for detailed implementation.*‡
 __unknown_file (
 iso2__contains__wu
 
-æ' æ(>
+ñ' ñ(>
 %2*,
 
 __unknown_file (
@@ -95,9 +95,9 @@ Consider engaging an ISO 27001 consultant for detailed implementation.*‡
 5
 6:
 
-Ö* Ö(5
+ã* ã(5
 prompt:
 
-Ö7 Ö(N	
+ã7 ã(N	
 contextB-+
 )services.ai.assistant.ComplianceAssistantH

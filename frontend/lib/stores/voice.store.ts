@@ -43,9 +43,9 @@ interface VoiceStore extends VoiceState {
   adjustVolume: (volume: number) => void;
 
   // Actions - Commands
-  registerCommand: (command: VoiceCommand) => void;
+  registerCommand: (_command: VoiceCommand) => void;
   unregisterCommand: (trigger: string) => void;
-  executeCommand: (command: string) => Promise<void>;
+  executeCommand: (_command: string) => Promise<void>;
 
   // Actions - Configuration
   setLanguage: (language: string) => void;
@@ -273,7 +273,7 @@ const createActions = (set: any, get: any) => ({
   },
 
   // Command Actions
-  registerCommand: (command: VoiceCommand) => {
+  registerCommand: (_command: VoiceCommand) => {
     // TODO: Replace with proper logging
     // Future implementation - store commands
   },
@@ -283,7 +283,7 @@ const createActions = (set: any, get: any) => ({
     // Future implementation
   },
 
-  executeCommand: async (command: string) => {
+  executeCommand: async (_command: string) => {
     // TODO: Replace with proper logging
     // Future implementation - parse and execute commands
   },

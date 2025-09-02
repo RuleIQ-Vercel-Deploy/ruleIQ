@@ -35,7 +35,7 @@ def performance_config():
         "max_memory_mb": 500,
         "target_success_rate": 0.95,
         "concurrent_users": [1, 5, 10, 20],
-        "test_duration": 30,  # seconds
+        "test_duration": 30,  # seconds,
     }
 
 
@@ -53,7 +53,7 @@ class TestAIOptimizationPerformance:
             start_time = time.time()
 
             model = compliance_assistant._get_task_appropriate_model(
-                "analysis", {"framework": "gdpr", "prompt_length": 1000}
+                "analysis", {"framework": "gdpr", "prompt_length": 1000},
             )
 
             selection_time = time.time() - start_time
@@ -102,7 +102,7 @@ class TestAIOptimizationPerformance:
         ) as mock_get_model:
             mock_model = Mock()
             mock_model.generate_content_stream.return_value = iter(
-                [Mock(text=chunk) for chunk in mock_chunks]
+                [Mock(text=chunk) for chunk in mock_chunks],
             )
             mock_get_model.return_value = (mock_model, "test_instruction_id")
 
@@ -144,7 +144,7 @@ class TestAIOptimizationPerformance:
             ) as mock_get_model:
                 mock_model = Mock()
                 mock_model.generate_content_stream.return_value = iter(
-                    [Mock(text=chunk) for chunk in mock_chunks]
+                    [Mock(text=chunk) for chunk in mock_chunks],
                 )
                 mock_get_model.return_value = (mock_model, "test_instruction_id")
 
@@ -213,7 +213,7 @@ class TestAIOptimizationPerformance:
                     compliance_assistant._get_task_appropriate_model("analysis")
                     fallback_time = time.time() - start_time
                     fallback_times.append(fallback_time)
-                except Exception:
+                except (ValueError, TypeError):
                     # Fallback failed
                     pass
 
@@ -254,7 +254,7 @@ class TestAIOptimizationPerformance:
                     yield mock_chunk
 
             mock_model.generate_content_stream.return_value = (
-                create_streaming_response()
+                create_streaming_response(),
             )
             mock_get_model.return_value = (mock_model, "test_instruction_id")
 
@@ -338,7 +338,7 @@ class TestAIOptimizationPerformance:
                 mock_get_model.return_value = mock_model
 
                 model = compliance_assistant._get_task_appropriate_model(
-                    scenario["type"], {"complexity": scenario["complexity"]}
+                    scenario["type"], {"complexity": scenario["complexity"]},
                 )
 
                 assert model is not None

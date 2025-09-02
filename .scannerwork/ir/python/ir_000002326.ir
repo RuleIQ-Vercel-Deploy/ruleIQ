@@ -1,65 +1,11 @@
 
-©
-Ÿ"
-            MATCH (domain:ComplianceDomain)-[:GOVERNS]->(reg:Regulation)
-                  -[:REQUIRES]->(req:Requirement)
-            OPTIONAL MATCH (req)<-[:IMPLEMENTS]-(ctrl:Control)
-            RETURN domain.name AS domain,
-                   reg.name AS regulation,
-                   COUNT(req) AS total_requirements,
-                   COUNT(ctrl) AS implemented_controls,
-                   ROUND(100.0 * COUNT(ctrl) / COUNT(req), 2) AS coverage_percentage
-            ORDER BY domain.priority, coverage_percentage DESC
-            "str
-ÿõ"
-            MATCH (domain:ComplianceDomain {name: $domain_name})-[:GOVERNS]->(reg:Regulation)
-                  -[:REQUIRES]->(req:Requirement)
-            OPTIONAL MATCH (req)<-[:IMPLEMENTS]-(ctrl:Control)
-            RETURN domain.name AS domain,
-                   reg.name AS regulation,
-                   COUNT(req) AS total_requirements,
-                   COUNT(ctrl) AS implemented_controls,
-                   ROUND(100.0 * COUNT(ctrl) / COUNT(req), 2) AS coverage_percentage
-            "str
-"domain_name"str
-8/"Get compliance coverage analysis for a domain"str
-"coverage_analysis"strself
-Ý Ý(domain_name
-Ý Ý(/"[+
+1("Decorator for version-specific routes."strversion\ \("µ!
+
+b b("#unknown-value#(
+&
+_ b(%closure"#new-object#)
+'
+_ b("#set-field# version:+
 )
-
-á á("
-__bool__*:BboolH,"*
-
-á á( *
-á á(
-2
-í í("†(
-&
-â â(query"#id#:Bstr.
-,
-
-ì ì(1params"#new-object#Bdict"
- 
-
-ì ì(0	"	#map-set#:"b(
-&
-î î(·query"#id#:
-Bstr.
-,
-
-ù ù(params"#new-object#Bdict"³#
-!
-
-û û(9"#unknown-value#,
-*
-
-û û(9results"#unknown-value#&
-$
-
-ü ü(-"#new-object#Bdict"
- 
-
-ü ü(,"	#map-set#:
-
-ü ü(-*A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py
+_ b("?python-partial-apply?:
+b b(*</home/omar/Documents/ruleIQ/api/middleware/api_versioning.py

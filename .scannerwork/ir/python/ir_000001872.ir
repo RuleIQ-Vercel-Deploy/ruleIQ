@@ -1,63 +1,32 @@
 
-"Check equality."str
-
-0intself: :(other: :("	tupleD@services.ai.evaluation.golden_datasets.versioning.DatasetVersion"t)
-'
-< <(0"#is-instance#:Bbool)
-'
-< <(0"#unaryop !#2!:Bbool"
-< <(0 *< <(
-"5!
-
-= =(!"#unknown-value#
-= =(!"ô&
-$
-> >("#get-field# major:&
-$
-> >(&	"#get-field# minor:&
-$
->( >(2
-"#get-field# patch:(
+		"message"str
+'"Convert error to dictionary."str
+"error"str
+"timestamp"str
+	"details"str
+"code"strself* *("­$
+"
+, 3(	"#new-object#Bdict$
+"
+- 2("#new-object#Bdict%
+#
+. .(!"#get-field# code: 
+
+. .(!"	#map-set#:(
 &
-> >(3"#unknown-value#Btuple&
-$
-> >(3"
-#is-exact#:Bbool
-
-> >(3"
-#assume#:8
-6
-> >(3"#set-field# __collection_size:Bint&
-$
-> >(3"#array-add-last#:&
-$
-> >(3"#array-add-last#:	&
-$
-> >(3"#array-add-last#:
-&
-$
-? ?("#get-field# major:&
-$
-@ @("#get-field# minor:&
-$
-A A("#get-field# patch:(
+/ /('
+"#get-field# message: 
+
+/ /('"	#map-set#:	
+(
 &
->7 B(	"#unknown-value#Btuple&
-$
->7 B(	"
-#is-exact#:Bbool
-
->7 B(	"
-#assume#:8
-6
->7 B(	"#set-field# __collection_size:Bint&
-$
->7 B(	"#array-add-last#:&
-$
->7 B(	"#array-add-last#:&
-$
->7 B(	"#array-add-last#:*
+0 0('"#get-field# details: 
+
+0 0('"	#map-set#:*
 (
-> B(	"
-#binop ==#2==:Bbool
-> B(	*P/home/omar/Documents/ruleIQ/services/ai/evaluation/golden_datasets/versioning.py
+1 1(+"#get-field# timestamp: 
+
+1 1(+"	#map-set#: 
+
+- 2("	#map-set#:
+, 3(	*@/home/omar/Documents/ruleIQ/app/core/monitoring/error_handler.py

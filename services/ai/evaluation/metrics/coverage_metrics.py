@@ -1,5 +1,7 @@
 """Dataset coverage metrics."""
 
+from __future__ import annotations
+
 from collections import Counter
 from typing import Any, Dict, List
 from pydantic import BaseModel
@@ -55,7 +57,7 @@ def coverage_summary(dataset: List[BaseModel]) -> Dict[str, Any]:
         "avg_frameworks_per_item": sum(frameworks.values()) / total if total > 0 else 0,
         "most_common_framework": frameworks.most_common(1)[0] if frameworks else None,
         "most_common_jurisdiction": (
-            jurisdictions.most_common(1)[0] if jurisdictions else None
+            jurisdictions.most_common(1)[0] if jurisdictions else None,
         ),
         "most_common_trigger": triggers.most_common(1)[0] if triggers else None,
     }

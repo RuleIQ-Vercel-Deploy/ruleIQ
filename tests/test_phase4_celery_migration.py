@@ -1,11 +1,13 @@
 """
+from __future__ import annotations
+
 Test suite for Phase 4: Complete Celery task migration to LangGraph
 Tests all 16 migrated tasks and the unified orchestrator
 """
 
 import pytest
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 from unittest.mock import Mock, patch, AsyncMock
 
@@ -40,7 +42,7 @@ class TestComplianceTaskMigration:
             "task_result": None,
             "task_status": "pending",
             "original_task_name": "update_all_compliance_scores",
-            "migration_timestamp": datetime.utcnow().isoformat(),
+            "migration_timestamp": datetime.now(timezone.utc).isoformat(),
             "execution_metrics": {},
             "errors": [],
             "retry_count": 0,
@@ -69,7 +71,7 @@ class TestComplianceTaskMigration:
             "task_result": None,
             "task_status": "pending",
             "original_task_name": "check_compliance_alerts",
-            "migration_timestamp": datetime.utcnow().isoformat(),
+            "migration_timestamp": datetime.now(timezone.utc).isoformat(),
             "execution_metrics": {},
             "errors": [],
             "retry_count": 0,
@@ -101,7 +103,7 @@ class TestEvidenceTaskMigration:
             "task_result": None,
             "task_status": "pending",
             "original_task_name": "process_evidence_item",
-            "migration_timestamp": datetime.utcnow().isoformat(),
+            "migration_timestamp": datetime.now(timezone.utc).isoformat(),
             "execution_metrics": {},
             "errors": [],
             "retry_count": 0,
@@ -127,7 +129,7 @@ class TestEvidenceTaskMigration:
             "task_result": None,
             "task_status": "pending",
             "original_task_name": "sync_evidence_status",
-            "migration_timestamp": datetime.utcnow().isoformat(),
+            "migration_timestamp": datetime.now(timezone.utc).isoformat(),
             "execution_metrics": {},
             "errors": [],
             "retry_count": 0,
@@ -161,7 +163,7 @@ class TestNotificationTaskMigration:
             "task_result": None,
             "task_status": "pending",
             "original_task_name": "send_compliance_alert",
-            "migration_timestamp": datetime.utcnow().isoformat(),
+            "migration_timestamp": datetime.now(timezone.utc).isoformat(),
             "execution_metrics": {},
             "errors": [],
             "retry_count": 0,
@@ -187,7 +189,7 @@ class TestNotificationTaskMigration:
             "task_result": None,
             "task_status": "pending",
             "original_task_name": "send_weekly_summary",
-            "migration_timestamp": datetime.utcnow().isoformat(),
+            "migration_timestamp": datetime.now(timezone.utc).isoformat(),
             "execution_metrics": {},
             "errors": [],
             "retry_count": 0,
@@ -216,7 +218,7 @@ class TestNotificationTaskMigration:
             "task_result": None,
             "task_status": "pending",
             "original_task_name": "broadcast_notification",
-            "migration_timestamp": datetime.utcnow().isoformat(),
+            "migration_timestamp": datetime.now(timezone.utc).isoformat(),
             "execution_metrics": {},
             "errors": [],
             "retry_count": 0,
@@ -247,7 +249,7 @@ class TestReportingTaskMigration:
             "task_result": None,
             "task_status": "pending",
             "original_task_name": "generate_and_distribute_report",
-            "migration_timestamp": datetime.utcnow().isoformat(),
+            "migration_timestamp": datetime.now(timezone.utc).isoformat(),
             "execution_metrics": {},
             "errors": [],
             "retry_count": 0,
@@ -273,7 +275,7 @@ class TestReportingTaskMigration:
             "task_result": None,
             "task_status": "pending",
             "original_task_name": "cleanup_old_reports",
-            "migration_timestamp": datetime.utcnow().isoformat(),
+            "migration_timestamp": datetime.now(timezone.utc).isoformat(),
             "execution_metrics": {},
             "errors": [],
             "retry_count": 0,
@@ -304,7 +306,7 @@ class TestMonitoringTaskMigration:
             "task_result": None,
             "task_status": "pending",
             "original_task_name": "collect_database_metrics",
-            "migration_timestamp": datetime.utcnow().isoformat(),
+            "migration_timestamp": datetime.now(timezone.utc).isoformat(),
             "execution_metrics": {},
             "errors": [],
             "retry_count": 0,
@@ -331,7 +333,7 @@ class TestMonitoringTaskMigration:
             "task_result": None,
             "task_status": "pending",
             "original_task_name": "system_metrics_collection",
-            "migration_timestamp": datetime.utcnow().isoformat(),
+            "migration_timestamp": datetime.now(timezone.utc).isoformat(),
             "execution_metrics": {},
             "errors": [],
             "retry_count": 0,
@@ -393,7 +395,7 @@ class TestUnifiedOrchestrator:
         graph = CeleryMigrationGraph()
 
         result = await graph.execute_task(
-            task_type="update_compliance_scores", params={}
+            task_type="update_compliance_scores", params={},
         )
 
         assert result["task"] == "update_all_compliance_scores"
@@ -424,7 +426,7 @@ class TestUnifiedOrchestrator:
             "task_result": None,
             "task_status": "pending",
             "original_task_name": "invalid_task",
-            "migration_timestamp": datetime.utcnow().isoformat(),
+            "migration_timestamp": datetime.now(timezone.utc).isoformat(),
             "execution_metrics": {},
             "errors": [],
             "retry_count": 0,
@@ -532,7 +534,7 @@ class TestMigrationCompleteness:
             "sync_evidence",  # Every 2 hours
             "cleanup_monitoring",  # Every 6 hours
             "cleanup_reports",  # Daily
-            "weekly_summary",  # Weekly
+            "weekly_summary",  # Weekly,
         ]
 
         # Verify all periodic tasks are in the task routes

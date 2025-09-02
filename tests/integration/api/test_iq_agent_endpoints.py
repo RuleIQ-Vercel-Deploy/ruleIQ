@@ -11,7 +11,7 @@ Tests the FastAPI endpoints for IQ Agent GraphRAG compliance intelligence includ
 
 import json
 import pytest
-from datetime import datetime
+from datetime import datetime, timezone
 from unittest.mock import AsyncMock, Mock, patch
 from uuid import uuid4
 
@@ -53,7 +53,7 @@ class TestIQAgentEndpoints:
         agent.process_query = AsyncMock(
             return_value={
                 "status": "success",
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "summary": {
                     "risk_posture": "MEDIUM",
                     "compliance_score": 0.75,
@@ -83,7 +83,7 @@ class TestIQAgentEndpoints:
                             "cost_estimate": 15000.0,
                             "timeline": "30_days",
                             "graph_reference": "gap_123",
-                        }
+                        },
                     ],
                     "risk_assessment": {
                         "overall_risk_level": "MEDIUM",
@@ -96,7 +96,7 @@ class TestIQAgentEndpoints:
                         {
                             "pattern_type": "HIGH_GAP_CONCENTRATION",
                             "domain": "Data Protection",
-                        }
+                        },
                     ],
                     "memories_accessed": ["mem_123", "mem_456"],
                     "learnings_applied": 2,
@@ -121,7 +121,7 @@ class TestIQAgentEndpoints:
                     },
                 ],
                 "llm_response": "Based on my comprehensive analysis of your compliance posture, I've identified several critical gaps that require immediate attention...",
-            }
+            },
         )
 
         # Mock memory manager
@@ -134,14 +134,14 @@ class TestIQAgentEndpoints:
                         id="mem_1",
                         memory_type="conversation",
                         content={"insight": "GDPR consent gap"},
-                        timestamp=datetime.utcnow(),
+                        timestamp=datetime.now(timezone.utc),
                         importance_score=0.8,
                         access_count=3,
                         tags=["gdpr", "consent"],
                         confidence_score=0.9,
-                    )
-                ]
-            )
+                    ),
+                ],
+            ),
         )
         agent.memory_manager = memory_manager
 
@@ -160,7 +160,7 @@ class TestIQAgentEndpoints:
                 "compliance_domains": 6,
                 "regulations": 12,
                 "requirements": 85,
-            }
+            },
         )
         return service
 
@@ -386,7 +386,7 @@ class TestIQAgentEndpoints:
         # Mock Neo4j service that fails connection
         failing_service = Mock()
         failing_service.test_connection = AsyncMock(
-            side_effect=Exception("Connection failed")
+            side_effect=Exception("Connection failed"),
         )
 
         with patch(
@@ -444,7 +444,7 @@ class TestIQAgentEndpoints:
             side_effect=Exception("Service unavailable"),
         ):
             response = await async_client.post(
-                "/api/v1/iq/query", json={"query": "Test query"}, headers=auth_headers
+                "/api/v1/iq/query", json={"query": "Test query"}, headers=auth_headers,
             )
 
         assert response.status_code == 503
@@ -460,12 +460,12 @@ class TestIQAgentEndpoints:
         from services.ai.exceptions import AIServiceException
 
         mock_iq_agent.process_query = AsyncMock(
-            side_effect=AIServiceException("AI service error")
+            side_effect=AIServiceException("AI service error"),
         )
 
         with patch("api.routers.iq_agent.get_iq_agent", return_value=mock_iq_agent):
             response = await async_client.post(
-                "/api/v1/iq/query", json={"query": "Test query"}, headers=auth_headers
+                "/api/v1/iq/query", json={"query": "Test query"}, headers=auth_headers,
             )
 
         assert response.status_code == 502
@@ -479,7 +479,7 @@ class TestIQAgentEndpoints:
 
         # Mock memory manager to raise exception
         mock_iq_agent.memory_manager.store_conversation_memory = AsyncMock(
-            side_effect=Exception("Memory storage failed")
+            side_effect=Exception("Memory storage failed"),
         )
 
         with patch("api.routers.iq_agent.get_iq_agent", return_value=mock_iq_agent):
@@ -547,12 +547,12 @@ class TestIQAgentEndpoints:
         """Test queries with special characters and unicode"""
 
         special_query = (
-            "What are our compliance gaps für GDPR & 6AMLD? Include costs €£$"
+            "What are our compliance gaps für GDPR & 6AMLD? Include costs €£$",
         )
 
         with patch("api.routers.iq_agent.get_iq_agent", return_value=mock_iq_agent):
             response = await async_client.post(
-                "/api/v1/iq/query", json={"query": special_query}, headers=auth_headers
+                "/api/v1/iq/query", json={"query": special_query}, headers=auth_headers,
             )
 
         assert response.status_code == 200

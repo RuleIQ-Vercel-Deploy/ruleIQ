@@ -3,8 +3,8 @@ Security Alert Service for SMB owners.
 Sends email notifications for security events like failed login attempts.
 """
 
-from typing import Optional, Dict
-from datetime import datetime, timedelta
+from typing import Optional
+from datetime import datetime, timedelta, timezone
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_, func
 from database.user import User
@@ -41,7 +41,7 @@ class SecurityAlertService:
         Returns:
             True if alert should be sent
         """
-        window_start = datetime.utcnow() - timedelta(minutes=cls.FAILED_LOGIN_WINDOW)
+        window_start = datetime.now(timezone.utc) - timedelta(minutes=cls.FAILED_LOGIN_WINDOW)
 
         # Count recent failed login attempts
         stmt = select(func.count(AuditLog.id)).where(
@@ -50,7 +50,7 @@ class SecurityAlertService:
                 AuditLog.action == "login_failure",
                 AuditLog.timestamp >= window_start,
                 AuditLog.ip_address == ip_address,
-            )
+            ),
         )
 
         result = await db.execute(stmt)
@@ -99,7 +99,7 @@ class SecurityAlertService:
                 <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
                     <p><strong>Failed Attempts:</strong> {failed_attempts}</p>
                     <p><strong>IP Address:</strong> {ip_address}</p>
-                    <p><strong>Time:</strong> {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')} UTC</p>
+                    <p><strong>Time:</strong> {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} UTC</p>
                     {f'<p><strong>Device:</strong> {user_agent}</p>' if user_agent else ''}
                 </div>
                 
@@ -112,7 +112,10 @@ class SecurityAlertService:
                 
                 <p style="margin-top: 30px;">
                     <a href="{os.getenv('FRONTEND_URL', 'https://app.ruleiq.com')}/reset-password" 
-                       style="background-color: #1976d2; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                       style= (
+                           "background-color: #1976d2; color: white; padding: 10px 20px; text-decoration: "
+                           "none; border-radius: 5px;"",
+                       )
                         Reset Password
                     </a>
                 </p>
@@ -132,7 +135,7 @@ We've detected multiple failed login attempts on your account:
 
 Failed Attempts: {failed_attempts}
 IP Address: {ip_address}
-Time: {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')} UTC
+Time: {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} UTC
 {f'Device: {user_agent}' if user_agent else ''}
 
 What should you do?
@@ -169,7 +172,7 @@ This is an automated security alert from RuleIQ.
                 start_tls=True,
             )
             logger.info(
-                f"Security alert sent to {user.email} for failed login attempts"
+                f"Security alert sent to {user.email} for failed login attempts",
             )
         except Exception as e:
             logger.error(f"Failed to send security alert email: {e}")
@@ -205,7 +208,7 @@ This is an automated security alert from RuleIQ.
             ip_address=ip_address,
             user_agent=user_agent,
             severity="info" if success else "warning",
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(timezone.utc),
         )
 
         db.add(audit_log)
@@ -217,15 +220,15 @@ This is an automated security alert from RuleIQ.
 
             if should_alert:
                 # Count total failed attempts in window
-                window_start = datetime.utcnow() - timedelta(
-                    minutes=cls.FAILED_LOGIN_WINDOW
+                window_start = datetime.now(timezone.utc) - timedelta(
+                    minutes=cls.FAILED_LOGIN_WINDOW,
                 )
                 stmt = select(func.count(AuditLog.id)).where(
                     and_(
                         AuditLog.user_id == user.id,
                         AuditLog.action == "login_failure",
                         AuditLog.timestamp >= window_start,
-                    )
+                    ),
                 )
                 result = await db.execute(stmt)
                 total_failed = result.scalar() or 0
@@ -237,7 +240,7 @@ This is an automated security alert from RuleIQ.
                         failed_attempts=total_failed,
                         ip_address=ip_address,
                         user_agent=user_agent,
-                    )
+                    ),
                 )
 
     @classmethod
@@ -253,7 +256,7 @@ This is an automated security alert from RuleIQ.
         smtp_host = os.getenv("SMTP_HOST")
         if not smtp_host:
             logger.warning(
-                "Email configuration missing, skipping password change notification"
+                "Email configuration missing, skipping password change notification",
             )
             return
 
@@ -267,7 +270,7 @@ This is an automated security alert from RuleIQ.
                 <p>Your password was successfully changed.</p>
                 
                 <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
-                    <p><strong>Changed at:</strong> {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S')} UTC</p>
+                    <p><strong>Changed at:</strong> {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} UTC</p>
                     <p><strong>IP Address:</strong> {ip_address}</p>
                 </div>
                 

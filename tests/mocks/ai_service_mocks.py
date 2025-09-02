@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Comprehensive AI Service Mocks for Testing
 
 Provides realistic mock implementations for all AI services used in the application,
@@ -6,7 +8,7 @@ including ComplianceAssistant, AI assessment endpoints, and external AI provider
 """
 
 import asyncio
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 from uuid import uuid4
 
@@ -71,7 +73,7 @@ class MockComplianceAssistant:
             "follow_up_suggestions": self._get_follow_up_suggestions(question_text),
             "source_references": self._get_source_references(framework_id),
             "request_id": f"mock-{uuid4().hex[:8]}",
-            "generated_at": datetime.utcnow().isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
         }
 
     async def generate_followup_questions(
@@ -92,14 +94,14 @@ class MockComplianceAssistant:
 
         # Generate contextual follow-up questions
         follow_ups = self._generate_followup_questions(
-            question_text, user_answer, framework_id
+            question_text, user_answer, framework_id,
         )
 
         return {
             "follow_up_questions": follow_ups,
             "reasoning": f"Based on your answer '{user_answer}', we need more specific information to provide accurate compliance guidance.",
             "request_id": f"mock-followup-{uuid4().hex[:8]}",
-            "generated_at": datetime.utcnow().isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
         }
 
     async def analyze_assessment_results(
@@ -125,7 +127,7 @@ class MockComplianceAssistant:
             "compliance_insights": self._generate_insights(answers, framework_id),
             "evidence_requirements": self._suggest_evidence(answers, framework_id),
             "request_id": f"mock-analysis-{uuid4().hex[:8]}",
-            "generated_at": datetime.utcnow().isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
         }
 
     async def get_personalized_recommendations(
@@ -146,14 +148,14 @@ class MockComplianceAssistant:
 
         return {
             "recommendations": self._generate_personalized_recommendations(
-                gaps, industry, size
+                gaps, industry, size,
             ),
             "implementation_plan": self._create_implementation_plan(
-                timeline_preferences
+                timeline_preferences,
             ),
             "success_metrics": self._define_success_metrics(gaps),
             "request_id": f"mock-rec-{uuid4().hex[:8]}",
-            "generated_at": datetime.utcnow().isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
         }
 
     def _generate_contextual_guidance(
@@ -208,7 +210,7 @@ class MockComplianceAssistant:
             ],
         }
         return topics_map.get(
-            framework_id.lower(), ["Compliance", "Risk Management", "Controls"]
+            framework_id.lower(), ["Compliance", "Risk Management", "Controls"],
         )
 
     def _get_follow_up_suggestions(self, question_text: str) -> List[str]:
@@ -225,13 +227,13 @@ class MockComplianceAssistant:
             return [
                 "How often is this policy reviewed?",
                 "Who is responsible for policy compliance?",
-                "How do you train staff on this policy?",
+                "How do you train staff on this policy?"
             ]
         else:
             return [
                 "What is your current implementation status?",
                 "What challenges do you face with this requirement?",
-                "Do you have documented procedures for this?",
+                "Do you have documented procedures for this?"
             ]
 
     def _get_source_references(self, framework_id: str) -> List[str]:
@@ -243,7 +245,7 @@ class MockComplianceAssistant:
             "hipaa": ["45 CFR 164", "HHS Guidance", "NIST 800-66"],
         }
         return references_map.get(
-            framework_id.lower(), [f"{framework_id} Standards", "Regulatory Guidance"]
+            framework_id.lower(), [f"{framework_id} Standards", "Regulatory Guidance"],
         )
 
     def _generate_followup_questions(
@@ -268,9 +270,9 @@ class MockComplianceAssistant:
                         "validation": {"required": True},
                         "metadata": {
                             "source": "ai",
-                            "reasoning": "Need to understand data types for risk assessment",
+                            "reasoning": "Need to understand data types for risk assessment"
                         },
-                    }
+                    },
                 )
                 questions.append(
                     {
@@ -286,9 +288,9 @@ class MockComplianceAssistant:
                         "validation": {"required": True},
                         "metadata": {
                             "source": "ai",
-                            "reasoning": "Legal basis is required for GDPR compliance",
+                            "reasoning": "Legal basis is required for GDPR compliance"
                         },
-                    }
+                    },
                 )
 
         return questions
@@ -306,7 +308,7 @@ class MockComplianceAssistant:
                         "description": "Privacy policy is missing or incomplete",
                         "priority": "high",
                         "control_reference": "GDPR Article 13",
-                    }
+                    },
                 )
 
             if answers.get("conducts_dpia") == "no":
@@ -316,7 +318,7 @@ class MockComplianceAssistant:
                         "description": "Data Protection Impact Assessment not conducted",
                         "priority": "medium",
                         "control_reference": "GDPR Article 35",
-                    }
+                    },
                 )
 
         return gaps
@@ -335,7 +337,7 @@ class MockComplianceAssistant:
                     "description": "Continue with the assessment to identify all compliance requirements",
                     "priority": "high",
                     "category": "Assessment",
-                }
+                },
             )
 
         recommendations.append(
@@ -345,7 +347,7 @@ class MockComplianceAssistant:
                 "description": f"Implement the required controls for {framework_id} compliance",
                 "priority": "medium",
                 "category": "Implementation",
-            }
+            },
         )
 
         return recommendations
@@ -367,7 +369,7 @@ class MockComplianceAssistant:
             "factors": (
                 ["Incomplete assessment", "Missing controls"]
                 if risk_score > 50
-                else ["Minor gaps identified"]
+                else ["Minor gaps identified"],
             ),
         }
 
@@ -503,7 +505,7 @@ class MockAIServiceFailures:
 
         async def filter_method(*args, **kwargs):
             raise AIContentFilterException(
-                filter_reason="Inappropriate content detected"
+                filter_reason="Inappropriate content detected",
             )
 
         mock.get_question_help = filter_method

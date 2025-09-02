@@ -1,19 +1,19 @@
 
 Zservices.ai.instruction_templates.SystemInstructionTemplates._initialize_base_instructionsJ
-@/home/omar/Documents/ruleIQ/services/ai/instruction_templates.py; ;(%"2*œb
-2< <(K
-	= ”(	
+@/home/omar/Documents/ruleIQ/services/ai/instruction_templates.py> >(%"2*³a
+2? ?(K
+	@ (
 %1"dict{
 y
-> >(&
+@ @(*
 %2"__id*a
 
 __unknown_file (E*C3
 1services.ai.instruction_templates.InstructionType"
 
-ASSESSMENTß
-Ü
-> ^(
+ASSESSMENTÍ
+Ê
+@ a(
 %3"__mapSet*"
 
 __unknown_file (
@@ -22,11 +22,11 @@ ASSESSMENTß
 
 __unknown_file (
 
-%2*÷
+%2*å
 
-__unknown_file (Ú×
-Ô
-You are ComplianceGPT, an expert AI compliance assistant specializing in UK regulations and international compliance frameworks.
+__unknown_file (ÈÅ
+Â
+You are ComplianceGPT, an expert AI compliance assistant specializing in UK regulations and international compliance frameworks.  # noqa: E501
 
 Core Competencies:
 - GDPR and UK GDPR compliance analysis with detailed legal understanding
@@ -59,15 +59,15 @@ Communication Style:
 - Actionable guidance with specific next steps
 y
 w
-_ _($
+b b(&
 %4"__id*_
 
 __unknown_file (C*A3
 1services.ai.instruction_templates.InstructionType"
 
-EVIDENCE”
-‘
-_ |(
+EVIDENCE†
+ƒ
+	b €(
 %5"__mapSet*"
 
 __unknown_file (
@@ -76,11 +76,11 @@ w
 
 __unknown_file (
 
-%4*¬
+%4*
 
-__unknown_file (Œ
-‰
-You are ComplianceGPT, an expert compliance evidence analyst with deep knowledge of UK and international compliance frameworks.
+__unknown_file (€ý
+ú
+You are ComplianceGPT, an expert compliance evidence analyst with deep knowledge of UK and international compliance frameworks.  # noqa: E501
 
 Evidence Analysis Expertise:
 - Comprehensive understanding of evidence requirements across frameworks
@@ -108,16 +108,18 @@ Quality Standards:
 - Evidence mapping must reference specific regulatory requirements
 - Collection processes must be scalable and sustainable
 - Quality criteria must be measurable and objective
-w
-u
-} }("
+y
+w
+
+ ($
 %6"__id*]
 
 __unknown_file (A*?3
 1services.ai.instruction_templates.InstructionType"
-POLICYŠ
-‡
-	} ›(
+POLICYû
+ø
+
+  (
 %7"__mapSet*"
 
 __unknown_file (
@@ -126,11 +128,11 @@ u
 
 __unknown_file (
 
-%6*¡
+%6*‘
 
-__unknown_file („
-þ
-You are ComplianceGPT, an expert compliance policy writer with extensive experience in UK regulatory frameworks and international standards.
+__unknown_file (ôñ
+î
+You are ComplianceGPT, an expert compliance policy writer with extensive experience in UK regulatory frameworks and international standards.  # noqa: E501
 
 Policy Development Expertise:
 - Comprehensive knowledge of regulatory requirements across frameworks
@@ -162,15 +164,15 @@ Policy Quality Criteria:
 w
 u
 
-œ œ( 
+¡ ¡("
 %8"__id*[
 
 __unknown_file (?*=3
 1services.ai.instruction_templates.InstructionType"
-CHATü
-ù
+CHATí
+ê
 
-œ ¹(
+¡ ¿(
 %9"__mapSet*"
 
 __unknown_file (
@@ -179,11 +181,11 @@ u
 
 __unknown_file (
 
-%8*’
+%8*ƒ
 
-__unknown_file (õò
-ï
-You are ComplianceGPT, a friendly and knowledgeable AI compliance assistant helping UK businesses navigate complex regulatory landscapes.
+__unknown_file (æã
+à
+You are ComplianceGPT, a friendly and knowledgeable AI compliance assistant helping UK businesses navigate complex regulatory landscapes.  # noqa: E501
 
 Conversational Expertise:
 - Comprehensive knowledge of UK and international compliance frameworks
@@ -214,16 +216,16 @@ Communication Standards:
 |
 z
 
-º º($
+À À(&
 %10"__id*_
 
 __unknown_file (C*A3
 1services.ai.instruction_templates.InstructionType"
 
-ANALYSIS¬
-©
+ANALYSIS
+š
 
-º ×(
+À Þ(
 %11"__mapSet*"
 
 __unknown_file (
@@ -232,11 +234,11 @@ z
 
 __unknown_file (
 
-%10*À
+%10*±
 
-__unknown_file (£ 
-
-You are ComplianceGPT, an expert compliance analyst with advanced skills in gap analysis, risk assessment, and compliance maturity evaluation.
+__unknown_file (”‘
+Ž
+You are ComplianceGPT, an expert compliance analyst with advanced skills in gap analysis, risk assessment, and compliance maturity evaluation.  # noqa: E501
 
 Analytical Expertise:
 - Advanced gap analysis methodologies and frameworks
@@ -267,15 +269,15 @@ Quality Requirements:
 „
 
 
-Ø Ø(+
+ß ß(-
 %12"__id*f
 
 __unknown_file (J*H3
 1services.ai.instruction_templates.InstructionType"
-RECOMMENDATIONSÿ
-ü
+RECOMMENDATIONSð
+í
 
-Ø õ(
+ß ý(
 %13"__mapSet*"
 
 __unknown_file (
@@ -284,11 +286,11 @@ Quality Requirements:
 
 __unknown_file (
 
-%12*“
+%12*„
 
-__unknown_file (öó
-ð
-You are ComplianceGPT, an expert compliance implementation consultant specializing in practical, risk-based recommendation development.
+__unknown_file (çä
+á
+You are ComplianceGPT, an expert compliance implementation consultant specializing in practical, risk-based recommendation development.  # noqa: E501
 
 Recommendation Expertise:
 - Expert knowledge of compliance implementation strategies and approaches
@@ -319,15 +321,15 @@ Implementation Focus:
 {
 y
 
-ö ö(#
+þ þ(%
 %14"__id*^
 
 __unknown_file (B*@3
 1services.ai.instruction_templates.InstructionType"	
-GENERALº
-·
+GENERAL«
+¨
 
-ö “(
+þ œ(
 %15"__mapSet*"
 
 __unknown_file (
@@ -336,11 +338,11 @@ y
 
 __unknown_file (
 
-%14*Î
+%14*¿
 
-__unknown_file (±®
-«
-You are ComplianceGPT, a comprehensive AI compliance assistant with expertise across UK and international regulatory frameworks.
+__unknown_file (¢Ÿ
+œ
+You are ComplianceGPT, a comprehensive AI compliance assistant with expertise across UK and international regulatory frameworks.  # noqa: E501
 
 General Assistance Capabilities:
 - Broad knowledge of compliance requirements across industries and frameworks
@@ -369,7 +371,7 @@ Response Quality:
 - Clear and accessible to non-compliance experts
 - Comprehensive yet focused on user needs
 "
-	= ”(	
+	@ (
 
 %1B@>
 <services.ai.instruction_templates.SystemInstructionTemplatesH

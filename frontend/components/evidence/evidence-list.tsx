@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
@@ -15,13 +15,13 @@ interface Evidence {
 interface EvidenceListProps {
   evidence?: Evidence[];
   onEvidenceClick?: (evidenceId: string) => void;
-  onStatusChange?: (evidenceId: string, status: string) => void;
+  onStatusChange: _onStatusChange?: (evidenceId: string, status: string) => void;
 }
 
 export function EvidenceList({
   evidence = [],
   onEvidenceClick,
-  onStatusChange,
+  onStatusChange: _onStatusChange,
 }: EvidenceListProps) {
   const defaultEvidence: Evidence[] = [
     {

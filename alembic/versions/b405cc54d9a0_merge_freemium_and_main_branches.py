@@ -1,5 +1,7 @@
 """Merge freemium and main branches
 
+from __future__ import annotations
+
 Revision ID: b405cc54d9a0
 Revises: freemium_001, d354bd6c0c4b
 Create Date: 2025-08-05 15:44:40.028805

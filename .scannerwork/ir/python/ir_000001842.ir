@@ -1,50 +1,25 @@
 
-truebool
-"division by zero"bool
-
-"S3518"bool
+Ç½"
+        Decorator to require specific permissions for a route.
 
-0int
-7."Check if performance meets SLO requirements."str
-"a"boolself
- ("€.
-,
+        Args:
+            permissions: List of required permissions
 
- ("#get-field# total_turns:,
-*
-
- ( "
-#binop ==#2==:Bbool "
-
- (  *
- (
-"
-
- ("Ù3
-1
-
-‘ ‘(+"#get-field# total_latency_ms:.
-,
-
-‘. ‘(>"#get-field# total_turns:,
-*
-
-‘ ‘(>	"
-#binop !=#2!=:Bbool"
- 
-
-‘ ‘(>"
-#assert#:	
-9
-7
-
-‘ ‘(>avg_latency"#dependent-value#*:#
+        Returns:
+            Route decorator
+        "strpermissions
+É É(2"Ã#
 !
 
-’ ’(0"#unknown-value#,
-*
+× ×("#unknown-value#*
+(
 
-’ ’(0"
-#binop <=#2<=:Bbool
+Ô ×(%closure"#new-object#/
+-
 
-’ ’(0*@/home/omar/Documents/ruleIQ/langgraph_agent/agents/agent_core.py
+Ô ×("#set-field# permissions:-
++
+
+Ô ×("?python-partial-apply?:
+
+× ×(*=/home/omar/Documents/ruleIQ/api/middleware/rbac_middleware.py

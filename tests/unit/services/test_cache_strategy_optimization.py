@@ -191,7 +191,7 @@ class TestCacheStrategyOptimization:
         # Test business profile update invalidation
         context = {"business_profile_id": business_profile_id}
         cache_manager.trigger_intelligent_invalidation(
-            "business_profile_update", context
+            "business_profile_update", context,
         )
 
         # Verify invalidation trigger was recorded
@@ -356,7 +356,7 @@ class TestCacheStrategyOptimization:
 
         # Test invalidation (should be no-op)
         cache_manager.trigger_intelligent_invalidation(
-            "business_profile_update", {"business_profile_id": "test"}
+            "business_profile_update", {"business_profile_id": "test"},
         )
         assert len(cache_manager.invalidation_triggers) == 0
 
@@ -391,8 +391,8 @@ class TestCacheStrategyIntegration:
                     "performance_based_ttl": {"enabled": True, "total_adjustments": 0},
                     "cache_warming": {"enabled": True, "queue_size": 0},
                     "intelligent_invalidation": {"enabled": True, "recent_triggers": 0},
-                }
-            }
+                },
+            },
         )
 
         assistant._add_to_cache_warming_queue = AsyncMock()
@@ -427,7 +427,7 @@ class TestCacheStrategyIntegration:
 
         # Add to warming queue
         await assistant_with_optimized_cache._add_to_cache_warming_queue(
-            context, "assessment"
+            context, "assessment",
         )
 
         # Process warming queue
@@ -443,7 +443,7 @@ class TestCacheStrategyIntegration:
 
         # Trigger invalidation
         await assistant_with_optimized_cache.trigger_cache_invalidation(
-            "business_profile_update", context
+            "business_profile_update", context,
         )
 
         # Should not raise exceptions

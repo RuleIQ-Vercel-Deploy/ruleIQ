@@ -120,7 +120,7 @@ class RolePermission(Base):
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     role_id = Column(PG_UUID(as_uuid=True), ForeignKey("roles.id"), nullable=False)
     permission_id = Column(
-        PG_UUID(as_uuid=True), ForeignKey("permissions.id"), nullable=False
+        PG_UUID(as_uuid=True), ForeignKey("permissions.id"), nullable=False,
     )
     granted_at = Column(DateTime, default=datetime.utcnow)
     granted_by = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
@@ -147,7 +147,7 @@ class FrameworkAccess(Base):
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     role_id = Column(PG_UUID(as_uuid=True), ForeignKey("roles.id"), nullable=False)
     framework_id = Column(
-        PG_UUID(as_uuid=True), ForeignKey("compliance_frameworks.id"), nullable=False
+        PG_UUID(as_uuid=True), ForeignKey("compliance_frameworks.id"), nullable=False,
     )
     access_level = Column(
         Enum("read", "write", "admin", name="access_level_enum"),
@@ -203,7 +203,7 @@ class AuditLog(Base):
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=True)
     session_id = Column(
-        PG_UUID(as_uuid=True), ForeignKey("user_sessions.id"), nullable=True
+        PG_UUID(as_uuid=True), ForeignKey("user_sessions.id"), nullable=True,
     )
     action = Column(
         String(100), nullable=False
@@ -237,7 +237,7 @@ class DataAccess(Base):
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     business_profile_id = Column(
-        PG_UUID(as_uuid=True), ForeignKey("business_profiles.id"), nullable=True
+        PG_UUID(as_uuid=True), ForeignKey("business_profiles.id"), nullable=True,
     )
     access_type = Column(
         Enum("own_data", "organization_data", "all_data", name="data_access_enum"),
@@ -256,6 +256,6 @@ class DataAccess(Base):
     # Ensure one data access level per user-business profile combination
     __table_args__ = (
         UniqueConstraint(
-            "user_id", "business_profile_id", name="uq_user_business_data_access"
+            "user_id", "business_profile_id", name="uq_user_business_data_access",
         ),
     )

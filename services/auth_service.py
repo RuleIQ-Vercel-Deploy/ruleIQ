@@ -1,10 +1,13 @@
 """
+from __future__ import annotations
+import requests
+
 Authentication service for session management and security.
 """
 
 import contextlib
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, List, Optional
 from uuid import UUID, uuid4
 
@@ -33,12 +36,12 @@ class SessionManager:
         if self._redis_client is None:
             try:
                 self._redis_client = redis.from_url(
-                    settings.redis_url, decode_responses=True
+                    settings.redis_url, decode_responses=True,
                 )
                 # Test the connection
                 await self._redis_client.ping()
                 self._redis_available = True
-            except Exception:
+            except (ValueError, TypeError):
                 self._redis_available = False
                 self._redis_client = None
                 return None
@@ -53,8 +56,8 @@ class SessionManager:
         session_data = {
             "user_id": str(user_id),
             "token": token,
-            "created_at": datetime.utcnow().isoformat(),
-            "last_activity": datetime.utcnow().isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "last_activity": datetime.now(timezone.utc).isoformat(),
             "metadata": metadata or {},
         }
 
@@ -72,7 +75,7 @@ class SessionManager:
                 await redis_client.sadd(f"user_sessions:{user_id}", session_id)
                 await redis_client.expire(f"user_sessions:{user_id}", 30 * 24 * 60 * 60)
                 return session_id
-            except Exception:
+            except json.JSONDecodeError:
                 # Fall back to in-memory
                 pass
 
@@ -89,7 +92,7 @@ class SessionManager:
                 session_data = await redis_client.get(f"session:{session_id}")
                 if session_data:
                     return json.loads(session_data)
-            except Exception:
+            except (json.JSONDecodeError, requests.RequestException):
                 pass
 
         # Fallback to in-memory
@@ -101,7 +104,7 @@ class SessionManager:
         if not session_data:
             return False
 
-        session_data["last_activity"] = datetime.utcnow().isoformat()
+        session_data["last_activity"] = datetime.now(timezone.utc).isoformat()
 
         redis_client = await self.get_redis_client()
 
@@ -113,7 +116,7 @@ class SessionManager:
                     json.dumps(session_data),
                 )
                 return True
-            except Exception:
+            except json.JSONDecodeError:
                 pass
 
         # Fallback to in-memory
@@ -136,7 +139,7 @@ class SessionManager:
                 if user_id:
                     await redis_client.srem(f"user_sessions:{user_id}", session_id)
                 return True
-            except Exception:
+            except (ValueError, TypeError):
                 pass
 
         # Fallback to in-memory
@@ -151,7 +154,7 @@ class SessionManager:
             try:
                 sessions = await redis_client.smembers(f"user_sessions:{user_id}")
                 return list(sessions)
-            except Exception:
+            except (ValueError, TypeError):
                 pass
 
         # Fallback to in-memory
@@ -183,7 +186,7 @@ class SessionManager:
         if not self._memory_sessions:
             return 0
 
-        current_time = datetime.utcnow()
+        current_time = datetime.now(timezone.utc)
         expired_sessions = []
 
         for session_id, data in self._memory_sessions.items():
@@ -213,11 +216,11 @@ class AuthService:
         session_metadata = {
             "user_agent": metadata.get("user_agent", "") if metadata else "",
             "ip_address": metadata.get("ip_address", "") if metadata else "",
-            "login_time": datetime.utcnow().isoformat(),
+            "login_time": datetime.now(timezone.utc).isoformat(),
         }
 
         return await self.session_manager.create_session(
-            user.id, token, session_metadata
+            user.id, token, session_metadata,
         )
 
     async def validate_session(
@@ -265,7 +268,7 @@ class AuthService:
                         "created_at": session_data.get("created_at"),
                         "last_activity": session_data.get("last_activity"),
                         "metadata": session_data.get("metadata", {}),
-                    }
+                    },
                 )
 
         return sessions

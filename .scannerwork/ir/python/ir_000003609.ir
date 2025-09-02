@@ -1,77 +1,0 @@
-
-"trend"str
-("Assess operational risk level"str
-4+"Process automation and technology upgrade"str
-"Manual processes"str
-
-0int
-
-"MEDIUM"str
-"mitigation"str
-"Data quality issues"str
-"System limitations"str
-"level"str
-	"factors"str
-
-3int
-	"HIGH"str
-"STABLE"strself
-û! û(%list"á&
-$
-
-ý †(	"#new-object#Bdict3
-1
-
-þ þ(4"#get-field# current_maturity:(
-&
-
-þ þ(:"#get-field# value:*
-(
-
-þ þ(>"	#binop <#2<:Bbool,"*
-
-þ þ(> *
-þ þ(2
-þ? þ(C"
-
-þ þ(L"
-
-þ þ(L"æ*	
-"
- 
-
-þ þ(L"	#map-set#:"
- 
-
-ÿ ÿ("	#map-set#:)
-'
-
-€ „("#unknown-value#Blist(
-&
-
-€ „("
-#is-exact#:Bbool
-
-
-€ „("
-#assume#::
-8
-
-€ „("#set-field# __collection_size:Bint(
-&
-
-€ „("#array-add-last#:(
-&
-
-€ „("#array-add-last#:(
-&
-
-€ „("#array-add-last#:"
- 
-
-€ „("	#map-set#:"
- 
-
-… …(E "	#map-set#:
-
-ý †(	*I/home/omar/Documents/ruleIQ/services/compliance/cco_strategic_playbook.py

@@ -1,12 +1,12 @@
 
 Gapi.integrations.base.base_integration.BaseIntegration.collect_evidenceO
-E/home/omar/Documents/ruleIQ/api/integrations/base/base_integration.pyG G("3*9
+E/home/omar/Documents/ruleIQ/api/integrations/base/base_integration.pyB B("3*9
 3
 base_integration.py"
-L L(
+F F(
 implicit return:
-H H( 
+B% B(7
 evidence_type:
-H" H(B
+B9 C(
 sinceB:8
 6api.integrations.base.base_integration.BaseIntegrationH

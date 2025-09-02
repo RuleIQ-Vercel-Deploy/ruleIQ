@@ -83,13 +83,13 @@ class TestEvidenceSourceDiscovery:
         """Test source priority and failover"""
         # Register multiple sources with different priorities
         orchestrator.register_source(
-            {"source_id": "primary", "priority": 1, "source_type": "database"}
+            {"source_id": "primary", "priority": 1, "source_type": "database"},
         )
         orchestrator.register_source(
-            {"source_id": "secondary", "priority": 2, "source_type": "database"}
+            {"source_id": "secondary", "priority": 2, "source_type": "database"},
         )
         orchestrator.register_source(
-            {"source_id": "tertiary", "priority": 3, "source_type": "database"}
+            {"source_id": "tertiary", "priority": 3, "source_type": "database"},
         )
 
         # Get sources by priority
@@ -114,14 +114,14 @@ class TestParallelCollectionMechanisms:
         # Register test sources
         orchestrator.register_source({"source_id": "source1", "source_type": "api"})
         orchestrator.register_source(
-            {"source_id": "source2", "source_type": "database"}
+            {"source_id": "source2", "source_type": "database"},
         )
 
         # Mock collection tasks
         query = {"type": "compliance_check", "regulation": "GDPR"}
 
         results = await orchestrator.collect_parallel(
-            query=query, sources=["source1", "source2"], timeout=5.0
+            query=query, sources=["source1", "source2"], timeout=5.0,
         )
 
         assert len(results) == 2
@@ -137,15 +137,15 @@ class TestParallelCollectionMechanisms:
             {
                 "source_id": "slow_source",
                 "source_type": "api",
-                "response_time_ms": 10000,  # 10 seconds
-            }
+                "response_time_ms": 10000,  # 10 seconds,
+            },
         )
 
         query = {"type": "test"}
 
         # Should timeout after 2 seconds
         results = await orchestrator.collect_parallel(
-            query=query, sources=["slow_source"], timeout=2.0
+            query=query, sources=["slow_source"], timeout=2.0,
         )
 
         assert len(results) == 1
@@ -158,7 +158,7 @@ class TestParallelCollectionMechanisms:
         # Register 10 sources
         for i in range(10):
             orchestrator.register_source(
-                {"source_id": f"source_{i}", "source_type": "api"}
+                {"source_id": f"source_{i}", "source_type": "api"},
             )
 
         # Set concurrency limit
@@ -167,7 +167,7 @@ class TestParallelCollectionMechanisms:
         # Collect from all sources
         source_ids = [f"source_{i}" for i in range(10)]
         results = await orchestrator.collect_parallel(
-            query={"type": "test"}, sources=source_ids, timeout=5.0
+            query={"type": "test"}, sources=source_ids, timeout=5.0,
         )
 
         # Verify all sources were queried
@@ -183,11 +183,11 @@ class TestParallelCollectionMechanisms:
         # Register sources with different behaviors
         orchestrator.register_source({"source_id": "good_source", "source_type": "api"})
         orchestrator.register_source(
-            {"source_id": "error_source", "source_type": "api", "simulate_error": True}
+            {"source_id": "error_source", "source_type": "api", "simulate_error": True},
         )
 
         results = await orchestrator.collect_parallel(
-            query={"type": "test"}, sources=["good_source", "error_source"], timeout=5.0
+            query={"type": "test"}, sources=["good_source", "error_source"], timeout=5.0,
         )
 
         # Good source should succeed
@@ -287,17 +287,17 @@ class TestEvidenceValidationAndScoring:
         """Test evidence deduplication based on similarity"""
         evidence1 = {
             "evidence_id": "ev_1",
-            "content": "GDPR requires explicit consent for data processing",
+            "content": "GDPR requires explicit consent for data processing"
         }
 
         evidence2 = {
             "evidence_id": "ev_2",
-            "content": "GDPR requires explicit consent for processing personal data",
+            "content": "GDPR requires explicit consent for processing personal data"
         }
 
         evidence3 = {
             "evidence_id": "ev_3",
-            "content": "HIPAA requires patient authorization for data disclosure",
+            "content": "HIPAA requires patient authorization for data disclosure"
         }
 
         # High similarity between evidence1 and evidence2
@@ -391,7 +391,7 @@ class TestEvidenceAggregationAlgorithms:
         ]
 
         hierarchy = orchestrator.aggregate_hierarchical(
-            evidence_list, levels=["regulation", "chapter", "article", "section"]
+            evidence_list, levels=["regulation", "chapter", "article", "section"],
         )
 
         assert "GDPR" in hierarchy
@@ -488,7 +488,7 @@ class TestCachingAndDeduplication:
 
         evidence2 = {
             "content": "GDPR Article 5 - Data minimization principle",
-            "metadata": {"created_at": "2024-01-02"},  # Different metadata
+            "metadata": {"created_at": "2024-01-02"},  # Different metadata,
         }
 
         evidence3 = {
@@ -521,7 +521,7 @@ class TestCachingAndDeduplication:
         # Add batch with duplicates
         evidence_batch2 = [
             {"id": "3", "content": "Content A"},  # Duplicate content
-            {"id": "4", "content": "Content C"},  # New content
+            {"id": "4", "content": "Content C"},  # New content,
         ]
 
         deduplicated2 = orchestrator.add_evidence_batch(evidence_batch2)
@@ -547,7 +547,7 @@ class TestEvidenceConfidenceCalculations:
                 "source_type": "official_database",
                 "trust_level": 0.95,
                 "verified": True,
-            }
+            },
         )
 
         orchestrator.register_source(
@@ -556,7 +556,7 @@ class TestEvidenceConfidenceCalculations:
                 "source_type": "public_api",
                 "trust_level": 0.7,
                 "verified": False,
-            }
+            },
         )
 
         evidence1 = {"source_id": "official_db", "content": "Evidence A"}
@@ -579,7 +579,7 @@ class TestEvidenceConfidenceCalculations:
         }
 
         confidence = orchestrator.calculate_temporal_confidence(
-            evidence, half_life_days=30
+            evidence, half_life_days=30,
         )
 
         # 30 days old with 30-day half-life should be ~0.5
@@ -592,7 +592,7 @@ class TestEvidenceConfidenceCalculations:
         }
 
         fresh_confidence = orchestrator.calculate_temporal_confidence(
-            fresh_evidence, half_life_days=30
+            fresh_evidence, half_life_days=30,
         )
         assert fresh_confidence["temporal_confidence"] > 0.95
 
@@ -610,7 +610,7 @@ class TestEvidenceConfidenceCalculations:
         ]
 
         confidence = orchestrator.calculate_corroboration_confidence(
-            primary_evidence, corroborating_evidence=corroborating
+            primary_evidence, corroborating_evidence=corroborating,
         )
 
         # Multiple corroborating sources should increase confidence
@@ -619,7 +619,7 @@ class TestEvidenceConfidenceCalculations:
 
         # No corroboration should have lower confidence
         no_corroboration = orchestrator.calculate_corroboration_confidence(
-            primary_evidence, corroborating_evidence=[]
+            primary_evidence, corroborating_evidence=[],
         )
         assert no_corroboration["corroboration_score"] < 0.5
 
@@ -639,7 +639,7 @@ class TestEvidenceConfidenceCalculations:
 
         # Register trusted source
         orchestrator.register_source(
-            {"source_id": "trusted_source", "trust_level": 0.9}
+            {"source_id": "trusted_source", "trust_level": 0.9},
         )
 
         composite = orchestrator.calculate_composite_confidence(

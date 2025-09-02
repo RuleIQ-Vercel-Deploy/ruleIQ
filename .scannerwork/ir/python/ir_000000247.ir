@@ -1,70 +1,7 @@
 
-"_active_loads"str
-"storage_backend"str
-7."load-{workflow_id}-{int(time.time() * 1000)}"str
-"workflow_id"str
-"start_time"str
-¿µ"Record the start of a checkpoint load operation.
+3*"Get the global quality monitor instance."str"7#
+!
 
-        Args:
-            workflow_id: ID of the workflow being loaded
-            checkpoint_id: ID of the checkpoint being loaded
-            storage_backend: Storage backend being used
+Ï Ï("#unknown-value#
 
-        Returns:
-            Load operation ID for tracking
-        "str
-"checkpoint_id"strself
-š š(workflow_id
-š š(checkpoint_id
-š  š(2storage_backend
-š4 š(S"®)
-'
-
-¦ ¦(Aload_id"#id#:Bstr2
-0
-
-© ©(-	"
-builtinshasattr*:Bbool+
-)
-
-© ©(-
-"#unaryop !#2!:	Bbool "
-
-© ©(-
- *
-© ©(
-"c&
-$
-
-ª! ª(#"#new-object#Bdict1
-/
-
-ª ª("#set-field# _active_loads:"Í&
-$
-
-¬& ±(	"#new-object#Bdict"
- 
-
-­ ­(&"	#map-set#:"
- 
-
-® ®(*"	#map-set#:"
- 
-
-¯ ¯(."	#map-set#:%
-#
-
-° °(%"
-timetimeBfloat"
- 
-
-° °(%"	#map-set#:0
-.
-
-¬ ¬("#get-field# _active_loads:&
-$
-
-¬ ±(	"#array-write#:
-
-³ ³(*D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py
+Ï Ï(*:/home/omar/Documents/ruleIQ/services/ai/quality_monitor.py

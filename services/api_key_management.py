@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 API Key Management Service for B2B Integrations
 
 This module provides secure API key generation, validation, and management
@@ -6,17 +8,14 @@ for B2B partner integrations with comprehensive security features.
 """
 
 import hashlib
-import hmac
 import secrets
-import time
 from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional, Tuple, Any
 from enum import Enum
 import json
-import base64
 from dataclasses import dataclass, asdict
 import redis.asyncio as redis
-from sqlalchemy import select, update, delete, and_
+from sqlalchemy import select, update, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException, status
 import ipaddress
@@ -150,7 +149,7 @@ class APIKeyManager:
         # Add scopes
         for scope in scopes:
             db_scope = APIKeyScope(
-                key_id=key_id, scope=scope, granted_at=datetime.now(timezone.utc)
+                key_id=key_id, scope=scope, granted_at=datetime.now(timezone.utc),
             )
             self.db.add(db_scope)
 
@@ -225,7 +224,7 @@ class APIKeyManager:
 
             # Verify key secret
             db_key = await self.db.execute(
-                select(APIKey).where(APIKey.key_id == key_id)
+                select(APIKey).where(APIKey.key_id == key_id),
             )
             db_key = db_key.scalar_one_or_none()
 
@@ -318,7 +317,7 @@ class APIKeyManager:
 
         # Schedule old key expiration
         expiration_time = datetime.now(timezone.utc) + timedelta(
-            hours=expires_old_in_hours
+            hours=expires_old_in_hours,
         )
         await self.db.execute(
             update(APIKey)
@@ -330,7 +329,7 @@ class APIKeyManager:
                     "rotated_to": new_key_id,
                     "rotation_scheduled": expiration_time.isoformat(),
                 },
-            )
+            ),
         )
         await self.db.commit()
 
@@ -426,7 +425,7 @@ class APIKeyManager:
         for key in keys:
             # Get scopes
             scopes_result = await self.db.execute(
-                select(APIKeyScope.scope).where(APIKeyScope.key_id == key.key_id)
+                select(APIKeyScope.scope).where(APIKeyScope.key_id == key.key_id),
             )
             scopes = [s for s in scopes_result.scalars()]
 
@@ -457,7 +456,7 @@ class APIKeyManager:
         result = await self.db.execute(
             select(APIKeyUsage)
             .where(and_(APIKeyUsage.key_id == key_id, APIKeyUsage.timestamp >= since))
-            .order_by(APIKeyUsage.timestamp.desc())
+            .order_by(APIKeyUsage.timestamp.desc()),
         )
 
         usage_records = result.scalars().all()
@@ -486,7 +485,7 @@ class APIKeyManager:
             "endpoints": endpoint_counts,
             "daily_usage": daily_counts,
             "last_used": (
-                usage_records[0].timestamp.isoformat() if usage_records else None
+                usage_records[0].timestamp.isoformat() if usage_records else None,
             ),
         }
 
@@ -497,7 +496,7 @@ class APIKeyManager:
         salt = (
             settings.API_KEY_SALT.encode()
             if hasattr(settings, "API_KEY_SALT")
-            else b"default_salt"
+            else b"default_salt",
         )
         return hashlib.pbkdf2_hmac("sha256", secret.encode(), salt, 100000).hex()
 
@@ -567,7 +566,7 @@ class APIKeyManager:
         await self.db.execute(
             update(APIKey)
             .where(APIKey.key_id == key_id)
-            .values(last_used_at=datetime.now(timezone.utc))
+            .values(last_used_at=datetime.now(timezone.utc)),
         )
 
         # Record usage
@@ -575,7 +574,7 @@ class APIKeyManager:
             key_id=key_id,
             timestamp=datetime.now(timezone.utc),
             ip_address=request_ip,
-            endpoint=None,  # Will be set by middleware
+            endpoint=None,  # Will be set by middleware,
         )
         self.db.add(usage)
 
@@ -585,7 +584,7 @@ class APIKeyManager:
     async def _update_key_status(self, key_id: str, status: APIKeyStatus) -> bool:
         """Update API key status in database."""
         result = await self.db.execute(
-            update(APIKey).where(APIKey.key_id == key_id).values(status=status.value)
+            update(APIKey).where(APIKey.key_id == key_id).values(status=status.value),
         )
         await self.db.commit()
         return result.rowcount > 0
@@ -629,7 +628,7 @@ class APIKeyManager:
 
         # Get scopes
         scopes_result = await self.db.execute(
-            select(APIKeyScope.scope).where(APIKeyScope.key_id == key_id)
+            select(APIKeyScope.scope).where(APIKeyScope.key_id == key_id),
         )
         scopes = [s for s in scopes_result.scalars()]
 

@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 AI-specific test configuration and fixtures
 
 Provides comprehensive fixtures for AI testing including service mocks,

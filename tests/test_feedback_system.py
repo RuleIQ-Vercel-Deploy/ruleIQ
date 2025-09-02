@@ -1,5 +1,7 @@
 """Test suite for Human-in-the-Loop Feedback System.
 
+from __future__ import annotations
+
 This test suite covers:
 1. Feedback collection APIs
 2. Feedback storage and retrieval
@@ -10,7 +12,7 @@ This test suite covers:
 """
 
 import pytest
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from unittest.mock import Mock, patch, AsyncMock
 from typing import Dict, List, Any
 import json
@@ -157,7 +159,7 @@ class TestFeedbackCollectionAPIs:
                     or not 1 <= feedback.value <= 5
                 ):
                     raise HTTPException(
-                        status_code=400, detail="Rating must be between 1 and 5"
+                        status_code=400, detail="Rating must be between 1 and 5",
                     )
 
             # Store feedback
@@ -457,7 +459,7 @@ class TestFeedbackStorage:
 
         # Submit to LangSmith
         result = feedback_collector.batch_submit_to_langsmith(
-            api_key="test-key", project_name="test-project"
+            api_key="test-key", project_name="test-project",
         )
 
         assert result["status"] == "success"
@@ -487,21 +489,21 @@ class TestFeedbackAggregation:
                 feedback_type=FeedbackType.RATING,
                 value=4.0,
                 user_id="user-001",
-                timestamp=datetime.utcnow(),
+                timestamp=datetime.now(timezone.utc),
             ),
             FeedbackItem(
                 run_id="run-002",
                 feedback_type=FeedbackType.RATING,
                 value=5.0,
                 user_id="user-002",
-                timestamp=datetime.utcnow(),
+                timestamp=datetime.now(timezone.utc),
             ),
             FeedbackItem(
                 run_id="run-003",
                 feedback_type=FeedbackType.RATING,
                 value=3.5,
                 user_id="user-003",
-                timestamp=datetime.utcnow(),
+                timestamp=datetime.now(timezone.utc),
             ),
         ]
 
@@ -524,8 +526,8 @@ class TestFeedbackAggregation:
                     feedback_type=FeedbackType.THUMBS_UP,
                     value=True,
                     user_id=f"user-{i:03d}",
-                    timestamp=datetime.utcnow(),
-                )
+                    timestamp=datetime.now(timezone.utc),
+                ),
             )
 
         # Add negative feedback
@@ -536,8 +538,8 @@ class TestFeedbackAggregation:
                     feedback_type=FeedbackType.THUMBS_DOWN,
                     value=False,
                     user_id=f"user-{i+7:03d}",
-                    timestamp=datetime.utcnow(),
-                )
+                    timestamp=datetime.now(timezone.utc),
+                ),
             )
 
         stats = feedback_analyzer.calculate_statistics()
@@ -549,7 +551,7 @@ class TestFeedbackAggregation:
 
     def test_time_based_aggregation(self, feedback_analyzer):
         """Test aggregating feedback over time periods."""
-        base_time = datetime.utcnow()
+        base_time = datetime.now(timezone.utc)
 
         # Add feedback at different times
         for i in range(24):  # 24 hours of feedback
@@ -560,7 +562,7 @@ class TestFeedbackAggregation:
                     value=3.0 + (i % 5) * 0.5,
                     user_id="user-001",
                     timestamp=base_time - timedelta(hours=i),
-                )
+                ),
             )
 
         # Get trends over last 24 hours
@@ -582,8 +584,8 @@ class TestFeedbackAggregation:
                     feedback_type=FeedbackType.RATING,
                     value=4.5,
                     user_id="user-001",
-                    timestamp=datetime.utcnow(),
-                )
+                    timestamp=datetime.now(timezone.utc),
+                ),
             )
 
         # User 002 gives mixed ratings
@@ -594,8 +596,8 @@ class TestFeedbackAggregation:
                     feedback_type=FeedbackType.RATING,
                     value=2.0 + i,
                     user_id="user-002",
-                    timestamp=datetime.utcnow(),
-                )
+                    timestamp=datetime.now(timezone.utc),
+                ),
             )
 
         patterns = feedback_analyzer.identify_patterns()
@@ -624,7 +626,7 @@ class TestFineTuningTriggers:
                     "run_id": f"run-{i:03d}",
                     "type": "correction",
                     "value": {"original": f"error-{i}", "corrected": f"fix-{i}"},
-                }
+                },
             )
 
         # Check if fine-tuning should be triggered
@@ -695,7 +697,7 @@ class TestFeedbackLoopMetrics:
         feedback_times = []
         response_times = []
 
-        base_time = datetime.utcnow()
+        base_time = datetime.now(timezone.utc)
 
         # Simulate feedback and response times
         for i in range(10):
@@ -710,7 +712,7 @@ class TestFeedbackLoopMetrics:
         # Calculate average response time
         response_deltas = [
             (response_times[i] - feedback_times[i]).total_seconds() / 60
-            for i in range(len(feedback_times))
+            for i in range(len(feedback_times)),
         ]
 
         avg_response_time = sum(response_deltas) / len(response_deltas)
@@ -730,7 +732,7 @@ class TestFeedbackLoopMetrics:
         assert incorporation_rate == 0.75
         assert (
             total_feedback
-            == incorporated_feedback + ignored_feedback + pending_feedback
+            == incorporated_feedback + ignored_feedback + pending_feedback,
         )
 
     def test_model_improvement_metrics(self):
@@ -766,7 +768,7 @@ class TestFeedbackLoopMetrics:
             3.8,  # Week 3
             4.1,  # Week 4
             4.3,  # Week 5
-            4.2,  # Week 6
+            4.2,  # Week 6,
         ]
 
         # Calculate trend (simple linear regression slope)
@@ -777,7 +779,7 @@ class TestFeedbackLoopMetrics:
         y_mean = sum(weekly_ratings) / n
 
         numerator = sum(
-            (x[i] - x_mean) * (weekly_ratings[i] - y_mean) for i in range(n)
+            (x[i] - x_mean) * (weekly_ratings[i] - y_mean) for i in range(n),
         )
         denominator = sum((x[i] - x_mean) ** 2 for i in range(n))
 
@@ -992,7 +994,7 @@ class TestFeedbackSystemIntegration:
                     value=item_dict["value"],
                     user_id=item_dict["user_id"],
                     metadata=item_dict.get("metadata", {}),
-                )
+                ),
             )
 
         assert len(collector2.feedback_queue) == 3

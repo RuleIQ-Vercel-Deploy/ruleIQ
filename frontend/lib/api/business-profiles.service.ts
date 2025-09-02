@@ -150,7 +150,7 @@ class BusinessProfileService {
     updates: Partial<BusinessProfileFormData>,
   ): Promise<BusinessProfile> {
     // Create update payload with only changed fields - exclude frontend-only fields
-    const { assessment_completed, assessment_data, ...frontendUpdates } = updates;
+    const { assessment_completed: _assessment_completed, assessment_data: _assessment_data, ...frontendUpdates } = updates;
     const updatePayload = BusinessProfileFieldMapper.createUpdatePayload(
       profile,
       frontendUpdates as Partial<BusinessProfile>,

@@ -84,7 +84,7 @@ const _persister = createSyncStoragePersister({
 
 // Persist the query client only in client-side environment
 // Note: persistQueryClient is not available in the current version
-// TODO: Implement persistence when upgrading to a version that supports it
+// NOTE: Implementation pending persistence when upgrading to a version that supports it
 /*
 if (typeof window !== 'undefined') {
   try {

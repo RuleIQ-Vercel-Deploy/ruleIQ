@@ -1,5 +1,7 @@
 """Add check constraint to compliance_frameworks
 
+from __future__ import annotations
+
 Revision ID: 802adb6d1be8
 Revises: cdd9337435cf
 Create Date: 2025-07-17 00:31:48.592947

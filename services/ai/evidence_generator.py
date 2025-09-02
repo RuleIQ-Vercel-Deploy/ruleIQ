@@ -1,5 +1,6 @@
-def generate_checklist_with_ai(evidence_text: str):
+from __future__ import annotations
+from typing import Any, List
+
+def generate_checklist_with_ai(evidence_text: str) -> List[Any]:
     """Placeholder for AI-powered checklist generation."""
-    # In a real implementation, this would use an AI model
-    # to generate a compliance checklist based on the evidence text.
-    return ["Placeholder checklist item 1", "Placeholder checklist item 2"]
+    return ['Placeholder checklist item 1', 'Placeholder checklist item 2']

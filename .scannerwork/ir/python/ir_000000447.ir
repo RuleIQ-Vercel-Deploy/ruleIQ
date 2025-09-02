@@ -1,12 +1,40 @@
 
-0.1float
-	"Success"str"v=
-;
+"risk_name"str
+"mitigation_chain"str
+™†"
+        MATCH (risk:Risk {name: $risk_name})<-[:MITIGATES]-(control:Control)
+        OPTIONAL MATCH (control)<-[:MONITORS]-(tech:Technology)
+        RETURN risk.name AS risk,
+               risk.risk_score AS inherent_risk,
+               control.name AS control,
+               control.automation_level AS automation,
+               tech.name AS technology,
+               tech.category AS tech_category
+        "str
+?6"Trace risk mitigation through controls to technology"strself
+ä* ä(.	risk_name
+ä0 ä(>"Ø(
+&
+ç ç(¥query"#id#:Bstr.
+,
 
-« «($"
-asyncio.taskssleep:Btyping.Coroutine#
+ó ó()params"#new-object#Bdict"
+ 
+
+ó ó(("	#map-set#:#
 !
 
-« «($"#unknown-value#
+ò ò(9	"#unknown-value#,
+*
 
-» »(*D/home/omar/Documents/ruleIQ/tests/unit/utils/test_circuit_breaker.py
+ò ò(9
+results"#unknown-value#&
+$
+
+ô ô(,"#new-object#Bdict"
+ 
+
+ô ô(+"	#map-set#:
+
+
+ô ô(,*5/home/omar/Documents/ruleIQ/services/neo4j_service.py

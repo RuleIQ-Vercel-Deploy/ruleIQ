@@ -1,47 +1,3 @@
-/+sqlalchemy.ext.asyncio.session.AsyncSession"Å#
-!
 
-¢9 ¢(E"#unknown-value#G
-E
-
-š š(7mock_session"	MagicMock:Bunittest.mock.MagicMock6
-4
-
-› ›(*"	MagicMockBunittest.mock.MagicMock'
-%
-
-› ›("#set-field# add:6
-4
-
-œ" œ(-"	AsyncMockBunittest.mock.AsyncMock*
-(
-
-œ œ("#set-field# commit:9
-7
-
-¢# ¢(F"	AsyncMock:Bunittest.mock.AsyncMock+
-)
-
-¢ ¢( 	"#set-field# refresh:6
-4
-
-£$ £(/
-"	AsyncMockBunittest.mock.AsyncMock,
-*
-
-£ £(!"#set-field# rollback:
-*
-(
-
-¦ ©(%closure"#new-object#0
-.
-
-¦ ©("#set-field# mock_session:-
-+
-
-¦ ©("?python-partial-apply?:#
-!
-
-© ©("#unknown-value#
-
-© ©(*D/home/omar/Documents/ruleIQ/tests/test_evidence_nodes_integration.py
+xo"<AIQuestionBank(category='{self.category}', type='{self.question_type}', difficulty={self.difficulty_level})>"strselfo o("
+p r(*8/home/omar/Documents/ruleIQ/database/ai_question_bank.py

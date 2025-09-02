@@ -1,22 +1,20 @@
 
 Gservices.ai.evaluation.tools.ingest_docs.DocumentFetcher.fetch_documentQ
-G/home/omar/Documents/ruleIQ/services/ai/evaluation/tools/ingest_docs.pyo o("2*†
-2p p(7‰
-†
-q q(>
-%11"__concat*
-q q(
-	Fetching *
-q  q((
+G/home/omar/Documents/ruleIQ/services/ai/evaluation/tools/ingest_docs.pyW W("2*ö
+2X X(7z
+x
+Y Y(D
+%11"__concat*,
+Y Y(2 
+Fetching %s document from %s*
+Y6 Y(>
 
 
-doc_type*
-q) q(8
- document from *
-q9 q(<
+doc_type*
+Y@ Y(C
 
 urlfd
-q q(?
+Y Y(E
 %12*&
 
 __unknown_file (
@@ -28,9 +26,9 @@ G/home/omar/Documents/ruleIQ/services/ai/evaluation/tools/ingest_docs.pyo o(
 
 %112info*
 9*™
-7x x(?O
+7^ ^(?O
 M
-x. x(>
+^. ^(>
 %3"__id*5
 
 __unknown_file (*
@@ -38,7 +36,7 @@ M
 
 response"	
 content¤¡
-x x(?
+^ ^(?
 %4*X
 
 __unknown_file (<:
@@ -47,12 +45,12 @@ M
 __unknown_file (
 
 %32_extract_pdf_text"
-x x(?
+^ ^(?
 
 %4*—
-8z z(=L
+8` `(=L
 J
-z/ z(<
+`/ `(<
 %5"__id*2
 
 __unknown_file (*
@@ -60,7 +58,7 @@ J
 
 response"
 text¥¢
-z z(=
+` `(=
 %6*X
 
 __unknown_file (<:
@@ -69,18 +67,18 @@ J
 __unknown_file (
 
 %52_extract_html_text"
-z z(=
+` `(=
 
 %6*²
-9t t(8
+9[ [(8
 }
-t t(#
+[ [(#
 %7"__id*e
 
 __unknown_file (I*G:
 8services.ai.evaluation.tools.ingest_docs.DocumentFetcher"	
 sessionqo
-t t(8
+[ [(8
 %8*"
 
 __unknown_file (
@@ -92,14 +90,14 @@ J
 url2get:
 timeout2B
 @
-t t(8
+[ [(8
 
 response"__id*"
 
 __unknown_file (
 
 %8NL
-u u('
+\ \('
 %9*(
 
 __unknown_file (
@@ -107,7 +105,7 @@ J
 
 response2raise_for_status’
 
-w w( 
+] ]( 
 %10"	__compare*"
 
 __unknown_file (
@@ -122,9 +120,9 @@ J
 pdf*
 7
 8:
-o o(%
+W W(%
 url:
-o' o(=
+W' W(;
 
 doc_typeB<:
 8services.ai.evaluation.tools.ingest_docs.DocumentFetcherH

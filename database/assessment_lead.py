@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 AssessmentLead model for capturing leads through the freemium assessment flow.
 Stores email capture, UTM tracking, and lead scoring data.
 """
@@ -64,7 +66,7 @@ class AssessmentLead(Base):
     # Timestamps
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
     updated_at = Column(
-        DateTime, server_default=func.now(), onupdate=func.now(), nullable=False
+        DateTime, server_default=func.now(), onupdate=func.now(), nullable=False,
     )
     last_activity_at = Column(DateTime, nullable=True)
 

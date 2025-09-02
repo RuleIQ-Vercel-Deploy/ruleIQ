@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
+
 Context Change Detection and Monitoring Script
 
 This script monitors file system changes and identifies when context documentation
@@ -372,18 +376,18 @@ class ContextMonitor:
 
     def run_monitoring_cycle(self) -> str:
         """Run a complete monitoring cycle and return results."""
-        print("🔍 Scanning for context-affecting changes...")
+        logger.info("🔍 Scanning for context-affecting changes...")
 
         changes_by_area = self.scan_for_changes()
 
         if not changes_by_area:
-            print("✅ No context-affecting changes detected")
+            logger.info("✅ No context-affecting changes detected")
             return "No changes detected"
 
-        print(f"📊 Analyzing impact of changes in {len(changes_by_area)} areas...")
+        logger.info(f"📊 Analyzing impact of changes in {len(changes_by_area)} areas...")
         impact_analysis = self.analyze_change_impact(changes_by_area)
 
-        print("📝 Generating change report...")
+        logger.info("📝 Generating change report...")
         report = self.generate_change_report(impact_analysis)
 
         # Save report
@@ -393,7 +397,7 @@ class ContextMonitor:
         with open(report_file, "w") as f:
             f.write(report)
 
-        print(f"📄 Change report saved: {report_file}")
+        logger.info(f"📄 Change report saved: {report_file}")
 
         # Update change log
         self._update_change_log(impact_analysis)
@@ -480,13 +484,13 @@ for updating context documentation.
         monitor = ContextMonitor()
         report = monitor.run_monitoring_cycle()
 
-        print("\n" + "=" * 60)
-        print("CONTEXT CHANGE DETECTION SUMMARY")
-        print("=" * 60)
-        print(report)
+        logger.info("\n" + "=" * 60)
+        logger.info("CONTEXT CHANGE DETECTION SUMMARY")
+        logger.info("=" * 60)
+        logger.info(report)
 
     except Exception as e:
-        print(f"❌ Error during context monitoring: {e}")
+        logger.info(f"❌ Error during context monitoring: {e}")
         sys.exit(1)
 
 

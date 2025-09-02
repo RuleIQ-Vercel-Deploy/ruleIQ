@@ -1,19 +1,16 @@
 
-Dservices.data_access_service.DataAccessService.can_access_assessmentG
-;/home/omar/Documents/ruleIQ/services/data_access_service.pyê ê("2*Ú
-2
-ì ú(H
-F
-
-ù7 ù(>
+Dservices.data_access_service.DataAccessService.can_access_assessmentE
+;/home/omar/Documents/ruleIQ/services/data_access_service.pyi i("2*Ë
+2k t(F
+D
+u7 u(>
 %5"__id*,
 
 __unknown_file (*
 
 user"
-id•¢
-
-ù ù(?
+id£†
+u u(?
 %6*N
 
 __unknown_file (20
@@ -21,18 +18,16 @@ F
 
 __unknown_file (
 
-%52get_user_data_access_levelH
-F
-
-ù ù(?
+%52get_user_data_access_levelF
+D
+u u(?
 access_level"__id*"
 
 __unknown_file (
 
-%6ú
-ô
-
-† †(%
+%6ö
+ó
+v v(%
 %7"	__compare*"
 
 __unknown_file (
@@ -46,24 +41,18 @@ F
 
 all_data*
 8
-9*(
-4
-¨ ¨("
-
-¨ ¨(	
+9*$
+4| |("
+| |(	
 
-False*'
-5
-™ ™("
-
-™ ™(
+False*#
+5{ {("
+{ {(
 
-True*ø
-6
-® ®(.•
-¢
-
-® ®(.
+True*ª
+6z z(.£
+†
+z z(.
 %1"	__compare*"
 
 __unknown_file (
@@ -76,21 +65,18 @@ F
 __unknown_file (
 organization_data*
 4
-5*è
-7
-• •(1H
-F
-
-•* •(1
+5*á
+7y y(1F
+D
+y* y(1
 %2"__id*,
 
 __unknown_file (*
 
 user"
-idù
-ö
-
-• •(1
+idõ
+ò
+y y(1
 %3"	__compare*"
 
 __unknown_file (
@@ -102,16 +88,13 @@ F
 
 __unknown_file (
 
-%2"
-
-• •(1
+%2"
+y y(1
 
-%3*∂
-8
-§ §(%ú
-ô
-
-§ §(%
+%3*≤
+8x x(%ö
+ó
+x x(%
 %4"	__compare*"
 
 __unknown_file (
@@ -125,17 +108,13 @@ F
 
 own_data*
 6
-7*'
-9
-° °("
-
-° °(
+7*#
+9w w("
+w w(
 
-True:
-
-ë ë(!
-user:#
-
-ë# ë(<
+True:
+i$ i(7
+user:!
+j j(!
 assessment_owner_idB20
 .services.data_access_service.DataAccessServiceH

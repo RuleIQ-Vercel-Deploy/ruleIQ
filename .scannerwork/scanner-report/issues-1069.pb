@@ -1,5 +1,4 @@
-Y
-pythonS1244:Do not perform equality checks with floating point values. 2
-‚‚ =c
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-·· ,
+C
+pythonS5905&Fix this assertion on a tuple literal. 2:< C
+pythonS5905&Fix this assertion on a tuple literal. 2=? C
+pythonS5905&Fix this assertion on a tuple literal. 2@B 

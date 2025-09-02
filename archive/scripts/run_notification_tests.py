@@ -2,6 +2,9 @@
 """
 Direct test runner for notification migration TDD tests
 """
+import logging
+logger = logging.getLogger(__name__)
+
 
 import sys
 import unittest
@@ -54,11 +57,11 @@ def run_tests():
     result = runner.run(suite)
 
     # Print summary
-    print("\n" + "=" * 70)
-    print(f"Tests run: {result.testsRun}")
-    print(f"Failures: {len(result.failures)}")
-    print(f"Errors: {len(result.errors)}")
-    print(f"Skipped: {len(result.skipped)}")
+    logger.info("\n" + "=" * 70)
+    logger.info(f"Tests run: {result.testsRun}")
+    logger.info(f"Failures: {len(result.failures)}")
+    logger.info(f"Errors: {len(result.errors)}")
+    logger.info(f"Skipped: {len(result.skipped)}")
 
     # Print coverage info
     if result.testsRun > 0:
@@ -66,7 +69,7 @@ def run_tests():
             (result.testsRun - len(result.failures) - len(result.errors))
             / result.testsRun
         ) * 100
-        print(f"Success rate: {success_rate:.1f}%")
+        logger.info(f"Success rate: {success_rate:.1f}%")
 
     return result.wasSuccessful()
 

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+
 Test database connection and identify issues with async/sync mixing.
 """
 

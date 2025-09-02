@@ -1,4 +1,7 @@
 """
+from __future__ import annotations
+import requests
+
 Reducer functions for LangGraph state management.
 
 These reducers are used with Annotated types to provide intelligent
@@ -84,7 +87,7 @@ def merge_decisions(
             unique_decisions, key=lambda d: d.get("timestamp", ""), reverse=False
         )
         return sorted_decisions
-    except:
+    except requests.RequestException:
         # If sorting fails, return as-is
         return unique_decisions
 
@@ -158,7 +161,7 @@ def update_cost_tracker(
     # Check if we had CostSnapshot input by looking for the import
     try:
         return CostSnapshot(**result)
-    except:
+    except (ValueError, TypeError):
         return result
 
 

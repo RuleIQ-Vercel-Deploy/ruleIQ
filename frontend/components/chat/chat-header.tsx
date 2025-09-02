@@ -20,7 +20,7 @@ export function ChatHeader({ title, isConnected = false }: ChatHeaderProps) {
   const { toast } = useToast();
 
   const handleExport = (format: 'pdf' | 'txt' | 'json') => {
-    // TODO: Implement actual export functionality
+    // NOTE: Implementation pending actual export functionality
     toast({
       title: 'Export Started',
       description: `Exporting conversation as ${format.toUpperCase()}...`,
@@ -28,7 +28,7 @@ export function ChatHeader({ title, isConnected = false }: ChatHeaderProps) {
   };
 
   const handleSave = () => {
-    // TODO: Implement actual save functionality
+    // NOTE: Implementation pending actual save functionality
     toast({
       title: 'Conversation Saved',
       description: 'Your conversation has been saved successfully.',

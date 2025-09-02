@@ -72,7 +72,7 @@ export function AIHelpTooltip({
         }
         return latestRequestId;
       });
-    } catch (err) {
+    } catch {} {
       setRequestId((latestRequestId) => {
         if (currentRequestId === latestRequestId) {
           setError(err instanceof Error ? err.message : 'Failed to get AI help');
@@ -106,7 +106,7 @@ export function AIHelpTooltip({
         description: 'Thank you for helping us improve AI assistance.',
         duration: 2000,
       });
-    } catch (err) {
+    } catch {} {
       // TODO: Replace with proper logging
       // // TODO: Replace with proper logging
     }

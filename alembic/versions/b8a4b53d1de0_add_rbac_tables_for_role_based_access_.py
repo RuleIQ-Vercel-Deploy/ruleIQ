@@ -1,5 +1,7 @@
 """Add RBAC tables for role-based access control
 
+from __future__ import annotations
+
 Revision ID: b8a4b53d1de0
 Revises: 52b4f203af3a
 Create Date: 2025-07-25 03:31:18.237271

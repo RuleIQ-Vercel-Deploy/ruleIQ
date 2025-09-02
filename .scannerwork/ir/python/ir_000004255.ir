@@ -1,216 +1,0 @@
-
-
-"industry"str
-@7"Look up regulations applicable to specific industries"str
-"properties"str
-J"items"str
-F"specific_activities"str
-JA"Industry sector (e.g., 'technology', 'financial', 'healthcare')"str
-"large"str
-:"international"str
-LC"Get the function schema for Google Generative AI function calling"str
-"micro"str
-."data_processing"str
-"name"str
-2C)"Geographic scope of business operations"str
-&"lookup_industry_regulations"str
-
-"parameters"str
-R
-"required"str
-"type"str
-72."Whether the business processes personal data"str
-0	"boolean"str
-"description"str
-9"eu"str
-:+1"Size of the business for applicable regulations"str
-8	"uk_only"str
-"enum"str
-"string"str
-"business_size"str
-
-$0int
-"object"str
-5"geographic_scope"str
-ONF"Specific business activities that may trigger additional regulations"str
-"medium"str
-H"array"str
-"small"strself
-Â Â( !list"¸&
-$
-
-Ä ä(	"#new-object#Bdict"
- 
-
-Å Å(1"	#map-set#:"
- 
-
-Æ Æ(R	"	#map-set#:&
-$
-
-Ç ã("#new-object#Bdict"
- 
-
-È È( "	#map-set#:&
-$
-
-É á("#new-object#Bdict&
-$
-
-Ê  Í("#new-object#Bdict"
- 
-
-Ë Ë(("	#map-set#:"
- 
-
-Ì Ì(h"	#map-set#:"
- 
-
-Ê Í("	#map-set#:&
-$
-
-Î% Ò("#new-object#Bdict"
- 
-
-Ï Ï(("	#map-set#:)
-'
-
-Ð  Ð(E "#unknown-value#Blist(
-&
-
-Ð  Ð(E""
-#is-exact#: !Bbool
-
-
-Ð  Ð(E#"
-#assume#:":
-8
-
-Ð  Ð(E%"#set-field# __collection_size: $Bint(
-&
-
-Ð  Ð(E&"#array-add-last#: (
-&
-
-Ð  Ð(E'"#array-add-last#: (
-&
-
-Ð  Ð(E("#array-add-last#: (
-&
-
-Ð  Ð(E)"#array-add-last#: "
- 
-
-Ð Ð(E*"	#map-set#: "
- 
-
-Ñ Ñ(X,"	#map-set#:+"
- 
-
-Î Ò(-"	#map-set#:&
-$
-
-Ó' Ö(/"#new-object#Bdict"
- 
-
-Ô Ô()1"	#map-set#:/0"
- 
-
-Õ Õ(U3"	#map-set#:/2"
- 
-
-Ó Ö(4"	#map-set#:./&
-$
-
-×( Û(6"#new-object#Bdict"
- 
-
-Ø Ø((7"	#map-set#:6)
-'
-
-Ù  Ù(B;"#unknown-value#Blist(
-&
-
-Ù  Ù(B<"
-#is-exact#:;!Bbool
-
-
-Ù  Ù(B="
-#assume#:<:
-8
-
-Ù  Ù(B>"#set-field# __collection_size:;$Bint(
-&
-
-Ù  Ù(B?"#array-add-last#:;8(
-&
-
-Ù  Ù(B@"#array-add-last#:;9(
-&
-
-Ù  Ù(BA"#array-add-last#:;:"
- 
-
-Ù Ù(BB"	#map-set#:6;"
- 
-
-Ú Ú(PD"	#map-set#:6C"
- 
-
-× Û(E"	#map-set#:56&
-$
-
-Ü+ à(G"#new-object#Bdict"
- 
-
-Ý Ý('I"	#map-set#:GH&
-$
-
-Þ! Þ(3K"#new-object#Bdict"
- 
-
-Þ" Þ(2L"	#map-set#:K"
- 
-
-Þ Þ(3M"	#map-set#:GJK"
- 
-
-ß ß(mO"	#map-set#:GN"
- 
-
-Ü à(P"	#map-set#:FG"
- 
-
-É á(Q"	#map-set#:)
-'
-
-â â(LS"#unknown-value#Blist(
-&
-
-â â(LT"
-#is-exact#:S!Bbool
-
-
-â â(LU"
-#assume#:T:
-8
-
-â â(LV"#set-field# __collection_size:S$Bint(
-&
-
-â â(LW"#array-add-last#:S(
-&
-
-â â(LX"#array-add-last#:S(
-&
-
-â â(LY"#array-add-last#:S."
- 
-
-â â(LZ"	#map-set#:RS"
- 
-
-Ç ã(["	#map-set#:
-
-
-Ä ä(	*;/home/omar/Documents/ruleIQ/services/ai/regulation_tools.py

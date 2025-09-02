@@ -1,33 +1,31 @@
-ì
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-§§ :)
-'
-§§ 	This function is async.†
+è
+pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2vv :'
+%vv 	This function is async.†
 pythonS7497VEnsure that the asyncio.CancelledError exception is re-raised after your cleanup code. 2
-–– %:)
+ïï %:)
 '
-»» 	This function is async.ì
+éé 	This function is async.ì
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-≤≤ ):)
+€€ ):)
 '
-≤≤ 	This function is async.î
+€€ 	This function is async.î
 pythonS7483JRemove this "timeout" parameter and use a timeout context manager instead. 2
-ÓÓ ):)
+ÄÄ: F:)
 '
-ÌÌ 	This function is async.ì
+ÄÄ 	This function is async.ì
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-ÅÅ %:)
+ëë %:)
 '
-ÅÅ 	This function is async.ì
+ëë 	This function is async.ì
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-ëë !:)
+ùù !:)
 '
-ëë 	This function is async.ì
+ùù 	This function is async.ì
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-±± +:)
+ØØ +:)
 '
-±± 	This function is async.ö
+ØØ 	This function is async.ö
 pythonS3358IExtract this nested conditional expression into an independent statement. 2
-°£ %:0
+ˆ˜, J:0
 .
-üü Parent conditional expression.
+ıı/ 1Parent conditional expression.

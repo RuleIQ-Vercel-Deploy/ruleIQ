@@ -1,26 +1,21 @@
 é
-pythonS5890aReplace the type hint "datetime" with "Optional[datetime]" or don't assign "None" to "created_at" 244 :
-544 a
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 288 /ì
+pythonS5890aReplace the type hint "datetime" with "Optional[datetime]" or don't assign "None" to "created_at" 2-- :
+5-- è
+pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2 :'
+%5 	This function is async.ì
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-•• :)
+≈≈ -:)
 '5
-•• 	This function is async.ì
+≈≈ 	This function is async.ì
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-ôô -:)
+€€ :)
 '5
-ôô 	This function is async.c
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-∑∑  ì
+€€ 	This function is async.ì
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-ªª :)
+¯¯ %:)
 '5
-ªª 	This function is async.ì
+¯¯ 	This function is async.ë
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-ÁÁ %:)
-'5
-ÁÁ 	This function is async.ë
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-œœ
+øø
  #:'
-%5œœ This function is async.
+%5øø This function is async.

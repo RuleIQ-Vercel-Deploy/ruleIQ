@@ -1,48 +1,42 @@
 """
+from __future__ import annotations
+
+# Constants
+MINUTE_SECONDS = 60
+
+
 Startup Configuration Validation
 Validates configuration on application startup
 """
-
 import sys
 import os
 import logging
 from typing import List, Tuple, Optional
 from pathlib import Path
-
-from . import (
-    get_current_config,
-    validate_config,
-    ConfigurationError,
-    BaseConfig,
-)
-
-
-# Setup logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+from . import get_current_config, validate_config, ConfigurationError, BaseConfig
+logging.basicConfig(level=logging.INFO, format=
+    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
 
 class StartupValidator:
     """Validates configuration and environment on startup"""
 
-    def __init__(self, config: Optional[BaseConfig] = None):
+    def __init__(self, config: Optional[BaseConfig]=None):
         """Initialize validator with optional config"""
         self.config = config or get_current_config()
         self.errors: List[str] = []
         self.warnings: List[str] = []
 
-    def validate_all(self) -> Tuple[bool, List[str], List[str]]:
+    def validate_all(self) ->Tuple[bool, List[str], List[str]]:
         """
         Run all validation checks
 
         Returns:
             Tuple of (success, errors, warnings)
         """
-        logger.info(f"Starting validation for environment: {self.config.ENVIRONMENT}")
-
-        # Run validation checks
+        logger.info('Starting validation for environment: %s' % self.config
+            .ENVIRONMENT)
         self._validate_environment()
         self._validate_secrets()
         self._validate_database_connectivity()
@@ -52,292 +46,217 @@ class StartupValidator:
         self._validate_file_system()
         self._validate_security_settings()
         self._validate_performance_settings()
-
-        # Log results
         if self.errors:
-            logger.error(f"Validation failed with {len(self.errors)} errors")
+            logger.error('Validation failed with %s errors' % len(self.errors))
             for error in self.errors:
-                logger.error(f"  - {error}")
-
+                logger.error('  - %s' % error)
         if self.warnings:
-            logger.warning(f"Validation completed with {len(self.warnings)} warnings")
+            logger.warning('Validation completed with %s warnings' % len(
+                self.warnings))
             for warning in self.warnings:
-                logger.warning(f"  - {warning}")
-
+                logger.warning('  - %s' % warning)
         if not self.errors and not self.warnings:
-            logger.info("Configuration validation passed successfully")
-
+            logger.info('Configuration validation passed successfully')
         return len(self.errors) == 0, self.errors, self.warnings
 
-    def _validate_environment(self) -> None:
+    def _validate_environment(self) ->None:
         """Validate environment settings"""
-        logger.debug("Validating environment settings...")
-
-        # Check environment is set correctly
-        if self.config.ENVIRONMENT not in [
-            "development",
-            "staging",
-            "production",
-            "testing",
-        ]:
-            self.errors.append(f"Invalid environment: {self.config.ENVIRONMENT}")
-
-        # Production specific checks
+        logger.debug('Validating environment settings...')
+        if self.config.ENVIRONMENT not in ['development', 'staging',
+            'production', 'testing']:
+            self.errors.append(
+                f'Invalid environment: {self.config.ENVIRONMENT}')
         if self.config.is_production():
             if self.config.DEBUG:
-                self.errors.append("DEBUG mode is enabled in production")
-
+                self.errors.append('DEBUG mode is enabled in production')
             if not self.config.SECURE_SSL_REDIRECT:
-                self.warnings.append("SSL redirect is not enabled in production")
+                self.warnings.append(
+                    'SSL redirect is not enabled in production')
 
-    def _validate_secrets(self) -> None:
+    def _validate_secrets(self) ->None:
         """Validate secret keys and tokens"""
-        logger.debug("Validating secrets...")
-
-        # Check secret key strength
+        logger.debug('Validating secrets...')
         if len(self.config.SECRET_KEY) < 32:
-            self.warnings.append("SECRET_KEY should be at least 32 characters")
-
+            self.warnings.append('SECRET_KEY should be at least 32 characters')
         if len(self.config.JWT_SECRET_KEY) < 32:
-            self.warnings.append("JWT_SECRET_KEY should be at least 32 characters")
-
-        # Check for default/weak secrets
-        weak_patterns = ["dev-", "test-", "change-me", "secret", "password", "123"]
-
+            self.warnings.append(
+                'JWT_SECRET_KEY should be at least 32 characters')
+        weak_patterns = ['dev-', 'test-', 'change-me', 'secret', 'password',
+            '123']
         for pattern in weak_patterns:
             if pattern in self.config.SECRET_KEY.lower():
-                severity = "error" if self.config.is_production() else "warning"
-                message = f"SECRET_KEY contains weak pattern: {pattern}"
-                if severity == "error":
+                severity = 'error' if self.config.is_production(
+                    ) else 'warning'
+                message = f'SECRET_KEY contains weak pattern: {pattern}'
+                if severity == 'error':
                     self.errors.append(message)
                 else:
                     self.warnings.append(message)
-
             if pattern in self.config.JWT_SECRET_KEY.lower():
-                severity = "error" if self.config.is_production() else "warning"
-                message = f"JWT_SECRET_KEY contains weak pattern: {pattern}"
-                if severity == "error":
+                severity = 'error' if self.config.is_production(
+                    ) else 'warning'
+                message = f'JWT_SECRET_KEY contains weak pattern: {pattern}'
+                if severity == 'error':
                     self.errors.append(message)
                 else:
                     self.warnings.append(message)
 
-    def _validate_database_connectivity(self) -> None:
+    def _validate_database_connectivity(self) ->None:
         """Validate database configuration and connectivity"""
-        logger.debug("Validating database configuration...")
-
-        # Check database URL format
+        logger.debug('Validating database configuration...')
         if not self.config.DATABASE_URL:
-            self.errors.append("DATABASE_URL is not set")
+            self.errors.append('DATABASE_URL is not set')
             return
-
-        # Import here to avoid circular dependencies
         try:
             from sqlalchemy import create_engine
             from sqlalchemy.exc import OperationalError
-
-            # Try to connect to database
-            engine = create_engine(
-                self.config.DATABASE_URL, connect_args={"connect_timeout": 5}
-            )
-
+            engine = create_engine(self.config.DATABASE_URL, connect_args={
+                'connect_timeout': 5})
             with engine.connect() as conn:
-                result = conn.execute("SELECT 1")
-                logger.debug("Database connection successful")
-
+                result = conn.execute('SELECT 1')
+                logger.debug('Database connection successful')
         except ImportError:
             self.warnings.append(
-                "SQLAlchemy not installed, skipping database connectivity check"
-            )
-
+                'SQLAlchemy not installed, skipping database connectivity check'
+                )
         except OperationalError as e:
             if self.config.is_production():
-                self.errors.append(f"Cannot connect to database: {str(e)}")
+                self.errors.append(f'Cannot connect to database: {str(e)}')
             else:
-                self.warnings.append(f"Cannot connect to database: {str(e)}")
-
+                self.warnings.append(f'Cannot connect to database: {str(e)}')
         except Exception as e:
-            self.warnings.append(f"Database validation error: {str(e)}")
+            self.warnings.append(f'Database validation error: {str(e)}')
 
-    def _validate_redis_connectivity(self) -> None:
+    def _validate_redis_connectivity(self) ->None:
         """Validate Redis configuration and connectivity"""
-        logger.debug("Validating Redis configuration...")
-
+        logger.debug('Validating Redis configuration...')
         if not self.config.REDIS_URL:
-            self.errors.append("REDIS_URL is not set")
+            self.errors.append('REDIS_URL is not set')
             return
-
         try:
             import redis
-
-            # Try to connect to Redis
-            r = redis.from_url(
-                self.config.REDIS_URL, socket_connect_timeout=5, decode_responses=True
-            )
+            r = redis.from_url(self.config.REDIS_URL,
+                socket_connect_timeout=5, decode_responses=True)
             r.ping()
-            logger.debug("Redis connection successful")
-
+            logger.debug('Redis connection successful')
         except ImportError:
             self.warnings.append(
-                "Redis not installed, skipping Redis connectivity check"
-            )
-
+                'Redis not installed, skipping Redis connectivity check')
         except redis.ConnectionError as e:
             if self.config.is_production():
-                self.errors.append(f"Cannot connect to Redis: {str(e)}")
+                self.errors.append(f'Cannot connect to Redis: {str(e)}')
             else:
-                self.warnings.append(f"Cannot connect to Redis: {str(e)}")
-
+                self.warnings.append(f'Cannot connect to Redis: {str(e)}')
         except Exception as e:
-            self.warnings.append(f"Redis validation error: {str(e)}")
+            self.warnings.append(f'Redis validation error: {str(e)}')
 
-    def _validate_neo4j_connectivity(self) -> None:
+    def _validate_neo4j_connectivity(self) ->None:
         """Validate Neo4j configuration and connectivity"""
-        logger.debug("Validating Neo4j configuration...")
-
-        if not all(
-            [
-                self.config.NEO4J_URI,
-                self.config.NEO4J_USERNAME,
-                self.config.NEO4J_PASSWORD,
-            ]
-        ):
-            self.errors.append("Neo4j configuration incomplete")
+        logger.debug('Validating Neo4j configuration...')
+        if not all([self.config.NEO4J_URI, self.config.NEO4J_USERNAME, self
+            .config.NEO4J_PASSWORD]):
+            self.errors.append('Neo4j configuration incomplete')
             return
-
         try:
             from neo4j import GraphDatabase
-
-            # Try to connect to Neo4j
-            driver = GraphDatabase.driver(
-                self.config.NEO4J_URI,
-                auth=(self.config.NEO4J_USERNAME, self.config.NEO4J_PASSWORD),
-                connection_timeout=5,
-            )
-
+            driver = GraphDatabase.driver(self.config.NEO4J_URI, auth=(self
+                .config.NEO4J_USERNAME, self.config.NEO4J_PASSWORD),
+                connection_timeout=5)
             with driver.session() as session:
-                result = session.run("RETURN 1 AS test")
+                result = session.run('RETURN 1 AS test')
                 result.single()
-
             driver.close()
-            logger.debug("Neo4j connection successful")
-
+            logger.debug('Neo4j connection successful')
         except ImportError:
             self.warnings.append(
-                "Neo4j driver not installed, skipping Neo4j connectivity check"
-            )
-
+                'Neo4j driver not installed, skipping Neo4j connectivity check'
+                )
         except Exception as e:
             if self.config.is_production():
-                self.errors.append(f"Cannot connect to Neo4j: {str(e)}")
+                self.errors.append(f'Cannot connect to Neo4j: {str(e)}')
             else:
-                self.warnings.append(f"Cannot connect to Neo4j: {str(e)}")
+                self.warnings.append(f'Cannot connect to Neo4j: {str(e)}')
 
-    def _validate_ai_services(self) -> None:
+    def _validate_ai_services(self) ->None:
         """Validate AI service configurations"""
-        logger.debug("Validating AI service configurations...")
-
+        logger.debug('Validating AI service configurations...')
         if not self.config.ENABLE_AI_PROCESSING:
-            logger.debug("AI processing disabled, skipping AI service validation")
+            logger.debug(
+                'AI processing disabled, skipping AI service validation')
             return
-
-        # Check for at least one AI service
-        services = {
-            "OpenAI": self.config.OPENAI_API_KEY,
-            "Google": self.config.GOOGLE_API_KEY or self.config.GOOGLE_AI_API_KEY,
-            "Anthropic": self.config.ANTHROPIC_API_KEY,
-        }
-
+        services = {'OpenAI': self.config.OPENAI_API_KEY, 'Google': self.
+            config.GOOGLE_API_KEY or self.config.GOOGLE_AI_API_KEY,
+            'Anthropic': self.config.ANTHROPIC_API_KEY}
         configured_services = [name for name, key in services.items() if key]
-
         if not configured_services:
             self.errors.append(
-                "AI processing enabled but no AI service API keys configured"
-            )
+                'AI processing enabled but no AI service API keys configured')
         else:
-            logger.debug(f"AI services configured: {', '.join(configured_services)}")
-
-        # Validate API key formats
+            logger.debug('AI services configured: %s' % ', '.join(
+                configured_services))
         if self.config.OPENAI_API_KEY:
-            if not self.config.OPENAI_API_KEY.startswith("sk-"):
-                self.warnings.append("OPENAI_API_KEY doesn't match expected format")
+            if not self.config.OPENAI_API_KEY.startswith('sk-'):
+                self.warnings.append(
+                    "OPENAI_API_KEY doesn't match expected format")
 
-    def _validate_file_system(self) -> None:
+    def _validate_file_system(self) ->None:
         """Validate file system configurations"""
-        logger.debug("Validating file system configurations...")
-
-        # Check upload directory
+        logger.debug('Validating file system configurations...')
         if self.config.UPLOAD_DIR:
             upload_path = Path(self.config.UPLOAD_DIR)
-
             if not upload_path.exists():
                 try:
                     upload_path.mkdir(parents=True, exist_ok=True)
-                    logger.debug(f"Created upload directory: {upload_path}")
+                    logger.debug('Created upload directory: %s' % upload_path)
                 except Exception as e:
-                    self.errors.append(f"Cannot create upload directory: {e}")
-
+                    self.errors.append(f'Cannot create upload directory: {e}')
             elif not upload_path.is_dir():
                 self.errors.append(
-                    f"Upload path exists but is not a directory: {upload_path}"
-                )
-
+                    f'Upload path exists but is not a directory: {upload_path}'
+                    )
             elif not os.access(upload_path, os.W_OK):
-                self.errors.append(f"Upload directory is not writable: {upload_path}")
-
-        # Check log file path if specified
+                self.errors.append(
+                    f'Upload directory is not writable: {upload_path}')
         if self.config.LOG_FILE:
             log_path = Path(self.config.LOG_FILE).parent
-
             if not log_path.exists():
                 try:
                     log_path.mkdir(parents=True, exist_ok=True)
-                    logger.debug(f"Created log directory: {log_path}")
+                    logger.debug('Created log directory: %s' % log_path)
                 except Exception as e:
-                    self.warnings.append(f"Cannot create log directory: {e}")
+                    self.warnings.append(f'Cannot create log directory: {e}')
 
-    def _validate_security_settings(self) -> None:
+    def _validate_security_settings(self) ->None:
         """Validate security configurations"""
-        logger.debug("Validating security settings...")
-
+        logger.debug('Validating security settings...')
         if self.config.is_production():
-            # Check CORS settings
-            if "*" in self.config.CORS_ORIGINS:
-                self.errors.append("CORS allows all origins in production")
-
-            # Check cookie settings
+            if '*' in self.config.CORS_ORIGINS:
+                self.errors.append('CORS allows all origins in production')
             if not self.config.SESSION_COOKIE_SECURE:
-                self.warnings.append("Session cookies are not secure in production")
-
+                self.warnings.append(
+                    'Session cookies are not secure in production')
             if not self.config.SESSION_COOKIE_HTTPONLY:
-                self.warnings.append("Session cookies are not HTTP-only in production")
-
-            # Check rate limiting
+                self.warnings.append(
+                    'Session cookies are not HTTP-only in production')
             if not self.config.RATE_LIMIT_ENABLED:
-                self.warnings.append("Rate limiting is disabled in production")
+                self.warnings.append('Rate limiting is disabled in production')
 
-    def _validate_performance_settings(self) -> None:
+    def _validate_performance_settings(self) ->None:
         """Validate performance configurations"""
-        logger.debug("Validating performance settings...")
-
-        # Check worker count
+        logger.debug('Validating performance settings...')
         if self.config.is_production():
             if self.config.WORKERS < 2:
-                self.warnings.append("Low worker count for production")
-
-            # Check database pool
+                self.warnings.append('Low worker count for production')
             if self.config.DB_POOL_SIZE < 10:
-                self.warnings.append("Small database pool size for production")
-
-            # Check Redis connections
+                self.warnings.append('Small database pool size for production')
             if self.config.REDIS_MAX_CONNECTIONS < 50:
-                self.warnings.append("Low Redis max connections for production")
+                self.warnings.append('Low Redis max connections for production'
+                    )
+        if self.config.DB_POOL_TIMEOUT > MINUTE_SECONDS:
+            self.warnings.append('Database pool timeout is very high')
 
-        # Check timeouts
-        if self.config.DB_POOL_TIMEOUT > 60:
-            self.warnings.append("Database pool timeout is very high")
 
-
-def run_startup_validation(exit_on_error: bool = True) -> bool:
+def run_startup_validation(exit_on_error: bool=True) ->bool:
     """
     Run startup validation
 
@@ -348,46 +267,35 @@ def run_startup_validation(exit_on_error: bool = True) -> bool:
         True if validation passed
     """
     try:
-        # Load and validate basic configuration
         config = get_current_config()
         validate_config(config)
-
-        # Run comprehensive validation
         validator = StartupValidator(config)
         success, errors, warnings = validator.validate_all()
-
         if not success and exit_on_error:
-            logger.critical("Configuration validation failed. Exiting...")
+            logger.critical('Configuration validation failed. Exiting...')
             sys.exit(1)
-
         return success
-
     except ConfigurationError as e:
-        logger.critical(f"Configuration error: {e}")
+        logger.critical('Configuration error: %s' % e)
         if exit_on_error:
             sys.exit(1)
         return False
-
     except Exception as e:
-        logger.critical(f"Unexpected error during validation: {e}")
+        logger.critical('Unexpected error during validation: %s' % e)
         if exit_on_error:
             sys.exit(1)
         return False
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     """Run validation when executed directly"""
     import os
-
-    # Allow environment override from command line
     if len(sys.argv) > 1:
-        os.environ["ENVIRONMENT"] = sys.argv[1]
-
+        os.environ['ENVIRONMENT'] = sys.argv[1]
     success = run_startup_validation(exit_on_error=False)
-
     if success:
-        print("\n✅ Configuration validation successful!")
+        logger.info('\n✅ Configuration validation successful!')
         sys.exit(0)
     else:
-        print("\n❌ Configuration validation failed!")
+        logger.error('\n❌ Configuration validation failed!')
         sys.exit(1)

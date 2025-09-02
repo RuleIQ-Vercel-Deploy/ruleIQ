@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Doppler Secrets Management Integration
 ======================================
 Centralized configuration management using Doppler for secure secret handling.

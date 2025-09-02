@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Test configuration and fixtures for AI Optimization tests.
 
 Provides shared fixtures, mocks, and configuration for testing

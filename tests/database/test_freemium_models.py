@@ -8,7 +8,7 @@ These tests define the exact interfaces and behavior required for the freemium m
 import os
 
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 
 import pytest
@@ -116,7 +116,7 @@ class TestFreemiumAssessmentSession:
 
         # Act
         session = FreemiumAssessmentSession(
-            lead_id=lead.id, assessment_type="technology_compliance", status="started"
+            lead_id=lead.id, assessment_type="technology_compliance", status="started",
         )
         db_session.add(session)
         db_session.commit()
@@ -129,7 +129,7 @@ class TestFreemiumAssessmentSession:
         assert session.session_token is not None
         assert len(session.session_token) >= 32  # Secure token length
         assert session.expires_at is not None
-        assert session.expires_at > datetime.utcnow()
+        assert session.expires_at > datetime.now(timezone.utc)
 
     def test_assessment_session_ai_responses_storage(self, db_session):
         """Test storing AI responses and user answers in JSON fields."""
@@ -139,7 +139,7 @@ class TestFreemiumAssessmentSession:
         db_session.commit()
 
         session = FreemiumAssessmentSession(
-            lead_id=lead.id, assessment_type="healthcare_compliance"
+            lead_id=lead.id, assessment_type="healthcare_compliance",
         )
 
         # Act
@@ -173,7 +173,7 @@ class TestFreemiumAssessmentSession:
         session = FreemiumAssessmentSession(
             lead_id=lead.id,
             assessment_type="finance_compliance",
-            expires_at=datetime.utcnow() + timedelta(hours=2),
+            expires_at=datetime.now(timezone.utc) + timedelta(hours=2),
         )
         db_session.add(session)
         db_session.commit()
@@ -182,7 +182,7 @@ class TestFreemiumAssessmentSession:
         assert session.is_expired() is False
 
         # Simulate expired session
-        session.expires_at = datetime.utcnow() - timedelta(minutes=1)
+        session.expires_at = datetime.now(timezone.utc) - timedelta(minutes=1)
         assert session.is_expired() is True
 
 
@@ -329,17 +329,17 @@ class TestFreemiumModelRelationships:
         """Test one-to-many relationship between leads and assessment sessions."""
         # Arrange
         lead = AssessmentLead(
-            email="relations.test@example.com", marketing_consent=True
+            email="relations.test@example.com", marketing_consent=True,
         )
         db_session.add(lead)
         db_session.commit()
 
         # Act - Create multiple sessions for same lead
         session1 = FreemiumAssessmentSession(
-            lead_id=lead.id, assessment_type="tech_compliance"
+            lead_id=lead.id, assessment_type="tech_compliance",
         )
         session2 = FreemiumAssessmentSession(
-            lead_id=lead.id, assessment_type="finance_compliance"
+            lead_id=lead.id, assessment_type="finance_compliance",
         )
 
         db_session.add_all([session1, session2])
@@ -358,7 +358,7 @@ class TestFreemiumModelRelationships:
         db_session.commit()
 
         session = FreemiumAssessmentSession(
-            lead_id=lead.id, assessment_type="education_compliance"
+            lead_id=lead.id, assessment_type="education_compliance",
         )
         event = LeadScoringEvent(
             lead_id=lead.id,

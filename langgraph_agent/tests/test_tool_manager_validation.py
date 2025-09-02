@@ -434,9 +434,9 @@ class TestRateLimiting:
         assert tool._check_rate_limit() == False
 
         # Simulate time passing (reset period)
-        from datetime import datetime, timedelta
+        from datetime import datetime, timedelta, timezone
 
-        tool._last_reset = datetime.utcnow() - timedelta(seconds=61)
+        tool._last_reset = datetime.now(timezone.utc) - timedelta(seconds=61)
         assert tool._check_rate_limit() == True
         assert tool._execution_count == 0  # Should reset counter
 

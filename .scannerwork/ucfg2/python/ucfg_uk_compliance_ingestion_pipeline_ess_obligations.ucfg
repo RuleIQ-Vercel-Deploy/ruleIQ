@@ -1,14 +1,14 @@
 
 Puk_compliance_ingestion_pipeline.UKComplianceGraphIngestion._process_obligations_
-S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipeline.py… …(""3"5*K
+S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipeline.pyÍ Í(""3"5*K
 3%
 #uk_compliance_ingestion_pipeline.py"
-Š Š(
+Ó Ó(
 implicit return*¢
 5
-ˆ ˆ(Kˆ…
+Ñ Ñ(Kˆ…
 
-ˆ ˆ(K
+Ñ Ñ(K
 %1*[
 
 __unknown_file (?=
@@ -30,12 +30,12 @@ obligation*&
 3
 5:
 
-…) …(0	
+Í) Í(0	
 session:
 
-…2 …(=
+Í2 Í(=
 reg_id:
 
-…? …(V
+Í? Î(
 obligationsB?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestionH

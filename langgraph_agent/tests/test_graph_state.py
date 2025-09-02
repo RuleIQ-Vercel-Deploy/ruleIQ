@@ -3,7 +3,7 @@ Tests for LangGraph state management.
 Validates state creation, updates, and helper functions.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from uuid import uuid4
 
 from langgraph_agent.graph.state import (
@@ -60,11 +60,11 @@ class TestCreateInitialState:
     def test_initial_state_timestamps(self):
         """Test timestamps are set correctly."""
         company_id = uuid4()
-        before_creation = datetime.utcnow()
+        before_creation = datetime.now(timezone.utc)
 
         state = create_initial_state(company_id=company_id, user_input="Test input")
 
-        after_creation = datetime.utcnow()
+        after_creation = datetime.now(timezone.utc)
 
         assert before_creation <= state["start_time"] <= after_creation
         assert before_creation <= state["last_updated"] <= after_creation

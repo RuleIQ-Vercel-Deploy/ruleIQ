@@ -22,10 +22,10 @@ class ReadinessAssessment(Base):
     # Replace 'users.id' etc. with actual table.column names if different.
     user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     business_profile_id = Column(
-        PG_UUID(as_uuid=True), ForeignKey("business_profiles.id"), nullable=False
+        PG_UUID(as_uuid=True), ForeignKey("business_profiles.id"), nullable=False,
     )
     framework_id = Column(
-        PG_UUID(as_uuid=True), ForeignKey("compliance_frameworks.id"), nullable=False
+        PG_UUID(as_uuid=True), ForeignKey("compliance_frameworks.id"), nullable=False,
     )
 
     # Assessment metadata

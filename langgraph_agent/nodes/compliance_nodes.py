@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Compliance check nodes - migrated from Celery compliance_tasks.
 Implements compliance checking against regulations and requirements.
 """

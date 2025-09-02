@@ -4,9 +4,8 @@ Provides high-performance query interface for compliance data.
 """
 
 import logging
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 from neo4j import AsyncGraphDatabase
-import asyncio
 
 logger = logging.getLogger(__name__)
 
@@ -89,12 +88,12 @@ class ComplianceQueryEngine:
                 "base_risk_score": base_risk,
                 "adjusted_risk": min(base_risk + enforcement_adjustment, 10),
                 "enforcement_frequency": reg.get("risk_metadata", {}).get(
-                    "enforcement_frequency"
+                    "enforcement_frequency",
                 ),
                 "max_penalty": reg.get("risk_metadata", {}).get("max_penalty"),
                 "enforcement_count": len(enforcements),
                 "total_penalties": sum(
-                    e.get("penalty_amount", 0) for e in enforcements
+                    e.get("penalty_amount", 0) for e in enforcements,
                 ),
             }
 

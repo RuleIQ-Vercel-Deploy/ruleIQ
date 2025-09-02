@@ -243,7 +243,7 @@ class AvaPerformanceMonitor {
     // TODO: Replace with proper logging
     try {
       // Use web-vitals library to measure real metrics
-      const webVitalsScript = `
+      const _webVitalsScript = `
         const { getCLS, getFID, getFCP, getLCP, getTTFB } = require('web-vitals');
         const results = {};
         
@@ -353,7 +353,7 @@ class AvaPerformanceMonitor {
     // TODO: Replace with proper logging
     try {
       // Use puppeteer to measure runtime metrics
-      const puppeteerScript = `
+      const _puppeteerScript = `
         const puppeteer = require('puppeteer');
         (async () => {
           const browser = await puppeteer.launch({ headless: true });
@@ -514,7 +514,7 @@ class AvaPerformanceMonitor {
     if (results.violations.length > 0) {
       // TODO: Replace with proper logging
       results.violations.forEach((violation) => {
-        const emoji =
+        const _emoji =
           violation.severity === 'CRITICAL' ? '🔴' : violation.severity === 'ERROR' ? '🟠' : '🟡';
         // TODO: Replace with proper logging
 

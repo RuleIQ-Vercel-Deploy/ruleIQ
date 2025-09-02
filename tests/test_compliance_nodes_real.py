@@ -1,11 +1,13 @@
 """
+from __future__ import annotations
+
 Integration tests for real compliance nodes implementation.
 Tests actual database operations and service connections.
 """
 
 import pytest
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from unittest.mock import Mock, AsyncMock, patch, MagicMock
 from typing import Dict, Any, List
 from uuid import uuid4
@@ -76,10 +78,10 @@ class TestRealComplianceNodes:
         assessment.id = uuid4()
         assessment.overall_score = 85.0
         assessment.priority_actions = [
-            {"action": "Implement data encryption", "urgency": "high", "impact": "high"}
+            {"action": "Implement data encryption", "urgency": "high", "impact": "high"},
         ]
         assessment.quick_wins = [{"action": "Update privacy policy", "effort": "low"}]
-        assessment.estimated_readiness_date = datetime.utcnow() + timedelta(days=30)
+        assessment.estimated_readiness_date = datetime.now(timezone.utc) + timedelta(days=30)
         assessment.framework_scores = {
             "policy": 90.0,
             "implementation": 80.0,
@@ -140,7 +142,7 @@ class TestRealComplianceNodes:
                     mock_generate.return_value = mock_assessment
 
                     result = await update_compliance_for_profile(
-                        mock_db, mock_business_profile
+                        mock_db, mock_business_profile,
                     )
 
                     assert result["profile_id"] == str(mock_business_profile.id)
@@ -215,19 +217,19 @@ class TestRealComplianceNodes:
                     assert "batch_update_results" in result["compliance_data"]
                     assert (
                         result["compliance_data"]["batch_update_results"][
-                            "total_profiles"
+                            "total_profiles",
                         ]
-                        == 1
+                        == 1,
                     )
                     assert (
                         result["compliance_data"]["batch_update_results"][
-                            "updated_count"
+                            "updated_count",
                         ]
-                        == 1
+                        == 1,
                     )
                     assert (
                         result["compliance_data"]["batch_update_results"]["error_count"]
-                        == 0
+                        == 0,
                     )
                     assert len(result["compliance_data"]["profiles"]) == 1
                     assert len(result["history"]) == 1
@@ -271,13 +273,13 @@ class TestRealComplianceNodes:
 
                     assert (
                         len(result["compliance_data"]["batch_update_results"]["alerts"])
-                        == 1
+                        == 1,
                     )
                     assert result["metadata"]["alerts_generated"] == True
                     assert result["metadata"]["alert_count"] == 1
 
                     alert = result["compliance_data"]["batch_update_results"]["alerts"][
-                        0
+                        0,
                     ]
                     assert alert["score"] == 65.0
                     assert alert["message"] == "Compliance score is below threshold"
@@ -326,7 +328,7 @@ class TestRealComplianceNodes:
                     assert "check_results" in result["compliance_data"]
                     assert (
                         result["compliance_data"]["check_results"]["overall_score"]
-                        == 85.0
+                        == 85.0,
                     )
                     assert result["compliance_data"]["regulation"] == "GDPR"
                     assert len(result["history"]) == 1
@@ -373,7 +375,7 @@ class TestRealComplianceNodes:
                         "overall_score": 65.0,  # Below 70 threshold
                         "risk_level": "Medium",
                         "priority_actions": [
-                            {"action": "Fix data retention", "urgency": "high"}
+                            {"action": "Fix data retention", "urgency": "high"},
                         ],
                         "quick_wins": [],
                     }
@@ -383,23 +385,23 @@ class TestRealComplianceNodes:
                     assert "monitoring_results" in result["compliance_data"]
                     assert (
                         result["compliance_data"]["monitoring_results"][
-                            "total_profiles"
+                            "total_profiles",
                         ]
-                        == 1
+                        == 1,
                     )
                     assert (
                         result["compliance_data"]["monitoring_results"][
-                            "alerts_generated"
+                            "alerts_generated",
                         ]
-                        == 1
+                        == 1,
                     )
                     assert (
                         len(
                             result["compliance_data"]["monitoring_results"][
-                                "low_score_profiles"
-                            ]
+                                "low_score_profiles",
+                            ],
                         )
-                        == 1
+                        == 1,
                     )
 
                     assert result["metadata"]["notify_required"] == True

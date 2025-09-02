@@ -9,7 +9,7 @@ from sqlalchemy import create_engine, text
 # Set environment variables
 os.environ["ENV"] = "testing"
 os.environ["DATABASE_URL"] = (
-    "postgresql://neondb_owner:npg_s0JhnfGNy3Ze@ep-wild-grass-a8o37wq8-pooler.eastus2.azure.neon.tech/neondb?sslmode=require"
+    "postgresql://neondb_owner:npg_s0JhnfGNy3Ze@ep-wild-grass-a8o37wq8-pooler.eastus2.azure.neon.tech/neondb?sslmode=require",
 )
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -52,7 +52,7 @@ async def setup_database():
 
     # Run Alembic migrations
     result = subprocess.run(
-        ["alembic", "upgrade", "head"], capture_output=True, text=True
+        ["alembic", "upgrade", "head"], capture_output=True, text=True,
     )
 
     if result.returncode == 0:
@@ -78,7 +78,7 @@ async def setup_database():
             from sqlalchemy import select
 
             result = await db.execute(
-                select(User).where(User.email == "test@example.com")
+                select(User).where(User.email == "test@example.com"),
             )
             user = result.scalar_one_or_none()
 

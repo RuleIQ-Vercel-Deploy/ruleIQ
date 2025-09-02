@@ -4,7 +4,7 @@ FastAPI router for chat functionality with the AI assistant.
 
 import asyncio
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 from uuid import UUID
 
@@ -55,11 +55,9 @@ async def create_conversation(
         user_id_str = str(current_user.id)
 
         # Use a single query with subquery for better performance
-        profile_stmt = select(BusinessProfile).where(
-            BusinessProfile.user_id == user_id_str
-        )
+        profile_stmt = select(BusinessProfile).where(BusinessProfile.user_id == user_id_str)
         count_stmt = select(func.count(ChatConversation.id)).where(
-            ChatConversation.user_id == user_id_str
+            ChatConversation.user_id == user_id_str,
         )
 
         # Execute both queries concurrently
@@ -67,9 +65,7 @@ async def create_conversation(
         count_task = asyncio.create_task(db.execute(count_stmt))
 
         try:
-            profile_result, count_result = await asyncio.gather(
-                profile_task, count_task
-            )
+            profile_result, count_result = await asyncio.gather(profile_task, count_task)
         except Exception as e:
             logger.error(f"Database query failed: {e}")
             raise HTTPException(status_code=500, detail="Database query failed")
@@ -112,9 +108,7 @@ async def create_conversation(
                 db.add(user_message)
 
                 # Generate assistant response with enhanced error handling and timeout
-                logger.info(
-                    f"Processing initial message for conversation {conversation.id}"
-                )
+                logger.info(f"Processing initial message for conversation {conversation.id}")
 
                 # Use asyncio timeout to prevent hanging
                 try:
@@ -124,32 +118,29 @@ async def create_conversation(
                             user=current_user,
                             message=request.initial_message,
                             business_profile_id=business_profile.id,
-                        )
+                        ),
                     )
 
                     # Aggressive timeout for conversation creation
-                    response_text, metadata = await asyncio.wait_for(
-                        response_task, timeout=12.0
-                    )
+                    response_text, metadata = await asyncio.wait_for(response_task, timeout=12.0)
 
                 except asyncio.TimeoutError:
-                    logger.warning(
-                        f"AI processing timed out for conversation {conversation.id}"
-                    )
+                    logger.warning(f"AI processing timed out for conversation {conversation.id}")
                     # Use fallback response
-                    response_text = \
-                        """I understand you'd like to discuss compliance matters. Due to high demand, I'm providing a quick response:
-
-I'm here to help with compliance questions about GDPR, ISO 27001, and other frameworks. Please feel free to ask specific questions about:
-• Data protection requirements
-• Security controls and policies
-• Risk assessments
-• Audit preparations
-
-What specific compliance topic would you like to explore?"""
+                    response_text = (
+                        "I understand you'd like to discuss compliance matters. Due to high "
+                        "demand, I'm providing a quick response. "
+                        "I'm here to help with compliance questions about GDPR, ISO 27001, and other frameworks. "
+                        "Please feel free to ask specific questions about: "
+                        "• Data protection requirements "
+                        "• Security controls and policies "
+                        "• Risk assessments "
+                        "• Audit preparations "
+                        "What specific compliance topic would you like to explore?"
+                    )
 
                     metadata = {
-                        "timestamp": datetime.utcnow().isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                         "fallback_used": True,
                         "timeout_occurred": True,
                         "intent": "general",
@@ -184,22 +175,23 @@ What specific compliance topic would you like to explore?"""
                 db.add(user_message)
 
                 # Provide fallback assistant response
-                fallback_response = """Thank you for your message. I'm currently experiencing high demand but I'm here to help with your compliance questions.
-
-Please feel free to ask about:
-• GDPR and data protection
-• ISO 27001 and security frameworks
-• Risk assessments and audits
-• Policy development
-
-What specific compliance area can I assist you with?"""
+                fallback_response = (
+                    "Thank you for your message. I'm currently experiencing high demand but "
+                    "I'm here to help with your compliance questions. "
+                    "Please feel free to ask about: "
+                    "• GDPR and data protection "
+                    "• ISO 27001 and security frameworks "
+                    "• Risk assessments and audits "
+                    "• Policy development "
+                    "What specific compliance area can I assist you with?"
+                )
 
                 assistant_message = ChatMessage(
                     conversation_id=conversation.id,
                     role="assistant",
                     content=fallback_response,
                     message_metadata={
-                        "timestamp": datetime.utcnow().isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                         "fallback_used": True,
                         "ai_error": str(ai_error),
                         "intent": "fallback",
@@ -257,7 +249,7 @@ async def list_conversations(
                 ChatConversation.user_id == str(current_user.id),
                 ChatConversation.status != ConversationStatus.DELETED,
             )
-            .count()
+            .count(),
         )
 
         # Get conversations with pagination
@@ -270,23 +262,21 @@ async def list_conversations(
             .order_by(desc(ChatConversation.updated_at))
             .offset((page - 1) * per_page)
             .limit(per_page)
-            .all()
+            .all(),
         )
 
         # Get message counts and last message times
         conversation_summaries = []
         for conv in conversations:
             message_count = (
-                db.query(ChatMessage)
-                .filter(ChatMessage.conversation_id == conv.id)
-                .count()
+                db.query(ChatMessage).filter(ChatMessage.conversation_id == conv.id).count(),
             )
 
             last_message = (
                 db.query(ChatMessage)
                 .filter(ChatMessage.conversation_id == conv.id)
                 .order_by(desc(ChatMessage.created_at))
-                .first()
+                .first(),
             )
 
             conversation_summaries.append(
@@ -297,7 +287,7 @@ async def list_conversations(
                     message_count=message_count,
                     last_message_at=last_message.created_at if last_message else None,
                     created_at=conv.created_at,
-                )
+                ),
             )
 
         return ConversationListResponse(
@@ -326,7 +316,7 @@ async def get_conversation(
                 ChatConversation.id == conversation_id,
                 ChatConversation.user_id == str(current_user.id),
             )
-            .first()
+            .first(),
         )
 
         if not conversation:
@@ -336,7 +326,7 @@ async def get_conversation(
             db.query(ChatMessage)
             .filter(ChatMessage.conversation_id == conversation_id)
             .order_by(ChatMessage.sequence_number)
-            .all()
+            .all(),
         )
 
         return ConversationResponse(
@@ -355,9 +345,7 @@ async def get_conversation(
         raise HTTPException(status_code=500, detail="Failed to get conversation")
 
 
-@router.post(
-    "/conversations/{conversation_id}/messages", response_model=MessageResponse
-)
+@router.post("/conversations/{conversation_id}/messages", response_model=MessageResponse)
 async def send_message(
     conversation_id: UUID,
     request: SendMessageRequest,
@@ -378,13 +366,11 @@ async def send_message(
         conversation = conv_result.scalars().first()
 
         if not conversation:
-            raise HTTPException(
-                status_code=404, detail="Conversation not found or inactive"
-            )
+            raise HTTPException(status_code=404, detail="Conversation not found or inactive")
 
         # Get business profile
         bp_stmt = select(BusinessProfile).where(
-            BusinessProfile.user_id == str(str(current_user.id))
+            BusinessProfile.user_id == str(str(current_user.id)),
         )
         bp_result = await db.execute(bp_stmt)
         business_profile = bp_result.scalars().first()
@@ -396,7 +382,7 @@ async def send_message(
         msg_stmt = (
             select(ChatMessage)
             .where(ChatMessage.conversation_id == conversation_id)
-            .order_by(desc(ChatMessage.sequence_number))
+            .order_by(desc(ChatMessage.sequence_number)),
         )
         msg_result = await db.execute(msg_stmt)
         last_message = msg_result.scalars().first()
@@ -435,7 +421,7 @@ async def send_message(
         # Update conversation timestamp
         from datetime import datetime
 
-        conversation.updated_at = datetime.utcnow()
+        conversation.updated_at = datetime.now(timezone.utc)
 
         await db.commit()
 
@@ -463,7 +449,7 @@ async def delete_conversation(
                 ChatConversation["id"] == conversation_id,
                 ChatConversation.user_id == str(current_user.id),
             )
-            .first()
+            .first(),
         )
 
         if not conversation:
@@ -482,9 +468,7 @@ async def delete_conversation(
         raise HTTPException(status_code=500, detail="Failed to delete conversation")
 
 
-@router.post(
-    "/evidence-recommendations", response_model=List[EvidenceRecommendationResponse]
-)
+@router.post("/evidence-recommendations", response_model=List[EvidenceRecommendationResponse])
 async def get_evidence_recommendations(
     request: EvidenceRecommendationRequest,
     db: AsyncSession = Depends(get_async_db),
@@ -493,9 +477,7 @@ async def get_evidence_recommendations(
     """Get AI-powered evidence collection recommendations."""
     try:
         # Use async query for business profile
-        stmt = select(BusinessProfile).where(
-            BusinessProfile.user_id == str(str(current_user.id))
-        )
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
         result = await db.execute(stmt)
         business_profile = result.scalars().first()
 
@@ -529,9 +511,7 @@ async def analyze_compliance_gap(
         from sqlalchemy import select
 
         # Use async query for business profile
-        stmt = select(BusinessProfile).where(
-            BusinessProfile.user_id == str(str(current_user.id))
-        )
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
         result = await db.execute(stmt)
         business_profile = result.scalars().first()
 
@@ -555,12 +535,8 @@ async def analyze_compliance_gap(
 
 @router.post("/context-aware-recommendations")
 async def get_context_aware_recommendations(
-    framework: str = Query(
-        ..., min_length=1, description="Framework to get recommendations for"
-    ),
-    context_type: str = Query(
-        default="comprehensive", description="Type of context analysis"
-    ),
+    framework: str = Query(..., min_length=1, description="Framework to get recommendations for"),
+    context_type: str = Query(default="comprehensive", description="Type of context analysis"),
     db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
 ):
@@ -574,9 +550,7 @@ async def get_context_aware_recommendations(
     """
     try:
         # Use async query for business profile
-        stmt = select(BusinessProfile).where(
-            BusinessProfile.user_id == str(str(current_user.id))
-        )
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
         result = await db.execute(stmt)
         business_profile = result.scalars().first()
 
@@ -597,19 +571,13 @@ async def get_context_aware_recommendations(
         raise
     except Exception as e:
         logger.error(f"Error getting context-aware recommendations: {e}")
-        raise HTTPException(
-            status_code=500, detail="Failed to get context-aware recommendations"
-        )
+        raise HTTPException(status_code=500, detail="Failed to get context-aware recommendations")
 
 
 @router.post("/evidence-collection-workflow")
 async def generate_evidence_collection_workflow(
-    framework: str = Query(
-        ..., min_length=1, description="Framework for workflow generation"
-    ),
-    control_id: Optional[str] = Query(
-        None, description="Specific control ID (optional)"
-    ),
+    framework: str = Query(..., min_length=1, description="Framework for workflow generation"),
+    control_id: Optional[str] = Query(None, description="Specific control ID (optional)"),
     workflow_type: str = Query(default="comprehensive", description="Type of workflow"),
     db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
@@ -620,9 +588,7 @@ async def generate_evidence_collection_workflow(
     """
     try:
         # Use async query for business profile
-        stmt = select(BusinessProfile).where(
-            BusinessProfile.user_id == str(str(current_user.id))
-        )
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
         result = await db.execute(stmt)
         business_profile = result.scalars().first()
 
@@ -645,7 +611,7 @@ async def generate_evidence_collection_workflow(
     except Exception as e:
         logger.error(f"Error generating evidence collection workflow: {e}")
         raise HTTPException(
-            status_code=500, detail="Failed to generate evidence collection workflow"
+            status_code=500, detail="Failed to generate evidence collection workflow",
         )
 
 
@@ -654,12 +620,8 @@ async def generate_customized_policy(
     policy_type: str = Query(..., description="Type of policy to generate"),
     tone: str = Query(default="Professional", description="Policy tone"),
     detail_level: str = Query(default="Standard", description="Level of detail"),
-    include_templates: bool = Query(
-        default=True, description="Include implementation templates"
-    ),
-    geographic_scope: str = Query(
-        default="Single location", description="Geographic scope"
-    ),
+    include_templates: bool = Query(default=True, description="Include implementation templates"),
+    geographic_scope: str = Query(default="Single location", description="Geographic scope"),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_active_user),
 ):
@@ -675,7 +637,7 @@ async def generate_customized_policy(
         business_profile = (
             db.query(BusinessProfile)
             .filter(BusinessProfile.user_id == str(str(current_user.id)))
-            .first()
+            .first(),
         )
 
         if not business_profile:
@@ -704,17 +666,13 @@ async def generate_customized_policy(
         raise
     except Exception as e:
         logger.error(f"Error generating customized policy: {e}")
-        raise HTTPException(
-            status_code=500, detail="Failed to generate customized policy"
-        )
+        raise HTTPException(status_code=500, detail="Failed to generate customized policy")
 
 
 @router.get("/smart-guidance/{framework}")
 async def get_smart_compliance_guidance(
     framework: str,
-    guidance_type: str = Query(
-        default="getting_started", description="Type of guidance needed"
-    ),
+    guidance_type: str = Query(default="getting_started", description="Type of guidance needed"),
     db: AsyncSession = Depends(get_async_db),
     current_user: User = Depends(get_current_active_user),
 ):
@@ -727,9 +685,7 @@ async def get_smart_compliance_guidance(
     """
     try:
         # Use async query for business profile
-        stmt = select(BusinessProfile).where(
-            BusinessProfile.user_id == str(str(current_user.id))
-        )
+        stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(str(current_user.id)))
         result = await db.execute(stmt)
         business_profile = result.scalars().first()
 
@@ -748,7 +704,7 @@ async def get_smart_compliance_guidance(
 
         # Get gap analysis
         gap_analysis = await assistant.analyze_evidence_gap(
-            business_profile_id=business_profile.id, framework=framework
+            business_profile_id=business_profile.id, framework=framework,
         )
 
         # Combine into smart guidance
@@ -758,7 +714,7 @@ async def get_smart_compliance_guidance(
             "current_status": {
                 "completion_percentage": gap_analysis.get("completion_percentage", 0),
                 "maturity_level": recommendations.get("business_context", {}).get(
-                    "maturity_level", "Basic"
+                    "maturity_level", "Basic",
                 ),
                 "critical_gaps_count": len(gap_analysis.get("critical_gaps", [])),
             },
@@ -775,7 +731,7 @@ async def get_smart_compliance_guidance(
                 for rec in recommendations.get("recommendations", [])
                 if rec.get("automation_possible", False)
             ][:3],
-            "generated_at": datetime.utcnow().isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
         }
 
         return guidance
@@ -784,9 +740,7 @@ async def get_smart_compliance_guidance(
         raise
     except Exception as e:
         logger.error(f"Error getting smart compliance guidance: {e}")
-        raise HTTPException(
-            status_code=500, detail="Failed to get smart compliance guidance"
-        )
+        raise HTTPException(status_code=500, detail="Failed to get smart compliance guidance")
 
 
 # REMOVED: Duplicate endpoint
@@ -809,7 +763,7 @@ async def get_smart_compliance_guidance(
 #         return {
 #             "cache_performance": metrics,
 #             "status": "active",
-#             "generated_at": datetime.utcnow().isoformat(),
+#             "generated_at": datetime.now(timezone.utc).isoformat(),
 #         }
 #
 #     except Exception as e:
@@ -835,7 +789,7 @@ async def clear_ai_cache(
         return {
             "cleared_entries": cleared_count,
             "pattern": pattern,
-            "cleared_at": datetime.utcnow().isoformat(),
+            "cleared_at": datetime.now(timezone.utc).isoformat(),
         }
 
     except Exception as e:
@@ -870,7 +824,7 @@ async def get_ai_performance_metrics(
             "performance_metrics": performance_metrics,
             "cache_metrics": cache_metrics,
             "system_status": "optimal",
-            "generated_at": datetime.utcnow().isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
         }
 
     except Exception as e:
@@ -881,9 +835,7 @@ async def get_ai_performance_metrics(
 @router.post("/performance/optimize")
 async def optimize_ai_performance(
     enable_batching: bool = Query(default=True, description="Enable request batching"),
-    enable_compression: bool = Query(
-        default=True, description="Enable prompt compression"
-    ),
+    enable_compression: bool = Query(default=True, description="Enable prompt compression"),
     max_concurrent: int = Query(default=10, description="Maximum concurrent requests"),
     current_user: User = Depends(get_current_active_user),
 ):
@@ -912,14 +864,12 @@ async def optimize_ai_performance(
                 "max_concurrent_requests": max_concurrent,
             },
             "status": "updated",
-            "updated_at": datetime.utcnow().isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat(),
         }
 
     except Exception as e:
         logger.error(f"Error updating performance settings: {e}")
-        raise HTTPException(
-            status_code=500, detail="Failed to update performance settings"
-        )
+        raise HTTPException(status_code=500, detail="Failed to update performance settings")
 
 
 @router.get("/analytics/dashboard")
@@ -999,9 +949,7 @@ async def get_cost_analytics(
 
 @router.get("/analytics/alerts")
 async def get_system_alerts(
-    resolved: Optional[bool] = Query(
-        default=None, description="Filter by resolution status"
-    ),
+    resolved: Optional[bool] = Query(default=None, description="Filter by resolution status"),
     current_user: User = Depends(get_current_active_user),
 ):
     """
@@ -1042,7 +990,7 @@ async def resolve_system_alert(
             return {
                 "alert_id": alert_id,
                 "status": "resolved",
-                "resolved_at": datetime.utcnow().isoformat(),
+                "resolved_at": datetime.now(timezone.utc).isoformat(),
             }
         else:
             raise HTTPException(status_code=404, detail="Alert not found")
@@ -1074,7 +1022,7 @@ async def create_smart_evidence_plan(
         business_profile = (
             db.query(BusinessProfile)
             .filter(BusinessProfile.user_id == str(str(current_user.id)))
-            .first()
+            .first(),
         )
 
         if not business_profile:
@@ -1127,15 +1075,11 @@ async def create_smart_evidence_plan(
         raise
     except Exception as e:
         logger.error(f"Error creating smart evidence plan: {e}")
-        raise HTTPException(
-            status_code=500, detail="Failed to create smart evidence plan"
-        )
+        raise HTTPException(status_code=500, detail="Failed to create smart evidence plan")
 
 
 @router.get("/smart-evidence/plan/{id}")
-async def get_smart_evidence_plan(
-    id: str, current_user: User = Depends(get_current_active_user)
-):
+async def get_smart_evidence_plan(id: str, current_user: User = Depends(get_current_active_user)):
     """
     Get details of a smart evidence collection plan.
     """
@@ -1245,7 +1189,7 @@ async def update_evidence_task_status(
 
         collector = await get_smart_evidence_collector()
         success = await collector.update_task_status(
-            plan_id, task_id, task_status, completion_notes
+            plan_id, task_id, task_status, completion_notes,
         )
 
         if not success:
@@ -1256,7 +1200,7 @@ async def update_evidence_task_status(
             "task_id": task_id,
             "status": status,
             "completion_notes": completion_notes,
-            "updated_at": datetime.utcnow().isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat(),
         }
 
     except HTTPException:
@@ -1328,13 +1272,16 @@ async def update_evidence_task_status(
 # #
 # #         # Create feedback object
 # #         feedback = ResponseFeedback(
-# #             feedback_id=f"fb_{response_id}_{int(datetime.utcnow().timestamp())}",
+# #             feedback_id=f"fb_{response_id}_{int(datetime.now(timezone.utc).timestamp())}",
 # #             response_id=response_id,
 # #             user_id=str(str(current_user.id)),
 # #             feedback_type=feedback_type_enum,
 # #             rating=rating,
 # #             text_feedback=text_feedback,
-# #             metadata={"user_email": current_user.get("primaryEmail", current_user.get("email", "")), "submitted_via": "api"},
+# #             metadata={"user_email": current_user.get(
+# #     "primaryEmail",
+# #     current_user.get("email", "")
+# # ), "submitted_via": "api"},
 # #         )
 # #
 # #         monitor = await get_quality_monitor()
@@ -1408,7 +1355,7 @@ async def compliance_gap_analysis(
     # Placeholder implementation
     return {
         "framework": framework,
-        "analysis_id": f"gap_{framework}_{datetime.utcnow().timestamp()}",
+        "analysis_id": f"gap_{framework}_{datetime.now(timezone.utc).timestamp()}",
         "gaps_identified": [
             {
                 "control_id": "1.1",
@@ -1438,7 +1385,7 @@ async def compliance_gap_analysis(
         "critical_gaps": 2,
         "total_controls": 15,
         "estimated_remediation_time": "3-6 months",
-        "generated_at": datetime.utcnow().isoformat(),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -1499,7 +1446,7 @@ async def get_smart_compliance_guidance_endpoint(
             "full_compliance": "4-6 months",
             "certification_ready": "6-8 months",
         },
-        "generated_at": datetime.utcnow().isoformat(),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -1519,7 +1466,7 @@ async def clear_cache_with_pattern(
         "cleared_entries": cleared_count,
         "cache_status": "cleared",
         "message": f"Successfully cleared {cleared_count} cache entries matching pattern '{pattern}'",
-        "cleared_at": datetime.utcnow().isoformat(),
+        "cleared_at": datetime.now(timezone.utc).isoformat(),
     }
 
 
@@ -1536,13 +1483,12 @@ async def get_quality_metrics(current_user: User = Depends(get_current_active_us
         return {
             "overall_metrics": monitor.metrics,
             "quality_thresholds": {
-                level.value: threshold
-                for level, threshold in monitor.quality_thresholds.items()
+                level.value: threshold for level, threshold in monitor.quality_thresholds.items()
             },
             "total_assessments": len(monitor.quality_assessments),
             "total_feedback_items": len(monitor.feedback_history),
             "recent_trends": await monitor.get_quality_trends(7),  # Last 7 days
-            "generated_at": datetime.utcnow().isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
         }
 
     except Exception as e:
@@ -1566,9 +1512,7 @@ async def get_iq_agent_for_chat(db: AsyncSession) -> IQComplianceAgent:
             await _neo4j_service.connect()
 
             # Create IQ agent with PostgreSQL session
-            _iq_agent = IQComplianceAgent(
-                neo4j_service=_neo4j_service, postgres_session=db
-            )
+            _iq_agent = IQComplianceAgent(neo4j_service=_neo4j_service, postgres_session=db)
             logger.info("IQ Agent initialized successfully for chat")
 
         except Exception as e:
@@ -1593,7 +1537,7 @@ async def send_iq_message(
             select(ChatConversation).where(
                 ChatConversation.id == conversation_id,
                 ChatConversation.user_id == str(current_user.id),
-            )
+            ),
         )
         conversation = result.scalars().first()
 
@@ -1603,8 +1547,8 @@ async def send_iq_message(
         # Get next sequence number
         seq_result = await db.execute(
             select(func.max(ChatMessage.sequence_number)).where(
-                ChatMessage.conversation_id == conversation_id
-            )
+                ChatMessage.conversation_id == conversation_id,
+            ),
         )
         max_seq = seq_result.scalar() or 0
 
@@ -1624,14 +1568,10 @@ async def send_iq_message(
         if iq_agent:
             try:
                 # Process with IQ Agent's GraphRAG capabilities
-                logger.info(
-                    f"Processing message with IQ Agent for conversation {conversation_id}"
-                )
+                logger.info(f"Processing message with IQ Agent for conversation {conversation_id}")
 
                 # Build context from business profile
-                business_context = await iq_agent.retrieve_business_context(
-                    str(current_user.id)
-                )
+                business_context = await iq_agent.retrieve_business_context(str(current_user.id))
 
                 # Process query through IQ Agent
                 result = await iq_agent.process_query(
@@ -1648,13 +1588,13 @@ async def send_iq_message(
 
                 # Add metadata from IQ processing
                 metadata = {
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     "iq_agent": True,
                     "graph_nodes_traversed": result.get("graph_context", {}).get(
-                        "nodes_traversed", 0
+                        "nodes_traversed", 0,
                     ),
                     "graph_relationships": result.get("graph_context", {}).get(
-                        "relationships_explored", 0
+                        "relationships_explored", 0,
                     ),
                     "evidence_found": len(result.get("evidence", [])),
                     "artifacts_generated": len(result.get("artifacts", [])),
@@ -1669,7 +1609,7 @@ async def send_iq_message(
 
             except Exception as iq_error:
                 logger.warning(
-                    f"IQ Agent processing failed, falling back to regular assistant: {iq_error}"
+                    f"IQ Agent processing failed, falling back to regular assistant: {iq_error}",
                 )
                 # Fallback to regular assistant
                 assistant = ComplianceAssistant(db)
@@ -1687,10 +1627,10 @@ async def send_iq_message(
                     response_text = (
                         "I can help you with compliance and regulatory questions. "
                         "For more personalized assistance, please set up a business profile "
-                        "for this conversation."
+                        "for this conversation.",
                     )
                     metadata = {
-                        "timestamp": datetime.utcnow().isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                         "no_business_profile": True,
                     }
                 metadata["iq_agent_fallback"] = True
@@ -1711,10 +1651,10 @@ async def send_iq_message(
                 response_text = (
                     "I can help you with compliance and regulatory questions. "
                     "For more personalized assistance, please set up a business profile "
-                    "for this conversation."
+                    "for this conversation.",
                 )
                 metadata = {
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     "no_business_profile": True,
                 }
             metadata["iq_agent"] = False
@@ -1730,7 +1670,7 @@ async def send_iq_message(
         db.add(assistant_message)
 
         # Update conversation timestamp
-        conversation.updated_at = datetime.utcnow()
+        conversation.updated_at = datetime.now(timezone.utc)
 
         await db.commit()
 
@@ -1771,11 +1711,9 @@ async def get_iq_agent_status(
                     "nodes_count": stats.get("nodes", 0),
                     "relationships_count": stats.get("relationships", 0),
                     "message": (
-                        "IQ Agent operational"
-                        if _iq_agent
-                        else "IQ Agent not initialized"
+                        "IQ Agent operational" if _iq_agent else "IQ Agent not initialized",
                     ),
-                }
+                },
             )
         except Exception as e:
             status["message"] = f"Neo4j connection error: {str(e)}"

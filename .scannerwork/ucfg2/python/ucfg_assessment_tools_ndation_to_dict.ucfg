@@ -1,18 +1,18 @@
 
 =services.ai.assessment_tools.ComplianceRecommendation.to_dictE
-;/home/omar/Documents/ruleIQ/services/ai/assessment_tools.py; ;("2*õ
-2< F(	
-< F(	
+;/home/omar/Documents/ruleIQ/services/ai/assessment_tools.py5 5("2*õ
+26 :(:
+6 :(:
 %1"dictw
 u
-= =(
+6 6(
 %2"__id*]
 
 __unknown_file (A*?7
 5services.ai.assessment_tools.ComplianceRecommendation"
 idâ
 Ü
-= =(
+6 6(
 %3"__mapSet*"
 
 __unknown_file (
@@ -26,14 +26,14 @@ u
 
 %2z
 x
-> >(
+6( 6(2
 %4"__id*`
 
 __unknown_file (D*B7
 5services.ai.assessment_tools.ComplianceRecommendation"
 titleå
 â
-> >(
+6 6(2
 %5"__mapSet*"
 
 __unknown_file (
@@ -47,14 +47,14 @@ x
 
 %4Ä
 ~
-? ?(+
+6C 7(
 %6"__id*f
 
 __unknown_file (J*H7
 5services.ai.assessment_tools.ComplianceRecommendation"
 descriptioní
 è
-? ?(+
+64 7(
 %7"__mapSet*"
 
 __unknown_file (
@@ -68,7 +68,7 @@ x
 
 %6}
 {
-@ @(%
+7% 7(2
 %8"__id*c
 
 __unknown_file (G*E7
@@ -76,7 +76,7 @@ x
 
 priorityè
 å
-@ @(%
+7 7(2
 %9"__mapSet*"
 
 __unknown_file (
@@ -91,14 +91,14 @@ x
 
 %8å
 â
-A% A(?
+8 8(&
 %10"__id*p
 
 __unknown_file (T*R7
 5services.ai.assessment_tools.ComplianceRecommendation"
 implementation_effortû
 õ
-A A(?
+74 8(&
 %11"__mapSet*"
 
 __unknown_file (
@@ -112,14 +112,14 @@ x
 
 %10Å
 
-B B(+
+87 8(G
 %12"__id*f
 
 __unknown_file (J*H7
 5services.ai.assessment_tools.ComplianceRecommendation"
 cost_impactî
 ë
-B B(+
+8( 8(G
 %13"__mapSet*"
 
 __unknown_file (
@@ -133,7 +133,7 @@ x
 
 %12~
 |
-C C(%
+9 9(%
 %14"__id*c
 
 __unknown_file (G*E7
@@ -141,7 +141,7 @@ x
 
 timelineë
 é
-C C(%
+9 9(%
 %15"__mapSet*"
 
 __unknown_file (
@@ -156,14 +156,14 @@ x
 
 %14É
 Ä
-D D(-
+97 9(H
 %16"__id*g
 
 __unknown_file (K*I7
 5services.ai.assessment_tools.ComplianceRecommendation"
 dependenciesï
 í
-D D(-
+9' 9(H
 %17"__mapSet*"
 
 __unknown_file (
@@ -177,14 +177,14 @@ x
 
 %16â
 Ü
-E" E(9
+:" :(9
 %18"__id*m
 
 __unknown_file (Q*O7
 5services.ai.assessment_tools.ComplianceRecommendation"
 resources_requiredõ
 ò
-E E(9
+: :(9
 %19"__mapSet*"
 
 __unknown_file (
@@ -197,7 +197,7 @@ x
 __unknown_file (
 
 %18"
-< F(	
+6 :(:
 
 %1B97
 5services.ai.assessment_tools.ComplianceRecommendationH

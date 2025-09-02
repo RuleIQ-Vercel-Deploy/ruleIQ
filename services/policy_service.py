@@ -1,9 +1,11 @@
 """
+from __future__ import annotations
+
 Asynchronous service for generating and managing compliance policies using AI.
 """
 
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional
 from uuid import UUID
 
@@ -42,7 +44,7 @@ def build_policy_generation_prompt(
     # This helper function remains synchronous as it's CPU-bound.
     return (
         f"Generate a {policy_type} compliance policy for a {profile.industry} company "
-        f"named {profile.company_name}."
+        f"named {profile.company_name}.",
     )
 
 
@@ -56,23 +58,23 @@ async def generate_compliance_policy(
     """Generate a comprehensive compliance policy using AI."""
     try:
         profile_res = await db.execute(
-            select(BusinessProfile).where(BusinessProfile.user_id == user_id)
+            select(BusinessProfile).where(BusinessProfile.user_id == user_id),
         )
         profile = profile_res.scalars().first()
         if not profile:
             raise NotFoundException(
-                "Business profile not found. Please complete your business assessment first."
+                "Business profile not found. Please complete your business assessment first.",
             )
 
         framework_res = await db.execute(
-            select(ComplianceFramework).where(ComplianceFramework.id == framework_id)
+            select(ComplianceFramework).where(ComplianceFramework.id == framework_id),
         )
         framework = framework_res.scalars().first()
         if not framework:
             raise NotFoundException("Compliance framework not found.")
 
         prompt = build_policy_generation_prompt(
-            profile, framework, policy_type, custom_requirements or []
+            profile, framework, policy_type, custom_requirements or [],
         )
 
         policy_content_str = await _generate_policy_with_protection(prompt)
@@ -86,7 +88,7 @@ async def generate_compliance_policy(
                 "title": f"{framework.name} Policy for {profile.company_name}",
                 "content": policy_content_str,
                 "sections": [
-                    {"title": "Policy Content", "content": policy_content_str}
+                    {"title": "Policy Content", "content": policy_content_str},
                 ],
             }
 
@@ -132,8 +134,8 @@ async def get_policy_by_id(
     try:
         res = await db.execute(
             select(GeneratedPolicy).where(
-                GeneratedPolicy.id == policy_id, GeneratedPolicy.user_id == user_id
-            )
+                GeneratedPolicy.id == policy_id, GeneratedPolicy.user_id == user_id,
+            ),
         )
         policy = res.scalars().first()
         if not policy:
@@ -147,7 +149,7 @@ async def get_user_policies(db: AsyncSession, user_id: UUID) -> List[GeneratedPo
     """Retrieves all policies for a given user."""
     try:
         result = await db.execute(
-            select(GeneratedPolicy).where(GeneratedPolicy.user_id == user_id)
+            select(GeneratedPolicy).where(GeneratedPolicy.user_id == user_id),
         )
         policies = result.scalars().all()
         return policies
@@ -174,14 +176,14 @@ async def regenerate_policy_section(
             (
                 s.get("content")
                 for s in policy.content.get("sections", [])
-                if s.get("title") == section_title
+                if s.get("title") == section_title,
             ),
             "Section not found",
         )
 
         prompt = (
             f'Regenerate the "{section_title}" section of a compliance policy. '
-            f'Current content: "{section_content}". Additional context: "{additional_context}"'
+            f'Current content: "{section_content}". Additional context: "{additional_context}"',
         )
         new_content = await _generate_policy_with_protection(prompt)
 
@@ -194,10 +196,10 @@ async def regenerate_policy_section(
 
         if not updated:
             raise BusinessLogicException(
-                f"Section '{section_title}' not found in the policy content."
+                f"Section '{section_title}' not found in the policy content.",
             )
 
-        policy.updated_at = datetime.utcnow()
+        policy.updated_at = datetime.now(timezone.utc)
         # Mark the JSON field as modified for the ORM to detect the change
         from sqlalchemy.orm.attributes import flag_modified
 

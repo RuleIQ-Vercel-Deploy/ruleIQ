@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 RAG (Retrieval-Augmented Generation) node for LangGraph workflow.
 Provides document retrieval and query capabilities.
 """

@@ -1,5 +1,7 @@
 """Add RBAC system tables
 
+from __future__ import annotations
+
 Revision ID: 52b4f203af3a
 Revises: add_check_constraints_data_integrity
 Create Date: 2025-07-25 03:29:04.463516

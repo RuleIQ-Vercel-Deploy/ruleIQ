@@ -130,14 +130,14 @@ class TestModelCostConfig:
         # Test input cost calculation
         input_cost = config.calculate_input_cost(1000)
         expected_input = (
-            Decimal("1000") / Decimal("1000000") * config.input_cost_per_million
+            Decimal("1000") / Decimal("1000000") * config.input_cost_per_million,
         )
         assert input_cost == expected_input
 
         # Test output cost calculation
         output_cost = config.calculate_output_cost(500)
         expected_output = (
-            Decimal("500") / Decimal("1000000") * config.output_cost_per_million
+            Decimal("500") / Decimal("1000000") * config.output_cost_per_million,
         )
         assert output_cost == expected_output
 
@@ -148,10 +148,10 @@ class TestModelCostConfig:
         total_cost = config.calculate_total_cost(input_tokens=1500, output_tokens=750)
 
         input_cost = (
-            Decimal("1500") / Decimal("1000000") * config.input_cost_per_million
+            Decimal("1500") / Decimal("1000000") * config.input_cost_per_million,
         )
         output_cost = (
-            Decimal("750") / Decimal("1000000") * config.output_cost_per_million
+            Decimal("750") / Decimal("1000000") * config.output_cost_per_million,
         )
         expected_total = input_cost + output_cost
 
@@ -212,7 +212,7 @@ class TestCostTrackingService:
         await cost_tracker.track_usage("policy_generation", "gemini-2.5-pro", 1000, 500)
         await cost_tracker.track_usage("policy_generation", "gpt-4-turbo", 800, 400)
         await cost_tracker.track_usage(
-            "assessment_analysis", "gemini-2.5-flash", 600, 300
+            "assessment_analysis", "gemini-2.5-flash", 600, 300,
         )
 
         # Get usage for specific service
@@ -242,7 +242,7 @@ class TestCostTrackingService:
         # Simulate usage throughout the day
         for i in range(10):
             await cost_tracker.track_usage(
-                f"service_{i % 3}", "gemini-2.5-pro", 1000 + i * 100, 500 + i * 50
+                f"service_{i % 3}", "gemini-2.5-pro", 1000 + i * 100, 500 + i * 50,
             )
 
         daily_costs = await cost_tracker.calculate_daily_costs(datetime.now().date())
@@ -264,7 +264,7 @@ class TestCostTrackingService:
             with patch("datetime.datetime") as mock_datetime:
                 mock_datetime.now.return_value = timestamp
                 await cost_tracker.track_usage(
-                    "policy_generation", "gemini-2.5-pro", 1000, 500
+                    "policy_generation", "gemini-2.5-pro", 1000, 500,
                 )
 
         trends = await cost_tracker.get_cost_trends(days=7)
@@ -278,7 +278,7 @@ class TestCostTrackingService:
         # Simulate normal usage
         for _ in range(10):
             await cost_tracker.track_usage(
-                "policy_generation", "gemini-2.5-pro", 1000, 500
+                "policy_generation", "gemini-2.5-pro", 1000, 500,
             )
 
         # Simulate anomalous usage (high token count to trigger > $0.50 cost)
@@ -380,7 +380,7 @@ class TestBudgetAlertService:
         )
 
         alerts = await alert_service.check_service_budget(
-            "policy_generation", service_usage
+            "policy_generation", service_usage,
         )
 
         assert len(alerts) >= 1
@@ -439,7 +439,7 @@ class TestCostOptimizationService:
         ]
 
         optimization = await optimization_service.analyze_caching_opportunities(
-            similar_requests
+            similar_requests,
         )
 
         assert optimization.strategy == OptimizationStrategy.CACHING_IMPROVEMENT
@@ -454,7 +454,7 @@ class TestCostOptimizationService:
         ]
 
         optimization = await optimization_service.analyze_batch_opportunities(
-            individual_requests
+            individual_requests,
         )
 
         assert optimization.strategy == OptimizationStrategy.BATCH_PROCESSING
@@ -471,7 +471,7 @@ class TestCostOptimizationService:
         }
 
         optimization = await optimization_service.analyze_prompt_efficiency(
-            prompt_metrics
+            prompt_metrics,
         )
 
         assert optimization.strategy == OptimizationStrategy.PROMPT_OPTIMIZATION
@@ -607,7 +607,7 @@ class TestAICostManager:
         """Test various cost reporting endpoints."""
         # Monthly report
         monthly_report = await cost_manager.generate_monthly_report(
-            year=datetime.now().year, month=datetime.now().month
+            year=datetime.now().year, month=datetime.now().month,
         )
 
         assert "total_cost" in monthly_report
@@ -692,7 +692,7 @@ class TestCostOptimizationStrategies:
         # Simple task should route to cheaper model
         simple_task = "What is GDPR?"
         model_choice = await router.select_optimal_model(
-            simple_task, "question_answering"
+            simple_task, "question_answering",
         )
         assert model_choice["model"] in ["gemini-2.5-flash-lite", "gpt-3.5-turbo"]
 
@@ -702,10 +702,10 @@ class TestCostOptimizationStrategies:
             "data collection, storage, processing, sharing, retention, user rights, "
             "cookie policies, third-party integrations, international data transfers, "
             "children's privacy, security measures, breach notifications, and compliance "
-            "with GDPR, CCPA, and other relevant privacy regulations worldwide"
+            "with GDPR, CCPA, and other relevant privacy regulations worldwide",
         )
         model_choice = await router.select_optimal_model(
-            complex_task, "policy_generation"
+            complex_task, "policy_generation",
         )
         assert model_choice["model"] in ["gemini-2.5-pro", "gpt-4-turbo"]
 

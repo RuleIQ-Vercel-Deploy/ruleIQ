@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 """Diagnose test issues"""
+import logging
+logger = logging.getLogger(__name__)
+
 
 import subprocess
 import sys
@@ -19,8 +22,8 @@ result = subprocess.run(
     text=True,
 )
 
-print("STDOUT:")
-print(result.stdout)
-print("\nSTDERR:")
-print(result.stderr)
-print(f"\nReturn code: {result.returncode}")
+logger.info("STDOUT:")
+logger.info(result.stdout)
+logger.info("\nSTDERR:")
+logger.info(result.stderr)
+logger.info(f"\nReturn code: {result.returncode}")

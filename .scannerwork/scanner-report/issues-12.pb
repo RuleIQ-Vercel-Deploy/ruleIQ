@@ -1,31 +1,39 @@
-c
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-ÉÉ /c
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-ññ +U
+ó
+pythonS5713WRemove this redundant Exception class; it derives from another which is already caught. 2
+∏∏6 >:
+
+∏∏+ 4Parent class.U
 pythonS74946Replace set constructor call with a set comprehension. 2
-««. 1U
+··* -U
 pythonS74946Replace set constructor call with a set comprehension. 2
-ÃÃ' *U
+‰‰G Jó
+pythonS5713WRemove this redundant Exception class; it derives from another which is already caught. 2
+ÌÌ #:
+
+ÌÌ Parent class.ó
+pythonS5713WRemove this redundant Exception class; it derives from another which is already caught. 2
+ÌÌ% /:
+
+ÌÌ Parent class.U
 pythonS74946Replace set constructor call with a set comprehension. 2
-öö- 0Q
+óó@ Có
+pythonS5713WRemove this redundant Exception class; it derives from another which is already caught. 2
+®® #:
+
+®® Parent class.ó
+pythonS5713WRemove this redundant Exception class; it derives from another which is already caught. 2
+®®% /:
+
+®® Parent class.Q
 pythonS11722Remove the unused function parameter "event_type". 2
-‘‘5 Dc
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-‚‚  1R
+√√ R
 pythonS11723Remove the unused function parameter "total_score". 2
-˛˛. >c
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-ÅÅ U
+‡·@ U
 pythonS74946Replace set constructor call with a set comprehension. 2
-≤≤ c
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-»» U
+ÑÑ U
 pythonS74946Replace set constructor call with a set comprehension. 2
-––* -U
+úú* -U
 pythonS74946Replace set constructor call with a set comprehension. 2
-““ U
+ùù0 3U
 pythonS74946Replace set constructor call with a set comprehension. 2
-ÚÚ" %c
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-ÅÅ (
+≥≥+ .

@@ -1,53 +1,62 @@
 
-0.0float
-%"Calculate percentile value"str
+
+1024int
+"S3518"bool
+A8"Get system information for optimal test configuration."str
+"division by zero"bool
 
-1intdata
-„ „(%
-percentile
-„' „(8"|+
-)
+3int
+"available_memory_gb"str
+"a"bool
 
-† †("
-__bool__*:BboolH+
-)
-
-† †("#unaryop !#2!:Bbool "
-
-† †( *
-† †(
-"
-
-‡ ‡("Š=
-;
-
-ˆ ˆ("sorted_data"
-builtinssorted*:Blist,
-*
-
-‰ ‰($"
-builtinslen*:Bint'
-%
-
-‰ ‰(1	"	#binop *#*2*:7
-5
-
-‰ ‰(2
-index"#dependent-value#*:	Bint,
-*
-
-Š& Š(6"
-builtinslen*:Bint'
-%
-
-Š& Š(:"	#binop -#*2-:(
-&
-
-Š Š(;"
-builtinsmin*:
-$
+0int
+"memory_gb"str
+"cpu_count"str"î$
 "
-
-Š Š(<"#array-read#:
-
-Š Š(<*:/home/omar/Documents/ruleIQ/config/performance_profiler.py
+U W(/"#new-object#Bdict'
+%
+U U(+"#unknown-value#Bbool+
+)
+U U(+"
+psutil	cpu_count:Bint 
+
+U U(+"	#map-set#:/
+-
+U: V("
+psutilvirtual_memoryBtuple&
+$
+U: V(	"#get-field# total:'
+%
+V! V(*"
+#binop **#*2**:
+*
+(
+U: V(*"
+#binop !=#2!=:Bbool 
+
+U: V(*"
+#assert#:*
+(
+U: V(*"#dependent-value#*:	 
+
+U- V(*"	#map-set#:/
+-
+VC W("
+psutilvirtual_memoryBtuple*
+(
+VC W(""#get-field# available:'
+%
+W% W(."
+#binop **#*2**:
+*
+(
+VC W(."
+#binop !=#2!=:Bbool 
+
+VC W(."
+#assert#:*
+(
+VC W(."#dependent-value#*: 
+
+V, W(."	#map-set#:
+U W(/*8/home/omar/Documents/ruleIQ/scripts/run_tests_chunked.py

@@ -1,89 +1,0 @@
-
-Aservices.context_service.UserContextService._update_user_patternsC
-7/home/omar/Documents/ruleIQ/services/context_service.py† †(#"6*8
-3
-context_service.py"
-• •
-implicit return*æ
-4
-‘ ‘(@g
-e
-
-‘ ‘(?
-%1"__concat*2
-
-‘ ‘(;$"
- Failed to update user patterns: *
-
-‘< ‘(=
-
-ege
-
-‘ ‘(@
-%2*&
-
-__unknown_file (
-
-
-logger*"
-
-__unknown_file (
-
-%12error*
-3*Ê
-6
-Š Š(2[
-Y
-
-Š Š(2
-%3"__concat* 
-
-Š Š((
-user_patterns:*
-
-Š) Š(0
-	
-user_idE
-C
-
-Š Š(2
-	cache_key"__id*"
-
-__unknown_file (
-
-%3z
-x
-
-‹ ‹($
-%4"__id*^
-
-__unknown_file (B*@-
-+services.context_service.UserContextService"
-cache_serviceki
-
-‹ ‹(6
-%5*"
-
-__unknown_file (
-
-%4*)
-
-__unknown_file (
-
-	cache_key2delete£ 
-
-Ž Ž(6
-%6*K
-
-__unknown_file (/-
-+services.context_service.UserContextService*'
-
-__unknown_file (
-	
-user_id2retrieve_user_patterns*
-3
-4:
-
-†* †(6	
-user_idB/-
-+services.context_service.UserContextServiceH

@@ -1,79 +1,6 @@
+"7#
+!
 
-
-"hit_rate"str
-"size"str
-"division by zero"bool
-
-"S3518"bool
+Æ Æ("#unknown-value#
 
-0int
-"a"bool
-"Get cache statistics"str
-"hit_count"str
-"miss_count"strself
-° °("ð-
-+
-
-² ²("#get-field# _hit_count:.
-,
-
-²" ²(2"#get-field# _miss_count:+
-)
-
-² ²(2total"	#binop +#2+:4
-2
-
-³. ³(7hit_rate"	#binop >#2>:Bbool,"*
-
-³. ³(7 *
-³+ ³(-2
-³8 ³(<"Ã-
-+
-
-³ ³(""#get-field# _hit_count:,
-*
-
-³ ³(*	"
-#binop !=#2!=:Bbool"
- 
-
-³ ³(*"
-#assert#:	
-,
-*
-
-³ ³(*"#dependent-value#*:
-
-³ ³(>"
-
-³ ³(>" *hit_rate&
-$
-
-´ ¹(	"#new-object#Bdict)
-'
-
-µ µ(#"#get-field# _cache:,
-*
-
-µ µ($"
-builtinslen*:Bint"
- 
-
-µ µ($"	#map-set#:-
-+
-
-¶ ¶(("#get-field# _hit_count:"
- 
-
-¶ ¶(("	#map-set#:.
-,
-
-· ·(*"#get-field# _miss_count:"
- 
-
-· ·(*"	#map-set#:"
- 
-
-¸ ¸( "	#map-set#:
-
-´ ¹(	*@/home/omar/Documents/ruleIQ/services/evidence/orchestrator_v2.py
+Æ Æ(*E/home/omar/Documents/ruleIQ/archive/test_configs/conftest_improved.py

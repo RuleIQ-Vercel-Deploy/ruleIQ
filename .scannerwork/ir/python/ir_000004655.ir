@@ -1,5 +1,0 @@
-
-$"Get current circuit state"strselfv v("9'
-%
-x x("#get-field# _state:
-x x(*:/home/omar/Documents/ruleIQ/services/ai/circuit_breaker.py

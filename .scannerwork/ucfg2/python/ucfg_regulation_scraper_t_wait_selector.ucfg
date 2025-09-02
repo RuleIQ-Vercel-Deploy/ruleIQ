@@ -1,8 +1,8 @@
 
 7regulation_scraper.RegulationScraper._get_wait_selectorM
-C/home/omar/Documents/ruleIQ/services/scrapers/regulation_scraper.py/ /("2*˜
-13: :(-~|
-: :(-
+C/home/omar/Documents/ruleIQ/services/scrapers/regulation_scraper.py, ,("2*˜
+133 3(-~|
+3 3(-
 %5*)
 
 __unknown_file (
@@ -13,11 +13,11 @@ C/home/omar/Documents/ruleIQ/services/scrapers/regulation_scraper.py/ /("2*
 eur-lex.europa.eu2__contains__*
 11
 12*@
-148 8(5"0
-8 8(5$"
+142 2(5"0
+2 2(5$"
  .main-content, .content, article*‘
-157 7(&wu
-7 7(&
+151 1(&wu
+1 1(&
 %6*)
 
 __unknown_file (
@@ -29,21 +29,21 @@ C/home/omar/Documents/ruleIQ/services/scrapers/regulation_scraper.py/ /("2*
 ico.org.uk2__contains__*
 13
 14*§
-20 0(?IG
-1 1(
+2- -(?IG
+. .(
 %7"	str.lower*#
 
 __unknown_file (
 
 url2lowerC
 A
-1 1(
+. .(
 	url_lower"__id*"
 
 __unknown_file (
 
 %7}
-4 4(,
+/ /(,
 %8*)
 
 __unknown_file (
@@ -54,17 +54,17 @@ A
 legislation.gov.uk2__contains__*
 4
 15*J
-45 5(@";
-5 5(@/-
+40 0(@";
+0 0(@/-
 +.LegSnippet, .LegClearFix, #viewLegContents*#
-5G G("
-G G(
+5< <("
+< <(
 body*J
-6D D(@";
-D D(@/-
+6: :(@";
+: :(@/-
 +.page-content, #main-content, .text-content*Œ
-7C C($us
-C C($
+79 9($us
+9 9($
 %1*)
 
 __unknown_file (
@@ -76,11 +76,11 @@ A
 nist.gov2__contains__*
 5
 6*J
-8A A(@";
-A A(@/-
+88 8(@";
+8 8(@/-
 +.content, .generated-content, #main-content*†
-9@ @(Bus
-@ @($
+97 7(Bus
+7 7($
 %2*)
 
 __unknown_file (
@@ -90,7 +90,7 @@ A
 __unknown_file (
 
 ecfr.gov2__contains__xv
-@( @(B
+7( 7(B
 %3*)
 
 __unknown_file (
@@ -101,11 +101,11 @@ A
 govinfo.gov2__contains__*
 7
 8*J
-10> >(?":
-> >(?.,
+106 6(?":
+6 6(?.,
 *.handbook-content, .rule-content, #content*š
-11= =(/€~
-= =(/
+115 5(/€~
+5 5(/
 %4*)
 
 __unknown_file (
@@ -116,9 +116,9 @@ A
 handbook.fca.org.uk2__contains__*
 9
 10*G
-12; ;(<"7
-; ;(<+)
+124 4(<"7
+4 4(<+)
 '#TexteOnly, .eli-main-title, #document1:
-/! /()
+,! ,()
 urlB(&
 $regulation_scraper.RegulationScraperH

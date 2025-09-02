@@ -1,44 +1,5 @@
 
-$"AWS (Amazon Web Services)"str
-1("Get list of supported cloud providers."str
-"DigitalOcean"str
-"IBM Cloud"str
-"Oracle Cloud"str
-"Linode"str
-
-"Other"str
-"Microsoft Azure"str
- "Google Cloud Platform"str
-	"Vultr"str
-
-0intlist"¢'
-%
-g q("#unknown-value#Blist&
-$
-g q("
-#is-exact#:Bbool
-
-g q("
-#assume#:8
-6
-g q("#set-field# __collection_size:Bint&
-$
-g q("#array-add-last#:&
-$
-g q("#array-add-last#:&
-$
-g q("#array-add-last#:&
-$
-g q("#array-add-last#:&
-$
-g q("#array-add-last#:&
-$
-g q("#array-add-last#:&
-$
-g q("#array-add-last#:&
-$
-g q("#array-add-last#:	&
-$
-g q("#array-add-last#:
-
-g q(*8/home/omar/Documents/ruleIQ/services/business_service.py
+>5"Alias for policy_content for backward compatibility"strself( (("A/
+-
+* *(""#get-field# policy_content:
+* *("*8/home/omar/Documents/ruleIQ/database/generated_policy.py

@@ -6,7 +6,7 @@ monitoring systems for the intelligent compliance platform.
 """
 
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from unittest.mock import AsyncMock
 
 import pytest
@@ -74,12 +74,12 @@ class TestAIResponseCache:
 
         # Test policy TTL (should be longer)
         policy_ttl = cache_instance._calculate_intelligent_ttl(
-            ContentType.POLICY, "A" * 3000, {"framework": "GDPR"}
+            ContentType.POLICY, "A" * 3000, {"framework": "GDPR"},
         )
 
         # Test general TTL (should be shorter)
         general_ttl = cache_instance._calculate_intelligent_ttl(
-            ContentType.GENERAL, "A" * 500, {}
+            ContentType.GENERAL, "A" * 500, {},
         )
 
         assert policy_ttl > general_ttl
@@ -108,7 +108,7 @@ class TestAIResponseCache:
         cached_data = {
             "response": "Cached response",
             "content_type": "recommendation",
-            "cached_at": datetime.utcnow().isoformat(),
+            "cached_at": datetime.now(timezone.utc).isoformat(),
         }
         cache_instance.cache_manager.get.return_value = cached_data
 
@@ -160,7 +160,7 @@ class TestAIPerformanceOptimizer:
 
         long_prompt = (
             "Generate ISO 27001 recommendations with lots of redundant information "
-            * 50
+            * 50,
         )
         context = {"framework": "ISO27001"}
 
@@ -176,7 +176,7 @@ class TestAIPerformanceOptimizer:
 
         # High priority should get parallel execution
         strategy = optimizer_instance._select_optimization_strategy(
-            "test prompt", {"priority": 9}, 9
+            "test prompt", {"priority": 9}, 9,
         )
         assert strategy == OptimizationStrategy.PARALLEL_EXECUTION
 
@@ -264,7 +264,7 @@ class TestAIAnalyticsMonitor:
         await monitor_instance.record_metric(
             MetricType.PERFORMANCE,
             "response_time_ms",
-            6000.0,  # Above 5000ms threshold
+            6000.0,  # Above 5000ms threshold,
         )
 
         # Should have created an alert
@@ -279,10 +279,10 @@ class TestAIAnalyticsMonitor:
         """Test real-time metrics calculation"""
 
         # Add some test metrics
-        datetime.utcnow()
+        datetime.now(timezone.utc)
         for i in range(10):
             await monitor_instance.record_metric(
-                MetricType.PERFORMANCE, "response_time_ms", 1000.0 + i * 100
+                MetricType.PERFORMANCE, "response_time_ms", 1000.0 + i * 100,
             )
 
         metrics = await monitor_instance.get_real_time_metrics()
@@ -300,7 +300,7 @@ class TestAIAnalyticsMonitor:
         for framework in frameworks:
             for _i in range(5):
                 await monitor_instance.record_metric(
-                    MetricType.USAGE, "request", 1, metadata={"framework": framework}
+                    MetricType.USAGE, "request", 1, metadata={"framework": framework},
                 )
 
         analytics = await monitor_instance.get_usage_analytics(7)
@@ -316,7 +316,7 @@ class TestAIAnalyticsMonitor:
         # Add some cost metrics
         for i in range(10):
             await monitor_instance.record_metric(
-                MetricType.COST, "cost_estimate", 0.01 * (i + 1)
+                MetricType.COST, "cost_estimate", 0.01 * (i + 1),
             )
 
         cost_analytics = await monitor_instance.get_cost_analytics(30)
@@ -331,7 +331,7 @@ class TestAIAnalyticsMonitor:
 
         # Create an alert
         await monitor_instance._create_alert(
-            AlertLevel.WARNING, "Test Alert", "Test description"
+            AlertLevel.WARNING, "Test Alert", "Test description",
         )
 
         alert_id = monitor_instance.alerts[-1].id
@@ -348,7 +348,7 @@ class TestAIAnalyticsMonitor:
 
         # Add some test data
         await monitor_instance.record_metric(
-            MetricType.PERFORMANCE, "response_time_ms", 1200.0
+            MetricType.PERFORMANCE, "response_time_ms", 1200.0,
         )
         await monitor_instance.record_metric(MetricType.COST, "cost_estimate", 0.05)
 
@@ -395,7 +395,7 @@ class TestSmartEvidenceCollector:
 
         # Test ISO27001 requirements
         iso_requirements = await collector_instance._generate_evidence_requirements(
-            "ISO27001", business_context
+            "ISO27001", business_context,
         )
 
         assert len(iso_requirements) > 0
@@ -414,11 +414,11 @@ class TestSmartEvidenceCollector:
         ]
 
         existing_evidence = [
-            {"control_id": "A.5.1.1", "evidence_type": "policy_document"}
+            {"control_id": "A.5.1.1", "evidence_type": "policy_document"},
         ]
 
         gaps = collector_instance._analyze_evidence_gaps(
-            requirements, existing_evidence
+            requirements, existing_evidence,
         )
 
         assert len(gaps) == 2
@@ -438,14 +438,14 @@ class TestSmartEvidenceCollector:
             "evidence_type": "policy_document",
         }
         priority = collector_instance._calculate_task_priority(
-            high_priority_gap, business_context, "ISO27001"
+            high_priority_gap, business_context, "ISO27001",
         )
         assert priority == EvidencePriority.CRITICAL
 
         # Training record (lower priority)
         low_priority_gap = {"control_id": "A.7.2.2", "evidence_type": "training_record"}
         priority = collector_instance._calculate_task_priority(
-            low_priority_gap, business_context, "ISO27001"
+            low_priority_gap, business_context, "ISO27001",
         )
         assert priority == EvidencePriority.LOW
 
@@ -456,20 +456,20 @@ class TestSmartEvidenceCollector:
 
         # Policy document effort
         policy_effort = collector_instance._estimate_base_effort(
-            "policy_document", business_context
+            "policy_document", business_context,
         )
         assert policy_effort > 0
 
         # System configuration effort
         config_effort = collector_instance._estimate_base_effort(
-            "system_configuration", business_context
+            "system_configuration", business_context,
         )
         assert config_effort > 0
 
         # Small org should have reduced effort
         large_org_context = {"employee_count": 1500}
         large_org_effort = collector_instance._estimate_base_effort(
-            "policy_document", large_org_context
+            "policy_document", large_org_context,
         )
         assert large_org_effort > policy_effort
 
@@ -505,7 +505,7 @@ class TestSmartEvidenceCollector:
         # Create a plan first
         business_context = {"industry": "Technology", "employee_count": 100}
         plan = await collector_instance.create_collection_plan(
-            "test_profile", "ISO27001", business_context
+            "test_profile", "ISO27001", business_context,
         )
 
         # Update first task status
@@ -571,14 +571,14 @@ class TestQualityMonitor:
         context = {"framework": "ISO27001"}
 
         accuracy_score = monitor_instance._score_accuracy(
-            accurate_response, "What is ISO 27001?", context
+            accurate_response, "What is ISO 27001?", context,
         )
         assert accuracy_score >= 7.0
 
         # Low accuracy response without framework alignment
         inaccurate_response = "Just use antivirus software"
         low_score = monitor_instance._score_accuracy(
-            inaccurate_response, "What is ISO 27001?", context
+            inaccurate_response, "What is ISO 27001?", context,
         )
         assert low_score < accuracy_score
 
@@ -609,10 +609,10 @@ class TestQualityMonitor:
         # Create initial dimension scores
         dimension_scores = {
             QualityDimension.ACCURACY: QualityScore(
-                QualityDimension.ACCURACY, 7.0, 0.8
+                QualityDimension.ACCURACY, 7.0, 0.8,
             ),
             QualityDimension.RELEVANCE: QualityScore(
-                QualityDimension.RELEVANCE, 6.0, 0.8
+                QualityDimension.RELEVANCE, 6.0, 0.8,
             ),
         }
 
@@ -622,12 +622,12 @@ class TestQualityMonitor:
             response_id="resp_001",
             user_id="user_001",
             feedback_type=FeedbackType.DETAILED_RATING,
-            rating=4.5,  # High rating
+            rating=4.5,  # High rating,
         )
 
         # Incorporate feedback
         updated_scores = monitor_instance._incorporate_user_feedback(
-            dimension_scores, positive_feedback
+            dimension_scores, positive_feedback,
         )
 
         # Scores should be adjusted upward
@@ -659,13 +659,13 @@ class TestQualityMonitor:
         # Create low scores for testing
         low_dimension_scores = {
             QualityDimension.ACCURACY: QualityScore(
-                QualityDimension.ACCURACY, 4.0, 0.8
+                QualityDimension.ACCURACY, 4.0, 0.8,
             ),
             QualityDimension.CLARITY: QualityScore(QualityDimension.CLARITY, 3.0, 0.8),
         }
 
         suggestions = monitor_instance._generate_improvement_suggestions(
-            low_dimension_scores, "test response", {}
+            low_dimension_scores, "test response", {},
         )
 
         assert len(suggestions) >= 2
@@ -695,7 +695,7 @@ class TestQualityMonitor:
                 dimension_scores={},
                 feedback_count=1,
                 improvement_suggestions=[],
-                timestamp=datetime.utcnow() - timedelta(days=i),
+                timestamp=datetime.now(timezone.utc) - timedelta(days=i),
             )
             monitor_instance.quality_assessments[f"response_{i}"] = assessment
 

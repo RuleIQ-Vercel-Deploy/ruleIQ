@@ -26,38 +26,38 @@ logger = get_logger(__name__)
 class ExperimentType(Enum):
     """Types of A/B experiments."""
 
-    AI_MODEL_COMPARISON = "ai_model_comparison"
-    PROMPT_OPTIMIZATION = "prompt_optimization"
-    FEATURE_ROLLOUT = "feature_rollout"
-    UI_OPTIMIZATION = "ui_optimization"
-    COMPLIANCE_EFFECTIVENESS = "compliance_effectiveness"
-    ASSESSMENT_METHODOLOGY = "assessment_methodology"
+#     AI_MODEL_COMPARISON = "ai_model_comparison"  # Unused variable
+#     PROMPT_OPTIMIZATION = "prompt_optimization"  # Unused variable
+#     FEATURE_ROLLOUT = "feature_rollout"  # Unused variable
+#     UI_OPTIMIZATION = "ui_optimization"  # Unused variable
+#     COMPLIANCE_EFFECTIVENESS = "compliance_effectiveness"  # Unused variable
+#     ASSESSMENT_METHODOLOGY = "assessment_methodology"  # Unused variable
 
     # MetricType imported from analytics_monitor above
-    CATEGORICAL = "categorical"  # User preferences, status categories
-    COUNT = "count"  # Number of actions, events
+#     CATEGORICAL = "categorical"  # User preferences, status categories  # Unused variable
+#     COUNT = "count"  # Number of actions, events  # Unused variable
 
 
 class StatisticalTest(Enum):
     """Available statistical tests."""
 
-    T_TEST = "t_test"  # Two-sample t-test for continuous metrics
-    WELCH_T_TEST = "welch_t_test"  # Welch's t-test (unequal variances)
-    CHI_SQUARED = "chi_squared"  # Chi-squared test for categorical data
-    MANN_WHITNEY = "mann_whitney"  # Non-parametric alternative to t-test
-    KOLMOGOROV_SMIRNOV = "ks_test"  # Distribution comparison
-    FISHER_EXACT = "fisher_exact"  # Exact test for small samples
+#     T_TEST = "t_test"  # Two-sample t-test for continuous metrics  # Unused variable
+#     WELCH_T_TEST = "welch_t_test"  # Welch's t-test (unequal variances)  # Unused variable
+#     CHI_SQUARED = "chi_squared"  # Chi-squared test for categorical data  # Unused variable
+#     MANN_WHITNEY = "mann_whitney"  # Non-parametric alternative to t-test  # Unused variable
+#     KOLMOGOROV_SMIRNOV = "ks_test"  # Distribution comparison  # Unused variable
+#     FISHER_EXACT = "fisher_exact"  # Exact test for small samples  # Unused variable
 
 
 class ExperimentStatus(Enum):
     """Experiment lifecycle status."""
 
-    DRAFT = "draft"
-    RUNNING = "running"
-    PAUSED = "paused"
-    COMPLETED = "completed"
-    CANCELLED = "cancelled"
-    ARCHIVED = "archived"
+#     DRAFT = "draft"  # Unused variable
+#     RUNNING = "running"  # Unused variable
+#     PAUSED = "paused"  # Unused variable
+#     COMPLETED = "completed"  # Unused variable
+#     CANCELLED = "cancelled"  # Unused variable
+#     ARCHIVED = "archived"  # Unused variable
 
 
 @dataclass
@@ -78,7 +78,7 @@ class ExperimentConfig:
 
     # Experiment design
     traffic_split: Dict[str, float] = field(
-        default_factory=lambda: {"control": 0.5, "treatment": 0.5}
+        default_factory=lambda: {"control": 0.5, "treatment": 0.5},
     )
     stratification_keys: List[str] = field(
         default_factory=list
@@ -133,7 +133,7 @@ class ExperimentData:
     # Metric values
     primary_metric_value: Union[float, int, str, bool]
     secondary_metrics: Dict[str, Union[float, int, str, bool]] = field(
-        default_factory=dict
+        default_factory=dict,
     )
 
     # Context
@@ -178,7 +178,7 @@ class ABTestingFramework:
         if config.min_sample_size < required_sample_size:
             logger.warning(
                 f"Configured sample size ({config.min_sample_size}) is below "
-                f"statistically required size ({required_sample_size})"
+                f"statistically required size ({required_sample_size})",
             )
 
         # Store experiment
@@ -201,7 +201,7 @@ class ABTestingFramework:
                     "experiment_type": config.experiment_type.value,
                     "metric_type": config.metric_type.value,
                 },
-            )
+            ),
         )
 
         return experiment_id
@@ -234,7 +234,7 @@ class ABTestingFramework:
                 name="experiment_started",
                 value=1.0,
                 metadata={"experiment_id": experiment_id},
-            )
+            ),
         )
 
         return True
@@ -338,7 +338,7 @@ class ABTestingFramework:
                     "variant": variant,
                     "metric_value": str(primary_metric_value),
                 },
-            )
+            ),
         )
 
         return True
@@ -364,7 +364,7 @@ class ABTestingFramework:
 
         if len(data) < config.min_sample_size:
             logger.warning(
-                f"Insufficient data for analysis: {len(data)} < {config.min_sample_size}"
+                f"Insufficient data for analysis: {len(data)} < {config.min_sample_size}",
             )
 
         # Group data by variant
@@ -375,7 +375,7 @@ class ABTestingFramework:
 
         # Perform statistical analysis
         result = self._perform_statistical_test(
-            test_type, variant_data, config, confidence_level
+            test_type, variant_data, config, confidence_level,
         )
 
         # Store result
@@ -394,7 +394,7 @@ class ABTestingFramework:
                     "is_significant": result.is_significant,
                     "effect_size": result.effect_size,
                 },
-            )
+            ),
         )
 
         return result
@@ -534,7 +534,7 @@ class ABTestingFramework:
         treatment_std = np.std(treatment_data, ddof=1)
 
         effect_size = (treatment_mean - control_mean) / np.sqrt(
-            (control_std**2 + treatment_std**2) / 2
+            (control_std**2 + treatment_std**2) / 2,
         )
 
         # Perform statistical test
@@ -544,13 +544,13 @@ class ABTestingFramework:
 
         elif test_type == StatisticalTest.WELCH_T_TEST:
             statistic, p_value = ttest_ind(
-                control_data, treatment_data, equal_var=False
+                control_data, treatment_data, equal_var=False,
             )
             test_name = "Welch's t-test (unequal variances)"
 
         elif test_type == StatisticalTest.MANN_WHITNEY:
             statistic, p_value = mannwhitneyu(
-                control_data, treatment_data, alternative="two-sided"
+                control_data, treatment_data, alternative="two-sided",
             )
             test_name = "Mann-Whitney U test"
 
@@ -564,7 +564,7 @@ class ABTestingFramework:
             contingency_table = []
             for category in all_categories:
                 contingency_table.append(
-                    [control_counts.get(category, 0), treatment_counts.get(category, 0)]
+                    [control_counts.get(category, 0), treatment_counts.get(category, 0)],
                 )
 
             chi2, p_value, dof, expected = chi2_contingency(contingency_table)
@@ -579,7 +579,7 @@ class ABTestingFramework:
             mean_diff = treatment_mean - control_mean
             pooled_se = np.sqrt(
                 control_std**2 / len(control_data)
-                + treatment_std**2 / len(treatment_data)
+                + treatment_std**2 / len(treatment_data),
             )
 
             if test_type == StatisticalTest.T_TEST:
@@ -591,7 +591,7 @@ class ABTestingFramework:
                 ) ** 2 / (
                     control_std**4 / (len(control_data) ** 2 * (len(control_data) - 1))
                     + treatment_std**4
-                    / (len(treatment_data) ** 2 * (len(treatment_data) - 1))
+                    / (len(treatment_data) ** 2 * (len(treatment_data) - 1)),
                 )
 
             t_critical = stats.t.ppf(1 - alpha / 2, df)
@@ -603,7 +603,7 @@ class ABTestingFramework:
         # Calculate statistical power
         observed_effect_size = abs(effect_size)
         power = self._calculate_power(
-            observed_effect_size, len(control_data), len(treatment_data), alpha
+            observed_effect_size, len(control_data), len(treatment_data), alpha,
         )
 
         # Determine significance
@@ -612,7 +612,7 @@ class ABTestingFramework:
 
         # Generate recommendation
         recommendation = self._generate_recommendation(
-            is_significant, practical_significance, effect_size, p_value, power
+            is_significant, practical_significance, effect_size, p_value, power,
         )
 
         return StatisticalResult(
@@ -670,7 +670,7 @@ class ABTestingFramework:
         power = (
             1
             - stats.nct.cdf(t_critical, n1 + n2 - 2, ncp)
-            + stats.nct.cdf(-t_critical, n1 + n2 - 2, ncp)
+            + stats.nct.cdf(-t_critical, n1 + n2 - 2, ncp),
         )
 
         return max(0.0, min(1.0, power))
@@ -686,9 +686,15 @@ class ABTestingFramework:
         """Generate actionable recommendation based on statistical results."""
         if is_significant and practical_significance:
             if effect_size > 0:
-                return f"IMPLEMENT: Treatment shows significant improvement (p={p_value:.4f}, effect size={effect_size:.3f})"
+                return f"IMPLEMENT: Treatment shows significant improvement (
+                    p={p_value:.4f},
+                    effect size={effect_size:.3f}
+                )"
             else:
-                return f"REJECT: Treatment shows significant degradation (p={p_value:.4f}, effect size={effect_size:.3f})"
+                return f"REJECT: Treatment shows significant degradation (
+                    p={p_value:.4f},
+                    effect size={effect_size:.3f}
+                )"
 
         elif is_significant and not practical_significance:
             return f"INCONCLUSIVE: Statistically significant but effect too small (effect size={effect_size:.3f})"
@@ -743,7 +749,7 @@ class ABTestingFramework:
                 "total_observations": len(data),
                 "variant_counts": dict(variant_counts),
                 "start_time": min(d.timestamp for d in data) if data else None,
-                "end_time": max(d.timestamp for d in data) if data else None,
+                "end_time": max(d.timestamp for d in data) if data else None
             },
             "results": [
                 {

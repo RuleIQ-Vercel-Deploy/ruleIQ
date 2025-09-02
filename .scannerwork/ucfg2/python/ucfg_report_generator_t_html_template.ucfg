@@ -1,11 +1,11 @@
 
 Jservices.ai.evaluation.report_generator.ReportGenerator._get_html_templateR
-F/home/omar/Documents/ruleIQ/services/ai/evaluation/report_generator.pyØ Ø("2*è(
+F/home/omar/Documents/ruleIQ/services/ai/evaluation/report_generator.py¨ ¨("2*ó(
 2
-Ù Ù('"Ö(
+© ©('"á(
 
-Ú ‰(Ç(Ä(
-Á(
+ª Ù(Ò(Ï(
+Ì(
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,53 +16,53 @@ F/home/omar/Documents/ruleIQ/services/ai/evaluation/report_generator.pyØ Ø(
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f5f5f5;
+            background-color: #f5f5f5;,
         }
         h1, h2 {
-            color: #333;
+            color: #333;,
         }
         .summary {
             background: white;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);,
         }
         .metrics-table {
             width: 100%;
             border-collapse: collapse;
             background: white;
-            margin-bottom: 20px;
+            margin-bottom: 20px;,
         }
         .metrics-table th, .metrics-table td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;,
         }
         .metrics-table th {
             background-color: #4CAF50;
-            color: white;
+            color: white;,
         }
         .metrics-table tr:hover {
-            background-color: #f5f5f5;
+            background-color: #f5f5f5;,
         }
         .regression {
             background-color: #fff3cd;
             border: 1px solid #ffc107;
             padding: 15px;
             border-radius: 4px;
-            margin-bottom: 20px;
+            margin-bottom: 20px;,
         }
         .regression h3 {
             color: #856404;
-            margin-top: 0;
+            margin-top: 0;,
         }
         .chart {
             background: white;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 20px;
-            text-align: center;
+            text-align: center;,
         }
         .status-good { color: green; }
         .status-bad { color: red; }
@@ -71,7 +71,7 @@ F/home/omar/Documents/ruleIQ/services/ai/evaluation/report_generator.pyØ Ø(
             color: #666;
             margin-top: 40px;
             padding-top: 20px;
-            border-top: 1px solid #ddd;
+            border-top: 1px solid #ddd;,
         }
     </style>
 </head>

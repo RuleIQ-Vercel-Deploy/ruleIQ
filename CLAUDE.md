@@ -17,16 +17,23 @@ serena /mcp-serena-initial-instruction
 # ✅ Onboarding: completed
 ```
 
-### 🔧 SERENA MCP AUTO-INITIALIZATION
+### 🔧 SERENA MCP SESSION-BASED ACTIVATION
 
-**If serena is no longer active (check before executing every command from the user)**
+**Session-based activation (only runs during Claude Code sessions):**
 
 ```bash
-serena activate_project ruleIQ
-serena check_onboarding_performed
+# Serena activates automatically when CLAUDE.md is accessed
+# The session manager monitors file access and maintains activation
+# Serena shuts down 5 minutes after Claude Code becomes inactive
+
+# Manual check if needed:
+bash .claude/serena-session-manager.sh status
+
+# Manual activation if needed:
+bash .claude/serena-session-manager.sh start
 ```
 
-** initialize serena mcp as often as required to ensure she is active 100% of the time. As mentioned above you must check her status before executing any user request or command**
+**Note: Serena is session-based - it runs only during active coding sessions and automatically shuts down when Claude Code exits or becomes inactive.**
 
 ## 🧠 SERENA MCP INTEGRATION
 

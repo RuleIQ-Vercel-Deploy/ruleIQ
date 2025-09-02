@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Compliance Analyzer service for LangGraph integration.
 Bridges to existing compliance services.
 """

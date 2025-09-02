@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Task scheduler node for LangGraph workflow.
 Manages task scheduling and orchestration.
 """

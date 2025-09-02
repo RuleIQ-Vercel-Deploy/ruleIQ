@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Celery application configuration for running background tasks such as
 evidence collection, processing, and compliance monitoring.
 """
@@ -49,11 +51,11 @@ celery_app.conf.update(
             "rate_limit": "10/m",
             "retry_kwargs": {
                 "max_retries": 5,
-                "countdown": 60,  # Wait 60 seconds between retries
+                "countdown": 60,  # Wait 60 seconds between retries,
             },
             "retry_backoff": True,
             "retry_backoff_max": 600,  # Max 10 minutes backoff
-            "retry_jitter": True,  # Add randomness to avoid thundering herd
+            "retry_jitter": True,  # Add randomness to avoid thundering herd,
         },
         # Specific rate limits for different task types
         "workers.evidence_tasks.*": {"rate_limit": "5/m"},

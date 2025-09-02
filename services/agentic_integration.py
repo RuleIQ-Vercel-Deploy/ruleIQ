@@ -6,7 +6,7 @@ Combines RAG system with Pydantic AI agents for seamless Claude integration
 import os
 import logging
 from typing import Dict, Any, Optional, List
-from datetime import datetime
+from datetime import datetime, timezone
 
 from services.agentic_rag import AgenticRAGSystem
 from services.agents.pydantic_ai_framework import (
@@ -41,13 +41,13 @@ class AgenticIntegrationService:
 
         # Configuration
         self.auto_process_docs = (
-            os.getenv("AUTO_PROCESS_DOCS", "true").lower() == "true"
+            os.getenv("AUTO_PROCESS_DOCS", "true").lower() == "true",
         )
 
         # Initialize fact-checker and self-critic system
         self.fact_checker = None
         self.self_critic_enabled = (
-            os.getenv("ENABLE_RAG_SELF_CRITIC", "true").lower() == "true"
+            os.getenv("ENABLE_RAG_SELF_CRITIC", "true").lower() == "true",
         )
 
     async def initialize(self) -> None:
@@ -60,13 +60,12 @@ class AgenticIntegrationService:
 
             if stats.get("total_chunks", 0) == 0 and self.auto_process_docs:
                 logger.info(
-                    "No documentation found, processing LangGraph and Pydantic AI docs..."
+                    "No documentation found, processing LangGraph and Pydantic AI docs...",
                 )
                 await self.rag_system.process_documentation_files()
                 logger.info("Documentation processing completed")
             else:
-                logger.info(
-                    f"Found {stats.get('total_chunks', 0)} documentation chunks and {stats.get('total_code_examples', 0)} code examples"
+                logger.info(f"Found {stats.get('total_chunks', 0)} documentation chunks and {stats.get('total_code_examples', 0)} code examples",
                 )
 
             # Initialize fact-checker if enabled
@@ -106,7 +105,7 @@ class AgenticIntegrationService:
         try:
             # Generate session ID if not provided
             if not session_id:
-                session_id = f"{user_id}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}"
+                session_id = f"{user_id}_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}"
 
             # Get or create session context
             context = self._get_session_context(
@@ -120,7 +119,7 @@ class AgenticIntegrationService:
             if trust_level not in self.agent_orchestrators:
                 trust_level = 1  # Default to trust level 1
                 logger.warning(
-                    f"Invalid trust level provided, defaulting to {trust_level}"
+                    f"Invalid trust level provided, defaulting to {trust_level}",
                 )
 
             # Process request through agent orchestrator
@@ -140,7 +139,10 @@ class AgenticIntegrationService:
 
             # Return safe fallback response
             return ComplianceAgentResponse(
-                recommendation="I apologize, but I encountered an error processing your compliance request. Please try rephrasing your question or contact support for assistance.",
+                recommendation=(
+                    "I apologize, but I encountered an error processing your compliance request. "
+                    "Please try rephrasing your question or contact support for assistance.",
+                ),
                 confidence=0.0,
                 trust_level_required=1,
                 reasoning=f"System error: {str(e)}",
@@ -206,7 +208,9 @@ class AgenticIntegrationService:
             Detailed implementation guidance with code examples
         """
         try:
-            guidance_query = f"How do I implement {topic} in {framework}? Provide detailed code examples and best practices."
+            guidance_query = (
+                f"How do I implement {topic} in {framework}? Provide detailed code examples and best practices.",
+            )
 
             result = await self.rag_system.query_documentation(
                 query=guidance_query,
@@ -219,7 +223,7 @@ class AgenticIntegrationService:
 
         except Exception as e:
             logger.error(f"Error getting implementation guidance: {e}")
-            return f"I apologize, but I couldn't retrieve guidance for {topic} in {framework}. Please check the documentation directly or try rephrasing your request."
+            return f"I apologize, but I couldn't retrieve guidance for {topic} in {framework}. Please check the documentation directly or try rephrasing your request."  # noqa: E501
 
     async def find_code_examples(
         self, task_description: str, framework: Optional[str] = None
@@ -312,7 +316,7 @@ class AgenticIntegrationService:
         try:
             if not self.fact_checker:
                 logger.warning(
-                    "Fact-checker not initialized, returning basic validation"
+                    "Fact-checker not initialized, returning basic validation",
                 )
                 return {
                     "approved": True,
@@ -324,7 +328,7 @@ class AgenticIntegrationService:
             if quick_check:
                 # Quick fact-check for real-time usage
                 is_reliable = await self.fact_checker.quick_fact_check(
-                    response_text=response_text, sources=sources
+                    response_text=response_text, sources=sources,
                 )
 
                 return {
@@ -363,7 +367,7 @@ class AgenticIntegrationService:
                 "confidence": 0.5,
                 "fact_check_available": False,
                 "error": str(e),
-                "message": "Fact-checking failed, proceeding with caution",
+                "message": "Fact-checking failed, proceeding with caution"
             }
 
     async def query_documentation_with_validation(
@@ -390,7 +394,7 @@ class AgenticIntegrationService:
         try:
             # Get standard RAG response
             rag_result = await self.query_documentation(
-                query=query, source_filter=source_filter, query_type=query_type
+                query=query, source_filter=source_filter, query_type=query_type,
             )
 
             # Add validation if enabled and fact-checker available
@@ -408,7 +412,7 @@ class AgenticIntegrationService:
                         "validation": validation_result,
                         "trust_score": validation_result["confidence"],
                         "approved_for_use": validation_result["approved"],
-                    }
+                    },
                 )
             else:
                 # Add default validation info
@@ -420,7 +424,7 @@ class AgenticIntegrationService:
                         },
                         "trust_score": rag_result["confidence"],
                         "approved_for_use": True,
-                    }
+                    },
                 )
 
             return rag_result
@@ -472,7 +476,7 @@ class AgenticIntegrationService:
         try:
             # This could be expanded to log to database for analytics
             log_entry = {
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "user_id": context.user_id,
                 "session_id": context.session_id,
                 "trust_level": context.trust_level,
@@ -498,7 +502,7 @@ class AgenticIntegrationService:
 
             return {
                 "status": "healthy",
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "rag_system": {
                     "total_chunks": rag_stats.get("total_chunks", 0),
                     "total_code_examples": rag_stats.get("total_code_examples", 0),
@@ -525,7 +529,7 @@ class AgenticIntegrationService:
                             "quality_scoring": True,
                         }
                         if self.fact_checker
-                        else {}
+                        else {},
                     ),
                 },
             }
@@ -534,21 +538,21 @@ class AgenticIntegrationService:
             logger.error(f"Error getting system status: {e}")
             return {
                 "status": "error",
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "error": str(e),
             }
 
     def cleanup_inactive_sessions(self, max_age_hours: int = 24) -> None:
         """Clean up old inactive sessions"""
         try:
-            current_time = datetime.utcnow()
+            current_time = datetime.now(timezone.utc)
             sessions_to_remove = []
 
             for session_id, context in self.active_sessions.items():
                 # Check last interaction time
                 if context.interaction_history:
                     last_interaction = datetime.fromisoformat(
-                        context.interaction_history[-1]["timestamp"]
+                        context.interaction_history[-1]["timestamp"],
                     )
                     age_hours = (current_time - last_interaction).total_seconds() / 3600
 

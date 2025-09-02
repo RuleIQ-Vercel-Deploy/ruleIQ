@@ -9,7 +9,7 @@ import os
 import warnings
 import logging
 from uuid import uuid4
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import pytest
 import pytest_asyncio
@@ -171,8 +171,8 @@ def get_test_database_url():
         sync_url = sync_url.replace("+asyncpg", "+psycopg2")
     elif "postgresql://" + os.getenv("DB_USER", "postgres") + ":" + os.getenv("DB_PASSWORD", "postgres") + "@" + os.getenv("DB_HOST", "localhost") + ":" + os.getenv("DB_PORT", "5432") + "/" + os.getenv("DB_NAME", "database") + "/to/sample/policy.pdf",
         automation_source="manual",
-        created_at=datetime.utcnow(),
-        updated_at=datetime.utcnow(),
+        created_at=datetime.now(timezone.utc),
+        updated_at=datetime.now(timezone.utc),
     )
     db_session.add(evidence)
     db_session.flush()
@@ -191,8 +191,8 @@ def sample_policy_document(db_session, sample_business_profile):
         content="This is a sample acceptable use policy content...",
         version="1.0",
         status="draft",
-        created_at=datetime.utcnow(),
-        updated_at=datetime.utcnow(),
+        created_at=datetime.now(timezone.utc),
+        updated_at=datetime.now(timezone.utc),
     )
     db_session.add(policy)
     db_session.flush()

@@ -1,5 +1,8 @@
 """Test Neo4j connection and setup module."""
 
+from __future__ import annotations
+
+from typing import Any, Dict, List, Optional
 import pytest
 from unittest.mock import Mock, patch, MagicMock
 from neo4j import GraphDatabase
@@ -18,14 +21,14 @@ from services.ai.evaluation.infrastructure.neo4j_setup import (
 class TestNeo4jConnection:
     """Test Neo4j connection wrapper."""
 
-    def test_connection_singleton(self):
+    def test_connection_singleton(self) -> Any:
         """Test Neo4j connection is a singleton."""
         conn1 = Neo4jConnection()
         conn2 = Neo4jConnection()
         assert conn1 is conn2
 
     @patch("services.ai.evaluation.infrastructure.neo4j_setup.GraphDatabase")
-    def test_get_driver_creates_driver(self, mock_graph_db):
+    def test_get_driver_creates_driver(self, mock_graph_db: Any) -> Any:
         """Test get_driver creates driver if none exists."""
         mock_driver = Mock()
         mock_graph_db.driver.return_value = mock_driver
@@ -37,10 +40,10 @@ class TestNeo4jConnection:
 
         assert driver == mock_driver
         mock_graph_db.driver.assert_called_once_with(
-            "bolt://localhost:7687", auth=("neo4j", "please_change")
+            "bolt://localhost:7687", auth=("neo4j", "please_change"),
         )
 
-    def test_get_driver_returns_existing(self):
+    def test_get_driver_returns_existing(self) -> Any:
         """Test get_driver returns existing driver."""
         conn = Neo4jConnection()
         mock_driver = Mock()
@@ -49,7 +52,7 @@ class TestNeo4jConnection:
         driver = conn.get_driver()
         assert driver == mock_driver
 
-    def test_close_driver(self):
+    def test_close_driver(self) -> Any:
         """Test close_driver closes the driver."""
         conn = Neo4jConnection()
         mock_driver = Mock()
@@ -60,7 +63,7 @@ class TestNeo4jConnection:
         mock_driver.close.assert_called_once()
         assert conn._driver is None
 
-    def test_execute_query(self):
+    def test_execute_query(self) -> Any:
         """Test execute_query runs cypher query."""
         conn = Neo4jConnection()
         mock_driver = Mock()
@@ -78,7 +81,7 @@ class TestNeo4jConnection:
         assert result == mock_result
         mock_session.run.assert_called_once_with("RETURN 1 AS num", None)
 
-    def test_execute_query_with_params(self):
+    def test_execute_query_with_params(self) -> Any:
         """Test execute_query with parameters."""
         conn = Neo4jConnection()
         mock_driver = Mock()
@@ -96,7 +99,7 @@ class TestNeo4jConnection:
 
         assert result == mock_result
         mock_session.run.assert_called_once_with(
-            "MATCH (n {name: $name}) RETURN n", params
+            "MATCH (n {name: $name}) RETURN n", params,
         )
 
 
@@ -104,7 +107,7 @@ class TestNeo4jSetupFunctions:
     """Test Neo4j setup helper functions."""
 
     @patch("services.ai.evaluation.infrastructure.neo4j_setup.docker")
-    def test_setup_neo4j_container_existing(self, mock_docker):
+    def test_setup_neo4j_container_existing(self, mock_docker: Any) -> Any:
         """Test setup with existing container."""
         mock_client = Mock()
         mock_container = Mock()
@@ -120,7 +123,7 @@ class TestNeo4jSetupFunctions:
 
     @patch("services.ai.evaluation.infrastructure.neo4j_setup.docker")
     @patch("services.ai.evaluation.infrastructure.neo4j_setup.wait_for_neo4j")
-    def test_setup_neo4j_container_create_new(self, mock_wait, mock_docker):
+    def test_setup_neo4j_container_create_new(self, mock_wait: Any, mock_docker: Any) -> Any:
         """Test setup creates new container if not exists."""
         mock_client = Mock()
         mock_container = Mock()
@@ -138,7 +141,7 @@ class TestNeo4jSetupFunctions:
 
     @patch("services.ai.evaluation.infrastructure.neo4j_setup.GraphDatabase")
     @patch("services.ai.evaluation.infrastructure.neo4j_setup.time")
-    def test_wait_for_neo4j_success(self, mock_time, mock_graph_db):
+    def test_wait_for_neo4j_success(self, mock_time: Any, mock_graph_db: Any) -> Any:
         """Test wait_for_neo4j succeeds when Neo4j is ready."""
         mock_driver = Mock()
         mock_session = Mock()
@@ -154,7 +157,7 @@ class TestNeo4jSetupFunctions:
 
     @patch("services.ai.evaluation.infrastructure.neo4j_setup.GraphDatabase")
     @patch("services.ai.evaluation.infrastructure.neo4j_setup.time")
-    def test_wait_for_neo4j_timeout(self, mock_time, mock_graph_db):
+    def test_wait_for_neo4j_timeout(self, mock_time: Any, mock_graph_db: Any) -> Any:
         """Test wait_for_neo4j times out."""
         mock_graph_db.driver.side_effect = ServiceUnavailable("Not ready")
 
@@ -162,7 +165,7 @@ class TestNeo4jSetupFunctions:
 
         assert result is False
 
-    def test_create_vector_indexes(self):
+    def test_create_vector_indexes(self) -> Any:
         """Test vector index creation."""
         mock_conn = Mock()
         mock_result = Mock()
@@ -183,7 +186,7 @@ class TestNeo4jSetupFunctions:
         assert any("chunk_embedding_index" in q for q in index_queries)
 
     @patch("services.ai.evaluation.infrastructure.neo4j_setup.Neo4jConnection")
-    def test_get_neo4j_driver(self, mock_conn_class):
+    def test_get_neo4j_driver(self, mock_conn_class: Any) -> Any:
         """Test get_neo4j_driver returns driver."""
         mock_conn = Mock()
         mock_driver = Mock()

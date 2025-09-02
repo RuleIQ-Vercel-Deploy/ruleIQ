@@ -1,4 +1,6 @@
-from datetime import datetime
+from __future__ import annotations
+
+from datetime import datetime, timezone
 from typing import Dict, List, Optional
 from uuid import UUID
 
@@ -31,7 +33,7 @@ class AssessmentService:
                 select(AssessmentSession)
                 .where(AssessmentSession.user_id == user.id)
                 .where(AssessmentSession.status == "in_progress")
-                .order_by(AssessmentSession.created_at.desc())
+                .order_by(AssessmentSession.created_at.desc()),
             )
             result_existing = await db.execute(stmt_existing)
             existing_session = result_existing.scalars().first()
@@ -42,7 +44,7 @@ class AssessmentService:
             # Get business profile if not provided
             if not business_profile_id:
                 stmt_profile = select(BusinessProfile).where(
-                    BusinessProfile.user_id == user.id
+                    BusinessProfile.user_id == user.id,
                 )
                 result_profile = await db.execute(stmt_profile)
                 business_profile = result_profile.scalars().first()
@@ -74,7 +76,7 @@ class AssessmentService:
             stmt = (
                 select(AssessmentSession)
                 .where(AssessmentSession.id == session_id)
-                .where(AssessmentSession.user_id == user.id)
+                .where(AssessmentSession.user_id == user.id),
             )
             result = await db.execute(stmt)
             session = result.scalars().first()
@@ -84,7 +86,7 @@ class AssessmentService:
         except sa.exc.SQLAlchemyError as e:
             # Log error appropriately
             raise DatabaseException(
-                f"Error retrieving assessment session {session_id}: {e}"
+                f"Error retrieving assessment session {session_id}: {e}",
             )
 
     async def get_current_assessment_session(
@@ -96,7 +98,7 @@ class AssessmentService:
                 select(AssessmentSession)
                 .where(AssessmentSession.user_id == user.id)
                 .where(AssessmentSession.status == "in_progress")
-                .order_by(AssessmentSession.created_at.desc())
+                .order_by(AssessmentSession.created_at.desc()),
             )
             result = await db.execute(stmt)
             session = result.scalars().first()
@@ -104,7 +106,7 @@ class AssessmentService:
         except sa.exc.SQLAlchemyError as e:
             # Log error appropriately
             raise DatabaseException(
-                f"Error retrieving current assessment session for user {user.id}: {e}"
+                f"Error retrieving current assessment session for user {user.id}: {e}",
             )
 
     async def get_user_assessment_sessions(
@@ -115,7 +117,7 @@ class AssessmentService:
             stmt = (
                 select(AssessmentSession)
                 .where(AssessmentSession.user_id == user.id)
-                .order_by(AssessmentSession.created_at.desc())
+                .order_by(AssessmentSession.created_at.desc()),
             )
             result = await db.execute(stmt)
             sessions = result.scalars().all()
@@ -123,7 +125,7 @@ class AssessmentService:
         except sa.exc.SQLAlchemyError as e:
             # Log error appropriately
             raise DatabaseException(
-                f"Error retrieving assessment sessions for user {user.id}: {e}"
+                f"Error retrieving assessment sessions for user {user.id}: {e}",
             )
 
     async def update_assessment_response(
@@ -140,7 +142,7 @@ class AssessmentService:
             if not session:
                 # Consider using NotFoundException if get_assessment_session can return None and it's an error here
                 raise NotFoundException(
-                    f"Assessment session {session_id} not found for user {user.id} during update."
+                    f"Assessment session {session_id} not found for user {user.id} during update.",
                 )
 
             if session.status != "in_progress":
@@ -153,7 +155,7 @@ class AssessmentService:
                 session.responses = {}
 
             session.responses[question_id] = answer
-            session.updated_at = datetime.utcnow()
+            session.updated_at = datetime.now(timezone.utc)
             # Potentially update current_stage based on answered questions
             # For example: session.current_stage = calculate_next_stage(session.responses)
 
@@ -165,7 +167,7 @@ class AssessmentService:
             await db.rollback()
             # Log error appropriately
             raise DatabaseException(
-                f"Error updating assessment response for session {session_id}: {e}"
+                f"Error updating assessment response for session {session_id}: {e}",
             )
         except NotFoundException:  # Re-raise if we want it to propagate
             raise
@@ -181,18 +183,18 @@ class AssessmentService:
             session = await self.get_assessment_session(db, user, session_id)
             if not session:
                 raise NotFoundException(
-                    f"Assessment session {session_id} not found for user {user.id} to complete."
+                    f"Assessment session {session_id} not found for user {user.id} to complete.",
                 )
 
             if session.status != "in_progress":
                 # Consider a more specific exception, e.g., InvalidSessionStateError
                 raise ValueError(
-                    f"Assessment session {session_id} is not 'in_progress' (status: {session.status}). Cannot complete."
+                    f"Assessment session {session_id} is not 'in_progress' (status: {session.status}). Cannot complete.",
                 )
 
             # Perform any final validation or processing
             session.status = "completed"
-            session.completed_at = datetime.utcnow()
+            session.completed_at = datetime.now(timezone.utc)
 
             # Generate recommendations based on responses
             # This would typically involve analyzing session.responses
@@ -203,7 +205,7 @@ class AssessmentService:
                 for framework_info in relevant_frameworks_data:
                     # Basic recommendation: suggest frameworks with high relevance
                     # Ensure framework_info structure is as expected by get_relevant_frameworks
-                    # It returns a list of dicts like: {"framework": framework_object.to_dict(), "relevance_score": score}
+                    # It returns a list of dicts like: {"framework": framework_object.to_dict(), "relevance_score": score}  # noqa: E501
                     if (
                         framework_info.get("relevance_score", 0) > 50
                     ):  # Adjusted threshold based on calculate_framework_relevance logic
@@ -213,10 +215,10 @@ class AssessmentService:
                                 "framework_id": str(framework_details.get("id")),
                                 "framework_name": framework_details.get("name"),
                                 "reason": f"High relevance score: {framework_info['relevance_score']}",
-                            }
+                            },
                         )
 
-            session.recommendations = recommendations  # Ensure AssessmentSession model has this field as JSON or similar
+            session.recommendations = recommendations  # Ensure AssessmentSession model has this field as JSON or similar  # noqa: E501
 
             db.add(session)
             await db.commit()
@@ -226,7 +228,7 @@ class AssessmentService:
             await db.rollback()
             # Log error appropriately
             raise DatabaseException(
-                f"Error completing assessment session {session_id}: {e}"
+                f"Error completing assessment session {session_id}: {e}",
             )
         except NotFoundException:  # Re-raise
             raise
@@ -369,7 +371,7 @@ class AssessmentService:
                         "£50K-£100K",
                         "Over £100K",
                     ],
-                    "required": False,
+                    "required": False
                 },
             ],
             5: [  # Goals and Timeline
@@ -378,7 +380,7 @@ class AssessmentService:
                     "question": "What is your target timeline for achieving compliance?",
                     "type": "select",
                     "options": ["3 months", "6 months", "12 months", "18+ months"],
-                    "required": True,
+                    "required": True
                 },
                 {
                     "id": "primary_driver",
@@ -391,7 +393,7 @@ class AssessmentService:
                         "Risk management",
                         "Competitive advantage",
                     ],
-                    "required": True,
+                    "required": True
                 },
                 {
                     "id": "biggest_challenge",

@@ -1,78 +1,4 @@
-
-"name"str
-<3"Sprint 2: Evidence Classification & Design System"str
-"velocity_target"str
-"capacity_hours"str
-"id"str
-"2025-08-15"str
-
-!0int
-"start_date"str
--$"Get default sprint data for ruleIQ"str
-"2025-08-01"str
-"team_members"str
-120.0float
-ri"Complete RBAC system, implement evidence auto-classification, and finalize teal design system migration"str
-"AI Engineer"str
-"Lead Developer"str
-
-"end_date"str
-40int
-
-"goal"str
-"Frontend Developer"str
-#"sprint_2_evidence_design"strself
-Õ! Õ(%list"Š&
-$
-
-× à(	"#new-object#Bdict"
- 
-
-Ø Ø(,"	#map-set#:"
- 
-
-Ù Ù(G	"	#map-set#:"
- 
-
-Ú Ú(}"	#map-set#:
-"
- 
-
-Û Û(&"	#map-set#:"
- 
-
-Ü Ü($"	#map-set#:"
- 
-
-Ý Ý(#"	#map-set#:"
- 
-
-Þ Þ(!"	#map-set#:)
-'
-
-ß ß(S"#unknown-value#Blist(
-&
-
-ß ß(S"
-#is-exact#:Bbool
-
-
-ß ß(S "
-#assume#::
-8
-
-ß ß(S""#set-field# __collection_size:!Bint(
-&
-
-ß ß(S#"#array-add-last#:(
-&
-
-ß ß(S$"#array-add-last#:(
-&
-
-ß ß(S%"#array-add-last#:"
- 
-
-ß ß(S&"	#map-set#:
-
-× à(	*1/home/omar/Documents/ruleIQ/scripts/sprint_cli.py
+cls&& &()info&+ &(/scopes&1 &(7"*
+
+' '("cls:
+' '(*B/home/omar/Documents/ruleIQ/api/clients/google_workspace_client.py

@@ -1,11 +1,13 @@
 """
+from __future__ import annotations
+
 LangGraph state definition for compliance agent.
 Defines TypedDict with messages, route, docs, profile, tool_outputs, errors, meta.
 """
 
 from typing import Dict, List, Optional, Any, TypedDict, Annotated
 from uuid import UUID
-from datetime import datetime
+from datetime import datetime, timezone
 
 from langgraph.graph import add_messages
 
@@ -98,7 +100,7 @@ def create_initial_state(
     Returns:
         Initial state with user message and default values
     """
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
 
     # Create initial user message
     initial_message = GraphMessage(role="user", content=user_input, timestamp=now)
@@ -161,7 +163,7 @@ def update_state_metadata(state: ComplianceAgentState) -> ComplianceAgentState:
     Returns:
         Updated state with fresh metadata
     """
-    state["last_updated"] = datetime.utcnow()
+    state["last_updated"] = datetime.now(timezone.utc)
     state["turn_count"] += 1
     return state
 

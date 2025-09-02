@@ -1,11 +1,12 @@
 """Feedback analysis and aggregation module for the feedback system."""
 
+from __future__ import annotations
+
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any
 from collections import defaultdict
 from dataclasses import dataclass, field
 import statistics
-from enum import Enum
 
 from config.langsmith_feedback import FeedbackItem, FeedbackType
 
@@ -184,10 +185,10 @@ class FeedbackAnalyzer:
                                     current_window_start + timedelta(hours=window_hours)
                                 ).isoformat(),
                                 "feedback_types": self._count_feedback_types(
-                                    current_window
+                                    current_window,
                                 ),
                             },
-                        )
+                        ),
                     )
 
                 # Start new window
@@ -215,7 +216,7 @@ class FeedbackAnalyzer:
                         ).isoformat(),
                         "feedback_types": self._count_feedback_types(current_window),
                     },
-                )
+                ),
             )
 
         return windows
@@ -268,7 +269,7 @@ class FeedbackAnalyzer:
                     dominant_sentiment=dominant_sentiment,
                     feedback_frequency=len(user_feedback) / time_span,
                     correction_rate=len(corrections) / len(user_feedback) * 100,
-                )
+                ),
             )
 
         return patterns
@@ -294,7 +295,7 @@ class FeedbackAnalyzer:
             "high_correction_users": len(
                 [p for p in user_patterns if p.correction_rate > 20]
             ),
-            "feedback_types": self._count_feedback_types(self.feedback_items),
+            "feedback_types": self._count_feedback_types(self.feedback_items)
         }
 
     def _count_feedback_types(
@@ -356,7 +357,7 @@ class FeedbackAnalyzer:
                 triggers["high_correction_rate"],
                 triggers["low_average_rating"],
                 triggers["high_negative_sentiment"],
-            ]
+            ],
         )
         triggers["composite_trigger"] = conditions_met >= 2
 
@@ -395,7 +396,7 @@ class FeedbackAnalyzer:
                     for f in self.feedback_items
                     if f.feedback_type == FeedbackType.THUMBS_DOWN
                 ]
-            ),
+            )
         }
 
         # Calculate sentiment score
@@ -456,7 +457,7 @@ class FeedbackAnalyzer:
         rating_values = [w.value for w in windows if w.value > 0]
         if len(rating_values) >= 2:
             rating_trend = (
-                "improving" if rating_values[-1] > rating_values[0] else "declining"
+                "improving" if rating_values[-1] > rating_values[0] else "declining",
             )
             rating_change = rating_values[-1] - rating_values[0]
         else:
@@ -485,7 +486,7 @@ class FeedbackAnalyzer:
             sentiment_trend = (
                 "improving"
                 if sentiment_progression[-1] > sentiment_progression[0]
-                else "declining"
+                else "declining",
             )
         else:
             sentiment_trend = None
@@ -576,7 +577,7 @@ class FeedbackAnalyzer:
             if len(timestamps) > 1:
                 gaps = [
                     (timestamps[i + 1] - timestamps[i]).total_seconds() / 3600
-                    for i in range(len(timestamps) - 1)
+                    for i in range(len(timestamps) - 1),
                 ]
                 avg_gap = statistics.mean(gaps)
                 if avg_gap < 1:  # Less than 1 hour average gap
@@ -611,15 +612,15 @@ class FeedbackAnalyzer:
         recommendations = []
         if "feedback_clustering" in behavioral_patterns:
             recommendations.append(
-                "Consider implementing rate limiting for feedback submission"
+                "Consider implementing rate limiting for feedback submission",
             )
         if "rating_polarization" in behavioral_patterns:
             recommendations.append(
-                "Investigate causes of polarized opinions in user base"
+                "Investigate causes of polarized opinions in user base",
             )
         if "correction_dominance" in behavioral_patterns:
             recommendations.append(
-                "Model may need retraining based on high correction rate"
+                "Model may need retraining based on high correction rate",
             )
         if len(user_segments["critics"]) > len(user_segments["supporters"]):
             recommendations.append("Focus on addressing concerns from critical users")

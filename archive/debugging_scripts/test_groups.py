@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+
 Test Group Runner for ruleIQ
 Organizes tests into 6 independent groups for parallel execution
 """

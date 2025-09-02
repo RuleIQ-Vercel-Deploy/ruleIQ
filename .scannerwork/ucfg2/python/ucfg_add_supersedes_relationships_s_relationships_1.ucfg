@@ -1,10 +1,10 @@
 
 bscripts.add_supersedes_relationships.SupersedesRelationshipBuilder.verify_supersedes_relationshipsO
-C/home/omar/Documents/ruleIQ/scripts/add_supersedes_relationships.pyÉ É(-"2*¡
+C/home/omar/Documents/ruleIQ/scripts/add_supersedes_relationships.pyÀ À(-"2*¡
 2
-Ñ Ñ(@çä
+Ã Ã(@çä
 
-Ö Ö(>
+Õ Õ(>
 %15*&
 
 __unknown_file (
@@ -16,14 +16,14 @@ C/home/omar/Documents/ruleIQ/scripts/add_supersedes_relationships.pyÉ É(-"
 '\nVerifying SUPERSEDES relationships...2infoå
 â
 
-á á(
+Œ Œ(
 %16"__id*n
 
 __unknown_file (R*PD
 Bscripts.add_supersedes_relationships.SupersedesRelationshipBuilder"
 driverCA
 
-á á((
+Œ Œ((
 %17*#
 
 __unknown_file (
@@ -31,7 +31,7 @@ Bscripts.add_supersedes_relationships.SupersedesRelationshipBuilder"
 %162sessionD
 B
 
-á á(3	
+Œ Œ(3	
 session"__id*#
 
 __unknown_file (
@@ -41,12 +41,12 @@ B
 6*E
 3!
 add_supersedes_relationships.py"
-° °
-implicit return*ª
+Â Â
+implicit return*≠
 5
-ù ù(L|z
+‡ ·( |z
 
-ù! ù(2
+‡, ‡(=
 %1"__mapGet*&
 
 __unknown_file (
@@ -57,7 +57,7 @@ B
 __unknown_file (	
 new_reg2__getitem__|z
 
-ù8 ù(I
+‡? ·(
 %2"__mapGet*&
 
 __unknown_file (
@@ -66,27 +66,25 @@ B
 record*'
 
 __unknown_file (	
-old_reg2__getitem__x
-v
+old_reg2__getitem__h
+f
 
-ù ù(K
-%3"__concat*
+‡ ·(
+%3"__concat*
 
-ù ù( 
-  *
+‡ ‡((
 
-ù! ù(2
+  %s -> %s*
+
+‡, ‡(=
 
-%1*
+%1*
 
-ù3 ù(7
- -> *
-
-ù8 ù(I
+‡? ·(
 
 %2fd
 
-ù ù(L
+‡ ·( 
 %4*&
 
 __unknown_file (
@@ -98,7 +96,7 @@ v
 
 %32infoÄ~
 
-û0 û(E
+‚4 ‚(I
 %5"__mapGet*&
 
 __unknown_file (
@@ -107,20 +105,20 @@ v
 record*+
 
 __unknown_file (
-description2__getitem__Y
-W
+description2__getitem__[
+Y
 
-û û(G
-%6"__concat*#
+‚ ‚(I
+%6"__concat*%
 
-û û(/
-    Description: *
+‚ ‚(1
+    Description: %s*
 
-û0 û(E
+‚4 ‚(I
 
 %5fd
 
-û û(H
+‚ ‚(J
 %7*&
 
 __unknown_file (
@@ -132,12 +130,12 @@ W
 
 %62info*
 3
-5*Ö
+5*á
 
 6
-â é(»≈
+œ ‘(»≈
 
-â é(
+œ ‘(
 %8*'
 
 __unknown_file (
@@ -151,14 +149,14 @@ b
             2runB
 @
 
-â é(
+œ ‘(
 result"__id*"
 
 __unknown_file (
 
 %8DB
 
-è è()
+’ ’()
 %9*&
 
 __unknown_file (
@@ -167,14 +165,14 @@ b
 result2singleA
 ?
 
-è è()
+’ ’()
 count"__id*"
 
 __unknown_file (
 
 %9zx
 
-ê; ê(I
+÷? ÷(M
 %10"__mapGet*%
 
 __unknown_file (	
@@ -182,20 +180,20 @@ b
 count*%
 
 __unknown_file (	
-count2__getitem__j
-h
+count2__getitem__l
+j
 
-ê ê(K
-%11"__concat*2
+÷ ÷(M
+%11"__concat*4
 
-ê ê(:$"
- Total SUPERSEDES relationships: *
+÷ ÷(<&$
+"Total SUPERSEDES relationships: %s*
 
-ê; ê(I
+÷? ÷(M
 
 %10hf
 
-ê ê(L
+÷ ÷(N
 %12*&
 
 __unknown_file (
@@ -207,7 +205,7 @@ h
 
 %112info±Æ
 
-ì ô(
+◊ ›(
 %13*'
 
 __unknown_file (
@@ -222,14 +220,14 @@ h
             2runC
 A
 
-ì ô(
+◊ ›(
 result"__id*#
 
 __unknown_file (
 
 %13àÖ
 
-õ õ(=
+ﬁ ﬁ(=
 %14*&
 
 __unknown_file (

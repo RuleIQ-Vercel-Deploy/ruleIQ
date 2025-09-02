@@ -39,7 +39,7 @@ class TestPolicyGenerationService:
                 "Lawful basis for processing",
                 "Data subject rights",
                 "Data Protection Impact Assessments",
-                "Breach notification (72 hours to ICO)",
+                "Breach notification (72 hours to ICO)"
             ],
             policy_template="""
             # UK GDPR Privacy Policy Template
@@ -136,12 +136,12 @@ class TestPolicyGenerationService:
                 "ICO registration mentioned",
                 "Legal bases clearly stated",
                 "Data subject rights included",
-            ],
+            ]
         }
 
         generator = PolicyGenerator()
         result = generator.generate_policy(
-            policy_generation_request, sample_uk_gdpr_framework
+            policy_generation_request, sample_uk_gdpr_framework,
         )
 
         assert result.success is True
@@ -164,7 +164,7 @@ class TestPolicyGenerationService:
         """Test fallback to OpenAI when Google AI fails"""
         # Mock Google AI failure
         mock_google.return_value.generate_policy.side_effect = Exception(
-            "Google AI service unavailable"
+            "Google AI service unavailable",
         )
 
         # Mock OpenAI success
@@ -177,7 +177,7 @@ class TestPolicyGenerationService:
 
         generator = PolicyGenerator()
         result = generator.generate_policy(
-            policy_generation_request, sample_uk_gdpr_framework
+            policy_generation_request, sample_uk_gdpr_framework,
         )
 
         assert result.success is True
@@ -195,15 +195,15 @@ class TestPolicyGenerationService:
 
             # Mock both providers failing
             mock_google.return_value.generate_policy.side_effect = Exception(
-                "Google AI failed"
+                "Google AI failed",
             )
             mock_openai.return_value.generate_policy.side_effect = Exception(
-                "OpenAI failed"
+                "OpenAI failed",
             )
 
             generator = PolicyGenerator()
             result = generator.generate_policy(
-                policy_generation_request, sample_uk_gdpr_framework
+                policy_generation_request, sample_uk_gdpr_framework,
             )
 
             assert result.success is False
@@ -271,7 +271,7 @@ class TestPolicyGenerationService:
             }
 
             result = generator.generate_policy(
-                detailed_request, sample_uk_gdpr_framework
+                detailed_request, sample_uk_gdpr_framework,
             )
 
             assert result.success is True
@@ -288,7 +288,7 @@ class TestPolicyGenerationService:
         """
 
         validation_result = generator.validate_uk_policy(
-            invalid_policy, sample_uk_gdpr_framework
+            invalid_policy, sample_uk_gdpr_framework,
         )
 
         assert validation_result.is_valid is False
@@ -312,7 +312,7 @@ class TestPolicyGenerationService:
         """
 
         validation_result = generator.validate_uk_policy(
-            valid_policy, sample_uk_gdpr_framework
+            valid_policy, sample_uk_gdpr_framework,
         )
 
         assert validation_result.is_valid is True
@@ -336,14 +336,14 @@ class TestPolicyGenerationService:
 
             # First request - should call AI
             result1 = generator.generate_policy(
-                policy_generation_request, sample_uk_gdpr_framework
+                policy_generation_request, sample_uk_gdpr_framework,
             )
             assert result1.success is True
             assert mock_google.return_value.generate_policy.call_count == 1
 
             # Second identical request - should use cache
             result2 = generator.generate_policy(
-                policy_generation_request, sample_uk_gdpr_framework
+                policy_generation_request, sample_uk_gdpr_framework,
             )
             assert result2.success is True
             assert result2.was_cached is True
@@ -359,7 +359,7 @@ class TestPolicyGenerationService:
         refinement_feedback = [
             "Add more detail about data retention",
             "Include specific contact information",
-            "Clarify legal basis for processing",
+            "Clarify legal basis for processing"
         ]
 
         with patch("services.ai.policy_generator.GoogleAIClient") as mock_google:
@@ -374,7 +374,7 @@ class TestPolicyGenerationService:
             }
 
             result = generator.refine_policy(
-                original_policy, refinement_feedback, sample_uk_gdpr_framework
+                original_policy, refinement_feedback, sample_uk_gdpr_framework,
             )
 
             assert result.success is True
@@ -418,7 +418,7 @@ class TestPolicyGeneratorAPIIntegration:
                     provider_used="google",
                     generated_sections=["test_section"],
                     compliance_checklist=["test_compliance"],
-                )
+                ),
             )
 
             response = client.post("/api/v1/ai/generate-policy", json=request_data)
@@ -489,7 +489,7 @@ class TestPolicyGeneratorPerformance:
 
             start_time = time.time()
             result = generator.generate_policy(
-                policy_generation_request, sample_uk_gdpr_framework
+                policy_generation_request, sample_uk_gdpr_framework,
             )
             end_time = time.time()
 
@@ -518,7 +518,7 @@ class TestPolicyGeneratorPerformance:
 
             def generate_policy_sync():
                 return generator.generate_policy(
-                    policy_generation_request, sample_uk_gdpr_framework
+                    policy_generation_request, sample_uk_gdpr_framework,
                 )
 
             # Test 5 concurrent requests

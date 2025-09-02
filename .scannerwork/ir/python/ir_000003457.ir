@@ -1,19 +1,0 @@
-
-=4"Generate a cryptographically secure session token."strselfd d(#"°(
-&
-f f("
-uuiduuid4B	uuid.UUID$
-"
-f f("#get-field# hex:,
-*
-f f("?python-partial-apply?:(
-&
-f" f(."
-uuiduuid4B	uuid.UUID$
-"
-f" f(2"#get-field# hex:,
-*
-f" f(2"?python-partial-apply?:"
- 
-f f(2	"	#binop +#2+:
-f f(2	*C/home/omar/Documents/ruleIQ/database/freemium_assessment_session.py

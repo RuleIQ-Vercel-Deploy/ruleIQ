@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
+
 Environment file validator - checks if JWT_SECRET is properly set
 without revealing the actual secret value.
 """
@@ -54,13 +58,13 @@ def check_env_file(filepath) -> Optional[str]:
 
 
 # Check all possible env files
-print("Environment File Validation")
-print("=" * 50)
+logger.info("Environment File Validation")
+logger.info("=" * 50)
 
 env_files = [".env", ".env.local", ".env.development", ".env.production"]
 
 for env_file in env_files:
     result = check_env_file(env_file)
-    print(f"{env_file}: {result}")
+    logger.info(f"{env_file}: {result}")
 
-print("\nNote: This script validates the format without revealing actual secrets.")
+logger.info("\nNote: This script validates the format without revealing actual secrets.")

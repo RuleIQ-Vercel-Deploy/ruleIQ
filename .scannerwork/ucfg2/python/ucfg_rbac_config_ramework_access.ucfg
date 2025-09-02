@@ -1,21 +1,21 @@
 
 :api.middleware.rbac_config.RBACConfig.get_framework_accessE
-9/home/omar/Documents/ruleIQ/api/middleware/rbac_config.py¶ ¶("2*€
+9/home/omar/Documents/ruleIQ/api/middleware/rbac_config.py¸ ¸("2*€
 2
-· ·(4}
+¹ ¹(4}
 {
 
-¸ ¸(4
+º º(4
 %1"__id*a
 
 __unknown_file (E*C'
 %api.middleware.rbac_config.RBACConfig"
 FRAMEWORK_ACCESS_RULES
 
-¸G ¸(I
+ºG º(I
 %2"dictš—
 
-¸ ¸(J
+º º(J
 %3"dict.get*"
 
 __unknown_file (
@@ -31,7 +31,7 @@
 %22getK
 I
 
-¸ ¸(J
+º º(J
 framework_rules"__id*"
 
 __unknown_file (
@@ -39,7 +39,7 @@ I
 %3l
 j
 
-¹. ¹(>
+». »(>
 %4"__id*P
 
 __unknown_file (4*2(
@@ -47,7 +47,7 @@ j
 READI
 G
 
-¹. ¹(D
+». »(D
 %5"__id*-
 
 __unknown_file (*
@@ -55,7 +55,7 @@ G
 %4"
 valueš—
 
-¹ ¹(E
+» »(E
 %6*/
 
 __unknown_file (
@@ -70,13 +70,13 @@ G
 
 %52get"
 
-¹ ¹(E
+» »(E
 
 %6:
 
-¶" ¶(0
+¸" ¸(0
 	role_name:
 
-¶2 ¶(C
+¸2 ¸(C
 framework_idB)'
 %api.middleware.rbac_config.RBACConfigH

@@ -1,21 +1,0 @@
-
-"Decorator usage."strself
-è è(func
-è è(/"Ê#
-!
-
-ó ó("#unknown-value#*
-(
-
-ì ó(%closure"#new-object#(
-&
-
-ì ó("#set-field# func:(
-&
-
-ì ó("#set-field# self:-
-+
-
-ì ó("?python-partial-apply?:
-
-ó ó(*8/home/omar/Documents/ruleIQ/api/utils/circuit_breaker.py

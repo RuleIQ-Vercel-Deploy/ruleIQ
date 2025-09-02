@@ -7,7 +7,7 @@ if (typeof window !== 'undefined') {
   Sentry = require('@sentry/nextjs');
 }
 
-const vitals = {
+const _vitals = {
   CLS: 0,
   FID: 0,
   FCP: 0,

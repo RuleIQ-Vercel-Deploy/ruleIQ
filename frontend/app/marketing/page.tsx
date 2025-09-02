@@ -10,13 +10,13 @@ import { Input } from '@/components/ui/input';
 import { TextEffect } from '@/components/ui/text-effect';
 import { TypewriterEffect } from '@/components/ui/typewriter-effect';
 import { InfiniteSlider } from '@/components/ui/infinite-slider';
-import { SparklesBackground } from '@/components/ui/sparkles-background';
+import { } from '@/components/ui/sparkles-background';
 import { GradientBackground } from '@/components/ui/gradient-background';
-import { AnimatedGrid } from '@/components/ui/animated-grid';
-import { FloatingElements } from '@/components/ui/floating-elements';
+import { } from '@/components/ui/animated-grid';
+import { } from '@/components/ui/floating-elements';
 import { ShimmerButton } from '@/components/magicui/shimmer-button';
 import { EnhancedMetricCard } from '@/components/dashboard/enhanced-metric-card';
-import { NumberTicker } from '@/components/magicui/number-ticker';
+import { } from '@/components/magicui/number-ticker';
 
 export default function MarketingPage() {
   const typewriterWords = [

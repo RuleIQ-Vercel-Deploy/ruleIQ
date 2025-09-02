@@ -6,15 +6,13 @@ Analyzes regulations for automation potential and generates strategic recommenda
 
 import asyncio
 import logging
-from typing import Dict, List, Any, Optional, Tuple
+from typing import Dict, List, Any
 from datetime import datetime, timedelta
 from dataclasses import dataclass, field
 from enum import Enum
-import json
-from pathlib import Path
 
 from neo4j import AsyncGraphDatabase
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field
 import numpy as np
 
 logger = logging.getLogger(__name__)
@@ -111,7 +109,7 @@ class AutomationScorer:
         self.cost_models = {
             "manual_compliance_hour": 150,  # Compliance officer hourly rate
             "developer_hour": 125,  # Developer hourly rate
-            "automation_maintenance_hour": 25,  # Ongoing maintenance cost
+            "automation_maintenance_hour": 25,  # Ongoing maintenance cost,
         }
 
     async def __aenter__(self):
@@ -127,7 +125,7 @@ class AutomationScorer:
         """Establish connection to Neo4j"""
         try:
             self.driver = AsyncGraphDatabase.driver(
-                self.neo4j_uri, auth=(self.neo4j_user, self.neo4j_password)
+                self.neo4j_uri, auth=(self.neo4j_user, self.neo4j_password),
             )
             # Verify connectivity
             async with self.driver.session() as session:
@@ -230,7 +228,7 @@ class AutomationScorer:
 
             # Calculate readiness score based on prerequisites
             opportunity.readiness_score = await self._calculate_readiness_score(
-                regulation_id, session
+                regulation_id, session,
             )
 
             # Estimate ROI
@@ -272,7 +270,7 @@ class AutomationScorer:
 
         # Estimate annual savings
         annual_savings = self._estimate_annual_savings(
-            automation_score, regulation.get("enforcement_frequency", "medium")
+            automation_score, regulation.get("enforcement_frequency", "medium"),
         )
 
         return AutomationOpportunity(
@@ -332,7 +330,7 @@ class AutomationScorer:
         complexity_score = (
             num_controls * 0.3
             + implementation_complexity * 0.4
-            + (5 if has_dependencies else 0) * 0.3
+            + (5 if has_dependencies else 0) * 0.3,
         )
 
         if complexity_score <= 3:
@@ -396,7 +394,7 @@ class AutomationScorer:
         # Check for easy automation targets
         if regulation.get("automation_potential", 0) > 0.7:
             quick_wins.append(
-                "High automation potential - prioritize for implementation"
+                "High automation potential - prioritize for implementation",
             )
 
         if any("reporting" in str(c).lower() for c in controls):
@@ -462,7 +460,7 @@ class AutomationScorer:
             "high": 12,  # Monthly
             "medium": 4,  # Quarterly
             "low": 2,  # Semi-annual
-            "very_low": 1,  # Annual
+            "very_low": 1,  # Annual,
         }
 
         frequency = frequency_map.get(enforcement_frequency, 4)
@@ -473,13 +471,13 @@ class AutomationScorer:
         # Annual savings
         annual_hours_saved = hours_per_cycle * frequency
         annual_cost_savings = (
-            annual_hours_saved * self.cost_models["manual_compliance_hour"]
+            annual_hours_saved * self.cost_models["manual_compliance_hour"],
         )
 
         # Subtract automation maintenance cost
         maintenance_hours = annual_hours_saved * 0.1  # 10% maintenance
         maintenance_cost = (
-            maintenance_hours * self.cost_models["automation_maintenance_hour"]
+            maintenance_hours * self.cost_models["automation_maintenance_hour"],
         )
 
         return max(0, annual_cost_savings - maintenance_cost)
@@ -517,7 +515,7 @@ class AutomationScorer:
 
         # Implementation cost
         implementation_cost = (
-            opportunity.effort_hours * self.cost_models["developer_hour"]
+            opportunity.effort_hours * self.cost_models["developer_hour"],
         )
 
         # Monthly savings
@@ -544,7 +542,7 @@ class AutomationScorer:
         async with self.driver.session() as session:
             # Get applicable regulations
             regulations = await self._get_applicable_regulations(
-                business_profile, session
+                business_profile, session,
             )
 
             # Score each regulation for automation
@@ -563,7 +561,7 @@ class AutomationScorer:
                 for opp in opportunities
                 if opp.complexity
                 in [AutomationComplexity.TRIVIAL, AutomationComplexity.SIMPLE]
-                and opp.automation_score > 0.6
+                and opp.automation_score > 0.6,
             ]
 
             strategic = [
@@ -571,7 +569,7 @@ class AutomationScorer:
                 for opp in opportunities
                 if opp.complexity
                 in [AutomationComplexity.COMPLEX, AutomationComplexity.STRATEGIC]
-                or opp.automation_score > 0.8
+                or opp.automation_score > 0.8,
             ]
 
             # Sort by ROI
@@ -580,7 +578,7 @@ class AutomationScorer:
 
             # Generate implementation phases
             phases = self._generate_implementation_phases(
-                quick_wins, strategic, max_phases
+                quick_wins, strategic, max_phases,
             )
 
             # Calculate metrics
@@ -591,11 +589,11 @@ class AutomationScorer:
                     opp.roi_months
                     for opp in opportunities
                     if opp.roi_months < float("inf")
-                ]
+                ],
             )
 
             automation_coverage = (
-                len(opportunities) / len(regulations) if regulations else 0
+                len(opportunities) / len(regulations) if regulations else 0,
             )
 
             # Estimate risk reduction
@@ -603,7 +601,7 @@ class AutomationScorer:
                 1 for opp in opportunities if opp.automation_score > 0.7
             )
             risk_reduction = (
-                (high_risk_automated / len(regulations)) * 0.5 if regulations else 0
+                (high_risk_automated / len(regulations)) * 0.5 if regulations else 0,
             )
 
             return AutomationRoadmap(
@@ -670,8 +668,8 @@ class AutomationScorer:
                     "expected_savings": sum(
                         opp.estimated_savings_annual for opp in phase1_items
                     ),
-                    "focus": "Establish automation infrastructure and deliver immediate value",
-                }
+                    "focus": "Establish automation infrastructure and deliver immediate value"
+                },
             )
 
         # Phase 2: Expand Coverage
@@ -687,8 +685,8 @@ class AutomationScorer:
                     "expected_savings": sum(
                         opp.estimated_savings_annual for opp in phase2_items
                     ),
-                    "focus": "Broaden automation coverage across compliance areas",
-                }
+                    "focus": "Broaden automation coverage across compliance areas"
+                },
             )
 
         # Phase 3: Strategic Initiatives
@@ -704,8 +702,8 @@ class AutomationScorer:
                     "expected_savings": sum(
                         opp.estimated_savings_annual for opp in phase3_items
                     ),
-                    "focus": "Implement complex automation for high-value regulations",
-                }
+                    "focus": "Implement complex automation for high-value regulations"
+                },
             )
 
         # Phase 4: Integration & Optimization
@@ -721,8 +719,8 @@ class AutomationScorer:
                     "expected_savings": sum(
                         opp.estimated_savings_annual for opp in phase4_items
                     ),
-                    "focus": "Integrate automation systems and optimize performance",
-                }
+                    "focus": "Integrate automation systems and optimize performance"
+                },
             )
 
         # Phase 5: Continuous Improvement
@@ -735,7 +733,7 @@ class AutomationScorer:
                 "effort_hours": 160,  # Maintenance estimate
                 "expected_savings": 0,
                 "focus": "Monitor, maintain, and enhance automation capabilities",
-            }
+            },
         )
 
         return phases[:max_phases]
@@ -786,20 +784,20 @@ class AutomationScorer:
                             "improvement_potential": (0.7 - avg_automation)
                             * count
                             * 1000,
-                        }
+                        },
                     )
 
             # Generate recommendations
             if gaps["low_automation_coverage"]:
                 gaps["recommendations"].append(
-                    "Focus on automating low-coverage areas for maximum impact"
+                    "Focus on automating low-coverage areas for maximum impact",
                 )
 
             gaps["recommendations"].append(
-                "Implement monitoring automation for real-time compliance"
+                "Implement monitoring automation for real-time compliance",
             )
             gaps["recommendations"].append(
-                "Create automated reporting pipelines for regular audits"
+                "Create automated reporting pipelines for regular audits",
             )
 
             return gaps
@@ -840,7 +838,7 @@ class AutomationScorer:
         roi_months = (
             total_investment / (total_annual_savings / 12)
             if total_annual_savings > 0
-            else float("inf")
+            else float("inf"),
         )
 
         # Break-even analysis
@@ -854,7 +852,7 @@ class AutomationScorer:
             "annual_savings": total_annual_savings,
             "roi_months": roi_months,
             "break_even_date": (
-                break_even_date.isoformat() if roi_months < float("inf") else None
+                break_even_date.isoformat() if roi_months < float("inf") else None,
             ),
             "net_present_value_3y": (total_annual_savings * 3) - total_investment,
             "implementation_months": total_dev_hours / 160,  # Assuming 160 hours/month
@@ -907,17 +905,17 @@ async def main():
             for opp in roadmap.quick_wins[:5]:
                 logger.info(f"  • {opp.title}")
                 logger.info(
-                    f"    Score: {opp.automation_score:.2f}, Hours: {opp.effort_hours}, ROI: {opp.roi_months:.1f} months"
+                    f"    Score: {opp.automation_score:.2f}, Hours: {opp.effort_hours}, ROI: {opp.roi_months:.1f} months"  # noqa: E501,
                 )
 
         if roadmap.phases:
             logger.info(f"\n📅 Implementation Phases:")
             for phase in roadmap.phases:
                 logger.info(
-                    f"  Phase {phase['phase']}: {phase['name']} ({phase['duration']})"
+                    f"  Phase {phase['phase']}: {phase['name']} ({phase['duration']})",
                 )
                 logger.info(
-                    f"    Items: {len(phase['items'])}, Hours: {phase['effort_hours']}, Savings: ${phase['expected_savings']:,.0f}"
+                    f"    Items: {len(phase['items'])}, Hours: {phase['effort_hours']}, Savings: ${phase['expected_savings']:,.0f}"  # noqa: E501,
                 )
 
         # Analyze gaps
@@ -937,7 +935,7 @@ async def main():
             logger.info(f"  Total Investment: ${investment['total_investment']:,.0f}")
             logger.info(f"  Annual Savings: ${investment['annual_savings']:,.0f}")
             logger.info(
-                f"  Break-even: {investment['break_even_date'][:10] if investment['break_even_date'] else 'N/A'}"
+                f"  Break-even: {investment['break_even_date'][:10] if investment['break_even_date'] else 'N/A'}",
             )
             logger.info(f"  3-Year NPV: ${investment['net_present_value_3y']:,.0f}")
 

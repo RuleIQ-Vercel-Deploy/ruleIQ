@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Test script to verify Phase 5 System Instructions implementation
 
 This script tests the core functionality of the system instructions upgrade

@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Shared types and enums for AI services
 
 This module contains common types, enums, and data structures used across

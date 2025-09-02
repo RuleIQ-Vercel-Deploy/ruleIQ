@@ -151,7 +151,7 @@ class TestNoEvidenceData:
         # Call with state as first parameter AND empty evidence_data (old calling convention)
         # This covers lines 77-78 and 83
         result = await node.process_evidence(
-            state_with_empty_evidence, evidence_data={}
+            state_with_empty_evidence, evidence_data={},
         )
 
         # Check the result is a dict
@@ -186,7 +186,7 @@ class TestDatabaseCommitError:
 
         # Commit raises SQLAlchemyError (covers lines 167-173)
         mock_session.commit = AsyncMock(
-            side_effect=SQLAlchemyError("Connection lost during commit")
+            side_effect=SQLAlchemyError("Connection lost during commit"),
         )
         mock_session.rollback = AsyncMock()
 
@@ -269,7 +269,7 @@ class TestDatabaseCommitError:
         assert len(result["messages"]) == 1
         assert (
             "Evidence processing failed: Unexpected error"
-            in result["messages"][0].content
+            in result["messages"][0].content,
         )
 
 

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Test Golden Dataset validators with security testing."""
 
+from __future__ import annotations
+
 import pytest
 import time
 from datetime import datetime, timedelta
@@ -37,7 +39,7 @@ def create_valid_compliance_scenario() -> ComplianceScenario:
         obligation_id="OBL001",
         triggers=["data_collection", "data_storage"],
         expected_outcome=ExpectedOutcome(
-            outcome_code="COMPLIANT", details={"retention_period": "7_years"}
+            outcome_code="COMPLIANT", details={"retention_period": "7_years"},
         ),
         regulation_refs=[RegCitation(framework="GDPR", citation="Article 5")],
         temporal=TemporalValidity(effective_from=datetime.now()),
@@ -66,7 +68,7 @@ def create_valid_evidence_case() -> EvidenceCase:
                     "Must show processing purpose",
                     "Must include timestamps",
                 ],
-            )
+            ),
         ],
         regulation_refs=[RegCitation(framework="GDPR", citation="Article 30")],
         temporal=TemporalValidity(effective_from=datetime.now()),
@@ -170,7 +172,7 @@ class TestDeepValidator:
         validator = DeepValidator()
         scenario = create_valid_compliance_scenario()
         scenario.regulation_refs = [
-            RegCitation(framework="GDPR", citation="Invalid Citation 999")
+            RegCitation(framework="GDPR", citation="Invalid Citation 999"),
         ]
 
         result = validator._validate_regulatory_accuracy(scenario)
@@ -419,7 +421,7 @@ class TestSecurityValidation:
         # Should handle without hanging due to pre-compiled patterns
         assert isinstance(results, list)
         assert any(
-            "ID exceeds maximum allowed length" in str(r.errors) for r in results
+            "ID exceeds maximum allowed length" in str(r.errors) for r in results,
         )
 
     def test_sanitized_error_messages(self):
@@ -492,7 +494,7 @@ class TestSecurityValidation:
 
         # Should detect invalid URL
         regulatory_result = next(
-            (r for r in results if r.layer == "regulatory_accuracy"), None
+            (r for r in results if r.layer == "regulatory_accuracy"), None,
         )
         assert regulatory_result
         assert any("Invalid URL format" in error for error in regulatory_result.errors)

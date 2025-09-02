@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 ComplianceState Pydantic model for LangGraph state management.
 
 This model provides a strongly-typed, validated state structure for

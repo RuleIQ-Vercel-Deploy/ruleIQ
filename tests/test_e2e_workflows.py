@@ -5,7 +5,7 @@ This module tests complete user journeys, error state handling,
 audit workflows, and reporting functionality.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from unittest.mock import patch
 
 import pytest
@@ -20,7 +20,7 @@ class TestCompleteComplianceJourney:
     ):
         """Test complete GDPR compliance journey for a new business"""
         mock_ai_client.generate_content.return_value.text = (
-            "Generated compliance content"
+            "Generated compliance content",
         )
 
         # 1. Business registration and profile creation
@@ -85,7 +85,7 @@ class TestCompleteComplianceJourney:
 
         recommendations = recommendations_response.json()["recommendations"]
         gdpr_recommendation = next(
-            (r for r in recommendations if "GDPR" in r["framework"]["name"]), None
+            (r for r in recommendations if "GDPR" in r["framework"]["name"]), None,
         )
         assert gdpr_recommendation is not None, "GDPR should be recommended"
         assert gdpr_recommendation["priority"] == "High"
@@ -122,7 +122,7 @@ class TestCompleteComplianceJourney:
 
         # 7. Start implementation - complete first few tasks
         plan_details = client.get(
-            f"/api/implementation/plans/{plan_id}", headers=authenticated_headers
+            f"/api/implementation/plans/{plan_id}", headers=authenticated_headers,
         )
         tasks = plan_details.json()["tasks"]
 
@@ -132,8 +132,8 @@ class TestCompleteComplianceJourney:
                 headers=authenticated_headers,
                 json={
                     "status": "completed",
-                    "actual_start": datetime.utcnow().isoformat(),
-                    "actual_end": datetime.utcnow().isoformat(),
+                    "actual_start": datetime.now(timezone.utc).isoformat(),
+                    "actual_end": datetime.now(timezone.utc).isoformat(),
                     "notes": f"Completed task {i + 1}",
                 },
             )
@@ -166,7 +166,7 @@ class TestCompleteComplianceJourney:
 
         # 9. Check readiness assessment
         readiness_response = client.get(
-            "/api/readiness/assessment", headers=authenticated_headers
+            "/api/readiness/assessment", headers=authenticated_headers,
         )
         assert readiness_response.status_code == 200
 
@@ -286,7 +286,7 @@ class TestErrorStateHandling:
 
         # Verify session state is recoverable
         recovery_response = client.get(
-            f"/api/assessments/{session_id}", headers=authenticated_headers
+            f"/api/assessments/{session_id}", headers=authenticated_headers,
         )
         assert recovery_response.status_code == 200
 
@@ -303,7 +303,7 @@ class TestErrorStateHandling:
             {"company_name": None, "industry": None},  # Null values
             {"company_name": "A" * 1000},  # Too long
             {"employee_count": "not_a_number"},  # Wrong type
-            {},  # Empty object
+            {},  # Empty object,
         ]
 
         for invalid_data in invalid_requests:
@@ -337,7 +337,7 @@ class TestErrorStateHandling:
         }
 
         profile_response = client.post(
-            "/api/business-profiles", headers=authenticated_headers, json=business_data
+            "/api/business-profiles", headers=authenticated_headers, json=business_data,
         )
         profile_id = profile_response.json()["id"]
 
@@ -366,7 +366,7 @@ class TestErrorStateHandling:
 
         if 409 in status_codes:  # Conflict detected
             conflict_response = (
-                response_1 if response_1.status_code == 409 else response_2
+                response_1 if response_1.status_code == 409 else response_2,
             )
             conflict_data = conflict_response.json()
             assert "conflict" in conflict_data["error"]["message"].lower()
@@ -377,11 +377,11 @@ class TestErrorStateHandling:
         """Test fallback behavior when external services fail"""
         # Mock AI service failure
         mock_ai_client.generate_content.side_effect = Exception(
-            "AI service unavailable"
+            "AI service unavailable",
         )
 
         frameworks_response = client.get(
-            "/api/frameworks", headers=authenticated_headers
+            "/api/frameworks", headers=authenticated_headers,
         )
         if frameworks_response.status_code == 200:
             frameworks_data = frameworks_response.json()
@@ -412,7 +412,7 @@ class TestErrorStateHandling:
                     policy_data = policy_response.json()
                     assert "content" in policy_data
                     assert (
-                        "template" in policy_data.get("generation_method", "").lower()
+                        "template" in policy_data.get("generation_method", "").lower(),
                     )
 
 
@@ -441,12 +441,12 @@ class TestAuditWorkflows:
         )
         assert profile_response.status_code == 201
         auditable_actions.append(
-            ("create_business_profile", profile_response.json()["id"])
+            ("create_business_profile", profile_response.json()["id"]),
         )
 
         # 2. Generate policy
         frameworks_response = client.get(
-            "/api/frameworks", headers=authenticated_headers
+            "/api/frameworks", headers=authenticated_headers,
         )
         if frameworks_response.status_code == 200:
             frameworks_data = frameworks_response.json()
@@ -581,7 +581,7 @@ class TestAuditWorkflows:
     ):
         """Test preparation of materials for regulatory submissions"""
         mock_ai_client.generate_content.return_value.text = (
-            "Regulatory submission content"
+            "Regulatory submission content",
         )
 
         # Create comprehensive business setup
@@ -698,7 +698,7 @@ class TestBusinessContinuityWorkflows:
             headers=authenticated_headers,
             json={
                 "deadline_type": "gdpr_compliance_review",
-                "due_date": (datetime.utcnow() + timedelta(days=30)).isoformat(),
+                "due_date": (datetime.now(timezone.utc) + timedelta(days=30)).isoformat(),
                 "framework": "GDPR",
                 "priority": "High",
                 "description": "Annual GDPR compliance review",
@@ -708,7 +708,7 @@ class TestBusinessContinuityWorkflows:
         if deadline_response.status_code == 201:
             # Check deadline alerts
             alerts_response = client.get(
-                "/api/compliance/alerts", headers=authenticated_headers
+                "/api/compliance/alerts", headers=authenticated_headers,
             )
 
             if alerts_response.status_code == 200:
@@ -716,7 +716,7 @@ class TestBusinessContinuityWorkflows:
 
                 # Should have upcoming deadline alert
                 deadline_alerts = [
-                    alert for alert in alerts if "deadline" in alert["type"]
+                    alert for alert in alerts if "deadline" in alert["type"],
                 ]
                 assert len(deadline_alerts) > 0, "Should alert about upcoming deadlines"
 
@@ -725,7 +725,7 @@ class TestBusinessContinuityWorkflows:
     ):
         """Test coordination across multiple compliance frameworks"""
         mock_ai_client.generate_content.return_value.text = (
-            "Multi-framework coordination content"
+            "Multi-framework coordination content",
         )
 
         # Business requiring multiple frameworks

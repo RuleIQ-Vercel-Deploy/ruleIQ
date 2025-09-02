@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Integration tests for ComplianceState with LangGraph and PostgreSQL.
 
 These tests verify the state model works within the LangGraph ecosystem.
@@ -71,7 +73,7 @@ def compliance_state_to_dict(state: ComplianceState) -> Dict[str, Any]:
         "memory": (
             state.memory.model_dump()
             if state.memory
-            else {"episodic": [], "semantic": {}}
+            else {"episodic": [], "semantic": {}},
         ),
         "evidence": [e.model_dump() for e in state.evidence],
         "decisions": [d.model_dump() for d in state.decisions],
@@ -79,7 +81,7 @@ def compliance_state_to_dict(state: ComplianceState) -> Dict[str, Any]:
         "workflow_status": (
             state.workflow_status.value
             if hasattr(state.workflow_status, "value")
-            else state.workflow_status
+            else state.workflow_status,
         ),
         "node_execution_times": state.node_execution_times,
         "retry_count": state.retry_count,
@@ -88,12 +90,12 @@ def compliance_state_to_dict(state: ComplianceState) -> Dict[str, Any]:
         "created_at": (
             state.created_at.isoformat()
             if hasattr(state.created_at, "isoformat")
-            else str(state.created_at)
+            else str(state.created_at),
         ),
         "updated_at": (
             state.updated_at.isoformat()
             if state.updated_at and hasattr(state.updated_at, "isoformat")
-            else None
+            else None,
         ),
     }
 
@@ -163,7 +165,7 @@ class TestStateWithLangGraph:
                     "timestamp": datetime.now().isoformat(),
                     "actor": "PolicyAuthor",
                     "action": "generate_policy",
-                }
+                },
             )
             return state
 
@@ -212,7 +214,7 @@ class TestStateWithLangGraph:
                     "type": "document",
                     "content": "test",
                     "timestamp": datetime.now().isoformat(),
-                }
+                },
             )
             return state
 
@@ -226,7 +228,7 @@ class TestStateWithLangGraph:
                     "timestamp": datetime.now().isoformat(),
                     "actor": "PolicyAuthor",
                     "action": "policy_generated",
-                }
+                },
             )
             return state
 
@@ -243,7 +245,7 @@ class TestStateWithLangGraph:
 
         workflow.set_entry_point("check")
         workflow.add_conditional_edges(
-            "check", route_evidence, {"collect": "collect", "generate": "generate"}
+            "check", route_evidence, {"collect": "collect", "generate": "generate"},
         )
         workflow.add_edge("collect", "generate")
         workflow.add_edge("generate", END)
@@ -281,7 +283,7 @@ class TestStateWithLangGraph:
                         "content": "test1",
                         "timestamp": datetime.now().isoformat(),
                         "source": "node1",
-                    }
+                    },
                 ],
                 "node_execution_times": {"node1": 100},
             }
@@ -296,7 +298,7 @@ class TestStateWithLangGraph:
                         "content": "test2",
                         "timestamp": datetime.now().isoformat(),
                         "source": "node2",
-                    }
+                    },
                 ],
                 "node_execution_times": {"node2": 150},
             }
@@ -370,7 +372,7 @@ class TestReducerIntegration:
     def test_decision_merge_reducer(self):
         """Test decision merging with chronological order."""
         existing = [
-            {"id": "dec-001", "timestamp": "2024-01-01T10:00:00", "action": "first"}
+            {"id": "dec-001", "timestamp": "2024-01-01T10:00:00", "action": "first"},
         ]
 
         new = [
@@ -478,7 +480,7 @@ class TestStateWithPostgreSQL:
                     "timestamp": datetime.now().isoformat(),
                     "actor": "System",
                     "action": "checkpoint_test",
-                }
+                },
             )
             return state
 
@@ -583,7 +585,7 @@ class TestComplexWorkflow:
                         "content": "Q4 audit report",
                         "timestamp": datetime.now().isoformat(),
                     },
-                ]
+                ],
             )
             state["workflow_status"] = "evidence_collected"
             return state
@@ -602,7 +604,7 @@ class TestComplexWorkflow:
                             "actor": "PolicyEvaluator",
                             "action": f"evaluated_{evidence['id']}",
                             "evidence_refs": [evidence["id"]],
-                        }
+                        },
                     )
             state["workflow_status"] = "policies_evaluated"
             return state
@@ -620,7 +622,7 @@ class TestComplexWorkflow:
                         "actor": "RecommendationEngine",
                         "action": "recommendations_generated",
                         "confidence": 0.95,
-                    }
+                    },
                 )
             state["workflow_status"] = "completed"
             return state
@@ -638,7 +640,7 @@ class TestComplexWorkflow:
 
         workflow.set_entry_point("collect")
         workflow.add_conditional_edges(
-            "collect", route_after_evidence, {"evaluate": "evaluate", "end": END}
+            "collect", route_after_evidence, {"evaluate": "evaluate", "end": END},
         )
         workflow.add_edge("evaluate", "recommend")
         workflow.add_edge("recommend", END)

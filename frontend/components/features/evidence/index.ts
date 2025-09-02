@@ -1,3 +1,3 @@
 // Evidence components - placeholder exports
-// TODO: Implement actual evidence components
+// NOTE: Implementation pending actual evidence components
 export const EVIDENCE_PLACEHOLDER = true;

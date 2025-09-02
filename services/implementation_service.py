@@ -1,4 +1,6 @@
-from datetime import datetime, timedelta
+from __future__ import annotations
+
+from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, List, Optional
 from uuid import UUID
 
@@ -35,7 +37,7 @@ async def generate_implementation_plan(
 
     # Get compliance framework
     framework_stmt = select(ComplianceFramework).where(
-        ComplianceFramework.id == framework_id
+        ComplianceFramework.id == framework_id,
     )
     framework_result = await db.execute(framework_stmt)
     framework = framework_result.scalars().first()
@@ -45,7 +47,7 @@ async def generate_implementation_plan(
     # Get policy if provided
     if policy_id:
         policy_stmt = select(GeneratedPolicy).where(
-            GeneratedPolicy.id == policy_id, GeneratedPolicy.user_id == user.id
+            GeneratedPolicy.id == policy_id, GeneratedPolicy.user_id == user.id,
         )
         policy_result = await db.execute(policy_stmt)
         policy_result.scalars().first()
@@ -54,7 +56,7 @@ async def generate_implementation_plan(
     plan_data = await generate_plan_with_ai(db, profile, framework.id, user.id)
 
     # Calculate timeline dates
-    start_datetime = datetime.utcnow()
+    start_datetime = datetime.now(timezone.utc)
     end_datetime = start_datetime + timedelta(weeks=timeline_weeks)
     start_date = start_datetime.date()
     end_date = end_datetime.date()
@@ -65,7 +67,7 @@ async def generate_implementation_plan(
         business_profile_id=profile.id,
         framework_id=framework.id,
         title=plan_data.get(
-            "title", f"Implementation Plan for {framework.display_name}"
+            "title", f"Implementation Plan for {framework.display_name}",
         ),
         phases=plan_data.get("phases", []),
         planned_start_date=start_date,
@@ -85,7 +87,7 @@ async def get_implementation_plan(
 ) -> Optional[ImplementationPlan]:
     """Get a specific implementation plan by its ID."""
     stmt = select(ImplementationPlan).where(
-        ImplementationPlan.id == plan_id, ImplementationPlan.user_id == user.id
+        ImplementationPlan.id == plan_id, ImplementationPlan.user_id == user.id,
     )
     result = await db.execute(stmt)
     return result.scalars().first()
@@ -146,13 +148,13 @@ async def get_plan_dashboard(
                 completed_tasks += 1
 
     completion_percentage = (
-        (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0
+        (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0,
     )
 
     # Calculate timeline status
-    days_elapsed = (datetime.utcnow() - plan.created_at).days
+    days_elapsed = (datetime.now(timezone.utc) - plan.created_at).days
     days_remaining = (
-        (plan.planned_end_date - datetime.utcnow()).days if plan.planned_end_date else 0
+        (plan.planned_end_date - datetime.now(timezone.utc)).days if plan.planned_end_date else 0,
     )
 
     return {

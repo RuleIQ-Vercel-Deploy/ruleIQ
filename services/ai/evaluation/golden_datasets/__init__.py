@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Golden dataset utilities."""
 
+from typing import Any, Dict, List, Optional
 from .loaders import (
     GoldenDatasetLoader,
     JSONLLoader,

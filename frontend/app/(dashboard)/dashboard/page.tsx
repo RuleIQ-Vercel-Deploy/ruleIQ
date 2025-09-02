@@ -138,12 +138,12 @@ export default function Dashboard() {
   }, []);
 
   // Default chart data for when API doesn't provide historical data
-  const complianceData = dashboardData?.compliance_trends
+  const _complianceData = dashboardData?.compliance_trends
     ?.slice(-7)
     .map((t: { score: number }) => t.score) || [85, 87, 89, 92, 88, 95, 98];
-  const alertsData = [12, 8, 15, 6, 9, 4, 3];
-  const insightsData = [3, 5, 2, 8, 6, 9, 7];
-  const tasksData = [120, 135, 128, 142, 138, 145, 142];
+  const _alertsData = [12, 8, 15, 6, 9, 4, 3];
+  const _insightsData = [3, 5, 2, 8, 6, 9, 7];
+  const _tasksData = [120, 135, 128, 142, 138, 145, 142];
 
   return (
     <div className="flex flex-1">

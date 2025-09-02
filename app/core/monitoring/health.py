@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Health check implementation with multiple check types.
 """
 
@@ -6,7 +8,7 @@ import asyncio
 import os
 import psutil
 from typing import Any, Dict, List, Optional, Callable, Union
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from enum import Enum
 import aiohttp
 from sqlalchemy import text
@@ -43,7 +45,7 @@ class HealthCheckResult:
         self.message = message
         self.details = details or {}
         self.duration_ms = duration_ms
-        self.timestamp = datetime.utcnow().isoformat()
+        self.timestamp = datetime.now(timezone.utc).isoformat()
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary."""
@@ -313,7 +315,7 @@ class HealthCheckRegistry:
         """Run all registered health checks."""
         # Use cached results if available and fresh
         if use_cache and self._last_results and self._last_check_time:
-            if datetime.utcnow() - self._last_check_time < self._cache_duration:
+            if datetime.now(timezone.utc) - self._last_check_time < self._cache_duration:
                 return self._last_results
 
         # Run checks in parallel
@@ -340,7 +342,7 @@ class HealthCheckRegistry:
 
         # Cache results
         self._last_results = processed_results
-        self._last_check_time = datetime.utcnow()
+        self._last_check_time = datetime.now(timezone.utc)
 
         return processed_results
 
@@ -380,6 +382,6 @@ async def run_health_checks(use_cache: bool = True) -> Dict[str, Any]:
 
     return {
         "status": overall_status,
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "checks": [r.to_dict() for r in results],
     }

@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Pydantic schemas for chat API endpoints.
 """
 
@@ -12,9 +14,7 @@ from pydantic import BaseModel, Field
 class SendMessageRequest(BaseModel):
     """Request schema for sending a chat message."""
 
-    message: str = Field(
-        ..., min_length=1, max_length=2000, description="The user's message"
-    )
+    message: str = Field(..., min_length=1, max_length=2000, description="The user's message")
 
 
 class MessageResponse(BaseModel):
@@ -63,11 +63,9 @@ class ConversationResponse(BaseModel):
 class CreateConversationRequest(BaseModel):
     """Request schema for creating a new conversation."""
 
-    title: Optional[str] = Field(
-        None, max_length=255, description="Optional conversation title"
-    )
+    title: Optional[str] = Field(None, max_length=255, description="Optional conversation title")
     initial_message: Optional[str] = Field(
-        None, max_length=2000, description="Optional initial message"
+        None, max_length=2000, description="Optional initial message",
     )
 
 
@@ -84,7 +82,7 @@ class EvidenceRecommendationRequest(BaseModel):
     """Request schema for getting evidence recommendations."""
 
     framework: Optional[str] = Field(
-        None, description="Specific framework to get recommendations for"
+        None, description="Specific framework to get recommendations for",
     )
 
 
@@ -120,9 +118,7 @@ class ContextAwareRecommendationRequest(BaseModel):
     """Request schema for context-aware recommendations."""
 
     framework: str = Field(..., description="Framework to get recommendations for")
-    context_type: str = Field(
-        default="comprehensive", description="Type of context analysis"
-    )
+    context_type: str = Field(default="comprehensive", description="Type of context analysis")
 
 
 class BusinessContextSummary(BaseModel):
@@ -183,9 +179,7 @@ class WorkflowGenerationRequest(BaseModel):
     """Request schema for workflow generation."""
 
     framework: str = Field(..., description="Framework for workflow generation")
-    control_id: Optional[str] = Field(
-        None, description="Specific control ID (optional)"
-    )
+    control_id: Optional[str] = Field(None, description="Specific control ID (optional)")
     workflow_type: str = Field(default="comprehensive", description="Type of workflow")
 
 
@@ -261,12 +255,8 @@ class PolicyGenerationRequest(BaseModel):
     policy_type: str = Field(..., description="Type of policy to generate")
     tone: str = Field(default="Professional", description="Policy tone")
     detail_level: str = Field(default="Standard", description="Level of detail")
-    include_templates: bool = Field(
-        default=True, description="Include implementation templates"
-    )
-    geographic_scope: str = Field(
-        default="Single location", description="Geographic scope"
-    )
+    include_templates: bool = Field(default=True, description="Include implementation templates")
+    geographic_scope: str = Field(default="Single location", description="Geographic scope")
 
 
 class PolicySubsection(BaseModel):
@@ -371,9 +361,7 @@ class SmartGuidanceRequest(BaseModel):
     """Request schema for smart guidance."""
 
     framework: str = Field(..., description="Framework for guidance")
-    guidance_type: str = Field(
-        default="getting_started", description="Type of guidance needed"
-    )
+    guidance_type: str = Field(default="getting_started", description="Type of guidance needed")
 
 
 class GuidanceCurrentStatus(BaseModel):

@@ -45,11 +45,11 @@ class TestIQComplianceAgent:
                                 "id": "req_1",
                                 "title": "Data Protection",
                                 "risk_level": "HIGH",
-                            }
+                            },
                         ],
-                    }
-                ]
-            }
+                    },
+                ],
+            },
         )
         service.test_connection = AsyncMock()
         service.get_graph_statistics = AsyncMock(return_value={"total_nodes": 100})
@@ -63,7 +63,7 @@ class TestIQComplianceAgent:
         manager.store_knowledge_graph_memory = AsyncMock(return_value="mem_67890")
         manager.retrieve_contextual_memories = AsyncMock()
         manager.consolidate_compliance_knowledge = AsyncMock(
-            return_value={"status": "success"}
+            return_value={"status": "success"},
         )
         return manager
 
@@ -154,7 +154,7 @@ class TestIQComplianceAgent:
                 "gap_id": "gap_1",
                 "requirement": {"title": "Consent Management", "risk_level": "high"},
                 "regulation": {"code": "GDPR"},
-            }
+            },
         ]
         mock_gap_result.metadata = {
             "total_gaps": 1,
@@ -198,7 +198,7 @@ class TestIQComplianceAgent:
                         "domain": {"name": "Data Protection"},
                         "gap_severity_score": 5.0,
                     },
-                ]
+                ],
             },
             compliance_posture={"overall_coverage": 0.6},
             risk_assessment={},
@@ -267,14 +267,14 @@ class TestIQComplianceAgent:
                 "action_id": "action_1",
                 "status": "executed",
                 "result": "success",
-            }
+            },
         )
         iq_agent._create_escalation = AsyncMock(
             return_value={
                 "action_id": "action_2",
                 "status": "escalated",
                 "reason": "Requires manual approval",
-            }
+            },
         )
         iq_agent._store_execution_evidence = AsyncMock()
 
@@ -300,14 +300,14 @@ class TestIQComplianceAgent:
                     {"domain": {"name": "Data Protection"}},
                     {"domain": {"name": "Data Protection"}},
                     {"domain": {"name": "Data Protection"}},
-                    {"domain": {"name": "Data Protection"}},  # 4 gaps in same domain
-                ]
+                    {"domain": {"name": "Data Protection"}},  # 4 gaps in same domain,
+                ],
             },
             compliance_posture={},
             risk_assessment={},
             action_plan=[],
             evidence_collected=[
-                {"action_id": "action_1", "status": "executed", "effectiveness": 0.9}
+                {"action_id": "action_1", "status": "executed", "effectiveness": 0.9},
             ],
             memories_accessed=[],
             patterns_detected=[],
@@ -317,7 +317,7 @@ class TestIQComplianceAgent:
         # Mock enforcement learning query
         mock_enforcement_result = Mock()
         mock_enforcement_result.data = [
-            {"case": "GDPR_violation", "lesson": "implement_consent"}
+            {"case": "GDPR_violation", "lesson": "implement_consent"},
         ]
 
         with patch("services.iq_agent.execute_compliance_query") as mock_query:
@@ -355,14 +355,14 @@ class TestIQComplianceAgent:
             memories_accessed=[],
             patterns_detected=[{"pattern_type": "HIGH_RISK", "confidence": 0.8}],
             messages=[],
-            step_count=10,  # Trigger consolidation
+            step_count=10,  # Trigger consolidation,
         )
 
         # Mock memory retrieval
         mock_memory_result = Mock()
         mock_memory_result.retrieved_memories = [Mock(id="mem_1"), Mock(id="mem_2")]
         mock_memory_manager.retrieve_contextual_memories.return_value = (
-            mock_memory_result
+            mock_memory_result,
         )
 
         result_state = await iq_agent._remember_node(state)
@@ -559,8 +559,8 @@ class TestIQAgentIntegration:
         with patch("services.iq_agent.ChatOpenAI") as mock_llm:
             mock_llm.return_value.ainvoke = AsyncMock(
                 return_value=Mock(
-                    content="Based on the analysis, here are the key GDPR compliance gaps..."
-                )
+                    content="Based on the analysis, here are the key GDPR compliance gaps...",
+                ),
             )
 
             result = await agent.process_query(query)

@@ -9,11 +9,8 @@ import hashlib
 from typing import Dict, List, Any, Optional, Tuple, Set
 from pathlib import Path
 from datetime import datetime, timezone
-from dataclasses import dataclass, field, asdict
-from enum import Enum
+from dataclasses import dataclass, fieldfrom enum import Enum
 import logging
-from contextlib import asynccontextmanager
-from collections import defaultdict
 import traceback
 
 from neo4j import AsyncGraphDatabase, AsyncSession
@@ -30,7 +27,7 @@ from tenacity import (
 
 # Production logging configuration
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -105,7 +102,7 @@ class IngestionMetrics:
             "data_quality_avg": (
                 np.mean(list(self.data_quality_scores.values()))
                 if self.data_quality_scores
-                else 0
+                else 0,
             ),
         }
 
@@ -390,7 +387,7 @@ class Neo4jComplianceIngestion:
                         "item_id": item.get("id"),
                         "error": str(e),
                         "timestamp": datetime.now(timezone.utc).isoformat(),
-                    }
+                    },
                 )
 
         if not validated_batch:
@@ -419,7 +416,7 @@ class Neo4jComplianceIngestion:
                 ELSE [] 
             END |
             MERGE (i:Industry {name: industry})
-            MERGE (r)-[:APPLIES_TO]->(i)
+            MERGE (r)-[:APPLIES_TO]->(i),
         )
         
         // Create jurisdiction relationships
@@ -431,7 +428,7 @@ class Neo4jComplianceIngestion:
                 ELSE [] 
             END |
             MERGE (j:Jurisdiction {name: jurisdiction})
-            MERGE (r)-[:GOVERNED_BY]->(j)
+            MERGE (r)-[:GOVERNED_BY]->(j),
         )
         
         // Create control relationships
@@ -442,13 +439,13 @@ class Neo4jComplianceIngestion:
                 ELSE [] 
             END |
             MERGE (c:Control {name: control})
-            MERGE (r)-[:SUGGESTS_CONTROL]->(c)
+            MERGE (r)-[:SUGGESTS_CONTROL]->(c),
         )
         
         // Create tag relationships
         FOREACH (tag IN item.tags |
             MERGE (t:Tag {name: tag})
-            MERGE (r)-[:TAGGED_WITH]->(t)
+            MERGE (r)-[:TAGGED_WITH]->(t),
         )
         
         RETURN r.id as id, 
@@ -539,7 +536,7 @@ class Neo4jComplianceIngestion:
                     async with session.begin_transaction() as tx:
                         try:
                             success_count = await self._ingest_regulation_batch(
-                                session, batch
+                                session, batch,
                             )
                             await tx.commit()
                             self.metrics.successful_items += success_count
@@ -551,7 +548,7 @@ class Neo4jComplianceIngestion:
                     # Progress logging
                     if (i + self.batch_size) % 500 == 0:
                         logger.info(
-                            f"Progress: {i + self.batch_size}/{len(items)} items processed"
+                            f"Progress: {i + self.batch_size}/{len(items)} items processed",
                         )
 
             # Retry failed items once
@@ -565,7 +562,7 @@ class Neo4jComplianceIngestion:
                     for item in retry_items:
                         try:
                             success = await self._ingest_regulation_batch(
-                                session, [item]
+                                session, [item],
                             )
                             if success:
                                 self.metrics.successful_items += 1
@@ -582,7 +579,7 @@ class Neo4jComplianceIngestion:
             # Write metrics to file for monitoring
             metrics_path = (
                 manifest_path.parent
-                / f"ingestion_metrics_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+                / f"ingestion_metrics_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json",
             )
             with open(metrics_path, "w") as f:
                 json.dump(self.metrics.to_dict(), f, indent=2)
@@ -598,7 +595,7 @@ class Neo4jComplianceIngestion:
                     "error": str(e),
                     "traceback": traceback.format_exc(),
                     "timestamp": datetime.now(timezone.utc).isoformat(),
-                }
+                },
             )
             raise
 
@@ -620,7 +617,7 @@ class Neo4jComplianceIngestion:
                 relationships_data = json.load(f)
 
             regulatory_relationships = relationships_data.get(
-                "regulatory_relationships", {}
+                "regulatory_relationships", {},
             )
 
             # Cypher query for creating relationships
@@ -655,14 +652,14 @@ class Neo4jComplianceIngestion:
                             }
 
                             result = await session.run(
-                                relationship_query, relationships=[rel_data]
+                                relationship_query, relationships=[rel_data],
                             )
                             await result.consume()
                             metrics.relationships_created += 1
 
                         except Exception as e:
                             logger.error(
-                                f"Failed to create relationship {source_id} -> {rel.get('target')}: {e}"
+                                f"Failed to create relationship {source_id} -> {rel.get('target')}: {e}",
                             )
                             metrics.failed_items += 1
 
@@ -823,7 +820,7 @@ class IQComplianceIntegration:
             r.business_triggers.industry = $industry
             OR r.business_triggers.jurisdiction = $jurisdiction
             OR $handles_personal_data = true AND r.id CONTAINS 'gdpr'
-            OR $processes_payments = true AND r.id CONTAINS 'pci'
+            OR $processes_payments = true AND r.id CONTAINS 'pci',
         )
         OPTIONAL MATCH (r)-[:SUGGESTS_CONTROL]->(c:Control)
         OPTIONAL MATCH (r)-[:RELATES_TO]->(related:Regulation)
@@ -845,7 +842,7 @@ class IQComplianceIntegration:
             "industry": business_profile.get("industry", ""),
             "jurisdiction": business_profile.get("jurisdiction", "UK"),
             "handles_personal_data": business_profile.get(
-                "handles_personal_data", False
+                "handles_personal_data", False,
             ),
             "processes_payments": business_profile.get("processes_payments", False),
             "risk_threshold": risk_threshold,
@@ -888,7 +885,7 @@ class IQComplianceIntegration:
 
         return {
             "overlapping_controls": [record["overlap"] for record in overlaps],
-            "deduplication_potential": len(overlaps) / max(len(regulation_ids), 1),
+            "deduplication_potential": len(overlaps) / max(len(regulation_ids), 1)
         }
 
     async def get_enforcement_evidence(

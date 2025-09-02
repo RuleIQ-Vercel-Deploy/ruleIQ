@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
+
 Set up Archon schema in Supabase
 """
 
@@ -12,15 +16,15 @@ SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 # Create Supabase client
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-print("Setting up Archon schema in Supabase...")
-print("Please go to your Supabase dashboard:")
-print(f"https://supabase.com/dashboard/project/wohtxsiayhtvycvkamev/sql/new")
-print()
+logger.info("Setting up Archon schema in Supabase...")
+logger.info("Please go to your Supabase dashboard:")
+logger.info(f"https://supabase.com/dashboard/project/wohtxsiayhtvycvkamev/sql/new")
+logger.info()
 print(
     "Then paste the contents of setup_archon_supabase.sql into the SQL Editor and run it."
 )
-print()
-print("The file is located at: /home/omar/Documents/ruleIQ/setup_archon_supabase.sql")
-print()
-print("After running the SQL, run the import script again:")
-print("python import_archon_to_supabase.py")
+logger.info()
+logger.info("The file is located at: /home/omar/Documents/ruleIQ/setup_archon_supabase.sql")
+logger.info()
+logger.info("After running the SQL, run the import script again:")
+logger.info("python import_archon_to_supabase.py")

@@ -1,91 +1,77 @@
 
--$"Convert to dictionary for logging."str
-"max_relevance_score"str
-"document_sources"str
-"retrieval_time_ms"str
-#"chunks"str
- "frameworks_covered"str
-"total_results"str
-
-
-"strategy"str
-"rerank_time_ms"str
-"avg_relevance_score"str
-"query"str
-"min_relevance_score"strself
-ò ò("Ÿ&
-$
+	"deleted"str
+truebool
+falsebool
 
-ô €(	"#new-object#Bdict0
+2int
+
+0int
+
+
+1int
+ –"
+        Delete an evidence item asynchronously.
+        Returns (success, status) where status is:
+        - 'deleted': Evidence deleted successfully
+        - 'not_found': Evidence doesn't exist
+        - 'unauthorized': Evidence exists but user doesn't have access
+        "str
+"found"strdb
+“ “((user
+“* “(4evidence_id
+“6 “(G"‚#
+!
+
+œ ž(	"#unknown-value#)
+'
+
+œ ž(	item"#unknown-value#.
+,
+
+œ ž(		item"#python-unpack#:0
 .
 
-õ õ(/"#get-field# total_results:"
- 
+œ ž(	status"#python-unpack#:
+,
+*
 
-õ õ(/"	#map-set#:(
+Ÿ Ÿ("
+#binop !=#2!=:Bbool "
+
+Ÿ Ÿ( *
+Ÿ Ÿ(
+"”*
+(
+
+   ( "#unknown-value#Btuple(
 &
 
-ö ö("#get-field# query:"
- 
-
-ö ö(	"	#map-set#:+
-)
-
-÷ ÷(%"#get-field# strategy:(
+   ( "#array-add-last#:(
 &
 
-÷ ÷(+"#get-field# value:"
- 
+   ( "#array-add-last#:
 
-÷ ÷(+"	#map-set#:
-4
-2
+   ( "¨#
+!
 
-ø! ø(7"#get-field# retrieval_time_ms:"
- 
+¢ ¢(6"#unknown-value##
+!
 
-ø ø(7"	#map-set#:1
-/
+¢ ¢(6"#unknown-value##
+!
 
-ù ù(1"#get-field# rerank_time_ms:"
- 
+£ £(1"#unknown-value##
+!
 
-ù ù(1"	#map-set#:6
-4
+£ £(1"#unknown-value#*
+(
 
-ú# ú(;"!#get-field# avg_relevance_score:"
- 
+¤ ¤("#unknown-value#Btuple(
+&
 
-ú ú(;"	#map-set#:6
-4
+¤ ¤("#array-add-last#:(
+&
 
-û# û(;"!#get-field# min_relevance_score:"
- 
+¤ ¤("#array-add-last#:
 
-û û(;"	#map-set#:6
-4
-
-ü# ü(;"!#get-field# max_relevance_score:"
- 
-
-ü ü(;"	#map-set#:-
-+
-
-ý  ý(H"?python-unknown?:Blist"
- 
-
-ý ý(H"	#map-set#:5
-3
-
-þ" þ(9!" #get-field# frameworks_covered:"
- 
-
-þ þ(9""	#map-set#: !-
-+
-
-ÿ ÿ(@$"?python-unknown?:Blist"
- 
-
-ÿ ÿ(@%"	#map-set#:#$
-
-ô €(	*@/home/omar/Documents/ruleIQ/langgraph_agent/agents/rag_system.py
+¤ ¤(*8/home/omar/Documents/ruleIQ/services/evidence_service.py

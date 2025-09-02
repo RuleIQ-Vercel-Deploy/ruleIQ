@@ -21,7 +21,7 @@ class TestFieldValidator:
     def test_validate_string_success(self):
         """Test successful string validation."""
         result = FieldValidator.validate_string(
-            "Hello World", min_length=1, max_length=20
+            "Hello World", min_length=1, max_length=20,
         )
         assert result == "Hello World"
 
@@ -79,7 +79,7 @@ class TestFieldValidator:
     def test_validate_enum_success(self):
         """Test enum validation."""
         result = FieldValidator.validate_enum(
-            "pending", ["pending", "approved", "rejected"]
+            "pending", ["pending", "approved", "rejected"],
         )
         assert result == "pending"
 
@@ -116,7 +116,7 @@ class TestSecurityValidator:
             "This is a normal description",
             "Evidence for ISO 27001 compliance",
             "Document contains policy information",
-            "Version 1.2.3 updated on 2024-01-01",
+            "Version 1.2.3 updated on 2024-01-01"
         ]
 
         for safe_input in safe_inputs:
@@ -312,7 +312,7 @@ class TestAttackScenarios:
         attack_data = {
             "evidence_name": "Normal Evidence",
             "is_admin": True,  # Try to inject admin field
-            "user_role": "admin",  # Try to inject role field
+            "user_role": "admin",  # Try to inject role field,
         }
 
         with pytest.raises(ValidationError, match="not allowed"):

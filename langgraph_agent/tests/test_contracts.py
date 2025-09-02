@@ -5,7 +5,7 @@ Validates schemas, interfaces, and data contracts across all components.
 
 import pytest
 from uuid import uuid4, UUID
-from datetime import datetime
+from datetime import datetime, timezone
 
 from pydantic import ValidationError
 
@@ -36,7 +36,7 @@ class TestCoreModelContracts:
         """Test GraphMessage schema validation."""
         # Valid message
         valid_msg = GraphMessage(
-            role="user", content="Test message", timestamp=datetime.utcnow()
+            role="user", content="Test message", timestamp=datetime.now(timezone.utc)
         )
         assert valid_msg.role == "user"
         assert valid_msg.content == "Test message"
@@ -53,7 +53,7 @@ class TestCoreModelContracts:
             GraphMessage(
                 role="invalid_role",  # Should be "user" or "assistant"
                 content="Test",
-                timestamp=datetime.utcnow(),
+                timestamp=datetime.now(timezone.utc),
             )
 
         # Test required fields
@@ -255,7 +255,7 @@ class TestStateContracts:
 
         # Add new message
         new_message = GraphMessage(
-            role="assistant", content="Response", timestamp=datetime.utcnow()
+            role="assistant", content="Response", timestamp=datetime.now(timezone.utc)
         )
         state["messages"].append(new_message)
 
@@ -565,7 +565,7 @@ class TestBackwardCompatibility:
         """Test that message format remains compatible."""
         # Create message using current format
         msg = GraphMessage(
-            role="user", content="Test message", timestamp=datetime.utcnow()
+            role="user", content="Test message", timestamp=datetime.now(timezone.utc)
         )
 
         # Should be able to access required fields

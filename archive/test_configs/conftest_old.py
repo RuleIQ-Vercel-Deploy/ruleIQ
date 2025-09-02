@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Pytest configuration and shared fixtures for ComplianceGPT tests.
 Now uses hybrid approach to support both sync (TestClient) and async tests.
 """
@@ -27,7 +29,7 @@ logging.getLogger("passlib.handlers.bcrypt").setLevel(logging.ERROR)
 # Environment variables are now set in conftest_hybrid.py
 
 import sys
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from uuid import uuid4
 
@@ -160,7 +162,7 @@ def db_session():
     session = TestSessionLocal()
     try:
         yield session
-    except Exception:
+    except (ValueError, TypeError):
         session.rollback()
         raise
     finally:
@@ -316,8 +318,8 @@ def sample_evidence_item(
         status="active",
         file_path="/path/to/sample/policy.pdf",  # Placeholder
         automation_source="manual",  # Correct field name
-        created_at=datetime.utcnow(),
-        updated_at=datetime.utcnow(),
+        created_at=datetime.now(timezone.utc),
+        updated_at=datetime.now(timezone.utc),
     )
     db_session.add(evidence)
     db_session.commit()
@@ -337,8 +339,8 @@ def sample_policy_document(db_session, sample_business_profile):
         content="This is a sample acceptable use policy content...",
         version="1.0",
         status="draft",
-        created_at=datetime.utcnow(),
-        updated_at=datetime.utcnow(),
+        created_at=datetime.now(timezone.utc),
+        updated_at=datetime.now(timezone.utc),
     )
     db_session.add(policy)
     db_session.commit()

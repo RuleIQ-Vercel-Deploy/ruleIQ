@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Custom middleware for the FastAPI application.
 """
 
@@ -17,9 +19,7 @@ class RequestIDMiddleware(BaseHTTPMiddleware):
     Middleware to add a unique request ID to each incoming request and log the response time.
     """
 
-    async def dispatch(
-        self, request: Request, call_next: RequestResponseEndpoint
-    ) -> Response:
+    async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         # Generate a unique request ID
         request_id = str(uuid.uuid4())
 

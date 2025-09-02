@@ -1,16 +1,16 @@
 
 Japi.middleware.rbac_middleware.RBACRouteProtector.require_framework_accessI
-=/home/omar/Documents/ruleIQ/api/middleware/rbac_middleware.pyˆ ˆ( "2*,
+=/home/omar/Documents/ruleIQ/api/middleware/rbac_middleware.pyÚ Ú( "2*,
 2
-‰ ’("
+Ü å("
 
-˜ ˜(
+ê ê(
 
 	decorator:
 
-ˆ! ˆ(2
+Ú! Ú(2
 framework_id:
 
-ˆ4 ˆ(N
+Ú4 Ú(L
 access_levelB53
 1api.middleware.rbac_middleware.RBACRouteProtectorH

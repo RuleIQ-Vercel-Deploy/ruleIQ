@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+
 Test script for A/B Testing Framework with Statistical Analysis
 
 Tests the rigorous statistical testing capabilities including t-tests,

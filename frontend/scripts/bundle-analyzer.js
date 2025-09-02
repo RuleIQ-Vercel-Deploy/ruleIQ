@@ -78,7 +78,7 @@ class BundleAnalyzer {
 
       // Exit with appropriate code
       process.exit(this.results.violations.length > 0 ? 1 : 0);
-    } catch (error) {
+    } catch {} {
       console.error(chalk.red('❌ Bundle analysis failed:'), error.message);
       process.exit(1);
     }
@@ -143,7 +143,7 @@ class BundleAnalyzer {
       try {
         const gzipCommand = `gzip -c "${filePath}" | wc -c`;
         gzipSize = parseInt(execSync(gzipCommand, { encoding: 'utf8' }).trim());
-      } catch (error) {
+      } catch {} {
         // Gzip not available or failed
       }
 
@@ -214,7 +214,7 @@ class BundleAnalyzer {
 
   checkThresholds() {
     const { totals, chunks } = this.results;
-    const violations = [];
+    const _violations = [];
 
     // Check total thresholds
     if (totals.totalJSKB > THRESHOLDS.TOTAL_JS) {

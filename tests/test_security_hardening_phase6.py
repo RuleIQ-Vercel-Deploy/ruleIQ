@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Test Suite for Phase 6: Security Hardening with TDD
 Comprehensive security tests for authentication, authorization, encryption, audit logging, and security headers
 """
@@ -6,7 +8,7 @@ Comprehensive security tests for authentication, authorization, encryption, audi
 import pytest
 import asyncio
 from unittest.mock import Mock, AsyncMock, patch, MagicMock
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Any, Optional
 import json
 import hashlib
@@ -50,8 +52,8 @@ class TestEnhancedAuthentication:
             "is_verified": True,
             "mfa_enabled": False,
             "failed_login_attempts": 0,
-            "last_login": datetime.utcnow().isoformat(),
-            "created_at": datetime.utcnow().isoformat(),
+            "last_login": datetime.now(timezone.utc).isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
         }
 
     @pytest.mark.asyncio
@@ -145,17 +147,17 @@ class TestEnhancedAuthentication:
             def record_failed_attempt(self, user_id: str):
                 if user_id not in self.attempts:
                     self.attempts[user_id] = []
-                self.attempts[user_id].append(datetime.utcnow())
+                self.attempts[user_id].append(datetime.now(timezone.utc))
 
                 # Clean old attempts (older than lockout duration)
-                cutoff = datetime.utcnow() - self.lockout_duration
+                cutoff = datetime.now(timezone.utc) - self.lockout_duration
                 self.attempts[user_id] = [
-                    attempt for attempt in self.attempts[user_id] if attempt > cutoff
+                    attempt for attempt in self.attempts[user_id] if attempt > cutoff,
                 ]
 
                 # Check if should lock
                 if len(self.attempts[user_id]) >= self.max_attempts:
-                    self.lockouts[user_id] = datetime.utcnow()
+                    self.lockouts[user_id] = datetime.now(timezone.utc)
                     return True
                 return False
 
@@ -164,7 +166,7 @@ class TestEnhancedAuthentication:
                     return False
 
                 lockout_time = self.lockouts[user_id]
-                if datetime.utcnow() - lockout_time > self.lockout_duration:
+                if datetime.now(timezone.utc) - lockout_time > self.lockout_duration:
                     # Unlock after duration
                     del self.lockouts[user_id]
                     if user_id in self.attempts:
@@ -214,7 +216,7 @@ class TestEnhancedAuthentication:
 
                 # Check concurrent session limit
                 user_sessions = [
-                    s for s in self.sessions.values() if s["user_id"] == user_id
+                    s for s in self.sessions.values() if s["user_id"] == user_id,
                 ]
                 if len(user_sessions) >= self.max_concurrent:
                     # Remove oldest session
@@ -226,12 +228,12 @@ class TestEnhancedAuthentication:
 
                 # Create new session
                 session_id = hashlib.sha256(
-                    f"{user_id}{datetime.utcnow()}".encode()
+                    f"{user_id}{datetime.now(timezone.utc)}".encode()
                 ).hexdigest()
                 self.sessions[session_id] = {
                     "user_id": user_id,
-                    "created_at": datetime.utcnow(),
-                    "last_activity": datetime.utcnow(),
+                    "created_at": datetime.now(timezone.utc),
+                    "last_activity": datetime.now(timezone.utc),
                 }
                 return session_id
 
@@ -240,12 +242,12 @@ class TestEnhancedAuthentication:
                     return False
 
                 session = self.sessions[session_id]
-                if datetime.utcnow() - session["last_activity"] > self.session_timeout:
+                if datetime.now(timezone.utc) - session["last_activity"] > self.session_timeout:
                     del self.sessions[session_id]
                     return False
 
                 # Update last activity
-                session["last_activity"] = datetime.utcnow()
+                session["last_activity"] = datetime.now(timezone.utc)
                 return True
 
             def invalidate_session(self, session_id: str):
@@ -257,7 +259,7 @@ class TestEnhancedAuthentication:
                 for sid, session in self.sessions.items():
                     if session["user_id"] == user_id:
                         if (
-                            datetime.utcnow() - session["last_activity"]
+                            datetime.now(timezone.utc) - session["last_activity"]
                             > self.session_timeout
                         ):
                             expired.append(sid)
@@ -520,7 +522,7 @@ class TestDataEncryption:
                             decrypted[field] = self.cipher.decrypt(
                                 encrypted_value
                             ).decode()
-                        except:
+                        except (KeyError, IndexError):
                             pass  # Field might not be encrypted
 
                 # Handle nested data
@@ -534,7 +536,7 @@ class TestDataEncryption:
                                 decrypted["personal_data"][field] = self.cipher.decrypt(
                                     encrypted_value
                                 ).decode()
-                            except:
+                            except (KeyError, IndexError):
                                 pass
 
                 return decrypted
@@ -561,7 +563,7 @@ class TestDataEncryption:
         assert encrypted_data["api_key"] != sample_sensitive_data["api_key"]
         assert (
             encrypted_data["personal_data"]["phone"]
-            != sample_sensitive_data["personal_data"]["phone"]
+            != sample_sensitive_data["personal_data"]["phone"],
         )
 
         # Test decryption
@@ -570,7 +572,7 @@ class TestDataEncryption:
         assert decrypted_data["credit_card"] == sample_sensitive_data["credit_card"]
         assert (
             decrypted_data["personal_data"]["phone"]
-            == sample_sensitive_data["personal_data"]["phone"]
+            == sample_sensitive_data["personal_data"]["phone"],
         )
 
         # Test encryption key rotation
@@ -628,7 +630,7 @@ class TestAuditLogging:
         """Sample audit event structure"""
         return {
             "event_id": str(uuid.uuid4()),
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "user_id": "user123",
             "action": "UPDATE_POLICY",
             "resource": "/api/v1/policies/456",
@@ -664,9 +666,9 @@ class TestAuditLogging:
                 """Log an audit event"""
                 event = {
                     "event_id": hashlib.sha256(
-                        f"{datetime.utcnow()}{user_id}{action}".encode()
+                        f"{datetime.now(timezone.utc)}{user_id}{action}".encode()
                     ).hexdigest()[:16],
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     "event_type": event_type,
                     "user_id": user_id,
                     "action": action,
@@ -746,7 +748,7 @@ class TestAuditLogging:
 
         # Test permission changes
         perm_event = logger.log_permission_change(
-            user_id="user456", admin_id="admin001", old_role="user", new_role="manager"
+            user_id="user456", admin_id="admin001", old_role="user", new_role="manager",
         )
         assert perm_event["action"] == "PERMISSION_CHANGE"
         assert perm_event["metadata"]["old_role"] == "user"
@@ -860,7 +862,7 @@ class TestSecurityHeaders:
                                 "header": header,
                                 "expected": expected_value,
                                 "actual": response_headers[header],
-                            }
+                            },
                         )
 
                 return missing, incorrect
@@ -893,7 +895,7 @@ class TestSecurityHeaders:
         for expected_header in security_headers_expected:
             assert expected_header in headers
             assert (
-                headers[expected_header] == security_headers_expected[expected_header]
+                headers[expected_header] == security_headers_expected[expected_header],
             )
 
         # Test header validation
@@ -968,7 +970,7 @@ class TestVulnerabilityPrevention:
                     r"(--|\#|\/\*|\*\/)",  # SQL comments
                     r"(\bOR\b.*=.*\bOR\b|\bAND\b.*=.*\bAND\b)",  # OR/AND conditions
                     r"(;.*\b(SELECT|UPDATE|DELETE|INSERT|DROP)\b)",  # Multiple statements
-                    r"(\bunion\b|\bselect\b.*\bfrom\b)",  # UNION attacks
+                    r"(\bunion\b|\bselect\b.*\bfrom\b)",  # UNION attacks,
                 ]
 
             def is_safe_input(self, user_input: str) -> bool:
@@ -1010,7 +1012,7 @@ class TestVulnerabilityPrevention:
                 ]
                 for keyword in dangerous_keywords:
                     sanitized = re.sub(
-                        rf"\b{keyword}\b", "", sanitized, flags=re.IGNORECASE
+                        rf"\b{keyword}\b", "", sanitized, flags=re.IGNORECASE,
                     )
 
                 # Escape special characters
@@ -1032,7 +1034,7 @@ class TestVulnerabilityPrevention:
                 placeholder_count = query_template.count("?")
                 if placeholder_count != len(params):
                     raise ValueError(
-                        f"Parameter count mismatch: expected {placeholder_count}, got {len(params)}"
+                        f"Parameter count mismatch: expected {placeholder_count}, got {len(params)}",
                     )
 
                 # Return template and params separately (would be executed by DB driver)
@@ -1072,10 +1074,10 @@ class TestVulnerabilityPrevention:
         params = ["admin", "password123"]
 
         query_template, query_params = sanitizer.build_parameterized_query(
-            query, params
+            query, params,
         )
         assert (
-            query_template == "SELECT * FROM users WHERE username = ? AND password = ?"
+            query_template == "SELECT * FROM users WHERE username = ? AND password = ?",
         )
         assert query_params == params
 

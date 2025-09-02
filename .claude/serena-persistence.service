@@ -1,0 +1,29 @@
+[Unit]
+Description=Serena MCP Persistence Service for ruleIQ
+After=network.target
+
+[Service]
+Type=simple
+User=omar
+WorkingDirectory=/home/omar/Documents/ruleIQ
+Environment="PYTHONPATH=/home/omar/Documents/ruleIQ"
+Environment="SERENA_PROJECT=ruleIQ"
+Environment="SERENA_ACTIVE=true"
+
+# Main execution
+ExecStart=/usr/bin/python3 /home/omar/Documents/ruleIQ/.claude/serena-daemon.py
+
+# Restart policy - always restart
+Restart=always
+RestartSec=5
+
+# Resource limits
+MemoryLimit=512M
+CPUQuota=10%
+
+# Logging
+StandardOutput=append:/home/omar/Documents/ruleIQ/.claude/serena-daemon.log
+StandardError=append:/home/omar/Documents/ruleIQ/.claude/serena-daemon-error.log
+
+[Install]
+WantedBy=multi-user.target

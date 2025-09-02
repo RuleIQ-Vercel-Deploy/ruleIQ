@@ -2,14 +2,12 @@
 Security Headers Middleware for comprehensive HTTP header security
 """
 
-from typing import Optional, Dict, List, Any, Callable
+from typing import Optional, Dict, List, Any
 from fastapi import Request, Response
 from starlette.datastructures import MutableHeaders
 from fastapi.responses import JSONResponse
-import hashlib
 import secrets
-from datetime import datetime
-import json
+from datetime import datetime, timezone
 
 
 class SecurityHeadersMiddleware:
@@ -325,7 +323,7 @@ class CSPViolationHandler:
 
             # Create violation record
             violation = {
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "document_uri": csp_report.get("document-uri"),
                 "blocked_uri": csp_report.get("blocked-uri"),
                 "violated_directive": csp_report.get("violated-directive"),

@@ -12,12 +12,7 @@ import { Slider } from '../ui/slider';
 import {
   Loader2,
   ArrowRight,
-  ArrowLeft,
-  CheckCircle,
-  AlertCircle,
-  Brain,
-  Clock,
-} from 'lucide-react';
+  } from 'lucide-react';
 import { freemiumService } from '../../lib/api/freemium.service';
 
 // Mock question structure for now

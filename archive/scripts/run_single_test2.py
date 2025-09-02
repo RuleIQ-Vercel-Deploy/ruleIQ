@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 """Run individual test methods directly"""
+import logging
+logger = logging.getLogger(__name__)
+
 
 import asyncio
 import sys
@@ -28,14 +31,14 @@ async def main():
         "max_retries": 3,
     }
 
-    print("Testing: pending -> running state transition")
+    logger.info("Testing: pending -> running state transition")
     try:
         await test_instance.test_state_transition_pending_to_running(
             notification_node, base_state
         )
-        print("✅ Test passed: pending -> running transition")
+        logger.info("✅ Test passed: pending -> running transition")
     except Exception as e:
-        print(f"❌ Test failed: {e}")
+        logger.info(f"❌ Test failed: {e}")
         import traceback
 
         traceback.print_exc()

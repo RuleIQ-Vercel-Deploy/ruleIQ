@@ -4,6 +4,7 @@ Test script to verify Neon database connection
 Ensures we're connecting to Neon cloud and not local PostgreSQL
 """
 
+from typing import Any, Dict, List, Optional
 import os
 import sys
 import asyncio
@@ -40,7 +41,7 @@ async def test_neon_connection():
     is_local = (
         parsed.hostname in ["localhost", "127.0.0.1", "db", "postgres"]
         if parsed.hostname
-        else False
+        else False,
     )
 
     if is_local:
@@ -69,7 +70,7 @@ async def test_neon_connection():
             # For Neon, we need SSL
             connect_args = {
                 "ssl": True,
-                "server_settings": {"jit": "off"},  # Recommended for Neon
+                "server_settings": {"jit": "off"},  # Recommended for Neon,
             }
         else:
             clean_url = database_url
@@ -102,8 +103,8 @@ async def test_neon_connection():
                     """
                 SELECT pg_database_size(current_database()) as size,
                        current_database() as db_name
-            """
-                )
+            """,
+                ),
             )
             row = result.fetchone()
             size_mb = row.size / (1024 * 1024)
@@ -118,8 +119,8 @@ async def test_neon_connection():
                 FROM pg_tables 
                 WHERE schemaname = 'public'
                 ORDER BY tablename
-            """
-                )
+            """,
+                ),
             )
             tables = [row[0] for row in result.fetchall()]
             print(f"\n📊 Tables in database ({len(tables)} total):")
@@ -134,23 +135,23 @@ async def test_neon_connection():
                     """
                 SELECT EXISTS (
                     SELECT FROM information_schema.tables 
-                    WHERE table_name = 'alembic_version'
+                    WHERE table_name = 'alembic_version',
                 )
-            """
-                )
+            """,
+                ),
             )
             has_migrations = result.scalar()
 
             if has_migrations:
                 result = await conn.execute(
-                    text("SELECT version_num FROM alembic_version")
+                    text("SELECT version_num FROM alembic_version"),
                 )
                 migration_version = result.scalar()
                 print(f"\n🔄 Database migrations:")
                 print(f"   Current version: {migration_version}")
             else:
                 print(
-                    f"\n⚠️  No alembic_version table found - migrations may not be initialized"
+                    f"\n⚠️  No alembic_version table found - migrations may not be initialized",
                 )
 
         await engine.dispose()
@@ -165,18 +166,18 @@ async def test_neon_connection():
 
         if "connection refused" in str(e).lower():
             print(
-                "\n💡 This error suggests the DATABASE_URL is pointing to a local database that's not running."
+                "\n💡 This error suggests the DATABASE_URL is pointing to a local database that's not running.",
             )
             print(
-                "   Please ensure DATABASE_URL in .env.local points to your Neon cloud database."
+                "   Please ensure DATABASE_URL in .env.local points to your Neon cloud database.",
             )
         elif "authentication failed" in str(e).lower():
             print(
-                "\n💡 Authentication failed. Please check your Neon database credentials."
+                "\n💡 Authentication failed. Please check your Neon database credentials.",
             )
         elif "neon.tenant_id" in str(e).lower():
             print(
-                "\n⚠️  The database connected but doesn't appear to be a Neon database."
+                "\n⚠️  The database connected but doesn't appear to be a Neon database.",
             )
             print("   The 'neon.tenant_id' setting is not available.")
 
@@ -222,7 +223,7 @@ async def test_connection_pooling():
             async def query_task(task_id):
                 async with engine.begin() as conn:
                     result = await conn.execute(
-                        text(f"SELECT {task_id} as id, NOW() as time")
+                        text(f"SELECT {task_id} as id, NOW() as time"),
                     )
                     return result.fetchone()
 

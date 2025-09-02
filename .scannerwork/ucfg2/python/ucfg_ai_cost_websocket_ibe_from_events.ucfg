@@ -1,18 +1,18 @@
 
 Gapi.routers.ai_cost_websocket.ConnectionManager.unsubscribe_from_eventsH
-</home/omar/Documents/ruleIQ/api/routers/ai_cost_websocket.pyà à(%"2*•
+</home/omar/Documents/ruleIQ/api/routers/ai_cost_websocket.py   (%"2*•
 2
-ã ã(?„
+¢ ¢(?„
 
 
-ä ä(3
+£ £(3
 %5"__id*g
 
 __unknown_file (K*I1
 /api.routers.ai_cost_websocket.ConnectionManager"
 active_connectionsus
 
-ä ä(3
+£ £(3
 %6*"
 
 __unknown_file (
@@ -26,20 +26,20 @@ Gapi.routers.ai_cost_websocket.ConnectionManager.unsubscribe_from_eventsH
 5*<
 3
 ai_cost_websocket.py"
-ê ê(
+¨ ¨(
 implicit return*
 5
-æ è(„
+¥ ¦()„
 
 
-æ æ('
+¥ ¥('
 %1"__id*g
 
 __unknown_file (K*I1
 /api.routers.ai_cost_websocket.ConnectionManager"
 active_connections~|
 
-æ æ(6
+¥ ¥(6
 %2"__mapGet*"
 
 __unknown_file (
@@ -50,7 +50,7 @@ Gapi.routers.ai_cost_websocket.ConnectionManager.unsubscribe_from_eventsH
 
 connection_id2__getitem__~|
 
-æ æ(G
+¥ ¦(
 %3"__mapGet*"
 
 __unknown_file (
@@ -60,7 +60,7 @@ Gapi.routers.ai_cost_websocket.ConnectionManager.unsubscribe_from_eventsH
 __unknown_file (
 subscriptions2__getitem__mk
 
-æ è(
+¥ ¦()
 %4*"
 
 __unknown_file (
@@ -74,9 +74,9 @@ event_type2discard*
 3
 5:
 
-á á( 
+ ,  (>
 connection_id:
 
-á" á(8
+ @ ¡(
 event_typesB31
 /api.routers.ai_cost_websocket.ConnectionManagerH

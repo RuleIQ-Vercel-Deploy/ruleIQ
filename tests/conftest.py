@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Pytest configuration and fixtures for the test suite.
 """
 
@@ -13,6 +15,10 @@ from langgraph.checkpoint.postgres import PostgresSaver
 from contextlib import contextmanager
 from sqlalchemy import create_engine, event
 from sqlalchemy.orm import sessionmaker, Session
+
+# Import and activate the service proxy BEFORE any tests run
+from tests.mock_service_proxy import setup_test_services
+setup_test_services()
 
 
 @pytest.fixture(scope="session")
@@ -29,6 +35,57 @@ def mock_llm():
     mock = MagicMock()
     mock.invoke.return_value = MagicMock(content="Mock response")
     mock.ainvoke.return_value = MagicMock(content="Mock async response")
+    return mock
+
+@pytest.fixture
+def mock_ai_client():
+    """Provide a mock AI client for testing without API calls."""
+    from utils.test_helpers import create_smart_mock_ai_client
+    return create_smart_mock_ai_client()
+
+
+@pytest.fixture
+def mock_openai_client():
+    """Provide a mock OpenAI client for testing."""
+    from utils.test_helpers import create_smart_mock_openai
+    return create_smart_mock_openai()
+
+
+@pytest.fixture
+def mock_anthropic_client():
+    """Provide a mock Anthropic client for testing."""
+    mock = MagicMock()
+    mock.messages.create = MagicMock()
+    mock.messages.create.return_value = MagicMock(
+        content=[MagicMock(text="Mock Anthropic response")],
+    )
+    return mock
+
+
+@pytest.fixture
+def mock_redis_client():
+    """Provide a mock Redis client for testing."""
+    from utils.test_helpers import get_redis_config
+    mock = MagicMock()
+    mock.get.return_value = None
+    mock.set.return_value = True
+    mock.delete.return_value = 1
+    mock.exists.return_value = False
+    mock.expire.return_value = True
+    mock.ttl.return_value = -1
+    mock.ping.return_value = True
+    # Use environment-aware config
+    config = get_redis_config()
+    mock._config = config
+    return mock
+
+
+@pytest.fixture
+def mock_neo4j_session():
+    """Provide a mock Neo4j session for testing."""
+    mock = MagicMock()
+    mock.run.return_value = MagicMock(data=MagicMock(return_value=[]))
+    mock.close = MagicMock()
     return mock
 
 
@@ -67,7 +124,7 @@ def postgres_checkpointer(postgres_test_url):
         conn = psycopg.connect(
             postgres_test_url,
             autocommit=True,  # Required for PostgresSaver
-            row_factory=dict_row,  # Required for PostgresSaver
+            row_factory=dict_row,  # Required for PostgresSaver,
         )
 
         # Create checkpointer
@@ -126,7 +183,7 @@ def db_session():
             sqlalchemy_url = sqlalchemy_url.replace("+asyncpg", "+psycopg2")
         elif "postgresql://" in sqlalchemy_url and "+" not in sqlalchemy_url:
             sqlalchemy_url = sqlalchemy_url.replace(
-                "postgresql://", "postgresql+psycopg2://"
+                "postgresql://", "postgresql+psycopg2://",
             )
 
         # Remove SSL parameters that cause issues with psycopg2
@@ -184,6 +241,7 @@ def temporary_env_var(key: str, value: str):
     try:
         yield
     finally:
+        session.close()
         if old_value is None:
             os.environ.pop(key, None)
         else:
@@ -203,7 +261,7 @@ def clean_test_db(postgres_connection):
             DROP TABLE IF EXISTS checkpoints CASCADE;
             DROP TABLE IF EXISTS checkpoint_blobs CASCADE;
             DROP TABLE IF EXISTS checkpoint_metadata CASCADE;
-        """
+        """,
         )
         postgres_connection.commit()
 
@@ -216,7 +274,7 @@ def clean_test_db(postgres_connection):
             DROP TABLE IF EXISTS checkpoints CASCADE;
             DROP TABLE IF EXISTS checkpoint_blobs CASCADE;
             DROP TABLE IF EXISTS checkpoint_metadata CASCADE;
-        """
+        """,
         )
         postgres_connection.commit()
 
@@ -227,7 +285,7 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "integration: mark test as an integration test")
     config.addinivalue_line("markers", "slow: mark test as slow running")
     config.addinivalue_line(
-        "markers", "requires_db: mark test as requiring database connection"
+        "markers", "requires_db: mark test as requiring database connection",
     )
 
 

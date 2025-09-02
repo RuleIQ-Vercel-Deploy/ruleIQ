@@ -51,7 +51,7 @@ class TypeScriptFixer {
     // TODO: Replace with proper logging
     try {
       // Run TypeScript compiler to get issues
-      const output = execSync('pnpm typecheck', {
+      const _output = execSync('pnpm typecheck', {
         encoding: 'utf8',
         stdio: 'pipe',
       });
@@ -262,7 +262,7 @@ class TypeScriptFixer {
 
     if (this.fixedFiles.size > 0) {
       // TODO: Replace with proper logging
-      for (const file of this.fixedFiles) {
+      for (const _file of this.fixedFiles) {
         // TODO: Replace with proper logging
       }
     }

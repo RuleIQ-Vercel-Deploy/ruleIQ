@@ -5,7 +5,7 @@
  * This script fixes common TypeScript errors automatically
  * to improve type safety and prepare for production.
  */
-class TypeScriptErrorFixer {
+class _TypeScriptErrorFixer {
   constructor(projectRoot) {
     this.errors = [];
     this.projectRoot = projectRoot;
@@ -36,7 +36,7 @@ class TypeScriptErrorFixer {
    */
   fixUnusedVariables(filePath, content) {
     // Fix: 'variable' is declared but its value is never read
-    const patterns = [
+    const _patterns = [
       // Function parameters
       /(\w+): ([^,)]+)(?=\s*[,)])/g,
       // Variable declarations

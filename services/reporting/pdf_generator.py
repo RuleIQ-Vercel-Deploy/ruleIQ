@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 PDF generation service using ReportLab for ComplianceGPT
 """
 
@@ -38,7 +40,7 @@ class PDFGenerator:
             "danger": colors.HexColor("#e74c3c"),  # Red
             "light_gray": colors.HexColor("#ecf0f1"),  # Light gray
             "medium_gray": colors.HexColor("#7f8c8d"),  # Medium gray
-            "dark_gray": colors.HexColor("#2c3e50"),  # Dark gray
+            "dark_gray": colors.HexColor("#2c3e50"),  # Dark gray,
         }
 
     def _setup_styles(self):
@@ -55,7 +57,7 @@ class PDFGenerator:
                 spaceAfter=20,
                 alignment=TA_CENTER,
                 fontName="Helvetica-Bold",
-            )
+            ),
         )
 
         styles.add(
@@ -67,7 +69,7 @@ class PDFGenerator:
                 spaceAfter=30,
                 alignment=TA_CENTER,
                 fontName="Helvetica",
-            )
+            ),
         )
 
         # Section headers
@@ -84,7 +86,7 @@ class PDFGenerator:
                 borderColor=self.colors["primary"],
                 borderPadding=4,
                 backColor=self.colors["light_gray"],
-            )
+            ),
         )
 
         styles.add(
@@ -96,7 +98,7 @@ class PDFGenerator:
                 spaceAfter=8,
                 spaceBefore=12,
                 fontName="Helvetica-Bold",
-            )
+            ),
         )
 
         # Metrics and values
@@ -109,7 +111,7 @@ class PDFGenerator:
                 alignment=TA_CENTER,
                 fontName="Helvetica-Bold",
                 spaceAfter=4,
-            )
+            ),
         )
 
         styles.add(
@@ -121,7 +123,7 @@ class PDFGenerator:
                 alignment=TA_CENTER,
                 fontName="Helvetica",
                 spaceAfter=16,
-            )
+            ),
         )
 
         # Status indicators
@@ -133,7 +135,7 @@ class PDFGenerator:
                 textColor=self.colors["accent"],
                 fontName="Helvetica-Bold",
                 alignment=TA_CENTER,
-            )
+            ),
         )
 
         styles.add(
@@ -144,7 +146,7 @@ class PDFGenerator:
                 textColor=colors.HexColor("#27ae60"),
                 fontName="Helvetica-Bold",
                 alignment=TA_CENTER,
-            )
+            ),
         )
 
         styles.add(
@@ -155,7 +157,7 @@ class PDFGenerator:
                 textColor=self.colors["warning"],
                 fontName="Helvetica-Bold",
                 alignment=TA_CENTER,
-            )
+            ),
         )
 
         styles.add(
@@ -166,7 +168,7 @@ class PDFGenerator:
                 textColor=self.colors["danger"],
                 fontName="Helvetica-Bold",
                 alignment=TA_CENTER,
-            )
+            ),
         )
 
         # Content styles
@@ -179,7 +181,7 @@ class PDFGenerator:
                 alignment=TA_JUSTIFY,
                 spaceAfter=8,
                 leading=14,
-            )
+            ),
         )
 
         styles.add(
@@ -192,7 +194,7 @@ class PDFGenerator:
                 bulletIndent=10,
                 spaceAfter=6,
                 leading=13,
-            )
+            ),
         )
 
         return styles
@@ -233,7 +235,7 @@ class PDFGenerator:
                 Paragraph(
                     f"Report type '{report_type}' is not yet implemented.",
                     self.styles["ReportBodyText"],
-                )
+                ),
             )
 
         # Build document
@@ -255,13 +257,13 @@ class PDFGenerator:
         title_text = (
             report_data.get("report_type", "compliance_report")
             .replace("_", " ")
-            .title()
+            .title(),
         )
         company_name = report_data.get("business_profile", {}).get(
-            "name", "Unknown Company"
+            "name", "Unknown Company",
         )
         generated_date = datetime.fromisoformat(report_data["generated_at"]).strftime(
-            "%B %d, %Y at %I:%M %p"
+            "%B %d, %Y at %I:%M %p",
         )
 
         return [
@@ -280,8 +282,15 @@ class PDFGenerator:
 
         business_profile = report_data.get("business_profile", {})
         overview_text = f"""
-        This executive summary provides a high-level overview of compliance status for {business_profile.get("name", "your organization")},
-        a {business_profile.get("industry", "technology")} company with {business_profile.get("employee_count", "unknown")} employees
+        This executive summary provides a high-level overview of compliance status for {business_profile.get(
+            "name",
+            "your organization"
+        )},
+        a {business_profile.get(
+            "industry",
+            "technology")} company with {business_profile.get("employee_count",
+            "unknown"
+        )} employees
         based in {business_profile.get("country", "the UK")}.
         """
         story.append(Paragraph(overview_text, self.styles["ReportBodyText"]))
@@ -289,7 +298,7 @@ class PDFGenerator:
 
         # Key metrics section
         story.append(
-            Paragraph("Key Performance Indicators", self.styles["SectionHeader"])
+            Paragraph("Key Performance Indicators", self.styles["SectionHeader"]),
         )
 
         key_metrics = report_data.get("key_metrics", {})
@@ -316,7 +325,7 @@ class PDFGenerator:
         summary = report_data.get("summary", {})
         if summary:
             story.append(
-                Paragraph("Compliance Framework Status", self.styles["SectionHeader"])
+                Paragraph("Compliance Framework Status", self.styles["SectionHeader"]),
             )
 
             framework_data = [["Framework", "Score", "Status", "Gaps", "Evidence %"]]
@@ -329,7 +338,7 @@ class PDFGenerator:
                         Paragraph(data.get("status", "Unknown"), status_style),
                         str(data.get("gaps_count", 0)),
                         f"{data.get('evidence_completion', 0):.1f}%",
-                    ]
+                    ],
                 )
 
             framework_table = Table(
@@ -353,8 +362,8 @@ class PDFGenerator:
                             (-1, -1),
                             [colors.white, self.colors["light_gray"]],
                         ),
-                    ]
-                )
+                    ],
+                ),
             )
             story.append(framework_table)
 
@@ -364,7 +373,7 @@ class PDFGenerator:
         recommendations = report_data.get("recommendations", [])
         if recommendations:
             story.append(
-                Paragraph("Priority Recommendations", self.styles["SectionHeader"])
+                Paragraph("Priority Recommendations", self.styles["SectionHeader"]),
             )
 
             for i, rec in enumerate(recommendations[:5], 1):
@@ -403,19 +412,19 @@ class PDFGenerator:
         if gaps:
             story.append(
                 Paragraph(
-                    "Identified Gaps by Framework", self.styles["SubsectionHeader"]
-                )
+                    "Identified Gaps by Framework", self.styles["SubsectionHeader"],
+                ),
             )
 
             gap_data = [
-                ["Framework", "Category", "Gap Description", "Severity", "Effort"]
+                ["Framework", "Category", "Gap Description", "Severity", "Effort"],
             ]
 
             for framework, categories in gaps.items():
                 for category, gap_list in categories.items():
                     for gap in gap_list:
                         severity_color = self._get_severity_color(
-                            gap.get("severity", "medium")
+                            gap.get("severity", "medium"),
                         )
                         gap_data.append(
                             [
@@ -435,7 +444,7 @@ class PDFGenerator:
                                     ),
                                 ),
                                 gap.get("remediation_effort", "Unknown"),
-                            ]
+                            ],
                         )
 
             if len(gap_data) > 1:
@@ -467,8 +476,8 @@ class PDFGenerator:
                                 (-1, -1),
                                 [colors.white, self.colors["light_gray"]],
                             ),
-                        ]
-                    )
+                        ],
+                    ),
                 )
                 story.append(gap_table)
 
@@ -479,8 +488,8 @@ class PDFGenerator:
         if remediation_plan:
             story.append(
                 Paragraph(
-                    "Recommended Remediation Plan", self.styles["SubsectionHeader"]
-                )
+                    "Recommended Remediation Plan", self.styles["SubsectionHeader"],
+                ),
             )
 
             current_phase = None
@@ -505,7 +514,7 @@ class PDFGenerator:
         story = []
 
         story.append(
-            Paragraph("Evidence Collection Report", self.styles["SectionHeader"])
+            Paragraph("Evidence Collection Report", self.styles["SectionHeader"]),
         )
 
         # Summary by framework
@@ -515,11 +524,11 @@ class PDFGenerator:
                 Paragraph(
                     "Evidence Collection Status by Framework",
                     self.styles["SubsectionHeader"],
-                )
+                ),
             )
 
             evidence_data = [
-                ["Framework", "Total Items", "Completion %", "Automation Opportunities"]
+                ["Framework", "Total Items", "Completion %", "Automation Opportunities"],
             ]
             for framework, data in evidence_summary.items():
                 evidence_data.append(
@@ -528,11 +537,11 @@ class PDFGenerator:
                         str(data.get("total_items", 0)),
                         f"{data.get('completion_percentage', 0):.1f}%",
                         str(data.get("automation_opportunities", 0)),
-                    ]
+                    ],
                 )
 
             evidence_table = Table(
-                evidence_data, colWidths=[1.5 * inch, 1 * inch, 1.2 * inch, 1.8 * inch]
+                evidence_data, colWidths=[1.5 * inch, 1 * inch, 1.2 * inch, 1.8 * inch],
             )
             evidence_table.setStyle(
                 TableStyle(
@@ -551,8 +560,8 @@ class PDFGenerator:
                             (-1, -1),
                             [colors.white, self.colors["light_gray"]],
                         ),
-                    ]
-                )
+                    ],
+                ),
             )
             story.append(evidence_table)
 
@@ -563,8 +572,8 @@ class PDFGenerator:
         if automation_opportunities:
             story.append(
                 Paragraph(
-                    "Priority Automation Opportunities", self.styles["SubsectionHeader"]
-                )
+                    "Priority Automation Opportunities", self.styles["SubsectionHeader"],
+                ),
             )
 
             for opp in automation_opportunities[:10]:  # Show top 10
@@ -583,14 +592,14 @@ class PDFGenerator:
         story = []
 
         story.append(
-            Paragraph("Audit Readiness Assessment", self.styles["SectionHeader"])
+            Paragraph("Audit Readiness Assessment", self.styles["SectionHeader"]),
         )
 
         # Readiness scores
         readiness_scores = report_data.get("readiness_scores", {})
         if readiness_scores:
             story.append(
-                Paragraph("Framework Readiness Scores", self.styles["SubsectionHeader"])
+                Paragraph("Framework Readiness Scores", self.styles["SubsectionHeader"]),
             )
 
             readiness_data = [
@@ -600,7 +609,7 @@ class PDFGenerator:
                     "Evidence %",
                     "Policy %",
                     "Gaps Remaining",
-                ]
+                ],
             ]
             for framework, scores in readiness_scores.items():
                 readiness_data.append(
@@ -610,7 +619,7 @@ class PDFGenerator:
                         f"{scores.get('evidence_completion', 0):.1f}%",
                         f"{scores.get('policy_completion', 0):.1f}%",
                         str(scores.get("gaps_remaining", 0)),
-                    ]
+                    ],
                 )
 
             readiness_table = Table(
@@ -634,8 +643,8 @@ class PDFGenerator:
                             (-1, -1),
                             [colors.white, self.colors["light_gray"]],
                         ),
-                    ]
-                )
+                    ],
+                ),
             )
             story.append(readiness_table)
 
@@ -648,7 +657,7 @@ class PDFGenerator:
                 Paragraph(
                     "Critical Items Requiring Immediate Attention",
                     self.styles["SubsectionHeader"],
-                )
+                ),
             )
 
             for item in critical_items[:8]:  # Show top 8 critical items
@@ -668,7 +677,7 @@ class PDFGenerator:
         story = []
 
         story.append(
-            Paragraph("Compliance Status Overview", self.styles["SectionHeader"])
+            Paragraph("Compliance Status Overview", self.styles["SectionHeader"]),
         )
 
         # Overall metrics
@@ -686,7 +695,7 @@ class PDFGenerator:
         framework_status = report_data.get("framework_status", {})
         if framework_status:
             story.append(
-                Paragraph("Framework-Specific Status", self.styles["SubsectionHeader"])
+                Paragraph("Framework-Specific Status", self.styles["SubsectionHeader"]),
             )
 
             status_data = [["Framework", "Score", "Status", "Last Assessed", "Gaps"]]
@@ -699,7 +708,7 @@ class PDFGenerator:
                         Paragraph(status.get("status", "Unknown"), status_style),
                         status.get("last_assessed", "Never"),
                         str(status.get("gaps", 0)),
-                    ]
+                    ],
                 )
 
             status_table = Table(
@@ -723,8 +732,8 @@ class PDFGenerator:
                             (-1, -1),
                             [colors.white, self.colors["light_gray"]],
                         ),
-                    ]
-                )
+                    ],
+                ),
             )
             story.append(status_table)
 
@@ -762,14 +771,14 @@ class PDFGenerator:
         canvas.setFont("Helvetica-Bold", 8)
         canvas.setFillColor(self.colors["medium_gray"])
         canvas.drawString(
-            doc.leftMargin, doc.height + doc.topMargin - 30, "ComplianceGPT Report"
+            doc.leftMargin, doc.height + doc.topMargin - 30, "ComplianceGPT Report",
         )
 
         # Footer
         canvas.setFont("Helvetica", 8)
         page_num_text = f"Page {doc.page}"
         canvas.drawRightString(
-            doc.width + doc.leftMargin, doc.bottomMargin - 20, page_num_text
+            doc.width + doc.leftMargin, doc.bottomMargin - 20, page_num_text,
         )
 
         # Footer line

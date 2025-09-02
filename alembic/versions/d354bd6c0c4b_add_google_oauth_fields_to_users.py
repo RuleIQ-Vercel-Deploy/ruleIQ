@@ -1,5 +1,7 @@
 """add_google_oauth_fields_to_users
 
+from __future__ import annotations
+
 Revision ID: d354bd6c0c4b
 Revises: 6df4d1d557f2
 Create Date: 2025-07-30 02:28:58.546510

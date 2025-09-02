@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Reporting nodes - migrated from Celery reporting_tasks.
 Implements report generation, distribution, and cleanup functionality.
 """

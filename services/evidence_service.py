@@ -1,4 +1,6 @@
-from datetime import datetime
+from __future__ import annotations
+
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional, Union
 from uuid import UUID
 
@@ -78,7 +80,7 @@ class EvidenceService:
             "status": evidence_item.status,
             "created_at": evidence_item.created_at,
             "updated_at": evidence_item.updated_at,
-            "evidence_type": evidence_item.evidence_type,  # Add the missing field
+            "evidence_type": evidence_item.evidence_type,  # Add the missing field,
         }
 
     @staticmethod
@@ -107,8 +109,8 @@ class EvidenceService:
             automation_source=evidence_data.get("source", "manual_upload"),
             description=evidence_data.get("description", ""),
             status="pending_review",
-            created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
+            updated_at=datetime.now(timezone.utc),
         )
 
         db.add(evidence)
@@ -192,10 +194,10 @@ class EvidenceService:
     ) -> List[EvidenceItem]:
         """Generate a comprehensive evidence checklist for a compliance framework asynchronously."""
         existing_items_stmt = select(EvidenceItem).where(
-            EvidenceItem.user_id == user.id, EvidenceItem.framework_id == framework_id
+            EvidenceItem.user_id == user.id, EvidenceItem.framework_id == framework_id,
         )
         existing_items_res = await EvidenceService._execute_query(
-            db, existing_items_stmt
+            db, existing_items_stmt,
         )
         existing_items = existing_items_res.scalars().all()
         if existing_items:
@@ -208,7 +210,7 @@ class EvidenceService:
             raise ValueError("Business profile not found")
 
         framework_stmt = select(ComplianceFramework).where(
-            ComplianceFramework.id == framework_id
+            ComplianceFramework.id == framework_id,
         )
         framework_res = await EvidenceService._execute_query(db, framework_stmt)
         framework = framework_res.scalars().first()
@@ -218,7 +220,7 @@ class EvidenceService:
         policy = None
         if policy_id:
             policy_stmt = select(GeneratedPolicy).where(
-                GeneratedPolicy.id == policy_id, GeneratedPolicy.user_id == user.id
+                GeneratedPolicy.id == policy_id, GeneratedPolicy.user_id == user.id,
             )
             policy_res = await EvidenceService._execute_query(db, policy_stmt)
             policy = policy_res.scalars().first()
@@ -226,7 +228,7 @@ class EvidenceService:
         prompt_details = (
             f"Business Profile: {profile.description}. "
             f"Compliance Framework: {framework.name} ({framework.description}). "
-            f"Key Controls: {', '.join([c.name for c in framework.controls[:5]])}."
+            f"Key Controls: {', '.join([c.name for c in framework.controls[:5]])}.",
         )
         if policy:
             prompt_details += f" Relevant Policy: {policy.title}."
@@ -267,7 +269,7 @@ class EvidenceService:
         item.file_path = file_path
         item.file_type = file_name.split(".")[-1] if "." in file_name else None
         item.status = "collected"
-        item.updated_at = datetime.utcnow()
+        item.updated_at = datetime.now(timezone.utc)
 
         await EvidenceService._commit_session(db)
         await EvidenceService._refresh_object(db, item)
@@ -285,7 +287,7 @@ class EvidenceService:
                 joinedload(EvidenceItem.business_profile),
                 joinedload(EvidenceItem.framework),
             )
-            .where(EvidenceItem.id == evidence_id, EvidenceItem.user_id == user_id)
+            .where(EvidenceItem.id == evidence_id, EvidenceItem.user_id == user_id),
         )
         result = await EvidenceService._execute_query(db, stmt)
         return result.scalars().first()
@@ -311,7 +313,7 @@ class EvidenceService:
                 joinedload(EvidenceItem.business_profile),
                 joinedload(EvidenceItem.framework),
             )
-            .where(EvidenceItem.id == evidence_id, EvidenceItem.user_id == user_id)
+            .where(EvidenceItem.id == evidence_id, EvidenceItem.user_id == user_id),
         )
         result = await EvidenceService._execute_query(db, stmt)
         evidence = result.scalars().first()
@@ -337,7 +339,7 @@ class EvidenceService:
         item.status = status
         if notes:
             item.collection_notes = notes
-        item.updated_at = datetime.utcnow()
+        item.updated_at = datetime.now(timezone.utc)
 
         await EvidenceService._commit_session(db)
         await EvidenceService._refresh_object(db, item)
@@ -370,7 +372,7 @@ class EvidenceService:
             return None, f"validation_error: {str(e)}"
 
         item, status = await EvidenceService.get_evidence_item_with_auth_check(
-            db, evidence_id, user.id
+            db, evidence_id, user.id,
         )
         if status != "found":
             return None, status
@@ -390,7 +392,7 @@ class EvidenceService:
                 setattr(item, field, value)
 
         # Always update the timestamp
-        item.updated_at = datetime.utcnow()
+        item.updated_at = datetime.now(timezone.utc)
 
         await EvidenceService._commit_session(db)
         await EvidenceService._refresh_object(db, item)
@@ -408,7 +410,7 @@ class EvidenceService:
         - 'unauthorized': Evidence exists but user doesn't have access
         """
         item, status = await EvidenceService.get_evidence_item_with_auth_check(
-            db, evidence_id, user.id
+            db, evidence_id, user.id,
         )
         if status != "found":
             return False, status
@@ -439,7 +441,7 @@ class EvidenceService:
 
         total_items = len(items)
         completion_percentage = (
-            status_counts["approved"] / total_items * 100 if total_items > 0 else 0
+            status_counts["approved"] / total_items * 100 if total_items > 0 else 0,
         )
 
         return {
@@ -489,7 +491,7 @@ class EvidenceService:
         for evidence_id in evidence_ids:
             try:
                 item = await EvidenceService.update_evidence_status(
-                    db, user, evidence_id, status, notes
+                    db, user, evidence_id, status, notes,
                 )
                 if item:
                     updated_items.append(item)
@@ -512,7 +514,7 @@ class EvidenceService:
             .where(
                 EvidenceItem.user_id == user.id,
                 EvidenceItem.framework_id == framework_id,
-            )
+            ),
         )
         result = await EvidenceService._execute_query(db, stmt)
         return result.scalars().all()
@@ -533,7 +535,7 @@ class EvidenceService:
                 joinedload(EvidenceItem.business_profile),
                 joinedload(EvidenceItem.framework),
             )
-            .where(EvidenceItem.user_id == user.id)
+            .where(EvidenceItem.user_id == user.id),
         )
 
         if framework_id:
@@ -567,7 +569,7 @@ class EvidenceService:
                 joinedload(EvidenceItem.business_profile),
                 joinedload(EvidenceItem.framework),
             )
-            .where(EvidenceItem.user_id == user.id)
+            .where(EvidenceItem.user_id == user.id),
         )
 
         # Apply filters
@@ -603,7 +605,7 @@ class EvidenceService:
         from sqlalchemy import func
 
         count_stmt = select(func.count(EvidenceItem.id)).where(
-            EvidenceItem.user_id == user.id
+            EvidenceItem.user_id == user.id,
         )
         if framework_id:
             count_stmt = count_stmt.where(EvidenceItem.framework_id == framework_id)
@@ -633,7 +635,7 @@ class EvidenceService:
         # Try to get from cache first
         cache = await get_cache_manager()
         cached_dashboard = await cache.get_evidence_dashboard(
-            str(user.id), str(framework_id)
+            str(user.id), str(framework_id),
         )
         if cached_dashboard:
             return cached_dashboard
@@ -643,7 +645,7 @@ class EvidenceService:
             dashboard_data = {"message": "No evidence items found for this framework."}
             # Cache empty result for shorter time
             await cache.set_evidence_dashboard(
-                str(user.id), str(framework_id), dashboard_data, ttl=60
+                str(user.id), str(framework_id), dashboard_data, ttl=60,
             )
             return dashboard_data
 
@@ -660,7 +662,7 @@ class EvidenceService:
 
         total_items = len(items)
         completion_percentage = (
-            status_counts["approved"] / total_items * 100 if total_items > 0 else 0
+            status_counts["approved"] / total_items * 100 if total_items > 0 else 0,
         )
 
         dashboard_data = {
@@ -682,7 +684,7 @@ class EvidenceService:
 
         # Cache the dashboard data for 5 minutes
         await cache.set_evidence_dashboard(
-            str(user.id), str(framework_id), dashboard_data, ttl=300
+            str(user.id), str(framework_id), dashboard_data, ttl=300,
         )
 
         return dashboard_data
@@ -728,7 +730,7 @@ class EvidenceService:
             "by_status": by_status,
             "by_type": by_type,
             "by_framework": by_framework,
-            "average_quality_score": 85.0,  # Placeholder
+            "average_quality_score": 85.0,  # Placeholder,
         }
 
         # Cache the results for 10 minutes

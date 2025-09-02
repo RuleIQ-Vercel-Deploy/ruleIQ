@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 State fixtures for LangGraph testing.
 
 Provides factory functions and builders for creating test states.
@@ -87,7 +89,7 @@ class StateBuilder:
                 "output": output,
                 "success": success,
                 "timestamp": datetime.now(timezone.utc).isoformat(),
-            }
+            },
         )
         return self
 
@@ -121,20 +123,34 @@ class StateBuilder:
                 "id": checkpoint_id,
                 "timestamp": datetime.now(timezone.utc).isoformat(),
                 "data": data,
-            }
+            },
         )
         return self
 
     def build(self) -> EnhancedComplianceState:
         """Build the state object."""
+        from uuid import uuid4
+        
+        # Default parameters for backward compatibility
+        session_id = str(uuid4())
+        company_id = uuid4() if isinstance(self.company_id, str) else self.company_id
+        initial_message = "Test initialization"
+        
+        return self.build_with_params(session_id, company_id, initial_message)
+    
+    def build_with_params(
+        self, session_id: str, company_id: Any, initial_message: str
+    ) -> EnhancedComplianceState:
+        """Build the state object with specific parameters."""
         # Start with enhanced initial state
-        state = create_enhanced_initial_state(self.company_id)
+        state = create_enhanced_initial_state(session_id, company_id, initial_message)
 
         # Update with builder values
         state["workflow_status"] = self.workflow_status
         state["current_node"] = self.current_node
-        state["messages"] = self.messages
-        state["compliance_data"] = self.compliance_data
+        if self.messages:  # Only replace if we have custom messages
+            state["messages"] = self.messages
+        state["compliance_data"].update(self.compliance_data)
         state["tool_outputs"] = self.tool_outputs
         state["errors"] = self.errors
         state["context"] = self.context
@@ -158,11 +174,18 @@ def create_test_state(
     Returns:
         Configured test state
     """
+    from uuid import uuid4
+    
     builder = StateBuilder()
+    
+    # Create with proper arguments for enhanced initial state
+    session_id = str(uuid4())
+    company_id = uuid4()
+    initial_message = "Test initialization"
 
     if scenario == TestScenario.INITIAL:
         builder.with_status(WorkflowStatus.PENDING).with_node("start").add_message(
-            "system", "Workflow initialized"
+            "system", "Workflow initialized",
         )
 
     elif scenario == TestScenario.IN_PROGRESS:
@@ -171,7 +194,7 @@ def create_test_state(
         ).add_message("system", "Processing compliance data").add_compliance_data(
             "framework", "SOC2"
         ).add_tool_output(
-            "data_collector", {"records": 100}
+            "data_collector", {"records": 100},
         )
 
     elif scenario == TestScenario.ERROR_STATE:
@@ -183,14 +206,14 @@ def create_test_state(
         builder.with_status(WorkflowStatus.COMPLETED).with_node(
             "end"
         ).add_compliance_data("assessment_complete", True).add_compliance_data(
-            "compliance_score", 0.95
+            "compliance_score", 0.95,
         )
 
     elif scenario == TestScenario.REVIEW_NEEDED:
         builder.with_status(WorkflowStatus.REVIEW_REQUIRED).with_node(
             "human_review"
         ).add_compliance_data("requires_human_input", True).with_context(
-            review_reason="Ambiguous compliance requirement"
+            review_reason="Ambiguous compliance requirement",
         )
 
     elif scenario == TestScenario.RETRY_REQUIRED:
@@ -203,7 +226,8 @@ def create_test_state(
         if hasattr(builder, key):
             setattr(builder, key, value)
 
-    return builder.build()
+    # Build with proper parameters
+    return builder.build_with_params(session_id, company_id, initial_message)
 
 
 def create_batch_states(
@@ -259,7 +283,7 @@ def assert_state_transition(
     # Ensure state has progressed
     assert (
         final_state["metadata"]["last_updated"]
-        >= initial_state["metadata"]["last_updated"]
+        >= initial_state["metadata"]["last_updated"],
     )
 
     # Check for state consistency
@@ -333,7 +357,7 @@ def create_compliance_context(
         "size": "Medium",
         "risk_level": "Medium",
         "metadata": {
-            "created_at": datetime.utcnow().isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
             "source": "test_fixture",
         },
     }

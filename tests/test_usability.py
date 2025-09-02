@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Usability Testing Framework for ComplianceGPT
 
 This module tests user experience, interface usability, and workflow
@@ -35,7 +37,7 @@ class TestUserOnboardingFlow:
         """Test that business profile creation provides guidance"""
         # Test profile creation with help text and validation
         response = client.get(
-            "/api/business-profiles/create-wizard", headers=authenticated_headers
+            "/api/business-profiles/create-wizard", headers=authenticated_headers,
         )
 
         if response.status_code == 200:
@@ -63,7 +65,7 @@ class TestUserOnboardingFlow:
 
         # Get questions
         questions_response = client.get(
-            f"/api/assessments/{session_id}/questions", headers=authenticated_headers
+            f"/api/assessments/{session_id}/questions", headers=authenticated_headers,
         )
 
         if questions_response.status_code == 200:
@@ -135,7 +137,7 @@ class TestNavigationAndWorkflow:
         session_id = session_response.json()["id"]
 
         progress_response = client.get(
-            f"/api/assessments/{session_id}/progress", headers=authenticated_headers
+            f"/api/assessments/{session_id}/progress", headers=authenticated_headers,
         )
 
         if progress_response.status_code == 200:
@@ -158,7 +160,7 @@ class TestNavigationAndWorkflow:
 
         # Test policy generation feedback
         frameworks_response = client.get(
-            "/api/frameworks", headers=authenticated_headers
+            "/api/frameworks", headers=authenticated_headers,
         )
         if frameworks_response.status_code == 200:
             frameworks = frameworks_response.json()
@@ -181,7 +183,7 @@ class TestNavigationAndWorkflow:
                     # Verify next steps guidance
                     assert (
                         "next_steps" in policy_data
-                        or "recommended_actions" in policy_data
+                        or "recommended_actions" in policy_data,
                     )
 
 
@@ -210,7 +212,7 @@ class TestContentReadabilityAndClarity:
         """
 
         frameworks_response = client.get(
-            "/api/frameworks", headers=authenticated_headers
+            "/api/frameworks", headers=authenticated_headers,
         )
         if frameworks_response.status_code == 200:
             frameworks = frameworks_response.json()
@@ -273,7 +275,7 @@ class TestContentReadabilityAndClarity:
         invalid_profile = {
             "company_name": "",  # Invalid
             "industry": "x",  # Too short
-            "employee_count": -1,  # Invalid
+            "employee_count": -1,  # Invalid,
         }
 
         response = client.post(
@@ -322,7 +324,7 @@ class TestContentReadabilityAndClarity:
         # Basic readability checks
         sentences = content.split(".")
         avg_sentence_length = (
-            sum(len(s.split()) for s in sentences) / len(sentences) if sentences else 0
+            sum(len(s.split()) for s in sentences) / len(sentences) if sentences else 0,
         )
 
         # Sentences shouldn't be too long
@@ -353,7 +355,7 @@ class TestContentReadabilityAndClarity:
                             "is",
                             "stands for",
                             "(",
-                            "also known as",
+                            "also known as"
                         ]
                     )
                     # Note: Not asserting this as it depends on context
@@ -388,7 +390,7 @@ class TestAccessibilityAndInclusion:
                 ):
                     # This is likely a list endpoint
                     list_key = next(
-                        (key for key in response_data if key.endswith("s")), None
+                        (key for key in response_data if key.endswith("s")), None,
                     )
                     if list_key:
                         assert isinstance(response_data[list_key], list)
@@ -466,7 +468,7 @@ class TestUserGuidanceAndHelp:
         """Test that contextual help is available throughout the application"""
         # Test help endpoint existence
         help_response = client.get(
-            "/api/help/getting-started", headers=authenticated_headers
+            "/api/help/getting-started", headers=authenticated_headers,
         )
 
         # Help system should be available (even if content is basic) or return appropriate status
@@ -493,7 +495,7 @@ class TestUserGuidanceAndHelp:
 
         # Check progress tracking
         progress_response = client.get(
-            "/api/compliance/progress", headers=authenticated_headers
+            "/api/compliance/progress", headers=authenticated_headers,
         )
 
         if progress_response.status_code == 200:
@@ -542,7 +544,7 @@ class TestUserGuidanceAndHelp:
     def test_complexity_progressive_disclosure(self, client, authenticated_headers):
         """Test that complex information is progressively disclosed"""
         frameworks_response = client.get(
-            "/api/frameworks", headers=authenticated_headers
+            "/api/frameworks", headers=authenticated_headers,
         )
 
         if frameworks_response.status_code == 200:
@@ -564,7 +566,7 @@ class TestUserGuidanceAndHelp:
 
                 # Detailed view should have more information
                 detail_response = client.get(
-                    f"/api/frameworks/{framework_id}", headers=authenticated_headers
+                    f"/api/frameworks/{framework_id}", headers=authenticated_headers,
                 )
 
                 if detail_response.status_code == 200:
@@ -614,7 +616,7 @@ class TestUserWorkflowEfficiency:
     def test_quick_actions_availability(self, client, authenticated_headers):
         """Test availability of quick actions for common tasks"""
         quick_actions_response = client.get(
-            "/api/quick-actions", headers=authenticated_headers
+            "/api/quick-actions", headers=authenticated_headers,
         )
 
         if quick_actions_response.status_code == 200:
@@ -631,7 +633,7 @@ class TestUserWorkflowEfficiency:
 
             if "actions" in quick_actions:
                 available_actions = [
-                    action["id"] for action in quick_actions["actions"]
+                    action["id"] for action in quick_actions["actions"],
                 ]
                 matching_actions = sum(
                     1 for action in expected_actions if action in available_actions
@@ -667,7 +669,7 @@ class TestUserWorkflowEfficiency:
 
             # Verify session can be resumed
             resume_response = client.get(
-                f"/api/assessments/{session_id}", headers=authenticated_headers
+                f"/api/assessments/{session_id}", headers=authenticated_headers,
             )
 
             if resume_response.status_code == 200:

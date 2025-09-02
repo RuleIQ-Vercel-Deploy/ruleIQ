@@ -11,7 +11,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
@@ -40,7 +40,7 @@ export default function ReportsPage() {
   });
 
   const downloadReportMutation = useDownloadReport();
-  const generateReportMutation = useGenerateReport();
+  const _generateReportMutation = useGenerateReport();
 
   const reports = reportsData?.items || [];
 

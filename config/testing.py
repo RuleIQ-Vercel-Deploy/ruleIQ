@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Testing Configuration
 Settings for test environment
 """
@@ -32,7 +34,7 @@ class TestingConfig(BaseConfig):
 
     # Database - Allow environment override with test default
     DATABASE_URL: str = Field(
-        default="postgresql://localhost/ruleiq_test", env="DATABASE_URL"
+        default="postgresql://localhost/ruleiq_test", env="DATABASE_URL",
     )
     DB_POOL_SIZE: int = 1
     DB_MAX_OVERFLOW: int = 0
@@ -65,10 +67,10 @@ class TestingConfig(BaseConfig):
     # AI Services - Mock defaults for testing, but allow override
     OPENAI_API_KEY: Optional[str] = Field(default="test-api-key", env="OPENAI_API_KEY")
     GOOGLE_API_KEY: Optional[str] = Field(
-        default="test-google-key", env="GOOGLE_API_KEY"
+        default="test-google-key", env="GOOGLE_API_KEY",
     )
     ANTHROPIC_API_KEY: Optional[str] = Field(
-        default="test-anthropic-key", env="ANTHROPIC_API_KEY"
+        default="test-anthropic-key", env="ANTHROPIC_API_KEY",
     )
     USE_AI_MOCKS: bool = True  # Use mocked AI responses
 

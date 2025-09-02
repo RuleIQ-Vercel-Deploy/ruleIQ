@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Redis client for API key management
 """
 

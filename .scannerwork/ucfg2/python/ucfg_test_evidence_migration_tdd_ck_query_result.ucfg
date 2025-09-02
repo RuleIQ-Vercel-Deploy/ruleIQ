@@ -1,54 +1,0 @@
-
-étests.test_evidence_migration_tdd.TestPerformanceAndOptimization.test_caching_reduces_database_calls.get_evidence_with_cache.mock_query_resultL
-@/home/omar/Documents/ruleIQ/tests/test_evidence_migration_tdd.pyÓ Ó('"1*ƒ
-1
-Ô Ô(M
-
-Ô Ô(M
-%1"dictî
-ë
-
-Ô Ô()
-%2"__mapSet*"
-
-__unknown_file (
-
-%1*"
-
-__unknown_file (
-id*+
-
-__unknown_file (
-
-evidence_idZ
-X
-
-Ô3 Ô(L
-%3"__concat*
-
-Ô5 Ô(>
-	Evidence *
-
-Ô? Ô(J
-
-evidence_idç
-ä
-
-Ô+ Ô(L
-%4"__mapSet*"
-
-__unknown_file (
-
-%1*$
-
-__unknown_file (
-data*"
-
-__unknown_file (
-
-%3"
-
-Ô Ô(M
-
-%1BDB
-@tests.test_evidence_migration_tdd.TestPerformanceAndOptimizationH

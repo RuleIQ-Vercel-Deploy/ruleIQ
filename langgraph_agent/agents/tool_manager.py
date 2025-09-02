@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Advanced tool implementation with validation, async execution, and composition.
 Production-ready tool management with error handling and performance optimization.
 """
@@ -7,7 +9,7 @@ import asyncio
 import logging
 from typing import Dict, List, Optional, Any, Union
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from abc import ABC, abstractmethod
 import hashlib
@@ -107,11 +109,11 @@ class BaseComplianceTool(BaseTool, ABC):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._execution_count = 0
-        self._last_reset = datetime.utcnow()
+        self._last_reset = datetime.now(timezone.utc)
 
     def _check_rate_limit(self) -> bool:
         """Check if tool is within rate limits."""
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         if (now - self._last_reset).total_seconds() >= 60:
             self._execution_count = 0
             self._last_reset = now
@@ -156,7 +158,7 @@ class BaseComplianceTool(BaseTool, ABC):
 
     async def _safe_execute(self, *args, **kwargs) -> ToolResult:
         """Execute tool with safety checks and error handling."""
-        start_time = datetime.utcnow()
+        start_time = datetime.now(timezone.utc)
 
         try:
             # Check rate limits
@@ -175,7 +177,7 @@ class BaseComplianceTool(BaseTool, ABC):
             )
 
             execution_time = int(
-                (datetime.utcnow() - start_time).total_seconds() * 1000
+                (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
             )
 
             return ToolResult(
@@ -191,9 +193,9 @@ class BaseComplianceTool(BaseTool, ABC):
                 error_type="timeout",
                 message=f"Tool execution timed out after {self.max_execution_time_seconds}s",
             )
-        except Exception as e:
+        except (Exception, ValueError) as e:
             execution_time = int(
-                (datetime.utcnow() - start_time).total_seconds() * 1000
+                (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
             )
 
             return ToolResult(
@@ -352,11 +354,11 @@ class ReportGenerationTool(BaseComplianceTool):
     ) -> Dict[str, Any]:
         """Generate compliance report."""
         report = {
-            "report_id": f"RPT_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}",
+            "report_id": f"RPT_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}",
             "company_id": company_id,
             "report_type": report_type,
             "frameworks": frameworks,
-            "generated_at": datetime.utcnow().isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
             "executive_summary": {
                 "overall_score": 78,
                 "critical_issues": 2,
@@ -490,7 +492,7 @@ class ToolManager:
             logger.error(f"Tool execution failed: {e}")
             self._update_stats(tool_name, None, failed=True)
             return e.to_fallback_response(company_id, thread_id)
-        except Exception as e:
+        except (Exception, KeyError, IndexError) as e:
             logger.error(f"Unexpected error executing tool {tool_name}: {e}")
             self._update_stats(tool_name, None, failed=True)
 
@@ -575,7 +577,7 @@ class ToolManager:
         """Update tool execution statistics."""
         stats = self.execution_stats[tool_name]
         stats["total_executions"] += 1
-        stats["last_executed"] = datetime.utcnow().isoformat()
+        stats["last_executed"] = datetime.now(timezone.utc).isoformat()
 
         if failed:
             stats["failed_executions"] += 1
@@ -614,7 +616,7 @@ class ToolManager:
             try:
                 # Simple health check - could be expanded
                 health["tool_statuses"][tool_name] = "available"
-            except Exception:
+            except (KeyError, IndexError):
                 health["tool_statuses"][tool_name] = "error"
                 health["status"] = "degraded"
 

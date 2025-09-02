@@ -7,7 +7,7 @@ AI responses conform to expected schemas and provide type safety.
 Part of Phase 6: Response Schema Validation implementation.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import Any, Dict, List, Literal, Optional, Union
 
@@ -29,43 +29,43 @@ class PriorityLevel(str, Enum):
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
-    URGENT = "urgent"
+#     URGENT = "urgent"  # Unused variable
 
 
 class ImplementationEffort(str, Enum):
-    MINIMAL = "minimal"
+#     MINIMAL = "minimal"  # Unused variable
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
-    EXTENSIVE = "extensive"
+#     EXTENSIVE = "extensive"  # Unused variable
 
 
 class RiskLevel(str, Enum):
-    LOW = "low"
-    MEDIUM = "medium"
-    HIGH = "high"
-    CRITICAL = "critical"
+#     LOW = "low"  # Unused variable
+#     MEDIUM = "medium"  # Unused variable
+#     HIGH = "high"  # Unused variable
+#     CRITICAL = "critical"  # Unused variable
 
 
 class MaturityLevel(str, Enum):
-    INITIAL = "initial"
-    DEVELOPING = "developing"
-    DEFINED = "defined"
-    MANAGED = "managed"
-    OPTIMIZED = "optimized"
+#     INITIAL = "initial"  # Unused variable
+#     DEVELOPING = "developing"  # Unused variable
+#     DEFINED = "defined"  # Unused variable
+#     MANAGED = "managed"  # Unused variable
+#     OPTIMIZED = "optimized"  # Unused variable
 
 
 class TrendDirection(str, Enum):
-    IMPROVING = "improving"
-    STABLE = "stable"
-    DECLINING = "declining"
+#     IMPROVING = "improving"  # Unused variable
+#     STABLE = "stable"  # Unused variable
+#     DECLINING = "declining"  # Unused variable
 
 
 class InsightType(str, Enum):
-    STRENGTH = "strength"
-    WEAKNESS = "weakness"
-    OPPORTUNITY = "opportunity"
-    THREAT = "threat"
+#     STRENGTH = "strength"  # Unused variable
+#     WEAKNESS = "weakness"  # Unused variable
+#     OPPORTUNITY = "opportunity"  # Unused variable
+#     THREAT = "threat"  # Unused variable
 
 
 # =====================================================================
@@ -82,33 +82,33 @@ class GapValidationModel(BaseModel):
     severity: SeverityLevel = Field(..., description="Gap severity level")
     category: str = Field(..., min_length=1, description="Gap category")
     framework_reference: str = Field(
-        ..., min_length=1, description="Framework reference"
+        ..., min_length=1, description="Framework reference",
     )
     current_state: str = Field(
-        ..., min_length=1, description="Current compliance state"
+        ..., min_length=1, description="Current compliance state",
     )
     target_state: str = Field(..., min_length=1, description="Target compliance state")
     impact_description: str = Field(..., min_length=1, description="Impact description")
     business_impact_score: float = Field(
-        ..., ge=0.0, le=1.0, description="Business impact score"
+        ..., ge=0.0, le=1.0, description="Business impact score",
     )
     technical_complexity: float = Field(
-        ..., ge=0.0, le=1.0, description="Technical complexity score"
+        ..., ge=0.0, le=1.0, description="Technical complexity score",
     )
     regulatory_requirement: bool = Field(
-        ..., description="Whether this is a regulatory requirement"
+        ..., description="Whether this is a regulatory requirement",
     )
     estimated_effort: ImplementationEffort = Field(
-        ..., description="Estimated implementation effort"
+        ..., description="Estimated implementation effort",
     )
     dependencies: List[str] = Field(
-        default_factory=list, description="List of dependencies"
+        default_factory=list, description="List of dependencies",
     )
     affected_systems: List[str] = Field(
-        default_factory=list, description="List of affected systems"
+        default_factory=list, description="List of affected systems",
     )
     stakeholders: List[str] = Field(
-        default_factory=list, description="List of stakeholders"
+        default_factory=list, description="List of stakeholders",
     )
 
     @validator("id")
@@ -126,43 +126,43 @@ class RecommendationValidationModel(BaseModel):
 
     id: str = Field(..., min_length=1, description="Unique recommendation identifier")
     title: str = Field(
-        ..., min_length=1, max_length=200, description="Recommendation title"
+        ..., min_length=1, max_length=200, description="Recommendation title",
     )
     description: str = Field(
-        ..., min_length=10, description="Detailed recommendation description"
+        ..., min_length=10, description="Detailed recommendation description",
     )
     priority: PriorityLevel = Field(..., description="Recommendation priority")
     category: str = Field(..., min_length=1, description="Recommendation category")
     framework_references: List[str] = Field(
-        ..., min_items=1, description="Framework references"
+        ..., min_items=1, description="Framework references",
     )
     addresses_gaps: List[str] = Field(
-        default_factory=list, description="Gap IDs this addresses"
+        default_factory=list, description="Gap IDs this addresses",
     )
     effort_estimate: ImplementationEffort = Field(
-        ..., description="Implementation effort estimate"
+        ..., description="Implementation effort estimate",
     )
     implementation_timeline: str = Field(
-        ..., min_length=1, description="Implementation timeline"
+        ..., min_length=1, description="Implementation timeline",
     )
     impact_score: float = Field(
-        ..., ge=0.0, le=1.0, description="Implementation impact score"
+        ..., ge=0.0, le=1.0, description="Implementation impact score",
     )
     cost_estimate: Optional[str] = Field(None, description="Cost estimate")
     resource_requirements: List[str] = Field(
-        default_factory=list, description="Required resources"
+        default_factory=list, description="Required resources",
     )
     success_criteria: List[str] = Field(
-        ..., min_items=1, description="Success criteria"
+        ..., min_items=1, description="Success criteria",
     )
     potential_challenges: List[str] = Field(
-        default_factory=list, description="Potential challenges"
+        default_factory=list, description="Potential challenges",
     )
     mitigation_strategies: List[str] = Field(
-        default_factory=list, description="Mitigation strategies"
+        default_factory=list, description="Mitigation strategies",
     )
     automation_potential: float = Field(
-        default=0.0, ge=0.0, le=1.0, description="Automation potential"
+        default=0.0, ge=0.0, le=1.0, description="Automation potential",
     )
     roi_estimate: Optional[str] = Field(None, description="ROI estimate")
 
@@ -184,13 +184,13 @@ class ImplementationPhaseValidationModel(BaseModel):
     duration_weeks: int = Field(..., ge=1, description="Duration in weeks")
     deliverables: List[str] = Field(..., min_items=1, description="Phase deliverables")
     dependencies: List[str] = Field(
-        default_factory=list, description="Phase dependencies"
+        default_factory=list, description="Phase dependencies",
     )
     resources_required: List[str] = Field(
-        default_factory=list, description="Required resources"
+        default_factory=list, description="Required resources",
     )
     success_criteria: List[str] = Field(
-        ..., min_items=1, description="Success criteria"
+        ..., min_items=1, description="Success criteria",
     )
 
 
@@ -199,16 +199,16 @@ class ImplementationPlanValidationModel(BaseModel):
 
     total_duration_weeks: int = Field(..., ge=1, description="Total duration in weeks")
     phases: List[ImplementationPhaseValidationModel] = Field(
-        ..., min_items=1, description="Implementation phases"
+        ..., min_items=1, description="Implementation phases",
     )
     resource_allocation: Dict[str, str] = Field(
-        default_factory=dict, description="Resource allocation"
+        default_factory=dict, description="Resource allocation",
     )
     budget_estimate: Optional[str] = Field(None, description="Budget estimate")
     risk_factors: List[str] = Field(default_factory=list, description="Risk factors")
     success_metrics: List[str] = Field(..., min_items=1, description="Success metrics")
     milestone_checkpoints: List[str] = Field(
-        default_factory=list, description="Milestone checkpoints"
+        default_factory=list, description="Milestone checkpoints",
     )
 
     @validator("phases")
@@ -227,19 +227,19 @@ class RiskAssessmentValidationModel(BaseModel):
     overall_risk_level: RiskLevel = Field(..., description="Overall risk level")
     risk_score: float = Field(..., ge=0.0, le=100.0, description="Risk score")
     top_risk_factors: List[str] = Field(
-        ..., min_items=1, description="Top risk factors"
+        ..., min_items=1, description="Top risk factors",
     )
     risk_mitigation_priorities: List[str] = Field(
-        ..., min_items=1, description="Risk mitigation priorities"
+        ..., min_items=1, description="Risk mitigation priorities",
     )
     regulatory_compliance_risk: float = Field(
-        ..., ge=0.0, le=100.0, description="Regulatory compliance risk"
+        ..., ge=0.0, le=100.0, description="Regulatory compliance risk",
     )
     operational_risk: float = Field(
-        ..., ge=0.0, le=100.0, description="Operational risk"
+        ..., ge=0.0, le=100.0, description="Operational risk",
     )
     reputational_risk: float = Field(
-        ..., ge=0.0, le=100.0, description="Reputational risk"
+        ..., ge=0.0, le=100.0, description="Reputational risk",
     )
     financial_risk: float = Field(..., ge=0.0, le=100.0, description="Financial risk")
 
@@ -256,7 +256,7 @@ class ComplianceInsightValidationModel(BaseModel):
     impact_level: SeverityLevel = Field(..., description="Impact level")
     framework_area: str = Field(..., min_length=1, description="Framework area")
     actionable_steps: List[str] = Field(
-        ..., min_items=1, description="Actionable steps"
+        ..., min_items=1, description="Actionable steps",
     )
 
     class Config:
@@ -269,16 +269,16 @@ class EvidenceRequirementValidationModel(BaseModel):
     evidence_type: str = Field(..., min_length=1, description="Evidence type")
     description: str = Field(..., min_length=10, description="Evidence description")
     framework_reference: str = Field(
-        ..., min_length=1, description="Framework reference"
+        ..., min_length=1, description="Framework reference",
     )
     priority: PriorityLevel = Field(..., description="Collection priority")
     collection_method: str = Field(..., min_length=1, description="Collection method")
     automation_potential: float = Field(
-        ..., ge=0.0, le=1.0, description="Automation potential"
+        ..., ge=0.0, le=1.0, description="Automation potential",
     )
     estimated_effort: ImplementationEffort = Field(..., description="Estimated effort")
     validation_criteria: List[str] = Field(
-        ..., min_items=1, description="Validation criteria"
+        ..., min_items=1, description="Validation criteria",
     )
     retention_period: Optional[str] = Field(None, description="Retention period")
 
@@ -290,17 +290,17 @@ class ComplianceMetricsValidationModel(BaseModel):
     """Validation model for compliance metrics."""
 
     overall_compliance_score: float = Field(
-        ..., ge=0.0, le=100.0, description="Overall compliance score"
+        ..., ge=0.0, le=100.0, description="Overall compliance score",
     )
     framework_scores: Dict[str, float] = Field(
-        default_factory=dict, description="Framework-specific scores"
+        default_factory=dict, description="Framework-specific scores",
     )
     maturity_level: MaturityLevel = Field(..., description="Maturity level")
     coverage_percentage: float = Field(
-        ..., ge=0.0, le=100.0, description="Coverage percentage"
+        ..., ge=0.0, le=100.0, description="Coverage percentage",
     )
     gap_count_by_severity: Dict[SeverityLevel, int] = Field(
-        default_factory=dict, description="Gap count by severity"
+        default_factory=dict, description="Gap count by severity",
     )
     improvement_trend: TrendDirection = Field(..., description="Improvement trend")
 
@@ -309,7 +309,7 @@ class ComplianceMetricsValidationModel(BaseModel):
         for framework, score in v.items():
             if not (0.0 <= score <= 100.0):
                 raise ValueError(
-                    f"Framework score for {framework} must be between 0.0 and 100.0"
+                    f"Framework score for {framework} must be between 0.0 and 100.0",
                 )
         return v
 
@@ -336,21 +336,21 @@ class GapAnalysisValidationModel(BaseModel):
     overall_risk_level: RiskLevel = Field(..., description="Overall risk level")
     priority_order: List[str] = Field(..., description="Gap IDs in priority order")
     estimated_total_effort: str = Field(
-        ..., min_length=1, description="Total effort estimate"
+        ..., min_length=1, description="Total effort estimate",
     )
     critical_gap_count: int = Field(..., ge=0, description="Count of critical gaps")
     medium_high_gap_count: int = Field(
-        ..., ge=0, description="Count of medium/high gaps"
+        ..., ge=0, description="Count of medium/high gaps",
     )
     compliance_percentage: float = Field(
-        ..., ge=0.0, le=100.0, description="Compliance percentage"
+        ..., ge=0.0, le=100.0, description="Compliance percentage",
     )
     framework_coverage: Dict[str, float] = Field(
-        default_factory=dict, description="Framework coverage"
+        default_factory=dict, description="Framework coverage",
     )
     summary: str = Field(..., min_length=10, description="Executive summary")
     next_steps: List[str] = Field(
-        ..., min_items=1, description="Recommended next steps"
+        ..., min_items=1, description="Recommended next steps",
     )
 
     @validator("priority_order")
@@ -367,7 +367,7 @@ class GapAnalysisValidationModel(BaseModel):
         for framework, coverage in v.items():
             if not (0.0 <= coverage <= 100.0):
                 raise ValueError(
-                    f"Framework coverage for {framework} must be between 0.0 and 100.0"
+                    f"Framework coverage for {framework} must be between 0.0 and 100.0",
                 )
         return v
 
@@ -379,22 +379,22 @@ class RecommendationResponseValidationModel(BaseModel):
     """Validation model for recommendation responses."""
 
     recommendations: List[RecommendationValidationModel] = Field(
-        ..., min_items=1, description="List of recommendations"
+        ..., min_items=1, description="List of recommendations",
     )
     implementation_plan: ImplementationPlanValidationModel = Field(
-        ..., description="Implementation plan"
+        ..., description="Implementation plan",
     )
     prioritization_rationale: str = Field(
-        ..., min_length=10, description="Prioritization rationale"
+        ..., min_length=10, description="Prioritization rationale",
     )
     quick_wins: List[str] = Field(
-        default_factory=list, description="Quick win recommendation IDs"
+        default_factory=list, description="Quick win recommendation IDs",
     )
     long_term_initiatives: List[str] = Field(
-        default_factory=list, description="Long-term initiative IDs"
+        default_factory=list, description="Long-term initiative IDs",
     )
     resource_summary: Dict[str, Any] = Field(
-        default_factory=dict, description="Resource summary"
+        default_factory=dict, description="Resource summary",
     )
     timeline_overview: str = Field(..., min_length=10, description="Timeline overview")
     success_metrics: List[str] = Field(..., min_items=1, description="Success metrics")
@@ -406,7 +406,7 @@ class RecommendationResponseValidationModel(BaseModel):
             invalid_ids = set(v) - recommendation_ids
             if invalid_ids:
                 raise ValueError(
-                    f"Invalid recommendation IDs in {field.name}: {invalid_ids}"
+                    f"Invalid recommendation IDs in {field.name}: {invalid_ids}",
                 )
         return v
 
@@ -416,25 +416,25 @@ class AssessmentAnalysisValidationModel(BaseModel):
 
     gaps: List[GapValidationModel] = Field(..., description="Identified gaps")
     recommendations: List[RecommendationValidationModel] = Field(
-        ..., description="Recommendations"
+        ..., description="Recommendations",
     )
     risk_assessment: RiskAssessmentValidationModel = Field(
-        ..., description="Risk assessment"
+        ..., description="Risk assessment",
     )
     compliance_insights: List[ComplianceInsightValidationModel] = Field(
-        ..., description="Compliance insights"
+        ..., description="Compliance insights",
     )
     evidence_requirements: List[EvidenceRequirementValidationModel] = Field(
-        ..., description="Evidence requirements"
+        ..., description="Evidence requirements",
     )
     compliance_metrics: ComplianceMetricsValidationModel = Field(
-        ..., description="Compliance metrics"
+        ..., description="Compliance metrics",
     )
     executive_summary: str = Field(..., min_length=50, description="Executive summary")
     detailed_findings: str = Field(..., min_length=100, description="Detailed findings")
     next_steps: List[str] = Field(..., min_items=1, description="Next steps")
     confidence_score: float = Field(
-        ..., ge=0.0, le=1.0, description="Analysis confidence score"
+        ..., ge=0.0, le=1.0, description="Analysis confidence score",
     )
 
 
@@ -443,20 +443,20 @@ class GuidanceValidationModel(BaseModel):
 
     guidance: str = Field(..., min_length=50, description="Main guidance content")
     confidence_score: float = Field(
-        ..., ge=0.0, le=1.0, description="Guidance confidence score"
+        ..., ge=0.0, le=1.0, description="Guidance confidence score",
     )
     related_topics: List[str] = Field(..., description="Related topics")
     follow_up_suggestions: List[str] = Field(..., description="Follow-up suggestions")
     source_references: List[str] = Field(..., description="Source references")
     examples: List[str] = Field(default_factory=list, description="Examples")
     best_practices: List[str] = Field(
-        default_factory=list, description="Best practices"
+        default_factory=list, description="Best practices",
     )
     common_pitfalls: List[str] = Field(
-        default_factory=list, description="Common pitfalls"
+        default_factory=list, description="Common pitfalls",
     )
     implementation_tips: List[str] = Field(
-        default_factory=list, description="Implementation tips"
+        default_factory=list, description="Implementation tips",
     )
 
 
@@ -468,33 +468,33 @@ class FollowUpQuestionValidationModel(BaseModel):
     category: str = Field(..., min_length=1, description="Question category")
     importance_level: PriorityLevel = Field(..., description="Question importance")
     expected_answer_type: Literal["text", "boolean", "multiple_choice", "numeric"] = (
-        Field(..., description="Expected answer type")
+        Field(..., description="Expected answer type"),
     )
     context: str = Field(..., min_length=1, description="Question context")
     validation_criteria: List[str] = Field(
-        default_factory=list, description="Validation criteria"
+        default_factory=list, description="Validation criteria",
     )
 
     class Config:
-        use_enum_values = True
+#         use_enum_values = True  # Unused variable
 
 
 class FollowUpValidationModel(BaseModel):
     """Validation model for follow-up responses."""
 
     follow_up_questions: List[FollowUpQuestionValidationModel] = Field(
-        ..., description="Follow-up questions"
+        ..., description="Follow-up questions",
     )
     recommendations: List[str] = Field(..., description="Immediate recommendations")
     confidence_score: float = Field(
-        ..., ge=0.0, le=1.0, description="Response confidence"
+        ..., ge=0.0, le=1.0, description="Response confidence",
     )
     assessment_completeness: float = Field(
-        ..., ge=0.0, le=1.0, description="Assessment completeness"
+        ..., ge=0.0, le=1.0, description="Assessment completeness",
     )
     priority_areas: List[str] = Field(..., description="Priority areas")
     suggested_next_steps: List[str] = Field(
-        ..., min_items=1, description="Suggested next steps"
+        ..., min_items=1, description="Suggested next steps",
     )
 
 
@@ -509,14 +509,14 @@ class IntentClassificationValidationModel(BaseModel):
         "assessment_help",
     ] = Field(..., description="Classified intent type")
     confidence: float = Field(
-        ..., ge=0.0, le=1.0, description="Classification confidence"
+        ..., ge=0.0, le=1.0, description="Classification confidence",
     )
     entities: Dict[str, List[str]] = Field(..., description="Extracted entities")
     context_requirements: List[str] = Field(
-        default_factory=list, description="Context requirements"
+        default_factory=list, description="Context requirements",
     )
     suggested_actions: List[str] = Field(
-        default_factory=list, description="Suggested actions"
+        default_factory=list, description="Suggested actions",
     )
 
 
@@ -532,17 +532,17 @@ class ResponseMetadataValidationModel(BaseModel):
     timestamp: str = Field(..., description="Response timestamp")
     model_used: str = Field(..., min_length=1, description="AI model used")
     processing_time_ms: int = Field(
-        ..., ge=0, description="Processing time in milliseconds"
+        ..., ge=0, description="Processing time in milliseconds",
     )
     confidence_score: float = Field(
-        ..., ge=0.0, le=1.0, description="Overall confidence"
+        ..., ge=0.0, le=1.0, description="Overall confidence",
     )
     schema_version: str = Field(..., min_length=1, description="Schema version")
     validation_status: Literal["valid", "invalid", "partially_valid"] = Field(
-        ..., description="Validation status"
+        ..., description="Validation status",
     )
     validation_errors: List[str] = Field(
-        default_factory=list, description="Validation errors"
+        default_factory=list, description="Validation errors",
     )
 
     @validator("timestamp")
@@ -558,7 +558,7 @@ class StructuredAIResponseValidationModel(BaseModel):
     """Validation model for structured AI responses."""
 
     metadata: ResponseMetadataValidationModel = Field(
-        ..., description="Response metadata"
+        ..., description="Response metadata",
     )
     response_type: str = Field(..., min_length=1, description="Response type")
     payload: Union[
@@ -613,7 +613,7 @@ def validate_ai_response(
         if hasattr(e, "errors"):
             for error in e.errors():
                 errors.append(
-                    f"{'.'.join(str(x) for x in error['loc'])}: {error['msg']}"
+                    f"{'.'.join(str(x) for x in error['loc'])}: {error['msg']}",
                 )
         else:
             errors.append(str(e))
@@ -625,7 +625,7 @@ def create_validation_report(
 ) -> Dict[str, Any]:
     """Create a detailed validation report for an AI response."""
     is_valid, errors, validated_model = validate_ai_response(
-        response_data, response_type
+        response_data, response_type,
     )
 
     return {
@@ -633,7 +633,7 @@ def create_validation_report(
         "response_type": response_type,
         "validation_errors": errors,
         "error_count": len(errors),
-        "validated_at": datetime.utcnow().isoformat(),
+        "validated_at": datetime.now(timezone.utc).isoformat(),
         "schema_version": "1.0.0",
         "has_model": validated_model is not None,
     }

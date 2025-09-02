@@ -1,3 +1,3 @@
-P
-pythonS11721Remove the unused function parameter "exception". 2
-ÅÅ  4
+E
+pythonS5905&Fix this assertion on a tuple literal. 2
+ÅÇ 5

@@ -1,8 +1,8 @@
 
 Yuk_compliance_ingestion_pipeline.UKComplianceGraphIngestion.ingest_complete_uk_compliance]
-S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipeline.py, ,(+"2*¢
-2- /(çä
-0 0(@
+S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipeline.py' '(+"2*¢
+2( *(çä
++ +(@
 %15*&
 
 __unknown_file (
@@ -12,59 +12,59 @@ S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipelin
 
 __unknown_file (-+
 )Starting UK compliance graph ingestion...2info*
-7*Î
-74 4(-ÜÉ
-4 4(-
+7*Ì
+7- -(-ÜÉ
+- -(-
 %4*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_create_graph_schemaçä
-7 7(4
+. .(4
 %5*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_ingest_compliance_manifestáÑ
-: :(.
+/ /(.
 %6*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_ingest_api_documentsçä
-= =(4
+0 0(4
 %7*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_ingest_data_protection_actòï
-@ @(?
+1 1(?
 %8*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2&_create_cross_regulation_relationshipsÜÉ
-C C(-
+2 2(-
 %9*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_generate_embeddingsàÖ
-F F(.
+3 3(.
 %10*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_create_graph_indexeså
 â
-H6 H(J
+4: 4(N
 %11"__id*p
 
 __unknown_file (T*R=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion"
-ingestion_stats_
-]
-H H(L
-%12"__concat*+
-H H(5
-Ingestion complete. Stats: *
-H6 H(J
+ingestion_statsa
+_
+4 4(N
+%12"__concat*-
+4 4(7!
+Ingestion complete. Stats: %s*
+4: 4(N
 
 %11fd
-H H(M
+4 4(O
 %13*&
 
 __unknown_file (
@@ -76,13 +76,13 @@ S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipelin
 
 %122infoå
 â
-I I('
+5 5('
 %14"__id*p
 
 __unknown_file (T*R=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion"
 ingestion_stats"
-I I('
+5 5('
 
 %14B?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestionH

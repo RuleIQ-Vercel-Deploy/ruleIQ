@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Improved pytest configuration with robust async database handling.
 This replaces the problematic patterns in conftest.py with stable solutions.
 """
@@ -115,7 +117,7 @@ class DatabaseTestManager:
         try:
             async with self._engine.begin() as conn:
                 await conn.run_sync(Base.metadata.drop_all)
-        except Exception:
+        except (ValueError, TypeError):
             # Fallback to schema recreation if table drops fail
             try:
                 async with self._engine.begin() as conn:
@@ -129,7 +131,7 @@ class DatabaseTestManager:
         if self._engine is not None:
             try:
                 await self._engine.dispose()
-            except Exception as e:
+            except (ValueError, TypeError) as e:
                 print(f"Warning: Engine disposal failed: {e}")
             finally:
                 self._engine = None
@@ -168,7 +170,7 @@ async def async_db_session() -> AsyncGenerator[AsyncSession, None]:
         async with AsyncSession(engine, expire_on_commit=False) as session:
             try:
                 yield session
-            except Exception:
+            except (ValueError, TypeError):
                 await session.rollback()
                 raise
             finally:
@@ -260,8 +262,8 @@ async def sample_evidence_item(
         status="active",
         file_path="/path/to/sample/policy.pdf",
         automation_source="manual",
-        created_at=pytest.datetime.utcnow() if hasattr(pytest, "datetime") else None,
-        updated_at=pytest.datetime.utcnow() if hasattr(pytest, "datetime") else None,
+        created_at=pytest.datetime.now(timezone.utc) if hasattr(pytest, "datetime") else None,
+        updated_at=pytest.datetime.now(timezone.utc) if hasattr(pytest, "datetime") else None,
     )
     async_db_session.add(evidence)
     await async_db_session.commit()
@@ -273,7 +275,7 @@ async def sample_evidence_item(
 @pytest.fixture
 def auth_token(sample_user: User) -> str:
     """Generate authentication token for tests."""
-    from datetime import timedelta
+    from datetime import timedelta, timezone
     from api.dependencies.auth import create_access_token
 
     token_data = {"sub": str(sample_user.id)}
@@ -310,7 +312,7 @@ def client() -> TestClient:
             async with AsyncSession(engine, expire_on_commit=False) as session:
                 try:
                     yield session
-                except Exception:
+                except (ValueError, TypeError):
                     await session.rollback()
                     raise
                 finally:

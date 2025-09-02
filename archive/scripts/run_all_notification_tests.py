@@ -3,6 +3,9 @@
 Comprehensive test runner for notification migration tests
 Runs all test methods directly to bypass pytest collection issues
 """
+import logging
+logger = logging.getLogger(__name__)
+
 
 import asyncio
 import sys
@@ -57,9 +60,9 @@ class TestRunner:
 
     async def run_test_class(self, test_class, class_name):
         """Run all test methods in a test class"""
-        print(f"\n{'='*60}")
-        print(f"Running {class_name}")
-        print(f"{'='*60}")
+        logger.info(f"\n{'='*60}")
+        logger.info(f"Running {class_name}")
+        logger.info(f"{'='*60}")
 
         test_instance = test_class()
         node = EnhancedNotificationNode()
@@ -70,7 +73,7 @@ class TestRunner:
 
         for method_name in test_methods:
             method = getattr(test_instance, method_name)
-            print(f"\n  Testing: {method_name.replace('test_', '').replace('_', ' ')}")
+            logger.info(f"\n  Testing: {method_name.replace('test_', '').replace('_', ' ')}")
 
             try:
                 # Check method signature to determine parameters
@@ -87,10 +90,10 @@ class TestRunner:
                 else:
                     await method()
 
-                print(f"    ✅ PASSED")
+                logger.info(f"    ✅ PASSED")
                 self.passed += 1
             except Exception as e:
-                print(f"    ❌ FAILED: {str(e)}")
+                logger.info(f"    ❌ FAILED: {str(e)}")
                 self.failed += 1
                 self.errors.append(
                     {"class": class_name, "method": method_name, "error": str(e)}
@@ -98,9 +101,9 @@ class TestRunner:
 
     async def run_all_tests(self):
         """Run all test classes"""
-        print("=" * 70)
-        print("NOTIFICATION MIGRATION TEST SUITE")
-        print("=" * 70)
+        logger.info("=" * 70)
+        logger.info("NOTIFICATION MIGRATION TEST SUITE")
+        logger.info("=" * 70)
 
         test_classes = [
             (TestNotificationStateTransitions, "State Transitions"),
@@ -119,21 +122,21 @@ class TestRunner:
             await self.run_test_class(test_class, name)
 
         # Print summary
-        print("\n" + "=" * 70)
-        print("TEST SUMMARY")
-        print("=" * 70)
-        print(f"✅ Passed: {self.passed}")
-        print(f"❌ Failed: {self.failed}")
-        print(f"📊 Total: {self.passed + self.failed}")
-        print(f"🎯 Success Rate: {(self.passed/(self.passed+self.failed)*100):.1f}%")
+        logger.info("\n" + "=" * 70)
+        logger.info("TEST SUMMARY")
+        logger.info("=" * 70)
+        logger.info(f"✅ Passed: {self.passed}")
+        logger.info(f"❌ Failed: {self.failed}")
+        logger.info(f"📊 Total: {self.passed + self.failed}")
+        logger.info(f"🎯 Success Rate: {(self.passed/(self.passed+self.failed)*100):.1f}%")
 
         if self.errors:
-            print("\n" + "=" * 70)
-            print("FAILED TEST DETAILS")
-            print("=" * 70)
+            logger.info("\n" + "=" * 70)
+            logger.info("FAILED TEST DETAILS")
+            logger.info("=" * 70)
             for error in self.errors:
-                print(f"\n{error['class']}.{error['method']}")
-                print(f"  Error: {error['error']}")
+                logger.info(f"\n{error['class']}.{error['method']}")
+                logger.info(f"  Error: {error['error']}")
 
         return self.failed == 0
 
@@ -144,9 +147,9 @@ async def main():
     success = await runner.run_all_tests()
 
     if success:
-        print("\n🎉 ALL TESTS PASSED!")
+        logger.info("\n🎉 ALL TESTS PASSED!")
     else:
-        print("\n⚠️ SOME TESTS FAILED - Review implementation")
+        logger.info("\n⚠️ SOME TESTS FAILED - Review implementation")
 
     return 0 if success else 1
 

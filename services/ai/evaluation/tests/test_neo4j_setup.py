@@ -1,4 +1,7 @@
 """Test Neo4j Community Edition Docker setup."""
+from typing import Any
+
+from __future__ import annotations
 
 import os
 import time
@@ -13,7 +16,7 @@ class TestNeo4jSetup:
     """Test Neo4j CE Docker container setup."""
 
     @pytest.fixture(scope="class")
-    def docker_client(self):
+    def docker_client(self) -> Any:
         """Get Docker client."""
         try:
             client = docker.from_env()
@@ -24,7 +27,7 @@ class TestNeo4jSetup:
             pytest.skip(f"Docker not available: {e}")
 
     @pytest.fixture(scope="class")
-    def neo4j_container(self, docker_client):
+    def neo4j_container(self, docker_client: Any) -> Any:
         """Ensure Neo4j container is running."""
         container_name = "neo4j-ce-golden"
         image = "neo4j:5.26.10-community"
@@ -62,7 +65,7 @@ class TestNeo4jSetup:
             for i in range(max_retries):
                 try:
                     driver = GraphDatabase.driver(
-                        "bolt://localhost:7687", auth=("neo4j", "please_change")
+                        "bolt://localhost:7687", auth=("neo4j", "please_change"),
                     )
                     with driver.session() as session:
                         session.run("RETURN 1")
@@ -75,22 +78,22 @@ class TestNeo4jSetup:
 
             return container
 
-    def test_container_running(self, neo4j_container):
+    def test_container_running(self, neo4j_container: Any) -> Any:
         """Test that Neo4j container is running."""
         # Refresh container status as it may have been 'created' initially
         neo4j_container.reload()
         assert neo4j_container.status == "running"
         assert neo4j_container.name == "neo4j-ce-golden"
 
-    def test_neo4j_version(self, neo4j_container):
+    def test_neo4j_version(self, neo4j_container: Any) -> Any:
         """Test Neo4j version is correct."""
         # Check container image tag
         assert "5.26.10-community" in neo4j_container.image.tags[0]
 
-    def test_neo4j_connection(self, neo4j_container):
+    def test_neo4j_connection(self, neo4j_container: Any) -> Any:
         """Test connection to Neo4j."""
         driver = GraphDatabase.driver(
-            "bolt://localhost:7687", auth=("neo4j", "test_password123")
+            "bolt://localhost:7687", auth=("neo4j", "test_password123"),
         )
 
         with driver.session() as session:
@@ -100,10 +103,10 @@ class TestNeo4jSetup:
 
         driver.close()
 
-    def test_vector_index_support(self, neo4j_container):
+    def test_vector_index_support(self, neo4j_container: Any) -> Any:
         """Test that Neo4j supports VECTOR indexes."""
         driver = GraphDatabase.driver(
-            "bolt://localhost:7687", auth=("neo4j", "test_password123")
+            "bolt://localhost:7687", auth=("neo4j", "test_password123"),
         )
 
         with driver.session() as session:
@@ -111,7 +114,7 @@ class TestNeo4jSetup:
             session.run(
                 """
                 DROP INDEX test_vector_index IF EXISTS
-            """
+            """,
             )
 
             # Create a test vector index
@@ -123,10 +126,10 @@ class TestNeo4jSetup:
                 OPTIONS {
                     indexConfig: {
                         `vector.dimensions`: 384,
-                        `vector.similarity_function`: 'cosine'
-                    }
+                        `vector.similarity_function`: 'cosine',
+                    },
                 }
-            """
+            """,
             )
 
             # Verify index exists
@@ -134,7 +137,7 @@ class TestNeo4jSetup:
                 """
                 SHOW INDEXES
                 WHERE name = 'test_vector_index'
-            """
+            """,
             )
 
             indexes = list(result)
@@ -145,10 +148,10 @@ class TestNeo4jSetup:
 
         driver.close()
 
-    def test_memory_configuration(self, neo4j_container):
+    def test_memory_configuration(self, neo4j_container: Any) -> Any:
         """Test Neo4j memory configuration."""
         driver = GraphDatabase.driver(
-            "bolt://localhost:7687", auth=("neo4j", "test_password123")
+            "bolt://localhost:7687", auth=("neo4j", "test_password123"),
         )
 
         with driver.session() as session:
@@ -160,10 +163,10 @@ class TestNeo4jSetup:
                 WHERE name IN [
                     'server.memory.heap.initial_size',
                     'server.memory.heap.max_size',
-                    'server.memory.pagecache.size'
+                    'server.memory.pagecache.size',
                 ]
                 RETURN name, value
-            """
+            """,
             )
 
             config = {record["name"]: record["value"] for record in result}
@@ -171,12 +174,12 @@ class TestNeo4jSetup:
             # Verify memory settings are applied
             assert (
                 "server.memory.heap.initial_size" in config
-                or "dbms.memory.heap.initial_size" in config
+                or "dbms.memory.heap.initial_size" in config,
             )
 
         driver.close()
 
-    def test_persistence_volumes(self, docker_client):
+    def test_persistence_volumes(self, docker_client: Any) -> Any:
         """Test that data persistence volumes exist."""
         volumes = docker_client.volumes.list()
         volume_names = [v.name for v in volumes]
@@ -188,12 +191,12 @@ class TestNeo4jSetup:
 class TestNeo4jDockerCompose:
     """Test Neo4j docker-compose configuration."""
 
-    def test_docker_compose_file_exists(self):
+    def test_docker_compose_file_exists(self) -> Any:
         """Test that docker-compose file exists."""
         compose_path = "services/ai/evaluation/docker/docker-compose.yml"
         assert os.path.exists(compose_path)
 
-    def test_docker_compose_configuration(self):
+    def test_docker_compose_configuration(self) -> Any:
         """Test docker-compose configuration is correct."""
         import yaml
 

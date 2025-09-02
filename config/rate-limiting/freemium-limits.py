@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Enhanced Rate Limiting Configuration for AI Assessment Freemium Strategy
 Implements multi-tier rate limiting for public and authenticated endpoints
 """
@@ -26,35 +28,35 @@ class FreemiumRateLimits:
             "requests": 5,
             "window": 300,  # 5 minutes
             "burst": 2,
-            "block_duration": 3600,  # 1 hour block after limit exceeded
+            "block_duration": 3600,  # 1 hour block after limit exceeded,
         },
         # Assessment start - moderate restriction
         "/api/v1/freemium/start-assessment": {
             "requests": 10,
             "window": 300,  # 5 minutes
             "burst": 3,
-            "block_duration": 1800,  # 30 minutes
+            "block_duration": 1800,  # 30 minutes,
         },
         # Answer questions - allow more for legitimate users
         "/api/v1/freemium/answer-question": {
             "requests": 50,
             "window": 300,  # 5 minutes
             "burst": 10,
-            "block_duration": 900,  # 15 minutes
+            "block_duration": 900,  # 15 minutes,
         },
         # Results viewing - cached, so can be more permissive
         "/api/v1/freemium/results": {
             "requests": 20,
             "window": 300,  # 5 minutes
             "burst": 5,
-            "block_duration": 600,  # 10 minutes
+            "block_duration": 600,  # 10 minutes,
         },
         # Conversion tracking - moderate limits
         "/api/v1/freemium/track-conversion": {
             "requests": 30,
             "window": 300,  # 5 minutes
             "burst": 5,
-            "block_duration": 900,  # 15 minutes
+            "block_duration": 900,  # 15 minutes,
         },
     }
 
@@ -64,19 +66,19 @@ class FreemiumRateLimits:
             "requests": 20,
             "window": 3600,  # 1 hour
             "tier": RateLimitTier.FREEMIUM,
-            "cost_threshold": 0.50,  # $0.50 per hour per IP
+            "cost_threshold": 0.50,  # $0.50 per hour per IP,
         },
         "assessment_analysis": {
             "requests": 10,
             "window": 3600,  # 1 hour
             "tier": RateLimitTier.FREEMIUM,
-            "cost_threshold": 2.00,  # $2.00 per hour per IP
+            "cost_threshold": 2.00,  # $2.00 per hour per IP,
         },
         "results_generation": {
             "requests": 15,
             "window": 3600,  # 1 hour
             "tier": RateLimitTier.FREEMIUM,
-            "cost_threshold": 1.00,  # $1.00 per hour per IP
+            "cost_threshold": 1.00,  # $1.00 per hour per IP,
         },
     }
 
@@ -86,7 +88,7 @@ class FreemiumRateLimits:
         "requests_per_hour": 1000,
         "requests_per_day": 5000,
         "concurrent_connections": 10,
-        "max_assessment_sessions": 3,  # Max concurrent assessment sessions per IP
+        "max_assessment_sessions": 3,  # Max concurrent assessment sessions per IP,
     }
 
     # User-agent based limits (bot detection)
@@ -99,7 +101,7 @@ class FreemiumRateLimits:
         "bot_limits": {
             "requests": 10,
             "window": 3600,  # 1 hour
-            "block_duration": 86400,  # 24 hours
+            "block_duration": 86400,  # 24 hours,
         },
     }
 
@@ -107,11 +109,11 @@ class FreemiumRateLimits:
     GEO_LIMITS = {
         "high_risk_countries": {
             "countries": ["CN", "RU", "KP"],  # ISO country codes
-            "multiplier": 0.1,  # 10% of normal limits
+            "multiplier": 0.1,  # 10% of normal limits,
         },
         "premium_regions": {
             "countries": ["US", "GB", "DE", "FR", "CA", "AU"],
-            "multiplier": 1.5,  # 150% of normal limits
+            "multiplier": 1.5,  # 150% of normal limits,
         },
     }
 
@@ -158,7 +160,7 @@ class RateLimitExceptions:
         "::1",  # IPv6 localhost
         "10.0.0.0/8",  # Private networks
         "172.16.0.0/12",  # Private networks
-        "192.168.0.0/16",  # Private networks
+        "192.168.0.0/16",  # Private networks,
     ]
 
     # Health check and monitoring services
@@ -166,7 +168,7 @@ class RateLimitExceptions:
         "GoogleHC/1.0",  # Google Health Check
         "Amazon CloudFront",  # CloudFront health checks
         "UptimeRobot/2.0",  # UptimeRobot monitoring
-        "Pingdom.com_bot",  # Pingdom monitoring
+        "Pingdom.com_bot",  # Pingdom monitoring,
     ]
 
     # Trusted partners and integrations
@@ -183,14 +185,14 @@ class RateLimitResponses:
         "error": "rate_limit_exceeded",
         "message": "Too many requests. Please try again later.",
         "status_code": 429,
-        "retry_after": None,  # Will be populated dynamically
+        "retry_after": None,  # Will be populated dynamically,
     }
 
     COST_LIMIT_EXCEEDED = {
         "error": "cost_limit_exceeded",
         "message": "AI service cost limit exceeded. Please try again later.",
         "status_code": 429,
-        "retry_after": 3600,  # 1 hour
+        "retry_after": 3600,  # 1 hour,
     }
 
     BOT_DETECTED = {
@@ -210,7 +212,7 @@ class RateLimitResponses:
 ENVIRONMENT_CONFIGS = {
     "development": {
         "enabled": False,  # Disable rate limiting in development
-        "multiplier": 10,  # 10x higher limits for testing
+        "multiplier": 10,  # 10x higher limits for testing,
     },
     "staging": {
         "enabled": True,

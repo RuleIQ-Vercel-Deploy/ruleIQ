@@ -3,18 +3,7 @@ import { persist } from 'zustand/middleware';
 import type {
   FreemiumStore,
   FreemiumState,
-  FreemiumActions,
-  LeadCaptureRequest,
-  AssessmentStartRequest,
-  AssessmentAnswerRequest,
-  ResultsGenerationRequest,
-  AssessmentQuestion,
-  AssessmentResponse,
-  AssessmentProgress,
-  FreemiumSession,
-  AssessmentResultsResponse,
-  TrackingMetadata,
-} from '@/types/freemium';
+  } from '@/types/freemium';
 
 // Add test compatibility types
 export interface FreemiumStoreState {
@@ -136,7 +125,7 @@ const apiCall = async (endpoint: string, data?: any, method: string = 'POST') =>
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
   const url = `${baseUrl}/api/v1/freemium${endpoint}`;
 
-  const response = await fetch(url, {
+  const _response = await fetch(url, {
     method,
     headers: {
       'Content-Type': 'application/json',
@@ -169,7 +158,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
         try {
           set({ isLoading: true, error: null });
 
-          const response = await apiCall('/leads', leadData);
+          const _response = await apiCall('/leads', leadData);
 
           set({
             leadId: response.lead_id,
@@ -213,7 +202,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
         try {
           set({ isLoading: true, error: null });
 
-          const response = await apiCall('/assessment/start', startData);
+          const _response = await apiCall('/assessment/start', startData);
 
           const session: FreemiumSession = {
             session_id: response.session_id,
@@ -335,7 +324,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
           set({ isLoading: true, error: null });
 
           // Use the freemiumService to submit answer
-          const response = await freemiumService.submitAnswer(answerData.session_token, {
+          const _response = await freemiumService.submitAnswer(answerData.session_token, {
             question_id: answerData.question_id,
             answer: answerData.answer.toString(),
             answer_confidence: answerData.confidence_level,
@@ -428,7 +417,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
             include_detailed_analysis: includeDetails,
           };
 
-          const response = await apiCall('/assessment/results', requestData);
+          const _response = await apiCall('/assessment/results', requestData);
 
           set({
             results: response,
@@ -945,7 +934,7 @@ export const createFreemiumStore = () => {
           // Same implementation as above
           try {
             set({ isLoading: true, error: null });
-            const response = await apiCall('/leads', leadData);
+            const _response = await apiCall('/leads', leadData);
             set({
               leadId: response.lead_id,
               email: leadData.email,

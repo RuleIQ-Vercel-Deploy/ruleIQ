@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Monitoring middleware for FastAPI applications.
 """
 

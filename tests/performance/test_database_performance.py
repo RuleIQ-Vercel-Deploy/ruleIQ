@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Database Performance Tests
 
 Tests database query performance, connection handling, and data operations
@@ -61,7 +63,7 @@ class TestDatabaseQueryPerformance:
                     EvidenceItem.evidence_name.contains("Evidence"),
                 )
                 .order_by(EvidenceItem.created_at.desc())
-                .limit(50)
+                .limit(50),
             )
 
             return query.all()
@@ -113,7 +115,7 @@ class TestDatabaseQueryPerformance:
                     EvidenceItem.evidence_name.contains(search_term)
                     | EvidenceItem.description.contains(search_term),
                 )
-                .limit(20)
+                .limit(20),
             )
 
             return query.all()
@@ -167,24 +169,24 @@ class TestDatabaseQueryPerformance:
                 db_session.query(EvidenceItem.status, func.count(EvidenceItem.id))
                 .filter(EvidenceItem.user_id == sample_user.id)
                 .group_by(EvidenceItem.status)
-                .all()
+                .all(),
             )
 
             # Count by type
             type_counts = (
                 db_session.query(
-                    EvidenceItem.evidence_type, func.count(EvidenceItem.id)
+                    EvidenceItem.evidence_type, func.count(EvidenceItem.id),
                 )
                 .filter(EvidenceItem.user_id == sample_user.id)
                 .group_by(EvidenceItem.evidence_type)
-                .all()
+                .all(),
             )
 
             # Average compliance score impact
             avg_quality = (
                 db_session.query(func.avg(EvidenceItem.compliance_score_impact))
                 .filter(EvidenceItem.user_id == sample_user.id)
-                .scalar()
+                .scalar(),
             )
 
             return {
@@ -250,7 +252,7 @@ class TestDatabaseQueryPerformance:
                     EvidenceItem.status == "collected",
                 )
                 .limit(50)
-                .all()
+                .all(),
             )
 
             return result
@@ -395,7 +397,7 @@ class TestDatabaseConnectionPerformance:
             for evidence in evidence_items:
                 evidence.status = "reviewed"
                 evidence.compliance_score_impact = 80.0 + (
-                    evidence_items.index(evidence) % 20
+                    evidence_items.index(evidence) % 20,
                 )
 
             # Perform aggregation within transaction
@@ -405,7 +407,7 @@ class TestDatabaseConnectionPerformance:
                     EvidenceItem.user_id == sample_user.id,
                     EvidenceItem.evidence_name.contains("Transaction Test"),
                 )
-                .count()
+                .count(),
             )
 
             return count
@@ -456,7 +458,7 @@ class TestDatabaseConnectionPerformance:
                         "description": f"Bulk inserted evidence item {i + 1}",
                         "status": "collected",
                         "compliance_score_impact": 70.0 + (i % 30),
-                    }
+                    },
                 )
 
             # Bulk insert
@@ -470,7 +472,7 @@ class TestDatabaseConnectionPerformance:
                     EvidenceItem.user_id == sample_user.id,
                     EvidenceItem.evidence_name.contains(f"Bulk Evidence {test_id}"),
                 )
-                .count()
+                .count(),
             )
 
             return count
@@ -523,7 +525,7 @@ class TestDatabaseIndexPerformance:
                 db_session.query(EvidenceItem)
                 .filter(EvidenceItem.user_id == sample_user.id)
                 .limit(100)
-                .all()
+                .all(),
             )
 
             # Query by status (commonly filtered field)
@@ -534,13 +536,13 @@ class TestDatabaseIndexPerformance:
                     EvidenceItem.status == "collected",
                 )
                 .limit(50)
-                .all()
+                .all(),
             )
 
             # Query by created_at (temporal queries)
-            from datetime import datetime, timedelta
+            from datetime import datetime, timedelta, timezone
 
-            yesterday = datetime.utcnow() - timedelta(days=1)
+            yesterday = datetime.now(timezone.utc) - timedelta(days=1)
             recent_evidence = (
                 db_session.query(EvidenceItem)
                 .filter(
@@ -549,7 +551,7 @@ class TestDatabaseIndexPerformance:
                 )
                 .order_by(EvidenceItem.created_at.desc())
                 .limit(20)
-                .all()
+                .all(),
             )
 
             return {
@@ -604,7 +606,7 @@ class TestDatabaseIndexPerformance:
                 EvidenceItem.user_id == sample_user.id,
                 EvidenceItem.description.contains("content 500"),
             )
-            .all()
+            .all(),
         )
 
         text_search_time = time.time() - start_time
@@ -619,7 +621,7 @@ class TestDatabaseIndexPerformance:
                 EvidenceItem.user_id == sample_user.id,
                 EvidenceItem.collection_notes.contains("searchable content 50"),
             )
-            .all()
+            .all(),
         )
 
         notes_search_time = time.time() - start_time
@@ -642,7 +644,7 @@ class TestDatabaseConcurrencyPerformance:
     """Test database performance under concurrent access"""
 
     @pytest.mark.skip(
-        reason="SQLAlchemy session sharing across threads not supported - requires separate sessions per thread"
+        reason="SQLAlchemy session sharing across threads not supported - requires separate sessions per thread",
     )
     def test_concurrent_read_performance(
         self,
@@ -711,7 +713,7 @@ class TestDatabaseConcurrencyPerformance:
                 "thread_id": thread_id,
                 "total_time": total_time,
                 "operation_count": len(results),
-                "avg_operation_time": sum(r["time"] for r in results) / len(results),
+                "avg_operation_time": sum(r["time"] for r in results) / len(results)
             }
 
         # Run concurrent read operations
@@ -727,7 +729,7 @@ class TestDatabaseConcurrencyPerformance:
         avg_total_time = sum(r["total_time"] for r in results) / len(results)
         max_total_time = max(r["total_time"] for r in results)
         avg_operation_time = sum(r["avg_operation_time"] for r in results) / len(
-            results
+            results,
         )
 
         # Performance assertions for concurrent reads
@@ -736,7 +738,7 @@ class TestDatabaseConcurrencyPerformance:
         assert avg_operation_time < 0.5  # Average operation time < 500ms
 
     @pytest.mark.skip(
-        reason="SQLAlchemy session sharing across threads not supported - requires separate sessions per thread"
+        reason="SQLAlchemy session sharing across threads not supported - requires separate sessions per thread",
     )
     def test_concurrent_write_performance(
         self,
@@ -815,7 +817,7 @@ class TestDatabaseConcurrencyPerformance:
         avg_duration = (
             sum(r["duration"] for r in successful) / len(successful)
             if successful
-            else 0
+            else 0,
         )
         max_duration = max(r["duration"] for r in successful) if successful else 0
 
@@ -833,7 +835,7 @@ class TestDatabaseConcurrencyPerformance:
                 EvidenceItem.user_id == sample_user.id,
                 EvidenceItem.evidence_name.contains("Concurrent Write Thread"),
             )
-            .count()
+            .count(),
         )
 
         expected_items = sum(r["items_created"] for r in successful)

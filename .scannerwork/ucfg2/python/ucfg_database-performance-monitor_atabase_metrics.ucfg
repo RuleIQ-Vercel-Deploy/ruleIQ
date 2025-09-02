@@ -1,20 +1,20 @@
 
 Tscripts.database-performance-monitor.DatabasePerformanceMonitor.get_database_metricsM
-C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.py) )("2*«
-2* *(,
-+ +(
+C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.py' '("2*«
+2( ((,
+) )(
 %10"dictB
 @
-+ +(	
+) )(	
 metrics"__id*#
 
 __unknown_file (
 
 %10
-- I(	
+* I(
 %11"dictÊ
 Ç
-. 1(
+* .(
 %12"__mapSet*#
 
 __unknown_file (
@@ -30,7 +30,7 @@ C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.py) )("2*
                        pg_size_pretty(pg_database_size(current_database())) as size_human
             ‰
 †
-2 9(
+/ 7(
 %13"__mapSet*#
 
 __unknown_file (
@@ -50,7 +50,7 @@ C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.py) )("2*
                 LIMIT 10
             à
 Ý
-: @(
+8 ?(
 %14"__mapSet*#
 
 __unknown_file (
@@ -69,7 +69,7 @@ C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.py) )("2*
                 WHERE datname = current_database()
             Ø
 Õ
-A H(
+@ H(
 %15"__mapSet*#
 
 __unknown_file (
@@ -89,19 +89,19 @@ C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.py) )("2*
                 FROM pg_statio_user_tables
             B
 @
-- I(		
+* I(	
 queries"__id*#
 
 __unknown_file (
 
 %11}{
-K K(
+J J(
 %16*_
 
 __unknown_file (CA
 ?scripts.database-performance-monitor.DatabasePerformanceMonitor2connect?
 =
-K K(#
+J J(#
 conn"__id*#
 
 __unknown_file (
@@ -111,14 +111,14 @@ C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.py) )("2*
 10*E
 3!
 database-performance-monitor.py"
-X X(
+W W(
 implicit return*&
-4V V("
-V V(
+4U U("
+U U(
 	
 metrics*Â
-6O O(-jh
-O O(-
+6N N(-jh
+N N(-
 %5*&
 
 __unknown_file (
@@ -129,7 +129,7 @@ C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.py) )("2*
 __unknown_file (	
 
 query2executeDB
-P! P(2
+O! O(2
 %6*&
 
 __unknown_file (
@@ -137,13 +137,13 @@ C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.py) )("2*
 
 cursor2fetchall@
 >
-P P(2
+O O(2
 result"__id*"
 
 __unknown_file (
 
 %6°­
-Q Q(5
+P P(5
 %7"dict.__setitem__*'
 
 __unknown_file (
@@ -161,22 +161,20 @@ C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.py) )("2*
 3
 4
 6
-7*Ì
-7S S(L„
-
-S% S(K
-%1"__concat*!
-S' S(8
-Error collecting *
-S9 S(D
+7*¼
+7R S(,u
+s
+R% S(+
+%1"__concat*'
+R% R(>
+Error collecting %s: %s*
+S S('
 
-metric_name*
-SE S(G
-: *
-SH S(I
+metric_name*
+S) S(*
 
 eec
-S S(L
+R S(,
 %2*&
 
 __unknown_file (
@@ -205,8 +203,8 @@ C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.py) )("2*
 %32__setitem__*
 4
 6*e
-9M* M(9NL
-M* M(9
+9L* L(9NL
+L* L(9
 %8"
 dict.items*'
 
@@ -215,15 +213,15 @@ dict.items*'
 queries2items*
 4
 6*š
-10L L((@>
-L L(
+10K K((@>
+K K(
 %9*$
 
 __unknown_file (
 
 conn2cursor@
 >
-L L((
+K K((
 cursor"__id*"
 
 __unknown_file (

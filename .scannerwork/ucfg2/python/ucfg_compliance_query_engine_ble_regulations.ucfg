@@ -1,9 +1,9 @@
 
 Tservices.ai.compliance_query_engine.ComplianceQueryEngine.get_applicable_regulationsL
-B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.py (("2*Ì
-2 %(¯
+B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.py (("2*Ì
+2 $(¯
 ¬
-& /(
+% .(
 query"__id*
 
 __unknown_file (óð
@@ -18,20 +18,20 @@ B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.py (("2*Ì
         ORDER BY r.risk_metadata.base_risk_score DESC
         
 }
-1 1(
+0 0(
 %7"__id*e
 
 __unknown_file (I*G;
 9services.ai.compliance_query_engine.ComplianceQueryEngine"
 driver?=
-1 1((
+0 0((
 %8*"
 
 __unknown_file (
 
 %72sessionA
 ?
-1 1(3	
+0 0(3	
 session"__id*"
 
 __unknown_file (
@@ -41,16 +41,16 @@ B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.py (("2*Ì
 7*@
 3
 compliance_query_engine.py"
-9 9(
+8 8(
 implicit return**
-47 7("
-7 7(
+46 6("
+6 6(
 
 regulations*Ê
-65 5('
-5 5('
+64 4('
+4 4('
 %1"dicttr
-5 5(&
+4 4(&
 %2"__mapGet*&
 
 __unknown_file (
@@ -61,7 +61,7 @@ B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.py (("2*Ì
 __unknown_file (
 r2__getitem__i
 g
-5 5('
+4 4('
 %3"dict.__init__*"
 
 __unknown_file (
@@ -72,13 +72,13 @@ g
 
 %2=
 ;
-5 5('
+4 4('
 reg"__id*"
 
 __unknown_file (
 
 %1yw
-6 6('
+5 5('
 %4"list.append*+
 
 __unknown_file (
@@ -90,8 +90,8 @@ g
 reg2append*
 4
 6*Õ
-72 2(?š—
-2 2(?
+71 1(?š—
+1 1(?
 %5*'
 
 __unknown_file (
@@ -106,16 +106,16 @@ g
 
 business_profile2run@
 >
-2 2(?
+1 1(?
 result"__id*"
 
 __unknown_file (
 
 %5
-3 3(
+2 2(
 %6"listE
 C
-3 3(
+2 2(
 regulations"__id*"
 
 __unknown_file (
@@ -123,6 +123,6 @@ C
 %6*
 4
 6:
- (.
+ (.
 business_profileB=;
 9services.ai.compliance_query_engine.ComplianceQueryEngineH

@@ -43,7 +43,7 @@ async def test_neo4j_connection():
                     created_at: datetime()
                 })
                 RETURN r
-            """
+            """,
             )
 
             test_record = await create_result.single()
@@ -54,12 +54,12 @@ async def test_neo4j_connection():
                 """
                 MATCH (r:Regulation {id: 'test-gdpr'})
                 RETURN r.title as title, r.risk_score as risk
-            """
+            """,
             )
 
             query_record = await query_result.single()
             print(
-                f"✓ Queried node: {query_record['title']} (risk: {query_record['risk']})"
+                f"✓ Queried node: {query_record['title']} (risk: {query_record['risk']})",
             )
 
             # Clean up

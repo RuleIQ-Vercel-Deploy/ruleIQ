@@ -1,67 +1,0 @@
-
-:tests.test_ingestion_simple.SimpleIngestion.create_indexesD
-:/home/omar/Documents/ruleIQ/tests/test_ingestion_simple.py( (("2*Œ
-2) )('q
-o
-* *(
-%4"__id*W
-
-__unknown_file (;*9-
-+tests.test_ingestion_simple.SimpleIngestion"
-driver?=
-* *((
-%5*"
-
-__unknown_file (
-
-%42sessionA
-?
-* *(3	
-session"__id*"
-
-__unknown_file (
-
-%5*
-3
-4*>
-3
-test_ingestion_simple.py"
-= =(
-implicit return*¿
-4, 1(×Ô
-, 1(
-%1*'
-
-__unknown_file (
-	
-session*“
-
-__unknown_file (wu
-s
-                CREATE INDEX regulation_id IF NOT EXISTS
-                FOR (r:Regulation) ON (r.id)
-            2runÝÚ
-4 9(
-%2*'
-
-__unknown_file (
-	
-session*™
-
-__unknown_file (}{
-y
-                CREATE INDEX regulation_title IF NOT EXISTS
-                FOR (r:Regulation) ON (r.title)
-            2runqo
-; ;(*
-%3*&
-
-__unknown_file (
-
-
-logger*/
-
-__unknown_file (
-Created indexes2info*
-3B/-
-+tests.test_ingestion_simple.SimpleIngestionH

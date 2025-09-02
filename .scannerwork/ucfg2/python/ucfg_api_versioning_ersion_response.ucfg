@@ -1,11 +1,11 @@
 
 Capi.middleware.api_versioning.APIVersioning.create_version_responseF
-</home/omar/Documents/ruleIQ/api/middleware/api_versioning.pyL L("2*ˆ
-2M M(7
-N U(	
+</home/omar/Documents/ruleIQ/api/middleware/api_versioning.py5 5("2*
+26 6(7
+	7 7(™
 %5"dict
 Š
-O O(
+7 7( 
 %6"__mapSet*"
 
 __unknown_file (
@@ -17,11 +17,11 @@ Capi.middleware.api_versioning.APIVersioning.create_version_responseF
 
 __unknown_file (
 
-data
-P T(
+data
+	7* 7(˜
 %7"dict—
 ”
-Q Q(&
+7+ 7(A
 %8"__mapSet*"
 
 __unknown_file (
@@ -35,14 +35,14 @@ Capi.middleware.api_versioning.APIVersioning.create_version_responseF
 	
 version}
 {
-R& R(=
+7Y 7(p
 %9"__id*c
 
 __unknown_file (G*E-
 +api.middleware.api_versioning.APIVersioning"
 SUPPORTED_VERSIONSš
 —
-R R(=
+7C 7(p
 %10"__mapSet*"
 
 __unknown_file (
@@ -54,16 +54,17 @@ Capi.middleware.api_versioning.APIVersioning.create_version_responseF
 
 __unknown_file (
 
-%9z
-x
-S" S(5
+%9|
+z
+
+7„ 7(—
 %11"__id*_
 
 __unknown_file (C*A-
 +api.middleware.api_versioning.APIVersioning"
-LATEST_VERSION—
-”
-S S(5
+LATEST_VERSION˜
+•
+	7r 7(—
 %12"__mapSet*"
 
 __unknown_file (
@@ -75,9 +76,9 @@ x
 
 __unknown_file (
 
-%11Œ
-‰
-P T(
+%11
+Š
+	7" 7(˜
 %13"__mapSet*"
 
 __unknown_file (
@@ -89,9 +90,9 @@ x
 
 __unknown_file (
 
-%7B
-@
-N U(	
+%7C
+A
+	7 7(™
 
 response"__id*"
 
@@ -99,14 +100,14 @@ x
 
 %5z
 x
-X X()
+8 8()
 %14"__id*_
 
 __unknown_file (C*A-
 +api.middleware.api_versioning.APIVersioning"
 LATEST_VERSION‘
 Ž
-X X()
+8 8()
 %15"	__compare*"
 
 __unknown_file (
@@ -121,35 +122,35 @@ x
 %14*
 4
 5*'
-4] ]("
-] ](
+4: :("
+: :(
 
 
 response*Ú
-5Y [(Zy
+59 9(ty
 w
-[< [(O
+9V 9(i
 %1"__id*_
 
 __unknown_file (C*A-
 +api.middleware.api_versioning.APIVersioning"
 LATEST_VERSION©
 ¦
-[ [(Z
+9* 9(t
 %2"__concat*
-[ [(
+9, 9(8
 API version *
-[ [(&
+99 9(@
 	
 version*$
-[' [(;
+9A 9(U
  is deprecated. Use *
-[< [(O
+9V 9(i
 
 %1*
-[P [(Y
+9j 9(s
 	 instead.yw
-Y Y(
+9 9(
 %4"__mapGet*(
 
 __unknown_file (
@@ -159,7 +160,7 @@ w
 
 __unknown_file (
 meta2__getitem__£ 
-Y [(Z
+9 9(t
 %3"dict.__setitem__*"
 
 __unknown_file (
@@ -173,8 +174,8 @@ w
 
 %22__setitem__*
 4:
-L& L(2	
+5& 5(2	
 version:
-L4 L(=
+54 5(=
 dataB/-
 +api.middleware.api_versioning.APIVersioningH

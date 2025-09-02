@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Core agent architecture with LangGraph state machine and multi-agent coordination.
 Production-ready implementation with streaming, context optimization, and error handling.
 """
@@ -6,7 +8,7 @@ Production-ready implementation with streaming, context optimization, and error 
 import logging
 from typing import Dict, Optional, Any, Union, AsyncGenerator
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from uuid import UUID, uuid4
 from enum import Enum
 
@@ -149,7 +151,7 @@ class AgentMetrics:
         """Convert metrics to dictionary for logging."""
         return {
             "session_id": self.session_id,
-            "duration_seconds": (datetime.utcnow() - self.start_time).total_seconds(),
+            "duration_seconds": (datetime.now(timezone.utc) - self.start_time).total_seconds(),
             "total_latency_ms": self.total_latency_ms,
             "avg_latency_ms": self.total_latency_ms / max(self.total_turns, 1),
             "first_token_latency_ms": self.first_token_latency_ms,
@@ -295,7 +297,7 @@ class ComplianceAgent:
             )
 
         metrics = self.active_sessions[session_id]
-        start_time = datetime.utcnow()
+        start_time = datetime.now(timezone.utc)
 
         try:
             # Check limits
@@ -346,7 +348,7 @@ class ComplianceAgent:
             response = last_message.content if last_message else "No response generated"
 
             # Update metrics
-            end_time = datetime.utcnow()
+            end_time = datetime.now(timezone.utc)
             latency_ms = int((end_time - start_time).total_seconds() * 1000)
             metrics.update_latency(latency_ms)
             metrics.total_turns += 1
@@ -405,7 +407,7 @@ class ComplianceAgent:
             return
 
         metrics = self.active_sessions[session_id]
-        start_time = datetime.utcnow()
+        start_time = datetime.now(timezone.utc)
         first_token_time = None
 
         try:
@@ -427,7 +429,7 @@ class ComplianceAgent:
             async for chunk in self.compiled_graph.astream(state, config=config):
                 # Record first token time
                 if first_token_time is None:
-                    first_token_time = datetime.utcnow()
+                    first_token_time = datetime.now(timezone.utc)
                     first_token_latency = int(
                         (first_token_time - start_time).total_seconds() * 1000
                     )
@@ -436,7 +438,7 @@ class ComplianceAgent:
                 yield chunk
 
             # Update metrics
-            end_time = datetime.utcnow()
+            end_time = datetime.now(timezone.utc)
             total_latency = int((end_time - start_time).total_seconds() * 1000)
             metrics.update_latency(total_latency)
             metrics.total_turns += 1
@@ -492,7 +494,7 @@ class ComplianceAgent:
         """Perform health check on agent components."""
         health = {
             "agent": "healthy",
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "active_sessions": len(self.active_sessions),
             "components": {},
         }

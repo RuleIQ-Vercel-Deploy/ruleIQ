@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Test database connection fixes."""
 
+from __future__ import annotations
+
 import sys
 import os
 import asyncio
@@ -67,7 +69,7 @@ async def test_database_connection() -> Optional[bool]:
         print("\n✅ All database connection tests passed!")
         return True
 
-    except Exception as e:
+    except (Exception, ValueError) as e:
         print(f"\n❌ Database connection test failed: {e}")
         import traceback
 
@@ -77,7 +79,7 @@ async def test_database_connection() -> Optional[bool]:
         try:
             await _db_manager.dispose()
             print("✓ Database engines disposed")
-        except:
+        except (Exception, ValueError):
             pass
 
 

@@ -1,43 +1,0 @@
-
-"user_access_logs"str
-"admin_activity_logs"str
-"access_groups"str
-"domain_configuration"str
-0'"Get list of supported evidence types."str
-
-0int
-"user_directory"strself
-ù% ù()	list"ñ)
-'
-
-ü •(	"#unknown-value#Blist(
-&
-
-ü •(	
-"
-#is-exact#:	Bbool
-
-
-ü •(	"
-#assume#:
-:
-8
-
-ü •(	"#set-field# __collection_size:Bint(
-&
-
-ü •(	"#array-add-last#:(
-&
-
-ü •(	"#array-add-last#:(
-&
-
-ü •(	"#array-add-last#:(
-&
-
-ü •(	"#array-add-last#:(
-&
-
-ü •(	"#array-add-last#:
-
-ü •(	*B/home/omar/Documents/ruleIQ/api/clients/google_workspace_client.py

@@ -30,7 +30,7 @@ class PriorityLevel(str, Enum):
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
-    URGENT = "urgent"
+#     URGENT = "urgent"  # Unused variable
 
 
 class ConfidenceLevel(str, Enum):
@@ -39,26 +39,26 @@ class ConfidenceLevel(str, Enum):
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
-    VERY_HIGH = "very_high"
+#     VERY_HIGH = "very_high"  # Unused variable
 
 
 class ImplementationEffort(str, Enum):
     """Implementation effort estimates."""
 
-    MINIMAL = "minimal"  # < 1 week
+#     MINIMAL = "minimal"  # < 1 week  # Unused variable
     LOW = "low"  # 1-2 weeks
     MEDIUM = "medium"  # 2-6 weeks
     HIGH = "high"  # 6-12 weeks
-    EXTENSIVE = "extensive"  # > 12 weeks
+#     EXTENSIVE = "extensive"  # > 12 weeks  # Unused variable
 
 
 class RiskLevel(str, Enum):
     """Risk assessment levels."""
 
-    LOW = "low"
-    MEDIUM = "medium"
-    HIGH = "high"
-    CRITICAL = "critical"
+#     LOW = "low"  # Unused variable
+#     MEDIUM = "medium"  # Unused variable
+#     HIGH = "high"  # Unused variable
+#     CRITICAL = "critical"  # Unused variable
 
 
 # =====================================================================
@@ -435,7 +435,7 @@ class StructuredAIResponse(TypedDict):
         ChatResponse,
         PolicyDocument,
         EvidenceWorkflow,
-        Dict[str, Any],  # Fallback for custom responses
+        Dict[str, Any],  # Fallback for custom responses,
     ]
     validation_passed: bool
     fallback_used: bool
@@ -473,7 +473,7 @@ class SchemaValidationResult(TypedDict):
 # =====================================================================
 
 # Union of all possible AI response types
-AIResponseType = Union[
+# AIResponseType = Union[  # Unused variable
     GapAnalysisResponse,
     RecommendationResponse,
     AssessmentAnalysisResponse,
@@ -485,7 +485,7 @@ AIResponseType = Union[
 ]
 
 # Union of all structured response schemas
-StructuredResponseSchema = Union[
+# StructuredResponseSchema = Union[  # Unused variable
     GapAnalysisResponse,
     RecommendationResponse,
     AssessmentAnalysisResponse,

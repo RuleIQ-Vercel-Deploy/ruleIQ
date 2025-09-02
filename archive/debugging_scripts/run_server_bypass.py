@@ -2,6 +2,9 @@
 """
 Run server with JWT fix verification - bypasses sentry issues
 """
+import logging
+logger = logging.getLogger(__name__)
+
 
 import os
 import sys
@@ -20,13 +23,13 @@ sentry_mock.init = lambda *args, **kwargs: None
 sys.modules["sentry_sdk"] = sentry_mock
 
 # Now run the actual verification
-print("Starting server with JWT fix...")
-print("=" * 60)
+logger.info("Starting server with JWT fix...")
+logger.info("=" * 60)
 
 # Import after mocking
 from api.main import app
 import uvicorn
 
 # Run server
-print("✓ Server starting on port 8000...")
+logger.info("✓ Server starting on port 8000...")
 uvicorn.run(app, host="127.0.0.1", port=8000)

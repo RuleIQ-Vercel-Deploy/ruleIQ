@@ -1,90 +1,74 @@
 
-3audit_logging.AuditLoggingService.log_authorizationJ
->/home/omar/Documents/ruleIQ/services/security/audit_logging.py¶ ¶("2*Ñ
-2
-Ø Ø(&k
-i
-
-± ±(3
+3audit_logging.AuditLoggingService.log_authorizationH
+>/home/omar/Documents/ruleIQ/services/security/audit_logging.pyq q("2*Ä
+2t t(&i
+g
+u/ u(K
 %1"__id*O
 
 __unknown_file (3*1
 audit_logging.AuditEventType"
 AUTHORIZATION*
 4
-5*À
-4
-≥ ≥(3r
-p
-
-≥ ≥(3
+5*≈
+4v v(6p
+n
+v v(6
 %3"__id*V
 
 __unknown_file (:*8 
 audit_logging.AuditEventAction"
-PERMISSION_GRANTED>
-<
-
-≥ ≥(3
+PERMISSION_GRANTED<
+:
+v v(6
 %2"__id*"
 
 __unknown_file (
 
 %3*
 7
-8* 
-5
-µ µ(7q
-o
-
-µ µ(7
+8*ƒ
+5w w(.o
+m
+w w(.
 %4"__id*U
 
 __unknown_file (9*7 
 audit_logging.AuditEventAction"
-PERMISSION_DENIED>
-<
-
-µ µ(7
+PERMISSION_DENIED<
+:
+w w(.
 %2"__id*"
 
 __unknown_file (
 
 %4*
 7
-8*Y
-7
-π π(C
-A
-
-π π(
+8*U
+7x x(&A
+?
+x x(&
 %5"__id*'
 
 __unknown_file (	
 SUCCESS*
-9*X
-8
-π- π(5B
-@
-
-π- π(5
+9*T
+8x7 x(?@
+>
+x7 x(?
 %5"__id*&
 
 __unknown_file (
 
 DENIED*
-9*ç
-9
-π- π(5
-
-∫ ∫(G
-%6"dict
-
-∫ ∫(2
-%7"dictõ
-ò
-
-∫ ∫(1
+9*ˇ
+9x7 x(?
+xJ y(=
+%6"dict
+y y((
+%7"dictô
+ñ
+y y('
 %8"__mapSet*"
 
 __unknown_file (
@@ -98,12 +82,10 @@ permission**
 __unknown_file (
 
 
-permission
-
-∫C ∫(E
-%9"dictÚÔ
-
-∞ º(	
+permission
+y9 y(;
+%9"dictÌ
+u y(E
 %10*A
 
 __unknown_file (%#
@@ -130,30 +112,23 @@ event_type
 %6:
 db
 
-db"
-
-∞ º(	
+db"
+u y(E
 
-%10:
+%10:
+q& q(2	
+user_id:
+q4 q(A
 
-® ®(	
-user_id:
+resource:
+r r(
 
-© ©(
+permission:
+r r(&	
+granted:
+r( r(E
 
-resource:
-
-™ ™(
-
-permission:
-
-´ ´(	
-granted:
-
-¨ ¨('
-
-metadata:
-
-≠ ≠(
+metadata:
+rG s(
 dbB%#
 !audit_logging.AuditLoggingServiceH

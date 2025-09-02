@@ -1,32 +1,0 @@
-
-
-"<NUMBER>"str
-"<UUID>"str
-"/[a-zA-Z0-9_/]+\.py"str
-"<TIMESTAMP>"str
-?6"Normalize error messages by removing dynamic content"str
-"<FILE>"str
-.%"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}"str
-
-"\d+"str
-KB"\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b"strselfn! n(%messagen' n(3"ã*
-(
-s w(	
-normalized"	
-resub:*
-(
-x z(		
-normalized"	
-resub:*
-(
-{ {(;
-normalized"	
-resub:
-	*
-(
-| |(I
-normalized"	
-resub:!
-
-} }("#unknown-value#
-} }(*4/home/omar/Documents/ruleIQ/config/error_tracking.py

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+
 Standalone Test for Statistical Analysis Components
 
 Tests the core statistical testing capabilities without requiring

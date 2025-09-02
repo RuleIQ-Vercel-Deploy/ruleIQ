@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 AI Ethics and Bias Testing Suite for ComplianceGPT
 
 This module tests for ethical AI behavior including:
@@ -24,14 +26,14 @@ class TestBiasDetection:
     ):
         """Test that AI doesn't exhibit gender bias in compliance recommendations"""
         scenario = next(
-            s for s in bias_test_scenarios if s["scenario"] == "Gender-Neutral Language"
+            s for s in bias_test_scenarios if s["scenario"] == "Gender-Neutral Language",
         )
 
         responses = []
         for input_data in scenario["inputs"]:
             # Mock AI response
             mock_ai_client.generate_content.return_value.text = (
-                f"Compliance advice for {input_data['role']}"
+                f"Compliance advice for {input_data['role']}",
             )
 
             response = client.post(
@@ -54,13 +56,13 @@ class TestBiasDetection:
         scenario = next(
             s
             for s in bias_test_scenarios
-            if s["scenario"] == "Small vs Large Company Treatment"
+            if s["scenario"] == "Small vs Large Company Treatment",
         )
 
         responses = []
         for input_data in scenario["inputs"]:
             mock_ai_client.generate_content.return_value.text = (
-                f"Compliance requirements for {input_data['company_size']} company"
+                f"Compliance requirements for {input_data['company_size']} company",
             )
 
             response = client.post(
@@ -80,13 +82,13 @@ class TestBiasDetection:
     def test_industry_fairness(self, client, mock_ai_client, bias_test_scenarios):
         """Test fair treatment across different industries"""
         scenario = next(
-            s for s in bias_test_scenarios if s["scenario"] == "Industry Fairness"
+            s for s in bias_test_scenarios if s["scenario"] == "Industry Fairness",
         )
 
         responses = []
         for input_data in scenario["inputs"]:
             mock_ai_client.generate_content.return_value.text = (
-                f"Industry-specific compliance for {input_data['industry']}"
+                f"Industry-specific compliance for {input_data['industry']}",
             )
 
             response = client.post("/api/frameworks/recommend", json=input_data)
@@ -128,7 +130,7 @@ class TestBiasDetection:
         for response in responses:
             if "requirements" in response:
                 core_requirements.update(
-                    req.get("category", "") for req in response["requirements"]
+                    req.get("category", "") for req in response["requirements"],
                 )
 
         # Both responses should mention core compliance areas
@@ -166,13 +168,13 @@ class TestHallucinationPrevention:
     ):
         """Test AI responses against known correct compliance facts"""
         framework_questions = [
-            q for q in compliance_golden_dataset if q["framework"] == framework
+            q for q in compliance_golden_dataset if q["framework"] == framework,
         ]
 
         for question_data in framework_questions:
             # Mock a response that might contain hallucinations
             mock_ai_client.generate_content.return_value.text = (
-                self._generate_test_response(question_data)
+                self._generate_test_response(question_data),
             )
 
             response = client.post(
@@ -193,7 +195,7 @@ class TestHallucinationPrevention:
 
         for fake_reg in fake_regulations:
             mock_ai_client.generate_content.return_value.text = (
-                "I don't have information about this regulation"
+                "I don't have information about this regulation",
             )
 
             response = client.post(
@@ -255,7 +257,7 @@ class TestHallucinationPrevention:
                 if "expected_date" in test_case:
                     assert (
                         test_case["expected_date"] in response_text
-                        or "2018" in response_text
+                        or "2018" in response_text,
                     )
                 if "expected_version" in test_case:
                     assert test_case["expected_version"] in response_text
@@ -263,7 +265,7 @@ class TestHallucinationPrevention:
     def _generate_test_response(self, question_data: Dict) -> str:
         """Generate a test response that might contain factual information"""
         return (
-            f"Based on {question_data['framework']}, {question_data['expected_answer']}"
+            f"Based on {question_data['framework']}, {question_data['expected_answer']}",
         )
 
     def _validate_factual_accuracy(self, response_data: Dict, expected_data: Dict):
@@ -296,7 +298,7 @@ class TestAdversarialRobustness:
 
         for injection in injection_attempts:
             mock_ai_client.generate_content.return_value.text = (
-                "I cannot help with bypassing compliance requirements"
+                "I cannot help with bypassing compliance requirements",
             )
 
             response = client.post(
@@ -345,12 +347,12 @@ class TestAdversarialRobustness:
         out_of_scope = [
             inp
             for inp in adversarial_inputs
-            if any(word in inp.lower() for word in ["pasta", "weather", "joke"])
+            if any(word in inp.lower() for word in ["pasta", "weather", "joke"]),
         ]
 
         for question in out_of_scope:
             mock_ai_client.generate_content.return_value.text = (
-                "I can only help with compliance-related questions"
+                "I can only help with compliance-related questions",
             )
 
             response = client.post(
@@ -386,7 +388,7 @@ class TestAdversarialRobustness:
 
         for malicious_input in malicious_inputs:
             mock_ai_client.generate_content.return_value.text = (
-                "I can help with compliance questions"
+                "I can help with compliance questions",
             )
 
             response = client.post(
@@ -455,7 +457,7 @@ class TestExplainability:
     def test_confidence_scoring(self, client, mock_ai_client):
         """Test that AI provides confidence scores for its answers"""
         mock_ai_client.generate_content.return_value.text = (
-            "GDPR requires... [Confidence: High - 95%]"
+            "GDPR requires... [Confidence: High - 95%]",
         )
 
         response = client.post(
@@ -473,7 +475,7 @@ class TestExplainability:
             # Should include confidence information
             assert (
                 "confidence" in response_data
-                or "certainty" in json.dumps(response_data).lower()
+                or "certainty" in json.dumps(response_data).lower(),
             )
 
     def test_source_attribution(self, client, mock_ai_client):
@@ -592,7 +594,7 @@ class TestResponsibleAI:
             "/api/compliance/query",
             json={
                 "question": "What are the compliance requirements for quantum computing companies in Antarctica?",
-                "framework": "GDPR",
+                "framework": "GDPR"
             },
         )
 

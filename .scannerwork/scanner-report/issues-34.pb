@@ -1,19 +1,20 @@
-c
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-   /c
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-êê /c
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-ºº /“
+“
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-ïï :)
+ :)
 '"
-ïï 	This function is async.“
+ 	This function is async.È
+pythonS5886cReturn a value of type "str" instead of "tuple" or update function "_generate_cache_key" type hint. 2
+ØÚ :&
+$"
+ÑÑ Function definition.:
+"
+ÒÒ> A
+Type hint.“
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-”” :)
+îî :)
 '"
-”” 	This function is async.‘
+îî 	This function is async.‘
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-ôô
+ÒÒ
  $:'
-%"ôô This function is async.
+%"ÒÒ This function is async.

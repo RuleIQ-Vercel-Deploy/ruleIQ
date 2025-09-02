@@ -335,7 +335,7 @@ export function logError(error: EnhancedApiError, additionalContext?: any): void
     return;
   }
 
-  const errorLog = {
+  const _errorLog = {
     timestamp: new Date().toISOString(),
     type: error.type || 'UNKNOWN',
     severity: error.severity || 'ERROR',

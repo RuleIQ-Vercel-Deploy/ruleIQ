@@ -17,8 +17,7 @@ interface QualityMetrics {
   accessibility: AccessibilityMetrics;
   testStability: TestStabilityMetrics;
   codeQuality: CodeQualityMetrics;
-  trends: TrendAnalysis;
-}
+  trends: TrendAnalysis}
 
 interface CoverageMetrics {
   statements: number;
@@ -27,53 +26,46 @@ interface CoverageMetrics {
   lines: number;
   threshold: boolean;
   uncoveredFiles: string[];
-  criticalUncovered: string[];
-}
+  criticalUncovered: string[]}
 
 interface PerformanceMetrics {
   lighthouse: LighthouseScores;
   coreWebVitals: CoreWebVitals;
   bundleSize: BundleSizeMetrics;
-  buildTime: number;
-}
+  buildTime: number}
 
 interface LighthouseScores {
   performance: number;
   accessibility: number;
   bestPractices: number;
   seo: number;
-  pwa: number;
-}
+  pwa: number}
 
 interface CoreWebVitals {
   cls: number;
   fid: number;
   lcp: number;
   fcp: number;
-  ttfb: number;
-}
+  ttfb: number}
 
 interface BundleSizeMetrics {
   totalSize: number;
   jsSize: number;
   cssSize: number;
   imageSize: number;
-  chunks: number;
-}
+  chunks: number}
 
 interface AccessibilityMetrics {
   violations: number;
   wcagLevel: 'A' | 'AA' | 'AAA';
   score: number;
-  criticalIssues: A11yIssue[];
-}
+  criticalIssues: A11yIssue[]}
 
 interface A11yIssue {
   rule: string;
   impact: 'minor' | 'moderate' | 'serious' | 'critical';
   nodes: number;
-  description: string;
-}
+  description: string}
 
 interface TestStabilityMetrics {
   totalTests: number;
@@ -81,36 +73,31 @@ interface TestStabilityMetrics {
   flakyTests: number;
   flakyRate: number;
   avgTestDuration: number;
-  slowestTests: SlowTest[];
-}
+  slowestTests: SlowTest[]}
 
 interface SlowTest {
   name: string;
   duration: number;
-  file: string;
-}
+  file: string}
 
 interface CodeQualityMetrics {
   lintErrors: number;
   lintWarnings: number;
   typeErrors: number;
   duplicateCode: number;
-  complexity: number;
-}
+  complexity: number}
 
 interface TrendAnalysis {
   coverageTrend: 'improving' | 'stable' | 'degrading';
   performanceTrend: 'improving' | 'stable' | 'degrading';
   stabilityTrend: 'improving' | 'stable' | 'degrading';
-  qualityScore: number;
-}
+  qualityScore: number}
 
 interface RiskArea {
   area: string;
   riskLevel: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
   issues: string[];
-  recommendations: string[];
-}
+  recommendations: string[]}
 
 class AvaQualityDashboard {
   private readonly frontendPath = process.cwd();
@@ -119,13 +106,11 @@ class AvaQualityDashboard {
 
   constructor() {
     // TODO: Replace with proper logging
-    this.ensureDirectories();
-  }
+    this.ensureDirectories()}
 
   private ensureDirectories(): void {
-    if (!existsSync(this.reportsPath)) {
-      mkdirSync(this.reportsPath, { recursive: true });
-    }
+    if (!existsSync(this.reportsPath) {
+      mkdirSync(this.reportsPath, { recursive: true })}
   }
 
   async generateQualityReport(): Promise<QualityMetrics> {
@@ -143,8 +128,7 @@ class AvaQualityDashboard {
     await this.saveQualityReport(metrics);
     await this.generateHTMLDashboard(metrics);
     
-    return metrics;
-  }
+    return metrics}
 
   private async collectCoverageMetrics(): Promise<CoverageMetrics> {
     // TODO: Replace with proper logging
@@ -154,8 +138,7 @@ class AvaQualityDashboard {
         cwd: this.frontendPath 
       });
       
-      return this.parseCoverageOutput(coverageOutput);
-    } catch (error: unknown) {
+      return this.parseCoverageOutput(coverageOutput)} catch (error: unknown) {
       console.warn('⚠️ Could not collect coverage metrics');
       return {
         statements: 0,
@@ -165,8 +148,7 @@ class AvaQualityDashboard {
         threshold: false,
         uncoveredFiles: [],
         criticalUncovered: []
-      };
-    }
+      }}
   }
 
   private parseCoverageOutput(output: string): CoverageMetrics {
@@ -185,8 +167,7 @@ class AvaQualityDashboard {
     // Extract uncovered files
     const uncoveredFiles = this.extractUncoveredFiles(output);
     const criticalUncovered = uncoveredFiles.filter(file => 
-      file.includes('auth/') || file.includes('payment/') || file.includes('security/')
-    );
+      file.includes('auth/') || file.includes('payment/') || file.includes('security/');
 
     return {
       statements,
@@ -196,25 +177,22 @@ class AvaQualityDashboard {
       threshold,
       uncoveredFiles,
       criticalUncovered
-    };
-  }
+    }}
 
   private extractUncoveredFiles(output: string): string[] {
     const uncoveredPattern = /Uncovered Line #s\s+:\s+(.+)/g;
     const files: string[] = [];
     let match;
 
-    while ((match = uncoveredPattern.exec(output)) !== null) {
+    while ((match = uncoveredPattern.exec(output) !== null) {
       // Extract file paths from coverage output
       const filePattern = /([^\s]+\.tsx?)/g;
       let fileMatch;
-      while ((fileMatch = filePattern.exec(match[1])) !== null) {
-        files.push(fileMatch[1]);
-      }
+      while ((fileMatch = filePattern.exec(match[1]) !== null) {
+        files.push(fileMatch[1])}
     }
 
-    return [...new Set(files)];
-  }
+    return [...new Set(files)]}
 
   private async collectPerformanceMetrics(): Promise<PerformanceMetrics> {
     // TODO: Replace with proper logging
@@ -247,16 +225,14 @@ class AvaQualityDashboard {
         },
         bundleSize: bundleStats,
         buildTime: 0 // TODO: Measure build time
-      };
-    } catch {
+      }} catch {
       console.warn('⚠️ Could not collect performance metrics');
       return {
         lighthouse: { performance: 0, accessibility: 0, bestPractices: 0, seo: 0, pwa: 0 },
         coreWebVitals: { cls: 0, fid: 0, lcp: 0, fcp: 0, ttfb: 0 },
         bundleSize: { totalSize: 0, jsSize: 0, cssSize: 0, imageSize: 0, chunks: 0 },
         buildTime: 0
-      };
-    }
+      }}
   }
 
   private async getBundleSize(): Promise<BundleSizeMetrics> {
@@ -268,11 +244,10 @@ class AvaQualityDashboard {
       const sizes: number[] = [];
       let match;
 
-      while ((match = sizePattern.exec(buildOutput)) !== null) {
+      while ((match = sizePattern.exec(buildOutput) !== null) {
         const size = parseFloat(match[1]);
         const unit = match[2];
-        sizes.push(unit === 'MB' ? size * 1024 : size);
-      }
+        sizes.push(unit === 'MB' ? size * 1024 : size)}
 
       return {
         totalSize: sizes.reduce((a, b) => a + b, 0),
@@ -280,10 +255,8 @@ class AvaQualityDashboard {
         cssSize: sizes[1] || 0,
         imageSize: sizes[2] || 0,
         chunks: sizes.length
-      };
-    } catch {
-      return { totalSize: 0, jsSize: 0, cssSize: 0, imageSize: 0, chunks: 0 };
-    }
+      }} catch {
+      return { totalSize: 0, jsSize: 0, cssSize: 0, imageSize: 0, chunks: 0 }}
   }
 
   private async collectAccessibilityMetrics(): Promise<AccessibilityMetrics> {
@@ -294,16 +267,14 @@ class AvaQualityDashboard {
         cwd: this.frontendPath
       });
       
-      return this.parseA11yOutput(a11yOutput);
-    } catch {
+      return this.parseA11yOutput(a11yOutput)} catch {
       console.warn('⚠️ Could not collect accessibility metrics');
       return {
         violations: 0,
         wcagLevel: 'A',
         score: 0,
         criticalIssues: []
-      };
-    }
+      }}
   }
 
   private parseA11yOutput(output: string): AccessibilityMetrics {
@@ -317,8 +288,7 @@ class AvaQualityDashboard {
       wcagLevel: violations === 0 ? &apos;AA' : violations < 5 ? 'A' : 'A',
       score: Math.max(0, 100 - violations * 10),
       criticalIssues: [] // TODO: Parse specific issues
-    };
-  }
+    }}
 
   private async collectTestStabilityMetrics(): Promise<TestStabilityMetrics> {
     // TODO: Replace with proper logging
@@ -327,10 +297,9 @@ class AvaQualityDashboard {
       const flakyDataPath = join(this.frontendPath, 'test-results', 'flaky-tests.json');
       let flakyTests = 0;
       
-      if (existsSync(flakyDataPath)) {
-        const flakyData = JSON.parse(readFileSync(flakyDataPath, 'utf8'));
-        flakyTests = Object.keys(flakyData).length;
-      }
+      if (existsSync(flakyDataPath) {
+        const flakyData = JSON.parse(readFileSync(flakyDataPath, 'utf8');
+        flakyTests = Object.keys(flakyData).length}
 
       // Run quick test to get current stats
       const testOutput = execSync('pnpm test --run --reporter=json', {
@@ -350,8 +319,7 @@ class AvaQualityDashboard {
         avgTestDuration: testResults.testResults?.reduce((acc: number, result: any) => 
           acc + (result.perfStats?.runtime || 0), 0) / (testResults.testResults?.length || 1) || 0,
         slowestTests: [] // TODO: Extract slowest tests
-      };
-    } catch {
+      }} catch {
       console.warn('⚠️ Could not collect test stability metrics');
       return {
         totalTests: 0,
@@ -360,8 +328,7 @@ class AvaQualityDashboard {
         flakyRate: 0,
         avgTestDuration: 0,
         slowestTests: []
-      };
-    }
+      }}
   }
 
   private async collectCodeQualityMetrics(): Promise<CodeQualityMetrics> {
@@ -374,10 +341,9 @@ class AvaQualityDashboard {
         lintErrors: (lintOutput.match(/error/g) || []).length,
         lintWarnings: (lintOutput.match(/warning/g) || []).length,
         typeErrors: (typeOutput.match(/error/g) || []).length,
-        duplicateCode: 0, // TODO: Implement duplicate detection
-        complexity: 0 // TODO: Implement complexity analysis
-      };
-    } catch (error: unknown) {
+        duplicateCode: 0, // NOTE: Implementation pending duplicate detection
+        complexity: 0 // NOTE: Implementation pending complexity analysis
+      }} catch (error: unknown) {
       // Parse errors from failed lint/typecheck
       const output = error.stdout || '';
       return {
@@ -386,8 +352,7 @@ class AvaQualityDashboard {
         typeErrors: (output.match(/TS\d+:/g) || []).length,
         duplicateCode: 0,
         complexity: 0
-      };
-    }
+      }}
   }
 
   private async analyzeTrends(): Promise<TrendAnalysis> {
@@ -401,8 +366,7 @@ class AvaQualityDashboard {
         performanceTrend: 'stable',
         stabilityTrend: 'stable',
         qualityScore: 75
-      };
-    }
+      }}
 
     const latest = historicalReports[0];
     const previous = historicalReports[1];
@@ -412,31 +376,26 @@ class AvaQualityDashboard {
       performanceTrend: this.calculateTrend(latest.performance.lighthouse.performance, previous.performance.lighthouse.performance),
       stabilityTrend: this.calculateTrend(1 - latest.testStability.flakyRate, 1 - previous.testStability.flakyRate),
       qualityScore: this.calculateQualityScore(latest)
-    };
-  }
+    }}
 
   private loadHistoricalReports(): QualityMetrics[] {
     try {
       const reportFiles = readdirSync(this.reportsPath)
-        .filter(f => f.startsWith('quality-report-') && f.endsWith('.json'))
+        .filter(f => f.startsWith('quality-report-') && f.endsWith('.json')
         .sort()
         .reverse()
         .slice(0, 5);
 
       return reportFiles.map(file => {
         const content = readFileSync(join(this.reportsPath, file), 'utf8');
-        return JSON.parse(content);
-      });
-    } catch {
-      return [];
-    }
+        return JSON.parse(content)})} catch {
+      return []}
   }
 
   private calculateTrend(current: number, previous: number): 'improving' | 'stable' | 'degrading' {
     const change = current - previous;
     if (Math.abs(change) < 2) return 'stable';
-    return change > 0 ? 'improving' : 'degrading';
-  }
+    return change > 0 ? 'improving' : 'degrading'}
 
   private calculateQualityScore(metrics: QualityMetrics): number {
     const weights = {
@@ -465,12 +424,11 @@ class AvaQualityDashboard {
       metrics.accessibility.score * weights.accessibility +
       stabilityScore * weights.stability +
       codeQualityScore * weights.codeQuality
-    );
-  }
+    )}
 
   private async saveQualityReport(metrics: QualityMetrics): Promise<void> {
     const reportPath = join(this.reportsPath, `quality-report-${Date.now()}.json`);
-    writeFileSync(reportPath, JSON.stringify(metrics, null, 2));
+    writeFileSync(reportPath, JSON.stringify(metrics, null, 2);
     // TODO: Replace with proper logging
   }
 
@@ -491,25 +449,25 @@ class AvaQualityDashboard {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ava&apos;s Quality Dashboard - ruleIQ</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background: #f5f5f5; }
-        .dashboard { max-width: 1200px; margin: 0 auto; }
-        .header { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 20px; }
-        .metric-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .metric-title { font-size: 18px; font-weight: 600; margin-bottom: 10px; }
-        .metric-value { font-size: 32px; font-weight: 700; margin-bottom: 5px; }
-        .metric-trend { font-size: 14px; }
-        .trend-improving { color: #10b981; }
-        .trend-stable { color: #6b7280; }
-        .trend-degrading { color: #ef4444; }
-        .risk-high { border-left: 4px solid #ef4444; }
-        .risk-medium { border-left: 4px solid #f59e0b; }
-        .risk-low { border-left: 4px solid #10b981; }
-        .quality-score { font-size: 48px; font-weight: 800; text-align: center; }
-        .score-excellent { color: #10b981; }
-        .score-good { color: #3b82f6; }
-        .score-fair { color: #f59e0b; }
-        .score-poor { color: #ef4444; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 0; padding: 20px; background: #f5f5f5}
+        .dashboard { max-width: 1200px; margin: 0 auto}
+        .header { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1)}
+        .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr); gap: 20px; margin-bottom: 20px}
+        .metric-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1)}
+        .metric-title { font-size: 18px; font-weight: 600; margin-bottom: 10px}
+        .metric-value { font-size: 32px; font-weight: 700; margin-bottom: 5px}
+        .metric-trend { font-size: 14px}
+        .trend-improving { color: #10b981}
+        .trend-stable { color: #6b7280}
+        .trend-degrading { color: #ef4444}
+        .risk-high { border-left: 4px solid #ef4444}
+        .risk-medium { border-left: 4px solid #f59e0b}
+        .risk-low { border-left: 4px solid #10b981}
+        .quality-score { font-size: 48px; font-weight: 800; text-align: center}
+        .score-excellent { color: #10b981}
+        .score-good { color: #3b82f6}
+        .score-fair { color: #f59e0b}
+        .score-poor { color: #ef4444}
     </style>
 </head>
 <body>
@@ -569,15 +527,13 @@ class AvaQualityDashboard {
         </div>
     </div>
 </body>
-</html>`;
-  }
+</html>`}
 
   private getScoreClass(score: number): string {
     if (score >= 90) return 'score-excellent';
     if (score >= 80) return 'score-good';
     if (score >= 70) return 'score-fair';
-    return 'score-poor';
-  }
+    return 'score-poor'}
 
   private identifyRiskAreas(metrics: QualityMetrics): RiskArea[] {
     const risks: RiskArea[] = [];
@@ -589,8 +545,7 @@ class AvaQualityDashboard {
         riskLevel: 'HIGH',
         issues: [`Coverage below threshold (${metrics.coverage.statements.toFixed(1)}%)`],
         recommendations: ['Increase test coverage', 'Focus on critical paths']
-      });
-    }
+      })}
 
     // Performance risks
     if (metrics.performance.lighthouse.performance < 90) {
@@ -599,8 +554,7 @@ class AvaQualityDashboard {
         riskLevel: 'MEDIUM',
         issues: [`Lighthouse score: ${metrics.performance.lighthouse.performance}`],
         recommendations: ['Optimize bundle size', 'Improve Core Web Vitals']
-      });
-    }
+      })}
 
     // Flaky test risks
     if (metrics.testStability.flakyRate > 0.05) {
@@ -609,11 +563,9 @@ class AvaQualityDashboard {
         riskLevel: 'HIGH',
         issues: [`${(metrics.testStability.flakyRate * 100).toFixed(1)}% flaky tests`],
         recommendations: ['Fix flaky tests', 'Improve test isolation']
-      });
-    }
+      })}
 
-    return risks;
-  }
+    return risks}
 }
 
 // CLI execution
@@ -639,12 +591,10 @@ async function main() {
     // Development logging - consider proper logger
 
     console.error('❌ Quality dashboard generation failed:', _error);
-    process.exit(1);
-  }
+    process.exit(1)}
 }
 
 if (require.main === module) {
-  main();
-}
+  main()}
 
 export { AvaQualityDashboard };

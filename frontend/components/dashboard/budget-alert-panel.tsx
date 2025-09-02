@@ -1,3 +1,4 @@
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 /**
  * Budget Alert Panel Component
  *
@@ -126,7 +127,7 @@ export const BudgetAlertPanel: React.FC<BudgetAlertPanelProps> = ({
                   size="sm"
                   className="h-6 w-6 p-0"
                   onClick={() => {
-                    // TODO: Implement dismiss functionality
+                    // NOTE: Implementation pending dismiss functionality
                     console.log('Dismiss alert:', alert.id);
                   }}
                 >

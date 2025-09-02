@@ -19,7 +19,7 @@ if __name__ == "__main__":
             "--tb=short",
             "--capture=no",
             "--log-cli-level=DEBUG",
-        ]
+        ],
     )
 
     sys.exit(exit_code)

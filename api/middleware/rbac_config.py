@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 RBAC Configuration for Route Protection
 
 Centralized configuration for role-based access control including
@@ -199,13 +201,13 @@ class RBACConfig:
         # Business profiles - ownership-based access
         r"/api/v1/business-profiles/?$": {
             "GET": ["user_list"],  # Admin level for listing all
-            "POST": [],  # Users can create their own
+            "POST": [],  # Users can create their own,
         },
         r"/api/v1/business-profiles/[^/]+/?$": {
             "GET": [],  # Ownership check in middleware
             "PUT": [],  # Ownership check in middleware
             "DELETE": ["user_delete"],  # Admin only
-            "PATCH": [],  # Ownership check in middleware
+            "PATCH": [],  # Ownership check in middleware,
         },
     }
 

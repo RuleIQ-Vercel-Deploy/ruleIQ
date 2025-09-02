@@ -1,17 +1,0 @@
-
-,#"Get evidence-specific instruction"strself
-Ô Ô(	framework
-Ô Ô(& business_profile
-Ô( Ô(Hkwargs
-ÔJ Ô(R"dict51services.ai.instruction_templates.InstructionType"•+
-)
-
-Ø Ø($"#get-field# EVIDENCE:'
-%
-
-Û Û("#unaryop **#2**:+
-)
-
-× Ü(		"?python-unknown?:
-
-× Ü(		*@/home/omar/Documents/ruleIQ/services/ai/instruction_templates.py

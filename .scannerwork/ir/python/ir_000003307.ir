@@ -1,65 +1,0 @@
-
-"S3518"bool
-0.0float
-
-3int
-"division by zero"bool
-=4"Calculate confidence score based on search results"str
-1.0float
-"a"bool
-1.2float
-
-0intself
-Ü Ü("results
-Ü$ Ü(A"|+
-)
-
-Þ Þ("
-__bool__*:BboolH+
-)
-
-Þ Þ("#unaryop !#2!:Bbool "
-
-Þ Þ( *
-Þ Þ(
-"
-
-ß ß("Ú?
-=
-
-â â(Atop_similarities"?python-unknown?:Blist'
-%
-
-ã ã(."
-builtinssum*:,
-*
-
-ã1 ã(F	"
-builtinslen*:Bint,
-*
-
-ã ã(F
-"
-#binop !=#2!=:	Bbool"
- 
-
-ã ã(F"
-#assert#:
-C
-A
-
-ã ã(Favg_similarity"#dependent-value#*:	Bfloat3
-1
-
-æ æ(2"#dependent-value#*:Bfloat4
-2
-
-æ æ(3
-confidence"
-builtinsmin*:*
-(
-
-è è(#"
-builtinsround*:
-
-è è(#*3/home/omar/Documents/ruleIQ/services/agentic_rag.py

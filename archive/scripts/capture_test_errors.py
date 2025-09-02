@@ -28,7 +28,7 @@ from database import (
     LeadScoringEvent,
     ConversionEvent,
 )
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from decimal import Decimal
 
 engine = create_engine(os.getenv("TEST_DATABASE_URL", "postgresql://postgres:postgres@localhost:5433/compliance_test"))
@@ -67,8 +67,8 @@ def test_session_creation():
         ), f"Token too short: {len(sess.session_token)}"
         assert sess.expires_at is not None, "Expires_at is None"
         assert (
-            sess.expires_at > datetime.utcnow()
-        ), f"Already expired: {sess.expires_at} <= {datetime.utcnow()}"
+            sess.expires_at > datetime.now(timezone.utc)
+        ), f"Already expired: {sess.expires_at} <= {datetime.now(timezone.utc)}"
 
         print("✓ test_create_assessment_session")
         return True

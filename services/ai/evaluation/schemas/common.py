@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Common schemas for Golden Dataset system."""
 
+from __future__ import annotations
+
 from datetime import datetime
 from typing import Optional, Dict, Any
 from pydantic import BaseModel, Field, field_validator
@@ -14,7 +16,7 @@ class RegCitation(BaseModel):
     url: Optional[str] = Field(None, description="URL to the citation")
     jurisdiction: Optional[str] = Field(None, description="Jurisdiction (e.g., EU, US)")
     notes: Optional[str] = Field(
-        None, description="Additional notes about the citation"
+        None, description="Additional notes about the citation",
     )
 
 
@@ -22,16 +24,16 @@ class SourceMetaOld(BaseModel):
     """Metadata about the source of data."""
 
     source_kind: str = Field(
-        ..., description="Type of source (e.g., regulatory_document, manual)"
+        ..., description="Type of source (e.g., regulatory_document, manual)",
     )
     method: str = Field(
-        ..., description="Method of extraction (e.g., manual_extraction, automated)"
+        ..., description="Method of extraction (e.g., manual_extraction, automated)",
     )
     created_by: str = Field(..., description="Who created this data")
     created_at: datetime = Field(..., description="When this data was created")
     version: Optional[str] = Field("1.0.0", description="Version of the source")
     metadata: Optional[Dict[str, Any]] = Field(
-        default_factory=dict, description="Additional metadata"
+        default_factory=dict, description="Additional metadata",
     )
 
 
@@ -40,7 +42,7 @@ class TemporalValidity(BaseModel):
 
     effective_from: datetime = Field(..., description="When this becomes effective")
     effective_to: Optional[datetime] = Field(
-        None, description="When this expires (None = no expiry)"
+        None, description="When this expires (None = no expiry)",
     )
 
     @field_validator("effective_to")
@@ -57,10 +59,10 @@ class ExpectedOutcome(BaseModel):
     """Expected outcome for compliance scenarios."""
 
     outcome_code: str = Field(
-        ..., description="Outcome code (e.g., COMPLIANT, REQUIRES_CONSENT)"
+        ..., description="Outcome code (e.g., COMPLIANT, REQUIRES_CONSENT)",
     )
     details: Dict[str, Any] = Field(
-        default_factory=dict, description="Additional outcome details"
+        default_factory=dict, description="Additional outcome details",
     )
 
     @field_validator("outcome_code")
@@ -79,11 +81,11 @@ class SourceMeta(BaseModel):
     origin: str = Field(..., description="Original source URL or identifier")
     domain: str = Field(..., description="Domain of the source")
     trust_score: float = Field(
-        0.5, ge=0.0, le=1.0, description="Trust score between 0 and 1"
+        0.5, ge=0.0, le=1.0, description="Trust score between 0 and 1",
     )
     sha256: str = Field(..., description="SHA256 hash of content")
     fetched_at: Optional[datetime] = Field(
-        None, description="When the document was fetched"
+        None, description="When the document was fetched",
     )
 
 

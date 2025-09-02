@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Centralized error handling for LangGraph implementation.
 
 Phase 2 Implementation: Centralized error handling with retry strategies.
@@ -13,7 +15,7 @@ import asyncio
 import time
 import random
 from typing import Dict, Any, Optional, Callable
-from datetime import datetime
+from datetime import datetime, timezone
 
 from langsmith import traceable
 
@@ -103,7 +105,7 @@ class ErrorHandlerNode:
                 {
                     "role": "system",
                     "content": f"Retry attempt {state['retry_count']}/{self.max_retries} for {error_type} error",
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                 }
             )
 
@@ -476,7 +478,7 @@ class ErrorHandlerNode:
                 "content": "I encountered persistent errors and couldn't complete the analysis. "
                 "The issue has been logged for manual review. Please try again later or "
                 "contact support if the problem persists.",
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         )
 

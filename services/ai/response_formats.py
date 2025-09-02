@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Structured Output Format Definitions for Google Gemini API
 
 This module defines JSON schemas that will be used with Google Gemini's

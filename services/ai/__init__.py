@@ -5,6 +5,7 @@ Imports and registers all AI tools for function calling support.
 """
 
 # Import tool modules to trigger registration
+from typing import Any, Dict, List, Optional
 from . import assessment_tools, evidence_tools, regulation_tools  # noqa: F401
 
 # Import assistant

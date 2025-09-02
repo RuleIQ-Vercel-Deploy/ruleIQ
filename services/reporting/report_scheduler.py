@@ -1,8 +1,10 @@
 """
+from __future__ import annotations
+
 Asynchronous service to manage report schedule configurations in the database.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List
 from uuid import UUID
 
@@ -56,12 +58,12 @@ class ReportScheduler:
             res = await self.db.execute(
                 select(ReportSchedule)
                 .where(ReportSchedule.id == schedule_id)
-                .options(selectinload(ReportSchedule.owner))
+                .options(selectinload(ReportSchedule.owner)),
             )
             schedule = res.scalars().first()
             if not schedule:
                 raise NotFoundException(
-                    f"Report schedule with ID {schedule_id} not found."
+                    f"Report schedule with ID {schedule_id} not found.",
                 )
             return schedule
         except SQLAlchemyError as e:
@@ -73,7 +75,7 @@ class ReportScheduler:
             res = await self.db.execute(
                 select(ReportSchedule)
                 .where(ReportSchedule.active)
-                .options(selectinload(ReportSchedule.owner))
+                .options(selectinload(ReportSchedule.owner)),
             )
             return res.scalars().all()
         except SQLAlchemyError as e:
@@ -85,7 +87,7 @@ class ReportScheduler:
         """Updates the status of a schedule after a run."""
         schedule = await self.get_schedule(schedule_id)
         if status == "success":
-            schedule.last_run_at = datetime.utcnow()
+            schedule.last_run_at = datetime.now(timezone.utc)
         # In a real app, you might store more detailed status or logs
         self.db.add(schedule)
         await self.db.commit()

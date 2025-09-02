@@ -1,5 +1,7 @@
 """Add RBAC system database schema
 
+from __future__ import annotations
+
 Revision ID: 8b656f197a19
 Revises: b8a4b53d1de0
 Create Date: 2025-07-25 03:32:39.337401
@@ -9,6 +11,11 @@ Create Date: 2025-07-25 03:32:39.337401
 from alembic import op
 import sqlalchemy as sa
 
+
+
+# Constants for commonly used strings
+USER_ID_COLUMN = "users.id"
+USER_ID_FIELD = "user_id"
 
 # revision identifiers, used by Alembic.
 revision = "8b656f197a19"
@@ -65,7 +72,7 @@ def upgrade() -> None:
         ),
         sa.ForeignKeyConstraint(
             ["granted_by"],
-            ["users.id"],
+            [USER_ID_COLUMN],
             name=op.f("fk_framework_access_granted_by_users"),
         ),
         sa.ForeignKeyConstraint(
@@ -83,7 +90,7 @@ def upgrade() -> None:
         sa.Column("granted_by", sa.UUID(), nullable=True),
         sa.ForeignKeyConstraint(
             ["granted_by"],
-            ["users.id"],
+            [USER_ID_COLUMN],
             name=op.f("fk_role_permissions_granted_by_users"),
         ),
         sa.ForeignKeyConstraint(
@@ -100,28 +107,28 @@ def upgrade() -> None:
     op.create_table(
         "user_roles",
         sa.Column("id", sa.UUID(), nullable=False),
-        sa.Column("user_id", sa.UUID(), nullable=False),
+        sa.Column(USER_ID_FIELD, sa.UUID(), nullable=False),
         sa.Column("role_id", sa.UUID(), nullable=False),
         sa.Column("granted_by", sa.UUID(), nullable=True),
         sa.Column("granted_at", sa.DateTime(), nullable=True),
         sa.Column("expires_at", sa.DateTime(), nullable=True),
         sa.Column("is_active", sa.Boolean(), nullable=True),
         sa.ForeignKeyConstraint(
-            ["granted_by"], ["users.id"], name=op.f("fk_user_roles_granted_by_users")
+            ["granted_by"], [USER_ID_COLUMN], name=op.f("fk_user_roles_granted_by_users")
         ),
         sa.ForeignKeyConstraint(
             ["role_id"], ["roles.id"], name=op.f("fk_user_roles_role_id_roles")
         ),
         sa.ForeignKeyConstraint(
-            ["user_id"], ["users.id"], name=op.f("fk_user_roles_user_id_users")
+            [USER_ID_FIELD], [USER_ID_COLUMN], name=op.f("fk_user_roles_user_id_users")
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_user_roles")),
-        sa.UniqueConstraint("user_id", "role_id", name="uq_user_role"),
+        sa.UniqueConstraint(USER_ID_FIELD, "role_id", name="uq_user_role"),
     )
     op.create_table(
         "user_sessions",
         sa.Column("id", sa.UUID(), nullable=False),
-        sa.Column("user_id", sa.UUID(), nullable=False),
+        sa.Column(USER_ID_FIELD, sa.UUID(), nullable=False),
         sa.Column("session_token", sa.String(length=255), nullable=False),
         sa.Column("roles_at_login", sa.String(length=500), nullable=True),
         sa.Column("ip_address", sa.String(length=45), nullable=True),
@@ -132,7 +139,7 @@ def upgrade() -> None:
         sa.Column("is_active", sa.Boolean(), nullable=True),
         sa.Column("logout_reason", sa.String(length=50), nullable=True),
         sa.ForeignKeyConstraint(
-            ["user_id"], ["users.id"], name=op.f("fk_user_sessions_user_id_users")
+            [USER_ID_FIELD], [USER_ID_COLUMN], name=op.f("fk_user_sessions_user_id_users")
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_user_sessions")),
         sa.UniqueConstraint(
@@ -142,7 +149,7 @@ def upgrade() -> None:
     op.create_table(
         "audit_logs",
         sa.Column("id", sa.UUID(), nullable=False),
-        sa.Column("user_id", sa.UUID(), nullable=True),
+        sa.Column(USER_ID_FIELD, sa.UUID(), nullable=True),
         sa.Column("session_id", sa.UUID(), nullable=True),
         sa.Column("action", sa.String(length=100), nullable=False),
         sa.Column("resource_type", sa.String(length=50), nullable=True),
@@ -162,14 +169,14 @@ def upgrade() -> None:
             name=op.f("fk_audit_logs_session_id_user_sessions"),
         ),
         sa.ForeignKeyConstraint(
-            ["user_id"], ["users.id"], name=op.f("fk_audit_logs_user_id_users")
+            [USER_ID_FIELD], [USER_ID_COLUMN], name=op.f("fk_audit_logs_user_id_users")
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_audit_logs")),
     )
     op.create_table(
         "data_access",
         sa.Column("id", sa.UUID(), nullable=False),
-        sa.Column("user_id", sa.UUID(), nullable=False),
+        sa.Column(USER_ID_FIELD, sa.UUID(), nullable=False),
         sa.Column("business_profile_id", sa.UUID(), nullable=True),
         sa.Column(
             "access_type",
@@ -187,14 +194,14 @@ def upgrade() -> None:
             name=op.f("fk_data_access_business_profile_id_business_profiles"),
         ),
         sa.ForeignKeyConstraint(
-            ["granted_by"], ["users.id"], name=op.f("fk_data_access_granted_by_users")
+            ["granted_by"], [USER_ID_COLUMN], name=op.f("fk_data_access_granted_by_users")
         ),
         sa.ForeignKeyConstraint(
-            ["user_id"], ["users.id"], name=op.f("fk_data_access_user_id_users")
+            [USER_ID_FIELD], [USER_ID_COLUMN], name=op.f("fk_data_access_user_id_users")
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_data_access")),
         sa.UniqueConstraint(
-            "user_id", "business_profile_id", name="uq_user_business_data_access"
+            USER_ID_FIELD, "business_profile_id", name="uq_user_business_data_access"
         ),
     )
     # ### end Alembic commands ###

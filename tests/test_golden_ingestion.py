@@ -65,7 +65,7 @@ def main():
                 """
                 MATCH (d:GoldenDocument)
                 RETURN count(d) as doc_count
-            """
+            """,
             )
             doc_count = result.single()["doc_count"]
 
@@ -73,7 +73,7 @@ def main():
                 """
                 MATCH (c:GoldenChunk)
                 RETURN count(c) as chunk_count
-            """
+            """,
             )
             chunk_count = result.single()["chunk_count"]
 
@@ -82,7 +82,7 @@ def main():
                 MATCH (c:GoldenChunk)
                 WHERE c.embedding IS NOT NULL
                 RETURN count(c) as embedding_count
-            """
+            """,
             )
             embedding_count = result.single()["embedding_count"]
 
@@ -97,7 +97,7 @@ def main():
                 MATCH (n)
                 WHERE NOT (n:GoldenDocument OR n:GoldenChunk)
                 RETURN count(n) as other_count
-            """
+            """,
             )
             other_count = result.single()["other_count"]
             print(f"   - Other nodes (main app): {other_count}")

@@ -1,76 +1,26 @@
 
-"source_references"str
-&"request_id"str
+%"Calculate innovation index"str
+0.3float
+	0.9float
+0.12floatself
+š$ š(("‚3
+1
 
-0int
-)"generated_at"str
-
-"related_topics"str
-"topic2"str
-"topic1"str
- "follow_up_suggestions"str
-"question1"str
-'"test-request-id"str
-	"source1"str
-"confidence_score"str
-"Test guidance"str
-*"2024-01-01T00:00:00Z"str
-0.9float
-
-"guidance"strargs0+ 0(0kwargs02 0(:"dictlist"Â$
-"
-1 9("#new-object#Bdict 
-
-2 2(+"	#map-set#: 
-
-3 3('	"	#map-set#:'
-%
-4" 4(6"#unknown-value#Blist&
-$
-4" 4(6"
-#is-exact#:Bbool
-
-4" 4(6"
-#assume#:8
-6
-4" 4(6"#set-field# __collection_size:Bint&
-$
-4" 4(6"#array-add-last#:&
-$
-4" 4(6"#array-add-last#: 
-
-4 4(6"	#map-set#:
-'
-%
-5) 5(6"#unknown-value#Blist&
-$
-5) 5(6"
-#is-exact#:Bbool
-
-5) 5(6"
-#assume#:8
-6
-5) 5(6"#set-field# __collection_size:Bint&
-$
-5) 5(6"#array-add-last#: 
-
-5 5(6"	#map-set#:'
-%
-6% 6(0 "#unknown-value#Blist&
-$
-6% 6(0!"
-#is-exact#: Bbool
-
-6% 6(0""
-#assume#:!8
-6
-6% 6(0#"#set-field# __collection_size: Bint&
-$
-6% 6(0$"#array-add-last#:  
-
-6 6(0%"	#map-set#:  
-
-7 7(/("	#map-set#:&' 
-
-8 8(6+"	#map-set#:)*
-1 9(*H/home/omar/Documents/ruleIQ/tests/integration/api/test_ai_assessments.py
+œ œ(."#get-field# current_maturity:(
+&
+
+œ œ(4"#get-field# value:3
+1
+
+œ œ(;"#dependent-value#*:Bfloat0
+.
+
+œ œ(;"#dependent-value#:Bfloat(
+&
+
+œ œ(A
+"
+builtinsmin*:	
+
+œ œ(A
+*I/home/omar/Documents/ruleIQ/services/compliance/cco_strategic_playbook.py

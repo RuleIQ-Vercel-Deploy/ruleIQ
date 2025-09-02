@@ -1,10 +1,10 @@
 
 6audit_logging.AuditLoggingService.verify_log_integrityJ
->/home/omar/Documents/ruleIQ/services/security/audit_logging.py± ±(""2*·
+>/home/omar/Documents/ruleIQ/services/security/audit_logging.py∂ ∂(""2*·
 2
-≤ ≤(8ig
+∑ ∑(8ig
 
-≥ ≥( 
+∏ ∏( 
 %5*"
 
 __unknown_file (
@@ -17,7 +17,7 @@
 AuditLog2query`
 ^
 
-≥( ≥(9
+∏( ∏(9
 %6"__id*D
 
 __unknown_file ((*&
@@ -26,7 +26,7 @@
 event_idí
 è
 
-≥( ≥(E
+∏( ∏(E
 %7"	__compare*"
 
 __unknown_file (
@@ -41,7 +41,7 @@
 
 event_iddb
 
-≥ ≥(F
+∏ ∏(F
 %8*"
 
 __unknown_file (
@@ -52,7 +52,7 @@
 
 %72filter?=
 
-≥ ≥(N
+∏ ∏(N
 %9*"
 
 __unknown_file (
@@ -60,7 +60,7 @@
 %82first?
 =
 
-≥ ≥(N
+∏ ∏(N
 log"__id*"
 
 __unknown_file (
@@ -69,9 +69,9 @@
 4
 5*≈
 4
-π π()ãà
+ª ª()ãà
 
-π π()
+ª ª()
 %1*A
 
 __unknown_file (%#
@@ -82,7 +82,7 @@
 log2_log_to_dictD
 B
 
-π π()
+ª ª()
 
 log_dict"__id*"
 
@@ -90,7 +90,7 @@ B
 
 %1ìê
 
-∫ ∫(6
+º º(6
 %2*A
 
 __unknown_file (%#
@@ -102,7 +102,7 @@ B
 log_dict2_calculate_hashI
 G
 
-∫ ∫(6
+º º(6
 expected_hash"__id*"
 
 __unknown_file (
@@ -110,7 +110,7 @@ G
 %2O
 M
 
-º  º(.
+Ω  Ω(.
 %3"__id*3
 
 __unknown_file (*
@@ -120,7 +120,7 @@ M
 hash_chainó
 î
 
-º º(.
+Ω Ω(.
 %4"	__compare*"
 
 __unknown_file (
@@ -134,20 +134,20 @@ hash_chainó
 
 %3"
 
-º º(.
+Ω Ω(.
 
 %4*(
 5
-∂ ∂("
+∫ ∫("
 
-∂ ∂(	
+∫ ∫(	
 
 False:
 
-±) ±(6
+∂) ∂(6
 
 event_id:
 
-±8 ±(C
+∂8 ∂(C
 dbB%#
 !audit_logging.AuditLoggingServiceH

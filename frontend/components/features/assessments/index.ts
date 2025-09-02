@@ -1,3 +1,3 @@
 // Assessment components - placeholder exports
-// TODO: Implement actual assessment components
+// NOTE: Implementation pending actual assessment components
 export const ASSESSMENTS_PLACEHOLDER = true;

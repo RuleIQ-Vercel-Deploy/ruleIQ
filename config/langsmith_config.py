@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 LangSmith Configuration for ruleIQ Assessment Agent
 
 This module provides configuration and utilities for LangSmith tracing
@@ -24,25 +26,21 @@ LANGCHAIN_PROJECT=ruleiq-assessment
 LANGCHAIN_ENDPOINT=https://api.smith.langchain.com
 ```
 """
+import logging
 
 import os
 import time
-from typing import Optional, Dict, Any, List
+from typing import Optional, Dict, Any, List, Generator
 from functools import wraps
 from config.logging_config import get_logger
-
-# Import tracing context manager if LangSmith is configured
 try:
     from langchain_core.tracers.context import tracing_v2_enabled
 except ImportError:
-    # If langchain_core is not installed, provide a no-op context manager
     from contextlib import contextmanager
 
     @contextmanager
-    def tracing_v2_enabled(**kwargs):
+    def tracing_v2_enabled(**kwargs) ->Generator[Any, None, None]:
         yield
-
-
 logger = get_logger(__name__)
 
 
@@ -50,27 +48,28 @@ class LangSmithConfig:
     """Configuration manager for LangSmith tracing."""
 
     @staticmethod
-    def is_tracing_enabled() -> bool:
+    def is_tracing_enabled() ->bool:
         """Check if LangSmith tracing is enabled."""
-        return os.getenv("LANGCHAIN_TRACING_V2", "false").lower() == "true"
+        return os.getenv('LANGCHAIN_TRACING_V2', 'false').lower() == 'true'
 
     @staticmethod
-    def get_api_key() -> Optional[str]:
+    def get_api_key() ->Optional[str]:
         """Get LangSmith API key from environment."""
-        return os.getenv("LANGCHAIN_API_KEY")
+        return os.getenv('LANGCHAIN_API_KEY')
 
     @staticmethod
-    def get_project_name() -> str:
+    def get_project_name() ->str:
         """Get LangSmith project name."""
-        return os.getenv("LANGCHAIN_PROJECT", "ruleiq-assessment")
+        return os.getenv('LANGCHAIN_PROJECT', 'ruleiq-assessment')
 
     @staticmethod
-    def get_endpoint() -> str:
+    def get_endpoint() ->str:
         """Get LangSmith API endpoint."""
-        return os.getenv("LANGCHAIN_ENDPOINT", "https://api.smith.langchain.com")
+        return os.getenv('LANGCHAIN_ENDPOINT',
+            'https://api.smith.langchain.com')
 
     @staticmethod
-    def validate_configuration() -> bool:
+    def validate_configuration() ->bool:
         """
         Validate LangSmith configuration.
 
@@ -78,38 +77,30 @@ class LangSmithConfig:
             True if configuration is valid, False otherwise
         """
         if not LangSmithConfig.is_tracing_enabled():
-            logger.debug("LangSmith tracing is disabled")
+            logger.debug('LangSmith tracing is disabled')
             return False
-
         api_key = LangSmithConfig.get_api_key()
         if not api_key:
             logger.warning(
-                "LANGCHAIN_TRACING_V2 is enabled but LANGCHAIN_API_KEY is not set. "
-                "Please set LANGCHAIN_API_KEY to enable tracing."
-            )
+                'LANGCHAIN_TRACING_V2 is enabled but LANGCHAIN_API_KEY is not set. Please set LANGCHAIN_API_KEY to enable tracing.',
+                )
             return False
-
-        if not api_key.startswith("ls__"):
+        if not api_key.startswith('ls__'):
             logger.warning(
-                "LANGCHAIN_API_KEY should start with 'ls__'. "
-                "Please check your API key format."
-            )
+                "LANGCHAIN_API_KEY should start with 'ls__'. Please check your API key format.",
+                )
             return False
-
         project = LangSmithConfig.get_project_name()
         endpoint = LangSmithConfig.get_endpoint()
-
-        logger.info("LangSmith tracing configured:")
-        logger.info(f"  Project: {project}")
-        logger.info(f"  Endpoint: {endpoint}")
-        logger.info("  View traces at: https://smith.langchain.com")
-
+        logger.info('LangSmith tracing configured:')
+        logger.info('  Project: %s' % project)
+        logger.info('  Endpoint: %s' % endpoint)
+        logger.info('  View traces at: https://smith.langchain.com')
         return True
 
     @staticmethod
-    def get_trace_metadata(
-        session_id: Optional[str] = None, lead_id: Optional[str] = None, **kwargs
-    ) -> Dict[str, Any]:
+    def get_trace_metadata(session_id: Optional[str]=None, lead_id:
+        Optional[str]=None, **kwargs) ->Dict[str, Any]:
         """
         Generate metadata for tracing.
 
@@ -121,24 +112,19 @@ class LangSmithConfig:
         Returns:
             Metadata dictionary for tracing
         """
-        metadata = {
-            "application": "ruleiq",
-            "component": "assessment_agent",
-            "environment": os.getenv("ENVIRONMENT", "development"),
-        }
-
+        metadata = {'application': 'ruleiq', 'component':
+            'assessment_agent', 'environment': os.getenv('ENVIRONMENT',
+            'development')}
         if session_id:
-            metadata["session_id"] = session_id
-
+            metadata['session_id'] = session_id
         if lead_id:
-            metadata["lead_id"] = lead_id
-
+            metadata['lead_id'] = lead_id
         metadata.update(kwargs)
-
         return metadata
 
     @staticmethod
-    def get_trace_tags(operation: str, phase: Optional[str] = None, **kwargs) -> list:
+    def get_trace_tags(operation: str, phase: Optional[str]=None, **kwargs
+        ) ->list:
         """
         Generate tags for tracing.
 
@@ -150,24 +136,15 @@ class LangSmithConfig:
         Returns:
             List of tags for tracing
         """
-        tags = [
-            "ruleiq",
-            "assessment",
-            "langgraph",
-            operation,
-        ]
-
+        tags = ['ruleiq', 'assessment', 'langgraph', operation]
         if phase:
-            tags.append(f"phase:{phase}")
-
-        # Add any additional tags from kwargs
+            tags.append(f'phase:{phase}')
         for key, value in kwargs.items():
-            tags.append(f"{key}:{value}")
-
+            tags.append(f'{key}:{value}')
         return tags
 
     @staticmethod
-    def add_custom_tags(tags: List[str], **custom_tags) -> List[str]:
+    def add_custom_tags(tags: List[str], **custom_tags) ->List[str]:
         """
         Add custom tags for enhanced filtering in LangSmith UI.
 
@@ -184,46 +161,31 @@ class LangSmithConfig:
                 environment="production",
                 version="1.2.0",
                 customer="enterprise",
-                priority="high"
+                priority="high",
             )
         """
         enhanced_tags = tags.copy()
-
-        # Add custom tags in key:value format
         for key, value in custom_tags.items():
             if value is not None:
-                enhanced_tags.append(f"{key}:{value}")
-
-        # Add automatic tags based on context
+                enhanced_tags.append(f'{key}:{value}')
         import os
-
-        # Environment tag
-        env = os.getenv("ENVIRONMENT", "development")
-        enhanced_tags.append(f"env:{env}")
-
-        # Version tag if available
-        version = os.getenv("APP_VERSION")
+        env = os.getenv('ENVIRONMENT', 'development')
+        enhanced_tags.append(f'env:{env}')
+        version = os.getenv('APP_VERSION')
         if version:
-            enhanced_tags.append(f"version:{version}")
-
-        # Performance tier tag based on environment
-        if env == "production":
-            enhanced_tags.append("tier:critical")
-        elif env == "staging":
-            enhanced_tags.append("tier:important")
+            enhanced_tags.append(f'version:{version}')
+        if env == 'production':
+            enhanced_tags.append('tier:critical')
+        elif env == 'staging':
+            enhanced_tags.append('tier:important')
         else:
-            enhanced_tags.append("tier:standard")
-
+            enhanced_tags.append('tier:standard')
         return enhanced_tags
 
     @staticmethod
-    def create_filter_query(
-        session_id: Optional[str] = None,
-        user_id: Optional[str] = None,
-        phase: Optional[str] = None,
-        status: Optional[str] = None,
-        date_range: Optional[tuple] = None,
-    ) -> Dict[str, Any]:
+    def create_filter_query(session_id: Optional[str]=None, user_id:
+        Optional[str]=None, phase: Optional[str]=None, status: Optional[str
+        ]=None, date_range: Optional[tuple]=None) ->Dict[str, Any]:
         """
         Create a filter query for LangSmith traces.
 
@@ -238,39 +200,27 @@ class LangSmithConfig:
             Filter query dictionary for LangSmith API
         """
         query = {}
-
         if session_id:
-            query["tags"] = query.get("tags", [])
-            query["tags"].append(f"session:{session_id}")
-
+            query['tags'] = query.get('tags', [])
+            query['tags'].append(f'session:{session_id}')
         if user_id:
-            query["tags"] = query.get("tags", [])
-            query["tags"].append(f"user:{user_id}")
-
+            query['tags'] = query.get('tags', [])
+            query['tags'].append(f'user:{user_id}')
         if phase:
-            query["tags"] = query.get("tags", [])
-            query["tags"].append(f"phase:{phase}")
-
+            query['tags'] = query.get('tags', [])
+            query['tags'].append(f'phase:{phase}')
         if status:
-            query["metadata.status"] = status
-
+            query['metadata.status'] = status
         if date_range:
             start_date, end_date = date_range
-            query["date_range"] = {
-                "start": (
-                    start_date.isoformat()
-                    if hasattr(start_date, "isoformat")
-                    else start_date
-                ),
-                "end": (
-                    end_date.isoformat() if hasattr(end_date, "isoformat") else end_date
-                ),
-            }
-
+            query['date_range'] = {'start': start_date.isoformat() if
+                hasattr(start_date, 'isoformat') else start_date, 'end': 
+                end_date.isoformat() if hasattr(end_date, 'isoformat') else
+                end_date}
         return query
 
     @staticmethod
-    def _extract_metadata(args: tuple, kwargs: dict) -> Dict[str, Any]:
+    def _extract_metadata(args: tuple, kwargs: dict) ->Dict[str, Any]:
         """
         Extract metadata from function arguments.
 
@@ -282,31 +232,26 @@ class LangSmithConfig:
             Dictionary of extracted metadata
         """
         metadata = {}
-
-        # Extract from kwargs
-        if "state" in kwargs and isinstance(kwargs["state"], dict):
-            state = kwargs["state"]
-            if "session_id" in state:
-                metadata["session_id"] = state["session_id"]
-            if "current_phase" in state:
-                metadata["current_phase"] = state["current_phase"]
-            if "user_id" in state:
-                metadata["user_id"] = state["user_id"]
-
-        # Extract from args (first arg might be state)
+        if 'state' in kwargs and isinstance(kwargs['state'], dict):
+            state = kwargs['state']
+            if 'session_id' in state:
+                metadata['session_id'] = state['session_id']
+            if 'current_phase' in state:
+                metadata['current_phase'] = state['current_phase']
+            if 'user_id' in state:
+                metadata['user_id'] = state['user_id']
         if args and isinstance(args[0], dict):
             state = args[0]
-            if "session_id" in state and "session_id" not in metadata:
-                metadata["session_id"] = state["session_id"]
-            if "current_phase" in state and "current_phase" not in metadata:
-                metadata["current_phase"] = state["current_phase"]
-            if "user_id" in state and "user_id" not in metadata:
-                metadata["user_id"] = state["user_id"]
-
+            if 'session_id' in state and 'session_id' not in metadata:
+                metadata['session_id'] = state['session_id']
+            if 'current_phase' in state and 'current_phase' not in metadata:
+                metadata['current_phase'] = state['current_phase']
+            if 'user_id' in state and 'user_id' not in metadata:
+                metadata['user_id'] = state['user_id']
         return metadata
 
     @staticmethod
-    def _generate_tags(operation: str, metadata: Dict[str, Any]) -> List[str]:
+    def _generate_tags(operation: str, metadata: Dict[str, Any]) ->List[str]:
         """
         Generate tags from operation and metadata.
 
@@ -318,33 +263,20 @@ class LangSmithConfig:
             List of tags for tracing
         """
         tags = [operation]
-
-        # Add session tag
-        if "session_id" in metadata:
+        if 'session_id' in metadata:
             tags.append(f"session:{metadata['session_id']}")
-
-        # Add phase tag
-        if "current_phase" in metadata:
+        if 'current_phase' in metadata:
             tags.append(f"phase:{metadata['current_phase']}")
-
-        # Add user tag
-        if "user_id" in metadata:
+        if 'user_id' in metadata:
             tags.append(f"user:{metadata['user_id']}")
-
-        # Add operation-specific tags
-        if "." in operation:
-            parts = operation.split(".")
-            tags.append(f"{parts[0]}.{parts[1]}")
-
+        if '.' in operation:
+            parts = operation.split('.')
+            tags.append(f'{parts[0]}.{parts[1]}')
         return tags
 
 
-def with_langsmith_tracing(
-    operation: str,
-    include_input: bool = True,
-    include_output: bool = True,
-    custom_name: Optional[str] = None,
-):
+def with_langsmith_tracing(operation: str, include_input: bool=True,
+    include_output: bool=True, custom_name: Optional[str]=None) ->Any:
     """
     Enhanced decorator for adding LangSmith tracing to async functions.
 
@@ -358,84 +290,50 @@ def with_langsmith_tracing(
         Decorated function with LangSmith tracing
     """
 
-    def decorator(func):
+    def decorator(func) ->Any:
+
         @wraps(func)
-        async def wrapper(*args, **kwargs):
+        async def wrapper(*args, **kwargs) ->Any:
             if not LangSmithConfig.is_tracing_enabled():
                 return await func(*args, **kwargs)
-
-            # Extract metadata from function parameters
             metadata = LangSmithConfig._extract_metadata(args, kwargs)
-
-            # Add function information
-            metadata["operation"] = operation
-            metadata["function"] = func.__name__
-            metadata["module"] = func.__module__
-
-            # Include inputs if requested
+            metadata['operation'] = operation
+            metadata['function'] = func.__name__
+            metadata['module'] = func.__module__
             if include_input:
-                metadata["inputs"] = {
-                    "args": str(args)[:500],  # Limit size
-                    "kwargs": str(kwargs)[:500],
-                }
-
-            # Generate tags
+                metadata['inputs'] = {'args': str(args)[:500], 'kwargs':
+                    str(kwargs)[:500]}
             tags = LangSmithConfig._generate_tags(operation, metadata)
-
-            # Use custom name if provided, otherwise use operation
             run_name = custom_name if custom_name else operation
-
-            # Track performance
             start_time = time.perf_counter()
-
-            # Create mutable metadata container for updates
             final_metadata = metadata.copy()
-
             try:
-                # Execute function with tracing
-                with tracing_v2_enabled(
-                    project_name=LangSmithConfig.get_project_name(),
-                    tags=tags,
-                    metadata=final_metadata,
-                    run_name=run_name,
-                ):
+                with tracing_v2_enabled(project_name=LangSmithConfig.
+                    get_project_name(), tags=tags, metadata=final_metadata,
+                    run_name=run_name):
                     result = await func(*args, **kwargs)
-
-                    # Calculate execution time
                     execution_time = time.perf_counter() - start_time
-
-                    # Update metadata with execution details
-                    final_metadata["execution_time_seconds"] = execution_time
-                    final_metadata["status"] = "success"
-
-                    # Include output if requested
+                    final_metadata['execution_time_seconds'] = execution_time
+                    final_metadata['status'] = 'success'
                     if include_output:
-                        final_metadata["output"] = str(result)[:500] if result else None
-
-                    logger.debug(
-                        f"Traced {operation} - {func.__name__} "
-                        f"(execution_time: {execution_time:.3f}s)"
-                    )
-
+                        final_metadata['output'] = str(result)[:500
+                            ] if result else None
+                    logger.debug('Traced %s - %s (execution_time: %ss)' % (
+                        operation, func.__name__, execution_time))
                     return result
-
             except Exception as e:
-                # Track error in metadata
                 execution_time = time.perf_counter() - start_time
-                final_metadata["execution_time_seconds"] = execution_time
-                final_metadata["status"] = "error"
-                final_metadata["error"] = str(e)
-                final_metadata["error_type"] = type(e).__name__
-
-                logger.error(f"Error in traced function {func.__name__}: {str(e)}")
+                final_metadata['execution_time_seconds'] = execution_time
+                final_metadata['status'] = 'error'
+                final_metadata['error'] = str(e)
+                final_metadata['error_type'] = type(e).__name__
+                logger.error('Error in traced function %s: %s' % (func.
+                    __name__, str(e)))
                 raise
-
         return wrapper
-
     return decorator
 
 
-# Example usage instructions
 LANGSMITH_SETUP_INSTRUCTIONS = """
 To enable LangSmith tracing for the ruleIQ assessment agent:
 
@@ -470,15 +368,11 @@ This is invaluable for:
 - Optimizing performance
 - Monitoring production behavior
 """
-
-
-if __name__ == "__main__":
-    # Validate configuration when module is run directly
-    print(LANGSMITH_SETUP_INSTRUCTIONS)
-    print("\nChecking current configuration...")
-
+if __name__ == '__main__':
+    logging.info(LANGSMITH_SETUP_INSTRUCTIONS)
+    logging.info('\nChecking current configuration...')
     if LangSmithConfig.validate_configuration():
-        print("✅ LangSmith tracing is properly configured!")
+        logging.info('✅ LangSmith tracing is properly configured!')
     else:
-        print("❌ LangSmith tracing is not configured or has issues.")
-        print("   Please follow the setup instructions above.")
+        logging.info('❌ LangSmith tracing is not configured or has issues.')
+        logging.info('   Please follow the setup instructions above.')

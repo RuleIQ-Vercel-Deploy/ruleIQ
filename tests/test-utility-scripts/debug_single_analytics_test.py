@@ -17,6 +17,6 @@ if __name__ == "__main__":
             "--tb=short",
             "-p",
             "no:warnings",
-        ]
+        ],
     )
     sys.exit(exit_code)

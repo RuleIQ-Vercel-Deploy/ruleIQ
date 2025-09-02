@@ -43,7 +43,7 @@ export default function PoliciesPage() {
         page_size: 50,
       });
       setPolicies(response.policies);
-    } catch (err) {
+    } catch {} {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -100,7 +100,7 @@ export default function PoliciesPage() {
       } else {
         await policyService.exportPolicyAsWord(policyId);
       }
-    } catch (err) {
+    } catch {} {
       // TODO: Replace with proper logging
       // // TODO: Replace with proper logging
     }

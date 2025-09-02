@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Defines the custom exception hierarchy for the application.
 
 This module provides a structured way to handle application-specific errors,

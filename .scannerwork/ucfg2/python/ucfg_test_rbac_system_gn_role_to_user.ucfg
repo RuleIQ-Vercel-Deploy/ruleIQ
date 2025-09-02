@@ -1,147 +1,0 @@
-
-?tests.test_rbac_system.TestRBACService.test_assign_role_to_userA
-5/home/omar/Documents/ruleIQ/tests/test_rbac_system.py‚ ‚( "2*Ù	
-2
-Ë Ë(*M
-K
-
-Í Í( 
-%1"__id*1
-
-__unknown_file (*
-
-	test_user"
-id^
-\
-
-Î Î(1
-%2"__id*B
-
-__unknown_file (&*$
-
-test_role_with_permissions"
-idM
-K
-
-Ï Ï(#
-%3"__id*1
-
-__unknown_file (*
-
-	test_user"
-idÀ»
-
-È Ì(	
-%4"5services.rbac_service.RBACService.assign_role_to_user*,
-
-__unknown_file (
-
-rbac_service2assign_role_to_user:
-user_id
-
-%1:
-role_id
-
-%2:
-
-granted_by
-
-%3E
-C
-
-È Ì(	
-	user_role"__id*"
-
-__unknown_file (
-
-%4R
-P
-
- ( 
-%5"__id*6
-
-__unknown_file (*
-
-	user_role"	
-user_idM
-K
-
-$ (0
-%6"__id*1
-
-__unknown_file (*
-
-	test_user"
-idå
-â
-
- (0
-%7"	__compare*"
-
-__unknown_file (
-==*"
-
-__unknown_file (
-
-%5*"
-
-__unknown_file (
-
-%6R
-P
-
-Ò Ò( 
-%8"__id*6
-
-__unknown_file (*
-
-	user_role"	
-role_id^
-\
-
-Ò$ Ò(A
-%9"__id*B
-
-__unknown_file (&*$
-
-test_role_with_permissions"
-idç
-ä
-
-Ò Ò(A
-%10"	__compare*"
-
-__unknown_file (
-==*"
-
-__unknown_file (
-
-%8*"
-
-__unknown_file (
-
-%9U
-S
-
-Ú Ú("
-%11"__id*8
-
-__unknown_file (*
-
-	user_role"
-	is_active*
-3*;
-3
-test_rbac_system.py"
-Ù Ù(
-implicit return:
-
-‰ ‰(!
-rbac_service:
-
-Â Â(
-	test_user:*
-
-Ê Ê((
-test_role_with_permissionsB*(
-&tests.test_rbac_system.TestRBACServiceH

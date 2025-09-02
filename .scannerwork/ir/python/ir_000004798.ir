@@ -1,64 +1,0 @@
-
-"assessment_completed"str
-;2"Factory method for assessment completion events."str
-"completion_rate"str
-1.0float
-"conversion"str
-"completed_assessment"str
-
-30int
-	50intcls
-’ ’(lead_id
-’ ’(completion_rate
-’! ’(7metadata
-’9 ’(N"–9
-7
-
-– –(3score_impact"?python-unknown?*:+
-)
-
-– –(3"
-__bool__*:BboolH,"*
-
-– –(3 *
-– –(2
-–4 –(8"
-
-– –(R"o'
-%
-
-–= –(Q"	#binop *#*2*:
-0
-.
-
-–9 –(R"#dependent-value#*:Bint
-
-– –(R"±*score_impact	&
-$
-
-ž ž(S"#new-object#Bdict"
- 
-
-ž ž(>"	#map-set#:+
-)
-
-žC ž(K"
-__bool__*:BboolH"
-
-žC ž(K "<&
-$
-
-žO ž(Q"#new-object#Bdict
-
-žC ž(Q"˜*'
-%
-
-ž@ ž(R"#unaryop **#2**:%
-#
-
-ž@ ž(R"#map-set-all#: 
-
-
-˜ Ÿ(	"cls:
-
-˜ Ÿ(	*:/home/omar/Documents/ruleIQ/database/lead_scoring_event.py

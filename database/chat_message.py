@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 SQLAlchemy model for storing chat messages.
 """
 
@@ -25,7 +27,7 @@ class ChatMessage(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     conversation_id = Column(
-        UUID(as_uuid=True), ForeignKey("chat_conversations.id"), nullable=False
+        UUID(as_uuid=True), ForeignKey("chat_conversations.id"), nullable=False,
     )
     role = Column(String(20), nullable=False)  # 'user' or 'assistant'
     content = Column(Text, nullable=False)

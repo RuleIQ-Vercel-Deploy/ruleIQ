@@ -1,216 +1,2 @@
-
-4"count"str
-""story_points_total"str
-W"recommendations"str
-6"story_points"str
-#63int
-
-1int
-
-"end_date"str
-"sprint_name"str
-"completed_stories"str
-0"stories_by_status"str
-%"hours_spent"str
-"2025-08-15"str
-("hours_estimated"str
-!"story_points_completed"str
-9"IN_PROGRESS"str
-<Y3"Consider early testing of completed RBAC features"str
-"total_stories"str
-?	"PENDING"str
-+"velocity_current"str
-B21int
-<3"Sprint 2: Evidence Classification & Design System"str
-&32.5float
-
- 8int
-
-2int
-;Z2"Monitor design system migration progress closely"str
-P
-"blockers"str
-"in_progress_stories"str
-E	"BLOCKED"str
-
-0int
-2"DONE"str
-6-"Create mock progress data for demonstration"str
-"days_remaining"str
-.40int
-"sprint_id"str
-"2025-08-01"str
-)200.0float
-
-"start_date"str
-*X!"Sprint is on track for delivery"str
-J	"TESTING"str
-
-7int
-"blocked_stories"str
-<34int
--"velocity_target"str
-
-5intself
-â# â('	sprint_id
-â) â(7Rlist"°&
-$
-
-ä (	"#new-object#Bdict"
- 
-
-å å(""	#map-set#:"
- 
-
-æ æ(N	"	#map-set#:"
- 
-
-ç ç(&"	#map-set#:
-"
- 
-
-è è($"	#map-set#:"
- 
-
-é é("	#map-set#:"
- 
-
-ê ê("	#map-set#:"
- 
-
-ë ë(""	#map-set#:"
- 
-
-ì ì($"	#map-set#:"
- 
-
-í í( "	#map-set#:"
- 
-
-î î('!"	#map-set#: "
- 
-
-ï ï($$"	#map-set#:"#"
- 
-
-ğ ğ('"	#map-set#:%&"
- 
-
-ñ ñ($*"	#map-set#:()"
- 
-
-ò ò(!,"	#map-set#:+ "
- 
-
-ó ó(!/"	#map-set#:-.&
-$
-
-ô! ú(1"#new-object#Bdict&
-$
-
-õ õ(73"#new-object#Bdict"
- 
-
-õ õ(#5"	#map-set#:34"
- 
-
-õ% õ(67"	#map-set#:36 "
- 
-
-õ õ(78"	#map-set#:123&
-$
-
-ö ö(?:"#new-object#Bdict"
- 
-
-ö  ö(*;"	#map-set#::4"
- 
-
-ö, ö(>="	#map-set#::6<"
- 
-
-ö ö(?>"	#map-set#:19:&
-$
-
-÷ ÷(;@"#new-object#Bdict"
- 
-
-÷ ÷(&A"	#map-set#:@4"
- 
-
-÷( ÷(:C"	#map-set#:@6B"
- 
-
-÷ ÷(;D"	#map-set#:1?@&
-$
-
-ø ø(:F"#new-object#Bdict"
- 
-
-ø ø(&G"	#map-set#:F4"
- 
-
-ø( ø(9H"	#map-set#:F6"
- 
-
-ø ø(:I"	#map-set#:1EF&
-$
-
-ù ù(:K"#new-object#Bdict"
- 
-
-ù ù(&L"	#map-set#:K4"
- 
-
-ù( ù(9M"	#map-set#:K6"
- 
-
-ù ù(:N"	#map-set#:1JK"
- 
-
-ô ú(O"	#map-set#:01)
-'
-
-û û(Q"#unknown-value#Blist(
-&
-
-û û(S"
-#is-exact#:QRBbool
-
-
-û û(T"
-#assume#:S:
-8
-
-û û(U"#set-field# __collection_size:QBint"
- 
-
-û û(V"	#map-set#:PQ)
-'
-
-ü €(["#unknown-value#Blist(
-&
-
-ü €(\"
-#is-exact#:[RBbool
-
-
-ü €(]"
-#assume#:\:
-8
-
-ü €(^"#set-field# __collection_size:[Bint(
-&
-
-ü €(_"#array-add-last#:[X(
-&
-
-ü €(`"#array-add-last#:[Y(
-&
-
-ü €(a"#array-add-last#:[Z"
- 
-
-ü €(b"	#map-set#:W[
-
-ä (	*1/home/omar/Documents/ruleIQ/scripts/sprint_cli.py
+self: :("
+; ;(*B/home/omar/Documents/ruleIQ/api/clients/google_workspace_client.py

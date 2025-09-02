@@ -1,11 +1,11 @@
 
 Hservices.ai.temporal_tracker.TemporalTracker._get_applicable_regulationsG
-;/home/omar/Documents/ruleIQ/services/ai/temporal_tracker.py¥ ¥()"2*›
+;/home/omar/Documents/ruleIQ/services/ai/temporal_tracker.py¢ ¢()"2*›
 2
-¨ ¨(<í
+¥ ¥(<í
 ê
 
-« ±(
+¨ ®(
 query"__id*Ì
 
 __unknown_file (¯¬
@@ -17,7 +17,7 @@ Hservices.ai.temporal_tracker.TemporalTracker._get_applicable_regulationsG
         LIMIT 100
         ig
 
-³ ³()
+° °()
 %5*'
 
 __unknown_file (
@@ -29,18 +29,18 @@ Hservices.ai.temporal_tracker.TemporalTracker._get_applicable_regulationsG
 query2runB
 @
 
-³ ³()
+° °()
 result"__id*"
 
 __unknown_file (
 
 %5
 
-´ ´(
+± ±(
 %6"listG
 E
 
-´ ´(
+± ±(
 regulations"__id*"
 
 __unknown_file (
@@ -49,18 +49,18 @@ E
 4
 6*.
 4
-¸ ¸("
+µ µ("
 
-¸ ¸(
+µ µ(
 
 regulations*”
 6
-¶ ¶(1
+³ ³(1
 
-¶ ¶(0
+³ ³(0
 %1"dictvt
 
-¶$ ¶(/
+³$ ³(/
 %2"__mapGet*&
 
 __unknown_file (
@@ -72,7 +72,7 @@ E
 r2__getitem__k
 i
 
-¶ ¶(0
+³ ³(0
 %3"dict.__init__*"
 
 __unknown_file (
@@ -83,7 +83,7 @@ i
 
 %2zx
 
-¶ ¶(1
+³ ³(1
 %4"list.append*+
 
 __unknown_file (
@@ -96,9 +96,9 @@ i
 4
 6: 
 
-¦ ¦(.
+£ £(.
 business_profile:
 
-¦0 ¦(<	
+£0 £(<	
 sessionB0.
 ,services.ai.temporal_tracker.TemporalTrackerH

@@ -1,36 +1,0 @@
-
-
-1000int
-"_execution_time_ms"strargs (kwargs! ()"dictdict"µ/
--
-   ($
-start_time"
-timetimeBfloat#
-!
-!  !(%"#unaryop *#2*:%
-#
-!' !(/"#unaryop **#2**:
-
-! !(0"func:)
-'
-! !(0result"#unknown-value#-
-+
-" "("end_time"
-timetimeBfloat1
-/
-#! #(6	"#dependent-value#*:BfloatD
-B
-#  #(>execution_time_ms"#dependent-value#*:	
-Bfloat)
-'
-& &('"#is-instance#:Bbool"
-& &(' *& &(".$
-"
-' '(@"#array-write#:"Œ(
-&
-) )(,"#unknown-value#Btuple&
-$
-) )(,"#array-add-last#:&
-$
-) )(,"#array-add-last#:
-) )(,*G/home/omar/Documents/ruleIQ/langgraph_agent/tests/test_latency_smoke.py

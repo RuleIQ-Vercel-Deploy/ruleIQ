@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Minimal FastAPI app to test JWT authentication
 This bypasses all startup checks to focus on JWT testing
 """

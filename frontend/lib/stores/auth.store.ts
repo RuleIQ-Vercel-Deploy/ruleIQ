@@ -35,7 +35,7 @@ interface AuthState {
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
 }
 
-interface AuthStateInternal {
+interface _AuthStateInternal {
   // State
   user: User | null;
   tokens: AuthTokens | null;

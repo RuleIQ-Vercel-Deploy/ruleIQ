@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Enhanced Authentication Service
 Implements MFA, password complexity, account lockout, and secure session management
 """
@@ -7,7 +9,7 @@ import secrets
 import hashlib
 import base64
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Optional, Dict, Any, Tuple
 import pyotp
 import bcrypt
@@ -113,7 +115,7 @@ class AuthenticationService:
         """Verify password against hash"""
         try:
             return bcrypt.checkpw(password.encode("utf-8"), hashed.encode("utf-8"))
-        except Exception:
+        except (ValueError, TypeError):
             return False
 
     async def check_account_lockout(self, user_id: str, db: Session) -> bool:
@@ -123,7 +125,7 @@ class AuthenticationService:
 
         if lockout_data:
             lockout_until = datetime.fromisoformat(lockout_data["until"])
-            if datetime.utcnow() < lockout_until:
+            if datetime.now(timezone.utc) < lockout_until:
                 return True
             else:
                 # Lockout expired, clear it
@@ -141,13 +143,13 @@ class AuthenticationService:
 
         # Store updated attempts with TTL
         await self.cache.set(
-            attempts_key, attempts, expire_seconds=self.LOCKOUT_DURATION_MINUTES * 60
+            attempts_key, attempts, expire_seconds=self.LOCKOUT_DURATION_MINUTES * 60,
         )
 
         # Check if lockout needed
         if attempts >= self.MAX_LOGIN_ATTEMPTS:
-            lockout_until = datetime.utcnow() + timedelta(
-                minutes=self.LOCKOUT_DURATION_MINUTES
+            lockout_until = datetime.now(timezone.utc) + timedelta(
+                minutes=self.LOCKOUT_DURATION_MINUTES,
             )
 
             lockout_data = {"until": lockout_until.isoformat(), "attempts": attempts}
@@ -170,7 +172,7 @@ class AuthenticationService:
     def generate_totp_uri(self, secret: str, email: str) -> str:
         """Generate TOTP URI for QR code"""
         return pyotp.totp.TOTP(secret).provisioning_uri(
-            name=email, issuer_name="RuleIQ"
+            name=email, issuer_name="RuleIQ",
         )
 
     def verify_totp(self, secret: str, code: str) -> bool:
@@ -209,8 +211,8 @@ class AuthenticationService:
         """Create JWT access token"""
         payload = {
             "sub": user_id,
-            "iat": datetime.utcnow(),
-            "exp": datetime.utcnow() + timedelta(minutes=self.TOKEN_EXPIRY_MINUTES),
+            "iat": datetime.now(timezone.utc),
+            "exp": datetime.now(timezone.utc) + timedelta(minutes=self.TOKEN_EXPIRY_MINUTES),
             "type": "access",
         }
 
@@ -223,8 +225,8 @@ class AuthenticationService:
         """Create JWT refresh token"""
         payload = {
             "sub": user_id,
-            "iat": datetime.utcnow(),
-            "exp": datetime.utcnow() + timedelta(days=self.REFRESH_TOKEN_DAYS),
+            "iat": datetime.now(timezone.utc),
+            "exp": datetime.now(timezone.utc) + timedelta(days=self.REFRESH_TOKEN_DAYS),
             "type": "refresh",
             "jti": secrets.token_urlsafe(32),  # Unique token ID for revocation
         }
@@ -235,7 +237,7 @@ class AuthenticationService:
         """Verify and decode JWT token"""
         try:
             payload = jwt.decode(
-                token, self.jwt_secret, algorithms=[self.jwt_algorithm]
+                token, self.jwt_secret, algorithms=[self.jwt_algorithm],
             )
 
             # Verify token type
@@ -246,7 +248,7 @@ class AuthenticationService:
 
         except jwt.ExpiredSignatureError:
             raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED, detail="Token has expired"
+                status_code=status.HTTP_401_UNAUTHORIZED, detail="Token has expired",
             )
         except jwt.InvalidTokenError as e:
             raise HTTPException(
@@ -262,8 +264,8 @@ class AuthenticationService:
 
         session_data = {
             "user_id": user_id,
-            "created_at": datetime.utcnow().isoformat(),
-            "last_activity": datetime.utcnow().isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "last_activity": datetime.now(timezone.utc).isoformat(),
             "ip_address": ip_address,
             "user_agent": user_agent,
         }
@@ -286,11 +288,11 @@ class AuthenticationService:
             return None
 
         # Update last activity
-        session_data["last_activity"] = datetime.utcnow().isoformat()
+        session_data["last_activity"] = datetime.now(timezone.utc).isoformat()
 
         # Refresh session TTL
         await self.cache.set(
-            session_key, session_data, expire_seconds=self.SESSION_TIMEOUT_MINUTES * 60
+            session_key, session_data, expire_seconds=self.SESSION_TIMEOUT_MINUTES * 60,
         )
 
         return session_data
@@ -335,14 +337,14 @@ class AuthenticationService:
         verifier = (
             base64.urlsafe_b64encode(secrets.token_bytes(32))
             .rstrip(b"=")
-            .decode("utf-8")
+            .decode("utf-8"),
         )
 
         # Generate code challenge (SHA256)
         challenge = (
             base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest())
             .rstrip(b"=")
-            .decode("utf-8")
+            .decode("utf-8"),
         )
 
         return verifier, challenge
@@ -352,7 +354,7 @@ class AuthenticationService:
         expected = (
             base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest())
             .rstrip(b"=")
-            .decode("utf-8")
+            .decode("utf-8"),
         )
 
         return secrets.compare_digest(expected, challenge)

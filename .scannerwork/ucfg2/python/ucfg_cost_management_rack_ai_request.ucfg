@@ -1,18 +1,18 @@
 
 :services.ai.cost_management.AICostManager.track_ai_requestF
-:/home/omar/Documents/ruleIQ/services/ai/cost_management.pyœ œ("2*Ä
+:/home/omar/Documents/ruleIQ/services/ai/cost_management.pyÙ Ù("2*Ä
 2
-­ ­(@w
+à à(@w
 u
 
-¯ ¯('
+á á('
 %1"__id*[
 
 __unknown_file (?*=+
 )services.ai.cost_management.AICostManager"
 cost_trackeräá
 
-¯ ¼(	
+á ç(&
 %2*"
 
 __unknown_file (
@@ -63,14 +63,14 @@ request_id:4
 metadataA
 ?
 
-¯ ¼(	
+á ç(&
 usage"__id*"
 
 __unknown_file (
 
 %2§¤
 
-¿ ¿(8
+è è(8
 %3*I
 
 __unknown_file (-+
@@ -80,11 +80,11 @@ request_id:4
 
 usage2_check_real_time_budget_alerts
 
-Á Æ(	
+é ë(3
 %4"dictQ
 O
 
-Â Â((
+é é(,
 %5"__id*5
 
 __unknown_file (*
@@ -94,7 +94,7 @@ O
 request_id‘
 Ž
 
-Â Â((
+é é(,
 %6"__mapSet*"
 
 __unknown_file (
@@ -110,7 +110,7 @@ request_id‘
 %5O
 M
 
-Ã Ã(&
+é: é(H
 %7"__id*3
 
 __unknown_file (*
@@ -120,7 +120,7 @@ M
 cost_usd‘
 Ž
 
-Ã Ã(&
+é. é(H
 %8"__mapSet*"
 
 __unknown_file (
@@ -135,7 +135,7 @@ M
 
 %7WU
 
-Ä  Ä(B
+ê  ê(B
 %9*%
 
 __unknown_file (	
@@ -143,7 +143,7 @@ M
 usage2calculate_efficiency_scoreš
 —
 
-Ä Ä(B
+ê ê(B
 %10"__mapSet*"
 
 __unknown_file (
@@ -158,7 +158,7 @@ M
 %9V
 T
 
-Å Å(2
+ë ë(2
 %11"__id*9
 
 __unknown_file (*
@@ -167,7 +167,7 @@ T
 cost_per_token™
 –
 
-Å Å(2
+ë ë(2
 %12"__mapSet*"
 
 __unknown_file (
@@ -181,53 +181,53 @@ T
 
 %11"
 
-Á Æ(	
+é ë(3
 
 %4:
 
-ž ž(
+Ù% Ù(6
 service_name:
 
-Ÿ Ÿ(
+Ù8 Ù(G
 
 model_name:
 
-   (
+Ú Ú(
 input_prompt: 
 
-¡ ¡(
+Ú Ú(0
 response_content:
 
-¢ ¢(
+Ú2 Ú(C
 input_tokens:
 
-£ £(
+Û Û(
 output_tokens:
 
-¤ ¤(%	
+Û Û(7	
 user_id:
 
-¥ ¥((
+Û9 Ü(
 
 session_id:
 
-¦ ¦((
+Ü Ü(:
 
 request_id:&
 
-§ §(6
+Ý Ý(4
 response_quality_score: 
 
-¨ ¨(0
+Ý6 Þ(
 response_time_ms:
 
-© ©(
+Þ Þ(3
 	cache_hit:
 
-ª ª($
+Þ5 ß(
 error_occurred:
 
-« «(1
+ß ß(6
 
 metadataB-+
 )services.ai.cost_management.AICostManagerH

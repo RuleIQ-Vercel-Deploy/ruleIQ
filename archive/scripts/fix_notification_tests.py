@@ -2,6 +2,9 @@
 """
 Fix remaining issues in notification tests
 """
+import logging
+logger = logging.getLogger(__name__)
+
 
 import sys
 import os
@@ -53,4 +56,4 @@ for old, new in fixes:
 with open("tests/test_notification_migration_tdd.py", "w") as f:
     f.write(content)
 
-print("Test fixes applied")
+logger.info("Test fixes applied")

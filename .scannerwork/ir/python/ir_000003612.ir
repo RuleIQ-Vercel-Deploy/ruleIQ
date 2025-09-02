@@ -1,437 +1,0 @@
-
-$
-"Planning"str
-i"technical_lead"str
-d"team"str
- *"Stakeholder alignment"str
-¥"Change Management"str
-"0-6 months"str
-{
-"services"str
-O"Training delivery"str
-?	"Testing"str
-¯"reporting_frequency"str
-"risk_mitigation_plan"str
- "implementation_phases"str
-o"3 FTE"str
-‚0.2float
-"success_metrics"str
-=4"Create detailed implementation plan for initiative"str
-"initiative_id"str
-8"Implementation"str
-v
-"software"str
-’"steering_committee"str
-L
-"2 months"str
-¡"TBD"str
-)"activities"str
-€
-"internal"str
-$“"Chief Compliance Officer"str
-t"budget"str
-#"phase"str
-&
-"duration"str
-}0.3float
-n"developers"str
-f"project_manager"str
-"governance_structure"str
-'	"1 month"str
-#•"Chief Financial Officer"str
-<"System configuration"str
-l"2 FTE"str
-£"working_groups"str
-x0.4float
-q
-"trainers"str
- "resource_requirements"str
-J	"Rollout"str
-N"Pilot deployment"str
-!+"Requirements gathering"str
-&¦"Training and Communication"str
-"title"str
-
-0int
-‡0.1float
-="Process design"str
-$”"Chief Technology Officer"str
-,"Vendor selection"str
-$¤"Technical Implementation"str
-">"Integration development"str
-=°3"Weekly during implementation, Monthly post-launch"str
-…"contingency"str
-Q"Stabilization"str
-:
-"3 months"str
--"Budget approval"str
-‹
-"timeline"str
-"project_sponsor"str
-P	"Go-live"str
-g"1 FTE"str
-k"business_analysts"strself
-£ £(
-initiative
-£ £(-list"á,
-*
-
-§ ¯(	plan"#new-object#Bdict0
-.
-
-¨ ¨(5"#get-field# initiative_id:"
- 
-
-¨ ¨(5"	#map-set#:(
-&
-
-© ©(%	"#get-field# title:"
- 
-
-© ©(%
-"	#map-set#:	)
-'
-
-ª% ª('"#unknown-value#Blist(
-&
-
-ª% ª('"
-#is-exact#:Bbool
-
-
-ª% ª('"
-#assume#::
-8
-
-ª% ª('"#set-field# __collection_size:Bint"
- 
-
-ª ª('"	#map-set#:&
-$
-
-«% «('"#new-object#Bdict"
- 
-
-« «('"	#map-set#:&
-$
-
-¬$ ¬(&"#new-object#Bdict"
- 
-
-¬ ¬(&"	#map-set#:2
-0
-
-­ ­(9"#get-field# success_metrics:"
- 
-
-­ ­(9"	#map-set#:&
-$
-
-®$ ®(&"#new-object#Bdict"
- 
-
-® ®(&"	#map-set#:+
-)
-
-² ²(. "#get-field# timeline:,
-*
-
-² ²(.!"
-#binop in#2in: Bbool "
-
-² ²(.! *
-² ²(
-"ª&
-$
-
-´ ½(""#new-object#Bdict"
- 
-
-µ µ('%"	#map-set#:"#$"
- 
-
-¶ ¶()("	#map-set#:"&')
-'
-
-·" ¼(."#unknown-value#Blist(
-&
-
-·" ¼(/"
-#is-exact#:.Bbool
-
-
-·" ¼(0"
-#assume#:/:
-8
-
-·" ¼(1"#set-field# __collection_size:.Bint(
-&
-
-·" ¼(2"#array-add-last#:.*(
-&
-
-·" ¼(3"#array-add-last#:.+(
-&
-
-·" ¼(4"#array-add-last#:.,(
-&
-
-·" ¼(5"#array-add-last#:.-"
- 
-
-· ¼(6"	#map-set#:").&
-$
-
-¾ Ç(7"#new-object#Bdict"
- 
-
-¿ ¿(-9"	#map-set#:7#8"
- 
-
-À À(*;"	#map-set#:7&:)
-'
-
-Á" Æ(@"#unknown-value#Blist(
-&
-
-Á" Æ(A"
-#is-exact#:@Bbool
-
-
-Á" Æ(B"
-#assume#:A:
-8
-
-Á" Æ(C"#set-field# __collection_size:@Bint(
-&
-
-Á" Æ(D"#array-add-last#:@<(
-&
-
-Á" Æ(E"#array-add-last#:@=(
-&
-
-Á" Æ(F"#array-add-last#:@>(
-&
-
-Á" Æ(G"#array-add-last#:@?"
- 
-
-Á Æ(H"	#map-set#:7)@&
-$
-
-È Ñ(I"#new-object#Bdict"
- 
-
-É É(&K"	#map-set#:I#J"
- 
-
-Ê Ê(*M"	#map-set#:I&L)
-'
-
-Ë" Ğ(R"#unknown-value#Blist(
-&
-
-Ë" Ğ(S"
-#is-exact#:RBbool
-
-
-Ë" Ğ(T"
-#assume#:S:
-8
-
-Ë" Ğ(U"#set-field# __collection_size:RBint(
-&
-
-Ë" Ğ(V"#array-add-last#:RN(
-&
-
-Ë" Ğ(W"#array-add-last#:RO(
-&
-
-Ë" Ğ(X"#array-add-last#:RP(
-&
-
-Ë" Ğ(Y"#array-add-last#:RQ"
- 
-
-Ë Ğ(Z"	#map-set#:I)R)
-'
-
-³, Ò(["#unknown-value#Blist(
-&
-
-³, Ò(\"
-#is-exact#:[Bbool
-
-
-³, Ò(]"
-#assume#:\:
-8
-
-³, Ò(^"#set-field# __collection_size:[Bint(
-&
-
-³, Ò(_"#array-add-last#:["(
-&
-
-³, Ò(`"#array-add-last#:[7(
-&
-
-³, Ò(a"#array-add-last#:[I&
-$
-
-³ Ò(b"#array-write#:["ø&
-$
-
-Õ( ä(	c"#new-object#Bdict&
-$
-
-Ö Ü(e"#new-object#Bdict"
- 
-
-× ×(*h"	#map-set#:efg"
- 
-
-Ø Ø()j"	#map-set#:eig"
- 
-
-Ù Ù(,m"	#map-set#:ekl"
- 
-
-Ú Ú(%p"	#map-set#:eno"
- 
-
-Û Û(#r"	#map-set#:eqg"
- 
-
-Ö Ü(s"	#map-set#:cde&
-$
-
-İ â(u"#new-object#Bdict6
-4
-
-Ş Ş(:w"!#get-field# investment_required:3
-1
-
-Ş Ş(@y"#dependent-value#*:wxBfloat"
- 
-
-Ş Ş(@z"	#map-set#:uvy6
-4
-
-ß ß(:|"!#get-field# investment_required:3
-1
-
-ß ß(@~"#dependent-value#*:|}Bfloat"
- 
-
-ß ß(@"	#map-set#:u{~7
-5
-
-à à(:"!#get-field# investment_required:6
-4
-
-à à(@ƒ"#dependent-value#*:‚Bfloat%
-#
-
-à à(@„"	#map-set#:u€ƒ7
-5
-
-á á(=†"!#get-field# investment_required:6
-4
-
-á á(Cˆ"#dependent-value#*:†‡Bfloat%
-#
-
-á á(C‰"	#map-set#:u…ˆ#
-!
-
-İ â(Š"	#map-set#:ctu,
-*
-
-ã ã(+Œ"#get-field# timeline:%
-#
-
-ã ã(+"	#map-set#:c‹Œ'
-%
-
-Õ ä(	"#array-write#:c.
-,
-
-ç' ï(	"?python-unknown?:Bdict(
-&
-
-ç ï(	"#array-write#:'
-%
-
-ò' €(	‘"#new-object#Bdict*
-(
-
-ó" ÷(–"#unknown-value#Blist*
-(
-
-ó" ÷(—"
-#is-exact#:–Bbool!
-
-
-ó" ÷(˜"
-#assume#:—<
-:
-
-ó" ÷(™"#set-field# __collection_size:–Bint+
-)
-
-ó" ÷(š"#array-add-last#:–“+
-)
-
-ó" ÷(›"#array-add-last#:–”+
-)
-
-ó" ÷(œ"#array-add-last#:–•&
-$
-
-ó ÷("	#map-set#:‘’–)
-'
-
-ø ø(/Ÿ"#get-field# owner:&
-$
-
-ø ø(/ "	#map-set#:‘Ÿ%
-#
-
-ù ù($¢"	#map-set#:‘f¡*
-(
-
-ú ş(§"#unknown-value#Blist*
-(
-
-ú ş(¨"
-#is-exact#:§Bbool!
-
-
-ú ş(©"
-#assume#:¨<
-:
-
-ú ş(ª"#set-field# __collection_size:§Bint+
-)
-
-ú ş(«"#array-add-last#:§¤+
-)
-
-ú ş(¬"#array-add-last#:§¥+
-)
-
-ú ş(­"#array-add-last#:§¦&
-$
-
-ú ş(®"	#map-set#:‘£§&
-$
-
-ÿ ÿ(V±"	#map-set#:‘¯°(
-&
-
-ò €(	²"#array-write#:‘
-
-‚ ‚(*I/home/omar/Documents/ruleIQ/services/compliance/cco_strategic_playbook.py

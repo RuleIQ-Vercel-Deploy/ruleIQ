@@ -1,4 +1,2 @@
-H
-pythonS1172+Remove the unused function parameter "cls". 2JJ H
-pythonS1172+Remove the unused function parameter "cls". 2UU H
-pythonS1172+Remove the unused function parameter "cls". 2YY 
+C
+pythonS5905&Fix this assertion on a tuple literal. 245 $

@@ -44,10 +44,10 @@ def test_direct_neo4j():
                     OPTIONS {
                         indexConfig: {
                             `vector.dimensions`: 384,
-                            `vector.similarity_function`: 'cosine'
-                        }
+                            `vector.similarity_function`: 'cosine',
+                        },
                     }
-                """
+                """,
                 )
                 print("✅ VECTOR index created/verified")
             except Exception as e:
@@ -66,7 +66,7 @@ def test_direct_neo4j():
                     created_at: datetime()
                 })
                 RETURN d.doc_id as id
-            """
+            """,
             )
             print(f"✅ Created document: {result.single()['id']}")
 
@@ -96,7 +96,7 @@ def test_direct_neo4j():
                 """
                 MATCH (d:GoldenDocument)
                 RETURN count(d) as doc_count
-            """
+            """,
             )
             doc_count = count_result.single()["doc_count"]
 
@@ -104,7 +104,7 @@ def test_direct_neo4j():
                 """
                 MATCH (c:GoldenChunk)
                 RETURN count(c) as chunk_count
-            """
+            """,
             )
             chunk_count = chunk_result.single()["chunk_count"]
 
@@ -136,7 +136,7 @@ def test_direct_neo4j():
             # Clean up test data
             print("\n🧹 Cleaning up test data...")
             session.run(
-                "MATCH (d:GoldenDocument {doc_id: 'gdpr_article_5'}) DETACH DELETE d"
+                "MATCH (d:GoldenDocument {doc_id: 'gdpr_article_5'}) DETACH DELETE d",
             )
             print("✅ Test data cleaned up")
 

@@ -11,6 +11,7 @@ Usage:
     python scripts/test_langsmith_tracing.py
 """
 
+from typing import Any, Dict, List, Optional
 import asyncio
 import os
 import sys
@@ -80,10 +81,10 @@ async def test_langsmith_tracing():
             return False
 
         engine = create_async_engine(
-            DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://")
+            DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://"),
         )
         AsyncSessionLocal = sessionmaker(
-            engine, class_=AsyncSession, expire_on_commit=False
+            engine, class_=AsyncSession, expire_on_commit=False,
         )
 
         async with AsyncSessionLocal() as db:

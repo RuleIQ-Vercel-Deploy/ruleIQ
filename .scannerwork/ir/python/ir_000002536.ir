@@ -1,218 +1,25 @@
 
-20.9float
-U"compliance_insights"str
->"Step 2"str
-g"type"str
-"gaps"str
-"impact"str
-
-"Data Protection"str
-) "Missing data protection policy"str
-|"test-request-id"str
-Q"score"str
-
-"severity"str
-<"implementation_steps"str
-"current_state"str
-"2024-01-01T00:00:00Z"str
-#"recommendations"str
-7*."Develop comprehensive data protection policy"str
-(("Create Data Protection Policy"str
-Y
-"insight2"str
-"description"str
-N"level"str
-%"rec1"str
-,
-"priority"str
-"target_state"str
-L"risk_assessment"str
-"No policy"str
-		"section"str
-O"medium"str
-"id"str
-b0.75float
-j"evidence1"str
-"gap1"str
-="Step 1"str
-'"title"str
-"Complete policy"str
-R0.6float
-."effort_estimate"str
-h
-"document"str
-W"key_findings"str
-~"generated_at"str
-5"Template available"str
-{"request_id"str
-m	"process"str
-/	"2 weeks"str
-a"compliance_score"str
-&"High risk of non-compliance"str
-X
-"insight1"str
-x"confidence_score"str
-y0.85float
-1"impact_score"str
-"high"str
+	"delayed"str
+0.95float
+0.7float
+2)"Calculate timeline adherence percentage"strself
+©& ©(*
+initiative
+©, ©(K"‡)
+'
 
-0int
- e"evidence_requirements"str
-4"resources"str
-o"evidence2"strargsV2 V(7kwargsV9 V(A"dictlist"$
-"
-W {("#new-object#Bdict$
-"
-Y a("#new-object#Bdict 
-
-Z Z($"	#map-set#: 
-
-[ [(4"	#map-set#:	
- 
-
-\ \(*"	#map-set#: 
-
-] ](G"	#map-set#: 
-
-^ ^(?"	#map-set#: 
-
-_ _(4"	#map-set#: 
-
-` `(9"	#map-set#:'
-%
-X b("#unknown-value#Blist&
-$
-X b("
-#is-exact#:Bbool
-
-X b("
-#assume#:8
-6
-X b( "#set-field# __collection_size:Bint&
-$
-X b(!"#array-add-last#: 
-
-X b(""	#map-set#:$
-"
-d m($"#new-object#Bdict 
-
-e e($&"	#map-set#:$% 
-
-f f(@)"	#map-set#:$'( 
-
-g g(U+"	#map-set#:$* 
-
-h h(*-"	#map-set#:$, 
-
-i i(40"	#map-set#:$./ 
-
-j j(+3"	#map-set#:$12'
-%
-k% k(;6"#unknown-value#Blist&
-$
-k% k(;7"
-#is-exact#:6Bbool
-
-k% k(;8"
-#assume#:78
-6
-k% k(;9"#set-field# __collection_size:6Bint&
-$
-k% k(;:"#array-add-last#:65 
-
-k k(;;"	#map-set#:$46'
-%
-l0 l(D?"#unknown-value#Blist&
-$
-l0 l(D@"
-#is-exact#:?Bbool
-
-l0 l(DA"
-#assume#:@8
-6
-l0 l(DB"#set-field# __collection_size:?Bint&
-$
-l0 l(DC"#array-add-last#:?=&
-$
-l0 l(DD"#array-add-last#:?> 
-
-l l(DE"	#map-set#:$<?'
-%
-c# n(F"#unknown-value#Blist&
-$
-c# n(G"
-#is-exact#:FBbool
-
-c# n(H"
-#assume#:G8
-6
-c# n(I"#set-field# __collection_size:FBint&
-$
-c# n(J"#array-add-last#:F$ 
-
-c n(K"	#map-set#:#F$
-"
-o# o(DM"#new-object#Bdict 
-
-o$ o(5P"	#map-set#:MNO 
-
-o7 o(CS"	#map-set#:MQR 
-
-o o(DT"	#map-set#:LM$
-"
-p' s(V"#new-object#Bdict'
-%
-q$ q(<Z"#unknown-value#Blist&
-$
-q$ q(<["
-#is-exact#:ZBbool
-
-q$ q(<\"
-#assume#:[8
-6
-q$ q(<]"#set-field# __collection_size:ZBint&
-$
-q$ q(<^"#array-add-last#:ZX&
-$
-q$ q(<_"#array-add-last#:ZY 
-
-q q(<`"	#map-set#:VWZ 
-
-r r(,c"	#map-set#:Vab 
-
-p s(d"	#map-set#:UV$
-"
-u u(Df"#new-object#Bdict 
-
-u u('i"	#map-set#:fgh 
-
-u) u(Ck"	#map-set#:fj$
-"
-v v(Cl"#new-object#Bdict 
-
-v v(&n"	#map-set#:lgm 
-
-v( v(Bp"	#map-set#:lo'
-%
-t) w(q"#unknown-value#Blist&
-$
-t) w(r"
-#is-exact#:qBbool
-
-t) w(s"
-#assume#:r8
-6
-t) w(t"#set-field# __collection_size:qBint&
-$
-t) w(u"#array-add-last#:qf&
-$
-t) w(v"#array-add-last#:ql 
-
-t w(w"	#map-set#:eq 
-
-x x((z"	#map-set#:xy 
-
-y y(/}"	#map-set#:{|!
-
-z z(6€"	#map-set#:~
-W {(*H/home/omar/Documents/ruleIQ/tests/integration/api/test_ai_assessments.py
+¬ ¬(("#get-field# status:,
+*
+
+¬ ¬(5"
+#binop !=#2!=:Bbool,"*
+
+¬ ¬(5 *
+¬ ¬(2
+¬6 ¬(:"
+
+¬ ¬(>"
+
+¬ ¬(>"&*	
+
+¬ ¬(>	*I/home/omar/Documents/ruleIQ/services/compliance/cco_strategic_playbook.py

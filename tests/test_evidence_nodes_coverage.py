@@ -1,7 +1,7 @@
 """Additional tests to improve coverage of evidence_nodes module."""
 
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any, AsyncGenerator, Dict
 from unittest.mock import AsyncMock, MagicMock, Mock, patch
 from uuid import uuid4
@@ -41,7 +41,7 @@ class TestEvidenceCollectionNodeUncovered:
                 "evidence_name": "Pending Doc",
                 "status": "not_started",
                 "evidence_type": "Policy",
-            }
+            },
         )
 
         # Mock the processor
@@ -52,7 +52,7 @@ class TestEvidenceCollectionNodeUncovered:
         mock_session = MagicMock(spec=AsyncSession)
         mock_result = MagicMock()
         mock_result.scalars = MagicMock(
-            return_value=MagicMock(all=MagicMock(return_value=[pending_evidence]))
+            return_value=MagicMock(all=MagicMock(return_value=[pending_evidence])),
         )
         mock_session.execute = AsyncMock(return_value=mock_result)
         mock_session.commit = AsyncMock()
@@ -201,7 +201,7 @@ class TestEvidenceCollectionNodeUncovered:
     @patch("langgraph_agent.nodes.evidence_nodes.get_async_db")
     async def test_check_evidence_expiry_with_frequencies(self, mock_get_db):
         """Test evidence expiry checking with different frequencies."""
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
 
         # Create evidence with different frequencies
         monthly_evidence = MagicMock(spec=EvidenceItem)
@@ -209,7 +209,7 @@ class TestEvidenceCollectionNodeUncovered:
         monthly_evidence.collected_at = now - timedelta(days=35)
         monthly_evidence.collection_frequency = "monthly"
         monthly_evidence.to_dict = MagicMock(
-            return_value={"id": "monthly_id", "status": "expired"}
+            return_value={"id": "monthly_id", "status": "expired"},
         )
 
         quarterly_evidence = MagicMock(spec=EvidenceItem)
@@ -217,7 +217,7 @@ class TestEvidenceCollectionNodeUncovered:
         quarterly_evidence.collected_at = now - timedelta(days=100)
         quarterly_evidence.collection_frequency = "quarterly"
         quarterly_evidence.to_dict = MagicMock(
-            return_value={"id": "quarterly_id", "status": "expired"}
+            return_value={"id": "quarterly_id", "status": "expired"},
         )
 
         annually_evidence = MagicMock(spec=EvidenceItem)
@@ -225,7 +225,7 @@ class TestEvidenceCollectionNodeUncovered:
         annually_evidence.collected_at = now - timedelta(days=400)
         annually_evidence.collection_frequency = "annually"
         annually_evidence.to_dict = MagicMock(
-            return_value={"id": "annually_id", "status": "expired"}
+            return_value={"id": "annually_id", "status": "expired"},
         )
 
         mock_session = MagicMock(spec=AsyncSession)
@@ -237,9 +237,9 @@ class TestEvidenceCollectionNodeUncovered:
                         monthly_evidence,
                         quarterly_evidence,
                         annually_evidence,
-                    ]
-                )
-            )
+                    ],
+                ),
+            ),
         )
         mock_session.execute = AsyncMock(return_value=mock_result)
         mock_session.commit = AsyncMock()

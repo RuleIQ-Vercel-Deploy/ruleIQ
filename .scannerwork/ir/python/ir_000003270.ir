@@ -1,49 +1,0 @@
-
-éß"
-Persona Adaptation for Ben (Cautious):
-Ben is risk-averse and needs guidance, reassurance, and step-by-step support. Adapt your responses to:
-- Use step-by-step wizards and guided processes
-- Provide extensive help text, tooltips, and explanations
-- Include confirmation dialogs and safety checks
-- Offer auto-save features and progress preservation
-- Present clear progress indicators and completion status
-- Provide reassuring language and risk mitigation guidance
-"str
-
-"catherine"str
-÷"
-Persona Adaptation for Alex (Analytical):
-Alex is data-driven and values customization, control, and detailed analysis. Adapt your responses to:
-- Provide detailed metrics, scores, and quantitative analysis
-- Include advanced filtering options and data export capabilities
-- Offer customization options and configuration choices
-- Present information in structured, analytical formats
-- Include comparative analysis and benchmarking data
-- Provide detailed technical implementation guidance
-"str
-"ben"str
-"alex"str
-ˆş"
-Persona Adaptation for Catherine (Principled):
-Catherine is ethics-focused and values transparency, audit trails, and compliance documentation. Adapt your responses to:
-- Emphasize audit trails and version history
-- Show compliance status prominently and clearly
-- Include policy documentation links and references
-- Provide transparent reasoning and decision explanations
-- Include ethical considerations and compliance implications
-- Offer comprehensive documentation and record-keeping guidance
-"str
->5"Initialize persona-specific instruction adaptations"strself
-ã( ã(,"©&
-$
-
-å „(	"#new-object#Bdict#
-!
-æ æ("	#map-set#:#
-!
-ğ ğ(ö	"	#map-set#:#
-!
-ú ú(›"	#map-set#:
-
-
-å „(	*@/home/omar/Documents/ruleIQ/services/ai/instruction_templates.py

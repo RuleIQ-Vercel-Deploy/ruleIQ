@@ -1,15 +1,4 @@
-™
-pythonS7493RUse an asynchronous file API instead of synchronous open() in this async function. 2WW %:(
-&´NN 	This function is async.
-pythonS7493RUse an asynchronous file API instead of synchronous open() in this async function. 2
-õõ :*
-(´
-íí 	This function is async.
-pythonS7493RUse an asynchronous file API instead of synchronous open() in this async function. 2
-†† (:*
-(´
-þþ 	This function is async.
-pythonS7493RUse an asynchronous file API instead of synchronous open() in this async function. 2
-ÁÁ *:*
-(´
-¹¹ 	This function is async.
+œ
+pythonS5852Make sure the regex used here, which is vulnerable to polynomial runtime due to backtracking, cannot lead to denial of service. 2 bŸ
+pythonS5361@Replace this "re.sub()" call by a "str.replace()" function call. 2 :@
+>´ /Expression without regular expression features.

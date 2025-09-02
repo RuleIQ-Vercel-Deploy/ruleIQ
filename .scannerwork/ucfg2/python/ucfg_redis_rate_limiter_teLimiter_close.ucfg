@@ -1,34 +1,29 @@
 
-8api.middleware.redis_rate_limiter.RedisRateLimiter.closeL
-@/home/omar/Documents/ruleIQ/api/middleware/redis_rate_limiter.pyä ä("2*ö
-2
-ã ã(%Ä
-~
-
-å å(
+8api.middleware.redis_rate_limiter.RedisRateLimiter.closeJ
+@/home/omar/Documents/ruleIQ/api/middleware/redis_rate_limiter.pyi i("2*ï
+2j j(%~
+|
+k k(
 %3"__id*d
 
 __unknown_file (H*F4
 2api.middleware.redis_rate_limiter.RedisRateLimiter"
 redis_client*
 3
-4*;
+4*9
 3
-redis_rate_limiter.py"
-ë ë
-implicit return*ÿ
-4
-ç ç(+Ä
-~
-
-ç ç(#
+redis_rate_limiter.py"
+o o
+implicit return*—
+4l l(+~
+|
+l l(#
 %1"__id*d
 
 __unknown_file (H*F4
 2api.middleware.redis_rate_limiter.RedisRateLimiter"
-redis_client?=
-
-ç ç(+
+redis_client=;
+l l(+
 %2*"
 
 __unknown_file (

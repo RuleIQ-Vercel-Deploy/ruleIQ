@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Sentry Integration for Proactive Monitoring
 
 This module initializes the Sentry SDK to capture errors and performance data.

@@ -1,28 +1,0 @@
-
-äÚ"
-        # {context.organization_name} {request.policy_type.value.replace('_', ' ').title()}
-
-        ## 1. Policy Statement
-        {context.organization_name} is committed to maintaining the highest standards of
-        {request.policy_type.value.replace('_', ' ')} in accordance with {framework.display_name}.
-
-        ## 2. Scope
-        This policy applies to all {context.organization_name} operations in {', '.join(context.geographic_operations)}.
-
-        ## 3. Responsibilities
-        All employees and contractors must comply with this policy.
-
-        ## 4. Implementation
-        This policy will be reviewed annually and updated as necessary.
-
-        Effective Date: {datetime.now().strftime('%Y-%m-%d')}
-        "str
-+""Generate mock policy for testing"strself
-½ ½(request
-½ ½(.	framework
-½0 ½(N"P<
-:
-
-À À(*context"#get-field# business_context:
-
-Â Ó(*;/home/omar/Documents/ruleIQ/services/ai/policy_generator.py

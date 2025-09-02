@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
+
 Chunked Test Execution Script for NexCompli
 
 This script provides optimized test execution strategies for different scenarios:
@@ -317,8 +321,8 @@ async def run_test_chunk(
                     optimize_parallelism(original_workers, system_info)
                 )
 
-    print(f"🚀 Starting: {chunk_name}")
-    print(f"   Command: {' '.join(command)}")
+    logger.info(f"🚀 Starting: {chunk_name}")
+    logger.info(f"   Command: {' '.join(command)}")
 
     try:
         process = await asyncio.create_subprocess_exec(
@@ -337,13 +341,13 @@ async def run_test_chunk(
         output = stdout.decode() if stdout else ""
 
         status = "✅ PASSED" if success else "❌ FAILED"
-        print(f"{status}: {chunk_name} ({duration:.1f}s)")
+        logger.info(f"{status}: {chunk_name} ({duration:.1f}s)")
 
         return chunk_name, success, output, duration
 
     except asyncio.TimeoutError:
         duration = time.time() - start_time
-        print(f"⏰ TIMEOUT: {chunk_name} ({duration:.1f}s)")
+        logger.info(f"⏰ TIMEOUT: {chunk_name} ({duration:.1f}s)")
         return (
             chunk_name,
             False,
@@ -352,7 +356,7 @@ async def run_test_chunk(
         )
     except Exception as e:
         duration = time.time() - start_time
-        print(f"💥 ERROR: {chunk_name} - {e!s}")
+        logger.info(f"💥 ERROR: {chunk_name} - {e!s}")
         return chunk_name, False, f"Error: {e!s}", duration
 
 
@@ -390,7 +394,7 @@ async def run_chunks_parallel(
 
     # Run sequential chunks one by one
     if sequential_chunks:
-        print(f"⏭️  Running {len(sequential_chunks)} chunks sequentially")
+        logger.info(f"⏭️  Running {len(sequential_chunks)} chunks sequentially")
         for chunk in sequential_chunks:
             result = await run_test_chunk(chunk, system_info)
             results.append(result)
@@ -400,27 +404,27 @@ async def run_chunks_parallel(
 
 def print_summary(results: List[Tuple], total_time: float) -> None:
     """Print test execution summary."""
-    print("\n" + "=" * 80)
-    print("📊 TEST EXECUTION SUMMARY")
-    print("=" * 80)
+    logger.info("\n" + "=" * 80)
+    logger.info("📊 TEST EXECUTION SUMMARY")
+    logger.info("=" * 80)
 
     passed = sum(1 for _, success, _, _ in results if success)
     failed = len(results) - passed
     total_test_time = sum(duration for _, _, _, duration in results)
 
-    print(f"Total Chunks: {len(results)}")
-    print(f"Passed: {passed} ✅")
-    print(f"Failed: {failed} ❌")
-    print(f"Success Rate: {(passed / len(results) * 100):.1f}%")
-    print(f"Total Time: {total_time:.1f}s")
-    print(f"Test Time: {total_test_time:.1f}s")
-    print(f"Efficiency: {(total_test_time / total_time):.1f}x")
+    logger.info(f"Total Chunks: {len(results)}")
+    logger.info(f"Passed: {passed} ✅")
+    logger.info(f"Failed: {failed} ❌")
+    logger.info(f"Success Rate: {(passed / len(results) * 100):.1f}%")
+    logger.info(f"Total Time: {total_time:.1f}s")
+    logger.info(f"Test Time: {total_test_time:.1f}s")
+    logger.info(f"Efficiency: {(total_test_time / total_time):.1f}x")
 
     if failed > 0:
-        print("\n❌ FAILED CHUNKS:")
+        logger.info("\n❌ FAILED CHUNKS:")
         for name, success, output, duration in results:
             if not success:
-                print(f"  • {name} ({duration:.1f}s)")
+                logger.info(f"  • {name} ({duration:.1f}s)")
                 # Show last few lines of output for context
                 if output:
                     lines = output.strip().split("\n")
@@ -430,9 +434,9 @@ def print_summary(results: List[Tuple], total_time: float) -> None:
                         if "FAILED" in l or "ERROR" in l or "assert" in l
                     ]
                     if relevant_lines:
-                        print(f"    {relevant_lines[-1][:100]}...")
+                        logger.info(f"    {relevant_lines[-1][:100]}...")
 
-    print("=" * 80)
+    logger.info("=" * 80)
 
 
 async def main() -> None:
@@ -456,15 +460,15 @@ async def main() -> None:
     args = parser.parse_args()
 
     if args.list_modes:
-        print("Available test modes:")
+        logger.info("Available test modes:")
         for mode, config in TEST_CONFIGS.items():
-            print(f"  {mode:12} - {config['description']}")
-            print(f"               {len(config['chunks'])} chunks")
+            logger.info(f"  {mode:12} - {config['description']}")
+            logger.info(f"               {len(config['chunks'])} chunks")
         return
 
     config = TEST_CONFIGS[args.mode]
-    print(f"🎯 Mode: {args.mode} - {config['description']}")
-    print(f"📦 Chunks: {len(config['chunks'])}")
+    logger.info(f"🎯 Mode: {args.mode} - {config['description']}")
+    logger.info(f"📦 Chunks: {len(config['chunks'])}")
 
     start_time = time.time()
     results = await run_chunks_parallel(config["chunks"], args.max_concurrent)

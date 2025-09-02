@@ -37,7 +37,7 @@ class APIClient {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${newTokens?.access_token}`,
           };
-        } catch (refreshError) {
+        } catch {} {
           throw new APIError('Authentication failed', 401);
         }
       }

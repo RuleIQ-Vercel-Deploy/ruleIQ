@@ -1,155 +1,121 @@
-#!/usr/bin/env python3
 """
+from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
+
 Debug script to test freemium table creation and database connectivity.
 """
+
 import os
 import sys
 import traceback
 from sqlalchemy import create_engine, text, inspect
-
-# Set environment
-os.environ["ENV"] = "testing"
-os.environ["DATABASE_URL"] = (
-    os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5433/compliance_test?sslmode=require")
-)
-
-# Add project to path
-sys.path.insert(0, "/home/omar/Documents/ruleIQ")
+os.environ['ENV'] = 'testing'
+os.environ['DATABASE_URL'] = os.getenv('DATABASE_URL',
+    'postgresql://postgres:postgres@localhost:5433/compliance_test?sslmode=require',
+    )
+sys.path.insert(0, '/home/omar/Documents/ruleIQ')
 
 
-def main() -> None:
-    print("=== Freemium Database Table Debug Script ===")
-
+def main() ->None:
+    logger.info('=== Freemium Database Table Debug Script ===')
     try:
-        # Test database connection
-        print("1. Testing Database Connection...")
-        db_url = os.environ["DATABASE_URL"]
-        if "+asyncpg" in db_url:
-            db_url = db_url.replace("+asyncpg", "+psycopg2")
-        elif "postgresql://" in db_url and "+psycopg2" not in db_url:
-            db_url = db_url.replace("postgresql://", "postgresql+psycopg2://", 1)
-
+        logger.info('1. Testing Database Connection...')
+        db_url = os.environ['DATABASE_URL']
+        if '+asyncpg' in db_url:
+            db_url = db_url.replace('+asyncpg', '+psycopg2')
+        elif 'postgresql://' in db_url and '+psycopg2' not in db_url:
+            db_url = db_url.replace('postgresql://',
+                'postgresql+psycopg2://', 1)
         engine = create_engine(db_url, echo=True)
-
-        # Test connection
         with engine.connect() as conn:
-            result = conn.execute(text("SELECT version()"))
+            result = conn.execute(text('SELECT version()'))
             version = result.fetchone()[0]
-            print(f"✅ Database connected: {version}")
-
-        # Check existing tables
-        print("\n2. Checking existing tables...")
+            logger.info('✅ Database connected: %s' % version)
+        logger.info('\n2. Checking existing tables...')
         inspector = inspect(engine)
         tables = inspector.get_table_names()
-        print(f"Found {len(tables)} tables:")
+        logger.info('Found %s tables:' % len(tables))
         for table in sorted(tables):
-            print(f"  - {table}")
-
-        # Check if freemium tables exist
-        freemium_tables = [
-            "assessment_leads",
-            "freemium_assessment_sessions",
-            "ai_question_bank",
-            "lead_scoring_events",
-            "conversion_events",  # Fixed: should be plural
-        ]
-
-        print("\n3. Checking freemium table status...")
+            logger.info('  - %s' % table)
+        freemium_tables = ['assessment_leads',
+            'freemium_assessment_sessions', 'ai_question_bank',
+            'lead_scoring_events', 'conversion_events']
+        logger.info('\n3. Checking freemium table status...')
         for table in freemium_tables:
             exists = table in tables
-            status = "✅ EXISTS" if exists else "❌ MISSING"
-            print(f"  {table}: {status}")
-
-        # Try to import freemium models
-        print("\n4. Testing model imports...")
+            status = '✅ EXISTS' if exists else '❌ MISSING'
+            logger.info('  %s: %s' % (table, status))
+        logger.info('\n4. Testing model imports...')
         try:
             from database.assessment_lead import AssessmentLead
-
-            print("✅ AssessmentLead imported successfully")
+            logger.info('✅ AssessmentLead imported successfully')
         except Exception as e:
-            print(f"❌ AssessmentLead import failed: {e}")
+            logger.info('❌ AssessmentLead import failed: %s' % e)
             traceback.print_exc()
-
         try:
-            print("✅ FreemiumAssessmentSession imported successfully")
-        except Exception as e:
-            print(f"❌ FreemiumAssessmentSession import failed: {e}")
+            logger.info('✅ FreemiumAssessmentSession imported successfully')
+        except (ValueError, TypeError) as e:
+            logger.info('❌ FreemiumAssessmentSession import failed: %s' % e)
             traceback.print_exc()
-
         try:
-            print("✅ AIQuestionBank imported successfully")
-        except Exception as e:
-            print(f"❌ AIQuestionBank import failed: {e}")
+            logger.info('✅ AIQuestionBank imported successfully')
+        except (ValueError, TypeError) as e:
+            logger.info('❌ AIQuestionBank import failed: %s' % e)
             traceback.print_exc()
-
         try:
-            print("✅ LeadScoringEvent imported successfully")
-        except Exception as e:
-            print(f"❌ LeadScoringEvent import failed: {e}")
+            logger.info('✅ LeadScoringEvent imported successfully')
+        except (ValueError, TypeError) as e:
+            logger.info('❌ LeadScoringEvent import failed: %s' % e)
             traceback.print_exc()
-
         try:
-            print("✅ ConversionEvent imported successfully")
-        except Exception as e:
-            print(f"❌ ConversionEvent import failed: {e}")
+            logger.info('✅ ConversionEvent imported successfully')
+        except (ValueError, TypeError) as e:
+            logger.info('❌ ConversionEvent import failed: %s' % e)
             traceback.print_exc()
-
-        # Test creating tables with Base.metadata.create_all
-        print("\n5. Testing Base.metadata.create_all...")
+        logger.info('\n5. Testing Base.metadata.create_all...')
         try:
             from database.db_setup import Base
-
             Base.metadata.create_all(bind=engine)
-            print("✅ Base.metadata.create_all executed without error")
+            logger.info('✅ Base.metadata.create_all executed without error')
         except Exception as e:
-            print(f"❌ Base.metadata.create_all failed: {e}")
+            logger.info('❌ Base.metadata.create_all failed: %s' % e)
             traceback.print_exc()
-
-        # Re-check tables after create_all
-        print("\n6. Re-checking tables after create_all...")
+        logger.info('\n6. Re-checking tables after create_all...')
         inspector = inspect(engine)
         tables_after = inspector.get_table_names()
-        print(f"Found {len(tables_after)} tables after create_all:")
-
+        logger.info('Found %s tables after create_all:' % len(tables_after))
         for table in freemium_tables:
             exists = table in tables_after
-            status = "✅ EXISTS" if exists else "❌ STILL MISSING"
-            print(f"  {table}: {status}")
-
-        # Test creating a simple record
-        print("\n7. Testing record creation...")
+            status = '✅ EXISTS' if exists else '❌ STILL MISSING'
+            logger.info('  %s: %s' % (table, status))
+        logger.info('\n7. Testing record creation...')
         try:
             from database.assessment_lead import AssessmentLead
             from sqlalchemy.orm import sessionmaker
-
             Session = sessionmaker(bind=engine)
             session = Session()
-
-            # Try to create a test record
-            lead = AssessmentLead(email="debug@test.com", consent_marketing=True)
+            lead = AssessmentLead(email='debug@test.com', consent_marketing
+                =True)
             session.add(lead)
             session.commit()
-            print("✅ Test AssessmentLead record created successfully")
-
-            # Clean up
+            logger.info('✅ Test AssessmentLead record created successfully')
             session.delete(lead)
             session.commit()
             session.close()
-            print("✅ Test record cleaned up")
-
+            logger.info('✅ Test record cleaned up')
         except Exception as e:
-            print(f"❌ Record creation failed: {e}")
+            logger.info('❌ Record creation failed: %s' % e)
             traceback.print_exc()
             try:
                 session.rollback()
                 session.close()
-            except:
+            except (ValueError, TypeError):
                 pass
-
-    except Exception as e:
-        print(f"❌ Script failed: {e}")
+    except (ValueError, TypeError) as e:
+        logger.info('❌ Script failed: %s' % e)
         traceback.print_exc()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

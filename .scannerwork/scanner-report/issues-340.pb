@@ -1,4 +1,11 @@
-ê
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 200 :(
-&‘00 This function is async.b
-pythonS3457EAdd replacement fields or use a normal string instead of an f-string. 2[[ 2
+é
+pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2((
+ &:&
+$‘(( This function is async.í
+pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
+ŒŒ
+ :(
+&‘ŒŒ This function is async.õ
+pythonS7493RUse an asynchronous file API instead of synchronous open() in this async function. 2
+§§	 *:(
+&‘ÊÊ This function is async.

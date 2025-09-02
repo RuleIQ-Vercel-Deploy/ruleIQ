@@ -1,43 +1,43 @@
 
-+scripts.fix-api-alignment.APIAlignmentFixerB
-8/home/omar/Documents/ruleIQ/scripts/fix-api-alignment.py ("2*Ñ
-2 (
- (
-%2"listr
-p
- (:-
-+scripts.fix-api-alignment.APIAlignmentFixer"	
+#fix-api-alignment.APIAlignmentFixerH
+>/home/omar/Documents/ruleIQ/scripts/sonar/fix-api-alignment.py ("2*¹
+2 (
+ (
+%2"listj
+h
+ (2%
+#fix-api-alignment.APIAlignmentFixer"	
 changes"__id*"
 
 __unknown_file (
 
 %2
-! (#
-%3"dict|
-z
- (#D-
-+scripts.fix-api-alignment.APIAlignmentFixer"
+! (#
+%3"dictt
+r
+ (#<%
+#fix-api-alignment.APIAlignmentFixer"
 backend_endpoints"__id*"
 
 __unknown_file (
 
 %3
-" ($
-%4"dict}
-{
- ($E-
-+scripts.fix-api-alignment.APIAlignmentFixer"
+" ($
+%4"dictu
+s
+ ($=%
+#fix-api-alignment.APIAlignmentFixer"
 frontend_endpoints"__id*"
 
 __unknown_file (
 
 %4*
-3*l
+3*d
 3
-fix-api-alignment.py=;
- (
-%1"+scripts.fix-api-alignment.APIAlignmentFixer"
- (
+fix-api-alignment.py53
+ (
+%1"#fix-api-alignment.APIAlignmentFixer"
+ (
 
-%1B/-
-+scripts.fix-api-alignment.APIAlignmentFixerH
+%1B'%
+#fix-api-alignment.APIAlignmentFixerH

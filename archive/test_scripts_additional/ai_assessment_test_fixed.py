@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 import requests
 import json
 import os
 from pathlib import Path
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dotenv import load_dotenv
 
 # Import jose instead of jwt to match the server
@@ -32,7 +34,7 @@ def create_test_token():
     """Creates a JWT token for a test user."""
     payload = {
         "sub": "testuser@example.com",
-        "exp": datetime.utcnow() + timedelta(minutes=5),
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=5),
     }
     return jwt.encode(payload, JWT_SECRET, algorithm="HS256")
 

@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Database Connection Pool Monitoring Service
 
 Provides comprehensive monitoring for database connection pools including:
@@ -12,7 +14,7 @@ Provides comprehensive monitoring for database connection pools including:
 import asyncio
 import logging
 import time
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, asdict
 
@@ -89,7 +91,7 @@ class DatabaseMonitor:
         """Get current pool metrics for both sync and async pools."""
         metrics = {}
         engine_info = get_engine_info()
-        timestamp = datetime.utcnow()
+        timestamp = datetime.now(timezone.utc)
 
         # Sync pool metrics
         if engine_info.get("sync_engine_initialized") and _ENGINE:
@@ -146,7 +148,7 @@ class DatabaseMonitor:
     def check_connection_health(self) -> Dict[str, ConnectionHealthCheck]:
         """Perform health checks on database connections."""
         results = {}
-        timestamp = datetime.utcnow()
+        timestamp = datetime.now(timezone.utc)
 
         # Sync connection health check
         if _ENGINE:
@@ -190,7 +192,7 @@ class DatabaseMonitor:
         if not _ASYNC_ENGINE:
             return None
 
-        timestamp = datetime.utcnow()
+        timestamp = datetime.now(timezone.utc)
         try:
             start_time = time.time()
             async with _ASYNC_ENGINE.connect() as conn:
@@ -298,7 +300,7 @@ class DatabaseMonitor:
                         "message": f"{pool_type.title()} pool has {failures} consecutive connection failures",
                         "value": failures,
                         "threshold": self.alert_thresholds.failed_connections_threshold,
-                        "timestamp": datetime.utcnow().isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                     }
                 )
 
@@ -311,7 +313,7 @@ class DatabaseMonitor:
         alerts = self.check_alerts(metrics)
 
         # Calculate recent averages (last 10 minutes)
-        recent_cutoff = datetime.utcnow() - timedelta(minutes=10)
+        recent_cutoff = datetime.now(timezone.utc) - timedelta(minutes=10)
         recent_metrics = [
             m for m in self.metrics_history if m.timestamp >= recent_cutoff
         ]
@@ -329,7 +331,7 @@ class DatabaseMonitor:
                     ) / len(pool_metrics)
 
         return {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "current_metrics": {k: v.to_dict() for k, v in metrics.items()},
             "health_checks": {k: v.to_dict() for k, v in health_checks.items()},
             "alerts": alerts,

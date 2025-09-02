@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
+
 Comprehensive Production Validation Script
 Tests all critical infrastructure components before deployment
 """
@@ -60,13 +64,13 @@ class ProductionValidator:
             if result.passed
             else f"{Colors.FAIL}FAIL{Colors.RESET}"
         )
-        print(f"[{status}] {result.test_name}")
+        logger.info(f"[{status}] {result.test_name}")
         if result.message:
-            print(f"      {result.message}")
+            logger.info(f"      {result.message}")
         if result.details:
             for key, value in result.details.items():
-                print(f"      {key}: {value}")
-        print()
+                logger.info(f"      {key}: {value}")
+        logger.info()
         self.results.append(result)
 
     def test_fastapi_import(self) -> ValidationResult:
@@ -315,7 +319,7 @@ class ProductionValidator:
         try:
             # Test if we can start the application in a subprocess
             process = subprocess.Popen(
-                ["python", "-c", "from api.main import app; print('App ready')"],
+                ["python", "-c", "from api.main import app; logger.info('App ready')"],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
@@ -351,9 +355,9 @@ class ProductionValidator:
 
     def run_all_tests(self) -> bool:
         """Run all validation tests"""
-        print(f"{Colors.INFO}Starting Production Validation Tests{Colors.RESET}")
-        print("=" * 50)
-        print()
+        logger.info(f"{Colors.INFO}Starting Production Validation Tests{Colors.RESET}")
+        logger.info("=" * 50)
+        logger.info()
 
         tests = [
             self.test_fastapi_import,
@@ -381,17 +385,17 @@ class ProductionValidator:
         passed = sum(1 for r in self.results if r.passed)
         total = len(self.results)
 
-        print("=" * 50)
-        print(f"{Colors.INFO}Validation Summary:{Colors.RESET}")
-        print(f"Total Tests: {total}")
-        print(f"Passed: {Colors.PASS}{passed}{Colors.RESET}")
-        print(f"Failed: {Colors.FAIL}{total - passed}{Colors.RESET}")
+        logger.info("=" * 50)
+        logger.info(f"{Colors.INFO}Validation Summary:{Colors.RESET}")
+        logger.info(f"Total Tests: {total}")
+        logger.info(f"Passed: {Colors.PASS}{passed}{Colors.RESET}")
+        logger.info(f"Failed: {Colors.FAIL}{total - passed}{Colors.RESET}")
 
         if total - passed > 0:
-            print(f"\n{Colors.FAIL}Failed Tests:{Colors.RESET}")
+            logger.info(f"\n{Colors.FAIL}Failed Tests:{Colors.RESET}")
             for result in self.results:
                 if not result.passed:
-                    print(f"  - {result.test_name}: {result.message}")
+                    logger.info(f"  - {result.test_name}: {result.message}")
 
         return passed == total
 

@@ -1,6 +1,4 @@
-k
-pythonS1066/Merge this if statement with the enclosing one. 2
-—— :
-Z
-–– 	enclosingc
-pythonS2068H"password" detected here, review this potentially hard-coded credential. 2 *
+O
+pythonS53322Using http protocol is insecure. Use https instead 2TT $H
+pythonS4790)Make sure that hashing data is safe here. 2
+§§  #

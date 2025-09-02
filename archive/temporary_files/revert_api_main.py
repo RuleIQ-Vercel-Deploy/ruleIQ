@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """Revert api/main.py to simpler approach"""
+import logging
+logger = logging.getLogger(__name__)
+
 
 # Read the current main.py
 with open("api/main.py", "r") as f:
@@ -74,4 +77,4 @@ content = content.replace(
 with open("api/main.py", "w") as f:
     f.write(content)
 
-print("Reverted to simpler approach")
+logger.info("Reverted to simpler approach")

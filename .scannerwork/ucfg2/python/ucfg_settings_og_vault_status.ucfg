@@ -1,24 +1,24 @@
 
 )config.settings.Settings.log_vault_status:
-./home/omar/Documents/ruleIQ/config/settings.py÷ ÷("2*‹
+./home/omar/Documents/ruleIQ/config/settings.pyë ë("2*‹
 2
-◊ ◊(?ig
+í í(?ig
 
-ÿ ÿ(0
+ì ì(0
 %15*8
 
 __unknown_file (
 config.settings.Settings2get_secrets_vault_healthC
 A
 
-ÿ ÿ(0
+ì ì(0
 health"__id*#
 
 __unknown_file (
 
 %15|z
 
-⁄ ⁄(
+î î(
 %16"__mapGet*&
 
 __unknown_file (
@@ -31,7 +31,7 @@ A
 status2__getitem__ì
 ê
 
-⁄ ⁄((
+î î((
 %17"	__compare*"
 
 __unknown_file (
@@ -47,13 +47,13 @@ A
 10*3
 3
 settings.py"
-È È(
-implicit return*˛
+£ £(
+implicit return*Ó
 4
-Â Á(	o
+† °(>o
 m
 
-Ê/ Ê(I
+†G °(!
 %1"__id*S
 
 __unknown_file (7*5
@@ -61,32 +61,29 @@ m
 secrets_vault_enabledn
 l
 
-ÊT Ê(m
+°# °(<
 %2"__id*R
 
 __unknown_file (6*4
 config.settings.Settings"
-secrets_vault_regionû
-õ
+secrets_vault_regioné
+ã
 
-Ê Ê(o
-%3"__concat*4
+† °(=
+%3"__concat*A
 
-Ê Ê(.&$
-"üîê Vault Configuration: enabled=*
+† †(C31
+/üîê Vault Configuration: enabled=%s, region=%s*
 
-Ê/ Ê(I
+†G °(!
 
-%1*
+%1*
 
-ÊJ Ê(S
-	, region=*
-
-ÊT Ê(m
+°# °(<
 
 %2fd
 
-Â Á(	
+† °(>
 %4*&
 
 __unknown_file (
@@ -99,9 +96,9 @@ l
 %32info*
 3*∑
 5
-€ €(T†ù
+ï ñ(L†ù
 
-€ €(T
+ï ñ(L
 %5*&
 
 __unknown_file (
@@ -111,11 +108,11 @@ l
 
 __unknown_file (?=
 ;‚úÖ SecretsVault: AWS Secrets Manager connected and healthy2info*
-4*◊
+4*Ÿ
 6
-„ „(@|z
+ü ü(B|z
 
-„, „(=
+ü0 ü(A
 %6"__mapGet*&
 
 __unknown_file (
@@ -124,20 +121,20 @@ l
 health*'
 
 __unknown_file (	
-message2__getitem__Z
-X
+message2__getitem__\
+Z
 
-„ „(?
-%7"__concat*$
+ü ü(A
+%7"__concat*&
 
-„ „(+
-‚ùå SecretsVault: *
+ü ü(-
+‚ùå SecretsVault: %s*
 
-„, „(=
+ü0 ü(A
 
 %6ge
 
-„ „(@
+ü ü(B
 %8*&
 
 __unknown_file (
@@ -150,9 +147,9 @@ X
 %72error*
 4*¬
 7
-ﬂ ·(´®
+õ ù(´®
 
-ﬂ ·(
+õ ù(
 %9*&
 
 __unknown_file (
@@ -164,9 +161,9 @@ X
 C‚ö†Ô∏è SecretsVault: Module unavailable, using environment fallback2warning*
 4*Ø
 8
-ﬁ ﬁ(.|z
+ö ö(.|z
 
-ﬁ ﬁ(
+ö ö(
 %10"__mapGet*&
 
 __unknown_file (
@@ -179,7 +176,7 @@ C‚ö†Ô∏è SecretsVault: Module unavailable, using environment fallback2warning*
 status2__getitem__ó
 î
 
-ﬁ ﬁ(.
+ö ö(.
 %11"	__compare*"
 
 __unknown_file (
@@ -194,9 +191,9 @@ C‚ö†Ô∏è SecretsVault: Module unavailable, using environment fallback2warning*
 6
 7*µ
 9
-› ›(Qûõ
+ò ô(ûõ
 
-› ›(Q
+ò ô(
 %12*&
 
 __unknown_file (
@@ -208,9 +205,9 @@ C‚ö†Ô∏è SecretsVault: Module unavailable, using environment fallback2warning*
 8üîê SecretsVault: Disabled, using environment variables2info*
 4*≠
 10
-‹ ‹(+|z
+ó ó(+|z
 
-‹ ‹(
+ó ó(
 %13"__mapGet*&
 
 __unknown_file (
@@ -223,7 +220,7 @@ C‚ö†Ô∏è SecretsVault: Module unavailable, using environment fallback2warning*
 status2__getitem__î
 ë
 
-‹ ‹(+
+ó ó(+
 %14"	__compare*"
 
 __unknown_file (

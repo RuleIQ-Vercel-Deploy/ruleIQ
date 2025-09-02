@@ -53,7 +53,7 @@ class TestOpenTelemetryMetricsCollector:
     def test_counter_creation_and_increment(self):
         """Test creating and incrementing a counter metric."""
         counter = self.collector.create_counter(
-            name="test_counter", description="Test counter metric", unit="1"
+            name="test_counter", description="Test counter metric", unit="1",
         )
 
         assert counter is not None
@@ -69,7 +69,7 @@ class TestOpenTelemetryMetricsCollector:
     def test_histogram_creation_and_recording(self):
         """Test creating and recording histogram metrics."""
         histogram = self.collector.create_histogram(
-            name="test_histogram", description="Test histogram metric", unit="ms"
+            name="test_histogram", description="Test histogram metric", unit="ms",
         )
 
         assert histogram is not None
@@ -89,7 +89,7 @@ class TestOpenTelemetryMetricsCollector:
     def test_updown_counter_creation(self):
         """Test creating and using an up-down counter."""
         gauge = self.collector.create_updown_counter(
-            name="test_gauge", description="Test gauge metric", unit="1"
+            name="test_gauge", description="Test gauge metric", unit="1",
         )
 
         assert gauge is not None
@@ -367,10 +367,10 @@ class TestLangGraphMetricsInstrumentor:
         """Test metrics for state transitions in LangGraph."""
         # Record state transitions
         self.instrumentor.record_state_transition(
-            from_state="pending", to_state="processing", workflow_id="test-workflow"
+            from_state="pending", to_state="processing", workflow_id="test-workflow",
         )
         self.instrumentor.record_state_transition(
-            from_state="processing", to_state="completed", workflow_id="test-workflow"
+            from_state="processing", to_state="completed", workflow_id="test-workflow",
         )
 
         metrics_data = self.collector.collect_metrics()
@@ -378,7 +378,7 @@ class TestLangGraphMetricsInstrumentor:
         # Verify state transition metrics
         assert "langgraph_state_transitions_total" in metrics_data
         transitions = self.collector.collect_metrics_by_labels()[
-            "langgraph_state_transitions_total"
+            "langgraph_state_transitions_total",
         ]
 
         # Check both transitions recorded
@@ -418,7 +418,7 @@ class TestLangGraphMetricsInstrumentor:
         self.instrumentor.record_message_enqueued("compliance_queue", priority="high")
         self.instrumentor.record_message_enqueued("compliance_queue", priority="normal")
         self.instrumentor.record_message_processed(
-            "compliance_queue", duration_ms=150, success=True
+            "compliance_queue", duration_ms=150, success=True,
         )
 
         metrics_data = self.collector.collect_metrics()
@@ -434,7 +434,7 @@ class TestLangGraphMetricsInstrumentor:
         self.instrumentor.record_memory_usage(
             component="state_store",
             bytes_used=1024 * 1024,  # 1MB
-            bytes_limit=10 * 1024 * 1024,  # 10MB
+            bytes_limit=10 * 1024 * 1024,  # 10MB,
         )
 
         metrics_data = self.collector.collect_metrics()
@@ -471,7 +471,7 @@ class TestMetricsBridge:
 
         # Register counter through bridge
         counter = bridge.register_counter(
-            name="test_counter", description="Test counter", labels={"env": "test"}
+            name="test_counter", description="Test counter", labels={"env": "test"},
         )
 
         # Increment counter

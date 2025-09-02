@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+
 Quick test runner for AI Optimization implementation.
 
 This script runs a subset of the AI optimization tests to verify

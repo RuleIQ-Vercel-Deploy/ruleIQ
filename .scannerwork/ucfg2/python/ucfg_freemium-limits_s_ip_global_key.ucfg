@@ -1,36 +1,36 @@
 
 0freemium-limits.RateLimitRedisKeys.ip_global_keyO
-C/home/omar/Documents/ruleIQ/config/rate-limiting/freemium-limits.pyÄ Ä("2*µ
+C/home/omar/Documents/ruleIQ/config/rate-limiting/freemium-limits.pyÇ Ç("2*µ
 2
-Å Å(&ç
+É É(&ç
 ä
 
-Ç Ç(4
+Ñ Ñ(4
 %1"__concat* 
 
-Ç Ç(
+Ñ Ñ(
 rate_limit:ip:*
 
-Ç  Ç("
+Ñ  Ñ("
 
 ip*
 
-Ç# Ç(+
+Ñ# Ñ(+
 
 :global:*
 
-Ç, Ç(2
+Ñ, Ñ(2
 
 
 window"
 
-Ç Ç(4
+Ñ Ñ(4
 
 %1:
 
-Ä Ä(
+Ç Ç(
 ip:
 
-Ä Ä(*
+Ç Ç(*
 windowB&$
 "freemium-limits.RateLimitRedisKeysH

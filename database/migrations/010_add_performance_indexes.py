@@ -1,5 +1,7 @@
 """Database migration to add performance indexes for ruleIQ."""
 
+from __future__ import annotations
+
 from alembic import op
 
 # revision identifiers, used by Alembic.
@@ -44,7 +46,7 @@ def upgrade() -> None:
     op.create_index("idx_assessment_user_status", "assessment_sessions", ["user_id", "status"])
 
     op.create_index(
-        "idx_assessment_business_profile", "assessment_sessions", ["business_profile_id"]
+        "idx_assessment_business_profile", "assessment_sessions", ["business_profile_id"],
     )
 
     op.create_index("idx_assessment_created_at", "assessment_sessions", ["created_at"])
@@ -66,7 +68,7 @@ def upgrade() -> None:
 
     # Integration configuration indexes
     op.create_index(
-        "idx_integration_user_type", "integration_configurations", ["user_id", "integration_type"]
+        "idx_integration_user_type", "integration_configurations", ["user_id", "integration_type"],
     )
 
     # Evidence metadata indexes
@@ -74,7 +76,7 @@ def upgrade() -> None:
 
     # Implementation plan indexes
     op.create_index(
-        "idx_implementation_assessment", "implementation_plans", ["assessment_session_id"]
+        "idx_implementation_assessment", "implementation_plans", ["assessment_session_id"],
     )
 
     # Generated policy indexes

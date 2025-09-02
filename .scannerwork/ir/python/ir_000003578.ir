@@ -1,9 +1,0 @@
-
-+""Get headers with authentication."str
-"Authorization"str
-#"Bearer {self.auth_token}"strself+ +("X$
-"
-- -(="#new-object#Bdict 
-
-- -(<"	#map-set#:
-- -(=*A/home/omar/Documents/ruleIQ/scripts/test_compliance_wizard_api.py

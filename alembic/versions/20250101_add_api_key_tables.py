@@ -1,5 +1,7 @@
 """Add API key management tables
 
+from __future__ import annotations
+
 Revision ID: add_api_key_tables
 Revises: latest
 Create Date: 2025-01-01

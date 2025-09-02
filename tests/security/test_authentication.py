@@ -49,12 +49,12 @@ class TestAuthenticationSecurity:
                 if "detail" in response_data:
                     assert (
                         "unauthorized" in response_data["detail"].lower()
-                        or "not authenticated" in response_data["detail"].lower()
+                        or "not authenticated" in response_data["detail"].lower(),
                     )
                 elif "error" in response_data:
                     assert (
                         "authentication" in response_data["error"]["message"].lower()
-                        or "unauthorized" in response_data["error"]["message"].lower()
+                        or "unauthorized" in response_data["error"]["message"].lower(),
                     )
 
     def test_invalid_token_rejected(self, unauthenticated_test_client):
@@ -73,7 +73,7 @@ class TestAuthenticationSecurity:
         for token in invalid_tokens:
             headers = {"Authorization": token} if token else {}
             response = unauthenticated_test_client.get(
-                "/api/business-profiles", headers=headers
+                "/api/business-profiles", headers=headers,
             )
 
             assert (
@@ -90,7 +90,7 @@ class TestAuthenticationSecurity:
         """Test proper handling of expired tokens"""
         headers = {"Authorization": f"Bearer {expired_token}"}
         response = unauthenticated_test_client.get(
-            "/api/business-profiles", headers=headers
+            "/api/business-profiles", headers=headers,
         )
 
         assert response.status_code == 401
@@ -98,14 +98,14 @@ class TestAuthenticationSecurity:
         assert (
             "could not validate credentials" in response_data["detail"].lower()
             or "expired" in response_data["detail"].lower()
-            or "invalid" in response_data["detail"].lower()
+            or "invalid" in response_data["detail"].lower(),
         )
 
     def test_token_without_bearer_prefix(self, unauthenticated_test_client, auth_token):
         """Test that tokens without Bearer prefix are rejected"""
         headers = {"Authorization": auth_token}  # Missing "Bearer " prefix
         response = unauthenticated_test_client.get(
-            "/api/business-profiles", headers=headers
+            "/api/business-profiles", headers=headers,
         )
 
         assert response.status_code == 401
@@ -119,12 +119,12 @@ class TestAuthenticationSecurity:
             {"Authorization": "Bearer token1 token2"},  # Multiple tokens
             {"Authorization": " Bearer token"},  # Leading space
             {"Authorization": "Bearer\ttoken"},  # Tab character
-            {"Authorization": "BEARER token"},  # Wrong case
+            {"Authorization": "BEARER token"},  # Wrong case,
         ]
 
         for headers in malformed_headers:
             response = unauthenticated_test_client.get(
-                "/api/business-profiles", headers=headers
+                "/api/business-profiles", headers=headers,
             )
             assert response.status_code == 401
 
@@ -139,7 +139,7 @@ class TestAuthenticationSecurity:
             "PASSWORD123",  # No lowercase
             "Passw0rd",  # Too short (assuming 8+ char requirement)
             "aaaaaaaa",  # Only repeated characters
-            "",  # Empty password
+            "",  # Empty password,
         ]
 
         for weak_password in weak_passwords:
@@ -198,7 +198,7 @@ class TestAuthenticationSecurity:
                 ), f"Strong password should not be rejected for strength: {strong_password}"
 
     @pytest.mark.skip(
-        reason="Account lockout is implemented via rate limiting which is disabled in test environment"
+        reason="Account lockout is implemented via rate limiting which is disabled in test environment",
     )
     def test_account_lockout_protection(self, client, sample_user_data):
         """Test account lockout after multiple failed login attempts"""
@@ -220,14 +220,14 @@ class TestAuthenticationSecurity:
                 assert response.status_code == 401
                 assert (
                     "invalid credentials" in response.json()["detail"].lower()
-                    or "unauthorized" in response.json()["detail"].lower()
+                    or "unauthorized" in response.json()["detail"].lower(),
                 )
             else:  # Later attempts should indicate account lockout
                 assert response.status_code in [401, 429]  # 429 for too many requests
                 if response.status_code == 429:
                     assert (
                         "locked" in response.json()["detail"].lower()
-                        or "too many attempts" in response.json()["detail"].lower()
+                        or "too many attempts" in response.json()["detail"].lower(),
                     )
 
         # Even correct password should be rejected when locked
@@ -241,7 +241,7 @@ class TestAuthenticationSecurity:
         if response.status_code == 429:
             assert (
                 "locked" in response.json()["detail"].lower()
-                or "too many attempts" in response.json()["detail"].lower()
+                or "too many attempts" in response.json()["detail"].lower(),
             )
 
     def test_email_enumeration_protection(self, client):
@@ -299,7 +299,7 @@ class TestAuthenticationSecurity:
 
         # Times should not differ by more than 50% (adjust threshold as needed)
         time_difference = abs(avg_existing - avg_non_existent) / max(
-            avg_existing, avg_non_existent
+            avg_existing, avg_non_existent,
         )
         assert (
             time_difference < 0.5
@@ -356,7 +356,7 @@ class TestAuthenticationSecurity:
 
         # Test successful password change
         change_response = client.post(
-            "/api/auth/change-password", json=password_change_data, headers=headers
+            "/api/auth/change-password", json=password_change_data, headers=headers,
         )
 
         if change_response.status_code == 200:
@@ -462,7 +462,7 @@ class TestTokenSecurity:
                 for field in expected_fields:
                     assert field in token_data, f"Token missing expected field: {field}"
 
-        except Exception:
+        except (json.JSONDecodeError, KeyError, IndexError):
             # If token is not a standard JWT format, that's also acceptable
             pass
 
@@ -557,7 +557,7 @@ class TestAuthorizationSecurity:
             json={"email": user1_data["email"], "password": user1_data["password"]},
         )
         user1_headers = {
-            "Authorization": f"Bearer {login1_response.json()['access_token']}"
+            "Authorization": f"Bearer {login1_response.json()['access_token']}",
         }
 
         # Register second user
@@ -572,7 +572,7 @@ class TestAuthorizationSecurity:
             json={"email": user2_data["email"], "password": user2_data["password"]},
         )
         user2_headers = {
-            "Authorization": f"Bearer {login2_response.json()['access_token']}"
+            "Authorization": f"Bearer {login2_response.json()['access_token']}",
         }
 
         # User 1 creates business profile
@@ -582,14 +582,14 @@ class TestAuthorizationSecurity:
             "employee_count": 50,
         }
         profile_response = client.post(
-            "/api/business-profiles", json=profile_data, headers=user1_headers
+            "/api/business-profiles", json=profile_data, headers=user1_headers,
         )
         assert profile_response.status_code == 201
         profile_id = profile_response.json()["id"]
 
         # User 2 should not be able to access User 1's business profile
         unauthorized_response = client.get(
-            f"/api/business-profiles/{profile_id}", headers=user2_headers
+            f"/api/business-profiles/{profile_id}", headers=user2_headers,
         )
         assert unauthorized_response.status_code in [403, 404]
 
@@ -603,7 +603,7 @@ class TestAuthorizationSecurity:
 
         # User 2 should not be able to delete User 1's business profile
         delete_response = client.delete(
-            f"/api/business-profiles/{profile_id}", headers=user2_headers
+            f"/api/business-profiles/{profile_id}", headers=user2_headers,
         )
         assert delete_response.status_code in [403, 404]
 
@@ -619,7 +619,7 @@ class TestAuthorizationSecurity:
             },
         )
         user_headers = {
-            "Authorization": f"Bearer {login_response.json()['access_token']}"
+            "Authorization": f"Bearer {login_response.json()['access_token']}",
         }
 
         # Try to access admin endpoints (if they exist)
@@ -654,7 +654,7 @@ class TestAuthorizationSecurity:
                 },
             )
             headers = {
-                "Authorization": f"Bearer {login_response.json()['access_token']}"
+                "Authorization": f"Bearer {login_response.json()['access_token']}",
             }
 
             # Test access to role-appropriate endpoints
@@ -685,7 +685,7 @@ class TestAuthorizationSecurity:
             if response.status_code == 429:  # Too Many Requests
                 assert (
                     "rate limit" in response.json()["detail"].lower()
-                    or "too many requests" in response.json()["detail"].lower()
+                    or "too many requests" in response.json()["detail"].lower(),
                 )
                 break
             elif response.status_code == 200:

@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Evidence Collector service for LangGraph integration.
 Bridges to existing evidence collection services.
 """
@@ -11,7 +13,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from typing import Dict, List, Any, Optional
 from uuid import UUID
 import hashlib
-from datetime import datetime
+from datetime import datetime, timezone
 
 
 class EvidenceCollector:
@@ -40,7 +42,7 @@ class EvidenceCollector:
                 "type": "document",
                 "title": f'Evidence for {obligation.get("title", "Requirement")}',
                 "description": f'Documentation supporting compliance with {obligation.get("framework", "standard")}',
-                "collected_at": datetime.utcnow().isoformat(),
+                "collected_at": datetime.now(timezone.utc).isoformat(),
                 "status": "collected",
                 "hash": hashlib.md5(f"{company_id}_{i}".encode()).hexdigest(),
             }
@@ -54,7 +56,7 @@ class EvidenceCollector:
                     "type": "certification",
                     "title": f"{framework} Compliance Evidence",
                     "description": f"Evidence package for {framework} compliance",
-                    "collected_at": datetime.utcnow().isoformat(),
+                    "collected_at": datetime.now(timezone.utc).isoformat(),
                     "status": "pending_review",
                     "hash": hashlib.md5(
                         f"{company_id}_{framework}".encode()
@@ -72,7 +74,7 @@ class EvidenceCollector:
         for item in self.collected_evidence:
             if item["id"] == evidence_id:
                 item["status"] = "verified"
-                item["verified_at"] = datetime.utcnow().isoformat()
+                item["verified_at"] = datetime.now(timezone.utc).isoformat()
                 return item
 
         return {

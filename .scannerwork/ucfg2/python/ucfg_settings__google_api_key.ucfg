@@ -1,10 +1,10 @@
 
 0config.settings.Settings.validate_google_api_key:
-./home/omar/Documents/ruleIQ/config/settings.pyž ž("2*’
+./home/omar/Documents/ruleIQ/config/settings.pyå å("2*’
 2
-Ÿ Ÿ(,yw
+æ æ(,yw
 
-   (#
+ç ç(#
 %2"str.startswith*!
 
 __unknown_file (
@@ -17,15 +17,15 @@ startswith*
 4
 5*$
 4
-¤ ¤("
+ë ë("
 
-¤ ¤(
+ë ë(
 
 v*É
 5
-¡ £(²¯
+è ê(²¯
 
-¡ £(
+è ê(
 %1*&
 
 __unknown_file (
@@ -37,6 +37,6 @@ startswith*
 JGoogle API key may not be in the correct format (should start with 'AIza')2warning*
 4:
 
-ž% ž(+
+å% å(+
 vB
 config.settings.SettingsH

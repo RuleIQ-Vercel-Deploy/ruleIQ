@@ -64,7 +64,7 @@ class TestStandardizedRAG:
                     # Create a mock retriever
                     mock_base_retriever = Mock()
                     mock_base_retriever.aget_relevant_documents = AsyncMock(
-                        return_value=[]
+                        return_value=[],
                     )
                     mock_store.as_retriever = Mock(return_value=mock_base_retriever)
 
@@ -78,7 +78,7 @@ class TestStandardizedRAG:
                     ) as mock_multi_query:
                         mock_retriever = Mock()
                         mock_retriever.aget_relevant_documents = AsyncMock(
-                            return_value=[]
+                            return_value=[],
                         )
                         mock_multi_query.from_llm.return_value = mock_retriever
 
@@ -138,7 +138,7 @@ class TestStandardizedRAG:
         # Add test documents first
         documents = [
             "GDPR requires explicit consent for data processing.",
-            "ISO 27001 mandates information security management.",
+            "ISO 27001 mandates information security management."
         ]
 
         await standard_rag.add_documents(documents)
@@ -246,7 +246,7 @@ class TestPerformanceImprovement:
             assert "from langchain.retrievers import MultiQueryRetriever" in content
             assert (
                 "from langchain_text_splitters import RecursiveCharacterTextSplitter"
-                in content
+                in content,
             )
 
     def test_simplified_interface(self):

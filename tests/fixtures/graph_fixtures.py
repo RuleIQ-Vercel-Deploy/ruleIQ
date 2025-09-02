@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Graph fixtures for LangGraph testing.
 
 Provides test graph configurations and utilities for graph testing.
@@ -53,7 +55,7 @@ class TestNode:
             {
                 "state_snapshot": state.copy(),
                 "timestamp": state["metadata"]["last_updated"],
-            }
+            },
         )
 
         # Apply behavior
@@ -63,22 +65,22 @@ class TestNode:
                     "type": "TestError",
                     "message": f"Node {self.name} failed as configured",
                     "node": self.name,
-                }
+                },
             )
             state["workflow_status"] = WorkflowStatus.FAILED
 
         elif self.behavior == "delay":
             await asyncio.sleep(0.1)  # Small delay for testing
             state["messages"].append(
-                {"role": "system", "content": f"Node {self.name} completed with delay"}
+                {"role": "system", "content": f"Node {self.name} completed with delay"},
             )
 
         else:  # Default "pass" behavior
             state["messages"].append(
-                {"role": "system", "content": f"Node {self.name} executed successfully"}
+                {"role": "system", "content": f"Node {self.name} executed successfully"},
             )
             state["tool_outputs"].append(
-                {"tool": self.name, "output": {"result": "success"}, "success": True}
+                {"tool": self.name, "output": {"result": "success"}, "success": True},
             )
 
         state["current_node"] = self.name
@@ -157,7 +159,7 @@ def create_conditional_graph() -> tuple[StateGraph, Dict[str, TestNode]]:
 
     # Conditional routing
     graph.add_conditional_edges(
-        "evaluate", route_decision, {"path_a": "path_a", "path_b": "path_b"}
+        "evaluate", route_decision, {"path_a": "path_a", "path_b": "path_b"},
     )
 
     graph.add_edge("path_a", "merge")
@@ -205,7 +207,7 @@ def create_cycle_graph() -> tuple[StateGraph, Dict[str, TestNode]]:
 
     # Conditional with cycle
     graph.add_conditional_edges(
-        "check", check_retry, {"retry": "retry", "success": "success"}
+        "check", check_retry, {"retry": "retry", "success": "success"},
     )
 
     graph.add_edge("retry", "attempt")  # Create cycle
@@ -338,7 +340,7 @@ class GraphTestHarness:
                 "node_calls": {
                     name: node.call_count for name, node in self.nodes.items()
                 },
-            }
+            },
         )
 
         return final_state

@@ -90,7 +90,7 @@ class TestAIErrorHandling:
 
         with patch.object(ComplianceAssistant, "get_assessment_help") as mock_help:
             mock_help.side_effect = AIContentFilterException(
-                filter_reason="Inappropriate content detected"
+                filter_reason="Inappropriate content detected",
             )
 
             response = client.post(
@@ -115,7 +115,7 @@ class TestAIErrorHandling:
 
         with patch.object(ComplianceAssistant, "get_assessment_help") as mock_help:
             mock_help.side_effect = AIModelException(
-                model_name="gemini-pro", model_error="Model inference failed"
+                model_name="gemini-pro", model_error="Model inference failed",
             )
 
             response = client.post(
@@ -196,7 +196,7 @@ class TestAIErrorHandling:
                 "user_answer": "yes",
             },
             "business_context": {
-                "business_profile_id": str(sample_business_profile.id)
+                "business_profile_id": str(sample_business_profile.id),
             },
         }
 
@@ -258,12 +258,12 @@ class TestAIErrorHandling:
                 return_value={
                     "guidance": "GDPR compliance requires...",
                     "confidence_score": 0.9,
-                }
+                },
             )
 
             # Follow-up service fails
             mock_assistant.return_value.generate_assessment_followup = AsyncMock(
-                side_effect=AIServiceException("Follow-up service unavailable")
+                side_effect=AIServiceException("Follow-up service unavailable"),
             )
 
             # Test working service
@@ -288,7 +288,7 @@ class TestAIErrorHandling:
                         "user_answer": "yes",
                     },
                     "business_context": {
-                        "business_profile_id": str(sample_business_profile.id)
+                        "business_profile_id": str(sample_business_profile.id),
                     },
                 },
                 headers=authenticated_headers,
@@ -319,7 +319,7 @@ class TestAIErrorHandling:
                         "guidance": "GDPR compliance requires...",
                         "confidence_score": 0.9,
                     },
-                ]
+                ],
             )
 
             # First request should fail
@@ -350,7 +350,7 @@ class TestAIErrorHandling:
 
         with patch("api.routers.ai_assessments.ComplianceAssistant") as mock_assistant:
             mock_assistant.return_value.get_assessment_help = AsyncMock(
-                side_effect=AIServiceException("Test error for logging")
+                side_effect=AIServiceException("Test error for logging"),
             )
 
             client.post(
@@ -375,7 +375,7 @@ class TestAIErrorHandling:
 
         with patch("services.ai.assistant.ComplianceAssistant") as mock_assistant:
             mock_assistant.return_value.get_question_help = AsyncMock(
-                side_effect=AIServiceException("Service unavailable")
+                side_effect=AIServiceException("Service unavailable"),
             )
 
             # Mock the fallback mechanism
@@ -386,7 +386,7 @@ class TestAIErrorHandling:
                     "guidance": "Mock guidance for GDPR compliance",
                     "confidence_score": 0.7,
                     "request_id": "mock-request-123",
-                    "generated_at": "2024-01-01T00:00:00Z",
+                    "generated_at": "2024-01-01T00:00:00Z"
                 }
 
                 response = client.post(
@@ -421,8 +421,8 @@ class TestAIErrorHandling:
 
             mock_assistant.return_value.get_assessment_help = AsyncMock(
                 side_effect=AIServiceException(
-                    "Service error with context", context=error_context
-                )
+                    "Service error with context", context=error_context,
+                ),
             )
 
             response = client.post(
@@ -447,7 +447,7 @@ class TestAIErrorHandling:
         with patch("api.routers.ai_assessments.ComplianceAssistant") as mock_assistant:
             # Simulate multiple failures to trigger circuit breaker
             mock_assistant.return_value.get_assessment_help = AsyncMock(
-                side_effect=AIServiceException("Repeated failures")
+                side_effect=AIServiceException("Repeated failures"),
             )
 
             responses = []
@@ -507,7 +507,7 @@ class TestAIErrorHandling:
             ]
 
             mock_assistant.return_value.get_assessment_help = AsyncMock(
-                side_effect=responses_sequence
+                side_effect=responses_sequence,
             )
 
             results = []

@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
+
 Test runner script for AI Optimization tests.
 
 Runs comprehensive test suite for the AI optimization implementation
@@ -24,7 +28,7 @@ class AIOptimizationTestRunner:
 
     def run_unit_tests(self, verbose: bool = False) -> Dict[str, Any]:
         """Run unit tests for AI optimization."""
-        print("🧪 Running AI Optimization Unit Tests...")
+        logger.info("🧪 Running AI Optimization Unit Tests...")
 
         test_files = [
             "tests/unit/services/test_ai_circuit_breaker.py",
@@ -61,7 +65,7 @@ class AIOptimizationTestRunner:
 
     def run_integration_tests(self, verbose: bool = False) -> Dict[str, Any]:
         """Run integration tests for AI optimization."""
-        print("🔗 Running AI Optimization Integration Tests...")
+        logger.info("🔗 Running AI Optimization Integration Tests...")
 
         test_files = ["tests/integration/test_ai_optimization_endpoints.py"]
 
@@ -91,7 +95,7 @@ class AIOptimizationTestRunner:
 
     def run_performance_tests(self, verbose: bool = False) -> Dict[str, Any]:
         """Run performance tests for AI optimization."""
-        print("⚡ Running AI Optimization Performance Tests...")
+        logger.info("⚡ Running AI Optimization Performance Tests...")
 
         test_files = ["tests/performance/test_ai_optimization_performance.py"]
 
@@ -125,7 +129,7 @@ class AIOptimizationTestRunner:
         self, test_path: str, verbose: bool = False
     ) -> Dict[str, Any]:
         """Run a specific test file."""
-        print(f"🎯 Running specific test: {test_path}")
+        logger.info(f"🎯 Running specific test: {test_path}")
 
         cmd = [
             "python",
@@ -154,8 +158,8 @@ class AIOptimizationTestRunner:
         self, verbose: bool = False, include_performance: bool = False
     ) -> List[Dict[str, Any]]:
         """Run all AI optimization tests."""
-        print("🚀 Running Complete AI Optimization Test Suite...")
-        print("=" * 60)
+        logger.info("🚀 Running Complete AI Optimization Test Suite...")
+        logger.info("=" * 60)
 
         results = []
 
@@ -182,12 +186,12 @@ class AIOptimizationTestRunner:
         status = "✅ PASSED" if result["success"] else "❌ FAILED"
         duration = f"{result['duration']:.2f}s"
 
-        print(f"{status} {result['name']} ({duration})")
+        logger.info(f"{status} {result['name']} ({duration})")
 
         if not result["success"] and result["errors"]:
-            print(f"   Errors: {result['errors'][:200]}...")
+            logger.info(f"   Errors: {result['errors'][:200]}...")
 
-        print()
+        logger.info()
 
     def generate_test_report(self, results: List[Dict[str, Any]]) -> str:
         """Generate comprehensive test report."""
@@ -221,7 +225,7 @@ Detailed Results:
 
     def check_test_dependencies(self) -> bool:
         """Check if all test dependencies are available."""
-        print("🔍 Checking test dependencies...")
+        logger.info("🔍 Checking test dependencies...")
 
         required_packages = [
             "pytest",
@@ -240,11 +244,11 @@ Detailed Results:
                 missing_packages.append(package)
 
         if missing_packages:
-            print(f"❌ Missing packages: {', '.join(missing_packages)}")
-            print("Install with: pip install " + " ".join(missing_packages))
+            logger.info(f"❌ Missing packages: {', '.join(missing_packages)}")
+            logger.info("Install with: pip install " + " ".join(missing_packages))
             return False
 
-        print("✅ All test dependencies available")
+        logger.info("✅ All test dependencies available")
         return True
 
     def setup_test_environment(self) -> None:
@@ -323,14 +327,14 @@ def main() -> None:
             results = runner.run_all_tests(args.verbose, args.performance)
 
         # Print summary
-        print("=" * 60)
+        logger.info("=" * 60)
         total_passed = sum(1 for r in results if r["success"])
         total_tests = len(results)
 
         if total_passed == total_tests:
-            print(f"🎉 All {total_tests} test suite(s) PASSED!")
+            logger.info(f"🎉 All {total_tests} test suite(s) PASSED!")
         else:
-            print(f"⚠️  {total_passed}/{total_tests} test suite(s) passed")
+            logger.info(f"⚠️  {total_passed}/{total_tests} test suite(s) passed")
 
         # Generate report if requested
         if args.report:
@@ -338,16 +342,16 @@ def main() -> None:
             report_file = project_root / "test_reports" / "ai_optimization_report.txt"
             report_file.parent.mkdir(exist_ok=True)
             report_file.write_text(report)
-            print(f"📄 Detailed report saved to: {report_file}")
+            logger.info(f"📄 Detailed report saved to: {report_file}")
 
         # Exit with appropriate code
         sys.exit(0 if total_passed == total_tests else 1)
 
     except KeyboardInterrupt:
-        print("\n⏹️  Tests interrupted by user")
+        logger.info("\n⏹️  Tests interrupted by user")
         sys.exit(1)
     except Exception as e:
-        print(f"❌ Test runner error: {e}")
+        logger.info(f"❌ Test runner error: {e}")
         sys.exit(1)
 
 

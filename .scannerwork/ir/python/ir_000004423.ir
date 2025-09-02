@@ -1,4 +1,0 @@
-
-90"err_{int(time.time())}_{str(uuid.uuid4())[:8]}"str
-#"Generate unique error ID"strself_ _("
-c c(@*4/home/omar/Documents/ruleIQ/config/error_tracking.py

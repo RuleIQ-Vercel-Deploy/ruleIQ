@@ -1,8 +1,6 @@
-a
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2<<$ 5a
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2aa )b
-pythonS7502ESave this task in a variable to prevent premature garbage collection. 2jj c
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-žž &c
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-   (
+L
+pythonS6546/Use a union type expression for this type hint. 2) =N
+pythonS6546/Use a union type expression for this type hint. 2
+„„ 3N
+pythonS6546/Use a union type expression for this type hint. 2
+´´ #

@@ -1,29 +1,19 @@
 """
+from __future__ import annotations
+
 RAG adapter for backward compatibility.
 
 Phase 3 Implementation: Bridge between old RAG interface and new standardized implementation.
 This adapter allows gradual migration by maintaining the existing interface while using
 the new standardized RAG implementation underneath.
 """
-
 from typing import List, Optional, Dict, Any
 from uuid import UUID, uuid4
 from pathlib import Path
 import logging
-
-from .rag_system import (
-    RAGSystem,
-    DocumentMetadata,
-    DocumentType,
-    DocumentSource,
-    RetrievalResult,
-    DocumentChunk,
-    RetrievalStrategy,
-)
+from .rag_system import RAGSystem, DocumentMetadata, DocumentType, DocumentSource, RetrievalResult, DocumentChunk, RetrievalStrategy
 from .rag_standard import StandardizedRAG
-
 logger = logging.getLogger(__name__)
-
 
 class RAGAdapter:
     """
@@ -41,29 +31,13 @@ class RAGAdapter:
             *args: Positional arguments from old interface
             **kwargs: Keyword arguments from old interface
         """
-        # Extract what we need from old interface
-        self.memory_manager = kwargs.get("memory_manager")
-        self.company_id = kwargs.get("company_id", uuid4())
-
-        # Initialize new standardized RAG
+        self.memory_manager = kwargs.get('memory_manager')
+        self.company_id = kwargs.get('company_id', uuid4())
         self.standard_rag = StandardizedRAG(self.company_id)
-
-        # Cache for document metadata (old system tracked this)
         self.document_metadata_cache = {}
+        logger.info('RAGAdapter initialized - bridging to StandardizedRAG')
 
-        logger.info("RAGAdapter initialized - bridging to StandardizedRAG")
-
-    async def add_document(
-        self,
-        file_path: str,
-        company_id: UUID,
-        title: str,
-        document_type: DocumentType,
-        source: DocumentSource,
-        frameworks: Optional[List[str]] = None,
-        tags: Optional[List[str]] = None,
-        metadata_override: Optional[Dict[str, Any]] = None,
-    ) -> DocumentMetadata:
+    async def add_document(self, file_path: str, company_id: UUID, title: str, document_type: DocumentType, source: DocumentSource, frameworks: Optional[List[str]]=None, tags: Optional[List[str]]=None, metadata_override: Optional[Dict[str, Any]]=None) -> DocumentMetadata:
         """
         Adapter method for add_document.
 
@@ -83,75 +57,27 @@ class RAGAdapter:
             DocumentMetadata object for compatibility
         """
         try:
-            # Read document content
-            content = ""
+            content = ''
             try:
-                with open(file_path, "r", encoding="utf-8") as f:
+                with open(file_path, 'r', encoding='utf-8') as f:
                     content = f.read()
             except UnicodeDecodeError:
-                # Try with different encoding
-                with open(file_path, "r", encoding="latin-1") as f:
+                with open(file_path, 'r', encoding='latin-1') as f:
                     content = f.read()
-
-            # Prepare metadata for new system
-            metadata = {
-                "title": title,
-                "document_type": (
-                    document_type.value
-                    if hasattr(document_type, "value")
-                    else str(document_type)
-                ),
-                "source": source.value if hasattr(source, "value") else str(source),
-                "company_id": str(company_id),
-                "frameworks": frameworks or [],
-                "tags": tags or [],
-                "file_path": file_path,
-            }
-
-            # Apply metadata overrides if provided
+            metadata = {'title': title, 'document_type': document_type.value if hasattr(document_type, 'value') else str(document_type), 'source': source.value if hasattr(source, 'value') else str(source), 'company_id': str(company_id), 'frameworks': frameworks or [], 'tags': tags or [], 'file_path': file_path}
             if metadata_override:
                 metadata.update(metadata_override)
-
-            # Add to standardized RAG
             await self.standard_rag.add_documents([content], [metadata])
-
-            # Create compatible metadata object
-            document_id = f"doc_{uuid4()}"
-            doc_metadata = DocumentMetadata(
-                document_id=document_id,
-                title=title,
-                document_type=document_type,
-                source=source,
-                content_hash="",  # Not computed in new system
-                file_size_bytes=(
-                    Path(file_path).stat().st_size if Path(file_path).exists() else 0
-                ),
-                company_id=company_id,
-                processing_status="processed",
-                frameworks=frameworks or [],
-                tags=tags or [],
-            )
-
-            # Cache metadata for retrieval
+            document_id = f'doc_{uuid4()}'
+            doc_metadata = DocumentMetadata(document_id=document_id, title=title, document_type=document_type, source=source, content_hash='', file_size_bytes=Path(file_path).stat().st_size if Path(file_path).exists() else 0, company_id=company_id, processing_status='processed', frameworks=frameworks or [], tags=tags or [])
             self.document_metadata_cache[document_id] = doc_metadata
-
-            logger.info(f"Document added via adapter: {document_id}")
+            logger.info(f'Document added via adapter: {document_id}')
             return doc_metadata
-
         except Exception as e:
-            logger.error(f"Failed to add document via adapter: {e}")
+            logger.error(f'Failed to add document via adapter: {e}')
             raise
 
-    async def retrieve_relevant_docs(
-        self,
-        query: str,
-        company_id: UUID,
-        k: int = 6,
-        strategy: RetrievalStrategy = RetrievalStrategy.HYBRID,
-        frameworks_filter: Optional[List[str]] = None,
-        source_filter: Optional[List[DocumentSource]] = None,
-        min_relevance_score: float = 0.0,
-    ) -> RetrievalResult:
+    async def retrieve_relevant_docs(self, query: str, company_id: UUID, k: int=6, strategy: RetrievalStrategy=RetrievalStrategy.HYBRID, frameworks_filter: Optional[List[str]]=None, source_filter: Optional[List[DocumentSource]]=None, min_relevance_score: float=0.0) -> RetrievalResult:
         """
         Adapter method for retrieval.
 
@@ -170,57 +96,19 @@ class RAGAdapter:
             RetrievalResult object for compatibility
         """
         try:
-            # Use standardized retrieval
             results = await self.standard_rag.retrieve(query, k)
-
-            # Convert to old format
             chunks = []
             for i, result in enumerate(results):
-                # Filter by minimum relevance score
-                if result["score"] < min_relevance_score:
+                if result['score'] < min_relevance_score:
                     continue
-
-                # Create compatible chunk object
-                chunk = DocumentChunk(
-                    chunk_id=f"chunk_{uuid4()}",
-                    document_id=f"adapted_{i}",
-                    content=result["content"],
-                    chunk_index=i,
-                    start_char=0,
-                    end_char=len(result["content"]),
-                    relevance_score=result["score"],
-                    metadata=result.get("metadata", {}),
-                )
+                chunk = DocumentChunk(chunk_id=f'chunk_{uuid4()}', document_id=f'adapted_{i}', content=result['content'], chunk_index=i, start_char=0, end_char=len(result['content']), relevance_score=result['score'], metadata=result.get('metadata', {}))
                 chunks.append(chunk)
-
-            # Create compatible result object
-            retrieval_result = RetrievalResult(
-                chunks=chunks[:k],  # Limit to k results
-                total_results=len(chunks),
-                query=query,
-                strategy=RetrievalStrategy.HYBRID,  # Always hybrid in new system
-                retrieval_time_ms=100,  # Approximate
-                avg_relevance_score=(
-                    sum(c.relevance_score for c in chunks) / len(chunks)
-                    if chunks
-                    else 0
-                ),
-            )
-
-            logger.info(f"Retrieved {len(chunks)} documents via adapter")
+            retrieval_result = RetrievalResult(chunks=chunks[:k], total_results=len(chunks), query=query, strategy=RetrievalStrategy.HYBRID, retrieval_time_ms=100, avg_relevance_score=sum((c.relevance_score for c in chunks)) / len(chunks) if chunks else 0)
+            logger.info(f'Retrieved {len(chunks)} documents via adapter')
             return retrieval_result
-
         except Exception as e:
-            logger.error(f"Retrieval failed via adapter: {e}")
-            # Return empty result on error
-            return RetrievalResult(
-                chunks=[],
-                total_results=0,
-                query=query,
-                strategy=strategy,
-                retrieval_time_ms=0,
-                avg_relevance_score=0.0,
-            )
+            logger.error(f'Retrieval failed via adapter: {e}')
+            return RetrievalResult(chunks=[], total_results=0, query=query, strategy=strategy, retrieval_time_ms=0, avg_relevance_score=0.0)
 
     async def get_health_status(self) -> Dict[str, Any]:
         """
@@ -244,10 +132,10 @@ class RAGAdapter:
         try:
             await self.standard_rag.clear_collection()
             self.document_metadata_cache.clear()
-            logger.info(f"Cleared documents for company {company_id}")
+            logger.info(f'Cleared documents for company {company_id}')
             return True
         except Exception as e:
-            logger.error(f"Failed to clear documents: {e}")
+            logger.error(f'Failed to clear documents: {e}')
             return False
 
     async def get_retrieval_statistics(self) -> Dict[str, Any]:
@@ -258,22 +146,8 @@ class RAGAdapter:
             Statistics dictionary
         """
         stats = await self.standard_rag.get_statistics()
-
-        # Add compatibility fields
-        stats.update(
-            {
-                "total_documents": len(self.document_metadata_cache),
-                "total_chunks": stats.get("document_count", 0),
-                "total_queries": 0,  # Not tracked in new system
-                "avg_retrieval_time_ms": 100,  # Approximate
-                "cache_hits": 0,  # Not tracked in new system
-                "enable_reranking": stats.get("reranking_enabled", False),
-            }
-        )
-
+        stats.update({'total_documents': len(self.document_metadata_cache), 'total_chunks': stats.get('document_count', 0), 'total_queries': 0, 'avg_retrieval_time_ms': 100, 'cache_hits': 0, 'enable_reranking': stats.get('reranking_enabled', False)})
         return stats
-
-    # Additional compatibility methods
 
     async def update_document(self, document_id: str, **updates) -> bool:
         """
@@ -288,9 +162,7 @@ class RAGAdapter:
         Returns:
             Always returns True for compatibility
         """
-        logger.warning(
-            f"Document update not supported in StandardizedRAG: {document_id}"
-        )
+        logger.warning(f'Document update not supported in StandardizedRAG: {document_id}')
         return True
 
     async def delete_document(self, document_id: str, company_id: UUID) -> bool:
@@ -306,14 +178,12 @@ class RAGAdapter:
         Returns:
             Always returns True for compatibility
         """
-        logger.warning(
-            f"Document deletion not supported in StandardizedRAG: {document_id}"
-        )
+        logger.warning(f'Document deletion not supported in StandardizedRAG: {document_id}')
         if document_id in self.document_metadata_cache:
             del self.document_metadata_cache[document_id]
         return True
 
-    def __getattr__(self, name):
+    def __getattr__(self, name) -> Any:
         """
         Forward any unimplemented methods to StandardizedRAG.
 
@@ -328,6 +198,4 @@ class RAGAdapter:
         """
         if hasattr(self.standard_rag, name):
             return getattr(self.standard_rag, name)
-        raise AttributeError(
-            f"'{self.__class__.__name__}' object has no attribute '{name}'"
-        )
+        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")

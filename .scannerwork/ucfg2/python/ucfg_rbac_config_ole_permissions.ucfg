@@ -1,21 +1,21 @@
 
 :api.middleware.rbac_config.RBACConfig.get_role_permissionsE
-9/home/omar/Documents/ruleIQ/api/middleware/rbac_config.py± ±("2*Ô
+9/home/omar/Documents/ruleIQ/api/middleware/rbac_config.py³ ³("2*Ô
 2
-² ²(2w
+´ ´(2w
 u
 
-³ ³(#
+µ µ(#
 %1"__id*[
 
 __unknown_file (?*='
 %api.middleware.rbac_config.RBACConfig"
 ROLE_PERMISSIONS
 
-³3 ³(5
+µ3 µ(5
 %2"list—”
 
-³ ³(6
+µ µ(6
 %3"dict.get*"
 
 __unknown_file (
@@ -30,10 +30,10 @@ u
 
 %22get"
 
-³ ³(6
+µ µ(6
 
 %3:
 
-±" ±(0
+³" ³(0
 	role_nameB)'
 %api.middleware.rbac_config.RBACConfigH

@@ -1,3 +1,9 @@
-H
-pythonS4790)Make sure that hashing data is safe here. 2
-èè' *
+ò
+pythonS5713WRemove this redundant Exception class; it derives from another which is already caught. 2
+ÆÆ- 7: 
+Í
+ÆÆ !Parent class.ò
+pythonS5713WRemove this redundant Exception class; it derives from another which is already caught. 2
+ÆÆ# +: 
+Í
+ÆÆ !Parent class.

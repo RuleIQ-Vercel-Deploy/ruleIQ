@@ -29,7 +29,7 @@ try:
         CREATE (d:GoldenDocument {
             doc_id: 'test_doc',
             content: 'Test content',
-            created_at: datetime()
+            created_at: datetime(),
         })
         RETURN d.doc_id as id
         """

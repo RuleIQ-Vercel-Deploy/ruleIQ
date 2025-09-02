@@ -1,10 +1,10 @@
 
 Nservices.ai.assistant.ComplianceAssistant._generate_contextual_recommendations@
-4/home/omar/Documents/ruleIQ/services/ai/assistant.py• •(2"7*ê
+4/home/omar/Documents/ruleIQ/services/ai/assistant.pyµ µ(2"7*ê
 7
-∞ ∂(˚¯
+ª Ω()˚¯
 
-∞ ∂(
+ª Ω()
 %4*I
 
 __unknown_file (-+
@@ -31,14 +31,14 @@ Nservices.ai.assistant.ComplianceAssistant._generate_contextual_recommendations
 	framework2'_build_contextual_recommendation_promptG
 E
 
-∞ ∂(
+ª Ω()
 prompt_dict"__id*"
 
 __unknown_file (
 
 %4Ä~
 
-∫ ∫(0
+ø ø(0
 %5"__mapGet*+
 
 __unknown_file (
@@ -49,7 +49,7 @@ E
 
 system2__getitem__~|
 
-∫< ∫(O
+ø< ø(O
 %6"__mapGet*+
 
 __unknown_file (
@@ -60,38 +60,38 @@ E
 user2__getitem__Ö
 Ç
 
-∫ ∫(Q
+ø ø(Q
 %7"__concat*
 
-∫ ∫(
+ø ø(
 
 System: *
 
-∫ ∫(0
+ø ø(0
 
 %5*
 
-∫1 ∫(;
+ø1 ø(;
 
 \n\nUser: *
 
-∫< ∫(O
+ø< ø(O
 
 %6K
 I
 
-π ª(
+æ ¿(
 combined_prompt"__id*"
 
 __unknown_file (
 
 %7
 
-æ √(
+¡ √(E
 %8"dictv
 t
 
-ø  ø(:
+¡- ¡(G
 %9"__id*Z
 
 __unknown_file (>*<(
@@ -99,7 +99,7 @@ t
 RECOMMENDATIONJ
 H
 
-ø  ø(@
+¡- ¬(
 %10"__id*-
 
 __unknown_file (*
@@ -108,7 +108,7 @@ H
 valueó
 î
 
-ø ø(@
+¡ ¬(
 %11"__mapSet*"
 
 __unknown_file (
@@ -123,7 +123,7 @@ H
 %10ö
 ó
 
-¿ ¿(&
+¬ ¬(-
 %12"__mapSet*"
 
 __unknown_file (
@@ -138,7 +138,7 @@ H
 	framework®
 •
 
-¡ ¡(4
+¬/ √( 
 %13"__mapSet*"
 
 __unknown_file (
@@ -153,7 +153,7 @@ H
 business_context¶
 £
 
-¬ ¬(2
+√" √(D
 %14"__mapSet*"
 
 __unknown_file (
@@ -168,14 +168,14 @@ H
 TrueI
 G
 
-æ √(
+¡ √(E
 cache_context"__id*"
 
 __unknown_file (
 
 %8‹Ÿ
 
-∆ »(
+ƒ ≈(
 %15*I
 
 __unknown_file (-+
@@ -190,7 +190,7 @@ G
 cache_context2_generate_gemini_responseE
 C
 
-∆ »(
+ƒ ≈(
 
 response"__id*#
 
@@ -198,7 +198,7 @@ C
 
 %15—Œ
 
-À À(Q
+∆ «(
 %16*I
 
 __unknown_file (-+
@@ -214,14 +214,14 @@ C
 	framework2_parse_ai_recommendationsL
 J
 
-À À(Q
+∆ «(
 recommendations"__id*#
 
 __unknown_file (
 
 %16ﬁ€
 
-Œ' –(
+»' …(2
 %17*I
 
 __unknown_file (-+
@@ -236,29 +236,29 @@ J
 business_context2_add_automation_insightsU
 S
 
-Œ –(
+» …(2
 enhanced_recommendations"__id*#
 
 __unknown_file (
 
 %17"*
 
-“ “(+
+   (+
 
 enhanced_recommendations: 
 
-ß ß((
+µ9 ∂(
 business_context:!
 
-® ®(%
+∂ ∂(5
 existing_evidence:!
 
-© ©()
+∂7 ∑(
 maturity_analysis:
 
-™ ™(%
+∑ ∑(5
 gaps_analysis:
 
-´ ´(
+∑7 ∑(E
 	frameworkB-+
 )services.ai.assistant.ComplianceAssistantH

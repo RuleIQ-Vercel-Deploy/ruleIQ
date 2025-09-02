@@ -1,4 +1,9 @@
 """Add comprehensive CHECK constraints for data integrity
+import logging
+logger = logging.getLogger(__name__)
+
+
+from __future__ import annotations
 
 Revision ID: add_check_constraints_data_integrity
 Revises: 802adb6d1be8
@@ -31,7 +36,7 @@ def upgrade() -> None:
             CHECK (employee_count >= 1 AND employee_count <= 1000000)
         """
         )
-    except Exception:
+    except (OSError, Exception):
         pass  # Constraint may already exist
 
     try:
@@ -43,7 +48,7 @@ def upgrade() -> None:
             CHECK (length(company_name) >= 2 AND length(company_name) <= 255)
         """
         )
-    except Exception:
+    except (OSError, Exception):
         pass
 
     try:
@@ -55,7 +60,7 @@ def upgrade() -> None:
             CHECK (data_sensitivity IN ('Low', 'Medium', 'High', 'Critical'))
         """
         )
-    except Exception:
+    except (OSError, Exception):
         pass
 
     # 2. COMPLIANCE FRAMEWORK CONSTRAINTS
@@ -203,7 +208,7 @@ def upgrade() -> None:
             )
         """
         )
-    except Exception:
+    except (OSError, Exception):
         pass
 
     # 4. ASSESSMENT SESSION CONSTRAINTS
@@ -615,7 +620,7 @@ def upgrade() -> None:
     except Exception:
         pass
 
-    print("✅ Successfully added CHECK constraints for data integrity")
+    logger.info("✅ Successfully added CHECK constraints for data integrity")
 
 
 def downgrade() -> None:
@@ -722,4 +727,4 @@ def downgrade() -> None:
             except Exception:
                 pass  # Constraint may not exist
 
-    print("✅ Successfully removed CHECK constraints")
+    logger.info("✅ Successfully removed CHECK constraints")

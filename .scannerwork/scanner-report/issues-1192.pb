@@ -1,2 +1,4 @@
-M
-pythonS60350Replace this alternation with a character class. 2.. 
+C
+pythonS5905&Fix this assertion on a tuple literal. 2=> 4C
+pythonS5905&Fix this assertion on a tuple literal. 2VW 4C
+pythonS5905&Fix this assertion on a tuple literal. 2no 4

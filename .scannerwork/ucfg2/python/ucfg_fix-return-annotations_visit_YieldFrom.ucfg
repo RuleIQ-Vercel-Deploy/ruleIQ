@@ -1,0 +1,29 @@
+
+7fix-return-annotations.ReturnTypeFinder.visit_YieldFromM
+C/home/omar/Documents/ruleIQ/scripts/sonar/fix-return-annotations.py ("2*ì
+2 (%r
+p
+ (
+%1"__id*X
+
+__unknown_file (<*:)
+'fix-return-annotations.ReturnTypeFinder"
+yield_fromsdb
+ (%
+%2*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+
+node2append*
+3*?
+3
+fix-return-annotations.py"
+ (
+implicit return:
+ ("
+nodeB+)
+'fix-return-annotations.ReturnTypeFinderH

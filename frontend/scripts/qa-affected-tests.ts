@@ -6,8 +6,8 @@
  * Provides fast feedback while maintaining comprehensive coverage
  */
 
-import { execSync, spawn } from 'child_process';
-import { readFileSync, existsSync } from 'fs';
+import { execSync, } from 'child_process';
+import { } from 'fs';
 import { join } from 'path';
 
 interface TestExecution {

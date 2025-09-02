@@ -1,8 +1,11 @@
 """
+from __future__ import annotations
+import requests
+
 Background tasks for database and system monitoring.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict
 
 from celery.schedules import crontab
@@ -33,7 +36,7 @@ def collect_database_metrics() -> Dict[str, Any]:
         session_metrics = database_monitor.collect_session_metrics()
 
         result = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "pool_metrics": pool_metrics.to_dict() if pool_metrics else None,
             "session_metrics": session_metrics.to_dict(),
             "status": "success",
@@ -46,7 +49,7 @@ def collect_database_metrics() -> Dict[str, Any]:
         error_msg = f"Failed to collect database metrics: {e}"
         logger.error(error_msg)
         return {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "status": "error",
             "error": str(e),
         }
@@ -104,7 +107,7 @@ def database_health_check() -> Dict[str, Any]:
             )
 
         result = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "health_status": health_status,
             "health_message": health_message,
             "recommendations": recommendations,
@@ -123,11 +126,11 @@ def database_health_check() -> Dict[str, Any]:
 
         return result
 
-    except Exception as e:
+    except (requests.RequestException, Exception, KeyError) as e:
         error_msg = f"Database health check failed: {e}"
         logger.error(error_msg)
         return {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "status": "error",
             "error": str(e),
         }
@@ -158,7 +161,7 @@ def cleanup_monitoring_data() -> Dict[str, Any]:
         alerts_after = len(database_monitor.alerts)
 
         result = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "cleanup_summary": {
                 "pool_metrics_removed": pool_metrics_before - pool_metrics_after,
                 "session_metrics_removed": session_metrics_before
@@ -174,11 +177,11 @@ def cleanup_monitoring_data() -> Dict[str, Any]:
         logger.info(f"Monitoring data cleanup completed: {result['cleanup_summary']}")
         return result
 
-    except Exception as e:
+    except (Exception, KeyError, IndexError) as e:
         error_msg = f"Monitoring data cleanup failed: {e}"
         logger.error(error_msg)
         return {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "status": "error",
             "error": str(e),
         }
@@ -210,11 +213,11 @@ def system_metrics_collection() -> Dict[str, Any]:
                 "packets_sent": network.packets_sent,
                 "packets_recv": network.packets_recv,
             }
-        except Exception:
+        except (ValueError, TypeError):
             network_data = None
 
         result = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "system_metrics": {
                 "cpu_percent": cpu_percent,
                 "memory_percent": memory.percent,
@@ -233,11 +236,11 @@ def system_metrics_collection() -> Dict[str, Any]:
         )
         return result
 
-    except Exception as e:
+    except (ValueError, TypeError) as e:
         error_msg = f"System metrics collection failed: {e}"
         logger.error(error_msg)
         return {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "status": "error",
             "error": str(e),
         }
@@ -281,7 +284,7 @@ def register_monitoring_tasks() -> None:
 
         logger.info("Monitoring tasks registered with Celery beat scheduler")
 
-    except Exception as e:
+    except (ValueError, TypeError) as e:
         logger.error(f"Failed to register monitoring tasks: {e}")
 
 

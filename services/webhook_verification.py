@@ -3,6 +3,7 @@ Webhook Signature Verification Service
 
 Provides secure webhook signature verification for incoming webhooks
 from external services (Stripe, GitHub, etc.)
+import requests
 """
 
 import hmac
@@ -10,11 +11,10 @@ import hashlib
 import time
 import json
 from typing import Optional, Dict, Any, Tuple
-from datetime import datetime, timedelta
+from datetime import datetime timezone
 import logging
 
 from fastapi import HTTPException, status, Request
-from sqlalchemy.ext.asyncio import AsyncSession
 import redis.asyncio as redis
 
 from config.settings import settings
@@ -38,13 +38,13 @@ class WebhookVerificationService:
             "header": "Stripe-Signature",
             "algorithm": "sha256",
             "format": "timestamp_signature",
-            "tolerance_seconds": 300,  # 5 minutes
+            "tolerance_seconds": 300,  # 5 minutes,
         },
         "github": {
             "header": "X-Hub-Signature-256",
             "algorithm": "sha256",
             "format": "sha_signature",
-            "tolerance_seconds": None,  # No timestamp validation
+            "tolerance_seconds": None,  # No timestamp validation,
         },
         "sendgrid": {
             "header": "X-Twilio-Email-Event-Webhook-Signature",
@@ -110,24 +110,24 @@ class WebhookVerificationService:
             # Verify based on format
             if config["format"] == "timestamp_signature":
                 return await self._verify_timestamp_signature(
-                    payload, signature_header, secret, config
+                    payload, signature_header, secret, config,
                 )
             elif config["format"] == "sha_signature":
                 return await self._verify_sha_signature(
-                    payload, signature_header, secret, config
+                    payload, signature_header, secret, config,
                 )
             elif config["format"] == "base64_signature":
                 return await self._verify_base64_signature(
-                    payload, signature_header, secret, config
+                    payload, signature_header, secret, config,
                 )
             elif config["format"] == "hmac_signature":
                 return await self._verify_hmac_signature(
-                    payload, signature_header, secret, config
+                    payload, signature_header, secret, config,
                 )
             else:
                 return False, f"Unknown signature format: {config['format']}"
 
-        except Exception as e:
+        except (requests.RequestException, KeyError, IndexError) as e:
             logger.error(f"Webhook verification error: {e}")
             return False, str(e)
 
@@ -172,7 +172,7 @@ class WebhookVerificationService:
 
             return False, "Invalid signature"
 
-        except Exception as e:
+        except (requests.RequestException, ValueError, KeyError) as e:
             return False, f"Signature verification failed: {e}"
 
     async def _verify_sha_signature(
@@ -197,7 +197,7 @@ class WebhookVerificationService:
 
             return False, "Invalid signature"
 
-        except Exception as e:
+        except (KeyError, IndexError) as e:
             return False, f"Signature verification failed: {e}"
 
     async def _verify_base64_signature(
@@ -221,7 +221,7 @@ class WebhookVerificationService:
 
             return False, "Invalid signature"
 
-        except Exception as e:
+        except (KeyError, IndexError) as e:
             return False, f"Signature verification failed: {e}"
 
     async def _verify_hmac_signature(
@@ -265,7 +265,7 @@ class WebhookVerificationService:
 
             return False, "Invalid signature"
 
-        except Exception as e:
+        except (requests.RequestException, ValueError, KeyError) as e:
             return False, f"Signature verification failed: {e}"
 
     async def _get_webhook_secret(self, provider: str) -> Optional[str]:
@@ -294,7 +294,7 @@ class WebhookVerificationService:
                 )
                 if result.returncode == 0:
                     secret = result.stdout.strip()
-            except Exception:
+            except (KeyError, IndexError):
                 pass
 
         # Cache the secret
@@ -371,7 +371,7 @@ class WebhookVerificationService:
         try:
             # Create log entry
             log_entry = {
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
                 "provider": provider,
                 "endpoint": endpoint,
                 "is_valid": is_valid,
@@ -382,7 +382,7 @@ class WebhookVerificationService:
             # Store in Redis with expiration
             log_key = f"webhook_log:{provider}:{int(time.time())}"
             await self.redis_client.setex(
-                log_key, 86400, json.dumps(log_entry)  # 24 hours
+                log_key, 86400, json.dumps(log_entry)  # 24 hours,
             )
 
             # Update metrics
@@ -391,7 +391,7 @@ class WebhookVerificationService:
             else:
                 await self.redis_client.incr(f"webhook_metrics:{provider}:failure")
 
-        except Exception as e:
+        except (json.JSONDecodeError, ValueError) as e:
             logger.error(f"Failed to log webhook attempt: {e}")
 
 
@@ -418,7 +418,7 @@ async def verify_webhook_signature(
         service = WebhookVerificationService(redis_client)
 
         is_valid, error = await service.verify_webhook(
-            request=request, provider=provider, secret=secret
+            request=request, provider=provider, secret=secret,
         )
 
         # Log the attempt
@@ -440,7 +440,7 @@ async def verify_webhook_signature(
 
     except HTTPException:
         raise
-    except Exception as e:
+    except (OSError, requests.RequestException) as e:
         logger.error(f"Webhook verification error: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

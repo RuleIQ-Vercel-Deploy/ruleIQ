@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Debug test to find the actual pytest issue."""
 
+from __future__ import annotations
+
 import json
 from pathlib import Path
 from uuid import uuid4

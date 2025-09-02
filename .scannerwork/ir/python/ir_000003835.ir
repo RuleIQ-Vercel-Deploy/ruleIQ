@@ -1,216 +1,0 @@
-
-."user_directory"str
-%@"Groups and Access Controls"str
-82/"User accounts, permissions, security settings"str
-"SOC2"str
-$!"Administrative Activities"str
-
-"description"str
-"admin_activity_logs"str
-
-"ISO27001"str
-"type"str
->"access_groups"str
-@#7"Admin actions, configuration changes, user management"str
-;"Daily"str
-FB="Group memberships, access permissions, organizational units"str
-
-0int
-C:"Returns the evidence types this integration can collect."str
-%0"User Directory Information"str
-"user_access_logs"str
-"title"str
-@7"Login attempts, successful and failed authentications"str
-"frequency"str
-"User Login Events"str
-"GDPR"str
-"Real-time"str
-"frameworks"strself
-Ù+ Ù(/list"ž&
-$
-
-Ü â("#new-object#Bdict"
- 
-
-Ý Ý(*"	#map-set#:"
- 
-
-Þ Þ(,	"	#map-set#:"
- 
-
-ß ß(V"	#map-set#:
-)
-'
-
-à à(:"#unknown-value#Blist(
-&
-
-à à(:"
-#is-exact#:Bbool
-
-
-à à(:"
-#assume#::
-8
-
-à à(:"#set-field# __collection_size:Bint(
-&
-
-à à(:"#array-add-last#:(
-&
-
-à à(:"#array-add-last#:(
-&
-
-à à(:"#array-add-last#:"
- 
-
-à à(:"	#map-set#:"
- 
-
-á á(("	#map-set#:&
-$
-
-ã é("#new-object#Bdict"
- 
-
-ä ä(- "	#map-set#:"
- 
-
-å å(4""	#map-set#:!"
- 
-
-æ æ(V$"	#map-set#:
-#)
-'
-
-ç ç(2%"#unknown-value#Blist(
-&
-
-ç ç(2&"
-#is-exact#:%Bbool
-
-
-ç ç(2'"
-#assume#:&:
-8
-
-ç ç(2("#set-field# __collection_size:%Bint(
-&
-
-ç ç(2)"#array-add-last#:%(
-&
-
-ç ç(2*"#array-add-last#:%"
- 
-
-ç ç(2+"	#map-set#:%"
- 
-
-è è((,"	#map-set#:&
-$
-
-ê ð(-"#new-object#Bdict"
- 
-
-ë ë((/"	#map-set#:-."
- 
-
-ì ì(51"	#map-set#:-0"
- 
-
-í í(N3"	#map-set#:-
-2)
-'
-
-î î(24"#unknown-value#Blist(
-&
-
-î î(25"
-#is-exact#:4Bbool
-
-
-î î(26"
-#assume#:5:
-8
-
-î î(27"#set-field# __collection_size:4Bint(
-&
-
-î î(28"#array-add-last#:4(
-&
-
-î î(29"#array-add-last#:4"
- 
-
-î î(2:"	#map-set#:-4"
- 
-
-ï ï($<"	#map-set#:-;&
-$
-
-ñ ÷(="#new-object#Bdict"
- 
-
-ò ò('?"	#map-set#:=>"
- 
-
-ó ó(5A"	#map-set#:=@"
- 
-
-ô ô(\C"	#map-set#:=
-B)
-'
-
-õ õ(2D"#unknown-value#Blist(
-&
-
-õ õ(2E"
-#is-exact#:DBbool
-
-
-õ õ(2F"
-#assume#:E:
-8
-
-õ õ(2G"#set-field# __collection_size:DBint(
-&
-
-õ õ(2H"#array-add-last#:D(
-&
-
-õ õ(2I"#array-add-last#:D"
- 
-
-õ õ(2J"	#map-set#:=D"
- 
-
-ö ö($K"	#map-set#:=;)
-'
-
-Û ø(	L"#unknown-value#Blist(
-&
-
-Û ø(	M"
-#is-exact#:LBbool
-
-
-Û ø(	N"
-#assume#:M:
-8
-
-Û ø(	O"#set-field# __collection_size:LBint(
-&
-
-Û ø(	P"#array-add-last#:L(
-&
-
-Û ø(	Q"#array-add-last#:L(
-&
-
-Û ø(	R"#array-add-last#:L-(
-&
-
-Û ø(	S"#array-add-last#:L=
-
-Û ø(	L*L/home/omar/Documents/ruleIQ/api/integrations/google_workspace_integration.py

@@ -1,11 +1,11 @@
 
 Emonitoring.prometheus_exporter.MetricsHTTPServer.set_metrics_callbackR
-F/home/omar/Documents/ruleIQ/app/core/monitoring/prometheus_exporter.pyÂ Â("2* 
+F/home/omar/Documents/ruleIQ/app/core/monitoring/prometheus_exporter.py¼ ¼("2* 
 2
-Ã Ç(‰
+½ Á(‰
 †
 
-È È((H2
+Â Â((H2
 0monitoring.prometheus_exporter.MetricsHTTPServer"
 metrics_callback"__id*(
 
@@ -16,10 +16,10 @@ F/home/omar/Documents/ruleIQ/app/core/monitoring/prometheus_exporter.pyÂ Â(
 3*>
 3
 prometheus_exporter.py"
-Ê Ê(
+Ä Ä(
 implicit return:
 
-Â# Â(5
+¼# ¼(5
 
 callbackB42
 0monitoring.prometheus_exporter.MetricsHTTPServerH

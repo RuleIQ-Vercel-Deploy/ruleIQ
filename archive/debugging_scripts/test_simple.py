@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Simple test to debug the failing test."""
 
+from __future__ import annotations
+
 import sys
 import os
 import asyncio
@@ -115,7 +117,7 @@ async def test_basic_functionality() -> Optional[bool]:
                 )
                 print(f"✓ process_message returned: {type(result)}")
 
-            except Exception as e:
+            except (OSError, ValueError, KeyError) as e:
                 print(f"✗ process_message failed: {e}")
                 import traceback
 
@@ -125,7 +127,7 @@ async def test_basic_functionality() -> Optional[bool]:
         print("\n✓ All tests passed!")
         return True
 
-    except Exception as e:
+    except (OSError, ValueError, KeyError) as e:
         print(f"\n✗ Test failed: {e}")
         import traceback
 
@@ -136,7 +138,7 @@ async def test_basic_functionality() -> Optional[bool]:
             await _db_manager.drop_tables()
             await _db_manager.dispose()
             print("✓ Database cleanup completed")
-        except:
+        except (Exception, ValueError):
             pass
 
 

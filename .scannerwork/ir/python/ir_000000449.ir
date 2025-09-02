@@ -1,12 +1,10 @@
 
-	"Success"str
-0.2float"v=
-;
-
-ä ä($"
-asyncio.taskssleep:Btyping.Coroutine#
+.%"Initialize the global Neo4j service"str"e#
 !
 
-ä ä($"#unknown-value#
+æ æ('"#unknown-value#,
+*
 
-å å(*D/home/omar/Documents/ruleIQ/tests/unit/utils/test_circuit_breaker.py
+æ æ('service"#unknown-value#
+
+ç ç(*5/home/omar/Documents/ruleIQ/services/neo4j_service.py

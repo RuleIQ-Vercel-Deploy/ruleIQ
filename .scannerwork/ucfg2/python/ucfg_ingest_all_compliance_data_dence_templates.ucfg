@@ -1,11 +1,11 @@
 
 Rscripts.ingest_all_compliance_data.ComplianceDataIngestion._add_evidence_templatesM
-A/home/omar/Documents/ruleIQ/scripts/ingest_all_compliance_data.pyä ä(%"2*™
+A/home/omar/Documents/ruleIQ/scripts/ingest_all_compliance_data.py¼ ¼(%"2*™
 2
-å å(3£
+¾ ¾(3£
  
 
-æ é(
+¿ Â(
 query"__id*‚
 
 __unknown_file (fd
@@ -14,11 +14,11 @@ b
         SET r.evidence_templates = $templates
         
 
-ë! ë(K
+Ã! Ã(K
 %1"dict“
 
 
-ë" ë(2
+Ã" Ã(2
 %2"__mapSet*"
 
 __unknown_file (
@@ -35,7 +35,7 @@ b
 reg_id™
 –
 
-ë4 ë(J
+Ã4 Ã(J
 %3"__mapSet*"
 
 __unknown_file (
@@ -49,7 +49,7 @@ b
 
 	templatesŽ‹
 
-ë ë(L
+Ã Ã(L
 %4*'
 
 __unknown_file (
@@ -66,15 +66,15 @@ b
 3*E
 3
 ingest_all_compliance_data.py"
-í í(
+Å Å(
 implicit return:
 
-ä, ä(3	
+¼, ¼(3	
 session:
 
-ä5 ä(@
+¼5 ¼(@
 reg_id:
 
-äB ä(V
+¼B ½(
 	templatesB><
 :scripts.ingest_all_compliance_data.ComplianceDataIngestionH

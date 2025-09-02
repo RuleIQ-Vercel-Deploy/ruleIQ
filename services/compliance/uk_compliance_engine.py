@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 UK Compliance Engine - Comprehensive Implementation
 Integrates all UK regulations with machine-actionable obligations
 """
@@ -84,7 +86,7 @@ class UKComplianceManifest:
 
     def __init__(self, manifest_path: Optional[str] = None):
         self.manifest_path = (
-            manifest_path or "data/manifests/uk_compliance_manifest.json"
+            manifest_path or "data/manifests/uk_compliance_manifest.json",
         )
         self.regulations = {}
         self.obligations = {}
@@ -432,13 +434,13 @@ class UKComplianceAssessmentEngine:
 
         # Calculate overall scores
         assessment_results["overall_score"] = self._calculate_overall_score(
-            assessment_results["results"]
+            assessment_results["results"],
         )
         assessment_results["risk_rating"] = self._determine_risk_rating(
-            assessment_results["overall_score"]
+            assessment_results["overall_score"],
         )
         assessment_results["recommendations"] = self._generate_recommendations(
-            assessment_results["results"]
+            assessment_results["results"],
         )
 
         return assessment_results
@@ -495,7 +497,7 @@ class UKComplianceAssessmentEngine:
                             "priority": self._determine_priority(result),
                             "estimated_effort": self._estimate_effort(gap),
                             "quick_win": self._is_quick_win(gap),
-                        }
+                        },
                     )
 
         # Sort by priority

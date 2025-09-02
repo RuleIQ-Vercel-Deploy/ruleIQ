@@ -2,6 +2,7 @@
 """
 Create a test user for API testing
 """
+from typing import Any, Dict, List, Optional
 import asyncio
 import sys
 

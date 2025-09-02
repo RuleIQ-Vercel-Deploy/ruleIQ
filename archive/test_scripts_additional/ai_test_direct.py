@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+
 Direct AI Service Testing Script for ruleIQ
 Tests AI functionality without requiring full backend startup
 """
@@ -8,7 +10,7 @@ import os
 import sys
 import asyncio
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional
 
 # Add project root to path
@@ -230,7 +232,7 @@ async def run_comprehensive_ai_test():
     print("🚀 Starting Comprehensive AI Service Testing")
     print("=" * 60)
 
-    results = {"timestamp": datetime.utcnow().isoformat(), "tests": []}
+    results = {"timestamp": datetime.now(timezone.utc).isoformat(), "tests": []}
 
     # Test 1: Google API Key
     api_key_ok = test_google_api_key()

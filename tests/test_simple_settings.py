@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Test simplified settings"""
 
+from __future__ import annotations
+
 import os
 from typing import List, Annotated, Any
 from pydantic import Field, BeforeValidator
@@ -36,7 +38,7 @@ class TestSettings(BaseSettings):
 
     # Test with annotation
     annotated_list: Annotated[List[str], BeforeValidator(parse_list_from_string)] = (
-        Field(default=["c", "d"])
+        Field(default=["c", "d"]),
     )
 
     model_config = SettingsConfigDict(
@@ -50,7 +52,7 @@ print("=== Test 1: No env vars ===")
 try:
     settings1 = TestSettings()
     print(
-        f"Success: simple_list={settings1.simple_list}, annotated_list={settings1.annotated_list}"
+        f"Success: simple_list={settings1.simple_list}, annotated_list={settings1.annotated_list}",
     )
 except Exception as e:
     print(f"Failed: {e}")
@@ -62,7 +64,7 @@ os.environ["ANNOTATED_LIST"] = "p,q,r"
 try:
     settings2 = TestSettings()
     print(
-        f"Success: simple_list={settings2.simple_list}, annotated_list={settings2.annotated_list}"
+        f"Success: simple_list={settings2.simple_list}, annotated_list={settings2.annotated_list}",
     )
 except Exception as e:
     print(f"Failed: {e}")
@@ -74,7 +76,7 @@ os.environ["ANNOTATED_LIST"] = '["p","q","r"]'
 try:
     settings3 = TestSettings()
     print(
-        f"Success: simple_list={settings3.simple_list}, annotated_list={settings3.annotated_list}"
+        f"Success: simple_list={settings3.simple_list}, annotated_list={settings3.annotated_list}",
     )
 except Exception as e:
     print(f"Failed: {e}")

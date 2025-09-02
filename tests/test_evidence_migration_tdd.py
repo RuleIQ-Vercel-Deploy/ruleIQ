@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Test-Driven Development suite for Evidence Collection Tasks Migration.
 Following TDD principles: Write tests first, then implementation.
 """
@@ -92,7 +94,7 @@ def sample_state():
             "context": {
                 "user_id": str(uuid4()),
                 "business_profile_id": str(uuid4()),
-                "integration_id": "test_integration",
+                "integration_id": "test_integration"
             },
             "evidence_items": [],
             "validation_results": {},
@@ -109,7 +111,7 @@ def sample_state():
             "workflow_status": "active",
             "errors": [],
             "max_retries": 3,
-        }
+        },
     )
     state.dict = lambda: dict(state)
     return state
@@ -146,7 +148,7 @@ class TestEvidenceStateManagement:
         # Verify both items are preserved
         assert all(
             item.get("evidence_type") == "document"
-            for item in sample_state.evidence_items
+            for item in sample_state.evidence_items,
         )
 
     async def test_state_transition_tracking(self, sample_state):
@@ -291,7 +293,7 @@ class TestRetryAndFallbackMechanisms:
 
         # Verify delays increase with some variance
         assert all(
-            retry_delays[i] < retry_delays[i + 1] for i in range(len(retry_delays) - 1)
+            retry_delays[i] < retry_delays[i + 1] for i in range(len(retry_delays) - 1),
         )
 
     async def test_fallback_to_cache(self, sample_evidence_data):
@@ -419,7 +421,7 @@ class TestEvidenceAggregationAndDeduplication:
             {**sample_evidence_data, "id": "1"},
             {**sample_evidence_data, "id": "2"},  # Duplicate content
             {**sample_evidence_data, "raw_data": {"different": "content"}, "id": "3"},
-            {**sample_evidence_data, "id": "4"},  # Duplicate content
+            {**sample_evidence_data, "id": "4"},  # Duplicate content,
         ]
 
         seen_hashes = set()
@@ -451,10 +453,10 @@ class TestEvidenceAggregationAndDeduplication:
         for group_name, evidences in evidence_groups.items():
             merged[group_name] = {
                 "combined_score": round(
-                    sum(e["score"] for e in evidences) / len(evidences), 2
+                    sum(e["score"] for e in evidences) / len(evidences), 2,
                 ),
                 "all_findings": [f for e in evidences for f in e["findings"]],
-                "evidence_count": len(evidences),
+                "evidence_count": len(evidences)
             }
 
         assert merged["policy_compliance"]["combined_score"] == 0.85
@@ -601,7 +603,7 @@ class TestErrorHandlingAndRecovery:
             "validation_performed": False,  # Failed but not critical
             "scoring_completed": False,  # Failed but not critical
             "stored_successfully": True,
-            "notifications_sent": False,  # Failed but not critical
+            "notifications_sent": False,  # Failed but not critical,
         }
 
         # System should still function with degraded features
@@ -630,7 +632,7 @@ class TestErrorHandlingAndRecovery:
 
             assert recovered_state["case_id"] == sample_state["case_id"]
             assert (
-                recovered_state["retry_count"] == sample_state.get("retry_count", 0) + 1
+                recovered_state["retry_count"] == sample_state.get("retry_count", 0) + 1,
             )
 
 
@@ -667,7 +669,7 @@ class TestIntegrationWithLangGraph:
                 "id": str(uuid4()),
                 **sample_evidence_data,
                 "processed_at": datetime.now().isoformat(),
-            }
+            },
         )
 
         assert len(sample_state.evidence_items) == initial_evidence_count + 1
@@ -681,7 +683,7 @@ class TestIntegrationWithLangGraph:
                 return "collect_more"
 
             valid_count = sum(
-                1 for e in state.evidence_items if e.get("validation_status") == "valid"
+                1 for e in state.evidence_items if e.get("validation_status") == "valid",
             )
 
             if valid_count >= 3:
@@ -835,7 +837,7 @@ class TestMonitoringAndObservability:
                     "actor": sample_state.actor,
                     "case_id": sample_state.case_id,
                     "details": details,
-                }
+                },
             )
 
         # Log operations
@@ -871,7 +873,7 @@ class TestEndToEndIntegration:
             error_count=0,
             node_execution_times={},
             messages=[],  # Initialize messages field
-            errors=[],  # Initialize errors field
+            errors=[],  # Initialize errors field,
         )
 
         # Mock components
@@ -924,7 +926,7 @@ class TestEndToEndIntegration:
         # Collect in parallel
         start_time = asyncio.get_event_loop().time()
         results = await asyncio.gather(
-            *[collect_from_integration(source) for source in sources]
+            *[collect_from_integration(source) for source in sources],
         )
         elapsed = asyncio.get_event_loop().time() - start_time
 
@@ -944,5 +946,5 @@ if __name__ == "__main__":
             "-v",
             "--cov=langgraph_agent.nodes.evidence_nodes",
             "--cov-report=term-missing",
-        ]
+        ],
     )

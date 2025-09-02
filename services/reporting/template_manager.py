@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Template manager for report customization
 """
 
@@ -26,7 +28,7 @@ class TemplateManager:
                 "formatting": {
                     "include_charts": True,
                     "include_details": False,
-                    "max_recommendations": 5,
+                    "max_recommendations": 5
                 },
             },
             "detailed_gap_analysis": {
@@ -71,7 +73,7 @@ class TemplateManager:
                 "formatting": {
                     "include_charts": True,
                     "include_details": True,
-                    "highlight_critical": True,
+                    "highlight_critical": True
                 },
             },
         }
@@ -88,7 +90,7 @@ class TemplateManager:
                 "display_name": template["name"],
                 "description": template["description"],
             }
-            for name, template in self.templates.items()
+            for name, template in self.templates.items(),
         ]
 
     def customize_template(
@@ -180,7 +182,7 @@ class TemplateManager:
         return {
             "title": "Priority Recommendations",
             "content": "Recommended actions for improvement",
-            "data": report_data.get("recommendations", []),
+            "data": report_data.get("recommendations", [])
         }
 
     def _build_gap_summary(self, report_data: Dict[str, Any]) -> Dict[str, Any]:
@@ -204,7 +206,7 @@ class TemplateManager:
         return {
             "title": "Remediation Plan",
             "content": "Prioritized plan for addressing gaps",
-            "data": report_data.get("remediation_plan", []),
+            "data": report_data.get("remediation_plan", [])
         }
 
     def _build_collection_summary(self, report_data: Dict[str, Any]) -> Dict[str, Any]:

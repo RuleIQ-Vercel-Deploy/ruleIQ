@@ -1,10 +1,10 @@
 
 [scripts.database-performance-monitor.DatabasePerformanceMonitor.generate_performance_reportO
-C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.pyñ ñ(#"2*¶
+C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.pyè è(#"2*¶
 2
-ó ó(7èå
+ê ê(7èå
 
-ò ò(@
+ë ë(@
 %15*&
 
 __unknown_file (
@@ -16,23 +16,23 @@ C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.pyñ ñ(#"
 )Starting database performance analysis...2info*
 7*¨
 7
-ú ú(Jåâ
+ì ì(Jåâ
 
-ú/ ú(J
+ì/ ì(J
 %4*_
 
 __unknown_file (CA
 ?scripts.database-performance-monitor.DatabasePerformanceMonitor2get_database_metricsâ
 Ü
 
-ú ú(
+ì ì(
 %6"__id*l
 
 __unknown_file (P*NA
 ?scripts.database-performance-monitor.DatabasePerformanceMonitor"	
 resultsÆ´
 
-ú ú(J
+ì ì(J
 %5"dict.__setitem__*"
 
 __unknown_file (
@@ -46,21 +46,21 @@ C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.pyñ ñ(#"
 
 %42__setitem__åâ
 
-ù/ ù(J
+î/ î(J
 %7*_
 
 __unknown_file (CA
 ?scripts.database-performance-monitor.DatabasePerformanceMonitor2get_table_statisticsâ
 Ü
 
-ù ù(
+î î(
 %9"__id*l
 
 __unknown_file (P*NA
 ?scripts.database-performance-monitor.DatabasePerformanceMonitor"	
 resultsÆ´
 
-ù ù(J
+î î(J
 %8"dict.__setitem__*"
 
 __unknown_file (
@@ -74,21 +74,21 @@ C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.pyñ ñ(#"
 
 %72__setitem__ãà
 
-û- û(F
+ï- ï(F
 %10*_
 
 __unknown_file (CA
 ?scripts.database-performance-monitor.DatabasePerformanceMonitor2get_index_analysisä
 á
 
-û û(
+ï ï(
 %12"__id*l
 
 __unknown_file (P*NA
 ?scripts.database-performance-monitor.DatabasePerformanceMonitor"	
 resultsØ¨
 
-û û(F
+ï ï(F
 %11"dict.__setitem__*#
 
 __unknown_file (
@@ -102,21 +102,21 @@ C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.pyñ ñ(#"
 
 %102__setitem__ëé
 
-° °(+
+ñ ñ(+
 %13*_
 
 __unknown_file (CA
 ?scripts.database-performance-monitor.DatabasePerformanceMonitor2generate_recommendationsä
 á
 
-£ £(
+ó ó(
 %14"__id*l
 
 __unknown_file (P*NA
 ?scripts.database-performance-monitor.DatabasePerformanceMonitor"	
 results"
 
-£ £(
+ó ó(
 
 %14BCA
 ?scripts.database-performance-monitor.DatabasePerformanceMonitorH

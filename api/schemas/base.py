@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Base schemas for ComplianceGPT API
 
 Common schemas and base classes used across the API.
@@ -27,14 +29,10 @@ T = TypeVar("T")
 class StandardResponse(BaseModel, Generic[T]):
     """Standard response wrapper for API endpoints"""
 
-    success: bool = Field(
-        default=True, description="Indicates if the request was successful"
-    )
+    success: bool = Field(default=True, description="Indicates if the request was successful")
     data: Optional[T] = Field(default=None, description="The response data")
     message: Optional[str] = Field(default=None, description="Optional message")
-    error: Optional[Dict[str, Any]] = Field(
-        default=None, description="Error details if any"
-    )
+    error: Optional[Dict[str, Any]] = Field(default=None, description="Error details if any")
 
     class Config:
         from_attributes = True
@@ -83,15 +81,11 @@ class PaginatedResponse(BaseResponse):
 class HealthCheckResponse(BaseSchema):
     """Health check response with database monitoring"""
 
-    status: str = Field(
-        ..., description="Service status (healthy, warning, degraded, error)"
-    )
+    status: str = Field(..., description="Service status (healthy, warning, degraded, error)")
     message: Optional[str] = Field(default=None, description="Status message")
     timestamp: Optional[str] = Field(default=None, description="Check timestamp")
     version: str = Field(default="1.0.0", description="API version")
-    database: Optional[Dict[str, Any]] = Field(
-        default=None, description="Database monitoring data"
-    )
+    database: Optional[Dict[str, Any]] = Field(default=None, description="Database monitoring data")
 
 
 class APIInfoResponse(BaseSchema):

@@ -1,21 +1,9 @@
-“
-pythonS5890eReplace the type hint "list[str]" with "Optional[list[str]]" or don't assign "None" to "dependencies" 2<< ":
-é<< Ž
-pythonS5890`Replace the type hint "list[Task]" with "Optional[list[Task]]" or don't assign "None" to "tasks" 2RR :
-éRR “
-pythonS5890eReplace the type hint "list[str]" with "Optional[list[str]]" or don't assign "None" to "dependencies" 2TT ":
-éTT š
-pythonS5890lReplace the type hint "list[UserStory]" with "Optional[list[UserStory]]" or don't assign "None" to "stories" 2pp #:
-épp P
-pythonS11721Remove the unused function parameter "sprint_id". 2
-   V
-pythonS11727Remove the unused function parameter "roadmap_context". 2
-   =N
-pythonS1656/Remove or correct this useless self-assignment. 2
-ÒÒ" #N
-pythonS1656/Remove or correct this useless self-assignment. 2
-ÓÓ  !N
-pythonS1656/Remove or correct this useless self-assignment. 2
-ÙÙ! "N
-pythonS1656/Remove or correct this useless self-assignment. 2
-ÚÚ# $
+X
+pythonS6353;Use concise character class syntax '\d' instead of '[0-9]'. 2KK' ,X
+pythonS6353;Use concise character class syntax '\d' instead of '[0-9]'. 2KK0 5œ
+pythonS5852Make sure the regex used here, which is vulnerable to polynomial runtime due to backtracking, cannot lead to denial of service. 2LL  &b
+pythonS3457EAdd replacement fields or use a normal string instead of an f-string. 2aa$ MX
+pythonS6353;Use concise character class syntax '\d' instead of '[0-9]'. 2jj% *X
+pythonS6353;Use concise character class syntax '\d' instead of '[0-9]'. 2mm# (g
+pythonS2068H"password" detected here, review this potentially hard-coded credential. 2
+éé  

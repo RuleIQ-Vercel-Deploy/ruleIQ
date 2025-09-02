@@ -1,93 +1,0 @@
-
-Gservices.ai.test_ingestion_integration.IngestionIntegrationTest.cleanupQ
-E/home/omar/Documents/ruleIQ/services/ai/test_ingestion_integration.pyÎ Î("2*›
-2
-Ï Ï(!tr
-
-Ð Ð('
-%7*&
-
-__unknown_file (
-
-
-logger*0
-
-__unknown_file (
-\nCleaning up...2info‹
-ˆ
-
-Ñ Ñ(
-%8"__id*n
-
-__unknown_file (R*PA
-?services.ai.test_ingestion_integration.IngestionIntegrationTest"
-	ingestion*
-6
-7*E
-3
-test_ingestion_integration.py"
-× ×(
-implicit return*Ž
-4
-Õ Õ()xv
-
-Õ Õ()
-%1*&
-
-__unknown_file (
-
-
-logger*4
-
-__unknown_file (
-âœ“ Cleanup complete2info*
-3*æ
-5
-Ô Ô(+Ž
-‹
-
-Ô Ô(#
-%2"__id*q
-
-__unknown_file (U*SA
-?services.ai.test_ingestion_integration.IngestionIntegrationTest"
-query_engine?=
-
-Ô Ô(+
-%3*"
-
-__unknown_file (
-
-%22close*
-4*¨
-6
-Ó Ó(Ž
-‹
-
-Ó Ó(
-%4"__id*q
-
-__unknown_file (U*SA
-?services.ai.test_ingestion_integration.IngestionIntegrationTest"
-query_engine*
-4
-5*ã
-7
-Ò Ò((‹
-ˆ
-
-Ò Ò( 
-%5"__id*n
-
-__unknown_file (R*PA
-?services.ai.test_ingestion_integration.IngestionIntegrationTest"
-	ingestion?=
-
-Ò Ò((
-%6*"
-
-__unknown_file (
-
-%52close*
-6BCA
-?services.ai.test_ingestion_integration.IngestionIntegrationTestH

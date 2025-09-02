@@ -1,8 +1,8 @@
 
 @services.ai.cost_management.ModelCostConfig.calculate_total_costD
-:/home/omar/Documents/ruleIQ/services/ai/cost_management.pyU U("2*Õ
-2V V(?¤¡
-W W(<
+:/home/omar/Documents/ruleIQ/services/ai/cost_management.py7 7("2*Õ
+29 9(?¤¡
+: :(<
 %1*K
 
 __unknown_file (/-
@@ -12,14 +12,14 @@
 
 input_tokens2calculate_input_costD
 B
-W W(<
+: :(<
 
 input_cost"__id*"
 
 __unknown_file (
 
 %1¦£
-X X(?
+; ;(?
 %2*K
 
 __unknown_file (/-
@@ -29,27 +29,27 @@ input_cost"__id*"
 
 output_tokens2calculate_output_costE
 C
-X X(?
+; ;(?
 output_cost"__id*"
 
 __unknown_file (
 
 %2U
 S
-Y Y('
+< <('
 %3"__concat*
-Y Y(
+< <(
 
 
 input_cost*
-Y Y('
+< <('
 
 output_cost"
-Y Y('
+< <('
 
 %3:
-U# U(4
+7# 7(4
 input_tokens:
-U6 U(H
+76 7(H
 output_tokensB/-
 +services.ai.cost_management.ModelCostConfigH

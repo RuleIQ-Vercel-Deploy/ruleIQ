@@ -1,234 +1,0 @@
-
-"applicable_indu"str
-"H"Communications Security"str
-(@"Information Security Policies"str
-"Cybersecurity"str
-p"estimated_cost_"str
-G"Operations Security"str
-?"control_domains"str
-E"Cryptography"str
-L"Business Continuity"str
-	"description"str
-I"System Development"str
-H?"Load ISO 27001 UK-adapted framework with template integration"str
--4$"System acquisition and development"str
-7"Business continuity"str
--.$"Asset inventory and classification"str
-"all"str
-$/"Access control management"str
-8*/"Information Security Management System (ISMS)"str
-&-"Information security policy"str
-∫
-∞"
-        International standard for Information Security Management Systems (ISMS)
-        adapted for UK regulatory context and integrated with ISO 27001 templates.
-        "str
-"3"Communications security"str
-m"implementation_"str
-Z"Training Records"str
-["Incident Reports"str
-T"evidence_types"str
-!J"Supplier Relationships"str
- 0"Cryptography controls"str
-"geographic_scop"str
-C"Asset Management"str
-!"Global"str
-j"complexity_scor"str
-"¬£1M+"str
-%W"Statement of Applicability"str
-"display_name"str
-!5"Supplier relationships"str
-.1%"Physical and environmental security"str
-$\"Business Continuity Plans"str
-F"Physical Security"str
-6"Incident management"str
-"employee_thresh"str
-
-k9int
-(+"Risk assessment and treatment"str
-2"Operations security"str
-) "ISO 27001:2022 (UK Adaptation)"str
-)"key_requirement"str
-10int
-"name"str
-K"Incident Management"str
-/A&"Organization of Information Security"str
-"B"Human Resource Security"str
- 8"Compliance monitoring"str
-"ISO27001_UK"str
-+,""Statement of Applicability (SoA)"str
-D"Access Control"str
-s	"version"str
-
-0int
-"revenue_thresho"str
-
-"category"str
-t"1.0"str
-n32int
- "UK"str
-q"¬£50,000-¬£200,000"str
-X"Security Policies"str
-"V"Risk Assessment Reports"str
-U"ISMS Documentation"str
-M"Compliance"str
-Y"Audit Reports"strlist"˝&
-$
-
-Ü ¡("#new-object#Bdict"
- 
-
-á á("	#map-set#:"
- 
-
-à à(8"	#map-set#:#
-!
-â â(À"	#map-set#:	
-"
- 
-
-ç ç(#"	#map-set#:)
-'
-
-é é(""#unknown-value#Blist(
-&
-
-é é(""
-#is-exact#:Bbool
-
-
-é é(""
-#assume#::
-8
-
-é é(""#set-field# __collection_size:Bint(
-&
-
-é é(""#array-add-last#:"
- 
-
-é é(""	#map-set#:"
- 
-
-è è("	#map-set#:"
- 
-
-ê ê(!"	#map-set#:)
-'
-
-ë ë(+""#unknown-value#Blist(
-&
-
-ë ë(+#"
-#is-exact#:"Bbool
-
-
-ë ë(+$"
-#assume#:#:
-8
-
-ë ë(+%"#set-field# __collection_size:"Bint(
-&
-
-ë ë(+&"#array-add-last#:" (
-&
-
-ë ë(+'"#array-add-last#:"!"
- 
-
-ë ë(+("	#map-set#:")
-'
-
-í ¢(	9"#unknown-value#Blist(
-&
-
-í ¢(	:"
-#is-exact#:9Bbool
-
-
-í ¢(	;"
-#assume#:::
-8
-
-í ¢(	<"#set-field# __collection_size:9Bint-
-+
-
-í ¢(	="?python-unknown?*Blist"
- 
-
-í ¢(	>"	#map-set#:)=)
-'
-
-£ ≤(	N"#unknown-value#Blist(
-&
-
-£ ≤(	O"
-#is-exact#:NBbool
-
-
-£ ≤(	P"
-#assume#:O:
-8
-
-£ ≤(	Q"#set-field# __collection_size:NBint-
-+
-
-£ ≤(	R"?python-unknown?*Blist"
- 
-
-£ ≤(	S"	#map-set#:?R)
-'
-
-≥ º(	]"#unknown-value#Blist(
-&
-
-≥ º(	^"
-#is-exact#:]Bbool
-
-
-≥ º(	_"
-#assume#:^:
-8
-
-≥ º(	`"#set-field# __collection_size:]Bint(
-&
-
-≥ º(	a"#array-add-last#:]U(
-&
-
-≥ º(	b"#array-add-last#:]V(
-&
-
-≥ º(	c"#array-add-last#:]W(
-&
-
-≥ º(	d"#array-add-last#:]X(
-&
-
-≥ º(	e"#array-add-last#:]Y(
-&
-
-≥ º(	f"#array-add-last#:]Z(
-&
-
-≥ º(	g"#array-add-last#:][(
-&
-
-≥ º(	h"#array-add-last#:]\"
- 
-
-≥ º(	i"	#map-set#:T]"
- 
-
-Ω Ω(l"	#map-set#:jk"
- 
-
-æ æ(o"	#map-set#:mn"
- 
-
-ø ø(-r"	#map-set#:pq"
- 
-
-¿ ¿(u"	#map-set#:st
-
-Ü ¡(*9/home/omar/Documents/ruleIQ/scripts/load_uk_frameworks.py

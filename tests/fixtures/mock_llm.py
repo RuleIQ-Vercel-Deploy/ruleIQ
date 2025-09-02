@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Mock LLM for deterministic testing in LangGraph workflows.
 
 Provides consistent, predictable responses for testing without API calls.
@@ -44,7 +46,7 @@ class MockLLM(BaseChatModel):
                     "assessment": "compliant",
                     "confidence": 0.95,
                     "evidence": ["Document reviewed", "Controls validated"],
-                }
+                },
             ),
             # Risk assessment patterns
             "risk": json.dumps(
@@ -52,7 +54,7 @@ class MockLLM(BaseChatModel):
                     "level": "medium",
                     "factors": ["Data exposure", "Third-party dependencies"],
                     "mitigation": "Implement additional controls",
-                }
+                },
             ),
             # State transition patterns
             "next_step": "data_collection",
@@ -70,9 +72,9 @@ class MockLLM(BaseChatModel):
                 {
                     "entities": ["Entity1", "Entity2"],
                     "relationships": [
-                        {"from": "Entity1", "to": "Entity2", "type": "relates_to"}
+                        {"from": "Entity1", "to": "Entity2", "type": "relates_to"},
                     ],
-                }
+                },
             ),
         }
 
@@ -107,7 +109,7 @@ class MockLLM(BaseChatModel):
                     for m in messages
                 ],
                 "kwargs": kwargs,
-            }
+            },
         )
 
         # Find matching response pattern
@@ -115,7 +117,7 @@ class MockLLM(BaseChatModel):
 
         # Create generation
         generation = Generation(
-            text=response, generation_info={"mock": True, "pattern_matched": True}
+            text=response, generation_info={"mock": True, "pattern_matched": True},
         )
 
         return LLMResult(generations=[[generation]])
@@ -158,7 +160,7 @@ class MockLLM(BaseChatModel):
                 "response": "Default mock response",
                 "confidence": 0.8,
                 "metadata": {"mock": True},
-            }
+            },
         )
 
     def add_response(self, pattern: str, response: str):
@@ -206,7 +208,7 @@ class MockLLMWithStreaming(MockLLM):
     ):
         """Stream tokens for testing streaming functionality."""
         response = self._get_response_for_input(
-            str(messages[-1].content if messages else "")
+            str(messages[-1].content if messages else ""),
         )
 
         # Simulate streaming by yielding response in chunks
@@ -225,7 +227,7 @@ class MockLLMWithStreaming(MockLLM):
     ):
         """Async stream tokens for testing streaming functionality."""
         response = self._get_response_for_input(
-            str(messages[-1].content if messages else "")
+            str(messages[-1].content if messages else ""),
         )
 
         # Simulate streaming by yielding response in chunks
@@ -255,14 +257,14 @@ def create_deterministic_llm(scenario: str = "default") -> MockLLM:
                     "gaps": [],
                     "recommendations": ["Continue monitoring"],
                     "confidence": 0.98,
-                }
+                },
             ),
             "validate": json.dumps({"valid": True, "issues": []}),
         },
         "error_simulation": {
             "process": "ERROR: Simulated failure",
             "validate": json.dumps(
-                {"valid": False, "errors": ["Invalid input", "Missing data"]}
+                {"valid": False, "errors": ["Invalid input", "Missing data"]},
             ),
         },
         "state_transitions": {
@@ -282,10 +284,10 @@ def create_deterministic_llm(scenario: str = "default") -> MockLLM:
                             "id": "OBL-001",
                             "regulation": "GDPR",
                             "requirement": "Data protection",
-                        }
+                        },
                     ],
-                }
-            )
+                },
+            ),
         },
     }
 

@@ -83,7 +83,7 @@ class TestPolicyGeneratorBasic:
 
         # Test fallback content generation
         fallback_content = generator._generate_fallback_content(
-            "privacy_policy", "TestCorp"
+            "privacy_policy", "TestCorp",
         )
 
         assert fallback_content is not None

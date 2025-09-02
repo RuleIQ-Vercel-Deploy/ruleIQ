@@ -1,25 +1,25 @@
 
 6api.clients.okta_client.OktaAPIClient._prepare_headers@
-6/home/omar/Documents/ruleIQ/api/clients/okta_client.pyO O("2*Å	
-2R R(,
-S X(	
+6/home/omar/Documents/ruleIQ/api/clients/okta_client.pyN N("2*Å	
+2P P(,
+Q T(<
 %2"dictp
 n
-T% T(5
+R R($
 %3"__id*V
 
 __unknown_file (:*8'
 %api.clients.okta_client.OktaAPIClient"
 credentialsM
 K
-T% T(A
+R R(0
 %4"__id*3
 
 __unknown_file (*
 
 %3"
 credentialsxv
-T% T(N
+R R(=
 %5"__mapGet*"
 
 __unknown_file (
@@ -29,15 +29,15 @@ K
 __unknown_file (
 	api_token2__getitem__G
 E
-T T(P
+R R(?
 %6"__concat*
-T T($	
+R R(	
 SSWS *
-T% T(N
+R R(=
 
 %5î
 ë
-T T(P
+Q R(?
 %7"__mapSet*"
 
 __unknown_file (
@@ -51,7 +51,7 @@ E
 
 %6õ
 ò
-U U((
+RA S(
 %8"__mapSet*"
 
 __unknown_file (
@@ -65,7 +65,7 @@ E
 __unknown_file (
 application/json°
 û
-V V(.
+S  S(B
 %9"__mapSet*"
 
 __unknown_file (
@@ -78,7 +78,7 @@ E
 __unknown_file (
 application/jsonØ
 ¨
-W W(;
+T T(;
 %10"__mapSet*"
 
 __unknown_file (
@@ -92,7 +92,7 @@ User-Agent*?
 __unknown_file (#!
 ruleIQ-compliance-collector/1.0A
 ?
-S X(		
+Q T(<	
 headers"__id*"
 
 __unknown_file (
@@ -100,12 +100,12 @@ User-Agent*?
 %2*
 4
 5*&
-4] ]("
-] ](
+4W W("
+W W(
 	
 headers*´
-5[ [(.ñì
-[ [(.
+5V V(.ñì
+V V(.
 %1"typing.MutableMapping.update*'
 
 __unknown_file (
@@ -116,6 +116,6 @@ User-Agent*?
 
 additional_headers2update*
 4: 
-P P(7
+N% N(L
 additional_headersB)'
 %api.clients.okta_client.OktaAPIClientH

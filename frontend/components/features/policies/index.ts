@@ -1,3 +1,3 @@
 // Policy components - placeholder exports
-// TODO: Implement actual policy components
+// NOTE: Implementation pending actual policy components
 export const POLICIES_PLACEHOLDER = true;

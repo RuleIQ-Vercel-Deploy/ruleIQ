@@ -1,5 +1,3 @@
-Y
-pythonS5754<Specify an exception class to catch or reraise the exception 2 Y
-pythonS5754<Specify an exception class to catch or reraise the exception 2"" Y
-pythonS5754<Specify an exception class to catch or reraise the exception 2-- Y
-pythonS5754<Specify an exception class to catch or reraise the exception 288 
+œ
+pythonS5852Make sure the regex used here, which is vulnerable to polynomial runtime due to backtracking, cannot lead to denial of service. 2 5W
+pythonS5857:Replace this use of a reluctant quantifier with "[^\\n]*". 2. 1

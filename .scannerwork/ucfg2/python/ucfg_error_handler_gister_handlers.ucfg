@@ -1,11 +1,11 @@
 
 >monitoring.error_handler.GlobalErrorHandler._register_handlersL
-@/home/omar/Documents/ruleIQ/app/core/monitoring/error_handler.pyÑ Ñ("2*–
+@/home/omar/Documents/ruleIQ/app/core/monitoring/error_handler.pyÜ Ü("2*–
 2
-Ö Ö(*p
+á á(*p
 n
 
-á á(
+â â(
 %1"__id*T
 
 __unknown_file (8*6-
@@ -13,14 +13,14 @@ n
 appá
 Ñ
 
-á9 á(W
+â9 â(W
 %2"__id*j
 
 __unknown_file (N*L-
 +monitoring.error_handler.GlobalErrorHandler"
 _handle_application_error¶£
 
-á á(X
+â â(X
 %3*"
 
 __unknown_file (
@@ -36,7 +36,7 @@ n
 %22add_exception_handlerp
 n
 
-ä ä(
+å å(
 %4"__id*T
 
 __unknown_file (8*6-
@@ -44,14 +44,14 @@ n
 appÜ
 É
 
-ã$ ã(A
+ç$ ç(A
 %5"__id*i
 
 __unknown_file (M*K-
 +monitoring.error_handler.GlobalErrorHandler"
 _handle_validation_error¨©
 
-ä å(	
+å é(	
 %6*"
 
 __unknown_file (
@@ -67,7 +67,7 @@ n
 %52add_exception_handlerp
 n
 
-è è(
+ë ë(
 %7"__id*T
 
 __unknown_file (8*6-
@@ -75,14 +75,14 @@ n
 appÑ
 Å
 
-ê$ ê(?
+í$ í(?
 %8"__id*g
 
 __unknown_file (K*I-
 +monitoring.error_handler.GlobalErrorHandler"
 _handle_http_exception¨©
 
-è ë(	
+ë ì(	
 %9*"
 
 __unknown_file (
@@ -98,7 +98,7 @@ n
 %82add_exception_handlerq
 o
 
-î î(
+ñ ñ(
 %10"__id*T
 
 __unknown_file (8*6-
@@ -106,14 +106,14 @@ o
 appÖ
 Ç
 
-î8 î(S
+ñ8 ñ(S
 %11"__id*g
 
 __unknown_file (K*I-
 +monitoring.error_handler.GlobalErrorHandler"
 _handle_database_error®•
 
-î î(T
+ñ ñ(T
 %12*#
 
 __unknown_file (
@@ -129,7 +129,7 @@ o
 %112add_exception_handlerq
 o
 
-ó ó(
+ô ô(
 %13"__id*T
 
 __unknown_file (8*6-
@@ -137,14 +137,14 @@ o
 appÑ
 Å
 
-ó2 ó(L
+ô2 ô(L
 %14"__id*f
 
 __unknown_file (J*H-
 +monitoring.error_handler.GlobalErrorHandler"
 _handle_generic_error¢ü
 
-ó ó(M
+ô ô(M
 %15*#
 
 __unknown_file (
@@ -161,6 +161,6 @@ o
 3*8
 3
 error_handler.py"
-ô ô(
+õ õ(
 implicit returnB/-
 +monitoring.error_handler.GlobalErrorHandlerH

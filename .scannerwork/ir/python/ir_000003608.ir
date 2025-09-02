@@ -1,57 +1,0 @@
-
-'"Assess regulatory risk level"str
-
-0int
-"mitigation"str
-"trend"str
-+""Increasing regulatory complexity"str
-/&"Cross-border compliance requirements"str
-
-	"factors"str
-"MEDIUM"str
-"DECREASING"str
-"level"str
-"Enforcement trends"str
-+""Strategic roadmap implementation"strself
-î  î($list"ú&
-$
-
-ð ù(	"#new-object#Bdict"
- 
-
-ñ ñ("	#map-set#:"
- 
-
-ò ò(!	"	#map-set#:)
-'
-
-ó ÷("#unknown-value#Blist(
-&
-
-ó ÷("
-#is-exact#:Bbool
-
-
-ó ÷("
-#assume#::
-8
-
-ó ÷("#set-field# __collection_size:Bint(
-&
-
-ó ÷("#array-add-last#:(
-&
-
-ó ÷("#array-add-last#:(
-&
-
-ó ÷("#array-add-last#:"
- 
-
-ó ÷("	#map-set#:
-"
- 
-
-ø ø(<"	#map-set#:
-
-ð ù(	*I/home/omar/Documents/ruleIQ/services/compliance/cco_strategic_playbook.py

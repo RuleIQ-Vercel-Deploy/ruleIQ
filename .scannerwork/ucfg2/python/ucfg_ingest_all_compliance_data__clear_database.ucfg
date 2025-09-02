@@ -1,8 +1,8 @@
 
 Iscripts.ingest_all_compliance_data.ComplianceDataIngestion.clear_databaseK
-A/home/omar/Documents/ruleIQ/scripts/ingest_all_compliance_data.py/ /("2*™
-20 0(0{y
-1 1(0
+A/home/omar/Documents/ruleIQ/scripts/ingest_all_compliance_data.py' '("2*™
+2( ((0{y
+) )(0
 %3*&
 
 __unknown_file (
@@ -13,20 +13,20 @@ A/home/omar/Documents/ruleIQ/scripts/ingest_all_compliance_data.py/ /("2*™
 __unknown_file (
 Clearing existing data...2info€
 ~
-2 2(
+* *(
 %4"__id*f
 
 __unknown_file (J*H<
 :scripts.ingest_all_compliance_data.ComplianceDataIngestion"
 driver?=
-2 2((
+* *((
 %5*"
 
 __unknown_file (
 
 %42sessionA
 ?
-2 2(3	
+* *(3	
 session"__id*"
 
 __unknown_file (
@@ -36,10 +36,10 @@ A/home/omar/Documents/ruleIQ/scripts/ingest_all_compliance_data.py/ /("2*™
 4*C
 3
 ingest_all_compliance_data.py"
-6 6(
+. .(
 implicit return*‡
-43 3(:{y
-3 3(:
+4+ +(:{y
++ +(:
 %1*'
 
 __unknown_file (
@@ -48,7 +48,7 @@ A/home/omar/Documents/ruleIQ/scripts/ingest_all_compliance_data.py/ /("2*™
 
 __unknown_file (
 MATCH (n) DETACH DELETE n2runvt
-4 4(-
+, ,(-
 %2*&
 
 __unknown_file (

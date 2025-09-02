@@ -1,59 +1,0 @@
-
-"final_memory"str
-"final_cpu"str
-
-"duration"str
--$"Stop monitoring and return metrics"strself
-ç ç("²/
--
-
-ë ë(end_time"
-timetimeBfloat-
-+
-
-ì. ì(="#get-field# start_time:3
-1
-
-ì# ì(="#dependent-value#*:Bfloat*
-(
-
-ì ì("#get-field# metrics:&
-$
-
-ì ì(="#array-write#:#
-!
-
-í$ í(8	"#unknown-value#)
-'
-
-í$ í(8
-"#unknown-value#Bbool2
-0
-
-í$ í(8"
-psutilcpu_percent:	
-Bfloat*
-(
-
-í í("#get-field# metrics:&
-$
-
-í í(8"#array-write#:1
-/
-
-î' î(>"
-psutilvirtual_memoryBtuple*
-(
-
-î' î(F"#get-field# percent:*
-(
-
-î î("#get-field# metrics:&
-$
-
-î î(F"#array-write#:*
-(
-
-ð ð("#get-field# metrics:
-
-ð ð(*E/home/omar/Documents/ruleIQ/tests/performance/test_api_performance.py

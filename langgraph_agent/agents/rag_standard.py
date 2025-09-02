@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Standardized RAG system using LangChain components.
 
 Phase 3 Implementation: Replace custom RAG with standard LangChain components.

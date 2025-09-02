@@ -1,42 +1,27 @@
-# emergency_fix.py - Quick fix to get your backend running
+from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
 import subprocess
 import sys
 import os
 
 
-def install_missing_dependencies() -> None:
+def install_missing_dependencies() ->None:
     """Install all missing dependencies"""
-    print("🔧 Installing missing dependencies...")
-
-    dependencies = [
-        "asyncpg",
-        "mistralai",
-        "httpx",
-        "redis",
-        "celery",
-        "fastapi",
-        "uvicorn",
-        "pydantic",
-        "sqlalchemy",
-        "alembic",
-        "passlib[bcrypt]",
-        "python-jose[cryptography]",
-        "python-multipart",
-        "email-validator",
-        "python-dotenv",
-    ]
-
+    logger.info('🔧 Installing missing dependencies...')
+    dependencies = ['asyncpg', 'mistralai', 'httpx', 'redis', 'celery',
+        'fastapi', 'uvicorn', 'pydantic', 'sqlalchemy', 'alembic',
+        'passlib[bcrypt]', 'python-jose[cryptography]', 'python-multipart',
+        'email-validator', 'python-dotenv']
     for dep in dependencies:
-        print(f"📦 Installing {dep}...")
-        subprocess.check_call([sys.executable, "-m", "pip", "install", dep])
+        logger.info('📦 Installing %s...' % dep)
+        subprocess.check_call([sys.executable, '-m', 'pip', 'install', dep])
+    logger.info('✅ All dependencies installed!')
 
-    print("✅ All dependencies installed!")
 
-
-def create_minimal_backend() -> None:
+def create_minimal_backend() ->None:
     """Create a minimal working backend"""
-    print("🚀 Creating minimal backend...")
-
+    logger.info('🚀 Creating minimal backend...')
     minimal_backend = """# minimal_backend.py - Emergency backend to test with
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -68,8 +53,8 @@ async def get_dashboard():
         "stats": {
             "assessments": 0,
             "policies": 0,
-            "compliance_score": 0
-        }
+            "compliance_score": 0,
+        },
     }
 
 # Mock assessments endpoint
@@ -79,7 +64,7 @@ async def get_assessments():
         "assessments": [],
         "total": 0,
         "page": 1,
-        "page_size": 50
+        "page_size": 50,
     }
 
 # Mock policies endpoint
@@ -89,7 +74,7 @@ async def get_policies():
         "policies": [],
         "total": 0,
         "page": 1,
-        "page_size": 50
+        "page_size": 50,
     }
 
 # Mock auth endpoints (temporary)
@@ -104,7 +89,7 @@ async def login(request: LoginRequest):
         return {
             "access_token": "fake-jwt-token",
             "refresh_token": "fake-refresh-token",
-            "token_type": "bearer"
+            "token_type": "bearer",
         }
     raise HTTPException(status_code=401, detail="Invalid credentials")
 
@@ -114,43 +99,34 @@ async def get_me():
         "id": 1,
         "email": "test@example.com",
         "full_name": "Test User",
-        "is_active": True
+        "is_active": True,
     }
 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
 """
-
-    with open("minimal_backend.py", "w") as f:
+    with open('minimal_backend.py', 'w') as f:
         f.write(minimal_backend)
+    logger.info('✅ Minimal backend created!')
 
-    print("✅ Minimal backend created!")
 
-
-def main() -> None:
-    print("🚨 RuleIQ Emergency Fix Script")
-    print("=" * 40)
-
-    # Check current directory
-    if not os.path.exists("main.py"):
-        print("❌ Please run this script from the RuleIQ root directory")
+def main() ->None:
+    logger.info('🚨 RuleIQ Emergency Fix Script')
+    logger.info('=' * 40)
+    if not os.path.exists('main.py'):
+        logger.info('❌ Please run this script from the RuleIQ root directory')
         return
-
-    # Install dependencies
     install_missing_dependencies()
-
-    # Create minimal backend
     create_minimal_backend()
+    logger.info('\n✅ Emergency fix complete!')
+    logger.info('\n📋 Next steps:')
+    logger.info('1. Run the minimal backend: python3 minimal_backend.py')
+    logger.info('2. This will get your frontend working temporarily')
+    logger.info('3. Implement Stack Auth for a permanent solution')
+    logger.info('\n🎯 To run minimal backend:')
+    logger.info('   python3 minimal_backend.py')
 
-    print("\n✅ Emergency fix complete!")
-    print("\n📋 Next steps:")
-    print("1. Run the minimal backend: python3 minimal_backend.py")
-    print("2. This will get your frontend working temporarily")
-    print("3. Implement Stack Auth for a permanent solution")
-    print("\n🎯 To run minimal backend:")
-    print("   python3 minimal_backend.py")
 
-
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

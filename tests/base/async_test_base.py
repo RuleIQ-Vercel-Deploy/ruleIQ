@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Base classes for async tests with proper event loop management.
 """
 
@@ -34,7 +36,7 @@ class AsyncTestBase:
         """Run async test with proper exception handling."""
         try:
             return await coro
-        except Exception as e:
+        except (ValueError, TypeError) as e:
             # Log test failure details
             pytest.fail(f"Async test failed: {e}")
 
@@ -55,11 +57,11 @@ class DatabaseTestBase(AsyncTestBase):
             for obj in self.test_objects:
                 try:
                     self.db_session.delete(obj)
-                except Exception:
+                except (ValueError, TypeError):
                     pass
             try:
                 self.db_session.commit()
-            except Exception:
+            except (ValueError, TypeError):
                 self.db_session.rollback()
 
         super().teardown_method(method)
@@ -97,13 +99,13 @@ class APITestBase(AsyncTestBase):
     def assert_response_success(self, response, expected_status: int = 200):
         """Assert response is successful."""
         assert (
-            response.status_code == expected_status
+            response.status_code == expected_status,
         ), f"Expected {expected_status}, got {response.status_code}: {response.text}"
 
     def assert_response_error(self, response, expected_status: int = 400):
         """Assert response is an error."""
         assert (
-            response.status_code == expected_status
+            response.status_code == expected_status,
         ), f"Expected {expected_status}, got {response.status_code}: {response.text}"
 
 
@@ -138,7 +140,7 @@ class AsyncContextTestCase:
         for task in reversed(self._cleanup_tasks):
             try:
                 await task()
-            except Exception as e:
+            except (ValueError, TypeError) as e:
                 print(f"Warning: Cleanup task failed: {e}")
 
         self._cleanup_tasks.clear()

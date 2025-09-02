@@ -1,15 +1,279 @@
 
-*!"Check if in testing environment"strself
-Ë Ë(config.base.Environment"œ.
-,
+G"financial_planning"str
+"financial_reporting"str
+12int
 
-Í Í("#get-field# ENVIRONMENT:*
-(
+<4int
+F"budget"str
+1.5float
+"affected_regulations"str
+5,"Load known seasonal patterns in compliance"str
+-1.2float
+"audit"str
 
-Í# Í(6"#get-field# TESTING:,
-*
+&5int
+[1.4float
+"tax"str
+D1.3float
+$"gdpr_reviews"str
+9"fiscal_year_planning"str
 
-Í Í(6"
-#binop ==#2==:Bbool
+0int
 
-Í Í(6**/home/omar/Documents/ruleIQ/config/base.py
+R2int
+"impact_multiplier"str
+_"iso"str
+^"financial_audit"str
+11int
+
+;3int
+"year_end_reporting"str
+"months"str
+P"audit_season"str
+0	"privacy"str
+/"data_protection"str
+]"sox"str
+
+	1intself
+¡  ¡($list"È&
+$
+
+£ ¸(	"#new-object#Bdict&
+$
+
+¤" ¨("#new-object#Bdict)
+'
+
+¥ ¥(%
+"#unknown-value#Blist(
+&
+
+¥ ¥(%"
+#is-exact#:
+Bbool
+
+
+¥ ¥(%"
+#assume#::
+8
+
+¥ ¥(%"#set-field# __collection_size:
+Bint(
+&
+
+¥ ¥(%"#array-add-last#:
+(
+&
+
+¥ ¥(%"#array-add-last#:
+(
+&
+
+¥ ¥(%"#array-add-last#:
+	"
+ 
+
+¥ ¥(%"	#map-set#:
+"
+ 
+
+¦ ¦(("	#map-set#:)
+'
+
+§( §(O"#unknown-value#Blist(
+&
+
+§( §(O"
+#is-exact#:Bbool
+
+
+§( §(O"
+#assume#::
+8
+
+§( §(O"#set-field# __collection_size:Bint(
+&
+
+§( §(O"#array-add-last#:(
+&
+
+§( §(O "#array-add-last#:(
+&
+
+§( §(O!"#array-add-last#:"
+ 
+
+§ §(O""	#map-set#:"
+ 
+
+¤ ¨(#"	#map-set#:&
+$
+
+© ­(%"#new-object#Bdict)
+'
+
+ª ª('"#unknown-value#Blist(
+&
+
+ª ª(("
+#is-exact#:'Bbool
+
+
+ª ª()"
+#assume#:(:
+8
+
+ª ª(*"#set-field# __collection_size:'Bint(
+&
+
+ª ª(+"#array-add-last#:'&"
+ 
+
+ª ª(,"	#map-set#:%'"
+ 
+
+« «((."	#map-set#:%-)
+'
+
+¬( ¬(F1"#unknown-value#Blist(
+&
+
+¬( ¬(F2"
+#is-exact#:1Bbool
+
+
+¬( ¬(F3"
+#assume#:2:
+8
+
+¬( ¬(F4"#set-field# __collection_size:1Bint(
+&
+
+¬( ¬(F5"#array-add-last#:1/(
+&
+
+¬( ¬(F6"#array-add-last#:10"
+ 
+
+¬ ¬(F7"	#map-set#:%1"
+ 
+
+© ­(8"	#map-set#:$%&
+$
+
+®$ ²(:"#new-object#Bdict)
+'
+
+¯ ¯( ="#unknown-value#Blist(
+&
+
+¯ ¯( >"
+#is-exact#:=Bbool
+
+
+¯ ¯( ?"
+#assume#:>:
+8
+
+¯ ¯( @"#set-field# __collection_size:=Bint(
+&
+
+¯ ¯( A"#array-add-last#:=;(
+&
+
+¯ ¯( B"#array-add-last#:=<"
+ 
+
+¯ ¯( C"	#map-set#::="
+ 
+
+° °((E"	#map-set#::D)
+'
+
+±( ±(HH"#unknown-value#Blist(
+&
+
+±( ±(HI"
+#is-exact#:HBbool
+
+
+±( ±(HJ"
+#assume#:I:
+8
+
+±( ±(HK"#set-field# __collection_size:HBint(
+&
+
+±( ±(HL"#array-add-last#:HF(
+&
+
+±( ±(HM"#array-add-last#:HG"
+ 
+
+± ±(HN"	#map-set#::H"
+ 
+
+® ²(O"	#map-set#:9:&
+$
+
+³ ·(Q"#new-object#Bdict)
+'
+
+´ ´(#S"#unknown-value#Blist(
+&
+
+´ ´(#T"
+#is-exact#:SBbool
+
+
+´ ´(#U"
+#assume#:T:
+8
+
+´ ´(#V"#set-field# __collection_size:SBint(
+&
+
+´ ´(#W"#array-add-last#:SR(
+&
+
+´ ´(#X"#array-add-last#:S;(
+&
+
+´ ´(#Y"#array-add-last#:S<"
+ 
+
+´ ´(#Z"	#map-set#:QS"
+ 
+
+µ µ((\"	#map-set#:Q[)
+'
+
+¶( ¶(I`"#unknown-value#Blist(
+&
+
+¶( ¶(Ia"
+#is-exact#:`Bbool
+
+
+¶( ¶(Ib"
+#assume#:a:
+8
+
+¶( ¶(Ic"#set-field# __collection_size:`Bint(
+&
+
+¶( ¶(Id"#array-add-last#:`](
+&
+
+¶( ¶(Ie"#array-add-last#:`^(
+&
+
+¶( ¶(If"#array-add-last#:`_"
+ 
+
+¶ ¶(Ig"	#map-set#:Q`"
+ 
+
+³ ·(h"	#map-set#:PQ
+
+£ ¸(	*;/home/omar/Documents/ruleIQ/services/ai/temporal_tracker.py

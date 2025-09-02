@@ -1,17 +1,17 @@
 
 Buk_compliance_engine.UKComplianceAssessmentEngine._estimate_effortS
-G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py„ „("2*“
+G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py† †("2*“
 2
-… …()KI
+‡ ‡()KI
 
-‡ ‡("
+‰ ‰("
 %5"	str.lower*#
 
 __unknown_file (
 
 gap2lowernl
 
-‡ ‡("
+‰ ‰("
 %6*"
 
 __unknown_file (
@@ -22,14 +22,14 @@ G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py„ „
 
 policy2__contains__KI
 
-‡4 ‡(?
+‰4 ‰(?
 %7"	str.lower*#
 
 __unknown_file (
 
 gap2lowerpn
 
-‡& ‡(?
+‰& ‰(?
 %8*"
 
 __unknown_file (
@@ -42,32 +42,32 @@ G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py„ „
 4
 7*&
 4
-ˆ ˆ("
+Š Š("
 
-ˆ ˆ(
+Š Š(
 Low*'
 5
-Œ Œ("
+Ž Ž("
 
-Œ Œ(
+Ž Ž(
 High*)
 6
-Š Š("
+Œ Œ("
 
-Š Š(
+Œ Œ(
 
 Medium*•
 7
-‰ ‰(CKI
+‹ ‹(CKI
 
-‰ ‰(%
+‹ ‹(%
 %1"	str.lower*#
 
 __unknown_file (
 
 gap2lowerom
 
-‰ ‰(%
+‹ ‹(%
 %2*"
 
 __unknown_file (
@@ -77,14 +77,14 @@ G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py„ „
 __unknown_file (	
 process2__contains__KI
 
-‰8 ‰(C
+‹8 ‹(C
 %3"	str.lower*#
 
 __unknown_file (
 
 gap2lowerqo
 
-‰) ‰(C
+‹) ‹(C
 %4*"
 
 __unknown_file (
@@ -96,6 +96,6 @@ G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py„ „
 5
 6:
 
-„ „('
+† †('
 gapB53
 1uk_compliance_engine.UKComplianceAssessmentEngineH

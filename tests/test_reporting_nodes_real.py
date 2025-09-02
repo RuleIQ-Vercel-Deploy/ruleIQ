@@ -5,7 +5,7 @@ Tests actual service integration, not mocks.
 
 import pytest
 import asyncio
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, Any, List
 from unittest.mock import AsyncMock, MagicMock, patch, call
 from uuid import UUID, uuid4
@@ -50,7 +50,7 @@ class TestReportingNodesRealImplementation:
                 "test_mode": True,
             },
             compliance_data={
-                "scores": {"overall": 85.5, "evidence": 90.0, "policy": 81.0}
+                "scores": {"overall": 85.5, "evidence": 90.0, "policy": 81.0},
             },
             report_data={},
             scheduled_tasks=[],
@@ -74,7 +74,7 @@ class TestReportingNodesRealImplementation:
                 "name": profile.name,
                 "user_id": str(profile.user_id),
                 "industry": "Technology",
-            }
+            },
         )
         return profile
 
@@ -90,8 +90,8 @@ class TestReportingNodesRealImplementation:
         schedule.parameters = {"include_evidence": True}
         schedule.recipients = ["user@example.com", "compliance@example.com"]
         schedule.active = True
-        schedule.last_run = datetime.utcnow() - timedelta(days=7)
-        schedule.next_run = datetime.utcnow() + timedelta(hours=1)
+        schedule.last_run = datetime.now(timezone.utc) - timedelta(days=7)
+        schedule.next_run = datetime.now(timezone.utc) + timedelta(hours=1)
         return schedule
 
     @pytest.mark.asyncio
@@ -126,7 +126,7 @@ class TestReportingNodesRealImplementation:
             # Configure ReportScheduler mock
             mock_scheduler = AsyncMock()
             mock_scheduler.get_active_schedules = AsyncMock(
-                return_value=[mock_report_schedule]
+                return_value=[mock_report_schedule],
             )
             mock_scheduler.update_schedule_status = AsyncMock()
             MockScheduler.return_value = mock_scheduler
@@ -136,13 +136,13 @@ class TestReportingNodesRealImplementation:
             mock_generator.generate_report = AsyncMock(
                 return_value={
                     "report_title": "Compliance Status Report",
-                    "generated_at": datetime.utcnow().isoformat(),
+                    "generated_at": datetime.now(timezone.utc).isoformat(),
                     "metrics": {
                         "overall_compliance_score": 85.5,
                         "evidence_completeness_score": 90.0,
                         "policy_coverage_score": 81.0,
                     },
-                }
+                },
             )
             MockGenerator.return_value = mock_generator
 
@@ -214,7 +214,7 @@ class TestReportingNodesRealImplementation:
                 result_state.get("report_data", {})
                 .get("scheduled_reports", {})
                 .get("generated", 0)
-                == 0
+                == 0,
             )
 
     @pytest.mark.asyncio
@@ -242,7 +242,7 @@ class TestReportingNodesRealImplementation:
 
             mock_scheduler = AsyncMock()
             mock_scheduler.get_active_schedules = AsyncMock(
-                return_value=[mock_report_schedule]
+                return_value=[mock_report_schedule],
             )
             mock_scheduler.update_schedule_status = AsyncMock()
             MockScheduler.return_value = mock_scheduler
@@ -252,7 +252,7 @@ class TestReportingNodesRealImplementation:
                 return_value={
                     "report_title": "Compliance Status Report",
                     "data": {"score": 85.5},
-                }
+                },
             )
             MockGenerator.return_value = mock_generator
 
@@ -289,7 +289,7 @@ class TestReportingNodesRealImplementation:
 
             mock_scheduler = AsyncMock()
             mock_scheduler.get_active_schedules = AsyncMock(
-                return_value=[mock_report_schedule]
+                return_value=[mock_report_schedule],
             )
             mock_scheduler.update_schedule_status = AsyncMock()
             MockScheduler.return_value = mock_scheduler
@@ -297,7 +297,7 @@ class TestReportingNodesRealImplementation:
             # Make ReportGenerator raise an exception
             mock_generator = AsyncMock()
             mock_generator.generate_report = AsyncMock(
-                side_effect=Exception("Database connection error")
+                side_effect=Exception("Database connection error"),
             )
             MockGenerator.return_value = mock_generator
 
@@ -325,7 +325,7 @@ class TestReportingNodesRealImplementation:
         sample_state["metadata"]["report_format"] = "pdf"
         sample_state["metadata"]["recipient_emails"] = ["manager@example.com"]
         sample_state["metadata"]["report_parameters"] = {
-            "include_recommendations": True
+            "include_recommendations": True,
         }
 
         # Add database to state
@@ -341,12 +341,12 @@ class TestReportingNodesRealImplementation:
             mock_generator.generate_report = AsyncMock(
                 return_value={
                     "report_title": "Executive Compliance Summary",
-                    "generated_at": datetime.utcnow().isoformat(),
+                    "generated_at": datetime.now(timezone.utc).isoformat(),
                     "key_metrics": {"compliance": 85.5},
                     "top_recommendations": [
-                        {"area": "Policies", "recommendation": "Update privacy policy"}
+                        {"area": "Policies", "recommendation": "Update privacy policy"},
                     ],
-                }
+                },
             )
             MockGenerator.return_value = mock_generator
 
@@ -362,7 +362,7 @@ class TestReportingNodesRealImplementation:
             mock_generator.generate_report.assert_called_once_with(
                 user_id=UUID(sample_state["metadata"]["user_id"]),
                 business_profile_id=UUID(
-                    sample_state["metadata"]["business_profile_id"]
+                    sample_state["metadata"]["business_profile_id"],
                 ),
                 report_type="executive_summary",
                 parameters={"include_recommendations": True},
@@ -371,7 +371,7 @@ class TestReportingNodesRealImplementation:
             # Verify email was sent
             mock_send_email.assert_called_once()
             assert mock_send_email.call_args.kwargs["recipients"] == [
-                "manager@example.com"
+                "manager@example.com",
             ]
 
             # Verify state was updated
@@ -399,7 +399,7 @@ class TestReportingNodesRealImplementation:
         assert len(result_state["errors"]) > 0
         assert (
             "user_id and business_profile_id are required"
-            in result_state["errors"][0]["message"]
+            in result_state["errors"][0]["message"],
         )
         assert result_state["error_count"] == 1
 
@@ -426,7 +426,7 @@ class TestReportingNodesRealImplementation:
 
             mock_scheduler = AsyncMock()
             mock_scheduler.get_active_schedules = AsyncMock(
-                return_value=[mock_report_schedule]
+                return_value=[mock_report_schedule],
             )
             MockScheduler.return_value = mock_scheduler
 
@@ -507,7 +507,7 @@ class TestReportGeneratorIntegration:
                     "id": str(item.id),
                     "control_id": item.control_id,
                     "status": item.status,
-                }
+                },
             )
             items.append(item)
         return items
@@ -547,9 +547,9 @@ class TestReportGeneratorIntegration:
             MagicMock(
                 scalars=MagicMock(
                     return_value=MagicMock(
-                        first=MagicMock(return_value=mock_business_profile)
-                    )
-                )
+                        first=MagicMock(return_value=mock_business_profile),
+                    ),
+                ),
             ),
             # Queries for _calculate_key_metrics
             evidence_result,  # total evidence
@@ -604,23 +604,23 @@ class TestReportGeneratorIntegration:
             MagicMock(
                 scalars=MagicMock(
                     return_value=MagicMock(
-                        first=MagicMock(return_value=mock_business_profile)
-                    )
-                )
+                        first=MagicMock(return_value=mock_business_profile),
+                    ),
+                ),
             ),
             # Get framework
             MagicMock(
                 scalars=MagicMock(
-                    return_value=MagicMock(first=MagicMock(return_value=mock_framework))
-                )
+                    return_value=MagicMock(first=MagicMock(return_value=mock_framework)),
+                ),
             ),
             # Get evidence items
             MagicMock(
                 scalars=MagicMock(
                     return_value=MagicMock(
-                        all=MagicMock(return_value=mock_evidence_items)
-                    )
-                )
+                        all=MagicMock(return_value=mock_evidence_items),
+                    ),
+                ),
             ),
         ]
 
@@ -666,7 +666,7 @@ class TestReportGeneratorIntegration:
         profile.user_id = uuid4()
         profile.company_name = "Test Company"
         profile.to_dict = MagicMock(
-            return_value={"id": str(profile.id), "company_name": profile.company_name}
+            return_value={"id": str(profile.id), "company_name": profile.company_name},
         )
         return profile
 
@@ -680,7 +680,7 @@ class TestPDFGeneratorIntegration:
 
         report_data = {
             "report_title": "Test Report",
-            "generated_at": datetime.utcnow().isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
             "metrics": {"compliance_score": 85.5, "evidence_count": 42},
         }
 
@@ -699,7 +699,7 @@ class TestPDFGeneratorIntegration:
 
         report_data = {
             "report_title": "Compliance Dashboard",
-            "generated_at": datetime.utcnow().isoformat(),
+            "generated_at": datetime.now(timezone.utc).isoformat(),
             "metrics": {
                 "overall_compliance_score": 85.5,
                 "evidence_completeness_score": 90.0,
@@ -740,14 +740,14 @@ class TestReportSchedulerIntegration:
         # Create mock schedules
         active_schedule = MagicMock()
         active_schedule.active = True
-        active_schedule.next_run = datetime.utcnow() - timedelta(hours=1)
+        active_schedule.next_run = datetime.now(timezone.utc) - timedelta(hours=1)
 
         inactive_schedule = MagicMock()
         inactive_schedule.active = False
 
         future_schedule = MagicMock()
         future_schedule.active = True
-        future_schedule.next_run = datetime.utcnow() + timedelta(days=1)
+        future_schedule.next_run = datetime.now(timezone.utc) + timedelta(days=1)
 
         # Mock database query - the service filters by active status in the query
         mock_result = MagicMock()
@@ -784,7 +784,7 @@ class TestReportSchedulerIntegration:
 
         scheduler = ReportScheduler(mock_db_session)
         await scheduler.update_schedule_status(
-            schedule_id, "success", distribution_successful=True
+            schedule_id, "success", distribution_successful=True,
         )
 
         # Verify schedule was updated
@@ -808,7 +808,7 @@ class TestErrorHandlingAndEdgeCases:
                 "test_mode": True,
             },
             compliance_data={
-                "scores": {"overall": 85.5, "evidence": 90.0, "policy": 81.0}
+                "scores": {"overall": 85.5, "evidence": 90.0, "policy": 81.0},
             },
             report_data={},
             scheduled_tasks=[],
@@ -946,7 +946,7 @@ class TestErrorHandlingAndEdgeCases:
                     {"data": "report1"},
                     Exception("Report generation failed"),
                     {"data": "report3"},
-                ]
+                ],
             )
             MockGenerator.return_value = mock_generator
 
@@ -964,7 +964,7 @@ class TestErrorHandlingAndEdgeCases:
             failed_calls = [
                 call
                 for call in mock_scheduler.update_schedule_status.call_args_list
-                if call[0][1] == "failed"
+                if call[0][1] == "failed",
             ]
             assert len(failed_calls) == 1
 

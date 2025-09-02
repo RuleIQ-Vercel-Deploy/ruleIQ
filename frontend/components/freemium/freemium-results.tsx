@@ -9,15 +9,7 @@ import {
   ExternalLink,
   AlertTriangle,
   CheckCircle,
-  XCircle,
-  ArrowRight,
-  Shield,
-  TrendingUp,
-  Clock,
-  Users,
-  Loader2,
-  RefreshCw,
-} from 'lucide-react';
+  } from 'lucide-react';
 import { useFreemiumStore } from '../../lib/stores/freemium-store';
 import {
   getSeverityColor,
@@ -238,7 +230,7 @@ export function FreemiumResults({ token, className = '' }: FreemiumResultsProps)
           onCtaClick={() => handleConversionClick(results.conversion_cta)}
           onEmailShare={handleEmailShare}
           gapsCount={results.compliance_gaps.length}
-          riskScore={results.risk_score}
+          riskScore: _riskScore={results.risk_score}
         />
       )}
     </div>
@@ -279,15 +271,15 @@ interface ConversionCTAProps {
   onCtaClick: () => void;
   onEmailShare: () => void;
   gapsCount: number;
-  riskScore: number;
+  riskScore: _riskScore: number;
 }
 
 function ConversionCTA({
   conversionCta,
   onCtaClick,
   onEmailShare,
-  gapsCount,
-  riskScore,
+  gapsCount: _gapsCount,
+  riskScore: _riskScore,
 }: ConversionCTAProps) {
   return (
     <Card className="border-teal-200 bg-gradient-to-r from-teal-50 to-teal-100">

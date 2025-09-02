@@ -1,30 +1,0 @@
-
-"division by zero"bool
-
-0int
-	"S3518"bool
-
-"a"bool
-0.0float
-LC"Calculate success rate as a ratio of successful to total requests"strselfN N("y/
--
-P P("#get-field# total_requests:(
-&
-P P(""	#binop >#2>:Bbool"
-P P(" *P P(
-"ó4
-2
-Q Q(+"!#get-field# successful_requests:/
--
-Q. Q(A"#get-field# total_requests:*
-(
-Q Q(A"
-#binop !=#2!=:Bbool 
-
-Q Q(A"
-#assert#:	
-*
-(
-Q Q(A"#dependent-value#*:
-Q Q(A"
-R R(*:/home/omar/Documents/ruleIQ/services/ai/circuit_breaker.py

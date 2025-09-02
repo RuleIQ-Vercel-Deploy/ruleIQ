@@ -1,23 +1,23 @@
 
 Kapi.dependencies.token_blacklist.EnhancedTokenBlacklist._generate_cache_keyI
-?/home/omar/Documents/ruleIQ/api/dependencies/token_blacklist.pyV V("2*ê
-2W W(+m
+?/home/omar/Documents/ruleIQ/api/dependencies/token_blacklist.pyP P("2*ê
+2Q Q(+m
 k
-X X(1
+R R(1
 %1"__concat* 
-X X("
+R R("
 
 BLACKLIST_PREFIX*
-X# X($
+R# R($
 :*
-X% X(/
+R% R(/
 
 
 token_hash"
-X X(1
+R R(1
 
 %1:
-V" V(1
+P" P(1
 
 token_hashB;9
 7api.dependencies.token_blacklist.EnhancedTokenBlacklistH

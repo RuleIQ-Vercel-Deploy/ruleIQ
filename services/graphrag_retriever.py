@@ -10,16 +10,14 @@ to the IQ agent from the Neo4j compliance knowledge graph. It provides:
 """
 
 import logging
-import json
-from typing import Dict, List, Any, Optional, Tuple, Literal
-from datetime import datetime
+from typing import Dict, List, Any, Optional
+from datetime import datetime, timezone
 from dataclasses import dataclass
 from enum import Enum
 import hashlib
 
 from services.neo4j_service import Neo4jGraphRAGService
 from langchain_openai import OpenAIEmbeddings
-from langchain_core.messages import SystemMessage, HumanMessage
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +59,7 @@ class GraphRAGRetriever:
     SYSTEM_PROMPT = """# GraphRAG Retriever for Compliance Knowledge
 
 ## Role
-You are a specialized retrieval agent that serves grounded context from the Neo4j compliance knowledge graph. You DO NOT generate content - you ONLY retrieve and structure existing knowledge.
+You are a specialized retrieval agent that serves grounded context from the Neo4j compliance knowledge graph. You DO NOT generate content - you ONLY retrieve and structure existing knowledge.  # noqa: E501
 
 ## Core Principles
 1. **Retrieval-Only**: Return facts from the graph, never speculate
@@ -148,7 +146,7 @@ Always return a ContextPack containing:
             ContextPack with retrieved compliance knowledge
         """
         # Generate query ID
-        query_id = hashlib.md5(f"{query}_{datetime.utcnow()}".encode()).hexdigest()[:12]
+        query_id = hashlib.md5(f"{query}_{datetime.now(timezone.utc)}".encode()).hexdigest()[:12]
 
         # Determine retrieval mode if not specified
         if mode is None:
@@ -176,7 +174,7 @@ Always return a ContextPack containing:
             coverage_gaps=result.get("gaps", []),
             confidence_score=result.get("confidence", 0.0),
             sources=result.get("sources", []),
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(timezone.utc),
             query_metadata={
                 "query": query,
                 "jurisdiction": jurisdiction,
@@ -239,13 +237,13 @@ Always return a ContextPack containing:
                 name: r.name,
                 jurisdiction: r.jurisdiction,
                 effective_date: r.effective_date,
-                url: r.url
+                url: r.url,
             },
             requirement: {
                 id: req.id,
                 description: req.description,
                 mandatory: req.mandatory,
-                category: req.category
+                category: req.category,
             },
             controls: [c IN controls | {
                 id: c.id,
@@ -288,23 +286,23 @@ Always return a ContextPack containing:
                         "type": "primary",
                         "url": result["regulation"].get("url"),
                         "jurisdiction": result["regulation"].get("jurisdiction"),
-                    }
+                    },
                 )
 
             # Add requirement node
             if result.get("requirement"):
                 nodes.append(
-                    {"type": "Requirement", "properties": result["requirement"]}
+                    {"type": "Requirement", "properties": result["requirement"]},
                 )
                 relationships.append(
-                    {"type": "CONTAINS", "from": "Regulation", "to": "Requirement"}
+                    {"type": "CONTAINS", "from": "Regulation", "to": "Requirement"},
                 )
 
             # Add control nodes
             for control in result.get("controls", []):
                 nodes.append({"type": "Control", "properties": control})
                 relationships.append(
-                    {"type": "SATISFIED_BY", "from": "Requirement", "to": "Control"}
+                    {"type": "SATISFIED_BY", "from": "Requirement", "to": "Control"},
                 )
 
         # Identify gaps
@@ -375,7 +373,7 @@ Always return a ContextPack containing:
                     patterns[domain]["jurisdictions"].add(reg.get("jurisdiction"))
                     patterns[domain]["regulations"].append(reg)
                     patterns[domain]["total_requirements"] += reg.get(
-                        "requirement_count", 0
+                        "requirement_count", 0,
                     )
 
                 nodes.append(
@@ -385,7 +383,7 @@ Always return a ContextPack containing:
                             "name": domain,
                             "coverage": list(patterns[domain]["jurisdictions"]),
                         },
-                    }
+                    },
                 )
 
         # Build synthesis
@@ -394,9 +392,9 @@ Always return a ContextPack containing:
             "jurisdictions_covered": (
                 list(set().union(*(p["jurisdictions"] for p in patterns.values())))
                 if patterns
-                else []
+                else [],
             ),
-            "domains": list(patterns.keys()),
+            "domains": list(patterns.keys())
         }
 
         return {
@@ -454,12 +452,12 @@ Always return a ContextPack containing:
             connections = record.get("connections", [])
 
             nodes.append(
-                {"type": node.get("label", "Unknown"), "properties": dict(node)}
+                {"type": node.get("label", "Unknown"), "properties": dict(node)},
             )
 
             for conn in connections:
                 relationships.append(
-                    {"type": conn.get("relationship"), "score": conn.get("score")}
+                    {"type": conn.get("relationship"), "score": conn.get("score")},
                 )
 
         return {
@@ -490,7 +488,7 @@ Always return a ContextPack containing:
                 name: r.name,
                 jurisdiction: r.jurisdiction,
                 effective_date: r.effective_date,
-                last_updated: r.last_updated
+                last_updated: r.last_updated,
             },
             superseded: [s IN superseded | s.name],
             amendments: [a IN amendments | {
@@ -532,7 +530,7 @@ Always return a ContextPack containing:
                         "superseded": change.get("superseded", []),
                         "amendments": change.get("amendments", []),
                     },
-                }
+                },
             )
 
             changes.append(
@@ -540,7 +538,7 @@ Always return a ContextPack containing:
                     "regulation": change.get("current", {}).get("name"),
                     "type": change.get("change_type"),
                     "date": change.get("current", {}).get("last_updated"),
-                }
+                },
             )
 
         return {
@@ -585,7 +583,7 @@ Always return a ContextPack containing:
         results = await self.neo4j.execute_query(coverage_query)
 
         coverage_report = {
-            "timestamp": datetime.utcnow().isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "jurisdictions": {},
         }
 

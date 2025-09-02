@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Test suite for LangGraph execution patterns.
 
 This module tests the core execution patterns of LangGraph including:
@@ -61,7 +63,7 @@ class TestNodeExecutionOrder:
         # Verify timestamps are sequential
         timestamps = [entry["timestamp"] for entry in result.execution_history]
         assert all(
-            timestamps[i] <= timestamps[i + 1] for i in range(len(timestamps) - 1)
+            timestamps[i] <= timestamps[i + 1] for i in range(len(timestamps) - 1),
         )
 
     def test_parallel_execution_order(self, graph_test_harness):
@@ -184,7 +186,7 @@ class TestConditionalEdges:
                 "execute_phase_1",
                 "evaluate_phase_2",
                 "execute_phase_2",
-            ]
+            ],
         )
 
     def test_conditional_edge_with_external_data(self, graph_test_harness, mocker):
@@ -343,7 +345,7 @@ class TestRetryMechanisms:
 
         # Act
         result = graph_test_harness.execute(
-            graph, initial_state, max_retries=4, backoff_strategy="exponential"
+            graph, initial_state, max_retries=4, backoff_strategy="exponential",
         )
 
         # Assert
@@ -409,7 +411,7 @@ class TestRetryMechanisms:
             ("NetworkError", True, 3),  # Should retry
             ("ValidationError", False, 1),  # Should not retry
             ("RateLimitError", True, 3),  # Should retry
-            ("AuthenticationError", False, 1),  # Should not retry
+            ("AuthenticationError", False, 1),  # Should not retry,
         ]
 
         for error_type, should_retry, expected_calls in test_cases:
@@ -531,7 +533,7 @@ class TestGraphIntegration:
         # Act - Resume from checkpoint
         graph_test_harness.reset_failures()
         result2 = graph_test_harness.resume_from_checkpoint(
-            graph, checkpoint_dir / f"{initial_state.workflow_id}.checkpoint"
+            graph, checkpoint_dir / f"{initial_state.workflow_id}.checkpoint",
         )
 
         # Assert

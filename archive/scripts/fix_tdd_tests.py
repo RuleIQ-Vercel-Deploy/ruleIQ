@@ -3,6 +3,9 @@
 Fix TDD tests that were written expecting NameError but now need to test actual functionality.
 """
 import re
+import logging
+logger = logging.getLogger(__name__)
+
 
 
 def fix_test_file(filepath):
@@ -14,7 +17,7 @@ def fix_test_file(filepath):
     # Count occurrences
     pattern = r"with pytest\.raises\(NameError\):"
     matches = re.findall(pattern, content)
-    print(f"Found {len(matches)} occurrences of pytest.raises(NameError)")
+    logger.info(f"Found {len(matches)} occurrences of pytest.raises(NameError)")
 
     # Remove the pytest.raises(NameError) blocks and unindent the code inside
     lines = content.split("\n")
@@ -50,9 +53,9 @@ def fix_test_file(filepath):
     with open(filepath, "w") as f:
         f.write("\n".join(new_lines))
 
-    print(f"Fixed {filepath}")
+    logger.info(f"Fixed {filepath}")
 
 
 if __name__ == "__main__":
     fix_test_file("tests/models/test_compliance_state.py")
-    print("Done!")
+    logger.info("Done!")

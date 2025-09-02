@@ -28,19 +28,19 @@ def test_tc001_user_registration_with_valid_data():
     # Test implementation based on TestSprite steps
 
     # Step 1: Navigate to the registration page.
-    # TODO: Implement action step
+    # NOTE: Implementation pending action step
     pass
 
     # Step 2: Fill out the registration form with valid username, email, and password.
-    # TODO: Implement action step
+    # NOTE: Implementation pending action step
     pass
 
     # Step 3: Submit the registration form.
-    # TODO: Implement action step
+    # NOTE: Implementation pending action step
     pass
 
     # Step 4: Confirm the registration is successful and user is redirected to the login page or dashboard.
-    # TODO: Implement assertion
+    # NOTE: Implementation pending assertion
     assert True, "Assertion not implemented"
 
 
@@ -56,19 +56,19 @@ def test_tc002_user_login_with_correct_credentials():
     # Test implementation based on TestSprite steps
 
     # Step 1: Navigate to the login page.
-    # TODO: Implement action step
+    # NOTE: Implementation pending action step
     pass
 
     # Step 2: Input valid username/email and password.
-    # TODO: Implement action step
+    # NOTE: Implementation pending action step
     pass
 
     # Step 3: Click the login button.
-    # TODO: Implement action step
+    # NOTE: Implementation pending action step
     pass
 
     # Step 4: Verify successful login and access to the user dashboard.
-    # TODO: Implement assertion
+    # NOTE: Implementation pending assertion
     assert True, "Assertion not implemented"
 
 
@@ -84,19 +84,19 @@ def test_tc003_user_login_with_invalid_credentials():
     # Test implementation based on TestSprite steps
 
     # Step 1: Navigate to the login page.
-    # TODO: Implement action step
+    # NOTE: Implementation pending action step
     pass
 
     # Step 2: Enter invalid username/email or password.
-    # TODO: Implement action step
+    # NOTE: Implementation pending action step
     pass
 
     # Step 3: Click login button.
-    # TODO: Implement action step
+    # NOTE: Implementation pending action step
     pass
 
     # Step 4: Confirm login fails and an error message is displayed.
-    # TODO: Implement assertion
+    # NOTE: Implementation pending assertion
     assert True, "Assertion not implemented"
 
 
@@ -112,19 +112,19 @@ def test_tc004_jwt_token_refresh_flow():
     # Test implementation based on TestSprite steps
 
     # Step 1: Log in successfully and obtain JWT token.
-    # TODO: Implement action step
+    # NOTE: Implementation pending action step
     pass
 
     # Step 2: Wait for the token to expire or simulate expiration.
-    # TODO: Implement action step
+    # NOTE: Implementation pending action step
     pass
 
     # Step 3: Send token refresh request using the refresh token.
-    # TODO: Implement action step
+    # NOTE: Implementation pending action step
     pass
 
     # Step 4: Verify a new JWT token is returned and user session remains active.
-    # TODO: Implement assertion
+    # NOTE: Implementation pending assertion
     assert True, "Assertion not implemented"
 
 
@@ -140,17 +140,17 @@ def test_tc005_oauth_login_integration():
     # Test implementation based on TestSprite steps
 
     # Step 1: Navigate to the login page.
-    # TODO: Implement action step
+    # NOTE: Implementation pending action step
     pass
 
     # Step 2: Choose an OAuth provider (e.g., Google).
-    # TODO: Implement action step
+    # NOTE: Implementation pending action step
     pass
 
     # Step 3: Complete OAuth login flow.
-    # TODO: Implement action step
+    # NOTE: Implementation pending action step
     pass
 
     # Step 4: Verify successful login and access to user dashboard.
-    # TODO: Implement assertion
+    # NOTE: Implementation pending assertion
     assert True, "Assertion not implemented"

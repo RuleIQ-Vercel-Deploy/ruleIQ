@@ -77,7 +77,7 @@ class TestUserOnboardingFlow:
         }
 
         profile_response = client.post(
-            "/api/business-profiles", json=business_profile_data, headers=auth_headers
+            "/api/business-profiles", json=business_profile_data, headers=auth_headers,
         )
         assert profile_response.status_code == 201
         # assert_api_response_security(profile_response)
@@ -97,7 +97,7 @@ class TestUserOnboardingFlow:
         }
 
         assessment_response = client.post(
-            "/api/assessments/quick", json=assessment_data, headers=auth_headers
+            "/api/assessments/quick", json=assessment_data, headers=auth_headers,
         )
         assert assessment_response.status_code == 200
         # assert_api_response_security(assessment_response)
@@ -149,7 +149,7 @@ class TestUserOnboardingFlow:
         assert login_response.status_code == 200
 
         auth_headers = {
-            "Authorization": f"Bearer {login_response.json()['access_token']}"
+            "Authorization": f"Bearer {login_response.json()['access_token']}",
         }
 
         # Create business profile inline
@@ -168,7 +168,7 @@ class TestUserOnboardingFlow:
             "has_international_operations": False,
         }
         profile_response = client.post(
-            "/api/business-profiles", json=business_profile_data, headers=auth_headers
+            "/api/business-profiles", json=business_profile_data, headers=auth_headers,
         )
         assert profile_response.status_code == 201
         business_profile_id = profile_response.json()["id"]
@@ -181,7 +181,7 @@ class TestUserOnboardingFlow:
         }
 
         assessment_response = client.post(
-            "/api/assessments/quick", json=assessment_data, headers=auth_headers
+            "/api/assessments/quick", json=assessment_data, headers=auth_headers,
         )
         assert assessment_response.status_code == 200
 
@@ -198,7 +198,7 @@ class TestUserOnboardingFlow:
 
         # Test "restart" by running assessment again (simulating restart)
         restart_response = client.post(
-            "/api/assessments/quick", json=assessment_data, headers=auth_headers
+            "/api/assessments/quick", json=assessment_data, headers=auth_headers,
         )
         assert restart_response.status_code == 200
 
@@ -230,7 +230,7 @@ class TestUserOnboardingFlow:
         assert login_response.status_code == 200
 
         auth_headers = {
-            "Authorization": f"Bearer {login_response.json()['access_token']}"
+            "Authorization": f"Bearer {login_response.json()['access_token']}",
         }
 
         # Create minimal business profile
@@ -241,7 +241,7 @@ class TestUserOnboardingFlow:
         }
 
         profile_response = client.post(
-            "/api/business-profiles", json=minimal_profile, headers=auth_headers
+            "/api/business-profiles", json=minimal_profile, headers=auth_headers,
         )
         assert profile_response.status_code == 201
         business_profile_id = profile_response.json()["id"]
@@ -254,7 +254,7 @@ class TestUserOnboardingFlow:
         }
 
         quick_response = client.post(
-            "/api/assessments/quick", json=quick_assessment_data, headers=auth_headers
+            "/api/assessments/quick", json=quick_assessment_data, headers=auth_headers,
         )
         assert quick_response.status_code == 200
 
@@ -295,7 +295,7 @@ class TestUserOnboardingFlow:
         assert login_response.status_code == 200
 
         auth_headers = {
-            "Authorization": f"Bearer {login_response.json()['access_token']}"
+            "Authorization": f"Bearer {login_response.json()['access_token']}",
         }
 
         # Test invalid login attempt (wrong password)
@@ -312,7 +312,7 @@ class TestUserOnboardingFlow:
         )
         assert valid_login_response.status_code == 200
         auth_headers = {
-            "Authorization": f"Bearer {valid_login_response.json()['access_token']}"
+            "Authorization": f"Bearer {valid_login_response.json()['access_token']}",
         }
 
         # Test accessing protected endpoint with valid token
@@ -357,7 +357,7 @@ class TestOnboardingIntegration:
         )
         assert login_response.status_code == 200
         auth_headers = {
-            "Authorization": f"Bearer {login_response.json()['access_token']}"
+            "Authorization": f"Bearer {login_response.json()['access_token']}",
         }
 
         # Create business profile inline
@@ -377,7 +377,7 @@ class TestOnboardingIntegration:
         }
 
         profile_response = client.post(
-            "/api/business-profiles", json=business_profile_data, headers=auth_headers
+            "/api/business-profiles", json=business_profile_data, headers=auth_headers,
         )
         assert profile_response.status_code == 201
         business_profile_id = profile_response.json()["id"]
@@ -390,7 +390,7 @@ class TestOnboardingIntegration:
         }
 
         assessment_response = client.post(
-            "/api/assessments/quick", json=assessment_data, headers=auth_headers
+            "/api/assessments/quick", json=assessment_data, headers=auth_headers,
         )
         assert assessment_response.status_code == 200
 
@@ -423,7 +423,7 @@ class TestOnboardingIntegration:
             json={"email": unique_email, "password": user_data["password"]},
         )
         auth_headers = {
-            "Authorization": f"Bearer {login_response.json()['access_token']}"
+            "Authorization": f"Bearer {login_response.json()['access_token']}",
         }
 
         business_profile_data = {
@@ -441,7 +441,7 @@ class TestOnboardingIntegration:
             "has_international_operations": sample_business_profile.has_international_operations,
         }
         client.post(
-            "/api/business-profiles", json=business_profile_data, headers=auth_headers
+            "/api/business-profiles", json=business_profile_data, headers=auth_headers,
         )
 
         # Check audit trail
@@ -493,12 +493,12 @@ class TestOnboardingIntegration:
             json={"email": user_data["email"], "password": user_data["password"]},
         )
         auth_headers = {
-            "Authorization": f"Bearer {login_response.json()['access_token']}"
+            "Authorization": f"Bearer {login_response.json()['access_token']}",
         }
 
         # Check that preferences were saved (if endpoint exists)
         preferences_response = client.get(
-            "/api/users/preferences", headers=auth_headers
+            "/api/users/preferences", headers=auth_headers,
         )
         if preferences_response.status_code == 200:
             preferences_response.json()

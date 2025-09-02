@@ -1,5 +1,7 @@
 """Create freemium tables for AI Assessment Strategy
 
+from __future__ import annotations
+
 Revision ID: freemium_001
 Revises:
 Create Date: 2025-08-05

@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """Debug database connection."""
+import logging
+logger = logging.getLogger(__name__)
+
 
 import sys
 import os
@@ -11,9 +14,9 @@ try:
     from database.db_setup import _get_configured_database_urls
 
     urls = _get_configured_database_urls()
-    print(f"URLs: {urls}")
+    logger.info(f"URLs: {urls}")
 except Exception as e:
-    print(f"Error: {e}")
+    logger.info(f"Error: {e}")
     import traceback
 
     traceback.print_exc()

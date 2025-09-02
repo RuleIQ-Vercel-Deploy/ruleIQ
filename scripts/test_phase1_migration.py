@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+
 Test Phase 1 migration - Core User Endpoints
 This script validates our migration approach on the first 3 files
 """
@@ -11,7 +13,7 @@ from pathlib import Path
 PHASE_1_FILES = [
     "api/routers/users.py",
     "api/routers/business_profiles.py",
-    # main.py already done
+    # main.py already done,
 ]
 
 

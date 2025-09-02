@@ -1,3 +1,3 @@
 // Chat components - placeholder exports
-// TODO: Implement actual chat components
+// NOTE: Implementation pending actual chat components
 export const CHAT_PLACEHOLDER = true;

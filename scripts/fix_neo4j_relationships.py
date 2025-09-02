@@ -1,9 +1,9 @@
-#!/usr/bin/env python3
 """
+from __future__ import annotations
+
 Fix Neo4j relationships and populate missing business_triggers.
 This script addresses the warnings about missing relationship types and business_triggers.
 """
-
 import asyncio
 import json
 import logging
@@ -12,9 +12,7 @@ from typing import Dict, Any, List
 from neo4j import AsyncGraphDatabase
 import os
 from dotenv import load_dotenv
-
 load_dotenv()
-
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -25,174 +23,116 @@ class Neo4jRelationshipFixer:
     def __init__(self, uri: str, user: str, password: str):
         self.driver = AsyncGraphDatabase.driver(uri, auth=(user, password))
 
-    async def close(self):
+    async def close(self) ->None:
         await self.driver.close()
 
-    async def populate_business_triggers(self):
+    async def populate_business_triggers(self) ->None:
         """Populate business_triggers from manifest files."""
-        logger.info("Starting business_triggers population...")
-
-        # Load UK industry regulations (has business_triggers)
-        uk_regs_path = Path("data/manifests/uk_industry_regulations.json")
+        logger.info('Starting business_triggers population...')
+        uk_regs_path = Path('data/manifests/uk_industry_regulations.json')
         if uk_regs_path.exists():
-            with open(uk_regs_path, "r") as f:
+            with open(uk_regs_path, 'r') as f:
                 data = json.load(f)
-
             async with self.driver.session() as session:
                 count = 0
-                for item in data.get("items", []):
-                    if "business_triggers" in item:
-                        # Update regulation with business_triggers
+                for item in data.get('items', []):
+                    if 'business_triggers' in item:
                         result = await session.run(
                             """
                             MATCH (r:Regulation {id: $id})
                             SET r.business_triggers = $business_triggers
                             RETURN r.id as id
-                        """,
-                            id=item["id"],
-                            business_triggers=json.dumps(item["business_triggers"]),
-                        )
-
+                        """
+                            , id=item['id'], business_triggers=json.dumps(
+                            item['business_triggers']))
                         if await result.single():
                             count += 1
-                            logger.info(f"Updated {item['id']} with business_triggers")
-
-                logger.info(f"✅ Updated {count} regulations with business_triggers")
-
-        # Create generic business_triggers for regulations without them
+                            logger.info('Updated %s with business_triggers' %
+                                item['id'])
+                logger.info(
+                    '✅ Updated %s regulations with business_triggers' % count)
         await self._add_generic_business_triggers()
 
     async def _add_generic_business_triggers(self):
         """Add generic business_triggers based on tags for regulations without them."""
-        logger.info("Adding generic business_triggers based on tags...")
-
+        logger.info('Adding generic business_triggers based on tags...')
         async with self.driver.session() as session:
-            # Get regulations without business_triggers
             result = await session.run(
                 """
                 MATCH (r:Regulation)
                 WHERE r.business_triggers IS NULL
                 RETURN r.id as id, r.tags as tags, r.title as title
-            """
-            )
-
+            """,
+                )
             regulations = []
             async for record in result:
-                regulations.append(
-                    {
-                        "id": record["id"],
-                        "tags": record["tags"],
-                        "title": record["title"],
-                    }
-                )
-
-            logger.info(
-                f"Found {len(regulations)} regulations without business_triggers"
-            )
-
-            # Generate and apply business_triggers
+                regulations.append({'id': record['id'], 'tags': record[
+                    'tags'], 'title': record['title']})
+            logger.info('Found %s regulations without business_triggers' %
+                len(regulations))
             for reg in regulations:
-                triggers = self._generate_business_triggers(reg["tags"], reg["title"])
-
+                triggers = self._generate_business_triggers(reg['tags'],
+                    reg['title'])
                 await session.run(
                     """
                     MATCH (r:Regulation {id: $id})
                     SET r.business_triggers = $business_triggers
                     RETURN r.id
-                """,
-                    id=reg["id"],
-                    business_triggers=json.dumps(triggers),
-                )
-
+                """
+                    , id=reg['id'], business_triggers=json.dumps(triggers))
             logger.info(
-                f"✅ Added generic business_triggers to {len(regulations)} regulations"
-            )
+                '✅ Added generic business_triggers to %s regulations' % len
+                (regulations))
 
-    def _generate_business_triggers(
-        self, tags: List[str], title: str
-    ) -> Dict[str, Any]:
+    def _generate_business_triggers(self, tags: List[str], title: str) ->Dict[
+        str, Any]:
         """Generate business_triggers based on tags and title."""
         triggers = {}
-
-        # Industry detection
-        if "finance" in tags or "banking" in tags:
-            triggers["industry"] = "finance"
-        elif "healthcare" in tags or "health" in tags:
-            triggers["industry"] = "healthcare"
-        elif "technology" in tags or "tech" in tags:
-            triggers["industry"] = "technology"
-        elif "retail" in tags:
-            triggers["industry"] = "retail"
+        if 'finance' in tags or 'banking' in tags:
+            triggers['industry'] = 'finance'
+        elif 'healthcare' in tags or 'health' in tags:
+            triggers['industry'] = 'healthcare'
+        elif 'technology' in tags or 'tech' in tags:
+            triggers['industry'] = 'technology'
+        elif 'retail' in tags:
+            triggers['industry'] = 'retail'
         else:
-            triggers["industry"] = "general"
-
-        # Geographic detection
-        if "UK" in tags:
-            triggers["country"] = "UK"
-        elif "EU" in tags or "GDPR" in title:
-            triggers["country"] = "EU"
-        elif "US" in tags or "California" in tags:
-            triggers["country"] = "US"
+            triggers['industry'] = 'general'
+        if 'UK' in tags:
+            triggers['country'] = 'UK'
+        elif 'EU' in tags or 'GDPR' in title:
+            triggers['country'] = 'EU'
+        elif 'US' in tags or 'California' in tags:
+            triggers['country'] = 'US'
         else:
-            triggers["country"] = "global"
-
-        # Data handling detection
-        if "data" in tags or "privacy" in tags or "GDPR" in title:
-            triggers["stores_customer_data"] = True
-
-        if "payment" in tags or "PCI" in title:
-            triggers["processes_payments"] = True
-
-        if "health" in tags or "HIPAA" in title:
-            triggers["handles_health_data"] = True
-
-        # Company size detection
-        if "enterprise" in tags:
-            triggers["employee_count"] = ">500"
-        elif "SME" in tags or "small" in tags:
-            triggers["employee_count"] = "<100"
-
+            triggers['country'] = 'global'
+        if 'data' in tags or 'privacy' in tags or 'GDPR' in title:
+            triggers['stores_customer_data'] = True
+        if 'payment' in tags or 'PCI' in title:
+            triggers['processes_payments'] = True
+        if 'health' in tags or 'HIPAA' in title:
+            triggers['handles_health_data'] = True
+        if 'enterprise' in tags:
+            triggers['employee_count'] = '>500'
+        elif 'SME' in tags or 'small' in tags:
+            triggers['employee_count'] = '<100'
         return triggers
 
-    async def create_dependency_relationships(self):
+    async def create_dependency_relationships(self) ->None:
         """Create DEPENDS_ON relationships between related regulations."""
-        logger.info("Creating DEPENDS_ON relationships...")
-
+        logger.info('Creating DEPENDS_ON relationships...')
         async with self.driver.session() as session:
-            # Create dependencies based on common patterns
-            dependencies = [
-                # GDPR dependencies
-                ("gdpr-general", "gdpr-article-6", "Article 6 depends on general GDPR"),
-                ("gdpr-general", "gdpr-article-7", "Article 7 depends on general GDPR"),
-                (
-                    "gdpr-general",
-                    "gdpr-article-32",
-                    "Article 32 depends on general GDPR",
-                ),
-                # PCI DSS dependencies
-                (
-                    "pci-dss-general",
-                    "pci-dss-requirement-1",
-                    "Requirement 1 depends on PCI DSS",
-                ),
-                (
-                    "pci-dss-general",
-                    "pci-dss-requirement-2",
-                    "Requirement 2 depends on PCI DSS",
-                ),
-                # SOC 2 dependencies
-                (
-                    "soc2-general",
-                    "soc2-security",
-                    "Security principle depends on SOC 2",
-                ),
-                (
-                    "soc2-general",
-                    "soc2-availability",
-                    "Availability principle depends on SOC 2",
-                ),
-            ]
-
+            dependencies = [('gdpr-general', 'gdpr-article-6',
+                'Article 6 depends on general GDPR'), ('gdpr-general',
+                'gdpr-article-7', 'Article 7 depends on general GDPR'), (
+                'gdpr-general', 'gdpr-article-32',
+                'Article 32 depends on general GDPR'), ('pci-dss-general',
+                'pci-dss-requirement-1', 'Requirement 1 depends on PCI DSS'
+                ), ('pci-dss-general', 'pci-dss-requirement-2',
+                'Requirement 2 depends on PCI DSS'), ('soc2-general',
+                'soc2-security', 'Security principle depends on SOC 2'), (
+                'soc2-general', 'soc2-availability',
+                'Availability principle depends on SOC 2')]
             created = 0
             for parent_id, child_id, description in dependencies:
                 result = await session.run(
@@ -205,47 +145,27 @@ class Neo4jRelationshipFixer:
                     SET d.description = $description,
                         d.created_at = datetime()
                     RETURN parent.id as parent, child.id as child
-                """,
-                    parent_pattern=parent_id,
-                    child_pattern=child_id,
-                    description=description,
-                )
-
+                """
+                    , parent_pattern=parent_id, child_pattern=child_id,
+                    description=description)
                 async for record in result:
                     created += 1
-                    logger.info(
-                        f"Created DEPENDS_ON: {record['child']} -> {record['parent']}"
-                    )
+                    logger.info('Created DEPENDS_ON: %s -> %s' % (record[
+                        'child'], record['parent']))
+            logger.info('✅ Created %s DEPENDS_ON relationships' % created)
 
-            logger.info(f"✅ Created {created} DEPENDS_ON relationships")
-
-    async def create_equivalence_relationships(self):
+    async def create_equivalence_relationships(self) ->None:
         """Create EQUIVALENT_TO relationships between similar regulations."""
-        logger.info("Creating EQUIVALENT_TO relationships...")
-
+        logger.info('Creating EQUIVALENT_TO relationships...')
         async with self.driver.session() as session:
-            # Find regulations with similar titles or purposes
-            equivalences = [
-                # Data protection equivalences
-                ("gdpr", "ccpa", "privacy", "Both handle personal data protection"),
-                (
-                    "gdpr",
-                    "uk-data-protection",
-                    "privacy",
-                    "Similar data protection laws",
-                ),
-                # Security framework equivalences
-                (
-                    "iso27001",
-                    "soc2-security",
-                    "security",
-                    "Security management frameworks",
-                ),
-                ("nist", "iso27001", "security", "Security control frameworks"),
-                # Financial equivalences
-                ("pci-dss", "psd2", "payment", "Payment security regulations"),
-            ]
-
+            equivalences = [('gdpr', 'ccpa', 'privacy',
+                'Both handle personal data protection'), ('gdpr',
+                'uk-data-protection', 'privacy',
+                'Similar data protection laws'), ('iso27001',
+                'soc2-security', 'security',
+                'Security management frameworks'), ('nist', 'iso27001',
+                'security', 'Security control frameworks'), ('pci-dss',
+                'psd2', 'payment', 'Payment security regulations')]
             created = 0
             for reg1_pattern, reg2_pattern, tag, description in equivalences:
                 result = await session.run(
@@ -261,46 +181,27 @@ class Neo4jRelationshipFixer:
                         e.similarity_score = 0.8,
                         e.created_at = datetime()
                     RETURN r1.id as reg1, r2.id as reg2
-                """,
-                    pattern1=reg1_pattern,
-                    pattern2=reg2_pattern,
-                    tag=tag,
-                    description=description,
-                )
-
+                """
+                    , pattern1=reg1_pattern, pattern2=reg2_pattern, tag=tag,
+                    description=description)
                 async for record in result:
                     created += 1
-                    logger.info(
-                        f"Created EQUIVALENT_TO: {record['reg1']} <-> {record['reg2']}"
-                    )
+                    logger.info('Created EQUIVALENT_TO: %s <-> %s' % (
+                        record['reg1'], record['reg2']))
+            logger.info('✅ Created %s EQUIVALENT_TO relationships' % created)
 
-            logger.info(f"✅ Created {created} EQUIVALENT_TO relationships")
-
-    async def create_supersedes_relationships(self):
+    async def create_supersedes_relationships(self) ->None:
         """Create SUPERSEDES relationships for regulations that replace older ones."""
-        logger.info("Creating SUPERSEDES relationships...")
-
+        logger.info('Creating SUPERSEDES relationships...')
         async with self.driver.session() as session:
-            # Define supersession patterns
-            supersessions = [
-                # GDPR supersedes older directives
-                (
-                    "gdpr-general",
-                    "data-protection-directive-95",
-                    "GDPR replaced 1995 directive",
-                ),
-                # Version updates
-                ("iso27001-2022", "iso27001-2013", "2022 version supersedes 2013"),
-                ("pci-dss-v4", "pci-dss-v3", "Version 4 supersedes Version 3"),
-                # Regional replacements
-                (
-                    "uk-gdpr",
-                    "gdpr-general",
-                    "UK GDPR supersedes EU GDPR post-Brexit",
-                    "UK",
-                ),
-            ]
-
+            supersessions = [('gdpr-general',
+                'data-protection-directive-95',
+                'GDPR replaced 1995 directive'), ('iso27001-2022',
+                'iso27001-2013', '2022 version supersedes 2013'), (
+                'pci-dss-v4', 'pci-dss-v3',
+                'Version 4 supersedes Version 3'), ('uk-gdpr',
+                'gdpr-general', 'UK GDPR supersedes EU GDPR post-Brexit', 'UK'),
+                ]
             created = 0
             for new_pattern, old_pattern, description, *conditions in supersessions:
                 query = """
@@ -309,17 +210,10 @@ class Neo4jRelationshipFixer:
                     MATCH (old:Regulation)
                     WHERE old.id CONTAINS $old_pattern
                 """
-
-                params = {
-                    "new_pattern": new_pattern,
-                    "old_pattern": old_pattern,
-                    "description": description,
-                }
-
-                # Add country condition if specified
+                params = {'new_pattern': new_pattern, 'old_pattern':
+                    old_pattern, 'description': description}
                 if conditions:
                     query += " AND 'UK' IN new.tags"
-
                 query += """
                     MERGE (new)-[s:SUPERSEDES]->(old)
                     SET s.description = $description,
@@ -327,47 +221,25 @@ class Neo4jRelationshipFixer:
                         s.created_at = datetime()
                     RETURN new.id as new_reg, old.id as old_reg
                 """
-
                 result = await session.run(query, **params)
-
                 async for record in result:
                     created += 1
-                    logger.info(
-                        f"Created SUPERSEDES: {record['new_reg']} -> {record['old_reg']}"
-                    )
+                    logger.info('Created SUPERSEDES: %s -> %s' % (record[
+                        'new_reg'], record['old_reg']))
+            logger.info('✅ Created %s SUPERSEDES relationships' % created)
 
-            logger.info(f"✅ Created {created} SUPERSEDES relationships")
-
-    async def create_control_dependencies(self):
+    async def create_control_dependencies(self) ->None:
         """Create relationships between controls that depend on each other."""
-        logger.info("Creating control dependency relationships...")
-
+        logger.info('Creating control dependency relationships...')
         async with self.driver.session() as session:
-            # Create DEPENDS_ON relationships between controls
-            control_deps = [
-                (
-                    "encryption_at_rest",
-                    "key_management",
-                    "Encryption requires key management",
-                ),
-                (
-                    "access_control",
-                    "authentication",
-                    "Access control requires authentication",
-                ),
-                (
-                    "audit_logging",
-                    "log_management",
-                    "Audit logs require log management",
-                ),
-                (
-                    "incident_response",
-                    "monitoring",
-                    "Incident response requires monitoring",
-                ),
-                ("backup", "disaster_recovery", "Backup is part of disaster recovery"),
-            ]
-
+            control_deps = [('encryption_at_rest', 'key_management',
+                'Encryption requires key management'), ('access_control',
+                'authentication', 'Access control requires authentication'),
+                ('audit_logging', 'log_management',
+                'Audit logs require log management'), ('incident_response',
+                'monitoring', 'Incident response requires monitoring'), (
+                'backup', 'disaster_recovery',
+                'Backup is part of disaster recovery')]
             created = 0
             for control1, control2, description in control_deps:
                 result = await session.run(
@@ -380,122 +252,92 @@ class Neo4jRelationshipFixer:
                     SET d.description = $description,
                         d.created_at = datetime()
                     RETURN c1.name as control1, c2.name as control2
-                """,
-                    pattern1=control1,
-                    pattern2=control2,
-                    description=description,
-                )
-
+                """
+                    , pattern1=control1, pattern2=control2, description=
+                    description)
                 async for record in result:
                     created += 1
-                    logger.info(
-                        f"Control dependency: {record['control1']} -> {record['control2']}"
-                    )
+                    logger.info('Control dependency: %s -> %s' % (record[
+                        'control1'], record['control2']))
+            logger.info('✅ Created %s control dependency relationships' %
+                created)
 
-            logger.info(f"✅ Created {created} control dependency relationships")
-
-    async def verify_relationships(self):
+    async def verify_relationships(self) ->None:
         """Verify all relationships have been created."""
-        logger.info("\n" + "=" * 60)
-        logger.info("RELATIONSHIP VERIFICATION")
-        logger.info("=" * 60)
-
+        logger.info('\n' + '=' * 60)
+        logger.info('RELATIONSHIP VERIFICATION')
+        logger.info('=' * 60)
         async with self.driver.session() as session:
-            # Check all relationship types
             result = await session.run(
                 """
                 CALL db.relationshipTypes() YIELD relationshipType
                 RETURN relationshipType
-            """
-            )
-
+            """,
+                )
             rel_types = []
             async for record in result:
-                rel_types.append(record["relationshipType"])
-
-            logger.info(f"\nRelationship types found: {rel_types}")
-
-            # Count each relationship type
+                rel_types.append(record['relationshipType'])
+            logger.info('\nRelationship types found: %s' % rel_types)
             for rel_type in rel_types:
                 result = await session.run(
                     f"""
                     MATCH ()-[r:{rel_type}]->()
                     RETURN count(r) as count
-                """
-                )
+                """,
+                    )
                 count = await result.single()
-                logger.info(f"  {rel_type}: {count['count']} relationships")
-
-            # Check business_triggers population
+                logger.info('  %s: %s relationships' % (rel_type, count[
+                    'count']))
             result = await session.run(
                 """
                 MATCH (r:Regulation)
                 RETURN 
                     count(r) as total,
                     count(r.business_triggers) as with_triggers
-            """
-            )
+            """,
+                )
             stats = await result.single()
-
-            logger.info(f"\nBusiness triggers stats:")
-            logger.info(f"  Total regulations: {stats['total']}")
-            logger.info(f"  With business_triggers: {stats['with_triggers']}")
-            logger.info(f"  Coverage: {stats['with_triggers']/stats['total']*100:.1f}%")
-
-            # Sample some business_triggers
+            logger.info('\nBusiness triggers stats:')
+            logger.info('  Total regulations: %s' % stats['total'])
+            logger.info('  With business_triggers: %s' % stats['with_triggers'],
+                )
+            logger.info('  Coverage: %s%' % (stats['with_triggers'] / stats
+                ['total'] * 100))
             result = await session.run(
                 """
                 MATCH (r:Regulation)
                 WHERE r.business_triggers IS NOT NULL
                 RETURN r.id as id, r.business_triggers as triggers
                 LIMIT 3
-            """
-            )
-
-            logger.info("\nSample business_triggers:")
+            """,
+                )
+            logger.info('\nSample business_triggers:')
             async for record in result:
-                triggers = json.loads(record["triggers"])
-                logger.info(f"  {record['id']}: {triggers}")
+                triggers = json.loads(record['triggers'])
+                logger.info('  %s: %s' % (record['id'], triggers))
 
 
-async def main():
+async def main() ->None:
     """Main execution function."""
-    # Neo4j connection
-    neo4j_uri = "bolt://localhost:7688"
-    neo4j_user = "neo4j"
-    neo4j_password = "ruleiq123"
-
+    neo4j_uri = 'bolt://localhost:7688'
+    neo4j_user = 'neo4j'
+    neo4j_password = 'ruleiq123'
     fixer = Neo4jRelationshipFixer(neo4j_uri, neo4j_user, neo4j_password)
-
     try:
-        # 1. Populate business_triggers
         await fixer.populate_business_triggers()
-
-        # 2. Create DEPENDS_ON relationships
         await fixer.create_dependency_relationships()
-
-        # 3. Create EQUIVALENT_TO relationships
         await fixer.create_equivalence_relationships()
-
-        # 4. Create SUPERSEDES relationships
         await fixer.create_supersedes_relationships()
-
-        # 5. Create control dependencies
         await fixer.create_control_dependencies()
-
-        # 6. Verify everything
         await fixer.verify_relationships()
-
-        logger.info("\n✅ All relationship fixes completed successfully!")
-
+        logger.info('\n✅ All relationship fixes completed successfully!')
     except Exception as e:
-        logger.error(f"Error: {e}")
+        logger.error('Error: %s' % e)
         import traceback
-
         traceback.print_exc()
     finally:
         await fixer.close()
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     asyncio.run(main())

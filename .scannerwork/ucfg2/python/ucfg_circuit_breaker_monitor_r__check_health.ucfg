@@ -1,11 +1,11 @@
 
 Gservices.ai.circuit_breaker_monitor.CircuitBreakerMonitor._check_healthN
-B/home/omar/Documents/ruleIQ/services/ai/circuit_breaker_monitor.py© ©("16*‰
+B/home/omar/Documents/ruleIQ/services/ai/circuit_breaker_monitor.pyã ã("16*‰
 13
-≤ ∑(y
+ë î(=y
 w
 
-≥ ≥(0
+ë2 ë(E
 %19"__id*\
 
 __unknown_file (@*>3
@@ -13,14 +13,14 @@ w
 ERRORÉ
 Ä
 
-µk µ(v
+ìc ì(n
 %20"__id*e
 
 __unknown_file (I*G;
 9services.ai.circuit_breaker_monitor.CircuitBreakerMonitor"
 configc
 a
-µk µ(ì
+ìc ì(ã
 %21"__id*E
 
 __unknown_file ()*'
@@ -28,27 +28,27 @@ a
 %20"
 failure_rate_error_thresholdª
 ∏
-µ µ(ô
+ì ì(ë
 %22"__concat*-
 
-µ µ(9
+ì ì(1
 AI service failure rate is *
 
-µ: µ(F
+ì2 ì(>
 
 failure_rate*1
 
-µK µ(j#!
+ìC ì(b#!
 , exceeding error threshold of *
-µk µ(ì
+ìc ì(ã
 
 %21
 
-∂ ∂(:
+î î(<
 %23"dict°
 û
 
-∂ ∂(9
+î î(;
 %24"__mapSet*#
 
 __unknown_file (
@@ -62,7 +62,7 @@ a
 
 failure_rateÊ„
 
-≤ ∑(
+ë î(=
 %25*Y
 
 __unknown_file (=;
@@ -80,10 +80,10 @@ a
 %23*
 12*Â
 14
-π æ({
+ñ ô(={
 y
 
-∫ ∫(2
+ñ2 ñ(G
 %26"__id*^
 
 __unknown_file (B*@3
@@ -91,14 +91,14 @@ y
 WARNINGÉ
 Ä
 
-ºm º(x
+òe ò(p
 %27"__id*e
 
 __unknown_file (I*G;
 9services.ai.circuit_breaker_monitor.CircuitBreakerMonitor"
 confige
 c
-ºm º(ó
+òe ò(è
 %28"__id*G
 
 __unknown_file (+*)
@@ -106,27 +106,27 @@ c
 %27" 
 failure_rate_warning_thresholdΩ
 ∫
-º º(ù
+ò ò(ï
 %29"__concat*-
 
-º º(9
+ò ò(1
 AI service failure rate is *
 
-º: º(F
+ò2 ò(>
 
 failure_rate*3
 
-ºK º(l%#
+òC ò(d%#
 !, exceeding warning threshold of *
-ºm º(ó
+òe ò(è
 
 %28
 
-Ω Ω(:
+ô ô(<
 %30"dict°
 û
 
-Ω Ω(9
+ô ô(;
 %31"__mapSet*#
 
 __unknown_file (
@@ -140,7 +140,7 @@ c
 
 failure_rate·ﬁ
 
-π æ(
+ñ ô(=
 %32*Y
 
 __unknown_file (=;
@@ -159,13 +159,13 @@ c
 12*B
 3
 circuit_breaker_monitor.py"
-Ÿ Ÿ(
+™ ™(
 implicit return*°
 15
-∏ ∏(KÉ
+ï ï(KÉ
 Ä
 
-∏! ∏(,
+ï! ï(,
 %33"__id*e
 
 __unknown_file (I*G;
@@ -173,7 +173,7 @@ c
 configd
 b
 
-∏! ∏(K
+ï! ï(K
 %34"__id*G
 
 __unknown_file (+*)
@@ -182,7 +182,7 @@ b
 failure_rate_warning_thresholdò
 ï
 
-∏ ∏(K
+ï ï(K
 %35"	__compare*"
 
 __unknown_file (
@@ -196,30 +196,30 @@ b
 
 %34*
 14
-12*·
+12*„
 4
-◊ ◊(@Å
+® ®(BÅ
 
 
-◊ ◊(
+® ®(
 %1"__id*e
 
 __unknown_file (I*G;
 9services.ai.circuit_breaker_monitor.CircuitBreakerMonitor"
-loggerb
-`
+loggerd
+b
 
-◊ ◊(?
-%2"__concat*-
+® ®(A
+%2"__concat*/
 
-◊  ◊(;
-Error during health check: *
+® ®(=!
+Error during health check: %s*
 
-◊< ◊(=
+®@ ®(A
 
 eca
 
-◊ ◊(@
+® ®(B
 %3*"
 
 __unknown_file (
@@ -231,17 +231,17 @@ b
 %22error*
 3*ù
 16
-¨ ¨(Då
+é é(Då
 â
 
-¨ ¨(0
+é é(0
 %36"__id*n
 
 __unknown_file (R*P;
 9services.ai.circuit_breaker_monitor.CircuitBreakerMonitor"
 circuit_breakerMK
 
-¨ ¨(D
+é é(D
 %37*#
 
 __unknown_file (
@@ -249,14 +249,14 @@ b
 %362get_health_statusJ
 H
 
-¨ ¨(D
+é é(D
 health_status"__id*#
 
 __unknown_file (
 
 %37ÖÇ
 
-Ø Ø(3
+è è(3
 %38"__mapGet*-
 
 __unknown_file (
@@ -266,7 +266,7 @@ H
 __unknown_file (	
 metrics2__getitem__}
 
-Ø Ø(C
+è è(C
 %39"__mapGet*#
 
 __unknown_file (
@@ -277,7 +277,7 @@ H
 failure_rate2__getitem__I
 G
 
-Ø Ø(C
+è è(C
 failure_rate"__id*#
 
 __unknown_file (
@@ -285,7 +285,7 @@ G
 %39É
 Ä
 
-± ±(*
+ê ê(*
 %40"__id*e
 
 __unknown_file (I*G;
@@ -293,7 +293,7 @@ G
 configb
 `
 
-± ±(G
+ê ê(G
 %41"__id*E
 
 __unknown_file ()*'
@@ -302,7 +302,7 @@ G
 failure_rate_error_thresholdò
 ï
 
-± ±(G
+ê ê(G
 %42"	__compare*"
 
 __unknown_file (
@@ -318,10 +318,10 @@ G
 13
 15*è
 9
-√ …({
+ú †(D{
 y
 
-ƒ! ƒ(7
+ú6 ù( 
 %4"__id*_
 
 __unknown_file (C*A3
@@ -330,33 +330,33 @@ y
 CRITICALc
 a
 
-≈ ≈(@
+ù( ù(J
 %5"__concat*%
 
-≈  ≈(3
+ù* ù(=
 Model Unavailable: *
 
-≈4 ≈(>
+ù> ù(H
 
 
 model_nameô
 ñ
 
-∆  ∆(c
+ü ü([
 %6"__concat*
 
-∆" ∆(+
+ü ü(#
 	AI model *
 
-∆, ∆(6
+ü$ ü(.
 
 
 model_name*=
 
-∆7 ∆(b/-
+ü/ ü(Z/-
 + is unavailable due to circuit breaker tripÌ
 
-√ …(
+ú †(D
 %7*Y
 
 __unknown_file (=;
@@ -384,10 +384,10 @@ model_info*
 9
 11*Ø
 10
-Œ ‘(z
+£ ¶(Dz
 x
 
-œ! œ(6
+£6 £(K
 %8"__id*^
 
 __unknown_file (B*@3
@@ -395,18 +395,18 @@ x
 WARNING`
 ^
 
-– –(=
+§ §(=
 %9"__concat*"
 
-–  –(0
+§  §(0
 Model Degraded: *
 
-–1 –(;
+§1 §(;
 
 
 model_nameàÖ
 
-—= —(X
+•5 •(P
 %10"__mapGet**
 
 __unknown_file (
@@ -418,28 +418,28 @@ model_info*-
 failure_count2__getitem__Ø
 ¨
 
-—  —(j
+• •(b
 %11"__concat*
 
-—" —(+
+• •(#
 	AI model *
 
-—, —(6
+•$ •(.
 
 
 model_name*
 
-—7 —(<	
+•/ •(4	
  has *
 
-—= —(X
+•5 •(P
 
 %10*"
 
-—Y —(i
+•Q •(a
  recent failuresÚÔ
 
-Œ ‘(
+£ ¶(D
 %12*Y
 
 __unknown_file (=;
@@ -467,9 +467,9 @@ model_info*
 9
 11*¨
 11
-  Õ(àÖ
+° ¢(CàÖ
 
-À À(/
+° ¢(
 %13"__mapGet**
 
 __unknown_file (
@@ -481,7 +481,7 @@ model_info*-
 failure_count2__getitem__É
 Ä
 
-Ã Ã("
+¢ ¢($
 %14"__id*e
 
 __unknown_file (I*G;
@@ -489,7 +489,7 @@ model_info*-
 configd
 b
 
-Ã Ã(A
+¢ ¢(C
 %15"__id*G
 
 __unknown_file (+*)
@@ -498,7 +498,7 @@ b
 consecutive_failures_thresholdè
 å
 
-À Ã(A
+° ¢(C
 %16"	__compare*"
 
 __unknown_file (
@@ -517,9 +517,9 @@ b
 10
 11*È
 12
-¡* ¡(IÑÅ
+ö* ö(IÑÅ
 
-¡* ¡(A
+ö* ö(A
 %17"__mapGet*-
 
 __unknown_file (
@@ -530,7 +530,7 @@ b
 
 models2__getitem__A?
 
-¡* ¡(I
+ö* ö(I
 %18*#
 
 __unknown_file (

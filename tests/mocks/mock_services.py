@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Mock services for testing compliance and reporting nodes.
 Provides mock implementations of external dependencies.
 """
@@ -20,7 +22,7 @@ class MockNeo4jSession:
     async def run(self, query: str, **params):
         """Mock run method that returns predefined data."""
         self.queries_executed.append(
-            {"query": query, "params": params, "timestamp": datetime.now().isoformat()}
+            {"query": query, "params": params, "timestamp": datetime.now().isoformat()},
         )
 
         # Return mock result based on query type
@@ -113,7 +115,7 @@ class MockEmailService:
                 "body": body,
                 "attachment": attachment_path,
                 "sent_at": datetime.now().isoformat(),
-            }
+            },
         )
 
         return True
@@ -188,7 +190,7 @@ class MockRegulatoryAPI:
                         "description": "Maintain updated privacy policy",
                         "category": "transparency",
                     },
-                ]
+                ],
             },
             "SOC2": {
                 "obligations": [
@@ -204,7 +206,7 @@ class MockRegulatoryAPI:
                         "description": "Document change management process",
                         "category": "availability",
                     },
-                ]
+                ],
             },
         }
 
@@ -227,7 +229,7 @@ class MockRegulatoryAPI:
             "total_obligations": len(obligations),
             "satisfied_obligations": satisfied,
             "compliance_score": (
-                (satisfied / len(obligations) * 100) if obligations else 100
+                (satisfied / len(obligations) * 100) if obligations else 100,
             ),
             "timestamp": datetime.now().isoformat(),
         }
@@ -252,9 +254,9 @@ class MockRAGService:
                 "metadata": {
                     "source": "SOX Compliance",
                     "category": "retention",
-                    "relevance_score": 0.88,
+                    "relevance_score": 0.88
                 },
-            },
+            }
         ]
 
     async def search(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
@@ -315,7 +317,7 @@ def get_mock_compliance_state() -> Dict[str, Any]:
             {
                 "content": "The company must implement data protection requirements.",
                 "metadata": {"source": "GDPR Article 32", "category": "security"},
-            }
+            },
         ],
         "compliance_data": {
             "check_results": {

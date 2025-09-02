@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Enhanced state management for LangGraph with proper TypedDict and Annotated reducers.
 
 Phase 1 Implementation: Proper state management with reducers for aggregating data.
@@ -11,7 +13,7 @@ This module provides enhanced state definitions with custom reducers for:
 
 from typing import Dict, List, Optional, Any, TypedDict, Annotated, Union
 from uuid import UUID
-from datetime import datetime
+from datetime import datetime, timezone
 from dataclasses import dataclass, field
 from enum import Enum
 
@@ -44,13 +46,13 @@ def merge_tool_outputs(existing: Dict[str, Any], new: Dict[str, Any]) -> Dict[st
                 merged[history_key].append(
                     {
                         "value": merged[key],
-                        "timestamp": datetime.utcnow().isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                     }
                 )
 
         # Update with new value
         merged[key] = value
-        merged[f"{key}_timestamp"] = datetime.utcnow().isoformat()
+        merged[f"{key}_timestamp"] = datetime.now(timezone.utc).isoformat()
 
     return merged
 
@@ -133,7 +135,7 @@ def merge_compliance_data(
             # Default merge
             merged[key] = value
 
-    merged["last_updated"] = datetime.utcnow().isoformat()
+    merged["last_updated"] = datetime.now(timezone.utc).isoformat()
     return merged
 
 
@@ -168,7 +170,7 @@ def update_metadata(existing: Dict[str, Any], new: Dict[str, Any]) -> Dict[str, 
     if "change_history" not in merged:
         merged["change_history"] = []
 
-    change_record = {"timestamp": datetime.utcnow().isoformat(), "changes": {}}
+    change_record = {"timestamp": datetime.now(timezone.utc).isoformat(), "changes": {}}
 
     for key, value in new.items():
         if key in merged and merged[key] != value:
@@ -178,7 +180,7 @@ def update_metadata(existing: Dict[str, Any], new: Dict[str, Any]) -> Dict[str, 
     if change_record["changes"]:
         merged["change_history"].append(change_record)
 
-    merged["last_updated"] = datetime.utcnow().isoformat()
+    merged["last_updated"] = datetime.now(timezone.utc).isoformat()
     merged["update_count"] = merged.get("update_count", 0) + 1
 
     return merged
@@ -309,7 +311,7 @@ def create_enhanced_initial_state(
     Returns:
         Enhanced initial state with all fields properly initialized
     """
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
 
     return EnhancedComplianceState(
         # Conversation
@@ -449,7 +451,7 @@ class StateTransition:
         # Update workflow status
         if to_node == "END":
             state["workflow_status"] = WorkflowStatus.COMPLETED
-            state["end_time"] = datetime.utcnow()
+            state["end_time"] = datetime.now(timezone.utc)
         elif state["workflow_status"] == WorkflowStatus.PENDING:
             state["workflow_status"] = WorkflowStatus.IN_PROGRESS
 

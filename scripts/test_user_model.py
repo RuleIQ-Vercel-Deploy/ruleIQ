@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Simple test to check User model database connection"""
 
+from __future__ import annotations
+
+from typing import Any, Dict, List, Optional
 import os
 import sys
 
@@ -15,7 +18,7 @@ load_dotenv(".env.local", override=True)
 os.environ["TESTING"] = "true"
 
 
-def test_user_model_simple():
+def test_user_model_simple() -> Any:
     try:
         from database.db_setup import get_db_session
         from database.user import User
@@ -32,8 +35,8 @@ def test_user_model_simple():
         # Check database schema directly
         result = db.execute(
             text(
-                "SELECT column_name FROM information_schema.columns WHERE table_name = 'users' ORDER BY ordinal_position"
-            )
+                "SELECT column_name FROM information_schema.columns WHERE table_name = 'users' ORDER BY ordinal_position",
+            ),
         )
         columns = [row[0] for row in result]
         print(f"✅ Database columns: {columns}")

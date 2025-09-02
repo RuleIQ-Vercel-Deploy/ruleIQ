@@ -1,44 +1,0 @@
-
-Jtests.test_rbac_system.TestRBACMiddleware.test_is_authenticated_only_routeA
-5/home/omar/Documents/ruleIQ/tests/test_rbac_system.py« «(("2*Þ
-2
-¬ ¬(6•’
-
-­ ­(N
-%1*/
-
-__unknown_file (
-
-rbac_middleware*/
-
-__unknown_file (
-/api/v1/auth/me2_is_authenticated_only_route™–
-
-¯ ¯(O
-%2*/
-
-__unknown_file (
-
-rbac_middleware*3
-
-__unknown_file (
-/api/v1/auth/logout2_is_authenticated_only_route“
-
-± ±(L
-%3*/
-
-__unknown_file (
-
-rbac_middleware*-
-
-__unknown_file (
-/api/v1/users2_is_authenticated_only_route*
-3*;
-3
-test_rbac_system.py"
-³ ³(
-implicit return:
-
-«/ «(>
-rbac_middlewareB-+
-)tests.test_rbac_system.TestRBACMiddlewareH

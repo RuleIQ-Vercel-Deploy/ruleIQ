@@ -1,41 +1,0 @@
-
-"enforcement_body"str
-"penalties"str
-	"applicability"str
-"description"str
-"key_requirements"str
-"name"str
-"last_updated"strself ("ê$
-"
-  ((	"#new-object#Bdict%
-#
-! !("#get-field# name: 
-
-! !("	#map-set#:,
-*
-" "(+"#get-field# description: 
-
-" "(+"	#map-set#:.
-,
-# #(/
-"#get-field# applicability: 
-
-# #(/"	#map-set#:	
-1
-/
-$  $(5"#get-field# key_requirements: 
-
-$ $(5"	#map-set#:*
-(
-% %('"#get-field# penalties: 
-
-% %('"	#map-set#:1
-/
-&  &(5"#get-field# enforcement_body: 
-
-& &(5"	#map-set#:-
-+
-' '(-"#get-field# last_updated: 
-
-' '(-"	#map-set#:
-  ((	*;/home/omar/Documents/ruleIQ/services/ai/regulation_tools.py

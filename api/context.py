@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Context variables for sharing request-scoped data.
 """
 

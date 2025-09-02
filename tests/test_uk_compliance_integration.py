@@ -95,7 +95,7 @@ class TestUKComplianceManifest(unittest.TestCase):
         """Test obligations are properly indexed"""
         # Should have at least 108 obligations as per requirements
         self.assertGreaterEqual(
-            len(self.manifest.obligations), 108, "Should have at least 108 obligations"
+            len(self.manifest.obligations), 108, "Should have at least 108 obligations",
         )
 
         # Check obligation structure
@@ -122,7 +122,7 @@ class TestUKComplianceManifest(unittest.TestCase):
     def test_get_applicable_obligations(self):
         """Test filtering obligations by entity type"""
         controller_obligations = self.manifest.get_applicable_obligations(
-            "data_controllers"
+            "data_controllers",
         )
         self.assertGreater(len(controller_obligations), 0)
 
@@ -149,7 +149,7 @@ class TestUKComplianceManifest(unittest.TestCase):
                 m
                 for m in self.manifest.cross_mappings
                 if "UK_GDPR" in m["regulations"]
-                and "DATA_PROTECTION_ACT" in m["regulations"]
+                and "DATA_PROTECTION_ACT" in m["regulations"],
             ),
             None,
         )
@@ -174,7 +174,7 @@ class TestUKComplianceAssessmentEngine(unittest.IsolatedAsyncioTestCase):
     async def test_assess_compliance_basic(self):
         """Test basic compliance assessment"""
         result = await self.engine.assess_compliance(
-            self.test_organization, "UK_GDPR", "full"
+            self.test_organization, "UK_GDPR", "full",
         )
 
         self.assertIsNotNone(result)
@@ -220,7 +220,7 @@ class TestUKComplianceAssessmentEngine(unittest.IsolatedAsyncioTestCase):
         # Check prioritization (lower score = higher priority)
         if len(recommendations) > 1:
             self.assertLessEqual(
-                recommendations[0]["priority"], recommendations[-1]["priority"]
+                recommendations[0]["priority"], recommendations[-1]["priority"],
             )
 
     async def test_assessment_prompts_loaded(self):
@@ -246,7 +246,7 @@ class TestGraphRAGResearchEngine(unittest.IsolatedAsyncioTestCase):
 
         with patch("services.compliance.graphrag_research_engine.AsyncGraphDatabase"):
             self.engine = GraphRAGResearchEngine(
-                "bolt://localhost:7687", ("neo4j", "password"), self.mock_llm
+                "bolt://localhost:7687", ("neo4j", "password"), self.mock_llm,
             )
 
     async def test_research_query_creation(self):
@@ -279,11 +279,11 @@ class TestGraphRAGResearchEngine(unittest.IsolatedAsyncioTestCase):
                 [
                     Mock(
                         text=json.dumps(
-                            {"findings": ["Risk 1", "Risk 2"], "confidence": 0.85}
-                        )
-                    )
-                ]
-            ]
+                            {"findings": ["Risk 1", "Risk 2"], "confidence": 0.85},
+                        ),
+                    ),
+                ],
+            ],
         )
 
         result = await self.engine.conduct_research(query)
@@ -304,7 +304,7 @@ class TestGraphRAGResearchEngine(unittest.IsolatedAsyncioTestCase):
 
         # First call
         self.mock_llm.agenerate.return_value = AsyncMock(
-            generations=[[Mock(text=json.dumps({"findings": ["Control 1"]}))]]
+            generations=[[Mock(text=json.dumps({"findings": ["Control 1"]}))]],
         )
 
         result1 = await self.engine.conduct_research(query, use_cache=True)
@@ -335,7 +335,7 @@ class TestGraphRAGResearchEngine(unittest.IsolatedAsyncioTestCase):
         test_cases = [
             ({"evidence_sources": ["s1", "s2", "s3"]}, 0.8),  # High confidence
             ({"conflicts": ["c1", "c2"]}, 0.3),  # Low confidence
-            ({"consistency_score": 0.9}, 0.68),  # Medium-high confidence
+            ({"consistency_score": 0.9}, 0.68),  # Medium-high confidence,
         ]
 
         for synthesized, min_expected in test_cases:
@@ -422,7 +422,7 @@ class TestPerformance(unittest.TestCase):
 
         # Should load in under 2 seconds
         self.assertLess(
-            load_time, 2.0, f"Manifest load took {load_time:.2f}s, expected < 2s"
+            load_time, 2.0, f"Manifest load took {load_time:.2f}s, expected < 2s",
         )
 
     def test_large_obligation_search(self):
@@ -441,7 +441,7 @@ class TestPerformance(unittest.TestCase):
 
         # Should complete 100 searches in under 1 second
         self.assertLess(
-            search_time, 1.0, f"100 searches took {search_time:.2f}s, expected < 1s"
+            search_time, 1.0, f"100 searches took {search_time:.2f}s, expected < 1s",
         )
 
 
@@ -486,7 +486,7 @@ class TestSecurityAndValidation(unittest.TestCase):
             "../../../etc/passwd",
             None,
             "",
-            " " * 1000,  # Very long string
+            " " * 1000,  # Very long string,
         ]
 
         for dangerous_input in dangerous_inputs:

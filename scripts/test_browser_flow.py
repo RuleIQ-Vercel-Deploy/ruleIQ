@@ -10,7 +10,7 @@ def test_freemium_flow():
     with sync_playwright() as p:
         # Launch browser
         browser = p.chromium.launch(
-            headless=False
+            headless=False,
         )  # Set headless=False to see what's happening
         context = browser.new_context()
         page = context.new_page()

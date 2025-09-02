@@ -1,31 +1,21 @@
-#!/usr/bin/env python3
 """Fix the cache strategy test fixtures issue."""
-
+import logging
+logger = logging.getLogger(__name__)
+from __future__ import annotations
 import os
 import sys
-
-# Add project root to path
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
 
-def fix_cache_strategy_tests() -> None:
+def fix_cache_strategy_tests() ->None:
     """Fix fixture scope issues in cache strategy tests."""
-
-    test_file = os.path.join(
-        project_root, "tests/unit/services/test_cache_strategy_optimization.py"
-    )
-
-    print(f"Fixing {test_file}...")
-
-    with open(test_file, "r") as f:
+    test_file = os.path.join(project_root,
+        'tests/unit/services/test_cache_strategy_optimization.py')
+    logger.info('Fixing %s...' % test_file)
+    with open(test_file, 'r') as f:
         content = f.read()
-
-    # The issue is that fixtures are defined inside the test class
-    # In pytest, this requires using them differently or moving them outside
-
-    # Create a fixed version
-    fixed_content = '''"""
+    fixed_content = """""\"
 Unit Tests for Cache Strategy Optimization
 
 Tests the enhanced cache strategy features including:
@@ -33,7 +23,7 @@ Tests the enhanced cache strategy features including:
 - Cache warming queues
 - Intelligent invalidation
 - Cache strategy metrics
-"""
+""\"
 
 import pytest
 from unittest.mock import Mock, patch
@@ -50,7 +40,7 @@ from services.ai.cached_content import (
 # Move fixtures outside the class
 @pytest.fixture
 def optimized_cache_config():
-    """Cache configuration with optimization enabled."""
+    ""\"Cache configuration with optimization enabled.""\"
     return CacheLifecycleConfig(
         default_ttl_hours=2,
         max_ttl_hours=8,
@@ -66,13 +56,13 @@ def optimized_cache_config():
 
 @pytest.fixture
 def cache_manager(optimized_cache_config):
-    """Cache manager with optimization enabled."""
+    ""\"Cache manager with optimization enabled.""\"
     return GoogleCachedContentManager(optimized_cache_config)
 
 
 @pytest.fixture
 def sample_business_profile():
-    """Sample business profile for testing."""
+    ""\"Sample business profile for testing.""\"
     return {
         "id": str(uuid4()),
         "company_name": "Test Corp",
@@ -87,10 +77,10 @@ def sample_business_profile():
 @pytest.mark.unit
 @pytest.mark.ai
 class TestCacheStrategyOptimization:
-    """Test cache strategy optimization features."""
+    ""\"Test cache strategy optimization features.""\"
 
     def test_performance_based_ttl_optimization(self, cache_manager):
-        """Test performance-based TTL adjustment."""
+        ""\"Test performance-based TTL adjustment.""\"
         # Test fast responses
         cache_key_fast = "test_cache_key_fast"
         for _ in range(5):
@@ -110,7 +100,7 @@ class TestCacheStrategyOptimization:
         assert adjustment == -0.2  # Should decrease TTL for slow responses
 
     def test_cache_warming_queue_management(self, cache_manager, sample_business_profile):
-        """Test cache warming queue operations."""
+        ""\"Test cache warming queue operations.""\"
         # Add items to warming queue with different priorities
         cache_manager.add_to_warming_queue(
             CacheContentType.ASSESSMENT_CONTEXT,
@@ -137,7 +127,7 @@ class TestCacheStrategyOptimization:
         assert cache_manager.cache_warming_queue[2]["priority"] == 5
 
     def test_should_warm_cache_logic(self, cache_manager):
-        """Test cache warming decision logic."""
+        ""\"Test cache warming decision logic.""\"
         # High priority items should always be warmed
         high_priority_entry = {
             "content_type": CacheContentType.ASSESSMENT_CONTEXT,
@@ -163,7 +153,7 @@ class TestCacheStrategyOptimization:
     @pytest.mark.asyncio
     @patch("google.generativeai.caching.CachedContent.create")
     async def test_process_warming_queue(self, mock_create, cache_manager, sample_business_profile):
-        """Test processing of cache warming queue."""
+        ""\"Test processing of cache warming queue.""\"
         # Mock successful cache creation
         mock_cached_content = Mock()
         mock_cached_content.name = "test_warmed_cache"
@@ -187,7 +177,7 @@ class TestCacheStrategyOptimization:
         assert len(cache_manager.cache_warming_queue) == 0
 
     def test_intelligent_invalidation_triggers(self, cache_manager, sample_business_profile):
-        """Test intelligent cache invalidation triggers."""
+        ""\"Test intelligent cache invalidation triggers.""\"
         business_profile_id = sample_business_profile["id"]
 
         # Mock some cache entries
@@ -215,11 +205,11 @@ class TestCacheStrategyOptimization:
 
         # Verify invalidation trigger was recorded
         assert any(
-            "business_profile_update" in key for key in cache_manager.invalidation_triggers.keys()
+            "business_profile_update" in key for key in cache_manager.invalidation_triggers.keys(),
         )
 
     def test_framework_invalidation(self, cache_manager):
-        """Test framework-specific invalidation."""
+        ""\"Test framework-specific invalidation.""\"
         framework_id = "ISO27001"
 
         # Mock cache entries
@@ -240,7 +230,7 @@ class TestCacheStrategyOptimization:
         assert "cache_3" in keys_to_invalidate
 
     def test_cache_strategy_metrics_collection(self, cache_manager):
-        """Test collection of cache strategy metrics."""
+        ""\"Test collection of cache strategy metrics.""\"
         # Simulate performance history
         cache_manager.performance_history = {
             "cache_1": [
@@ -305,18 +295,18 @@ class TestCacheStrategyOptimization:
         assert invalidation_metrics["recent_triggers"] == 1  # Only one within last hour
 
     def test_cache_warming_queue_size_limit(self, cache_manager):
-        """Test cache warming queue size limitation."""
+        ""\"Test cache warming queue size limitation.""\"
         # Add more than 100 items to test size limit
         for i in range(110):
             cache_manager.add_to_warming_queue(
-                CacheContentType.FRAMEWORK_CONTEXT, {"framework_id": f"framework_{i}"}, priority=5
+                CacheContentType.FRAMEWORK_CONTEXT, {"framework_id": f"framework_{i}"}, priority=5,
             )
 
         # Verify queue is limited to 100 items
         assert len(cache_manager.cache_warming_queue) == 100
 
     def test_performance_history_limit(self, cache_manager):
-        """Test performance history size limitation."""
+        ""\"Test performance history size limitation.""\"
         cache_key = "test_cache_key"
 
         # Add more than 50 performance records
@@ -327,7 +317,7 @@ class TestCacheStrategyOptimization:
         assert len(cache_manager.performance_history[cache_key]) == 50
 
     def test_ttl_adjustment_calculation_edge_cases(self, cache_manager):
-        """Test TTL adjustment calculation edge cases."""
+        ""\"Test TTL adjustment calculation edge cases.""\"
         cache_key = "test_cache_key"
 
         # Test with insufficient history (less than 3 records)
@@ -345,10 +335,10 @@ class TestCacheStrategyOptimization:
         assert adjustment == 0.0  # Should not adjust for medium response times
 
     def test_disabled_optimization_features(self):
-        """Test behavior when optimization features are disabled."""
+        ""\"Test behavior when optimization features are disabled.""\"
         from services.ai.cached_content import GoogleCachedContentManager, CacheLifecycleConfig
         config = CacheLifecycleConfig(
-            performance_based_ttl=False, cache_warming_enabled=False, intelligent_invalidation=False
+            performance_based_ttl=False, cache_warming_enabled=False, intelligent_invalidation=False,
         )
         cache_manager = GoogleCachedContentManager(config)
 
@@ -358,13 +348,13 @@ class TestCacheStrategyOptimization:
 
         # Test warming queue (should be no-op)
         cache_manager.add_to_warming_queue(
-            CacheContentType.ASSESSMENT_CONTEXT, {"framework_id": "ISO27001"}, priority=1
+            CacheContentType.ASSESSMENT_CONTEXT, {"framework_id": "ISO27001"}, priority=1,
         )
         assert len(cache_manager.cache_warming_queue) == 0
 
         # Test invalidation (should be no-op)
         cache_manager.trigger_intelligent_invalidation(
-            "business_profile_update", {"business_profile_id": "test"}
+            "business_profile_update", {"business_profile_id": "test"},
         )
         assert len(cache_manager.invalidation_triggers) == 0
 
@@ -372,11 +362,11 @@ class TestCacheStrategyOptimization:
 @pytest.mark.integration
 @pytest.mark.ai
 class TestCacheStrategyIntegration:
-    """Integration tests for cache strategy optimization."""
+    ""\"Integration tests for cache strategy optimization.""\"
 
     @pytest.fixture
     def assistant_with_optimized_cache(self, async_db_session):
-        """AI assistant with optimized cache configuration."""
+        ""\"AI assistant with optimized cache configuration.""\"
         from services.ai.assistant import ComplianceAssistant
         from services.ai.cached_content import CacheLifecycleConfig
         from unittest.mock import Mock, AsyncMock
@@ -389,7 +379,7 @@ class TestCacheStrategyIntegration:
         config = CacheLifecycleConfig(
             performance_based_ttl=True,
             cache_warming_enabled=True,
-            intelligent_invalidation=True
+            intelligent_invalidation=True,
         )
 
         # Mock the cache-related methods
@@ -397,7 +387,7 @@ class TestCacheStrategyIntegration:
             "strategy_optimization": {
                 "performance_based_ttl": {"enabled": True, "total_adjustments": 0},
                 "cache_warming": {"enabled": True, "queue_size": 0},
-                "intelligent_invalidation": {"enabled": True, "recent_triggers": 0}
+                "intelligent_invalidation": {"enabled": True, "recent_triggers": 0},
             }
         })
 
@@ -411,7 +401,7 @@ class TestCacheStrategyIntegration:
     async def test_cache_strategy_metrics_endpoint_integration(
         self, assistant_with_optimized_cache
     ):
-        """Test integration of cache strategy metrics with assistant."""
+        ""\"Test integration of cache strategy metrics with assistant.""\"
         # Get cache strategy metrics
         metrics = await assistant_with_optimized_cache.get_cache_strategy_metrics()
 
@@ -425,7 +415,7 @@ class TestCacheStrategyIntegration:
 
     @pytest.mark.asyncio
     async def test_cache_warming_integration(self, assistant_with_optimized_cache):
-        """Test cache warming integration with assistant."""
+        ""\"Test cache warming integration with assistant.""\"
         context = {
             "framework_id": "ISO27001",
             "business_profile": {"id": str(uuid4()), "industry": "Technology"},
@@ -442,41 +432,32 @@ class TestCacheStrategyIntegration:
 
     @pytest.mark.asyncio
     async def test_cache_invalidation_integration(self, assistant_with_optimized_cache):
-        """Test cache invalidation integration with assistant."""
+        ""\"Test cache invalidation integration with assistant.""\"
         context = {"business_profile_id": str(uuid4()), "framework_id": "ISO27001"}
 
         # Trigger invalidation
         await assistant_with_optimized_cache.trigger_cache_invalidation(
-            "business_profile_update", context
+            "business_profile_update", context,
         )
 
         # Should not raise exceptions
         assert True
-'''
-
-    # Write the fixed content
-    with open(test_file, "w") as f:
+"""
+    with open(test_file, 'w') as f:
         f.write(fixed_content)
-
-    print("✓ Fixed fixture scope issues")
-
-    # Fix the cached_content test file similarly
-    cached_test_file = os.path.join(
-        project_root, "tests/unit/services/test_cached_content.py"
-    )
-    print(f"\nFixing {cached_test_file}...")
-
-    # Read and check if it has similar issues
-    with open(cached_test_file, "r") as f:
+    logger.info('✓ Fixed fixture scope issues')
+    cached_test_file = os.path.join(project_root,
+        'tests/unit/services/test_cached_content.py')
+    logger.info('\nFixing %s...' % cached_test_file)
+    with open(cached_test_file, 'r') as f:
         content = f.read()
-
-    if "@pytest.fixture" in content and "class Test" in content:
-        print("  This file also has fixtures inside test classes - fixing...")
-        # Would need similar fix
+    if '@pytest.fixture' in content and 'class Test' in content:
+        logger.info(
+            '  This file also has fixtures inside test classes - fixing...')
     else:
-        print("  This file appears to be OK")
+        logger.info('  This file appears to be OK')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     fix_cache_strategy_tests()
-    print("\nDone! Now run: python scripts/run_failing_tests.py")
+    logger.info('\nDone! Now run: python scripts/run_failing_tests.py')

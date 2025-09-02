@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Input validation utilities for secure API operations.
 Prevents injection attacks and unauthorized field modifications.
 """
@@ -37,7 +39,7 @@ class FieldValidator:
     # Common regex patterns
     EMAIL_PATTERN = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
     URL_PATTERN = re.compile(
-        r"^https?://(?:[-\w.])+(?:\:[0-9]+)?(?:/(?:[\w/_.])*(?:\?(?:[\w&=%.])*)?(?:\#(?:[\w.])*)?)?$"
+        r"^https?://(?:[-\w.])+(?:\:[0-9]+)?(?:/(?:[\w/_.])*(?:\?(?:[\w&=%.])*)?(?:\#(?:[\w.])*)?)?$",
     )
     UUID_PATTERN = re.compile(
         r"^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
@@ -74,11 +76,11 @@ class FieldValidator:
         # Check length
         if len(value) < min_length:
             raise ValidationError(
-                f"String must be at least {min_length} characters long"
+                f"String must be at least {min_length} characters long",
             )
         if len(value) > max_length:
             raise ValidationError(
-                f"String must be at most {max_length} characters long"
+                f"String must be at most {max_length} characters long",
             )
 
         # Check for potentially dangerous characters
@@ -462,7 +464,7 @@ class WhitelistValidator:
         """Validate a single field value."""
         if field_name not in self.field_definitions:
             raise ValidationError(
-                f"Field '{field_name}' is not allowed for updates on {self.model_name}"
+                f"Field '{field_name}' is not allowed for updates on {self.model_name}",
             )
 
         field_def = self.field_definitions[field_name]
@@ -507,7 +509,7 @@ class WhitelistValidator:
                 )
             elif field_type == FieldType.DICT:
                 return FieldValidator.validate_dict(
-                    value, max_keys=field_def.get("max_keys", 50)
+                    value, max_keys=field_def.get("max_keys", 50),
                 )
             else:
                 raise ValidationError(f"Unsupported field type: {field_type}")
@@ -549,7 +551,7 @@ class SecurityValidator:
         r"drop\s+table",  # SQL injection
         r"delete\s+from",  # SQL injection
         r"insert\s+into",  # SQL injection
-        r"update\s+.*\s+set",  # SQL injection
+        r"update\s+.*\s+set",  # SQL injection,
     ]
 
     @staticmethod
@@ -572,7 +574,7 @@ class SecurityValidator:
             if isinstance(val, str):
                 if SecurityValidator.scan_for_dangerous_patterns(val):
                     raise ValidationError(
-                        "Input contains potentially dangerous content"
+                        "Input contains potentially dangerous content",
                     )
             elif isinstance(val, dict):
                 for v in val.values():

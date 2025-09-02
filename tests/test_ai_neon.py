@@ -69,7 +69,7 @@ async def test_ai_functionality():
             if hasattr(response, "guidance"):
                 print(f"   Guidance preview: {response.guidance[:100]}...")
             print(
-                f"   Has citations: {'citations' in response.__dict__ if hasattr(response, '__dict__') else 'N/A'}\n"
+                f"   Has citations: {'citations' in response.__dict__ if hasattr(response, '__dict__') else 'N/A'}\n",
             )
         except Exception as e:
             print(f"❌ AI response generation failed: {e}\n")

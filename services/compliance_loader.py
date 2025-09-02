@@ -7,7 +7,7 @@ following the Agent Operating Protocol and test specifications.
 
 from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 import logging
 
 from database.compliance_framework import ComplianceFramework
@@ -69,7 +69,7 @@ class UKComplianceLoader:
                 existing = (
                     self.db_session.query(ComplianceFramework)
                     .filter(ComplianceFramework.name == framework_data.get("name"))
-                    .first()
+                    .first(),
                 )
 
                 if existing:
@@ -157,8 +157,8 @@ class UKComplianceLoader:
             # Metadata
             is_active=data.get("is_active", True),
             version=data.get("version", "1.0"),
-            created_at=datetime.utcnow(),
-            updated_at=datetime.utcnow(),
+            created_at=datetime.now(timezone.utc),
+            updated_at=datetime.now(timezone.utc),
         )
 
         return framework
@@ -176,7 +176,7 @@ class UKComplianceLoader:
                 ComplianceFramework.is_active,
                 ComplianceFramework.geographic_scop.contains(["UK"]),
             )
-            .all()
+            .all(),
         )
 
     def update_framework_version(
@@ -199,7 +199,7 @@ class UKComplianceLoader:
         framework = (
             self.db_session.query(ComplianceFramework)
             .filter(ComplianceFramework.name == framework_name)
-            .first()
+            .first(),
         )
 
         if not framework:
@@ -208,7 +208,7 @@ class UKComplianceLoader:
         framework.version = new_version
         if description_update:
             framework.description = f"{framework.description} {description_update}"
-        framework.updated_at = datetime.utcnow()
+        framework.updated_at = datetime.now(timezone.utc)
 
         self.db_session.commit()
         return framework
@@ -217,7 +217,7 @@ class UKComplianceLoader:
 class GeographicValidator:
     """Validator for geographic scope of frameworks"""
 
-    UK_REGIONS = {"UK", "England", "Scotland", "Wales", "Northern Ireland"}
+#     UK_REGIONS = {"UK", "England", "Scotland", "Wales", "Northern Ireland"}  # Unused variable
 
     def validate_uk_scope(self, geographic_scope: List[str]) -> bool:
         """
@@ -239,7 +239,7 @@ class GeographicValidator:
 class ISO27001UKMapper:
     """Mapper for ISO 27001 controls to UK regulatory requirements"""
 
-    ISO_TO_UK_GDPR_MAPPING = {
+#     ISO_TO_UK_GDPR_MAPPING = {  # Unused variable
         "A.5.1.1": {
             "uk_requirement": "Data Protection by Design and Default",
             "ico_guidance": "Implement appropriate technical and organisational measures",
@@ -274,7 +274,7 @@ class ISO27001UKMapper:
                     {
                         "uk_requirement": f"General Data Protection Requirement for {control}",
                         "ico_guidance": "Refer to ICO guidance for specific implementation",
-                    }
+                    },
                 )
 
         return mappings

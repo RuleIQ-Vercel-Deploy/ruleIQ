@@ -17,8 +17,7 @@ interface HealthCheckResult {
   checks: HealthCheck[];
   summary: HealthSummary;
   recommendations: string[];
-  alerts: Alert[];
-}
+  alerts: Alert[]}
 
 interface HealthCheck {
   name: string;
@@ -27,8 +26,7 @@ interface HealthCheck {
   duration: number;
   details: string;
   metrics?: Record<string, any>;
-  error?: string;
-}
+  error?: string}
 
 interface HealthSummary {
   totalChecks: number;
@@ -37,15 +35,13 @@ interface HealthSummary {
   failedChecks: number;
   skippedChecks: number;
   criticalIssues: string[];
-  improvements: string[];
-}
+  improvements: string[]}
 
 interface Alert {
   level: 'INFO' | 'WARNING' | 'CRITICAL';
   category: string;
   message: string;
-  action: string;
-}
+  action: string}
 
 class AvaHealthCheck {
   private readonly frontendPath = process.cwd();
@@ -54,13 +50,11 @@ class AvaHealthCheck {
 
   constructor() {
     // TODO: Replace with proper logging
-    this.ensureDirectories();
-  }
+    this.ensureDirectories()}
 
   private ensureDirectories(): void {
-    if (!existsSync(this.reportsPath)) {
-      require('fs').mkdirSync(this.reportsPath, { recursive: true });
-    }
+    if (!existsSync(this.reportsPath) {
+      require('fs').mkdirSync(this.reportsPath, { recursive: true })}
   }
 
   async runDailyHealthCheck(): Promise<HealthCheckResult> {
@@ -85,8 +79,7 @@ class AvaHealthCheck {
     await this.saveHealthReport(result);
     this.displayHealthReport(result);
 
-    return result;
-  }
+    return result}
 
   private async checkTestInfrastructure(): Promise<void> {
     // TODO: Replace with proper logging
@@ -113,27 +106,23 @@ class AvaHealthCheck {
       ];
 
       const missingConfigs = configFiles.filter(file => 
-        !existsSync(join(this.frontendPath, file))
+        !existsSync(join(this.frontendPath, file)
       );
 
       if (missingConfigs.length > 0) {
         check.status = 'WARN';
         check.score = 80;
-        check.details = `Missing config files: ${missingConfigs.join(', ')}`;
-      } else {
-        check.details = 'All test infrastructure components are healthy';
-      }
+        check.details = `Missing config files: ${missingConfigs.join(', ')}`} else {
+        check.details = 'All test infrastructure components are healthy'}
 
     } catch (error: unknown) {
       check.status = 'FAIL';
       check.score = 0;
       check.details = 'Test infrastructure is not working properly';
-      check.error = error.message;
-    }
+      check.error = error.message}
 
     check.duration = Date.now() - startTime;
-    this.healthChecks.push(check);
-  }
+    this.healthChecks.push(check)}
 
   private async checkCodeQuality(): Promise<void> {
     // TODO: Replace with proper logging
@@ -161,18 +150,13 @@ class AvaHealthCheck {
       if (lintErrors > 0 || typeErrors > 0) {
         check.status = 'FAIL';
         check.score = Math.max(0, 100 - lintErrors * 10 - typeErrors * 15);
-        check.details = `${lintErrors} lint errors, ${typeErrors} type errors`;
-      } else if (lintWarnings > 5) {
+        check.details = `${lintErrors} lint errors, ${typeErrors} type errors`} else if (lintWarnings > 5) {
         check.status = 'WARN';
         check.score = 85;
-        check.details = `${lintWarnings} lint warnings`;
-      } else {
-        check.details = 'Code quality is excellent';
-      }
+        check.details = `${lintWarnings} lint warnings`} else {
+        check.details = 'Code quality is excellent'}
 
-      check.metrics = { lintErrors, lintWarnings, typeErrors };
-
-    } catch (error: unknown) {
+      check.metrics = { lintErrors, lintWarnings, typeErrors }} catch (error: unknown) {
       // Parse errors from failed commands
       const output = error.stdout || error.message;
       const errors = (output.match(/error/gi) || []).length;
@@ -180,12 +164,10 @@ class AvaHealthCheck {
       check.status = errors > 10 ? 'FAIL' : 'WARN';
       check.score = Math.max(0, 100 - errors * 5);
       check.details = `Code quality issues detected: ${errors} errors`;
-      check.error = error.message;
-    }
+      check.error = error.message}
 
     check.duration = Date.now() - startTime;
-    this.healthChecks.push(check);
-  }
+    this.healthChecks.push(check)}
 
   private async checkTestCoverage(): Promise<void> {
     // TODO: Replace with proper logging
@@ -219,29 +201,22 @@ class AvaHealthCheck {
       
       if (avgCoverage >= 80) {
         check.score = Math.round(avgCoverage);
-        check.details = `Excellent coverage: ${avgCoverage.toFixed(1)}%`;
-      } else if (avgCoverage >= 70) {
+        check.details = `Excellent coverage: ${avgCoverage.toFixed(1)}%`} else if (avgCoverage >= 70) {
         check.status = 'WARN';
         check.score = Math.round(avgCoverage);
-        check.details = `Coverage below target: ${avgCoverage.toFixed(1)}%`;
-      } else {
+        check.details = `Coverage below target: ${avgCoverage.toFixed(1)}%`} else {
         check.status = 'FAIL';
         check.score = Math.round(avgCoverage);
-        check.details = `Low coverage: ${avgCoverage.toFixed(1)}%`;
-      }
+        check.details = `Low coverage: ${avgCoverage.toFixed(1)}%`}
 
-      check.metrics = { statements, branches, functions, lines, avgCoverage };
-
-    } catch (error: unknown) {
+      check.metrics = { statements, branches, functions, lines, avgCoverage }} catch (error: unknown) {
       check.status = 'FAIL';
       check.score = 0;
       check.details = 'Could not measure test coverage';
-      check.error = error.message;
-    }
+      check.error = error.message}
 
     check.duration = Date.now() - startTime;
-    this.healthChecks.push(check);
-  }
+    this.healthChecks.push(check)}
 
   private async checkPerformance(): Promise<void> {
     // TODO: Replace with proper logging
@@ -268,29 +243,22 @@ class AvaHealthCheck {
 
       if (score >= 90) {
         check.score = score;
-        check.details = `Excellent performance: ${score}/100`;
-      } else if (score >= 80) {
+        check.details = `Excellent performance: ${score}/100`} else if (score >= 80) {
         check.status = 'WARN';
         check.score = score;
-        check.details = `Good performance: ${score}/100`;
-      } else {
+        check.details = `Good performance: ${score}/100`} else {
         check.status = 'FAIL';
         check.score = score;
-        check.details = `Poor performance: ${score}/100`;
-      }
+        check.details = `Poor performance: ${score}/100`}
 
-      check.metrics = { performanceScore: score };
-
-    } catch (error: unknown) {
+      check.metrics = { performanceScore: score }} catch (error: unknown) {
       check.status = 'SKIP';
       check.score = 0;
       check.details = 'Performance check skipped (server not running)';
-      check.error = error.message;
-    }
+      check.error = error.message}
 
     check.duration = Date.now() - startTime;
-    this.healthChecks.push(check);
-  }
+    this.healthChecks.push(check)}
 
   private async checkAccessibility(): Promise<void> {
     // TODO: Replace with proper logging
@@ -316,29 +284,22 @@ class AvaHealthCheck {
       const violations = violationMatch ? parseInt(violationMatch[1]) : 0;
 
       if (violations === 0) {
-        check.details = 'No accessibility violations found';
-      } else if (violations <= 3) {
+        check.details = 'No accessibility violations found'} else if (violations <= 3) {
         check.status = 'WARN';
         check.score = Math.max(70, 100 - violations * 10);
-        check.details = `${violations} accessibility violations`;
-      } else {
+        check.details = `${violations} accessibility violations`} else {
         check.status = 'FAIL';
         check.score = Math.max(0, 100 - violations * 15);
-        check.details = `${violations} accessibility violations`;
-      }
+        check.details = `${violations} accessibility violations`}
 
-      check.metrics = { violations };
-
-    } catch (error: unknown) {
+      check.metrics = { violations }} catch (error: unknown) {
       check.status = 'SKIP';
       check.score = 0;
       check.details = 'Accessibility check skipped';
-      check.error = error.message;
-    }
+      check.error = error.message}
 
     check.duration = Date.now() - startTime;
-    this.healthChecks.push(check);
-  }
+    this.healthChecks.push(check)}
 
   private async checkSecurity(): Promise<void> {
     // TODO: Replace with proper logging
@@ -359,12 +320,10 @@ class AvaHealthCheck {
         cwd: this.frontendPath 
       });
 
-      check.details = 'No security vulnerabilities found';
-
-    } catch (error: unknown) {
+      check.details = 'No security vulnerabilities found'} catch (error: unknown) {
       const output = error.stdout || error.message;
       
-      if (output.includes('vulnerabilities')) {
+      if (output.includes('vulnerabilities') {
         const vulnMatch = output.match(/(\d+) vulnerabilities/);
         const vulnerabilities = vulnMatch ? parseInt(vulnMatch[1]) : 0;
         
@@ -372,16 +331,13 @@ class AvaHealthCheck {
           check.status = vulnerabilities > 5 ? 'FAIL' : 'WARN';
           check.score = Math.max(0, 100 - vulnerabilities * 10);
           check.details = `${vulnerabilities} security vulnerabilities`;
-          check.metrics = { vulnerabilities };
-        }
+          check.metrics = { vulnerabilities }}
       } else {
-        check.details = 'Security audit completed successfully';
-      }
+        check.details = 'Security audit completed successfully'}
     }
 
     check.duration = Date.now() - startTime;
-    this.healthChecks.push(check);
-  }
+    this.healthChecks.push(check)}
 
   private async checkDependencies(): Promise<void> {
     // TODO: Replace with proper logging
@@ -405,35 +361,27 @@ class AvaHealthCheck {
       const outdatedCount = (outdatedOutput.match(/\n/g) || []).length - 1; // Subtract header
 
       if (outdatedCount === 0) {
-        check.details = 'All dependencies are up to date';
-      } else if (outdatedCount <= 5) {
+        check.details = 'All dependencies are up to date'} else if (outdatedCount <= 5) {
         check.status = 'WARN';
         check.score = 85;
-        check.details = `${outdatedCount} outdated dependencies`;
-      } else {
+        check.details = `${outdatedCount} outdated dependencies`} else {
         check.status = 'WARN';
         check.score = 70;
-        check.details = `${outdatedCount} outdated dependencies`;
-      }
+        check.details = `${outdatedCount} outdated dependencies`}
 
-      check.metrics = { outdatedCount };
-
-    } catch (error: unknown) {
+      check.metrics = { outdatedCount }} catch (error: unknown) {
       // pnpm outdated exits with code 1 when there are outdated packages
       if (error.code === 1 && error.stdout) {
         const outdatedCount = (error.stdout.match(/\n/g) || []).length - 1;
         check.status = 'WARN';
         check.score = 85;
         check.details = `${outdatedCount} outdated dependencies`;
-        check.metrics = { outdatedCount };
-      } else {
-        check.details = 'Dependencies check completed';
-      }
+        check.metrics = { outdatedCount }} else {
+        check.details = 'Dependencies check completed'}
     }
 
     check.duration = Date.now() - startTime;
-    this.healthChecks.push(check);
-  }
+    this.healthChecks.push(check)}
 
   private async checkBuildHealth(): Promise<void> {
     // TODO: Replace with proper logging
@@ -454,29 +402,24 @@ class AvaHealthCheck {
         cwd: this.frontendPath 
       });
 
-      if (buildOutput.includes('error') || buildOutput.includes('Error')) {
+      if (buildOutput.includes('error') || buildOutput.includes('Error') {
         check.status = 'FAIL';
         check.score = 0;
-        check.details = 'Build contains errors';
-      } else if (buildOutput.includes('warning') || buildOutput.includes('Warning')) {
+        check.details = 'Build contains errors'} else if (buildOutput.includes('warning') || buildOutput.includes('Warning') {
         const warnings = (buildOutput.match(/warning/gi) || []).length;
         check.status = 'WARN';
         check.score = Math.max(70, 100 - warnings * 5);
-        check.details = `Build completed with ${warnings} warnings`;
-      } else {
-        check.details = 'Build completed successfully';
-      }
+        check.details = `Build completed with ${warnings} warnings`} else {
+        check.details = 'Build completed successfully'}
 
     } catch (error: unknown) {
       check.status = 'FAIL';
       check.score = 0;
       check.details = 'Build failed';
-      check.error = error.message;
-    }
+      check.error = error.message}
 
     check.duration = Date.now() - startTime;
-    this.healthChecks.push(check);
-  }
+    this.healthChecks.push(check)}
 
   private async checkFlakyTests(): Promise<void> {
     // TODO: Replace with proper logging
@@ -494,37 +437,30 @@ class AvaHealthCheck {
       // Check flaky test database
       const flakyDataPath = join(this.frontendPath, 'test-results', 'flaky-tests.json');
       
-      if (existsSync(flakyDataPath)) {
-        const flakyData = JSON.parse(require('fs').readFileSync(flakyDataPath, 'utf8'));
+      if (existsSync(flakyDataPath) {
+        const flakyData = JSON.parse(require('fs').readFileSync(flakyDataPath, 'utf8');
         const flakyCount = Object.keys(flakyData).length;
         
         if (flakyCount === 0) {
-          check.details = 'No flaky tests detected';
-        } else if (flakyCount <= 3) {
+          check.details = 'No flaky tests detected'} else if (flakyCount <= 3) {
           check.status = 'WARN';
           check.score = 80;
-          check.details = `${flakyCount} flaky tests detected`;
-        } else {
+          check.details = `${flakyCount} flaky tests detected`} else {
           check.status = 'FAIL';
           check.score = Math.max(50, 100 - flakyCount * 10);
-          check.details = `${flakyCount} flaky tests detected`;
-        }
+          check.details = `${flakyCount} flaky tests detected`}
 
-        check.metrics = { flakyCount };
-      } else {
-        check.details = 'No flaky test data available';
-      }
+        check.metrics = { flakyCount }} else {
+        check.details = 'No flaky test data available'}
 
     } catch (error: unknown) {
       check.status = 'SKIP';
       check.score = 0;
       check.details = 'Could not check flaky tests';
-      check.error = error.message;
-    }
+      check.error = error.message}
 
     check.duration = Date.now() - startTime;
-    this.healthChecks.push(check);
-  }
+    this.healthChecks.push(check)}
 
   private generateHealthReport(totalDuration: number): HealthCheckResult {
     const passedChecks = this.healthChecks.filter(c => c.status === 'PASS').length;
@@ -569,8 +505,7 @@ class AvaHealthCheck {
       },
       recommendations,
       alerts
-    };
-  }
+    }}
 
   private generateAlerts(): Alert[] {
     const alerts: Alert[] = [];
@@ -582,8 +517,7 @@ class AvaHealthCheck {
         category: check.name,
         message: check.details,
         action: `Fix ${check.name.toLowerCase()} issues immediately`
-      });
-    });
+      })});
 
     const warningChecks = this.healthChecks.filter(c => c.status === 'WARN');
     warningChecks.forEach(check => {
@@ -592,40 +526,33 @@ class AvaHealthCheck {
         category: check.name,
         message: check.details,
         action: `Address ${check.name.toLowerCase()} warnings`
-      });
-    });
+      })});
 
-    return alerts;
-  }
+    return alerts}
 
   private generateRecommendations(): string[] {
     const recommendations: string[] = [];
 
     const coverageCheck = this.healthChecks.find(c => c.name === 'Test Coverage');
     if (coverageCheck && coverageCheck.score < 80) {
-      recommendations.push('📊 Increase test coverage by adding unit tests for uncovered components');
-    }
+      recommendations.push('📊 Increase test coverage by adding unit tests for uncovered components')}
 
     const performanceCheck = this.healthChecks.find(c => c.name === 'Performance');
     if (performanceCheck && performanceCheck.score < 90) {
-      recommendations.push('⚡ Optimize performance by reducing bundle size and improving Core Web Vitals');
-    }
+      recommendations.push('⚡ Optimize performance by reducing bundle size and improving Core Web Vitals')}
 
     const flakyCheck = this.healthChecks.find(c => c.name === 'Test Stability');
     if (flakyCheck && flakyCheck.metrics?.flakyCount > 0) {
-      recommendations.push('🔧 Fix flaky tests to improve CI/CD reliability');
-    }
+      recommendations.push('🔧 Fix flaky tests to improve CI/CD reliability')}
 
     if (recommendations.length === 0) {
-      recommendations.push('✅ All systems are healthy! Keep up the great work!');
-    }
+      recommendations.push('✅ All systems are healthy! Keep up the great work!')}
 
-    return recommendations;
-  }
+    return recommendations}
 
   private async saveHealthReport(result: HealthCheckResult): Promise<void> {
     const reportPath = join(this.reportsPath, `health-check-${Date.now()}.json`);
-    writeFileSync(reportPath, JSON.stringify(result, null, 2));
+    writeFileSync(reportPath, JSON.stringify(result, null, 2);
     // TODO: Replace with proper logging
   }
 
@@ -666,8 +593,7 @@ class AvaHealthCheck {
                    check.status === 'WARN' ? '⚠️' : 
                    check.status === 'FAIL' ? '❌' : '⏭️';
     // TODO: Replace with proper logging
-    });
-  }
+    })}
 }
 
 // CLI execution
@@ -679,19 +605,16 @@ async function main() {
     
     if (result.overallStatus === 'FAILING') {
     // TODO: Replace with proper logging
-      process.exit(1);
-    }
+      process.exit(1)}
     // TODO: Replace with proper logging
   } catch {
     // Development logging - consider proper logger
 
     console.error('❌ Health check failed:', _error);
-    process.exit(1);
-  }
+    process.exit(1)}
 }
 
 if (require.main === module) {
-  main();
-}
+  main()}
 
 export { AvaHealthCheck };

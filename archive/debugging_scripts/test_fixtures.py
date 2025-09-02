@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Test if fixtures work."""
 
+from __future__ import annotations
+
 import pytest
 
 

@@ -1,8 +1,10 @@
 """
+from __future__ import annotations
+
 Asynchronous service for managing business profiles and assessments.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from sqlalchemy import select
@@ -28,7 +30,7 @@ async def create_or_update_business_profile(
             for key, value in profile_data.items():
                 if hasattr(existing_profile, key):
                     setattr(existing_profile, key, value)
-            existing_profile.updated_at = datetime.utcnow()
+            existing_profile.updated_at = datetime.now(timezone.utc)
             profile = existing_profile
         else:
             # Create new profile
@@ -66,7 +68,7 @@ async def update_assessment_status(
     try:
         profile.assessment_completed = assessment_completed
         profile.assessment_data = assessment_data
-        profile.updated_at = datetime.utcnow()
+        profile.updated_at = datetime.now(timezone.utc)
 
         await db.commit()
         await db.refresh(profile)

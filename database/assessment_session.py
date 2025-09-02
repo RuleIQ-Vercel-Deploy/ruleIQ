@@ -17,7 +17,7 @@ class AssessmentSession(Base):
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     business_profile_id = Column(
-        PG_UUID(as_uuid=True), ForeignKey("business_profiles.id"), nullable=True
+        PG_UUID(as_uuid=True), ForeignKey("business_profiles.id"), nullable=True,
     )
 
     # Session metadata
@@ -54,5 +54,5 @@ class AssessmentSession(Base):
 
     # Relationships
     questions = relationship(
-        "AssessmentQuestion", back_populates="session", cascade="all, delete-orphan"
+        "AssessmentQuestion", back_populates="session", cascade="all, delete-orphan",
     )

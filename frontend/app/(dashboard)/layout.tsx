@@ -11,7 +11,7 @@ import { ChatWidget } from '@/components/chat/chat-widget';
 import { useAuthStore } from '@/lib/stores/auth.store';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
+  const _router = useRouter();
   const { isAuthenticated, isLoading, checkAuthStatus } = useAuthStore();
 
   useEffect(() => {

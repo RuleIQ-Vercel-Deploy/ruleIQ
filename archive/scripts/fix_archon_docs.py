@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
+
 Fix Archon documents by updating the project's docs field
 """
 
@@ -28,14 +32,14 @@ with open("/home/omar/Documents/ruleIQ/archon_project_full.json", "w") as f:
     }
     json.dump(project_data, f, indent=2)
 
-print("To fix the documents issue:")
+logger.info("To fix the documents issue:")
 print(
     "1. The documents are stored in the project's 'docs' field, not as separate records"
 )
-print("2. We need to update the project record with the full docs array")
+logger.info("2. We need to update the project record with the full docs array")
 print(
     "3. The Archon MCP server already has this data - we just need to sync it to Supabase"
 )
-print()
-print("The issue is that Archon stores documents differently than expected.")
-print("Documents are embedded in the project record, not stored separately.")
+logger.info()
+logger.info("The issue is that Archon stores documents differently than expected.")
+logger.info("Documents are embedded in the project record, not stored separately.")

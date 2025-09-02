@@ -25,7 +25,7 @@ import { ChatMessage } from './chat-message';
 import { TypingIndicator } from './typing-indicator';
 import { useChatStore } from '@/lib/stores/chat.store';
 import { useVoiceStore } from '@/lib/stores/voice.store';
-import type { VoiceState, VoiceCapabilities } from '@/types/voice';
+import type { } from '@/types/voice';
 
 interface ChatWidgetProps {
   position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
@@ -82,7 +82,7 @@ export function ChatWidget({
     startVoiceCall,
     endVoiceCall,
     toggleMute,
-    speakResponse,
+    speakResponse: _speakResponse,
     voiceCapabilities,
   } = useVoiceStore();
 

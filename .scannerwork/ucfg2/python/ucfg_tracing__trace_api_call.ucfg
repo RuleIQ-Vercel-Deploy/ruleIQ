@@ -1,14 +1,11 @@
 
-*config.tracing.CustomTracer.trace_api_call9
--/home/omar/Documents/ruleIQ/config/tracing.pyò ò("2*“
-2
-ô ô(&
-
-ö û(	
-%6"dictò
-ï
-
-õ õ(!
+*config.tracing.CustomTracer.trace_api_call7
+-/home/omar/Documents/ruleIQ/config/tracing.pyn n("2*∆
+2p p(&
+q r()
+%6"dictñ
+ì
+q q(+
 %7"__mapSet*"
 
 __unknown_file (
@@ -21,10 +18,9 @@
 __unknown_file (
 
 
-methodô
-ñ
-
-ú ú("
+methodó
+î
+q- q(C
 %8"__mapSet*"
 
 __unknown_file (
@@ -38,10 +34,9 @@ http.route*(
 __unknown_file (
 
 
-endpointù
-ö
-
-ù ù((
+endpointõ
+ò
+r r((
 %9"__mapSet*"
 
 __unknown_file (
@@ -53,10 +48,9 @@ http.route*(
 
 __unknown_file (
 
-ruleiq-apiF
-D
-
-ö û(	
+ruleiq-apiD
+B
+q r()
 
 attributes"__id*"
 
@@ -64,47 +58,39 @@ attributes"__id*"
 
 %6*
 4
-5*‡
-4
-£ •(	i
-g
-
-§ §("
-%1"__concat*
-
-§ §(
+5*Œ
+4u v(3a
+_
+u u(5
+%1"__concat*
+u" u((
 
 
-method*
-
-§ §(
- *
-
-§ §( 
+method*
+u) u(*
+ *
+u+ u(3
 
 
-endpointO
-M
-
-§@ §(N
+endpointM
+K
+v v(+
 %2"__id*3
 
 __unknown_file (*
 
 trace"
 
-SpanKindJ
-H
-
-§@ §(U
+SpanKindH
+F
+v v(2
 %3"__id*.
 
 __unknown_file (*
 
 %2"
-SERVER∞≠
-
-£ •(	
+SERVERÆ´
+u v(3
 %4*;
 
 __unknown_file (
@@ -121,15 +107,12 @@ attributes
 attributes:
 kind
 
-%3"
-
-£ •(	
+%3"
+u v(3
 
-%4*…
-5
-° °(+≤Ø
-
-° °(+
+%4*≈
+5t t(+∞≠
+t t(+
 %5"dict.__setitem__**
 
 __unknown_file (
@@ -143,15 +126,12 @@ attributes*'
 __unknown_file (
 	
 user_id2__setitem__*
-4:
+4:
+n n(*
 
-ò ò(*
-
-endpoint:
-
-ò, ò(7
-method:
-
-ò9 ò(V	
+endpoint:
+n, n(7
+method:
+n9 o(	
 user_idB
 config.tracing.CustomTracerH

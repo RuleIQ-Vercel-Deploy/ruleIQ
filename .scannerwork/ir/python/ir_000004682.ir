@@ -1,7 +1,0 @@
-
-TK"Based on {question_data['framework']}, {question_data['expected_answer']}"str
-JA"Generate a test response that might contain factual information"strself
-‡  ‡($question_data
-‡& ‡(9"
-
-‰ ‹(	*3/home/omar/Documents/ruleIQ/tests/test_ai_ethics.py

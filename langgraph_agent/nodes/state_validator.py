@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 State validator node for validating and preparing workflow state.
 """
 

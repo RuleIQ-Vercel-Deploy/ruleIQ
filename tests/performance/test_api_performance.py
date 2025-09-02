@@ -1,4 +1,8 @@
 """
+from __future__ import annotations
+import requests
+import json
+
 API Performance Tests using pytest-benchmark
 
 Benchmarks critical API endpoints for response time and throughput
@@ -72,7 +76,7 @@ class TestAPIPerformance:
             }
 
             response = client.post(
-                "/api/evidence", json=evidence_data, headers=authenticated_headers
+                "/api/evidence", json=evidence_data, headers=authenticated_headers,
             )
             assert response.status_code == 201
             return response.json()
@@ -155,7 +159,7 @@ class TestAPIPerformance:
             }
 
             response = client.post(
-                "/api/chat/send", json=chat_data, headers=authenticated_headers
+                "/api/chat/send", json=chat_data, headers=authenticated_headers,
             )
             assert response.status_code == 200
             return response.json()
@@ -320,7 +324,7 @@ class TestMemoryPerformance:
         # Test retrieving large dataset via API
         start_time = time.time()
         response = client.get(
-            "/api/evidence?page_size=50", headers=authenticated_headers
+            "/api/evidence?page_size=50", headers=authenticated_headers,
         )
         retrieval_time = time.time() - start_time
 
@@ -368,7 +372,7 @@ class TestMemoryPerformance:
                     "business_profile_id": str(
                         sample_business_profile.id
                     ),  # Required field
-                    "source": "manual_upload",  # Required field
+                    "source": "manual_upload",  # Required field,
                 }
 
                 try:
@@ -381,10 +385,10 @@ class TestMemoryPerformance:
 
                     # Retrieve user evidence
                     response = client.get(
-                        "/api/evidence", headers=authenticated_headers
+                        "/api/evidence", headers=authenticated_headers,
                     )
                     assert response.status_code == 200
-                except Exception:
+                except (json.JSONDecodeError, requests.RequestException):
                     # Skip failed requests in concurrent testing
                     pass
 
@@ -534,7 +538,7 @@ class TestEndToEndPerformance:
             }
 
             profile_response = client.post(
-                "/api/business-profiles", json=profile_data, headers=headers
+                "/api/business-profiles", json=profile_data, headers=headers,
             )
             assert profile_response.status_code == 201
             business_profile_id = profile_response.json()["id"]
@@ -546,7 +550,7 @@ class TestEndToEndPerformance:
             }
 
             assessment_response = client.post(
-                "/api/assessments", json=assessment_data, headers=headers
+                "/api/assessments", json=assessment_data, headers=headers,
             )
             # Accept both 200 (existing session) and 201 (new session)
             assert assessment_response.status_code in [200, 201]
@@ -567,7 +571,7 @@ class TestEndToEndPerformance:
                 )
 
             complete_response = client.post(
-                f"/api/assessments/{assessment_id}/complete", headers=headers
+                f"/api/assessments/{assessment_id}/complete", headers=headers,
             )
             assert complete_response.status_code == 200
 
@@ -662,7 +666,7 @@ class TestRealWorldScenarios:
 
         # Check evidence items
         response = client.get(
-            "/api/evidence?page=1&page_size=10", headers=authenticated_headers
+            "/api/evidence?page=1&page_size=10", headers=authenticated_headers,
         )
         assert response.status_code == 200
 
@@ -674,16 +678,16 @@ class TestRealWorldScenarios:
             "control_id": "DAILY-001",  # Required field
             "framework_id": str(sample_compliance_framework.id),  # Required field
             "business_profile_id": str(sample_business_profile.id),  # Required field
-            "source": "manual_upload",  # Required field
+            "source": "manual_upload",  # Required field,
         }
         response = client.post(
-            "/api/evidence", json=evidence_data, headers=authenticated_headers
+            "/api/evidence", json=evidence_data, headers=authenticated_headers,
         )
         assert response.status_code == 201
 
         # Search for evidence
         response = client.get(
-            "/api/evidence/search?q=workflow", headers=authenticated_headers
+            "/api/evidence/search?q=workflow", headers=authenticated_headers,
         )
         assert response.status_code == 200
 
@@ -724,7 +728,7 @@ class TestRealWorldScenarios:
 
             if login_response.status_code == 200:
                 headers = {
-                    "Authorization": f"Bearer {login_response.json()['access_token']}"
+                    "Authorization": f"Bearer {login_response.json()['access_token']}",
                 }
 
                 # Simulate user activity (reduced from 10 to 5 activities for better performance)
@@ -741,7 +745,7 @@ class TestRealWorldScenarios:
                                 "control_id": f"PEAK-{user_id}-{activity_num}",  # Required field
                                 "framework_id": shared_framework_id,  # Use shared framework
                                 "business_profile_id": shared_business_profile_id,  # Use shared business profile
-                                "source": "manual_upload",  # Required field
+                                "source": "manual_upload",  # Required field,
                             },
                             headers=headers,
                         ),

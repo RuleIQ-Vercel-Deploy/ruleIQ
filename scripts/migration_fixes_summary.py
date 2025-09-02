@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """
 Summary of Alembic Migration Fixes Applied
+import logging
+logger = logging.getLogger(__name__)
+
 
 This script documents the fixes made to ensure Alembic migrations are idempotent
 and can be run safely multiple times.
@@ -44,9 +47,9 @@ Database State Management:
 - When tables are created outside migrations, use 'alembic stamp head'
 - This marks the database as being at the latest migration version
 - Prevents migration conflicts when tables already exist
-"""
+""",
 )
 
 if __name__ == "__main__":
-    print("\nAll migrations are now idempotent and can be run safely!")
-    print("Run 'alembic upgrade head' to apply any pending migrations.")
+    logger.info("\nAll migrations are now idempotent and can be run safely!")
+    logger.info("Run 'alembic upgrade head' to apply any pending migrations.")

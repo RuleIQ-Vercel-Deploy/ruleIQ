@@ -203,3 +203,10 @@ frontend/legacy/
 results.json
 postman/environment-doppler-synced.json
 postman/newman-environment-doppler.json
+
+# Test artifacts and configs
+test_artifacts/
+test_configs/docker-compose.test.yml
+*.coverage
+coverage.xml
+test-*.html

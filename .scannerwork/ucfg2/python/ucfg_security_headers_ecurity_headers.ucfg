@@ -1,11 +1,11 @@
 
 Fsecurity_headers.SecurityHeadersMiddleware._add_basic_security_headersF
-:/home/omar/Documents/ruleIQ/middleware/security_headers.pyÜ Ü(#"2*Ö
+:/home/omar/Documents/ruleIQ/middleware/security_headers.pyÑ Ñ(#"2*Ö
 2
-á á((Q
+Ö Ö((Q
 O
 
-â â(
+á á(
 %2"__id*5
 
 __unknown_file (*
@@ -14,7 +14,7 @@ O
 response"	
 headersπ∂
 
-â â(>
+á á(>
 %1"dict.__setitem__*"
 
 __unknown_file (
@@ -28,7 +28,7 @@ O
 nosniff2__setitem__Q
 O
 
-å å(
+ä ä(
 %4"__id*5
 
 __unknown_file (*
@@ -37,7 +37,7 @@ O
 response"	
 headersπ∂
 
-å å(>
+ä ä(>
 %3"dict.__setitem__*"
 
 __unknown_file (
@@ -51,7 +51,7 @@ O
 1; mode=block2__setitem__Q
 O
 
-è è(
+ç ç(
 %6"__id*5
 
 __unknown_file (*
@@ -60,7 +60,7 @@ O
 response"	
 headersØ¨
 
-è è(4
+ç ç(4
 %5"dict.__setitem__*"
 
 __unknown_file (
@@ -74,7 +74,7 @@ O
 DENY2__setitem__Q
 O
 
-í í(
+ê ê(
 %8"__id*5
 
 __unknown_file (*
@@ -83,7 +83,7 @@ O
 response"	
 headers «
 
-í í(O
+ê ê(O
 %7"dict.__setitem__*"
 
 __unknown_file (
@@ -97,7 +97,7 @@ O
 strict-origin-when-cross-origin2__setitem__R
 P
 
-ï ï(
+ì ì(
 %10"__id*5
 
 __unknown_file (*
@@ -106,7 +106,7 @@ P
 response"	
 headers‚ﬂ
 
-ï ó(	
+ì ï(	
 %9"dict.__setitem__*#
 
 __unknown_file (
@@ -120,7 +120,7 @@ P
 ,max-age=31536000; includeSubDomains; preload2__setitem__R
 P
 
-ö ö(
+ò ò(
 %12"__id*5
 
 __unknown_file (*
@@ -129,7 +129,7 @@ P
 response"	
 headersûõ
 
-ö ù(	
+ò õ(	
 %11"dict.__setitem__*#
 
 __unknown_file (
@@ -144,10 +144,10 @@ maccelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), mic
 3*;
 3
 security_headers.py"
-ü ü(
+ù ù(
 implicit return:
 
-Ü* Ü(<
+Ñ* Ñ(<
 
 responseB.,
 *security_headers.SecurityHeadersMiddlewareH

@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Test utilities router for cleaning up test data.
 Only enabled in development/testing environments.
 """
@@ -22,9 +24,7 @@ def is_test_environment() -> bool:
 
 
 @router.delete("/cleanup-test-users")
-async def cleanup_test_users(
-    email_pattern: str = "@example.com", db: Session = Depends(get_db)
-):
+async def cleanup_test_users(email_pattern: str = "@example.com", db: Session = Depends(get_db)):
     """
     Clean up test users from the database.
     Only works in test/development environments.
@@ -66,26 +66,14 @@ async def cleanup_test_users(
 
         for user in test_users:
             # Delete business-related data
-            db.query(BusinessProfile).filter(
-                BusinessProfile.user_id == user.id
-            ).delete()
-            db.query(AssessmentSession).filter(
-                AssessmentSession.user_id == user.id
-            ).delete()
-            db.query(GeneratedPolicy).filter(
-                GeneratedPolicy.user_id == user.id
-            ).delete()
-            db.query(ChatConversation).filter(
-                ChatConversation.user_id == user.id
-            ).delete()
+            db.query(BusinessProfile).filter(BusinessProfile.user_id == user.id).delete()
+            db.query(AssessmentSession).filter(AssessmentSession.user_id == user.id).delete()
+            db.query(GeneratedPolicy).filter(GeneratedPolicy.user_id == user.id).delete()
+            db.query(ChatConversation).filter(ChatConversation.user_id == user.id).delete()
             db.query(ReportSchedule).filter(ReportSchedule.user_id == user.id).delete()
             db.query(EvidenceItem).filter(EvidenceItem.user_id == user.id).delete()
-            db.query(ImplementationPlan).filter(
-                ImplementationPlan.user_id == user.id
-            ).delete()
-            db.query(ReadinessAssessment).filter(
-                ReadinessAssessment.user_id == user.id
-            ).delete()
+            db.query(ImplementationPlan).filter(ImplementationPlan.user_id == user.id).delete()
+            db.query(ReadinessAssessment).filter(ReadinessAssessment.user_id == user.id).delete()
 
             # Delete RBAC and audit data
             db.query(AuditLog).filter(AuditLog.user_id == user.id).delete()
@@ -140,9 +128,7 @@ async def create_test_user(
     from api.auth.security import get_password_hash
 
     hashed_password = get_password_hash(password)
-    db_user = User(
-        id=uuid4(), email=email, hashed_password=hashed_password, is_active=True
-    )
+    db_user = User(id=uuid4(), email=email, hashed_password=hashed_password, is_active=True)
     db.add(db_user)
     db.commit()
     db.refresh(db_user)

@@ -17,7 +17,7 @@ Integrates with:
 
 import uuid
 from uuid import UUID
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional, Any
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -55,7 +55,7 @@ class FreemiumAssessmentService:
         self.MIN_QUESTIONS_FOR_RESULTS = 5
         self.MAX_QUESTIONS_PER_SESSION = 12
         self.DEFAULT_QUESTION_TIME_LIMIT = 300  # 5 minutes per question
-        self.USE_LANGGRAPH_AGENT = True  # Feature flag for new conversational agent  # Feature flag for new conversational agent
+        self.USE_LANGGRAPH_AGENT = True  # Feature flag for new conversational agent  # Feature flag for new conversational agent  # noqa: E501
 
     @classmethod
     async def create(cls, db_session: AsyncSession):
@@ -100,8 +100,8 @@ class FreemiumAssessmentService:
             session_token = self._generate_session_token()
 
             # Set session expiration
-            expires_at = datetime.utcnow() + timedelta(
-                hours=self.SESSION_DURATION_HOURS
+            expires_at = datetime.now(timezone.utc) + timedelta(
+                hours=self.SESSION_DURATION_HOURS,
             )
 
             # Prepare personalization data with business context
@@ -110,7 +110,7 @@ class FreemiumAssessmentService:
                 {
                     "business_type": business_type,
                     "company_size": company_size,
-                }
+                },
             )
 
             # Create session record
@@ -152,7 +152,7 @@ class FreemiumAssessmentService:
                     import traceback
 
                     logger.error(
-                        f"LangGraph agent failed with error: {str(langgraph_error)}"
+                        f"LangGraph agent failed with error: {str(langgraph_error)}",
                     )
                     logger.error(f"Traceback: {traceback.format_exc()}")
                     logger.warning("Falling back to traditional approach")
@@ -174,13 +174,13 @@ class FreemiumAssessmentService:
                         "questions_generated": (
                             len(agent_state.get("questions_asked", []))
                             if "questions_asked" in agent_state
-                            else 0
+                            else 0,
                         ),
                         "total_questions_planned": agent_state.get(
-                            "total_questions_planned", self.MAX_QUESTIONS_PER_SESSION
+                            "total_questions_planned", self.MAX_QUESTIONS_PER_SESSION,
                         ),
                         "using_langgraph": True,
-                        "generation_timestamp": datetime.utcnow().isoformat(),
+                        "generation_timestamp": datetime.now(timezone.utc).isoformat(),
                     }
 
                     # Extract first question from agent messages
@@ -189,7 +189,7 @@ class FreemiumAssessmentService:
                         # Last message should be the introduction/first question
                         session.current_question_id = "agent_intro"
                         session.total_questions = agent_state.get(
-                            "total_questions_planned", self.MIN_QUESTIONS_FOR_RESULTS
+                            "total_questions_planned", self.MIN_QUESTIONS_FOR_RESULTS,
                         )
                 else:
                     use_langgraph = False
@@ -211,12 +211,12 @@ class FreemiumAssessmentService:
                     "total_questions_planned": self.MAX_QUESTIONS_PER_SESSION,
                     "personalization_applied": bool(personalization_data),
                     "using_langgraph": False,
-                    "generation_timestamp": datetime.utcnow().isoformat(),
+                    "generation_timestamp": datetime.now(timezone.utc).isoformat(),
                 }
 
                 session.user_answers = {}
                 session.current_question_id = (
-                    initial_questions[0]["question_id"] if initial_questions else None
+                    initial_questions[0]["question_id"] if initial_questions else None,
                 )
                 session.total_questions = len(initial_questions)
 
@@ -224,13 +224,14 @@ class FreemiumAssessmentService:
 
             await self.db.commit()
 
-            questions_count = (
-                session.ai_responses.get("questions_generated", 0)
-                if self.USE_LANGGRAPH_AGENT
-                else len(initial_questions if "initial_questions" in locals() else [])
-            )
+#             questions_count = (  # Unused variable
+#                 session.ai_responses.get("questions_generated", 0)
+#                 if self.USE_LANGGRAPH_AGENT
+#                 else len(initial_questions if "initial_questions" in locals() else [])
+#             )
             logger.info(
-                f"Session created successfully: {session.id} with LangGraph={'enabled' if self.USE_LANGGRAPH_AGENT else 'disabled'}"
+                f"Session created successfully: {session.id} with LangGraph "
+                f"{'enabled' if self.USE_LANGGRAPH_AGENT else 'disabled'}"
             )
             return session
 
@@ -263,8 +264,8 @@ class FreemiumAssessmentService:
         try:
             result = await self.db.execute(
                 select(FreemiumAssessmentSession).where(
-                    FreemiumAssessmentSession.id == session_id
-                )
+                    FreemiumAssessmentSession.id == session_id,
+                ),
             )
             session = result.scalar_one_or_none()
             if not session:
@@ -274,7 +275,7 @@ class FreemiumAssessmentService:
                 raise ValueError("Session has expired")
 
             logger.info(
-                f"Processing answer for session: {session_id}, question: {question_id}"
+                f"Processing answer for session: {session_id}, question: {question_id}",
             )
 
             # Check if using LangGraph agent
@@ -296,7 +297,7 @@ class FreemiumAssessmentService:
                     "answer": answer,
                     "confidence": answer_confidence,
                     "time_spent_seconds": time_spent_seconds,
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                 }
 
                 # Update progress - always increment as we've processed an answer
@@ -318,17 +319,20 @@ class FreemiumAssessmentService:
                 questions_answered = session.questions_answered
                 is_completion_phase = phase_value.lower() in ["completion", "completed"]
                 has_enough_answers = (
-                    questions_answered >= self.MIN_QUESTIONS_FOR_RESULTS
+                    questions_answered >= self.MIN_QUESTIONS_FOR_RESULTS,
                 )
 
                 completion_status = (
                     "completed"
                     if (is_completion_phase and has_enough_answers)
-                    else "in_progress"
+                    else "in_progress",
                 )
 
                 logger.info(
-                    f"Assessment status check: phase={phase_value}, answered={questions_answered}, min_required={self.MIN_QUESTIONS_FOR_RESULTS}, status={completion_status}"
+                    f"Assessment status check: phase={phase_value}, "
+                    f"answered={questions_answered}, "
+                    f"min_required={self.MIN_QUESTIONS_FOR_RESULTS}, "
+                    f"status={completion_status}"
                 )
                 next_question = None
 
@@ -344,7 +348,7 @@ class FreemiumAssessmentService:
                                     "question_text": msg.content,
                                     "question_type": "conversational",
                                     "category": agent_state.get(
-                                        "current_phase", "general"
+                                        "current_phase", "general",
                                     ),
                                 }
                                 break
@@ -353,16 +357,16 @@ class FreemiumAssessmentService:
                 session.ai_responses.update(
                     {
                         "current_phase": str(
-                            agent_state.get("current_phase", "unknown")
+                            agent_state.get("current_phase", "unknown"),
                         ),
                         "questions_answered": session.questions_answered,
                         "compliance_score": agent_state.get("compliance_score", 0),
                         "risk_level": agent_state.get("risk_level", "unknown"),
-                    }
+                    },
                 )
 
                 if completion_status == "completed":
-                    session.completed_at = datetime.utcnow()
+                    session.completed_at = datetime.now(timezone.utc)
 
             else:
                 # Traditional processing (non-LangGraph)
@@ -374,7 +378,7 @@ class FreemiumAssessmentService:
                     "answer": answer,
                     "confidence": answer_confidence,
                     "time_spent_seconds": time_spent_seconds,
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                 }
 
                 # Update progress
@@ -410,11 +414,11 @@ class FreemiumAssessmentService:
                         and session.questions_answered < self.MAX_QUESTIONS_PER_SESSION
                     ):
                         next_question = await self._generate_follow_up_question(
-                            session_id=session_id, previous_answers=session.user_answers
+                            session_id=session_id, previous_answers=session.user_answers,
                         )
                     else:
                         completion_status = "completed"
-                        session.completed_at = datetime.utcnow()
+                        session.completed_at = datetime.now(timezone.utc)
                 else:
                     # Generate next standard question
                     next_question = await self._get_next_question(
@@ -445,7 +449,7 @@ class FreemiumAssessmentService:
             # Add AI insights if available
             if answer_confidence == "high" and len(answer) > 50:
                 response["insights"] = await self._generate_answer_insights(
-                    question_id, answer
+                    question_id, answer,
                 )
 
             logger.info(f"Answer processed successfully for session: {session_id}")
@@ -469,8 +473,8 @@ class FreemiumAssessmentService:
         try:
             result = await self.db.execute(
                 select(FreemiumAssessmentSession).where(
-                    FreemiumAssessmentSession.id == session_id
-                )
+                    FreemiumAssessmentSession.id == session_id,
+                ),
             )
             session = result.scalar_one_or_none()
             if not session:
@@ -483,7 +487,7 @@ class FreemiumAssessmentService:
 
             # Get lead information for personalization
             result = await self.db.execute(
-                select(AssessmentLead).where(AssessmentLead.id == session.lead_id)
+                select(AssessmentLead).where(AssessmentLead.id == session.lead_id),
             )
             lead = result.scalar_one_or_none()
 
@@ -506,7 +510,7 @@ class FreemiumAssessmentService:
 
             # Calculate compliance score
             compliance_score = self._calculate_compliance_score(
-                session.user_answers, session.assessment_type
+                session.user_answers, session.assessment_type,
             )
 
             # Determine risk level
@@ -514,22 +518,22 @@ class FreemiumAssessmentService:
 
             # Generate personalized recommendations
             recommendations = await self._generate_recommendations(
-                assessment_context, ai_analysis, compliance_score
+                assessment_context, ai_analysis, compliance_score,
             )
 
             # Identify compliance gaps
             gaps_identified = self._identify_compliance_gaps(
-                session.user_answers, session.assessment_type, ai_analysis
+                session.user_answers, session.assessment_type, ai_analysis,
             )
 
             # Generate conversion opportunities
             conversion_opportunities = self._generate_conversion_opportunities(
-                compliance_score, risk_level, gaps_identified, lead
+                compliance_score, risk_level, gaps_identified, lead,
             )
 
             # Create results summary
             results_summary = await self._generate_results_summary(
-                compliance_score, risk_level, recommendations, gaps_identified
+                compliance_score, risk_level, recommendations, gaps_identified,
             )
 
             # Store results in session
@@ -547,7 +551,7 @@ class FreemiumAssessmentService:
                 "compliance_score": compliance_score,
                 "risk_level": risk_level,
                 "completed_at": (
-                    session.completed_at.isoformat() if session.completed_at else None
+                    session.completed_at.isoformat() if session.completed_at else None,
                 ),
                 "risk_assessment": ai_analysis,
                 "recommendations": recommendations,
@@ -559,7 +563,7 @@ class FreemiumAssessmentService:
                     "questions_answered": session.questions_answered,
                     "assessment_type": session.assessment_type,
                     "business_type": personalization.get("business_type"),
-                    "generation_timestamp": datetime.utcnow().isoformat(),
+                    "generation_timestamp": datetime.now(timezone.utc).isoformat(),
                 },
             }
 
@@ -596,7 +600,7 @@ class FreemiumAssessmentService:
 
             # Adjust for confidence level
             confidence_multiplier = {"high": 1.5, "medium": 1.0, "low": 0.8}.get(
-                confidence, 1.0
+                confidence, 1.0,
             )
 
             # Adjust for question complexity (look up in question bank if available)
@@ -607,7 +611,7 @@ class FreemiumAssessmentService:
                 # Try to parse as UUID
                 uuid.UUID(question_id)
                 result = await self.db.execute(
-                    select(AIQuestionBank).where(AIQuestionBank.id == question_id)
+                    select(AIQuestionBank).where(AIQuestionBank.id == question_id),
                 )
                 question = result.scalar_one_or_none()
                 if question:
@@ -618,13 +622,13 @@ class FreemiumAssessmentService:
             except (ValueError, TypeError):
                 # Not a UUID, skip database lookup for dynamic questions
                 logger.debug(
-                    f"Skipping question bank lookup for non-UUID question_id: {question_id}"
+                    f"Skipping question bank lookup for non-UUID question_id: {question_id}",
                 )
 
             final_score = int(base_score * confidence_multiplier)
 
             logger.debug(
-                f"Score impact calculated: {final_score} for question {question_id}"
+                f"Score impact calculated: {final_score} for question {question_id}",
             )
             return final_score
 
@@ -671,7 +675,7 @@ class FreemiumAssessmentService:
             )
 
             return questions_data.get(
-                "questions", self._get_fallback_questions(assessment_type)
+                "questions", self._get_fallback_questions(assessment_type),
             )
 
         except Exception as e:
@@ -719,7 +723,7 @@ class FreemiumAssessmentService:
                         "Yes, occasionally",
                         "No",
                         "Planning to start",
-                    ],
+                    ]
                 },
                 {
                     "question_id": "gen_005",
@@ -769,7 +773,7 @@ class FreemiumAssessmentService:
                         "Yes, partially",
                         "No",
                         "Don't know",
-                    ],
+                    ]
                 },
             ],
             "gdpr": [
@@ -846,8 +850,8 @@ class FreemiumAssessmentService:
                         "Yes, everywhere",
                         "Yes, partially",
                         "No",
-                        "Don't know",
-                    ],
+                        "Don't know"
+                    ]
                 },
                 {
                     "question_id": "sec_002",
@@ -908,7 +912,7 @@ class FreemiumAssessmentService:
                         "Automated tools",
                         "Manual reviews",
                         "No active monitoring",
-                    ],
+                    ]
                 },
                 {
                     "question_id": "sec_007",
@@ -993,7 +997,7 @@ class FreemiumAssessmentService:
         try:
             if self.circuit_breaker.is_model_available("gemini-2.5-flash"):
                 follow_up = await self.assistant.generate_followup_questions(
-                    previous_answers=previous_answers, max_questions=1
+                    previous_answers=previous_answers, max_questions=1,
                 )
                 questions = follow_up.get("questions", [])
                 return questions[0] if questions else None
@@ -1012,8 +1016,8 @@ class FreemiumAssessmentService:
             # Get the session to access previous answers
             result = await self.db.execute(
                 select(FreemiumAssessmentSession).where(
-                    FreemiumAssessmentSession.id == session_id
-                )
+                    FreemiumAssessmentSession.id == session_id,
+                ),
             )
             session = result.scalar_one_or_none()
             if not session:
@@ -1031,7 +1035,7 @@ class FreemiumAssessmentService:
 
                 # Generate a smart follow-up question based on what we've learned
                 follow_up = await self.assistant.generate_followup_questions(
-                    previous_answers=session.user_answers, max_questions=1
+                    previous_answers=session.user_answers, max_questions=1,
                 )
                 questions = follow_up.get("questions", [])
                 if questions:
@@ -1061,7 +1065,7 @@ class FreemiumAssessmentService:
                     business_profile_id=(
                         UUID(assessment_context.get("business_profile_id"))
                         if assessment_context.get("business_profile_id")
-                        else UUID("00000000-0000-0000-0000-000000000000")
+                        else UUID("00000000-0000-0000-0000-000000000000"),
                     ),
                 )
                 return analysis
@@ -1099,7 +1103,7 @@ class FreemiumAssessmentService:
 
             # Adjust for confidence
             confidence_multiplier = {"high": 1.0, "medium": 0.9, "low": 0.7}.get(
-                confidence, 0.8
+                confidence, 0.8,
             )
             total_score += score * confidence_multiplier
 
@@ -1166,7 +1170,7 @@ class FreemiumAssessmentService:
                     "title": "Enhance Existing Controls",
                     "description": "Strengthen current compliance measures and fill identified gaps.",
                     "estimated_effort": "3-6 weeks",
-                }
+                },
             ]
         else:
             return [
@@ -1175,7 +1179,7 @@ class FreemiumAssessmentService:
                     "title": "Continuous Improvement",
                     "description": "Implement regular reviews and updates to maintain compliance.",
                     "estimated_effort": "Ongoing",
-                }
+                },
             ]
 
     def _identify_compliance_gaps(
@@ -1194,7 +1198,7 @@ class FreemiumAssessmentService:
                         "gap_type": "missing_control",
                         "severity": "medium",
                         "description": f"Gap identified in {question_id}",
-                    }
+                    },
                 )
 
         return gaps
@@ -1217,7 +1221,7 @@ class FreemiumAssessmentService:
                     "description": "Get expert guidance on addressing your compliance gaps",
                     "urgency": "high",
                     "cta_text": "Book Free Consultation",
-                }
+                },
             )
 
         if len(gaps_identified) > 3:
@@ -1228,7 +1232,7 @@ class FreemiumAssessmentService:
                     "description": "Try our compliance platform to address identified gaps",
                     "urgency": "medium",
                     "cta_text": "Start Free Trial",
-                }
+                },
             )
 
         return opportunities
@@ -1244,16 +1248,16 @@ class FreemiumAssessmentService:
         summary_parts = [
             f"Your compliance score is {compliance_score}% with a {risk_level} risk level.",
             f"We identified {len(gaps_identified)} areas for improvement.",
-            f"Our analysis includes {len(recommendations)} personalized recommendations.",
+            f"Our analysis includes {len(recommendations)} personalized recommendations."
         ]
 
         if compliance_score >= 80:
             summary_parts.append(
-                "Your organization demonstrates strong compliance practices."
+                "Your organization demonstrates strong compliance practices.",
             )
         elif compliance_score >= 60:
             summary_parts.append(
-                "Your compliance foundation is solid but can be strengthened."
+                "Your compliance foundation is solid but can be strengthened.",
             )
         else:
             summary_parts.append("Significant compliance improvements are recommended.")
@@ -1272,7 +1276,7 @@ class FreemiumAssessmentService:
                     "Schedule a compliance consultation",
                     "Prioritize high-risk areas identified",
                     "Implement basic security controls",
-                ]
+                ],
             )
         elif compliance_score < 70:
             steps.extend(
@@ -1280,7 +1284,7 @@ class FreemiumAssessmentService:
                     "Review detailed recommendations",
                     "Create implementation timeline",
                     "Consider compliance platform trial",
-                ]
+                ],
             )
         else:
             steps.extend(
@@ -1288,7 +1292,7 @@ class FreemiumAssessmentService:
                     "Maintain current compliance practices",
                     "Schedule periodic reviews",
                     "Stay updated on regulatory changes",
-                ]
+                ],
             )
 
         return steps
@@ -1300,12 +1304,12 @@ class FreemiumAssessmentService:
         try:
             if self.circuit_breaker.is_model_available("gemini-2.5-flash"):
                 insights = await self.assistant.analyze_specific_answer(
-                    question_id=question_id, answer=answer
+                    question_id=question_id, answer=answer,
                 )
                 return insights
             else:
                 return {
-                    "insight": "Detailed insights are available with our full platform"
+                    "insight": "Detailed insights are available with our full platform",
                 }
 
         except Exception as e:

@@ -1,21 +1,0 @@
-
--$"Build prompt for policy refinement"str
-ãÅ"
-        Please refine the following policy based on the feedback provided:
-
-        Original Policy:
-        {original_policy}
-
-        Feedback to Address:
-        {chr(10).join(f"- {item}" for item in feedback)}
-
-        Framework Requirements: {framework.display_name}
-
-        Please provide an improved version that addresses all feedback while maintaining compliance.
-        "strself
-Œ Œ(original_policy
-Œ Œ("feedback
-Œ$ Œ(7	framework
-Œ9 Œ(W"
-
-— ›(*;/home/omar/Documents/ruleIQ/services/ai/policy_generator.py

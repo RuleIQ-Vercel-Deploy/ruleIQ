@@ -20,7 +20,7 @@ class TestGDPRAccuracy:
     ):
         """Test accuracy of GDPR penalty information"""
         gdpr_questions = [
-            q for q in compliance_golden_dataset if q["framework"] == "GDPR"
+            q for q in compliance_golden_dataset if q["framework"] == "GDPR",
         ]
         penalty_questions = [q for q in gdpr_questions if q["category"] == "penalties"]
 
@@ -44,11 +44,11 @@ class TestGDPRAccuracy:
                 assert "4%" in response_text
                 assert (
                     "annual turnover" in response_text
-                    or "worldwide turnover" in response_text
+                    or "worldwide turnover" in response_text,
                 )
                 assert (
                     "whichever is higher" in response_text
-                    or "higher amount" in response_text
+                    or "higher amount" in response_text,
                 )
 
     def test_gdpr_data_subject_rights_accuracy(self, client, mock_ai_client):
@@ -104,14 +104,14 @@ class TestGDPRAccuracy:
                 article_num = test_case["article"].split()[1]
                 assert (
                     f"article {article_num}" in response_text
-                    or f"art. {article_num}" in response_text
+                    or f"art. {article_num}" in response_text,
                 )
 
                 # Validate key elements presence
                 matching_elements = sum(
                     1
                     for element in test_case["key_elements"]
-                    if element.lower() in response_text
+                    if element.lower() in response_text,
                 )
                 assert (
                     matching_elements >= len(test_case["key_elements"]) * 0.6
@@ -124,7 +124,7 @@ class TestGDPRAccuracy:
         breach_questions = [
             q
             for q in compliance_golden_dataset
-            if q["framework"] == "GDPR" and q["category"] == "breach_notification"
+            if q["framework"] == "GDPR" and q["category"] == "breach_notification",
         ]
 
         for question_data in breach_questions:
@@ -168,7 +168,7 @@ class TestGDPRAccuracy:
             "/api/compliance/query",
             json={
                 "question": "What are the lawful bases for processing personal data under GDPR?",
-                "framework": "GDPR",
+                "framework": "GDPR"
             },
         )
 
@@ -248,7 +248,7 @@ class TestISO27001Accuracy:
             "/api/compliance/query",
             json={
                 "question": "What are the main requirements for an ISMS under ISO 27001?",
-                "framework": "ISO 27001",
+                "framework": "ISO 27001"
             },
         )
 
@@ -330,11 +330,11 @@ class TestUKSpecificRegulations:
             # Validate ICO role accuracy
             assert "information commissioner" in response_text or "ico" in response_text
             assert (
-                "independent authority" in response_text or "regulator" in response_text
+                "independent authority" in response_text or "regulator" in response_text,
             )
             assert (
                 "information rights" in response_text
-                or "data protection" in response_text
+                or "data protection" in response_text,
             )
             assert "guidance" in response_text
             assert "fines" in response_text or "penalties" in response_text
@@ -373,7 +373,7 @@ class TestSectorSpecificCompliance:
 
             # Validate key frameworks
             mentioned_frameworks = sum(
-                1 for fw in financial_frameworks if fw.lower() in response_text
+                1 for fw in financial_frameworks if fw.lower() in response_text,
             )
             assert (
                 mentioned_frameworks >= 3
@@ -381,7 +381,7 @@ class TestSectorSpecificCompliance:
 
             # Validate regulatory body
             assert (
-                "fca" in response_text or "financial conduct authority" in response_text
+                "fca" in response_text or "financial conduct authority" in response_text,
             )
 
     def test_healthcare_compliance_accuracy(self, client, mock_ai_client):
@@ -405,7 +405,7 @@ class TestSectorSpecificCompliance:
             "/api/compliance/query",
             json={
                 "question": "What are the data protection requirements for UK healthcare providers?",
-                "framework": "Healthcare",
+                "framework": "Healthcare"
             },
         )
 
@@ -600,8 +600,8 @@ class TestSMEValidationFramework:
                 "Recommendations are realistic for SMBs",
                 "Implementation timelines are achievable",
                 "Resource requirements are reasonable",
-                "Cost estimates align with market rates",
-            ],
+                "Cost estimates align with market rates"
+            ]
         }
 
         # Generate content for SME review
@@ -653,7 +653,7 @@ class TestSMEValidationFramework:
             }
 
             update_response = client.patch(
-                f"/api/compliance/content/{content_id}", json=update_data
+                f"/api/compliance/content/{content_id}", json=update_data,
             )
 
             assert update_response.status_code == 200
@@ -689,6 +689,6 @@ class TestSMEValidationFramework:
             # Check specific flags
             flags = validation_result["accuracy_flags"]
             penalty_flagged = any(
-                "penalty" in flag.lower() or "fine" in flag.lower() for flag in flags
+                "penalty" in flag.lower() or "fine" in flag.lower() for flag in flags,
             )
             assert penalty_flagged, "Should flag incorrect penalty amounts"

@@ -1,170 +1,0 @@
-
-)"cache_creates"str
-!6"estimated_cost_savings"str
-
-:4int
-8"total_cost_savings"str
-
-2int
--"cache_refreshes"str
-7."Get comprehensive cache performance metrics."str
-1"total_size_cached_mb"str
-"S3518"bool
-"hit_rate_percentage"str
-"cache_hits"str
-100int
-#"total_requests"str
-"cache_misses"str
-"division by zero"bool
-="cache_types"str
-
-
-0int
-%"active_caches"str
-"a"boolself
-« «("´*
-(
-
-­ ­(%"#get-field# metrics:$
-"
-
-­ ­(3"#array-read#:*
-(
-
-­6 ­(B"#get-field# metrics:$
-"
-
-­6 ­(R"#array-read#:4
-2
-
-­ ­(R	total_requests"	#binop +#2+:*
-(
-
-° °(!"	#binop >#2>:	
-Bbool,"*
-
-° °(! *
-° °(2
-± ±("¢*
-(
-
-¯ ¯("#get-field# metrics:$
-"
-
-¯ ¯('"#array-read#:,
-*
-
-¯ ¯(8"
-#binop !=#2!=:	
-Bbool"
- 
-
-¯ ¯(8"
-#assert#:3
-1
-
-¯ ¯(8"#dependent-value#*:	Bfloat3
-1
-
-¯ ¯(>"#dependent-value#*:Bfloat
-
-¯ ±("
-
-¯ ±("Ü	*
-%
-#
-
-® ²(	hit_rate"#id#:&
-$
-
-´ È(	"#new-object#Bdict*
-(
-
-µ# µ(5"
-builtinsround*:"
- 
-
-µ µ(5"	#map-set#:*
-(
-
-¶ ¶(&"#get-field# metrics:$
-"
-
-¶ ¶(4"#array-read#:"
- 
-
-¶ ¶(4"	#map-set#:*
-(
-
-· ·(( "#get-field# metrics:$
-"
-
-· ·(8!"#array-read#: "
- 
-
-· ·(8""	#map-set#:!"
- 
-
-¸ ¸(,$"	#map-set#:#	0
-.
-
-¹! ¹(3&"#get-field# active_caches:,
-*
-
-¹ ¹(4'"
-builtinslen*:&Bint"
- 
-
-¹ ¹(4("	#map-set#:%'*
-(
-
-º º()*"#get-field# metrics:$
-"
-
-º º(:+"#array-read#:*)"
- 
-
-º º(:,"	#map-set#:)+*
-(
-
-» »(+."#get-field# metrics:$
-"
-
-» »(>/"#array-read#:.-"
- 
-
-» »(>0"	#map-set#:-/*
-(
-
-¼* ¼(62"#get-field# metrics:$
-"
-
-¼* ¼(N3"#array-read#:21*
-(
-
-¼$ ¼(R4"
-builtinsround*:3"
- 
-
-¼ ¼(R5"	#map-set#:14*
-(
-
-½, ½(87"#get-field# metrics:$
-"
-
-½, ½(N9"#array-read#:78*
-(
-
-½& ½(R;"
-builtinsround*:9:"
- 
-
-½ ½(R<"	#map-set#:6;-
-+
-
-¾ Ç(>"?python-unknown?:Bdict"
- 
-
-¾ Ç(?"	#map-set#:=>
-
-´ È(	*9/home/omar/Documents/ruleIQ/services/ai/cached_content.py

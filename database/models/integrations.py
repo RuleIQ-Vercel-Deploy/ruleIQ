@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Database models for enterprise integrations and evidence storage
 """
 
@@ -46,7 +48,7 @@ class Integration(Base):
 
     # Relationships
     evidence_collections = relationship(
-        "EvidenceCollection", back_populates="integration", cascade="all, delete-orphan"
+        "EvidenceCollection", back_populates="integration", cascade="all, delete-orphan",
     )
 
     # Indexes for performance
@@ -70,7 +72,7 @@ class EvidenceCollection(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     integration_id = Column(
-        UUID(as_uuid=True), ForeignKey("integrations.id"), nullable=False
+        UUID(as_uuid=True), ForeignKey("integrations.id"), nullable=False,
     )
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     framework_id = Column(String(50), nullable=False)  # soc2_type2, iso27001, etc.
@@ -123,7 +125,7 @@ class IntegrationEvidenceItem(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     collection_id = Column(
-        UUID(as_uuid=True), ForeignKey("evidence_collections.id"), nullable=False
+        UUID(as_uuid=True), ForeignKey("evidence_collections.id"), nullable=False,
     )
     evidence_type = Column(String(100), nullable=False)  # iam_policies, users, etc.
     source_system = Column(String(50), nullable=False)  # aws, okta, etc.
@@ -156,7 +158,7 @@ class IntegrationEvidenceItem(Base):
             "idx_evidence_controls",
             text("compliance_controls jsonb_path_ops"),
             postgresql_using="gin",
-        ),  # GIN index for JSON array
+        ),  # GIN index for JSON array,
     )
 
     def __repr__(self) -> str:
@@ -172,7 +174,7 @@ class IntegrationHealthLog(Base):
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     integration_id = Column(
-        UUID(as_uuid=True), ForeignKey("integrations.id"), nullable=False
+        UUID(as_uuid=True), ForeignKey("integrations.id"), nullable=False,
     )
     status = Column(String(20), nullable=False)  # healthy, unhealthy, degraded
     response_time = Column(JSON)  # Response time metrics
@@ -203,7 +205,7 @@ class EvidenceAuditLog(Base):
     integration_id = Column(UUID(as_uuid=True), ForeignKey("integrations.id"))
     collection_id = Column(UUID(as_uuid=True), ForeignKey("evidence_collections.id"))
     evidence_item_id = Column(
-        UUID(as_uuid=True), ForeignKey("integration_evidence_items.id")
+        UUID(as_uuid=True), ForeignKey("integration_evidence_items.id"),
     )
     action = Column(String(50), nullable=False)  # create, read, update, delete, export
     resource_type = Column(

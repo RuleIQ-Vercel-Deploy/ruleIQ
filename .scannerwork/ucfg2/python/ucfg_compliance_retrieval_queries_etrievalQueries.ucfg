@@ -1,9 +1,9 @@
 
 @services.compliance_retrieval_queries.ComplianceRetrievalQueriesN
-D/home/omar/Documents/ruleIQ/services/compliance_retrieval_queries.pyF F("2*¦
-2G G("‘
+D/home/omar/Documents/ruleIQ/services/compliance_retrieval_queries.py8 8("2*¦
+29 9("‘
 Ž
-G G("MB
+9 9("MB
 @services.compliance_retrieval_queries.ComplianceRetrievalQueries"
 neo4j"__id*-
 
@@ -13,11 +13,11 @@ D/home/omar/Documents/ruleIQ/services/compliance_retrieval_queries.pyF F("2
 3*Œ
 3!
 compliance_retrieval_queries.pyRP
-J J(
+; ;(
 %1"@services.compliance_retrieval_queries.ComplianceRetrievalQueries"
-J J(
+; ;(
 
 %1:
-F F(:
+8 8(:
 neo4j_serviceBDB
 @services.compliance_retrieval_queries.ComplianceRetrievalQueriesH

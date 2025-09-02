@@ -1,299 +1,0 @@
-
-6tests.test_ingestion_simple.SimpleIngestion.test_queryF
-:/home/omar/Documents/ruleIQ/tests/test_ingestion_simple.pyî î("2*ò
-2
-ï ï(.t
-r
-
-ñ ñ(
-%18"__id*W
-
-__unknown_file (;*9-
-+tests.test_ingestion_simple.SimpleIngestion"
-driverCA
-
-ñ ñ((
-%19*#
-
-__unknown_file (
-
-%182sessionD
-B
-
-ñ ñ(3	
-session"__id*#
-
-__unknown_file (
-
-%19*
-3
-9*>
-3
-test_ingestion_simple.py"
-ø ø
-implicit return*ô
-5
-∫ º(zx
-
-ª ª(*
-%1"__mapGet*&
-
-__unknown_file (
-
-
-record*%
-
-__unknown_file (	
-title2__getitem__}
-
-ª: ª(N
-%2"__mapGet*&
-
-__unknown_file (
-
-
-record**
-
-__unknown_file (
-
-automation2__getitem__ö
-ó
-
-ª ª(Q
-%3"__concat*
-
-ª ª(
-  - *
-
-ª ª(*
-
-%1* 
-
-ª+ ª(9
- (automation: *
-
-ª: ª(N
-
-%2*
-
-ªO ª(P
-)fd
-
-∫ º(
-%4*&
-
-__unknown_file (
-
-
-logger*"
-
-__unknown_file (
-
-%32info*
-3
-5*Œ
-6
-Æ ∂(ﬁ€
-
-Æ& ∂(
-%5*'
-
-__unknown_file (
-	
-session*ò
-
-__unknown_file (˚¯
-ı
-                MATCH (r:Regulation)
-                WHERE r.automation_potential >= 0.7
-                RETURN r.title as title, r.automation_potential as automation
-                ORDER BY automation DESC
-                LIMIT 5
-            2runM
-K
-
-Æ ∂(
-automation_result"__id*"
-
-__unknown_file (
-
-%5ÑÅ
-
-∏ ∏(:
-%6*&
-
-__unknown_file (
-
-
-logger*?
-
-__unknown_file (#!
-Highly automatable regulations:2info*
-3
-5*é
-8
-´ ´(Nzx
-
-´# ´(2
-%7"__mapGet*&
-
-__unknown_file (
-
-
-record*%
-
-__unknown_file (	
-title2__getitem__yw
-
-´< ´(J
-%8"__mapGet*&
-
-__unknown_file (
-
-
-record*$
-
-__unknown_file (
-risk2__getitem__î
-ë
-
-´ ´(M
-%9"__concat*
-
-´ ´("
-  - *
-
-´# ´(2
-
-%7*
-
-´3 ´(;
-
- (risk: *
-
-´< ´(J
-
-%8*
-
-´K ´(L
-)ge
-
-´ ´(N
-%10*&
-
-__unknown_file (
-
-
-logger*"
-
-__unknown_file (
-
-%92info*
-6
-8*Û	
-9
-ò ö(ìê
-
-ò! ö(
-%11*'
-
-__unknown_file (
-	
-session*M
-
-__unknown_file (1/
--MATCH (r:Regulation) RETURN count(r) as count2runI
-G
-
-ò ö(
-count_result"__id*#
-
-__unknown_file (
-
-%11KI
-
-õ! õ(6
-%12*,
-
-__unknown_file (
-
-count_result2singleI
-G
-
-õ õ(6
-count_record"__id*#
-
-__unknown_file (
-
-%12Å
-
-ú. ú(C
-%13"__mapGet*,
-
-__unknown_file (
-
-count_record*%
-
-__unknown_file (	
-count2__getitem__]
-[
-
-ú ú(E
-%14"__concat*%
-
-ú ú(-
-Total regulations: *
-
-ú. ú(C
-
-%13hf
-
-ú ú(F
-%15*&
-
-__unknown_file (
-
-
-logger*#
-
-__unknown_file (
-
-%142info«ƒ
-
-ü% ß(
-%16*'
-
-__unknown_file (
-	
-session*Ä
-
-__unknown_file („‡
-›
-                MATCH (r:Regulation)
-                WHERE r.base_risk_score >= 8
-                RETURN r.title as title, r.base_risk_score as risk
-                ORDER BY risk DESC
-                LIMIT 5
-            2runM
-K
-
-ü ß(
-high_risk_result"__id*#
-
-__unknown_file (
-
-%16{y
-
-© ©(1
-%17*&
-
-__unknown_file (
-
-
-logger*6
-
-__unknown_file (
-High-risk regulations:2info*
-6
-8B/-
-+tests.test_ingestion_simple.SimpleIngestionH

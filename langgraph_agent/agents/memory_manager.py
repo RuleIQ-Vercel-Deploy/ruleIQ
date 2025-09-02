@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Advanced memory management with Graphiti vector database integration.
 Handles conversation history, entity extraction, and contextual memory retrieval.
 """
@@ -6,7 +8,7 @@ Handles conversation history, entity extraction, and contextual memory retrieval
 import logging
 from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from uuid import UUID, uuid4
 import json
@@ -71,14 +73,14 @@ class MemoryEntry:
 
     def update_access(self) -> None:
         """Update access tracking."""
-        self.last_accessed = datetime.utcnow()
+        self.last_accessed = datetime.now(timezone.utc)
         self.access_count += 1
 
     def is_expired(self) -> bool:
         """Check if memory has expired."""
         if not self.expires_at:
             return False
-        return datetime.utcnow() > self.expires_at
+        return datetime.now(timezone.utc) > self.expires_at
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for storage."""
@@ -166,7 +168,7 @@ class MemoryManager:
         # Memory caches
         self.short_term_cache: Dict[str, List[MemoryEntry]] = {}
         self.entity_cache: Dict[str, Any] = {}
-        self.last_cleanup = datetime.utcnow()
+        self.last_cleanup = datetime.now(timezone.utc)
 
         # Initialize async components in setup
         self._initialized = False
@@ -231,7 +233,7 @@ class MemoryManager:
                 "conversation_turn": {
                     "user_message": user_message,
                     "agent_response": agent_response,
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     "session_id": session_id,
                     "company_id": str(company_id),
                     "user_id": str(user_id) if user_id else None,
@@ -259,7 +261,7 @@ class MemoryManager:
                 episode_type=EpisodeType.json,
                 group_id=str(company_id),  # Use company_id for grouping
                 source_description=f"Conversation turn for company {company_id}",
-                reference_time=datetime.utcnow(),
+                reference_time=datetime.now(timezone.utc),
                 metadata=episode_metadata,
             )
 
@@ -442,7 +444,7 @@ class MemoryManager:
                 episode_type=EpisodeType.json,
                 group_id=str(company_id),
                 source_description=f"Session summary for {session_id}",
-                reference_time=summary.end_time or datetime.utcnow(),
+                reference_time=summary.end_time or datetime.now(timezone.utc),
                 metadata=episode_metadata,
             )
 
@@ -570,7 +572,7 @@ class MemoryManager:
             # This method can be used for additional business logic cleanup
 
             # Clean up short-term cache
-            current_time = datetime.utcnow()
+            current_time = datetime.now(timezone.utc)
             sessions_to_remove = []
 
             for session_key, memories in self.short_term_cache.items():
@@ -661,7 +663,7 @@ class MemoryManager:
                 created_at=(
                     datetime.fromisoformat(metadata["created_at"])
                     if metadata.get("created_at")
-                    else datetime.utcnow()
+                    else datetime.now(timezone.utc)
                 ),
                 source_type=metadata.get("source_type", "unknown"),
                 metadata=metadata,
@@ -676,7 +678,7 @@ class MemoryManager:
 
         # Recency boost (newer memories get higher scores)
         hours_since_creation = (
-            datetime.utcnow() - memory.created_at
+            datetime.now(timezone.utc) - memory.created_at
         ).total_seconds() / 3600
         recency_score = max(0, 1 - (hours_since_creation / (24 * 7)))  # Week decay
 

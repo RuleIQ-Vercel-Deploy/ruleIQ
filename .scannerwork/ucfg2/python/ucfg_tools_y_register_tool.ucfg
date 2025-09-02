@@ -1,26 +1,23 @@
 
 ,services.ai.tools.ToolRegistry.register_tool:
-0/home/omar/Documents/ruleIQ/services/ai/tools.pyz z("2*š
-2	{ (g
-e
-
-‚ ‚(
+0/home/omar/Documents/ruleIQ/services/ai/tools.pys s("2*
+2t z(e
+c
+{ {(
 %12"__id*J
 
 __unknown_file (.*, 
 services.ai.tools.ToolRegistry"
-_toolsK
-I
-
-‚ ‚(
+_toolsI
+G
+{ {(
 %13"__id*.
 
 __unknown_file (*
 
 tool"
-name¥¢
-
-‚ ‚(%
+name£ 
+{ {(%
 %11"dict.__setitem__*#
 
 __unknown_file (
@@ -33,17 +30,15 @@ I
 
 __unknown_file (
 
-tool2__setitem__n
-l
-
-„ „(.
+tool2__setitem__l
+j
+| |(.
 %14"__id*Q
 
 __unknown_file (5*3 
 services.ai.tools.ToolRegistry"
-_tool_by_typesq
-
-„ „(.
+_tool_by_typeqo
+| |(.
 %15*#
 
 __unknown_file (
@@ -52,10 +47,9 @@ l
 
 __unknown_file (
 
-	tool_type2__contains__?
-=
-
-„ „(.
+	tool_type2__contains__=
+;
+| |(.
 %16"not*#
 
 __unknown_file (
@@ -66,20 +60,17 @@ l
 3
 
 tools.py"
-Š Š(
-implicit return*”
-4
-† †(2m
-k
-
-† †(
+‚ ‚(
+implicit return*Þ
+4~ ~(2k
+i
+~ ~(
 %1"__id*Q
 
 __unknown_file (5*3 
 services.ai.tools.ToolRegistry"
-_tool_by_typezx
-
-† †(%
+_tool_by_typexv
+~ ~(%
 %2"__mapGet*"
 
 __unknown_file (
@@ -88,9 +79,8 @@ k
 
 __unknown_file (
 
-	tool_type2__getitem__fd
-
-† †(2
+	tool_type2__getitem__db
+~ ~(2
 %3*"
 
 __unknown_file (
@@ -99,10 +89,9 @@ k
 
 __unknown_file (
 
-tool2appendJ
-H
-
-ˆ( ˆ(1
+tool2appendH
+F
+; (D
 %4"__id*.
 
 __unknown_file (*
@@ -111,36 +100,26 @@ H
 nameP
 N
 
-ˆ> ˆ(M
+€ €(
 %5"__id*4
 
 __unknown_file (*
 
 	tool_type"
-value¤
-¡
-
-ˆ ˆ(P
-%6"__concat*#
-
-ˆ ˆ('
-Registered tool '*
-
-ˆ( ˆ(1
+valuez
+x
+	 €(
+%6"__concat*1
+ (7%#
+!Registered tool '%s' of type '%s'*
+; (D
 
-%4*
+%4*
 
-ˆ2 ˆ(=
-' of type '*
-
-ˆ> ˆ(M
+€ €(
 
-%5*
-
-ˆN ˆ(O
-'fd
-
-ˆ ˆ(Q
+%5ec
+	 €(
 %7*&
 
 __unknown_file (
@@ -151,22 +130,18 @@ N
 __unknown_file (
 
 %62info*
-3*Ë
-5
-… …(.
-
-…, …(.
-%8"listn
-l
-
-… …(
+3*Ã
+5} }(.
+}, }(.
+%8"listl
+j
+} }(
 %10"__id*Q
 
 __unknown_file (5*3 
 services.ai.tools.ToolRegistry"
-_tool_by_type¨¥
-
-… …(.
+_tool_by_type¦£
+} }(.
 %9"dict.__setitem__*#
 
 __unknown_file (
@@ -181,8 +156,8 @@ l
 
 %82__setitem__*
 4:
-z z(*
+s s(*
 tool:
-z, z(?
+s, s(?
 	tool_typeB" 
 services.ai.tools.ToolRegistryH

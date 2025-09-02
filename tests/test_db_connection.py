@@ -43,7 +43,7 @@ def test_connection():
         print(f"  User: {connection_params['user']}")
         print(f"  Database: {connection_params['database']}")
         print(
-            f"  Password: {'*' * len(connection_params['password']) if connection_params['password'] else 'None'}"
+            f"  Password: {'*' * len(connection_params['password']) if connection_params['password'] else 'None'}",
         )
 
         # Try to connect

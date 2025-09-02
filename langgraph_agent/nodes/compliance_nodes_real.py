@@ -1,11 +1,13 @@
 """
+from __future__ import annotations
+
 Real implementation of compliance nodes that connects to actual services.
 This replaces the mocked version with actual database operations.
 """
 
 import asyncio
 from typing import Dict, Any, List, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 from uuid import UUID
 import logging
 
@@ -142,7 +144,7 @@ async def batch_compliance_update_node(
                     "updated_count": len(updated_profiles) - len(errors),
                     "error_count": len(errors),
                     "alerts": alerts,
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                 },
                 "profiles": updated_profiles,
             }
@@ -155,7 +157,7 @@ async def batch_compliance_update_node(
             state["history"].append(
                 {
                     "action": "batch_compliance_update",
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     "details": {
                         "profiles_updated": len(updated_profiles) - len(errors),
                         "errors": len(errors),
@@ -174,7 +176,7 @@ async def batch_compliance_update_node(
             {
                 "type": "BatchUpdateError",
                 "message": str(e),
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         )
         state["error_count"] += 1
@@ -198,7 +200,7 @@ async def single_compliance_check_node(
             {
                 "type": "ValidationError",
                 "message": "company_id required for compliance check",
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         )
         state["error_count"] += 1
@@ -222,7 +224,7 @@ async def single_compliance_check_node(
                     {
                         "type": "NotFoundError",
                         "message": f"No business profile found for company {company_id}",
-                        "timestamp": datetime.utcnow().isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                     }
                 )
                 state["error_count"] += 1
@@ -236,7 +238,7 @@ async def single_compliance_check_node(
                     {
                         "type": "ComplianceCheckError",
                         "message": result["error"],
-                        "timestamp": datetime.utcnow().isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                     }
                 )
                 state["error_count"] += 1
@@ -246,7 +248,7 @@ async def single_compliance_check_node(
                     "regulation": state.get("metadata", {}).get(
                         "regulation", "Unknown"
                     ),
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                 }
 
                 # Check if we need to trigger notifications
@@ -258,7 +260,7 @@ async def single_compliance_check_node(
                 state["history"].append(
                     {
                         "action": "compliance_check",
-                        "timestamp": datetime.utcnow().isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                         "details": {
                             "company_id": company_id,
                             "score": result["overall_score"],
@@ -275,7 +277,7 @@ async def single_compliance_check_node(
             {
                 "type": "ComplianceCheckError",
                 "message": str(e),
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         )
         state["error_count"] += 1
@@ -327,7 +329,7 @@ async def compliance_monitoring_node(
                 "total_profiles": len(profiles),
                 "alerts_generated": len(alerts),
                 "low_score_profiles": low_score_profiles,
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
 
             if alerts:
@@ -339,7 +341,7 @@ async def compliance_monitoring_node(
             state["history"].append(
                 {
                     "action": "compliance_monitoring",
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     "details": {
                         "profiles_monitored": len(profiles),
                         "alerts_generated": len(alerts),
@@ -357,7 +359,7 @@ async def compliance_monitoring_node(
             {
                 "type": "MonitoringError",
                 "message": str(e),
-                "timestamp": datetime.utcnow().isoformat(),
+                "timestamp": datetime.now(timezone.utc).isoformat(),
             }
         )
         state["error_count"] += 1

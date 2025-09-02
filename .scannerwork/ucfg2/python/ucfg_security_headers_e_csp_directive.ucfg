@@ -1,18 +1,18 @@
 
 ?security_headers.SecurityHeadersMiddleware.update_csp_directiveF
-:/home/omar/Documents/ruleIQ/middleware/security_headers.pyù ù("2*»
+:/home/omar/Documents/ruleIQ/middleware/security_headers.py÷ ÷("2*»
 2
-ú €(w
+ø ş(w
 u
 
- (
+ÿ ÿ(
 %2"__id*[
 
 __unknown_file (?*=,
 *security_headers.SecurityHeadersMiddleware"
 default_csp«¨
 
- (,
+ÿ ÿ(,
 %1"dict.__setitem__*"
 
 __unknown_file (
@@ -30,12 +30,12 @@ u
 3*;
 3
 security_headers.py"
-ƒ ƒ(
+ (
 implicit return:
 
-ù# ù(1
+÷# ÷(1
 	directive:
 
-ù3 ù(D
+÷3 ÷(D
 valuesB.,
 *security_headers.SecurityHeadersMiddlewareH

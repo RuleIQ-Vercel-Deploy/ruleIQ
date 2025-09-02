@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Test Metrics and Observability
 
 Tests for monitoring test execution metrics, performance tracking,
@@ -78,7 +80,7 @@ class TestMetricsCollector:
             self.metrics["performance_data"][metric_name] = []
 
         self.metrics["performance_data"][metric_name].append(
-            {"value": value, "unit": unit, "timestamp": time.time()}
+            {"value": value, "unit": unit, "timestamp": time.time()},
         )
 
     def calculate_test_statistics(self) -> Dict[str, Any]:
@@ -351,7 +353,7 @@ class TestObservability:
 
         for i, duration in enumerate(durations):
             metrics_collector.record_test_execution(
-                f"trend_test_{i}", duration, "passed", "unit"
+                f"trend_test_{i}", duration, "passed", "unit",
             )
 
         executions = metrics_collector.metrics["test_executions"]
@@ -385,7 +387,7 @@ class TestMetricsReporting:
         collector.record_test_execution("unit_test_1", 0.5, "passed", "unit")
         collector.record_test_execution("unit_test_2", 1.2, "failed", "unit")
         collector.record_test_execution(
-            "integration_test_1", 2.5, "passed", "integration"
+            "integration_test_1", 2.5, "passed", "integration",
         )
         collector.record_performance_metric("response_time", 150.0, "ms")
         collector.collect_system_metrics()
@@ -470,7 +472,7 @@ class TestMetricsReporting:
                                 "value": metric_point["value"],
                                 "threshold": threshold["max"],
                                 "unit": threshold["unit"],
-                            }
+                            },
                         )
 
         # Verify violation detection
@@ -563,7 +565,7 @@ class TestCoverageTracking:
             {"timestamp": time.time() - 86400 * 5, "coverage": 80.2},  # 5 days ago
             {"timestamp": time.time() - 86400 * 3, "coverage": 82.1},  # 3 days ago
             {"timestamp": time.time() - 86400 * 1, "coverage": 83.7},  # 1 day ago
-            {"timestamp": time.time(), "coverage": 85.5},  # Today
+            {"timestamp": time.time(), "coverage": 85.5},  # Today,
         ]
 
         # Add to metrics collector
@@ -608,7 +610,7 @@ class TestCoverageTracking:
             "services.authentication": {
                 "coverage": 82.1,
                 "priority": "high_priority",
-            },  # Below threshold
+            },  # Below threshold,
         }
 
         violations = []
@@ -627,7 +629,7 @@ class TestCoverageTracking:
                         "threshold": threshold,
                         "priority": priority,
                         "deficit": threshold - coverage,
-                    }
+                    },
                 )
 
         # Verify violation detection
@@ -692,17 +694,17 @@ def generate_metrics_dashboard_data(metrics_data: Dict[str, Any]) -> Dict[str, A
             "avg_test_duration": (
                 sum(e["duration"] for e in executions) / len(executions)
                 if executions
-                else 0
+                else 0,
             ),
             "pass_rate": (
                 len([e for e in executions if e["status"] == "passed"])
                 / len(executions)
                 if executions
-                else 0
+                else 0,
             ),
             "performance_metrics_count": sum(
                 len(metrics) for metrics in performance_data.values()
-            ),
+            )
         },
         "charts": {
             "test_duration_over_time": [
@@ -712,7 +714,7 @@ def generate_metrics_dashboard_data(metrics_data: Dict[str, Any]) -> Dict[str, A
             "resource_usage_over_time": resource_usage,
             "test_status_distribution": {
                 "passed": len([e for e in executions if e["status"] == "passed"]),
-                "failed": len([e for e in executions if e["status"] == "failed"]),
+                "failed": len([e for e in executions if e["status"] == "failed"])
             },
         },
         "alerts": [],
@@ -724,7 +726,7 @@ def generate_metrics_dashboard_data(metrics_data: Dict[str, Any]) -> Dict[str, A
             {
                 "severity": "high",
                 "message": f"Low pass rate: {dashboard_data['summary']['pass_rate']:.1%}",
-            }
+            },
         )
 
     if dashboard_data["summary"]["avg_test_duration"] > 5.0:
@@ -732,7 +734,7 @@ def generate_metrics_dashboard_data(metrics_data: Dict[str, Any]) -> Dict[str, A
             {
                 "severity": "medium",
                 "message": f"High average test duration: {dashboard_data['summary']['avg_test_duration']:.1f}s",
-            }
+            },
         )
 
     return dashboard_data

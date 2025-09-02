@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """Fix settings to handle list parsing correctly"""
+import logging
+logger = logging.getLogger(__name__)
+
 
 import re
 
@@ -73,4 +76,4 @@ if '@field_validator("cors_origins"' not in content:
 with open("config/settings.py", "w") as f:
     f.write(content)
 
-print("Settings file has been updated to handle list parsing correctly")
+logger.info("Settings file has been updated to handle list parsing correctly")

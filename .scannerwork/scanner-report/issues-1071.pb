@@ -1,5 +1,3 @@
-g
-pythonS2068H"password" detected here, review this potentially hard-coded credential. 2
-©© 6Y
-pythonS1244:Do not perform equality checks with floating point values. 2
-•• *
+V
+pythonS59147Replace this expression; its boolean value is constant. 2
+ÓÓ 

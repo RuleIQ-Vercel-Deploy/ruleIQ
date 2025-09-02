@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+
 Simple test to debug freemium model issues without pytest configuration interference.
 """
 import os
@@ -11,7 +13,7 @@ from typing import Optional
 # Set environment
 os.environ["ENV"] = "testing"
 os.environ["DATABASE_URL"] = (
-    os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5433/compliance_test?sslmode=require")
+    os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5433/compliance_test?sslmode=require"),
 )
 
 # Add project to path
@@ -50,7 +52,7 @@ def test_freemium_model_directly() -> Optional[bool]:
 
         # Verify it exists
         found_lead = (
-            session.query(AssessmentLead).filter_by(email="test@example.com").first()
+            session.query(AssessmentLead).filter_by(email="test@example.com").first(),
         )
         assert found_lead is not None, "Lead not found in database"
         assert found_lead.email == "test@example.com"
@@ -59,13 +61,13 @@ def test_freemium_model_directly() -> Optional[bool]:
 
         # Test 2: Create FreemiumAssessmentSession
         print("\n2. Testing FreemiumAssessmentSession creation...")
-        from datetime import datetime, timedelta
+        from datetime import datetime, timedelta, timezone
 
         session_obj = FreemiumAssessmentSession(
             lead_id=lead.id,
             business_type="technology",
             company_size="11-50",
-            expires_at=datetime.utcnow() + timedelta(hours=24),
+            expires_at=datetime.now(timezone.utc) + timedelta(hours=24),
         )
         session.add(session_obj)
         session.commit()
@@ -124,15 +126,15 @@ def test_freemium_model_directly() -> Optional[bool]:
         # Test unique constraint on AssessmentLead email
         try:
             duplicate_lead = AssessmentLead(
-                email="test@example.com", consent_marketing=False  # Same email
+                email="test@example.com", consent_marketing=False  # Same email,
             )
             session.add(duplicate_lead)
             session.commit()
             print("❌ Unique constraint test FAILED - duplicate email was allowed")
-        except Exception as e:
+        except ValueError as e:
             session.rollback()
             print(
-                f"✅ Unique constraint test PASSED - duplicate email rejected: {type(e).__name__}"
+                f"✅ Unique constraint test PASSED - duplicate email rejected: {type(e).__name__}",
             )
 
         # Cleanup
@@ -149,7 +151,7 @@ def test_freemium_model_directly() -> Optional[bool]:
         print("\n🎉 ALL FREEMIUM MODEL TESTS PASSED!")
         return True
 
-    except Exception as e:
+    except ValueError as e:
         print(f"\n❌ Test failed with error: {e}")
         print(f"Error type: {type(e).__name__}")
         traceback.print_exc()
@@ -158,7 +160,7 @@ def test_freemium_model_directly() -> Optional[bool]:
         try:
             session.rollback()
             session.close()
-        except:
+        except (ValueError, TypeError):
             pass
 
         return False

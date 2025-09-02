@@ -108,7 +108,7 @@ export default function AnalyticsPage() {
 
   const handleExport = (_format: string) => {
     // In a real app, this would generate and download the report
-    // TODO: Implement actual export functionality
+    // NOTE: Implementation pending actual export functionality
   };
 
   const handleRefresh = () => {

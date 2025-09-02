@@ -1,1370 +1,0 @@
-
-_	"gen_005"str
-¸"Automated process"str
-GM>"Do you conduct regular security training for your employees?"str
-û"Automated tools"str
-=å3"Do you maintain records of processing activities?"str
- •"Yes, over a year ago"str
-ë
-"Annually"str
-õ"monitoring"str
-g"Department-based"str
-"ƒ"During onboarding only"str
-'
-"security"str
-≤"Yes, assigned roles"str
-ˇ"Never received any"str
-"data_protection"str
- È"Yes, fully compliant"str
-’"Rarely"str
-˙"Manual tracking"str
-6á,"Do you have network segmentation in place?"str
-ë"Yes, partial"str
-!ˆ"credential_management"str
-ê"Yes, comprehensive"str
-"yes_no"str
-F‰<"Do you have a privacy policy that meets GDPR requirements?"str
-T"Planning to start"str
-≥"Outsourced"str
-;˜1"How do you handle data subject access requests?"str
->"No formal backup"str
-§"data_security"str
-—
-"gdpr_002"str
-ñ	"sec_006"str
-:“0"Do you maintain an inventory of all IT assets?"str
-‘"Immediately"str
-
-"question_text"str
-Jü@"Have you conducted a Data Protection Impact Assessment (DPIA)?"str
-≈"scope"str
-◊"Yes, automated"str
-Ò	"sec_004"str
-'¶"Yes, at rest and in transit"str
-;52"How do you currently back up your business data?"str
-±"Yes, dedicated team"str
-˝"Manual process"str
-Î"Yes, fully"str
-"Yes"str
-?a6"How do you manage access to sensitive business data?"str
-æ"gdpr"str
-"question_id"str
-;"Cloud backup"str
-C:"Get hardcoded fallback questions when AI is unavailable."str
-<"Local backup"str
-Í"Yes, needs updating"str
-¿
-"gdpr_001"str
-u	"gen_006"str
-9¬/"Do you process personal data of EU residents?"str
-’"asset_management"str
-	"gen_001"str
-9"data_management"str
-¢"assessment"str
-˘"Single sign-on"str
-6ò,"How do you monitor for security incidents?"str
-à	"gen_007"str
-|"Yes, documented"str
-A¿7"How often do you conduct security awareness training?"str
-z"incident_response"str
-ß"Yes, partially"str
-˙"data_rights"str
-‰	"sec_010"str
-S"Yes, occasionally"str
-¯"Password manager"str
-ù
-"gdpr_006"str
-Ö	"sec_005"str
-"question_type"str
-ü	"gen_008"str
-"	"gen_002"str
-=Û3"How do you manage user passwords and credentials?"str
-)"In development"str
-È"architecture"str
-¬"Yes, everywhere"str
-"Unsure"str
-“"maintenance"str
-ÿ"Not required"str
-ä
-"gdpr_005"str
-·	"sec_003"str
-f"Role-based access"str
-7"multiple_choice"str
-ü"Manual reviews"str
-÷"governance"str
-@Ê6"Have you implemented Zero Trust security principles?"str
-2≠("Do you have an incident response team?"str
-–	"sec_009"str
-}"Yes, informal"str
-F„<"Do you perform regular security vulnerability assessments?"str
-ÿ"Yes, manual"str
-h"Everyone has access"str
-@$7"Do you have documented information security policies?"str
- ¶"Not sure if required"str
-	"options"str
-í"Never"str
-ù
-"24/7 SOC"str
->œ4"How often do you update your software and systems?"str
-R"Yes, regularly"str
-B”8"Do you have a Data Protection Officer (DPO) appointed?"str
-3w*"Do you have a data breach response plan?"str
- †"No active monitoring"str
-«
-"Possibly"str
-˛"No formal process"str
-è	"Monthly"str
-?"Don't know"str
-ı
-"gdpr_004"str
-d"access_control"str
-´	"sec_007"str
-§"Yes, recently"str
-ì"Ad-hoc basis"str
-ç"compliance_review"str
-;ä1"How often do you review your compliance status?"str
-º	"sec_001"str
-Á"documentation"str
-Hæ>"Do you use multi-factor authentication for business systems?"str
-5°+"Do you use encryption for sensitive data?"str
-Ÿ	"Partial"str
-3	"gen_003"str
-SJ"Does your organization handle personal data from customers or employees?"str
-="Both"str
-ä"network_security"str
-K	"gen_004"str
-i"No formal system"str
-
-"category"str
-
-0int
-!í"Planning to implement"str
-æ	"sec_008"str
-"No"str
-	"general"str
-Õ	"sec_002"str
-P
-"training"str
-ê"Quarterly"str
-‚
-"gdpr_003"strself
-©  ©($assessment_type
-©& ©(:list"Ç~:
-8
-
-´ æ(	fallback_questions"#new-object#Bdict&
-$
-
-≠ ≥("#new-object#Bdict"
- 
-
-Æ Æ(,	"	#map-set#:"
- 
-
-Ø Ø(o"	#map-set#:
-"
- 
-
-∞ ∞(-"	#map-set#:"
- 
-
-± ±(1"	#map-set#:)
-'
-
-≤ ≤(6"#unknown-value#Blist(
-&
-
-≤ ≤(6"
-#is-exact#:Bbool
-
-
-≤ ≤(6"
-#assume#::
-8
-
-≤ ≤(6"#set-field# __collection_size:Bint(
-&
-
-≤ ≤(6"#array-add-last#:(
-&
-
-≤ ≤(6"#array-add-last#:(
-&
-
-≤ ≤(6"#array-add-last#:"
- 
-
-≤ ≤(6 "	#map-set#:&
-$
-
-¥ ∫(!"#new-object#Bdict"
- 
-
-µ µ(,#"	#map-set#:!""
- 
-
-∂ ∂(\%"	#map-set#:!
-$"
- 
-
-∑ ∑(-&"	#map-set#:!"
- 
-
-∏ ∏(*("	#map-set#:!')
-'
-
-π π(>*"#unknown-value#Blist(
-&
-
-π π(>+"
-#is-exact#:*Bbool
-
-
-π π(>,"
-#assume#:+:
-8
-
-π π(>-"#set-field# __collection_size:*Bint(
-&
-
-π π(>."#array-add-last#:*(
-&
-
-π π(>/"#array-add-last#:*(
-&
-
-π π(>0"#array-add-last#:*)"
- 
-
-π π(>1"	#map-set#:!*&
-$
-
-ª «(2"#new-object#Bdict"
- 
-
-º º(,4"	#map-set#:23"
- 
-
-Ω Ω(W6"	#map-set#:2
-5"
- 
-
-æ æ(68"	#map-set#:27"
- 
-
-ø ø(1:"	#map-set#:29)
-'
-
-¿ ∆(@"#unknown-value#Blist(
-&
-
-¿ ∆(A"
-#is-exact#:@Bbool
-
-
-¿ ∆(B"
-#assume#:A:
-8
-
-¿ ∆(C"#set-field# __collection_size:@Bint(
-&
-
-¿ ∆(D"#array-add-last#:@;(
-&
-
-¿ ∆(E"#array-add-last#:@<(
-&
-
-¿ ∆(F"#array-add-last#:@=(
-&
-
-¿ ∆(G"#array-add-last#:@>(
-&
-
-¿ ∆(H"#array-add-last#:@?"
- 
-
-¿ ∆(I"	#map-set#:2@&
-$
-
-» ”(J"#new-object#Bdict"
- 
-
-… …(,L"	#map-set#:JK"
- 
-
-   (cN"	#map-set#:J
-M"
- 
-
-À À(-O"	#map-set#:J"
- 
-
-Ã Ã(*Q"	#map-set#:JP)
-'
-
-Õ “(U"#unknown-value#Blist(
-&
-
-Õ “(V"
-#is-exact#:UBbool
-
-
-Õ “(W"
-#assume#:V:
-8
-
-Õ “(X"#set-field# __collection_size:UBint(
-&
-
-Õ “(Y"#array-add-last#:UR(
-&
-
-Õ “(Z"#array-add-last#:US(
-&
-
-Õ “(["#array-add-last#:U(
-&
-
-Õ “(\"#array-add-last#:UT"
- 
-
-Õ “(]"	#map-set#:JU&
-$
-
-‘ ‡(^"#new-object#Bdict"
- 
-
-’ ’(,`"	#map-set#:^_"
- 
-
-÷ ÷([b"	#map-set#:^
-a"
- 
-
-◊ ◊(6c"	#map-set#:^7"
- 
-
-ÿ ÿ(0e"	#map-set#:^d)
-'
-
-Ÿ ﬂ(j"#unknown-value#Blist(
-&
-
-Ÿ ﬂ(k"
-#is-exact#:jBbool
-
-
-Ÿ ﬂ(l"
-#assume#:k:
-8
-
-Ÿ ﬂ(m"#set-field# __collection_size:jBint(
-&
-
-Ÿ ﬂ(n"#array-add-last#:jf(
-&
-
-Ÿ ﬂ(o"#array-add-last#:jg(
-&
-
-Ÿ ﬂ(p"#array-add-last#:jh(
-&
-
-Ÿ ﬂ(q"#array-add-last#:ji(
-&
-
-Ÿ ﬂ(r"#array-add-last#:j"
- 
-
-Ÿ ﬂ(s"	#map-set#:^j&
-$
-
-· Ï(t"#new-object#Bdict"
- 
-
-‚ ‚(,v"	#map-set#:tu"
- 
-
-„ „(Ox"	#map-set#:t
-w"
- 
-
-‰ ‰(-y"	#map-set#:t"
- 
-
-Â Â(3{"	#map-set#:tz)
-'
-
-Ê Î(~"#unknown-value#Blist(
-&
-
-Ê Î("
-#is-exact#:~Bbool 
-
-
-Ê Î(Ä"
-#assume#:;
-9
-
-Ê Î(Å"#set-field# __collection_size:~Bint)
-'
-
-Ê Î(Ç"#array-add-last#:~|)
-'
-
-Ê Î(É"#array-add-last#:~})
-'
-
-Ê Î(Ñ"#array-add-last#:~)
-'
-
-Ê Î(Ö"#array-add-last#:~)#
-!
-
-Ê Î(Ü"	#map-set#:t~'
-%
-
-Ì ˘(á"#new-object#Bdict%
-#
-
-Ó Ó(,â"	#map-set#:áà%
-#
-
-Ô Ô(Vã"	#map-set#:á
-ä$
-"
-
- (6å"	#map-set#:á7%
-#
-
-Ò Ò(3é"	#map-set#:áç*
-(
-
-Ú ¯(î"#unknown-value#Blist*
-(
-
-Ú ¯(ï"
-#is-exact#:îBbool!
-
-
-Ú ¯(ñ"
-#assume#:ï<
-:
-
-Ú ¯(ó"#set-field# __collection_size:îBint+
-)
-
-Ú ¯(ò"#array-add-last#:îè+
-)
-
-Ú ¯(ô"#array-add-last#:îê+
-)
-
-Ú ¯(ö"#array-add-last#:îë+
-)
-
-Ú ¯(õ"#array-add-last#:îí+
-)
-
-Ú ¯(ú"#array-add-last#:îì%
-#
-
-Ú ¯(ù"	#map-set#:áî'
-%
-
-˙ Ö(û"#new-object#Bdict%
-#
-
-˚ ˚(,†"	#map-set#:ûü%
-#
-
-¸ ¸(P¢"	#map-set#:û
-°$
-"
-
-˝ ˝(-£"	#map-set#:û%
-#
-
-˛ ˛(/•"	#map-set#:û§*
-(
-
-ˇ Ñ(®"#unknown-value#Blist*
-(
-
-ˇ Ñ(©"
-#is-exact#:®Bbool!
-
-
-ˇ Ñ(™"
-#assume#:©<
-:
-
-ˇ Ñ(´"#set-field# __collection_size:®Bint+
-)
-
-ˇ Ñ(¨"#array-add-last#:®¶+
-)
-
-ˇ Ñ(≠"#array-add-last#:®ß*
-(
-
-ˇ Ñ(Æ"#array-add-last#:®*
-(
-
-ˇ Ñ(Ø"#array-add-last#:®?%
-#
-
-ˇ Ñ(∞"	#map-set#:û®*
-(
-
-¨ Ü(±"#unknown-value#Blist*
-(
-
-¨ Ü(≤"
-#is-exact#:±Bbool!
-
-
-¨ Ü(≥"
-#assume#:≤<
-:
-
-¨ Ü(¥"#set-field# __collection_size:±Bint*
-(
-
-¨ Ü(µ"#array-add-last#:±*
-(
-
-¨ Ü(∂"#array-add-last#:±!*
-(
-
-¨ Ü(∑"#array-add-last#:±2*
-(
-
-¨ Ü(∏"#array-add-last#:±J*
-(
-
-¨ Ü(π"#array-add-last#:±^*
-(
-
-¨ Ü(∫"#array-add-last#:±t+
-)
-
-¨ Ü(ª"#array-add-last#:±á+
-)
-
-¨ Ü(º"#array-add-last#:±û$
-"
-
-¨ Ü(Ω"	#map-set#:±'
-%
-
-à é(ø"#new-object#Bdict%
-#
-
-â â(-¡"	#map-set#:ø¿%
-#
-
-ä ä(T√"	#map-set#:ø
-¬$
-"
-
-ã ã(-ƒ"	#map-set#:ø%
-#
-
-å å('∆"	#map-set#:ø≈*
-(
-
-ç ç(8»"#unknown-value#Blist*
-(
-
-ç ç(8…"
-#is-exact#:»Bbool!
-
-
-ç ç(8 "
-#assume#:…<
-:
-
-ç ç(8À"#set-field# __collection_size:»Bint*
-(
-
-ç ç(8Ã"#array-add-last#:»*
-(
-
-ç ç(8Õ"#array-add-last#:»+
-)
-
-ç ç(8Œ"#array-add-last#:»«%
-#
-
-ç ç(8œ"	#map-set#:ø»'
-%
-
-è ï(–"#new-object#Bdict%
-#
-
-ê ê(-“"	#map-set#:–—%
-#
-
-ë ë(]‘"	#map-set#:–
-”$
-"
-
-í í(-’"	#map-set#:–%
-#
-
-ì ì(,◊"	#map-set#:–÷*
-(
-
-î î(<Ÿ"#unknown-value#Blist*
-(
-
-î î(<⁄"
-#is-exact#:ŸBbool!
-
-
-î î(<€"
-#assume#:⁄<
-:
-
-î î(<‹"#set-field# __collection_size:ŸBint*
-(
-
-î î(<›"#array-add-last#:Ÿ*
-(
-
-î î(<ﬁ"#array-add-last#:Ÿ+
-)
-
-î î(<ﬂ"#array-add-last#:Ÿÿ%
-#
-
-î î(<‡"	#map-set#:–Ÿ'
-%
-
-ñ °(·"#new-object#Bdict%
-#
-
-ó ó(-„"	#map-set#:·‚%
-#
-
-ò ò(aÂ"	#map-set#:·
-‰$
-"
-
-ô ô(-Ê"	#map-set#:·%
-#
-
-ö ö(/Ë"	#map-set#:·Á*
-(
-
-õ †(Î"#unknown-value#Blist*
-(
-
-õ †(Ï"
-#is-exact#:ÎBbool!
-
-
-õ †(Ì"
-#assume#:Ï<
-:
-
-õ †(Ó"#set-field# __collection_size:ÎBint+
-)
-
-õ †(Ô"#array-add-last#:ÎÈ+
-)
-
-õ †("#array-add-last#:ÎÍ*
-(
-
-õ †(Ò"#array-add-last#:Î*
-(
-
-õ †(Ú"#array-add-last#:Î%
-#
-
-õ †(Û"	#map-set#:·Î'
-%
-
-¢ ≠(Ù"#new-object#Bdict%
-#
-
-£ £(-ˆ"	#map-set#:Ùı%
-#
-
-§ §(V¯"	#map-set#:Ù
-˜$
-"
-
-• •(6˘"	#map-set#:Ù7%
-#
-
-¶ ¶(-˚"	#map-set#:Ù˙*
-(
-
-ß ¨(Ä"#unknown-value#Blist*
-(
-
-ß ¨(Å"
-#is-exact#:ÄBbool!
-
-
-ß ¨(Ç"
-#assume#:Å<
-:
-
-ß ¨(É"#set-field# __collection_size:ÄBint+
-)
-
-ß ¨(Ñ"#array-add-last#:Ä¸+
-)
-
-ß ¨(Ö"#array-add-last#:Ä˝+
-)
-
-ß ¨(Ü"#array-add-last#:Ä˛+
-)
-
-ß ¨(á"#array-add-last#:Äˇ%
-#
-
-ß ¨(à"	#map-set#:ÙÄ'
-%
-
-Æ π(â"#new-object#Bdict%
-#
-
-Ø Ø(-ã"	#map-set#:âä%
-#
-
-∞ ∞(Xç"	#map-set#:â
-å$
-"
-
-± ±(-é"	#map-set#:â%
-#
-
-≤ ≤(/è"	#map-set#:âÁ*
-(
-
-≥ ∏(ì"#unknown-value#Blist*
-(
-
-≥ ∏(î"
-#is-exact#:ìBbool!
-
-
-≥ ∏(ï"
-#assume#:î<
-:
-
-≥ ∏(ñ"#set-field# __collection_size:ìBint+
-)
-
-≥ ∏(ó"#array-add-last#:ìê+
-)
-
-≥ ∏(ò"#array-add-last#:ìë*
-(
-
-≥ ∏(ô"#array-add-last#:ì+
-)
-
-≥ ∏(ö"#array-add-last#:ìí%
-#
-
-≥ ∏(õ"	#map-set#:âì'
-%
-
-∫ ≈(ú"#new-object#Bdict%
-#
-
-ª ª(-û"	#map-set#:úù%
-#
-
-º º(e†"	#map-set#:ú
-ü$
-"
-
-Ω Ω(-°"	#map-set#:ú%
-#
-
-æ æ(,£"	#map-set#:ú¢*
-(
-
-ø ƒ(ß"#unknown-value#Blist*
-(
-
-ø ƒ(®"
-#is-exact#:ßBbool!
-
-
-ø ƒ(©"
-#assume#:®<
-:
-
-ø ƒ(™"#set-field# __collection_size:ßBint+
-)
-
-ø ƒ(´"#array-add-last#:ß§+
-)
-
-ø ƒ(¨"#array-add-last#:ß•*
-(
-
-ø ƒ(≠"#array-add-last#:ß+
-)
-
-ø ƒ(Æ"#array-add-last#:ß¶%
-#
-
-ø ƒ(Ø"	#map-set#:úß*
-(
-
-á ∆(∞"#unknown-value#Blist*
-(
-
-á ∆(±"
-#is-exact#:∞Bbool!
-
-
-á ∆(≤"
-#assume#:±<
-:
-
-á ∆(≥"#set-field# __collection_size:∞Bint+
-)
-
-á ∆(¥"#array-add-last#:∞ø+
-)
-
-á ∆(µ"#array-add-last#:∞–+
-)
-
-á ∆(∂"#array-add-last#:∞·+
-)
-
-á ∆(∑"#array-add-last#:∞Ù+
-)
-
-á ∆(∏"#array-add-last#:∞â+
-)
-
-á ∆(π"#array-add-last#:∞ú%
-#
-
-á ∆(∫"	#map-set#:æ∞'
-%
-
-» ”(ª"#new-object#Bdict%
-#
-
-… …(,Ω"	#map-set#:ªº%
-#
-
-   (cø"	#map-set#:ª
-æ$
-"
-
-À À(-¿"	#map-set#:ª$
-"
-
-Ã Ã(0¡"	#map-set#:ªd*
-(
-
-Õ “(√"#unknown-value#Blist*
-(
-
-Õ “(ƒ"
-#is-exact#:√Bbool!
-
-
-Õ “(≈"
-#assume#:ƒ<
-:
-
-Õ “(∆"#set-field# __collection_size:√Bint+
-)
-
-Õ “(«"#array-add-last#:√¬+
-)
-
-Õ “(»"#array-add-last#:√ß*
-(
-
-Õ “(…"#array-add-last#:√*
-(
-
-Õ “( "#array-add-last#:√?%
-#
-
-Õ “(À"	#map-set#:ª√'
-%
-
-‘ ‡(Ã"#new-object#Bdict%
-#
-
-’ ’(,Œ"	#map-set#:ÃÕ%
-#
-
-÷ ÷(Y–"	#map-set#:Ã
-œ$
-"
-
-◊ ◊(6—"	#map-set#:Ã7%
-#
-
-ÿ ÿ(-”"	#map-set#:Ã“*
-(
-
-Ÿ ﬂ(÷"#unknown-value#Blist*
-(
-
-Ÿ ﬂ(◊"
-#is-exact#:÷Bbool!
-
-
-Ÿ ﬂ(ÿ"
-#assume#:◊<
-:
-
-Ÿ ﬂ(Ÿ"#set-field# __collection_size:÷Bint+
-)
-
-Ÿ ﬂ(⁄"#array-add-last#:÷‘+
-)
-
-Ÿ ﬂ(€"#array-add-last#:÷è+
-)
-
-Ÿ ﬂ(‹"#array-add-last#:÷ê+
-)
-
-Ÿ ﬂ(›"#array-add-last#:÷ë+
-)
-
-Ÿ ﬂ(ﬁ"#array-add-last#:÷’%
-#
-
-Ÿ ﬂ(ﬂ"	#map-set#:Ã÷'
-%
-
-· Ï(‡"#new-object#Bdict%
-#
-
-‚ ‚(,‚"	#map-set#:‡·%
-#
-
-„ „(a‰"	#map-set#:‡
-„$
-"
-
-‰ ‰(-Â"	#map-set#:‡%
-#
-
-Â Â(,Ê"	#map-set#:‡¢*
-(
-
-Ê Î(Á"#unknown-value#Blist*
-(
-
-Ê Î(Ë"
-#is-exact#:ÁBbool!
-
-
-Ê Î(È"
-#assume#:Ë<
-:
-
-Ê Î(Í"#set-field# __collection_size:ÁBint*
-(
-
-Ê Î(Î"#array-add-last#:ÁR*
-(
-
-Ê Î(Ï"#array-add-last#:ÁS*
-(
-
-Ê Î(Ì"#array-add-last#:Á*
-(
-
-Ê Î(Ó"#array-add-last#:ÁT%
-#
-
-Ê Î(Ô"	#map-set#:‡Á'
-%
-
-Ì ¯("#new-object#Bdict%
-#
-
-Ó Ó(,Ú"	#map-set#:Ò%
-#
-
-Ô Ô(XÙ"	#map-set#:
-Û$
-"
-
- (6ı"	#map-set#:7%
-#
-
-Ò Ò(7˜"	#map-set#:ˆ*
-(
-
-Ú ˜(˚"#unknown-value#Blist*
-(
-
-Ú ˜(¸"
-#is-exact#:˚Bbool!
-
-
-Ú ˜(˝"
-#assume#:¸<
-:
-
-Ú ˜(˛"#set-field# __collection_size:˚Bint+
-)
-
-Ú ˜(ˇ"#array-add-last#:˚¯+
-)
-
-Ú ˜(Ä"#array-add-last#:˚˘+
-)
-
-Ú ˜(Å"#array-add-last#:˚˙*
-(
-
-Ú ˜(Ç"#array-add-last#:˚i%
-#
-
-Ú ˜(É"	#map-set#:˚'
-%
-
-˘ Ñ(Ñ"#new-object#Bdict%
-#
-
-˙ ˙(,Ü"	#map-set#:ÑÖ%
-#
-
-˚ ˚(Qà"	#map-set#:Ñ
-á$
-"
-
-¸ ¸(-â"	#map-set#:Ñ%
-#
-
-˝ ˝(2ã"	#map-set#:Ñä*
-(
-
-˛ É(å"#unknown-value#Blist*
-(
-
-˛ É(ç"
-#is-exact#:åBbool!
-
-
-˛ É(é"
-#assume#:ç<
-:
-
-˛ É(è"#set-field# __collection_size:åBint+
-)
-
-˛ É(ê"#array-add-last#:åê+
-)
-
-˛ É(ë"#array-add-last#:åë*
-(
-
-˛ É(í"#array-add-last#:å*
-(
-
-˛ É(ì"#array-add-last#:å?%
-#
-
-˛ É(î"	#map-set#:Ñå'
-%
-
-Ö ê(ï"#new-object#Bdict%
-#
-
-Ü Ü(,ó"	#map-set#:ïñ%
-#
-
-á á(Qô"	#map-set#:ï
-ò$
-"
-
-à à(6ö"	#map-set#:ï7%
-#
-
-â â(,ú"	#map-set#:ïõ*
-(
-
-ä è(°"#unknown-value#Blist*
-(
-
-ä è(¢"
-#is-exact#:°Bbool!
-
-
-ä è(£"
-#assume#:¢<
-:
-
-ä è(§"#set-field# __collection_size:°Bint+
-)
-
-ä è(•"#array-add-last#:°ù+
-)
-
-ä è(¶"#array-add-last#:°û+
-)
-
-ä è(ß"#array-add-last#:°ü+
-)
-
-ä è(®"#array-add-last#:°†%
-#
-
-ä è(©"	#map-set#:ï°'
-%
-
-ë ú(™"#new-object#Bdict%
-#
-
-í í(,¨"	#map-set#:™´%
-#
-
-ì ì(MÆ"	#map-set#:™
-≠$
-"
-
-î î(-Ø"	#map-set#:™$
-"
-
-ï ï(3∞"	#map-set#:™z*
-(
-
-ñ õ(¥"#unknown-value#Blist*
-(
-
-ñ õ(µ"
-#is-exact#:¥Bbool!
-
-
-ñ õ(∂"
-#assume#:µ<
-:
-
-ñ õ(∑"#set-field# __collection_size:¥Bint+
-)
-
-ñ õ(∏"#array-add-last#:¥±+
-)
-
-ñ õ(π"#array-add-last#:¥≤*
-(
-
-ñ õ(∫"#array-add-last#:¥+
-)
-
-ñ õ(ª"#array-add-last#:¥≥%
-#
-
-ñ õ(º"	#map-set#:™¥'
-%
-
-ù ©(Ω"#new-object#Bdict%
-#
-
-û û(,ø"	#map-set#:Ωæ%
-#
-
-ü ü(\¡"	#map-set#:Ω
-¿$
-"
-
-† †(6¬"	#map-set#:Ω7$
-"
-
-° °(*√"	#map-set#:ΩP*
-(
-
-¢ ®(≈"#unknown-value#Blist*
-(
-
-¢ ®(∆"
-#is-exact#:≈Bbool!
-
-
-¢ ®(«"
-#assume#:∆<
-:
-
-¢ ®(»"#set-field# __collection_size:≈Bint+
-)
-
-¢ ®(…"#array-add-last#:≈è+
-)
-
-¢ ®( "#array-add-last#:≈ê+
-)
-
-¢ ®(À"#array-add-last#:≈ë+
-)
-
-¢ ®(Ã"#array-add-last#:≈ƒ+
-)
-
-¢ ®(Õ"#array-add-last#:≈í%
-#
-
-¢ ®(Œ"	#map-set#:Ω≈'
-%
-
-™ ∞(œ"#new-object#Bdict%
-#
-
-´ ´(,—"	#map-set#:œ–%
-#
-
-¨ ¨(U”"	#map-set#:œ
-“$
-"
-
-≠ ≠(-‘"	#map-set#:œ%
-#
-
-Æ Æ(2÷"	#map-set#:œ’*
-(
-
-Ø Ø(Q⁄"#unknown-value#Blist*
-(
-
-Ø Ø(Q€"
-#is-exact#:⁄Bbool!
-
-
-Ø Ø(Q‹"
-#assume#:€<
-:
-
-Ø Ø(Q›"#set-field# __collection_size:⁄Bint+
-)
-
-Ø Ø(Qﬁ"#array-add-last#:⁄◊+
-)
-
-Ø Ø(Qﬂ"#array-add-last#:⁄ÿ+
-)
-
-Ø Ø(Q‡"#array-add-last#:⁄Ÿ*
-(
-
-Ø Ø(Q·"#array-add-last#:⁄%
-#
-
-Ø Ø(Q‚"	#map-set#:œ⁄'
-%
-
-± º(„"#new-object#Bdict%
-#
-
-≤ ≤(,Â"	#map-set#:„‰%
-#
-
-≥ ≥([Á"	#map-set#:„
-Ê$
-"
-
-¥ ¥(-Ë"	#map-set#:„%
-#
-
-µ µ(.Í"	#map-set#:„È*
-(
-
-∂ ª(Ï"#unknown-value#Blist*
-(
-
-∂ ª(Ì"
-#is-exact#:ÏBbool!
-
-
-∂ ª(Ó"
-#assume#:Ì<
-:
-
-∂ ª(Ô"#set-field# __collection_size:ÏBint+
-)
-
-∂ ª("#array-add-last#:ÏÎ+
-)
-
-∂ ª(Ò"#array-add-last#:Ïß*
-(
-
-∂ ª(Ú"#array-add-last#:Ï+
-)
-
-∂ ª(Û"#array-add-last#:Ïí%
-#
-
-∂ ª(Ù"	#map-set#:„Ï*
-(
-
-« Ω(ı"#unknown-value#Blist*
-(
-
-« Ω(ˆ"
-#is-exact#:ıBbool!
-
-
-« Ω(˜"
-#assume#:ˆ<
-:
-
-« Ω(¯"#set-field# __collection_size:ıBint+
-)
-
-« Ω(˘"#array-add-last#:ıª+
-)
-
-« Ω(˙"#array-add-last#:ıÃ+
-)
-
-« Ω(˚"#array-add-last#:ı‡+
-)
-
-« Ω(¸"#array-add-last#:ı+
-)
-
-« Ω(˝"#array-add-last#:ıÑ+
-)
-
-« Ω(˛"#array-add-last#:ıï+
-)
-
-« Ω(ˇ"#array-add-last#:ı™+
-)
-
-« Ω(Ä"#array-add-last#:ıΩ+
-)
-
-« Ω(Å"#array-add-last#:ıœ+
-)
-
-« Ω(Ç"#array-add-last#:ı„$
-"
-
-« Ω(É"	#map-set#:'ı%
-#
-
-¿7 ¿(TÑ"#array-read#:+
-)
-
-¿ ¿(UÖ"
-dictget* :ÑH
-
-¿ ¿(UÖ*C/home/omar/Documents/ruleIQ/services/freemium_assessment_service.py

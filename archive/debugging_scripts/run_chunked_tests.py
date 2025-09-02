@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
+
 Chunked Test Runner for ruleIQ Project
 
 Organizes ~795 tests into 6 logical groups and runs them asynchronously
@@ -64,7 +68,7 @@ class TestRunner:
 
     async def run_test_group(self, group_name: str, test_paths: List[str]) -> Dict:
         """Run a single test group and return results."""
-        print(f"🚀 Starting {group_name}...")
+        logger.info(f"🚀 Starting {group_name}...")
 
         # Filter paths that actually exist
         existing_paths = []
@@ -72,7 +76,7 @@ class TestRunner:
             if Path(path).exists():
                 existing_paths.append(path)
             else:
-                print(f"⚠️  Path not found: {path}")
+                logger.info(f"⚠️  Path not found: {path}")
 
         if not existing_paths:
             return {
@@ -136,7 +140,7 @@ class TestRunner:
 
         except Exception as e:
             duration = time.time() - start_time
-            print(f"❌ {group_name} failed with exception: {e}")
+            logger.info(f"❌ {group_name} failed with exception: {e}")
             return {
                 "group": group_name,
                 "status": "error",
@@ -187,9 +191,9 @@ class TestRunner:
 
     async def run_all_groups(self) -> None:
         """Run all test groups concurrently."""
-        print("🧪 Starting ruleIQ Chunked Test Execution")
-        print(f"📊 Running {len(TEST_GROUPS)} test groups asynchronously")
-        print("=" * 60)
+        logger.info("🧪 Starting ruleIQ Chunked Test Execution")
+        logger.info(f"📊 Running {len(TEST_GROUPS)} test groups asynchronously")
+        logger.info("=" * 60)
 
         # Create tasks for all groups
         tasks = []
@@ -207,7 +211,7 @@ class TestRunner:
             if isinstance(result, dict):
                 self.results[result["group"]] = result
             else:
-                print(f"❌ Unexpected error: {result}")
+                logger.info(f"❌ Unexpected error: {result}")
 
         self._print_summary()
 
@@ -215,9 +219,9 @@ class TestRunner:
         """Print comprehensive test execution summary."""
         total_duration = time.time() - self.start_time
 
-        print("\n" + "=" * 60)
-        print("📋 CHUNKED TEST EXECUTION SUMMARY")
-        print("=" * 60)
+        logger.info("\n" + "=" * 60)
+        logger.info("📋 CHUNKED TEST EXECUTION SUMMARY")
+        logger.info("=" * 60)
 
         total_passed = total_failed = total_tests = 0
 
@@ -236,29 +240,29 @@ class TestRunner:
             total_failed += failed
             total_tests += total
 
-        print("-" * 60)
-        print("🎯 OVERALL RESULTS:")
-        print(f"   Total Tests: {total_tests}")
+        logger.info("-" * 60)
+        logger.info("🎯 OVERALL RESULTS:")
+        logger.info(f"   Total Tests: {total_tests}")
         print(
             f"   Passed: {total_passed} ({total_passed / total_tests * 100:.1f}%)"
             if total_tests > 0
             else "   Passed: 0"
         )
-        print(f"   Failed: {total_failed}")
-        print(f"   Duration: {total_duration:.1f}s")
+        logger.info(f"   Failed: {total_failed}")
+        logger.info(f"   Duration: {total_duration:.1f}s")
 
         success_rate = (total_passed / total_tests * 100) if total_tests > 0 else 0
         if success_rate >= 95:
-            print("🎉 EXCELLENT: >95% pass rate achieved!")
+            logger.info("🎉 EXCELLENT: >95% pass rate achieved!")
         elif success_rate >= 90:
-            print("🎊 GREAT: >90% pass rate achieved!")
+            logger.info("🎊 GREAT: >90% pass rate achieved!")
         elif success_rate >= 80:
-            print("👍 GOOD: >80% pass rate achieved!")
+            logger.info("👍 GOOD: >80% pass rate achieved!")
         else:
-            print("⚠️  NEEDS WORK: <80% pass rate")
+            logger.info("⚠️  NEEDS WORK: <80% pass rate")
 
-        print("\n📁 Test result files: test_results_group*.xml")
-        print("=" * 60)
+        logger.info("\n📁 Test result files: test_results_group*.xml")
+        logger.info("=" * 60)
 
 
 async def main() -> None:

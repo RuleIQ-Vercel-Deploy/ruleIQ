@@ -1,9 +1,11 @@
 """
+from __future__ import annotations
+
 Rate limiting service for AI features.
 Implements per-user daily limits for SMB users.
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_, func
@@ -51,7 +53,7 @@ class RateLimitService:
         daily_limit = limit_config["daily"]
 
         # Calculate time window (last 24 hours)
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         window_start = now - timedelta(hours=24)
 
         # Count usage in the window from audit logs
@@ -60,7 +62,7 @@ class RateLimitService:
                 AuditLog.user_id == user.id,
                 AuditLog.action == f"{feature}_request",
                 AuditLog.timestamp >= window_start,
-            )
+            ),
         )
 
         result = await db.execute(stmt)
@@ -81,10 +83,10 @@ class RateLimitService:
                         AuditLog.user_id == user.id,
                         AuditLog.action == f"{feature}_request",
                         AuditLog.timestamp >= window_start,
-                    )
+                    ),
                 )
                 .order_by(AuditLog.timestamp)
-                .limit(1)
+                .limit(1),
             )
 
             oldest_result = await db.execute(oldest_stmt)
@@ -139,12 +141,12 @@ class RateLimitService:
             details=json.dumps(
                 {
                     "feature": feature,
-                    "timestamp": datetime.utcnow().isoformat(),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
                     **(metadata or {}),
-                }
+                },
             ),
             severity="info",
-            timestamp=datetime.utcnow(),
+            timestamp=datetime.now(timezone.utc),
         )
 
         db.add(audit_entry)
@@ -163,7 +165,7 @@ class RateLimitService:
             Dict with usage stats for each feature
         """
         stats = {}
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         window_start = now - timedelta(hours=24)
 
         for feature, config in cls.LIMITS.items():
@@ -173,7 +175,7 @@ class RateLimitService:
                     AuditLog.user_id == user.id,
                     AuditLog.action == f"{feature}_request",
                     AuditLog.timestamp >= window_start,
-                )
+                ),
             )
 
             result = await db.execute(stmt)
@@ -187,7 +189,7 @@ class RateLimitService:
                 "percentage_used": (
                     round((usage_count / config["daily"]) * 100, 1)
                     if config["daily"] > 0
-                    else 0
+                    else 0,
                 ),
             }
 
@@ -213,7 +215,7 @@ class RateLimitService:
         # This would typically be restricted to admin users
         # For now, we'll just clear the relevant audit log entries
 
-        window_start = datetime.utcnow() - timedelta(hours=24)
+        window_start = datetime.now(timezone.utc) - timedelta(hours=24)
 
         if feature:
             # Reset specific feature
@@ -222,7 +224,7 @@ class RateLimitService:
                     AuditLog.user_id == user.id,
                     AuditLog.action == f"{feature}_request",
                     AuditLog.timestamp >= window_start,
-                )
+                ),
             )
         else:
             # Reset all features
@@ -232,7 +234,7 @@ class RateLimitService:
                     AuditLog.user_id == user.id,
                     AuditLog.action.in_(actions),
                     AuditLog.timestamp >= window_start,
-                )
+                ),
             )
 
         result = await db.execute(stmt)

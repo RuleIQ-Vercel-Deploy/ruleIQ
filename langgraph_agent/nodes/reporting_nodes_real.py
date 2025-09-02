@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Real reporting nodes implementation with actual service integration.
 Connects to real ReportGenerator, PDFGenerator, and ReportScheduler services.
 """
@@ -6,7 +8,7 @@ Connects to real ReportGenerator, PDFGenerator, and ReportScheduler services.
 import logging
 import os
 import json
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from uuid import UUID
@@ -132,7 +134,7 @@ async def generate_scheduled_reports_node(
                     # Save PDF file
                     filename = (
                         f"{schedule.report_type.replace(' ', '_')}_"
-                        f"{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.pdf"
+                        f"{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.pdf"
                     )
                     file_path = await save_report_file(pdf_content, filename)
                     report_data["file_path"] = file_path
@@ -279,7 +281,7 @@ async def generate_on_demand_report_node(
             filename = (
                 f"{report_type.replace(' ', '_')}_"
                 f"{profile_id}_"
-                f"{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.pdf"
+                f"{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}.pdf"
             )
             file_path = await save_report_file(pdf_content, filename)
             state["report_data"]["file_path"] = file_path
@@ -507,7 +509,7 @@ def should_run_schedule(schedule: ReportScheduleModel) -> bool:
     if not schedule.active:
         return False
 
-    now = datetime.utcnow()
+    now = datetime.now(timezone.utc)
 
     # If never run, should run
     if not schedule.last_run:

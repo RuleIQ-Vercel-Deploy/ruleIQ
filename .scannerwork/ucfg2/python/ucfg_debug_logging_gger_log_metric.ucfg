@@ -1,37 +1,32 @@
 
 1config.debug_logging.PerformanceLogger.log_metric=
-3/home/omar/Documents/ruleIQ/config/debug_logging.pyJ J("2*ü
-2K K(!l
+3/home/omar/Documents/ruleIQ/config/debug_logging.py> >("2*Å
+2@ @(!l
 j
-L L(
+A A(
 %1"__id*R
 
 __unknown_file (6*4(
 &config.debug_logging.PerformanceLogger"
-logger©
-¶
-M M(5
-%2"__concat*
-M M(
+loggerã
+à
+A A(J
+%2"__concat*"
+A A(-
+Metric: %s = %s %s*
+A1 A(<
 
-Metric: *
-M M("
-
-metric_name*
-M# M(&
- = *
-M' M(,	
+metric_name*
+A> A(C	
 
-value*
-M- M(.
- *
-M/ M(3
+value*
+AE A(I
 
 unit
-N S(
+B C(8
 %3"dictõ
 ò
-O O(*
+B B(-
 %4"__mapSet*"
 
 __unknown_file (
@@ -45,7 +40,7 @@ j
 
 metric_nameñ
 ì
-P P(%
+B/ B(D
 %5"__mapSet*"
 
 __unknown_file (
@@ -59,7 +54,7 @@ j
 
 valueî
 ë
-Q Q(#
+C C(
 %6"__mapSet*"
 
 __unknown_file (
@@ -73,7 +68,7 @@ j
 
 unitï
 í
-R R(&
+C! C(7
 %7"__mapSet*"
 
 __unknown_file (
@@ -87,7 +82,7 @@ event_type*&
 __unknown_file (
 
 metricqo
-L T(	
+A C(9
 %8*"
 
 __unknown_file (
@@ -103,12 +98,12 @@ event_type*&
 3*4
 3
 debug_logging.py"
-W W
+F F
 implicit return:
-J J()
+> >()
 metric_name:
-J+ J(7
+>+ >(7
 value:
-J9 J(L
+>9 >(J
 unitB*(
 &config.debug_logging.PerformanceLoggerH

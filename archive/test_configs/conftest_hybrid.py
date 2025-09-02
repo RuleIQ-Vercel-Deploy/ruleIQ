@@ -137,7 +137,7 @@ class HybridDatabaseManager:
             async_engine = self.get_async_engine()
             async with async_engine.begin() as conn:
                 await conn.run_sync(Base.metadata.drop_all)
-        except Exception as e:
+        except (ValueError, TypeError) as e:
             print(f"Warning: Table cleanup failed: {e}")
 
     async def dispose(self) -> None:
@@ -184,7 +184,7 @@ def sync_db_session():
 
     try:
         yield session
-    except Exception:
+    except (ValueError, TypeError):
         session.rollback()
         raise
     finally:
@@ -199,7 +199,7 @@ def sync_db_session_isolated():
 
     try:
         yield session
-    except Exception:
+    except (ValueError, TypeError):
         session.rollback()
         raise
     finally:
@@ -302,10 +302,11 @@ async def async_db_session() -> AsyncGenerator[AsyncSession, None]:
     async with AsyncSession(async_engine, expire_on_commit=False) as session:
         try:
             yield session
-        except Exception:
+        except (ValueError, TypeError):
             await session.rollback()
             raise
         finally:
+        session.close()
             await session.close()
 
 

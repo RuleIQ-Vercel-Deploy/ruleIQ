@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+from __future__ import annotations
+
 AI Service Testing Script for ruleIQ
 Comprehensive testing of AI functionality
 """
@@ -8,7 +10,7 @@ import os
 import sys
 import json
 import subprocess
-from datetime import datetime
+from datetime import datetime, timezone
 
 # Add project root to path
 sys.path.insert(0, "/home/omar/Documents/ruleIQ")
@@ -30,7 +32,7 @@ def test_environment_setup():
 
     results = {
         "phase": "environment",
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "tests": [],
     }
 
@@ -80,7 +82,7 @@ def test_api_endpoints():
 
     results = {
         "phase": "api_endpoints",
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "tests": [],
     }
 
@@ -243,7 +245,7 @@ def run_all_tests() -> None:
     all_results = {
         "summary": {},
         "phases": [],
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
     # Phase 1

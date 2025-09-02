@@ -100,7 +100,7 @@ This enables automatic state persistence between workflow runs.
         # Test querying
         print("\n🔍 Testing RAG query...")
         response = await rag_system.query_documentation(
-            "How do I set up state in LangGraph?", source_filter="test", max_results=2
+            "How do I set up state in LangGraph?", source_filter="test", max_results=2,
         )
 
         print("💬 Query response:")
@@ -116,7 +116,7 @@ This enables automatic state persistence between workflow runs.
         print("\n🎉 All processing tests passed!")
         return True
 
-    except Exception as e:
+    except (Exception, ValueError, KeyError) as e:
         print(f"❌ Test failed with error: {e}")
         import traceback
 
@@ -127,7 +127,7 @@ This enables automatic state persistence between workflow runs.
         # Clean up connections
         try:
             rag_system.close()
-        except:
+        except (ValueError, TypeError):
             pass
 
 

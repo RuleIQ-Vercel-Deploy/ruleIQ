@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Production-grade evaluation metrics for LangGraph compliance agent.
 Includes recall@k, citation exactness, link precision, and performance metrics.
 """
@@ -7,7 +9,7 @@ import time
 import logging
 from typing import Dict, List, Any, Optional
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from statistics import mean, stdev
 from collections import Counter
 
@@ -230,7 +232,7 @@ class LinkPrecisionEvaluator:
         try:
             domain = urlparse(url).netloc.lower()
             return any(valid_domain in domain for valid_domain in self.valid_domains)
-        except Exception:
+        except ValueError:
             return False
 
     def evaluate(self, responses: List[str]) -> EvaluationResult:
@@ -497,7 +499,7 @@ class AgentPerformanceEvaluator:
                 "latency_ms": latency_ms,
                 "user_satisfaction": user_satisfaction,
                 "task_completion": task_completion,
-                "timestamp": datetime.utcnow(),
+                "timestamp": datetime.now(timezone.utc),
             }
         )
 
@@ -675,7 +677,7 @@ class ComprehensiveEvaluator:
             Comprehensive evaluation report
         """
         report = {
-            "evaluation_timestamp": datetime.utcnow().isoformat(),
+            "evaluation_timestamp": datetime.now(timezone.utc).isoformat(),
             "overall_score": 0.0,
             "metric_scores": {},
             "slo_compliance": {},
@@ -808,7 +810,7 @@ async def run_latency_smoke_test(
                 latency_ms = (end_time - start_time) * 1000
                 latency_evaluator.add_sample(latency_ms)
 
-            except Exception as e:
+            except (ValueError, TypeError) as e:
                 logger.error(f"Test iteration {i} failed: {e}")
                 # Still record the time taken until failure
                 end_time = time.time()

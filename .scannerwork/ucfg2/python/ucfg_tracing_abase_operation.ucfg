@@ -1,14 +1,11 @@
 
-4config.tracing.CustomTracer.trace_database_operation9
--/home/omar/Documents/ruleIQ/config/tracing.pyß ß( "2*Œ
-2
-™ ™('
-
-´ Ø(	
-%6"dictú
-ô
-
-¨ ¨(%
+4config.tracing.CustomTracer.trace_database_operation7
+-/home/omar/Documents/ruleIQ/config/tracing.pyx x( "2*¬
+2z z('
+{ |(&
+%6"dictö
+ó
+{ {(/
 %7"__mapSet*"
 
 __unknown_file (
@@ -20,10 +17,9 @@
 
 __unknown_file (
 
-	operationî
-ë
-
-≠ ≠(
+	operationí
+è
+{1 {(B
 %8"__mapSet*"
 
 __unknown_file (
@@ -36,10 +32,9 @@
 
 __unknown_file (	
 
-tableö
-ó
-
-Æ Æ(%
+tableò
+ï
+| |(%
 %9"__mapSet*"
 
 __unknown_file (
@@ -51,10 +46,9 @@
 
 __unknown_file (
 
-postgresqlF
-D
-
-´ Ø(	
+postgresqlD
+B
+{ |(&
 
 attributes"__id*"
 
@@ -62,23 +56,19 @@ attributes"__id*"
 
 %6*
 4
-5*…
-4
-¥ ∂(	R
-P
-
-µ µ(
-%1"__concat*
-
-µ µ(
-db.*
-
-µ µ(
+5*¿
+4	 Ä('L
+J
+ (0
+%1"__concat*
+! ($
+db.*
+% (.
 
 	operationO
 M
 
-µ; µ(I
+Ä Ä(
 %2"__id*3
 
 __unknown_file (*
@@ -88,15 +78,14 @@ M
 SpanKindJ
 H
 
-µ; µ(P
+Ä Ä(&
 %3"__id*.
 
 __unknown_file (*
 
 %2"
-CLIENT∞≠
-
-¥ ∂(	
+CLIENTØ¨
+	 Ä('
 %4*;
 
 __unknown_file (
@@ -113,15 +102,12 @@ attributes
 attributes:
 kind
 
-%3"
-
-¥ ∂(	
+%3"
+	 Ä('
 
-%4*Œ
-5
-≤ ≤(0∑¥
-
-≤ ≤(0
+%4* 
+5~ ~(0µ≤
+~ ~(0
 %5"dict.__setitem__**
 
 __unknown_file (
@@ -136,15 +122,12 @@ attributes*+
 
 
 query_id2__setitem__*
-4:
-
-® ®(
-	operation:
-
-® ®((
-table:
-
-®* ®(H
+4:
+x' x(5
+	operation:
+x7 x(A
+table:
+xC y(
 
 query_idB
 config.tracing.CustomTracerH

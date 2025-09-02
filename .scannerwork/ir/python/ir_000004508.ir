@@ -1,261 +1,0 @@
-
-"FCA_REGULATORY"str
-"applicable_indu"str
-d"Training Records"str
-$c"Consumer Outcomes Reports"str
--$"Load FCA regulatory framework data"str
-I"control_domains"str
-a"Risk Assessments"str
-
-"1int
-¶
-¬"
-        Financial Conduct Authority requirements for financial services firms.
-        Covers consumer protection, market integrity, and operational resilience.
-        "str
-	"description"str
-!L"Operational Resilience"str
-x"implementation_"str
-O"Data Management"str
-.2%"Operational resilience requirements"str
-8"Regulatory reporting"str
-"7"Prudential requirements"str
-M"Consumer Protection"str
-&"FCA Regulatory Requirements"str
-%"Â£0+"str
-e"Incident Reports"str
-_"evidence_types"str
-{"estimated_cost_"str
-	"banking"str
-'b"Operational Resilience Plans"str
-*1!"Treating Customers Fairly (TCF)"str
-|"Â£25,000-Â£150,000"str
-'"geographic_scop"str
-Q"Regulatory Reporting"str
-u"complexity_scor"str
-K"Risk Management"str
-!J"Governance & Oversight"str
-N"Financial Crime"str
-"financial_services"str
-!"employee_thresh"str
-"display_name"str
-P"Market Conduct"str
-"insurance"str
-%3"Financial crime prevention"str
-	"fintech"str
-$5"Consumer duty obligations"str
-"Financial Services"str
-900"Senior Managers & Certification Regime (SM&CR)"str
-)4 "Data governance and protection"str
-/"key_requirement"str
-"name"str
-
-v9int
-"1.0"str
-g"Complaints Logs"str
-6"Market conduct rules"str
-f"Regulatory Returns"str
-
-0int
-`"Governance Policies"str
-
-"category"str
-~	"version"str
-y24int
-("UK"str
-"investment"str
-9"Complaints handling"str
-$"revenue_thresho"strlist"ä%
-#
-	n ¤("#new-object#Bdict 
-
-o o( "	#map-set#: 
-
-p p(5"	#map-set#:!
-
-	q q(Ç"	#map-set#:	
- 
-
-u u(("	#map-set#:'
-%
-v |(	"#unknown-value#Blist&
-$
-v |(	"
-#is-exact#:Bbool
-
-v |(	"
-#assume#:8
-6
-v |(	"#set-field# __collection_size:Bint&
-$
-v |(	"#array-add-last#:&
-$
-v |(	"#array-add-last#:&
-$
-v |(	"#array-add-last#:&
-$
-v |(	"#array-add-last#:&
-$
-v |(	"#array-add-last#: 
-
-v |(	 "	#map-set#: 
-
-} }(#"	#map-set#:!" 
-
-~ ~( &"	#map-set#:$%'
-%
- (!)"#unknown-value#Blist&
-$
- (!*"
-#is-exact#:)Bbool
-
- (!+"
-#assume#:*8
-6
- (!,"#set-field# __collection_size:)Bint&
-$
- (!-"#array-add-last#:)( 
-
- (!."	#map-set#:'))
-'
-
-€ ‹(	:"#unknown-value#Blist(
-&
-
-€ ‹(	;"
-#is-exact#::Bbool
-
-
-€ ‹(	<"
-#assume#:;:
-8
-
-€ ‹(	="#set-field# __collection_size::Bint(
-&
-
-€ ‹(	>"#array-add-last#::0(
-&
-
-€ ‹(	?"#array-add-last#::1(
-&
-
-€ ‹(	@"#array-add-last#::2(
-&
-
-€ ‹(	A"#array-add-last#::3(
-&
-
-€ ‹(	B"#array-add-last#::4(
-&
-
-€ ‹(	C"#array-add-last#::5(
-&
-
-€ ‹(	D"#array-add-last#::6(
-&
-
-€ ‹(	E"#array-add-last#::7(
-&
-
-€ ‹(	F"#array-add-last#::8(
-&
-
-€ ‹(	G"#array-add-last#::9"
- 
-
-€ ‹(	H"	#map-set#:/:)
-'
-
-Œ •(	R"#unknown-value#Blist(
-&
-
-Œ •(	S"
-#is-exact#:RBbool
-
-
-Œ •(	T"
-#assume#:S:
-8
-
-Œ •(	U"#set-field# __collection_size:RBint(
-&
-
-Œ •(	V"#array-add-last#:RJ(
-&
-
-Œ •(	W"#array-add-last#:RK(
-&
-
-Œ •(	X"#array-add-last#:RL(
-&
-
-Œ •(	Y"#array-add-last#:RM(
-&
-
-Œ •(	Z"#array-add-last#:RN(
-&
-
-Œ •(	["#array-add-last#:RO(
-&
-
-Œ •(	\"#array-add-last#:RP(
-&
-
-Œ •(	]"#array-add-last#:RQ"
- 
-
-Œ •(	^"	#map-set#:IR)
-'
-
-– Ÿ(	h"#unknown-value#Blist(
-&
-
-– Ÿ(	i"
-#is-exact#:hBbool
-
-
-– Ÿ(	j"
-#assume#:i:
-8
-
-– Ÿ(	k"#set-field# __collection_size:hBint(
-&
-
-– Ÿ(	l"#array-add-last#:h`(
-&
-
-– Ÿ(	m"#array-add-last#:ha(
-&
-
-– Ÿ(	n"#array-add-last#:hb(
-&
-
-– Ÿ(	o"#array-add-last#:hc(
-&
-
-– Ÿ(	p"#array-add-last#:hd(
-&
-
-– Ÿ(	q"#array-add-last#:he(
-&
-
-– Ÿ(	r"#array-add-last#:hf(
-&
-
-– Ÿ(	s"#array-add-last#:hg"
- 
-
-– Ÿ(	t"	#map-set#:_h"
- 
-
-   (w"	#map-set#:uv"
- 
-
-¡ ¡(z"	#map-set#:xy"
- 
-
-¢ ¢(-}"	#map-set#:{|#
-!
-
-£ £(€"	#map-set#:~
-	n ¤(*9/home/omar/Documents/ruleIQ/scripts/load_uk_frameworks.py

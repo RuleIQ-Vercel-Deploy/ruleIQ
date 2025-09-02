@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 AI Tests for Compliance Accuracy
 
 Tests the AI assistant's accuracy on compliance questions using golden datasets
@@ -280,7 +282,7 @@ class TestComplianceAccuracy:
 
         for question_data in gdpr_golden_dataset[:3]:
             mock_response = self._generate_mock_response(
-                question_data, include_terminology=True
+                question_data, include_terminology=True,
             )
             mock_ai_client.generate_content.return_value.text = mock_response
 
@@ -451,7 +453,7 @@ class TestComplianceAccuracy:
         # Add some keywords naturally
         if len(keywords) > 2:
             response_parts.extend(
-                ["", f"Key considerations include: {', '.join(keywords[:3])}."]
+                ["", f"Key considerations include: {', '.join(keywords[:3])}."],
             )
 
         if include_terminology and question_data["framework"] == "GDPR":
@@ -459,7 +461,7 @@ class TestComplianceAccuracy:
                 [
                     "",
                     "As a data controller, you must ensure compliance with supervisory authority requirements.",
-                ]
+                ],
             )
 
         return "\n".join(response_parts)

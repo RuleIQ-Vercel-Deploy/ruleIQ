@@ -1,49 +1,0 @@
-
-*!"Processed: {user_input[:20]}..."str
-1000int
-"company_id"str
-	"success"str
-0.05float
-truebool
-"result"str
-company_id
-÷& ÷(0
-user_input
-÷2 ÷(<kwargs
-÷> ÷(F"dict"â.
-,
-
-ù ù(
-base_delay"#id#:Bfloat,
-*
-
-ú  ú(/"
-builtinslen*:BintF
-D
-
-ú  ú(6complexity_factor"#dependent-value#*:Bfloat0
-.
-
-û  û(>	"#dependent-value#:Bfloat=
-;
-
-û û(?
-"
-asyncio.taskssleep:	Btyping.Coroutine#
-!
-
-û û(?"#unknown-value#&
-$
-
-ı ("#new-object#Bdict"
- 
-
-ş ş(("	#map-set#:"
- 
-
-ÿ ÿ(<"	#map-set#:"
- 
-
-€ €("	#map-set#:
-
-ı (*G/home/omar/Documents/ruleIQ/langgraph_agent/tests/test_latency_smoke.py

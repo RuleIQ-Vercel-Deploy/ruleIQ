@@ -44,10 +44,10 @@ class TestStandardizedRAG:
             "langgraph_agent.agents.rag_standard.OpenAIEmbeddings"
         ) as mock_embeddings:
             mock_embeddings.return_value.embed_query = Mock(
-                return_value=[0.1] * 1536  # Mock embedding
+                return_value=[0.1] * 1536  # Mock embedding,
             )
             mock_embeddings.return_value.embed_documents = Mock(
-                return_value=[[0.1] * 1536]  # Mock embeddings
+                return_value=[[0.1] * 1536]  # Mock embeddings,
             )
 
             rag = StandardizedRAG(company_id)
@@ -89,7 +89,7 @@ class TestStandardizedRAG:
         # Add test documents first
         documents = [
             "GDPR requires explicit consent for data processing.",
-            "ISO 27001 mandates information security management.",
+            "ISO 27001 mandates information security management."
         ]
 
         await standard_rag.add_documents(documents)
@@ -227,7 +227,7 @@ class TestRAGAdapter:
                     "metadata": {"title": "SOC2 Guide"},
                     "score": 0.85,
                 },
-            ]
+            ],
         )
 
         # Retrieve using old interface
@@ -256,7 +256,7 @@ class TestRAGAdapter:
         """Test health status compatibility."""
         # Mock the standard RAG health check
         rag_adapter.standard_rag.health_check = Mock(
-            return_value={"status": "healthy", "vector_store": "operational"}
+            return_value={"status": "healthy", "vector_store": "operational"},
         )
 
         health = await rag_adapter.get_health_status()
@@ -285,7 +285,7 @@ class TestRAGAdapter:
         """Test getting retrieval statistics."""
         # Mock the standard RAG statistics
         rag_adapter.standard_rag.get_statistics = AsyncMock(
-            return_value={"document_count": 10, "reranking_enabled": True}
+            return_value={"document_count": 10, "reranking_enabled": True},
         )
 
         stats = await rag_adapter.get_retrieval_statistics()
@@ -333,7 +333,7 @@ class TestPerformanceImprovement:
             assert "from langchain.retrievers import MultiQueryRetriever" in content
             assert (
                 "from langchain.text_splitter import RecursiveCharacterTextSplitter"
-                in content
+                in content,
             )
 
     def test_simplified_interface(self):

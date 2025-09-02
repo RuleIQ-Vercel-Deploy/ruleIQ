@@ -1,29 +1,6 @@
-
-%"unimplemented_requirements"str
-8/"Find all unimplemented mandatory requirements"str
-äÚ"
-        MATCH (reg:Regulation)-[:REQUIRES {mandatory: true}]->(req:Requirement)
-        WHERE NOT EXISTS((req)<-[:IMPLEMENTS]-(:Control))
-        RETURN reg.name AS regulation,
-               req.title AS requirement,
-               req.deadline AS deadline,
-               req.description AS description
-        ORDER BY req.deadline
-        "strself
-þ- þ(1"Û(
-&
- (îquery"#id#:Bstr#
-!
-
-‹ ‹(1"#unknown-value#,
-*
-
-‹ ‹(1results"#unknown-value#&
-$
-
-Œ Œ(6"#new-object#Bdict"
- 
-
-Œ Œ(5	"	#map-set#:
-
-Œ Œ(6*A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py
+func_ _("c!
+
+` `(#"#unknown-value#.
+,
+` `("#set-field# _api_version:
+a a(*</home/omar/Documents/ruleIQ/api/middleware/api_versioning.py

@@ -1,51 +1,40 @@
 
-©ü"
-    Convenience function to execute AI operations with cost tracking and circuit breaker protection.
+"risk_name"str
+"mitigation_chain"str
+™†"
+        MATCH (risk:Risk {name: $risk_name})<-[:MITIGATES]-(control:Control)
+        OPTIONAL MATCH (control)<-[:MONITORS]-(tech:Technology)
+        RETURN risk.name AS risk,
+               risk.risk_score AS inherent_risk,
+               control.name AS control,
+               control.automation_level AS automation,
+               tech.name AS technology,
+               tech.category AS tech_category
+        "str
+?6"Trace risk mitigation through controls to technology"strself
+ä* ä(.	risk_name
+ä0 ä(>"Ø(
+&
+ç ç(¥query"#id#:Bstr.
+,
 
-    Args:
-        model_name: Name of the AI model
-        service_name: Name of the service
-        operation: Function to execute
-        input_tokens: Number of input tokens
-        output_tokens: Number of output tokens
-        user_id: User identifier
-        session_id: Session identifier
-        request_id: Request identifier
-        *args, **kwargs: Arguments for the operation
+ó ó()params"#new-object#Bdict"
+ 
 
-    Returns:
-        Result of the operation
-    "str
-model_name
-â â(service_name
-ä ä(	operation
-ã ã(input_tokens
-å å(output_tokens
-ç ç(user_id
-é é(!
-session_id
-è è($
-request_id
-ê ê($	args
-ë ë(	
-kwargs
-í í("dict"ßk
-i
-
-¶ ¶(6circuit_breaker"H
-&services.ai.cost_aware_circuit_breakerget_cost_aware_circuit_breaker%
-#
-
-± ±("#unaryop *#2*:	'
-%
-
-≤ ≤("#unaryop **#2**:
-1
-/
-
-® ≥("?python-unknown?:#
+ó ó(("	#map-set#:#
 !
 
-® ≥("#unknown-value#
+ò ò(9	"#unknown-value#,
+*
 
-® ≥(*E/home/omar/Documents/ruleIQ/services/ai/cost_aware_circuit_breaker.py
+ò ò(9
+results"#unknown-value#&
+$
+
+ô ô(,"#new-object#Bdict"
+ 
+
+ô ô(+"	#map-set#:
+
+
+ô ô(,*A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py

@@ -33,7 +33,7 @@ def ingest_documents():
     """Ingest priority documents."""
     # Load manifest
     processor = ManifestProcessor(
-        "/home/omar/Documents/ruleIQ/data/manifests/compliance_ml_manifest.json"
+        "/home/omar/Documents/ruleIQ/data/manifests/compliance_ml_manifest.json",
     )
     docs = processor.get_priority_documents(5)
 

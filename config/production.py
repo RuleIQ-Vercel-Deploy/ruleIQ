@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Production Configuration
 Settings optimized for production environment
 """

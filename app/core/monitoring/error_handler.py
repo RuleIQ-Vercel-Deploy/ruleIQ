@@ -1,11 +1,13 @@
 """
+from __future__ import annotations
+
 Comprehensive error handling with custom exceptions and handlers.
 """
 
 import traceback
 import sys
 from typing import Any, Dict, Optional, Type, Union, Callable
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
@@ -35,7 +37,7 @@ class ApplicationError(Exception):
         self.code = code
         self.status_code = status_code
         self.details = details or {}
-        self.timestamp = datetime.utcnow().isoformat()
+        self.timestamp = datetime.now(timezone.utc).isoformat()
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert error to dictionary."""
@@ -242,7 +244,7 @@ class ErrorHandler:
                     "error": {
                         "code": "INTERNAL_SERVER_ERROR",
                         "message": "An internal server error occurred",
-                        "timestamp": datetime.utcnow().isoformat(),
+                        "timestamp": datetime.now(timezone.utc).isoformat(),
                     }
                 },
             )

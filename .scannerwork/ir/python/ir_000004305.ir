@@ -1,41 +1,0 @@
-
-Ã¹"
-        Forward any unimplemented methods to StandardizedRAG.
-
-        This ensures maximum compatibility by trying to use the new system
-        for any methods not explicitly adapted.
-
-        Args:
-            name: Method name
-
-        Returns:
-            Method from StandardizedRAG if available
-        "str
-G>"'{self.__class__.__name__}' object has no attribute '{name}'"strself
-¼ ¼(name
-¼ ¼("‡/
--
-
-É É($"#get-field# standard_rag:2
-0
-
-É É(+"
-builtinshasattr*:Bbool "
-
-É É(+ *
-É É(
-"s/
--
-
-Ê Ê(,"#get-field# standard_rag:,
-*
-
-Ê Ê(3"
-builtinsgetattr*:
-
-Ê Ê(3"N8
-6
-
-Ë Í(		"AttributeError*:BAttributeError2
-
-Ë Í(		*A/home/omar/Documents/ruleIQ/langgraph_agent/agents/rag_adapter.py

@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 """Check available routes in the test app."""
+import logging
+logger = logging.getLogger(__name__)
+
 
 from tests.test_app import create_test_app
 
@@ -12,13 +15,13 @@ for route in app.routes:
         routes.append((route.path, list(route.methods)))
 
 # Sort and print chat-related routes
-print("Chat-related routes:")
+logger.info("Chat-related routes:")
 for path, methods in sorted(routes):
     if "/chat" in path:
-        print(f"  {path}: {methods}")
+        logger.info(f"  {path}: {methods}")
 
 # Check specifically for analytics routes
-print("\nAnalytics routes:")
+logger.info("\nAnalytics routes:")
 analytics_routes = [r for r in routes if "analytics" in r[0]]
 for path, methods in sorted(analytics_routes):
-    print(f"  {path}: {methods}")
+    logger.info(f"  {path}: {methods}")

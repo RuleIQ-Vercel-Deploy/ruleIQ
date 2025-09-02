@@ -30,7 +30,7 @@ async def test_instantiation():
         # Create instance
         print("📊 Creating MasterIntegrationGraph instance...")
         graph = await MasterIntegrationGraph.create(
-            database_url=db_url, enable_streaming=True
+            database_url=db_url, enable_streaming=True,
         )
         print("✅ Graph instance created successfully")
 
@@ -49,7 +49,7 @@ async def test_instantiation():
         print("🔍 Checking graph structure...")
         if hasattr(graph, "graph") and graph.graph:
             print(
-                f"✅ Graph has {len(graph.graph.nodes) if hasattr(graph.graph, 'nodes') else 'unknown number of'} nodes"
+                f"✅ Graph has {len(graph.graph.nodes) if hasattr(graph.graph, 'nodes') else 'unknown number of'} nodes",
             )
 
         if hasattr(graph, "checkpointer"):

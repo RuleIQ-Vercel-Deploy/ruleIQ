@@ -1,3 +1,7 @@
+from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
+
 import asyncio
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy import text
@@ -13,7 +17,7 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 
 async def test_connection() -> None:
     """Tests the database connection and prints detailed error information."""
-    print(f"Attempting to connect to database: {DATABASE_URL}")
+    logger.info(f"Attempting to connect to database: {DATABASE_URL}")
     try:
         from urllib.parse import urlparse, urlunparse, parse_qs, urlencode
 
@@ -27,9 +31,9 @@ async def test_connection() -> None:
         engine = create_async_engine(async_db_url, connect_args={"ssl": True})
         async with engine.connect() as conn:
             await conn.execute(text("SELECT 1"))
-        print("Database connection successful!")
+        logger.info("Database connection successful!")
     except Exception as e:
-        print(f"Database connection failed: {e}")
+        logger.info(f"Database connection failed: {e}")
 
 
 if __name__ == "__main__":

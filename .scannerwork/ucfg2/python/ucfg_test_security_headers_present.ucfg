@@ -1,140 +1,0 @@
-
-Btests.test_security.TestDataProtection.test_secure_headers_present>
-2/home/omar/Documents/ruleIQ/tests/test_security.pyê ê(#"2*´
-2
-ë ë(Ajh
-
-í í((
-%1*&
-
-__unknown_file (
-
-
-client*'
-
-__unknown_file (	
-/health2getD
-B
-
-í í((
-
-response"__id*"
-
-__unknown_file (
-
-%1Q
-O
-
-ï ï("
-%2"__id*5
-
-__unknown_file (*
-
-
-response"	
-headersC
-A
-
-ï ï("	
-headers"__id*"
-
-__unknown_file (
-
-%2ÑÅ
-
-ñ ñ(2
-%3*'
-
-__unknown_file (
-	
-headers*6
-
-__unknown_file (
-X-Content-Type-Options2__contains__|z
-
-ó ó(+
-%4*'
-
-__unknown_file (
-	
-headers*/
-
-__unknown_file (
-X-Frame-Options2__contains__}{
-
-ò ò(,
-%5*'
-
-__unknown_file (
-	
-headers*0
-
-__unknown_file (
-X-XSS-Protection2__contains__áÑ
-
-ô ô(5
-%6*'
-
-__unknown_file (
-	
-headers*9
-
-__unknown_file (
-Strict-Transport-Security2__contains__çä
-
-ö ö(0
-%7"__mapGet*'
-
-__unknown_file (
-	
-headers*6
-
-__unknown_file (
-X-Content-Type-Options2__getitem__ë
-é
-
-ö ö(=
-%8"	__compare*"
-
-__unknown_file (
-==*"
-
-__unknown_file (
-
-%7*'
-
-__unknown_file (	
-nosniffÜÉ
-
-õ õ()
-%9"__mapGet*'
-
-__unknown_file (
-	
-headers*/
-
-__unknown_file (
-X-Frame-Options2__getitem__è
-å
-
-õ õ(3
-%10"	__compare*"
-
-__unknown_file (
-==*"
-
-__unknown_file (
-
-%9*$
-
-__unknown_file (
-DENY*
-3*6
-3
-test_security.py"
-û û
-implicit return:
-
-ê* ê(0
-clientB*(
-&tests.test_security.TestDataProtectionH

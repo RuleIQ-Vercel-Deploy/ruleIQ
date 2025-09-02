@@ -5,6 +5,9 @@ Test runner for ComplianceState model tests.
 import sys
 import os
 import subprocess
+import logging
+logger = logging.getLogger(__name__)
+
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -14,17 +17,17 @@ def run_tests():
     """Run tests and report results."""
 
     # First verify imports work
-    print("1. Testing imports...")
+    logger.info("1. Testing imports...")
     try:
         from langgraph_agent.models.compliance_state import ComplianceState
 
-        print("✅ ComplianceState import successful")
+        logger.info("✅ ComplianceState import successful")
     except ImportError as e:
-        print(f"❌ Import failed: {e}")
+        logger.info(f"❌ Import failed: {e}")
         return False
 
     # Run unit tests
-    print("\n2. Running unit tests...")
+    logger.info("\n2. Running unit tests...")
     result = subprocess.run(
         [
             sys.executable,
@@ -40,11 +43,11 @@ def run_tests():
     )
 
     if result.returncode != 0:
-        print(f"❌ Unit tests failed with code {result.returncode}")
+        logger.info(f"❌ Unit tests failed with code {result.returncode}")
         return False
 
     # Run integration tests
-    print("\n3. Running integration tests...")
+    logger.info("\n3. Running integration tests...")
     result = subprocess.run(
         [
             sys.executable,
@@ -60,10 +63,10 @@ def run_tests():
     )
 
     if result.returncode != 0:
-        print(f"❌ Integration tests failed with code {result.returncode}")
+        logger.info(f"❌ Integration tests failed with code {result.returncode}")
         return False
 
-    print("\n✅ All tests passed!")
+    logger.info("\n✅ All tests passed!")
     return True
 
 

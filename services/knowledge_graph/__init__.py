@@ -3,6 +3,7 @@ RegWatch Knowledge Graph Module
 Phase 5: Regulatory knowledge graph with memory management integration
 """
 
+from typing import Any, Dict, List, Optional
 from .graph_manager import GraphManager
 from .obligation_mapper import ObligationMapper
 from .evidence_linker import EvidenceLinker

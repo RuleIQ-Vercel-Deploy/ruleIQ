@@ -1,4 +1,6 @@
 """
+from __future__ import annotations
+
 Latency smoke tests for LangGraph compliance agent.
 Validates P95 ≤ 2.5s SLO compliance and performance benchmarks.
 """

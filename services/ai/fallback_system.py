@@ -18,11 +18,11 @@ from services.ai.exceptions import AIServiceException
 class FallbackLevel(Enum):
     """Levels of fallback degradation"""
 
-    NONE = "none"  # No fallback, fail immediately
-    BASIC = "basic"  # Basic static responses
-    CACHED = "cached"  # Use cached responses
-    TEMPLATE = "template"  # Use response templates
-    COMPREHENSIVE = "comprehensive"  # Full fallback system
+#     NONE = "none"  # No fallback, fail immediately  # Unused variable
+#     BASIC = "basic"  # Basic static responses  # Unused variable
+#     CACHED = "cached"  # Use cached responses  # Unused variable
+#     TEMPLATE = "template"  # Use response templates  # Unused variable
+#     COMPREHENSIVE = "comprehensive"  # Full fallback system  # Unused variable
 
 
 @dataclass
@@ -262,7 +262,10 @@ We apologize for the inconvenience and are working to restore full service quick
             )
         else:
             return FallbackResponse(
-                content="Recommendations are temporarily unavailable. Please contact support for personalized guidance.",
+                content= (
+                    "Recommendations are temporarily unavailable. Please contact support for personalized "
+                    "guidance."",
+                )
                 confidence=0.3,
                 source="default_fallback",
             )
@@ -398,7 +401,7 @@ class FallbackSystem:
         )
 
         return bool(
-            isinstance(exception, (ModelTimeoutException, ModelOverloadedException))
+            isinstance(exception, (ModelTimeoutException, ModelOverloadedException)),
         )
 
     def get_fallback_response(
@@ -467,7 +470,10 @@ class FallbackSystem:
     ) -> FallbackResponse:
         """Get basic fallback response"""
         if exception:
-            content = f"The {operation} service is temporarily unavailable due to: {exception!s}. Please try again later or contact support."
+            content = (
+                f"The {operation} service is temporarily unavailable due to: {exception!s}. Please try f
+                fagain later or contact support.f,
+            )
         else:
             content = f"The {operation} service is temporarily unavailable. Please try again later."
 

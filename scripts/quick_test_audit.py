@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 """Quick test audit to identify issues."""
+from typing import Any
+
+from __future__ import annotations
 
 import subprocess
 import json
@@ -7,7 +10,7 @@ from pathlib import Path
 from typing import Dict, List
 
 
-def run_pytest_json():
+def run_pytest_json() -> Any:
     """Run pytest with JSON output to get detailed results."""
     print("Running pytest with JSON output...")
 

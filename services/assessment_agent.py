@@ -21,8 +21,8 @@ from enum import Enum
 from langgraph.graph import StateGraph, add_messages, END
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
+from typing import Optional, Any
 import asyncio
-from typing import Optional, Iterator, AsyncIterator, Tuple, Any
 import os
 from config.settings import get_settings
 from langchain_core.messages import HumanMessage, AIMessage
@@ -161,7 +161,7 @@ class AssessmentAgent:
                 # Convert asyncpg URL to psycopg format if needed
                 if "asyncpg" in database_url:
                     database_url = database_url.replace(
-                        "postgresql+asyncpg://", "postgresql://"
+                        "postgresql+asyncpg://", "postgresql://",
                     )
 
                 # Import psycopg for PostgreSQL connection
@@ -171,7 +171,7 @@ class AssessmentAgent:
                 # Create connection with proper parameters for AsyncPostgresSaver
                 # AsyncPostgresSaver expects a psycopg connection with autocommit and dict_row
                 conn = await psycopg.AsyncConnection.connect(
-                    database_url, autocommit=True, row_factory=dict_row
+                    database_url, autocommit=True, row_factory=dict_row,
                 )
 
                 # Use the official AsyncPostgresSaver with the connection
@@ -181,7 +181,7 @@ class AssessmentAgent:
                 await checkpointer.setup()
                 logger.info("Async checkpoint tables created or verified")
                 logger.info(
-                    "Initialized official AsyncPostgresSaver for persistent state storage"
+                    "Initialized official AsyncPostgresSaver for persistent state storage",
                 )
 
                 # Store connection to prevent it from being garbage collected
@@ -191,7 +191,7 @@ class AssessmentAgent:
             else:
                 # Fallback to in-memory storage for development
                 logger.warning(
-                    "DATABASE_URL not found, using in-memory checkpointer (state won't persist between requests)"
+                    "DATABASE_URL not found, using in-memory checkpointer (state won't persist between requests)",
                 )
                 return MemorySaver()
 
@@ -212,7 +212,7 @@ class AssessmentAgent:
 
             if not api_key:
                 logger.warning(
-                    "LANGCHAIN_TRACING_V2 is enabled but LANGCHAIN_API_KEY is not set"
+                    "LANGCHAIN_TRACING_V2 is enabled but LANGCHAIN_API_KEY is not set",
                 )
                 return
 
@@ -223,7 +223,7 @@ class AssessmentAgent:
             logger.info("Traces will be available at: https://smith.langchain.com")
         else:
             logger.debug(
-                "LangSmith tracing is disabled. Set LANGCHAIN_TRACING_V2=true to enable."
+                "LangSmith tracing is disabled. Set LANGCHAIN_TRACING_V2=true to enable.",
             )
 
     def _build_graph(self) -> StateGraph:
@@ -282,7 +282,7 @@ of your needs.
 
 Let's start with understanding your business context. What type of business do you operate, and 
 what's your primary industry?
-        """
+        """,
         )
 
         state["messages"].append(intro_message)
@@ -318,7 +318,7 @@ what's your primary industry?
 
                 # Determine expertise level from responses
                 state["expertise_level"] = analysis.get(
-                    "expertise_level", "intermediate"
+                    "expertise_level", "intermediate",
                 )
 
                 # Check if we need follow-up questions
@@ -389,13 +389,13 @@ what's your primary industry?
                 # Generate contextual question
                 question_data = await self.assistant.generate_contextual_question(
                     context=context,
-                    previous_messages=state["messages"][-6:],  # Last 3 Q&A pairs
+                    previous_messages=state["messages"][-6:],  # Last 3 Q&A pairs,
                 )
 
                 if question_data:
                     question_text = question_data.get("question_text")
                     question_id = question_data.get(
-                        "question_id", f"dyn_{uuid.uuid4().hex[:8]}"
+                        "question_id", f"dyn_{uuid.uuid4().hex[:8]}",
                     )
 
                     # Add question to conversation
@@ -535,7 +535,7 @@ approach to compliance management. Our platform can help automate many of these 
 ensure you stay compliant with minimal effort.
 
 Would you like to schedule a demo to see how we can help address your specific needs?
-        """
+        """,
         )
 
         state["messages"].append(summary_message)
@@ -557,7 +557,7 @@ Would you like to schedule a demo to see how we can help address your specific n
                 has_company_size,
                 has_compliance_needs,
                 has_enough_answers,
-            ]
+            ],
         )
 
     def _calculate_compliance_score(self, state: AssessmentState) -> float:
@@ -574,7 +574,7 @@ Would you like to schedule a demo to see how we can help address your specific n
 
         # Adjust based on expertise level
         expertise_bonus = {"beginner": -10, "intermediate": 0, "expert": 10}.get(
-            state["expertise_level"], 0
+            state["expertise_level"], 0,
         )
 
         base_score += expertise_bonus
@@ -656,7 +656,7 @@ Would you like to schedule a demo to see how we can help address your specific n
         current_index = (
             phase_order.index(state["current_phase"])
             if state["current_phase"] in phase_order
-            else 0
+            else 0,
         )
 
         if current_index < len(phase_order) - 1:
@@ -704,8 +704,8 @@ Would you like to schedule a demo to see how we can help address your specific n
                 {
                     "priority": "low",
                     "title": "Prepare for Certification",
-                    "description": "Work towards formal compliance certification",
-                },
+                    "description": "Work towards formal compliance certification"
+                }
             ]
         else:
             return [
@@ -717,8 +717,8 @@ Would you like to schedule a demo to see how we can help address your specific n
                 {
                     "priority": "low",
                     "title": "Automate Processes",
-                    "description": "Look for opportunities to automate compliance workflows",
-                },
+                    "description": "Look for opportunities to automate compliance workflows"
+                }
             ]
 
     def _format_list(self, items: List[str]) -> str:
@@ -778,7 +778,7 @@ Would you like to schedule a demo to see how we can help address your specific n
             should_continue=True,
             error_count=0,
             fallback_mode=not self.circuit_breaker.is_model_available(
-                "gemini-2.5-flash"
+                "gemini-2.5-flash",
             ),
         )
 
@@ -803,13 +803,13 @@ Would you like to schedule a demo to see how we can help address your specific n
         except NotImplementedError as e:
             logger.error(f"PostgresSaver NotImplementedError in start_assessment: {e}")
             logger.error(
-                "This indicates LangGraph async/sync compatibility issues with PostgresSaver"
+                "This indicates LangGraph async/sync compatibility issues with PostgresSaver",
             )
 
             # Try fallback without checkpointer state persistence
             try:
                 logger.warning(
-                    "Attempting fallback execution without state persistence"
+                    "Attempting fallback execution without state persistence",
                 )
                 # Create a temporary app without checkpointer for this request
                 fallback_app = self.graph.compile()  # No checkpointer
@@ -819,7 +819,7 @@ Would you like to schedule a demo to see how we can help address your specific n
             except Exception as fallback_error:
                 logger.error(f"Fallback execution also failed: {fallback_error}")
                 raise Exception(
-                    f"Assessment failed due to checkpointer issues: {str(e)}"
+                    f"Assessment failed due to checkpointer issues: {str(e)}",
                 )
 
         except Exception as e:
@@ -919,7 +919,7 @@ Would you like to schedule a demo to see how we can help address your specific n
 
         # Add user message to state
         user_message = HumanMessage(
-            content=user_response, additional_kwargs={"confidence": confidence}
+            content=user_response, additional_kwargs={"confidence": confidence},
         )
 
         # Try to get existing state from checkpointer first
@@ -934,7 +934,7 @@ Would you like to schedule a demo to see how we can help address your specific n
                 # Check if it's a string (the error case) or a dict (expected)
                 if isinstance(checkpoint_data, str):
                     logger.error(
-                        f"Checkpoint returned string instead of dict: {checkpoint_data}"
+                        f"Checkpoint returned string instead of dict: {checkpoint_data}",
                     )
                     raise ValueError("Invalid checkpoint format")
 
@@ -957,12 +957,12 @@ Would you like to schedule a demo to see how we can help address your specific n
 
                 # Increment questions answered
                 existing_state["questions_answered"] = (
-                    existing_state.get("questions_answered", 0) + 1
+                    existing_state.get("questions_answered", 0) + 1,
                 )
 
                 # Update fallback mode if needed
                 existing_state["fallback_mode"] = (
-                    not self.circuit_breaker.is_model_available("gemini-2.5-flash")
+                    not self.circuit_breaker.is_model_available("gemini-2.5-flash"),
                 )
 
                 # Ensure current_phase is an enum value
@@ -972,15 +972,15 @@ Would you like to schedule a demo to see how we can help address your specific n
                         # Convert string to enum
                         try:
                             existing_state["current_phase"] = AssessmentPhase(
-                                phase_value
+                                phase_value,
                             )
                         except ValueError:
                             existing_state["current_phase"] = (
-                                AssessmentPhase.BUSINESS_CONTEXT
+                                AssessmentPhase.BUSINESS_CONTEXT,
                             )
 
                 logger.info(
-                    f"Retrieved existing state for session {session_id}: phase={existing_state.get('current_phase')}, answered={existing_state.get('questions_answered')}"
+                    f"Retrieved existing state for session {session_id}: phase={existing_state.get('current_phase')}, answered={existing_state.get('questions_answered')}"  # noqa: E501,
                 )
 
                 # Check if we should complete the assessment
@@ -994,7 +994,7 @@ Would you like to schedule a demo to see how we can help address your specific n
                 initial_state = existing_state
             else:
                 logger.warning(
-                    f"No existing state found for session {session_id}, creating new state"
+                    f"No existing state found for session {session_id}, creating new state",
                 )
                 # Create initial state with all required fields if no state exists
                 initial_state = {
@@ -1020,7 +1020,7 @@ Would you like to schedule a demo to see how we can help address your specific n
                     "risk_level": "medium",
                     "gaps_identified": [],
                     "fallback_mode": not self.circuit_breaker.is_model_available(
-                        "gemini-2.5-flash"
+                        "gemini-2.5-flash",
                     ),
                     "should_continue": True,
                     "error_count": 0,
@@ -1051,7 +1051,7 @@ Would you like to schedule a demo to see how we can help address your specific n
                 "risk_level": "medium",
                 "gaps_identified": [],
                 "fallback_mode": not self.circuit_breaker.is_model_available(
-                    "gemini-2.5-flash"
+                    "gemini-2.5-flash",
                 ),
                 "should_continue": True,
                 "error_count": 0,

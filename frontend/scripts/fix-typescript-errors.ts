@@ -14,7 +14,7 @@ interface TypeScriptError {
   message: string;
 }
 
-class TypeScriptErrorFixer {
+class _TypeScriptErrorFixer {
   private projectRoot: string;
   private errors: TypeScriptError[] = [];
 
@@ -51,7 +51,7 @@ class TypeScriptErrorFixer {
    */
   private fixUnusedVariables(filePath: string, content: string): string {
     // Fix: 'variable' is declared but its value is never read
-    const patterns = [
+    const _patterns = [
       // Function parameters
       /(\w+): ([^,)]+)(?=\s*[,)])/g,
       // Variable declarations
