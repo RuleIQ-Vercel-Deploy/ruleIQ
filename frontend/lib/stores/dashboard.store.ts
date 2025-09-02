@@ -492,7 +492,7 @@ export const useDashboardStore = create<DashboardState>()(
           );
         },
 
-        setWidgetError: (widgetId, error) => {
+        setWidgetError: (widgetId, _error) => {
           set(
             (state) => ({
               widgetErrors: { ...state.widgetErrors, [widgetId]: error },

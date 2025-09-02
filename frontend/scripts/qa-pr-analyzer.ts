@@ -367,10 +367,10 @@ async function main() {
     // TODO: Replace with proper logging
 
     // TODO: Replace with proper logging
-  } catch (error) {
+  } catch {
     // Development logging - consider proper logger
 
-    console.error('❌ PR analysis failed:', error);
+    console.error('❌ PR analysis failed:', _error);
     process.exit(1);
   }
 }

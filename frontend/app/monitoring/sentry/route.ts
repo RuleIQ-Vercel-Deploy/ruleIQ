@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
       },
     });
-  } catch (error) {
+  } catch {
     // TODO: Replace with proper logging
 
     // // TODO: Replace with proper logging

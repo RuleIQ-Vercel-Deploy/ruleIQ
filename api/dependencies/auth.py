@@ -320,9 +320,7 @@ async def get_api_key_auth(
         is_valid, metadata, error = await manager.validate_api_key(
             api_key=x_api_key,
             request_ip=request.client.host if request.client else None,
-            request_origin=request.headers.get("Origin"),
-            endpoint=str(request.url.path),
-            method=request.method,
+            origin=request.headers.get("Origin")
         )
 
         if not is_valid:

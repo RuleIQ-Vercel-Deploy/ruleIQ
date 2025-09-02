@@ -134,7 +134,7 @@ class AvaA11yTracker {
         allIncomplete.push(...pageResult.incomplete);
         
       } catch {
-        console.warn(`⚠️ Failed to audit ${url}:`, error);
+        console.warn(`⚠️ Failed to audit ${url}:`, _error);
         pageResults.push({
           url,
           violations: 0,
@@ -666,10 +666,10 @@ async function main() {
       process.exit(1);
     }
     
-  } catch (error) {
+  } catch {
     // Development logging - consider proper logger
 
-    console.error('❌ Accessibility tracking failed:', error);
+    console.error('❌ Accessibility tracking failed:', _error);
     process.exit(1);
   }
 }

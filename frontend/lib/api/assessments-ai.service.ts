@@ -385,7 +385,7 @@ class AssessmentAIService {
 
       // Development fallback
       return mockAIResponses.analysis;
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -451,7 +451,7 @@ class AssessmentAIService {
           'Zero retention-related compliance incidents',
         ],
       };
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -534,7 +534,7 @@ Can you provide guidance on how to answer this question correctly?`;
       } else {
         // TODO: Replace with proper logging
       }
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
       // // TODO: Replace with proper logging
       // Non-blocking - don't throw error for feedback submission
@@ -558,7 +558,7 @@ Can you provide guidance on how to answer this question correctly?`;
         total_interactions: number;
       }>('/ai/assessments/metrics');
       return response;
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -938,7 +938,7 @@ Can you provide guidance on how to answer this question correctly?`;
       const response = await this.executeWithTimeout(aiRequest, timeoutMs, 'Enhanced AI analysis');
 
       return response;
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -1019,7 +1019,7 @@ Can you provide guidance on how to answer this question correctly?`;
         options.onError?.('Connection error occurred');
         eventSource.close();
       };
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -1074,7 +1074,7 @@ Can you provide guidance on how to answer this question correctly?`;
         options.onError?.('Connection error occurred');
         eventSource.close();
       };
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -1130,7 +1130,7 @@ Can you provide guidance on how to answer this question correctly?`;
         options.onError?.('Connection error occurred');
         eventSource.close();
       };
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging

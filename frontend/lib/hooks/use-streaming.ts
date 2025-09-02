@@ -121,7 +121,7 @@ export function useStreaming(): [StreamingState, StreamingControls] {
           }));
         },
 
-        onError: (error) => {
+        onError: () => {
           stopTimer();
           setState((prev) => ({
             ...prev,

@@ -41,7 +41,7 @@ export function CsrfForm({
 
     try {
       await onSubmit(formData, token);
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
       // // TODO: Replace with proper logging
     }

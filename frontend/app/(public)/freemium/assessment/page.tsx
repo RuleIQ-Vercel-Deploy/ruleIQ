@@ -7,7 +7,6 @@ import {
   FreemiumAssessmentProgress,
 } from '../../../../components/freemium/freemium-assessment-flow';
 import { Card, CardContent } from '../../../../components/ui/card';
-import { Alert, AlertDescription } from '../../../../components/ui/alert';
 import { Button } from '../../../../components/ui/button';
 import { useFreemiumStore, useFreemiumSession } from '../../../../lib/stores/freemium-store';
 import { AlertTriangle, Loader2, ArrowLeft } from 'lucide-react';

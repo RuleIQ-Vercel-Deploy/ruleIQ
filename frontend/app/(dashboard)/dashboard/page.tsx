@@ -14,7 +14,6 @@ import {
 import { ComplianceScoreWidget } from '@/components/dashboard/compliance-score-widget';
 import { DashboardHeader } from '@/components/dashboard/dashboard-header';
 import { DataTable } from '@/components/dashboard/data-table';
-import { EnhancedStatsCard } from '@/components/dashboard/enhanced-stats-card';
 import { EnhancedMetricCard } from '@/components/dashboard/enhanced-metric-card';
 import { PendingTasksWidget } from '@/components/dashboard/pending-tasks-widget';
 import { QuickActionsWidget } from '@/components/dashboard/quick-actions';

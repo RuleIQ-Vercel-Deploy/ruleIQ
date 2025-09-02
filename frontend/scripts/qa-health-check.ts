@@ -682,10 +682,10 @@ async function main() {
       process.exit(1);
     }
     // TODO: Replace with proper logging
-  } catch (error) {
+  } catch {
     // Development logging - consider proper logger
 
-    console.error('❌ Health check failed:', error);
+    console.error('❌ Health check failed:', _error);
     process.exit(1);
   }
 }

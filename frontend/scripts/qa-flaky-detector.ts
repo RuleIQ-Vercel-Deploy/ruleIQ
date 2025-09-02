@@ -457,7 +457,7 @@ class AvaFlakyTestDetector {
         }
       }
     } catch {
-      console.warn(`⚠️ Could not tag test ${test.testName}:`, error);
+      console.warn(`⚠️ Could not tag test ${test.testName}:`, _error);
     }
   }
 }
@@ -485,10 +485,10 @@ async function main() {
       await detector.autoTagFlakyTests();
     }
     // TODO: Replace with proper logging
-  } catch (error) {
+  } catch {
     // Development logging - consider proper logger
 
-    console.error('❌ Flaky test detection failed:', error);
+    console.error('❌ Flaky test detection failed:', _error);
     process.exit(1);
   }
 }

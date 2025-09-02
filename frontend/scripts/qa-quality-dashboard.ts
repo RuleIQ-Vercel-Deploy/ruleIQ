@@ -635,10 +635,10 @@ async function main() {
     // TODO: Replace with proper logging
 
     // TODO: Replace with proper logging
-  } catch (error) {
+  } catch {
     // Development logging - consider proper logger
 
-    console.error('❌ Quality dashboard generation failed:', error);
+    console.error('❌ Quality dashboard generation failed:', _error);
     process.exit(1);
   }
 }

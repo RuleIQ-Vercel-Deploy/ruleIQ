@@ -61,7 +61,7 @@ export function useMutationWithToast<TData = unknown, TError = unknown, TVariabl
       // Call custom success handler
       onSuccess?.(data, variables);
     },
-    onError: (error, variables) => {
+    onError: (_error, variables) => {
       // Show error toast
       const message =
         typeof errorMessage === 'function' ? errorMessage(error) : getErrorMessage(error);

@@ -110,7 +110,7 @@ describe('AI Timeout Handling Tests', () => {
         request: any,
         timeoutMs: number = 15000,
       ): Promise<any> => {
-        const aiRequest = new Promise((resolve, reject) => {
+        const aiRequest = new Promise((resolve, _reject) => {
           // Simulate slow AI response
           setTimeout(() => {
             resolve({

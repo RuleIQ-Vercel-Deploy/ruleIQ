@@ -289,7 +289,7 @@ class AvaAffectedTestsRunner {
         execution.output = error.stdout || error.message;
         execution.duration = Date.now() - executionStart;
 
-        const failure = this.parseTestFailure(execution, error);
+        const failure = this.parseTestFailure(execution, _error);
         results.failures.push(failure);
         results.failedTests++;
         // TODO: Replace with proper logging
@@ -408,10 +408,10 @@ async function main() {
       process.exit(1);
     }
     // TODO: Replace with proper logging
-  } catch (error) {
+  } catch {
     // Development logging - consider proper logger
 
-    console.error('❌ Test execution failed:', error);
+    console.error('❌ Test execution failed:', _error);
     process.exit(1);
   }
 }

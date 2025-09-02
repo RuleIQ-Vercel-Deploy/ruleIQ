@@ -74,7 +74,7 @@ export function AssessmentWizard({
           onSave(progress);
         }
       },
-      onError: (error) => {
+      onError: () => {
         setError(error.message);
         toast({
           title: 'Error',

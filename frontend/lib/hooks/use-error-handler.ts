@@ -39,7 +39,7 @@ export function useErrorHandler(options: UseErrorHandlerOptions = {}) {
         processedError = error;
       } else {
         // Create a generic error
-        processedError = new APIError(error.message || 'An unexpected error occurred', 0, error);
+        processedError = new APIError(error.message || 'An unexpected error occurred', 0, _error);
       }
 
       setError(processedError);

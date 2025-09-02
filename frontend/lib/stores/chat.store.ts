@@ -230,7 +230,7 @@ export const useChatStore = create<ChatState>()(
                   content: message,
                 });
               }
-            } catch (error) {
+            } catch {
               // If IQ status check fails, fallback to regular chat
               response = await chatService.sendMessage(conversationId, {
                 content: message,

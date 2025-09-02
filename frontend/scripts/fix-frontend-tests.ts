@@ -294,10 +294,10 @@ async function main() {
     // TODO: Replace with proper logging
 
     // TODO: Replace with proper logging
-  } catch (error) {
+  } catch {
     // Development logging - consider proper logger
 
-    console.error('\n❌ Error applying fixes:', error);
+    console.error('\n❌ Error applying fixes:', _error);
     process.exit(1);
   }
 }

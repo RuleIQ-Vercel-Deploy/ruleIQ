@@ -177,10 +177,10 @@ describe('AI Fallback Tests', () => {
         try {
           // Simulate AI service failure
           throw new Error('AI service temporarily unavailable');
-        } catch (error) {
+        } catch {
           // Development logging - consider proper logger
 
-          console.error('Enhanced AI response failed:', error);
+          console.error('Enhanced AI response failed:', _error);
           return fallbackResponse;
         }
       };
@@ -221,10 +221,10 @@ describe('AI Fallback Tests', () => {
         try {
           // Simulate network error
           throw new Error('Network request failed');
-        } catch (error) {
+        } catch {
           // Development logging - consider proper logger
 
-          console.error('Network error:', error);
+          console.error('Network error:', _error);
 
           // Return fallback response
           return {

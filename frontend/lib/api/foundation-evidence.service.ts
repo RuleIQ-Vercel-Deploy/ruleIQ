@@ -214,7 +214,7 @@ class FoundationEvidenceService {
   streamCollectionProgress(
     collectionId: string,
     onProgress: (status: Partial<EvidenceCollectionStatus>) => void,
-    onError: (error: Error) => void,
+    onError: (_error: Error) => void,
   ): EventSource {
     const eventSource = new EventSource(`/api/foundation/evidence/collect/${collectionId}/stream`);
 

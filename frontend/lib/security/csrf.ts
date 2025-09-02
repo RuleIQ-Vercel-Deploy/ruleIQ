@@ -39,7 +39,7 @@ export function verifyCsrfToken(request: NextRequest): boolean {
     }
 
     return true;
-  } catch (error) {
+  } catch {
     // TODO: Replace with proper logging
 
     // // TODO: Replace with proper logging

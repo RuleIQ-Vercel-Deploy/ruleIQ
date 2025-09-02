@@ -568,10 +568,10 @@ async function main() {
       await monitor.monitorPerformance(url);
       // TODO: Replace with proper logging
     }
-  } catch (error) {
+  } catch {
     // Development logging - consider proper logger
 
-    console.error('❌ Performance monitoring failed:', error);
+    console.error('❌ Performance monitoring failed:', _error);
     process.exit(1);
   }
 }

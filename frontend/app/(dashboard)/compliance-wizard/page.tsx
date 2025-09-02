@@ -260,7 +260,7 @@ export default function ComplianceWizardPage() {
           title: 'Draft Loaded',
           message: 'We found your previous answers and loaded them for you.',
         });
-      } catch (error) {
+      } catch {
         // TODO: Replace with proper logging
         // // TODO: Replace with proper logging
       }
@@ -335,7 +335,7 @@ export default function ComplianceWizardPage() {
     try {
       // If user selected a framework, run compliance check for that framework
       if (selectedFramework && profile?.id) {
-        await new Promise<void>((resolve, reject) => {
+        await new Promise<void>((resolve, _reject) => {
           runComplianceCheck(
             {
               businessProfileId: profile.id,
@@ -364,7 +364,7 @@ export default function ComplianceWizardPage() {
 
                 resolve();
               },
-              onError: (error) => {
+              onError: () => {
                 // TODO: Replace with proper logging
 
                 // // TODO: Replace with proper logging
@@ -418,7 +418,7 @@ export default function ComplianceWizardPage() {
 
       // Redirect to results page
       router.push('/compliance-wizard/results');
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging

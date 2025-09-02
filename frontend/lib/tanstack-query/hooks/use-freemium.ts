@@ -25,7 +25,7 @@ export const useFreemiumEmailCapture = () => {
       // Redirect to assessment flow
       router.push(`/freemium/assessment?token=${response.token}`);
     },
-    onError: (error) => {
+    onError: () => {
       // TODO: Replace with proper logging
       // // TODO: Replace with proper logging
     },
@@ -85,7 +85,7 @@ export const useFreemiumAnswerQuestion = () => {
         queryKey: freemiumKeys.assessment(token || ''),
       });
     },
-    onError: (error: unknown) => {
+    onError: (_error: unknown) => {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -135,7 +135,7 @@ export const useFreemiumConversionTracking = () => {
       // Track locally regardless of API success
       trackConversionEvent(variables.event_type);
     },
-    onError: (error) => {
+    onError: () => {
       // Conversion tracking failures should not break UX
       // TODO: Replace with proper logging
     },

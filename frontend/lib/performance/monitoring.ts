@@ -229,7 +229,7 @@ class PerformanceMonitor {
 
       try {
         await fn();
-      } catch (error) {
+      } catch {
         // TODO: Replace with proper logging
         // // TODO: Replace with proper logging
       }

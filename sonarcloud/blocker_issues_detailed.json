@@ -1,0 +1,4130 @@
+{
+  "total": 62,
+  "issues": [
+    {
+      "key": "AZkJxouaIPC-JqlUo0Ac",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:api/middleware/api_key_auth.py",
+      "project": "ruliq-compliance-platform",
+      "line": 125,
+      "hash": "2c3fea985c035e8c0ace711535387c4c",
+      "textRange": {
+        "startLine": 125,
+        "endLine": 125,
+        "startOffset": 20,
+        "endOffset": 64
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:api/middleware/api_key_auth.py",
+              "textRange": {
+                "startLine": 125,
+                "endLine": 125,
+                "startOffset": 20,
+                "endOffset": 64
+              },
+              "msg": "Remove this unexpected named argument 'request_origin'."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/api_key_management.py",
+              "textRange": {
+                "startLine": 193,
+                "endLine": 193,
+                "startOffset": 14,
+                "endOffset": 30
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'request_origin'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-09-01T08:03:50+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxouaIPC-JqlUo0Ad",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:api/middleware/api_key_auth.py",
+      "project": "ruliq-compliance-platform",
+      "line": 127,
+      "hash": "10c56fd0e2538af4dca597f2d1217b8e",
+      "textRange": {
+        "startLine": 127,
+        "endLine": 127,
+        "startOffset": 20,
+        "endOffset": 45
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:api/middleware/api_key_auth.py",
+              "textRange": {
+                "startLine": 127,
+                "endLine": 127,
+                "startOffset": 20,
+                "endOffset": 45
+              },
+              "msg": "Remove this unexpected named argument 'endpoint'."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/api_key_management.py",
+              "textRange": {
+                "startLine": 193,
+                "endLine": 193,
+                "startOffset": 14,
+                "endOffset": 30
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'endpoint'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-09-01T08:03:50+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxouaIPC-JqlUo0Ae",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:api/middleware/api_key_auth.py",
+      "project": "ruliq-compliance-platform",
+      "line": 128,
+      "hash": "f4070792d1e0c86886c9655f20b14649",
+      "textRange": {
+        "startLine": 128,
+        "endLine": 128,
+        "startOffset": 20,
+        "endOffset": 41
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:api/middleware/api_key_auth.py",
+              "textRange": {
+                "startLine": 128,
+                "endLine": 128,
+                "startOffset": 20,
+                "endOffset": 41
+              },
+              "msg": "Remove this unexpected named argument 'method'."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/api_key_management.py",
+              "textRange": {
+                "startLine": 193,
+                "endLine": 193,
+                "startOffset": 14,
+                "endOffset": 30
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'method'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-09-01T08:03:50+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpWGIPC-JqlUo0UY",
+      "rule": "secrets:S7362",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:archive/scripts/migrate_archon_data.py",
+      "project": "ruliq-compliance-platform",
+      "line": 13,
+      "hash": "161812f3f1e006683734a06013c2a9d9",
+      "textRange": {
+        "startLine": 13,
+        "endLine": 13,
+        "startOffset": 20,
+        "endOffset": 239
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Make sure this Supabase Service Role JWT secret gets revoked, changed, and removed from the code.",
+      "effort": "30min",
+      "debt": "30min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-09-01T08:03:50+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "VULNERABILITY",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "TRUSTWORTHY",
+      "cleanCodeAttributeCategory": "RESPONSIBLE",
+      "impacts": [
+        {
+          "softwareQuality": "SECURITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxou0IPC-JqlUo0Aw",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:api/dependencies/auth.py",
+      "project": "ruliq-compliance-platform",
+      "line": 304,
+      "hash": "2c3fea985c035e8c0ace711535387c4c",
+      "textRange": {
+        "startLine": 304,
+        "endLine": 304,
+        "startOffset": 12,
+        "endOffset": 56
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:api/dependencies/auth.py",
+              "textRange": {
+                "startLine": 304,
+                "endLine": 304,
+                "startOffset": 12,
+                "endOffset": 56
+              },
+              "msg": "Remove this unexpected named argument 'request_origin'."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/api_key_management.py",
+              "textRange": {
+                "startLine": 193,
+                "endLine": 193,
+                "startOffset": 14,
+                "endOffset": 30
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'request_origin'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-09-01T07:35:20+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxou0IPC-JqlUo0Ax",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:api/dependencies/auth.py",
+      "project": "ruliq-compliance-platform",
+      "line": 305,
+      "hash": "b597a4b1a4497f792e969297351f39e0",
+      "textRange": {
+        "startLine": 305,
+        "endLine": 305,
+        "startOffset": 12,
+        "endOffset": 42
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:api/dependencies/auth.py",
+              "textRange": {
+                "startLine": 305,
+                "endLine": 305,
+                "startOffset": 12,
+                "endOffset": 42
+              },
+              "msg": "Remove this unexpected named argument 'endpoint'."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/api_key_management.py",
+              "textRange": {
+                "startLine": 193,
+                "endLine": 193,
+                "startOffset": 14,
+                "endOffset": 30
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'endpoint'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-09-01T07:35:20+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxou0IPC-JqlUo0Ay",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:api/dependencies/auth.py",
+      "project": "ruliq-compliance-platform",
+      "line": 306,
+      "hash": "f4070792d1e0c86886c9655f20b14649",
+      "textRange": {
+        "startLine": 306,
+        "endLine": 306,
+        "startOffset": 12,
+        "endOffset": 33
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:api/dependencies/auth.py",
+              "textRange": {
+                "startLine": 306,
+                "endLine": 306,
+                "startOffset": 12,
+                "endOffset": 33
+              },
+              "msg": "Remove this unexpected named argument 'method'."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/api_key_management.py",
+              "textRange": {
+                "startLine": 193,
+                "endLine": 193,
+                "startOffset": 14,
+                "endOffset": 30
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'method'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-09-01T07:35:20+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxoxbIPC-JqlUo0Bo",
+      "rule": "python:S3516",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:langgraph_agent/nodes/task_scheduler_node.py",
+      "project": "ruliq-compliance-platform",
+      "line": 241,
+      "hash": "b0b461d4c8d0c6893932bfd55ea7a61f",
+      "textRange": {
+        "startLine": 241,
+        "endLine": 241,
+        "startOffset": 10,
+        "endOffset": 33
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/nodes/task_scheduler_node.py",
+              "textRange": {
+                "startLine": 276,
+                "endLine": 276,
+                "startOffset": 8,
+                "endOffset": 20
+              },
+              "msg": "returned value"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/nodes/task_scheduler_node.py",
+              "textRange": {
+                "startLine": 272,
+                "endLine": 272,
+                "startOffset": 8,
+                "endOffset": 20
+              },
+              "msg": "returned value"
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Refactor this method to not always return the same value.",
+      "effort": "2min",
+      "debt": "2min",
+      "author": "you@example.com",
+      "tags": [
+        "confusing",
+        "design"
+      ],
+      "creationDate": "2025-08-29T13:55:18+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "CODE_SMELL",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxn6tIPC-JqlUoznD",
+      "rule": "pythonsecurity:S2083",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:services/ai/evaluation/tools/ingestion.py",
+      "project": "ruliq-compliance-platform",
+      "line": 23,
+      "hash": "8f7adb58b2955500c53327573b453747",
+      "textRange": {
+        "startLine": 23,
+        "endLine": 23,
+        "startOffset": 13,
+        "endOffset": 33
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:services/ai/evaluation/tools/ingestion.py",
+              "textRange": {
+                "startLine": 23,
+                "endLine": 23,
+                "startOffset": 13,
+                "endOffset": 33
+              },
+              "msg": "Sink: this invocation is not safe; a malicious value can be used as argument"
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/evaluation/tools/ingestion.py",
+              "textRange": {
+                "startLine": 21,
+                "endLine": 21,
+                "startOffset": 34,
+                "endOffset": 48
+              },
+              "msg": "This instruction can propagate malicious content"
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/evaluation/tools/ingestion.py",
+              "textRange": {
+                "startLine": 21,
+                "endLine": 21,
+                "startOffset": 8,
+                "endOffset": 27
+              },
+              "msg": "This instruction can propagate malicious content"
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/evaluation/tools/ingestion.py",
+              "textRange": {
+                "startLine": 334,
+                "endLine": 334,
+                "startOffset": 24,
+                "endOffset": 73
+              },
+              "msg": "This instruction can propagate malicious content"
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/evaluation/tools/ingestion.py",
+              "textRange": {
+                "startLine": 323,
+                "endLine": 323,
+                "startOffset": 31,
+                "endOffset": 45
+              },
+              "msg": "This instruction can propagate malicious content"
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/evaluation/tools/retrieval_api.py",
+              "textRange": {
+                "startLine": 167,
+                "endLine": 167,
+                "startOffset": 17,
+                "endOffset": 70
+              },
+              "msg": "This instruction can propagate malicious content"
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/evaluation/tools/retrieval_api.py",
+              "textRange": {
+                "startLine": 167,
+                "endLine": 167,
+                "startOffset": 52,
+                "endOffset": 69
+              },
+              "msg": "A malicious value was previously assigned to field \u2018file_path\u2019"
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/evaluation/tools/retrieval_api.py",
+              "textRange": {
+                "startLine": 159,
+                "endLine": 159,
+                "startOffset": 10,
+                "endOffset": 31
+              },
+              "msg": "Source: a user can craft an HTTP request with malicious content"
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Change this code to not construct the path from user-controlled data.",
+      "effort": "30min",
+      "debt": "30min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-29T13:55:18+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "VULNERABILITY",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "COMPLETE",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "SECURITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxn7QIPC-JqlUoznI",
+      "rule": "pythonsecurity:S2083",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:services/ai/evaluation/tools/ingestion_fixed.py",
+      "project": "ruliq-compliance-platform",
+      "line": 68,
+      "hash": "8f7adb58b2955500c53327573b453747",
+      "textRange": {
+        "startLine": 68,
+        "endLine": 68,
+        "startOffset": 13,
+        "endOffset": 33
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:services/ai/evaluation/tools/ingestion_fixed.py",
+              "textRange": {
+                "startLine": 68,
+                "endLine": 68,
+                "startOffset": 13,
+                "endOffset": 33
+              },
+              "msg": "Sink: this invocation is not safe; a malicious value can be used as argument"
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/evaluation/tools/ingestion_fixed.py",
+              "textRange": {
+                "startLine": 66,
+                "endLine": 66,
+                "startOffset": 34,
+                "endOffset": 48
+              },
+              "msg": "This instruction can propagate malicious content"
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/evaluation/tools/ingestion_fixed.py",
+              "textRange": {
+                "startLine": 66,
+                "endLine": 66,
+                "startOffset": 8,
+                "endOffset": 27
+              },
+              "msg": "This instruction can propagate malicious content"
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/evaluation/tools/ingestion_fixed.py",
+              "textRange": {
+                "startLine": 204,
+                "endLine": 204,
+                "startOffset": 24,
+                "endOffset": 69
+              },
+              "msg": "This instruction can propagate malicious content"
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/evaluation/tools/ingestion_fixed.py",
+              "textRange": {
+                "startLine": 192,
+                "endLine": 192,
+                "startOffset": 31,
+                "endOffset": 45
+              },
+              "msg": "This instruction can propagate malicious content"
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/evaluation/tools/retrieval_api.py",
+              "textRange": {
+                "startLine": 167,
+                "endLine": 167,
+                "startOffset": 17,
+                "endOffset": 70
+              },
+              "msg": "This instruction can propagate malicious content"
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/evaluation/tools/retrieval_api.py",
+              "textRange": {
+                "startLine": 167,
+                "endLine": 167,
+                "startOffset": 52,
+                "endOffset": 69
+              },
+              "msg": "A malicious value was previously assigned to field \u2018file_path\u2019"
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/evaluation/tools/retrieval_api.py",
+              "textRange": {
+                "startLine": 159,
+                "endLine": 159,
+                "startOffset": 10,
+                "endOffset": 31
+              },
+              "msg": "Source: a user can craft an HTTP request with malicious content"
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Change this code to not construct the path from user-controlled data.",
+      "effort": "30min",
+      "debt": "30min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-29T13:55:18+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "VULNERABILITY",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "COMPLETE",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "SECURITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpVlIPC-JqlUo0UQ",
+      "rule": "secrets:S6698",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:archive/scripts/capture_test_errors.py",
+      "project": "ruliq-compliance-platform",
+      "line": 7,
+      "hash": "ff139edf026b6961029d4e5d526c9975",
+      "textRange": {
+        "startLine": 7,
+        "endLine": 7,
+        "startOffset": 52,
+        "endOffset": 60
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+      "effort": "30min",
+      "debt": "30min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "VULNERABILITY",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "TRUSTWORTHY",
+      "cleanCodeAttributeCategory": "RESPONSIBLE",
+      "impacts": [
+        {
+          "softwareQuality": "SECURITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpVlIPC-JqlUo0UR",
+      "rule": "secrets:S6698",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:archive/scripts/capture_test_errors.py",
+      "project": "ruliq-compliance-platform",
+      "line": 8,
+      "hash": "c9263aa23146faabbbfe4e03e36bf9e4",
+      "textRange": {
+        "startLine": 8,
+        "endLine": 8,
+        "startOffset": 57,
+        "endOffset": 65
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+      "effort": "30min",
+      "debt": "30min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "VULNERABILITY",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "TRUSTWORTHY",
+      "cleanCodeAttributeCategory": "RESPONSIBLE",
+      "impacts": [
+        {
+          "softwareQuality": "SECURITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpVlIPC-JqlUo0US",
+      "rule": "secrets:S6698",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:archive/scripts/capture_test_errors.py",
+      "project": "ruliq-compliance-platform",
+      "line": 23,
+      "hash": "c0605899ce8bb6749d7adff3b2a9d5c2",
+      "textRange": {
+        "startLine": 23,
+        "endLine": 23,
+        "startOffset": 46,
+        "endOffset": 54
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+      "effort": "30min",
+      "debt": "30min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "VULNERABILITY",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "TRUSTWORTHY",
+      "cleanCodeAttributeCategory": "RESPONSIBLE",
+      "impacts": [
+        {
+          "softwareQuality": "SECURITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxoyFIPC-JqlUo0Cj",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+      "project": "ruliq-compliance-platform",
+      "line": 851,
+      "hash": "db208d0f514a80452822c0de71e3d886",
+      "textRange": {
+        "startLine": 851,
+        "endLine": 851,
+        "startOffset": 25,
+        "endOffset": 54
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+              "textRange": {
+                "startLine": 851,
+                "endLine": 851,
+                "startOffset": 25,
+                "endOffset": 54
+              },
+              "msg": "Add 1 missing arguments; '_send_email_notification' expects at least 3 positional arguments."
+            },
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+              "textRange": {
+                "startLine": 398,
+                "endLine": 398,
+                "startOffset": 14,
+                "endOffset": 38
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Add 1 missing arguments; '_send_email_notification' expects at least 3 positional arguments.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxoyFIPC-JqlUo0Ck",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+      "project": "ruliq-compliance-platform",
+      "line": 852,
+      "hash": "a98e98a92aca08b858ea4fc9330cbf8e",
+      "textRange": {
+        "startLine": 852,
+        "endLine": 852,
+        "startOffset": 16,
+        "endOffset": 49
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+              "textRange": {
+                "startLine": 852,
+                "endLine": 852,
+                "startOffset": 16,
+                "endOffset": 49
+              },
+              "msg": "Remove this unexpected named argument 'recipient'."
+            },
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+              "textRange": {
+                "startLine": 398,
+                "endLine": 398,
+                "startOffset": 14,
+                "endOffset": 38
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'recipient'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxoyFIPC-JqlUo0Cl",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+      "project": "ruliq-compliance-platform",
+      "line": 857,
+      "hash": "04cb50dd791dd54abfa86786c0fec637",
+      "textRange": {
+        "startLine": 857,
+        "endLine": 857,
+        "startOffset": 25,
+        "endOffset": 52
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+              "textRange": {
+                "startLine": 857,
+                "endLine": 857,
+                "startOffset": 25,
+                "endOffset": 52
+              },
+              "msg": "Add 1 missing arguments; '_send_sms_notification' expects 2 positional arguments."
+            },
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+              "textRange": {
+                "startLine": 431,
+                "endLine": 431,
+                "startOffset": 14,
+                "endOffset": 36
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Add 1 missing arguments; '_send_sms_notification' expects 2 positional arguments.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxoyFIPC-JqlUo0Cm",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+      "project": "ruliq-compliance-platform",
+      "line": 858,
+      "hash": "a98e98a92aca08b858ea4fc9330cbf8e",
+      "textRange": {
+        "startLine": 858,
+        "endLine": 858,
+        "startOffset": 16,
+        "endOffset": 49
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+              "textRange": {
+                "startLine": 858,
+                "endLine": 858,
+                "startOffset": 16,
+                "endOffset": 49
+              },
+              "msg": "Remove this unexpected named argument 'recipient'."
+            },
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+              "textRange": {
+                "startLine": 431,
+                "endLine": 431,
+                "startOffset": 14,
+                "endOffset": 36
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'recipient'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxoyFIPC-JqlUo0Cn",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+      "project": "ruliq-compliance-platform",
+      "line": 862,
+      "hash": "7f18a0a09c5e9c1c5d60266f1f1237c2",
+      "textRange": {
+        "startLine": 862,
+        "endLine": 862,
+        "startOffset": 25,
+        "endOffset": 54
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+              "textRange": {
+                "startLine": 862,
+                "endLine": 862,
+                "startOffset": 25,
+                "endOffset": 54
+              },
+              "msg": "Add 1 missing arguments; '_send_slack_notification' expects at least 2 positional arguments."
+            },
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+              "textRange": {
+                "startLine": 451,
+                "endLine": 451,
+                "startOffset": 14,
+                "endOffset": 38
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Add 1 missing arguments; '_send_slack_notification' expects at least 2 positional arguments.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxoyFIPC-JqlUo0Co",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+      "project": "ruliq-compliance-platform",
+      "line": 863,
+      "hash": "28ab682cbb6eda5681512c3cb4eb7e0f",
+      "textRange": {
+        "startLine": 863,
+        "endLine": 863,
+        "startOffset": 16,
+        "endOffset": 63
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+              "textRange": {
+                "startLine": 863,
+                "endLine": 863,
+                "startOffset": 16,
+                "endOffset": 63
+              },
+              "msg": "Remove this unexpected named argument 'channel_id'."
+            },
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
+              "textRange": {
+                "startLine": 451,
+                "endLine": 451,
+                "startOffset": 14,
+                "endOffset": 38
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'channel_id'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxo4pIPC-JqlUo0Gh",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+      "project": "ruliq-compliance-platform",
+      "line": 223,
+      "hash": "c00c1d62de006292bee46d29ff3ec1f6",
+      "textRange": {
+        "startLine": 223,
+        "endLine": 223,
+        "startOffset": 24,
+        "endOffset": 45
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+              "textRange": {
+                "startLine": 223,
+                "endLine": 223,
+                "startOffset": 24,
+                "endOffset": 45
+              },
+              "msg": "Add 1 missing arguments; 'create_freemium_token' expects at least 2 positional arguments."
+            },
+            {
+              "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+              "textRange": {
+                "startLine": 31,
+                "endLine": 31,
+                "startOffset": 4,
+                "endOffset": 25
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Add 1 missing arguments; 'create_freemium_token' expects at least 2 positional arguments.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxo4pIPC-JqlUo0Gi",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+      "project": "ruliq-compliance-platform",
+      "line": 225,
+      "hash": "fbde1274defa85b43f271d4dba85106e",
+      "textRange": {
+        "startLine": 225,
+        "endLine": 225,
+        "startOffset": 12,
+        "endOffset": 47
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+              "textRange": {
+                "startLine": 225,
+                "endLine": 225,
+                "startOffset": 12,
+                "endOffset": 47
+              },
+              "msg": "Remove this unexpected named argument 'expires_delta'."
+            },
+            {
+              "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+              "textRange": {
+                "startLine": 31,
+                "endLine": 31,
+                "startOffset": 4,
+                "endOffset": 25
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'expires_delta'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxo4pIPC-JqlUo0Gk",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+      "project": "ruliq-compliance-platform",
+      "line": 628,
+      "hash": "455da29bab7c075d8cee179c357056d5",
+      "textRange": {
+        "startLine": 628,
+        "endLine": 628,
+        "startOffset": 16,
+        "endOffset": 37
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+              "textRange": {
+                "startLine": 628,
+                "endLine": 628,
+                "startOffset": 16,
+                "endOffset": 37
+              },
+              "msg": "Add 1 missing arguments; 'create_freemium_token' expects at least 2 positional arguments."
+            },
+            {
+              "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+              "textRange": {
+                "startLine": 31,
+                "endLine": 31,
+                "startOffset": 4,
+                "endOffset": 25
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Add 1 missing arguments; 'create_freemium_token' expects at least 2 positional arguments.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxo4pIPC-JqlUo0Gl",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+      "project": "ruliq-compliance-platform",
+      "line": 630,
+      "hash": "e605c0ed5f1bf3d2b654fda2eabca670",
+      "textRange": {
+        "startLine": 630,
+        "endLine": 630,
+        "startOffset": 12,
+        "endOffset": 46
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+              "textRange": {
+                "startLine": 630,
+                "endLine": 630,
+                "startOffset": 12,
+                "endOffset": 46
+              },
+              "msg": "Remove this unexpected named argument 'expires_delta'."
+            },
+            {
+              "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+              "textRange": {
+                "startLine": 31,
+                "endLine": 31,
+                "startOffset": 4,
+                "endOffset": 25
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'expires_delta'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxo4pIPC-JqlUo0Gm",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+      "project": "ruliq-compliance-platform",
+      "line": 647,
+      "hash": "ed89f0455fb1bef3c283efc58a2f9d08",
+      "textRange": {
+        "startLine": 647,
+        "endLine": 647,
+        "startOffset": 11,
+        "endOffset": 32
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+              "textRange": {
+                "startLine": 647,
+                "endLine": 647,
+                "startOffset": 11,
+                "endOffset": 32
+              },
+              "msg": "Add 1 missing arguments; 'create_freemium_token' expects at least 2 positional arguments."
+            },
+            {
+              "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+              "textRange": {
+                "startLine": 31,
+                "endLine": 31,
+                "startOffset": 4,
+                "endOffset": 25
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Add 1 missing arguments; 'create_freemium_token' expects at least 2 positional arguments.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxo4pIPC-JqlUo0Gn",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+      "project": "ruliq-compliance-platform",
+      "line": 649,
+      "hash": "3f1c77183a5ecc4bb62af4c891f2ad1a",
+      "textRange": {
+        "startLine": 649,
+        "endLine": 649,
+        "startOffset": 8,
+        "endOffset": 27
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+              "textRange": {
+                "startLine": 649,
+                "endLine": 649,
+                "startOffset": 8,
+                "endOffset": 27
+              },
+              "msg": "Remove this unexpected named argument 'utm_source'."
+            },
+            {
+              "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+              "textRange": {
+                "startLine": 31,
+                "endLine": 31,
+                "startOffset": 4,
+                "endOffset": 25
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'utm_source'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxo4pIPC-JqlUo0Go",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+      "project": "ruliq-compliance-platform",
+      "line": 650,
+      "hash": "a5457d449ec462b5fdbb4eb5805fd0f0",
+      "textRange": {
+        "startLine": 650,
+        "endLine": 650,
+        "startOffset": 8,
+        "endOffset": 38
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+              "textRange": {
+                "startLine": 650,
+                "endLine": 650,
+                "startOffset": 8,
+                "endOffset": 38
+              },
+              "msg": "Remove this unexpected named argument 'utm_campaign'."
+            },
+            {
+              "component": "ruliq-compliance-platform:tests/integration/api/test_freemium_endpoints.py",
+              "textRange": {
+                "startLine": 31,
+                "endLine": 31,
+                "startOffset": 4,
+                "endOffset": 25
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'utm_campaign'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxo5eIPC-JqlUo0Gy",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/integration/test_contract_validation.py",
+      "project": "ruliq-compliance-platform",
+      "line": 47,
+      "hash": "9457d51d85ef22d35705bcf1f8055561",
+      "textRange": {
+        "startLine": 47,
+        "endLine": 47,
+        "startOffset": 72,
+        "endOffset": 95
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/integration/test_contract_validation.py",
+              "textRange": {
+                "startLine": 47,
+                "endLine": 47,
+                "startOffset": 72,
+                "endOffset": 95
+              },
+              "msg": "Remove this unexpected named argument 'username'."
+            },
+            {
+              "component": "ruliq-compliance-platform:tests/utils/auth_test_utils.py",
+              "textRange": {
+                "startLine": 22,
+                "endLine": 22,
+                "startOffset": 8,
+                "endOffset": 24
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'username'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxo6GIPC-JqlUo0G_",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/integration/test_external_service_integration.py",
+      "project": "ruliq-compliance-platform",
+      "line": 49,
+      "hash": "10ccdfcbfff9fd41062f2fbfa62cfd60",
+      "textRange": {
+        "startLine": 49,
+        "endLine": 49,
+        "startOffset": 78,
+        "endOffset": 126
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/integration/test_external_service_integration.py",
+              "textRange": {
+                "startLine": 49,
+                "endLine": 49,
+                "startOffset": 78,
+                "endOffset": 126
+              },
+              "msg": "Remove this unexpected named argument 'username'."
+            },
+            {
+              "component": "ruliq-compliance-platform:tests/utils/auth_test_utils.py",
+              "textRange": {
+                "startLine": 22,
+                "endLine": 22,
+                "startOffset": 8,
+                "endOffset": 24
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'username'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxo6GIPC-JqlUo0HE",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/integration/test_external_service_integration.py",
+      "project": "ruliq-compliance-platform",
+      "line": 223,
+      "hash": "3f66160d1d4df8b8d2112cd187506bee",
+      "textRange": {
+        "startLine": 223,
+        "endLine": 223,
+        "startOffset": 78,
+        "endOffset": 126
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/integration/test_external_service_integration.py",
+              "textRange": {
+                "startLine": 223,
+                "endLine": 223,
+                "startOffset": 78,
+                "endOffset": 126
+              },
+              "msg": "Remove this unexpected named argument 'username'."
+            },
+            {
+              "component": "ruliq-compliance-platform:tests/utils/auth_test_utils.py",
+              "textRange": {
+                "startLine": 22,
+                "endLine": 22,
+                "startOffset": 8,
+                "endOffset": 24
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'username'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxo6GIPC-JqlUo0HG",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/integration/test_external_service_integration.py",
+      "project": "ruliq-compliance-platform",
+      "line": 340,
+      "hash": "2d43f44905e8541a7b8789ec7cec31d3",
+      "textRange": {
+        "startLine": 340,
+        "endLine": 340,
+        "startOffset": 81,
+        "endOffset": 132
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/integration/test_external_service_integration.py",
+              "textRange": {
+                "startLine": 340,
+                "endLine": 340,
+                "startOffset": 81,
+                "endOffset": 132
+              },
+              "msg": "Remove this unexpected named argument 'username'."
+            },
+            {
+              "component": "ruliq-compliance-platform:tests/utils/auth_test_utils.py",
+              "textRange": {
+                "startLine": 22,
+                "endLine": 22,
+                "startOffset": 8,
+                "endOffset": 24
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'username'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxo6GIPC-JqlUo0HJ",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/integration/test_external_service_integration.py",
+      "project": "ruliq-compliance-platform",
+      "line": 541,
+      "hash": "a79a0e293d0339bfec82c41e5154b132",
+      "textRange": {
+        "startLine": 541,
+        "endLine": 541,
+        "startOffset": 79,
+        "endOffset": 128
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/integration/test_external_service_integration.py",
+              "textRange": {
+                "startLine": 541,
+                "endLine": 541,
+                "startOffset": 79,
+                "endOffset": 128
+              },
+              "msg": "Remove this unexpected named argument 'username'."
+            },
+            {
+              "component": "ruliq-compliance-platform:tests/utils/auth_test_utils.py",
+              "textRange": {
+                "startLine": 22,
+                "endLine": 22,
+                "startOffset": 8,
+                "endOffset": 24
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'username'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxo6GIPC-JqlUo0HM",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/integration/test_external_service_integration.py",
+      "project": "ruliq-compliance-platform",
+      "line": 637,
+      "hash": "1bff47681ef3650eecfc42550291477c",
+      "textRange": {
+        "startLine": 637,
+        "endLine": 637,
+        "startOffset": 79,
+        "endOffset": 128
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/integration/test_external_service_integration.py",
+              "textRange": {
+                "startLine": 637,
+                "endLine": 637,
+                "startOffset": 79,
+                "endOffset": 128
+              },
+              "msg": "Remove this unexpected named argument 'username'."
+            },
+            {
+              "component": "ruliq-compliance-platform:tests/utils/auth_test_utils.py",
+              "textRange": {
+                "startLine": 22,
+                "endLine": 22,
+                "startOffset": 8,
+                "endOffset": 24
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'username'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-28T05:58:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpG4IPC-JqlUo0Nt",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/fixtures/state_fixtures.py",
+      "project": "ruliq-compliance-platform",
+      "line": 121,
+      "hash": "00d8acd25450a0777a005fa7e8c4eb3b",
+      "textRange": {
+        "startLine": 121,
+        "endLine": 121,
+        "startOffset": 16,
+        "endOffset": 45
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/fixtures/state_fixtures.py",
+              "textRange": {
+                "startLine": 121,
+                "endLine": 121,
+                "startOffset": 16,
+                "endOffset": 45
+              },
+              "msg": "Add 2 missing arguments; 'create_enhanced_initial_state' expects at least 3 positional arguments."
+            },
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/graph/enhanced_state.py",
+              "textRange": {
+                "startLine": 283,
+                "endLine": 283,
+                "startOffset": 4,
+                "endOffset": 33
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Add 2 missing arguments; 'create_enhanced_initial_state' expects at least 3 positional arguments.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-27T05:26:53+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpK4IPC-JqlUo0Pb",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/test_graph_execution.py",
+      "project": "ruliq-compliance-platform",
+      "line": 89,
+      "hash": "6429802779e4b459594a309c19b5a114",
+      "textRange": {
+        "startLine": 89,
+        "endLine": 89,
+        "startOffset": 36,
+        "endOffset": 52
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/test_graph_execution.py",
+              "textRange": {
+                "startLine": 89,
+                "endLine": 89,
+                "startOffset": 36,
+                "endOffset": 52
+              },
+              "msg": "Remove this unexpected named argument 'max_iterations'."
+            },
+            {
+              "component": "ruliq-compliance-platform:tests/fixtures/graph_fixtures.py",
+              "textRange": {
+                "startLine": 173,
+                "endLine": 173,
+                "startOffset": 4,
+                "endOffset": 22
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'max_iterations'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-27T05:26:53+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpNKIPC-JqlUo0Qk",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/test_state_management.py",
+      "project": "ruliq-compliance-platform",
+      "line": 40,
+      "hash": "754059e4fc1c0c881be244d10e6093f8",
+      "textRange": {
+        "startLine": 40,
+        "endLine": 40,
+        "startOffset": 16,
+        "endOffset": 45
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/test_state_management.py",
+              "textRange": {
+                "startLine": 40,
+                "endLine": 40,
+                "startOffset": 16,
+                "endOffset": 45
+              },
+              "msg": "Add 2 missing arguments; 'create_enhanced_initial_state' expects at least 3 positional arguments."
+            },
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/graph/enhanced_state.py",
+              "textRange": {
+                "startLine": 283,
+                "endLine": 283,
+                "startOffset": 4,
+                "endOffset": 33
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Add 2 missing arguments; 'create_enhanced_initial_state' expects at least 3 positional arguments.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-27T05:26:53+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxoakIPC-JqlUoz3E",
+      "rule": "secrets:S6698",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:scripts/setup_secrets_vault.py",
+      "project": "ruliq-compliance-platform",
+      "line": 48,
+      "hash": "759848f9146dcaea50260869af31d873",
+      "textRange": {
+        "startLine": 48,
+        "endLine": 48,
+        "startOffset": 60,
+        "endOffset": 69
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+      "effort": "30min",
+      "debt": "30min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-22T16:25:57+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "VULNERABILITY",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "TRUSTWORTHY",
+      "cleanCodeAttributeCategory": "RESPONSIBLE",
+      "impacts": [
+        {
+          "softwareQuality": "SECURITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxoakIPC-JqlUoz3F",
+      "rule": "secrets:S6698",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:scripts/setup_secrets_vault.py",
+      "project": "ruliq-compliance-platform",
+      "line": 49,
+      "hash": "04cfb38d7dd42b5c34b331ca9abfce6d",
+      "textRange": {
+        "startLine": 49,
+        "endLine": 49,
+        "startOffset": 65,
+        "endOffset": 74
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+      "effort": "30min",
+      "debt": "30min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-22T16:25:57+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "VULNERABILITY",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "TRUSTWORTHY",
+      "cleanCodeAttributeCategory": "RESPONSIBLE",
+      "impacts": [
+        {
+          "softwareQuality": "SECURITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxo5sIPC-JqlUo0G0",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/integration/test_comprehensive_api_workflows.py",
+      "project": "ruliq-compliance-platform",
+      "line": 56,
+      "hash": "c6ade375dcb2507fccae03336a5a75ef",
+      "textRange": {
+        "startLine": 56,
+        "endLine": 56,
+        "startOffset": 37,
+        "endOffset": 57
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/integration/test_comprehensive_api_workflows.py",
+              "textRange": {
+                "startLine": 56,
+                "endLine": 56,
+                "startOffset": 37,
+                "endOffset": 57
+              },
+              "msg": "Remove this unexpected named argument 'role'."
+            },
+            {
+              "component": "ruliq-compliance-platform:tests/utils/auth_test_utils.py",
+              "textRange": {
+                "startLine": 22,
+                "endLine": 22,
+                "startOffset": 8,
+                "endOffset": 24
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'role'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-22T16:25:57+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxo0dIPC-JqlUo0D3",
+      "rule": "python:S3516",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:langgraph_agent/agents/memory_manager.py",
+      "project": "ruliq-compliance-platform",
+      "line": 540,
+      "hash": "2e208a44be46e15e9c184a3fcf8ad927",
+      "textRange": {
+        "startLine": 540,
+        "endLine": 540,
+        "startOffset": 14,
+        "endOffset": 38
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/agents/memory_manager.py",
+              "textRange": {
+                "startLine": 578,
+                "endLine": 578,
+                "startOffset": 12,
+                "endOffset": 32
+              },
+              "msg": "returned value"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/agents/memory_manager.py",
+              "textRange": {
+                "startLine": 574,
+                "endLine": 574,
+                "startOffset": 12,
+                "endOffset": 32
+              },
+              "msg": "returned value"
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Refactor this method to not always return the same value.",
+      "effort": "2min",
+      "debt": "2min",
+      "author": "you@example.com",
+      "tags": [
+        "confusing",
+        "design"
+      ],
+      "creationDate": "2025-08-15T17:00:26+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "CODE_SMELL",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxowpIPC-JqlUo0BZ",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:langgraph_agent/tests/test_tenancy.py",
+      "project": "ruliq-compliance-platform",
+      "line": 505,
+      "hash": "a8df75b717805f84921df1aa59bd49ce",
+      "textRange": {
+        "startLine": 505,
+        "endLine": 505,
+        "startOffset": 12,
+        "endOffset": 32
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/tests/test_tenancy.py",
+              "textRange": {
+                "startLine": 505,
+                "endLine": 505,
+                "startOffset": 12,
+                "endOffset": 32
+              },
+              "msg": "Add 1 missing arguments; 'create_initial_state' expects at least 2 positional arguments."
+            },
+            {
+              "component": "ruliq-compliance-platform:langgraph_agent/graph/state.py",
+              "textRange": {
+                "startLine": 81,
+                "endLine": 81,
+                "startOffset": 4,
+                "endOffset": 24
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Add 1 missing arguments; 'create_initial_state' expects at least 2 positional arguments.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-15T17:00:26+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpVwIPC-JqlUo0UU",
+      "rule": "secrets:S6698",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:archive/scripts/check_schema.py",
+      "project": "ruliq-compliance-platform",
+      "line": 12,
+      "hash": "2e46f0e5c46309929149e0ec08b3ddc5",
+      "textRange": {
+        "startLine": 12,
+        "endLine": 12,
+        "startOffset": 31,
+        "endOffset": 47
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+      "effort": "30min",
+      "debt": "30min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-05T17:23:39+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "VULNERABILITY",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "TRUSTWORTHY",
+      "cleanCodeAttributeCategory": "RESPONSIBLE",
+      "impacts": [
+        {
+          "softwareQuality": "SECURITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxohJIPC-JqlUoz5i",
+      "rule": "secrets:S6698",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:scripts/debug_freemium_tables.py",
+      "project": "ruliq-compliance-platform",
+      "line": 13,
+      "hash": "2e46f0e5c46309929149e0ec08b3ddc5",
+      "textRange": {
+        "startLine": 13,
+        "endLine": 13,
+        "startOffset": 31,
+        "endOffset": 47
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+      "effort": "30min",
+      "debt": "30min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-05T17:23:39+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "VULNERABILITY",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "TRUSTWORTHY",
+      "cleanCodeAttributeCategory": "RESPONSIBLE",
+      "impacts": [
+        {
+          "softwareQuality": "SECURITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxoVNIPC-JqlUoz1a",
+      "rule": "secrets:S6698",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:scripts/simple_test_debug.py",
+      "project": "ruliq-compliance-platform",
+      "line": 14,
+      "hash": "2e46f0e5c46309929149e0ec08b3ddc5",
+      "textRange": {
+        "startLine": 14,
+        "endLine": 14,
+        "startOffset": 31,
+        "endOffset": 47
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+      "effort": "30min",
+      "debt": "30min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-08-05T17:23:39+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "VULNERABILITY",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "TRUSTWORTHY",
+      "cleanCodeAttributeCategory": "RESPONSIBLE",
+      "impacts": [
+        {
+          "softwareQuality": "SECURITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpLxIPC-JqlUo0Ps",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/test_ai_policy_generator.py",
+      "project": "ruliq-compliance-platform",
+      "line": 99,
+      "hash": "99435800527f236b9e9bca9e93427959",
+      "textRange": {
+        "startLine": 99,
+        "endLine": 99,
+        "startOffset": 12,
+        "endOffset": 42
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/test_ai_policy_generator.py",
+              "textRange": {
+                "startLine": 99,
+                "endLine": 99,
+                "startOffset": 12,
+                "endOffset": 42
+              },
+              "msg": "Add 1 missing arguments; 'record_failure' expects at least 2 positional arguments."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/circuit_breaker.py",
+              "textRange": {
+                "startLine": 184,
+                "endLine": 184,
+                "startOffset": 8,
+                "endOffset": 22
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Add 1 missing arguments; 'record_failure' expects at least 2 positional arguments.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-25T06:28:56+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpFLIPC-JqlUo0Ms",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/test_ai_neon.py",
+      "project": "ruliq-compliance-platform",
+      "line": 60,
+      "hash": "724b3e96cb778cb35dba8f7cbe269b3f",
+      "textRange": {
+        "startLine": 60,
+        "endLine": 60,
+        "startOffset": 29,
+        "endOffset": 58
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/test_ai_neon.py",
+              "textRange": {
+                "startLine": 60,
+                "endLine": 60,
+                "startOffset": 29,
+                "endOffset": 58
+              },
+              "msg": "Add 3 missing arguments; 'get_assessment_help' expects at least 4 positional arguments."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 3246,
+                "endLine": 3246,
+                "startOffset": 14,
+                "endOffset": 33
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Add 3 missing arguments; 'get_assessment_help' expects at least 4 positional arguments.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-22T03:09:57+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpFLIPC-JqlUo0Mt",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/test_ai_neon.py",
+      "project": "ruliq-compliance-platform",
+      "line": 62,
+      "hash": "67ab3209f54aa7de4448ffe82e691c25",
+      "textRange": {
+        "startLine": 62,
+        "endLine": 62,
+        "startOffset": 16,
+        "endOffset": 53
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/test_ai_neon.py",
+              "textRange": {
+                "startLine": 62,
+                "endLine": 62,
+                "startOffset": 16,
+                "endOffset": 53
+              },
+              "msg": "Remove this unexpected named argument 'question_type'."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 3246,
+                "endLine": 3246,
+                "startOffset": 14,
+                "endOffset": 33
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'question_type'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-22T03:09:57+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpFLIPC-JqlUo0Mu",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/test_ai_neon.py",
+      "project": "ruliq-compliance-platform",
+      "line": 79,
+      "hash": "128d4541e050ceeec1222627fd6afbfc",
+      "textRange": {
+        "startLine": 79,
+        "endLine": 79,
+        "startOffset": 36,
+        "endOffset": 65
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/test_ai_neon.py",
+              "textRange": {
+                "startLine": 79,
+                "endLine": 79,
+                "startOffset": 36,
+                "endOffset": 65
+              },
+              "msg": "Add 3 missing arguments; 'get_assessment_help' expects at least 4 positional arguments."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 3246,
+                "endLine": 3246,
+                "startOffset": 14,
+                "endOffset": 33
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Add 3 missing arguments; 'get_assessment_help' expects at least 4 positional arguments.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-22T03:09:57+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpFLIPC-JqlUo0Mv",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:tests/test_ai_neon.py",
+      "project": "ruliq-compliance-platform",
+      "line": 81,
+      "hash": "67ab3209f54aa7de4448ffe82e691c25",
+      "textRange": {
+        "startLine": 81,
+        "endLine": 81,
+        "startOffset": 16,
+        "endOffset": 53
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:tests/test_ai_neon.py",
+              "textRange": {
+                "startLine": 81,
+                "endLine": 81,
+                "startOffset": 16,
+                "endOffset": 53
+              },
+              "msg": "Remove this unexpected named argument 'question_type'."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 3246,
+                "endLine": 3246,
+                "startOffset": 14,
+                "endOffset": 33
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'question_type'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-22T03:09:57+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxoDFIPC-JqlUozrx",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:services/ai/safety_manager.py",
+      "project": "ruliq-compliance-platform",
+      "line": 921,
+      "hash": "ad176384884274b98fe60e1b840bf620",
+      "textRange": {
+        "startLine": 921,
+        "endLine": 925,
+        "startOffset": 12,
+        "endOffset": 13
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:services/ai/safety_manager.py",
+              "textRange": {
+                "startLine": 921,
+                "endLine": 925,
+                "startOffset": 12,
+                "endOffset": 13
+              },
+              "msg": "Remove this unexpected named argument 'metadata'."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/safety_manager.py",
+              "textRange": {
+                "startLine": 357,
+                "endLine": 357,
+                "startOffset": 8,
+                "endOffset": 34
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'metadata'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-21T21:22:18+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpgXIPC-JqlUo0W2",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:workers/compliance_tasks.py",
+      "project": "ruliq-compliance-platform",
+      "line": 40,
+      "hash": "d8ceaa63ee51ece24f54509f9d338d52",
+      "textRange": {
+        "startLine": 40,
+        "endLine": 40,
+        "startOffset": 43,
+        "endOffset": 72
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:workers/compliance_tasks.py",
+              "textRange": {
+                "startLine": 40,
+                "endLine": 40,
+                "startOffset": 43,
+                "endOffset": 72
+              },
+              "msg": "Add 1 missing arguments; 'generate_readiness_assessment' expects at least 3 positional arguments."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/readiness_service.py",
+              "textRange": {
+                "startLine": 92,
+                "endLine": 92,
+                "startOffset": 10,
+                "endOffset": 39
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Add 1 missing arguments; 'generate_readiness_assessment' expects at least 3 positional arguments.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-21T21:22:18+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpgXIPC-JqlUo0W3",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:workers/compliance_tasks.py",
+      "project": "ruliq-compliance-platform",
+      "line": 84,
+      "hash": "d8ceaa63ee51ece24f54509f9d338d52",
+      "textRange": {
+        "startLine": 84,
+        "endLine": 84,
+        "startOffset": 43,
+        "endOffset": 72
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:workers/compliance_tasks.py",
+              "textRange": {
+                "startLine": 84,
+                "endLine": 84,
+                "startOffset": 43,
+                "endOffset": 72
+              },
+              "msg": "Add 1 missing arguments; 'generate_readiness_assessment' expects at least 3 positional arguments."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/readiness_service.py",
+              "textRange": {
+                "startLine": 92,
+                "endLine": 92,
+                "startOffset": 10,
+                "endOffset": 39
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Add 1 missing arguments; 'generate_readiness_assessment' expects at least 3 positional arguments.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-21T21:22:18+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxovDIPC-JqlUo0A3",
+      "rule": "python:S3516",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:api/dependencies/token_blacklist.py",
+      "project": "ruliq-compliance-platform",
+      "line": 244,
+      "hash": "1dfdcc93eb28f1acf428d73c191854db",
+      "textRange": {
+        "startLine": 244,
+        "endLine": 244,
+        "startOffset": 14,
+        "endOffset": 35
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:api/dependencies/token_blacklist.py",
+              "textRange": {
+                "startLine": 274,
+                "endLine": 274,
+                "startOffset": 12,
+                "endOffset": 20
+              },
+              "msg": "returned value"
+            }
+          ]
+        },
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:api/dependencies/token_blacklist.py",
+              "textRange": {
+                "startLine": 270,
+                "endLine": 270,
+                "startOffset": 12,
+                "endOffset": 20
+              },
+              "msg": "returned value"
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Refactor this method to not always return the same value.",
+      "effort": "2min",
+      "debt": "2min",
+      "author": "you@example.com",
+      "tags": [
+        "confusing",
+        "design"
+      ],
+      "creationDate": "2025-07-17T21:01:04+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "CODE_SMELL",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "MAINTAINABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpTvIPC-JqlUo0Tt",
+      "rule": "secrets:S6698",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:archive/test_configs/conftest_fixed.py",
+      "project": "ruliq-compliance-platform",
+      "line": 43,
+      "hash": "2e46f0e5c46309929149e0ec08b3ddc5",
+      "textRange": {
+        "startLine": 43,
+        "endLine": 43,
+        "startOffset": 31,
+        "endOffset": 47
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+      "effort": "30min",
+      "debt": "30min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-11T15:44:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "VULNERABILITY",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "TRUSTWORTHY",
+      "cleanCodeAttributeCategory": "RESPONSIBLE",
+      "impacts": [
+        {
+          "softwareQuality": "SECURITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpULIPC-JqlUo0T8",
+      "rule": "secrets:S6698",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:archive/test_configs/conftest_hybrid.py",
+      "project": "ruliq-compliance-platform",
+      "line": 29,
+      "hash": "2e46f0e5c46309929149e0ec08b3ddc5",
+      "textRange": {
+        "startLine": 29,
+        "endLine": 29,
+        "startOffset": 31,
+        "endOffset": 47
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+      "effort": "30min",
+      "debt": "30min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-11T15:44:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "VULNERABILITY",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "TRUSTWORTHY",
+      "cleanCodeAttributeCategory": "RESPONSIBLE",
+      "impacts": [
+        {
+          "softwareQuality": "SECURITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxpSFIPC-JqlUo0TX",
+      "rule": "secrets:S6698",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:archive/test_configs/conftest_improved.py",
+      "project": "ruliq-compliance-platform",
+      "line": 29,
+      "hash": "2e46f0e5c46309929149e0ec08b3ddc5",
+      "textRange": {
+        "startLine": 29,
+        "endLine": 29,
+        "startOffset": 31,
+        "endOffset": 47
+      },
+      "flows": [],
+      "status": "OPEN",
+      "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+      "effort": "30min",
+      "debt": "30min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-11T15:44:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "VULNERABILITY",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "TRUSTWORTHY",
+      "cleanCodeAttributeCategory": "RESPONSIBLE",
+      "impacts": [
+        {
+          "softwareQuality": "SECURITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxn-RIPC-JqlUozpq",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:services/ai/assistant.py",
+      "project": "ruliq-compliance-platform",
+      "line": 4518,
+      "hash": "c8a2f1804c9f316abf22af3168260b97",
+      "textRange": {
+        "startLine": 4518,
+        "endLine": 4518,
+        "startOffset": 21,
+        "endOffset": 44
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 4518,
+                "endLine": 4518,
+                "startOffset": 21,
+                "endOffset": 44
+              },
+              "msg": "Add 4 missing arguments; '_generate_response' expects 4 positional arguments."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 2777,
+                "endLine": 2777,
+                "startOffset": 14,
+                "endOffset": 32
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Add 4 missing arguments; '_generate_response' expects 4 positional arguments.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-11T15:44:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxn-RIPC-JqlUozpr",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:services/ai/assistant.py",
+      "project": "ruliq-compliance-platform",
+      "line": 4519,
+      "hash": "0124d31729f95f96facbba83799de8db",
+      "textRange": {
+        "startLine": 4519,
+        "endLine": 4519,
+        "startOffset": 12,
+        "endOffset": 35
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 4519,
+                "endLine": 4519,
+                "startOffset": 12,
+                "endOffset": 35
+              },
+              "msg": "Remove this unexpected named argument 'question_id'."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 2777,
+                "endLine": 2777,
+                "startOffset": 14,
+                "endOffset": 32
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'question_id'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-11T15:44:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxn-RIPC-JqlUozps",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:services/ai/assistant.py",
+      "project": "ruliq-compliance-platform",
+      "line": 4520,
+      "hash": "272c7bf5763aa17f830b301bf0a68f66",
+      "textRange": {
+        "startLine": 4520,
+        "endLine": 4520,
+        "startOffset": 12,
+        "endOffset": 39
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 4520,
+                "endLine": 4520,
+                "startOffset": 12,
+                "endOffset": 39
+              },
+              "msg": "Remove this unexpected named argument 'question_text'."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 2777,
+                "endLine": 2777,
+                "startOffset": 14,
+                "endOffset": 32
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'question_text'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-11T15:44:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxn-RIPC-JqlUozpt",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:services/ai/assistant.py",
+      "project": "ruliq-compliance-platform",
+      "line": 4521,
+      "hash": "c567dd34bcaf9f4aaeee336ee07efb0d",
+      "textRange": {
+        "startLine": 4521,
+        "endLine": 4521,
+        "startOffset": 12,
+        "endOffset": 37
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 4521,
+                "endLine": 4521,
+                "startOffset": 12,
+                "endOffset": 37
+              },
+              "msg": "Remove this unexpected named argument 'framework_id'."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 2777,
+                "endLine": 2777,
+                "startOffset": 14,
+                "endOffset": 32
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'framework_id'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-11T15:44:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxn-RIPC-JqlUozpu",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:services/ai/assistant.py",
+      "project": "ruliq-compliance-platform",
+      "line": 4522,
+      "hash": "e85c1693ac8d3c131f440b44b3387380",
+      "textRange": {
+        "startLine": 4522,
+        "endLine": 4522,
+        "startOffset": 12,
+        "endOffset": 51
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 4522,
+                "endLine": 4522,
+                "startOffset": 12,
+                "endOffset": 51
+              },
+              "msg": "Remove this unexpected named argument 'business_profile_id'."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 2777,
+                "endLine": 2777,
+                "startOffset": 14,
+                "endOffset": 32
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'business_profile_id'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-11T15:44:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxn-RIPC-JqlUozpv",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:services/ai/assistant.py",
+      "project": "ruliq-compliance-platform",
+      "line": 4523,
+      "hash": "a7cd3d1f13cc972e300e2f45fd30c278",
+      "textRange": {
+        "startLine": 4523,
+        "endLine": 4523,
+        "startOffset": 12,
+        "endOffset": 33
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 4523,
+                "endLine": 4523,
+                "startOffset": 12,
+                "endOffset": 33
+              },
+              "msg": "Remove this unexpected named argument 'section_id'."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 2777,
+                "endLine": 2777,
+                "startOffset": 14,
+                "endOffset": 32
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'section_id'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-11T15:44:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    },
+    {
+      "key": "AZkJxn-RIPC-JqlUozpw",
+      "rule": "python:S930",
+      "severity": "BLOCKER",
+      "component": "ruliq-compliance-platform:services/ai/assistant.py",
+      "project": "ruliq-compliance-platform",
+      "line": 4524,
+      "hash": "d8d50d64580a0e3aa8d90f888434f4e1",
+      "textRange": {
+        "startLine": 4524,
+        "endLine": 4524,
+        "startOffset": 12,
+        "endOffset": 37
+      },
+      "flows": [
+        {
+          "locations": [
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 4524,
+                "endLine": 4524,
+                "startOffset": 12,
+                "endOffset": 37
+              },
+              "msg": "Remove this unexpected named argument 'user_context'."
+            },
+            {
+              "component": "ruliq-compliance-platform:services/ai/assistant.py",
+              "textRange": {
+                "startLine": 2777,
+                "endLine": 2777,
+                "startOffset": 14,
+                "endOffset": 32
+              },
+              "msg": "Function definition."
+            }
+          ]
+        }
+      ],
+      "status": "OPEN",
+      "message": "Remove this unexpected named argument 'user_context'.",
+      "effort": "10min",
+      "debt": "10min",
+      "author": "you@example.com",
+      "tags": [
+        "cwe"
+      ],
+      "creationDate": "2025-07-11T15:44:38+0000",
+      "updateDate": "2025-09-02T09:29:46+0000",
+      "type": "BUG",
+      "organization": "omara1-bakri",
+      "cleanCodeAttribute": "LOGICAL",
+      "cleanCodeAttributeCategory": "INTENTIONAL",
+      "impacts": [
+        {
+          "softwareQuality": "RELIABILITY",
+          "severity": "BLOCKER"
+        }
+      ],
+      "issueStatus": "OPEN",
+      "projectName": "ruleIQ Compliance Platform"
+    }
+  ],
+  "categorized": {
+    "python:S930": [
+      {
+        "file": "api/middleware/api_key_auth.py",
+        "line": 125,
+        "message": "Remove this unexpected named argument 'request_origin'.",
+        "key": "AZkJxouaIPC-JqlUo0Ac"
+      },
+      {
+        "file": "api/middleware/api_key_auth.py",
+        "line": 127,
+        "message": "Remove this unexpected named argument 'endpoint'.",
+        "key": "AZkJxouaIPC-JqlUo0Ad"
+      },
+      {
+        "file": "api/middleware/api_key_auth.py",
+        "line": 128,
+        "message": "Remove this unexpected named argument 'method'.",
+        "key": "AZkJxouaIPC-JqlUo0Ae"
+      },
+      {
+        "file": "api/dependencies/auth.py",
+        "line": 304,
+        "message": "Remove this unexpected named argument 'request_origin'.",
+        "key": "AZkJxou0IPC-JqlUo0Aw"
+      },
+      {
+        "file": "api/dependencies/auth.py",
+        "line": 305,
+        "message": "Remove this unexpected named argument 'endpoint'.",
+        "key": "AZkJxou0IPC-JqlUo0Ax"
+      },
+      {
+        "file": "api/dependencies/auth.py",
+        "line": 306,
+        "message": "Remove this unexpected named argument 'method'.",
+        "key": "AZkJxou0IPC-JqlUo0Ay"
+      },
+      {
+        "file": "langgraph_agent/nodes/notification_nodes.py",
+        "line": 851,
+        "message": "Add 1 missing arguments; '_send_email_notification' expects at least 3 positional arguments.",
+        "key": "AZkJxoyFIPC-JqlUo0Cj"
+      },
+      {
+        "file": "langgraph_agent/nodes/notification_nodes.py",
+        "line": 852,
+        "message": "Remove this unexpected named argument 'recipient'.",
+        "key": "AZkJxoyFIPC-JqlUo0Ck"
+      },
+      {
+        "file": "langgraph_agent/nodes/notification_nodes.py",
+        "line": 857,
+        "message": "Add 1 missing arguments; '_send_sms_notification' expects 2 positional arguments.",
+        "key": "AZkJxoyFIPC-JqlUo0Cl"
+      },
+      {
+        "file": "langgraph_agent/nodes/notification_nodes.py",
+        "line": 858,
+        "message": "Remove this unexpected named argument 'recipient'.",
+        "key": "AZkJxoyFIPC-JqlUo0Cm"
+      },
+      {
+        "file": "langgraph_agent/nodes/notification_nodes.py",
+        "line": 862,
+        "message": "Add 1 missing arguments; '_send_slack_notification' expects at least 2 positional arguments.",
+        "key": "AZkJxoyFIPC-JqlUo0Cn"
+      },
+      {
+        "file": "langgraph_agent/nodes/notification_nodes.py",
+        "line": 863,
+        "message": "Remove this unexpected named argument 'channel_id'.",
+        "key": "AZkJxoyFIPC-JqlUo0Co"
+      },
+      {
+        "file": "tests/integration/api/test_freemium_endpoints.py",
+        "line": 223,
+        "message": "Add 1 missing arguments; 'create_freemium_token' expects at least 2 positional arguments.",
+        "key": "AZkJxo4pIPC-JqlUo0Gh"
+      },
+      {
+        "file": "tests/integration/api/test_freemium_endpoints.py",
+        "line": 225,
+        "message": "Remove this unexpected named argument 'expires_delta'.",
+        "key": "AZkJxo4pIPC-JqlUo0Gi"
+      },
+      {
+        "file": "tests/integration/api/test_freemium_endpoints.py",
+        "line": 628,
+        "message": "Add 1 missing arguments; 'create_freemium_token' expects at least 2 positional arguments.",
+        "key": "AZkJxo4pIPC-JqlUo0Gk"
+      },
+      {
+        "file": "tests/integration/api/test_freemium_endpoints.py",
+        "line": 630,
+        "message": "Remove this unexpected named argument 'expires_delta'.",
+        "key": "AZkJxo4pIPC-JqlUo0Gl"
+      },
+      {
+        "file": "tests/integration/api/test_freemium_endpoints.py",
+        "line": 647,
+        "message": "Add 1 missing arguments; 'create_freemium_token' expects at least 2 positional arguments.",
+        "key": "AZkJxo4pIPC-JqlUo0Gm"
+      },
+      {
+        "file": "tests/integration/api/test_freemium_endpoints.py",
+        "line": 649,
+        "message": "Remove this unexpected named argument 'utm_source'.",
+        "key": "AZkJxo4pIPC-JqlUo0Gn"
+      },
+      {
+        "file": "tests/integration/api/test_freemium_endpoints.py",
+        "line": 650,
+        "message": "Remove this unexpected named argument 'utm_campaign'.",
+        "key": "AZkJxo4pIPC-JqlUo0Go"
+      },
+      {
+        "file": "tests/integration/test_contract_validation.py",
+        "line": 47,
+        "message": "Remove this unexpected named argument 'username'.",
+        "key": "AZkJxo5eIPC-JqlUo0Gy"
+      },
+      {
+        "file": "tests/integration/test_external_service_integration.py",
+        "line": 49,
+        "message": "Remove this unexpected named argument 'username'.",
+        "key": "AZkJxo6GIPC-JqlUo0G_"
+      },
+      {
+        "file": "tests/integration/test_external_service_integration.py",
+        "line": 223,
+        "message": "Remove this unexpected named argument 'username'.",
+        "key": "AZkJxo6GIPC-JqlUo0HE"
+      },
+      {
+        "file": "tests/integration/test_external_service_integration.py",
+        "line": 340,
+        "message": "Remove this unexpected named argument 'username'.",
+        "key": "AZkJxo6GIPC-JqlUo0HG"
+      },
+      {
+        "file": "tests/integration/test_external_service_integration.py",
+        "line": 541,
+        "message": "Remove this unexpected named argument 'username'.",
+        "key": "AZkJxo6GIPC-JqlUo0HJ"
+      },
+      {
+        "file": "tests/integration/test_external_service_integration.py",
+        "line": 637,
+        "message": "Remove this unexpected named argument 'username'.",
+        "key": "AZkJxo6GIPC-JqlUo0HM"
+      },
+      {
+        "file": "tests/fixtures/state_fixtures.py",
+        "line": 121,
+        "message": "Add 2 missing arguments; 'create_enhanced_initial_state' expects at least 3 positional arguments.",
+        "key": "AZkJxpG4IPC-JqlUo0Nt"
+      },
+      {
+        "file": "tests/test_graph_execution.py",
+        "line": 89,
+        "message": "Remove this unexpected named argument 'max_iterations'.",
+        "key": "AZkJxpK4IPC-JqlUo0Pb"
+      },
+      {
+        "file": "tests/test_state_management.py",
+        "line": 40,
+        "message": "Add 2 missing arguments; 'create_enhanced_initial_state' expects at least 3 positional arguments.",
+        "key": "AZkJxpNKIPC-JqlUo0Qk"
+      },
+      {
+        "file": "tests/integration/test_comprehensive_api_workflows.py",
+        "line": 56,
+        "message": "Remove this unexpected named argument 'role'.",
+        "key": "AZkJxo5sIPC-JqlUo0G0"
+      },
+      {
+        "file": "langgraph_agent/tests/test_tenancy.py",
+        "line": 505,
+        "message": "Add 1 missing arguments; 'create_initial_state' expects at least 2 positional arguments.",
+        "key": "AZkJxowpIPC-JqlUo0BZ"
+      },
+      {
+        "file": "tests/test_ai_policy_generator.py",
+        "line": 99,
+        "message": "Add 1 missing arguments; 'record_failure' expects at least 2 positional arguments.",
+        "key": "AZkJxpLxIPC-JqlUo0Ps"
+      },
+      {
+        "file": "tests/test_ai_neon.py",
+        "line": 60,
+        "message": "Add 3 missing arguments; 'get_assessment_help' expects at least 4 positional arguments.",
+        "key": "AZkJxpFLIPC-JqlUo0Ms"
+      },
+      {
+        "file": "tests/test_ai_neon.py",
+        "line": 62,
+        "message": "Remove this unexpected named argument 'question_type'.",
+        "key": "AZkJxpFLIPC-JqlUo0Mt"
+      },
+      {
+        "file": "tests/test_ai_neon.py",
+        "line": 79,
+        "message": "Add 3 missing arguments; 'get_assessment_help' expects at least 4 positional arguments.",
+        "key": "AZkJxpFLIPC-JqlUo0Mu"
+      },
+      {
+        "file": "tests/test_ai_neon.py",
+        "line": 81,
+        "message": "Remove this unexpected named argument 'question_type'.",
+        "key": "AZkJxpFLIPC-JqlUo0Mv"
+      },
+      {
+        "file": "services/ai/safety_manager.py",
+        "line": 921,
+        "message": "Remove this unexpected named argument 'metadata'.",
+        "key": "AZkJxoDFIPC-JqlUozrx"
+      },
+      {
+        "file": "workers/compliance_tasks.py",
+        "line": 40,
+        "message": "Add 1 missing arguments; 'generate_readiness_assessment' expects at least 3 positional arguments.",
+        "key": "AZkJxpgXIPC-JqlUo0W2"
+      },
+      {
+        "file": "workers/compliance_tasks.py",
+        "line": 84,
+        "message": "Add 1 missing arguments; 'generate_readiness_assessment' expects at least 3 positional arguments.",
+        "key": "AZkJxpgXIPC-JqlUo0W3"
+      },
+      {
+        "file": "services/ai/assistant.py",
+        "line": 4518,
+        "message": "Add 4 missing arguments; '_generate_response' expects 4 positional arguments.",
+        "key": "AZkJxn-RIPC-JqlUozpq"
+      },
+      {
+        "file": "services/ai/assistant.py",
+        "line": 4519,
+        "message": "Remove this unexpected named argument 'question_id'.",
+        "key": "AZkJxn-RIPC-JqlUozpr"
+      },
+      {
+        "file": "services/ai/assistant.py",
+        "line": 4520,
+        "message": "Remove this unexpected named argument 'question_text'.",
+        "key": "AZkJxn-RIPC-JqlUozps"
+      },
+      {
+        "file": "services/ai/assistant.py",
+        "line": 4521,
+        "message": "Remove this unexpected named argument 'framework_id'.",
+        "key": "AZkJxn-RIPC-JqlUozpt"
+      },
+      {
+        "file": "services/ai/assistant.py",
+        "line": 4522,
+        "message": "Remove this unexpected named argument 'business_profile_id'.",
+        "key": "AZkJxn-RIPC-JqlUozpu"
+      },
+      {
+        "file": "services/ai/assistant.py",
+        "line": 4523,
+        "message": "Remove this unexpected named argument 'section_id'.",
+        "key": "AZkJxn-RIPC-JqlUozpv"
+      },
+      {
+        "file": "services/ai/assistant.py",
+        "line": 4524,
+        "message": "Remove this unexpected named argument 'user_context'.",
+        "key": "AZkJxn-RIPC-JqlUozpw"
+      }
+    ],
+    "secrets:S7362": [
+      {
+        "file": "archive/scripts/migrate_archon_data.py",
+        "line": 13,
+        "message": "Make sure this Supabase Service Role JWT secret gets revoked, changed, and removed from the code.",
+        "key": "AZkJxpWGIPC-JqlUo0UY"
+      }
+    ],
+    "python:S3516": [
+      {
+        "file": "langgraph_agent/nodes/task_scheduler_node.py",
+        "line": 241,
+        "message": "Refactor this method to not always return the same value.",
+        "key": "AZkJxoxbIPC-JqlUo0Bo"
+      },
+      {
+        "file": "langgraph_agent/agents/memory_manager.py",
+        "line": 540,
+        "message": "Refactor this method to not always return the same value.",
+        "key": "AZkJxo0dIPC-JqlUo0D3"
+      },
+      {
+        "file": "api/dependencies/token_blacklist.py",
+        "line": 244,
+        "message": "Refactor this method to not always return the same value.",
+        "key": "AZkJxovDIPC-JqlUo0A3"
+      }
+    ],
+    "pythonsecurity:S2083": [
+      {
+        "file": "services/ai/evaluation/tools/ingestion.py",
+        "line": 23,
+        "message": "Change this code to not construct the path from user-controlled data.",
+        "key": "AZkJxn6tIPC-JqlUoznD"
+      },
+      {
+        "file": "services/ai/evaluation/tools/ingestion_fixed.py",
+        "line": 68,
+        "message": "Change this code to not construct the path from user-controlled data.",
+        "key": "AZkJxn7QIPC-JqlUoznI"
+      }
+    ],
+    "secrets:S6698": [
+      {
+        "file": "archive/scripts/capture_test_errors.py",
+        "line": 7,
+        "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+        "key": "AZkJxpVlIPC-JqlUo0UQ"
+      },
+      {
+        "file": "archive/scripts/capture_test_errors.py",
+        "line": 8,
+        "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+        "key": "AZkJxpVlIPC-JqlUo0UR"
+      },
+      {
+        "file": "archive/scripts/capture_test_errors.py",
+        "line": 23,
+        "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+        "key": "AZkJxpVlIPC-JqlUo0US"
+      },
+      {
+        "file": "scripts/setup_secrets_vault.py",
+        "line": 48,
+        "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+        "key": "AZkJxoakIPC-JqlUoz3E"
+      },
+      {
+        "file": "scripts/setup_secrets_vault.py",
+        "line": 49,
+        "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+        "key": "AZkJxoakIPC-JqlUoz3F"
+      },
+      {
+        "file": "archive/scripts/check_schema.py",
+        "line": 12,
+        "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+        "key": "AZkJxpVwIPC-JqlUo0UU"
+      },
+      {
+        "file": "scripts/debug_freemium_tables.py",
+        "line": 13,
+        "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+        "key": "AZkJxohJIPC-JqlUoz5i"
+      },
+      {
+        "file": "scripts/simple_test_debug.py",
+        "line": 14,
+        "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+        "key": "AZkJxoVNIPC-JqlUoz1a"
+      },
+      {
+        "file": "archive/test_configs/conftest_fixed.py",
+        "line": 43,
+        "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+        "key": "AZkJxpTvIPC-JqlUo0Tt"
+      },
+      {
+        "file": "archive/test_configs/conftest_hybrid.py",
+        "line": 29,
+        "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+        "key": "AZkJxpULIPC-JqlUo0T8"
+      },
+      {
+        "file": "archive/test_configs/conftest_improved.py",
+        "line": 29,
+        "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
+        "key": "AZkJxpSFIPC-JqlUo0TX"
+      }
+    ]
+  }
+}

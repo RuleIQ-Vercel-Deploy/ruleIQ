@@ -195,7 +195,7 @@ export default function AssessmentPage() {
         status: 'in_progress',
         responses: (progress as AssessmentProgress).responses || {}, // Safe access to responses
       });
-    } catch (error) {
+    } catch {
       // Log error for debugging - consider using a proper logger in production
       // TODO: Replace with proper logging
     }

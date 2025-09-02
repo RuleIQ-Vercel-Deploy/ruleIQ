@@ -117,10 +117,8 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
                 is_valid, metadata, error = await manager.validate_api_key(
                     api_key=api_key,
                     request_ip=request.client.host,
-                    request_origin=request.headers.get("Origin"),
-                    required_scope=self._get_required_scope(request.url.path),
-                    endpoint=request.url.path,
-                    method=request.method,
+                    origin=request.headers.get("Origin"),
+                    required_scope=self._get_required_scope(request.url.path)
                 )
 
                 return is_valid, metadata, error

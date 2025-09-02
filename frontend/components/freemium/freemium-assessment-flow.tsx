@@ -149,8 +149,8 @@ export function FreemiumAssessmentFlow({
         // No next question but not complete - might be an error state
         setError('Unable to continue assessment. Please try again.');
       }
-    } catch (error) {
-      console.error('Failed to submit answer:', error);
+    } catch {
+      console.error('Failed to submit answer:', _error);
       setAnswerError(error instanceof Error ? error.message : 'Failed to submit answer');
     } finally {
       setIsSubmitting(false);

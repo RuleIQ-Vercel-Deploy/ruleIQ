@@ -307,7 +307,7 @@ class AISelfReviewService {
         timestamp: new Date().toISOString(),
         original_response: request.original_response,
       };
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -370,7 +370,7 @@ class AISelfReviewService {
         ],
         recommendation: 'use_as_is',
       };
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -414,7 +414,7 @@ class AISelfReviewService {
         ],
         user_satisfaction_with_reviews: 8.4,
       };
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -445,7 +445,7 @@ class AISelfReviewService {
       } else {
         // TODO: Replace with proper logging
       }
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
       // // TODO: Replace with proper logging
       // Non-blocking - don't throw error for feedback submission

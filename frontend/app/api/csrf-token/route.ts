@@ -31,7 +31,7 @@ export async function GET() {
     });
 
     return response;
-  } catch (error) {
+  } catch {
     // TODO: Replace with proper logging
 
     // // TODO: Replace with proper logging

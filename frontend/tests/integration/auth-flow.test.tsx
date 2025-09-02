@@ -372,10 +372,10 @@ describe('Authentication Flow Integration', () => {
         const handleRefresh = async () => {
           try {
             await authService.refreshToken();
-          } catch (error) {
+          } catch {
             // Development logging - consider proper logger
 
-            console.error('Token refresh failed:', error);
+            console.error('Token refresh failed:', _error);
           }
         };
 

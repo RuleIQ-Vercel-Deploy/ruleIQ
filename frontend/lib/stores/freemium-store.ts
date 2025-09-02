@@ -709,7 +709,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
 
       setProgress: (progress: number) => {
         // Validate and clamp progress
-        const clampedProgress = Math.max(0, Math.min(100, progress));
+        const clampedProgress = Math.max(0, Math.min(100, _progress));
 
         // Always set progress as number for test compatibility
         set({ progress: clampedProgress });
@@ -1079,7 +1079,7 @@ export const createFreemiumStore = () => {
         },
 
         setProgress: (progress: number) => {
-          const clampedProgress = Math.max(0, Math.min(100, progress));
+          const clampedProgress = Math.max(0, Math.min(100, _progress));
           // Always set progress as number for test compatibility
           set({ progress: clampedProgress });
 

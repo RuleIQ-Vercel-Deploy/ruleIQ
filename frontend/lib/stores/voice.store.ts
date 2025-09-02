@@ -334,7 +334,7 @@ const createActions = (set: any, get: any) => ({
         set({ isEnabled: true });
         return true;
       }
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -364,7 +364,7 @@ const createActions = (set: any, get: any) => ({
 
         return hasAudio;
       }
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
       // // TODO: Replace with proper logging
     }

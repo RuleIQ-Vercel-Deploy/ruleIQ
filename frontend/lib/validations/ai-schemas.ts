@@ -561,7 +561,7 @@ export function validateAIResponse<T extends AIResponseSchemaType>(
       success: true,
       data: validatedData,
     };
-  } catch (error) {
+  } catch {
     if (error instanceof z.ZodError) {
       return {
         success: false,
@@ -595,7 +595,7 @@ export function validateStructuredResponse(data: unknown): {
       success: true,
       data: validatedData,
     };
-  } catch (error) {
+  } catch {
     if (error instanceof z.ZodError) {
       return {
         success: false,

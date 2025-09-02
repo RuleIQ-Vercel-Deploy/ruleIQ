@@ -39,10 +39,10 @@ class TypeScriptFixer {
       // Generate report
       this.generateReport();
       // TODO: Replace with proper logging
-    } catch (error) {
+    } catch {
       // Development logging - consider proper logger
 
-      console.error('❌ TypeScript fixing failed:', error);
+      console.error('❌ TypeScript fixing failed:', _error);
       process.exit(1);
     }
   }

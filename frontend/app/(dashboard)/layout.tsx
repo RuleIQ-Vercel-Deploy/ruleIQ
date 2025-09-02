@@ -9,7 +9,6 @@ import { AppSidebar } from '@/components/navigation/app-sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { ChatWidget } from '@/components/chat/chat-widget';
 import { useAuthStore } from '@/lib/stores/auth.store';
-import { Loader2 } from 'lucide-react';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();

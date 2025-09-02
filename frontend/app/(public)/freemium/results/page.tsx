@@ -4,7 +4,6 @@ import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { FreemiumResults } from '../../../../components/freemium/freemium-results';
 import { Card, CardContent } from '../../../../components/ui/card';
-import { Alert, AlertDescription } from '../../../../components/ui/alert';
 import { Button } from '../../../../components/ui/button';
 import { useFreemiumStore, useFreemiumSession } from '../../../../lib/stores/freemium-store';
 import { AlertTriangle, Loader2, ArrowLeft, Share2, Download } from 'lucide-react';

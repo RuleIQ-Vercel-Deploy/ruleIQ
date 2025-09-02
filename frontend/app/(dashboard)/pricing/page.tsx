@@ -23,7 +23,7 @@ export default function PricingPage() {
       if (subscription) {
         setCurrentPlan(subscription.plan_id);
       }
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
       // // TODO: Replace with proper logging
     } finally {
@@ -48,7 +48,7 @@ export default function PricingPage() {
       if (response.url) {
         window.location.href = response.url;
       }
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
       // // TODO: Replace with proper logging
     }

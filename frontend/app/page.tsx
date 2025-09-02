@@ -81,7 +81,7 @@ const HeroSection = ({ showEmailCapture, setShowEmailCapture }: HeroSectionProps
           }
         }, 500);
       }, 100);
-    } catch (error) {
+    } catch {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
