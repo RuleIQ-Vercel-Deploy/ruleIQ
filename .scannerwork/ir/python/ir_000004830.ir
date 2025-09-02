@@ -1,42 +1,28 @@
 
-"current_node"str
-100int
-
-1000int
-"compliance_analyzer"str
-0.1float
-"company_id"strstate
-Þ) Þ(.config
-Þ0 Þ(;"´/
--
+äÚ"
+        # {context.organization_name} {request.policy_type.value.replace('_', ' ').title()}
 
-à, à(?"#get-field# configurable:$
-"
+        ## 1. Policy Statement
+        {context.organization_name} is committed to maintaining the highest standards of
+        {request.policy_type.value.replace('_', ' ')} in accordance with {framework.display_name}.
 
-à, à(M"#array-read#:-
-+
+        ## 2. Scope
+        This policy applies to all {context.organization_name} operations in {', '.join(context.geographic_operations)}.
 
-à' à(N"
-builtinshash*:Bint'
-%
+        ## 3. Responsibilities
+        All employees and contractors must comply with this policy.
 
-à' à(T	"	#binop %#*2%:3
-1
+        ## 4. Implementation
+        This policy will be reviewed annually and updated as necessary.
 
-à& à(\"#dependent-value#*:	
-Bfloat0
-.
+        Effective Date: {datetime.now().strftime('%Y-%m-%d')}
+        "str
++""Generate mock policy for testing"strself
+½ ½(request
+½ ½(.	framework
+½0 ½(N"P<
+:
 
-à  à(\"#dependent-value#:Bfloat=
-;
+À À(*context"#get-field# business_context:
 
-à à(]"
-asyncio.taskssleep:Btyping.Coroutine#
-!
-
-à à(]"#unknown-value#&
-$
-
-á á(9"#array-write#:
-
-â â(*G/home/omar/Documents/ruleIQ/langgraph_agent/tests/test_latency_smoke.py
+Â Ó(*;/home/omar/Documents/ruleIQ/services/ai/policy_generator.py

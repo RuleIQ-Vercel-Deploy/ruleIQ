@@ -1,37 +1,30 @@
 
-"metrics_dashboard"str
-¢˜"
-        MATCH (m:Metric)
-        OPTIONAL MATCH (m)-[:MEASURES]->(ctrl:Control)
-        RETURN m.type AS metric_type,
-               m.name AS metric,
-               m.current_value AS current,
-               m.target_value AS target,
-               m.frequency AS frequency,
-               m.owner AS owner,
-               CASE 
-                 WHEN m.type = 'KPI' AND m.current_value < m.target_value THEN 'GREEN'
-                 WHEN m.type = 'KRI' AND m.current_value > m.target_value THEN 'RED'
-                 ELSE 'AMBER'
-               END AS status,
-               COLLECT(ctrl.name) AS related_controls
-        ORDER BY m.type, status DESC
+ÚÐ"
+        MATCH (risk:Risk)
+        WHERE risk.risk_score >= 15
+        AND NOT EXISTS((risk)<-[:MITIGATES]-(:Control))
+        RETURN risk.name AS risk_name,
+               risk.category AS category,
+               risk.description AS description,
+               risk.risk_score AS score
+        ORDER BY risk.risk_score DESC
         "str
-%"Get KPI/KRI dashboard data"strself
-‚/ ‚(3"Û(
+!"unmitigated_high_risks"str
+;2"Find high-risk areas needing immediate attention"strself
+ª) ª(-"Û(
 &
-… …(¬query"#id#:Bstr#
+­ ­(äquery"#id#:Bstr#
 !
 
-— —(1"#unknown-value#,
+¸ ¸(1"#unknown-value#,
 *
 
-— —(1results"#unknown-value#&
+¸ ¸(1results"#unknown-value#&
 $
 
-˜ ˜(-"#new-object#Bdict"
+¹ ¹(2"#new-object#Bdict"
  
 
-˜ ˜(,	"	#map-set#:
+¹ ¹(1	"	#map-set#:
 
-˜ ˜(-*5/home/omar/Documents/ruleIQ/services/neo4j_service.py
+¹ ¹(2*5/home/omar/Documents/ruleIQ/services/neo4j_service.py

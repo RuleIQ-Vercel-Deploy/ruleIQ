@@ -224,7 +224,8 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
                 if total_cost >= daily_limit:
                     raise HTTPException(
                         status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-                        detail=f"Daily cost limit exceeded: ${total_cost:.2f} >= ${daily_limit:.2f}",
+                        detail= \
+                            f"Daily cost limit exceeded: ${total_cost:.2f} >= ${daily_limit:.2f}",
                         headers={"Retry-After": "86400"},  # Retry after 24 hours
                     )
                 elif total_cost >= daily_limit * Decimal("0.9"):  # 90% warning

@@ -1,9 +1,9 @@
 “
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-˜˜ ":)
+³³ ":)
 '.
-˜˜ 	This function is async.“
+³³ 	This function is async.“
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-µµ :)
+ÐÐ :)
 '.
-µµ 	This function is async.
+ÐÐ 	This function is async.

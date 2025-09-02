@@ -116,7 +116,8 @@ async def configure_aws_integration(
             if not config.access_key_id or not config.secret_access_key:
                 raise HTTPException(
                     status_code=400,
-                    detail="Access key ID and secret access key are required for access_key auth type",
+                    detail= \
+                        "Access key ID and secret access key are required for access_key auth type",
                 )
             credentials_dict = {
                 "access_key_id": config.access_key_id,

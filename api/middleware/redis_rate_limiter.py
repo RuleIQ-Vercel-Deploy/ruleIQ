@@ -230,7 +230,8 @@ def redis_rate_limit(
         if not allowed:
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-                detail=f"Rate limit exceeded: {requests_per_window} requests per {window_seconds} seconds. Try again in {retry_after} seconds",
+                detail= \
+                    f"Rate limit exceeded: {requests_per_window} requests per {window_seconds} seconds. Try again in {retry_after} seconds",
                 headers={"Retry-After": str(retry_after)},
             )
 

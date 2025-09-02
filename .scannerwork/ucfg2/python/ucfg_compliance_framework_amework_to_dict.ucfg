@@ -1,18 +1,18 @@
 
 9database.compliance_framework.ComplianceFramework.to_dictF
-</home/omar/Documents/ruleIQ/database/compliance_framework.py? ?("2*ž
-2@ @(@
-A H(	
+</home/omar/Documents/ruleIQ/database/compliance_framework.pyE E("2*ž
+2F F(@
+G N(	
 %1"dicts
 q
-B B(
+H H(
 %2"__id*Y
 
 __unknown_file (=*;3
 1database.compliance_framework.ComplianceFramework"
 id‰
 †
-B B(
+H H(
 %3"__mapSet*"
 
 __unknown_file (
@@ -26,14 +26,14 @@ q
 
 %2u
 s
-C C(
+I I(
 %4"__id*[
 
 __unknown_file (?*=3
 1database.compliance_framework.ComplianceFramework"
 name‹
 ˆ
-C C(
+I I(
 %5"__mapSet*"
 
 __unknown_file (
@@ -47,14 +47,14 @@ s
 
 %4|
 z
-D D(+
+J J(+
 %6"__id*b
 
 __unknown_file (F*D3
 1database.compliance_framework.ComplianceFramework"
 description’
 
-D D(+
+J J(+
 %7"__mapSet*"
 
 __unknown_file (
@@ -68,7 +68,7 @@ z
 
 %6y
 w
-E E(%
+K K(%
 %8"__id*_
 
 __unknown_file (C*A3
@@ -76,7 +76,7 @@ w
 
 category
 Œ
-E E(%
+K K(%
 %9"__mapSet*"
 
 __unknown_file (
@@ -91,14 +91,14 @@ w
 
 %8y
 w
-F F(#
+L L(#
 %10"__id*^
 
 __unknown_file (B*@3
 1database.compliance_framework.ComplianceFramework"	
 version
 
-F F(#
+L L(#
 %11"__mapSet*"
 
 __unknown_file (
@@ -111,10 +111,10 @@ w
 __unknown_file (
 
 %10
-G G(
+M M(
 %12"list‘
 Ž
-G G(
+M M(
 %13"__mapSet*"
 
 __unknown_file (
@@ -128,7 +128,7 @@ w
 __unknown_file (
 
 %12"
-A H(	
+G N(	
 
 %1B53
 1database.compliance_framework.ComplianceFrameworkH

@@ -1,10 +1,10 @@
 
 Fconfig.startup_validation.StartupValidator._validate_security_settingsD
-8/home/omar/Documents/ruleIQ/config/startup_validation.pyô ô(#"2*·
+8/home/omar/Documents/ruleIQ/config/startup_validation.py™ ™(#"2*·
 2
-ö ö(.ÜÉ
+´ ´(.ÜÉ
 
-õ õ(7
+¨ ¨(7
 %18*&
 
 __unknown_file (
@@ -16,14 +16,14 @@ Fconfig.startup_validation.StartupValidator._validate_security_settingsD
 Validating security settings...2debugs
 q
 
-ù ù(
+Æ Æ(
 %19"__id*V
 
 __unknown_file (:*8,
 *config.startup_validation.StartupValidator"
 configIG
 
-ù ù(&
+Æ Æ(&
 %20*#
 
 __unknown_file (
@@ -33,13 +33,13 @@ q
 11*=
 3
 startup_validation.py"
-≠ ≠(
+æ æ(
 implicit return*ó
 4
-´ ´(Ot
+º º(Ot
 r
 
-´ ´(
+º º(
 %1"__id*X
 
 __unknown_file (<*:,
@@ -47,7 +47,7 @@ r
 
 warningsäá
 
-´ ´(O
+º º(O
 %2*"
 
 __unknown_file (
@@ -58,10 +58,10 @@ r
 'Rate limiting is disabled in production2append*
 3*„
 5
-™ ™(1r
+ª ª(1r
 p
 
-™ ™(
+ª ª(
 %3"__id*V
 
 __unknown_file (:*8,
@@ -69,7 +69,7 @@ p
 configV
 T
 
-™ ™(1
+ª ª(1
 %4"__id*:
 
 __unknown_file (*
@@ -79,10 +79,10 @@ T
 3
 4*ü
 6
-ß ß(Wt
+∏ ∏(Wt
 r
 
-ß ß(
+∏ ∏(
 %5"__id*X
 
 __unknown_file (<*:,
@@ -90,7 +90,7 @@ r
 
 warningsíè
 
-ß ß(W
+∏ ∏(W
 %6*"
 
 __unknown_file (
@@ -101,10 +101,10 @@ r
 /Session cookies are not HTTP-only in production2append*
 5*Ë
 7
-¶ ¶(6r
+∑ ∑(6r
 p
 
-¶ ¶(
+∑ ∑(
 %7"__id*V
 
 __unknown_file (:*8,
@@ -112,7 +112,7 @@ p
 config[
 Y
 
-¶ ¶(6
+∑ ∑(6
 %8"__id*?
 
 __unknown_file (#*!
@@ -122,10 +122,10 @@ Y
 5
 6*ù
 8
-§ §(Tt
+µ µ(Tt
 r
 
-§ §(
+µ µ(
 %9"__id*X
 
 __unknown_file (<*:,
@@ -133,7 +133,7 @@ r
 
 warningsêç
 
-§ §(T
+µ µ(T
 %10*"
 
 __unknown_file (
@@ -144,10 +144,10 @@ r
 ,Session cookies are not secure in production2append*
 7*È
 9
-£ £(4s
+¥ ¥(4s
 q
 
-£ £(
+¥ ¥(
 %11"__id*V
 
 __unknown_file (:*8,
@@ -155,7 +155,7 @@ q
 config[
 Y
 
-£ £(4
+¥ ¥(4
 %12"__id*>
 
 __unknown_file ("* 
@@ -165,17 +165,17 @@ Y
 7
 8*ó
 10
-† †(Ks
+± ±(Ks
 q
 
-† †(
+± ±(
 %13"__id*V
 
 __unknown_file (:*8,
 *config.startup_validation.StartupValidator"
 errorsäá
 
-† †(K
+± ±(K
 %14*#
 
 __unknown_file (
@@ -186,10 +186,10 @@ q
 %CORS allows all origins in production2append*
 9*œ
 11
-ü ü(.s
+∞ ∞(.s
 q
 
-ü ü(!
+∞ ∞(!
 %15"__id*V
 
 __unknown_file (:*8,
@@ -197,7 +197,7 @@ q
 configR
 P
 
-ü ü(.
+∞ ∞(.
 %16"__id*5
 
 __unknown_file (*
@@ -205,7 +205,7 @@ P
 %15"
 CORS_ORIGINSki
 
-ü ü(.
+∞ ∞(.
 %17*#
 
 __unknown_file (

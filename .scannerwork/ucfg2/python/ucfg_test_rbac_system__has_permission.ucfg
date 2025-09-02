@@ -1,12 +1,12 @@
 
 ?tests.test_rbac_system.TestRBACService.test_user_has_permissionA
-5/home/omar/Documents/ruleIQ/tests/test_rbac_system.py„ „( "2*õ
+5/home/omar/Documents/ruleIQ/tests/test_rbac_system.pyž ž( "2*õ
 
 2
-† †(<M
+¤ ¤(<M
 K
 
-‰ ‰( 
+§ §( 
 %1"__id*1
 
 __unknown_file (*
@@ -15,7 +15,7 @@ K
 id^
 \
 
-Š Š(1
+¨ ¨(1
 %2"__id*B
 
 __unknown_file (&*$
@@ -24,7 +24,7 @@ K
 idM
 K
 
-‹ ‹(#
+© ©(#
 %3"__id*1
 
 __unknown_file (*
@@ -32,7 +32,7 @@ K
 	test_user"
 idËÈ
 
-ˆ Œ(	
+¦ ª(	
 %4"5services.rbac_service.RBACService.assign_role_to_user*,
 
 __unknown_file (
@@ -50,7 +50,7 @@ granted_by
 %3M
 K
 
-0 (<
+­0 ­(<
 %5"__id*1
 
 __unknown_file (*
@@ -58,7 +58,7 @@ K
 	test_user"
 idÞÛ
 
- (J
+­ ­(J
 %6"5services.rbac_service.RBACService.user_has_permission*,
 
 __unknown_file (
@@ -73,7 +73,7 @@ K
 	user_list2user_has_permissionM
 K
 
-0 (<
+®0 ®(<
 %7"__id*1
 
 __unknown_file (*
@@ -81,7 +81,7 @@ K
 	test_user"
 idàÝ
 
- (L
+® ®(L
 %8"5services.rbac_service.RBACService.user_has_permission*,
 
 __unknown_file (
@@ -96,7 +96,7 @@ K
 user_create2user_has_permissionM
 K
 
-‘0 ‘(<
+¯0 ¯(<
 %9"__id*1
 
 __unknown_file (*
@@ -104,7 +104,7 @@ K
 	test_user"
 idáÞ
 
-‘ ‘(L
+¯ ¯(L
 %10"5services.rbac_service.RBACService.user_has_permission*,
 
 __unknown_file (
@@ -120,15 +120,15 @@ K
 3*;
 3
 test_rbac_system.py"
-“ “(
+± ±(
 implicit return:
 
-„' „(@
+   (!
 rbac_service:
 
-„B „(Q
+¡ ¡(
 	test_user:*
 
-…  …(@
+¢ ¢((
 test_role_with_permissionsB*(
 &tests.test_rbac_system.TestRBACServiceH

@@ -1,12 +1,5 @@
 
-	"Success"str
-0.5float"v=
-;
-
-Ò Ò($"
-asyncio.taskssleep:Btyping.Coroutine#
-!
-
-Ò Ò($"#unknown-value#
-
-Ó Ó(*D/home/omar/Documents/ruleIQ/tests/unit/utils/test_circuit_breaker.py
+"Service unavailable"str"J8
+6
+N N(8"ConnectionError*:BConnectionError2
+N N(8*D/home/omar/Documents/ruleIQ/tests/unit/utils/test_circuit_breaker.py

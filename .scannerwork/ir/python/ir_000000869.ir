@@ -1,8 +1,14 @@
+self
+Å Å(config.settings.Environment"†.
+,
 
-#"Get application settings"str"P<
-:
+Ç Ç("#get-field# environment:.
+,
 
-„ „($"*
-config.settings_get_or_create_settings
+Ç# Ç(:"#get-field# DEVELOPMENT:,
+*
 
-„ „($*./home/omar/Documents/ruleIQ/config/settings.py
+Ç Ç(:"
+#binop ==#2==:Bbool
+
+Ç Ç(:*./home/omar/Documents/ruleIQ/config/settings.py

@@ -1,6 +1,5 @@
-c
-pythonS2068H"password" detected here, review this potentially hard-coded credential. 2
-
- *b
-pythonS3457EAdd replacement fields or use a normal string instead of an f-string. 2AA ,b
-pythonS3457EAdd replacement fields or use a normal string instead of an f-string. 2GG (
+Y
+pythonS1244:Do not perform equality checks with floating point values. 2
+¹¹ 1Y
+pythonS1244:Do not perform equality checks with floating point values. 2
+ºº 0

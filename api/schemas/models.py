@@ -262,7 +262,8 @@ class EvidenceCreate(BaseModel):
     )
     business_profile_id: Optional[UUID] = Field(
         None,
-        description="The business profile this evidence is associated with (auto-populated if not provided).",
+        description= \
+            "The business profile this evidence is associated with (auto-populated if not provided).",
     )
     source: str = Field(
         "manual_upload",

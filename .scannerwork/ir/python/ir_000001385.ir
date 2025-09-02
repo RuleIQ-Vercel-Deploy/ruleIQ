@@ -1,28 +1,17 @@
 
-ìâ"
-    Decorator to cache function results.
+"evidence_dashboard"str
+.%"Get cached evidence dashboard data."strself
+Æ Æ(user_id
+Æ Æ(framework_id
+Æ Æ(-"ç/
+-
 
-    Args:
-        ttl: Time to live in seconds
-        key_prefix: Prefix for cache key
-    "strttl
-ˇ ˇ(
-key_prefix
-ˇ! ˇ(9"Î#
+± ≥(	key"?python-unknown?:#
 !
 
-ü ü("#unknown-value#*
-(
+¥ ¥(""#unknown-value##
+!
 
-à ü(%closure"#new-object#.
-,
+¥ ¥(""#unknown-value#
 
-à ü("#set-field# key_prefix:'
-%
-
-à ü("#set-field# ttl:-
-+
-
-à ü("?python-partial-apply?:
-
-ü ü(*+/home/omar/Documents/ruleIQ/config/cache.py
+¥ ¥("*+/home/omar/Documents/ruleIQ/config/cache.py

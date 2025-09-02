@@ -1,10 +1,10 @@
 
 +analyze_test_failures.generate_fix_strategyY
-O/home/omar/Documents/ruleIQ/tests/test-utility-scripts/analyze_test_failures.pyz z("2*›
+O/home/omar/Documents/ruleIQ/tests/test-utility-scripts/analyze_test_failures.py{ {("2*›
 13
-ë ë(>áÑ
+ö ö(>áÑ
 
-ë ë("
+ö ö("
 %25"__mapGet*(
 
 __unknown_file (
@@ -15,7 +15,7 @@ O/home/omar/Documents/ruleIQ/tests/test-utility-scripts/analyze_test_failures.py
 __unknown_file (
 priority_order2__getitem__us
 
-ë ë(>
+ö ö(>
 %26*#
 
 __unknown_file (
@@ -25,7 +25,7 @@ O/home/omar/Documents/ruleIQ/tests/test-utility-scripts/analyze_test_failures.py
 __unknown_file (
 ai_service_issues2appendáÑ
 
-í í("
+õ õ("
 %28"__mapGet*(
 
 __unknown_file (
@@ -36,7 +36,7 @@ O/home/omar/Documents/ruleIQ/tests/test-utility-scripts/analyze_test_failures.py
 __unknown_file (
 fix_approaches2__getitem__—Œ
 
-í í(^
+õ ù(0
 %27"dict.__setitem__*#
 
 __unknown_file (
@@ -49,7 +49,7 @@ O/home/omar/Documents/ruleIQ/tests/test-utility-scripts/analyze_test_failures.py
 __unknown_file (&$
 "Fix AI service mocking and caching2__setitem__äá
 
-ì ì(%
+û û(%
 %30"__mapGet*(
 
 __unknown_file (
@@ -60,7 +60,7 @@ O/home/omar/Documents/ruleIQ/tests/test-utility-scripts/analyze_test_failures.py
 __unknown_file (
 agent_assignments2__getitem__Ã…
 
-ì ì(\
+û †(+
 %29"dict.__setitem__*#
 
 __unknown_file (
@@ -77,13 +77,13 @@ O/home/omar/Documents/ruleIQ/tests/test-utility-scripts/analyze_test_failures.py
 7
 9
 11*¥
-2{ {(0
-| |(T
+2| |(0
+} }(T
 %49"dict
-|" |($
+}" }($
 %50"listò
 ï
-| |($
+} }($
 %51"__mapSet*#
 
 __unknown_file (
@@ -96,10 +96,10 @@ O/home/omar/Documents/ruleIQ/tests/test-utility-scripts/analyze_test_failures.py
 __unknown_file (
 
 %50
-|8 |(:
+}8 }(:
 %52"dictò
 ï
-|& |(:
+}& }(:
 %53"__mapSet*#
 
 __unknown_file (
@@ -112,10 +112,10 @@ O/home/omar/Documents/ruleIQ/tests/test-utility-scripts/analyze_test_failures.py
 __unknown_file (
 
 %52
-|Q |(S
+}Q }(S
 %54"dictõ
 ò
-|< |(S
+}< }(S
 %55"__mapSet*#
 
 __unknown_file (
@@ -129,7 +129,7 @@ O/home/omar/Documents/ruleIQ/tests/test-utility-scripts/analyze_test_failures.py
 
 %54C
 A
-| |(T
+} }(T
 
 strategy"__id*#
 
@@ -146,9 +146,9 @@ A
 9
 11*◊
 15
-å å(:áÑ
+ë ë(:áÑ
 
-å å("
+ë ë("
 %31"__mapGet*(
 
 __unknown_file (
@@ -159,7 +159,7 @@ A
 __unknown_file (
 priority_order2__getitem__qo
 
-å å(:
+ë ë(:
 %32*#
 
 __unknown_file (
@@ -169,7 +169,7 @@ A
 __unknown_file (
 import_issues2appendáÑ
 
-ç ç("
+í í("
 %34"__mapGet*(
 
 __unknown_file (
@@ -180,7 +180,7 @@ A
 __unknown_file (
 fix_approaches2__getitem__ŒÀ
 
-ç ç([
+í î(1
 %33"dict.__setitem__*#
 
 __unknown_file (
@@ -193,7 +193,7 @@ A
 __unknown_file ('%
 #Fix module imports and dependencies2__setitem__äá
 
-é é(%
+ï ï(%
 %36"__mapGet*(
 
 __unknown_file (
@@ -204,7 +204,7 @@ A
 __unknown_file (
 agent_assignments2__getitem__…∆
 
-é é(Y
+ï ó(,
 %35"dict.__setitem__*#
 
 __unknown_file (
@@ -223,16 +223,16 @@ A
 9
 11*+
 4
-´ ´("
+º º("
 
-´ ´(
+º º(
 
 
 strategy*Ø
 5
-ß ß(9ÜÉ
+∏ ∏(9ÜÉ
 
-ß ß("
+∏ ∏("
 %1"__mapGet*(
 
 __unknown_file (
@@ -243,7 +243,7 @@ A
 __unknown_file (
 priority_order2__getitem__nl
 
-ß ß(9
+∏ ∏(9
 %2*"
 
 __unknown_file (
@@ -253,7 +253,7 @@ A
 __unknown_file (
 other_issues2appendÜÉ
 
-® ®("
+π π("
 %4"__mapGet*(
 
 __unknown_file (
@@ -264,7 +264,7 @@ A
 __unknown_file (
 fix_approaches2__getitem__≈¬
 
-® ®(T
+π π(T
 %3"dict.__setitem__*"
 
 __unknown_file (
@@ -277,7 +277,7 @@ A
 __unknown_file (!
 Fix miscellaneous test issues2__setitem__âÜ
 
-© ©(%
+∫ ∫(%
 %6"__mapGet*(
 
 __unknown_file (
@@ -288,7 +288,7 @@ A
 __unknown_file (
 agent_assignments2__getitem__¬ø
 
-© ©(T
+∫ ∫(T
 %5"dict.__setitem__*"
 
 __unknown_file (
@@ -302,9 +302,9 @@ A
 General Testing Specialist2__setitem__*
 4*Ê
 17
-Ö Ö(<áÑ
+ä ä(<áÑ
 
-Ö Ö("
+ä ä("
 %37"__mapGet*(
 
 __unknown_file (
@@ -315,7 +315,7 @@ A
 __unknown_file (
 priority_order2__getitem__sq
 
-Ö Ö(<
+ä ä(<
 %38*#
 
 __unknown_file (
@@ -325,7 +325,7 @@ A
 __unknown_file (
 database_issues2appendáÑ
 
-Ü Ü("
+ã ã("
 %40"__mapGet*(
 
 __unknown_file (
@@ -336,7 +336,7 @@ A
 __unknown_file (
 fix_approaches2__getitem__ÿ’
 
-Ü à(	
+ã ç(9
 %39"dict.__setitem__*#
 
 __unknown_file (
@@ -349,7 +349,7 @@ A
 __unknown_file (/-
 +Fix database connections and async handling2__setitem__äá
 
-â â(%
+é é(%
 %42"__mapGet*(
 
 __unknown_file (
@@ -360,7 +360,7 @@ A
 __unknown_file (
 agent_assignments2__getitem__»≈
 
-â â(X
+é é(X
 %41"dict.__setitem__*#
 
 __unknown_file (
@@ -380,9 +380,9 @@ A
 9
 11*∆
 7
-¢ ¢(9ÜÉ
+± ±(9ÜÉ
 
-¢ ¢("
+± ±("
 %7"__mapGet*(
 
 __unknown_file (
@@ -393,7 +393,7 @@ A
 __unknown_file (
 priority_order2__getitem__nl
 
-¢ ¢(9
+± ±(9
 %8*"
 
 __unknown_file (
@@ -403,7 +403,7 @@ A
 __unknown_file (
 async_issues2appendáÑ
 
-£ £("
+≤ ≤("
 %10"__mapGet*(
 
 __unknown_file (
@@ -414,7 +414,7 @@ A
 __unknown_file (
 fix_approaches2__getitem__—Œ
 
-£ £(_
+≤ ¥(6
 %9"dict.__setitem__*#
 
 __unknown_file (
@@ -427,7 +427,7 @@ A
 __unknown_file (,*
 (Fix async/await patterns and event loops2__setitem__äá
 
-§ §(%
+µ µ(%
 %12"__mapGet*(
 
 __unknown_file (
@@ -438,7 +438,7 @@ A
 __unknown_file (
 agent_assignments2__getitem__»≈
 
-§ §(X
+µ µ(X
 %11"dict.__setitem__*#
 
 __unknown_file (
@@ -453,9 +453,9 @@ A
 4
 5*ﬂ
 19
-Ä Ä(;áÑ
+Å Å(;áÑ
 
-Ä Ä("
+Å Å("
 %43"__mapGet*(
 
 __unknown_file (
@@ -466,7 +466,7 @@ A
 __unknown_file (
 priority_order2__getitem__rp
 
-Ä Ä(;
+Å Å(;
 %44*#
 
 __unknown_file (
@@ -476,7 +476,7 @@ A
 __unknown_file (
 fixture_issues2appendáÑ
 
-Å Å("
+Ç Ç("
 %46"__mapGet*(
 
 __unknown_file (
@@ -487,7 +487,7 @@ A
 __unknown_file (
 fix_approaches2__getitem__Ã…
 
-Å Å(Y
+Ç Ñ(.
 %45"dict.__setitem__*#
 
 __unknown_file (
@@ -500,7 +500,7 @@ A
 __unknown_file ($"
  Fix test configuration and setup2__setitem__äá
 
-Ç Ç(%
+Ö Ö(%
 %48"__mapGet*(
 
 __unknown_file (
@@ -511,7 +511,7 @@ A
 __unknown_file (
 agent_assignments2__getitem__ «
 
-Ç Ç(Z
+Ö á(,
 %47"dict.__setitem__*#
 
 __unknown_file (
@@ -532,9 +532,9 @@ A
 9
 11*‚
 9
-õ õ(BáÑ
+® ®(BáÑ
 
-õ õ("
+® ®("
 %13"__mapGet*(
 
 __unknown_file (
@@ -545,7 +545,7 @@ A
 __unknown_file (
 priority_order2__getitem__yw
 
-õ õ(B
+® ®(B
 %14*#
 
 __unknown_file (
@@ -555,7 +555,7 @@ A
 __unknown_file (
 authentication_issues2appendáÑ
 
-ú ú("
+© ©("
 %16"__mapGet*(
 
 __unknown_file (
@@ -566,7 +566,7 @@ A
 __unknown_file (
 fix_approaches2__getitem__Ÿ÷
 
-ú û(	
+© ´(4
 %15"dict.__setitem__*#
 
 __unknown_file (
@@ -579,7 +579,7 @@ A
 __unknown_file (*(
 &Fix authentication and user management2__setitem__äá
 
-ü ü(%
+¨ ¨(%
 %18"__mapGet*(
 
 __unknown_file (
@@ -590,7 +590,7 @@ A
 __unknown_file (
 agent_assignments2__getitem__Õ 
 
-ü ü(]
+¨ Æ((
 %17"dict.__setitem__*#
 
 __unknown_file (
@@ -606,9 +606,9 @@ A
 5
 7*æ
 11
-ñ ñ(9áÑ
+£ £(9áÑ
 
-ñ ñ("
+£ £("
 %19"__mapGet*(
 
 __unknown_file (
@@ -619,7 +619,7 @@ A
 __unknown_file (
 priority_order2__getitem__pn
 
-ñ ñ(9
+£ £(9
 %20*#
 
 __unknown_file (
@@ -629,7 +629,7 @@ A
 __unknown_file (
 cache_issues2appendáÑ
 
-ó ó("
+§ §("
 %22"__mapGet*(
 
 __unknown_file (
@@ -640,7 +640,7 @@ A
 __unknown_file (
 fix_approaches2__getitem__≈¬
 
-ó ó(R
+§ §(R
 %21"dict.__setitem__*#
 
 __unknown_file (
@@ -653,7 +653,7 @@ A
 __unknown_file (
 Fix cache and Redis mocking2__setitem__äá
 
-ò ò(%
+• •(%
 %24"__mapGet*(
 
 __unknown_file (
@@ -664,7 +664,7 @@ A
 __unknown_file (
 agent_assignments2__getitem__¬ø
 
-ò ò(R
+• •(R
 %23"dict.__setitem__*#
 
 __unknown_file (
@@ -680,6 +680,6 @@ A
 5
 7
 9:
-z z($
+{ {($
 
 categoriesB H

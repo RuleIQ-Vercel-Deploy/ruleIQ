@@ -1,28 +1,6 @@
-F
-pythonS1481)Remove the unused local variable "state". 2 H
-pythonS1481)Remove the unused local variable "state". 2
-çç H
-pythonS1481)Remove the unused local variable "state". 2
-ÕÕ Y
-pythonS1244:Do not perform equality checks with floating point values. 2
-‡‡ 7Y
-pythonS1244:Do not perform equality checks with floating point values. 2
-ˆˆ 8Y
-pythonS1244:Do not perform equality checks with floating point values. 2
-íí .Y
-pythonS1244:Do not perform equality checks with floating point values. 2
-¸¸ 4H
-pythonS1481)Remove the unused local variable "state". 2
-ÛÛ H
-pythonS1481)Remove the unused local variable "state". 2
-ÅÅ H
-pythonS1481)Remove the unused local variable "state". 2
-◊◊ H
-pythonS1481)Remove the unused local variable "state". 2
-ÄÄ H
-pythonS1481)Remove the unused local variable "state". 2
-ﬁﬁ H
-pythonS1481)Remove the unused local variable "state". 2
-ÎÎ H
-pythonS1481)Remove the unused local variable "state". 2
-˘˘ 
+9
+pythonS125Remove this commented out code. 2 Iî
+pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
+∞∞ !:*
+(Á	
+∞∞ 	This function is async.

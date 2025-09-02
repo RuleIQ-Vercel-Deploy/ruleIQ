@@ -475,13 +475,13 @@ class TestCacheStrategyIntegration:
 10*A
 4
 fix_cache_strategy_tests.py"
-Ş Ş
+à à
 implicit return*²
 5
-Ø Ø(N›
+Ú Ú(N›
 ˜
 
-Ø Ø(N
+Ú Ú(N
 %5"print*
 
 __unknown_file ( *]
@@ -490,10 +490,10 @@ class TestCacheStrategyIntegration:
 =  This file also has fixtures inside test classes - fixing...*
 4*
 6
-Û Û(-y
+İ İ(-y
 w
 
-Û Û(-
+İ İ(-
 %6"print*
 
 __unknown_file ( *<
@@ -502,9 +502,9 @@ w
   This file appears to be OK*
 4*
 7
-× ×(?|z
+Ù Ù(?|z
 
-× ×(#
+Ù Ù(#
 %7*'
 
 __unknown_file (
@@ -514,7 +514,7 @@ w
 __unknown_file (
 @pytest.fixture2__contains__wu
 
-×( ×(?
+Ù( Ù(?
 %8*'
 
 __unknown_file (
@@ -527,9 +527,9 @@ class Test2__contains__*
 5
 6*˜
 8
-Õ Õ(=;
+× ×(=;
 
-Õ Õ(
+× ×(
 %9*!
 
 __unknown_file (
@@ -537,7 +537,7 @@ class Test2__contains__*
 f2readC
 A
 
-Õ Õ(	
+× ×(	
 content"__id*"
 
 __unknown_file (
@@ -557,7 +557,7 @@ z
 âœ“ Fixed fixture scope issues¾
 »
 
-Ğ Ğ(_
+Ğ Ò(
 %11"os.path.join*
 
 __unknown_file ( *,
@@ -570,7 +570,7 @@ z
 *tests/unit/services/test_cached_content.pyM
 K
 
-Ğ Ğ(_
+Ğ Ò(
 cached_test_file"__id*#
 
 __unknown_file (
@@ -578,22 +578,22 @@ K
 %11w
 u
 
-Ñ
- Ñ(+
+Ó
+ Ó(+
 %12"__concat*
 
-Ñ Ñ(
+Ó Ó(
 	\nFixing *"
 
-Ñ Ñ(&
+Ó Ó(&
 
 cached_test_file*
 
-Ñ' Ñ(*
+Ó' Ó(*
 ...a
 _
 
-Ñ Ñ(,
+Ó Ó(,
 %13"print*
 
 __unknown_file ( *#
@@ -603,7 +603,7 @@ _
 %12‘
 
 
-Ô	 Ô($
+Ö	 Ö($
 %14"open*
 
 __unknown_file ( *0
@@ -616,7 +616,7 @@ _
 r>
 <
 
-Ô	 Ô()
+Ö	 Ö()
 f"__id*#
 
 __unknown_file (

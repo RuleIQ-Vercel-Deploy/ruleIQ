@@ -1,3 +1,22 @@
 
-bY"<ChatMessage(id={self.id}, role='{self.role}', conversation_id={self.conversation_id})>"strself' '("
-( ((i*4/home/omar/Documents/ruleIQ/database/chat_message.py
+falsebool
+$"Validate document schema."strself` `(doc`  `((3/services.ai.evaluation.schemas.common.GoldenDoc"I)
+'
+b b(%"#is-instance#:Bbool"
+b b(% *b b(
+"j'
+%
+c c(""#get-field# doc_id:)
+'
+c c(""
+__bool__*:BboolH"
+c c(" "
+d d("<(
+&
+c' c(2"#get-field# content:
+c c(2"U*	/
+-
+c c(3
+"#dependent-value#*:	Bbool
+c c(3
+*K/home/omar/Documents/ruleIQ/services/ai/evaluation/tools/ingestion_fixed.py

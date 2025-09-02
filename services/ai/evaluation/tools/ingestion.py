@@ -21,7 +21,14 @@ class DocumentProcessor:
 
     def load_golden_dataset(self, file_path: str) -> List[GoldenDoc]:
         """Load golden dataset from JSON file."""
-        with open(file_path, "r") as f:
+        # Sanitize file path to prevent path traversal attacks
+        import os
+        safe_path = os.path.abspath(os.path.normpath(file_path))
+        # Ensure the path is within allowed directories
+        if not safe_path.startswith(os.path.abspath(".")):
+            raise ValueError("Invalid file path: attempted path traversal")
+        
+        with open(safe_path, "r") as f:
             data = json.load(f)
 
         documents = []

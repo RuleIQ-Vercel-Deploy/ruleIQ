@@ -1,14 +1,55 @@
 
-3*"Decorator for role-based access control."str
-permissionu u(&"¿#
-!
-
-‰ ‰("#unknown-value#)
-'
-	x ‰(%closure"#new-object#-
+4+"Estimate efficiency gain from automation."str
+150int
+!"efficiency_improvement"str
+) "estimated_hours_saved_annually"str
+%"{min(high_auto * 15, 75)}%"str
+"${cost_saved:,.0f}"str
+40int
+
+20int
+!"estimated_cost_savings"strself
+×" ×(&opportunities
+×( ×(A"·-
 +
-	x ‰("#set-field# permission:,
-*
-	x ‰("?python-partial-apply?:
 
-‰ ‰(*9/home/omar/Documents/ruleIQ/services/ai/safety_manager.py
+Ù Ù(R"?python-unknown?:Blist7
+5
+
+Ù Ù(S	high_auto"
+builtinslen*:Bint-
++
+
+Û Û(L"?python-unknown?:Blist9
+7
+
+Ú Ü(	medium_auto"
+builtinslen*:Bint'
+%
+
+ß ß(*	"	#binop *#*2*:'
+%
+
+ß/ ß(?"	#binop *#*2*:
+6
+4
+
+ß ß(@time_saved_hours"	#binop +#2+:	3
+1
+
+à à(+
+cost_saved"	#binop *#*2*:&
+$
+
+â æ(	"#new-object#Bdict"
+ 
+
+ã ã(>"	#map-set#:"
+ 
+
+ä ä(;"	#map-set#:"
+ 
+
+å å(C"	#map-set#:
+
+â æ(	*?/home/omar/Documents/ruleIQ/services/ai/iq_neo4j_integration.py

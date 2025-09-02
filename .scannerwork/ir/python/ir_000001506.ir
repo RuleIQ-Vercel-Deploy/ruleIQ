@@ -1,9 +1,34 @@
 
-D;"Check if a token is blacklisted using enhanced blacklist."strtokenW W()"8
-6
-Y Y(Pis_token_blacklisted"?python-unknown?!
+!": "&ldquo;", 
+        "str
+'"Fix React unescaped entities"str
+"'"str
+
+"""str
+"&apos;"str
+&"(>\s*[^<]*?)([\'"""])(.*?<)"str
+	"&rdquo;"str
+"&quot;"strcontent) )("ª!
 
-[ [(/"#unknown-value#!
-
-[ [(/"#unknown-value#
-[ [(/*4/home/omar/Documents/ruleIQ/api/dependencies/auth.py
+;" ;(0"#unknown-value#2
+0
++ 0(replacements"#new-object#Bdict 
+
+, ,("	#map-set#: 
+
+- .(	"	#map-set#: 
+
+/ /("	#map-set#:
++
+)
+3 3(0jsx_pattern"#id#:Bstr(
+&
+5 ;(%closure"#new-object#.
+,
+5 ;("#set-field# replacements:+
+)
+5 ;("?python-partial-apply?:'
+%
+; ;(:content"	
+resub:
+< <(*//home/omar/Documents/ruleIQ/scripts/fix-lint.py

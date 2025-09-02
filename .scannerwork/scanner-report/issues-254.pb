@@ -1,6 +1,6 @@
 l
 pythonS1066/Merge this if statement with the enclosing one. 2
-ââ :
+ýý :
 þ
-áá 
+üü 
 	enclosing

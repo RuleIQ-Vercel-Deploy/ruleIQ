@@ -1,25 +1,25 @@
 
 Aservices.context_service.UserContextService._update_user_patternsC
-7/home/omar/Documents/ruleIQ/services/context_service.pyî î(#"6*8
+7/home/omar/Documents/ruleIQ/services/context_service.py† †(#"6*8
 3
 context_service.py"
-ü ü
+• •
 implicit return*æ
 4
-ù ù(@g
+‘ ‘(@g
 e
 
-ù ù(?
+‘ ‘(?
 %1"__concat*2
 
-ù ù(;$"
+‘ ‘(;$"
  Failed to update user patterns: *
 
-ù< ù(=
+‘< ‘(=
 
 ege
 
-ù ù(@
+‘ ‘(@
 %2*&
 
 __unknown_file (
@@ -32,21 +32,21 @@ e
 %12error*
 3*Ê
 6
-ò ò(2[
+Š Š(2[
 Y
 
-ò ò(2
+Š Š(2
 %3"__concat* 
 
-ò ò((
+Š Š((
 user_patterns:*
 
-ò) ò(0
+Š) Š(0
 	
 user_idE
 C
 
-ò ò(2
+Š Š(2
 	cache_key"__id*"
 
 __unknown_file (
@@ -54,14 +54,14 @@ C
 %3z
 x
 
-ó ó($
+‹ ‹($
 %4"__id*^
 
 __unknown_file (B*@-
 +services.context_service.UserContextService"
 cache_serviceki
 
-ó ó(6
+‹ ‹(6
 %5*"
 
 __unknown_file (
@@ -72,7 +72,7 @@ x
 
 	cache_key2delete£ 
 
-ö ö(6
+Ž Ž(6
 %6*K
 
 __unknown_file (/-
@@ -84,6 +84,6 @@ x
 3
 4:
 
-î* î(6	
+†* †(6	
 user_idB/-
 +services.context_service.UserContextServiceH

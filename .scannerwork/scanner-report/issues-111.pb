@@ -1,11 +1,11 @@
 ˜
-pythonS7493RUse an asynchronous file API instead of synchronous open() in this async function. 2kk %:'
-%ogg 	This function is async.H
+pythonS7493RUse an asynchronous file API instead of synchronous open() in this async function. 2ii %:'
+%oee 	This function is async.H
 pythonS4790)Make sure that hashing data is safe here. 2
-ªª% (œ
+»»% (œ
 pythonS7493RUse an asynchronous file API instead of synchronous open() in this async function. 2
-ÛÛ (:)
+îî (:)
 'o
-ÓÓ 	This function is async.H
+ææ 	This function is async.H
 pythonS4790)Make sure that hashing data is safe here. 2
-»»0 3
+ÓÓ !

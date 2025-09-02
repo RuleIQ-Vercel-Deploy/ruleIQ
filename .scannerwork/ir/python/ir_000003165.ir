@@ -1,21 +1,6 @@
 
-1("Decorator to trace database operations"str	operation
-ì ì(%table
-ì' ì(1"ì#
-!
+#"Generate unique event ID"str
+&"evt_{uuid.uuid4().hex[:16]}"strself
+Ñ Ñ("
 
-ö ö("#unknown-value#*
-(
-
-î ö(%closure"#new-object#-
-+
-
-î ö("#set-field# operation:)
-'
-
-î ö("#set-field# table:-
-+
-
-î ö("?python-partial-apply?:
-
-ö ö(*-/home/omar/Documents/ruleIQ/config/tracing.py
+Ó Ó(-*>/home/omar/Documents/ruleIQ/services/security/audit_logging.py

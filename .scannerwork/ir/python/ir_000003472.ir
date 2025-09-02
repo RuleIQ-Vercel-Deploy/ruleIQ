@@ -1,141 +1,25 @@
 
+"avg_query_time"str
+
+0.85float
+	"cache_hit_rate"str
+0.1float
+I@"Check if performance metrics are within acceptable thresholds."str
+0.8float
+&"connection_pool_utilization"str"²2
+0
 
-0int
-"a"bool
- "rate_limited_requests"str
- "requests_by_operation"str
- "rate_limit_percentage"str
-"division by zero"bool
-.60int
-"uptime_seconds"str
-"S3518"bool
-##"rate_limits_by_operation"str
-100int
-	"total_requests"str
-0'"Get current rate limiting statistics."str
-'"requests_per_minute"strself
-Ê Ê("¡%
-#
-
-Ì Ì("
-timetimeBfloat-
-+
-
-Ì Ì(."#get-field# start_time:;
-9
-
-Ì Ì(.uptime"#dependent-value#*:Bfloat&
-$
-
-Î Ü(	"#new-object#Bdict"
+¦ ª(	
+thresholds"#new-object#Bdict"
  
 
-Ï Ï($"	#map-set#:1
-/
-
-Ð Ð(1
-"#get-field# total_requests:"
+§ §(!"	#map-set#:"
  
 
-Ð Ð(1"	#map-set#:	
-8
-6
-
-Ñ% Ñ(?"#!#get-field# rate_limited_requests:"
+¨ ¨(."	#map-set#:"
  
 
-Ñ Ñ(?"	#map-set#:1
-/
+© ©(""	#map-set#:	
+
 
-Ô Ô(&"#get-field# total_requests:*
-(
-
-Ô Ô(*"	#binop >#2>:Bbool,"*
-
-Ô Ô(* *
-Ô Ô(2
-Õ Õ("½8
-6
-
-Ó Ó(+"#!#get-field# rate_limited_requests:1
-/
-
-Ó. Ó(A"#get-field# total_requests:,
-*
-
-Ó Ó(A"
-#binop !=#2!=:Bbool"
- 
-
-Ó Ó(A"
-#assert#:3
-1
-
-Ó Ó(A"#dependent-value#*:Bfloat3
-1
-
-Ó Ó(G"#dependent-value#*:Bfloat
-
-Ó Õ("
-
-Ó Õ("ß*"
- 
-
-Ò Ö("	#map-set#:8
-6
-
-×* ×(D "#!#get-field# requests_by_operation:.
-,
-
-×% ×(E!"
-builtinsdict*: Bdict"
- 
-
-× ×(E""	#map-set#:!;
-9
-
-Ø- Ø(J$"&$#get-field# rate_limits_by_operation:.
-,
-
-Ø( Ø(K%"
-builtinsdict*:$Bdict"
- 
-
-Ø Ø(K&"	#map-set#:#%+
-)
-
-Ú7 Ú(A("?python-unknown?*:+
-)
-
-Ú7 Ú(A)"
-__bool__*:(BboolH,"*
-
-Ú7 Ú(A) *
-Ú4 Ú(62
-ÚB Ú(F"ƒ1
-/
-
-Ú Ú($*"#get-field# total_requests:,
-*
-
-Ú Ú(-+"
-#binop !=#2!=:Bbool"
- 
-
-Ú Ú(-,"
-#assert#:+3
-1
-
-Ú Ú(--"#dependent-value#*:*Bfloat3
-1
-
-Ú Ú(2/"#dependent-value#*:-.Bfloat
-
-Ú Ú(H"
-
-Ú Ú(H"J*0/"
- 
-
-Ù Û(1"	#map-set#:'0
-
-Î Ü(	*=/home/omar/Documents/ruleIQ/api/middleware/ai_rate_limiter.py
+« «(*>/home/omar/Documents/ruleIQ/tests/test_database_performance.py

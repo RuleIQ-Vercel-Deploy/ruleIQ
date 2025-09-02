@@ -1,49 +1,8 @@
-
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 200 *:(
-&ß
-00 This function is async.
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2;; 2:(
-&ß
-;; This function is async.
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2BB 3:(
-&ß
-BB This function is async.
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2VV 1:(
-&ß
-VV This function is async.”
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-‘‘ ':*
-(ß
-
-‘‘ This function is async.”
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-”” ":*
-(ß
-
-”” This function is async.”
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-›› 0:*
-(ß
-
-›› This function is async.”
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
- :*
-(ß
-
- This function is async.x
-pythonS1186YAdd a nested comment explaining why this method is empty, or complete the implementation. 2
-‹‹ x
-pythonS1186YAdd a nested comment explaining why this method is empty, or complete the implementation. 2
-ŽŽ x
-pythonS1186YAdd a nested comment explaining why this method is empty, or complete the implementation. 2
-‘‘ ”
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-™™ *:*
-(ß
-
-™™ This function is async.”
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-½½ 0:*
-(ß
-
-½½ This function is async.
+b
+pythonS2208GImport only needed names or import the module and then use its members. 2 O
+pythonS53322Using http protocol is insecure. Use https instead 2))7 D¶
+pythonS9301Remove this unexpected named argument 'username'. 211' >:g
+@ß
+11' >1Remove this unexpected named argument 'username'.
+#Õ
+ Function definition.

@@ -176,7 +176,8 @@ def rate_limit(requests_per_minute: int = 60):
         if not allowed:
             raise HTTPException(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-                detail=f"Rate limit exceeded: {requests_per_minute} requests per minute. Try again in {retry_after} seconds",
+                detail= \
+                    f"Rate limit exceeded: {requests_per_minute} requests per minute. Try again in {retry_after} seconds",
                 headers={
                     "Retry-After": str(retry_after),
                     "X-RateLimit-Limit": str(requests_per_minute),

@@ -1,22 +1,22 @@
 
 Gservices.ai.evaluation.tools.ingest_docs.DocumentFetcher.fetch_documentQ
-G/home/omar/Documents/ruleIQ/services/ai/evaluation/tools/ingest_docs.pyq q("2*†
-2r r(7‰
+G/home/omar/Documents/ruleIQ/services/ai/evaluation/tools/ingest_docs.pyo o("2*†
+2p p(7‰
 †
-s s(>
+q q(>
 %11"__concat*
-s s(
+q q(
 	Fetching *
-s  s((
+q  q((
 
 
 doc_type*
-s) s(8
+q) q(8
  document from *
-s9 s(<
+q9 q(<
 
 urlfd
-s s(?
+q q(?
 %12*&
 
 __unknown_file (
@@ -28,9 +28,9 @@ G/home/omar/Documents/ruleIQ/services/ai/evaluation/tools/ingest_docs.pyq q(
 
 %112info*
 9*™
-7z z(?O
+7x x(?O
 M
-z. z(>
+x. x(>
 %3"__id*5
 
 __unknown_file (*
@@ -38,7 +38,7 @@ M
 
 response"	
 content¤¡
-z z(?
+x x(?
 %4*X
 
 __unknown_file (<:
@@ -47,12 +47,12 @@ M
 __unknown_file (
 
 %32_extract_pdf_text"
-z z(?
+x x(?
 
 %4*—
-8| |(=L
+8z z(=L
 J
-|/ |(<
+z/ z(<
 %5"__id*2
 
 __unknown_file (*
@@ -60,7 +60,7 @@ J
 
 response"
 text¥¢
-| |(=
+z z(=
 %6*X
 
 __unknown_file (<:
@@ -69,18 +69,18 @@ J
 __unknown_file (
 
 %52_extract_html_text"
-| |(=
+z z(=
 
 %6*²
-9v v(8
+9t t(8
 }
-v v(#
+t t(#
 %7"__id*e
 
 __unknown_file (I*G:
 8services.ai.evaluation.tools.ingest_docs.DocumentFetcher"	
 sessionqo
-v v(8
+t t(8
 %8*"
 
 __unknown_file (
@@ -92,14 +92,14 @@ J
 url2get:
 timeout2B
 @
-v v(8
+t t(8
 
 response"__id*"
 
 __unknown_file (
 
 %8NL
-w w('
+u u('
 %9*(
 
 __unknown_file (
@@ -107,7 +107,7 @@ J
 
 response2raise_for_status’
 
-y y( 
+w w( 
 %10"	__compare*"
 
 __unknown_file (
@@ -122,9 +122,9 @@ J
 pdf*
 7
 8:
-q q(%
+o o(%
 url:
-q' q(=
+o' o(=
 
 doc_typeB<:
 8services.ai.evaluation.tools.ingest_docs.DocumentFetcherH

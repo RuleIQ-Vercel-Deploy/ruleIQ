@@ -1,43 +1,65 @@
 
-"regulation_controls"str
-"regulation"str
-MD"Natural language query: What controls do we need for [REGULATION]?"str
-ðæ"
-        MATCH (reg:Regulation {name: $regulation})-[:REQUIRES]->(req:Requirement)
-        OPTIONAL MATCH (req)<-[:IMPLEMENTS]-(ctrl:Control)
-        RETURN req.title AS requirement,
-               req.mandatory AS is_mandatory,
-               COLLECT(ctrl.name) AS existing_controls,
-               CASE 
-                 WHEN SIZE(COLLECT(ctrl)) = 0 THEN 'MISSING'
-                 ELSE 'IMPLEMENTED'
-               END AS status
-        ORDER BY req.mandatory DESC, status
-        "strself
-·, ·(0
-regulation
-·2 ·(A"¯(
+©
+Ÿ"
+            MATCH (domain:ComplianceDomain)-[:GOVERNS]->(reg:Regulation)
+                  -[:REQUIRES]->(req:Requirement)
+            OPTIONAL MATCH (req)<-[:IMPLEMENTS]-(ctrl:Control)
+            RETURN domain.name AS domain,
+                   reg.name AS regulation,
+                   COUNT(req) AS total_requirements,
+                   COUNT(ctrl) AS implemented_controls,
+                   ROUND(100.0 * COUNT(ctrl) / COUNT(req), 2) AS coverage_percentage
+            ORDER BY domain.priority, coverage_percentage DESC
+            "str
+ÿõ"
+            MATCH (domain:ComplianceDomain {name: $domain_name})-[:GOVERNS]->(reg:Regulation)
+                  -[:REQUIRES]->(req:Requirement)
+            OPTIONAL MATCH (req)<-[:IMPLEMENTS]-(ctrl:Control)
+            RETURN domain.name AS domain,
+                   reg.name AS regulation,
+                   COUNT(req) AS total_requirements,
+                   COUNT(ctrl) AS implemented_controls,
+                   ROUND(100.0 * COUNT(ctrl) / COUNT(req), 2) AS coverage_percentage
+            "str
+"domain_name"str
+8/"Get compliance coverage analysis for a domain"str
+"coverage_analysis"strself
+Ý Ý(domain_name
+Ý Ý(/"[+
+)
+
+á á("
+__bool__*:BboolH,"*
+
+á á( *
+á á(
+2
+í í("†(
 &
-º º(úquery"#id#:Bstr.
+â â(query"#id#:Bstr.
 ,
 
-Ç Ç(+params"#new-object#Bdict"
+ì ì(1params"#new-object#Bdict"
  
 
-Ç Ç(*"	#map-set#:#
+ì ì(0	"	#map-set#:"b(
+&
+î î(·query"#id#:
+Bstr.
+,
+
+ù ù(params"#new-object#Bdict"³#
 !
 
-È È(9	"#unknown-value#,
+û û(9"#unknown-value#,
 *
 
-È È(9
-results"#unknown-value#&
+û û(9results"#unknown-value#&
 $
 
-É É(/"#new-object#Bdict"
+ü ü(-"#new-object#Bdict"
  
 
-É É(."	#map-set#:
-
+ü ü(,"	#map-set#:
 
-É É(/*A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py
+ü ü(-*A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py

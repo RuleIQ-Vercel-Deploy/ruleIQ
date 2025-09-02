@@ -1,10 +1,10 @@
 
 >tests.test_rbac_system.TestRBACMiddleware.test_is_public_routeA
-5/home/omar/Documents/ruleIQ/tests/test_rbac_system.pyõ õ("2*Ï
+5/home/omar/Documents/ruleIQ/tests/test_rbac_system.py£ £("2*Ï
 2
-ö ö(*Œ‰
+¤ ¤(*Œ‰
 
-÷ ÷(E
+¥ ¥(E
 %1*/
 
 __unknown_file (
@@ -14,7 +14,7 @@
 __unknown_file (
 /api/v1/auth/login2_is_public_routeŒ
 
-ø ø(H
+¦ ¦(H
 %2*/
 
 __unknown_file (
@@ -24,7 +24,7 @@
 __unknown_file (
 /api/v1/auth/register2_is_public_route~|
 
-ù ù(8
+§ §(8
 %3*/
 
 __unknown_file (
@@ -34,7 +34,7 @@
 __unknown_file (	
 /docs2_is_public_route‡„
 
-ú ú(@
+¨ ¨(@
 %4*/
 
 __unknown_file (
@@ -44,7 +44,7 @@
 __unknown_file (
 /api/v1/users2_is_public_routeŠ
 
-û û(F
+© ©(F
 %5*/
 
 __unknown_file (
@@ -56,9 +56,9 @@
 3*;
 3
 test_rbac_system.py"
-ı ı(
+« «(
 implicit return:
 
-õ# õ(2
+£# £(2
 rbac_middlewareB-+
 )tests.test_rbac_system.TestRBACMiddlewareH

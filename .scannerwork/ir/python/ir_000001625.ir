@@ -1,45 +1,21 @@
 
-&"Simulated streaming failure"str
+;2"Create an executor function for a scheduled task"strself
+ö ö("	task_type
+ö$ ö(2"Î#
+!
 
-1intself   (StopIteration"û(
-&
-! !("#get-field# current:(
-&
-! !('"#get-field# fail_at:*
+¢ ¢("#unknown-value#*
 (
-! !('"
-#binop ==#2==:Bbool"
-! !(' *! !(
-"J6
-4
-" "(:"
-builtins	Exception*:B	Exception2
-" "(:"À(
+
+ù ¢(%closure"#new-object#(
 &
-$ $("#get-field# current:'
-%
-$ $(*"#get-field# chunks:*
-(
-$ $(+	"
-builtinslen*:Bint*
-(
-$ $(+
-"
-#binop >=#2>=:	Bbool"
-$ $(+
- *$ $(
-"2
-% %("å'
-%
-' '("#get-field# chunks:(
-&
-' '(("#get-field# current:)
-'
-' '()chunk"#array-read#:(
-&
-( (("#get-field# current:%
-#
-( (("	#binop +#*2+:)
-'
-( (("#set-field# current:
-) )(*D/home/omar/Documents/ruleIQ/tests/unit/services/test_ai_streaming.py
+
+ù ¢("#set-field# self:-
++
+
+ù ¢("#set-field# task_type:-
++
+
+ù ¢("?python-partial-apply?:
+
+¢ ¢(*K/home/omar/Documents/ruleIQ/langgraph_agent/graph/celery_migration_graph.py

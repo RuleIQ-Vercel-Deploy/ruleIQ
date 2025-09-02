@@ -1,14 +1,14 @@
 
 Muk_compliance_ingestion_pipeline.UKComplianceGraphIngestion._process_chapters_
-S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipeline.py§ §("3"5*K
+S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipeline.py¶ ¶("3"5*K
 3%
 #uk_compliance_ingestion_pipeline.py"
-… …(
+— —(
 implicit return*ø
 5
-ß ß(<Ä~
+© ©(<Ä~
 
-ß% ß(:
+©% ©(:
 %9"__mapGet*'
 
 __unknown_file (
@@ -20,23 +20,23 @@ S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipelin
 chapter_id2__getitem__d
 b
 
-ß ß(<
+© ©(<
 %10"__concat*
 
-ß ß("
+© ©("
 
 
 reg_id*
 
-ß# ß($
+©# ©($
 _*
 
-ß% ß(:
+©% ©(:
 
 %9G
 E
 
-ß ß(<
+© ©(<
 
 chapter_id"__id*#
 
@@ -44,7 +44,7 @@ chapter_id"__id*#
 
 %10|z
 
-±. ±(>
+∂ ∂(&
 %11"__mapGet*'
 
 __unknown_file (
@@ -54,7 +54,7 @@ chapter_id"__id*#
 __unknown_file (	
 title2__getitem__øº
 
-™ ±(N
+¨ ∏(
 %12*'
 
 __unknown_file (
@@ -83,10 +83,10 @@ chapter_id:
 
 reg_id
 
-¥3 ¥(5
+ª3 ª(5
 %13"listìê
 
-¥ ¥(6
+ª ª(6
 %14*'
 
 __unknown_file (
@@ -104,9 +104,9 @@ chapter_id:
 5
 7*Ò	
 7
-µ µ(DÄ~
+º º(DÄ~
 
-µ- µ(B
+º- º(B
 %2"__mapGet*'
 
 __unknown_file (
@@ -118,23 +118,23 @@ chapter_id:
 article_id2__getitem__g
 e
 
-µ µ(D
+º º(D
 %3"__concat*
 
-µ  µ(*
+º  º(*
 
 
 chapter_id*
 
-µ+ µ(,
+º+ º(,
 _*
 
-µ- µ(B
+º- º(B
 
 %2F
 D
 
-µ µ(D
+º º(D
 
 article_id"__id*"
 
@@ -142,7 +142,7 @@ article_id"__id*"
 
 %3{y
 
-¿ ¿(*
+» »(*
 %4"__mapGet*'
 
 __unknown_file (
@@ -152,7 +152,7 @@ article_id"__id*"
 __unknown_file (	
 title2__getitem__Ä~
 
-¡ ¡(0
+… …(0
 %5"__mapGet*'
 
 __unknown_file (
@@ -163,7 +163,7 @@ article_id"__id*"
 
 article_id2__getitem__ÍÁ
 
-∑ √(
+æ À(
 %6*'
 
 __unknown_file (
@@ -196,10 +196,10 @@ chapter_id
 
 chapter_id
 
-∆= ∆(?
+Œ= Œ(?
 %7"listîë
 
-∆" ∆(@
+Œ" Œ(@
 %8*'
 
 __unknown_file (
@@ -217,9 +217,9 @@ chapter_id
 7
 9*¨
 9
-« «(Wåâ
+œ œ(Wåâ
 
-« «(W
+œ œ(W
 %1*[
 
 __unknown_file (?=
@@ -243,13 +243,13 @@ article_id2_create_obligation_node*
 7
 9:
 
-§& §(-	
+¶& ¶(-	
 session:
 
-§/ §(:
+¶/ ¶(:
 reg_id:
 
-§< §(P
+¶< ¶(P
 
 chaptersB?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestionH

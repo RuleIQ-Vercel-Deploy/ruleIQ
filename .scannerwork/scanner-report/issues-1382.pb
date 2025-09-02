@@ -1,57 +1,49 @@
-î
+ê
+pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 200 *:(
+&Ê
+00 This function is async.ê
+pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2;; 2:(
+&Ê
+;; This function is async.ê
+pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2BB 3:(
+&Ê
+BB This function is async.ê
+pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2VV 1:(
+&Ê
+VV This function is async.î
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-ââ :*
+ïï ':*
 (Ê
 
-ââ This function is async.î
+ïï This function is async.î
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-µµ  :*
+òò ":*
 (Ê
 
-µµ This function is async.î
+òò This function is async.î
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-ππ ":*
+üü 0:*
 (Ê
 
-ππ This function is async.î
+üü This function is async.î
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-≈≈ !:*
+îî :*
 (Ê
 
-≈≈ This function is async.î
+îî This function is async.x
+pythonS1186YAdd a nested comment explaining why this method is empty, or complete the implementation. 2
+ûû x
+pythonS1186YAdd a nested comment explaining why this method is empty, or complete the implementation. 2
+°° x
+pythonS1186YAdd a nested comment explaining why this method is empty, or complete the implementation. 2
+§§ î
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-ˇˇ $:*
+¨¨ *:*
 (Ê
 
-ˇˇ This function is async.î
+¨¨ This function is async.î
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-åå $:*
+–– 0:*
 (Ê
 
-åå This function is async.î
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-öö  :*
-(Ê
-
-öö This function is async.Y
-pythonS1244:Do not perform equality checks with floating point values. 2
-îî 1Y
-pythonS1244:Do not perform equality checks with floating point values. 2
-ôô 4J
-pythonS1481+Remove the unused local variable "result2". 2
-òò î
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-™™ ":*
-(Ê
-
-™™ This function is async.î
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-¿¿ #:*
-(Ê
-
-¿¿ This function is async.î
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-—— *:*
-(Ê
-
-—— This function is async.
+–– This function is async.

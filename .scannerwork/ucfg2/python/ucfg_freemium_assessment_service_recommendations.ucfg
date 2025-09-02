@@ -1,18 +1,18 @@
 
 Xservices.freemium_assessment_service.FreemiumAssessmentService._generate_recommendationsO
-C/home/omar/Documents/ruleIQ/services/freemium_assessment_service.py¾ ¾('"9*™
+C/home/omar/Documents/ruleIQ/services/freemium_assessment_service.pyá á('"9*™
 7
-Ç Ë(Š
+ê î(Š
 ‡
 
-Ç( Ç(6
+ê( ê(6
 %5"__id*m
 
 __unknown_file (Q*O@
 >services.freemium_assessment_service.FreemiumAssessmentService"
 	assistantØÕ
 
-Ç( Ë(
+ê( î(
 %6*"
 
 __unknown_file (
@@ -29,17 +29,17 @@ C/home/omar/Documents/ruleIQ/services/freemium_assessment_service.py¾ ¾('"
 compliance_scoreK
 I
 
-Ç Ë(
+ê î(
 recommendations"__id*"
 
 __unknown_file (
 
 %6
 
-Ì> Ì(@
+ï> ï(@
 %7"list 
 
-Ì Ì(A
+ï ï(A
 %8*/
 
 __unknown_file (
@@ -53,13 +53,13 @@ I
 
 %72get"
 
-Ì Ì(A
+ï ï(A
 
 %8*î
 8
-Î Î(KÆÃ
+ñ ñ(KÆÃ
 
-Î Î(K
+ñ ñ(K
 %9*^
 
 __unknown_file (B@
@@ -69,21 +69,21 @@ I
 
 compliance_score2_get_fallback_recommendations"
 
-Î Î(K
+ñ ñ(K
 
 %9*®
 9
-Æ Æ(J‘
+é é(J‘
 Ž
 
-Æ Æ(#
+é é(#
 %10"__id*s
 
 __unknown_file (W*U@
 >services.freemium_assessment_service.FreemiumAssessmentService"
 circuit_breaker€~
 
-Æ Æ(J
+é é(J
 %11*#
 
 __unknown_file (
@@ -95,12 +95,12 @@ I
 7
 8:"
 
-À À(*
+ã ã(*
 assessment_context:
 
-Á Á(#
+ä ä(#
 ai_analysis: 
 
-Â Â(
+å å(
 compliance_scoreBB@
 >services.freemium_assessment_service.FreemiumAssessmentServiceH

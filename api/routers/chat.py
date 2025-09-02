@@ -137,7 +137,8 @@ async def create_conversation(
                         f"AI processing timed out for conversation {conversation.id}"
                     )
                     # Use fallback response
-                    response_text = """I understand you'd like to discuss compliance matters. Due to high demand, I'm providing a quick response:
+                    response_text = \
+                        """I understand you'd like to discuss compliance matters. Due to high demand, I'm providing a quick response:
 
 I'm here to help with compliance questions about GDPR, ISO 27001, and other frameworks. Please feel free to ask specific questions about:
 • Data protection requirements

@@ -1,14 +1,14 @@
 
 >services.compliance_loader.ISO27001UKMapper.map_iso_to_uk_gdprE
-9/home/omar/Documents/ruleIQ/services/compliance_loader.py˛ ˛("2*{
+9/home/omar/Documents/ruleIQ/services/compliance_loader.pyÅ Å("2*{
 2
-ˇ á(
+Ç ä(
 
-à à(
+ã ã(
 %11"listE
 C
 
-à à(
+ã ã(
 
 mappings"__id*#
 
@@ -18,24 +18,24 @@ C
 4
 6*+
 4
-ì ì("
+ò ò("
 
-ì ì(
+ò ò(
 
 
 mappings*ê
 6
-ä ä(5Ñ
+ç ç(5Ñ
 Å
 
-ä ä(5
+ç ç(5
 %9"__id*g
 
 __unknown_file (K*I-
 +services.compliance_loader.ISO27001UKMapper"
 ISO_TO_UK_GDPR_MAPPINGpn
 
-ä ä(5
+ç ç(5
 %10*"
 
 __unknown_file (
@@ -48,17 +48,17 @@ C
 7
 8*ë
 7
-ã ã(EÑ
+é é(EÑ
 Å
 
-ã  ã(;
+é  é(;
 %1"__id*g
 
 __unknown_file (K*I-
 +services.compliance_loader.ISO27001UKMapper"
 ISO_TO_UK_GDPR_MAPPINGxv
 
-ã  ã(D
+é  é(D
 %2"__mapGet*"
 
 __unknown_file (
@@ -69,7 +69,7 @@ C
 	
 control2__getitem__wu
 
-ã ã(E
+é é(E
 %3"list.append*(
 
 __unknown_file (
@@ -83,24 +83,24 @@ C
 4
 6*Ñ
 8
-é ë(
+ë ñ(
 
-é  ë(
+í ï(
 %4"dictu
 s
 
-è& è(Z
+ì* ì(^
 %5"__concat*:
 
-è( è(P,*
+ì, ì(T,*
 (General Data Protection Requirement for *
 
-èQ è(X
+ìU ì(\
 	
 controló
 î
 
-è è(Z
+ì ì(^
 %6"__mapSet*"
 
 __unknown_file (
@@ -115,7 +115,7 @@ s
 %5ƒ
 ¡
 
-ê ê(W
+î î([
 %7"__mapSet*"
 
 __unknown_file (
@@ -128,7 +128,7 @@ s
 __unknown_file (53
 1Refer to ICO guidance for specific implementationwu
 
-é ë(
+ë ñ(
 %8"list.append*(
 
 __unknown_file (
@@ -142,6 +142,6 @@ s
 4
 6:
 
-˛! ˛(8
+Å! Å(8
 iso_controlsB/-
 +services.compliance_loader.ISO27001UKMapperH

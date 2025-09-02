@@ -2,30 +2,30 @@ c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
 ÉÉ /c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-ëë +U
+ññ +U
 pythonS74946Replace set constructor call with a set comprehension. 2
-ππ. 1U
+««. 1U
 pythonS74946Replace set constructor call with a set comprehension. 2
-ºº' *U
+ÃÃ' *U
 pythonS74946Replace set constructor call with a set comprehension. 2
-ãã- 0Q
+öö- 0Q
 pythonS11722Remove the unused function parameter "event_type". 2
-ææN ]c
+‘‘5 Dc
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-……  1R
+‚‚  1R
 pythonS11723Remove the unused function parameter "total_score". 2
-‚‚@ Pc
+˛˛. >c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-‰‰ U
+ÅÅ U
 pythonS74946Replace set constructor call with a set comprehension. 2
-ïï c
+≤≤ c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-´´ U
+»» U
 pythonS74946Replace set constructor call with a set comprehension. 2
-≤≤* -U
+––* -U
 pythonS74946Replace set constructor call with a set comprehension. 2
-≥≥& )U
+““ U
 pythonS74946Replace set constructor call with a set comprehension. 2
-……" %c
+ÚÚ" %c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-®® (
+ÅÅ (

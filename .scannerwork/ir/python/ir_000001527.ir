@@ -1,21 +1,3 @@
 
-
-0intself
-– –(kwargs
-– –($"dictlist"Ä)
-'
-
-˜ ˜("#unknown-value#Blist(
-&
-
-˜ ˜("
-#is-exact#:Bbool
-
-
-˜ ˜("
-#assume#::
-8
-
-˜ ˜("#set-field# __collection_size:Bint
-
-˜ ˜(*6/home/omar/Documents/ruleIQ/api/clients/okta_client.py
+0'"https://{self.domain}.okta.com/api/v1"strself) )("
+* *(7*6/home/omar/Documents/ruleIQ/api/clients/okta_client.py

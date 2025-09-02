@@ -175,7 +175,8 @@ class GoogleWorkspaceIntegration(BaseIntegration):
                     self.format_evidence(
                         evidence_type="user_access_logs",
                         title="Google Workspace User Login Events",
-                        description="Records of user login activities including successful and failed login attempts.",
+                        description= \
+                            "Records of user login activities including successful and failed login attempts.",
                         raw_data={
                             "events": login_events,
                             "event_count": len(login_events),

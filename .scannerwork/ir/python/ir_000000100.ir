@@ -9,50 +9,50 @@
 "status"str
 "collection_time_ms"str
 
-"duration"strselfc c($	 orchestrator_v2.CollectionStatus"ð$
+"duration"strselfl l($	 orchestrator_v2.CollectionStatus"ð$
 "
-e m(	"#new-object#Bdict*
+n z(	"#new-object#Bdict*
 (
-f f('"#get-field# source_id: 
+o o('"#get-field# source_id: 
 
-f f('"	#map-set#:'
+o o('"	#map-set#:'
 %
-g6 g(A"#get-field# status:)
+r r()"#get-field# status:)
 '
-g+ g(T
+r r(<
 "#is-instance#:	Bbool&"$
-g+ g(T
- *g( g(*2gU g(Y"c'
+r r(<
+ *r r(2s s("c'
 %
-g g(!"#get-field# status:&
+q q("#get-field# status:&
 $
-g g('"#get-field# value:
-g g(e";'
+q q(!"#get-field# value:
+q s( ";'
 %
-gZ g(e"#get-field# status:
-g g(e"ó* 
+s s( "#get-field# status:
+q s( "ó* 
 
-g g(e"	#map-set#:)
+p t("	#map-set#:)
 '
-h h(%"#get-field# evidence: 
+u u(%"#get-field# evidence: 
 
-h h(%"	#map-set#:)
+u u(%"	#map-set#:)
 '
-i i(!"#get-field# evidence: 
+v v(!"#get-field# evidence: 
 
-i i(!"	#map-set#:.
+v v(!"	#map-set#:.
 ,
-j j(/"#get-field# error_message: 
+w w(/"#get-field# error_message: 
 
-j j(/"	#map-set#:)
+w w(/"	#map-set#:)
 '
-k k(%"#get-field# duration: 
+x x(%"#get-field# duration: 
 
-k k(%"	#map-set#:)
+x x(%"	#map-set#:)
 '
-l" l(/"#get-field# duration:%
+y" y(/"#get-field# duration:%
 #
-l" l(6"	#binop *#*2*: 
+y" y(6"	#binop *#*2*: 
 
-l l(6 "	#map-set#:
-e m(	*@/home/omar/Documents/ruleIQ/services/evidence/orchestrator_v2.py
+y y(6 "	#map-set#:
+n z(	*@/home/omar/Documents/ruleIQ/services/evidence/orchestrator_v2.py

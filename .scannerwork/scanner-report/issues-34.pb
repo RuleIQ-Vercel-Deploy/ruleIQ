@@ -1,19 +1,19 @@
 c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-›› /c
+   /c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-ÜÜ /c
+êê /c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-££ /“
+ºº /“
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-ÓÓ :)
+ïï :)
 '"
-ÓÓ 	This function is async.“
+ïï 	This function is async.“
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-ÓÓ :)
+”” :)
 '"
-ÓÓ 	This function is async.‘
+”” 	This function is async.‘
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-••
+ôô
  $:'
-%"•• This function is async.
+%"ôô This function is async.

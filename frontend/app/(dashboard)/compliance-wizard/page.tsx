@@ -33,7 +33,6 @@ import { useAppStore } from '@/lib/stores/app.store';
 import { useBusinessProfileStore } from '@/lib/stores/business-profile.store';
 import {
   useComplianceStatus,
-  useComplianceRequirements,
   useFrameworks,
   useRunComplianceCheck,
 } from '@/lib/tanstack-query/hooks';

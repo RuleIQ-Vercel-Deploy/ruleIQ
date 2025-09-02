@@ -1,39 +1,65 @@
 
-ÕË"
-        MATCH (ctrl:Control)
-        OPTIONAL MATCH (ctrl)-[impl:IMPLEMENTS]->(req:Requirement)
-        OPTIONAL MATCH (ctrl)-[mit:MITIGATES]->(risk:Risk)
-        OPTIONAL MATCH (metric:Metric)-[:MEASURES]->(ctrl)
-        RETURN ctrl.name AS control,
-               ctrl.automation_level AS automation,
-               ctrl.implementation_status AS status,
-               COUNT(DISTINCT req) AS requirements_addressed,
-               COUNT(DISTINCT risk) AS risks_mitigated,
-               COLLECT(DISTINCT metric.name) AS metrics,
-               CASE ctrl.automation_level
-                 WHEN 'FULLY_AUTOMATED' THEN 3
-                 WHEN 'SEMI_AUTOMATED' THEN 2
-                 WHEN 'MANUAL' THEN 1
-                 ELSE 0
-               END AS automation_score
-        ORDER BY COUNT(DISTINCT req) DESC, automation_score DESC
-        "str
- "control_effectiveness"str
->5"Analyze control effectiveness and automation levels"strself
-», »(0"Û(
+©
+Ÿ"
+            MATCH (domain:ComplianceDomain)-[:GOVERNS]->(reg:Regulation)
+                  -[:REQUIRES]->(req:Requirement)
+            OPTIONAL MATCH (req)<-[:IMPLEMENTS]-(ctrl:Control)
+            RETURN domain.name AS domain,
+                   reg.name AS regulation,
+                   COUNT(req) AS total_requirements,
+                   COUNT(ctrl) AS implemented_controls,
+                   ROUND(100.0 * COUNT(ctrl) / COUNT(req), 2) AS coverage_percentage
+            ORDER BY domain.priority, coverage_percentage DESC
+            "str
+ÿõ"
+            MATCH (domain:ComplianceDomain {name: $domain_name})-[:GOVERNS]->(reg:Regulation)
+                  -[:REQUIRES]->(req:Requirement)
+            OPTIONAL MATCH (req)<-[:IMPLEMENTS]-(ctrl:Control)
+            RETURN domain.name AS domain,
+                   reg.name AS regulation,
+                   COUNT(req) AS total_requirements,
+                   COUNT(ctrl) AS implemented_controls,
+                   ROUND(100.0 * COUNT(ctrl) / COUNT(req), 2) AS coverage_percentage
+            "str
+"domain_name"str
+8/"Get compliance coverage analysis for a domain"str
+"coverage_analysis"strself
+Ý Ý(domain_name
+Ý Ý(/"[+
+)
+
+á á("
+__bool__*:BboolH,"*
+
+á á( *
+á á(
+2
+í í("†(
 &
-¾ ¾(ßquery"#id#:Bstr#
-!
+â â(query"#id#:Bstr.
+,
 
-Ò Ò(1"#unknown-value#,
-*
-
-Ò Ò(1results"#unknown-value#&
-$
-
-Ó Ó(1"#new-object#Bdict"
+ì ì(1params"#new-object#Bdict"
  
 
-Ó Ó(0	"	#map-set#:
+ì ì(0	"	#map-set#:"b(
+&
+î î(·query"#id#:
+Bstr.
+,
 
-Ó Ó(1*5/home/omar/Documents/ruleIQ/services/neo4j_service.py
+ù ù(params"#new-object#Bdict"³#
+!
+
+û û(9"#unknown-value#,
+*
+
+û û(9results"#unknown-value#&
+$
+
+ü ü(-"#new-object#Bdict"
+ 
+
+ü ü(,"	#map-set#:
+
+ü ü(-*5/home/omar/Documents/ruleIQ/services/neo4j_service.py

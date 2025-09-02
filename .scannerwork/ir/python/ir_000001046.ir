@@ -1,21 +1,22 @@
 
-
-0intself
-ê ê(kwargs
-ê ê($"dictlist"ƒ)
-'
-
-í í("#unknown-value#Blist(
-&
-
-í í("
-#is-exact#:Bbool
-
-
-í í("
-#assume#::
-8
-
-í í("#set-field# __collection_size:Bint
-
-í í(*5/home/omar/Documents/ruleIQ/api/clients/aws_client.py
+;2"Refresh AWS credentials if using role assumption"str
+
+trueboolselfk" k(&($api.clients.base_api_client.AuthType"÷,
+*
+m m("#get-field# credentials:*
+(
+m m(%"#get-field# auth_type:0
+.
+m) m(A"#get-field# ROLE_ASSUMPTION:*
+(
+m m(A"
+#binop ==#2==:Bbool"
+m m(A *m m(
+"X!
+
+n n(,"#unknown-value#!
+
+n n(,	"#unknown-value#
+n n(,	"
+o o(
+*5/home/omar/Documents/ruleIQ/api/clients/aws_client.py

@@ -1,21 +1,21 @@
 O
-pythonS14812Remove the unused local variable "total_coverage". 2vv c
+pythonS14812Remove the unused local variable "total_coverage". 2uu c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-šš 'c
+ŸŸ 'c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-üü 'U
+şş 'U
 pythonS11726Remove the unused function parameter "risk_threshold". 2
-ŠŠ $c
+ŒŒ *c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-öö 'š
+ıı 'š
 pythonS3358IExtract this nested conditional expression into an independent statement. 2
-úúG p:0
+ F:0
 .
 
-úú- /Parent conditional expression.c
+€€ Parent conditional expression.c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-€€ 'c
+‰‰ 'c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-÷÷ 'c
+„„ 'c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-şş '
+““ '

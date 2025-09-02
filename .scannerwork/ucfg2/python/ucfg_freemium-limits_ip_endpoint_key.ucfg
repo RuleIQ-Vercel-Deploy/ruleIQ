@@ -1,28 +1,28 @@
 
 2freemium-limits.RateLimitRedisKeys.ip_endpoint_keyM
-C/home/omar/Documents/ruleIQ/config/rate-limiting/freemium-limits.py} }("2*«
-2~ ~(3‡
+C/home/omar/Documents/ruleIQ/config/rate-limiting/freemium-limits.py{ {("2*«
+2| |(3‡
 „
- (8
+} }(8
 %1"__concat*
- (
+} }(
 rate_limit:ip:*
-  ("
+}  }("
 
 ip*
-# (-
+}# }(-
 
 :endpoint:*
-. (6
+}. }(6
 
 
 endpoint"
- (8
+} }(8
 
 %1:
-} }(
+{ {(
 ip:
-}! }(.
+{! {(.
 
 endpointB&$
 "freemium-limits.RateLimitRedisKeysH

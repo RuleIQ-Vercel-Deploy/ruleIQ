@@ -1,72 +1,68 @@
 
-#"compliance_status"str
-
-"industry"str
-	"business_profile_id"str
+"S3518"bool
+"division by zero"bool
+2)"Calculate average automation potential."str
 
-0int
-"business_profile"str
-%"overall_score"str
-"name"str
-'"framework_scores"str
-"Unknown Industry"str
-"recent_evidence"str
-MD"Returns a default context when profile information is unavailable."str
-"frameworks"str
-"Unknown Company"str
-"conversation_id"strselfO O(conversation_idO O(#!business_profile_idO% O(>list"°$
-"
-R _(	"#new-object#Bdict.
-,
-S S(3"#dependent-value#*:Bstr 
-
-S S(3"	#map-set#:.
-,
-T# T(;
-"#dependent-value#*:Bstr 
-
-T T(;"	#map-set#:	
-$
-"
-U  Y("#new-object#Bdict 
-
-V V()"	#map-set#: 
-
-W W(."	#map-set#:'
+0int
+0.5float
+"a"bool
+
+2intself
+©( ©(,regulations
+©. ©(E"|+
+)
+
+« «("
+__bool__*:BboolH+
+)
+
+« «("#unaryop !#2!:Bbool "
+
+« «( *
+« «(
+"
+
+¬ ¬("”5
+3
+
+­ ¯(	scores"?python-unknown?:Blist+
+)
+
+°6 °(<"
+__bool__*:BboolH,"*
+
+°6 °(< *
+°3 °(52
+°= °(A"—'
 %
-X X( "#unknown-value#Blist&
-$
-X X( "
-#is-exact#:Bbool
-
-X X( "
-#assume#:8
-6
-X X( "#set-field# __collection_size:Bint 
-
-X X( "	#map-set#: 
-
-U Y("	#map-set#:'
-%
-Z Z(!"#unknown-value#Blist&
-$
-Z Z(!"
-#is-exact#:Bbool
-
-Z Z(! "
-#assume#:8
-6
-Z Z(!!"#set-field# __collection_size:Bint 
-
-Z Z(!""	#map-set#:$
-"
-[! ^($"#new-object#Bdict 
-
-\ \("&"	#map-set#:$%$
-"
-]$ ](&("#new-object#Bdict 
-
-] ](&)"	#map-set#:$'( 
-
-[ ^(*"	#map-set#:#$
-R _(	*:/home/omar/Documents/ruleIQ/services/ai/context_manager.py
+
+° °( 	"
+builtinssum*:,
+*
+
+°# °(.
+"
+builtinslen*:Bint,
+*
+
+° °(."
+#binop !=#2!=:
+Bbool"
+ 
+
+° °(."
+#assert#:,
+*
+
+° °(."#dependent-value#*:	
+*
+(
+
+° °(2"
+builtinsround*:
+
+° °(E"
+
+° °(E"&*
+
+° °(E*?/home/omar/Documents/ruleIQ/services/ai/iq_neo4j_integration.py

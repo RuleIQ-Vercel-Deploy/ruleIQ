@@ -1,11 +1,11 @@
 
 4uk_compliance_engine.ComplianceObligation.to_json_ldQ
-G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py8 8("2*Ì
-29 9(;
-: I(	
+G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py; ;("2*Ì
+2< <(;
+= L(	
 %1"dict´
 ±
-; ;(A
+> >(A
 %2"__mapSet*"
 
 __unknown_file (
@@ -19,7 +19,7 @@ G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py8 8(
 __unknown_file (+)
 'https://schema.org/ComplianceObligationž
 ›
-< <(+
+? ?(+
 %3"__mapSet*"
 
 __unknown_file (
@@ -32,14 +32,14 @@ G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py8 8(
 __unknown_file (
 ComplianceObligationv
 t
-= =(%
+@ @(%
 %4"__id*\
 
 __unknown_file (@*>+
 )uk_compliance_engine.ComplianceObligation"
 obligation_idŠ
 ‡
-= =(%
+@ @(%
 %5"__mapSet*"
 
 __unknown_file (
@@ -53,14 +53,14 @@ t
 
 %4w
 u
-> >(-
+A A(-
 %6"__id*]
 
 __unknown_file (A*?+
 )uk_compliance_engine.ComplianceObligation"
 regulation_ref‘
 Ž
-> >(-
+A A(-
 %7"__mapSet*"
 
 __unknown_file (
@@ -75,14 +75,14 @@ regulation*"
 
 %6n
 l
-? ?(
+B B(
 %8"__id*T
 
 __unknown_file (8*6+
 )uk_compliance_engine.ComplianceObligation"
 title‹
 ˆ
-? ?(
+B B(
 %9"__mapSet*"
 
 __unknown_file (
@@ -96,14 +96,14 @@ l
 
 %8u
 s
-@ @(+
+C C(+
 %10"__id*Z
 
 __unknown_file (>*<+
 )uk_compliance_engine.ComplianceObligation"
 description”
 ‘
-@ @(+
+C C(+
 %11"__mapSet*"
 
 __unknown_file (
@@ -117,14 +117,14 @@ s
 
 %10z
 x
-A  A(5
+D  D(5
 %12"__id*_
 
 __unknown_file (C*A+
 )uk_compliance_engine.ComplianceObligation"
 requirement_type™
 –
-A A(5
+D D(5
 %13"__mapSet*"
 
 __unknown_file (
@@ -138,14 +138,14 @@ x
 
 %12}
 {
-B B(4
+E E(4
 %14"__id*b
 
 __unknown_file (F*D+
 )uk_compliance_engine.ComplianceObligation"
 applicable_entities•
 ’
-B B(4
+E E(4
 %15"__mapSet*"
 
 __unknown_file (
@@ -159,14 +159,14 @@ x
 
 %14€
 ~
-C C(2
+F F(2
 %16"__id*e
 
 __unknown_file (I*G+
 )uk_compliance_engine.ComplianceObligation"
 implementation_actions
 
-C C(2
+F F(2
 %17"__mapSet*"
 
 __unknown_file (
@@ -180,14 +180,14 @@ x
 
 %16
 }
-D$ D(>
+G$ G(>
 %18"__id*d
 
 __unknown_file (H*F+
 )uk_compliance_engine.ComplianceObligation"
 verification_criteria
 š
-D D(>
+G G(>
 %19"__mapSet*"
 
 __unknown_file (
@@ -201,7 +201,7 @@ x
 
 %18r
 p
-E E(%
+H H(%
 %20"__id*W
 
 __unknown_file (;*9+
@@ -209,7 +209,7 @@ p
 
 controls‘
 Ž
-E E(%
+H H(%
 %21"__mapSet*"
 
 __unknown_file (
@@ -224,7 +224,7 @@ p
 
 %20r
 p
-F F(%
+I I(%
 %22"__id*W
 
 __unknown_file (;*9+
@@ -232,7 +232,7 @@ p
 
 timeline‘
 Ž
-F F(%
+I I(%
 %23"__mapSet*"
 
 __unknown_file (
@@ -247,14 +247,14 @@ p
 
 %22s
 q
-G G('
+J J('
 %24"__id*X
 
 __unknown_file (<*:+
 )uk_compliance_engine.ComplianceObligation"
 	penalties’
 
-G G('
+J J('
 %25"__mapSet*"
 
 __unknown_file (
@@ -268,14 +268,14 @@ q
 
 %24~
 |
-H H(8
+K K(8
 %26"__id*c
 
 __unknown_file (G*E+
 )uk_compliance_engine.ComplianceObligation"
 automation_potential˜
 •
-H H(8
+K K(8
 %27"__mapSet*"
 
 __unknown_file (
@@ -288,7 +288,7 @@ q
 __unknown_file (
 
 %26"
-: I(	
+= L(	
 
 %1B-+
 )uk_compliance_engine.ComplianceObligationH

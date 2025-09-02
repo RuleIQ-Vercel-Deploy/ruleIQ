@@ -1,2 +1,4 @@
-a
-pythonS7504DRemove this unnecessary `list()` call on an already iterable object. 2 
+c
+pythonS2068H"password" detected here, review this potentially hard-coded credential. 2
+
+ *

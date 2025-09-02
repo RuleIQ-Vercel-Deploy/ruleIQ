@@ -1,16 +1,21 @@
-func
-à à("º#
+
+"evidence_dashboard"str
+5,"Cache evidence dashboard data (5 min TTL)."strself
+∑ ∑(user_id
+∏ ∏(framework_id
+π π(dashboard_data
+∫ ∫(&ttl
+ª ª("ç/
+-
+
+æ ¿(	key"?python-unknown?:#
 !
 
-ù ù("#unknown-value#*
-(
+¡ ¡(7	"#unknown-value##
+!
 
-â ù(%closure"#new-object#(
-&
+¡ ¡(7
+"#unknown-value#
 
-â ù("#set-field# func:-
-+
-
-â ù("?python-partial-apply?:
-
-ù ù(*+/home/omar/Documents/ruleIQ/config/cache.py
+¡ ¡(7
+*+/home/omar/Documents/ruleIQ/config/cache.py

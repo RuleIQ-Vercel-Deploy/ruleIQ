@@ -1,25 +1,6 @@
+"7#
+!
 
-"avg_query_time"str
-
-0.85float
-	"cache_hit_rate"str
-0.1float
-I@"Check if performance metrics are within acceptable thresholds."str
-0.8float
-&"connection_pool_utilization"str"²2
-0
+Õ Õ("#unknown-value#
 
-€ „(	
-thresholds"#new-object#Bdict"
- 
-
- (!"	#map-set#:"
- 
-
-‚ ‚(."	#map-set#:"
- 
-
-ƒ ƒ(""	#map-set#:	
-
-
-… …(*>/home/omar/Documents/ruleIQ/tests/test_database_performance.py
+Õ Õ(*B/home/omar/Documents/ruleIQ/archive/test_configs/conftest_fixed.py

@@ -1,10 +1,48 @@
 
-.%"Initialize the global Neo4j service"str"e#
+
+"jurisdiction"str
+"domain"str
+"domain_requirements"str
+\S"Natural language query: What are the requirements for [DOMAIN] in [JURISDICTION]?"str
+‡ý"
+        MATCH (domain:ComplianceDomain {name: $domain})
+              -[:GOVERNS]->(reg:Regulation {jurisdiction: $jurisdiction})
+              -[:REQUIRES]->(req:Requirement)
+        RETURN reg.name AS regulation,
+               COLLECT({
+                 title: req.title,
+                 description: req.description,
+                 mandatory: req.mandatory,
+                 deadline: req.deadline,
+                 article_reference: req.article_reference
+               }) AS requirements
+        "strself
+· ·(domain
+· ·(jurisdiction
+· ·(,"Ó(
+&
+» »(‘query"#id#:Bstr.
+,
+
+É É(Aparams"#new-object#Bdict"
+ 
+
+É É("	"	#map-set#:"
+ 
+
+É$ É(@"	#map-set#:
+#
 !
 
-Ç Ç('"#unknown-value#,
+Ê Ê(9"#unknown-value#,
 *
 
-Ç Ç('service"#unknown-value#
+Ê Ê(9results"#unknown-value#&
+$
 
-È È(*5/home/omar/Documents/ruleIQ/services/neo4j_service.py
+Ë Ë(/"#new-object#Bdict"
+ 
+
+Ë Ë(."	#map-set#:
+
+Ë Ë(/*5/home/omar/Documents/ruleIQ/services/neo4j_service.py

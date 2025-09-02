@@ -1,7 +1,7 @@
-Ž
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
- #:&
-$Ô	 This function is async.Ž
-pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2ff
- &:&
-$Ô	ff This function is async.
+c
+pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
+íí !Y
+pythonS1244:Do not perform equality checks with floating point values. 2
+‚‚ 2Y
+pythonS1244:Do not perform equality checks with floating point values. 2
+ˆˆ 2

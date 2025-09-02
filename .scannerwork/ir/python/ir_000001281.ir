@@ -1,30 +1,25 @@
 
-‘‡"
-    Dependency factory for requiring framework access with specific level.
+ÔÊ"
+    Dependency factory for requiring all of the specified permissions.
 
     Args:
-        framework_id: Framework ID to check access for
-        access_level: Required access level (read, write, admin)
+        permissions: List of permission names (user needs all)
 
     Returns:
         FastAPI dependency function
-    "strframework_id
-‘# ‘(4access_level
-‘6 ‘(P"ö#
+    "strpermissions
+• •(2"Ã#
 !
 
-© ©("#unknown-value#*
+« «("#unknown-value#*
 (
 
- ©(%closure"#new-object#0
-.
+  «(%closure"#new-object#/
+-
 
- ©("#set-field# framework_id:0
-.
-
- ©("#set-field# access_level:-
+  «("#set-field# permissions:-
 +
 
- ©("?python-partial-apply?:
+  «("?python-partial-apply?:
 
-© ©(*9/home/omar/Documents/ruleIQ/api/dependencies/rbac_auth.py
+« «(*9/home/omar/Documents/ruleIQ/api/dependencies/rbac_auth.py

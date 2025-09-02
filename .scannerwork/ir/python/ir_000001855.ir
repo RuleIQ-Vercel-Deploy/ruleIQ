@@ -1,38 +1,66 @@
 
-
-"evidence"str
-"report_title"str
-?6"Generates a report detailing all collected evidence."str
-"total_items"str
-$	"Collected Evidence Report"strself
-¬ ¬(profile
-¬ ¬(&params
-¬( ¬(4"Ý#
-!
-
-¯ ¯(D"#unknown-value#3
-1
-
-¯ ¯(Devidence_items"#unknown-value#&
-$
-
-° ´(	"#new-object#Bdict"
- 
-
-± ±(7
-"	#map-set#:	,
-*
-
-² ²(."
-builtinslen*:Bint"
- 
-
-² ²(."	#map-set#:-
-+
-
-³ ³(C"?python-unknown?:Blist"
- 
-
-³ ³(C"	#map-set#:
-
-° ´(	*B/home/omar/Documents/ruleIQ/services/reporting/report_generator.py
+""Server"str
+0'"Add security headers to all responses"str
+$"Strict-Transport-Security"str
+"1; mode=block"str
+.%"max-age=31536000; includeSubDomains"str
+	"nosniff"str
+"X-XSS-Protection"str
+""Content-Security-Policy"str
+!"X-Content-Type-Options"str
+ "Permissions-Policy"str
+3*"geolocation=(), microphone=(), camera=()"str
+
+"DENY"str
+"Referrer-Policy"str
+"X-Frame-Options"str
+*!"strict-origin-when-cross-origin"str
+"default-src 'self'"strrequest& (6	call_next8 (A"ò
+
+ ('"	call_next:+
+)
+ ('response"#unknown-value#(
+&
+	 	("#get-field# headers:$
+"
+	 	(:	"#array-write#:(
+&
+
+ 
+("#get-field# headers:$
+"
+
+ 
+(0"#array-write#:
+(
+&
+ ("#get-field# headers:$
+"
+ (:"#array-write#:(
+&
+ ("#get-field# headers:$
+"
+ ("#array-write#:(
+&
+ ("#get-field# headers:$
+"
+ (F"#array-write#:(
+&
+ ("#get-field# headers:$
+"
+ (K"#array-write#:(
+&
+ ("#get-field# headers:$
+"
+ (W!"#array-write#: (
+&
+ (##"#get-field# headers:*
+(
+ (#$"
+#binop in#2in:"#Bbool"
+ (#$ * ("\(
+&
+ (%"#get-field# headers:(
+&
+ (&&"#python-array-del#:%""
+ (*>/home/omar/Documents/ruleIQ/api/middleware/security_headers.py

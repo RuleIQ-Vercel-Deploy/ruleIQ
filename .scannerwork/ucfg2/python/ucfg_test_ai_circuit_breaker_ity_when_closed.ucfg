@@ -1,8 +1,8 @@
 
 dtests.unit.services.test_ai_circuit_breaker.TestAICircuitBreaker.test_model_availability_when_closedT
-J/home/omar/Documents/ruleIQ/tests/unit/services/test_ai_circuit_breaker.py- -(+"2*ª
-2. .(=ˆ…
-/ /(C
+J/home/omar/Documents/ruleIQ/tests/unit/services/test_ai_circuit_breaker.py0 0(+"2*ª
+21 1(=ˆ…
+2 2(C
 %1*/
 
 __unknown_file (
@@ -11,7 +11,7 @@ J/home/omar/Documents/ruleIQ/tests/unit/services/test_ai_circuit_breaker.py- 
 
 __unknown_file (
 gemini-2.5-pro2is_model_availableŠ‡
-0 0(E
+3 3(E
 %2*/
 
 __unknown_file (
@@ -23,8 +23,8 @@ J/home/omar/Documents/ruleIQ/tests/unit/services/test_ai_circuit_breaker.py- 
 3*@
 3
 test_ai_circuit_breaker.py"
-2 2(
+5 5(
 implicit return:
--2 -(A
+02 0(A
 circuit_breakerBDB
 @tests.unit.services.test_ai_circuit_breaker.TestAICircuitBreakerH

@@ -1,124 +1,127 @@
 
 "S3518"bool
-†ü"Calculate throughput for a workflow type.
-        
+0.0float
+ !"throughput_per_minute"str
+òè"Calculate throughput for a workflow type.
+
         Args:
             workflow_type: Type of workflow
             time_window_seconds: Time window in seconds for calculation
-            
+
         Returns:
             Throughput metrics
         "str
-0.0float
 "division by zero"bool
-60int
-'"average_duration_ms"str
+("average_duration_ms"str
+60int
 
 	0int
 "a"bool
-  "throughput_per_minute"str
-%"workflows_per_minute"str
-#"workflows_per_second"strself
-™ ™(!workflow_type
-™# ™(5#time_window_seconds
-™7 ™(T"Ú%
+&"workflows_per_minute"str
+$"workflows_per_second"strself
+¯ ¯(workflow_type
+¯ ¯( #time_window_seconds
+¯" ¯(?"Ä%
 #
 
-£ £(!"
+º º(!"
 timetimeBfloat@
 >
 
-£ £(7cutoff_time"#dependent-value#*:BfloatA
+º º(7cutoff_time"#dependent-value#*:BfloatA
 ?
 
-¤ §(	recent_workflows"?python-unknown?:Blist<
+» ¿(	recent_workflows"?python-unknown?:Blist<
 :
 
-ª ª(.workflow_count"
-builtinslen*:Bint@
->
+Â Â(.workflow_count"
+builtinslen*:Bint*
+(
 
-­G ­(^
-workflows_per_second"	#binop >#2>:	Bbool,"*
+Æ4 Æ(K
+"	#binop >#2>:	Bbool,"*
 
-­G ­(^
+Æ4 Æ(K
  *
-­D ­(F2
-­_ ­(c"›,
+Æ1 Æ(32
+ÆL Æ(P"›,
 *
 
-­ ­(C"
+Æ Æ(0"
 #binop !=#2!=:	Bbool"
  
 
-­ ­(C"
+Æ Æ(0"
 #assert#:3
 1
 
-­ ­(C"#dependent-value#*:Bfloat
+Æ Æ(0"#dependent-value#*:Bfloat
 
-­ ­(e"
+Æ Æ(R"
 
-­ ­(e"°&*$workflows_per_second	=
+Æ Æ(R"Í*	1
+/
+
+Å Ç(	workflows_per_second"#id#:=
 ;
 
-® ®(8workflows_per_minute"	#binop *#*2*:A
+È È(8workflows_per_minute"	#binop *#*2*:A
 ?
 
-± ·(	recent_completed"?python-unknown?:Blist3
+Ë Ò(	recent_completed"?python-unknown?:Blist3
 1
 
-¹ ¹(avg_duration_ms"#id#:Bfloat+
+Ô Ô(avg_duration_ms"#id#:Bfloat+
 )
 
-º º("
-__bool__*:BboolH "
+Õ Õ("
+__bool__*:BboolH "
 
-º º( *
-º º(
+Õ Õ( *
+Õ Õ(
 "±8
 6
 
-» »(Y	durations"?python-unknown?:Blist'
+Ö Ø(	durations"?python-unknown?:Blist'
 %
 
-¼ ¼(,"
-builtinssum*:,
+Ù Ù(,"
+builtinssum*:,
 *
 
-¼/ ¼(="
-builtinslen*:Bint,
+Ù/ Ù(="
+builtinslen*:Bint,
 *
 
-¼ ¼(="
-#binop !=#2!=:	Bbool"
+Ù Ù(="
+#binop !=#2!=:	Bbool"
  
 
-¼ ¼(="
-#assert#:D
+Ù Ù(="
+#assert#:D
 B
 
-¼ ¼(=avg_duration_ms"#dependent-value#*:Bfloat"Ô!*(avg_duration_ms2
+Ù Ù(=avg_duration_ms"#dependent-value#*:Bfloat"Ô!*)avg_duration_ms2
 0
 
-¿ ¿($"#get-field# _workflow_stats:+
+Ü Ü($"#get-field# _workflow_stats:+
 )
 
-¿ ¿(3stats"#array-read#:&
+Ü Ü(3 stats"#array-read#:&
 $
 
-À À(=!"#array-write#: &
+Ý Ý(=""#array-write#: !&
 $
 
-Â Æ(	""#new-object#Bdict"
+ß ã(	#"#new-object#Bdict"
  
 
-Ã Ã(8$"	#map-set#:"#"
+à à(8%"	#map-set#:#$"
  
 
-Ä Ä(8&"	#map-set#:"%"
+á á(8'"	#map-set#:#&"
  
 
-Å Å(2)"	#map-set#:"'(
+â â(2*"	#map-set#:#()
 
-Â Æ(	"*D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py
+ß ã(	#*D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py

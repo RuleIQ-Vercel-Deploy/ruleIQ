@@ -1,11 +1,11 @@
 
-<langgraph_agent.agents.agent_core.AgentMetrics.update_tokensJ
-@/home/omar/Documents/ruleIQ/langgraph_agent/agents/agent_core.py ("2*‚	
+<langgraph_agent.agents.agent_core.AgentMetrics.update_tokensL
+@/home/omar/Documents/ruleIQ/langgraph_agent/agents/agent_core.py ("2*‚	
 2
-€ €()|
+‚ ‚()|
 z
 
- (
+ƒ ƒ(
 %1"__id*`
 
 __unknown_file (D*B0
@@ -13,19 +13,19 @@ z
 input_tokensT
 R
 
- ()
+ƒ ƒ()
 %2"__concat*
 
- (
+ƒ ƒ(
 
 %1*
 
- ()
+ƒ ƒ()
 
 input_tokens|
 z
 
- ()B0
+ƒ ƒ()B0
 .langgraph_agent.agents.agent_core.AgentMetrics"
 input_tokens"__id*"
 
@@ -34,7 +34,7 @@ z
 %2}
 {
 
-‚ ‚(
+„ „(
 %3"__id*a
 
 __unknown_file (E*C0
@@ -42,19 +42,19 @@ z
 output_tokensU
 S
 
-‚ ‚(+
+„ „(+
 %4"__concat*
 
-‚ ‚(
+„ „(
 
 %3*
 
-‚ ‚(+
+„ „(+
 
 output_tokens}
 {
 
-‚ ‚(+C0
+„ „(+C0
 .langgraph_agent.agents.agent_core.AgentMetrics"
 output_tokens"__id*"
 
@@ -63,7 +63,7 @@ S
 %4}
 {
 
-ƒ0 ƒ(B
+…0 …(B
 %5"__id*a
 
 __unknown_file (E*C0
@@ -71,7 +71,7 @@ S
 output_tokens|
 z
 
-ƒ ƒ(-
+… …(-
 %6"__id*`
 
 __unknown_file (D*B0
@@ -79,19 +79,19 @@ z
 input_tokensJ
 H
 
-ƒ ƒ(B
+… …(B
 %7"__concat*
 
-ƒ ƒ(-
+… …(-
 
 %6*
 
-ƒ0 ƒ(B
+…0 …(B
 
 %5|
 z
 
-ƒ ƒ(BB0
+… …(BB0
 .langgraph_agent.agents.agent_core.AgentMetrics"
 total_tokens"__id*"
 
@@ -101,10 +101,12 @@ z
 3*5
 3
 agent_core.py"
-… …(
-implicit return:
- (-
-input_tokens:
-/ (A
+‡ ‡(
+implicit return:
+
+ (-
+input_tokens:
+
+/ (A
 output_tokensB20
 .langgraph_agent.agents.agent_core.AgentMetricsH

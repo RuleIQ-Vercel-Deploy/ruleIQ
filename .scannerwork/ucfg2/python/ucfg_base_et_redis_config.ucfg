@@ -1,14 +1,14 @@
 
 'config.base.BaseConfig.get_redis_config6
-*/home/omar/Documents/ruleIQ/config/base.py¢ ¢("2*É
+*/home/omar/Documents/ruleIQ/config/base.py¨ ¨("2*É
 2
-£ £(*
+© ©(*
 
-¤ ¨(	
+ª ®(	
 %1"dicta
 _
 
-¥ ¥(!
+« «(!
 %2"__id*E
 
 __unknown_file ()*'
@@ -16,7 +16,7 @@ _
 	REDIS_URLŒ
 ‰
 
-¥ ¥(!
+« «(!
 %3"__mapSet*"
 
 __unknown_file (
@@ -31,7 +31,7 @@ _
 %2m
 k
 
-¦ ¦(9
+¬ ¬(9
 %4"__id*Q
 
 __unknown_file (5*3
@@ -39,7 +39,7 @@ k
 REDIS_MAX_CONNECTIONS˜
 •
 
-¦ ¦(9
+¬ ¬(9
 %5"__mapSet*"
 
 __unknown_file (
@@ -54,7 +54,7 @@ k
 %4n
 l
 
-§  §(;
+­  ­(;
 %6"__id*R
 
 __unknown_file (6*4
@@ -62,7 +62,7 @@ l
 REDIS_DECODE_RESPONSES™
 –
 
-§ §(;
+­ ­(;
 %7"__mapSet*"
 
 __unknown_file (
@@ -76,7 +76,7 @@ l
 
 %6"
 
-¤ ¨(	
+ª ®(	
 
 %1B
 config.base.BaseConfigH

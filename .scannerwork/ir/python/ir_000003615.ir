@@ -1,32 +1,26 @@
 
-'"API v1 health check endpoint"str
-"timestamp"str
-"status"str
-"api_version"str
-
-"1.0.0"str
-	"healthy"str
-"v1"str
-		"version"str"ñ&
-$
+0.1float
+	0.7float
+0.2float
+.%"Calculate risk reduction percentage"strself
+Ì" Ì(&"‚3
+1
 
-« °("#new-object#Bdict"
- 
+Î Î(/"#get-field# current_maturity:(
+&
 
-¬ ¬("	#map-set#:%
-#
+Î Î(5"#get-field# value:3
+1
 
-­ ­( "
-timetimeBfloat"
- 
+Î Î(;"#dependent-value#*:Bfloat0
+.
 
-­ ­( "	#map-set#:"
- 
+Î Î(<"#dependent-value#:Bfloat(
+&
 
-® ®("	#map-set#:	
-"
- 
+Î Î(B
+"
+builtinsmin*:	
 
-¯ ¯("	#map-set#:
-
-« °(*'/home/omar/Documents/ruleIQ/api/main.py
+Î Î(B
+*I/home/omar/Documents/ruleIQ/services/compliance/cco_strategic_playbook.py

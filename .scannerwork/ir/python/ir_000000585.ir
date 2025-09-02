@@ -1,48 +1,29 @@
 
-
-"jurisdiction"str
-"domain"str
-"domain_requirements"str
-\S"Natural language query: What are the requirements for [DOMAIN] in [JURISDICTION]?"str
-‡ý"
-        MATCH (domain:ComplianceDomain {name: $domain})
-              -[:GOVERNS]->(reg:Regulation {jurisdiction: $jurisdiction})
-              -[:REQUIRES]->(req:Requirement)
-        RETURN reg.name AS regulation,
-               COLLECT({
-                 title: req.title,
-                 description: req.description,
-                 mandatory: req.mandatory,
-                 deadline: req.deadline,
-                 article_reference: req.article_reference
-               }) AS requirements
-        "strself
-Ÿ Ÿ(domain
-   (jurisdiction
-¡ ¡("Ó(
+!"regulatory_convergence"str
+ÛÑ"
+        MATCH (j1:Jurisdiction)-[:ENFORCES]->(r1:Regulation)-[:REQUIRES]->(req1:Requirement)
+        MATCH (j2:Jurisdiction)-[:ENFORCES]->(r2:Regulation)-[:REQUIRES]->(req2:Requirement)
+        WHERE j1.code <> j2.code 
+          AND req1.description = req2.description
+        RETURN DISTINCT req1.title AS common_requirement,
+               COLLECT(DISTINCT j1.code + ':' + r1.name) AS regulations
+        ORDER BY size(COLLECT(DISTINCT j1.code)) DESC
+        "str
+8/"Find common requirements across jurisdictions"strself
+¿* ¿(."Û(
 &
-¥ ¥(‘query"#id#:Bstr.
-,
-
-³ ³(Aparams"#new-object#Bdict"
- 
-
-³ ³("	"	#map-set#:"
- 
-
-³$ ³(@"	#map-set#:
-#
+Â Â(åquery"#id#:Bstr#
 !
 
-´ ´(9"#unknown-value#,
+Ì Ì(1"#unknown-value#,
 *
 
-´ ´(9results"#unknown-value#&
+Ì Ì(1results"#unknown-value#&
 $
 
-µ µ(/"#new-object#Bdict"
+Í Í(2"#new-object#Bdict"
  
 
-µ µ(."	#map-set#:
+Í Í(1	"	#map-set#:
 
-µ µ(/*5/home/omar/Documents/ruleIQ/services/neo4j_service.py
+Í Í(2*5/home/omar/Documents/ruleIQ/services/neo4j_service.py

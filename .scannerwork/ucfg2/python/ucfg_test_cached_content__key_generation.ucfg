@@ -1,15 +1,15 @@
 
 `tests.unit.services.test_cached_content.TestGoogleCachedContentManager.test_cache_key_generationP
-F/home/omar/Documents/ruleIQ/tests/unit/services/test_cached_content.pyA A(!"2*á
-2B B(A}
+F/home/omar/Documents/ruleIQ/tests/unit/services/test_cached_content.pyC C(!"2*á
+2D D(A}
 {
-E E(/
+G G(/
 %1"__id*c
 
 __unknown_file (G*E-
 +services.ai.cached_content.CacheContentType"
 ASSESSMENT_CONTEXTÓÐ
-D F(	
+F H(	
 %2*-
 
 __unknown_file (
@@ -27,20 +27,20 @@ F/home/omar/Documents/ruleIQ/tests/unit/services/test_cached_content.pyA A(!"
 __unknown_file (
 tech_company2_generate_cache_key>
 <
-D F(	
+F H(	
 key1"__id*"
 
 __unknown_file (
 
 %2}
 {
-H H(/
+J J(/
 %3"__id*c
 
 __unknown_file (G*E-
 +services.ai.cached_content.CacheContentType"
 ASSESSMENT_CONTEXTÓÐ
-G I(	
+I K(	
 %4*-
 
 __unknown_file (
@@ -58,14 +58,14 @@ F/home/omar/Documents/ruleIQ/tests/unit/services/test_cached_content.pyA A(!"
 __unknown_file (
 tech_company2_generate_cache_key>
 <
-G I(	
+I K(	
 key2"__id*"
 
 __unknown_file (
 
 %4Ž
 ‹
-J J(
+L L(
 %5"	__compare*"
 
 __unknown_file (
@@ -78,7 +78,7 @@ F/home/omar/Documents/ruleIQ/tests/unit/services/test_cached_content.pyA A(!"
 __unknown_file (
 
 key2pn
-K K(,
+M M(,
 %6*$
 
 __unknown_file (
@@ -90,13 +90,13 @@ F/home/omar/Documents/ruleIQ/tests/unit/services/test_cached_content.pyA A(!"
 gai_cache:2
 startswith}
 {
-O O(/
+Q Q(/
 %7"__id*c
 
 __unknown_file (G*E-
 +services.ai.cached_content.CacheContentType"
 ASSESSMENT_CONTEXTÏÌ
-N P(	
+P R(	
 %8*-
 
 __unknown_file (
@@ -113,14 +113,14 @@ startswith}
 __unknown_file (
 tech_company2_generate_cache_key>
 <
-N P(	
+P R(	
 key3"__id*"
 
 __unknown_file (
 
 %8Ž
 ‹
-Q Q(
+S S(
 %9"	__compare*"
 
 __unknown_file (
@@ -136,8 +136,8 @@ startswith}
 3*<
 3
 test_cached_content.py"
-S S(
+U U(
 implicit return:
-A( A(5
+C( C(5
 cache_managerBJH
 Ftests.unit.services.test_cached_content.TestGoogleCachedContentManagerH

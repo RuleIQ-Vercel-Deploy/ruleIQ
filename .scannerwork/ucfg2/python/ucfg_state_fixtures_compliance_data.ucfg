@@ -1,15 +1,15 @@
 
 >tests.fixtures.state_fixtures.StateBuilder.add_compliance_dataF
-</home/omar/Documents/ruleIQ/tests/fixtures/state_fixtures.pyI I("2*é
-2J J("y
+</home/omar/Documents/ruleIQ/tests/fixtures/state_fixtures.pyK K("2*é
+2L L("y
 w
-K K(
+M M(
 %2"__id*_
 
 __unknown_file (C*A,
 *tests.fixtures.state_fixtures.StateBuilder"
 compliance_data¢Ÿ
-K K()
+M M()
 %1"dict.__setitem__*"
 
 __unknown_file (
@@ -23,10 +23,10 @@ w
 __unknown_file (	
 
 value2__setitem__":
-L L(.,
+N N(.,
 *tests.fixtures.state_fixtures.StateBuilder:
-I" I(*
+K" K(*
 key:
-I, I(6
+K, K(6
 valueB.,
 *tests.fixtures.state_fixtures.StateBuilderH

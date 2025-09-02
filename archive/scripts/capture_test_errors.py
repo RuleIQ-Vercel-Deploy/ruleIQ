@@ -5,10 +5,10 @@ import traceback
 
 # Force test database
 os.environ["DATABASE_URL"] = (
-    "postgresql://postgres:postgres@localhost:5433/compliance_test"
+    os.getenv("TEST_DATABASE_URL", "postgresql://postgres:postgres@localhost:5433/compliance_test")
 )
 os.environ["TEST_DATABASE_URL"] = (
-    "postgresql://postgres:postgres@localhost:5433/compliance_test"
+    os.getenv("TEST_DATABASE_URL", "postgresql://postgres:postgres@localhost:5433/compliance_test")
 )
 
 # Remove Doppler
@@ -31,7 +31,7 @@ from database import (
 from datetime import datetime, timedelta
 from decimal import Decimal
 
-engine = create_engine("postgresql://postgres:postgres@localhost:5433/compliance_test")
+engine = create_engine(os.getenv("TEST_DATABASE_URL", "postgresql://postgres:postgres@localhost:5433/compliance_test"))
 Base.metadata.create_all(bind=engine)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

@@ -1,21 +1,21 @@
 
 ?monitoring.langgraph_metrics.PerformanceAnalyzer.analyze_trendsP
-D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py” ”("2*©
+D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.pyÓ Ó("2*©
 2
-• œ(
+Ô Û(
 
-Ÿ ¤(	
+Þ ã(	
 %1"dict
 }
 
-    (2
+ß  ß(2
 %2"__id*c
 
 __unknown_file (G*E2
 0monitoring.langgraph_metrics.PerformanceAnalyzer"
 _node_trackerHF
 
-    (C
+ß  ß(C
 %3*"
 
 __unknown_file (
@@ -23,7 +23,7 @@ D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py” ”("
 %22get_node_stats™
 –
 
-   (C
+ß ß(C
 %4"__mapSet*"
 
 __unknown_file (
@@ -38,14 +38,14 @@ D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py” ”("
 %3„
 
 
-¡$ ¡(:
+à$ à(:
 %5"__id*g
 
 __unknown_file (K*I2
 0monitoring.langgraph_metrics.PerformanceAnalyzer"
 _workflow_trackerLJ
 
-¡$ ¡(O
+à$ à(O
 %6*"
 
 __unknown_file (
@@ -53,7 +53,7 @@ D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py” ”("
 %52get_workflow_stats
 š
 
-¡ ¡(O
+à à(O
 %7"__mapSet*"
 
 __unknown_file (
@@ -68,14 +68,14 @@ D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py” ”("
 %6
 
 
-¢ ¢(1
+á á(1
 %8"__id*e
 
 __unknown_file (I*G2
 0monitoring.langgraph_metrics.PerformanceAnalyzer"
 _memory_trackerKI
 
-¢ ¢(E
+á á(E
 %9*"
 
 __unknown_file (
@@ -83,7 +83,7 @@ D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py” ”("
 %82get_memory_trends—
 ”
 
-¢ ¢(E
+á á(E
 %10"__mapSet*"
 
 __unknown_file (
@@ -97,14 +97,14 @@ D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py” ”("
 
 %9
 
-£ £(>
+â â(>
 %11*P
 
 __unknown_file (42
 0monitoring.langgraph_metrics.PerformanceAnalyzer2generate_recommendationsš
 —
 
-£ £(>
+â â(>
 %12"__mapSet*"
 
 __unknown_file (
@@ -118,10 +118,10 @@ D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py” ”("
 
 %11"
 
-Ÿ ¤(	
+Þ ã(	
 
 %1:
 
-” ”(3
+Ó Ó(3
 window_hoursB42
 0monitoring.langgraph_metrics.PerformanceAnalyzerH

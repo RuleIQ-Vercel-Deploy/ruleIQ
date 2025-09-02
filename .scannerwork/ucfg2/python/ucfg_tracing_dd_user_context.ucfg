@@ -1,6 +1,6 @@
 
 ,config.tracing.CustomTracer.add_user_context9
--/home/omar/Documents/ruleIQ/config/tracing.pyÑ Ñ("2*}
+-/home/omar/Documents/ruleIQ/config/tracing.pyÏ Ï("2*}
 2
 Ò Ò('d
 b
@@ -16,7 +16,7 @@ b
 3
 
 tracing.py"
-Û Û
+Ü Ü
 implicit return*Ë
 4
 Ø Ø(J´±
@@ -59,12 +59,12 @@ tracing.py"
 Ô Ô(
 void:
 
-Ñ Ñ(#
+Ð Ð(
 span:
 
-Ñ% Ñ(1	
+Ð Ð( 	
 user_id:#
 
-Ñ3 Ñ(\
+Ð" Ð(K
 business_profile_idB
 config.tracing.CustomTracerH

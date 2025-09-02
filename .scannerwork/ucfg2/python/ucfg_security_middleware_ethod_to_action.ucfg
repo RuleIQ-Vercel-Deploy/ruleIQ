@@ -1,14 +1,14 @@
 
 <security_middleware.SecurityMiddleware._map_method_to_actionI
-=/home/omar/Documents/ruleIQ/middleware/security_middleware.pyû û("2*
+=/home/omar/Documents/ruleIQ/middleware/security_middleware.py€ €("2*
 2
-ü „(
+ ‰(
 
-… ‹(	
+Š (	
 %1"dictŽ
 ‹
 
-† †(
+‹ ‹(
 %2"__mapSet*"
 
 __unknown_file (
@@ -22,7 +22,7 @@
 read‘
 Ž
 
-‡ ‡(
+Œ Œ(
 %3"__mapSet*"
 
 __unknown_file (
@@ -37,7 +37,7 @@
 create
 
 
-ˆ ˆ(
+ (
 %4"__mapSet*"
 
 __unknown_file (
@@ -52,7 +52,7 @@
 update’
 
 
-‰ ‰(
+Ž Ž(
 %5"__mapSet*"
 
 __unknown_file (
@@ -67,7 +67,7 @@
 update“
 
 
-Š Š(
+ (
 %6"__mapSet*"
 
 __unknown_file (
@@ -83,7 +83,7 @@
 deleteF
 D
 
-… ‹(	
+Š (	
 
 method_map"__id*"
 
@@ -91,7 +91,7 @@ method_map"__id*"
 
 %1ž›
 
-Œ Œ(-
+‘ ‘(-
 %7"dict.get**
 
 __unknown_file (
@@ -107,10 +107,10 @@ method_map*&
 __unknown_file (
 read2get"
 
-Œ Œ(-
+‘ ‘(-
 
 %7:
 
-û$ û(/
+€$ €(/
 methodB*(
 &security_middleware.SecurityMiddlewareH

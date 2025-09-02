@@ -1,16 +1,16 @@
 
 Jservices.data_access_service.DataAccessService.can_access_business_profileE
-;/home/omar/Documents/ruleIQ/services/data_access_service.pyF F(#"2*Ú
-2L V(G
+;/home/omar/Documents/ruleIQ/services/data_access_service.pyG G(#"2*Ú
+2J T(G
 E
-W7 W(>
+U7 U(>
 %12"__id*,
 
 __unknown_file (*
 
 user"
 id•¢
-W W(?
+U U(?
 %13*N
 
 __unknown_file (20
@@ -20,14 +20,14 @@ E
 
 %122get_user_data_access_levelG
 E
-W W(?
+U U(?
 access_level"__id*#
 
 __unknown_file (
 
 %13õ
 ò
-Z Z(%
+X X(%
 %14"	__compare*"
 
 __unknown_file (
@@ -43,8 +43,8 @@ E
 13
 8
 11*$
-13[ [("
-[ [(
+13Y Y("
+Y Y(
 
 True*$
 4p p("
@@ -135,15 +135,15 @@ H
 c c(	
 
 False*Â
-11_ a(p
+11] a(p
 n
-_ _(
+^ ^(
 %6"__id*V
 
 __unknown_file (:*80
 .services.data_access_service.DataAccessService"
 dbnl
-_ _(4
+^ ^(.
 %7*"
 
 __unknown_file (
@@ -154,14 +154,14 @@ n
 
 BusinessProfile2queryk
 i
-` `("
+_ _(*
 %8"__id*Q
 
 __unknown_file (5*3+
 )database.business_profile.BusinessProfile"
 idí
 è
-` `(0
+_ _(8
 %9"	__compare*"
 
 __unknown_file (
@@ -175,7 +175,7 @@ i
 
 
 profile_idca
-_ a(
+^ _(9
 %10*"
 
 __unknown_file (
@@ -185,14 +185,14 @@ profile_idca
 __unknown_file (
 
 %92filter?=
-_ a(
+^ `(
 %11*#
 
 __unknown_file (
 
 %102firstB
 @
-_ a(	
+] a(	
 profile"__id*#
 
 __unknown_file (
@@ -200,11 +200,11 @@ profile_idca
 %11*
 9
 10:
-H H(
+H H(!
 user:
-I I(
+H# H(3
 
 profile_id:
-J J(%
+H5 H(R
 profile_owner_idB20
 .services.data_access_service.DataAccessServiceH

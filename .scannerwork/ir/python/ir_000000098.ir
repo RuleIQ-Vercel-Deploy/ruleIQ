@@ -4,44 +4,44 @@
 .%"Make CollectionResult subscriptable"str
 "collection_time_ms"str
 "data"str
-"status"strselfP P(keyP P($ orchestrator_v2.CollectionStatus"T*
+"status"strselfU U(keyU U($ orchestrator_v2.CollectionStatus"T*
 (
-S S("
+X X("
 #binop ==#2==:Bbool&"$
-S S( *S S(
-2U U("=)
+X X( *X X(
+2Z Z("=)
 '
-T T( "#get-field# evidence:
-T T( "V*
+Y Y( "#get-field# evidence:
+Y Y( "V*
 (
-U U(("
+Z Z(("
 #binop ==#2==:Bbool&"$
-U U(( *U U(2W W("d)
+Z Z(( *Z Z(2\ \("d)
 '
-V V( 	"#get-field# duration:%
+[ [( 	"#get-field# duration:%
 #
-V V('"	#binop *#*2*:	
+[ [('"	#binop *#*2*:	
 
-V V('"L*
+[ [('"L*
 (
-W W("
+\ \("
 #binop ==#2==:Bbool"
-W W( *W W("~'
+\ \( *\ \("~'
 %
-Y3 Y(>"#get-field# status:)
+` `()"#get-field# status:)
 '
-Y( Y(Q"#is-instance#:Bbool&"$
-Y( Y(Q *Y% Y('2YR Y(V">*
+` `(<"#is-instance#:Bbool&"$
+` `(< *` `(2a a(">*
 (
-Z Z(!"
+c c(!"
 builtinsgetattr*:
-Z Z(!"c'
+c c(!"c'
 %
-Y Y("#get-field# status:&
+_ _("#get-field# status:&
 $
-Y Y($"#get-field# value:
-Y Y(b	";'
+_ _(!"#get-field# value:
+_ a( 	";'
 %
-YW Y(b"#get-field# status:
-Y Y(b	"$	*
-Y Y(b*@/home/omar/Documents/ruleIQ/services/evidence/orchestrator_v2.py
+a a( "#get-field# status:
+_ a( 	"$	*
+^ b(*@/home/omar/Documents/ruleIQ/services/evidence/orchestrator_v2.py

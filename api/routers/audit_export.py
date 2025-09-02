@@ -127,7 +127,7 @@ async def get_recent_audit_logs(
     for log in logs:
         try:
             metadata = json.loads(log.metadata) if log.metadata else {}
-        except:
+        except Exception:
             metadata = {}
 
         entry = AuditLogEntry(
@@ -335,7 +335,7 @@ def _export_json(logs: List[AuditLog], user: User) -> Response:
     for log in logs:
         try:
             metadata = json.loads(log.metadata) if log.metadata else {}
-        except:
+        except Exception:
             metadata = {}
 
         data.append(

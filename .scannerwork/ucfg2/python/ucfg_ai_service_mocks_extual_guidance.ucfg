@@ -1,10 +1,10 @@
 
 Fai_service_mocks.MockComplianceAssistant._generate_contextual_guidanceG
-;/home/omar/Documents/ruleIQ/tests/mocks/ai_service_mocks.py– –(%"2*–
+;/home/omar/Documents/ruleIQ/tests/mocks/ai_service_mocks.pyŸ Ÿ(%"2*–
 13
-¥ ¥(,{y
+° °(,{y
 
-¥ ¥(,
+° °(,
 %5*.
 
 __unknown_file (
@@ -16,9 +16,9 @@ Fai_service_mocks.MockComplianceAssistant._generate_contextual_guidanceG
 4
 12*”
 14
-£ £('xv
+® ®('xv
 
-£ £('
+® ®('
 %6*.
 
 __unknown_file (
@@ -30,9 +30,9 @@ Fai_service_mocks.MockComplianceAssistant._generate_contextual_guidanceG
 13
 11*„
 15
-¢ ¢(/TR
+­ ­(/TR
 
-¢ ¢(!
+­ ­(!
 %7"	str.lower*,
 
 __unknown_file (
@@ -40,7 +40,7 @@ Fai_service_mocks.MockComplianceAssistant._generate_contextual_guidanceG
 framework_id2lower’
 
 
-¢ ¢(/
+­ ­(/
 %8"	__compare*"
 
 __unknown_file (
@@ -56,9 +56,9 @@ Fai_service_mocks.MockComplianceAssistant._generate_contextual_guidanceG
 14
 4*¦
 2
-— —(JUS
+¢ ¢(JUS
 
-˜ ˜(.
+£ £(.
 %9"	str.lower*-
 
 __unknown_file (
@@ -66,14 +66,14 @@ Fai_service_mocks.MockComplianceAssistant._generate_contextual_guidanceG
 question_text2lowerJ
 H
 
-˜ ˜(.
+£ £(.
 question_lower"__id*"
 
 __unknown_file (
 
 %9US
 
-š š(
+¥ ¥(
 %10"	str.lower*,
 
 __unknown_file (
@@ -81,7 +81,7 @@ H
 framework_id2lower
 
 
-š š()
+¥ ¥()
 %11"	__compare*"
 
 __unknown_file (
@@ -95,32 +95,32 @@ H
 gdpr*
 15
 10*Ì
-4© ©(Õ¢
+4´ ´(Õ¢
 Ÿ
-© ©(Õ
+´ ´(Õ
 %1"__concat*+
 
-© ©(*
+´ ´(*
 This question relates to *
 
-©+ ©(7
+´+ ´(7
 
 framework_id*²
-©8 ©(Ô¢Ÿ
+´8 ´(Ô¢Ÿ
 œ compliance requirements. Proper implementation requires understanding the specific context of your organization and the applicable regulatory requirements."
-© ©(Õ
+´ ´(Õ
 
 %1*Ž
-5œ œ(þ"û
-œ œ(þëè
+5§ §(þ"û
+§ §(þëè
 åPersonal data under GDPR includes any information relating to an identified or identifiable natural person. This includes names, email addresses, IP addresses, and even pseudonymized data that can be linked back to an individual.*ó
-6   (ã"à
-   (ãÐÍ
+6« «(ã"à
+« «(ãÐÍ
 ÊData breaches must be reported to supervisory authorities within 72 hours of becoming aware of the breach. If the breach poses a high risk to individuals, they must also be notified without undue delay.*“
 7
-Ÿ Ÿ(+zx
+ª ª(+zx
 
-Ÿ Ÿ(+
+ª ª(+
 %2*.
 
 __unknown_file (
@@ -132,13 +132,13 @@ H
 breach2__contains__*
 4
 6*å
-8ž ž(Õ"Ò
-ž ž(ÕÂ¿
+8© ©(Õ"Ò
+© ©(ÕÂ¿
 ¼GDPR requires that consent be freely given, specific, informed, and unambiguous. It must be as easy to withdraw consent as it is to give it, and consent cannot be bundled with other terms.*”
 9
- (,{y
+¨ ¨(,{y
 
- (,
+¨ ¨(,
 %3*.
 
 __unknown_file (
@@ -150,9 +150,9 @@ H
 7
 8*œ
 10
-› ›(0
+¦ ¦(0
 
-› ›(0
+¦ ¦(0
 %4*.
 
 __unknown_file (
@@ -163,16 +163,16 @@ H
 personal data2__contains__*
 5
 9*÷
-11¤ ¤(æ"ã
-¤ ¤(æÓÐ
+11¯ ¯(æ"ã
+¯ ¯(æÓÐ
 ÍISO 27001 requires a systematic approach to risk management. Organizations must identify information security risks, assess their likelihood and impact, and implement appropriate controls to mitigate them.*ÿ
-12¦ ¦(î"ë
-¦ ¦(îÛØ
+12± ±(î"ë
+± ±(îÛØ
 ÕISO 27001 controls are safeguards implemented to reduce information security risks. The standard provides 114 controls across 14 categories, but organizations should select controls based on their risk assessment.:
 
-–, –(>
+   ( 
 question_text:
 
-–@ –(Q
+ "  (3
 framework_idB,*
 (ai_service_mocks.MockComplianceAssistantH

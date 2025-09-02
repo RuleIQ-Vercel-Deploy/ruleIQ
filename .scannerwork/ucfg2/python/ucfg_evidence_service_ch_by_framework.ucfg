@@ -1,17 +1,17 @@
 
 =services.evidence_service.EvidenceService.search_by_frameworkD
-8/home/omar/Documents/ruleIQ/services/evidence_service.py› ›("3*;
+8/home/omar/Documents/ruleIQ/services/evidence_service.py£ £("3*;
 3
 evidence_service.py"
-¡ ¡(
+© ©(
 implicit return:
 
-œ œ(	
+¤ ¤(	
 user_id:
 
-œ œ(%
+¤ ¤(%
 	framework:
 
-œ' œ(E
+¤' ¤(E
 search_filtersB-+
 )services.evidence_service.EvidenceServiceH

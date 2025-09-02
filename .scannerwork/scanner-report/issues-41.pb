@@ -1,27 +1,27 @@
 c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-¨¨6 G“
+¬¬6 G“
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-ÆÆ (:)
+ÌÌ (:)
 ')
-ÆÆ 	This function is async.M
+ÌÌ 	This function is async.M
 pythonS1172.Remove the unused function parameter "prompt". 2
-ÅÅ" -X
+ÖÖ" -X
 pythonS905:Remove or refactor this statement; it has no side effects. 2
-ÒÒ T
+ôô T
 pythonS11725Remove the unused function parameter "response_text". 2
-ŠŠ “
+®® “
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-¸¸ ":)
+áá ":)
 ')
-¸¸ 	This function is async.“
+áá 	This function is async.“
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-ÅÅ  :)
+îî  :)
 ')
-ÅÅ 	This function is async.c
+îî 	This function is async.c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-ÈÈ $‘
+ññ $‘
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-‘‘
+ÂÂ
  :'
-%)‘‘ This function is async.
+%)ÂÂ This function is async.

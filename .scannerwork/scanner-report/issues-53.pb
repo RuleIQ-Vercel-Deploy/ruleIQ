@@ -3,24 +3,24 @@
 544 a
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 288 /“
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-›› :)
+¥¥ :)
 '5
-›› 	This function is async.“
+¥¥ 	This function is async.“
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-‚‚ -:)
+™™ -:)
 '5
-‚‚ 	This function is async.c
+™™ 	This function is async.c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-žž  “
+··  “
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-¢¢ :)
+»» :)
 '5
-¢¢ 	This function is async.“
+»» 	This function is async.“
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-ÎÎ %:)
+çç %:)
 '5
-ÎÎ 	This function is async.‘
+çç 	This function is async.‘
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-²²
+ÏÏ
  #:'
-%5²² This function is async.
+%5ÏÏ This function is async.

@@ -566,7 +566,8 @@ async def submit_assessment_answer(
     "/sessions/{token}/results",
     response_model=AssessmentResultsResponse,
     summary="Get AI assessment results",
-    description="Generate comprehensive assessment results with AI insights and conversion opportunities",
+    description= \
+        "Generate comprehensive assessment results with AI insights and conversion opportunities",
     dependencies=[Depends(rate_limit(requests_per_minute=15))],
 )
 async def get_assessment_results(

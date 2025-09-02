@@ -1,9 +1,9 @@
 
 5services.context_service.SessionContext.__post_init__A
-7/home/omar/Documents/ruleIQ/services/context_service.py` `("2*
-2a a('w
+7/home/omar/Documents/ruleIQ/services/context_service.pyi i("2*
+2j j('w
 u
-a a(
+j j(
 %10"__id*\
 
 __unknown_file (@*>)
@@ -13,13 +13,13 @@ u
 12*6
 3
 context_service.py"
-l l
+v v
 implicit return*¢
-4j j(#
-j! j(#
+4s s(#
+s! s(#
 %1"listt
 r
-j j(#<)
+s s(#<)
 'services.context_service.SessionContext"
 trust_signals"__id*"
 
@@ -27,9 +27,9 @@ r
 
 %1*
 3*‹
-5i i(%t
+5r r(%t
 r
-i i(
+r r(
 %2"__id*Z
 
 __unknown_file (>*<)
@@ -37,11 +37,11 @@ r
 trust_signals*
 3
 4*§
-6h h((
-h& h((
+6q q((
+q& q((
 %3"dicty
 w
-h h((A)
+q q((A)
 'services.context_service.SessionContext"
 conversation_state"__id*"
 
@@ -49,9 +49,9 @@ w
 
 %3*
 5*
-7g g(*y
+7p p(*y
 w
-g g("
+p p("
 %4"__id*_
 
 __unknown_file (C*A)
@@ -59,11 +59,11 @@ w
 conversation_state*
 5
 6*¢
-8f f(#
-f! f(#
+8o o(#
+o! o(#
 %5"listt
 r
-f f(#<)
+o o(#<)
 'services.context_service.SessionContext"
 context_stack"__id*"
 
@@ -71,9 +71,9 @@ r
 
 %5*
 7*‹
-9e e(%t
+9n n(%t
 r
-e e(
+n n(
 %6"__id*Z
 
 __unknown_file (>*<)
@@ -81,11 +81,11 @@ r
 context_stack*
 7
 8*¥
-10d d(%
-d# d(%
+10m m(%
+m# m(%
 %7"listv
 t
-d d(%>)
+m m(%>)
 'services.context_service.SessionContext"
 pending_actions"__id*"
 
@@ -93,9 +93,9 @@ t
 
 %7*
 9*
-11c c('v
+11l l('v
 t
-c c(
+l l(
 %8"__id*\
 
 __unknown_file (@*>)
@@ -103,11 +103,11 @@ t
 pending_actions*
 9
 10*¦
-12b b(%
-b# b(%
+12k k(%
+k# k(%
 %9"listv
 t
-b b(%>)
+k k(%>)
 'services.context_service.SessionContext"
 completed_steps"__id*"
 

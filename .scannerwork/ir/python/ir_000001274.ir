@@ -1,25 +1,53 @@
 
-¤š"
-    Dependency factory for requiring specific roles.
+"sub"str
+	"permissions"str
+"roles"str
+ÿõ"
+    Create access token with embedded role and permission claims.
 
     Args:
-        role: Required role name
+        user_id: User ID
+        roles: List of user roles
+        permissions: List of user permissions
 
     Returns:
-        FastAPI dependency function
-    "strrole
-® ®("¼#
+        JWT access token with role claims
+    "str
+"role_details"struser_ide e(rolese e($permissionse& e(<"ó1
+/
+s w(role_claims"#new-object#Bdict+
+)
+t t(1"?python-unknown?:Blist 
+
+t t(1"	#map-set#: 
+
+u u("
+"	#map-set#:	 
+
+v v("	#map-set#:0
+.
+y ~(
+token_data"#new-object#Bdict.
+,
+z z("#dependent-value#*:Bstr 
+
+z z("	#map-set#:"
+ 
+{ {(%"#array-read#: 
+
+{ {(%"	#map-set#: 
+
+| |(""	#map-set#:	"
+ 
+} }(3"#array-read#: 
+
+} }(3"	#map-set#:#
 !
 
-Â Â("#unknown-value#*
-(
+€ €(*"#unknown-value#B
+@
 
-¹ Â(%closure"#new-object#(
-&
+€ €(*",
+api.dependencies.authcreate_access_token:
 
-¹ Â("#set-field# role:-
-+
-
-¹ Â("?python-partial-apply?:
-
-Â Â(*9/home/omar/Documents/ruleIQ/api/dependencies/rbac_auth.py
+€ €(**9/home/omar/Documents/ruleIQ/api/dependencies/rbac_auth.py

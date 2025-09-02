@@ -1,32 +1,37 @@
 
-©Ÿ"
-        MATCH (ea:EnforcementAction)-[:PRECEDENT_FOR]->(ctrl:Control)
-        OPTIONAL MATCH (ctrl)-[:IMPLEMENTS]->(req:Requirement)
-        RETURN ea.target_company AS company,
-               ea.violation_type AS violation,
-               ea.penalty_amount AS fine,
-               ea.lessons_learned AS lessons,
-               ea.date AS incident_date,
-               COLLECT(DISTINCT ctrl.name) AS controls_to_strengthen,
-               COLLECT(DISTINCT req.title) AS requirements_affected
-        ORDER BY ea.penalty_amount DESC
-        "str
-3*"Extract lessons from enforcement actions"str
-"enforcement_lessons"strself
-ë- ë(1"Û(
+"residual_risks"str
+5,"Calculate residual risk across all domains"str
+ÚÐ"
+        MATCH (risk:Risk)
+        OPTIONAL MATCH (risk)<-[m:MITIGATES]-(ctrl:Control)
+        WITH risk, 
+             risk.risk_score AS inherent_risk,
+             COALESCE(AVG(m.mitigation_percentage), 0) AS avg_mitigation
+        RETURN risk.name AS risk_name,
+               risk.category AS category,
+               inherent_risk,
+               ROUND(inherent_risk * (1 - avg_mitigation/100.0), 2) AS residual_risk,
+               CASE 
+                 WHEN inherent_risk * (1 - avg_mitigation/100.0) >= 15 THEN 'HIGH'
+                 WHEN inherent_risk * (1 - avg_mitigation/100.0) >= 10 THEN 'MEDIUM'
+                 ELSE 'LOW'
+               END AS risk_level
+        ORDER BY residual_risk DESC
+        "strself
+’' ’(+"Û(
 &
-î î(³query"#id#:Bstr#
+• •(äquery"#id#:Bstr#
 !
 
-û û(1"#unknown-value#,
+§ §(1"#unknown-value#,
 *
 
-û û(1results"#unknown-value#&
+§ §(1results"#unknown-value#&
 $
 
-ü ü(/"#new-object#Bdict"
+¨ ¨(*"#new-object#Bdict"
  
 
-ü ü(.	"	#map-set#:
+¨ ¨()	"	#map-set#:
 
-ü ü(/*5/home/omar/Documents/ruleIQ/services/neo4j_service.py
+¨ ¨(**5/home/omar/Documents/ruleIQ/services/neo4j_service.py

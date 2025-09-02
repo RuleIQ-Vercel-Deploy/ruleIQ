@@ -1,11 +1,11 @@
 
 9config.logging_config.ComplianceLogger.log_ai_interaction@
-4/home/omar/Documents/ruleIQ/config/logging_config.pyè è("2*Ô
+4/home/omar/Documents/ruleIQ/config/logging_config.pyù ù("2*Ô
 2
-ê ê((n
+† †((n
 l
 
-ë ë(
+° °(
 %1"__id*R
 
 __unknown_file (6*4(
@@ -13,21 +13,21 @@ l
 logger_
 ]
 
-í í(*
+¢ ¢(*
 %2"__concat*&
 
-í í("
+¢ ¢("
 AI interaction with *
 
-í# í((	
+¢# ¢((	
 
 model
 
-ì ò(
+£ ®(
 %3"dictü
 ú
 
-î î(.
+§ §(.
 %4"__mapSet*"
 
 __unknown_file (
@@ -42,7 +42,7 @@ event_type*.
 ai_interactionî
 ë
 
-ï ï(!
+• •(!
 %5"__mapSet*"
 
 __unknown_file (
@@ -58,7 +58,7 @@ event_type*.
 modelù
 ö
 
-ñ ñ(*
+¶ ¶(*
 %6"__mapSet*"
 
 __unknown_file (
@@ -73,7 +73,7 @@ event_type*.
 prompt_typeù
 ö
 
-ó ó(*
+ß ß(*
 %7"__mapSet*"
 
 __unknown_file (
@@ -87,7 +87,7 @@ event_type*.
 
 tokens_usedsq
 
-ë ô(	
+° ©(	
 %8*"
 
 __unknown_file (
@@ -103,15 +103,15 @@ event_type*.
 3*9
 3
 logging_config.py"
-õ õ(
+´ ´(
 implicit return:
 
-è! è(+
+û û(
 model:
 
-è- è(=
+û û(*
 prompt_type:
 
-è? è(`
+û, û(M
 tokens_usedB*(
 &config.logging_config.ComplianceLoggerH

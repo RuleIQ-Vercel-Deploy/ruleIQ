@@ -1,11 +1,11 @@
 
 4audit_logging.AuditLoggingService.log_authenticationJ
->/home/omar/Documents/ruleIQ/services/security/audit_logging.py‹ ‹( "2*…
+>/home/omar/Documents/ruleIQ/services/security/audit_logging.py ( "2*…
 2
-• •('l
+š š('l
 j
 
-— —(4
+œ œ(4
 %1"__id*P
 
 __unknown_file (4*2
@@ -14,10 +14,10 @@ j
 4
 5*¾
 4
-˜ ˜()e
+ ()e
 c
 
-˜ ˜()
+ ()
 %3"__id*I
 
 __unknown_file (-*+ 
@@ -25,7 +25,7 @@ c
 LOGIN>
 <
 
-˜ ˜()
+ ()
 %2"__id*"
 
 __unknown_file (
@@ -34,10 +34,10 @@ c
 7
 8*Å
 5
-˜: ˜(Wl
+: (Wl
 j
 
-˜: ˜(W
+: (W
 %4"__id*P
 
 __unknown_file (4*2 
@@ -45,7 +45,7 @@ j
 LOGIN_FAILED>
 <
 
-˜: ˜(W
+: (W
 %2"__id*"
 
 __unknown_file (
@@ -54,29 +54,29 @@ j
 7
 8*Y
 7
-œ œ(C
+¡ ¡(C
 A
 
-œ œ(
+¡ ¡(
 %5"__id*'
 
 __unknown_file (	
 SUCCESS*
 9*Y
 8
-œ- œ(6C
+¡- ¡(6C
 A
 
-œ- œ(6
+¡- ¡(6
 %5"__id*'
 
 __unknown_file (	
 FAILURE*
 9*Á
 9
-œ- œ(6™–
+¡- ¡(6™–
 
-– Ÿ(	
+› ¤(	
 %6*A
 
 __unknown_file (%#
@@ -112,31 +112,31 @@ user_agent:
 
 db"
 
-– Ÿ(	
+› ¤(	
 
 %6:
 
- (	
+’ ’(	
 user_id:
 
-Ž Ž(
+“ “(
 action:
 
- (	
+” ”(	
 success:
 
- (
+• •(
 
 ip_address:
 
-‘ ‘(
+– –(
 
 user_agent:
 
-’ ’('
+— —('
 
 metadata:
 
-“ “(
+˜ ˜(
 dbB%#
 !audit_logging.AuditLoggingServiceH

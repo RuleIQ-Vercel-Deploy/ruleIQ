@@ -1,5 +1,6 @@
-Y
-pythonS1244:Do not perform equality checks with floating point values. 2
-ËË 1Y
-pythonS1244:Do not perform equality checks with floating point values. 2
-ÌÌ 0
+c
+pythonS2068H"password" detected here, review this potentially hard-coded credential. 2
+
+ *e
+pythonS2068H"password" detected here, review this potentially hard-coded credential. 299 #b
+pythonS3457EAdd replacement fields or use a normal string instead of an f-string. 2AA 5

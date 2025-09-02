@@ -1,10 +1,29 @@
 
-.%"Initialize the global Neo4j service"str"e#
+!"regulatory_convergence"str
+ÛÑ"
+        MATCH (j1:Jurisdiction)-[:ENFORCES]->(r1:Regulation)-[:REQUIRES]->(req1:Requirement)
+        MATCH (j2:Jurisdiction)-[:ENFORCES]->(r2:Regulation)-[:REQUIRES]->(req2:Requirement)
+        WHERE j1.code <> j2.code 
+          AND req1.description = req2.description
+        RETURN DISTINCT req1.title AS common_requirement,
+               COLLECT(DISTINCT j1.code + ':' + r1.name) AS regulations
+        ORDER BY size(COLLECT(DISTINCT j1.code)) DESC
+        "str
+8/"Find common requirements across jurisdictions"strself
+¿* ¿(."Û(
+&
+Â Â(åquery"#id#:Bstr#
 !
 
-Ç Ç('"#unknown-value#,
+Ì Ì(1"#unknown-value#,
 *
 
-Ç Ç('service"#unknown-value#
+Ì Ì(1results"#unknown-value#&
+$
 
-È È(*A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py
+Í Í(2"#new-object#Bdict"
+ 
+
+Í Í(1	"	#map-set#:
+
+Í Í(2*A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py

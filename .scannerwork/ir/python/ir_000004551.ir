@@ -1,39 +1,2 @@
-
-ÞÔ"
-        Wrap a node function with error handling.
-        
-        Args:
-            node_func: The node function to wrap
-            
-        Returns:
-            Wrapped function with error handling
-        "strself
- (	node_func
- (+"ë#
-!
-
-Ù Ù("#unknown-value##
-!
-
-× ×(	"#unknown-value#*
-(
-
-§ ×(%closure"#new-object#-
-+
-
-§ ×("#set-field# node_func:(
-&
-
-§ ×("#set-field# self:-
-+
-
-§ ×("?python-partial-apply?:+
-)
-
-× ×(-"#get-field# __name__:,
-*
-
-× ×(
-"#set-field# __name__:	
-
-Ù Ù(*M/home/omar/Documents/ruleIQ/langgraph_agent/graph/integrated_error_handler.py
+self= =("
+> >(*B/home/omar/Documents/ruleIQ/api/clients/google_workspace_client.py

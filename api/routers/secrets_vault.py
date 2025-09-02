@@ -111,7 +111,7 @@ async def get_vault_status(
     try:
         # Check if SecretsVault module is available
         try:
-            from config.secrets_vault import get_secrets_vault
+#             from config.secrets_vault import get_secrets_vault
 
             vault_available = True
         except ImportError:

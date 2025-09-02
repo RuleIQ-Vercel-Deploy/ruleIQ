@@ -1,79 +1,117 @@
 
-	"100%"str
-!"Define success metrics"str
-"metric"str
-$"Staff training completion"str
-"target"str
-!"Control implementation"str
-"95%"str
-"Gap closure rate"str
+100int
+"level"str
+"low"str
+"medium"str
+"high"str
+"score"str
+	70int
+<3"Assess risk level based on completion and answers"str
+40int
+"Missing controls"str
 
-0int
-"Policy completion"strself
-³  ³($gaps
-³& ³(6list"¬&
+0int
+ "Incomplete assessment"str
+ %"Minor gaps identified"str
+	"factors"str
+50intself
+á á(
+completion
+á! á(2answers
+á4 á(Alist"¹'
+%
+
+ã ã(,"	#binop -#*2-:4
+2
+
+ã ã(-
+risk_score"
+builtinsmax*:*
+(
+
+å å(
+"	#binop >#2>:	Bbool,"*
+
+å å(
+ *
+å å(
+2
+ç ç("1'
+%
+
+æ æ(level"#id#:Bstr"\*
+(
+
+ç ç("	#binop >#2>:Bbool,"*
+
+ç ç( *
+ç ç(2
+é é("1'
+%
+
+è è(level"#id#:Bstr"1'
+%
+
+ê ê(level"#id#:Bstr"ë*level&
 $
 
-¶ ¶(<"#new-object#Bdict"
+ì ô(	"#new-object#Bdict"
  
 
-¶ ¶()"	#map-set#:"
+í í("	#map-set#:"
  
 
-¶+ ¶(;
-"	#map-set#:	&
-$
+î î("	#map-set#:*
+(
 
-· ·(="#new-object#Bdict"
- 
+ñ ñ(""	#binop >#2>:Bbool,"*
 
-· ·(*"	#map-set#:"
- 
-
-·, ·(<"	#map-set#:	&
-$
-
-¸ ¸(D"#new-object#Bdict"
- 
-
-¸ ¸(2"	#map-set#:"
- 
-
-¸4 ¸(C"	#map-set#:&
-$
-
-¹ ¹(B"#new-object#Bdict"
- 
-
-¹ ¹(/"	#map-set#:"
- 
-
-¹1 ¹(A"	#map-set#:	)
+ñ ñ(" *
+ñ ñ(2
+ò ò("š)
 '
 
-µ º(	"#unknown-value#Blist(
+ð ð(="#unknown-value#Blist(
 &
 
-µ º(	"
-#is-exact#:Bbool
+ð ð(= "
+#is-exact#:Bbool
 
 
-µ º(	"
-#assume#::
+ð ð(=!"
+#assume#: :
 8
 
-µ º(	"#set-field# __collection_size:Bint(
+ð ð(=""#set-field# __collection_size:Bint(
 &
 
-µ º(	"#array-add-last#:(
+ð ð(=#"#array-add-last#:(
 &
 
-µ º(	"#array-add-last#:(
+ð ð(=$"#array-add-last#:
+
+ð ò(."ð)
+'
+
+ò ò(.&"#unknown-value#Blist(
 &
 
-µ º(	 "#array-add-last#:(
+ò ò(.'"
+#is-exact#:&Bbool
+
+
+ò ò(.("
+#assume#:':
+8
+
+ò ò(.)"#set-field# __collection_size:&Bint(
 &
 
-µ º(	!"#array-add-last#:
+ò ò(.*"#array-add-last#:&%
 
-µ º(	*;/home/omar/Documents/ruleIQ/tests/mocks/ai_service_mocks.py
+ð ò(."J*+&"
+ 
+
+ï ó(,"	#map-set#:+
+
+ì ô(	*;/home/omar/Documents/ruleIQ/tests/mocks/ai_service_mocks.py

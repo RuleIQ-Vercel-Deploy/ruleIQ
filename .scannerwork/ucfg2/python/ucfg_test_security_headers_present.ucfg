@@ -1,10 +1,10 @@
 
 Btests.test_security.TestDataProtection.test_secure_headers_present>
-2/home/omar/Documents/ruleIQ/tests/test_security.pyÎ Î(#"2*´
+2/home/omar/Documents/ruleIQ/tests/test_security.pyê ê(#"2*´
 2
-Ï Ï(Ajh
+ë ë(Ajh
 
-Ì Ì((
+í í((
 %1*&
 
 __unknown_file (
@@ -16,7 +16,7 @@ Btests.test_security.TestDataProtection.test_secure_headers_present>
 /health2getD
 B
 
-Ì Ì((
+í í((
 
 response"__id*"
 
@@ -25,7 +25,7 @@ B
 %1Q
 O
 
- ("
+ï ï("
 %2"__id*5
 
 __unknown_file (*
@@ -35,14 +35,14 @@ O
 headersC
 A
 
- ("	
+ï ï("	
 headers"__id*"
 
 __unknown_file (
 
 %2ÑÅ
 
-Ò Ò(2
+ñ ñ(2
 %3*'
 
 __unknown_file (
@@ -52,7 +52,7 @@ A
 __unknown_file (
 X-Content-Type-Options2__contains__|z
 
-Ú Ú(+
+ó ó(+
 %4*'
 
 __unknown_file (
@@ -62,7 +62,7 @@ A
 __unknown_file (
 X-Frame-Options2__contains__}{
 
-Û Û(,
+ò ò(,
 %5*'
 
 __unknown_file (
@@ -72,7 +72,7 @@ A
 __unknown_file (
 X-XSS-Protection2__contains__áÑ
 
-Ù Ù(5
+ô ô(5
 %6*'
 
 __unknown_file (
@@ -82,7 +82,7 @@ A
 __unknown_file (
 Strict-Transport-Security2__contains__çä
 
-ı ı(0
+ö ö(0
 %7"__mapGet*'
 
 __unknown_file (
@@ -93,7 +93,7 @@ A
 X-Content-Type-Options2__getitem__ë
 é
 
-ı ı(=
+ö ö(=
 %8"	__compare*"
 
 __unknown_file (
@@ -106,7 +106,7 @@ A
 __unknown_file (	
 nosniffÜÉ
 
-ˆ ˆ()
+õ õ()
 %9"__mapGet*'
 
 __unknown_file (
@@ -117,7 +117,7 @@ A
 X-Frame-Options2__getitem__è
 å
 
-ˆ ˆ(3
+õ õ(3
 %10"	__compare*"
 
 __unknown_file (
@@ -132,9 +132,9 @@ A
 3*6
 3
 test_security.py"
-˘ ˘
+û û
 implicit return:
 
-Î* Î(0
+ê* ê(0
 clientB*(
 &tests.test_security.TestDataProtectionH

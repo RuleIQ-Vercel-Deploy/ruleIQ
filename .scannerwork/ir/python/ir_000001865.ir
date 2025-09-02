@@ -1,52 +1,38 @@
 
-/&"Check if greater than other version."str
+
+"evidence"str
+"report_title"str
+?6"Generates a report detailing all collected evidence."str
+"total_items"str
+$	"Collected Evidence Report"strself
+» »(profile
+» »(&params
+»( »(4"Ý#
+!
 
-0intselfH H(otherH H(,	tuple"ð&
+¾ ¾(D"#unknown-value#3
+1
+
+¾ ¾(Devidence_items"#unknown-value#&
 $
-J J("#get-field# major:&
-$
-J J(&"#get-field# minor:&
-$
-J( J(2"#get-field# patch:(
-&
-J J(3"#unknown-value#Btuple&
-$
-J J(3	"
-#is-exact#:Bbool
-
-J J(3
-"
-#assume#:	8
-6
-J J(3"#set-field# __collection_size:Bint&
-$
-J J(3"#array-add-last#:&
-$
-J J(3"#array-add-last#:&
-$
-J J(3"#array-add-last#:&
-$
-J7 J(B"#get-field# major:&
-$
-JD J(O"#get-field# minor:&
-$
-JQ J(\"#get-field# patch:(
-&
-J6 J(]"#unknown-value#Btuple&
-$
-J6 J(]"
-#is-exact#:Bbool
-
-J6 J(]"
-#assume#:8
-6
-J6 J(]"#set-field# __collection_size:Bint&
-$
-J6 J(]"#array-add-last#:&
-$
-J6 J(]"#array-add-last#:&
-$
-J6 J(]"#array-add-last#:(
-&
-J J(]"	#binop >#2>:Bbool
-J J(]*P/home/omar/Documents/ruleIQ/services/ai/evaluation/golden_datasets/versioning.py
+
+¿ Ã(	"#new-object#Bdict"
+ 
+
+À À(7
+"	#map-set#:	,
+*
+
+Á Á(."
+builtinslen*:Bint"
+ 
+
+Á Á(."	#map-set#:-
++
+
+Â Â(C"?python-unknown?:Blist"
+ 
+
+Â Â(C"	#map-set#:
+
+¿ Ã(	*B/home/omar/Documents/ruleIQ/services/reporting/report_generator.py

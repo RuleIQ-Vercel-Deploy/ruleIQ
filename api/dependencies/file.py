@@ -259,7 +259,7 @@ def check_for_malicious_content(file_content: bytes, filename: str) -> bool:
                 if re.search(pattern, text_content, re.IGNORECASE):
                     logger.warning(f"Suspicious pattern found in {filename}")
                     return False
-        except:
+        except Exception:
             pass
 
     return True
@@ -456,7 +456,8 @@ def get_file_validator(
             ]:
                 raise HTTPException(
                     status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                    detail=f"File rejected - Security analysis: {', '.join(analysis_report.threats_detected)}",
+                    detail= \
+                        f"File rejected - Security analysis: {', '.join(analysis_report.threats_detected)}",
                 )
         elif security_level == "standard":
             if analysis_report.validation_result == ValidationResult.MALICIOUS:

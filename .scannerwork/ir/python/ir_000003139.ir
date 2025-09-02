@@ -1,20 +1,27 @@
 
-#"Log authorization events"strself
-¢ ¢(user_id
-£ £(resource
-§ §(
-permission
-• •(granted
-¶ ¶(metadata
-ß ß('db
-® ®("\#
+8/"Decorator to profile API endpoint performance"strself
+“ “(endpoint
+“ “(,method
+“. “(A"ñ#
 !
 
-´ ≥(		"#unknown-value##
-!
+Å Å(
+"#unknown-value#*
+(
 
-´ ≥(	
-"#unknown-value#
+’ Å(%closure"#new-object#*
+(
 
-´ ≥(	
-*>/home/omar/Documents/ruleIQ/services/security/audit_logging.py
+’ Å("#set-field# method:,
+*
+
+’ Å("#set-field# endpoint:(
+&
+
+’ Å("#set-field# self:-
++
+
+’ Å(	"?python-partial-apply?:
+
+Å Å(
+*:/home/omar/Documents/ruleIQ/config/performance_profiler.py

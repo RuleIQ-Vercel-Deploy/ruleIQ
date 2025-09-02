@@ -1,15 +1,15 @@
 ô
-pythonS7493RUse an asynchronous file API instead of synchronous open() in this async function. 2VV %:(
-&¥MM 	This function is async.ù
+pythonS7493RUse an asynchronous file API instead of synchronous open() in this async function. 2WW %:(
+&¥NN 	This function is async.ù
 pythonS7493RUse an asynchronous file API instead of synchronous open() in this async function. 2
-ÊÊ :*
+ıı :*
 (¥
-ﬁﬁ 	This function is async.ù
+ÌÌ 	This function is async.ù
 pythonS7493RUse an asynchronous file API instead of synchronous open() in this async function. 2
-˜˜ (:*
+ÜÜ (:*
 (¥
-ÔÔ 	This function is async.ù
+˛˛ 	This function is async.ù
 pythonS7493RUse an asynchronous file API instead of synchronous open() in this async function. 2
-∞∞ *:*
+¡¡ *:*
 (¥
-®® 	This function is async.
+ππ 	This function is async.

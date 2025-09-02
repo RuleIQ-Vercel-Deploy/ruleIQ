@@ -1,40 +1,32 @@
 
-"risk_name"str
-"mitigation_chain"str
-ª "
-        MATCH (risk:Risk {name: $risk_name})<-[:MITIGATES]-(control:Control)
-        OPTIONAL MATCH (control)<-[:MONITORS]-(tech:Technology)
-        RETURN risk.name AS risk,
-               risk.risk_score AS inherent_risk,
-               control.name AS control,
-               control.automation_level AS automation,
-               tech.name AS technology,
-               tech.category AS tech_category
+©Ÿ"
+        MATCH (ea:EnforcementAction)-[:PRECEDENT_FOR]->(ctrl:Control)
+        OPTIONAL MATCH (ctrl)-[:IMPLEMENTS]->(req:Requirement)
+        RETURN ea.target_company AS company,
+               ea.violation_type AS violation,
+               ea.penalty_amount AS fine,
+               ea.lessons_learned AS lessons,
+               ea.date AS incident_date,
+               COLLECT(DISTINCT ctrl.name) AS controls_to_strengthen,
+               COLLECT(DISTINCT req.title) AS requirements_affected
+        ORDER BY ea.penalty_amount DESC
         "str
-?6"Trace risk mitigation through controls to technology"strself
-â* â(.	risk_name
-â0 â(>"¯(
+3*"Extract lessons from enforcement actions"str
+"enforcement_lessons"strself
+ƒ- ƒ(1"Û(
 &
-å å(´query"#id#:Bstr.
-,
-
-ð ð()params"#new-object#Bdict"
- 
-
-ð ð(("	#map-set#:#
+† †(³query"#id#:Bstr#
 !
 
-ñ ñ(9	"#unknown-value#,
+“ “(1"#unknown-value#,
 *
 
-ñ ñ(9
-results"#unknown-value#&
+“ “(1results"#unknown-value#&
 $
 
-ò ò(,"#new-object#Bdict"
+” ”(/"#new-object#Bdict"
  
 
-ò ò(+"	#map-set#:
-
+” ”(.	"	#map-set#:
 
-ò ò(,*5/home/omar/Documents/ruleIQ/services/neo4j_service.py
+” ”(/*5/home/omar/Documents/ruleIQ/services/neo4j_service.py

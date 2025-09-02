@@ -1,65 +1,25 @@
 
-"S3518"bool
-0.0float
+90"Backwards compatible blacklist token function."strtoken
+∞ ∞(reason
+∞ ∞(&ttl
+∞( ∞(Akwargs
+∞C ∞(K"dict"‚#
+!
 
-3int
-"division by zero"bool
-=4"Calculate confidence score based on search results"str
-1.0float
-"a"bool
-1.2float
+≥ ≥(+"#unknown-value#.
+,
 
-0intself
-ã ã("results
-ã$ ã(A"|+
-)
-
-ç ç("
-__bool__*:BboolH+
-)
-
-ç ç("#unaryop !#2!:Bbool "
-
-ç ç( *
-ç ç(
-"
-
-é é("⁄?
-=
-
-ë ë(Atop_similarities"?python-unknown?:Blist'
+≥ ≥(+	blacklist"#unknown-value#'
 %
 
-í í(."
-builtinssum*:,
-*
+¥? ¥(G"#unaryop **#2**:+
+)
 
-í1 í(F	"
-builtinslen*:Bint,
-*
+¥ ¥(H	"?python-unknown?:#
+!
 
-í í(F
-"
-#binop !=#2!=:	Bbool"
- 
+¥ ¥(H
+"#unknown-value#
 
-í í(F"
-#assert#:
-C
-A
-
-í í(Favg_similarity"#dependent-value#*:	Bfloat3
-1
-
-ï ï(2"#dependent-value#*:Bfloat4
-2
-
-ï ï(3
-confidence"
-builtinsmin*:*
-(
-
-ó ó(#"
-builtinsround*:
-
-ó ó(#*3/home/omar/Documents/ruleIQ/services/agentic_rag.py
+¥ ¥(H
+*?/home/omar/Documents/ruleIQ/api/dependencies/token_blacklist.py

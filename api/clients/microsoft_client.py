@@ -536,7 +536,7 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
             try:
                 directory_data = await self._make_graph_request("directory")
                 directory = directory_data
-            except:
+            except Exception:
                 directory = {}
 
             quality_score = self._calculate_organization_quality(organization)

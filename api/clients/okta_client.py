@@ -324,7 +324,7 @@ class OktaUserCollector(BaseEvidenceCollector):
                     score -= 0.3
                 elif days_since_login > 30:
                     score -= 0.1
-            except:
+            except Exception:
                 pass  # Ignore date parsing errors
 
         # Check if essential profile fields are filled

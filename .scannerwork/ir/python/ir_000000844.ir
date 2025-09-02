@@ -1,15 +1,38 @@
 
-*!"Check if in testing environment"strself
-Å Å(config.base.Environment"œ.
-,
+"pool_size"str
+"url"str
+
+"max_overflow"str
+"pool_timeout"str
+*!"Get database configuration dict"strself
+Ÿ Ÿ("”&
+$
 
-Ç Ç("#get-field# ENVIRONMENT:*
-(
+¡ ¦(	"#new-object#Bdict/
+-
 
-Ç# Ç(6"#get-field# TESTING:,
-*
+¢ ¢($"#get-field# DATABASE_URL:"
+ 
 
-Ç Ç(6"
-#binop ==#2==:Bbool
+¢ ¢($"	#map-set#:/
+-
 
-Ç Ç(6**/home/omar/Documents/ruleIQ/config/base.py
+£ £(*"#get-field# DB_POOL_SIZE:"
+ 
+
+£ £(*	"	#map-set#:2
+0
+
+¤ ¤(0"#get-field# DB_MAX_OVERFLOW:"
+ 
+
+¤ ¤(0"	#map-set#:
+2
+0
+
+¥ ¥(0"#get-field# DB_POOL_TIMEOUT:"
+ 
+
+¥ ¥(0"	#map-set#:
+
+¡ ¦(	**/home/omar/Documents/ruleIQ/config/base.py

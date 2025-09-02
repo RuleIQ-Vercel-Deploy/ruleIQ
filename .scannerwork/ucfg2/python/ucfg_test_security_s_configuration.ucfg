@@ -1,14 +1,14 @@
 
 ;tests.test_security.TestAPISecurity.test_cors_configuration>
-2/home/omar/Documents/ruleIQ/tests/test_security.py¡ ¡("2*ˆ
+2/home/omar/Documents/ruleIQ/tests/test_security.pyÆ Æ("2*ˆ
 2
-¢ ¢(/
+Ç Ç(/
 
-¥ ¨(
+Ê Í(
 %3"dict§
 ¤
 
-¦ ¦(6
+Ë Ë(6
 %4"__mapSet*"
 
 __unknown_file (
@@ -23,7 +23,7 @@
 https://malicious-site.com§
 ¤
 
-§ §(6
+Ì Ì(6
 %5"__mapSet*"
 
 __unknown_file (
@@ -36,7 +36,7 @@
 __unknown_file (
 GETŠ‡
 
-£ ©(	
+È Î(	
 %6*&
 
 __unknown_file (
@@ -51,7 +51,7 @@
 %3D
 B
 
-£ ©(	
+È Î(	
 
 response"__id*"
 
@@ -60,7 +60,7 @@ B
 %6Q
 O
 
-« «('
+Ð Ð('
 %7"__id*5
 
 __unknown_file (*
@@ -70,14 +70,14 @@ O
 headersH
 F
 
-« «('
+Ð Ð('
 cors_headers"__id*"
 
 __unknown_file (
 
 %7Ž‹
 
-¬ ¬(8
+Ñ Ñ(8
 %8*,
 
 __unknown_file (
@@ -90,12 +90,12 @@ F
 4*8
 3
 test_security.py"
-° °(
+Õ Õ(
 implicit return*¼
 4
-® ®(E—”
+Ó Ó(E—”
 
-® ®(>
+Ó Ó(>
 %1"__mapGet*,
 
 __unknown_file (
@@ -106,7 +106,7 @@ F
 Access-Control-Allow-Origin2__getitem__‹
 ˆ
 
-® ®(E
+Ó Ó(E
 %2"	__compare*"
 
 __unknown_file (
@@ -120,6 +120,6 @@ F
 **
 3:
 
-¡& ¡(,
+Æ& Æ(,
 clientB'%
 #tests.test_security.TestAPISecurityH

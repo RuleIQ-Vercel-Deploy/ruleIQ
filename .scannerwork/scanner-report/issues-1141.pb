@@ -1,12 +1,19 @@
-a
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2** &a
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2>> (a
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2^^ &c
+c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
- &c
+‚‚ 0c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-ªª &d
-pythonS1313EMake sure using this hardcoded IP address "192.168.1.1" is safe here. 2
-¿¿ +d
-pythonS1313EMake sure using this hardcoded IP address "192.168.1.1" is safe here. 2
-ÇÇ +
+ƒƒ ,M
+pythonS1172.Remove the unused function parameter "reason". 2
+÷÷ '\
+pythonS1172=Remove the unused function parameter "exclude_current_token". 2
+øø 3
+pythonS35169Refactor this method to not always return the same value. 2
+ôô #:!
+õ
+’’ returned value:!
+õ
+ returned valuec
+pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
+««$ 5c
+pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
+ßß, =

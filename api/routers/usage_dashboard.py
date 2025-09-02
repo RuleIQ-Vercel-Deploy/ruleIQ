@@ -110,7 +110,7 @@ async def get_usage_dashboard(
                 metadata=metadata,
             )
             recent_activity.append(history)
-        except:
+        except Exception:
             continue
 
     # Calculate usage by day

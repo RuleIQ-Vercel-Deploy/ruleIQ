@@ -1,11 +1,11 @@
 
 6audit_logging.AuditLoggingService._generate_hash_chainJ
->/home/omar/Documents/ruleIQ/services/security/audit_logging.py× ×("2*‰
+>/home/omar/Documents/ruleIQ/services/security/audit_logging.pyÕ Õ("2*‰
 2
-Ø Ø(0p
+Ö Ö(0p
 n
 
-Ú Ú(
+Ø Ø(
 %4"__id*T
 
 __unknown_file (8*6#
@@ -14,9 +14,9 @@ n
 4
 5*†
 4
-Ý Ý(4”‘
+Û Û(4”‘
 
-Ý Ý(4
+Û Û(4
 %1*A
 
 __unknown_file (%#
@@ -27,7 +27,7 @@ n
 	log_entry2_calculate_hashF
 D
 
-Ý Ý(4
+Û Û(4
 
 hash_value"__id*"
 
@@ -36,7 +36,7 @@ hash_value"__id*"
 %1x
 v
 
-Þ Þ('6#
+Ü Ü('6#
 !audit_logging.AuditLoggingService"
 previous_hash"__id**
 
@@ -45,22 +45,22 @@ v
 
 hash_value"
 
-ß ß(
+Ý Ý(
 
 
 hash_value*»
 5
-Û Û(;p
+Ù Ù(;p
 n
 
-Û) Û(;
+Ù) Ù(;
 %2"__id*T
 
 __unknown_file (8*6#
 !audit_logging.AuditLoggingService"
 previous_hash²¯
 
-Û Û(;
+Ù Ù(;
 %3"dict.__setitem__*)
 
 __unknown_file (
@@ -75,6 +75,6 @@ n
 %22__setitem__*
 4:
 
-×# ×(<
+Õ# Õ(<
 	log_entryB%#
 !audit_logging.AuditLoggingServiceH

@@ -1,14 +1,14 @@
 
 qtests.test_security_hardening_phase6.TestSecurityHeaders.test_security_headers_presence.SecurityHeadersMiddlewareO
-C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py£ £("2*Ï
+C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.pyÂ Â("2*Ï
 2
-¤ ¬(
+Ã Ë(
 
-¤ ¬(
+Ã Ë(
 %2"dict¤
 ¡
 
-¥ ¥(7
+Ä Ä(7
 %3"__mapSet*"
 
 __unknown_file (
@@ -22,7 +22,7 @@ C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py£ £("
 nosniffš
 —
 
-¦ ¦(-
+Å Å(-
 %4"__mapSet*"
 
 __unknown_file (
@@ -36,7 +36,7 @@ C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py£ £("
 DENY¤
 ¡
 
-§ §(7
+Æ Æ(7
 %5"__mapSet*"
 
 __unknown_file (
@@ -50,7 +50,7 @@ C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py£ £("
 1; mode=blockÃ
 À
 
-¨ ¨(V
+Ç Ç(V
 %6"__mapSet*"
 
 __unknown_file (
@@ -64,7 +64,7 @@ C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py£ £("
 #max-age=31536000; includeSubDomains°
 ­
 
-© ©(C
+È È(C
 %7"__mapSet*"
 
 __unknown_file (
@@ -78,7 +78,7 @@ C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py£ £("
 default-src 'self'µ
 ²
 
-ª ª(H
+É É(H
 %8"__mapSet*"
 
 __unknown_file (
@@ -92,7 +92,7 @@ C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py£ £("
 strict-origin-when-cross-originÁ
 ¾
 
-« «(T
+Ê Ê(T
 %9"__mapSet*"
 
 __unknown_file (
@@ -106,7 +106,7 @@ C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py£ £("
 (geolocation=(), microphone=(), camera=()¼
 ¹
 
-¤ ¬(€s
+Ã Ë(€s
 qtests.test_security_hardening_phase6.TestSecurityHeaders.test_security_headers_presence.SecurityHeadersMiddleware"	
 headers"__id*"
 
@@ -116,9 +116,9 @@ qtests.test_security_hardening_phase6.TestSecurityHeaders.test_security_headers_
 3*Å
 3#
 !test_security_hardening_phase6.py†ƒ
-® ®(
+Í Í(
 %1"qtests.test_security_hardening_phase6.TestSecurityHeaders.test_security_headers_presence.SecurityHeadersMiddleware"
-® ®(
+Í Í(
 
 %1Bus
 qtests.test_security_hardening_phase6.TestSecurityHeaders.test_security_headers_presence.SecurityHeadersMiddlewareH

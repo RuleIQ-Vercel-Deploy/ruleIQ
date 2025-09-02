@@ -3,4 +3,4 @@ O
 pythonS1481=Replace the unused local variable "control_content" with "_". 2
 ½½ #\
 pythonS1481=Replace the unused local variable "variant_content" with "_". 2
-ÃÃ #
+ÅÅ #

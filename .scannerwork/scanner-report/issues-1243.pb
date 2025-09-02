@@ -1,2 +1,7 @@
-T
-pythonS59147Replace this expression; its boolean value is constant. 2 
+Ž
+pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
+ #:&
+$Û	 This function is async.Ž
+pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2ss
+ &:&
+$Û	ss This function is async.

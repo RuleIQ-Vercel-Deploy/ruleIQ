@@ -1,93 +1,39 @@
 
-"pytest"str
- "stdout"str
-&"return_code"str
-	"-v"str
- "Run concurrency tests"str
-"-k"str
-"-m"str
-"completed"str
-"python"str
-truebool
-"concurrent"str
-
-"--tb=short"str
-"tests/performance/"str
-#"stderr"str
-"status"str
-
-0intself
-³ ³("list"Ë.
-,
-
-µ ¾(	cmd"#unknown-value#Blist(
-&
-
-µ ¾(	"
-#is-exact#:Bbool
-
-
-µ ¾(	"
-#assume#::
-8
-
-µ ¾(	"#set-field# __collection_size:Bint(
-&
-
-µ ¾(	"#array-add-last#:(
-&
-
-µ ¾(	"#array-add-last#:(
-&
-
-µ ¾(	"#array-add-last#:(
-&
-
-µ ¾(	"#array-add-last#:(
-&
-
-µ ¾(	"#array-add-last#:(
-&
-
-µ ¾(	"#array-add-last#:(
-&
-
-µ ¾(	"#array-add-last#:	(
-&
-
-µ ¾(	"#array-add-last#:
-#
-!
-
-ÀI À(U"#unknown-value#N
-L
-
-À À(Vresult"
-
-subprocessrun:Bsubprocess.CompletedProcess&
-$
-
-Â Ç(	"#new-object#Bdict"
+C:"Check if test suite should be run based on configuration"str
+truebool
+
+"exclude_suites"str
+"include_suites"strselfA A(
+suite_nameA A(."s'
+%
+C C(*"#get-field# config:*
+(
+C C(*"
+#binop in#2in:Bbool"
+C C(* *C C(
+"‹'
+%
+D! D(,"#get-field# config:"
  
-
-Ã Ã(!"	#map-set#:)
-'
-
-Ä Ä(#!"#get-field# stdout:"
+D! D(>"#array-read#:*
+(
+D D(>	"
+#binop in#2in:Bbool
+D D(>	"u'
+%
+E E(*"#get-field# config:*
+(
+E E(*"
+#binop in#2in:
+Bbool"
+E E(* *E E(
+"“'
+%
+F% F(0"#get-field# config:"
  
-
-Ä Ä(#""	#map-set#: !)
-'
-
-Å Å(#$"#get-field# stderr:"
- 
-
-Å Å(#%"	#map-set#:#$-
-+
-
-Æ Æ(,'"#get-field# returncode:"
- 
-
-Æ Æ(,("	#map-set#:&'
-
-Â Ç(	*F/home/omar/Documents/ruleIQ/tests/performance/run_performance_tests.py
+F% F(B"#array-read#:
+2
+0
+F F(B"#binop not in#2not in:Bbool
+F F(B"
+G G(*F/home/omar/Documents/ruleIQ/tests/performance/run_performance_tests.py

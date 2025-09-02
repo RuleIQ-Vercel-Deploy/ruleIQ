@@ -1,8 +1,8 @@
 
 Yuk_compliance_ingestion_pipeline.UKComplianceGraphIngestion.ingest_complete_uk_compliance]
-S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipeline.py. .(+"2*¢
-2/ 1(çä
-2 2(@
+S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipeline.py, ,(+"2*¢
+2- /(çä
+0 0(@
 %15*&
 
 __unknown_file (
@@ -13,58 +13,58 @@ S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipelin
 __unknown_file (-+
 )Starting UK compliance graph ingestion...2info*
 7*Î
-76 6(-ÜÉ
-6 6(-
+74 4(-ÜÉ
+4 4(-
 %4*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_create_graph_schemaçä
-9 9(4
+7 7(4
 %5*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_ingest_compliance_manifestáÑ
-< <(.
+: :(.
 %6*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_ingest_api_documentsçä
-? ?(4
+= =(4
 %7*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_ingest_data_protection_actòï
-B B(?
+@ @(?
 %8*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2&_create_cross_regulation_relationshipsÜÉ
-E E(-
+C C(-
 %9*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_generate_embeddingsàÖ
-H H(.
+F F(.
 %10*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_create_graph_indexeså
 â
-J6 J(J
+H6 H(J
 %11"__id*p
 
 __unknown_file (T*R=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion"
 ingestion_stats_
 ]
-J J(L
+H H(L
 %12"__concat*+
-J J(5
+H H(5
 Ingestion complete. Stats: *
-J6 J(J
+H6 H(J
 
 %11fd
-J J(M
+H H(M
 %13*&
 
 __unknown_file (
@@ -76,13 +76,13 @@ S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipelin
 
 %122infoå
 â
-K K('
+I I('
 %14"__id*p
 
 __unknown_file (T*R=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion"
 ingestion_stats"
-K K('
+I I('
 
 %14B?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestionH

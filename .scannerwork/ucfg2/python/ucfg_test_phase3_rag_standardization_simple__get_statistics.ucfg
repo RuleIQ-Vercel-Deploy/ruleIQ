@@ -1,10 +1,10 @@
 
 Ttests.test_phase3_rag_standardization_simple.TestStandardizedRAG.test_get_statisticsW
-K/home/omar/Documents/ruleIQ/tests/test_phase3_rag_standardization_simple.py… …(!"2*∆
+K/home/omar/Documents/ruleIQ/tests/test_phase3_rag_standardization_simple.py— —(!"2*∆
 2
-   (&RP
+“ “(&RP
 
-À À(3
+” ”(3
 %1*,
 
 __unknown_file (
@@ -12,14 +12,14 @@ K/home/omar/Documents/ruleIQ/tests/test_phase3_rag_standardization_simple.py…
 standard_rag2get_statisticsA
 ?
 
-À À(3
+” ”(3
 stats"__id*"
 
 __unknown_file (
 
 %1us
 
-Õ Õ($
+’ ’($
 %2*%
 
 __unknown_file (	
@@ -30,7 +30,7 @@ K/home/omar/Documents/ruleIQ/tests/test_phase3_rag_standardization_simple.py…
 
 company_id2__contains__zx
 
-Œ Œ()
+÷ ÷()
 %3*%
 
 __unknown_file (	
@@ -40,7 +40,7 @@ company_id2__contains__zx
 __unknown_file (
 collection_name2__contains__{y
 
-œ œ(*
+◊ ◊(*
 %4*%
 
 __unknown_file (	
@@ -50,7 +50,7 @@ company_id2__contains__zx
 __unknown_file (
 embeddings_model2__contains__ÖÇ
 
-– –((
+ÿ ÿ((
 %5"__mapGet*%
 
 __unknown_file (	
@@ -61,7 +61,7 @@ company_id2__contains__zx
 embeddings_model2__getitem__†
 ù
 
-– –(D
+ÿ ÿ(D
 %6"	__compare*"
 
 __unknown_file (
@@ -74,7 +74,7 @@ company_id2__contains__zx
 __unknown_file (
 text-embedding-3-small~|
 
-— —(-
+Ÿ Ÿ(-
 %7*%
 
 __unknown_file (	
@@ -86,9 +86,9 @@ company_id2__contains__zx
 3*O
 3+
 )test_phase3_rag_standardization_simple.py"
-’ ’
+› ›
 implicit return:
 
-…( …(4
+—( —(4
 standard_ragBDB
 @tests.test_phase3_rag_standardization_simple.TestStandardizedRAGH

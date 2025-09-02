@@ -1,12 +1,12 @@
 a
-pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2YY %c
+pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2\\ %c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-ŽŽ %c
+•• %c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-ºº %c
+ÁÁ %c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-——! 2c
+­­% 6c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-££ )c
+ºº )c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-¯¯ *
+ÌÌ *

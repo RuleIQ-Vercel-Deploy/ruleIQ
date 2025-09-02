@@ -1,8 +1,7 @@
-b
-pythonS2208GImport only needed names or import the module and then use its members. 2 O
-pythonS53322Using http protocol is insecure. Use https instead 2((7 D¶
-pythonS9301Remove this unexpected named argument 'username'. 2//H _:g
-@Ø
-//H _1Remove this unexpected named argument 'username'.
-#Î
- Function definition.
+a
+pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2'' /a
+pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2(( /Q
+pythonS14812Replace the unused loop index "mem_type" with "_". 2
+°° c
+pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
+¾¾ *

@@ -1,15 +1,15 @@
 
 Rtests.test_security_hardening_phase6.TestSecurityHeaders.security_headers_expectedO
-C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py‘ ‘(!"2*¡
+C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py° °(!"2*¡
 
 2
-’ ’('
+± ±('
 
-“ ›(	
+² º(	
 %1"dict¤
 ¡
 
-” ”(/
+³ ³(/
 %2"__mapSet*"
 
 __unknown_file (
@@ -23,7 +23,7 @@ C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py‘ ‘(!"
 nosniffš
 —
 
-• •(%
+´ ´(%
 %3"__mapSet*"
 
 __unknown_file (
@@ -37,7 +37,7 @@ C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py‘ ‘(!"
 DENY¤
 ¡
 
-– –(/
+µ µ(/
 %4"__mapSet*"
 
 __unknown_file (
@@ -51,7 +51,7 @@ C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py‘ ‘(!"
 1; mode=blockÃ
 À
 
-— —(N
+¶ ¶(N
 %5"__mapSet*"
 
 __unknown_file (
@@ -65,7 +65,7 @@ C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py‘ ‘(!"
 #max-age=31536000; includeSubDomains°
 ­
 
-˜ ˜(;
+· ·(;
 %6"__mapSet*"
 
 __unknown_file (
@@ -79,7 +79,7 @@ C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py‘ ‘(!"
 default-src 'self'µ
 ²
 
-™ ™(@
+¸ ¸(@
 %7"__mapSet*"
 
 __unknown_file (
@@ -93,7 +93,7 @@ C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py‘ ‘(!"
 strict-origin-when-cross-originÁ
 ¾
 
-š š(L
+¹ ¹(L
 %8"__mapSet*"
 
 __unknown_file (
@@ -106,7 +106,7 @@ C/home/omar/Documents/ruleIQ/tests/test_security_hardening_phase6.py‘ ‘(!"
 __unknown_file (,*
 (geolocation=(), microphone=(), camera=()"
 
-“ ›(	
+² º(	
 
 %1B<:
 8tests.test_security_hardening_phase6.TestSecurityHeadersH

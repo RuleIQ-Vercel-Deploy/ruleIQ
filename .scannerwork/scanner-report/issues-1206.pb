@@ -1,2 +1,7 @@
-b
-pythonS3457EAdd replacement fields or use a normal string instead of an f-string. 233 A
+Ÿ
+pythonS1854MRemove this assignment to local variable 'response'; the value is never used. 2
+¢¦ :1
+/¶	
+­± 'response' is reassigned here.F
+pythonS2201'The return value of "sum" must be used. 2
+õõ 

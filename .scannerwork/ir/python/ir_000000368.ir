@@ -1,13 +1,21 @@
 
-"cancelled"str
--$"Check if conversion was cancelled."strself
-ì ì("u3
+;2"{self.currency_code} {self.conversion_value:.2f}"str
+
+"No value"str
+8/"Get formatted conversion value with currency."strself
+é' é(+"Ñ3
 1
 
-ï ï($"#get-field# conversion_stage:,
-*
+ê ê( "#get-field# conversion_value:+
+)
 
-ï ï(3"
-#binop ==#2==:Bbool
+ê ê( "
+__bool__*:BboolH "
 
-ï ï(3*8/home/omar/Documents/ruleIQ/database/conversion_event.py
+ê ê(  *
+ê ê(
+"
+
+ë ë(F"
+
+í í(*8/home/omar/Documents/ruleIQ/database/conversion_event.py

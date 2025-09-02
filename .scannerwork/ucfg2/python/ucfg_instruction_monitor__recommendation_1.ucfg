@@ -1,70 +1,70 @@
 
 ^services.ai.instruction_monitor.InstructionPerformanceMonitor._generate_ab_test_recommendationJ
->/home/omar/Documents/ruleIQ/services/ai/instruction_monitor.pyÂ Â(("6"7*‚
+>/home/omar/Documents/ruleIQ/services/ai/instruction_monitor.pyõ õ(("6"7*‚
 4
-Ê Ê(uÚ
+ý ý(uÚ
 ×
 
-Ê Ê(u
+ý ý(u
 %1"__concat*
 
-Ê Ê(!
+ý ý(!
 Instruction *
 
-Ê" Ê((
+ý" ý((
 
 
 winner*2
 
-Ê) Ê(I$"
+ý) ý(I$"
   shows significant improvement (*
 
-ÊJ Ê(U
+ýJ ý(U
 
 improvement*,
 
-ÊZ Ê(t
+ýZ ý(t
 ). Recommend implementing."
 
-Ê Ê(u
+ý ý(u
 
 %1*Ï
-5Ì Ì(œ¥
+5ÿ ÿ(œ¥
 ¢
-Ì Ì(œ
+ÿ ÿ(œ
 %2"__concat*
 
-Ì Ì(!
+ÿ ÿ(!
 Instruction *
 
-Ì" Ì((
+ÿ" ÿ((
 
 
 winner*&
 
-Ì) Ì(=
+ÿ) ÿ(=
  shows improvement (*
 
-Ì> Ì(I
+ÿ> ÿ(I
 
 improvement*&
 
-ÌN Ì(b
+ÿN ÿ(b
 ) but below target (*$
 
-Ìc Ì(u
+ÿc ÿ(u
 
 target_improvement*4
-Ìz Ì(›%#
+ÿz ÿ(›%#
 !). Consider further optimization."
-Ì Ì(œ
+ÿ ÿ(œ
 
 %2*¿
 6
-É É(,¥
+ü ü(,¥
 ¢
 
-É É(,
+ü ü(,
 %3"	__compare*"
 
 __unknown_file (
@@ -80,17 +80,17 @@
 4
 5*Š
 7
-Ç Ç(|"y
+ú ú(|"y
 
-Ç Ç(|ki
+ú ú(|ki
 gNo statistically significant difference found. Consider running test longer or with larger sample size.:
 
-Ã Ã(#
+ö ö(#
 winner:
 
-Ã% Ã(7
+ö% ö(7
 improvement:"
 
-Ã9 Ã(R
+ö9 ö(R
 target_improvementBA?
 =services.ai.instruction_monitor.InstructionPerformanceMonitorH

@@ -1,22 +1,22 @@
 
 :tests.test_ingestion_simple.SimpleIngestion.clear_databaseD
-:/home/omar/Documents/ruleIQ/tests/test_ingestion_simple.py   ("2*Œ
-2! !(0q
+:/home/omar/Documents/ruleIQ/tests/test_ingestion_simple.py" "("2*Œ
+2# #(0q
 o
-" "(
+$ $(
 %3"__id*W
 
 __unknown_file (;*9-
 +tests.test_ingestion_simple.SimpleIngestion"
 driver?=
-" "((
+$ $((
 %4*"
 
 __unknown_file (
 
 %32sessionA
 ?
-" "(3	
+$ $(3	
 session"__id*"
 
 __unknown_file (
@@ -26,10 +26,10 @@ o
 4*>
 3
 test_ingestion_simple.py"
-& &(
+( ((
 implicit return*ƒ
-4# #(:{y
-# #(:
+4% %(:{y
+% %(:
 %1*'
 
 __unknown_file (
@@ -38,7 +38,7 @@ o
 
 __unknown_file (
 MATCH (n) DETACH DELETE n2runrp
-$ $(+
+& &(+
 %2*&
 
 __unknown_file (

@@ -1,21 +1,37 @@
 
 
-0intself
-œ œ(kwargs
-œ œ($"dictlist"Ä)
+0int
+"security_groups"str
+"iam_roles"str
+"cloudtrail_logs"str
+	"config_rules"str
+"ec2_instances"str
+
+"guardduty_findings"str
+"s3_buckets"str
+"compliance_reports"str
+7."Get list of supported evidence types for AWS"str
+"vpc_configuration"str
+"iam_users"str
+"iam_policies"str
+"inspector_findings"strself
+†% †()list"ó)
 '
 
-ž ž("#unknown-value#Blist(
+ˆ •(	"#unknown-value#Blist(
 &
 
-ž ž("
-#is-exact#:Bbool
+ˆ •(	"
+#is-exact#:Bbool
 
 
-ž ž("
-#assume#::
+ˆ •(	"
+#assume#::
 8
 
-ž ž("#set-field# __collection_size:Bint
+ˆ •(	"#set-field# __collection_size:Bint-
++
 
-ž ž(*5/home/omar/Documents/ruleIQ/api/clients/aws_client.py
+ˆ •(	"?python-unknown?*Blist
+
+ˆ •(	*5/home/omar/Documents/ruleIQ/api/clients/aws_client.py

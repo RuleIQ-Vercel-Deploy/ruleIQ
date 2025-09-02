@@ -1,31 +1,31 @@
 Z
-pythonS112>Replace this generic exception class with a more specific one. 2TT B<
+pythonS112>Replace this generic exception class with a more specific one. 2[[ B<
 pythonS2053Make this salt unpredictable. 2
- $Å
+•• $Å
 pythonS5886`Return a value of type "str" instead of "NoneType" or update function "encrypt_field" type hint. 2
-¢¢ :&
+¨¨ :&
 $z
-•• Function definition.:
+›› Function definition.:
 z
-••G J
+››G J
 Type hint.c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-¯¯ .K
+µµ .K
 pythonS1481,Remove the unused local variable "metadata". 2
-ãã [
+èè [
 pythonS5754<Specify an exception class to catch or reraise the exception 2
-ëë c
+ðð c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-ŽŽ *c
+’’ *c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-˜˜" 3c
+ŸŸ" 3c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-¡¡ ,œ
+¨¨ ,œ
 pythonS7493RUse an asynchronous file API instead of synchronous open() in this async function. 2
-ÒÒ %:)
+ÖÖ %:)
 'z
-µµ 	This function is async.c
+¹¹ 	This function is async.c
 pythonS6903DDon't use `datetime.datetime.utcnow` to create this datetime object. 2
-úú )[
+þþ )[
 pythonS5754<Specify an exception class to catch or reraise the exception 2
-›› 
+ŸŸ 

@@ -509,7 +509,8 @@ async def query_compliance(
 
         # Mock AI response for testing (in production, this would call the actual AI service)
         if "ignore" in question.lower() or "bypass" in question.lower():
-            answer = "I cannot help with bypassing compliance requirements. Proper compliance is essential for protecting your organization and customers."
+            answer = \
+                "I cannot help with bypassing compliance requirements. Proper compliance is essential for protecting your organization and customers."
         elif framework.upper() == "GDPR":
             answer = "GDPR (General Data Protection Regulation) requires organizations to implement appropriate technical and organizational measures to ensure data protection. Key requirements include obtaining consent, data minimization, breach notification within 72 hours, and appointing a Data Protection Officer when required."
         elif framework.upper() == "ISO 27001":

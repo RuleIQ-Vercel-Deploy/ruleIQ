@@ -1,62 +1,23 @@
 
-"control_reference"str
-"evidence_type"str
-"title"str
-"framework"str
-	"description"str
-"collection_method"str
-"responsible_party"str
-!"automation_potential"str
-"id"str
-
-"priority"str
-"frequency"strself# #("≠$
-"
-$ 0(	"#new-object#Bdict#
+	"success"str
+	truebool
+*!"Process a single chunk of items"str
+0.01floatself
+Å Å(!chunk
+Å# Å(3"¬=
+;
+
+Ñ Ñ(!"
+asyncio.taskssleep:Btyping.Coroutine#
 !
-% %("#get-field# id: 
-
-% %("	#map-set#:&
+
+Ñ Ñ(!"#unknown-value#&
 $
-& &("#get-field# title: 
-
-& &("	#map-set#:,
-*
-' '(+
-"#get-field# description: 
-
-' '(+"	#map-set#:	
-*
-(
-( (('"#get-field# framework: 
-
-( (('"	#map-set#:2
-0
-)! )(7"#get-field# control_reference: 
-
-) )(7"	#map-set#:.
-,
-* *(/"#get-field# evidence_type: 
-
-* *(/"	#map-set#:2
-0
-+! +(7"#get-field# collection_method: 
-
-+ +(7"	#map-set#:*
-(
-, ,('"#get-field# frequency: 
-
-, ,('"	#map-set#:)
-'
-- -(%"#get-field# priority: 
-
-- -(%"	#map-set#:2
-0
-.! .(7"#get-field# responsible_party: 
-
-. .(7 "	#map-set#:5
-3
-/$ /(=""" #get-field# automation_potential: 
-
-/ /(=#"	#map-set#:!"
-$ 0(	*9/home/omar/Documents/ruleIQ/services/ai/evidence_tools.py
+
+Ö Ö( "#new-object#Bdict"
+ 
+
+Ö Ö(
+"	#map-set#:	
+
+Ö Ö( *G/home/omar/Documents/ruleIQ/langgraph_agent/nodes/notification_nodes.py

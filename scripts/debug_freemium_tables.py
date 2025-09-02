@@ -10,7 +10,7 @@ from sqlalchemy import create_engine, text, inspect
 # Set environment
 os.environ["ENV"] = "testing"
 os.environ["DATABASE_URL"] = (
-    "postgresql://neondb_owner:npg_s0JhnfGNy3Ze@ep-wild-grass-a8o37wq8-pooler.eastus2.azure.neon.tech/neondb?sslmode=require"
+    os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5433/compliance_test?sslmode=require")
 )
 
 # Add project to path

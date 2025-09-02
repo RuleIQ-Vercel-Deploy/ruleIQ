@@ -294,7 +294,8 @@ async def rotate_api_key(
             expires_at=new_metadata.expires_at,
             scopes=new_metadata.scopes,
             rate_limit=new_metadata.rate_limit,
-            message=f"API key rotated successfully. Old key will expire in {request.expires_old_in_hours} hours.",
+            message= \
+                f"API key rotated successfully. Old key will expire in {request.expires_old_in_hours} hours.",
         )
 
     except Exception as e:

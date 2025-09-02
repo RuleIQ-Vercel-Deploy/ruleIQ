@@ -1,18 +1,18 @@
 
 .monitoring.health.HealthCheckRegistry.registerE
-9/home/omar/Documents/ruleIQ/app/core/monitoring/health.py» »("2*„
+9/home/omar/Documents/ruleIQ/app/core/monitoring/health.py³ ³("2*„
 2
-¼ ¼(&m
+´ ´(&m
 k
 
-½ ½(
+µ µ(
 %1"__id*Q
 
 __unknown_file (5*3'
 %monitoring.health.HealthCheckRegistry"
 checksge
 
-½ ½(!
+µ µ(!
 %2*"
 
 __unknown_file (
@@ -24,7 +24,7 @@ k
 check2appendK
 I
 
-¾0 ¾(:
+¶0 ¶(:
 %3"__id*/
 
 __unknown_file (*
@@ -33,17 +33,17 @@ I
 namea
 _
 
-¾ ¾(<
+¶ ¶(<
 %4"__concat*+
 
-¾ ¾(/
+¶ ¶(/
 Registered health check: *
 
-¾0 ¾(:
+¶0 ¶(:
 
 %3fd
 
-¾ ¾(=
+¶ ¶(=
 %5*&
 
 __unknown_file (
@@ -57,9 +57,9 @@ _
 3*1
 3
 	health.py"
-À À(
+¸ ¸(
 implicit return:
 
-» »()
+³ ³()
 checkB)'
 %monitoring.health.HealthCheckRegistryH

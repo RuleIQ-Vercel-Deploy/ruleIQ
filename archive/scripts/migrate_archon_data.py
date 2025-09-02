@@ -1,3 +1,4 @@
+import os
 #!/usr/bin/env python3
 """
 Migrate ALL Archon data from old Supabase to new Supabase
@@ -10,11 +11,11 @@ from datetime import datetime
 
 # OLD Supabase (source)
 OLD_SUPABASE_URL = "https://nxmzlhiutzqvkyhhntez.supabase.co"
-OLD_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im54bXpsaGl1dHpxdmt5aGhudGV6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NTQ0MDc3NywiZXhwIjoyMDcxMDE2Nzc3fQ.6XUyCJS9ZeuOpn7b59pbKtHc_vnsfdNzsxvLUQsaArs"
+OLD_SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
 
 # NEW Supabase (destination)
 NEW_SUPABASE_URL = "https://wohtxsiayhtvycvkamev.supabase.co"
-NEW_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndvaHR4c2lheWh0dnljdmthbWV2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NjYyNTczOSwiZXhwIjoyMDcyMjAxNzM5fQ.mzmZQ_cBvjr0B1oSuRrjZ_jk4HqM7Xz0bETDo29RzI0"
+NEW_SUPABASE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY", "")
 
 
 def migrate_table(table_name, old_client, new_client, batch_size=100):

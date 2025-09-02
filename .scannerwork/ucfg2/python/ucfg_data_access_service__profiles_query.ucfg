@@ -1,18 +1,16 @@
 
 Mservices.data_access_service.DataAccessService.filter_business_profiles_queryE
-;/home/omar/Documents/ruleIQ/services/data_access_service.pyr r(&"2*ˆ
-2	w Ä(I
-G
-
-Å7 Å(>
+;/home/omar/Documents/ruleIQ/services/data_access_service.pyr r(&"2*Ô
+2s |(G
+E
+}7 }(>
 %11"__id*,
 
 __unknown_file (*
 
 user"
-idß§
-
-Å Å(?
+id•¢
+} }(?
 %12*N
 
 __unknown_file (20
@@ -20,10 +18,9 @@ G
 
 __unknown_file (
 
-%112get_user_data_access_levelI
-G
-
-Å Å(?
+%112get_user_data_access_levelG
+E
+} }(?
 access_level"__id*#
 
 __unknown_file (
@@ -31,7 +28,7 @@ G
 %12ù
 ö
 
-Ñ Ñ(%
+Ä Ä(%
 %13"	__compare*"
 
 __unknown_file (
@@ -47,10 +44,10 @@ G
 8
 9*‡
 4
-í í(Dr
+é é(Dr
 p
 
-í! í(8
+é! é(8
 %1"__id*V
 
 __unknown_file (:*8+
@@ -58,7 +55,7 @@ p
 user_idH
 F
 
-í< í(C
+é< é(C
 %2"__id*,
 
 __unknown_file (*
@@ -67,7 +64,7 @@ F
 idå
 â
 
-í! í(C
+é! é(C
 %3"	__compare*"
 
 __unknown_file (
@@ -81,7 +78,7 @@ F
 
 %2lj
 
-í í(D
+é é(D
 %4**
 
 __unknown_file (
@@ -93,21 +90,21 @@ base_query*"
 
 %32filter"
 
-í í(D
+é é(D
 
 %4*-
 5
-è è("
+ã ã("
 
-è è(
+ã ã(
 
 
 base_query*ø
 6
-å å(.•
+à à(.•
 ¢
 
-å å(.
+à à(.
 %5"	__compare*"
 
 __unknown_file (
@@ -122,10 +119,10 @@ base_query*ø
 4
 5*‡
 7
-â â(Hr
+Ö Ö(Hr
 p
 
-â% â(<
+Ö% Ö(<
 %6"__id*V
 
 __unknown_file (:*8+
@@ -133,7 +130,7 @@ p
 user_idH
 F
 
-â@ â(G
+Ö@ Ö(G
 %7"__id*,
 
 __unknown_file (*
@@ -142,7 +139,7 @@ F
 idå
 â
 
-â% â(G
+Ö% Ö(G
 %8"	__compare*"
 
 __unknown_file (
@@ -156,7 +153,7 @@ F
 
 %7lj
 
-â â(H
+Ö Ö(H
 %9**
 
 __unknown_file (
@@ -168,14 +165,14 @@ base_query*"
 
 %82filter"
 
-â â(H
+Ö Ö(H
 
 %9*∑
 8
-à à(%ù
+Ñ Ñ(%ù
 ö
 
-à à(%
+Ñ Ñ(%
 %10"	__compare*"
 
 __unknown_file (
@@ -191,15 +188,15 @@ base_query*"
 6
 7*-
 9
-Ö Ö("
+Å Å("
 
-Ö Ö(
+Å Å(
 
 
 base_query:
-t t(
+r- r(@
 user:
-u u(
+rB r(L
 
 base_queryB20
 .services.data_access_service.DataAccessServiceH

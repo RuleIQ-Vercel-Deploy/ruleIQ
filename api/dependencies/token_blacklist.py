@@ -406,7 +406,8 @@ class EnhancedTokenBlacklist:
                 if count > 10:  # More than 10 blacklists in time window
                     await self._update_metrics("suspicious_pattern")
                     logger.warning(
-                        f"Suspicious blacklist pattern detected: IP={entry.ip_address}, User={entry.user_id}"
+                        f"Suspicious blacklist pattern detected: IP= \
+                            {entry.ip_address}, User={entry.user_id}"
                     )
 
                 await self.cache_manager.set(

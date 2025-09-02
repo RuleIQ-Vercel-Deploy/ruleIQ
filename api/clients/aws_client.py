@@ -21,6 +21,9 @@ from config.logging_config import get_logger
 logger = get_logger(__name__)
 
 
+KEY_AGE_THRESHOLD_DAYS = 90
+
+
 class AWSAPIException(APIException):
     """AWS-specific API exception"""
 
@@ -516,14 +519,14 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
         # Check for old access keys
         for key in access_keys:
             key_age = (datetime.utcnow() - key["CreateDate"].replace(tzinfo=None)).days
-            if key_age > 90:  # Keys older than 90 days
+            if key_age > KEY_AGE_THRESHOLD_DAYS:  # Keys older than KEY_AGE_THRESHOLD_DAYS days
                 score -= 0.2
 
         # Check if user has used password recently (if they have console access)
         if user.get("PasswordLastUsed"):
             last_used = user["PasswordLastUsed"].replace(tzinfo=None)
             days_since_login = (datetime.utcnow() - last_used).days
-            if days_since_login > 90:  # Inactive user
+            if days_since_login > KEY_AGE_THRESHOLD_DAYS:  # Inactive user
                 score -= 0.2
 
         return max(0.0, score)

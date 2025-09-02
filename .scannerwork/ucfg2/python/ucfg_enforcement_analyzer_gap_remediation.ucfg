@@ -1,14 +1,14 @@
 
 Iservices.ai.enforcement_analyzer.EnforcementAnalyzer._get_gap_remediationK
-?/home/omar/Documents/ruleIQ/services/ai/enforcement_analyzer.py• •("2*å
+?/home/omar/Documents/ruleIQ/services/ai/enforcement_analyzer.py» »("2*å
 2
-¶ ¶(6
+… …(6
 
-ß ≤(	
+  ’(	
 %1"dict»
 ≈
 
-® ®(S
+À À(S
 %2"__mapSet*"
 
 __unknown_file (
@@ -22,7 +22,7 @@ Iservices.ai.enforcement_analyzer.EnforcementAnalyzer._get_gap_remediationK
 ,Implement role-based access control with MFA 
 «
 
-© ©(U
+Ã Ã(U
 %3"__mapSet*"
 
 __unknown_file (
@@ -36,7 +36,7 @@ Iservices.ai.enforcement_analyzer.EnforcementAnalyzer._get_gap_remediationK
 -Develop and test incident response procedures‡
 ›
 
-™ ™(k
+Õ Õ(k
 %4"__mapSet*"
 
 __unknown_file (
@@ -50,7 +50,7 @@ Iservices.ai.enforcement_analyzer.EnforcementAnalyzer._get_gap_remediationK
 ?Create vulnerable customer identification and support framework”
 –
 
-´ ´(^
+Œ Œ(^
 %5"__mapSet*"
 
 __unknown_file (
@@ -64,7 +64,7 @@ Iservices.ai.enforcement_analyzer.EnforcementAnalyzer._get_gap_remediationK
 /Deploy automated transaction monitoring with MLŸ
 ÷
 
-¨ ¨(d
+œ œ(d
 %6"__mapSet*"
 
 __unknown_file (
@@ -78,7 +78,7 @@ Iservices.ai.enforcement_analyzer.EnforcementAnalyzer._get_gap_remediationK
 9Implement granular consent tracking and preference center÷
 ”
 
-≠ ≠(a
+– –(a
 %7"__mapSet*"
 
 __unknown_file (
@@ -92,7 +92,7 @@ Iservices.ai.enforcement_analyzer.EnforcementAnalyzer._get_gap_remediationK
 :Establish automated data retention and deletion procedures◊
 ‘
 
-Æ Æ(b
+— —(b
 %8"__mapSet*"
 
 __unknown_file (
@@ -106,7 +106,7 @@ Iservices.ai.enforcement_analyzer.EnforcementAnalyzer._get_gap_remediationK
 .Build risk-based affordability checking system‘
 —
 
-Ø Ø(_
+“ “(_
 %9"__mapSet*"
 
 __unknown_file (
@@ -120,7 +120,7 @@ Iservices.ai.enforcement_analyzer.EnforcementAnalyzer._get_gap_remediationK
 -Implement continuous environmental monitoring“
 œ
 
-∞ ∞(\
+” ”(\
 %10"__mapSet*"
 
 __unknown_file (
@@ -134,7 +134,7 @@ Iservices.ai.enforcement_analyzer.EnforcementAnalyzer._get_gap_remediationK
 3Deploy robust age verification with multiple checksÕ
  
 
-± ±(W
+‘ ‘(W
 %11"__mapSet*"
 
 __unknown_file (
@@ -148,14 +148,14 @@ Iservices.ai.enforcement_analyzer.EnforcementAnalyzer._get_gap_remediationK
 ,Establish independent QA with regular auditsH
 F
 
-ß ≤(	
+  ’(	
 remediations"__id*"
 
 __unknown_file (
 
 %1óî
 
-¥F ¥([
+ÿ2 ÿ(G
 %12"str.replace*#
 
 __unknown_file (
@@ -169,17 +169,17 @@ F
  2replaceh
 f
 
-¥% ¥(]
+ÿ ÿ(I
 %13"__concat*0
 
-¥' ¥(E" 
+ÿ ÿ(1" 
 Implement controls to address *
 
-¥F ¥([
+ÿ2 ÿ(G
 
 %12ùö
 
-¥ ¥(^
+◊ Ÿ(	
 %14"dict.get*,
 
 __unknown_file (
@@ -194,10 +194,10 @@ f
 
 %132get"
 
-¥ ¥(^
+◊ Ÿ(	
 
 %14:
 
-•# •(+
+»# »(+
 gapB86
 4services.ai.enforcement_analyzer.EnforcementAnalyzerH

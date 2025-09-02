@@ -1,11 +1,11 @@
 
 :database.models.integrations.IntegrationHealthLog.__repr__G
-;/home/omar/Documents/ruleIQ/database/models/integrations.py≤ ≤("2*Ω
+;/home/omar/Documents/ruleIQ/database/models/integrations.pyæ æ("2*Ω
 2
-≥ ≥(CÅ
+ø ø(CÅ
 
 
-≥ ≥(0
+ø ø(0
 %1"__id*e
 
 __unknown_file (I*G3
@@ -13,7 +13,7 @@
 integration_idy
 w
 
-≥5 ≥(@
+ø5 ø(@
 %2"__id*]
 
 __unknown_file (A*?3
@@ -21,27 +21,27 @@ w
 statusñ
 ì
 
-≥ ≥(C
+ø ø(C
 %3"__concat*
 
-≥ ≥(
+ø ø(
 <HealthLog *
 
-≥ ≥(0
+ø ø(0
 
 %1*
 
-≥1 ≥(4
+ø1 ø(4
  - *
 
-≥5 ≥(@
+ø5 ø(@
 
 %2*
 
-≥A ≥(B
+øA ø(B
 >"
 
-≥ ≥(C
+ø ø(C
 
 %3B53
 1database.models.integrations.IntegrationHealthLogH

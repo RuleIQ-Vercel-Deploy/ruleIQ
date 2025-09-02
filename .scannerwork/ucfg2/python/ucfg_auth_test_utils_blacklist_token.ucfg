@@ -1,15 +1,15 @@
 
 ;tests.utils.auth_test_utils.TestAuthManager.blacklist_tokenD
-:/home/omar/Documents/ruleIQ/tests/utils/auth_test_utils.py5 5("2*ß
-26 6( }
+:/home/omar/Documents/ruleIQ/tests/utils/auth_test_utils.py7 7("2*ß
+28 8( }
 {
-7 7(
+9 9(
 %2"__id*c
 
 __unknown_file (G*E-
 +tests.utils.auth_test_utils.TestAuthManager"
 blacklisted_tokensb`
-7 7(*
+9 9(*
 %3*"
 
 __unknown_file (
@@ -20,13 +20,13 @@
 
 token2addx
 v
-8 8(&
+: :(&
 %4"__id*^
 
 __unknown_file (B*@-
 +tests.utils.auth_test_utils.TestAuthManager"
 active_tokenski
-8 8(&
+: :(&
 %5*"
 
 __unknown_file (
@@ -40,17 +40,17 @@ v
 4*8
 3
 auth_test_utils.py"
-; ;(
+= =(
 implicit return*Œ
-49 9()x
+4; ;()x
 v
-9 9("
+; ;("
 %1"__id*^
 
 __unknown_file (B*@-
 +tests.utils.auth_test_utils.TestAuthManager"
 active_tokens*
 3:
-5 5((
+7 7((
 tokenB/-
 +tests.utils.auth_test_utils.TestAuthManagerH

@@ -1,10 +1,10 @@
 ;
-pythonS125Remove this commented out code. 2!!& ]“
+pythonS125Remove this commented out code. 2"" I“
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-¡¡ :)
+ªª :)
 'l
-¡¡ 	This function is async.‘
+ªª 	This function is async.‘
 pythonS7503IUse asynchronous features in this function or remove the `async` keyword. 2
-ÁÁ
+ÌÌ
  :'
-%lÁÁ This function is async.
+%lÌÌ This function is async.
