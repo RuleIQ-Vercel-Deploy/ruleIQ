@@ -1,0 +1,14 @@
+{
+  "project": "ruleiq",
+  "config": "dev",
+  "secrets": {
+    "NEO4J_PASSWORD": "Configure in Doppler Dashboard",
+    "NEO4J_USER": "neo4j",
+    "NEO4J_URI": "bolt://localhost:7687",
+    "JWT_SECRET": "Generate secure 32+ character secret",
+    "DATABASE_URL": "postgresql://user:pass@localhost/ruleiq",
+    "REDIS_URL": "redis://localhost:6379",
+    "OPENAI_API_KEY": "Your OpenAI API key",
+    "ANTHROPIC_API_KEY": "Your Anthropic API key"
+  }
+}

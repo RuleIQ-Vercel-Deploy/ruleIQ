@@ -1,0 +1,15 @@
+
+%"(\\s*)(console\\.error\\()"str
+0'"\\s*console\\.log\\([^;]+\\);?\\s*\\n"str
+%"Fix console.log statements"str
+F="\\1// Development logging - consider proper logger\\n\\1\\2"str
+5,"
+    // TODO: Replace with proper logging
+"strcontent (""b'
+%
+ (content"	
+resub:'
+%
+ (Ocontent"	
+resub:
+ (*5/home/omar/Documents/ruleIQ/scripts/sonar/fix-lint.py

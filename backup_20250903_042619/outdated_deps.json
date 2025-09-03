@@ -1,0 +1,436 @@
+{
+  "@chromatic-com/storybook": {
+    "current": "3.2.7",
+    "wanted": "3.2.7",
+    "latest": "4.1.1",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@chromatic-com/storybook"
+  },
+  "@hookform/resolvers": {
+    "current": "3.10.0",
+    "wanted": "3.10.0",
+    "latest": "5.2.1",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@hookform/resolvers"
+  },
+  "@radix-ui/react-accordion": {
+    "current": "1.2.2",
+    "wanted": "1.2.2",
+    "latest": "1.2.12",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-accordion"
+  },
+  "@radix-ui/react-alert-dialog": {
+    "current": "1.1.4",
+    "wanted": "1.1.4",
+    "latest": "1.1.15",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-alert-dialog"
+  },
+  "@radix-ui/react-aspect-ratio": {
+    "current": "1.1.1",
+    "wanted": "1.1.1",
+    "latest": "1.1.7",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-aspect-ratio"
+  },
+  "@radix-ui/react-avatar": {
+    "current": "1.1.2",
+    "wanted": "1.1.2",
+    "latest": "1.1.10",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-avatar"
+  },
+  "@radix-ui/react-collapsible": {
+    "current": "1.1.2",
+    "wanted": "1.1.2",
+    "latest": "1.1.12",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-collapsible"
+  },
+  "@radix-ui/react-context-menu": {
+    "current": "2.2.4",
+    "wanted": "2.2.4",
+    "latest": "2.2.16",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-context-menu"
+  },
+  "@radix-ui/react-dropdown-menu": {
+    "current": "2.1.4",
+    "wanted": "2.1.4",
+    "latest": "2.1.16",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-dropdown-menu"
+  },
+  "@radix-ui/react-hover-card": {
+    "current": "1.1.4",
+    "wanted": "1.1.4",
+    "latest": "1.1.15",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-hover-card"
+  },
+  "@radix-ui/react-menubar": {
+    "current": "1.1.4",
+    "wanted": "1.1.4",
+    "latest": "1.1.16",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-menubar"
+  },
+  "@radix-ui/react-navigation-menu": {
+    "current": "1.2.3",
+    "wanted": "1.2.3",
+    "latest": "1.2.14",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-navigation-menu"
+  },
+  "@radix-ui/react-progress": {
+    "current": "1.1.1",
+    "wanted": "1.1.1",
+    "latest": "1.1.7",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-progress"
+  },
+  "@radix-ui/react-scroll-area": {
+    "current": "1.2.2",
+    "wanted": "1.2.2",
+    "latest": "1.2.10",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-scroll-area"
+  },
+  "@radix-ui/react-separator": {
+    "current": "1.1.1",
+    "wanted": "1.1.1",
+    "latest": "1.1.7",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-separator"
+  },
+  "@radix-ui/react-slider": {
+    "current": "1.2.2",
+    "wanted": "1.2.2",
+    "latest": "1.3.6",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-slider"
+  },
+  "@radix-ui/react-tabs": {
+    "current": "1.1.2",
+    "wanted": "1.1.2",
+    "latest": "1.1.13",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-tabs"
+  },
+  "@radix-ui/react-toast": {
+    "current": "1.2.4",
+    "wanted": "1.2.4",
+    "latest": "1.2.15",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-toast"
+  },
+  "@radix-ui/react-toggle": {
+    "current": "1.1.1",
+    "wanted": "1.1.1",
+    "latest": "1.1.10",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-toggle"
+  },
+  "@radix-ui/react-toggle-group": {
+    "current": "1.1.1",
+    "wanted": "1.1.1",
+    "latest": "1.1.11",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-toggle-group"
+  },
+  "@radix-ui/react-tooltip": {
+    "current": "1.1.6",
+    "wanted": "1.1.6",
+    "latest": "1.2.8",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-tooltip"
+  },
+  "@sentry/nextjs": {
+    "current": "9.46.0",
+    "wanted": "9.46.0",
+    "latest": "10.8.0",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@sentry/nextjs"
+  },
+  "@storybook/addon-a11y": {
+    "current": "8.6.14",
+    "wanted": "8.6.14",
+    "latest": "9.1.4",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@storybook/addon-a11y"
+  },
+  "@storybook/addon-links": {
+    "current": "8.6.14",
+    "wanted": "8.6.14",
+    "latest": "9.1.4",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@storybook/addon-links"
+  },
+  "@storybook/addon-onboarding": {
+    "current": "8.6.14",
+    "wanted": "8.6.14",
+    "latest": "9.1.4",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@storybook/addon-onboarding"
+  },
+  "@storybook/addon-viewport": {
+    "current": "8.6.14",
+    "wanted": "8.6.14",
+    "latest": "9.0.8",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@storybook/addon-viewport"
+  },
+  "@storybook/nextjs": {
+    "current": "8.6.14",
+    "wanted": "8.6.14",
+    "latest": "9.1.4",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@storybook/nextjs"
+  },
+  "@storybook/react": {
+    "current": "8.6.14",
+    "wanted": "8.6.14",
+    "latest": "9.1.4",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@storybook/react"
+  },
+  "@storybook/test-runner": {
+    "current": "0.22.1",
+    "wanted": "0.22.1",
+    "latest": "0.23.0",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@storybook/test-runner"
+  },
+  "@tanstack/query-sync-storage-persister": {
+    "current": "5.85.5",
+    "wanted": "5.85.9",
+    "latest": "5.85.9",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@tanstack/query-sync-storage-persister"
+  },
+  "@tanstack/react-query": {
+    "current": "5.85.5",
+    "wanted": "5.85.9",
+    "latest": "5.85.9",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@tanstack/react-query"
+  },
+  "@tanstack/react-query-devtools": {
+    "current": "5.85.5",
+    "wanted": "5.85.9",
+    "latest": "5.85.9",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@tanstack/react-query-devtools"
+  },
+  "@tiptap/core": {
+    "current": "3.3.0",
+    "wanted": "3.3.1",
+    "latest": "3.3.1",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/core"
+  },
+  "@tiptap/extension-text-align": {
+    "current": "3.3.0",
+    "wanted": "3.3.1",
+    "latest": "3.3.1",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/extension-text-align"
+  },
+  "@tiptap/extension-underline": {
+    "current": "3.3.0",
+    "wanted": "3.3.1",
+    "latest": "3.3.1",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/extension-underline"
+  },
+  "@tiptap/pm": {
+    "current": "3.3.0",
+    "wanted": "3.3.1",
+    "latest": "3.3.1",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/pm"
+  },
+  "@tiptap/react": {
+    "current": "3.3.0",
+    "wanted": "3.3.1",
+    "latest": "3.3.1",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/react"
+  },
+  "@tiptap/starter-kit": {
+    "current": "3.3.0",
+    "wanted": "3.3.1",
+    "latest": "3.3.1",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/starter-kit"
+  },
+  "@types/jspdf": {
+    "current": "2.0.0",
+    "wanted": "2.0.0",
+    "latest": "1.3.3",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@types/jspdf"
+  },
+  "@types/node": {
+    "current": "22.18.0",
+    "wanted": "22.18.0",
+    "latest": "24.3.0",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@types/node"
+  },
+  "@typescript-eslint/eslint-plugin": {
+    "current": "8.41.0",
+    "wanted": "8.42.0",
+    "latest": "8.42.0",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@typescript-eslint/eslint-plugin"
+  },
+  "@typescript-eslint/parser": {
+    "current": "8.41.0",
+    "wanted": "8.42.0",
+    "latest": "8.42.0",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@typescript-eslint/parser"
+  },
+  "@vitejs/plugin-react": {
+    "current": "4.7.0",
+    "wanted": "4.7.0",
+    "latest": "5.0.2",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/@vitejs/plugin-react"
+  },
+  "chromatic": {
+    "current": "11.29.0",
+    "wanted": "11.29.0",
+    "latest": "13.1.4",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/chromatic"
+  },
+  "cmdk": {
+    "current": "1.0.4",
+    "wanted": "1.0.4",
+    "latest": "1.1.1",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/cmdk"
+  },
+  "embla-carousel-react": {
+    "current": "8.5.1",
+    "wanted": "8.5.1",
+    "latest": "8.6.0",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/embla-carousel-react"
+  },
+  "eslint-plugin-storybook": {
+    "current": "0.11.6",
+    "wanted": "0.11.6",
+    "latest": "9.1.4",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/eslint-plugin-storybook"
+  },
+  "input-otp": {
+    "current": "1.4.1",
+    "wanted": "1.4.1",
+    "latest": "1.4.2",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/input-otp"
+  },
+  "jest": {
+    "current": "30.1.1",
+    "wanted": "30.1.3",
+    "latest": "30.1.3",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/jest"
+  },
+  "jest-environment-jsdom": {
+    "current": "30.1.1",
+    "wanted": "30.1.2",
+    "latest": "30.1.2",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/jest-environment-jsdom"
+  },
+  "lint-staged": {
+    "current": "16.1.5",
+    "wanted": "16.1.6",
+    "latest": "16.1.6",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/lint-staged"
+  },
+  "lucide-react": {
+    "current": "0.454.0",
+    "wanted": "0.454.0",
+    "latest": "0.542.0",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/lucide-react"
+  },
+  "msw": {
+    "current": "2.10.5",
+    "wanted": "2.11.1",
+    "latest": "2.11.1",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/msw"
+  },
+  "next": {
+    "current": "15.4.7",
+    "wanted": "15.4.7",
+    "latest": "15.5.2",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/next"
+  },
+  "react-resizable-panels": {
+    "current": "2.1.9",
+    "wanted": "2.1.9",
+    "latest": "3.0.5",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/react-resizable-panels"
+  },
+  "recharts": {
+    "current": "2.15.0",
+    "wanted": "2.15.0",
+    "latest": "3.1.2",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/recharts"
+  },
+  "sonner": {
+    "current": "1.7.4",
+    "wanted": "1.7.4",
+    "latest": "2.0.7",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/sonner"
+  },
+  "storybook": {
+    "current": "8.6.14",
+    "wanted": "8.6.14",
+    "latest": "9.1.4",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/storybook"
+  },
+  "tailwind-merge": {
+    "current": "2.6.0",
+    "wanted": "2.6.0",
+    "latest": "3.3.1",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/tailwind-merge"
+  },
+  "tailwindcss": {
+    "current": "3.4.17",
+    "wanted": "3.4.17",
+    "latest": "4.1.12",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/tailwindcss"
+  },
+  "vaul": {
+    "current": "0.9.9",
+    "wanted": "0.9.9",
+    "latest": "1.1.2",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/vaul"
+  },
+  "zod": {
+    "current": "3.25.76",
+    "wanted": "3.25.76",
+    "latest": "4.1.5",
+    "dependent": "frontend",
+    "location": "/home/omar/Documents/ruleIQ/frontend/node_modules/zod"
+  }
+}

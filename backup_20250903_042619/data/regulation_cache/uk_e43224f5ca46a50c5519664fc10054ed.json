@@ -1,0 +1,260 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/eur/2012/648/data.xml",
+  "fetched_at": "2025-08-31T18:16:06.173749",
+  "metadata": {
+    "title": "Regulation (EU) No 648/2012 of the European Parliament and of the Council of 4 July 2012 on OTC derivatives, central counterparties and trade repositories (Text with EEA relevance)",
+    "description": "Regulation (EU) No 648/2012 of the European Parliament and of the Council of 4 July 2012 on OTC derivatives, central counterparties and trade repositories (Text with EEA relevance)",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "article-1",
+      "text": "Article 11This Regulation lays down clearing and bilateral risk-management requirements for over-the-counter (\u2018OTC\u2019) derivative contracts, reporting requirements for derivative contracts and uniform requirements for the performance of activities of central counterparties (\u2018CCPs\u2019) and trade repositories.2This Regulation shall apply to CCPs and their clearing members, to financial counterparties and to trade repositories. It shall apply to non-financial counterparties and trading venues where so p",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-2",
+      "text": "Article 2For the purposes of this Regulation, the following definitions shall apply:\u201cFSMA\u201d means the Financial Services and Markets Act 2000;\u201cMIFIR\u201d means Regulation (EU) No 600/2014 of the European Parliament and of the Council of 15 May 2014 on markets in financial instruments and amending Regulation (EU) 648/2012;\u201cCapital Requirements Regulation\u201d means Regulation (EU) No 575/2013 of the European Parliament and of the Council of 26 June 2013 on prudential requirements for credit institutions a",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent"
+      ]
+    },
+    {
+      "id": "article-2a",
+      "text": "Article 2a\n                  \n                           1\n                        \n                              For the purposes of Article 2(7) of this Regulation, a third-country market shall be considered to be equivalent to  a UK regulated market within the meaning given in Article 2(1)(13A) of the MIFIR  where it complies with legally binding requirements which are equivalent to the requirements  resulting from provisions of the law of the United Kingdom relied on before  IP completion da",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-3",
+      "text": "Article 31In relation to a non-financial counterparty, an intragroup transaction is an OTC derivative contract entered into with another counterparty which is part of the same group provided that both counterparties are included in the same consolidation on a full basis and they are subject to an appropriate centralised risk evaluation, measurement and control procedures and that counterparty is established in the  United Kingdom  or, if it is established in a third country, the Commission has a",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-4",
+      "text": "Article 41Counterparties shall clear all OTC derivative contracts pertaining to a class of OTC derivatives that has been declared subject to the clearing obligation in accordance with Article 5(2), if those contracts fulfil both of the following conditions:athey have been concluded in one of the following ways:between two financial counterparties that  are subject to the conditions  set out in the second subparagraph of Article\u00a04a(1);\n                                          \n                  ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-4a",
+      "text": "Article\u00a04a\n                  \n                           1\n                        \n                              Every\u00a012 months, a financial counterparty taking positions in OTC derivative contracts may calculate its aggregate month-end average position for the previous\u00a012 months in accordance with paragraph\u00a03.\n                           \n                              Where a financial counterparty does not calculate its positions, or where the result of that calculation exceeds any of the cle",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-5",
+      "text": "Article 5\n                           1\n                        . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2Technical standards may be made as follows:athe Bank of England may make technical standards specifying the class or classes of OTC derivatives that should be subject to the clearing obligation referred to in Article 4;bthe Bank of England may make technical standards for financial counterparties that are PRA-authorised persons and the FCA may make technical standards fo",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-6",
+      "text": "Article 61The Bank of England  shall establish, maintain and keep up to date a public register in order to identify the classes of OTC derivatives subject to the clearing obligation correctly and unequivocally. The public register shall be available on  the Bank of England's  website.2The register shall include:athe classes of OTC derivatives that are subject to the clearing obligation pursuant to Article 4;b\n                                    the CCPs that are authorised in accordance with  Ar",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-6a",
+      "text": "Article\u00a06a\n                  1The Bank of England may, with the consent of the Treasury, direct that the clearing obligation referred to in Article 4(1) be suspended for specific classes of OTC derivatives or for a specific type of counterparty if one of the following conditions is met:athe specific classes of OTC derivatives are no longer suitable for central clearing in accordance with the criteria referred to in the first sub-paragraph of Article 5(4) and in Article 5(5);ba CCP is likely to c",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent"
+      ]
+    },
+    {
+      "id": "article-7",
+      "text": "Article 71\n                        \n                              A CCP that has been authorised to clear OTC derivative contracts shall accept clearing such contracts on a non-discriminatory and transparent basis, including as regards collateral requirements and fees related to access, regardless of the trading venue. This in particular shall ensure that a trading venue has the right to non-discriminatory treatment in terms of how contracts traded on that trading venue are treated in terms of:\n",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-8",
+      "text": "Article 81A trading venue shall provide trade feeds on a non-discriminatory and transparent basis to any CCP that has been authorised to clear OTC derivative contracts traded on that trading venue upon request by the CCP.2Where a request to access a trading venue has been formally submitted to a trading venue by a CCP, the trading venue shall respond to the CCP within three months.3Where access is refused by a trading venue, it shall notify the CCP accordingly, providing full reasons.4Without pr",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-9",
+      "text": "Article 91\n                        \n                              Counterparties and CCPs shall ensure that the details of any derivative contract they have concluded and of any modification or termination of the contract are reported in accordance with paragraphs\u00a01a to\u00a01f of this Article to a trade repository registered in accordance with Article\u00a055 or recognised in accordance with Article\u00a077. The details shall be reported no later than the working day following the conclusion, modification or ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent"
+      ]
+    },
+    {
+      "id": "article-10",
+      "text": "Article 101\n                        \n                              Every\u00a012 months, a non-financial counterparty taking positions in OTC derivative contracts may calculate its aggregate month-end average position for the previous\u00a012 months in accordance with paragraph\u00a03.\n                           \n                              Where a non-financial counterparty does not calculate its positions, or where the result of that calculation in respect of one or more classes of OTC derivatives exceeds ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-11",
+      "text": "Article 111Financial counterparties and non-financial counterparties that enter into an OTC derivative contract not cleared by a CCP, shall ensure, exercising due diligence, that appropriate procedures and arrangements are in place to measure, monitor and mitigate operational risk and counterparty credit risk, including at least:athe timely confirmation, where available, by electronic means, of the terms of the relevant OTC derivative contract;bformalised processes which are robust, resilient an",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-12",
+      "text": "Article 121Regulation 9 of the 2013 Regulations sets out the penalties applicable to infringements of the rules under this Title.2. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .3An infringement of the rules under this Title shall not affect the validity of an OTC derivative contract or the possibility for the parties to enforce the provisions of an OTC derivative contract. An infringement of the rules under this Title shall not give rise to any right to compensation from a party ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-13",
+      "text": "Article 131. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2The Treasury may by regulations determine  that the legal, supervisory and enforcement arrangements of a third country:aare equivalent to the requirements laid down in this Regulation under Articles 4, 9, 10 and 11;bensure protection of professional secrecy that is equivalent to that set out in this Regulation; andcare being effectively applied and enforced in an equitable and non-distortive manner so as to ensure effecti",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-13a",
+      "text": "Article 13aThe FCA, the PRA and the Bank of England, as appropriate, must co-ordinate the exercise of their functions when making technical standards under:athe second sub-paragraph of paragraph 4 of Article 4,bparagraph 5 of Article 9,cparagraph 6 of Article 9,dparagraph 15 of Article 11, oreparagraph 17 of Article 11,with a view to ensuring that the technical standards made under each of those provisions are compatible.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-14",
+      "text": "Article 141Where a  body corporate or unincorporated association established in the United Kingdom  intends to provide clearing services as a CCP, it shall apply for authorisation to  its competent authority  (the CCP\u2019s competent authority), in accordance with the procedure set out in Article 17.2. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .3Authorisation referred to in paragraph 1 shall be granted only for activities linked to clearing and shall specify the services or activit",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-15",
+      "text": "Article 151A CCP wishing to extend its business to additional services or activities not covered by the initial authorisation shall submit a request for extension to the CCP\u2019s competent authority. The offering of clearing services for which the CCP has not already been authorised shall be considered to be an extension of that authorisation.The extension of authorisation shall be made in accordance with the procedure set out under Article 17.2. . . . . . . . . . . . . . . . . . . . . . . . . . . ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-16",
+      "text": "Article 161A CCP shall have a permanent and available initial capital of at least EUR 7,5 million to be authorised pursuant to Article 14.2A CCP\u2019s capital, including retained earnings and reserves, shall be proportionate to the risk stemming from the activities of the CCP. It shall at all times be sufficient to ensure an orderly winding-down or restructuring of the activities over an appropriate time span and an adequate protection of the CCP against credit, counterparty, market, operational, le",
+      "type": "mandatory",
+      "keywords": [
+        "retention"
+      ]
+    },
+    {
+      "id": "article-17",
+      "text": "Article 171The applicant CCP shall submit an application for authorisation to the competent authority ... .2The applicant CCP shall provide all information necessary to satisfy the competent authority that the applicant CCP has established, at the time of authorisation, all the necessary arrangements to meet the requirements laid down in this Regulation. ...\n                              3\n                           \n                                 Within 30 working days of receipt of the appli",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-20",
+      "text": "Article 201 The  CCP\u2019s competent authority shall withdraw authorisation where the CCP:ahas not made use of the authorisation within 12 months, expressly renounces the authorisation or has provided no services or performed no activity for the preceding six months;bhas obtained authorisation by making false statements or by any other irregular means;cis no longer in compliance with the conditions under which authorisation was granted and has not taken the remedial action requested by the CCP\u2019s com",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-21",
+      "text": "Article 21\n                              1\n                            The competent authority  referred to in Article 22 shall review the arrangements, strategies, processes and mechanisms implemented by CCPs to comply with this Regulation and evaluate the risks, including at least financial and operational risks, to which CCPs are, or might be, exposed.\n                              2The review and evaluation referred to in paragraph 1 shall cover all the requirements on CCPs laid down in this",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "article-25",
+      "text": "Article 25\n                              1\n                           \n                                 A CCP established in a third country may only provide clearing services to clearing members or trading venues established in the  United Kingdom  where that CCP is recognised by  the Bank of England.\n                              2 The Bank of England  may recognise a CCP established in a third country that has applied for recognition to provide certain clearing services or activities where:a ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-25a",
+      "text": "Article 25a\n                     \n                              1\n                           \n                                 A CCP referred to in Article 25(2b) may submit a reasoned request that  the Bank of England  assesses whether in its compliance with the applicable third-country framework, taking into account the provisions of the  regulations made under  Article 25(6), that CCP may be deemed to satisfy compliance with the requirements set out in Article 16 and Titles IV and V. ...\n    ",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "article-25b",
+      "text": "Article 25b\n                     \n                              1\n                           \n                                  The Bank of England  shall be responsible for carrying out the duties resulting from this Regulation for the supervision on an ongoing basis of the compliance of recognised Tier 2 CCPs with the requirements referred to in point (a) of Article 25(2b). ...\n                                 The Bank of England shall require confirmation from each Tier 2 CCP at least on a ye",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    }
+  ],
+  "penalties": [],
+  "enforcement": {
+    "authority": [
+      "Prudential Regulation Authority",
+      "PRA",
+      "Financial Conduct Authority",
+      "FCA"
+    ],
+    "powers": [
+      "Article 2a\n                  \n                           1\n                        \n                              For the purposes of Article 2(7) of this Regulation, a third-country market shall be c",
+      "Article 71\n                        \n                              A CCP that has been authorised to clear OTC derivative contracts shall accept clearing such contracts on a non-discriminatory and tran",
+      "Article 91\n                        \n                              Counterparties and CCPs shall ensure that the details of any derivative contract they have concluded and of any modification or termin",
+      "Article 111Financial counterparties and non-financial counterparties that enter into an OTC derivative contract not cleared by a CCP, shall ensure, exercising due diligence, that appropriate procedure",
+      "Article 121Regulation 9 of the 2013 Regulations sets out the penalties applicable to infringements of the rules under this Title.2. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .3An inf",
+      "Article 131. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2The Treasury may by regulations determine  that the legal, supervisory and enforcement arrangements of a third country:aare e",
+      "Article 21\n                              1\n                            The competent authority  referred to in Article 22 shall review the arrangements, strategies, processes and mechanisms implemente",
+      "Article 25\n                              1\n                           \n                                 A CCP established in a third country may only provide clearing services to clearing members or t",
+      "Article 261A CCP shall have robust governance arrangements, which include a clear organisational structure with well-defined, transparent and consistent lines of responsibility, effective processes to",
+      "Article 27\n                     \n                        \n                           1\n                           \n                              The senior management of a CCP shall be of sufficiently",
+      "Article 30\n                     \n                        \n                           1\n                           \n                              The competent authority shall not authorise a CCP unles",
+      "Article 481A CCP shall have detailed procedures in place to be followed where a clearing member does not comply with the participation requirements of the CCP laid down in Article 37 within the time l",
+      "Article 751 The Treasury may by regulations determine  that the legal and supervisory arrangements of a third country ensure that:atrade repositories authorised in that third country comply with legal",
+      "Article\u00a076a\n                     \n                              1\n                           \n                                 Where necessary for the exercise of their duties, relevant authorities of",
+      "Article 831The obligation of professional secrecy shall apply to all persons who work or have worked for the competent authorities ... , or for auditors and experts instructed by the competent authori"
+    ],
+    "procedures": []
+  },
+  "dates": [
+    {
+      "type": "deadline",
+      "date": "12\u00a0February\u00a02014",
+      "context": "Article 91\n                        \n                              Counterparties and CCPs shall ensure that the details of any derivative contract the"
+    },
+    {
+      "type": "deadline",
+      "date": "12",
+      "context": "Article 201 The  CCP\u2019s competent authority shall withdraw authorisation where the CCP:ahas not made use of the authorisation within 12 months, express"
+    }
+  ],
+  "controls": [
+    "consent_management",
+    "audit_logging",
+    "data_minimization",
+    "security_testing",
+    "access_control",
+    "risk_assessment",
+    "incident_response"
+  ],
+  "xml_length": 1827003
+}

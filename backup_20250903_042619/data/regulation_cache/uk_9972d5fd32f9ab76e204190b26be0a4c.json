@@ -1,0 +1,476 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/eur/2016/1011/data.xml",
+  "fetched_at": "2025-08-31T18:16:09.264305",
+  "metadata": {
+    "title": "Regulation (EU) 2016/1011 of the European Parliament and of the Council of 8 June 2016 on indices used as benchmarks in financial instruments and financial contracts or to measure the performance of investment funds and amending Directives 2008/48/EC and 2014/17/EU and Regulation (EU) No 596/2014 (Text with EEA relevance)",
+    "description": "Regulation (EU) 2016/1011 of the European Parliament and of the Council of 8 June 2016 on indices used as benchmarks in financial instruments and financial contracts or to measure the performance of investment funds and amending Directives 2008/48/EC and 2014/17/EU and Regulation (EU) No 596/2014 (Text with EEA relevance)",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "article-2",
+      "text": "Article 21This Regulation applies to the provision of benchmarks, the contribution of input data to a benchmark and the use of a benchmark within the United Kingdom.2This Regulation shall not apply to:aa central bank;ba public authority, where it contributes data to, provides, or has control over the provision of, benchmarks for public policy purposes, including measures of employment, economic activity, and inflation;ca central counterparty (CCP)  as defined in Article 2(1) of Regulation (EU) N",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-3",
+      "text": "Article 31For the purposes of this Regulation, the following definitions apply:\u2018index\u2019 means any figure:that is published or made available to the public;that is regularly determined:entirely or partially by the application of a formula or any other method of calculation, or by an assessment; andon the basis of the value of one or more underlying assets or prices, including estimated prices, actual or estimated interest rates, quotes and committed quotes, or other values or surveys;\u2018index provid",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-4",
+      "text": "Article 41An administrator shall have in place robust governance arrangements which include a clear organisational structure with well-defined, transparent and consistent roles and responsibilities for all persons involved in the provision of a benchmark.Administrators shall take adequate steps to identify and to prevent or manage conflicts of interest between themselves, including their managers, employees or any person directly or indirectly linked to them by control, and contributors or users",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-5",
+      "text": "Article 51Administrators shall establish and maintain a permanent and effective oversight function to ensure oversight of all aspects of the provision of their benchmarks.2Administrators shall develop and maintain robust procedures regarding their oversight function, which shall be made available to the FCA.3The oversight function shall operate with integrity and shall have the following responsibilities, which shall be adjusted by the administrator based on the complexity, use and vulnerability",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-6",
+      "text": "Article 61Administrators shall have in place a control framework that ensures that their benchmarks are provided and published or made available in accordance with this Regulation.2The control framework shall be proportionate to the level of conflicts of interest identified, the extent of discretion in the provision of the benchmark and the nature of the benchmark input data.3The control framework shall include:amanagement of operational risk;badequate and effective business continuity and disas",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "article-7",
+      "text": "Article 71An administrator shall have in place an accountability framework, covering record-keeping, auditing and review, and a complaints process, that provides evidence of compliance with the requirements of this Regulation.2An administrator shall designate an internal function with the necessary capability to review and report on the administrator's compliance with the benchmark methodology and this Regulation.3For critical benchmarks, an administrator shall appoint an independent external au",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-8",
+      "text": "Article 81An administrator shall keep records of:aall input data, including the use of such data;bthe methodology used for the determination of a benchmark;cany exercise of judgement or discretion by the administrator and, where applicable, by assessors, in the determination of a benchmark, including the reasoning for said judgement or discretion;dthe disregard of any input data, in particular where it conformed to the requirements of the benchmark methodology, and the rationale for such disrega",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "article-9",
+      "text": "Article 91An administrator shall have in place and publish procedures for receiving, investigating and retaining records concerning complaints made, including about the administrator's benchmark determination process.2Such a complaints-handling mechanism shall ensure that:athe administrator makes available the complaints-handling policy through which complaints may be submitted on whether a specific benchmark determination is representative of market value, on a proposed change to the benchmark ",
+      "type": "mandatory",
+      "keywords": [
+        "retention"
+      ]
+    },
+    {
+      "id": "article-10",
+      "text": "Article 101An administrator shall not outsource functions in the provision of a benchmark in such a way as to impair materially the administrator's control over the provision of the benchmark or the ability of the FCA to supervise the benchmark.2Where an administrator outsources to a service provider functions or any relevant services and activities in the provision of a benchmark, the administrator shall remain fully responsible for discharging all of the administrator's obligations under this ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "retention"
+      ]
+    },
+    {
+      "id": "article-11",
+      "text": "Article 111The provision of a benchmark shall be governed by the following requirements in respect of its input data:athe input data shall be sufficient to represent accurately and reliably the market or economic reality that the benchmark is intended to measure.The input data shall be transaction data, if available and appropriate. If transaction data is not sufficient or is not appropriate to represent accurately and reliably the market or economic reality that the benchmark is intended to mea",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-12",
+      "text": "Article 121An administrator shall use a methodology for determining a benchmark that:ais robust and reliable;bhas clear rules identifying how and when discretion may be exercised in the determination of that benchmark;cis rigorous, continuous and capable of validation including, where appropriate, back-testing against available transaction data;dis resilient and ensures that the benchmark can be calculated in the widest set of possible circumstances, without compromising its integrity;eis tracea",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-13",
+      "text": "Article 131An administrator shall develop, operate and administer the benchmark and methodology transparently. To that end, the administrator shall publish or make available the following information:athe key elements of the methodology that the administrator uses for each benchmark provided and published or, when applicable, for each family of benchmarks provided and published;bdetails of the internal review and the approval of a given methodology, as well as the frequency of such review;cthe p",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-14",
+      "text": "Article 141An administrator shall establish adequate systems and effective controls to ensure the integrity of input data in order to be able to identify and report to the FCA any conduct that may involve manipulation or attempted manipulation of a benchmark, under Regulation (EU) No 596/2014.2An administrator shall monitor input data and contributors in order to be able to notify the FCA and provide all relevant information where the administrator suspects that, in relation to a benchmark, any ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-15",
+      "text": "Article 151Where a benchmark is based on input data from contributors, its administrator shall develop a code of conduct for each benchmark clearly specifying contributors' responsibilities with respect to the contribution of input data and shall ensure that such code of conduct complies with this Regulation. The administrator shall be satisfied that contributors adhere to the code of conduct on a continuous basis and at least annually and in case of changes to it.2The code of conduct shall incl",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-16",
+      "text": "Article 161The following governance and control requirements shall apply to a supervised contributor:athe supervised contributor shall ensure that the provision of input data is not affected by any existing or potential conflict of interest and that, where any discretion is required, it is independently and honestly exercised based on relevant information in accordance with the code of conduct referred to in Article 15;bthe supervised contributor shall have in place a control framework that ensu",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "retention",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-17",
+      "text": "Article 171Article 11(1)(d) and (e), Article 11(2) and (3), Article 14(1) and (2), and Articles 15 and 16 shall not apply to the provision of and the contribution to regulated-data benchmarks. Article 8(1)(a) shall not apply to the provision of regulated-data benchmarks with reference to input data that are contributed entirely and directly as specified in point (24) of Article 3(1).2Articles 24 and 25 or Article 26 shall, as applicable, apply to the provision of, and the contribution to, regula",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-18",
+      "text": "Article 18The specific requirements laid down in Annex I shall apply to the provision of, and contribution to, interest rate benchmarks in addition to, or as a substitute for, the requirements of Title II.Articles 24, 25 and 26 shall not apply to the provision of, and contribution to, interest rate benchmarks.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-19",
+      "text": "Article 191The specific requirements laid down in Annex II shall apply instead of the requirements of Title II, with the exception of Article 10, to the provision of, and contribution to, commodity benchmarks, unless the benchmark in question is a regulated-data benchmark or is based on submissions by contributors the majority of which are supervised entities.Articles 24, 25 and 26 shall not apply to the provision of, and contribution to, commodity benchmarks.2Where a commodity benchmark is a cr",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-19a",
+      "text": "Article 19a1The requirements laid down in Annex III shall apply to the provision of, and contribution to,  UK  Climate Transition Benchmarks and UK Paris-aligned Benchmarks, in addition to the requirements of Titles II, III and IV.2The Treasury may make regulations  to supplement this Regulation by laying down the minimum standards for  UK  Climate Transition Benchmarks and UK Paris-aligned Benchmarks to specify:athe criteria for the choice of the underlying assets, including, where applicable, ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-19b",
+      "text": "Article 19bAdministrators of  UK  Climate Transition Benchmarks shall select, weight, or exclude underlying assets issued by companies that follow a decarbonisation trajectory by 31 December 2022, in accordance with the following requirements:the companies disclose measurable carbon emission reduction targets to be achieved within specific timeframes;the companies disclose a reduction in carbon emissions which is disaggregated down to the level of relevant operating subsidiaries;the companies di",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-19d",
+      "text": "Article 19dBy 1 January 2022, administrators which are located in the  United Kingdom  and which provide significant benchmarks determined on the basis of the value of one or more underlying assets or prices shall endeavour to provide one or more  UK  Climate Transition Benchmarks.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-A20",
+      "text": "Article A201The FCA must conduct a  proportionate review  of critical benchmarks in accordance with paragraphs 2 to 4, taking into account information provided to it under paragraph A1 of Article 20.2The review must consider:awhether an administrator located in the United Kingdom provides a benchmark that satisfies one or more of conditions (a), (b), (c) or (d) of paragraph 1 of Article 20; andbwhere a benchmark satisfies point (a) of this paragraph, whether the FCA recommends that the benchmark",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-20",
+      "text": "Article 20A1An administrator shall immediately notify the FCA when the administrator\u2019s benchmark:aexceeds the threshold in paragraph 1(a); orbfulfils the criterion in paragraph 1(c)(ii) and there is reason to believe that it also fulfils the criterion in paragraph 1(c)(iii).1The conditions are:athe benchmark is used directly or indirectly within a combination of benchmarks as a reference for financial instruments or financial contracts or for measuring the performance of investment funds, having",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-21",
+      "text": "Article 211If an administrator of a critical benchmark intends to cease providing such benchmark, the administrator shall:aimmediately notify the FCA; andbwithin four weeks of such notification submit an assessment of how the benchmark:is to be transitioned to a new administrator; oris to be ceased to be provided, taking into account the procedure established in Article 28(1).During the period referred to in point (b) of the first subparagraph, the administrator shall not cease provision of the ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-21A",
+      "text": "Article 21A\n              1Where the FCA has completed an assessment of a critical benchmark under Article 21(2), the FCA may, by publishing a notice, prohibit some or all new use of the benchmark by supervised entities.2In paragraph 1, the reference to new use of a benchmark is to doing the following on or after the day on which the prohibition takes effect (\u201cthe prohibition day\u201d)\u2014aissuing a financial instrument which references the benchmark, or amending the terms of a financial instrument so ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-22",
+      "text": "Article 22Without prejudice to the application of United Kingdom competition law, when providing a critical benchmark, the administrator shall take adequate steps to ensure that licences of, and information relating to, the benchmark are provided to all users on a fair, reasonable, transparent and non-discriminatory basis.",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-22A",
+      "text": "Article 22A\n                  1This Article applies to a critical benchmark that\u2014ais based on submissions by contributors the majority of which are supervised entities or supervised third country entities, andbis not an Article 23A benchmark.2An administrator of a critical benchmark must submit to the FCA an assessment of the capability of the benchmark to measure the underlying market or economic reality\u2014aat the end of the period of two years beginning with the day on which the benchmark became",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-22B",
+      "text": "Article 22B\n                  1Where the FCA receives an assessment by a benchmark administrator under Article 22A within the period specified by or under that Article, the FCA must make its own assessment of the capability of the benchmark to measure the underlying market or economic reality, taking into account, among other things\u2014athe procedure established by the administrator in accordance with Article 28(1), andbthe administrator's assessment.2If a benchmark administrator does not submit an",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "article-23",
+      "text": "Article 231. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .3. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .4. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .5AIf a supervised contributor or supervised third country contributor gives a notification under Article 22A(6), the contributor may not cease contributing input data before the date specified in the notification as the date on which ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-23A",
+      "text": "Article 23A\n              1If the FCA gives the administrator of a critical benchmark a notice under Article 21(3B)(a) or Article 22B(3)(a) (benchmark unrepresentative or representativeness at risk), the FCA must, before the end of the period of 21 days beginning with the day on which it gave the notice\u2014aconsider whether it is appropriate for the FCA to designate the benchmark under this Article, andbif it proposes to do so, inform the benchmark administrator by written notice.2The FCA may not d",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-23B",
+      "text": "Article 23B\n              1Supervised entities must not use an Article 23A benchmark, except where permitted to do so under paragraph 2 or Article 23C.2The FCA may, by publishing a notice before the day on which the designation of the benchmark under Article 23A takes effect, provide that the\nprohibition in paragraph 1 does not take effect until a date specified in the notice.3The date specified in a notice under paragraph 2 must fall before the end of the period of four months beginning with th",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-23C",
+      "text": "Article 23C\n              1This Article applies to an Article 23A benchmark.2The FCA may, by publishing a notice, permit some or all legacy use of the benchmark by supervised entities.3The FCA may, by publishing a notice, alter or withdraw a permission under paragraph 2.4The FCA may only exercise a power under paragraph 2 or 3 if it considers it desirable to do so in order to advance either or both of the following\u2014aits consumer protection objective (see section 1C of FSMA);bits integrity object",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent"
+      ]
+    },
+    {
+      "id": "article-23D",
+      "text": "Article 23D\n                  1This Article applies to an Article 23A benchmark.2The FCA may by written notice impose requirements on the benchmark administrator relating to any of the following\u2014athe way in which the benchmark is determined, including the input data,brules of the benchmark, andcwhere the benchmark is based on submissions by contributors, the code of conduct referred to in Article 15.3The FCA may only exercise the powers under paragraph 2 if\u2014ait considers it appropriate to do so ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent"
+      ]
+    },
+    {
+      "id": "article-23E",
+      "text": "Article 23E\n              1Where the FCA has exercised a power under Article 23D(2) in relation to a benchmark, the FCA must, for each review period\u2014areview its exercise of its powers under Article 23D(2) in relation to that benchmark during the period, andbpublish a report setting out the outcome of the review.2For the purposes of paragraph 1, the review periods are\u2014athe period of two years beginning with the day on which the first notice under Article 23D(2) relating to the benchmark is publis",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-23F",
+      "text": "Article 23F\n                  1The FCA must prepare and publish a statement of its policy with respect to\u2014athe exercise of its power under Article 21A,bthe designation of benchmarks under Article 23A,cthe exercise of its powers under Article 23C, anddthe exercise of its powers under Article 23D.2The FCA\u2014amay alter or replace a statement published under this Article, andbif it does so, must publish the altered or replacement statement.3A statement published under this Article must be published in",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-23FC",
+      "text": "Article 23FC\n              1An administrator of an Article 23A benchmark, and its officers and employees, are not liable in damages\u2014afor action or inaction required by a notice under Article 23D(2) or by Article 23D(8), orbfor publishing the benchmark as it exists as a result of such action or inaction.2Paragraph 1 does not remove liability in respect of loss or damage arising from the exercise of a discretion conferred on the administrator under Article 23D(2) or as part of a permission given u",
+      "type": "mandatory",
+      "keywords": [
+        "consent"
+      ]
+    },
+    {
+      "id": "article-23G",
+      "text": "Article 23G\n                  1This Article makes provision about critical benchmarks provided for different currencies, maturities or tenors (\u201cumbrella benchmarks\u201d).2References in this Article to a  \u201cversion\u201d of an umbrella benchmark are to the benchmark as provided for a particular currency, maturity or tenor or, where the benchmark is provided for a combination of two or more of those factors, the benchmark as provided for each combination.3Articles 11(4), (4A) and (4B), 21, 21A, 22A, 22B, 23",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "article-24",
+      "text": "Article 241A benchmark which is not a critical benchmark is significant when:ait is used directly or indirectly within a combination of benchmarks as a reference for financial instruments or financial contracts or for measuring the performance of investments funds having a total average value of at least EUR 50 billion on the basis of all the range of maturities or tenors of the benchmark, where applicable, over a period of six months; orbit has no or very few appropriate market-led substitutes ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-25",
+      "text": "Article 251An administrator may choose not to apply Article 4(2), points (c), (d) and (e) of Article 4(7), point (b) of Article 11(3) or Article 15(2) with respect to its significant benchmark where that administrator considers that the application of one or more of those provisions would be disproportionate taking into account the nature or impact of the benchmark or the size of the administrator.2In the event that an administrator chooses not to apply one or more of the provisions referred to ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-26",
+      "text": "Article 261An administrator may choose not to apply Articles 4(2), points (c), (d) and (e) of Article 4(7), Articles 4(8), 5(2), 5(3), 5(4), 6(1), 6(3), 6(5), 7(2), point (b) of Article 11(1), points (b) and (c) of Article 11(2), and Articles 11(3), 13(2), 14(2), 15(2), 16(2) and (3) with respect to its non-significant benchmarks.2An administrator shall immediately notify the FCA when the administrator's non-significant benchmark exceeds the threshold mentioned in point (a) of Article 24(1). In ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-26A",
+      "text": "Article 26A\n              Supervised entities and supervised third country entities must comply with prohibitions and other requirements imposed on them by the FCA under this Regulation.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-27",
+      "text": "Article 271Within two weeks of the inclusion of an administrator in the FCA register, the administrator shall publish, by means that ensure fair and easy access, a benchmark statement for each benchmark or, where applicable, for each family of benchmarks, that may be used in the United Kingdom in accordance with Article 29.Where that administrator begins providing a new benchmark or family of benchmarks that may be used in the United Kingdom in accordance with Article 29, the administrator shall",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-28",
+      "text": "Article 281An administrator shall publish... a robust procedure concerning the actions to be taken by the administrator in the event of changes to or the cessation of a benchmark which may be used in the United Kingdom in accordance with Article 29(1). The procedure may be drafted, where applicable, for families of benchmarks ....1AThe procedure described in paragraph 1\u2014amust be published with the benchmark statement for the benchmark when that statement is published in accordance with the first",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "article-29",
+      "text": "Article 291A supervised entity may use a benchmark or a combination of benchmarks in the United Kingdom if the  benchmark: ais on the FCA register; orbis provided by an administrator who is on the FCA register and located in the United Kingdom.1AParagraph 1 does not enable a supervised entity to use a benchmark in the United Kingdom in breach of a prohibition under Article 21A or 23B.1BThe use of a benchmark by a supervised entity for a financial contract, financial instrument or investment fund",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-30",
+      "text": "Article 301In order for a benchmark or a combination of benchmarks provided by an administrator located in a third country to be used in the United Kingdom in accordance with Article 29(1), the benchmark and the administrator shall be included in the FCA register. The following conditions shall be complied with in order to be included in the register:aeither:ithe Treasury have made regulations in accordance with paragraph 2 or 3 of this Article; oriithe European Commission has adopted a decision",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent"
+      ]
+    },
+    {
+      "id": "article-31",
+      "text": "Article 311The FCA shall withdraw the registration of an administrator located in a third country by removing that administrator from the FCA register where it has well-founded reasons, based on documented evidence, that the administrator:ais acting in a manner which is clearly prejudicial to the interests of the users of its benchmarks or the orderly functioning of markets; orbhas seriously infringed the national legislation in the third country or other provisions applicable to it in the third",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    }
+  ],
+  "penalties": [],
+  "enforcement": {
+    "authority": [
+      "PRA",
+      "FCA"
+    ],
+    "powers": [
+      "Article 51Administrators shall establish and maintain a permanent and effective oversight function to ensure oversight of all aspects of the provision of their benchmarks.2Administrators shall develop",
+      "Article 71An administrator shall have in place an accountability framework, covering record-keeping, auditing and review, and a complaints process, that provides evidence of compliance with the requir",
+      "Article 81An administrator shall keep records of:aall input data, including the use of such data;bthe methodology used for the determination of a benchmark;cany exercise of judgement or discretion by ",
+      "Article 91An administrator shall have in place and publish procedures for receiving, investigating and retaining records concerning complaints made, including about the administrator's benchmark deter",
+      "Article 161The following governance and control requirements shall apply to a supervised contributor:athe supervised contributor shall ensure that the provision of input data is not affected by any ex",
+      "Article 291A supervised entity may use a benchmark or a combination of benchmarks in the United Kingdom if the  benchmark: ais on the FCA register; orbis provided by an administrator who is on the FCA",
+      "Article 301In order for a benchmark or a combination of benchmarks provided by an administrator located in a third country to be used in the United Kingdom in accordance with Article 29(1), the benchm",
+      "Article 321Until such time as regulations are made in accordance with Article 30(2) or (3), a benchmark provided by an administrator located in a third country may be used by supervised entities in th",
+      "Article 481Any confidential information received, exchanged or transmitted pursuant to this Regulation shall be subject to the conditions of professional secrecy laid down in paragraph 2.2The obligati"
+    ],
+    "procedures": []
+  },
+  "dates": [
+    {
+      "type": "deadline",
+      "date": "30 April 2020",
+      "context": "Article 131An administrator shall develop, operate and administer the benchmark and methodology transparently. To that end, the administrator shall pu"
+    },
+    {
+      "type": "deadline",
+      "date": "30",
+      "context": "Article 151Where a benchmark is based on input data from contributors, its administrator shall develop a code of conduct for each benchmark clearly sp"
+    },
+    {
+      "type": "deadline",
+      "date": "30",
+      "context": "Article 151Where a benchmark is based on input data from contributors, its administrator shall develop a code of conduct for each benchmark clearly sp"
+    },
+    {
+      "type": "deadline",
+      "date": "30 April 2020",
+      "context": "Article 19a1The requirements laid down in Annex III shall apply to the provision of, and contribution to,  UK  Climate Transition Benchmarks and UK Pa"
+    },
+    {
+      "type": "deadline",
+      "date": "31 December 2022",
+      "context": "Article 19bAdministrators of  UK  Climate Transition Benchmarks shall select, weight, or exclude underlying assets issued by companies that follow a d"
+    },
+    {
+      "type": "deadline",
+      "date": "1 January 2022",
+      "context": "Article 19dBy 1 January 2022, administrators which are located in the  United Kingdom  and which provide significant benchmarks determined on the basi"
+    },
+    {
+      "type": "deadline",
+      "date": "30",
+      "context": "Article 251An administrator may choose not to apply Article 4(2), points (c), (d) and (e) of Article 4(7), point (b) of Article 11(3) or Article 15(2)"
+    },
+    {
+      "type": "deadline",
+      "date": "30 April 2020",
+      "context": "Article 271Within two weeks of the inclusion of an administrator in the FCA register, the administrator shall publish, by means that ensure fair and e"
+    },
+    {
+      "type": "deadline",
+      "date": "31 December 2019",
+      "context": "Article 511An index provider providing a benchmark to which paragraph 1A applies must  have applied to the FCA for authorisation or registration in ac"
+    },
+    {
+      "type": "deadline",
+      "date": "1 January 2020",
+      "context": "Article 511An index provider providing a benchmark to which paragraph 1A applies must  have applied to the FCA for authorisation or registration in ac"
+    },
+    {
+      "type": "deadline",
+      "date": "12",
+      "context": "Article 52Article 29(2) is without prejudice to outstanding prospectuses approved under Directive 2003/71/EC prior to 1 January 2018. For prospectuses"
+    },
+    {
+      "type": "deadline",
+      "date": "3 July 2019",
+      "context": "Article 56Regulation (EU) No 596/2014 is amended as follows:Article 19 is amended as follows:the following paragraph is inserted:1a.The notification o"
+    }
+  ],
+  "controls": [
+    "consent_management",
+    "audit_logging",
+    "data_minimization",
+    "training",
+    "security_testing",
+    "access_control",
+    "incident_response"
+  ],
+  "xml_length": 2001102
+}

@@ -1,0 +1,46 @@
+
+""implementation_guidance"str
+"evidence_required"str
+"title"str
+	"description"str
+"framework"str
+"mandatory"str
+"requirement_id"str
+	"section"strself0 0("½$
+"
+1 5(8"#new-object#Bdict/
+-
+1" 1(5"#get-field# requirement_id: 
+
+1 1(5"	#map-set#:&
+$
+1@ 1(J"#get-field# title: 
+
+17 1(J"	#map-set#:,
+*
+2 2(+
+"#get-field# description: 
+
+2 2(+"	#map-set#:	
+*
+(
+2: 2(H"#get-field# mandatory: 
+
+2- 2(H"	#map-set#:*
+(
+3 3('"#get-field# framework: 
+
+3 3('"	#map-set#:(
+&
+34 3(@"#get-field# section: 
+
+3) 3(@"	#map-set#:8
+6
+4' 4(C"%##get-field# implementation_guidance: 
+
+4 4(C"	#map-set#:2
+0
+5! 5(7"#get-field# evidence_required: 
+
+5 5(7"	#map-set#:
+1 5(8*;/home/omar/Documents/ruleIQ/services/ai/regulation_tools.py

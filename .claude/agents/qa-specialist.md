@@ -1,7 +1,8 @@
 ---
-name: qa-specialist  
-description: "Testing and quality specialist. Proactively fixes test infrastructure, increases coverage, and integrates with SonarCloud. Focus on achieving 95% backend test pass rate."
+name: qa-specialist
+description: Testing and quality specialist. Proactively fixes test infrastructure, increases coverage, and integrates with SonarCloud. Focus on achieving 95% backend test pass rate.
 tools: Read, Write, Execute, Test, SonarCloud
+model: opus
 ---
 
 # QA Specialist - RuleIQ

@@ -1,0 +1,632 @@
+"""
+Comprehensive TDD Test Suite for Notification Tasks Migration
+Tests written BEFORE implementation according to TDD principles
+"""
+
+import sys
+import os
+
+# Add mock services to path
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Import mock services and patch before other imports
+from mock_external_services import twilio, slack_sdk, fcm, audit_logger
+sys.modules['twilio'] = twilio
+sys.modules['twilio.rest'] = twilio.rest
+sys.modules['slack_sdk'] = slack_sdk
+sys.modules['fcm'] = fcm
+sys.modules['audit_logger'] = type('Module', (), {'audit_logger': audit_logger})()
+
+import asyncio
+import pytest
+from datetime import datetime
+from unittest.mock import AsyncMock, MagicMock, patch, call
+from uuid import uuid4
+from typing import Dict, Any, List
+
+from langsmith import traceable
+from langgraph.graph import StateGraph, END
+from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
+from langgraph.prebuilt import ToolNode
+
+from langgraph_agent.nodes.celery_migration_nodes import (
+    TaskMigrationState,
+    NotificationTaskNode
+)
+from langgraph_agent.graph.error_handler import ErrorHandlerNode
+from langgraph_agent.graph.celery_migration_graph import create_celery_migration_graph
+
+
+@pytest.fixture
+def notification_node():
+    """Fixture for EnhancedNotificationNode with mocked dependencies"""
+    from langgraph_agent.nodes.notification_nodes import EnhancedNotificationNode
+    return EnhancedNotificationNode()
+
+
+@pytest.fixture
+def base_state():
+    """Base state fixture for all tests"""
+    return dict(
+        messages=[],
+        session_id=str(uuid4()),
+        company_id=str(uuid4()),
+        task_type="",
+        task_params={},
+        task_result=None,
+        task_status="pending",
+        original_task_name="",
+        migration_timestamp=datetime.utcnow().isoformat(),
+        execution_metrics={},
+        errors=[],
+        retry_count=0,
+        max_retries=3
+    )
+
+
+@pytest.mark.asyncio
+class TestNotificationStateTransitions:
+    """Test notification state transitions according to LangGraph patterns"""
+    
+    async def test_state_transition_pending_to_running(self, notification_node, base_state):
+        """Test transition from pending to running state"""
+        base_state["task_status"] = "pending"
+        base_state["task_type"] = "compliance_alert"
+        
+        # Mock internal state tracking
+        with patch.object(notification_node, '_update_state_status') as mock_update:
+            result = await notification_node.process(base_state)
+            
+            # Verify state transition occurred
+            assert mock_update.called
+            assert result["task_status"] in ["running", "completed"]
+    
+    async def test_state_transition_running_to_completed(self, notification_node, base_state):
+        """Test successful completion state transition"""
+        base_state["task_status"] = "running"
+        base_state["task_type"] = "compliance_alert"
+        base_state["task_params"] = {
+            "alert_type": "compliance_breach",
+            "recipients": ["test@example.com"]
+        }
+        
+        result = await notification_node.send_compliance_alert(base_state)
+        
+        assert result["task_status"] == "completed"
+        assert result["task_result"] is not None
+        assert result["task_result"]["status"] == "completed"
+    
+    async def test_state_transition_running_to_failed(self, notification_node, base_state):
+        """Test failure state transition with error capture"""
+        base_state["task_status"] = "running"
+        base_state["task_type"] = "compliance_alert"
+        
+        # Force an error by not providing required params
+        base_state["task_params"] = {}
+        
+        with patch.object(notification_node.error_handler, 'handle_error') as mock_error:
+            mock_error.return_value = {**base_state, "task_status": "failed"}
+            result = await notification_node.process(base_state)
+            
+            assert result["task_status"] == "failed"
+    
+    async def test_state_transition_failed_to_retry(self, notification_node, base_state):
+        """Test retry state transition after failure"""
+        base_state["task_status"] = "failed"
+        base_state["retry_count"] = 1
+        base_state["max_retries"] = 3
+        base_state["task_type"] = "compliance_alert"
+        
+        with patch.object(notification_node, '_should_retry', return_value=True):
+            result = await notification_node.process(base_state)
+            
+            assert result["retry_count"] == 2
+            assert result["task_status"] in ["pending", "running"]
+    
+    async def test_state_transition_with_checkpoint_saving(self, notification_node, base_state):
+        """Test state persistence at checkpoints"""
+        base_state["task_type"] = "weekly_summary"
+        
+        # Mock checkpoint saver
+        with patch('langgraph.checkpoint.postgres.aio.AsyncPostgresSaver') as mock_saver:
+            mock_saver.save_checkpoint = AsyncMock()
+            
+            result = await notification_node.process(base_state)
+            
+            # Verify checkpoint was saved at critical state transitions
+            assert result["task_status"] == "completed"
+
+
+@pytest.mark.asyncio
+class TestEmailSMSDeliveryMocking:
+    """Test email/SMS delivery with proper mocking"""
+    
+    async def test_email_delivery_mock(self, notification_node, base_state):
+        """Test email delivery with SMTP mocking"""
+        base_state["task_type"] = "compliance_alert"
+        base_state["task_params"] = {
+            "alert_type": "urgent",
+            "recipients": ["user@example.com"],
+            "delivery_method": "email"
+        }
+        
+        # SMTP mocking is handled globally through mock_external_services
+        
+        result = await notification_node.send_compliance_alert(base_state)
+        
+        assert result["task_status"] == "completed"
+        assert result["task_result"]["delivery_status"]["email"] == "sent"
+    
+    async def test_sms_delivery_mock(self, notification_node, base_state):
+        """Test SMS delivery with Twilio mocking"""
+        base_state["task_type"] = "compliance_alert"
+        base_state["task_params"] = {
+            "alert_type": "urgent",
+            "recipients": ["+1234567890"],
+            "delivery_method": "sms"
+        }
+        
+        # Twilio mocking is handled globally through mock_external_services
+        
+        result = await notification_node.send_compliance_alert(base_state)
+        
+        assert result["task_status"] == "completed"
+        assert "sms" in result["task_result"]["delivery_status"]
+    
+    async def test_slack_delivery_mock(self, notification_node, base_state):
+        """Test Slack delivery with SDK mocking"""
+        base_state["task_type"] = "broadcast"
+        base_state["task_params"] = {
+            "message": "System maintenance",
+            "channels": ["slack"],
+            "slack_channel": "#general"
+        }
+        
+        # Slack mocking is handled globally through mock_external_services
+        
+        result = await notification_node.broadcast_notification(base_state)
+        
+        assert result["task_status"] == "completed"
+        assert "slack" in result["task_result"]["channels_used"]
+    
+    async def test_multi_channel_delivery(self, notification_node, base_state):
+        """Test delivery across multiple channels simultaneously"""
+        base_state["task_type"] = "broadcast"
+        base_state["task_params"] = {
+            "message": "Important update",
+            "channels": ["email", "sms", "slack"],
+            "recipients": ["user@example.com", "+1234567890"],
+            "slack_channel": "#updates"
+        }
+        
+        with patch('smtplib.SMTP'), \
+             patch('twilio.rest.Client'), \
+             patch('slack_sdk.WebClient'):
+            
+            result = await notification_node.broadcast_notification(base_state)
+            
+            assert result["task_status"] == "completed"
+            assert len(result["task_result"]["channels_used"]) == 3
+            assert result["task_result"]["delivery_metrics"]["total_recipients"] > 0
+
+
+@pytest.mark.asyncio
+class TestRetryLogicAndErrorHandling:
+    """Test retry mechanisms and error recovery"""
+    
+    async def test_exponential_backoff_retry(self, notification_node, base_state):
+        """Test exponential backoff in retry logic"""
+        base_state["task_type"] = "compliance_alert"
+        base_state["retry_count"] = 0
+        base_state["max_retries"] = 5
+        
+        retry_delays = []
+        
+        with patch.object(notification_node, '_calculate_retry_delay') as mock_delay:
+            mock_delay.side_effect = lambda count: 2 ** count  # Exponential backoff
+            
+            for i in range(3):
+                base_state["retry_count"] = i
+                delay = notification_node._calculate_retry_delay(i)
+                retry_delays.append(delay)
+            
+            # Verify exponential backoff pattern
+            assert retry_delays == [1, 2, 4]
+    
+    async def test_retry_with_jitter(self, notification_node, base_state):
+        """Test retry with jitter to avoid thundering herd"""
+        base_state["task_type"] = "weekly_summary"
+        base_state["retry_count"] = 2
+        
+        delays = []
+        for _ in range(10):
+            with patch('random.uniform', return_value=0.5):
+                delay = notification_node._calculate_retry_delay_with_jitter(
+                    base_state["retry_count"]
+                )
+                delays.append(delay)
+        
+        # Verify jitter adds randomness
+        assert len(set(delays)) > 1
+    
+    async def test_max_retries_enforcement(self, notification_node, base_state):
+        """Test that max retries limit is enforced"""
+        base_state["task_type"] = "compliance_alert"
+        base_state["retry_count"] = 5
+        base_state["max_retries"] = 5
+        
+        # Should not retry anymore
+        result = await notification_node.process(base_state)
+        
+        assert result["task_status"] == "failed"
+        assert result["retry_count"] == 5  # No increment
+    
+    async def test_error_categorization(self, notification_node, base_state):
+        """Test different error types trigger appropriate handling"""
+        base_state["task_type"] = "compliance_alert"
+        
+        # Transient error - should retry
+        with patch.object(notification_node, 'send_compliance_alert',
+                         side_effect=ConnectionError("Network timeout")):
+            result = await notification_node.process(base_state)
+            assert result["errors"][0]["error_type"] == "transient"
+            assert result["errors"][0]["should_retry"] is True
+        
+        # Permanent error - should not retry
+        base_state["errors"] = []
+        with patch.object(notification_node, 'send_compliance_alert',
+                         side_effect=ValueError("Invalid recipient format")):
+            result = await notification_node.process(base_state)
+            assert result["errors"][0]["error_type"] == "permanent"
+            assert result["errors"][0]["should_retry"] is False
+    
+    async def test_circuit_breaker_pattern(self, notification_node, base_state):
+        """Test circuit breaker prevents cascading failures"""
+        base_state["task_type"] = "broadcast"
+        
+        # Simulate multiple failures to trip circuit breaker
+        with patch.object(notification_node, '_circuit_breaker_status', 
+                         return_value="open"):
+            result = await notification_node.process(base_state)
+            
+            assert result["task_status"] == "circuit_breaker_open"
+            assert "circuit_breaker" in result["errors"][0]
+    
+    async def test_dead_letter_queue(self, notification_node, base_state):
+        """Test failed messages go to dead letter queue"""
+        base_state["task_type"] = "compliance_alert"
+        base_state["retry_count"] = 5
+        base_state["max_retries"] = 5
+        
+        with patch.object(notification_node, '_send_to_dlq') as mock_dlq:
+            result = await notification_node.process(base_state)
+            
+            assert mock_dlq.called
+            assert result["task_status"] == "failed_dlq"
+
+
+@pytest.mark.asyncio
+class TestBatchNotificationProcessing:
+    """Test batch processing capabilities"""
+    
+    async def test_batch_compliance_alerts(self, notification_node, base_state):
+        """Test processing multiple compliance alerts in batch"""
+        base_state["task_type"] = "batch_compliance_alerts"
+        base_state["task_params"] = {
+            "alerts": [
+                {"alert_type": "breach", "recipient": "user1@example.com"},
+                {"alert_type": "warning", "recipient": "user2@example.com"},
+                {"alert_type": "info", "recipient": "user3@example.com"}
+            ]
+        }
+        
+        result = await notification_node.process_batch(base_state)
+        
+        assert result["task_status"] == "completed"
+        assert result["task_result"]["processed_count"] == 3
+        assert result["task_result"]["failed_count"] == 0
+    
+    async def test_batch_with_partial_failures(self, notification_node, base_state):
+        """Test batch processing with some failures"""
+        base_state["task_type"] = "batch_compliance_alerts"
+        base_state["task_params"] = {
+            "alerts": [
+                {"alert_type": "breach", "recipient": "valid@example.com"},
+                {"alert_type": "warning", "recipient": "invalid-email"},
+                {"alert_type": "info", "recipient": "user3@example.com"}
+            ]
+        }
+        
+        result = await notification_node.process_batch(base_state)
+        
+        assert result["task_status"] == "completed_with_errors"
+        assert result["task_result"]["processed_count"] == 2
+        assert result["task_result"]["failed_count"] == 1
+        assert len(result["task_result"]["failures"]) == 1
+    
+    async def test_batch_rate_limiting(self, notification_node, base_state):
+        """Test rate limiting in batch processing"""
+        base_state["task_type"] = "batch_broadcast"
+        base_state["task_params"] = {
+            "messages": [f"Message {i}" for i in range(100)],
+            "rate_limit": 10  # 10 per second
+        }
+        
+        start_time = asyncio.get_event_loop().time()
+        result = await notification_node.process_batch_with_rate_limit(base_state)
+        elapsed_time = asyncio.get_event_loop().time() - start_time
+        
+        assert result["task_status"] == "completed"
+        assert elapsed_time >= 10.0  # Should take at least 10 seconds for 100 items at 10/sec
+    
+    async def test_batch_chunking(self, notification_node, base_state):
+        """Test automatic chunking of large batches"""
+        base_state["task_type"] = "batch_weekly_summaries"
+        base_state["task_params"] = {
+            "user_ids": [str(uuid4()) for _ in range(1000)],
+            "chunk_size": 50
+        }
+        
+        with patch.object(notification_node, '_process_chunk') as mock_chunk:
+            mock_chunk.return_value = {"success": True}
+            result = await notification_node.process_batch_chunked(base_state)
+            
+            assert mock_chunk.call_count == 20  # 1000 / 50
+            assert result["task_result"]["total_chunks"] == 20
+    
+    async def test_batch_parallel_processing(self, notification_node, base_state):
+        """Test parallel processing of batch items"""
+        base_state["task_type"] = "batch_compliance_alerts"
+        base_state["task_params"] = {
+            "alerts": [{"recipient": f"user{i}@example.com"} for i in range(10)],
+            "parallel_workers": 3
+        }
+        
+        with patch('asyncio.gather') as mock_gather:
+            mock_gather.return_value = [{"success": True} for _ in range(10)]
+            result = await notification_node.process_batch_parallel(base_state)
+            
+            assert result["task_status"] == "completed"
+            assert result["execution_metrics"]["parallel_workers"] == 3
+
+
+@pytest.mark.asyncio
+class TestNotificationChannelIntegration:
+    """Test integration with various notification channels"""
+    
+    async def test_email_template_rendering(self, notification_node, base_state):
+        """Test email template rendering with variables"""
+        base_state["task_type"] = "compliance_alert"
+        base_state["task_params"] = {
+            "template_id": "compliance_breach",
+            "template_vars": {
+                "user_name": "John Doe",
+                "compliance_score": 85,
+                "breach_details": "Missing documentation"
+            }
+        }
+        
+        result = await notification_node.render_and_send_email(base_state)
+        
+        assert result["task_status"] == "completed"
+        assert "John Doe" in result["task_result"]["rendered_content"]
+    
+    async def test_webhook_delivery(self, notification_node, base_state):
+        """Test webhook notification delivery"""
+        base_state["task_type"] = "webhook_notification"
+        base_state["task_params"] = {
+            "webhook_url": "https://example.com/webhook",
+            "payload": {"event": "compliance_update"},
+            "headers": {"Authorization": "Bearer token123"}
+        }
+        
+        with patch('aiohttp.ClientSession.post') as mock_post:
+            mock_post.return_value.__aenter__.return_value.status = 200
+            result = await notification_node.send_webhook_notification(base_state)
+            
+            assert result["task_status"] == "completed"
+            assert result["task_result"]["http_status"] == 200
+    
+    async def test_push_notification_delivery(self, notification_node, base_state):
+        """Test push notification delivery (mobile/web)"""
+        base_state["task_type"] = "push_notification"
+        base_state["task_params"] = {
+            "device_tokens": ["token1", "token2"],
+            "notification": {
+                "title": "Compliance Alert",
+                "body": "Action required",
+                "data": {"alert_id": "123"}
+            }
+        }
+        
+        with patch('fcm.send_notification') as mock_fcm:
+            mock_fcm.return_value = {"success": 2, "failure": 0}
+            result = await notification_node.send_push_notification(base_state)
+            
+            assert result["task_status"] == "completed"
+            assert result["task_result"]["delivered"] == 2
+
+
+@pytest.mark.asyncio
+class TestNotificationPrioritization:
+    """Test notification priority and queuing"""
+    
+    async def test_priority_queue_processing(self, notification_node, base_state):
+        """Test notifications processed by priority"""
+        notifications = [
+            {"priority": "low", "content": "Info"},
+            {"priority": "high", "content": "Alert"},
+            {"priority": "critical", "content": "Emergency"},
+            {"priority": "medium", "content": "Update"}
+        ]
+        
+        base_state["task_params"] = {"notifications": notifications}
+        
+        result = await notification_node.process_priority_queue(base_state)
+        
+        # Should process in order: critical, high, medium, low
+        assert result["task_result"]["processing_order"][0]["priority"] == "critical"
+        assert result["task_result"]["processing_order"][-1]["priority"] == "low"
+    
+    async def test_throttling_by_recipient(self, notification_node, base_state):
+        """Test throttling notifications per recipient"""
+        base_state["task_params"] = {
+            "recipient": "user@example.com",
+            "notifications": [f"Message {i}" for i in range(10)],
+            "throttle_limit": 3,
+            "throttle_window": 60  # 3 per minute
+        }
+        
+        result = await notification_node.send_throttled_notifications(base_state)
+        
+        assert result["task_result"]["sent_count"] == 3
+        assert result["task_result"]["throttled_count"] == 7
+
+
+@pytest.mark.asyncio
+class TestObservabilityAndMetrics:
+    """Test observability features for notification system"""
+    
+    async def test_langsmith_tracing(self, notification_node, base_state):
+        """Test LangSmith tracing integration"""
+        base_state["task_type"] = "compliance_alert"
+        
+        with patch('langsmith.traceable') as mock_traceable:
+            result = await notification_node.process(base_state)
+            
+            assert mock_traceable.called
+            assert result["execution_metrics"]["traced"] is True
+    
+    async def test_performance_metrics_collection(self, notification_node, base_state):
+        """Test collection of performance metrics"""
+        base_state["task_type"] = "weekly_summary"
+        
+        result = await notification_node.process(base_state)
+        
+        assert "execution_time_ms" in result["execution_metrics"]
+        assert "memory_usage_mb" in result["execution_metrics"]
+        assert "cpu_usage_percent" in result["execution_metrics"]
+    
+    async def test_delivery_analytics(self, notification_node, base_state):
+        """Test delivery analytics and reporting"""
+        base_state["task_type"] = "broadcast"
+        
+        result = await notification_node.broadcast_notification(base_state)
+        
+        assert "delivery_metrics" in result["task_result"]
+        assert "open_rate" in result["task_result"]["delivery_metrics"]
+        assert "click_rate" in result["task_result"]["delivery_metrics"]
+        assert "bounce_rate" in result["task_result"]["delivery_metrics"]
+
+
+@pytest.mark.asyncio
+class TestStatePersistenceAndRecovery:
+    """Test state persistence and recovery mechanisms"""
+    
+    async def test_checkpoint_save_and_restore(self, notification_node, base_state):
+        """Test saving and restoring from checkpoints"""
+        base_state["task_type"] = "compliance_alert"
+        checkpoint_id = str(uuid4())
+        
+        # Save checkpoint
+        with patch('langgraph.checkpoint.postgres.aio.AsyncPostgresSaver') as mock_saver:
+            saver_instance = AsyncMock()
+            mock_saver.return_value = saver_instance
+            
+            await notification_node.save_checkpoint(base_state, checkpoint_id)
+            assert saver_instance.save.called
+            
+            # Restore checkpoint
+            restored_state = await notification_node.restore_checkpoint(checkpoint_id)
+            assert restored_state == base_state
+    
+    async def test_recovery_after_crash(self, notification_node, base_state):
+        """Test recovery after system crash"""
+        base_state["task_status"] = "running"
+        base_state["task_type"] = "weekly_summary"
+        base_state["checkpoint_id"] = str(uuid4())
+        
+        # Simulate crash and recovery
+        with patch.object(notification_node, 'restore_checkpoint') as mock_restore:
+            mock_restore.return_value = base_state
+            
+            recovered_state = await notification_node.recover_from_crash(
+                base_state["checkpoint_id"]
+            )
+            
+            assert recovered_state["task_status"] == "pending"  # Reset to pending
+            assert recovered_state["retry_count"] == 1  # Increment retry
+
+
+@pytest.mark.asyncio 
+class TestCostGovernance:
+    """Test cost tracking and budget enforcement"""
+    
+    async def test_token_usage_tracking(self, notification_node, base_state):
+        """Test tracking of AI token usage in notifications"""
+        base_state["task_type"] = "ai_generated_summary"
+        base_state["task_params"] = {
+            "generate_summary": True,
+            "max_tokens": 500
+        }
+        
+        result = await notification_node.process_with_ai(base_state)
+        
+        assert "token_usage" in result["execution_metrics"]
+        assert result["execution_metrics"]["token_usage"]["total"] <= 500
+        assert "cost_usd" in result["execution_metrics"]
+    
+    async def test_budget_enforcement(self, notification_node, base_state):
+        """Test budget limits are enforced"""
+        base_state["task_params"] = {
+            "daily_budget_usd": 10.00,
+            "current_spend_usd": 9.95
+        }
+        
+        # Should block expensive operation
+        result = await notification_node.process_with_budget_check(base_state)
+        
+        assert result["task_status"] == "blocked_budget_exceeded"
+        assert "budget_exceeded" in result["errors"][0]
+
+
+@pytest.mark.asyncio
+class TestComplianceAndSecurity:
+    """Test compliance and security features"""
+    
+    async def test_pii_redaction(self, notification_node, base_state):
+        """Test PII is redacted from notifications"""
+        base_state["task_params"] = {
+            "message": "User SSN: 123-45-6789, Email: test@example.com"
+        }
+        
+        result = await notification_node.send_with_pii_redaction(base_state)
+        
+        assert "123-45-6789" not in result["task_result"]["sent_message"]
+        assert "[REDACTED]" in result["task_result"]["sent_message"]
+    
+    async def test_audit_logging(self, notification_node, base_state):
+        """Test audit logging of all notifications"""
+        base_state["task_type"] = "compliance_alert"
+        
+        with patch('audit_logger.log') as mock_audit:
+            result = await notification_node.process(base_state)
+            
+            assert mock_audit.called
+            audit_entry = mock_audit.call_args[0][0]
+            assert "notification_sent" in audit_entry
+            assert "recipient" in audit_entry
+            assert "timestamp" in audit_entry
+
+
+# Run tests with coverage report
+if __name__ == "__main__":
+    pytest.main([
+        __file__,
+        "-v",
+        "--cov=langgraph_agent.nodes.notification_nodes",
+        "--cov-report=term-missing",
+        "--cov-report=html",
+        "--cov-fail-under=100"  # Require 100% coverage
+    ])

@@ -1,0 +1,24 @@
+
+"'\\1'"str
+	"^\\s*&apos;([^']*)',"str
+"&apos;([^']*&apos;)"str
+$"Fix common parsing issues"str
+
+"      '\\1',"str
+"getValues('\\1')"str
+.%"getValues\\(&apos;([^']*)'&apos;\\)"strcontent (#"Û'
+%
+! "($content"	
+resub:'
+%
+# #(=content"	
+resub:!
+
+%	 %("#unknown-value#*
+(
+%	 %("#get-field# MULTILINE:(
+&
+$ %(content"	
+resub:	
+
+& &(*?/home/omar/Documents/ruleIQ/scripts/sonar/fix-undefined-vars.py

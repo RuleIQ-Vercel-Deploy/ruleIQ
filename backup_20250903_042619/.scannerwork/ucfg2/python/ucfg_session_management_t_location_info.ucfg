@@ -1,0 +1,242 @@
+
+Aservices.session_management.SessionManager._extract_location_infoF
+:/home/omar/Documents/ruleIQ/services/session_management.py³ ³("2*„
+2
+´ ´(7
+
+µ ·(
+%6"dictO
+M
+
+µ6 µ(D
+%8"__id*3
+
+__unknown_file (*
+	
+request"
+client*
+8
+9*0
+4
+¾ ¾("
+
+¾ ¾(
+
+location_info*º
+5
+½ ½(Cki
+
+½- ½(C
+%1*+
+
+__unknown_file (
+
+x_forwarded*!
+
+__unknown_file (
+,2split¶³
+
+½ ½(C
+%2"dict.__setitem__*-
+
+__unknown_file (
+
+location_info*-
+
+__unknown_file (
+forwarded_ips*"
+
+__unknown_file (
+
+%12__setitem__*
+4*¢
+6
+» »(<P
+N
+
+» »(%
+%3"__id*4
+
+__unknown_file (*
+	
+request"	
+headersnl
+
+» »(<
+%4*"
+
+__unknown_file (
+
+%3*/
+
+__unknown_file (
+X-Forwarded-For2getG
+E
+
+» »(<
+x_forwarded"__id*"
+
+__unknown_file (
+
+%4*
+4
+5*Ï
+7
+º º(1¸µ
+
+º º(1
+%5"dict.__setitem__*-
+
+__unknown_file (
+
+location_info*'
+
+__unknown_file (	
+country**
+
+__unknown_file (
+
+
+cf_country2__setitem__*
+6*ò
+8
+µ µ(2O
+M
+
+µ µ(-
+%9"__id*3
+
+__unknown_file (*
+	
+request"
+clientI
+G
+
+µ µ(2
+%10"__id*,
+
+__unknown_file (*
+
+%9"
+host?
+=
+
+µ µ(2
+%7"__id*#
+
+__unknown_file (
+
+%10*
+10*Z
+9
+¶ ¶(C
+A
+
+¶ ¶(
+%7"__id*'
+
+__unknown_file (	
+unknown*
+10*Æ
+10
+¶ ¶(Œ
+‰
+
+µ ¶(
+%11"__mapSet*"
+
+__unknown_file (
+
+%6*"
+
+__unknown_file (
+ip*"
+
+__unknown_file (
+
+%7–
+“
+
+¶ ¶(+
+%12"__mapSet*"
+
+__unknown_file (
+
+%6*'
+
+__unknown_file (	
+country*'
+
+__unknown_file (	
+unknown“
+
+
+¶- ¶(>
+%13"__mapSet*"
+
+__unknown_file (
+
+%6*$
+
+__unknown_file (
+city*'
+
+__unknown_file (	
+unknown—
+”
+
+¶@ ·(
+%14"__mapSet*"
+
+__unknown_file (
+
+%6*(
+
+__unknown_file (
+
+timezone*'
+
+__unknown_file (	
+unknownI
+G
+
+µ ·(
+location_info"__id*"
+
+__unknown_file (
+
+%6Q
+O
+
+¸ ¸($
+%15"__id*4
+
+__unknown_file (*
+	
+request"	
+headersmk
+
+¸ ¸(8
+%16*#
+
+__unknown_file (
+
+%15*,
+
+__unknown_file (
+CF-IPCountry2getG
+E
+
+¸ ¸(8
+
+cf_country"__id*#
+
+__unknown_file (
+
+%16*
+6
+7:
+
+³% ³(5	
+requestB.,
+*services.session_management.SessionManagerH

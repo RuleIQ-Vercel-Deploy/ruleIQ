@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freemium Assessment Debug Trace</title>
+    <style>
+        body {
+            font-family: monospace;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #0f0;
+        }
+        h1 {
+            color: #00ff00;
+            border-bottom: 2px solid #00ff00;
+            padding-bottom: 10px;
+        }
+        .trace-step {
+            margin: 10px 0;
+            padding: 10px;
+            border-left: 3px solid #00ff00;
+            background: #0a0a0a;
+        }
+        .error {
+            color: #ff0000;
+            border-left-color: #ff0000;
+        }
+        .success {
+            color: #00ff00;
+            border-left-color: #00ff00;
+        }
+        .pending {
+            color: #ffff00;
+            border-left-color: #ffff00;
+        }
+        button {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #00cc00;
+        }
+        pre {
+            background: #000;
+            padding: 10px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Freemium Assessment Flow Debug Trace</h1>
+    
+    <div id="trace-log"></div>
+    
+    <button onclick="testFullFlow()">🚀 Test Full Flow</button>
+    <button onclick="clearLog()">🗑️ Clear Log</button>
+    
+    <script>
+        const API_BASE = 'http://localhost:8000/api/v1/freemium';
+        const FRONTEND_BASE = 'http://localhost:3000';
+        
+        function log(step, data, status = 'pending') {
+            const logDiv = document.getElementById('trace-log');
+            const entry = document.createElement('div');
+            entry.className = `trace-step ${status}`;
+            entry.innerHTML = `
+                <strong>[${new Date().toISOString()}] ${step}</strong>
+                ${data ? `<pre>${JSON.stringify(data, null, 2)}</pre>` : ''}
+            `;
+            logDiv.appendChild(entry);
+            console.log(`[DEBUG TRACE] ${step}`, data);
+        }
+        
+        function clearLog() {
+            document.getElementById('trace-log').innerHTML = '';
+        }
+        
+        async function testFullFlow() {
+            clearLog();
+            log('Starting Full Freemium Assessment Flow Test');
+            
+            try {
+                // Step 1: Email Capture
+                log('Step 1: Testing Email Capture API');
+                const testEmail = `test-${Date.now()}@example.com`;
+                
+                const leadResponse = await fetch(`${API_BASE}/leads`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: testEmail,
+                        first_name: 'Debug',
+                        company_name: 'Debug Company'
+                    })
+                });
+                
+                if (!leadResponse.ok) {
+                    const error = await leadResponse.text();
+                    log('❌ Email capture failed', { status: leadResponse.status, error }, 'error');
+                    return;
+                }
+                
+                const leadData = await leadResponse.json();
+                log('✅ Email captured successfully', leadData, 'success');
+                
+                // Step 2: Start Assessment Session
+                log('Step 2: Starting Assessment Session');
+                
+                const sessionResponse = await fetch(`${API_BASE}/sessions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        lead_email: testEmail,
+                        business_type: 'general',
+                        assessment_type: 'general'
+                    })
+                });
+                
+                if (!sessionResponse.ok) {
+                    const error = await sessionResponse.text();
+                    log('❌ Session start failed', { status: sessionResponse.status, error }, 'error');
+                    return;
+                }
+                
+                const sessionData = await sessionResponse.json();
+                log('✅ Session started successfully', sessionData, 'success');
+                
+                // Step 3: Check Frontend Route
+                log('Step 3: Testing Frontend Navigation');
+                const assessmentUrl = `${FRONTEND_BASE}/assessment?token=${sessionData.session_token}`;
+                log('Generated assessment URL', { url: assessmentUrl });
+                
+                // Step 4: Test Frontend Response
+                log('Step 4: Testing Frontend Assessment Page');
+                
+                const frontendResponse = await fetch(assessmentUrl);
+                if (!frontendResponse.ok) {
+                    log('❌ Frontend assessment page not accessible', { status: frontendResponse.status }, 'error');
+                    return;
+                }
+                
+                const htmlContent = await frontendResponse.text();
+                const hasAssessmentContent = htmlContent.includes('assessment') || htmlContent.includes('Assessment');
+                
+                if (hasAssessmentContent) {
+                    log('✅ Frontend assessment page is accessible', { 
+                        status: frontendResponse.status,
+                        hasAssessmentContent 
+                    }, 'success');
+                } else {
+                    log('⚠️ Frontend page loaded but no assessment content found', null, 'error');
+                }
+                
+                // Step 5: Test Session Progress API
+                log('Step 5: Testing Session Progress API');
+                
+                const progressResponse = await fetch(`${API_BASE}/sessions/${sessionData.session_token}`);
+                if (!progressResponse.ok) {
+                    log('❌ Session progress fetch failed', { status: progressResponse.status }, 'error');
+                    return;
+                }
+                
+                const progressData = await progressResponse.json();
+                log('✅ Session progress retrieved', progressData, 'success');
+                
+                // Final Summary
+                log('🎉 ALL TESTS PASSED - Flow is working correctly!', {
+                    leadId: leadData.lead_id,
+                    sessionToken: sessionData.session_token,
+                    assessmentUrl
+                }, 'success');
+                
+                // Open assessment in new tab
+                log('Opening assessment in new tab...');
+                window.open(assessmentUrl, '_blank');
+                
+            } catch (error) {
+                log('❌ Unexpected error during test', { 
+                    message: error.message,
+                    stack: error.stack 
+                }, 'error');
+            }
+        }
+        
+        // Auto-run test on page load
+        window.addEventListener('load', () => {
+            log('Debug Trace Tool Ready', { 
+                apiBase: API_BASE, 
+                frontendBase: FRONTEND_BASE 
+            });
+        });
+    </script>
+</body>
+</html>

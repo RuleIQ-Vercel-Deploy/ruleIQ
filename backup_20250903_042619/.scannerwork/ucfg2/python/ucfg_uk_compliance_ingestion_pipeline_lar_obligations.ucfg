@@ -1,0 +1,312 @@
+
+Puk_compliance_ingestion_pipeline.UKComplianceGraphQuery.find_similar_obligations_
+S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipeline.py¥ ¥(&"2*¦
+2
+§ §(T€
+~
+
+¨ ¨(
+%20"__id*c
+
+__unknown_file (G*E9
+7uk_compliance_ingestion_pipeline.UKComplianceGraphQuery"
+driverCA
+
+¨ ¨((
+%21*#
+
+__unknown_file (
+
+%202sessionD
+B
+
+¨ ¨(3	
+session"__id*#
+
+__unknown_file (
+
+%21*
+3
+11*K
+3%
+#uk_compliance_ingestion_pipeline.py"
+Ë Ë(
+implicit return**
+4
+É É("
+
+É É(
+	
+records*Ú
+6
+Ç È(<
+
+Ç# È(;
+%1"dict
+
+Ç2 Ç(D
+%2"dictwu
+
+Ç7 Ç(C
+%3"__mapGet*&
+
+__unknown_file (
+
+
+record*"
+
+__unknown_file (
+o22__getitem__k
+i
+
+Ç2 Ç(D
+%4"dict.__init__*"
+
+__unknown_file (
+
+%2*"
+
+__unknown_file (
+
+%3“
+
+
+Ç$ Ç(D
+%5"__mapSet*"
+
+__unknown_file (
+
+%1**
+
+__unknown_file (
+
+obligation*"
+
+__unknown_file (
+
+%2}
+
+È& È(:
+%6"__mapGet*&
+
+__unknown_file (
+
+
+record**
+
+__unknown_file (
+
+similarity2__getitem__“
+
+
+È È(:
+%7"__mapSet*"
+
+__unknown_file (
+
+%1**
+
+__unknown_file (
+
+similarity*"
+
+__unknown_file (
+
+%6vt
+
+Ç È(<
+%8"list.append*'
+
+__unknown_file (
+	
+records*"
+
+__unknown_file (
+
+%12append*
+4
+6*µ
+7
+¼ Å(7×Ô
+
+¼ Å(7
+%9*'
+
+__unknown_file (
+	
+session*á
+
+__unknown_file (ÄÁ
+¾
+                    MATCH (o1:Obligation {id: $ob_id})
+                    MATCH (o2:Obligation)
+                    WHERE o2.id <> o1.id
+                    AND o2.description CONTAINS substring(o1.description, 0, 20)
+                    RETURN o2, 0.5 as similarity
+                    LIMIT $limit
+                2run:
+ob_id
+
+obligation_id:
+limit	
+
+limitB
+@
+
+¼ Å(7
+result"__id*"
+
+__unknown_file (
+
+%9*
+4
+6*ï
+10
+¹ º(8
+
+¹ º(7
+%10"dict
+
+¹. ¹(@
+%11"dictxv
+
+¹3 ¹(?
+%12"__mapGet*&
+
+__unknown_file (
+
+
+record*"
+
+__unknown_file (
+o22__getitem__n
+l
+
+¹. ¹(@
+%13"dict.__init__*#
+
+__unknown_file (
+
+%11*#
+
+__unknown_file (
+
+%12–
+“
+
+¹  ¹(@
+%14"__mapSet*#
+
+__unknown_file (
+
+%10**
+
+__unknown_file (
+
+obligation*#
+
+__unknown_file (
+
+%11€~
+
+º" º(6
+%15"__mapGet*&
+
+__unknown_file (
+
+
+record**
+
+__unknown_file (
+
+similarity2__getitem__–
+“
+
+º º(6
+%16"__mapSet*#
+
+__unknown_file (
+
+%10**
+
+__unknown_file (
+
+similarity*#
+
+__unknown_file (
+
+%15xv
+
+¹ º(8
+%17"list.append*'
+
+__unknown_file (
+	
+records*#
+
+__unknown_file (
+
+%102append*
+
+4
+7
+10*¾
+11
+© ¶(3÷ô
+
+© ¶(3
+%18*'
+
+__unknown_file (
+	
+session*€
+
+__unknown_file (ãà
+Ý
+                MATCH (o1:Obligation {id: $ob_id})
+                WHERE o1.embedding IS NOT NULL
+                MATCH (o2:Obligation)
+                WHERE o2.id <> o1.id AND o2.embedding IS NOT NULL
+                WITH o1, o2, 
+                     gds.similarity.cosine(o1.embedding, o2.embedding) as similarity
+                WHERE similarity > 0.7
+                RETURN o2, similarity
+                ORDER BY similarity DESC
+                LIMIT $limit
+            2run:
+ob_id
+
+obligation_id:
+limit	
+
+limitC
+A
+
+© ¶(3
+result"__id*#
+
+__unknown_file (
+
+%18
+
+· ·(
+%19"listD
+B
+
+· ·(	
+records"__id*#
+
+__unknown_file (
+
+%19*
+
+4
+7
+10:
+
+¥- ¥(?
+obligation_id:
+
+¥A ¥(M
+limitB;9
+7uk_compliance_ingestion_pipeline.UKComplianceGraphQueryH

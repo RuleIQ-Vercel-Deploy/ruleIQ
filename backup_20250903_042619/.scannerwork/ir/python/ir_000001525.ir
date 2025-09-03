@@ -1,0 +1,47 @@
+
+40int
+"top_p"str
+"top_k"str
+"application/json"str
+"temperature"str
+"response_schema"str
+0.2float
+4096int
+"max_output_tokens"str
+D;"Get AI configuration optimized for structured JSON output"str
+	0.8float
+"response_mime_type"strself
+¤% ¤()response_schema
+¤+ ¥("³.
+,
+
+§ ©(config"#new-object#Bdict"
+ 
+
+§ §($"	#map-set#:"
+ 
+
+§& §(2
+"	#map-set#:	"
+ 
+
+§4 §(?"	#map-set#:"
+ 
+
+¨ ¨(%"	#map-set#:"
+ 
+
+¨' ¨(O"	#map-set#:+
+)
+
+ª ª("
+__bool__*:BboolH "
+
+ª ª( *
+ª ª(
+"0&
+$
+
+« «(7"#array-write#:"
+
+¬ ¬(*//home/omar/Documents/ruleIQ/config/ai_config.py

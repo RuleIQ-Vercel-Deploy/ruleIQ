@@ -1,0 +1,180 @@
+
+$"Get HTML report template."str
+ÿ(Œ("
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Evaluation Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;,
+        }
+        h1, h2 {
+            color: #333;,
+        }
+        .summary {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);,
+        }
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-bottom: 20px;,
+        }
+        .metrics-table th, .metrics-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;,
+        }
+        .metrics-table th {
+            background-color: #4CAF50;
+            color: white;,
+        }
+        .metrics-table tr:hover {
+            background-color: #f5f5f5;,
+        }
+        .regression {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;,
+        }
+        .regression h3 {
+            color: #856404;
+            margin-top: 0;,
+        }
+        .chart {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;,
+        }
+        .status-good { color: green; }
+        .status-bad { color: red; }
+        .footer {
+            text-align: center;
+            color: #666;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;,
+        }
+    </style>
+</head>
+<body>
+    <h1>Evaluation Report</h1>
+    <p><strong>Generated:</strong> {{ timestamp }}</p>
+    
+    {% if result.summary %}
+    <div class="summary">
+        <h2>Summary</h2>
+        <ul>
+            <li><strong>Total Tasks:</strong> {{ result.summary.total_tasks }}</li>
+            <li><strong>Successful:</strong> {{ result.summary.successful_tasks }}</li>
+            <li><strong>Failed:</strong> {{ result.summary.failed_tasks }}</li>
+            <li><strong>Duration:</strong> {{ "%.2f"|format(result.summary.duration) }}s</li>
+        </ul>
+    </div>
+    {% endif %}
+    
+    {% if result.metrics %}
+    <h2>Metrics</h2>
+    <table class="metrics-table">
+        <thead>
+            <tr>
+                <th>Metric</th>
+                <th>Mean</th>
+                <th>Std Dev</th>
+                <th>Min</th>
+                <th>Max</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for metric, stats in result.metrics.items() %}
+            {% if stats is mapping and 'mean' in stats %}
+            <tr>
+                <td>{{ metric }}</td>
+                <td>{{ "%.4f"|format(stats.mean) }}</td>
+                <td>{{ "%.4f"|format(stats.std|default(0)) }}</td>
+                <td>{{ "%.4f"|format(stats.min|default(0)) }}</td>
+                <td>{{ "%.4f"|format(stats.max|default(0)) }}</td>
+                <td>{{ stats.count|default(0) }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    
+    {% if result.regressions and result.regressions|length > 0 %}
+    <div class="regression">
+        <h3>‚ö†Ô∏è Regressions Detected</h3>
+        <ul>
+            {% for reg in result.regressions %}
+            <li>
+                <strong>{{ reg.metric }}:</strong> 
+                {{ "%.4f"|format(reg.baseline) }} ‚Üí {{ "%.4f"|format(reg.current) }}
+                ({{ "%.1f"|format(reg.change * 100) }}% change)
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    
+    {% if result.comparison %}
+    <h2>Baseline Comparison</h2>
+    <table class="metrics-table">
+        <thead>
+            <tr>
+                <th>Metric</th>
+                <th>Baseline</th>
+                <th>Current</th>
+                <th>Change %</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for metric, comp in result.comparison.items() %}
+            <tr>
+                <td>{{ metric }}</td>
+                <td>{{ "%.4f"|format(comp.baseline) }}</td>
+                <td>{{ "%.4f"|format(comp.current) }}</td>
+                <td>{{ "%.1f"|format(comp.change_pct) }}%</td>
+                <td>
+                    {% if comp.improved %}
+                    <span class="status-good">‚úÖ Improved</span>
+                    {% else %}
+                    <span class="status-bad">‚ùå Degraded</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+    
+    {% if charts.metrics_chart %}
+    <div class="chart">
+        <h2>Metrics Visualization</h2>
+        <img src="{{ charts.metrics_chart }}" alt="Metrics Chart" style="max-width: 100%;">
+    </div>
+    {% endif %}
+    
+    <div class="footer">
+        <p>Generated by AI Evaluation Pipeline</p>
+    </div>
+</body>
+</html>
+"strself
+® ®("
+™ ™(◊(*F/home/omar/Documents/ruleIQ/services/ai/evaluation/report_generator.py

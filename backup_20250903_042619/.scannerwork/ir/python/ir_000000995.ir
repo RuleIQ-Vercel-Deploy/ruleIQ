@@ -1,0 +1,18 @@
+
+=4"Cache evidence statistics for a user (10 min TTL)."str
+"evidence_stats"strself
+•& •(*user_id
+•, •(8stats
+•: –(ttl
+– –("Œ.
+,
+
+˜ ˜(Ikey"?python-unknown?:#
+!
+
+™ ™(."#unknown-value##
+!
+
+™ ™(.	"#unknown-value#
+
+™ ™(.	*+/home/omar/Documents/ruleIQ/config/cache.py

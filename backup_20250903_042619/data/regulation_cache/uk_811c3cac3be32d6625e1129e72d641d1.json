@@ -1,0 +1,405 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/ukpga/2012/7/data.xml",
+  "fetched_at": "2025-08-31T18:16:02.918919",
+  "metadata": {
+    "title": "Health and Social Care Act 2012",
+    "description": "An Act to establish and make provision about a National Health Service Commissioning Board and clinical commissioning groups and to make other provision about the National Health Service in England; to make provision about public health in the United Kingdom; to make provision about regulating health and adult social care services; to make provision about public involvement in health and social care matters, scrutiny of health matters by local authorities and co-operation between local authorities and commissioners of health care services; to make provision about regulating health and social care workers; to establish and make provision about a National Institute for Health and Care Excellence; to establish and make provision about a Health and Social Care Information Centre and to make other provision about information relating to health or social care matters; to abolish certain public bodies involved in health or social care; to make other provision about health care; and for connected purposes.",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "section-1",
+      "text": "1For section 1 of the National Health Service Act 2006 (Secretary of State's duty to promote health service) substitute\u2014Secretary of State's duty to promote comprehensive health service11The Secretary of State must continue the promotion in England of a comprehensive health service designed to secure improvement\u2014ain the physical and mental health of the people of England, andbin the prevention, diagnosis and treatment of physical and mental illness.2For that purpose, the Secretary of State must ",
+      "type": "mandatory",
+      "keywords": [
+        "retention"
+      ]
+    },
+    {
+      "id": "",
+      "text": "11The Secretary of State must continue the promotion in England of a comprehensive health service designed to secure improvement\u2014ain the physical and mental health of the people of England, andbin the prevention, diagnosis and treatment of physical and mental illness.2For that purpose, the Secretary of State must exercise the functions conferred by this Act so as to secure that services are provided in accordance with this Act.3The Secretary of State retains ministerial responsibility to Parliam",
+      "type": "mandatory",
+      "keywords": [
+        "retention"
+      ]
+    },
+    {
+      "id": "section-2",
+      "text": "2After section 1 of the National Health Service Act 2006 insert\u2014Duty as to improvement in quality of services1A1The Secretary of State must exercise the functions of the Secretary of State in relation to the health service with a view to securing continuous improvement in the quality of services provided to individuals for or in connection with\u2014athe prevention, diagnosis or treatment of illness, orbthe protection or improvement of public health.2In discharging the duty under subsection (1) the S",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "1A1The Secretary of State must exercise the functions of the Secretary of State in relation to the health service with a view to securing continuous improvement in the quality of services provided to individuals for or in connection with\u2014athe prevention, diagnosis or treatment of illness, orbthe protection or improvement of public health.2In discharging the duty under subsection (1) the Secretary of State must, in particular, act with a view to securing continuous improvement in the outcomes tha",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-3",
+      "text": "3After section 1A of the National Health Service Act 2006 insert\u2014Duty as to the NHS Constitution1B1In exercising functions in relation to the health service, the Secretary of State must have regard to the NHS Constitution.2In this Act,  \u201cNHS Constitution\u201d has the same meaning as in Chapter 1 of Part 1 of the Health Act 2009 (see section 1 of that Act).",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "1B1In exercising functions in relation to the health service, the Secretary of State must have regard to the NHS Constitution.2In this Act,  \u201cNHS Constitution\u201d has the same meaning as in Chapter 1 of Part 1 of the Health Act 2009 (see section 1 of that Act).",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-4",
+      "text": "4After section 1B of the National Health Service Act 2006 insert\u2014Duty as to reducing inequalities1CIn exercising functions in relation to the health service, the Secretary of State must have regard to the need to reduce inequalities between the people of England with respect to the benefits that they can obtain from the health service.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "1CIn exercising functions in relation to the health service, the Secretary of State must have regard to the need to reduce inequalities between the people of England with respect to the benefits that they can obtain from the health service.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-6",
+      "text": "6After section 1D of the National Health Service Act 2006 insert\u2014Duty as to research1EIn exercising functions in relation to the health service, the Secretary of State must promote\u2014aresearch on matters relevant to the health service, andbthe use in the health service of evidence obtained from research.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "1EIn exercising functions in relation to the health service, the Secretary of State must promote\u2014aresearch on matters relevant to the health service, andbthe use in the health service of evidence obtained from research.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-7",
+      "text": "7After section 1E of the National Health Service Act 2006 insert\u2014Duty as to education and training1F1The Secretary of State must exercise the functions of the Secretary of State under any relevant enactment so as to secure that there is an effective system for the planning and delivery of education and training to persons who are employed, or who are considering becoming employed, in an activity which involves or is connected with the provision of services as part of the health service in Englan",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "1F1The Secretary of State must exercise the functions of the Secretary of State under any relevant enactment so as to secure that there is an effective system for the planning and delivery of education and training to persons who are employed, or who are considering becoming employed, in an activity which involves or is connected with the provision of services as part of the health service in England.2Any arrangements made with a person under this Act for the provision of services as part of tha",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-8",
+      "text": "8After section 1F of the National Health Service Act 2006 insert\u2014Secretary of State's duty as to reporting on and reviewing treatment of providers1G1The Secretary of State must, within one year of the passing of the Health and Social Care Act 2012, lay a report before Parliament on the treatment of NHS health care providers as respects any matter, including taxation, which might affect their ability to provide health care services for the purposes of the NHS or the reward available to them for d",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "1G1The Secretary of State must, within one year of the passing of the Health and Social Care Act 2012, lay a report before Parliament on the treatment of NHS health care providers as respects any matter, including taxation, which might affect their ability to provide health care services for the purposes of the NHS or the reward available to them for doing so.2The report must include recommendations as to how any differences in the treatment of NHS health care providers identified in the report ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-9",
+      "text": "91After section 1G of the National Health Service Act 2006 insert\u2014Role of the Board in the health service in EnglandThe National Health Service Commissioning Board and its general functions1H1There is to be a body corporate known as the National Health Service Commissioning Board (\u201cthe Board\u201d).2The Board is subject to the duty under section 1(1) concurrently with the Secretary of State except in relation to the part of the health service that is provided in pursuance of the public health functio",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "1H1There is to be a body corporate known as the National Health Service Commissioning Board (\u201cthe Board\u201d).2The Board is subject to the duty under section 1(1) concurrently with the Secretary of State except in relation to the part of the health service that is provided in pursuance of the public health functions of the Secretary of State or local authorities.3For the purpose of discharging that duty, the Board\u2014ahas the function of arranging for the provision of services for the purposes of the h",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-11",
+      "text": "11After section 2 of the National Health Service Act 2006 insert\u2014Provision for protection or improvement of public healthSecretary of State's duty as to protection of public health2A1The Secretary of State must take such steps as the Secretary of State considers appropriate for the purpose of protecting the public in England from disease or other dangers to health.2The steps that may be taken under subsection (1) include\u2014athe conduct of research or such other steps as the Secretary of State cons",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "2A1The Secretary of State must take such steps as the Secretary of State considers appropriate for the purpose of protecting the public in England from disease or other dangers to health.2The steps that may be taken under subsection (1) include\u2014athe conduct of research or such other steps as the Secretary of State considers appropriate for advancing knowledge and understanding;bproviding microbiological or other technical services (whether in laboratories or otherwise);cproviding vaccination, im",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-12",
+      "text": "12After section 2A of the National Health Service Act 2006 insert\u2014Functions of local authorities and Secretary of State as to improvement of public health2B1Each local authority must take such steps as it considers appropriate for improving the health of the people in its area.2The Secretary of State may take such steps as the Secretary of State considers appropriate for improving the health of the people of England.3The steps that may be taken under subsection (1) or (2) include\u2014aproviding info",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "2B1Each local authority must take such steps as it considers appropriate for improving the health of the people in its area.2The Secretary of State may take such steps as the Secretary of State considers appropriate for improving the health of the people of England.3The steps that may be taken under subsection (1) or (2) include\u2014aproviding information and advice;bproviding services or facilities designed to promote healthy living (whether by helping individuals to address behaviour that is detri",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-13",
+      "text": "131Section 3 of the National Health Service Act 2006 is amended as follows.2In subsection (1)\u2014afor the words from the beginning to  \u201creasonable requirements\u201d substitute  \u201cA clinical commissioning group must arrange for the provision of the following to such extent as it considers necessary to meet the reasonable requirements of the persons for whom it has responsibility\u201d, andbin each of paragraphs (d) and (e) for the words  \u201cas he considers\u201d substitute  \u201cas the group considers\u201d.3After that subse",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-14",
+      "text": "14After section 3 of the National Health Service Act 2006 insert\u2014Power of clinical commissioning groups to commission certain health services3A1Each clinical commissioning group may arrange for the provision of such services or facilities as it considers appropriate for the purposes of the health service that relate to securing improvement\u2014ain the physical and mental health of the persons for whom it has responsibility, orbin the prevention, diagnosis and treatment of illness in those persons.2A",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "3A1Each clinical commissioning group may arrange for the provision of such services or facilities as it considers appropriate for the purposes of the health service that relate to securing improvement\u2014ain the physical and mental health of the persons for whom it has responsibility, orbin the prevention, diagnosis and treatment of illness in those persons.2A clinical commissioning group may not arrange for the provision of a service or facility under subsection (1) if the Board has a duty to arra",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-15",
+      "text": "15After section 3A of the National Health Service Act 2006 insert\u2014Secretary of State's power to require Board to commission services3B1Regulations may require the Board to arrange, to such extent as it considers necessary to meet all reasonable requirements, for the provision as part of the health service of\u2014adental services of a prescribed description;bservices or facilities for members of the armed forces or their families;cservices or facilities for persons who are detained in a prison or in ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "3B1Regulations may require the Board to arrange, to such extent as it considers necessary to meet all reasonable requirements, for the provision as part of the health service of\u2014adental services of a prescribed description;bservices or facilities for members of the armed forces or their families;cservices or facilities for persons who are detained in a prison or in other accommodation of a prescribed description;dsuch other services or facilities as may be prescribed.2A service or facility may b",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-16",
+      "text": "161Section 4 of the National Health Service Act 2006 (high security psychiatric services) is amended as follows.2In subsection (1) for the words from the beginning to  \u201cduty to provide\u201d substitute  \u201cThe Board must arrange for the provision of\u201d.3In subsection (3)\u2014aafter  \u201cmay be provided\u201d insert\u2014\n                        a, andbafter paragraph (a) insert, and\n                        bonly by a person approved by the Secretary of State for the purposes of this subsection.4After subsection (3) inser",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "section-17",
+      "text": "171In section 5 of the National Health Service Act 2006 (other services) for  \u201cabout the Secretary of State and services under this Act\u201d substitute  \u201cabout the provision of services for the purposes of the health service in England\u201d.2Schedule 1 to that Act is amended as follows.3In paragraph 1 (medical inspection of pupils)\u2014afor  \u201cThe Secretary of State\u201d substitute  \u201cA local authority\u201d, andbfor  \u201clocal authorities\u201d substitute  \u201cthe local authority\u201d.4In paragraph 2\u2014ain sub-paragraph (1)\u2014ifor  \u201cTh",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "7CThe Secretary of State must for the purposes of the health service make arrangements for\u2014acollecting, screening, analysing, processing and supplying blood or other tissues,bpreparing blood components and reagents, andcfacilitating tissue and organ transplantation.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-18",
+      "text": "181After section 6B of the National Health Service Act 2006 insert\u2014Regulations as to the exercise of functionsRegulations as to the exercise by local authorities of certain public health functions6C1Regulations may require a local authority to exercise any of the public health functions of the Secretary of State (so far as relating to the health of the public in the authority's area) by taking such steps as may be prescribed.2Regulations may require a local authority to exercise its public healt",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "6C1Regulations may require a local authority to exercise any of the public health functions of the Secretary of State (so far as relating to the health of the public in the authority's area) by taking such steps as may be prescribed.2Regulations may require a local authority to exercise its public health functions by taking such steps as may be prescribed.3Where regulations under subsection (1) require a local authority to exercise any of the public health functions of the Secretary of State, th",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-20",
+      "text": "201After section 6D of the National Health Service Act 2006 insert\u2014Regulations as to the exercise of functions by the Board or clinical commissioning groups6E1Regulations may impose requirements (to be known as  \u201cstanding rules\u201d) in accordance with this section on the Board or on clinical commissioning groups.2The regulations may, in relation to the commissioning functions of the Board or clinical commissioning groups, make provision\u2014arequiring the Board or clinical commissioning groups to arran",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "6E1Regulations may impose requirements (to be known as  \u201cstanding rules\u201d) in accordance with this section on the Board or on clinical commissioning groups.2The regulations may, in relation to the commissioning functions of the Board or clinical commissioning groups, make provision\u2014arequiring the Board or clinical commissioning groups to arrange for specified treatments or other specified services to be provided or to be provided in a specified manner or within a specified period;bas to the arran",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-21",
+      "text": "211Section 7 of the National Health Service Act 2006 (distribution of health service functions) is amended as follows.2For subsection (1) substitute\u20141The Secretary of State may direct a Special Health Authority to exercise any functions of the Secretary of State or any other person which relate to the health service in England and are specified in the direction.1ASubsection (1) does not apply to any function of the Secretary of State of making an order or regulations.1BBefore exercising the powe",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-23",
+      "text": "231In Part 2 of the National Health Service Act 2006 (health service bodies), before Chapter 1 insert\u2014CHAPTER A1The National Health Service Commissioning BoardSecretary of State's mandate to the BoardMandate to Board13A1Before the start of each financial year, the Secretary of State must publish and lay before Parliament a document to be known as  \u201cthe mandate\u201d.2The Secretary of State must specify in the mandate\u2014athe objectives that the Secretary of State considers the Board should seek to achie",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "13A1Before the start of each financial year, the Secretary of State must publish and lay before Parliament a document to be known as  \u201cthe mandate\u201d.2The Secretary of State must specify in the mandate\u2014athe objectives that the Secretary of State considers the Board should seek to achieve in the exercise of its functions during that financial year and such subsequent financial years as the Secretary of State considers appropriate, andbany requirements that the Secretary of State considers it necess",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "13B1The Secretary of State must keep the Board's performance in achieving any objectives or requirements specified in the mandate under review.2If the Secretary of State varies the amount specified for the purposes of section 223D(2) or (3), the Secretary of State must revise the mandate accordingly.3The Secretary of State may make any other revision to the mandate only if\u2014athe Board agrees to the revision,ba parliamentary general election takes place, orcthe Secretary of State considers that th",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "",
+      "text": "13C1The Board must, in the exercise of its functions\u2014aact with a view to securing that health services are provided in a way which promotes the NHS Constitution, andbpromote awareness of the NHS Constitution among patients, staff and members of the public.2In this section,  \u201cpatients\u201d and  \u201cstaff\u201d have the same meaning as in Chapter 1 of Part 1 of the Health Act 2009 (see section 3(7) of that Act).",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "13DThe Board must exercise its functions effectively, efficiently and economically.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "13E1The Board must exercise its functions with a view to securing continuous improvement in the quality of services provided to individuals for or in connection with\u2014athe prevention, diagnosis or treatment of illness, orbthe protection or improvement of public health.2In discharging its duty under subsection (1), the Board must, in particular, act with a view to securing continuous improvement in the outcomes that are achieved from the provision of the services.3The outcomes relevant for the pur",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "13F1In exercising its functions, the Board must have regard to the desirability of securing, so far as consistent with the interests of the health service\u2014athat any other person exercising functions in relation to the health service or providing services for its purposes is free to exercise those functions or provide those services in the manner it considers most appropriate, andbthat unnecessary burdens are not imposed on any such person.2If, in the case of any exercise of functions, the Board ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "13GThe Board must, in the exercise of its functions, have regard to the need to\u2014areduce inequalities between patients with respect to their ability to access health services, andbreduce inequalities between patients with respect to the outcomes achieved for them by the provision of health services.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "13HThe Board must, in the exercise of its functions, promote the involvement of patients, and their carers and representatives (if any), in decisions which relate to\u2014athe prevention or diagnosis of illness in the patients, orbtheir care or treatment.",
+      "type": "mandatory",
+      "keywords": []
+    }
+  ],
+  "penalties": [],
+  "enforcement": {
+    "authority": [
+      "Secretary of State",
+      "Competition and Markets Authority"
+    ],
+    "powers": [
+      "171In section 5 of the National Health Service Act 2006 (other services) for  \u201cabout the Secretary of State and services under this Act\u201d substitute  \u201cabout the provision of services for the purposes o",
+      "181After section 6B of the National Health Service Act 2006 insert\u2014Regulations as to the exercise of functionsRegulations as to the exercise by local authorities of certain public health functions6C1R",
+      "6C1Regulations may require a local authority to exercise any of the public health functions of the Secretary of State (so far as relating to the health of the public in the authority's area) by taking",
+      "19After section 6C of the National Health Service Act 2006 insert\u2014Regulations relating to EU obligations6D1Regulations may require the Board or a clinical commissioning group to exercise a specified E",
+      "6D1Regulations may require the Board or a clinical commissioning group to exercise a specified EU health function.2In subsection (1)\u2014a\u201cEU health function\u201d means any function exercisable by the Secreta",
+      "22After section 7 of the National Health Service Act 2006 insert\u2014Exercise of Secretary of State's public health functionsExercise of Secretary of State's public health functions7A1The Secretary of Sta",
+      "7A1The Secretary of State may arrange for a body mentioned in subsection (2) to exercise any of the public health functions of the Secretary of State.2Those bodies are\u2014athe Board;ba clinical commissio",
+      "251After Chapter A1 of Part 2 of the National Health Service Act 2006 insert\u2014CHAPTER A2Clinical commissioning groupsEstablishment of clinical commissioning groupsGeneral duties of Board in relation to",
+      "14M1The governing body of a clinical commissioning group must have an audit committee and a remuneration committee.2The audit committee has\u2014asuch functions in relation to the financial duties of the c",
+      "14N1Regulations may make provision specifying the minimum number of members of governing bodies of clinical commissioning groups.2Regulations may\u2014aprovide that the members of governing bodies must inc",
+      "30In Part 3 of the National Health Service Act 2006 (local authorities and the NHS) before section 74 insert\u2014Appointment of directors of public health73A1Each local authority must, acting jointly with",
+      "73A1Each local authority must, acting jointly with the Secretary of State, appoint an individual to have responsibility for \u2014athe exercise by the authority of its functions under section 2B, 111 or 24",
+      "32In Part 3 of the National Health Service Act 2006 (local authorities and the NHS) after section 73B insert\u2014Complaints about exercise of public health functions by local authorities73C1Regulations ma",
+      "73C1Regulations may make provision about the handling and consideration of complaints made under the regulations about \u2014athe exercise by a local authority of any of its public health functions;bthe ex",
+      "931 NHS England  must maintain and publish a register of licence holders.2The register may contain such information as  NHS England  considers appropriate for the purpose of keeping members of the pub",
+      "981The things which a licence holder may be required to do by a condition under section 97(1)(i)(i) include, in particular\u2014aproviding information to the commissioners of services to which the conditio",
+      "1061 NHS England  may accept an enforcement undertaking from a person if  NHS England  has reasonable grounds to suspect that the person\u2014ahas provided, or is providing, a health care service for the p",
+      "107Schedule 11 (Part 1 of which makes further provision about discretionary requirements and Part 2 of which makes further provision about enforcement undertakings) has effect.",
+      "1091 NHS England  must include information about the following in its annual report\u2014athe cases in which a discretionary requirement has been imposed during the financial year to which the report relat",
+      "1101As soon as reasonably practicable after imposing a discretionary requirement or accepting an enforcement undertaking  NHS England must notify the following of that fact\u2014a. . . . . . . . . . . . . ",
+      "1111Where  NHS England  is satisfied that the governance of an NHS foundation trust is such that the trust will fail to comply with the conditions of its licence,  NHS England  may include in the lice",
+      "1301Regulations (referred to in this Chapter as  \u201chealth special administration regulations\u201d) must make further provision about health special administration orders.2Health special administration regu",
+      "1511In paragraph 7 of Schedule 7 to the National Health Service Act 2006 (public benefit corporation to have governors)\u2014ain sub-paragraph (1), for  \u201ca board of governors\u201d substitute  \u201ca council of gov",
+      "1541In paragraph 24 of Schedule 7 to the National Health Service Act 2006 (accounts: general), for sub-paragraph (1) substitute\u20141A public benefit corporation must keep proper accounts and proper recor",
+      "1571After paragraph 27 of Schedule 7 to the National Health Service Act 2006 insert\u2014Annual meeting of members27A1A public benefit corporation must hold an annual meeting of its members.2The meeting mu",
+      "27A1A public benefit corporation must hold an annual meeting of its members.2The meeting must be open to members of the public.3At least one member of the board of directors of the corporation must at",
+      "1591In section 30(1) of the National Health Service Act 2006 (definition of NHS foundation trust), for  \u201cwhich is authorised under this Chapter to provide\u201d substitute  \u201cthe function of which is to pro",
+      "2091Section 60 of the Health Act 1999 (regulation of health care professions etc.) is amended as follows.2In subsection (1), after paragraph (b) insert\u2014baregulating the social work profession in Engla",
+      "2111Schedule 3 to the Health Act 1999 (further provision as to power to make Orders in Council under section 60 of that Act) is amended as follows.2After paragraph 1 (matters generally within the scop",
+      "1AAn Order may make provision, in relation to any social care workers in England, for any of the following matters (among others)\u2014athe establishment and continuance of a regulatory body,bthe functions",
+      "2231In section 25 of the National Health Service Reform and Health Care Professions Act 2002 (the Professional Standards Authority), in subsection (2)(a), for  \u201cpatients\u201d substitute  \u201cusers of health ",
+      "2251After section 25A of the National Health Service Reform and Health Care Professions Act 2002 insert\u2014Power of the Authority to advise regulatory bodies etc.25B1The Authority may, for the purpose of",
+      "25B1The Authority may, for the purpose of assisting the Authority in its performance of its functions under this group of sections, provide advice or provide auditing services to\u2014aa regulatory body;ba",
+      "2501The Secretary of State or  NHS England  may prepare and publish an information standard.2For the purposes of this Part \u201can information standard\u201d is a standard in relation to the processing of info",
+      "251ZA1The Secretary of State may require a person to provide the Secretary of State with documents, records or other information for the purposes of monitoring the person\u2019s compliance with information",
+      "251C1This section applies for the purposes of sections 251A and 251B and this section.2\u201cRelevant health or adult social care commissioner or provider\u201d means\u2014aany public body so far as it exercises fun",
+      "2531 NHS England must have regard to the following when exercising its relevant data functions other than those under the Medicines and Medical Devices Act 2021\u2014 athe information standards published b",
+      "277A1The Secretary of State may require a relevant provider of adult social care services to provide the Secretary of State with information that relates to\u2014athe person on whom the requirement is impo",
+      "3041A power to make regulations under this Act is exercisable by the Secretary of State.2Regulations under this Act, and orders by the Secretary of State, the Welsh Ministers or the Privy Council unde",
+      "3071The Secretary of State must consult the Scottish Ministers before making an order under section 306(4) relating to\u2014asection 58 (radiation protection functions), so far as relating to the Scottish ",
+      "161The Board must prepare consolidated annual accounts in respect of each financial year.2The consolidated annual accounts must contain\u2014athe Board's annual accounts, andba consolidation of the Board's",
+      "171The Secretary of State may, with the approval of the Treasury, direct the Board to prepare accounts in respect of such period or periods as may be specified in the direction (\u201cinterim accounts\u201d).2T",
+      "71The constitution must specify the arrangements made by the clinical commissioning group for the discharge of the functions of its governing body.2The arrangements\u2014amust include provision for the app",
+      "171A clinical commissioning group must keep proper accounts and proper records in relation to the accounts.2A clinical commissioning group must prepare annual accounts in respect of each financial yea",
+      "1251Schedule 15 (accounts and audits) is amended as follows.2In paragraph 1(1)\u2014aomit paragraph (a),bomit paragraph (c), andcomit paragraph (g).3In paragraph 5, omit sub-paragraph (2).4Omit paragraph 7",
+      "53In section 47 (local authority's duty to investigate), in subsection (11)\u2014aafter paragraph (c) insert\u2014cathe National Health Service Commissioning Board;\u201d, andbin paragraph (d)\u2014iafter  \u201cany\u201d insert  ",
+      "54In section 80 (inspection of children's homes)\u2014ain subsection (1), in paragraph (d) \u2014iomit  \u201c, Primary Care Trust\u201d, andiiafter  \u201cNHS foundation trust\u201d insert  \u201cor pursuant to arrangements made by th",
+      "81In section 33 of the Audit Commission Act 1998, in subsection (8) (bodies not subject to certain Commission studies)\u2014aomit paragraph (a), andbomit paragraph (b).",
+      "107In section 133(4) of the Nationality, Immigration and Asylum Act 2002 (power of medical inspector to disclose information to health service bodies), in paragraph (a)\u2014aomit sub-paragraph (i),bbefore",
+      "184In section 149 of the Charities Act 2011 (audit or examination of English NHS charity accounts), in subsection (7)\u2014aomit paragraph (a),bomit paragraph (b),cbefore paragraph (c) insert\u2014bathe Nationa",
+      "121Section 133(4) of the Nationality, Immigration and Asylum Act 2002 (power of medical inspector to disclose information to health service bodies) is amended as follows.2In paragraph (a)\u2014abefore sub-",
+      "14In section 7 (matters which may be investigated: restrictions), omit subsection (6A).",
+      "171Monitor must prepare in respect of each financial year a set of accounts which consolidates the annual accounts of all NHS foundation trusts.2The Secretary of State may, with the approval of the Tr",
+      "191Monitor must prepare annual accounts in respect of each financial year.2Monitor must send copies of the annual accounts to the Secretary of State and the Comptroller and Auditor General within such",
+      "201The Secretary of State may, with the approval of the Treasury, direct Monitor to prepare accounts in respect of such period or periods as may be specified in the direction (\u201cinterim accounts\u201d).2Mon",
+      "11Where  NHS England  proposes to impose a discretionary requirement on a person,  NHS England  must give notice to that person (a  \u201cnotice of intent\u201d).2A notice of intent must\u2014astate that  NHS Englan",
+      "91NHS England  must publish a procedure for entering into enforcement undertakings.2NHS England  may revise the procedure and if it does so,  NHS England  must publish the procedure as revised.3NHS En",
+      "101Where  NHS England  accepts an enforcement undertaking,  NHS England  must publish the undertaking.2But  NHS England  must not under sub-paragraph (1) publish any part of an enforcement undertaking",
+      "11The terms of an enforcement undertaking (including, in particular, the action specified under it and the period so specified within which the action must be taken) may be varied if both the person g",
+      "121Where  NHS England  is satisfied that an enforcement undertaking has been complied with,  NHS England  must issue a certificate to that effect (referred to in this Schedule as a  \u201ccompliance certif",
+      "14Where  NHS England  is satisfied that a person who has given an enforcement undertaking has supplied  NHS England  with inaccurate, misleading or incomplete information in relation to the undertakin",
+      "391Paragraph 18 (accounts) is amended as follows.2In sub-paragraph (1)\u2014afor  \u201cAn authority\u201d substitute  \u201cThe Welsh Council\u201d, andbfor  \u201cthe Secretary of State\u201d substitute  \u201cthe Welsh Ministers\u201d.3In sub",
+      "141NICE must prepare annual accounts in respect of each financial year.2NICE must send copies of the annual accounts to the Secretary of State and the Comptroller and Auditor General within such perio",
+      "151The Secretary of State may, with the approval of the Treasury, direct NICE to prepare accounts in respect of such period or periods as may be specified in the direction (\u201cinterim accounts\u201d).2NICE m"
+    ],
+    "procedures": []
+  },
+  "dates": [
+    {
+      "type": "deadline",
+      "date": "28",
+      "context": "251After Chapter A1 of Part 2 of the National Health Service Act 2006 insert\u2014CHAPTER A2Clinical commissioning groupsEstablishment of clinical commissi"
+    },
+    {
+      "type": "deadline",
+      "date": "28",
+      "context": "14O1Each clinical commissioning group must maintain one or more registers of the interests of\u2014athe members of the group,bthe members of its governing "
+    },
+    {
+      "type": "deadline",
+      "date": "1 April 2014",
+      "context": "1121Section 111 ceases to have effect in relation to an NHS foundation trust on such day as the Secretary of State may by order specify.2Different day"
+    },
+    {
+      "type": "deadline",
+      "date": "1 April 2016",
+      "context": "1121Section 111 ceases to have effect in relation to an NHS foundation trust on such day as the Secretary of State may by order specify.2Different day"
+    }
+  ],
+  "controls": [
+    "consent_management",
+    "audit_logging",
+    "data_minimization",
+    "training",
+    "security_testing",
+    "access_control",
+    "incident_response"
+  ],
+  "xml_length": 5233254
+}

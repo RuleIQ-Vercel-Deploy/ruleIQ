@@ -1,0 +1,73 @@
+
+'config.base.BaseConfig.get_redis_config4
+*/home/omar/Documents/ruleIQ/config/base.pyr r("2*»
+2s s(*
+	t t(†
+%1"dict_
+]
+t t(%
+%2"__id*E
+
+__unknown_file ()*'
+config.base.BaseConfig"
+	REDIS_URLŠ
+‡
+t t(%
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*#
+
+__unknown_file (
+url*"
+
+__unknown_file (
+
+%2k
+i
+t: t(T
+%4"__id*Q
+
+__unknown_file (5*3
+config.base.BaseConfig"
+REDIS_MAX_CONNECTIONS–
+“
+t' t(T
+%5"__mapSet*"
+
+__unknown_file (
+
+%1*/
+
+__unknown_file (
+max_connections*"
+
+__unknown_file (
+
+%4m
+k
+	tj t(…
+%6"__id*R
+
+__unknown_file (6*4
+config.base.BaseConfig"
+REDIS_DECODE_RESPONSES˜
+•
+	tV t(…
+%7"__mapSet*"
+
+__unknown_file (
+
+%1*0
+
+__unknown_file (
+decode_responses*"
+
+__unknown_file (
+
+%6"
+	t t(†
+
+%1B
+config.base.BaseConfigH

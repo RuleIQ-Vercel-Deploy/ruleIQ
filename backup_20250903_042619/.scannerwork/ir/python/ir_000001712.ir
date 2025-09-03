@@ -1,0 +1,305 @@
+
+/"board_reporting"str
+1"period"str
+¸
+,®
+"
+                Evaluate control effectiveness for UK regulatory compliance.
+                
+                Control: {control}
+                Requirement: {requirement}
+                Evidence: {evidence}
+                
+                Assessment Criteria:
+                
+                1. DESIGN EFFECTIVENESS
+                - Does control address the requirement?
+                - UK regulatory alignment
+                - Industry best practices
+                
+                2. OPERATIONAL EFFECTIVENESS
+                - Implementation quality
+                - Consistency of application
+                - Evidence of operation
+                
+                3. TESTING RESULTS
+                - Test methodology
+                - Sample selection
+                - Findings and exceptions
+                
+                4. MATURITY RATING
+                Level 1: Initial/Ad-hoc
+                Level 2: Developing
+                Level 3: Defined
+                Level 4: Managed
+                Level 5: Optimized
+                
+                5. IMPROVEMENT RECOMMENDATIONS
+                - Immediate fixes
+                - Enhancement opportunities
+                - Automation potential
+                
+                Rate effectiveness and provide improvement roadmap.
+                "str
+"regulation"str
+ü9ò"
+                Create executive board report for UK compliance status.
+                
+                Organization: {organization}
+                Period: {period}
+                Results: {assessment_results}
+                
+                BOARD REPORT STRUCTURE:
+                
+                1. EXECUTIVE SUMMARY
+                - Overall compliance score
+                - Key achievements
+                - Critical issues
+                - Required decisions
+                
+                2. UK REGULATORY LANDSCAPE
+                - Recent regulatory changes
+                - Upcoming requirements
+                - Enforcement trends
+                - Peer comparisons
+                
+                3. COMPLIANCE STATUS
+                - By regulation (GDPR, FCA, MLR, etc.)
+                - Traffic light status
+                - Trend analysis
+                - Benchmarking
+                
+                4. KEY RISKS & ISSUES
+                - Critical findings
+                - Potential penalties
+                - Reputational risks
+                - Remediation status
+                
+                5. STRATEGIC INITIATIVES
+                - Compliance program enhancements
+                - Technology investments
+                - Resource requirements
+                - ROI analysis
+                
+                6. RECOMMENDATIONS
+                - Board actions required
+                - Policy approvals needed
+                - Resource allocations
+                - Strategic decisions
+                
+                Format for board presentation with clear visuals and metrics.
+                "str
+3*"Load production-ready assessment prompts"str
+"risk_assessment"str
+"current_state"str
+ !"control_effectiveness"str
+"	"control"str
+"gap_analysis"str
+	"context"str
+#"requirement"str
+"organization"str
+"requirements"str
+
+0int
+0"assessment_results"str
+àÖ"
+                You are an expert UK compliance officer conducting a risk assessment.
+                
+                Organization: {organization}
+                Regulation: {regulation}
+                Context: {context}
+                
+                Conduct a comprehensive risk assessment following UK regulatory standards:
+                
+                1. INHERENT RISK ANALYSIS
+                - Identify risks based on business activities
+                - Consider UK-specific regulatory requirements
+                - Evaluate sector-specific risks
+                
+                2. CONTROL EFFECTIVENESS
+                - Assess existing controls against UK standards
+                - Identify control gaps
+                - Rate control maturity (1-5 scale)
+                
+                3. RESIDUAL RISK CALCULATION
+                - Calculate post-control risk levels
+                - Use UK regulatory risk matrices
+                - Consider enforcement trends
+                
+                4. RECOMMENDATIONS
+                - Priority remediation actions
+                - Quick wins vs strategic initiatives
+                - Resource requirements
+                
+                5. UK-SPECIFIC CONSIDERATIONS
+                - ICO guidance alignment
+                - FCA expectations
+                - Recent enforcement actions
+                
+                Output as structured JSON with risk scores and actionable recommendations.
+                "str
+$
+"evidence"str
+ÌÂ"
+                Perform a detailed gap analysis for UK {regulation} compliance.
+                
+                Current State: {current_state}
+                Requirements: {requirements}
+                
+                Analysis Framework:
+                
+                1. REQUIREMENT MAPPING
+                - Map each UK regulatory requirement
+                - Identify implementation status
+                - Document evidence available
+                
+                2. GAP IDENTIFICATION
+                - Controls not implemented
+                - Partially implemented controls
+                - Documentation gaps
+                - Process gaps
+                
+                3. PRIORITIZATION
+                - Critical gaps (immediate risk)
+                - High priority (regulatory focus areas)
+                - Medium priority (best practices)
+                - Low priority (enhancements)
+                
+                4. REMEDIATION ROADMAP
+                - Quick fixes (< 1 month)
+                - Short-term (1-3 months)
+                - Medium-term (3-6 months)
+                - Long-term (6+ months)
+                
+                5. RESOURCE REQUIREMENTS
+                - People (roles, skills)
+                - Process (new/updated)
+                - Technology (tools, systems)
+                - Budget estimates
+                
+                Provide detailed gap analysis with actionable remediation plan.
+                "strself
+é! é(%	list"®&
+$
+
+ë ˜(	"#new-object#Bdict)
+'
+
+í  í(I"#unknown-value#Blist(
+&
+
+í  í(I
+"
+#is-exact#:	Bbool
+
+
+í  í(I"
+#assume#:
+:
+8
+
+í  í(I"#set-field# __collection_size:Bint(
+&
+
+í  í(I"#array-add-last#:(
+&
+
+í  í(I"#array-add-last#:(
+&
+
+í  í(I"#array-add-last#:'
+%
+
+ì ’("#unknown-value#:"
+ 
+
+ì ’("	#map-set#:)
+'
+
+”  ”(O"#unknown-value#Blist(
+&
+
+”  ”(O"
+#is-exact#:	Bbool
+
+
+”  ”(O"
+#assume#::
+8
+
+”  ”(O"#set-field# __collection_size:Bint(
+&
+
+”  ”(O"#array-add-last#:(
+&
+
+”  ”(O"#array-add-last#:(
+&
+
+”  ”(O"#array-add-last#:'
+%
+
+“ ¼("#unknown-value#:"
+ 
+
+“ ¼( "	#map-set#:)
+'
+
+¾  ¾(F%"#unknown-value#Blist(
+&
+
+¾  ¾(F&"
+#is-exact#:%	Bbool
+
+
+¾  ¾(F'"
+#assume#:&:
+8
+
+¾  ¾(F("#set-field# __collection_size:%Bint(
+&
+
+¾  ¾(F)"#array-add-last#:%"(
+&
+
+¾  ¾(F*"#array-add-last#:%#(
+&
+
+¾  ¾(F+"#array-add-last#:%$'
+%
+
+½% å(-"#unknown-value#:%,"
+ 
+
+½ å(."	#map-set#:!-)
+'
+
+ç  ç(P2"#unknown-value#Blist(
+&
+
+ç  ç(P3"
+#is-exact#:2	Bbool
+
+
+ç  ç(P4"
+#assume#:3:
+8
+
+ç  ç(P5"#set-field# __collection_size:2Bint(
+&
+
+ç  ç(P6"#array-add-last#:20(
+&
+
+ç  ç(P7"#array-add-last#:21(
+&
+
+ç  ç(P8"#array-add-last#:2'
+%
+
+æ —(:"#unknown-value#:29"
+ 
+
+æ —(;"	#map-set#:/:
+
+ë ˜(	*G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py

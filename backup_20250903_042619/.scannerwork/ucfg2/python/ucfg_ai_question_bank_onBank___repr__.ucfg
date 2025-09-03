@@ -1,0 +1,50 @@
+
+1database.ai_question_bank.AIQuestionBank.__repr__B
+8/home/omar/Documents/ruleIQ/database/ai_question_bank.pyo o("2*Û
+2p r(p
+n
+q) q(6
+%1"__id*V
+
+__unknown_file (:*8*
+(database.ai_question_bank.AIQuestionBank"
+
+categoryu
+s
+qA q(S
+%2"__id*[
+
+__unknown_file (?*=*
+(database.ai_question_bank.AIQuestionBank"
+question_typex
+v
+qc q(x
+%3"__id*^
+
+__unknown_file (B*@*
+(database.ai_question_bank.AIQuestionBank"
+difficulty_levelÔ
+Ñ
+q q(|
+%4"__concat**
+q q((
+<AIQuestionBank(category='*
+q) q(6
+
+%1*
+q7 q(@
+	', type='*
+qA q(S
+
+%2*
+qT q(b
+', difficulty=*
+qc q(x
+
+%3*
+qy q({
+)>"
+p r(
+
+%4B,*
+(database.ai_question_bank.AIQuestionBankH

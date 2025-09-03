@@ -1,0 +1,659 @@
+
+Œ"assessment_delete"str
+Ç"framework_list"str
+R"/api/users/?$"str
+c"/api/users/[^/]+/?$"str
+¸"report_view"str
+ô"framework_update"str
+Ä"/api/frameworks/?$"str
+%ç"/api/business-profiles/?$"str
+$ë"/api/frameworks/[^/]+/?$"str
+ﬁ"policy_generate"str
+â"framework_create"str
+"PUT"str
+,"PATCH"str
+?"monitoring_admin"str
+˙"/api/reports.*"str
+$"DELETE"str
+"admin_roles"str
+#H"/api/monitoring/status.*"str
+%ø"/api/assessments/[^/]+/?$"str
+"/api/admin/.*"str
+r"user_delete"str
+
+0int
+ƒ∫"
+        Configure route patterns and their required permissions by HTTP method.
+
+        Returns:
+            Dictionary mapping compiled regex patterns to method permissions
+        "str
+"POST"str
+«"assessment_update"str
+Â"policy_refine"str
+%5"/api/monitoring/database.*"str
+∞"assessment_list"str
+‹"/api/policies.*"str
+Æ"/api/assessments/?$"str
+k"user_update"str
++õ!"/api/business-profiles/[^/]+/?$"str
+"GET"str
+"admin_permissions"str
+T"user_list"str
+∑"assessment_create"str
+	"admin_audit"str
+É"report_export"str
+†"framework_delete"str
+7"monitoring_view"str
+Ñ"report_schedule"str
+["user_create"strself5% 5()list"ªU2
+0
+= W(4route_config"#new-object#Bdict$
+"
+=) B(!"#new-object#Bdict'
+%
+=1 >(/
+"#unknown-value#Blist&
+$
+=1 >(/"
+#is-exact#:
+Bbool
+
+=1 >(/"
+#assume#:8
+6
+=1 >(/"#set-field# __collection_size:
+Bint&
+$
+=1 >(/"#array-add-last#:
+&
+$
+=1 >(/"#array-add-last#:
+&
+$
+=1 >(/"#array-add-last#:
+	 
+
+=* >(/"	#map-set#:
+'
+%
+>9 ?( "#unknown-value#Blist&
+$
+>9 ?( "
+#is-exact#:Bbool
+
+>9 ?( "
+#assume#:8
+6
+>9 ?( "#set-field# __collection_size:Bint&
+$
+>9 ?( "#array-add-last#:&
+$
+>9 ?( "#array-add-last#: 
+
+>1 ?( "	#map-set#:'
+%
+?) @( "#unknown-value#Blist&
+$
+?) @( "
+#is-exact#:Bbool
+
+?) @( "
+#assume#:8
+6
+?) @(  "#set-field# __collection_size:Bint&
+$
+?) @( !"#array-add-last#:&
+$
+?) @( ""#array-add-last#: 
+
+?" @( #"	#map-set#:'
+%
+@, A( %"#unknown-value#Blist&
+$
+@, A( &"
+#is-exact#:%Bbool
+
+@, A( '"
+#assume#:&8
+6
+@, A( ("#set-field# __collection_size:%Bint&
+$
+@, A( )"#array-add-last#:%&
+$
+@, A( *"#array-add-last#:% 
+
+@" A( +"	#map-set#:$%'
+%
+A+ B( -"#unknown-value#Blist&
+$
+A+ B( ."
+#is-exact#:-Bbool
+
+A+ B( /"
+#assume#:.8
+6
+A+ B( 0"#set-field# __collection_size:-Bint&
+$
+A+ B( 1"#array-add-last#:-&
+$
+A+ B( 2"#array-add-last#:- 
+
+A" B( 3"	#map-set#:,- 
+
+= B(!4"	#map-set#:$
+"
+BA D( 6"#new-object#Bdict'
+%
+BI C(-8"#unknown-value#Blist&
+$
+BI C(-9"
+#is-exact#:8Bbool
+
+BI C(-:"
+#assume#:98
+6
+BI C(-;"#set-field# __collection_size:8Bint&
+$
+BI C(-<"#array-add-last#:8&
+$
+BI C(-="#array-add-last#:87 
+
+BB C(->"	#map-set#:68'
+%
+C7 D(@"#unknown-value#Blist&
+$
+C7 D(A"
+#is-exact#:@Bbool
+
+C7 D(B"
+#assume#:A8
+6
+C7 D(C"#set-field# __collection_size:@Bint&
+$
+C7 D(D"#array-add-last#:@&
+$
+C7 D(E"#array-add-last#:@? 
+
+C/ D(F"	#map-set#:6@ 
+
+B# D( G"	#map-set#:56$
+"
+D> E(.I"#new-object#Bdict'
+%
+DF E(-J"#unknown-value#Blist&
+$
+DF E(-K"
+#is-exact#:JBbool
+
+DF E(-L"
+#assume#:K8
+6
+DF E(-M"#set-field# __collection_size:JBint&
+$
+DF E(-N"#array-add-last#:J&
+$
+DF E(-O"#array-add-last#:J7 
+
+D? E(-P"	#map-set#:IJ 
+
+D" E(.Q"	#map-set#:HI$
+"
+EA F(2S"#new-object#Bdict'
+%
+EI F(U"#unknown-value#Blist&
+$
+EI F(V"
+#is-exact#:UBbool
+
+EI F(W"
+#assume#:V8
+6
+EI F(X"#set-field# __collection_size:UBint&
+$
+EI F(Y"#array-add-last#:UT 
+
+EB F(Z"	#map-set#:SU'
+%
+F" F(1\"#unknown-value#Blist&
+$
+F" F(1]"
+#is-exact#:\Bbool
+
+F" F(1^"
+#assume#:]8
+6
+F" F(1_"#set-field# __collection_size:\Bint&
+$
+F" F(1`"#array-add-last#:\[ 
+
+F F(1a"	#map-set#:S\ 
+
+E0 F(2b"	#map-set#:RS$
+"
+G H(5d"#new-object#Bdict'
+%
+G G(!e"#unknown-value#Blist&
+$
+G G(!f"
+#is-exact#:eBbool
+
+G G(!g"
+#assume#:f8
+6
+G G(!h"#set-field# __collection_size:eBint&
+$
+G G(!i"#array-add-last#:eT 
+
+G G(!j"	#map-set#:de'
+%
+G* G(9l"#unknown-value#Blist&
+$
+G* G(9m"
+#is-exact#:lBbool
+
+G* G(9n"
+#assume#:m8
+6
+G* G(9o"#set-field# __collection_size:lBint&
+$
+G* G(9p"#array-add-last#:lk 
+
+G# G(9q"	#map-set#:dl'
+%
+GE H(s"#unknown-value#Blist&
+$
+GE H(t"
+#is-exact#:sBbool
+
+GE H(u"
+#assume#:t8
+6
+GE H(v"#set-field# __collection_size:sBint&
+$
+GE H(w"#array-add-last#:sr 
+
+G; H(x"	#map-set#:d$s'
+%
+H% H(4y"#unknown-value#Blist&
+$
+H% H(4z"
+#is-exact#:yBbool
+
+H% H(4{"
+#assume#:z8
+6
+H% H(4|"#set-field# __collection_size:yBint&
+$
+H% H(4}"#array-add-last#:yk 
+
+H H(4~"	#map-set#:d,y 
+
+F4 H(5"	#map-set#:cd%
+#
+I I(EÅ"#new-object#Bdict(
+&
+I I(&É"#unknown-value#Blist(
+&
+I I(&Ñ"
+#is-exact#:ÉBbool
+
+I I(&Ö"
+#assume#:Ñ:
+8
+I I(&Ü"#set-field# __collection_size:ÉBint)
+'
+I I(&á"#array-add-last#:ÉÇ#
+!
+I I(&à"	#map-set#:ÅÉ(
+&
+I0 I(Dä"#unknown-value#Blist(
+&
+I0 I(Dã"
+#is-exact#:äBbool
+
+I0 I(Då"
+#assume#:ã:
+8
+I0 I(Dç"#set-field# __collection_size:äBint)
+'
+I0 I(Dé"#array-add-last#:äâ#
+!
+I( I(Dè"	#map-set#:Åä#
+!
+H7 I(Eê"	#map-set#:ÄÅ%
+#
+J( L(!í"#new-object#Bdict(
+&
+J0 J(Bì"#unknown-value#Blist(
+&
+J0 J(Bî"
+#is-exact#:ìBbool
+
+J0 J(Bï"
+#assume#:î:
+8
+J0 J(Bñ"#set-field# __collection_size:ìBint)
+'
+J0 J(Bó"#array-add-last#:ìÇ#
+!
+J) J(Bò"	#map-set#:íì(
+&
+K K( ö"#unknown-value#Blist(
+&
+K K( õ"
+#is-exact#:öBbool
+
+K K( ú"
+#assume#:õ:
+8
+K K( ù"#set-field# __collection_size:öBint)
+'
+K K( û"#array-add-last#:öô#
+!
+JD K( ü"	#map-set#:íö(
+&
+K, K(@°"#unknown-value#Blist(
+&
+K, K(@¢"
+#is-exact#:°Bbool
+
+K, K(@£"
+#assume#:¢:
+8
+K, K(@§"#set-field# __collection_size:°Bint)
+'
+K, K(@•"#array-add-last#:°†#
+!
+K" K(@¶"	#map-set#:í$°(
+&
+L L( ß"#unknown-value#Blist(
+&
+L L( ®"
+#is-exact#:ßBbool
+
+L L( ©"
+#assume#:®:
+8
+L L( ™"#set-field# __collection_size:ßBint)
+'
+L L( ´"#array-add-last#:ßô#
+!
+KB L( ¨"	#map-set#:í,ß#
+!
+J L(!≠"	#map-set#:ëí%
+#
+L: M(>Ø"#new-object#Bdict(
+&
+LB M(±"#unknown-value#Blist(
+&
+LB M(≤"
+#is-exact#:±Bbool
+
+LB M(≥"
+#assume#:≤:
+8
+LB M(¥"#set-field# __collection_size:±Bint)
+'
+LB M(µ"#array-add-last#:±∞#
+!
+L; M(∂"	#map-set#:Ø±(
+&
+M( M(=∏"#unknown-value#Blist(
+&
+M( M(=π"
+#is-exact#:∏Bbool
+
+M( M(=∫"
+#assume#:π:
+8
+M( M(=ª"#set-field# __collection_size:∏Bint)
+'
+M( M(=º"#array-add-last#:∏∑#
+!
+M  M(=Ω"	#map-set#:Ø∏#
+!
+L# M(>æ"	#map-set#:ÆØ%
+#
+N) P("¿"#new-object#Bdict(
+&
+N1 N(D¡"#unknown-value#Blist(
+&
+N1 N(D¬"
+#is-exact#:¡Bbool
+
+N1 N(D√"
+#assume#:¬:
+8
+N1 N(Dƒ"#set-field# __collection_size:¡Bint)
+'
+N1 N(D≈"#array-add-last#:¡∞#
+!
+N* N(D∆"	#map-set#:¿¡(
+&
+O O(!»"#unknown-value#Blist(
+&
+O O(!…"
+#is-exact#:»Bbool
+
+O O(! "
+#assume#:…:
+8
+O O(!À"#set-field# __collection_size:»Bint)
+'
+O O(!Ã"#array-add-last#:»«#
+!
+NF O(!Õ"	#map-set#:¿»(
+&
+O- O(Bœ"#unknown-value#Blist(
+&
+O- O(B–"
+#is-exact#:œBbool
+
+O- O(B—"
+#assume#:–:
+8
+O- O(B“"#set-field# __collection_size:œBint)
+'
+O- O(B”"#array-add-last#:œŒ#
+!
+O# O(B‘"	#map-set#:¿$œ(
+&
+P P(!’"#unknown-value#Blist(
+&
+P P(!÷"
+#is-exact#:’Bbool
+
+P P(!◊"
+#assume#:÷:
+8
+P P(!ÿ"#set-field# __collection_size:’Bint)
+'
+P P(!Ÿ"#array-add-last#:’«#
+!
+OD P(!⁄"	#map-set#:¿,’#
+!
+N P("€"	#map-set#:ø¿%
+#
+P7 R(D›"#new-object#Bdict(
+&
+P? Q(ﬂ"#unknown-value#Blist(
+&
+P? Q(‡"
+#is-exact#:ﬂBbool
+
+P? Q(·"
+#assume#:‡:
+8
+P? Q(‚"#set-field# __collection_size:ﬂBint)
+'
+P? Q(„"#array-add-last#:ﬂﬁ#
+!
+P8 Q(‰"	#map-set#:›ﬂ(
+&
+Q( R(Ê"#unknown-value#Blist(
+&
+Q( R(Á"
+#is-exact#:ÊBbool
+
+Q( R(Ë"
+#assume#:Á:
+8
+Q( R(È"#set-field# __collection_size:ÊBint)
+'
+Q( R(Í"#array-add-last#:Êﬁ)
+'
+Q( R(Î"#array-add-last#:ÊÂ#
+!
+Q  R(Ï"	#map-set#:›Ê(
+&
+R R('Ì"#unknown-value#Blist(
+&
+R R('Ó"
+#is-exact#:ÌBbool
+
+R R('Ô"
+#assume#:Ó:
+8
+R R('"#set-field# __collection_size:ÌBint)
+'
+R R('Ò"#array-add-last#:ÌÂ#
+!
+R R('Ú"	#map-set#:›Ì(
+&
+R2 R(CÛ"#unknown-value#Blist(
+&
+R2 R(CÙ"
+#is-exact#:ÛBbool
+
+R2 R(Cı"
+#assume#:Ù:
+8
+R2 R(Cˆ"#set-field# __collection_size:ÛBint)
+'
+R2 R(C˜"#array-add-last#:ÛÂ#
+!
+R) R(C¯"	#map-set#:›,Û#
+!
+P$ R(D˘"	#map-set#:‹›%
+#
+S T(0˚"#new-object#Bdict(
+&
+S& S(5˝"#unknown-value#Blist(
+&
+S& S(5˛"
+#is-exact#:˝Bbool
+
+S& S(5ˇ"
+#assume#:˛:
+8
+S& S(5Ä"#set-field# __collection_size:˝Bint)
+'
+S& S(5Å"#array-add-last#:˝¸#
+!
+S S(5Ç"	#map-set#:˚˝(
+&
+S? T(/Ö"#unknown-value#Blist(
+&
+S? T(/Ü"
+#is-exact#:ÖBbool
+
+S? T(/á"
+#assume#:Ü:
+8
+S? T(/à"#set-field# __collection_size:ÖBint)
+'
+S? T(/â"#array-add-last#:ÖÉ)
+'
+S? T(/ä"#array-add-last#:ÖÑ#
+!
+S7 T(/ã"	#map-set#:˚Ö#
+!
+S T(0å"	#map-set#:˙˚%
+#
+U) U(Ké"#new-object#Bdict(
+&
+U1 U(>è"#unknown-value#Blist(
+&
+U1 U(>ê"
+#is-exact#:èBbool
+
+U1 U(>ë"
+#assume#:ê:
+8
+U1 U(>í"#set-field# __collection_size:èBint(
+&
+U1 U(>ì"#array-add-last#:èT#
+!
+U* U(>î"	#map-set#:éè(
+&
+UH U(Jï"#unknown-value#Blist(
+&
+UH U(Jñ"
+#is-exact#:ïBbool
+
+UH U(Jó"
+#assume#:ñ:
+8
+UH U(Jò"#set-field# __collection_size:ïBint#
+!
+U@ U(Jô"	#map-set#:éï#
+!
+U U(Kö"	#map-set#:çé%
+#
+V/ W(3ú"#new-object#Bdict(
+&
+V7 V(9ù"#unknown-value#Blist(
+&
+V7 V(9û"
+#is-exact#:ùBbool
+
+V7 V(9ü"
+#assume#:û:
+8
+V7 V(9†"#set-field# __collection_size:ùBint#
+!
+V0 V(9°"	#map-set#:úù(
+&
+VB V(D¢"#unknown-value#Blist(
+&
+VB V(D£"
+#is-exact#:¢Bbool
+
+VB V(D§"
+#assume#:£:
+8
+VB V(D•"#set-field# __collection_size:¢Bint#
+!
+V; V(D¶"	#map-set#:ú¢(
+&
+W W(%ß"#unknown-value#Blist(
+&
+W W(%®"
+#is-exact#:ßBbool
+
+W W(%©"
+#assume#:®:
+8
+W W(%™"#set-field# __collection_size:ßBint(
+&
+W W(%´"#array-add-last#:ßr#
+!
+W W(%¨"	#map-set#:ú$ß(
+&
+W0 W(2≠"#unknown-value#Blist(
+&
+W0 W(2Æ"
+#is-exact#:≠Bbool
+
+W0 W(2Ø"
+#assume#:Æ:
+8
+W0 W(2∞"#set-field# __collection_size:≠Bint#
+!
+W' W(2±"	#map-set#:ú,≠#
+!
+V W(3≤"	#map-set#:õú,
+*
+X Y(!≥"?python-unknown?:Bdict
+X Y(!≥*=/home/omar/Documents/ruleIQ/api/middleware/rbac_middleware.py

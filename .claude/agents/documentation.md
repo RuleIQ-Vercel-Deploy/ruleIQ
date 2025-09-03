@@ -1,7 +1,8 @@
 ---
 name: documentation
-description: "Documentation specialist. Creates and maintains README files, API documentation, architecture diagrams, and user guides."
+description: Documentation specialist. Creates and maintains README files, API documentation, architecture diagrams, and user guides.
 tools: Read, Write, Markdown, OpenAPI
+model: opus
 ---
 
 # Documentation Specialist - RuleIQ

@@ -1,0 +1,1251 @@
+{
+  "title": "SMB Framework Compliance Manifest",
+  "description": "Extracted obligations from ISO standards and frameworks for SMBs",
+  "created_at": "2025-08-31T20:55:25.287683",
+  "source": "Official ISO and framework documentation",
+  "total_obligations": 53,
+  "frameworks": {
+    "ISO 27001:2022": {
+      "title": "Information Security Management System",
+      "source": "https://www.iso.org/standard/27001",
+      "core_principles": [
+        "Confidentiality",
+        "Integrity",
+        "Availability"
+      ],
+      "obligation_count": 10,
+      "categories": [
+        "Information Protection",
+        "Security Integration",
+        "Improvement",
+        "Incident Management",
+        "Risk Management",
+        "ISMS Establishment",
+        "Access Management",
+        "Scope",
+        "Leadership",
+        "Context"
+      ]
+    },
+    "ISO 9001:2015": {
+      "title": "Quality Management System",
+      "source": "https://www.iso.org/standard/62085.html",
+      "core_principles": [
+        "Customer Focus",
+        "Leadership",
+        "Process Approach",
+        "Improvement"
+      ],
+      "obligation_count": 10,
+      "categories": [
+        "Improvement",
+        "Risk Management",
+        "Operation",
+        "Leadership",
+        "Documentation",
+        "Audit",
+        "Support",
+        "Performance",
+        "Context",
+        "Planning"
+      ]
+    },
+    "ISO 14001:2015": {
+      "title": "Environmental Management System",
+      "source": "https://www.iso.org/standard/60857.html",
+      "core_principles": [
+        "Environmental Protection",
+        "Legal Compliance",
+        "Continual Improvement"
+      ],
+      "obligation_count": 8,
+      "categories": [
+        "Environmental Aspects",
+        "Monitoring",
+        "Environmental Performance",
+        "Operation",
+        "Compliance",
+        "Leadership",
+        "Emergency Response",
+        "Planning"
+      ]
+    },
+    "ISO 31000:2018": {
+      "title": "Risk Management Guidelines",
+      "source": "https://www.iso.org/standard/65694.html",
+      "core_principles": [
+        "Integrated",
+        "Structured",
+        "Customized",
+        "Inclusive"
+      ],
+      "obligation_count": 7,
+      "categories": [
+        "Risk Assessment",
+        "Monitoring",
+        "Risk Treatment",
+        "Communication",
+        "Framework"
+      ]
+    },
+    "ISO 37301:2021": {
+      "title": "Compliance Management System",
+      "source": "https://www.upguard.com/blog/iso-37301-guide",
+      "core_principles": [
+        "Ethics",
+        "Compliance Culture",
+        "Risk-Based",
+        "Continuous Improvement"
+      ],
+      "obligation_count": 8,
+      "categories": [
+        "Culture",
+        "Risk Assessment",
+        "Performance Evaluation",
+        "Operation",
+        "Leadership",
+        "Communication",
+        "Support",
+        "Planning"
+      ]
+    },
+    "NIST CSF 2.0": {
+      "title": "NIST Cybersecurity Framework",
+      "source": "https://www.nist.gov/cyberframework",
+      "core_principles": [
+        "Identify",
+        "Protect",
+        "Detect",
+        "Respond",
+        "Recover",
+        "Govern"
+      ],
+      "obligation_count": 10,
+      "categories": [
+        "Recover",
+        "Govern",
+        "Identify",
+        "Protect",
+        "Detect",
+        "Respond"
+      ]
+    }
+  },
+  "obligations": [
+    {
+      "obligation_id": "SMB-03a7d3ae",
+      "framework": "ISO 27001:2022",
+      "framework_title": "Information Security Management System",
+      "source_url": "https://www.iso.org/standard/27001",
+      "id": "ISO27001-SMB-001",
+      "title": "Establish Information Security Management System",
+      "description": "Establish an ISMS to ensure confidentiality, integrity and availability of information",
+      "requirement": "Organizations must establish, implement, maintain and continually improve an information security management system",
+      "smb_guidance": "Scale ISMS implementation to organization size and complexity",
+      "category": "ISMS Establishment",
+      "priority": "critical",
+      "core_principles": [
+        "Confidentiality",
+        "Integrity",
+        "Availability"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287436"
+    },
+    {
+      "obligation_id": "SMB-1177b950",
+      "framework": "ISO 27001:2022",
+      "framework_title": "Information Security Management System",
+      "source_url": "https://www.iso.org/standard/27001",
+      "id": "ISO27001-SMB-002",
+      "title": "Risk-Based Security Approach",
+      "description": "Apply a risk management process adapted to organization's size",
+      "requirement": "Implement risk assessment and treatment processes to identify and address security risks",
+      "smb_guidance": "Use simplified risk assessment methodology appropriate for SMB resources",
+      "category": "Risk Management",
+      "priority": "critical",
+      "core_principles": [
+        "Confidentiality",
+        "Integrity",
+        "Availability"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287443"
+    },
+    {
+      "obligation_id": "SMB-1a755778",
+      "framework": "ISO 27001:2022",
+      "framework_title": "Information Security Management System",
+      "source_url": "https://www.iso.org/standard/27001",
+      "id": "ISO27001-SMB-003",
+      "title": "Secure All Information Formats",
+      "description": "Secure information across all formats (paper, cloud, digital)",
+      "requirement": "Protection must cover all forms of information regardless of storage medium",
+      "smb_guidance": "Focus on most critical information assets first",
+      "category": "Information Protection",
+      "priority": "high",
+      "core_principles": [
+        "Confidentiality",
+        "Integrity",
+        "Availability"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287447"
+    },
+    {
+      "obligation_id": "SMB-f37509de",
+      "framework": "ISO 27001:2022",
+      "framework_title": "Information Security Management System",
+      "source_url": "https://www.iso.org/standard/27001",
+      "id": "ISO27001-SMB-004",
+      "title": "Prepare People, Processes and Technology",
+      "description": "Prepare people, processes, and technology to face cyber risks",
+      "requirement": "Integrate security awareness and controls across human, process and technical dimensions",
+      "smb_guidance": "Prioritize employee training and basic technical controls",
+      "category": "Security Integration",
+      "priority": "high",
+      "core_principles": [
+        "Confidentiality",
+        "Integrity",
+        "Availability"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287451"
+    },
+    {
+      "obligation_id": "SMB-5df2f360",
+      "framework": "ISO 27001:2022",
+      "framework_title": "Information Security Management System",
+      "source_url": "https://www.iso.org/standard/27001",
+      "id": "ISO27001-SMB-005",
+      "title": "Management Oversight",
+      "description": "Ensure management oversight to protect organizational data",
+      "requirement": "Top management must demonstrate leadership and commitment to the ISMS",
+      "smb_guidance": "Assign clear security responsibilities even in small teams",
+      "category": "Leadership",
+      "priority": "critical",
+      "core_principles": [
+        "Confidentiality",
+        "Integrity",
+        "Availability"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287454"
+    },
+    {
+      "obligation_id": "SMB-98767eb9",
+      "framework": "ISO 27001:2022",
+      "framework_title": "Information Security Management System",
+      "source_url": "https://www.iso.org/standard/27001",
+      "id": "ISO27001-SMB-006",
+      "title": "Context Understanding",
+      "description": "Determine external and internal issues relevant to ISMS",
+      "requirement": "Organization must understand its context and stakeholder requirements",
+      "smb_guidance": "Document key business relationships and dependencies",
+      "category": "Context",
+      "priority": "medium",
+      "core_principles": [
+        "Confidentiality",
+        "Integrity",
+        "Availability"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287457"
+    },
+    {
+      "obligation_id": "SMB-43670e40",
+      "framework": "ISO 27001:2022",
+      "framework_title": "Information Security Management System",
+      "source_url": "https://www.iso.org/standard/27001",
+      "id": "ISO27001-SMB-007",
+      "title": "Scope Definition",
+      "description": "Define boundaries and applicability of ISMS",
+      "requirement": "Clearly define what is included and excluded from ISMS scope",
+      "smb_guidance": "Start with core business processes and expand gradually",
+      "category": "Scope",
+      "priority": "high",
+      "core_principles": [
+        "Confidentiality",
+        "Integrity",
+        "Availability"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287460"
+    },
+    {
+      "obligation_id": "SMB-5260010c",
+      "framework": "ISO 27001:2022",
+      "framework_title": "Information Security Management System",
+      "source_url": "https://www.iso.org/standard/27001",
+      "id": "ISO27001-SMB-008",
+      "title": "Continuous Improvement",
+      "description": "Continuously identify and address evolving security risks",
+      "requirement": "Implement processes for continual improvement of the ISMS",
+      "smb_guidance": "Regular quarterly reviews suitable for SMBs",
+      "category": "Improvement",
+      "priority": "medium",
+      "core_principles": [
+        "Confidentiality",
+        "Integrity",
+        "Availability"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287468"
+    },
+    {
+      "obligation_id": "SMB-3689f0ed",
+      "framework": "ISO 27001:2022",
+      "framework_title": "Information Security Management System",
+      "source_url": "https://www.iso.org/standard/27001",
+      "id": "ISO27001-SMB-009",
+      "title": "Incident Response",
+      "description": "Establish incident management procedures",
+      "requirement": "Define and implement information security incident management processes",
+      "smb_guidance": "Create simple incident response checklist and contact list",
+      "category": "Incident Management",
+      "priority": "critical",
+      "core_principles": [
+        "Confidentiality",
+        "Integrity",
+        "Availability"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287472"
+    },
+    {
+      "obligation_id": "SMB-168b8047",
+      "framework": "ISO 27001:2022",
+      "framework_title": "Information Security Management System",
+      "source_url": "https://www.iso.org/standard/27001",
+      "id": "ISO27001-SMB-010",
+      "title": "Access Control",
+      "description": "Implement access control based on business requirements",
+      "requirement": "Limit access to information and information processing facilities",
+      "smb_guidance": "Use role-based access control with regular reviews",
+      "category": "Access Management",
+      "priority": "critical",
+      "core_principles": [
+        "Confidentiality",
+        "Integrity",
+        "Availability"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287477"
+    },
+    {
+      "obligation_id": "SMB-1ad06e10",
+      "framework": "ISO 9001:2015",
+      "framework_title": "Quality Management System",
+      "source_url": "https://www.iso.org/standard/62085.html",
+      "id": "ISO9001-SMB-001",
+      "title": "Understand Organizational Context",
+      "description": "Determine internal and external factors affecting QMS",
+      "requirement": "Organization must determine external and internal issues relevant to its purpose",
+      "smb_guidance": "Simple SWOT analysis sufficient for SMBs",
+      "category": "Context",
+      "priority": "high",
+      "core_principles": [
+        "Customer Focus",
+        "Leadership",
+        "Process Approach",
+        "Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287495"
+    },
+    {
+      "obligation_id": "SMB-034c53f0",
+      "framework": "ISO 9001:2015",
+      "framework_title": "Quality Management System",
+      "source_url": "https://www.iso.org/standard/62085.html",
+      "id": "ISO9001-SMB-002",
+      "title": "Leadership Commitment",
+      "description": "Top management must actively engage in QMS",
+      "requirement": "Top management shall demonstrate leadership and commitment to the quality management system",
+      "smb_guidance": "Owner/CEO involvement essential in SMBs",
+      "category": "Leadership",
+      "priority": "critical",
+      "core_principles": [
+        "Customer Focus",
+        "Leadership",
+        "Process Approach",
+        "Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287497"
+    },
+    {
+      "obligation_id": "SMB-4845914a",
+      "framework": "ISO 9001:2015",
+      "framework_title": "Quality Management System",
+      "source_url": "https://www.iso.org/standard/62085.html",
+      "id": "ISO9001-SMB-003",
+      "title": "Quality Objectives",
+      "description": "Establish clear quality objectives and policies",
+      "requirement": "Organization shall establish quality objectives at relevant functions and levels",
+      "smb_guidance": "3-5 measurable quality goals appropriate for SMBs",
+      "category": "Planning",
+      "priority": "high",
+      "core_principles": [
+        "Customer Focus",
+        "Leadership",
+        "Process Approach",
+        "Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287499"
+    },
+    {
+      "obligation_id": "SMB-3e2361ae",
+      "framework": "ISO 9001:2015",
+      "framework_title": "Quality Management System",
+      "source_url": "https://www.iso.org/standard/62085.html",
+      "id": "ISO9001-SMB-004",
+      "title": "Resource Allocation",
+      "description": "Allocate necessary resources for QMS",
+      "requirement": "Organization shall determine and provide resources needed for QMS",
+      "smb_guidance": "Focus resources on customer-critical processes",
+      "category": "Support",
+      "priority": "high",
+      "core_principles": [
+        "Customer Focus",
+        "Leadership",
+        "Process Approach",
+        "Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287501"
+    },
+    {
+      "obligation_id": "SMB-44975e16",
+      "framework": "ISO 9001:2015",
+      "framework_title": "Quality Management System",
+      "source_url": "https://www.iso.org/standard/62085.html",
+      "id": "ISO9001-SMB-005",
+      "title": "Customer Requirements",
+      "description": "Meet customer requirements and increase satisfaction",
+      "requirement": "Organization shall determine and meet customer requirements",
+      "smb_guidance": "Regular customer feedback surveys and reviews",
+      "category": "Operation",
+      "priority": "critical",
+      "core_principles": [
+        "Customer Focus",
+        "Leadership",
+        "Process Approach",
+        "Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287503"
+    },
+    {
+      "obligation_id": "SMB-a381f66a",
+      "framework": "ISO 9001:2015",
+      "framework_title": "Quality Management System",
+      "source_url": "https://www.iso.org/standard/62085.html",
+      "id": "ISO9001-SMB-006",
+      "title": "Performance Evaluation",
+      "description": "Monitor and measure QMS performance",
+      "requirement": "Organization shall monitor, measure, analyze and evaluate QMS performance",
+      "smb_guidance": "Monthly KPI dashboard tracking key metrics",
+      "category": "Performance",
+      "priority": "high",
+      "core_principles": [
+        "Customer Focus",
+        "Leadership",
+        "Process Approach",
+        "Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287507"
+    },
+    {
+      "obligation_id": "SMB-cdf1fc96",
+      "framework": "ISO 9001:2015",
+      "framework_title": "Quality Management System",
+      "source_url": "https://www.iso.org/standard/62085.html",
+      "id": "ISO9001-SMB-007",
+      "title": "Continuous Improvement",
+      "description": "Systematically enhance quality management system",
+      "requirement": "Organization shall continually improve the QMS",
+      "smb_guidance": "Implement simple PDCA cycle for improvements",
+      "category": "Improvement",
+      "priority": "medium",
+      "core_principles": [
+        "Customer Focus",
+        "Leadership",
+        "Process Approach",
+        "Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287511"
+    },
+    {
+      "obligation_id": "SMB-3b5bcba0",
+      "framework": "ISO 9001:2015",
+      "framework_title": "Quality Management System",
+      "source_url": "https://www.iso.org/standard/62085.html",
+      "id": "ISO9001-SMB-008",
+      "title": "Document Control",
+      "description": "Manage documented information",
+      "requirement": "Control documents and records required by the QMS",
+      "smb_guidance": "Use cloud-based document management for SMBs",
+      "category": "Documentation",
+      "priority": "medium",
+      "core_principles": [
+        "Customer Focus",
+        "Leadership",
+        "Process Approach",
+        "Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287516"
+    },
+    {
+      "obligation_id": "SMB-230773bd",
+      "framework": "ISO 9001:2015",
+      "framework_title": "Quality Management System",
+      "source_url": "https://www.iso.org/standard/62085.html",
+      "id": "ISO9001-SMB-009",
+      "title": "Risk-Based Thinking",
+      "description": "Address potential risks and opportunities",
+      "requirement": "Determine risks and opportunities that need to be addressed",
+      "smb_guidance": "Simple risk register with quarterly updates",
+      "category": "Risk Management",
+      "priority": "high",
+      "core_principles": [
+        "Customer Focus",
+        "Leadership",
+        "Process Approach",
+        "Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287519"
+    },
+    {
+      "obligation_id": "SMB-268df389",
+      "framework": "ISO 9001:2015",
+      "framework_title": "Quality Management System",
+      "source_url": "https://www.iso.org/standard/62085.html",
+      "id": "ISO9001-SMB-010",
+      "title": "Internal Audit",
+      "description": "Conduct internal audits at planned intervals",
+      "requirement": "Organization shall conduct internal audits",
+      "smb_guidance": "Annual internal audit cycle sufficient for SMBs",
+      "category": "Audit",
+      "priority": "medium",
+      "core_principles": [
+        "Customer Focus",
+        "Leadership",
+        "Process Approach",
+        "Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287523"
+    },
+    {
+      "obligation_id": "SMB-d387311f",
+      "framework": "ISO 14001:2015",
+      "framework_title": "Environmental Management System",
+      "source_url": "https://www.iso.org/standard/60857.html",
+      "id": "ISO14001-SMB-001",
+      "title": "Environmental Impact Assessment",
+      "description": "Identify environmental aspects and impacts",
+      "requirement": "Determine environmental aspects of activities, products and services",
+      "smb_guidance": "Focus on main environmental impacts of core operations",
+      "category": "Environmental Aspects",
+      "priority": "high",
+      "core_principles": [
+        "Environmental Protection",
+        "Legal Compliance",
+        "Continual Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287536"
+    },
+    {
+      "obligation_id": "SMB-7d087f8d",
+      "framework": "ISO 14001:2015",
+      "framework_title": "Environmental Management System",
+      "source_url": "https://www.iso.org/standard/60857.html",
+      "id": "ISO14001-SMB-002",
+      "title": "Legal Compliance",
+      "description": "Comply with environmental legal regulations",
+      "requirement": "Identify and have access to applicable legal requirements",
+      "smb_guidance": "Use compliance calendar for key environmental regulations",
+      "category": "Compliance",
+      "priority": "critical",
+      "core_principles": [
+        "Environmental Protection",
+        "Legal Compliance",
+        "Continual Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287539"
+    },
+    {
+      "obligation_id": "SMB-dfb15011",
+      "framework": "ISO 14001:2015",
+      "framework_title": "Environmental Management System",
+      "source_url": "https://www.iso.org/standard/60857.html",
+      "id": "ISO14001-SMB-003",
+      "title": "Environmental Policy",
+      "description": "Establish environmental policy appropriate to organization",
+      "requirement": "Top management shall establish an environmental policy",
+      "smb_guidance": "One-page policy covering key environmental commitments",
+      "category": "Leadership",
+      "priority": "high",
+      "core_principles": [
+        "Environmental Protection",
+        "Legal Compliance",
+        "Continual Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287540"
+    },
+    {
+      "obligation_id": "SMB-e8c5c2ee",
+      "framework": "ISO 14001:2015",
+      "framework_title": "Environmental Management System",
+      "source_url": "https://www.iso.org/standard/60857.html",
+      "id": "ISO14001-SMB-004",
+      "title": "Minimize Environmental Footprint",
+      "description": "Proactively minimize environmental footprint",
+      "requirement": "Implement actions to address environmental aspects",
+      "smb_guidance": "Start with energy, waste, and water reduction",
+      "category": "Environmental Performance",
+      "priority": "high",
+      "core_principles": [
+        "Environmental Protection",
+        "Legal Compliance",
+        "Continual Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287542"
+    },
+    {
+      "obligation_id": "SMB-7dc3fa72",
+      "framework": "ISO 14001:2015",
+      "framework_title": "Environmental Management System",
+      "source_url": "https://www.iso.org/standard/60857.html",
+      "id": "ISO14001-SMB-005",
+      "title": "Emergency Preparedness",
+      "description": "Prepare for environmental emergencies",
+      "requirement": "Establish processes to prepare for and respond to emergencies",
+      "smb_guidance": "Simple spill response and emergency contact procedures",
+      "category": "Emergency Response",
+      "priority": "critical",
+      "core_principles": [
+        "Environmental Protection",
+        "Legal Compliance",
+        "Continual Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287546"
+    },
+    {
+      "obligation_id": "SMB-a851a27f",
+      "framework": "ISO 14001:2015",
+      "framework_title": "Environmental Management System",
+      "source_url": "https://www.iso.org/standard/60857.html",
+      "id": "ISO14001-SMB-006",
+      "title": "Environmental Objectives",
+      "description": "Set measurable environmental objectives",
+      "requirement": "Establish environmental objectives at relevant functions",
+      "smb_guidance": "3-5 SMART environmental goals per year",
+      "category": "Planning",
+      "priority": "medium",
+      "core_principles": [
+        "Environmental Protection",
+        "Legal Compliance",
+        "Continual Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287548"
+    },
+    {
+      "obligation_id": "SMB-159314d2",
+      "framework": "ISO 14001:2015",
+      "framework_title": "Environmental Management System",
+      "source_url": "https://www.iso.org/standard/60857.html",
+      "id": "ISO14001-SMB-007",
+      "title": "Operational Control",
+      "description": "Control operations with significant environmental aspects",
+      "requirement": "Establish operational controls for environmental aspects",
+      "smb_guidance": "Focus controls on highest impact activities",
+      "category": "Operation",
+      "priority": "high",
+      "core_principles": [
+        "Environmental Protection",
+        "Legal Compliance",
+        "Continual Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287552"
+    },
+    {
+      "obligation_id": "SMB-e63f5b50",
+      "framework": "ISO 14001:2015",
+      "framework_title": "Environmental Management System",
+      "source_url": "https://www.iso.org/standard/60857.html",
+      "id": "ISO14001-SMB-008",
+      "title": "Performance Monitoring",
+      "description": "Monitor environmental performance",
+      "requirement": "Monitor and measure key environmental performance indicators",
+      "smb_guidance": "Track basic metrics: energy, waste, water monthly",
+      "category": "Monitoring",
+      "priority": "medium",
+      "core_principles": [
+        "Environmental Protection",
+        "Legal Compliance",
+        "Continual Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287553"
+    },
+    {
+      "obligation_id": "SMB-d3295e2f",
+      "framework": "ISO 31000:2018",
+      "framework_title": "Risk Management Guidelines",
+      "source_url": "https://www.iso.org/standard/65694.html",
+      "id": "ISO31000-SMB-001",
+      "title": "Risk Management Framework",
+      "description": "Establish framework for risk management",
+      "requirement": "Organization should establish a framework for managing risk",
+      "smb_guidance": "Simple risk register and quarterly review process",
+      "category": "Framework",
+      "priority": "high",
+      "core_principles": [
+        "Integrated",
+        "Structured",
+        "Customized",
+        "Inclusive"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287558"
+    },
+    {
+      "obligation_id": "SMB-b3d795a7",
+      "framework": "ISO 31000:2018",
+      "framework_title": "Risk Management Guidelines",
+      "source_url": "https://www.iso.org/standard/65694.html",
+      "id": "ISO31000-SMB-002",
+      "title": "Risk Identification",
+      "description": "Systematically identify risks",
+      "requirement": "Identify risks that could affect objectives",
+      "smb_guidance": "Brainstorming sessions with key staff quarterly",
+      "category": "Risk Assessment",
+      "priority": "critical",
+      "core_principles": [
+        "Integrated",
+        "Structured",
+        "Customized",
+        "Inclusive"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287560"
+    },
+    {
+      "obligation_id": "SMB-0970b2f2",
+      "framework": "ISO 31000:2018",
+      "framework_title": "Risk Management Guidelines",
+      "source_url": "https://www.iso.org/standard/65694.html",
+      "id": "ISO31000-SMB-003",
+      "title": "Risk Analysis",
+      "description": "Analyze identified risks",
+      "requirement": "Understand the nature of risk and determine risk level",
+      "smb_guidance": "Use simple likelihood x impact matrix",
+      "category": "Risk Assessment",
+      "priority": "high",
+      "core_principles": [
+        "Integrated",
+        "Structured",
+        "Customized",
+        "Inclusive"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287564"
+    },
+    {
+      "obligation_id": "SMB-ae0773f2",
+      "framework": "ISO 31000:2018",
+      "framework_title": "Risk Management Guidelines",
+      "source_url": "https://www.iso.org/standard/65694.html",
+      "id": "ISO31000-SMB-004",
+      "title": "Risk Evaluation",
+      "description": "Evaluate risks for treatment priority",
+      "requirement": "Compare risk analysis results with risk criteria",
+      "smb_guidance": "Focus on top 10 risks for SMBs",
+      "category": "Risk Assessment",
+      "priority": "high",
+      "core_principles": [
+        "Integrated",
+        "Structured",
+        "Customized",
+        "Inclusive"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287565"
+    },
+    {
+      "obligation_id": "SMB-0d82e579",
+      "framework": "ISO 31000:2018",
+      "framework_title": "Risk Management Guidelines",
+      "source_url": "https://www.iso.org/standard/65694.html",
+      "id": "ISO31000-SMB-005",
+      "title": "Risk Treatment",
+      "description": "Implement risk treatment options",
+      "requirement": "Select and implement appropriate risk treatment options",
+      "smb_guidance": "Accept, avoid, reduce or transfer based on resources",
+      "category": "Risk Treatment",
+      "priority": "critical",
+      "core_principles": [
+        "Integrated",
+        "Structured",
+        "Customized",
+        "Inclusive"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287567"
+    },
+    {
+      "obligation_id": "SMB-39ee15c5",
+      "framework": "ISO 31000:2018",
+      "framework_title": "Risk Management Guidelines",
+      "source_url": "https://www.iso.org/standard/65694.html",
+      "id": "ISO31000-SMB-006",
+      "title": "Risk Communication",
+      "description": "Communicate risk information",
+      "requirement": "Ensure risk information is communicated to stakeholders",
+      "smb_guidance": "Monthly risk updates to management team",
+      "category": "Communication",
+      "priority": "medium",
+      "core_principles": [
+        "Integrated",
+        "Structured",
+        "Customized",
+        "Inclusive"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287569"
+    },
+    {
+      "obligation_id": "SMB-b65096cb",
+      "framework": "ISO 31000:2018",
+      "framework_title": "Risk Management Guidelines",
+      "source_url": "https://www.iso.org/standard/65694.html",
+      "id": "ISO31000-SMB-007",
+      "title": "Risk Monitoring",
+      "description": "Monitor and review risks",
+      "requirement": "Regularly monitor and review risk management process",
+      "smb_guidance": "Quarterly risk register review and update",
+      "category": "Monitoring",
+      "priority": "medium",
+      "core_principles": [
+        "Integrated",
+        "Structured",
+        "Customized",
+        "Inclusive"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287571"
+    },
+    {
+      "obligation_id": "SMB-76d671a3",
+      "framework": "ISO 37301:2021",
+      "framework_title": "Compliance Management System",
+      "source_url": "https://www.upguard.com/blog/iso-37301-guide",
+      "id": "ISO37301-SMB-001",
+      "title": "Compliance Risk Assessment",
+      "description": "Conduct compliance risk assessments",
+      "requirement": "Identify and assess compliance risks",
+      "smb_guidance": "Annual compliance risk assessment with quarterly updates",
+      "category": "Risk Assessment",
+      "priority": "critical",
+      "core_principles": [
+        "Ethics",
+        "Compliance Culture",
+        "Risk-Based",
+        "Continuous Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287575"
+    },
+    {
+      "obligation_id": "SMB-4b7bff68",
+      "framework": "ISO 37301:2021",
+      "framework_title": "Compliance Management System",
+      "source_url": "https://www.upguard.com/blog/iso-37301-guide",
+      "id": "ISO37301-SMB-002",
+      "title": "Compliance Officer",
+      "description": "Establish compliance officer responsibilities",
+      "requirement": "Assign compliance management responsibilities",
+      "smb_guidance": "Part-time compliance role acceptable for SMBs",
+      "category": "Leadership",
+      "priority": "high",
+      "core_principles": [
+        "Ethics",
+        "Compliance Culture",
+        "Risk-Based",
+        "Continuous Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287577"
+    },
+    {
+      "obligation_id": "SMB-c1e4e322",
+      "framework": "ISO 37301:2021",
+      "framework_title": "Compliance Management System",
+      "source_url": "https://www.upguard.com/blog/iso-37301-guide",
+      "id": "ISO37301-SMB-003",
+      "title": "Compliance Objectives",
+      "description": "Implement compliance objectives",
+      "requirement": "Establish compliance objectives and planning to achieve them",
+      "smb_guidance": "3-5 key compliance goals annually",
+      "category": "Planning",
+      "priority": "high",
+      "core_principles": [
+        "Ethics",
+        "Compliance Culture",
+        "Risk-Based",
+        "Continuous Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287579"
+    },
+    {
+      "obligation_id": "SMB-18279e18",
+      "framework": "ISO 37301:2021",
+      "framework_title": "Compliance Management System",
+      "source_url": "https://www.upguard.com/blog/iso-37301-guide",
+      "id": "ISO37301-SMB-004",
+      "title": "Internal Controls",
+      "description": "Develop internal compliance controls",
+      "requirement": "Establish and maintain compliance controls",
+      "smb_guidance": "Focus on high-risk compliance areas first",
+      "category": "Operation",
+      "priority": "critical",
+      "core_principles": [
+        "Ethics",
+        "Compliance Culture",
+        "Risk-Based",
+        "Continuous Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287580"
+    },
+    {
+      "obligation_id": "SMB-d457472f",
+      "framework": "ISO 37301:2021",
+      "framework_title": "Compliance Management System",
+      "source_url": "https://www.upguard.com/blog/iso-37301-guide",
+      "id": "ISO37301-SMB-005",
+      "title": "Compliance Training",
+      "description": "Build organizational compliance awareness",
+      "requirement": "Ensure compliance awareness and competence",
+      "smb_guidance": "Annual compliance training for all staff",
+      "category": "Support",
+      "priority": "high",
+      "core_principles": [
+        "Ethics",
+        "Compliance Culture",
+        "Risk-Based",
+        "Continuous Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287582"
+    },
+    {
+      "obligation_id": "SMB-ca0e2d49",
+      "framework": "ISO 37301:2021",
+      "framework_title": "Compliance Management System",
+      "source_url": "https://www.upguard.com/blog/iso-37301-guide",
+      "id": "ISO37301-SMB-006",
+      "title": "Compliance Monitoring",
+      "description": "Perform internal compliance audits",
+      "requirement": "Monitor compliance performance",
+      "smb_guidance": "Annual audit cycle with spot checks",
+      "category": "Performance Evaluation",
+      "priority": "medium",
+      "core_principles": [
+        "Ethics",
+        "Compliance Culture",
+        "Risk-Based",
+        "Continuous Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287586"
+    },
+    {
+      "obligation_id": "SMB-105fbb99",
+      "framework": "ISO 37301:2021",
+      "framework_title": "Compliance Management System",
+      "source_url": "https://www.upguard.com/blog/iso-37301-guide",
+      "id": "ISO37301-SMB-007",
+      "title": "Compliance Culture",
+      "description": "Promote culture of compliance",
+      "requirement": "Foster ethical behavior and compliance culture",
+      "smb_guidance": "Lead by example with clear tone from the top",
+      "category": "Culture",
+      "priority": "high",
+      "core_principles": [
+        "Ethics",
+        "Compliance Culture",
+        "Risk-Based",
+        "Continuous Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287588"
+    },
+    {
+      "obligation_id": "SMB-4efbc279",
+      "framework": "ISO 37301:2021",
+      "framework_title": "Compliance Management System",
+      "source_url": "https://www.upguard.com/blog/iso-37301-guide",
+      "id": "ISO37301-SMB-008",
+      "title": "Whistleblowing",
+      "description": "Establish reporting mechanisms",
+      "requirement": "Enable reporting of compliance concerns",
+      "smb_guidance": "Simple anonymous reporting channel",
+      "category": "Communication",
+      "priority": "critical",
+      "core_principles": [
+        "Ethics",
+        "Compliance Culture",
+        "Risk-Based",
+        "Continuous Improvement"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287590"
+    },
+    {
+      "obligation_id": "SMB-0efd2aad",
+      "framework": "NIST CSF 2.0",
+      "framework_title": "NIST Cybersecurity Framework",
+      "source_url": "https://www.nist.gov/cyberframework",
+      "id": "NIST-SMB-001",
+      "title": "Asset Management",
+      "description": "Identify and manage cybersecurity assets",
+      "requirement": "Maintain inventory of organizational systems, assets, and data",
+      "smb_guidance": "Simple spreadsheet of critical IT assets and data",
+      "category": "Identify",
+      "priority": "critical",
+      "core_principles": [
+        "Identify",
+        "Protect",
+        "Detect",
+        "Respond",
+        "Recover",
+        "Govern"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287594"
+    },
+    {
+      "obligation_id": "SMB-d4c8ef2e",
+      "framework": "NIST CSF 2.0",
+      "framework_title": "NIST Cybersecurity Framework",
+      "source_url": "https://www.nist.gov/cyberframework",
+      "id": "NIST-SMB-002",
+      "title": "Risk Assessment",
+      "description": "Assess cybersecurity risks",
+      "requirement": "Identify and assess cybersecurity risks to operations and assets",
+      "smb_guidance": "Annual cybersecurity risk assessment",
+      "category": "Identify",
+      "priority": "high",
+      "core_principles": [
+        "Identify",
+        "Protect",
+        "Detect",
+        "Respond",
+        "Recover",
+        "Govern"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287596"
+    },
+    {
+      "obligation_id": "SMB-415de6e5",
+      "framework": "NIST CSF 2.0",
+      "framework_title": "NIST Cybersecurity Framework",
+      "source_url": "https://www.nist.gov/cyberframework",
+      "id": "NIST-SMB-003",
+      "title": "Access Control",
+      "description": "Protect through access control",
+      "requirement": "Limit access to assets and facilities to authorized users",
+      "smb_guidance": "Implement MFA and least privilege access",
+      "category": "Protect",
+      "priority": "critical",
+      "core_principles": [
+        "Identify",
+        "Protect",
+        "Detect",
+        "Respond",
+        "Recover",
+        "Govern"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287598"
+    },
+    {
+      "obligation_id": "SMB-5e35bf4d",
+      "framework": "NIST CSF 2.0",
+      "framework_title": "NIST Cybersecurity Framework",
+      "source_url": "https://www.nist.gov/cyberframework",
+      "id": "NIST-SMB-004",
+      "title": "Data Security",
+      "description": "Protect data at rest and in transit",
+      "requirement": "Implement data protection measures",
+      "smb_guidance": "Encrypt sensitive data and use secure connections",
+      "category": "Protect",
+      "priority": "critical",
+      "core_principles": [
+        "Identify",
+        "Protect",
+        "Detect",
+        "Respond",
+        "Recover",
+        "Govern"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287599"
+    },
+    {
+      "obligation_id": "SMB-a0e87a4b",
+      "framework": "NIST CSF 2.0",
+      "framework_title": "NIST Cybersecurity Framework",
+      "source_url": "https://www.nist.gov/cyberframework",
+      "id": "NIST-SMB-005",
+      "title": "Security Training",
+      "description": "Train users on cybersecurity",
+      "requirement": "Provide cybersecurity awareness training",
+      "smb_guidance": "Quarterly security awareness training",
+      "category": "Protect",
+      "priority": "high",
+      "core_principles": [
+        "Identify",
+        "Protect",
+        "Detect",
+        "Respond",
+        "Recover",
+        "Govern"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287601"
+    },
+    {
+      "obligation_id": "SMB-6a16d3e9",
+      "framework": "NIST CSF 2.0",
+      "framework_title": "NIST Cybersecurity Framework",
+      "source_url": "https://www.nist.gov/cyberframework",
+      "id": "NIST-SMB-006",
+      "title": "Continuous Monitoring",
+      "description": "Detect cybersecurity events",
+      "requirement": "Implement continuous monitoring capabilities",
+      "smb_guidance": "Basic SIEM or log monitoring tools",
+      "category": "Detect",
+      "priority": "high",
+      "core_principles": [
+        "Identify",
+        "Protect",
+        "Detect",
+        "Respond",
+        "Recover",
+        "Govern"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287603"
+    },
+    {
+      "obligation_id": "SMB-254e2077",
+      "framework": "NIST CSF 2.0",
+      "framework_title": "NIST Cybersecurity Framework",
+      "source_url": "https://www.nist.gov/cyberframework",
+      "id": "NIST-SMB-007",
+      "title": "Incident Response Plan",
+      "description": "Respond to detected incidents",
+      "requirement": "Maintain and test incident response procedures",
+      "smb_guidance": "Simple incident response checklist and contacts",
+      "category": "Respond",
+      "priority": "critical",
+      "core_principles": [
+        "Identify",
+        "Protect",
+        "Detect",
+        "Respond",
+        "Recover",
+        "Govern"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287605"
+    },
+    {
+      "obligation_id": "SMB-1e292def",
+      "framework": "NIST CSF 2.0",
+      "framework_title": "NIST Cybersecurity Framework",
+      "source_url": "https://www.nist.gov/cyberframework",
+      "id": "NIST-SMB-008",
+      "title": "Recovery Planning",
+      "description": "Plan for recovery from incidents",
+      "requirement": "Maintain recovery plans and procedures",
+      "smb_guidance": "Basic backup and recovery procedures",
+      "category": "Recover",
+      "priority": "high",
+      "core_principles": [
+        "Identify",
+        "Protect",
+        "Detect",
+        "Respond",
+        "Recover",
+        "Govern"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287609"
+    },
+    {
+      "obligation_id": "SMB-5c4295d2",
+      "framework": "NIST CSF 2.0",
+      "framework_title": "NIST Cybersecurity Framework",
+      "source_url": "https://www.nist.gov/cyberframework",
+      "id": "NIST-SMB-009",
+      "title": "Supply Chain Risk",
+      "description": "Manage supply chain cybersecurity",
+      "requirement": "Assess and manage supply chain risks",
+      "smb_guidance": "Vendor security questionnaire for critical suppliers",
+      "category": "Identify",
+      "priority": "medium",
+      "core_principles": [
+        "Identify",
+        "Protect",
+        "Detect",
+        "Respond",
+        "Recover",
+        "Govern"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287613"
+    },
+    {
+      "obligation_id": "SMB-6c4ccab4",
+      "framework": "NIST CSF 2.0",
+      "framework_title": "NIST Cybersecurity Framework",
+      "source_url": "https://www.nist.gov/cyberframework",
+      "id": "NIST-SMB-010",
+      "title": "Governance Structure",
+      "description": "Establish cybersecurity governance",
+      "requirement": "Define roles and responsibilities for cybersecurity",
+      "smb_guidance": "Clear security roles even in small teams",
+      "category": "Govern",
+      "priority": "high",
+      "core_principles": [
+        "Identify",
+        "Protect",
+        "Detect",
+        "Respond",
+        "Recover",
+        "Govern"
+      ],
+      "implementation_level": "SMB",
+      "created_at": "2025-08-31T20:55:25.287615"
+    }
+  ]
+}

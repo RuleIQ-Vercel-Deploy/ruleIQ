@@ -1,7 +1,8 @@
 ---
 name: graphrag-specialist
-description: "GraphRAG and AI research specialist. Implements knowledge graph systems, RAG pipelines, and AI-powered research capabilities."
+description: GraphRAG and AI research specialist. Implements knowledge graph systems, RAG pipelines, and AI-powered research capabilities.
 tools: Read, Write, Execute, Neo4j, OpenAI, LangChain
+model: opus
 ---
 
 # GraphRAG Specialist - RuleIQ

@@ -1,0 +1,95 @@
+
+8fix-undefined-names.UndefinedNameFixer.visit_FunctionDefJ
+@/home/omar/Documents/ruleIQ/scripts/sonar/fix-undefined-names.pyz z("2*«
+2{ {()s
+q
+| |(
+%5"__id*Y
+
+__unknown_file (=*;(
+&fix-undefined-names.UndefinedNameFixer"
+defined_namesH
+F
+| |((
+%6"__id*.
+
+__unknown_file (*
+
+node"
+name_]
+| |()
+%7*"
+
+__unknown_file (
+
+%5*"
+
+__unknown_file (
+
+%62addH
+F
+~ ~(
+%8"__id*.
+
+__unknown_file (*
+
+node"
+argsF
+D
+~ ~(!
+%9"__id*,
+
+__unknown_file (*
+
+%8"
+args*
+4
+6*>
+3
+fix-undefined-names.py"
+Ç Ç(
+implicit return*©
+4
+Ä Ä( íè
+
+Ä Ä( 
+%1*F
+
+__unknown_file (*(
+&fix-undefined-names.UndefinedNameFixer*$
+
+__unknown_file (
+
+node2generic_visit*
+3*≥
+6 (+s
+q
+ (
+%2"__id*Y
+
+__unknown_file (=*;(
+&fix-undefined-names.UndefinedNameFixer"
+defined_namesF
+D
+# (*
+%3"__id*,
+
+__unknown_file (*
+
+arg"
+arg_]
+ (+
+%4*"
+
+__unknown_file (
+
+%2*"
+
+__unknown_file (
+
+%32add*
+4
+6:
+z  z($
+nodeB*(
+&fix-undefined-names.UndefinedNameFixerH

@@ -1,0 +1,246 @@
+
+Iservices.compliance_memory_manager.ComplianceMemoryManager._generate_tagsM
+A/home/omar/Documents/ruleIQ/services/compliance_memory_manager.py¸ ¸("2*ö
+2
+º º(/
+
+» »(
+%19"listA
+?
+
+» »(
+tags"__id*#
+
+__unknown_file (
+
+%19|z
+
+¼ ¼(&
+%20*'
+
+__unknown_file (
+	
+context*.
+
+__unknown_file (
+query_category2__contains__*
+9
+10*©
+4
+Â Â(9±®
+
+Â Â(9
+%1*Z
+
+__unknown_file (><
+:services.compliance_memory_manager.ComplianceMemoryManager**
+
+__unknown_file (
+
+
+user_query2_extract_key_termsG
+E
+
+Â Â(9
+query_terms"__id*"
+
+__unknown_file (
+
+%1|z
+
+Ã Ã( 
+%2"list.extend*$
+
+__unknown_file (
+
+tags*+
+
+__unknown_file (
+
+query_terms2extend
+
+Ä Ä(
+%3"list
+
+Ä Ä(
+%4"sethf
+
+Ä Ä(
+%5*"
+
+__unknown_file (
+
+%4*$
+
+__unknown_file (
+
+tags2__init__fd
+
+Ä Ä(
+%6*"
+
+__unknown_file (
+
+%3*"
+
+__unknown_file (
+
+%42__init__"
+
+Ä Ä(
+
+%3*»
+6
+Á Á(ECA
+
+Á" Á(0
+%7*&
+
+__unknown_file (
+
+
+domain2lower•’
+
+Á" Á(B
+%8"str.replace*"
+
+__unknown_file (
+
+%7*!
+
+__unknown_file (
+ *!
+
+__unknown_file (
+_2replaceO
+M
+
+Á Á(D
+%9"__concat*
+
+Á Á(!	
+domain_*
+
+Á" Á(B
+
+%8tr
+
+Á Á(E
+%10"list.append*$
+
+__unknown_file (
+
+tags*"
+
+__unknown_file (
+
+%92append*
+4
+6*É
+7
+À À(0
+
+À- À(/
+%11"list’
+
+À À(0
+%12*'
+
+__unknown_file (
+	
+context*'
+
+__unknown_file (	
+domains*#
+
+__unknown_file (
+
+%112get*
+4
+6*à
+8
+¿ ¿(8
+
+¿  ¿(5
+%13"__mapGet*'
+
+__unknown_file (
+	
+context**
+
+__unknown_file (
+
+risk_level2__getitem__O
+M
+
+¿ ¿(7
+%14"__concat*
+
+¿ ¿(	
+risk_*
+
+¿  ¿(5
+
+%13us
+
+¿ ¿(8
+%15"list.append*$
+
+__unknown_file (
+
+tags*#
+
+__unknown_file (
+
+%142append*
+7*‘
+9
+¾ ¾("xv
+
+¾ ¾("
+%16*'
+
+__unknown_file (
+	
+context**
+
+__unknown_file (
+
+risk_level2__contains__*
+7
+8*•
+10
+½ ½(2†ƒ
+
+½ ½(1
+%17"__mapGet*'
+
+__unknown_file (
+	
+context*.
+
+__unknown_file (
+query_category2__getitem__us
+
+½ ½(2
+%18"list.append*$
+
+__unknown_file (
+
+tags*#
+
+__unknown_file (
+
+%172append*
+9:
+
+¸ ¸(,
+
+user_query:
+
+¸. ¸(A
+agent_response:
+
+¸C ¹(	
+contextB><
+:services.compliance_memory_manager.ComplianceMemoryManagerH

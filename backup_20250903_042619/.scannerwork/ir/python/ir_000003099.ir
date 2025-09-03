@@ -1,0 +1,10 @@
+
+;2"Check if circuit is half-open (testing recovery)"strselfp p(%!services.ai.ai_types.CircuitState"‘'
+%
+r r("#get-field# _state:*
+(
+r r(4"#get-field# HALF_OPEN:*
+(
+r r(4"
+#binop ==#2==:Bbool
+r r(4*:/home/omar/Documents/ruleIQ/services/ai/circuit_breaker.py

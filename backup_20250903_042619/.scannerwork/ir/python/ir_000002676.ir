@@ -1,0 +1,216 @@
+
+."user_directory"str
+%@"Groups and Access Controls"str
+82/"User accounts, permissions, security settings"str
+"SOC2"str
+$!"Administrative Activities"str
+
+"description"str
+"admin_activity_logs"str
+
+"ISO27001"str
+"type"str
+>"access_groups"str
+@#7"Admin actions, configuration changes, user management"str
+;"Daily"str
+FB="Group memberships, access permissions, organizational units"str
+
+0int
+C:"Returns the evidence types this integration can collect."str
+%0"User Directory Information"str
+"user_access_logs"str
+"title"str
+@7"Login attempts, successful and failed authentications"str
+"frequency"str
+"User Login Events"str
+"GDPR"str
+"Real-time"str
+"frameworks"strself
+ú+ ú(/list"&
+$
+
+ü €("#new-object#Bdict"
+ 
+
+ü ü(+"	#map-set#:"
+ 
+
+ü- ü(I	"	#map-set#:"
+ 
+
+ı ş(C"	#map-set#:
+)
+'
+
+ÿ ÿ(6"#unknown-value#Blist(
+&
+
+ÿ ÿ(6"
+#is-exact#:Bbool
+
+
+ÿ ÿ(6"
+#assume#::
+8
+
+ÿ ÿ(6"#set-field# __collection_size:Bint(
+&
+
+ÿ ÿ(6"#array-add-last#:(
+&
+
+ÿ ÿ(6"#array-add-last#:(
+&
+
+ÿ ÿ(6"#array-add-last#:"
+ 
+
+ÿ ÿ(6"	#map-set#:"
+ 
+
+ÿ8 €("	#map-set#:&
+$
+
+€ ƒ(I"#new-object#Bdict"
+ 
+
+€ €(8 "	#map-set#:"
+ 
+
+€: ('""	#map-set#:!"
+ 
+
+) ‚(C$"	#map-set#:
+#)
+'
+
+ƒ ƒ(.%"#unknown-value#Blist(
+&
+
+ƒ ƒ(.&"
+#is-exact#:%Bbool
+
+
+ƒ ƒ(.'"
+#assume#:&:
+8
+
+ƒ ƒ(.("#set-field# __collection_size:%Bint(
+&
+
+ƒ ƒ(.)"#array-add-last#:%(
+&
+
+ƒ ƒ(.*"#array-add-last#:%"
+ 
+
+ƒ ƒ(.+"	#map-set#:%"
+ 
+
+ƒ0 ƒ(H,"	#map-set#:&
+$
+
+„ ‡(7-"#new-object#Bdict"
+ 
+
+„ „(%/"	#map-set#:-."
+ 
+
+„' …((1"	#map-set#:-0"
+ 
+
+…* †(;3"	#map-set#:-
+2)
+'
+
+‡ ‡( 4"#unknown-value#Blist(
+&
+
+‡ ‡( 5"
+#is-exact#:4Bbool
+
+
+‡ ‡( 6"
+#assume#:5:
+8
+
+‡ ‡( 7"#set-field# __collection_size:4Bint(
+&
+
+‡ ‡( 8"#array-add-last#:4(
+&
+
+‡ ‡( 9"#array-add-last#:4"
+ 
+
+†= ‡( :"	#map-set#:-4"
+ 
+
+‡" ‡(6<"	#map-set#:-;&
+$
+
+‡9 ‹(E="#new-object#Bdict"
+ 
+
+‡: ˆ(?"	#map-set#:=>"
+ 
+
+ˆ ˆ(BA"	#map-set#:=@"
+ 
+
+‰ Š(IC"	#map-set#:=
+B)
+'
+
+‹ ‹(.D"#unknown-value#Blist(
+&
+
+‹ ‹(.E"
+#is-exact#:DBbool
+
+
+‹ ‹(.F"
+#assume#:E:
+8
+
+‹ ‹(.G"#set-field# __collection_size:DBint(
+&
+
+‹ ‹(.H"#array-add-last#:D(
+&
+
+‹ ‹(.I"#array-add-last#:D"
+ 
+
+‹ ‹(.J"	#map-set#:=D"
+ 
+
+‹0 ‹(DK"	#map-set#:=;)
+'
+
+ü ‹(FL"#unknown-value#Blist(
+&
+
+ü ‹(FM"
+#is-exact#:LBbool
+
+
+ü ‹(FN"
+#assume#:M:
+8
+
+ü ‹(FO"#set-field# __collection_size:LBint(
+&
+
+ü ‹(FP"#array-add-last#:L(
+&
+
+ü ‹(FQ"#array-add-last#:L(
+&
+
+ü ‹(FR"#array-add-last#:L-(
+&
+
+ü ‹(FS"#array-add-last#:L=
+
+ü ‹(FL*L/home/omar/Documents/ruleIQ/api/integrations/google_workspace_integration.py

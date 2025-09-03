@@ -1,0 +1,242 @@
+
+TK"Compliance framework section (e.g., 'GDPR Article 25', 'ISO 27001 A.5.1')"str
+;F2"Current state of compliance for this requirement"str
+"properties"str
+("high"str
+"array"str
+"gaps"str
+5:,"Detailed description of the compliance gap"str
+5@,"Business impact of not addressing this gap"str
+$5"Severity level of the gap"str
+<3"Extract compliance gaps from assessment responses"str
+%"enum"str
+LC"Get the function schema for Google Generative AI function calling"str
+C"current_state"str
+"items"str
+"
+"severity"str
+^"overall_risk_level"str
+&"low"str
+6j-"Overall risk level based on identified gaps"str
+"name"str
+""extract_compliance_gaps"str
+="impact"str
+
+"parameters"str
+-$"List of identified compliance gaps"str
+m"priority_order"str
+5y,"Estimated total effort to address all gaps"str
+"type"str
+"description"str
+/L&"Required state to achieve compliance"str
+v"estimated_effort"str
+	"section"str
+'"medium"str
+)
+"critical"str
+I"target_state"str
+"object"str
+"string"str
+P
+"required"str
+Fs="Recommended order for addressing gaps (section identifiers)"str
+
+.0intselfE E( +list"Ç$
+"
+G b(!"#new-object#Bdict 
+
+G G(1"	#map-set#: 
+
+G3 H(?	"	#map-set#:$
+"
+I b( "#new-object#Bdict 
+
+I I(+"	#map-set#:$
+"
+I; `(:"#new-object#Bdict$
+"
+ID Y("#new-object#Bdict 
+
+IE J("	#map-set#: 
+
+J J(H"	#map-set#:$
+"
+K Y("#new-object#Bdict 
+
+K K(&"	#map-set#:$
+"
+K6 W(4"#new-object#Bdict$
+"
+KB N("#new-object#Bdict 
+
+KC L("	#map-set#: 
+
+L M(W "	#map-set#: 
+
+K7 N(!"	#map-set#:$
+"
+N P(#"#new-object#Bdict 
+
+N N(,$"	#map-set#:#'
+%
+N6 O(*"#unknown-value#Blist&
+$
+N6 O(,"
+#is-exact#:*+Bbool
+
+N6 O(-"
+#assume#:,8
+6
+N6 O(/"#set-field# __collection_size:*.Bint&
+$
+N6 O(0"#array-add-last#:*&&
+$
+N6 O(1"#array-add-last#:*'&
+$
+N6 O(2"#array-add-last#:*(&
+$
+N6 O(3"#array-add-last#:*) 
+
+N. O(4"	#map-set#:#%* 
+
+O! O(K6"	#map-set#:#5 
+
+N P(7"	#map-set#:"#$
+"
+P Q(98"#new-object#Bdict 
+
+P P(/9"	#map-set#:8 
+
+P1 Q(8;"	#map-set#:8: 
+
+P Q(9<"	#map-set#:8$
+"
+QE S(9>"#new-object#Bdict 
+
+R R(?"	#map-set#:> 
+
+R S(8A"	#map-set#:>@ 
+
+Q; S(9B"	#map-set#:=>$
+"
+T U(?D"#new-object#Bdict 
+
+T T(E"	#map-set#:D 
+
+T U(>G"	#map-set#:DF 
+
+S; U(?H"	#map-set#:CD$
+"
+V W(3J"#new-object#Bdict 
+
+V V(-K"	#map-set#:J 
+
+V/ W(2M"	#map-set#:JL 
+
+V W(3N"	#map-set#:IJ 
+
+K( W(4O"	#map-set#:'
+%
+WB Y(Q"#unknown-value#Blist&
+$
+WB Y(R"
+#is-exact#:Q+Bbool
+
+WB Y(S"
+#assume#:R8
+6
+WB Y(T"#set-field# __collection_size:Q.Bint&
+$
+WB Y(U"#array-add-last#:Q&
+$
+WB Y(V"#array-add-last#:Q"&
+$
+WB Y(W"#array-add-last#:Q&
+$
+WB Y(X"#array-add-last#:Q=&
+$
+WB Y(Y"#array-add-last#:QC&
+$
+WB Y(Z"#array-add-last#:QI 
+
+W6 Y(["	#map-set#:PQ 
+
+K Y(\"	#map-set#: 
+
+I< Y(]"	#map-set#:$
+"
+Y5 [(:_"#new-object#Bdict 
+
+Y6 Y(F`"	#map-set#:_'
+%
+Z Z(9a"#unknown-value#Blist&
+$
+Z Z(9b"
+#is-exact#:a+Bbool
+
+Z Z(9c"
+#assume#:b8
+6
+Z Z(9d"#set-field# __collection_size:a.Bint&
+$
+Z Z(9e"#array-add-last#:a&&
+$
+Z Z(9f"#array-add-last#:a'&
+$
+Z Z(9g"#array-add-last#:a(&
+$
+Z Z(9h"#array-add-last#:a) 
+
+Z Z(9i"	#map-set#:_%a 
+
+Z; [(9k"	#map-set#:_j 
+
+Y [(:l"	#map-set#:^_$
+"
+\ ^(Jn"#new-object#Bdict 
+
+\ \(.o"	#map-set#:n$
+"
+\9 \(Kp"#new-object#Bdict 
+
+\: \(Jq"	#map-set#:p 
+
+\0 \(Kr"	#map-set#:np 
+
+] ^(It"	#map-set#:ns 
+
+\ ^(Ju"	#map-set#:mn$
+"
+_  `(9w"#new-object#Bdict 
+
+_! _(1x"	#map-set#:w 
+
+_3 `(8z"	#map-set#:wy 
+
+_ `(9{"	#map-set#:vw 
+
+I- `(:|"	#map-set#:'
+%
+`H b(}"#unknown-value#Blist&
+$
+`H b(~"
+#is-exact#:}+Bbool
+
+`H b("
+#assume#:~9
+7
+`H b(€"#set-field# __collection_size:}.Bint'
+%
+`H b("#array-add-last#:}'
+%
+`H b(‚"#array-add-last#:}^'
+%
+`H b(ƒ"#array-add-last#:}m'
+%
+`H b(„"#array-add-last#:}v!
+
+`< b(…"	#map-set#:P}!
+
+I b( †"	#map-set#:
+
+G b(!*;/home/omar/Documents/ruleIQ/services/ai/assessment_tools.py

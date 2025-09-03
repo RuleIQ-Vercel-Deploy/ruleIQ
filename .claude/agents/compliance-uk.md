@@ -1,7 +1,8 @@
 ---
 name: compliance-uk
-description: "UK compliance specialist. Ensures GDPR compliance, UK-specific regulations, and creates compliance documentation."
+description: UK compliance specialist. Ensures GDPR compliance, UK-specific regulations, and creates compliance documentation.
 tools: Read, Write, Legal, GDPR
+model: opus
 ---
 
 # UK Compliance Specialist - RuleIQ

@@ -1,7 +1,8 @@
 ---
 name: security-auditor
-description: "Security vulnerability specialist. Proactively fixes security issues, reviews hotspots, and ensures compliance with security standards."
+description: Security vulnerability specialist. Proactively fixes security issues, reviews hotspots, and ensures compliance with security standards.
 tools: Read, Write, Execute, SonarCloud, Snyk, OWASP
+model: opus
 ---
 
 # Security Auditor - RuleIQ

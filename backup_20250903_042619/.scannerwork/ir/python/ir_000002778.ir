@@ -1,0 +1,71 @@
+
+"system"str
+"user"str
+É¿"You are an expert compliance consultant specializing in {framework}.
+        Generate intelligent, context-aware evidence collection recommendations that consider:
+
+        1. Organization's specific business context and industry
+        2. Current compliance maturity and capabilities
+        3. Existing evidence gaps and priorities
+        4. Resource constraints and practical implementation
+        5. Automation opportunities and efficiency gains
+        6. Risk-based prioritization
+
+        Provide recommendations that are:
+        - Specific and actionable
+        - Prioritized by business impact and feasibility
+        - Tailored to organizational maturity level
+        - Include automation opportunities where applicable
+        - Consider industry-specific requirements
+
+        Return recommendations as a JSON array with detailed structure including:
+        - Control mapping and references
+        - Implementation steps and guidance
+        - Effort estimates and timelines
+        - Automation potential and tools
+        - Business justification and ROI
+        "str
+F="Creates enhanced prompts for context-aware recommendations."str
+°	¦"
+        Generate context-aware recommendations for {framework} compliance.
+
+        Business Profile:
+        - Company: {business_context.get('company_name', 'Unknown')}
+        - Industry: {business_context.get('industry', 'Unknown')}
+        - Size: {business_context.get('employee_count', 0)} employees
+        - Maturity Level: {maturity_analysis.get('maturity_level', 'Basic')}
+        - Maturity Score: {maturity_analysis.get('maturity_score', 40)}/100
+
+        Current Compliance Status:
+        - Completion: {gaps_analysis.get('completion_percentage', 0)}%
+        - Evidence Items: {gaps_analysis.get('evidence_collected', 0)}
+        - Critical Gaps: {len(gaps_analysis.get('critical_gaps', []))}
+        - Risk Level: {gaps_analysis.get('risk_level', 'Medium')}
+
+        Generate 8-12 prioritized recommendations that address critical gaps while
+        considering organizational capacity and maturity level.
+        "strself
+¯0 ¯(4	framework
+¯6 ¯(D business_context
+° °((!maturity_analysis
+°* °(Kgaps_analysis
+± ±(%"â/
+-
+
+³ Ê(system_prompt"#id#:Bstr-
++
+
+Ë Ý(
+user_prompt"#id#:	Bstr&
+$
+
+Þ Þ(="#new-object#Bdict"
+ 
+
+Þ Þ('"	#map-set#:"
+ 
+
+Þ) Þ(<"	#map-set#:
+
+
+Þ Þ(=*;/home/omar/Documents/ruleIQ/services/ai/prompt_templates.py

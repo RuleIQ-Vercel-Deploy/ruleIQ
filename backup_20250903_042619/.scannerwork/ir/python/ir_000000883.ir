@@ -1,0 +1,44 @@
+
+$"AWS (Amazon Web Services)"str
+1("Get list of supported cloud providers."str
+"DigitalOcean"str
+"IBM Cloud"str
+"Oracle Cloud"str
+"Linode"str
+
+"Other"str
+"Microsoft Azure"str
+ "Google Cloud Platform"str
+	"Vultr"str
+
+0intlist"¢'
+%
+i s("#unknown-value#Blist&
+$
+i s("
+#is-exact#:Bbool
+
+i s("
+#assume#:8
+6
+i s("#set-field# __collection_size:Bint&
+$
+i s("#array-add-last#:&
+$
+i s("#array-add-last#:&
+$
+i s("#array-add-last#:&
+$
+i s("#array-add-last#:&
+$
+i s("#array-add-last#:&
+$
+i s("#array-add-last#:&
+$
+i s("#array-add-last#:&
+$
+i s("#array-add-last#:	&
+$
+i s("#array-add-last#:
+
+i s(*8/home/omar/Documents/ruleIQ/services/business_service.py

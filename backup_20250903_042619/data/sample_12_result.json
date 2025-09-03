@@ -1,0 +1,434 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/ukpga/2018/12/data.xml",
+  "fetched_at": "2025-08-31T18:13:16.117766",
+  "metadata": {
+    "title": "Data Protection Act 2018",
+    "description": "An Act to make provision for the regulation of the processing of information relating to individuals; to make provision in connection with the Information Commissioner's functions under certain regulations relating to information; to make provision for a direct marketing code of practice; and for connected purposes.",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "section-4",
+      "text": "41This Part is relevant to most processing of personal data.2 This Part\u2014aapplies to the types of processing of personal data to which the  UK GDPR  applies by virtue of Article 2 of the  UK GDPR, andbsupplements, and must be read with, the  UK GDPR.3. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection"
+      ]
+    },
+    {
+      "id": "section-6",
+      "text": "61The definition of  \u201ccontroller\u201d in Article 4(7) of the  UK GDPR  has effect subject to\u2014asubsection (2),bsection 209, andcsection 210.2For the purposes of the  UK GDPR, where personal data is processed only\u2014afor purposes for which it is required by an enactment to be processed, andbby means by which it is required by an enactment to be processed,the person on whom the obligation to process the data is imposed by the enactment (or, if different, one of the enactments) is the controller.",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection"
+      ]
+    },
+    {
+      "id": "section-11",
+      "text": "111For the purposes of Article 9(2)(h) of the  UK GDPR  (processing for health or social care purposes etc), the circumstances in which the processing of personal data is carried out subject to the conditions and safeguards referred to in Article 9(3) of the  UK GDPR  (obligation of secrecy) include circumstances in which it is carried out\u2014aby or under the responsibility of a health professional or a social work professional, orbby another person who in the circumstances owes a duty of confident",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "security"
+      ]
+    },
+    {
+      "id": "section-12",
+      "text": "121The Secretary of State may by regulations specify limits on the fees that a controller may charge in reliance on\u2014aArticle 12(5) of the  UK GDPR  (reasonable fees when responding to manifestly unfounded or excessive requests), orbArticle 15(3) of the  UK GDPR  (reasonable fees for provision of further copies).2The Secretary of State may by regulations\u2014arequire controllers of a description specified in the regulations to produce and publish guidance about the fees that they charge in reliance o",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-13",
+      "text": "131This section applies where a controller is a credit reference agency (within the meaning of section 145(8) of the Consumer Credit Act 1974).2The controller's obligations under Article 15(1) to (3) of the UK GDPR (confirmation of processing, access to data and safeguards for third country transfers) are taken to apply only to personal data relating to the data subject's financial standing, unless the data subject has indicated a contrary intention.3Where the controller discloses personal data ",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-14",
+      "text": "141This section makes provision for the purposes of Article 22(2)(b) of the  UK GDPR  (exception from Article 22(1) of the  UK GDPR  for significant decisions based solely on automated processing that are  required or authorised under the law of the United Kingdom or a part of the United Kingdom  and subject to safeguards for the data subject's rights, freedoms and legitimate interests).2A decision is a  \u201csignificant decision\u201d for the purposes of this section if, in relation to a data subject, i",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent"
+      ]
+    },
+    {
+      "id": "section-17",
+      "text": "171Accreditation of a person as a certification provider is only valid when carried out by\u2014athe Commissioner, orbthe  UK national accreditation body.2The Commissioner may only accredit a person as a certification provider where the Commissioner\u2014ahas published a statement that the Commissioner will carry out such accreditation, andbhas not published a notice withdrawing that statement.3The  UK national accreditation body  may only accredit a person as a certification provider where the Commission",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-17A",
+      "text": "17A1The Secretary of State may by regulations specify any of the following which the Secretary of State considers ensures an adequate level of protection of personal data\u2014aa third country,ba territory or one or more sectors within a third country,can international organisation, orda description of such a country, territory, sector or organisation.2For the purposes of the UK GDPR and this Part of this Act, a transfer of personal data to a third country or an international organisation is based on",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-17B",
+      "text": "17B1For so long as regulations under section 17A are in force which specify, or specify a description which includes, a third country, a territory or sector within a third country or an international organisation, the Secretary of State must carry out a review of whether the country, territory, sector or organisation ensures an adequate level of protection of personal data at intervals of not more than 4 years.2Each review under subsection (1) must take into account all relevant developments in ",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-17C",
+      "text": "17C1The Secretary of State may by regulations specify standard data protection clauses which the Secretary of State considers provide appropriate safeguards for the purposes of transfers of personal data to a third country or an international organisation in reliance on Article 46 of the UK GDPR (and see also section 119A).2The Secretary of State must keep under review the standard data protection clauses specified in regulations under this section that are for the time being in force.3Regulatio",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-18",
+      "text": "181The Secretary of State may by regulations specify, for the purposes of Article 49(1)(d) of the  UK GDPR\u2014acircumstances in which a transfer of personal data to a third country or international organisation is to be taken to be necessary for important reasons of public interest, andbcircumstances in which a transfer of personal data to a third country or international organisation which is not required by an enactment is not to be taken to be necessary for important reasons of public interest.2",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection"
+      ]
+    },
+    {
+      "id": "section-24",
+      "text": "241The provisions of  the UK GDPR  and this Act listed in subsection (2) do not apply to personal data to which  the UK GDPR  applies by virtue of  Article 2(1A) \n\t\t\t\t\t(manual unstructured personal data held by FOI public authorities).2Those provisions are\u2014ain Chapter II of the UK GDPR  (principles)\u2014iArticle 5(1)(a) to (c), (e) and (f)\n\t\t\t\t\t\t\t\t\t(principles relating to processing, other than the accuracy principle),iiArticle 6 (lawfulness),iiiArticle 7 (conditions for consent),ivArticle 8(1) and ",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting",
+        "consent"
+      ]
+    },
+    {
+      "id": "section-26",
+      "text": "261A provision of  the UK GDPR or this Act mentioned in subsection (2) does not apply to personal data to which  the UK GDPR  applies if exemption from the provision is required for\u2014athe purpose of safeguarding national security, orbdefence purposes.2The provisions are\u2014aChapter II of  the UK GDPR  (principles) except for\u2014iArticle 5(1)(a) (lawful, fair and transparent processing), so far as it requires processing of personal data to be lawful;iiArticle 6 (lawfulness of processing);iiiArticle 9 (p",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "security"
+      ]
+    },
+    {
+      "id": "section-27",
+      "text": "271Subject to subsection (3), a certificate signed by a Minister of the Crown certifying that exemption from all or any of the provisions listed in section 26(2) is, or at any time was, required in relation to any personal data for the purpose of safeguarding national security is conclusive evidence of that fact.2A certificate under subsection (1)\u2014amay identify the personal data to which it applies by means of a general description, andbmay be expressed to have prospective effect.3Any person dir",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "security",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-28",
+      "text": "281Article 9(1) of  the UK GDPR  (prohibition on processing of special categories of personal data) does not prohibit the processing of personal data to which  the UK GDPR  applies to the extent that the processing is carried out\u2014afor the purpose of safeguarding national security or for defence purposes, andbwith appropriate safeguards for the rights and freedoms of data subjects.2Article 32 of  the UK GDPR  (security of processing) does not apply to a controller or processor to the extent that ",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "security"
+      ]
+    },
+    {
+      "id": "section-32",
+      "text": "321In this Part,  \u201ccontroller\u201d means the competent authority which, alone or jointly with others\u2014adetermines the purposes and means of the processing of personal data, orbis the controller by virtue of subsection (2).2Where personal data is processed only\u2014afor purposes for which it is required by an enactment to be processed, andbby means by which it is required by an enactment to be processed,the competent authority on which the obligation to process the data is imposed by the enactment (or, if",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection"
+      ]
+    },
+    {
+      "id": "section-34",
+      "text": "341This Chapter sets out the six data protection principles as follows\u2014asection 35(1) sets out the first data protection principle (requirement that processing be lawful and fair);bsection 36(1) sets out the second data protection principle (requirement that purposes of processing be specified, explicit and legitimate);csection 37 sets out the third data protection principle (requirement that personal data be adequate, relevant and not excessive);dsection 38(1) sets out the fourth data protectio",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection"
+      ]
+    },
+    {
+      "id": "section-35",
+      "text": "351The first data protection principle is that the processing of personal data for any of the law enforcement purposes must be lawful and fair.2The processing of personal data for any of the law enforcement purposes is lawful only if and to the extent that it is based on law and either\u2014athe data subject has given consent to the processing for that purpose, orbthe processing is necessary for the performance of a task carried out for that purpose by a competent authority.3In addition, where the pr",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "consent"
+      ]
+    },
+    {
+      "id": "section-36",
+      "text": "361The second data protection principle is that\u2014athe law enforcement purpose for which personal data is collected on any occasion must be specified, explicit and legitimate, andbpersonal data so collected must not be processed in a manner that is incompatible with the purpose for which it was collected.2Paragraph (b) of the second data protection principle is subject to subsections (3) and (4).3Personal data collected for a law enforcement purpose may be processed for any other law enforcement p",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection"
+      ]
+    },
+    {
+      "id": "section-37",
+      "text": "37The third data protection principle is that personal data processed for any of the law enforcement purposes must be adequate, relevant and not excessive in relation to the purpose for which it is processed.",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection"
+      ]
+    },
+    {
+      "id": "section-38",
+      "text": "381The fourth data protection principle is that\u2014apersonal data processed for any of the law enforcement purposes must be accurate and, where necessary, kept up to date, andbevery reasonable step must be taken to ensure that personal data that is inaccurate, having regard to the law enforcement purpose for which it is processed, is erased or rectified without delay.2In processing personal data for any of the law enforcement purposes, personal data based on facts must, so far as possible, be disti",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-39",
+      "text": "391The fifth data protection principle is that personal data processed for any of the law enforcement purposes must be kept for no longer than is necessary for the purpose for which it is processed.2Appropriate time limits must be established for the periodic review of the need for the continued storage of personal data for any of the law enforcement purposes.",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-40",
+      "text": "40The sixth data protection principle is that personal data processed for any of the law enforcement purposes must be so processed in a manner that ensures appropriate security of the personal data, using appropriate technical or organisational measures (and, in this principle,  \u201cappropriate security\u201d includes protection against unauthorised or unlawful processing and against accidental loss, destruction or damage).",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "security"
+      ]
+    },
+    {
+      "id": "section-42",
+      "text": "421This section applies for the purposes of section 35(4) and (5) (which require a controller to have an appropriate policy document in place when carrying out sensitive processing in reliance on the consent of the data subject or, as the case may be, in reliance on a condition specified in Schedule 8).2The controller has an appropriate policy document in place in relation to the sensitive processing if the controller has produced a document which\u2014aexplains the controller's procedures for securi",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting",
+        "consent",
+        "retention",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-44",
+      "text": "441The controller must make available to data subjects the following information (whether by making the information generally available to the public or in any other way)\u2014athe identity and the contact details of the controller;bwhere applicable, the contact details of the data protection officer (see sections 69 to 71);cthe purposes for which the controller processes personal data;dthe existence of the rights of data subjects to request from the controller\u2014iaccess to personal data (see section 4",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-45",
+      "text": "451A data subject is entitled to obtain from the controller\u2014aconfirmation as to whether or not personal data concerning him or her is being processed, andbwhere that is the case, access to the personal data and the information set out in subsection (2).2That information is\u2014athe purposes of and legal basis for the processing;bthe categories of personal data concerned;cthe recipients or categories of recipients to whom the personal data has been disclosed (including recipients or categories of rec",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "security",
+        "reporting"
+      ]
+    }
+  ],
+  "penalties": [
+    {
+      "type": "financial",
+      "amount": "\u00a317,500,000",
+      "context": "maximum amount of penalty1571in relation to an infringement of a provision of the  uk gdpr, the maximum amount of the penalty that may be imposed by a penalty notice is\u2014athe amount specified in articl"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a317,500,000",
+      "context": "maximum amount of penalty1571in relation to an infringement of a provision of the  uk gdpr, the maximum amount of the penalty that may be imposed by a penalty notice is\u2014athe amount specified in articl"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a38,700,000",
+      "context": "maximum amount of penalty1571in relation to an infringement of a provision of the  uk gdpr, the maximum amount of the penalty that may be imposed by a penalty notice is\u2014athe amount specified in articl"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a317,500,000",
+      "context": "gdpr: maximum amount of penalties16in relation to an infringement, before  ip completion day, of a provision of the eu gdpr (as it was directly applicable to the united kingdom) or the applied gdpr\u2014aa"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a38,700,000",
+      "context": "gdpr: maximum amount of penalties16in relation to an infringement, before  ip completion day, of a provision of the eu gdpr (as it was directly applicable to the united kingdom) or the applied gdpr\u2014aa"
+    }
+  ],
+  "enforcement": {
+    "authority": [
+      "Financial Conduct Authority",
+      "Prudential Regulation Authority",
+      "Secretary of State",
+      "Information Commissioner",
+      "Ofcom",
+      "Competition and Markets Authority"
+    ],
+    "powers": [
+      "11This Act makes provision about the processing of personal data.2Most processing of personal data is subject to the  UK GDPR.3Part 2 supplements the  UK GDPR.4Part 3 makes provision about the process",
+      "31This section defines some terms used in this Act.2\u201cPersonal data\u201d means any information relating to an identified or identifiable living individual (subject to subsection (14)(c)).3\u201cIdentifiable liv",
+      "261A provision of  the UK GDPR or this Act mentioned in subsection (2) does not apply to personal data to which  the UK GDPR  applies if exemption from the provision is required for\u2014athe purpose of sa",
+      "301In this Part,  \u201ccompetent authority\u201d means\u2014aa person specified or described in Schedule 7, andbany other person if and to the extent that the person has statutory functions for any of the law enfor",
+      "31For the purposes of this Part,  \u201cthe law enforcement purposes\u201d are the purposes of the prevention, investigation, detection or prosecution of criminal offences or the execution of criminal penalties",
+      "351The first data protection principle is that the processing of personal data for any of the law enforcement purposes must be lawful and fair.2The processing of personal data for any of the law enfor",
+      "361The second data protection principle is that\u2014athe law enforcement purpose for which personal data is collected on any occasion must be specified, explicit and legitimate, andbpersonal data so colle",
+      "37The third data protection principle is that personal data processed for any of the law enforcement purposes must be adequate, relevant and not excessive in relation to the purpose for which it is pr",
+      "381The fourth data protection principle is that\u2014apersonal data processed for any of the law enforcement purposes must be accurate and, where necessary, kept up to date, andbevery reasonable step must ",
+      "391The fifth data protection principle is that personal data processed for any of the law enforcement purposes must be kept for no longer than is necessary for the purpose for which it is processed.2A",
+      "40The sixth data protection principle is that personal data processed for any of the law enforcement purposes must be so processed in a manner that ensures appropriate security of the personal data, u",
+      "411This section applies in relation to the processing of personal data for a law enforcement purpose where the processing is necessary\u2014afor archiving purposes in the public interest,bfor scientific or",
+      "431This Chapter\u2014aimposes general duties on the controller to make information available (see section 44);bconfers a right of access by the data subject (see section 45);cconfers rights on the data sub",
+      "551This Chapter\u2014asets out the general obligations of controllers and processors (see sections 56 to 65);bsets out specific obligations of controllers and processors with respect to security (see secti",
+      "711The controller must entrust the data protection officer with at least the following tasks\u2014ainforming and advising the controller, any processor engaged by the controller, and any employee of the co",
+      "731A controller may not transfer personal data to a third country or to an international organisation unless\u2014athe three conditions set out in subsections (2) to (4) are met, andbin a case where the pe",
+      "74A1The Secretary of State may by regulations specify any of the following which the Secretary of State considers ensures an adequate level of protection of personal data\u2014aa third country,ba territory",
+      "74AB1For the purposes of section 74AA, the data protection test is met in relation to transfers to a third country or international organisation if the standard of the protection provided for data sub",
+      "761A transfer of personal data to a third country or international organisation is based on special circumstances where the transfer is necessary\u2014ato protect the vital interests of the data subject or",
+      "771The additional conditions referred to in section 73(4)(b)(ii) are the following four conditions.2Condition 1 is that the transfer is strictly necessary in a specific case for the performance of a t",
+      "781Where personal data is transferred in accordance with section 73, the transferring controller must make it a condition of the transfer that the data is not to be further transferred to a third coun",
+      "801Subsections (3) and (4) apply where, for a law enforcement purpose, a controller transmits or otherwise makes available personal data to  a non-UK recipient.2In this section\u2014...\u201cnon-UK recipient\u201d m",
+      "1101A provision mentioned in subsection (2) does not apply to personal data to which this Part applies if exemption from the provision is required for the purpose of safeguarding national security.2Th",
+      "1151. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2General functions are conferred on the Commissioner by\u2014aArticle 57 of the  UK GDPR  (tasks), andbArticle 58 of the  UK GDPR  (powers",
+      "116A1The Commissioner is responsible for monitoring the application of Part 3 of this Act, in order to protect the fundamental rights and freedoms of individuals in relation to processing by a compete",
+      "1191The Commissioner may inspect personal data where the inspection is necessary in order to discharge an international obligation of the United Kingdom, subject to the restriction in subsection (2).2",
+      "1201The Commissioner must, in relation to third countries and international organisations, take appropriate steps to\u2014adevelop international co-operation mechanisms to facilitate the effective enforcem",
+      "1461The Commissioner may by written notice (an  \u201cassessment notice\u201d) require a controller or processor to permit the Commissioner to carry out an assessment of whether the controller or processor has ",
+      "1471An assessment notice does not require a person to do something to the extent that requiring the person to do it would involve an infringement of the privileges of either House of Parliament.2An as",
+      "1491Where the Commissioner is satisfied that a person has failed, or is failing, as described in subsection (2), (3), (4) or (5), the Commissioner may give the person a written notice (an  \u201cenforcemen",
+      "1501An enforcement notice must\u2014astate what the person has failed or is failing to do, andbgive the Commissioner's reasons for reaching that opinion.2In deciding whether to give an enforcement notice i",
+      "1511Subsections (2) and (3) apply where an enforcement notice is given in respect of a failure by a controller or processor\u2014ato comply with a data protection principle relating to accuracy, orbto comp",
+      "1521The Commissioner may not give a controller or processor an enforcement notice in reliance on section 149(2) with respect to the processing of personal data for the special purposes unless\u2014aa deter",
+      "1531The Commissioner may cancel or vary an enforcement notice by giving written notice to the person to whom it was given.2A person to whom an enforcement notice is given may apply in writing to the C",
+      "154Schedule 15 makes provision about powers of entry and inspection.",
+      "1551If the Commissioner is satisfied that a person\u2014ahas failed or is failing as described in section 149(2), (3), (4) or (5), orbhas failed to comply with an information notice, an assessment notice o",
+      "1571In relation to an infringement of a provision of the  UK GDPR, the maximum amount of the penalty that may be imposed by a penalty notice is\u2014athe amount specified in Article 83 of the  UK GDPR, orb",
+      "1601The Commissioner must produce and publish guidance about how the Commissioner proposes to exercise the Commissioner's functions in connection with\u2014ainformation notices,bassessment notices,cenforce",
+      "161A1The Commissioner must produce and publish an annual report containing the information described in subsections (2) to (5).2The report must include the following information about UK GDPR investig",
+      "1621A person who is given any of the following notices may appeal to the Tribunal\u2014aan information notice;ban assessment notice;can enforcement notice;da penalty notice;ea penalty variation notice.2A p",
+      "1631Subsections (2) to (4) apply where a person appeals to the Tribunal under section 162(1) or (3).2The Tribunal may review any determination of fact on which the notice or decision against which the",
+      "1641This section applies where an information notice, an assessment notice or an enforcement notice given to a person contains an urgency statement.2The person may apply to the court for either or bot",
+      "1731Subsection (3) applies where\u2014aa request has been made in exercise of a data subject access right, andbthe person making the request would have been entitled to receive information in response to t",
+      "1771The Commissioner must produce and publish guidance about the steps that may be taken where an individual considers that a media organisation is failing or has failed to comply with the data protec",
+      "1791The Secretary of State must, before the end of each review period, lay before Parliament a report produced by the Secretary of State or an appropriate person on\u2014athe use of relevant alternative di",
+      "1801The jurisdiction conferred on a court by the provisions listed in subsection (2) is exercisable\u2014ain England and Wales, by the High Court or the county court,bin Northern Ireland, by the High Court",
+      "180A1This section applies where a court is required to determine whether a data subject is entitled to information by virtue of a right under\u2014aArticle 15 of the UK GDPR (right of access by the data su",
+      "181In this Part\u2014\u201cassessment notice\u201d has the meaning given in section 146;\u201ccertification provider\u201d has the meaning given in section 17;\u201cenforcement notice\u201d has the meaning given in section 149;\u201cinforma",
+      "1851A term or condition of a contract is void in so far as it purports to require an individual to supply another person with a record which\u2014aconsists of the information contained in a health record, ",
+      "1861An enactment or rule of law prohibiting or restricting the disclosure of information, or authorising the withholding of information, does not remove or restrict the obligations and rights provided",
+      "2031Tribunal Procedure Rules may make provision for regulating\u2014athe exercise of the rights of appeal conferred by section 27, 79, 111 or 162, andbthe exercise of the rights of data subjects under sect",
+      "2041In this Act,  \u201chealth professional\u201d means any of the following\u2014aa registered medical practitioner;ba registered nurse or midwife;ca registered dentist within the meaning of the Dentists Act 1984 (",
+      "206The Table below lists provisions which define or otherwise explain terms defined for this Act, for a Part of this Act or for Chapter 2 or 3 of Part 2 of this Act.the affirmative resolution procedur",
+      "81The listed GDPR provisions do not apply to personal data processed for the purposes of discharging a function listed in sub-paragraph (2) to the extent that the application of those provisions would",
+      "51The listed GDPR provisions do not apply to personal data consisting of information the disclosure of which is prohibited or restricted by an enactment listed in sub-paragraph (2), (3) or (4).2The en",
+      "111The Commissioner must\u2014akeep proper accounts and other records in relation to the accounts, andbprepare in respect of each financial year a statement of account in such form as the Secretary of Stat",
+      "221The Commission must keep proper accounts and proper records in relation to them.2The Commission must prepare a statement of accounts in respect of each financial year in the form specified by the S",
+      "11The Commissioner must\u2014amonitor and enforce Parts 3 and 4 of this Act;bpromote public awareness and understanding of the risks, rules, safeguards and rights in relation to processing of personal data",
+      "51A warrant issued under this Schedule must authorise the Commissioner or any of the Commissioner's officers or staff\u2014ato enter the premises,bto search the premises, andcto inspect, examine, operate a",
+      "111The powers of inspection and seizure conferred by a warrant issued under this Schedule are not exercisable in respect of a communication which is made\u2014abetween a professional legal adviser and the ",
+      "12The powers of inspection and seizure conferred by a warrant issued under this Schedule are not exercisable where their exercise would involve an infringement of the privileges of either House of Par",
+      "131This paragraph applies if a person in occupation of premises in respect of which a warrant is issued under this Schedule objects to the inspection or seizure of any material under the warrant on th",
+      "51A penalty notice must contain the following information\u2014athe name and address of the person to whom it is addressed;bdetails of the notice of intent given to the person;cwhether the Commissioner rec",
+      "91The Commissioner must not take action to recover a penalty unless\u2014athe period specified in accordance with paragraph 6 has ended,bany appeals against the penalty notice have been decided or otherwis",
+      "5In this Schedule,  \u201cdata subject access right\u201d means a right under\u2014aArticle 15 of the  UK GDPR  (right of access by the data subject);bArticle 20 of the  UK GDPR  (right to data portability);csection",
+      "3In section 11AA(1) of the Parliamentary Commissioner Act 1967 (disclosure of information by Parliamentary Commissioner to Information Commissioner)\u2014ain paragraph (a), for sub-paragraph (i) substitute",
+      "5In section 33A(1) (disclosure of information by Local Commissioner to Information Commissioner)\u2014ain paragraph (a), for sub-paragraph (i) substitute\u2014isections 142 to 154, 160 to 164 or 174 to 176 of, ",
+      "6In section 34O(1) (disclosure of information by Local Commissioner to Information Commissioner)\u2014ain paragraph (a), for sub-paragraph (i) substitute\u2014isections 142 to 154, 160 to 164 or 174 to 176 of, ",
+      "43In section 18A(1) of the Health Service Commissioners Act 1993 (power to disclose information)\u2014ain paragraph (a), for sub-paragraph (i) substitute\u2014isections 142 to 154, 160 to 164 or 174 to 176 of, ",
+      "581Section 40 (personal information) is amended as follows.2In subsection (2)\u2014ain paragraph (a), for  \u201cdo\u201d substitute \u201c\n                          does\n                        \u201d, andbin paragraph (b), ",
+      "60For section 61 (appeal proceedings) substitute\u2014Appeal proceedings611Tribunal Procedure Rules may make provision for regulating the exercise of rights of appeal conferred by sections 57(1) and (2) an",
+      "611Tribunal Procedure Rules may make provision for regulating the exercise of rights of appeal conferred by sections 57(1) and (2) and 60(1) and (4).2In relation to appeals under those provisions, Tri",
+      "67In section 26B(3)(a) (voluntary disclosure of data to Audit Scotland), for  \u201cthe Data Protection Act 1998 (c. 29)\u201d substitute \u201c\n                  the data protection legislation\n                \u201d.",
+      "72In section 65(7) (meaning of  \u201clegal privilege\u201d)\u2014afor  \u201cparagraph 1 of Schedule 9 to the Data Protection Act 1998 (c. 29)\u201d substitute \u201c\n                      paragraphs 1 and 2 of Schedule 15 to the",
+      "73In Schedule 1 (powers of seizure)\u2014aomit paragraph 65, andbafter paragraph 73R insert\u2014Data Protection Act 201873SThe power of seizure conferred by paragraphs 1 and 2 of Schedule 15 to the Data Protec",
+      "73SThe power of seizure conferred by paragraphs 1 and 2 of Schedule 15 to the Data Protection Act 2018 (powers of entry and inspection).",
+      "871In Schedule 5 to the Scottish Public Services Ombudsman Act 2002 (disclosure of information by the Ombudsman), the entry for the Information Commissioner is amended as follows.2In paragraph 1, for ",
+      "901Section 38 (personal information) is amended as follows.2In subsection (1), for paragraph (b) substitute\u2014bpersonal data and the first, second or third condition is satisfied (see subsections (2A) t",
+      "991Section 64C of the Public Audit (Wales) Act 2004 (voluntary provision of data) is amended as follows.2In subsection (3)(a), for  \u201cthe Data Protection Act 1998 (c. 29)\u201d substitute \u201c\n                ",
+      "100The Companies (Audit, Investigations and Community Enterprise) Act 2004 is amended as follows.",
+      "1091Section 34X of the Public Services Ombudsman (Wales) Act 2005 (disclosure of information) is amended as follows.2In subsection (4), for paragraph (a) substitute\u2014asections 142 to 154, 160 to 164 or",
+      "1121Section 18 of the Commissioner for Older People (Wales) Act 2006 (power to disclose information) is amended as follows.2In subsection (7), for paragraph (a) substitute\u2014asections 142 to 154, 160 to",
+      "126In section 1253D(3) (restriction on transfer of audit working papers to third countries), for  \u201cthe Data Protection Act 1998\u201d substitute \u201c\n                  the data protection legislation\n        ",
+      "130The Tribunals, Courts and Enforcement Act 2007 is amended as follows.",
+      "1521Section 70 of the Regulatory Enforcement and Sanctions Act 2008 (disclosure of information) is amended as follows.2In subsection (4)(a), for  \u201cthe Data Protection Act 1998 (c. 29)\u201d substitute \u201c\n  ",
+      "1681Section 22 (power to disclose information) is amended as follows.2In subsection (4)\u2014ain the English language text, for paragraph (a) substitute\u2014asections 142 to 154, 160 to 164 or 174 to 176 of, o",
+      "1841Paragraph 3 of Schedule 9 to the Local Audit and Accountability Act 2014 (data matching: voluntary provision of data) is amended as follows.2In sub-paragraph (3)(a), for  \u201cthe Data Protection Act ",
+      "2041Section 49 of the Police Services Ombudsman Act (Northern Ireland) 2016 (disclosure of information) is amended as follows.2In subsection (4), for paragraph (a) substitute\u2014asections 142 to 154, 160",
+      "257In regulation 61A (conditions on the use, supply and inspection of absent voter records or lists), for paragraph (a) (but not the final  \u201cor\u201d) substitute\u2014aArticle 89 GDPR purposes;.",
+      "264In regulation 119(2) (conditions on the use, supply and disclosure of documents open to public inspection), for sub-paragraph (i) (but not the final  \u201cor\u201d) substitute\u2014iArticle 89 GDPR purposes;.",
+      "271In regulation 61A (conditions on the use, supply and inspection of absent voter records or lists), for paragraph (a) (but not the final  \u201cor\u201d) substitute\u2014aArticle 89 GDPR purposes;.",
+      "277In regulation 119(2) (conditions on the use, supply and disclosure of documents open to public inspection), for sub-paragraph (i) (but not the final  \u201cor\u201d) substitute\u2014iArticle 89 GDPR purposes;.",
+      "303In paragraph 77(2)(b) (conditions on the use, supply and disclosure of documents open to public inspection), for  \u201cresearch purposes\u201d substitute \u201c\n                  Article 89 GDPR purposes\n       ",
+      "3071Regulation 13 (personal data) is amended as follows.2For paragraph (1) substitute\u20141To the extent that the information requested includes personal data of which the applicant is not the data subjec",
+      "309In regulation 18 (enforcement and appeal provisions), in paragraph (5), for  \u201cregulation 13(5)\u201d substitute \u201c\n                  regulation 13(5A)\n                \u201d.",
+      "3121Regulation 11 (personal data) is amended as follows.2For paragraph (2) substitute\u20142To the extent that environmental information requested includes personal data of which the applicant is not the d",
+      "3171Regulation 45 of the Civil Contingencies Act 2004 (Contingency Planning) Regulations 2005 (sensitive information) is amended as follows.2In paragraph (1)(d)\u2014aomit  \u201c, within the meaning of section",
+      "3201Regulation 39 (sensitive information) is amended as follows.2In paragraph (1)(d)\u2014aomit  \u201c, within the meaning of section 1(1) of the Data Protection Act 1998\u201d, andbfor  \u201c(2) or (3)\u201d substitute \u201c\n ",
+      "3221Paragraph 14 of Schedule 1 to the National Assembly for Wales (Representation of the People) Order 2007 (absent voting at Assembly elections: conditions on the use, supply and inspection of absent",
+      "3261Regulation 18 of the Representation of the People (Absent Voting at Local Elections) (Scotland) Regulations 2007 (conditions on the supply and inspection of absent voter records or lists) is amend",
+      "327In regulation 5 of the Representation of the People (Post-Local Government Elections Supply and Inspection of Documents) (Scotland) Regulations 2007 (conditions on the use, supply and disclosure of",
+      "331In regulation 118 of the Representation of the People (Northern Ireland) Regulations 2008 (conditions on the use, supply and disclosure of documents open to public inspection)\u2014ain paragraph (2), fo",
+      "3391Paragraph 6 of Schedule 2 to the Companies (Disclosure of Address) Regulations 2009 (conditions for permitted disclosure to a credit reference agency) is amended as follows.2The existing text beco",
+      "3401Paragraph 6 of Schedule 2 to the Overseas Companies Regulations 2009 (conditions for permitted disclosure to a credit reference agency) is amended as follows.2The existing text becomes sub-paragra",
+      "3531Article 9 (inspection and enforcement) is amended as follows.2For paragraph (4) substitute\u20144If a report that the Council proposes to publish pursuant to paragraph (3) includes personal data, it is",
+      "3641Schedule 3 to the Local Elections (Northern Ireland) Order 2010 (access to marked registers and other documents open to public inspection after an election) is amended as follows.2In paragraph 1(1",
+      "3691Schedule 10 (access to marked registers and other documents open to public inspection after an election) is amended as follows.2In paragraph 1(2) (interpretation), omit paragraphs (c) and (d) (but",
+      "377In paragraph 45(2) (conditions on the use, supply and disclosure of documents open to public inspection), for paragraph (a) (but not the final  \u201cor\u201d) substitute\u2014aArticle 89 GDPR purposes (as define",
+      "3841Paragraph 6 of Schedule 2 to the Companies (Disclosure of Date of Birth Information) Regulations 2015 (conditions for permitted disclosure to a credit reference agency) is amended as follows.2The ",
+      "3971Schedule 8 (access to marked registers and other documents open to public inspection after an election) is amended as follows.2In paragraph 1(2) (interpretation), omit paragraphs (c) and (d) (but ",
+      "402In Part 3 (interpretation), after paragraph 13 insert\u201414In this Schedule,  \u201cdata protection obligations\u201d, in relation to a credit reference agency, a credit institution or a financial institution, ",
+      "14In this Schedule,  \u201cdata protection obligations\u201d, in relation to a credit reference agency, a credit institution or a financial institution, means\u2014awhere the agency or institution carries on busines",
+      "406For Schedule 2 substitute\u2014SCHEDULE 2Information Commissioner's enforcement powersProvisions applied for enforcement purposes1For the purposes of enforcing these Regulations and the eIDAS Regulation",
+      "1For the purposes of enforcing these Regulations and the eIDAS Regulation, the following provisions of Parts 5 to 7 of the Data Protection Act 2018 apply with the modifications set out in paragraphs 2",
+      "11The provisions listed in paragraph 1 have effect as if after section 153 there were inserted\u2014Withdrawal noticesWithdrawal notices153A1The Commissioner may, by written notice (a  \u201cwithdrawal notice\u201d)",
+      "153A1The Commissioner may, by written notice (a  \u201cwithdrawal notice\u201d), withdraw the qualified status from a trust service provider, or the qualified status of a service provided by a trust service pro",
+      "4201Paragraph 6 of Schedule 5 to the Scottish Partnerships (Register of People with Significant Control) Regulations 2017 (conditions for permitted disclosure to a credit institution or a financial in",
+      "201The repeal of paragraph 10 of Schedule 5 to the 1998 Act does not affect the duties of the Commissioner and the Comptroller and Auditor General under that paragraph in respect of the Commissioner's",
+      "321The repeal of sections 41A and 41B of the 1998 Act (assessment notices) does not affect the application of those sections after the relevant time in a case in which\u2014athe Commissioner served a notic",
+      "331The repeal of sections 40 and 41 of the 1998 Act (enforcement notices) does not affect the application of those sections after the relevant time in a case in which\u2014athe Commissioner served a notice",
+      "351The repeal of section 46 of the 1998 Act (restriction on enforcement in case of processing for the special purposes) does not affect the application of that section after the relevant time in relat",
+      "361The repeal of sections 47, 60 and 61 of the 1998 Act (offences of failing to comply with certain notices and of providing false information etc in response to a notice) does not affect the applicat",
+      "111The following are specified for the purposes of paragraph 10(1)\u2014a an EEA state; aaSwitzerland;bGibraltar;ca third country, a territory or sector within a third country or an international organisat"
+    ],
+    "procedures": []
+  },
+  "dates": [
+    {
+      "type": "deadline",
+      "date": "24 October 1998",
+      "context": "251The provisions of  the UK GDPR  listed in subsection (2) do not apply to personal data to which  the UK GDPR applies by virtue of  Article 2(1A)  ("
+    },
+    {
+      "type": "deadline",
+      "date": "6 May 2016",
+      "context": "141In relation to an automated processing system set up before 6 May 2016, subsections (1) to (3) of section 62 of this Act do not apply if and to the"
+    }
+  ],
+  "controls": [
+    "access_control",
+    "risk_assessment",
+    "security_testing",
+    "incident_response",
+    "training",
+    "audit_logging",
+    "consent_management",
+    "dpia",
+    "data_minimization",
+    "encryption"
+  ],
+  "xml_length": 5282747
+}

@@ -1,0 +1,415 @@
+{
+  "schema_version": "2.0",
+  "created_at": "2025-01-03",
+  "category": "UK Industry-Specific Regulations",
+  "description": "Sector-specific UK regulatory requirements for targeted compliance",
+  "items": [
+    {
+      "id": "fca-consumer-duty-2023",
+      "title": "FCA Consumer Duty",
+      "url": "https://www.fca.org.uk/firms/consumer-duty",
+      "tags": ["regulation", "finance", "UK", "consumer-protection", "FCA"],
+      "priority": 5,
+      "business_triggers": {
+        "industry": "finance",
+        "provides_financial_services": true,
+        "has_retail_customers": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "max_penalty": "Unlimited fines",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months",
+        "deadline": "2023-07-31"
+      },
+      "four_outcomes": {
+        "products_services": "Products and services designed to meet customer needs",
+        "price_value": "Fair value - price reflects product/service quality",
+        "consumer_understanding": "Clear communications enabling good decisions",
+        "consumer_support": "Customer support meeting consumer needs"
+      },
+      "suggested_controls": [
+        "customer_outcome_monitoring",
+        "value_assessment_framework",
+        "vulnerable_customer_policy",
+        "product_governance_framework",
+        "communications_testing"
+      ],
+      "automation_potential": 0.6,
+      "evidence_templates": [
+        "Customer outcome testing results",
+        "Fair value assessments",
+        "Board attestation",
+        "Vulnerable customer policy",
+        "MI dashboards"
+      ],
+      "enforcement_examples": [
+        {
+          "date": "2024-01-15",
+          "firm": "Major Bank",
+          "penalty": "£12.5M",
+          "issue": "Failure to deliver good outcomes for savings customers"
+        }
+      ]
+    },
+    {
+      "id": "pra-rulebook-2024",
+      "title": "PRA Rulebook - Prudential Standards",
+      "url": "https://www.prarulebook.co.uk/",
+      "tags": ["regulation", "banking", "insurance", "UK", "prudential", "PRA"],
+      "priority": 5,
+      "business_triggers": {
+        "industry": "finance",
+        "requires_pra_authorization": true,
+        "is_bank_or_insurer": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 10,
+        "enforcement_frequency": "very_high",
+        "max_penalty": "Unlimited fines, license revocation",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "24+ months"
+      },
+      "key_requirements": {
+        "capital_requirements": "Minimum capital ratios",
+        "liquidity": "LCR and NSFR requirements",
+        "governance": "Senior Managers Regime",
+        "risk_management": "ICAAP/ORSA processes",
+        "recovery_resolution": "Recovery and resolution planning"
+      },
+      "suggested_controls": [
+        "capital_adequacy_monitoring",
+        "liquidity_risk_management",
+        "stress_testing_framework",
+        "senior_manager_regime",
+        "recovery_planning"
+      ],
+      "automation_potential": 0.5,
+      "reporting_requirements": [
+        "COREP - Capital reporting",
+        "FINREP - Financial reporting",
+        "LCR - Liquidity coverage ratio",
+        "NSFR - Net stable funding ratio"
+      ]
+    },
+    {
+      "id": "cqc-fundamental-standards",
+      "title": "CQC Fundamental Standards - Health & Social Care",
+      "url": "https://www.cqc.org.uk/guidance-providers/regulations/fundamental-standards",
+      "tags": ["regulation", "healthcare", "UK", "care-quality", "CQC"],
+      "priority": 5,
+      "business_triggers": {
+        "industry": "healthcare",
+        "provides_regulated_health_services": true,
+        "stores_health_data": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "high",
+        "max_penalty": "Criminal prosecution, service closure",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "fundamental_standards": {
+        "person_centred_care": "Regulation 9",
+        "dignity_respect": "Regulation 10",
+        "consent": "Regulation 11",
+        "safe_care": "Regulation 12",
+        "safeguarding": "Regulation 13",
+        "nutrition_hydration": "Regulation 14",
+        "premises_equipment": "Regulation 15",
+        "complaints": "Regulation 16",
+        "good_governance": "Regulation 17",
+        "staffing": "Regulation 18",
+        "fit_proper_persons": "Regulation 19",
+        "duty_of_candour": "Regulation 20"
+      },
+      "suggested_controls": [
+        "clinical_governance_framework",
+        "incident_reporting_system",
+        "safeguarding_procedures",
+        "staff_training_matrix",
+        "quality_assurance_program"
+      ],
+      "automation_potential": 0.4,
+      "inspection_ratings": ["Outstanding", "Good", "Requires Improvement", "Inadequate"]
+    },
+    {
+      "id": "mhra-gmp-gdp-regulations",
+      "title": "MHRA GMP/GDP - Pharmaceutical Regulations",
+      "url": "https://www.gov.uk/guidance/good-manufacturing-practice-and-good-distribution-practice",
+      "tags": ["regulation", "pharmaceutical", "UK", "manufacturing", "MHRA"],
+      "priority": 5,
+      "business_triggers": {
+        "industry": "pharmaceutical",
+        "manufactures_medicines": true,
+        "distributes_medicines": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 10,
+        "enforcement_frequency": "very_high",
+        "max_penalty": "License suspension, criminal prosecution",
+        "implementation_complexity": 9,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "key_requirements": {
+        "quality_management": "Pharmaceutical Quality System",
+        "personnel": "Qualified Person requirements",
+        "premises_equipment": "Clean room standards",
+        "documentation": "Batch records and traceability",
+        "production": "Validation and qualification",
+        "quality_control": "Testing and release procedures",
+        "complaints_recalls": "Product recall procedures"
+      },
+      "suggested_controls": [
+        "pharmaceutical_quality_system",
+        "batch_record_management",
+        "deviation_investigation_system",
+        "change_control_procedure",
+        "supplier_qualification"
+      ],
+      "automation_potential": 0.6
+    },
+    {
+      "id": "ofcom-online-safety-duties",
+      "title": "Ofcom Online Safety Act Implementation",
+      "url": "https://www.ofcom.org.uk/online-safety",
+      "tags": ["regulation", "platforms", "UK", "online-safety", "Ofcom"],
+      "priority": 5,
+      "business_triggers": {
+        "industry": "technology",
+        "online_platform": true,
+        "has_user_generated_content": true,
+        "uk_users": ">1000",
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "emerging",
+        "max_penalty": "10% global revenue or £18M",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "6-12 months",
+        "compliance_deadline": "2024-Q2"
+      },
+      "duties": {
+        "illegal_content": "Systems to prevent illegal content",
+        "child_safety": "Age verification and protection measures",
+        "risk_assessments": "Regular platform risk assessments",
+        "transparency": "Transparency reporting requirements",
+        "user_empowerment": "User reporting and control tools",
+        "terms_of_service": "Clear and enforceable terms"
+      },
+      "suggested_controls": [
+        "content_moderation_system",
+        "age_verification_framework",
+        "risk_assessment_process",
+        "transparency_reporting",
+        "user_safety_tools"
+      ],
+      "automation_potential": 0.7
+    },
+    {
+      "id": "gambling-commission-lccp",
+      "title": "Gambling Commission License Conditions and Codes of Practice",
+      "url": "https://www.gamblingcommission.gov.uk/licensees-and-businesses/lccp",
+      "tags": ["regulation", "gambling", "UK", "consumer-protection", "AML"],
+      "priority": 5,
+      "business_triggers": {
+        "industry": "gambling",
+        "offers_gambling_services": true,
+        "requires_gambling_license": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "max_penalty": "License revocation, unlimited fines",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "key_requirements": {
+        "social_responsibility": "Player protection measures",
+        "aml_ctf": "Enhanced AML for high-risk sector",
+        "advertising": "Responsible advertising standards",
+        "customer_interaction": "Identify and interact with at-risk customers",
+        "self_exclusion": "GAMSTOP integration",
+        "age_verification": "Robust age verification",
+        "fairness": "Game fairness and RNG testing"
+      },
+      "suggested_controls": [
+        "responsible_gambling_framework",
+        "aml_enhanced_monitoring",
+        "customer_risk_profiling",
+        "self_exclusion_system",
+        "age_verification_checks"
+      ],
+      "automation_potential": 0.8,
+      "enforcement_trends": "Focus on social responsibility failures and AML breaches"
+    },
+    {
+      "id": "ofgem-supply-license-conditions",
+      "title": "Ofgem Energy Supply License Conditions",
+      "url": "https://www.ofgem.gov.uk/energy-policy-and-regulation/industry-licensing",
+      "tags": ["regulation", "energy", "UK", "consumer-protection", "Ofgem"],
+      "priority": 4,
+      "business_triggers": {
+        "industry": "energy",
+        "supplies_gas_electricity": true,
+        "requires_supply_license": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 7,
+        "enforcement_frequency": "high",
+        "max_penalty": "10% UK turnover",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "standard_license_conditions": {
+        "slc_0": "Treating customers fairly",
+        "slc_7b": "Customer credit balances",
+        "slc_25": "Marketing to domestic customers",
+        "slc_27": "Vulnerable customer obligations",
+        "slc_28a": "Priority Services Register"
+      },
+      "suggested_controls": [
+        "customer_fairness_framework",
+        "vulnerable_customer_policy",
+        "credit_balance_protection",
+        "switching_process_management",
+        "smart_meter_rollout"
+      ],
+      "automation_potential": 0.6
+    },
+    {
+      "id": "fsa-food-safety-haccp",
+      "title": "Food Standards Agency - Food Safety Requirements",
+      "url": "https://www.food.gov.uk/business-guidance",
+      "tags": ["regulation", "food", "UK", "safety", "hygiene", "FSA"],
+      "priority": 4,
+      "business_triggers": {
+        "industry": "food",
+        "handles_food_products": true,
+        "food_business_operator": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "max_penalty": "Unlimited fines, imprisonment",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "3-6 months"
+      },
+      "key_requirements": {
+        "haccp": "HACCP-based procedures",
+        "registration": "Food business registration",
+        "hygiene": "Food hygiene requirements",
+        "traceability": "Supply chain traceability",
+        "allergens": "Allergen management",
+        "labelling": "Food labelling requirements"
+      },
+      "suggested_controls": [
+        "haccp_management_system",
+        "supplier_approval_process",
+        "allergen_management_controls",
+        "traceability_system",
+        "hygiene_training_program"
+      ],
+      "automation_potential": 0.7,
+      "rating_scheme": "Food Hygiene Rating Scheme (0-5)"
+    },
+    {
+      "id": "caa-aviation-regulations",
+      "title": "CAA Aviation Safety Regulations",
+      "url": "https://www.caa.co.uk/commercial-industry/",
+      "tags": ["regulation", "aviation", "UK", "safety", "CAA"],
+      "priority": 4,
+      "business_triggers": {
+        "industry": "aviation",
+        "operates_aircraft": true,
+        "requires_aoc": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 10,
+        "enforcement_frequency": "very_high",
+        "max_penalty": "License revocation, criminal prosecution",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "key_requirements": {
+        "air_operator_certificate": "AOC requirements",
+        "safety_management": "SMS implementation",
+        "crew_licensing": "Pilot and crew licensing",
+        "maintenance": "Part 145 maintenance requirements",
+        "security": "Aviation security programme"
+      },
+      "suggested_controls": [
+        "safety_management_system",
+        "fatigue_risk_management",
+        "maintenance_tracking_system",
+        "crew_training_records",
+        "security_programme"
+      ],
+      "automation_potential": 0.5
+    },
+    {
+      "id": "hta-human-tissue-regulations",
+      "title": "Human Tissue Authority Regulations",
+      "url": "https://www.hta.gov.uk/guidance-professionals",
+      "tags": ["regulation", "healthcare", "research", "UK", "HTA"],
+      "priority": 4,
+      "business_triggers": {
+        "industry": "healthcare",
+        "handles_human_tissue": true,
+        "requires_hta_license": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "medium",
+        "max_penalty": "License revocation, £50K fine",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "licensable_activities": {
+        "storage": "Storage of human tissue",
+        "research": "Use for research purposes",
+        "public_display": "Public display of human material",
+        "anatomical_examination": "Anatomical examination"
+      },
+      "suggested_controls": [
+        "consent_management_system",
+        "tissue_tracking_system",
+        "quality_management_system",
+        "disposal_procedures",
+        "audit_programme"
+      ],
+      "automation_potential": 0.5
+    }
+  ],
+  "cross_sector_considerations": {
+    "multi_regulated_entities": {
+      "description": "Organizations subject to multiple sector regulations",
+      "examples": [
+        "Digital health platforms (CQC + ICO + MHRA)",
+        "Fintech gambling (FCA + Gambling Commission)",
+        "Energy financial services (Ofgem + FCA)"
+      ],
+      "complexity_multiplier": 1.5
+    },
+    "supply_chain_impacts": {
+      "description": "Sector regulations affecting suppliers",
+      "cascading_requirements": [
+        "Pharmaceutical GDP affects logistics providers",
+        "Food safety affects packaging suppliers",
+        "Financial services affects tech providers"
+      ]
+    }
+  }
+}

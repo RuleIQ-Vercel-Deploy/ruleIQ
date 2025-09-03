@@ -1,0 +1,34 @@
+
+truebool
+	"logging"str
+.%"Check for existing logging imports."strself (node (#"}'
+%
+ ("#get-field# module:*
+(
+ (#"
+#binop ==#2==:Bbool&"$
+ (# * (
+2 (">4
+2
+ (#" #set-field# has_logging_import:"j'
+%
+ (	"#get-field# module:)
+'
+ (
+"
+__bool__*:	BboolH"
+ (
+ "g'
+%
+* (5"#get-field# module:*
+(
+ (5"
+#binop in#2in:Bbool
+ (5"]*	)
+'
+ (5"
+__bool__*:BboolH"
+ (5 * (">4
+2
+   (#" #set-field# has_logging_import:"
+! !(*A/home/omar/Documents/ruleIQ/scripts/sonar/fix-print-to-logging.py

@@ -1,0 +1,24 @@
+{
+  "execution_date": "2025-08-01T22:40:17.298041",
+  "project": "ruleIQ",
+  "test_framework": "TestSprite + pytest",
+  "results": [
+    {
+      "command": "/home/omar/Documents/ruleIQ/.venv/bin/python -m pytest /home/omar/Documents/ruleIQ/tests/testsprite_generated -v --tb=short",
+      "return_code": 1,
+      "stdout": "============================= test session starts ==============================\ncollecting ... collected 8 items\n\ntests/testsprite_generated/test_authentication_testsprite.py::TestAuthenticationFlow::test_user_registration_valid_data FAILED [ 12%]\ntests/testsprite_generated/test_authentication_testsprite.py::TestAuthenticationFlow::test_user_login_correct_credentials PASSED [ 25%]\ntests/testsprite_generated/test_authentication_testsprite.py::TestAuthenticationFlow::test_protected_endpoint_access PASSED [ 37%]\ntests/testsprite_generated/test_frontend_testsprite.py::test_tc001_user_registration_with_valid_data PASSED [ 50%]\ntests/testsprite_generated/test_frontend_testsprite.py::test_tc002_user_login_with_correct_credentials PASSED [ 62%]\ntests/testsprite_generated/test_frontend_testsprite.py::test_tc003_user_login_with_invalid_credentials PASSED [ 75%]\ntests/testsprite_generated/test_frontend_testsprite.py::test_tc004_jwt_token_refresh_flow PASSED [ 87%]\ntests/testsprite_generated/test_frontend_testsprite.py::test_tc005_oauth_login_integration PASSED [100%]\n\n========================= 1 failed, 7 passed in 10.52s =========================\n",
+      "stderr": ""
+    },
+    {
+      "command": "/home/omar/Documents/ruleIQ/.venv/bin/python -m pytest /home/omar/Documents/ruleIQ/tests/testsprite_generated/test_authentication_testsprite.py -v",
+      "return_code": 1,
+      "stdout": "============================= test session starts ==============================\ncollecting ... collected 3 items\n\ntests/testsprite_generated/test_authentication_testsprite.py::TestAuthenticationFlow::test_user_registration_valid_data FAILED [ 33%]\ntests/testsprite_generated/test_authentication_testsprite.py::TestAuthenticationFlow::test_user_login_correct_credentials PASSED [ 66%]\ntests/testsprite_generated/test_authentication_testsprite.py::TestAuthenticationFlow::test_protected_endpoint_access PASSED [100%]\n\n========================= 1 failed, 2 passed in 10.03s =========================\n",
+      "stderr": ""
+    }
+  ],
+  "summary": {
+    "total_commands": 2,
+    "passed": 0,
+    "failed": 2
+  }
+}

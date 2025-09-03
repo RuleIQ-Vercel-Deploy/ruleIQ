@@ -1,0 +1,204 @@
+
+1L("Complete DPIA for high-risk processing"str
+%
+"complete"str
+6"assessment_report"str
++25int
+K"recommendations"str
+:"required_by"str
+"2024-01-15"str
+!"training_record"str
+B
+"priority"str
+	"UK_GDPR"str
+("2024-02-01"str
+,8#"Data Protection Impact Assessment"str
+"collected"str
+"type"str
+"title"str
+'"completion_date"str
+##"Data Protection Training"str
+C"high"str
+EM<"Update privacy policy to include new processing activities"str
+;"GDPR Article 35"str
+	"policy_document"str
+"GDPR"str
+
+0int
+-N$"Document data retention procedures"str
+*"attendees"str
+"status"str
+4	"missing"str
+"frameworks"str
+	"current"str
+"last_updated"str
+"Privacy Policy"str
+6-"Collect evidence for compliance frameworks."strself
+³ ³(
+company_id
+³ ³(,
+frameworks
+³. ³(Clist"”0
+.
+
+µ Ó(	evidence"#new-object#Bdict&
+$
+
+· ½("#new-object#Bdict"
+ 
+
+¸ ¸(-
+"	#map-set#:	"
+ 
+
+¹ ¹(-"	#map-set#:"
+ 
+
+º º('"	#map-set#:"
+ 
+
+» »(0"	#map-set#:)
+'
+
+¼" ¼(5"#unknown-value#Blist(
+&
+
+¼" ¼(5"
+#is-exact#:Bbool
+
+
+¼" ¼(5"
+#assume#::
+8
+
+¼" ¼(5"#set-field# __collection_size:Bint(
+&
+
+¼" ¼(5"#array-add-last#:(
+&
+
+¼" ¼(5"#array-add-last#:"
+ 
+
+¼ ¼(5"	#map-set#:&
+$
+
+¾ Ä( "#new-object#Bdict"
+ 
+
+¿ ¿(-""	#map-set#: !"
+ 
+
+À À(7$"	#map-set#: #"
+ 
+
+Á Á((&"	#map-set#: %"
+ 
+
+Â Â(3)"	#map-set#: '("
+ 
+
+Ã Ã(#,"	#map-set#: *+)
+'
+
+¶ Å(-"#unknown-value#Blist(
+&
+
+¶ Å(."
+#is-exact#:-Bbool
+
+
+¶ Å(/"
+#assume#:.:
+8
+
+¶ Å(0"#set-field# __collection_size:-Bint(
+&
+
+¶ Å(1"#array-add-last#:-(
+&
+
+¶ Å(2"#array-add-last#:- "
+ 
+
+¶ Å(3"	#map-set#:-&
+$
+
+Ç Ì(5"#new-object#Bdict"
+ 
+
+È È(/7"	#map-set#:56"
+ 
+
+É É(@9"	#map-set#:58)
+'
+
+Ê# Ê(6<"#unknown-value#Blist(
+&
+
+Ê# Ê(6="
+#is-exact#:<Bbool
+
+
+Ê# Ê(6>"
+#assume#:=:
+8
+
+Ê# Ê(6?"#set-field# __collection_size:<Bint(
+&
+
+Ê# Ê(6@"#array-add-last#:<;"
+ 
+
+Ê Ê(6A"	#map-set#:5:<"
+ 
+
+Ë Ë(&D"	#map-set#:5BC)
+'
+
+Æ Í(E"#unknown-value#Blist(
+&
+
+Æ Í(F"
+#is-exact#:EBbool
+
+
+Æ Í(G"
+#assume#:F:
+8
+
+Æ Í(H"#set-field# __collection_size:EBint(
+&
+
+Æ Í(I"#array-add-last#:E5"
+ 
+
+Æ Í(J"	#map-set#:4E)
+'
+
+Î Ò(O"#unknown-value#Blist(
+&
+
+Î Ò(P"
+#is-exact#:OBbool
+
+
+Î Ò(Q"
+#assume#:P:
+8
+
+Î Ò(R"#set-field# __collection_size:OBint(
+&
+
+Î Ò(S"#array-add-last#:OL(
+&
+
+Î Ò(T"#array-add-last#:OM(
+&
+
+Î Ò(U"#array-add-last#:ON"
+ 
+
+Î Ò(V"	#map-set#:KO
+
+Õ Õ(*B/home/omar/Documents/ruleIQ/langgraph_agent/agents/tool_manager.py

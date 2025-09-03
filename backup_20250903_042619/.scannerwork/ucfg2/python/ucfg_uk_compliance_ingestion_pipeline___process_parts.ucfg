@@ -1,0 +1,134 @@
+
+Juk_compliance_ingestion_pipeline.UKComplianceGraphIngestion._process_parts_
+S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipeline.py» »("3"5*K
+3%
+#uk_compliance_ingestion_pipeline.py"
+Í Í(
+implicit return*™
+5
+¾ ¾(3zx
+
+¾" ¾(1
+%2"__mapGet*$
+
+__unknown_file (
+
+part*'
+
+__unknown_file (	
+part_id2__getitem__c
+a
+
+¾ ¾(3
+%3"__concat*
+
+¾ ¾(
+
+
+reg_id*
+
+¾  ¾(!
+_*
+
+¾" ¾(1
+
+%2C
+A
+
+¾ ¾(3	
+part_id"__id*"
+
+__unknown_file (
+
+%3xv
+
+È) È(6
+%4"__mapGet*$
+
+__unknown_file (
+
+part*%
+
+__unknown_file (	
+title2__getitem__¬©
+
+¿ È(F
+%5*'
+
+__unknown_file (
+	
+session*§
+
+__unknown_file (Š‡
+„
+                MERGE (p:Part {id: $part_id})
+                SET p.title = $title,
+                    p.regulation_id = $reg_id
+                WITH p
+                MATCH (r:Regulation {id: $reg_id})
+                MERGE (r)-[:CONTAINS]->(p)
+            2run:
+part_id
+	
+part_id:
+title
+
+%4:
+reg_id
+
+
+reg_id
+
+É6 É(8
+%6"list‘Ž
+
+É É(9
+%7*$
+
+__unknown_file (
+
+part*+
+
+__unknown_file (
+obligations*"
+
+__unknown_file (
+
+%62get*	
+3
+5
+7*¦
+7
+Ê Ë(‰†
+
+Ê Ë(
+%1*[
+
+__unknown_file (?=
+;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion*'
+
+__unknown_file (
+	
+session**
+
+__unknown_file (
+
+
+obligation*'
+
+__unknown_file (
+	
+part_id2_create_obligation_node*	
+3
+5
+7:
+
+»# »(*	
+session:
+
+», »(7
+reg_id:
+
+»9 »(J
+partsB?=
+;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestionH

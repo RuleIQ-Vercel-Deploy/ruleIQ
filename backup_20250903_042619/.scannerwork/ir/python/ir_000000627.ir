@@ -1,0 +1,695 @@
+
+X"Companies Act"str
+¼"fire.?safety"str
+±"derivatives"str
+‘"proceeds.?crime"str
+¢"markets.?financial"str
+ ‘"network.?information"str
+È"environment"str
+­"ukpga/2015/4"str
+Ë"pollution.?control"str
+ "ukpga/2006/35"str
+M"human.?trafficking"str
+"personal.?data"str
+„"pecr"str
+"ukpga/2018/12"str
+ ‚"Criminal Justice Act"str
+>"ukpga/2010/23"str
+¯"emir"str
+ £"investment.?services"str
+Y"companies.?act"str
+t"HSWA"str
+x"occupational.?health"str
+!Í"securities.?offerings"str
+%Ê"environmental.?protection"str
+À"securities.?lending"str
+×"ukpga/2023/50"str
+K"modern.?slavery"str
+"ukpga/2000/8"str
+ç"competition"str
+$”"critical.?infrastructure"str
+…"tax.?evasion"str
+Ì"eur/2017/1129"str
+-"money.?laundering"str
+Ø"Benchmarks"str
+Ÿ"terrorism"str
+&…"electronic.?communications"str
+Ç"Environment Act"str
+°"eur/2012/648"str
+Ü"reference.?rates"str
+è"ukpga/1998/41"str
+ê
+"monopoly"str
+Ø"harmful.?content"str
+"fca"str
+f"Equality Act"str
+®"EMIR"str
+ ®"retirement.?benefits"str
+@"anti.?bribery"str
+¡"eur/2014/596"str
+
+"GDPR/DPA"str
+h"ukpga/2010/15"str
+i"discrimination"str
+	"data.?protection"str
+g
+"equality"str
+"Proceeds of Crime"str
+”"confiscation"str
+,"MLR"str
+!½"securities.?financing"str
+‚"PECR"str
+ô"Enterprise Act"str
+"consumer.?credit"str
+†"criminal.?finances"str
+!²"clearing.?obligations"str
+u"health.?safety"str
+ ½"construction.?safety"str
+Û"libor"str
+ã"Economic Crime Act"str
+¡"counter.?terrorism"str
+É"ukpga/2021/31"str
+Ö"online.?safety"str
+¼"SFTR"str
+"financial.?services"str
+«¡"
+from __future__ import annotations
+import logging
+logger = logging.getLogger(__name__)
+
+Categorize and map UK regulatory obligations to specific regulations.
+"str
+“"asset.?recovery"str
+"financial.?conduct"str
+"FCA"str
+."uksi/2017/692"str
+é"anti.?competitive"str
+„"ukpga/2017/22"str
+’"uksi/2018/506"str
+/"anti.?money"str
+«"Pensions Act"str
+#æ"corporate.?transparency"str
+	"privacy"str
+!ø"market.?investigation"str
+?"corruption"str
+“"cyber.?security"str
+v"hswa"str
+æ"Competition Act"str
+\"director.?duties"str
+w"workplace.?safety"str
+%Ù"social.?media.?regulation"str
+0"aml"str
+
+"gdpr"str
+N"forced.?labour"str
+
+"MiFID II"str
+º"building.?safety"str
+j"equal.?opportunities"str
+†"uksi/2003/2426"str
+ "ukpga/2021/22"str
+"NIS"str
+÷"merger.?control"str
+ "eur/2014/600"str
+÷
+"__main__"str
+ƒ"privacy.?electronic"str
+¬
+"pensions"str
+=	"bribery"str
+»"ukpga/2022/10"str
+J"Modern Slavery Act"str
+Õ"Online Safety Act"str
+L"ukpga/2015/30"str
+ö"ukpga/2002/40"str
+¾"eur/2015/2365"str
+NoneNoneType
+õ"enterprise"str
+Ë"prospectus"str
+ ["corporate.?governance"str
+Ú"eur/2016/1011"str
+¹"Building Safety Act"str
+å"ukpga/2022/46"str
+’"ukpga/2002/29"str
+
+0int
+!ç"beneficial.?ownership"str
+ƒ"criminal.?justice"str
+Ÿ"mifid"str
+ä"economic.?crime"str
+Ê"Prospectus"str
+¿"sftr"str
+"Terrorism Act"str
+<"Bribery Act"str
+Z"ukpga/2006/46"str
+1"terrorist.?financing"str
+Î"public.?offerings"str
+Ù"benchmark"str
+¯"pension.?schemes"strlist"P&
+$
+ (Path"?python-unknown?&
+$
+ ("Dict"?python-unknown?&
+$
+ ("List"?python-unknown?%
+#
+ ("Any"?python-unknown?*
+(
+ (datetime"?python-unknown?9
+7
+ 3(REGULATION_PATTERNS"#new-object#Bdict'
+%
+# (1"#unknown-value#Blist&
+$
+# (1"
+#is-exact#:Bbool
+
+# (1"
+#assume#:8
+6
+# (1"#set-field# __collection_size:Bint&
+$
+# (1"#array-add-last#:	&
+$
+# (1"#array-add-last#:
+&
+$
+# (1"#array-add-last#:&
+$
+# (1"#array-add-last#:&
+$
+# (1"#array-add-last#: 
+
+ (1"	#map-set#:'
+%
+: ((!"#unknown-value#Blist&
+$
+: ((""
+#is-exact#:!Bbool
+
+: ((#"
+#assume#:"8
+6
+: (($"#set-field# __collection_size:!Bint&
+$
+: ((%"#array-add-last#:!&
+$
+: ((&"#array-add-last#:!&
+$
+: (('"#array-add-last#:!&
+$
+: ((("#array-add-last#:!&
+$
+: (()"#array-add-last#:!&
+$
+: ((*"#array-add-last#:!  
+
+3 ((+"	#map-set#:!'
+%
+1 (B2"#unknown-value#Blist&
+$
+1 (B3"
+#is-exact#:2Bbool
+
+1 (B4"
+#assume#:38
+6
+1 (B5"#set-field# __collection_size:2Bint&
+$
+1 (B6"#array-add-last#:2-&
+$
+1 (B7"#array-add-last#:2.&
+$
+1 (B8"#array-add-last#:2/&
+$
+1 (B9"#array-add-last#:20&
+$
+1 (B:"#array-add-last#:21 
+
+* (B;"	#map-set#:,2'
+%
+ (A"#unknown-value#Blist&
+$
+ (B"
+#is-exact#:ABbool
+
+ (C"
+#assume#:B8
+6
+ (D"#set-field# __collection_size:ABint&
+$
+ (E"#array-add-last#:A=&
+$
+ (F"#array-add-last#:A>&
+$
+ (G"#array-add-last#:A?&
+$
+ (H"#array-add-last#:A@ 
+
+ (I"	#map-set#:<A'
+%
+, (<O"#unknown-value#Blist&
+$
+, (<P"
+#is-exact#:OBbool
+
+, (<Q"
+#assume#:P8
+6
+, (<R"#set-field# __collection_size:OBint&
+$
+, (<S"#array-add-last#:OK&
+$
+, (<T"#array-add-last#:OL&
+$
+, (<U"#array-add-last#:OM&
+$
+, (<V"#array-add-last#:ON 
+
+ (<W"	#map-set#:JO'
+%
+ (0]"#unknown-value#Blist&
+$
+ (0^"
+#is-exact#:]Bbool
+
+ (0_"
+#assume#:^8
+6
+ (0`"#set-field# __collection_size:]Bint&
+$
+ (0a"#array-add-last#:]Y&
+$
+ (0b"#array-add-last#:]Z&
+$
+ (0c"#array-add-last#:][&
+$
+ (0d"#array-add-last#:]\ 
+
+ (0e"	#map-set#:X]'
+%
+B (Jk"#unknown-value#Blist&
+$
+B (Jl"
+#is-exact#:kBbool
+
+B (Jm"
+#assume#:l8
+6
+B (Jn"#set-field# __collection_size:kBint&
+$
+B (Jo"#array-add-last#:kg&
+$
+B (Jp"#array-add-last#:kh&
+$
+B (Jq"#array-add-last#:ki&
+$
+B (Jr"#array-add-last#:kj 
+
+2 (Js"	#map-set#:fk'
+%
+ (y"#unknown-value#Blist&
+$
+ (z"
+#is-exact#:yBbool
+
+ ({"
+#assume#:z8
+6
+ (|"#set-field# __collection_size:yBint&
+$
+ (}"#array-add-last#:yu&
+$
+ (~"#array-add-last#:yv&
+$
+ ("#array-add-last#:yw'
+%
+ (€"#array-add-last#:yx!
+
+ ("	#map-set#:ty(
+&
+% (3‡"#unknown-value#Blist(
+&
+% (3ˆ"
+#is-exact#:‡Bbool
+
+% (3‰"
+#assume#:ˆ:
+8
+% (3Š"#set-field# __collection_size:‡Bint)
+'
+% (3‹"#array-add-last#:‡ƒ)
+'
+% (3Œ"#array-add-last#:‡„)
+'
+% (3"#array-add-last#:‡…)
+'
+% (3"#array-add-last#:‡†#
+!
+ (3"	#map-set#:‚‡(
+&
+< (•"#unknown-value#Blist(
+&
+< (–"
+#is-exact#:•Bbool
+
+< (—"
+#assume#:–:
+8
+< (˜"#set-field# __collection_size:•Bint)
+'
+< (™"#array-add-last#:•‘)
+'
+< (š"#array-add-last#:•’)
+'
+< (›"#array-add-last#:•“)
+'
+< (œ"#array-add-last#:•”#
+!
+5 ("	#map-set#:•(
+&
+- (A¤"#unknown-value#Blist(
+&
+- (A¥"
+#is-exact#:¤Bbool
+
+- (A¦"
+#assume#:¥:
+8
+- (A§"#set-field# __collection_size:¤Bint)
+'
+- (A¨"#array-add-last#:¤Ÿ)
+'
+- (A©"#array-add-last#:¤ )
+'
+- (Aª"#array-add-last#:¤¡)
+'
+- (A«"#array-add-last#:¤¢)
+'
+- (A¬"#array-add-last#:¤£#
+!
+! (A­"	#map-set#:¤(
+&
+ (D³"#unknown-value#Blist(
+&
+ (D´"
+#is-exact#:³Bbool
+
+ (Dµ"
+#assume#:´:
+8
+ (D¶"#set-field# __collection_size:³Bint)
+'
+ (D·"#array-add-last#:³¯)
+'
+ (D¸"#array-add-last#:³°)
+'
+ (D¹"#array-add-last#:³±)
+'
+ (Dº"#array-add-last#:³²#
+!
+C (D»"	#map-set#:®³(
+&
+  !(Á"#unknown-value#Blist(
+&
+  !(Â"
+#is-exact#:ÁBbool
+
+  !(Ã"
+#assume#:Â:
+8
+  !(Ä"#set-field# __collection_size:ÁBint)
+'
+  !(Å"#array-add-last#:Á½)
+'
+  !(Æ"#array-add-last#:Á¾)
+'
+  !(Ç"#array-add-last#:Á¿)
+'
+  !(È"#array-add-last#:ÁÀ#
+!
+  !(É"	#map-set#:¼Á(
+&
+!* "(1Ï"#unknown-value#Blist(
+&
+!* "(1Ğ"
+#is-exact#:ÏBbool
+
+!* "(1Ñ"
+#assume#:Ğ:
+8
+!* "(1Ò"#set-field# __collection_size:ÏBint)
+'
+!* "(1Ó"#array-add-last#:ÏË)
+'
+!* "(1Ô"#array-add-last#:ÏÌ)
+'
+!* "(1Õ"#array-add-last#:ÏÍ)
+'
+!* "(1Ö"#array-add-last#:ÏÎ#
+!
+! "(1×"	#map-set#:ÊÏ(
+&
+"A #(>İ"#unknown-value#Blist(
+&
+"A #(>Ş"
+#is-exact#:İBbool
+
+"A #(>ß"
+#assume#:Ş:
+8
+"A #(>à"#set-field# __collection_size:İBint)
+'
+"A #(>á"#array-add-last#:İÙ)
+'
+"A #(>â"#array-add-last#:İÚ)
+'
+"A #(>ã"#array-add-last#:İÛ)
+'
+"A #(>ä"#array-add-last#:İÜ#
+!
+"3 #(>å"	#map-set#:Øİ(
+&
+$ %(ë"#unknown-value#Blist(
+&
+$ %(ì"
+#is-exact#:ëBbool
+
+$ %(í"
+#assume#:ì:
+8
+$ %(î"#set-field# __collection_size:ëBint)
+'
+$ %(ï"#array-add-last#:ëç)
+'
+$ %(ğ"#array-add-last#:ëè)
+'
+$ %(ñ"#array-add-last#:ëé)
+'
+$ %(ò"#array-add-last#:ëê#
+!
+$ %(ó"	#map-set#:æë(
+&
+%# &(/ù"#unknown-value#Blist(
+&
+%# &(/ú"
+#is-exact#:ùBbool
+
+%# &(/û"
+#assume#:ú:
+8
+%# &(/ü"#set-field# __collection_size:ùBint)
+'
+%# &(/ı"#array-add-last#:ùõ)
+'
+%# &(/ş"#array-add-last#:ùö)
+'
+%# &(/ÿ"#array-add-last#:ù÷)
+'
+%# &(/€"#array-add-last#:ùø#
+!
+% &(/"	#map-set#:ôù(
+&
+&I ((‡"#unknown-value#Blist(
+&
+&I ((ˆ"
+#is-exact#:‡Bbool
+
+&I ((‰"
+#assume#:ˆ:
+8
+&I ((Š"#set-field# __collection_size:‡Bint)
+'
+&I ((‹"#array-add-last#:‡ƒ)
+'
+&I ((Œ"#array-add-last#:‡„)
+'
+&I (("#array-add-last#:‡…)
+'
+&I (("#array-add-last#:‡†#
+!
+&1 (("	#map-set#:‚‡(
+&
+(0 )(7•"#unknown-value#Blist(
+&
+(0 )(7–"
+#is-exact#:•Bbool
+
+(0 )(7—"
+#assume#:–:
+8
+(0 )(7˜"#set-field# __collection_size:•Bint)
+'
+(0 )(7™"#array-add-last#:•‘)
+'
+(0 )(7š"#array-add-last#:•’)
+'
+(0 )(7›"#array-add-last#:•“)
+'
+(0 )(7œ"#array-add-last#:•”#
+!
+( )(7"	#map-set#:•(
+&
+)J +(¢"#unknown-value#Blist(
+&
+)J +(£"
+#is-exact#:¢Bbool
+
+)J +(¤"
+#assume#:£:
+8
+)J +(¥"#set-field# __collection_size:¢Bint)
+'
+)J +(¦"#array-add-last#:¢Ÿ)
+'
+)J +(§"#array-add-last#:¢ )
+'
+)J +(¨"#array-add-last#:¢¡(
+&
+)J +(©"#array-add-last#:¢1#
+!
+)9 +(ª"	#map-set#:¢(
+&
++- ,(/°"#unknown-value#Blist(
+&
++- ,(/±"
+#is-exact#:°Bbool
+
++- ,(/²"
+#assume#:±:
+8
++- ,(/³"#set-field# __collection_size:°Bint)
+'
++- ,(/´"#array-add-last#:°¬)
+'
++- ,(/µ"#array-add-last#:°­)
+'
++- ,(/¶"#array-add-last#:°®)
+'
++- ,(/·"#array-add-last#:°¯#
+!
++ ,(/¸"	#map-set#:«°(
+&
+,H .(¾"#unknown-value#Blist(
+&
+,H .(¿"
+#is-exact#:¾Bbool
+
+,H .(À"
+#assume#:¿:
+8
+,H .(Á"#set-field# __collection_size:¾Bint)
+'
+,H .(Â"#array-add-last#:¾º)
+'
+,H .(Ã"#array-add-last#:¾»)
+'
+,H .(Ä"#array-add-last#:¾¼)
+'
+,H .(Å"#array-add-last#:¾½#
+!
+,1 .(Æ"	#map-set#:¹¾(
+&
+.0 /(GÌ"#unknown-value#Blist(
+&
+.0 /(GÍ"
+#is-exact#:ÌBbool
+
+.0 /(GÎ"
+#assume#:Í:
+8
+.0 /(GÏ"#set-field# __collection_size:ÌBint)
+'
+.0 /(GĞ"#array-add-last#:ÌÈ)
+'
+.0 /(GÑ"#array-add-last#:ÌÉ)
+'
+.0 /(GÒ"#array-add-last#:ÌÊ)
+'
+.0 /(GÓ"#array-add-last#:ÌË#
+!
+. /(GÔ"	#map-set#:ÇÌ(
+&
+0 1(4Ú"#unknown-value#Blist(
+&
+0 1(4Û"
+#is-exact#:ÚBbool
+
+0 1(4Ü"
+#assume#:Û:
+8
+0 1(4İ"#set-field# __collection_size:ÚBint)
+'
+0 1(4Ş"#array-add-last#:ÚÖ)
+'
+0 1(4ß"#array-add-last#:Ú×)
+'
+0 1(4à"#array-add-last#:ÚØ)
+'
+0 1(4á"#array-add-last#:ÚÙ#
+!
+0 1(4â"	#map-set#:ÕÚ(
+&
+2 3(è"#unknown-value#Blist(
+&
+2 3(é"
+#is-exact#:èBbool
+
+2 3(ê"
+#assume#:é:
+8
+2 3(ë"#set-field# __collection_size:èBint)
+'
+2 3(ì"#array-add-last#:èä)
+'
+2 3(í"#array-add-last#:èå)
+'
+2 3(î"#array-add-last#:èæ)
+'
+2 3(ï"#array-add-last#:èç#
+!
+16 3(ğ"	#map-set#:ãè%
+#
+6 Qñ%closure"#new-object#$
+"
+6 Qò"#set-field# Dict:ñ#
+!
+6 Qó"#set-field# Any:ñ3
+1
+6 Qô"!#set-field# REGULATION_PATTERNS:ñ)
+'
+6 Qõ"?python-partial-apply?:ñ$
+"
+
+° °(ö"#unknown-value#/
+-
+
+° °(ø"
+#binop ==#2==:ö÷Bbool"
+
+° °(ø *° °("F<
+:
+
+± ±(
+ù")
+!scripts.categorize_uk_obligationsmain" *@/home/omar/Documents/ruleIQ/scripts/categorize_uk_obligations.py

@@ -1,0 +1,9 @@
+
+"assessment"str
+5,"Check if this is an assessment-type event."strselfK K( "m/
+-
+M M(""#get-field# event_category:*
+(
+M M(2"
+#binop ==#2==:Bbool
+M M(2*:/home/omar/Documents/ruleIQ/database/lead_scoring_event.py

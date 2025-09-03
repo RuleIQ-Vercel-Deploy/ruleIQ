@@ -1,0 +1,89 @@
+
+4fix-api-alignment.APIAlignmentFixer.analyze_frontendH
+>/home/omar/Documents/ruleIQ/scripts/sonar/fix-api-alignment.py= =("2*ô
+2> >(,áÑ
+? ?(9
+%6*&
+
+__unknown_file (
+
+
+logger*D
+
+__unknown_file ((&
+$üîç Analyzing Frontend API Calls...2infoxv
+@ @(A
+%7*0
+
+__unknown_file (
+
+FRONTEND_API_DIR*,
+
+__unknown_file (
+*.service.ts2glob*
+4
+6*ò
+4D D(&u
+s
+D D(&
+%1"__id*[
+
+__unknown_file (?*=%
+#fix-api-alignment.APIAlignmentFixer"
+frontend_endpoints"
+D D(&
+
+%1*Ç
+6A A(E¢ü
+A A(E
+%5*C
+
+__unknown_file ('%
+#fix-api-alignment.APIAlignmentFixer*,
+
+__unknown_file (
+
+service_file2extract_frontend_endpointsC
+A
+A A(E
+	endpoints"__id*"
+
+__unknown_file (
+
+%5*	
+4
+6
+7*Ü
+7C C(Fu
+s
+C C('
+%3"__id*[
+
+__unknown_file (?*=%
+#fix-api-alignment.APIAlignmentFixer"
+frontend_endpointsP
+N
+C( C(9
+%4"__id*6
+
+__unknown_file (*
+
+service_file"
+stem•¢
+C C(F
+%2"dict.__setitem__*"
+
+__unknown_file (
+
+%3*"
+
+__unknown_file (
+
+%4*)
+
+__unknown_file (
+
+	endpoints2__setitem__*
+4
+6B'%
+#fix-api-alignment.APIAlignmentFixerH

@@ -1,0 +1,10 @@
+
+.%"Check if in development environment"strselfz z(config.base.Environment"˜,
+*
+| |("#get-field# ENVIRONMENT:,
+*
+|# |(:"#get-field# DEVELOPMENT:*
+(
+| |(:"
+#binop ==#2==:Bbool
+| |(:**/home/omar/Documents/ruleIQ/config/base.py

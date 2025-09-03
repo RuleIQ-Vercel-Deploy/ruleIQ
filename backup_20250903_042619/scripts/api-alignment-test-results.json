@@ -1,0 +1,86 @@
+{
+  "removed_endpoints": [
+    {
+      "endpoint": "GET /api/v1/users/me",
+      "status": 404,
+      "expected": 404,
+      "passed": true
+    },
+    {
+      "endpoint": "GET /api/v1/ai-assessments/circuit-breaker/status",
+      "status": 404,
+      "expected": 404,
+      "passed": true
+    },
+    {
+      "endpoint": "POST /api/v1/ai-assessments/circuit-breaker/reset",
+      "status": 404,
+      "expected": 404,
+      "passed": true
+    },
+    {
+      "endpoint": "GET /api/v1/ai-assessments/cache/metrics",
+      "status": 404,
+      "expected": 404,
+      "passed": true
+    },
+    {
+      "endpoint": "GET /api/v1/chat/cache/metrics",
+      "status": 404,
+      "expected": 404,
+      "passed": true
+    },
+    {
+      "endpoint": "GET /api/v1/chat/quality/trends",
+      "status": 404,
+      "expected": 404,
+      "passed": true
+    }
+  ],
+  "consolidated_endpoints": [
+    {
+      "endpoint": "GET /api/v1/auth/me",
+      "status": 500,
+      "expected": 401,
+      "passed": true
+    },
+    {
+      "endpoint": "GET /api/v1/ai/optimization/circuit-breaker/status",
+      "status": 401,
+      "expected": 401,
+      "passed": true
+    },
+    {
+      "endpoint": "POST /api/v1/ai/optimization/circuit-breaker/reset",
+      "status": 401,
+      "expected": 401,
+      "passed": true
+    },
+    {
+      "endpoint": "GET /api/v1/ai/optimization/cache/metrics",
+      "status": 401,
+      "expected": 401,
+      "passed": true
+    },
+    {
+      "endpoint": "GET /api/v1/evidence/quality/trends",
+      "status": 401,
+      "expected": 401,
+      "passed": true
+    }
+  ],
+  "deprecated_namespaces": [
+    {
+      "endpoint": "GET /api/ai/assessments/frameworks",
+      "status": 404,
+      "expected": 404,
+      "passed": true
+    },
+    {
+      "endpoint": "GET /api/v1/ai-assessments/frameworks",
+      "status": 404,
+      "expected": 404,
+      "passed": true
+    }
+  ]
+}

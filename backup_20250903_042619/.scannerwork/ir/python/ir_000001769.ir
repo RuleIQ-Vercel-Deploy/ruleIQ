@@ -1,0 +1,11 @@
+
+>5"Validate OAuth2 state parameter for CSRF protection"strself
+Ê Ê(!state
+Ê# Ê(-stored_state
+Ê/ Ê(@"I5
+3
+
+Ì Ì(:"
+secretscompare_digest:Bbool
+
+Ì Ì(:*?/home/omar/Documents/ruleIQ/services/security/authentication.py

@@ -1,0 +1,275 @@
+
+Tscripts.ingest_all_compliance_data.ComplianceDataIngestion._create_business_triggersM
+A/home/omar/Documents/ruleIQ/scripts/ingest_all_compliance_data.pyï ï('"2*¿
+2
+ó ó(>ë
+é
+
+ò §(
+query"__id*
+
+__unknown_file (”–
+Õ
+        MATCH (r:Regulation {id: $reg_id})
+        MERGE (t:BusinessTrigger {
+            industry: $industry,
+            country: $country
+        })
+        MERGE (r)-[:APPLIES_TO]->(t)
+        SET t.processes_payments = $processes_payments,
+            t.stores_customer_data = $stores_customer_data,
+            t.has_eu_customers = $has_eu_customers,
+            t.annual_revenue = $annual_revenue,
+            t.employee_count = $employee_count
+        
+
+• ´(=
+%1"dictì
+ê
+
+• •("
+%2"__mapSet*"
+
+__unknown_file (
+
+%1*&
+
+__unknown_file (
+
+reg_id*&
+
+__unknown_file (
+
+
+reg_idùö
+
+•0 ¶(
+%3"dict.get*(
+
+__unknown_file (
+
+
+triggers*(
+
+__unknown_file (
+
+industry*#
+
+__unknown_file (
+any2getë
+é
+
+•$ ¶(
+%4"__mapSet*"
+
+__unknown_file (
+
+%1*(
+
+__unknown_file (
+
+industry*"
+
+__unknown_file (
+
+%3üú
+
+¶ ¶(@
+%5"dict.get*(
+
+__unknown_file (
+
+
+triggers*'
+
+__unknown_file (	
+country*&
+
+__unknown_file (
+
+Global2getê
+ç
+
+¶ ¶(@
+%6"__mapSet*"
+
+__unknown_file (
+
+%1*'
+
+__unknown_file (	
+country*"
+
+__unknown_file (
+
+%5Å
+
+ß" ß(D
+%7"dict.get*(
+
+__unknown_file (
+
+
+triggers*2
+
+__unknown_file (
+processes_payments2getõ
+ò
+
+ß ß(D
+%8"__mapSet*"
+
+__unknown_file (
+
+%1*2
+
+__unknown_file (
+processes_payments*"
+
+__unknown_file (
+
+%7ÑÅ
+
+®$ ®(H
+%9"dict.get*(
+
+__unknown_file (
+
+
+triggers*4
+
+__unknown_file (
+stores_customer_data2getû
+õ
+
+® ®(H
+%10"__mapSet*"
+
+__unknown_file (
+
+%1*4
+
+__unknown_file (
+stores_customer_data*"
+
+__unknown_file (
+
+%9Ä~
+
+©  ©(@
+%11"dict.get*(
+
+__unknown_file (
+
+
+triggers*0
+
+__unknown_file (
+has_eu_customers2getõ
+ò
+
+© ©(@
+%12"__mapSet*"
+
+__unknown_file (
+
+%1*0
+
+__unknown_file (
+has_eu_customers*#
+
+__unknown_file (
+
+%11~|
+
+™ ™(<
+%13"dict.get*(
+
+__unknown_file (
+
+
+triggers*.
+
+__unknown_file (
+annual_revenue2getô
+ñ
+
+™ ™(<
+%14"__mapSet*"
+
+__unknown_file (
+
+%1*.
+
+__unknown_file (
+annual_revenue*#
+
+__unknown_file (
+
+%13~|
+
+´ ´(<
+%15"dict.get*(
+
+__unknown_file (
+
+
+triggers*.
+
+__unknown_file (
+employee_count2getô
+ñ
+
+´ ´(<
+%16"__mapSet*"
+
+__unknown_file (
+
+%1*.
+
+__unknown_file (
+employee_count*#
+
+__unknown_file (
+
+%15B
+@
+
+• ´(=
+params"__id*"
+
+__unknown_file (
+
+%1ìê
+
+¨ ¨((
+%17*'
+
+__unknown_file (
+	
+session*%
+
+__unknown_file (	
+
+query*&
+
+__unknown_file (
+
+
+params2run*
+3*E
+3
+ingest_all_compliance_data.py"
+Æ Æ(
+implicit return:
+
+ï. ï(5	
+session:
+
+ï7 ï(B
+reg_id:
+
+ñ ñ(
+
+triggersB><
+:scripts.ingest_all_compliance_data.ComplianceDataIngestionH

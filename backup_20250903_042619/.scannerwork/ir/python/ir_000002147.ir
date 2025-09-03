@@ -1,0 +1,27 @@
+
+8/"Decorator to profile API endpoint performance"strself
+Ÿ Ÿ(endpoint
+Ÿ Ÿ(,method
+Ÿ. Ÿ(?"–#
+!
+
+¹ ¹(
+"#unknown-value#*
+(
+
+¢ ¹(%closure"#new-object#*
+(
+
+¢ ¹("#set-field# method:,
+*
+
+¢ ¹("#set-field# endpoint:(
+&
+
+¢ ¹("#set-field# self:-
++
+
+¢ ¹(	"?python-partial-apply?:
+
+¹ ¹(
+*:/home/omar/Documents/ruleIQ/config/performance_profiler.py

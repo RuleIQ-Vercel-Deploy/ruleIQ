@@ -1,0 +1,323 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/ukpga/2022/46/data.xml",
+  "fetched_at": "2025-08-31T18:16:18.502892",
+  "metadata": {
+    "title": "Product Security and Telecommunications Infrastructure Act 2022",
+    "description": "",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "section-8",
+      "text": "8\n\n\n1\n\nA manufacturer of a relevant connectable product must comply with any relevant security requirements relating to the product if condition A or B is met.\n\n\n\n2\n\nCondition A is that the manufacturer\u2014\n\na\n\nintends the product to be a UK consumer connectable product, or\n\n\n\nb\n\nis aware, or ought to be aware, that the product will be a UK consumer connectable product.\n\n\n\n\n\n3\n\nCondition B is that\u2014\n\na\n\nthe product is a UK consumer connectable product, and\n\n\n\nb\n\nat the time it was made available by ",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "section-10",
+      "text": "10\n\n\n1\n\nThis section applies if, at any time after a relevant connectable product has been made available in the United Kingdom\u2014\n\na\n\na manufacturer of the product is informed that there is, or may be, a compliance failure in relation to the product, and\n\n\n\nb\n\nthe manufacturer is aware, or ought to be aware, that the product is or will be a UK consumer connectable product.\n\n\n\n\n\n2\n\nThe manufacturer must take all reasonable steps to investigate whether there is a compliance failure in relation to t",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-11",
+      "text": "11\n\n\n1\n\nThis section applies if, at any time after a relevant connectable product has been made available in the United Kingdom\u2014\n\na\n\na manufacturer of the product becomes aware, or ought to be aware, of a compliance failure in relation to the product, and\n\n\n\nb\n\nthe manufacturer is aware, or ought to be aware, that the product is or will be a UK consumer connectable product.\n\n\n\n\n\n2\n\nThe manufacturer must, as soon as is practicable, take all reasonable steps to\u2014\n\na\n\nprevent the product from being ",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-12",
+      "text": "12\n\n\n1\n\nA manufacturer of a relevant connectable product must maintain a record of\u2014\n\na\n\nany investigations carried out by the manufacturer in relation to a compliance failure or suspected compliance failure (whether or not as a result of information received as mentioned in section 10(1)(a));\n\n\n\nb\n\nany compliance failures relating to the product.\n\n\n\n\n\n2\n\nA record of an investigation must contain the following information\u2014\n\na\n\nthe outcome of the investigation;\n\n\n\nb\n\nwhere the manufacturer determi",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting",
+        "retention"
+      ]
+    },
+    {
+      "id": "section-13",
+      "text": "13\n\n\n1\n\nThis section applies if, at any time after a relevant connectable product is made available in the United Kingdom\u2014\n\na\n\nan authorised representative of a manufacturer of the product is informed that there is, or may be, a compliance failure in relation to the product, and\n\n\n\nb\n\nthe authorised representative is aware, or ought to be aware, that the product is or will be a UK consumer connectable product.\n\n\n\n\n\n2\n\nThe authorised representative must contact the manufacturer about the complian",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-14",
+      "text": "14\n\n\n1\n\nAn importer of a relevant connectable product must comply with any relevant security requirements relating to the product if condition A or B is met.\n\n\n\n2\n\nCondition A is that the importer\u2014\n\na\n\nintends the product to be a UK consumer connectable product, or\n\n\n\nb\n\nis aware, or ought to be aware, that the product will be a UK consumer connectable product.\n\n\n\n\n\n3\n\nCondition B is that\u2014\n\na\n\nthe product is a UK consumer connectable product, and\n\n\n\nb\n\nat the time it was made available by the im",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "section-15",
+      "text": "15\n\n\n1\n\nSubsection (2) applies if an importer of a relevant connectable product\u2014\n\na\n\nintends the product to be a UK consumer connectable product, or\n\n\n\nb\n\nis aware, or ought to be aware, that the product will be a UK consumer connectable product.\n\n\n\n\n\n2\n\nThe importer may not make the product available in the United Kingdom unless it is accompanied by\u2014\n\na\n\na statement of compliance, or\n\n\n\nb\n\na summary of the statement of compliance prepared in accordance with section 9(2)(b).\n\n\n\n\n\n3\n\nThe importer",
+      "type": "mandatory",
+      "keywords": [
+        "retention"
+      ]
+    },
+    {
+      "id": "section-17",
+      "text": "17\n\n\n1\n\nThis section applies if, at any time after an importer of a relevant connectable product makes it available in the United Kingdom\u2014\n\na\n\nthe importer is informed that there is, or may be, a compliance failure in relation to the product, and\n\n\n\nb\n\nthe importer is aware, or ought to be aware, that the product is or will be a UK consumer connectable product.\n\n\n\n\n\n2\n\nThe importer must take all reasonable steps to investigate whether there is a compliance failure in relation to the product.\n\n\n\n",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-18",
+      "text": "18\n\n\n1\n\nThis section applies if, at any time after an importer of a relevant connectable product makes it available to a customer in the United Kingdom\u2014\n\na\n\nthe importer becomes aware, or ought to be aware, of a compliance failure in relation to the product, and\n\n\n\nb\n\nthe importer is aware, or ought to be aware, that the product is a UK consumer connectable product.\n\n\n\n\n\n2\n\nThe importer must, as soon as is practicable, take all reasonable steps to remedy the compliance failure.\n\n\n\n3\n\nThe importe",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-19",
+      "text": "19\n\n\n1\n\nThis section applies if, at any time after an importer of a relevant connectable product makes it available in the United Kingdom\u2014\n\na\n\nthe importer becomes aware, or ought to be aware, of a compliance failure in relation to the product, and\n\n\n\nb\n\nthe importer is aware, or ought to be aware, that the product is or will be a UK consumer connectable product.\n\n\n\n\n\n2\n\nIn this section \u201ccompliance failure\u201d means a failure by a manufacturer of the product to comply with a relevant security requi",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-20",
+      "text": "20\n\n\n1\n\nAn importer of a relevant connectable product must maintain a record of\u2014\n\na\n\nany investigations carried out by the importer (whether or not as a result of information received as mentioned in section 17(1)(a)) in relation to a compliance failure, or suspected compliance failure, by\u2014\n\ni\n\nthe importer, or\n\n\n\nii\n\na manufacturer of the product;\n\n\n\n\n\nb\n\nany investigations of which the importer is aware that have been carried out by a manufacturer of the product in relation to a compliance fai",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting",
+        "retention"
+      ]
+    },
+    {
+      "id": "section-21",
+      "text": "21\n\n\n1\n\nA distributor of a relevant connectable product must comply with any relevant security requirements relating to the product if condition A or B is met.\n\n\n\n2\n\nCondition A is that the distributor\u2014\n\na\n\nintends the product to be a UK consumer connectable product, or\n\n\n\nb\n\nis aware, or ought to be aware, that the product will be a UK consumer connectable product.\n\n\n\n\n\n3\n\nCondition B is that\u2014\n\na\n\nthe product is a UK consumer connectable product, and\n\n\n\nb\n\nat the time it was made available by t",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "section-24",
+      "text": "24\n\n\n1\n\nThis section applies if, at any time after a distributor of a relevant connectable product makes it available to a customer in the United Kingdom\u2014\n\na\n\nthe distributor becomes aware, or ought to be aware, of a compliance failure in relation to the product, and\n\n\n\nb\n\nthe distributor is aware, or ought to be aware, that the product is a UK consumer connectable product.\n\n\n\n\n\n2\n\nThe distributor must, as soon as is practicable, take all reasonable steps to remedy the compliance failure.\n\n\n\n3\n\n",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-25",
+      "text": "25\n\n\n1\n\nThis section applies if, at any time after a distributor of a relevant connectable product makes it available in the United Kingdom\u2014\n\na\n\nthe distributor becomes aware, or ought to be aware, of a compliance failure in relation to the product, and\n\n\n\nb\n\nthe distributor is aware, or ought to be aware, that the product is or will be a UK consumer connectable product.\n\n\n\n\n\n2\n\nIn this section \u201ccompliance failure\u201d means a failure by a manufacturer of the product to comply with a relevant securi",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-28",
+      "text": "28\n\n\n1\n\nIf the Secretary of State has reasonable grounds to believe that a person has failed to comply with a relevant duty, the Secretary of State may give a compliance notice to the person.\n\n\n\n2\n\nA compliance notice is a notice under this section requiring the person to whom it is given to comply with the relevant duty specified in the notice within a specified period.\n\n\n\n3\n\nA compliance notice given to a person must\u2014\n\na\n\nset out the reasons for giving the compliance notice;\n\n\n\nb\n\nexplain what",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-29",
+      "text": "29\n\n\n1\n\nIf the Secretary of State has reasonable grounds to believe that a person is carrying on, or is likely to carry on, an activity in breach of a relevant duty, the Secretary of State may give a stop notice to the person.\n\n\n\n2\n\nA stop notice is a notice under this section requiring the person to whom it is given to stop carrying on an activity specified in the notice within a specified period.\n\n\n\n3\n\nA stop notice given to a person must\u2014\n\na\n\nset out the reasons for giving the stop notice;\n\n\n",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-30",
+      "text": "30\n\n\n1\n\nSubsection (2) applies if\u2014\n\na\n\nthe Secretary of State has reasonable grounds to believe that there is a compliance failure in relation to any UK consumer connectable products that have been supplied to customers,\n\n\n\nb\n\nthe Secretary of State considers that the action (if any) being taken by any relevant person in relation to the compliance failure is inadequate, and\n\n\n\nc\n\nthe Secretary of State considers that any action which the Secretary of State may take under section 28, 29 or 42 wou",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-32",
+      "text": "32\n\n\n1\n\nIt is an offence for a person to fail to comply with an enforcement notice.\n\n\n\n2\n\nIt is a defence for a person (\u201cP\u201d) charged with an offence under this section to show that P took all reasonable steps to comply with the notice.\n\n\n\n3\n\nP is to be taken to have shown the fact mentioned in subsection (2) if\u2014\n\na\n\nsufficient evidence of the fact is adduced to raise an issue with respect to it, and\n\n\n\nb\n\nthe contrary is not proved beyond reasonable doubt.\n\n\n\n\n\n4\n\nP may not rely on a defence und",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent"
+      ]
+    },
+    {
+      "id": "section-33",
+      "text": "33\n\n\n1\n\nA person who is given an enforcement notice may appeal to the First-tier Tribunal (\u201cthe Tribunal\u201d) against the enforcement notice or any provision of it.\n\n\n\n2\n\nAn appeal under this section is to be brought before the end of the period of 28 days beginning with\u2014\n\na\n\nthe day on which the notice was given, or\n\n\n\nb\n\nif the appeal is in respect of the variation of a notice under section 31, the day on which the notice was varied.\n\n\n\n\n\n3\n\nOn an appeal under this section, the Tribunal\u2014\n\na\n\nif i",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "section-34",
+      "text": "34\n\n\n1\n\nThis section applies if\u2014\n\na\n\nthe Secretary of State gives a stop notice or a recall notice to a person,\n\n\n\nb\n\nthe relevant breach in respect of which the notice was given did not occur, and\n\n\n\nc\n\nthe decision to give the notice was not attributable to any neglect or default by the person.\n\n\n\n\n\n2\n\nThe Secretary of State is liable to pay compensation to the person to whom the notice was given in respect of any loss or damage caused as a result of the giving of the notice.\n\n\n\n3\n\nThe amount ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-35",
+      "text": "35\n\n\n1\n\nA person may appeal to the First-tier Tribunal (\u201cthe Tribunal\u201d) against\u2014\n\na\n\na decision not to award compensation to the person under section 34, or\n\n\n\nb\n\nthe amount of compensation awarded to the person under that section.\n\n\n\n\n\n2\n\nAn appeal under this section is to be brought before the end of the period of 28 days beginning with the day on which the person is notified in accordance with section 34(7)(b).\n\n\n\n3\n\nOn an appeal under this section against a decision not to award compensation",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "section-36",
+      "text": "36\n\n\n1\n\nIf the Secretary of State is satisfied on the balance of probabilities that a person has failed to comply with a relevant duty, the Secretary of State may give a penalty notice to the person.\n\n\n\n2\n\nA penalty notice is a notice under this section requiring the person to pay a penalty of a specified amount to the Secretary of State within a specified period.\n\n\n\n3\n\nA person may not be given more than one penalty notice in respect of a single relevant breach.\n\n\n\n4\n\nA penalty notice may not r",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-37",
+      "text": "37\n\n\n1\n\nA penalty imposed by a penalty notice must be of an amount that the Secretary of State considers to be\u2014\n\na\n\nappropriate, and\n\n\n\nb\n\nproportionate to the relevant breach in respect of which it is imposed.\n\n\n\n\n\n2\n\nIn determining the amount of a penalty to be imposed by a penalty notice on a person, the Secretary of State must take into account the following matters (among others)\u2014\n\na\n\nthe effects of the relevant breach in respect of which the penalty is imposed;\n\n\n\nb\n\nany action taken by th",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-39",
+      "text": "39\n\n\n1\n\nBefore giving a penalty notice to a person, the Secretary of State must\u2014\n\na\n\nnotify the person of the Secretary of State\u2019s intention to give a penalty notice to the person, and\n\n\n\nb\n\ngive the person an opportunity to make representations about the giving of the notice.\n\n\n\n\n\n2\n\nThe Secretary of State may not give a penalty notice to the person before the end of the period of 28 days beginning with the day on which notification under subsection (1)(a) is given.\n\n\n\n3\n\nA penalty notice must ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-41",
+      "text": "41\n\n\n1\n\nA person who is given a penalty notice may appeal to the First-tier Tribunal (\u201cthe Tribunal\u201d) against\u2014\n\na\n\nthe imposition of a penalty imposed by the penalty notice;\n\n\n\nb\n\nthe amount of such a penalty;\n\n\n\nc\n\nthe period within which such a penalty, or any part of it, is required to be paid.\n\n\n\n\n\n2\n\nAn appeal under this section is to be brought before the end of the period of 28 days beginning with\u2014\n\na\n\nthe day on which the penalty notice was given, or\n\n\n\nb\n\nif the appeal is in respect of ",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "section-42",
+      "text": "42\n\n\n1\n\nIn this section \u201cforfeitable products\u201d means\u2014\n\na\n\nany relevant connectable products that\u2014\n\ni\n\nare in the possession or control of any manufacturer, importer or distributor of the products,\n\n\n\nii\n\nare in the possession or control of an authorised representative of a manufacturer of the products, or\n\n\n\niii\n\nare detained under paragraph 28 of Schedule 5 to the Consumer Rights Act 2015;\n\n\n\n\n\nb\n\nany relevant connectable products that have been returned to any of the following persons as a res",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "section-43",
+      "text": "43\n\n\n1\n\nAn application under section 42 to a magistrates\u2019 court in England and Wales is to be made by way of complaint.\n\n\n\n2\n\nAn application under section 42 to a court of summary jurisdiction in Northern Ireland is to be made by way of complaint under Part 8 of the Magistrates\u2019 Courts (Northern Ireland) Order 1981 (S.I. 1981/1675 (N.I. 26)).\n\n\n\n3\n\nIn a case where proceedings have been brought in England and Wales or Northern Ireland for\u2014\n\na\n\nan offence under section 32 relating to a compliance ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-44",
+      "text": "44\n\n\n1\n\nWhere an order for the forfeiture of any products has been made under section 42, each of the following persons may appeal against the order\u2014\n\na\n\nany party to the proceedings in which the order was made;\n\n\n\nb\n\nany other person entitled to the products.\n\n\n\n\n\n2\n\nThe Secretary of State may appeal against\u2014\n\na\n\na decision not to make an order for forfeiture under section 42;\n\n\n\nb\n\nan order under subsection (8) of that section for the return of any products.\n\n\n\n\n\n3\n\nWhere\u2014\n\na\n\nthe Secretary of",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-47",
+      "text": "47\n\n\n1\n\nThis section applies where conditions A and B are met.\n\n\n\n2\n\nCondition A is that the Secretary of State has reasonable grounds to believe that there is a compliance failure in relation to any UK consumer connectable products that have been supplied to customers.\n\n\n\n3\n\nCondition B is that\u2014\n\na\n\na person to whom a recall notice was given in relation to the compliance failure has failed to comply with it, or\n\n\n\nb\n\nit is not possible to give a recall notice in relation to the compliance failu",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    }
+  ],
+  "penalties": [
+    {
+      "type": "financial",
+      "amount": "\u00a320,000,",
+      "context": "monetary penalties\n\n36\n\n\n1\n\nif the secretary of state is satisfied on the balance of probabilities that a person has failed to comply with a relevant duty, the secretary of state may give a penalty no"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310 million",
+      "context": "the relevant maximum\n\n38\n\n\n1\n\nfor the purposes of section 36 the relevant maximum, in relation to a person, is the greater of\u2014\n\na\n\n\u00a310 million, and\n\n\n\nb\n\n4% of the person\u2019s qualifying worldwide revenu"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310 million",
+      "context": "the relevant maximum\n\n38\n\n\n1\n\nfor the purposes of section 36 the relevant maximum, in relation to a person, is the greater of\u2014\n\na\n\n\u00a310 million, and\n\n\n\nb\n\n4% of the person\u2019s qualifying worldwide revenu"
+    }
+  ],
+  "enforcement": {
+    "authority": [
+      "Secretary of State"
+    ],
+    "powers": [
+      "10\n\n\n1\n\nThis section applies if, at any time after a relevant connectable product has been made available in the United Kingdom\u2014\n\na\n\na manufacturer of the product is informed that there is, or may be,",
+      "11\n\n\n1\n\nThis section applies if, at any time after a relevant connectable product has been made available in the United Kingdom\u2014\n\na\n\na manufacturer of the product becomes aware, or ought to be aware, ",
+      "13\n\n\n1\n\nThis section applies if, at any time after a relevant connectable product is made available in the United Kingdom\u2014\n\na\n\nan authorised representative of a manufacturer of the product is informed",
+      "17\n\n\n1\n\nThis section applies if, at any time after an importer of a relevant connectable product makes it available in the United Kingdom\u2014\n\na\n\nthe importer is informed that there is, or may be, a comp",
+      "18\n\n\n1\n\nThis section applies if, at any time after an importer of a relevant connectable product makes it available to a customer in the United Kingdom\u2014\n\na\n\nthe importer becomes aware, or ought to be ",
+      "19\n\n\n1\n\nThis section applies if, at any time after an importer of a relevant connectable product makes it available in the United Kingdom\u2014\n\na\n\nthe importer becomes aware, or ought to be aware, of a co",
+      "24\n\n\n1\n\nThis section applies if, at any time after a distributor of a relevant connectable product makes it available to a customer in the United Kingdom\u2014\n\na\n\nthe distributor becomes aware, or ought t",
+      "25\n\n\n1\n\nThis section applies if, at any time after a distributor of a relevant connectable product makes it available in the United Kingdom\u2014\n\na\n\nthe distributor becomes aware, or ought to be aware, of",
+      "26\n\n\n1\n\nThe person responsible for enforcing the provisions of this Part, and of regulations made under it, is the Secretary of State (but see also section 27).\n\n\n\n2\n\nFor the investigatory powers avai",
+      "27\n\n\n1\n\nThe Secretary of State may by regulations authorise any person to exercise any enforcement function of the Secretary of State.\n\n\n\n2\n\nRegulations under this section may provide for payments to ",
+      "31\n\n\n1\n\nThe Secretary of State may vary or revoke an enforcement notice.\n\n\n\n2\n\nBut the Secretary of State may not vary an enforcement notice in order to make it more onerous.",
+      "32\n\n\n1\n\nIt is an offence for a person to fail to comply with an enforcement notice.\n\n\n\n2\n\nIt is a defence for a person (\u201cP\u201d) charged with an offence under this section to show that P took all reasonab",
+      "33\n\n\n1\n\nA person who is given an enforcement notice may appeal to the First-tier Tribunal (\u201cthe Tribunal\u201d) against the enforcement notice or any provision of it.\n\n\n\n2\n\nAn appeal under this section is ",
+      "36\n\n\n1\n\nIf the Secretary of State is satisfied on the balance of probabilities that a person has failed to comply with a relevant duty, the Secretary of State may give a penalty notice to the person.\n",
+      "40\n\n\n1\n\nIn England and Wales, a penalty is recoverable as if it were payable under an order of the High Court.\n\n\n\n2\n\nIn Scotland, a penalty may be enforced in the same manner as an extract registered ",
+      "46\n\n\n1\n\nThe Secretary of State may publish details of a failure by a relevant person to comply with a relevant security requirement in relation to a product.\n\n\n\n2\n\nThe Secretary of State may publish d",
+      "48\n\n\n1\n\nThe Secretary of State may disclose to a person any information obtained by the Secretary of State in connection with the Secretary of State\u2019s enforcement functions if the disclosure is made f",
+      "53\n\n\n1\n\nThe Secretary of State may issue guidance about the effect of any provision made by or under this Part.\n\n\n\n2\n\nThe enforcement authority may issue guidance about the exercise of any of its enfo",
+      "56\n\n\n1\n\nIn this Part\u2014\n\n\n\n\u201cauthorised representative\u201d has the meaning given by section 51(2);\n\n\n\n\n\u201cbusiness\u201d includes\u2014\n\n\n\nany trade or profession;\n\n\n\n\nthe activities of a local or public authority;\n\n\n\n",
+      "64\n\n\n1\n\nThe Business Tenancies (Northern Ireland) Order 1996 (S.I. 1996/725 (N.I. 5)) is amended as follows.\n\n\n\n2\n\nAfter Article 18A (inserted by section 62) insert\u2014\n\n\nCompensation for exercise of cod",
+      "66\n\n\n1\n\nThe electronic communications code is amended as follows.\n\n\n\n2\n\nAfter paragraph 27 insert\u2014\n\n\nRefusal of application on grounds of national security etc\n\n27ZA\n\n\n1\n\nThis paragraph applies where ",
+      "27ZA\n\n\n1\n\nThis paragraph applies where an operator applies to the court for an order under paragraph 20, 26 or 27 which would impose an agreement between the operator and another person.\n\n\n\n2\n\nThe cou"
+    ],
+    "procedures": []
+  },
+  "dates": [
+    {
+      "type": "deadline",
+      "date": "29 December 2003",
+      "context": "59\n\n\n1\n\nThe electronic communications code is amended as follows.\n\n\n\n2\n\nIn paragraph 15 (introductory), in paragraph (b), for the words \u201cto which such"
+    },
+    {
+      "type": "deadline",
+      "date": "29 December 2003",
+      "context": "59\n\n\n1\n\nThe electronic communications code is amended as follows.\n\n\n\n2\n\nIn paragraph 15 (introductory), in paragraph (b), for the words \u201cto which such"
+    },
+    {
+      "type": "deadline",
+      "date": "29 December 2003",
+      "context": "17A\n\n\n1\n\nThis paragraph applies where\u2014\n\na\n\nan operator (\u201cthe main operator\u201d) keeps electronic communications apparatus installed under land,\n\n\n\nb\n\nthe"
+    }
+  ],
+  "controls": [
+    "consent_management",
+    "access_control",
+    "data_minimization",
+    "incident_response"
+  ],
+  "xml_length": 532226
+}

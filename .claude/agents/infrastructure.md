@@ -1,7 +1,8 @@
 ---
 name: infrastructure
-description: "Infrastructure and CI/CD specialist. Manages Docker, GitHub Actions, deployment pipelines, and environment configuration."
+description: Infrastructure and CI/CD specialist. Manages Docker, GitHub Actions, deployment pipelines, and environment configuration.
 tools: Read, Write, Execute, Docker, GitHub
+model: opus
 ---
 
 # Infrastructure Specialist - RuleIQ

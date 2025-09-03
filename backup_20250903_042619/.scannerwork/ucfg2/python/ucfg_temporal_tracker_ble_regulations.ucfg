@@ -1,0 +1,104 @@
+
+Hservices.ai.temporal_tracker.TemporalTracker._get_applicable_regulationsG
+;/home/omar/Documents/ruleIQ/services/ai/temporal_tracker.py¢ ¢()"2*›
+2
+¥ ¥(<í
+ê
+
+¨ ®(
+query"__id*Ì
+
+__unknown_file (¯¬
+©
+        MATCH (r:Regulation)
+        WHERE r.typical_timeline IS NOT NULL 
+           OR r.enforcement_frequency IS NOT NULL
+        RETURN r
+        LIMIT 100
+        ig
+
+° °()
+%5*'
+
+__unknown_file (
+	
+session*%
+
+__unknown_file (	
+
+query2runB
+@
+
+° °()
+result"__id*"
+
+__unknown_file (
+
+%5
+
+± ±(
+%6"listG
+E
+
+± ±(
+regulations"__id*"
+
+__unknown_file (
+
+%6*
+4
+6*.
+4
+µ µ("
+
+µ µ(
+
+regulations*”
+6
+³ ³(1
+
+³ ³(0
+%1"dictvt
+
+³$ ³(/
+%2"__mapGet*&
+
+__unknown_file (
+
+
+record*!
+
+__unknown_file (
+r2__getitem__k
+i
+
+³ ³(0
+%3"dict.__init__*"
+
+__unknown_file (
+
+%1*"
+
+__unknown_file (
+
+%2zx
+
+³ ³(1
+%4"list.append*+
+
+__unknown_file (
+
+regulations*"
+
+__unknown_file (
+
+%12append*
+4
+6: 
+
+£ £(.
+business_profile:
+
+£0 £(<	
+sessionB0.
+,services.ai.temporal_tracker.TemporalTrackerH

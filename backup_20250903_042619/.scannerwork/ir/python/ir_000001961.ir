@@ -1,0 +1,21 @@
+
+
+0int
+A8"Get list of supported evidence types for this provider"strself
+³% ³()list"Ä)
+'
+
+µ µ("#unknown-value#Blist(
+&
+
+µ µ("
+#is-exact#:Bbool
+
+
+µ µ("
+#assume#::
+8
+
+µ µ("#set-field# __collection_size:Bint
+
+µ µ(*:/home/omar/Documents/ruleIQ/api/clients/base_api_client.py

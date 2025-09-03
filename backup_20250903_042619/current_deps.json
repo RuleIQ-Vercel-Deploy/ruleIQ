@@ -1,0 +1,883 @@
+{
+  "version": "1.0.0",
+  "name": "ruleiq-frontend",
+  "problems": [
+    "invalid: @emotion/is-prop-valid@1.3.1 /home/omar/Documents/ruleIQ/frontend/node_modules/@emotion/is-prop-valid",
+    "invalid: @radix-ui/react-checkbox@1.3.3 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-checkbox",
+    "invalid: @radix-ui/react-dialog@1.1.15 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-dialog",
+    "invalid: @radix-ui/react-icons@1.3.2 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-icons",
+    "invalid: @radix-ui/react-label@2.1.7 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-label",
+    "invalid: @radix-ui/react-popover@1.1.15 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-popover",
+    "invalid: @radix-ui/react-radio-group@1.3.8 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-radio-group",
+    "invalid: @radix-ui/react-select@2.2.6 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-select",
+    "invalid: @radix-ui/react-slot@1.2.3 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-slot",
+    "invalid: @radix-ui/react-switch@1.2.6 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-switch",
+    "invalid: @tanstack/react-table@8.21.3 /home/omar/Documents/ruleIQ/frontend/node_modules/@tanstack/react-table",
+    "invalid: @tiptap/core@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/core",
+    "invalid: @tiptap/extension-text-align@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/extension-text-align",
+    "invalid: @tiptap/extension-underline@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/extension-underline",
+    "invalid: @tiptap/pm@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/pm",
+    "invalid: @tiptap/react@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/react",
+    "invalid: @tiptap/starter-kit@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/starter-kit",
+    "invalid: date-fns@4.1.0 /home/omar/Documents/ruleIQ/frontend/node_modules/date-fns",
+    "invalid: framer-motion@12.23.12 /home/omar/Documents/ruleIQ/frontend/node_modules/framer-motion",
+    "invalid: react-day-picker@9.9.0 /home/omar/Documents/ruleIQ/frontend/node_modules/react-day-picker",
+    "invalid: react-dropzone@14.3.8 /home/omar/Documents/ruleIQ/frontend/node_modules/react-dropzone",
+    "invalid: simplex-noise@4.0.3 /home/omar/Documents/ruleIQ/frontend/node_modules/simplex-noise"
+  ],
+  "dependencies": {
+    "@axe-core/playwright": {
+      "version": "4.10.2",
+      "resolved": "file:../.pnpm/@axe-core+playwright@4.10.2_playwright-core@1.55.0/node_modules/@axe-core/playwright",
+      "overridden": false
+    },
+    "@chromatic-com/storybook": {
+      "version": "3.2.7",
+      "resolved": "file:../.pnpm/@chromatic-com+storybook@3.2.7_react@19.1.1_storybook@8.6.14_prettier@3.6.2_/node_modules/@chromatic-com/storybook",
+      "overridden": false
+    },
+    "@commitlint/cli": {
+      "version": "19.8.1",
+      "resolved": "file:../.pnpm/@commitlint+cli@19.8.1_@types+node@22.18.0_typescript@5.9.2/node_modules/@commitlint/cli",
+      "overridden": false
+    },
+    "@commitlint/config-conventional": {
+      "version": "19.8.1",
+      "resolved": "file:../.pnpm/@commitlint+config-conventional@19.8.1/node_modules/@commitlint/config-conventional",
+      "overridden": false
+    },
+    "@dnd-kit/core": {
+      "version": "6.3.1",
+      "resolved": "file:../.pnpm/@dnd-kit+core@6.3.1_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/@dnd-kit/core",
+      "overridden": false
+    },
+    "@dnd-kit/sortable": {
+      "version": "10.0.0",
+      "resolved": "file:../.pnpm/@dnd-kit+sortable@10.0.0_@dnd-kit+core@6.3.1_react-dom@19.1.1_react@19.1.1__react@19.1.1__react@19.1.1/node_modules/@dnd-kit/sortable",
+      "overridden": false
+    },
+    "@dnd-kit/utilities": {
+      "version": "3.2.2",
+      "resolved": "file:../.pnpm/@dnd-kit+utilities@3.2.2_react@19.1.1/node_modules/@dnd-kit/utilities",
+      "overridden": false
+    },
+    "@e965/xlsx": {
+      "version": "0.20.3",
+      "resolved": "file:../.pnpm/@e965+xlsx@0.20.3/node_modules/@e965/xlsx",
+      "overridden": false
+    },
+    "@emotion/is-prop-valid": {
+      "version": "1.3.1",
+      "resolved": "file:../.pnpm/@emotion+is-prop-valid@1.3.1/node_modules/@emotion/is-prop-valid",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: @emotion/is-prop-valid@1.3.1 /home/omar/Documents/ruleIQ/frontend/node_modules/@emotion/is-prop-valid"
+      ]
+    },
+    "@eslint/eslintrc": {
+      "version": "3.3.1",
+      "resolved": "file:../.pnpm/@eslint+eslintrc@3.3.1/node_modules/@eslint/eslintrc",
+      "overridden": false
+    },
+    "@eslint/js": {
+      "version": "9.34.0",
+      "resolved": "file:../.pnpm/@eslint+js@9.34.0/node_modules/@eslint/js",
+      "overridden": false
+    },
+    "@hookform/resolvers": {
+      "version": "3.10.0",
+      "resolved": "file:../.pnpm/@hookform+resolvers@3.10.0_react-hook-form@7.62.0_react@19.1.1_/node_modules/@hookform/resolvers",
+      "overridden": false
+    },
+    "@monaco-editor/react": {
+      "version": "4.7.0",
+      "resolved": "file:../.pnpm/@monaco-editor+react@4.7.0_monaco-editor@0.52.2_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/@monaco-editor/react",
+      "overridden": false
+    },
+    "@next/bundle-analyzer": {
+      "version": "15.5.2",
+      "resolved": "file:../.pnpm/@next+bundle-analyzer@15.5.2/node_modules/@next/bundle-analyzer",
+      "overridden": false
+    },
+    "@playwright/test": {
+      "version": "1.55.0",
+      "resolved": "file:../.pnpm/@playwright+test@1.55.0/node_modules/@playwright/test",
+      "overridden": false
+    },
+    "@radix-ui/react-accordion": {
+      "version": "1.2.2",
+      "resolved": "file:../.pnpm/@radix-ui+react-accordion@1.2.2_@types+react-dom@19.1.9_@types+react@19.1.12__@types+re_937d5bab0ba82b79cb3460df24ebc2cf/node_modules/@radix-ui/react-accordion",
+      "overridden": false
+    },
+    "@radix-ui/react-alert-dialog": {
+      "version": "1.1.4",
+      "resolved": "file:../.pnpm/@radix-ui+react-alert-dialog@1.1.4_@types+react-dom@19.1.9_@types+react@19.1.12__@types_43be8d74a4a77b044831acf2127122f1/node_modules/@radix-ui/react-alert-dialog",
+      "overridden": false
+    },
+    "@radix-ui/react-aspect-ratio": {
+      "version": "1.1.1",
+      "resolved": "file:../.pnpm/@radix-ui+react-aspect-ratio@1.1.1_@types+react-dom@19.1.9_@types+react@19.1.12__@types_ca69e950a4058e3c2225ba0551629255/node_modules/@radix-ui/react-aspect-ratio",
+      "overridden": false
+    },
+    "@radix-ui/react-avatar": {
+      "version": "1.1.2",
+      "resolved": "file:../.pnpm/@radix-ui+react-avatar@1.1.2_@types+react-dom@19.1.9_@types+react@19.1.12__@types+react_db7b24b980989061c06a566d77c302a7/node_modules/@radix-ui/react-avatar",
+      "overridden": false
+    },
+    "@radix-ui/react-checkbox": {
+      "version": "1.3.3",
+      "resolved": "file:../.pnpm/@radix-ui+react-checkbox@1.3.3_@types+react-dom@19.1.9_@types+react@19.1.12__@types+rea_830c079fab8636f69574fb34eb5e88cd/node_modules/@radix-ui/react-checkbox",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: @radix-ui/react-checkbox@1.3.3 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-checkbox"
+      ]
+    },
+    "@radix-ui/react-collapsible": {
+      "version": "1.1.2",
+      "resolved": "file:../.pnpm/@radix-ui+react-collapsible@1.1.2_@types+react-dom@19.1.9_@types+react@19.1.12__@types+_17b449e8b74d99eab8b00a3cc9dbdd77/node_modules/@radix-ui/react-collapsible",
+      "overridden": false
+    },
+    "@radix-ui/react-context-menu": {
+      "version": "2.2.4",
+      "resolved": "file:../.pnpm/@radix-ui+react-context-menu@2.2.4_@types+react-dom@19.1.9_@types+react@19.1.12__@types_f99f4e2cb9789ea02d90c14e023000bb/node_modules/@radix-ui/react-context-menu",
+      "overridden": false
+    },
+    "@radix-ui/react-dialog": {
+      "version": "1.1.15",
+      "resolved": "file:../.pnpm/@radix-ui+react-dialog@1.1.15_@types+react-dom@19.1.9_@types+react@19.1.12__@types+reac_ba9180588748945b46fdfe64a4b72302/node_modules/@radix-ui/react-dialog",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: @radix-ui/react-dialog@1.1.15 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-dialog"
+      ]
+    },
+    "@radix-ui/react-dropdown-menu": {
+      "version": "2.1.4",
+      "resolved": "file:../.pnpm/@radix-ui+react-dropdown-menu@2.1.4_@types+react-dom@19.1.9_@types+react@19.1.12__@type_be2dacd3303a07e1968ab7725ac4851e/node_modules/@radix-ui/react-dropdown-menu",
+      "overridden": false
+    },
+    "@radix-ui/react-hover-card": {
+      "version": "1.1.4",
+      "resolved": "file:../.pnpm/@radix-ui+react-hover-card@1.1.4_@types+react-dom@19.1.9_@types+react@19.1.12__@types+r_c8257c96af98a61496dc6e1b3a8c0aa9/node_modules/@radix-ui/react-hover-card",
+      "overridden": false
+    },
+    "@radix-ui/react-icons": {
+      "version": "1.3.2",
+      "resolved": "file:../.pnpm/@radix-ui+react-icons@1.3.2_react@19.1.1/node_modules/@radix-ui/react-icons",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: @radix-ui/react-icons@1.3.2 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-icons"
+      ]
+    },
+    "@radix-ui/react-label": {
+      "version": "2.1.7",
+      "resolved": "file:../.pnpm/@radix-ui+react-label@2.1.7_@types+react-dom@19.1.9_@types+react@19.1.12__@types+react@_d0e794566b9c0660549b54e794921e40/node_modules/@radix-ui/react-label",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: @radix-ui/react-label@2.1.7 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-label"
+      ]
+    },
+    "@radix-ui/react-menubar": {
+      "version": "1.1.4",
+      "resolved": "file:../.pnpm/@radix-ui+react-menubar@1.1.4_@types+react-dom@19.1.9_@types+react@19.1.12__@types+reac_eb90a423da680d3b743835ca979bedc0/node_modules/@radix-ui/react-menubar",
+      "overridden": false
+    },
+    "@radix-ui/react-navigation-menu": {
+      "version": "1.2.3",
+      "resolved": "file:../.pnpm/@radix-ui+react-navigation-menu@1.2.3_@types+react-dom@19.1.9_@types+react@19.1.12__@ty_3e2c213f9f6c3e8f826a8d246a2ae46d/node_modules/@radix-ui/react-navigation-menu",
+      "overridden": false
+    },
+    "@radix-ui/react-popover": {
+      "version": "1.1.15",
+      "resolved": "file:../.pnpm/@radix-ui+react-popover@1.1.15_@types+react-dom@19.1.9_@types+react@19.1.12__@types+rea_b4a5618e9db942b02d03d724bb7dd029/node_modules/@radix-ui/react-popover",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: @radix-ui/react-popover@1.1.15 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-popover"
+      ]
+    },
+    "@radix-ui/react-progress": {
+      "version": "1.1.1",
+      "resolved": "file:../.pnpm/@radix-ui+react-progress@1.1.1_@types+react-dom@19.1.9_@types+react@19.1.12__@types+rea_b73334f476d5c58818a1b6f58cc50dc7/node_modules/@radix-ui/react-progress",
+      "overridden": false
+    },
+    "@radix-ui/react-radio-group": {
+      "version": "1.3.8",
+      "resolved": "file:../.pnpm/@radix-ui+react-radio-group@1.3.8_@types+react-dom@19.1.9_@types+react@19.1.12__@types+_390e455509ff0904e7bb1409ee544845/node_modules/@radix-ui/react-radio-group",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: @radix-ui/react-radio-group@1.3.8 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-radio-group"
+      ]
+    },
+    "@radix-ui/react-scroll-area": {
+      "version": "1.2.2",
+      "resolved": "file:../.pnpm/@radix-ui+react-scroll-area@1.2.2_@types+react-dom@19.1.9_@types+react@19.1.12__@types+_fcb5c291d9cbfc1442b6445eb8ba900d/node_modules/@radix-ui/react-scroll-area",
+      "overridden": false
+    },
+    "@radix-ui/react-select": {
+      "version": "2.2.6",
+      "resolved": "file:../.pnpm/@radix-ui+react-select@2.2.6_@types+react-dom@19.1.9_@types+react@19.1.12__@types+react_b853c32961e1e186a5cb0e3cfade3419/node_modules/@radix-ui/react-select",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: @radix-ui/react-select@2.2.6 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-select"
+      ]
+    },
+    "@radix-ui/react-separator": {
+      "version": "1.1.1",
+      "resolved": "file:../.pnpm/@radix-ui+react-separator@1.1.1_@types+react-dom@19.1.9_@types+react@19.1.12__@types+re_b2fcaaab402cc0ca02716922e2574f94/node_modules/@radix-ui/react-separator",
+      "overridden": false
+    },
+    "@radix-ui/react-slider": {
+      "version": "1.2.2",
+      "resolved": "file:../.pnpm/@radix-ui+react-slider@1.2.2_@types+react-dom@19.1.9_@types+react@19.1.12__@types+react_326566882dd76d5c278869df9abbb9c1/node_modules/@radix-ui/react-slider",
+      "overridden": false
+    },
+    "@radix-ui/react-slot": {
+      "version": "1.2.3",
+      "resolved": "file:../.pnpm/@radix-ui+react-slot@1.2.3_@types+react@19.1.12_react@19.1.1/node_modules/@radix-ui/react-slot",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: @radix-ui/react-slot@1.2.3 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-slot"
+      ]
+    },
+    "@radix-ui/react-switch": {
+      "version": "1.2.6",
+      "resolved": "file:../.pnpm/@radix-ui+react-switch@1.2.6_@types+react-dom@19.1.9_@types+react@19.1.12__@types+react_e7b18ce6f18dd923b2f8b6684a2d45e3/node_modules/@radix-ui/react-switch",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: @radix-ui/react-switch@1.2.6 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-switch"
+      ]
+    },
+    "@radix-ui/react-tabs": {
+      "version": "1.1.2",
+      "resolved": "file:../.pnpm/@radix-ui+react-tabs@1.1.2_@types+react-dom@19.1.9_@types+react@19.1.12__@types+react@1_2ce8c96fcf44a13aeee7330d02513387/node_modules/@radix-ui/react-tabs",
+      "overridden": false
+    },
+    "@radix-ui/react-toast": {
+      "version": "1.2.4",
+      "resolved": "file:../.pnpm/@radix-ui+react-toast@1.2.4_@types+react-dom@19.1.9_@types+react@19.1.12__@types+react@_019aaa127b2b56e43b85318e4124ef5c/node_modules/@radix-ui/react-toast",
+      "overridden": false
+    },
+    "@radix-ui/react-toggle-group": {
+      "version": "1.1.1",
+      "resolved": "file:../.pnpm/@radix-ui+react-toggle-group@1.1.1_@types+react-dom@19.1.9_@types+react@19.1.12__@types_f7b26e43dd8cc38a487e5e5e017154ba/node_modules/@radix-ui/react-toggle-group",
+      "overridden": false
+    },
+    "@radix-ui/react-toggle": {
+      "version": "1.1.1",
+      "resolved": "file:../.pnpm/@radix-ui+react-toggle@1.1.1_@types+react-dom@19.1.9_@types+react@19.1.12__@types+react_4497389f15ad09d3741cb57c852248a2/node_modules/@radix-ui/react-toggle",
+      "overridden": false
+    },
+    "@radix-ui/react-tooltip": {
+      "version": "1.1.6",
+      "resolved": "file:../.pnpm/@radix-ui+react-tooltip@1.1.6_@types+react-dom@19.1.9_@types+react@19.1.12__@types+reac_1b5f8cebd9e3afaede606e52b2ed207c/node_modules/@radix-ui/react-tooltip",
+      "overridden": false
+    },
+    "@sentry/nextjs": {
+      "version": "9.46.0",
+      "resolved": "file:../.pnpm/@sentry+nextjs@9.46.0_@opentelemetry+context-async-hooks@1.30.1_@opentelemetry+api@1.9._b5bdecf333e747849b4b73c457bdca06/node_modules/@sentry/nextjs",
+      "overridden": false
+    },
+    "@storybook/addon-a11y": {
+      "version": "8.6.14",
+      "resolved": "file:../.pnpm/@storybook+addon-a11y@8.6.14_storybook@8.6.14_prettier@3.6.2_/node_modules/@storybook/addon-a11y",
+      "overridden": false
+    },
+    "@storybook/addon-essentials": {
+      "version": "8.6.14",
+      "resolved": "file:../.pnpm/@storybook+addon-essentials@8.6.14_@types+react@19.1.12_storybook@8.6.14_prettier@3.6.2_/node_modules/@storybook/addon-essentials",
+      "overridden": false
+    },
+    "@storybook/addon-interactions": {
+      "version": "8.6.14",
+      "resolved": "file:../.pnpm/@storybook+addon-interactions@8.6.14_storybook@8.6.14_prettier@3.6.2_/node_modules/@storybook/addon-interactions",
+      "overridden": false
+    },
+    "@storybook/addon-links": {
+      "version": "8.6.14",
+      "resolved": "file:../.pnpm/@storybook+addon-links@8.6.14_react@19.1.1_storybook@8.6.14_prettier@3.6.2_/node_modules/@storybook/addon-links",
+      "overridden": false
+    },
+    "@storybook/addon-onboarding": {
+      "version": "8.6.14",
+      "resolved": "file:../.pnpm/@storybook+addon-onboarding@8.6.14_storybook@8.6.14_prettier@3.6.2_/node_modules/@storybook/addon-onboarding",
+      "overridden": false
+    },
+    "@storybook/addon-viewport": {
+      "version": "8.6.14",
+      "resolved": "file:../.pnpm/@storybook+addon-viewport@8.6.14_storybook@8.6.14_prettier@3.6.2_/node_modules/@storybook/addon-viewport",
+      "overridden": false
+    },
+    "@storybook/blocks": {
+      "version": "8.6.14",
+      "resolved": "file:../.pnpm/@storybook+blocks@8.6.14_react-dom@19.1.1_react@19.1.1__react@19.1.1_storybook@8.6.14_prettier@3.6.2_/node_modules/@storybook/blocks",
+      "overridden": false
+    },
+    "@storybook/nextjs": {
+      "version": "8.6.14",
+      "resolved": "file:../.pnpm/@storybook+nextjs@8.6.14_@swc+core@1.13.5_esbuild@0.25.9_next@15.4.7_@babel+core@7.28.3_4fcc82c289798921f71d60fc34faf8cf/node_modules/@storybook/nextjs",
+      "overridden": false
+    },
+    "@storybook/react": {
+      "version": "8.6.14",
+      "resolved": "file:../.pnpm/@storybook+react@8.6.14_@storybook+test@8.6.14_storybook@8.6.14_prettier@3.6.2___react-_2b260c3a79daa2f7a2e39c7ae80e6d39/node_modules/@storybook/react",
+      "overridden": false
+    },
+    "@storybook/test-runner": {
+      "version": "0.22.1",
+      "resolved": "file:../.pnpm/@storybook+test-runner@0.22.1_@types+node@22.18.0_storybook@8.6.14_prettier@3.6.2_/node_modules/@storybook/test-runner",
+      "overridden": false
+    },
+    "@storybook/test": {
+      "version": "8.6.14",
+      "resolved": "file:../.pnpm/@storybook+test@8.6.14_storybook@8.6.14_prettier@3.6.2_/node_modules/@storybook/test",
+      "overridden": false
+    },
+    "@stripe/react-stripe-js": {
+      "version": "3.9.2",
+      "resolved": "file:../.pnpm/@stripe+react-stripe-js@3.9.2_@stripe+stripe-js@7.9.0_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/@stripe/react-stripe-js",
+      "overridden": false
+    },
+    "@stripe/stripe-js": {
+      "version": "7.9.0",
+      "resolved": "file:../.pnpm/@stripe+stripe-js@7.9.0/node_modules/@stripe/stripe-js",
+      "overridden": false
+    },
+    "@tailwindcss/typography": {
+      "version": "0.5.16",
+      "resolved": "file:../.pnpm/@tailwindcss+typography@0.5.16_tailwindcss@3.4.17/node_modules/@tailwindcss/typography",
+      "overridden": false
+    },
+    "@tanstack/query-sync-storage-persister": {
+      "version": "5.85.5",
+      "resolved": "file:../.pnpm/@tanstack+query-sync-storage-persister@5.85.5/node_modules/@tanstack/query-sync-storage-persister",
+      "overridden": false
+    },
+    "@tanstack/react-query-devtools": {
+      "version": "5.85.5",
+      "resolved": "file:../.pnpm/@tanstack+react-query-devtools@5.85.5_@tanstack+react-query@5.85.5_react@19.1.1__react@19.1.1/node_modules/@tanstack/react-query-devtools",
+      "overridden": false
+    },
+    "@tanstack/react-query": {
+      "version": "5.85.5",
+      "resolved": "file:../.pnpm/@tanstack+react-query@5.85.5_react@19.1.1/node_modules/@tanstack/react-query",
+      "overridden": false
+    },
+    "@tanstack/react-table": {
+      "version": "8.21.3",
+      "resolved": "file:../.pnpm/@tanstack+react-table@8.21.3_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/@tanstack/react-table",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: @tanstack/react-table@8.21.3 /home/omar/Documents/ruleIQ/frontend/node_modules/@tanstack/react-table"
+      ]
+    },
+    "@tanstack/react-virtual": {
+      "version": "3.13.12",
+      "resolved": "file:../.pnpm/@tanstack+react-virtual@3.13.12_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/@tanstack/react-virtual",
+      "overridden": false
+    },
+    "@testing-library/jest-dom": {
+      "version": "6.8.0",
+      "resolved": "file:../.pnpm/@testing-library+jest-dom@6.8.0/node_modules/@testing-library/jest-dom",
+      "overridden": false
+    },
+    "@testing-library/react": {
+      "version": "16.3.0",
+      "resolved": "file:../.pnpm/@testing-library+react@16.3.0_@testing-library+dom@10.4.0_@types+react-dom@19.1.9_@type_cd6ee8097f1223ad987b8abf43824d55/node_modules/@testing-library/react",
+      "overridden": false
+    },
+    "@testing-library/user-event": {
+      "version": "14.6.1",
+      "resolved": "file:../.pnpm/@testing-library+user-event@14.6.1_@testing-library+dom@10.4.0/node_modules/@testing-library/user-event",
+      "overridden": false
+    },
+    "@tiptap/core": {
+      "version": "3.3.0",
+      "resolved": "file:../.pnpm/@tiptap+core@3.3.0_@tiptap+pm@3.3.0/node_modules/@tiptap/core",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: @tiptap/core@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/core"
+      ]
+    },
+    "@tiptap/extension-text-align": {
+      "version": "3.3.0",
+      "resolved": "file:../.pnpm/@tiptap+extension-text-align@3.3.0_@tiptap+core@3.3.0_@tiptap+pm@3.3.0_/node_modules/@tiptap/extension-text-align",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: @tiptap/extension-text-align@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/extension-text-align"
+      ]
+    },
+    "@tiptap/extension-underline": {
+      "version": "3.3.0",
+      "resolved": "file:../.pnpm/@tiptap+extension-underline@3.3.0_@tiptap+core@3.3.0_@tiptap+pm@3.3.0_/node_modules/@tiptap/extension-underline",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: @tiptap/extension-underline@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/extension-underline"
+      ]
+    },
+    "@tiptap/pm": {
+      "version": "3.3.0",
+      "resolved": "file:../.pnpm/@tiptap+pm@3.3.0/node_modules/@tiptap/pm",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: @tiptap/pm@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/pm"
+      ]
+    },
+    "@tiptap/react": {
+      "version": "3.3.0",
+      "resolved": "file:../.pnpm/@tiptap+react@3.3.0_@floating-ui+dom@1.7.4_@tiptap+core@3.3.0_@tiptap+pm@3.3.0__@tiptap_5dcb839651f3ca29ce56bbb628960f1a/node_modules/@tiptap/react",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: @tiptap/react@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/react"
+      ]
+    },
+    "@tiptap/starter-kit": {
+      "version": "3.3.0",
+      "resolved": "file:../.pnpm/@tiptap+starter-kit@3.3.0/node_modules/@tiptap/starter-kit",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: @tiptap/starter-kit@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/starter-kit"
+      ]
+    },
+    "@types/jest": {
+      "version": "30.0.0",
+      "resolved": "file:../.pnpm/@types+jest@30.0.0/node_modules/@types/jest",
+      "overridden": false
+    },
+    "@types/jspdf": {
+      "version": "2.0.0",
+      "resolved": "file:../.pnpm/@types+jspdf@2.0.0/node_modules/@types/jspdf",
+      "overridden": false
+    },
+    "@types/node": {
+      "version": "22.18.0",
+      "resolved": "file:../.pnpm/@types+node@22.18.0/node_modules/@types/node",
+      "overridden": false
+    },
+    "@types/react-dom": {
+      "version": "19.1.9",
+      "resolved": "file:../.pnpm/@types+react-dom@19.1.9_@types+react@19.1.12/node_modules/@types/react-dom",
+      "overridden": false
+    },
+    "@types/react-grid-layout": {
+      "version": "1.3.5",
+      "resolved": "file:../.pnpm/@types+react-grid-layout@1.3.5/node_modules/@types/react-grid-layout",
+      "overridden": false
+    },
+    "@types/react-router-dom": {
+      "version": "5.3.3",
+      "resolved": "file:../.pnpm/@types+react-router-dom@5.3.3/node_modules/@types/react-router-dom",
+      "overridden": false
+    },
+    "@types/react": {
+      "version": "19.1.12",
+      "resolved": "file:../.pnpm/@types+react@19.1.12/node_modules/@types/react",
+      "overridden": false
+    },
+    "@typescript-eslint/eslint-plugin": {
+      "version": "8.41.0",
+      "resolved": "file:../.pnpm/@typescript-eslint+eslint-plugin@8.41.0_@typescript-eslint+parser@8.41.0_eslint@9.34.0__3ced3ca3eda709623529954ca409bf88/node_modules/@typescript-eslint/eslint-plugin",
+      "overridden": false
+    },
+    "@typescript-eslint/parser": {
+      "version": "8.41.0",
+      "resolved": "file:../.pnpm/@typescript-eslint+parser@8.41.0_eslint@9.34.0_jiti@2.5.1__typescript@5.9.2/node_modules/@typescript-eslint/parser",
+      "overridden": false
+    },
+    "@vercel/analytics": {
+      "version": "1.5.0",
+      "resolved": "file:../.pnpm/@vercel+analytics@1.5.0_next@15.4.7_@babel+core@7.28.3_@opentelemetry+api@1.9.0_@playwr_523f824297f58cdc591e2e1d9d2bf80e/node_modules/@vercel/analytics",
+      "overridden": false
+    },
+    "@vitejs/plugin-react": {
+      "version": "4.7.0",
+      "resolved": "file:../.pnpm/@vitejs+plugin-react@4.7.0_vite@7.1.3_@types+node@22.18.0_jiti@2.5.1_terser@5.43.1_yaml@2.8.1_/node_modules/@vitejs/plugin-react",
+      "overridden": false
+    },
+    "@vitest/coverage-v8": {
+      "version": "3.2.4",
+      "resolved": "file:../.pnpm/@vitest+coverage-v8@3.2.4_vitest@3.2.4/node_modules/@vitest/coverage-v8",
+      "overridden": false
+    },
+    "@vitest/ui": {
+      "version": "3.2.4",
+      "resolved": "file:../.pnpm/@vitest+ui@3.2.4_vitest@3.2.4/node_modules/@vitest/ui",
+      "overridden": false
+    },
+    "autoprefixer": {
+      "version": "10.4.21",
+      "resolved": "file:.pnpm/autoprefixer@10.4.21_postcss@8.5.6/node_modules/autoprefixer",
+      "overridden": false
+    },
+    "axe-core": {
+      "version": "4.10.3",
+      "resolved": "file:.pnpm/axe-core@4.10.3/node_modules/axe-core",
+      "overridden": false
+    },
+    "axe-playwright": {
+      "version": "2.1.0",
+      "resolved": "file:.pnpm/axe-playwright@2.1.0_playwright@1.55.0/node_modules/axe-playwright",
+      "overridden": false
+    },
+    "axios": {
+      "version": "1.11.0",
+      "resolved": "file:.pnpm/axios@1.11.0/node_modules/axios",
+      "overridden": false
+    },
+    "chromatic": {
+      "version": "11.29.0",
+      "resolved": "file:.pnpm/chromatic@11.29.0/node_modules/chromatic",
+      "overridden": false
+    },
+    "class-variance-authority": {
+      "version": "0.7.1",
+      "resolved": "file:.pnpm/class-variance-authority@0.7.1/node_modules/class-variance-authority",
+      "overridden": false
+    },
+    "clsx": {
+      "version": "2.1.1",
+      "resolved": "file:.pnpm/clsx@2.1.1/node_modules/clsx",
+      "overridden": false
+    },
+    "cmdk": {
+      "version": "1.0.4",
+      "resolved": "file:.pnpm/cmdk@1.0.4_@types+react-dom@19.1.9_@types+react@19.1.12__@types+react@19.1.12_react-dom_1288b4b4d8a7b9b837a19f1624daa162/node_modules/cmdk",
+      "overridden": false
+    },
+    "csrf": {
+      "version": "3.1.0",
+      "resolved": "file:.pnpm/csrf@3.1.0/node_modules/csrf",
+      "overridden": false
+    },
+    "date-fns": {
+      "version": "4.1.0",
+      "resolved": "file:.pnpm/date-fns@4.1.0/node_modules/date-fns",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: date-fns@4.1.0 /home/omar/Documents/ruleIQ/frontend/node_modules/date-fns"
+      ]
+    },
+    "embla-carousel-react": {
+      "version": "8.5.1",
+      "resolved": "file:.pnpm/embla-carousel-react@8.5.1_react@19.1.1/node_modules/embla-carousel-react",
+      "overridden": false
+    },
+    "eslint-config-next": {
+      "version": "15.5.2",
+      "resolved": "file:.pnpm/eslint-config-next@15.5.2_eslint@9.34.0_jiti@2.5.1__typescript@5.9.2/node_modules/eslint-config-next",
+      "overridden": false
+    },
+    "eslint-config-prettier": {
+      "version": "10.1.8",
+      "resolved": "file:.pnpm/eslint-config-prettier@10.1.8_eslint@9.34.0_jiti@2.5.1_/node_modules/eslint-config-prettier",
+      "overridden": false
+    },
+    "eslint-plugin-import": {
+      "version": "2.32.0",
+      "resolved": "file:.pnpm/eslint-plugin-import@2.32.0_@typescript-eslint+parser@8.41.0_eslint@9.34.0_jiti@2.5.1___cb91133a18510fd4ba585a6b7d579418/node_modules/eslint-plugin-import",
+      "overridden": false
+    },
+    "eslint-plugin-jsx-a11y": {
+      "version": "6.10.2",
+      "resolved": "file:.pnpm/eslint-plugin-jsx-a11y@6.10.2_eslint@9.34.0_jiti@2.5.1_/node_modules/eslint-plugin-jsx-a11y",
+      "overridden": false
+    },
+    "eslint-plugin-react-hooks": {
+      "version": "5.2.0",
+      "resolved": "file:.pnpm/eslint-plugin-react-hooks@5.2.0_eslint@9.34.0_jiti@2.5.1_/node_modules/eslint-plugin-react-hooks",
+      "overridden": false
+    },
+    "eslint-plugin-storybook": {
+      "version": "0.11.6",
+      "resolved": "file:.pnpm/eslint-plugin-storybook@0.11.6_eslint@9.34.0_jiti@2.5.1__typescript@5.9.2/node_modules/eslint-plugin-storybook",
+      "overridden": false
+    },
+    "eslint": {
+      "version": "9.34.0",
+      "resolved": "file:.pnpm/eslint@9.34.0_jiti@2.5.1/node_modules/eslint",
+      "overridden": false
+    },
+    "framer-motion": {
+      "version": "12.23.12",
+      "resolved": "file:.pnpm/framer-motion@12.23.12_@emotion+is-prop-valid@1.3.1_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/framer-motion",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: framer-motion@12.23.12 /home/omar/Documents/ruleIQ/frontend/node_modules/framer-motion"
+      ]
+    },
+    "husky": {
+      "version": "9.1.7",
+      "resolved": "file:.pnpm/husky@9.1.7/node_modules/husky",
+      "overridden": false
+    },
+    "import-in-the-middle": {
+      "version": "1.14.2",
+      "resolved": "file:.pnpm/import-in-the-middle@1.14.2/node_modules/import-in-the-middle",
+      "overridden": false
+    },
+    "input-otp": {
+      "version": "1.4.1",
+      "resolved": "file:.pnpm/input-otp@1.4.1_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/input-otp",
+      "overridden": false
+    },
+    "isomorphic-dompurify": {
+      "version": "2.26.0",
+      "resolved": "file:.pnpm/isomorphic-dompurify@2.26.0/node_modules/isomorphic-dompurify",
+      "overridden": false
+    },
+    "jest-axe": {
+      "version": "10.0.0",
+      "resolved": "file:.pnpm/jest-axe@10.0.0/node_modules/jest-axe",
+      "overridden": false
+    },
+    "jest-environment-jsdom": {
+      "version": "30.1.1",
+      "resolved": "file:.pnpm/jest-environment-jsdom@30.1.1/node_modules/jest-environment-jsdom",
+      "overridden": false
+    },
+    "jest": {
+      "version": "30.1.1",
+      "resolved": "file:.pnpm/jest@30.1.1_@types+node@22.18.0_esbuild-register@3.6.0_esbuild@0.25.9_/node_modules/jest",
+      "overridden": false
+    },
+    "jose": {
+      "version": "6.1.0",
+      "resolved": "file:.pnpm/jose@6.1.0/node_modules/jose",
+      "overridden": false
+    },
+    "jsdom": {
+      "version": "26.1.0",
+      "resolved": "file:.pnpm/jsdom@26.1.0/node_modules/jsdom",
+      "overridden": false
+    },
+    "jspdf-autotable": {
+      "version": "5.0.2",
+      "resolved": "file:.pnpm/jspdf-autotable@5.0.2_jspdf@3.0.2/node_modules/jspdf-autotable",
+      "overridden": false
+    },
+    "jspdf": {
+      "version": "3.0.2",
+      "resolved": "file:.pnpm/jspdf@3.0.2/node_modules/jspdf",
+      "overridden": false
+    },
+    "lint-staged": {
+      "version": "16.1.5",
+      "resolved": "file:.pnpm/lint-staged@16.1.5/node_modules/lint-staged",
+      "overridden": false
+    },
+    "lucide-react": {
+      "version": "0.454.0",
+      "resolved": "file:.pnpm/lucide-react@0.454.0_react@19.1.1/node_modules/lucide-react",
+      "overridden": false
+    },
+    "motion": {
+      "version": "12.23.12",
+      "resolved": "file:.pnpm/motion@12.23.12_@emotion+is-prop-valid@1.3.1_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/motion",
+      "overridden": false
+    },
+    "msw": {
+      "version": "2.10.5",
+      "resolved": "file:.pnpm/msw@2.10.5_@types+node@22.18.0_typescript@5.9.2/node_modules/msw",
+      "overridden": false
+    },
+    "next-themes": {
+      "version": "0.4.6",
+      "resolved": "file:.pnpm/next-themes@0.4.6_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/next-themes",
+      "overridden": false
+    },
+    "next": {
+      "version": "15.4.7",
+      "resolved": "file:.pnpm/next@15.4.7_@babel+core@7.28.3_@opentelemetry+api@1.9.0_@playwright+test@1.55.0_react-d_47ff3813d790566df254a2163550c2d5/node_modules/next",
+      "overridden": false
+    },
+    "playwright": {
+      "version": "1.55.0",
+      "resolved": "file:.pnpm/playwright@1.55.0/node_modules/playwright",
+      "overridden": false
+    },
+    "postcss": {
+      "version": "8.5.6",
+      "resolved": "file:.pnpm/postcss@8.5.6/node_modules/postcss",
+      "overridden": false
+    },
+    "prettier-plugin-tailwindcss": {
+      "version": "0.6.14",
+      "resolved": "file:.pnpm/prettier-plugin-tailwindcss@0.6.14_prettier@3.6.2/node_modules/prettier-plugin-tailwindcss",
+      "overridden": false
+    },
+    "prettier": {
+      "version": "3.6.2",
+      "resolved": "file:.pnpm/prettier@3.6.2/node_modules/prettier",
+      "overridden": false
+    },
+    "react-aria-live": {
+      "version": "2.0.5",
+      "resolved": "file:.pnpm/react-aria-live@2.0.5_react@19.1.1/node_modules/react-aria-live",
+      "overridden": false
+    },
+    "react-day-picker": {
+      "version": "9.9.0",
+      "resolved": "file:.pnpm/react-day-picker@9.9.0_react@19.1.1/node_modules/react-day-picker",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: react-day-picker@9.9.0 /home/omar/Documents/ruleIQ/frontend/node_modules/react-day-picker"
+      ]
+    },
+    "react-dom": {
+      "version": "19.1.1",
+      "resolved": "file:.pnpm/react-dom@19.1.1_react@19.1.1/node_modules/react-dom",
+      "overridden": false
+    },
+    "react-dropzone": {
+      "version": "14.3.8",
+      "resolved": "file:.pnpm/react-dropzone@14.3.8_react@19.1.1/node_modules/react-dropzone",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: react-dropzone@14.3.8 /home/omar/Documents/ruleIQ/frontend/node_modules/react-dropzone"
+      ]
+    },
+    "react-error-boundary": {
+      "version": "6.0.0",
+      "resolved": "file:.pnpm/react-error-boundary@6.0.0_react@19.1.1/node_modules/react-error-boundary",
+      "overridden": false
+    },
+    "react-focus-lock": {
+      "version": "2.13.6",
+      "resolved": "file:.pnpm/react-focus-lock@2.13.6_@types+react@19.1.12_react@19.1.1/node_modules/react-focus-lock",
+      "overridden": false
+    },
+    "react-grid-layout": {
+      "version": "1.5.2",
+      "resolved": "file:.pnpm/react-grid-layout@1.5.2_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/react-grid-layout",
+      "overridden": false
+    },
+    "react-hook-form": {
+      "version": "7.62.0",
+      "resolved": "file:.pnpm/react-hook-form@7.62.0_react@19.1.1/node_modules/react-hook-form",
+      "overridden": false
+    },
+    "react-intersection-observer": {
+      "version": "9.16.0",
+      "resolved": "file:.pnpm/react-intersection-observer@9.16.0_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/react-intersection-observer",
+      "overridden": false
+    },
+    "react-resizable-panels": {
+      "version": "2.1.9",
+      "resolved": "file:.pnpm/react-resizable-panels@2.1.9_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/react-resizable-panels",
+      "overridden": false
+    },
+    "react": {
+      "version": "19.1.1",
+      "resolved": "file:.pnpm/react@19.1.1/node_modules/react",
+      "overridden": false
+    },
+    "recharts": {
+      "version": "2.15.0",
+      "resolved": "file:.pnpm/recharts@2.15.0_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/recharts",
+      "overridden": false
+    },
+    "require-in-the-middle": {
+      "version": "7.5.2",
+      "resolved": "file:.pnpm/require-in-the-middle@7.5.2/node_modules/require-in-the-middle",
+      "overridden": false
+    },
+    "sharp": {
+      "version": "0.34.3",
+      "resolved": "file:.pnpm/sharp@0.34.3/node_modules/sharp",
+      "overridden": false
+    },
+    "simplex-noise": {
+      "version": "4.0.3",
+      "resolved": "file:.pnpm/simplex-noise@4.0.3/node_modules/simplex-noise",
+      "overridden": false,
+      "invalid": "\"latest\" from the root project",
+      "problems": [
+        "invalid: simplex-noise@4.0.3 /home/omar/Documents/ruleIQ/frontend/node_modules/simplex-noise"
+      ]
+    },
+    "sonner": {
+      "version": "1.7.4",
+      "resolved": "file:.pnpm/sonner@1.7.4_react-dom@19.1.1_react@19.1.1__react@19.1.1/node_modules/sonner",
+      "overridden": false
+    },
+    "storybook": {
+      "version": "8.6.14",
+      "resolved": "file:.pnpm/storybook@8.6.14_prettier@3.6.2/node_modules/storybook",
+      "overridden": false
+    },
+    "tailwind-merge": {
+      "version": "2.6.0",
+      "resolved": "file:.pnpm/tailwind-merge@2.6.0/node_modules/tailwind-merge",
+      "overridden": false
+    },
+    "tailwindcss-animate": {
+      "version": "1.0.7",
+      "resolved": "file:.pnpm/tailwindcss-animate@1.0.7_tailwindcss@3.4.17/node_modules/tailwindcss-animate",
+      "overridden": false
+    },
+    "tailwindcss": {
+      "version": "3.4.17",
+      "resolved": "file:.pnpm/tailwindcss@3.4.17/node_modules/tailwindcss",
+      "overridden": false
+    },
+    "typescript": {
+      "version": "5.9.2",
+      "resolved": "file:.pnpm/typescript@5.9.2/node_modules/typescript",
+      "overridden": false
+    },
+    "vaul": {
+      "version": "0.9.9",
+      "resolved": "file:.pnpm/vaul@0.9.9_@types+react-dom@19.1.9_@types+react@19.1.12__@types+react@19.1.12_react-dom_4638c2bfb117689275e8430dd95e5081/node_modules/vaul",
+      "overridden": false
+    },
+    "vitest": {
+      "version": "3.2.4",
+      "resolved": "file:.pnpm/vitest@3.2.4_@types+node@22.18.0_@vitest+ui@3.2.4_jiti@2.5.1_jsdom@26.1.0_msw@2.10.5_@t_859daced099342642bbdadc346a5035a/node_modules/vitest",
+      "overridden": false
+    },
+    "web-vitals": {
+      "version": "5.1.0",
+      "resolved": "file:.pnpm/web-vitals@5.1.0/node_modules/web-vitals",
+      "overridden": false
+    },
+    "webpack-bundle-analyzer": {
+      "version": "4.10.2",
+      "resolved": "file:.pnpm/webpack-bundle-analyzer@4.10.2/node_modules/webpack-bundle-analyzer",
+      "overridden": false
+    },
+    "zod": {
+      "version": "3.25.76",
+      "resolved": "file:.pnpm/zod@3.25.76/node_modules/zod",
+      "overridden": false
+    },
+    "zustand": {
+      "version": "5.0.8",
+      "resolved": "file:.pnpm/zustand@5.0.8_@types+react@19.1.12_react@19.1.1_use-sync-external-store@1.5.0_react@19.1.1_/node_modules/zustand",
+      "overridden": false
+    }
+  },
+  "error": {
+    "code": "ELSPROBLEMS",
+    "summary": "invalid: @emotion/is-prop-valid@1.3.1 /home/omar/Documents/ruleIQ/frontend/node_modules/@emotion/is-prop-valid\ninvalid: @radix-ui/react-checkbox@1.3.3 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-checkbox\ninvalid: @radix-ui/react-dialog@1.1.15 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-dialog\ninvalid: @radix-ui/react-icons@1.3.2 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-icons\ninvalid: @radix-ui/react-label@2.1.7 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-label\ninvalid: @radix-ui/react-popover@1.1.15 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-popover\ninvalid: @radix-ui/react-radio-group@1.3.8 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-radio-group\ninvalid: @radix-ui/react-select@2.2.6 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-select\ninvalid: @radix-ui/react-slot@1.2.3 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-slot\ninvalid: @radix-ui/react-switch@1.2.6 /home/omar/Documents/ruleIQ/frontend/node_modules/@radix-ui/react-switch\ninvalid: @tanstack/react-table@8.21.3 /home/omar/Documents/ruleIQ/frontend/node_modules/@tanstack/react-table\ninvalid: @tiptap/core@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/core\ninvalid: @tiptap/extension-text-align@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/extension-text-align\ninvalid: @tiptap/extension-underline@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/extension-underline\ninvalid: @tiptap/pm@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/pm\ninvalid: @tiptap/react@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/react\ninvalid: @tiptap/starter-kit@3.3.0 /home/omar/Documents/ruleIQ/frontend/node_modules/@tiptap/starter-kit\ninvalid: date-fns@4.1.0 /home/omar/Documents/ruleIQ/frontend/node_modules/date-fns\ninvalid: framer-motion@12.23.12 /home/omar/Documents/ruleIQ/frontend/node_modules/framer-motion\ninvalid: react-day-picker@9.9.0 /home/omar/Documents/ruleIQ/frontend/node_modules/react-day-picker\ninvalid: react-dropzone@14.3.8 /home/omar/Documents/ruleIQ/frontend/node_modules/react-dropzone\ninvalid: simplex-noise@4.0.3 /home/omar/Documents/ruleIQ/frontend/node_modules/simplex-noise",
+    "detail": ""
+  }
+}

@@ -1,0 +1,41 @@
+
+´ª"
+    Enhanced decorator for adding LangSmith tracing to async functions.
+
+    Args:
+        operation: Name of the operation being traced
+        include_input: Whether to include function inputs in metadata
+        include_output: Whether to include function outputs in metadata
+        custom_name: Optional custom name for the run (overrides operation)
+
+    Returns:
+        Decorated function with LangSmith tracing
+    "str	operation
+– –()include_input
+–+ –(Cinclude_output
+— —(custom_name
+— —(>"Ù#
+!
+
+Î Î("#unknown-value#*
+(
+
+¥ Î(%closure"#new-object#-
++
+
+¥ Î("#set-field# operation:1
+/
+
+¥ Î("#set-field# include_input:/
+-
+
+¥ Î(	"#set-field# custom_name:2
+0
+
+¥ Î(
+"#set-field# include_output:-
++
+
+¥ Î("?python-partial-apply?:
+
+Î Î(*6/home/omar/Documents/ruleIQ/config/langsmith_config.py

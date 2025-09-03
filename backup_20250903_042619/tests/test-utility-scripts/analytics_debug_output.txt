@@ -1,0 +1,6 @@
+============================= test session starts ==============================
+collecting ... collected 1 item
+
+tests/integration/api/test_analytics_endpoints.py::TestAnalyticsEndpoints::test_analytics_dashboard_success FAILED [100%]
+
+============================== 1 failed in 4.85s ===============================

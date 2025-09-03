@@ -1,0 +1,232 @@
+
+Tscripts.database-performance-monitor.DatabasePerformanceMonitor.get_database_metricsM
+C/home/omar/Documents/ruleIQ/scripts/database-performance-monitor.py' '("2*«
+2( ((,
+) )(
+%10"dictB
+@
+) )(	
+metrics"__id*#
+
+__unknown_file (
+
+%10
+* I(
+%11"dictÊ
+Ç
+* .(
+%12"__mapSet*#
+
+__unknown_file (
+
+%11*-
+
+__unknown_file (
+database_size*Õ
+
+__unknown_file (¸µ
+²
+                SELECT pg_database_size(current_database()) as size_bytes,
+                       pg_size_pretty(pg_database_size(current_database())) as size_human
+            ‰
+†
+/ 7(
+%13"__mapSet*#
+
+__unknown_file (
+
+%11*+
+
+__unknown_file (
+table_sizes*–
+
+__unknown_file (ùö
+ó
+                SELECT schemaname, tablename,
+                       pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) as size
+                FROM pg_tables
+                WHERE schemaname NOT IN ('information_schema', 'pg_catalog')
+                ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC
+                LIMIT 10
+            à
+Ý
+8 ?(
+%14"__mapSet*#
+
+__unknown_file (
+
+%11*0
+
+__unknown_file (
+connection_stats*è
+
+__unknown_file (ËÈ
+Å
+                SELECT count(*) as total_connections,
+                       count(*) FILTER (WHERE state = 'active') as active_connections,
+                       count(*) FILTER (WHERE state = 'idle') as idle_connections
+                FROM pg_stat_activity
+                WHERE datname = current_database()
+            Ø
+Õ
+@ H(
+%15"__mapSet*#
+
+__unknown_file (
+
+%11*/
+
+__unknown_file (
+cache_hit_ratio*á
+
+__unknown_file (ÄÁ
+¾
+                SELECT
+                    CASE
+                        WHEN sum(heap_blks_hit) + sum(heap_blks_read) = 0 THEN 0
+                        ELSE sum(heap_blks_hit)::float / (sum(heap_blks_hit) + sum(heap_blks_read))
+                    END as ratio
+                FROM pg_statio_user_tables
+            B
+@
+* I(	
+queries"__id*#
+
+__unknown_file (
+
+%11}{
+J J(
+%16*_
+
+__unknown_file (CA
+?scripts.database-performance-monitor.DatabasePerformanceMonitor2connect?
+=
+J J(#
+conn"__id*#
+
+__unknown_file (
+
+%16*
+4
+10*E
+3!
+database-performance-monitor.py"
+W W(
+implicit return*&
+4U U("
+U U(
+	
+metrics*Â
+6N N(-jh
+N N(-
+%5*&
+
+__unknown_file (
+
+
+cursor*%
+
+__unknown_file (	
+
+query2executeDB
+O! O(2
+%6*&
+
+__unknown_file (
+
+
+cursor2fetchall@
+>
+O O(2
+result"__id*"
+
+__unknown_file (
+
+%6°­
+P P(5
+%7"dict.__setitem__*'
+
+__unknown_file (
+	
+metrics*+
+
+__unknown_file (
+
+metric_name*&
+
+__unknown_file (
+
+
+result2__setitem__*
+3
+4
+6
+7*¼
+7R S(,u
+s
+R% S(+
+%1"__concat*'
+R% R(>
+Error collecting %s: %s*
+S S('
+
+metric_name*
+S) S(*
+
+eec
+R S(,
+%2*&
+
+__unknown_file (
+
+
+logger*"
+
+__unknown_file (
+
+%12error
+T/ T(1
+%3"list¬©
+T T(1
+%4"dict.__setitem__*'
+
+__unknown_file (
+	
+metrics*+
+
+__unknown_file (
+
+metric_name*"
+
+__unknown_file (
+
+%32__setitem__*
+4
+6*e
+9L* L(9NL
+L* L(9
+%8"
+dict.items*'
+
+__unknown_file (
+	
+queries2items*
+4
+6*š
+10K K((@>
+K K(
+%9*$
+
+__unknown_file (
+
+conn2cursor@
+>
+K K((
+cursor"__id*"
+
+__unknown_file (
+
+%9*
+4
+9BCA
+?scripts.database-performance-monitor.DatabasePerformanceMonitorH

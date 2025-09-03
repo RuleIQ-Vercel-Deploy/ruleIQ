@@ -1,0 +1,76 @@
+
+Iservices.reporting.template_manager.TemplateManager._build_critical_itemsN
+B/home/omar/Documents/ruleIQ/services/reporting/template_manager.pyî î("2*Ü
+2
+ï ï(*
+
+ð ô(	
+%1"dictš
+—
+
+ñ ñ(%
+%2"__mapSet*"
+
+__unknown_file (
+
+%1*%
+
+__unknown_file (	
+title*.
+
+__unknown_file (
+Critical Items±
+®
+
+ò ò(<
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*'
+
+__unknown_file (	
+content*C
+
+__unknown_file ('%
+#Items requiring immediate attention
+
+ó6 ó(8
+%4"list›˜
+
+ó ó(9
+%5*+
+
+__unknown_file (
+
+report_data*.
+
+__unknown_file (
+critical_items*"
+
+__unknown_file (
+
+%42get
+Š
+
+ó ó(9
+%6"__mapSet*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+data*"
+
+__unknown_file (
+
+%5"
+
+ð ô(	
+
+%1:
+
+î$ î(?
+report_dataB75
+3services.reporting.template_manager.TemplateManagerH

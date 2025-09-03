@@ -1,0 +1,65 @@
+
+©
+Ÿ"
+            MATCH (domain:ComplianceDomain)-[:GOVERNS]->(reg:Regulation)
+                  -[:REQUIRES]->(req:Requirement)
+            OPTIONAL MATCH (req)<-[:IMPLEMENTS]-(ctrl:Control)
+            RETURN domain.name AS domain,
+                   reg.name AS regulation,
+                   COUNT(req) AS total_requirements,
+                   COUNT(ctrl) AS implemented_controls,
+                   ROUND(100.0 * COUNT(ctrl) / COUNT(req), 2) AS coverage_percentage
+            ORDER BY domain.priority, coverage_percentage DESC
+            "str
+ÿõ"
+            MATCH (domain:ComplianceDomain {name: $domain_name})-[:GOVERNS]->(reg:Regulation)
+                  -[:REQUIRES]->(req:Requirement)
+            OPTIONAL MATCH (req)<-[:IMPLEMENTS]-(ctrl:Control)
+            RETURN domain.name AS domain,
+                   reg.name AS regulation,
+                   COUNT(req) AS total_requirements,
+                   COUNT(ctrl) AS implemented_controls,
+                   ROUND(100.0 * COUNT(ctrl) / COUNT(req), 2) AS coverage_percentage
+            "str
+"domain_name"str
+8/"Get compliance coverage analysis for a domain"str
+"coverage_analysis"strself
+£& £(*domain_name
+£, £(K"[+
+)
+
+¦ ¦("
+__bool__*:BboolH,"*
+
+¦ ¦( *
+¦ ¦(
+2
+² ²("†(
+&
+§ §(query"#id#:Bstr.
+,
+
+± ±(1params"#new-object#Bdict"
+ 
+
+± ±(0	"	#map-set#:"b(
+&
+³ ³(·query"#id#:
+Bstr.
+,
+
+¾ ¾(params"#new-object#Bdict"³#
+!
+
+¿ ¿(9"#unknown-value#,
+*
+
+¿ ¿(9results"#unknown-value#&
+$
+
+À À(-"#new-object#Bdict"
+ 
+
+À À(,"	#map-set#:
+
+À À(-*A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py

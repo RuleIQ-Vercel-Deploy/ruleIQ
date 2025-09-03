@@ -1,0 +1,5 @@
+
+("Generate cache key for token."str
+*!"{BLACKLIST_PREFIX}:{token_hash}"strselfP P( 
+token_hashP" P(1"
+R R(1*?/home/omar/Documents/ruleIQ/api/dependencies/token_blacklist.py
