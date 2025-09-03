@@ -17,7 +17,6 @@ from neo4j import AsyncGraphDatabase
 import numpy as np
 logger = logging.getLogger(__name__)
 
-
 class ResearchType(Enum):
     """Types of compliance research"""
     REGULATORY_UPDATE = 'regulatory_update'
@@ -28,7 +27,6 @@ class ResearchType(Enum):
     CROSS_REGULATION = 'cross_regulation'
     ENFORCEMENT_TRENDS = 'enforcement_trends'
     BEST_PRACTICES = 'best_practices'
-
 
 @dataclass
 class ResearchQuery:
@@ -41,7 +39,6 @@ class ResearchQuery:
     max_results: int = 10
     include_reasoning: bool = True
 
-
 @dataclass
 class ResearchResult:
     """Structured research result"""
@@ -52,7 +49,6 @@ class ResearchResult:
     sources: List[str]
     reasoning: Optional[str] = None
     timestamp: datetime = None
-
 
 class GraphRAGResearchEngine:
     """

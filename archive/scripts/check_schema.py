@@ -16,7 +16,6 @@ os.environ["DATABASE_URL"] = (
     os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5433/compliance_test?sslmode=require")
 )
 
-
 def main() -> None:
     logger.info("=== Schema Comparison Analysis ===")
 
@@ -89,7 +88,6 @@ def main() -> None:
             logger.info(f"  ✅ {table_name}: {len(columns)} columns")
         except Exception as e:
             logger.info(f"  ❌ {table_name}: Error - {e}")
-
 
 if __name__ == "__main__":
     main()

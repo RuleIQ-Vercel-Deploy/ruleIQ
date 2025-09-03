@@ -55,7 +55,6 @@ from database.business_profile import BusinessProfile
 from database.compliance_framework import ComplianceFramework
 from database.evidence_item import EvidenceItem
 
-
 class DatabaseTestManager:
     """Manages database connections and cleanup for tests."""
 
@@ -136,10 +135,8 @@ class DatabaseTestManager:
             finally:
                 self._engine = None
 
-
 # Global database manager
 _db_manager = DatabaseTestManager()
-
 
 @pytest.fixture(scope="session")
 def event_loop():
@@ -148,7 +145,6 @@ def event_loop():
     asyncio.set_event_loop(loop)
     yield loop
     loop.close()
-
 
 @pytest.fixture(scope="session", autouse=True)
 async def setup_test_database():
@@ -161,7 +157,6 @@ async def setup_test_database():
     # Clean up
     await _db_manager.drop_tables()
     await _db_manager.dispose()
-
 
 @pytest.fixture
 async def async_db_session() -> AsyncGenerator[AsyncSession, None]:
@@ -176,7 +171,6 @@ async def async_db_session() -> AsyncGenerator[AsyncSession, None]:
             finally:
                 await session.close()
 
-
 @pytest.fixture
 async def sample_user(async_db_session: AsyncSession) -> User:
     """Create a sample user for tests."""
@@ -190,7 +184,6 @@ async def sample_user(async_db_session: AsyncSession) -> User:
     await async_db_session.commit()
     await async_db_session.refresh(user)
     return user
-
 
 @pytest.fixture
 async def sample_business_profile(
@@ -223,7 +216,6 @@ async def sample_business_profile(
     await async_db_session.refresh(profile)
     return profile
 
-
 @pytest.fixture
 async def sample_compliance_framework(
     async_db_session: AsyncSession,
@@ -240,7 +232,6 @@ async def sample_compliance_framework(
     await async_db_session.commit()
     await async_db_session.refresh(framework)
     return framework
-
 
 @pytest.fixture
 async def sample_evidence_item(
@@ -270,7 +261,6 @@ async def sample_evidence_item(
     await async_db_session.refresh(evidence)
     return evidence
 
-
 # Authentication fixtures with proper async handling
 @pytest.fixture
 def auth_token(sample_user: User) -> str:
@@ -281,12 +271,10 @@ def auth_token(sample_user: User) -> str:
     token_data = {"sub": str(sample_user.id)}
     return create_access_token(data=token_data, expires_delta=timedelta(minutes=30))
 
-
 @pytest.fixture
 def authenticated_headers(auth_token: str) -> dict:
     """Provide authenticated headers for API tests."""
     return {"Authorization": f"Bearer {auth_token}"}
-
 
 # API client fixture with proper dependency overrides
 @pytest.fixture
@@ -306,7 +294,6 @@ def client() -> TestClient:
         is_active=True,
     )
 
-    # Use the existing database manager from this file
     async def override_get_async_db():
         async with _db_manager.get_engine() as engine:
             async with AsyncSession(engine, expire_on_commit=False) as session:

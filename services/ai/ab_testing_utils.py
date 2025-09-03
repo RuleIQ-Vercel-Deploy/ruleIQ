@@ -6,7 +6,6 @@ DEFAULT_TIMEOUT = 30
 
 CONFIDENCE_THRESHOLD = 0.8
 
-
 A/B Testing Utilities and Integration Helpers
 
 Provides convenient utilities for integrating A/B testing into the ruleIQ
@@ -20,7 +19,6 @@ from .analytics_monitor import get_analytics_monitor
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 class ComplianceMetric(Enum):
     """Compliance-specific metrics for A/B testing."""
     ASSESSMENT_ACCURACY = 'assessment_accuracy'
@@ -30,7 +28,6 @@ class ComplianceMetric(Enum):
     TASK_COMPLETION_TIME = 'task_completion_time'
     ERROR_RATE = 'error_rate'
     RECOMMENDATION_RELEVANCE = 'recommendation_relevance'
-
 
 class AIModelTester:
     """A/B testing utilities for AI model comparisons."""
@@ -104,7 +101,6 @@ class AIModelTester:
                  % (experiment_id, result.p_value, result.effect_size))
         return result
 
-
 class PromptOptimizationTester:
     """A/B testing utilities for prompt optimization."""
 
@@ -176,7 +172,6 @@ class PromptOptimizationTester:
             variant=variant, user_id=user_id, primary_metric_value=
             metric_value, context=task_context or {})
 
-
 class ComplianceEffectivenessTester:
     """A/B testing for compliance methodology effectiveness."""
 
@@ -240,7 +235,6 @@ class ComplianceEffectivenessTester:
         return self.framework.record_metric(experiment_id=experiment_id,
             variant=variant, user_id=organization_id, primary_metric_value=
             improvement_percentage, context=enhanced_context)
-
 
 class ABTestingManager:
     """Central manager for all A/B testing activities in ruleIQ."""
@@ -347,9 +341,7 @@ class ABTestingManager:
         return max(100, int(current_total * (0.8 - current_power) /
             current_power))
 
-
 _ab_testing_manager: Optional[ABTestingManager] = None
-
 
 def get_ab_testing_manager() ->ABTestingManager:
     """Get global A/B testing manager instance."""
@@ -358,12 +350,10 @@ def get_ab_testing_manager() ->ABTestingManager:
         _ab_testing_manager = ABTestingManager()
     return _ab_testing_manager
 
-
 def start_model_comparison(control_model: str, treatment_model: str) ->str:
     """Quick start for AI model A/B testing."""
     manager = get_ab_testing_manager()
     return manager.start_ai_model_experiment(control_model, treatment_model)
-
 
 def record_ai_performance(experiment_id: str, model_name: str, user_id: str,
     accuracy_score: float) ->bool:
@@ -371,7 +361,6 @@ def record_ai_performance(experiment_id: str, model_name: str, user_id: str,
     manager = get_ab_testing_manager()
     return manager.model_tester.record_model_performance(experiment_id,
         model_name, user_id, accuracy_score)
-
 
 def analyze_experiment_results(experiment_id: str) ->Dict[str, Any]:
     """Quick analysis for any experiment."""

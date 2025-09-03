@@ -12,7 +12,6 @@ from pathlib import Path
 from typing import Dict, Tuple
 import sys
 
-
 class MigrationValidator:
     """Validates that migrations were applied correctly"""
 
@@ -141,7 +140,6 @@ class MigrationValidator:
         else:
             return '✅ Migration validated successfully'
 
-
 def validate_file(file_path: str) ->bool:
     """Validate a single file"""
     path = Path(file_path)
@@ -167,7 +165,6 @@ def validate_file(file_path: str) ->bool:
             logger.info('  %s' % error)
     logger.info('\n%s' % results['summary'])
     return is_valid
-
 
 def main() ->int:
     """Run validation on Phase 1 files"""
@@ -201,7 +198,6 @@ def main() ->int:
         logger.info('❌ Validation failed - please fix errors before proceeding',
             )
     return 0 if all_valid else 1
-
 
 if __name__ == '__main__':
     sys.exit(main())

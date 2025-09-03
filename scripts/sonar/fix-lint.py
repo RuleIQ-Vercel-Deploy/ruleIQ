@@ -9,14 +9,12 @@ import glob
 import logging
 logger = logging.getLogger(__name__)
 
-
 def fix_unused_variables(content) ->Any:
     """Fix unused variables by prefixing with underscore"""
     content = re.sub('} catch \\(error\\) \\{', '} catch {', content)
     content = re.sub('} catch \\(err\\) \\{', '} catch {', content)
     content = re.sub('} catch \\(e\\) \\{', '} catch {', content)
     return content
-
 
 def fix_console_statements(content) ->Any:
     """Fix console.log statements"""
@@ -27,7 +25,6 @@ def fix_console_statements(content) ->Any:
     content = re.sub('(\\s*)(console\\.error\\()',
         '\\1// Development logging - consider proper logger\\n\\1\\2', content)
     return content
-
 
 def fix_react_entities(content) ->Any:
     """Fix React unescaped entities"""
@@ -43,7 +40,6 @@ def fix_react_entities(content) ->Any:
     content = re.sub(jsx_pattern, replace_entity, content)
     return content
 
-
 def fix_typescript_any(content) ->Any:
     """Fix some TypeScript any types with better alternatives"""
     replacements = [(': any\\[\\]', ': unknown[]'), ('error: any',
@@ -53,7 +49,6 @@ def fix_typescript_any(content) ->Any:
     for pattern, replacement in replacements:
         content = re.sub(pattern, replacement, content)
     return content
-
 
 def process_file(file_path) ->int:
     """Process a single TypeScript/React file"""
@@ -75,7 +70,6 @@ def process_file(file_path) ->int:
         logger.info('Error processing %s: %s' % (file_path, e))
         return 0
 
-
 def main() ->None:
     """Main function to process all TypeScript/React files"""
     os.chdir('/home/omar/Documents/ruleIQ/frontend')
@@ -90,7 +84,6 @@ def main() ->None:
     for file_path in files:
         fixed_count += process_file(file_path)
     logger.info('Fixed %s files.' % fixed_count)
-
 
 if __name__ == '__main__':
     main()

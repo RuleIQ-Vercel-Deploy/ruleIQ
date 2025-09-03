@@ -15,7 +15,6 @@ from pathlib import Path
 from typing import Dict, List
 import json
 
-
 class APIEndpointAnalyzer:
 
     def __init__(self, api_dir: str='api/routers') ->None:
@@ -130,7 +129,6 @@ class APIEndpointAnalyzer:
                     'Potentially sensitive endpoint without authentication'})
         return report
 
-
 def main() ->None:
     """Main function to run the API audit"""
     logger.info('🔍 Starting Comprehensive API Audit...')
@@ -166,7 +164,6 @@ def main() ->None:
     logger.info('\n📄 Detailed report saved to: api_audit_report.json')
     generate_markdown_docs(report)
     logger.info('📄 API documentation saved to: API_ENDPOINTS_DOCUMENTATION.md')
-
 
 def generate_markdown_docs(report: Dict) ->None:
     """Generate markdown documentation for all endpoints"""
@@ -223,7 +220,6 @@ def generate_markdown_docs(report: Dict) ->None:
         md_content += '\n'
     with open('API_ENDPOINTS_DOCUMENTATION.md', 'w') as f:
         f.write(md_content)
-
 
 if __name__ == '__main__':
     main()

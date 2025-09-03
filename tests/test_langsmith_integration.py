@@ -5,7 +5,6 @@ from __future__ import annotations
 DEFAULT_LIMIT = 100
 MAX_RETRIES = 3
 
-
 Comprehensive test suite for LangSmith integration with LangGraph.
 
 Tests cover:
@@ -28,7 +27,6 @@ import json
 import time
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config.langsmith_config import LangSmithConfig, with_langsmith_tracing, LANGSMITH_SETUP_INSTRUCTIONS
-
 
 class TestLangSmithConfiguration:
     """Test LangSmith client configuration."""
@@ -113,7 +111,6 @@ class TestLangSmithConfiguration:
         assert LangSmithConfig.validate_configuration() is False
         assert "should start with 'ls__'" in caplog.text
 
-
 class TestLangSmithMetadata:
     """Test metadata collection functionality."""
 
@@ -163,7 +160,6 @@ class TestLangSmithMetadata:
         assert 'phase:final' in tags
         assert 'priority:high' in tags
         assert 'source:api' in tags
-
 
 class TestTracingDecorator:
     """Test tracing decorators and callbacks."""
@@ -247,7 +243,6 @@ class TestTracingDecorator:
                 await test_function()
             assert str(exc_info.value) == 'Tracing setup failed'
 
-
 class TestPerformanceImpact:
     """Test performance impact of tracing."""
 
@@ -308,7 +303,6 @@ class TestPerformanceImpact:
             assert len(results) == DEFAULT_LIMIT
             assert results[50] == DEFAULT_LIMIT
             assert elapsed < 1.0
-
 
 class TestErrorScenarios:
     """Test error scenarios and edge cases."""
@@ -381,7 +375,6 @@ class TestErrorScenarios:
             assert results[9] == 'session-9'
             assert mock_tracing.call_count == 10
 
-
 class TestTraceDataStructure:
     """Test and validate trace data structure."""
 
@@ -438,7 +431,6 @@ class TestTraceDataStructure:
             assert isinstance(trace['tags'], list)
             assert isinstance(trace['metadata'], dict)
 
-
 class TestIntegrationWithLangGraph:
     """Test integration with LangGraph nodes."""
 
@@ -453,7 +445,6 @@ class TestIntegrationWithLangGraph:
             mock_context.__enter__ = MagicMock(return_value=None)
             mock_context.__exit__ = MagicMock(return_value=None)
             mock_tracing.return_value = mock_context
-
 
             class TestNode:
 
@@ -496,7 +487,6 @@ class TestIntegrationWithLangGraph:
             assert load_result['restored'] is True
             assert mock_tracing.call_count == 2
 
-
 class TestMockTracingCallbacks:
     """Test mock tracing callbacks for testing."""
 
@@ -525,7 +515,6 @@ class TestMockTracingCallbacks:
         await mock_handler.on_tool_end(output='test output')
         assert mock_handler.on_tool_start.called
         assert mock_handler.on_tool_end.called
-
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

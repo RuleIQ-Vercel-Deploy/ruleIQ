@@ -57,47 +57,90 @@ class JWTAuthMiddleware:
         r'^/api/v1/auth/google.*',  # Google OAuth
         r'^/api/v1/freemium.*',  # Freemium endpoints
         r'^/api/test-utils.*',  # Test utilities (dev only)
+        r'^/api/v1/ping$',  # Simple ping endpoint
     ]
     
-    # Critical routes requiring strict authentication (20% coverage target)
+    # EXTENDED: All routes requiring authentication (covering 100% of critical endpoints)
     CRITICAL_PROTECTED_ROUTES = [
-        # User management endpoints
+        # User management endpoints (CRITICAL)
         r'^/api/v1/users.*',
-        # Admin endpoints
+        
+        # Admin endpoints (CRITICAL)
         r'^/api/v1/api/admin.*',
         r'^/api/v1/admin.*',
-        # Data export endpoints
-        r'^/api/v1/reports/export.*',
-        r'^/api/v1/evidence/export.*',
-        r'^/api/v1/audit-export.*',
-        # Settings and configuration
-        r'^/api/v1/settings.*',
+        
+        # Business profiles (CRITICAL - contains sensitive business data)
         r'^/api/v1/business-profiles.*',
-        # Payment and billing
-        r'^/api/v1/payments.*',
-        # API key management
-        r'^/api/v1/api-keys.*',
-        # Webhook management
-        r'^/api/v1/webhooks.*',
-        # Secrets vault
-        r'^/api/v1/secrets.*',
-        # Compliance and assessments (write operations)
+        
+        # Assessment endpoints (CRITICAL - business sensitive)
         r'^/api/v1/assessments.*',
+        r'^/api/v1/readiness.*',
+        
+        # Evidence management (CRITICAL - compliance data)
+        r'^/api/v1/evidence.*',
+        r'^/api/v1/evidence-collection.*',
+        r'^/api/v1/foundation/evidence.*',
+        
+        # Compliance and frameworks (CRITICAL - compliance status)
         r'^/api/v1/compliance.*',
+        r'^/api/v1/frameworks.*',
+        
+        # Policies (CRITICAL - policy management)
         r'^/api/v1/policies.*',
-        # AI endpoints (cost-sensitive)
+        
+        # Implementation plans (CRITICAL - business operations)
+        r'^/api/v1/implementation.*',
+        
+        # Reports and exports (CRITICAL - data export)
+        r'^/api/v1/reports.*',
+        r'^/api/v1/audit-export.*',
+        r'^/api/v1/usage-dashboard.*',
+        
+        # Integrations (CRITICAL - third-party access)
+        r'^/api/v1/integrations.*',
+        
+        # Payment and billing (CRITICAL - financial)
+        r'^/api/v1/payments.*',
+        
+        # API key management (CRITICAL - security)
+        r'^/api/v1/api-keys.*',
+        
+        # Webhook management (CRITICAL - security)
+        r'^/api/v1/webhooks.*',
+        
+        # Secrets vault (CRITICAL - secrets)
+        r'^/api/v1/secrets.*',
+        
+        # AI endpoints (CRITICAL - cost-sensitive)
         r'^/api/v1/ai/.*',
         r'^/api/v1/iq-agent.*',
         r'^/api/v1/agentic-rag.*',
-        # Integration management
-        r'^/api/v1/integrations.*',
-        # Dashboard data
+        r'^/api/v1/chat.*',
+        
+        # Dashboard data (CRITICAL - aggregated business data)
         r'^/api/dashboard$',
         r'^/api/v1/dashboard.*',
-        # Monitoring and security
+        
+        # Monitoring and security (CRITICAL - system health)
         r'^/api/v1/monitoring.*',
         r'^/api/v1/security.*',
         r'^/api/v1/performance.*',
+        
+        # UK Compliance (CRITICAL - regulatory)
+        r'^/api/v1/uk-compliance.*',
+        
+        # Feedback system (SENSITIVE - user feedback)
+        r'^/api/v1/feedback.*',
+        
+        # Settings and configuration (CRITICAL)
+        r'^/api/v1/settings.*',
+        r'^/api/v1/config.*',
+    ]
+    
+    # Routes that can optionally work without auth (degraded functionality)
+    OPTIONAL_AUTH_ROUTES = [
+        r'^/api/v1/frameworks/public.*',  # Public framework listings
+        r'^/api/v1/policies/templates.*',  # Public policy templates
     ]
     
     def __init__(
@@ -139,10 +182,22 @@ class JWTAuthMiddleware:
                 re.compile(pattern) for pattern in custom_protected_paths
             ])
         
+        self.optional_auth_patterns = [
+            re.compile(pattern) for pattern in self.OPTIONAL_AUTH_ROUTES
+        ]
+        
         # Rate limiting storage (in production, use Redis)
         self.auth_attempts: Dict[str, List[float]] = {}
         self.rate_limit_window = 60  # 1 minute
         self.max_auth_attempts = settings.auth_rate_limit_per_minute
+        
+        # Track authentication coverage
+        self.auth_coverage_stats = {
+            'total_requests': 0,
+            'authenticated_requests': 0,
+            'public_requests': 0,
+            'failed_auth_requests': 0
+        }
     
     def is_public_path(self, path: str) -> bool:
         """Check if a path is public and doesn't require authentication."""
@@ -151,6 +206,10 @@ class JWTAuthMiddleware:
     def is_critical_path(self, path: str) -> bool:
         """Check if a path is critical and requires strict authentication."""
         return any(pattern.match(path) for pattern in self.protected_patterns)
+    
+    def is_optional_auth_path(self, path: str) -> bool:
+        """Check if a path can work with optional authentication."""
+        return any(pattern.match(path) for pattern in self.optional_auth_patterns)
     
     def check_rate_limit(self, identifier: str) -> bool:
         """
@@ -266,6 +325,29 @@ class JWTAuthMiddleware:
         else:
             logger.warning(f"Auth failure: {log_entry}")
     
+    def get_auth_coverage_report(self) -> Dict[str, Any]:
+        """Get authentication coverage statistics."""
+        total = self.auth_coverage_stats['total_requests']
+        if total == 0:
+            return {
+                'coverage_percentage': 0,
+                'total_requests': 0,
+                'authenticated_requests': 0,
+                'public_requests': 0,
+                'failed_auth_requests': 0
+            }
+        
+        authenticated = self.auth_coverage_stats['authenticated_requests']
+        coverage = (authenticated / total) * 100
+        
+        return {
+            'coverage_percentage': round(coverage, 2),
+            'total_requests': total,
+            'authenticated_requests': authenticated,
+            'public_requests': self.auth_coverage_stats['public_requests'],
+            'failed_auth_requests': self.auth_coverage_stats['failed_auth_requests']
+        }
+    
     async def __call__(self, request: Request, call_next):
         """
         Process request through JWT authentication middleware.
@@ -278,28 +360,43 @@ class JWTAuthMiddleware:
             Response after authentication processing
         """
         path = request.url.path
+        self.auth_coverage_stats['total_requests'] += 1
         
         # Skip authentication for public paths
         if self.is_public_path(path):
+            self.auth_coverage_stats['public_requests'] += 1
             return await call_next(request)
         
         # Check if this is a critical protected route
         is_critical = self.is_critical_path(path)
+        is_optional = self.is_optional_auth_path(path)
         
-        # Extract token from Authorization header
         auth_header = request.headers.get('Authorization')
         if not auth_header or not auth_header.startswith('Bearer '):
+            # For optional auth routes, allow without token but mark as unauthenticated
+            if is_optional:
+                request.state.is_authenticated = False
+                request.state.user_id = None
+                return await call_next(request)
+            
+            # For critical routes or strict mode, require authentication
             if is_critical or self.enable_strict_mode:
+                self.auth_coverage_stats['failed_auth_requests'] += 1
                 await self.log_auth_event(
                     request, 'MISSING_TOKEN', False,
-                    details={'reason': 'No Authorization header'}
+                    details={'reason': 'No Authorization header', 'is_critical': is_critical}
                 )
                 return JSONResponse(
                     status_code=status.HTTP_401_UNAUTHORIZED,
-                    content={'detail': 'Authentication required'},
+                    content={
+                        'detail': 'Authentication required',
+                        'message': 'This endpoint requires a valid JWT token',
+                        'auth_required': True
+                    },
                     headers={'WWW-Authenticate': 'Bearer'}
                 )
             # Allow non-critical routes without auth if not in strict mode
+            request.state.is_authenticated = False
             return await call_next(request)
         
         # Extract and validate token
@@ -321,13 +418,18 @@ class JWTAuthMiddleware:
         # Validate token
         payload = await self.validate_jwt_token(token)
         if not payload:
+            self.auth_coverage_stats['failed_auth_requests'] += 1
             await self.log_auth_event(
                 request, 'INVALID_TOKEN', False,
-                details={'reason': 'Token validation failed'}
+                details={'reason': 'Token validation failed', 'is_critical': is_critical}
             )
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                content={'detail': 'Invalid or expired token'},
+                content={
+                    'detail': 'Invalid or expired token',
+                    'message': 'Your authentication token is invalid or has expired. Please login again.',
+                    'auth_required': True
+                },
                 headers={'WWW-Authenticate': 'Bearer'}
             )
         
@@ -336,10 +438,13 @@ class JWTAuthMiddleware:
         request.state.token_payload = payload
         request.state.is_authenticated = True
         
+        self.auth_coverage_stats['authenticated_requests'] += 1
+        
         # Log successful authentication
         await self.log_auth_event(
             request, 'AUTHENTICATION_SUCCESS', True,
-            user_id=request.state.user_id
+            user_id=request.state.user_id,
+            details={'path_type': 'critical' if is_critical else 'normal'}
         )
         
         # Process request
@@ -348,6 +453,11 @@ class JWTAuthMiddleware:
         # Add security headers to response
         response.headers['X-Content-Type-Options'] = 'nosniff'
         response.headers['X-Frame-Options'] = 'DENY'
+        response.headers['X-XSS-Protection'] = '1; mode=block'
+        
+        # Add authentication coverage header (for monitoring)
+        coverage = self.get_auth_coverage_report()
+        response.headers['X-Auth-Coverage'] = str(coverage['coverage_percentage'])
         
         # Add token expiry warning header if applicable
         exp = payload.get('exp')
@@ -361,7 +471,6 @@ class JWTAuthMiddleware:
                 response.headers['X-Token-Refresh-Recommended'] = 'true'
         
         return response
-
 
 def get_jwt_middleware(**kwargs) -> JWTAuthMiddleware:
     """Factory function to create JWT middleware instance."""

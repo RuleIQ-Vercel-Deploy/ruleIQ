@@ -25,7 +25,6 @@ TOKEN_EXPIRY_WARNING = 300
 logger = get_logger(__name__)
 import sys
 
-
 def get_jwt_secret_key() ->str:
     """Get JWT secret key with production enforcement."""
     if settings.is_production:
@@ -52,7 +51,6 @@ def get_jwt_secret_key() ->str:
             secret_key = secrets.token_urlsafe(32)
         return secret_key
 
-
 SECRET_KEY = get_jwt_secret_key()
 ALGORITHM = 'HS256'
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
@@ -61,19 +59,16 @@ pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/v1/auth/token',
     auto_error=False)
 
-
 async def blacklist_token(token: str, reason: str='logout', **kwargs) ->None:
     """Add a token to the blacklist with enhanced security features."""
     from .token_blacklist import blacklist_token as enhanced_blacklist_token
     ttl = ACCESS_TOKEN_EXPIRE_MINUTES * 60
     await enhanced_blacklist_token(token, reason=reason, ttl=ttl, **kwargs)
 
-
 async def is_token_blacklisted(token: str) ->bool:
     """Check if a token is blacklisted using enhanced blacklist."""
     from .token_blacklist import is_token_blacklisted as enhanced_is_blacklisted
     return await enhanced_is_blacklisted(token)
-
 
 def validate_password(password: str) ->tuple[bool, str]:
     """Validate password strength."""
@@ -92,14 +87,11 @@ def validate_password(password: str) ->tuple[bool, str]:
             )
     return True, 'Password is valid.'
 
-
 def verify_password(plain_password: str, hashed_password: str) ->bool:
     return pwd_context.verify(plain_password, hashed_password)
 
-
 def get_password_hash(password: str) ->str:
     return pwd_context.hash(password)
-
 
 def create_token(data: dict, token_type: str, expires_delta: Optional[
     timedelta]=None) ->str:
@@ -112,17 +104,14 @@ def create_token(data: dict, token_type: str, expires_delta: Optional[
         now(timezone.utc)})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-
 def create_access_token(data: dict, expires_delta: Optional[timedelta]=None
     ) ->str:
     return create_token(data, 'access', expires_delta or timedelta(minutes=
         ACCESS_TOKEN_EXPIRE_MINUTES))
 
-
 def create_refresh_token(data: dict) ->str:
     return create_token(data, 'refresh', timedelta(days=
         REFRESH_TOKEN_EXPIRE_DAYS))
-
 
 def validate_token_expiry(payload: Dict) ->None:
     """Validate that token has not expired with additional checks."""
@@ -140,7 +129,6 @@ def validate_token_expiry(payload: Dict) ->None:
         logging.warning('Token expires in %s seconds' % time_until_expiry.
             total_seconds())
 
-
 def decode_token(token: str) ->Optional[Dict]:
     """Decode JWT token with proper error handling for expiry."""
     try:
@@ -152,7 +140,6 @@ def decode_token(token: str) ->Optional[Dict]:
             'Token has expired. Please log in again.')
     except JWTError as e:
         raise NotAuthenticatedException(f'Token validation failed: {e!s}')
-
 
 async def get_current_user(token: Optional[str]=Depends(oauth2_scheme), db:
     AsyncSession=Depends(get_async_db)) ->Optional[User]:
@@ -179,7 +166,6 @@ async def get_current_user(token: Optional[str]=Depends(oauth2_scheme), db:
         raise NotAuthenticatedException('User not found.')
     return user
 
-
 async def get_current_active_user(current_user: User=Depends(get_current_user)
     ) ->User:
     if current_user is None:
@@ -189,7 +175,6 @@ async def get_current_active_user(current_user: User=Depends(get_current_user)
             'Inactive user')
     user_id_var.set(UUID(str(current_user.id)))
     return current_user
-
 
 async def get_current_user_from_refresh_token(token: Optional[str]=Depends(
     oauth2_scheme), db: AsyncSession=Depends(get_async_db)) ->Optional[User]:
@@ -215,7 +200,6 @@ async def get_current_user_from_refresh_token(token: Optional[str]=Depends(
         raise NotAuthenticatedException('User not found for refresh token.')
     return user
 
-
 def require_auth(func) ->Any:
     """
     Decorator to require authentication for a route.
@@ -227,7 +211,6 @@ def require_auth(func) ->Any:
     async def wrapper(*args, **kwargs) ->Any:
         return await func(*args, **kwargs)
     return wrapper
-
 
 async def get_api_key_auth(request: Request, x_api_key: str=Header(None,
     alias='X-API-Key'), db: AsyncSession=Depends(get_async_db)) ->dict:

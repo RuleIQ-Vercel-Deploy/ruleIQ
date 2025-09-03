@@ -24,7 +24,6 @@ from app.core.monitoring.langgraph_metrics import (
     PerformanceAnalyzer,
 )
 
-
 class TestNodeExecutionTracker:
     """Test tracking metrics for individual LangGraph nodes."""
 
@@ -160,7 +159,6 @@ class TestNodeExecutionTracker:
         assert retry_stats["total_retries"] == 1
         assert retry_stats["successful_retries"] == 1
         assert retry_stats["retry_reasons"]["NetworkError"] == 1
-
 
 class TestWorkflowMetricsTracker:
     """Test tracking metrics for complete LangGraph workflows."""
@@ -321,7 +319,6 @@ class TestWorkflowMetricsTracker:
         # Now another can start
         assert self.tracker.can_start_workflow("limited_workflow")
 
-
 class TestStateTransitionTracker:
     """Test tracking state transitions in LangGraph."""
 
@@ -446,7 +443,6 @@ class TestStateTransitionTracker:
         # Check probabilities
         assert abs(patterns["processing->completed"]["probability"] - 0.888) < 0.01
         assert abs(patterns["processing->failed"]["probability"] - 0.111) < 0.01
-
 
 class TestCheckpointMetrics:
     """Test metrics for LangGraph checkpointing operations."""
@@ -573,7 +569,6 @@ class TestCheckpointMetrics:
         assert cleanup_metrics["freed_bytes"] == 1024 * 8
         assert cleanup_metrics["remaining_count"] == 12
 
-
 class TestMemoryUsageTracker:
     """Test memory usage tracking for LangGraph components."""
 
@@ -668,7 +663,6 @@ class TestMemoryUsageTracker:
         violations = self.tracker.get_limit_violations()
         assert "limited_component" in violations
         assert violations["limited_component"]["over_limit_bytes"] == 1024 * 1024
-
 
 class TestErrorMetricsCollector:
     """Test error metrics collection for LangGraph."""
@@ -767,7 +761,6 @@ class TestErrorMetricsCollector:
         assert recovery_stats["successful_recoveries"] == 1
         assert recovery_stats["recovery_success_rate"] == 1 / 3
         assert recovery_stats["average_attempts_to_recovery"] == 3
-
 
 class TestPerformanceAnalyzer:
     """Test performance analysis for LangGraph workflows."""

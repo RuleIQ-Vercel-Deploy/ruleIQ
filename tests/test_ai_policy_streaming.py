@@ -27,7 +27,6 @@ from api.schemas.ai_policy import (
 from services.ai.policy_generator import PolicyGenerator
 from database.compliance_framework import ComplianceFramework
 
-
 class TestPolicyStreamingService:
     """Test the PolicyGenerator streaming service implementation."""
 
@@ -289,7 +288,6 @@ class TestPolicyStreamingService:
             assert len(section_chunks) == 5
             assert "Introduction" in [c.section_name for c in section_chunks]
 
-
 class TestPolicyStreamingAPI:
     """Test the API endpoint for policy streaming."""
 
@@ -484,7 +482,6 @@ class TestPolicyStreamingAPI:
 
             assert response.status_code == 429
 
-
 class TestPolicyStreamingIntegration:
     """Integration tests for the complete streaming pipeline."""
 
@@ -567,7 +564,6 @@ class TestPolicyStreamingIntegration:
             # Verify content
             content = "".join(c.content for c in chunks if c.chunk_type == "content")
             assert len(content) > 100
-
 
 class TestPolicyStreamingPerformance:
     """Performance tests for streaming functionality."""

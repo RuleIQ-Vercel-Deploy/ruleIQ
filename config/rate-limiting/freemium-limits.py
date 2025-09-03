@@ -7,7 +7,6 @@ Implements multi-tier rate limiting for public and authenticated endpoints
 
 from enum import Enum
 
-
 class RateLimitTier(Enum):
     """Rate limiting tiers for different user types and endpoints"""
 
@@ -16,7 +15,6 @@ class RateLimitTier(Enum):
     AUTHENTICATED = "authenticated"
     PREMIUM = "premium"
     ADMIN = "admin"
-
 
 class FreemiumRateLimits:
     """Rate limiting configuration for freemium endpoints"""
@@ -60,7 +58,6 @@ class FreemiumRateLimits:
         },
     }
 
-    # AI service specific limits (separate from HTTP limits)
     AI_SERVICE_LIMITS = {
         "question_generation": {
             "requests": 20,
@@ -117,7 +114,6 @@ class FreemiumRateLimits:
         },
     }
 
-
 class RateLimitRedisKeys:
     """Redis key patterns for rate limiting storage"""
 
@@ -151,7 +147,6 @@ class RateLimitRedisKeys:
         """Key for AI cost tracking per IP"""
         return f"cost_tracking:ai:{service}:ip:{ip}"
 
-
 class RateLimitExceptions:
     """IP addresses and patterns exempt from rate limiting"""
 
@@ -176,7 +171,6 @@ class RateLimitExceptions:
         # Format: "api_key": {"name": "Partner Name", "limits": "multiplier"}
         # These would be actual API keys in production
     }
-
 
 class RateLimitResponses:
     """Standard responses for rate limit violations"""
@@ -206,7 +200,6 @@ class RateLimitResponses:
         "message": "Unusual activity detected. Please contact support if you believe this is an error.",
         "status_code": 403,
     }
-
 
 # Configuration for different environments
 ENVIRONMENT_CONFIGS = {

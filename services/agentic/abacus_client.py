@@ -11,7 +11,6 @@ import logging
 from app.core.doppler_config import DopplerConfig
 logger = logging.getLogger(__name__)
 
-
 class AbacusAIClient:
     """
     Secure Abacus AI client using Doppler for secrets management.
@@ -84,9 +83,7 @@ class AbacusAIClient:
                 )
         return {'status': 'success', 'message': 'Placeholder response'}
 
-
 _abacus_client: Optional[AbacusAIClient] = None
-
 
 def get_abacus_client() ->AbacusAIClient:
     """Get or create the singleton Abacus AI client instance."""

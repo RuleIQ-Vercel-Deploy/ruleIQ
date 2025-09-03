@@ -14,7 +14,6 @@ from uuid import UUID
 from pydantic import BaseModel, Field, field_validator, ConfigDict
 import json
 
-
 class WorkflowStatus(str, Enum):
     """Workflow status enumeration."""
 
@@ -24,7 +23,6 @@ class WorkflowStatus(str, Enum):
     FAILED = "failed"
     CANCELLED = "cancelled"
 
-
 class ActorType(str, Enum):
     """Valid actor types for compliance workflows."""
 
@@ -32,7 +30,6 @@ class ActorType(str, Enum):
     EVIDENCE_COLLECTOR = "EvidenceCollector"
     REG_WATCH = "RegWatch"
     FILING_SCHEDULER = "FilingScheduler"
-
 
 class EvidenceItem(BaseModel):
     """Evidence item structure."""
@@ -45,7 +42,6 @@ class EvidenceItem(BaseModel):
     metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
     model_config = ConfigDict(json_encoders={datetime: lambda v: v.isoformat()})
-
 
 class Decision(BaseModel):
     """Decision tracking structure."""
@@ -60,7 +56,6 @@ class Decision(BaseModel):
     metadata: Optional[Dict[str, Any]] = Field(default_factory=dict)
 
     model_config = ConfigDict(json_encoders={datetime: lambda v: v.isoformat()})
-
 
 class CostSnapshot(BaseModel):
     """Cost tracking snapshot."""
@@ -83,7 +78,6 @@ class CostSnapshot(BaseModel):
         self.timestamp = datetime.now()
         return self
 
-
 class MemoryStore(BaseModel):
     """Memory storage structure."""
 
@@ -102,7 +96,6 @@ class MemoryStore(BaseModel):
         for value in values:
             if value not in self.semantic[key]:
                 self.semantic[key].append(value)
-
 
 class Context(BaseModel):
     """Workflow context structure."""
@@ -141,7 +134,6 @@ class Context(BaseModel):
             pass
 
         return v
-
 
 class ComplianceState(BaseModel):
     """

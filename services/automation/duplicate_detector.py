@@ -16,7 +16,6 @@ from core.exceptions import BusinessLogicException, DatabaseException
 from database.evidence_item import EvidenceItem
 logger = get_logger(__name__)
 
-
 class DuplicateDetector:
     """Detects duplicate evidence based on content and context asynchronously."""
 

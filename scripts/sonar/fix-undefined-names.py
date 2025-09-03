@@ -18,7 +18,6 @@ class UndefinedNameFixer(ast.NodeVisitor):
         self.defined_names = set()
         self.imports_needed = {}
         
-        # Common import mappings
         self.import_map = {
             # Type hints
             'Optional': 'from typing import Optional',
@@ -157,7 +156,6 @@ class UndefinedNameFixer(ast.NodeVisitor):
             self.defined_names.add(node.name)
         self.generic_visit(node)
 
-
 def fix_file(file_path: Path) -> bool:
     """Fix undefined names in a single file."""
     try:
@@ -235,7 +233,6 @@ def fix_file(file_path: Path) -> bool:
         print(f"Error processing {file_path}: {e}")
         return False
 
-
 def main():
     """Main function to fix undefined names."""
     root_path = Path('/home/omar/Documents/ruleIQ')
@@ -258,7 +255,6 @@ def main():
     print(f"\n✅ Fixed undefined names in {fixed_count} files")
     
     return 0
-
 
 if __name__ == '__main__':
     sys.exit(main())

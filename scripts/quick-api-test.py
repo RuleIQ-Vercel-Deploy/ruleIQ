@@ -14,7 +14,6 @@ import json
 from datetime import datetime
 BASE_URL = 'http://localhost:8000'
 
-
 async def test_endpoints():
     """Test key endpoints to verify API alignment"""
     test_endpoints = [('GET', '/', 'Root', False), ('GET', '/health',
@@ -83,7 +82,6 @@ async def test_endpoints():
         json.dump(results, f, indent=2)
     logger.info('\nResults saved to: scripts/quick-api-test-results.json')
     return results
-
 
 if __name__ == '__main__':
     asyncio.run(test_endpoints())

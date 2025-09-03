@@ -6,7 +6,6 @@ FIVE_MINUTES_SECONDS = 300
 
 MAX_RETRIES = 3
 
-
 Enhanced Session Management Service for ruleIQ
 
 Provides advanced session management with:
@@ -30,14 +29,11 @@ from user_agents import parse
 from config.settings import settings
 logger = logging.getLogger(__name__)
 
-
 class SessionStatus(str, Enum):
     """Session status enumeration"""
 
-
 class DeviceType(str, Enum):
     """Device type enumeration"""
-
 
 class SessionManager:
     """
@@ -435,9 +431,7 @@ class SessionManager:
         tor_ranges = ['198.96.155.3']
         return ip in tor_ranges
 
-
 _session_manager: Optional[SessionManager] = None
-
 
 async def get_session_manager() ->SessionManager:
     """
@@ -466,7 +460,6 @@ async def get_session_manager() ->SessionManager:
             enable_device_tracking=settings.enable_device_tracking,
             enable_geo_tracking=settings.enable_geo_tracking)
     return _session_manager
-
 
 async def validate_session_dependency(request: Request, session_id:
     Optional[str]=None) ->Dict[str, Any]:

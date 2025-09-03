@@ -5,7 +5,6 @@ from __future__ import annotations
 CONFIDENCE_THRESHOLD = 0.8
 HALF_RATIO = 0.5
 
-
 Compliance Memory Manager for IQ Agent GraphRAG System
 
 This module implements intelligent memory management for compliance analysis,
@@ -31,10 +30,8 @@ from services.neo4j_service import Neo4jGraphRAGService
 from services.compliance_retrieval_queries import QueryCategory
 logger = logging.getLogger(__name__)
 
-
 class MemoryType(Enum):
     """Types of memory in the compliance system"""
-
 
 @dataclass
 class MemoryNode:
@@ -51,7 +48,6 @@ class MemoryNode:
     confidence_score: float
     embedding: Optional[List[float]] = None
 
-
 @dataclass
 class MemoryCluster:
     """Cluster of related memories"""
@@ -63,7 +59,6 @@ class MemoryCluster:
     created_at: datetime
     last_updated: datetime
 
-
 @dataclass
 class MemoryRetrievalResult:
     """Result of memory retrieval operation"""
@@ -74,7 +69,6 @@ class MemoryRetrievalResult:
     total_memories_searched: int
     retrieval_strategy: str
     confidence_score: float
-
 
 class ComplianceMemoryManager:
     """Advanced memory management for compliance intelligence"""

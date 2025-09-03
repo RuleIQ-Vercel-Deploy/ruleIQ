@@ -13,7 +13,6 @@ from scipy import stats
 import logging
 logger = logging.getLogger(__name__)
 
-
 class TaskStatus(Enum):
     """Task execution status."""
     PENDING = 'pending'
@@ -21,7 +20,6 @@ class TaskStatus(Enum):
     COMPLETED = 'completed'
     FAILED = 'failed'
     TIMEOUT = 'timeout'
-
 
 @dataclass
 class PipelineConfig:
@@ -43,7 +41,6 @@ class PipelineConfig:
             raise ValueError('regression_threshold must be between 0 and 1')
         if self.cache_dir is None:
             self.cache_dir = Path('.evaluation_cache')
-
 
 @dataclass
 class EvaluationTask:
@@ -76,7 +73,6 @@ class EvaluationTask:
         self.completed_at = datetime.now(timezone.utc)
         self.error = error
 
-
 @dataclass
 class EvaluationResult:
     """Result of an evaluation task."""
@@ -87,7 +83,6 @@ class EvaluationResult:
     duration: float = 0.0
     timestamp: datetime = field(default_factory=datetime.utcnow)
     weight: float = 1.0
-
 
 class EvaluationPipeline:
     """Core evaluation pipeline."""
@@ -185,7 +180,6 @@ class EvaluationPipeline:
         """Clear result cache."""
         self._cache.clear()
 
-
 class MetricAggregator:
     """Aggregates metrics from multiple evaluation results."""
 
@@ -222,7 +216,6 @@ class MetricAggregator:
                 weighted_mean = np.average(values_array, weights=weights_array)
                 aggregated[metric]['weighted_mean'] = float(weighted_mean)
         return aggregated
-
 
 class RegressionDetector:
     """Detects performance regressions."""
@@ -278,7 +271,6 @@ class RegressionDetector:
             float(r_value ** 2), 'p_value': float(p_value), 'consistent': 
             consecutive_declines == len(values) - 1 if direction ==
             'declining' else False}
-
 
 class BaselineComparator:
     """Compares evaluation results against baselines."""
@@ -349,7 +341,6 @@ class BaselineComparator:
         t_critical = stats.t.ppf(1 - alpha / 2, df)
         margin = t_critical * se
         return diff - margin, diff + margin
-
 
 class PipelineOrchestrator:
     """Orchestrates the evaluation pipeline."""

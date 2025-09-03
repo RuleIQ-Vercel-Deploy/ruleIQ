@@ -7,7 +7,6 @@ DEFAULT_RETRIES = 5
 HALF_RATIO = 0.5
 MAX_RETRIES = 3
 
-
 Google Workspace API Client for compliance evidence collection.
 Follows the foundation architecture pattern for enterprise API integrations.
 """
@@ -25,7 +24,6 @@ try:
 except ImportError:
     GOOGLE_AVAILABLE = False
 
-
     class Credentials:
 
         def __init__(self, *args, **kwargs) ->None:
@@ -41,17 +39,14 @@ except ImportError:
         def refresh(self, request) ->None:
             pass
 
-
     class Request:
         pass
 
     def build(*args, **kwargs) ->Any:
         return MockGoogleService()
 
-
     class HttpError(Exception):
         pass
-
 
     class MockGoogleService:
 
@@ -71,7 +66,6 @@ except ImportError:
             return {'items': []}
 logger = logging.getLogger(__name__)
 
-
 class GoogleWorkspaceCredentials(BaseModel):
     """Google Workspace OAuth2 credentials."""
     client_id: str = Field(..., description='Google OAuth2 client ID')
@@ -81,10 +75,8 @@ class GoogleWorkspaceCredentials(BaseModel):
         'Current access token')
     domain: str = Field(..., description='Google Workspace domain')
 
-
     class Config:
         extra = 'allow'
-
 
 class GoogleWorkspaceAPIClient(BaseAPIClient):
     """Google Workspace API client for compliance evidence collection."""

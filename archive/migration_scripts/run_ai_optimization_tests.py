@@ -18,7 +18,6 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List
 
-
 class AIOptimizationTestRunner:
     """Test runner for AI optimization implementation."""
 
@@ -260,7 +259,6 @@ Detailed Results:
         # Disable actual AI API calls during testing
         os.environ["MOCK_AI_RESPONSES"] = "true"
 
-
 def main() -> None:
     """Main test runner function."""
     parser = argparse.ArgumentParser(description="AI Optimization Test Runner")
@@ -353,7 +351,6 @@ def main() -> None:
     except Exception as e:
         logger.info(f"❌ Test runner error: {e}")
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()

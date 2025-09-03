@@ -12,7 +12,6 @@ import requests
 from fastapi.testclient import TestClient
 from main import app
 
-
 class TestAuthenticationFlow:
     """Authentication tests generated from TestSprite plans"""
 

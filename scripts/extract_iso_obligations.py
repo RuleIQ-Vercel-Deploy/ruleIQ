@@ -308,7 +308,6 @@ ISO_STANDARDS = {'ISO 27001:2022': {'title':
     'description': 'Establish OH&S objectives', 'type': 'mandatory',
     'category': 'planning'}]}}}}
 
-
 def extract_iso_obligations() ->Any:
     """Extract all ISO obligations and controls."""
     all_obligations = []
@@ -337,7 +336,6 @@ def extract_iso_obligations() ->Any:
                     framework_summary[standard_name]['mandatory_count'] += 1
     return all_obligations, framework_summary
 
-
 def create_iso_manifest(obligations: List[Dict], framework_summary: Dict
     ) ->Any:
     """Create ISO compliance manifest."""
@@ -350,7 +348,6 @@ def create_iso_manifest(obligations: List[Dict], framework_summary: Dict
             'control_count': summary['control_count'], 'mandatory_count':
             summary['mandatory_count'], 'obligations': summary['obligations']}
     return manifest
-
 
 def main() ->Any:
     """Main extraction process."""
@@ -388,7 +385,6 @@ Extracted {len(obligations)} total obligations from {len(framework_summary)} ISO
         logger.info('   Description: %s' % obl['description'])
         logger.info('   Type: %s, Category: %s' % (obl['type'], obl[
             'category']))
-
 
 if __name__ == '__main__':
     main()

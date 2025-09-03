@@ -18,7 +18,6 @@ from langgraph_agent.graph.enhanced_state import (
     create_enhanced_initial_state,
 )
 
-
 class TestScenario(Enum):
     """Common test scenarios for state testing."""
 
@@ -28,7 +27,6 @@ class TestScenario(Enum):
     COMPLETED = "completed"
     REVIEW_NEEDED = "review_needed"
     RETRY_REQUIRED = "retry_required"
-
 
 @dataclass
 class StateBuilder:
@@ -160,7 +158,6 @@ class StateBuilder:
 
         return state
 
-
 def create_test_state(
     scenario: TestScenario = TestScenario.INITIAL, **overrides
 ) -> EnhancedComplianceState:
@@ -229,7 +226,6 @@ def create_test_state(
     # Build with proper parameters
     return builder.build_with_params(session_id, company_id, initial_message)
 
-
 def create_batch_states(
     count: int = 5, scenario: TestScenario = TestScenario.INITIAL
 ) -> List[EnhancedComplianceState]:
@@ -252,7 +248,6 @@ def create_batch_states(
         states.append(state)
 
     return states
-
 
 def assert_state_transition(
     initial_state: EnhancedComplianceState,
@@ -291,7 +286,6 @@ def assert_state_transition(
         final_state["company_id"] == initial_state["company_id"]
     ), "Company ID should not change during transition"
 
-
 def assert_error_recorded(state: EnhancedComplianceState, error_type: str):
     """
     Assert that an error of a specific type was recorded.
@@ -304,7 +298,6 @@ def assert_error_recorded(state: EnhancedComplianceState, error_type: str):
     assert (
         error_type in error_types
     ), f"Expected error type {error_type} not found. Found: {error_types}"
-
 
 def assert_tool_output_exists(state: EnhancedComplianceState, tool_name: str):
     """
@@ -319,12 +312,10 @@ def assert_tool_output_exists(state: EnhancedComplianceState, tool_name: str):
         tool_name in tool_names
     ), f"Expected tool {tool_name} not found. Found: {tool_names}"
 
-
 # Pytest fixture
 def state_builder_fixture():
     """Pytest fixture for state builder."""
     return StateBuilder()
-
 
 def test_states_fixture():
     """Pytest fixture providing various test states."""
@@ -336,7 +327,6 @@ def test_states_fixture():
         "review": create_test_state(TestScenario.REVIEW_NEEDED),
         "retry": create_test_state(TestScenario.RETRY_REQUIRED),
     }
-
 
 def create_compliance_context(
     company_name: str = "Test Company", framework: str = "SOC2"

@@ -16,7 +16,6 @@ os.environ['DATABASE_URL'] = os.getenv('DATABASE_URL',
     )
 sys.path.insert(0, '/home/omar/Documents/ruleIQ')
 
-
 def main() ->None:
     logger.info('=== Freemium Database Table Debug Script ===')
     try:
@@ -115,7 +114,6 @@ def main() ->None:
     except (ValueError, TypeError) as e:
         logger.info('❌ Script failed: %s' % e)
         traceback.print_exc()
-
 
 if __name__ == '__main__':
     main()

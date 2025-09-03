@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 MAX_RETRIES = 3
 
-
 AIQuestionBank model for storing and managing AI-generated assessment questions.
 Supports dynamic question generation with context tags and difficulty weighting.
 """
@@ -14,7 +13,6 @@ from decimal import Decimal
 from sqlalchemy import Boolean, Column, DateTime, Integer, Numeric, String, Text
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSONB
 from .db_setup import Base
-
 
 class AIQuestionBank(Base):
     """

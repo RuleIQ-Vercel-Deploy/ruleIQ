@@ -7,7 +7,6 @@ import requests
 HTTP_INTERNAL_SERVER_ERROR = 500
 HTTP_NOT_FOUND = 404
 
-
 This module provides a REST API for querying the golden dataset using
 semantic similarity search powered by Neo4j vector indexes.
 """
@@ -24,7 +23,6 @@ from pydantic import BaseModel, Field
 import uvicorn
 from services.ai.evaluation.tools.ingestion_fixed import GoldenDatasetIngestion, EmbeddingService
 
-
 class SearchRequest(BaseModel):
     """Request model for similarity search."""
     query: str = Field(..., description='Search query text')
@@ -33,7 +31,6 @@ class SearchRequest(BaseModel):
         ge=0.0, le=1.0)
     source_filter: Optional[str] = Field(None, description=
         'Filter by source origin')
-
 
 class SearchResult(BaseModel):
     """Response model for search results."""
@@ -44,7 +41,6 @@ class SearchResult(BaseModel):
     source: str
     metadata: Optional[Dict[str, Any]] = None
 
-
 class SearchResponse(BaseModel):
     """Complete search response."""
     query: str
@@ -52,11 +48,9 @@ class SearchResponse(BaseModel):
     total_results: int
     processing_time_ms: float
 
-
 class IngestionRequest(BaseModel):
     """Request model for data ingestion."""
     file_path: str = Field(..., description='Path to golden dataset JSON file')
-
 
 class IngestionResponse(BaseModel):
     """Response model for ingestion results."""
@@ -66,7 +60,6 @@ class IngestionResponse(BaseModel):
     embeddings_generated: int
     errors: List[str] = []
 
-
 class HealthResponse(BaseModel):
     """Health check response."""
     status: str
@@ -74,13 +67,11 @@ class HealthResponse(BaseModel):
     embedding_model: str
     vector_index_ready: bool
 
-
 app = FastAPI(title='Golden Dataset Retrieval API', description=
     'API for querying and managing golden datasets for AI evaluation',
     version='1.0.0')
 ingestion_service = GoldenDatasetIngestion()
 embedding_service = EmbeddingService()
-
 
 @app.get('/health', response_model=HealthResponse)
 async def health_check() ->Any:
@@ -103,7 +94,6 @@ async def health_check() ->Any:
     return HealthResponse(status='healthy' if neo4j_connected else
         'degraded', neo4j_connected=neo4j_connected, embedding_model=
         embedding_service.model_name, vector_index_ready=vector_index_ready)
-
 
 @app.post('/search', response_model=SearchResponse)
 async def search_golden_dataset(request: SearchRequest) ->Any:
@@ -130,7 +120,6 @@ async def search_golden_dataset(request: SearchRequest) ->Any:
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Search failed: {str(e)}')
 
-
 @app.post('/ingest', response_model=IngestionResponse)
 async def ingest_golden_dataset(request: IngestionRequest) ->Any:
     """Ingest a new golden dataset from JSON file."""
@@ -148,7 +137,6 @@ async def ingest_golden_dataset(request: IngestionRequest) ->Any:
     except (OSError, requests.RequestException, KeyError) as e:
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Ingestion failed: {str(e)}')
-
 
 @app.get('/stats')
 async def get_dataset_statistics() ->Dict[str, Any]:
@@ -194,7 +182,6 @@ async def get_dataset_statistics() ->Dict[str, Any]:
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Failed to get statistics: {str(e)}')
 
-
 @app.delete('/clear')
 async def clear_golden_dataset() ->Dict[str, Any]:
     """Clear all golden dataset data from Neo4j."""
@@ -219,7 +206,6 @@ async def clear_golden_dataset() ->Dict[str, Any]:
     except (KeyError, IndexError) as e:
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Failed to clear dataset: {str(e)}')
-
 
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=8001, reload=False)

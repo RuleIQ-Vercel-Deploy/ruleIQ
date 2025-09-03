@@ -65,7 +65,6 @@ def fix_trailing_commas_in_file(file_path: Path) -> bool:
         print(f"Error processing {file_path}: {e}")
         return False
 
-
 def fix_with_ast_approach(file_path: Path) -> bool:
     """Alternative approach using AST for more accurate fixes."""
     try:
@@ -117,7 +116,6 @@ def fix_with_ast_approach(file_path: Path) -> bool:
         print(f"Error with AST approach for {file_path}: {e}")
         return False
 
-
 def main():
     """Main function to fix COM812 violations."""
     root_path = Path('/home/omar/Documents/ruleIQ')
@@ -148,7 +146,6 @@ def main():
     print(f"\n✅ Fixed COM812 violations in {fixed_count} files")
     
     return 0
-
 
 if __name__ == '__main__':
     sys.exit(main())

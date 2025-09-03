@@ -7,7 +7,6 @@ from sqlalchemy.orm import relationship
 
 from .db_setup import Base
 
-
 class AssessmentQuestion(Base):
     __tablename__ = "assessment_questions"
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)

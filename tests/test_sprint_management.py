@@ -14,7 +14,6 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from scripts.sprint_management import SprintManager, Sprint, UserStory, Task, Priority, StoryStatus, TaskType, AcceptanceCriteria
 
-
 class TestSprintManager:
     """Test cases for SprintManager"""
 
@@ -125,7 +124,6 @@ class TestSprintManager:
             assert 'stories_by_status' in progress
             assert 'recommendations' in progress
 
-
 class TestDataClasses:
     """Test sprint data classes"""
 
@@ -169,7 +167,6 @@ class TestDataClasses:
         assert sprint.capacity_hours == 80.0
         assert len(sprint.team_members) == 2
         assert sprint.status == 'PLANNING'
-
 
 class TestSprintBusinessLogic:
     """Test business logic and edge cases"""
@@ -236,7 +233,6 @@ class TestSprintBusinessLogic:
         analysis = self.sprint_manager.analyze_stories(stories)
         risks = analysis['risks']
         assert any('critical complexity' in risk.lower() for risk in risks)
-
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

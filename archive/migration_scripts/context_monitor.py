@@ -22,7 +22,6 @@ import hashlib
 PROJECT_ROOT = Path(__file__).parent.parent
 sys.path.append(str(PROJECT_ROOT))
 
-
 class ContextMonitor:
     """Monitor file changes and detect context-affecting modifications."""
 
@@ -455,7 +454,6 @@ class ContextMonitor:
         with open(change_log_file, "w") as f:
             f.write("\n".join(lines))
 
-
 def main() -> None:
     """Main entry point for context monitoring."""
     if len(sys.argv) > 1 and sys.argv[1] == "--help":
@@ -492,7 +490,6 @@ for updating context documentation.
     except Exception as e:
         logger.info(f"❌ Error during context monitoring: {e}")
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()

@@ -12,14 +12,12 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, Optional
 
-
 class CircuitState(Enum):
     """Circuit breaker states"""
 
     CLOSED = "closed"  # Normal operation
     OPEN = "open"  # Circuit tripped, failing fast
     HALF_OPEN = "half_open"  # Testing if service recovered
-
 
 class ServiceStatus(Enum):
     """Service health status levels"""
@@ -30,7 +28,6 @@ class ServiceStatus(Enum):
     UNKNOWN = "unknown"
     MAINTENANCE = "maintenance"
 
-
 class RetryStrategy(Enum):
     """Available retry strategies"""
 
@@ -38,7 +35,6 @@ class RetryStrategy(Enum):
     LINEAR_BACKOFF = "linear_backoff"
     FIXED_DELAY = "fixed_delay"
     FIBONACCI_BACKOFF = "fibonacci_backoff"
-
 
 class FallbackLevel(Enum):
     """Levels of fallback degradation"""
@@ -49,7 +45,6 @@ class FallbackLevel(Enum):
     TEMPLATE = "template"  # Use response templates
     COMPREHENSIVE = "comprehensive"  # Full fallback system
 
-
 class OfflineMode(Enum):
     """Offline operating modes"""
 
@@ -57,7 +52,6 @@ class OfflineMode(Enum):
     BASIC = "basic"  # Basic offline responses only
     ENHANCED = "enhanced"  # Offline templates and cached responses
     FULL = "full"  # Complete offline functionality
-
 
 class HealthCheckType(Enum):
     """Types of health checks"""
@@ -67,7 +61,6 @@ class HealthCheckType(Enum):
     PERFORMANCE = "performance"  # Response time and throughput
     COMPREHENSIVE = "comprehensive"  # Full health assessment
 
-
 class AlertSeverity(Enum):
     """Alert severity levels"""
 
@@ -75,7 +68,6 @@ class AlertSeverity(Enum):
     WARNING = "warning"
     ERROR = "error"
     CRITICAL = "critical"
-
 
 @dataclass
 class FailureRecord:
@@ -86,7 +78,6 @@ class FailureRecord:
     error_type: str
     error_message: str
     context: Optional[Dict[str, Any]] = None
-
 
 @dataclass
 class RetryAttempt:
@@ -106,7 +97,6 @@ class RetryAttempt:
             return self.end_time - self.start_time
         return None
 
-
 @dataclass
 class OfflineRequest:
     """Represents a request made while offline"""
@@ -118,7 +108,6 @@ class OfflineRequest:
     user_id: Optional[str] = None
     status: str = "pending"  # pending, synced, failed
     priority: int = 1  # 1-5, higher is more important
-
 
 # Common type aliases for consistency
 AIContext = Dict[str, Any]

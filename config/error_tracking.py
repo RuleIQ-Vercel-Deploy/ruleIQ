@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 MAX_RETRIES = 3
 
-
 Comprehensive Error Tracking and Monitoring System for ruleIQ
 
 Provides error tracking, alerting, and automated debugging
@@ -23,14 +22,12 @@ import threading
 from functools import wraps
 logger = logging.getLogger(__name__)
 
-
 class ErrorSeverity(Enum):
     """Error severity levels"""
     LOW = 'low'
     MEDIUM = 'medium'
     HIGH = 'high'
     CRITICAL = 'critical'
-
 
 class ErrorCategory(Enum):
     """Error categories for classification"""
@@ -43,7 +40,6 @@ class ErrorCategory(Enum):
     SECURITY = 'security'
     PERFORMANCE = 'performance'
     UNKNOWN = 'unknown'
-
 
 @dataclass
 class ErrorReport:
@@ -63,7 +59,6 @@ class ErrorReport:
     resolved: bool = False
     resolution_notes: Optional[str] = None
 
-
 @dataclass
 class ErrorPattern:
     """Pattern of recurring errors"""
@@ -77,7 +72,6 @@ class ErrorPattern:
     examples: List[str] = field(default_factory=list)
     affected_endpoints: List[str] = field(default_factory=list)
     affected_users: List[str] = field(default_factory=list)
-
 
 class ErrorTracker:
     """Comprehensive error tracking system"""
@@ -274,7 +268,6 @@ class ErrorTracker:
             cutoff = datetime.now(timezone.utc) - timedelta(days=days)
             self.errors = [e for e in self.errors if e.timestamp > cutoff]
 
-
 class ErrorAlertingSystem:
     """Alert system for critical errors"""
 
@@ -314,10 +307,8 @@ class ErrorAlertingSystem:
             except Exception as e:
                 logger.error('Alert callback failed: %s' % e)
 
-
 global_error_tracker = ErrorTracker()
 error_alerting = ErrorAlertingSystem(global_error_tracker)
-
 
 def track_errors(category: Optional[ErrorCategory]=None, severity: Optional
     [ErrorSeverity]=None, context: Optional[Dict[str, Any]]=None) ->Any:
@@ -348,18 +339,15 @@ def track_errors(category: Optional[ErrorCategory]=None, severity: Optional
             return sync_wrapper
     return decorator
 
-
 def track_api_errors(endpoint: str) ->Any:
     """Decorator specifically for API endpoint error tracking"""
     return track_errors(category=ErrorCategory.API, context={'endpoint':
         endpoint})
 
-
 def track_db_errors(operation: str, table: str='unknown') ->Any:
     """Decorator specifically for database operation error tracking"""
     return track_errors(category=ErrorCategory.DATABASE, context={
         'operation': operation, 'table': table})
-
 
 def get_error_dashboard_data() ->Dict[str, Any]:
     """Get comprehensive error data for dashboard display"""
@@ -371,7 +359,6 @@ def get_error_dashboard_data() ->Dict[str, Any]:
         get_recent_errors(hours=1)), 'last_6_hours': len(
         global_error_tracker.get_recent_errors(hours=6)), 'last_24_hours':
         len(global_error_tracker.get_recent_errors(hours=24))}}
-
 
 def setup_basic_alerting() ->None:
     """Set up basic console alerting"""

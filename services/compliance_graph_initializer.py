@@ -20,7 +20,6 @@ from dataclasses import dataclass, asdict
 from services.neo4j_service import Neo4jGraphRAGService
 logger = logging.getLogger(__name__)
 
-
 @dataclass
 class ComplianceDomain:
     """Core compliance domain structure"""
@@ -31,7 +30,6 @@ class ComplianceDomain:
     business_impact: str
     oversight_body: Optional[str] = None
 
-
 @dataclass
 class Jurisdiction:
     """Legal jurisdiction structure"""
@@ -41,7 +39,6 @@ class Jurisdiction:
     enforcement_approach: str
     penalties_framework: str
     data_localization: bool = False
-
 
 @dataclass
 class Regulation:
@@ -56,7 +53,6 @@ class Regulation:
     penalty_framework: str
     extraterritorial_reach: bool
 
-
 @dataclass
 class Requirement:
     """Specific regulatory requirement"""
@@ -69,7 +65,6 @@ class Requirement:
     risk_level: str
     business_function: str
 
-
 @dataclass
 class Control:
     """Control measure for compliance"""
@@ -81,7 +76,6 @@ class Control:
     automation_level: str
     cost_impact: str
 
-
 @dataclass
 class ComplianceMetric:
     """Compliance measurement and KPI"""
@@ -92,7 +86,6 @@ class ComplianceMetric:
     reporting_frequency: str
     data_source: str
     controls: List[str]
-
 
 class ComplianceGraphInitializer:
     """Initializes Neo4j graph with CCO compliance playbook data"""
@@ -628,7 +621,6 @@ class ComplianceGraphInitializer:
         logger.info('Created temporal relationships')
         return 4
 
-
 async def initialize_compliance_graph() ->Dict[str, Any]:
     """Standalone function to initialize compliance graph"""
     neo4j_service = Neo4jGraphRAGService()
@@ -639,7 +631,6 @@ async def initialize_compliance_graph() ->Dict[str, Any]:
         return result
     finally:
         await neo4j_service.close()
-
 
 if __name__ == '__main__':
 

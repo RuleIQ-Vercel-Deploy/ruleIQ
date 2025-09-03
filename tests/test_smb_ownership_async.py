@@ -27,14 +27,11 @@ engine = create_async_engine(SQLALCHEMY_DATABASE_URL)
 TestingSessionLocal = async_sessionmaker(engine, class_=AsyncSession,
     expire_on_commit=False)
 
-
 async def override_get_async_db():
     async with TestingSessionLocal() as session:
         yield session
 
-
 app.dependency_overrides[get_async_db] = override_get_async_db
-
 
 @pytest.fixture(scope='function')
 async def setup_db():
@@ -44,13 +41,11 @@ async def setup_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)
 
-
 @pytest.fixture
 async def client():
     transport = ASGITransport(app=app)
     async with AsyncClient(transport=transport, base_url='http://test') as ac:
         yield ac
-
 
 @pytest.fixture
 async def test_user(setup_db):
@@ -64,7 +59,6 @@ async def test_user(setup_db):
         await db.refresh(user)
         yield user
 
-
 @pytest.fixture
 async def other_user(setup_db):
     """Create another user to test ownership isolation."""
@@ -77,20 +71,17 @@ async def other_user(setup_db):
         await db.refresh(user)
         yield user
 
-
 @pytest.fixture
 def auth_headers(test_user):
     """Generate auth headers for the test user."""
     token = create_access_token({'sub': str(test_user.id)})
     return {'Authorization': f'Bearer {token}'}
 
-
 @pytest.fixture
 def other_auth_headers(other_user):
     """Generate auth headers for the other user."""
     token = create_access_token({'sub': str(other_user.id)})
     return {'Authorization': f'Bearer {token}'}
-
 
 @pytest.mark.asyncio
 class TestSMBOwnership:

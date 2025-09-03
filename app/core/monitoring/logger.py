@@ -18,7 +18,6 @@ from contextvars import ContextVar
 # Context variable for request tracking
 request_id_context: ContextVar[Optional[str]] = ContextVar("request_id", default=None)
 
-
 class LogLevel(str, Enum):
     """Logging levels."""
 
@@ -27,7 +26,6 @@ class LogLevel(str, Enum):
     WARNING = "WARNING"
     ERROR = "ERROR"
     CRITICAL = "CRITICAL"
-
 
 class StructuredFormatter(logging.Formatter):
     """JSON structured formatter for production logging."""
@@ -89,7 +87,6 @@ class StructuredFormatter(logging.Formatter):
 
         return json.dumps(log_data)
 
-
 class ColoredFormatter(logging.Formatter):
     """Colored formatter for development console output."""
 
@@ -119,7 +116,6 @@ class ColoredFormatter(logging.Formatter):
             msg += f"\n{color}{''.join(traceback.format_exception(*record.exc_info))}{reset}"
 
         return msg
-
 
 class StructuredLogger:
     """Enhanced logger with structured logging capabilities."""
@@ -174,7 +170,6 @@ class StructuredLogger:
         """Log exception with traceback."""
         kwargs["exc_info"] = True
         self._log("ERROR", message, **kwargs)
-
 
 def setup_logging(
     log_level: Union[str, LogLevel] = LogLevel.INFO,
@@ -247,7 +242,6 @@ def setup_logging(
     logging.getLogger("aiohttp").setLevel(logging.WARNING)
     logging.getLogger("httpx").setLevel(logging.WARNING)
 
-
 def get_logger(
     name: str, level: Optional[Union[str, LogLevel]] = None
 ) -> StructuredLogger:
@@ -266,16 +260,13 @@ def get_logger(
         logger.set_level(level)
     return logger
 
-
 def set_request_id(request_id: str) -> None:
     """Set request ID for current context."""
     request_id_context.set(request_id)
 
-
 def get_request_id() -> Optional[str]:
     """Get current request ID."""
     return request_id_context.get()
-
 
 def clear_request_id() -> None:
     """Clear request ID from context."""

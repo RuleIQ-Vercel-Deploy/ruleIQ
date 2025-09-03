@@ -16,7 +16,6 @@ from services.neo4j_service import get_neo4j_service
 
 logger = logging.getLogger(__name__)
 
-
 @track_node_cost(node_name="compliance_check", model_name="gpt-4")
 async def compliance_check_node(
     state: UnifiedComplianceState,
@@ -57,7 +56,6 @@ async def compliance_check_node(
         return state
 
     try:
-        # Extract requirements from RAG documents
         requirements = extract_requirements_from_rag(
             state.get("relevant_documents", [])
         )
@@ -123,7 +121,6 @@ async def compliance_check_node(
 
     return state
 
-
 @track_node_cost(node_name="extract_requirements", track_tokens=False)
 def extract_requirements_from_rag(
     documents: List[Dict[str, Any]],
@@ -143,7 +140,6 @@ def extract_requirements_from_rag(
         content = doc.get("content", "")
         metadata = doc.get("metadata", {})
 
-        # Parse requirements from document content
         # This is a simplified version - in production, use NLP or structured extraction
         if "requirement" in content.lower() or "must" in content.lower():
             requirements.append(
@@ -160,7 +156,6 @@ def extract_requirements_from_rag(
     )
 
     return requirements
-
 
 @track_node_cost(node_name="check_compliance_status", model_name="gpt-4")
 async def check_compliance_status(
@@ -271,7 +266,6 @@ async def check_compliance_status(
             "error": str(e),
             "timestamp": datetime.now().isoformat(),
         }
-
 
 async def assess_compliance_risk(
     state: UnifiedComplianceState,

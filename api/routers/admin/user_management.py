@@ -21,7 +21,6 @@ from services.rbac_service import RBACService, initialize_rbac_system
 router = APIRouter(prefix='/api/v1/admin/users', tags=['admin',
     'user-management'])
 
-
 class UserCreateRequest(BaseModel):
     """Request model for creating a new user."""
     email: EmailStr
@@ -32,14 +31,12 @@ class UserCreateRequest(BaseModel):
     roles: List[str] = Field(default_factory=list, description=
         'List of role names to assign')
 
-
 class UserUpdateRequest(BaseModel):
     """Request model for updating a user."""
     email: Optional[EmailStr] = None
     full_name: Optional[str] = None
     is_active: Optional[bool] = None
     is_verified: Optional[bool] = None
-
 
 class UserResponse(BaseModel):
     """Response model for user information."""
@@ -54,10 +51,8 @@ class UserResponse(BaseModel):
     roles: List[Dict[str, Any]]
     permissions: List[str]
 
-
     class Config:
         from_attributes = True
-
 
 class RoleCreateRequest(BaseModel):
     """Request model for creating a new role."""
@@ -66,13 +61,11 @@ class RoleCreateRequest(BaseModel):
     description: Optional[str] = None
     permissions: List[str] = Field(default_factory=list)
 
-
 class RoleUpdateRequest(BaseModel):
     """Request model for updating a role."""
     display_name: Optional[str] = None
     description: Optional[str] = None
     is_active: Optional[bool] = None
-
 
 class RoleResponse(BaseModel):
     """Response model for role information."""
@@ -86,17 +79,14 @@ class RoleResponse(BaseModel):
     permissions: List[Dict[str, Any]]
     user_count: int
 
-
     class Config:
         from_attributes = True
-
 
 class RoleAssignmentRequest(BaseModel):
     """Request model for role assignment."""
     user_id: UUID
     role_id: UUID
     expires_at: Optional[datetime] = None
-
 
 class PermissionResponse(BaseModel):
     """Response model for permission information."""
@@ -108,10 +98,8 @@ class PermissionResponse(BaseModel):
     resource_type: Optional[str]
     is_active: bool
 
-
     class Config:
         from_attributes = True
-
 
 class AdminStatsResponse(BaseModel):
     """Response model for admin statistics."""
@@ -124,7 +112,6 @@ class AdminStatsResponse(BaseModel):
     total_permissions: int
     recent_logins: int
     recent_registrations: int
-
 
 class AuditLogResponse(BaseModel):
     """Response model for audit log entries."""
@@ -139,10 +126,8 @@ class AuditLogResponse(BaseModel):
     ip_address: Optional[str]
     user_agent: Optional[str]
 
-
     class Config:
         from_attributes = True
-
 
 @router.get('/', response_model=List[UserResponse])
 async def list_users(page: int=Query(1, ge=1), limit: int=Query(50, ge=1,
@@ -178,7 +163,6 @@ async def list_users(page: int=Query(1, ge=1), limit: int=Query(50, ge=1,
             roles, permissions=permissions))
     return user_responses
 
-
 @router.get('/{user_id}', response_model=UserResponse)
 async def get_user(user_id: UUID, current_user: UserWithRoles=Depends(
     require_permission('user_list')), db: Session=Depends(get_db)) ->Any:
@@ -194,7 +178,6 @@ async def get_user(user_id: UUID, current_user: UserWithRoles=Depends(
         full_name, is_active=user.is_active, is_verified=user.is_verified,
         created_at=user.created_at, updated_at=user.updated_at, last_login=
         user.last_login, roles=roles, permissions=permissions)
-
 
 @router.post('/', response_model=UserResponse)
 async def create_user(request: UserCreateRequest, current_user:
@@ -234,7 +217,6 @@ async def create_user(request: UserCreateRequest, current_user:
         created_at=user.created_at, updated_at=user.updated_at, last_login=
         user.last_login, roles=roles, permissions=permissions)
 
-
 @router.put('/{user_id}', response_model=UserResponse)
 async def update_user(user_id: UUID, request: UserUpdateRequest,
     current_user: UserWithRoles=Depends(require_permission('user_update')),
@@ -268,7 +250,6 @@ async def update_user(user_id: UUID, request: UserUpdateRequest,
         created_at=user.created_at, updated_at=user.updated_at, last_login=
         user.last_login, roles=roles, permissions=permissions)
 
-
 @router.delete('/{user_id}')
 async def delete_user(user_id: UUID, current_user: UserWithRoles=Depends(
     require_permission('user_delete')), db: Session=Depends(get_db)) ->Dict[
@@ -292,7 +273,6 @@ async def delete_user(user_id: UUID, current_user: UserWithRoles=Depends(
     db.commit()
     return {'message': 'User deleted successfully'}
 
-
 @router.get('/roles/', response_model=List[RoleResponse])
 async def list_roles(current_user: UserWithRoles=Depends(require_permission
     ('admin_roles')), db: Session=Depends(get_db)) ->Dict[str, Any]:
@@ -314,7 +294,6 @@ async def list_roles(current_user: UserWithRoles=Depends(require_permission
             created_at=role.created_at, permissions=permission_data,
             user_count=user_count))
     return role_responses
-
 
 @router.post('/roles/', response_model=RoleResponse)
 async def create_role(request: RoleCreateRequest, current_user:
@@ -348,7 +327,6 @@ async def create_role(request: RoleCreateRequest, current_user:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail
             =str(e))
 
-
 @router.post('/{user_id}/roles')
 async def assign_role_to_user(user_id: UUID, request: RoleAssignmentRequest,
     current_user: UserWithRoles=Depends(require_permission('admin_roles')),
@@ -366,7 +344,6 @@ async def assign_role_to_user(user_id: UUID, request: RoleAssignmentRequest,
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail
             =str(e))
 
-
 @router.delete('/{user_id}/roles/{role_id}')
 async def revoke_role_from_user(user_id: UUID, role_id: UUID, current_user:
     UserWithRoles=Depends(require_permission('admin_roles')), db: Session=
@@ -379,7 +356,6 @@ async def revoke_role_from_user(user_id: UUID, role_id: UUID, current_user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=
             'Role assignment not found')
     return {'message': 'Role revoked successfully'}
-
 
 @router.get('/statistics', response_model=AdminStatsResponse)
 async def get_admin_statistics(current_user: UserWithRoles=Depends(
@@ -403,7 +379,6 @@ async def get_admin_statistics(current_user: UserWithRoles=Depends(
         total_roles, system_roles=system_roles, custom_roles=custom_roles,
         total_permissions=total_permissions, recent_logins=recent_logins,
         recent_registrations=recent_registrations)
-
 
 @router.get('/audit-logs', response_model=List[AuditLogResponse])
 async def get_audit_logs(page: int=Query(1, ge=1), limit: int=Query(50, ge=
@@ -430,7 +405,6 @@ async def get_audit_logs(page: int=Query(1, ge=1), limit: int=Query(50, ge=
         severity=log.severity, created_at=log.created_at, ip_address=log.
         ip_address, user_agent=log.user_agent) for log in audit_logs]
 
-
 @router.post('/initialize-rbac')
 async def initialize_rbac_system_endpoint(current_user: UserWithRoles=
     Depends(require_permission('admin_roles')), db: Session=Depends(get_db)
@@ -443,7 +417,6 @@ async def initialize_rbac_system_endpoint(current_user: UserWithRoles=
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Failed to initialize RBAC system: {str(e)}')
-
 
 @router.post('/cleanup-expired-roles')
 async def cleanup_expired_roles(current_user: UserWithRoles=Depends(

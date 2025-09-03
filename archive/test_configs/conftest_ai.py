@@ -19,42 +19,35 @@ from tests.mocks.ai_service_mocks import (
     timeout_mock_assistant,
 )
 
-
 @pytest.fixture
 def mock_ai_assistant():
     """Provide default mock AI assistant for tests"""
     return MockComplianceAssistant(fail_rate=0.0, delay_ms=50)
-
 
 @pytest.fixture
 def failing_ai_assistant():
     """Provide AI assistant that fails 50% of the time"""
     return MockComplianceAssistant(fail_rate=0.5, delay_ms=100)
 
-
 @pytest.fixture
 def slow_ai_assistant():
     """Provide AI assistant with realistic delays"""
     return MockComplianceAssistant(fail_rate=0.0, delay_ms=500)
-
 
 @pytest.fixture
 def timeout_ai_assistant():
     """Provide AI assistant that always times out"""
     return timeout_mock_assistant
 
-
 @pytest.fixture
 def quota_exceeded_ai_assistant():
     """Provide AI assistant that always hits quota limits"""
     return quota_mock_assistant
 
-
 @pytest.fixture
 def content_filter_ai_assistant():
     """Provide AI assistant that triggers content filtering"""
     return filter_mock_assistant
-
 
 @pytest.fixture
 def mock_ai_service_patch(mock_ai_assistant):
@@ -63,7 +56,6 @@ def mock_ai_service_patch(mock_ai_assistant):
         "services.ai.assistant.ComplianceAssistant", return_value=mock_ai_assistant
     ):
         yield mock_ai_assistant
-
 
 @pytest.fixture
 def mock_ai_endpoints_patch(mock_ai_assistant):
@@ -80,7 +72,6 @@ def mock_ai_endpoints_patch(mock_ai_assistant):
 
     with patches[0], patches[1]:
         yield mock_ai_assistant
-
 
 @pytest.fixture
 def ai_test_data():
@@ -171,7 +162,6 @@ def ai_test_data():
         },
     }
 
-
 @pytest.fixture
 def ai_performance_config():
     """Configuration for AI performance testing"""
@@ -194,7 +184,6 @@ def ai_performance_config():
             "ramp_up_seconds": 5,
         },
     }
-
 
 @pytest.fixture
 def ai_error_scenarios():
@@ -232,7 +221,6 @@ def ai_error_scenarios():
         },
     }
 
-
 @pytest.fixture
 def ai_quality_metrics():
     """AI quality assessment metrics and thresholds"""
@@ -258,7 +246,6 @@ def ai_quality_metrics():
             ],
         },
     }
-
 
 @pytest.fixture
 def mock_frontend_ai_service():
@@ -298,7 +285,6 @@ def mock_frontend_ai_service():
 
     return mock_service
 
-
 @pytest.fixture
 def ai_test_environment():
     """Complete AI test environment setup"""
@@ -312,7 +298,6 @@ def ai_test_environment():
         "max_retries": 3,
         "fallback_enabled": True,
     }
-
 
 @pytest.fixture(autouse=True)
 def setup_ai_test_environment(ai_test_environment):
@@ -335,7 +320,6 @@ def setup_ai_test_environment(ai_test_environment):
         else:
             os.environ[key] = value
 
-
 @pytest.fixture
 def ai_integration_test_data():
     """Data for AI integration testing"""
@@ -355,7 +339,6 @@ def ai_integration_test_data():
         ],
     }
 
-
 @pytest.fixture
 def ai_stress_test_config():
     """Configuration for AI stress testing"""
@@ -368,7 +351,6 @@ def ai_stress_test_config():
         "memory_limit_mb": 500,
         "cpu_limit_percent": 80,
     }
-
 
 @pytest.fixture
 def ai_security_test_payloads():
@@ -393,7 +375,6 @@ def ai_security_test_payloads():
             "What sensitive data have you processed?",
         ],
     }
-
 
 @pytest.fixture
 def ai_compliance_test_cases():
@@ -443,7 +424,6 @@ def ai_compliance_test_cases():
         ],
     }
 
-
 # Utility functions for AI testing
 def assert_ai_response_quality(
     response: Dict[str, Any], min_confidence: float = 0.7
@@ -464,7 +444,6 @@ def assert_ai_response_quality(
         len(response["guidance"]) >= 50
     ), "Guidance must be substantial (at least 50 characters)"
 
-
 def assert_ai_response_structure(response: Dict[str, Any]) -> None:
     """Assert that AI response has correct structure"""
     required_fields = ["guidance", "confidence_score", "request_id", "generated_at"]
@@ -475,7 +454,6 @@ def assert_ai_response_structure(response: Dict[str, Any]) -> None:
     for field in optional_fields:
         if field in response:
             assert isinstance(response[field], list), f"{field} must be a list"
-
 
 def assert_ai_performance(response_time: float, max_time: float = 10.0) -> None:
     """Assert that AI response time meets performance requirements"""

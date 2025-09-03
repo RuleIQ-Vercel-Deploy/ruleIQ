@@ -39,7 +39,6 @@ class SecurityFixer:
             
             # Check if file has hardcoded password
             if "neo4j_password = 'ruleiq123'" in content or 'neo4j_password = "ruleiq123"' in content:
-                # Add import if not present
                 if "import os" not in content:
                     content = "import os\n" + content
                 

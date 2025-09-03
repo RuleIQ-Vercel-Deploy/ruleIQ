@@ -14,7 +14,6 @@ HTTP_NOT_FOUND = 404
 
 router = APIRouter()
 
-
 @router.post('/generate', status_code=201)
 async def generate_policy(request: PolicyGenerateRequest, current_user:
     User=Depends(get_current_active_user), db: AsyncSession=Depends(
@@ -38,13 +37,11 @@ async def generate_policy(request: PolicyGenerateRequest, current_user:
         'Schedule a review meeting with stakeholders',
         'Set up policy training for staff', 'Create implementation timeline']}
 
-
 @router.get('/', response_model=PolicyListResponse)
 async def list_policies(current_user: User=Depends(get_current_active_user),
     db: AsyncSession=Depends(get_async_db)) ->Dict[str, Any]:
     policies = await get_user_policies(db, current_user.id)
     return {'policies': policies}
-
 
 @router.get('/{id}', response_model=GeneratedPolicyResponse)
 async def get_policy(policy_id: UUID, current_user: User=Depends(
@@ -54,7 +51,6 @@ async def get_policy(policy_id: UUID, current_user: User=Depends(
         raise HTTPException(status_code=HTTP_NOT_FOUND, detail=
             'Policy not found')
     return policy
-
 
 @router.patch('/{id}/status')
 async def update_policy_status(policy_id: UUID, status_update: dict,
@@ -72,12 +68,10 @@ async def update_policy_status(policy_id: UUID, status_update: dict,
     return {'id': policy.id, 'status': policy.status, 'approved':
         status_update.get('approved', False)}
 
-
 @router.put('/{id}/approve')
 async def approve_policy(policy_id: UUID, current_user: User=Depends(
     get_current_active_user)) ->Dict[str, Any]:
     return {'message': 'Policy approved', 'policy_id': policy_id}
-
 
 @router.post('/{id}/regenerate-section')
 async def regenerate_policy_section(policy_id: UUID, section_data: dict,
@@ -89,7 +83,6 @@ async def regenerate_policy_section(policy_id: UUID, section_data: dict,
         'regenerated': True, 'content':
         f'Regenerated content for {section_name} section', 'message':
         f"Section '{section_name}' regenerated successfully"}
-
 
 @router.get('/templates')
 async def get_policy_templates(current_user: User=Depends(
@@ -106,7 +99,6 @@ async def get_policy_templates(current_user: User=Depends(
         'sections': 10, 'description':
         'SOC 2 Type II compliance policy template'}], 'total': 3}
 
-
 @router.post('/{id}/clone')
 async def clone_policy(policy_id: UUID, clone_data: dict, current_user:
     User=Depends(get_current_active_user), db: AsyncSession=Depends(
@@ -116,7 +108,6 @@ async def clone_policy(policy_id: UUID, clone_data: dict, current_user:
     return {'original_id': str(policy_id), 'cloned_id': 'cloned-policy-123',
         'name': new_name, 'status': 'draft', 'message':
         f"Policy cloned successfully as '{new_name}'"}
-
 
 @router.get('/{id}/versions')
 async def get_policy_versions(policy_id: UUID, current_user: User=Depends(

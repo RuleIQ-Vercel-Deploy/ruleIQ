@@ -280,7 +280,6 @@ TEST_CONFIGS["ci"] = {
     ],
 }
 
-
 def get_system_info() -> Dict:
     """Get system information for optimal test configuration."""
     return {
@@ -289,7 +288,6 @@ def get_system_info() -> Dict:
         "available_memory_gb": psutil.virtual_memory().available / (1024**3),
     }
 
-
 def optimize_parallelism(base_workers: int, system_info: Dict) -> int:
     """Optimize number of parallel workers based on system resources."""
     cpu_workers = min(base_workers, system_info["cpu_count"])
@@ -297,7 +295,6 @@ def optimize_parallelism(base_workers: int, system_info: Dict) -> int:
         1, int(system_info["available_memory_gb"] / 2)
     )  # 2GB per worker
     return min(cpu_workers, memory_workers)
-
 
 async def run_test_chunk(
     chunk: Dict, system_info: Dict
@@ -359,7 +356,6 @@ async def run_test_chunk(
         logger.info(f"💥 ERROR: {chunk_name} - {e!s}")
         return chunk_name, False, f"Error: {e!s}", duration
 
-
 async def run_chunks_parallel(
     chunks: List[Dict], max_concurrent: int = 3
 ) -> List[Tuple]:
@@ -401,7 +397,6 @@ async def run_chunks_parallel(
 
     return results
 
-
 def print_summary(results: List[Tuple], total_time: float) -> None:
     """Print test execution summary."""
     logger.info("\n" + "=" * 80)
@@ -437,7 +432,6 @@ def print_summary(results: List[Tuple], total_time: float) -> None:
                         logger.info(f"    {relevant_lines[-1][:100]}...")
 
     logger.info("=" * 80)
-
 
 async def main() -> None:
     """Main execution function."""
@@ -479,7 +473,6 @@ async def main() -> None:
     # Exit with error code if any tests failed
     failed_count = sum(1 for _, success, _, _ in results if not success)
     sys.exit(failed_count)
-
 
 if __name__ == "__main__":
     asyncio.run(main())

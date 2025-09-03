@@ -27,7 +27,6 @@ from services.cache_service import CacheService
 from config.settings import settings
 logger = logging.getLogger(__name__)
 
-
 class EncryptionService:
     """
     Comprehensive encryption service for data protection
@@ -420,9 +419,7 @@ class EncryptionService:
             'key_rotation_interval': str(self._key_rotation_interval),
             'last_rotation': 'N/A', 'status': 'healthy'}
 
-
 _encryption_service = None
-
 
 def get_encryption_service() ->EncryptionService:
     """Get or create encryption service instance"""

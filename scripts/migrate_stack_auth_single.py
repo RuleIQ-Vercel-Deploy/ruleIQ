@@ -63,7 +63,6 @@ ATTRIBUTE_PATTERNS = [{'pattern': '(\\w+)\\.id\\b', 'replacement':
     'description': 'Attribute: .is_superuser -> role check', 'user_vars': [
     'current_user', 'user', 'auth_user', 'authenticated_user']}]
 
-
 def analyze_file(file_path: Path) ->Dict[str, List[Dict]]:
     """Analyze a file and return all needed changes"""
     content = file_path.read_text()
@@ -104,7 +103,6 @@ def analyze_file(file_path: Path) ->Dict[str, List[Dict]]:
                         group(0), 'replacement': pattern_info['replacement'
                         ], 'description': pattern_info['description']})
     return changes
-
 
 def print_dry_run_report(file_path: Path, changes: Dict[str, List[Dict]]
     ) ->int:
@@ -160,7 +158,6 @@ def print_dry_run_report(file_path: Path, changes: Dict[str, List[Dict]]
                 )
     return total_changes
 
-
 def apply_migrations(file_path: Path, changes: Dict[str, List[Dict]]) ->str:
     """Apply all migrations to file content"""
     content = file_path.read_text()
@@ -185,14 +182,12 @@ def apply_migrations(file_path: Path, changes: Dict[str, List[Dict]]) ->str:
                 lines[line_idx] = new_line
     return '\n'.join(lines)
 
-
 def create_backup(file_path: Path) ->Path:
     """Create timestamped backup"""
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     backup_path = file_path.with_suffix(f'.{timestamp}.jwt-backup')
     shutil.copy2(file_path, backup_path)
     return backup_path
-
 
 def main() ->int:
     parser = argparse.ArgumentParser(description=
@@ -236,7 +231,6 @@ def main() ->int:
         f"4. Commit: git add {file_path} && git commit -m 'feat: migrate {file_path.stem} to Stack Auth'",
         )
     return 0
-
 
 if __name__ == '__main__':
     sys.exit(main())

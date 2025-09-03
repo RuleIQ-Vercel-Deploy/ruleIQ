@@ -12,7 +12,6 @@ from fastapi.testclient import TestClient
 sys.path.insert(0, str(Path(__file__).parent))
 from main import app
 
-
 def test_phase1_endpoints():
     """Test Phase 1 endpoints with FastAPI TestClient"""
     client = TestClient(app)
@@ -55,7 +54,6 @@ def test_phase1_endpoints():
         print(f'   {endpoint:35} {status}')
     print(f'\n   Results: {passed}/{total} endpoints properly protected')
     return passed == total
-
 
 if __name__ == '__main__':
     success = test_phase1_endpoints()

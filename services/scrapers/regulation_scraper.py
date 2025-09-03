@@ -19,7 +19,6 @@ import re
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 class RegulationScraper:
     """Scrapes regulation content from official URLs."""
 
@@ -273,7 +272,6 @@ class RegulationScraper:
                         , reg_id=result['regulation_id'], control=control)
                 logger.info('Updated Neo4j for %s' % result['regulation_id'])
 
-
 async def test_single_regulation() ->None:
     """Test scraping a single regulation."""
     neo4j_uri = 'bolt://localhost:7688'
@@ -324,11 +322,9 @@ async def test_single_regulation() ->None:
     finally:
         await scraper.close()
 
-
 async def main() ->None:
     """Main execution function."""
     await test_single_regulation()
-
 
 if __name__ == '__main__':
     asyncio.run(main())

@@ -10,12 +10,10 @@ os.environ["USE_MOCK_AI"] = "true"
 from services.ai.assistant import ComplianceAssistant
 from config.ai_config import ModelType
 
-# Attempt to import for spec, but allow it to fail if not installed
 try:
     import google.generativeai as genai
 except ImportError:
     genai = MagicMock()
-
 
 class TestAIFallback(unittest.TestCase):
     @patch("services.ai.assistant.get_ai_model")
@@ -64,7 +62,6 @@ class TestAIFallback(unittest.TestCase):
 
         # Verify that get_ai_model was called once for the fallback
         mock_get_ai_model.assert_called_once()
-
 
 if __name__ == "__main__":
     unittest.main()

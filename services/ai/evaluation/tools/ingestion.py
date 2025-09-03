@@ -10,7 +10,6 @@ import numpy as np
 from services.ai.evaluation.schemas.common import GoldenDoc, GoldenChunk, SourceMeta, RegCitation, ExpectedOutcome
 from services.ai.evaluation.infrastructure.neo4j_setup import Neo4jConnection
 
-
 class DocumentProcessor:
     """Process and validate golden dataset documents."""
 
@@ -58,7 +57,6 @@ class DocumentProcessor:
         content = re.sub('([.!?])\\s+', '\\1 ', content)
         return content
 
-
 class ChunkProcessor:
     """Process documents into chunks for embedding."""
 
@@ -89,7 +87,6 @@ class ChunkProcessor:
             else:
                 break
         return chunks
-
 
 class EmbeddingGenerator:
     """Generate embeddings for documents and chunks."""
@@ -125,7 +122,6 @@ class EmbeddingGenerator:
             else:
                 result.append(embedding)
         return result
-
 
 class GraphIngestion:
     """Ingest documents and chunks into Neo4j."""
@@ -226,7 +222,6 @@ class GraphIngestion:
                     logger.info('Error creating chunk relationship: %s' % e)
                     return False
         return True
-
 
 class GoldenDatasetIngestion:
     """Complete ingestion pipeline for golden datasets."""

@@ -14,7 +14,6 @@ from fastapi.responses import JSONResponse
 from config.settings import get_settings
 settings = get_settings()
 
-
 class RedisRateLimiter:
     """Redis-based rate limiter for distributed environments."""
 
@@ -107,7 +106,6 @@ class RedisRateLimiter:
         if self.redis_client:
             await self.redis_client.close()
 
-
 general_limiter = RedisRateLimiter(requests_per_window=settings.
     rate_limit_requests, window_seconds=settings.rate_limit_window,
     key_prefix='general')
@@ -115,7 +113,6 @@ auth_limiter = RedisRateLimiter(requests_per_window=10, window_seconds=60,
     key_prefix='auth')
 api_limiter = RedisRateLimiter(requests_per_window=100, window_seconds=60,
     key_prefix='api')
-
 
 async def redis_rate_limit_middleware(request: Request, call_next) ->Any:
     """Redis-based rate limiting middleware."""
@@ -141,7 +138,6 @@ async def redis_rate_limit_middleware(request: Request, call_next) ->Any:
         general_limiter.window_seconds)
     return response
 
-
 def redis_rate_limit(requests_per_window: int=60, window_seconds: int=60,
     key_prefix: str='custom') ->Any:
     """Create a custom Redis rate limit dependency."""
@@ -160,7 +156,6 @@ def redis_rate_limit(requests_per_window: int=60, window_seconds: int=60,
                 f'Rate limit exceeded: {requests_per_window} requests per {window_seconds} seconds. Try again in {retry_after} seconds'
                 , headers={'Retry-After': str(retry_after)})
     return check_limit
-
 
 def auth_redis_rate_limit() ->Any:
     """Redis-based auth endpoint rate limiting."""

@@ -13,7 +13,6 @@ from config.langsmith_config import with_langsmith_tracing
 
 logger = logging.getLogger(__name__)
 
-
 @with_langsmith_tracing("rag.query")
 async def rag_query_node(state: UnifiedComplianceState) -> UnifiedComplianceState:
     """
@@ -33,7 +32,6 @@ async def rag_query_node(state: UnifiedComplianceState) -> UnifiedComplianceStat
     try:
         logger.info("RAG query node executing")
 
-        # Extract query from metadata or compliance context
         query = state.get("metadata", {}).get("rag_query", "")
         regulation = state.get("metadata", {}).get("regulation", "")
 
@@ -100,7 +98,6 @@ async def rag_query_node(state: UnifiedComplianceState) -> UnifiedComplianceStat
 
         return state
 
-
 @with_langsmith_tracing("rag.retrieve_documents")
 async def retrieve_compliance_documents(
     query: str, regulation: str = None, limit: int = 10
@@ -155,7 +152,6 @@ async def retrieve_compliance_documents(
     except Exception as e:
         logger.error(f"Error retrieving documents: {str(e)}")
         return []
-
 
 @with_langsmith_tracing("rag.semantic_search")
 async def semantic_search(

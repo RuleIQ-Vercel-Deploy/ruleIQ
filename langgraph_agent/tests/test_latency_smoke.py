@@ -22,7 +22,6 @@ from langgraph_agent.evals.metrics import (
     run_latency_smoke_test,
 )
 
-
 class LatencyTestHelper:
     """Helper class for latency testing utilities."""
 
@@ -96,7 +95,6 @@ class LatencyTestHelper:
             },
         ]
         return test_inputs
-
 
 @pytest.mark.asyncio
 class TestGraphLatency:
@@ -263,7 +261,6 @@ class TestGraphLatency:
             f"Concurrent execution time: {total_time_ms:.1f}ms for {len(test_inputs)} requests"
         )
 
-
 @pytest.mark.asyncio
 class TestToolLatency:
     """Test tool execution latency."""
@@ -408,7 +405,6 @@ class TestToolLatency:
             f"Tool chain execution: {chain_latency_ms:.1f}ms for {len(tool_sequence)} tools"
         )
 
-
 @pytest.mark.asyncio
 class TestLatencyEvaluator:
     """Test the LatencyEvaluator utility."""
@@ -493,7 +489,6 @@ class TestLatencyEvaluator:
         assert result.score == 1.0
         assert result.details["meets_slo"]
 
-
 @pytest.mark.asyncio
 class TestSmokeTestRunner:
     """Test the smoke test runner utility."""
@@ -576,7 +571,6 @@ class TestSmokeTestRunner:
         assert metrics.samples == 6  # All attempts recorded
         assert metrics.p95_ms > 0
 
-
 @pytest.mark.slow
 @pytest.mark.asyncio
 class TestRealisticLatencyBenchmarks:
@@ -654,10 +648,8 @@ class TestRealisticLatencyBenchmarks:
             percentiles["p50"] <= SLO_P95_LATENCY_MS * 0.4
         ), "P50 latency should be much lower than SLO"
 
-
 # Performance test configuration
 pytestmark = [pytest.mark.asyncio, pytest.mark.performance]
-
 
 def test_slo_constants_reasonable():
     """Test that SLO constants are reasonable for user experience."""
@@ -665,7 +657,6 @@ def test_slo_constants_reasonable():
     assert SLO_P95_LATENCY_MS == 2500
     assert SLO_P95_LATENCY_MS <= 3000  # Not too slow
     assert SLO_P95_LATENCY_MS >= 1000  # Not unrealistically fast
-
 
 if __name__ == "__main__":
     # Run latency tests directly

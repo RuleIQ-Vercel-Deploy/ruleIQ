@@ -7,7 +7,6 @@ HTTP_INTERNAL_SERVER_ERROR = 500
 HALF_RATIO = 0.5
 MAX_ITEMS = 1000
 
-
 Fact Checking and Self-Critic Module for Agentic RAG System
 Provides advanced fact-checking, source verification, and response quality assessment
 """
@@ -22,17 +21,14 @@ import openai
 from mistralai import Mistral
 logger = logging.getLogger(__name__)
 
-
 class FactCheckConfidence(Enum):
     """Confidence levels for fact checking"""
     HIGH = 'high'
     MEDIUM = 'medium'
     LOW = 'low'
 
-
 class CriticSeverity(Enum):
     """Severity levels for self-criticism"""
-
 
 class FactCheckResult(BaseModel):
     """Result of fact checking analysis"""
@@ -45,7 +41,6 @@ class FactCheckResult(BaseModel):
     reasoning: str
     timestamp: datetime = Field(default_factory=datetime.now)
 
-
 class SelfCritique(BaseModel):
     """Self-critique analysis result"""
     aspect: str
@@ -54,7 +49,6 @@ class SelfCritique(BaseModel):
     issues: List[str]
     suggestions: List[str]
     reasoning: str
-
 
 class QualityAssessment(BaseModel):
     """Overall quality assessment of RAG response"""
@@ -67,7 +61,6 @@ class QualityAssessment(BaseModel):
     flagged_issues: List[str]
     approved_for_use: bool
     assessment_timestamp: datetime = Field(default_factory=datetime.now)
-
 
 class RAGFactChecker:
     """

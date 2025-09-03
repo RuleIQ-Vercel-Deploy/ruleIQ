@@ -28,7 +28,6 @@ from dataclasses import dataclass
 from datetime import datetime
 sys.path.insert(0, str(Path(__file__).parent))
 
-
 @dataclass
 class APIEndpoint:
     """Represents an API endpoint"""
@@ -39,7 +38,6 @@ class APIEndpoint:
     status_code: Optional[int] = None
     response_time_ms: Optional[float] = None
     error: Optional[str] = None
-
 
 @dataclass
 class APIAnalysisResult:
@@ -52,7 +50,6 @@ class APIAnalysisResult:
     router_mapping: Dict[str, List[str]]
     issues_found: List[str]
     recommendations: List[str]
-
 
 class APIRouteAnalyzer:
     """Analyzes API routes and tests connectivity"""
@@ -295,7 +292,6 @@ class APIRouteAnalyzer:
                 'Consider consolidating related routers to reduce complexity')
         return recommendations
 
-
 def print_analysis_report(result: APIAnalysisResult) ->None:
     """Print a comprehensive analysis report"""
     logger.info('\n' + '=' * 80)
@@ -347,7 +343,6 @@ def print_analysis_report(result: APIAnalysisResult) ->None:
                 endpoint.error))
     logger.info('\n' + '=' * 80)
 
-
 async def main() ->None:
     """Main analysis function"""
     logger.info('🔧 ruleIQ API Route Analyzer')
@@ -373,7 +368,6 @@ async def main() ->None:
         logger.info('\n💾 Analysis results saved to %s' % filename)
     except Exception as e:
         logger.info('\n⚠️  Could not save results: %s' % e)
-
 
 if __name__ == '__main__':
     asyncio.run(main())

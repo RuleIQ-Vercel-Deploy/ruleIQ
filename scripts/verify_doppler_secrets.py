@@ -18,7 +18,6 @@ from typing import Dict, List, Tuple, Optional
 import re
 from urllib.parse import urlparse
 
-
 class DopplerSecretsVerifier:
     """Independent verification of Doppler secrets configuration."""
 
@@ -269,7 +268,6 @@ Each verification was performed standalone without relying on cached or historic
         logger.info(
             '✅ Detailed results saved to doppler_verification_results.json')
 
-
 def main() ->int:
     """Main execution function."""
     logger.info('🔍 Starting Doppler Secrets Verification...')
@@ -293,7 +291,6 @@ def main() ->int:
     else:
         logger.info('⚠️  %s secrets are not accessible' % (total - accessible))
         return 1
-
 
 if __name__ == '__main__':
     sys.exit(main())

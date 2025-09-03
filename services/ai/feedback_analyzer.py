@@ -10,7 +10,6 @@ import statistics
 
 from config.langsmith_feedback import FeedbackItem, FeedbackType
 
-
 @dataclass
 class AggregationResult:
     """Result of feedback aggregation."""
@@ -19,7 +18,6 @@ class AggregationResult:
     value: float
     count: int
     metadata: Dict[str, Any] = field(default_factory=dict)
-
 
 @dataclass
 class UserPattern:
@@ -32,7 +30,6 @@ class UserPattern:
     feedback_frequency: float = 0.0  # feedbacks per day
     correction_rate: float = 0.0  # percentage of corrections
 
-
 @dataclass
 class QualityScore:
     """Quality score with dimensional breakdown."""
@@ -41,7 +38,6 @@ class QualityScore:
     dimensions: Dict[str, float] = field(default_factory=dict)
     confidence: float = 0.0
     sample_size: int = 0
-
 
 @dataclass
 class ResponseFeedback:
@@ -53,7 +49,6 @@ class ResponseFeedback:
     timestamp: datetime
     user_id: Optional[str] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
-
 
 class FeedbackAnalyzer:
     """Analyzer for feedback aggregation and pattern detection."""

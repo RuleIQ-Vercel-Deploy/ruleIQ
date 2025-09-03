@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 DEFAULT_LIMIT = 100
 
-
 Audit Log Export API for SMB compliance tracking.
 Provides audit trail exports for compliance and security auditing.
 """
@@ -24,7 +23,6 @@ from database.user import User
 from database.rbac import AuditLog
 router = APIRouter(tags=['Audit Export'])
 
-
 class AuditLogEntry(BaseModel):
     """Single audit log entry."""
     timestamp: datetime
@@ -37,7 +35,6 @@ class AuditLogEntry(BaseModel):
     status: str
     metadata: Optional[Dict] = None
 
-
 class AuditExportRequest(BaseModel):
     """Request parameters for audit log export."""
     start_date: datetime
@@ -45,7 +42,6 @@ class AuditExportRequest(BaseModel):
     format: str = 'csv'
     action_filter: Optional[List[str]] = None
     include_system: bool = False
-
 
 @router.post('/audit/export')
 @require_auth
@@ -78,7 +74,6 @@ async def export_audit_logs(request: AuditExportRequest, current_user: User
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail
             =f'Unsupported export format: {request.format}')
 
-
 @router.get('/audit/recent')
 @require_auth
 async def get_recent_audit_logs(current_user: User=Depends(
@@ -108,7 +103,6 @@ async def get_recent_audit_logs(current_user: User=Depends(
             metadata=metadata)
         entries.append(entry)
     return {'total': len(entries), 'period_days': days, 'entries': entries}
-
 
 @router.get('/audit/security-events')
 @require_auth
@@ -150,7 +144,6 @@ async def get_security_events(current_user: User=Depends(
         'recommendation': _get_security_recommendation(failed_logins,
         successful_logins)}
 
-
 @router.get('/audit/compliance-report')
 @require_auth
 async def generate_compliance_report(current_user: User=Depends(
@@ -185,7 +178,6 @@ async def generate_compliance_report(current_user: User=Depends(
             , logs)
     return report
 
-
 def _export_csv(logs: List[AuditLog], user: User) ->StreamingResponse:
     """Export logs as CSV."""
     output = io.StringIO()
@@ -203,7 +195,6 @@ def _export_csv(logs: List[AuditLog], user: User) ->StreamingResponse:
     return StreamingResponse(io.BytesIO(output.getvalue().encode()),
         media_type='text/csv', headers={'Content-Disposition':
         f'attachment; filename={filename}'})
-
 
 def _export_json(logs: List[AuditLog], user: User) ->Response:
     """Export logs as JSON."""
@@ -224,7 +215,6 @@ def _export_json(logs: List[AuditLog], user: User) ->Response:
     return Response(content=json.dumps(data, indent=2), media_type=
         'application/json', headers={'Content-Disposition':
         f'attachment; filename={filename}'})
-
 
 def _export_txt(logs: List[AuditLog], user: User) ->StreamingResponse:
     """Export logs as plain text."""
@@ -252,7 +242,6 @@ def _export_txt(logs: List[AuditLog], user: User) ->StreamingResponse:
         media_type='text/plain', headers={'Content-Disposition':
         f'attachment; filename={filename}'})
 
-
 def _categorize_security_event(action: str) ->str:
     """Categorize security event type."""
     if 'login' in action or 'logout' in action:
@@ -270,7 +259,6 @@ def _categorize_security_event(action: str) ->str:
     else:
         return 'other'
 
-
 def _get_security_recommendation(failed_logins: int, successful_logins: int
     ) ->str:
     """Generate security recommendation based on events."""
@@ -285,12 +273,10 @@ def _get_security_recommendation(failed_logins: int, successful_logins: int
     else:
         return 'Security events within normal parameters.'
 
-
 def _is_data_access(action: str) ->bool:
     """Check if action is data access related."""
     access_keywords = ['view', 'read', 'get', 'list', 'search', 'export']
     return any(keyword in action.lower() for keyword in access_keywords)
-
 
 def _is_modification(action: str) ->bool:
     """Check if action is data modification related."""
@@ -298,13 +284,11 @@ def _is_modification(action: str) ->bool:
         ]
     return any(keyword in action.lower() for keyword in modify_keywords)
 
-
 def _is_security_event(action: str) ->bool:
     """Check if action is security related."""
     security_keywords = ['login', 'logout', 'password', 'permission',
         'role', 'mfa', 'auth']
     return any(keyword in action.lower() for keyword in security_keywords)
-
 
 def _get_compliance_recommendations(logs: List[AuditLog]) ->List[str]:
     """Generate compliance recommendations."""
@@ -324,7 +308,6 @@ def _get_compliance_recommendations(logs: List[AuditLog]) ->List[str]:
     if not recommendations:
         recommendations.append('Audit logging appears to be functioning well')
     return recommendations
-
 
 def _get_framework_specific_report(framework: str, logs: List[AuditLog]
     ) ->Dict:

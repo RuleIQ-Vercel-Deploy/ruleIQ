@@ -5,7 +5,6 @@ from __future__ import annotations
 DEFAULT_LIMIT = 100
 MAX_RETRIES = 3
 
-
 Unit tests for AI Streaming Implementation.
 
 Tests the streaming functionality including async generators,
@@ -18,7 +17,6 @@ from uuid import uuid4
 import pytest
 from services.ai.assistant import ComplianceAssistant
 from services.ai.exceptions import ModelUnavailableException
-
 
 class MockStreamingResponse:
     """Mock streaming response for testing."""
@@ -40,7 +38,6 @@ class MockStreamingResponse:
         self.current += 1
         return chunk
 
-
 class MockChunk:
     """Mock chunk object for streaming responses."""
 
@@ -49,13 +46,11 @@ class MockChunk:
         self.text = text
         self.candidates = candidates or []
 
-
 class MockCandidate:
     """Mock candidate object for streaming responses."""
 
     def __init__(self, content=None):
         self.content = content
-
 
 class MockContent:
     """Mock content object for streaming responses."""
@@ -63,13 +58,11 @@ class MockContent:
     def __init__(self, parts: list):
         self.parts = parts
 
-
 class MockPart:
     """Mock part object for streaming responses."""
 
     def __init__(self, text: str):
         self.text = text
-
 
 @pytest.fixture
 def compliance_assistant():
@@ -79,13 +72,11 @@ def compliance_assistant():
     assistant = ComplianceAssistant(mock_db)
     return assistant
 
-
 @pytest.fixture
 def mock_streaming_chunks():
     """Mock streaming chunks for testing."""
     return [MockChunk(text='This is '), MockChunk(text='a streaming '),
         MockChunk(text='response '), MockChunk(text='for testing.')]
-
 
 @pytest.fixture
 def mock_complex_chunks():
@@ -94,7 +85,6 @@ def mock_complex_chunks():
         MockPart(text='Complex ')]))]), MockChunk(candidates=[MockCandidate
         (content=MockContent(parts=[MockPart(text='streaming ')]))]),
         MockChunk(text='response.')]
-
 
 class TestAIStreaming:
     """Test suite for AI streaming functionality."""
@@ -333,12 +323,10 @@ class TestAIStreaming:
                         chunks.append(chunk)
                     mock_record.assert_called_once_with('test-model', error)
 
-
 async def async_generator_from_list(items):
     """Convert a list to an async generator for testing."""
     for item in items:
         yield item
-
 
 class TestStreamingPerformance:
     """Test suite for streaming performance characteristics."""

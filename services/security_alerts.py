@@ -18,7 +18,6 @@ import os
 
 logger = logging.getLogger(__name__)
 
-
 class SecurityAlertService:
     """Service for managing security alerts and notifications."""
 

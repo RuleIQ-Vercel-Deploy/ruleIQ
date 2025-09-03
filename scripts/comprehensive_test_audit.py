@@ -18,7 +18,6 @@ from typing import Dict, List, Tuple, Optional, Set
 from datetime import datetime
 from collections import defaultdict
 
-
 class TestSuiteAuditor:
     """Comprehensive test suite analysis and execution."""
 
@@ -452,7 +451,6 @@ class TestSuiteAuditor:
 
         return final_results
 
-
 def main():
     """Main execution function."""
     auditor = TestSuiteAuditor()
@@ -494,7 +492,6 @@ def main():
     else:
         print(f"❌ Need to fix {results['tests_needed_to_pass']} more tests")
         return 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

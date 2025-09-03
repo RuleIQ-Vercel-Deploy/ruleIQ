@@ -13,7 +13,6 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any
 
-
 def extract_iso_metadata() ->Any:
     """Extract official ISO metadata from ISO Open Data."""
     target_standards = {'ISO/IEC 27001:2022':
@@ -100,7 +99,6 @@ def extract_iso_metadata() ->Any:
         for ref, info in related_standards.items():
             logger.info('  - %s: %s...' % (ref, info['title'][:80]))
     return manifest
-
 
 if __name__ == '__main__':
     extract_iso_metadata()

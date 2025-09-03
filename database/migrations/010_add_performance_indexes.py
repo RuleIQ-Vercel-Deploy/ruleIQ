@@ -10,7 +10,6 @@ down_revision = "009_fix_assessment_sessions_truncation"
 branch_labels = None
 depends_on = None
 
-
 def upgrade() -> None:
     """Add performance indexes to improve query performance."""
 
@@ -93,7 +92,6 @@ def upgrade() -> None:
     op.execute("ANALYZE evidence_metadata;")
     op.execute("ANALYZE implementation_plans;")
     op.execute("ANALYZE generated_policies;")
-
 
 def downgrade() -> None:
     """Remove performance indexes."""

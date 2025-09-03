@@ -4,7 +4,6 @@ Summary of Alembic Migration Fixes Applied
 import logging
 logger = logging.getLogger(__name__)
 
-
 This script documents the fixes made to ensure Alembic migrations are idempotent
 and can be run safely multiple times.
 """

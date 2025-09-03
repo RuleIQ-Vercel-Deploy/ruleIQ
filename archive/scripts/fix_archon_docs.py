@@ -17,9 +17,7 @@ SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 # Create Supabase client
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# Load the project data from our earlier export (which includes the full docs array)
 with open("/home/omar/Documents/ruleIQ/archon_project_full.json", "w") as f:
-    # This is the full project data from the get_project response
     project_data = {
         "id": "342d657c-fb73-4f71-9b6e-302857319aac",
         "title": "ruleIQ Compliance Automation Platform",

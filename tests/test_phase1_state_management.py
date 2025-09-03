@@ -22,7 +22,6 @@ from datetime import datetime, timedelta, timezone
 from langgraph_agent.graph.enhanced_state import EnhancedComplianceState, WorkflowStatus, create_enhanced_initial_state, merge_tool_outputs, accumulate_errors, merge_compliance_data, increment_counter, update_metadata, StateTransition, StateAggregator
 from langgraph_agent.graph.enhanced_app import EnhancedComplianceGraph
 
-
 class TestStateReducers:
     """Test custom reducer functions."""
 
@@ -85,7 +84,6 @@ class TestStateReducers:
         assert changes['version']['from'] == '1.0.0'
         assert changes['version']['to'] == '1.1.0'
 
-
 class TestStateTransition:
     """Test state transition validation and recording."""
 
@@ -119,7 +117,6 @@ class TestStateTransition:
         assert state['workflow_status'] == WorkflowStatus.COMPLETED
         assert state['end_time'] is not None
         assert state['total_latency_ms'] == 350
-
 
 class TestStateAggregator:
     """Test state aggregation utilities."""
@@ -180,7 +177,6 @@ class TestStateAggregator:
         assert metrics['nodes_visited'] == MAX_RETRIES
         assert metrics['token_usage']['total'] == 150
         assert metrics['estimated_cost'] == 0.0015
-
 
 @pytest.mark.asyncio
 class TestEnhancedComplianceGraph:
@@ -263,7 +259,6 @@ class TestEnhancedComplianceGraph:
         assert 'HIPAA' in updated_state['compliance_data']['frameworks']
         assert len(updated_state['compliance_data']['obligations']) > 0
         assert updated_state['token_usage']['total'] > 0
-
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

@@ -15,10 +15,8 @@ from enum import Enum
 from typing import Any, Callable, Dict, List, Optional
 from services.ai.exceptions import AIServiceException, CircuitBreakerException, ModelOverloadedException, ModelRetryExhaustedException, ModelTimeoutException, ModelUnavailableException
 
-
 class RetryStrategy(Enum):
     """Available retry strategies"""
-
 
 @dataclass
 class RetryConfig:
@@ -44,7 +42,6 @@ class RetryConfig:
             self.non_retryable_exceptions = [ModelUnavailableException,
                 CircuitBreakerException, ValueError, TypeError]
 
-
 @dataclass
 class RetryAttempt:
     """Information about a retry attempt"""
@@ -61,7 +58,6 @@ class RetryAttempt:
         if self.start_time and self.end_time:
             return self.end_time - self.start_time
         return None
-
 
 class RetryHandler:
     """
@@ -269,7 +265,6 @@ class RetryHandler:
         """Clear retry history (useful for testing)"""
         self.retry_history.clear()
 
-
 def retry_on_failure(max_attempts: int=3, base_delay: float=1.0, strategy:
     RetryStrategy=RetryStrategy.EXPONENTIAL_BACKOFF, model_name: str='unknown'
     ) ->Any:
@@ -303,7 +298,6 @@ def retry_on_failure(max_attempts: int=3, base_delay: float=1.0, strategy:
             return sync_wrapper
     return decorator
 
-
 DEFAULT_RETRY_CONFIG = RetryConfig(max_attempts=3, base_delay=1.0, strategy
     =RetryStrategy.EXPONENTIAL_BACKOFF)
 AGGRESSIVE_RETRY_CONFIG = RetryConfig(max_attempts=5, base_delay=0.5,
@@ -313,7 +307,6 @@ CONSERVATIVE_RETRY_CONFIG = RetryConfig(max_attempts=2, base_delay=2.0,
 _default_retry_handler: Optional[RetryHandler] = None
 _aggressive_retry_handler: Optional[RetryHandler] = None
 _conservative_retry_handler: Optional[RetryHandler] = None
-
 
 def get_retry_handler(config_type: str='default') ->RetryHandler:
     """Get a configured retry handler instance"""

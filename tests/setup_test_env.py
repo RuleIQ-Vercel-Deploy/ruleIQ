@@ -7,7 +7,6 @@ import os
 import subprocess
 import sys
 
-
 def load_doppler_env():
     """Load environment variables from Doppler."""
     try:
@@ -38,10 +37,8 @@ def load_doppler_env():
         print("Warning: Doppler CLI not found")
         return False
 
-
 def setup_test_database_urls():
     """Setup test database URLs with proper configuration."""
-    # Load from Doppler first
     doppler_loaded = load_doppler_env()
     
     # Set test-specific overrides
@@ -66,7 +63,6 @@ def setup_test_database_urls():
     os.environ["DISABLE_EXTERNAL_APIS"] = "true"
     
     print("✓ Test environment configured successfully")
-
 
 # Auto-execute when imported
 if __name__ != "__main__":

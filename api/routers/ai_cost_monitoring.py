@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 DEFAULT_LIMIT = 100
 
-
 AI Cost Monitoring API Router
 
 Provides endpoints for AI cost tracking, budget management, optimization insights,
@@ -22,7 +21,6 @@ from services.ai.cost_management import AICostManager, CostTrackingService, Budg
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 router = APIRouter(tags=['AI Cost Management'])
-
 
 class CostTrackingRequest(BaseModel):
     """Request model for tracking AI usage costs."""
@@ -44,7 +42,6 @@ class CostTrackingRequest(BaseModel):
     metadata: Optional[Dict[str, Any]] = Field(None, description=
         'Additional metadata')
 
-
 class CostTrackingResponse(BaseModel):
     """Response model for cost tracking."""
     usage_id: str = Field(..., description='Unique usage identifier')
@@ -52,7 +49,6 @@ class CostTrackingResponse(BaseModel):
     efficiency_score: Decimal = Field(..., description='Efficiency score')
     cost_per_token: Decimal = Field(..., description='Cost per token')
     timestamp: datetime = Field(..., description='Timestamp of usage')
-
 
 class BudgetConfigRequest(BaseModel):
     """Request model for budget configuration."""
@@ -62,7 +58,6 @@ class BudgetConfigRequest(BaseModel):
         'Monthly budget limit in USD')
     service_limits: Optional[Dict[str, Decimal]] = Field(None, description=
         'Per-service budget limits')
-
 
 class BudgetStatusResponse(BaseModel):
     """Response model for budget status."""
@@ -79,7 +74,6 @@ class BudgetStatusResponse(BaseModel):
     projected_monthly_cost: Decimal = Field(..., description=
         'Projected end-of-month cost')
 
-
 class AlertResponse(BaseModel):
     """Response model for budget alerts."""
     alert_type: str = Field(..., description='Type of alert')
@@ -90,7 +84,6 @@ class AlertResponse(BaseModel):
     service_name: Optional[str] = Field(None, description=
         'Service name if service-specific')
     timestamp: datetime = Field(..., description='Alert timestamp')
-
 
 class OptimizationResponse(BaseModel):
     """Response model for optimization recommendations."""
@@ -103,7 +96,6 @@ class OptimizationResponse(BaseModel):
     implementation_effort: str = Field(..., description=
         'Implementation effort (low/medium/high)')
     priority: str = Field(..., description='Priority level (low/medium/high)')
-
 
 class CostAnalyticsResponse(BaseModel):
     """Response model for cost analytics."""
@@ -121,7 +113,6 @@ class CostAnalyticsResponse(BaseModel):
     hourly_breakdown: Optional[Dict[str, Decimal]] = Field(None,
         description='Hourly cost breakdown')
 
-
 class CostTrendsResponse(BaseModel):
     """Response model for cost trends."""
     trends: List[Dict[str, Any]] = Field(..., description=
@@ -132,7 +123,6 @@ class CostTrendsResponse(BaseModel):
     anomalies: List[Dict[str, Any]] = Field(..., description=
         'Cost anomalies detected')
 
-
 class ModelRoutingRequest(BaseModel):
     """Request model for intelligent model routing."""
     task_description: str = Field(..., description='Description of the task')
@@ -141,7 +131,6 @@ class ModelRoutingRequest(BaseModel):
         'Maximum cost constraint')
     quality_requirements: Optional[str] = Field(None, description=
         'Quality requirements')
-
 
 class ModelRoutingResponse(BaseModel):
     """Response model for model routing recommendations."""
@@ -153,12 +142,10 @@ class ModelRoutingResponse(BaseModel):
     reasoning: str = Field(..., description='Reasoning for recommendation')
     complexity_score: float = Field(..., description='Task complexity score')
 
-
 cost_manager = AICostManager()
 cost_tracker = CostTrackingService()
 budget_service = BudgetAlertService()
 optimization_service = CostOptimizationService()
-
 
 @router.post('/track', response_model=CostTrackingResponse, status_code=
     status.HTTP_201_CREATED, dependencies=[Depends(get_current_active_user),
@@ -190,7 +177,6 @@ async def track_ai_usage(request: CostTrackingRequest, current_user: User=
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Failed to track usage: {str(e)}')
-
 
 @router.get('/analytics/daily', response_model=CostAnalyticsResponse,
     dependencies=[Depends(get_current_active_user), Depends(RateLimited(
@@ -224,7 +210,6 @@ async def get_daily_cost_analytics(target_date: Optional[date]=Query(None,
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Failed to retrieve analytics: {str(e)}')
-
 
 @router.get('/analytics/trends', response_model=CostTrendsResponse,
     dependencies=[Depends(get_current_active_user), Depends(RateLimited(
@@ -260,7 +245,6 @@ async def get_cost_trends(days: int=Query(7, ge=1, le=90, description=
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Failed to retrieve trends: {str(e)}')
 
-
 @router.post('/budget/configure', status_code=status.HTTP_200_OK,
     dependencies=[Depends(get_current_active_user), Depends(RateLimited(
     requests=10, window=60))])
@@ -286,7 +270,6 @@ async def configure_budget(config: BudgetConfigRequest, current_user: User=
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Failed to configure budget: {str(e)}')
-
 
 @router.get('/budget/status', response_model=BudgetStatusResponse,
     dependencies=[Depends(get_current_active_user), Depends(RateLimited(
@@ -333,7 +316,6 @@ async def get_budget_status() ->Any:
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Failed to retrieve budget status: {str(e)}')
 
-
 @router.get('/alerts', response_model=List[AlertResponse], dependencies=[
     Depends(get_current_active_user), Depends(RateLimited(requests=30,
     window=60))])
@@ -354,7 +336,6 @@ async def get_budget_alerts() ->Any:
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Failed to retrieve alerts: {str(e)}')
-
 
 @router.get('/optimization/recommendations', response_model=List[
     OptimizationResponse], dependencies=[Depends(get_current_active_user),
@@ -377,7 +358,6 @@ async def get_optimization_recommendations() ->Any:
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Failed to retrieve recommendations: {str(e)}')
-
 
 @router.post('/routing/select-model', response_model=ModelRoutingResponse,
     dependencies=[Depends(get_current_active_user), Depends(RateLimited(
@@ -408,7 +388,6 @@ async def select_optimal_model(request: ModelRoutingRequest) ->Any:
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Failed to select model: {str(e)}')
 
-
 @router.get('/reports/monthly', dependencies=[Depends(
     get_current_active_user), Depends(RateLimited(requests=5, window=60))])
 async def generate_monthly_report(year: int=Query(..., ge=2020, le=2030,
@@ -431,7 +410,6 @@ async def generate_monthly_report(year: int=Query(..., ge=2020, le=2030,
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Failed to generate report: {str(e)}')
-
 
 @router.get('/usage/by-service', dependencies=[Depends(
     get_current_active_user), Depends(RateLimited(requests=30, window=60))])
@@ -472,7 +450,6 @@ async def get_usage_by_service(service_name: str=Query(..., description=
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Failed to retrieve service usage: {str(e)}')
 
-
 @router.get('/health', dependencies=[Depends(RateLimited(requests=60,
     window=60))])
 async def cost_monitoring_health() ->Dict[str, Any]:
@@ -492,7 +469,6 @@ async def cost_monitoring_health() ->Dict[str, Any]:
         logger.error('Cost monitoring health check failed: %s' % str(e))
         return {'status': 'unhealthy', 'error': str(e), 'timestamp':
             datetime.now().isoformat()}
-
 
 @router.delete('/cache/clear', dependencies=[Depends(
     get_current_active_user), Depends(RateLimited(requests=5, window=3600))])

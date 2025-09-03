@@ -25,7 +25,6 @@ engine = create_engine(db_url, poolclass=StaticPool, echo=False,
     connect_args={'connect_timeout': 10})
 TestSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-
 def test_with_exact_setup() ->Optional[bool]:
     """Test using the exact same setup as pytest conftest."""
     logger.info('=== Using Exact Test Setup ===')
@@ -55,7 +54,6 @@ def test_with_exact_setup() ->Optional[bool]:
         return False
     finally:
         session.close()
-
 
 def simulate_pytest_test() ->Optional[bool]:
     """Simulate the exact pytest test that's failing."""
@@ -88,7 +86,6 @@ def simulate_pytest_test() ->Optional[bool]:
         import traceback
         traceback.print_exc()
         return False
-
 
 if __name__ == '__main__':
     logger.info('🧪 Manual Test with Exact Setup')

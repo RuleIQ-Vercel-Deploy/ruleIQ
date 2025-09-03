@@ -19,7 +19,6 @@ import sys
 # Suppress scipy warnings for cleaner output
 warnings.filterwarnings("ignore")
 
-
 def perform_t_test(
     control_data: List[float], treatment_data: List[float], alpha: float = 0.05
 ) -> Dict:
@@ -105,7 +104,6 @@ def perform_t_test(
         >= 0.2,  # Small effect size threshold
     }
 
-
 def perform_chi_squared_test(
     control_outcomes: List[int], treatment_outcomes: List[int], alpha: float = 0.05
 ) -> Dict:
@@ -155,7 +153,6 @@ def perform_chi_squared_test(
         "is_significant": p_value < alpha,
     }
 
-
 def perform_mann_whitney_test(
     control_data: List[float], treatment_data: List[float], alpha: float = 0.05
 ) -> Dict:
@@ -196,7 +193,6 @@ def perform_mann_whitney_test(
         "sample_sizes": {"control": n1, "treatment": n2},
         "is_significant": p_value < alpha,
     }
-
 
 def test_statistical_scenarios() -> bool:
     """Test various statistical scenarios with known outcomes."""
@@ -280,7 +276,6 @@ def test_statistical_scenarios() -> bool:
 
     return True
 
-
 def test_power_analysis() -> bool:
     """Test statistical power calculations."""
     print("\n⚡ Testing Statistical Power Analysis\n")
@@ -331,7 +326,6 @@ def test_power_analysis() -> bool:
 
     return True
 
-
 def main() -> Optional[bool]:
     """Run comprehensive statistical testing validation."""
     print("🚀 Statistical Analysis Framework Validation")
@@ -376,7 +370,6 @@ def main() -> Optional[bool]:
 
         traceback.print_exc()
         return False
-
 
 if __name__ == "__main__":
     success = main()

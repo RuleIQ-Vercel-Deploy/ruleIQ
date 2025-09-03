@@ -9,7 +9,6 @@ from neo4j import AsyncGraphDatabase
 
 logger = logging.getLogger(__name__)
 
-
 class ComplianceQueryEngine:
     """Query engine for compliance data in Neo4j."""
 

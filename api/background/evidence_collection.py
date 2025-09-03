@@ -13,7 +13,6 @@ from api.clients.microsoft_client import MicrosoftGraphAPIClient
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 async def execute_foundation_evidence_collection(collection_id: str,
     user_id: str, integration_map: Dict[str, Any], evidence_types: List[str]
     ) ->None:

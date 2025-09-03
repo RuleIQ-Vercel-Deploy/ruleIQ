@@ -7,7 +7,6 @@ DEFAULT_LIMIT = 100
 DEFAULT_RETRIES = 5
 MAX_ITEMS = 1000
 
-
 Central repository for all prompt templates used by the AI assistant.
 
 Updated to work with system instructions rather than system prompts for better
@@ -24,10 +23,8 @@ from .instruction_templates import get_system_instruction
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 class ThreatLevel(Enum):
     """Threat levels for input analysis."""
-
 
 @dataclass
 class SecurityAnalysis:
@@ -38,7 +35,6 @@ class SecurityAnalysis:
     sanitized_content: str
     original_hash: str
     analysis_metadata: Dict[str, Any]
-
 
 class AdvancedPromptSanitizer:
     """Enhanced prompt sanitization with multi-layer defense."""
@@ -195,9 +191,7 @@ class AdvancedPromptSanitizer:
         sanitized = re.sub('\\n{3,}', '\n\n', sanitized)
         return sanitized
 
-
 _sanitizer = AdvancedPromptSanitizer()
-
 
 def sanitize_input(input_string: str, context: str='general') ->str:
     """
@@ -229,7 +223,6 @@ def sanitize_input(input_string: str, context: str='general') ->str:
         return create_safety_fence('[MALICIOUS CONTENT BLOCKED]', 'user')
     return create_safety_fence(analysis.sanitized_content, 'user')
 
-
 def create_safety_fence(content: str, fence_type: str='user') ->str:
     """
     Create enhanced safety fence around content with multiple isolation layers.
@@ -256,7 +249,6 @@ def create_safety_fence(content: str, fence_type: str='user') ->str:
 {fence_config['inner']}
 {fence_config['end']}
 """
-
 
 def validate_prompt_safety(prompt_dict: Dict[str, str], context: Dict[str,
     Any]=None) ->Dict[str, Any]:
@@ -297,7 +289,6 @@ def validate_prompt_safety(prompt_dict: Dict[str, str], context: Dict[str,
             validation_report['threats_detected'])
     return validation_report
 
-
 def get_security_analysis(input_text: str, context: str='general') ->Dict[
     str, Any]:
     """
@@ -318,7 +309,6 @@ def get_security_analysis(input_text: str, context: str='general') ->Dict[
         ThreatLevel.CLEAN, ThreatLevel.SUSPICIOUS], 'recommended_action':
         _get_recommended_action(analysis)}
 
-
 def _get_recommended_action(analysis: SecurityAnalysis) ->str:
     """Generate recommended action based on security analysis."""
     if analysis.threat_level == ThreatLevel.MALICIOUS:
@@ -333,7 +323,6 @@ def _get_recommended_action(analysis: SecurityAnalysis) ->str:
             return 'ALLOW_WITH_LOGGING'
     else:
         return 'ALLOW'
-
 
 class PromptTemplates:
     """Manages and formats prompts for different AI tasks."""

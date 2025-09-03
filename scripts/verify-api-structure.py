@@ -16,7 +16,6 @@ PROJECT_ROOT = Path(__file__).parent.parent
 ROUTERS_DIR = PROJECT_ROOT / 'api' / 'routers'
 MAIN_PY = PROJECT_ROOT / 'api' / 'main.py'
 
-
 def extract_endpoints() ->Dict[str, List[str]]:
     """Extract all API endpoints from routers"""
     endpoints = {}
@@ -30,7 +29,6 @@ def extract_endpoints() ->Dict[str, List[str]]:
         endpoints[router_file.stem] = [f'{method.upper()} {path}' for 
             method, path in matches]
     return endpoints
-
 
 def check_naming_conventions(endpoints: Dict[str, List[str]]) ->Dict[str,
     List[str]]:
@@ -55,7 +53,6 @@ def check_naming_conventions(endpoints: Dict[str, List[str]]) ->Dict[str,
                         f'{router}: {endpoint} - param: {{{param}}}')
     return issues
 
-
 def find_duplicates(endpoints: Dict[str, List[str]]) ->List[str]:
     """Find potentially duplicate endpoints"""
     duplicates = []
@@ -78,7 +75,6 @@ def find_duplicates(endpoints: Dict[str, List[str]]) ->List[str]:
                     duplicates.append(
                         f'{router1}: {endpoint1} <-> {router2}: {endpoint2}')
     return duplicates
-
 
 def main() ->Any:
     logger.info('🔍 API Structure Verification')
@@ -134,7 +130,6 @@ def main() ->Any:
             for path in paths:
                 logger.info('      - %s' % path)
     return total_issues == 0
-
 
 if __name__ == '__main__':
     success = main()

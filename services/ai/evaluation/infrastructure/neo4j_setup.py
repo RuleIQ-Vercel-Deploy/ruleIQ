@@ -11,7 +11,6 @@ from typing import Optional, Dict, Any
 from neo4j import GraphDatabase, Driver
 from neo4j.exceptions import ServiceUnavailable
 
-
 class Neo4jConnection:
     """Singleton Neo4j connection wrapper."""
     _instance: Optional['Neo4jConnection'] = None
@@ -67,7 +66,6 @@ class Neo4jConnection:
         with driver.session() as session:
             return session.run(query, params)
 
-
 def setup_neo4j_container() ->docker.models.containers.Container:
     """Set up Neo4j Community Edition container."""
     client = docker.from_env()
@@ -97,7 +95,6 @@ def setup_neo4j_container() ->docker.models.containers.Container:
     wait_for_neo4j()
     return container
 
-
 def wait_for_neo4j(max_retries: int=30) ->bool:
     """Wait for Neo4j to be ready."""
     uri = os.getenv('NEO4J_URI', 'bolt://localhost:7688')
@@ -115,7 +112,6 @@ def wait_for_neo4j(max_retries: int=30) ->bool:
                 return False
             time.sleep(2)
     return False
-
 
 def create_vector_indexes(connection: Neo4jConnection) ->None:
     """Create vector indexes for documents and chunks."""
@@ -161,7 +157,6 @@ def create_vector_indexes(connection: Neo4jConnection) ->None:
             connection.execute_query(chunk_index_query)
         except Exception as e:
             logger.info('Could not create chunk index: %s' % e)
-
 
 def get_neo4j_driver() ->Driver:
     """Get Neo4j driver instance."""

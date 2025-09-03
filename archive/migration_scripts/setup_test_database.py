@@ -32,7 +32,6 @@ from sqlalchemy import text
 from database.db_setup import Base
 from typing import Optional
 
-
 async def create_tables() -> Optional[bool]:
     """Create all database tables."""
     db_url = os.environ["DATABASE_URL"]
@@ -99,7 +98,6 @@ async def create_tables() -> Optional[bool]:
     finally:
         await engine.dispose()
 
-
 def main() -> int:
     """Run the setup."""
     print("Setting up test database")
@@ -114,7 +112,6 @@ def main() -> int:
     else:
         print("Test database setup failed!")
         return 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

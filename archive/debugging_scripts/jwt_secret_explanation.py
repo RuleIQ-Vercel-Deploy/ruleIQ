@@ -5,7 +5,6 @@ This shows how the JWT secret was generated
 import logging
 logger = logging.getLogger(__name__)
 
-
 import secrets
 import base64
 

@@ -11,11 +11,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import JSONB as PG_JSONB, UUID as PG_UUID
 
-# Import the shared Base from db_setup to ensure all models use the same Base
 from .db_setup import Base
-
-# Import existing models from their dedicated files to avoid duplication
-
 
 class Policy(Base):
     __tablename__ = "policies"
@@ -30,7 +26,6 @@ class Policy(Base):
     version = Column(String(20), default="1.0")
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-
 
 class Evidence(Base):
     __tablename__ = "evidence"
@@ -57,13 +52,3 @@ class Evidence(Base):
     # The User model references EvidenceItem, not Evidence
     # owner = relationship("User", back_populates="evidence_items")
 
-
-# AssessmentSession is imported from assessment_session.py
-
-# ImplementationPlan is imported from implementation_plan.py
-
-# ReadinessAssessment is imported from readiness_assessment.py
-
-# IntegrationConfiguration is imported from integration_configuration.py
-
-# ReportSchedule is imported from report_schedule.py

@@ -21,7 +21,6 @@ from unittest.mock import AsyncMock, Mock, patch
 from uuid import uuid4
 from services.ai.cached_content import GoogleCachedContentManager, CacheContentType, CacheLifecycleConfig, get_cached_content_manager
 
-
 @pytest.mark.unit
 @pytest.mark.ai
 class TestGoogleCachedContentManager:
@@ -287,7 +286,6 @@ class TestGoogleCachedContentManager:
         assert cache_key not in cache_manager.cache_metadata
         mock_expired_cache.delete.assert_called_once()
 
-
 @pytest.mark.unit
 @pytest.mark.ai
 class TestCachedContentIntegration:
@@ -316,7 +314,6 @@ class TestCachedContentIntegration:
         assert CacheContentType.FRAMEWORK_CONTEXT.value == 'framework_context'
         assert CacheContentType.INDUSTRY_REGULATIONS.value == 'industry_regulations'
         assert CacheContentType.SYSTEM_INSTRUCTIONS.value == 'system_instructions'
-
 
 @pytest.mark.integration
 @pytest.mark.ai

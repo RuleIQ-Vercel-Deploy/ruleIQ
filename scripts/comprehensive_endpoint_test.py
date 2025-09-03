@@ -22,7 +22,6 @@ import json
 import time
 from typing import Dict, List, Any, Tuple
 
-
 class ComprehensiveAPITester:
 
     def __init__(self, base_url: str='http://localhost:8000'):
@@ -224,7 +223,6 @@ class ComprehensiveAPITester:
             'summary': group['summary']} for group in test_groups],
             'detailed_results': test_groups}
 
-
 def main():
     logger.info('🚀 ruleIQ API Comprehensive Endpoint Testing')
     logger.info('=' * 60)
@@ -284,7 +282,6 @@ def main():
         logger.info(
             '🐌 SLOW: Average response time above 1s - consider optimization')
     logger.info('\n✅ Comprehensive endpoint testing completed successfully!')
-
 
 if __name__ == '__main__':
     main()

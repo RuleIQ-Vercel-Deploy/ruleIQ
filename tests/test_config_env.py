@@ -6,7 +6,6 @@ Test script to verify configuration loads correctly from environment variables
 import os
 import sys
 
-
 def test_environment_loading():
     """Test that configuration loads from environment variables"""
     print("=" * 60)
@@ -118,7 +117,6 @@ def test_environment_loading():
     print("=" * 60)
     return True
 
-
 def test_environment_override():
     """Test that we can override config with environment variables"""
     print("\n" + "=" * 60)
@@ -153,9 +151,7 @@ def test_environment_override():
 
     return True
 
-
 if __name__ == "__main__":
-    # First load environment from .env.local if it exists
     from pathlib import Path
 
     env_file = Path(".env.local")

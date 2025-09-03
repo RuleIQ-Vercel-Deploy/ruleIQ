@@ -59,7 +59,6 @@ def _send_email_directly(
         True if email sent successfully, False otherwise
     """
     try:
-        # Get SMTP configuration from settings
         smtp_host = getattr(settings, 'SMTP_HOST', 'localhost')
         smtp_port = getattr(settings, 'SMTP_PORT', 587)
         smtp_user = getattr(settings, 'SMTP_USER', '')
@@ -142,7 +141,6 @@ async def generate_scheduled_reports_node(
         f"Starting scheduled report generation for workflow {state.get('workflow_id')}"
     )
 
-    # Get database session from state
     db = state.get("db_session")
     if not db:
         logger.error("No database session in state")
@@ -297,7 +295,6 @@ async def generate_on_demand_report_node(
         state["error_count"] += 1
         return state
 
-    # Extract report parameters from metadata
     metadata = state.get("metadata", {})
     user_id = metadata.get("user_id")
     profile_id = metadata.get("business_profile_id")
@@ -478,7 +475,6 @@ async def send_summary_notifications_node(
                 if hasattr(schedule, "owner") and schedule.owner:
                     user_summaries[user_id]["user"] = schedule.owner
                 else:
-                    # Fetch from database if not available
                     user_result = await db.execute(
                         select(UserModel).where(UserModel.id == schedule.user_id)
                     )
@@ -621,7 +617,6 @@ async def send_scheduled_report_email(
     try:
         subject = f"Scheduled Report: {report_type}"
 
-        # Extract key metrics from report data
         metrics = report_data.get("key_metrics", {})
         compliance_score = metrics.get("overall_compliance_score", "N/A")
 

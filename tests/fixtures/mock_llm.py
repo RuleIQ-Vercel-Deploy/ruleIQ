@@ -13,7 +13,6 @@ from langchain_core.language_models import BaseChatModel
 from langchain_core.callbacks import CallbackManagerForLLMRun
 import json
 
-
 class MockLLM(BaseChatModel):
     """
     Deterministic mock LLM for testing.
@@ -195,7 +194,6 @@ class MockLLM(BaseChatModel):
             "mock": True,
         }
 
-
 class MockLLMWithStreaming(MockLLM):
     """Mock LLM with streaming support for testing streaming workflows."""
 
@@ -236,7 +234,6 @@ class MockLLMWithStreaming(MockLLM):
             if i > 0:
                 yield " "
             yield word
-
 
 def create_deterministic_llm(scenario: str = "default") -> MockLLM:
     """
@@ -294,12 +291,10 @@ def create_deterministic_llm(scenario: str = "default") -> MockLLM:
     responses = scenarios.get(scenario, {})
     return MockLLM(responses=responses)
 
-
 # Fixture function for pytest
 def mock_llm_fixture():
     """Pytest fixture for mock LLM."""
     return create_deterministic_llm("default")
-
 
 # Factory function for creating mock LLMs
 def mock_llm_factory(scenario: str = "default"):

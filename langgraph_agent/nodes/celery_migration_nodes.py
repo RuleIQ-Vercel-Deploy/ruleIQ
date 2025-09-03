@@ -20,7 +20,6 @@ from ..graph.error_handler import ErrorHandlerNode
 
 logger = logging.getLogger(__name__)
 
-
 class TaskMigrationState(TypedDict):
     """Extended state for task migration"""
 
@@ -45,11 +44,9 @@ class TaskMigrationState(TypedDict):
     retry_count: int
     max_retries: int
 
-
 # ==========================================
 # COMPLIANCE TASK NODES (2 tasks)
 # ==========================================
-
 
 class ComplianceTaskNode:
     """Migrated compliance tasks from workers/compliance_tasks.py"""
@@ -167,11 +164,9 @@ class ComplianceTaskNode:
             )
             return state
 
-
 # ==========================================
 # EVIDENCE TASK NODES (2 tasks)
 # ==========================================
-
 
 class EvidenceTaskNode:
     """Migrated evidence tasks from workers/evidence_tasks.py"""
@@ -269,11 +264,9 @@ class EvidenceTaskNode:
             state["task_status"] = "failed"
             return state
 
-
 # ==========================================
 # NOTIFICATION TASK NODES (3 tasks)
 # ==========================================
-
 
 class NotificationTaskNode:
     """Migrated notification tasks from workers/notification_tasks.py"""
@@ -410,11 +403,9 @@ class NotificationTaskNode:
             state["task_status"] = "failed"
             return state
 
-
 # ==========================================
 # REPORTING TASK NODES (4 tasks)
 # ==========================================
-
 
 class ReportingTaskNode:
     """Migrated reporting tasks from workers/reporting_tasks.py"""
@@ -587,11 +578,9 @@ class ReportingTaskNode:
             state["task_status"] = "failed"
             return state
 
-
 # ==========================================
 # MONITORING TASK NODES (5 tasks)
 # ==========================================
-
 
 class MonitoringTaskNode:
     """Migrated monitoring tasks from workers/monitoring_tasks.py"""

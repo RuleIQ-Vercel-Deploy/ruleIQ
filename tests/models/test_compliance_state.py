@@ -22,7 +22,6 @@ from pydantic import ValidationError
 import json
 from langgraph_agent.models.compliance_state import ComplianceState, EvidenceItem, Decision, CostSnapshot, WorkflowStatus, ActorType, MemoryStore, Context
 
-
 class TestComplianceStateInitialization:
     """Test basic state creation and initialization."""
 
@@ -58,7 +57,6 @@ class TestComplianceStateInitialization:
         assert state.memory.episodic == ['event-001', 'event-002']
         assert state.workflow_status == WorkflowStatus.PENDING
 
-
 class TestActorValidation:
     """Test actor type constraints and validation."""
 
@@ -87,7 +85,6 @@ class TestActorValidation:
             'objective': 'Test case sensitivity', 'trace_id': str(uuid4())}
         with pytest.raises(ValidationError):
             state = ComplianceState(**data)
-
 
 class TestEvidenceAccumulation:
     """Test evidence items are properly accumulated, not replaced."""
@@ -128,7 +125,6 @@ class TestEvidenceAccumulation:
         with pytest.raises((ValidationError, ValueError)):
             state = ComplianceState(**data)
 
-
 class TestCostTracking:
     """Test cost snapshot updates and calculations."""
 
@@ -166,7 +162,6 @@ class TestCostTracking:
         assert result.completion_tokens == MINUTE_SECONDS
         assert result.estimated_cost == 0.0015
 
-
 class TestMemoryPersistence:
     """Test episodic and semantic memory storage."""
 
@@ -202,7 +197,6 @@ class TestMemoryPersistence:
         state.memory.semantic['evidence'] = ['ev-001']
         assert 'evidence' in state.memory.semantic
         assert len(state.memory.semantic) == 2
-
 
 class TestDecisionTracking:
     """Test decision audit trail functionality."""
@@ -245,7 +239,6 @@ class TestDecisionTracking:
         assert state.decisions[0].id == 'dec-001'
         assert state.decisions[1].id == 'dec-002'
 
-
 class TestStateSerialization:
     """Test JSON serialization/deserialization."""
 
@@ -287,7 +280,6 @@ class TestStateSerialization:
         assert 'created_at' in parsed
         assert isinstance(parsed['created_at'], str)
 
-
 class TestTraceIdGeneration:
     """Test unique trace ID creation and propagation."""
 
@@ -317,7 +309,6 @@ class TestTraceIdGeneration:
         state1 = ComplianceState(**data1)
         state2 = ComplianceState(**data2)
         assert state1.trace_id == state2.trace_id
-
 
 class TestContextValidation:
     """Test org profile, framework, obligations context."""
@@ -350,7 +341,6 @@ class TestContextValidation:
             'objective': 'Test framework', 'context': context, 'trace_id':
             str(uuid4())}
         state = ComplianceState(**data)
-
 
 class TestStateTransitions:
     """Test valid state transition paths."""
@@ -390,7 +380,6 @@ class TestStateTransitions:
         assert state.state_history[0]['from'] == 'pending'
         assert state.state_history[0]['to'] == 'in_progress'
 
-
 class TestPerformanceMetrics:
     """Test performance tracking fields."""
 
@@ -421,7 +410,6 @@ class TestPerformanceMetrics:
         state = ComplianceState(**data)
         assert state.retry_count == 0
         assert state.error_count == 0
-
 
 class TestStateValidation:
     """Test comprehensive state validation rules."""
@@ -458,7 +446,6 @@ class TestStateValidation:
         state = ComplianceState(**data)
         assert isinstance(state.retry_count, int)
         assert state.retry_count == DEFAULT_RETRIES
-
 
 class TestLangGraphIntegration:
     """Test integration with LangGraph state management."""

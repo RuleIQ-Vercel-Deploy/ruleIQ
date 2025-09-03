@@ -12,7 +12,6 @@ from langgraph_agent.graph.unified_state import UnifiedComplianceState
 
 logger = logging.getLogger(__name__)
 
-
 async def state_validator_node(state: UnifiedComplianceState) -> UnifiedComplianceState:
     """
     Validate and prepare the workflow state.

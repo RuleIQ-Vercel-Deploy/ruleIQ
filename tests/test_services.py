@@ -29,7 +29,6 @@ from services.implementation_service import generate_implementation_plan, update
 from services.policy_service import generate_compliance_policy
 from services.readiness_service import generate_compliance_report, generate_readiness_assessment, get_readiness_dashboard
 
-
 @pytest.mark.unit
 class TestBusinessService:
     """Test business profile service logic"""
@@ -178,7 +177,6 @@ class TestBusinessService:
         assert 'Microsoft 365' in saas_tools
         assert len(saas_tools) > MAX_RETRIES
 
-
 @pytest.mark.unit
 @pytest.mark.asyncio
 class TestAssessmentService:
@@ -270,7 +268,6 @@ class TestAssessmentService:
         """Test compliance score calculation"""
         pass
 
-
 @pytest.mark.unit
 @pytest.mark.asyncio
 class TestPolicyService:
@@ -303,7 +300,6 @@ class TestPolicyService:
             assert result.policy_content == mock_ai_response_text
             mock_gcp.assert_called_once_with(db=db_session, user_id=user_id,
                 framework_id=framework_id, policy_type='data_protection')
-
 
 @pytest.mark.unit
 @pytest.mark.asyncio
@@ -386,7 +382,6 @@ class TestFrameworkService:
             assert all('mandatory' in req for req in result_requirements)
             assert result_requirements == expected_requirements
 
-
 @pytest.mark.unit
 @pytest.mark.asyncio
 class TestImplementationService:
@@ -446,7 +441,6 @@ class TestImplementationService:
             assert updated_plan_orm_object is not None
             assert updated_plan_orm_object.phases[0]['tasks'][0]['status'
                 ] == new_status
-
 
 @pytest.mark.unit
 @pytest.mark.asyncio
@@ -513,7 +507,6 @@ class TestEvidenceService:
             assert 0 <= result['quality_score'] <= DEFAULT_LIMIT
             assert 'validation_results' in result
             mock_validate.assert_called_once_with(evidence_data)
-
 
 @pytest.mark.unit
 @pytest.mark.asyncio

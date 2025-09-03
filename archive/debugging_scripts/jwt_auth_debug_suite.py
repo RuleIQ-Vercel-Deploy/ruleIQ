@@ -3,7 +3,6 @@ Comprehensive JWT Authentication Debug and Test Suite
 import logging
 logger = logging.getLogger(__name__)
 
-
 This script performs the following:
 1. Checks JWT library compatibility
 2. Verifies environment variable loading

@@ -16,7 +16,6 @@ from uuid import uuid4
 import pytest
 from tests.conftest import assert_api_response_security
 
-
 @pytest.mark.integration
 @pytest.mark.api
 class TestEvidenceClassificationAPI:
@@ -196,7 +195,6 @@ class TestEvidenceClassificationAPI:
         assert response_data['failed_classifications'] > 0
         assert len(response_data['results']) == 1
         assert response_data['results'][0]['success'] is False
-
 
 @pytest.mark.integration
 @pytest.mark.api

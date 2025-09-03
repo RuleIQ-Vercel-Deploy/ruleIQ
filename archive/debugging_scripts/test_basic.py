@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Basic test without fixtures."""
 
-
 from __future__ import annotations
 
 def test_basic() -> None:

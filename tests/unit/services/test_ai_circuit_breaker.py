@@ -14,7 +14,6 @@ import pytest
 from services.ai.circuit_breaker import AICircuitBreaker, CircuitBreakerConfig, CircuitState
 from services.ai.exceptions import AIServiceException
 
-
 class TestAICircuitBreaker:
     """Test suite for AI Circuit Breaker functionality."""
 

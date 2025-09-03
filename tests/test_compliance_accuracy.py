@@ -10,7 +10,6 @@ import json
 
 import pytest
 
-
 @pytest.mark.compliance
 class TestGDPRAccuracy:
     """Test GDPR compliance content accuracy"""
@@ -182,7 +181,6 @@ class TestGDPRAccuracy:
             # Validate article reference
             assert "article 6" in response_text or "art. 6" in response_text
 
-
 @pytest.mark.compliance
 class TestISO27001Accuracy:
     """Test ISO 27001 compliance content accuracy"""
@@ -264,7 +262,6 @@ class TestISO27001Accuracy:
             )
             assert mentioned_elements >= 4, "Key ISMS elements should be mentioned"
 
-
 @pytest.mark.compliance
 class TestUKSpecificRegulations:
     """Test UK-specific regulatory compliance accuracy"""
@@ -338,7 +335,6 @@ class TestUKSpecificRegulations:
             )
             assert "guidance" in response_text
             assert "fines" in response_text or "penalties" in response_text
-
 
 @pytest.mark.compliance
 class TestSectorSpecificCompliance:
@@ -419,7 +415,6 @@ class TestSectorSpecificCompliance:
             assert (
                 mentioned_elements >= 3
             ), "Healthcare-specific elements should be mentioned"
-
 
 @pytest.mark.compliance
 class TestComplianceContentValidation:
@@ -572,7 +567,6 @@ class TestComplianceContentValidation:
             assert (
                 mentioned_healthcare >= 1
             ), "Should include healthcare-specific recommendations"
-
 
 @pytest.mark.compliance
 @pytest.mark.sme_validation

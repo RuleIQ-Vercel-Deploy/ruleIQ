@@ -28,7 +28,6 @@ from langgraph_agent.core.constants import (
     SLO_P95_LATENCY_MS,
 )
 
-
 class TestCoreModelContracts:
     """Test core model schemas and validation."""
 
@@ -170,7 +169,6 @@ class TestCoreModelContracts:
                 recommendations=[],
             )
 
-
 class TestStateContracts:
     """Test state management contracts."""
 
@@ -266,7 +264,6 @@ class TestStateContracts:
         # Update metadata should still work
         updated_state = update_state_metadata(state)
         assert updated_state["turn_count"] == 2
-
 
 class TestToolContracts:
     """Test tool interface contracts."""
@@ -376,7 +373,6 @@ class TestToolContracts:
         assert ToolPriority.HIGH == "high"
         assert ToolPriority.CRITICAL == "critical"
 
-
 class TestConstantsContracts:
     """Test that constants maintain expected contracts."""
 
@@ -420,7 +416,6 @@ class TestConstantsContracts:
         assert isinstance(SLO_P95_LATENCY_MS, (int, float))
         assert SLO_P95_LATENCY_MS > 0
         assert SLO_P95_LATENCY_MS <= 10000  # Should be <= 10 seconds for reasonable UX
-
 
 class TestAPIContracts:
     """Test API interface contracts."""
@@ -481,7 +476,6 @@ class TestAPIContracts:
         for param_name in expected_params:
             assert param_name in sig.parameters
 
-
 class TestIntegrationContracts:
     """Test integration between components maintains contracts."""
 
@@ -534,7 +528,6 @@ class TestIntegrationContracts:
         assert len(state["errors"]) == 1
         assert state["error_count"] == 1
         assert state["errors"][0].company_id == company_id
-
 
 class TestBackwardCompatibility:
     """Test that changes maintain backward compatibility."""

@@ -20,7 +20,6 @@ from langchain.schema import Document
 
 logger = logging.getLogger(__name__)
 
-
 class ComplianceStatus(Enum):
     """Compliance status levels"""
 
@@ -30,7 +29,6 @@ class ComplianceStatus(Enum):
     NOT_APPLICABLE = "not_applicable"
     PENDING_ASSESSMENT = "pending_assessment"
 
-
 class RiskLevel(Enum):
     """Risk severity levels"""
 
@@ -39,7 +37,6 @@ class RiskLevel(Enum):
     MEDIUM = "medium"
     LOW = "low"
     MINIMAL = "minimal"
-
 
 @dataclass
 class ComplianceObligation:
@@ -76,7 +73,6 @@ class ComplianceObligation:
             "penalties": self.penalties,
             "automationScore": self.automation_potential,
         }
-
 
 class UKComplianceManifest:
     """
@@ -218,7 +214,6 @@ class UKComplianceManifest:
             if key in timeline.lower():
                 return datetime.now() + timedelta(days=days)
         return None
-
 
 class UKComplianceAssessmentEngine:
     """
@@ -529,7 +524,6 @@ class UKComplianceAssessmentEngine:
         """Identify quick wins"""
         quick_win_keywords = ["document", "policy", "update", "review", "approval"]
         return any(keyword in gap.lower() for keyword in quick_win_keywords)
-
 
 # Additional classes would continue here...
 # Including GraphRAG integration, CCO strategic features, etc.

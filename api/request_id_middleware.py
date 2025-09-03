@@ -13,7 +13,6 @@ from starlette.responses import Response
 
 from api.context import request_id_var
 
-
 class RequestIDMiddleware(BaseHTTPMiddleware):
     """
     Middleware to add a unique request ID to each incoming request and log the response time.

@@ -12,7 +12,6 @@ from sqlalchemy import text
 import sys
 from typing import Optional
 
-
 async def clean_database() -> Optional[bool]:
     """Drop all tables and types from the database."""
     db_url = os.environ.get(
@@ -73,7 +72,6 @@ async def clean_database() -> Optional[bool]:
     finally:
         await engine.dispose()
 
-
 def main() -> int:
     """Run the cleanup."""
     print("Cleaning test database")
@@ -88,7 +86,6 @@ def main() -> int:
     else:
         print("Database cleanup failed!")
         return 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

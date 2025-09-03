@@ -20,19 +20,15 @@ from services.security_alerts import SecurityAlertService
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 class LoginRequest(BaseModel):
     email: str
     password: str
 
-
 router = APIRouter()
-
 
 class RegisterResponse(BaseModel):
     user: UserResponse
     tokens: Token
-
 
 @router.post('/register', response_model=RegisterResponse, status_code=
     status.HTTP_201_CREATED, dependencies=[Depends(auth_rate_limit())])
@@ -73,7 +69,6 @@ async def register(user: UserCreate, db: Session=Depends(get_db)) ->Any:
         email, is_active=db_user.is_active, created_at=db_user.created_at),
         tokens=Token(access_token=access_token, refresh_token=refresh_token,
         token_type='bearer'))
-
 
 @router.post('/token', response_model=Token, dependencies=[Depends(
     auth_rate_limit())])
@@ -119,7 +114,6 @@ async def login_for_access_token(request: Request, form_data:
     return {'access_token': access_token, 'refresh_token': refresh_token,
         'token_type': 'bearer'}
 
-
 @router.post('/login', response_model=Token, dependencies=[Depends(
     auth_rate_limit())])
 async def login(request: Request, login_data: LoginRequest, db: Session=
@@ -164,7 +158,6 @@ async def login(request: Request, login_data: LoginRequest, db: Session=
     return {'access_token': access_token, 'refresh_token': refresh_token,
         'token_type': 'bearer'}
 
-
 @router.post('/refresh', response_model=Token, dependencies=[Depends(
     auth_rate_limit())])
 async def refresh_token(refresh_request: dict, db: Session=Depends(get_db)
@@ -187,7 +180,6 @@ async def refresh_token(refresh_request: dict, db: Session=Depends(get_db)
     new_refresh_token = create_refresh_token(data={'sub': str(user.id)})
     return {'access_token': access_token, 'refresh_token':
         new_refresh_token, 'token_type': 'bearer'}
-
 
 @router.get('/me')
 async def get_current_user(db: Session=Depends(get_db), token: str=Depends(
@@ -235,7 +227,6 @@ async def get_current_user(db: Session=Depends(get_db), token: str=Depends(
         permissions), 'assessment_permissions': [p for p in permissions if 
         'assessment' in p.lower()]}
 
-
 @router.post('/logout')
 async def logout(request: Request, token: str=Depends(oauth2_scheme)) ->Dict[
     str, Any]:
@@ -254,7 +245,6 @@ async def logout(request: Request, token: str=Depends(oauth2_scheme)) ->Dict[
         except (requests.RequestException, KeyError, IndexError):
             pass
     return {'message': 'Successfully logged out'}
-
 
 @router.post('/assign-default-role')
 async def assign_default_role(db: Session=Depends(get_db), token: str=

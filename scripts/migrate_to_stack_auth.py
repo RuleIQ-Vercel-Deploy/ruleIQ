@@ -26,7 +26,6 @@ REPLACEMENTS = [(
     'current_user\\.username', 'current_user.get("displayName", "")'), (
     'user\\.username', 'user.get("displayName", "")')]
 
-
 def get_router_files() ->List[Path]:
     """Get all router files that need migration"""
     router_dir = Path('api/routers')
@@ -37,14 +36,12 @@ def get_router_files() ->List[Path]:
             router_files.append(file)
     return router_files
 
-
 def backup_file(file_path: Path) ->None:
     """Create a backup of the file before modifying"""
     backup_path = file_path.with_suffix(f'{file_path.suffix}.backup')
     if not backup_path.exists():
         backup_path.write_text(file_path.read_text())
         logger.info('✅ Backed up: %s -> %s' % (file_path, backup_path))
-
 
 def migrate_file(file_path: Path, dry_run: bool=False) ->List[str]:
     """Migrate a single file from JWT to Stack Auth"""
@@ -73,7 +70,6 @@ def migrate_file(file_path: Path, dry_run: bool=False) ->List[str]:
             changes)))
     return changes
 
-
 def generate_migration_report(results: dict) ->None:
     """Generate a detailed migration report"""
     report_path = Path('STACK_AUTH_MIGRATION_REPORT.md')
@@ -90,7 +86,6 @@ def generate_migration_report(results: dict) ->None:
             report.append('')
     report_path.write_text('\n'.join(report))
     logger.info('\n📄 Migration report saved to: %s' % report_path)
-
 
 def main() ->None:
     """Run the migration"""
@@ -141,7 +136,6 @@ Create backups and continue? (yes/no): """,
     logger.info('4. Test each endpoint manually with Stack Auth tokens')
     logger.info('5. Update any service layer functions that expect User models',
         )
-
 
 if __name__ == '__main__':
     main()

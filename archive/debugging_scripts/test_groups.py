@@ -87,7 +87,6 @@ TEST_GROUPS = {
     },
 }
 
-
 def run_test_group(group_name, group_config):
     """Run a single test group"""
     print(f"\n🚀 Starting {group_config['name']} ({group_name})")
@@ -139,7 +138,6 @@ def run_test_group(group_name, group_config):
             "error": str(e),
         }
 
-
 def run_single_group(group_name):
     """Run a single test group by name"""
     if group_name not in TEST_GROUPS:
@@ -149,7 +147,6 @@ def run_single_group(group_name):
 
     result = run_test_group(group_name, TEST_GROUPS[group_name])
     return result["status"] == "PASSED"
-
 
 def run_all_groups_parallel():
     """Run all test groups in parallel"""
@@ -186,7 +183,6 @@ def run_all_groups_parallel():
 
     return passed == len(results)
 
-
 def run_all_groups_sequential():
     """Run all test groups sequentially"""
     print("🎯 Running ALL test groups sequentially...")
@@ -216,7 +212,6 @@ def run_all_groups_sequential():
 
     return passed == len(results)
 
-
 def list_groups() -> None:
     """List all available test groups"""
     print("📋 Available Test Groups (597 total tests):")
@@ -236,7 +231,6 @@ def list_groups() -> None:
     print(f"📊 TOTAL: {total_tests} tests across {len(TEST_GROUPS)} groups")
     print("⚡ Parallel execution: ~6-8 minutes total")
     print("🔄 Sequential execution: ~20-25 minutes total")
-
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:

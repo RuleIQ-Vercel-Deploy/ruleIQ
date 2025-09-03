@@ -8,7 +8,6 @@ from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
 load_dotenv()
 
-
 def main() ->None:
     database_url = os.getenv('DATABASE_URL')
     if not database_url:
@@ -26,7 +25,6 @@ def main() ->None:
         sys.exit(1)
     finally:
         engine.dispose()
-
 
 if __name__ == '__main__':
     main()

@@ -14,7 +14,6 @@ from database.rbac import AuditLog
 import json
 from fastapi import HTTPException, status
 
-
 class RateLimitService:
     """Service for managing AI feature rate limits."""
 
@@ -56,7 +55,6 @@ class RateLimitService:
         now = datetime.now(timezone.utc)
         window_start = now - timedelta(hours=24)
 
-        # Count usage in the window from audit logs
         stmt = select(func.count(AuditLog.id)).where(
             and_(
                 AuditLog.user_id == user.id,

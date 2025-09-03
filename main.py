@@ -10,6 +10,7 @@ from api.request_id_middleware import RequestIDMiddleware
 from api.routers import agentic_rag, ai_assessments, ai_cost_monitoring, ai_cost_websocket, ai_optimization, ai_policy, api_keys, assessments, auth, business_profiles, chat, compliance, dashboard, evidence, evidence_collection, feedback, foundation_evidence, frameworks, freemium, google_auth, implementation, integrations, iq_agent, monitoring, payment, performance_monitoring, policies, readiness, reports, security, secrets_vault, test_utils, uk_compliance, users, webhooks
 from api.routers.admin import admin_router
 from api.routers import rbac_auth
+from api.routers import auth_monitoring  # NEW: Authentication monitoring router
 from api.schemas import APIInfoResponse, HealthCheckResponse
 from config.logging_config import get_logger, setup_logging
 from config.settings import settings
@@ -133,6 +134,7 @@ app.include_router(uk_compliance.router, prefix='/api/v1/uk-compliance', tags=['
 app.include_router(iq_agent.router, prefix='/api/v1/iq-agent', tags=['IQ Agent'])
 app.include_router(agentic_rag.router, prefix='/api/v1/agentic-rag', tags=['Agentic RAG'])
 app.include_router(admin_router)
+app.include_router(auth_monitoring.router, tags=['Authentication Monitoring'])  # NEW: Auth monitoring endpoints
 import os
 if os.getenv('ENVIRONMENT', 'production').lower() in ['development', 'test', 'testing', 'local']:
     app.include_router(test_utils.router, prefix='/api/test-utils', tags=['Test Utilities'])

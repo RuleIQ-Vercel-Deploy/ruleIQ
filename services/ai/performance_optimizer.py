@@ -18,10 +18,8 @@ from typing import Any, Dict, List, Optional, Tuple
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 class OptimizationStrategy(Enum):
     """Performance optimization strategies."""
-
 
 @dataclass
 class PerformanceMetrics:
@@ -33,7 +31,6 @@ class PerformanceMetrics:
     token_usage: int = 0
     cost_estimate: float = 0.0
     optimization_savings: float = 0.0
-
 
 @dataclass
 class BatchRequest:
@@ -47,7 +44,6 @@ class BatchRequest:
     def __post_init__(self) ->None:
         if self.created_at is None:
             self.created_at = datetime.now(timezone.utc)
-
 
 class AIPerformanceOptimizer:
     """
@@ -312,9 +308,7 @@ class AIPerformanceOptimizer:
         return {'request_id': request.get('id', 'unknown'), 'status':
             'completed', 'processing_time_ms': 100}
 
-
 performance_optimizer = AIPerformanceOptimizer()
-
 
 async def get_performance_optimizer() ->AIPerformanceOptimizer:
     """Get the global performance optimizer instance."""

@@ -8,14 +8,12 @@ import sys
 import asyncio
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
 load_dotenv()
 
 # Add the project root to Python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from services.agentic_rag import AgenticRAGSystem
-
 
 async def test_rag_processing():
     """Test the RAG system's document processing and querying"""
@@ -129,7 +127,6 @@ This enables automatic state persistence between workflow runs.
             rag_system.close()
         except (ValueError, TypeError):
             pass
-
 
 if __name__ == "__main__":
     asyncio.run(test_rag_processing())

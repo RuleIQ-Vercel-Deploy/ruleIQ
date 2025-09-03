@@ -14,12 +14,10 @@ from langgraph.graph.message import add_messages
 from database.evidence_item import EvidenceItem
 from langgraph_agent.nodes.evidence_nodes import EvidenceCollectionNode, evidence_node
 
-
 async def async_generator(items):
     """Helper to create async generator."""
     for item in items:
         yield item
-
 
 @pytest.mark.asyncio
 class TestEvidenceCollectionNodeUncovered:
@@ -286,7 +284,6 @@ class TestEvidenceCollectionNodeUncovered:
 
         # Should log warning about no collector implementation
         assert result == state  # Returns unchanged when no actual collectors
-
 
 class TestEvidenceCollectionNodeSync:
     """Tests for synchronous methods in EvidenceCollectionNode."""

@@ -13,7 +13,6 @@ import json
 from datetime import datetime
 from typing import Dict, Any
 
-
 class SecurityAuditor:
     """Automated security audit for backend fixes"""
 
@@ -248,7 +247,6 @@ Generated: {self.results['timestamp']}
                 report += f"Details: {detail['details']}\n"
         return report
 
-
 def main() ->None:
     """Main audit execution"""
     auditor = SecurityAuditor()
@@ -268,7 +266,6 @@ def main() ->None:
     else:
         logger.info('\n✅ Security audit passed successfully')
         sys.exit(0)
-
 
 if __name__ == '__main__':
     main()

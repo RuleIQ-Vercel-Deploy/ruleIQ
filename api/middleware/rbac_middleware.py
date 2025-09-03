@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 MAX_RETRIES = 3
 
-
 RBAC Middleware for Automatic API Protection
 
 Provides middleware that automatically enforces role-based access control
@@ -22,7 +21,6 @@ from api.dependencies.rbac_auth import UserWithRoles
 from database.db_setup import get_db
 from services.rbac_service import RBACService
 logger = logging.getLogger(__name__)
-
 
 class RBACMiddleware(BaseHTTPMiddleware):
     """
@@ -316,7 +314,6 @@ class RBACMiddleware(BaseHTTPMiddleware):
         except Exception as e:
             logger.error('Failed to log access failure: %s' % e)
 
-
 class RBACRouteProtector:
     """
     Decorator-based route protection for specific endpoints.
@@ -375,16 +372,13 @@ class RBACRouteProtector:
         func._admin_only = True
         return func
 
-
 def require_admin(func) ->Any:
     """Decorator for admin-only routes."""
     return RBACRouteProtector.admin_only(func)
 
-
 def require_permissions(*permissions) ->Any:
     """Decorator for routes requiring specific permissions."""
     return RBACRouteProtector.require_permissions(list(permissions))
-
 
 def require_framework_access(framework_id: str, access_level: str='read'
     ) ->Any:

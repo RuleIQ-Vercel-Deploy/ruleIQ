@@ -6,7 +6,6 @@ import logging
 import json
 logger = logging.getLogger(__name__)
 
-
 import os
 from pathlib import Path
 from datetime import datetime, timedelta, timezone

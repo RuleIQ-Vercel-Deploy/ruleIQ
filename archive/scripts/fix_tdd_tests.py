@@ -6,8 +6,6 @@ import re
 import logging
 logger = logging.getLogger(__name__)
 
-
-
 def fix_test_file(filepath):
     """Fix all pytest.raises(NameError) patterns in the test file."""
 
@@ -54,7 +52,6 @@ def fix_test_file(filepath):
         f.write("\n".join(new_lines))
 
     logger.info(f"Fixed {filepath}")
-
 
 if __name__ == "__main__":
     fix_test_file("tests/models/test_compliance_state.py")

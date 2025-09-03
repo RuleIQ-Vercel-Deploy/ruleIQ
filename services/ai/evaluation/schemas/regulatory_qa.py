@@ -9,7 +9,6 @@ from pydantic import BaseModel, Field
 
 from .common import RegCitation, SourceMeta, TemporalValidity
 
-
 class RegulatoryQAPair(BaseModel):
     """Regulatory Q&A pair definition."""
 

@@ -20,7 +20,6 @@ from typing import Optional
 setup_logging()
 logger = get_logger(__name__)
 
-
 async def create_tables() ->Optional[bool]:
     """Run Alembic migrations to create/update database tables."""
     logger.info('Running database migrations...')
@@ -38,7 +37,6 @@ async def create_tables() ->Optional[bool]:
         logger.error('Error running migrations: %s' % e, exc_info=True)
         return False
 
-
 async def populate_default_data() ->Optional[bool]:
     """Populate database with default frameworks and data asynchronously."""
     logger.info('Populating default data...')
@@ -51,7 +49,6 @@ async def populate_default_data() ->Optional[bool]:
         logger.error('Error populating default data: %s' % e, exc_info=True)
         return False
 
-
 async def test_connection() ->Optional[bool]:
     """Test database connection asynchronously."""
     logger.info('Testing database connection...')
@@ -63,7 +60,6 @@ async def test_connection() ->Optional[bool]:
     except Exception as e:
         logger.error('Database connection failed: %s' % e, exc_info=True)
         return False
-
 
 async def main() ->bool:
     """Main asynchronous initialization function."""
@@ -84,7 +80,6 @@ async def main() ->bool:
         return False
     logger.info('Database initialization completed successfully!')
     return True
-
 
 if __name__ == '__main__':
     success = asyncio.run(main())

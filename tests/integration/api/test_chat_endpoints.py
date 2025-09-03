@@ -16,7 +16,6 @@ from uuid import uuid4
 import pytest
 from tests.conftest import assert_api_response_security
 
-
 @pytest.mark.integration
 @pytest.mark.api
 class TestChatEndpoints:
@@ -156,7 +155,6 @@ class TestChatEndpoints:
         assert response.status_code == HTTP_BAD_REQUEST
         response_data = response.json()
         assert 'Business profile not found' in response_data['detail']
-
 
 @pytest.mark.integration
 @pytest.mark.api

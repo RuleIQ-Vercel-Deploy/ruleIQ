@@ -21,7 +21,6 @@ from api.schemas.ai_policy import (
 )
 from database.compliance_framework import ComplianceFramework
 
-
 class TestPolicyGenerationService:
     """Test suite for AI-powered policy generation"""
 
@@ -382,7 +381,6 @@ class TestPolicyGenerationService:
             assert "Enhanced privacy policy" in result.refined_content
             assert result.confidence_score == 0.94
 
-
 class TestPolicyGeneratorAPIIntegration:
     """Test API integration for policy generation"""
 
@@ -461,7 +459,6 @@ class TestPolicyGeneratorAPIIntegration:
         assert "templates" in data
         assert len(data["templates"]) > 0
         assert any(t["name"] == "UK_GDPR_Privacy_Policy" for t in data["templates"])
-
 
 class TestPolicyGeneratorPerformance:
     """Performance tests for policy generation"""

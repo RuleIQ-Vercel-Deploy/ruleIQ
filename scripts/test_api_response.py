@@ -7,8 +7,6 @@ import json
 # Constants
 HTTP_OK = 200
 
-
-
 def test_api_directly() ->Any:
     url = 'http://localhost:8000/api/v1/freemium/leads'
     data = {'email': 'direct_test@example.com', 'utm_source': 'test',
@@ -31,7 +29,6 @@ def test_api_directly() ->Any:
             print(f'Error Response: {response.text}')
     except Exception as e:
         print(f'Error: {e}')
-
 
 if __name__ == '__main__':
     test_api_directly()

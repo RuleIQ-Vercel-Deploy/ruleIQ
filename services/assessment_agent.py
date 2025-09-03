@@ -35,7 +35,6 @@ from config.logging_config import get_logger
 
 logger = get_logger(__name__)
 
-
 class AssessmentPhase(Enum):
     """Phases of the assessment conversation."""
 
@@ -46,7 +45,6 @@ class AssessmentPhase(Enum):
     RISK_ASSESSMENT = "risk_assessment"
     RECOMMENDATIONS = "recommendations"
     COMPLETION = "completion"
-
 
 class AssessmentState(TypedDict):
     """
@@ -88,7 +86,6 @@ class AssessmentState(TypedDict):
     should_continue: bool
     error_count: int
     fallback_mode: bool
-
 
 class AssessmentAgent:
     """
@@ -153,7 +150,6 @@ class AssessmentAgent:
         Uses the official AsyncPostgresSaver from langgraph.checkpoint.postgres.aio.
         """
         try:
-            # Get database URL from settings
             settings = get_settings()
             database_url = settings.database_url
 
@@ -184,7 +180,6 @@ class AssessmentAgent:
                     "Initialized official AsyncPostgresSaver for persistent state storage",
                 )
 
-                # Store connection to prevent it from being garbage collected
                 self._db_conn = conn
 
                 return checkpointer
@@ -254,7 +249,6 @@ class AssessmentAgent:
         # These edges would be used when processing actual user answers
         # graph.add_edge("process_answer", "determine_next")
 
-        # Conditional routing from determine_next
         graph.add_conditional_edges(
             "determine_next",
             self._route_next_step,
@@ -293,7 +287,6 @@ what's your primary industry?
 
     async def _analyze_context_node(self, state: AssessmentState) -> AssessmentState:
         """Analyze accumulated context to understand the business better."""
-        # Extract insights from conversation so far
         messages = state["messages"]
 
         # Use AI to analyze if available
@@ -316,7 +309,6 @@ what's your primary industry?
                     if need not in state["compliance_needs"]:
                         state["compliance_needs"].append(need)
 
-                # Determine expertise level from responses
                 state["expertise_level"] = analysis.get(
                     "expertise_level", "intermediate",
                 )
@@ -451,7 +443,6 @@ what's your primary industry?
         # Update progress
         progress = min((state["questions_answered"] / self.MIN_QUESTIONS) * 100, 100)
 
-        # Extract key information from answer
         if state["messages"]:
             last_answer = state["messages"][-1]
             if isinstance(last_answer, HumanMessage):
@@ -847,7 +838,6 @@ Would you like to schedule a demo to see how we can help address your specific n
         # Add user answer as a message
         current_state["messages"].append(HumanMessage(content=answer))
 
-        # Create a new graph that starts from process_answer
         graph = StateGraph(AssessmentState)
 
         # Add all nodes
@@ -914,7 +904,6 @@ Would you like to schedule a demo to see how we can help address your specific n
         Returns:
             Updated assessment state
         """
-        # Get current state from checkpointer
         config = {"configurable": {"thread_id": f"thread_{session_id}"}}
 
         # Add user message to state
@@ -922,9 +911,7 @@ Would you like to schedule a demo to see how we can help address your specific n
             content=user_response, additional_kwargs={"confidence": confidence},
         )
 
-        # Try to get existing state from checkpointer first
         try:
-            # Get the current state from the checkpointer
             checkpoint_tuple = self.checkpointer.get_tuple(config)
 
             if checkpoint_tuple and checkpoint_tuple.checkpoint:

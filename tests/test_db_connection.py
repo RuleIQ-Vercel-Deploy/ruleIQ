@@ -7,7 +7,6 @@ from urllib.parse import urlparse
 import psycopg2
 from psycopg2 import OperationalError
 
-
 def test_connection():
     """Test the database connection using the DATABASE_URL from .env"""
     # Load .env file
@@ -76,7 +75,6 @@ def test_connection():
     except Exception as e:
         print(f"\nUNEXPECTED ERROR: {e}")
         return False
-
 
 if __name__ == "__main__":
     success = test_connection()

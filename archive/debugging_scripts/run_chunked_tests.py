@@ -60,7 +60,6 @@ TEST_GROUPS = {
     ],
 }
 
-
 class TestRunner:
     def __init__(self) -> None:
         self.results: Dict[str, Dict] = {}
@@ -116,7 +115,6 @@ class TestRunner:
             stdout, stderr = await process.communicate()
             duration = time.time() - start_time
 
-            # Parse results from output
             output = stdout.decode() + stderr.decode()
             passed, failed, total = self._parse_pytest_output(output)
 
@@ -264,12 +262,10 @@ class TestRunner:
         logger.info("\n📁 Test result files: test_results_group*.xml")
         logger.info("=" * 60)
 
-
 async def main() -> None:
     """Main execution function."""
     runner = TestRunner()
     await runner.run_all_groups()
-
 
 if __name__ == "__main__":
     # Run the async test execution

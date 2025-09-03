@@ -14,7 +14,6 @@ os.environ["DATABASE_URL"] = (
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-
 async def setup_database():
     """Setup database using Alembic migrations"""
     import subprocess
@@ -103,7 +102,6 @@ async def setup_database():
             print(f"✗ Error creating test user: {e}")
             await db.rollback()
             return False
-
 
 if __name__ == "__main__":
     success = asyncio.run(setup_database())

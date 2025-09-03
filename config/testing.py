@@ -11,7 +11,6 @@ from pathlib import Path
 from typing import Optional
 from pydantic import Field
 
-
 class TestingConfig(BaseConfig):
     """Testing-specific configuration"""
 

@@ -13,7 +13,6 @@ from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
-
 class TemporalGranularity(Enum):
     """Time granularity levels for regulatory changes"""
 
@@ -23,7 +22,6 @@ class TemporalGranularity(Enum):
     MONTHLY = "monthly"  # Monthly reports
     QUARTERLY = "quarterly"  # Quarterly reviews
     ANNUAL = "annual"  # Annual compliance
-
 
 class ChangeType(Enum):
     """Types of regulatory changes"""
@@ -35,7 +33,6 @@ class ChangeType(Enum):
     ENFORCEMENT_ACTION = "enforcement_action"
     CONSULTATION = "consultation"
     EFFECTIVE_DATE = "effective_date"
-
 
 @dataclass
 class TemporalNode:
@@ -52,7 +49,6 @@ class TemporalNode:
     jurisdiction: Optional[str] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
 
-
 @dataclass
 class TemporalEdge:
     """Represents a time-aware relationship"""
@@ -66,7 +62,6 @@ class TemporalEdge:
     confidence: float = 1.0
     metadata: Dict[str, Any] = field(default_factory=dict)
 
-
 @dataclass
 class RegulatoryClock:
     """Tracks regulatory timelines and deadlines"""
@@ -79,7 +74,6 @@ class RegulatoryClock:
     grace_period_end: Optional[datetime] = None
     review_date: Optional[datetime] = None
     sunset_date: Optional[datetime] = None
-
 
 class GraphitiTemporalMemory:
     """
@@ -499,7 +493,6 @@ class GraphitiTemporalMemory:
     async def close(self):
         """Close database connection"""
         self.driver.close()
-
 
 class TemporalMemoryIntegration:
     """

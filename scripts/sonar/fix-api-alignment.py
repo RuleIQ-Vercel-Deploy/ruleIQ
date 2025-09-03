@@ -18,7 +18,6 @@ ROUTERS_DIR = PROJECT_ROOT / 'api' / 'routers'
 FRONTEND_API_DIR = PROJECT_ROOT / 'frontend' / 'lib' / 'api'
 MAIN_PY = PROJECT_ROOT / 'main.py'
 
-
 class APIAlignmentFixer:
 
     def __init__(self):
@@ -193,7 +192,6 @@ class APIAlignmentFixer:
             json.dump(report, f, indent=2)
         return report
 
-
 def main() ->None:
     """Main execution"""
     logger.info('🚀 RuleIQ API Alignment Fixer')
@@ -247,7 +245,6 @@ def main() ->None:
             '\n💡 Run with --fix flag to apply backend fixes automatically')
         logger.info('   python scripts/fix-api-alignment.py --fix')
     logger.info('\n📄 Detailed report saved to api-alignment-report.json')
-
 
 if __name__ == '__main__':
     main()

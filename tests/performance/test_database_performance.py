@@ -16,7 +16,6 @@ import pytest
 from sqlalchemy import func, text
 from sqlalchemy.orm import Session
 
-
 @pytest.mark.performance
 @pytest.mark.database
 class TestDatabaseQueryPerformance:
@@ -263,7 +262,6 @@ class TestDatabaseQueryPerformance:
         # Join queries should be efficient
         # Note: benchmark stats are available after test completion
 
-
 @pytest.mark.performance
 @pytest.mark.database
 class TestDatabaseConnectionPerformance:
@@ -429,7 +427,6 @@ class TestDatabaseConnectionPerformance:
     ):
         """Test bulk database operation performance"""
 
-        # Clean up any existing bulk evidence from previous test runs
         from database.evidence_item import EvidenceItem
 
         db_session.query(EvidenceItem).filter(
@@ -483,7 +480,6 @@ class TestDatabaseConnectionPerformance:
         # Bulk operations should be much faster than individual inserts
         assert benchmark.stats["mean"] < 2.0  # Mean < 2s for 500 records
         assert benchmark.stats["max"] < 5.0  # Max < 5s
-
 
 @pytest.mark.performance
 @pytest.mark.database
@@ -636,7 +632,6 @@ class TestDatabaseIndexPerformance:
 
         assert len(text_search) >= 1
         assert len(notes_search) >= 1
-
 
 @pytest.mark.performance
 @pytest.mark.database
@@ -842,7 +837,6 @@ class TestDatabaseConcurrencyPerformance:
         assert (
             total_created == expected_items
         )  # All successful items should be in database
-
 
 @pytest.mark.performance
 @pytest.mark.database

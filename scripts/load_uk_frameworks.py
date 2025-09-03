@@ -15,7 +15,6 @@ from database.db_setup import get_db
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 def load_uk_gdpr_framework() ->Dict[str, Any]:
     """Load UK GDPR framework data"""
     return {'name': 'ICO_GDPR_UK', 'display_name':
@@ -74,7 +73,6 @@ def load_uk_gdpr_framework() ->Dict[str, Any]:
         """
         , 'version': '1.0'}
 
-
 def load_fca_framework() ->Dict[str, Any]:
     """Load FCA regulatory framework data"""
     return {'name': 'FCA_REGULATORY', 'display_name':
@@ -102,7 +100,6 @@ def load_fca_framework() ->Dict[str, Any]:
         'Complaints Logs'], 'complexity_scor': 9, 'implementation_': 24,
         'estimated_cost_': '£25,000-£150,000', 'version': '1.0'}
 
-
 def load_cyber_essentials_framework() ->Dict[str, Any]:
     """Load Cyber Essentials framework data"""
     return {'name': 'CYBER_ESSENTIALS_UK', 'display_name':
@@ -122,7 +119,6 @@ def load_cyber_essentials_framework() ->Dict[str, Any]:
         'Access Control Lists', 'Antivirus Reports',
         'Patch Management Logs'], 'complexity_scor': 4, 'implementation_': 
         8, 'estimated_cost_': '£2,000-£10,000', 'version': '1.0'}
-
 
 def load_pci_dss_uk_framework() ->Dict[str, Any]:
     """Load PCI DSS UK implementation framework"""
@@ -153,7 +149,6 @@ def load_pci_dss_uk_framework() ->Dict[str, Any]:
         'Security Policies', 'Training Records', 'Incident Response Plans'],
         'complexity_scor': 7, 'implementation_': 20, 'estimated_cost_':
         '£20,000-£100,000', 'version': '1.0'}
-
 
 def load_iso27001_uk_framework() ->Dict[str, Any]:
     """Load ISO 27001 UK-adapted framework with template integration"""
@@ -187,7 +182,6 @@ def load_iso27001_uk_framework() ->Dict[str, Any]:
         ], 'complexity_scor': 9, 'implementation_': 32, 'estimated_cost_':
         '£50,000-£200,000', 'version': '1.0'}
 
-
 def main() ->Any:
     """Main function to load UK compliance frameworks"""
     logger.info('Starting UK compliance frameworks loading...')
@@ -218,7 +212,6 @@ def main() ->Any:
             logger.error('  - %s' % error)
     db_session.close()
     return result.success
-
 
 if __name__ == '__main__':
     success = main()

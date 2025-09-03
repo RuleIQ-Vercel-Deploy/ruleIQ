@@ -10,7 +10,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 async def test_neo4j_connection():
     """Test basic Neo4j connection."""
 
@@ -70,7 +69,6 @@ async def test_neo4j_connection():
         await driver.close()
 
     print("\n✅ Neo4j connection test passed!")
-
 
 if __name__ == "__main__":
     asyncio.run(test_neo4j_connection())

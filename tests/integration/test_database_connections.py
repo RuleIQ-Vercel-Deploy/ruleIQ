@@ -10,7 +10,6 @@ from sqlalchemy.orm import Session
 import redis
 import asyncio
 
-
 class TestDatabaseConnections:
     """Test database connection functionality."""
     
@@ -54,7 +53,6 @@ class TestDatabaseConnections:
         """Verify data doesn't persist between tests."""
         from database import User
         
-        # User from previous test should not exist
         found = db_session.query(User).filter_by(email="rollback_test@example.com").first()
         assert found is None
     
@@ -161,13 +159,11 @@ class TestDatabaseConnections:
         # Cache user ID in Redis
         redis_client.set(f"user:{sample_user.id}", sample_user.email)
         
-        # Retrieve from cache
         cached_email = redis_client.get(f"user:{sample_user.id}")
         assert cached_email == sample_user.email
         
         # Clean up
         redis_client.delete(f"user:{sample_user.id}")
-
 
 class TestConnectionResilience:
     """Test connection resilience and error handling."""
@@ -198,7 +194,6 @@ class TestConnectionResilience:
         redis_client.set('recovery_test', 'works')
         assert redis_client.get('recovery_test') == 'works'
         redis_client.delete('recovery_test')
-
 
 class TestMockFixtures:
     """Test mock fixtures for unit tests."""

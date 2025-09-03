@@ -6,7 +6,6 @@ from collections import Counter
 from typing import Any, Dict, List
 from pydantic import BaseModel
 
-
 def coverage_summary(dataset: List[BaseModel]) -> Dict[str, Any]:
     """Calculate coverage metrics by framework, jurisdiction, and trigger.
 
@@ -26,7 +25,6 @@ def coverage_summary(dataset: List[BaseModel]) -> Dict[str, Any]:
             for ref in item.regulation_refs:
                 frameworks[ref.framework] += 1
 
-                # Infer jurisdiction from framework
                 if "UK" in ref.framework:
                     jurisdictions["UK"] += 1
                 elif "GDPR" in ref.framework or "EU" in ref.framework:

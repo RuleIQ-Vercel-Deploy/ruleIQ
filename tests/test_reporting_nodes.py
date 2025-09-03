@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 MAX_RETRIES = 3
 
-
 Comprehensive test suite for reporting nodes.
 Tests migration from Celery reporting_tasks to LangGraph nodes.
 """
@@ -19,7 +18,6 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),
     '..')))
 from langgraph_agent.graph.unified_state import UnifiedComplianceState
-
 
 class TestGenerateReportNode:
     """Test suite for generate_report_node function."""
@@ -88,7 +86,6 @@ class TestGenerateReportNode:
             assert result['error_count'] == 1
             assert 'DataError' in result['errors'][0]['type']
 
-
 class TestDistributeReportNode:
     """Test suite for distribute_report_node function."""
 
@@ -154,7 +151,6 @@ class TestDistributeReportNode:
                 assert result['error_count'] == 1
                 assert 'EmailError' in result['errors'][0]['type']
 
-
 class TestCleanupOldReportsNode:
     """Test suite for cleanup_old_reports_node function."""
 
@@ -219,7 +215,6 @@ class TestCleanupOldReportsNode:
                 result = await mock_node(state)
                 assert result['error_count'] == 1
 
-
 class TestReportHelperFunctions:
     """Test suite for report helper functions."""
 
@@ -266,7 +261,6 @@ class TestReportHelperFunctions:
                     'Please find attached the compliance report.',
                     attachment_path='/tmp/report.pdf')
                 assert result == True
-
 
 class TestReportingWorkflowIntegration:
     """Integration tests for complete reporting workflow."""
@@ -328,7 +322,6 @@ class TestReportingWorkflowIntegration:
             assert result['report_data']['parameters']['start_date'
                 ] == '2024-01-01'
             assert 'content' in result['report_data']
-
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

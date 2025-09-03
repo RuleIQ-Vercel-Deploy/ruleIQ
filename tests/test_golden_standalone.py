@@ -9,9 +9,7 @@ os.environ["NEO4J_URI"] = "bolt://localhost:7688"
 os.environ["NEO4J_USER"] = "neo4j"
 os.environ["NEO4J_PASSWORD"] = "ruleiq123"
 
-# Add path but don't import anything that might override env vars
 sys.path.insert(0, ".")
-
 
 def test_direct_neo4j():
     """Test Neo4j connection directly without any problematic imports."""
@@ -150,7 +148,6 @@ def test_direct_neo4j():
 
         traceback.print_exc()
         return False
-
 
 if __name__ == "__main__":
     success = test_direct_neo4j()

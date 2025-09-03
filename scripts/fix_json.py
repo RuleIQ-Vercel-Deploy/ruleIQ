@@ -7,16 +7,13 @@ with open('ruleiq_comprehensive_postman_collection.json', 'r') as f:
     content = f.read()
 pattern = '"raw":\\s*"(\\{[^"]*\\})"'
 
-
 def fix_json_string(match) ->Any:
     raw_content = match.group(1)
     escaped = raw_content.replace('\\', '\\\\').replace('\n', '\\n').replace(
         '"', '\\"')
     return f'"raw": "{escaped}"'
 
-
 content = re.sub(pattern, fix_json_string, content, flags=re.DOTALL)
-
 
 def fix_multiline_json(content) ->Any:
     lines = content.split('\n')
@@ -76,7 +73,6 @@ def fix_multiline_json(content) ->Any:
             '"', '\\"')
         result[-1] += escaped + '"'
     return '\n'.join(result)
-
 
 content = fix_multiline_json(content)
 with open('ruleiq_comprehensive_postman_collection_fixed.json', 'w') as f:

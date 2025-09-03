@@ -51,7 +51,6 @@ from database.db_setup import Base, _get_configured_database_urls
 from database.user import User
 from database.business_profile import BusinessProfile
 
-
 class HybridDatabaseManager:
     """Manages both sync and async database connections for testing."""
 
@@ -148,10 +147,8 @@ class HybridDatabaseManager:
             await self._async_engine.dispose()
         self._initialized = False
 
-
 # Global database manager
 _hybrid_db_manager = HybridDatabaseManager()
-
 
 @pytest.fixture(scope="session")
 def event_loop():
@@ -160,7 +157,6 @@ def event_loop():
     asyncio.set_event_loop(loop)
     yield loop
     loop.close()
-
 
 @pytest.fixture(scope="session", autouse=True)
 async def setup_test_database():
@@ -173,7 +169,6 @@ async def setup_test_database():
     # Clean up
     await _hybrid_db_manager.drop_tables()
     await _hybrid_db_manager.dispose()
-
 
 # SYNC FIXTURES (for TestClient tests)
 @pytest.fixture
@@ -190,7 +185,6 @@ def sync_db_session():
     finally:
         session.close()
 
-
 @pytest.fixture
 def sync_db_session_isolated():
     """Isolated sync database session for TestClient tests (new session each time)."""
@@ -204,7 +198,6 @@ def sync_db_session_isolated():
         raise
     finally:
         session.close()
-
 
 @pytest.fixture
 def sync_sample_user(sync_db_session):
@@ -224,7 +217,6 @@ def sync_sample_user(sync_db_session):
     sync_db_session.commit()
     sync_db_session.refresh(user)
     return user
-
 
 @pytest.fixture(scope="session")
 def sync_sample_business_profile_session():
@@ -256,7 +248,6 @@ def sync_sample_business_profile_session():
         "compliance_budget": "50000-100000",
         "compliance_timeline": "6-12 months",
     }
-
 
 @pytest.fixture
 def sync_sample_business_profile(
@@ -293,7 +284,6 @@ def sync_sample_business_profile(
 
     return profile
 
-
 # ASYNC FIXTURES (for pure async tests)
 @pytest.fixture
 async def async_db_session() -> AsyncGenerator[AsyncSession, None]:
@@ -309,7 +299,6 @@ async def async_db_session() -> AsyncGenerator[AsyncSession, None]:
         session.close()
             await session.close()
 
-
 @pytest.fixture
 async def async_sample_user(async_db_session: AsyncSession) -> User:
     """Create a sample user for async tests."""
@@ -323,7 +312,6 @@ async def async_sample_user(async_db_session: AsyncSession) -> User:
     await async_db_session.commit()
     await async_db_session.refresh(user)
     return user
-
 
 @pytest.fixture
 async def async_sample_business_profile(
@@ -355,7 +343,6 @@ async def async_sample_business_profile(
     await async_db_session.commit()
     await async_db_session.refresh(profile)
     return profile
-
 
 # TESTCLIENT FIXTURES (uses sync database)
 @pytest.fixture
@@ -452,7 +439,6 @@ def authenticated_test_client(sync_db_session, sync_sample_user):
         app.dependency_overrides.clear()
         app.dependency_overrides.update(original_overrides)
 
-
 @pytest.fixture
 def unauthenticated_test_client(sync_db_session):
     """Create FastAPI test client with sync database but NO authentication overrides."""
@@ -532,13 +518,11 @@ def unauthenticated_test_client(sync_db_session):
         app.dependency_overrides.clear()
         app.dependency_overrides.update(original_overrides)
 
-
 # Default test_client fixture uses authenticated client
 @pytest.fixture
 def test_client(authenticated_test_client):
     """Default test client with authentication (for backward compatibility)."""
     return authenticated_test_client
-
 
 # AUTHENTICATION FIXTURES
 @pytest.fixture
@@ -550,12 +534,10 @@ def auth_token(sync_sample_user: User) -> str:
     token_data = {"sub": str(sync_sample_user.id)}
     return create_access_token(data=token_data, expires_delta=timedelta(minutes=30))
 
-
 @pytest.fixture
 def authenticated_headers(auth_token: str) -> Dict[str, str]:
     """Provide authenticated headers for API tests."""
     return {"Authorization": f"Bearer {auth_token}"}
-
 
 # COMPATIBILITY FIXTURES (for backward compatibility)
 @pytest.fixture
@@ -563,18 +545,15 @@ def client(authenticated_test_client):
     """Alias for authenticated_test_client for backward compatibility."""
     return authenticated_test_client
 
-
 @pytest.fixture
 def sample_user(sync_sample_user):
     """Alias for sync_sample_user for backward compatibility."""
     return sync_sample_user
 
-
 @pytest.fixture
 def sample_business_profile(sync_sample_business_profile):
     """Alias for sync_sample_business_profile for backward compatibility."""
     return sync_sample_business_profile
-
 
 # MOCK AI FIXTURES
 @pytest.fixture(autouse=True)

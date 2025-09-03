@@ -17,7 +17,6 @@ import json
 import time
 BASE_URL = 'http://localhost:8000'
 
-
 def test_endpoint_with_details(method, endpoint, data=None, headers=None,
     description='') ->Tuple[Any, ...]:
     """Test endpoint and provide detailed info"""
@@ -59,7 +58,6 @@ def test_endpoint_with_details(method, endpoint, data=None, headers=None,
         logger.info('\n❌ %s %s' % (method, endpoint))
         logger.info('    ERROR: %s' % e)
         return False, None
-
 
 def main() ->Any:
     logger.info('🔍 Debugging API Routes - Detailed Analysis')
@@ -128,7 +126,6 @@ def main() ->Any:
             logger.info('    ❌ Could not process auth response: %s' % e)
     logger.info('\n' + '=' * 60)
     logger.info('🔍 Debug Analysis Complete')
-
 
 if __name__ == '__main__':
     main()

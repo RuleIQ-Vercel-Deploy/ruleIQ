@@ -16,7 +16,6 @@ from pathlib import Path
 from typing import Dict, List, Set, Tuple
 import json
 
-
 class APIAlignmentFixer:
 
     def __init__(self):
@@ -218,7 +217,6 @@ else:
         with open('scripts/verify-api-alignment.py', 'w') as f:
             f.write(verification_script)
         os.chmod('scripts/verify-api-alignment.py', 493)
-
 
 if __name__ == '__main__':
     fixer = APIAlignmentFixer()

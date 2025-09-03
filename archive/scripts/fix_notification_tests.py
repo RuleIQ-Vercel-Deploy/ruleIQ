@@ -5,7 +5,6 @@ Fix remaining issues in notification tests
 import logging
 logger = logging.getLogger(__name__)
 
-
 import sys
 import os
 

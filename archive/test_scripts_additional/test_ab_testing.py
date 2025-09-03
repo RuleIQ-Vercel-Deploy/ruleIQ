@@ -26,7 +26,6 @@ from services.ai.ab_testing_framework import (
 from services.ai.ab_testing_utils import get_ab_testing_manager, start_model_comparison
 from typing import Optional
 
-
 def test_statistical_framework() -> bool:
     """Test the core statistical testing framework."""
     print("🧪 Testing A/B Testing Framework with Rigorous Statistical Analysis\n")
@@ -212,7 +211,6 @@ def test_statistical_framework() -> bool:
 
     return True
 
-
 def test_integration_utilities() -> bool:
     """Test the integration utilities and convenience functions."""
     print("\n🔧 Testing Integration Utilities\n")
@@ -245,7 +243,6 @@ def test_integration_utilities() -> bool:
     print("\n✅ Integration utilities working correctly!")
 
     return True
-
 
 def main() -> Optional[bool]:
     """Run all A/B testing framework tests."""
@@ -287,7 +284,6 @@ def main() -> Optional[bool]:
 
         traceback.print_exc()
         return False
-
 
 if __name__ == "__main__":
     success = main()

@@ -19,7 +19,6 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
-
 class ComplianceEventType(str, Enum):
     """Types of compliance timeline events"""
 
@@ -32,7 +31,6 @@ class ComplianceEventType(str, Enum):
     AUDIT_SCHEDULED = "audit_scheduled"
     ENFORCEMENT_ACTION = "enforcement_action"
 
-
 class ComplianceUrgency(str, Enum):
     """Urgency levels for compliance actions"""
 
@@ -41,7 +39,6 @@ class ComplianceUrgency(str, Enum):
     MEDIUM = "medium"  # 90-180 days
     LOW = "low"  # 180-365 days
     PLANNING = "planning"  # > 365 days
-
 
 @dataclass
 class ComplianceEvent:
@@ -62,7 +59,6 @@ class ComplianceEvent:
     completion_status: str = "pending"
     notes: str = ""
 
-
 @dataclass
 class ComplianceTimeline:
     """Timeline view of compliance obligations"""
@@ -78,7 +74,6 @@ class ComplianceTimeline:
     seasonal_patterns: Dict[str, Any]
     resource_forecast: Dict[str, Any]
 
-
 @dataclass
 class AmendmentAlert:
     """Alert for regulation amendments"""
@@ -93,7 +88,6 @@ class AmendmentAlert:
     implementation_timeline: int  # days
     risk_if_ignored: str
 
-
 class TemporalMetrics(BaseModel):
     """Metrics for temporal compliance tracking"""
 
@@ -107,7 +101,6 @@ class TemporalMetrics(BaseModel):
     amendment_frequency: float = 0.0  # Amendments per year
     seasonal_peak_months: List[int] = Field(default_factory=list)
     resource_utilization: float = 0.0
-
 
 class TemporalTracker:
     """
@@ -213,7 +206,6 @@ class TemporalTracker:
             regulation = dict(record["r"])
             events = []
 
-            # Extract deadline from various fields
             deadline_patterns = [
                 r'deadline["\']?\s*:\s*["\']?(\d{4}-\d{2}-\d{2})',
                 r'effective_date["\']?\s*:\s*["\']?(\d{4}-\d{2}-\d{2})',
@@ -800,13 +792,11 @@ class TemporalTracker:
 
         return calendar
 
-
 async def main():
     """Test the temporal tracker"""
 
     # Neo4j connection details
     neo4j_uri = "bolt://localhost:7688"
-    # Security: Credentials now loaded from environment via Doppler
     neo4j_user = os.getenv("NEO4J_USER", "neo4j")
     neo4j_password = os.getenv("NEO4J_PASSWORD")
     
@@ -915,7 +905,6 @@ async def main():
                 logger.info(
                     f"      {event.urgency.value.upper()} - {event.action_required[:50]}",
                 )
-
 
 if __name__ == "__main__":
     logging.basicConfig(

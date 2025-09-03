@@ -13,7 +13,6 @@ import pytest
 from database.user import User
 from api.dependencies.auth import oauth2_scheme, create_access_token
 
-
 class TestAuthManager:
     """Manages authentication for tests."""
 
@@ -79,8 +78,6 @@ class TestAuthManager:
         self.active_tokens.clear()
         self.blacklisted_tokens.clear()
 
-
-# Create a class for the global auth manager that doesn't have __init__
 class GlobalTestAuthManager:
     """Global test auth manager for utility functions."""
     
@@ -145,15 +142,12 @@ class GlobalTestAuthManager:
         self.active_tokens.clear()
         self.blacklisted_tokens.clear()
 
-
 # Global test auth manager
 _test_auth_manager = GlobalTestAuthManager()
-
 
 def get_test_auth_manager() -> GlobalTestAuthManager:
     """Get the global test auth manager."""
     return _test_auth_manager
-
 
 def override_get_current_user() -> User:
     """Override for get_current_user in tests."""
@@ -162,14 +156,12 @@ def override_get_current_user() -> User:
     user = _test_auth_manager.create_test_user()
     return user
 
-
 def override_get_current_active_user() -> User:
     """Override for get_current_active_user in tests."""
     # Always return active test user for tests
     # Use synchronous version to avoid event loop conflicts with TestClient
     user = _test_auth_manager.create_test_user()
     return user
-
 
 def create_auth_headers(user: Optional[User] = None) -> Dict[str, str]:
     """Create authentication headers for tests."""
@@ -179,11 +171,9 @@ def create_auth_headers(user: Optional[User] = None) -> Dict[str, str]:
     token = _test_auth_manager.create_test_token(user)
     return {"Authorization": f"Bearer {token}"}
 
-
 def create_test_user_with_permissions() -> User:
     """Create test user with specific permissions."""
     return _test_auth_manager.create_test_user()
-
 
 def setup_auth_mocks():
     """Set up authentication mocks for tests."""
@@ -209,11 +199,9 @@ def setup_auth_mocks():
 
     return mock_genai
 
-
 def cleanup_auth_mocks():
     """Clean up authentication mocks."""
     _test_auth_manager.clear_all()
-
 
 # Context manager for test authentication
 class TestAuthContext:
@@ -243,7 +231,6 @@ class TestAuthContext:
         # Restore original overrides
         self.app.dependency_overrides.clear()
         self.app.dependency_overrides.update(self.original_overrides)
-
 
 def with_test_auth(app, user: Optional[User] = None):
     """Context manager for test authentication."""

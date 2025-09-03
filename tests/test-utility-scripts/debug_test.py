@@ -7,7 +7,6 @@ from unittest.mock import Mock
 from sqlalchemy.ext.asyncio import AsyncSession
 from services.ai.assistant import ComplianceAssistant
 
-
 async def test_model_selection():
     """Debug the model selection test."""
     mock_db = Mock(spec=AsyncSession)
@@ -38,7 +37,6 @@ async def test_model_selection():
         logger.info('Error occurred: %s' % e)
         import traceback
         traceback.print_exc()
-
 
 if __name__ == '__main__':
     asyncio.run(test_model_selection())

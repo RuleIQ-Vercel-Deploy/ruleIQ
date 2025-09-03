@@ -13,7 +13,6 @@ from langgraph_agent.utils.cost_tracking import track_node_cost
 
 logger = logging.getLogger(__name__)
 
-
 @track_node_cost(node_name="task_scheduler_node", track_tokens=False)
 async def task_scheduler_node(state: UnifiedComplianceState) -> UnifiedComplianceState:
     """
@@ -137,7 +136,6 @@ async def task_scheduler_node(state: UnifiedComplianceState) -> UnifiedComplianc
 
         return state
 
-
 def should_schedule_compliance_check(state: Dict[str, Any]) -> bool:
     """
     Determine if a compliance check should be scheduled.
@@ -167,7 +165,6 @@ def should_schedule_compliance_check(state: Dict[str, Any]) -> bool:
 
     return not compliance_data
 
-
 def should_schedule_report(state: Dict[str, Any]) -> bool:
     """
     Determine if a report should be scheduled.
@@ -189,7 +186,6 @@ def should_schedule_report(state: Dict[str, Any]) -> bool:
         return True
 
     return False
-
 
 def should_schedule_notification(state: Dict[str, Any]) -> bool:
     """
@@ -213,7 +209,6 @@ def should_schedule_notification(state: Dict[str, Any]) -> bool:
         return True
 
     return False
-
 
 def get_next_scheduled_time(schedule_type: str, delay_hours: int = 0) -> str:
     """
@@ -241,7 +236,6 @@ def get_next_scheduled_time(schedule_type: str, delay_hours: int = 0) -> str:
 
     return scheduled_time.isoformat()
 
-
 def generate_task_id() -> str:
     """
     Generate unique task ID.
@@ -252,7 +246,6 @@ def generate_task_id() -> str:
     import uuid
 
     return str(uuid.uuid4())
-
 
 async def execute_scheduled_tasks(
     state: UnifiedComplianceState,

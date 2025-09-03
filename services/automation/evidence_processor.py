@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 MINUTE_SECONDS = 60
 
-
 Asynchronous service for processing and enriching collected evidence.
 """
 import hashlib
@@ -21,7 +20,6 @@ from core.exceptions import BusinessLogicException, DatabaseException
 from database.evidence_item import EvidenceItem
 from .quality_scorer import QualityScorer
 logger = get_logger(__name__)
-
 
 class EvidenceProcessor:
     """Processes raw evidence to add scores, tags, and mappings asynchronously."""

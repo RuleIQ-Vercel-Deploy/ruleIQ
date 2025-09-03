@@ -15,7 +15,6 @@ sys.path.insert(0, ".")
 # Set test environment
 os.environ["ENVIRONMENT"] = "test"
 
-
 async def test_basic_functionality() -> Optional[bool]:
     """Test basic functionality that's failing in pytest."""
     try:
@@ -140,7 +139,6 @@ async def test_basic_functionality() -> Optional[bool]:
             print("✓ Database cleanup completed")
         except (Exception, ValueError):
             pass
-
 
 if __name__ == "__main__":
     success = asyncio.run(test_basic_functionality())

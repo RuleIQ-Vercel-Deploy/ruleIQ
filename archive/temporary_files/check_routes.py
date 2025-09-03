@@ -3,7 +3,6 @@
 import logging
 logger = logging.getLogger(__name__)
 
-
 from tests.test_app import create_test_app
 
 app = create_test_app()

@@ -5,7 +5,6 @@ from __future__ import annotations
 HTTP_INTERNAL_SERVER_ERROR = 500
 HTTP_SERVICE_UNAVAILABLE = 503
 
-
 🔐 SecretsVault API Router - Easily Identifiable Vault Management
 
 This router provides endpoints for managing and monitoring the SecretsVault
@@ -26,7 +25,6 @@ router = APIRouter(prefix='/api/v1/api/v1/secrets-vault', tags=[
     'SecretsVault not found'}, (500): {'description':
     'Vault operation failed'}})
 
-
 class VaultHealthResponse(BaseModel):
     """SecretsVault health check response model"""
     status: str
@@ -37,7 +35,6 @@ class VaultHealthResponse(BaseModel):
     message: str
     timestamp: Optional[str] = None
 
-
 class VaultStatusResponse(BaseModel):
     """SecretsVault status response model"""
     vault_available: bool
@@ -45,7 +42,6 @@ class VaultStatusResponse(BaseModel):
     configuration: Dict[str, Any]
     health: Dict[str, Any]
     integration_active: bool
-
 
 async def get_vault_health(current_user: User=Depends(get_current_active_user)
     ) ->VaultHealthResponse:
@@ -73,7 +69,6 @@ async def get_vault_health(current_user: User=Depends(get_current_active_user)
             {'error': 'vault_health_check_failed', 'message':
             f'Failed to check SecretsVault health: {str(e)}', 'vault_type':
             'Multi-Platform SecretsVault'})
-
 
 @router.get('/status', response_model=VaultStatusResponse, summary=
     '🔐 SecretsVault Status')
@@ -116,7 +111,6 @@ async def get_vault_status(current_user: User=Depends(get_current_active_user)
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             {'error': 'vault_status_check_failed', 'message':
             f'Failed to get SecretsVault status: {str(e)}'})
-
 
 async def test_vault_connection(current_user: User=Depends(
     get_current_active_user)) ->Dict[str, Any]:
@@ -166,7 +160,6 @@ async def test_vault_connection(current_user: User=Depends(
             {'error': 'vault_connection_test_failed', 'message':
             f'SecretsVault connection test failed: {str(e)}', 'vault_type':
             'Multi-Platform SecretsVault'})
-
 
 async def get_vault_config(current_user: User=Depends(get_current_active_user)
     ) ->Dict[str, Any]:

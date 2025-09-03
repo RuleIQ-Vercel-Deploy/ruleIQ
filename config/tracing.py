@@ -24,7 +24,6 @@ from opentelemetry.propagate import set_global_textmap
 from opentelemetry.propagators.b3 import B3MultiFormat
 logger = logging.getLogger(__name__)
 
-
 class TracingConfig:
     """OpenTelemetry tracing configuration for ruleIQ"""
 
@@ -87,7 +86,6 @@ class TracingConfig:
             logger.info('Auto-instrumentation completed')
         except Exception as e:
             logger.error('Failed to instrument libraries: %s' % e)
-
 
 class CustomTracer:
     """Custom tracer wrapper for ruleIQ-specific tracing"""
@@ -152,11 +150,9 @@ class CustomTracer:
         if business_profile_id:
             span.set_attribute('business.profile.id', business_profile_id)
 
-
 _tracing_config = TracingConfig()
 _base_tracer = _tracing_config.setup_tracing()
 tracer = CustomTracer(_base_tracer)
-
 
 def trace_endpoint(endpoint: str, method: str='GET') ->Any:
     """Decorator to trace FastAPI endpoints"""
@@ -171,7 +167,6 @@ def trace_endpoint(endpoint: str, method: str='GET') ->Any:
         return wrapper
     return decorator
 
-
 def trace_db_operation(operation: str, table: str) ->Any:
     """Decorator to trace database operations"""
 
@@ -184,7 +179,6 @@ def trace_db_operation(operation: str, table: str) ->Any:
                 return func(*args, **kwargs)
         return wrapper
     return decorator
-
 
 def trace_external_service(service: str) ->Any:
     """Decorator to trace external service calls"""

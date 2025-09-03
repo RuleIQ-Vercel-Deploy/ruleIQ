@@ -19,7 +19,6 @@ HTTP_BAD_REQUEST = 400
 
 router = APIRouter()
 
-
 @router.post('/', response_model=BusinessProfileResponse, status_code=
     status.HTTP_201_CREATED)
 @require_auth
@@ -58,7 +57,6 @@ async def create_business_profile(profile: BusinessProfileCreate,
         await db.refresh(db_profile)
         return db_profile
 
-
 @router.get('/', response_model=BusinessProfileResponse)
 @require_auth
 async def get_business_profile(current_user=Depends(get_current_user), db:
@@ -71,7 +69,6 @@ async def get_business_profile(current_user=Depends(get_current_user), db:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=
             'Business profile not found')
     return profile
-
 
 @router.get('/{id}', response_model=BusinessProfileResponse)
 @require_auth
@@ -86,7 +83,6 @@ async def get_business_profile_by_id(id: UUID, current_user=Depends(
         resource='business_profile', resource_id=str(id), action='read', db
         =sync_db)
     return profile
-
 
 @router.put('/', response_model=BusinessProfileResponse)
 @require_auth
@@ -115,7 +111,6 @@ async def update_business_profile(profile_update: BusinessProfileUpdate,
     await db.commit()
     await db.refresh(profile)
     return profile
-
 
 @router.put('/{id}', response_model=BusinessProfileResponse)
 @require_auth
@@ -147,7 +142,6 @@ async def update_business_profile_by_id(profile_id: UUID, profile_update:
     await db.refresh(profile)
     return profile
 
-
 @router.delete('/{id}')
 @require_auth
 async def delete_business_profile_by_id(profile_id: UUID, current_user=
@@ -161,7 +155,6 @@ async def delete_business_profile_by_id(profile_id: UUID, current_user=
         resource='business_profile', resource_id=str(profile_id), action=
         'delete', db=sync_db)
     return {'message': 'Business profile deleted successfully'}
-
 
 @router.get('/list', summary='List all business profiles')
 @require_auth
@@ -178,7 +171,6 @@ async def list_business_profiles(limit: int=10, offset: int=0, current_user
         updated_at.isoformat() if hasattr(profile, 'updated_at') else None} for
         profile in profiles], 'total': len(profiles), 'limit': limit,
         'offset': offset}
-
 
 @router.get('/{id}/compliance-status', summary=
     'Get compliance status for profile')
@@ -200,7 +192,6 @@ async def get_profile_compliance_status(profile_id: UUID, current_user=
         'last_assessment': '2024-01-08T14:30:00Z'}], 'risk_level': 'Medium',
         'action_items': 5}
 
-
 @router.get('/{id}/team', summary='Get team members for profile')
 @require_auth
 async def get_profile_team(profile_id: UUID, current_user=Depends(
@@ -213,7 +204,6 @@ async def get_profile_team(profile_id: UUID, current_user=Depends(
         (current_user.id), 'email': current_user.email, 'role': 'Owner',
         'permissions': ['full_access'], 'joined_at': '2024-01-01T00:00:00Z'
         }], 'total_members': 1, 'pending_invites': 0}
-
 
 @router.post('/{id}/invite', summary='Invite team member to profile')
 @require_auth
@@ -239,7 +229,6 @@ async def invite_team_member(profile_id: UUID, invite_data: dict,
         timezone.utc).isoformat(), 'expires_at': '2024-01-22T00:00:00Z',
         'note': 'Team invites coming soon for SMB collaboration'}
 
-
 @router.get('/{id}/activity', summary='Get activity log for profile')
 @require_auth
 async def get_profile_activity(profile_id: UUID, limit: int=20,
@@ -258,7 +247,6 @@ async def get_profile_activity(profile_id: UUID, limit: int=20,
         'type': 'evidence_uploaded', 'description':
         'New evidence document uploaded', 'user': current_user.email,
         'timestamp': '2024-01-13T16:45:00Z'}], 'total': 3, 'limit': limit}
-
 
 @router.patch('/{id}', response_model=BusinessProfileResponse)
 @require_auth
@@ -296,7 +284,6 @@ async def patch_business_profile(profile_id: UUID, profile_update:
     await db.commit()
     await db.refresh(profile)
     return profile
-
 
 @router.get('/{id}/compliance', summary=
     'Get compliance status for business profile')

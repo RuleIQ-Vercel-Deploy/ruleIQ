@@ -17,7 +17,6 @@ from services.ai.evaluation.infrastructure.neo4j_setup import (
     get_neo4j_driver,
 )
 
-
 class TestNeo4jConnection:
     """Test Neo4j connection wrapper."""
 
@@ -101,7 +100,6 @@ class TestNeo4jConnection:
         mock_session.run.assert_called_once_with(
             "MATCH (n {name: $name}) RETURN n", params,
         )
-
 
 class TestNeo4jSetupFunctions:
     """Test Neo4j setup helper functions."""

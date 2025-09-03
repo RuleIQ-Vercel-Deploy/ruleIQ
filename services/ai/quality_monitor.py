@@ -10,7 +10,6 @@ DEFAULT_TIMEOUT = 30
 DEFAULT_LIMIT = 100
 HALF_RATIO = 0.5
 
-
 AI Response Quality Monitoring System
 
 Implements AI response quality tracking, feedback loops, and continuous
@@ -24,14 +23,11 @@ from typing import Any, Dict, List, Optional
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 class QualityDimension(Enum):
     """Quality dimensions for AI response evaluation."""
 
-
 class FeedbackType(Enum):
     """Types of feedback for AI responses."""
-
 
 class QualityLevel(Enum):
     """Quality levels for responses."""
@@ -41,7 +37,6 @@ class QualityLevel(Enum):
     NEEDS_IMPROVEMENT = 'needs_improvement'
     POOR = 'poor'
 
-
 @dataclass
 class QualityScore:
     """Individual quality score for a dimension."""
@@ -50,7 +45,6 @@ class QualityScore:
     confidence: float
     explanation: str = ''
     automated: bool = True
-
 
 @dataclass
 class ResponseFeedback:
@@ -65,7 +59,6 @@ class ResponseFeedback:
     timestamp: datetime = field(default_factory=datetime.utcnow)
     metadata: Dict[str, Any] = field(default_factory=dict)
 
-
 @dataclass
 class QualityAssessment:
     """Comprehensive quality assessment for an AI response."""
@@ -78,7 +71,6 @@ class QualityAssessment:
     improvement_suggestions: List[str]
     timestamp: datetime = field(default_factory=datetime.utcnow)
     metadata: Dict[str, Any] = field(default_factory=dict)
-
 
 class AIQualityMonitor:
     """
@@ -454,9 +446,7 @@ class AIQualityMonitor:
                     )
         return improvement_areas
 
-
 quality_monitor = AIQualityMonitor()
-
 
 async def get_quality_monitor() ->AIQualityMonitor:
     """Get the global quality monitor instance."""

@@ -15,8 +15,6 @@ from typing import Any, Dict
 import psutil
 import pytest
 
-
-# Create a standalone metrics collector class (not a test class)
 class MetricsCollector:
     """Collects metrics during test execution"""
 
@@ -128,12 +126,9 @@ class MetricsCollector:
             "by_type": by_type,
         }
 
-
 # Global metrics collector instance
 metrics_collector = MetricsCollector()
 
-
-# Create proper test class that uses fixtures instead of __init__
 class TestMetricsCollector:
     """Test class for MetricsCollector functionality"""
     
@@ -160,7 +155,6 @@ class TestMetricsCollector:
         assert "memory_percent" in resource_metric
         assert "timestamp" in resource_metric
 
-
 @pytest.fixture(scope="session", autouse=True)
 def test_session_metrics():
     """Automatically collect metrics for entire test session"""
@@ -182,14 +176,12 @@ def test_session_metrics():
     print(f"   Pass Rate: {stats.get('pass_rate', 0):.1%}")
     print(f"   Avg Duration: {stats.get('avg_duration', 0):.2f}s")
 
-
 @pytest.fixture(autouse=True)
 def test_execution_tracker(request):
     """Track individual test execution metrics"""
     test_name = request.node.name
     test_type = "unit"  # Default
 
-    # Determine test type from path
     test_path = str(request.fspath)
     if "integration" in test_path:
         test_type = "integration"
@@ -215,7 +207,6 @@ def test_execution_tracker(request):
 
     metrics_collector.record_test_execution(test_name, duration, status, test_type)
 
-
 @pytest.hookimpl(tryfirst=True, hookwrapper=True)
 def pytest_runtest_makereport(item, call):
     """Hook to capture test results"""
@@ -240,7 +231,6 @@ def pytest_runtest_makereport(item, call):
         if error_category not in metrics_collector.metrics["error_rates"]:
             metrics_collector.metrics["error_rates"][error_category] = 0
         metrics_collector.metrics["error_rates"][error_category] += 1
-
 
 @pytest.mark.monitoring
 class TestObservability:
@@ -403,7 +393,6 @@ class TestObservability:
         assert 2.1 <= max(trend_durations) <= 2.1
         assert 1.0 <= avg_duration <= 1.5
 
-
 @pytest.mark.monitoring
 class TestMetricsReporting:
     """Tests for metrics reporting and analysis"""
@@ -549,7 +538,6 @@ class TestMetricsReporting:
         assert slope < 0, "Test duration should be improving (decreasing) over time"
         assert slope < -0.1, "Trend should show significant improvement"
 
-
 @pytest.mark.monitoring
 class TestCoverageTracking:
     """Tests for test coverage tracking and reporting"""
@@ -666,7 +654,6 @@ class TestCoverageTracking:
         assert violations[0]["module"] == "services.authentication"
         assert violations[0]["deficit"] == pytest.approx(2.9, rel=1e-2)
 
-
 # Utility functions for metrics analysis
 def analyze_test_performance_trends(metrics_data: Dict[str, Any]) -> Dict[str, Any]:
     """Analyze performance trends from metrics data"""
@@ -709,7 +696,6 @@ def analyze_test_performance_trends(metrics_data: Dict[str, Any]) -> Dict[str, A
             trends[test_type] = "stable"
 
     return trends
-
 
 def generate_metrics_dashboard_data(metrics_data: Dict[str, Any]) -> Dict[str, Any]:
     """Generate data for metrics dashboard visualization"""

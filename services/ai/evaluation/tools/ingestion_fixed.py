@@ -16,7 +16,6 @@ from datetime import datetime
 import numpy as np
 from services.ai.evaluation.schemas.common import GoldenDoc, GoldenChunk, SourceMeta, RegCitation, ExpectedOutcome
 
-
 class Neo4jConnectionFixed:
     """Fixed Neo4j connection that uses correct defaults."""
     _instance = None
@@ -47,7 +46,6 @@ class Neo4jConnectionFixed:
         if self._driver:
             self._driver.close()
             self._driver = None
-
 
 class DocumentProcessor:
     """Process and validate golden dataset documents."""
@@ -80,7 +78,6 @@ class DocumentProcessor:
             return bool(doc.doc_id and doc.content)
         return False
 
-
 class EmbeddingService:
     """Generate embeddings for golden dataset."""
 
@@ -110,7 +107,6 @@ class EmbeddingService:
             return embedding.tolist()
         else:
             return np.random.rand(self.dimension).tolist()
-
 
 class ChunkingService:
     """Chunk documents for golden dataset."""
@@ -144,7 +140,6 @@ class ChunkingService:
                 chunk_index += 1
             start = end - self.overlap if end < len(content) else end
         return chunks
-
 
 class GoldenDatasetIngestion:
     """Main ingestion pipeline for golden datasets."""

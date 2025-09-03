@@ -16,7 +16,6 @@ from typing import Dict, Any
 from tests.fixtures.state_fixtures import StateBuilder, TestScenario, create_test_state, create_batch_states, assert_state_transition, assert_error_recorded
 from langgraph_agent.graph.enhanced_state import EnhancedComplianceState, WorkflowStatus, create_enhanced_initial_state, merge_tool_outputs, accumulate_errors, merge_compliance_data, increment_counter, update_metadata
 
-
 class TestStateInitialization:
     """Test state initialization and factory functions."""
 
@@ -74,7 +73,6 @@ class TestStateInitialization:
             assert state['workflow_status'] == expected_status
             assert state['current_node'] == expected_node
 
-
 class TestStateTransitions:
     """Test state transitions and mutations."""
 
@@ -112,7 +110,6 @@ class TestStateTransitions:
         assert recovery_state['retry_count'] > error_state['retry_count']
         assert recovery_state['workflow_status'] == WorkflowStatus.IN_PROGRESS
         assert len(recovery_state['errors']) == len(error_state['errors'])
-
 
 class TestStateReducers:
     """Test custom reducer functions for state aggregation."""
@@ -174,7 +171,6 @@ class TestStateReducers:
         assert updated['reviewer'] == 'human'
         assert updated['last_updated'] == '2025-01-02T00:00:00Z'
 
-
 class TestStatePersistence:
     """Test state persistence and recovery."""
 
@@ -198,7 +194,6 @@ class TestStatePersistence:
         assert deserialized['company_id'] == state['company_id']
         assert deserialized['workflow_status'] == state['workflow_status'
             ].value
-
 
 class TestStateValidation:
     """Test state validation and constraints."""
@@ -238,7 +233,6 @@ class TestStateValidation:
             if i >= MAX_RETRIES:
                 assert state['retry_count'] >= MAX_RETRIES
 
-
 class TestBatchStateOperations:
     """Test batch operations on multiple states."""
 
@@ -259,7 +253,6 @@ class TestBatchStateOperations:
                 f"Processing {state['company_id']}"})
         for state in states:
             assert len(state['messages']) > 0
-
 
 @pytest.mark.integration
 class TestStateIntegration:

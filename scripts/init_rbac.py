@@ -16,7 +16,6 @@ from database.db_setup import get_db
 from services.rbac_service import RBACService, initialize_rbac_system
 from database.rbac import Role, Permission
 
-
 def assign_permissions_to_roles(db_session) ->None:
     """Assign permissions to default roles based on role responsibilities."""
     rbac = RBACService(db_session)
@@ -66,7 +65,6 @@ def assign_permissions_to_roles(db_session) ->None:
                         f"✗ Error assigning '{permission_name}' to '{role_name}': {e}",
                         )
 
-
 def main() ->bool:
     """Initialize the RBAC system."""
     logger.info('=== Initializing RBAC System ===')
@@ -102,7 +100,6 @@ def main() ->bool:
         session.close()
         db_session.close()
     return True
-
 
 if __name__ == '__main__':
     success = main()

@@ -5,7 +5,6 @@ from __future__ import annotations
 DEFAULT_RETRIES = 5
 MAX_RETRIES = 3
 
-
 LangSmith Feedback Collection System
 Enables human-in-the-loop feedback for continuous improvement
 """
@@ -17,7 +16,6 @@ import logging
 from enum import Enum
 logger = logging.getLogger(__name__)
 
-
 class FeedbackType(Enum):
     """Types of feedback that can be collected."""
     THUMBS_UP = 'thumbs_up'
@@ -26,7 +24,6 @@ class FeedbackType(Enum):
     CORRECTION = 'correction'
     COMMENT = 'comment'
     FLAG = 'flag'
-
 
 @dataclass
 class FeedbackItem:
@@ -43,7 +40,6 @@ class FeedbackItem:
         return {'run_id': self.run_id, 'feedback_type': self.feedback_type.
             value, 'value': self.value, 'user_id': self.user_id,
             'timestamp': self.timestamp.isoformat(), 'metadata': self.metadata}
-
 
 class LangSmithFeedbackCollector:
     """Collect and manage feedback for LangSmith runs."""
@@ -169,7 +165,6 @@ class LangSmithFeedbackCollector:
         logger.info('Exported %s feedback items to %s' % (len(self.
             feedback_queue), filepath))
 
-
 class FeedbackAnalyzer:
     """Analyze collected feedback to identify patterns and improvements."""
 
@@ -267,6 +262,5 @@ class FeedbackAnalyzer:
             recommendations.append(
                 'System performing well. Continue monitoring for trends.')
         return recommendations
-
 
 feedback_collector = LangSmithFeedbackCollector()

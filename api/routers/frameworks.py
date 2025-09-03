@@ -16,7 +16,6 @@ from api.schemas.models import ComplianceFrameworkResponse, FrameworkRecommendat
 from services.framework_service import get_framework_by_id, get_relevant_frameworks
 router = APIRouter()
 
-
 @router.get('/', response_model=List[ComplianceFrameworkResponse])
 async def list_frameworks(current_user: UserWithRoles=Depends(
     require_permission('user_list')), db: AsyncSession=Depends(get_async_db)
@@ -32,7 +31,6 @@ async def list_frameworks(current_user: UserWithRoles=Depends(
     return [ComplianceFrameworkResponse(id=fw.id, name=fw.name, description
         =fw.description or '', category=fw.category or 'general', version=
         fw.version or '1.0', controls=[]) for fw in active_frameworks]
-
 
 @router.get('/recommendations', response_model=List[FrameworkRecommendation])
 async def get_framework_recommendations(current_user: UserWithRoles=Depends
@@ -52,7 +50,6 @@ async def get_framework_recommendations(current_user: UserWithRoles=Depends
                 reasons=rec.get('reasons', []), priority=rec.get('priority',
                 'medium')))
     return accessible_recommendations
-
 
 @router.get('/recommendations/{business_profile_id}', response_model=List[
     FrameworkRecommendation])
@@ -74,7 +71,6 @@ async def get_framework_recommendations_for_profile(business_profile_id:
                 'medium')))
     return accessible_recommendations
 
-
 @router.get('/all-public', response_model=List[ComplianceFrameworkResponse])
 async def list_all_public_frameworks(current_user: UserWithRoles=Depends(
     require_permission('user_list')), db: AsyncSession=Depends(get_async_db)
@@ -88,7 +84,6 @@ async def list_all_public_frameworks(current_user: UserWithRoles=Depends(
     return [ComplianceFrameworkResponse(id=fw.id, name=fw.name, description
         =fw.description or '', category=fw.category or 'general', version=
         fw.version or '1.0', controls=[]) for fw in frameworks]
-
 
 @router.get('/{id}', response_model=ComplianceFrameworkResponse)
 async def get_framework(id: UUID, current_user: UserWithRoles=Depends(
@@ -114,7 +109,6 @@ async def get_framework(id: UUID, current_user: UserWithRoles=Depends(
         description=framework.description, category=framework.category,
         version=framework.version, controls=controls)
 
-
 @router.get('/{framework_id}/controls')
 async def get_framework_controls(framework_id: UUID, current_user:
     UserWithRoles=Depends(require_permission('framework_list')), db:
@@ -129,7 +123,6 @@ async def get_framework_controls(framework_id: UUID, current_user:
         'required': True}, {'id': 'ctrl-3', 'name': 'Audit Logging',
         'description': 'Maintain comprehensive audit logs', 'category':
         'Compliance', 'required': False}], 'total': 3}
-
 
 @router.get('/{framework_id}/implementation-guide')
 async def get_framework_implementation_guide(framework_id: UUID,
@@ -147,7 +140,6 @@ async def get_framework_implementation_guide(framework_id: UUID,
         'resources': ['Implementation checklist', 'Control templates',
         'Policy templates']}}
 
-
 @router.get('/{framework_id}/compliance-status')
 async def get_framework_compliance_status(framework_id: UUID, current_user:
     UserWithRoles=Depends(require_permission('framework_list')), db:
@@ -158,7 +150,6 @@ async def get_framework_compliance_status(framework_id: UUID, current_user:
         'partial': 5, 'non_compliant': 3, 'not_applicable': 2},
         'last_assessment': '2024-01-15T10:00:00Z', 'next_review':
         '2024-04-15T10:00:00Z'}
-
 
 @router.post('/compare')
 async def compare_frameworks(comparison_data: dict, current_user:
@@ -176,7 +167,6 @@ async def compare_frameworks(comparison_data: dict, current_user:
          else 'framework1'): '6-8 months', (framework_ids[1] if len(
         framework_ids) > 1 else 'framework2'): '4-6 months'}},
         'recommendation': 'Consider implementing both frameworks in phases'}
-
 
 @router.get('/{framework_id}/maturity-assessment')
 async def get_framework_maturity_assessment(framework_id: UUID,

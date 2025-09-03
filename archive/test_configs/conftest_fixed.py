@@ -76,7 +76,6 @@ mock_model = unittest.mock.MagicMock()
 mock_model.generate_content.return_value = mock_response
 mock_model.model_name = "gemini-2.5-flash"
 
-
 # Mock streaming response
 def mock_stream_generator():
     for i in range(3):
@@ -85,7 +84,6 @@ def mock_stream_generator():
         chunk.parts = [unittest.mock.MagicMock()]
         chunk.parts[0].text = f"Stream chunk {i}"
         yield chunk
-
 
 mock_model.generate_content_stream.side_effect = (
     lambda *args, **kwargs: mock_stream_generator()
@@ -136,15 +134,12 @@ from database.generated_policy import GeneratedPolicy
 # EVENT LOOP CONFIGURATION - CRITICAL FOR FIXING ASYNC ISSUES
 # =============================================================================
 
-# Use the new event_loop_policy fixture from pytest-asyncio
 pytest_plugins = ("pytest_asyncio",)
-
 
 @pytest.fixture(scope="session")
 def event_loop_policy():
     """Set event loop policy for the test session."""
     return asyncio.get_event_loop_policy()
-
 
 @pytest.fixture(scope="session")
 def event_loop():
@@ -155,11 +150,9 @@ def event_loop():
     yield loop
     loop.close()
 
-
 # =============================================================================
 # DATABASE URL MANAGEMENT
 # =============================================================================
-
 
 def get_test_database_url():
     """Get test database URLs."""
@@ -177,7 +170,6 @@ def get_test_database_url():
     db_session.add(evidence)
     db_session.flush()
     return evidence
-
 
 @pytest.fixture
 def sample_policy_document(db_session, sample_business_profile):
@@ -198,17 +190,14 @@ def sample_policy_document(db_session, sample_business_profile):
     db_session.flush()
     return policy
 
-
 # =============================================================================
 # AI MOCKING FIXTURES
 # =============================================================================
-
 
 @pytest.fixture(autouse=True)
 def ensure_ai_mocking():
     """Ensure all tests use mocked AI instead of real API calls."""
     return mock_model
-
 
 @pytest.fixture
 def mock_ai_client():
@@ -225,11 +214,9 @@ def mock_ai_client():
     with patch("config.ai_config.get_ai_model", return_value=mock_client):
         yield mock_client
 
-
 # =============================================================================
 # TEST DATA FIXTURES
 # =============================================================================
-
 
 @pytest.fixture
 def sample_business_profile_data():
@@ -253,7 +240,6 @@ def sample_business_profile_data():
         "compliance_budget": "50000-100000",
         "compliance_timeline": "6-12 months",
     }
-
 
 @pytest.fixture
 def compliance_golden_dataset():
@@ -283,23 +269,19 @@ def compliance_golden_dataset():
             }
         ]
 
-
 # =============================================================================
 # BACKWARD COMPATIBILITY ALIASES
 # =============================================================================
-
 
 @pytest.fixture
 def authenticated_test_client(client):
     """Alias for backward compatibility."""
     return client
 
-
 @pytest.fixture
 def unauthenticated_test_client(unauthenticated_client):
     """Alias for backward compatibility."""
     return unauthenticated_client
-
 
 @pytest.fixture
 def test_client(client):

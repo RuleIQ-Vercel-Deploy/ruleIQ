@@ -28,7 +28,6 @@ naming_convention = {'ix': 'ix_%(column_0_label)s', 'uq':
 metadata = MetaData(naming_convention=naming_convention)
 Base = declarative_base(metadata=metadata)
 
-
 class DatabaseConfig:
     """Database configuration class for managing connection settings."""
 
@@ -125,7 +124,6 @@ Please copy env.template to .env.local and configure the variables."""
                 'keepalives_count': 5, 'connect_timeout': 10}}
             return sync_kwargs
 
-
 def _init_sync_db() ->None:
     """Initializes synchronous database engine and session maker if not already initialized."""
     global _ENGINE, _SESSION_LOCAL
@@ -141,7 +139,6 @@ def _init_sync_db() ->None:
             logger.error(
                 'Failed to initialize synchronous database engine: %s' % e)
             raise
-
 
 def _init_async_db() ->None:
     """Initializes asynchronous database engine and session maker if not already initialized."""
@@ -160,7 +157,6 @@ def _init_async_db() ->None:
             logger.error(
                 'Failed to initialize asynchronous database engine: %s' % e)
             raise
-
 
 def init_db() ->bool:
     """
@@ -188,7 +184,6 @@ def init_db() ->bool:
         logger.error('Database initialization failed: %s' % e, exc_info=True)
         return False
 
-
 def test_database_connection() ->bool:
     """Test database connection synchronously."""
     try:
@@ -201,7 +196,6 @@ def test_database_connection() ->bool:
     except Exception as e:
         logger.error('Database connection test failed: %s' % e)
         return False
-
 
 async def test_async_database_connection() ->bool:
     """Test database connection asynchronously."""
@@ -216,7 +210,6 @@ async def test_async_database_connection() ->bool:
         logger.error('Async database connection test failed: %s' % e)
         return False
 
-
 def get_db() ->Generator[Any, None, None]:
     """
     Provides a synchronous database session and ensures it's closed afterwards.
@@ -228,7 +221,6 @@ def get_db() ->Generator[Any, None, None]:
         yield db
     finally:
         db.close()
-
 
 def get_db_session() ->Generator[Any, None, None]:
     """
@@ -242,7 +234,6 @@ def get_db_session() ->Generator[Any, None, None]:
     finally:
         db.close()
 
-
 async def get_async_db() ->AsyncGenerator[AsyncSession, None]:
     """
     Provides an asynchronous database session and ensures it's closed afterwards.
@@ -254,7 +245,6 @@ async def get_async_db() ->AsyncGenerator[AsyncSession, None]:
         except (ValueError, TypeError):
             await session.rollback()
             raise
-
 
 @contextmanager
 def get_db_context() ->Generator[Any, None, None]:
@@ -270,7 +260,6 @@ def get_db_context() ->Generator[Any, None, None]:
     finally:
         db.close()
 
-
 async def cleanup_db_connections() ->None:
     """Cleanup database connections and dispose engines."""
     global _ENGINE, _ASYNC_ENGINE
@@ -282,7 +271,6 @@ async def cleanup_db_connections() ->None:
         _ENGINE.dispose()
         _ENGINE = None
         logger.info('Sync database engine disposed')
-
 
 def get_engine_info() ->Dict[str, Any]:
     """Get information about current database engines for debugging."""
@@ -300,7 +288,6 @@ def get_engine_info() ->Dict[str, Any]:
             pool.checkedin(), 'sync_pool_checked_out': pool.checkedout(),
             'sync_pool_overflow': pool.overflow()})
     return info
-
 
 _get_configured_database_urls = DatabaseConfig.get_database_urls
 _init_sync_db = _init_sync_db

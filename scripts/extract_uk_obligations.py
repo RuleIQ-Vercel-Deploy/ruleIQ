@@ -13,7 +13,6 @@ from typing import Dict, List, Any
 from datetime import datetime
 import hashlib
 
-
 def extract_obligations_from_document(doc_path: Path) ->Dict[str, Any]:
     """Extract obligations from a single document."""
     with open(doc_path, 'r') as f:
@@ -56,7 +55,6 @@ def extract_obligations_from_document(doc_path: Path) ->Dict[str, Any]:
             if obligation['title'] or obligation['text']:
                 doc_info['obligations'].append(obligation)
     return doc_info
-
 
 def main() ->None:
     """Extract all obligations from UK regulatory documents."""
@@ -130,7 +128,6 @@ def main() ->None:
             logger.info('   Type: %s' % obl['type'])
             logger.info('   Title: %s...' % obl['title'][:100])
             logger.info('   Text: %s...' % obl['text'][:150])
-
 
 if __name__ == '__main__':
     main()

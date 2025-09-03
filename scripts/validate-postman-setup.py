@@ -14,7 +14,6 @@ import json
 import os
 import sys
 
-
 def validate_collection(filename: str) ->Any:
     """Validate Postman collection file"""
     if not os.path.exists(filename):
@@ -35,7 +34,6 @@ def validate_collection(filename: str) ->Any:
     except Exception as e:
         return False, f'Error reading collection: {str(e)}'
 
-
 def validate_environment(filename: str) ->Any:
     """Validate Postman environment file"""
     if not os.path.exists(filename):
@@ -55,7 +53,6 @@ def validate_environment(filename: str) ->Any:
             'test@ruleiq.dev'}
     except Exception as e:
         return False, f'Error reading environment: {str(e)}'
-
 
 def main() ->Any:
     logger.info('RuleIQ Postman Setup Validation')
@@ -121,7 +118,6 @@ def main() ->Any:
     logger.info("2. Import 'ruleiq_postman_environment.json' as environment")
     logger.info("3. Select 'RuleIQ Development' environment")
     logger.info('4. Start testing with the Authentication folder!')
-
 
 if __name__ == '__main__':
     main()

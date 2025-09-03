@@ -13,7 +13,6 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import redis
 from pathlib import Path
 
-
 class TestEnvironmentSetup:
     """Manages test environment setup and teardown"""
     
@@ -296,7 +295,6 @@ NEO4J_PASSWORD=test-password
         except (OSError, Exception, ValueError) as e:
             print(f"\n❌ Setup failed: {e}")
             sys.exit(1)
-
 
 if __name__ == "__main__":
     setup = TestEnvironmentSetup()

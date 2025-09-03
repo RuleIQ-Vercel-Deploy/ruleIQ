@@ -20,7 +20,6 @@ NODE_CONFIGS = {'langgraph_agent/nodes/reporting_nodes.py': [(
     'langgraph_agent/nodes/task_scheduler_node.py': [('task_scheduler_node',
     None), ('schedule_task', None)]}
 
-
 def add_import_if_missing(file_path: Path) ->bool:
     """Add cost tracking import if not already present."""
     content = file_path.read_text()
@@ -52,7 +51,6 @@ from langgraph_agent.utils.cost_tracking import track_node_cost
     file_path.write_text(new_content)
     logger.info('  ✓ Added import to %s' % file_path.name)
     return True
-
 
 def add_decorator_to_function(file_path: Path, function_name: str,
     model_name: str=None) ->bool:
@@ -98,7 +96,6 @@ def add_decorator_to_function(file_path: Path, function_name: str,
     logger.info('    ✓ Added decorator to %s' % function_name)
     return True
 
-
 def main() ->None:
     """Apply cost tracking to all configured nodes."""
     logger.info('Applying cost tracking to LangGraph nodes...')
@@ -120,7 +117,6 @@ def main() ->None:
         utils_init.parent.mkdir(parents=True, exist_ok=True)
         utils_init.write_text('"""Utilities for LangGraph agent."""\n')
         logger.info('✓ Created %s' % utils_init)
-
 
 if __name__ == '__main__':
     main()

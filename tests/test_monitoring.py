@@ -28,7 +28,6 @@ from app.core.monitoring.metrics import Counter, Gauge, Histogram, Summary, Metr
 from app.core.monitoring.health import HealthStatus, HealthCheckResult, HealthCheck, DatabaseHealthCheck, RedisHealthCheck, DiskSpaceHealthCheck, MemoryHealthCheck, ExternalServiceHealthCheck, HealthCheckRegistry, run_health_checks
 from app.core.monitoring.shutdown import GracefulShutdown, ConnectionDrainer, get_shutdown_manager, get_connection_drainer
 
-
 class TestLogger:
     """Test logging functionality."""
 
@@ -66,7 +65,6 @@ class TestLogger:
         logger.info('Test with request ID')
         clear_request_id()
         handler.handle.assert_called_once()
-
 
 class TestErrorHandler:
     """Test error handling functionality."""
@@ -116,7 +114,6 @@ class TestErrorHandler:
         response = await handler.handle_error(error)
         assert response.status_code == HTTP_INTERNAL_SERVER_ERROR
         assert callback_called
-
 
 class TestMetrics:
     """Test metrics collection functionality."""
@@ -194,7 +191,6 @@ class TestMetrics:
         assert 'metrics' in metrics
         assert len(metrics['metrics']) > 0
 
-
 class TestHealthChecks:
     """Test health check functionality."""
 
@@ -263,7 +259,6 @@ class TestHealthChecks:
         overall = registry.get_overall_status(results)
         assert overall == HealthStatus.HEALTHY
 
-
 class TestShutdown:
     """Test graceful shutdown functionality."""
 
@@ -297,7 +292,6 @@ class TestShutdown:
             await asyncio.sleep(0.1)
         await drain_task
         assert drainer.active_connections == 0
-
 
 class TestMonitoringIntegration:
     """Test monitoring integration with FastAPI."""

@@ -25,7 +25,6 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-
 def test_sync_initialization():
     """Test synchronous database initialization."""
     print("=" * 50)
@@ -61,7 +60,6 @@ def test_sync_initialization():
         logger.error("❌ Error during initialization: %s", e, exc_info=True)
         return False
 
-
 async def test_async_operations():
     """Test async database operations."""
     print("=" * 50)
@@ -86,7 +84,6 @@ async def test_async_operations():
     except Exception as e:
         logger.error("❌ Error during async testing: %s", e, exc_info=True)
         return False
-
 
 async def main():
     """Main test function."""
@@ -123,7 +120,6 @@ async def main():
     else:
         print("❌ Some tests failed. Check the logs above for details.")
         return False
-
 
 if __name__ == "__main__":
     success = asyncio.run(main())

@@ -13,7 +13,6 @@ from fastapi import HTTPException
 from services.data_access import DataAccess
 from database.user import User
 
-
 class TestDataAccessOwnership:
     """Test the DataAccess ownership utilities."""
 

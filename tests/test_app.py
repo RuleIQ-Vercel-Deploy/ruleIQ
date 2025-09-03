@@ -10,14 +10,12 @@ from api.dependencies.auth import get_current_active_user
 from database.db_setup import get_async_db
 from database import User
 
-
 @asynccontextmanager
 async def test_lifespan(app: FastAPI):
     """Test lifespan - no database initialization."""
     print("Test app started")
     yield
     print("Test app shutdown")
-
 
 def create_test_app() -> FastAPI:
     """Create a test-specific FastAPI app without lifespan issues."""

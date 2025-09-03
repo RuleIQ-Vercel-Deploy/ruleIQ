@@ -6,7 +6,6 @@ HOUR_SECONDS = 3600
 
 MAX_RECORDS = 10000
 
-
 Advanced Safety & Configuration Manager for AI Services
 
 Provides enterprise-grade safety settings, content filtering, and compliance-focused
@@ -21,14 +20,12 @@ from google.generativeai.types import HarmBlockThreshold, HarmCategory
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 class SafetyLevel(Enum):
     """Safety levels for different operational contexts."""
     PERMISSIVE = 'permissive'
     STANDARD = 'standard'
     STRICT = 'strict'
     ENTERPRISE = 'enterprise'
-
 
 class ContentType(Enum):
     """Content types for safety configuration."""
@@ -42,14 +39,12 @@ class ContentType(Enum):
     GENERAL_QUESTION = 'general_question'
     GENERAL_INQUIRY = 'general_inquiry'
 
-
 class SafetyDecision(Enum):
     """Safety decision outcomes."""
     ALLOW = 'allow'
     BLOCK = 'block'
     MODIFY = 'modify'
     ESCALATE = 'escalate'
-
 
 @dataclass
 class SafetyProfile:
@@ -76,7 +71,6 @@ class SafetyProfile:
     created_at: datetime = field(default_factory=datetime.now)
     updated_at: datetime = field(default_factory=datetime.now)
 
-
 @dataclass
 class SafetyDecisionRecord:
     """Record of a safety decision for audit purposes."""
@@ -93,7 +87,6 @@ class SafetyDecisionRecord:
     session_id: Optional[str] = None
     metadata: Dict[str, Any] = field(default_factory=dict)
 
-
 @dataclass
 class SafetyMetrics:
     """Safety system metrics."""
@@ -106,7 +99,6 @@ class SafetyMetrics:
     low_confidence_rate: float = 0.0
     profile_usage: Dict[str, int] = field(default_factory=dict)
     content_type_distribution: Dict[str, int] = field(default_factory=dict)
-
 
 def require_permission(permission: str) ->Any:
     """Decorator for role-based access control."""
@@ -126,7 +118,6 @@ def require_permission(permission: str) ->Any:
             return await func(self, *args, **kwargs)
         return wrapper
     return decorator
-
 
 class AdvancedSafetyManager:
     """
@@ -654,10 +645,8 @@ class AdvancedSafetyManager:
             analysis['confidence'], 'context_type': context_type})
         return analysis
 
-
 _safety_managers: Dict[str, AdvancedSafetyManager] = {}
 _default_safety_manager = AdvancedSafetyManager()
-
 
 def get_safety_manager(user_context: Optional[Dict[str, Any]]=None
     ) ->AdvancedSafetyManager:
@@ -676,7 +665,6 @@ def get_safety_manager(user_context: Optional[Dict[str, Any]]=None
         _safety_managers[user_id] = AdvancedSafetyManager(user_context)
     return _safety_managers[user_id]
 
-
 def get_safety_manager_for_user(user: Any, organization_id: Optional[str]=None
     ) ->AdvancedSafetyManager:
     """Get a properly configured safety manager for a user with role-based authorization."""
@@ -687,13 +675,11 @@ def get_safety_manager_for_user(user: Any, organization_id: Optional[str]=None
         'is_active', True)}
     return get_safety_manager(user_context)
 
-
 def validate_safety_manager_permissions(safety_manager:
     AdvancedSafetyManager, required_permissions: List[str]) ->bool:
     """Validate that a safety manager has all required permissions."""
     return all(safety_manager.check_permission(perm) for perm in
         required_permissions)
-
 
 class RoleBasedSafetyMiddleware:
     """Middleware for role-based safety management in AI operations."""

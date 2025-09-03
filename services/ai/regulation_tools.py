@@ -13,7 +13,6 @@ from config.logging_config import get_logger
 from .tools import BaseTool, ToolResult, ToolType, register_tool
 logger = get_logger(__name__)
 
-
 @dataclass
 class RegulationInfo:
     """Information about a specific regulation"""
@@ -31,7 +30,6 @@ class RegulationInfo:
             key_requirements, 'penalties': self.penalties,
             'enforcement_body': self.enforcement_body, 'last_updated': self
             .last_updated}
-
 
 @dataclass
 class ComplianceRequirement:
@@ -51,7 +49,6 @@ class ComplianceRequirement:
             'framework': self.framework, 'section': self.section,
             'implementation_guidance': self.implementation_guidance,
             'evidence_required': self.evidence_required}
-
 
 class IndustryRegulationLookupTool(BaseTool):
     """Tool for looking up industry-specific regulations"""
@@ -300,7 +297,6 @@ class IndustryRegulationLookupTool(BaseTool):
             'Consider professional compliance consultation'])
         return next_steps
 
-
 class ComplianceRequirementsTool(BaseTool):
     """Tool for checking specific compliance requirements"""
 
@@ -439,7 +435,6 @@ class ComplianceRequirementsTool(BaseTool):
             priorities.append({'requirement': req['title'], 'priority':
                 'medium', 'reason': 'Best practice recommendation'})
         return priorities
-
 
 register_tool(IndustryRegulationLookupTool(), ToolType.REGULATION_LOOKUP)
 register_tool(ComplianceRequirementsTool(), ToolType.FRAMEWORK_SPECIFICS)

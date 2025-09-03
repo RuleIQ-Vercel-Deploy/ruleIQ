@@ -26,7 +26,6 @@ from ..graph.state import create_initial_state
 
 logger = logging.getLogger(__name__)
 
-
 class AgentMode(str, Enum):
     """Agent operation modes."""
 
@@ -35,7 +34,6 @@ class AgentMode(str, Enum):
     BATCH = "batch"
     STREAMING = "streaming"
 
-
 class PriorityLevel(str, Enum):
     """Task priority levels."""
 
@@ -43,7 +41,6 @@ class PriorityLevel(str, Enum):
     MEDIUM = "medium"
     HIGH = "high"
     CRITICAL = "critical"
-
 
 @dataclass
 class AgentConfig:
@@ -86,7 +83,6 @@ class AgentConfig:
     langsmith_enabled: bool = True
     debug_mode: bool = False
     metrics_collection: bool = True
-
 
 @dataclass
 class AgentMetrics:
@@ -162,7 +158,6 @@ class AgentMetrics:
             "slo_compliant": self.is_slo_compliant(),
             "cost_per_token": self.cost_per_token,
         }
-
 
 class ComplianceAgent:
     """
@@ -321,7 +316,6 @@ class ComplianceAgent:
                 autonomy_level=self.config.autonomy_level,
             )
 
-            # Add context from memory and RAG
             if self.memory_manager:
                 memory_context = await self.memory_manager.get_relevant_memories(
                     company_id, message
@@ -484,7 +478,6 @@ class ComplianceAgent:
         if self.memory_manager:
             await self.memory_manager.store_session_summary(session_id, final_metrics)
 
-        # Remove from active sessions
         del self.active_sessions[session_id]
 
         logger.info(f"Ended session {session_id} with metrics: {final_metrics}")

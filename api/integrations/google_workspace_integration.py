@@ -15,7 +15,6 @@ try:
 except ImportError:
     GOOGLE_AVAILABLE = False
 
-
     class Credentials:
 
         def __init__(self, *args, **kwargs) ->None:
@@ -31,17 +30,14 @@ except ImportError:
         def refresh(self, request) ->None:
             pass
 
-
     class Request:
         pass
 
     def build(*args, **kwargs) ->Any:
         return MockGoogleService()
 
-
     class HttpError(Exception):
         pass
-
 
     class MockGoogleService:
 
@@ -55,7 +51,6 @@ except ImportError:
             return {'items': []}
 from .base.base_integration import AuthenticationError, BaseIntegration, EvidenceCollectionError
 logger = logging.getLogger(__name__)
-
 
 class GoogleWorkspaceIntegration(BaseIntegration):
     """Concrete implementation for Google Workspace."""

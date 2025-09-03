@@ -29,7 +29,6 @@ from services.ai.evaluation.golden_datasets.validators import (
     DataClassification,
 )
 
-
 def create_valid_compliance_scenario() -> ComplianceScenario:
     """Create a valid compliance scenario for testing."""
     return ComplianceScenario(
@@ -52,7 +51,6 @@ def create_valid_compliance_scenario() -> ComplianceScenario:
         ),
         created_at=datetime.now(),
     )
-
 
 def create_valid_evidence_case() -> EvidenceCase:
     """Create a valid evidence case for testing."""
@@ -82,7 +80,6 @@ def create_valid_evidence_case() -> EvidenceCase:
         created_at=datetime.now(),
     )
 
-
 def create_valid_regulatory_qa() -> RegulatoryQAPair:
     """Create a valid regulatory Q&A for testing."""
     return RegulatoryQAPair(
@@ -100,7 +97,6 @@ def create_valid_regulatory_qa() -> RegulatoryQAPair:
         ),
         created_at=datetime.now(),
     )
-
 
 class TestDeepValidator:
     """Test DeepValidator functionality."""
@@ -265,7 +261,6 @@ class TestDeepValidator:
         assert len(results) >= 2
         assert all(r.is_valid for r in results)
 
-
 class TestExternalDataValidator:
     """Test ExternalDataValidator functionality."""
 
@@ -357,7 +352,6 @@ class TestExternalDataValidator:
         assert result.is_valid
         # Old data (500 days) should reduce trust score but not to below 0.5 necessarily
         assert result.trust_score < 0.8  # Just ensure it's not at max trust
-        # No warnings expected from validate_external_data for old data unless trust < 0.5
 
     def test_validate_external_invalid_source(self):
         """Test external validation with invalid source kind."""
@@ -371,7 +365,6 @@ class TestExternalDataValidator:
 
         assert not result.is_valid
         assert "source_kind" in str(result.errors[0]).lower()
-
 
 class TestSecurityValidation:
     """Test security features and malicious input handling."""

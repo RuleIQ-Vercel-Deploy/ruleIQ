@@ -11,7 +11,6 @@ import os
 import re
 import glob
 
-
 def fix_undefined_error_vars(content: str) ->Any:
     """Fix undefined error variables in catch blocks"""
     patterns = [(
@@ -27,7 +26,6 @@ def fix_undefined_error_vars(content: str) ->Any:
         content = re.sub(pattern, replacement, content, flags=re.DOTALL)
     return content
 
-
 def fix_parsing_issues(content: str) ->Any:
     """Fix common parsing issues"""
     content = re.sub("getValues\\(&apos;([^']*)'&apos;\\)",
@@ -36,7 +34,6 @@ def fix_parsing_issues(content: str) ->Any:
     content = re.sub("^\\s*&apos;([^']*)',", "      '\\1',", content, flags
         =re.MULTILINE)
     return content
-
 
 def process_file(file_path: Any) ->Any:
     """Process a single TypeScript/React file"""
@@ -56,7 +53,6 @@ def process_file(file_path: Any) ->Any:
         logger.info('Error processing %s: %s' % (file_path, e))
         return 0
 
-
 def main() ->Any:
     """Main function to process all TypeScript/React files"""
     os.chdir('/home/omar/Documents/ruleIQ/frontend')
@@ -72,7 +68,6 @@ def main() ->Any:
     for file_path in files:
         fixed_count += process_file(file_path)
     logger.info('Fixed %s files.' % fixed_count)
-
 
 if __name__ == '__main__':
     main()

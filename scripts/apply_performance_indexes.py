@@ -20,7 +20,6 @@ from typing import Optional, Any
 setup_logging()
 logger = get_logger(__name__)
 
-
 async def check_index_exists(db, index_name: str, table_name: str) ->bool:
     """Check if an index already exists."""
     try:
@@ -36,7 +35,6 @@ async def check_index_exists(db, index_name: str, table_name: str) ->bool:
     except Exception as e:
         logger.warning('Error checking index %s: %s' % (index_name, e))
         return False
-
 
 async def create_index_safely(db, index_sql: str, index_name: str,
     table_name: str) ->bool:
@@ -61,7 +59,6 @@ async def create_index_safely(db, index_sql: str, index_name: str,
         logger.error('✗ Unexpected error creating index %s: %s' % (
             index_name, e))
         return False
-
 
 async def apply_performance_indexes() ->Any:
     """Apply all performance indexes for evidence queries."""
@@ -116,7 +113,6 @@ async def apply_performance_indexes() ->Any:
         success_count, total_count))
     return success_count == total_count
 
-
 async def verify_indexes() ->bool:
     """Verify that the critical indexes were created successfully."""
     logger.info('Verifying index creation...')
@@ -137,7 +133,6 @@ async def verify_indexes() ->bool:
                 return False
     logger.info('✓ All critical indexes verified successfully!')
     return True
-
 
 async def main() ->Optional[bool]:
     """Main function to apply performance indexes."""
@@ -163,7 +158,6 @@ async def main() ->Optional[bool]:
     except Exception as e:
         logger.error('Error during index creation: %s' % e, exc_info=True)
         return False
-
 
 if __name__ == '__main__':
     success = asyncio.run(main())

@@ -26,7 +26,6 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 feedback_storage = FeedbackStorage()
 
-
 class FeedbackSubmissionRequest(BaseModel):
     """Request model for submitting feedback."""
     run_id: str = Field(..., description='LangSmith run ID')
@@ -37,19 +36,16 @@ class FeedbackSubmissionRequest(BaseModel):
     metadata: Dict[str, Any] = Field(default_factory=dict, description=
         'Additional metadata')
 
-
 class BatchFeedbackRequest(BaseModel):
     """Request model for batch feedback submission."""
     feedback_items: List[FeedbackSubmissionRequest] = Field(...,
         description='List of feedback items to submit')
-
 
 class FeedbackResponse(BaseModel):
     """Response model for feedback submission."""
     feedback_id: str = Field(..., description='Unique feedback ID')
     status: str = Field(..., description='Submission status')
     message: str = Field(..., description='Status message')
-
 
 class FeedbackRetrievalResponse(BaseModel):
     """Response model for feedback retrieval."""
@@ -58,7 +54,6 @@ class FeedbackRetrievalResponse(BaseModel):
     total_count: int = Field(..., description='Total number of items')
     page: int = Field(1, description='Current page')
     page_size: int = Field(50, description='Items per page')
-
 
 class FeedbackAggregationResponse(BaseModel):
     """Response model for feedback aggregation."""
@@ -70,7 +65,6 @@ class FeedbackAggregationResponse(BaseModel):
     recommendations: List[str] = Field(default_factory=list, description=
         'Improvement recommendations')
 
-
 class FeedbackMetricsResponse(BaseModel):
     """Response model for feedback metrics."""
     response_time_p50: float = Field(..., description='Median response time')
@@ -81,7 +75,6 @@ class FeedbackMetricsResponse(BaseModel):
     satisfaction_trend: str = Field(..., description='User satisfaction trend')
     active_users: int = Field(..., description=
         'Number of active feedback providers')
-
 
 @router.post('/submit', response_model=FeedbackResponse)
 async def submit_feedback(request: FeedbackSubmissionRequest, current_user:
@@ -120,7 +113,6 @@ async def submit_feedback(request: FeedbackSubmissionRequest, current_user:
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Error submitting feedback: {str(e)}')
-
 
 @router.post('/batch', response_model=List[FeedbackResponse])
 async def submit_batch_feedback(request: BatchFeedbackRequest, current_user:
@@ -161,7 +153,6 @@ async def submit_batch_feedback(request: BatchFeedbackRequest, current_user:
                 'error', message=str(e)))
     return responses
 
-
 @router.get('/retrieve/{feedback_id}', response_model=Dict[str, Any])
 async def retrieve_feedback_by_id(feedback_id: str, current_user: User=
     Depends(get_current_active_user), db: AsyncSession=Depends(get_async_db)
@@ -195,7 +186,6 @@ async def retrieve_feedback_by_id(feedback_id: str, current_user: User=
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Error retrieving feedback: {str(e)}')
 
-
 @router.get('/run/{run_id}', response_model=FeedbackRetrievalResponse)
 async def retrieve_run_feedback(run_id: str, page: int=Query(1, ge=1,
     description='Page number'), page_size: int=Query(50, ge=1, le=100,
@@ -227,7 +217,6 @@ async def retrieve_run_feedback(run_id: str, page: int=Query(1, ge=1,
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Error retrieving run feedback: {str(e)}')
-
 
 @router.get('/aggregate', response_model=FeedbackAggregationResponse)
 async def get_feedback_aggregation(start_date: Optional[datetime]=Query(
@@ -300,7 +289,6 @@ async def get_feedback_aggregation(start_date: Optional[datetime]=Query(
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Error aggregating feedback: {str(e)}')
 
-
 @router.get('/metrics', response_model=FeedbackMetricsResponse)
 async def get_feedback_metrics(window_days: int=Query(30, ge=1, le=365,
     description='Time window in days'), current_user: User=Depends(
@@ -354,7 +342,6 @@ async def get_feedback_metrics(window_days: int=Query(30, ge=1, le=365,
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Error calculating metrics: {str(e)}')
 
-
 @router.post('/export')
 async def export_feedback(format: str=Query('json', regex='^(json|csv)$',
     description='Export format'), start_date: Optional[datetime]=Query(None,
@@ -390,6 +377,5 @@ async def export_feedback(format: str=Query('json', regex='^(json|csv)$',
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Error exporting feedback: {str(e)}')
-
 
 from datetime import timedelta

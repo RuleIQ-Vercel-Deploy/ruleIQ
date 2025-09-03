@@ -20,7 +20,6 @@ from services.ai.exceptions import (
     AITimeoutException,
 )
 
-
 @pytest.mark.integration
 @pytest.mark.ai
 @pytest.mark.error_handling

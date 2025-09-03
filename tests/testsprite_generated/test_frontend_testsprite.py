@@ -7,14 +7,12 @@ import pytest
 from fastapi.testclient import TestClient
 from main import app
 
-
 class TestFrontendFlow:
     """Frontend tests generated from TestSprite plans"""
 
     @pytest.fixture
     def client(self):
         return TestClient(app)
-
 
 def test_tc001_user_registration_with_valid_data():
     """
@@ -43,7 +41,6 @@ def test_tc001_user_registration_with_valid_data():
     # NOTE: Implementation pending assertion
     assert True, "Assertion not implemented"
 
-
 def test_tc002_user_login_with_correct_credentials():
     """
     User Login with Correct Credentials
@@ -70,7 +67,6 @@ def test_tc002_user_login_with_correct_credentials():
     # Step 4: Verify successful login and access to the user dashboard.
     # NOTE: Implementation pending assertion
     assert True, "Assertion not implemented"
-
 
 def test_tc003_user_login_with_invalid_credentials():
     """
@@ -99,7 +95,6 @@ def test_tc003_user_login_with_invalid_credentials():
     # NOTE: Implementation pending assertion
     assert True, "Assertion not implemented"
 
-
 def test_tc004_jwt_token_refresh_flow():
     """
     JWT Token Refresh Flow
@@ -126,7 +121,6 @@ def test_tc004_jwt_token_refresh_flow():
     # Step 4: Verify a new JWT token is returned and user session remains active.
     # NOTE: Implementation pending assertion
     assert True, "Assertion not implemented"
-
 
 def test_tc005_oauth_login_integration():
     """

@@ -13,7 +13,6 @@ from jinja2 import Template
 import logging
 logger = logging.getLogger(__name__)
 
-
 class ReportGenerator:
     """Generates evaluation reports in various formats."""
 
@@ -343,7 +342,6 @@ class ReportGenerator:
 </body>
 </html>
 """
-
 
 class TrendAnalyzer:
     """Analyzes trends in evaluation metrics over time."""

@@ -9,7 +9,6 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-
 class EvidenceClassificationRequest(BaseModel):
     """Request schema for evidence classification."""
 
@@ -17,7 +16,6 @@ class EvidenceClassificationRequest(BaseModel):
     force_reclassify: bool = Field(
         False, description="Force reclassification even if already classified",
     )
-
 
 class EvidenceClassificationResponse(BaseModel):
     """Response schema for evidence classification."""
@@ -31,7 +29,6 @@ class EvidenceClassificationResponse(BaseModel):
         default_factory=list, description="Suggested compliance controls",
     )
     reasoning: str = Field(..., description="AI reasoning for classification")
-
 
 class BulkClassificationRequest(BaseModel):
     """Request schema for bulk evidence classification."""
@@ -49,7 +46,6 @@ class BulkClassificationRequest(BaseModel):
         70, ge=50, le=100, description="Minimum confidence to auto-apply",
     )
 
-
 class ClassificationResult(BaseModel):
     """Individual classification result for bulk operations."""
 
@@ -63,7 +59,6 @@ class ClassificationResult(BaseModel):
     error: Optional[str] = None
     applied: bool = Field(False, description="Whether the suggestion was applied")
 
-
 class BulkClassificationResponse(BaseModel):
     """Response schema for bulk evidence classification."""
 
@@ -73,7 +68,6 @@ class BulkClassificationResponse(BaseModel):
     auto_applied: int = Field(0, description="Number of suggestions automatically applied")
     results: List[ClassificationResult]
 
-
 class ControlMappingRequest(BaseModel):
     """Request schema for control mapping suggestions."""
 
@@ -81,7 +75,6 @@ class ControlMappingRequest(BaseModel):
     frameworks: List[str] = Field(
         default=["ISO27001", "SOC2", "GDPR"], description="Target frameworks",
     )
-
 
 class ControlMappingResponse(BaseModel):
     """Response schema for control mapping suggestions."""
@@ -93,7 +86,6 @@ class ControlMappingResponse(BaseModel):
     )
     confidence_scores: Dict[str, int] = Field(..., description="Confidence scores by framework")
     reasoning: str
-
 
 class ClassificationStatsResponse(BaseModel):
     """Response schema for classification statistics."""

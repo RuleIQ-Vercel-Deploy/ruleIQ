@@ -15,11 +15,8 @@ from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 
-# from langgraph.prebuilt import ToolInvocation, ToolExecutor  # Not used
-
 from tests.fixtures.mock_llm import MockLLM, create_deterministic_llm
 from tests.fixtures.state_fixtures import EnhancedComplianceState, WorkflowStatus
-
 
 class TestGraphType(Enum):
     """Types of test graphs available."""
@@ -30,7 +27,6 @@ class TestGraphType(Enum):
     WITH_SUBGRAPHS = "with_subgraphs"
     WITH_TOOLS = "with_tools"
     ERROR_HANDLING = "error_handling"
-
 
 class TestNode:
     """Base class for test nodes."""
@@ -91,7 +87,6 @@ class TestNode:
         self.call_count = 0
         self.call_history = []
 
-
 def create_simple_graph() -> tuple[StateGraph, Dict[str, TestNode]]:
     """
     Create a simple linear test graph: start -> process -> end
@@ -121,7 +116,6 @@ def create_simple_graph() -> tuple[StateGraph, Dict[str, TestNode]]:
     graph.add_edge("finalize", END)
 
     return graph, nodes
-
 
 def create_conditional_graph() -> tuple[StateGraph, Dict[str, TestNode]]:
     """
@@ -168,7 +162,6 @@ def create_conditional_graph() -> tuple[StateGraph, Dict[str, TestNode]]:
 
     return graph, nodes
 
-
 def create_cycle_graph() -> tuple[StateGraph, Dict[str, TestNode]]:
     """
     Create a graph with a retry cycle.
@@ -214,7 +207,6 @@ def create_cycle_graph() -> tuple[StateGraph, Dict[str, TestNode]]:
     graph.add_edge("success", END)
 
     return graph, nodes
-
 
 def create_error_handling_graph() -> tuple[StateGraph, Dict[str, Any]]:
     """
@@ -276,7 +268,6 @@ def create_error_handling_graph() -> tuple[StateGraph, Dict[str, Any]]:
     graph.add_edge("success", END)
 
     return graph, nodes
-
 
 class GraphTestHarness:
     """
@@ -384,7 +375,6 @@ class GraphTestHarness:
             node.reset()
         self.execution_history = []
 
-
 def create_test_harness(
     graph_type: TestGraphType = TestGraphType.SIMPLE,
 ) -> GraphTestHarness:
@@ -409,22 +399,18 @@ def create_test_harness(
 
     return GraphTestHarness(graph, nodes)
 
-
 # Pytest fixtures
 def simple_graph_fixture():
     """Pytest fixture for simple graph."""
     return create_test_harness(TestGraphType.SIMPLE)
 
-
 def conditional_graph_fixture():
     """Pytest fixture for conditional graph."""
     return create_test_harness(TestGraphType.WITH_CONDITIONALS)
 
-
 def cycle_graph_fixture():
     """Pytest fixture for graph with cycles."""
     return create_test_harness(TestGraphType.WITH_CYCLES)
-
 
 def error_graph_fixture():
     """Pytest fixture for error handling graph."""

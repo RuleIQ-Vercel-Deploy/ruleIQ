@@ -19,7 +19,6 @@ from database.compliance_framework import ComplianceFramework
 from api.schemas.ai_policy import PolicyGenerationRequest, PolicyGenerationResponse, PolicyRefinementResponse, PolicyValidationResult
 logger = logging.getLogger(__name__)
 
-
 @dataclass
 class TemplateSection:
     """Represents a section from an ISO 27001 template"""
@@ -27,7 +26,6 @@ class TemplateSection:
     content: str
     variables: List[str]
     requirements: List[str]
-
 
 @dataclass
 class ParsedTemplate:
@@ -37,7 +35,6 @@ class ParsedTemplate:
     sections: Dict[str, TemplateSection]
     variables: List[str]
     error_message: Optional[str] = None
-
 
 class TemplateProcessor:
     """Processes ISO 27001 templates for policy generation"""
@@ -138,7 +135,6 @@ ICO Registration: [ico_number]"""
         for section in sections.values():
             variables.update(section.variables)
         return list(variables)
-
 
 class PolicyGenerator:
     """

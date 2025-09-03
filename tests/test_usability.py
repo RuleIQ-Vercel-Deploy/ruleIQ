@@ -9,7 +9,6 @@ intuitiveness for the compliance automation platform.
 
 import pytest
 
-
 @pytest.mark.usability
 class TestUserOnboardingFlow:
     """Test user onboarding experience and ease of use"""
@@ -90,7 +89,6 @@ class TestUserOnboardingFlow:
                     assert (
                         2 <= len(options) <= 6
                     ), "Should have reasonable number of options"
-
 
 @pytest.mark.usability
 class TestNavigationAndWorkflow:
@@ -185,7 +183,6 @@ class TestNavigationAndWorkflow:
                         "next_steps" in policy_data
                         or "recommended_actions" in policy_data,
                     )
-
 
 @pytest.mark.usability
 class TestContentReadabilityAndClarity:
@@ -360,7 +357,6 @@ class TestContentReadabilityAndClarity:
                     )
                     # Note: Not asserting this as it depends on context
 
-
 @pytest.mark.usability
 class TestAccessibilityAndInclusion:
     """Test accessibility and inclusive design principles"""
@@ -458,7 +454,6 @@ class TestAccessibilityAndInclusion:
             )
 
             # Note: This is more of a design guideline than a hard requirement
-
 
 @pytest.mark.usability
 class TestUserGuidanceAndHelp:
@@ -586,7 +581,6 @@ class TestUserGuidanceAndHelp:
                         assert isinstance(
                             detail_data["controls"], list
                         ), "Controls should be a list"
-
 
 @pytest.mark.usability
 class TestUserWorkflowEfficiency:

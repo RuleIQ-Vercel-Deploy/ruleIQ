@@ -18,7 +18,6 @@ from database.user import User
 from database.compliance_framework import ComplianceFramework
 logger = logging.getLogger(__name__)
 
-
 class RBACService:
     """
     Service for Role-Based Access Control operations.
@@ -398,7 +397,6 @@ class RBACService:
             self.db.commit()
             logger.info('Cleaned up %s expired role assignments' % count)
         return count
-
 
 def initialize_rbac_system(db: Session) ->None:
     """

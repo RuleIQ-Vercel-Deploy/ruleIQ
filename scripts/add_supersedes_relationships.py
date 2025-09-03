@@ -13,7 +13,6 @@ from datetime import datetime
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 class SupersedesRelationshipBuilder:
     """Build SUPERSEDES relationships between regulations."""
 
@@ -226,7 +225,6 @@ class SupersedesRelationshipBuilder:
                     'old_reg']))
                 logger.info('    Description: %s' % record['description'])
 
-
 async def main() ->None:
     """Main execution function."""
     neo4j_uri = 'bolt://localhost:7688'
@@ -246,7 +244,6 @@ async def main() ->None:
         traceback.print_exc()
     finally:
         await builder.close()
-
 
 if __name__ == '__main__':
     asyncio.run(main())

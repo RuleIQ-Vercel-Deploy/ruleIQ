@@ -11,7 +11,6 @@ load_dotenv(".env.local")
 # Import after loading env vars
 from database.db_setup import init_db
 
-
 async def test_neon_and_ai():
     """Simple test for Neon connection and basic AI"""
     print("🧪 Testing Neon Database and AI Setup\n")
@@ -59,7 +58,6 @@ async def test_neon_and_ai():
     print("- Google AI: ✅ Working")
     print("- Redis: Check if running locally")
     print("\nYour AI system is ready to use with Neon!")
-
 
 if __name__ == "__main__":
     asyncio.run(test_neon_and_ai())

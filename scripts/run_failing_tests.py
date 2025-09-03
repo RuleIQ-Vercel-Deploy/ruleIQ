@@ -16,7 +16,6 @@ test_files = ['tests/unit/services/test_cache_strategy_optimization.py',
     'tests/performance/test_ai_optimization_performance.py',
     'tests/performance/test_database_performance.py']
 
-
 def run_tests() ->Any:
     """Run all failing tests and report results."""
     results = {}
@@ -48,7 +47,6 @@ def run_tests() ->Any:
             if not result['passed']:
                 logger.info('  - %s' % test)
     return failed == 0
-
 
 if __name__ == '__main__':
     success = run_tests()

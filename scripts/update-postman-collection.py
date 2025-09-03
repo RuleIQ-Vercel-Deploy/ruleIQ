@@ -27,7 +27,6 @@ ENDPOINT_UPDATES = {'removed': ['/api/v1/users/me',
     '/api/v1/evidence/quality/trends', '/api/v1/ai-assessments':
     '/api/v1/ai/assessments', '/api/ai/assessments': '/api/v1/ai/assessments'}}
 
-
 def update_request_url(request: Dict[str, Any]) ->bool:
     """Update a single request URL if needed."""
     if 'url' not in request:
@@ -48,7 +47,6 @@ def update_request_url(request: Dict[str, Any]) ->bool:
         return updated
     return False
 
-
 def should_remove_request(request: Dict[str, Any]) ->bool:
     """Check if a request should be removed."""
     if 'url' not in request:
@@ -63,7 +61,6 @@ def should_remove_request(request: Dict[str, Any]) ->bool:
                     )
                 return True
     return False
-
 
 def process_items(items: List[Dict[str, Any]], stats: Dict[str, int]) ->List[
     Dict[str, Any]]:
@@ -86,7 +83,6 @@ def process_items(items: List[Dict[str, Any]], stats: Dict[str, int]) ->List[
                     stats['unchanged'] += 1
                 updated_items.append(item)
     return updated_items
-
 
 def update_collection(input_file: str, output_file: str) ->Any:
     """Update the Postman collection with new API structure."""
@@ -123,7 +119,6 @@ Changes:
     logger.info('Total processed: %s' % sum(stats.values()))
     return stats
 
-
 def main() ->None:
     """Main entry point."""
     collections = ['ruleiq_postman_collection.json',
@@ -143,7 +138,6 @@ def main() ->None:
     stats = update_collection(input_file, output_file)
     logger.info('\n✅ Collection updated successfully!')
     logger.info('📁 Output file: %s' % output_file)
-
 
 if __name__ == '__main__':
     main()

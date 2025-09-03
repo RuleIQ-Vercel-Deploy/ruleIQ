@@ -22,7 +22,6 @@ from pathlib import Path
 from typing import Optional
 sys.path.append(str(Path(__file__).parent.parent))
 
-
 async def verify_backend_auth() ->Optional[bool]:
     """Verify backend authentication system"""
     logger.info('🔍 Verifying Backend Authentication System...')
@@ -61,7 +60,6 @@ async def verify_backend_auth() ->Optional[bool]:
     except Exception as e:
         logger.info('❌ Backend verification failed: %s' % e)
         return False
-
 
 def verify_frontend_auth() ->Optional[bool]:
     """Verify frontend authentication components"""
@@ -102,7 +100,6 @@ def verify_frontend_auth() ->Optional[bool]:
     except Exception as e:
         logger.info('❌ Frontend verification failed: %s' % e)
         return False
-
 
 def verify_stack_auth_removal() ->Optional[bool]:
     """Verify Stack Auth has been completely removed"""
@@ -149,7 +146,6 @@ def verify_stack_auth_removal() ->Optional[bool]:
         logger.info('❌ Stack Auth removal verification failed: %s' % e)
         return False
 
-
 def verify_environment_config() ->Optional[bool]:
     """Verify environment configuration is correct"""
     logger.info('\n🔍 Verifying Environment Configuration...')
@@ -189,7 +185,6 @@ def verify_environment_config() ->Optional[bool]:
         logger.info('❌ Environment configuration verification failed: %s' % e)
         return False
 
-
 def verify_api_endpoints() ->Optional[bool]:
     """Verify API endpoints are properly configured"""
     logger.info('\n🔍 Verifying API Endpoints...')
@@ -223,7 +218,6 @@ def verify_api_endpoints() ->Optional[bool]:
         logger.info('❌ API endpoint verification failed: %s' % e)
         return False
 
-
 def generate_verification_report() ->None:
     """Generate a comprehensive verification report"""
     logger.info('\n📊 Generating Verification Report...')
@@ -241,7 +235,6 @@ def generate_verification_report() ->None:
     logger.info(
         '✅ Verification report saved to authentication_verification_report.json'
         )
-
 
 async def main() ->None:
     """Main verification function"""
@@ -272,7 +265,6 @@ async def main() ->None:
     logger.info('🗑️  Stack Auth Status: Removed')
     logger.info('📅 Verification Date: %s' % datetime.now().strftime(
         '%Y-%m-%d %H:%M:%S'))
-
 
 if __name__ == '__main__':
     asyncio.run(main())

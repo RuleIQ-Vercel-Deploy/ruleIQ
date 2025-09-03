@@ -20,12 +20,10 @@ from langchain_core.messages import SystemMessage
 from database.evidence_item import EvidenceItem
 from langgraph_agent.nodes.evidence_nodes import EvidenceCollectionNode, evidence_node
 
-
 async def async_generator(items):
     """Helper to create async generator."""
     for item in items:
         yield item
-
 
 @pytest.mark.asyncio
 class TestDuplicateDetection:
@@ -98,7 +96,6 @@ class TestDuplicateDetection:
         # Should return duplicate status
         assert result["status"] == "duplicate"
 
-
 @pytest.mark.asyncio
 class TestNoEvidenceData:
     """Test handling of missing evidence data."""
@@ -159,7 +156,6 @@ class TestNoEvidenceData:
         # When no evidence data is found, it should update state messages
         assert len(result.get("messages", [])) > 0
         assert "No evidence data to process" in result["messages"][0].content
-
 
 @pytest.mark.asyncio
 class TestDatabaseCommitError:
@@ -271,7 +267,6 @@ class TestDatabaseCommitError:
             "Evidence processing failed: Unexpected error"
             in result["messages"][0].content,
         )
-
 
 @pytest.mark.asyncio
 class TestStateUpdatePaths:

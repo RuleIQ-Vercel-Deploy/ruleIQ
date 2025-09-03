@@ -27,7 +27,6 @@ os.environ['NEO4J_PASSWORD'] = os.getenv('NEO4J_PASSWORD', 'ruleiq123')
 from langgraph_agent.graph.master_integration_graph import MasterIntegrationGraph
 from langgraph_agent.agents.rag_system import RAGConfig
 
-
 async def test_master_integration():
     """Test the master integration graph."""
     print('=' * 80)
@@ -163,7 +162,6 @@ async def test_master_integration():
         return False
     return True
 
-
 async def test_checkpoint_recovery():
     """Test checkpoint saving and recovery."""
     print('\n' + '=' * 80)
@@ -214,7 +212,6 @@ async def test_checkpoint_recovery():
         return False
     return True
 
-
 async def main():
     """Run all integration tests."""
     print('\n🚀 Starting Master Integration Tests...')
@@ -226,7 +223,6 @@ async def main():
     if success:
         await test_checkpoint_recovery()
     print('\n✨ All tests completed!')
-
 
 if __name__ == '__main__':
     asyncio.run(main())

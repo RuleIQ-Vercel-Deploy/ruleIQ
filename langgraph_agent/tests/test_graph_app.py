@@ -20,7 +20,6 @@ from langgraph_agent.graph.app import (
 from langgraph_agent.graph.state import create_initial_state
 from langgraph_agent.core.constants import GRAPH_NODES
 
-
 class TestNodeFunctions:
     """Test individual node functions."""
 
@@ -152,7 +151,6 @@ class TestNodeFunctions:
         assert result["messages"][-1].role == "assistant"
         assert "legal review" in result["messages"][-1].content.lower()
 
-
 class TestGraphCreation:
     """Test graph structure and creation."""
 
@@ -192,7 +190,6 @@ class TestGraphCreation:
                 assert compiled is not None
             except Exception as e:
                 pytest.fail(f"Graph compilation failed: {e}")
-
 
 @pytest.mark.asyncio
 class TestGraphInvocation:
@@ -337,7 +334,6 @@ class TestGraphInvocation:
         assert chunks[0] == {"chunk": 1}
         assert "error" in chunks[1]
         assert "Streaming error" in chunks[1]["error"].error_message
-
 
 @pytest.mark.asyncio
 class TestIntegrationFlow:

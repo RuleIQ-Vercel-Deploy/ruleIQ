@@ -14,7 +14,6 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from tests.conftest import assert_api_response_security
 
-
 @pytest.mark.integration
 @pytest.mark.api
 class TestAnalyticsEndpoints:
@@ -189,7 +188,6 @@ class TestAnalyticsEndpoints:
             data = response.json()
             assert 'Alert not found' in data['detail']
 
-
 @pytest.mark.integration
 @pytest.mark.api
 class TestPerformanceEndpoints:
@@ -256,7 +254,6 @@ class TestPerformanceEndpoints:
             assert settings['batching_enabled'] is True
             assert settings['compression_enabled'] is True
             assert settings['max_concurrent_requests'] == 15
-
 
 @pytest.mark.integration
 @pytest.mark.api

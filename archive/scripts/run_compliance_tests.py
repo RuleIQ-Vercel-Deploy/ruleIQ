@@ -8,10 +8,8 @@ import subprocess
 import logging
 logger = logging.getLogger(__name__)
 
-
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-
 
 def run_tests():
     """Run tests and report results."""
@@ -68,7 +66,6 @@ def run_tests():
 
     logger.info("\n✅ All tests passed!")
     return True
-
 
 if __name__ == "__main__":
     success = run_tests()

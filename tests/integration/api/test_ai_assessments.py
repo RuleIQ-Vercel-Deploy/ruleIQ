@@ -22,7 +22,6 @@ from fastapi.testclient import TestClient
 from services.ai.assistant import ComplianceAssistant
 from services.ai.exceptions import AIContentFilterException, AIQuotaExceededException, AIServiceException, AITimeoutException
 
-
 @pytest.mark.integration
 @pytest.mark.ai
 class TestAIAssessmentEndpoints:
@@ -317,7 +316,6 @@ class TestAIAssessmentEndpoints:
         ai_assessments.get_user_business_profile = original_get_profile
         assert response.status_code == HTTP_NOT_FOUND
 
-
 @pytest.mark.integration
 @pytest.mark.ai
 @pytest.mark.rate_limiting
@@ -331,7 +329,6 @@ class TestAIRateLimiting:
         mock_user.id = 'test-user-id'
         mock_user.email = 'test@example.com'
         mock_user.is_active = True
-
 
         class AsyncMockDB:
 
@@ -431,7 +428,6 @@ class TestAIRateLimiting:
         rate_limited_count = sum(1 for r in responses if r.status_code == 429)
         assert success_count >= 10
         assert rate_limited_count <= 2
-
 
 @pytest.mark.integration
 @pytest.mark.ai

@@ -11,8 +11,6 @@ from ..schemas.regulatory_qa import RegulatoryQAPair
 # Constants
 HIGH_CONFIDENCE_THRESHOLD = 0.95
 
-
-
 class TestCommonSchemas:
     """Test common schema components."""
 
@@ -66,7 +64,6 @@ class TestCommonSchemas:
         assert 'effective_to must be after effective_from' in str(exc_info.
             value)
 
-
 class TestComplianceScenario:
     """Test ComplianceScenario schema."""
 
@@ -112,7 +109,6 @@ class TestComplianceScenario:
         with pytest.raises(ValidationError):
             ExpectedOutcome(obligations=['test'], risk_level='low',
                 enforcement_likelihood=1.5)
-
 
 class TestEvidenceCase:
     """Test EvidenceCase schema."""
@@ -166,7 +162,6 @@ class TestEvidenceCase:
             FrameworkMap(framework='SOC2', control_id='CC1.1',
                 satisfaction_level=-0.1)
 
-
 class TestRegulatoryQAPair:
     """Test RegulatoryQAPair schema."""
 
@@ -204,7 +199,6 @@ class TestRegulatoryQAPair:
             domain='test.com', fetched_at=datetime.now(timezone.utc),
             trust_score=0.7))
         assert len(qa_pair.regulation_refs) == 0
-
 
 class TestSchemaIntegration:
     """Test schema integration and edge cases."""

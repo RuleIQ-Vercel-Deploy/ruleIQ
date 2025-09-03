@@ -5,7 +5,6 @@ Generate a secure JWT secret key
 import logging
 logger = logging.getLogger(__name__)
 
-
 import secrets
 import base64
 import string

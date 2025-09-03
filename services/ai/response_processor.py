@@ -17,7 +17,6 @@ from config.logging_config import get_logger
 from .validation_models import validate_ai_response
 logger = get_logger(__name__)
 
-
 class AIResponseProcessor:
     """Processes and validates AI responses with comprehensive schema validation."""
 
@@ -266,9 +265,7 @@ class AIResponseProcessor:
             'validation_successes': 0, 'validation_failures': 0,
             'fallback_uses': 0, 'error_recoveries': 0}
 
-
 response_processor = AIResponseProcessor()
-
 
 def process_ai_response(raw_response: str, response_type: str, model_used:
     str, processing_start_time: datetime, fallback_data: Optional[Dict[str,

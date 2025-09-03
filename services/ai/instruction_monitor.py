@@ -7,7 +7,6 @@ DEFAULT_TIMEOUT = 30.0
 DEFAULT_RETRIES = 5
 HIGH_CONFIDENCE_THRESHOLD = 0.95
 
-
 Instruction Performance Monitoring and A/B Testing Framework
 
 This module provides comprehensive monitoring, analytics, and A/B testing capabilities
@@ -25,7 +24,6 @@ from typing import Any, Dict, List, Optional
 from uuid import uuid4
 from config.logging_config import get_logger
 logger = get_logger(__name__)
-
 
 class InstructionPersistence(abc.ABC):
     """Abstract interface for instruction data persistence"""
@@ -51,7 +49,6 @@ class InstructionPersistence(abc.ABC):
         """Load performance data from persistent storage"""
         pass
 
-
 class MemoryPersistence(InstructionPersistence):
     """Development/testing persistence - in memory only"""
 
@@ -67,7 +64,6 @@ class MemoryPersistence(InstructionPersistence):
 
     def load_performance_data(self) ->Dict[str, 'InstructionPerformanceData']:
         return {}
-
 
 class FilePersistence(InstructionPersistence):
     """Production-ready file-based persistence"""
@@ -114,7 +110,6 @@ class FilePersistence(InstructionPersistence):
             logger.error('Failed to load performance data: %s' % e)
         return {}
 
-
 class InstructionMetricType(Enum):
     """Types of instruction performance metrics"""
     RESPONSE_QUALITY = 'response_quality'
@@ -125,7 +120,6 @@ class InstructionMetricType(Enum):
     ERROR_RATE = 'error_rate'
     INSTRUCTION_EFFECTIVENESS = 'instruction_effectiveness'
 
-
 class ABTestStatus(Enum):
     """A/B test status values"""
     PLANNING = 'planning'
@@ -133,7 +127,6 @@ class ABTestStatus(Enum):
     PAUSED = 'paused'
     COMPLETED = 'completed'
     CANCELLED = 'cancelled'
-
 
 @dataclass
 class InstructionMetric:
@@ -149,7 +142,6 @@ class InstructionMetric:
     framework: Optional[str] = None
     task_type: Optional[str] = None
 
-
 @dataclass
 class InstructionPerformanceData:
     """Aggregated performance data for an instruction"""
@@ -164,7 +156,6 @@ class InstructionPerformanceData:
     effectiveness_score: float
     last_updated: datetime
     sample_size: int
-
 
 @dataclass
 class ABTestConfig:
@@ -183,7 +174,6 @@ class ABTestConfig:
     status: ABTestStatus
     metadata: Dict[str, Any]
 
-
 @dataclass
 class ABTestResult:
     """Results from an A/B test"""
@@ -196,7 +186,6 @@ class ABTestResult:
     winner: Optional[str]
     recommendation: str
     detailed_analysis: Dict[str, Any]
-
 
 class InstructionPerformanceMonitor:
     """Monitors and analyzes instruction performance"""
@@ -738,11 +727,9 @@ class InstructionPerformanceMonitor:
         except Exception as e:
             logger.error('Failed to save instruction data: %s' % e)
 
-
 instruction_monitor = InstructionPerformanceMonitor(persistence=
     FilePersistence() if os.getenv('ENVIRONMENT') == 'production' else
     MemoryPersistence())
-
 
 def get_instruction_monitor() ->InstructionPerformanceMonitor:
     """Get the global instruction performance monitor instance"""

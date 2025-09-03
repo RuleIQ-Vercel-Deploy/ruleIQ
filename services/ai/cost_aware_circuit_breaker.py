@@ -23,7 +23,6 @@ from config.logging_config import get_logger
 
 logger = get_logger(__name__)
 
-
 class CostAwareCircuitBreakerConfig(CircuitBreakerConfig):
     """Extended circuit breaker configuration with cost awareness."""
 
@@ -47,7 +46,6 @@ class CostAwareCircuitBreakerConfig(CircuitBreakerConfig):
         self.budget_enforcement = budget_enforcement
         self.cost_spike_threshold = cost_spike_threshold
         self.track_cost_efficiency = track_cost_efficiency
-
 
 class CostAwareCircuitBreaker(AICircuitBreaker):
     """
@@ -498,10 +496,8 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
             else available_models[0],
         )
 
-
 # Global cost-aware circuit breaker instance
 _cost_aware_circuit_breaker: Optional[CostAwareCircuitBreaker] = None
-
 
 def get_cost_aware_circuit_breaker() -> CostAwareCircuitBreaker:
     """Get global cost-aware circuit breaker instance."""
@@ -512,12 +508,10 @@ def get_cost_aware_circuit_breaker() -> CostAwareCircuitBreaker:
 
     return _cost_aware_circuit_breaker
 
-
 def reset_cost_aware_circuit_breaker() -> None:
     """Reset global cost-aware circuit breaker instance."""
     global _cost_aware_circuit_breaker
     _cost_aware_circuit_breaker = None
-
 
 # Convenience function for easy integration
 async def execute_with_cost_and_circuit_protection(

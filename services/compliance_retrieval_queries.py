@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 DEFAULT_RETRIES = 5
 
-
 Compliance Retrieval Queries for IQ Agent GraphRAG System
 
 This module implements 14 categories of production-ready queries for
@@ -34,10 +33,8 @@ from enum import Enum
 from services.neo4j_service import Neo4jGraphRAGService
 logger = logging.getLogger(__name__)
 
-
 class QueryCategory(Enum):
     """Enumeration of query categories for compliance analysis"""
-
 
 @dataclass
 class QueryResult:
@@ -48,7 +45,6 @@ class QueryResult:
     data: List[Dict[str, Any]]
     metadata: Dict[str, Any]
     confidence_score: float
-
 
 class ComplianceRetrievalQueries:
     """Production-ready retrieval queries for compliance intelligence"""
@@ -560,7 +556,6 @@ class ComplianceRetrievalQueries:
             'average_penalty': total_penalties / max(len(enforcement_data),
             1), 'violation_types_analyzed': violation_types or 'all'},
             confidence_score=0.87)
-
 
 async def execute_compliance_query(query_category: QueryCategory,
     neo4j_service: Neo4jGraphRAGService, **kwargs) ->QueryResult:

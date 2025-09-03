@@ -25,7 +25,6 @@ from config.settings import settings
 from services.security.audit_logging import get_audit_service
 from services.security.encryption import EncryptionService
 
-
 class APIKeyStatus(str, Enum):
     """API key status enumeration"""
 
@@ -34,7 +33,6 @@ class APIKeyStatus(str, Enum):
     REVOKED = "revoked"
     EXPIRED = "expired"
 
-
 class APIKeyType(str, Enum):
     """API key type enumeration"""
 
@@ -42,7 +40,6 @@ class APIKeyType(str, Enum):
     PREMIUM = "premium"
     ENTERPRISE = "enterprise"
     INTERNAL = "internal"
-
 
 @dataclass
 class APIKeyMetadata:
@@ -62,7 +59,6 @@ class APIKeyMetadata:
     rate_limit: int
     rate_limit_window: int
     metadata: Dict[str, Any]
-
 
 class APIKeyManager:
     """
@@ -214,7 +210,6 @@ class APIKeyManager:
             metadata = await self._get_cached_metadata(key_id)
 
             if not metadata:
-                # Load from database
                 metadata = await self._load_key_metadata(key_id)
                 if not metadata:
                     return False, None, "Invalid API key"
@@ -648,7 +643,6 @@ class APIKeyManager:
             rate_limit_window=key.rate_limit_window,
             metadata=key.key_metadata,
         )
-
 
 # FastAPI dependency for API key authentication
 async def get_api_key_auth(

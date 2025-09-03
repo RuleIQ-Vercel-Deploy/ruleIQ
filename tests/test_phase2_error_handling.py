@@ -26,7 +26,6 @@ from langgraph_agent.graph.error_handler import ErrorHandlerNode, should_route_t
 from langgraph_agent.graph.enhanced_state import EnhancedComplianceState, WorkflowStatus, create_enhanced_initial_state
 from langgraph_agent.graph.enhanced_app import EnhancedComplianceGraph
 
-
 class TestErrorClassification:
     """Test error type classification logic."""
 
@@ -111,7 +110,6 @@ class TestErrorClassification:
         for error_dict in test_cases:
             state = {'errors': [error_dict]}
             assert handler._classify_error(state) == 'unknown'
-
 
 @pytest.mark.asyncio
 class TestRetryStrategies:
@@ -225,7 +223,6 @@ class TestRetryStrategies:
             result = await handler._handle_timeout_error(state)
             assert result['metadata']['timeout'] == 120
 
-
 @pytest.mark.asyncio
 class TestErrorHandlerIntegration:
     """Test error handler integration with the main graph."""
@@ -287,7 +284,6 @@ class TestErrorHandlerIntegration:
             assert result['should_continue'] is False
             assert result['requires_human_review'] is True
 
-
 class TestRoutingFunctions:
     """Test routing helper functions."""
 
@@ -315,7 +311,6 @@ class TestRoutingFunctions:
         assert get_recovery_node(state) == 'profile_builder'
         del state['last_successful_node']
         assert get_recovery_node(state) == 'router'
-
 
 @pytest.mark.asyncio
 class TestEnhancedGraphWithErrorHandling:
@@ -371,7 +366,6 @@ class TestEnhancedGraphWithErrorHandling:
         assert result['last_successful_node'] == 'profile_builder'
         result = await graph._compliance_analyzer_node(state)
         assert result['last_successful_node'] == 'compliance_analyzer'
-
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

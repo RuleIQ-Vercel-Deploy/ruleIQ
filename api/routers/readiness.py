@@ -18,7 +18,6 @@ MINUTE_SECONDS = 60
 
 router = APIRouter()
 
-
 @router.get('/assessment')
 async def get_readiness_assessment(framework_id: Optional[UUID]=None,
     current_user: User=Depends(get_current_active_user), db: AsyncSession=
@@ -59,13 +58,11 @@ async def get_readiness_assessment(framework_id: Optional[UUID]=None,
         'Collect required evidence items']
     return assessment_dict
 
-
 @router.get('/history')
 async def get_assessment_history(framework_id: Optional[UUID]=None, limit:
     int=10, current_user: User=Depends(get_current_active_user)) ->Any:
     history = get_historical_assessments(current_user, framework_id, limit)
     return history
-
 
 @router.post('/report')
 async def generate_report(report_config: ComplianceReport, current_user:
@@ -81,7 +78,6 @@ async def generate_report(report_config: ComplianceReport, current_user:
     else:
         return report_data
 
-
 @router.post('/reports', status_code=201)
 async def generate_compliance_report_endpoint(report_request:
     ComplianceReport, current_user: User=Depends(get_current_active_user),
@@ -95,7 +91,6 @@ async def generate_compliance_report_endpoint(report_request:
         f'/api/reports/download/{report_id}', 'title': title, 'format':
         report_request.format}
 
-
 @router.get('/reports/{report_id}/download')
 async def download_compliance_report(report_id: str, current_user: User=
     Depends(get_current_active_user)) ->Dict[str, Any]:
@@ -103,7 +98,6 @@ async def download_compliance_report(report_id: str, current_user: User=
     return {'report_id': report_id, 'status': 'ready', 'message':
         'Report is ready for download', 'content_type': 'application/pdf',
         'size': 1024}
-
 
 @router.get('/{business_profile_id}', summary=
     'Get readiness assessment for business profile')
@@ -116,7 +110,6 @@ async def get_readiness_by_profile(business_profile_id: str, current_user:
         'Good'}, {'name': 'ISO 27001', 'readiness_score': 70, 'status':
         'Fair'}], 'last_assessed': '2024-01-15T10:00:00Z',
         'next_assessment_due': '2024-02-15T10:00:00Z'}
-
 
 @router.get('/gaps/{business_profile_id}', summary=
     'Get compliance gaps for business profile')
@@ -132,7 +125,6 @@ async def get_compliance_gaps(business_profile_id: str, current_user: User=
         'Incomplete access control procedures', 'severity': 'medium',
         'estimated_effort': '1 week'}], 'total_gaps': 2, 'critical_gaps': 1,
         'estimated_total_effort': '3 weeks'}
-
 
 @router.post('/roadmap', summary='Generate compliance roadmap')
 async def generate_compliance_roadmap(roadmap_request: dict, current_user:
@@ -154,7 +146,6 @@ async def generate_compliance_roadmap(roadmap_request: dict, current_user:
         '1 month', 'tasks': ['Internal audit', 'Gap remediation',
         'Certification preparation']}], 'created_at': '2024-01-15T10:00:00Z'}
 
-
 @router.post('/quick-assessment', summary='Perform quick readiness assessment')
 async def quick_readiness_assessment(assessment_request: dict, current_user:
     User=Depends(get_current_active_user), db: AsyncSession=Depends(
@@ -174,7 +165,6 @@ async def quick_readiness_assessment(assessment_request: dict, current_user:
         'Create privacy policy', 'Implement cookie consent'],
         'assessment_date': '2024-01-15T10:00:00Z'}
 
-
 @router.get('/trends/{business_profile_id}', summary='Get readiness trends')
 async def get_readiness_trends(business_profile_id: str, period: str='30d',
     current_user: User=Depends(get_current_active_user), db: AsyncSession=
@@ -189,7 +179,6 @@ async def get_readiness_trends(business_profile_id: str, period: str='30d',
         'insights': ['Significant improvement in data protection measures',
         'Access control procedures need attention',
         'Overall compliance posture strengthening']}
-
 
 @router.get('/benchmarks', summary='Get industry benchmarks')
 async def get_industry_benchmarks(industry: str='technology', size: str=

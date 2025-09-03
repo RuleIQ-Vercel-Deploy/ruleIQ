@@ -25,7 +25,6 @@ from config.settings import settings
 
 logger = logging.getLogger(__name__)
 
-
 @track_node_cost(node_name="generate_report_node", model_name="gpt-4")
 async def generate_report_node(state: UnifiedComplianceState) -> UnifiedComplianceState:
     """
@@ -135,7 +134,6 @@ async def generate_report_node(state: UnifiedComplianceState) -> UnifiedComplian
 
     return state
 
-
 async def distribute_report_node(
     state: UnifiedComplianceState,
 ) -> UnifiedComplianceState:
@@ -238,7 +236,6 @@ async def distribute_report_node(
 
     return state
 
-
 async def cleanup_old_reports_node(
     state: UnifiedComplianceState,
 ) -> UnifiedComplianceState:
@@ -338,7 +335,6 @@ async def cleanup_old_reports_node(
 
     return state
 
-
 def prepare_report_data(
     compliance_data: Dict[str, Any], report_type: str
 ) -> Dict[str, Any]:
@@ -404,7 +400,6 @@ def prepare_report_data(
 
     return report_data
 
-
 async def generate_pdf_report(report_data: Dict[str, Any]) -> bytes:
     """
     Generate PDF report from report data.
@@ -436,7 +431,6 @@ async def generate_pdf_report(report_data: Dict[str, Any]) -> bytes:
     # In production, convert to actual PDF
     # For now, return as bytes
     return pdf_content.encode()
-
 
 def generate_html_report(report_data: Dict[str, Any]) -> str:
     """
@@ -486,7 +480,6 @@ def generate_html_report(report_data: Dict[str, Any]) -> str:
 
     return html_content
 
-
 async def save_report_file(content: bytes, filename: str) -> str:
     """
     Save report content to file.
@@ -508,7 +501,6 @@ async def save_report_file(content: bytes, filename: str) -> str:
 
     return str(file_path)
 
-
 async def send_report_email(
     recipients: List[str],
     subject: str,
@@ -528,7 +520,6 @@ async def send_report_email(
         True if email sent successfully
     """
     try:
-        # Get email configuration from settings
         smtp_host = getattr(settings, "SMTP_HOST", "localhost")
         smtp_port = getattr(settings, "SMTP_PORT", 587)
         smtp_user = getattr(settings, "SMTP_USER", None)
@@ -571,7 +562,6 @@ async def send_report_email(
     except Exception as e:
         logger.error(f"Failed to send email: {e}")
         raise
-
 
 async def reporting_node(state: UnifiedComplianceState) -> UnifiedComplianceState:
     """

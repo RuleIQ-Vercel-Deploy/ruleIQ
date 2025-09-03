@@ -15,7 +15,6 @@ DEFAULT_RETRIES = 5.0
 HIGH_CONFIDENCE_THRESHOLD = 0.95
 MAX_RETRIES = 3.0
 
-
 Performance Testing Suite for ComplianceGPT
 
 This module tests system performance including API response times,
@@ -29,7 +28,6 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from unittest.mock import Mock
 import psutil
 import pytest
-
 
 @pytest.mark.performance
 class TestAPIResponseTimes:
@@ -93,7 +91,6 @@ class TestAPIResponseTimes:
             'employee_count': 25}, '/api/policies/generate': {
             'framework_id': 'test-framework-id'}}
         return test_data_map.get(endpoint, {})
-
 
 @pytest.mark.performance
 class TestAIGenerationPerformance:
@@ -177,7 +174,6 @@ class TestAIGenerationPerformance:
             'What are GDPR requirements?', 'framework': 'GDPR'}}
         return ai_test_data.get(endpoint, {})
 
-
 @pytest.mark.performance
 class TestConcurrentUserLoad:
     """Test system performance under concurrent user load"""
@@ -246,7 +242,6 @@ class TestConcurrentUserLoad:
             results])
         return {'success_rate': success_rate, 'avg_response_time':
             avg_response_time, 'total_requests': len(results)}
-
 
 @pytest.mark.performance
 @pytest.mark.slow
@@ -319,7 +314,6 @@ class TestSoakTesting:
         success_rate = len(success_codes) / len(status_codes)
         assert success_rate >= CONFIDENCE_THRESHOLD, f'System should handle connection exhaustion gracefully, got {success_rate:.2f}'
 
-
 @pytest.mark.performance
 class TestResourceUtilization:
     """Test resource utilization and optimization"""
@@ -376,7 +370,6 @@ class TestResourceUtilization:
             if uncompressed_size > KB_SIZE:
                 compression_ratio = uncompressed_size / compressed_size
                 assert compression_ratio >= 1.2, f'Compression should reduce size, got {compression_ratio:.2f}x ratio'
-
 
 @pytest.mark.performance
 class TestScalabilityLimits:

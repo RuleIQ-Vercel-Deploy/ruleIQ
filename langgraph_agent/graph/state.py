@@ -20,7 +20,6 @@ from ..core.models import (
     SafeFallbackResponse,
 )
 
-
 class ComplianceAgentState(TypedDict):
     """
     State for the compliance agent graph.
@@ -78,7 +77,6 @@ class ComplianceAgentState(TypedDict):
     token_usage: Dict[str, int]
     cost_estimate: float
     latency_ms: Optional[int]
-
 
 def create_initial_state(
     company_id: UUID,
@@ -152,7 +150,6 @@ def create_initial_state(
         latency_ms=None,
     )
 
-
 def update_state_metadata(state: ComplianceAgentState) -> ComplianceAgentState:
     """
     Update state metadata with current timestamp and turn count.
@@ -166,7 +163,6 @@ def update_state_metadata(state: ComplianceAgentState) -> ComplianceAgentState:
     state["last_updated"] = datetime.now(timezone.utc)
     state["turn_count"] += 1
     return state
-
 
 def add_error_to_state(
     state: ComplianceAgentState, error: SafeFallbackResponse
@@ -184,7 +180,6 @@ def add_error_to_state(
     state["errors"].append(error)
     state["error_count"] += 1
     return update_state_metadata(state)
-
 
 def should_interrupt(state: ComplianceAgentState, node_name: str) -> bool:
     """
@@ -214,7 +209,6 @@ def should_interrupt(state: ComplianceAgentState, node_name: str) -> bool:
         return True
 
     return False
-
 
 def get_state_summary(state: ComplianceAgentState) -> Dict[str, Any]:
     """

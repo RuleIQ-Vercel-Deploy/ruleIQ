@@ -8,7 +8,6 @@ Settings specific to development environment
 from config.base import BaseConfig, Environment
 from typing import Optional
 
-
 class DevelopmentConfig(BaseConfig):
     """Development-specific configuration"""
 

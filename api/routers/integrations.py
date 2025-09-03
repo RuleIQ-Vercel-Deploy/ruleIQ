@@ -19,12 +19,10 @@ from database.models.integrations import Integration
 logger = get_logger(__name__)
 router = APIRouter()
 
-
 class IntegrationCredentials(BaseModel):
     provider: str
     credentials: Dict[str, Any]
     settings: Optional[Dict[str, Any]] = None
-
 
 class IntegrationResponse(BaseModel):
     provider: str
@@ -34,11 +32,9 @@ class IntegrationResponse(BaseModel):
     last_sync_at: Optional[datetime] = None
     last_sync_status: Optional[str] = None
 
-
 class IntegrationListResponse(BaseModel):
     available_providers: List[Dict[str, Any]]
     configured_integrations: List[IntegrationResponse]
-
 
 class GenericIntegration(BaseIntegration):
     """A generic class to access base methods like encryption without a real provider."""
@@ -59,10 +55,8 @@ class GenericIntegration(BaseIntegration):
     async def get_available_evidence_types(self) ->List:
         return []
 
-
 AVAILABLE_PROVIDERS = {'google_workspace': {'name': 'Google Workspace'},
     'microsoft_365': {'name': 'Microsoft 365'}}
-
 
 @router.post('/connect', response_model=IntegrationResponse, summary=
     'Connect or Update Integration')
@@ -130,7 +124,6 @@ async def connect_integration(payload: IntegrationCredentials, current_user:
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
-
 @router.delete('/{provider}', summary='Disconnect integration', status_code
     =status.HTTP_204_NO_CONTENT)
 async def disconnect_integration(provider: str, current_user: User=Depends(
@@ -159,7 +152,6 @@ async def disconnect_integration(provider: str, current_user: User=Depends(
             HTTP_500_INTERNAL_SERVER_ERROR, detail='Database operation failed.',
             )
 
-
 @router.get('/{provider}/status', response_model=IntegrationResponse,
     summary='Get integration status')
 async def get_integration_status(provider: str, current_user: User=Depends(
@@ -186,7 +178,6 @@ async def get_integration_status(provider: str, current_user: User=Depends(
             HTTP_500_INTERNAL_SERVER_ERROR, detail='Database operation failed.',
             )
 
-
 @router.get('/', summary='List all available integrations')
 async def list_integrations(current_user: User=Depends(
     get_current_active_user), db: AsyncSession=Depends(get_async_db)) ->Dict[
@@ -197,14 +188,12 @@ async def list_integrations(current_user: User=Depends(
         'microsoft_365', 'name': 'Microsoft 365', 'configured': False}],
         'configured_count': 0}
 
-
 @router.get('/connected', summary='Get connected integrations')
 async def get_connected_integrations(current_user: User=Depends(
     get_current_active_user), db: AsyncSession=Depends(get_async_db)) ->Dict[
     str, Any]:
     """Get list of currently connected integrations for the user."""
     return {'connected_integrations': [], 'total': 0}
-
 
 @router.post('/{integrationId}/test', summary='Test integration connection')
 async def test_integration(integrationId: str, current_user: User=Depends(
@@ -214,7 +203,6 @@ async def test_integration(integrationId: str, current_user: User=Depends(
     return {'integration_id': integrationId, 'status': 'success', 'message':
         'Connection test successful', 'timestamp': datetime.now(timezone.
         utc).isoformat()}
-
 
 @router.get('/{integrationId}/sync-history', summary='Get sync history')
 async def get_sync_history(integrationId: str, current_user: User=Depends(
@@ -227,7 +215,6 @@ async def get_sync_history(integrationId: str, current_user: User=Depends(
         'status': 'success', 'records_synced': 148, 'duration_seconds': 42}
         ], 'total_syncs': 2}
 
-
 @router.post('/{integrationId}/webhooks', summary='Configure webhooks')
 async def configure_webhooks(integrationId: str, webhook_config: dict,
     current_user: User=Depends(get_current_active_user), db: AsyncSession=
@@ -239,7 +226,6 @@ async def configure_webhooks(integrationId: str, webhook_config: dict,
         'events': events, 'status': 'configured', 'message':
         'Webhook configured successfully'}
 
-
 @router.get('/{integrationId}/logs', summary='Get integration logs')
 async def get_integration_logs(integrationId: str, current_user: User=
     Depends(get_current_active_user), db: AsyncSession=Depends(get_async_db)
@@ -250,7 +236,6 @@ async def get_integration_logs(integrationId: str, current_user: User=
         'Sync completed successfully', 'details': {'records': 150}}, {
         'timestamp': '2024-01-15T15:29:00Z', 'level': 'info', 'message':
         'Sync started', 'details': {}}], 'total_logs': 2}
-
 
 @router.post('/oauth/callback', summary='Handle OAuth callback')
 async def oauth_callback(callback_data: dict, current_user: User=Depends(

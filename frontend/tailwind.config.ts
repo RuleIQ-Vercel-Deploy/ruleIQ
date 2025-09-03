@@ -19,23 +19,32 @@ const config = {
     },
     extend: {
       colors: {
-        // Modern ruleIQ Brand Colors - Professional Teal Theme
+        // RuleIQ Brand Colors - As Per Spec
         brand: {
-          primary: '#2C7A7B', // teal-600 - main brand color
-          secondary: '#319795', // teal-500 - secondary accent
-          tertiary: '#4FD1C5', // teal-300 - bright accent
-          dark: '#285E61', // teal-700 - darker for hover states
-          light: '#E6FFFA', // teal-50 - light backgrounds
+          navy: '#103766', // Primary Navy
+          teal: '#0B4F6C', // Primary Teal  
+          orange: '#F28C28', // Accent Orange (use sparingly)
+          'navy-dark': '#0A2340', // Darker navy for hover states
+          'navy-light': '#1C4A7D', // Lighter navy
+          'teal-dark': '#073A52', // Darker teal for hover states
+          'teal-light': '#0F6585', // Lighter teal
+          'orange-light': '#F5A554', // Lighter orange
+          'orange-dark': '#E67A0F', // Darker orange
         },
 
-        // Gradient colors for modern teal effects
+        // Legacy brand mappings for gradual migration
+        primary: '#0B4F6C', // Primary Teal
+        secondary: '#103766', // Primary Navy
+        accent: '#F28C28', // Accent Orange
+
+        // Gradient colors using brand palette
         gradient: {
-          from: '#2C7A7B', // teal-600
-          via: '#319795', // teal-500
-          to: '#4FD1C5', // teal-300
-          'from-dark': '#285E61', // teal-700
-          'via-dark': '#234E52', // teal-800
-          'to-dark': '#1D4044', // teal-900
+          from: '#103766', // Navy
+          via: '#0B4F6C', // Teal
+          to: '#0F6585', // Light Teal
+          'from-dark': '#0A2340', // Dark Navy
+          'via-dark': '#073A52', // Dark Teal
+          'to-dark': '#051F2E', // Very Dark Teal
         },
 
         // Surface colors (Light Mode Professional)
@@ -63,35 +72,21 @@ const config = {
           950: '#0A0A0B',
         },
 
-        // Teal color scale (Primary brand colors)
-        teal: {
-          50: '#E6FFFA',
-          100: '#B2F5EA',
-          200: '#81E6D9',
-          300: '#4FD1C5',
-          400: '#38B2AC',
-          500: '#319795',
-          600: '#2C7A7B',
-          700: '#285E61',
-          800: '#234E52',
-          900: '#1D4044',
-        },
-
         // Text colors (Optimized for light surfaces)
         text: {
           primary: '#111827', // High contrast dark - neutral-900
           secondary: '#4B5563', // Muted gray - neutral-600
           tertiary: '#6B7280', // Even more muted - neutral-500
           inverse: '#FFFFFF', // For dark backgrounds
-          brand: '#2C7A7B', // Brand teal text - teal-600
-          accent: '#319795', // Teal accent text - teal-500
+          brand: '#0B4F6C', // Brand teal text
+          accent: '#103766', // Navy accent text
         },
 
         // Semantic colors
         success: '#10B981',
         warning: '#F59E0B',
         error: '#EF4444',
-        info: '#319795', // teal-500 instead of cyan
+        info: '#0B4F6C', // Using brand teal
 
         // Glass morphism effects (light theme)
         glass: {
@@ -100,13 +95,6 @@ const config = {
           border: 'rgba(229, 231, 235, 0.5)', // neutral-200 with transparency
           'border-hover': 'rgba(209, 213, 219, 0.8)', // neutral-300 with transparency
         },
-
-        // Legacy color mappings (for gradual migration)
-        navy: '#2C7A7B', // Map to teal-600 (brand primary)
-        gold: '#F59E0B', // Map to warning
-        'gold-dark': '#D97706', // Darker gold for hover states
-        turquoise: '#319795', // Map to teal-500 (brand secondary)
-        midnight: '#FFFFFF', // Map to white surface base
 
         // shadcn/ui CSS variables (keep for compatibility)
         border: 'hsl(var(--border))',
@@ -145,12 +133,11 @@ const config = {
       },
       // Extend ring colors to include custom colors
       ringColor: {
-        gold: '#F59E0B',
-        'gold-dark': '#D97706',
-        navy: '#2C7A7B', // teal-600
-        turquoise: '#319795', // teal-500
+        'brand-navy': '#103766',
+        'brand-teal': '#0B4F6C',
+        'brand-orange': '#F28C28',
       },
-      // 8px grid system spacing
+      // 8px grid system spacing (as specified)
       spacing: {
         '0.5': '4px', // Half-step when necessary
         '1': '8px', // Base unit
@@ -186,18 +173,23 @@ const config = {
         '80': '640px',
         '96': '768px',
       },
+      fontFamily: {
+        sans: ['Inter', 'Roboto', 'system-ui', '-apple-system', 'sans-serif'],
+        inter: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        roboto: ['Roboto', 'system-ui', '-apple-system', 'sans-serif'],
+      },
       fontSize: {
-        // Enhanced Typography scale with optimized weights
+        // Typography scale with optimized weights
         xs: ['12px', { lineHeight: '16px', fontWeight: '400' }], // Small
         sm: ['14px', { lineHeight: '20px', fontWeight: '400' }], // Body
         base: ['16px', { lineHeight: '24px', fontWeight: '400' }], // Large body
-        lg: ['18px', { lineHeight: '28px', fontWeight: '500' }], // H3 - reduced from 600
-        xl: ['20px', { lineHeight: '28px', fontWeight: '500' }], // Large H3 - reduced from 600
-        '2xl': ['24px', { lineHeight: '32px', fontWeight: '600' }], // H2 - reduced from 700
-        '3xl': ['30px', { lineHeight: '36px', fontWeight: '600' }], // Large H2 - reduced from 700
-        '4xl': ['32px', { lineHeight: '40px', fontWeight: '600' }], // H1 - reduced from 700
-        '5xl': ['48px', { lineHeight: '48px', fontWeight: '600' }], // Display - reduced from 700
-        '6xl': ['60px', { lineHeight: '60px', fontWeight: '600' }], // Large display - reduced from 700
+        lg: ['18px', { lineHeight: '28px', fontWeight: '500' }], // H3
+        xl: ['20px', { lineHeight: '28px', fontWeight: '500' }], // Large H3
+        '2xl': ['24px', { lineHeight: '32px', fontWeight: '600' }], // H2
+        '3xl': ['30px', { lineHeight: '36px', fontWeight: '600' }], // Large H2
+        '4xl': ['32px', { lineHeight: '40px', fontWeight: '600' }], // H1
+        '5xl': ['48px', { lineHeight: '48px', fontWeight: '600' }], // Display
+        '6xl': ['60px', { lineHeight: '60px', fontWeight: '600' }], // Large display
       },
       // Enhanced Shadow System (3-tier elevation)
       boxShadow: {
@@ -215,8 +207,9 @@ const config = {
         glass: '0 8px 32px 0 rgba(31, 38, 135, 0.12)',
         'glass-hover': '0 12px 40px 0 rgba(31, 38, 135, 0.16)',
         // Brand glow effect
-        'glow-teal': '0 0 20px rgba(44, 122, 123, 0.15)',
-        'glow-teal-strong': '0 0 30px rgba(44, 122, 123, 0.25)',
+        'glow-navy': '0 0 20px rgba(16, 55, 102, 0.15)',
+        'glow-teal': '0 0 20px rgba(11, 79, 108, 0.15)',
+        'glow-orange': '0 0 20px rgba(242, 140, 40, 0.15)',
       },
       // Varied Border Radius for Visual Interest
       borderRadius: {
@@ -242,7 +235,8 @@ const config = {
       backgroundColor: {
         'glass-white': 'rgba(255, 255, 255, 0.85)',
         'glass-white-strong': 'rgba(255, 255, 255, 0.95)',
-        'glass-teal': 'rgba(44, 122, 123, 0.08)',
+        'glass-navy': 'rgba(16, 55, 102, 0.08)',
+        'glass-teal': 'rgba(11, 79, 108, 0.08)',
         'glass-dark': 'rgba(0, 0, 0, 0.4)',
       },
       // Glass Morphism Borders
@@ -311,8 +305,8 @@ const config = {
           '50%': { transform: 'translateY(-10px)' },
         },
         'pulse-glow': {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(44, 122, 123, 0.15)' },
-          '50%': { boxShadow: '0 0 30px rgba(44, 122, 123, 0.3)' },
+          '0%, 100%': { boxShadow: '0 0 20px rgba(11, 79, 108, 0.15)' },
+          '50%': { boxShadow: '0 0 30px rgba(11, 79, 108, 0.3)' },
         },
         shimmer: {
           '0%': { backgroundPosition: '-200% 0' },

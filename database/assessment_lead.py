@@ -20,7 +20,6 @@ from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 
 from .db_setup import Base
 
-
 class AssessmentLead(Base):
     """
     Model for capturing leads through the freemium assessment flow.

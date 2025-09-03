@@ -10,7 +10,6 @@ from database.user import User
 from services.assessment_service import AssessmentService
 from database.assessment_session import AssessmentSession
 
-
 class TestAssessmentOwnership:
     """Test assessment ownership enforcement."""
 

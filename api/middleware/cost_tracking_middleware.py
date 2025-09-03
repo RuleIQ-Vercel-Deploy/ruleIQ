@@ -6,7 +6,6 @@ import json
 # Constants
 HTTP_INTERNAL_SERVER_ERROR = 500
 
-
 Cost Tracking Middleware
 
 Automatically tracks AI costs for API requests and integrates with
@@ -25,7 +24,6 @@ from services.ai.cost_aware_circuit_breaker import get_cost_aware_circuit_breake
 from config.logging_config import get_logger
 from database.user import User
 logger = get_logger(__name__)
-
 
 class CostTrackingMiddleware(BaseHTTPMiddleware):
     """
@@ -283,7 +281,6 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
         except (requests.RequestException, KeyError, IndexError) as e:
             logger.warning('Failed to add cost headers: %s' % str(e))
 
-
 class RealTimeCostMonitor:
     """Real-time cost monitoring with WebSocket support."""
 
@@ -334,6 +331,5 @@ class RealTimeCostMonitor:
                 logger.warning(
                     'Failed to send budget alert to client %s: %s' % (
                     client_id, str(e)))
-
 
 real_time_monitor = RealTimeCostMonitor(AICostManager())

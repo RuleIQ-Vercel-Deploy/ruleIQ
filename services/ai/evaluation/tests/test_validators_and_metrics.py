@@ -18,7 +18,6 @@ from ..golden_datasets.validators import (
 from ..metrics.quality_metrics import dataset_quality_summary
 from ..metrics.coverage_metrics import coverage_summary
 
-
 class TestDeepValidator:
     """Test DeepValidator multi-layer validation."""
 
@@ -180,7 +179,6 @@ class TestDeepValidator:
             for warning in results["temporal"]["warnings"]
         )
 
-
 class TestExternalDataValidator:
     """Test ExternalDataValidator trust scoring."""
 
@@ -329,7 +327,6 @@ class TestExternalDataValidator:
         assert scores["source_reputation"] == 1.0  # Authoritative domain
         assert scores["data_freshness"] == 1.0  # Very fresh data
 
-
 class TestQualityMetrics:
     """Test quality metrics calculation."""
 
@@ -392,7 +389,6 @@ class TestQualityMetrics:
         assert metrics["unique_ids"] == 3  # CS-001, CS-003, CS-004
         assert metrics["duplicate_ids"] == 2  # 2 extra CS-001s
         assert metrics["uniqueness"] == 3 / 5  # 60% unique
-
 
 class TestCoverageMetrics:
     """Test coverage metrics calculation."""
@@ -492,7 +488,6 @@ class TestCoverageMetrics:
         assert metrics["triggers"]["user_request"] == 2  # First 2 have this
         assert metrics["trigger_count"] == 2
         assert metrics["most_common_trigger"] == ("data_breach", 5)
-
 
 class TestKnownConstants:
     """Test the known frameworks and authoritative domains constants."""

@@ -19,14 +19,12 @@ from .logger import get_logger
 
 logger = get_logger(__name__)
 
-
 class HealthStatus(str, Enum):
     """Health check status."""
 
     HEALTHY = "healthy"
     DEGRADED = "degraded"
     UNHEALTHY = "unhealthy"
-
 
 class HealthCheckResult:
     """Health check result."""
@@ -61,7 +59,6 @@ class HealthCheckResult:
             result["duration_ms"] = self.duration_ms
         return result
 
-
 class HealthCheck:
     """Base health check class."""
 
@@ -73,7 +70,6 @@ class HealthCheck:
     async def check(self) -> HealthCheckResult:
         """Perform health check."""
         raise NotImplementedError
-
 
 class DatabaseHealthCheck(HealthCheck):
     """Database health check."""
@@ -110,7 +106,6 @@ class DatabaseHealthCheck(HealthCheck):
                 duration_ms=duration_ms,
             )
 
-
 class RedisHealthCheck(HealthCheck):
     """Redis health check."""
 
@@ -143,7 +138,6 @@ class RedisHealthCheck(HealthCheck):
                 message=f"Redis connection failed: {str(e)}",
                 duration_ms=duration_ms,
             )
-
 
 class DiskSpaceHealthCheck(HealthCheck):
     """Disk space health check."""
@@ -195,7 +189,6 @@ class DiskSpaceHealthCheck(HealthCheck):
                 message=f"Failed to check disk space: {str(e)}",
             )
 
-
 class MemoryHealthCheck(HealthCheck):
     """Memory usage health check."""
 
@@ -242,7 +235,6 @@ class MemoryHealthCheck(HealthCheck):
                 status=HealthStatus.UNHEALTHY,
                 message=f"Failed to check memory: {str(e)}",
             )
-
 
 class ExternalServiceHealthCheck(HealthCheck):
     """External service health check."""
@@ -294,7 +286,6 @@ class ExternalServiceHealthCheck(HealthCheck):
                 message=f"Service check failed: {str(e)}",
                 duration_ms=duration_ms,
             )
-
 
 class HealthCheckRegistry:
     """Registry for health checks."""
@@ -365,15 +356,12 @@ class HealthCheckRegistry:
 
         return HealthStatus.HEALTHY
 
-
 # Global registry
 _registry = HealthCheckRegistry()
-
 
 def register_health_check(check: HealthCheck) -> None:
     """Register a health check."""
     _registry.register(check)
-
 
 async def run_health_checks(use_cache: bool = True) -> Dict[str, Any]:
     """Run all registered health checks and return results."""

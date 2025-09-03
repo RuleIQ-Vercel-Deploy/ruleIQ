@@ -11,7 +11,6 @@ import pytest
 from database import db_setup
 from database.db_setup import Base
 
-
 @pytest.fixture(scope='session', autouse=True)
 async def manage_test_database_schema():
     """Create and drop test database schema for the session with proper async isolation."""
@@ -47,7 +46,6 @@ async def manage_test_database_schema():
             )
     db_setup._async_engine = None
     db_setup._AsyncSessionLocal = None
-
 
 class TestEvidenceCollectionFlow:
     """Test the complete evidence collection and reporting workflow."""
@@ -131,7 +129,6 @@ class TestEvidenceCollectionFlow:
                 assert execution_data['status'] in ['success', 'initiated']
                 assert 'executed_at' in execution_data
 
-
 class TestAPIEndpointsIntegration:
     """Test critical API endpoint interactions."""
 
@@ -172,7 +169,6 @@ class TestAPIEndpointsIntegration:
                 assert 'overall_score' in readiness_data
                 assert 'framework_scores' in readiness_data
 
-
 class TestErrorHandlingAndResilience:
     """Test system behavior under error conditions."""
 
@@ -197,7 +193,6 @@ class TestErrorHandlingAndResilience:
             report_data = response.json()
             assert 'content' in report_data
 
-
 @pytest.mark.asyncio
 class TestAsyncOperations:
     """Test asynchronous operations and background tasks."""
@@ -211,7 +206,6 @@ class TestAsyncOperations:
         """Test AI assistant async message processing."""
         from services.ai.assistant import ComplianceAssistant
         assert ComplianceAssistant is not None
-
 
 @pytest.fixture(scope='function', autouse=True)
 def cleanup_test_data():

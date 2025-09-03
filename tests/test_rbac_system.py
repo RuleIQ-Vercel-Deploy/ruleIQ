@@ -6,7 +6,6 @@ HTTP_FORBIDDEN = 403
 
 MAX_RETRIES = 3
 
-
 Test Suite for RBAC System
 
 Comprehensive tests for role-based access control including:
@@ -27,7 +26,6 @@ from api.dependencies.rbac_auth import UserWithRoles, create_access_token_with_r
 from database.rbac import Role, Permission, UserRole, RolePermission, FrameworkAccess
 from database.user import User
 from services.rbac_service import RBACService
-
 
 class TestRBACModels:
     """Test RBAC database models and relationships."""
@@ -119,7 +117,6 @@ class TestRBACModels:
         assert framework_access.id is not None
         assert framework_access.framework_id == framework.id
         assert framework_access.access_level == 'read'
-
 
 class TestRBACService:
     """Test RBAC service functionality."""
@@ -223,7 +220,6 @@ class TestRBACService:
         expired_count = rbac_service.cleanup_expired_roles()
         assert expired_count >= 1
 
-
 class TestUserWithRoles:
     """Test UserWithRoles class functionality."""
 
@@ -303,7 +299,6 @@ class TestUserWithRoles:
         assert len(data['permissions']) == MAX_RETRIES
         assert len(data['accessible_frameworks']) == 2
 
-
 class TestRBACAuthentication:
     """Test RBAC authentication and token handling."""
 
@@ -356,7 +351,6 @@ class TestRBACAuthentication:
             await check_permissions(user_without_permissions)
         assert exc_info.value.status_code == HTTP_FORBIDDEN
 
-
 class TestRBACMiddleware:
     """Test RBAC middleware functionality."""
 
@@ -404,7 +398,6 @@ class TestRBACMiddleware:
             '/api/v1/auth/login', 'POST')
         assert len(public_permissions) == 0
 
-
 class TestRBACIntegration:
     """Integration tests for RBAC system."""
 
@@ -447,7 +440,6 @@ class TestRBACIntegration:
         assert success is True
         assert rbac.user_has_permission(user.id, 'integration_permission'
             ) is False
-
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

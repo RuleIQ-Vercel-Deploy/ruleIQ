@@ -17,14 +17,12 @@ from config.app_config import get_cipher_suite
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 class IntegrationStatus(str, Enum):
     CONNECTED = 'connected'
     DISCONNECTED = 'disconnected'
     ERROR = 'error'
     NEEDS_REAUTH = 'needs_reauth'
     PENDING_VERIFICATION = 'pending_verification'
-
 
 @dataclass
 class IntegrationConfig:
@@ -34,7 +32,6 @@ class IntegrationConfig:
     settings: Optional[Dict[str, Any]] = None
     status: IntegrationStatus = IntegrationStatus.DISCONNECTED
     last_sync: Optional[datetime] = None
-
 
 class BaseIntegration(ABC):
 
@@ -130,18 +127,14 @@ class BaseIntegration(ABC):
             raise IntegrationError(f'Failed to decrypt credentials: {e}'
                 ) from e
 
-
 class IntegrationError(Exception):
     pass
-
 
 class AuthenticationError(IntegrationError):
     pass
 
-
 class ConnectionError(IntegrationError):
     pass
-
 
 class EvidenceCollectionError(IntegrationError):
     pass

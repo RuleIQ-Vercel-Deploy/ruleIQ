@@ -20,7 +20,6 @@ sys.path.insert(0, "/home/omar/Documents/ruleIQ")
 os.environ["ENVIRONMENT"] = "development"
 os.environ["USE_MOCK_AI"] = "false"
 
-
 def test_google_api_key() -> bool:
     """Test Google API key configuration"""
     print("=== Testing Google API Key Configuration ===")
@@ -35,7 +34,6 @@ def test_google_api_key() -> bool:
     else:
         print("   Please set GOOGLE_AI_API_KEY in .env.local")
         return False
-
 
 async def test_ai_model_initialization() -> Optional[bool]:
     """Test AI model initialization"""
@@ -67,7 +65,6 @@ async def test_ai_model_initialization() -> Optional[bool]:
     except Exception as e:
         print(f"❌ AI initialization failed: {e}")
         return False
-
 
 async def test_basic_ai_functionality() -> Optional[bool]:
     """Test basic AI functionality"""
@@ -106,7 +103,6 @@ async def test_basic_ai_functionality() -> Optional[bool]:
         print(f"❌ Basic AI functionality test failed: {e}")
         return False
 
-
 async def test_assessment_ai() -> Optional[bool]:
     """Test assessment AI endpoints"""
     print("\n=== Testing Assessment AI ===")
@@ -137,7 +133,6 @@ async def test_assessment_ai() -> Optional[bool]:
     except Exception as e:
         print(f"❌ Assessment AI test failed: {e}")
         return False
-
 
 async def test_policy_generation() -> Optional[bool]:
     """Test AI policy generation"""
@@ -170,7 +165,6 @@ async def test_policy_generation() -> Optional[bool]:
         print(f"❌ Policy generation test failed: {e}")
         return False
 
-
 async def test_evidence_analysis() -> Optional[bool]:
     """Test AI evidence analysis"""
     print("\n=== Testing AI Evidence Analysis ===")
@@ -202,7 +196,6 @@ async def test_evidence_analysis() -> Optional[bool]:
         print(f"❌ Evidence analysis test failed: {e}")
         return False
 
-
 async def test_circuit_breaker() -> Optional[bool]:
     """Test circuit breaker functionality"""
     print("\n=== Testing Circuit Breaker ===")
@@ -225,7 +218,6 @@ async def test_circuit_breaker() -> Optional[bool]:
     except Exception as e:
         print(f"❌ Circuit breaker test failed: {e}")
         return False
-
 
 async def run_comprehensive_ai_test():
     """Run comprehensive AI testing"""
@@ -296,7 +288,6 @@ async def run_comprehensive_ai_test():
 
     return results
 
-
 async def main() -> None:
     """Main testing function"""
     try:
@@ -306,7 +297,6 @@ async def main() -> None:
         import traceback
 
         traceback.print_exc()
-
 
 if __name__ == "__main__":
     asyncio.run(main())

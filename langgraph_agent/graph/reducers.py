@@ -12,7 +12,6 @@ from typing import Dict, List, Any, Optional, Union
 from datetime import datetime
 import copy
 
-
 def accumulate_evidence(
     existing: List[Dict[str, Any]], new: List[Dict[str, Any]]
 ) -> List[Dict[str, Any]]:
@@ -47,7 +46,6 @@ def accumulate_evidence(
 
     # Return as list maintaining order
     return list(evidence_dict.values())
-
 
 def merge_decisions(
     existing: List[Dict[str, Any]], new: List[Dict[str, Any]]
@@ -90,7 +88,6 @@ def merge_decisions(
     except requests.RequestException:
         # If sorting fails, return as-is
         return unique_decisions
-
 
 def update_cost_tracker(
     existing: Union[Dict[str, Any], Any], new: Union[Dict[str, Any], Any]
@@ -158,12 +155,10 @@ def update_cost_tracker(
     result["timestamp"] = datetime.now().isoformat()
 
     # Return as CostSnapshot object if we're dealing with CostSnapshot inputs
-    # Check if we had CostSnapshot input by looking for the import
     try:
         return CostSnapshot(**result)
     except (ValueError, TypeError):
         return result
-
 
 def append_to_memory(existing: Dict[str, Any], new: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -212,7 +207,6 @@ def append_to_memory(existing: Dict[str, Any], new: Dict[str, Any]) -> Dict[str,
 
     return result
 
-
 def merge_node_execution_times(
     existing: Dict[str, float], new: Dict[str, float]
 ) -> Dict[str, float]:
@@ -238,7 +232,6 @@ def merge_node_execution_times(
 
     return result
 
-
 def increment_counter(existing: int, new: int) -> int:
     """
     Increment counter reducer.
@@ -256,7 +249,6 @@ def increment_counter(existing: int, new: int) -> int:
         new = 0
 
     return existing + new
-
 
 def accumulate_errors(
     existing: List[Dict[str, Any]],
@@ -294,7 +286,6 @@ def accumulate_errors(
         combined = combined[-max_errors:]
 
     return combined
-
 
 def update_metadata(existing: Dict[str, Any], new: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -338,7 +329,6 @@ def update_metadata(existing: Dict[str, Any], new: Dict[str, Any]) -> Dict[str, 
     result["updated_at"] = datetime.now().isoformat()
 
     return result
-
 
 def merge_context(existing: Dict[str, Any], new: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -386,7 +376,6 @@ def merge_context(existing: Dict[str, Any], new: Dict[str, Any]) -> Dict[str, An
         result["metadata"] = update_metadata(result["metadata"], new["metadata"])
 
     return result
-
 
 # Export all reducers
 __all__ = [

@@ -9,7 +9,6 @@ from config.base import BaseConfig, Environment
 from typing import Optional
 import os
 
-
 class ProductionConfig(BaseConfig):
     """Production-specific configuration"""
 

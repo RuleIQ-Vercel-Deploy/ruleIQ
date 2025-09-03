@@ -17,7 +17,6 @@ from database.user import User
 # Assuming the AI function is awaitable or wrapped to be non-blocking
 from services.ai.plan_generator import generate_plan_with_ai
 
-
 async def generate_implementation_plan(
     db: AsyncSession,
     user: User,
@@ -81,7 +80,6 @@ async def generate_implementation_plan(
 
     return new_plan
 
-
 async def get_implementation_plan(
     db: AsyncSession, user: User, plan_id: UUID
 ) -> Optional[ImplementationPlan]:
@@ -92,7 +90,6 @@ async def get_implementation_plan(
     result = await db.execute(stmt)
     return result.scalars().first()
 
-
 async def list_implementation_plans(
     db: AsyncSession, user: User
 ) -> List[ImplementationPlan]:
@@ -100,7 +97,6 @@ async def list_implementation_plans(
     stmt = select(ImplementationPlan).where(ImplementationPlan.user_id == user.id)
     result = await db.execute(stmt)
     return result.scalars().all()
-
 
 async def update_task_status(
     db: AsyncSession, user: User, plan_id: UUID, task_id: str, status: str
@@ -130,7 +126,6 @@ async def update_task_status(
     await db.commit()
     await db.refresh(plan)
     return plan
-
 
 async def get_plan_dashboard(
     db: AsyncSession, user: User, plan_id: UUID

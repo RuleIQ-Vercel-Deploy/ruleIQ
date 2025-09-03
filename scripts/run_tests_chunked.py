@@ -79,20 +79,17 @@ TEST_CONFIGS['ci'] = {'description': 'CI/CD optimized test execution',
     '-m', 'pytest', 'tests/e2e/', '-n', '1', '-m', 'smoke or critical',
     '--tb=short', '--maxfail=3'], 'timeout': 400, 'parallel': False}]}
 
-
 def get_system_info() ->Dict:
     """Get system information for optimal test configuration."""
     return {'cpu_count': psutil.cpu_count(), 'memory_gb': psutil.
         virtual_memory().total / 1024 ** 3, 'available_memory_gb': psutil.
         virtual_memory().available / 1024 ** 3}
 
-
 def optimize_parallelism(base_workers: int, system_info: Dict) ->int:
     """Optimize number of parallel workers based on system resources."""
     cpu_workers = min(base_workers, system_info['cpu_count'])
     memory_workers = max(1, int(system_info['available_memory_gb'] / 2))
     return min(cpu_workers, memory_workers)
-
 
 async def run_test_chunk(chunk: Dict, system_info: Dict) ->Tuple[str, bool,
     str, float]:
@@ -134,7 +131,6 @@ async def run_test_chunk(chunk: Dict, system_info: Dict) ->Tuple[str, bool,
         logger.info('💥 ERROR: %s - %s' % (chunk_name, e))
         return chunk_name, False, f'Error: {e!s}', duration
 
-
 async def run_chunks_parallel(chunks: List[Dict], max_concurrent: int=3
     ) ->List[Tuple]:
     """Run test chunks with controlled parallelism."""
@@ -165,7 +161,6 @@ async def run_chunks_parallel(chunks: List[Dict], max_concurrent: int=3
             results.append(result)
     return results
 
-
 def print_summary(results: List[Tuple], total_time: float) ->None:
     """Print test execution summary."""
     logger.info('\n' + '=' * 80)
@@ -194,7 +189,6 @@ def print_summary(results: List[Tuple], total_time: float) ->None:
                         logger.info('    %s...' % relevant_lines[-1][:100])
     logger.info('=' * 80)
 
-
 async def main() ->None:
     """Main execution function."""
     parser = argparse.ArgumentParser(description=
@@ -221,7 +215,6 @@ async def main() ->None:
     print_summary(results, total_time)
     failed_count = sum(1 for _, success, _, _ in results if not success)
     sys.exit(failed_count)
-
 
 if __name__ == '__main__':
     asyncio.run(main())

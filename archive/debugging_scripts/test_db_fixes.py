@@ -17,7 +17,6 @@ os.environ["DATABASE_URL"] = (
     "postgresql://neondb_owner:npg_s0JhnfGNy3Ze@ep-wild-grass-a8o37wq8-pooler.eastus2.azure.neon.tech/neondb?sslmode=require"
 )
 
-
 async def test_database_connection() -> Optional[bool]:
     """Test database connection with our fixes."""
     try:
@@ -81,7 +80,6 @@ async def test_database_connection() -> Optional[bool]:
             print("✓ Database engines disposed")
         except (Exception, ValueError):
             pass
-
 
 if __name__ == "__main__":
     success = asyncio.run(test_database_connection())

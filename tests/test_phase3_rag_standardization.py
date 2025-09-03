@@ -20,13 +20,10 @@ import tempfile
 from langgraph_agent.agents.rag_standard import StandardizedRAG
 
 # Temporarily comment out adapter imports to test StandardizedRAG alone
-# from langgraph_agent.agents.rag_adapter import RAGAdapter
-# from langgraph_agent.agents.rag_system import (
 #     DocumentType,
 #     DocumentSource,
 #     RetrievalStrategy
 # )
-
 
 class TestStandardizedRAG:
     """Test the new standardized RAG implementation."""
@@ -142,7 +139,6 @@ class TestStandardizedRAG:
         assert stats["embeddings_model"] == "text-embedding-3-small"
         assert "multi_query_enabled" in stats
         assert stats["multi_query_enabled"] is True
-
 
 # Temporarily disabled until dependency issues resolved
 # Start of commented section
@@ -294,7 +290,6 @@ class TestRAGAdapter:
         assert "enable_reranking" in stats
         assert stats["enable_reranking"] is True
 
-
 class TestPerformanceImprovement:
     """Test performance improvements from standardization."""
 
@@ -359,7 +354,6 @@ class TestPerformanceImprovement:
         # All essential methods should be present
         for method in essential_methods:
             assert method in public_methods, f"Missing essential method: {method}"
-
 
 if __name__ == "__main__":
     # Run tests

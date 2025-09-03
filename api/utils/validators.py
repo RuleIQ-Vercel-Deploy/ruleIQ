@@ -11,7 +11,6 @@ SAFE_STRING_REGEX = re.compile('^[a-zA-Z0-9\\s\\-_.,!?]+$')
 UUID_REGEX = re.compile(
     '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$')
 
-
 class InputValidators:
     """Common input validation functions"""
 
@@ -64,10 +63,8 @@ class InputValidators:
             raise ValueError('Employee count seems unrealistic')
         return value
 
-
 def email_validator(cls, v) ->Any:
     return InputValidators.validate_email(v)
-
 
 def safe_string_validator(max_length: int=255) ->Any:
 
@@ -75,10 +72,8 @@ def safe_string_validator(max_length: int=255) ->Any:
         return InputValidators.validate_safe_string(v, max_length)
     return validator
 
-
 def company_name_validator(cls, v) ->Any:
     return InputValidators.validate_company_name(v)
-
 
 def url_validator(cls, v) ->Any:
     return InputValidators.validate_url(v)

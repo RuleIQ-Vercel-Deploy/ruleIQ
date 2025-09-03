@@ -24,12 +24,10 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 print(f"[JWT TEST SERVER] Using JWT_SECRET: {JWT_SECRET[:10]}...")
 
-
 class TestRequest(BaseModel):
     question_id: str
     question_text: str
     framework_id: str
-
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     """Verify JWT token"""
@@ -56,12 +54,10 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
         print(f"[AUTH] Token validation failed: {e}")
         raise credentials_exception
 
-
 @app.get("/health")
 async def health():
     """Health check endpoint"""
     return {"status": "healthy", "jwt_configured": True}
-
 
 @app.get("/debug/config")
 async def debug_config():
@@ -71,7 +67,6 @@ async def debug_config():
         "jwt_secret_length": len(JWT_SECRET) if JWT_SECRET else 0,
         "algorithm": ALGORITHM,
     }
-
 
 @app.post("/api/v1/ai-assessments/soc2/help")
 async def test_ai_endpoint(
@@ -83,7 +78,6 @@ async def test_ai_endpoint(
         "message": f"JWT authentication working! User: {current_user}",
         "request": request.dict(),
     }
-
 
 if __name__ == "__main__":
     import uvicorn

@@ -9,7 +9,6 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-
 async def assign_user_role() ->bool:
     """Assign business_user role to the test user"""
     database_url = os.getenv('DATABASE_URL')
@@ -74,7 +73,6 @@ async def assign_user_role() ->bool:
     except Exception as e:
         logger.info('❌ Error: %s' % e)
         return False
-
 
 if __name__ == '__main__':
     success = asyncio.run(assign_user_role())

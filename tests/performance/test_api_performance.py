@@ -17,7 +17,6 @@ from uuid import uuid4
 import pytest
 from pytest_benchmark.fixture import BenchmarkFixture
 
-
 @pytest.mark.performance
 @pytest.mark.benchmark
 class TestAPIPerformance:
@@ -275,7 +274,6 @@ class TestAPIPerformance:
         )  # Mean < 5s for 5 items (realistic threshold)
         assert benchmark.stats["max"] < 10.0  # Max < 10s (realistic threshold)
 
-
 @pytest.mark.performance
 @pytest.mark.memory
 class TestMemoryPerformance:
@@ -299,7 +297,6 @@ class TestMemoryPerformance:
         process = psutil.Process(os.getpid())
         initial_memory = process.memory_info().rss / 1024 / 1024  # MB
 
-        # Create evidence items directly in database for speed (simulating bulk import)
         evidence_items = []
         for i in range(50):  # Reduced from 100 to 50 for faster execution
             evidence = EvidenceItem(
@@ -392,7 +389,6 @@ class TestMemoryPerformance:
                     # Skip failed requests in concurrent testing
                     pass
 
-        # Run fewer threads concurrently (reduced from 10 to 5)
         threads = []
         for thread_id in range(5):
             thread = threading.Thread(target=worker_thread, args=(thread_id,))
@@ -408,7 +404,6 @@ class TestMemoryPerformance:
 
         # Memory should not increase excessively
         assert memory_increase < 200  # < 200MB increase for concurrent operations
-
 
 @pytest.mark.performance
 @pytest.mark.database
@@ -498,7 +493,6 @@ class TestDatabasePerformance:
         # Aggregation queries should be fast (adjusted for CI/CD environment)
         assert benchmark.stats["mean"] < 5.0  # Mean < 5s (realistic threshold)
         assert benchmark.stats["max"] < 12.0  # Max < 12s (realistic threshold)
-
 
 @pytest.mark.performance
 @pytest.mark.integration
@@ -599,7 +593,6 @@ class TestEndToEndPerformance:
             benchmark.stats["max"] < 60.0
         )  # Max < 60s (adjusted based on actual performance)
 
-
 # Performance test utilities
 class PerformanceMonitor:
     """Monitor system performance during tests"""
@@ -627,7 +620,6 @@ class PerformanceMonitor:
 
         return self.metrics
 
-
 @pytest.fixture
 def performance_monitor():
     """Fixture for performance monitoring"""
@@ -644,7 +636,6 @@ def performance_monitor():
         metrics["duration"] < 45.0
     )  # Test should complete in < 45s (adjusted from 30s)
     assert metrics["final_cpu"] - metrics["initial_cpu"] < 50  # CPU increase < 50%
-
 
 @pytest.mark.performance
 class TestRealWorldScenarios:
@@ -731,7 +722,6 @@ class TestRealWorldScenarios:
                     "Authorization": f"Bearer {login_response.json()['access_token']}",
                 }
 
-                # Simulate user activity (reduced from 10 to 5 activities for better performance)
                 for activity_num in range(5):
                     # Random activity
                     activities = [

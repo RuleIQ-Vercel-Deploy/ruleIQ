@@ -13,7 +13,6 @@ from datetime import datetime, timedelta
 from unittest.mock import Mock, AsyncMock, MagicMock, patch
 import json
 
-
 class TestEvidenceSourceDiscovery:
     """Test evidence source discovery and registration"""
 
@@ -98,7 +97,6 @@ class TestEvidenceSourceDiscovery:
         assert ordered[1]["source_id"] == "secondary"
         assert ordered[2]["source_id"] == "tertiary"
 
-
 class TestParallelCollectionMechanisms:
     """Test parallel evidence collection capabilities"""
 
@@ -164,7 +162,6 @@ class TestParallelCollectionMechanisms:
         # Set concurrency limit
         orchestrator.set_concurrency_limit(3)
 
-        # Collect from all sources
         source_ids = [f"source_{i}" for i in range(10)]
         results = await orchestrator.collect_parallel(
             query={"type": "test"}, sources=source_ids, timeout=5.0,
@@ -198,7 +195,6 @@ class TestParallelCollectionMechanisms:
         error_result = next(r for r in results if r["source_id"] == "error_source")
         assert error_result["status"] == "error"
         assert "error_message" in error_result
-
 
 class TestEvidenceValidationAndScoring:
     """Test evidence validation and quality scoring"""
@@ -307,7 +303,6 @@ class TestEvidenceValidationAndScoring:
         # Low similarity between evidence1 and evidence3
         similarity_1_3 = orchestrator.calculate_similarity(evidence1, evidence3)
         assert similarity_1_3 < 0.4
-
 
 class TestEvidenceAggregationAlgorithms:
     """Test evidence aggregation and merging strategies"""
@@ -432,7 +427,6 @@ class TestEvidenceAggregationAlgorithms:
         assert aggregated[0]["evidence_id"] == "ev_3"  # Highest weighted score
         assert "weighted_score" in aggregated[0]
 
-
 class TestCachingAndDeduplication:
     """Test caching mechanisms and deduplication strategies"""
 
@@ -527,7 +521,6 @@ class TestCachingAndDeduplication:
         deduplicated2 = orchestrator.add_evidence_batch(evidence_batch2)
         assert len(deduplicated2) == 1  # Only new content added
         assert deduplicated2[0]["content"] == "Content C"
-
 
 class TestEvidenceConfidenceCalculations:
     """Test evidence confidence score calculations"""
@@ -658,7 +651,6 @@ class TestEvidenceConfidenceCalculations:
             factor in composite["confidence_factors"]
             for factor in ["source", "temporal", "quality", "corroboration"]
         )
-
 
 if __name__ == "__main__":
     # Run tests with pytest

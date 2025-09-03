@@ -14,7 +14,6 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-
 def test_auth_flow():
     """Test the complete authentication flow"""
     print('🚀 Testing Complete Stack Auth Flow')
@@ -103,7 +102,6 @@ def test_auth_flow():
             except ValueError:
                 server.kill()
                 print('\n🛑 Server killed')
-
 
 if __name__ == '__main__':
     success = test_auth_flow()

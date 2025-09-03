@@ -26,7 +26,6 @@ from sqlalchemy.orm import relationship
 
 from database.base import Base
 
-
 class AIUsageLog(Base):
     """Log of individual AI API usage events."""
 
@@ -96,7 +95,6 @@ class AIUsageLog(Base):
         ),
     )
 
-
 class AIModelConfig(Base):
     """Configuration for AI model costs and capabilities."""
 
@@ -155,7 +153,6 @@ class AIModelConfig(Base):
         ),
     )
 
-
 class BudgetConfiguration(Base):
     """Budget configuration and limits."""
 
@@ -207,7 +204,6 @@ class BudgetConfiguration(Base):
         Index("idx_budget_user_service", "user_id", "service_name"),
         Index("idx_budget_global", "is_global", "is_active"),
     )
-
 
 class CostAlert(Base):
     """Cost-related alerts and notifications."""
@@ -267,7 +263,6 @@ class CostAlert(Base):
         Index("idx_alert_severity_type", "severity", "alert_type"),
         Index("idx_alert_user_date", "user_id", "date_key"),
     )
-
 
 class CostOptimizationInsight(Base):
     """Cost optimization insights and recommendations."""
@@ -340,7 +335,6 @@ class CostOptimizationInsight(Base):
         Index("idx_optimization_service_date", "service_name", "analysis_start_date"),
     )
 
-
 class CostAggregation(Base):
     """Pre-calculated cost aggregations for efficient reporting."""
 
@@ -411,7 +405,6 @@ class CostAggregation(Base):
             "total_cost",
         ),
     )
-
 
 class CostForecast(Base):
     """Cost forecasting and predictions."""
@@ -485,7 +478,6 @@ class CostForecast(Base):
         Index("idx_forecast_accuracy", "forecasting_model", "model_accuracy"),
     )
 
-
 # Extend User model to include cost-related relationships
 def extend_user_model() -> None:
     """Extend the User model with cost-related relationships."""
@@ -499,7 +491,6 @@ def extend_user_model() -> None:
             back_populates="user",
         )
         User.cost_aggregations = relationship("CostAggregation", back_populates="user")
-
 
 # Call the extension function
 extend_user_model()

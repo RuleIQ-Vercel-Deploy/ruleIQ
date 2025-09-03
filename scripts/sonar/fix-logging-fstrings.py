@@ -118,7 +118,6 @@ class LoggingFStringTransformer(ast.NodeTransformer):
         
         return 's'  # Default to string
 
-
 def fix_file(file_path: Path) -> bool:
     """Fix G004 violations in a single file."""
     try:
@@ -154,7 +153,6 @@ def fix_file(file_path: Path) -> bool:
         print(f"Error processing {file_path}: {e}")
         return False
 
-
 def main():
     """Main function to fix G004 violations."""
     root_path = Path('/home/omar/Documents/ruleIQ')
@@ -186,7 +184,6 @@ def main():
     print(f"\n✅ Fixed G004 violations in {fixed_count} files")
     
     return 0
-
 
 if __name__ == '__main__':
     sys.exit(main())

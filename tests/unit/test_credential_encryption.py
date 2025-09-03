@@ -15,7 +15,6 @@ from core.security.credential_encryption import (
     CredentialDecryptionError,
 )
 
-
 class TestCredentialEncryption:
     """Test cases for CredentialEncryption class"""
 
@@ -185,7 +184,6 @@ class TestCredentialEncryption:
             assert health["encryption_algorithm"] == "AES-256"
             assert health["key_derivation"] == "PBKDF2-SHA256"
 
-
 class TestConvenienceFunctions:
     """Test convenience functions"""
 
@@ -224,7 +222,6 @@ class TestConvenienceFunctions:
 
             assert health["status"] == "healthy"
             assert "response_time" in health
-
 
 class TestEdgeCases:
     """Test edge cases and error conditions"""
@@ -288,7 +285,6 @@ class TestEdgeCases:
 
             assert decrypted == special_credentials
 
-
 class TestSecurityProperties:
     """Test security properties of the encryption system"""
 
@@ -350,7 +346,6 @@ class TestSecurityProperties:
             # Should fail to decrypt
             with pytest.raises(CredentialDecryptionError):
                 encryption.decrypt_credentials(tampered)
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

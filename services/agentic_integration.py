@@ -17,7 +17,6 @@ from services.agents.pydantic_ai_framework import (
 
 logger = logging.getLogger(__name__)
 
-
 class AgenticIntegrationService:
     """
     Main integration service that orchestrates RAG and agents
@@ -568,10 +567,8 @@ class AgenticIntegrationService:
         except Exception as e:
             logger.warning(f"Error cleaning up sessions: {e}")
 
-
 # Global service instance
 _agentic_service = None
-
 
 def get_agentic_service() -> AgenticIntegrationService:
     """Get or create the global agentic service instance"""
@@ -579,7 +576,6 @@ def get_agentic_service() -> AgenticIntegrationService:
     if _agentic_service is None:
         _agentic_service = AgenticIntegrationService()
     return _agentic_service
-
 
 async def initialize_agentic_service():
     """Initialize the global agentic service"""

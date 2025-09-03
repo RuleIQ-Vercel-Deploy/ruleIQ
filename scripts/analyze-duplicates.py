@@ -15,7 +15,6 @@ PROJECT_ROOT = Path(__file__).parent.parent
 ROUTERS_DIR = PROJECT_ROOT / 'api' / 'routers'
 MAIN_PY = PROJECT_ROOT / 'main.py'
 
-
 class DuplicateAnalyzer:
 
     def __init__(self):
@@ -190,7 +189,6 @@ class DuplicateAnalyzer:
         return {'total_endpoints': len(self.endpoints), 'duplicates':
             duplicates, 'unused_count': len(unused)}
 
-
 def main() ->None:
     analyzer = DuplicateAnalyzer()
     endpoints = analyzer.analyze_routers()
@@ -200,7 +198,6 @@ def main() ->None:
         json.dump({'endpoints': {k: v for k, v in endpoints.items()},
             'duplicates': duplicates, 'summary': report}, f, indent=2)
     logger.info('\n📄 Detailed report saved to duplicate-analysis-report.json')
-
 
 if __name__ == '__main__':
     main()

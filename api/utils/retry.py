@@ -14,7 +14,6 @@ from typing import Awaitable, Callable, Optional, TypeVar, Any
 logger = logging.getLogger(__name__)
 T = TypeVar('T')
 
-
 class RetryConfig:
     """Configuration for retry behavior."""
 
@@ -30,7 +29,6 @@ class RetryConfig:
         self.exceptions = exceptions
         self.on_retry = on_retry
 
-
 class RetryExhaustedError(Exception):
     """Raised when all retry attempts have been exhausted."""
 
@@ -40,7 +38,6 @@ class RetryExhaustedError(Exception):
         super().__init__(
             f'Retry exhausted after {attempts} attempts. Last exception: {type(last_exception).__name__}: {last_exception}',
             )
-
 
 class RetryManager:
     """Manages retry logic for both sync and async functions."""
@@ -133,7 +130,6 @@ class RetryManager:
                     time.sleep(delay)
         raise RetryExhaustedError(self.config.max_attempts, last_exception)
 
-
 def retry(max_attempts: int=3, base_delay: float=1.0, max_delay: float=60.0,
     exponential_base: float=2.0, jitter: bool=True, exceptions: tuple=(
     Exception,), on_retry: Optional[Callable]=None) ->Any:
@@ -176,7 +172,6 @@ def retry(max_attempts: int=3, base_delay: float=1.0, max_delay: float=60.0,
             return sync_wrapper
     return decorator
 
-
 network_retry = retry(max_attempts=3, base_delay=1.0, max_delay=30.0,
     exceptions=(ConnectionError, TimeoutError, OSError))
 api_retry = retry(max_attempts=5, base_delay=2.0, max_delay=60.0,
@@ -184,12 +179,10 @@ api_retry = retry(max_attempts=5, base_delay=2.0, max_delay=60.0,
 database_retry = retry(max_attempts=3, base_delay=0.5, max_delay=10.0,
     exceptions=(ConnectionError, OSError))
 
-
 async def retry_async(func: Callable[..., Awaitable[T]], config:
     RetryConfig, *args, **kwargs) ->T:
     """Manually retry an async function with the given configuration."""
     return await RetryManager(config).execute_async(func, *args, **kwargs)
-
 
 def retry_sync(func: Callable[..., T], config: RetryConfig, *args, **kwargs
     ) ->T:

@@ -6,7 +6,6 @@ import requests
 CONFIDENCE_THRESHOLD = 0.8
 MAX_ITEMS = 1000
 
-
 Comprehensive Performance Monitoring Service
 Tracks API response times, database performance, and system metrics
 """
@@ -24,7 +23,6 @@ from config.cache import get_cache_manager
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 @dataclass
 class PerformanceMetrics:
     """Performance metrics data structure."""
@@ -37,7 +35,6 @@ class PerformanceMetrics:
     active_connections: int
     requests_per_second: float
 
-
 @dataclass
 class DatabaseMetrics:
     """Database-specific performance metrics."""
@@ -47,7 +44,6 @@ class DatabaseMetrics:
     avg_query_time: float
     slow_queries_count: int
     deadlocks_count: int
-
 
 @dataclass
 class CacheMetrics:
@@ -59,7 +55,6 @@ class CacheMetrics:
     total_requests: int
     avg_response_time: float
 
-
 @dataclass
 class APIMetrics:
     """API performance metrics."""
@@ -69,7 +64,6 @@ class APIMetrics:
     requests_per_second: float
     error_rate: float
     slowest_endpoints: List[Dict[str, Any]]
-
 
 class PerformanceMonitor:
     """
@@ -352,16 +346,13 @@ class PerformanceMonitor:
             min([m.database_query_time for m in recent_metrics]), 'max':
             max([m.database_query_time for m in recent_metrics])}}}
 
-
 performance_monitor = PerformanceMonitor()
-
 
 async def get_performance_monitor() ->PerformanceMonitor:
     """Get the global performance monitor instance."""
     if not performance_monitor.monitoring_active:
         await performance_monitor.initialize()
     return performance_monitor
-
 
 def monitor_performance(endpoint_name: str=None) ->Any:
     """Decorator to monitor function performance."""

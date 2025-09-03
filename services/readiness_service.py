@@ -15,13 +15,10 @@ from database.user import User as UserModel
 # Constants
 MINUTE_SECONDS = 60
 
-
-
 def calculate_policy_score(policies: List[GeneratedPolicyModel]) ->float:
     if not policies:
         return 0.0
     return 75.0
-
 
 def calculate_implementation_score(plans: List[ImplementationPlanModel]
     ) ->float:
@@ -29,12 +26,10 @@ def calculate_implementation_score(plans: List[ImplementationPlanModel]
         return 0.0
     return 60.0
 
-
 def calculate_evidence_score(evidence: List[EvidenceItemModel]) ->float:
     if not evidence:
         return 0.0
     return 80.0
-
 
 def analyze_readiness_details(policy_score, implementation_score,
     evidence_score) ->Dict[str, Any]:
@@ -43,7 +38,6 @@ def analyze_readiness_details(policy_score, implementation_score,
         'Upload missing evidence for control X', 'effort': 'low'}],
         'estimated_readiness_date': datetime.now(timezone.utc) + timedelta(
         days=90)}
-
 
 async def generate_compliance_report(user: UserModel, framework: str,
     report_type: str, format: str, include_evidence: bool,
@@ -63,12 +57,10 @@ async def generate_compliance_report(user: UserModel, framework: str,
             'N/A', 'evidence': 'Evidence included.' if include_evidence else
             'N/A'}
 
-
 async def get_historical_assessments(db: AsyncSession, user: UserModel,
     business_profile_id: UUID) ->List[ReadinessAssessmentModel]:
     """Placeholder for retrieving historical readiness assessments."""
     return []
-
 
 async def generate_readiness_assessment(db: AsyncSession, user: UserModel,
     framework_id: UUID, assessment_type: str='full'
@@ -130,7 +122,6 @@ async def generate_readiness_assessment(db: AsyncSession, user: UserModel,
         'Implement additional security controls',
         'Collect required evidence items']
     return new_assessment
-
 
 async def get_readiness_dashboard(db: AsyncSession, user: UserModel) ->Dict[
     str, Any]:

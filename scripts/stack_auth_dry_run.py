@@ -20,7 +20,6 @@ from datetime import datetime
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-
 class StackAuthDryRunValidator:
     """Validates Stack Auth conversion readiness without making changes"""
 
@@ -294,7 +293,6 @@ class StackAuthDryRunValidator:
             conversion_plan, 'issues': self.issues, 'warnings': self.warnings}
         return summary
 
-
 def main() ->Optional[int]:
     """Main dry run execution"""
     validator = StackAuthDryRunValidator()
@@ -339,7 +337,6 @@ def main() ->Optional[int]:
     except Exception as e:
         logger.info('❌ Dry run failed with error: %s' % e)
         return 1
-
 
 if __name__ == '__main__':
     sys.exit(main())

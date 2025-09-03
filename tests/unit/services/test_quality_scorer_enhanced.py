@@ -18,7 +18,6 @@ import pytest
 from database.evidence_item import EvidenceItem
 from services.automation.quality_scorer import QualityScorer
 
-
 @pytest.mark.unit
 @pytest.mark.ai
 class TestEnhancedQualityScorer:

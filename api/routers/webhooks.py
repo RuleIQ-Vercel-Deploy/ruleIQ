@@ -18,7 +18,6 @@ logger = get_logger(__name__)
 router = APIRouter(prefix='/api/v1/webhooks', tags=['Webhooks'], responses=
     {(404): {'description': 'Not found'}})
 
-
 async def handle_stripe_event(event_type: str, data: dict, db: AsyncSession
     ) ->None:
     """Handle Stripe webhook events."""
@@ -46,7 +45,6 @@ async def handle_stripe_event(event_type: str, data: dict, db: AsyncSession
     else:
         logger.info('Unhandled Stripe event type: %s' % event_type)
 
-
 async def handle_github_event(event_type: str, data: dict, db: AsyncSession
     ) ->None:
     """Handle GitHub webhook events."""
@@ -66,7 +64,6 @@ async def handle_github_event(event_type: str, data: dict, db: AsyncSession
     else:
         logger.info('Unhandled GitHub event type: %s' % event_type)
 
-
 async def handle_sendgrid_event(events: list, db: AsyncSession) ->None:
     """Handle SendGrid webhook events."""
     for event in events:
@@ -83,7 +80,6 @@ async def handle_sendgrid_event(events: list, db: AsyncSession) ->None:
             logger.warning('Email marked as spam by %s' % email)
         elif event_type == 'unsubscribe':
             logger.info('User unsubscribed: %s' % email)
-
 
 @router.post('/stripe', include_in_schema=False)
 async def stripe_webhook(request: Request, background_tasks:
@@ -124,7 +120,6 @@ async def stripe_webhook(request: Request, background_tasks:
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail='Webhook processing failed')
 
-
 @router.post('/github', include_in_schema=False)
 async def github_webhook(request: Request, background_tasks:
     BackgroundTasks, db: AsyncSession=Depends(get_db), redis_client: redis.
@@ -161,7 +156,6 @@ async def github_webhook(request: Request, background_tasks:
         logger.error('GitHub webhook error: %s' % e)
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail='Webhook processing failed')
-
 
 @router.post('/sendgrid', include_in_schema=False)
 async def sendgrid_webhook(request: Request, background_tasks:
@@ -201,7 +195,6 @@ async def sendgrid_webhook(request: Request, background_tasks:
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail='Webhook processing failed')
 
-
 @router.post('/custom/{webhook_id}', include_in_schema=False)
 async def custom_webhook(webhook_id: str, request: Request,
     background_tasks: BackgroundTasks, db: AsyncSession=Depends(get_db),
@@ -239,7 +232,6 @@ async def custom_webhook(webhook_id: str, request: Request,
         logger.error('Custom webhook error for %s: %s' % (webhook_id, e))
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail='Webhook processing failed')
-
 
 @router.get('/test/generate-signature')
 async def test_generate_signature(payload: str='{"test": "data"}', secret:

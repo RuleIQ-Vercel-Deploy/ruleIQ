@@ -14,7 +14,6 @@ HTTP_NOT_FOUND = 404
 
 router = APIRouter()
 
-
 @router.post('/plans', response_model=ImplementationPlanResponse,
     status_code=201)
 async def create_plan(plan_data: ImplementationPlanCreate, current_user:
@@ -38,13 +37,11 @@ async def create_plan(plan_data: ImplementationPlanCreate, current_user:
         total_tasks, 'estimated_duration_weeks': estimated_duration_weeks}
     return plan_dict
 
-
 @router.get('/plans', response_model=ImplementationPlanListResponse)
 async def list_plans(current_user: User=Depends(get_current_active_user),
     db: AsyncSession=Depends(get_async_db)) ->Dict[str, Any]:
     plans = await list_implementation_plans(db, current_user)
     return {'plans': plans}
-
 
 @router.get('/plans/{id}', response_model=ImplementationPlanResponse)
 async def get_plan(id: UUID, current_user: User=Depends(
@@ -74,7 +71,6 @@ async def get_plan(id: UUID, current_user: User=Depends(
         'tasks': all_tasks}
     return plan_dict
 
-
 @router.patch('/plans/{plan_id}/tasks/{task_id}')
 async def update_task(plan_id: UUID, task_id: str, task_update:
     ImplementationTaskUpdate, current_user: User=Depends(
@@ -86,7 +82,6 @@ async def update_task(plan_id: UUID, task_id: str, task_update:
         raise HTTPException(status_code=HTTP_NOT_FOUND, detail=
             'Implementation plan not found')
     return {'message': 'Task updated', 'plan_id': plan_id, 'task_id': task_id}
-
 
 async def get_implementation_recommendations(framework: str=None,
     current_user: User=Depends(get_current_active_user), db: AsyncSession=
@@ -112,7 +107,6 @@ async def get_implementation_recommendations(framework: str=None,
         'total_recommendations': 3, 'estimated_total_hours': 24,
         'quick_wins_count': 1, 'automation_opportunities': 2,
         'generated_at': datetime.now(timezone.utc).isoformat()}
-
 
 @router.get('/resources/{frameworkId}', summary='Get implementation resources')
 async def get_implementation_resources(frameworkId: str, current_user: User
@@ -146,7 +140,6 @@ async def get_implementation_resources(frameworkId: str, current_user: User
         f'https://thumbnails.example.com/{frameworkId}-intro.jpg'}]},
         'total_resources': 7, 'last_updated': datetime.now(timezone.utc).
         isoformat()}
-
 
 @router.get('/plans/{planId}/analytics', summary='Get plan analytics')
 async def get_implementation_plan_analytics(planId: UUID, current_user:

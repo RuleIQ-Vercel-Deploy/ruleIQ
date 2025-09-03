@@ -19,14 +19,12 @@ from services.ai.assistant import ComplianceAssistant
 from services.ai.circuit_breaker import AICircuitBreaker, CircuitBreakerConfig
 from services.ai.exceptions import AIServiceException
 
-
 @pytest.fixture(scope="session")
 def event_loop():
     """Create an instance of the default event loop for the test session."""
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
-
 
 @pytest.fixture
 def circuit_breaker_config():
@@ -37,7 +35,6 @@ def circuit_breaker_config():
         half_open_max_calls=2,
         success_threshold=2,
     )
-
 
 @pytest.fixture
 def mock_circuit_breaker(circuit_breaker_config):
@@ -54,14 +51,12 @@ def mock_circuit_breaker(circuit_breaker_config):
     }
     return circuit_breaker
 
-
 @pytest.fixture
 def mock_model_metadata():
     """Mock model metadata for testing - uses central config."""
     from config.ai_config import MODEL_METADATA
 
     return MODEL_METADATA
-
 
 @pytest.fixture
 def mock_ai_model():
@@ -73,7 +68,6 @@ def mock_ai_model():
         [Mock(text="Mock "), Mock(text="streaming "), Mock(text="response")]
     )
     return model
-
 
 @pytest.fixture
 async def mock_compliance_assistant():
@@ -98,7 +92,6 @@ async def mock_compliance_assistant():
 
     return assistant
 
-
 @pytest.fixture
 def mock_streaming_chunks():
     """Mock streaming chunks for testing."""
@@ -114,7 +107,6 @@ def mock_streaming_chunks():
         MockChunk(text="streaming "),
         MockChunk(text="response."),
     ]
-
 
 @pytest.fixture
 def mock_assessment_data():
@@ -132,7 +124,6 @@ def mock_assessment_data():
             {"section": "consent", "severity": "medium", "score": 0.6},
         ],
     }
-
 
 @pytest.fixture
 def mock_business_context():
@@ -155,7 +146,6 @@ def mock_business_context():
         },
     }
 
-
 @pytest.fixture
 def performance_test_config():
     """Performance test configuration."""
@@ -167,7 +157,6 @@ def performance_test_config():
         "concurrent_users": [1, 5, 10],
         "test_duration": 10,
     }
-
 
 class MockStreamingResponse:
     """Mock streaming response iterator for testing."""
@@ -191,24 +180,20 @@ class MockStreamingResponse:
         self.current += 1
         return chunk
 
-
 @pytest.fixture
 def mock_streaming_response_factory():
     """Factory for creating mock streaming responses."""
     return MockStreamingResponse
-
 
 async def async_generator_from_list(items: List[str]) -> AsyncIterator[str]:
     """Convert a list to an async generator for testing."""
     for item in items:
         yield item
 
-
 @pytest.fixture
 def async_generator_factory():
     """Factory for creating async generators from lists."""
     return async_generator_from_list
-
 
 @pytest.fixture
 def mock_prompt_templates():
@@ -228,7 +213,6 @@ def mock_prompt_templates():
     }
     return templates
 
-
 @pytest.fixture
 def mock_context_manager():
     """Mock context manager for testing."""
@@ -244,7 +228,6 @@ def mock_context_manager():
         }
     )
     return context_manager
-
 
 @pytest.fixture(autouse=True)
 def mock_ai_dependencies():
@@ -272,7 +255,6 @@ def mock_ai_dependencies():
 
         yield {"model": mock_model, "circuit_breaker": mock_circuit_breaker}
 
-
 @pytest.fixture
 def test_task_contexts():
     """Various task contexts for testing model selection."""
@@ -295,7 +277,6 @@ def test_task_contexts():
             "complexity": "medium",
         },
     }
-
 
 @pytest.fixture
 def mock_database_session():

@@ -21,10 +21,6 @@ from datetime import datetime, timedelta
 import json
 
 # These imports will be created during implementation
-# from app.agents.graph_builder import GraphBuilder
-# from app.agents.nodes import ComplianceNode
-# from app.agents.edges import ConditionalEdge
-# from app.agents.exceptions import NodeExecutionError, GraphTimeoutError
 
 from tests.fixtures.mock_llm import MockLLM, mock_llm_factory
 from tests.fixtures.state_fixtures import (
@@ -40,7 +36,6 @@ from tests.fixtures.graph_fixtures import (
     create_simple_graph as create_parallel_graph,
     create_cycle_graph as create_cyclic_graph,
 )
-
 
 class TestNodeExecutionOrder:
     """Test that nodes execute in the correct order."""
@@ -126,7 +121,6 @@ class TestNodeExecutionOrder:
         start1, end1 = exec1["start_time"], exec1["end_time"]
         start2, end2 = exec2["start_time"], exec2["end_time"]
         return start1 < end2 and start2 < end1
-
 
 class TestConditionalEdges:
     """Test conditional edge evaluation and routing."""
@@ -221,7 +215,6 @@ class TestConditionalEdges:
         assert result.had_routing_error == True
         assert "fallback_path" in result.execution_history
 
-
 class TestErrorHandling:
     """Test error handling and recovery mechanisms."""
 
@@ -311,7 +304,6 @@ class TestErrorHandling:
         # Assert
         assert "company_id" in str(exc_info.value)
         assert exc_info.value.validation_errors["company_id"] == "required field"
-
 
 class TestRetryMechanisms:
     """Test retry mechanisms and backoff strategies."""
@@ -457,7 +449,6 @@ class TestRetryMechanisms:
         assert state_snapshots[1].company_id == initial_state.company_id
         assert state_snapshots[1].workflow_id == initial_state.workflow_id
 
-
 class TestGraphIntegration:
     """Integration tests for complete graph execution scenarios."""
 
@@ -530,7 +521,6 @@ class TestGraphIntegration:
         result1 = graph_test_harness.execute(graph, initial_state)
         assert result1.workflow_status == "failed"
 
-        # Act - Resume from checkpoint
         graph_test_harness.reset_failures()
         result2 = graph_test_harness.resume_from_checkpoint(
             graph, checkpoint_dir / f"{initial_state.workflow_id}.checkpoint",
@@ -569,15 +559,12 @@ class TestGraphIntegration:
         assert metrics["node_execution_count"] >= 4
         assert metrics["state_size_bytes"] > 100
 
-
 # Fixtures for graph testing
-
 
 @pytest.fixture
 def graph_test_harness():
     """Provide a fresh graph test harness for each test."""
     return GraphTestHarness()
-
 
 @pytest.fixture
 def mock_regulation_api(mocker):
@@ -587,7 +574,6 @@ def mock_regulation_api(mocker):
     mock.check_compliance.return_value = {"status": "compliant"}
     return mock
 
-
 @pytest.fixture
 def async_graph_test_harness():
     """Provide async-capable graph test harness."""
@@ -595,9 +581,7 @@ def async_graph_test_harness():
     harness.enable_async_mode()
     return harness
 
-
 # Test data generators
-
 
 def generate_test_graphs(count: int = 5) -> List[Any]:
     """Generate multiple test graphs with varying complexity."""
@@ -610,7 +594,6 @@ def generate_test_graphs(count: int = 5) -> List[Any]:
         else:
             graphs.append(create_parallel_graph())
     return graphs
-
 
 def generate_error_scenarios() -> List[Dict[str, Any]]:
     """Generate various error scenarios for testing."""

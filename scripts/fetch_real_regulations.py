@@ -18,7 +18,6 @@ from neo4j import AsyncGraphDatabase
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 class RegulationDataFetcher:
     """Fetches real regulation data and updates Neo4j."""
 
@@ -173,7 +172,6 @@ class RegulationDataFetcher:
         logger.info('Report saved to data/real_regulation_fetch_report.json')
         return report
 
-
 async def main() ->None:
     """Main execution."""
     fetcher = RegulationDataFetcher()
@@ -194,7 +192,6 @@ async def main() ->None:
         traceback.print_exc()
     finally:
         await fetcher.close()
-
 
 if __name__ == '__main__':
     asyncio.run(main())

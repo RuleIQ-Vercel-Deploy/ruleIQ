@@ -11,7 +11,6 @@ HTTP_UNPROCESSABLE_ENTITY = 422
 HALF_RATIO = 0.5
 MAX_RETRIES = 3
 
-
 API Contract Validation Tests
 
 Validates API contracts and schema compliance including:
@@ -31,7 +30,6 @@ from pydantic import BaseModel, ValidationError
 from api.main import app
 from api.schemas import *
 from tests.utils.auth_test_utils import TestAuthManager
-
 
 @pytest.mark.contract
 @pytest.mark.integration
@@ -285,7 +283,6 @@ class TestAPIContractValidation:
             assert response.headers['access-control-allow-origin'] in ['*',
                 'http://localhost:3000']
 
-
 @pytest.mark.contract
 @pytest.mark.performance
 class TestContractPerformance:
@@ -308,7 +305,6 @@ class TestContractPerformance:
         validation_time = end_time - start_time
         assert validation_time < HALF_RATIO, f'Schema validation took {validation_time:.3f}s, expected <0.5s'
         assert response.status_code == HTTP_CREATED
-
 
 @pytest.mark.contract
 @pytest.mark.security

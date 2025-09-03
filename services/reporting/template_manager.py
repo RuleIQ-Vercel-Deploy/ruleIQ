@@ -6,7 +6,6 @@ Template manager for report customization
 
 from typing import Any, Dict, List, Optional
 
-
 class TemplateManager:
     """Manage report templates and customization options"""
 

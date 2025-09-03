@@ -17,7 +17,6 @@ from .versioning import is_semver
 from .validators import DeepValidator, ExternalDataValidator
 from ..metrics import dataset_quality_summary, coverage_summary
 
-
 def validate_and_report(root: Path, version: str, outdir: Path) ->None:
     """Validate golden datasets and generate reports.
 
@@ -106,7 +105,6 @@ def validate_and_report(root: Path, version: str, outdir: Path) ->None:
         for error in errors:
             logger.info('  - %s' % error)
 
-
 def write_markdown_report(path: Path, report: Dict[str, Any]) ->None:
     """Write markdown format report."""
     lines = []
@@ -185,7 +183,6 @@ def write_markdown_report(path: Path, report: Dict[str, Any]) ->None:
     with open(path, 'w', encoding='utf-8') as f:
         f.write('\n'.join(lines))
 
-
 def main() ->None:
     """CLI entry point."""
     parser = argparse.ArgumentParser(description=
@@ -202,7 +199,6 @@ def main() ->None:
     except Exception as e:
         logger.info('Error: %s' % e)
         exit(1)
-
 
 if __name__ == '__main__':
     main()

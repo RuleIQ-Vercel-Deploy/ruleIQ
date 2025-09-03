@@ -38,7 +38,6 @@ GOOGLE_API_KEY = os.getenv('GOOGLE_AI_API_KEY')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 MISTRAL_API_KEY = os.getenv('MISTRAL_API_KEY', 'free')
 
-
 @pytest.fixture(scope='session')
 async def database_setup():
     """Set up test database with proper schema."""
@@ -90,7 +89,6 @@ async def database_setup():
             )
         await conn.close()
 
-
 @pytest.fixture
 async def master_graph(database_setup):
     """Create master integration graph with real services."""
@@ -103,7 +101,6 @@ async def master_graph(database_setup):
         TEST_DATABASE_URL, rag_config=rag_config, enable_streaming=True)
     yield graph
     await graph.close()
-
 
 @pytest.fixture
 async def neo4j_service():
@@ -134,7 +131,6 @@ async def neo4j_service():
         )
     await service.close()
 
-
 @pytest.fixture
 async def supabase_service():
     """Create real Supabase service connection."""
@@ -142,7 +138,6 @@ async def supabase_service():
         pytest.skip('Supabase credentials not configured')
     service = SupabaseService(SUPABASE_URL, SUPABASE_KEY)
     yield service
-
 
 class TestMasterIntegrationEndToEnd:
     """Test end-to-end execution with real services."""
@@ -263,7 +258,6 @@ class TestMasterIntegrationEndToEnd:
         if state_updates:
             final_state = state_updates[-1]['data']
 
-
 class TestProductionReadiness:
     """Test production readiness criteria."""
 
@@ -354,7 +348,6 @@ class TestProductionReadiness:
         error_rate = errors / num_requests
         assert error_rate < 0.05
 
-
 class TestLongRunningStability:
     """Test long-running stability (abbreviated for CI/CD)."""
 
@@ -394,7 +387,6 @@ class TestLongRunningStability:
         assert success_rate >= HIGH_CONFIDENCE_THRESHOLD
         assert request_count > 0
 
-
 class TestServiceIntegration:
     """Test integration with external services."""
 
@@ -427,7 +419,6 @@ class TestServiceIntegration:
         assert len(events) > 0
         ai_messages = [e for e in events if e['type'] == 'assistant_message']
         assert len(ai_messages) > 0
-
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v', '-m', 'integration'])

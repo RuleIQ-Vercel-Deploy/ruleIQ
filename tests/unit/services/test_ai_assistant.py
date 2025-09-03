@@ -18,7 +18,6 @@ from uuid import uuid4
 import pytest
 from services.ai.assistant import ComplianceAssistant
 
-
 @pytest.mark.unit
 @pytest.mark.ai
 class TestComplianceAssistant:
@@ -373,7 +372,6 @@ class TestComplianceAssistant:
             mock_context.assert_called_once_with(conversation_id,
                 conversation_history)
 
-
 @pytest.mark.unit
 @pytest.mark.ai
 class TestAIResponseValidation:
@@ -441,7 +439,6 @@ class TestAIResponseValidation:
             result = ComplianceAssistant._validate_tone(casual_response)
             assert result['tone_appropriate'] is False
             assert len(result['issues']) > 0
-
 
 @pytest.mark.unit
 @pytest.mark.ai

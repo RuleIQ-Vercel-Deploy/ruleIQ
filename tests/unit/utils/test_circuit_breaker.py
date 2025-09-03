@@ -17,7 +17,6 @@ from api.utils.circuit_breaker import (
     CircuitBreakerState,
 )
 
-
 @pytest.mark.unit
 class TestCircuitBreakerStates:
     """Test circuit breaker state transitions"""
@@ -184,7 +183,6 @@ class TestCircuitBreakerStates:
 
         assert breaker.state == CircuitBreakerState.OPEN
 
-
 @pytest.mark.unit
 class TestCircuitBreakerTimeout:
     """Test circuit breaker timeout functionality"""
@@ -230,7 +228,6 @@ class TestCircuitBreakerTimeout:
 
         result = await breaker.call(slow_function)
         assert result == "Success"
-
 
 @pytest.mark.unit
 class TestCircuitBreakerExceptionHandling:
@@ -306,7 +303,6 @@ class TestCircuitBreakerExceptionHandling:
 
         assert breaker.state == CircuitBreakerState.OPEN
 
-
 @pytest.mark.unit
 class TestCircuitBreakerDecorator:
     """Test circuit breaker as decorator"""
@@ -351,7 +347,6 @@ class TestCircuitBreakerDecorator:
         # Function metadata should be preserved
         assert example_function.__name__ == "example_function"
         assert "Example function docstring" in example_function.__doc__
-
 
 @pytest.mark.unit
 class TestCircuitBreakerMetrics:
@@ -419,7 +414,6 @@ class TestCircuitBreakerMetrics:
         assert breaker._success_count >= breaker.config.success_threshold
         assert breaker.state == CircuitBreakerState.CLOSED
 
-
 @pytest.mark.unit
 class TestPreconfiguredCircuitBreakers:
     """Test preconfigured circuit breakers for common services"""
@@ -450,7 +444,6 @@ class TestPreconfiguredCircuitBreakers:
         assert aws_breaker.config.failure_threshold == 5
         assert aws_breaker.config.recovery_timeout == 45.0
         assert aws_breaker.config.timeout_seconds == 30.0
-
 
 @pytest.mark.unit
 class TestCircuitBreakerConcurrency:

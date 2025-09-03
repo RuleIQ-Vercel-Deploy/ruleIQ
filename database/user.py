@@ -7,7 +7,6 @@ from sqlalchemy.orm import relationship
 
 from .db_setup import Base  # Import Base from our new db_setup.py
 
-
 class User(Base):
     __tablename__ = "users"
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)

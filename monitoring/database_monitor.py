@@ -22,9 +22,7 @@ from sqlalchemy import text
 
 from database.db_setup import get_engine_info, _ENGINE, _ASYNC_ENGINE
 
-
 logger = logging.getLogger(__name__)
-
 
 @dataclass
 class PoolMetrics:
@@ -46,7 +44,6 @@ class PoolMetrics:
         result["timestamp"] = self.timestamp.isoformat()
         return result
 
-
 @dataclass
 class ConnectionHealthCheck:
     """Database connection health check result."""
@@ -63,7 +60,6 @@ class ConnectionHealthCheck:
         result["timestamp"] = self.timestamp.isoformat()
         return result
 
-
 @dataclass
 class AlertThresholds:
     """Alert thresholds for database monitoring."""
@@ -75,7 +71,6 @@ class AlertThresholds:
     connection_timeout_warning: float = 1000.0  # ms
     connection_timeout_critical: float = 2000.0  # ms
     failed_connections_threshold: int = 5  # consecutive failures
-
 
 class DatabaseMonitor:
     """Database connection pool monitoring service."""
@@ -376,10 +371,8 @@ class DatabaseMonitor:
                 logger.error(f"Database monitoring loop error: {e}")
                 await asyncio.sleep(interval_seconds)
 
-
 # Global monitor instance
 _monitor: Optional[DatabaseMonitor] = None
-
 
 def get_database_monitor() -> DatabaseMonitor:
     """Get or create global database monitor instance."""
@@ -388,12 +381,10 @@ def get_database_monitor() -> DatabaseMonitor:
         _monitor = DatabaseMonitor()
     return _monitor
 
-
 async def start_database_monitoring(interval_seconds: int = 30) -> None:
     """Start database monitoring service."""
     monitor = get_database_monitor()
     await monitor.start_monitoring_loop(interval_seconds)
-
 
 def get_database_health_status() -> Dict[str, Any]:
     """Get current database health status for API endpoints."""

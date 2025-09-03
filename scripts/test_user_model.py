@@ -9,14 +9,12 @@ import sys
 
 sys.path.insert(0, ".")
 
-# Load environment from .env.local
 from dotenv import load_dotenv
 
 load_dotenv(".env.local", override=True)
 
 # Set testing flag (like pytest does)
 os.environ["TESTING"] = "true"
-
 
 def test_user_model_simple() -> Any:
     try:
@@ -67,7 +65,6 @@ def test_user_model_simple() -> Any:
 
         traceback.print_exc()
         return False
-
 
 if __name__ == "__main__":
     success = test_user_model_simple()

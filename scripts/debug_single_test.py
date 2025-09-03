@@ -6,7 +6,6 @@ import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-
 def run_single_test(test_file, test_name=None):
     """Run a single test file or specific test."""
     logger.info('Running test: %s' % test_file)
@@ -20,7 +19,6 @@ def run_single_test(test_file, test_name=None):
     env['USE_MOCK_AI'] = 'true'
     result = subprocess.run(cmd, env=env)
     return result.returncode == 0
-
 
 if __name__ == '__main__':
     test_file = 'tests/unit/services/test_cache_strategy_optimization.py'

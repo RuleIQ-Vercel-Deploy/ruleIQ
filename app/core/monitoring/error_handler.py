@@ -20,7 +20,6 @@ from .logger import get_logger, set_request_id
 
 logger = get_logger(__name__)
 
-
 class ApplicationError(Exception):
     """Base application error."""
 
@@ -54,7 +53,6 @@ class ApplicationError(Exception):
         """Convert error to JSON response."""
         return JSONResponse(status_code=self.status_code, content=self.to_dict())
 
-
 class ValidationError(ApplicationError):
     """Validation error."""
 
@@ -69,7 +67,6 @@ class ValidationError(ApplicationError):
             details=details,
         )
 
-
 class AuthenticationError(ApplicationError):
     """Authentication error."""
 
@@ -82,7 +79,6 @@ class AuthenticationError(ApplicationError):
             **kwargs,
         )
 
-
 class AuthorizationError(ApplicationError):
     """Authorization error."""
 
@@ -94,7 +90,6 @@ class AuthorizationError(ApplicationError):
             status_code=status.HTTP_403_FORBIDDEN,
             **kwargs,
         )
-
 
 class NotFoundError(ApplicationError):
     """Resource not found error."""
@@ -116,7 +111,6 @@ class NotFoundError(ApplicationError):
             **kwargs,
         )
 
-
 class ConflictError(ApplicationError):
     """Resource conflict error."""
 
@@ -128,7 +122,6 @@ class ConflictError(ApplicationError):
             status_code=status.HTTP_409_CONFLICT,
             **kwargs,
         )
-
 
 class RateLimitError(ApplicationError):
     """Rate limit exceeded error."""
@@ -149,7 +142,6 @@ class RateLimitError(ApplicationError):
             details=details,
         )
 
-
 class ExternalServiceError(ApplicationError):
     """External service error."""
 
@@ -162,7 +154,6 @@ class ExternalServiceError(ApplicationError):
             details={"service": service},
             **kwargs,
         )
-
 
 class ErrorHandler:
     """Error handler with context management."""
@@ -249,7 +240,6 @@ class ErrorHandler:
                 },
             )
 
-
 class GlobalErrorHandler:
     """Global error handler for FastAPI."""
 
@@ -322,11 +312,9 @@ class GlobalErrorHandler:
         """Handle generic errors."""
         return await self.handler.handle_error(error, request)
 
-
 def setup_error_handling(app: FastAPI) -> GlobalErrorHandler:
     """Setup global error handling for FastAPI app."""
     return GlobalErrorHandler(app)
-
 
 async def custom_exception_handler(request: Request, exc: Exception) -> JSONResponse:
     """Custom exception handler for middleware."""

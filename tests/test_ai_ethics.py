@@ -16,7 +16,6 @@ from typing import Dict, List
 
 import pytest
 
-
 @pytest.mark.ethical
 class TestBiasDetection:
     """Test AI responses for bias and fairness"""
@@ -158,7 +157,6 @@ class TestBiasDetection:
                     term not in response_text
                 ), f"Discriminatory term '{term}' found in response"
 
-
 @pytest.mark.ethical
 class TestHallucinationPrevention:
     """Test AI hallucination prevention and fact-checking"""
@@ -274,14 +272,12 @@ class TestHallucinationPrevention:
         response_text = json.dumps(response_data).lower()
         expected_keywords = expected_data["expected_answer"].lower().split()
 
-        # At least some key terms from the expected answer should be present
         matching_keywords = sum(
             1 for keyword in expected_keywords if keyword in response_text
         )
         assert (
             matching_keywords >= len(expected_keywords) * 0.3
         ), "Response should contain key factual elements"
-
 
 @pytest.mark.ethical
 class TestAdversarialRobustness:
@@ -409,7 +405,6 @@ class TestAdversarialRobustness:
             else:
                 assert response.status_code == 400, "Malicious input should be rejected"
 
-
 @pytest.mark.ethical
 class TestExplainability:
     """Test AI explainability and transparency"""
@@ -511,7 +506,6 @@ class TestExplainability:
                 indicator in response_text for indicator in source_indicators
             )
             assert has_source, "AI should attribute information to regulatory sources"
-
 
 @pytest.mark.ethical
 class TestResponsibleAI:

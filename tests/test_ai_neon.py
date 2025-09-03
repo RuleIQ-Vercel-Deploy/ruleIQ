@@ -15,7 +15,6 @@ from services.ai.assistant import ComplianceAssistant
 from services.ai.safety_manager import AdvancedSafetyManager
 from database.db_setup import init_db, get_async_db
 
-
 async def test_ai_functionality():
     """Test core AI functionality"""
     print("🧪 Testing AI functionality with Neon database\n")
@@ -94,7 +93,6 @@ async def test_ai_functionality():
             print(f"❌ Cache test failed: {e}\n")
 
     print("🎉 AI functionality tests completed!")
-
 
 if __name__ == "__main__":
     asyncio.run(test_ai_functionality())

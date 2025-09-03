@@ -6,7 +6,6 @@ MINUTE_SECONDS = 60
 
 DEFAULT_LIMIT = 100.0
 
-
 Comprehensive test suite for compliance nodes.
 Tests migration from Celery compliance_tasks to LangGraph nodes.
 """
@@ -21,7 +20,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),
     '..')))
 from langgraph_agent.nodes.compliance_nodes import compliance_check_node, extract_requirements_from_rag, check_compliance_status, assess_compliance_risk
 from langgraph_agent.graph.unified_state import UnifiedComplianceState
-
 
 class TestComplianceCheckNode:
     """Test suite for compliance_check_node function."""
@@ -98,7 +96,6 @@ class TestComplianceCheckNode:
                 await compliance_check_node(mock_state)
             assert 'Database connection failed' in str(exc_info.value)
 
-
 class TestExtractRequirements:
     """Test suite for extract_requirements_from_rag function."""
 
@@ -129,7 +126,6 @@ class TestExtractRequirements:
             'metadata': {'source': 'Guide'}}]
         requirements = extract_requirements_from_rag(documents)
         assert len(requirements) == 0
-
 
 class TestCheckComplianceStatus:
     """Test suite for check_compliance_status function."""
@@ -187,7 +183,6 @@ class TestCheckComplianceStatus:
             assert result['compliance_score'] == 0
             assert 'error' in result
             assert 'Database service not available' in result['error']
-
 
 class TestAssessComplianceRisk:
     """Test suite for assess_compliance_risk function."""
@@ -252,7 +247,6 @@ class TestAssessComplianceRisk:
         assert result['compliance_data']['risk_assessment']['level'
             ] == 'CRITICAL'
 
-
 class TestIntegration:
     """Integration tests for compliance workflow."""
 
@@ -282,7 +276,6 @@ class TestIntegration:
                 'level'] == 'MEDIUM',)
             assert final_state['metadata']['notify_required'] == True
             assert len(final_state['history']) == 1
-
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

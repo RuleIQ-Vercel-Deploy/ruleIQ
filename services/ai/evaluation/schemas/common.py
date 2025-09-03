@@ -7,7 +7,6 @@ from datetime import datetime
 from typing import Optional, Dict, Any
 from pydantic import BaseModel, Field, field_validator
 
-
 class RegCitation(BaseModel):
     """Regulatory citation reference."""
 
@@ -18,7 +17,6 @@ class RegCitation(BaseModel):
     notes: Optional[str] = Field(
         None, description="Additional notes about the citation",
     )
-
 
 class SourceMetaOld(BaseModel):
     """Metadata about the source of data."""
@@ -36,7 +34,6 @@ class SourceMetaOld(BaseModel):
         default_factory=dict, description="Additional metadata",
     )
 
-
 class TemporalValidity(BaseModel):
     """Temporal validity period for regulations."""
 
@@ -53,7 +50,6 @@ class TemporalValidity(BaseModel):
             if v < info.data["effective_from"]:
                 raise ValueError("effective_to must be >= effective_from")
         return v
-
 
 class ExpectedOutcome(BaseModel):
     """Expected outcome for compliance scenarios."""
@@ -73,7 +69,6 @@ class ExpectedOutcome(BaseModel):
             raise ValueError("outcome_code is required")
         return v
 
-
 # Additional classes for document ingestion
 class SourceMeta(BaseModel):
     """Source metadata for golden dataset documents."""
@@ -88,7 +83,6 @@ class SourceMeta(BaseModel):
         None, description="When the document was fetched",
     )
 
-
 class GoldenDoc(BaseModel):
     """Golden dataset document schema."""
 
@@ -97,7 +91,6 @@ class GoldenDoc(BaseModel):
     source_meta: SourceMeta = Field(..., description="Source metadata")
     reg_citations: Optional[list] = Field(None, description="Regulatory citations")
     expected_outcomes: Optional[list] = Field(None, description="Expected outcomes")
-
 
 class GoldenChunk(BaseModel):
     """Golden dataset chunk schema."""

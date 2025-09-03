@@ -29,7 +29,6 @@ from app.core.monitoring.opentelemetry_metrics import (
     MetricsBridge,
 )
 
-
 class TestOpenTelemetryMetricsCollector:
     """Test OpenTelemetry metrics collector functionality."""
 
@@ -164,7 +163,6 @@ class TestOpenTelemetryMetricsCollector:
             elif metric["labels"]["env"] == "dev":
                 assert metric["value"] == 3
 
-
 class TestPrometheusExporter:
     """Test Prometheus metrics exporter functionality."""
 
@@ -287,7 +285,6 @@ class TestPrometheusExporter:
         # Verify both metrics are present
         assert 'shared_counter{source="collector1"} 10' in prometheus_output
         assert 'shared_counter{source="collector2"} 20' in prometheus_output
-
 
 class TestLangGraphMetricsInstrumentor:
     """Test LangGraph-specific metrics instrumentation."""
@@ -448,7 +445,6 @@ class TestLangGraphMetricsInstrumentor:
         ratio = metrics_data["langgraph_memory_usage_ratio"]["value"]
         assert abs(ratio - 0.1) < 0.01  # 10% usage
 
-
 class TestMetricsBridge:
     """Test bridging between existing MetricsCollector and OpenTelemetry."""
 
@@ -568,7 +564,6 @@ class TestMetricsBridge:
         metrics_data = bridge.otel_collector.collect_metrics()
         assert "langgraph_node_executions_total" in metrics_data
 
-
 class TestIntegration:
     """Integration tests for the complete metrics pipeline."""
 
@@ -603,7 +598,6 @@ class TestIntegration:
         # Wait for metrics to propagate
         await asyncio.sleep(0.5)
 
-        # Fetch metrics from Prometheus endpoint
         import aiohttp
 
         async with aiohttp.ClientSession() as session:

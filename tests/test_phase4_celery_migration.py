@@ -24,7 +24,6 @@ from langgraph_agent.nodes.celery_migration_nodes import (
     MonitoringTaskNode,
 )
 
-
 @pytest.mark.asyncio
 class TestComplianceTaskMigration:
     """Test migrated compliance tasks"""
@@ -85,7 +84,6 @@ class TestComplianceTaskMigration:
         assert "alerts" in result["task_result"]
         assert result["task_result"]["alerts_found"] >= 0
 
-
 @pytest.mark.asyncio
 class TestEvidenceTaskMigration:
     """Test migrated evidence tasks"""
@@ -141,7 +139,6 @@ class TestEvidenceTaskMigration:
         assert result["task_status"] == "completed"
         assert "sync_summary" in result["task_result"]
         assert result["task_result"]["sync_summary"]["total_evidence_items"] > 0
-
 
 @pytest.mark.asyncio
 class TestNotificationTaskMigration:
@@ -231,7 +228,6 @@ class TestNotificationTaskMigration:
         assert result["task_result"]["channels_used"] == ["email", "slack"]
         assert "delivery_metrics" in result["task_result"]
 
-
 @pytest.mark.asyncio
 class TestReportingTaskMigration:
     """Test migrated reporting tasks"""
@@ -287,7 +283,6 @@ class TestReportingTaskMigration:
         assert result["task_status"] == "completed"
         assert "cleanup_summary" in result["task_result"]
         assert "space_freed" in result["task_result"]["cleanup_summary"]
-
 
 @pytest.mark.asyncio
 class TestMonitoringTaskMigration:
@@ -348,7 +343,6 @@ class TestMonitoringTaskMigration:
             key in result["task_result"]["system_metrics"]
             for key in ["cpu", "memory", "disk", "network"]
         )
-
 
 @pytest.mark.asyncio
 class TestUnifiedOrchestrator:
@@ -483,7 +477,6 @@ class TestUnifiedOrchestrator:
         assert all(r["status"] == "completed" for r in results)
         assert len(results) == 4
 
-
 @pytest.mark.asyncio
 class TestMigrationCompleteness:
     """Verify 100% Celery task migration"""
@@ -551,7 +544,6 @@ class TestMigrationCompleteness:
 
         # Clean up
         await graph.stop_scheduler()
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

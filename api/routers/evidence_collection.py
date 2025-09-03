@@ -7,7 +7,6 @@ HTTP_FORBIDDEN = 403
 HTTP_INTERNAL_SERVER_ERROR = 500
 HTTP_NOT_FOUND = 404
 
-
 Evidence Collection Plan API Router
 
 Endpoints for AI-driven evidence collection planning and task management.
@@ -24,7 +23,6 @@ from services.ai.smart_evidence_collector import CollectionStatus, smart_evidenc
 from services.business_service import get_business_profile
 logger = get_logger(__name__)
 router = APIRouter()
-
 
 async def create_collection_plan(plan_request: CollectionPlanCreate, db:
     AsyncSession=Depends(get_async_db), current_user: User=Depends(
@@ -96,7 +94,6 @@ async def create_collection_plan(plan_request: CollectionPlanCreate, db:
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             str(e))
 
-
 @router.get('/plans/{plan_id}', response_model=CollectionPlanResponse)
 async def get_collection_plan(plan_id: str, db: AsyncSession=Depends(
     get_async_db), current_user: User=Depends(get_current_active_user)) ->Any:
@@ -122,7 +119,6 @@ async def get_collection_plan(plan_id: str, db: AsyncSession=Depends(
         metadata=task.metadata) for task in plan.tasks],
         automation_opportunities=AutomationOpportunities(**plan.
         automation_opportunities), created_at=plan.created_at)
-
 
 async def list_collection_plans(framework: Optional[str]=Query(None,
     description='Filter by framework'), status: Optional[str]=Query(None,
@@ -157,7 +153,6 @@ async def list_collection_plans(framework: Optional[str]=Query(None,
             user_plans.append(summary)
     return user_plans
 
-
 @router.get('/plans/{plan_id}/priority-tasks', response_model=List[
     EvidenceTaskResponse])
 async def get_priority_tasks(plan_id: str, limit: int=Query(5, ge=1, le=20,
@@ -182,7 +177,6 @@ async def get_priority_tasks(plan_id: str, limit: int=Query(5, ge=1, le=20,
         =task.assigned_to, due_date=task.due_date, status=task.status.value,
         created_at=task.created_at, metadata=task.metadata) for task in
         priority_tasks]
-
 
 @router.patch('/plans/{plan_id}/tasks/{task_id}', response_model=
     EvidenceTaskResponse)
@@ -215,7 +209,6 @@ async def update_task_status(plan_id: str, task_id: str, status_update:
                 status=task.status.value, created_at=task.created_at,
                 metadata=task.metadata)
     raise HTTPException(status_code=HTTP_NOT_FOUND, detail='Task not found')
-
 
 @router.get('/automation-recommendations/{framework}')
 async def get_automation_recommendations(framework: str, db: AsyncSession=

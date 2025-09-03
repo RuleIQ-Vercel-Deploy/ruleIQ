@@ -27,7 +27,6 @@ from langgraph_agent.nodes.compliance_nodes_real import (
 )
 from langgraph_agent.graph.unified_state import UnifiedComplianceState
 
-
 class TestRealComplianceNodes:
     """Test suite for real compliance node implementations."""
 
@@ -416,7 +415,6 @@ class TestRealComplianceNodes:
                     assert len(result["history"]) == 1
                     assert result["history"][0]["action"] == "compliance_monitoring"
 
-
 class TestIntegrationWithDatabase:
     """Integration tests that would run with a real database."""
 
@@ -440,7 +438,6 @@ class TestIntegrationWithDatabase:
         # Assertions would check real data
         assert "batch_update_results" in result["compliance_data"]
         assert result["compliance_data"]["batch_update_results"]["total_profiles"] >= 0
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

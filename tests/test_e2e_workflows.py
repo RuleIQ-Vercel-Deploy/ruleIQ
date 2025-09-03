@@ -10,7 +10,6 @@ from unittest.mock import patch
 
 import pytest
 
-
 @pytest.mark.e2e
 class TestCompleteComplianceJourney:
     """Test complete compliance implementation journeys from start to finish"""
@@ -248,7 +247,6 @@ class TestCompleteComplianceJourney:
             assert "effort_estimate" in migration_plan
             assert "risk_assessment" in migration_plan
 
-
 @pytest.mark.e2e
 class TestErrorStateHandling:
     """Test comprehensive error state handling and recovery"""
@@ -414,7 +412,6 @@ class TestErrorStateHandling:
                     assert (
                         "template" in policy_data.get("generation_method", "").lower(),
                     )
-
 
 @pytest.mark.e2e
 class TestAuditWorkflows:
@@ -636,7 +633,6 @@ class TestAuditWorkflows:
                 assert any(
                     doc_type in doc["type"] for doc in included_docs
                 ), f"Submission should include {doc_type}"
-
 
 @pytest.mark.e2e
 class TestBusinessContinuityWorkflows:

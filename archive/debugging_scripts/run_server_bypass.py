@@ -5,14 +5,12 @@ Run server with JWT fix verification - bypasses sentry issues
 import logging
 logger = logging.getLogger(__name__)
 
-
 import os
 import sys
 
 # Set environment to disable sentry if needed
 os.environ["SENTRY_DSN"] = ""
 
-# Bypass sentry import issue by creating a mock
 sys.path.insert(0, ".")
 
 # Create a minimal sentry mock

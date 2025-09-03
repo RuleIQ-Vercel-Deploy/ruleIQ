@@ -17,20 +17,17 @@ from pydantic import BaseModel, Field, validator
 # Validation Enums
 # =====================================================================
 
-
 class SeverityLevel(str, Enum):
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
     CRITICAL = "critical"
 
-
 class PriorityLevel(str, Enum):
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
 #     URGENT = "urgent"  # Unused variable
-
 
 class ImplementationEffort(str, Enum):
 #     MINIMAL = "minimal"  # Unused variable
@@ -39,13 +36,11 @@ class ImplementationEffort(str, Enum):
     HIGH = "high"
 #     EXTENSIVE = "extensive"  # Unused variable
 
-
 class RiskLevel(str, Enum):
 #     LOW = "low"  # Unused variable
 #     MEDIUM = "medium"  # Unused variable
 #     HIGH = "high"  # Unused variable
 #     CRITICAL = "critical"  # Unused variable
-
 
 class MaturityLevel(str, Enum):
 #     INITIAL = "initial"  # Unused variable
@@ -54,12 +49,10 @@ class MaturityLevel(str, Enum):
 #     MANAGED = "managed"  # Unused variable
 #     OPTIMIZED = "optimized"  # Unused variable
 
-
 class TrendDirection(str, Enum):
 #     IMPROVING = "improving"  # Unused variable
 #     STABLE = "stable"  # Unused variable
 #     DECLINING = "declining"  # Unused variable
-
 
 class InsightType(str, Enum):
 #     STRENGTH = "strength"  # Unused variable
@@ -67,11 +60,9 @@ class InsightType(str, Enum):
 #     OPPORTUNITY = "opportunity"  # Unused variable
 #     THREAT = "threat"  # Unused variable
 
-
 # =====================================================================
 # Core Validation Models
 # =====================================================================
-
 
 class GapValidationModel(BaseModel):
     """Validation model for compliance gaps."""
@@ -119,7 +110,6 @@ class GapValidationModel(BaseModel):
 
     class Config:
         use_enum_values = True
-
 
 class RecommendationValidationModel(BaseModel):
     """Validation model for compliance recommendations."""
@@ -175,7 +165,6 @@ class RecommendationValidationModel(BaseModel):
     class Config:
         use_enum_values = True
 
-
 class ImplementationPhaseValidationModel(BaseModel):
     """Validation model for implementation phases."""
 
@@ -192,7 +181,6 @@ class ImplementationPhaseValidationModel(BaseModel):
     success_criteria: List[str] = Field(
         ..., min_items=1, description="Success criteria",
     )
-
 
 class ImplementationPlanValidationModel(BaseModel):
     """Validation model for implementation plans."""
@@ -220,7 +208,6 @@ class ImplementationPlanValidationModel(BaseModel):
             raise ValueError("Phase numbers must be consecutive starting from 1")
         return v
 
-
 class RiskAssessmentValidationModel(BaseModel):
     """Validation model for risk assessments."""
 
@@ -246,7 +233,6 @@ class RiskAssessmentValidationModel(BaseModel):
     class Config:
         use_enum_values = True
 
-
 class ComplianceInsightValidationModel(BaseModel):
     """Validation model for compliance insights."""
 
@@ -261,7 +247,6 @@ class ComplianceInsightValidationModel(BaseModel):
 
     class Config:
         use_enum_values = True
-
 
 class EvidenceRequirementValidationModel(BaseModel):
     """Validation model for evidence requirements."""
@@ -284,7 +269,6 @@ class EvidenceRequirementValidationModel(BaseModel):
 
     class Config:
         use_enum_values = True
-
 
 class ComplianceMetricsValidationModel(BaseModel):
     """Validation model for compliance metrics."""
@@ -323,11 +307,9 @@ class ComplianceMetricsValidationModel(BaseModel):
     class Config:
         use_enum_values = True
 
-
 # =====================================================================
 # Composite Response Models
 # =====================================================================
-
 
 class GapAnalysisValidationModel(BaseModel):
     """Validation model for gap analysis responses."""
@@ -374,7 +356,6 @@ class GapAnalysisValidationModel(BaseModel):
     class Config:
         use_enum_values = True
 
-
 class RecommendationResponseValidationModel(BaseModel):
     """Validation model for recommendation responses."""
 
@@ -410,7 +391,6 @@ class RecommendationResponseValidationModel(BaseModel):
                 )
         return v
 
-
 class AssessmentAnalysisValidationModel(BaseModel):
     """Validation model for comprehensive assessment analysis."""
 
@@ -437,7 +417,6 @@ class AssessmentAnalysisValidationModel(BaseModel):
         ..., ge=0.0, le=1.0, description="Analysis confidence score",
     )
 
-
 class GuidanceValidationModel(BaseModel):
     """Validation model for guidance responses."""
 
@@ -459,7 +438,6 @@ class GuidanceValidationModel(BaseModel):
         default_factory=list, description="Implementation tips",
     )
 
-
 class FollowUpQuestionValidationModel(BaseModel):
     """Validation model for follow-up questions."""
 
@@ -478,7 +456,6 @@ class FollowUpQuestionValidationModel(BaseModel):
     class Config:
 #         use_enum_values = True  # Unused variable
 
-
 class FollowUpValidationModel(BaseModel):
     """Validation model for follow-up responses."""
 
@@ -496,7 +473,6 @@ class FollowUpValidationModel(BaseModel):
     suggested_next_steps: List[str] = Field(
         ..., min_items=1, description="Suggested next steps",
     )
-
 
 class IntentClassificationValidationModel(BaseModel):
     """Validation model for intent classification."""
@@ -519,11 +495,9 @@ class IntentClassificationValidationModel(BaseModel):
         default_factory=list, description="Suggested actions",
     )
 
-
 # =====================================================================
 # Response Metadata Models
 # =====================================================================
-
 
 class ResponseMetadataValidationModel(BaseModel):
     """Validation model for response metadata."""
@@ -553,7 +527,6 @@ class ResponseMetadataValidationModel(BaseModel):
             raise ValueError("Timestamp must be in ISO format")
         return v
 
-
 class StructuredAIResponseValidationModel(BaseModel):
     """Validation model for structured AI responses."""
 
@@ -573,11 +546,9 @@ class StructuredAIResponseValidationModel(BaseModel):
     validation_passed: bool = Field(..., description="Whether validation passed")
     fallback_used: bool = Field(default=False, description="Whether fallback was used")
 
-
 # =====================================================================
 # Validation Functions
 # =====================================================================
-
 
 def validate_ai_response(
     response_data: Dict[str, Any], response_type: str
@@ -618,7 +589,6 @@ def validate_ai_response(
         else:
             errors.append(str(e))
         return False, errors, None
-
 
 def create_validation_report(
     response_data: Dict[str, Any], response_type: str

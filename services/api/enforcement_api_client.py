@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 HTTP_OK = 200
 
-
 Enforcement Data Collector - Fetches real enforcement actions from regulatory bodies.
 This provides REAL penalty data, not guesses.
 """
@@ -21,7 +20,6 @@ from bs4 import BeautifulSoup
 import hashlib
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
 
 class EnforcementAPIClient:
     """Fetches real enforcement data from FCA, ICO, and other regulators."""
@@ -349,7 +347,6 @@ class EnforcementAPIClient:
         logger.info('Saved enforcement data to %s' % filepath)
         return filepath
 
-
 async def test_enforcement_collector() ->Optional[Any]:
     """Test the enforcement data collector."""
     async with EnforcementAPIClient() as client:
@@ -388,7 +385,6 @@ async def test_enforcement_collector() ->Optional[Any]:
             await client.save_to_cache(all_data)
             return all_data
         return None
-
 
 if __name__ == '__main__':
     asyncio.run(test_enforcement_collector())

@@ -6,7 +6,6 @@ Runs all test methods directly to bypass pytest collection issues
 import logging
 logger = logging.getLogger(__name__)
 
-
 import asyncio
 import sys
 from pathlib import Path
@@ -29,7 +28,6 @@ from tests.test_notification_migration_tdd import (
     TestCostGovernance,
     TestComplianceAndSecurity,
 )
-
 
 class TestRunner:
     """Run all notification migration tests"""
@@ -140,7 +138,6 @@ class TestRunner:
 
         return self.failed == 0
 
-
 async def main():
     """Main entry point"""
     runner = TestRunner()
@@ -152,7 +149,6 @@ async def main():
         logger.info("\n⚠️ SOME TESTS FAILED - Review implementation")
 
     return 0 if success else 1
-
 
 if __name__ == "__main__":
     exit_code = asyncio.run(main())

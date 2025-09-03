@@ -21,7 +21,6 @@ from sqlalchemy.orm import relationship
 
 from database.db_setup import Base
 
-
 class ChatMessage(Base):
     __tablename__ = "chat_messages"
 

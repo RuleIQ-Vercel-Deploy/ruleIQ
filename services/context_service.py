@@ -27,7 +27,6 @@ from services.cache_service import CacheService
 
 logger = logging.getLogger(__name__)
 
-
 class InteractionType(str, Enum):
 #     ASSESSMENT_START = "assessment_start"  # Unused variable
 #     ASSESSMENT_CONTINUE = "assessment_continue"  # Unused variable
@@ -41,7 +40,6 @@ class InteractionType(str, Enum):
 #     AUTOMATION_DELEGATED = "automation_delegated"  # Unused variable
 #     ERROR_ENCOUNTERED = "error_encountered"  # Unused variable
 
-
 class TrustLevel(str, Enum):
 #     UNKNOWN = "unknown"  # New user, no history  # Unused variable
 #     SKEPTICAL = "skeptical"  # User questions recommendations  # Unused variable
@@ -49,13 +47,11 @@ class TrustLevel(str, Enum):
 #     TRUSTING = "trusting"  # User accepts most recommendations  # Unused variable
 #     DELEGATING = "delegating"  # User delegates tasks to system  # Unused variable
 
-
 class CommunicationStyle(str, Enum):
 #     FORMAL = "formal"  # Business formal language  # Unused variable
 #     CASUAL = "casual"  # Friendly, conversational  # Unused variable
 #     TECHNICAL = "technical"  # Technical jargon, detailed explanations  # Unused variable
 #     CONCISE = "concise"  # Brief, to-the-point responses  # Unused variable
-
 
 @dataclass
 class UserInteraction:
@@ -69,7 +65,6 @@ class UserInteraction:
     success: bool = True
     session_id: Optional[str] = None
     metadata: Optional[Dict[str, Any]] = None
-
 
 @dataclass
 class UserPattern:
@@ -86,7 +81,6 @@ class UserPattern:
     questions_per_session_avg: float
     last_updated: datetime
     confidence_score: float  # 0-1, how confident we are in the patterns
-
 
 @dataclass
 class SessionContext:
@@ -114,7 +108,6 @@ class SessionContext:
         if self.trust_signals is None:
             self.trust_signals = []
 
-
 @dataclass
 class PredictedNeed:
     """Predicted user need based on patterns"""
@@ -125,7 +118,6 @@ class PredictedNeed:
     suggested_action: str
     estimated_value: Optional[str] = None
     urgency: int = 1  # 1-10 scale
-
 
 class UserContextService:
     """
@@ -656,10 +648,8 @@ class UserContextService:
         except Exception as e:
             logger.error(f"Failed to update user patterns: {e}")
 
-
 # Global service instance
 _context_service = None
-
 
 async def get_context_service() -> UserContextService:
     """Get or create the context service instance"""

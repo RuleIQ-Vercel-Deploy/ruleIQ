@@ -9,7 +9,6 @@ import logging
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
-
 async def test_instantiation():
     """Test basic instantiation of MasterIntegrationGraph."""
 
@@ -70,7 +69,6 @@ async def test_instantiation():
 
         traceback.print_exc()
         return False
-
 
 if __name__ == "__main__":
     success = asyncio.run(test_instantiation())

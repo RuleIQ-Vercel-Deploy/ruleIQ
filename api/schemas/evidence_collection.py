@@ -11,7 +11,6 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
-
 class CollectionPlanCreate(BaseModel):
     """Request model for creating a collection plan."""
 
@@ -23,7 +22,6 @@ class CollectionPlanCreate(BaseModel):
         False, description="Include analysis of existing evidence",
     )
 
-
 class AutomationOpportunities(BaseModel):
     """Automation opportunities analysis."""
 
@@ -33,7 +31,6 @@ class AutomationOpportunities(BaseModel):
     effort_savings_hours: float
     effort_savings_percentage: float
     recommended_tools: List[str]
-
 
 class EvidenceTaskResponse(BaseModel):
     """Response model for an evidence collection task."""
@@ -54,7 +51,6 @@ class EvidenceTaskResponse(BaseModel):
     created_at: datetime
     metadata: Dict[str, Any] = {}
 
-
 class CollectionPlanResponse(BaseModel):
     """Response model for a collection plan."""
 
@@ -68,7 +64,6 @@ class CollectionPlanResponse(BaseModel):
     automation_opportunities: AutomationOpportunities
     created_at: datetime
 
-
 class CollectionPlanSummary(BaseModel):
     """Summary model for collection plan listing."""
 
@@ -81,7 +76,6 @@ class CollectionPlanSummary(BaseModel):
     status: str
     created_at: datetime
 
-
 class TaskStatusUpdate(BaseModel):
     """Request model for updating task status."""
 
@@ -91,7 +85,6 @@ class TaskStatusUpdate(BaseModel):
     )
     completion_notes: Optional[str] = Field(None, description="Notes about task completion")
 
-
 class AutomationRecommendation(BaseModel):
     """Automation recommendation for evidence collection."""
 
@@ -100,7 +93,6 @@ class AutomationRecommendation(BaseModel):
     effort_reduction: str
     success_rate: str
     recommended_tools: List[str]
-
 
 class AutomationRecommendationsResponse(BaseModel):
     """Response model for automation recommendations."""

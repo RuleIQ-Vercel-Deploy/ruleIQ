@@ -17,7 +17,6 @@ from .metrics import track_request, get_metrics_collector
 
 logger = get_logger(__name__)
 
-
 class RequestIDMiddleware(BaseHTTPMiddleware):
     """Middleware to add request ID to all requests."""
 
@@ -43,9 +42,7 @@ class RequestIDMiddleware(BaseHTTPMiddleware):
 
             return response
         finally:
-            # Clear request ID from context
             clear_request_id()
-
 
 class LoggingMiddleware(BaseHTTPMiddleware):
     """Middleware to log all requests and responses."""
@@ -106,7 +103,6 @@ class LoggingMiddleware(BaseHTTPMiddleware):
 
             raise
 
-
 class MetricsMiddleware(BaseHTTPMiddleware):
     """Middleware to collect request metrics."""
 
@@ -144,7 +140,6 @@ class MetricsMiddleware(BaseHTTPMiddleware):
             # Decrement active connections
             if active_connections:
                 active_connections.decrement()
-
 
 class PerformanceMiddleware(BaseHTTPMiddleware):
     """Middleware for performance monitoring."""
@@ -201,7 +196,6 @@ class PerformanceMiddleware(BaseHTTPMiddleware):
             )
             raise
 
-
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
     """Middleware to add security headers."""
 
@@ -230,7 +224,6 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
             )
 
         return response
-
 
 def setup_middleware(
     app: FastAPI,

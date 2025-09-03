@@ -32,7 +32,6 @@ from api.dependencies.token_blacklist import (
 )
 from middleware.jwt_auth import JWTAuthMiddleware
 
-
 class TestJWTTokenGeneration:
     """Test JWT token generation and validation."""
     
@@ -73,7 +72,6 @@ class TestJWTTokenGeneration:
         exp_time = datetime.fromtimestamp(payload["exp"], tz=timezone.utc)
         current_time = datetime.now(timezone.utc)
         
-        # Check expiry is approximately 1 minute from now
         time_diff = (exp_time - current_time).total_seconds()
         assert 55 < time_diff < 65  # Allow some margin
     
@@ -108,7 +106,6 @@ class TestJWTTokenGeneration:
         
         with pytest.raises(Exception):
             decode_token(wrong_token)
-
 
 @pytest.mark.asyncio
 class TestTokenBlacklist:
@@ -198,7 +195,6 @@ class TestTokenBlacklist:
         assert stats["current_blacklisted"] == 3
         assert stats["total_blacklisted"] == 100
         assert stats["total_checked"] == 500
-
 
 @pytest.mark.asyncio
 class TestJWTMiddleware:
@@ -379,7 +375,6 @@ class TestJWTMiddleware:
         assert result.headers["X-Content-Type-Options"] == "nosniff"
         assert result.headers["X-Frame-Options"] == "DENY"
 
-
 class TestProtectedRoutes:
     """Test that critical routes are properly protected."""
     
@@ -434,7 +429,6 @@ class TestProtectedRoutes:
         assert coverage_percentage >= 20, f"Only {coverage_percentage:.1f}% coverage, need at least 20%"
         print(f"JWT Protection Coverage: {coverage_percentage:.1f}% of routes")
 
-
 @pytest.mark.asyncio
 class TestTokenRefreshFlow:
     """Test token refresh mechanism."""
@@ -483,7 +477,6 @@ class TestTokenRefreshFlow:
         # Should be rejected (wrong token type)
         assert result.status_code == 401
 
-
 class TestSecurityBestPractices:
     """Test security best practices are followed."""
     
@@ -508,7 +501,6 @@ class TestSecurityBestPractices:
         """Test that rate limiting is properly configured."""
         assert settings.auth_rate_limit_per_minute <= 10, "Auth endpoints should have strict rate limiting"
         assert settings.rate_limit_per_minute <= 200, "General rate limit should be reasonable"
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

@@ -9,7 +9,6 @@ DEFAULT_TIMEOUT = 30
 DEFAULT_LIMIT = 100
 MAX_RETRIES = 3
 
-
 Service for calculating a quality score for each piece of evidence.
 """
 import asyncio
@@ -21,7 +20,6 @@ from config.logging_config import get_logger
 from core.exceptions import BusinessLogicException
 from database.evidence_item import EvidenceItem
 logger = get_logger(__name__)
-
 
 class QualityScorer:
     """Calculates a quality score (0-100) for evidence."""

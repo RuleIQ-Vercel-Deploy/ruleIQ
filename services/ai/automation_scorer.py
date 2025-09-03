@@ -18,7 +18,6 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
-
 class AutomationComplexity(str, Enum):
     """Automation implementation complexity levels"""
 
@@ -27,7 +26,6 @@ class AutomationComplexity(str, Enum):
     MODERATE = "moderate"  # 2-4 weeks
     COMPLEX = "complex"  # 1-2 months
     STRATEGIC = "strategic"  # 2-6 months
-
 
 class AutomationCategory(str, Enum):
     """Categories of compliance automation"""
@@ -40,7 +38,6 @@ class AutomationCategory(str, Enum):
     WORKFLOW = "workflow"  # Process automation
     INTEGRATION = "integration"  # System integration
     ANALYSIS = "analysis"  # Risk/impact analysis
-
 
 @dataclass
 class AutomationOpportunity:
@@ -61,7 +58,6 @@ class AutomationOpportunity:
     estimated_savings_annual: float = 0.0
     confidence_level: float = 0.8  # Confidence in estimates
 
-
 @dataclass
 class AutomationRoadmap:
     """Strategic roadmap for automation implementation"""
@@ -74,7 +70,6 @@ class AutomationRoadmap:
     expected_roi_months: float
     automation_coverage: float  # Percentage of regulations automated
     risk_reduction: float  # Expected risk reduction percentage
-
 
 class AutomationMetrics(BaseModel):
     """Metrics for automation scoring and analysis"""
@@ -89,7 +84,6 @@ class AutomationMetrics(BaseModel):
     roi_timeline_months: float = 0.0
     technology_stack: List[str] = Field(default_factory=list)
     coverage_by_category: Dict[str, float] = Field(default_factory=dict)
-
 
 class AutomationScorer:
     """
@@ -248,7 +242,6 @@ class AutomationScorer:
         # Calculate complexity based on multiple factors
         complexity = self._calculate_complexity(regulation, controls)
 
-        # Base automation score from regulation metadata
         base_score = regulation.get("automation_potential", 0.5)
 
         # Adjust based on control characteristics
@@ -864,13 +857,11 @@ class AutomationScorer:
             },
         }
 
-
 async def main():
     """Test the automation scorer"""
 
     # Neo4j connection details
     neo4j_uri = "bolt://localhost:7688"
-    # Security: Credentials now loaded from environment via Doppler
     neo4j_user = os.getenv("NEO4J_USER", "neo4j")
     neo4j_password = os.getenv("NEO4J_PASSWORD")
     
@@ -943,7 +934,6 @@ async def main():
                 f"  Break-even: {investment['break_even_date'][:10] if investment['break_even_date'] else 'N/A'}",
             )
             logger.info(f"  3-Year NPV: ${investment['net_present_value_3y']:,.0f}")
-
 
 if __name__ == "__main__":
     logging.basicConfig(

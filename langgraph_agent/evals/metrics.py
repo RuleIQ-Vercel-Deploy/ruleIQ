@@ -17,7 +17,6 @@ import numpy as np
 
 logger = logging.getLogger(__name__)
 
-
 @dataclass
 class EvaluationResult:
     """Container for evaluation results."""
@@ -35,7 +34,6 @@ class EvaluationResult:
             "timestamp": self.timestamp.isoformat(),
         }
 
-
 @dataclass
 class LatencyMetrics:
     """Container for latency measurements."""
@@ -51,7 +49,6 @@ class LatencyMetrics:
     def meets_slo(self, p95_threshold_ms: float = 2500) -> bool:
         """Check if P95 latency meets SLO requirement."""
         return self.p95_ms <= p95_threshold_ms
-
 
 class RecallAtKEvaluator:
     """Evaluates recall@k for compliance recommendation systems."""
@@ -111,7 +108,6 @@ class RecallAtKEvaluator:
                 )
 
         return results
-
 
 class CitationExactnessEvaluator:
     """Evaluates citation exactness for compliance responses."""
@@ -199,7 +195,6 @@ class CitationExactnessEvaluator:
             metric_name="citation_exactness", score=avg_exactness, details=details
         )
 
-
 class LinkPrecisionEvaluator:
     """Evaluates precision of legal/regulatory links in responses."""
 
@@ -276,7 +271,6 @@ class LinkPrecisionEvaluator:
         return EvaluationResult(
             metric_name="link_precision", score=precision, details=details
         )
-
 
 class CounselFPREvaluator:
     """Evaluates False Positive Rate for legal counsel recommendations."""
@@ -394,7 +388,6 @@ class CounselFPREvaluator:
             details=details,
         )
 
-
 class LatencyEvaluator:
     """Evaluates agent response latency and SLO compliance."""
 
@@ -466,7 +459,6 @@ class LatencyEvaluator:
         }
 
         return EvaluationResult(metric_name="latency_slo", score=score, details=details)
-
 
 class AgentPerformanceEvaluator:
     """Evaluates overall agent performance including success rates and error handling."""
@@ -590,7 +582,6 @@ class AgentPerformanceEvaluator:
     def clear_results(self) -> None:
         """Clear all interaction results."""
         self.interaction_results.clear()
-
 
 class ComprehensiveEvaluator:
     """Comprehensive evaluator that orchestrates all evaluation metrics."""
@@ -747,16 +738,13 @@ class ComprehensiveEvaluator:
 
         return report
 
-
 # Utility functions for evaluation data preparation
-
 
 def prepare_recall_evaluation_data(
     predictions: List[List[str]], ground_truth: List[List[str]]
 ) -> Dict[str, Any]:
     """Prepare data for recall@k evaluation."""
     return {"predicted_items": predictions, "relevant_items": ground_truth}
-
 
 def prepare_citation_evaluation_data(
     responses: List[str],
@@ -770,13 +758,11 @@ def prepare_citation_evaluation_data(
         "extracted_citations": extracted_citations,
     }
 
-
 def prepare_counsel_evaluation_data(
     responses: List[str], contexts: List[Dict[str, Any]]
 ) -> Dict[str, Any]:
     """Prepare data for counsel FPR evaluation."""
     return {"responses": responses, "contexts": contexts}
-
 
 async def run_latency_smoke_test(
     graph_function,

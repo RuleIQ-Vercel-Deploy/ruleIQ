@@ -9,7 +9,6 @@ import re
 from pathlib import Path
 from collections import Counter
 
-
 def analyze_connections() ->Optional[Tuple[Any, ...]]:
     """Analyze the connections in the HTML file."""
     with open('api-connection-map.html', 'r') as f:
@@ -107,7 +106,6 @@ def analyze_connections() ->Optional[Tuple[Any, ...]]:
     logger.info('Potential matches (with normalization): %s' %
         potential_matches)
     return stats, connected_endpoints, missing_endpoints, unused_endpoints
-
 
 if __name__ == '__main__':
     analyze_connections()

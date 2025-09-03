@@ -22,7 +22,6 @@ from main import app
 from services.iq_agent import IQComplianceAgent
 from services.neo4j_service import Neo4jGraphRAGService
 
-
 @pytest.mark.integration
 @pytest.mark.api
 class TestIQAgentEndpoints:
@@ -573,7 +572,6 @@ class TestIQAgentEndpoints:
 
         # Background task execution is verified by checking the response was successful
         # In a real test environment, you might check logs or database for task completion
-
 
 @pytest.mark.load
 @pytest.mark.asyncio

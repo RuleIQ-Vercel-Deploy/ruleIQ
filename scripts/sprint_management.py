@@ -14,13 +14,11 @@ from dataclasses import dataclass, asdict
 from enum import Enum
 import os
 
-
 class Priority(Enum):
     CRITICAL = 'CRITICAL'
     HIGH = 'HIGH'
     MEDIUM = 'MEDIUM'
     LOW = 'LOW'
-
 
 class StoryStatus(Enum):
     PENDING = 'PENDING'
@@ -28,7 +26,6 @@ class StoryStatus(Enum):
     BLOCKED = 'BLOCKED'
     TESTING = 'TESTING'
     DONE = 'DONE'
-
 
 class TaskType(Enum):
     FEATURE = 'FEATURE'
@@ -38,14 +35,12 @@ class TaskType(Enum):
     TESTING = 'TESTING'
     DOCUMENTATION = 'DOCUMENTATION'
 
-
 @dataclass
 class AcceptanceCriteria:
     """Acceptance criteria for user stories"""
     description: str
     testable: bool = True
     automated_test: Optional[str] = None
-
 
 @dataclass
 class Task:
@@ -67,7 +62,6 @@ class Task:
             self.dependencies = []
         if self.created_at is None:
             self.created_at = datetime.datetime.now()
-
 
 @dataclass
 class UserStory:
@@ -97,7 +91,6 @@ class UserStory:
         if self.created_at is None:
             self.created_at = datetime.datetime.now()
 
-
 @dataclass
 class Sprint:
     """Sprint definition with goals and capacity"""
@@ -120,7 +113,6 @@ class Sprint:
             self.stories = []
         if self.created_at is None:
             self.created_at = datetime.datetime.now()
-
 
 class SprintManager:
     """Main sprint management system"""
@@ -517,7 +509,6 @@ class SprintManager:
             logger.info('Error deserializing sprint %s: %s' % (sprint_id, e))
             return None
 
-
 def main() ->None:
     """CLI interface for sprint management"""
     import sys
@@ -569,7 +560,6 @@ def main() ->None:
                     .estimated_hours))
     elif command == 'track_progress':
         logger.info('Sprint progress tracking requires saved sprint data')
-
 
 if __name__ == '__main__':
     main()

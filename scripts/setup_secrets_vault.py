@@ -15,7 +15,6 @@ import boto3
 from typing import Dict, Any
 from botocore.exceptions import ClientError
 
-
 class SecretsVaultSetup:
     """🔐 Setup AWS Secrets Manager for RuleIQ Production"""
 
@@ -249,7 +248,6 @@ class SecretsVaultSetup:
             )
         return json.dumps(policy, indent=2)
 
-
 def main() ->None:
     """🔐 Main CLI interface for Secrets Vault Setup"""
     import argparse
@@ -282,7 +280,6 @@ def main() ->None:
         setup.create_iam_policy()
     else:
         setup.setup_vault(update_if_exists=args.update)
-
 
 if __name__ == '__main__':
     main()

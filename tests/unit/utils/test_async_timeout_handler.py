@@ -11,7 +11,6 @@ import pytest
 from unittest.mock import AsyncMock, MagicMock, patch
 from datetime import timedelta
 
-
 class TestAsyncTimeoutHandler:
     """Test suite for async timeout handler."""
 
@@ -86,7 +85,6 @@ class TestAsyncTimeoutHandler:
         with pytest.raises(TimeoutError):
             sync_with_timeout(hanging_sync_operation, timeout=0.5)
 
-
 class TestConnectionCleanup:
     """Test suite for database/Redis connection cleanup."""
 
@@ -147,7 +145,6 @@ class TestConnectionCleanup:
         mock_db.close.assert_called_once()
         mock_redis.close.assert_called_once()
 
-
 class TestTestTimeout:
     """Test suite for test-level timeout decorator."""
 
@@ -176,7 +173,6 @@ class TestTestTimeout:
             return 'should_timeout'
         assert hasattr(hanging_test, 'pytestmark')
 
-
 class TestMockResponseFix:
     """Test suite for fixing generic mock responses."""
 
@@ -198,7 +194,6 @@ class TestMockResponseFix:
             'user', 'content': 'compliance question'}])
         assert response.choices[0].message.content != 'Mock OpenAI response'
         assert 'compliance' in response.choices[0].message.content.lower()
-
 
 class TestPortConfiguration:
     """Test suite for environment-aware port configuration."""

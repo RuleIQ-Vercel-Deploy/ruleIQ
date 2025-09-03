@@ -8,12 +8,9 @@ from sqlalchemy import text
 from dotenv import load_dotenv
 import os
 
-# Load environment variables from .env.local
 load_dotenv(".env.local")
 
-# Get the database URL from the environment
 DATABASE_URL = os.getenv("DATABASE_URL")
-
 
 async def test_connection() -> None:
     """Tests the database connection and prints detailed error information."""
@@ -34,7 +31,6 @@ async def test_connection() -> None:
         logger.info("Database connection successful!")
     except Exception as e:
         logger.info(f"Database connection failed: {e}")
-
 
 if __name__ == "__main__":
     asyncio.run(test_connection())

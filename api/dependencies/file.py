@@ -30,14 +30,12 @@ except ImportError:
     logger.warning(
         'python-magic not available. Using fallback MIME type detection.')
 
-
 class ValidationResult(Enum):
     """Validation result status."""
     CLEAN = 'clean'
     SUSPICIOUS = 'suspicious'
     MALICIOUS = 'malicious'
     QUARANTINED = 'quarantined'
-
 
 @dataclass
 class FileAnalysisReport:
@@ -53,7 +51,6 @@ class FileAnalysisReport:
     threats_detected: List[str]
     recommendations: List[str]
     validation_time: float
-
 
 FILE_SIGNATURES = {'application/pdf': [b'%PDF'], 'image/jpeg': [
     b'\xff\xd8\xff'], 'image/png': [b'\x89PNG\r\n\x1a\n'], 'image/gif': [
@@ -71,7 +68,6 @@ DANGEROUS_EXTENSIONS = ['.exe', '.dll', '.scr', '.bat', '.cmd', '.com',
 MALWARE_BYTE_PATTERNS = [b'MZ\x90\x00', b'\x7fELF', b'\xca\xfe\xba\xbe',
     b'<?php', b'<%@', b'<script', b'eval(', b'base64_decode', b'shell_exec',
     b'system(', b'exec(']
-
 
 def detect_mime_type_fallback(file_content: bytes, filename: str='') ->str:
     """
@@ -102,7 +98,6 @@ def detect_mime_type_fallback(file_content: bytes, filename: str='') ->str:
         pass
     return 'application/octet-stream'
 
-
 def get_file_mime_type(file_content: bytes, filename: str='') ->str:
     """
     Get MIME type using python-magic if available, otherwise use fallback detection.
@@ -116,11 +111,9 @@ def get_file_mime_type(file_content: bytes, filename: str='') ->str:
     else:
         return detect_mime_type_fallback(file_content, filename)
 
-
 TYPE_SIZE_LIMITS = {'image/jpeg': 10 * 1024 * 1024, 'image/png': 10 * 1024 *
     1024, 'image/gif': 5 * 1024 * 1024, 'application/pdf': 50 * 1024 * 1024,
     'text/csv': 10 * 1024 * 1024, 'text/plain': 5 * 1024 * 1024}
-
 
 def sanitize_filename(filename: str) ->str:
     """Sanitize filename to prevent security issues."""
@@ -132,7 +125,6 @@ def sanitize_filename(filename: str) ->str:
         name = name[:100]
     filename = name + ext
     return filename
-
 
 def validate_file_content(file_content: bytes, content_type: str, filename:
     str='') ->bool:
@@ -156,7 +148,6 @@ def validate_file_content(file_content: bytes, content_type: str, filename:
         return False
     return True
 
-
 def check_for_malicious_content(file_content: bytes, filename: str) ->bool:
     """Check for potentially malicious content patterns."""
     _, ext = os.path.splitext(filename.lower())
@@ -179,7 +170,6 @@ def check_for_malicious_content(file_content: bytes, filename: str) ->bool:
         except (OSError, KeyError, IndexError):
             pass
     return True
-
 
 def analyze_file_comprehensively(file_content: bytes, filename: str,
     content_type: str) ->FileAnalysisReport:
@@ -270,7 +260,6 @@ def analyze_file_comprehensively(file_content: bytes, filename: str,
         threats_detected=threats_detected, recommendations=recommendations,
         validation_time=validation_time)
 
-
 def get_file_validator(max_size: int=None, allowed_types: List[str]=None,
     enable_content_validation: bool=True, enable_malware_check: bool=True,
     security_level: str='standard') ->callable:
@@ -339,11 +328,9 @@ def get_file_validator(max_size: int=None, allowed_types: List[str]=None,
         return file, analysis_report
     return validator
 
-
 def calculate_file_hash(content: bytes) ->str:
     """Calculate SHA-256 hash of file content."""
     return hashlib.sha256(content).hexdigest()
-
 
 def get_safe_upload_path(filename: str, upload_dir: str=None) ->Path:
     """Get a safe upload path preventing directory traversal."""
@@ -355,7 +342,6 @@ def get_safe_upload_path(filename: str, upload_dir: str=None) ->Path:
     if not str(file_path.resolve()).startswith(str(upload_path)):
         raise ValueError('Invalid file path')
     return file_path
-
 
 def quarantine_file(file_content: bytes, analysis_report: FileAnalysisReport
     ) ->str:
@@ -386,7 +372,6 @@ def quarantine_file(file_content: bytes, analysis_report: FileAnalysisReport
     logger.warning('File quarantined: %s - %s' % (quarantine_filename,
         analysis_report.threats_detected))
     return str(quarantine_path)
-
 
 class EnhancedFileValidator:
     """Enhanced file validator with advanced security features."""

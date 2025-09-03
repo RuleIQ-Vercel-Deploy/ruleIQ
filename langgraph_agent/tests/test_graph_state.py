@@ -15,7 +15,6 @@ from langgraph_agent.graph.state import (
 )
 from langgraph_agent.core.models import SafeFallbackResponse
 
-
 class TestCreateInitialState:
     """Test initial state creation."""
 
@@ -70,7 +69,6 @@ class TestCreateInitialState:
         assert before_creation <= state["last_updated"] <= after_creation
         assert before_creation <= state["messages"][0].timestamp <= after_creation
 
-
 class TestUpdateStateMetadata:
     """Test state metadata updates."""
 
@@ -97,7 +95,6 @@ class TestUpdateStateMetadata:
 
         assert updated_state["company_id"] == original_company_id
         assert len(updated_state["messages"]) == len(original_messages)
-
 
 class TestAddErrorToState:
     """Test error handling in state."""
@@ -132,7 +129,6 @@ class TestAddErrorToState:
         assert state["error_count"] == 2
         assert state["errors"][0].error_message == "First error"
         assert state["errors"][1].error_message == "Second error"
-
 
 class TestShouldInterrupt:
     """Test interrupt logic."""
@@ -178,7 +174,6 @@ class TestShouldInterrupt:
         state = create_initial_state(company_id=uuid4(), user_input="Test")
 
         assert should_interrupt(state, "any_node") is False
-
 
 class TestGetStateSummary:
     """Test state summary generation."""

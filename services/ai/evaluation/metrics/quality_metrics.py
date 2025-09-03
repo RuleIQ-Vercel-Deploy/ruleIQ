@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import Any, Dict, List
 from pydantic import BaseModel
 
-
 def dataset_quality_summary(dataset: List[BaseModel]) -> Dict[str, Any]:
     """Calculate quality metrics for dataset.
 

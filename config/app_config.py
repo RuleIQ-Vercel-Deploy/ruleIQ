@@ -34,7 +34,6 @@ else:
              % e, exc_info=True)
         cipher_suite = None
 
-
 def get_cipher_suite() ->(Fernet | None):
     """Returns the initialized Fernet cipher suite."""
     if cipher_suite is None:

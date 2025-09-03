@@ -17,7 +17,6 @@ from services.ai.assistant import ComplianceAssistant
 from services.ai.circuit_breaker import AICircuitBreaker
 from services.ai.exceptions import ModelUnavailableException
 
-
 class TestAIOptimizationEndpoints:
     """Integration tests for AI optimization endpoints."""
 

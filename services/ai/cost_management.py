@@ -20,18 +20,14 @@ import redis
 from config.settings import settings
 logger = get_logger(__name__)
 
-
 class UsageType(Enum):
     """Types of AI usage for categorization."""
-
 
 class AlertType(Enum):
     """Types of cost alerts."""
 
-
 class OptimizationStrategy(Enum):
     """Cost optimization strategies."""
-
 
 @dataclass
 class ModelCostConfig:
@@ -104,7 +100,6 @@ class ModelCostConfig:
             context_window=16385, max_output_tokens=4096)}
         return configs.get(model_name, configs['gpt-4-turbo'])
 
-
 @dataclass
 class AIUsageMetrics:
     """Metrics for a single AI usage event."""
@@ -161,7 +156,6 @@ class AIUsageMetrics:
             cache_hit or other.cache_hit, error_occurred=self.
             error_occurred or other.error_occurred)
 
-
 @dataclass
 class CostMetrics:
     """Aggregated cost metrics for a time period."""
@@ -189,7 +183,6 @@ class CostMetrics:
             return Decimal('0')
         return self.total_cost / Decimal(self.total_tokens)
 
-
 @dataclass
 class BudgetAlert:
     """Budget alert notification."""
@@ -202,7 +195,6 @@ class BudgetAlert:
     timestamp: datetime = field(default_factory=datetime.now)
     metadata: Dict[str, Any] = field(default_factory=dict)
 
-
 @dataclass
 class CostOptimization:
     """Cost optimization recommendation."""
@@ -213,7 +205,6 @@ class CostOptimization:
     implementation_effort: str
     priority: str
     metadata: Dict[str, Any] = field(default_factory=dict)
-
 
 class CostTrackingService:
     """Core service for tracking AI usage and costs."""
@@ -447,7 +438,6 @@ class CostTrackingService:
                 threshold * 1.5 else 'medium'})
         return anomalies
 
-
 class BudgetAlertService:
     """Service for managing budgets and generating alerts."""
 
@@ -557,7 +547,6 @@ class BudgetAlertService:
                 current_usage=usage.total_cost, budget_limit=service_budget,
                 service_name=service_name))
         return alerts
-
 
 class CostOptimizationService:
     """Service for analyzing usage patterns and recommending optimizations."""
@@ -707,7 +696,6 @@ class CostOptimizationService:
             'total_cost', Decimal('0')), 'projected_monthly_savings': 
             total_potential_savings * 30, 'payback_period_days': 30}}
 
-
 class AICostManager:
     """Main orchestrator for AI cost management."""
 
@@ -839,7 +827,6 @@ class AICostManager:
             'daily_breakdown': daily_breakdown, 'service_analysis': {},
             'optimization_opportunities': optimization_report}
 
-
 class IntelligentModelRouter:
     """Routes requests to optimal models based on task complexity and cost."""
 
@@ -879,7 +866,6 @@ class IntelligentModelRouter:
             f'Selected based on task complexity ({complexity_score:.2f}) and cost constraints',
             }
 
-
 class DynamicCacheManager:
     """Manages dynamic caching decisions based on cost-benefit analysis."""
 
@@ -889,7 +875,6 @@ class DynamicCacheManager:
         frequency = request_data.get('frequency', 1)
         cache_threshold = Decimal('0.05')
         return estimated_cost * Decimal(frequency) > cache_threshold
-
 
 class PromptOptimizer:
     """Optimizes prompts to reduce token usage while maintaining quality."""
@@ -905,7 +890,6 @@ class PromptOptimizer:
         for verbose, concise in replacements.items():
             compressed = compressed.replace(verbose, concise)
         return compressed.strip()
-
 
 class BatchRequestOptimizer:
     """Optimizes multiple requests through batching."""
@@ -923,7 +907,6 @@ class BatchRequestOptimizer:
         return {'batched': True, 'combined_prompt': combined_prompt,
             'cost_savings': individual_cost - batch_cost, 'original_count':
             len(requests)}
-
 
 class CostAnalyticsDashboard:
     """Generates executive-level cost analytics and dashboards."""
@@ -943,7 +926,6 @@ class CostAnalyticsDashboard:
             'implemented_savings': current_month * Decimal('0.1')},
             'budget_utilization': {'percentage_used': 75.5,
             'projected_month_end': current_month * Decimal('1.33')}}
-
 
 class CostAttributionAnalyzer:
     """Analyzes cost attribution across multiple dimensions."""
@@ -969,7 +951,6 @@ class CostAttributionAnalyzer:
             'High usage of premium models for simple tasks',
             'Lack of caching for repeated policy templates',
             'Inefficient prompt engineering leading to higher token usage']}
-
 
 class PredictiveCostModeler:
     """Provides predictive modeling for future cost estimation."""

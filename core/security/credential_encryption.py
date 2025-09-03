@@ -17,21 +17,17 @@ from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 class CredentialEncryptionError(Exception):
     """Base exception for credential encryption errors"""
     pass
-
 
 class InvalidEncryptionKeyError(CredentialEncryptionError):
     """Raised when encryption key is invalid or missing"""
     pass
 
-
 class CredentialDecryptionError(CredentialEncryptionError):
     """Raised when credential decryption fails"""
     pass
-
 
 class CredentialEncryption:
     """
@@ -254,9 +250,7 @@ class CredentialEncryption:
             return {'status': 'unhealthy', 'error': str(e), 'timestamp':
                 datetime.now(timezone.utc).isoformat()}
 
-
 _encryption_instance: Optional[CredentialEncryption] = None
-
 
 def get_credential_encryption() ->CredentialEncryption:
     """
@@ -269,7 +263,6 @@ def get_credential_encryption() ->CredentialEncryption:
     if _encryption_instance is None:
         _encryption_instance = CredentialEncryption()
     return _encryption_instance
-
 
 def encrypt_credentials(credentials: Dict[str, Any]) ->str:
     """
@@ -284,7 +277,6 @@ def encrypt_credentials(credentials: Dict[str, Any]) ->str:
     encryption = get_credential_encryption()
     return encryption.encrypt_credentials(credentials)
 
-
 def decrypt_credentials(encrypted_creds: str) ->Dict[str, Any]:
     """
     Convenience function to decrypt credentials using global instance
@@ -297,7 +289,6 @@ def decrypt_credentials(encrypted_creds: str) ->Dict[str, Any]:
     """
     encryption = get_credential_encryption()
     return encryption.decrypt_credentials(encrypted_creds)
-
 
 def verify_encryption_health() ->Dict[str, Any]:
     """

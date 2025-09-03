@@ -22,7 +22,6 @@ from api.dependencies.file import EnhancedFileValidator
 from core.security.credential_encryption import CredentialEncryption
 client = TestClient(app)
 
-
 class TestSecurityFixes:
     """Test suite for security vulnerability fixes"""
 
@@ -93,7 +92,6 @@ class TestSecurityFixes:
         from database.query_optimization import QueryOptimizer
         optimizer = QueryOptimizer()
 
-
 class TestPerformanceFixes:
     """Test suite for performance optimization fixes"""
 
@@ -112,7 +110,6 @@ class TestPerformanceFixes:
         """Test caching is properly implemented"""
         assert settings.redis_url is not None
 
-
 class TestIntegrationFixes:
     """Test suite for integration fixes"""
 
@@ -127,7 +124,6 @@ class TestIntegrationFixes:
         from api.utils.error_handlers import RuleIQException
         assert issubclass(ValidationException, RuleIQException)
         assert issubclass(AuthenticationException, RuleIQException)
-
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

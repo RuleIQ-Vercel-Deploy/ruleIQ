@@ -6,7 +6,6 @@ OAuth2 configuration for integrations
 
 from pydantic import BaseSettings
 
-
 class OAuth2Config(BaseSettings):
     """OAuth2 configuration for various providers"""
 
@@ -72,6 +71,5 @@ class OAuth2Config(BaseSettings):
             base_url = "https://login.microsoftonline.com/common/oauth2/v2.0/authorize"
 
         return f"{base_url}?{urlencode(params)}"
-
 
 oauth2_config = OAuth2Config()

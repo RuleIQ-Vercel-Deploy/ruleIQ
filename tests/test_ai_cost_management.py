@@ -27,7 +27,6 @@ from services.ai.cost_management import (
     OptimizationStrategy,
 )
 
-
 class TestAIUsageMetrics:
     """Test AI usage metrics calculation and tracking."""
 
@@ -119,7 +118,6 @@ class TestAIUsageMetrics:
         expected = Decimal("0.85") / (Decimal("0.002") / Decimal("1500"))
         assert efficiency == expected
 
-
 class TestModelCostConfig:
     """Test model cost configuration management."""
 
@@ -172,7 +170,6 @@ class TestModelCostConfig:
         assert config.provider == "custom"
         assert config.input_cost_per_million == Decimal("5.00")
         assert config.output_cost_per_million == Decimal("10.00")
-
 
 class TestCostTrackingService:
     """Test core cost tracking functionality."""
@@ -289,7 +286,6 @@ class TestCostTrackingService:
         assert len(anomalies) >= 1
         assert any(anomaly["cost"] > Decimal("0.5") for anomaly in anomalies)
 
-
 class TestBudgetAlertService:
     """Test budget monitoring and alert functionality."""
 
@@ -385,7 +381,6 @@ class TestBudgetAlertService:
 
         assert len(alerts) >= 1
         assert alerts[0].alert_type == AlertType.SERVICE_BUDGET_WARNING
-
 
 class TestCostOptimizationService:
     """Test cost optimization recommendations and strategies."""
@@ -500,7 +495,6 @@ class TestCostOptimizationService:
         assert "total_potential_savings" in report
         assert "priority_recommendations" in report
         assert len(report["optimizations"]) > 0
-
 
 class TestAICostManager:
     """Test the main AI cost management orchestrator."""
@@ -678,7 +672,6 @@ class TestAICostManager:
         assert "confidence_interval" in forecast
         assert "trend_analysis" in forecast
 
-
 class TestCostOptimizationStrategies:
     """Test specific cost optimization strategies."""
 
@@ -783,7 +776,6 @@ class TestCostOptimizationStrategies:
         assert batch_result["cost_savings"] > 0
         assert len(batch_result["combined_prompt"]) > 0
 
-
 class TestCostReportingAndAnalytics:
     """Test cost reporting and analytics functionality."""
 
@@ -862,7 +854,6 @@ class TestCostReportingAndAnalytics:
         assert "cost_drivers" in prediction
         assert "recommended_budget" in prediction
 
-
 # Integration tests with real AI services
 class TestIntegrationWithAIServices:
     """Test integration with actual AI services."""
@@ -923,7 +914,6 @@ class TestIntegrationWithAIServices:
 
         alerts = await cost_manager.check_budget_alerts()
         assert len(alerts) > 0
-
 
 if __name__ == "__main__":
     pytest.main([__file__])

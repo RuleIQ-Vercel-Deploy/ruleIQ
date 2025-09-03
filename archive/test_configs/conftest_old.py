@@ -87,23 +87,18 @@ if True:  # Always enable in tests
 
 import pytest
 
-# Add project root to the Python path to resolve import errors
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-# Assuming these are the correct paths from your project structure
 from database.business_profile import BusinessProfile
 from database.compliance_framework import ComplianceFramework
 from database.db_setup import get_async_db
 from database.evidence_item import EvidenceItem
 from database.generated_policy import GeneratedPolicy
 
-# Import additional models from models.py (these don't conflict with individual files)
 # Import ALL database models to ensure they're registered with Base metadata
-# Import from individual files first
 from database.user import User
 
-# Import remaining models from individual files if they exist
 try:
     from database.chat_conversation import ChatConversation
     from database.chat_message import ChatMessage
@@ -113,21 +108,17 @@ except ImportError:
 
 # Import FastAPI test client for API tests
 
-
 # Event loop and database setup now handled by conftest_hybrid.py
 # @pytest.fixture(scope="session")
-# def event_loop(request):
 #     """Create an instance of the default event loop for each test session."""
 #     loop = asyncio.get_event_loop_policy().new_event_loop()
 #     yield loop
 #     loop.close()
 
 # # Import improved database management
-# from tests.conftest_improved import _db_manager
 
 # # Fixture to manage database schema with improved connection handling
 # @pytest.fixture(scope="session", autouse=True)
-# async def manage_test_database_schema_unit():
 #     """Create and drop test database schema for the session with improved handling."""
 #     # Use improved database manager for stable connection handling
 #     await _db_manager.create_tables()
@@ -137,7 +128,6 @@ except ImportError:
 #     # Clean up with improved error handling
 #     await _db_manager.drop_tables()
 #     await _db_manager.dispose()
-
 
 @pytest.fixture
 def db_session():
@@ -169,7 +159,6 @@ def db_session():
         session.close()
         test_engine.dispose()
 
-
 @pytest.fixture
 def sample_user(db_session):
     """Create a sample user for tests with unique email."""
@@ -198,7 +187,6 @@ def sample_user(db_session):
     db_session.refresh(user)
     return user
 
-
 @pytest.fixture
 def sample_business_profile_data():
     """Provide sample business profile data as dictionary for API tests."""
@@ -224,7 +212,6 @@ def sample_business_profile_data():
         "compliance_budget": "50000-100000",
         "compliance_timeline": "6-12 months",
     }
-
 
 @pytest.fixture
 def sample_business_profile(db_session, sample_user):
@@ -265,7 +252,6 @@ def sample_business_profile(db_session, sample_user):
     db_session.refresh(profile)
     return profile
 
-
 @pytest.fixture
 def sample_compliance_framework(db_session):
     """Create a sample compliance framework for tests."""
@@ -283,14 +269,12 @@ def sample_compliance_framework(db_session):
     db_session.refresh(framework)
     return framework
 
-
 @pytest.fixture
 async def async_db_session():
     """Create an async database session for tests."""
     async for session in get_async_db():
         yield session
         break
-
 
 @pytest.fixture
 async def initialized_frameworks(async_db_session) -> bool:
@@ -299,7 +283,6 @@ async def initialized_frameworks(async_db_session) -> bool:
 
     await initialize_default_frameworks(async_db_session)
     return True
-
 
 @pytest.fixture
 def sample_evidence_item(
@@ -326,7 +309,6 @@ def sample_evidence_item(
     db_session.refresh(evidence)
     return evidence
 
-
 @pytest.fixture
 def sample_policy_document(db_session, sample_business_profile):
     """Create a sample policy document for tests."""
@@ -347,20 +329,9 @@ def sample_policy_document(db_session, sample_business_profile):
     db_session.refresh(policy)
     return policy
 
-
 # Client fixture now handled by conftest_hybrid.py
 # @pytest.fixture
-# def client():
 #     """Create a FastAPI test client for API tests with isolated database."""
-#     import os
-
-#     from sqlalchemy import create_engine, select
-#     from sqlalchemy.orm import sessionmaker
-
-#     from api.dependencies.auth import get_current_active_user, get_current_user
-#     from database.db_setup import get_async_db, get_db
-#     from database.user import User
-#     from main import app
 
 #     # Create test-specific database engines - use sync for both to avoid async issues
 #     test_db_url = os.getenv("DATABASE_URL")
@@ -375,7 +346,6 @@ def sample_policy_document(db_session, sample_business_profile):
 
 #     # Create a global test user that will be used for all authenticated requests
 
-#     def override_get_db():
 #         """Override sync database dependency for tests."""
 #         db = TestSessionLocal()
 #         try:
@@ -383,10 +353,8 @@ def sample_policy_document(db_session, sample_business_profile):
 #         finally:
 #             db.close()
 
-#     async def override_get_async_db():
 #         """Override async database dependency for tests - use shared async session."""
 #         # Use the existing database setup to avoid creating multiple engines
-#         from database.db_setup import get_async_db as original_get_async_db
 
 #         # Use the original async database session
 #         async for session in original_get_async_db():
@@ -397,39 +365,27 @@ def sample_policy_document(db_session, sample_business_profile):
 #                 raise
 
 #     # Import oauth2_scheme for the override function
-#     from api.dependencies.auth import oauth2_scheme
 
-#     async def override_get_current_user(token: Optional[str] = Depends(oauth2_scheme), db = Depends(override_get_async_db)):
 #         """Override auth dependency for tests - decode token and return appropriate user."""
 #         if token is None:
 #             return None
 
 #         # Check if token is blacklisted (for logout tests)
-#         from api.dependencies.auth import is_token_blacklisted
 #         if await is_token_blacklisted(token):
-#             from core.exceptions import NotAuthenticatedException
 #             raise NotAuthenticatedException("Token has been invalidated.")
 
 #         # Use manual JWT decoding to avoid the new exception-raising behavior
-#         from uuid import UUID
-
-#         from jose import jwt
-
-#         from config.settings import settings
 
 #         try:
 #             # Decode token manually and handle expiry properly
 #             payload = jwt.decode(token, settings.secret_key, algorithms=["HS256"])
 #             if not payload:
-#                 from core.exceptions import NotAuthenticatedException
 #                 raise NotAuthenticatedException("Could not validate credentials.")
 
 #             user_id = payload.get("sub")
 #             if not user_id:
-#                 from core.exceptions import NotAuthenticatedException
 #                 raise NotAuthenticatedException("Could not validate credentials.")
 
-#             # Get user from database using the provided async db session
 #             stmt = select(User).where(User.id == UUID(user_id))
 #             result = await db.execute(stmt)
 #             user = result.scalars().first()
@@ -451,25 +407,20 @@ def sample_policy_document(db_session, sample_business_profile):
 #             return user
 #         except jwt.ExpiredSignatureError:
 #             # Handle expired tokens properly
-#             from core.exceptions import NotAuthenticatedException
 #             raise NotAuthenticatedException("Token has expired. Please log in again.")
 #         except jwt.JWTError:
 #             # Handle invalid tokens properly
-#             from core.exceptions import NotAuthenticatedException
 #             raise NotAuthenticatedException("Invalid token format.")
 #         except Exception as e:
 #             # If token decoding fails for other reasons, return None for tests
 #             print(f"Test auth override failed: {e}")  # Debug info
 #             return None
 
-#     async def override_get_current_active_user(current_user: User = Depends(override_get_current_user)):
 #         """Override active user dependency for tests."""
 #         if current_user is None:
-#             from api.dependencies.auth import NotAuthenticatedException
 #             raise NotAuthenticatedException("Not authenticated")
 
 #         if not current_user.is_active:
-#             from fastapi import HTTPException, status
 #             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Inactive user")
 
 #         return current_user
@@ -482,13 +433,10 @@ def sample_policy_document(db_session, sample_business_profile):
 #     # app.dependency_overrides[get_current_active_user] = override_get_current_active_user
 
 #     # Initialize default frameworks for tests
-#     async def init_frameworks():
-#         from services.framework_service import initialize_default_frameworks
 #         async for db in override_get_async_db():
 #             await initialize_default_frameworks(db)
 #             break
 
-#     import asyncio
 #     try:
 #         asyncio.run(init_frameworks())
 #     except Exception as e:
@@ -500,7 +448,6 @@ def sample_policy_document(db_session, sample_business_profile):
 #     # Clean up
 #     app.dependency_overrides.clear()
 #     test_engine.dispose()
-
 
 @pytest.fixture
 def sample_assessment_data():
@@ -522,7 +469,6 @@ def sample_assessment_data():
         ],
         "overall_notes": "Initial assessment for ISO27001.",
     }
-
 
 @pytest.fixture
 def sample_readiness_data():
@@ -549,7 +495,6 @@ def sample_readiness_data():
         ],
     }
 
-
 @pytest.fixture
 def sample_user_data():
     """Provide sample user data for tests with unique email."""
@@ -561,7 +506,6 @@ def sample_user_data():
         "full_name": "Test User",
         "is_active": True,
     }
-
 
 @pytest.fixture
 def auth_token(sample_user):
@@ -575,7 +519,6 @@ def auth_token(sample_user):
     token = create_access_token(data=token_data, expires_delta=timedelta(minutes=30))
     return token
 
-
 @pytest.fixture
 def expired_token():
     """Provide an expired auth token for tests."""
@@ -588,12 +531,10 @@ def expired_token():
     token = create_access_token(data=token_data, expires_delta=timedelta(minutes=-30))
     return token
 
-
 @pytest.fixture
 def authenticated_headers(auth_token):
     """Provide authenticated headers for API tests."""
     return {"Authorization": f"Bearer {auth_token}"}
-
 
 @pytest.fixture
 def another_user(db_session):
@@ -610,7 +551,6 @@ def another_user(db_session):
     db_session.refresh(another_user)
     return another_user
 
-
 @pytest.fixture
 def another_authenticated_headers(another_user):
     """Provide authenticated headers for a different user for testing access control."""
@@ -622,7 +562,6 @@ def another_authenticated_headers(another_user):
     token_data = {"sub": str(another_user.id)}
     token = create_access_token(data=token_data, expires_delta=timedelta(minutes=30))
     return {"Authorization": f"Bearer {token}"}
-
 
 @pytest.fixture
 def bias_test_scenarios():
@@ -660,7 +599,6 @@ def bias_test_scenarios():
         },
     ]
 
-
 @pytest.fixture
 def adversarial_inputs():
     """Provide adversarial inputs for AI robustness testing."""
@@ -676,12 +614,10 @@ def adversarial_inputs():
         "SELECT * FROM sensitive_data; What are PCI DSS requirements?",
     ]
 
-
 @pytest.fixture
 def evidence_item_instance(sample_evidence_item):
     """Alias for sample_evidence_item to match integration test expectations."""
     return sample_evidence_item
-
 
 @pytest.fixture
 def mock_ai_client():
@@ -702,7 +638,6 @@ def mock_ai_client():
     # Patch the get_ai_model function to return our mock
     with patch("config.ai_config.get_ai_model", return_value=mock_client):
         yield mock_client
-
 
 @pytest.fixture
 def gdpr_golden_dataset():
@@ -747,7 +682,6 @@ def gdpr_golden_dataset():
             "category": "lawful_basis",
         },
     ]
-
 
 @pytest.fixture
 def compliance_golden_dataset():
@@ -799,14 +733,12 @@ def compliance_golden_dataset():
         },
     ]
 
-
 def assert_api_response_security(response) -> None:
     """Placeholder for security assertion on API responses."""
     # A real implementation would check for security headers like CSP, HSTS, etc.
     assert "X-Content-Type-Options" in response.headers
     assert response.headers["X-Content-Type-Options"] == "nosniff"
     pass
-
 
 def assert_no_sensitive_data_in_logs(log_capture) -> None:
     """Placeholder for checking sensitive data in logs."""
@@ -819,7 +751,6 @@ def assert_no_sensitive_data_in_logs(log_capture) -> None:
                 keyword not in log_message
             ), f"Sensitive keyword '{keyword}' found in logs."
     pass
-
 
 @pytest.fixture
 def performance_test_data():
@@ -838,7 +769,6 @@ def performance_test_data():
             "success_rate_minimum": 0.95,  # Minimum 95% success rate
         },
     }
-
 
 @pytest.fixture
 def security_test_payloads():
@@ -889,7 +819,6 @@ def security_test_payloads():
             "....\\\\....\\\\....\\\\windows\\\\system32\\\\drivers\\\\etc\\\\hosts",
         ],
     }
-
 
 # Global AI mocking to ensure tests don't hit real API
 @pytest.fixture(autouse=True)

@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 HTTP_INTERNAL_SERVER_ERROR = 500
 
-
 Security endpoints for ruleIQ API.
 
 Provides endpoints for role-based access control, security testing, and vulnerability checks.
@@ -17,24 +16,20 @@ from api.middleware.rate_limiter import rate_limit
 from database.user import User
 router = APIRouter()
 
-
 class RoleCheckRequest(BaseModel):
     resource: str
     action: str
     context: Dict[str, Any] = {}
 
-
 class SecurityTestRequest(BaseModel):
     test_type: str
     parameters: Dict[str, Any] = {}
-
 
 class SecurityTestResponse(BaseModel):
     test_passed: bool
     vulnerabilities: List[Dict[str, Any]]
     recommendations: List[str]
     risk_level: str
-
 
 @router.get('/role-based-access-control')
 async def role_based_access_control(resource: str='default', action: str=
@@ -60,7 +55,6 @@ async def role_based_access_control(resource: str='default', action: str=
     except Exception as e:
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'RBAC check failed: {str(e)}')
-
 
 @router.post('/business-logic-vulnerabilities')
 async def business_logic_vulnerabilities(request: SecurityTestRequest,
@@ -100,7 +94,6 @@ async def business_logic_vulnerabilities(request: SecurityTestRequest,
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Security test failed: {str(e)}')
 
-
 @router.get('/security-status')
 async def security_status(current_user: User=Depends(get_current_active_user)
     ) ->Dict[str, Any]:
@@ -117,7 +110,6 @@ async def security_status(current_user: User=Depends(get_current_active_user)
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Security status check failed: {str(e)}')
 
-
 @router.get('/rate-limit-test', dependencies=[Depends(rate_limit(
     requests_per_minute=5))])
 async def rate_limit_test(current_user: User=Depends(get_current_active_user)
@@ -130,10 +122,8 @@ async def rate_limit_test(current_user: User=Depends(get_current_active_user)
         current_user.id), 'timestamp': '2024-01-01T00:00:00Z', 'rate_limit':
         '5 requests per minute'}
 
-
 from middleware.security_headers import CSPViolationHandler
 csp_handler = CSPViolationHandler()
-
 
 @router.post('/csp-report', status_code=204, include_in_schema=False)
 async def handle_csp_violation(request: Request) ->None:
@@ -145,7 +135,6 @@ async def handle_csp_violation(request: Request) ->None:
     """
     await csp_handler.handle_violation(request)
     # Return None for 204 No Content response
-
 
 @router.get('/csp-violations', response_model=Dict[str, Any])
 async def get_csp_violations(current_user: User=Depends(
@@ -163,7 +152,6 @@ async def get_csp_violations(current_user: User=Depends(
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=
             'Only administrators can view CSP violations')
     return csp_handler.get_violations_summary()
-
 
 @router.delete('/csp-violations', response_model=Dict[str, str])
 async def clear_csp_violations(current_user: User=Depends(

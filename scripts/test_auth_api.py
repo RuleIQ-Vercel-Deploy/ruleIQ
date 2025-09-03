@@ -6,14 +6,12 @@ HTTP_BAD_REQUEST = 400
 HTTP_CREATED = 201
 HTTP_OK = 200
 
-
 Authenticated API Test Script
 Tests ruleIQ API endpoints with proper authentication.
 """
 import asyncio
 import aiohttp
 from typing import Dict, Optional
-
 
 class APITester:
 
@@ -97,7 +95,6 @@ class APITester:
             print(f'❌ {method} {endpoint} - Error: {e}')
             return False
 
-
 async def main():
     """Run authenticated API tests."""
     print('🔐 Testing ruleIQ API with Authentication')
@@ -119,7 +116,6 @@ async def main():
         print(
             f'\n📊 Results: {success_count}/{len(endpoints_to_test)} endpoints working'
             )
-
 
 if __name__ == '__main__':
     asyncio.run(main())

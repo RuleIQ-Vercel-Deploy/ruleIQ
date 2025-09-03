@@ -14,7 +14,6 @@ from services.redis_client import get_redis_client
 from database.db_setup import get_db
 logger = logging.getLogger(__name__)
 
-
 class APIKeyAuthMiddleware(BaseHTTPMiddleware):
     """
     Middleware for API key authentication on specific routes.
@@ -105,7 +104,6 @@ class APIKeyAuthMiddleware(BaseHTTPMiddleware):
             if path.startswith(prefix):
                 return scope
         return None
-
 
 def get_api_key_from_request(request: Request) ->Optional[str]:
     """Extract API key from request headers."""

@@ -40,7 +40,6 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(tags=["Chat Assistant"])
 
-
 @router.post("/conversations", response_model=dict)
 async def create_conversation(
     request: CreateConversationRequest,
@@ -232,7 +231,6 @@ async def create_conversation(
         logger.error(f"Unexpected error creating conversation: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to create conversation")
 
-
 @router.get("/conversations", response_model=ConversationListResponse)
 async def list_conversations(
     page: int = Query(1, ge=1),
@@ -301,7 +299,6 @@ async def list_conversations(
         logger.error(f"Error listing conversations: {e}")
         raise HTTPException(status_code=500, detail="Failed to list conversations")
 
-
 @router.get("/conversations/{conversation_id}", response_model=ConversationResponse)
 async def get_conversation(
     conversation_id: UUID,
@@ -343,7 +340,6 @@ async def get_conversation(
     except Exception as e:
         logger.error(f"Error getting conversation: {e}")
         raise HTTPException(status_code=500, detail="Failed to get conversation")
-
 
 @router.post("/conversations/{conversation_id}/messages", response_model=MessageResponse)
 async def send_message(
@@ -434,7 +430,6 @@ async def send_message(
         logger.error(f"Error sending message: {e}")
         raise HTTPException(status_code=500, detail="Failed to send message")
 
-
 @router.delete("/conversations/{conversation_id}")
 async def delete_conversation(
     conversation_id: UUID,
@@ -467,7 +462,6 @@ async def delete_conversation(
         logger.error(f"Error deleting conversation: {e}")
         raise HTTPException(status_code=500, detail="Failed to delete conversation")
 
-
 @router.post("/evidence-recommendations", response_model=List[EvidenceRecommendationResponse])
 async def get_evidence_recommendations(
     request: EvidenceRecommendationRequest,
@@ -498,7 +492,6 @@ async def get_evidence_recommendations(
     except Exception as e:
         logger.error(f"Error getting evidence recommendations: {e}")
         raise HTTPException(status_code=500, detail="Failed to get recommendations")
-
 
 @router.post("/compliance-analysis", response_model=ComplianceAnalysisResponse)
 async def analyze_compliance_gap(
@@ -531,7 +524,6 @@ async def analyze_compliance_gap(
     except Exception as e:
         logger.error(f"Error analyzing compliance gap: {e}")
         raise HTTPException(status_code=500, detail="Failed to analyze compliance gap")
-
 
 @router.post("/context-aware-recommendations")
 async def get_context_aware_recommendations(
@@ -573,7 +565,6 @@ async def get_context_aware_recommendations(
         logger.error(f"Error getting context-aware recommendations: {e}")
         raise HTTPException(status_code=500, detail="Failed to get context-aware recommendations")
 
-
 @router.post("/evidence-collection-workflow")
 async def generate_evidence_collection_workflow(
     framework: str = Query(..., min_length=1, description="Framework for workflow generation"),
@@ -613,7 +604,6 @@ async def generate_evidence_collection_workflow(
         raise HTTPException(
             status_code=500, detail="Failed to generate evidence collection workflow",
         )
-
 
 async def generate_customized_policy(
     framework: str = Query(..., description="Framework for policy generation"),
@@ -667,7 +657,6 @@ async def generate_customized_policy(
     except Exception as e:
         logger.error(f"Error generating customized policy: {e}")
         raise HTTPException(status_code=500, detail="Failed to generate customized policy")
-
 
 @router.get("/smart-guidance/{framework}")
 async def get_smart_compliance_guidance(
@@ -742,11 +731,9 @@ async def get_smart_compliance_guidance(
         logger.error(f"Error getting smart compliance guidance: {e}")
         raise HTTPException(status_code=500, detail="Failed to get smart compliance guidance")
 
-
 # REMOVED: Duplicate endpoint
 # REMOVED: Duplicate endpoint
 # # @router.get("/cache/metrics")
-# # async def get_ai_cache_metrics(current_user: User = Depends(get_current_active_user)):
 # #     """
 # #     Get AI response cache performance metrics including:
 # #     - Cache hit rate and performance statistics
@@ -754,7 +741,6 @@ async def get_smart_compliance_guidance(
 # #     - Cache size and efficiency metrics
 # #     """
 # #     try:
-# #         from services.ai.response_cache import get_ai_cache
 # #
 #
 #         ai_cache = await get_ai_cache()
@@ -769,7 +755,6 @@ async def get_smart_compliance_guidance(
 #     except Exception as e:
 #         logger.error(f"Error getting cache metrics: {e}")
 #         raise HTTPException(status_code=500, detail="Failed to get cache metrics")
-
 
 @router.delete("/cache/clear")
 async def clear_ai_cache(
@@ -795,7 +780,6 @@ async def clear_ai_cache(
     except Exception as e:
         logger.error(f"Error clearing cache: {e}")
         raise HTTPException(status_code=500, detail="Failed to clear cache")
-
 
 @router.get("/performance/metrics")
 async def get_ai_performance_metrics(
@@ -830,7 +814,6 @@ async def get_ai_performance_metrics(
     except Exception as e:
         logger.error(f"Error getting performance metrics: {e}")
         raise HTTPException(status_code=500, detail="Failed to get performance metrics")
-
 
 @router.post("/performance/optimize")
 async def optimize_ai_performance(
@@ -871,7 +854,6 @@ async def optimize_ai_performance(
         logger.error(f"Error updating performance settings: {e}")
         raise HTTPException(status_code=500, detail="Failed to update performance settings")
 
-
 @router.get("/analytics/dashboard")
 async def get_analytics_dashboard(
     current_user: User = Depends(get_current_active_user),
@@ -895,7 +877,6 @@ async def get_analytics_dashboard(
     except Exception as e:
         logger.error(f"Error getting analytics dashboard: {e}")
         raise HTTPException(status_code=500, detail="Failed to get analytics dashboard")
-
 
 @router.get("/analytics/usage")
 async def get_usage_analytics(
@@ -921,7 +902,6 @@ async def get_usage_analytics(
         logger.error(f"Error getting usage analytics: {e}")
         raise HTTPException(status_code=500, detail="Failed to get usage analytics")
 
-
 @router.get("/analytics/cost")
 async def get_cost_analytics(
     days: int = Query(default=30, description="Number of days to analyze"),
@@ -945,7 +925,6 @@ async def get_cost_analytics(
     except Exception as e:
         logger.error(f"Error getting cost analytics: {e}")
         raise HTTPException(status_code=500, detail="Failed to get cost analytics")
-
 
 @router.get("/analytics/alerts")
 async def get_system_alerts(
@@ -971,7 +950,6 @@ async def get_system_alerts(
     except Exception as e:
         logger.error(f"Error getting system alerts: {e}")
         raise HTTPException(status_code=500, detail="Failed to get system alerts")
-
 
 @router.post("/analytics/alerts/{alert_id}/resolve")
 async def resolve_system_alert(
@@ -1000,7 +978,6 @@ async def resolve_system_alert(
     except Exception as e:
         logger.error(f"Error resolving alert: {e}")
         raise HTTPException(status_code=500, detail="Failed to resolve alert")
-
 
 @router.post("/smart-evidence/create-plan")
 async def create_smart_evidence_plan(
@@ -1077,7 +1054,6 @@ async def create_smart_evidence_plan(
         logger.error(f"Error creating smart evidence plan: {e}")
         raise HTTPException(status_code=500, detail="Failed to create smart evidence plan")
 
-
 @router.get("/smart-evidence/plan/{id}")
 async def get_smart_evidence_plan(id: str, current_user: User = Depends(get_current_active_user)):
     """
@@ -1123,7 +1099,6 @@ async def get_smart_evidence_plan(id: str, current_user: User = Depends(get_curr
         logger.error(f"Error getting smart evidence plan: {e}")
         raise HTTPException(status_code=500, detail="Failed to get smart evidence plan")
 
-
 @router.get("/smart-evidence/next-tasks/{id}")
 async def get_next_priority_tasks(
     id: str,
@@ -1162,7 +1137,6 @@ async def get_next_priority_tasks(
     except Exception as e:
         logger.error(f"Error getting next priority tasks: {e}")
         raise HTTPException(status_code=500, detail="Failed to get next priority tasks")
-
 
 @router.post("/smart-evidence/update-task/{plan_id}/{task_id}")
 async def update_evidence_task_status(
@@ -1209,11 +1183,9 @@ async def update_evidence_task_status(
         logger.error(f"Error updating task status: {e}")
         raise HTTPException(status_code=500, detail="Failed to update task status")
 
-
 # REMOVED: Duplicate endpoint
 # REMOVED: Duplicate endpoint
 # # @router.get("/quality/trends")
-# # async def get_quality_trends(
 # #     days: int = Query(default=30, description="Number of days to analyze"),
 # #     current_user: User = Depends(get_current_active_user),
 # # ):
@@ -1227,7 +1199,6 @@ async def update_evidence_task_status(
 # #     - Performance benchmarks
 # #     """
 # #     try:
-# #         from services.ai.quality_monitor import get_quality_monitor
 # #
 # #         monitor = await get_quality_monitor()
 # #         trends = await monitor.get_quality_trends(days)
@@ -1240,7 +1211,6 @@ async def update_evidence_task_status(
 # #
 # #
 # # @router.post("/quality/feedback")
-# # async def submit_quality_feedback(
 # #     response_id: str = Query(..., description="Response ID to provide feedback for"),
 # #     feedback_type: str = Query(..., description="Type of feedback"),
 # #     rating: Optional[float] = Query(None, description="Rating (1-5 scale)"),
@@ -1258,7 +1228,6 @@ async def update_evidence_task_status(
 # #     - improvement_suggestion: Specific improvement suggestions
 # #     """
 # #     try:
-# #         from services.ai.quality_monitor import FeedbackType, ResponseFeedback, get_quality_monitor
 # #
 # #         # Validate feedback type
 # #         try:
@@ -1303,12 +1272,10 @@ async def update_evidence_task_status(
 # #
 # #
 # # @router.get("/quality/assessment/{response_id}")
-# # async def get_quality_assessment(response_id: str, current_user: User = Depends(get_current_active_user)):
 # #     """
 # #     Get detailed quality assessment for a specific AI response.
 # #     """
 # #     try:
-# #         from services.ai.quality_monitor import get_quality_monitor
 # #
 # #         monitor = await get_quality_monitor()
 # #
@@ -1343,7 +1310,6 @@ async def update_evidence_task_status(
 # #         logger.error(f"Error getting quality assessment: {e}")
 # #         raise HTTPException(status_code=500, detail="Failed to get quality assessment")
 # #
-
 
 @router.post("/compliance-gap-analysis", summary="Analyze compliance gaps")
 async def compliance_gap_analysis(
@@ -1387,7 +1353,6 @@ async def compliance_gap_analysis(
         "estimated_remediation_time": "3-6 months",
         "generated_at": datetime.now(timezone.utc).isoformat(),
     }
-
 
 @router.get("/smart-compliance-guidance", summary="Get smart compliance guidance")
 async def get_smart_compliance_guidance_endpoint(
@@ -1449,7 +1414,6 @@ async def get_smart_compliance_guidance_endpoint(
         "generated_at": datetime.now(timezone.utc).isoformat(),
     }
 
-
 @router.delete("/cache/clear", summary="Clear AI cache")
 async def clear_cache_with_pattern(
     pattern: str = Query(..., description="Cache pattern to clear"),
@@ -1468,7 +1432,6 @@ async def clear_cache_with_pattern(
         "message": f"Successfully cleared {cleared_count} cache entries matching pattern '{pattern}'",
         "cleared_at": datetime.now(timezone.utc).isoformat(),
     }
-
 
 @router.get("/quality/metrics")
 async def get_quality_metrics(current_user: User = Depends(get_current_active_user)):
@@ -1495,11 +1458,9 @@ async def get_quality_metrics(current_user: User = Depends(get_current_active_us
         logger.error(f"Error getting quality metrics: {e}")
         raise HTTPException(status_code=500, detail="Failed to get quality metrics")
 
-
 # Global IQ agent instance (shared with iq_agent router)
 _iq_agent: Optional[IQComplianceAgent] = None
 _neo4j_service: Optional[Neo4jGraphRAGService] = None
-
 
 async def get_iq_agent_for_chat(db: AsyncSession) -> IQComplianceAgent:
     """Get or create IQ agent instance for chat"""
@@ -1521,7 +1482,6 @@ async def get_iq_agent_for_chat(db: AsyncSession) -> IQComplianceAgent:
             return None
 
     return _iq_agent
-
 
 @router.post("/iq-chat/{conversation_id}/messages", response_model=MessageResponse)
 async def send_iq_message(
@@ -1570,7 +1530,6 @@ async def send_iq_message(
                 # Process with IQ Agent's GraphRAG capabilities
                 logger.info(f"Processing message with IQ Agent for conversation {conversation_id}")
 
-                # Build context from business profile
                 business_context = await iq_agent.retrieve_business_context(str(current_user.id))
 
                 # Process query through IQ Agent
@@ -1586,7 +1545,6 @@ async def send_iq_message(
                 # Extract response text
                 response_text = result.get("llm_response", "")
 
-                # Add metadata from IQ processing
                 metadata = {
                     "timestamp": datetime.now(timezone.utc).isoformat(),
                     "iq_agent": True,
@@ -1682,7 +1640,6 @@ async def send_iq_message(
         await db.rollback()
         logger.error(f"Error sending IQ message: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to send message")
-
 
 @router.get("/iq-agent/status")
 async def get_iq_agent_status(

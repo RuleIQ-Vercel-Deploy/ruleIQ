@@ -22,7 +22,6 @@ import uuid
 
 from database.db_setup import Base
 
-
 class APIKey(Base):
     """API Key model for B2B integrations"""
 
@@ -74,7 +73,6 @@ class APIKey(Base):
         Index("idx_api_keys_expires", "expires_at"),
     )
 
-
 class APIKeyScope(Base):
     """API Key scope/permission model"""
 
@@ -95,7 +93,6 @@ class APIKeyScope(Base):
     __table_args__ = (
         Index("idx_api_key_scopes_key_scope", "key_id", "scope", unique=True),
     )
-
 
 class APIKeyUsage(Base):
     """API Key usage tracking model"""

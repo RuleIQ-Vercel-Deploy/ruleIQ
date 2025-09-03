@@ -10,7 +10,6 @@ from pathlib import Path
 from typing import Optional, List, Dict, Any
 from dataclasses import dataclass, asdict
 
-
 def is_semver(v: str) -> bool:
     """Check if string is valid semantic version (strict X.Y.Z format).
 
@@ -26,7 +25,6 @@ def is_semver(v: str) -> bool:
     # Use \A and \Z for absolute string boundaries (no whitespace allowed)
     pattern = r"\A(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)\Z"
     return bool(re.match(pattern, v))
-
 
 class DatasetVersion:
     """Semantic version for datasets."""
@@ -103,7 +101,6 @@ class DatasetVersion:
         """Create new version with incremented major number (resets minor and patch)."""
         return DatasetVersion(f"{self.major + 1}.0.0")
 
-
 @dataclass
 class VersionMetadata:
     """Metadata for a dataset version."""
@@ -127,7 +124,6 @@ class VersionMetadata:
         data = data.copy()
         data["created_at"] = datetime.fromisoformat(data["created_at"])
         return cls(**data)
-
 
 class VersionManager:
     """Manage dataset versions."""

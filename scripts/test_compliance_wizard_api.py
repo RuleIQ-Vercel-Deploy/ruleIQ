@@ -5,14 +5,12 @@ from __future__ import annotations
 HTTP_CREATED = 201
 HTTP_OK = 200
 
-
 Test the compliance wizard API integration with corrected routes.
 Verifies that the frontend can successfully connect to backend APIs.
 """
 from typing import Any, Dict, List, Optional
 import asyncio
 import aiohttp
-
 
 class ComplianceWizardTester:
 
@@ -160,7 +158,6 @@ class ComplianceWizardTester:
                 print(f'❌ Compliance check failed: {response.status} - {text}')
                 return None
 
-
 async def main():
     """Run the complete compliance wizard API test."""
     print('🧙\u200d♂️ ruleIQ Compliance Wizard API Integration Test')
@@ -189,7 +186,6 @@ async def main():
         print('  ✓ Compliance Status API')
         print('  ✓ Compliance Check API (main integration)')
         print('\n💡 The compliance wizard should now work correctly!')
-
 
 if __name__ == '__main__':
     asyncio.run(main())

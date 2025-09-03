@@ -33,7 +33,6 @@ from tests.utils.auth_test_utils import TestAuthManager
 
 # create_test_assessment is not implemented yet
 
-
 @pytest.mark.integration
 @pytest.mark.api
 class TestComprehensiveAPIWorkflows:
@@ -574,7 +573,6 @@ class TestComprehensiveAPIWorkflows:
                 "warnings" in assessment
                 or assessment.get("external_data_available") == False,
             )
-
 
 @pytest.mark.integration
 @pytest.mark.performance

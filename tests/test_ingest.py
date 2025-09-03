@@ -9,12 +9,10 @@ from neo4j import GraphDatabase
 os.environ["NEO4J_URI"] = "bolt://localhost:7688"
 os.environ["NEO4J_PASSWORD"] = "ruleiq123"
 
-# Now import after setting env vars
 from services.ai.evaluation.tools.ingest_docs import (
     ManifestProcessor,
     GoldenDatasetBuilder,
 )
-
 
 def test_connection():
     """Test Neo4j connection."""
@@ -27,7 +25,6 @@ def test_connection():
         print(f"Neo4j connection failed: {e}")
     finally:
         driver.close()
-
 
 def ingest_documents():
     """Ingest priority documents."""
@@ -73,7 +70,6 @@ def ingest_documents():
                 print("❌ Failed to ingest into Neo4j")
         else:
             print("Failed to process document")
-
 
 if __name__ == "__main__":
     print("Testing Neo4j connection...")

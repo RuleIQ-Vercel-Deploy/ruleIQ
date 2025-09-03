@@ -5,7 +5,6 @@ from __future__ import annotations
 CONFIDENCE_THRESHOLD = 0.8
 DEFAULT_RETRIES = 5
 
-
 Integration utilities for system instructions with performance monitoring
 
 This module provides integration between the instruction template system,
@@ -17,7 +16,6 @@ from config.logging_config import get_logger
 from .instruction_monitor import InstructionMetricType, get_instruction_monitor
 from .instruction_templates import SystemInstructionTemplates, get_system_instruction
 logger = get_logger(__name__)
-
 
 class InstructionManager:
     """
@@ -325,9 +323,7 @@ class InstructionManager:
         weight_sum += 0.1
         return score / weight_sum if weight_sum > 0 else 0.0
 
-
 instruction_manager = InstructionManager()
-
 
 def get_instruction_manager() ->InstructionManager:
     """Get the global instruction manager instance"""

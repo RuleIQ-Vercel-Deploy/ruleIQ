@@ -35,7 +35,6 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 import pytest
 
-
 class IntegrationTestRunner:
     """Manages execution of integration test suites"""
 
@@ -266,7 +265,6 @@ class IntegrationTestRunner:
             json.dump(results, f, indent=2, default=str)
         logger.info('📄 JSON results saved to: %s' % json_path)
 
-
 async def main():
     """Main execution function"""
     parser = argparse.ArgumentParser(description='Run ruleIQ integration tests'
@@ -328,7 +326,6 @@ async def main():
     except Exception as e:
         logger.info('\n❌ Test execution failed: %s' % e)
         sys.exit(1)
-
 
 if __name__ == '__main__':
     asyncio.run(main())

@@ -10,7 +10,6 @@ from config.settings import settings
 
 _redis_client: Optional[redis.Redis] = None
 
-
 async def get_redis_client() -> redis.Redis:
     """Get Redis client instance"""
     global _redis_client

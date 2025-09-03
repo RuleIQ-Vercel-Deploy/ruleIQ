@@ -11,7 +11,6 @@ import sys
 import os
 from typing import Optional
 
-
 def run_sql_command(sql, database="postgres", user="postgres"):
     """Run a SQL command using psql."""
     try:
@@ -30,7 +29,6 @@ def run_sql_command(sql, database="postgres", user="postgres"):
     except Exception as e:
         print(f"✗ SQL command failed: {e}")
         return False, str(e)
-
 
 def setup_test_database() -> Optional[bool]:
     """Set up the test database and user."""
@@ -94,7 +92,6 @@ def setup_test_database() -> Optional[bool]:
     except Exception as e:
         print(f"✗ Test connection error: {e}")
         return False
-
 
 if __name__ == "__main__":
     success = setup_test_database()

@@ -17,7 +17,6 @@ NEO4J_URI = os.getenv('NEO4J_URI', 'bolt://localhost:7687')
 NEO4J_USERNAME = os.getenv('NEO4J_USERNAME', 'neo4j')
 NEO4J_PASSWORD = os.getenv('NEO4J_PASSWORD', 'please_change')
 
-
 class ComplianceGraphInitializer:
     """Initialize Neo4j with compliance graph data."""
 
@@ -314,7 +313,6 @@ class ComplianceGraphInitializer:
         if self.driver:
             self.driver.close()
 
-
 def main() ->None:
     """Initialize Neo4j compliance graph."""
     logger.info('=' * 60)
@@ -353,7 +351,6 @@ def main() ->None:
         sys.exit(1)
     finally:
         initializer.close()
-
 
 if __name__ == '__main__':
     main()

@@ -13,7 +13,6 @@ from services.ai import ComplianceAssistant
 from sqlalchemy.future import select
 import uuid
 
-
 async def debug_ai_chat() ->None:
     """Debug the AI chat conversation creation by testing each step"""
     async for db in get_async_db():
@@ -83,7 +82,6 @@ async def debug_ai_chat() ->None:
             import traceback
             traceback.print_exc()
             break
-
 
 if __name__ == '__main__':
     asyncio.run(debug_ai_chat())

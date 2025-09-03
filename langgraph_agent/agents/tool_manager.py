@@ -22,7 +22,6 @@ from ..core.models import SafeFallbackResponse
 
 logger = logging.getLogger(__name__)
 
-
 class ToolCategory(str, Enum):
     """Tool categories for organization."""
 
@@ -35,7 +34,6 @@ class ToolCategory(str, Enum):
     INTEGRATION = "integration"
     UTILITY = "utility"
 
-
 class ToolPriority(str, Enum):
     """Tool execution priority levels."""
 
@@ -43,7 +41,6 @@ class ToolPriority(str, Enum):
     MEDIUM = "medium"
     HIGH = "high"
     CRITICAL = "critical"
-
 
 @dataclass
 class ToolResult:
@@ -69,7 +66,6 @@ class ToolResult:
             "metadata": self.metadata,
         }
 
-
 @dataclass
 class ToolError(Exception):
     """Custom tool execution error."""
@@ -93,7 +89,6 @@ class ToolError(Exception):
             company_id=company_id,
             thread_id=thread_id,
         )
-
 
 class BaseComplianceTool(BaseTool, ABC):
     """
@@ -210,7 +205,6 @@ class BaseComplianceTool(BaseTool, ABC):
         """Execute the tool logic. Must be implemented by subclasses."""
         pass
 
-
 class ComplianceAnalysisTool(BaseComplianceTool):
     """Tool for analyzing compliance requirements."""
 
@@ -247,7 +241,6 @@ class ComplianceAnalysisTool(BaseComplianceTool):
         }
 
         return analysis
-
 
 class DocumentRetrievalTool(BaseComplianceTool):
     """Tool for retrieving relevant documents and templates."""
@@ -296,7 +289,6 @@ class DocumentRetrievalTool(BaseComplianceTool):
 
         return documents
 
-
 class EvidenceCollectionTool(BaseComplianceTool):
     """Tool for collecting and organizing compliance evidence."""
 
@@ -339,7 +331,6 @@ class EvidenceCollectionTool(BaseComplianceTool):
         }
 
         return evidence
-
 
 class ReportGenerationTool(BaseComplianceTool):
     """Tool for generating compliance reports."""
@@ -392,7 +383,6 @@ class ReportGenerationTool(BaseComplianceTool):
         }
 
         return report
-
 
 class ToolManager:
     """
@@ -515,7 +505,6 @@ class ToolManager:
             args = step.get("args", [])
             kwargs = step.get("kwargs", {})
 
-            # Inject context from previous results
             if "use_context" in step:
                 for key in step["use_context"]:
                     if key in context:

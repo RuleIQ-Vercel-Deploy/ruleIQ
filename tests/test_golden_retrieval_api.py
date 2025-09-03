@@ -12,7 +12,6 @@ HTTP_OK = 200
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-
 def test_health_check(base_url: str='http://localhost:8001') ->bool:
     """Test the health check endpoint."""
     print('🏥 Testing Health Check...')
@@ -31,7 +30,6 @@ def test_health_check(base_url: str='http://localhost:8001') ->bool:
     except (json.JSONDecodeError, requests.RequestException, ValueError) as e:
         print(f'  ❌ Health check error: {e}')
         return False
-
 
 def test_ingestion(base_url: str='http://localhost:8001') ->bool:
     """Test the ingestion endpoint."""
@@ -59,7 +57,6 @@ def test_ingestion(base_url: str='http://localhost:8001') ->bool:
     except (OSError, json.JSONDecodeError, requests.RequestException) as e:
         print(f'  ❌ Ingestion error: {e}')
         return False
-
 
 def test_search(base_url: str='http://localhost:8001') ->bool:
     """Test the search endpoint."""
@@ -96,7 +93,6 @@ def test_search(base_url: str='http://localhost:8001') ->bool:
             all_successful = False
     return all_successful
 
-
 def test_statistics(base_url: str='http://localhost:8001') ->bool:
     """Test the statistics endpoint."""
     print('\n📊 Testing Statistics...')
@@ -121,7 +117,6 @@ def test_statistics(base_url: str='http://localhost:8001') ->bool:
         print(f'  ❌ Statistics error: {e}')
         return False
 
-
 def test_clear_dataset(base_url: str='http://localhost:8001') ->bool:
     """Test clearing the dataset."""
     print('\n🗑️  Testing Dataset Clear...')
@@ -138,7 +133,6 @@ def test_clear_dataset(base_url: str='http://localhost:8001') ->bool:
     except (json.JSONDecodeError, requests.RequestException, ValueError) as e:
         print(f'  ❌ Clear error: {e}')
         return False
-
 
 def main():
     """Run all API tests."""
@@ -178,7 +172,6 @@ def main():
     else:
         print('\n⚠️ Some tests failed.')
         return 1
-
 
 if __name__ == '__main__':
     sys.exit(main())

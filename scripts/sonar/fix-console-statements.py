@@ -8,7 +8,6 @@ import os
 import re
 import glob
 
-
 def fix_console_statements(content) ->Tuple[Any, ...]:
     """Replace console statements with appropriate alternatives"""
     patterns_and_replacements = [(
@@ -32,7 +31,6 @@ def fix_console_statements(content) ->Tuple[Any, ...]:
             modified = True
             content = new_content
     return content, modified
-
 
 def process_files() ->Any:
     """Process all TypeScript/JavaScript files in the frontend directory"""
@@ -60,7 +58,6 @@ def process_files() ->Any:
     logger.info('\nProcessed %s files' % files_processed)
     logger.info('Modified %s files' % files_modified)
     return files_modified
-
 
 if __name__ == '__main__':
     logger.info('🔧 Fixing console statements...')

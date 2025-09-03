@@ -27,7 +27,6 @@ ROUTE_MAPPINGS = {'/api/v1/ai/assessments': '/api/v1/ai-assessments',
     '/api/v1/integrations', '/api/v1/reporting/reports':
     '/api/v1/reporting/reports'}
 
-
 def find_api_service_files() ->List[Path]:
     """Find all API service files in the frontend."""
     frontend_path = Path('frontend/lib/api')
@@ -40,7 +39,6 @@ def find_api_service_files() ->List[Path]:
         logger.info('   - %s' % f)
     return service_files
 
-
 def find_hook_files() ->List[Path]:
     """Find all TanStack Query hook files."""
     hooks_path = Path('frontend/lib/tanstack-query/hooks')
@@ -52,7 +50,6 @@ def find_hook_files() ->List[Path]:
     for f in hook_files:
         logger.info('   - %s' % f)
     return hook_files
-
 
 def update_api_routes_in_file(file_path: Path, route_mappings: Dict[str, str]
     ) ->bool:
@@ -83,7 +80,6 @@ def update_api_routes_in_file(file_path: Path, route_mappings: Dict[str, str]
         logger.info('❌ Error updating %s: %s' % (file_path, e))
         return False
 
-
 def update_debug_analysis_tool() ->bool:
     """Update the debug analysis tool with correct route mappings."""
     debug_file = Path('debug_api_analysis.py')
@@ -107,7 +103,6 @@ def update_debug_analysis_tool() ->bool:
     except Exception as e:
         logger.info('❌ Error updating debug analysis: %s' % e)
         return False
-
 
 def create_auth_test_script() ->None:
     """Create a script to test endpoints with proper authentication."""
@@ -257,7 +252,6 @@ if __name__ == "__main__":
     script_path.chmod(493)
     logger.info('✅ Created authenticated API test script: test_auth_api.py')
 
-
 def main() ->None:
     """Main execution function."""
     logger.info('🔧 ruleIQ API Route Fixing Script')
@@ -289,7 +283,6 @@ def main() ->None:
     logger.info('2. Run: python debug_api_analysis.py (to verify fixed routes)',
         )
     logger.info('3. Test frontend compliance wizard integration')
-
 
 if __name__ == '__main__':
     main()

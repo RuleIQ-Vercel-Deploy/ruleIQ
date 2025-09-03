@@ -14,7 +14,6 @@ from typing import Any, Dict, Optional
 
 from services.ai.exceptions import AIServiceException
 
-
 class FallbackLevel(Enum):
     """Levels of fallback degradation"""
 
@@ -23,7 +22,6 @@ class FallbackLevel(Enum):
 #     CACHED = "cached"  # Use cached responses  # Unused variable
 #     TEMPLATE = "template"  # Use response templates  # Unused variable
 #     COMPREHENSIVE = "comprehensive"  # Full fallback system  # Unused variable
-
 
 @dataclass
 class FallbackResponse:
@@ -45,7 +43,6 @@ class FallbackResponse:
             "metadata": self.metadata,
             "fallback": True,
         }
-
 
 class FallbackTemplateManager:
     """Manages fallback response templates"""
@@ -281,7 +278,6 @@ We apologize for the inconvenience and are working to restore full service quick
             metadata=template["metadata"],
         )
 
-
 class CacheManager:
     """Manages cached AI responses for fallback use"""
 
@@ -363,7 +359,6 @@ class CacheManager:
 
         if expired_keys:
             self.logger.info(f"Cleared {len(expired_keys)} expired cache entries")
-
 
 class FallbackSystem:
     """
@@ -459,7 +454,6 @@ class FallbackSystem:
             return self.template_manager.get_assessment_help_fallback(framework)
 
         elif operation == "assessment_recommendations":
-            # Determine risk level from context
             risk_level = context.get("risk_level", "medium")
             return self.template_manager.get_recommendations_fallback(risk_level)
 
@@ -520,10 +514,8 @@ class FallbackSystem:
         self.cache_manager.clear_expired_cache()
         self.logger.info("Fallback system maintenance completed")
 
-
 # Global fallback system instance
 _fallback_system: Optional[FallbackSystem] = None
-
 
 def get_fallback_system(
     fallback_level: FallbackLevel = FallbackLevel.COMPREHENSIVE,
@@ -533,7 +525,6 @@ def get_fallback_system(
     if _fallback_system is None:
         _fallback_system = FallbackSystem(fallback_level)
     return _fallback_system
-
 
 def reset_fallback_system() -> None:
     """Reset global fallback system (for testing)"""

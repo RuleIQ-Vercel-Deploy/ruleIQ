@@ -24,7 +24,6 @@ import sys
 from colorama import init, Fore, Style
 init(autoreset=True)
 
-
 class EndpointValidator:
 
     def __init__(self, base_url: str='http://localhost:8000'):
@@ -312,7 +311,6 @@ class EndpointValidator:
         self.test_freemium_flow()
         self.test_data_persistence()
         self.generate_report()
-
 
 if __name__ == '__main__':
     validator = EndpointValidator()

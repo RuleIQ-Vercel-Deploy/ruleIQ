@@ -8,7 +8,6 @@ from sqlalchemy.orm import relationship
 
 from .db_setup import Base
 
-
 class BusinessProfile(Base):
     """Business profile information for compliance assessment"""
 

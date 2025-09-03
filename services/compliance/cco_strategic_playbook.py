@@ -5,7 +5,6 @@ from __future__ import annotations
 HALF_RATIO = 0.5
 MAX_RETRIES = 3
 
-
 CCO Strategic Playbook Integration (2025-2030)
 Implements strategic compliance planning and executive capabilities
 """
@@ -21,7 +20,6 @@ import pandas as pd
 from pydantic import BaseModel, Field
 logger = logging.getLogger(__name__)
 
-
 class StrategicPriority(Enum):
     """Strategic priority levels"""
     CRITICAL = 'critical'
@@ -30,7 +28,6 @@ class StrategicPriority(Enum):
     LOW = 'low'
     MONITORING = 'monitoring'
 
-
 class MaturityLevel(Enum):
     """Compliance maturity levels"""
     INITIAL = 1
@@ -38,7 +35,6 @@ class MaturityLevel(Enum):
     DEFINED = 3
     MANAGED = 4
     OPTIMIZING = 5
-
 
 @dataclass
 class StrategicInitiative:
@@ -55,7 +51,6 @@ class StrategicInitiative:
     risks: List[str]
     owner: str
     status: str = 'planned'
-
 
 @dataclass
 class ComplianceRoadmap:
@@ -80,7 +75,6 @@ class ComplianceRoadmap:
         if not self.phases:
             return datetime.now()
         return datetime.now() + timedelta(days=len(self.phases) * 365)
-
 
 class CCOStrategicPlaybook:
     """

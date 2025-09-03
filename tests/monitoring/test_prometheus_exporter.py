@@ -16,7 +16,6 @@ import aiohttp
 from prometheus_client import CollectorRegistry, Counter, Gauge, Histogram, Summary, generate_latest, CONTENT_TYPE_LATEST
 from app.core.monitoring.prometheus_exporter import PrometheusMetricsExporter, MetricsHTTPServer, PrometheusFormatter, MetricTypeMapper, LabelSanitizer
 
-
 class TestPrometheusFormatter:
     """Test Prometheus metrics formatting."""
 
@@ -106,7 +105,6 @@ class TestPrometheusFormatter:
             ) == 'metric_name'
         assert self.formatter.sanitize_metric_name('123metric') == '_123metric'
 
-
 class TestLabelSanitizer:
     """Test label sanitization for Prometheus compliance."""
 
@@ -146,7 +144,6 @@ class TestLabelSanitizer:
         assert 'valid_label' in sanitized
         assert sanitized['_123metric'] == 'value\\nwith\\nnewlines'
 
-
 class TestMetricTypeMapper:
     """Test mapping between different metric type systems."""
 
@@ -177,7 +174,6 @@ class TestMetricTypeMapper:
         invalid_types = ['meter', 'timer', 'custom', 'unknown']
         for metric_type in invalid_types:
             assert not self.mapper.is_valid_prometheus_type(metric_type)
-
 
 class TestMetricsHTTPServer:
     """Test the HTTP server for serving Prometheus metrics."""
@@ -274,7 +270,6 @@ class TestMetricsHTTPServer:
                 assert 'error' in content.lower()
         await server.shutdown()
 
-
 class TestPrometheusMetricsExporter:
     """Test the main Prometheus metrics exporter."""
 
@@ -354,7 +349,6 @@ class TestPrometheusMetricsExporter:
     def test_custom_collector_integration(self):
         """Test integrating custom collectors with the exporter."""
         from prometheus_client.core import CounterMetricFamily
-
 
         class CustomCollector:
 

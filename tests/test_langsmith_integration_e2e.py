@@ -14,9 +14,7 @@ import logging
 from config.langsmith_config import LangSmithConfig, with_langsmith_tracing
 from langgraph_agent.graph.unified_state import UnifiedComplianceState
 
-
 logger = logging.getLogger(__name__)
-
 
 class MockEvidenceNode:
     """Mock evidence node with LangSmith tracing."""
@@ -35,7 +33,6 @@ class MockEvidenceNode:
         state["evidence_validated"] = True
         return state
 
-
 class MockComplianceNode:
     """Mock compliance node with LangSmith tracing."""
 
@@ -47,7 +44,6 @@ class MockComplianceNode:
         await asyncio.sleep(0.01)  # Simulate processing time
         return state
 
-
 class MockRAGNode:
     """Mock RAG node with LangSmith tracing."""
 
@@ -57,7 +53,6 @@ class MockRAGNode:
         state["documents_retrieved"] = ["doc1", "doc2", "doc3"]
         await asyncio.sleep(0.01)  # Simulate retrieval time
         return state
-
 
 @pytest.mark.asyncio
 class TestLangSmithIntegrationE2E:
@@ -280,7 +275,6 @@ class TestLangSmithIntegrationE2E:
             assert len(traced_operations) == 2
             assert any("nested.outer" in tag for tag in traced_operations[0]["tags"])
             assert any("nested.inner" in tag for tag in traced_operations[1]["tags"])
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

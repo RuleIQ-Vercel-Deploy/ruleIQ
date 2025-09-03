@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 HTTP_INTERNAL_SERVER_ERROR = 500
 
-
 AI Response Caching System
 
 Intelligent caching for AI responses to improve performance and reduce costs.
@@ -20,7 +19,6 @@ from config.cache import get_cache_manager
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 class ContentType(Enum):
     """AI response content types for intelligent TTL management."""
     RECOMMENDATION = 'recommendation'
@@ -30,14 +28,12 @@ class ContentType(Enum):
     GUIDANCE = 'guidance'
     GENERAL = 'general'
 
-
 class CacheStrategy(Enum):
     """Caching strategies for different content types."""
     AGGRESSIVE = 'aggressive'
     MODERATE = 'moderate'
     CONSERVATIVE = 'conservative'
     DYNAMIC = 'dynamic'
-
 
 class AIResponseCache:
     """
@@ -265,9 +261,7 @@ class AIResponseCache:
         """Invalidate all AI cache entries for a specific user."""
         return 0
 
-
 ai_response_cache = AIResponseCache()
-
 
 async def get_ai_cache() ->AIResponseCache:
     """Get the global AI response cache instance."""

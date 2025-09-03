@@ -12,13 +12,11 @@ from alembic import op
 import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
-
 # revision identifiers, used by Alembic.
 revision = "7a680f130f6a"
 down_revision = "0717d4f5dcba"
 branch_labels = None
 depends_on = None
-
 
 def upgrade() -> None:
     # Add missing columns to lead_scoring_events table to match the model
@@ -41,7 +39,6 @@ def upgrade() -> None:
         "lead_scoring_events",
         sa.Column("ip_address", sa.String(length=45), nullable=True),
     )
-
 
 def downgrade() -> None:
     # Remove the added columns

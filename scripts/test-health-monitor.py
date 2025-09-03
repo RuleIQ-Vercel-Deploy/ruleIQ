@@ -12,7 +12,6 @@ from datetime import datetime
 from typing import Dict, Any, Tuple
 import sys
 
-
 class TestHealthMonitor:
 
     def __init__(self) ->None:
@@ -253,7 +252,6 @@ class TestHealthMonitor:
         logger.info('=' * 60)
         logger.info('📄 Full report saved to: TEST_HEALTH_REPORT.md')
         return production_ready
-
 
 if __name__ == '__main__':
     monitor = TestHealthMonitor()

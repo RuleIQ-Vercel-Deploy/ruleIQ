@@ -12,7 +12,6 @@ DEFAULT_TIMEOUT = 30
 DEFAULT_LIMIT = 100
 MAX_RECORDS = 10000
 
-
 Okta API client for identity and access management evidence collection
 """
 import aiohttp
@@ -22,11 +21,9 @@ from .base_api_client import BaseAPIClient, APICredentials, APIRequest, Evidence
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 class OktaAPIException(APIException):
     """Okta-specific API exception"""
     pass
-
 
 class OktaAPIClient(BaseAPIClient):
     """Okta API client for identity and access management evidence"""
@@ -103,7 +100,6 @@ class OktaAPIClient(BaseAPIClient):
 
     def get_health_endpoint(self) ->str:
         return '/users/me'
-
 
 class OktaUserCollector(BaseEvidenceCollector):
     """Collect user and access evidence from Okta"""
@@ -238,7 +234,6 @@ class OktaUserCollector(BaseEvidenceCollector):
             score -= 0.1 * len(missing_fields)
         return max(0.0, score)
 
-
 class OktaGroupCollector(BaseEvidenceCollector):
     """Collect group and membership evidence from Okta"""
 
@@ -328,7 +323,6 @@ class OktaGroupCollector(BaseEvidenceCollector):
             score += 0.1
         return max(0.0, score)
 
-
 class OktaApplicationCollector(BaseEvidenceCollector):
     """Collect application and access evidence from Okta"""
 
@@ -414,7 +408,6 @@ class OktaApplicationCollector(BaseEvidenceCollector):
         if len(users) == 0:
             score -= 0.1
         return max(0.0, score)
-
 
 class OktaLogsCollector(BaseEvidenceCollector):
     """Collect system logs for audit evidence"""
@@ -516,24 +509,20 @@ class OktaLogsCollector(BaseEvidenceCollector):
             score += 0.2
         return max(0.0, score)
 
-
 class OktaPolicyCollector(BaseEvidenceCollector):
 
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
-
 
 class OktaMFACollector(BaseEvidenceCollector):
 
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
 
-
 class OktaZoneCollector(BaseEvidenceCollector):
 
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
-
 
 class OktaAuthServerCollector(BaseEvidenceCollector):
 

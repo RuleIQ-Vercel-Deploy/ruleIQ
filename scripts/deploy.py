@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 HTTP_OK = 200
 
-
 Deployment script and operational readiness checker for ComplianceGPT.
 
 This script helps ensure all components are properly configured and
@@ -24,7 +23,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config.logging_config import get_logger, setup_logging
 setup_logging()
 logger = get_logger(__name__)
-
 
 class DeploymentChecker:
     """Comprehensive deployment readiness checker."""
@@ -206,7 +204,6 @@ class DeploymentChecker:
             'warnings_count': len(self.warnings), 'duration_seconds':
             duration, 'errors': self.errors, 'warnings': self.warnings}
 
-
 def create_docker_environment_file() ->None:
     """Create an example .env file for Docker Compose."""
     logger.info("\n📄 Creating example .env file for Docker ('.env.example')..."
@@ -252,7 +249,6 @@ LOG_LEVEL=INFO # DEBUG, INFO, WARNING, ERROR, CRITICAL
         logger.error('Failed to create %s: %s' % (env_file, e),
             exc_info_flag=True)
 
-
 def main() ->None:
     """Main deployment preparation function."""
     import argparse
@@ -282,7 +278,6 @@ def main() ->None:
                 e), exc_info_flag=True)
     sys.exit(0 if report['overall_status'] in ['READY',
         'READY_WITH_WARNINGS'] else 1)
-
 
 if __name__ == '__main__':
     main()

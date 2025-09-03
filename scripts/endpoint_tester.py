@@ -15,7 +15,6 @@ import json
 import time
 from typing import Dict, List, Any
 
-
 class EndpointTester:
 
     def __init__(self, base_url: str='http://localhost:8000'):
@@ -172,7 +171,6 @@ class EndpointTester:
             time.strftime('%Y-%m-%d %H:%M:%S')}, 'categories':
             category_summaries, 'detailed_results': results}
 
-
 def main():
     logger.info('🚀 Starting ruleIQ API Comprehensive Endpoint Testing')
     logger.info('=' * 60)
@@ -199,7 +197,6 @@ def main():
         json.dump(report, f, indent=2)
     logger.info('\n💾 Detailed report saved to: endpoint_test_report.json')
     logger.info('\n✅ Endpoint testing complete!')
-
 
 if __name__ == '__main__':
     main()

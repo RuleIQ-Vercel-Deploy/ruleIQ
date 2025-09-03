@@ -5,12 +5,10 @@ from __future__ import annotations
 DEFAULT_RETRIES = 5
 MAX_RETRIES = 3
 
-
 AI-specific exceptions for better error handling and debugging.
 """
 from typing import Any, Dict, Optional
 from core.exceptions import BusinessLogicException, IntegrationException
-
 
 class AIServiceException(IntegrationException):
     """Base exception for AI service errors."""
@@ -22,7 +20,6 @@ class AIServiceException(IntegrationException):
         self.service_name = service_name
         self.error_code = error_code
         self.context = context or {}
-
 
 class AITimeoutException(AIServiceException):
     """Raised when AI service requests timeout."""
@@ -36,7 +33,6 @@ class AITimeoutException(AIServiceException):
             error_code='AI_TIMEOUT', context=context)
         self.timeout_seconds = timeout_seconds
 
-
 class AIQuotaExceededException(AIServiceException):
     """Raised when AI service quota is exceeded."""
 
@@ -46,7 +42,6 @@ class AIQuotaExceededException(AIServiceException):
         super().__init__(message=message, service_name=service_name,
             error_code='AI_QUOTA_EXCEEDED', context=context)
         self.quota_type = quota_type
-
 
 class AIModelException(AIServiceException):
     """Raised when AI model encounters an error."""
@@ -59,7 +54,6 @@ class AIModelException(AIServiceException):
         self.model_name = model_name
         self.model_error = model_error
 
-
 class AIContentFilterException(AIServiceException):
     """Raised when AI content is filtered for safety."""
 
@@ -69,7 +63,6 @@ class AIContentFilterException(AIServiceException):
         super().__init__(message=message, service_name=service_name,
             error_code='AI_CONTENT_FILTERED', context=context)
         self.filter_reason = filter_reason
-
 
 class AIParsingException(BusinessLogicException):
     """Raised when AI response cannot be parsed."""
@@ -85,7 +78,6 @@ class AIParsingException(BusinessLogicException):
         self.parsing_error = parsing_error
         self.context = context or {}
 
-
 class AIValidationException(BusinessLogicException):
     """Raised when AI response fails validation."""
 
@@ -98,7 +90,6 @@ class AIValidationException(BusinessLogicException):
         self.response_data = response_data
         self.context = context or {}
 
-
 class ModelUnavailableException(AIServiceException):
     """Raised when a specific AI model is unavailable."""
 
@@ -110,7 +101,6 @@ class ModelUnavailableException(AIServiceException):
             error_code='MODEL_UNAVAILABLE', context=context)
         self.model_name = model_name
         self.reason = reason
-
 
 class ModelTimeoutException(AIServiceException):
     """Raised when AI model request times out."""
@@ -127,7 +117,6 @@ class ModelTimeoutException(AIServiceException):
         self.timeout_seconds = timeout_seconds
         self.operation = operation
 
-
 class ModelOverloadedException(AIServiceException):
     """Raised when AI model is overloaded and cannot process requests."""
 
@@ -142,7 +131,6 @@ class ModelOverloadedException(AIServiceException):
         self.model_name = model_name
         self.retry_after = retry_after
 
-
 class ModelConfigurationException(AIServiceException):
     """Raised when AI model configuration is invalid."""
 
@@ -153,7 +141,6 @@ class ModelConfigurationException(AIServiceException):
             error_code='MODEL_CONFIG_ERROR', context=context)
         self.model_name = model_name
         self.config_error = config_error
-
 
 class CircuitBreakerException(AIServiceException):
     """Raised when circuit breaker prevents operation."""
@@ -173,7 +160,6 @@ class CircuitBreakerException(AIServiceException):
         self.circuit_state = circuit_state
         self.model_name = model_name
         self.failure_count = failure_count
-
 
 class SchemaValidationException(AIServiceException):
     """Raised when AI response fails schema validation in Phase 6 implementation."""
@@ -213,7 +199,6 @@ class SchemaValidationException(AIServiceException):
                 f'  ... and {len(self.validation_errors) - 5} more errors')
         return summary
 
-
 class ResponseProcessingException(AIServiceException):
     """Raised when AI response processing fails during Phase 6 implementation."""
 
@@ -231,7 +216,6 @@ class ResponseProcessingException(AIServiceException):
         self.original_error = original_error
         self.model_name = model_name
 
-
 class ModelRetryExhaustedException(AIServiceException):
     """Raised when all retry attempts for a model have been exhausted."""
 
@@ -247,7 +231,6 @@ class ModelRetryExhaustedException(AIServiceException):
         self.attempts = attempts
         self.last_error = last_error
 
-
 GEMINI_ERROR_MAPPING = {'DEADLINE_EXCEEDED': ModelTimeoutException,
     'RESOURCE_EXHAUSTED': ModelOverloadedException, 'INVALID_ARGUMENT':
     ModelConfigurationException, 'PERMISSION_DENIED': AIServiceException,
@@ -262,7 +245,6 @@ ERROR_PATTERN_MAPPING = {'timeout': ModelTimeoutException, 'quota':
     ModelConfigurationException, 'schema validation':
     SchemaValidationException, 'response processing':
     ResponseProcessingException}
-
 
 def map_gemini_error(error: Exception, model_name: str='unknown', context:
     Optional[Dict[str, Any]]=None) ->AIServiceException:
@@ -313,7 +295,6 @@ def map_gemini_error(error: Exception, model_name: str='unknown', context:
                     service_name='Google Gemini', context=context)
     return AIServiceException(message=error_message, service_name=
         'Google Gemini', error_code='UNKNOWN_ERROR', context=context)
-
 
 def handle_ai_error(error: Exception, operation: str, model_name: str=
     'unknown', context: Optional[Dict[str, Any]]=None, fallback_response:

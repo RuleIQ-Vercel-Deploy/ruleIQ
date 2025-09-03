@@ -14,7 +14,6 @@ from utils.input_validation import (
     validate_business_profile_update,
 )
 
-
 class TestFieldValidator:
     """Test individual field validators."""
 
@@ -88,7 +87,6 @@ class TestFieldValidator:
         with pytest.raises(ValidationError, match="must be one of"):
             FieldValidator.validate_enum("invalid", ["pending", "approved"])
 
-
 class TestSecurityValidator:
     """Test security pattern detection."""
 
@@ -143,7 +141,6 @@ class TestSecurityValidator:
 
         with pytest.raises(ValidationError, match="dangerous content"):
             SecurityValidator.validate_no_dangerous_content(dangerous_data)
-
 
 class TestWhitelistValidator:
     """Test whitelist-based validation."""
@@ -211,7 +208,6 @@ class TestWhitelistValidator:
         with pytest.raises(ValidationError, match="not allowed for updates"):
             validator.validate_update_data(invalid_data)
 
-
 class TestConvenienceFunctions:
     """Test convenience validation functions."""
 
@@ -262,7 +258,6 @@ class TestConvenienceFunctions:
 
         with pytest.raises(ValidationError):
             validate_business_profile_update(invalid_data)
-
 
 class TestAttackScenarios:
     """Test against real attack scenarios."""

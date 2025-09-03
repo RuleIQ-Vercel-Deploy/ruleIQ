@@ -14,7 +14,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from database.evidence_item import EvidenceItem
 from langgraph_agent.nodes.evidence_nodes import EvidenceCollectionNode, evidence_node
 
-
 # Fixtures
 @pytest.fixture
 def minimal_state() -> Dict[str, Any]:
@@ -33,7 +32,6 @@ def minimal_state() -> Dict[str, Any]:
         "processing_status": "init",
     }
 
-
 @pytest.fixture
 def evidence_data() -> Dict[str, Any]:
     """Create sample evidence data."""
@@ -50,12 +48,10 @@ def evidence_data() -> Dict[str, Any]:
         "metadata": {"version": "1.0", "approved": True},
     }
 
-
 async def async_generator(items):
     """Helper to create async generator."""
     for item in items:
         yield item
-
 
 @pytest.mark.asyncio
 class TestEvidenceCollectionNodeIntegration:
@@ -454,7 +450,6 @@ class TestEvidenceCollectionNodeIntegration:
 
         assert len(results) == 5
         assert all(r["status"] == "processed" for r in results)
-
 
 @pytest.mark.asyncio
 class TestErrorScenariosIntegration:

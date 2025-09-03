@@ -12,16 +12,12 @@ from sqlalchemy.orm import Session
 from database.db_setup import get_db
 from database import User
 
-# Remove unused import
-
 router = APIRouter()
-
 
 def is_test_environment() -> bool:
     """Check if we're running in a test environment."""
     env = os.getenv("ENVIRONMENT", "production").lower()
     return env in ["development", "test", "testing", "local"]
-
 
 @router.delete("/cleanup-test-users")
 async def cleanup_test_users(email_pattern: str = "@example.com", db: Session = Depends(get_db)):
@@ -94,7 +90,6 @@ async def cleanup_test_users(email_pattern: str = "@example.com", db: Session = 
             detail=f"Failed to cleanup test users: {str(e)}",
         )
 
-
 @router.post("/create-test-user")
 async def create_test_user(
     email: str, password: str = "TestPassword123!", db: Session = Depends(get_db)
@@ -138,7 +133,6 @@ async def create_test_user(
         "email": db_user.email,
         "is_active": db_user.is_active,
     }
-
 
 @router.post("/clear-rate-limits")
 async def clear_rate_limits():

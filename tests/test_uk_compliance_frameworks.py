@@ -17,7 +17,6 @@ from database.compliance_framework import ComplianceFramework
 from services.compliance_loader import UKComplianceLoader
 from api.schemas.compliance import UKFrameworkSchema
 
-
 class TestUKComplianceFrameworksLoading:
     """Test suite for loading UK-specific compliance frameworks"""
 
@@ -99,7 +98,6 @@ class TestUKComplianceFrameworksLoading:
         assert len(result2.skipped_frameworks) == 1
         assert result2.skipped_frameworks[0] == 'ICO_GDPR_UK'
 
-
 class TestUKFrameworkAPIIntegration:
     """Test API integration for UK frameworks"""
 
@@ -130,7 +128,6 @@ class TestUKFrameworkAPIIntegration:
         response = client.post('/api/v1/assessments/', json=assessment_data)
         assert response.status_code == HTTP_CREATED
         assert response.json()['framework_count'] == 1
-
 
 class TestUKComplianceFrameworksDataIntegrity:
     """Test data integrity and mappings for UK frameworks"""
@@ -163,7 +160,6 @@ class TestUKComplianceFrameworksDataIntegrity:
         assert validator.validate_uk_scope(['England', 'Scotland']) is True
         assert validator.validate_uk_scope(['EU', 'Germany']) is False
         assert validator.validate_uk_scope([]) is False
-
 
 class TestUKFrameworksPerformance:
     """Performance tests for UK frameworks loading"""

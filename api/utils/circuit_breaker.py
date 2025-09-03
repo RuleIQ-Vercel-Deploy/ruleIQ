@@ -15,13 +15,11 @@ from core.exceptions import APIError
 logger = logging.getLogger(__name__)
 T = TypeVar('T')
 
-
 class CircuitBreakerState(Enum):
     """Circuit breaker states."""
     CLOSED = 'closed'
     OPEN = 'open'
     HALF_OPEN = 'half_open'
-
 
 @dataclass
 class CircuitBreakerConfig:
@@ -32,7 +30,6 @@ class CircuitBreakerConfig:
         TimeoutError, OSError)
     success_threshold: int = 3
     timeout_seconds: Optional[float] = 30.0
-
 
 class CircuitBreakerOpenException(APIError):
     """Exception when circuit breaker is open."""
@@ -47,7 +44,6 @@ class CircuitBreakerOpenException(APIError):
         super().__init__(message=message, status_code=503)
         self.details = {'service_name': service_name, 'failure_count':
             failure_count, 'recovery_time': recovery_time}
-
 
 class CircuitBreaker:
     """Circuit breaker for external service calls."""
@@ -126,7 +122,6 @@ class CircuitBreaker:
         async def wrapper(*args, **kwargs) ->Any:
             return await self.call(func, *args, **kwargs)
         return wrapper
-
 
 openai_breaker = CircuitBreaker('OpenAI', CircuitBreakerConfig(
     failure_threshold=3, recovery_timeout=30.0, timeout_seconds=60.0))

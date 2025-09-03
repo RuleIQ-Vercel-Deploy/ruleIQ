@@ -7,8 +7,6 @@ from ..golden_datasets.versioning import is_semver
 # Constants
 MAX_RETRIES = 3
 
-
-
 class TestSemanticVersioning:
     """Test semantic versioning validation."""
 

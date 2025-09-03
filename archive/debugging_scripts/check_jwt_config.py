@@ -6,7 +6,6 @@ Checks for common JWT configuration issues
 import logging
 logger = logging.getLogger(__name__)
 
-
 import os
 import re
 

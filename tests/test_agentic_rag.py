@@ -14,7 +14,6 @@ sys.path.insert(0, str(project_root))
 
 from services.agentic_integration import get_agentic_service
 
-
 async def test_agentic_rag():
     """Test the agentic RAG system"""
     print("🚀 Testing Agentic RAG Integration")
@@ -83,7 +82,6 @@ async def test_agentic_rag():
         import traceback
 
         traceback.print_exc()
-
 
 if __name__ == "__main__":
     # Set environment variables for testing

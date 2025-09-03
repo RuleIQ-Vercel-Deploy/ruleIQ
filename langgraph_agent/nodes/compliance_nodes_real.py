@@ -27,12 +27,10 @@ from config.langsmith_config import with_langsmith_tracing
 
 logger = logging.getLogger(__name__)
 
-
 async def get_default_framework(db: AsyncSession) -> Optional[ComplianceFrameworkModel]:
     """Get the default compliance framework (usually the first one)."""
     result = await db.execute(select(ComplianceFrameworkModel).limit(1))
     return result.scalars().first()
-
 
 async def get_user_for_profile(
     db: AsyncSession, profile: BusinessProfileModel
@@ -40,7 +38,6 @@ async def get_user_for_profile(
     """Get the user associated with a business profile."""
     result = await db.execute(select(UserModel).where(UserModel.id == profile.user_id))
     return result.scalars().first()
-
 
 async def update_compliance_for_profile(
     db: AsyncSession, profile: BusinessProfileModel
@@ -90,7 +87,6 @@ async def update_compliance_for_profile(
     except Exception as e:
         logger.error(f"Failed to update compliance for profile {profile.id}: {e}")
         return {"profile_id": str(profile.id), "error": str(e), "overall_score": 0}
-
 
 @with_langsmith_tracing("compliance.batch_update")
 async def batch_compliance_update_node(
@@ -182,7 +178,6 @@ async def batch_compliance_update_node(
         state["error_count"] += 1
 
     return state
-
 
 @with_langsmith_tracing("compliance.single_check")
 async def single_compliance_check_node(
@@ -284,7 +279,6 @@ async def single_compliance_check_node(
 
     return state
 
-
 @with_langsmith_tracing("compliance.monitoring")
 async def compliance_monitoring_node(
     state: UnifiedComplianceState,
@@ -365,7 +359,6 @@ async def compliance_monitoring_node(
         state["error_count"] += 1
 
     return state
-
 
 # Export the nodes for use in the workflow
 __all__ = [

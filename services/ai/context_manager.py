@@ -13,7 +13,6 @@ from database.business_profile import BusinessProfile
 from database.evidence_item import EvidenceItem
 logger = get_logger(__name__)
 
-
 class ContextManager:
     """Gathers relevant data to build a context for AI conversations asynchronously."""
 

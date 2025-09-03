@@ -11,7 +11,6 @@ DEFAULT_LIMIT = 100
 MAX_ITEMS = 1000
 MAX_RETRIES = 3
 
-
 Google Cached Content Integration for AI Optimization
 
 This module implements Google's CachedContent API to replace the custom caching system,
@@ -28,10 +27,8 @@ from config.logging_config import get_logger
 from config.ai_config import ModelType
 logger = get_logger(__name__)
 
-
 class CacheContentType(Enum):
     """Types of content that can be cached."""
-
 
 @dataclass
 class CacheLifecycleConfig:
@@ -47,7 +44,6 @@ class CacheLifecycleConfig:
     fast_response_threshold_ms: int = 200
     slow_response_threshold_ms: int = 2000
     ttl_adjustment_factor: float = 0.2
-
 
 class GoogleCachedContentManager:
     """
@@ -843,9 +839,7 @@ class GoogleCachedContentManager:
             self.invalidation_triggers.values() if (datetime.now() - t).
             total_seconds() < HOUR_SECONDS])}}
 
-
 cached_content_manager = GoogleCachedContentManager()
-
 
 async def get_cached_content_manager() ->GoogleCachedContentManager:
     """Get the global cached content manager instance."""

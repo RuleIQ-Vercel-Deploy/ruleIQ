@@ -16,7 +16,6 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 class Neo4jRelationshipFixer:
     """Fix missing relationships and business_triggers in Neo4j."""
 
@@ -316,7 +315,6 @@ class Neo4jRelationshipFixer:
                 triggers = json.loads(record['triggers'])
                 logger.info('  %s: %s' % (record['id'], triggers))
 
-
 async def main() ->None:
     """Main execution function."""
     neo4j_uri = 'bolt://localhost:7688'
@@ -339,7 +337,6 @@ async def main() ->None:
         traceback.print_exc()
     finally:
         await fixer.close()
-
 
 if __name__ == '__main__':
     asyncio.run(main())

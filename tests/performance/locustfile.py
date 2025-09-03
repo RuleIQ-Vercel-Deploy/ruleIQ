@@ -8,7 +8,6 @@ Advanced Performance Tests using Locust
 import logging
 logger = logging.getLogger(__name__)
 
-
 Comprehensive performance testing scenarios for ComplianceGPT backend
 including user workflows, AI operations, and system stress testing.
 """
@@ -28,7 +27,6 @@ SAMPLE_QUESTIONS = ['What are the GDPR requirements for data processing?',
     'What evidence is needed for SOC 2 audit?',
     'How to handle data breach notifications?',
     'What are the penalties for non-compliance?']
-
 
 class AuthenticatedUser(HttpUser):
     """Base class for authenticated user scenarios"""
@@ -50,7 +48,6 @@ class AuthenticatedUser(HttpUser):
         else:
             self.headers = {}
 
-
 class UserOnboardingFlow(SequentialTaskSet):
     """Sequential task set for complete user onboarding workflow"""
 
@@ -59,7 +56,6 @@ class UserOnboardingFlow(SequentialTaskSet):
         self.business_profile_id = None
         self.assessment_id = None
 
-    @task
     def create_business_profile(self):
         """Create business profile"""
         profile_data = {'company_name': random.choice(SAMPLE_COMPANIES),
@@ -81,7 +77,6 @@ class UserOnboardingFlow(SequentialTaskSet):
                     f'Failed to create business profile: {response.status_code}'
                     )
 
-    @task
     def start_assessment(self):
         """Start compliance assessment"""
         if not self.business_profile_id:
@@ -99,7 +94,6 @@ class UserOnboardingFlow(SequentialTaskSet):
                 response.failure(
                     f'Failed to start assessment: {response.status_code}')
 
-    @task
     def complete_assessment(self):
         """Complete assessment with responses"""
         if not self.assessment_id:
@@ -125,7 +119,6 @@ class UserOnboardingFlow(SequentialTaskSet):
                 response.failure(
                     f'Failed to complete assessment: {response.status_code}')
 
-    @task
     def get_recommendations(self):
         """Get framework recommendations"""
         if not self.business_profile_id:
@@ -144,13 +137,11 @@ class UserOnboardingFlow(SequentialTaskSet):
                 response.failure(
                     f'Failed to get recommendations: {response.status_code}')
 
-
 class ComplianceUser(AuthenticatedUser):
     """User focused on compliance workflows"""
     wait_time = between(1, 3)
     tasks = [UserOnboardingFlow]
 
-    @task(3)
     def create_evidence_item(self):
         """Create evidence items"""
         evidence_types = ['document', 'screenshot', 'configuration',
@@ -166,7 +157,6 @@ class ComplianceUser(AuthenticatedUser):
         self.client.post('/api/evidence', json=evidence_data, headers=self.
             headers)
 
-    @task(2)
     def search_evidence(self):
         """Search evidence items"""
         search_terms = ['security', 'policy', 'procedure', 'control', 'audit']
@@ -176,22 +166,18 @@ class ComplianceUser(AuthenticatedUser):
         self.client.get('/api/evidence/search', params=params, headers=self
             .headers)
 
-    @task(1)
     def get_dashboard(self):
         """Access user dashboard"""
         self.client.get('/api/users/dashboard', headers=self.headers)
 
-    @task(1)
     def get_compliance_status(self):
         """Check compliance status"""
         self.client.get('/api/compliance/status', headers=self.headers)
-
 
 class AIAssistantUser(AuthenticatedUser):
     """User focused on AI assistant interactions"""
     wait_time = between(2, 5)
 
-    @task(5)
     def ask_compliance_question(self):
         """Ask compliance questions to AI assistant"""
         question = random.choice(SAMPLE_QUESTIONS)
@@ -209,7 +195,6 @@ class AIAssistantUser(AuthenticatedUser):
             else:
                 response.failure(f'AI chat failed: {response.status_code}')
 
-    @task(2)
     def get_chat_history(self):
         """Retrieve chat conversation history"""
         if hasattr(self, 'conversation_id'):
@@ -218,7 +203,6 @@ class AIAssistantUser(AuthenticatedUser):
                 headers=self.headers, name=
                 '/api/chat/conversations/[id]/messages')
 
-    @task(1)
     def start_new_conversation(self):
         """Start a new chat conversation"""
         conversation_data = {'title':
@@ -235,12 +219,10 @@ class AIAssistantUser(AuthenticatedUser):
                 response.failure(
                     f'Failed to create conversation: {response.status_code}')
 
-
 class ReportingUser(AuthenticatedUser):
     """User focused on reporting and analytics"""
     wait_time = between(3, 8)
 
-    @task(3)
     def generate_compliance_report(self):
         """Generate compliance reports"""
         report_data = {'report_type': random.choice(['gap_analysis',
@@ -282,7 +264,6 @@ class ReportingUser(AuthenticatedUser):
                         f'Status check failed: {response.status_code}')
                     return
 
-    @task(2)
     def get_analytics_dashboard(self):
         """Access analytics dashboard"""
         params = {'time_range': random.choice(['7d', '30d', '90d', '1y']),
@@ -291,7 +272,6 @@ class ReportingUser(AuthenticatedUser):
         self.client.get('/api/analytics/dashboard', params=params, headers=
             self.headers)
 
-    @task(1)
     def export_data(self):
         """Export compliance data"""
         export_data = {'data_type': random.choice(['evidence',
@@ -300,12 +280,10 @@ class ReportingUser(AuthenticatedUser):
             '2024-12-31'}}
         self.client.post('/api/export', json=export_data, headers=self.headers)
 
-
 class StressTestUser(AuthenticatedUser):
     """High-intensity user for stress testing"""
     wait_time = between(0.1, 0.5)
 
-    @task(10)
     def rapid_api_calls(self):
         """Make rapid API calls to test system limits"""
         endpoints = ['/api/users/profile', '/api/business-profiles',
@@ -313,7 +291,6 @@ class StressTestUser(AuthenticatedUser):
         endpoint = random.choice(endpoints)
         self.client.get(endpoint, headers=self.headers)
 
-    @task(5)
     def concurrent_evidence_creation(self):
         """Create evidence items rapidly"""
         evidence_data = {'title':
@@ -324,7 +301,6 @@ class StressTestUser(AuthenticatedUser):
         self.client.post('/api/evidence', json=evidence_data, headers=self.
             headers)
 
-    @task(3)
     def bulk_operations(self):
         """Perform bulk operations"""
         bulk_data = {'evidence_ids': [str(uuid4()) for _ in range(10)],
@@ -332,24 +308,20 @@ class StressTestUser(AuthenticatedUser):
         self.client.post('/api/evidence/bulk-update', json=bulk_data,
             headers=self.headers)
 
-
 class LightLoad(AuthenticatedUser):
     """Light load testing - normal user behavior"""
     weight = 3
     tasks = [ComplianceUser, AIAssistantUser]
-
 
 class MediumLoad(AuthenticatedUser):
     """Medium load testing - active user behavior"""
     weight = 2
     tasks = [ComplianceUser, AIAssistantUser, ReportingUser]
 
-
 class HeavyLoad(AuthenticatedUser):
     """Heavy load testing - intensive operations"""
     weight = 1
     tasks = [ReportingUser, StressTestUser]
-
 
 @events.request.add_listener
 def request_handler(request_type, name, response_time, response_length,
@@ -362,7 +334,6 @@ def request_handler(request_type, name, response_time, response_length,
         logger.info('ERROR: %s %s failed with %s' % (request_type, name,
             exception))
 
-
 @events.test_start.add_listener
 def on_test_start(environment, **kwargs):
     """Setup test environment"""
@@ -370,7 +341,6 @@ def on_test_start(environment, **kwargs):
     logger.info('Target host: %s' % environment.host)
     if isinstance(environment.runner, MasterRunner):
         logger.info('Running distributed load test')
-
 
 @events.test_stop.add_listener
 def on_test_stop(environment, **kwargs):
@@ -382,7 +352,6 @@ def on_test_stop(environment, **kwargs):
     logger.info('Average response time: %sms' % stats.total.avg_response_time)
     logger.info('95th percentile: %sms' % stats.total.
         get_response_time_percentile(0.95))
-
 
 class ChatWebSocketUser(HttpUser):
     """Test WebSocket chat performance"""
@@ -396,7 +365,6 @@ class ChatWebSocketUser(HttpUser):
         if login_response.status_code == HTTP_OK:
             self.token = login_response.json()['access_token']
 
-    @task
     def websocket_chat_session(self):
         """Test WebSocket chat performance"""
         try:
@@ -420,12 +388,10 @@ class ChatWebSocketUser(HttpUser):
                 choice(SAMPLE_QUESTIONS)}, headers={'Authorization':
                 f'Bearer {self.token}'})
 
-
 class DatabaseStressUser(AuthenticatedUser):
     """Test database operations under load"""
     wait_time = between(0.5, 2)
 
-    @task(5)
     def complex_evidence_search(self):
         """Perform complex search queries"""
         search_params = {'q': 'security policy governance', 'evidence_type':
@@ -436,7 +402,6 @@ class DatabaseStressUser(AuthenticatedUser):
         self.client.get('/api/evidence/search', params=search_params,
             headers=self.headers)
 
-    @task(3)
     def aggregate_analytics(self):
         """Request analytics that require database aggregation"""
         analytics_params = {'metrics': ['compliance_trends',
@@ -445,7 +410,6 @@ class DatabaseStressUser(AuthenticatedUser):
         self.client.get('/api/analytics/aggregate', params=analytics_params,
             headers=self.headers)
 
-    @task(2)
     def concurrent_updates(self):
         """Perform concurrent data updates"""
         for _ in range(5):
@@ -463,7 +427,6 @@ class DatabaseStressUser(AuthenticatedUser):
                     update_data, headers=self.headers, name=
                     '/api/evidence/[id]')
 
-
 class PeakTrafficScenario(AuthenticatedUser):
     """Simulate peak traffic scenarios"""
 
@@ -471,7 +434,6 @@ class PeakTrafficScenario(AuthenticatedUser):
         super().on_start()
         self.scenario_start_time = time.time()
 
-    @task(10)
     def morning_rush_pattern(self):
         """Simulate morning rush hour user behavior"""
         self.client.get('/api/users/dashboard', headers=self.headers)
@@ -479,7 +441,6 @@ class PeakTrafficScenario(AuthenticatedUser):
             headers)
         self.client.get('/api/compliance/status', headers=self.headers)
 
-    @task(5)
     def deadline_crunch_pattern(self):
         """Simulate behavior during compliance deadlines"""
         report_data = {'report_type': 'readiness_assessment', 'frameworks':
@@ -492,7 +453,6 @@ class PeakTrafficScenario(AuthenticatedUser):
                 'evidence_type': 'document', 'urgent': True}
             self.client.post('/api/evidence', json=evidence_data, headers=
                 self.headers)
-
 
 if __name__ == '__main__':
     logger.info('ComplianceGPT Performance Test Suite')

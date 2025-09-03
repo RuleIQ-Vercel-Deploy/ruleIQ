@@ -12,7 +12,6 @@ HTTP_INTERNAL_SERVER_ERROR = 500
 router = APIRouter(prefix='/api/ai', tags=['AI Optimization'])
 circuit_breaker = AICircuitBreaker()
 
-
 @router.post('/model-selection')
 async def model_selection(request: ModelSelectionRequest, current_user=
     Depends(get_current_user)) ->Dict[str, Any]:
@@ -28,7 +27,6 @@ async def model_selection(request: ModelSelectionRequest, current_user=
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             str(e))
 
-
 @router.get('/model-health')
 async def model_health_check(current_user=Depends(get_current_user)) ->Dict[
     str, Any]:
@@ -36,7 +34,6 @@ async def model_health_check(current_user=Depends(get_current_user)) ->Dict[
     health_statuses = circuit_breaker.get_all_model_health()
     return {'models': health_statuses, 'timestamp': circuit_breaker.
         last_health_check}
-
 
 @router.get('/performance-metrics')
 async def performance_metrics(current_user=Depends(get_current_user)) ->Dict[

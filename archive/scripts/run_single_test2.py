@@ -3,7 +3,6 @@
 import logging
 logger = logging.getLogger(__name__)
 
-
 import asyncio
 import sys
 from pathlib import Path
@@ -14,7 +13,6 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from tests.test_notification_migration_tdd import TestNotificationStateTransitions
 from langgraph_agent.nodes.notification_nodes import EnhancedNotificationNode
-
 
 async def main():
     """Run a single test method"""
@@ -42,7 +40,6 @@ async def main():
         import traceback
 
         traceback.print_exc()
-
 
 if __name__ == "__main__":
     asyncio.run(main())

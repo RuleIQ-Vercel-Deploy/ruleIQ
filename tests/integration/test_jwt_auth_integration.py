@@ -7,7 +7,6 @@ HTTP_CREATED = 201
 HTTP_OK = 200
 HTTP_UNAUTHORIZED = 401
 
-
 JWT Authentication Integration Tests
 Tests the complete JWT authentication flow after Stack Auth removal
 """
@@ -19,13 +18,11 @@ from main import app
 from database.user import User
 from api.dependencies.auth import get_password_hash
 
-
 @pytest.fixture
 def test_user_data():
     """Test user data for authentication tests"""
     return {'email': 'test@example.com', 'password': 'TestPassword123!',
         'full_name': 'Test User'}
-
 
 @pytest.fixture
 def existing_user(db_session: Session, test_user_data):
@@ -37,7 +34,6 @@ def existing_user(db_session: Session, test_user_data):
     db_session.commit()
     db_session.refresh(user)
     return user
-
 
 class TestJWTAuthenticationFlow:
     """Test complete JWT authentication flow"""
@@ -149,7 +145,6 @@ class TestJWTAuthenticationFlow:
         response = test_client.get('/api/v1/auth/me', headers=headers)
         assert response.status_code == HTTP_UNAUTHORIZED
 
-
 class TestBusinessProfileIntegration:
     """Test JWT authentication with business profile endpoints"""
 
@@ -172,7 +167,6 @@ class TestBusinessProfileIntegration:
         response = test_client.get('/api/v1/business-profiles')
         assert response.status_code == HTTP_UNAUTHORIZED
 
-
 class TestRAGSystemIntegration:
     """Test JWT authentication with RAG system endpoints"""
 
@@ -193,7 +187,6 @@ class TestRAGSystemIntegration:
         """Test chat endpoint requires authentication"""
         response = test_client.get('/api/v1/chat/conversations')
         assert response.status_code == HTTP_UNAUTHORIZED
-
 
 @pytest.mark.integration
 class TestAuthenticationSystemIntegration:

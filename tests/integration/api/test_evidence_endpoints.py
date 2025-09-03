@@ -22,7 +22,6 @@ from uuid import uuid4
 import pytest
 from tests.conftest import assert_api_response_security
 
-
 @pytest.mark.integration
 @pytest.mark.api
 class TestEvidenceEndpoints:
@@ -299,7 +298,6 @@ class TestEvidenceEndpoints:
             assert 'title' in result
             assert 'relevance_score' in result
 
-
 @pytest.mark.integration
 @pytest.mark.api
 class TestEvidenceValidationEndpoints:
@@ -367,7 +365,6 @@ class TestEvidenceValidationEndpoints:
         assert 'test_connection' in response_data
         if response_data['configuration_successful']:
             assert 'next_collection' in response_data
-
 
 @pytest.mark.integration
 @pytest.mark.api

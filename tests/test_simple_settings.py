@@ -8,7 +8,6 @@ from typing import List, Annotated, Any
 from pydantic import Field, BeforeValidator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 def parse_list_from_string(v: Any) -> list:
     """Parse a list from string or return as-is if already a list."""
     print(f"parse_list_from_string called with: {v!r} (type: {type(v)})")
@@ -31,7 +30,6 @@ def parse_list_from_string(v: Any) -> list:
         return result
     return v
 
-
 class TestSettings(BaseSettings):
     # Test without annotation
     simple_list: List[str] = Field(default=["a", "b"])
@@ -45,7 +43,6 @@ class TestSettings(BaseSettings):
         env_file=".env.test",
         case_sensitive=False,
     )
-
 
 # Test 1: Without environment variables
 print("=== Test 1: No env vars ===")

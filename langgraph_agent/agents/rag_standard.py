@@ -29,7 +29,6 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-
 class StandardizedRAG:
     """Simplified RAG system using LangChain components."""
 

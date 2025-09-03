@@ -11,7 +11,6 @@ from core.security.credential_encryption import CredentialEncryption
 from api.clients.base_api_client import APICredentials, AuthType
 from typing import Optional
 
-
 async def test_encryption_fixes() -> bool:
     """Test encryption fixes"""
     print("Testing encryption fixes...")
@@ -52,7 +51,6 @@ async def test_encryption_fixes() -> bool:
 
     return True
 
-
 def test_model_imports() -> Optional[bool]:
     """Test model imports are working"""
     print("\nTesting model imports...")
@@ -72,7 +70,6 @@ def test_model_imports() -> Optional[bool]:
     except Exception as e:
         print(f"✗ Import test failed: {e}")
         return False
-
 
 def test_validation_logic() -> Optional[bool]:
     """Test validation logic"""
@@ -99,7 +96,6 @@ def test_validation_logic() -> Optional[bool]:
     except Exception as e:
         print(f"✗ Validation test failed: {e}")
         return False
-
 
 async def main() -> bool:
     """Run all tests"""
@@ -135,7 +131,6 @@ async def main() -> bool:
     else:
         print("❌ Some tests failed. Review the implementation.")
         return False
-
 
 if __name__ == "__main__":
     asyncio.run(main())

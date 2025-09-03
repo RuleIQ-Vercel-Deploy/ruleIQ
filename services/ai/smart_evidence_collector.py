@@ -5,7 +5,6 @@ from __future__ import annotations
 DEFAULT_LIMIT = 100
 MAX_ITEMS = 1000
 
-
 Smart Evidence Collection System
 
 AI-driven evidence collection prioritization and automation with intelligent
@@ -18,14 +17,12 @@ from typing import Any, Dict, List, Optional
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 class EvidencePriority(Enum):
     """Evidence collection priority levels."""
     CRITICAL = "critical"
     HIGH = "high"
     MEDIUM = "medium"
     LOW = "low"
-
 
 class CollectionStatus(Enum):
     """Evidence collection status."""
@@ -34,13 +31,11 @@ class CollectionStatus(Enum):
     COMPLETED = "completed"
     FAILED = "failed"
 
-
 class AutomationLevel(Enum):
     """Automation level for evidence collection."""
     MANUAL = "manual"
     SEMI_AUTOMATED = "semi_automated"
     FULLY_AUTOMATED = "fully_automated"
-
 
 @dataclass
 class EvidenceTask:
@@ -61,7 +56,6 @@ class EvidenceTask:
     created_at: datetime = field(default_factory=datetime.utcnow)
     metadata: Dict[str, Any] = field(default_factory=dict)
 
-
 @dataclass
 class CollectionPlan:
     """Evidence collection plan with prioritized tasks."""
@@ -74,7 +68,6 @@ class CollectionPlan:
     tasks: List[EvidenceTask] = field(default_factory=list)
     automation_opportunities: Dict[str, Any] = field(default_factory=dict)
     created_at: datetime = field(default_factory=datetime.utcnow)
-
 
 class SmartEvidenceCollector:
     """
@@ -392,9 +385,7 @@ class SmartEvidenceCollector:
             datetime.max, t.estimated_effort_hours))
         return pending_tasks[:limit]
 
-
 smart_evidence_collector = SmartEvidenceCollector()
-
 
 async def get_smart_evidence_collector() ->SmartEvidenceCollector:
     """Get the global smart evidence collector instance."""

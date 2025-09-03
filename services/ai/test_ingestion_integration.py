@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 HALF_RATIO = 0.5
 
-
 Integration test for Neo4j compliance ingestion pipeline.
 Tests the full flow from manifest files to IQ agent queries.
 """
@@ -25,7 +24,6 @@ from database import get_db
 import os
 from dotenv import load_dotenv
 load_dotenv()
-
 
 class IngestionIntegrationTest:
     """Test suite for Neo4j ingestion and IQ agent integration."""
@@ -334,13 +332,11 @@ class IngestionIntegrationTest:
         finally:
             await self.cleanup()
 
-
 async def main():
     """Main entry point."""
     test_suite = IngestionIntegrationTest()
     success = await test_suite.run_all_tests()
     return 0 if success else 1
-
 
 if __name__ == '__main__':
     exit_code = asyncio.run(main())

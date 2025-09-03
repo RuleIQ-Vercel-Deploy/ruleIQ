@@ -5,7 +5,6 @@ from __future__ import annotations
 DEFAULT_RETRIES = 5
 MAX_RETRIES = 3
 
-
 Manifest Enhancer - Enriches compliance manifests with business context and risk metadata
 for the ruleIQ IQ Agent's GraphRAG system.
 """
@@ -17,7 +16,6 @@ from datetime import datetime
 logging.basicConfig(level=logging.INFO, format=
     '%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
 
 class ManifestEnhancer:
     """Enhances compliance manifests with intelligent metadata for IQ Agent."""
@@ -382,7 +380,6 @@ class ManifestEnhancer:
                 complexity_scores), 1)
         return report
 
-
 def main() ->None:
     """Main execution function."""
     import argparse
@@ -408,7 +405,6 @@ def main() ->None:
             json.dump(report, f, indent=2)
         logger.info('\nReport saved to: %s' % report_path)
     logger.info('\n✅ Successfully enhanced manifest: %s' % args.output)
-
 
 if __name__ == '__main__':
     main()

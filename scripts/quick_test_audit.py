@@ -9,7 +9,6 @@ import json
 from pathlib import Path
 from typing import Dict, List
 
-
 def run_pytest_json() -> Any:
     """Run pytest with JSON output to get detailed results."""
     print("Running pytest with JSON output...")
@@ -80,7 +79,6 @@ def run_pytest_json() -> Any:
                     print(f"  Error: {test['call']['longrepr'][:200]}...")
     else:
         print("No JSON report generated")
-
 
 if __name__ == "__main__":
     run_pytest_json()

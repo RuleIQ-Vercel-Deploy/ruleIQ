@@ -10,7 +10,6 @@ from typing import Dict, Any
 # Import the complete graph
 from langgraph_agent.graph.complete_graph import build_integrated_graph
 
-
 class TestWorkflowIntegration:
     """Test suite for complete workflow integration."""
 
@@ -126,7 +125,6 @@ class TestWorkflowIntegration:
 
         except ImportError as e:
             pytest.fail(f"Failed to import state validator: {str(e)}")
-
 
 if __name__ == "__main__":
     # Run basic integration test

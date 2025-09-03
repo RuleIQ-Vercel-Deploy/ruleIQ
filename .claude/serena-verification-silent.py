@@ -4,7 +4,6 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-
 def verify() -> None:
     status_file = Path(__file__).parent / 'serena-status.json'
     if not Path('/home/omar/Documents/ruleIQ').exists():
@@ -25,7 +24,6 @@ def verify() -> None:
     except (OSError, ValueError, TypeError):
         sys.exit(3)
     sys.exit(0)
-
 
 if __name__ == '__main__':
     verify()

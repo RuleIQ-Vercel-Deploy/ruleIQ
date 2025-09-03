@@ -17,9 +17,7 @@ from graphiti_core import Graphiti
 from graphiti_core.nodes import EpisodeType
 from graphiti_core.search.search_config_recipes import NODE_HYBRID_SEARCH_RRF
 
-
 logger = logging.getLogger(__name__)
-
 
 class MemoryType(str, Enum):
     """Types of memory storage."""
@@ -31,7 +29,6 @@ class MemoryType(str, Enum):
     PROCEDURAL = "procedural"  # Process and workflow memories
     CONTEXTUAL = "contextual"  # Situational context and preferences
 
-
 class MemoryImportance(str, Enum):
     """Memory importance levels for retention."""
 
@@ -40,7 +37,6 @@ class MemoryImportance(str, Enum):
     MEDIUM = "medium"  # Standard retention
     LOW = "low"  # Short retention
     MINIMAL = "minimal"  # Cache-like, disposable
-
 
 @dataclass
 class MemoryEntry:
@@ -105,7 +101,6 @@ class MemoryEntry:
             "metadata": self.metadata,
         }
 
-
 @dataclass
 class ConversationSummary:
     """Summary of a conversation session."""
@@ -132,7 +127,6 @@ class ConversationSummary:
     # Context for future sessions
     context_for_next: Optional[str] = None
     unresolved_questions: List[str] = field(default_factory=list)
-
 
 class MemoryManager:
     """
@@ -340,7 +334,6 @@ class MemoryManager:
 
             for result in search_results:
                 try:
-                    # Extract metadata from search result
                     metadata = getattr(result, "metadata", {})
 
                     # Filter by company access
@@ -357,7 +350,6 @@ class MemoryManager:
                     if user_id and metadata.get("user_id") != str(user_id):
                         continue
 
-                    # Create memory entry from search result
                     memory = self._create_memory_from_search_result(result, company_id)
                     if memory:
                         # Add similarity score
@@ -371,7 +363,6 @@ class MemoryManager:
                     logger.warning(f"Failed to process search result: {e}")
                     continue
 
-            # Include recent short-term memories from current session
             if session_id:
                 session_key = f"{company_id}_{session_id}"
                 if session_key in self.short_term_cache:

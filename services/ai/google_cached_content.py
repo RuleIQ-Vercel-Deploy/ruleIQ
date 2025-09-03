@@ -16,7 +16,6 @@ from config.ai_config import get_ai_config
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 @dataclass
 class CacheMetadata:
     """Metadata for cached content tracking."""
@@ -27,7 +26,6 @@ class CacheMetadata:
     expires_at: datetime
     hit_count: int = 0
     last_accessed: Optional[datetime] = None
-
 
 class GoogleCachedContentManager:
     """

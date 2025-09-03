@@ -2,7 +2,6 @@
 import logging
 logger = logging.getLogger(__name__)
 
-
 from __future__ import annotations
 
 Revision ID: add_check_constraints_data_integrity
@@ -13,13 +12,11 @@ Create Date: 2025-07-17 12:00:00.000000
 
 from alembic import op
 
-
 # revision identifiers, used by Alembic.
 revision = "add_check_constraints_data_integrity"
 down_revision = "802adb6d1be8"
 branch_labels = None
 depends_on = None
-
 
 def upgrade() -> None:
     """Add CHECK constraints for data integrity."""
@@ -621,7 +618,6 @@ def upgrade() -> None:
         pass
 
     logger.info("✅ Successfully added CHECK constraints for data integrity")
-
 
 def downgrade() -> None:
     """Remove CHECK constraints."""

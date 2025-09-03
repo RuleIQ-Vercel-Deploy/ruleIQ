@@ -15,7 +15,6 @@ from api.schemas.ai_policy import PolicyGenerationRequest, PolicyType, Customiza
 from services.ai.policy_generator import PolicyGenerator
 from database.compliance_framework import ComplianceFramework
 
-
 class TestPolicyStreamingSimple:
     """Simple tests for the policy streaming functionality."""
 
@@ -165,7 +164,6 @@ class TestPolicyStreamingSimple:
         final_chunks = [c for c in chunks if c['type'] == 'complete']
         if final_chunks:
             assert final_chunks[0].get('progress') == 1.0
-
 
 class TestPolicyStreamingAPI:
     """Test the streaming API endpoint."""

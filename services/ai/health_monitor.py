@@ -6,7 +6,6 @@ HTTP_OK = 200
 
 DEFAULT_LIMIT = 100
 
-
 Service Health Monitoring for AI Services
 
 Provides comprehensive health monitoring, service discovery, and
@@ -23,14 +22,11 @@ from typing import Any, Callable, Dict, List, Optional
 import aiohttp
 from config.ai_config import ModelType, ai_config
 
-
 class ServiceStatus(Enum):
     """Service health status levels"""
 
-
 class HealthCheckType(Enum):
     """Types of health checks"""
-
 
 @dataclass
 class HealthMetrics:
@@ -50,7 +46,6 @@ class HealthMetrics:
     recent_errors: List[str] = field(default_factory=list)
     error_patterns: Dict[str, int] = field(default_factory=dict)
 
-
 @dataclass
 class HealthCheck:
     """Configuration for a health check"""
@@ -63,7 +58,6 @@ class HealthCheck:
     retries: int = 2
     success_threshold: int = 2
     failure_threshold: int = 3
-
 
 class ServiceHealthMonitor:
     """
@@ -393,9 +387,7 @@ class ServiceHealthMonitor:
             'consecutive_failures': metrics.consecutive_failures,
             'consecutive_successes': metrics.consecutive_successes}
 
-
 _health_monitor: Optional[ServiceHealthMonitor] = None
-
 
 def get_health_monitor() ->ServiceHealthMonitor:
     """Get global health monitor instance"""
@@ -403,7 +395,6 @@ def get_health_monitor() ->ServiceHealthMonitor:
     if _health_monitor is None:
         _health_monitor = ServiceHealthMonitor()
     return _health_monitor
-
 
 def reset_health_monitor() ->None:
     """Reset global health monitor (for testing)"""

@@ -24,7 +24,6 @@ from config.logging_config import get_logger
 
 logger = get_logger(__name__)
 
-
 class ErrorHandlerNode:
     """Centralized error handling for all graph nodes."""
 
@@ -217,7 +216,6 @@ class ErrorHandlerNode:
         # Clear errors for retry
         state["should_continue"] = True
 
-        # Set next node to retry from last successful node
         if state.get("last_successful_node"):
             state["next_node"] = state["last_successful_node"]
         else:
@@ -498,7 +496,6 @@ class ErrorHandlerNode:
 
         return state
 
-
 def should_route_to_error_handler(state: EnhancedComplianceState) -> Optional[str]:
     """
     Conditional routing function to determine if error handler should be invoked.
@@ -515,7 +512,6 @@ def should_route_to_error_handler(state: EnhancedComplianceState) -> Optional[st
             return "error_handler"
     return None
 
-
 def get_recovery_node(state: EnhancedComplianceState) -> str:
     """
     Determine which node to route to after error handling.
@@ -530,7 +526,6 @@ def get_recovery_node(state: EnhancedComplianceState) -> str:
     if state.get("next_node"):
         return state["next_node"]
 
-    # If we have a last successful node, retry from there
     if state.get("last_successful_node"):
         return state["last_successful_node"]
 

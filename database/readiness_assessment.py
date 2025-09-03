@@ -9,7 +9,6 @@ from sqlalchemy.orm import relationship
 
 from database.db_setup import Base
 
-
 class ReadinessAssessment(Base):
     __tablename__ = "readiness_assessments"
 

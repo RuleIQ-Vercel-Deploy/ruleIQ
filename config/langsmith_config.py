@@ -43,7 +43,6 @@ except ImportError:
         yield
 logger = get_logger(__name__)
 
-
 class LangSmithConfig:
     """Configuration manager for LangSmith tracing."""
 
@@ -274,7 +273,6 @@ class LangSmithConfig:
             tags.append(f'{parts[0]}.{parts[1]}')
         return tags
 
-
 def with_langsmith_tracing(operation: str, include_input: bool=True,
     include_output: bool=True, custom_name: Optional[str]=None) ->Any:
     """
@@ -332,7 +330,6 @@ def with_langsmith_tracing(operation: str, include_input: bool=True,
                 raise
         return wrapper
     return decorator
-
 
 LANGSMITH_SETUP_INSTRUCTIONS = """
 To enable LangSmith tracing for the ruleIQ assessment agent:

@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 MINUTE_SECONDS = 60
 
-
 Startup Configuration Validation
 Validates configuration on application startup
 """
@@ -17,7 +16,6 @@ from . import get_current_config, validate_config, ConfigurationError, BaseConfi
 logging.basicConfig(level=logging.INFO, format=
     '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
 
 class StartupValidator:
     """Validates configuration and environment on startup"""
@@ -255,7 +253,6 @@ class StartupValidator:
         if self.config.DB_POOL_TIMEOUT > MINUTE_SECONDS:
             self.warnings.append('Database pool timeout is very high')
 
-
 def run_startup_validation(exit_on_error: bool=True) ->bool:
     """
     Run startup validation
@@ -285,7 +282,6 @@ def run_startup_validation(exit_on_error: bool=True) ->bool:
         if exit_on_error:
             sys.exit(1)
         return False
-
 
 if __name__ == '__main__':
     """Run validation when executed directly"""

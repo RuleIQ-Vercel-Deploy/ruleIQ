@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 HOUR_SECONDS = 3600
 
-
 AI-specific rate limiting middleware for ruleIQ API endpoints.
 
 Implements tiered rate limiting for different AI operations:
@@ -23,7 +22,6 @@ from api.dependencies.auth import get_current_active_user
 from config.settings import get_settings
 from database.user import User
 settings = get_settings()
-
 
 class AIRateLimiter:
     """Advanced rate limiter specifically designed for AI endpoints."""
@@ -80,13 +78,11 @@ class AIRateLimiter:
         remaining = self.requests_per_minute - len(user_requests)
         return max(0, remaining)
 
-
 ai_help_limiter = AIRateLimiter(requests_per_minute=10, burst_allowance=2)
 ai_followup_limiter = AIRateLimiter(requests_per_minute=5, burst_allowance=1)
 ai_analysis_limiter = AIRateLimiter(requests_per_minute=3, burst_allowance=1)
 ai_recommendations_limiter = AIRateLimiter(requests_per_minute=3,
     burst_allowance=1)
-
 
 def create_ai_rate_limit_dependency(limiter: AIRateLimiter, operation_name: str
     ) ->Any:
@@ -121,7 +117,6 @@ def create_ai_rate_limit_dependency(limiter: AIRateLimiter, operation_name: str
             'X-RateLimit-Operation': operation_name}
     return ai_rate_limit_check
 
-
 ai_help_rate_limit = create_ai_rate_limit_dependency(ai_help_limiter, 'help')
 ai_followup_rate_limit = create_ai_rate_limit_dependency(ai_followup_limiter,
     'followup')
@@ -130,14 +125,12 @@ ai_analysis_rate_limit = create_ai_rate_limit_dependency(ai_analysis_limiter,
 ai_recommendations_rate_limit = create_ai_rate_limit_dependency(
     ai_recommendations_limiter, 'recommendations')
 
-
 async def add_rate_limit_headers(request: Request, response) ->Dict[str, Any]:
     """Middleware to add rate limit headers to responses."""
     if hasattr(request.state, 'rate_limit_headers'):
         for header, value in request.state.rate_limit_headers.items():
             response.headers[header] = value
     return response
-
 
 class AIRateLimitStats:
     """Statistics and monitoring for AI rate limiting."""
@@ -169,9 +162,7 @@ class AIRateLimitStats:
             rate_limits_by_operation), 'requests_per_minute': self.
             total_requests / uptime * 60 if uptime > 0 else 0}
 
-
 ai_rate_limit_stats = AIRateLimitStats()
-
 
 def get_ai_rate_limit_stats() ->Dict:
     """Get AI rate limiting statistics."""

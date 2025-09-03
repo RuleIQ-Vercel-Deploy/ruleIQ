@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 HTTP_OK = 200
 
-
 Automated test script for the freemium assessment feature.
 Tests the complete flow from lead capture through 5 questions.
 """
@@ -17,7 +16,6 @@ from datetime import datetime
 BASE_URL = 'http://localhost:8000/api/v1'
 TEST_EMAIL = f'test_{int(time.time())}@example.com'
 EXPECTED_MIN_QUESTIONS = 5
-
 
 class FreemiumAssessmentTester:
 
@@ -214,7 +212,6 @@ class FreemiumAssessmentTester:
         print('=' * 60)
         return results
 
-
 async def main():
     tester = FreemiumAssessmentTester()
     try:
@@ -222,7 +219,6 @@ async def main():
         return 0 if all(results.values()) else 1
     finally:
         await tester.close()
-
 
 if __name__ == '__main__':
     exit_code = asyncio.run(main())

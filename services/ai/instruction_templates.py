@@ -5,7 +5,6 @@ from __future__ import annotations
 DEFAULT_LIMIT = 100
 MAX_ITEMS = 1000
 
-
 System Instruction Templates for AI Model Initialization
 
 This module provides system instructions that replace traditional system prompts,
@@ -16,7 +15,6 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Dict, Optional
 
-
 class InstructionType(Enum):
     """Types of instruction templates available"""
     ASSESSMENT = 'assessment'
@@ -26,7 +24,6 @@ class InstructionType(Enum):
     ANALYSIS = 'analysis'
     RECOMMENDATIONS = 'recommendations'
     GENERAL = 'general'
-
 
 class FrameworkType(Enum):
     """Supported compliance frameworks"""
@@ -39,7 +36,6 @@ class FrameworkType(Enum):
     NIST = 'nist'
     GENERIC = 'generic'
 
-
 @dataclass
 class InstructionContext:
     """Context for building dynamic instructions"""
@@ -49,7 +45,6 @@ class InstructionContext:
     user_persona: Optional[str] = None
     task_complexity: Optional[str] = None
     additional_context: Optional[Dict[str, Any]] = None
-
 
 class SystemInstructionTemplates:
     """Manages system instruction templates for different AI tasks"""
@@ -571,9 +566,7 @@ Caching Optimization:
             business_profile=business_profile, user_persona=user_persona,
             **kwargs)
 
-
 system_instructions = SystemInstructionTemplates()
-
 
 def get_system_instruction(instruction_type: str, framework: Optional[str]=
     None, business_profile: Optional[Dict[str, Any]]=None, user_persona:

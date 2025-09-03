@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv(".env.local")
 
-
 async def test_ai_direct():
     """Test AI components directly"""
     print("🤖 Testing AI Components Directly\n")
@@ -84,7 +83,6 @@ async def test_ai_direct():
     print("- Circuit Breaker: Test initialization")
     print("- Database: Already tested with Neon ✅")
     print("\nYour AI system is ready!")
-
 
 if __name__ == "__main__":
     asyncio.run(test_ai_direct())

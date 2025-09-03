@@ -15,7 +15,6 @@ from typing import Dict, List, Any
 from neo4j import GraphDatabase
 import hashlib
 
-
 class SMBFrameworkNeo4jIngestion:
     """Ingest SMB framework data into Neo4j knowledge graph."""
 
@@ -314,7 +313,6 @@ class SMBFrameworkNeo4jIngestion:
                 logger.info('  - %s: %s obligations' % (record['framework'],
                     record['count']))
 
-
 def main() ->Any:
     """Main ingestion process."""
     ingestion = SMBFrameworkNeo4jIngestion()
@@ -332,7 +330,6 @@ def main() ->Any:
         ingestion.generate_statistics()
     finally:
         ingestion.close()
-
 
 if __name__ == '__main__':
     main()

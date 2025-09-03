@@ -19,7 +19,6 @@ from enum import Enum
 
 from langgraph.graph import add_messages
 
-
 # Custom reducer functions for state management
 def merge_tool_outputs(existing: Dict[str, Any], new: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -56,7 +55,6 @@ def merge_tool_outputs(existing: Dict[str, Any], new: Dict[str, Any]) -> Dict[st
 
     return merged
 
-
 def accumulate_errors(existing: List[Dict], new: Union[Dict, List[Dict]]) -> List[Dict]:
     """
     Accumulate errors with a maximum limit to prevent memory issues.
@@ -80,7 +78,6 @@ def accumulate_errors(existing: List[Dict], new: Union[Dict, List[Dict]]) -> Lis
         return combined[-max_errors:]
 
     return combined
-
 
 def merge_compliance_data(
     existing: Dict[str, Any], new: Dict[str, Any]
@@ -138,7 +135,6 @@ def merge_compliance_data(
     merged["last_updated"] = datetime.now(timezone.utc).isoformat()
     return merged
 
-
 def increment_counter(existing: int, new: int) -> int:
     """
     Increment a counter value.
@@ -151,7 +147,6 @@ def increment_counter(existing: int, new: int) -> int:
         Incremented counter
     """
     return existing + new
-
 
 def update_metadata(existing: Dict[str, Any], new: Dict[str, Any]) -> Dict[str, Any]:
     """
@@ -185,7 +180,6 @@ def update_metadata(existing: Dict[str, Any], new: Dict[str, Any]) -> Dict[str, 
 
     return merged
 
-
 class WorkflowStatus(Enum):
     """Status of the workflow execution."""
 
@@ -195,7 +189,6 @@ class WorkflowStatus(Enum):
     FAILED = "failed"
     INTERRUPTED = "interrupted"
     RETRYING = "retrying"  # Added for retry logic
-
 
 class EnhancedComplianceState(TypedDict):
     """
@@ -283,7 +276,6 @@ class EnhancedComplianceState(TypedDict):
     evidence_validation_results: List[Dict[str, Any]]
     evidence_collection_state: str  # "init", "collecting", "validating", "complete"
     actor: str  # Current actor/node processing the state
-
 
 def create_enhanced_initial_state(
     session_id: str,
@@ -385,7 +377,6 @@ def create_enhanced_initial_state(
         updated_at=now,
     )
 
-
 class StateTransition:
     """
     Helper class for state transitions with validation.
@@ -456,7 +447,6 @@ class StateTransition:
             state["workflow_status"] = WorkflowStatus.IN_PROGRESS
 
         return state
-
 
 class StateAggregator:
     """

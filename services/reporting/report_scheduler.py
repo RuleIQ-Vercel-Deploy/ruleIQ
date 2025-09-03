@@ -16,7 +16,6 @@ from sqlalchemy.orm import selectinload
 from core.exceptions import DatabaseException, NotFoundException
 from database.report_schedule import ReportSchedule
 
-
 class ReportScheduler:
     """Service to create, manage, and delete report schedules from the database."""
 

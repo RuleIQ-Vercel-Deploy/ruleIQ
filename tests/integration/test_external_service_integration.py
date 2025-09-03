@@ -32,7 +32,6 @@ from services.ai.assistant import ComplianceAssistant
 from config.settings import settings
 from tests.utils.auth_test_utils import TestAuthManager
 
-
 @pytest.mark.integration
 @pytest.mark.external
 class TestAIServiceIntegration:
@@ -239,7 +238,6 @@ class TestAIServiceIntegration:
             mock_openai.assert_called_once()
             assert result["compliance_score"] == 0.72
 
-
 @pytest.mark.integration
 @pytest.mark.external
 @pytest.mark.database
@@ -367,7 +365,6 @@ class TestDatabaseIntegration:
 
             # Either succeeds with retry or returns appropriate error
             assert response.status_code in [201, 503, 500]
-
 
 @pytest.mark.integration
 @pytest.mark.external
@@ -506,7 +503,6 @@ class TestRedisIntegration:
             # Redis might not be available in test environment
             pytest.skip(f"Redis not available for testing: {e}")
 
-
 @pytest.mark.integration
 @pytest.mark.external
 @pytest.mark.slow
@@ -579,7 +575,6 @@ class TestEmailServiceIntegration:
 
             # Email should be sent (if configured)
             # mock_email.assert_called_once()
-
 
 @pytest.mark.integration
 @pytest.mark.external
@@ -686,7 +681,6 @@ class TestFileStorageIntegration:
             mock_processor.assert_called_once()
             assert processing_result["document_type"] == "privacy_policy"
             assert processing_result["confidence_score"] == 0.95
-
 
 @pytest.mark.integration
 @pytest.mark.external

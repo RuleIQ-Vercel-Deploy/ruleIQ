@@ -6,7 +6,6 @@ Task 799f27b3: Validate that all test fixtures work correctly.
 import pytest
 from unittest.mock import MagicMock
 
-
 class TestDatabaseFixtures:
     """Test database-related fixtures."""
     
@@ -57,7 +56,6 @@ class TestDatabaseFixtures:
         result = await async_db_session.execute(text("SELECT 1"))
         assert result is not None
 
-
 class TestRedisFixtures:
     """Test Redis-related fixtures."""
     
@@ -70,7 +68,6 @@ class TestRedisFixtures:
         assert mock_redis_client.get("test_key") == "test_value"
         assert mock_redis_client.delete("test_key") == 1
         assert mock_redis_client.exists("test_key") is False
-
 
 class TestExternalServiceMocks:
     """Test external service mock fixtures."""
@@ -183,7 +180,6 @@ class TestExternalServiceMocks:
         assert result is not None
         assert result.state == "SUCCESS"
 
-
 class TestAuthenticationFixtures:
     """Test authentication-related fixtures."""
     
@@ -212,7 +208,6 @@ class TestAuthenticationFixtures:
         assert authenticated_client is not None
         assert "Authorization" in authenticated_client.headers
 
-
 class TestSampleDataFixtures:
     """Test sample data fixtures."""
     
@@ -234,7 +229,6 @@ class TestSampleDataFixtures:
         assert sample_assessment_data is not None
         assert sample_assessment_data["status"] == "in_progress"
         assert sample_assessment_data["framework_id"] == 1
-
 
 class TestUtilityFixtures:
     """Test utility fixtures."""
@@ -276,7 +270,6 @@ class TestUtilityFixtures:
         else:
             assert os.environ["TEST_VAR"] == original_value
 
-
 class TestAsyncFixtures:
     """Test async fixtures."""
     
@@ -286,7 +279,6 @@ class TestAsyncFixtures:
         assert async_client is not None
         response = await async_client.get("/health")
         assert response is not None
-
 
 class TestAutoMocking:
     """Test auto-mocking of external services."""
@@ -305,7 +297,6 @@ class TestAutoMocking:
         assert "anthropic" in auto_mock_external_services
         assert "gemini" in auto_mock_external_services
         assert "boto" in auto_mock_external_services
-
 
 class TestFixtureIsolation:
     """Test that fixtures are properly isolated."""
@@ -334,12 +325,10 @@ class TestFixtureIsolation:
         """Second test to verify rollback happened."""
         from database import User
         
-        # Check that user from previous test doesn't exist
         user = db_session.query(User).filter_by(
             email="isolation-test-1@example.com"
         ).first()
         assert user is None
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

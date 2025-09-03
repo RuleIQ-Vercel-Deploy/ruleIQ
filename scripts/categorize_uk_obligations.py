@@ -50,7 +50,6 @@ REGULATION_PATTERNS = {'GDPR/DPA': ['data.?protection', 'gdpr',
     ['economic.?crime', 'ukpga/2022/46', 'corporate.?transparency',
     'beneficial.?ownership']}
 
-
 def identify_regulation(doc_data: Dict[str, Any], file_name: str) ->str:
     """Identify which regulation a document belongs to."""
     url = doc_data.get('url', '')
@@ -76,7 +75,6 @@ def identify_regulation(doc_data: Dict[str, Any], file_name: str) ->str:
         if year_match:
             return f'EU Reg {year_match.group(1)}/{year_match.group(2)}'
     return 'Other'
-
 
 def main() ->None:
     """Categorize obligations by regulation type."""
@@ -171,7 +169,6 @@ def main() ->None:
             ['urls']} for k, v in regulation_obligations.items()}}, f, indent=2,
             )
     logger.info('Full analysis saved to: %s' % analysis_path)
-
 
 if __name__ == '__main__':
     main()

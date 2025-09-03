@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 MAX_ITEMS = 1000
 
-
 Database monitoring service for connection pool and session lifecycle tracking.
 """
 from dataclasses import asdict, dataclass
@@ -15,10 +14,8 @@ from config.logging_config import get_logger
 from database.db_setup import get_engine_info
 logger = get_logger(__name__)
 
-
 class AlertLevel(Enum):
     """Alert severity levels."""
-
 
 @dataclass
 class PoolMetrics:
@@ -35,7 +32,6 @@ class PoolMetrics:
         """Convert to dictionary for JSON serialization."""
         return {**asdict(self), 'timestamp': self.timestamp.isoformat()}
 
-
 @dataclass
 class SessionMetrics:
     """Async session lifecycle metrics."""
@@ -49,7 +45,6 @@ class SessionMetrics:
     def to_dict(self) ->Dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {**asdict(self), 'timestamp': self.timestamp.isoformat()}
-
 
 @dataclass
 class DatabaseAlert:
@@ -65,7 +60,6 @@ class DatabaseAlert:
         """Convert to dictionary for JSON serialization."""
         return {**asdict(self), 'timestamp': self.timestamp.isoformat(),
             'level': self.level.value}
-
 
 class DatabaseMonitor:
     """Database connection pool and session monitoring service."""
@@ -207,7 +201,6 @@ class DatabaseMonitor:
             recent_alerts if a.level == AlertLevel.WARNING]), 'info': len([
             a for a in recent_alerts if a.level == AlertLevel.INFO])},
             'thresholds': self.thresholds}
-
 
 class SessionTracker:
     """Track async session lifecycle for monitoring."""

@@ -21,7 +21,6 @@ from langchain_openai import OpenAIEmbeddings
 
 logger = logging.getLogger(__name__)
 
-
 class RetrievalMode(Enum):
     """Retrieval strategies for different query types"""
 
@@ -29,7 +28,6 @@ class RetrievalMode(Enum):
     GLOBAL = "global"  # Cross-jurisdictional synthesis
     HYBRID = "hybrid"  # Combined graph + vector search
     TEMPORAL = "temporal"  # Time-aware regulatory tracking
-
 
 @dataclass
 class ContextPack:
@@ -45,7 +43,6 @@ class ContextPack:
     sources: List[Dict[str, Any]]
     timestamp: datetime
     query_metadata: Dict[str, Any]
-
 
 class GraphRAGRetriever:
     """

@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 MAX_RETRIES = 3
 
-
 Pydantic AI Agent Framework for ruleIQ
 Implements intelligent agents with trust levels and RAG integration
 """
@@ -16,7 +15,6 @@ from datetime import datetime, timezone
 from services.agentic_rag import AgenticRAGSystem
 logger = logging.getLogger(__name__)
 
-
 class AgentContext(BaseModel):
     """Context passed to agents during execution"""
     user_id: str
@@ -25,7 +23,6 @@ class AgentContext(BaseModel):
     business_context: Dict[str, Any] = Field(default_factory=dict)
     interaction_history: List[Dict[str, Any]] = Field(default_factory=list)
     preferences: Dict[str, Any] = Field(default_factory=dict)
-
 
 class AgentResponse(BaseModel):
     """Standard response from Pydantic AI agents"""
@@ -37,14 +34,12 @@ class AgentResponse(BaseModel):
     next_actions: List[str] = Field(default_factory=list)
     requires_human_approval: bool = False
 
-
 class ComplianceAgentResponse(AgentResponse):
     """Response from compliance-specific agents"""
     risk_level: Literal['low', 'medium', 'high', 'critical']
     compliance_gaps: List[str] = Field(default_factory=list)
     recommended_policies: List[str] = Field(default_factory=list)
     implementation_steps: List[str] = Field(default_factory=list)
-
 
 class BaseComplianceAgent:
     """
@@ -188,7 +183,6 @@ Trust Level {self.trust_level} Specific Guidance:
         except Exception as e:
             logger.warning('Failed to log interaction: %s' % e)
 
-
 class GDPRComplianceAgent(BaseComplianceAgent):
     """Specialized agent for GDPR compliance"""
 
@@ -216,7 +210,6 @@ class GDPRComplianceAgent(BaseComplianceAgent):
         - Documentation requirements under Article 30
         """
         return base_prompt + gdpr_specifics
-
 
 class CompaniesHouseAgent(BaseComplianceAgent):
     """Specialized agent for Companies House compliance"""
@@ -246,7 +239,6 @@ class CompaniesHouseAgent(BaseComplianceAgent):
         """
         return base_prompt + companies_house_specifics
 
-
 class EmploymentLawAgent(BaseComplianceAgent):
     """Specialized agent for employment law compliance"""
 
@@ -274,7 +266,6 @@ class EmploymentLawAgent(BaseComplianceAgent):
         - Trade union considerations
         """
         return base_prompt + employment_specifics
-
 
 class AgentOrchestrator:
     """
@@ -334,7 +325,6 @@ class AgentOrchestrator:
             return max(scores, key=scores.get)
         return 'general'
 
-
 def create_compliance_agent(trust_level: int, agent_type: str='general',
     rag_system: Optional[AgenticRAGSystem]=None) ->BaseComplianceAgent:
     """Factory function to create specialized compliance agents"""
@@ -343,7 +333,6 @@ def create_compliance_agent(trust_level: int, agent_type: str='general',
         BaseComplianceAgent}
     agent_class = agent_classes.get(agent_type, BaseComplianceAgent)
     return agent_class(trust_level, rag_system)
-
 
 def create_agent_orchestrator(trust_level: int, rag_system: Optional[
     AgenticRAGSystem]=None) ->AgentOrchestrator:

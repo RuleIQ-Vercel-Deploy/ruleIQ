@@ -31,7 +31,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-
 class IngestionStatus(Enum):
     """Ingestion status tracking"""
 
@@ -42,7 +41,6 @@ class IngestionStatus(Enum):
     PARTIAL = "partial"
     RETRY = "retry"
 
-
 class DataQuality(Enum):
     """Data quality indicators"""
 
@@ -50,7 +48,6 @@ class DataQuality(Enum):
     MEDIUM = "medium"
     LOW = "low"
     INVALID = "invalid"
-
 
 @dataclass
 class IngestionMetrics:
@@ -106,7 +103,6 @@ class IngestionMetrics:
             ),
         }
 
-
 class ComplianceDataValidator(BaseModel):
     """Enterprise-grade validation for compliance data"""
 
@@ -145,7 +141,6 @@ class ComplianceDataValidator(BaseModel):
 
     class Config:
         extra = "allow"  # Allow additional fields for flexibility
-
 
 class Neo4jComplianceIngestion:
     """
@@ -782,7 +777,6 @@ class Neo4jComplianceIngestion:
         await self.driver.close()
         logger.info("Neo4j connection closed")
 
-
 # Integration with IQ Agent
 class IQComplianceIntegration:
     """
@@ -917,7 +911,6 @@ class IQComplianceIntegration:
 
         return [record["evidence"] for record in evidence]
 
-
 if __name__ == "__main__":
     # Example usage for testing
     import os
@@ -928,7 +921,6 @@ if __name__ == "__main__":
     async def test_ingestion():
         """Test the ingestion pipeline"""
 
-        # Get credentials from environment
         neo4j_uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
         neo4j_user = os.getenv("NEO4J_USER", "neo4j")
         neo4j_password = os.getenv("NEO4J_PASSWORD", "password")

@@ -26,13 +26,11 @@ from database.business_profile import BusinessProfile
 from database.compliance_framework import ComplianceFramework
 from database.generated_policy import GeneratedPolicy
 
-
 @api_retry
 @google_breaker
 async def _generate_policy_with_protection(prompt: str) -> str:
     """Generates policy content with retry and circuit breaker protection."""
     return await generate_compliance_content(prompt)
-
 
 def build_policy_generation_prompt(
     profile: BusinessProfile,
@@ -46,7 +44,6 @@ def build_policy_generation_prompt(
         f"Generate a {policy_type} compliance policy for a {profile.industry} company "
         f"named {profile.company_name}.",
     )
-
 
 async def generate_compliance_policy(
     db: AsyncSession,
@@ -83,7 +80,6 @@ async def generate_compliance_policy(
         try:
             policy_data = json.loads(policy_content_str)
         except json.JSONDecodeError:
-            # Handle plain text response from AI service
             policy_data = {
                 "title": f"{framework.name} Policy for {profile.company_name}",
                 "content": policy_content_str,
@@ -126,7 +122,6 @@ async def generate_compliance_policy(
             f"An unexpected error occurred during policy generation: {e}"
         ) from e
 
-
 async def get_policy_by_id(
     db: AsyncSession, policy_id: UUID, user_id: UUID
 ) -> GeneratedPolicy:
@@ -144,7 +139,6 @@ async def get_policy_by_id(
     except SQLAlchemyError as e:
         raise DatabaseException("Failed to retrieve policy.") from e
 
-
 async def get_user_policies(db: AsyncSession, user_id: UUID) -> List[GeneratedPolicy]:
     """Retrieves all policies for a given user."""
     try:
@@ -158,7 +152,6 @@ async def get_user_policies(db: AsyncSession, user_id: UUID) -> List[GeneratedPo
         raise DatabaseException(
             f"Failed to retrieve policies for user {user_id}."
         ) from e
-
 
 async def regenerate_policy_section(
     db: AsyncSession,

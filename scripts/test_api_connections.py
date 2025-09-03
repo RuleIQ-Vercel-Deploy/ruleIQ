@@ -10,7 +10,6 @@ import requests
 import json
 BASE_URL = 'http://localhost:8000'
 
-
 def test_endpoint(method, endpoint, data=None, headers=None, description=''):
     """Test a single endpoint"""
     url = f'{BASE_URL}{endpoint}'
@@ -36,7 +35,6 @@ def test_endpoint(method, endpoint, data=None, headers=None, description=''):
     except (json.JSONDecodeError, requests.RequestException, ValueError) as e:
         print(f'❌ {method} {endpoint} -> ERROR: {e}')
         return False, None
-
 
 def main():
     print('🚀 Testing API Connections - Backend to Frontend Integration')
@@ -80,7 +78,6 @@ def main():
     print('✅ API Connection Test Complete')
     print("   - Check results above to see what's working vs broken")
     print('   - ✅ = Working, ❌ = Needs attention')
-
 
 if __name__ == '__main__':
     main()

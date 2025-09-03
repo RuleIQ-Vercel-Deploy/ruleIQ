@@ -14,7 +14,6 @@ from collections import defaultdict
 import statistics
 from dataclasses import dataclass, field
 
-
 @dataclass
 class EnforcementPattern:
     """Represents a pattern extracted from enforcement actions"""
@@ -29,7 +28,6 @@ class EnforcementPattern:
     risk_multiplier: float
     evidence_references: List[str] = field(default_factory=list)
 
-
 @dataclass
 class RegulatoryTrend:
     """Tracks regulatory enforcement trends over time"""
@@ -39,7 +37,6 @@ class RegulatoryTrend:
     recent_penalty_avg: float
     year_over_year_change: float
     predicted_focus: List[str]
-
 
 class EnforcementAnalyzer:
     """
@@ -398,7 +395,6 @@ class EnforcementAnalyzer:
         else:
             return 'INSUFFICIENT'
 
-
 class IQEnforcementIntegration:
     """
     Integrates enforcement intelligence into IQ's decision-making
@@ -492,7 +488,6 @@ class IQEnforcementIntegration:
                 'internal://enforcement/patterns'}
             formatted_evidence.append(pattern_evidence)
         return formatted_evidence
-
 
 if __name__ == '__main__':
     analyzer = EnforcementAnalyzer()

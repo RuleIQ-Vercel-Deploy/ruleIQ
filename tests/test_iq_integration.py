@@ -11,7 +11,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 load_dotenv()
 
-
 async def test_iq_neo4j_integration():
     """Test the IQ Neo4j integration with real compliance data."""
     neo4j_uri = 'bolt://localhost:7688'
@@ -151,7 +150,6 @@ async def test_iq_neo4j_integration():
         traceback.print_exc()
     finally:
         await integration.close()
-
 
 if __name__ == '__main__':
     asyncio.run(test_iq_neo4j_integration())

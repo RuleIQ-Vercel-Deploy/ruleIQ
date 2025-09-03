@@ -32,7 +32,6 @@ from services.ai import ComplianceAssistant
 
 logger = logging.getLogger(__name__)
 
-
 class ConversationState(str, Enum):
 #     STARTING = "starting"  # Unused variable
 #     GATHERING_CONTEXT = "gathering_context"  # Unused variable
@@ -42,14 +41,12 @@ class ConversationState(str, Enum):
 #     COMPLETED = "completed"  # Unused variable
 #     PAUSED = "paused"  # Unused variable
 
-
 class QuestionType(str, Enum):
 #     BASIC_INFO = "basic_info"  # Unused variable
 #     COMPLIANCE_SPECIFIC = "compliance_specific"  # Unused variable
 #     FOLLOW_UP = "follow_up"  # Unused variable
 #     CLARIFICATION = "clarification"  # Unused variable
 #     VERIFICATION = "verification"  # Unused variable
-
 
 @dataclass
 class ConversationalQuestion:
@@ -63,7 +60,6 @@ class ConversationalQuestion:
     follow_up_conditions: Optional[Dict[str, Any]] = None
     personalization_context: Optional[Dict[str, Any]] = None
     trust_level_required: TrustLevel = TrustLevel.UNKNOWN
-
 
 @dataclass
 class AssessmentConversation:
@@ -82,7 +78,6 @@ class AssessmentConversation:
     started_at: datetime
     last_activity: datetime
     estimated_completion: float  # 0-1 progress
-
 
 class AgenticAssessmentService:
     """
@@ -474,7 +469,6 @@ class AgenticAssessmentService:
                 q["question_id"] for q in conversation.answered_questions,
             ]
 
-            # Find appropriate question from templates
             for framework in framework_types:
                 questions = self._conversation_templates.get(framework, {}).get(
                     question_type.value, [],
@@ -505,7 +499,6 @@ class AgenticAssessmentService:
 
     def _load_conversation_templates(self) -> Dict[str, Any]:
         """Load conversation templates for different frameworks"""
-        # This would typically load from a file or database
         # For now, return a basic template structure
         return {
             "ISO27001": {
@@ -570,7 +563,6 @@ class AgenticAssessmentService:
     ) -> Dict[str, Any]:
         """Process and validate user response"""
         try:
-            # Use LLM to extract structured data from natural language response
             current_question = conversation.current_question
             if not current_question:
                 return {"raw_response": user_response}
@@ -834,7 +826,6 @@ class AgenticAssessmentService:
         self, conversation: AssessmentConversation, processed_response: Dict[str, Any]
     ) -> None:
         """Update conversation context with new information"""
-        # Extract business context from responses
         structured_data = processed_response.get("structured_data", {})
 
         # Update context based on question area
@@ -847,10 +838,8 @@ class AgenticAssessmentService:
                 conversation.current_question.id
             ] = structured_data
 
-
 # Global service instance
 _agentic_assessment_service = None
-
 
 async def get_agentic_assessment_service() -> AgenticAssessmentService:
     """Get or create the agentic assessment service instance"""

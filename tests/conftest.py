@@ -64,14 +64,12 @@ from tests.fixtures.external_services import (
 from tests.mock_service_proxy import setup_test_services
 setup_test_services()
 
-
 @pytest.fixture(scope="session")
 def event_loop():
     """Create an instance of the default event loop for the test session."""
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
-
 
 @pytest.fixture
 def mock_llm():
@@ -81,20 +79,17 @@ def mock_llm():
     mock.ainvoke.return_value = MagicMock(content="Mock async response")
     return mock
 
-
 @pytest.fixture
 def mock_ai_client():
     """Provide a mock AI client for testing without API calls."""
     from utils.test_helpers import create_smart_mock_ai_client
     return create_smart_mock_ai_client()
 
-
 @pytest.fixture
 def mock_openai_client():
     """Provide a mock OpenAI client for testing."""
     from utils.test_helpers import create_smart_mock_openai
     return create_smart_mock_openai()
-
 
 @pytest.fixture
 def mock_anthropic_client():
@@ -106,7 +101,6 @@ def mock_anthropic_client():
     )
     return mock
 
-
 @pytest.fixture
 def mock_neo4j_session():
     """Provide a mock Neo4j session for testing."""
@@ -114,7 +108,6 @@ def mock_neo4j_session():
     mock.run.return_value = MagicMock(data=MagicMock(return_value=[]))
     mock.close = MagicMock()
     return mock
-
 
 @pytest.fixture
 def postgres_test_url():
@@ -124,7 +117,6 @@ def postgres_test_url():
         "TEST_DATABASE_URL",
         "postgresql://test_user:test_password@localhost:5433/ruleiq_test"
     )
-
 
 @pytest.fixture
 def postgres_checkpointer(postgres_test_url):
@@ -158,7 +150,6 @@ def postgres_checkpointer(postgres_test_url):
     except Exception as e:
         pytest.skip(f"PostgreSQL checkpointer not available: {e}")
 
-
 @pytest.fixture
 def postgres_connection(postgres_test_url):
     """
@@ -170,7 +161,6 @@ def postgres_connection(postgres_test_url):
         conn.close()
     except Exception as e:
         pytest.skip(f"PostgreSQL connection failed: {e}")
-
 
 @pytest.fixture
 def clean_test_db(postgres_connection):
@@ -202,7 +192,6 @@ def clean_test_db(postgres_connection):
         )
         postgres_connection.commit()
 
-
 @contextmanager
 def temporary_env_var(key: str, value: str):
     """
@@ -218,7 +207,6 @@ def temporary_env_var(key: str, value: str):
         else:
             os.environ[key] = old_value
 
-
 # Mark slow tests
 def pytest_configure(config):
     """Register custom markers."""
@@ -231,7 +219,6 @@ def pytest_configure(config):
     config.addinivalue_line("markers", "external: mark test as requiring external services")
     config.addinivalue_line("markers", "unit: mark test as unit test")
 
-
 def assert_api_response_security(response):
     """Assert API response has proper security headers."""
     # Check for security headers
@@ -239,7 +226,6 @@ def assert_api_response_security(response):
     assert response.headers["X-Content-Type-Options"] == "nosniff"
     # Additional security checks can be added here
     pass
-
 
 @pytest.fixture
 def client():
@@ -250,13 +236,11 @@ def client():
     with TestClient(app) as test_client:
         yield test_client
 
-
 @pytest.fixture
 def authenticated_client(client, authenticated_headers):
     """Create an authenticated test client."""
     client.headers.update(authenticated_headers)
     return client
-
 
 @pytest.fixture
 def authenticated_headers(sample_user, db_session):
@@ -270,7 +254,6 @@ def authenticated_headers(sample_user, db_session):
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json",
     }
-
 
 @pytest.fixture
 def admin_headers(db_session):
@@ -298,7 +281,6 @@ def admin_headers(db_session):
         "Content-Type": "application/json",
     }
 
-
 @pytest.fixture
 def sample_user_data():
     """Create sample user data for testing."""
@@ -309,7 +291,6 @@ def sample_user_data():
         "company": "Test Company",
         "role": "compliance_manager"
     }
-
 
 @pytest.fixture
 def sample_framework_data():
@@ -333,7 +314,6 @@ def sample_framework_data():
         ]
     }
 
-
 @pytest.fixture
 def sample_assessment_data():
     """Create sample assessment data for testing."""
@@ -345,7 +325,6 @@ def sample_assessment_data():
         "responses": {}
     }
 
-
 # API testing fixtures
 @pytest.fixture
 def api_headers():
@@ -356,7 +335,6 @@ def api_headers():
         "X-Request-ID": "test-request-id"
     }
 
-
 @pytest.fixture
 def multipart_headers():
     """Headers for multipart form data."""
@@ -365,7 +343,6 @@ def multipart_headers():
         "X-Request-ID": "test-request-id"
         # Content-Type will be set automatically for multipart
     }
-
 
 # Async fixtures
 @pytest.fixture
@@ -377,13 +354,11 @@ async def async_client():
     async with AsyncClient(app=app, base_url="http://test") as client:
         yield client
 
-
 @pytest.fixture
 async def async_authenticated_client(async_client, authenticated_headers):
     """Create an authenticated async test client."""
     async_client.headers.update(authenticated_headers)
     return async_client
-
 
 # Cleanup fixtures
 @pytest.fixture(autouse=True)
@@ -402,7 +377,6 @@ def cleanup_uploads(tmp_path):
     if upload_dir.exists():
         shutil.rmtree(upload_dir)
 
-
 @pytest.fixture(autouse=True)
 def reset_singleton_instances():
     """Reset singleton instances between tests."""
@@ -415,7 +389,6 @@ def reset_singleton_instances():
     for module in modules_to_reload:
         if hasattr(sys.modules[module], '_instance'):
             delattr(sys.modules[module], '_instance')
-
 
 # Re-export all fixtures for backward compatibility
 __all__ = [

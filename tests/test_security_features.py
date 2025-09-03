@@ -17,7 +17,6 @@ from services.security_alerts import SecurityAlertService
 from database.user import User
 from database.rbac import AuditLog
 
-
 @pytest.mark.asyncio
 class TestRateLimiting:
     """Test AI feature rate limiting."""
@@ -68,7 +67,6 @@ class TestRateLimiting:
                 mock_user, feature='ai_assessment', check_only=False)
         assert exc_info.value.status_code == 429
         assert 'Rate limit exceeded' in exc_info.value.detail['error']
-
 
 @pytest.mark.asyncio
 class TestSecurityAlerts:
@@ -158,7 +156,6 @@ class TestSecurityAlerts:
         assert audit_log.action == 'login_failure'
         assert audit_log.severity == 'warning'
         mock_create_task.assert_called_once()
-
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

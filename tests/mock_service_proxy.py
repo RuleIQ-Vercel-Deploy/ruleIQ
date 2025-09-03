@@ -14,7 +14,6 @@ import redis
 from sqlalchemy import create_engine
 from urllib.parse import urlparse, urlunparse
 
-
 class ServiceProxy:
     """
     Intercepts service connections and redirects to test instances.
@@ -185,9 +184,7 @@ class ServiceProxy:
         except ImportError:
             pass
 
-
 service_proxy = ServiceProxy()
-
 
 def setup_test_services():
     """
@@ -203,7 +200,6 @@ def setup_test_services():
     logger.info('  Redis: localhost:%s' % service_proxy.test_config['redis'
         ]['port'])
     logger.info('  OpenTelemetry: Mocked (no exports)')
-
 
 @contextmanager
 def test_service_context():

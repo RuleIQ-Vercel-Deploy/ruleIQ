@@ -13,7 +13,6 @@ DEFAULT_LIMIT = 100
 HALF_RATIO = 0.5
 HIGH_CONFIDENCE_THRESHOLD = 0.95
 
-
 Microsoft 365/Azure AD API Client for compliance evidence collection.
 Follows the foundation architecture pattern for enterprise API integrations.
 """
@@ -24,7 +23,6 @@ import aiohttp
 from pydantic import BaseModel, Field
 from .base_api_client import BaseAPIClient, APICredentials, AuthType, CollectionResult, EvidenceQuality
 logger = logging.getLogger(__name__)
-
 
 class MicrosoftCredentials(BaseModel):
     """Microsoft 365/Azure AD OAuth2 credentials."""
@@ -37,10 +35,8 @@ class MicrosoftCredentials(BaseModel):
     access_token: Optional[str] = Field(None, description=
         'Current access token')
 
-
     class Config:
         extra = 'allow'
-
 
 class MicrosoftGraphAPIClient(BaseAPIClient):
     """Microsoft 365/Azure AD Graph API client for compliance evidence collection."""

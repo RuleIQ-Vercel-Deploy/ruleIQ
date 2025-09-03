@@ -17,13 +17,10 @@ DEFAULT_RETRIES = 5
 HALF_RATIO = 0.5
 MAX_RETRIES = 3
 
-
-
 async def async_generator(items):
     """Helper to create async generator."""
     for item in items:
         yield item
-
 
 @pytest.mark.asyncio
 class TestProcessEvidenceAdditionalPaths:
@@ -75,7 +72,6 @@ class TestProcessEvidenceAdditionalPaths:
         with pytest.raises(SQLAlchemyError):
             await node.process_evidence(evidence_data)
         assert mock_session.rollback.called
-
 
 @pytest.mark.asyncio
 class TestProcessPendingEvidenceEdgeCases:
@@ -138,7 +134,6 @@ class TestProcessPendingEvidenceEdgeCases:
         assert result['error_count'] == 1
         assert len(result['errors']) == 1
 
-
 @pytest.mark.asyncio
 class TestRetryWithBackoffEdgeCases:
     """Test edge cases in retry_with_backoff."""
@@ -158,7 +153,6 @@ class TestRetryWithBackoffEdgeCases:
         with pytest.raises(Exception, match='Persistent failure'):
             await node.retry_with_backoff(always_failing)
         assert call_count == MAX_RETRIES
-
 
 @pytest.mark.asyncio
 class TestStaleEvidenceCleanup:
@@ -207,7 +201,6 @@ class TestStaleEvidenceCleanup:
             assert result['sync_results']['updated_count'] == DEFAULT_RETRIES
             assert 'Evidence sync completed: 5 items marked stale' in str(
                 result['messages'])
-
 
 @pytest.mark.asyncio
 class TestValidateEvidenceScoring:

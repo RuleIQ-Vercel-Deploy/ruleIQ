@@ -27,7 +27,6 @@ FILES_TO_REMOVE = [
     "workers/monitoring_tasks.py",
 ]
 
-# Patterns to remove from requirements files
 DEPENDENCIES_TO_REMOVE = [
     "celery",
     "redis",
@@ -57,7 +56,6 @@ IMPORT_PATTERNS = [
     "from workers.monitoring_tasks import",
     "from celery_app import",
 ]
-
 
 class CeleryRemover:
     """Safely remove Celery code from the project."""
@@ -147,7 +145,6 @@ class CeleryRemover:
                 original_content = content
                 modified = False
                 
-                # Remove import lines
                 lines = content.split('\n')
                 new_lines = []
                 
@@ -304,7 +301,6 @@ class CeleryRemover:
         for step in report['next_steps']:
             print(f"  {step}")
 
-
 def main():
     parser = argparse.ArgumentParser(
         description="Remove Celery code from ruleIQ codebase"
@@ -335,7 +331,6 @@ def main():
     else:
         print("\n✅ Celery code removal complete!")
         print("⚠️  Remember to run tests and check the application!")
-
 
 if __name__ == "__main__":
     main()

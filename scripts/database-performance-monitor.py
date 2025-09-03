@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 MAX_RECORDS = 10000
 
-
 Database Performance Monitoring Script
 Monitors PostgreSQL database performance and identifies optimization opportunities
 """
@@ -17,7 +16,6 @@ import os
 logging.basicConfig(level=logging.INFO, format=
     '%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
 
 class DatabasePerformanceMonitor:
 
@@ -192,7 +190,6 @@ class DatabasePerformanceMonitor:
         except Exception as e:
             logger.error('Error saving report: %s' % e)
 
-
 def main() ->None:
     """Main execution function"""
     database_url = os.getenv('DATABASE_URL',
@@ -224,7 +221,6 @@ def main() ->None:
         logger.info('\n✅ Analysis complete!')
     except Exception as e:
         logger.error('Failed to run performance analysis: %s' % e)
-
 
 if __name__ == '__main__':
     main()

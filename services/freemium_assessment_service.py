@@ -35,7 +35,6 @@ from config.logging_config import get_logger
 
 logger = get_logger(__name__)
 
-
 class FreemiumAssessmentService:
     """
     Core service for managing freemium AI assessments.
@@ -183,7 +182,6 @@ class FreemiumAssessmentService:
                         "generation_timestamp": datetime.now(timezone.utc).isoformat(),
                     }
 
-                    # Extract first question from agent messages
                     messages = agent_state.get("messages", [])
                     if messages and len(messages) > 0:
                         # Last message should be the introduction/first question
@@ -336,7 +334,6 @@ class FreemiumAssessmentService:
                 )
                 next_question = None
 
-                # Extract next question from agent messages if not complete
                 if completion_status == "in_progress":
                     messages = agent_state.get("messages", [])
                     if messages:
@@ -491,7 +488,6 @@ class FreemiumAssessmentService:
             )
             lead = result.scalar_one_or_none()
 
-            # Get business context from personalization data
             personalization = session.personalization_data or {}
 
             # Prepare context for AI analysis
@@ -1025,7 +1021,6 @@ class FreemiumAssessmentService:
 
             # If AI is available, generate a contextual follow-up question
             if self.circuit_breaker.is_model_available("gemini-2.5-flash"):
-                # Build context from previous answers
                 context = {
                     "previous_answers": session.user_answers,
                     "business_type": session.personalization_data.get("business_type"),
@@ -1041,7 +1036,6 @@ class FreemiumAssessmentService:
                 if questions:
                     return questions[0]
 
-            # Fallback: Select from our question bank if not already asked
             fallback_questions = self._get_fallback_questions(session.assessment_type)
             for question in fallback_questions:
                 if question["question_id"] not in answered_questions:

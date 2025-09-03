@@ -17,7 +17,6 @@ from datetime import datetime
 project_root = Path(__file__).parent.parent
 sys.path.append(str(project_root))
 
-
 class TestSpriteExecutor:
 
     def __init__(self) ->None:
@@ -263,7 +262,6 @@ class TestFrontendFlow:
         logger.info('   Passed: %s' % report['summary']['passed'])
         logger.info('   Failed: %s' % report['summary']['failed'])
 
-
 async def main() ->None:
     """Main execution function"""
     logger.info('🚀 TestSprite Code Generation and Execution')
@@ -278,7 +276,6 @@ async def main() ->None:
     await executor.run_generated_tests()
     executor.generate_report()
     logger.info('\n✅ TestSprite execution complete!')
-
 
 if __name__ == '__main__':
     asyncio.run(main())

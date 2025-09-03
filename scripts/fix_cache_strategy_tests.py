@@ -7,7 +7,6 @@ import sys
 project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, project_root)
 
-
 def fix_cache_strategy_tests() ->None:
     """Fix fixture scope issues in cache strategy tests."""
     test_file = os.path.join(project_root,
@@ -36,8 +35,6 @@ from services.ai.cached_content import (
     CacheLifecycleConfig,
 )
 
-
-# Move fixtures outside the class
 @pytest.fixture
 def optimized_cache_config():
     ""\"Cache configuration with optimization enabled.""\"
@@ -53,12 +50,10 @@ def optimized_cache_config():
         ttl_adjustment_factor=0.2,
     )
 
-
 @pytest.fixture
 def cache_manager(optimized_cache_config):
     ""\"Cache manager with optimization enabled.""\"
     return GoogleCachedContentManager(optimized_cache_config)
-
 
 @pytest.fixture
 def sample_business_profile():
@@ -72,7 +67,6 @@ def sample_business_profile():
         "handles_personal_data": True,
         "processes_payments": False,
     }
-
 
 @pytest.mark.unit
 @pytest.mark.ai
@@ -358,7 +352,6 @@ class TestCacheStrategyOptimization:
         )
         assert len(cache_manager.invalidation_triggers) == 0
 
-
 @pytest.mark.integration
 @pytest.mark.ai
 class TestCacheStrategyIntegration:
@@ -456,7 +449,6 @@ class TestCacheStrategyIntegration:
             '  This file also has fixtures inside test classes - fixing...')
     else:
         logger.info('  This file appears to be OK')
-
 
 if __name__ == '__main__':
     fix_cache_strategy_tests()

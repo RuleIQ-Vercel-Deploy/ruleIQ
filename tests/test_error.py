@@ -8,7 +8,6 @@ from langgraph_agent.graph.enhanced_app import EnhancedComplianceGraph
 from langgraph_agent.graph.enhanced_state import create_enhanced_initial_state
 from uuid import uuid4
 
-
 async def test():
     try:
         graph = await EnhancedComplianceGraph.create()
@@ -31,6 +30,5 @@ async def test():
         import traceback
 
         traceback.print_exc()
-
 
 asyncio.run(test())

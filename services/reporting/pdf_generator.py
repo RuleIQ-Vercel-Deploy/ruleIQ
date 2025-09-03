@@ -22,7 +22,6 @@ from reportlab.platypus import (
     TableStyle,
 )
 
-
 class PDFGenerator:
     """Generate PDF reports from structured data"""
 

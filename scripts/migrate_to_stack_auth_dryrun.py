@@ -28,7 +28,6 @@ REPLACEMENTS = [(
     'current_user\\.username', 'current_user.get("displayName", "")'), (
     'user\\.username', 'user.get("displayName", "")')]
 
-
 def get_router_files() ->List[Path]:
     """Get all router files that need migration"""
     router_dir = Path('api/routers')
@@ -39,7 +38,6 @@ def get_router_files() ->List[Path]:
         if file.name not in exclude_files and not file.name.startswith('_'):
             router_files.append(file)
     return router_files
-
 
 def analyze_file(file_path: Path) ->List[str]:
     """Analyze a single file for needed changes"""
@@ -65,7 +63,6 @@ def analyze_file(file_path: Path) ->List[str]:
                 f'  Line {line_num}: {line.strip()} -> User type hint needs updating to dict'
                 )
     return changes
-
 
 def main() ->None:
     """Run the dry-run analysis"""
@@ -110,7 +107,6 @@ def main() ->None:
     logger.info('2. Run the migration script with confirmation')
     logger.info('3. Test all endpoints with Stack Auth tokens')
     logger.info('4. Update any service layer code that expects User models')
-
 
 if __name__ == '__main__':
     main()

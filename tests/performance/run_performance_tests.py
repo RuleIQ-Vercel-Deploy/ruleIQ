@@ -25,7 +25,6 @@ import psutil
 project_root = Path(__file__).parent.parent.parent
 sys.path.append(str(project_root))
 
-
 class PerformanceTestRunner:
     """Orchestrates performance test execution and reporting"""
 
@@ -313,7 +312,6 @@ class PerformanceTestRunner:
         else:
             logger.info('\n🎉 No performance issues detected!')
 
-
 class SystemMonitor:
     """Monitor system resources during performance tests"""
 
@@ -348,7 +346,6 @@ class SystemMonitor:
             memory_samples else 0, 'max_memory_percent': max(memory_samples
             ) if memory_samples else 0, 'sample_count': len(cpu_samples)}
 
-
 def load_config(config_file: Optional[str]=None) ->Dict[str, Any]:
     """Load performance test configuration"""
     default_config = {'warmup_iterations': 3, 'benchmark_rounds': 10,
@@ -359,7 +356,6 @@ def load_config(config_file: Optional[str]=None) ->Dict[str, Any]:
             file_config = json.load(f)
         default_config.update(file_config)
     return default_config
-
 
 def main():
     """Main entry point for performance test runner"""
@@ -399,7 +395,6 @@ def main():
         sys.exit(1)
     else:
         sys.exit(0)
-
 
 if __name__ == '__main__':
     main()

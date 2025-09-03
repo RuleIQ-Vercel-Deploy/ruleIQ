@@ -14,7 +14,6 @@ from threading import Lock
 from typing import Any, Callable, Dict, List, Optional
 from services.ai.ai_types import CircuitState, FailureRecord
 
-
 @dataclass
 class CircuitBreakerConfig:
     """Configuration for circuit breaker behavior"""
@@ -40,7 +39,6 @@ class CircuitBreakerConfig:
     @property
     def timeout_seconds(self) ->int:
         return self.recovery_timeout
-
 
 @dataclass
 class CircuitBreakerMetrics:
@@ -74,7 +72,6 @@ class CircuitBreakerMetrics:
             self.failure_rate = self.failed_requests / self.total_requests
         else:
             self.failure_rate = 0.0
-
 
 class AICircuitBreaker:
     """
@@ -362,9 +359,7 @@ class AICircuitBreaker:
                 __name__})
             raise
 
-
 _circuit_breaker: Optional[AICircuitBreaker] = None
-
 
 def get_circuit_breaker() ->AICircuitBreaker:
     """Get global circuit breaker instance"""
@@ -372,7 +367,6 @@ def get_circuit_breaker() ->AICircuitBreaker:
     if _circuit_breaker is None:
         _circuit_breaker = AICircuitBreaker()
     return _circuit_breaker
-
 
 def reset_circuit_breaker() ->None:
     """Reset global circuit breaker (for testing)"""

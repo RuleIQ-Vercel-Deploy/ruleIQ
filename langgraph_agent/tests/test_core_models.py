@@ -31,7 +31,6 @@ from langgraph_agent.core.constants import (
     COMPLIANCE_FRAMEWORKS,
 )
 
-
 class TestConstants:
     """Test core constants are properly defined."""
 
@@ -60,7 +59,6 @@ class TestConstants:
         model_frameworks = [f.value for f in ComplianceFramework]
         for framework in COMPLIANCE_FRAMEWORKS:
             assert framework in model_frameworks
-
 
 class TestComplianceProfile:
     """Test ComplianceProfile model validation."""
@@ -103,7 +101,6 @@ class TestComplianceProfile:
                 frameworks=[],  # Empty frameworks not allowed
             )
 
-
 class TestObligation:
     """Test Obligation model validation."""
 
@@ -135,7 +132,6 @@ class TestObligation:
                 description="Test description",
                 category="test",
             )
-
 
 class TestSafeFallbackResponse:
     """Test SafeFallbackResponse behavior."""
@@ -169,7 +165,6 @@ class TestSafeFallbackResponse:
                 error_details={"password": "secret123"},  # Sensitive key not allowed
             )
 
-
 class TestEvidenceItem:
     """Test EvidenceItem model validation."""
 
@@ -202,7 +197,6 @@ class TestEvidenceItem:
                 file_path="relative/path.pdf",  # Invalid relative path
             )
 
-
 class TestLegalReviewTicket:
     """Test LegalReviewTicket model validation."""
 
@@ -234,7 +228,6 @@ class TestLegalReviewTicket:
                 status="invalid_status",  # Not in allowed list
             )
 
-
 class TestGraphMessage:
     """Test GraphMessage model validation."""
 
@@ -257,7 +250,6 @@ class TestGraphMessage:
                 role="invalid_role",  # Must be user/assistant/system/tool
                 content="Test message",
             )
-
 
 class TestRouteDecision:
     """Test RouteDecision model validation."""
@@ -289,7 +281,6 @@ class TestRouteDecision:
                 input_text="Test input",
                 company_id=uuid4(),
             )
-
 
 class TestJSONSchemaExport:
     """Test JSON schema export functionality."""

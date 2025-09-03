@@ -311,7 +311,6 @@ SMB_FRAMEWORKS = {'ISO 27001:2022': {'title':
     'Clear security roles even in small teams', 'category': 'Govern',
     'priority': 'high'}]}}
 
-
 def extract_smb_framework_obligations() ->Any:
     """Extract SMB-relevant obligations from frameworks."""
     all_obligations = []
@@ -370,7 +369,6 @@ def extract_smb_framework_obligations() ->Any:
         logger.info('  - %s: %s obligations' % (framework, details[
             'obligation_count']))
     return manifest
-
 
 if __name__ == '__main__':
     extract_smb_framework_obligations()

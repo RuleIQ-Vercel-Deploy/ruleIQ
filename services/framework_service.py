@@ -15,7 +15,6 @@ from database.compliance_framework import ComplianceFramework
 from database.user import User
 logger = get_logger(__name__)
 
-
 async def get_all_frameworks(db: AsyncSession) ->List[ComplianceFramework]:
     """Get all available compliance frameworks."""
     try:
@@ -27,7 +26,6 @@ async def get_all_frameworks(db: AsyncSession) ->List[ComplianceFramework]:
             exc_info=True)
         raise DatabaseException('Failed to retrieve compliance frameworks.'
             ) from e
-
 
 async def get_framework_by_id(db: AsyncSession, user: User, framework_id: UUID
     ) ->Optional[ComplianceFramework]:
@@ -44,7 +42,6 @@ async def get_framework_by_id(db: AsyncSession, user: User, framework_id: UUID
             framework_id, e), exc_info=True)
         raise DatabaseException('Failed to retrieve framework by ID.') from e
 
-
 async def get_framework_by_name(db: AsyncSession, name: str) ->Optional[
     ComplianceFramework]:
     """Get a specific compliance framework by name."""
@@ -57,7 +54,6 @@ async def get_framework_by_name(db: AsyncSession, name: str) ->Optional[
             "Database error while getting framework by name '%s': %s" % (
             name, e), exc_info=True)
         raise DatabaseException('Failed to retrieve framework by name.') from e
-
 
 def calculate_framework_relevance(profile: BusinessProfile, framework:
     ComplianceFramework) ->float:
@@ -72,7 +68,6 @@ def calculate_framework_relevance(profile: BusinessProfile, framework:
         ] and framework.category == 'Data Protection':
         score += 25
     return score
-
 
 async def get_relevant_frameworks(db: AsyncSession, user: User) ->List[Dict]:
     """Get compliance frameworks relevant to the user's business profile with relevance scores."""
@@ -100,7 +95,6 @@ async def get_relevant_frameworks(db: AsyncSession, user: User) ->List[Dict]:
              % (user.id, e), exc_info=True)
         raise DatabaseException('Failed to retrieve relevant frameworks.'
             ) from e
-
 
 async def initialize_default_frameworks(db: AsyncSession) ->None:
     """Populate the database with a default set of compliance frameworks."""

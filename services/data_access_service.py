@@ -16,7 +16,6 @@ from database.business_profile import BusinessProfile
 from api.dependencies.rbac_auth import UserWithRoles
 logger = logging.getLogger(__name__)
 
-
 class DataAccessService:
     """
     Service for managing data visibility and access controls.
@@ -203,7 +202,6 @@ class DataAccessService:
             profiles = self.db.query(BusinessProfile.id).all()
             return [profile.id for profile in profiles]
         return []
-
 
 async def get_data_access_service(db: Session) ->DataAccessService:
     """

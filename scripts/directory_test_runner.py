@@ -8,7 +8,6 @@ import os
 from pathlib import Path
 from typing import Dict, List
 
-
 def find_test_directories():
     """Find all directories containing test files."""
     test_dirs = set()
@@ -23,7 +22,6 @@ def find_test_directories():
             test_dirs.add(test_file.parent)
 
     return sorted(test_dirs)
-
 
 def run_tests_in_directory(directory: Path) -> Dict:
     """Run tests in a single directory."""
@@ -78,7 +76,6 @@ def run_tests_in_directory(directory: Path) -> Dict:
 
     return stats
 
-
 def main():
     """Run tests directory by directory."""
     print("Finding test directories...")
@@ -111,7 +108,6 @@ def main():
     for stats in all_stats:
         if stats["errors"] == 0 and stats["collected"] > 0:
             print(f"  - {stats['directory']}: {stats['collected']} tests")
-
 
 if __name__ == "__main__":
     main()

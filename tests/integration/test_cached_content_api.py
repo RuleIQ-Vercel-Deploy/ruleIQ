@@ -11,7 +11,6 @@ Tests the cached content metrics endpoint and integration with AI services.
 """
 import pytest
 
-
 @pytest.mark.integration
 @pytest.mark.ai
 class TestCachedContentAPI:

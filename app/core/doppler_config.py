@@ -16,7 +16,6 @@ import json
 
 logger = logging.getLogger(__name__)
 
-
 class DopplerConfig:
     """Doppler configuration manager with fallback mechanisms."""
 
@@ -275,10 +274,8 @@ class DopplerConfig:
 
         return len(missing) == 0, missing
 
-
 # Global instance
 _doppler_config = None
-
 
 def get_doppler_config() -> DopplerConfig:
     """Get or create global Doppler configuration instance."""
@@ -294,22 +291,18 @@ def get_doppler_config() -> DopplerConfig:
 
     return _doppler_config
 
-
 # Convenience functions
 def get_secret(key: str, default: Optional[str] = None) -> Optional[str]:
     """Get a secret value from Doppler."""
     return get_doppler_config().get_secret(key, default)
 
-
 def get_database_url(test: bool = False) -> str:
     """Get database URL."""
     return get_doppler_config().get_database_url(test)
 
-
 def get_redis_url() -> str:
     """Get Redis URL."""
     return get_doppler_config().get_redis_url()
-
 
 def validate_startup_secrets() -> None:
     """Validate required secrets on application startup."""

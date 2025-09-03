@@ -22,7 +22,6 @@ from database import (
     ConversionEvent,
 )
 
-
 class TestAssessmentLead:
     """Test the AssessmentLead model for email capture and UTM tracking."""
 
@@ -102,7 +101,6 @@ class TestAssessmentLead:
         assert lead.lead_score == 85
         assert lead.lead_status == "hot"
         assert lead.updated_at > original_updated_at
-
 
 class TestFreemiumAssessmentSession:
     """Test the FreemiumAssessmentSession model for AI-driven assessments."""
@@ -185,7 +183,6 @@ class TestFreemiumAssessmentSession:
         session.expires_at = datetime.now(timezone.utc) - timedelta(minutes=1)
         assert session.is_expired() is True
 
-
 class TestAIQuestionBank:
     """Test the AIQuestionBank model for dynamic question management."""
 
@@ -230,7 +227,6 @@ class TestAIQuestionBank:
         # Assert
         assert question.difficulty_level == 8
         assert question.compliance_weight == Decimal("0.95")
-
 
 class TestLeadScoringEvent:
     """Test the LeadScoringEvent model for behavioral tracking."""
@@ -287,7 +283,6 @@ class TestLeadScoringEvent:
         assert event.event_metadata["question_id"] == "q_data_protection_1"
         assert event.event_metadata["time_spent_seconds"] == 45
 
-
 class TestConversionEvent:
     """Test the ConversionEvent model for tracking freemium to paid conversions."""
 
@@ -320,7 +315,6 @@ class TestConversionEvent:
         assert conversion.conversion_value == Decimal("99.00")
         assert conversion.conversion_source == "freemium_results_page"
         assert conversion.created_at is not None
-
 
 class TestFreemiumModelRelationships:
     """Test relationships between freemium models."""

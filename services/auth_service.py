@@ -18,7 +18,6 @@ from sqlalchemy.future import select
 from config.settings import settings
 from database.user import User
 
-
 class SessionManager:
     """Manages user sessions with Redis backend and in-memory fallback."""
 
@@ -202,7 +201,6 @@ class SessionManager:
 
         return len(expired_sessions)
 
-
 class AuthService:
     """Main authentication service with session management."""
 
@@ -234,7 +232,6 @@ class AuthService:
         # Update last activity
         await self.session_manager.update_session_activity(session_id)
 
-        # Get user from database
         user_id = UUID(session_data["user_id"])
         result = await db.execute(select(User).where(User.id == user_id))
         user = result.scalars().first()
@@ -292,7 +289,6 @@ class AuthService:
                 removed_count += 1
 
         return removed_count
-
 
 # Global auth service instance
 auth_service = AuthService()

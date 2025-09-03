@@ -12,7 +12,6 @@ from langgraph.graph import add_messages
 from typing_extensions import Annotated
 from uuid import uuid4
 
-
 class UnifiedComplianceState(TypedDict):
     """
     Complete unified state for ALL phases of the compliance system.
@@ -79,7 +78,6 @@ class UnifiedComplianceState(TypedDict):
     questions_asked: List[str]
     questions_answered: int
     assessment_phase: str
-
 
 def create_unified_initial_state(
     workflow_id: Optional[str] = None,
@@ -196,12 +194,10 @@ def create_unified_initial_state(
         assessment_phase="initialization",
     )
 
-
 def update_state_timestamp(state: UnifiedComplianceState) -> UnifiedComplianceState:
     """Update the state's updated_at timestamp."""
     state["updated_at"] = datetime.now()
     return state
-
 
 def add_state_history(
     state: UnifiedComplianceState, action: str, details: Optional[Dict[str, Any]] = None

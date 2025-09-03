@@ -10,14 +10,12 @@ route permissions, framework access rules, and security policies.
 from typing import Dict, List, Set
 from enum import Enum
 
-
 class AccessLevel(Enum):
     """Framework access levels in order of privilege."""
 
     READ = "read"
     WRITE = "write"
     ADMIN = "admin"
-
 
 class RBACConfig:
     """

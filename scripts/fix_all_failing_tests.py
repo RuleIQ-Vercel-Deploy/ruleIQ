@@ -19,7 +19,6 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-
 def fix_fixture_scope_in_file(file_path) ->bool:
     """Fix fixtures defined inside test classes."""
     logger.info('Fixing fixtures in %s...' % file_path.name)
@@ -65,7 +64,6 @@ def fix_fixture_scope_in_file(file_path) ->bool:
     logger.info('  Moved %s fixtures outside classes' % len(fixtures_to_move))
     return True
 
-
 def fix_cache_strategy_tests() ->None:
     """Fix cache strategy and cached content tests."""
     logger.info('\n1. Fixing Cache Strategy Tests...')
@@ -83,7 +81,6 @@ def fix_cache_strategy_tests() ->None:
                 fix_fixture_scope_in_file(test_file)
         else:
             logger.info('  ✗ %s not found!' % test_file.name)
-
 
 def fix_compliance_accuracy_tests() ->None:
     """Fix AI compliance accuracy tests."""
@@ -117,7 +114,6 @@ def fix_compliance_accuracy_tests() ->None:
     else:
         logger.info('  ✓ No fixture scope issues detected')
 
-
 def fix_optimization_performance_tests() ->None:
     """Fix AI optimization performance tests."""
     logger.info('\n3. Fixing AI Optimization Performance Tests...')
@@ -137,7 +133,6 @@ def fix_optimization_performance_tests() ->None:
         logger.info('  ✓ Circuit breaker module exists')
     else:
         logger.info('  ✗ Circuit breaker module missing!')
-
 
 def fix_database_performance_tests() ->None:
     """Fix database performance tests."""
@@ -167,7 +162,6 @@ def fix_database_performance_tests() ->None:
             logger.info('  ✓ All required fields present')
     else:
         logger.info('  ✗ EvidenceItem model not found!')
-
 
 def create_comprehensive_test_runner() ->None:
     """Create a comprehensive test runner."""
@@ -310,7 +304,6 @@ if __name__ == "__main__":
     os.chmod(runner_path, 493)
     logger.info('  ✓ Created comprehensive test runner at %s' % runner_path)
 
-
 def main() ->None:
     """Main function to apply all fixes."""
     logger.info('🔧 Applying Comprehensive Test Fixes')
@@ -326,7 +319,6 @@ def main() ->None:
     logger.info('1. Run: python scripts/run_all_failing_tests.py')
     logger.info('2. Review any remaining failures')
     logger.info('3. Apply targeted fixes based on specific error messages')
-
 
 if __name__ == '__main__':
     main()

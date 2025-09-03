@@ -18,12 +18,10 @@ from services.ai.assistant import ComplianceAssistant
 from services.ai.context_manager import ContextManager
 from services.ai.prompt_templates import PromptTemplates
 
-
 @pytest.fixture
 def mock_db():
     """Mock database session."""
     return AsyncMock()
-
 
 @pytest.fixture
 def mock_context_manager():
@@ -34,7 +32,6 @@ def mock_context_manager():
         'employee_count': 50, 'frameworks': ['GDPR', 'ISO27001']},
         'recent_evidence': [], 'compliance_status': {'overall_score': 75}}
     return context_manager
-
 
 @pytest.fixture
 def mock_prompt_templates():
@@ -50,7 +47,6 @@ def mock_prompt_templates():
         'Generate recommendations.', 'user': 'Provide recommendations.'}
     return templates
 
-
 @pytest.fixture
 def compliance_assistant(mock_db, mock_context_manager, mock_prompt_templates):
     """Create ComplianceAssistant instance with mocked dependencies."""
@@ -58,7 +54,6 @@ def compliance_assistant(mock_db, mock_context_manager, mock_prompt_templates):
     assistant.context_manager = mock_context_manager
     assistant.prompt_templates = mock_prompt_templates
     return assistant
-
 
 class TestAssessmentHelp:
     """Test get_assessment_help method."""
@@ -97,7 +92,6 @@ class TestAssessmentHelp:
             assert 'confidence_score' in result
             assert result['confidence_score'] == HALF_RATIO
 
-
 class TestAssessmentFollowup:
     """Test generate_assessment_followup method."""
 
@@ -120,7 +114,6 @@ class TestAssessmentFollowup:
             assert 'request_id' in result
             assert 'framework_id' in result
 
-
 class TestAssessmentAnalysis:
     """Test analyze_assessment_results method."""
 
@@ -140,7 +133,6 @@ class TestAssessmentAnalysis:
             assert 'gaps' in result
             assert 'recommendations' in result
             assert 'request_id' in result
-
 
 class TestAssessmentRecommendations:
     """Test get_assessment_recommendations method."""
@@ -166,7 +158,6 @@ class TestAssessmentRecommendations:
             assert 'implementation_plan' in result
             assert 'request_id' in result
 
-
 class TestIntentClassification:
     """Test enhanced intent classification for assessments."""
 
@@ -187,7 +178,6 @@ class TestIntentClassification:
             'in_assessment': True})
         assert result['intent'] == 'gap_analysis'
 
-
 class TestEntityExtraction:
     """Test enhanced entity extraction for assessments."""
 
@@ -201,7 +191,6 @@ class TestEntityExtraction:
         assert 'context_enhanced' in result
         assert result['context_enhanced'] is True
         assert 'gdpr' in result['frameworks']
-
 
 if __name__ == '__main__':
     pytest.main([__file__])

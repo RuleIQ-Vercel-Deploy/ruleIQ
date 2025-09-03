@@ -16,7 +16,6 @@ from services.ai.temporal_tracker import TemporalTracker
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 async def run_complete_integration_test():
     """
     Run comprehensive test of all compliance platform components.
@@ -328,7 +327,6 @@ async def run_complete_integration_test():
             'business_profile': business_profile, 'summary_metrics':
             summary, 'status': 'SUCCESS'}, f, indent=2)
     logger.info('\n📄 Results saved to: integration_test_results.json')
-
 
 if __name__ == '__main__':
     asyncio.run(run_complete_integration_test())

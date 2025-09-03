@@ -15,7 +15,6 @@ from config.settings import get_settings
 from config.security_config import SecurityConfig
 from core.security.credential_encryption import get_credential_encryption
 
-
 def validate_configuration() ->Tuple[bool, List[str]]:
     """
     Validate all critical configuration values
@@ -68,7 +67,6 @@ def validate_configuration() ->Tuple[bool, List[str]]:
         is_valid = False
     return is_valid, issues
 
-
 def print_validation_report() ->int:
     """Print a comprehensive validation report"""
     logger.info('🔍 ruleIQ Backend Configuration Validation')
@@ -104,7 +102,6 @@ def print_validation_report() ->int:
         logger.info('4. Set Google API key:')
         logger.info('   export GOOGLE_API_KEY=your_actual_google_api_key')
     return 0 if is_valid else 1
-
 
 if __name__ == '__main__':
     sys.exit(print_validation_report())

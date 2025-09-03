@@ -10,7 +10,6 @@ MINUTE_SECONDS = 60
 DEFAULT_LIMIT = 100
 DEFAULT_RETRIES = 5.0
 
-
 AI Performance and Rate Limiting Tests
 
 Tests AI service performance, response times, caching mechanisms,
@@ -25,7 +24,6 @@ from uuid import UUID
 import pytest
 from services.ai.assistant import ComplianceAssistant
 from services.ai.exceptions import AITimeoutException
-
 
 @pytest.mark.performance
 @pytest.mark.ai
@@ -149,7 +147,6 @@ class TestAIPerformance:
             assert response1.status_code == HTTP_OK
             assert response2.status_code == HTTP_OK
             assert second_request_time <= first_request_time * 1.5
-
 
 @pytest.mark.performance
 @pytest.mark.rate_limiting
@@ -276,7 +273,6 @@ class TestAIRateLimiting:
                 **request_data, 'question_id': 'reset-test-final'}, headers
                 =authenticated_headers)
             assert response.status_code in [200, 500]
-
 
 @pytest.mark.performance
 @pytest.mark.load

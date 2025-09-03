@@ -5,7 +5,6 @@ from playwright.sync_api import sync_playwright
 import time
 import json
 
-
 def test_freemium_flow():
     with sync_playwright() as p:
         # Launch browser
@@ -76,7 +75,6 @@ def test_freemium_flow():
         input("Press Enter to close browser...")
 
         browser.close()
-
 
 if __name__ == "__main__":
     test_freemium_flow()

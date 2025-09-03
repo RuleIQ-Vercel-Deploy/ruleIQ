@@ -19,7 +19,6 @@ from services.ai.exceptions import (
     AITimeoutException,
 )
 
-
 class MockComplianceAssistant:
     """Mock implementation of ComplianceAssistant with realistic responses"""
 
@@ -468,7 +467,6 @@ class MockComplianceAssistant:
             {"metric": "Control implementation", "target": "100%"},
         ]
 
-
 class MockAIServiceFailures:
     """Mock AI service that simulates various failure scenarios"""
 
@@ -510,7 +508,6 @@ class MockAIServiceFailures:
 
         mock.get_question_help = filter_method
         return mock
-
 
 # Global mock instances for easy access
 default_mock_assistant = MockComplianceAssistant()

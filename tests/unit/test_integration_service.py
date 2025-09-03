@@ -13,7 +13,6 @@ from database.services.integration_service import IntegrationService, EvidenceCo
 from database.models.integrations import Integration, EvidenceCollection, IntegrationEvidenceItem
 from api.clients.base_api_client import APICredentials, AuthType
 
-
 class TestIntegrationService:
     """Test cases for IntegrationService"""
 
@@ -188,7 +187,6 @@ class TestIntegrationService:
         assert result
         assert not existing_integration.is_active
 
-
 class TestEvidenceCollectionService:
     """Test cases for EvidenceCollectionService"""
 
@@ -331,7 +329,6 @@ class TestEvidenceCollectionService:
         assert len(items) == 2
         assert items[0].evidence_type == 'iam_policies'
         assert items[1].evidence_type == 'iam_users'
-
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

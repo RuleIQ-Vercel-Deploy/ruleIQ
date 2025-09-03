@@ -24,7 +24,6 @@ logging.basicConfig(level=logging.INFO, format=
     '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-
 class ManifestProcessor:
     """Process manifest files for document ingestion."""
 
@@ -59,7 +58,6 @@ class ManifestProcessor:
         logger.info('Found %s documents with priority >= %s' % (len(
             priority_docs), min_priority))
         return priority_docs
-
 
 class DocumentFetcher:
     """Fetch and extract text from URLs."""
@@ -137,7 +135,6 @@ class DocumentFetcher:
             logger.error('Error extracting PDF text: %s' % e)
             return ''
 
-
 class GoldenDatasetBuilder:
     """Build golden dataset from manifest documents."""
 
@@ -207,7 +204,6 @@ class GoldenDatasetBuilder:
                 doc_id, e))
             return False
 
-
 def main() ->Any:
     """Main ingestion pipeline."""
     parser = argparse.ArgumentParser(description=
@@ -247,7 +243,6 @@ def main() ->Any:
     if failed_docs:
         logger.warning('Failed documents: %s' % ', '.join(failed_docs))
     return 0 if success_count > 0 else 1
-
 
 if __name__ == '__main__':
     sys.exit(main())

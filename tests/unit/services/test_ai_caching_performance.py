@@ -18,7 +18,6 @@ from services.ai.performance_optimizer import (
 )
 from services.ai.response_cache import AIResponseCache, ContentType
 
-
 @pytest.mark.unit
 @pytest.mark.ai
 class TestAIResponseCache:
@@ -143,7 +142,6 @@ class TestAIResponseCache:
         assert metrics["total_hits"] == 75
         assert metrics["total_misses"] == 25
 
-
 @pytest.mark.unit
 @pytest.mark.ai
 class TestAIPerformanceOptimizer:
@@ -222,7 +220,6 @@ class TestAIPerformanceOptimizer:
 
         assert len(results) == 5
         assert all("status" in result for result in results)
-
 
 @pytest.mark.unit
 @pytest.mark.ai
@@ -375,7 +372,6 @@ class TestAIAnalyticsMonitor:
         status = monitor_instance._calculate_health_status(2000, 0.5, 80.0)
         assert status == "good"
 
-
 @pytest.mark.unit
 @pytest.mark.ai
 class TestSmartEvidenceCollector:
@@ -520,7 +516,6 @@ class TestSmartEvidenceCollector:
 
             assert success is True
             assert plan.tasks[0].status == CollectionStatus.COMPLETED
-
 
 @pytest.mark.unit
 @pytest.mark.ai

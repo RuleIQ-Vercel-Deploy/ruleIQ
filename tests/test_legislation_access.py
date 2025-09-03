@@ -8,7 +8,6 @@ Test different methods to access legislation.gov.uk API
 import requests
 import time
 
-
 def test_direct_access():
     """Test direct access to legislation.gov.uk API"""
     test_urls = ['https://www.legislation.gov.uk/ukpga/2018/12/data.xml',
@@ -47,7 +46,6 @@ def test_direct_access():
                 print(f'  ❌ Exception: {e}')
             time.sleep(1)
     return False
-
 
 if __name__ == '__main__':
     print('Testing access to legislation.gov.uk API...')

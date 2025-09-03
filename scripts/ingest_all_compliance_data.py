@@ -18,7 +18,6 @@ logging.basicConfig(level=logging.INFO, format=
 logger = logging.getLogger(__name__)
 load_dotenv()
 
-
 class ComplianceDataIngestion:
     """Production Neo4j ingestion for all compliance data."""
 
@@ -338,7 +337,6 @@ class ComplianceDataIngestion:
                 'controls_created'])
             logger.info('  Errors encountered: %s' % len(self.stats['errors']))
 
-
 async def main() ->int:
     """Run the full compliance data ingestion."""
     start_time = datetime.now()
@@ -373,7 +371,6 @@ async def main() ->int:
     finally:
         await ingestion.close()
     return 0
-
 
 if __name__ == '__main__':
     exit(asyncio.run(main()))

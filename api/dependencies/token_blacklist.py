@@ -25,7 +25,6 @@ BLACKLIST_METRICS_KEY = 'blacklist:metrics'
 BLACKLIST_SUSPICIOUS_PATTERNS_KEY = 'blacklist:suspicious_patterns'
 DEFAULT_TOKEN_TTL = 3600 * 24 * 7
 
-
 @dataclass
 class BlacklistEntry:
     """Represents a blacklisted token entry."""
@@ -39,7 +38,6 @@ class BlacklistEntry:
     user_agent: Optional[str] = None
     metadata: Optional[Dict] = None
 
-
 @dataclass
 class BlacklistMetrics:
     """Metrics for token blacklist operations."""
@@ -49,7 +47,6 @@ class BlacklistMetrics:
     suspicious_patterns_detected: int = 0
     bulk_operations_count: int = 0
     last_cleanup: Optional[datetime] = None
-
 
 class EnhancedTokenBlacklist:
     """Enhanced Redis-based token blacklist with security features."""
@@ -332,22 +329,18 @@ class EnhancedTokenBlacklist:
         except Exception as e:
             logger.error('Failed to analyze blacklist patterns: %s' % e)
 
-
 _token_blacklist = EnhancedTokenBlacklist()
-
 
 async def get_token_blacklist() ->EnhancedTokenBlacklist:
     """Get the global token blacklist instance."""
     await _token_blacklist._ensure_initialized()
     return _token_blacklist
 
-
 async def blacklist_token(token: str, reason: str='logout', ttl: Optional[
     int]=None, **kwargs) ->bool:
     """Backwards compatible blacklist token function."""
     blacklist = await get_token_blacklist()
     return await blacklist.blacklist_token(token, reason, ttl, **kwargs)
-
 
 async def is_token_blacklisted(token: str) ->bool:
     """Backwards compatible token check function."""

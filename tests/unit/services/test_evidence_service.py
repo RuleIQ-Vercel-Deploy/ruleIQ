@@ -16,9 +16,6 @@ import pytest
 from core.exceptions import NotFoundAPIError, ValidationAPIError
 from services.evidence_service import EvidenceService
 
-# Note: Using fast_db_session from conftest_optimized for performance
-
-
 @pytest.mark.unit
 class TestEvidenceService:
     """Test evidence service business logic"""
@@ -313,7 +310,6 @@ class TestEvidenceService:
             assert 'average_quality_score' in result
             assert result['automation_coverage'] > 0
             mock_stats.assert_called_once_with(sample_user.id)
-
 
 @pytest.mark.unit
 class TestEvidenceValidation:

@@ -11,9 +11,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import JSONB as PG_JSONB, UUID as PG_UUID
 
-# Import the shared Base from db_setup to ensure all models use the same Base
 from ..db_setup import Base
-
 
 class Evidence(Base):
     __tablename__ = "evidence"

@@ -22,7 +22,6 @@ import logging
 logger = logging.getLogger(__name__)
 router = APIRouter(tags=['AI Policy Generation'])
 
-
 @router.post('/generate-policy', response_model=PolicyGenerationResponse,
     status_code=status.HTTP_201_CREATED, dependencies=[Depends(
     get_current_active_user), Depends(RateLimited(requests=20, window=60))])
@@ -60,7 +59,6 @@ async def generate_policy(request: PolicyGenerationRequest,
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Policy generation failed: {str(e)}')
-
 
 @router.post('/generate-policy/stream', status_code=status.HTTP_200_OK,
     dependencies=[Depends(get_current_active_user), Depends(RateLimited(
@@ -141,7 +139,6 @@ async def generate_policy_stream(request: PolicyGenerationRequest,
         'text/event-stream', headers={'Cache-Control': 'no-cache',
         'Connection': 'keep-alive', 'X-Accel-Buffering': 'no'})
 
-
 @router.put('/refine-policy', response_model=PolicyRefinementResponse,
     dependencies=[Depends(get_current_active_user), Depends(RateLimited(
     requests=30, window=60))])
@@ -173,7 +170,6 @@ async def refine_policy(request: PolicyRefinementRequest, current_user:
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Policy refinement failed: {str(e)}')
-
 
 @router.get('/policy-templates', response_model=PolicyTemplatesResponse,
     dependencies=[Depends(RateLimited(requests=100, window=60))])
@@ -228,7 +224,6 @@ async def get_policy_templates(framework_id: Optional[str]=None,
         templates), supported_frameworks=supported_frameworks,
         supported_languages=['en-GB', 'en-US'])
 
-
 @router.get('/metrics', response_model=PolicyGenerationMetrics,
     dependencies=[Depends(get_current_active_user), Depends(RateLimited(
     requests=50, window=60))])
@@ -257,7 +252,6 @@ async def get_ai_metrics() ->Any:
         openai_metrics], circuit_breaker_status=circuit_status,
         cost_savings_percentage=42.5, monthly_cost_trend=[65.2, 58.05, 52.3,
         48.15])
-
 
 @router.post('/validate-policy', dependencies=[Depends(
     get_current_active_user), Depends(RateLimited(requests=50, window=60))])
@@ -291,7 +285,6 @@ async def validate_policy(policy_content: str, framework_id: str,
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Policy validation failed: {str(e)}')
 
-
 async def _log_generation_metrics(result: PolicyGenerationResponse,
     framework_id: str, framework_name: str) ->None:
     """
@@ -308,7 +301,6 @@ async def _log_generation_metrics(result: PolicyGenerationResponse,
         'Policy generated: framework=%s, provider=%s, confidence=%s, time=%sms, cost=$%s'
          % (framework_name, result.provider_used, result.confidence_score,
         result.generation_time_ms, result.estimated_cost or 0))
-
 
 @router.post('/analytics/export', dependencies=[Depends(
     get_current_active_user), Depends(RateLimited(requests=5, window=3600))])

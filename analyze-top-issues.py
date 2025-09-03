@@ -3,7 +3,6 @@
 import logging
 logger = logging.getLogger(__name__)
 
-
 RULE_DESCRIPTIONS = {
     "COM812": "Missing trailing comma in Python 3.6+ (flake8-commas)",
     "FA100": "Missing from __future__ import annotations (flake8-future-annotations)",

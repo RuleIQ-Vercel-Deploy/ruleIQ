@@ -19,11 +19,9 @@ from langgraph_agent.graph.enhanced_state import EnhancedComplianceState
 from langgraph_agent.graph.error_handler import ErrorHandlerNode
 from langgraph_agent.nodes.evidence_nodes import EvidenceCollectionNode
 
-
 # ==========================
 # Test Fixtures
 # ==========================
-
 
 @pytest.fixture
 def mock_db_session():
@@ -37,7 +35,6 @@ def mock_db_session():
     session.query = MagicMock()
     return session
 
-
 @pytest.fixture
 def mock_processor():
     """Mock evidence processor."""
@@ -46,14 +43,12 @@ def mock_processor():
     processor.validate_evidence = Mock(return_value={"valid": True, "score": 0.95})
     return processor
 
-
 @pytest.fixture
 def mock_duplicate_detector():
     """Mock duplicate detector."""
     detector = Mock()
     detector.is_duplicate = AsyncMock(return_value=False)
     return detector
-
 
 @pytest.fixture
 def sample_evidence_data():
@@ -70,7 +65,6 @@ def sample_evidence_data():
         "confidence_score": 0.85,
         "validation_status": "pending",
     }
-
 
 @pytest.fixture
 def sample_state():
@@ -116,11 +110,9 @@ def sample_state():
     state.dict = lambda: dict(state)
     return state
 
-
 # ==========================
 # Test Classes
 # ==========================
-
 
 class TestEvidenceStateManagement:
     """Tests for evidence state management within LangGraph."""
@@ -193,7 +185,6 @@ class TestEvidenceStateManagement:
         sample_state.context["status"] = "recovered"
         assert sample_state.context["status"] == "recovered"
 
-
 class TestEvidenceValidationAndScoring:
     """Tests for evidence validation and scoring mechanisms."""
 
@@ -244,7 +235,6 @@ class TestEvidenceValidationAndScoring:
 
     async def test_evidence_confidence_calculation(self, sample_evidence_data):
         """Test confidence score calculation for evidence."""
-        # Base confidence from source
         source_confidence = {
             "integration_api": 0.9,
             "manual_upload": 0.7,
@@ -258,7 +248,6 @@ class TestEvidenceValidationAndScoring:
 
         final_confidence = (base_confidence + data_confidence) / 2
         assert final_confidence == 0.875  # (0.9 + 0.85) / 2
-
 
 class TestRetryAndFallbackMechanisms:
     """Tests for retry logic and fallback strategies."""
@@ -370,7 +359,6 @@ class TestRetryAndFallbackMechanisms:
         with pytest.raises(Exception, match="Circuit breaker is open"):
             breaker.call(failing_function)
 
-
 class TestEvidenceAggregationAndDeduplication:
     """Tests for evidence aggregation and deduplication logic."""
 
@@ -462,7 +450,6 @@ class TestEvidenceAggregationAndDeduplication:
         assert merged["policy_compliance"]["combined_score"] == 0.85
         assert len(merged["policy_compliance"]["all_findings"]) == 3
         assert merged["policy_compliance"]["evidence_count"] == 2
-
 
 class TestEvidenceCollectionWorkflows:
     """Tests for complete evidence collection workflows."""
@@ -566,7 +553,6 @@ class TestEvidenceCollectionWorkflows:
             assert mock_db_session.execute.called
             assert mock_db_session.commit.called
 
-
 class TestErrorHandlingAndRecovery:
     """Tests for error handling and recovery strategies."""
 
@@ -626,7 +612,6 @@ class TestErrorHandlingAndRecovery:
             # Simulate operation failure
             raise ValueError("Validation failed")
         except ValueError:
-            # Recover from checkpoint
             recovered_state = checkpoint["state"].copy()
             recovered_state["retry_count"] = recovered_state.get("retry_count", 0) + 1
 
@@ -634,7 +619,6 @@ class TestErrorHandlingAndRecovery:
             assert (
                 recovered_state["retry_count"] == sample_state.get("retry_count", 0) + 1,
             )
-
 
 class TestIntegrationWithLangGraph:
     """Tests for integration with LangGraph framework."""
@@ -703,7 +687,6 @@ class TestIntegrationWithLangGraph:
             {"validation_status": "valid"},
         ]
         assert route_evidence(sample_state) == "proceed_to_assessment"
-
 
 class TestPerformanceAndOptimization:
     """Tests for performance optimization and efficiency."""
@@ -785,7 +768,6 @@ class TestPerformanceAndOptimization:
 
         assert processed_count == 1000
 
-
 class TestMonitoringAndObservability:
     """Tests for monitoring and observability features."""
 
@@ -849,11 +831,9 @@ class TestMonitoringAndObservability:
         assert all("timestamp" in entry for entry in audit_trail)
         assert audit_trail[0]["operation"] == "evidence_collected"
 
-
 # ==========================
 # Integration Tests
 # ==========================
-
 
 @pytest.mark.asyncio
 class TestEndToEndIntegration:
@@ -936,7 +916,6 @@ class TestEndToEndIntegration:
         assert len(results) == 4
         assert all(r["status"] == "success" for r in results)
         assert sum(r["evidence_count"] for r in results) == 20
-
 
 # Run tests with coverage
 if __name__ == "__main__":

@@ -19,14 +19,12 @@ from utils.input_validation import validate_evidence_update, ValidationError
 # Assuming the AI function is awaitable or wrapped to be non-blocking
 from services.ai.evidence_generator import generate_checklist_with_ai
 
-
 class EvidenceService:
     """Provides business logic for evidence management."""
 
     @staticmethod
     def _is_async_session(db) -> bool:
         """Detect if the database session is async or sync."""
-        # Check for AsyncSession or AsyncSessionWrapper from tests
         return isinstance(db, AsyncSession) or hasattr(db, "__aenter__")
 
     @staticmethod
@@ -632,7 +630,6 @@ class EvidenceService:
         db: Union[AsyncSession, Session], user: User, framework_id: UUID
     ) -> Dict[str, Any]:
         """Get dashboard data for evidence collection status with caching."""
-        # Try to get from cache first
         cache = await get_cache_manager()
         cached_dashboard = await cache.get_evidence_dashboard(
             str(user.id), str(framework_id),
@@ -696,7 +693,6 @@ class EvidenceService:
         db: Union[AsyncSession, Session], user_id: UUID
     ) -> Dict[str, Any]:
         """Get evidence statistics for a user with caching."""
-        # Try to get from cache first
         cache = await get_cache_manager()
         cached_stats = await cache.get_evidence_statistics(str(user_id))
         if cached_stats:
@@ -737,7 +733,6 @@ class EvidenceService:
         await cache.set_evidence_statistics(str(user_id), stats, ttl=600)
 
         return stats
-
 
 # Module-level functions for backward compatibility with tests
 def get_user_evidence_items(user_id: UUID) -> List[Dict[str, Any]]:

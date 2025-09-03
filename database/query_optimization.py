@@ -15,7 +15,6 @@ MAX_ITEMS = 1000
 
 logger = logging.getLogger(__name__)
 
-
 class QueryOptimizer:
     """Enhanced database query optimizer with performance monitoring."""
 
@@ -312,7 +311,6 @@ class QueryOptimizer:
                 'Better concurrency handling and resource utilization'})
         return suggestions
 
-
 class BatchQueryOptimizer:
     """Batch operations to reduce database round trips."""
 
@@ -366,7 +364,6 @@ class BatchQueryOptimizer:
             None, 'business_profile_id': str(item.business_profile_id),
             'framework_id': str(item.framework_id)} for item in evidence_items]
 
-
 class QueryCache:
     """Simple query caching to reduce database load."""
 
@@ -405,6 +402,5 @@ class QueryCache:
     def clear(self) ->None:
         """Clear all cache entries."""
         self._cache.clear()
-
 
 query_cache = QueryCache()

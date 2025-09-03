@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 MAX_ITEMS = 1000
 
-
 AI Tools Module for Function Calling Implementation
 
 Provides base tool interface, tool registry system, and validation for
@@ -18,7 +17,6 @@ from typing import Any, Dict, List, Optional
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 class ToolType(Enum):
     """Types of AI tools available"""
     GAP_ANALYSIS = 'gap_analysis'
@@ -28,7 +26,6 @@ class ToolType(Enum):
     REGULATION_LOOKUP = 'regulation_lookup'
     FRAMEWORK_SPECIFICS = 'framework_specifics'
     RISK_CALCULATION = 'risk_calculation'
-
 
 @dataclass
 class ToolResult:
@@ -44,7 +41,6 @@ class ToolResult:
         return {'success': self.success, 'data': self.data, 'error': self.
             error, 'execution_time': self.execution_time, 'metadata': self.
             metadata}
-
 
 class BaseTool(ABC):
     """Base interface for all AI tools"""
@@ -103,7 +99,6 @@ class BaseTool(ABC):
     def increment_execution_count(self) ->None:
         """Track tool usage"""
         self.execution_count += 1
-
 
 class ToolRegistry:
     """Registry for managing AI tools"""
@@ -184,7 +179,6 @@ class ToolRegistry:
             _tool_by_type.items()}, 'tool_execution_counts': {name: tool.
             execution_count for name, tool in self._tools.items()}}
 
-
 class ToolValidator:
     """Validation utilities for tools"""
 
@@ -239,7 +233,6 @@ class ToolValidator:
             logger.error('Failed result must have error message')
             return False
         return True
-
 
 class ToolExecutor:
     """Executes tools and handles results"""
@@ -322,21 +315,17 @@ class ToolExecutor:
             'average_execution_time': avg_execution_time, 'tool_usage':
             tool_usage}
 
-
 tool_registry = ToolRegistry()
 tool_executor = ToolExecutor(tool_registry)
-
 
 def register_tool(tool: BaseTool, tool_type: ToolType) ->None:
     """Convenience function to register a tool"""
     tool_registry.register_tool(tool, tool_type)
 
-
 def get_tool_schemas(tool_names: Optional[List[str]]=None) ->List[Dict[str,
     Any]]:
     """Convenience function to get tool schemas"""
     return tool_registry.get_function_schemas(tool_names)
-
 
 async def execute_tool(tool_name: str, parameters: Dict[str, Any], context:
     Optional[Dict[str, Any]]=None) ->ToolResult:

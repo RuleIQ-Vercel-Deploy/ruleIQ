@@ -14,7 +14,6 @@ from database.compliance_framework import ComplianceFramework
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-
 async def test_ai_policy_generation():
     """Test AI policy generation with UK GDPR framework"""
     logger.info('=== AI Policy Generation Functional Test ===')
@@ -60,7 +59,6 @@ async def test_ai_policy_generation():
         traceback.print_exc()
         return False
 
-
 async def test_frameworks_availability():
     """Test that UK frameworks are available"""
     logger.info('=== Testing Framework Availability ===')
@@ -80,7 +78,6 @@ async def test_frameworks_availability():
         logger.error('Framework test failed: %s' % str(e))
         return False
 
-
 async def main():
     """Run all functional tests"""
     logger.info('Starting AI Policy Generation Functional Tests...')
@@ -95,7 +92,6 @@ async def main():
     logger.info('✅ All functional tests passed!')
     logger.info('🎉 AI Policy Generation Assistant is ready for use')
     return True
-
 
 if __name__ == '__main__':
     success = asyncio.run(main())

@@ -22,7 +22,6 @@ STATUS_COLUMN = 'status'
 UPDATED_AT_COLUMN = 'updated_at'
 router = APIRouter()
 
-
 @router.get('/status', response_model=ComplianceStatusResponse)
 async def get_compliance_status(current_user: User=Depends(
     get_current_active_user), db: AsyncSession=Depends(get_async_db)) ->Dict[
@@ -136,7 +135,6 @@ async def get_compliance_status(current_user: User=Depends(
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Failed to retrieve compliance status: {e!s}')
 
-
 @router.get('/status/{framework_id}', response_model=ComplianceStatusResponse)
 async def get_framework_compliance_status(framework_id: str, current_user:
     User=Depends(get_current_active_user), db: AsyncSession=Depends(
@@ -152,7 +150,6 @@ async def get_framework_compliance_status(framework_id: str, current_user:
     """
     return await get_compliance_status(current_user, db)
 
-
 @router.post('/tasks')
 async def create_compliance_task(task_data: dict, current_user: User=
     Depends(get_current_active_user), db: AsyncSession=Depends(get_async_db)
@@ -166,7 +163,6 @@ async def create_compliance_task(task_data: dict, current_user: User=
         timezone.utc).isoformat(), UPDATED_AT_COLUMN: datetime.now(timezone
         .utc).isoformat()}
 
-
 @router.patch('/tasks/{id}')
 async def update_compliance_task(id: str, update_data: dict, current_user:
     User=Depends(get_current_active_user), db: AsyncSession=Depends(
@@ -177,7 +173,6 @@ async def update_compliance_task(id: str, update_data: dict, current_user:
         update_data.get(STATUS_COLUMN, 'in_progress'), 'priority':
         update_data.get('priority', 'medium'), UPDATED_AT_COLUMN: datetime.
         now(timezone.utc).isoformat()}
-
 
 @router.post('/risks')
 async def create_compliance_risk(risk_data: dict, current_user: User=
@@ -192,7 +187,6 @@ async def create_compliance_risk(risk_data: dict, current_user: User=
         risk_data.get('mitigation_plan'), 'created_at': datetime.now(
         timezone.utc).isoformat()}
 
-
 @router.patch('/risks/{risk_id}')
 async def update_compliance_risk(risk_id: str, update_data: dict,
     current_user: User=Depends(get_current_active_user), db: AsyncSession=
@@ -204,7 +198,6 @@ async def update_compliance_risk(risk_id: str, update_data: dict,
         'medium'), STATUS_COLUMN: update_data.get(STATUS_COLUMN,
         'mitigated'), 'mitigation_plan': update_data.get('mitigation_plan'),
         UPDATED_AT_COLUMN: datetime.now(timezone.utc).isoformat()}
-
 
 @router.get('/timeline')
 async def get_compliance_timeline(framework_id: str=None, current_user:
@@ -225,7 +218,6 @@ async def get_compliance_timeline(framework_id: str=None, current_user:
         'current_phase': 'evidence_collection', 'estimated_completion':
         '2024-03-01', 'progress_percentage': 45}
 
-
 async def get_compliance_dashboard(current_user: User=Depends(
     get_current_active_user), db: AsyncSession=Depends(get_async_db)) ->Dict[
     str, Any]:
@@ -241,7 +233,6 @@ async def get_compliance_dashboard(current_user: User=Depends(
         '/compliance/tasks'}, {'action': 'View Risks', 'path':
         '/compliance/risks'}], 'compliance_trends': {'30_day_change': 5.2,
         'trend_direction': 'improving', 'forecast': 'on_track'}}
-
 
 @router.post('/certificate/generate')
 async def generate_compliance_certificate(request_data: dict, current_user:
@@ -259,7 +250,6 @@ async def generate_compliance_certificate(request_data: dict, current_user:
         'verification_code': 'VERIFY-2024-0001', 'issuer':
         'RuleIQ Compliance Platform', 'recipient': {'organization':
         'User Organization', 'contact': current_user.email}}
-
 
 @router.post('/query')
 async def query_compliance(request: dict, current_user: User=Depends(

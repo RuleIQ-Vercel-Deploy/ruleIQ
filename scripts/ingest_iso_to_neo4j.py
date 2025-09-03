@@ -13,7 +13,6 @@ from datetime import datetime
 from typing import Dict, List, Any
 from neo4j import GraphDatabase
 
-
 class ISOComplianceNeo4jIngestion:
     """Ingest ISO compliance data into Neo4j knowledge graph."""
 
@@ -345,7 +344,6 @@ class ISOComplianceNeo4jIngestion:
                     logger.info('  - %s: %s' % (record['type'], record[
                         'count']))
 
-
 def main() ->None:
     """Main ingestion process."""
     ingestion = ISOComplianceNeo4jIngestion()
@@ -361,7 +359,6 @@ def main() ->None:
         ingestion.generate_statistics()
     finally:
         ingestion.close()
-
 
 if __name__ == '__main__':
     main()

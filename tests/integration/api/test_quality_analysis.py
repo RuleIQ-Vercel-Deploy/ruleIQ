@@ -16,7 +16,6 @@ from uuid import uuid4
 import pytest
 from tests.conftest import assert_api_response_security
 
-
 @pytest.mark.integration
 @pytest.mark.api
 class TestQualityAnalysisAPI:
@@ -212,7 +211,6 @@ class TestQualityAnalysisAPI:
         assert response.status_code == HTTP_UNPROCESSABLE_ENTITY
         response_data = response.json()
         assert 'detail' in response_data
-
 
 @pytest.mark.integration
 @pytest.mark.api

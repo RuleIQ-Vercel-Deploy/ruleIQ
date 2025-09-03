@@ -14,7 +14,6 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),
 from main import app
 client = TestClient(app)
 
-
 class TestAuthenticationSecurity:
     """Test authentication security measures."""
 
@@ -54,7 +53,6 @@ class TestAuthenticationSecurity:
             'Bearer test-token'})
         assert response.status_code in [200, 401]
 
-
 class TestPasswordSecurity:
     """Test password security measures."""
 
@@ -73,7 +71,6 @@ class TestPasswordSecurity:
         response = client.post('/api/auth/register', json={'email':
             'weak@test.com', 'password': '123', 'full_name': 'Test User'})
         assert response.status_code in [400, 422]
-
 
 class TestSessionManagement:
     """Test session management security."""
@@ -94,7 +91,6 @@ class TestSessionManagement:
                 me_response = client.get('/api/auth/me', headers={
                     'Authorization': f'Bearer {token}'})
                 assert me_response.status_code == HTTP_UNAUTHORIZED
-
 
 class TestInputValidation:
     """Test input validation and injection prevention."""

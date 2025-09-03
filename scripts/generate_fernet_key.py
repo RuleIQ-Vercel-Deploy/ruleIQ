@@ -15,13 +15,11 @@ Example:
 from typing import Any, Dict, List, Optional
 from cryptography.fernet import Fernet
 
-
 def generate_key() -> None:
     """Generates a new Fernet key."""
     key = Fernet.generate_key()
     logger.info("Generated Fernet Key (store this securely!):")
     logger.info(key.decode())  # Print as string for easy copy-pasting
-
 
 if __name__ == "__main__":
     generate_key()

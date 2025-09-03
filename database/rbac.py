@@ -26,7 +26,6 @@ from .db_setup import Base
 # Forward reference imports for relationships
 # These will be resolved at runtime by SQLAlchemy
 
-
 class Role(Base):
     """
     System roles that define user permissions.
@@ -54,7 +53,6 @@ class Role(Base):
     user_roles = relationship("UserRole", back_populates="role")
     role_permissions = relationship("RolePermission", back_populates="role")
     framework_access = relationship("FrameworkAccess", back_populates="role")
-
 
 class Permission(Base):
     """
@@ -85,7 +83,6 @@ class Permission(Base):
     # Relationships
     role_permissions = relationship("RolePermission", back_populates="permission")
 
-
 class UserRole(Base):
     """
     Assignment of roles to users with optional constraints.
@@ -108,7 +105,6 @@ class UserRole(Base):
 
     # Ensure one role assignment per user-role combination
     __table_args__ = (UniqueConstraint("user_id", "role_id", name="uq_user_role"),)
-
 
 class RolePermission(Base):
     """
@@ -134,7 +130,6 @@ class RolePermission(Base):
     __table_args__ = (
         UniqueConstraint("role_id", "permission_id", name="uq_role_permission"),
     )
-
 
 class FrameworkAccess(Base):
     """
@@ -168,7 +163,6 @@ class FrameworkAccess(Base):
         UniqueConstraint("role_id", "framework_id", name="uq_role_framework_access"),
     )
 
-
 class UserSession(Base):
     """
     Track user sessions for security and audit purposes.
@@ -191,7 +185,6 @@ class UserSession(Base):
 
     # Relationships
     user = relationship("User", foreign_keys=[user_id])
-
 
 class AuditLog(Base):
     """
@@ -225,7 +218,6 @@ class AuditLog(Base):
     # Relationships
     user = relationship("User", foreign_keys=[user_id])
     session = relationship("UserSession")
-
 
 class DataAccess(Base):
     """

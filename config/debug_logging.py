@@ -18,7 +18,6 @@ from contextlib import contextmanager
 from logging.handlers import RotatingFileHandler
 from pythonjsonlogger import jsonlogger
 
-
 class ContextFilter(logging.Filter):
     """Add contextual information to log records"""
 
@@ -34,7 +33,6 @@ class ContextFilter(logging.Filter):
         record.user_id = getattr(record, 'user_id', 'anonymous')
         record.session_id = getattr(record, 'session_id', 'no-session')
         return True
-
 
 class PerformanceLogger:
     """Track and log performance metrics"""
@@ -65,7 +63,6 @@ class PerformanceLogger:
         self.logger.info('Metric: %s = %s %s' % (metric_name, value, unit),
             extra={'metric_name': metric_name, 'metric_value': value,
             'metric_unit': unit, 'event_type': 'metric'})
-
 
 class DebugLogger:
     """Enhanced logger for debugging and development"""
@@ -164,7 +161,6 @@ class DebugLogger:
         self.logger.info('Compliance: %s for %s' % (action, framework),
             extra=compliance_data)
 
-
 class DebugMiddleware:
     """Middleware to add debug logging to FastAPI"""
 
@@ -195,7 +191,6 @@ class DebugMiddleware:
         self.logger.debug_request(request_data)
         await self.app(scope, receive, send_wrapper)
 
-
 def debug_function(logger: DebugLogger, include_args: bool=False,
     include_result: bool=False) ->Any:
     """Decorator to debug function calls"""
@@ -223,7 +218,6 @@ def debug_function(logger: DebugLogger, include_args: bool=False,
                     raise
         return wrapper
     return decorator
-
 
 def debug_async_function(logger: DebugLogger, include_args: bool=False,
     include_result: bool=False) ->Any:
@@ -253,7 +247,6 @@ def debug_async_function(logger: DebugLogger, include_args: bool=False,
                     raise
         return wrapper
     return decorator
-
 
 api_logger = DebugLogger('ruleiq.api')
 db_logger = DebugLogger('ruleiq.database')

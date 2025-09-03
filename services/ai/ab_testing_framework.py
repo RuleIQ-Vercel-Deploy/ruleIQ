@@ -22,7 +22,6 @@ from .analytics_monitor import MetricEvent, MetricType, get_analytics_monitor
 
 logger = get_logger(__name__)
 
-
 class ExperimentType(Enum):
     """Types of A/B experiments."""
 
@@ -33,10 +32,8 @@ class ExperimentType(Enum):
 #     COMPLIANCE_EFFECTIVENESS = "compliance_effectiveness"  # Unused variable
 #     ASSESSMENT_METHODOLOGY = "assessment_methodology"  # Unused variable
 
-    # MetricType imported from analytics_monitor above
 #     CATEGORICAL = "categorical"  # User preferences, status categories  # Unused variable
 #     COUNT = "count"  # Number of actions, events  # Unused variable
-
 
 class StatisticalTest(Enum):
     """Available statistical tests."""
@@ -48,7 +45,6 @@ class StatisticalTest(Enum):
 #     KOLMOGOROV_SMIRNOV = "ks_test"  # Distribution comparison  # Unused variable
 #     FISHER_EXACT = "fisher_exact"  # Exact test for small samples  # Unused variable
 
-
 class ExperimentStatus(Enum):
     """Experiment lifecycle status."""
 
@@ -58,7 +54,6 @@ class ExperimentStatus(Enum):
 #     COMPLETED = "completed"  # Unused variable
 #     CANCELLED = "cancelled"  # Unused variable
 #     ARCHIVED = "archived"  # Unused variable
-
 
 @dataclass
 class ExperimentConfig:
@@ -93,7 +88,6 @@ class ExperimentConfig:
     owner: str = "system"
     tags: List[str] = field(default_factory=list)
 
-
 @dataclass
 class StatisticalResult:
     """Results of statistical test analysis."""
@@ -119,7 +113,6 @@ class StatisticalResult:
     timestamp: datetime = field(default_factory=datetime.now)
     metadata: Dict[str, Any] = field(default_factory=dict)
 
-
 @dataclass
 class ExperimentData:
     """Data point in an A/B experiment."""
@@ -139,7 +132,6 @@ class ExperimentData:
     # Context
     user_segments: Dict[str, str] = field(default_factory=dict)
     metadata: Dict[str, Any] = field(default_factory=dict)
-
 
 class ABTestingFramework:
     """Comprehensive A/B Testing Framework with rigorous statistical analysis."""
@@ -768,10 +760,8 @@ class ABTestingFramework:
 
         return summary
 
-
 # Global instance
 _ab_testing_framework: Optional[ABTestingFramework] = None
-
 
 def get_ab_testing_framework() -> ABTestingFramework:
     """Get global A/B testing framework instance."""
@@ -779,7 +769,6 @@ def get_ab_testing_framework() -> ABTestingFramework:
     if _ab_testing_framework is None:
         _ab_testing_framework = ABTestingFramework()
     return _ab_testing_framework
-
 
 def create_ai_model_experiment(
     model_a: str,
@@ -815,7 +804,6 @@ def create_ai_model_experiment(
     )
 
     return framework.create_experiment(config)
-
 
 def create_prompt_optimization_experiment(
     original_prompt: str, optimized_prompt: str, metric: str = "task_completion_rate"

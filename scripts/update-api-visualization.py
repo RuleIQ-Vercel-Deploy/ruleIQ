@@ -31,7 +31,6 @@ ENDPOINT_UPDATES = {'removed': ['/api/v1/users/me',
     '/api/v1/evidence/quality/trends', '/api/v1/ai-assessments':
     '/api/v1/ai/assessments', '/api/ai/assessments': '/api/v1/ai/assessments'}}
 
-
 def update_connection_path(path: str) ->Optional[str]:
     """Update a single path if needed."""
     if path in ENDPOINT_UPDATES['updated']:
@@ -42,7 +41,6 @@ def update_connection_path(path: str) ->Optional[str]:
             return new_path + trailing
     return None
 
-
 def should_remove_connection(path: str) ->bool:
     """Check if a connection should be removed."""
     for removed_path in ENDPOINT_UPDATES['removed']:
@@ -51,7 +49,6 @@ def should_remove_connection(path: str) ->bool:
         if path == removed_path or path.startswith(removed_path + '/'):
             return True
     return False
-
 
 def process_connections(connections: List[Dict[str, Any]], stats: Dict[str,
     int]) ->List[Dict[str, Any]]:
@@ -96,7 +93,6 @@ def process_connections(connections: List[Dict[str, Any]], stats: Dict[str,
                 conn['status'] = 'connected'
         updated_connections.append(conn)
     return updated_connections
-
 
 def update_html_file(input_file: str, output_file: str) ->Optional[Any]:
     """Update the HTML file with new API structure."""
@@ -147,7 +143,6 @@ def update_html_file(input_file: str, output_file: str) ->Optional[Any]:
         f.write(updated_html)
     return stats
 
-
 def main() ->None:
     """Main entry point."""
     input_file = 'api-connection-map.html'
@@ -168,7 +163,6 @@ def main() ->None:
             'unchanged']))
         logger.info('\n✅ HTML visualization updated successfully!')
         logger.info('📁 Output file: %s' % output_file)
-
 
 if __name__ == '__main__':
     main()

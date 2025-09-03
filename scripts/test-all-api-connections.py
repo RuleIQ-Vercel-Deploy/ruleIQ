@@ -19,7 +19,6 @@ from datetime import datetime
 BASE_URL = 'http://localhost:8000/api/v1'
 TEST_TOKEN = 'your-test-token-here'
 
-
 class APIConnectionTester:
 
     def __init__(self):
@@ -195,7 +194,6 @@ class APIConnectionTester:
             '\n✅ Results saved to scripts/api-connection-test-results.json')
         return self.results['failed'] == 0
 
-
 async def main():
     """Main test runner"""
     tester = APIConnectionTester()
@@ -215,7 +213,6 @@ async def main():
     else:
         logger.info('\n⚠️  Some tests failed. Please review the errors above.')
     return success
-
 
 if __name__ == '__main__':
     asyncio.run(main())

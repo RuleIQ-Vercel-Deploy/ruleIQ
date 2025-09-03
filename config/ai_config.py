@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 MAX_ITEMS = 1000
 
-
 AI Configuration and Model Setup for ComplianceGPT
 
 This module handles configuration and initialization of AI models,
@@ -30,14 +29,12 @@ ENTERPRISE_EMPLOYEE_THRESHOLD = 1000
 SIMPLE_COMPLEXITY_THRESHOLD = 0.3
 COMPLEX_COMPLEXITY_THRESHOLD = 0.7
 
-
 class ModelType(Enum):
     """Available AI model types"""
     GEMINI_FLASH = 'gemini-2.5-flash-preview-05-20'
     GEMINI_25_PRO = 'gemini-2.5-pro'
     GEMINI_25_FLASH = 'gemini-2.5-flash'
     GEMMA_3 = 'gemma-3-8b-it'
-
 
 @dataclass
 class ModelMetadata:
@@ -55,7 +52,6 @@ class ModelMetadata:
         return (self.capability_score / self.cost_score if self.cost_score >
             0 else 0)
 
-
 MODEL_FALLBACK_CHAIN = [ModelType.GEMINI_25_PRO, ModelType.GEMINI_25_FLASH,
     ModelType.GEMMA_3]
 MODEL_METADATA = {ModelType.GEMINI_25_PRO: ModelMetadata(name=ModelType.
@@ -68,7 +64,6 @@ MODEL_METADATA = {ModelType.GEMINI_25_PRO: ModelMetadata(name=ModelType.
     timeout_seconds=15.0), ModelType.GEMINI_FLASH: ModelMetadata(name=
     ModelType.GEMINI_FLASH.value, cost_score=4.0, speed_score=8.0,
     capability_score=7.0, max_tokens=2048, timeout_seconds=30.0)}
-
 
 class AIConfig:
     """AI Configuration Manager"""
@@ -381,9 +376,7 @@ class AIConfig:
             'AI Model Selection', error_code='NO_MODELS_AVAILABLE', context
             ={'attempted_models': [m.value for m in fallback_models]})
 
-
 ai_config = AIConfig()
-
 
 def get_ai_model(model_type: Optional[ModelType]=None, task_complexity: str
     ='medium', prefer_speed: bool=False, task_context: Optional[Dict[str,
@@ -409,7 +402,6 @@ def get_ai_model(model_type: Optional[ModelType]=None, task_complexity: str
     return ai_config.get_model(model_type, system_instruction=
         system_instruction, tools=tools)
 
-
 def get_structured_ai_model(response_schema_type: str, model_type: Optional
     [ModelType]=None, task_complexity: str='medium', prefer_speed: bool=
     False, task_context: Optional[Dict[str, Any]]=None, system_instruction:
@@ -434,7 +426,6 @@ def get_structured_ai_model(response_schema_type: str, model_type: Optional
         system_instruction=system_instruction, response_schema_type=
         response_schema_type, tools=tools)
 
-
 async def generate_compliance_content(prompt: str, model_type: Optional[
     ModelType]=None) ->str:
     """Generate compliance-focused content using optimized settings"""
@@ -447,7 +438,6 @@ async def generate_compliance_content(prompt: str, model_type: Optional[
         return response.text
     finally:
         ai_config.generation_config = original_config
-
 
 def generate_creative_content(prompt: str, model_type: Optional[ModelType]=None
     ) ->str:

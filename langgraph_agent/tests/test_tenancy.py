@@ -14,7 +14,6 @@ from langgraph_agent.graph.app import invoke_graph, stream_graph
 from langgraph_agent.agents.tool_manager import ToolManager
 from langgraph_agent.core.models import SafeFallbackResponse
 
-
 class TestStateTenancy:
     """Test tenancy enforcement in state management."""
 
@@ -93,7 +92,6 @@ class TestStateTenancy:
         assert state_user_a["user_id"] != state_user_b["user_id"]
         assert state_user_a["company_id"] == state_user_b["company_id"]
         assert state_user_a["thread_id"] == state_user_b["thread_id"]
-
 
 class TestToolTenancy:
     """Test tenancy enforcement in tool execution."""
@@ -218,7 +216,6 @@ class TestToolTenancy:
         assert stats["total_executions"] == 2
         assert stats["successful_executions"] == 2
 
-
 class TestGraphTenancy:
     """Test tenancy enforcement in graph execution."""
 
@@ -323,7 +320,6 @@ class TestGraphTenancy:
         for chunk in chunks:
             assert chunk["company_id"] == company_id
 
-
 class TestErrorTenancy:
     """Test tenancy enforcement in error handling."""
 
@@ -390,7 +386,6 @@ class TestErrorTenancy:
         error = result["errors"][0]
         assert error.company_id == company_id
         assert error.thread_id == thread_id
-
 
 class TestDataIsolation:
     """Test data isolation between tenants."""
@@ -484,7 +479,6 @@ class TestDataIsolation:
             != state_b["tool_results"][0].result["compliance_score"]
         )
 
-
 class TestCrossCompanySecurityValidation:
     """Test security measures preventing cross-company data access."""
 
@@ -539,7 +533,6 @@ class TestCrossCompanySecurityValidation:
         # Modifying one thread should not affect the other
         state1["metadata"]["custom_data"] = "thread-1-data"
         assert "custom_data" not in state2["metadata"]
-
 
 class TestAuditTrails:
     """Test audit trail generation for tenancy compliance."""

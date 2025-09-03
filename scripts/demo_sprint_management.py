@@ -12,7 +12,6 @@ import sys
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from sprint_management import SprintManager, Priority, StoryStatus
 
-
 def demo_sprint_management() ->None:
     """Comprehensive demonstration of sprint management capabilities"""
     logger.info('🚀 ruleIQ Sprint Management System Demo')
@@ -139,7 +138,6 @@ def demo_sprint_management() ->None:
     logger.info('   python sprint_cli.py analyze-stories')
     logger.info('   python sprint_cli.py decompose-stories')
 
-
 def demo_cli_commands() ->None:
     """Demonstrate CLI command usage"""
     logger.info('\n🖥️  CLI Commands Demo')
@@ -156,7 +154,6 @@ def demo_cli_commands() ->None:
         logger.info('   %s' % cmd)
         logger.info('      %s' % description)
         logger.info()
-
 
 if __name__ == '__main__':
     try:

@@ -17,7 +17,6 @@ import pytest
 
 T = TypeVar('T')
 
-
 # Async timeout handling
 async def async_with_timeout(coro, timeout: float):
     """
@@ -34,7 +33,6 @@ async def async_with_timeout(coro, timeout: float):
         asyncio.TimeoutError: If operation exceeds timeout
     """
     return await asyncio.wait_for(coro, timeout=timeout)
-
 
 def sync_with_timeout(func: Callable, timeout: float, *args, **kwargs):
     """
@@ -74,7 +72,6 @@ def sync_with_timeout(func: Callable, timeout: float, *args, **kwargs):
     
     return result[0]
 
-
 # Connection cleanup decorators
 def with_db_cleanup(async_func):
     """
@@ -98,7 +95,6 @@ def with_db_cleanup(async_func):
                     conn.close()
     return wrapper
 
-
 def with_redis_cleanup(async_func):
     """
     Decorator to ensure Redis connections are cleaned up.
@@ -121,7 +117,6 @@ def with_redis_cleanup(async_func):
                     redis_client.close()
     return wrapper
 
-
 async def cleanup_all_connections(connections: Dict[str, Any]):
     """
     Clean up multiple connections.
@@ -138,7 +133,6 @@ async def cleanup_all_connections(connections: Dict[str, Any]):
                     conn.close()
             except Exception as e:
                 print(f"Error closing {name}: {e}")
-
 
 # Test timeout decorator
 def with_test_timeout(seconds: int):
@@ -175,7 +169,6 @@ def with_test_timeout(seconds: int):
             return sync_wrapper
     
     return decorator
-
 
 # Smart mock creation
 def create_smart_mock_ai_client():
@@ -221,7 +214,6 @@ def create_smart_mock_ai_client():
     
     return mock_client
 
-
 def create_smart_mock_openai():
     """
     Create a mock OpenAI client with intelligent responses.
@@ -253,7 +245,6 @@ def create_smart_mock_openai():
     
     return mock_client
 
-
 # Environment-aware configuration
 def get_redis_config() -> Dict[str, Any]:
     """
@@ -267,7 +258,6 @@ def get_redis_config() -> Dict[str, Any]:
         'port': int(os.getenv('REDIS_PORT', '6379')),
         'db': int(os.getenv('REDIS_DB', '0')),
     }
-
 
 def get_postgres_config() -> Dict[str, Any]:
     """
@@ -296,7 +286,6 @@ def get_postgres_config() -> Dict[str, Any]:
         'password': 'postgres',
     }
 
-
 # Context managers for test isolation
 @asynccontextmanager
 async def isolated_test_context():
@@ -312,7 +301,6 @@ async def isolated_test_context():
         yield connections
     finally:
         await cleanup_all_connections(connections)
-
 
 @contextmanager
 def timeout_context(seconds: float):

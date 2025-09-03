@@ -14,7 +14,6 @@ from typing import Dict, Any
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from sprint_management import SprintManager, Priority, TaskType
 
-
 class SprintCLI:
     """Command-line interface for sprint management"""
 
@@ -285,7 +284,6 @@ class SprintCLI:
             'Consider early testing of completed RBAC features',
             'Monitor design system migration progress closely']}
 
-
 def main() ->None:
     """Main CLI entry point"""
     parser = argparse.ArgumentParser(description=
@@ -366,7 +364,6 @@ Examples:
         if '--debug' in sys.argv:
             import traceback
             traceback.print_exc()
-
 
 if __name__ == '__main__':
     main()

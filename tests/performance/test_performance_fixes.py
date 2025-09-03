@@ -15,7 +15,6 @@ from database.query_optimization import QueryOptimizer
 from api.utils.error_handlers import DatabaseException
 from config.settings import settings
 
-
 class TestPerformanceFixes:
     """Test suite for performance optimization fixes"""
 
@@ -94,7 +93,6 @@ class TestPerformanceFixes:
         assert hasattr(optimizer, method_name) or hasattr(optimizer,
             'optimize_query')
 
-
 class TestDatabaseIndexes:
     """Test suite for database index optimizations"""
 
@@ -125,7 +123,6 @@ class TestDatabaseIndexes:
         optimizer = QueryOptimizer()
         assert hasattr(optimizer, 'explain_query')
         assert callable(getattr(optimizer, 'explain_query', None))
-
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

@@ -17,7 +17,6 @@ from core.security.credential_encryption import get_credential_encryption, Crede
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 class IntegrationService:
     """Service for managing enterprise integrations"""
 
@@ -277,7 +276,6 @@ class IntegrationService:
         except Exception as e:
             logger.warning('Failed to create audit log: %s' % e)
 
-
 class EvidenceCollectionService:
     """Service for managing evidence collections"""
 
@@ -414,7 +412,6 @@ class EvidenceCollectionService:
             logger.error('Failed to get collection evidence: %s' % e)
             raise
 
-
 async def store_integration_config(user_id: str, provider: str, credentials:
     APICredentials, health_info: Dict[str, Any], db: AsyncSession,
     configuration_metadata: Optional[Dict[str, Any]]=None) ->Integration:
@@ -423,20 +420,17 @@ async def store_integration_config(user_id: str, provider: str, credentials:
     return await service.store_integration_config(user_id, provider,
         credentials, health_info, configuration_metadata)
 
-
 async def get_user_integrations(user_id: str, db: AsyncSession) ->List[
     Integration]:
     """Get user integrations"""
     service = IntegrationService(db)
     return await service.get_user_integrations(user_id)
 
-
 async def get_integration_by_id(integration_id: str, db: AsyncSession,
     user_id: Optional[str]=None) ->Optional[Integration]:
     """Get integration by ID"""
     service = IntegrationService(db)
     return await service.get_integration_by_id(integration_id, user_id)
-
 
 async def decrypt_integration_credentials(integration: Integration
     ) ->APICredentials:
@@ -452,7 +446,6 @@ async def decrypt_integration_credentials(integration: Integration
         logger.error('Failed to decrypt credentials for integration %s: %s' %
             (integration.id, e))
         raise
-
 
 async def update_integration_health(integration_id: str, health_data: Dict[
     str, Any], db: AsyncSession, user_id: Optional[str]=None) ->bool:

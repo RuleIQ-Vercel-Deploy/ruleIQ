@@ -1,0 +1,30 @@
+{
+  "name": "ruleIQ - AI-Powered Compliance Automation",
+  "short_name": "ruleIQ",
+  "description": "Streamline compliance for UK SMBs with intelligent automation and real-time monitoring",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0B4F6C",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/logo192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/logo512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "categories": ["business", "productivity", "utilities"],
+  "lang": "en-GB",
+  "dir": "ltr"
+}

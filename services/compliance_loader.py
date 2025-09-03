@@ -14,9 +14,7 @@ from database.compliance_framework import ComplianceFramework
 from database.db_setup import get_db
 from sqlalchemy.orm import Session
 
-
 logger = logging.getLogger(__name__)
-
 
 @dataclass
 class LoadResult:
@@ -27,7 +25,6 @@ class LoadResult:
     skipped_frameworks: List[str]
     errors: List[str]
     total_processed: int
-
 
 class UKComplianceLoader:
     """
@@ -213,7 +210,6 @@ class UKComplianceLoader:
         self.db_session.commit()
         return framework
 
-
 class GeographicValidator:
     """Validator for geographic scope of frameworks"""
 
@@ -234,7 +230,6 @@ class GeographicValidator:
 
         # Must contain at least one UK region
         return bool(set(geographic_scope) & self.UK_REGIONS)
-
 
 class ISO27001UKMapper:
     """Mapper for ISO 27001 controls to UK regulatory requirements"""

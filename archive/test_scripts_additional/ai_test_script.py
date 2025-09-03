@@ -24,7 +24,6 @@ try:
 except ImportError:
     print("⚠️ `python-dotenv` not found. Assuming environment variables are set.")
 
-
 def test_environment_setup():
     """Test Phase 1: Environment & Configuration"""
     print("=== AI Service Testing - Phase 1: Environment & Configuration ===")
@@ -73,7 +72,6 @@ def test_environment_setup():
     print(f"{'ℹ️'} Mock AI Mode: {'Enabled' if use_mock else 'Disabled'}")
 
     return results
-
 
 def test_api_endpoints():
     """Test Phase 2: API Endpoints (using curl)"""
@@ -236,7 +234,6 @@ def test_api_endpoints():
 
     return results
 
-
 def run_all_tests() -> None:
     """Run all test phases and save the report."""
     print("🚀 Starting AI Service Test Suite")
@@ -287,7 +284,6 @@ def run_all_tests() -> None:
         json.dump(all_results, f, indent=2)
 
     print(f"\n✅ Test report saved to {report_path}")
-
 
 if __name__ == "__main__":
     run_all_tests()

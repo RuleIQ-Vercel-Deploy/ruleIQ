@@ -32,7 +32,6 @@ PERFORMANCE_INDEXES = [Index('idx_evidence_user_status',
     'compliance_frameworks.category'), Index('idx_framework_active',
     'compliance_frameworks.is_active')]
 
-
 async def create_performance_indexes(db: AsyncSession) ->None:
     """
     Create performance indexes to speed up common queries.
@@ -71,7 +70,6 @@ async def create_performance_indexes(db: AsyncSession) ->None:
         logger.info('Error creating performance indexes: %s' % e)
         raise
 
-
 async def analyze_tables(db: AsyncSession) ->None:
     """
     Run ANALYZE on tables to update statistics for better query planning.
@@ -91,7 +89,6 @@ async def analyze_tables(db: AsyncSession) ->None:
         logger.info('Table analysis completed')
     except Exception as e:
         logger.info('Error analyzing tables: %s' % e)
-
 
 QUERY_OPTIMIZATIONS = {'evidence_search':
     """
@@ -117,7 +114,6 @@ QUERY_OPTIMIZATIONS = {'evidence_search':
         GROUP BY user_id, status;
     """,
     }
-
 
 def get_optimized_query(query_name: str) ->str:
     """Get an optimized version of a common query."""

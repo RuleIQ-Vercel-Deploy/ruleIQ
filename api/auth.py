@@ -28,16 +28,13 @@ REFRESH_TOKEN_EXPIRE_DAYS = settings.jwt_refresh_token_expire_days
 pwd_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/api/auth/token')
 
-
 def verify_password(plain_password: str, hashed_password: str) ->bool:
     """Verify a password against its hash."""
     return pwd_context.verify(plain_password, hashed_password)
 
-
 def get_password_hash(password: str) ->str:
     """Hash a password."""
     return pwd_context.hash(password)
-
 
 def create_access_token(data: Dict[str, Any], expires_delta: Optional[
     timedelta]=None) ->str:
@@ -53,7 +50,6 @@ def create_access_token(data: Dict[str, Any], expires_delta: Optional[
         ALGORITHM)
     return encoded_jwt
 
-
 def create_refresh_token(data: Dict[str, Any]) ->str:
     """Create a JWT refresh token."""
     to_encode = data.copy()
@@ -63,7 +59,6 @@ def create_refresh_token(data: Dict[str, Any]) ->str:
     encoded_jwt = jwt.encode(to_encode, settings.jwt_secret, algorithm=
         ALGORITHM)
     return encoded_jwt
-
 
 async def get_current_user(token: str=Depends(oauth2_scheme), db: Session=
     Depends(get_db)) ->User:
@@ -88,7 +83,6 @@ async def get_current_user(token: str=Depends(oauth2_scheme), db: Session=
     if user is None:
         raise credentials_exception
     return user
-
 
 async def get_current_active_user(current_user: User=Depends(get_current_user)
     ) ->User:

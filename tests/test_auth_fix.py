@@ -10,7 +10,6 @@ import pytest
 from uuid import uuid4
 from unittest.mock import patch, AsyncMock
 
-
 class TestAuthenticationFix:
     """Test authentication fixes for E2E tests."""
 

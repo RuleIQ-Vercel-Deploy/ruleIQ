@@ -12,12 +12,10 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-
 class ValidationError(Exception):
     """Raised when input validation fails"""
 
     pass
-
 
 class InputValidator:
     """Comprehensive input validation and sanitization"""
@@ -250,22 +248,18 @@ class InputValidator:
 
         return float_value
 
-
 # Convenience functions
 def sanitize_input(value: str, max_length: int = 1000) -> str:
     """Quick string sanitization"""
     return InputValidator.sanitize_string(value, max_length)
 
-
 def validate_email(email: str) -> str:
     """Quick email validation"""
     return InputValidator.validate_email(email)
 
-
 def validate_uuid(uuid_str: str) -> str:
     """Quick UUID validation"""
     return InputValidator.validate_uuid(uuid_str)
-
 
 def validate_password(password: str) -> str:
     """Quick password validation"""

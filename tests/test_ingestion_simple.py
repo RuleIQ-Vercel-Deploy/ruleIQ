@@ -14,7 +14,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 load_dotenv()
 
-
 class SimpleIngestion:
     """Simplified Neo4j ingestion for testing."""
 
@@ -148,7 +147,6 @@ class SimpleIngestion:
                 logger.info('  - %s (automation: %s)' % (record['title'],
                     record['automation']))
 
-
 async def main():
     """Run the simplified ingestion test."""
     ingestion = SimpleIngestion()
@@ -170,7 +168,6 @@ async def main():
     finally:
         await ingestion.close()
     return 0
-
 
 if __name__ == '__main__':
     exit(asyncio.run(main()))

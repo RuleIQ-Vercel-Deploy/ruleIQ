@@ -38,14 +38,12 @@ from api.main import app
 import jwt
 from datetime import datetime, timedelta
 
-
 def create_freemium_token(email: str, session_data: dict, expires_in: int=3600
     ) ->str:
     """Mock implementation of create_freemium_token."""
     payload = {'email': email, 'session_data': session_data, 'exp': 
         datetime.now(timezone.utc) + timedelta(seconds=expires_in)}
     return jwt.encode(payload, 'test_secret', algorithm='HS256')
-
 
 def verify_freemium_token(token: str) ->dict:
     """Mock implementation of verify_freemium_token."""
@@ -56,12 +54,10 @@ def verify_freemium_token(token: str) ->dict:
     except jwt.InvalidTokenError:
         raise ValueError('Invalid token')
 
-
 from services.ai.assistant import ComplianceAssistant
 from services.ai.exceptions import CircuitBreakerException as CircuitBreakerError
 from database.freemium_assessment_session import FreemiumAssessmentSession as FreemiumSession
 from database.user import User
-
 
 class TestFreemiumEmailCapture:
     """Test email capture endpoint with UTM tracking."""
@@ -155,7 +151,6 @@ class TestFreemiumEmailCapture:
         end_time = time.time()
         assert response.status_code == HTTP_OK
         assert end_time - start_time < 0.2
-
 
 class TestFreemiumAssessmentStart:
     """Test assessment session creation endpoint."""
@@ -257,7 +252,6 @@ class TestFreemiumAssessmentStart:
             assert data['progress'] == 25
             assert data['previous_responses'] == {'q1_business_type': 'SaaS'}
 
-
 class TestFreemiumAnswerQuestion:
     """Test answer submission and next question generation."""
 
@@ -346,7 +340,6 @@ class TestFreemiumAnswerQuestion:
             assert data['answer_recorded'] is True
             assert 'fallback_mode' in data
             assert data['fallback_mode'] is True
-
 
 class TestFreemiumResults:
     """Test results retrieval endpoint."""
@@ -442,7 +435,6 @@ class TestFreemiumResults:
             assert response.status_code == HTTP_OK
             assert end_time - start_time < 0.2
 
-
 class TestFreemiumConversionTracking:
     """Test conversion event tracking endpoint."""
 
@@ -494,7 +486,6 @@ class TestFreemiumConversionTracking:
         data = response.json()
         assert 'event_type' in data['detail'][0]['loc']
 
-
 class TestFreemiumSecurityAndValidation:
     """Test security measures and input validation."""
 
@@ -542,13 +533,11 @@ class TestFreemiumSecurityAndValidation:
         assert response.status_code == HTTP_UNAUTHORIZED
         assert 'expired' in response.json()['detail'].lower()
 
-
 @pytest.fixture
 async def freemium_token():
     """Create a valid freemium token for testing."""
     return create_freemium_token(email='test@example.com', utm_source=
         'google', utm_campaign='compliance_test')
-
 
 @pytest.fixture
 async def freemium_session(freemium_token, db_session):
@@ -561,7 +550,6 @@ async def freemium_session(freemium_token, db_session):
     db_session.add(session)
     await db_session.commit()
     return {'token': freemium_token, 'session': session}
-
 
 @pytest.fixture
 async def completed_freemium_session(freemium_session, db_session):
@@ -576,7 +564,6 @@ async def completed_freemium_session(freemium_session, db_session):
     session.completed_at = datetime.now(timezone.utc)
     await db_session.commit()
     return freemium_session
-
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v', '--tb=short'])

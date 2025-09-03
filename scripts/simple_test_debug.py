@@ -20,7 +20,6 @@ os.environ["DATABASE_URL"] = (
 project_root = Path(__file__).parent
 sys.path.insert(0, str(project_root))
 
-
 def test_freemium_model_directly() -> Optional[bool]:
     """Test freemium models directly without pytest overhead."""
     print("=== Direct Freemium Model Test ===")
@@ -164,7 +163,6 @@ def test_freemium_model_directly() -> Optional[bool]:
             pass
 
         return False
-
 
 if __name__ == "__main__":
     success = test_freemium_model_directly()

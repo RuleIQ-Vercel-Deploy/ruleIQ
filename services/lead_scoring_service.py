@@ -11,7 +11,6 @@ DEFAULT_LIMIT = 100
 DEFAULT_RETRIES = 5
 MAX_RETRIES = 3
 
-
 LeadScoringService - Behavioral analytics and lead scoring engine.
 
 Handles comprehensive lead scoring based on:
@@ -34,7 +33,6 @@ from database import AssessmentLead, LeadScoringEvent, FreemiumAssessmentSession
 from config.logging_config import get_logger
 from config.cache import get_cache_manager
 logger = get_logger(__name__)
-
 
 class LeadScoringService:
     """

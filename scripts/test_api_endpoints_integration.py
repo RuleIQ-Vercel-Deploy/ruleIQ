@@ -6,7 +6,6 @@ HTTP_BAD_REQUEST = 400
 HTTP_NOT_FOUND = 404
 HTTP_OK = 200
 
-
 Test script to verify business-profiles and frameworks endpoints are working properly
 Specifically testing the endpoints that are failing in the frontend
 """
@@ -16,7 +15,6 @@ import json
 import sys
 from datetime import datetime
 BASE_URL = 'http://localhost:8000'
-
 
 def test_login() ->Any:
     """Login and get auth token"""
@@ -46,7 +44,6 @@ def test_login() ->Any:
                 f'❌ Registration failed: {response.status_code} - {response.text}'
                 )
             return None
-
 
 def test_business_profiles(token: str) ->Any:
     """Test business profiles endpoints"""
@@ -101,7 +98,6 @@ def test_business_profiles(token: str) ->Any:
         print(f'❌ Failed to create profile - Status: {response.status_code}')
         print(f'   Error: {response.text[:500]}')
 
-
 def test_frameworks(token: str) ->Any:
     """Test frameworks endpoints"""
     print('\n🎯 Testing Frameworks Endpoints...')
@@ -138,7 +134,6 @@ def test_frameworks(token: str) ->Any:
             )
         print(f'   Error: {response.text[:200]}')
 
-
 def test_compliance_wizard_requirements(token: str) ->Any:
     """Test specific endpoints needed by compliance wizard"""
     print('\n🧙 Testing Compliance Wizard Requirements...')
@@ -171,7 +166,6 @@ def test_compliance_wizard_requirements(token: str) ->Any:
         print(
             '⚠️  No business profile - compliance wizard would show profile creation form first'
             )
-
 
 def main() ->Any:
     print('🚀 Testing Fixed API Routes for Business Profiles and Frameworks')
@@ -212,7 +206,6 @@ def main() ->Any:
     print(
         '   4. Ensure frontend is sending Authorization header with Bearer token'
         )
-
 
 if __name__ == '__main__':
     main()

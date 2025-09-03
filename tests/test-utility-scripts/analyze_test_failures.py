@@ -13,7 +13,6 @@ import json
 from pathlib import Path
 from collections import defaultdict
 
-
 def run_tests_with_detailed_output():
     """Run tests and capture detailed output."""
     print('🔍 Running comprehensive test analysis...')
@@ -24,7 +23,6 @@ def run_tests_with_detailed_output():
         '--disable-warnings', '--maxfail=50', '--tb=short']
     result = subprocess.run(cmd, capture_output=True, text=True, env=env)
     return result
-
 
 def analyze_failures(test_output):
     """Analyze test failures and categorize them."""
@@ -45,7 +43,6 @@ def analyze_failures(test_output):
             'sqlalchemy', 'pytest', 'fixture']):
             error_buffer.append(line.strip())
     return failures, error_buffer
-
 
 def categorize_test_issues(failures, errors):
     """Categorize test issues by type."""
@@ -75,7 +72,6 @@ def categorize_test_issues(failures, errors):
         else:
             categories['other_issues'].append(test)
     return categories
-
 
 def generate_fix_strategy(categories):
     """Generate a comprehensive fix strategy."""
@@ -131,7 +127,6 @@ def generate_fix_strategy(categories):
             ] = 'General Testing Specialist'
     return strategy
 
-
 def main():
     """Main analysis function."""
     print('🧪 Comprehensive Test Failure Analysis')
@@ -169,7 +164,6 @@ def main():
     print('\n💾 Detailed analysis saved to: test_failure_analysis.json')
     print(f'📤 Return code: {result.returncode}')
     return result.returncode == 0
-
 
 if __name__ == '__main__':
     success = main()

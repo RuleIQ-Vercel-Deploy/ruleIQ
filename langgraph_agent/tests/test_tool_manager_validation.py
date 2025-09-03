@@ -20,7 +20,6 @@ from langgraph_agent.agents.tool_manager import (
 )
 from langgraph_agent.core.models import SafeFallbackResponse
 
-
 class TestToolCreation:
     """Test tool instantiation and Pydantic compatibility."""
 
@@ -91,7 +90,6 @@ class TestToolCreation:
             assert callable(tool._run)
             assert callable(tool._arun)
 
-
 class TestToolManager:
     """Test ToolManager functionality."""
 
@@ -143,7 +141,6 @@ class TestToolManager:
         assert (
             len(medium_priority) >= 1
         )  # At least document_retrieval and report_generation
-
 
 @pytest.mark.asyncio
 class TestToolExecution:
@@ -254,7 +251,6 @@ class TestToolExecution:
         assert "medium_issues" in summary
         assert "recommendations" in summary
 
-
 @pytest.mark.asyncio
 class TestToolManagerExecution:
     """Test ToolManager execution functionality."""
@@ -360,7 +356,6 @@ class TestToolManagerExecution:
         assert all(isinstance(r, ToolResult) for r in results)
         assert all(r.success for r in results)
 
-
 class TestToolStats:
     """Test tool statistics and monitoring."""
 
@@ -418,7 +413,6 @@ class TestToolStats:
         for tool_name, status in health["tool_statuses"].items():
             assert status == "available"
 
-
 class TestRateLimiting:
     """Test tool rate limiting functionality."""
 
@@ -439,7 +433,6 @@ class TestRateLimiting:
         tool._last_reset = datetime.now(timezone.utc) - timedelta(seconds=61)
         assert tool._check_rate_limit() == True
         assert tool._execution_count == 0  # Should reset counter
-
 
 class TestSignatureValidation:
     """Test HMAC signature validation."""
@@ -471,7 +464,6 @@ class TestSignatureValidation:
             tool._validate_signature(input_data, expected_signature, "wrong_secret")
             == False
         )
-
 
 @pytest.mark.asyncio
 class TestErrorHandling:

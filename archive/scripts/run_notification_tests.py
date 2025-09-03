@@ -5,7 +5,6 @@ Direct test runner for notification migration TDD tests
 import logging
 logger = logging.getLogger(__name__)
 
-
 import sys
 import unittest
 from pathlib import Path
@@ -26,7 +25,6 @@ from tests.test_notification_migration_tdd import (
     TestCostGovernance,
     TestComplianceAndSecurity,
 )
-
 
 def run_tests():
     """Run all notification migration TDD tests"""
@@ -72,7 +70,6 @@ def run_tests():
         logger.info(f"Success rate: {success_rate:.1f}%")
 
     return result.wasSuccessful()
-
 
 if __name__ == "__main__":
     success = run_tests()

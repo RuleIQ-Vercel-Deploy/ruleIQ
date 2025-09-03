@@ -14,10 +14,8 @@ down_revision = ("freemium_001", "d354bd6c0c4b")
 branch_labels = None
 depends_on = None
 
-
 def upgrade() -> None:
     pass
-
 
 def downgrade() -> None:
     pass

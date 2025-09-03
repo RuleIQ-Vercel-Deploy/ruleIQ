@@ -17,7 +17,6 @@ from unittest.mock import patch
 import pytest
 from tests.conftest import assert_api_response_security
 
-
 @pytest.mark.integration
 @pytest.mark.api
 class TestEnhancedChatEndpoints:
@@ -264,7 +263,6 @@ class TestEnhancedChatEndpoints:
             '/api/chat/context-aware-recommendations?framework=', headers=
             authenticated_headers)
         assert response.status_code == HTTP_UNPROCESSABLE_ENTITY
-
 
 @pytest.mark.integration
 @pytest.mark.api

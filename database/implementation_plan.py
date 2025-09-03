@@ -7,7 +7,6 @@ from sqlalchemy.orm import relationship
 
 from .db_setup import Base
 
-
 class ImplementationPlan(Base):
     __tablename__ = "implementation_plans"
 

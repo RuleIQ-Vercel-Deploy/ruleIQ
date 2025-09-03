@@ -6,7 +6,6 @@ HTTP_OK = 200
 
 DEFAULT_LIMIT = 100
 
-
 Circuit Breaker Monitoring and Alerting System
 
 Provides comprehensive monitoring, alerting, and dashboard capabilities
@@ -21,14 +20,12 @@ from enum import Enum
 from typing import Any, Dict, List, Optional
 from services.ai.circuit_breaker import AICircuitBreaker
 
-
 class AlertSeverity(Enum):
     """Alert severity levels"""
     INFO = 'info'
     WARNING = 'warning'
     ERROR = 'error'
     CRITICAL = 'critical'
-
 
 @dataclass
 class Alert:
@@ -43,7 +40,6 @@ class Alert:
     acknowledged: bool = False
     resolved: bool = False
 
-
 @dataclass
 class MonitoringConfig:
     """Configuration for circuit breaker monitoring"""
@@ -56,7 +52,6 @@ class MonitoringConfig:
     enable_logging: bool = True
     enable_webhook: bool = False
     webhook_url: Optional[str] = None
-
 
 class CircuitBreakerMonitor:
     """
@@ -283,9 +278,7 @@ class CircuitBreakerMonitor:
             health_status['models'].items()}, 'performance_trends': self.
             performance_trends, 'last_updated': datetime.now().isoformat()}
 
-
 _monitor_instance: Optional[CircuitBreakerMonitor] = None
-
 
 def get_circuit_breaker_monitor(circuit_breaker: AICircuitBreaker
     ) ->CircuitBreakerMonitor:
@@ -294,7 +287,6 @@ def get_circuit_breaker_monitor(circuit_breaker: AICircuitBreaker
     if _monitor_instance is None:
         _monitor_instance = CircuitBreakerMonitor(circuit_breaker)
     return _monitor_instance
-
 
 def reset_monitor() ->None:
     """Reset global monitor (for testing)"""

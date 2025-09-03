@@ -9,7 +9,6 @@ Script to update all router files from Stack Auth to JWT authentication
 import re
 from pathlib import Path
 
-
 def update_file(file_path) ->bool:
     """Update a single file to use JWT auth instead of Stack Auth"""
     logger.info('Updating %s...' % file_path)
@@ -42,7 +41,6 @@ from database.user import User"""
         logger.info('⏭️  No changes needed for %s' % file_path)
         return False
 
-
 def main() ->None:
     """Main function to update all router files"""
     router_dir = Path('api/routers')
@@ -64,7 +62,6 @@ def main() ->None:
             updated_count += 1
     logger.info('\n✅ Successfully updated %s files' % updated_count)
     logger.info('🔧 Manual review may be needed for complex usage patterns')
-
 
 if __name__ == '__main__':
     main()

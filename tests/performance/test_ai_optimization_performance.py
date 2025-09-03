@@ -15,7 +15,6 @@ import pytest
 from services.ai.assistant import ComplianceAssistant
 from services.ai.exceptions import ModelUnavailableException
 
-
 @pytest.fixture
 def compliance_assistant():
     """Compliance assistant for performance testing."""
@@ -24,7 +23,6 @@ def compliance_assistant():
     mock_db = Mock(spec=AsyncSession)
     assistant = ComplianceAssistant(mock_db)
     return assistant
-
 
 @pytest.fixture
 def performance_config():
@@ -37,7 +35,6 @@ def performance_config():
         "concurrent_users": [1, 5, 10, 20],
         "test_duration": 30,  # seconds,
     }
-
 
 class TestAIOptimizationPerformance:
     """Performance tests for AI optimization features."""

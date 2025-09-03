@@ -14,7 +14,6 @@ PROJECT_ROOT = Path(__file__).parent.parent
 ROUTERS_DIR = PROJECT_ROOT / 'api' / 'routers'
 MAIN_PY = PROJECT_ROOT / 'main.py'
 
-
 class DuplicateCleaner:
 
     def __init__(self) ->None:
@@ -242,7 +241,6 @@ class DuplicateCleaner:
                 logger.info('    ... and %s more' % (len(self.changes) - 20))
         return self.changes
 
-
 def main() ->Any:
     import sys
     cleaner = DuplicateCleaner()
@@ -267,7 +265,6 @@ def main() ->Any:
         with open(PROJECT_ROOT / 'cleanup-plan.json', 'w') as f:
             json.dump(plan, f, indent=2, default=str)
         logger.info('\n📄 Cleanup plan saved to cleanup-plan.json')
-
 
 if __name__ == '__main__':
     main()

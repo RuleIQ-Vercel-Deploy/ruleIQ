@@ -10,7 +10,6 @@ MINUTE_SECONDS = 60
 CONFIDENCE_THRESHOLD = 0.8
 HALF_RATIO = 0.5
 
-
 Performance Monitoring API Endpoints
 Provides real-time performance metrics and optimization recommendations
 """
@@ -26,7 +25,6 @@ from config.logging_config import get_logger
 logger = get_logger(__name__)
 router = APIRouter(tags=['performance-monitoring'])
 
-
 class PerformanceOverview(BaseModel):
     """Performance overview response model."""
     performance_score: float
@@ -34,7 +32,6 @@ class PerformanceOverview(BaseModel):
     critical_issues: int
     recommendations_count: int
     last_updated: datetime
-
 
 class DatabasePerformanceResponse(BaseModel):
     """Database performance metrics response."""
@@ -45,7 +42,6 @@ class DatabasePerformanceResponse(BaseModel):
     slow_queries_count: int
     performance_rating: str
 
-
 class CachePerformanceResponse(BaseModel):
     """Cache performance metrics response."""
     hit_rate: float
@@ -54,7 +50,6 @@ class CachePerformanceResponse(BaseModel):
     total_requests: int
     avg_response_time: float
     performance_rating: str
-
 
 class APIPerformanceResponse(BaseModel):
     """API performance metrics response."""
@@ -65,7 +60,6 @@ class APIPerformanceResponse(BaseModel):
     slowest_endpoints: List[Dict[str, Any]]
     performance_rating: str
 
-
 class SystemMetricsResponse(BaseModel):
     """System metrics response."""
     cpu_percent: float
@@ -73,7 +67,6 @@ class SystemMetricsResponse(BaseModel):
     disk_percent: float
     load_average: float
     status: str
-
 
 class OptimizationRecommendation(BaseModel):
     """Performance optimization recommendation."""
@@ -85,13 +78,11 @@ class OptimizationRecommendation(BaseModel):
     suggested_value: str
     impact: str
 
-
 class PerformanceTrendsResponse(BaseModel):
     """Performance trends response."""
     hours: int
     data_points: int
     trends: Dict[str, Dict[str, float]]
-
 
 @router.get('/overview', response_model=PerformanceOverview)
 @monitor_performance('performance_overview')
@@ -131,7 +122,6 @@ async def get_performance_overview(current_user: User=Depends(
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             'Failed to get performance overview')
 
-
 @router.get('/database', response_model=DatabasePerformanceResponse)
 @monitor_performance('database_performance')
 async def get_database_performance(current_user: User=Depends(
@@ -168,7 +158,6 @@ async def get_database_performance(current_user: User=Depends(
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             'Failed to get database metrics')
 
-
 @router.get('/cache', response_model=CachePerformanceResponse)
 @monitor_performance('cache_performance')
 async def get_cache_performance(current_user: User=Depends(
@@ -202,7 +191,6 @@ async def get_cache_performance(current_user: User=Depends(
         logger.error('Error getting cache performance: %s' % e)
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             'Failed to get cache metrics')
-
 
 @router.get('/api', response_model=APIPerformanceResponse)
 @monitor_performance('api_performance')
@@ -240,7 +228,6 @@ async def get_api_performance(current_user: User=Depends(
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             'Failed to get API metrics')
 
-
 @router.get('/system', response_model=SystemMetricsResponse)
 @monitor_performance('system_metrics')
 async def get_system_metrics(current_user: User=Depends(
@@ -277,7 +264,6 @@ async def get_system_metrics(current_user: User=Depends(
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             'Failed to get system metrics')
 
-
 @monitor_performance('performance_recommendations')
 async def get_optimization_recommendations(current_user: User=Depends(
     get_current_active_user)) ->List[OptimizationRecommendation]:
@@ -295,7 +281,6 @@ async def get_optimization_recommendations(current_user: User=Depends(
         logger.error('Error getting optimization recommendations: %s' % e)
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             'Failed to get recommendations')
-
 
 @router.get('/trends', response_model=PerformanceTrendsResponse)
 @monitor_performance('performance_trends')
@@ -320,7 +305,6 @@ async def get_performance_trends(hours: int=Query(24, ge=1, le=168,
         logger.error('Error getting performance trends: %s' % e)
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             'Failed to get performance trends')
-
 
 @router.post('/alerts/configure')
 @monitor_performance('configure_performance_alerts')
@@ -352,7 +336,6 @@ async def configure_performance_alerts(alerts_config: Dict[str, Any],
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             'Failed to configure alerts')
 
-
 async def performance_monitoring_health() ->Any:
     """
     Health check for performance monitoring system.
@@ -368,7 +351,6 @@ async def performance_monitoring_health() ->Any:
         logger.error('Performance monitoring health check failed: %s' % e)
         return {'status': 'unhealthy', 'error': str(e), 'timestamp':
             datetime.now(timezone.utc).isoformat()}
-
 
 @router.post('/monitoring/start')
 async def start_performance_monitoring(interval: int=Query(60, ge=10, le=
@@ -397,7 +379,6 @@ async def start_performance_monitoring(interval: int=Query(60, ge=10, le=
         logger.error('Error starting performance monitoring: %s' % e)
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             'Failed to start monitoring')
-
 
 @router.post('/monitoring/stop')
 async def stop_performance_monitoring(current_user: User=Depends(

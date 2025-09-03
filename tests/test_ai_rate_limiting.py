@@ -13,7 +13,6 @@ from unittest.mock import patch
 import pytest
 from api.middleware.ai_rate_limiter import AIRateLimiter, ai_analysis_limiter, ai_followup_limiter, ai_help_limiter, ai_recommendations_limiter, get_ai_rate_limit_stats
 
-
 class TestAIRateLimiter:
     """Test the AIRateLimiter class functionality."""
 
@@ -97,7 +96,6 @@ class TestAIRateLimiter:
         remaining = rate_limiter.get_remaining_requests(user_id)
         assert remaining == 2
 
-
 class TestAIRateLimiterInstances:
     """Test the pre-configured rate limiter instances."""
 
@@ -121,7 +119,6 @@ class TestAIRateLimiterInstances:
         assert ai_recommendations_limiter.requests_per_minute == MAX_RETRIES
         assert ai_recommendations_limiter.burst_allowance == 1
 
-
 class TestAIRateLimitStats:
     """Test the rate limiting statistics functionality."""
 
@@ -143,7 +140,6 @@ class TestAIRateLimitStats:
         assert stats['total_requests'] >= 0
         assert stats['rate_limited_requests'] >= 0
         assert stats['uptime_seconds'] >= 0
-
 
 class TestRateLimitingIntegration:
     """Integration tests for rate limiting with mock endpoints."""
@@ -193,7 +189,6 @@ class TestRateLimitingIntegration:
         blocked_count = sum(1 for allowed, _ in results if not allowed)
         assert allowed_count == 6
         assert blocked_count == 4
-
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

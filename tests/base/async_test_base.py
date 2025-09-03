@@ -9,7 +9,6 @@ import pytest
 from typing import Any, Optional
 from unittest.mock import AsyncMock, MagicMock
 
-
 class AsyncTestBase:
     """Base class for async tests with proper lifecycle management."""
 
@@ -40,7 +39,6 @@ class AsyncTestBase:
             # Log test failure details
             pytest.fail(f"Async test failed: {e}")
 
-
 class DatabaseTestBase(AsyncTestBase):
     """Base class for database tests with session management."""
 
@@ -70,7 +68,6 @@ class DatabaseTestBase(AsyncTestBase):
         """Add object to cleanup list."""
         self.test_objects.append(obj)
         return obj
-
 
 class APITestBase(AsyncTestBase):
     """Base class for API tests with HTTP client management."""
@@ -108,7 +105,6 @@ class APITestBase(AsyncTestBase):
             response.status_code == expected_status,
         ), f"Expected {expected_status}, got {response.status_code}: {response.text}"
 
-
 class IntegrationTestBase(DatabaseTestBase, APITestBase):
     """Base class for integration tests combining database and API testing."""
 
@@ -121,7 +117,6 @@ class IntegrationTestBase(DatabaseTestBase, APITestBase):
         """Clean up integration test resources."""
         APITestBase.teardown_method(self, method)
         DatabaseTestBase.teardown_method(self, method)
-
 
 class AsyncContextTestCase:
     """Context manager for async test execution with proper cleanup."""
@@ -149,11 +144,9 @@ class AsyncContextTestCase:
         """Add cleanup coroutine."""
         self._cleanup_tasks.append(coro)
 
-
 def async_test_context(test_instance):
     """Create async test context with cleanup."""
     return AsyncContextTestCase(test_instance)
-
 
 # Pytest integration decorators
 def async_test(func):
@@ -164,7 +157,6 @@ def async_test(func):
 
     return wrapper
 
-
 def database_test(func):
     """Decorator for database test methods with transaction rollback."""
 
@@ -173,7 +165,6 @@ def database_test(func):
         return await func(*args, **kwargs)
 
     return wrapper
-
 
 def api_test(func):
     """Decorator for API test methods with client setup."""

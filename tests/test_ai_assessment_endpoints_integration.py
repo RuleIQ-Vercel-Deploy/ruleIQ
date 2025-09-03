@@ -13,12 +13,10 @@ from fastapi.testclient import TestClient
 from main import app
 from services.ai.assistant import ComplianceAssistant
 
-
 @pytest.fixture
 def test_client():
     """Create test client."""
     return TestClient(app)
-
 
 class TestAIHelpEndpoint:
     """Test /ai/assessments/{framework_id}/help endpoint integration."""
@@ -51,7 +49,6 @@ class TestAIHelpEndpoint:
             assert data['guidance'] == 'Test guidance'
             assert data['confidence_score'] == 0.9
 
-
 class TestAIFollowupEndpoint:
     """Test /ai/assessments/followup endpoint integration."""
 
@@ -82,7 +79,6 @@ class TestAIFollowupEndpoint:
             assert response.status_code == HTTP_OK
             data = response.json()
             assert len(data['questions']) == 2
-
 
 class TestAIAnalysisEndpoint:
     """Test /ai/assessments/analysis endpoint integration."""
@@ -122,7 +118,6 @@ class TestAIAnalysisEndpoint:
             assert len(data['gaps']) == 1
             assert len(data['recommendations']) == 1
 
-
 class TestAIRecommendationsEndpoint:
     """Test /ai/assessments/recommendations endpoint integration."""
 
@@ -160,7 +155,6 @@ class TestAIRecommendationsEndpoint:
             data = response.json()
             assert len(data['recommendations']) == 1
             assert 'implementation_plan' in data
-
 
 if __name__ == '__main__':
     pytest.main([__file__])

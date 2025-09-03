@@ -11,7 +11,6 @@ from typing import Optional
 from neo4j import GraphDatabase
 from neo4j.exceptions import ServiceUnavailable
 
-
 class TestNeo4jSetup:
     """Test Neo4j CE Docker container setup."""
 
@@ -186,7 +185,6 @@ class TestNeo4jSetup:
 
         assert "neo4j_golden_data" in volume_names
         assert "neo4j_golden_logs" in volume_names
-
 
 class TestNeo4jDockerCompose:
     """Test Neo4j docker-compose configuration."""

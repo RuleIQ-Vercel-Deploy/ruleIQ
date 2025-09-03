@@ -8,7 +8,6 @@ Test fixture isolation to debug the test client issue.
 """
 import pytest
 
-
 def test_authenticated_client_works(client, authenticated_headers,
     sample_business_profile):
     """Test that authenticated client works properly."""
@@ -35,7 +34,6 @@ def test_authenticated_client_works(client, authenticated_headers,
             print(f'Response body: {response.json()}')
         assert response.status_code == HTTP_OK
 
-
 def test_unauthenticated_client_fails(unauthenticated_test_client):
     """Test that unauthenticated client fails properly."""
     request_data = {'question_id': 'q1', 'question_text':
@@ -44,7 +42,6 @@ def test_unauthenticated_client_fails(unauthenticated_test_client):
         , json=request_data)
     print(f'Response status: {response.status_code}')
     assert response.status_code == HTTP_UNAUTHORIZED
-
 
 def test_authenticated_client_works_again(client, authenticated_headers,
     sample_business_profile):

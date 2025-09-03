@@ -7,7 +7,6 @@ Load testing configuration for ComplianceGPT using Locust.
 import logging
 logger = logging.getLogger(__name__)
 
-
 Usage:
     locust -f tests/load/locustfile.py --host=http://localhost:8000
 
@@ -20,7 +19,6 @@ For headless mode:
 import random
 from uuid import uuid4
 from locust import HttpUser, between, events, task
-
 
 class ComplianceGPTUser(HttpUser):
     """Simulates a typical ComplianceGPT user workflow."""
@@ -49,7 +47,6 @@ class ComplianceGPTUser(HttpUser):
         except Exception as e:
             logger.info('Auth failed: %s' % e)
 
-    @task(10)
     def view_dashboard(self):
         """Simulates a user loading their main dashboard - most common action."""
         with self.client.get('/api/business-profiles', headers=self.headers,
@@ -60,7 +57,6 @@ class ComplianceGPTUser(HttpUser):
                 response.failure(
                     f'Dashboard load failed: {response.status_code}')
 
-    @task(8)
     def view_evidence_items(self):
         """Simulates viewing evidence items."""
         with self.client.get('/api/evidence', headers=self.headers,
@@ -71,7 +67,6 @@ class ComplianceGPTUser(HttpUser):
                 response.failure(
                     f'Evidence view failed: {response.status_code}')
 
-    @task(6)
     def view_frameworks(self):
         """Simulates viewing compliance frameworks."""
         with self.client.get('/api/frameworks', headers=self.headers,
@@ -82,7 +77,6 @@ class ComplianceGPTUser(HttpUser):
                 response.failure(
                     f'Frameworks view failed: {response.status_code}')
 
-    @task(5)
     def chat_with_assistant(self):
         """Simulates AI assistant interaction."""
         messages = ['What is my current compliance status?',
@@ -99,7 +93,6 @@ class ComplianceGPTUser(HttpUser):
             else:
                 response.failure(f'Chat failed: {response.status_code}')
 
-    @task(4)
     def generate_policy(self):
         """Simulates policy generation - moderately heavy operation."""
         with self.client.post('/api/policies/generate', json={
@@ -116,7 +109,6 @@ class ComplianceGPTUser(HttpUser):
                 response.failure(
                     f'Policy generation failed: {response.status_code}')
 
-    @task(3)
     def check_readiness_score(self):
         """Simulates checking compliance readiness."""
         with self.client.get(f'/api/readiness/{self.business_profile_id}',
@@ -127,7 +119,6 @@ class ComplianceGPTUser(HttpUser):
                 response.failure(
                     f'Readiness check failed: {response.status_code}')
 
-    @task(2)
     def generate_light_report(self):
         """Simulates generating a JSON report - medium load operation."""
         with self.client.post('/api/reports/generate', json={
@@ -141,7 +132,6 @@ class ComplianceGPTUser(HttpUser):
                 response.failure(f'Light report failed: {response.status_code}'
                     )
 
-    @task(1)
     def generate_heavy_report(self):
         """Simulates generating a PDF report - heavy operation."""
         with self.client.post('/api/reports/generate', json={
@@ -156,7 +146,6 @@ class ComplianceGPTUser(HttpUser):
                 response.failure(f'Heavy report failed: {response.status_code}'
                     )
 
-    @task(1)
     def integration_operations(self):
         """Simulates integration-related operations."""
         operations = [('GET', '/api/integrations', {}), ('POST',
@@ -180,7 +169,6 @@ class ComplianceGPTUser(HttpUser):
                     response.failure(
                         f'Integration POST failed: {response.status_code}')
 
-
 class AdminUser(HttpUser):
     """Simulates an admin user with different usage patterns."""
     wait_time = between(2, 8)
@@ -191,7 +179,6 @@ class AdminUser(HttpUser):
         self.headers = {'Authorization': f'Bearer admin_token_{uuid4()}',
             'Content-Type': 'application/json'}
 
-    @task(5)
     def manage_report_schedules(self):
         """Admin manages report schedules."""
         with self.client.get('/api/reports/schedules', headers=self.headers,
@@ -202,7 +189,6 @@ class AdminUser(HttpUser):
                 response.failure(
                     f'Schedule list failed: {response.status_code}')
 
-    @task(3)
     def view_system_stats(self):
         """Admin views system statistics."""
         endpoints = ['/api/reports/stats', '/api/evidence/stats', '/health']
@@ -217,7 +203,6 @@ class AdminUser(HttpUser):
                         f'Stats endpoint {endpoint} failed: {response.status_code}'
                         )
 
-    @task(2)
     def bulk_operations(self):
         """Admin performs bulk operations."""
         with self.client.post('/api/evidence/bulk-process', json={
@@ -228,7 +213,6 @@ class AdminUser(HttpUser):
             else:
                 response.failure(
                     f'Bulk operation failed: {response.status_code}')
-
 
 class HeavyReportUser(HttpUser):
     """Simulates users who primarily generate reports - tests report system load."""
@@ -241,7 +225,6 @@ class HeavyReportUser(HttpUser):
             'application/json'}
         self.business_profile_id = str(uuid4())
 
-    @task(3)
     def generate_executive_reports(self):
         """Generate executive summary reports."""
         with self.client.post('/api/reports/generate', json={
@@ -255,7 +238,6 @@ class HeavyReportUser(HttpUser):
                 response.failure(
                     f'Executive report failed: {response.status_code}')
 
-    @task(2)
     def generate_gap_analysis(self):
         """Generate gap analysis reports."""
         with self.client.post('/api/reports/generate', json={
@@ -270,7 +252,6 @@ class HeavyReportUser(HttpUser):
                 response.failure(f'Gap analysis failed: {response.status_code}'
                     )
 
-    @task(1)
     def download_reports(self):
         """Download previously generated reports."""
         report_types = ['executive_summary', 'evidence_report',
@@ -286,7 +267,6 @@ class HeavyReportUser(HttpUser):
                 response.failure(
                     f'Report download failed: {response.status_code}')
 
-
 @events.request.add_listener
 def my_request_handler(request_type, name, response_time, response_length,
     response, context, exception, start_time, url, **kwargs):
@@ -296,13 +276,11 @@ def my_request_handler(request_type, name, response_time, response_length,
     elif response.status_code >= HTTP_BAD_REQUEST:
         logger.info('HTTP error: %s - %s' % (name, response.status_code))
 
-
 @events.test_start.add_listener
 def on_test_start(environment, **kwargs):
     """Called when the load test starts."""
     logger.info('ComplianceGPT load test starting...')
     logger.info('Target host: %s' % environment.host)
-
 
 @events.test_stop.add_listener
 def on_test_stop(environment, **kwargs):

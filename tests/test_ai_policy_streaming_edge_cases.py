@@ -20,7 +20,6 @@ from api.schemas.ai_policy import PolicyGenerationRequest, PolicyType, BusinessC
 from services.ai.policy_generator import PolicyGenerator
 from database.compliance_framework import ComplianceFramework
 
-
 class TestStreamingEdgeCases:
     """Test edge cases in policy streaming."""
 
@@ -284,7 +283,6 @@ class TestStreamingEdgeCases:
                         errors.append(e)
             assert len(chunks) >= 2
             assert any(c.content == 'Regular content' for c in chunks)
-
 
 class TestStreamingConcurrency:
     """Test concurrent streaming scenarios."""

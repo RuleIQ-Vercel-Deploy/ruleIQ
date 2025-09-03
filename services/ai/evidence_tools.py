@@ -8,7 +8,6 @@ DEFAULT_RETRIES = 5
 HALF_RATIO = 0.5
 MAX_RETRIES = 3
 
-
 Evidence and Compliance Scoring Tools for Function Calling
 
 Implements tools for evidence requirement mapping and compliance scoring
@@ -20,7 +19,6 @@ from typing import Any, Dict, List, Optional
 from config.logging_config import get_logger
 from .tools import BaseTool, ToolResult, ToolType, register_tool
 logger = get_logger(__name__)
-
 
 @dataclass
 class EvidenceRequirement:
@@ -46,7 +44,6 @@ class EvidenceRequirement:
             .responsible_party, 'automation_potential': self.
             automation_potential}
 
-
 @dataclass
 class ComplianceScore:
     """Represents a compliance score calculation"""
@@ -62,7 +59,6 @@ class ComplianceScore:
             self.category_scores, 'maturity_level': self.maturity_level,
             'risk_level': self.risk_level, 'confidence_score': self.
             confidence_score, 'calculation_date': self.calculation_date}
-
 
 class EvidenceMapperTool(BaseTool):
     """Tool for mapping evidence requirements to compliance controls"""
@@ -242,7 +238,6 @@ class EvidenceMapperTool(BaseTool):
                 'benefit': 'Streamlined evidence collection and reporting',
                 'implementation_effort': 'High'})
         return recommendations
-
 
 class ComplianceScoringTool(BaseTool):
     """Tool for calculating compliance scores and maturity levels"""
@@ -515,7 +510,6 @@ class ComplianceScoringTool(BaseTool):
             'Fully compliant controls = 100% weight, Partially compliant = 50% weight'
             , 'score_formula':
             '(compliant + (partially_compliant * 0.5)) / total * 100'}
-
 
 register_tool(EvidenceMapperTool(), ToolType.EVIDENCE_MAPPING)
 register_tool(ComplianceScoringTool(), ToolType.COMPLIANCE_SCORING)

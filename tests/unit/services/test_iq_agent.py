@@ -21,7 +21,6 @@ from services.neo4j_service import Neo4jGraphRAGService
 from services.compliance_memory_manager import MemoryType, MemoryNode
 from services.compliance_retrieval_queries import QueryCategory
 
-
 @pytest.mark.unit
 @pytest.mark.ai
 @pytest.mark.asyncio
@@ -75,7 +74,6 @@ class TestIQComplianceAgent:
             mock_response = Mock()
             mock_response.content = "Test compliance guidance response"
 
-            # Mock the LLM class and its instance methods
             mock_llm_instance = Mock()
             mock_llm_instance.ainvoke = AsyncMock(return_value=mock_response)
             mock_llm.return_value = mock_llm_instance
@@ -520,7 +518,6 @@ class TestIQComplianceAgent:
         assert all("priority" in action for action in next_actions)
         assert all("graph_reference" in action for action in next_actions)
 
-
 @pytest.mark.integration
 @pytest.mark.asyncio
 class TestIQAgentIntegration:
@@ -570,7 +567,6 @@ class TestIQAgentIntegration:
             assert "artifacts" in result
             assert "graph_context" in result
             assert result["llm_response"] is not None
-
 
 @pytest.mark.performance
 @pytest.mark.asyncio

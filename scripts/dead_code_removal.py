@@ -110,7 +110,6 @@ class DeadCodeRemover:
         print("\n🔍 Removing unused imports...")
         
         if not self.dry_run:
-            # Use autoflake for safe import removal
             try:
                 result = subprocess.run([
                     "autoflake",
@@ -122,7 +121,6 @@ class DeadCodeRemover:
                     str(self.project_root)
                 ], capture_output=True, text=True)
                 
-                # Count modified files from autoflake output
                 modified_files = len([l for l in result.stdout.split('\n') if 'fixed' in l])
                 self.report["metrics"]["files_modified"] += modified_files
                 print(f"  ✅ Cleaned {modified_files} files with autoflake")

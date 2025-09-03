@@ -14,7 +14,6 @@ from sqlalchemy import select
 from fastapi import HTTPException, status
 from database.user import User
 
-
 class DataAccess:
     """Simple data access patterns for SMB users (1-5 users typically)."""
 

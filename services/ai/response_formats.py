@@ -104,7 +104,6 @@ GAP_ANALYSIS_SCHEMA = {
     ],
 }
 
-
 # =====================================================================
 # Recommendation Response Format
 # =====================================================================
@@ -235,7 +234,6 @@ RECOMMENDATION_SCHEMA = {
         "success_metrics",
     ],
 }
-
 
 # =====================================================================
 # Assessment Analysis Response Format
@@ -423,7 +421,6 @@ ASSESSMENT_ANALYSIS_SCHEMA = {
     ],
 }
 
-
 # =====================================================================
 # Guidance Response Format
 # =====================================================================
@@ -449,7 +446,6 @@ GUIDANCE_SCHEMA = {
         "source_references",
     ],
 }
-
 
 # =====================================================================
 # Follow-up Response Format
@@ -504,7 +500,6 @@ FOLLOWUP_SCHEMA = {
     ],
 }
 
-
 # =====================================================================
 # Intent Classification Format
 # =====================================================================
@@ -537,7 +532,6 @@ INTENT_CLASSIFICATION_SCHEMA = {
     "required": ["intent_type", "confidence", "entities"],
 }
 
-
 # =====================================================================
 # Schema Registry
 # =====================================================================
@@ -551,16 +545,13 @@ RESPONSE_SCHEMAS = {
     "intent_classification": INTENT_CLASSIFICATION_SCHEMA,
 }
 
-
 def get_schema_for_response_type(response_type: str) -> Dict[str, Any]:
     """Get the JSON schema for a specific response type."""
     return RESPONSE_SCHEMAS.get(response_type, {})
 
-
 def get_all_schemas() -> Dict[str, Dict[str, Any]]:
     """Get all available response schemas."""
     return RESPONSE_SCHEMAS.copy()
-
 
 def validate_schema_exists(response_type: str) -> bool:
     """Check if a schema exists for the given response type."""

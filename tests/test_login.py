@@ -8,7 +8,6 @@ Test login with created user
 import requests
 import json
 
-
 def test_login():
     """Test login with created user"""
     url = 'http://localhost:8000/api/v1/auth/login'
@@ -30,7 +29,6 @@ def test_login():
     except Exception as e:
         print(f'❌ Error during login: {e}')
         return None
-
 
 if __name__ == '__main__':
     test_login()

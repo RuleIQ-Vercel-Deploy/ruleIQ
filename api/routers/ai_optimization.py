@@ -5,7 +5,6 @@ import requests
 # Constants
 HTTP_INTERNAL_SERVER_ERROR = 500
 
-
 AI Optimization endpoints for ruleIQ API.
 
 Provides endpoints for AI model selection, health monitoring, and performance metrics.
@@ -23,19 +22,16 @@ from config.cache import get_cache_manager
 from services.ai.circuit_breaker import AICircuitBreaker
 router = APIRouter()
 
-
 class ModelSelectionRequest(BaseModel):
     task_type: str
     complexity: str = 'medium'
     prefer_speed: bool = False
     context: Dict[str, Any] = {}
 
-
 class ModelHealthResponse(BaseModel):
     models: Dict[str, Any]
     timestamp: str
     overall_status: str
-
 
 class PerformanceMetricsResponse(BaseModel):
     response_times: Dict[str, float]
@@ -43,9 +39,7 @@ class PerformanceMetricsResponse(BaseModel):
     token_usage: Dict[str, int]
     cost_metrics: Dict[str, float]
 
-
 circuit_breaker = AICircuitBreaker()
-
 
 @router.post('/model-selection')
 async def model_selection(request: ModelSelectionRequest, current_user:
@@ -66,7 +60,6 @@ async def model_selection(request: ModelSelectionRequest, current_user:
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Model selection failed: {str(e)}')
 
-
 @router.get('/model-health')
 async def model_health_check(current_user: User=Depends(
     get_current_active_user)) ->Dict[str, Any]:
@@ -79,7 +72,6 @@ async def model_health_check(current_user: User=Depends(
     except (ValueError, TypeError) as e:
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Health check failed: {str(e)}')
-
 
 @router.get('/performance-metrics')
 async def performance_metrics(current_user: User=Depends(
@@ -101,7 +93,6 @@ async def performance_metrics(current_user: User=Depends(
             'gemini-2.5-flash': 6000, 'gemini-2.5-pro': 4000},
             'cost_metrics': {'total_cost': 5.0, 'optimization_savings': 1.2}}
 
-
 @router.post('/model-fallback-chain')
 async def model_fallback_chain(request: ModelSelectionRequest, current_user:
     User=Depends(get_current_active_user)) ->Dict[str, Any]:
@@ -122,7 +113,6 @@ async def model_fallback_chain(request: ModelSelectionRequest, current_user:
     except Exception as e:
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Fallback chain failed: {str(e)}')
-
 
 @router.get('/circuit-breaker/status')
 async def get_circuit_breaker_status(current_user: User=Depends(
@@ -149,7 +139,6 @@ async def get_circuit_breaker_status(current_user: User=Depends(
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             'Failed to retrieve circuit breaker status')
-
 
 @router.post('/circuit-breaker/reset')
 async def reset_circuit_breaker(model_name: str=Query(..., description=
@@ -182,7 +171,6 @@ async def reset_circuit_breaker(model_name: str=Query(..., description=
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             'Failed to reset circuit breaker')
-
 
 @router.get('/cache/metrics')
 async def get_cache_metrics(current_user: User=Depends(

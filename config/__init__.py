@@ -14,11 +14,9 @@ from config.development import DevelopmentConfig
 from config.production import ProductionConfig
 from config.testing import TestingConfig
 
-
 class ConfigurationError(Exception):
     """Configuration error"""
     pass
-
 
 def get_config(environment: Optional[str]=None) ->BaseConfig:
     """
@@ -52,7 +50,6 @@ def get_config(environment: Optional[str]=None) ->BaseConfig:
         return config
     except Exception as e:
         raise ConfigurationError(f'Failed to load configuration: {str(e)}')
-
 
 def validate_config(config: BaseConfig) ->bool:
     """
@@ -100,9 +97,7 @@ def validate_config(config: BaseConfig) ->bool:
             '\n'.join(errors))
     return True
 
-
 _config: Optional[BaseConfig] = None
-
 
 def get_current_config() ->BaseConfig:
     """
@@ -116,7 +111,6 @@ def get_current_config() ->BaseConfig:
         _config = get_config()
         validate_config(_config)
     return _config
-
 
 def reload_config(environment: Optional[str]=None) ->BaseConfig:
     """
@@ -132,7 +126,6 @@ def reload_config(environment: Optional[str]=None) ->BaseConfig:
     _config = get_config(environment)
     validate_config(_config)
     return _config
-
 
 __all__ = ['BaseConfig', 'DevelopmentConfig', 'ProductionConfig',
     'TestingConfig', 'Environment', 'get_config', 'get_current_config',

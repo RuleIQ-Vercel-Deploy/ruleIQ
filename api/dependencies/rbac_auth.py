@@ -18,7 +18,6 @@ from database.user import User
 from services.rbac_service import RBACService
 logger = logging.getLogger(__name__)
 
-
 class UserWithRoles:
     """
     Enhanced user object that includes role and permission information.
@@ -74,7 +73,6 @@ class UserWithRoles:
             created_at else None, 'roles': self.roles, 'permissions': self.
             permissions, 'accessible_frameworks': self.accessible_frameworks}
 
-
 def create_access_token_with_roles(user_id: UUID, roles: List[Dict],
     permissions: List[str]) ->str:
     """
@@ -95,7 +93,6 @@ def create_access_token_with_roles(user_id: UUID, roles: List[Dict],
         }
     return create_access_token(token_data)
 
-
 def create_refresh_token_with_roles(user_id: UUID) ->str:
     """
     Create refresh token (roles will be re-evaluated on refresh).
@@ -107,7 +104,6 @@ def create_refresh_token_with_roles(user_id: UUID) ->str:
         JWT refresh token
     """
     return create_refresh_token({'sub': str(user_id)})
-
 
 async def get_current_user_with_roles(token: Optional[str]=Depends(
     oauth2_scheme), async_db: AsyncSession=Depends(get_async_db)) ->Optional[
@@ -148,7 +144,6 @@ async def get_current_user_with_roles(token: Optional[str]=Depends(
     except NotAuthenticatedException:
         return None
 
-
 async def get_current_active_user_with_roles(current_user: Optional[
     UserWithRoles]=Depends(get_current_user_with_roles)) ->UserWithRoles:
     """
@@ -171,7 +166,6 @@ async def get_current_active_user_with_roles(current_user: Optional[
             'Inactive user')
     return current_user
 
-
 def require_permission(permission: str) ->Any:
     """
     Dependency factory for requiring specific permissions.
@@ -190,7 +184,6 @@ def require_permission(permission: str) ->Any:
                 detail=f"Permission '{permission}' required")
         return current_user
     return check_permission
-
 
 def require_any_permission(permissions: List[str]) ->Any:
     """
@@ -211,7 +204,6 @@ def require_any_permission(permissions: List[str]) ->Any:
                 f"One of these permissions required: {', '.join(permissions)}")
         return current_user
     return check_permissions
-
 
 def require_all_permissions(permissions: List[str]) ->Any:
     """
@@ -234,7 +226,6 @@ def require_all_permissions(permissions: List[str]) ->Any:
         return current_user
     return check_permissions
 
-
 def require_role(role: str) ->Any:
     """
     Dependency factory for requiring specific roles.
@@ -254,7 +245,6 @@ def require_role(role: str) ->Any:
         return current_user
     return check_role
 
-
 def require_any_role(roles: List[str]) ->Any:
     """
     Dependency factory for requiring any of the specified roles.
@@ -273,7 +263,6 @@ def require_any_role(roles: List[str]) ->Any:
                 detail=f"One of these roles required: {', '.join(roles)}")
         return current_user
     return check_roles
-
 
 def require_framework_access(framework_id: str, access_level: str='read'
     ) ->Any:
@@ -297,7 +286,6 @@ def require_framework_access(framework_id: str, access_level: str='read'
         return current_user
     return check_framework_access
 
-
 def check_framework_access_permission(user: UserWithRoles, framework_id:
     str, required_level: str='read') ->bool:
     """
@@ -319,7 +307,6 @@ def check_framework_access_permission(user: UserWithRoles, framework_id:
                 'access_level', 'read'), 1)
             return user_level_value >= required_level_value
     return False
-
 
 def require_framework_access_level(framework_id: str, access_level: str='read'
     ) ->Any:
@@ -344,7 +331,6 @@ def require_framework_access_level(framework_id: str, access_level: str='read'
                 )
         return current_user
     return check_access
-
 
 class RBACMiddleware:
     """
@@ -375,7 +361,6 @@ class RBACMiddleware:
             if path.startswith(protected_path):
                 return user.has_any_permission(required_permissions)
         return True
-
 
 get_current_user = get_current_user_with_roles
 get_current_active_user = get_current_active_user_with_roles

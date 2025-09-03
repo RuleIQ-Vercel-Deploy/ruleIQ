@@ -15,11 +15,9 @@ from config.logging_config import get_logger
 logger = get_logger(__name__)
 KEY_AGE_THRESHOLD_DAYS = 90
 
-
 class AWSAPIException(APIException):
     """AWS-specific API exception"""
     pass
-
 
 class AWSAPIClient(BaseAPIClient):
     """AWS API client for collecting infrastructure and security evidence"""
@@ -126,7 +124,6 @@ class AWSAPIClient(BaseAPIClient):
             return {'status': 'unhealthy', 'error': str(e), 'provider':
                 self.provider_name, 'timestamp': datetime.now(timezone.utc),
                 'region': self.region}
-
 
 class AWSIAMEvidenceCollector(BaseEvidenceCollector):
     """Collect IAM-related evidence from AWS"""
@@ -355,7 +352,6 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
                     score -= 0.5
         return max(0.0, score)
 
-
 class AWSCloudTrailCollector(BaseEvidenceCollector):
     """Collect CloudTrail audit logs for compliance evidence"""
 
@@ -438,7 +434,6 @@ class AWSCloudTrailCollector(BaseEvidenceCollector):
             score += 0.1
         return max(0.0, score)
 
-
 class AWSSecurityGroupCollector(BaseEvidenceCollector):
     """Collect Security Group configurations for network security evidence"""
 
@@ -495,42 +490,35 @@ class AWSSecurityGroupCollector(BaseEvidenceCollector):
             score -= 0.1
         return max(0.0, score)
 
-
 class AWSVPCCollector(BaseEvidenceCollector):
 
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
-
 
 class AWSConfigCollector(BaseEvidenceCollector):
 
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
 
-
 class AWSGuardDutyCollector(BaseEvidenceCollector):
 
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
-
 
 class AWSInspectorCollector(BaseEvidenceCollector):
 
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
 
-
 class AWSComplianceCollector(BaseEvidenceCollector):
 
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
 
-
 class AWSS3Collector(BaseEvidenceCollector):
 
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
-
 
 class AWSEC2Collector(BaseEvidenceCollector):
 

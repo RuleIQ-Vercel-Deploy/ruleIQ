@@ -9,7 +9,6 @@ import subprocess
 import json
 from pathlib import Path
 
-
 def find_test_files():
     """Find all valid test files."""
     test_files = []
@@ -23,7 +22,6 @@ def find_test_files():
             test_files.append(str(file))
 
     return sorted(test_files)
-
 
 def identify_collection_errors():
     """Identify which test files have collection errors."""
@@ -44,7 +42,6 @@ def identify_collection_errors():
             print(f"✅ OK: {test_file}")
 
     return problematic_files
-
 
 def fix_import_issues(file_path):
     """Fix common import issues in test files."""
@@ -70,7 +67,6 @@ def fix_import_issues(file_path):
         return True
     return False
 
-
 def run_test_suite():
     """Run the complete test suite."""
     print("\n" + "=" * 60)
@@ -94,7 +90,6 @@ def run_test_suite():
 
     return result.returncode == 0
 
-
 def main():
     print("🔧 Fixing Test Suite for 100% Coverage\n")
 
@@ -110,7 +105,6 @@ def main():
     if problematic_files:
         print(f"\nFound {len(problematic_files)} files with collection errors")
 
-        # Step 3: Try to fix import issues
         print("\nStep 3: Attempting to fix import issues...")
         for file in problematic_files:
             fix_import_issues(file)
@@ -132,7 +126,6 @@ def main():
     else:
         print("\n❌ Some tests failed. Review the output above.")
         return 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

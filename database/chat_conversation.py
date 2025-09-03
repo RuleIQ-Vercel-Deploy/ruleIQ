@@ -15,12 +15,10 @@ from sqlalchemy.orm import relationship
 
 from database.db_setup import Base
 
-
 class ConversationStatus(str, enum.Enum):
     ACTIVE = "active"
     ARCHIVED = "archived"
     DELETED = "deleted"
-
 
 class ChatConversation(Base):
     __tablename__ = "chat_conversations"

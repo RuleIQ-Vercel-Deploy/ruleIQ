@@ -22,7 +22,6 @@ from fastapi import status
 from fastapi.testclient import TestClient
 from pydantic import ValidationError
 
-# Import from existing modules
 from config.langsmith_feedback import (
     FeedbackType,
     FeedbackItem,
@@ -31,11 +30,9 @@ from config.langsmith_feedback import (
 from services.ai.feedback_analyzer import FeedbackAnalyzer
 from services.ai.quality_monitor import ResponseFeedback, QualityScore, QualityDimension
 
-
 # ============================================================================
 # Test Models and Schemas
 # ============================================================================
-
 
 class TestFeedbackModels:
     """Test feedback data models and validation."""
@@ -105,11 +102,9 @@ class TestFeedbackModels:
         assert score.score == 0.95
         assert score.confidence == 0.85
 
-
 # ============================================================================
 # Test Feedback Collection APIs
 # ============================================================================
-
 
 class TestFeedbackCollectionAPIs:
     """Test feedback collection API endpoints."""
@@ -367,11 +362,9 @@ class TestFeedbackCollectionAPIs:
         assert data["count"] == 3
         assert len(data["feedback"]) == 3
 
-
 # ============================================================================
 # Test Feedback Storage and Retrieval
 # ============================================================================
-
 
 class TestFeedbackStorage:
     """Test feedback storage and retrieval mechanisms."""
@@ -467,11 +460,9 @@ class TestFeedbackStorage:
         assert result["remaining"] == 0
         mock_client_instance.create_feedback.assert_called_once()
 
-
 # ============================================================================
 # Test Feedback Aggregation
 # ============================================================================
-
 
 class TestFeedbackAggregation:
     """Test feedback aggregation and analysis."""
@@ -606,11 +597,9 @@ class TestFeedbackAggregation:
         assert "user-001" in patterns["user_patterns"]
         assert patterns["user_patterns"]["user-001"]["average_rating"] == 4.5
 
-
 # ============================================================================
 # Test Model Fine-tuning Triggers
 # ============================================================================
-
 
 class TestFineTuningTriggers:
     """Test triggers for model fine-tuning based on feedback."""
@@ -683,11 +672,9 @@ class TestFineTuningTriggers:
         assert should_trigger is True
         assert triggers_met == 2
 
-
 # ============================================================================
 # Test Feedback Loop Metrics
 # ============================================================================
-
 
 class TestFeedbackLoopMetrics:
     """Test metrics for feedback loop effectiveness."""
@@ -789,11 +776,9 @@ class TestFeedbackLoopMetrics:
         assert slope > 0
         assert slope > 0.15  # Significant improvement
 
-
 # ============================================================================
 # Test UI Components for Feedback
 # ============================================================================
-
 
 class TestFeedbackUIComponents:
     """Test UI component requirements for feedback collection."""
@@ -894,11 +879,9 @@ class TestFeedbackUIComponents:
         assert dialog_state["original_text"] != dialog_state["corrected_text"]
         assert len(dialog_state["categories"]) > 0
 
-
 # ============================================================================
 # Integration Tests
 # ============================================================================
-
 
 class TestFeedbackSystemIntegration:
     """Integration tests for the complete feedback system."""
@@ -979,7 +962,6 @@ class TestFeedbackSystemIntegration:
         export_file = tmp_path / "feedback.json"
         collector1.export_feedback(str(export_file))
 
-        # Create new collector and import
         collector2 = LangSmithFeedbackCollector()
 
         with open(export_file, "r") as f:
@@ -999,7 +981,6 @@ class TestFeedbackSystemIntegration:
 
         assert len(collector2.feedback_queue) == 3
         assert collector2.feedback_queue[0].run_id == "run-000"
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

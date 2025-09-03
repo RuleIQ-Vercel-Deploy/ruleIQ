@@ -15,7 +15,6 @@ from core.exceptions import DatabaseException, NotFoundException
 from database.business_profile import BusinessProfile
 from database.user import User
 
-
 async def create_or_update_business_profile(
     db: AsyncSession, user: User, profile_data: Dict[str, Any]
 ) -> BusinessProfile:
@@ -44,7 +43,6 @@ async def create_or_update_business_profile(
         await db.rollback()
         raise DatabaseException("Failed to create or update business profile.") from e
 
-
 async def get_business_profile(
     db: AsyncSession, user: User
 ) -> Optional[BusinessProfile]:
@@ -55,7 +53,6 @@ async def get_business_profile(
         return result.scalars().first()
     except SQLAlchemyError as e:
         raise DatabaseException("Failed to retrieve business profile.") from e
-
 
 async def update_assessment_status(
     db: AsyncSession, user: User, assessment_completed: bool, assessment_data: Dict
@@ -78,7 +75,6 @@ async def update_assessment_status(
         await db.rollback()
         raise DatabaseException("Failed to update assessment status.") from e
 
-
 def get_supported_industries() -> List[str]:
     """Get list of supported industries for business profiles."""
     return [
@@ -99,7 +95,6 @@ def get_supported_industries() -> List[str]:
         "Other",
     ]
 
-
 def get_cloud_provider_options() -> List[str]:
     """Get list of supported cloud providers."""
     return [
@@ -113,7 +108,6 @@ def get_cloud_provider_options() -> List[str]:
         "Vultr",
         "Other",
     ]
-
 
 def get_saas_tool_options() -> List[str]:
     """Get list of common SaaS tools for integration guidance."""

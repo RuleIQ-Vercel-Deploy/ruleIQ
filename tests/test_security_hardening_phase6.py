@@ -31,7 +31,6 @@ from services.security.audit_logging import AuditLoggingService
 from middleware.security_middleware import SecurityMiddleware
 from middleware.security_headers import SecurityHeadersMiddleware
 
-
 class TestEnhancedAuthentication:
     """Test enhanced authentication mechanisms"""
 
@@ -309,7 +308,6 @@ class TestEnhancedAuthentication:
         # Test token exchange security
         pass
 
-
 class TestAuthorizationPolicies:
     """Test fine-grained authorization policies"""
 
@@ -358,7 +356,6 @@ class TestAuthorizationPolicies:
                     else:
                         permissions.add(perm)
 
-                # Add inherited permissions from hierarchy
                 for inherited_role in self.role_hierarchy.get(role, []):
                     for perm in self.permissions.get(inherited_role, []):
                         if perm != "*":  # Don't inherit wildcard
@@ -455,7 +452,6 @@ class TestAuthorizationPolicies:
         # Test tenant-specific data filtering
         # Test tenant context propagation
         pass
-
 
 class TestDataEncryption:
     """Test data encryption and decryption"""
@@ -620,7 +616,6 @@ class TestDataEncryption:
         # Test perfect forward secrecy
         # Test HSTS implementation
         pass
-
 
 class TestAuditLogging:
     """Test comprehensive audit logging"""
@@ -810,7 +805,6 @@ class TestAuditLogging:
         # Test alert notification delivery
         pass
 
-
 class TestSecurityHeaders:
     """Test security headers and HTTP security"""
 
@@ -952,7 +946,6 @@ class TestSecurityHeaders:
         # Test global limits
         # Test limit bypass prevention
         pass
-
 
 class TestVulnerabilityPrevention:
     """Test vulnerability prevention mechanisms"""
@@ -1147,7 +1140,6 @@ class TestVulnerabilityPrevention:
         # Test least privilege execution
         pass
 
-
 class TestSecurityMonitoring:
     """Test security monitoring and alerting"""
 
@@ -1187,7 +1179,6 @@ class TestSecurityMonitoring:
         # Test SOC2 compliance checks
         pass
 
-
 class TestSecretManagement:
     """Test secure secret management"""
 
@@ -1218,7 +1209,6 @@ class TestSecretManagement:
         # Test rotation notifications
         pass
 
-
 class TestNetworkSecurity:
     """Test network-level security"""
 
@@ -1248,7 +1238,6 @@ class TestNetworkSecurity:
         # Test SYN flood protection
         # Test amplification attack prevention
         pass
-
 
 class TestDataPrivacy:
     """Test data privacy and GDPR compliance"""
@@ -1289,7 +1278,6 @@ class TestDataPrivacy:
         # Test differential privacy
         pass
 
-
 class TestSecurityIntegration:
     """End-to-end security integration tests"""
 
@@ -1329,7 +1317,6 @@ class TestSecurityIntegration:
         # Test configuration changes
         # Test report generation
         pass
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "--asyncio-mode=auto"])

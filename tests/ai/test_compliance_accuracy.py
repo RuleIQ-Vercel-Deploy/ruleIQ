@@ -17,7 +17,6 @@ import pytest
 
 from services.ai.assistant import ComplianceAssistant
 
-
 @pytest.mark.ai
 @pytest.mark.compliance
 @pytest.mark.golden
@@ -539,7 +538,6 @@ class TestComplianceAccuracy:
         self, responses: List[str], category: str
     ) -> bool:
         """Check conceptual consistency across responses in same category"""
-        # Extract key concepts from all responses
         all_words = []
         for response in responses:
             words = response.lower().split()
@@ -564,7 +562,6 @@ class TestComplianceAccuracy:
             return shared_terms >= 1  # At least one shared term across responses
 
         return True  # Default to consistent for unknown categories
-
 
 @pytest.mark.ai
 @pytest.mark.compliance

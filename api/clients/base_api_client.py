@@ -20,7 +20,6 @@ HTTP_INTERNAL_ERROR = 500
 HOUR_IN_SECONDS = 3600
 logger = get_logger(__name__)
 
-
 class AuthType(str, Enum):
     OAUTH2 = 'oauth2'
     API_KEY = 'api_key'
@@ -28,7 +27,6 @@ class AuthType(str, Enum):
     BASIC_AUTH = 'basic_auth'
     ROLE_ASSUMPTION = 'role_assumption'
     CERTIFICATE = 'certificate'
-
 
 @dataclass
 class APICredentials:
@@ -38,7 +36,6 @@ class APICredentials:
     expires_at: Optional[datetime] = None
     scopes: Optional[List[str]] = None
     region: Optional[str] = None
-
 
 @dataclass
 class APIRequest:
@@ -50,7 +47,6 @@ class APIRequest:
     timeout: int = 30
     retry_attempts: int = 3
 
-
 @dataclass
 class APIResponse:
     status_code: int
@@ -58,7 +54,6 @@ class APIResponse:
     headers: Dict[str, str]
     response_time: float
     request_id: str
-
 
 @dataclass
 class EvidenceItem:
@@ -71,13 +66,11 @@ class EvidenceItem:
     quality_score: float = 1.0
     metadata: Dict[str, Any] = field(default_factory=dict)
 
-
 class EvidenceQuality(str, Enum):
     HIGH = 'high'
     MEDIUM = 'medium'
     LOW = 'low'
     UNKNOWN = 'unknown'
-
 
 @dataclass
 class CollectionResult:
@@ -89,36 +82,29 @@ class CollectionResult:
     quality_score: float = 0.0
     total_collected: int = 0
 
-
 class APIException(Exception):
     """Base API exception"""
     pass
-
 
 class APITimeoutException(APIException):
     """API timeout exception"""
     pass
 
-
 class APIConnectionException(APIException):
     """API connection exception"""
     pass
-
 
 class APIAuthenticationException(APIException):
     """API authentication exception"""
     pass
 
-
 class APIRateLimitException(APIException):
     """API rate limit exception"""
     pass
 
-
 class UnsupportedEvidenceTypeException(APIException):
     """Unsupported evidence type exception"""
     pass
-
 
 class BaseAPIClient(ABC):
     """Base class for all enterprise API clients"""
@@ -337,7 +323,6 @@ class BaseAPIClient(ABC):
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) ->None:
         await self.close()
-
 
 class BaseEvidenceCollector(ABC):
     """Base class for evidence collectors"""

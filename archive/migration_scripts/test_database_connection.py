@@ -18,7 +18,6 @@ os.environ["DATABASE_URL"] = (
     "postgresql://neondb_owner:npg_s0JhnfGNy3Ze@ep-wild-grass-a8o37wq8-pooler.eastus2.azure.neon.tech/neondb?sslmode=require"
 )
 
-
 def test_sync_connection() -> Optional[bool]:
     """Test synchronous database connection."""
     print("Testing synchronous connection...")
@@ -36,7 +35,6 @@ def test_sync_connection() -> Optional[bool]:
     except Exception as e:
         print(f"Sync connection failed: {e}")
         return False
-
 
 async def test_async_connection() -> Optional[bool]:
     """Test asynchronous database connection."""
@@ -69,7 +67,6 @@ async def test_async_connection() -> Optional[bool]:
 
         traceback.print_exc()
         return False
-
 
 async def test_table_creation() -> Optional[bool]:
     """Test table creation in test database."""
@@ -110,7 +107,6 @@ async def test_table_creation() -> Optional[bool]:
         print(f"Table operations failed: {e}")
         return False
 
-
 def main() -> int:
     """Run all tests."""
     print("Database Connection Test Suite")
@@ -137,7 +133,6 @@ def main() -> int:
     else:
         print("\nSome tests failed. Please check the errors above.")
         return 1
-
 
 if __name__ == "__main__":
     sys.exit(main())

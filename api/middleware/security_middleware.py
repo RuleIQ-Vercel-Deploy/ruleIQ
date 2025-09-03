@@ -5,7 +5,6 @@ import requests
 # Constants
 MAX_ITEMS = 1000
 
-
 Comprehensive security middleware for ruleIQ backend
 """
 from typing import Any, Dict
@@ -17,7 +16,6 @@ from starlette.responses import JSONResponse
 from api.context import request_id_var, user_id_var
 from config.logging_config import get_logger
 logger = get_logger(__name__)
-
 
 class SecurityMiddleware(BaseHTTPMiddleware):
     """Comprehensive security middleware"""
@@ -48,7 +46,6 @@ class SecurityMiddleware(BaseHTTPMiddleware):
             f'{process_time:.3f}s'})
         return response
 
-
 class RateLimitMiddleware(BaseHTTPMiddleware):
     """Rate limiting middleware"""
 
@@ -76,7 +73,6 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
         self.requests[client_ip].append(current_time)
         return await call_next(request)
 
-
 class CORSMiddleware(BaseHTTPMiddleware):
     """CORS middleware with security checks"""
 
@@ -102,7 +98,6 @@ class CORSMiddleware(BaseHTTPMiddleware):
             response.headers['Access-Control-Allow-Origin'] = origin
             response.headers['Access-Control-Allow-Credentials'] = 'true'
         return response
-
 
 class RequestLoggingMiddleware(BaseHTTPMiddleware):
     """Detailed request logging middleware"""

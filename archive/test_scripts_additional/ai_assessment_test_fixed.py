@@ -18,7 +18,6 @@ print(f"File exists: {env_path.exists()}")
 # Load environment variables
 load_dotenv(env_path)
 
-# Get JWT_SECRET from environment
 JWT_SECRET = os.getenv("JWT_SECRET")
 print(f"JWT_SECRET loaded: {JWT_SECRET[:10] if JWT_SECRET else 'None'}...")
 
@@ -29,7 +28,6 @@ if not JWT_SECRET:
 
 BASE_URL = "http://localhost:8000/api/v1"
 
-
 def create_test_token():
     """Creates a JWT token for a test user."""
     payload = {
@@ -37,7 +35,6 @@ def create_test_token():
         "exp": datetime.now(timezone.utc) + timedelta(minutes=5),
     }
     return jwt.encode(payload, JWT_SECRET, algorithm="HS256")
-
 
 def test_diagnostic_endpoint() -> None:
     """Test the diagnostic endpoint to verify server configuration."""
@@ -50,7 +47,6 @@ def test_diagnostic_endpoint() -> None:
     except requests.exceptions.RequestException as e:
         print(f"Error: {e}")
     print("-" * 40)
-
 
 def test_endpoint(endpoint, payload, token, stream=False) -> None:
     """Helper function to test an endpoint."""
@@ -71,7 +67,6 @@ def test_endpoint(endpoint, payload, token, stream=False) -> None:
     except requests.exceptions.RequestException as e:
         print(f"Error: {e}")
     print("-" * 20)
-
 
 if __name__ == "__main__":
     # First test the diagnostic endpoint

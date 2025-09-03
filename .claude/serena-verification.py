@@ -18,7 +18,6 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-
 def check_project_structure() -> bool:
     """Verify ruleIQ project structure exists"""
     required_paths = [
@@ -36,7 +35,6 @@ def check_project_structure() -> bool:
         return False
     logger.info('✅ Project structure verified')
     return True
-
 
 def check_python_environment() -> bool:
     """Verify Python environment is accessible"""
@@ -62,7 +60,6 @@ def check_python_environment() -> bool:
     except Exception as e:
         logger.info('❌ Python environment error: %s', e)
         return False
-
 
 def check_archon_health() -> bool:
     """Verify Archon MCP is active and responsive"""
@@ -99,7 +96,6 @@ def check_archon_health() -> bool:
         logger.info('⚠️  Archon health check error: %s', e)
         return True
 
-
 def set_persistence_flags() -> bool:
     """Set persistence flags for both Serena and Archon"""
     try:
@@ -126,7 +122,6 @@ def set_persistence_flags() -> bool:
         logger.info('❌ Failed to set persistence flags: %s', e)
         return False
 
-
 def check_mcp_servers() -> None:
     """Check status of both MCP servers"""
     logger.info('\n📊 MCP Server Status:')
@@ -147,7 +142,6 @@ def check_mcp_servers() -> None:
     logger.info('  2. Use Archon RAG for research')
     logger.info('  3. Use Serena for code intelligence')
     logger.info('  4. Never skip task status updates')
-
 
 def main() -> int:
     """Main verification process for both Serena and Archon"""
@@ -189,7 +183,6 @@ def main() -> int:
             datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         )
         return 0
-
 
 if __name__ == '__main__':
     sys.exit(main())

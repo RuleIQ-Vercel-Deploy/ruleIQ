@@ -22,10 +22,8 @@ for module in modules_to_clear:
     if module in sys.modules:
         del sys.modules[module]
 
-# Now import fresh
 from services.ai.evaluation.tools.ingestion import GoldenDatasetIngestion
 from services.ai.evaluation.infrastructure.neo4j_setup import Neo4jConnection
-
 
 def main():
     """Test golden dataset ingestion."""
@@ -83,7 +81,6 @@ def main():
 
     print("\n✅ Golden dataset ingestion test completed successfully!")
     return 0
-
 
 if __name__ == "__main__":
     sys.exit(main())

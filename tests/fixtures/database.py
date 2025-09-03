@@ -15,14 +15,12 @@ import os
 # Import test connection utilities
 from database.test_connection import get_test_db_manager, setup_test_database
 
-
 @pytest.fixture(scope="session")
 def event_loop():
     """Create an event loop for the test session."""
     loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
-
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_test_environment():
@@ -41,7 +39,6 @@ def setup_test_environment():
     # Cleanup
     manager = get_test_db_manager()
     manager.cleanup()
-
 
 @pytest.fixture(scope="session")
 def test_db_engine():
@@ -62,7 +59,6 @@ def test_db_engine():
     
     # Cleanup handled by setup_test_environment
 
-
 @pytest.fixture(scope="session")
 def SessionLocal(test_db_engine):
     """Create a session factory for tests."""
@@ -73,7 +69,6 @@ def SessionLocal(test_db_engine):
             bind=test_db_engine
         )
     )
-
 
 @pytest.fixture
 def db_session(SessionLocal, test_db_engine) -> Generator[Session, None, None]:
@@ -103,7 +98,6 @@ def db_session(SessionLocal, test_db_engine) -> Generator[Session, None, None]:
     SessionLocal.remove()
     transaction.rollback()
     connection.close()
-
 
 @pytest.fixture
 async def async_db_session() -> AsyncGenerator[AsyncSession, None]:
@@ -143,7 +137,6 @@ async def async_db_session() -> AsyncGenerator[AsyncSession, None]:
     
     await async_engine.dispose()
 
-
 @pytest.fixture
 def clean_db(db_session):
     """
@@ -168,7 +161,6 @@ def clean_db(db_session):
     
     # Data will be rolled back by db_session fixture
 
-
 @pytest.fixture
 def sample_user(db_session):
     """Create a sample user for tests."""
@@ -187,7 +179,6 @@ def sample_user(db_session):
     db_session.refresh(user)
     
     return user
-
 
 @pytest.fixture
 def sample_business_profile(db_session, sample_user):
@@ -212,7 +203,6 @@ def sample_business_profile(db_session, sample_user):
     
     return profile
 
-
 @pytest.fixture
 def authenticated_user(db_session, sample_user):
     """Provide an authenticated user context."""
@@ -225,7 +215,6 @@ def authenticated_user(db_session, sample_user):
         "token": token,
         "headers": {"Authorization": f"Bearer {token}"}
     }
-
 
 # Redis fixtures
 @pytest.fixture
@@ -264,7 +253,6 @@ def redis_client():
     
     # Clean up keys created during test
     client.flushdb()
-
 
 @pytest.fixture
 def mock_redis_client(monkeypatch):

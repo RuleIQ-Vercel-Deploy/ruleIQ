@@ -21,7 +21,6 @@ from config.settings import settings
 
 logger = logging.getLogger(__name__)
 
-
 class WebhookVerificationService:
     """
     Service for verifying webhook signatures from external services.
@@ -92,7 +91,6 @@ class WebhookVerificationService:
 
             config = self.PROVIDERS[provider]
 
-            # Get signature from headers
             signature_header = request.headers.get(config["header"])
             if not signature_header:
                 return False, f"Missing signature header: {config['header']}"
@@ -277,7 +275,6 @@ class WebhookVerificationService:
             if time.time() - cached_time < self._secrets_cache_ttl:
                 return secret
 
-        # Get from environment
         env_var = f"WEBHOOK_SECRET_{provider.upper()}"
         secret = settings.get(env_var)
 
@@ -393,7 +390,6 @@ class WebhookVerificationService:
 
         except (json.JSONDecodeError, ValueError) as e:
             logger.error(f"Failed to log webhook attempt: {e}")
-
 
 # Webhook verification dependency
 async def verify_webhook_signature(

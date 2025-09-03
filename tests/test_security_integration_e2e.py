@@ -7,7 +7,6 @@ HTTP_UNAUTHORIZED = 401
 
 DEFAULT_LIMIT = 100
 
-
 End-to-End Security Integration Tests
 Tests the complete security stack with all middleware and services integrated
 """
@@ -20,7 +19,6 @@ from datetime import datetime
 import os
 from main import app
 from database.db_setup import get_db
-
 
 class TestSecurityIntegrationE2E:
     """End-to-end security integration tests"""

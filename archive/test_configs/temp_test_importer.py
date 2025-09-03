@@ -1,6 +1,5 @@
 # Test importing services
 
-
 from __future__ import annotations
 
 def test_import_services() -> None:

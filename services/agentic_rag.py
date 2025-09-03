@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 DEFAULT_LIMIT = 100
 
-
 Custom Agentic RAG System for ruleIQ
 Integrates LangGraph and Pydantic AI documentation with knowledge graph capabilities
 """
@@ -23,7 +22,6 @@ from neo4j import GraphDatabase
 from supabase import create_client, Client
 logger = logging.getLogger(__name__)
 
-
 class DocumentChunk(BaseModel):
     """Document chunk for vector storage"""
     id: str
@@ -33,7 +31,6 @@ class DocumentChunk(BaseModel):
     source: str
     chunk_type: str = 'documentation'
 
-
 class AgenticRAGResponse(BaseModel):
     """Response from RAG query"""
     answer: str
@@ -42,7 +39,6 @@ class AgenticRAGResponse(BaseModel):
     chunks_used: List[str]
     query_type: str
     processing_time: float
-
 
 class AgenticRAGSystem:
     """

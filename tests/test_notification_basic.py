@@ -6,7 +6,6 @@ import asyncio
 from langgraph_agent.nodes.notification_nodes import EnhancedNotificationNode
 from langgraph_agent.nodes.celery_migration_nodes import TaskMigrationState
 
-
 async def test_basic_notification():
     """Test basic notification functionality"""
 
@@ -58,7 +57,6 @@ async def test_basic_notification():
 
         traceback.print_exc()
         return False
-
 
 if __name__ == "__main__":
     success = asyncio.run(test_basic_notification())

@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 DEFAULT_LIMIT = 100
 
-
 Redis caching configuration and utilities for NexCompli.
 
 This module provides caching functionality to improve API performance by caching
@@ -23,7 +22,6 @@ except ImportError:
     REDIS_AVAILABLE = False
 from config.logging_config import get_logger
 logger = get_logger(__name__)
-
 
 class CacheManager:
     """
@@ -217,16 +215,13 @@ class CacheManager:
             logger.debug('Cleaned up %s expired cache entries' % len(
                 expired_keys))
 
-
 cache_manager = CacheManager()
-
 
 async def get_cache_manager() ->CacheManager:
     """Get the global cache manager instance."""
     if cache_manager.redis_client is None and REDIS_AVAILABLE:
         await cache_manager.initialize()
     return cache_manager
-
 
 def cache_result(ttl: int=300, key_prefix: str='func') ->Any:
     """

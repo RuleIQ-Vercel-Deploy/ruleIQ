@@ -21,7 +21,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-
 def check_docker_services() -> bool:
     """Check if Docker test services are running."""
     try:
@@ -47,7 +46,6 @@ def check_docker_services() -> bool:
         logger.error("Docker not found. Please ensure Docker is installed.")
         return False
 
-
 def start_docker_services() -> bool:
     """Start Docker test services if not running."""
     logger.info("Starting Docker test services...")
@@ -69,7 +67,6 @@ def start_docker_services() -> bool:
     except Exception as e:
         logger.error(f"Failed to start Docker services: {e}")
         return False
-
 
 def wait_for_postgres(host: str, port: int, user: str, password: str, database: str, max_retries: int = 30) -> bool:
     """Wait for PostgreSQL to be ready."""
@@ -94,7 +91,6 @@ def wait_for_postgres(host: str, port: int, user: str, password: str, database: 
                 return False
     return False
 
-
 def wait_for_redis(host: str, port: int, max_retries: int = 30) -> bool:
     """Wait for Redis to be ready."""
     for i in range(max_retries):
@@ -111,7 +107,6 @@ def wait_for_redis(host: str, port: int, max_retries: int = 30) -> bool:
                 logger.error(f"Redis failed to start on port {port}")
                 return False
     return False
-
 
 def setup_test_database(conn_params: dict) -> bool:
     """Create test database and run migrations."""
@@ -157,7 +152,6 @@ def setup_test_database(conn_params: dict) -> bool:
         logger.error(f"Failed to setup database: {e}")
         return False
 
-
 def run_alembic_migrations() -> bool:
     """Run Alembic migrations on test database."""
     try:
@@ -192,7 +186,6 @@ def run_alembic_migrations() -> bool:
     except Exception as e:
         logger.error(f"Failed to run migrations: {e}")
         return True  # Not critical
-
 
 def verify_database_schema() -> bool:
     """Verify that all required tables exist in test database."""
@@ -235,7 +228,6 @@ def verify_database_schema() -> bool:
         logger.error(f"Failed to verify schema: {e}")
         return False
 
-
 def verify_redis_connection() -> bool:
     """Verify Redis test instance is accessible."""
     try:
@@ -256,7 +248,6 @@ def verify_redis_connection() -> bool:
     except Exception as e:
         logger.error(f"Redis connection failed: {e}")
         return False
-
 
 def setup_test_environment() -> bool:
     """Set up complete test environment."""
@@ -323,7 +314,6 @@ def setup_test_environment() -> bool:
     logger.info("  pytest tests/integration/")
     
     return True
-
 
 if __name__ == "__main__":
     success = setup_test_environment()

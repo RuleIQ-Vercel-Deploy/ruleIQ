@@ -3,7 +3,6 @@
 import logging
 logger = logging.getLogger(__name__)
 
-
 from __future__ import annotations
 
 from typing import Any
@@ -35,9 +34,7 @@ def fix_datetime_utcnow() -> Any:
             
             # Check if file uses datetime.now(timezone.utc)
             if 'datetime.now(timezone.utc)' in content or 'datetime.datetime.now(timezone.utc)' in content:
-                # Add timezone import if needed
                 if 'from datetime import' in content and 'timezone' not in content:
-                    # Add timezone to existing datetime import
                     content = re.sub(
                         r'from datetime import ([^;\n]+)',
                         lambda m: f"from datetime import {m.group(1)}, timezone" if 'timezone' not in m.group(1) else m.group(0),  # noqa: E501
@@ -45,7 +42,6 @@ def fix_datetime_utcnow() -> Any:
                         count=1
                     )
                 elif 'import datetime' in content and 'from datetime import timezone' not in content:
-                    # Add timezone import after datetime import
                     content = re.sub(
                         r'(import datetime\n)',
                         r'\1from datetime import timezone\n',

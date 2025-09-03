@@ -32,14 +32,12 @@ MAX_REGEX_COMPLEXITY = 100
 RATE_LIMIT_WINDOW = 60
 RATE_LIMIT_MAX_CALLS = 100
 
-
 class DataClassification(Enum):
     """Data classification levels for compliance."""
     PUBLIC = 'public'
     INTERNAL = 'internal'
     CONFIDENTIAL = 'confidential'
     RESTRICTED = 'restricted'
-
 
 @dataclass
 class ValidationResult:
@@ -78,7 +76,6 @@ class ValidationResult:
             sanitized = sanitized[:197] + '...'
         return sanitized
 
-
 def rate_limit(max_calls: int=RATE_LIMIT_MAX_CALLS, window: int=
     RATE_LIMIT_WINDOW) ->Any:
     """Rate limiting decorator to prevent abuse."""
@@ -100,7 +97,6 @@ def rate_limit(max_calls: int=RATE_LIMIT_MAX_CALLS, window: int=
         return wrapper
     return decorator
 
-
 @dataclass
 class ExternalValidationResult:
     """Result of external data validation."""
@@ -109,7 +105,6 @@ class ExternalValidationResult:
     errors: List[str]
     warnings: List[str]
     metadata: Dict[str, Any]
-
 
 def validate_input_bounds(data: Any, max_length: int=MAX_INPUT_LENGTH) ->None:
     """Validate input size to prevent resource exhaustion attacks.
@@ -138,7 +133,6 @@ def validate_input_bounds(data: Any, max_length: int=MAX_INPUT_LENGTH) ->None:
                 for item in obj:
                     check_depth(item, depth + 1, max_depth)
         check_depth(data)
-
 
 class DeepValidator:
     """Multi-layer validation for Golden Dataset entries with security controls."""
@@ -539,7 +533,6 @@ class DeepValidator:
                 temporal1.effective_to if temporal1.effective_to else False)
         return not (temporal1.effective_to < temporal2.effective_from or 
             temporal2.effective_to < temporal1.effective_from)
-
 
 class ExternalDataValidator:
     """Validator for external data sources with trust scoring."""

@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 import json
 from decimal import Decimal
 
-
 class MockRedis:
     """Mock Redis client for testing without requiring actual Redis server."""
 
@@ -188,7 +187,6 @@ class MockRedis:
     async def execute(self):
         """Mock execute for pipeline."""
         return []
-
 
 class MockPipeline:
     """Mock Redis pipeline for batch operations."""

@@ -35,7 +35,6 @@ engine = create_engine(os.getenv("TEST_DATABASE_URL", "postgresql://postgres:pos
 Base.metadata.create_all(bind=engine)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-
 def test_session_creation():
     session = SessionLocal()
     try:
@@ -84,7 +83,6 @@ def test_session_creation():
         session.rollback()
         session.close()
 
-
 def test_ai_question():
     session = SessionLocal()
     try:
@@ -123,7 +121,6 @@ def test_ai_question():
         session.rollback()
         session.close()
 
-
 def test_lead_scoring_event():
     session = SessionLocal()
     try:
@@ -160,7 +157,6 @@ def test_lead_scoring_event():
     finally:
         session.rollback()
         session.close()
-
 
 def test_conversion_event():
     session = SessionLocal()
@@ -205,7 +201,6 @@ def test_conversion_event():
     finally:
         session.rollback()
         session.close()
-
 
 if __name__ == "__main__":
     failures = 0

@@ -9,7 +9,6 @@ from pydantic import BaseModel, Field, field_validator
 
 from .common import RegCitation, SourceMeta, TemporalValidity, ExpectedOutcome
 
-
 class ComplianceScenario(BaseModel):
     """Compliance scenario definition."""
 

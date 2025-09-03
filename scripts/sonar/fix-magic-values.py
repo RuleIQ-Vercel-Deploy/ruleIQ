@@ -115,7 +115,6 @@ class MagicValueReplacer(ast.NodeTransformer):
         
         return node
 
-
 def add_constants_to_file(file_path: Path, constants: Set[tuple]) -> bool:
     """Add constant definitions to the top of the file."""
     if not constants:
@@ -203,7 +202,6 @@ def add_constants_to_file(file_path: Path, constants: Set[tuple]) -> bool:
     file_path.write_text(new_content, encoding='utf-8')
     return True
 
-
 def fix_file(file_path: Path) -> bool:
     """Fix magic values in a single file."""
     try:
@@ -239,7 +237,6 @@ def fix_file(file_path: Path) -> bool:
         print(f"Error processing {file_path}: {e}")
         return False
 
-
 def main():
     """Main function to fix magic values."""
     root_path = Path('/home/omar/Documents/ruleIQ')
@@ -269,7 +266,6 @@ def main():
     print(f"\n✅ Fixed magic values in {fixed_count} files")
     
     return 0
-
 
 if __name__ == '__main__':
     sys.exit(main())

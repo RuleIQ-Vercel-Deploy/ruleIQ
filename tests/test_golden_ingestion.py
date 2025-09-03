@@ -6,7 +6,6 @@ import sys
 from pathlib import Path
 from services.ai.evaluation.tools.ingestion import GoldenDatasetIngestion
 
-
 def main():
     """Test golden dataset ingestion."""
 
@@ -108,7 +107,6 @@ def main():
 
     print("\n✅ Golden dataset ingestion test completed successfully!")
     return 0
-
 
 if __name__ == "__main__":
     sys.exit(main())

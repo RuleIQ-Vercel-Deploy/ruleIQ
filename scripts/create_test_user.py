@@ -14,7 +14,6 @@ from api.dependencies.auth import get_password_hash
 from sqlalchemy.future import select
 import uuid
 
-
 async def create_test_user():
     """Create a test user for API testing"""
     async for db in get_async_db():
@@ -59,7 +58,6 @@ async def create_test_user():
             print(f"❌ Error creating/updating user: {e}")
             await db.rollback()
             break
-
 
 if __name__ == "__main__":
     asyncio.run(create_test_user())

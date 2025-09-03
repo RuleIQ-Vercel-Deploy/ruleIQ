@@ -11,7 +11,6 @@ from sqlalchemy.dialects.postgresql import (
 
 from .db_setup import Base
 
-
 class ReadinessAssessment(Base):
     """Compliance readiness assessments and scoring"""
 

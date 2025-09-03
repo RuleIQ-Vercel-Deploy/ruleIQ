@@ -9,7 +9,6 @@ FIVE_MINUTES_SECONDS = 300
 DEFAULT_RETRIES = 5
 MAX_RETRIES = 3
 
-
 Test enhanced LangSmith features including evaluation, feedback, and performance benchmarking.
 """
 import pytest
@@ -20,7 +19,6 @@ from datetime import datetime
 from config.langsmith_config import LangSmithConfig, with_langsmith_tracing
 from config.langsmith_evaluators import LangSmithEvaluator, EvaluationMetrics, PerformanceBenchmark
 from config.langsmith_feedback import LangSmithFeedbackCollector, FeedbackItem, FeedbackType, FeedbackAnalyzer
-
 
 class TestEnhancedTracing:
     """Test enhanced tracing features with custom naming and metadata."""
@@ -140,7 +138,6 @@ class TestEnhancedTracing:
             assert 'Test error' in traced_metadata.get('error_message', '')
             assert 'error' in traced_tags
 
-
 class TestEvaluationMetrics:
     """Test evaluation metrics functionality."""
 
@@ -206,7 +203,6 @@ class TestEvaluationMetrics:
         assert comparison['error_status'] == 'improved'
         assert comparison['cost_change_percent'] == pytest.approx(-20.0)
         assert comparison['cost_status'] == 'improved'
-
 
 class TestFeedbackCollection:
     """Test feedback collection system."""
@@ -292,7 +288,6 @@ class TestFeedbackCollection:
             generate_improvement_recommendations(analysis2))
         assert any('performing well' in r for r in recommendations2)
 
-
 class TestCustomTagging:
     """Test custom tagging functionality."""
 
@@ -325,7 +320,6 @@ class TestCustomTagging:
         assert query['metadata.status'] == 'success'
         assert query['date_range']['start'] == '2024-01-01T00:00:00'
         assert query['date_range']['end'] == '2024-01-31T00:00:00'
-
 
 if __name__ == '__main__':
     pytest.main([__file__, '-v'])

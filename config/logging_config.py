@@ -13,7 +13,6 @@ from pythonjsonlogger import jsonlogger
 from api.context import request_id_var, user_id_var
 from config.settings import settings
 
-
 class CustomJsonFormatter(jsonlogger.JsonFormatter):
 
     def add_fields(self, log_record, record, message_dict) ->None:
@@ -30,7 +29,6 @@ class CustomJsonFormatter(jsonlogger.JsonFormatter):
         user_id = user_id_var.get()
         if user_id:
             log_record['user_id'] = str(user_id)
-
 
 def get_logging_config(log_level: str) ->Dict[str, Any]:
     """Defines the logging configuration dictionary."""
@@ -56,7 +54,6 @@ def get_logging_config(log_level: str) ->Dict[str, Any]:
         'handlers': ['file', 'error_file'], 'level': 'WARNING', 'propagate':
         False}}}
 
-
 def setup_logging() ->None:
     """Setup logging configuration based on environment settings."""
     log_level = settings.log_level.value
@@ -64,7 +61,6 @@ def setup_logging() ->None:
     logging.config.dictConfig(logging_config)
     logger = logging.getLogger(__name__)
     logger.info('Logging initialized with level %s' % log_level)
-
 
 class ComplianceLogger:
     """A wrapper around the standard logger to provide structured logging for specific event types."""
@@ -101,7 +97,6 @@ class ComplianceLogger:
             'event_type': 'error', 'error_type': type(error).__name__,
             'error_message': str(error), 'context': context or {}},
             exc_info=True)
-
 
 def get_logger(name: str) ->logging.Logger:
     """Get a standard logger instance."""

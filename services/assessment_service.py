@@ -14,7 +14,6 @@ from database.business_profile import BusinessProfile
 from database.user import User
 from services.framework_service import get_relevant_frameworks
 
-
 class AssessmentService:
     def __init__(self) -> None:
         pass  # db session will be passed to methods

@@ -23,7 +23,6 @@ import requests
 import json
 import pytest
 
-
 @pytest.mark.security
 class TestInputValidation:
     """Test input validation and sanitization"""
@@ -72,7 +71,6 @@ class TestInputValidation:
             assert response.status_code in [400, 404, 403
                 ], 'Path traversal should be blocked'
 
-
 @pytest.mark.security
 class TestAuthentication:
     """Test authentication security"""
@@ -115,7 +113,6 @@ class TestAuthentication:
                 'Test User'})
             assert response.status_code == HTTP_UNPROCESSABLE_ENTITY, f'Weak password {weak_password} should be rejected'
 
-
 @pytest.mark.security
 class TestAuthorization:
     """Test authorization and access control"""
@@ -149,7 +146,6 @@ class TestAuthorization:
         response = client.post('/api/auth/login', json={'email': user_data[
             'email'], 'password': user_data['password']})
         return response.json()['access_token']
-
 
 @pytest.mark.security
 class TestDataProtection:
@@ -191,7 +187,6 @@ class TestDataProtection:
         assert headers['X-Content-Type-Options'] == 'nosniff'
         assert headers['X-Frame-Options'] == 'DENY'
 
-
 @pytest.mark.security
 class TestRateLimiting:
     """Test rate limiting and DDoS protection"""
@@ -217,7 +212,6 @@ class TestRateLimiting:
                 rate_limited = True
                 break
         assert rate_limited, 'Rate limiting should apply to authenticated users'
-
 
 @pytest.mark.security
 class TestAPISecurity:
@@ -250,7 +244,6 @@ class TestAPISecurity:
             'postgresql://', 'Exception', '__file__']
         for info in sensitive_info:
             assert info not in error_message, f'Error message should not contain {info}'
-
 
 @pytest.mark.security
 @pytest.mark.slow

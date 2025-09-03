@@ -386,7 +386,6 @@ class TestReportingNodesRealImplementation:
         # Add database to state
         sample_state["db_session"] = mock_db_session
 
-        # Remove required parameters from metadata
         sample_state["metadata"].pop("user_id", None)
         sample_state["metadata"].pop("business_profile_id", None)
 
@@ -465,7 +464,6 @@ class TestReportingNodesRealImplementation:
 
     def test_send_email_sync_success(self):
         """Test synchronous email sending (mock implementation)."""
-        # Import the function from the correct module
         from langgraph_agent.nodes.reporting_nodes_real import _send_email_directly
         # Mock the function for testing
         with patch('langgraph_agent.nodes.reporting_nodes_real._send_email_directly') as mock_email:

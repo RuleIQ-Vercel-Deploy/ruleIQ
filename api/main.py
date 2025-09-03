@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 HTTP_SERVICE_UNAVAILABLE = 503
 
-
 Main FastAPI application for ruleIQ API
 Production-ready FastAPI application with comprehensive configuration
 """
@@ -35,7 +34,6 @@ from app.core.monitoring.shutdown import get_shutdown_manager
 logging.basicConfig(level=getattr(logging, settings.log_level.value),
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) ->AsyncGenerator[None, None]:
@@ -70,7 +68,6 @@ async def lifespan(app: FastAPI) ->AsyncGenerator[None, None]:
     await cleanup_db_connections()
     logger.info('Database connections closed')
     logger.info('ruleIQ API shutdown complete')
-
 
 app = FastAPI(title='ruleIQ API', description=
     'AI-powered compliance and risk management platform', version='1.0.0',
@@ -144,7 +141,6 @@ app.include_router(data_access.router, prefix='/api/v1/admin', tags=[
 app.include_router(token_management.router, prefix='/api/v1/admin', tags=[
     'admin', 'token-management'])
 
-
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException
     ) ->JSONResponse:
@@ -152,7 +148,6 @@ async def http_exception_handler(request: Request, exc: HTTPException
     return JSONResponse(status_code=exc.status_code, content={'error': {
         'message': exc.detail, 'type': 'http_exception', 'status_code': exc
         .status_code}})
-
 
 @app.exception_handler(SQLAlchemyError)
 async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError
@@ -163,7 +158,6 @@ async def sqlalchemy_exception_handler(request: Request, exc: SQLAlchemyError
         'Database operation failed', 'type': 'database_error',
         'status_code': 500}})
 
-
 @app.exception_handler(Exception)
 async def general_exception_handler(request: Request, exc: Exception
     ) ->JSONResponse:
@@ -173,17 +167,14 @@ async def general_exception_handler(request: Request, exc: Exception
         'Internal server error', 'type': 'internal_error', 'status_code': 500}}
         )
 
-
 async def health_check() ->Dict[str, Any]:
     """Basic health check endpoint"""
     return {'status': 'healthy', 'timestamp': time.time(), 'version': '1.0.0'}
-
 
 async def api_health_check() ->Dict[str, Any]:
     """API v1 health check endpoint"""
     return {'status': 'healthy', 'timestamp': time.time(), 'version':
         '1.0.0', 'api_version': 'v1'}
-
 
 @app.get('/api/v1/health/detailed')
 async def api_health_detailed() ->Dict[str, Any]:
@@ -208,7 +199,6 @@ async def api_health_detailed() ->Dict[str, Any]:
         '1.0.0', 'api_version': 'v1', 'components': {'database': db_status,
         'ai_services': ai_status, 'redis': 'not_configured'}}
 
-
 @app.get('/health/ready')
 async def readiness_check() ->Dict[str, Any]:
     """Readiness check with database connectivity"""
@@ -226,13 +216,11 @@ async def readiness_check() ->Dict[str, Any]:
         if db is not None:
             db.close()
 
-
 @app.get('/health/live')
 async def liveness_check() ->Dict[str, Any]:
     """Liveness check for container orchestration"""
     return {'status': 'alive', 'timestamp': time.time(), 'uptime': time.
         time() - getattr(app.state, 'start_time', time.time())}
-
 
 @app.get('/')
 async def root() ->Dict[str, Any]:
@@ -242,12 +230,10 @@ async def root() ->Dict[str, Any]:
         'documentation': '/docs' if settings.debug else None, 'health':
         '/health'}
 
-
 @app.on_event('startup')
 async def startup_event() ->None:
     """Set application start time"""
     app.state.start_time = time.time()
-
 
 @app.get('/debug/config')
 async def debug_config() ->Dict[str, Any]:
@@ -260,7 +246,6 @@ async def debug_config() ->Dict[str, Any]:
         'env_file_exists': os.path.exists('.env.local'), 'JWT_SECRET_env': 
         os.getenv('JWT_SECRET')[:10] if os.getenv('JWT_SECRET') else None}
 
-
 def validate_configuration() ->None:
     """Validate critical configuration settings"""
     required_vars = ['database_url', 'jwt_secret_key']
@@ -271,7 +256,6 @@ def validate_configuration() ->None:
     if missing_vars:
         raise ValueError(
             f'Missing required environment variables: {missing_vars}')
-
 
 if __name__ == '__main__':
     uvicorn.run('api.main:app', host=str(settings.host), port=int(settings.

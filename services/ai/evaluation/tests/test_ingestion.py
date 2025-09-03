@@ -24,7 +24,6 @@ from services.ai.evaluation.schemas.common import (
     ExpectedOutcome,
 )
 
-
 class TestDocumentProcessor:
     """Test document processing functionality."""
 
@@ -94,7 +93,6 @@ class TestDocumentProcessor:
         assert processed == "This is a TEST. With multiple spaces."
         assert "  " not in processed
         assert processed.strip() == processed
-
 
 class TestChunkProcessor:
     """Test document chunking functionality."""
@@ -186,7 +184,6 @@ class TestChunkProcessor:
             assert chunk.reg_citations == doc.reg_citations
             assert chunk.expected_outcomes == doc.expected_outcomes
 
-
 class TestEmbeddingGenerator:
     """Test embedding generation functionality."""
 
@@ -244,7 +241,6 @@ class TestEmbeddingGenerator:
         # Check normalization (L2 norm should be 1)
         norm = sum(x**2 for x in embedding) ** 0.5
         assert abs(norm - 1.0) < 0.01
-
 
 class TestGraphIngestion:
     """Test Neo4j graph ingestion functionality."""
@@ -349,7 +345,6 @@ class TestGraphIngestion:
         # Should create NEXT relationships between consecutive chunks
         calls = mock_conn.execute_query.call_args_list
         assert any("NEXT" in str(call) for call in calls)
-
 
 class TestGoldenDatasetIngestion:
     """Test complete ingestion pipeline."""

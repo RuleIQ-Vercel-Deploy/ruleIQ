@@ -16,7 +16,6 @@ from pathlib import Path
 
 from langgraph_agent.agents.rag_standard import StandardizedRAG
 
-
 class TestStandardizedRAG:
     """Test the new standardized RAG implementation."""
 
@@ -217,7 +216,6 @@ class TestStandardizedRAG:
         assert "multi_query_enabled" in stats
         assert stats["multi_query_enabled"] is True
 
-
 class TestPerformanceImprovement:
     """Test performance improvements from standardization."""
 
@@ -272,7 +270,6 @@ class TestPerformanceImprovement:
         # All essential methods should be present
         for method in essential_methods:
             assert method in public_methods, f"Missing essential method: {method}"
-
 
 if __name__ == "__main__":
     # Run tests

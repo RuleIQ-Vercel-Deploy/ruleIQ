@@ -25,7 +25,6 @@ from config.logging_config import get_logger
 
 logger = get_logger(__name__)
 
-
 async def test_langsmith_tracing():
     """Test LangSmith tracing configuration and basic functionality."""
 
@@ -139,7 +138,6 @@ async def test_langsmith_tracing():
         logger.exception("Tracing test failed")
         return False
 
-
 async def main():
     """Main function."""
     print("\nTesting LangSmith integration for ruleIQ assessment agent\n")
@@ -173,7 +171,6 @@ async def main():
         print("   LANGCHAIN_PROJECT=ruleiq-assessment")
 
     print("\n" + "=" * 60)
-
 
 if __name__ == "__main__":
     asyncio.run(main())

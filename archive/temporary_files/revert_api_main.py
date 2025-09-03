@@ -3,7 +3,6 @@
 import logging
 logger = logging.getLogger(__name__)
 
-
 # Read the current main.py
 with open("api/main.py", "r") as f:
     content = f.read()

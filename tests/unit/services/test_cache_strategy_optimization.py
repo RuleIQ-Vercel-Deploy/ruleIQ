@@ -19,8 +19,6 @@ from services.ai.cached_content import (
     CacheLifecycleConfig,
 )
 
-
-# Move fixtures outside the class
 @pytest.fixture
 def optimized_cache_config():
     """Cache configuration with optimization enabled."""
@@ -36,12 +34,10 @@ def optimized_cache_config():
         ttl_adjustment_factor=0.2,
     )
 
-
 @pytest.fixture
 def cache_manager(optimized_cache_config):
     """Cache manager with optimization enabled."""
     return GoogleCachedContentManager(optimized_cache_config)
-
 
 @pytest.fixture
 def sample_business_profile():
@@ -55,7 +51,6 @@ def sample_business_profile():
         "handles_personal_data": True,
         "processes_payments": False,
     }
-
 
 @pytest.mark.unit
 @pytest.mark.ai
@@ -359,7 +354,6 @@ class TestCacheStrategyOptimization:
             "business_profile_update", {"business_profile_id": "test"},
         )
         assert len(cache_manager.invalidation_triggers) == 0
-
 
 @pytest.mark.integration
 @pytest.mark.ai

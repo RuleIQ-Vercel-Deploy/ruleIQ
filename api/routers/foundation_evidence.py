@@ -6,7 +6,6 @@ HTTP_BAD_REQUEST = 400
 HTTP_INTERNAL_SERVER_ERROR = 500
 HTTP_NOT_FOUND = 404
 
-
 Foundation Evidence Collection API endpoints
 AWS + Okta integration for automated compliance evidence gathering
 """
@@ -29,7 +28,6 @@ from config.logging_config import get_logger
 logger = get_logger(__name__)
 router = APIRouter()
 
-
 class AWSConfigurationRequest(BaseModel):
     auth_type: str
     access_key_id: Optional[str] = None
@@ -38,11 +36,9 @@ class AWSConfigurationRequest(BaseModel):
     external_id: Optional[str] = None
     region: str = 'us-east-1'
 
-
 class OktaConfigurationRequest(BaseModel):
     domain: str
     api_token: str
-
 
 class GoogleWorkspaceConfigurationRequest(BaseModel):
     domain: str
@@ -50,13 +46,11 @@ class GoogleWorkspaceConfigurationRequest(BaseModel):
     client_secret: str
     refresh_token: str
 
-
 class MicrosoftConfigurationRequest(BaseModel):
     tenant_id: str
     client_id: str
     client_secret: str
     refresh_token: Optional[str] = None
-
 
 class FoundationEvidenceRequest(BaseModel):
     framework_id: str
@@ -65,7 +59,6 @@ class FoundationEvidenceRequest(BaseModel):
     collection_mode: str = 'immediate'
     quality_requirements: Optional[Dict[str, Any]] = None
 
-
 class EvidenceCollectionResponse(BaseModel):
     collection_id: str
     status: str
@@ -73,7 +66,6 @@ class EvidenceCollectionResponse(BaseModel):
     estimated_duration: str
     evidence_types: List[str]
     created_at: datetime
-
 
 class EvidenceCollectionStatus(BaseModel):
     collection_id: str
@@ -87,7 +79,6 @@ class EvidenceCollectionStatus(BaseModel):
     current_activity: str
     errors: List[str]
 
-
 class CollectedEvidence(BaseModel):
     evidence_id: str
     evidence_type: str
@@ -98,7 +89,6 @@ class CollectedEvidence(BaseModel):
     quality_score: float
     collected_at: datetime
     data_summary: Dict[str, Any]
-
 
 @router.post('/aws/configure')
 async def configure_aws_integration(config: AWSConfigurationRequest,
@@ -149,7 +139,6 @@ async def configure_aws_integration(config: AWSConfigurationRequest,
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Configuration failed: {str(e)}')
 
-
 @router.post('/okta/configure')
 async def configure_okta_integration(config: OktaConfigurationRequest,
     current_user: User=Depends(get_current_active_user), db: AsyncSession=
@@ -179,7 +168,6 @@ async def configure_okta_integration(config: OktaConfigurationRequest,
             (str(current_user.id), e))
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Configuration failed: {str(e)}')
-
 
 @router.post('/google/configure')
 async def configure_google_workspace_integration(config:
@@ -216,7 +204,6 @@ async def configure_google_workspace_integration(config:
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Configuration failed: {str(e)}')
 
-
 @router.post('/microsoft/configure')
 async def configure_microsoft_integration(config:
     MicrosoftConfigurationRequest, current_user: User=Depends(
@@ -251,7 +238,6 @@ async def configure_microsoft_integration(config:
             (str(current_user.id), e))
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Configuration failed: {str(e)}')
-
 
 @router.post('/collect', response_model=EvidenceCollectionResponse)
 async def start_foundation_evidence_collection(request:
@@ -306,7 +292,6 @@ async def start_foundation_evidence_collection(request:
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Failed to start collection: {str(e)}')
 
-
 @router.get('/collect/{collection_id}/status', response_model=
     EvidenceCollectionStatus)
 async def get_collection_status(collection_id: str, current_user: User=
@@ -344,7 +329,6 @@ async def get_collection_status(collection_id: str, current_user: User=
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Failed to get status: {str(e)}')
 
-
 @router.get('/collect/{collection_id}/results')
 async def get_collection_results(collection_id: str, evidence_type:
     Optional[str]=Query(None, description='Filter by evidence type'), page:
@@ -380,7 +364,6 @@ async def get_collection_results(collection_id: str, evidence_type:
             collection_id, e))
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Failed to get results: {str(e)}')
-
 
 async def check_foundation_integrations_health(current_user: User=Depends(
     get_current_active_user), db: AsyncSession=Depends(get_async_db)) ->Dict[

@@ -14,7 +14,6 @@ from psycopg2 import OperationalError as PsycopgOperationalError
 
 logger = logging.getLogger(__name__)
 
-
 class TestDatabaseManager:
     """Manages test database connections and setup."""
     
@@ -104,7 +103,6 @@ class TestDatabaseManager:
         
         # Parse connection parameters
         if 'postgresql' in db_url:
-            # Extract components from URL
             import re
             pattern = r'postgresql(?:\+\w+)?://([^:]+):([^@]+)@([^:/]+)(?::(\d+))?/(.+)'
             match = re.match(pattern, db_url)
@@ -169,13 +167,11 @@ class TestDatabaseManager:
             logger.info("Test engine connections disposed")
             self.test_engine = None
 
-
 def get_test_db_manager() -> TestDatabaseManager:
     """Get a singleton test database manager."""
     if not hasattr(get_test_db_manager, '_instance'):
         get_test_db_manager._instance = TestDatabaseManager()
     return get_test_db_manager._instance
-
 
 def setup_test_database() -> Tuple[bool, Optional[str]]:
     """
@@ -206,7 +202,6 @@ def setup_test_database() -> Tuple[bool, Optional[str]]:
         return False, "Failed to create tables"
     
     return True, None
-
 
 def test_redis_connection() -> bool:
     """Test Redis connection."""

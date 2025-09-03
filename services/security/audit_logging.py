@@ -19,7 +19,6 @@ from config.settings import settings
 import logging
 logger = logging.getLogger(__name__)
 
-
 class AuditEventType(Enum):
     """Types of audit events"""
     AUTHENTICATION = 'authentication'
@@ -29,7 +28,6 @@ class AuditEventType(Enum):
     CONFIGURATION_CHANGE = 'configuration_change'
     SECURITY_ALERT = 'security_alert'
     SYSTEM = 'system'
-
 
 class AuditEventAction(Enum):
     """Audit event actions"""
@@ -54,7 +52,6 @@ class AuditEventAction(Enum):
     SERVICE_STOP = 'service_stop'
     BACKUP = 'backup'
     RESTORE = 'restore'
-
 
 class AuditLoggingService:
     """Service for comprehensive audit logging"""
@@ -277,9 +274,7 @@ class AuditLoggingService:
             .get('result'), 'error_message': details.get('error_message'),
             'metadata': details.get('metadata'), 'severity': log.severity}
 
-
 _audit_service: Optional[AuditLoggingService] = None
-
 
 def get_audit_service() ->AuditLoggingService:
     """Get audit logging service instance"""

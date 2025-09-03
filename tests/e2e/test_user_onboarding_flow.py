@@ -11,7 +11,6 @@ import pytest
 
 from tests.conftest import assert_api_response_security
 
-
 @pytest.mark.e2e
 class TestUserOnboardingFlow:
     """Test complete user onboarding workflow"""
@@ -334,7 +333,6 @@ class TestUserOnboardingFlow:
         else:
             # Other errors are acceptable for this error recovery test
             pass
-
 
 @pytest.mark.e2e
 class TestOnboardingIntegration:

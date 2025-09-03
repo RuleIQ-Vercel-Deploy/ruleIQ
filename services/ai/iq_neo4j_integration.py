@@ -13,7 +13,6 @@ from typing import Dict, Any, List
 from neo4j import AsyncGraphDatabase
 logger = logging.getLogger(__name__)
 
-
 class IQNeo4jIntegration:
     """
     Integration layer between IQ agent and enhanced Neo4j compliance graph.

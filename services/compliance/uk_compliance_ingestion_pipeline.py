@@ -18,7 +18,6 @@ from langchain.schema import Document
 import numpy as np
 logger = logging.getLogger(__name__)
 
-
 class UKComplianceGraphIngestion:
     """
     Ingests UK compliance data into Neo4j knowledge graph
@@ -502,7 +501,6 @@ class UKComplianceGraphIngestion:
         """Close Neo4j driver connection"""
         await self.driver.close()
 
-
 class UKComplianceGraphQuery:
     """Query helper for UK compliance graph"""
 
@@ -588,7 +586,6 @@ class UKComplianceGraphQuery:
         """Close driver connection"""
         await self.driver.close()
 
-
 async def main() ->None:
     """Execute the UK compliance ingestion pipeline"""
     NEO4J_URI = 'bolt://localhost:7687'
@@ -601,7 +598,6 @@ async def main() ->None:
         logger.info('Verification results: %s' % verification)
     finally:
         await ingestion.close()
-
 
 if __name__ == '__main__':
     asyncio.run(main())

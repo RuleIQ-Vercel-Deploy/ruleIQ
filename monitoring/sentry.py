@@ -13,7 +13,6 @@ from config.settings import settings
 
 logger = logging.getLogger(__name__)
 
-
 def init_sentry() -> None:
     """Initialize the Sentry SDK."""
     if not settings.sentry_dsn:

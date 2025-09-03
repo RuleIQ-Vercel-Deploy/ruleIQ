@@ -14,7 +14,6 @@ from unittest.mock import Mock, patch
 import pytest
 from config.ai_config import MODEL_FALLBACK_CHAIN, MODEL_METADATA, AIConfig, ModelMetadata, ModelType, get_ai_model
 
-
 class TestModelMetadata:
     """Test suite for ModelMetadata functionality."""
 
@@ -46,7 +45,6 @@ class TestModelMetadata:
             timeout_seconds=30.0)
         assert metadata.efficiency_score == 0
 
-
 class TestModelType:
     """Test suite for ModelType enum."""
 
@@ -65,7 +63,6 @@ class TestModelType:
         pro_index = MODEL_FALLBACK_CHAIN.index(ModelType.GEMINI_25_PRO)
         flash_index = MODEL_FALLBACK_CHAIN.index(ModelType.GEMINI_25_FLASH)
         assert pro_index < flash_index
-
 
 class TestAIConfig:
     """Test suite for AIConfig class."""
@@ -164,7 +161,6 @@ class TestAIConfig:
         metadata = ai_config.get_model_metadata(model_type)
         assert metadata.capability_score >= 8.0
 
-
 class TestGetAIModel:
     """Test suite for get_ai_model function."""
 
@@ -217,7 +213,6 @@ class TestGetAIModel:
         assert result == mock_model
         mock_ai_config.get_model.assert_called_with(ModelType.
             GEMINI_25_FLASH, system_instruction=None, tools=None)
-
 
 class TestModelMetadataIntegration:
     """Integration tests for model metadata and selection."""

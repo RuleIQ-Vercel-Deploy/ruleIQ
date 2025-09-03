@@ -29,7 +29,6 @@ router = APIRouter(prefix='/api/v1', tags=['IQ Agent - GraphRAG Intelligence'])
 _iq_agent: Optional[IQComplianceAgent] = None
 _neo4j_service: Optional[Neo4jGraphRAGService] = None
 
-
 async def get_iq_agent() ->IQComplianceAgent:
     """Get or create IQ agent instance"""
     global _iq_agent, _neo4j_service
@@ -46,7 +45,6 @@ async def get_iq_agent() ->IQComplianceAgent:
                 f'IQ Agent initialization failed: {str(e)}')
     return _iq_agent
 
-
 async def get_neo4j_service() ->Neo4jGraphRAGService:
     """Get Neo4j service instance"""
     global _neo4j_service
@@ -60,7 +58,6 @@ async def get_neo4j_service() ->Neo4jGraphRAGService:
                 HTTP_503_SERVICE_UNAVAILABLE, detail=
                 f'Neo4j service initialization failed: {str(e)}')
     return _neo4j_service
-
 
 @router.post('/query', response_model=ComplianceQueryResponse, summary=
     'Query IQ Agent for Compliance Analysis', description=
@@ -117,7 +114,6 @@ async def query_compliance_analysis(request: ComplianceQueryRequest,
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             'Internal server error during compliance analysis')
 
-
 @router.post('/memory/store', response_model=MemoryStoreResponse, summary=
     "Store Knowledge in IQ's Memory", description=
     """
@@ -151,7 +147,6 @@ async def store_compliance_memory(request: MemoryStoreRequest, iq_agent:
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Failed to store memory: {str(e)}')
 
-
 @router.post('/memory/retrieve', response_model=
     MemoryRetrievalResponseWrapper, summary='Retrieve Relevant Memories',
     description=
@@ -184,7 +179,6 @@ async def retrieve_compliance_memories(request: MemoryRetrievalRequest,
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Failed to retrieve memories: {str(e)}')
-
 
 @router.post('/graph/initialize', response_model=
     GraphInitializationResponseWrapper, summary=
@@ -226,7 +220,6 @@ async def initialize_compliance_graph_endpoint(request:
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             f'Failed to initialize graph: {str(e)}')
-
 
 @router.get('/health', response_model=IQHealthCheckResponse, summary=
     'IQ Agent Health Check', description=
@@ -288,7 +281,6 @@ async def iq_agent_health_check(include_stats: bool=Query(default=True,
             graph_statistics={}, memory_statistics={}), message=
             f'Health check failed: {str(e)}')
 
-
 @router.get('/status', summary='IQ Agent Status Summary', description=
     """
     Quick status check for IQ agent operational readiness.
@@ -309,7 +301,6 @@ async def iq_agent_status() ->Dict[str, Any]:
         return {'status': 'degraded', 'timestamp': datetime.now(timezone.
             utc).isoformat(), 'agent': 'IQ', 'error': str(e)}
 
-
 async def _log_query_metrics(user_id: UUID, query: str, response_status:
     str, nodes_traversed: int) ->None:
     """Log query metrics for monitoring"""
@@ -320,7 +311,6 @@ async def _log_query_metrics(user_id: UUID, query: str, response_status:
     except Exception as e:
         logger.error('Failed to log query metrics: %s' % str(e))
 
-
 async def _initialize_graph_background(clear_existing: bool=False,
     load_sample_data: bool=True) ->None:
     """Initialize compliance graph in background"""
@@ -330,7 +320,6 @@ async def _initialize_graph_background(clear_existing: bool=False,
         logger.info('Graph initialization completed: %s' % result['status'])
     except Exception as e:
         logger.error('Background graph initialization failed: %s' % str(e))
-
 
 async def cleanup_iq_agent() ->None:
     """Cleanup IQ agent resources on shutdown"""

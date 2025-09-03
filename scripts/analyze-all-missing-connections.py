@@ -12,7 +12,6 @@ from pathlib import Path
 from collections import defaultdict
 from typing import Dict, List, Any
 
-
 def extract_connections() ->Any:
     """Extract and categorize all connections from the HTML file."""
     with open('api-connection-map.html', 'r') as f:
@@ -22,7 +21,6 @@ def extract_connections() ->Any:
     if not connections_match:
         return None
     return json.loads(connections_match.group(1))
-
 
 def analyze_missing_endpoints(connections: Any) ->Any:
     """Analyze all missing backend endpoints by service."""
@@ -38,7 +36,6 @@ def analyze_missing_endpoints(connections: Any) ->Any:
                 ('path', '')}
             missing_by_service[service].append(endpoint_info)
     return missing_by_service
-
 
 def analyze_connected_patterns(connections: Any) ->Any:
     """Analyze patterns in successfully connected endpoints."""
@@ -61,7 +58,6 @@ def analyze_connected_patterns(connections: Any) ->Any:
                         'backend': b_path, 'service': frontend.get('file', '')},
                         )
     return patterns
-
 
 def generate_backend_endpoints(missing_by_service: Any) ->Any:
     """Generate backend endpoint implementations needed."""
@@ -95,7 +91,6 @@ def generate_backend_endpoints(missing_by_service: Any) ->Any:
                 'line']})
     return endpoints_to_create
 
-
 def generate_fix_plan(missing_by_service: Any, patterns: Any,
     endpoints_to_create: Any) ->Any:
     """Generate a comprehensive fix plan."""
@@ -112,7 +107,6 @@ def generate_fix_plan(missing_by_service: Any, patterns: Any,
             'endpoints': endpoints, 'count': len(endpoints)}
         plan['implementation_order'].append(router)
     return plan
-
 
 def generate_documentation(plan: Any, missing_by_service: Any) ->Any:
     """Generate comprehensive documentation."""
@@ -143,7 +137,6 @@ def generate_documentation(plan: Any, missing_by_service: Any) ->Any:
         for endpoint in endpoints:
             doc.append(f"- {endpoint['method']} `{endpoint['path']}`")
     return '\n'.join(doc)
-
 
 def main() ->Any:
     """Main analysis function."""
@@ -184,7 +177,6 @@ def main() ->Any:
             'path_patterns']}, 'plan': plan}, f, indent=2)
     logger.info('📊 Detailed plan saved to: api-fix-plan.json')
     return plan
-
 
 if __name__ == '__main__':
     main()

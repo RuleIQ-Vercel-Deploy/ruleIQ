@@ -9,7 +9,6 @@ from unittest.mock import MagicMock, AsyncMock, patch
 import json
 from typing import Dict, Any, Optional
 
-
 # ==================== AI Service Mocks ====================
 
 @pytest.fixture
@@ -51,7 +50,6 @@ def mock_openai():
     
     return mock
 
-
 @pytest.fixture
 def mock_anthropic():
     """Mock Anthropic Claude API client."""
@@ -80,7 +78,6 @@ def mock_anthropic():
     mock.messages.create_async.return_value = mock.messages.create.return_value
     
     return mock
-
 
 @pytest.fixture
 def mock_google_ai():
@@ -115,7 +112,6 @@ def mock_google_ai():
     
     return mock
 
-
 # ==================== Email Service Mocks ====================
 
 @pytest.fixture
@@ -132,7 +128,6 @@ def mock_sendgrid():
     
     return mock
 
-
 @pytest.fixture
 def mock_smtp():
     """Mock SMTP email service."""
@@ -147,7 +142,6 @@ def mock_smtp():
         instance.quit = MagicMock()
         
         yield instance
-
 
 # ==================== AWS Service Mocks ====================
 
@@ -181,7 +175,6 @@ def mock_s3():
     
     return mock
 
-
 @pytest.fixture
 def mock_secrets_manager():
     """Mock AWS Secrets Manager client."""
@@ -211,7 +204,6 @@ def mock_secrets_manager():
     
     return mock
 
-
 @pytest.fixture
 def mock_cloudwatch():
     """Mock AWS CloudWatch client."""
@@ -226,7 +218,6 @@ def mock_cloudwatch():
     mock.describe_alarms = MagicMock(return_value={'MetricAlarms': []})
     
     return mock
-
 
 # ==================== Payment Service Mocks ====================
 
@@ -267,7 +258,6 @@ def mock_stripe():
     
     return mock
 
-
 # ==================== OAuth Service Mocks ====================
 
 @pytest.fixture
@@ -300,7 +290,6 @@ def mock_google_oauth():
     
     return mock
 
-
 # ==================== Database/Cache Mocks ====================
 
 @pytest.fixture
@@ -326,7 +315,6 @@ def mock_neo4j():
     mock.close = MagicMock()
     
     return mock
-
 
 @pytest.fixture
 def mock_elasticsearch():
@@ -358,7 +346,6 @@ def mock_elasticsearch():
     
     return mock
 
-
 # ==================== Monitoring Service Mocks ====================
 
 @pytest.fixture
@@ -372,7 +359,6 @@ def mock_sentry():
                     'capture_exception': mock_capture,
                     'capture_message': mock_message
                 }
-
 
 @pytest.fixture
 def mock_datadog():
@@ -391,7 +377,6 @@ def mock_datadog():
     mock.tracer.current_span = MagicMock()
     
     return mock
-
 
 # ==================== External API Mocks ====================
 
@@ -430,7 +415,6 @@ def mock_http_client():
     
     return mock
 
-
 @pytest.fixture
 def mock_webhook_client():
     """Mock webhook client for external notifications."""
@@ -445,7 +429,6 @@ def mock_webhook_client():
     mock.verify_signature = MagicMock(return_value=True)
     
     return mock
-
 
 # ==================== Celery/Background Task Mocks ====================
 
@@ -474,7 +457,6 @@ def mock_celery_task():
     
     return mock
 
-
 # ==================== File Storage Mocks ====================
 
 @pytest.fixture
@@ -490,7 +472,6 @@ def mock_file_storage():
     mock.get_url = MagicMock(return_value="https://storage.example.com/file.pdf")
     
     return mock
-
 
 # ==================== Auto-patching Fixture ====================
 
@@ -532,7 +513,6 @@ def auto_mock_external_services(monkeypatch):
                             'stripe': mock_stripe_key
                         }
 
-
 # ==================== Helper Functions ====================
 
 def create_mock_response(status_code: int = 200, json_data: Optional[Dict[str, Any]] = None, text: str = ""):
@@ -548,7 +528,6 @@ def create_mock_response(status_code: int = 200, json_data: Optional[Dict[str, A
         mock_response.raise_for_status.side_effect = Exception(f"HTTP {status_code} Error")
     
     return mock_response
-
 
 def create_mock_async_response(status_code: int = 200, json_data: Optional[Dict[str, Any]] = None):
     """Helper to create mock async HTTP responses."""

@@ -19,7 +19,6 @@ TEST_CATEGORIES = {'Cache Strategy & Content': [
     ['tests/performance/test_ai_optimization_performance.py'],
     'Database Performance': ['tests/performance/test_database_performance.py']}
 
-
 def run_test_category(category_name: Any, test_files: Any) ->Any:
     """Run tests in a category."""
     logger.info('\n%s' % ('=' * 60))
@@ -52,7 +51,6 @@ def run_test_category(category_name: Any, test_files: Any) ->Any:
                 logger.info('     %s' % line.strip())
         results.append({'file': test_file, 'passed': passed, 'output': output})
     return results
-
 
 def main() ->Any:
     """Run all test categories and provide summary."""
@@ -87,7 +85,6 @@ def main() ->Any:
                 if not result['passed']:
                     logger.info('  - %s' % result['file'])
     return passed_files == total_files
-
 
 if __name__ == '__main__':
     success = main()

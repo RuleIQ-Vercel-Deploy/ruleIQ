@@ -8,7 +8,6 @@ from sqlalchemy.orm import relationship
 
 from .db_setup import Base
 
-
 class AssessmentSession(Base):
     """User assessment sessions for compliance scoping"""
 

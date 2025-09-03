@@ -14,7 +14,6 @@ from services.compliance_retrieval_queries import ComplianceRetrievalQueries
 from typing import Dict, List, Any, Optional
 from uuid import UUID
 
-
 class ComplianceAnalyzer:
     """Wrapper for compliance analysis services."""
 
@@ -28,7 +27,6 @@ class ComplianceAnalyzer:
     ) -> Dict[str, Any]:
         """Analyze compliance requirements for a company."""
 
-        # Extract key information from business profile
         industry = business_profile.get("industry", "general")
         location = business_profile.get("location", "global")
         size = business_profile.get("size", "small")

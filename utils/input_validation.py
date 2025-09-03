@@ -10,12 +10,10 @@ from typing import Any, Dict, List, Optional
 from uuid import UUID
 from enum import Enum
 
-
 class ValidationError(Exception):
     """Custom exception for validation errors."""
 
     pass
-
 
 class FieldType(Enum):
     """Supported field types for validation."""
@@ -31,7 +29,6 @@ class FieldType(Enum):
     ENUM = "enum"
     LIST = "list"
     DICT = "dict"
-
 
 class FieldValidator:
     """Validates individual field values."""
@@ -241,7 +238,6 @@ class FieldValidator:
                 raise ValidationError(f"Dictionary key '{key}': {str(e)}")
 
         return validated_dict
-
 
 class WhitelistValidator:
     """Validates input against predefined whitelists for secure field updates."""
@@ -532,7 +528,6 @@ class WhitelistValidator:
 
         return validated_data
 
-
 class SecurityValidator:
     """Additional security validations."""
 
@@ -586,7 +581,6 @@ class SecurityValidator:
         for value in data.values():
             check_value(value)
 
-
 # Convenience function for evidence service
 def validate_evidence_update(update_data: Dict[str, Any]) -> Dict[str, Any]:
     """Validate evidence item update data."""
@@ -597,7 +591,6 @@ def validate_evidence_update(update_data: Dict[str, Any]) -> Dict[str, Any]:
     validator = WhitelistValidator("EvidenceItem")
     return validator.validate_update_data(update_data)
 
-
 # Convenience function for business profile service
 def validate_business_profile_update(update_data: Dict[str, Any]) -> Dict[str, Any]:
     """Validate business profile update data."""
@@ -607,7 +600,6 @@ def validate_business_profile_update(update_data: Dict[str, Any]) -> Dict[str, A
     # Whitelist validation
     validator = WhitelistValidator("BusinessProfile")
     return validator.validate_update_data(update_data)
-
 
 # Convenience function for user service
 def validate_user_update(update_data: Dict[str, Any]) -> Dict[str, Any]:

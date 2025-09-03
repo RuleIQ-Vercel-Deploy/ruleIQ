@@ -37,7 +37,6 @@ def fix_hardcoded_passwords() -> Any:
                     print(f"Fixed line {line_num} in {filepath}")
         
         if modified:
-            # Ensure os import is at the top
             if 'import os\n' not in lines[:10]:
                 lines.insert(0, 'import os\n')
             
@@ -69,7 +68,6 @@ def remove_sonarqube_tokens() -> Any:
             content
         )
         
-        # Add import if needed
         if 'import os' not in modified_content and modified_content != content:
             modified_content = 'import os\n' + modified_content
         

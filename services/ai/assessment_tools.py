@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 DEFAULT_RETRIES = 5
 
-
 Assessment-Specific AI Tools for Function Calling
 
 Implements specialized tools for compliance assessment analysis including
@@ -16,7 +15,6 @@ from typing import Any, Dict, List, Optional
 from config.logging_config import get_logger
 from .tools import BaseTool, ToolResult, ToolType, register_tool
 logger = get_logger(__name__)
-
 
 @dataclass
 class ComplianceGap:
@@ -35,7 +33,6 @@ class ComplianceGap:
             severity, 'description': self.description, 'impact': self.
             impact, 'current_state': self.current_state, 'target_state':
             self.target_state, 'priority': self.priority}
-
 
 @dataclass
 class ComplianceRecommendation:
@@ -56,7 +53,6 @@ class ComplianceRecommendation:
             self.implementation_effort, 'cost_impact': self.cost_impact,
             'timeline': self.timeline, 'dependencies': self.dependencies,
             'resources_required': self.resources_required}
-
 
 class GapAnalysisTool(BaseTool):
     """Tool for extracting and analyzing compliance gaps from assessment responses"""
@@ -174,7 +170,6 @@ class GapAnalysisTool(BaseTool):
             recommendations.append(
                 'Implement ISO 27001 security controls systematically')
         return recommendations
-
 
 class RecommendationGenerationTool(BaseTool):
     """Tool for generating prioritized compliance recommendations"""
@@ -306,7 +301,6 @@ class RecommendationGenerationTool(BaseTool):
                     rec['priority'], 'effort': rec['implementation_effort'],
                     'dependencies': len(rec.get('dependencies', []))})
         return major_initiatives
-
 
 register_tool(GapAnalysisTool(), ToolType.GAP_ANALYSIS)
 register_tool(RecommendationGenerationTool(), ToolType.RECOMMENDATION)

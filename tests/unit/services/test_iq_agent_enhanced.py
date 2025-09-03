@@ -20,7 +20,6 @@ from database.models.evidence import Evidence
 from database.assessment_session import AssessmentSession
 from sqlalchemy.ext.asyncio import AsyncSession
 
-
 class TestIQComplianceAgentEnhanced:
     """Test suite for enhanced IQComplianceAgent with dual database access."""
 
@@ -235,7 +234,6 @@ class TestIQComplianceAgentEnhanced:
         assert mock_neo4j_service.execute_query.called
         assert agent._count_available_evidence.called
 
-        # Verify result contains data from both sources
         assert result["status"] == "success"
         assert "business_context" in result
         assert (
@@ -384,7 +382,6 @@ class TestIQComplianceAgentEnhanced:
 
         assert result["status"] == "success"
         assert "business_context" in result
-        # The error message comes from retrieve_business_context method
         assert result["business_context"]["error"] == "Database connection error"
         assert (
             "artifacts" in result

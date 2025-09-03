@@ -9,7 +9,6 @@ DEFAULT_RETRIES = 5
 HALF_RATIO = 0.5
 MAX_RECORDS = 10000
 
-
 AI Performance Optimization Service
 Optimizes AI service performance, token usage, and response times
 """
@@ -25,10 +24,8 @@ from config.cache import get_cache_manager
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 class OptimizationStrategy(Enum):
     """AI optimization strategies."""
-
 
 @dataclass
 class AIPerformanceMetrics:
@@ -41,7 +38,6 @@ class AIPerformanceMetrics:
     model_distribution: Dict[str, int]
     optimization_score: float
 
-
 @dataclass
 class ModelPerformance:
     """Individual model performance metrics."""
@@ -53,7 +49,6 @@ class ModelPerformance:
     success_rate: float
     usage_count: int
 
-
 @dataclass
 class OptimizationRecommendation:
     """AI optimization recommendation."""
@@ -64,7 +59,6 @@ class OptimizationRecommendation:
     estimated_savings: str
     implementation_effort: str
     description: str
-
 
 class AIPerformanceOptimizer:
     """
@@ -478,9 +472,7 @@ class AIPerformanceOptimizer:
         return {'status': 'success', 'message':
             f'Enabled batching for {len(operations)} operations'}
 
-
 ai_performance_optimizer = AIPerformanceOptimizer()
-
 
 async def get_ai_performance_optimizer() ->AIPerformanceOptimizer:
     """Get the global AI performance optimizer instance."""

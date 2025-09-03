@@ -60,7 +60,6 @@ from .rbac import (
     DataAccess,
 )
 
-
 __all__ = [
     # Database setup and utilities
     "Base",

@@ -26,7 +26,6 @@ from database import (
     FreemiumAssessmentSession,
 )
 
-
 def test_models():
     """Test creating each model that's failing."""
     # Create engine and session
@@ -121,7 +120,6 @@ def test_models():
 
     for result in results:
         print(result)
-
 
 if __name__ == "__main__":
     test_models()

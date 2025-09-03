@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 HTTP_OK = 200
 
-
 Regulation API client for fetching real regulation data from official sources.
 Uses XML APIs instead of scraping for better reliability and structure.
 """
@@ -22,7 +21,6 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
 
 class RegulationAPIClient:
     """Client for fetching regulation data from official APIs."""
@@ -313,7 +311,6 @@ class RegulationAPIClient:
             logger.error('Error fetching regulation updates: %s' % e)
         return updates
 
-
 async def test_api_client() ->None:
     """Test the regulation API client."""
     async with RegulationAPIClient() as client:
@@ -338,7 +335,6 @@ async def test_api_client() ->None:
                 logger.error('❌ Failed: %s' % result.get('error'))
         updates = await client.fetch_regulation_updates('2024-01-01')
         logger.info('Found %s recent regulation updates' % len(updates))
-
 
 if __name__ == '__main__':
     asyncio.run(test_api_client())

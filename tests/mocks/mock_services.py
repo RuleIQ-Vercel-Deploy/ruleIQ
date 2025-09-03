@@ -10,7 +10,6 @@ from datetime import datetime
 from unittest.mock import AsyncMock, MagicMock
 import json
 
-
 class MockNeo4jSession:
     """Mock Neo4j session for testing."""
 
@@ -43,7 +42,6 @@ class MockNeo4jSession:
         """Async context manager exit."""
         pass
 
-
 class MockNeo4jResult:
     """Mock Neo4j query result."""
 
@@ -59,7 +57,6 @@ class MockNeo4jResult:
         """Generate records asynchronously."""
         for record in self.records:
             yield record
-
 
 class MockSecretsVault:
     """Mock SecretsVault for testing."""
@@ -87,7 +84,6 @@ class MockSecretsVault:
             "secrets_available": len(self.secrets),
             "timestamp": datetime.now().isoformat(),
         }
-
 
 class MockEmailService:
     """Mock email service for testing."""
@@ -119,7 +115,6 @@ class MockEmailService:
         )
 
         return True
-
 
 class MockFileSystem:
     """Mock file system operations for testing."""
@@ -162,7 +157,6 @@ class MockFileSystem:
     def directory_exists(self, path: str) -> bool:
         """Check if mock directory exists."""
         return path in self.directories
-
 
 class MockRegulatoryAPI:
     """Mock regulatory API for testing compliance checks."""
@@ -234,7 +228,6 @@ class MockRegulatoryAPI:
             "timestamp": datetime.now().isoformat(),
         }
 
-
 class MockRAGService:
     """Mock RAG service for testing document retrieval."""
 
@@ -270,7 +263,6 @@ class MockRAGService:
                     break
         return results
 
-
 def get_mock_neo4j_session(mock_data: Dict[str, Any] = None) -> MockNeo4jSession:
     """Factory function to create mock Neo4j session."""
     default_data = {
@@ -300,7 +292,6 @@ def get_mock_neo4j_session(mock_data: Dict[str, Any] = None) -> MockNeo4jSession
         default_data.update(mock_data)
 
     return MockNeo4jSession(default_data)
-
 
 def get_mock_compliance_state() -> Dict[str, Any]:
     """Get a standard mock compliance state for testing."""

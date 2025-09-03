@@ -21,7 +21,6 @@ sys.path.append(str(Path(__file__).parent.parent))
 from services.agentic_rag import AgenticRAGSystem
 from services.rag_fact_checker import RAGFactChecker, QualityAssessment
 
-
 class RAGSelfCriticCommands:
     """
     Command-line interface for RAG fact-checking and self-criticism
@@ -265,7 +264,6 @@ class RAGSelfCriticCommands:
             f"   Final Status: {'✅ APPROVED FOR USE' if assessment.approved_for_use else '⚠️ REQUIRES REVIEW'}"
             )
 
-
 async def main() ->None:
     """Main CLI interface"""
     parser = argparse.ArgumentParser(description='RAG Self-Critic Commands')
@@ -319,7 +317,6 @@ async def main() ->None:
     finally:
         if critic.rag_system:
             critic.rag_system.close()
-
 
 if __name__ == '__main__':
     asyncio.run(main())

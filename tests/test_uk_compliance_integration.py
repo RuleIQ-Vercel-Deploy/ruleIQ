@@ -27,7 +27,6 @@ from services.compliance.graphrag_research_engine import (
     ResearchResult,
 )
 
-
 class TestUKComplianceManifest(unittest.TestCase):
     """Test UK compliance manifest implementation"""
 
@@ -155,7 +154,6 @@ class TestUKComplianceManifest(unittest.TestCase):
         )
         self.assertIsNotNone(gdpr_dpa_mapping, "GDPR-DPA mapping should exist")
 
-
 class TestUKComplianceAssessmentEngine(unittest.IsolatedAsyncioTestCase):
     """Test compliance assessment engine"""
 
@@ -234,7 +232,6 @@ class TestUKComplianceAssessmentEngine(unittest.IsolatedAsyncioTestCase):
 
         for prompt_name in expected_prompts:
             self.assertIn(prompt_name, self.engine.assessment_prompts)
-
 
 class TestGraphRAGResearchEngine(unittest.IsolatedAsyncioTestCase):
     """Test GraphRAG research engine"""
@@ -343,7 +340,6 @@ class TestGraphRAGResearchEngine(unittest.IsolatedAsyncioTestCase):
             self.assertGreaterEqual(confidence, min_expected)
             self.assertLessEqual(confidence, 1.0)
 
-
 class TestIntegrationEndToEnd(unittest.IsolatedAsyncioTestCase):
     """End-to-end integration tests"""
 
@@ -408,7 +404,6 @@ class TestIntegrationEndToEnd(unittest.IsolatedAsyncioTestCase):
             self.assertIsNotNone(result)
             self.assertIn("overall_score", result)
 
-
 class TestPerformance(unittest.TestCase):
     """Performance and load tests"""
 
@@ -443,7 +438,6 @@ class TestPerformance(unittest.TestCase):
         self.assertLess(
             search_time, 1.0, f"100 searches took {search_time:.2f}s, expected < 1s",
         )
-
 
 class TestSecurityAndValidation(unittest.TestCase):
     """Security and data validation tests"""
@@ -498,7 +492,6 @@ class TestSecurityAndValidation(unittest.TestCase):
             except Exception as e:
                 # Should not raise unhandled exceptions
                 self.fail(f"Unhandled exception for input '{dangerous_input}': {e}")
-
 
 if __name__ == "__main__":
     unittest.main()

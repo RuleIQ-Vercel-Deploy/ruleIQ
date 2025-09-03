@@ -18,7 +18,6 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.append(str(project_root))
 
-
 def main() ->bool:
     """Establish Alembic baseline."""
     logger.info('🔧 Establishing Alembic baseline...')
@@ -67,7 +66,6 @@ def main() ->bool:
     else:
         logger.info('❌ Verification failed: %s' % result.stderr)
         return False
-
 
 if __name__ == '__main__':
     success = main()

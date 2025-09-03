@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 MAX_RETRIES = 3
 
-
 Offline Mode Management for AI Services
 
 Provides comprehensive offline capabilities when AI services are unavailable,
@@ -21,14 +20,12 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 from services.ai.fallback_system import FallbackResponse
 
-
 class OfflineMode(Enum):
     """Offline operating modes"""
     DISABLED = 'disabled'
     BASIC = 'basic'
     ENHANCED = 'enhanced'
     FULL = 'full'
-
 
 @dataclass
 class OfflineRequest:
@@ -41,7 +38,6 @@ class OfflineRequest:
     status: str = 'pending'
     priority: int = 1
 
-
 @dataclass
 class OfflineCapability:
     """Describes what's available in offline mode"""
@@ -50,7 +46,6 @@ class OfflineCapability:
     degradation_level: str
     description: str
     alternatives: List[str] = field(default_factory=list)
-
 
 class OfflineDatabase:
     """Local SQLite database for offline operation"""
@@ -213,7 +208,6 @@ class OfflineDatabase:
                 return result[0], result[1]
             return None
 
-
 class OfflineAssessmentTools:
     """Provides offline assessment capabilities"""
 
@@ -314,7 +308,6 @@ This is a basic offline assessment. Answer each question with 'Yes' or 'No':
             'Stay informed of regulatory changes',
             'Conduct periodic comprehensive reviews']}
         return recommendations.get(risk_level, recommendations['medium_risk'])
-
 
 class OfflineModeManager:
     """
@@ -534,9 +527,7 @@ You will be notified when the analysis is complete. In the meantime, you can:
             copy(), 'pending_requests': len(self.database.
             get_pending_requests())}
 
-
 _offline_manager: Optional[OfflineModeManager] = None
-
 
 def get_offline_manager(mode: OfflineMode=OfflineMode.ENHANCED
     ) ->OfflineModeManager:
@@ -545,7 +536,6 @@ def get_offline_manager(mode: OfflineMode=OfflineMode.ENHANCED
     if _offline_manager is None:
         _offline_manager = OfflineModeManager(mode)
     return _offline_manager
-
 
 def reset_offline_manager() ->None:
     """Reset global offline manager (for testing)"""

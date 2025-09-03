@@ -10,12 +10,10 @@ from uuid import UUID
 
 from pydantic import BaseModel, Field
 
-
 class SendMessageRequest(BaseModel):
     """Request schema for sending a chat message."""
 
     message: str = Field(..., min_length=1, max_length=2000, description="The user's message")
-
 
 class MessageResponse(BaseModel):
     """Response schema for a chat message."""
@@ -31,7 +29,6 @@ class MessageResponse(BaseModel):
         from_attributes = True
         populate_by_name = True
 
-
 class ConversationSummary(BaseModel):
     """Summary schema for a conversation."""
 
@@ -44,7 +41,6 @@ class ConversationSummary(BaseModel):
 
     class Config:
         from_attributes = True
-
 
 class ConversationResponse(BaseModel):
     """Response schema for a conversation with messages."""
@@ -59,7 +55,6 @@ class ConversationResponse(BaseModel):
     class Config:
         from_attributes = True
 
-
 class CreateConversationRequest(BaseModel):
     """Request schema for creating a new conversation."""
 
@@ -67,7 +62,6 @@ class CreateConversationRequest(BaseModel):
     initial_message: Optional[str] = Field(
         None, max_length=2000, description="Optional initial message",
     )
-
 
 class ConversationListResponse(BaseModel):
     """Response schema for listing conversations."""
@@ -77,14 +71,12 @@ class ConversationListResponse(BaseModel):
     page: int
     per_page: int
 
-
 class EvidenceRecommendationRequest(BaseModel):
     """Request schema for getting evidence recommendations."""
 
     framework: Optional[str] = Field(
         None, description="Specific framework to get recommendations for",
     )
-
 
 class EvidenceRecommendationResponse(BaseModel):
     """Response schema for evidence recommendations."""
@@ -93,12 +85,10 @@ class EvidenceRecommendationResponse(BaseModel):
     recommendations: str
     generated_at: datetime
 
-
 class ComplianceAnalysisRequest(BaseModel):
     """Request schema for compliance gap analysis."""
 
     framework: str = Field(..., min_length=1, description="Framework to analyze")
-
 
 class ComplianceAnalysisResponse(BaseModel):
     """Response schema for compliance analysis."""
@@ -112,14 +102,12 @@ class ComplianceAnalysisResponse(BaseModel):
     critical_gaps: List[str]
     risk_level: str
 
-
 # Enhanced Recommendation Schemas
 class ContextAwareRecommendationRequest(BaseModel):
     """Request schema for context-aware recommendations."""
 
     framework: str = Field(..., description="Framework to get recommendations for")
     context_type: str = Field(default="comprehensive", description="Type of context analysis")
-
 
 class BusinessContextSummary(BaseModel):
     """Business context summary for recommendations."""
@@ -129,14 +117,12 @@ class BusinessContextSummary(BaseModel):
     employee_count: int
     maturity_level: str
 
-
 class CurrentStatusSummary(BaseModel):
     """Current compliance status summary."""
 
     completion_percentage: float
     evidence_collected: int
     critical_gaps_count: int
-
 
 class RecommendationItem(BaseModel):
     """Individual recommendation item."""
@@ -152,7 +138,6 @@ class RecommendationItem(BaseModel):
     priority_score: Optional[float] = None
     automation_guidance: Optional[str] = None
 
-
 class EffortEstimation(BaseModel):
     """Effort estimation for recommendations."""
 
@@ -160,7 +145,6 @@ class EffortEstimation(BaseModel):
     high_priority_hours: int
     estimated_weeks: float
     quick_wins: int
-
 
 class ContextAwareRecommendationResponse(BaseModel):
     """Response schema for context-aware recommendations."""
@@ -173,7 +157,6 @@ class ContextAwareRecommendationResponse(BaseModel):
     estimated_effort: EffortEstimation
     generated_at: str
 
-
 # Workflow Schemas
 class WorkflowGenerationRequest(BaseModel):
     """Request schema for workflow generation."""
@@ -181,7 +164,6 @@ class WorkflowGenerationRequest(BaseModel):
     framework: str = Field(..., description="Framework for workflow generation")
     control_id: Optional[str] = Field(None, description="Specific control ID (optional)")
     workflow_type: str = Field(default="comprehensive", description="Type of workflow")
-
 
 class WorkflowStep(BaseModel):
     """Individual workflow step."""
@@ -198,7 +180,6 @@ class WorkflowStep(BaseModel):
     automation_opportunities: Optional[Dict[str, Any]] = None
     estimated_hours_with_automation: Optional[int] = None
 
-
 class WorkflowPhase(BaseModel):
     """Workflow phase containing multiple steps."""
 
@@ -207,7 +188,6 @@ class WorkflowPhase(BaseModel):
     description: str
     estimated_hours: int
     steps: List[WorkflowStep]
-
 
 class AutomationSummary(BaseModel):
     """Automation potential summary for workflow."""
@@ -220,7 +200,6 @@ class AutomationSummary(BaseModel):
     high_automation_steps: int
     total_steps: int
 
-
 class WorkflowEffortEstimation(BaseModel):
     """Comprehensive effort estimation for workflow."""
 
@@ -231,7 +210,6 @@ class WorkflowEffortEstimation(BaseModel):
     phases_count: int
     steps_count: int
     effort_savings: Dict[str, Any]
-
 
 class WorkflowResponse(BaseModel):
     """Response schema for workflow generation."""
@@ -246,7 +224,6 @@ class WorkflowResponse(BaseModel):
     automation_summary: AutomationSummary
     effort_estimation: WorkflowEffortEstimation
 
-
 # Policy Generation Schemas
 class PolicyGenerationRequest(BaseModel):
     """Request schema for policy generation."""
@@ -258,7 +235,6 @@ class PolicyGenerationRequest(BaseModel):
     include_templates: bool = Field(default=True, description="Include implementation templates")
     geographic_scope: str = Field(default="Single location", description="Geographic scope")
 
-
 class PolicySubsection(BaseModel):
     """Policy subsection."""
 
@@ -266,7 +242,6 @@ class PolicySubsection(BaseModel):
     title: str
     content: str
     controls: List[str]
-
 
 class PolicySection(BaseModel):
     """Policy section containing subsections."""
@@ -276,13 +251,11 @@ class PolicySection(BaseModel):
     content: str
     subsections: List[PolicySubsection]
 
-
 class RoleResponsibility(BaseModel):
     """Role and responsibilities definition."""
 
     role: str
     responsibilities: List[str]
-
 
 class PolicyProcedure(BaseModel):
     """Policy procedure definition."""
@@ -291,14 +264,12 @@ class PolicyProcedure(BaseModel):
     title: str
     steps: List[str]
 
-
 class ComplianceRequirement(BaseModel):
     """Compliance requirement mapping."""
 
     requirement_id: str
     description: str
     control_reference: str
-
 
 class BusinessContextInfo(BaseModel):
     """Business context information for policy."""
@@ -308,14 +279,12 @@ class BusinessContextInfo(BaseModel):
     employee_count: int
     customization_applied: str
 
-
 class ImplementationPhase(BaseModel):
     """Policy implementation phase."""
 
     phase: str
     duration_weeks: int
     activities: List[str]
-
 
 class PolicyImplementationGuidance(BaseModel):
     """Implementation guidance for policy."""
@@ -325,7 +294,6 @@ class PolicyImplementationGuidance(BaseModel):
     common_challenges: List[str]
     mitigation_strategies: List[str]
 
-
 class ComplianceMapping(BaseModel):
     """Compliance mapping for policy."""
 
@@ -334,7 +302,6 @@ class ComplianceMapping(BaseModel):
     mapped_controls: List[str]
     compliance_objectives: List[str]
     audit_considerations: List[str]
-
 
 class PolicyResponse(BaseModel):
     """Response schema for policy generation."""
@@ -355,7 +322,6 @@ class PolicyResponse(BaseModel):
     compliance_mapping: ComplianceMapping
     implementation_notes: Optional[List[str]] = None
 
-
 # Smart Guidance Schemas
 class SmartGuidanceRequest(BaseModel):
     """Request schema for smart guidance."""
@@ -363,14 +329,12 @@ class SmartGuidanceRequest(BaseModel):
     framework: str = Field(..., description="Framework for guidance")
     guidance_type: str = Field(default="getting_started", description="Type of guidance needed")
 
-
 class GuidanceCurrentStatus(BaseModel):
     """Current status for guidance."""
 
     completion_percentage: float
     maturity_level: str
     critical_gaps_count: int
-
 
 class SmartGuidanceResponse(BaseModel):
     """Response schema for smart compliance guidance."""

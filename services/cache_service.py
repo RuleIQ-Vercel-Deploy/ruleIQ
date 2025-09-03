@@ -14,7 +14,6 @@ import redis.asyncio as redis
 from config.settings import settings
 logger = logging.getLogger(__name__)
 
-
 class CacheService:
     """
     Unified cache service with Redis backend and in-memory fallback
@@ -257,9 +256,7 @@ class CacheService:
             logger.error('Failed to cleanup expired cache entries: %s' % e)
             return 0
 
-
 _cache_service = None
-
 
 async def get_cache_service() ->CacheService:
     """Get or create the cache service instance"""
@@ -268,18 +265,15 @@ async def get_cache_service() ->CacheService:
         _cache_service = CacheService()
     return _cache_service
 
-
 async def cache_get(key: str) ->Optional[Any]:
     """Helper function to get from cache"""
     service = await get_cache_service()
     return await service.get(key)
 
-
 async def cache_set(key: str, value: Any, ttl: Optional[int]=None) ->bool:
     """Helper function to set cache"""
     service = await get_cache_service()
     return await service.set(key, value, ttl)
-
 
 async def cache_delete(key: str) ->bool:
     """Helper function to delete from cache"""

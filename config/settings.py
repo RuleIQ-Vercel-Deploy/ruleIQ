@@ -45,7 +45,6 @@ except ImportError:
         '⚠️ SecretsVault not available, falling back to environment variables')
     SECRETS_VAULT_AVAILABLE = False
 
-
 def get_secret_or_env(secret_key: str, env_key: Optional[str]=None) ->Optional[
     str]:
     """
@@ -86,7 +85,6 @@ def get_secret_or_env(secret_key: str, env_key: Optional[str]=None) ->Optional[
         secret_key)
     return None
 
-
 def parse_list_from_string(v: Union[str, list]) ->list:
     """Parse a list from string or return as-is if already a list."""
     if isinstance(v, list):
@@ -100,14 +98,12 @@ def parse_list_from_string(v: Union[str, list]) ->list:
         return [item.strip() for item in v.split(',') if item.strip()]
     return []
 
-
 class Environment(str, Enum):
     """Environment types"""
     DEVELOPMENT = 'development'
     STAGING = 'staging'
     PRODUCTION = 'production'
     TESTING = 'testing'
-
 
 class LogLevel(str, Enum):
     """Log levels"""
@@ -116,7 +112,6 @@ class LogLevel(str, Enum):
     WARNING = 'WARNING'
     ERROR = 'ERROR'
     CRITICAL = 'CRITICAL'
-
 
 class Settings(BaseSettings):
     """Application settings with environment variable support."""
@@ -515,20 +510,16 @@ class Settings(BaseSettings):
             return False
         return self.get_secrets_vault_health()['status'] == 'healthy'
 
-
 # Singleton instance management
 _settings: Optional[Settings] = None
-
 
 def get_settings() ->Settings:
     """Get application settings"""
     return _get_or_create_settings()
 
-
 def reload_settings() ->Settings:
     """Reload settings from environment variables"""
     return _create_new_settings()
-
 
 def _get_or_create_settings() ->Settings:
     """Get existing settings or create new ones"""
@@ -539,13 +530,11 @@ def _get_or_create_settings() ->Settings:
             _settings.log_vault_status()
     return _settings
 
-
 def _create_new_settings() ->Settings:
     """Create new settings instance"""
     global _settings
     _settings = Settings()
     return _settings
-
 
 # Export the settings instance
 settings = get_settings()

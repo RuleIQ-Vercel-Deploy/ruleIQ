@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 MAX_RETRIES = 3
 
-
 🔐 RuleIQ Secure Secrets Vault - Multi-Platform Integration
 Easily identifiable secure secrets vault implementation
 
@@ -26,7 +25,6 @@ try:
 except ImportError:
     AWS_AVAILABLE = False
 logger = logging.getLogger(__name__)
-
 
 class SecretsVault:
     """
@@ -472,9 +470,7 @@ class SecretsVault:
         self.get_secret.cache_clear()
         return False
 
-
 _vault_instance: Optional[SecretsVault] = None
-
 
 def get_secrets_vault() ->SecretsVault:
     """
@@ -493,16 +489,13 @@ def get_secrets_vault() ->SecretsVault:
         logger.info('🔐 SecretsVault: Global instance initialized')
     return _vault_instance
 
-
 def get_secret(key: str) ->Optional[str]:
     """🔐 Convenience function to get a secret from the vault"""
     return get_secrets_vault().get_secret(key)
 
-
 def vault_health_check() ->Dict[str, Any]:
     """🔐 Convenience function to check vault health"""
     return get_secrets_vault().health_check()
-
 
 class SecretKeys:
     """🔐 Easily identifiable secret keys used in RuleIQ"""
@@ -537,7 +530,6 @@ class SecretKeys:
     STRIPE_WEBHOOK_SECRET = 'stripe_webhook_secret'
     SENTRY_DSN = 'sentry_dsn'
     SENTRY_RELEASE = 'sentry_release'
-
 
 if __name__ == '__main__':
     """

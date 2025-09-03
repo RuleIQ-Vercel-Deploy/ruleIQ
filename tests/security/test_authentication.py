@@ -12,7 +12,6 @@ import pytest
 
 from tests.conftest import assert_api_response_security
 
-
 @pytest.mark.security
 @pytest.mark.auth
 class TestAuthenticationSecurity:
@@ -410,7 +409,6 @@ class TestAuthenticationSecurity:
         # At minimum, the most recent session should be valid
         assert valid_sessions >= 1
 
-
 @pytest.mark.security
 @pytest.mark.auth
 class TestTokenSecurity:
@@ -540,7 +538,6 @@ class TestTokenSecurity:
 
             # All malicious tokens should be rejected
             assert response.status_code == 401
-
 
 @pytest.mark.security
 @pytest.mark.auth

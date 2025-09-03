@@ -12,7 +12,6 @@ import os
 import re
 from typing import Optional
 
-
 def check_env_file(filepath) -> Optional[str]:
     """Check if an env file has proper JWT_SECRET configuration."""
     if not os.path.exists(filepath):
@@ -55,7 +54,6 @@ def check_env_file(filepath) -> Optional[str]:
 
     except Exception as e:
         return f"Error reading {filepath}: {e}"
-
 
 # Check all possible env files
 logger.info("Environment File Validation")

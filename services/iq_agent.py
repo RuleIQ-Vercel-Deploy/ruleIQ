@@ -6,7 +6,6 @@ CONFIDENCE_THRESHOLD = 0.8
 DEFAULT_RETRIES = 5
 MAX_RETRIES = 3
 
-
 IQ - Autonomous Compliance Orchestrator with GraphRAG Intelligence
 
 This module implements the IQ agent as described in the comprehensive prompt,
@@ -28,10 +27,8 @@ from services.compliance_memory_manager import ComplianceMemoryManager
 from services.compliance_graph_initializer import initialize_compliance_graph
 logger = logging.getLogger(__name__)
 
-
 class IQState(Enum):
     """IQ Agent operational states"""
-
 
 @dataclass
 class IQAgentState:
@@ -47,7 +44,6 @@ class IQAgentState:
     messages: List[Any]
     step_count: int = 0
     max_steps: int = 10
-
 
 class IQComplianceAgent:
     """
@@ -921,7 +917,6 @@ Focus on actionable insights derived from the graph analysis.
                 f'Focus on {len(requirements)} regulatory requirements identified'
                 )
         return recommendations
-
 
 async def create_iq_agent(neo4j_service: Neo4jGraphRAGService
     ) ->IQComplianceAgent:

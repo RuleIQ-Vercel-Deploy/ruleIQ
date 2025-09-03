@@ -6,7 +6,6 @@ Simple test to verify freemium models work correctly after fixes.
 import pytest
 from database.assessment_lead import AssessmentLead
 
-
 def test_assessment_lead_creation(db_session):
     """Test creating an assessment lead with minimal required fields."""
     email = "test.lead@example.com"
@@ -26,7 +25,6 @@ def test_assessment_lead_creation(db_session):
     assert lead.lead_status == "new"
     assert lead.created_at is not None
     assert lead.updated_at is not None
-
 
 def test_assessment_lead_with_all_fields(db_session):
     """Test creating an assessment lead with all available fields."""

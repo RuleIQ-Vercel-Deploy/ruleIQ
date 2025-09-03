@@ -15,7 +15,6 @@ import pytest
 from database.evidence_item import EvidenceItem
 from services.automation.evidence_processor import EvidenceProcessor
 
-
 @pytest.mark.unit
 @pytest.mark.ai
 class TestEvidenceProcessorAI:

@@ -12,7 +12,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-
 def run_quick_tests() -> bool:
     """Run a quick subset of AI optimization tests."""
     print("🚀 Running AI Optimization Quick Tests...")
@@ -59,7 +58,6 @@ def run_quick_tests() -> bool:
         print("⚠️  Some tests failed. Run full test suite for details.")
         return False
 
-
 def check_test_setup() -> bool:
     """Check if the test environment is properly set up."""
     print("🔍 Checking test setup...")
@@ -104,7 +102,6 @@ def check_test_setup() -> bool:
 
     return True
 
-
 def main() -> None:
     """Main function."""
     print("AI Optimization Test Verification")
@@ -129,7 +126,6 @@ def main() -> None:
         print("\nFor detailed diagnostics:")
         print("  python scripts/run_ai_optimization_tests.py --verbose")
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()

@@ -25,7 +25,6 @@ import redis.asyncio as redis
 
 router = APIRouter()
 
-
 def setup_health_checks() -> None:
     """Setup health checks for the application."""
     # Database health check
@@ -60,7 +59,6 @@ def setup_health_checks() -> None:
             )
         )
 
-
 @router.get("/health", tags=["health"])
 async def health_check() -> Dict[str, Any]:
     """
@@ -70,7 +68,6 @@ async def health_check() -> Dict[str, Any]:
     """
     return await run_health_checks(use_cache=True)
 
-
 @router.get("/health/live", tags=["health"])
 async def liveness_check() -> Dict[str, str]:
     """
@@ -79,7 +76,6 @@ async def liveness_check() -> Dict[str, str]:
     Returns a simple response indicating the service is alive.
     """
     return {"status": "ok"}
-
 
 @router.get("/health/ready", tags=["health"])
 async def readiness_check() -> Dict[str, Any]:
@@ -97,7 +93,6 @@ async def readiness_check() -> Dict[str, Any]:
         )
 
     return result
-
 
 @router.get("/metrics", tags=["monitoring"])
 async def metrics_endpoint() -> PlainTextResponse:
@@ -129,7 +124,6 @@ async def metrics_endpoint() -> PlainTextResponse:
         content="\n".join(prometheus_output), media_type="text/plain"
     )
 
-
 @router.get("/metrics/json", tags=["monitoring"])
 async def metrics_json() -> Dict[str, Any]:
     """
@@ -138,7 +132,6 @@ async def metrics_json() -> Dict[str, Any]:
     Returns all collected metrics as JSON for debugging or custom monitoring.
     """
     return get_metrics()
-
 
 @router.post("/metrics/reset", tags=["monitoring"])
 async def reset_metrics() -> Dict[str, str]:
@@ -159,7 +152,6 @@ async def reset_metrics() -> Dict[str, str]:
             metric.value = 0
 
     return {"status": "metrics reset"}
-
 
 @router.get("/debug/info", tags=["debug"])
 async def debug_info() -> Dict[str, Any]:
@@ -189,7 +181,6 @@ async def debug_info() -> Dict[str, Any]:
         and bool(settings.database_url),
         "redis_connected": hasattr(settings, "redis_url") and bool(settings.redis_url),
     }
-
 
 # Initialize health checks when module is imported
 setup_health_checks()

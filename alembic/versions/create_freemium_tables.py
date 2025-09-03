@@ -24,7 +24,6 @@ down_revision = None  # Replace with actual previous revision
 branch_labels = None
 depends_on = None
 
-
 def upgrade() -> None:
     # AssessmentLead table for email capture and UTM tracking
     op.create_table(
@@ -340,7 +339,6 @@ def upgrade() -> None:
         "ix_freemium_sessions_expires", "freemium_assessment_sessions", ["expires_at"]
     )
     # Remove non-existent column index
-
 
 def downgrade() -> None:
     # Drop tables in reverse order due to foreign key constraints

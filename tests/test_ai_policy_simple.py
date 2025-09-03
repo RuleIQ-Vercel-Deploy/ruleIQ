@@ -7,7 +7,6 @@ import pytest
 from unittest.mock import Mock, patch
 from services.ai.policy_generator import PolicyGenerator, TemplateProcessor
 
-
 class TestPolicyGeneratorBasic:
     """Basic tests for AI policy generator"""
 
@@ -91,7 +90,6 @@ class TestPolicyGeneratorBasic:
         assert "privacy policy" in fallback_content.lower()
         assert "template-based" in fallback_content.lower()
 
-
 class TestPolicyGeneratorIntegration:
     """Integration tests for policy generator"""
 
@@ -114,7 +112,6 @@ class TestPolicyGeneratorIntegration:
 
         # Test template processor has ISO 27001 path configured
         assert hasattr(generator.template_processor, "iso27001_templates_path")
-
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

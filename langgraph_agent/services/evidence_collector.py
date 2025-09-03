@@ -15,7 +15,6 @@ from uuid import UUID
 import hashlib
 from datetime import datetime, timezone
 
-
 class EvidenceCollector:
     """Wrapper for evidence collection services."""
 
@@ -30,7 +29,6 @@ class EvidenceCollector:
 
         evidence = []
 
-        # Extract obligations from compliance data
         obligations = compliance_data.get("obligations", [])
         frameworks = compliance_data.get("frameworks", [])
 

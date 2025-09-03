@@ -14,7 +14,6 @@ from typing import Dict, List, Any
 from neo4j import GraphDatabase
 import hashlib
 
-
 class UKComplianceNeo4jIngestion:
     """Ingest UK compliance data into Neo4j knowledge graph."""
 
@@ -286,7 +285,6 @@ class UKComplianceNeo4jIngestion:
             for record in session.run(rel_query):
                 logger.info('  - %s: %s' % (record['type'], record['count']))
 
-
 def main() ->None:
     """Main ingestion process."""
     ingestion = UKComplianceNeo4jIngestion()
@@ -303,7 +301,6 @@ def main() ->None:
         ingestion.generate_statistics()
     finally:
         ingestion.close()
-
 
 if __name__ == '__main__':
     main()

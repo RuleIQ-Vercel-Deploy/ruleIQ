@@ -11,7 +11,6 @@ import os
 import re
 import glob
 
-
 def fix_react_entities(content: str) ->Any:
     """Fix React unescaped entities"""
     patterns_and_replacements = [('&apos;', "'"), ('&quot;', '"'), (
@@ -26,7 +25,6 @@ def fix_react_entities(content: str) ->Any:
             modified = True
             content = new_content
     return content, modified
-
 
 def process_files() ->Any:
     """Process all TypeScript/JavaScript files in the frontend directory"""
@@ -54,7 +52,6 @@ def process_files() ->Any:
     logger.info('\nProcessed %s files' % files_processed)
     logger.info('Modified %s files' % files_modified)
     return files_modified
-
 
 if __name__ == '__main__':
     logger.info('🔧 Fixing React unescaped entities...')

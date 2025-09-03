@@ -25,7 +25,6 @@ import uuid
 
 from database.db_setup import Base
 
-
 class Integration(Base):
     """
     Stores enterprise integration configurations with encrypted credentials
@@ -61,7 +60,6 @@ class Integration(Base):
 
     def __repr__(self) -> str:
         return f"<Integration {self.provider} for user {self.user_id}>"
-
 
 class EvidenceCollection(Base):
     """
@@ -115,7 +113,6 @@ class EvidenceCollection(Base):
     def __repr__(self) -> str:
         return f"<EvidenceCollection {self.id} - {self.status}>"
 
-
 class IntegrationEvidenceItem(Base):
     """
     Individual evidence items collected from integrations
@@ -164,7 +161,6 @@ class IntegrationEvidenceItem(Base):
     def __repr__(self) -> str:
         return f"<EvidenceItem {self.evidence_type}:{self.resource_id}>"
 
-
 class IntegrationHealthLog(Base):
     """
     Historical health check data for integrations
@@ -191,7 +187,6 @@ class IntegrationHealthLog(Base):
 
     def __repr__(self) -> str:
         return f"<HealthLog {self.integration_id} - {self.status}>"
-
 
 class EvidenceAuditLog(Base):
     """

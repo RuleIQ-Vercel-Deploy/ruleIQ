@@ -28,7 +28,6 @@ ROUTER_FILES = ['assessments.py', 'business_profiles.py', 'policies.py',
     'dashboard.py', 'auth.py', 'ai_chat.py', 'ai_assessments.py', 'iq_agent.py'
     ]
 
-
 def analyze_router_file(filepath: Path) ->Dict:
     """Analyze a router file for endpoints"""
     with open(filepath, 'r') as f:
@@ -45,7 +44,6 @@ def analyze_router_file(filepath: Path) ->Dict:
         upper(), path) for method, path in endpoints], 'issues':
         analyze_issues(endpoints)}
 
-
 def analyze_issues(endpoints: List[Tuple[str, str]]) ->List[str]:
     """Identify issues with endpoints"""
     issues = []
@@ -57,7 +55,6 @@ def analyze_issues(endpoints: List[Tuple[str, str]]) ->List[str]:
         if '_' in path and not path.startswith('{'):
             issues.append(f'Underscore in path: {method} {path}')
     return issues
-
 
 def fix_router_file(filepath: Path, dry_run: bool=True) ->Tuple[str, List[str]
     ]:
@@ -85,7 +82,6 @@ def fix_router_file(filepath: Path, dry_run: bool=True) ->Tuple[str, List[str]
             with open(filepath, 'w') as f:
                 f.write(content)
     return content, changes
-
 
 def main() ->None:
     """Main execution"""
@@ -136,7 +132,6 @@ def main() ->None:
             'total_issues': len(all_issues), 'endpoints': all_endpoints}, f,
             indent=2)
     logger.info('\n📄 Report saved to api-alignment-backend-report.json')
-
 
 if __name__ == '__main__':
     main()

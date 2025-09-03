@@ -3,7 +3,6 @@
 import logging
 logger = logging.getLogger(__name__)
 
-
 import re
 
 # Read the current settings file

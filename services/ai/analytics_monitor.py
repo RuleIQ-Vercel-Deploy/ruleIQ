@@ -14,15 +14,12 @@ from typing import Any, Dict, List, Optional
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 class MetricType(Enum):
     """Types of metrics to track."""
     ERROR = 'error'
 
-
 class AlertLevel(Enum):
     """Alert severity levels."""
-
 
 @dataclass
 class MetricEvent:
@@ -35,7 +32,6 @@ class MetricEvent:
     user_id: Optional[str] = None
     session_id: Optional[str] = None
 
-
 @dataclass
 class Alert:
     """System alert."""
@@ -46,7 +42,6 @@ class Alert:
     timestamp: datetime
     resolved: bool = False
     metadata: Dict[str, Any] = field(default_factory=dict)
-
 
 @dataclass
 class AnalyticsSummary:
@@ -60,7 +55,6 @@ class AnalyticsSummary:
     error_rate: float
     top_frameworks: List[Dict[str, Any]]
     performance_trends: Dict[str, List[float]]
-
 
 class AIAnalyticsMonitor:
     """
@@ -317,9 +311,7 @@ class AIAnalyticsMonitor:
             'health_status', 'unknown'), 'uptime_hours': 24, 'last_updated':
             datetime.now(timezone.utc).isoformat()}}
 
-
 analytics_monitor = AIAnalyticsMonitor()
-
 
 async def get_analytics_monitor() ->AIAnalyticsMonitor:
     """Get the global analytics monitor instance."""

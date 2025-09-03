@@ -7,34 +7,34 @@
     /* Base font size - 112.5% = 18px on 16px browser default */
     font-size: 112.5%;
 
-    /* LIGHT THEME - Beautiful Teal Design System - Premium Look */
+    /* LIGHT THEME - RuleIQ Brand Design System */
     --background: 0 0% 100%; /* Pure white background #FFFFFF */
-    --foreground: 184 23% 15%; /* Deep teal-charcoal text #1F3A3A for high contrast */
+    --foreground: 222 47% 11%; /* Near-black text #0F172A for high contrast */
 
-    --card: 180 20% 99%; /* Subtle teal-tinted white cards #FAFFFE */
-    --card-foreground: 184 23% 15%; /* Deep teal-charcoal text */
+    --card: 0 0% 100%; /* White cards #FFFFFF */
+    --card-foreground: 222 47% 11%; /* Near-black text */
 
-    --popover: 180 20% 99%; /* Subtle teal-tinted white popover */
-    --popover-foreground: 184 23% 15%; /* Deep teal-charcoal text */
+    --popover: 0 0% 100%; /* White popover */
+    --popover-foreground: 222 47% 11%; /* Near-black text */
 
-    --primary: 174 72% 41%; /* Vibrant teal #19A89B - main brand */
+    --primary: 198 53% 24%; /* Brand Teal #0B4F6C */
     --primary-foreground: 0 0% 100%; /* White text on teal */
 
-    --secondary: 173 41% 96%; /* Very light teal #EDF9F8 */
-    --secondary-foreground: 175 47% 26%; /* Deep teal text #234E4B */
+    --secondary: 214 58% 23%; /* Brand Navy #103766 */
+    --secondary-foreground: 0 0% 100%; /* White text on navy */
 
-    --muted: 174 30% 94%; /* Light teal background #E8F5F3 */
-    --muted-foreground: 175 25% 40%; /* Medium teal text #4C6B68 - WCAG AA compliant */
+    --muted: 210 20% 96%; /* Light gray background #F3F4F6 */
+    --muted-foreground: 215 16% 47%; /* Medium gray text #64748B - WCAG AA compliant */
 
-    --accent: 172 82% 88%; /* Light vibrant teal #B8F4EE */
-    --accent-foreground: 176 47% 20%; /* Very dark teal text #1A3D39 */
+    --accent: 34 100% 56%; /* Brand Orange #F28C28 - use sparingly */
+    --accent-foreground: 0 0% 100%; /* White text on orange */
 
     --destructive: 0 84% 60%; /* Error red #EF4444 */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 174 20% 91%; /* Light teal borders #E0EEEC */
-    --input: 174 20% 91%; /* Input borders with teal tint */
-    --ring: 174 72% 41%; /* Vibrant teal focus ring */
+    --border: 214 20% 91%; /* Light borders #E2E8F0 */
+    --input: 214 20% 91%; /* Input borders */
+    --ring: 198 53% 24%; /* Brand teal focus ring */
 
     --radius: 0.5rem;
 
@@ -46,33 +46,65 @@
   /* Light theme (default - no class needed) */
   .light {
     --background: 0 0% 100%; /* Pure white background */
-    --foreground: 184 23% 15%; /* Deep teal-charcoal text #1F3A3A */
+    --foreground: 222 47% 11%; /* Near-black text */
 
-    --card: 180 20% 99%; /* Subtle teal-tinted white cards #FAFFFE */
-    --card-foreground: 184 23% 15%; /* Deep teal-charcoal text */
+    --card: 0 0% 100%; /* White cards */
+    --card-foreground: 222 47% 11%; /* Near-black text */
 
-    --popover: 180 20% 99%; /* Subtle teal-tinted white popover */
-    --popover-foreground: 184 23% 15%; /* Deep teal-charcoal text */
+    --popover: 0 0% 100%; /* White popover */
+    --popover-foreground: 222 47% 11%; /* Near-black text */
 
-    --primary: 174 72% 41%; /* Vibrant teal #19A89B - main brand */
+    --primary: 198 53% 24%; /* Brand Teal #0B4F6C */
     --primary-foreground: 0 0% 100%; /* White text on teal */
 
-    --secondary: 173 41% 96%; /* Very light teal #EDF9F8 */
-    --secondary-foreground: 175 47% 26%; /* Deep teal text #234E4B */
+    --secondary: 214 58% 23%; /* Brand Navy #103766 */
+    --secondary-foreground: 0 0% 100%; /* White text on navy */
 
-    --muted: 174 30% 94%; /* Light teal backgrounds #E8F5F3 */
-    --muted-foreground: 175 25% 40%; /* Medium teal text #4C6B68 */
+    --muted: 210 20% 96%; /* Light gray backgrounds #F3F4F6 */
+    --muted-foreground: 215 16% 47%; /* Medium gray text */
 
-    --accent: 172 82% 88%; /* Light vibrant teal #B8F4EE */
-    --accent-foreground: 176 47% 20%; /* Very dark teal text #1A3D39 */
+    --accent: 34 100% 56%; /* Brand Orange #F28C28 */
+    --accent-foreground: 0 0% 100%; /* White text */
 
     --destructive: 0 84% 60%; /* Error red */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 174 20% 91%; /* Light teal borders #E0EEEC */
-    --input: 174 20% 91%; /* Input borders with teal tint */
-    --ring: 174 72% 41%; /* Vibrant teal focus ring */
+    --border: 214 20% 91%; /* Light borders #E2E8F0 */
+    --input: 214 20% 91%; /* Input borders */
+    --ring: 198 53% 24%; /* Brand teal focus ring */
   }
+
+  /* Dark theme (optional - for future implementation) */
+  .dark {
+    --background: 222 47% 11%; /* Dark background #0F172A */
+    --foreground: 210 40% 98%; /* Light text #F8FAFC */
+
+    --card: 222 47% 15%; /* Dark cards */
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 15%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 198 53% 24%; /* Brand Teal #0B4F6C */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 214 58% 23%; /* Brand Navy #103766 */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 217 33% 17%; /* Dark muted */
+    --muted-foreground: 215 20% 65%; /* Light muted text */
+
+    --accent: 34 100% 56%; /* Brand Orange #F28C28 */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62% 30%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 198 53% 24%;
+  }
+
   .theme {
     --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
     --animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear;
@@ -193,7 +225,7 @@
 @layer components {
   /* Modern Gradient Text */
   .gradient-text {
-    @apply bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-tertiary bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-brand-navy via-brand-teal to-brand-teal-light bg-clip-text text-transparent;
   }
 
   /* Animated Gradient Background */
@@ -224,26 +256,31 @@
     @apply border-neutral-300 bg-white/90;
   }
 
-  /* Neon Glow Effects */
-  .glow-purple {
-    /* Updated to teal glow to match new design system */
+  /* Brand Glow Effects */
+  .glow-navy {
     box-shadow:
-      0 0 20px hsl(var(--primary) / 0.5),
-      0 0 40px hsl(var(--primary) / 0.3),
-      0 0 60px hsl(var(--primary) / 0.15);
+      0 0 20px rgba(16, 55, 102, 0.5),
+      0 0 40px rgba(16, 55, 102, 0.3),
+      0 0 60px rgba(16, 55, 102, 0.15);
   }
 
-  .glow-cyan {
-    /* Updated to teal glow to match new design system */
+  .glow-teal {
     box-shadow:
-      0 0 20px hsl(var(--primary) / 0.5),
-      0 0 40px hsl(var(--primary) / 0.3),
-      0 0 60px hsl(var(--primary) / 0.15);
+      0 0 20px rgba(11, 79, 108, 0.5),
+      0 0 40px rgba(11, 79, 108, 0.3),
+      0 0 60px rgba(11, 79, 108, 0.15);
+  }
+
+  .glow-orange {
+    box-shadow:
+      0 0 20px rgba(242, 140, 40, 0.5),
+      0 0 40px rgba(242, 140, 40, 0.3),
+      0 0 60px rgba(242, 140, 40, 0.15);
   }
 
   /* Modern Button Styles */
   .btn-gradient {
-    @apply relative overflow-hidden bg-gradient-to-r from-brand-primary to-brand-secondary font-semibold text-white transition-all duration-300;
+    @apply relative overflow-hidden bg-gradient-to-r from-brand-teal to-brand-navy font-semibold text-white transition-all duration-300;
   }
 
   .btn-gradient:hover {
@@ -253,7 +290,7 @@
 
   .btn-gradient::before {
     content: '';
-    @apply absolute inset-0 bg-gradient-to-r from-brand-secondary to-brand-tertiary opacity-0 transition-opacity duration-300;
+    @apply absolute inset-0 bg-gradient-to-r from-brand-navy to-brand-teal-light opacity-0 transition-opacity duration-300;
   }
 
   .btn-gradient:hover::before {
@@ -263,24 +300,24 @@
   /* Mesh Gradient Background */
   .mesh-gradient {
     background-image:
-      radial-gradient(at 40% 20%, hsl(var(--primary) / 0.25) 0px, transparent 50%),
-      radial-gradient(at 80% 0%, hsla(188, 95%, 43%, 0.3) 0px, transparent 50%),
-      radial-gradient(at 0% 50%, hsla(158, 76%, 42%, 0.3) 0px, transparent 50%),
-      radial-gradient(at 80% 50%, hsl(var(--primary) / 0.2) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, hsla(188, 95%, 43%, 0.2) 0px, transparent 50%);
+      radial-gradient(at 40% 20%, rgba(11, 79, 108, 0.25) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, rgba(16, 55, 102, 0.3) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, rgba(11, 79, 108, 0.3) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, rgba(16, 55, 102, 0.2) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, rgba(11, 79, 108, 0.2) 0px, transparent 50%);
   }
 
-  /* Elevation system for dark theme */
+  /* Elevation system */
   .elevation-low {
-    @apply shadow-sm shadow-black/20;
+    @apply shadow-sm;
   }
 
   .elevation-medium {
-    @apply shadow-md shadow-black/30;
+    @apply shadow-md;
   }
 
   .elevation-high {
-    @apply shadow-lg shadow-black/40;
+    @apply shadow-lg;
   }
 
   /* Skip to main content link (accessibility) */
@@ -317,7 +354,7 @@
   .ProseMirror h4,
   .ProseMirror h5,
   .ProseMirror h6 {
-    @apply text-primary; /* Primary color for headings */
+    @apply text-brand-navy; /* Brand navy for headings */
   }
   .ProseMirror h1 {
     @apply my-4 text-4xl font-bold;
@@ -357,7 +394,7 @@
     @apply line-through;
   }
   .ProseMirror a {
-    @apply text-primary underline hover:text-primary/80;
+    @apply text-brand-teal underline hover:text-brand-teal-light;
   }
 }
 
@@ -452,13 +489,13 @@
   .gradient-accent-top::before {
     content: '';
     @apply absolute inset-x-0 top-0 h-1;
-    @apply bg-gradient-to-r from-teal-700 via-teal-600 to-teal-400;
+    @apply bg-gradient-to-r from-brand-navy via-brand-teal to-brand-teal-light;
   }
 
   .gradient-accent-left::before {
     content: '';
     @apply absolute inset-y-0 left-0 w-1;
-    @apply bg-gradient-to-b from-teal-700 via-teal-600 to-teal-400;
+    @apply bg-gradient-to-b from-brand-navy via-brand-teal to-brand-teal-light;
   }
 }
 

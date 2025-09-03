@@ -4,12 +4,10 @@ from __future__ import annotations
 # Constants
 HTTP_CREATED = 201
 
-
 Create a test user for TestSprite testing
 """
 import requests
 from typing import Optional
-
 
 def create_test_user() ->Optional[bool]:
     """Create test user via API"""
@@ -33,7 +31,6 @@ def create_test_user() ->Optional[bool]:
     except Exception as e:
         print(f'❌ Error creating user: {e}')
         return False
-
 
 if __name__ == '__main__':
     create_test_user()

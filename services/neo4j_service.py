@@ -14,7 +14,6 @@ import asyncio
 from concurrent.futures import ThreadPoolExecutor
 logger = logging.getLogger(__name__)
 
-
 class Neo4jGraphRAGService:
     """
     Production-ready Neo4j service for compliance intelligence with GraphRAG capabilities
@@ -468,9 +467,7 @@ class Neo4jGraphRAGService:
             self.executor.shutdown(wait=True)
             logger.info('Neo4j service closed')
 
-
 _neo4j_service: Optional[Neo4jGraphRAGService] = None
-
 
 async def get_neo4j_service() ->Neo4jGraphRAGService:
     """Get or create the global Neo4j service instance"""
@@ -479,7 +476,6 @@ async def get_neo4j_service() ->Neo4jGraphRAGService:
         _neo4j_service = Neo4jGraphRAGService()
         await _neo4j_service.initialize()
     return _neo4j_service
-
 
 async def initialize_neo4j_service() ->Any:
     """Initialize the global Neo4j service"""

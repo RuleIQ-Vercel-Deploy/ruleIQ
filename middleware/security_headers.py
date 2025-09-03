@@ -9,7 +9,6 @@ from fastapi.responses import JSONResponse
 import secrets
 from datetime import datetime, timezone
 
-
 class SecurityHeadersMiddleware:
     """Middleware to add comprehensive security headers to all responses"""
 
@@ -290,7 +289,6 @@ class SecurityHeadersMiddleware:
             "report_uri": self.report_uri,
         }
 
-
 class CSPViolationHandler:
     """Handler for CSP violation reports"""
 
@@ -405,7 +403,6 @@ class CSPViolationHandler:
                 self.violations[-10:] if len(self.violations) > 10 else self.violations
             ),
         }
-
 
 def create_security_headers_middleware(
     app, config: Optional[Dict[str, Any]] = None

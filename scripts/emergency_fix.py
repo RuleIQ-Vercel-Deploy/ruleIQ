@@ -5,7 +5,6 @@ import subprocess
 import sys
 import os
 
-
 def install_missing_dependencies() ->None:
     """Install all missing dependencies"""
     logger.info('🔧 Installing missing dependencies...')
@@ -17,7 +16,6 @@ def install_missing_dependencies() ->None:
         logger.info('📦 Installing %s...' % dep)
         subprocess.check_call([sys.executable, '-m', 'pip', 'install', dep])
     logger.info('✅ All dependencies installed!')
-
 
 def create_minimal_backend() ->None:
     """Create a minimal working backend"""
@@ -110,7 +108,6 @@ if __name__ == "__main__":
         f.write(minimal_backend)
     logger.info('✅ Minimal backend created!')
 
-
 def main() ->None:
     logger.info('🚨 RuleIQ Emergency Fix Script')
     logger.info('=' * 40)
@@ -126,7 +123,6 @@ def main() ->None:
     logger.info('3. Implement Stack Auth for a permanent solution')
     logger.info('\n🎯 To run minimal backend:')
     logger.info('   python3 minimal_backend.py')
-
 
 if __name__ == '__main__':
     main()

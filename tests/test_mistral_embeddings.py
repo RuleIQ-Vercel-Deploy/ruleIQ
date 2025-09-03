@@ -13,7 +13,6 @@ load_dotenv()
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from services.agentic_rag import AgenticRAGSystem
 
-
 async def test_mistral_embeddings():
     """Test Mistral embeddings in the RAG system"""
     print('🚀 Testing Mistral Embeddings Integration')
@@ -81,7 +80,6 @@ async def test_mistral_embeddings():
             rag_system.close()
         except (ValueError, TypeError):
             pass
-
 
 if __name__ == '__main__':
     asyncio.run(test_mistral_embeddings())

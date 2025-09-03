@@ -9,7 +9,6 @@ from pydantic import BaseModel, Field
 
 from .common import RegCitation, SourceMeta, TemporalValidity
 
-
 class EvidenceItem(BaseModel):
     """Required evidence item specification."""
 
@@ -24,13 +23,11 @@ class EvidenceItem(BaseModel):
         None, description="Example location (e.g., S3 path)",
     )
 
-
 class FrameworkMap(BaseModel):
     """Mapping to control frameworks."""
 
     framework: str = Field(..., description="Framework name (e.g., NIST, ISO27001)")
     control_id: str = Field(..., description="Control ID within the framework")
-
 
 class EvidenceCase(BaseModel):
     """Evidence case definition."""

@@ -6,7 +6,6 @@ import json
 import sys
 from pathlib import Path
 
-
 def run_tests_and_analyze():
     """Run tests and capture failures."""
     logger.info('Running all tests to identify failures...')
@@ -48,7 +47,6 @@ def run_tests_and_analyze():
         for f in file_failures[:3]:
             logger.info('  - %s' % f['nodeid'].split('::')[-1])
     return failures
-
 
 if __name__ == '__main__':
     run_tests_and_analyze()

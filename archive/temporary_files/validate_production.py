@@ -16,8 +16,6 @@ import subprocess
 from typing import Dict
 import importlib.util
 
-
-# Load environment variables from .env file
 def load_env_file(path=".env") -> None:
     """Load environment variables from .env file"""
     if os.path.exists(path):
@@ -28,7 +26,6 @@ def load_env_file(path=".env") -> None:
                     key, value = line.split("=", 1)
                     os.environ[key] = value
 
-
 # Color codes for output
 class Colors:
     PASS = "\033[92m"
@@ -36,7 +33,6 @@ class Colors:
     WARN = "\033[93m"
     INFO = "\033[94m"
     RESET = "\033[0m"
-
 
 class ValidationResult:
     def __init__(
@@ -46,7 +42,6 @@ class ValidationResult:
         self.passed = passed
         self.message = message
         self.details = details or {}
-
 
 class ProductionValidator:
     def __init__(self) -> None:
@@ -399,7 +394,6 @@ class ProductionValidator:
 
         return passed == total
 
-
 def main() -> None:
     """Main validation function"""
     validator = ProductionValidator()
@@ -407,7 +401,6 @@ def main() -> None:
 
     # Exit with appropriate status code
     sys.exit(0 if all_passed else 1)
-
 
 if __name__ == "__main__":
     main()

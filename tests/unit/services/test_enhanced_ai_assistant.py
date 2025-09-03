@@ -15,7 +15,6 @@ from core.exceptions import BusinessLogicException
 from database.user import User
 from services.ai.assistant import ComplianceAssistant
 
-
 @pytest.mark.unit
 @pytest.mark.ai
 class TestContextAwareRecommendations:
@@ -305,7 +304,6 @@ class TestContextAwareRecommendations:
         assert all("title" in rec for rec in fallback)
         assert all("effort_hours" in rec for rec in fallback)
 
-
 @pytest.mark.unit
 @pytest.mark.ai
 class TestWorkflowGeneration:
@@ -404,7 +402,6 @@ class TestWorkflowGeneration:
         assert effort["effort_savings"]["hours_saved"] == 6
         assert effort["phases_count"] == 2
         assert effort["steps_count"] == 3
-
 
 @pytest.mark.unit
 @pytest.mark.ai

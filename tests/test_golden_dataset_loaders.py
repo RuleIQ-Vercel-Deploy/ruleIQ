@@ -12,8 +12,6 @@ from services.ai.evaluation.schemas.common import RegCitation, SourceMeta, Tempo
 # Constants
 MAX_RETRIES = 3
 
-
-
 class TestDatasetVersion:
     """Test dataset versioning."""
 
@@ -55,7 +53,6 @@ class TestDatasetVersion:
         assert str(v_minor) == '1.3.0'
         v_major = v.increment_major()
         assert str(v_major) == '2.0.0'
-
 
 class TestVersionManager:
     """Test version management."""
@@ -115,7 +112,6 @@ class TestVersionManager:
             manager.create_version('2.0.0', 'user3', 'Version 3')
             latest = manager.get_latest_version()
             assert latest == '2.0.0'
-
 
 class TestJSONLLoader:
     """Test JSONL loader."""
@@ -180,7 +176,6 @@ class TestJSONLLoader:
         finally:
             Path(temp_path).unlink()
 
-
 class TestGoldenDatasetLoader:
     """Test main dataset loader."""
 
@@ -224,7 +219,6 @@ class TestGoldenDatasetLoader:
             assert 'compliance_scenarios' in parsed
             assert len(parsed['compliance_scenarios']) == 1
             assert parsed['compliance_scenarios'][0].id == 'CS001'
-
 
 class TestDatasetRegistry:
     """Test dataset registry."""

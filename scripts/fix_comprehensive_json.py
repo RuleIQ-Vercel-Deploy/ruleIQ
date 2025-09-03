@@ -10,7 +10,6 @@ from pathlib import Path
 import logging
 logger = logging.getLogger(__name__)
 
-
 def fix_json_file(filepath) ->Tuple[Any, ...]:
     """Fix common JSON errors in Postman collections"""
     logger.info('🔧 Fixing JSON errors in: %s' % filepath)
@@ -43,7 +42,6 @@ def fix_json_file(filepath) ->Tuple[Any, ...]:
         logger.info('❌ Error processing file: %s' % e)
         return None, 0
 
-
 def main() ->Dict[str, Any]:
     """Fix all comprehensive Postman collection files"""
     files_to_fix = ['ruleiq_comprehensive_postman_collection_fixed.json',
@@ -60,7 +58,6 @@ def main() ->Dict[str, Any]:
         logger.info('✅ %s: %s endpoints ready for testing' % (Path(
             output_path).name, count))
     return results
-
 
 if __name__ == '__main__':
     main()

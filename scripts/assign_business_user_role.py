@@ -19,7 +19,6 @@ from database.user import User
 from database.rbac import Role
 from services.rbac_service import RBACService
 
-
 def assign_business_user_roles() ->Any:
     """Assign business_user role to all active users"""
     logger.info('=== Assigning business_user Role to All Users ===\n')
@@ -81,12 +80,10 @@ def assign_business_user_roles() ->Any:
     finally:
         db.close()
 
-
 def main() ->Any:
     """Main execution"""
     success = assign_business_user_roles()
     sys.exit(0 if success else 1)
-
 
 if __name__ == '__main__':
     main()

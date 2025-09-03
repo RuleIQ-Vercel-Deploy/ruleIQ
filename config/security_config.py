@@ -11,7 +11,6 @@ from cryptography.fernet import Fernet
 import logging
 logger = logging.getLogger(__name__)
 
-
 class SecurityConfig:
     """Centralized security configuration management."""
 
@@ -89,6 +88,5 @@ class SecurityConfig:
                     logger.error('Placeholder value detected for %s' % key)
                     return False
         return True
-
 
 security_config = SecurityConfig()

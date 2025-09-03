@@ -27,7 +27,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 BASE_URL = 'http://localhost:8000'
 TIMEOUT = aiohttp.ClientTimeout(total=5)
 
-
 class Colors:
     GREEN = '\x1b[92m'
     RED = '\x1b[91m'
@@ -38,11 +37,9 @@ class Colors:
     RESET = '\x1b[0m'
     BOLD = '\x1b[1m'
 
-
 def colored(text: str, color: str) ->str:
     """Add color to text for terminal output"""
     return f'{color}{text}{Colors.RESET}'
-
 
 class APIAlignmentTester:
 
@@ -348,7 +345,6 @@ class APIAlignmentTester:
         logger.info('\n%s %s' % (colored('📁 Results saved to:', Colors.CYAN
             ), results_file))
 
-
 async def main():
     """Main test runner"""
     try:
@@ -380,7 +376,6 @@ async def main():
     except (requests.RequestException, ValueError, KeyError) as e:
         logger.info('\n%s' % colored(f'Error: {e}', Colors.RED))
         sys.exit(1)
-
 
 if __name__ == '__main__':
     asyncio.run(main())

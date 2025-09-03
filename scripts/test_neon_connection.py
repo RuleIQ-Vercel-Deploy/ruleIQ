@@ -17,7 +17,6 @@ from urllib.parse import urlparse
 # Load environment variables
 load_dotenv(".env.local")
 
-
 async def test_neon_connection():
     """Test connection to Neon database and verify it's not local PostgreSQL."""
 
@@ -60,7 +59,6 @@ async def test_neon_connection():
         # Fix the database URL for asyncpg - it doesn't support sslmode in the URL
         # Instead, it uses ssl parameter
         if "sslmode=" in database_url:
-            # Remove sslmode and channel_binding from URL
             import re
 
             clean_url = re.sub(r"[?&](sslmode|channel_binding)=[^&]*", "", database_url)
@@ -183,7 +181,6 @@ async def test_neon_connection():
 
         return False
 
-
 async def test_connection_pooling():
     """Test connection pooling configuration."""
     database_url = os.getenv("DATABASE_URL")
@@ -237,7 +234,6 @@ async def test_connection_pooling():
     except Exception as e:
         print(f"   Connection pooling test failed: {str(e)}")
 
-
 async def main():
     """Run all database connection tests."""
     print("=" * 60)
@@ -263,7 +259,6 @@ async def main():
         print("✅ All database tests PASSED")
         print("\nThe application is correctly configured to use Neon database.")
         sys.exit(0)
-
 
 if __name__ == "__main__":
     asyncio.run(main())

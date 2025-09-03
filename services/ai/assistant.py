@@ -31,7 +31,6 @@ from .response_cache import get_ai_cache
 from .tools import get_tool_schemas, tool_executor
 logger = get_logger(__name__)
 
-
 class ComplianceAssistant:
     """AI-powered compliance assistant using Google Gemini, with full async support."""
 

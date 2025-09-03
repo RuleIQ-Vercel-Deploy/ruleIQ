@@ -16,13 +16,10 @@ from langgraph_agent.nodes.evidence_nodes import EvidenceCollectionNode, evidenc
 DEFAULT_RETRIES = 5
 MAX_RETRIES = 3
 
-
-
 async def async_generator(items):
     """Helper to create async generator."""
     for item in items:
         yield item
-
 
 @pytest.mark.asyncio
 class TestSyncEvidenceStatusFull:
@@ -81,7 +78,6 @@ class TestSyncEvidenceStatusFull:
         assert result['sync_count'] == 0
         assert 'last_sync' in result
 
-
 @pytest.mark.asyncio
 class TestCheckEvidenceExpiryErrors:
     """Test error handling in check_evidence_expiry."""
@@ -105,7 +101,6 @@ class TestCheckEvidenceExpiryErrors:
         assert 'Query timeout' in result['errors'][0]
         assert len(result['messages']) == 1
         assert 'Expiry check failed' in result['messages'][0].content
-
 
 @pytest.mark.asyncio
 class TestCollectAllIntegrationsLoop:
@@ -166,7 +161,6 @@ class TestCollectAllIntegrationsLoop:
         assert len(result['messages']) == 1
         assert 'No integrations configured' in result['messages'][0].content
 
-
 @pytest.mark.asyncio
 class TestValidateEvidenceEdgeCases:
     """Test edge cases in validate_evidence method."""
@@ -195,7 +189,6 @@ class TestValidateEvidenceEdgeCases:
         result = await node.validate_evidence(evidence)
         assert result['valid'] is True
         assert len(result['errors']) == 0
-
 
 @pytest.mark.asyncio
 class TestEvidenceNodeFunction:

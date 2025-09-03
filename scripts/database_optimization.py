@@ -24,7 +24,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config.logging_config import get_logger
 logger = get_logger(__name__)
 
-
 class DatabaseOptimizer:
     """
     Database optimization manager for creating missing indexes
@@ -270,7 +269,6 @@ class DatabaseOptimizer:
         """Close the database connection."""
         await self.engine.dispose()
 
-
 async def main() ->None:
     """Main entry point for the database optimization script."""
     database_url = os.getenv('DATABASE_URL')
@@ -295,7 +293,6 @@ async def main() ->None:
         sys.exit(1)
     finally:
         await optimizer.close()
-
 
 if __name__ == '__main__':
     asyncio.run(main())

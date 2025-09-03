@@ -11,7 +11,6 @@ import requests
 import json
 BASE_URL = 'http://localhost:8000'
 
-
 def test_auth_me() ->Any:
     """Test the /api/v1/auth/me endpoint with different scenarios"""
     logger.info('Testing /api/v1/auth/me endpoint...')
@@ -56,7 +55,6 @@ def test_auth_me() ->Any:
     logger.info('- Should return 401 for missing/invalid tokens')
     logger.info('- Should NOT return 500 Internal Server Error')
     logger.info('- Current issue: Returns 500 instead of proper 401')
-
 
 if __name__ == '__main__':
     test_auth_me()

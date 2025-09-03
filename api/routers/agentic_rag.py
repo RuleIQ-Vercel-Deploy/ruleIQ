@@ -5,7 +5,6 @@ from __future__ import annotations
 HTTP_INTERNAL_SERVER_ERROR = 500
 HTTP_SERVICE_UNAVAILABLE = 503
 
-
 FastAPI router for Agentic RAG endpoints
 Provides seamless integration with LangGraph and Pydantic AI documentation
 """
@@ -21,7 +20,6 @@ from api.schemas.base import StandardResponse
 logger = logging.getLogger(__name__)
 router = APIRouter(tags=['Agentic RAG'])
 
-
 class DocumentationQueryRequest(BaseModel):
     query: str = Field(..., min_length=1, max_length=1000, description=
         'Question about LangGraph or Pydantic AI')
@@ -32,11 +30,9 @@ class DocumentationQueryRequest(BaseModel):
     max_results: int = Field(5, ge=1, le=20, description=
         'Maximum number of results to return')
 
-
 class ProcessDocumentationRequest(BaseModel):
     force_reprocess: bool = Field(False, description=
         'Force reprocessing even if already indexed')
-
 
 class FrameworkGuidanceRequest(BaseModel):
     topic: str = Field(..., min_length=1, max_length=200, description=
@@ -44,9 +40,7 @@ class FrameworkGuidanceRequest(BaseModel):
     framework: str = Field(..., description=
         "Framework: 'langgraph' or 'pydantic_ai'")
 
-
 _rag_system = None
-
 
 def get_rag_system() ->AgenticRAGSystem:
     """Get or create the RAG system instance"""
@@ -54,7 +48,6 @@ def get_rag_system() ->AgenticRAGSystem:
     if _rag_system is None:
         _rag_system = AgenticRAGSystem()
     return _rag_system
-
 
 @router.post('/find-examples', response_model=StandardResponse[
     AgenticRAGResponse], dependencies=[Depends(rate_limit(
@@ -86,7 +79,6 @@ async def find_code_examples(request: FrameworkGuidanceRequest,
         logger.error('Error finding examples: %s' % str(e))
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Failed to find examples: {str(e)}')
-
 
 @router.post('/fact-check', response_model=Dict[str, Any], summary=
     'Fact-check a RAG response', description=
@@ -125,7 +117,6 @@ async def fact_check_response(request: DocumentationQueryRequest,
         logger.error('Error in fact-check endpoint: %s' % e)
         raise HTTPException(status_code=HTTP_INTERNAL_SERVER_ERROR, detail=
             f'Fact-checking failed: {str(e)}')
-
 
 @router.post('/query-with-validation', response_model=Dict[str, Any],
     summary='Query documentation with automatic validation', description=

@@ -18,7 +18,6 @@ from dotenv import load_dotenv
 load_dotenv('.env.local', override=True)
 os.environ.update({'IS_TESTING': 'true'})
 
-
 def test_ai_help_manually() ->Any:
     """Test the AI help endpoint manually"""
     try:
@@ -117,7 +116,6 @@ def test_ai_help_manually() ->Any:
         logger.info('❌ Test failed with error: %s' % e)
         import traceback
         traceback.print_exc()
-
 
 if __name__ == '__main__':
     test_ai_help_manually()

@@ -17,13 +17,10 @@ from langgraph_agent.nodes.evidence_nodes import EvidenceCollectionNode, evidenc
 # Constants
 DEFAULT_RETRIES = 5
 
-
-
 async def async_generator(items):
     """Helper to create async generator."""
     for item in items:
         yield item
-
 
 @pytest.mark.asyncio
 class TestCleanupStaleEvidence:
@@ -82,7 +79,6 @@ class TestCleanupStaleEvidence:
             await node.cleanup_stale_evidence(mock_session)
         assert not mock_session.commit.called
 
-
 @pytest.mark.asyncio
 class TestSyncEvidenceStatusRefactored:
     """Test the refactored sync_evidence_status method."""
@@ -136,7 +132,6 @@ class TestSyncEvidenceStatusRefactored:
             return_value=3)):
             from typing import TypedDict
 
-
             class TestState(TypedDict):
                 user_id: str
                 business_profile_id: str
@@ -162,7 +157,6 @@ class TestSyncEvidenceStatusRefactored:
         assert len(result['messages']) == 1
         assert 'Evidence sync failed' in result['messages'][0].content
         assert 'Database unavailable' in result['messages'][0].content
-
 
 @pytest.mark.asyncio
 class TestIntegrationWithRefactoredMethods:

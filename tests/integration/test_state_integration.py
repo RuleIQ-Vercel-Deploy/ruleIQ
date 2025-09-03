@@ -39,7 +39,6 @@ from langgraph_agent.graph.reducers import (
     merge_node_execution_times,
 )
 
-
 class ComplianceStateDict(TypedDict, total=False):
     """TypedDict version of ComplianceState for LangGraph integration."""
 
@@ -60,7 +59,6 @@ class ComplianceStateDict(TypedDict, total=False):
     iteration_count: Optional[int]  # For testing
     created_at: str
     updated_at: Optional[str]
-
 
 def compliance_state_to_dict(state: ComplianceState) -> Dict[str, Any]:
     """Convert ComplianceState to dict for LangGraph."""
@@ -98,7 +96,6 @@ def compliance_state_to_dict(state: ComplianceState) -> Dict[str, Any]:
             else None,
         ),
     }
-
 
 def dict_to_compliance_state(data: Dict[str, Any]) -> ComplianceState:
     """Convert dict from LangGraph back to ComplianceState."""
@@ -142,7 +139,6 @@ def dict_to_compliance_state(data: Dict[str, Any]) -> ComplianceState:
         prepared_data["state_history"] = data["state_history"]
 
     return ComplianceState(**prepared_data)
-
 
 class TestStateWithLangGraph:
     """Test state works within LangGraph context."""
@@ -313,7 +309,6 @@ class TestStateWithLangGraph:
         workflow.add_node("evidence2", collect_evidence_2)
         workflow.add_node("merge", merge_evidence)
 
-        # Proper parallel execution from START
         workflow.add_edge(START, "evidence1")
         workflow.add_edge(START, "evidence2")
 
@@ -334,11 +329,9 @@ class TestStateWithLangGraph:
         initial_dict = compliance_state_to_dict(initial_state)
 
         result = await app.ainvoke(initial_dict)
-        # Should have evidence from both nodes
         assert len(result.get("evidence", [])) == 2  # Both nodes should execute
         assert "node1" in result.get("node_execution_times", {})
         assert "node2" in result.get("node_execution_times", {})
-
 
 class TestReducerIntegration:
     """Test reducers work correctly with ComplianceState."""
@@ -446,7 +439,6 @@ class TestReducerIntegration:
         assert len(result["semantic"]["concepts"]) == 2
         assert "relations" in result["semantic"]
 
-
 class TestStateWithPostgreSQL:
     """Test state persistence with PostgreSQL."""
 
@@ -462,7 +454,6 @@ class TestStateWithPostgreSQL:
     @pytest.mark.requires_db
     def test_state_checkpointing(self, postgres_checkpointer):
         """Test state can be checkpointed to PostgreSQL."""
-        # Use the checkpointer from fixture
         checkpointer = postgres_checkpointer
 
         # Create workflow with checkpointing
@@ -513,7 +504,6 @@ class TestStateWithPostgreSQL:
     @pytest.mark.requires_db
     def test_state_recovery(self, postgres_checkpointer):
         """Test state can be recovered from checkpoint."""
-        # Use the checkpointer from fixture
         checkpointer = postgres_checkpointer
 
         workflow = StateGraph(ComplianceStateDict)
@@ -555,7 +545,6 @@ class TestStateWithPostgreSQL:
 
         saved_state = checkpointer.get(config)
         assert saved_state is not None
-
 
 class TestComplexWorkflow:
     """Test complex multi-step compliance workflow."""
@@ -678,7 +667,6 @@ class TestComplexWorkflow:
         # Verify context preserved
         assert result["context"]["framework"] == "ISO 27001"
         assert "security" in result["context"]["obligations"]
-
 
 # Run tests
 if __name__ == "__main__":

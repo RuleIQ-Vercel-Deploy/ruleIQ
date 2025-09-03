@@ -23,7 +23,6 @@ from config.settings import settings
 from database.user import User
 from services.cache_service import CacheService
 
-
 class AuthenticationService:
     """Enhanced authentication with security hardening"""
 
@@ -359,10 +358,8 @@ class AuthenticationService:
 
         return secrets.compare_digest(expected, challenge)
 
-
 # Singleton instance
 _auth_service: Optional[AuthenticationService] = None
-
 
 def get_auth_service() -> AuthenticationService:
     """Get authentication service instance"""

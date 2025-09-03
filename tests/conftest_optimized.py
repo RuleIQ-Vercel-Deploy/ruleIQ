@@ -23,7 +23,6 @@ from database import Base
 # Performance monitoring
 test_durations = {}
 
-
 @pytest.fixture(scope="session")
 def sqlite_engine():
     """
@@ -50,7 +49,6 @@ def sqlite_engine():
     Base.metadata.create_all(engine)
     
     return engine
-
 
 @pytest.fixture(scope="function")
 def fast_db_session(sqlite_engine) -> Generator[Session, None, None]:
@@ -86,7 +84,6 @@ def fast_db_session(sqlite_engine) -> Generator[Session, None, None]:
     transaction.rollback()
     connection.close()
 
-
 @pytest.fixture(scope="session")
 def postgres_engine():
     """
@@ -109,7 +106,6 @@ def postgres_engine():
     
     return engine
 
-
 @pytest.fixture(scope="function")
 def integration_db_session(postgres_engine) -> Generator[Session, None, None]:
     """
@@ -131,7 +127,6 @@ def integration_db_session(postgres_engine) -> Generator[Session, None, None]:
     transaction.rollback()
     connection.close()
 
-
 @pytest.fixture(scope="session")
 def cached_test_data() -> Dict[str, Any]:
     """
@@ -147,7 +142,6 @@ def cached_test_data() -> Dict[str, Any]:
         "regulations": _generate_regulations()
     }
 
-
 @lru_cache(maxsize=128)
 def _generate_test_users():
     """Generate test user data (cached)."""
@@ -160,7 +154,6 @@ def _generate_test_users():
         }
         for i in range(10)
     ]
-
 
 @lru_cache(maxsize=128)
 def _generate_compliance_frameworks():
@@ -176,7 +169,6 @@ def _generate_compliance_frameworks():
         for i, framework in enumerate(frameworks)
     ]
 
-
 @lru_cache(maxsize=128)
 def _generate_ai_responses():
     """Generate AI response test data (cached)."""
@@ -189,7 +181,6 @@ def _generate_ai_responses():
         }
         for i in range(20)
     ]
-
 
 @lru_cache(maxsize=128)
 def _generate_business_profiles():
@@ -206,7 +197,6 @@ def _generate_business_profiles():
         for i in range(15)
     ]
 
-
 @lru_cache(maxsize=128)
 def _generate_regulations():
     """Generate regulation test data (cached)."""
@@ -220,7 +210,6 @@ def _generate_regulations():
         }
         for i in range(30)
     ]
-
 
 @pytest.fixture(scope="function")
 def mock_ai_client():
@@ -246,7 +235,6 @@ def mock_ai_client():
             }
     
     return MockAIClient()
-
 
 @pytest.fixture(scope="session")
 def redis_mock():
@@ -283,7 +271,6 @@ def redis_mock():
     
     return MockRedis()
 
-
 @pytest.fixture(autouse=True)
 def measure_test_duration(request):
     """
@@ -308,7 +295,6 @@ def measure_test_duration(request):
     
     request.addfinalizer(finalizer)
 
-
 @pytest.fixture(scope="session", autouse=True)
 def configure_test_environment():
     """
@@ -329,7 +315,6 @@ def configure_test_environment():
     # Cleanup
     os.environ.pop("TESTING", None)
 
-
 @contextmanager
 def temporary_database():
     """
@@ -349,7 +334,6 @@ def temporary_database():
         session.close()
         engine.dispose()
 
-
 # Performance helpers
 def get_slowest_tests(n: int = 10) -> list:
     """Get the N slowest tests from the last run."""
@@ -359,7 +343,6 @@ def get_slowest_tests(n: int = 10) -> list:
         reverse=True
     )
     return sorted_tests[:n]
-
 
 def print_performance_summary():
     """Print test performance summary."""

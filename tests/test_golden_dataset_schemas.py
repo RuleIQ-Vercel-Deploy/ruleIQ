@@ -10,8 +10,6 @@ from services.ai.evaluation.schemas.regulatory_qa import RegulatoryQAPair
 # Constants
 MAX_RETRIES = 3
 
-
-
 class TestCommonSchemas:
     """Test common schema definitions."""
 
@@ -68,7 +66,6 @@ class TestCommonSchemas:
         with pytest.raises(ValueError, match=
             'effective_to must be >= effective_from'):
             TemporalValidity(effective_from=start, effective_to=end)
-
 
 class TestComplianceScenario:
     """Test ComplianceScenario schema."""
@@ -134,7 +131,6 @@ class TestComplianceScenario:
                 created_by='compliance_team', created_at=datetime.now()),
                 created_at=datetime.now())
 
-
 class TestEvidenceCase:
     """Test EvidenceCase schema."""
 
@@ -176,7 +172,6 @@ class TestEvidenceCase:
         assert case.control_mappings[0].framework == 'NIST'
         assert (case.required_evidence[0].example_locator ==
             's3://bucket/logs/access.log',)
-
 
 class TestRegulatoryQAPair:
     """Test RegulatoryQAPair schema."""

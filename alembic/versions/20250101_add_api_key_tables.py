@@ -19,7 +19,6 @@ down_revision = None  # Update this with the latest revision
 branch_labels = None
 depends_on = None
 
-
 def upgrade() -> None:
     """Create API key management tables."""
 
@@ -109,7 +108,6 @@ def upgrade() -> None:
         "idx_api_key_usage_key_timestamp", "api_key_usage", ["key_id", "timestamp"]
     )
     op.create_index("idx_api_key_usage_timestamp", "api_key_usage", ["timestamp"])
-
 
 def downgrade() -> None:
     """Drop API key management tables."""
