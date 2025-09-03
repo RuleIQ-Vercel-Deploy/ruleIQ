@@ -1,0 +1,48 @@
+
+6security_middleware.SecurityMiddleware._is_public_pathI
+=/home/omar/Documents/ruleIQ/middleware/security_middleware.pyﬁ ﬁ("2*ç
+2
+ﬂ Á(t
+r
+
+Ë Ë(,
+%2"__id*X
+
+__unknown_file (<*:(
+&security_middleware.SecurityMiddleware"
+public_paths*
+4
+6*(
+4
+Î Î("
+
+Î Î(	
+
+False*°
+6
+È È(+ÑÅ
+
+È È(+
+%1"str.startswith*$
+
+__unknown_file (
+
+path*+
+
+__unknown_file (
+
+public_path2
+startswith*	
+4
+6
+7*'
+7
+Í Í("
+
+Í Í(
+
+True:
+
+ﬁ ﬁ('
+pathB*(
+&security_middleware.SecurityMiddlewareH

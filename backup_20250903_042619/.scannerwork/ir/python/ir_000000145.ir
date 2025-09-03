@@ -1,0 +1,16 @@
+
+sj"Get count of currently executing nodes.
+
+        Returns:
+            Number of executing nodes
+        "strself
+‚ ‚( "r0
+.
+
+ˆ ˆ(%"#get-field# _active_nodes:,
+*
+
+ˆ ˆ(&"
+builtinslen*:Bint
+
+ˆ ˆ(&*D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py

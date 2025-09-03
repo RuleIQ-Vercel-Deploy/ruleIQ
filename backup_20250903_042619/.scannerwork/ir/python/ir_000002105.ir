@@ -1,0 +1,39 @@
+
+’À"
+    Decorator for automatic retry on function failure
+
+    Example:
+        @retry_on_failure(max_attempts=5, base_delay=2.0)
+        async def my_ai_operation():
+            # ... operation code
+    "strmax_attempts
+ë ë((
+base_delay
+ë* ë(?strategy
+ëA í(3
+model_name
+í5 í(N"“#
+!
+
+∞ ∞("#unknown-value#*
+(
+
+ù ∞(%closure"#new-object#0
+.
+
+ù ∞("#set-field# max_attempts:.
+,
+
+ù ∞("#set-field# base_delay:,
+*
+
+ù ∞(	"#set-field# strategy:.
+,
+
+ù ∞(
+"#set-field# model_name:-
++
+
+ù ∞("?python-partial-apply?:
+
+∞ ∞(*8/home/omar/Documents/ruleIQ/services/ai/retry_handler.py

@@ -1,0 +1,177 @@
+{
+  "ecosystems": [
+    {
+      "name": "npm",
+      "module": "frontend",
+      "total_dependencies": 152,
+      "direct_dependencies": 89,
+      "indirect_dependencies": 63,
+      "vulnerabilities_summary": {
+        "critical": 0,
+        "high": 2,
+        "moderate": 5,
+        "low": 8,
+        "info": 3
+      },
+      "outdated_packages": 47,
+      "deprecated_packages": 3,
+      "dependencies": [
+        {
+          "name": "@next/bundle-analyzer",
+          "direct": true,
+          "current_version": "14.2.3",
+          "latest_safe_version": "15.0.1",
+          "release_age_days": 180,
+          "license": "MIT",
+          "status": "Warn",
+          "update_command": "npm install @next/bundle-analyzer@15.0.1"
+        },
+        {
+          "name": "next",
+          "direct": true,
+          "current_version": "14.2.3",
+          "latest_safe_version": "15.0.3",
+          "release_age_days": 180,
+          "license": "MIT",
+          "status": "Warn",
+          "vulnerabilities": [
+            {
+              "cve": "CVE-2024-PENDING",
+              "cvss_v3": 5.3,
+              "severity": "Moderate",
+              "affected_versions": "<15.0.0",
+              "fixed_version": "15.0.0",
+              "advisory_url": "https://github.com/vercel/next.js/security"
+            }
+          ]
+        },
+        {
+          "name": "@sentry/nextjs",
+          "direct": true,
+          "current_version": "8.7.0",
+          "latest_safe_version": "8.33.0",
+          "release_age_days": 120,
+          "license": "MIT",
+          "status": "Warn"
+        },
+        {
+          "name": "@supabase/auth-helpers-nextjs",
+          "direct": true,
+          "current_version": "0.10.0",
+          "latest_safe_version": "0.10.0",
+          "release_age_days": 90,
+          "license": "MIT",
+          "status": "Compliant"
+        },
+        {
+          "name": "react",
+          "direct": true,
+          "current_version": "18.3.1",
+          "latest_safe_version": "18.3.1",
+          "release_age_days": 30,
+          "license": "MIT",
+          "status": "Compliant"
+        },
+        {
+          "name": "typescript",
+          "direct": true,
+          "current_version": "5.4.5",
+          "latest_safe_version": "5.6.2",
+          "release_age_days": 150,
+          "license": "Apache-2.0",
+          "status": "Warn"
+        }
+      ]
+    },
+    {
+      "name": "pip",
+      "module": "backend",
+      "total_dependencies": 124,
+      "direct_dependencies": 68,
+      "indirect_dependencies": 56,
+      "vulnerabilities_summary": {
+        "critical": 0,
+        "high": 1,
+        "moderate": 3,
+        "low": 4,
+        "info": 2
+      },
+      "outdated_packages": 28,
+      "deprecated_packages": 0,
+      "dependencies": [
+        {
+          "name": "fastapi",
+          "direct": true,
+          "current_version": "0.104.1",
+          "latest_safe_version": "0.115.0",
+          "release_age_days": 210,
+          "license": "MIT",
+          "status": "Warn"
+        },
+        {
+          "name": "langchain",
+          "direct": true,
+          "current_version": "0.1.13",
+          "latest_safe_version": "0.3.0",
+          "release_age_days": 240,
+          "license": "MIT",
+          "status": "Warn"
+        },
+        {
+          "name": "pydantic",
+          "direct": true,
+          "current_version": "2.5.0",
+          "latest_safe_version": "2.9.2",
+          "release_age_days": 180,
+          "license": "MIT",
+          "status": "Warn"
+        },
+        {
+          "name": "sqlalchemy",
+          "direct": true,
+          "current_version": "2.0.23",
+          "latest_safe_version": "2.0.35",
+          "release_age_days": 120,
+          "license": "MIT",
+          "status": "Warn"
+        },
+        {
+          "name": "alembic",
+          "direct": true,
+          "current_version": "1.12.1",
+          "latest_safe_version": "1.13.2",
+          "release_age_days": 180,
+          "license": "MIT",
+          "status": "Warn"
+        }
+      ]
+    }
+  ],
+  "compliance": {
+    "license_violations": [],
+    "security_policy_violations": [
+      {
+        "package": "next",
+        "version": "14.2.3",
+        "reason": "Version below security baseline (15.0.0)",
+        "severity": "High"
+      }
+    ],
+    "deprecated_packages": [
+      {
+        "ecosystem": "npm",
+        "packages": ["request", "node-sass", "tslint"]
+      }
+    ]
+  },
+  "recommendations": {
+    "immediate_actions": [
+      "Update Next.js to 15.0.3+ to fix security vulnerability and get latest features",
+      "Update FastAPI to latest stable version",
+      "Review and update all TypeScript dependencies"
+    ],
+    "security_updates": 18,
+    "feature_updates": 29,
+    "total_updates_available": 75
+  }
+}

@@ -1,0 +1,1633 @@
+{
+  "missing_by_service": {
+    "ai-self-review.service": [
+      {
+        "method": "POST",
+        "path": "/ai/self-review",
+        "line": 297,
+        "full_path": "/api/v1/ai/self-review"
+      },
+      {
+        "method": "POST",
+        "path": "/ai/quick-confidence-check",
+        "line": 347,
+        "full_path": "/api/v1/ai/quick-confidence-check"
+      }
+    ],
+    "assessments-ai.service": [
+      {
+        "method": "POST",
+        "path": "/ai/assessments/followup",
+        "line": 339,
+        "full_path": "/api/v1/ai/assessments/followup"
+      },
+      {
+        "method": "GET",
+        "path": "/ai/assessments/metrics",
+        "line": 559,
+        "full_path": "/api/v1/ai/assessments/metrics"
+      }
+    ],
+    "assessments.service": [
+      {
+        "method": "GET",
+        "path": "/assessments",
+        "line": 33,
+        "full_path": "/api/v1/assessments"
+      },
+      {
+        "method": "GET",
+        "path": "/assessments/${id}",
+        "line": 43,
+        "full_path": "/api/v1/assessments/${id}"
+      },
+      {
+        "method": "POST",
+        "path": "/assessments",
+        "line": 51,
+        "full_path": "/api/v1/assessments"
+      },
+      {
+        "method": "PATCH",
+        "path": "/assessments/${id}",
+        "line": 59,
+        "full_path": "/api/v1/assessments/${id}"
+      },
+      {
+        "method": "POST",
+        "path": "/assessments/${id}/complete",
+        "line": 98,
+        "full_path": "/api/v1/assessments/${id}/complete"
+      },
+      {
+        "method": "GET",
+        "path": "/assessments/${id}/results",
+        "line": 106,
+        "full_path": "/api/v1/assessments/${id}/results"
+      }
+    ],
+    "business-profiles.service": [
+      {
+        "method": "GET",
+        "path": "/business-profiles",
+        "line": 28,
+        "full_path": "/api/v1/business-profiles"
+      },
+      {
+        "method": "GET",
+        "path": "/business-profiles/${id}",
+        "line": 41,
+        "full_path": "/api/v1/business-profiles/${id}"
+      },
+      {
+        "method": "POST",
+        "path": "/business-profiles",
+        "line": 128,
+        "full_path": "/api/v1/business-profiles"
+      },
+      {
+        "method": "PUT",
+        "path": "/business-profiles/${id}",
+        "line": 74,
+        "full_path": "/api/v1/business-profiles/${id}"
+      },
+      {
+        "method": "GET",
+        "path": "/business-profiles/${id}/compliance",
+        "line": 95,
+        "full_path": "/api/v1/business-profiles/${id}/compliance"
+      }
+    ],
+    "chat.service": [
+      {
+        "method": "GET",
+        "path": "/chat/conversations/${id}",
+        "line": 56,
+        "full_path": "/api/v1/chat/conversations/${id}"
+      },
+      {
+        "method": "POST",
+        "path": "/chat/compliance-gap-analysis",
+        "line": 123,
+        "full_path": "/api/v1/chat/compliance-gap-analysis"
+      },
+      {
+        "method": "GET",
+        "path": "/chat/smart-compliance-guidance",
+        "line": 185,
+        "full_path": "/api/v1/chat/smart-compliance-guidance"
+      },
+      {
+        "method": "DELETE",
+        "path": "/chat/cache/clear?pattern=${encodeURIComponent(pattern)}",
+        "line": 207,
+        "full_path": "/api/v1/chat/cache/clear?pattern=${encodeURIComponent(pattern)}"
+      }
+    ],
+    "compliance.service": [
+      {
+        "method": "GET",
+        "path": "/compliance/status/${frameworkId}",
+        "line": 69,
+        "full_path": "/api/v1/compliance/status/${frameworkId}"
+      },
+      {
+        "method": "POST",
+        "path": "/compliance/tasks",
+        "line": 98,
+        "full_path": "/api/v1/compliance/tasks"
+      },
+      {
+        "method": "PATCH",
+        "path": "/compliance/tasks/${taskId}",
+        "line": 109,
+        "full_path": "/api/v1/compliance/tasks/${taskId}"
+      },
+      {
+        "method": "POST",
+        "path": "/compliance/risks",
+        "line": 135,
+        "full_path": "/api/v1/compliance/risks"
+      },
+      {
+        "method": "PATCH",
+        "path": "/compliance/risks/${riskId}",
+        "line": 146,
+        "full_path": "/api/v1/compliance/risks/${riskId}"
+      },
+      {
+        "method": "GET",
+        "path": "/compliance/timeline",
+        "line": 174,
+        "full_path": "/api/v1/compliance/timeline"
+      },
+      {
+        "method": "GET",
+        "path": "/compliance/dashboard",
+        "line": 202,
+        "full_path": "/api/v1/compliance/dashboard"
+      },
+      {
+        "method": "POST",
+        "path": "/compliance/certificate/generate",
+        "line": 220,
+        "full_path": "/api/v1/compliance/certificate/generate"
+      }
+    ],
+    "dashboard.service": [
+      {
+        "method": "GET",
+        "path": "/dashboard",
+        "line": 82,
+        "full_path": "/api/v1/dashboard"
+      },
+      {
+        "method": "GET",
+        "path": "/dashboard/widgets",
+        "line": 99,
+        "full_path": "/api/v1/dashboard/widgets"
+      },
+      {
+        "method": "GET",
+        "path": "/dashboard/notifications",
+        "line": 144,
+        "full_path": "/api/v1/dashboard/notifications"
+      },
+      {
+        "method": "GET",
+        "path": "/dashboard/quick-actions",
+        "line": 176,
+        "full_path": "/api/v1/dashboard/quick-actions"
+      },
+      {
+        "method": "GET",
+        "path": "/dashboard/recommendations",
+        "line": 205,
+        "full_path": "/api/v1/dashboard/recommendations"
+      }
+    ],
+    "evidence-collection.service": [
+      {
+        "method": "GET",
+        "path": "/evidence-collection/plans",
+        "line": 69,
+        "full_path": "/api/v1/evidence-collection/plans"
+      }
+    ],
+    "evidence.service": [
+      {
+        "method": "GET",
+        "path": "/evidence",
+        "line": 52,
+        "full_path": "/api/v1/evidence"
+      },
+      {
+        "method": "GET",
+        "path": "/evidence/${id}",
+        "line": 62,
+        "full_path": "/api/v1/evidence/${id}"
+      },
+      {
+        "method": "POST",
+        "path": "/evidence",
+        "line": 70,
+        "full_path": "/api/v1/evidence"
+      },
+      {
+        "method": "PATCH",
+        "path": "/evidence/${id}",
+        "line": 78,
+        "full_path": "/api/v1/evidence/${id}"
+      },
+      {
+        "method": "POST",
+        "path": "/evidence/${id}/automation",
+        "line": 133,
+        "full_path": "/api/v1/evidence/${id}/automation"
+      },
+      {
+        "method": "GET",
+        "path": "/evidence/dashboard/${frameworkId}",
+        "line": 154,
+        "full_path": "/api/v1/evidence/dashboard/${frameworkId}"
+      },
+      {
+        "method": "POST",
+        "path": "/evidence/${id}/classify",
+        "line": 173,
+        "full_path": "/api/v1/evidence/${id}/classify"
+      },
+      {
+        "method": "GET",
+        "path": "/evidence/requirements/${frameworkId}",
+        "line": 201,
+        "full_path": "/api/v1/evidence/requirements/${frameworkId}"
+      },
+      {
+        "method": "GET",
+        "path": "/evidence/${id}/quality",
+        "line": 215,
+        "full_path": "/api/v1/evidence/${id}/quality"
+      }
+    ],
+    "foundation-evidence.service": [
+      {
+        "method": "POST",
+        "path": "/foundation/evidence/aws/configure",
+        "line": 98,
+        "full_path": "/api/v1/foundation/evidence/aws/configure"
+      },
+      {
+        "method": "POST",
+        "path": "/foundation/evidence/okta/configure",
+        "line": 113,
+        "full_path": "/api/v1/foundation/evidence/okta/configure"
+      },
+      {
+        "method": "POST",
+        "path": "/foundation/evidence/google/configure",
+        "line": 128,
+        "full_path": "/api/v1/foundation/evidence/google/configure"
+      },
+      {
+        "method": "POST",
+        "path": "/foundation/evidence/microsoft/configure",
+        "line": 143,
+        "full_path": "/api/v1/foundation/evidence/microsoft/configure"
+      },
+      {
+        "method": "GET",
+        "path": "/foundation/evidence/health",
+        "line": 207,
+        "full_path": "/api/v1/foundation/evidence/health"
+      }
+    ],
+    "frameworks.service": [
+      {
+        "method": "GET",
+        "path": "/frameworks",
+        "line": 18,
+        "full_path": "/api/v1/frameworks"
+      },
+      {
+        "method": "GET",
+        "path": "/frameworks/${id}",
+        "line": 26,
+        "full_path": "/api/v1/frameworks/${id}"
+      },
+      {
+        "method": "GET",
+        "path": "/frameworks/${frameworkId}/controls",
+        "line": 55,
+        "full_path": "/api/v1/frameworks/${frameworkId}/controls"
+      },
+      {
+        "method": "GET",
+        "path": "/frameworks/${frameworkId}/implementation-guide",
+        "line": 75,
+        "full_path": "/api/v1/frameworks/${frameworkId}/implementation-guide"
+      },
+      {
+        "method": "GET",
+        "path": "/frameworks/${frameworkId}/compliance-status",
+        "line": 98,
+        "full_path": "/api/v1/frameworks/${frameworkId}/compliance-status"
+      },
+      {
+        "method": "POST",
+        "path": "/frameworks/compare",
+        "line": 123,
+        "full_path": "/api/v1/frameworks/compare"
+      },
+      {
+        "method": "GET",
+        "path": "/frameworks/${frameworkId}/maturity-assessment",
+        "line": 148,
+        "full_path": "/api/v1/frameworks/${frameworkId}/maturity-assessment"
+      }
+    ],
+    "implementation.service": [
+      {
+        "method": "GET",
+        "path": "/implementation/plans/${planId}",
+        "line": 85,
+        "full_path": "/api/v1/implementation/plans/${planId}"
+      },
+      {
+        "method": "GET",
+        "path": "/implementation/recommendations",
+        "line": 168,
+        "full_path": "/api/v1/implementation/recommendations"
+      },
+      {
+        "method": "GET",
+        "path": "/implementation/resources/${frameworkId}",
+        "line": 206,
+        "full_path": "/api/v1/implementation/resources/${frameworkId}"
+      },
+      {
+        "method": "GET",
+        "path": "/implementation/plans/${planId}/analytics",
+        "line": 249,
+        "full_path": "/api/v1/implementation/plans/${planId}/analytics"
+      }
+    ],
+    "integrations.service": [
+      {
+        "method": "GET",
+        "path": "/integrations",
+        "line": 22,
+        "full_path": "/api/v1/integrations"
+      },
+      {
+        "method": "GET",
+        "path": "/integrations/connected",
+        "line": 30,
+        "full_path": "/api/v1/integrations/connected"
+      },
+      {
+        "method": "POST",
+        "path": "/integrations/${integrationId}/test",
+        "line": 61,
+        "full_path": "/api/v1/integrations/${integrationId}/test"
+      },
+      {
+        "method": "GET",
+        "path": "/integrations/${integrationId}/sync-history",
+        "line": 100,
+        "full_path": "/api/v1/integrations/${integrationId}/sync-history"
+      },
+      {
+        "method": "POST",
+        "path": "/integrations/${integrationId}/webhooks",
+        "line": 115,
+        "full_path": "/api/v1/integrations/${integrationId}/webhooks"
+      },
+      {
+        "method": "GET",
+        "path": "/integrations/${integrationId}/logs",
+        "line": 140,
+        "full_path": "/api/v1/integrations/${integrationId}/logs"
+      },
+      {
+        "method": "POST",
+        "path": "/integrations/oauth/callback",
+        "line": 177,
+        "full_path": "/api/v1/integrations/oauth/callback"
+      }
+    ],
+    "monitoring.service": [
+      {
+        "method": "GET",
+        "path": "/monitoring/database/status",
+        "line": 39,
+        "full_path": "/api/v1/monitoring/database/status"
+      },
+      {
+        "method": "PATCH",
+        "path": "/monitoring/alerts/${alertId}/resolve",
+        "line": 63,
+        "full_path": "/api/v1/monitoring/alerts/${alertId}/resolve"
+      },
+      {
+        "method": "GET",
+        "path": "/monitoring/metrics",
+        "line": 73,
+        "full_path": "/api/v1/monitoring/metrics"
+      },
+      {
+        "method": "GET",
+        "path": "/monitoring/api-performance",
+        "line": 100,
+        "full_path": "/api/v1/monitoring/api-performance"
+      },
+      {
+        "method": "GET",
+        "path": "/monitoring/error-logs",
+        "line": 126,
+        "full_path": "/api/v1/monitoring/error-logs"
+      },
+      {
+        "method": "GET",
+        "path": "/monitoring/health",
+        "line": 143,
+        "full_path": "/api/v1/monitoring/health"
+      },
+      {
+        "method": "GET",
+        "path": "/monitoring/audit-logs",
+        "line": 172,
+        "full_path": "/api/v1/monitoring/audit-logs"
+      }
+    ],
+    "payment.service": [
+      {
+        "method": "POST",
+        "path": "/payments/subscription/cancel",
+        "line": 100,
+        "full_path": "/api/v1/payments/subscription/cancel"
+      },
+      {
+        "method": "POST",
+        "path": "/payments/subscription/reactivate",
+        "line": 110,
+        "full_path": "/api/v1/payments/subscription/reactivate"
+      },
+      {
+        "method": "POST",
+        "path": "/payments/payment-methods",
+        "line": 128,
+        "full_path": "/api/v1/payments/payment-methods"
+      },
+      {
+        "method": "GET",
+        "path": "/payments/invoices",
+        "line": 155,
+        "full_path": "/api/v1/payments/invoices"
+      },
+      {
+        "method": "GET",
+        "path": "/payments/invoices/upcoming",
+        "line": 174,
+        "full_path": "/api/v1/payments/invoices/upcoming"
+      },
+      {
+        "method": "POST",
+        "path": "/payments/coupons/apply",
+        "line": 193,
+        "full_path": "/api/v1/payments/coupons/apply"
+      },
+      {
+        "method": "GET",
+        "path": "/payments/subscription/limits",
+        "line": 218,
+        "full_path": "/api/v1/payments/subscription/limits"
+      }
+    ],
+    "policies.service": [
+      {
+        "method": "GET",
+        "path": "/policies",
+        "line": 31,
+        "full_path": "/api/v1/policies"
+      },
+      {
+        "method": "GET",
+        "path": "/policies/${id}",
+        "line": 39,
+        "full_path": "/api/v1/policies/${id}"
+      },
+      {
+        "method": "PATCH",
+        "path": "/policies/${id}/status",
+        "line": 62,
+        "full_path": "/api/v1/policies/${id}/status"
+      },
+      {
+        "method": "PUT",
+        "path": "/policies/${id}/approve",
+        "line": 77,
+        "full_path": "/api/v1/policies/${id}/approve"
+      },
+      {
+        "method": "POST",
+        "path": "/policies/${id}/regenerate-section",
+        "line": 95,
+        "full_path": "/api/v1/policies/${id}/regenerate-section"
+      },
+      {
+        "method": "GET",
+        "path": "/policies/templates",
+        "line": 126,
+        "full_path": "/api/v1/policies/templates"
+      },
+      {
+        "method": "POST",
+        "path": "/policies/${id}/clone",
+        "line": 134,
+        "full_path": "/api/v1/policies/${id}/clone"
+      },
+      {
+        "method": "GET",
+        "path": "/policies/${id}/versions",
+        "line": 151,
+        "full_path": "/api/v1/policies/${id}/versions"
+      }
+    ],
+    "readiness.service": [
+      {
+        "method": "GET",
+        "path": "/readiness/${businessProfileId}",
+        "line": 48,
+        "full_path": "/api/v1/readiness/${businessProfileId}"
+      },
+      {
+        "method": "GET",
+        "path": "/readiness/gaps/${businessProfileId}",
+        "line": 57,
+        "full_path": "/api/v1/readiness/gaps/${businessProfileId}"
+      },
+      {
+        "method": "POST",
+        "path": "/readiness/roadmap",
+        "line": 100,
+        "full_path": "/api/v1/readiness/roadmap"
+      },
+      {
+        "method": "POST",
+        "path": "/readiness/quick-assessment",
+        "line": 119,
+        "full_path": "/api/v1/readiness/quick-assessment"
+      },
+      {
+        "method": "GET",
+        "path": "/readiness/trends/${businessProfileId}",
+        "line": 149,
+        "full_path": "/api/v1/readiness/trends/${businessProfileId}"
+      },
+      {
+        "method": "GET",
+        "path": "/readiness/benchmarks",
+        "line": 173,
+        "full_path": "/api/v1/readiness/benchmarks"
+      }
+    ],
+    "reports.service": [
+      {
+        "method": "GET",
+        "path": "/reports/history",
+        "line": 37,
+        "full_path": "/api/v1/reports/history"
+      },
+      {
+        "method": "GET",
+        "path": "/reports/${id}",
+        "line": 47,
+        "full_path": "/api/v1/reports/${id}"
+      },
+      {
+        "method": "POST",
+        "path": "/reports/schedule",
+        "line": 82,
+        "full_path": "/api/v1/reports/schedule"
+      },
+      {
+        "method": "GET",
+        "path": "/reports/scheduled",
+        "line": 100,
+        "full_path": "/api/v1/reports/scheduled"
+      },
+      {
+        "method": "POST",
+        "path": "/reports/preview",
+        "line": 154,
+        "full_path": "/api/v1/reports/preview"
+      },
+      {
+        "method": "GET",
+        "path": "/reports/analytics",
+        "line": 172,
+        "full_path": "/api/v1/reports/analytics"
+      }
+    ]
+  },
+  "patterns": {
+    "working_services": [
+      "implementation.service",
+      "assessments.service",
+      "chat.service",
+      "policies.service",
+      "compliance.service",
+      "evidence.service",
+      "integrations.service",
+      "reports.service"
+    ],
+    "common_prefixes": [
+      "/api/v1"
+    ],
+    "path_patterns": [
+      {
+        "frontend": "/assessments/quick",
+        "backend": "/api/v1/assessments/quick",
+        "service": "assessments.service.ts"
+      },
+      {
+        "frontend": "/chat/conversations",
+        "backend": "/api/v1/chat/conversations",
+        "service": "chat.service.ts"
+      },
+      {
+        "frontend": "/chat/evidence-recommendations",
+        "backend": "/api/v1/chat/evidence-recommendations",
+        "service": "chat.service.ts"
+      },
+      {
+        "frontend": "/chat/cache/metrics",
+        "backend": "/api/v1/ai/optimization/cache/metrics",
+        "service": "chat.service.ts"
+      },
+      {
+        "frontend": "/chat/performance/metrics",
+        "backend": "/api/v1/chat/performance/metrics",
+        "service": "chat.service.ts"
+      },
+      {
+        "frontend": "/compliance/status",
+        "backend": "/api/v1/compliance/status",
+        "service": "compliance.service.ts"
+      },
+      {
+        "frontend": "/evidence/bulk-update",
+        "backend": "/api/v1/evidence/bulk-update",
+        "service": "evidence.service.ts"
+      },
+      {
+        "frontend": "/implementation/plans",
+        "backend": "/api/v1/implementation/plans",
+        "service": "implementation.service.ts"
+      },
+      {
+        "frontend": "/integrations/connect",
+        "backend": "/api/v1/integrations/connect",
+        "service": "integrations.service.ts"
+      },
+      {
+        "frontend": "/policies/generate",
+        "backend": "/api/v1/policies/generate",
+        "service": "policies.service.ts"
+      },
+      {
+        "frontend": "/reports/generate",
+        "backend": "/api/v1/reports/generate",
+        "service": "reports.service.ts"
+      },
+      {
+        "frontend": "/reports/templates",
+        "backend": "/api/v1/reports/templates",
+        "service": "reports.service.ts"
+      }
+    ]
+  },
+  "plan": {
+    "summary": {
+      "total_missing": 99,
+      "services_affected": 18,
+      "endpoints_to_create": 99
+    },
+    "by_service": {
+      "evidence": {
+        "file": "api/routers/evidence.py",
+        "endpoints": [
+          {
+            "service": "evidence.service",
+            "router": "evidence",
+            "method": "GET",
+            "path": "evidence",
+            "full_path": "/api/v1/evidence",
+            "frontend_line": 52
+          },
+          {
+            "service": "evidence.service",
+            "router": "evidence",
+            "method": "GET",
+            "path": "evidence/{id}",
+            "full_path": "/api/v1/evidence/{id}",
+            "frontend_line": 62
+          },
+          {
+            "service": "evidence.service",
+            "router": "evidence",
+            "method": "POST",
+            "path": "evidence",
+            "full_path": "/api/v1/evidence",
+            "frontend_line": 70
+          },
+          {
+            "service": "evidence.service",
+            "router": "evidence",
+            "method": "PATCH",
+            "path": "evidence/{id}",
+            "full_path": "/api/v1/evidence/{id}",
+            "frontend_line": 78
+          },
+          {
+            "service": "evidence.service",
+            "router": "evidence",
+            "method": "POST",
+            "path": "evidence/{id}/automation",
+            "full_path": "/api/v1/evidence/{id}/automation",
+            "frontend_line": 133
+          },
+          {
+            "service": "evidence.service",
+            "router": "evidence",
+            "method": "GET",
+            "path": "evidence/dashboard/{frameworkId}",
+            "full_path": "/api/v1/evidence/dashboard/{frameworkId}",
+            "frontend_line": 154
+          },
+          {
+            "service": "evidence.service",
+            "router": "evidence",
+            "method": "POST",
+            "path": "evidence/{id}/classify",
+            "full_path": "/api/v1/evidence/{id}/classify",
+            "frontend_line": 173
+          },
+          {
+            "service": "evidence.service",
+            "router": "evidence",
+            "method": "GET",
+            "path": "evidence/requirements/{frameworkId}",
+            "full_path": "/api/v1/evidence/requirements/{frameworkId}",
+            "frontend_line": 201
+          },
+          {
+            "service": "evidence.service",
+            "router": "evidence",
+            "method": "GET",
+            "path": "evidence/{id}/quality",
+            "full_path": "/api/v1/evidence/{id}/quality",
+            "frontend_line": 215
+          }
+        ],
+        "count": 9
+      },
+      "compliance": {
+        "file": "api/routers/compliance.py",
+        "endpoints": [
+          {
+            "service": "compliance.service",
+            "router": "compliance",
+            "method": "GET",
+            "path": "compliance/status/{frameworkId}",
+            "full_path": "/api/v1/compliance/status/{frameworkId}",
+            "frontend_line": 69
+          },
+          {
+            "service": "compliance.service",
+            "router": "compliance",
+            "method": "POST",
+            "path": "compliance/tasks",
+            "full_path": "/api/v1/compliance/tasks",
+            "frontend_line": 98
+          },
+          {
+            "service": "compliance.service",
+            "router": "compliance",
+            "method": "PATCH",
+            "path": "compliance/tasks/{taskId}",
+            "full_path": "/api/v1/compliance/tasks/{taskId}",
+            "frontend_line": 109
+          },
+          {
+            "service": "compliance.service",
+            "router": "compliance",
+            "method": "POST",
+            "path": "compliance/risks",
+            "full_path": "/api/v1/compliance/risks",
+            "frontend_line": 135
+          },
+          {
+            "service": "compliance.service",
+            "router": "compliance",
+            "method": "PATCH",
+            "path": "compliance/risks/{riskId}",
+            "full_path": "/api/v1/compliance/risks/{riskId}",
+            "frontend_line": 146
+          },
+          {
+            "service": "compliance.service",
+            "router": "compliance",
+            "method": "GET",
+            "path": "compliance/timeline",
+            "full_path": "/api/v1/compliance/timeline",
+            "frontend_line": 174
+          },
+          {
+            "service": "compliance.service",
+            "router": "compliance",
+            "method": "GET",
+            "path": "compliance/dashboard",
+            "full_path": "/api/v1/compliance/dashboard",
+            "frontend_line": 202
+          },
+          {
+            "service": "compliance.service",
+            "router": "compliance",
+            "method": "POST",
+            "path": "compliance/certificate/generate",
+            "full_path": "/api/v1/compliance/certificate/generate",
+            "frontend_line": 220
+          }
+        ],
+        "count": 8
+      },
+      "policies": {
+        "file": "api/routers/policies.py",
+        "endpoints": [
+          {
+            "service": "policies.service",
+            "router": "policies",
+            "method": "GET",
+            "path": "policies",
+            "full_path": "/api/v1/policies",
+            "frontend_line": 31
+          },
+          {
+            "service": "policies.service",
+            "router": "policies",
+            "method": "GET",
+            "path": "policies/{id}",
+            "full_path": "/api/v1/policies/{id}",
+            "frontend_line": 39
+          },
+          {
+            "service": "policies.service",
+            "router": "policies",
+            "method": "PATCH",
+            "path": "policies/{id}/status",
+            "full_path": "/api/v1/policies/{id}/status",
+            "frontend_line": 62
+          },
+          {
+            "service": "policies.service",
+            "router": "policies",
+            "method": "PUT",
+            "path": "policies/{id}/approve",
+            "full_path": "/api/v1/policies/{id}/approve",
+            "frontend_line": 77
+          },
+          {
+            "service": "policies.service",
+            "router": "policies",
+            "method": "POST",
+            "path": "policies/{id}/regenerate-section",
+            "full_path": "/api/v1/policies/{id}/regenerate-section",
+            "frontend_line": 95
+          },
+          {
+            "service": "policies.service",
+            "router": "policies",
+            "method": "GET",
+            "path": "policies/templates",
+            "full_path": "/api/v1/policies/templates",
+            "frontend_line": 126
+          },
+          {
+            "service": "policies.service",
+            "router": "policies",
+            "method": "POST",
+            "path": "policies/{id}/clone",
+            "full_path": "/api/v1/policies/{id}/clone",
+            "frontend_line": 134
+          },
+          {
+            "service": "policies.service",
+            "router": "policies",
+            "method": "GET",
+            "path": "policies/{id}/versions",
+            "full_path": "/api/v1/policies/{id}/versions",
+            "frontend_line": 151
+          }
+        ],
+        "count": 8
+      },
+      "frameworks": {
+        "file": "api/routers/frameworks.py",
+        "endpoints": [
+          {
+            "service": "frameworks.service",
+            "router": "frameworks",
+            "method": "GET",
+            "path": "frameworks",
+            "full_path": "/api/v1/frameworks",
+            "frontend_line": 18
+          },
+          {
+            "service": "frameworks.service",
+            "router": "frameworks",
+            "method": "GET",
+            "path": "frameworks/{id}",
+            "full_path": "/api/v1/frameworks/{id}",
+            "frontend_line": 26
+          },
+          {
+            "service": "frameworks.service",
+            "router": "frameworks",
+            "method": "GET",
+            "path": "frameworks/{frameworkId}/controls",
+            "full_path": "/api/v1/frameworks/{frameworkId}/controls",
+            "frontend_line": 55
+          },
+          {
+            "service": "frameworks.service",
+            "router": "frameworks",
+            "method": "GET",
+            "path": "frameworks/{frameworkId}/implementation-guide",
+            "full_path": "/api/v1/frameworks/{frameworkId}/implementation-guide",
+            "frontend_line": 75
+          },
+          {
+            "service": "frameworks.service",
+            "router": "frameworks",
+            "method": "GET",
+            "path": "frameworks/{frameworkId}/compliance-status",
+            "full_path": "/api/v1/frameworks/{frameworkId}/compliance-status",
+            "frontend_line": 98
+          },
+          {
+            "service": "frameworks.service",
+            "router": "frameworks",
+            "method": "POST",
+            "path": "frameworks/compare",
+            "full_path": "/api/v1/frameworks/compare",
+            "frontend_line": 123
+          },
+          {
+            "service": "frameworks.service",
+            "router": "frameworks",
+            "method": "GET",
+            "path": "frameworks/{frameworkId}/maturity-assessment",
+            "full_path": "/api/v1/frameworks/{frameworkId}/maturity-assessment",
+            "frontend_line": 148
+          }
+        ],
+        "count": 7
+      },
+      "integrations": {
+        "file": "api/routers/integrations.py",
+        "endpoints": [
+          {
+            "service": "integrations.service",
+            "router": "integrations",
+            "method": "GET",
+            "path": "integrations",
+            "full_path": "/api/v1/integrations",
+            "frontend_line": 22
+          },
+          {
+            "service": "integrations.service",
+            "router": "integrations",
+            "method": "GET",
+            "path": "integrations/connected",
+            "full_path": "/api/v1/integrations/connected",
+            "frontend_line": 30
+          },
+          {
+            "service": "integrations.service",
+            "router": "integrations",
+            "method": "POST",
+            "path": "integrations/{integrationId}/test",
+            "full_path": "/api/v1/integrations/{integrationId}/test",
+            "frontend_line": 61
+          },
+          {
+            "service": "integrations.service",
+            "router": "integrations",
+            "method": "GET",
+            "path": "integrations/{integrationId}/sync-history",
+            "full_path": "/api/v1/integrations/{integrationId}/sync-history",
+            "frontend_line": 100
+          },
+          {
+            "service": "integrations.service",
+            "router": "integrations",
+            "method": "POST",
+            "path": "integrations/{integrationId}/webhooks",
+            "full_path": "/api/v1/integrations/{integrationId}/webhooks",
+            "frontend_line": 115
+          },
+          {
+            "service": "integrations.service",
+            "router": "integrations",
+            "method": "GET",
+            "path": "integrations/{integrationId}/logs",
+            "full_path": "/api/v1/integrations/{integrationId}/logs",
+            "frontend_line": 140
+          },
+          {
+            "service": "integrations.service",
+            "router": "integrations",
+            "method": "POST",
+            "path": "integrations/oauth/callback",
+            "full_path": "/api/v1/integrations/oauth/callback",
+            "frontend_line": 177
+          }
+        ],
+        "count": 7
+      },
+      "monitoring": {
+        "file": "api/routers/monitoring.py",
+        "endpoints": [
+          {
+            "service": "monitoring.service",
+            "router": "monitoring",
+            "method": "GET",
+            "path": "monitoring/database/status",
+            "full_path": "/api/v1/monitoring/database/status",
+            "frontend_line": 39
+          },
+          {
+            "service": "monitoring.service",
+            "router": "monitoring",
+            "method": "PATCH",
+            "path": "monitoring/alerts/{alertId}/resolve",
+            "full_path": "/api/v1/monitoring/alerts/{alertId}/resolve",
+            "frontend_line": 63
+          },
+          {
+            "service": "monitoring.service",
+            "router": "monitoring",
+            "method": "GET",
+            "path": "monitoring/metrics",
+            "full_path": "/api/v1/monitoring/metrics",
+            "frontend_line": 73
+          },
+          {
+            "service": "monitoring.service",
+            "router": "monitoring",
+            "method": "GET",
+            "path": "monitoring/api-performance",
+            "full_path": "/api/v1/monitoring/api-performance",
+            "frontend_line": 100
+          },
+          {
+            "service": "monitoring.service",
+            "router": "monitoring",
+            "method": "GET",
+            "path": "monitoring/error-logs",
+            "full_path": "/api/v1/monitoring/error-logs",
+            "frontend_line": 126
+          },
+          {
+            "service": "monitoring.service",
+            "router": "monitoring",
+            "method": "GET",
+            "path": "monitoring/health",
+            "full_path": "/api/v1/monitoring/health",
+            "frontend_line": 143
+          },
+          {
+            "service": "monitoring.service",
+            "router": "monitoring",
+            "method": "GET",
+            "path": "monitoring/audit-logs",
+            "full_path": "/api/v1/monitoring/audit-logs",
+            "frontend_line": 172
+          }
+        ],
+        "count": 7
+      },
+      "payment": {
+        "file": "api/routers/payment.py",
+        "endpoints": [
+          {
+            "service": "payment.service",
+            "router": "payment",
+            "method": "POST",
+            "path": "payments/subscription/cancel",
+            "full_path": "/api/v1/payments/subscription/cancel",
+            "frontend_line": 100
+          },
+          {
+            "service": "payment.service",
+            "router": "payment",
+            "method": "POST",
+            "path": "payments/subscription/reactivate",
+            "full_path": "/api/v1/payments/subscription/reactivate",
+            "frontend_line": 110
+          },
+          {
+            "service": "payment.service",
+            "router": "payment",
+            "method": "POST",
+            "path": "payments/payment-methods",
+            "full_path": "/api/v1/payments/payment-methods",
+            "frontend_line": 128
+          },
+          {
+            "service": "payment.service",
+            "router": "payment",
+            "method": "GET",
+            "path": "payments/invoices",
+            "full_path": "/api/v1/payments/invoices",
+            "frontend_line": 155
+          },
+          {
+            "service": "payment.service",
+            "router": "payment",
+            "method": "GET",
+            "path": "payments/invoices/upcoming",
+            "full_path": "/api/v1/payments/invoices/upcoming",
+            "frontend_line": 174
+          },
+          {
+            "service": "payment.service",
+            "router": "payment",
+            "method": "POST",
+            "path": "payments/coupons/apply",
+            "full_path": "/api/v1/payments/coupons/apply",
+            "frontend_line": 193
+          },
+          {
+            "service": "payment.service",
+            "router": "payment",
+            "method": "GET",
+            "path": "payments/subscription/limits",
+            "full_path": "/api/v1/payments/subscription/limits",
+            "frontend_line": 218
+          }
+        ],
+        "count": 7
+      },
+      "assessments": {
+        "file": "api/routers/assessments.py",
+        "endpoints": [
+          {
+            "service": "assessments.service",
+            "router": "assessments",
+            "method": "GET",
+            "path": "assessments",
+            "full_path": "/api/v1/assessments",
+            "frontend_line": 33
+          },
+          {
+            "service": "assessments.service",
+            "router": "assessments",
+            "method": "GET",
+            "path": "assessments/{id}",
+            "full_path": "/api/v1/assessments/{id}",
+            "frontend_line": 43
+          },
+          {
+            "service": "assessments.service",
+            "router": "assessments",
+            "method": "POST",
+            "path": "assessments",
+            "full_path": "/api/v1/assessments",
+            "frontend_line": 51
+          },
+          {
+            "service": "assessments.service",
+            "router": "assessments",
+            "method": "PATCH",
+            "path": "assessments/{id}",
+            "full_path": "/api/v1/assessments/{id}",
+            "frontend_line": 59
+          },
+          {
+            "service": "assessments.service",
+            "router": "assessments",
+            "method": "POST",
+            "path": "assessments/{id}/complete",
+            "full_path": "/api/v1/assessments/{id}/complete",
+            "frontend_line": 98
+          },
+          {
+            "service": "assessments.service",
+            "router": "assessments",
+            "method": "GET",
+            "path": "assessments/{id}/results",
+            "full_path": "/api/v1/assessments/{id}/results",
+            "frontend_line": 106
+          }
+        ],
+        "count": 6
+      },
+      "readiness": {
+        "file": "api/routers/readiness.py",
+        "endpoints": [
+          {
+            "service": "readiness.service",
+            "router": "readiness",
+            "method": "GET",
+            "path": "readiness/{businessProfileId}",
+            "full_path": "/api/v1/readiness/{businessProfileId}",
+            "frontend_line": 48
+          },
+          {
+            "service": "readiness.service",
+            "router": "readiness",
+            "method": "GET",
+            "path": "readiness/gaps/{businessProfileId}",
+            "full_path": "/api/v1/readiness/gaps/{businessProfileId}",
+            "frontend_line": 57
+          },
+          {
+            "service": "readiness.service",
+            "router": "readiness",
+            "method": "POST",
+            "path": "readiness/roadmap",
+            "full_path": "/api/v1/readiness/roadmap",
+            "frontend_line": 100
+          },
+          {
+            "service": "readiness.service",
+            "router": "readiness",
+            "method": "POST",
+            "path": "readiness/quick-assessment",
+            "full_path": "/api/v1/readiness/quick-assessment",
+            "frontend_line": 119
+          },
+          {
+            "service": "readiness.service",
+            "router": "readiness",
+            "method": "GET",
+            "path": "readiness/trends/{businessProfileId}",
+            "full_path": "/api/v1/readiness/trends/{businessProfileId}",
+            "frontend_line": 149
+          },
+          {
+            "service": "readiness.service",
+            "router": "readiness",
+            "method": "GET",
+            "path": "readiness/benchmarks",
+            "full_path": "/api/v1/readiness/benchmarks",
+            "frontend_line": 173
+          }
+        ],
+        "count": 6
+      },
+      "reports": {
+        "file": "api/routers/reports.py",
+        "endpoints": [
+          {
+            "service": "reports.service",
+            "router": "reports",
+            "method": "GET",
+            "path": "reports/history",
+            "full_path": "/api/v1/reports/history",
+            "frontend_line": 37
+          },
+          {
+            "service": "reports.service",
+            "router": "reports",
+            "method": "GET",
+            "path": "reports/{id}",
+            "full_path": "/api/v1/reports/{id}",
+            "frontend_line": 47
+          },
+          {
+            "service": "reports.service",
+            "router": "reports",
+            "method": "POST",
+            "path": "reports/schedule",
+            "full_path": "/api/v1/reports/schedule",
+            "frontend_line": 82
+          },
+          {
+            "service": "reports.service",
+            "router": "reports",
+            "method": "GET",
+            "path": "reports/scheduled",
+            "full_path": "/api/v1/reports/scheduled",
+            "frontend_line": 100
+          },
+          {
+            "service": "reports.service",
+            "router": "reports",
+            "method": "POST",
+            "path": "reports/preview",
+            "full_path": "/api/v1/reports/preview",
+            "frontend_line": 154
+          },
+          {
+            "service": "reports.service",
+            "router": "reports",
+            "method": "GET",
+            "path": "reports/analytics",
+            "full_path": "/api/v1/reports/analytics",
+            "frontend_line": 172
+          }
+        ],
+        "count": 6
+      },
+      "business_profiles": {
+        "file": "api/routers/business_profiles.py",
+        "endpoints": [
+          {
+            "service": "business-profiles.service",
+            "router": "business_profiles",
+            "method": "GET",
+            "path": "business-profiles",
+            "full_path": "/api/v1/business-profiles",
+            "frontend_line": 28
+          },
+          {
+            "service": "business-profiles.service",
+            "router": "business_profiles",
+            "method": "GET",
+            "path": "business-profiles/{id}",
+            "full_path": "/api/v1/business-profiles/{id}",
+            "frontend_line": 41
+          },
+          {
+            "service": "business-profiles.service",
+            "router": "business_profiles",
+            "method": "POST",
+            "path": "business-profiles",
+            "full_path": "/api/v1/business-profiles",
+            "frontend_line": 128
+          },
+          {
+            "service": "business-profiles.service",
+            "router": "business_profiles",
+            "method": "PUT",
+            "path": "business-profiles/{id}",
+            "full_path": "/api/v1/business-profiles/{id}",
+            "frontend_line": 74
+          },
+          {
+            "service": "business-profiles.service",
+            "router": "business_profiles",
+            "method": "GET",
+            "path": "business-profiles/{id}/compliance",
+            "full_path": "/api/v1/business-profiles/{id}/compliance",
+            "frontend_line": 95
+          }
+        ],
+        "count": 5
+      },
+      "dashboard": {
+        "file": "api/routers/dashboard.py",
+        "endpoints": [
+          {
+            "service": "dashboard.service",
+            "router": "dashboard",
+            "method": "GET",
+            "path": "dashboard",
+            "full_path": "/api/v1/dashboard",
+            "frontend_line": 82
+          },
+          {
+            "service": "dashboard.service",
+            "router": "dashboard",
+            "method": "GET",
+            "path": "dashboard/widgets",
+            "full_path": "/api/v1/dashboard/widgets",
+            "frontend_line": 99
+          },
+          {
+            "service": "dashboard.service",
+            "router": "dashboard",
+            "method": "GET",
+            "path": "dashboard/notifications",
+            "full_path": "/api/v1/dashboard/notifications",
+            "frontend_line": 144
+          },
+          {
+            "service": "dashboard.service",
+            "router": "dashboard",
+            "method": "GET",
+            "path": "dashboard/quick-actions",
+            "full_path": "/api/v1/dashboard/quick-actions",
+            "frontend_line": 176
+          },
+          {
+            "service": "dashboard.service",
+            "router": "dashboard",
+            "method": "GET",
+            "path": "dashboard/recommendations",
+            "full_path": "/api/v1/dashboard/recommendations",
+            "frontend_line": 205
+          }
+        ],
+        "count": 5
+      },
+      "foundation_evidence": {
+        "file": "api/routers/foundation_evidence.py",
+        "endpoints": [
+          {
+            "service": "foundation-evidence.service",
+            "router": "foundation_evidence",
+            "method": "POST",
+            "path": "foundation/evidence/aws/configure",
+            "full_path": "/api/v1/foundation/evidence/aws/configure",
+            "frontend_line": 98
+          },
+          {
+            "service": "foundation-evidence.service",
+            "router": "foundation_evidence",
+            "method": "POST",
+            "path": "foundation/evidence/okta/configure",
+            "full_path": "/api/v1/foundation/evidence/okta/configure",
+            "frontend_line": 113
+          },
+          {
+            "service": "foundation-evidence.service",
+            "router": "foundation_evidence",
+            "method": "POST",
+            "path": "foundation/evidence/google/configure",
+            "full_path": "/api/v1/foundation/evidence/google/configure",
+            "frontend_line": 128
+          },
+          {
+            "service": "foundation-evidence.service",
+            "router": "foundation_evidence",
+            "method": "POST",
+            "path": "foundation/evidence/microsoft/configure",
+            "full_path": "/api/v1/foundation/evidence/microsoft/configure",
+            "frontend_line": 143
+          },
+          {
+            "service": "foundation-evidence.service",
+            "router": "foundation_evidence",
+            "method": "GET",
+            "path": "foundation/evidence/health",
+            "full_path": "/api/v1/foundation/evidence/health",
+            "frontend_line": 207
+          }
+        ],
+        "count": 5
+      },
+      "ai_assessments": {
+        "file": "api/routers/ai_assessments.py",
+        "endpoints": [
+          {
+            "service": "ai-self-review.service",
+            "router": "ai_assessments",
+            "method": "POST",
+            "path": "ai/self-review",
+            "full_path": "/api/v1/ai/self-review",
+            "frontend_line": 297
+          },
+          {
+            "service": "ai-self-review.service",
+            "router": "ai_assessments",
+            "method": "POST",
+            "path": "ai/quick-confidence-check",
+            "full_path": "/api/v1/ai/quick-confidence-check",
+            "frontend_line": 347
+          },
+          {
+            "service": "assessments-ai.service",
+            "router": "ai_assessments",
+            "method": "POST",
+            "path": "ai/assessments/followup",
+            "full_path": "/api/v1/ai/assessments/followup",
+            "frontend_line": 339
+          },
+          {
+            "service": "assessments-ai.service",
+            "router": "ai_assessments",
+            "method": "GET",
+            "path": "ai/assessments/metrics",
+            "full_path": "/api/v1/ai/assessments/metrics",
+            "frontend_line": 559
+          }
+        ],
+        "count": 4
+      },
+      "chat": {
+        "file": "api/routers/chat.py",
+        "endpoints": [
+          {
+            "service": "chat.service",
+            "router": "chat",
+            "method": "GET",
+            "path": "chat/conversations/{id}",
+            "full_path": "/api/v1/chat/conversations/{id}",
+            "frontend_line": 56
+          },
+          {
+            "service": "chat.service",
+            "router": "chat",
+            "method": "POST",
+            "path": "chat/compliance-gap-analysis",
+            "full_path": "/api/v1/chat/compliance-gap-analysis",
+            "frontend_line": 123
+          },
+          {
+            "service": "chat.service",
+            "router": "chat",
+            "method": "GET",
+            "path": "chat/smart-compliance-guidance",
+            "full_path": "/api/v1/chat/smart-compliance-guidance",
+            "frontend_line": 185
+          },
+          {
+            "service": "chat.service",
+            "router": "chat",
+            "method": "DELETE",
+            "path": "chat/cache/clear?pattern={encodeURIComponent(pattern)}",
+            "full_path": "/api/v1/chat/cache/clear?pattern={encodeURIComponent(pattern)}",
+            "frontend_line": 207
+          }
+        ],
+        "count": 4
+      },
+      "implementation": {
+        "file": "api/routers/implementation.py",
+        "endpoints": [
+          {
+            "service": "implementation.service",
+            "router": "implementation",
+            "method": "GET",
+            "path": "implementation/plans/{planId}",
+            "full_path": "/api/v1/implementation/plans/{planId}",
+            "frontend_line": 85
+          },
+          {
+            "service": "implementation.service",
+            "router": "implementation",
+            "method": "GET",
+            "path": "implementation/recommendations",
+            "full_path": "/api/v1/implementation/recommendations",
+            "frontend_line": 168
+          },
+          {
+            "service": "implementation.service",
+            "router": "implementation",
+            "method": "GET",
+            "path": "implementation/resources/{frameworkId}",
+            "full_path": "/api/v1/implementation/resources/{frameworkId}",
+            "frontend_line": 206
+          },
+          {
+            "service": "implementation.service",
+            "router": "implementation",
+            "method": "GET",
+            "path": "implementation/plans/{planId}/analytics",
+            "full_path": "/api/v1/implementation/plans/{planId}/analytics",
+            "frontend_line": 249
+          }
+        ],
+        "count": 4
+      },
+      "evidence_collection": {
+        "file": "api/routers/evidence_collection.py",
+        "endpoints": [
+          {
+            "service": "evidence-collection.service",
+            "router": "evidence_collection",
+            "method": "GET",
+            "path": "evidence-collection/plans",
+            "full_path": "/api/v1/evidence-collection/plans",
+            "frontend_line": 69
+          }
+        ],
+        "count": 1
+      }
+    },
+    "implementation_order": [
+      "evidence",
+      "compliance",
+      "policies",
+      "frameworks",
+      "integrations",
+      "monitoring",
+      "payment",
+      "assessments",
+      "readiness",
+      "reports",
+      "business_profiles",
+      "dashboard",
+      "foundation_evidence",
+      "ai_assessments",
+      "chat",
+      "implementation",
+      "evidence_collection"
+    ]
+  }
+}

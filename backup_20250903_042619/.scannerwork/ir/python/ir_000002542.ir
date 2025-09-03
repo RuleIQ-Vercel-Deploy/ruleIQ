@@ -1,0 +1,32 @@
+
+'"API v1 health check endpoint"str
+"timestamp"str
+"status"str
+"api_version"str
+
+"1.0.0"str
+	"healthy"str
+"v1"str
+		"version"str"ñ&
+$
+
+¸ ¹(%"#new-object#Bdict"
+ 
+
+¸ ¸("	#map-set#:%
+#
+
+¸. ¸(9"
+timetimeBfloat"
+ 
+
+¸! ¸(9"	#map-set#:"
+ 
+
+¸; ¹("	#map-set#:	
+"
+ 
+
+¹ ¹($"	#map-set#:
+
+¸ ¹(%*'/home/omar/Documents/ruleIQ/api/main.py

@@ -1,0 +1,42 @@
+
+"supported_versions"str
+"latest_version"str
+"meta"str
+"data"str
+	"warning"str
+
+"api_version"str
+RI"API version {version} is deprecated. Use {self.LATEST_VERSION} instead."str
+4+"Create response with version information."strself5  5($version5& 5(2data54 5(="ç/
+-
+	7 7(™response"#new-object#Bdict 
+
+7 7( "	#map-set#:%
+#
+	7* 7(˜	"#new-object#Bdict 
+
+7+ 7(A"	#map-set#:	
+3
+1
+7Y 7(p" #get-field# SUPPORTED_VERSIONS: 
+
+7C 7(p"	#map-set#:	1
+/
+
+7„ 7(—"#get-field# LATEST_VERSION:!
+
+	7r 7(—"	#map-set#:	!
+
+	7" 7(˜"	#map-set#:	/
+-
+8 8()"#get-field# LATEST_VERSION:*
+(
+8 8()"
+#binop !=#2!=:Bbool"
+8 8() *8 8(
+"R"
+ 
+9 9("#array-read#:$
+"
+9 9(t"#array-write#:"
+: :(*</home/omar/Documents/ruleIQ/api/middleware/api_versioning.py

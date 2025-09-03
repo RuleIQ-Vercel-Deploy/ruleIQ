@@ -1,0 +1,295 @@
+
+Lservices.ai.evaluation.tools.manifest_enhancer.ManifestEnhancer.enhance_itemY
+M/home/omar/Documents/ruleIQ/services/ai/evaluation/tools/manifest_enhancer.py˙ ˙("2*Å
+2
+˚ É(@>
+
+Ñ Ñ(
+%6*$
+
+__unknown_file (
+
+item2copyD
+B
+
+Ñ Ñ(
+
+enhanced"__id*"
+
+__unknown_file (
+
+%6π∂
+
+Ö( Ö(N
+%7*_
+
+__unknown_file (CA
+?services.ai.evaluation.tools.manifest_enhancer.ManifestEnhancer*$
+
+__unknown_file (
+
+item2determine_business_triggersµ≤
+
+Ö Ö(N
+%8"dict.__setitem__*(
+
+__unknown_file (
+
+
+enhanced*1
+
+__unknown_file (
+business_triggers*"
+
+__unknown_file (
+
+%72__setitem__≤Ø
+
+Ü Ü(4
+%9*_
+
+__unknown_file (CA
+?services.ai.evaluation.tools.manifest_enhancer.ManifestEnhancer*$
+
+__unknown_file (
+
+item2calculate_risk_scoreF
+D
+
+Ü Ü(4
+
+risk_score"__id*"
+
+__unknown_file (
+
+%9≥∞
+
+á á(4
+%10*_
+
+__unknown_file (CA
+?services.ai.evaluation.tools.manifest_enhancer.ManifestEnhancer*$
+
+__unknown_file (
+
+item2determine_complexityG
+E
+
+á á(4
+
+complexity"__id*#
+
+__unknown_file (
+
+%10
+
+à$ å(
+%11"dict¢
+ü
+
+à% à(B
+%12"__mapSet*#
+
+__unknown_file (
+
+%11*/
+
+__unknown_file (
+base_risk_score**
+
+__unknown_file (
+
+
+risk_scoreƒ¡
+
+â% ä(
+%13*_
+
+__unknown_file (CA
+?services.ai.evaluation.tools.manifest_enhancer.ManifestEnhancer**
+
+__unknown_file (
+
+
+risk_score2determine_enforcement_frequency°
+û
+
+â ä(
+%14"__mapSet*#
+
+__unknown_file (
+
+%11*5
+
+__unknown_file (
+enforcement_frequency*#
+
+__unknown_file (
+
+%13¨
+©
+
+ä ä(@
+%15"__mapSet*#
+
+__unknown_file (
+
+%11*9
+
+__unknown_file (
+implementation_complexity**
+
+__unknown_file (
+
+
+complexity∂≥
+
+ã/ å(
+%16*_
+
+__unknown_file (CA
+?services.ai.evaluation.tools.manifest_enhancer.ManifestEnhancer**
+
+__unknown_file (
+
+
+complexity2estimate_timeline´
+®
+
+ã å(
+%17"__mapSet*#
+
+__unknown_file (
+
+%11*?
+
+__unknown_file (#!
+typical_implementation_timeline*#
+
+__unknown_file (
+
+%16≥∞
+
+à å(
+%18"dict.__setitem__*(
+
+__unknown_file (
+
+
+enhanced*-
+
+__unknown_file (
+risk_metadata*#
+
+__unknown_file (
+
+%112__setitem__Ø¨
+
+ç ç(.
+%19*_
+
+__unknown_file (CA
+?services.ai.evaluation.tools.manifest_enhancer.ManifestEnhancer*$
+
+__unknown_file (
+
+item2suggest_controlsE
+C
+
+ç ç(.
+
+controls"__id*#
+
+__unknown_file (
+
+%19*
+6
+7*+
+4
+ï ï("
+
+ï ï(
+
+
+enhanced*ç
+5
+ì î(Ω∫
+
+ì- î(
+%1*_
+
+__unknown_file (CA
+?services.ai.evaluation.tools.manifest_enhancer.ManifestEnhancer*(
+
+__unknown_file (
+
+
+controls2generate_evidence_templates∂≥
+
+ì î(
+%2"dict.__setitem__*(
+
+__unknown_file (
+
+
+enhanced*2
+
+__unknown_file (
+evidence_templates*"
+
+__unknown_file (
+
+%12__setitem__*
+4*ë
+6
+ê ë(ºπ
+
+ê+ ë(
+%3*_
+
+__unknown_file (CA
+?services.ai.evaluation.tools.manifest_enhancer.ManifestEnhancer*$
+
+__unknown_file (
+
+item2determine_automation_potential∏µ
+
+ê ë(
+%4"dict.__setitem__*(
+
+__unknown_file (
+
+
+enhanced*4
+
+__unknown_file (
+automation_potential*"
+
+__unknown_file (
+
+%32__setitem__*
+4
+5*”
+7
+è è(5ºπ
+
+è è(5
+%5"dict.__setitem__*(
+
+__unknown_file (
+
+
+enhanced*2
+
+__unknown_file (
+suggested_controls*(
+
+__unknown_file (
+
+
+controls2__setitem__*
+6:
+
+˙ ˙(/
+itemBCA
+?services.ai.evaluation.tools.manifest_enhancer.ManifestEnhancerH

@@ -1,0 +1,581 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/ukpga/1986/53/data.xml",
+  "fetched_at": "2025-08-31T18:16:15.564152",
+  "metadata": {
+    "title": "Building Societies Act 1986",
+    "description": "An Act to make fresh provision with respect to building societies and further provision with respect to conveyancing services.",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "section-2",
+      "text": "21There shall be charged on building societies such a general charge towards the expenses of the Commission and such fees in respect of the exercise of its functions as are authorised under this section.2The Treasury may, by regulations, make provision for\u2014aa general charge to be levied, with respect to each accounting year of the Commission, on every authorised building society to be paid at such rate computed by reference to such criteria, at such time and in such manner as may be prescribed; ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-3",
+      "text": "31The Commission shall keep proper accounts and proper accounting records and shall prepare in respect of each accounting year a statement of accounts in such form as the Treasury may direct.2The statement of the accounts required by subsection (1) above may be combined with the statement of the accounts of the Chief Registrar which he is required to prepare as regards his functions.3The Commission shall send to the Treasury and to the Comptroller and Auditor General, before the end of the perio",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-4",
+      "text": "41It shall be the duty of the Commission to lay before the Treasury and before Parliament as soon as possible after the end of each accounting year a report on the discharge of its functions during that year.2. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .3The Commission may lay before Parliament from time to time such other reports relating to the discharge of its functions, whether in relation to building societies generally or a particular building society, as it thinks fit.",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-5",
+      "text": "51A society may be established under this Act if (and only if) it complies with the following requirements, namely\u2014aits purpose or principal purpose is that of making loans which are secured on residential property and are funded substantially by its members; andbits principal office is in the United Kingdom.2A society is established under this Act on compliance by the persons establishing it with the scheduled requirements and is incorporated under this Act as from the date of registration by t",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-6",
+      "text": "61A building society shall secure that the difference between\u2014athe value of X on any quarter day; andbthe value of Y on that day or the value of Y on the immediately preceding quarter day, whichever is the greater,does not exceed 25 per cent of that value of X.2For the purposes of subsection (1) above\u2014X = the difference between the total assets of the society and any subsidiary undertakings of the society as shown in the society\u2019s accounts and the aggregate of\u2014athe liquid assets of the society a",
+      "type": "mandatory",
+      "keywords": [
+        "consent"
+      ]
+    },
+    {
+      "id": "section-6A",
+      "text": "6A1For the purposes of this Act a loan is secured on land if it is secured by\u2014aa mortgage of a legal estate in land in England and Wales or Northern Ireland;ba heritable security over land in Scotland; orca qualifying security over land in  the Isle of Man, the Channel Islands or Gibraltar.1AFor the purposes of this Act a loan is also secured on land if\u2014ait was secured before IP completion day by a qualifying security over land in an EEA country or territory other than the United Kingdom, andbit",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "section-6B",
+      "text": "6B1For the purposes of this Act a loan which is owed to a building society or a subsidiary undertaking of a building society and is secured on residential property or other land is fully secured on the land if\u2014athe principal of, and interest accrued on, the loan does not exceed the value of the requisite security; andbno, or no more than one, mortgage of the land which has priority over the society\u2019s or undertaking\u2019s mortgage is outstanding in favour of an outside person.2Where a mortgage of the",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "section-6C",
+      "text": "6CSchedule 2A to this Act, which contains supplementary provisions as to the discharge of mortgages, shall have effect.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-7",
+      "text": "71A building society shall secure that the difference between\u2014athe value of X on any quarter day; andbthe value of Y on that day or the value of Y on the immediately preceding quarter day, whichever is the greater,does not exceed 50 per cent of that value of X.2For the purposes of subsection (1) above\u2014X = the aggregate of the following, namely\u2014athe principal value of, and interest accrued on, shares in the society;bthe principal of, and interest accrued on, sums deposited with the society or any",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-8",
+      "text": "81Subject to subsection (2) below, a building society shall not do any of the following things, namely\u2014aaccept a deposit from an individual;braise funds from an individual otherwise than by the issue of shares; andcraise funds from a body corporate, or from a bare trustee (or, in Scotland, a simple trustee) for a body corporate or for persons who include a body corporate, otherwise than by the issue of deferred shares.2Nothing in subsection (1)(a) above shall apply in relation to\u2014athe maintenanc",
+      "type": "mandatory",
+      "keywords": [
+        "consent"
+      ]
+    },
+    {
+      "id": "section-9A",
+      "text": "9A1Subject to subsections (2) to (4) below, a building society shall not do, and shall secure that each of its subsidiary undertakings does not do, any of the following things,\n\n\n\n\n\n\n\nnamely\u2014aact as a market maker in securities, commodities or currencies;btrade in commodities or currencies; andcenter into any transaction involving derivative investments;but a contravention of this subsection shall not invalidate any transaction or other act.2No transaction entered into by a building society, or ",
+      "type": "mandatory",
+      "keywords": [
+        "consent"
+      ]
+    },
+    {
+      "id": "section-10",
+      "text": "101A building society may make advances to members (in this Act referred to as \u201cadvances secured on land\u201d) secured by\u2014aa mortgage of a legal estate or, as provided under subsection (6) below, an equitable interest in land in England and Wales or Northern Ireland, orba heritable security over land in Scotland,and for that purpose may (in England and Wales or Northern Ireland) hold land with the right of foreclosure.2Advances secured on land may, in accordance with sections 11 and 12\u2014abe fully or ",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "consent"
+      ]
+    },
+    {
+      "id": "section-11",
+      "text": "111The provisions of this section and section 12 define what is a class 1 advance and what is a class 2 advance for the purpose of the requirements of this Part for the structure of commercial assets and when an advance may, for those purposes, be treated partly as a class 1 advance and partly as a class 2 advance.2Class 1 advances are advances as to which the society when it makes the advance is satisfied that the advance is an advance secured on land and that\u2014athe borrower is an individual;bwh",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "retention"
+      ]
+    },
+    {
+      "id": "section-12",
+      "text": "121The Commission, by order in a statutory instrument, may as respects class 1 advances\u2014aspecify the circumstances in which land is for a person\u2019s residential use,bspecify who are to be a person\u2019s dependants, andcmake such other incidental and supplementary and such transitional provision as the Commission considers necessary or expedient,for the purposes of section 11(2); and in that subsection \u201cprescribed\u201d  means prescribed in an order under this subsection.2Without prejudice to the generality",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "consent"
+      ]
+    },
+    {
+      "id": "section-13",
+      "text": "131It shall be the duty of every director of a building society to satisfy himself that the arrangements made for assessing the adequacy of the security for any advance to be fully secured on land which is to be made by the society are such as may reasonably be expected to ensure that\u2014aan assessment will be made on the occasion of each advance whether or not any previous assessment was made with a view to further advances or re-advances;beach assessment will be made by a person holding office in",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-14",
+      "text": "141The appropriate authority may, with a view to conferring on building societies or building societies of particular descriptions powers to make advances to members secured on land outside the United Kingdom corresponding to the powers to make advances secured on land within the United Kingdom, by order\u2014adesignate countries or territories outside the United Kingdom as countries or territories as respects which advances under this section may be made secured on the land;bspecify, or provide for ",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "consent"
+      ]
+    },
+    {
+      "id": "section-14A",
+      "text": "14A1Subject to subsection (2) below, a building society may participate in syndicated lending\u2014aas a member of the lending syndicate, orbas a person whose rights as a participant arise under an arrangement with a member of the lending syndicate (\u201ca sub-participant\u201d).2Subsection (1) above only applies if\u2014athe syndicated lending is appropriately secured, andbwhere the society\u2019s participation is as a sub-participant, the society\u2019s rights as such a participant are appropriately secured.3The Commissio",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "consent"
+      ]
+    },
+    {
+      "id": "section-15",
+      "text": "151Subject to the provisions of this section, a building society may make mobile home loans to individuals, whether or not they are members of the society.2A mobile home loan is a loan made for the purchase of a mobile home and secured by such security as the Commission may, with the consent of the Treasury, prescribe by order in a statutory instrument.3No such loan shall be made unless the building society, when it makes the loan, is satisfied that\u2014athe borrower or a dependant of his of a presc",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "consent"
+      ]
+    },
+    {
+      "id": "section-16",
+      "text": "161Subject to the provisions of this section, a building society may, with or without security and whether or not at interest, lend money to individuals, whether or not they are members of the society.2Advances fully secured on land do not constitute loans under this section except that an advance for a deposit for the purchase of land shall, if the purchase is not completed within the period of six months beginning with the date of the advance, be treated after the end of that period as a loan ",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "consent"
+      ]
+    },
+    {
+      "id": "section-17",
+      "text": "171Subject to subsections (2), (9) and (11) below, a building society may acquire, hold and dispose of land in the United Kingdom for purposes other than those for which it may acquire, hold or dispose of land under section 6 or 10.2Land may not be acquired or held or disposed of by way of lease under this section except where the land is or is to be used\u2014aprimarily for residential purposes, orbfor purposes incidental to the use of adjoining land held or to be held by the society which is or is ",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "consent"
+      ]
+    },
+    {
+      "id": "section-18",
+      "text": "181Subject to the following provisions of this section, a building society may\u2014aacquire and hold shares or corresponding membership rights in bodies corporate and form or take part in forming bodies corporate, andbprovide bodies corporate in which it holds shares or such rights or to which it is, for the purpose of any power under this section, linked by resolution with any of the following supporting services\u2014iloans of money, with or without security and whether or not at interest,iigrants of m",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "consent"
+      ]
+    },
+    {
+      "id": "section-19",
+      "text": "191The Treasury may, with a view to extending or altering, or extending to other descriptions of building societies, the forms of property which are to constitute class 3 assets in the hands of building societies or building societies of particular descriptions, by order\u2014aspecify forms of property which a building society is to have power to acquire, hold and dispose of as assets of that class, subject to any specified conditions or restrictions;bwithout prejudice to paragraph (a) above, specify",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-20",
+      "text": "201The requirements for the structure of commercial assets applicable to building societies are the following.2The class 2 assets or, if it has class 3 assets, the aggregate of the class 2 and class 3 assets held by a building society at the end of a financial year shall not exceed whichever is the greater of\u2014a10 per cent. of the total commercial assets held by the society at that time, orban amount corresponding to that percentage of the total commercial assets held by the society at the end of",
+      "type": "mandatory",
+      "keywords": [
+        "consent"
+      ]
+    },
+    {
+      "id": "section-21",
+      "text": "211Subject to the following provisions of this section, a building society shall secure that, of its total assets, it keeps such a proportion of them having such a composition as will at all times enable the society to meet its liabilities as they arise.2A building society may keep assets of an authorised character beyond those required for the purpose of complying with subsection (1) above.3Subject to subsections (5) and (6) below, the assets held by a building society under subsection (1) or (",
+      "type": "mandatory",
+      "keywords": [
+        "consent"
+      ]
+    },
+    {
+      "id": "section-23",
+      "text": "231Subject to subsections (3) and (4) below, a building society may effect contracts of a prescribed description for the purpose of reducing the risk of loss arising from changes in interest rates, currency rates or other factors of a prescribed description which affect its business.2The Commission, with the consent of the Treasury, may by order\u2014aspecify as contracts which building societies have power to effect under this section descriptions of contract whose purpose or one of whose purposes i",
+      "type": "mandatory",
+      "keywords": [
+        "consent"
+      ]
+    },
+    {
+      "id": "section-32",
+      "text": "32The Provisions of Schedule 7 to this Act relating to shareholders in and depositors with a building society shall have effect.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-33",
+      "text": "33Where it appears to the Commission that a building society is in financial difficulties it may authorise a building society to lend money to that society, and a building society shall have power to do so accordingly.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-34",
+      "text": "341A building society may provide services of the descriptions for the time being specified in Part I of Schedule 8 to this Act subject to the restrictions (if any) for the time being specified in Part II or III of that Schedule.2The appropriate authority may by order vary Schedule 8 by adding to or deleting from it any description of service or any provision or by varying any description of service or any provision for the time being specified or contained in it but not so as to confer any powe",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-35",
+      "text": "351A building society which, or a subsidiary of which, provides services of any description specified in Part I of Schedule 8 to this Act shall not offer to make a class 1 advance to any person subject to a condition that any services of that description which are or may be required by that person in connection with the making of the advance shall be provided by the society or its subsidiary.2Where, in connection with a class 1 advance by a building society, several services are made available b",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-36",
+      "text": "361The provisions of this section have effect where, by reason of a building society\u2019s failure to comply with\u2014athe requirement imposed by section 5(1)(a) or (b)\n\n\t\t\t\t\t\t\t(purpose or principal purpose and principal office);bthe requirement imposed by section 6(1)\n\n\t\t\t\t\t\t\t(the lending limit); orcthe requirement imposed by section 7(1)\n\n\t\t\t\t\t\t\t(the funding limit),the powers conferred by this section become exercisable by the   appropriate authority  in relation to the society (the requirements refer",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-36A",
+      "text": "36A1Where by virtue of section 36(12) the powers conferred by this section become exercisable in relation to a building society, the  appropriate authority  may issue a prohibition order directed to the society.2A prohibition order under this section is an order\u2014aprohibiting, subject to the saving or transitional provisions of the order, the continuance or, as the case may be, the carrying on of the activity specified in the order after a date so specified, either absolutely or unless conditions",
+      "type": "mandatory",
+      "keywords": [
+        "consent"
+      ]
+    },
+    {
+      "id": "section-37",
+      "text": "371Where\u2014aby virtue of section 36(13) the powers conferred by this section become exercisable in relation to a building society;bby virtue of section 36A(12) the power conferred by this subsection becomes so exercisable; orcthe  appropriate authority  has reason to believe that a building society has ceased to comply with the requirement imposed by section 5(1)(a)\n\n\t\t\t\t\t\t\t(purpose or principal purpose),the  appropriate authority  may present a petition to the High Court for the winding up of the",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-38",
+      "text": "381The Commission shall have power to determine whether a particular activity of a building society or its subsidiary is or is not within the existing powers of the society and may, if it thinks fit, take such professional advice as it considers it needs to enable it to make the determination.2A determination may be made under this section in relation to an activity which is proposed to be carried on as well as in relation to one which is being carried on.3The powers of the Commission in relatio",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-39",
+      "text": "391A determination of the Commission under section 38 shall be in writing and, as soon as practicable after it is made, the Commission shall notify the society of the determination and the reasons for it.2On receiving notice of the determination the society shall, if it is a determination that the activity in question was outside its powers, forthwith send a copy of it to every person who the society has reason to believe will or may be affected by it other than a person whose only interest is a",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-40",
+      "text": "401On or at any time after making a determination under section 38 that a specified activity is outside the powers of a building society, the Commission shall, if it appears to it\u2014athat the activity is being carried on by the society, orbthat the activity has not been but, unless a prohibition order is made under this section, may be carried on by the society.serve on the society a notice of the Commission\u2019s intention to issue a prohibition order directed to the society.2A prohibition order unde",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    }
+  ],
+  "penalties": [
+    {
+      "type": "financial",
+      "amount": "\u00a3200",
+      "context": "powers to obtain information and documents etc.521this section applies to information, documents or other material, or explanations of matters, which relate to the business of a building society or it"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a3100 million",
+      "context": "directors: supplementary provisions as to elections, etc.611rules made under section 60(10)(a), in order to comply with this section, must not require\u2014ain the case of a society whose total commercial "
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a3100 million",
+      "context": "directors: supplementary provisions as to elections, etc.611rules made under section 60(10)(a), in order to comply with this section, must not require\u2014ain the case of a society whose total commercial "
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a3250 million",
+      "context": "directors: supplementary provisions as to elections, etc.611rules made under section 60(10)(a), in order to comply with this section, must not require\u2014ain the case of a society whose total commercial "
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a35",
+      "context": "records of loans, etc. for directors falling within s. 65.681a building society shall maintain a register containing a copy of every subsisting transaction or arrangement (other than an excepted trans"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a32,000",
+      "context": "records of loans, etc. for directors falling within s. 65.681a building society shall maintain a register containing a copy of every subsisting transaction or arrangement (other than an excepted trans"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310,000",
+      "context": "records of loans, etc. for directors falling within s. 65.681a building society shall maintain a register containing a copy of every subsisting transaction or arrangement (other than an excepted trans"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310,000",
+      "context": "disclosure and record of income of related businesses.691where, at any time during a financial year of a building society, a person both is a director or other officer of a building society and is, or"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a35",
+      "context": "disclosure and record of income of related businesses.691where, at any time during a financial year of a building society, a person both is a director or other officer of a building society and is, or"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a3200",
+      "context": "summary financial statement for members and depositors.761the directors of a building society shall, with respect to each financial year, prepare for members and depositors a summary financial stateme"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a340",
+      "context": "summary financial statement for members and depositors.761the directors of a building society shall, with respect to each financial year, prepare for members and depositors a summary financial stateme"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a3200",
+      "context": "laying and furnishing accounts, etc., to  members  , the fca and the pra .811the directors of every building society shall lay before the society at the annual general meeting the annual accounts for "
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a340",
+      "context": "laying and furnishing accounts, etc., to  members  , the fca and the pra .811the directors of every building society shall lay before the society at the annual general meeting the annual accounts for "
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310",
+      "context": "dissolution by consent.871a building society may be dissolved by an instrument of dissolution, with the consent (testified by their signature of that instrument) of three-quarters of the members of th"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a340",
+      "context": "power of court to declare dissolution of building society void.911where a building society has been dissolved under section 87 or following a winding up, building society insolvency or building societ"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a3200.12",
+      "context": "restriction of use of certain names and descriptions.1071subject to subsections (2) to (9) below, no person carrying on in the united kingdom a business of any description shall, unless that person is"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a3100",
+      "context": "records.1141subject to any other provision of this act or regulations under it, any record to be kept by a building society may be kept in any manner.2where any such record is not kept by making entri"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310,",
+      "context": "11where any land has been mortgaged to a building society as security for an advance and a person sells the land in the exercise of a power (whether statutory or express) exercisable by virtue of the "
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a3100",
+      "context": "61a building society or connected undertaking of a building societywhich accedes to a recognised scheme or has acceded to a scheme which becomes a recognised scheme shall, within the period of 21 days"
+    }
+  ],
+  "enforcement": {
+    "authority": [
+      "PRA",
+      "Secretary of State",
+      "Financial Conduct Authority",
+      "Prudential Regulation Authority",
+      "FCA"
+    ],
+    "powers": [
+      "31The Commission shall keep proper accounts and proper accounting records and shall prepare in respect of each accounting year a statement of accounts in such form as the Treasury may direct.2The stat",
+      "481A tribunal may give such directions as it thinks fit for the payment of costs or expenses by any party to the appeal.2On an appeal under section 46(2) the building society in relation to which the ",
+      "521This section applies to information, documents or other material, or explanations of matters, which relate to the business of a building society or its plans for future development and, in relation",
+      "52B1A justice of the peace may issue a warrant under section 176 of the Financial Services and Markets Act 2000 if satisfied on information on oath given by or on behalf of the  FCA or the PRA , an au",
+      "541If and in so far as it appears to the Secretary of State that the disclosure of any information will enable the  FCA or the PRA  better to discharge its functions under this Act (but not otherwise)",
+      "551If it appears to  the FCA or the PRA  desirable to do so for the purposes of its supervisory functions in relation to a building society,  it  may appoint one or more competent persons to investiga",
+      "561In the circumstances mentioned in subsection (2) below, the  FCA and the PRA \u2014amay appoint one or more competent inspectors to investigate and report on the affairs of a building society, orbmay ca",
+      "571In this section\u2014\u201cthe body under investigation\u201d means the building society whose affairs or, as the case may be, the building society whose affairs, and each connected undertaking of the building so",
+      "681A building society shall maintain a register containing a copy of every subsisting transaction or arrangement (other than an excepted transaction or arrangement) falling within section 65(1) made f",
+      "691Where, at any time during a financial year of a building society, a person both is a director or other officer of a building society and is, or is a director of or partner in, a business associate ",
+      "711Every building society shall\u2014acause accounting records to be kept, ...b. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .in accordance with this section.2The accounting records of a so",
+      "741The directors of every building society shall, by reference to the annual accounts and other records and information at their disposal, prepare with respect to each financial year of the society a ",
+      "761The directors of a building society shall, with respect to each financial year, prepare for members and depositors a summary financial statement for that year, that is to say, a statement derived f",
+      "771Every building society shall at each annual general meeting appoint an auditor or auditors to hold office from the conclusion of that meeting until the conclusion of the next annual general meeting",
+      "781The  auditor  of a building society shall make a  written\n                   report to the members on the annual accounts which are to be laid before the society at the annual general meeting durin",
+      "78A1The auditor\u2019s report must state the name of the auditor                      (or, where more than one person is appointed as auditor, all of their names)\n                   and be signed and dated",
+      "78B1The senior statutory auditor means the individual identified by the firm as senior statutory auditor in relation to the audit in accordance with the standards or guidance mentioned in section 504(",
+      "78C1The copy of the auditor\u2019s report sent ... under section 81, and every copy of the auditor\u2019s report that is published by or on behalf of the society, must\u2014astate the name of the auditor and (where ",
+      "78D1 An\n                auditor\u2019s name and, where the auditor is a firm, the name of the person who signed the report as senior statutory auditor, may be omitted from\u2014athe copy of the report sent ... ",
+      "791It is the duty of the  auditor  of a building society in preparing  his  report to the members under section 78, to carry out such investigations as will enable  him  to form an opinion as to the f",
+      "801Every balance sheet of a building society shall be signed by  one director  on behalf of the board of directors ....2The income and expenditure account,  . . . and the annual business statement sha",
+      "81A1If a building society publishes any of its statutory accounts, they must be accompanied by the relevant  auditor\u2019s report  under section 78.2A building society that is required to prepare group ac",
+      "90D1An application for an administration order in respect of a building society may not be determined unless the conditions below are satisfied.2A petition for a winding up order in respect of a build",
+      "971A building society may, in accordance with this section and the other applicable provisions of this Act, transfer the whole of its business to a company (its \u201csuccessor\u201d).2The applicable provisions",
+      "1031Where , having consulted the PRA,  the  FCA  is satisfied, with respect to a building society\u2014athat the society has been dissolved by virtue of section 93(5), 94(10), 97(9) or 97(10), orbthat the ",
+      "1041If, on any modification of the statutory provisions in force in Great Britain or Northern Ireland relating to companies, it appears to the Treasury to be expedient to modify the relevant provision",
+      "1061The   FCA  shall prepare and maintain a file relating to each building society (to be known as the public file) and the file shall\u2014acontain the documents or, as the case may be, the copies of the ",
+      "1101Subject to subsection (3) below, any provision to which this section applies, whether contained in the rules of a building society or in any contract with a building society or otherwise, shall be",
+      "1111Notwithstanding any limitation on the time for the taking of proceedings contained in any Act, summary proceedings for any offence under this Act , other than an offence in relation to which provi",
+      "1141Subject to any other provision of this Act or regulations under it, any record to be kept by a building society may be kept in any manner.2Where any such record is not kept by making entries in a ",
+      "1191In this Act, except where the context otherwise requires\u2014\u201cadopt\u201d and \u201cadopted\u201d, in relation to powers, and \u201cadoptable powers\u201d have the meaning given by paragraph 1 of Schedule 2 of this Act;\u201cadvan",
+      "1211The Treasury may, by order made by statutory instrument, make such provision as appears to them to be necessary or expedient for the purposes of the transition to the provisions of this Act from t",
+      "31The rules of a building society shall provide for the matters specified in the Table in sub-paragraph (4) below.2The rules of a building society are binding upon each of the members and officers of ",
+      "10C1A building society which contravenes paragraph 10A(2) above shall be liable on summary conviction to a fine not exceeding level 3 on the standard scale.2A building society which, without reasonabl",
+      "151At any time when a building society\u2014ahas had its permission under  Part 4A  of the Financial Services and Markets Act 2000 to accept deposits cancelled; andbhas not subsequently been given such per",
+      "61The Board may determine its own financial year.2It shall be the duty of the Board\u2014ato keep proper accounts and proper records in relation to the accounts; andbto prepare in respect of any period (re",
+      "21The particulars of a restricted transaction or arrangement required by section 68(3) are particulars of the principal terms of the transaction or arrangement.2Without prejudice to the generality of ",
+      "71The amounts to be shown for any financial year under paragraphs 1 to 5 are the sums receivable in respect of that year (whenever paid) or, in the case of sums not receivable in respect of a period, ",
+      "101This paragraph applies, subject to sub-paragraph (4), in relation to\u2013aloans from and other transactions and arrangements with the society described in section 65 (which restricts loans to and other",
+      "11The following must be shown\u2014athe amount of any remuneration receivable by the society\u2019s auditor  , or an associate of the society\u2019s auditor, for the auditing of the annual accounts, andbthe amount o",
+      "2The types of service in respect of which disclosure is required are\u2014athe auditing of accounts of any associate of the society;baudit-related assurance services;ctaxation compliance services;dany taxa",
+      "31Disclosure is not required of remuneration receivable for the supply of services falling within paragraph  2(h) supplied by a distant associate of the society\u2019s auditor where the total remuneration ",
+      "4The auditor of a building society must supply the directors of the society with such information as is necessary to enable the disclosure required by paragraph 1 to be made.",
+      "51This paragraph defines what is meant in this Schedule by an \u201cassociate\u201d or a \u201cdistant associate\u201d of a building society\u2019s auditor.2The following are associates of a society\u2019s auditor\u2014aany person cont",
+      "6In this Schedule\u2014\u201cassociate of the society\u201d means\u2014any subsidiary of the society, other than a subsidiary in respect of which severe long-term restrictions substantially hinder the exercise of rights ",
+      "11The  first auditor  of a building society may be appointed by the directors at any time before the first general meeting of the building society following the end of the society\u2019s first financial ye",
+      "2The directors, or the building society in general meeting, may fill any casual vacancy in the office of auditor; but while any such vacancy continues, the surviving or continuing auditor or auditors ",
+      "31If at any annual general meeting of a building society no  auditor is  appointed or re-appointed, the  appropriate authority  may appoint a person to fill the vacancy; and the society shall, within ",
+      "3B1This paragraph applies to the appointment of an auditor or auditors under section 77, where the building society has an audit committee.2Before an appointment to which this paragraph applies is mad",
+      "3C1This paragraph applies to the appointment of an auditor or auditors under section 77, where the building society does not have an audit committee.2Before an appointment to which this paragraph appl",
+      "3D1A person who has been, or will have been, auditor of a building society in respect of every financial year comprised in the maximum engagement period may not be appointed as auditor of the society ",
+      "3DA1If\u2014aa building society appoints, or purports to appoint, an auditor or auditors, andbthe appointment or purported appointment is made in breach of paragraph 3B, 3C or 3D (requirements applying to ",
+      "3E1Where a person is auditor of a building society in respect of consecutive financial years, the maximum engagement period of the person as auditor of the society\u2014abegins with the first of those year",
+      "41A resolution at a general meeting of a building society\u2014aappointing as auditor a person other than a retiring auditor; orbfilling a casual vacancy in the office of auditor; orcreappointing as audito",
+      "61A building society may by resolution in general meeting remove an auditor before the expiration of his term of office, notwithstanding anything in any agreement between it and him.2Where a resolutio",
+      "6ZA1The competent authority may apply to the High Court for an order removing an auditor of a building society from office if the authority considers that there are proper grounds for removing the aud",
+      "6A1Where an auditor of a building society is removed from office  , other than by order of the High Court made under paragraph 6ZA, an application may be made to the High Court under this paragraph.2T",
+      "71An auditor of a building society may resign his office by depositing a notice to that effect at the principal office of the society; and any such notice operates to bring his term of office to an en",
+      "81Where an auditor\u2019s notice of resignation contains a statement under paragraph 7(2)(b) above he may also deposit at the principal office of the society a requisition signed by him calling on the dire",
+      "8A1Where an auditor of a building society ceases for any reason to hold office, he must notify the appropriate audit authority.2The notice must\u2014ainform the appropriate audit authority that he has ceas",
+      "8B1Where an auditor ceases to hold office before the end of his term of office, the building society must notify the appropriate audit authority.2The notice must\u2014ainform the appropriate audit authorit",
+      "8C1In this Schedule\u2014\u201cappropriate audit authority\u201d means\u2014the Secretary of State, orif the Secretary of State has delegated functions under section 1252 of the Companies Act 2006  to a body whose functi",
+      "6The duty of the adjudicator to investigate, and make determinations on, actions duly referred for investigation.",
+      "2A scheme must not exclude action from investigation on any other than the following grounds, that is to say\u2014athat the complaint is frivolous or vexatious;bthat the action is the subject of proceeding",
+      "3A scheme must, as regards the duties and powers attached to the investigation of complaints under the scheme\u2014aimpose on the adjudicator a duty, subject to the provision made in pursuance of sub-parag",
+      "41Subject to any provision made in pursuance of sub-paragraph (3) below, a scheme must authorise the adjudicator, in reaching his decision, to have regard to, but not to be bound by, any matter (wheth",
+      "31The central office shall maintain a register of recognised schemes for the investigation of complaints (\u201cthe register\"), and the register shall\u2014acontain a copy of every scheme and the direction for ",
+      "321Where a report is made to the prosecuting authority (within the meaning of section 218) under section 218(4) of the Act, in relation to an officer of a building society, he\n\n\n\nmay, if he thinks fit",
+      "55D1Where a report is made to the prosecuting authority (within the meaning of Article 182) under Article 182(3), in relation to an officer of a building society, he may, if he\n\n\n\nthinks fit, refer th",
+      "81Where a building society adopts any adoptable power under paragraph 2 or 3 above\u2014ait shall, by virtue of this paragraph, assume an obligation, enforceable as provided in pararaph 9 below, not to exe"
+    ],
+    "procedures": []
+  },
+  "dates": [
+    {
+      "type": "deadline",
+      "date": "14",
+      "context": "561In the circumstances mentioned in subsection (2) below, the  FCA and the PRA \u2014amay appoint one or more competent inspectors to investigate and repo"
+    },
+    {
+      "type": "deadline",
+      "date": "15",
+      "context": "871A building society may be dissolved by an instrument of dissolution, with the consent (testified by their signature of that instrument) of three-qu"
+    },
+    {
+      "type": "deadline",
+      "date": "28",
+      "context": "871A building society may be dissolved by an instrument of dissolution, with the consent (testified by their signature of that instrument) of three-qu"
+    },
+    {
+      "type": "deadline",
+      "date": "15",
+      "context": "881A building society may be wound up voluntarily under the applicable winding up legislation if it resolves by special resolution that it be wound up"
+    },
+    {
+      "type": "deadline",
+      "date": "12",
+      "context": "911Where a building society has been dissolved under section 87 or following a winding up, building society insolvency or building society special adm"
+    },
+    {
+      "type": "deadline",
+      "date": "21",
+      "context": "115B1Where a person has received a document or information from a building society otherwise than in hard copy form, the person is entitled to require"
+    },
+    {
+      "type": "deadline",
+      "date": "14",
+      "context": "20A1On a members\u2019 requisition, a building society shall\u2014aduly call a special meeting, and specify the meeting as such in the notice calling it; andbif"
+    },
+    {
+      "type": "deadline",
+      "date": "28",
+      "context": "20B1This paragraph applies where a members\u2019 requisition is deposited at a building society\u2019s principal office and the society is not relieved of the o"
+    },
+    {
+      "type": "deadline",
+      "date": "63",
+      "context": "20B1This paragraph applies where a members\u2019 requisition is deposited at a building society\u2019s principal office and the society is not relieved of the o"
+    },
+    {
+      "type": "deadline",
+      "date": "28",
+      "context": "11Where any land has been mortgaged to a building society as security for an advance and a person sells the land in the exercise of a power (whether s"
+    },
+    {
+      "type": "deadline",
+      "date": "14",
+      "context": "31The following provisions of this paragraph shall apply in place of paragraph 1 of Schedule 16.2The society shall send to every member entitled to no"
+    },
+    {
+      "type": "deadline",
+      "date": "14",
+      "context": "91The following provisions of this paragraph shall apply in place of Part I of Schedule 17.2The society shall send to every member entitled to notice "
+    },
+    {
+      "type": "deadline",
+      "date": "17 June 1994",
+      "context": "3E1Where a person is auditor of a building society in respect of consecutive financial years, the maximum engagement period of the person as auditor o"
+    },
+    {
+      "type": "deadline",
+      "date": "17 June 2020",
+      "context": "3E1Where a person is auditor of a building society in respect of consecutive financial years, the maximum engagement period of the person as auditor o"
+    },
+    {
+      "type": "deadline",
+      "date": "10",
+      "context": "3E1Where a person is auditor of a building society in respect of consecutive financial years, the maximum engagement period of the person as auditor o"
+    },
+    {
+      "type": "deadline",
+      "date": "10",
+      "context": "3E1Where a person is auditor of a building society in respect of consecutive financial years, the maximum engagement period of the person as auditor o"
+    },
+    {
+      "type": "deadline",
+      "date": "14",
+      "context": "61A building society may by resolution in general meeting remove an auditor before the expiration of his term of office, notwithstanding anything in a"
+    },
+    {
+      "type": "deadline",
+      "date": "21",
+      "context": "81Where an auditor\u2019s notice of resignation contains a statement under paragraph 7(2)(b) above he may also deposit at the principal office of the socie"
+    },
+    {
+      "type": "deadline",
+      "date": "40",
+      "context": "2The court may hear and determine a dispute falling within paragraph 1(5) above in any case where, on the application of any person concerned, it appe"
+    },
+    {
+      "type": "deadline",
+      "date": "15",
+      "context": "211Section 130 of the Act (consequences of winding-up order) shall have effect with the following modifications.2Subsections (1) and (3) shall be omit"
+    },
+    {
+      "type": "deadline",
+      "date": "15",
+      "context": "481Article 110 (consequences of winding-up order) shall have effect with the following modifications.2Paragraphs (1) and (3) shall be omitted.3A build"
+    }
+  ],
+  "controls": [
+    "consent_management",
+    "audit_logging",
+    "data_minimization",
+    "training",
+    "access_control",
+    "incident_response"
+  ],
+  "xml_length": 5479031
+}

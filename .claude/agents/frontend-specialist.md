@@ -1,7 +1,8 @@
 ---
 name: frontend-specialist
-description: "Frontend and React specialist. Handles Next.js, React components, UI/UX improvements, and frontend testing."
+description: Frontend and React specialist. Handles Next.js, React components, UI/UX improvements, and frontend testing.
 tools: Read, Write, Execute, Test, Browser
+model: opus
 ---
 
 # Frontend Specialist - RuleIQ

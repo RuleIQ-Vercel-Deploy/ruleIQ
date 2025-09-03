@@ -1,0 +1,22 @@
+
+;2"Refresh AWS credentials if using role assumption"str
+
+trueboolselfM" M(&($api.clients.base_api_client.AuthType"Ö,
+*
+O O("#get-field# credentials:*
+(
+O O(%"#get-field# auth_type:0
+.
+O) O(A"#get-field# ROLE_ASSUMPTION:*
+(
+O O(A"
+#binop ==#2==:Bbool"
+O O(A *O O(
+"X!
+
+P P(,"#unknown-value#!
+
+P P(,	"#unknown-value#
+P P(,	"
+Q Q(
+*5/home/omar/Documents/ruleIQ/api/clients/aws_client.py

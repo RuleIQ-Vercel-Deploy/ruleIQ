@@ -1,0 +1,157 @@
+
+3services.ai.regulation_tools.RegulationInfo.to_dictE
+;/home/omar/Documents/ruleIQ/services/ai/regulation_tools.py ("2*§
+2 !(
+ !(
+%1"dicto
+m
+ (!
+%2"__id*U
+
+__unknown_file (9*7-
++services.ai.regulation_tools.RegulationInfo"
+name‹
+ˆ
+ (!
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+name*"
+
+__unknown_file (
+
+%2v
+t
+2 (B
+%4"__id*\
+
+__unknown_file (@*>-
++services.ai.regulation_tools.RegulationInfo"
+description’
+
+# (B
+%5"__mapSet*"
+
+__unknown_file (
+
+%1*+
+
+__unknown_file (
+description*"
+
+__unknown_file (
+
+%4x
+v
+ (/
+%6"__id*^
+
+__unknown_file (B*@-
++services.ai.regulation_tools.RegulationInfo"
+applicability”
+‘
+ (/
+%7"__mapSet*"
+
+__unknown_file (
+
+%1*-
+
+__unknown_file (
+applicability*"
+
+__unknown_file (
+
+%6{
+y
+E (
+%8"__id*a
+
+__unknown_file (E*C-
++services.ai.regulation_tools.RegulationInfo"
+key_requirements—
+”
+1 (
+%9"__mapSet*"
+
+__unknown_file (
+
+%1*0
+
+__unknown_file (
+key_requirements*"
+
+__unknown_file (
+
+%8u
+s
++ (9
+%10"__id*Z
+
+__unknown_file (>*<-
++services.ai.regulation_tools.RegulationInfo"
+	penalties’
+
+ (9
+%11"__mapSet*"
+
+__unknown_file (
+
+%1*)
+
+__unknown_file (
+	penalties*#
+
+__unknown_file (
+
+%10|
+z
+    (5
+%12"__id*a
+
+__unknown_file (E*C-
++services.ai.regulation_tools.RegulationInfo"
+enforcement_body™
+–
+   (5
+%13"__mapSet*"
+
+__unknown_file (
+
+%1*0
+
+__unknown_file (
+enforcement_body*#
+
+__unknown_file (
+
+%12x
+v
+ G !(
+%14"__id*]
+
+__unknown_file (A*?-
++services.ai.regulation_tools.RegulationInfo"
+last_updated•
+’
+ 7 !(
+%15"__mapSet*"
+
+__unknown_file (
+
+%1*,
+
+__unknown_file (
+last_updated*#
+
+__unknown_file (
+
+%14"
+ !(
+
+%1B/-
++services.ai.regulation_tools.RegulationInfoH

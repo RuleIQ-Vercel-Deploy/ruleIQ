@@ -1,0 +1,26 @@
+{
+  "id": "ruleiq-doppler-env",
+  "name": "ruleIQ with Doppler",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "enabled": true
+    },
+    {
+      "key": "google_api_key", 
+      "value": "'$GOOGLE_API_KEY'",
+      "enabled": true
+    },
+    {
+      "key": "test_user_email",
+      "value": "'${TEST_USER_EMAIL:-test@example.com}'",
+      "enabled": true
+    },
+    {
+      "key": "test_user_password",
+      "value": "'${TEST_USER_PASSWORD:-testpassword123}'",
+      "enabled": true
+    }
+  ]
+}

@@ -1,0 +1,207 @@
+# Serena MCP Server Configuration for ruleIQ Compliance Platform
+# Optimized for intelligent development assistance across the full-stack codebase
+
+name: "ruleIQ"
+type: "full-stack-web-application"
+description: "AI-powered compliance automation platform for UK SMBs"
+language: "python"
+languages:
+  - python
+  - typescript
+  - javascript
+
+project:
+  name: "ruleIQ"
+  type: "full-stack-web-application"
+  description: "AI-powered compliance automation platform for UK SMBs"
+  language: "python"
+  languages:
+    - python
+    - typescript
+    - javascript
+  
+  # Project architecture overview
+  architecture:
+    backend: "FastAPI + PostgreSQL + Redis + Celery"
+    frontend: "Next.js 15 + React + TypeScript + Tailwind CSS"
+    ai_services: "Google Gemini with circuit breaker patterns"
+    testing: "pytest + Jest + Playwright (671+ tests)"
+
+context:
+  mode: "ide-assistant"
+  focus_areas:
+    # Backend development priorities
+    - "api/"                    # FastAPI routers and endpoints
+    - "services/"               # Business logic and AI services
+    - "database/"               # SQLAlchemy models and migrations
+    - "utils/"                  # Shared utilities and validation
+    - "config/"                 # Application configuration
+    
+    # Frontend development priorities  
+    - "frontend/components/"    # React components and UI
+    - "frontend/lib/"          # Frontend utilities and stores
+    - "frontend/app/"          # Next.js App Router pages
+    - "frontend/types/"        # TypeScript type definitions
+    
+    # Integration and testing
+    - "tests/"                 # Backend test suites
+    - "frontend/tests/"        # Frontend test suites
+    - "alembic/"              # Database migrations
+
+  # Development workflow patterns
+  development_patterns:
+    backend_testing: "pytest with fixtures and async support"
+    frontend_testing: "Jest + Playwright for E2E"
+    ai_optimization: "Circuit breaker patterns with Google Gemini"
+    security: "Input validation with whitelist patterns"
+    database: "SQLAlchemy with Alembic migrations"
+
+semantic_analysis:
+  python:
+    language_server: "pyright"
+    include_patterns:
+      # Core API and business logic
+      - "api/**/*.py"
+      - "services/**/*.py" 
+      - "database/**/*.py"
+      - "utils/**/*.py"
+      - "config/**/*.py"
+      - "core/**/*.py"
+      
+      # Application entry points
+      - "main.py"
+      - "celery_app.py"
+      
+      # Testing infrastructure
+      - "tests/**/*.py"
+      - "conftest*.py"
+      
+      # Scripts and utilities
+      - "scripts/**/*.py"
+      - "workers/**/*.py"
+      - "alembic/**/*.py"
+      
+    exclude_patterns:
+      - "__pycache__/**"
+      - "venv/**"
+      - "env/**"
+      - ".pytest_cache/**"
+      - "*.pyc"
+      - "logs/**"
+      - "monitoring/**"
+      
+    # Python-specific semantic understanding
+    key_patterns:
+      ai_services: "services/ai/*.py"
+      database_models: "database/*.py"
+      api_routers: "api/routers/*.py"
+      business_services: "services/*_service.py"
+      validation_utils: "utils/input_validation.py"
+  
+  typescript:
+    language_server: "typescript-language-server"
+    include_patterns:
+      # Frontend application code
+      - "frontend/**/*.ts"
+      - "frontend/**/*.tsx"
+      - "frontend/**/*.js"
+      - "frontend/**/*.jsx"
+      
+    exclude_patterns:
+      - "frontend/node_modules/**"
+      - "frontend/.next/**"
+      - "frontend/dist/**"
+      - "frontend/build/**"
+      - "frontend/.turbo/**"
+      - "frontend/coverage/**"
+      - "frontend/test-results/**"
+      
+    # TypeScript-specific semantic understanding
+    key_patterns:
+      components: "frontend/components/**/*.tsx"
+      stores: "frontend/lib/stores/*.ts"
+      api_services: "frontend/lib/api/*.ts"
+      types: "frontend/types/*.ts"
+      pages: "frontend/app/**/*.tsx"
+      hooks: "frontend/lib/hooks/*.ts"
+
+# ruleIQ-specific domain knowledge
+domain_knowledge:
+  compliance_frameworks:
+    - "GDPR"
+    - "ISO27001" 
+    - "SOX"
+    - "HIPAA"
+    - "PCI-DSS"
+    
+  key_concepts:
+    business_profile: "Company information and compliance requirements"
+    assessment_session: "Interactive compliance questionnaires"
+    evidence_item: "Compliance evidence collection and management"
+    ai_assistant: "Google Gemini-powered compliance guidance"
+    field_mapper: "Frontend-backend field name translation"
+    
+  critical_patterns:
+    security_validation: "Whitelist-based input validation in utils/input_validation.py"
+    token_encryption: "Web Crypto API in frontend/lib/utils/secure-storage.ts"
+    ai_circuit_breaker: "Fault tolerance in services/ai/circuit_breaker.py"
+    field_mapping: "Database column name handling in frontend/lib/api/business-profile/field-mapper.ts"
+
+# Development workflow optimization
+workflow_intelligence:
+  testing_strategy:
+    backend: "pytest with 671+ tests covering AI, API, and business logic"
+    frontend: "Jest for components, Playwright for E2E workflows"
+    ai_testing: "Golden dataset validation for compliance accuracy"
+    
+  performance_monitoring:
+    ai_optimization: "40-60% cost reduction through model selection"
+    response_streaming: "80% latency improvement with real-time responses"
+    caching_strategy: "Redis for AI responses and user data"
+    
+  security_priorities:
+    input_validation: "Comprehensive whitelist patterns"
+    token_storage: "AES-GCM encryption for authentication"
+    rate_limiting: "AI-specific and general API protection"
+
+# Serena assistant behavior preferences
+assistant_behavior:
+  code_analysis_depth: "deep"          # Full semantic understanding
+  suggestion_confidence: "high"        # Production-ready recommendations
+  refactoring_safety: "conservative"   # Maintain existing patterns
+  documentation_style: "technical"     # Developer-focused explanations
+  
+  # Focus priorities for intelligent assistance
+  focus_priorities:
+    1: "AI service optimization and reliability"
+    2: "Database schema and migration management" 
+    3: "Frontend-backend integration patterns"
+    4: "Security and input validation"
+    5: "Testing coverage and quality assurance"
+
+# Development environment settings
+development:
+  auto_format: true
+  type_checking: true
+  lint_on_save: true
+  test_on_change: false  # Manual test execution preferred
+  
+  # ruleIQ development commands
+  commands:
+    backend_start: "uvicorn main:app --reload --host 0.0.0.0 --port 8000"
+    frontend_start: "cd frontend && pnpm dev"
+    backend_test: "pytest tests/"
+    frontend_test: "cd frontend && pnpm test"
+    type_check: "cd frontend && pnpm typecheck"
+    lint: "cd frontend && pnpm lint"
+
+# Performance and resource management
+resource_management:
+  language_server_timeout: 30000  # 30 seconds
+  analysis_cache_size: 100MB
+  max_concurrent_requests: 5
+  
+  # Optimized for ruleIQ's large codebase
+  indexing_strategy: "incremental"
+  symbol_cache_duration: "1hour"
+  dependency_resolution: "lazy"

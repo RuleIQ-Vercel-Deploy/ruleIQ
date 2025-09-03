@@ -1,0 +1,22 @@
+
+'"Placeholder checklist item 1"str
+
+	0int
+;2"Placeholder for AI-powered checklist generation."str
+'"Placeholder checklist item 2"strevidence_text (1list"Š'
+%
+ (K"#unknown-value#Blist&
+$
+ (K"
+#is-exact#:Bbool
+
+ (K"
+#assume#:8
+6
+ (K
+"#set-field# __collection_size:	Bint&
+$
+ (K"#array-add-last#:&
+$
+ (K"#array-add-last#:
+ (K*=/home/omar/Documents/ruleIQ/services/ai/evidence_generator.py

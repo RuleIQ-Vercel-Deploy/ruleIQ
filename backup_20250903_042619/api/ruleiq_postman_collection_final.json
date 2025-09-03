@@ -1,0 +1,987 @@
+{
+  "info": {
+    "name": "RuleIQ Compliance API - Complete",
+    "description": "Complete API collection for RuleIQ Compliance Platform with authentication, all endpoints, and test scenarios",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "2.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{access_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "api_version",
+      "value": "v1",
+      "type": "string"
+    },
+    {
+      "key": "access_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refresh_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "test_user_email",
+      "value": "test@example.com",
+      "type": "string"
+    },
+    {
+      "key": "test_user_password",
+      "value": "TestPassword123!",
+      "type": "string"
+    },
+    {
+      "key": "business_profile_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "assessment_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "policy_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Health & Status",
+      "item": [
+        {
+          "name": "Root Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            },
+            "description": "Check if the API server is running"
+          }
+        },
+        {
+          "name": "Health Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            },
+            "description": "Get health status of the application"
+          }
+        },
+        {
+          "name": "API Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "health"]
+            },
+            "description": "Get API-specific health status"
+          }
+        },
+        {
+          "name": "Monitoring Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/monitoring/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "monitoring", "health"]
+            },
+            "description": "Get detailed monitoring health metrics"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('access_token', response.access_token);",
+                  "    pm.collectionVariables.set('refresh_token', response.refresh_token);",
+                  "    console.log('Login successful - tokens saved');",
+                  "}",
+                  "",
+                  "pm.test('Login successful', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has access token', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response).to.have.property('access_token');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "{{test_user_email}}",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "{{test_user_password}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/auth/token",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "auth", "token"]
+            },
+            "description": "Login with username and password to get JWT tokens"
+          }
+        },
+        {
+          "name": "Get Current User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Returns 401 without token or 200 with valid token', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 401]);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('Response has user data', function () {",
+                  "        const response = pm.response.json();",
+                  "        pm.expect(response).to.have.property('email');",
+                  "    });",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "auth", "me"]
+            },
+            "description": "Get current authenticated user information"
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('access_token', response.access_token);",
+                  "    console.log('Token refreshed successfully');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"refresh_token\": \"{{refresh_token}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/auth/refresh",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "auth", "refresh"]
+            },
+            "description": "Refresh access token using refresh token"
+          }
+        },
+        {
+          "name": "Google OAuth Login",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/auth/google/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "auth", "google", "login"]
+            },
+            "description": "Initiate Google OAuth login flow (returns 503 if not configured)"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/auth/logout",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "auth", "logout"]
+            },
+            "description": "Logout current user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Business Profiles",
+      "item": [
+        {
+          "name": "List Business Profiles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/business-profiles?skip=0&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "business-profiles"],
+              "query": [
+                {
+                  "key": "skip",
+                  "value": "0"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get list of business profiles (requires authentication)"
+          }
+        },
+        {
+          "name": "Create Business Profile",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('business_profile_id', response.id);",
+                  "    console.log('Business profile created with ID:', response.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Test Company Ltd\",\n    \"industry\": \"Technology\",\n    \"size\": \"small\",\n    \"description\": \"A test technology company\",\n    \"website\": \"https://example.com\",\n    \"address\": \"123 Tech Street, London, UK\",\n    \"phone\": \"+44 20 1234 5678\",\n    \"email\": \"contact@testcompany.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/business-profiles",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "business-profiles"]
+            },
+            "description": "Create a new business profile"
+          }
+        },
+        {
+          "name": "Get Business Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/business-profiles/{{business_profile_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "business-profiles", "{{business_profile_id}}"]
+            },
+            "description": "Get specific business profile by ID"
+          }
+        },
+        {
+          "name": "Update Business Profile",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Company Ltd\",\n    \"industry\": \"Technology\",\n    \"size\": \"medium\",\n    \"description\": \"An updated technology company\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/business-profiles/{{business_profile_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "business-profiles", "{{business_profile_id}}"]
+            },
+            "description": "Update an existing business profile"
+          }
+        },
+        {
+          "name": "Delete Business Profile",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/business-profiles/{{business_profile_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "business-profiles", "{{business_profile_id}}"]
+            },
+            "description": "Delete a business profile"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Assessments",
+      "item": [
+        {
+          "name": "List Assessments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/assessments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "assessments"]
+            },
+            "description": "Get list of compliance assessments"
+          }
+        },
+        {
+          "name": "Create Assessment",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('assessment_id', response.id);",
+                  "    console.log('Assessment created with ID:', response.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"business_profile_id\": \"{{business_profile_id}}\",\n    \"framework_id\": \"gdpr\",\n    \"name\": \"GDPR Compliance Assessment\",\n    \"description\": \"Initial GDPR compliance assessment\",\n    \"status\": \"in_progress\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/assessments",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "assessments"]
+            },
+            "description": "Create a new compliance assessment"
+          }
+        },
+        {
+          "name": "Get Assessment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/assessments/{{assessment_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "assessments", "{{assessment_id}}"]
+            },
+            "description": "Get specific assessment by ID"
+          }
+        },
+        {
+          "name": "Submit Assessment Response",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"question_id\": \"q1\",\n    \"answer\": \"yes\",\n    \"notes\": \"We have implemented appropriate technical measures\",\n    \"evidence_urls\": [\"https://example.com/evidence1.pdf\"]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/assessments/{{assessment_id}}/responses",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "assessments", "{{assessment_id}}", "responses"]
+            },
+            "description": "Submit a response to an assessment question"
+          }
+        },
+        {
+          "name": "Complete Assessment",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/assessments/{{assessment_id}}/complete",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "assessments", "{{assessment_id}}", "complete"]
+            },
+            "description": "Mark an assessment as complete"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Frameworks",
+      "item": [
+        {
+          "name": "List Frameworks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/frameworks",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "frameworks"]
+            },
+            "description": "Get list of available compliance frameworks"
+          }
+        },
+        {
+          "name": "Get Framework",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/frameworks/gdpr",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "frameworks", "gdpr"]
+            },
+            "description": "Get specific framework details (e.g., GDPR)"
+          }
+        },
+        {
+          "name": "Get Framework Requirements",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/frameworks/gdpr/requirements",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "frameworks", "gdpr", "requirements"]
+            },
+            "description": "Get requirements for a specific framework"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Policies",
+      "item": [
+        {
+          "name": "List Policies",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/policies",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "policies"]
+            },
+            "description": "Get list of policies"
+          }
+        },
+        {
+          "name": "Create Policy",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('policy_id', response.id);",
+                  "    console.log('Policy created with ID:', response.id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"business_profile_id\": \"{{business_profile_id}}\",\n    \"name\": \"Data Protection Policy\",\n    \"type\": \"privacy\",\n    \"content\": \"This is our comprehensive data protection policy...\",\n    \"version\": \"1.0\",\n    \"status\": \"draft\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/policies",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "policies"]
+            },
+            "description": "Create a new policy"
+          }
+        },
+        {
+          "name": "Get Policy",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/policies/{{policy_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "policies", "{{policy_id}}"]
+            },
+            "description": "Get specific policy by ID"
+          }
+        },
+        {
+          "name": "Generate AI Policy",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"business_profile_id\": \"{{business_profile_id}}\",\n    \"policy_type\": \"privacy\",\n    \"context\": {\n        \"industry\": \"technology\",\n        \"jurisdiction\": \"UK\",\n        \"company_size\": \"small\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/policies/generate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "policies", "generate"]
+            },
+            "description": "Generate a policy using AI"
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Services",
+      "item": [
+        {
+          "name": "AI Analyze",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"text\": \"We collect personal data from our customers...\",\n    \"analysis_type\": \"compliance\",\n    \"framework\": \"gdpr\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/ai/analyze",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "ai", "analyze"]
+            },
+            "description": "Analyze text for compliance issues"
+          }
+        },
+        {
+          "name": "AI Assessment Generate",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"business_profile_id\": \"{{business_profile_id}}\",\n    \"framework\": \"gdpr\",\n    \"context\": {\n        \"industry\": \"technology\",\n        \"company_size\": \"small\",\n        \"data_types\": [\"personal\", \"financial\"]\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/ai/assessments/generate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "ai", "assessments", "generate"]
+            },
+            "description": "Generate an AI-powered assessment"
+          }
+        },
+        {
+          "name": "Circuit Breaker Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/ai/optimization/circuit-breaker/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "ai", "optimization", "circuit-breaker", "status"]
+            },
+            "description": "Get AI circuit breaker status"
+          }
+        },
+        {
+          "name": "AI Cost Monitoring",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/ai/cost-monitoring/usage",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "ai", "cost-monitoring", "usage"]
+            },
+            "description": "Get AI usage and cost metrics"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Compliance",
+      "item": [
+        {
+          "name": "Compliance Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/compliance/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "compliance", "status"]
+            },
+            "description": "Get overall compliance status"
+          }
+        },
+        {
+          "name": "Compliance Score",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/compliance/score?business_profile_id={{business_profile_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "compliance", "score"],
+              "query": [
+                {
+                  "key": "business_profile_id",
+                  "value": "{{business_profile_id}}"
+                }
+              ]
+            },
+            "description": "Get compliance score for a business profile"
+          }
+        },
+        {
+          "name": "Compliance Gaps",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/compliance/gaps?business_profile_id={{business_profile_id}}&framework=gdpr",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "compliance", "gaps"],
+              "query": [
+                {
+                  "key": "business_profile_id",
+                  "value": "{{business_profile_id}}"
+                },
+                {
+                  "key": "framework",
+                  "value": "gdpr"
+                }
+              ]
+            },
+            "description": "Identify compliance gaps"
+          }
+        }
+      ]
+    },
+    {
+      "name": "RAG & Chat",
+      "item": [
+        {
+          "name": "RAG Find Examples",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"query\": \"data protection requirements for small businesses\",\n    \"limit\": 5,\n    \"filters\": {\n        \"framework\": \"gdpr\",\n        \"industry\": \"technology\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/agentic-rag/find-examples",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "agentic-rag", "find-examples"]
+            },
+            "description": "Find relevant compliance examples using RAG"
+          }
+        },
+        {
+          "name": "Chat Message",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"message\": \"What are the key GDPR requirements for my business?\",\n    \"context\": {\n        \"business_profile_id\": \"{{business_profile_id}}\",\n        \"session_id\": \"{{$guid}}\"\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/chat/message",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "chat", "message"]
+            },
+            "description": "Send a chat message to the AI assistant"
+          }
+        },
+        {
+          "name": "IQ Agent Suggestions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/iq-agent/suggestions?business_profile_id={{business_profile_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "iq-agent", "suggestions"],
+              "query": [
+                {
+                  "key": "business_profile_id",
+                  "value": "{{business_profile_id}}"
+                }
+              ]
+            },
+            "description": "Get AI-powered compliance suggestions"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard & Reports",
+      "item": [
+        {
+          "name": "Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/dashboard/stats",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "dashboard", "stats"]
+            },
+            "description": "Get dashboard statistics"
+          }
+        },
+        {
+          "name": "Generate Report",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"business_profile_id\": \"{{business_profile_id}}\",\n    \"report_type\": \"compliance_summary\",\n    \"framework\": \"gdpr\",\n    \"format\": \"pdf\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/reports/generate",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "reports", "generate"]
+            },
+            "description": "Generate a compliance report"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Test Scenarios",
+      "item": [
+        {
+          "name": "Test Unauthorized Access",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/business-profiles",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "business-profiles"]
+            },
+            "description": "Test that endpoint returns 401 without authentication"
+          }
+        },
+        {
+          "name": "Test Invalid Token",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "invalid_token_here",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "auth", "me"]
+            },
+            "description": "Test that invalid token returns 401"
+          }
+        },
+        {
+          "name": "Test Rate Limiting",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/{{api_version}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["api", "{{api_version}}", "health"]
+            },
+            "description": "Run multiple times quickly to test rate limiting"
+          }
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global pre-request script",
+          "// Log the request being made",
+          "console.log(`Making ${pm.request.method} request to: ${pm.request.url}`);",
+          "",
+          "// Check if we have an access token for authenticated requests",
+          "const requiresAuth = !pm.request.url.toString().includes('/health') && ",
+          "                     !pm.request.url.toString().includes('/auth/token') &&",
+          "                     !pm.request.url.toString().includes('/auth/google');",
+          "",
+          "if (requiresAuth && !pm.collectionVariables.get('access_token')) {",
+          "    console.warn('No access token found. Please login first.');",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global test script",
+          "// Log response status",
+          "console.log(`Response Status: ${pm.response.code} ${pm.response.status}`);",
+          "",
+          "// Check for common errors",
+          "if (pm.response.code === 401) {",
+          "    console.log('Authentication required or token expired');",
+          "}",
+          "",
+          "if (pm.response.code === 403) {",
+          "    console.log('Forbidden - insufficient permissions');",
+          "}",
+          "",
+          "if (pm.response.code === 429) {",
+          "    console.log('Rate limited - too many requests');",
+          "}",
+          "",
+          "if (pm.response.code === 500) {",
+          "    console.error('Internal server error - check server logs');",
+          "}",
+          "",
+          "if (pm.response.code === 503) {",
+          "    console.log('Service unavailable - feature may not be configured');",
+          "}"
+        ]
+      }
+    }
+  ]
+}

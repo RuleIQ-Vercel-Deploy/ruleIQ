@@ -1,0 +1,27 @@
+
+2)"Decorator to debug async function calls"strlogger
+ä ä(,include_args
+ä. ä(Finclude_result
+å å("¤#
+!
+
+ÿ ÿ(
+"#unknown-value#*
+(
+
+è ÿ(%closure"#new-object#0
+.
+
+è ÿ("#set-field# include_args:*
+(
+
+è ÿ("#set-field# logger:2
+0
+
+è ÿ("#set-field# include_result:-
++
+
+è ÿ(	"?python-partial-apply?:
+
+ÿ ÿ(
+*3/home/omar/Documents/ruleIQ/config/debug_logging.py

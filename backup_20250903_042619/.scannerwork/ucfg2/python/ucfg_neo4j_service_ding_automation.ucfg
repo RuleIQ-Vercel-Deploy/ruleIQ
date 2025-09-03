@@ -1,0 +1,63 @@
+
+Rservices.neo4j_service.Neo4jGraphRAGService.get_manual_controls_needing_automationA
+5/home/omar/Documents/ruleIQ/services/neo4j_service.py› ›(4"2*ô
+2
+œ œ(Bª
+§
+
+ §(
+query"__id*‰
+
+__unknown_file (ìé
+æ
+        MATCH (ctrl:Control {automation_level: 'MANUAL'})
+        WHERE ctrl.implementation_status IN ['NOT_STARTED', 'IN_PROGRESS']
+        OPTIONAL MATCH (ctrl)-[:IMPLEMENTS]->(req:Requirement {mandatory: true})
+        RETURN ctrl.name AS manual_control,
+               ctrl.type AS control_type,
+               COUNT(req) AS mandatory_requirements,
+               ctrl.description AS description,
+               ctrl.frequency AS frequency
+        ORDER BY COUNT(req) DESC
+        ˜•
+
+¨ ¨(1
+%1*K
+
+__unknown_file (/-
++services.neo4j_service.Neo4jGraphRAGService*%
+
+__unknown_file (	
+
+query2execute_queryC
+A
+
+¨ ¨(1	
+results"__id*"
+
+__unknown_file (
+
+%1
+
+© ©(1
+%2"dict£
+ 
+
+© ©(0
+%3"__mapSet*"
+
+__unknown_file (
+
+%2*5
+
+__unknown_file (
+automation_candidates*'
+
+__unknown_file (
+	
+results"
+
+© ©(1
+
+%2B/-
++services.neo4j_service.Neo4jGraphRAGServiceH

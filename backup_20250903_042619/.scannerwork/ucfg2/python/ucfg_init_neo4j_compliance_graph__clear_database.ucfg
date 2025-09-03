@@ -1,0 +1,62 @@
+
+Mscripts.init_neo4j_compliance_graph.ComplianceGraphInitializer.clear_databaseL
+B/home/omar/Documents/ruleIQ/scripts/init_neo4j_compliance_graph.py8 8("2*©
+29 9(8…‚
+: :(5
+%3*&
+
+__unknown_file (
+
+
+logger*B
+
+__unknown_file (&$
+"ðŸ—‘ï¸  Clearing existing data...2info…
+‚
+; ;(
+%4"__id*j
+
+__unknown_file (N*L@
+>scripts.init_neo4j_compliance_graph.ComplianceGraphInitializer"
+driver?=
+; ;("
+%5*"
+
+__unknown_file (
+
+%42sessionA
+?
+; ;(-	
+session"__id*"
+
+__unknown_file (
+
+%5*
+3
+4*D
+3 
+init_neo4j_compliance_graph.py"
+? ?(
+implicit return*‡
+4< <(4{y
+< <(4
+%1*'
+
+__unknown_file (
+	
+session*9
+
+__unknown_file (
+MATCH (n) DETACH DELETE n2runvt
+= =(-
+%2*&
+
+__unknown_file (
+
+
+logger*4
+
+__unknown_file (
+âœ… Database cleared2info*
+3BB@
+>scripts.init_neo4j_compliance_graph.ComplianceGraphInitializerH

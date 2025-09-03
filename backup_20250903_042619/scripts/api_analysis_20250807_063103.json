@@ -1,0 +1,304 @@
+{
+  "timestamp": "2025-08-07T06:31:03.432353",
+  "summary": {
+    "total_endpoints": 25,
+    "working_endpoints": 0,
+    "missing_endpoints": 12,
+    "error_endpoints": 13
+  },
+  "endpoints": [
+    {
+      "path": "/api/v1/auth/register",
+      "method": "POST",
+      "router": "auth",
+      "exists": true,
+      "status_code": 422,
+      "response_time_ms": 5.93871700039017,
+      "error": "Client error: 422"
+    },
+    {
+      "path": "/api/v1/auth/login",
+      "method": "POST",
+      "router": "auth",
+      "exists": true,
+      "status_code": 401,
+      "response_time_ms": 1437.783760000002,
+      "error": "Client error: 401"
+    },
+    {
+      "path": "/api/v1/auth/me",
+      "method": "GET",
+      "router": "auth",
+      "exists": true,
+      "status_code": 500,
+      "response_time_ms": 366.2182509997365,
+      "error": "Server error: 500"
+    },
+    {
+      "path": "/api/v1/auth/refresh",
+      "method": "POST",
+      "router": "auth",
+      "exists": true,
+      "status_code": 400,
+      "response_time_ms": 3.5446750002847693,
+      "error": "Client error: 400"
+    },
+    {
+      "path": "/api/v1/assessments",
+      "method": "GET",
+      "router": "assessments",
+      "exists": true,
+      "status_code": 401,
+      "response_time_ms": 3.5579099999267783,
+      "error": "Client error: 401"
+    },
+    {
+      "path": "/api/v1/assessments",
+      "method": "POST",
+      "router": "assessments",
+      "exists": true,
+      "status_code": 401,
+      "response_time_ms": 3.5325199996805168,
+      "error": "Client error: 401"
+    },
+    {
+      "path": "/api/v1/assessments/readiness",
+      "method": "GET",
+      "router": "assessments",
+      "exists": true,
+      "status_code": 401,
+      "response_time_ms": 1.9331999997120874,
+      "error": "Client error: 401"
+    },
+    {
+      "path": "/api/v1/business-profiles",
+      "method": "GET",
+      "router": "business_profiles",
+      "exists": true,
+      "status_code": 401,
+      "response_time_ms": 3.509606000079657,
+      "error": "Client error: 401"
+    },
+    {
+      "path": "/api/v1/business-profiles",
+      "method": "POST",
+      "router": "business_profiles",
+      "exists": true,
+      "status_code": 401,
+      "response_time_ms": 3.6307109999142995,
+      "error": "Client error: 401"
+    },
+    {
+      "path": "/api/v1/frameworks",
+      "method": "GET",
+      "router": "frameworks",
+      "exists": true,
+      "status_code": 401,
+      "response_time_ms": 3.0984280001575826,
+      "error": "Client error: 401"
+    },
+    {
+      "path": "/api/v1/policies",
+      "method": "GET",
+      "router": "policies",
+      "exists": true,
+      "status_code": 401,
+      "response_time_ms": 3.252458000133629,
+      "error": "Client error: 401"
+    },
+    {
+      "path": "/api/v1/policies/generate",
+      "method": "POST",
+      "router": "policies",
+      "exists": true,
+      "status_code": 401,
+      "response_time_ms": 2.7210969997213397,
+      "error": "Client error: 401"
+    },
+    {
+      "path": "/api/v1/ai/assessments",
+      "method": "POST",
+      "router": "ai_assessments",
+      "exists": false,
+      "status_code": 404,
+      "response_time_ms": 2.1581849996437086,
+      "error": null
+    },
+    {
+      "path": "/api/v1/ai/health",
+      "method": "GET",
+      "router": "ai_assessments",
+      "exists": false,
+      "status_code": 404,
+      "response_time_ms": 2.0554060001813923,
+      "error": null
+    },
+    {
+      "path": "/api/v1/ai/policies/generate",
+      "method": "POST",
+      "router": "ai_policy",
+      "exists": false,
+      "status_code": 404,
+      "response_time_ms": 1.918410000143922,
+      "error": null
+    },
+    {
+      "path": "/api/v1/ai/policies/templates",
+      "method": "GET",
+      "router": "ai_policy",
+      "exists": false,
+      "status_code": 404,
+      "response_time_ms": 1.851491000252281,
+      "error": null
+    },
+    {
+      "path": "/api/v1/ai/costs",
+      "method": "GET",
+      "router": "ai_cost_monitoring",
+      "exists": false,
+      "status_code": 404,
+      "response_time_ms": 2.249903000119957,
+      "error": null
+    },
+    {
+      "path": "/api/v1/chat/messages",
+      "method": "POST",
+      "router": "chat",
+      "exists": false,
+      "status_code": 404,
+      "response_time_ms": 2.361087999815936,
+      "error": null
+    },
+    {
+      "path": "/api/v1/compliance/status",
+      "method": "GET",
+      "router": "compliance",
+      "exists": true,
+      "status_code": 401,
+      "response_time_ms": 2.5199159999829135,
+      "error": "Client error: 401"
+    },
+    {
+      "path": "/api/v1/compliance/score",
+      "method": "GET",
+      "router": "compliance",
+      "exists": false,
+      "status_code": 404,
+      "response_time_ms": 2.431895999961853,
+      "error": null
+    },
+    {
+      "path": "/api/v1/compliance/check",
+      "method": "POST",
+      "router": "compliance",
+      "exists": false,
+      "status_code": 404,
+      "response_time_ms": 2.4699600003259548,
+      "error": null
+    },
+    {
+      "path": "/api/v1/monitoring/health",
+      "method": "GET",
+      "router": "monitoring",
+      "exists": false,
+      "status_code": 404,
+      "response_time_ms": 3.286394000042492,
+      "error": null
+    },
+    {
+      "path": "/api/v1/monitoring/metrics",
+      "method": "GET",
+      "router": "monitoring",
+      "exists": false,
+      "status_code": 404,
+      "response_time_ms": 3.1272050000552554,
+      "error": null
+    },
+    {
+      "path": "/api/v1/integrations",
+      "method": "GET",
+      "router": "integrations",
+      "exists": false,
+      "status_code": 404,
+      "response_time_ms": 3.556676999778574,
+      "error": null
+    },
+    {
+      "path": "/api/v1/reporting/reports",
+      "method": "GET",
+      "router": "reporting",
+      "exists": false,
+      "status_code": 404,
+      "response_time_ms": 2.8185559999656107,
+      "error": null
+    }
+  ],
+  "router_mapping": {
+    "auth": [
+      "POST /api/v1/auth/register",
+      "POST /api/v1/auth/login",
+      "GET /api/v1/auth/me",
+      "POST /api/v1/auth/refresh"
+    ],
+    "assessments": [
+      "GET /api/v1/assessments",
+      "POST /api/v1/assessments",
+      "GET /api/v1/assessments/readiness"
+    ],
+    "business_profiles": [
+      "GET /api/v1/business-profiles",
+      "POST /api/v1/business-profiles"
+    ],
+    "frameworks": [
+      "GET /api/v1/frameworks"
+    ],
+    "policies": [
+      "GET /api/v1/policies",
+      "POST /api/v1/policies/generate"
+    ],
+    "ai_assessments": [
+      "POST /api/v1/ai/assessments",
+      "GET /api/v1/ai/health"
+    ],
+    "ai_policy": [
+      "POST /api/v1/ai/policies/generate",
+      "GET /api/v1/ai/policies/templates"
+    ],
+    "ai_cost_monitoring": [
+      "GET /api/v1/ai/costs"
+    ],
+    "chat": [
+      "POST /api/v1/chat/messages"
+    ],
+    "compliance": [
+      "GET /api/v1/compliance/status",
+      "GET /api/v1/compliance/score",
+      "POST /api/v1/compliance/check"
+    ],
+    "monitoring": [
+      "GET /api/v1/monitoring/health",
+      "GET /api/v1/monitoring/metrics"
+    ],
+    "integrations": [
+      "GET /api/v1/integrations"
+    ],
+    "reporting": [
+      "GET /api/v1/reporting/reports"
+    ]
+  },
+  "issues_found": [
+    "OpenAPI documentation not available",
+    "Found 12 missing endpoints",
+    "Found 1 endpoints with server errors",
+    "AI endpoints using '/api/v1/ai/' prefix are not found - likely mounted at '/api/v1/ai-*' instead"
+  ],
+  "recommendations": [
+    "Check api/main.py router mounting - some endpoints may be mounted with different prefixes",
+    "AI endpoints: Update frontend to use '/api/v1/ai-assessments' instead of '/api/v1/ai/assessments'",
+    "AI endpoints: Update frontend to use appropriate AI router prefixes as defined in main.py",
+    "Some endpoints require authentication - ensure test suite includes valid JWT tokens",
+    "Some endpoints have validation errors - check request schemas and required fields",
+    "Consider adding Pydantic model validation to ensure proper request format",
+    "Consider adding caching or database query optimization for slow endpoints"
+  ]
+}

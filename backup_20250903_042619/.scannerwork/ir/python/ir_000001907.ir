@@ -1,0 +1,55 @@
+
+4+"Estimate efficiency gain from automation."str
+150int
+!"efficiency_improvement"str
+) "estimated_hours_saved_annually"str
+%"{min(high_auto * 15, 75)}%"str
+"${cost_saved:,.0f}"str
+40int
+
+20int
+!"estimated_cost_savings"strself
+à" à(&opportunities
+à( à(A"·-
++
+
+ã ä("?python-unknown?:Blist7
+5
+
+ã ä(	high_auto"
+builtinslen*:Bint-
++
+
+å æ(&"?python-unknown?:Blist9
+7
+
+å æ('medium_auto"
+builtinslen*:Bint'
+%
+
+ç ç()	"	#binop *#*2*:'
+%
+
+ç, ç(<"	#binop *#*2*:
+6
+4
+
+ç ç(<time_saved_hours"	#binop +#2+:	3
+1
+
+è è(+
+cost_saved"	#binop *#*2*:&
+$
+
+é ë(D"#new-object#Bdict"
+ 
+
+é é(B"	#map-set#:"
+ 
+
+ê ê(;"	#map-set#:"
+ 
+
+ë ë(C"	#map-set#:
+
+é ë(D*?/home/omar/Documents/ruleIQ/services/ai/iq_neo4j_integration.py

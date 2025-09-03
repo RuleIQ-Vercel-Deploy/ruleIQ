@@ -1,0 +1,21 @@
+
+;2"Create an executor function for a scheduled task"strself
+€ €("	task_type
+€$ €(2"ë#
+!
+
+‡ ‡("#unknown-value#*
+(
+
+ƒ ‡(%closure"#new-object#(
+&
+
+ƒ ‡("#set-field# self:-
++
+
+ƒ ‡("#set-field# task_type:-
++
+
+ƒ ‡("?python-partial-apply?:
+
+‡ ‡(*K/home/omar/Documents/ruleIQ/langgraph_agent/graph/celery_migration_graph.py

@@ -1,0 +1,8 @@
+
+&"Get LangSmith API endpoint."str
+"LANGCHAIN_ENDPOINT"str
+*!"https://api.smith.langchain.com"str"2 
+
+D E(."
+osgetenv:
+D E(.*6/home/omar/Documents/ruleIQ/config/langsmith_config.py

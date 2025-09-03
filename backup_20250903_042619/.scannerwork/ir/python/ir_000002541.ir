@@ -1,0 +1,27 @@
+
+"timestamp"str
+"status"str
+
+"1.0.0"str
+&"Basic health check endpoint"str
+	"healthy"str
+		"version"str"Í&
+$
+
+³ ³(N"#new-object#Bdict"
+ 
+
+³ ³("	#map-set#:%
+#
+
+³. ³(9"
+timetimeBfloat"
+ 
+
+³! ³(9"	#map-set#:"
+ 
+
+³; ³(M"	#map-set#:	
+
+
+³ ³(N*'/home/omar/Documents/ruleIQ/api/main.py

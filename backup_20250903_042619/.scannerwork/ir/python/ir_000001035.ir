@@ -1,0 +1,38 @@
+
+1("Check if cached result is still valid."str
+
+	"expires"str
+falseboolself
+Å Å(key
+Å Å("É)
+'
+
+Ñ Ñ(!"#get-field# _cache:4
+2
+
+Ñ Ñ(!"#binop not in#2not in:Bbool "
+
+Ñ Ñ(! *
+Ñ Ñ(
+"
+
+Ö Ö("Á)
+'
+
+Ü Ü("#get-field# _cache:,
+*
+
+Ü Ü(!cached"#array-read#:%
+#
+
+á á(	"
+timetimeBfloat$
+"
+
+á á(."#array-read#:
++
+)
+
+á á(."?python-unknown?*:	
+
+á á(.*:/home/omar/Documents/ruleIQ/database/query_optimization.py

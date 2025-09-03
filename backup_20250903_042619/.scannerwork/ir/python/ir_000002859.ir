@@ -1,0 +1,4 @@
+
+1("rate_limit:ip:{ip}:endpoint:{endpoint}"str
+0'"Key for IP + endpoint specific limits"strip} }(endpoint}! }(."
+ (8*C/home/omar/Documents/ruleIQ/config/rate-limiting/freemium-limits.py

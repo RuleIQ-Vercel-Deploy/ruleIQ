@@ -1,0 +1,33 @@
+
+
+"metadata"str
+"data"str
+	"success"str
+'"Convert to dictionary format"str
+"execution_time"str
+
+"error"strself* *("µ$
+"
+, .("#new-object#Bdict(
+&
+, ,('"#get-field# success: 
+
+, ,('"	#map-set#:%
+#
+,1 ,(:"#get-field# data: 
+
+,) ,(:	"	#map-set#:&
+$
+,E -("#get-field# error: 
+
+,< -("	#map-set#:
+/
+-
+-% -(8"#get-field# execution_time: 
+
+- -(8"	#map-set#:)
+'
+-F .("#get-field# metadata: 
+
+-: .("	#map-set#:
+, .(*0/home/omar/Documents/ruleIQ/services/ai/tools.py

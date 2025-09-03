@@ -1,0 +1,34 @@
+
+%"Convert path to dictionary"str
+"nodes"str
+"length"str
+"relationships"str
+
+"total_weight"strselfu u("¦%
+#
+	w w(µ"#new-object#Bdict+
+)
+w w(:"?python-unknown?:Blist 
+
+w w(:"	#map-set#:+
+)
+wM w(v"?python-unknown?:Blist 
+
+w< w(v	"	#map-set#:/
+-
+
+wˆ w(™"#get-field# total_weight:!
+
+	wx w(™"	#map-set#:
+(
+&
+
+w© w(³"#get-field# nodes:,
+*
+
+w¥ w(´"
+builtinslen*:Bint"
+ 
+
+w› w(´"	#map-set#:
+	w w(µ*>/home/omar/Documents/ruleIQ/services/knowledge_graph/models.py

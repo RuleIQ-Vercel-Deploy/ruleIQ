@@ -1,0 +1,102 @@
+
+@neo4j_service.Neo4jGraphRAGService.query_controls_for_regulationM
+A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.pyæ æ(+"2*
+
+2
+è è(P¨
+¥
+
+é ô(
+query"__id*‡
+
+__unknown_file (êç
+ä
+        MATCH (reg:Regulation {name: $regulation})-[:REQUIRES]->(req:Requirement)
+        OPTIONAL MATCH (req)<-[:IMPLEMENTS]-(ctrl:Control)
+        RETURN req.title AS requirement,
+               req.mandatory AS is_mandatory,
+               COLLECT(ctrl.name) AS existing_controls,
+               CASE 
+                 WHEN SIZE(COLLECT(ctrl)) = 0 THEN 'MISSING'
+                 ELSE 'IMPLEMENTED'
+               END AS status
+        ORDER BY req.mandatory DESC, status
+        
+
+õ õ(+
+%1"dict›
+˜
+
+õ õ(*
+%2"__mapSet*"
+
+__unknown_file (
+
+%1**
+
+__unknown_file (
+
+regulation**
+
+__unknown_file (
+
+
+regulationB
+@
+
+õ õ(+
+params"__id*"
+
+__unknown_file (
+
+%1·´
+
+ö ö(9
+%3*B
+
+__unknown_file (&$
+"neo4j_service.Neo4jGraphRAGService*%
+
+__unknown_file (	
+
+query*&
+
+__unknown_file (
+
+
+params2execute_queryC
+A
+
+ö ö(9	
+results"__id*"
+
+__unknown_file (
+
+%3
+
+÷ ÷(/
+%4"dict¡
+ž
+
+÷ ÷(.
+%5"__mapSet*"
+
+__unknown_file (
+
+%4*3
+
+__unknown_file (
+regulation_controls*'
+
+__unknown_file (
+	
+results"
+
+÷ ÷(/
+
+%4:
+
+æ2 æ(A
+
+regulationB&$
+"neo4j_service.Neo4jGraphRAGServiceH

@@ -1,0 +1,83 @@
+
+;api.middleware.api_versioning.APIVersioning.mark_deprecatedF
+</home/omar/Documents/ruleIQ/api/middleware/api_versioning.py ("2*§
+2 (-
+. (}
+%1"dict“
+
+/ (A
+%2"__mapSet*"
+
+__unknown_file (
+
+%1*'
+
+__unknown_file (	
+version*'
+
+__unknown_file (
+	
+version›
+˜
+C (]
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*+
+
+__unknown_file (
+replacement*+
+
+__unknown_file (
+
+replacementœ
+™
+_ (|
+%4"__mapSet*"
+
+__unknown_file (
+
+%1*-
+
+__unknown_file (
+deprecated_at**
+
+__unknown_file (
+
+2024-01-01
+}
+ (!
+%6"__id*e
+
+__unknown_file (I*G-
++api.middleware.api_versioning.APIVersioning"
+deprecated_endpoints¤¡
+ (}
+%5"dict.__setitem__*"
+
+__unknown_file (
+
+%6*(
+
+__unknown_file (
+
+
+endpoint*"
+
+__unknown_file (
+
+%12__setitem__*
+3*7
+3
+api_versioning.py"
+ (
+implicit return:
+ (+
+
+endpoint:
+- (9	
+version:
+; (Z
+replacementB/-
++api.middleware.api_versioning.APIVersioningH

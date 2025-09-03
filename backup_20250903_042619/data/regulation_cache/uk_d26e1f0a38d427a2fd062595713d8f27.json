@@ -1,0 +1,299 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/eur/2017/1129/data.xml",
+  "fetched_at": "2025-08-31T18:16:08.891518",
+  "metadata": {
+    "title": "Regulation (EU)\u00a02017/1129 of the European\u00a0Parliament and of the Council of 14\u00a0June 2017 on the prospectus to be published when securities are offered to the public or admitted to trading on a regulated market, and repealing Directive\u00a02003/71/EC (Text with EEA relevance)",
+    "description": "Regulation (EU)\u00a02017/1129 of the European\u00a0Parliament and of the Council of 14\u00a0June 2017 on the prospectus to be published when securities are offered to the public or admitted to trading on a regulated market, and repealing Directive\u00a02003/71/EC (Text with EEA relevance)",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "article-1",
+      "text": "Article\u00a011This Regulation lays down requirements for the drawing up, approval and distribution of the prospectus to be published when securities are offered to the public or admitted to trading on a regulated market situated or operating within  the United Kingdom.2This Regulation shall not apply to the following types of securities:aunits issued by collective investment undertakings other than the closed-end type;bnon-equity securities issued by\u2014ithe government of any country or territory,iia l",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-2",
+      "text": "Article\u00a02For the purposes of this Regulation, the following definitions apply:FCA\u2019 means the Financial Conduct Authority;FSMA\u2019 means the Financial Services and Markets Act 2000 ;\u2018markets in financial instruments regulation\u2019 means Regulation (EU) No 600/2014 of the European Parliament and of the Council of 15 May 2014 on markets in financial instruments and amending Regulation (EU) No 648/2012;references to a  \u2018third country\u2019 (including in expressions including the words  \u2018third country\u2019) are to ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent"
+      ]
+    },
+    {
+      "id": "article-3",
+      "text": "Article\u00a031Without prejudice to Article\u00a01(4), securities shall only be offered to the public in the  United Kingdom  after prior publication of a prospectus in accordance with this Regulation.2. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .3Without prejudice to Article\u00a01(5), securities shall only be admitted to trading on a regulated market situated or operating within the  United Kingdom  after prior publication of a prospectus in accordance with this Regulation.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-4",
+      "text": "Article\u00a041Where an offer of securities to the public or an admission of securities to trading on a regulated market is outside the scope of this Regulation in accordance with Article\u00a01(3), or exempted from the obligation to publish a prospectus in accordance with Article\u00a01(4), 1(5) or\u00a03(2), an issuer, an offeror or a person asking for admission to trading on a regulated market shall be entitled to voluntarily draw up a prospectus in accordance with this Regulation.2Such voluntarily drawn up pros",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-5",
+      "text": "Article\u00a05\n                  \n                     \n                        1\n                        \n                           Any subsequent resale of securities which were previously the subject of one or more of the types of offer of securities to the public listed in points (a) to (d) of Article\u00a01(4) shall be considered as a separate offer and the definition set out in point (d) of Article\u00a02 shall apply for the purpose of determining whether that resale is an offer of securities to the pub",
+      "type": "mandatory",
+      "keywords": [
+        "consent"
+      ]
+    },
+    {
+      "id": "article-6",
+      "text": "Article\u00a06\n                  \n                     \n                        1\n                        \n                           Without prejudice to Article\u00a014(2) and Article\u00a018(1), a prospectus shall contain the necessary information which is material to an investor for making an informed assessment of:\n                           \n                              a\n                              \n                                 the assets and liabilities, profits and losses, financial position, a",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-7",
+      "text": "Article\u00a071The prospectus shall include a summary that provides the key information that investors need in order to understand the nature and the risks of the issuer, the guarantor and the securities that are being offered or admitted to trading on a regulated market, and that is to be read together with the other parts of the prospectus to aid investors when considering whether to invest in such securities.By way of derogation from the first subparagraph, no summary shall be required where the p",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-8",
+      "text": "Article\u00a081For non-equity securities, including warrants in any form, the prospectus may, at the choice of the issuer, offeror or person asking for the admission to trading on a regulated market, consist of a base prospectus containing the necessary information concerning the issuer and the securities offered to the public or to be admitted to trading on a regulated market.2A base prospectus shall include the following information:aa template, entitled \u2018form of the final terms\u2019, to be filled out ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-9",
+      "text": "Article\u00a091Any issuer whose securities are admitted to trading on a regulated market or an MTF may draw up every financial year a registration document in the form of a universal registration document describing the company\u2019s organisation, business, financial position, earnings and prospects, governance and shareholding structure.2Any issuer that chooses to draw up a universal registration document every financial year shall submit it for approval to the competent authority ... in accordance with",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-10",
+      "text": "Article\u00a0101An issuer that has already had a registration document approved by  the competent  authority shall be required to draw up only the securities note and the summary, where applicable, when securities are offered to the public or admitted to trading on a regulated market. In that case, the securities note and the summary shall be subject to a separate approval.Where, since the approval of the registration document, there has been a significant new factor, material mistake or material ina",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-12",
+      "text": "Article\u00a012\n                  \n                     \n                        1\n                        \n                           A prospectus, whether a single document or consisting of separate documents, shall be valid for\u00a012 months after its approval for offers to the public or admissions to trading on a regulated market, provided that it is completed by any supplement required pursuant to Article\u00a023.\n                        \n                        \n                           Where a prospe",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-13",
+      "text": "Article\u00a0131The Treasury may by regulations  supplement this Regulation regarding the format of the prospectus, the base prospectus and the final terms, and the schedules defining the specific information to be included in a prospectus, including LEIs and ISINs, avoiding duplication of information when a prospectus is composed of separate documents.In particular, when setting out the various prospectus schedules, account shall be taken of the following:athe various types of information needed by ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-14",
+      "text": "Article\u00a0141The following persons may choose to draw up a simplified prospectus under the simplified disclosure regime for secondary issuances, in the case of an offer of securities to the public or of an admission to trading of securities on a regulated market:aissuers whose securities have been admitted to trading on a regulated market or an SME growth market continuously for at least the last\u00a018 months and who issue securities fungible with existing securities which have been previously issued",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-15",
+      "text": "Article\u00a0151The following persons may choose to draw up  a UK  Growth prospectus under the proportionate disclosure regime set out in this Article in the case of an offer of securities to the public provided that they have no securities admitted to trading on a regulated market:aSMEs;bissuers, other than SMEs, whose securities are traded or are to be traded on an SME growth market, provided that those issuers had an average market capitalisation of less than EUR\u00a0500 000 000 on the basis of end-ye",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-16",
+      "text": "Article\u00a0161The risk factors featured in a prospectus shall be limited to risks which are specific to the issuer and/or to the securities and which are material for taking an informed investment decision, as corroborated by the content of the registration document and the securities note.When drawing up the prospectus, the issuer, the offeror or the person asking for admission to trading on a regulated market shall assess the materiality of the risk factors based on the probability of their occur",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-17",
+      "text": "Article\u00a0171Where the final offer price and/or amount of securities to be offered to the public, whether expressed in number of securities or as an aggregate nominal amount, cannot be included in the prospectus:athe acceptances of the purchase or subscription of securities may be withdrawn for not less than two working days after the final offer price and/or amount of securities to be offered to the public has been filed; orbthe following shall be disclosed in the prospectus:the maximum price and",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-18",
+      "text": "Article\u00a0181The competent authority ... may authorise the omission from the prospectus, or constituent parts thereof, of certain information to be included therein, where it considers that any of the following conditions is met:adisclosure of such information would be contrary to the public interest;bdisclosure of such information would be seriously detrimental to the issuer or to the guarantor, if any, provided that the omission of such information would not be likely to mislead the public with ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-19",
+      "text": "Article\u00a0191Information may be incorporated by reference in a prospectus where it has been previously or simultaneously published electronically, drawn up in a language fulfilling the requirements of Article\u00a027 as it had effect immediately before exit day where the information was published before  IP completion day,  and where it is contained in one of the following documents:aa document which has\u2014ibefore  IP completion day, been approved by or filed with a competent authority (as defined in thi",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-20",
+      "text": "Article\u00a0201A prospectus shall not be published unless the ... competent authority has approved it, or all of its constituent parts in accordance with Article\u00a010.2The competent authority shall notify the issuer, the offeror or the person asking for admission to trading on a regulated market of its decision regarding the approval of the prospectus within\u00a010 working days of the submission of the draft prospectus.Where the competent authority fails to take a decision on the prospectus within the tim",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-21",
+      "text": "Article\u00a0211Once approved, the prospectus shall be made available to the public by the issuer, the offeror or the person asking for admission to trading on a regulated market at a reasonable time in advance of, and at the latest at the beginning of, the offer to the public or the admission to trading of the securities involved.In the case of an initial offer to the public of a class of shares that is admitted to trading on a regulated market for the first time, the prospectus shall be made availa",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-22",
+      "text": "Article\u00a0221Any advertisement relating either to an offer of securities to the public or to an admission to trading on a regulated market shall comply with the principles contained in paragraphs\u00a02 to\u00a05. Paragraphs\u00a02 to\u00a04 and point (b) of paragraph\u00a05 shall apply only to cases where the issuer, the offeror or the person asking for admission to trading on a regulated market is subject to the obligation to draw up a prospectus.2Advertisements shall state that a prospectus has been or will be publishe",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-23",
+      "text": "Article\u00a0231Every significant new factor, material mistake or material inaccuracy relating to the information included in a prospectus which may affect the assessment of the securities and which arises or is noted between the time when the prospectus is approved and the closing of the offer period or the time when trading on a regulated market begins, whichever occurs later, shall be mentioned in a supplement to the prospectus without undue delay.Such a supplement shall be approved in the same wa",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-28",
+      "text": "Article\u00a028Where a third country issuer intends to offer securities to the public in the  United Kingdom  or to seek admission to trading of securities on a regulated market established in the  United Kingdom  under a prospectus drawn up in accordance with this Regulation, it shall obtain approval of its prospectus, in accordance with Article\u00a020, from the competent authority ....Once a prospectus is approved in accordance with the first subparagraph, it shall entail all the rights and obligations",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-30",
+      "text": "Article\u00a0301For the purpose of Article 29 and, where deemed necessary, for the purpose of Article 28, the competent authority shall conclude cooperation arrangements with supervisory authorities of third countries concerning the exchange of information with supervisory authorities in third countries and the enforcement of obligations arising under this Regulation in third countries unless that third country is a high-risk third country within the meaning of regulation 33 of the Money Laundering, ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-32",
+      "text": "Article\u00a0321. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .3. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .4This Regulation is without prejudice to  the law of the United Kingdom  on takeover bids, merger transactions and other transactions affecting the ownership or control of companies  which implemented  Directive\u00a02004/25/EC and that impose requirements in addition to the requirements of this Regula",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-35",
+      "text": "Article\u00a0351All information exchanged between the  competent authority, the Treasury and any other authority (including a third country authority), or received by the competent authority, the Treasury or any other authority (including a third country authority) from another authority  under this Regulation that concerns business or operational conditions and other economic or personal affairs shall be considered to be confidential and shall be subject to the requirements of professional secrecy, ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-36",
+      "text": "Article\u00a036With regard to the processing of personal data within the framework of this Regulation,  the competent authority shall carry out its  tasks for the purposes of this Regulation in accordance with Regulation (EU)\u00a02016/679 and the Data Protection Act 2018.. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection"
+      ]
+    },
+    {
+      "id": "article-42",
+      "text": "Article\u00a0421. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .3. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .4The competent authority shall ensure that any information about an infringement of this Regulation which the authority publishes under section 391(4) of FSMA is published on its website (whether or not also published in any other way) and then remains on that website for a period of at least five",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-46",
+      "text": "Article\u00a046\n                  \n                     \n                        1\n                        \n                           Directive\u00a02003/71/EC is repealed with effect from 21\u00a0July 2019, except for:\n                           \n                              a\n                              \n                                 points (a) and (g) of Article\u00a04(2) of Directive\u00a02003/71/EC, which are repealed with effect from 20\u00a0July 2017; and\n                              \n                         ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-49",
+      "text": "Article\u00a0491This Regulation shall enter into force on the twentieth day following that of its publication in the Official Journal of the European\u00a0Union.2Without prejudice to Article\u00a044(2), this Regulation shall apply from 21\u00a0July 2019, except for Article\u00a01(3) and Article\u00a03(2) which shall apply from 21\u00a0July 2018 and points (a), (b) and (c) of the first subparagraph of Article\u00a01(5) and the second subparagraph of Article\u00a01(5) which shall apply from 20\u00a0July 2017.3. . . . . . . . . . . . . . . . . . .",
+      "type": "mandatory",
+      "keywords": []
+    }
+  ],
+  "penalties": [],
+  "enforcement": {
+    "authority": [
+      "Financial Conduct Authority",
+      "FCA"
+    ],
+    "powers": [
+      "Article\u00a071The prospectus shall include a summary that provides the key information that investors need in order to understand the nature and the risks of the issuer, the guarantor and the securities t",
+      "Article\u00a0191Information may be incorporated by reference in a prospectus where it has been previously or simultaneously published electronically, drawn up in a language fulfilling the requirements of A",
+      "Article\u00a0301For the purpose of Article 29 and, where deemed necessary, for the purpose of Article 28, the competent authority shall conclude cooperation arrangements with supervisory authorities of thi"
+    ],
+    "procedures": []
+  },
+  "dates": [
+    {
+      "type": "deadline",
+      "date": "20\u00a0July 2017",
+      "context": "Article\u00a011This Regulation lays down requirements for the drawing up, approval and distribution of the prospectus to be published when securities are o"
+    },
+    {
+      "type": "deadline",
+      "date": "3 January 2018",
+      "context": "Article\u00a02For the purposes of this Regulation, the following definitions apply:FCA\u2019 means the Financial Conduct Authority;FSMA\u2019 means the Financial Ser"
+    },
+    {
+      "type": "deadline",
+      "date": "21\u00a0July 2018",
+      "context": "Article\u00a0221Any advertisement relating either to an offer of securities to the public or to an admission to trading on a regulated market shall comply "
+    },
+    {
+      "type": "deadline",
+      "date": "21\u00a0July 2019",
+      "context": "Article\u00a046\n                  \n                     \n                        1\n                        \n                           Directive\u00a02003/71/EC"
+    }
+  ],
+  "controls": [
+    "consent_management",
+    "audit_logging",
+    "data_minimization",
+    "incident_response"
+  ],
+  "xml_length": 849017
+}

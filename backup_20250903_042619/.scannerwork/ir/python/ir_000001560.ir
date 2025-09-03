@@ -1,0 +1,32 @@
+
+90"Use graph patterns to identify compliance gaps"str
+…û"
+        MATCH (domain:ComplianceDomain)-[:GOVERNS]->(reg:Regulation)
+              -[:REQUIRES]->(req:Requirement)
+        WHERE NOT EXISTS((req)<-[:IMPLEMENTS]-(:Control))
+          AND req.mandatory = true
+        RETURN domain.name AS domain,
+               domain.priority AS priority,
+               reg.name AS regulation,
+               COUNT(req) AS missing_controls,
+               COLLECT(req.title) AS unimplemented_requirements
+        ORDER BY domain.priority, missing_controls DESC
+        "str
+"compliance_gaps"strself
+ù# ù('"Û(
+&
+û û(query"#id#:Bstr#
+!
+
+‡ ‡(1"#unknown-value#,
+*
+
+‡ ‡(1results"#unknown-value#&
+$
+
+ˆ ˆ(+"#new-object#Bdict"
+ 
+
+ˆ ˆ(*	"	#map-set#:
+
+ˆ ˆ(+*A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py

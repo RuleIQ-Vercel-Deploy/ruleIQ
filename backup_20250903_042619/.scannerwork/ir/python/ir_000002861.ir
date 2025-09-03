@@ -1,0 +1,7 @@
+
+*!"rate_limit:ai:{service}:ip:{ip}"str
+$"Key for AI service limits"strip
+‡ ‡(service
+‡  ‡(,"
+
+‰ ‰(1*C/home/omar/Documents/ruleIQ/config/rate-limiting/freemium-limits.py

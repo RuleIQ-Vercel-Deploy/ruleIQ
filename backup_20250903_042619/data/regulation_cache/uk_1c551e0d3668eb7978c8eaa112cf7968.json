@@ -1,0 +1,378 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/eur/2014/600/data.xml",
+  "fetched_at": "2025-08-31T18:16:06.058024",
+  "metadata": {
+    "title": "Regulation (EU) No 600/2014 of the European Parliament and of the Council of 15 May 2014 on markets in financial instruments and amending Regulation (EU) No 648/2012 (Text with EEA relevance)",
+    "description": "Regulation (EU) No 600/2014 of the European Parliament and of the Council of 15 May 2014 on markets in financial instruments and amending Regulation (EU) No 648/2012 (Text with EEA relevance)",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "article-1",
+      "text": "Article 11This Regulation establishes uniform requirements in relation to the following:adisclosure of trade data to the public;breporting of transactions to the competent authorities;ctrading of derivatives on organised venues;d. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .eproduct intervention powers of competent authorities ... and powers  of the competent authority  on position management controls and position limits;fprovision of investment services or activities by third-c",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent"
+      ]
+    },
+    {
+      "id": "article-2",
+      "text": "Article 21For the purposes of this Regulation, the following definitions apply:\u201cinvestment firm\u201d has the meaning given in paragraph 1A;\u201cinvestment services and activities\u201d means any of the services and activities listed in Part 3 of Schedule 2 to the Regulated Activities Order, relating to any of the instruments listed in Part 1 of Schedule 2 to that Order;\u201cancillary services\u201d means any of the services listed in Part 3A of Schedule 2 to the Regulated Activities Order;\u201cexecution of orders on beha",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting",
+        "consent",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-3",
+      "text": "Article 31Market operators and investment firms operating a trading venue shall make public current bid and offer prices and the depth of trading interests at those prices which are advertised through their systems for shares, depositary receipts, ETFs, certificates and other similar financial instruments traded on a trading venue. That requirement shall also apply to actionable indication of interests. Market operators and investment firms operating a trading venue shall make that information a",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-4",
+      "text": "Article 41                        The FCA may  waive the obligation for market operators and investment firms operating a trading venue to make public the information referred to in Article 3(1) for:asystems matching orders based on a trading methodology by which the price of the financial instrument referred to in Article 3(1) is derived from the trading venue where that financial instrument was first admitted to trading or the most relevant market in terms of liquidity, where that reference pr",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-4a",
+      "text": "Article 4a1.The FCA may direct that a waiver provided for by Article 4 is suspended (whether entirely or to such an extent as may be specified in the direction) if it considers that continued use of the waiver would unduly harm price formation.2.The suspension of a waiver by virtue of a direction under paragraph 1 may not have effect for a period longer than six months, but this does not prevent the giving of a further direction under that paragraph by which the suspension is renewed for a perio",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-6",
+      "text": "Article 61Market operators and investment firms operating a trading venue shall make public the price, volume and time of the transactions executed in respect of shares, depositary receipts, ETFs, certificates and other similar financial instruments traded on that trading venue. Market operators and investment firms operating a trading venue shall make details of all such transactions public as close to real-time as is technically possible.2Market operators and investment firms operating a tradi",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-7",
+      "text": "Article 71The FCA  shall be able to authorise market operators and investment firms operating a trading venue to provide for deferred publication of the details of transactions based on their type or size.In particular,  the FCA  may authorise the deferred publication in respect of transactions that are large in scale compared with the normal market size for that share, depositary receipt, ETF, certificate or other similar financial instrument or that class of share, depositary receipt, ETF, cer",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-8",
+      "text": "Article 81The FCA must by rules impose pre-trade transparency requirements on relevant persons in respect of the trading of such relevant instruments as the FCA determines should be subject to the requirements for the purposes of furthering\u2014aefficient price formation, andbthe fair evaluation of financial assets.2The power to make rules under paragraph 1 is exercisable only if the FCA considers that the rules are necessary or expedient for the purpose of advancing one or more of its operational o",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-9",
+      "text": "Article 91Rules under Article 8 may include provision for any requirements imposed by the rules to be waived in such cases, and to such extent, as may be determined by or under the rules.2Rules that include provision under paragraph 1 may impose whatever conditions on the application of a waiver the FCA considers appropriate.3The FCA may by notice given to a relevant person withdraw a waiver granted by virtue of paragraph 1 if the FCA considers that the waiver is being used\u2014ain a way that deviat",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-10",
+      "text": "Article 101The FCA must by rules impose post-trade transparency requirements on relevant persons in respect of the trading of such relevant instruments as the FCA determines should be subject to the requirements for the purposes of furthering\u2014aefficient price formation, andbthe fair evaluation of financial assets.2The power to make rules under paragraph 1 is exercisable only if the FCA considers that the rules are necessary or expedient for the purpose of advancing one or more of its operational",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-11",
+      "text": "Article 111Rules under Article 10 may include provision authorising relevant persons to defer complying with requirements imposed by the rules in such cases and to such extent as the rules may specify.2Rules made by virtue of paragraph 1 may impose whatever conditions on the application of a deferral the FCA considers appropriate.3The FCA may by notice suspend any requirements imposed by rules under Article 10 in the case of such relevant instruments, or class of relevant instruments, as may be ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-12",
+      "text": "Article 121Market operators and investment firms operating a trading venue shall make the information published in accordance with , or with rules made under, Articles 3, 4 and 6 to 11 available to the public by offering pre-trade and post-trade transparency data separately.2                        The FCA may make  technical standards to specify the offering of pre-trade and post-trade transparency data, including the level of disaggregation of the data to be made available to the public as ref",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-13",
+      "text": "Article 131Market operators and investment firms operating a trading venue shall make the information published in accordance with , or with rules made under, Articles 3, 4 and 6 to 11 available to the public on a reasonable commercial basis and ensure non-discriminatory access to the information. Such information shall be made available free of charge 15 minutes after publication.2                    The Treasury may by regulations clarify  what constitutes a reasonable commercial basis to make",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-14",
+      "text": "Article 141Investment firms shall make public firm quotes in respect of those shares, depositary receipts, ETFs, certificates and other similar financial instruments traded on a trading venue for which they are systematic internalisers and for which there is a liquid market.Where there is not a liquid market for the financial instruments referred to in the first subparagraph, systematic internalisers shall disclose quotes to their clients upon request.2This Article and Articles 15, 16 and 17 sha",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-15",
+      "text": "Article 151Systematic internalisers shall make public their quotes on a regular and continuous basis during normal trading hours. They may update their quotes at any time. They shall be allowed, under exceptional market conditions, to withdraw their quotes.Firms that meet the definition of systematic internaliser must notify the FCA in accordance with the rules of that authority. The FCA must publish a list of the systematic internalisers in the United Kingdom for which it has received notificat",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-16",
+      "text": "Article 16The  competent authority  shall check the following:that investment firms regularly update bid and offer prices published in accordance with Article 14 and maintain prices which reflect the prevailing market conditions;that investment firms comply with the conditions for price improvement laid down in Article 15(2).",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-17",
+      "text": "Article 171Systematic internalisers shall be allowed to decide, on the basis of their commercial policy and in an objective non-discriminatory way, the clients to whom they give access to their quotes. To that end there shall be clear standards for governing access to their quotes. Systematic internalisers may refuse to enter into or discontinue business relationships with clients on the basis of commercial considerations such as the client credit status, the counterparty risk and the final sett",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-17a",
+      "text": "Article 17aSystematic internalisers\u2019 quotes, price improvements on those quotes and execution prices shall comply with tick sizes set in accordance with  paragraph 3G of Schedule 1 to the Financial Services and Markets Act 2000 (Recognition Requirements for Investment Exchanges, Clearing Houses and Central Securities Depositories) Regulations 2001, as if that paragraph applied to the systemic internaliser in the course of its operations as such and sub-paragraph (1A) were omitted.Application of ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-18",
+      "text": "Article 181The FCA may by rules impose pre-trade transparency requirements on systematic internalisers in respect of the trading of such relevant instruments as the FCA determines should be subject to the requirements for the purposes of furthering\u2014aefficient price formation, andbthe fair evaluation of financial assets.2The power to make rules under paragraph 1 is exercisable only if the FCA considers that the rules are necessary or expedient for the purposes of advancing one or more of its oper",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-18a",
+      "text": "Article 18a1Rules under Article 18 may include provision for any requirements imposed by those rules to be waived in such cases, and to such extent, as may be determined by or under the rules.2Rules that include provision under paragraph 1 may impose whatever conditions on the application of a waiver as the FCA considers appropriate.3The FCA may by notice given to a systematic internaliser withdraw a waiver granted by virtue of paragraph 1 if the FCA considers that the waiver is being used\u2014ain a",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-18b",
+      "text": "Article 18b1Firms meeting the definition of systematic internaliser must notify the FCA of that fact in accordance with rules made by the FCA.2The FCA must publish, and keep up to date, a list of the systematic internalisers for which it has received notification under paragraph 1.",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-20",
+      "text": "Article 201Investment firms which, either on own account or on behalf of clients, conclude transactions in shares, depositary receipts, ETFs, certificates and other similar financial instruments traded on a trading venue, shall make public the volume and price of those transactions and the time at which they were concluded. That information shall be made public through an APA.2The information which is made public in accordance with paragraph 1 of this Article and the time-limits within which it ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-21",
+      "text": "Article 211The FCA must by rules impose post-trade transparency requirements on relevant persons in respect of the trading of such relevant instruments as the FCA determines should be subject to the requirements for the purposes of furthering\u2014aefficient price formation, andbthe fair evaluation of financial assets.2The power to make rules under paragraph 1 is exercisable only if the FCA considers that the rules are necessary or expedient for the purpose of advancing one or more of its operational",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-22",
+      "text": "Article 221In order to carry out calculations for determining the requirements for the pre-trade and post-trade transparency and the trading obligation regimes imposed by or under Articles 3 to 11, Articles 14 to 21 and Article 32, which are applicable to financial instruments and for determining whether an investment firm is a systematic internaliser,  the competent authority  may require information from:atrading venues;bAPAs; andcCTPs.2Trading venues, APAs and CTPs shall store the necessary d",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-23",
+      "text": "Article 231. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .1A.. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2An investment firm that operates an internal matching system which executes client orders in shares, depositary receipts, ETFs, certificates and other similar financial instruments on a multilateral basis must ensure it  has permission to operate a multilateral trading facility under Part 4A of FSMA  and comply with all relevant provisions pertaining to  su",
+      "type": "mandatory",
+      "keywords": [
+        "consent"
+      ]
+    },
+    {
+      "id": "article-24",
+      "text": "Article 24                     The FCA  shall monitor the activities of investment firms to ensure that they act honestly, fairly and professionally and in a manner which promotes the integrity of the market.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-25",
+      "text": "Article 251Investment firms shall keep at the disposal of the competent authority, for five years, the relevant data relating to all orders and all transactions in financial instruments which they have carried out, whether on own account or on behalf of a client. In the case of transactions carried out on behalf of clients, the records shall contain all the information and details of the identity of the client, and the information required under  the Money Laundering, Terrorist Financing and Tra",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-26",
+      "text": "Article 261Investment firms which execute transactions in financial instruments shall report complete and accurate details of such transactions to the competent authority as quickly as possible, and no later than the close of the following working day.......2The obligation laid down in paragraph 1 shall apply to:afinancial instruments which are admitted to trading or traded on a  UK, Gibraltar  or EU trading venue  or for which a request for admission to trading has been made;bfinancial instrume",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "article-27",
+      "text": "Article 271With regard to financial instruments admitted to trading on regulated markets or traded on MTFs or OTFs, trading venues shall provide  the FCA  with identifying reference data for the purposes of transaction reporting under Article 26.With regard to other financial instruments covered by Article  26(2)(b) or (c)  traded on its system, each systematic internaliser shall provide  the FCA  with reference data relating to those financial instruments.Identifying reference data shall be mad",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-28",
+      "text": "Article 281Relevant financial counterparties and relevant non-financial counterparties shall conclude transactions which are neither intragroup transactions as defined in Article 3 of Regulation (EU) No 648/2012 nor transactions covered by the transitional provisions in Article 89 of that Regulation with other relevant financial counterparties or other relevant non-financial counterparties  in derivatives pertaining to a class of derivatives that has been declared subject to the trading obligati",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-28a",
+      "text": "Article 28a1The FCA may direct that the trading obligation imposed by Article 28(1) and (2) (the \u201cDTO\u201d) is suspended or modified in accordance with the direction if it considers that the suspension or modification\u2014ais necessary for the purpose of preventing or mitigating disruption to financial markets, andbadvances one or more of the FCA\u2019s operational objectives referred to in section 1B(3) of FSMA.2A direction under this Article may provide for the DTO to be suspended or modified\u2014ain the case ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent"
+      ]
+    },
+    {
+      "id": "article-29",
+      "text": "Article 291The operator of a regulated market shall ensure that all transactions in derivatives that are concluded on that regulated market are cleared by a CCP.2CCPs, trading venues and investment firms which act as clearing members in accordance with Article 2(14) of Regulation (EU) No 648/2012 shall have in place effective systems, procedures and arrangements in relation to cleared derivatives to ensure that transactions in cleared derivatives are submitted and accepted for clearing as quickl",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-30",
+      "text": "Article 301Indirect clearing arrangements with regard to exchange-traded derivatives are permissible provided that those arrangements do not increase counterparty risk and ensure that the assets and positions of the counterparty benefit from protection with equivalent effect to that referred to in Articles 39 and 48 of Regulation (EU) No 648/2012.2The appropriate regulator may make  technical standards to specify the types of indirect clearing service arrangements, where established, that meet t",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-31",
+      "text": "Article 311The FCA may by rules provide for one or more relevant obligations not to apply\u2014ain relation to activities or transactions of a specified description carried out as part of a risk reduction service, orbto persons of a specified description in the provision of such services.2The power to make rules under paragraph 1 is exercisable only if the FCA considers that the rules are necessary or expedient for the purpose of advancing one or more of its operational objectives referred to in sect",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-32",
+      "text": "Article 321The FCA may make  technical standards to specify the following:awhich of the class of derivatives declared subject to the clearing obligation in accordance with Article 5(2) and (4) of Regulation (EU) No 648/2012 or a relevant subset thereof shall be traded on the venues referred to in Article 28(1) of this Regulation;bthe date or dates from which the trading obligation takes effect, including any phase-in and the categories of counterparties to which the obligation applies where such",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-33",
+      "text": "Article 331. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2The Treasury may by regulations specify  that the legal, supervisory and enforcement arrangements of the relevant third country:aare equivalent to the requirements resulting from Articles 28 and 29;bensure protection of professional secrecy that is equivalent to that set out in this Regulation;care being effectively applied and enforced in an equitable and non-distortive manner so as to ensure effective supervision and en",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-34",
+      "text": "Article\u00a0341.The FCA must publish and maintain on its website a register specifying\u2014aevery derivative that appears to the FCA to be subject to the obligation to trade on the venues referred to in Article 28(1);bthe venues where the derivative is admitted to trading or traded;cthe dates from which the obligation takes effect.2.The FCA may draw on such information as it considers appropriate to maintain the register, including information published in the register maintained by ESMA under  Article ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-35",
+      "text": "Article 351Without prejudice to Article 7 of Regulation (EU) No 648/2012 and subject to paragraph 1A, a CCP shall accept to clear financial instruments on a non-discriminatory and transparent basis, including as regards collateral requirements and fees relating to access, regardless of the trading venue on which a transaction is executed. This in particular shall ensure that a trading venue has the right to non-discriminatory treatment of contracts traded on that trading venue in terms of:acolla",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent"
+      ]
+    },
+    {
+      "id": "article-36",
+      "text": "Article 361Without prejudice to Article 8 of Regulation (EU) No 648/2012 and subject to paragraph 1A, a trading venue shall provide trade feeds on a non-discriminatory and transparent basis, including as regards fees related to access, upon request to any CCP authorised or recognised by Regulation (EU) No 648/2012 that wishes to clear transactions in financial instruments that are concluded on that trading venue. That requirement does not apply to any derivative contract that is already subject ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-37",
+      "text": "Article 371Where the value of any financial instrument is calculated by reference to a benchmark, a person with proprietary rights to the benchmark shall ensure that CCPs and trading venues are permitted, for the purposes of trading and clearing, non-discriminatory access to:arelevant price and data feeds and information on the composition, methodology and pricing of that benchmark for the purposes of clearing and trading; andblicences.A licence including access to information shall be granted o",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-38",
+      "text": "Article 381A trading venue established in a third country may request access to a CCP established in the  United Kingdom  only if  the Treasury has made regulations  in accordance with Article 28(4) relating to that third country. A CCP established in a third country may request access to a trading venue in the  United Kingdom  subject to that CCP being recognised under Article 25 of Regulation (EU) No 648/2012 CCPs and trading venues established in third countries shall only be permitted to mak",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-39",
+      "text": "Article 391. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .3 The FCA  shall monitor the market for financial instruments and structured deposits which are marketed, distributed or sold in or from  the United Kingdom.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-42",
+      "text": "Article 421 The FCA  may prohibit or restrict the following in or from  the United Kingdom:athe marketing, distribution or sale of certain financial instruments or structured deposits or financial instruments or structured deposits with certain specified features; orba type of financial activity or practice.2 The FCA  may take the action referred to in paragraph 1 if it is satisfied on reasonable grounds that:aeithera financial instrument, structured deposit or activity or practice gives rise to",
+      "type": "mandatory",
+      "keywords": []
+    }
+  ],
+  "penalties": [],
+  "enforcement": {
+    "authority": [
+      "Prudential Regulation Authority",
+      "PRA",
+      "Financial Conduct Authority",
+      "FCA"
+    ],
+    "powers": [
+      "Article 21For the purposes of this Regulation, the following definitions apply:\u201cinvestment firm\u201d has the meaning given in paragraph 1A;\u201cinvestment services and activities\u201d means any of the services an",
+      "Article 281Relevant financial counterparties and relevant non-financial counterparties shall conclude transactions which are neither intragroup transactions as defined in Article 3 of Regulation (EU) ",
+      "Article 331. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2The Treasury may by regulations specify  that the legal, supervisory and enforcement arrangements of the relevant third count",
+      "Article 351Without prejudice to Article 7 of Regulation (EU) No 648/2012 and subject to paragraph 1A, a CCP shall accept to clear financial instruments on a non-discriminatory and transparent basis, i",
+      "Article 381A trading venue established in a third country may request access to a CCP established in the  United Kingdom  only if  the Treasury has made regulations  in accordance with Article 28(4) r",
+      "Article 421 The FCA  may prohibit or restrict the following in or from  the United Kingdom:athe marketing, distribution or sale of certain financial instruments or structured deposits or financial ins",
+      "Article 461A third-country firm may provide investment services or perform investment activities with or without any ancillary services to eligible counterparties and to professional clients within  P",
+      "Article 471The Treasury may by regulations determine that the legal and supervisory arrangements of a third country ensure all of the following\u2014athat firms authorised in that third country to provide ",
+      "Article 49A1.The FCA may temporarily prohibit a third-country firm from providing investment services, or performing investment activities, in the United Kingdom, or place temporary restrictions on a ",
+      "Article 53Regulation (EU) No 648/2012 is amended as follows:in Article 5(2), the following subparagraph is added:In the developing of the draft regulatory technical standards under this paragraph ESMA",
+      "81To determine whether the legal and supervisory framework of a third country ensures that a regulated market or other trading venue  authorised in that country complies with legally binding requireme"
+    ],
+    "procedures": []
+  },
+  "dates": [
+    {
+      "type": "deadline",
+      "date": "3 January 2020",
+      "context": "Article 261Investment firms which execute transactions in financial instruments shall report complete and accurate details of such transactions to the"
+    },
+    {
+      "type": "deadline",
+      "date": "3 January 2018",
+      "context": "Article 351Without prejudice to Article 7 of Regulation (EU) No 648/2012 and subject to paragraph 1A, a CCP shall accept to clear financial instrument"
+    }
+  ],
+  "controls": [
+    "consent_management",
+    "audit_logging",
+    "data_minimization",
+    "security_testing",
+    "access_control",
+    "incident_response"
+  ],
+  "xml_length": 1518515
+}

@@ -1,0 +1,36 @@
+{
+  "id": "ruleiq-doppler-env",
+  "name": "ruleIQ with Doppler Secrets",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "enabled": true
+    },
+    {
+      "key": "google_api_key", 
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "database_url",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "jwt_secret_key",
+      "value": "",
+      "enabled": true
+    },
+    {
+      "key": "test_user_email",
+      "value": "test@ruleiq.dev",
+      "enabled": true
+    },
+    {
+      "key": "test_user_password",
+      "value": "TestPassword123!",
+      "enabled": true
+    }
+  ]
+}

@@ -1,0 +1,168 @@
+
+8authorization.AuthorizationService._get_user_permissionsH
+>/home/omar/Documents/ruleIQ/services/security/authorization.py^ ^("2*√
+2_ _(>
+` `(
+%14"setF
+D
+` `(
+permissions"__id*#
+
+__unknown_file (
+
+%14J
+H
+a a(
+%15"__id*/
+
+__unknown_file (*
+
+user"
+roles*
+4
+6**
+4h h("
+h h(
+
+permissions*Ò
+6b b(Du
+s
+b b(1
+%5"__id*[
+
+__unknown_file (?*=$
+"authorization.AuthorizationService"
+DEFAULT_PERMISSIONSH
+F
+b6 b(?
+%6"__id*.
+
+__unknown_file (*
+
+role"
+name
+bA b(C
+%7"listÑÅ
+b b(D
+%8*"
+
+__unknown_file (
+
+%5*"
+
+__unknown_file (
+
+%6*"
+
+__unknown_file (
+
+%72getD
+B
+b b(D
+
+role_perms"__id*"
+
+__unknown_file (
+
+%8}
+c c(*
+%9"
+set.update*+
+
+__unknown_file (
+
+permissions**
+
+__unknown_file (
+
+
+role_perms2updateq
+o
+d d(1
+%10"__id*V
+
+__unknown_file (:*8$
+"authorization.AuthorizationService"
+ROLE_HIERARCHYI
+G
+d6 d(?
+%11"__id*.
+
+__unknown_file (*
+
+role"
+name
+dA d(C
+%12"listàÖ
+d d(D
+%13*#
+
+__unknown_file (
+
+%10*#
+
+__unknown_file (
+
+%11*#
+
+__unknown_file (
+
+%122getJ
+H
+d d(D
+inherited_roles"__id*#
+
+__unknown_file (
+
+%13*	
+4
+6
+8*ä
+8f f(Mu
+s
+f" f(:
+%1"__id*[
+
+__unknown_file (?*=$
+"authorization.AuthorizationService"
+DEFAULT_PERMISSIONS
+fJ f(L
+%2"listãà
+f" f(M
+%3*"
+
+__unknown_file (
+
+%1*)
+
+__unknown_file (
+
+	inherited*"
+
+__unknown_file (
+
+%22getI
+G
+f f(M
+inherited_perms"__id*"
+
+__unknown_file (
+
+%3ÖÇ
+g g(3
+%4"
+set.update*+
+
+__unknown_file (
+
+permissions*/
+
+__unknown_file (
+
+inherited_perms2update*	
+4
+6
+8:
+^$ ^(.
+userB&$
+"authorization.AuthorizationServiceH

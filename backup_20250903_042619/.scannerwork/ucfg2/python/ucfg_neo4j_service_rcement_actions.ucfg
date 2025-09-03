@@ -1,0 +1,64 @@
+
+Jservices.neo4j_service.Neo4jGraphRAGService.learn_from_enforcement_actionsA
+5/home/omar/Documents/ruleIQ/services/neo4j_service.py« «(,"2*©
+2
+¬ ¬(6á
+Þ
+
+­ ¸(
+query"__id*À
+
+__unknown_file (£ 
+
+        MATCH (ea:EnforcementAction)-[:PRECEDENT_FOR]->(ctrl:Control)
+        OPTIONAL MATCH (ctrl)-[:IMPLEMENTS]->(req:Requirement)
+        RETURN ea.target_company AS company,
+               ea.violation_type AS violation,
+               ea.penalty_amount AS fine,
+               ea.lessons_learned AS lessons,
+               ea.date AS incident_date,
+               COLLECT(DISTINCT ctrl.name) AS controls_to_strengthen,
+               COLLECT(DISTINCT req.title) AS requirements_affected
+        ORDER BY ea.penalty_amount DESC
+        ˜•
+
+¹ ¹(1
+%1*K
+
+__unknown_file (/-
++services.neo4j_service.Neo4jGraphRAGService*%
+
+__unknown_file (	
+
+query2execute_queryC
+A
+
+¹ ¹(1	
+results"__id*"
+
+__unknown_file (
+
+%1
+
+º º(/
+%2"dict¡
+ž
+
+º º(.
+%3"__mapSet*"
+
+__unknown_file (
+
+%2*3
+
+__unknown_file (
+enforcement_lessons*'
+
+__unknown_file (
+	
+results"
+
+º º(/
+
+%2B/-
++services.neo4j_service.Neo4jGraphRAGServiceH

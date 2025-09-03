@@ -1,0 +1,45 @@
+
+"format"str
+&"Report generation initiated"str
+	"message"str
+"name"str
+"status"str
+"estimated_completion"str
+?6"Generate a new report based on specified parameters."str
+	"report_id"str
+"type"str
+"generating"str
+"2024-01-15T10:05:00Z"strreport_request( ((7current_user(9 ((ldb	(n ((”"²)
+'
+* *(uuid4"?python-unknown?(
+&
++ +("
+uuiduuid4B	uuid.UUID9
+7
++ +(	report_id"#dependent-value#*:Bstr%
+#
+	, ,(ð"#new-object#Bdict 
+
+, ,("
+"	#map-set#:	%
+#
+,, ,(?"#get-field# name: 
+
+,$ ,(?"	#map-set#:%
+#
+,I ,(\"#get-field# type: 
+
+,A ,(\"	#map-set#:'
+%
+,h ,(}"#get-field# format: 
+
+,^ ,(}"	#map-set#:!
+
+	, ,(•"	#map-set#:"
+ 
+
+,— ,(Å"	#map-set#:"
+ 
+
+,Ç ,(ï"	#map-set#:
+	, ,(ð*2/home/omar/Documents/ruleIQ/api/routers/reports.py

@@ -1,0 +1,30 @@
+
+ýó"
+    Dependency factory for requiring framework access.
+
+    Args:
+        framework_id: Framework ID to check access for
+        access_level: Required access level (read, write, admin)
+
+    Returns:
+        FastAPI dependency function
+    "strframework_id
+– –(.access_level
+–0 –(H"ö#
+!
+
+ª ª(!"#unknown-value#*
+(
+
+£ ª(%closure"#new-object#0
+.
+
+£ ª("#set-field# framework_id:0
+.
+
+£ ª("#set-field# access_level:-
++
+
+£ ª("?python-partial-apply?:
+
+ª ª(!*9/home/omar/Documents/ruleIQ/api/dependencies/rbac_auth.py

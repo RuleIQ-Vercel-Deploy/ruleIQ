@@ -1,0 +1,136 @@
+
+Sservices.ai.compliance_query_engine.ComplianceQueryEngine.get_automation_statisticsL
+B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.pyz z('"2*‹
+2	{ €(æ
+ã
+
+ Š(
+query"__id*Å
+
+__unknown_file (¨¥
+¢
+        MATCH (r:Regulation)
+        WHERE r.automation_potential IS NOT NULL
+        RETURN 
+            avg(r.automation_potential) as average_potential,
+            min(r.automation_potential) as min_potential,
+            max(r.automation_potential) as max_potential,
+            count(r) as regulation_count,
+            count(CASE WHEN r.automation_potential >= 0.7 THEN 1 END) as high_automation_count
+        
+
+
+Œ Œ(
+%7"__id*e
+
+__unknown_file (I*G;
+9services.ai.compliance_query_engine.ComplianceQueryEngine"
+driverA?
+
+Œ Œ((
+%8*"
+
+__unknown_file (
+
+%72sessionC
+A
+
+Œ Œ(3	
+session"__id*"
+
+__unknown_file (
+
+%8*
+3
+4*B
+3
+compliance_query_engine.py"
+‘ ‘(
+implicit return*Ð
+4
+ (-ig
+
+ (-
+%1*'
+
+__unknown_file (
+	
+session*%
+
+__unknown_file (	
+
+query2runB
+@
+
+ (-
+result"__id*"
+
+__unknown_file (
+
+%1DB
+
+Ž Ž(*
+%2*&
+
+__unknown_file (
+
+
+result2singleB
+@
+
+Ž Ž(*
+record"__id*"
+
+__unknown_file (
+
+%2*
+5
+6*á
+5
+ (
+
+ (
+%4"dicto
+m
+
+ (
+%5"dict.__init__*"
+
+__unknown_file (
+
+%4*&
+
+__unknown_file (
+
+
+record>
+<
+
+ (
+%3"__id*"
+
+__unknown_file (
+
+%4*
+7*p
+6
+/ (1
+
+/ (1
+%6"dict>
+<
+
+/ (1
+%3"__id*"
+
+__unknown_file (
+
+%6*
+7*%
+7
+0 (1"
+
+ (1
+
+%3B=;
+9services.ai.compliance_query_engine.ComplianceQueryEngineH

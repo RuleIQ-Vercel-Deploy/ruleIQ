@@ -1,0 +1,123 @@
+
+Xscripts.ingest_smb_frameworks_to_neo4j.SMBFrameworkNeo4jIngestion.link_to_uk_regulationsQ
+E/home/omar/Documents/ruleIQ/scripts/ingest_smb_frameworks_to_neo4j.py≥ ≥("2*¨
+2
+¥ ¥(Dä
+á
+
+µ µ(
+%5"__id*m
+
+__unknown_file (Q*OC
+Ascripts.ingest_smb_frameworks_to_neo4j.SMBFrameworkNeo4jIngestion"
+driverA?
+
+µ µ("
+%6*"
+
+__unknown_file (
+
+%52sessionC
+A
+
+µ µ(-	
+session"__id*"
+
+__unknown_file (
+
+%6*
+3
+4*I
+3#
+!ingest_smb_frameworks_to_neo4j.py"
+– –(
+implicit return*Ò
+4
+∂ º(ﬁ
+€
+
+∂ º(
+	gdpr_link"__id*π
+
+__unknown_file (úô
+ñ
+                MATCH (f:FrameworkObligation)
+                WHERE f.framework = 'ISO 27001:2022'
+                MATCH (r:Regulation)
+                WHERE r.name CONTAINS 'GDPR' OR r.name CONTAINS 'DPA'
+                MERGE (f)-[:SUPPORTS_COMPLIANCE_WITH]->(r)
+            mk
+
+Ω Ω("
+%1*'
+
+__unknown_file (
+	
+session*)
+
+__unknown_file (
+
+	gdpr_link2run‹
+Ÿ
+
+æ ƒ(
+compliance_link"__id*±
+
+__unknown_file (îë
+é
+                MATCH (f:FrameworkObligation)
+                WHERE f.framework = 'ISO 37301:2021'
+                MATCH (r:Regulation)
+                WHERE r.name IN ['MLR', 'Bribery Act', 'FCA']
+                MERGE (f)-[:SUPPORTS_COMPLIANCE_WITH]->(r)
+            sq
+
+≈ ≈((
+%2*'
+
+__unknown_file (
+	
+session*/
+
+__unknown_file (
+
+compliance_link2run¡
+æ
+
+∆ Ã(
+
+nis_link"__id*ù
+
+__unknown_file (Ä˝
+˙
+                MATCH (f:FrameworkObligation)
+                WHERE f.framework = 'NIST CSF 2.0'
+                MATCH (r:Regulation)
+                WHERE r.name CONTAINS 'NIS'
+                MERGE (f)-[:SUPPORTS_COMPLIANCE_WITH]->(r)
+            lj
+
+Õ Õ(!
+%3*'
+
+__unknown_file (
+	
+session*(
+
+__unknown_file (
+
+
+nis_link2runÑÅ
+
+Œ Œ(:
+%4*&
+
+__unknown_file (
+
+
+logger*?
+
+__unknown_file (#!
+Created links to UK regulations2info*
+3BEC
+Ascripts.ingest_smb_frameworks_to_neo4j.SMBFrameworkNeo4jIngestionH

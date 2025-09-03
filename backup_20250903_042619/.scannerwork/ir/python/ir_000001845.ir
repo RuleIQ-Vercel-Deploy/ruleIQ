@@ -1,0 +1,36 @@
+
+
+0intfunc
+ç ç(	tuple"£#
+!
+
+è. è(:"#unknown-value##
+!
+
+è< è(H"#unknown-value#*
+(
+
+è è(+"#unknown-value#Btuple(
+&
+
+è è(+"
+#is-exact#:Bbool
+
+
+è è(+"
+#assume#::
+8
+
+è è(+	"#set-field# __collection_size:Bint(
+&
+
+è è(+
+"#array-add-last#:(
+&
+
+è è(+"#array-add-last#:>
+<
+
+è è(+"(&#set-field# _required_framework_access:
+
+é é(*=/home/omar/Documents/ruleIQ/api/middleware/rbac_middleware.py

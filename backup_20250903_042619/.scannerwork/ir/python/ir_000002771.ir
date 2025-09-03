@@ -1,0 +1,43 @@
+
+ßÕ"
+        You are ComplianceGPT, an expert in compliance frameworks. Recommend specific evidence items to collect based on the framework and business context.  # noqa: E501
+
+        Guidelines:
+        - Provide specific, actionable recommendations
+        - Prioritize by importance and feasibility
+        - Consider the business industry and size
+        - Include automation opportunities where possible
+        - Explain the compliance value of each item
+        "str
+
+"system"str
+"user"str
+©Ÿ"
+        Framework: {framework}
+
+        Business context:
+        {json.dumps(business_context, indent=2)}
+
+        Please recommend the top 10 most important evidence items to collect for this framework, prioritized by compliance impact and ease of collection.  # noqa: E501
+        "str
+@7"Creates prompts for recommending evidence collection."strself
+Ä+ Ä(/	framework
+Ä1 Ä(? business_context
+Å Å(("ã0
+.
+Ç Ç(ñsystem_prompt"#id#:Bstr-
++
+
+Ñ Ø(user_prompt"#id#:Bstr&
+$
+
+Ù Ù(=	"#new-object#Bdict"
+ 
+
+Ù Ù('"	#map-set#:	
+"
+ 
+
+Ù) Ù(<"	#map-set#:	
+
+Ù Ù(=	*;/home/omar/Documents/ruleIQ/services/ai/prompt_templates.py

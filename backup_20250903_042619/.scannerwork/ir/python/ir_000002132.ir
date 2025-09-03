@@ -1,0 +1,22 @@
+
+A8"Retrieve memories by semantic similarity (placeholder)"str
+
+0intself
+…/ …(3query
+…5 …(?list"Ä)
+'
+
+‡ ‡("#unknown-value#Blist(
+&
+
+‡ ‡("
+#is-exact#:Bbool
+
+
+‡ ‡("
+#assume#::
+8
+
+‡ ‡(	"#set-field# __collection_size:Bint
+
+‡ ‡(*A/home/omar/Documents/ruleIQ/services/compliance_memory_manager.py

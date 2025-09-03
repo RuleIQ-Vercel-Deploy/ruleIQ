@@ -1,0 +1,52 @@
+
+
+0int
+,#"Check if less than other version."strselfF F(otherF F(,	tuple"ð&
+$
+H H("#get-field# major:&
+$
+H H(&"#get-field# minor:&
+$
+H( H(2"#get-field# patch:(
+&
+H H(3"#unknown-value#Btuple&
+$
+H H(3	"
+#is-exact#:Bbool
+
+H H(3
+"
+#assume#:	8
+6
+H H(3"#set-field# __collection_size:Bint&
+$
+H H(3"#array-add-last#:&
+$
+H H(3"#array-add-last#:&
+$
+H H(3"#array-add-last#:&
+$
+I I("#get-field# major:&
+$
+J J("#get-field# minor:&
+$
+K K("#get-field# patch:(
+&
+H6 L(	"#unknown-value#Btuple&
+$
+H6 L(	"
+#is-exact#:Bbool
+
+H6 L(	"
+#assume#:8
+6
+H6 L(	"#set-field# __collection_size:Bint&
+$
+H6 L(	"#array-add-last#:&
+$
+H6 L(	"#array-add-last#:&
+$
+H6 L(	"#array-add-last#:(
+&
+H L(	"	#binop <#2<:Bbool
+H L(	*P/home/omar/Documents/ruleIQ/services/ai/evaluation/golden_datasets/versioning.py

@@ -1,0 +1,584 @@
+name: Performance Tests
+
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # Weekly on Monday at 2 AM
+  workflow_dispatch:
+    inputs:
+      load_test_users:
+        description: 'Number of concurrent users for load testing'
+        required: false
+        default: '20'
+        type: string
+      load_test_duration:
+        description: 'Load test duration (e.g., 300s, 5m)'
+        required: false
+        default: '300s'
+        type: string
+      test_environment:
+        description: 'Environment to test against'
+        required: false
+        default: 'staging'
+        type: choice
+        options:
+        - staging
+        - development
+        - local
+
+env:
+  PYTHON_VERSION: '3.11'
+  DATABASE_URL: postgresql://postgres:test_password@localhost:5432/compliance_test
+  REDIS_URL: redis://localhost:6379/0
+  GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+  SECRET_KEY: test_secret_key_for_ci
+  ENVIRONMENT: test
+
+jobs:
+  api-performance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: compliance_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v5
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest-benchmark psutil pandas
+
+    - name: Set up database
+      run: |
+        python -c "
+        from database.db_setup import init_db
+        init_db()
+        print('Database initialized successfully')
+        "
+
+    - name: Download baseline performance data
+      uses: actions/download-artifact@v5
+      with:
+        name: baseline-performance
+        path: baseline/
+      continue-on-error: true
+
+    - name: Run API performance benchmarks
+      run: |
+        pytest tests/performance/test_api_performance.py \
+          --benchmark-only \
+          --benchmark-json=api_benchmark_results.json \
+          --benchmark-sort=mean \
+          --benchmark-warmup=5 \
+          --benchmark-rounds=15
+
+    - name: Run database performance benchmarks
+      run: |
+        pytest tests/performance/test_database_performance.py \
+          --benchmark-only \
+          --benchmark-json=db_benchmark_results.json \
+          --benchmark-sort=mean \
+          --benchmark-warmup=3 \
+          --benchmark-rounds=10
+
+    - name: Compare with baseline (if available)
+      run: |
+        if [ -f "baseline/api_benchmark_results.json" ]; then
+          python -c "
+          import json
+          import sys
+          
+          # Load current and baseline results
+          with open('api_benchmark_results.json', 'r') as f:
+              current = json.load(f)
+          
+          with open('baseline/api_benchmark_results.json', 'r') as f:
+              baseline = json.load(f)
+          
+          # Compare performance
+          regressions = []
+          improvements = []
+          
+          current_benchmarks = {b['name']: b for b in current['benchmarks']}
+          baseline_benchmarks = {b['name']: b for b in baseline['benchmarks']}
+          
+          for name, current_bench in current_benchmarks.items():
+              if name in baseline_benchmarks:
+                  current_mean = current_bench['stats']['mean']
+                  baseline_mean = baseline_benchmarks[name]['stats']['mean']
+                  
+                  # Calculate percentage change
+                  change_percent = ((current_mean - baseline_mean) / baseline_mean) * 100
+                  
+                  if change_percent > 20:  # More than 20% slower
+                      regressions.append({
+                          'test': name,
+                          'current': current_mean,
+                          'baseline': baseline_mean,
+                          'change_percent': change_percent
+                      })
+                  elif change_percent < -10:  # More than 10% faster
+                      improvements.append({
+                          'test': name,
+                          'current': current_mean,
+                          'baseline': baseline_mean,
+                          'change_percent': change_percent
+                      })
+          
+          # Report results
+          if regressions:
+              print('⚠️ Performance regressions detected:')
+              for reg in regressions:
+                  print(f'  - {reg[\"test\"]}: {reg[\"change_percent\"]:.1f}% slower')
+          
+          if improvements:
+              print('🚀 Performance improvements detected:')
+              for imp in improvements:
+                  print(f'  - {imp[\"test\"]}: {abs(imp[\"change_percent\"]):.1f}% faster')
+          
+          # Exit with error if significant regressions
+          if len(regressions) > 0:
+              print(f'❌ {len(regressions)} performance regressions detected')
+              sys.exit(1)
+          else:
+              print('✅ No significant performance regressions detected')
+          "
+        else
+          echo "No baseline data found, skipping comparison"
+        fi
+
+    - name: Generate performance report
+      run: |
+        python -c "
+        import json
+        import time
+        from datetime import datetime
+        
+        # Load benchmark results
+        with open('api_benchmark_results.json', 'r') as f:
+            api_results = json.load(f)
+        
+        with open('db_benchmark_results.json', 'r') as f:
+            db_results = json.load(f)
+        
+        # Generate summary report
+        report = {
+            'timestamp': datetime.now().isoformat(),
+            'git_commit': '${{ github.sha }}',
+            'api_benchmarks': len(api_results['benchmarks']),
+            'db_benchmarks': len(db_results['benchmarks']),
+            'fastest_api_test': min(api_results['benchmarks'], key=lambda x: x['stats']['mean']),
+            'slowest_api_test': max(api_results['benchmarks'], key=lambda x: x['stats']['mean']),
+            'average_api_response_time': sum(b['stats']['mean'] for b in api_results['benchmarks']) / len(api_results['benchmarks']),
+            'performance_issues': []
+        }
+        
+        # Identify performance issues
+        for benchmark in api_results['benchmarks'] + db_results['benchmarks']:
+            mean_time = benchmark['stats']['mean']
+            max_time = benchmark['stats']['max']
+            
+            if mean_time > 2.0:
+                report['performance_issues'].append({
+                    'test': benchmark['name'],
+                    'issue': 'slow_mean_time',
+                    'value': mean_time,
+                    'threshold': 2.0
+                })
+            
+            if max_time > 5.0:
+                report['performance_issues'].append({
+                    'test': benchmark['name'],
+                    'issue': 'slow_max_time',
+                    'value': max_time,
+                    'threshold': 5.0
+                })
+        
+        # Save report
+        with open('performance_summary.json', 'w') as f:
+            json.dump(report, f, indent=2)
+        
+        # Print summary
+        print(f'Performance Summary:')
+        print(f'- API Benchmarks: {report[\"api_benchmarks\"]}')
+        print(f'- DB Benchmarks: {report[\"db_benchmarks\"]}')
+        print(f'- Average API Response Time: {report[\"average_api_response_time\"]:.3f}s')
+        print(f'- Performance Issues: {len(report[\"performance_issues\"])}')
+        
+        if report['performance_issues']:
+            print('Issues detected:')
+            for issue in report['performance_issues']:
+                print(f'  - {issue[\"test\"]}: {issue[\"issue\"]} ({issue[\"value\"]:.3f}s)')
+        "
+
+    - name: Upload performance results
+      uses: actions/upload-artifact@v4
+      with:
+        name: performance-benchmarks
+        path: |
+          api_benchmark_results.json
+          db_benchmark_results.json
+          performance_summary.json
+
+    - name: Update baseline performance data
+      uses: actions/upload-artifact@v4
+      if: github.ref == 'refs/heads/main' && github.event_name == 'schedule'
+      with:
+        name: baseline-performance
+        path: |
+          api_benchmark_results.json
+          db_benchmark_results.json
+
+  load-testing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    if: github.event_name == 'workflow_dispatch'
+    
+    services:
+      postgres:
+        image: postgres:13
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: compliance_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v5
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install locust psutil
+
+    - name: Set up database
+      run: |
+        python -c "
+        from database.db_setup import init_db
+        init_db()
+        print('Database initialized successfully')
+        "
+
+    - name: Start application
+      run: |
+        # Start the application in background
+        python main.py &
+        APP_PID=$!
+        echo $APP_PID > app.pid
+        
+        # Wait for application to start
+        echo "Waiting for application to start..."
+        for i in {1..30}; do
+          if curl -f http://localhost:8000/health > /dev/null 2>&1; then
+            echo "Application started successfully"
+            break
+          fi
+          if [ $i -eq 30 ]; then
+            echo "Application failed to start"
+            kill $APP_PID || true
+            exit 1
+          fi
+          sleep 2
+        done
+
+    - name: Run load tests
+      run: |
+        USERS=${{ github.event.inputs.load_test_users || '20' }}
+        DURATION=${{ github.event.inputs.load_test_duration || '300s' }}
+        
+        echo "Running load test with $USERS users for $DURATION"
+        
+        locust \
+          -f tests/performance/locustfile.py \
+          --host=http://localhost:8000 \
+          --users=$USERS \
+          --spawn-rate=2 \
+          --run-time=$DURATION \
+          --html=locust_report.html \
+          --csv=locust_results \
+          --headless \
+          --exit-code-on-error=0
+
+    - name: Stop application
+      if: always()
+      run: |
+        if [ -f app.pid ]; then
+          APP_PID=$(cat app.pid)
+          kill $APP_PID || true
+          rm app.pid
+        fi
+
+    - name: Analyze load test results
+      run: |
+        python -c "
+        import pandas as pd
+        import json
+        
+        try:
+            # Read Locust CSV results
+            df = pd.read_csv('locust_results_stats.csv')
+            
+            # Calculate metrics
+            total_requests = df['Request Count'].sum()
+            total_failures = df['Failure Count'].sum()
+            failure_rate = total_failures / total_requests if total_requests > 0 else 0
+            avg_response_time = df['Average Response Time'].mean()
+            max_response_time = df['Max Response Time'].max()
+            
+            # Generate report
+            report = {
+                'total_requests': int(total_requests),
+                'total_failures': int(total_failures),
+                'failure_rate': failure_rate,
+                'avg_response_time_ms': avg_response_time,
+                'max_response_time_ms': max_response_time,
+                'requests_per_second': df['Requests/s'].sum(),
+                'endpoints_tested': len(df)
+            }
+            
+            # Save report
+            with open('load_test_summary.json', 'w') as f:
+                json.dump(report, f, indent=2)
+            
+            # Print results
+            print(f'Load Test Results:')
+            print(f'- Total Requests: {total_requests:,}')
+            print(f'- Total Failures: {total_failures:,}')
+            print(f'- Failure Rate: {failure_rate:.2%}')
+            print(f'- Avg Response Time: {avg_response_time:.0f}ms')
+            print(f'- Max Response Time: {max_response_time:.0f}ms')
+            print(f'- Requests/sec: {df[\"Requests/s\"].sum():.1f}')
+            
+            # Check thresholds
+            if failure_rate > 0.05:  # > 5% failure rate
+                print(f'❌ High failure rate: {failure_rate:.1%} > 5%')
+                exit(1)
+            
+            if avg_response_time > 3000:  # > 3s average response time
+                print(f'❌ High response time: {avg_response_time:.0f}ms > 3000ms')
+                exit(1)
+            
+            print('✅ Load test passed all thresholds')
+            
+        except FileNotFoundError:
+            print('❌ Load test results not found')
+            exit(1)
+        except Exception as e:
+            print(f'❌ Error analyzing results: {e}')
+            exit(1)
+        "
+
+    - name: Upload load test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: load-test-results
+        path: |
+          locust_report.html
+          locust_results_*.csv
+          load_test_summary.json
+
+  memory-profiling:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    if: github.event_name == 'workflow_dispatch'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v5
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install memory-profiler psutil pytest-benchmark
+
+    - name: Run memory profiling tests
+      run: |
+        pytest tests/performance/ \
+          -k "memory" \
+          -v \
+          --tb=short \
+          --junit-xml=memory_test_results.xml
+
+    - name: Generate memory profile report
+      run: |
+        python -c "
+        import psutil
+        import json
+        
+        # Get system memory info
+        memory = psutil.virtual_memory()
+        
+        report = {
+            'total_memory_gb': round(memory.total / (1024**3), 2),
+            'available_memory_gb': round(memory.available / (1024**3), 2),
+            'memory_percent_used': memory.percent,
+            'timestamp': '$(date -Iseconds)'
+        }
+        
+        with open('memory_profile_report.json', 'w') as f:
+            json.dump(report, f, indent=2)
+        
+        print(f'Memory Profile:')
+        print(f'- Total Memory: {report[\"total_memory_gb\"]}GB')
+        print(f'- Available Memory: {report[\"available_memory_gb\"]}GB')
+        print(f'- Memory Usage: {report[\"memory_percent_used\"]}%')
+        "
+
+    - name: Upload memory profiling results
+      uses: actions/upload-artifact@v4
+      with:
+        name: memory-profiling-results
+        path: |
+          memory_test_results.xml
+          memory_profile_report.json
+
+  performance-summary:
+    runs-on: ubuntu-latest
+    needs: [api-performance, load-testing, memory-profiling]
+    if: always()
+    
+    steps:
+    - name: Download all performance artifacts
+      uses: actions/download-artifact@v5
+      with:
+        path: artifacts/
+
+    - name: Generate comprehensive performance report
+      run: |
+        python -c "
+        import json
+        import os
+        from datetime import datetime
+        
+        # Collect all performance data
+        performance_data = {
+            'timestamp': datetime.now().isoformat(),
+            'git_commit': '${{ github.sha }}',
+            'workflow_run_id': '${{ github.run_id }}',
+            'results': {}
+        }
+        
+        # Load API performance results
+        api_file = 'artifacts/performance-benchmarks/performance_summary.json'
+        if os.path.exists(api_file):
+            with open(api_file, 'r') as f:
+                performance_data['results']['api_performance'] = json.load(f)
+        
+        # Load load test results
+        load_file = 'artifacts/load-test-results/load_test_summary.json'
+        if os.path.exists(load_file):
+            with open(load_file, 'r') as f:
+                performance_data['results']['load_testing'] = json.load(f)
+        
+        # Load memory profiling results
+        memory_file = 'artifacts/memory-profiling-results/memory_profile_report.json'
+        if os.path.exists(memory_file):
+            with open(memory_file, 'r') as f:
+                performance_data['results']['memory_profiling'] = json.load(f)
+        
+        # Generate overall assessment
+        issues = []
+        
+        # Check API performance
+        if 'api_performance' in performance_data['results']:
+            api_issues = performance_data['results']['api_performance'].get('performance_issues', [])
+            issues.extend(api_issues)
+        
+        # Check load test results
+        if 'load_testing' in performance_data['results']:
+            load_data = performance_data['results']['load_testing']
+            if load_data.get('failure_rate', 0) > 0.05:
+                issues.append('High failure rate in load testing')
+            if load_data.get('avg_response_time_ms', 0) > 2000:
+                issues.append('High average response time under load')
+        
+        performance_data['overall_status'] = 'PASS' if len(issues) == 0 else 'FAIL'
+        performance_data['issues_count'] = len(issues)
+        performance_data['issues'] = issues
+        
+        # Save comprehensive report
+        with open('comprehensive_performance_report.json', 'w') as f:
+            json.dump(performance_data, f, indent=2)
+        
+        # Print summary
+        print('🔍 Performance Test Summary')
+        print('=' * 50)
+        print(f'Overall Status: {performance_data[\"overall_status\"]}')
+        print(f'Issues Found: {len(issues)}')
+        
+        if issues:
+            print('Issues:')
+            for issue in issues:
+                print(f'  - {issue}')
+        else:
+            print('✅ All performance tests passed!')
+        "
+
+    - name: Upload comprehensive report
+      uses: actions/upload-artifact@v4
+      with:
+        name: comprehensive-performance-report
+        path: comprehensive_performance_report.json

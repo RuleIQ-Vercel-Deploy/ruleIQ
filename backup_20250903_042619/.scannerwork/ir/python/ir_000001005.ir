@@ -1,0 +1,28 @@
+
+“‰"
+    Decorator to cache function results.
+
+    Args:
+        ttl: Time to live in seconds
+        key_prefix: Prefix for cache key
+    "strttl
+ç ç(
+key_prefix
+ç ç(5"ë#
+!
+
+þ þ("#unknown-value#*
+(
+
+ð þ(%closure"#new-object#.
+,
+
+ð þ("#set-field# key_prefix:'
+%
+
+ð þ("#set-field# ttl:-
++
+
+ð þ("?python-partial-apply?:
+
+þ þ(*+/home/omar/Documents/ruleIQ/config/cache.py

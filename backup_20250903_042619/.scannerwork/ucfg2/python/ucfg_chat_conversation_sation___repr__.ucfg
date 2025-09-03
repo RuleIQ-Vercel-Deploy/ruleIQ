@@ -1,0 +1,49 @@
+
+4database.chat_conversation.ChatConversation.__repr__C
+9/home/omar/Documents/ruleIQ/database/chat_conversation.py/ /("2*Å
+20 0(`m
+k
+0' 0(.
+%1"__id*S
+
+__unknown_file (7*5-
++database.chat_conversation.ChatConversation"
+idp
+n
+09 0(C
+%2"__id*V
+
+__unknown_file (:*8-
++database.chat_conversation.ChatConversation"
+titleq
+o
+0P 0([
+%3"__id*W
+
+__unknown_file (;*9-
++database.chat_conversation.ChatConversation"
+statusÍ
+Ê
+0 0(`
+%4"__concat*%
+0 0(&
+<ChatConversation(id=*
+0' 0(.
+
+%1*
+0/ 0(8
+	, title='*
+09 0(C
+
+%2*
+0D 0(O
+', status='*
+0P 0([
+
+%3*
+0\ 0(_
+')>"
+0 0(`
+
+%4B/-
++database.chat_conversation.ChatConversationH

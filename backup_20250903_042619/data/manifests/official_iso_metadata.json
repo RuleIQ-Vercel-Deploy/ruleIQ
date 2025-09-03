@@ -1,0 +1,160 @@
+{
+  "title": "Official ISO Standards Metadata for SMBs",
+  "source": "ISO Open Data (https://www.iso.org/open-data.html)",
+  "license": "ODC Attribution License (ODC-By) v1.0",
+  "extraction_date": "2025-08-31T21:22:21.079921",
+  "total_standards": 6,
+  "standards": {
+    "ISO 14001:2015": {
+      "id": "60857",
+      "reference": "ISO 14001:2015",
+      "title_en": "Environmental management systems \u2014 Requirements with guidance for use",
+      "title_fr": "Syst\u00e8mes de management environnemental \u2014 Exigences et lignes directrices pour son utilisation",
+      "type": "Environmental management systems",
+      "publication_date": "2015-09-14",
+      "edition": "3",
+      "ics_codes": [
+        "13.020.10",
+        "03.100.70"
+      ],
+      "owner_committee": "ISO/TC 207/SC 1",
+      "number_of_pages": "",
+      "abstract": "",
+      "stage": "",
+      "stage_date": "",
+      "deliverable_type": "IS",
+      "languages": [
+        "ar",
+        "en",
+        "es",
+        "fr"
+      ]
+    },
+    "ISO 9001:2015": {
+      "id": "62085",
+      "reference": "ISO 9001:2015",
+      "title_en": "Quality management systems \u2014 Requirements",
+      "title_fr": "Syst\u00e8mes de management de la qualit\u00e9 \u2014 Exigences",
+      "type": "Quality management systems",
+      "publication_date": "2015-09-22",
+      "edition": "5",
+      "ics_codes": [
+        "03.120.10",
+        "03.100.70"
+      ],
+      "owner_committee": "ISO/TC 176/SC 2",
+      "number_of_pages": "",
+      "abstract": "",
+      "stage": "",
+      "stage_date": "",
+      "deliverable_type": "IS",
+      "languages": [
+        "ar",
+        "en",
+        "es",
+        "fr",
+        "ru"
+      ]
+    },
+    "ISO 31000:2018": {
+      "id": "65694",
+      "reference": "ISO 31000:2018",
+      "title_en": "Risk management \u2014 Guidelines",
+      "title_fr": "Management du risque \u2014 Lignes directrices",
+      "type": "Risk management",
+      "publication_date": "2018-02-14",
+      "edition": "2",
+      "ics_codes": [
+        "03.100.01"
+      ],
+      "owner_committee": "ISO/TC 262",
+      "number_of_pages": "",
+      "abstract": "",
+      "stage": "",
+      "stage_date": "",
+      "deliverable_type": "IS",
+      "languages": [
+        "ar",
+        "en",
+        "es",
+        "fr"
+      ]
+    },
+    "ISO/IEC 20000-1:2018": {
+      "id": "70636",
+      "reference": "ISO/IEC 20000-1:2018",
+      "title_en": "Information technology \u2014 Service management \u2014 Part 1: Service management system requirements",
+      "title_fr": "Technologies de l'information \u2014 Gestion des services \u2014 Partie 1: Exigences du syst\u00e8me de management des services",
+      "type": "IT Service management",
+      "publication_date": "2018-09-14",
+      "edition": "3",
+      "ics_codes": [
+        "35.020",
+        "03.080.99"
+      ],
+      "owner_committee": "ISO/IEC JTC 1/SC 40",
+      "number_of_pages": "",
+      "abstract": "",
+      "stage": "",
+      "stage_date": "",
+      "deliverable_type": "IS",
+      "languages": [
+        "en",
+        "fr"
+      ]
+    },
+    "ISO 37301:2021": {
+      "id": "75080",
+      "reference": "ISO 37301:2021",
+      "title_en": "Compliance management systems \u2014 Requirements with guidance for use",
+      "title_fr": "Syst\u00e8mes de management de la conformit\u00e9 \u2014 Exigences et recommandations pour la mise en oeuvre",
+      "type": "Compliance management systems",
+      "publication_date": "2021-04-13",
+      "edition": "1",
+      "ics_codes": [
+        "03.100.70",
+        "03.100.02",
+        "03.100.01"
+      ],
+      "owner_committee": "ISO/TC 309",
+      "number_of_pages": "",
+      "abstract": "",
+      "stage": "",
+      "stage_date": "",
+      "deliverable_type": "IS",
+      "languages": [
+        "en",
+        "es",
+        "fr"
+      ]
+    },
+    "ISO/IEC 27001:2022": {
+      "id": "82875",
+      "reference": "ISO/IEC 27001:2022",
+      "title_en": "Information security, cybersecurity and privacy protection \u2014 Information security management systems \u2014 Requirements",
+      "title_fr": "S\u00e9curit\u00e9 de l'information, cybers\u00e9curit\u00e9 et protection de la vie priv\u00e9e \u2014 Syst\u00e8mes de management de la s\u00e9curit\u00e9 de l'information \u2014 Exigences",
+      "type": "Information security management systems",
+      "publication_date": "2022-10-25",
+      "edition": "3",
+      "ics_codes": [
+        "35.030",
+        "03.100.70"
+      ],
+      "owner_committee": "ISO/IEC JTC 1/SC 27",
+      "number_of_pages": "",
+      "abstract": "",
+      "stage": "",
+      "stage_date": "",
+      "deliverable_type": "IS",
+      "languages": [
+        "en",
+        "fr"
+      ]
+    }
+  },
+  "data_integrity": {
+    "source_type": "Official ISO metadata",
+    "verification": "Direct from ISO Open Data CSV",
+    "authenticity": "100% - Official ISO source"
+  }
+}

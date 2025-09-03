@@ -1,0 +1,159 @@
+
+>authorization.AuthorizationService._check_delegated_permissionJ
+>/home/omar/Documents/ruleIQ/services/security/authorization.pyÉ É()"2*Ω
+2
+Ñ Ñ(7H
+F
+
+Ö' Ö(.
+%8"__id*,
+
+__unknown_file (*
+
+user"
+idä
+á
+
+Ö Ö(@
+%9"__concat*
+
+Ö Ö(&
+delegation:*
+
+Ö' Ö(.
+
+%8*
+
+Ö/ Ö(0
+:*
+
+Ö1 Ö(>
+
+resource_typeJ
+H
+
+Ö Ö(@
+delegation_key"__id*"
+
+__unknown_file (
+
+%9*	
+5
+6
+8*Æ
+5
+à à(:i
+g
+
+à à(&
+%2"__id*M
+
+__unknown_file (1*/$
+"authorization.AuthorizationService"
+cachemk
+
+à à(:
+%3*"
+
+__unknown_file (
+
+%2*.
+
+__unknown_file (
+
+delegation_key2get>
+<
+
+à à(:
+%1"__id*"
+
+__unknown_file (
+
+%3*
+7*p
+6
+à> à(@
+
+à> à(@
+%4"list>
+<
+
+à> à(@
+%1"__id*"
+
+__unknown_file (
+
+%4*
+7*Ò
+7
+à? à(@G
+E
+
+à à(@
+delegations"__id*"
+
+__unknown_file (
+
+%1Ä~
+
+â â(-
+%5*+
+
+__unknown_file (
+
+delegations*/
+
+__unknown_file (
+
+permission_type2__contains__"
+
+â â(-
+
+%5*è
+8
+á á(/R
+P
+
+á á(/
+%6"__concat*
+
+á  á(!
+:*
+
+á" á(-
+
+resource_idV
+T
+
+á á(/
+%7"__concat* 
+
+á á(
+
+delegation_key*
+
+á á(/
+
+%6J
+H
+
+á á(/
+delegation_key"__id*"
+
+__unknown_file (
+
+%7*
+5
+6:
+
+É0 É(:
+user:
+
+É< É(N
+resource_type:
+
+ÉP É(d
+permission_type:
+Éf É(Ö
+resource_idB&$
+"authorization.AuthorizationServiceH

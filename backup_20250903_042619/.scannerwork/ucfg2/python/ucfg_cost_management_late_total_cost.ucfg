@@ -1,0 +1,55 @@
+
+@services.ai.cost_management.ModelCostConfig.calculate_total_costD
+:/home/omar/Documents/ruleIQ/services/ai/cost_management.py7 7("2*Õ
+29 9(?¤¡
+: :(<
+%1*K
+
+__unknown_file (/-
++services.ai.cost_management.ModelCostConfig*,
+
+__unknown_file (
+
+input_tokens2calculate_input_costD
+B
+: :(<
+
+input_cost"__id*"
+
+__unknown_file (
+
+%1¦£
+; ;(?
+%2*K
+
+__unknown_file (/-
++services.ai.cost_management.ModelCostConfig*-
+
+__unknown_file (
+
+output_tokens2calculate_output_costE
+C
+; ;(?
+output_cost"__id*"
+
+__unknown_file (
+
+%2U
+S
+< <('
+%3"__concat*
+< <(
+
+
+input_cost*
+< <('
+
+output_cost"
+< <('
+
+%3:
+7# 7(4
+input_tokens:
+76 7(H
+output_tokensB/-
++services.ai.cost_management.ModelCostConfigH

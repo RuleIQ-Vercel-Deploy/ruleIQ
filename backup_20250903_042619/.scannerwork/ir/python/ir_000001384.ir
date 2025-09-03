@@ -1,0 +1,400 @@
+
+N"weighting_factors"str
+v"medium"str
+p"business_size"str
+@
+"required"str
+("Compliance framework assessed"str
++2""Number of non-compliant controls"str
+!/"non_compliant_controls"str
+1,("Number of partially compliant controls"str
+
+E0int
+#R"critical_controls_weight"str
+:"additionalProperties"str
+!^"regulatory_risk_weight"str
+!X"business_impact_weight"str
+9a0"Weight based on regulatory risk (default: 1.2)"str
+u"small"str
+w"large"str
+t"micro"str
+-&$"Number of fully compliant controls"str
+"object"str
+')"partially_compliant_controls"str
+"string"str
+á"low"str
+"framework"str
+"assessment_results"str
+S8J"Scores by category (e.g., {'data_protection': 85, 'access_control': 75})"str
+"number"str
+f"context_factors"str
+s"enum"str
+%"calculate_compliance_score"str
+"properties"str
+#ó"Scope of the assessment"str
+#"compliant_controls"str
+"total_controls"str
+LC"Get the function schema for Google Generative AI function calling"str
+, #"Total number of controls assessed"str
+î"assessment_scope"str
+"name"str
+
+"parameters"str
+9[0"Weight based on business impact (default: 1.0)"str
+j
+"industry"str
+"type"str
+"description"str
+à"high"str
+ Å"Size of the business"str
+Ñ"risk_tolerance"str
+:1"Calculate compliance scores and maturity levels"str
+AU8"Weight multiplier for critical controls (default: 1.5)"str
+)ë"Organization's risk tolerance"str
+5"category_scores"str
+&m"Industry sector for context"strself
+ˇ ˇ( Blist"ó"&
+$
+
+Å ¢(0"#new-object#Bdict"
+ 
+
+Å Å(4"	#map-set#:"
+ 
+
+Å6 Ç(=	"	#map-set#:&
+$
+
+É ¢(/"#new-object#Bdict"
+ 
+
+É É("	#map-set#:&
+$
+
+É- °(B"#new-object#Bdict&
+$
+
+ÉD í(F"#new-object#Bdict"
+ 
+
+ÉE Ñ("	#map-set#:&
+$
+
+Ñ$ ê(:"#new-object#Bdict&
+$
+
+Ñ2 Ö(;"#new-object#Bdict"
+ 
+
+Ñ3 Ñ(C"	#map-set#:"
+ 
+
+Ö Ö(:"	#map-set#:"
+ 
+
+Ñ% Ö(;"	#map-set#:&
+$
+
+Ü á(0"#new-object#Bdict"
+ 
+
+Ü Ü(/"	#map-set#:"
+ 
+
+Ü1 á(/!"	#map-set#: "
+ 
+
+Ü á(0""	#map-set#:&
+$
+
+áH â(1$"#new-object#Bdict"
+ 
+
+à à(%"	#map-set#:$"
+ 
+
+à â(0'"	#map-set#:$&"
+ 
+
+á2 â(1("	#map-set#:#$&
+$
+
+ä, ã(D*"#new-object#Bdict"
+ 
+
+ä- ä(=+"	#map-set#:*"
+ 
+
+ã ã(C-"	#map-set#:*,"
+ 
+
+ä ã(D."	#map-set#:)*&
+$
+
+å& ç(/0"#new-object#Bdict"
+ 
+
+å' å(71"	#map-set#:0"
+ 
+
+å9 ç(.3"	#map-set#:02"
+ 
+
+å ç(/4"	#map-set#:/0&
+$
+
+çD ê(96"#new-object#Bdict"
+ 
+
+çE é(7"	#map-set#:6"
+ 
+
+é è(V9"	#map-set#:68&
+$
+
+ê& ê(8;"#new-object#Bdict"
+ 
+
+ê' ê(7<"	#map-set#:;"
+ 
+
+ê ê(8="	#map-set#:6:;"
+ 
+
+ç1 ê(9>"	#map-set#:56"
+ 
+
+Ñ ê(:?"	#map-set#:)
+'
+
+êH í(EA"#unknown-value#Blist(
+&
+
+êH í(EC"
+#is-exact#:ABBbool
+
+
+êH í(ED"
+#assume#:C:
+8
+
+êH í(EF"#set-field# __collection_size:AEBint(
+&
+
+êH í(EG"#array-add-last#:A(
+&
+
+êH í(EH"#array-add-last#:A(
+&
+
+êH í(EI"#array-add-last#:A#(
+&
+
+êH í(EJ"#array-add-last#:A)(
+&
+
+êH í(EK"#array-add-last#:A/"
+ 
+
+ê< í(EL"	#map-set#:@A"
+ 
+
+É. í(FM"	#map-set#:&
+$
+
+ì! ô(?O"#new-object#Bdict"
+ 
+
+ì" ì(2P"	#map-set#:O&
+$
+
+ìB ô(>Q"#new-object#Bdict&
+$
+
+î( ï(ES"#new-object#Bdict"
+ 
+
+î) î(9T"	#map-set#:S"
+ 
+
+î; ï(DV"	#map-set#:SU"
+ 
+
+î ï(EW"	#map-set#:QRS&
+$
+
+ñ& ó(=Y"#new-object#Bdict"
+ 
+
+ñ' ñ(7Z"	#map-set#:Y"
+ 
+
+ñ9 ó(<\"	#map-set#:Y["
+ 
+
+ñ ó(=]"	#map-set#:QXY&
+$
+
+ò& ô(=_"#new-object#Bdict"
+ 
+
+ò' ò(7`"	#map-set#:_"
+ 
+
+ò9 ô(<b"	#map-set#:_a"
+ 
+
+ò ô(=c"	#map-set#:Q^_"
+ 
+
+ì4 ô(>d"	#map-set#:OQ"
+ 
+
+ì ô(?e"	#map-set#:NO&
+$
+
+ö °(Ag"#new-object#Bdict"
+ 
+
+ö  ö(0h"	#map-set#:g&
+$
+
+ö@ °(@i"#new-object#Bdict&
+$
+
+õ ú(k"#new-object#Bdict"
+ 
+
+õ õ(l"	#map-set#:k"
+ 
+
+õ õ(Kn"	#map-set#:km"
+ 
+
+öA ú(o"	#map-set#:ijk&
+$
+
+ú  û(#q"#new-object#Bdict"
+ 
+
+ú! ú(1r"	#map-set#:q)
+'
+
+ú; ù('x"#unknown-value#Blist(
+&
+
+ú; ù('y"
+#is-exact#:xBBbool
+
+
+ú; ù('z"
+#assume#:y:
+8
+
+ú; ù('{"#set-field# __collection_size:xEBint(
+&
+
+ú; ù('|"#array-add-last#:xt(
+&
+
+ú; ù('}"#array-add-last#:xu(
+&
+
+ú; ù('~"#array-add-last#:xv(
+&
+
+ú; ù('"#array-add-last#:xw#
+!
+
+ú3 ù('Ä"	#map-set#:qsx$
+"
+
+ù) û("Ç"	#map-set#:qÅ#
+!
+
+ú û(#É"	#map-set#:ipq'
+%
+
+û7 †(,Ö"#new-object#Bdict$
+"
+
+û8 û(HÜ"	#map-set#:Ö*
+(
+
+ü ü(-â"#unknown-value#Blist*
+(
+
+ü ü(-ä"
+#is-exact#:âBBbool!
+
+
+ü ü(-ã"
+#assume#:ä<
+:
+
+ü ü(-å"#set-field# __collection_size:âEBint+
+)
+
+ü ü(-ç"#array-add-last#:âá*
+(
+
+ü ü(-é"#array-add-last#:âv+
+)
+
+ü ü(-è"#array-add-last#:âà%
+#
+
+ü ü(-ê"	#map-set#:Ösâ%
+#
+
+ü/ †(+í"	#map-set#:Öë%
+#
+
+û% †(,ì"	#map-set#:iÑÖ'
+%
+
+†B °(?ï"#new-object#Bdict$
+"
+
+†C °(ñ"	#map-set#:ï%
+#
+
+° °(>ò"	#map-set#:ïó%
+#
+
+†. °(?ô"	#map-set#:iîï#
+!
+
+ö2 °(@ö"	#map-set#:gi#
+!
+
+ö °(Aõ"	#map-set#:fg#
+!
+
+É °(Bú"	#map-set#:*
+(
+
+¢ ¢(.ù"#unknown-value#Blist*
+(
+
+¢ ¢(.û"
+#is-exact#:ùBBbool!
+
+
+¢ ¢(.ü"
+#assume#:û<
+:
+
+¢ ¢(.†"#set-field# __collection_size:ùEBint*
+(
+
+¢ ¢(.°"#array-add-last#:ù$
+"
+
+¢ ¢(.¢"	#map-set#:@ù#
+!
+
+Ç? ¢(/£"	#map-set#:
+
+
+Å ¢(0*9/home/omar/Documents/ruleIQ/services/ai/evidence_tools.py

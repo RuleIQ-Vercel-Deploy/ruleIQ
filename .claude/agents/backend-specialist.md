@@ -1,7 +1,8 @@
 ---
 name: backend-specialist
-description: "Backend and API specialist. Proactively fixes Python, FastAPI, database, and backend test issues with focus on P0 blockers and P1 API routing."
+description: Backend and API specialist. Proactively fixes Python, FastAPI, database, and backend test issues with focus on P0 blockers and P1 API routing.
 tools: Read, Write, Execute, Test
+model: opus
 ---
 
 # Backend Specialist - RuleIQ

@@ -1,0 +1,82 @@
+# Ruff configuration for ruleIQ
+target-version = "py38"
+line-length = 100
+
+[lint]
+select = [
+    "F",   # Pyflakes
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "ANN", # Type annotations
+    "ARG", # Unused arguments
+    "PLR", # Pylint refactor
+    "S",   # Security
+    "PT",  # pytest-specific rules
+]
+
+ignore = [
+    # Only ignore specific non-critical rules
+    "ANN201", # Missing return type annotation for public function
+    "ANN001", # Missing type function argument
+    "ANN003", # Missing type kwargs
+    "ANN202", # Missing return type annotation for private function
+    "ANN401", # Any type allowed in validation utilities
+    "ARG002", # Unused method argument
+    "ARG001", # Unused function argument
+    "PLR0913", # Too many arguments
+    "PLR0912", # Too many branches
+    "PLR0915", # Too many statements
+    "PLR0911", # Too many return statements
+    "S311",  # Non-cryptographic random usage
+    "S603",  # Subprocess without shell
+    "S105",  # Hardcoded password
+    "S106",  # Hardcoded password func arg
+    "S110",  # Try except pass
+    "S101",  # Assert (primarily in test files)
+]
+
+# Directories to exclude
+exclude = [
+    ".git",
+    "__pycache__",
+    ".venv",
+    ".env",
+    "build",
+    "dist",
+    "htmlcov",
+    ".pytest_cache",
+    ".mypy_cache",
+    ".ruff_cache",
+    "migrations",
+    "validate-auth-flow.py",
+]
+
+[lint.per-file-ignores]
+"tests/*" = [
+    "SIM117", "B011",  # Existing ignores
+    "ANN",     # Type annotations not required in tests
+    "ARG",     # Unused arguments (common in pytest fixtures)
+    "PLR0913", # Too many arguments (common in test methods)
+    "PLR0915", # Too many statements (common in test methods)
+    "PLR2004", # Magic value used in comparison (common in tests)
+    "S101",    # Use of assert (required in tests)
+    "PT",      # pytest-specific rules
+    "E501",    # Line too long (common in test data)
+    "W291",    # Trailing whitespace
+    "F401",    # Unused imports (common in test fixtures)
+    "F841",    # Unused variables (common in test setup)
+    "E402",    # Module import not at top of file (common in tests)
+    "F821",    # Undefined name (fixtures)
+    "S113",    # Request without timeout (acceptable in tests)
+    "S324",    # Hashlib insecure hash (acceptable in tests)
+]
+"*/__init__.py" = ["F401"]  # Allow unused imports in __init__.py
+
+[lint.isort]
+known-first-party = ["api", "database", "services", "config", "core"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+
+[format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"

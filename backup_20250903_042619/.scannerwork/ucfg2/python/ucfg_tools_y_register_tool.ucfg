@@ -1,0 +1,163 @@
+
+,services.ai.tools.ToolRegistry.register_tool:
+0/home/omar/Documents/ruleIQ/services/ai/tools.pys s("2*ç
+2t z(e
+c
+{ {(
+%12"__id*J
+
+__unknown_file (.*, 
+services.ai.tools.ToolRegistry"
+_toolsI
+G
+{ {(
+%13"__id*.
+
+__unknown_file (*
+
+tool"
+name£†
+{ {(%
+%11"dict.__setitem__*#
+
+__unknown_file (
+
+%12*#
+
+__unknown_file (
+
+%13*$
+
+__unknown_file (
+
+tool2__setitem__l
+j
+| |(.
+%14"__id*Q
+
+__unknown_file (5*3 
+services.ai.tools.ToolRegistry"
+_tool_by_typeqo
+| |(.
+%15*#
+
+__unknown_file (
+
+%14*)
+
+__unknown_file (
+
+	tool_type2__contains__=
+;
+| |(.
+%16"not*#
+
+__unknown_file (
+
+%15*
+4
+5*0
+3
+
+tools.py"
+Ç Ç(
+implicit return*ﬁ
+4~ ~(2k
+i
+~ ~(
+%1"__id*Q
+
+__unknown_file (5*3 
+services.ai.tools.ToolRegistry"
+_tool_by_typexv
+~ ~(%
+%2"__mapGet*"
+
+__unknown_file (
+
+%1*)
+
+__unknown_file (
+
+	tool_type2__getitem__db
+~ ~(2
+%3*"
+
+__unknown_file (
+
+%2*$
+
+__unknown_file (
+
+tool2appendH
+F
+; (D
+%4"__id*.
+
+__unknown_file (*
+
+tool"
+nameP
+N
+
+Ä Ä(
+%5"__id*4
+
+__unknown_file (*
+
+	tool_type"
+valuez
+x
+	 Ä(
+%6"__concat*1
+ (7%#
+!Registered tool '%s' of type '%s'*
+; (D
+
+%4*
+
+Ä Ä(
+
+%5ec
+	 Ä(
+%7*&
+
+__unknown_file (
+
+
+logger*"
+
+__unknown_file (
+
+%62info*
+3*√
+5} }(.
+}, }(.
+%8"listl
+j
+} }(
+%10"__id*Q
+
+__unknown_file (5*3 
+services.ai.tools.ToolRegistry"
+_tool_by_type¶£
+} }(.
+%9"dict.__setitem__*#
+
+__unknown_file (
+
+%10*)
+
+__unknown_file (
+
+	tool_type*"
+
+__unknown_file (
+
+%82__setitem__*
+4:
+s s(*
+tool:
+s, s(?
+	tool_typeB" 
+services.ai.tools.ToolRegistryH

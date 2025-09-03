@@ -1,0 +1,48 @@
+
+	
+"severity"str
+"target_state"str
+"impact"str
+"current_state"str
+	"section"str
+
+"priority"str
+"description"str
+"id"strself! !("¡$
+"
+" %(9"#new-object#Bdict#
+!
+" "("#get-field# id: 
+
+" "("	#map-set#:(
+&
+"* "(6"#get-field# section: 
+
+" "(6"	#map-set#:)
+'
+"D #(
+"#get-field# severity: 
+
+"8 #("	#map-set#:	
+,
+*
+#% #(5"#get-field# description: 
+
+# #(5"	#map-set#:'
+%
+#A $("#get-field# impact: 
+
+#7 $("	#map-set#:.
+,
+$% $(7"#get-field# current_state: 
+
+$ $(7"	#map-set#:-
++
+% %("#get-field# target_state: 
+
+$9 %("	#map-set#:)
+'
+%+ %(8"#get-field# priority: 
+
+% %(8"	#map-set#:
+" %(9*;/home/omar/Documents/ruleIQ/services/ai/assessment_tools.py

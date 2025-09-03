@@ -1,0 +1,106 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/ukpga/2010/23/data.xml",
+  "fetched_at": "2025-08-31T18:15:07.777468",
+  "metadata": {
+    "title": "Bribery Act 2010",
+    "description": "An Act to make provision about offences relating to bribery; and for connected purposes.",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "section-5",
+      "text": "51For the purposes of sections 3 and 4, the test of what is expected is a test of what a reasonable person in the United Kingdom would expect in relation to the performance of the type of function or activity concerned.2In deciding what such a person would expect in relation to the performance of a function or activity where the performance is not subject to the law of any part of the United Kingdom, any local custom or practice is to be disregarded unless it is permitted or required by the writ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-6",
+      "text": "61A person (\u201cP\u201d) who bribes a foreign public official (\u201cF\u201d) is guilty of an offence if P's intention is to influence F in F's capacity as a foreign public official.2P must also intend to obtain or retain\u2014abusiness, orban advantage in the conduct of business.3P bribes F if, and only if\u2014adirectly or through a third party, P offers, promises or gives any financial or other advantage\u2014ito F, oriito another person at F's request or with F's assent or acquiescence, andbF is neither permitted nor requir",
+      "type": "mandatory",
+      "keywords": [
+        "retention"
+      ]
+    },
+    {
+      "id": "section-7",
+      "text": "71A relevant commercial organisation (\u201cC\u201d) is guilty of an offence under this section if a person (\u201cA\u201d) associated with C bribes another person intending\u2014ato obtain or retain business for C, orbto obtain or retain an advantage in the conduct of business for C.2But it is a defence for C to prove that C had in place adequate procedures designed to prevent persons associated with C from undertaking such conduct.3For the purposes of this section, A bribes another person if, and only if, A\u2014ais, or wo",
+      "type": "mandatory",
+      "keywords": [
+        "retention"
+      ]
+    },
+    {
+      "id": "section-9",
+      "text": "91The Secretary of State must publish guidance about procedures that relevant commercial organisations can put in place to prevent persons associated with them from bribing as mentioned in section 7(1).2The Secretary of State may, from time to time, publish revisions to guidance under this section or revised guidance.3The Secretary of State must consult the Scottish Ministers and the Department of Justice in Northern Ireland before publishing anything under this section.4Publication under this s",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-10",
+      "text": "101No proceedings for an offence under this Act may be instituted in England and Wales except by or with the consent of\u2014athe Director of Public Prosecutions,orbthe Director of the Serious Fraud Office ...c. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .2No proceedings for an offence under this Act may be instituted in Northern Ireland except by or with the consent of\u2014athe Director of Public Prosecutions for Northern Ireland, orbthe Director of the Serious Fraud Office.3No proceedi",
+      "type": "mandatory",
+      "keywords": [
+        "consent"
+      ]
+    },
+    {
+      "id": "section-13",
+      "text": "131It is a defence for a person charged with a relevant bribery offence to prove that the person's conduct was necessary for\u2014athe proper exercise of any function of an intelligence service, orbthe proper exercise of any function of the armed forces when engaged on active service.2The head of each intelligence service must ensure that the service has in place arrangements designed to ensure that any conduct of a member of the service which would otherwise be a relevant bribery offence is necessar",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "section-15",
+      "text": "151Proceedings for an offence under section 7 alleged to have been committed by a partnership must be brought in the name of the partnership (and not in that of any of the partners).2For the purposes of such proceedings\u2014arules of court relating to the service of documents have effect as if the partnership were a body corporate, andbthe following provisions apply as they apply in relation to a body corporate\u2014isection 33 of the Criminal Justice Act 1925 and Schedule 3 to the Magistrates' Courts Ac",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-19",
+      "text": "191Subject to subsection (2), this Act comes into force on such day as the Secretary of State may by order made by statutory instrument appoint.2Sections 16, 17(4) to (10) and 18, this section (other than subsections (5) to (7)) and section 20 come into force on the day on which this Act is passed.3An order under subsection (1) may\u2014aappoint different days for different purposes,bmake such transitional, transitory or saving provision as the Secretary of State considers appropriate in connection w",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "schedule-1-paragraph-11",
+      "text": "11In Schedule 2 to the Armed Forces Act 2006 (which lists serious offences the possible commission of which, if suspected, must be referred to a service police force), in paragraph 12, at the end insert\u2014awan offence under section 1, 2 or 6 of the Bribery Act 2010.",
+      "type": "mandatory",
+      "keywords": []
+    }
+  ],
+  "penalties": [
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 12 month",
+      "context": "penalties111an individual guilty of an offence under section 1, 2 or 6 is liable\u2014aon summary conviction, to imprisonment for a term not exceeding 12 months, or to a fine not exceeding the statutory ma"
+    }
+  ],
+  "enforcement": {
+    "authority": [
+      "Secretary of State"
+    ],
+    "powers": [
+      "71A relevant commercial organisation (\u201cC\u201d) is guilty of an offence under this section if a person (\u201cA\u201d) associated with C bribes another person intending\u2014ato obtain or retain business for C, orbto obt",
+      "131Section 53 of that Act (certain extra-territorial offences to be prosecuted only by, or with the consent of, the Attorney General or the Advocate General for Northern Ireland) is amended as follows"
+    ],
+    "procedures": []
+  },
+  "dates": [
+    {
+      "type": "deadline",
+      "date": "2 May 2022",
+      "context": "111An individual guilty of an offence under section 1, 2 or 6 is liable\u2014aon summary conviction, to imprisonment for a term not exceeding 12 months, or"
+    }
+  ],
+  "controls": [
+    "consent_management",
+    "data_minimization",
+    "incident_response"
+  ],
+  "xml_length": 135297
+}
