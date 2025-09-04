@@ -31,11 +31,10 @@ class TestAssessmentEndpoints:
     @pytest.fixture
     def assessment_data(self):
         """Sample assessment creation data"""
+        from uuid import uuid4
         return {
-            "framework_id": 1,
-            "name": "Q1 2024 GDPR Assessment",
-            "description": "Quarterly GDPR compliance assessment",
-            "business_profile_id": str(uuid4())
+            "business_profile_id": str(uuid4()),
+            "session_type": "compliance_scoping"
         }
     
     @pytest.mark.asyncio
@@ -49,9 +48,8 @@ class TestAssessmentEndpoints:
         
         assert response.status_code == 201
         data = response.json()
-        assert data["name"] == assessment_data["name"]
-        assert data["framework_id"] == assessment_data["framework_id"]
-        assert data["status"] == "draft"
+        assert data["session_type"] == assessment_data["session_type"]
+        assert data["business_profile_id"] == assessment_data["business_profile_id"]
         assert "id" in data
     
     @pytest.mark.asyncio

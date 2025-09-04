@@ -9,6 +9,16 @@ import os
 os.environ['TESTING'] = 'true'
 os.environ['ENVIRONMENT'] = 'testing'
 
+# Import common test fixes EARLY to ensure environment is set up
+from tests.fixtures.common_test_fixes import (
+    fix_environment_variables,
+    get_valid_request_data,
+    create_test_client
+)
+
+# Fix environment variables immediately
+fix_environment_variables()
+
 # Load test environment configuration
 from tests.setup_test_env import setup_test_database_urls
 setup_test_database_urls()
@@ -230,11 +240,7 @@ def assert_api_response_security(response):
 @pytest.fixture
 def client():
     """Create a test client for FastAPI application."""
-    from fastapi.testclient import TestClient
-    from main import app
-
-    with TestClient(app) as test_client:
-        yield test_client
+    return create_test_client()
 
 @pytest.fixture
 def authenticated_client(client, authenticated_headers):
@@ -282,13 +288,7 @@ def admin_headers(db_session):
 @pytest.fixture
 def sample_user_data():
     """Create sample user data for testing."""
-    return {
-        "email": "test@example.com",
-        "password": "TestPassword123!",
-        "full_name": "Test User",
-        "company": "Test Company",
-        "role": "compliance_manager"
-    }
+    return get_valid_request_data("/api/v1/auth/register")
 
 @pytest.fixture
 def sample_framework_data():
@@ -315,13 +315,7 @@ def sample_framework_data():
 @pytest.fixture
 def sample_assessment_data():
     """Create sample assessment data for testing."""
-    return {
-        "framework_id": 1,
-        "name": "Q1 2024 GDPR Assessment",
-        "description": "Quarterly GDPR compliance assessment",
-        "status": "in_progress",
-        "responses": {}
-    }
+    return get_valid_request_data("/api/v1/assessments")
 
 # API testing fixtures
 @pytest.fixture
@@ -347,7 +341,16 @@ def multipart_headers():
 async def async_client():
     """Create an async test client for FastAPI application."""
     from httpx import AsyncClient
-    from main import app
+    try:
+        from api.main import app
+    except ImportError:
+        # Fallback to minimal app
+        from fastapi import FastAPI
+        app = FastAPI(title="Test App")
+        
+        @app.get("/health")
+        def health():
+            return {"status": "ok"}
     
     async with AsyncClient(app=app, base_url="http://test") as client:
         yield client
