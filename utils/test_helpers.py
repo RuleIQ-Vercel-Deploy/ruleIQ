@@ -208,8 +208,19 @@ def create_smart_mock_ai_client():
         return response
     
     mock_client = MagicMock()
-    mock_client.generate_content = generate_content
-    mock_client.generate_content_async = lambda p: asyncio.coroutine(generate_content)(p)
+    # Set up the mock to allow tests to override return_value.text
+    mock_client.generate_content.return_value = MagicMock()
+    
+    # Set default responses but allow override
+    def smart_generate_content(*args, **kwargs):
+        # If tests have set a specific return_value.text, use that
+        if hasattr(mock_client.generate_content.return_value, 'text'):
+            return mock_client.generate_content.return_value
+        # Otherwise use our smart defaults
+        return generate_content(args[0] if args else "")
+    
+    mock_client.generate_content.side_effect = smart_generate_content
+    mock_client.generate_content_async = lambda p: asyncio.coroutine(lambda: generate_content(p))()
     
     return mock_client
 

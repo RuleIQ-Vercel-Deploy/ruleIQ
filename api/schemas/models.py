@@ -15,9 +15,10 @@ class UserCreate(UserBase):
     @validator('password')
     @classmethod
     def validate_password_strength(cls, v) -> Any:
-        from api.dependencies.auth import validate_password
+        from api.dependencies.auth import validate_password_strength
         """Validate Password Strength"""
-        is_valid, message = validate_password(v)
+        is_valid = validate_password_strength(v)
+        message = "Password does not meet strength requirements"
         if not is_valid:
             raise ValueError(f'Password validation failed: {message}')
         return v
