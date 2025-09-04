@@ -141,6 +141,7 @@ class ErrorHandler:
 
         def sanitize_dict(data: Dict[str, Any]) ->Dict[str, Any]:
             sanitized = {}
+            """Sanitize Dict"""
             for key, value in data.items():
                 if any(sensitive in key.lower() for sensitive in sensitive_keys
                     ):

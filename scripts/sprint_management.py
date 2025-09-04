@@ -16,12 +16,14 @@ import os
 
 class Priority(Enum):
     CRITICAL = 'CRITICAL'
+    """Class for Priority"""
     HIGH = 'HIGH'
     MEDIUM = 'MEDIUM'
     LOW = 'LOW'
 
 class StoryStatus(Enum):
     PENDING = 'PENDING'
+    """Class for StoryStatus"""
     IN_PROGRESS = 'IN_PROGRESS'
     BLOCKED = 'BLOCKED'
     TESTING = 'TESTING'
@@ -29,6 +31,7 @@ class StoryStatus(Enum):
 
 class TaskType(Enum):
     FEATURE = 'FEATURE'
+    """Class for TaskType"""
     BUG = 'BUG'
     TECHNICAL = 'TECHNICAL'
     DESIGN = 'DESIGN'

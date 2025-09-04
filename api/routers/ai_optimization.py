@@ -24,17 +24,20 @@ router = APIRouter()
 
 class ModelSelectionRequest(BaseModel):
     task_type: str
+    """Class for ModelSelectionRequest"""
     complexity: str = 'medium'
     prefer_speed: bool = False
     context: Dict[str, Any] = {}
 
 class ModelHealthResponse(BaseModel):
     models: Dict[str, Any]
+    """Class for ModelHealthResponse"""
     timestamp: str
     overall_status: str
 
 class PerformanceMetricsResponse(BaseModel):
     response_times: Dict[str, float]
+    """Class for PerformanceMetricsResponse"""
     success_rates: Dict[str, float]
     token_usage: Dict[str, int]
     cost_metrics: Dict[str, float]
@@ -123,7 +126,7 @@ async def get_circuit_breaker_status(current_user: User=Depends(
 
     Returns the current state of circuit breakers, failure counts, and health metrics
     for all AI models in the system.
-    """
+        """
     try:
         assistant = ComplianceAssistant(db)
         circuit_status = assistant.circuit_breaker.get_health_status()

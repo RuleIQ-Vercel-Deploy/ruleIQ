@@ -90,6 +90,7 @@ def create_ai_rate_limit_dependency(limiter: AIRateLimiter, operation_name: str
 
     async def ai_rate_limit_check(request: Request, current_user: User=
         Depends(get_current_active_user)) ->None:
+        """Ai Rate Limit Check"""
         if settings.is_testing:
             return
         user_id = str(current_user.id)

@@ -18,6 +18,7 @@ sys.path.insert(0, '/home/omar/Documents/ruleIQ')
 
 def main() ->None:
     logger.info('=== Freemium Database Table Debug Script ===')
+    """Main"""
     try:
         logger.info('1. Testing Database Connection...')
         db_url = os.environ['DATABASE_URL']

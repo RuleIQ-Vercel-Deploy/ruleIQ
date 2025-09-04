@@ -20,16 +20,12 @@ from services.ai.circuit_breaker import AICircuitBreaker, CircuitBreakerConfig
 from services.ai.exceptions import AIServiceException
 
 @pytest.fixture(scope="session")
-def event_loop():
-    """Create an instance of the default event loop for the test session."""
-    loop = asyncio.get_event_loop_policy().new_event_loop()
+def event_loop(): loop = asyncio.get_event_loop_policy().new_event_loop()
     yield loop
     loop.close()
 
 @pytest.fixture
-def circuit_breaker_config():
-    """Circuit breaker configuration for testing."""
-    return CircuitBreakerConfig(
+def circuit_breaker_config(): return CircuitBreakerConfig(
         failure_threshold=3,
         timeout_seconds=60,
         half_open_max_calls=2,
@@ -37,9 +33,7 @@ def circuit_breaker_config():
     )
 
 @pytest.fixture
-def mock_circuit_breaker(circuit_breaker_config):
-    """Mock circuit breaker for testing."""
-    circuit_breaker = Mock(spec=AICircuitBreaker)
+def mock_circuit_breaker(circuit_breaker_config): circuit_breaker = Mock(spec=AICircuitBreaker)
     circuit_breaker.config = circuit_breaker_config
     circuit_breaker.is_model_available.return_value = True
     circuit_breaker.record_success.return_value = None
@@ -52,16 +46,12 @@ def mock_circuit_breaker(circuit_breaker_config):
     return circuit_breaker
 
 @pytest.fixture
-def mock_model_metadata():
-    """Mock model metadata for testing - uses central config."""
-    from config.ai_config import MODEL_METADATA
+def mock_model_metadata(): from config.ai_config import MODEL_METADATA
 
     return MODEL_METADATA
 
 @pytest.fixture
-def mock_ai_model():
-    """Mock AI model for testing."""
-    model = Mock()
+def mock_ai_model(): model = Mock()
     model.model_name = ModelType.GEMINI_25_FLASH.value
     model.generate_content.return_value = Mock(text="Mock AI response")
     model.generate_content_stream.return_value = iter(
@@ -70,9 +60,7 @@ def mock_ai_model():
     return model
 
 @pytest.fixture
-async def mock_compliance_assistant():
-    """Mock compliance assistant for testing."""
-    from sqlalchemy.ext.asyncio import AsyncSession
+async def mock_compliance_assistant(): from sqlalchemy.ext.asyncio import AsyncSession
 
     mock_db = Mock(spec=AsyncSession)
     assistant = Mock(spec=ComplianceAssistant)
@@ -83,6 +71,7 @@ async def mock_compliance_assistant():
     # Mock streaming methods
     async def mock_stream():
         yield "Mock streaming response"
+        """Mock Stream"""
 
     assistant.analyze_assessment_results_stream = AsyncMock(return_value=mock_stream())
     assistant.get_assessment_recommendations_stream = AsyncMock(
@@ -93,12 +82,9 @@ async def mock_compliance_assistant():
     return assistant
 
 @pytest.fixture
-def mock_streaming_chunks():
-    """Mock streaming chunks for testing."""
-
+def mock_streaming_chunks(): 
     class MockChunk:
-        def __init__(self, text=None, candidates=None) -> None:
-            self.text = text
+        def __init__(self, text=None, candidates=None) -> None: self.text = text
             self.candidates = candidates or []
 
     return [
@@ -109,9 +95,7 @@ def mock_streaming_chunks():
     ]
 
 @pytest.fixture
-def mock_assessment_data():
-    """Mock assessment data for testing."""
-    return {
+def mock_assessment_data(): return {
         "responses": [
             {"question_id": "q1", "answer": "yes", "confidence": 0.9},
             {"question_id": "q2", "answer": "no", "confidence": 0.8},
@@ -126,9 +110,7 @@ def mock_assessment_data():
     }
 
 @pytest.fixture
-def mock_business_context():
-    """Mock business context for testing."""
-    return {
+def mock_business_context(): return {
         "business_profile": {
             "industry": "technology",
             "company_size": "small",
@@ -147,9 +129,7 @@ def mock_business_context():
     }
 
 @pytest.fixture
-def performance_test_config():
-    """Performance test configuration."""
-    return {
+def performance_test_config(): return {
         "max_response_time": 3.0,
         "min_throughput": 10,
         "max_memory_mb": 500,
@@ -181,24 +161,16 @@ class MockStreamingResponse:
         return chunk
 
 @pytest.fixture
-def mock_streaming_response_factory():
-    """Factory for creating mock streaming responses."""
-    return MockStreamingResponse
+def mock_streaming_response_factory(): return MockStreamingResponse
 
-async def async_generator_from_list(items: List[str]) -> AsyncIterator[str]:
-    """Convert a list to an async generator for testing."""
-    for item in items:
+async def async_generator_from_list(items: List[str]) -> AsyncIterator[str]: for item in items:
         yield item
 
 @pytest.fixture
-def async_generator_factory():
-    """Factory for creating async generators from lists."""
-    return async_generator_from_list
+def async_generator_factory(): return async_generator_from_list
 
 @pytest.fixture
-def mock_prompt_templates():
-    """Mock prompt templates for testing."""
-    templates = Mock()
+def mock_prompt_templates(): templates = Mock()
     templates.get_assessment_analysis_prompt.return_value = {
         "system": "You are ComplianceGPT analyzing assessment results.",
         "user": "Analyze the following assessment responses...",
@@ -214,9 +186,7 @@ def mock_prompt_templates():
     return templates
 
 @pytest.fixture
-def mock_context_manager():
-    """Mock context manager for testing."""
-    context_manager = Mock()
+def mock_context_manager(): context_manager = Mock()
     context_manager.get_conversation_context = AsyncMock(
         return_value={
             "business_profile": {"industry": "technology", "company_size": "small"}
@@ -230,9 +200,7 @@ def mock_context_manager():
     return context_manager
 
 @pytest.fixture(autouse=True)
-def mock_ai_dependencies():
-    """Auto-use fixture to mock AI dependencies."""
-    with patch("services.ai.assistant.get_ai_model") as mock_get_model, patch(
+def mock_ai_dependencies(): with patch("services.ai.assistant.get_ai_model") as mock_get_model, patch(
         "services.ai.assistant.AICircuitBreaker"
     ) as mock_circuit_breaker_class:
         # Mock model
@@ -256,9 +224,7 @@ def mock_ai_dependencies():
         yield {"model": mock_model, "circuit_breaker": mock_circuit_breaker}
 
 @pytest.fixture
-def test_task_contexts():
-    """Various task contexts for testing model selection."""
-    return {
+def test_task_contexts(): return {
         "simple_help": {
             "task_type": "help",
             "prompt_length": 100,
@@ -279,9 +245,7 @@ def test_task_contexts():
     }
 
 @pytest.fixture
-def mock_database_session():
-    """Mock database session for testing."""
-    from sqlalchemy.ext.asyncio import AsyncSession
+def mock_database_session(): from sqlalchemy.ext.asyncio import AsyncSession
 
     session = Mock(spec=AsyncSession)
     session.execute = AsyncMock()

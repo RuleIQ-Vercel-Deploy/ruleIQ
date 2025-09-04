@@ -36,6 +36,7 @@ class EvidenceRequirement:
     automation_potential: str
 
     def to_dict(self) ->Dict[str, Any]:
+        """To Dict"""
         return {'id': self.id, 'title': self.title, 'description': self.
             description, 'framework': self.framework, 'control_reference':
             self.control_reference, 'evidence_type': self.evidence_type,
@@ -55,22 +56,19 @@ class ComplianceScore:
     calculation_date: str
 
     def to_dict(self) ->Dict[str, Any]:
+        """To Dict"""
         return {'overall_score': self.overall_score, 'category_scores':
             self.category_scores, 'maturity_level': self.maturity_level,
             'risk_level': self.risk_level, 'confidence_score': self.
             confidence_score, 'calculation_date': self.calculation_date}
 
-class EvidenceMapperTool(BaseTool):
-    """Tool for mapping evidence requirements to compliance controls"""
-
+class EvidenceMapperTool(BaseTool): 
     def __init__(self) ->None:
         super().__init__(name='map_evidence_requirements', description=
             'Map evidence requirements to compliance controls and create collection plans'
             )
 
-    def get_function_schema(self) ->Dict[str, Any]:
-        """Get the function schema for Google Generative AI function calling"""
-        return {'name': 'map_evidence_requirements', 'description':
+    def get_function_schema(self) ->Dict[str, Any]: return {'name': 'map_evidence_requirements', 'description':
             'Map evidence requirements to compliance controls',
             'parameters': {'type': 'object', 'properties': {
             'evidence_requirements': {'type': 'array', 'description':
@@ -127,8 +125,7 @@ class EvidenceMapperTool(BaseTool):
             'resource_requirements']}}
 
     async def execute(self, parameters: Dict[str, Any], context: Optional[
-        Dict[str, Any]]=None) ->ToolResult:
-        """Execute evidence requirement mapping"""
+        Dict[str, Any]]=None) -> ToolResult:
         try:
             evidence_data = parameters.get('evidence_requirements', [])
             collection_plan = parameters.get('collection_plan', {})
@@ -174,8 +171,7 @@ class EvidenceMapperTool(BaseTool):
             return ToolResult(success=False, error=
                 f'Evidence mapping execution failed: {e!s}')
 
-    def _analyze_evidence_requirements(self, evidence_list: List[Dict[str,
-        Any]]) ->Dict[str, Any]:
+    def _analyze_evidence_requirements(self, evidence_list: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Analyze evidence requirements for insights"""
         analysis = {'by_type': {}, 'by_frequency': {}, 'by_priority': {},
             'by_framework': {}, 'automation_potential': {}}
@@ -197,9 +193,7 @@ class EvidenceMapperTool(BaseTool):
                 'automation_potential'].get(automation, 0) + 1
         return analysis
 
-    def _generate_collection_timeline(self, evidence_list: List[Dict[str, Any]]
-        ) ->Dict[str, List[Dict[str, str]]]:
-        """Generate timeline for evidence collection"""
+    def _generate_collection_timeline(self, evidence_list: List[Dict[str, Any]]) ->Dict[str, List[Dict[str, str]]]:
         timeline = {'immediate': [], 'quarterly': [], 'annual': [],
             'continuous': []}
         for evidence in evidence_list:
@@ -218,8 +212,7 @@ class EvidenceMapperTool(BaseTool):
                 timeline['annual'].append(item)
         return timeline
 
-    def _generate_automation_recommendations(self, evidence_list: List[Dict
-        [str, Any]]) ->List[Dict[str, str]]:
+    def _generate_automation_recommendations(self, evidence_list: List[Dict[str, Any]]) -> List[Dict[str, str]]:
         """Generate recommendations for automating evidence collection"""
         recommendations = []
         high_automation_items = [e for e in evidence_list if e.get(
@@ -239,17 +232,13 @@ class EvidenceMapperTool(BaseTool):
                 'implementation_effort': 'High'})
         return recommendations
 
-class ComplianceScoringTool(BaseTool):
-    """Tool for calculating compliance scores and maturity levels"""
-
+class ComplianceScoringTool(BaseTool): 
     def __init__(self) ->None:
         super().__init__(name='calculate_compliance_score', description=
             'Calculate compliance scores and maturity levels based on assessment results'
             )
 
-    def get_function_schema(self) ->Dict[str, Any]:
-        """Get the function schema for Google Generative AI function calling"""
-        return {'name': 'calculate_compliance_score', 'description':
+    def get_function_schema(self) ->Dict[str, Any]: return {'name': 'calculate_compliance_score', 'description':
             'Calculate compliance scores and maturity levels', 'parameters':
             {'type': 'object', 'properties': {'assessment_results': {'type':
             'object', 'properties': {'framework': {'type': 'string',
@@ -285,8 +274,7 @@ class ComplianceScoringTool(BaseTool):
             'required': ['assessment_results']}}
 
     async def execute(self, parameters: Dict[str, Any], context: Optional[
-        Dict[str, Any]]=None) ->ToolResult:
-        """Execute compliance scoring calculation"""
+        Dict[str, Any]]=None) -> ToolResult:
         try:
             assessment_results = parameters.get('assessment_results', {})
             weighting_factors = parameters.get('weighting_factors', {})
@@ -332,9 +320,7 @@ class ComplianceScoringTool(BaseTool):
             return ToolResult(success=False, error=
                 f'Compliance scoring execution failed: {e!s}')
 
-    def _calculate_base_score(self, assessment_results: Dict[str, Any]
-        ) ->float:
-        """Calculate base compliance score"""
+    def _calculate_base_score(self, assessment_results: Dict[str, Any]) ->float:
         total = assessment_results.get('total_controls', 0)
         if total == 0:
             return 0.0
@@ -344,8 +330,7 @@ class ComplianceScoringTool(BaseTool):
         total_points = compliant + partially_compliant * 0.5
         return total_points / total * 100
 
-    def _apply_weighting(self, base_score: float, weighting_factors: Dict[
-        str, Any]) ->float:
+    def _apply_weighting(self, base_score: float, weighting_factors: Dict[str, Any]) ->float:
         """Apply weighting factors to base score"""
         critical_weight = weighting_factors.get('critical_controls_weight', 1.0
             )
@@ -357,8 +342,7 @@ class ComplianceScoringTool(BaseTool):
         weighted_score = min(100.0, base_score * composite_weight)
         return round(weighted_score, 1)
 
-    def _determine_maturity_level(self, score: float, assessment_results:
-        Dict[str, Any]) ->str:
+    def _determine_maturity_level(self, score: float, assessment_results:Dict[str, Any]) ->str:
         """Determine maturity level based on score and assessment details"""
         if score >= 90:
             return 'optimized'
@@ -371,8 +355,7 @@ class ComplianceScoringTool(BaseTool):
         else:
             return 'initial'
 
-    def _calculate_risk_level(self, score: float, assessment_results: Dict[
-        str, Any], context_factors: Dict[str, Any]) ->str:
+    def _calculate_risk_level(self, score: float, assessment_results: Dict[str, Any], context_factors: Dict[str, Any]) ->str:
         """Calculate overall risk level"""
         non_compliant = assessment_results.get('non_compliant_controls', 0)
         total = assessment_results.get('total_controls', 1)
@@ -405,9 +388,7 @@ class ComplianceScoringTool(BaseTool):
         else:
             return 'low'
 
-    def _calculate_confidence_score(self, assessment_results: Dict[str, Any]
-        ) ->float:
-        """Calculate confidence in the score based on assessment completeness"""
+    def _calculate_confidence_score(self, assessment_results: Dict[str, Any]) ->float:
         total_controls = assessment_results.get('total_controls', 0)
         if total_controls >= 50:
             base_confidence = 0.95
@@ -423,8 +404,7 @@ class ComplianceScoringTool(BaseTool):
         return min(1.0, base_confidence)
 
     def _generate_improvement_recommendations(self, score: float,
-        assessment_results: Dict[str, Any], context_factors: Dict[str, Any]
-        ) ->List[Dict[str, str]]:
+        assessment_results: Dict[str, Any], context_factors: Dict[str, Any]) -> List[Dict[str, str]]:
         """Generate recommendations for score improvement"""
         recommendations = []
         if score < MINUTE_SECONDS:
@@ -446,8 +426,7 @@ class ComplianceScoringTool(BaseTool):
                     , 'impact': f'Medium - Improve {category} compliance'})
         return recommendations
 
-    def _generate_benchmark_comparison(self, score: float, context_factors:
-        Dict[str, Any]) ->Dict[str, Any]:
+    def _generate_benchmark_comparison(self, score: float, context_factors:Dict[str, Any]) ->Dict[str, Any]:
         """Generate benchmark comparison data"""
         industry = context_factors.get('industry', 'general')
         business_size = context_factors.get('business_size', 'medium')
@@ -472,8 +451,7 @@ class ComplianceScoringTool(BaseTool):
             'percentile_rank': self._calculate_percentile_rank(score,
             benchmark)}
 
-    def _calculate_percentile_rank(self, score: float, benchmark: Dict[str,
-        float]) ->int:
+    def _calculate_percentile_rank(self, score: float, benchmark: Dict[str,float]) ->int:
         """Calculate approximate percentile rank"""
         if score >= benchmark['excellent']:
             return 90
@@ -484,9 +462,7 @@ class ComplianceScoringTool(BaseTool):
         else:
             return 25
 
-    def _recommend_next_assessment(self, score: float, maturity_level: str
-        ) ->str:
-        """Recommend when to conduct next assessment"""
+    def _recommend_next_assessment(self, score: float, maturity_level: str) ->str:
         if score < MINUTE_SECONDS or maturity_level == 'initial':
             return (
                 '3-6 months - Frequent assessments needed for rapid improvement'
@@ -496,9 +472,7 @@ class ComplianceScoringTool(BaseTool):
         else:
             return '12-18 months - Annual assessments for maintenance'
 
-    def _explain_score_calculation(self, assessment_results: Dict[str, Any]
-        ) ->Dict[str, Any]:
-        """Explain how the score was calculated"""
+    def _explain_score_calculation(self, assessment_results: Dict[str, Any]) ->Dict[str, Any]:
         total = assessment_results.get('total_controls', 0)
         compliant = assessment_results.get('compliant_controls', 0)
         partially_compliant = assessment_results.get(

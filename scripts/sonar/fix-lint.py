@@ -34,6 +34,7 @@ def fix_react_entities(content) ->Any:
 
     def replace_entity(match) ->Any:
         before, quote, after = match.groups()
+        """Replace Entity"""
         if quote in replacements:
             return f'{before}{replacements[quote]}{after}'
         return match.group(0)

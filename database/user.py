@@ -9,6 +9,7 @@ from .db_setup import Base  # Import Base from our new db_setup.py
 
 class User(Base):
     __tablename__ = "users"
+    """Class for User"""
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     email = Column(
         String, nullable=False, unique=True

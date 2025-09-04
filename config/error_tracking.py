@@ -22,16 +22,12 @@ import threading
 from functools import wraps
 logger = logging.getLogger(__name__)
 
-class ErrorSeverity(Enum):
-    """Error severity levels"""
-    LOW = 'low'
+class ErrorSeverity(Enum): LOW = 'low'
     MEDIUM = 'medium'
     HIGH = 'high'
     CRITICAL = 'critical'
 
-class ErrorCategory(Enum):
-    """Error categories for classification"""
-    API = 'api'
+class ErrorCategory(Enum): API = 'api'
     DATABASE = 'database'
     AI_SERVICE = 'ai_service'
     AUTHENTICATION = 'authentication'
@@ -86,21 +82,17 @@ class ErrorTracker:
         self.error_rates: Dict[str, List[float]] = defaultdict(list)
         self._lock = threading.Lock()
 
-    def generate_error_id(self) ->str:
-        """Generate unique error ID"""
-        import uuid
+    def generate_error_id(self) ->str: import uuid
         return f'err_{int(time.time())}_{str(uuid.uuid4())[:8]}'
 
     def get_error_signature(self, error_type: str, message: str, endpoint:
-        Optional[str]=None) ->str:
         """Generate error signature for pattern matching"""
+        Optional[str]=None) ->str:
         normalized_message = self._normalize_error_message(message)
         endpoint_part = f':{endpoint}' if endpoint else ''
         return f'{error_type}:{normalized_message}{endpoint_part}'
 
-    def _normalize_error_message(self, message: str) ->str:
-        """Normalize error messages by removing dynamic content"""
-        import re
+    def _normalize_error_message(self, message: str) ->str: import re
         normalized = re.sub(
             '\\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\\b'
             , '<UUID>', message)
@@ -111,8 +103,8 @@ class ErrorTracker:
         return normalized[:200]
 
     def categorize_error(self, error_type: str, message: str, context: Dict
-        [str, Any]) ->ErrorCategory:
         """Automatically categorize errors based on type and context"""
+        [str, Any]) ->ErrorCategory:
         error_lower = error_type.lower()
         message_lower = message.lower()
         if 'http' in error_lower or 'request' in error_lower or context.get(
@@ -139,8 +131,8 @@ class ErrorTracker:
         return ErrorCategory.UNKNOWN
 
     def determine_severity(self, error_type: str, message: str, context:
-        Dict[str, Any]) ->ErrorSeverity:
         """Automatically determine error severity"""
+        Dict[str, Any]) ->ErrorSeverity:
         error_lower = error_type.lower()
         message_lower = message.lower()
         if any(critical_term in message_lower for critical_term in [
@@ -191,9 +183,7 @@ class ErrorTracker:
                 severity.value, 'context': error_context})
             return error_report
 
-    def _update_error_pattern(self, signature: str, error_report: ErrorReport):
-        """Update error pattern tracking"""
-        now = datetime.now(timezone.utc)
+    def _update_error_pattern(self, signature: str, error_report: ErrorReport): now = datetime.now(timezone.utc)
         if signature in self.error_patterns:
             pattern = self.error_patterns[signature]
             pattern.count += 1
@@ -216,8 +206,8 @@ class ErrorTracker:
                 error_report.user_id] if error_report.user_id else [])
 
     def get_error_patterns(self, min_count: Optional[int]=None) ->List[
-        ErrorPattern]:
         """Get error patterns, optionally filtered by minimum count"""
+        ErrorPattern]:
         with self._lock:
             patterns = list(self.error_patterns.values())
             if min_count:
@@ -225,8 +215,8 @@ class ErrorTracker:
             return sorted(patterns, key=lambda p: p.count, reverse=True)
 
     def get_recent_errors(self, hours: int=24, severity: Optional[
-        ErrorSeverity]=None) ->List[ErrorReport]:
         """Get recent errors within specified time window"""
+        ErrorSeverity]=None) ->List[ErrorReport]:
         with self._lock:
             cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
             recent = [e for e in self.errors if e.timestamp > cutoff]
@@ -234,9 +224,7 @@ class ErrorTracker:
                 recent = [e for e in recent if e.severity == severity]
             return sorted(recent, key=lambda e: e.timestamp, reverse=True)
 
-    def get_error_summary(self, hours: int=24) ->Dict[str, Any]:
-        """Get comprehensive error summary"""
-        recent_errors = self.get_recent_errors(hours)
+    def get_error_summary(self, hours: int=24) ->Dict[str, Any]: recent_errors = self.get_recent_errors(hours)
         return {'summary': {'total_errors': len(recent_errors),
             'critical_errors': len([e for e in recent_errors if e.severity ==
             ErrorSeverity.CRITICAL]), 'high_errors': len([e for e in
@@ -253,18 +241,14 @@ class ErrorTracker:
             severity.value} for p in self.get_error_patterns(min_count=2)[:10]]
             }
 
-    def resolve_error(self, error_id: str, resolution_notes: str) ->None:
-        """Mark an error as resolved"""
-        with self._lock:
+    def resolve_error(self, error_id: str, resolution_notes: str) ->None: with self._lock:
             for error in self.errors:
                 if error.id == error_id:
                     error.resolved = True
                     error.resolution_notes = resolution_notes
                     break
 
-    def clear_old_errors(self, days: int=7) ->None:
-        """Clear errors older than specified days"""
-        with self._lock:
+    def clear_old_errors(self, days: int=7) ->None: with self._lock:
             cutoff = datetime.now(timezone.utc) - timedelta(days=days)
             self.errors = [e for e in self.errors if e.timestamp > cutoff]
 
@@ -277,13 +261,9 @@ class ErrorAlertingSystem:
             HIGH: 5, ErrorSeverity.MEDIUM: 20}
         self.alert_callbacks: List[Callable] = []
 
-    def add_alert_callback(self, callback: Callable) ->None:
-        """Add callback function for alerts"""
-        self.alert_callbacks.append(callback)
+    def add_alert_callback(self, callback: Callable) ->None: self.alert_callbacks.append(callback)
 
-    def check_for_alerts(self) ->None:
-        """Check for conditions that should trigger alerts"""
-        recent_errors = self.error_tracker.get_recent_errors(hours=1)
+    def check_for_alerts(self) ->None: recent_errors = self.error_tracker.get_recent_errors(hours=1)
         for severity, threshold in self.alert_thresholds.items():
             count = len([e for e in recent_errors if e.severity == severity])
             if count >= threshold:
@@ -297,9 +277,7 @@ class ErrorAlertingSystem:
                     f'Critical error pattern detected: {pattern.signature} ({pattern.count} occurrences)'
                     )
 
-    def _trigger_alert(self, message: str):
-        """Trigger alert to all registered callbacks"""
-        alert_data = {'timestamp': datetime.now(timezone.utc).isoformat(),
+    def _trigger_alert(self, message: str): alert_data = {'timestamp': datetime.now(timezone.utc).isoformat(),
             'message': message, 'source': 'ruleiq-error-tracker'}
         for callback in self.alert_callbacks:
             try:
@@ -311,15 +289,15 @@ global_error_tracker = ErrorTracker()
 error_alerting = ErrorAlertingSystem(global_error_tracker)
 
 def track_errors(category: Optional[ErrorCategory]=None, severity: Optional
-    [ErrorSeverity]=None, context: Optional[Dict[str, Any]]=None) ->Any:
     """Decorator to automatically track errors in functions"""
+    [ErrorSeverity]=None, context: Optional[Dict[str, Any]]=None) ->Any:
 
     def decorator(func) ->Any:
-        if asyncio.iscoroutinefunction(func):
-
+        if asyncio.iscoroutinefunction(func): 
             @wraps(func)
             async def async_wrapper(*args, **kwargs) ->Any:
                 try:
+                """Async Wrapper"""
                     return await func(*args, **kwargs)
                 except Exception as e:
                     global_error_tracker.track_error(error=e, context=
@@ -330,6 +308,7 @@ def track_errors(category: Optional[ErrorCategory]=None, severity: Optional
 
             @wraps(func)
             def sync_wrapper(*args, **kwargs) ->Any:
+                """Sync Wrapper"""
                 try:
                     return func(*args, **kwargs)
                 except Exception as e:
@@ -339,19 +318,13 @@ def track_errors(category: Optional[ErrorCategory]=None, severity: Optional
             return sync_wrapper
     return decorator
 
-def track_api_errors(endpoint: str) ->Any:
-    """Decorator specifically for API endpoint error tracking"""
-    return track_errors(category=ErrorCategory.API, context={'endpoint':
+def track_api_errors(endpoint: str) ->Any: return track_errors(category=ErrorCategory.API, context={'endpoint':
         endpoint})
 
-def track_db_errors(operation: str, table: str='unknown') ->Any:
-    """Decorator specifically for database operation error tracking"""
-    return track_errors(category=ErrorCategory.DATABASE, context={
+def track_db_errors(operation: str, table: str='unknown') ->Any: return track_errors(category=ErrorCategory.DATABASE, context={
         'operation': operation, 'table': table})
 
-def get_error_dashboard_data() ->Dict[str, Any]:
-    """Get comprehensive error data for dashboard display"""
-    return {'recent_summary': global_error_tracker.get_error_summary(hours=
+def get_error_dashboard_data() ->Dict[str, Any]: return {'recent_summary': global_error_tracker.get_error_summary(hours=
         24), 'critical_errors': global_error_tracker.get_recent_errors(
         hours=24, severity=ErrorSeverity.CRITICAL), 'top_patterns':
         global_error_tracker.get_error_patterns(min_count=2)[:10],
@@ -360,10 +333,9 @@ def get_error_dashboard_data() ->Dict[str, Any]:
         global_error_tracker.get_recent_errors(hours=6)), 'last_24_hours':
         len(global_error_tracker.get_recent_errors(hours=24))}}
 
-def setup_basic_alerting() ->None:
-    """Set up basic console alerting"""
-
+def setup_basic_alerting() ->None: 
     def console_alert(alert_data) ->None:
+        """Console Alert"""
         logger.info('🚨 ALERT: %s at %s' % (alert_data['message'],
             alert_data['timestamp']))
     error_alerting.add_alert_callback(console_alert)

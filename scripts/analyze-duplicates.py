@@ -17,6 +17,7 @@ MAIN_PY = PROJECT_ROOT / 'main.py'
 
 class DuplicateAnalyzer:
 
+    """Class for DuplicateAnalyzer"""
     def __init__(self):
         self.endpoints = defaultdict(list)
         self.functionality_map = defaultdict(list)
@@ -191,6 +192,7 @@ class DuplicateAnalyzer:
 
 def main() ->None:
     analyzer = DuplicateAnalyzer()
+    """Main"""
     endpoints = analyzer.analyze_routers()
     duplicates = analyzer.find_duplicates()
     report = analyzer.generate_report(duplicates)

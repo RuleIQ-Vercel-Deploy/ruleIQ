@@ -22,14 +22,10 @@ class TestDeepValidator:
     """Test DeepValidator multi-layer validation."""
 
     @pytest.fixture
-    def validator(self) -> Any:
-        """Create DeepValidator instance."""
-        return DeepValidator()
+    def validator(self) -> Any: return DeepValidator()
 
     @pytest.fixture
-    def valid_scenario(self) -> Any:
-        """Create a valid compliance scenario."""
-        return ComplianceScenario(
+    def valid_scenario(self) -> Any: return ComplianceScenario(
             id="CS-001",
             triggers=["data_breach"],
             regulation_refs=[
@@ -52,9 +48,7 @@ class TestDeepValidator:
             ),
         )
 
-    def test_validate_all_layers_pass(self, validator: Any, valid_scenario: Any) -> Any:
-        """Test all validation layers pass with valid data."""
-        dataset = [valid_scenario]
+    def test_validate_all_layers_pass(self, validator: Any, valid_scenario: Any) -> Any: dataset = [valid_scenario]
         results = validator.validate(dataset)
 
         assert results["overall_valid"] is True
@@ -63,9 +57,7 @@ class TestDeepValidator:
         assert results["regulatory"]["valid"] is True
         assert results["temporal"]["valid"] is True
 
-    def test_semantic_validation_missing_fields(self, validator: Any) -> Any:
-        """Test semantic validation catches missing required fields."""
-        # Scenario missing triggers
+    def test_semantic_validation_missing_fields(self, validator: Any) -> Any: # Scenario missing triggers
         scenario = ComplianceScenario(
             id="CS-002",
             triggers=[],  # Empty triggers should fail
@@ -84,9 +76,7 @@ class TestDeepValidator:
             "Missing triggers" in error for error in results["semantic"]["errors"]
         )
 
-    def test_regulatory_accuracy_unknown_framework(self, validator: Any) -> Any:
-        """Test regulatory accuracy validation warns on unknown frameworks."""
-        scenario = ComplianceScenario(
+    def test_regulatory_accuracy_unknown_framework(self, validator: Any) -> Any: scenario = ComplianceScenario(
             id="CS-003",
             triggers=["test"],
             regulation_refs=[
@@ -108,9 +98,7 @@ class TestDeepValidator:
             for warning in results["regulatory"]["warnings"]
         )
 
-    def test_regulatory_accuracy_non_authoritative_url(self, validator: Any) -> Any:
-        """Test regulatory accuracy validation catches non-authoritative URLs."""
-        scenario = ComplianceScenario(
+    def test_regulatory_accuracy_non_authoritative_url(self, validator: Any) -> Any: scenario = ComplianceScenario(
             id="CS-004",
             triggers=["test"],
             regulation_refs=[
@@ -135,9 +123,7 @@ class TestDeepValidator:
             for error in results["regulatory"]["errors"]
         )
 
-    def test_temporal_validation_expired(self, validator: Any) -> Any:
-        """Test temporal validation warns on expired items."""
-        scenario = ComplianceScenario(
+    def test_temporal_validation_expired(self, validator: Any) -> Any: scenario = ComplianceScenario(
             id="CS-005",
             triggers=["test"],
             regulation_refs=[RegCitation(framework="GDPR", article="Art 5")],
@@ -157,9 +143,7 @@ class TestDeepValidator:
         assert results["temporal"]["valid"] is True
         assert any("Expired" in warning for warning in results["temporal"]["warnings"])
 
-    def test_temporal_validation_future(self, validator: Any) -> Any:
-        """Test temporal validation warns on future effective dates."""
-        future_date = date.today() + timedelta(days=365)
+    def test_temporal_validation_future(self, validator: Any) -> Any: future_date = date.today() + timedelta(days=365)
         scenario = ComplianceScenario(
             id="CS-006",
             triggers=["test"],
@@ -183,14 +167,10 @@ class TestExternalDataValidator:
     """Test ExternalDataValidator trust scoring."""
 
     @pytest.fixture
-    def validator(self) -> Any:
-        """Create ExternalDataValidator instance."""
-        return ExternalDataValidator()
+    def validator(self) -> Any: return ExternalDataValidator()
 
     @pytest.fixture
-    def sample_dataset(self) -> Any:
-        """Create sample dataset for testing."""
-        return [
+    def sample_dataset(self) -> Any: return [
             ComplianceScenario(
                 id=f"CS-{i:03d}",
                 triggers=["test"],
@@ -207,9 +187,7 @@ class TestExternalDataValidator:
             for i in range(1, 6),
         ]
 
-    def test_source_reputation_authoritative(self, validator: Any) -> Any:
-        """Test source reputation scoring for authoritative domains."""
-        metadata = {"domain": "eur-lex.europa.eu"}
+    def test_source_reputation_authoritative(self, validator: Any) -> Any: metadata = {"domain": "eur-lex.europa.eu"}
         score = validator._check_source_reputation(metadata)
         assert score == 1.0
 
@@ -217,9 +195,7 @@ class TestExternalDataValidator:
         score = validator._check_source_reputation(metadata)
         assert score == 1.0
 
-    def test_source_reputation_gov_org(self, validator: Any) -> Any:
-        """Test source reputation scoring for .gov and .org domains."""
-        metadata = {"domain": "example.gov"}
+    def test_source_reputation_gov_org(self, validator: Any) -> Any: metadata = {"domain": "example.gov"}
         score = validator._check_source_reputation(metadata)
         assert score == 0.7
 
@@ -227,21 +203,15 @@ class TestExternalDataValidator:
         score = validator._check_source_reputation(metadata)
         assert score == 0.7
 
-    def test_source_reputation_other(self, validator: Any) -> Any:
-        """Test source reputation scoring for other domains."""
-        metadata = {"domain": "random-blog.com"}
+    def test_source_reputation_other(self, validator: Any) -> Any: metadata = {"domain": "random-blog.com"}
         score = validator._check_source_reputation(metadata)
         assert score == 0.4
 
-    def test_data_age_fresh(self, validator: Any) -> Any:
-        """Test data age scoring for fresh data."""
-        metadata = {"fetched_at": datetime.now(timezone.utc) - timedelta(days=30)}
+    def test_data_age_fresh(self, validator: Any) -> Any: metadata = {"fetched_at": datetime.now(timezone.utc) - timedelta(days=30)}
         score = validator._check_data_age(metadata)
         assert score == 1.0
 
-    def test_data_age_moderate(self, validator: Any) -> Any:
-        """Test data age scoring for moderately aged data."""
-        # 9 months old
+    def test_data_age_moderate(self, validator: Any) -> Any: # 9 months old
         metadata = {"fetched_at": datetime.now(timezone.utc) - timedelta(days=270)}
         score = validator._check_data_age(metadata)
         assert score == 0.8
@@ -251,25 +221,17 @@ class TestExternalDataValidator:
         score = validator._check_data_age(metadata)
         assert score == 0.6
 
-    def test_data_age_old(self, validator: Any) -> Any:
-        """Test data age scoring for old data."""
-        metadata = {"fetched_at": datetime.now(timezone.utc) - timedelta(days=1000)}
+    def test_data_age_old(self, validator: Any) -> Any: metadata = {"fetched_at": datetime.now(timezone.utc) - timedelta(days=1000)}
         score = validator._check_data_age(metadata)
         assert score == 0.4
 
-    def test_regulatory_accuracy_known_frameworks(self, validator: Any, sample_dataset: Any) -> Any:
-        """Test regulatory accuracy scoring with known frameworks."""
-        score = validator._check_regulatory_accuracy(sample_dataset)
+    def test_regulatory_accuracy_known_frameworks(self, validator: Any, sample_dataset: Any) -> Any: score = validator._check_regulatory_accuracy(sample_dataset)
         assert score == 1.0  # All GDPR which is known
 
-    def test_consistency_unique_ids(self, validator: Any, sample_dataset: Any) -> Any:
-        """Test consistency scoring with unique IDs."""
-        score = validator._check_consistency(sample_dataset)
+    def test_consistency_unique_ids(self, validator: Any, sample_dataset: Any) -> Any: score = validator._check_consistency(sample_dataset)
         assert score > 0.8  # Should be high with unique IDs
 
-    def test_consistency_duplicate_ids(self, validator: Any) -> Any:
-        """Test consistency scoring with duplicate IDs."""
-        dataset = [
+    def test_consistency_duplicate_ids(self, validator: Any) -> Any: dataset = [
             ComplianceScenario(
                 id="CS-001",  # Duplicate ID
                 triggers=["test"],
@@ -291,9 +253,7 @@ class TestExternalDataValidator:
             score < 0.7
         )  # Should be low with duplicate IDs (unique_ratio=1/3=0.33, field_score=1.0, total=(0.33+1.0)/2=0.67)
 
-    def test_coverage_diversity(self, validator: Any) -> Any:
-        """Test coverage scoring for framework and jurisdiction diversity."""
-        dataset = [
+    def test_coverage_diversity(self, validator: Any) -> Any: dataset = [
             ComplianceScenario(
                 id=f"CS-{i:03d}",
                 triggers=["test"],
@@ -313,9 +273,7 @@ class TestExternalDataValidator:
         score = validator._check_coverage(dataset)
         assert score == 1.0  # Maximum diversity achieved
 
-    def test_overall_trust_score(self, validator: Any, sample_dataset: Any) -> float:
-        """Test overall trust score calculation."""
-        metadata = {
+    def test_overall_trust_score(self, validator: Any, sample_dataset: Any) -> float: metadata = {
             "domain": "ico.org.uk",
             "fetched_at": datetime.now(timezone.utc) - timedelta(days=30),
         }
@@ -330,18 +288,14 @@ class TestExternalDataValidator:
 class TestQualityMetrics:
     """Test quality metrics calculation."""
 
-    def test_empty_dataset(self) -> Any:
-        """Test quality metrics for empty dataset."""
-        metrics = dataset_quality_summary([])
+    def test_empty_dataset(self) -> Any: metrics = dataset_quality_summary([])
 
         assert metrics["completeness"] == 0.0
         assert metrics["uniqueness"] == 0.0
         assert metrics["overall_score"] == 0.0
         assert metrics["total_items"] == 0
 
-    def test_perfect_quality(self) -> Any:
-        """Test quality metrics for perfect dataset."""
-        dataset = [
+    def test_perfect_quality(self) -> Any: dataset = [
             ComplianceScenario(
                 id=f"CS-{i:03d}",
                 triggers=["test"],
@@ -365,9 +319,7 @@ class TestQualityMetrics:
         assert metrics["unique_ids"] == 10
         assert metrics["duplicate_ids"] == 0
 
-    def test_duplicate_detection(self) -> Any:
-        """Test duplicate ID detection."""
-        dataset = [
+    def test_duplicate_detection(self) -> Any: dataset = [
             ComplianceScenario(
                 id="CS-001" if i < 3 else f"CS-{i:03d}",  # First 3 have same ID
                 triggers=["test"],
@@ -393,18 +345,14 @@ class TestQualityMetrics:
 class TestCoverageMetrics:
     """Test coverage metrics calculation."""
 
-    def test_empty_dataset(self) -> Any:
-        """Test coverage metrics for empty dataset."""
-        metrics = coverage_summary([])
+    def test_empty_dataset(self) -> Any: metrics = coverage_summary([])
 
         assert metrics["frameworks"] == {}
         assert metrics["jurisdictions"] == {}
         assert metrics["triggers"] == {}
         assert metrics["total_items"] == 0
 
-    def test_framework_counting(self) -> Any:
-        """Test framework coverage counting."""
-        dataset = [
+    def test_framework_counting(self) -> Any: dataset = [
             ComplianceScenario(
                 id=f"CS-{i:03d}",
                 triggers=["test"],
@@ -435,9 +383,7 @@ class TestCoverageMetrics:
         assert metrics["framework_count"] == 2
         assert metrics["most_common_framework"] == ("GDPR", 5)
 
-    def test_jurisdiction_inference(self) -> Any:
-        """Test jurisdiction inference from frameworks."""
-        dataset = [
+    def test_jurisdiction_inference(self) -> Any: dataset = [
             ComplianceScenario(
                 id=f"CS-{i:03d}",
                 triggers=["test"],
@@ -463,9 +409,7 @@ class TestCoverageMetrics:
         assert metrics["jurisdictions"]["US"] == 3  # HIPAA, SOX, CCPA
         assert metrics["jurisdictions"]["International"] == 1  # ISO27001
 
-    def test_trigger_counting(self) -> Any:
-        """Test trigger coverage counting."""
-        dataset = [
+    def test_trigger_counting(self) -> Any: dataset = [
             ComplianceScenario(
                 id=f"CS-{i:03d}",
                 triggers=["data_breach", "user_request"] if i < 2 else ["data_breach"],
@@ -492,9 +436,7 @@ class TestCoverageMetrics:
 class TestKnownConstants:
     """Test the known frameworks and authoritative domains constants."""
 
-    def test_authoritative_domains_present(self) -> Any:
-        """Test that key authoritative domains are present."""
-        expected_domains = {
+    def test_authoritative_domains_present(self) -> Any: expected_domains = {
             "eur-lex.europa.eu",  # EU legislation
             "ico.org.uk",  # UK data protection
             "hhs.gov",  # US health
@@ -504,9 +446,7 @@ class TestKnownConstants:
 
         assert expected_domains.issubset(AUTHORITATIVE_DOMAINS)
 
-    def test_known_frameworks_present(self) -> Any:
-        """Test that key frameworks are present."""
-        expected_frameworks = {
+    def test_known_frameworks_present(self) -> Any: expected_frameworks = {
             "GDPR",
             "UK GDPR",
             "HIPAA",

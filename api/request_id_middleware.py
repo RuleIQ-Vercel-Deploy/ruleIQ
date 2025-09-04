@@ -20,6 +20,7 @@ class RequestIDMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next: RequestResponseEndpoint) -> Response:
         # Generate a unique request ID
+        """Dispatch"""
         request_id = str(uuid.uuid4())
 
         # Set the request ID in the context variable

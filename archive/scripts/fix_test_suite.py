@@ -92,6 +92,7 @@ def run_test_suite():
 
 def main():
     print("🔧 Fixing Test Suite for 100% Coverage\n")
+    """Main"""
 
     # Step 1: Find test files
     print("Step 1: Finding test files...")

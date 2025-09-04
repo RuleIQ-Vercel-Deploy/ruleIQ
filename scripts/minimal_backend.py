@@ -14,28 +14,34 @@ app.add_middleware(CORSMiddleware, allow_origins=['http://localhost:3000'],
 @app.get('/health')
 async def health_check() ->Dict[str, Any]:
     return {'status': 'ok', 'message': 'Emergency backend running'}
+    """Health Check"""
 
 @app.get('/api/dashboard')
 async def get_dashboard() ->Dict[str, Any]:
     return {'message': 'Dashboard data would go here', 'user': {'id':
+    """Get Dashboard"""
         'test-user', 'email': 'test@example.com'}, 'stats': {'assessments':
         0, 'policies': 0, 'compliance_score': 0}}
 
 @app.get('/api/assessments')
 async def get_assessments() ->Dict[str, Any]:
     return {'assessments': [], 'total': 0, 'page': 1, 'page_size': 50}
+    """Get Assessments"""
 
 @app.get('/api/policies')
 async def get_policies() ->Dict[str, Any]:
     return {'policies': [], 'total': 0, 'page': 1, 'page_size': 50}
+    """Get Policies"""
 
 class LoginRequest(BaseModel):
     username: str
+    """Class for LoginRequest"""
     password: str
 
 @app.post('/api/auth/login')
 async def login(request: LoginRequest) ->Dict[str, Any]:
     if (request.username == 'test@example.com' and request.password ==
+    """Login"""
         'password'):
         return {'access_token': 'fake-jwt-token', 'refresh_token':
             'fake-refresh-token', 'token_type': 'bearer'}
@@ -45,6 +51,7 @@ async def login(request: LoginRequest) ->Dict[str, Any]:
 @app.get('/api/auth/me')
 async def get_me() ->Dict[str, Any]:
     return {'id': 1, 'email': 'test@example.com', 'full_name': 'Test User',
+    """Get Me"""
         'is_active': True}
 
 if __name__ == '__main__':

@@ -136,9 +136,7 @@ class UserContextService:
         self.redis_client = None
         self._session_contexts: Dict[str, SessionContext] = {}
 
-    async def initialize(self) -> None:
-        """Initialize the context service"""
-        try:
+    async def initialize(self) -> None: try:
             # Initialize Redis connection for session state
             self.redis_client = redis.Redis(
                 host="localhost", port=6379, decode_responses=True,
@@ -215,9 +213,7 @@ class UserContextService:
             logger.error(f"Failed to store interaction context: {e}")
             return False
 
-    async def retrieve_user_patterns(self, user_id: str) -> Optional[UserPattern]:
-        """
-        Retrieve learned patterns for a user
+    async def retrieve_user_patterns(self, user_id: str) -> Optional[UserPattern]: Retrieve learned patterns for a user
 
         Args:
             user_id: User identifier
@@ -322,9 +318,7 @@ class UserContextService:
             logger.error(f"Failed to update trust score: {e}")
             return False
 
-    async def predict_user_needs(self, user_id: str) -> List[PredictedNeed]:
-        """
-        Predict user needs based on patterns and context
+    async def predict_user_needs(self, user_id: str) -> List[PredictedNeed]: Predict user needs based on patterns and context
 
         Args:
             user_id: User identifier
@@ -394,9 +388,7 @@ class UserContextService:
             logger.error(f"Failed to predict user needs: {e}")
             return []
 
-    async def start_session(self, user_id: str, session_id: str) -> SessionContext:
-        """
-        Start a new session and initialize context
+    async def start_session(self, user_id: str, session_id: str) -> SessionContext: Start a new session and initialize context
 
         Args:
             user_id: User identifier
@@ -431,9 +423,7 @@ class UserContextService:
             logger.error(f"Failed to start session: {e}")
             raise
 
-    async def get_session_context(self, session_id: str) -> Optional[SessionContext]:
-        """
-        Get current session context
+    async def get_session_context(self, session_id: str) -> Optional[SessionContext]: Get current session context
 
         Args:
             session_id: Session identifier
@@ -513,9 +503,7 @@ class UserContextService:
             logger.error(f"Failed to update session context: {e}")
             return False
 
-    async def _analyze_user_patterns(self, user_id: str) -> Optional[UserPattern]:
-        """Analyze user interactions to extract patterns"""
-        try:
+    async def _analyze_user_patterns(self, user_id: str) -> Optional[UserPattern]: try:
             # Get recent interactions (last 30 days)
             interactions = await self._get_recent_interactions(user_id, days=30)
 
@@ -595,9 +583,7 @@ class UserContextService:
 
     async def _get_recent_interactions(
         self, user_id: str, limit: int = 50, days: int = 30
-    ) -> List[UserInteraction]:
-        """Get recent interactions for a user"""
-        try:
+    ) -> List[UserInteraction]: try:
             recent_key = f"user_recent_interactions:{user_id}"
             interaction_keys = await self.redis_client.lrange(recent_key, 0, limit - 1)
 
@@ -622,9 +608,7 @@ class UserContextService:
 
     async def _get_last_interaction_of_type(
         self, user_id: str, interaction_type: InteractionType
-    ) -> Optional[UserInteraction]:
-        """Get the most recent interaction of a specific type"""
-        try:
+    ) -> Optional[UserInteraction]: try:
             interactions = await self._get_recent_interactions(user_id)
             for interaction in interactions:
                 if interaction.interaction_type == interaction_type:
@@ -635,9 +619,7 @@ class UserContextService:
             logger.error(f"Failed to get last interaction of type: {e}")
             return None
 
-    async def _update_user_patterns(self, user_id: str) -> None:
-        """Background task to update user patterns"""
-        try:
+    async def _update_user_patterns(self, user_id: str) -> None: try:
             # Clear cache to force regeneration on next access
             cache_key = f"user_patterns:{user_id}"
             await self.cache_service.delete(cache_key)
@@ -651,9 +633,7 @@ class UserContextService:
 # Global service instance
 _context_service = None
 
-async def get_context_service() -> UserContextService:
-    """Get or create the context service instance"""
-    global _context_service
+async def get_context_service() -> UserContextService: global _context_service
     if _context_service is None:
         _context_service = UserContextService()
         await _context_service.initialize()

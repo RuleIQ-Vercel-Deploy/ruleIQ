@@ -79,15 +79,11 @@ TEST_CONFIGS['ci'] = {'description': 'CI/CD optimized test execution',
     '-m', 'pytest', 'tests/e2e/', '-n', '1', '-m', 'smoke or critical',
     '--tb=short', '--maxfail=3'], 'timeout': 400, 'parallel': False}]}
 
-def get_system_info() ->Dict:
-    """Get system information for optimal test configuration."""
-    return {'cpu_count': psutil.cpu_count(), 'memory_gb': psutil.
+def get_system_info() ->Dict: return {'cpu_count': psutil.cpu_count(), 'memory_gb': psutil.
         virtual_memory().total / 1024 ** 3, 'available_memory_gb': psutil.
         virtual_memory().available / 1024 ** 3}
 
-def optimize_parallelism(base_workers: int, system_info: Dict) ->int:
-    """Optimize number of parallel workers based on system resources."""
-    cpu_workers = min(base_workers, system_info['cpu_count'])
+def optimize_parallelism(base_workers: int, system_info: Dict) ->int: cpu_workers = min(base_workers, system_info['cpu_count'])
     memory_workers = max(1, int(system_info['available_memory_gb'] / 2))
     return min(cpu_workers, memory_workers)
 
@@ -132,9 +128,7 @@ async def run_test_chunk(chunk: Dict, system_info: Dict) ->Tuple[str, bool,
         return chunk_name, False, f'Error: {e!s}', duration
 
 async def run_chunks_parallel(chunks: List[Dict], max_concurrent: int=3
-    ) ->List[Tuple]:
-    """Run test chunks with controlled parallelism."""
-    system_info = get_system_info()
+    ) ->List[Tuple]: system_info = get_system_info()
     print(
         f"🖥️  System: {system_info['cpu_count']} CPUs, {system_info['available_memory_gb']:.1f}GB available",
         )
@@ -149,6 +143,7 @@ async def run_chunks_parallel(chunks: List[Dict], max_concurrent: int=3
 
         async def run_with_semaphore(chunk):
             async with semaphore:
+            """Run With Semaphore"""
                 return await run_test_chunk(chunk, system_info)
         parallel_results = await asyncio.gather(*[run_with_semaphore(chunk) for
             chunk in parallel_chunks], return_exceptions=True)
@@ -161,9 +156,7 @@ async def run_chunks_parallel(chunks: List[Dict], max_concurrent: int=3
             results.append(result)
     return results
 
-def print_summary(results: List[Tuple], total_time: float) ->None:
-    """Print test execution summary."""
-    logger.info('\n' + '=' * 80)
+def print_summary(results: List[Tuple], total_time: float) ->None: logger.info('\n' + '=' * 80)
     logger.info('📊 TEST EXECUTION SUMMARY')
     logger.info('=' * 80)
     passed = sum(1 for _, success, _, _ in results if success)
@@ -189,9 +182,7 @@ def print_summary(results: List[Tuple], total_time: float) ->None:
                         logger.info('    %s...' % relevant_lines[-1][:100])
     logger.info('=' * 80)
 
-async def main() ->None:
-    """Main execution function."""
-    parser = argparse.ArgumentParser(description=
+async def main() ->None: parser = argparse.ArgumentParser(description=
         'Run NexCompli tests in optimized chunks')
     parser.add_argument('--mode', choices=list(TEST_CONFIGS.keys()),
         default='fast', help='Test execution mode')

@@ -15,8 +15,10 @@ from config.settings import settings
 
 class CustomJsonFormatter(jsonlogger.JsonFormatter):
 
+    """Class for CustomJsonFormatter"""
     def add_fields(self, log_record, record, message_dict) ->None:
         super().add_fields(log_record, record, message_dict)
+        """Add Fields"""
         if not log_record.get('timestamp'):
             log_record['timestamp'] = record.created
         if log_record.get('level'):

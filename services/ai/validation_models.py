@@ -64,9 +64,7 @@ class InsightType(str, Enum):
 # Core Validation Models
 # =====================================================================
 
-class GapValidationModel(BaseModel):
-    """Validation model for compliance gaps."""
-
+class GapValidationModel(BaseModel): 
     id: str = Field(..., min_length=1, description="Unique gap identifier")
     title: str = Field(..., min_length=1, max_length=200, description="Gap title")
     description: str = Field(..., min_length=10, description="Detailed gap description")
@@ -111,9 +109,7 @@ class GapValidationModel(BaseModel):
     class Config:
         use_enum_values = True
 
-class RecommendationValidationModel(BaseModel):
-    """Validation model for compliance recommendations."""
-
+class RecommendationValidationModel(BaseModel): 
     id: str = Field(..., min_length=1, description="Unique recommendation identifier")
     title: str = Field(
         ..., min_length=1, max_length=200, description="Recommendation title",
@@ -165,9 +161,7 @@ class RecommendationValidationModel(BaseModel):
     class Config:
         use_enum_values = True
 
-class ImplementationPhaseValidationModel(BaseModel):
-    """Validation model for implementation phases."""
-
+class ImplementationPhaseValidationModel(BaseModel): 
     phase_number: int = Field(..., ge=1, description="Phase number")
     phase_name: str = Field(..., min_length=1, description="Phase name")
     duration_weeks: int = Field(..., ge=1, description="Duration in weeks")
@@ -182,9 +176,7 @@ class ImplementationPhaseValidationModel(BaseModel):
         ..., min_items=1, description="Success criteria",
     )
 
-class ImplementationPlanValidationModel(BaseModel):
-    """Validation model for implementation plans."""
-
+class ImplementationPlanValidationModel(BaseModel): 
     total_duration_weeks: int = Field(..., ge=1, description="Total duration in weeks")
     phases: List[ImplementationPhaseValidationModel] = Field(
         ..., min_items=1, description="Implementation phases",
@@ -208,9 +200,7 @@ class ImplementationPlanValidationModel(BaseModel):
             raise ValueError("Phase numbers must be consecutive starting from 1")
         return v
 
-class RiskAssessmentValidationModel(BaseModel):
-    """Validation model for risk assessments."""
-
+class RiskAssessmentValidationModel(BaseModel): 
     overall_risk_level: RiskLevel = Field(..., description="Overall risk level")
     risk_score: float = Field(..., ge=0.0, le=100.0, description="Risk score")
     top_risk_factors: List[str] = Field(
@@ -233,9 +223,7 @@ class RiskAssessmentValidationModel(BaseModel):
     class Config:
         use_enum_values = True
 
-class ComplianceInsightValidationModel(BaseModel):
-    """Validation model for compliance insights."""
-
+class ComplianceInsightValidationModel(BaseModel): 
     insight_type: InsightType = Field(..., description="Type of insight")
     title: str = Field(..., min_length=1, max_length=200, description="Insight title")
     description: str = Field(..., min_length=10, description="Insight description")
@@ -248,9 +236,7 @@ class ComplianceInsightValidationModel(BaseModel):
     class Config:
         use_enum_values = True
 
-class EvidenceRequirementValidationModel(BaseModel):
-    """Validation model for evidence requirements."""
-
+class EvidenceRequirementValidationModel(BaseModel): 
     evidence_type: str = Field(..., min_length=1, description="Evidence type")
     description: str = Field(..., min_length=10, description="Evidence description")
     framework_reference: str = Field(
@@ -270,9 +256,7 @@ class EvidenceRequirementValidationModel(BaseModel):
     class Config:
         use_enum_values = True
 
-class ComplianceMetricsValidationModel(BaseModel):
-    """Validation model for compliance metrics."""
-
+class ComplianceMetricsValidationModel(BaseModel): 
     overall_compliance_score: float = Field(
         ..., ge=0.0, le=100.0, description="Overall compliance score",
     )
@@ -311,9 +295,7 @@ class ComplianceMetricsValidationModel(BaseModel):
 # Composite Response Models
 # =====================================================================
 
-class GapAnalysisValidationModel(BaseModel):
-    """Validation model for gap analysis responses."""
-
+class GapAnalysisValidationModel(BaseModel): 
     gaps: List[GapValidationModel] = Field(..., description="List of identified gaps")
     overall_risk_level: RiskLevel = Field(..., description="Overall risk level")
     priority_order: List[str] = Field(..., description="Gap IDs in priority order")
@@ -356,9 +338,7 @@ class GapAnalysisValidationModel(BaseModel):
     class Config:
         use_enum_values = True
 
-class RecommendationResponseValidationModel(BaseModel):
-    """Validation model for recommendation responses."""
-
+class RecommendationResponseValidationModel(BaseModel): 
     recommendations: List[RecommendationValidationModel] = Field(
         ..., min_items=1, description="List of recommendations",
     )
@@ -391,9 +371,7 @@ class RecommendationResponseValidationModel(BaseModel):
                 )
         return v
 
-class AssessmentAnalysisValidationModel(BaseModel):
-    """Validation model for comprehensive assessment analysis."""
-
+class AssessmentAnalysisValidationModel(BaseModel): 
     gaps: List[GapValidationModel] = Field(..., description="Identified gaps")
     recommendations: List[RecommendationValidationModel] = Field(
         ..., description="Recommendations",
@@ -417,9 +395,7 @@ class AssessmentAnalysisValidationModel(BaseModel):
         ..., ge=0.0, le=1.0, description="Analysis confidence score",
     )
 
-class GuidanceValidationModel(BaseModel):
-    """Validation model for guidance responses."""
-
+class GuidanceValidationModel(BaseModel): 
     guidance: str = Field(..., min_length=50, description="Main guidance content")
     confidence_score: float = Field(
         ..., ge=0.0, le=1.0, description="Guidance confidence score",
@@ -438,9 +414,7 @@ class GuidanceValidationModel(BaseModel):
         default_factory=list, description="Implementation tips",
     )
 
-class FollowUpQuestionValidationModel(BaseModel):
-    """Validation model for follow-up questions."""
-
+class FollowUpQuestionValidationModel(BaseModel): 
     question_id: str = Field(..., min_length=1, description="Question identifier")
     question_text: str = Field(..., min_length=10, description="Question text")
     category: str = Field(..., min_length=1, description="Question category")
@@ -456,9 +430,7 @@ class FollowUpQuestionValidationModel(BaseModel):
     class Config:
 #         use_enum_values = True  # Unused variable
 
-class FollowUpValidationModel(BaseModel):
-    """Validation model for follow-up responses."""
-
+class FollowUpValidationModel(BaseModel): 
     follow_up_questions: List[FollowUpQuestionValidationModel] = Field(
         ..., description="Follow-up questions",
     )
@@ -474,9 +446,7 @@ class FollowUpValidationModel(BaseModel):
         ..., min_items=1, description="Suggested next steps",
     )
 
-class IntentClassificationValidationModel(BaseModel):
-    """Validation model for intent classification."""
-
+class IntentClassificationValidationModel(BaseModel): 
     intent_type: Literal[
         "evidence_query",
         "compliance_check",
@@ -499,9 +469,7 @@ class IntentClassificationValidationModel(BaseModel):
 # Response Metadata Models
 # =====================================================================
 
-class ResponseMetadataValidationModel(BaseModel):
-    """Validation model for response metadata."""
-
+class ResponseMetadataValidationModel(BaseModel): 
     response_id: str = Field(..., min_length=1, description="Response identifier")
     timestamp: str = Field(..., description="Response timestamp")
     model_used: str = Field(..., min_length=1, description="AI model used")
@@ -527,9 +495,7 @@ class ResponseMetadataValidationModel(BaseModel):
             raise ValueError("Timestamp must be in ISO format")
         return v
 
-class StructuredAIResponseValidationModel(BaseModel):
-    """Validation model for structured AI responses."""
-
+class StructuredAIResponseValidationModel(BaseModel): 
     metadata: ResponseMetadataValidationModel = Field(
         ..., description="Response metadata",
     )
@@ -551,9 +517,9 @@ class StructuredAIResponseValidationModel(BaseModel):
 # =====================================================================
 
 def validate_ai_response(
+    """
     response_data: Dict[str, Any], response_type: str
 ) -> tuple[bool, List[str], Optional[BaseModel]]:
-    """
     Validate AI response against appropriate schema.
 
     Args:
@@ -591,9 +557,9 @@ def validate_ai_response(
         return False, errors, None
 
 def create_validation_report(
+    """Create a detailed validation report for an AI response."""
     response_data: Dict[str, Any], response_type: str
 ) -> Dict[str, Any]:
-    """Create a detailed validation report for an AI response."""
     is_valid, errors, validated_model = validate_ai_response(
         response_data, response_type,
     )

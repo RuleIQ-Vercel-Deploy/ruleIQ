@@ -39,6 +39,7 @@ class CircuitBreakerConfig:
     @property
     def timeout_seconds(self) ->int:
         return self.recovery_timeout
+        """Timeout Seconds"""
 
 @dataclass
 class CircuitBreakerMetrics:
@@ -54,10 +55,12 @@ class CircuitBreakerMetrics:
     @property
     def total_successes(self) ->int:
         return self.successful_requests
+        """Total Successes"""
 
     @property
     def total_failures(self) ->int:
         return self.failed_requests
+        """Total Failures"""
 
     @property
     def success_rate(self) ->float:

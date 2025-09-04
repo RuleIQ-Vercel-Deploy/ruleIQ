@@ -1,0 +1,296 @@
+name: Quality Gate Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+      - develop
+
+env:
+  PYTHON_VERSION: '3.11'
+  QUALITY_GATE_THRESHOLD: 'B'
+
+jobs:
+  code-quality:
+    name: Code Quality Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for proper analysis
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install radon pylint flake8 mypy bandit coverage
+      
+      - name: Run Cognitive Complexity Analysis
+        id: complexity
+        run: |
+          echo "## Cognitive Complexity Report" >> $GITHUB_STEP_SUMMARY
+          python -m radon cc . -a -nb --total-average -j > complexity.json
+          
+          # Extract average complexity
+          AVG_COMPLEXITY=$(python -c "import json; data=json.load(open('complexity.json')); print(data.get('average_complexity', 0))")
+          echo "Average Complexity: $AVG_COMPLEXITY" >> $GITHUB_STEP_SUMMARY
+          
+          # Check if complexity is acceptable (< 10 is good)
+          if (( $(echo "$AVG_COMPLEXITY < 10" | bc -l) )); then
+            echo "✅ Cognitive complexity is acceptable" >> $GITHUB_STEP_SUMMARY
+            echo "complexity_pass=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Cognitive complexity too high (target < 10)" >> $GITHUB_STEP_SUMMARY
+            echo "complexity_pass=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Run Cyclomatic Complexity Analysis
+        run: |
+          echo "## Cyclomatic Complexity Report" >> $GITHUB_STEP_SUMMARY
+          python -m radon cc . -s -nb --total-average >> $GITHUB_STEP_SUMMARY
+      
+      - name: Run Maintainability Index
+        id: maintainability
+        run: |
+          echo "## Maintainability Index" >> $GITHUB_STEP_SUMMARY
+          python -m radon mi . -s -j > maintainability.json
+          
+          # Calculate average MI
+          AVG_MI=$(python -c "
+import json
+import os
+total = 0
+count = 0
+for root, dirs, files in os.walk('.'):
+    if '/.venv' in root or '__pycache__' in root:
+        continue
+    for file in files:
+        if file.endswith('.py'):
+            try:
+                result = os.popen(f'python -m radon mi {os.path.join(root, file)} -s').read()
+                for line in result.split('\\n'):
+                    if ' - ' in line and '(' in line:
+                        mi = float(line.split('(')[1].split(')')[0])
+                        total += mi
+                        count += 1
+            except:
+                pass
+if count > 0:
+    print(f'{total/count:.2f}')
+else:
+    print('0')
+          ")
+          
+          echo "Average Maintainability Index: $AVG_MI" >> $GITHUB_STEP_SUMMARY
+          
+          # Check if MI is acceptable (> 20 is maintainable, > 50 is good)
+          if (( $(echo "$AVG_MI > 50" | bc -l) )); then
+            echo "✅ Maintainability index is good" >> $GITHUB_STEP_SUMMARY
+            echo "maintainability_pass=true" >> $GITHUB_OUTPUT
+          elif (( $(echo "$AVG_MI > 20" | bc -l) )); then
+            echo "⚠️ Maintainability index is moderate" >> $GITHUB_STEP_SUMMARY
+            echo "maintainability_pass=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Maintainability index is poor (target > 20)" >> $GITHUB_STEP_SUMMARY
+            echo "maintainability_pass=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Run Code Duplication Check
+        id: duplication
+        run: |
+          echo "## Code Duplication Analysis" >> $GITHUB_STEP_SUMMARY
+          
+          # Use pylint to find duplicate code
+          pylint $(find . -name "*.py" -not -path "./.venv/*" -not -path "./__pycache__/*") \
+            --disable=all --enable=duplicate-code \
+            --min-similarity-lines=10 \
+            --ignore-comments=yes \
+            --ignore-docstrings=yes \
+            --output-format=json > duplication.json || true
+          
+          # Count duplicate code blocks
+          DUPLICATES=$(python -c "
+import json
+try:
+    with open('duplication.json') as f:
+        data = json.load(f)
+        duplicates = [m for m in data if m.get('symbol') == 'duplicate-code']
+        print(len(duplicates))
+except:
+    print(0)
+          ")
+          
+          echo "Duplicate code blocks found: $DUPLICATES" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$DUPLICATES" -lt "10" ]; then
+            echo "✅ Code duplication is acceptable" >> $GITHUB_STEP_SUMMARY
+            echo "duplication_pass=true" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Too much code duplication (found $DUPLICATES blocks)" >> $GITHUB_STEP_SUMMARY
+            echo "duplication_pass=false" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Count TODO Comments
+        id: todos
+        run: |
+          echo "## TODO Comments" >> $GITHUB_STEP_SUMMARY
+          
+          TODO_COUNT=$(grep -r "TODO\|FIXME\|XXX\|HACK" --include="*.py" . | wc -l || echo "0")
+          echo "TODO/FIXME comments found: $TODO_COUNT" >> $GITHUB_STEP_SUMMARY
+          
+          if [ "$TODO_COUNT" -lt "50" ]; then
+            echo "✅ TODO count is manageable" >> $GITHUB_STEP_SUMMARY
+            echo "todos_pass=true" >> $GITHUB_OUTPUT
+          else
+            echo "⚠️ High number of TODOs ($TODO_COUNT) - consider addressing them" >> $GITHUB_STEP_SUMMARY
+            echo "todos_pass=true" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Run Custom Quality Scanner
+        run: |
+          echo "## Custom Quality Analysis" >> $GITHUB_STEP_SUMMARY
+          python scripts/code_quality_scanner.py >> quality_scan.log 2>&1
+          
+          # Extract key metrics from the scan
+          if [ -f "sonarcloud_quality_report.json" ]; then
+            python -c "
+import json
+with open('sonarcloud_quality_report.json') as f:
+    data = json.load(f)
+    summary = data.get('summary', {})
+    print(f\"Total Issues: {summary.get('total_issues', 0)}\")
+    print(f\"Critical Issues: {summary.get('critical_issues', 0)}\")
+    print(f\"Major Issues: {summary.get('major_issues', 0)}\")
+            " >> $GITHUB_STEP_SUMMARY
+          fi
+      
+      - name: Quality Gate Decision
+        id: quality_gate
+        run: |
+          echo "## Quality Gate Decision" >> $GITHUB_STEP_SUMMARY
+          
+          # Collect all checks
+          COMPLEXITY_PASS="${{ steps.complexity.outputs.complexity_pass }}"
+          MAINTAINABILITY_PASS="${{ steps.maintainability.outputs.maintainability_pass }}"
+          DUPLICATION_PASS="${{ steps.duplication.outputs.duplication_pass }}"
+          TODOS_PASS="${{ steps.todos.outputs.todos_pass }}"
+          
+          # Determine overall quality grade
+          if [ "$COMPLEXITY_PASS" = "true" ] && [ "$MAINTAINABILITY_PASS" = "true" ] && [ "$DUPLICATION_PASS" = "true" ]; then
+            GRADE="A"
+            echo "🎯 **Quality Grade: A**" >> $GITHUB_STEP_SUMMARY
+            echo "quality_gate=passed" >> $GITHUB_OUTPUT
+          elif [ "$COMPLEXITY_PASS" = "true" ] || [ "$MAINTAINABILITY_PASS" = "true" ]; then
+            GRADE="B"
+            echo "🎯 **Quality Grade: B**" >> $GITHUB_STEP_SUMMARY
+            echo "quality_gate=passed" >> $GITHUB_OUTPUT
+          else
+            GRADE="C"
+            echo "🎯 **Quality Grade: C**" >> $GITHUB_STEP_SUMMARY
+            echo "quality_gate=failed" >> $GITHUB_OUTPUT
+          fi
+          
+          echo "grade=$GRADE" >> $GITHUB_OUTPUT
+      
+      - name: Upload Quality Reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: quality-reports
+          path: |
+            complexity.json
+            maintainability.json
+            duplication.json
+            sonarcloud_quality_report.json
+            CODE_QUALITY_ISSUES.md
+            quality_scan.log
+      
+      - name: Comment PR with Quality Report
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const grade = '${{ steps.quality_gate.outputs.grade }}';
+            const passed = '${{ steps.quality_gate.outputs.quality_gate }}' === 'passed';
+            
+            const emoji = grade === 'A' ? '🌟' : grade === 'B' ? '✅' : '⚠️';
+            const status = passed ? 'PASSED' : 'FAILED';
+            
+            const comment = `## ${emoji} Code Quality Report
+            
+            **Quality Grade: ${grade}**
+            **Status: ${status}**
+            
+            | Metric | Status | Result |
+            |--------|--------|--------|
+            | Cognitive Complexity | ${{ steps.complexity.outputs.complexity_pass == 'true' && '✅' || '❌' }} | See summary |
+            | Maintainability Index | ${{ steps.maintainability.outputs.maintainability_pass == 'true' && '✅' || '❌' }} | See summary |
+            | Code Duplication | ${{ steps.duplication.outputs.duplication_pass == 'true' && '✅' || '❌' }} | See summary |
+            | TODO Comments | ${{ steps.todos.outputs.todos_pass == 'true' && '✅' || '⚠️' }} | See summary |
+            
+            ${!passed ? '### ❌ Quality gate failed. Please improve code quality before merging.' : '### ✅ Quality gate passed. Code meets quality standards.'}
+            
+            [View detailed report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+      
+      - name: Fail if Quality Gate Not Met
+        if: steps.quality_gate.outputs.quality_gate == 'failed'
+        run: |
+          echo "❌ Quality gate failed. Code quality must be Grade B or better."
+          exit 1
+
+  sonarcloud-analysis:
+    name: SonarCloud Analysis
+    runs-on: ubuntu-latest
+    needs: [code-quality]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install coverage pytest pytest-cov
+      
+      - name: Run tests with coverage
+        run: |
+          pytest tests/ --cov=. --cov-report=xml --cov-report=term || true
+      
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      
+      - name: SonarQube Quality Gate check
+        uses: SonarSource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        continue-on-error: true  # Don't fail the build yet during initial setup

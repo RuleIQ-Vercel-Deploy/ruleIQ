@@ -22,6 +22,7 @@ router = APIRouter(tags=['Agentic RAG'])
 
 class DocumentationQueryRequest(BaseModel):
     query: str = Field(..., min_length=1, max_length=1000, description=
+    """Class for DocumentationQueryRequest"""
         'Question about LangGraph or Pydantic AI')
     source_filter: Optional[str] = Field(None, description=
         "Filter by source: 'langgraph', 'pydantic_ai', etc.")
@@ -32,10 +33,12 @@ class DocumentationQueryRequest(BaseModel):
 
 class ProcessDocumentationRequest(BaseModel):
     force_reprocess: bool = Field(False, description=
+    """Class for ProcessDocumentationRequest"""
         'Force reprocessing even if already indexed')
 
 class FrameworkGuidanceRequest(BaseModel):
     topic: str = Field(..., min_length=1, max_length=200, description=
+    """Class for FrameworkGuidanceRequest"""
         'Topic to get guidance on')
     framework: str = Field(..., description=
         "Framework: 'langgraph' or 'pydantic_ai'")

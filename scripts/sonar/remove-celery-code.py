@@ -3,9 +3,7 @@
 Script to safely remove Celery code from the ruleIQ codebase.
 Run this after confirming LangGraph is fully operational.
 
-Usage: python scripts/sonar/remove-celery-code.py [--dry-run] [--backup]
-"""
-
+Usage: python scripts/sonar/remove-celery-code.py [--dry-run] [--backup] 
 import os
 import shutil
 import argparse
@@ -67,9 +65,7 @@ class CeleryRemover:
         self.modified_files = []
         self.errors = []
         
-    def run(self) -> Dict[str, any]:
-        """Execute the removal process."""
-        print("🔍 Starting Celery code removal process...")
+    def run(self) -> Dict[str, any]: print("🔍 Starting Celery code removal process...")
         
         if self.backup and not self.dry_run:
             self.create_backup()
@@ -94,9 +90,7 @@ class CeleryRemover:
         
         return report
     
-    def create_backup(self):
-        """Create a backup of files before removal."""
-        backup_dir = PROJECT_ROOT / f"celery_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+    def create_backup(self): backup_dir = PROJECT_ROOT / f"celery_backup_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
         print(f"📦 Creating backup at {backup_dir}")
         
         for file_path in FILES_TO_REMOVE:
@@ -107,9 +101,7 @@ class CeleryRemover:
                 shutil.copy2(full_path, backup_path)
                 print(f"  ✓ Backed up {file_path}")
     
-    def remove_celery_files(self):
-        """Remove Celery-specific files."""
-        print("\n🗑️  Removing Celery files...")
+    def remove_celery_files(self): print("\n🗑️  Removing Celery files...")
         
         for file_path in FILES_TO_REMOVE:
             full_path = PROJECT_ROOT / file_path
@@ -127,9 +119,7 @@ class CeleryRemover:
             else:
                 print(f"  ⚠️  File not found: {file_path}")
     
-    def clean_imports(self):
-        """Remove Celery imports from Python files."""
-        print("\n🧹 Cleaning up imports...")
+    def clean_imports(self): print("\n🧹 Cleaning up imports...")
         
         python_files = list(PROJECT_ROOT.rglob("*.py"))
         
@@ -178,9 +168,7 @@ class CeleryRemover:
             except Exception as e:
                 self.errors.append(f"Error processing {py_file}: {e}")
     
-    def update_requirements(self):
-        """Remove Celery dependencies from requirements files."""
-        print("\n📦 Updating requirements files...")
+    def update_requirements(self): print("\n📦 Updating requirements files...")
         
         req_files = [
             "requirements.txt",
@@ -223,9 +211,7 @@ class CeleryRemover:
             except Exception as e:
                 self.errors.append(f"Error updating {req_file}: {e}")
     
-    def flag_env_vars(self):
-        """Flag environment variables for removal."""
-        print("\n🚩 Flagging environment variables...")
+    def flag_env_vars(self): print("\n🚩 Flagging environment variables...")
         
         env_files = [".env", ".env.local", ".env.example", ".env.template"]
         
@@ -245,9 +231,7 @@ class CeleryRemover:
             except Exception as e:
                 self.errors.append(f"Error checking {env_file}: {e}")
     
-    def generate_report(self) -> Dict[str, any]:
-        """Generate a removal report."""
-        report = {
+    def generate_report(self) -> Dict[str, any]: report = {
             "timestamp": datetime.now().isoformat(),
             "dry_run": self.dry_run,
             "removed_files": self.removed_files,
@@ -269,18 +253,14 @@ class CeleryRemover:
         
         return report
     
-    def save_report(self, report: Dict[str, any]):
-        """Save the removal report."""
-        report_path = PROJECT_ROOT / "scripts/sonar/celery_removal_report.json"
+    def save_report(self, report: Dict[str, any]): report_path = PROJECT_ROOT / "scripts/sonar/celery_removal_report.json"
         
         with open(report_path, 'w') as f:
             json.dump(report, f, indent=2)
         
         print(f"\n📄 Report saved to {report_path}")
     
-    def print_summary(self, report: Dict[str, any]):
-        """Print a summary of the removal."""
-        print("\n" + "="*50)
+    def print_summary(self, report: Dict[str, any]): print("\n" + "="*50)
         print("CELERY REMOVAL SUMMARY")
         print("="*50)
         
@@ -302,6 +282,7 @@ class CeleryRemover:
             print(f"  {step}")
 
 def main():
+    """Main"""
     parser = argparse.ArgumentParser(
         description="Remove Celery code from ruleIQ codebase"
     )

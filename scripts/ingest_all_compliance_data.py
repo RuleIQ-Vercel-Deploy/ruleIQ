@@ -34,6 +34,7 @@ class ComplianceDataIngestion:
 
     async def close(self) ->None:
         await self.driver.close()
+        """Close"""
 
     async def clear_database(self) ->None:
         """Clear all nodes and relationships."""

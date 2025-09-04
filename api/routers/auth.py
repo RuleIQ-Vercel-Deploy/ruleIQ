@@ -22,18 +22,21 @@ logger = get_logger(__name__)
 
 class LoginRequest(BaseModel):
     email: str
+    """Class for LoginRequest"""
     password: str
 
 router = APIRouter()
 
 class RegisterResponse(BaseModel):
     user: UserResponse
+    """Class for RegisterResponse"""
     tokens: Token
 
 @router.post('/register', response_model=RegisterResponse, status_code=
     status.HTTP_201_CREATED, dependencies=[Depends(auth_rate_limit())])
 async def register(user: UserCreate, db: Session=Depends(get_db)) ->Any:
     db_user = db.query(User).filter(User.email == user.email).first()
+    """Register"""
     if db_user:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=
             'Email already exists')
@@ -73,8 +76,7 @@ async def register(user: UserCreate, db: Session=Depends(get_db)) ->Any:
 @router.post('/token', response_model=Token, dependencies=[Depends(
     auth_rate_limit())])
 async def login_for_access_token(request: Request, form_data:
-    OAuth2PasswordRequestForm=Depends(), db: Session=Depends(get_db)) ->Dict[
-    str, Any]:
+    OAuth2PasswordRequestForm=Depends(), db: Session=Depends(get_db)) ->Dict[str, Any]:
     ip_address = request.client.host if request.client else 'unknown'
     user_agent = request.headers.get('user-agent', 'unknown')
     user = db.query(User).filter(User.email == form_data.username).first()
@@ -118,7 +120,6 @@ async def login_for_access_token(request: Request, form_data:
     auth_rate_limit())])
 async def login(request: Request, login_data: LoginRequest, db: Session=
     Depends(get_db)) ->Dict[str, Any]:
-    """Login endpoint - accepts JSON data for compatibility with tests"""
     ip_address = request.client.host if request.client else 'unknown'
     user_agent = request.headers.get('user-agent', 'unknown')
     user = db.query(User).filter(User.email == login_data.email).first()
@@ -184,7 +185,6 @@ async def refresh_token(refresh_request: dict, db: Session=Depends(get_db)
 @router.get('/me')
 async def get_current_user(db: Session=Depends(get_db), token: str=Depends(
     oauth2_scheme)) ->Dict[str, Any]:
-    """Get current user information from JWT token"""
     from api.dependencies.auth import decode_token
     from core.exceptions import NotAuthenticatedException
     if not token:

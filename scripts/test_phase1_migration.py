@@ -42,6 +42,7 @@ def run_dry_run(file_path: str) -> bool:
 
 def main() -> int:
     print("🚀 Stack Auth Migration - Phase 1 Test")
+    """Main"""
     print("Testing migration approach on core user endpoints")
     print("=" * 80)
 

@@ -26,6 +26,7 @@ except ImportError:
 
     class Credentials:
 
+        """Class for Credentials"""
         def __init__(self, *args, **kwargs) ->None:
             self.expired = False
             self.refresh_token = None
@@ -35,35 +36,46 @@ except ImportError:
         @classmethod
         def from_authorized_user_info(cls, info, scopes) ->'Credentials':
             return cls()
+            """From Authorized User Info"""
 
         def refresh(self, request) ->None:
             pass
+            """Refresh"""
 
     class Request:
         pass
+        """Class for Request"""
 
     def build(*args, **kwargs) ->Any:
         return MockGoogleService()
+        """Build"""
 
     class HttpError(Exception):
         pass
+        """Class for HttpError"""
 
     class MockGoogleService:
 
+        """Class for MockGoogleService"""
         def activities(self) ->Any:
             return self
+            """Activities"""
 
         def users(self) ->Any:
             return self
+            """Users"""
 
         def groups(self) ->Any:
             return self
+            """Groups"""
 
         def list(self, **kwargs) ->Any:
             return self
+            """List"""
 
         def execute(self) ->Dict[str, Any]:
             return {'items': []}
+            """Execute"""
 logger = logging.getLogger(__name__)
 
 class GoogleWorkspaceCredentials(BaseModel):
@@ -77,6 +89,7 @@ class GoogleWorkspaceCredentials(BaseModel):
 
     class Config:
         extra = 'allow'
+        """Class for Config"""
 
 class GoogleWorkspaceAPIClient(BaseAPIClient):
     """Google Workspace API client for compliance evidence collection."""

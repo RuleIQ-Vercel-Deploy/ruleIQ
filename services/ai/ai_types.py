@@ -12,58 +12,44 @@ from datetime import datetime
 from enum import Enum
 from typing import Any, Dict, Optional
 
-class CircuitState(Enum):
-    """Circuit breaker states"""
-
+class CircuitState(Enum): 
     CLOSED = "closed"  # Normal operation
     OPEN = "open"  # Circuit tripped, failing fast
     HALF_OPEN = "half_open"  # Testing if service recovered
 
-class ServiceStatus(Enum):
-    """Service health status levels"""
-
+class ServiceStatus(Enum): 
     HEALTHY = "healthy"
     DEGRADED = "degraded"
     UNHEALTHY = "unhealthy"
     UNKNOWN = "unknown"
     MAINTENANCE = "maintenance"
 
-class RetryStrategy(Enum):
-    """Available retry strategies"""
-
+class RetryStrategy(Enum): 
     EXPONENTIAL_BACKOFF = "exponential_backoff"
     LINEAR_BACKOFF = "linear_backoff"
     FIXED_DELAY = "fixed_delay"
     FIBONACCI_BACKOFF = "fibonacci_backoff"
 
-class FallbackLevel(Enum):
-    """Levels of fallback degradation"""
-
+class FallbackLevel(Enum): 
     NONE = "none"  # No fallback, fail immediately
     BASIC = "basic"  # Basic static responses
     CACHED = "cached"  # Use cached responses
     TEMPLATE = "template"  # Use response templates
     COMPREHENSIVE = "comprehensive"  # Full fallback system
 
-class OfflineMode(Enum):
-    """Offline operating modes"""
-
+class OfflineMode(Enum): 
     DISABLED = "disabled"  # No offline capabilities
     BASIC = "basic"  # Basic offline responses only
     ENHANCED = "enhanced"  # Offline templates and cached responses
     FULL = "full"  # Complete offline functionality
 
-class HealthCheckType(Enum):
-    """Types of health checks"""
-
+class HealthCheckType(Enum): 
     PING = "ping"  # Basic connectivity
     FUNCTIONAL = "functional"  # Service functionality test
     PERFORMANCE = "performance"  # Response time and throughput
     COMPREHENSIVE = "comprehensive"  # Full health assessment
 
-class AlertSeverity(Enum):
-    """Alert severity levels"""
-
+class AlertSeverity(Enum): 
     INFO = "info"
     WARNING = "warning"
     ERROR = "error"
@@ -93,6 +79,7 @@ class RetryAttempt:
 
     @property
     def duration(self) -> Optional[float]:
+        """Duration"""
         if self.start_time and self.end_time:
             return self.end_time - self.start_time
         return None

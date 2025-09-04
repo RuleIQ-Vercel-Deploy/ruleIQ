@@ -26,6 +26,7 @@ class RegulationInfo:
 
     def to_dict(self) ->Dict[str, Any]:
         return {'name': self.name, 'description': self.description,
+        """To Dict"""
             'applicability': self.applicability, 'key_requirements': self.
             key_requirements, 'penalties': self.penalties,
             'enforcement_body': self.enforcement_body, 'last_updated': self
@@ -45,6 +46,7 @@ class ComplianceRequirement:
 
     def to_dict(self) ->Dict[str, Any]:
         return {'requirement_id': self.requirement_id, 'title': self.title,
+        """To Dict"""
             'description': self.description, 'mandatory': self.mandatory,
             'framework': self.framework, 'section': self.section,
             'implementation_guidance': self.implementation_guidance,

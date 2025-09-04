@@ -9,10 +9,11 @@ from datetime import datetime, timedelta
 from typing import Dict, Any
 from unittest.mock import Mock, patch
 
-from services.ai.evaluation.schemas import (
-    ComplianceScenario,
-    EvidenceCase,
-    RegulatoryQAPair,
+# Fix imports to use correct schema locations
+from services.ai.evaluation.schemas.compliance_scenario import ComplianceScenario
+from services.ai.evaluation.schemas.evidence_case import EvidenceCase
+from services.ai.evaluation.schemas.regulatory_qa import RegulatoryQAPair
+from services.ai.evaluation.schemas.common import (
     RegCitation,
     SourceMeta,
     TemporalValidity,

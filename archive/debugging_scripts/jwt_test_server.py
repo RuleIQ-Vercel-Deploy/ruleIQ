@@ -26,6 +26,7 @@ print(f"[JWT TEST SERVER] Using JWT_SECRET: {JWT_SECRET[:10]}...")
 
 class TestRequest(BaseModel):
     question_id: str
+    """Class for TestRequest"""
     question_text: str
     framework_id: str
 

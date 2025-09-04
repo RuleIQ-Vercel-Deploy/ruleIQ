@@ -24,13 +24,11 @@ class CacheManager:
     """
     
     def __init__(self):
-        """Initialize cache manager with connection pool."""
         self._pool: Optional[ConnectionPool] = None
         self._redis_client: Optional[redis.Redis] = None
         self._initialized = False
         
     async def initialize(self) -> None:
-        """Initialize Redis connection pool."""
         if self._initialized:
             return
             
@@ -60,7 +58,6 @@ class CacheManager:
             self._initialized = False
             
     async def close(self) -> None:
-        """Close Redis connections."""
         if self._redis_client:
             await self._redis_client.close()
         if self._pool:
@@ -68,7 +65,6 @@ class CacheManager:
         self._initialized = False
         
     async def get(self, key: str) -> Optional[Any]:
-        """Get value from cache."""
         if not self._redis_client:
             return None
             
@@ -103,7 +99,6 @@ class CacheManager:
             return False
             
     async def delete(self, key: str) -> bool:
-        """Delete key from cache."""
         if not self._redis_client:
             return False
             
@@ -115,7 +110,6 @@ class CacheManager:
             return False
             
     async def delete_pattern(self, pattern: str) -> int:
-        """Delete all keys matching pattern."""
         if not self._redis_client:
             return 0
             
@@ -132,7 +126,6 @@ class CacheManager:
             return 0
             
     async def exists(self, key: str) -> bool:
-        """Check if key exists in cache."""
         if not self._redis_client:
             return False
             
@@ -143,7 +136,6 @@ class CacheManager:
             return False
             
     async def ttl(self, key: str) -> Optional[int]:
-        """Get TTL for a key."""
         if not self._redis_client:
             return None
             
@@ -155,7 +147,6 @@ class CacheManager:
             return None
             
     async def expire(self, key: str, ttl: int) -> bool:
-        """Set expiration for a key."""
         if not self._redis_client:
             return False
             
@@ -167,7 +158,6 @@ class CacheManager:
             
     # Batch operations for performance
     async def mget(self, keys: list[str]) -> Dict[str, Any]:
-        """Get multiple values from cache."""
         if not self._redis_client:
             return {}
             
@@ -186,7 +176,6 @@ class CacheManager:
             return {}
             
     async def mset(self, mapping: Dict[str, Any], ttl: Optional[int] = None) -> bool:
-        """Set multiple values in cache."""
         if not self._redis_client:
             return False
             
@@ -269,9 +258,11 @@ def cached(
         ttl = int(ttl.total_seconds())
     
     def decorator(func):
+        """Decorator"""
         @wraps(func)
         async def wrapper(*args, **kwargs):
             # Skip caching if disabled
+            """Wrapper"""
             if not hasattr(wrapper, '_cache_manager'):
                 wrapper._cache_manager = CacheManager()
                 await wrapper._cache_manager.initialize()
@@ -312,7 +303,6 @@ def cached(
 
 
 async def _invalidate_cache(prefix: str, *args, **kwargs) -> bool:
-    """Invalidate cached result for specific arguments."""
     cache_manager = CacheManager()
     await cache_manager.initialize()
     
@@ -325,7 +315,6 @@ _cache_manager_instance: Optional[CacheManager] = None
 
 
 async def get_cache_manager() -> CacheManager:
-    """Get or create cache manager singleton."""
     global _cache_manager_instance
     if _cache_manager_instance is None:
         _cache_manager_instance = CacheManager()

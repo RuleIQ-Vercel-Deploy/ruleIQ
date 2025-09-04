@@ -16,9 +16,7 @@ import subprocess
 from typing import Dict
 import importlib.util
 
-def load_env_file(path=".env") -> None:
-    """Load environment variables from .env file"""
-    if os.path.exists(path):
+def load_env_file(path=".env") -> None: if os.path.exists(path):
         with open(path, "r") as f:
             for line in f:
                 line = line.strip()
@@ -28,15 +26,13 @@ def load_env_file(path=".env") -> None:
 
 # Color codes for output
 class Colors:
-    PASS = "\033[92m"
-    FAIL = "\033[91m"
+    PASS = "\033[92m" FAIL = "\033[91m"
     WARN = "\033[93m"
     INFO = "\033[94m"
     RESET = "\033[0m"
 
 class ValidationResult:
-    def __init__(
-        self, test_name: str, passed: bool, message: str = "", details: Dict = None
+    def __init__( self, test_name: str, passed: bool, message: str = "", details: Dict = None
     ) -> None:
         self.test_name = test_name
         self.passed = passed
@@ -44,17 +40,14 @@ class ValidationResult:
         self.details = details or {}
 
 class ProductionValidator:
-    def __init__(self) -> None:
-        # Load environment variables
+    def __init__(self) -> None: # Load environment variables
         load_env_file()
 
         self.results = []
         self.base_url = os.getenv("API_BASE_URL", "http://localhost:8000")
         self.db_url = os.getenv("DATABASE_URL", "")
 
-    def log_result(self, result: ValidationResult) -> None:
-        """Log validation result with appropriate formatting"""
-        status = (
+    def log_result(self, result: ValidationResult) -> None: status = (
             f"{Colors.PASS}PASS{Colors.RESET}"
             if result.passed
             else f"{Colors.FAIL}FAIL{Colors.RESET}"
@@ -68,9 +61,7 @@ class ProductionValidator:
         logger.info()
         self.results.append(result)
 
-    def test_fastapi_import(self) -> ValidationResult:
-        """Test if FastAPI application can be imported and started"""
-        try:
+    def test_fastapi_import(self) -> ValidationResult: try:
             # Test importing main FastAPI app
             spec = importlib.util.spec_from_file_location("main", "api/main.py")
             if spec is None or spec.loader is None:
@@ -105,9 +96,7 @@ class ProductionValidator:
                 "FastAPI Import", False, f"Failed to import FastAPI app: {str(e)}"
             )
 
-    def test_database_initialization(self) -> ValidationResult:
-        """Test database initialization works correctly"""
-        try:
+    def test_database_initialization(self) -> ValidationResult: try:
             # Test database setup module
             spec = importlib.util.spec_from_file_location(
                 "db_setup", "database/db_setup.py"
@@ -152,9 +141,7 @@ class ProductionValidator:
                 f"Database initialization failed: {str(e)}",
             )
 
-    def test_environment_variables(self) -> ValidationResult:
-        """Test if all required environment variables are properly configured"""
-        required_vars = ["DATABASE_URL", "SECRET_KEY", "API_BASE_URL", "ENVIRONMENT"]
+    def test_environment_variables(self) -> ValidationResult: required_vars = ["DATABASE_URL", "SECRET_KEY", "API_BASE_URL", "ENVIRONMENT"]
 
         optional_vars = [
             "REDIS_URL",
@@ -188,9 +175,7 @@ class ProductionValidator:
             },
         )
 
-    def test_critical_routes(self) -> ValidationResult:
-        """Test if all critical routes are accessible"""
-        critical_routes = [
+    def test_critical_routes(self) -> ValidationResult: critical_routes = [
             "/health",
             "/api/v1/health",
             "/api/v1/docs",
@@ -226,9 +211,7 @@ class ProductionValidator:
             {"routes": accessible_routes},
         )
 
-    def test_database_connection(self) -> ValidationResult:
-        """Test database connection establishment"""
-        try:
+    def test_database_connection(self) -> ValidationResult: try:
             # Test database connection using db_setup
             sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
@@ -260,9 +243,7 @@ class ProductionValidator:
                 f"Database connection test failed: {str(e)}",
             )
 
-    def test_health_check_endpoints(self) -> ValidationResult:
-        """Test health check endpoints respond correctly"""
-        health_endpoints = ["/health", "/api/v1/health", "/api/v1/health/detailed"]
+    def test_health_check_endpoints(self) -> ValidationResult: health_endpoints = ["/health", "/api/v1/health", "/api/v1/health/detailed"]
 
         working_endpoints = []
         failed_endpoints = []
@@ -309,9 +290,7 @@ class ProductionValidator:
             {"endpoints": working_endpoints},
         )
 
-    def test_application_startup(self) -> ValidationResult:
-        """Test if FastAPI application can be started"""
-        try:
+    def test_application_startup(self) -> ValidationResult: try:
             # Test if we can start the application in a subprocess
             process = subprocess.Popen(
                 ["python", "-c", "from api.main import app; logger.info('App ready')"],
@@ -348,9 +327,7 @@ class ProductionValidator:
                 f"Application startup test failed: {str(e)}",
             )
 
-    def run_all_tests(self) -> bool:
-        """Run all validation tests"""
-        logger.info(f"{Colors.INFO}Starting Production Validation Tests{Colors.RESET}")
+    def run_all_tests(self) -> bool: logger.info(f"{Colors.INFO}Starting Production Validation Tests{Colors.RESET}")
         logger.info("=" * 50)
         logger.info()
 
@@ -394,9 +371,7 @@ class ProductionValidator:
 
         return passed == total
 
-def main() -> None:
-    """Main validation function"""
-    validator = ProductionValidator()
+def main() -> None: validator = ProductionValidator()
     all_passed = validator.run_all_tests()
 
     # Exit with appropriate status code

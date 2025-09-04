@@ -1,16 +1,16 @@
 """
-
-# Constants
-HTTP_INTERNAL_SERVER_ERROR = 500
-HTTP_UNAUTHORIZED = 401
-
 Test Phase 1 Stack Auth endpoints using FastAPI TestClient
 """
 import sys
 from pathlib import Path
 from fastapi.testclient import TestClient
-sys.path.insert(0, str(Path(__file__).parent))
-from main import app
+
+# Constants
+HTTP_INTERNAL_SERVER_ERROR = 500
+HTTP_UNAUTHORIZED = 401
+
+# sys.path.insert(0, str(Path(__file__).parent))
+from api.main import app
 
 def test_phase1_endpoints():
     """Test Phase 1 endpoints with FastAPI TestClient"""

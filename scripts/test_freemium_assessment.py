@@ -19,6 +19,7 @@ EXPECTED_MIN_QUESTIONS = 5
 
 class FreemiumAssessmentTester:
 
+    """Class for FreemiumAssessmentTester"""
     def __init__(self):
         self.client = httpx.AsyncClient(timeout=30.0)
         self.lead_id = None
@@ -28,6 +29,7 @@ class FreemiumAssessmentTester:
 
     async def close(self):
         await self.client.aclose()
+        """Close"""
 
     async def test_lead_capture(self) ->bool:
         """Step 1: Capture lead information"""
@@ -214,6 +216,7 @@ class FreemiumAssessmentTester:
 
 async def main():
     tester = FreemiumAssessmentTester()
+    """Main"""
     try:
         results = await tester.run_full_test()
         return 0 if all(results.values()) else 1

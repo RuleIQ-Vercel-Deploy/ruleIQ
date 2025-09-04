@@ -17,9 +17,7 @@ from urllib.parse import urlparse
 # Load environment variables
 load_dotenv(".env.local")
 
-async def test_neon_connection():
-    """Test connection to Neon database and verify it's not local PostgreSQL."""
-
+async def test_neon_connection(): 
     database_url = os.getenv("DATABASE_URL")
 
     if not database_url:
@@ -97,9 +95,7 @@ async def test_neon_connection():
 
             # Get database size
             result = await conn.execute(
-                text(
-                    """
-                SELECT pg_database_size(current_database()) as size,
+                text( SELECT pg_database_size(current_database()) as size,
                        current_database() as db_name
             """,
                 ),
@@ -111,9 +107,7 @@ async def test_neon_connection():
 
             # List tables
             result = await conn.execute(
-                text(
-                    """
-                SELECT tablename 
+                text( SELECT tablename 
                 FROM pg_tables 
                 WHERE schemaname = 'public'
                 ORDER BY tablename
@@ -129,9 +123,7 @@ async def test_neon_connection():
 
             # Check for alembic version (migrations)
             result = await conn.execute(
-                text(
-                    """
-                SELECT EXISTS (
+                text( SELECT EXISTS (
                     SELECT FROM information_schema.tables 
                     WHERE table_name = 'alembic_version',
                 )
@@ -181,9 +173,7 @@ async def test_neon_connection():
 
         return False
 
-async def test_connection_pooling():
-    """Test connection pooling configuration."""
-    database_url = os.getenv("DATABASE_URL")
+async def test_connection_pooling(): database_url = os.getenv("DATABASE_URL")
 
     if not database_url:
         return
@@ -218,8 +208,7 @@ async def test_connection_pooling():
         for i in range(10):
 
             async def query_task(task_id):
-                async with engine.begin() as conn:
-                    result = await conn.execute(
+                async with engine.begin() as conn: result = await conn.execute(
                         text(f"SELECT {task_id} as id, NOW() as time"),
                     )
                     return result.fetchone()
@@ -234,9 +223,7 @@ async def test_connection_pooling():
     except Exception as e:
         print(f"   Connection pooling test failed: {str(e)}")
 
-async def main():
-    """Run all database connection tests."""
-    print("=" * 60)
+async def main(): print("=" * 60)
     print("🚀 Neon Database Connection Test")
     print("=" * 60)
 

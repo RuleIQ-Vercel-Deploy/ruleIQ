@@ -61,13 +61,10 @@ TEST_GROUPS = {
 }
 
 class TestRunner:
-    def __init__(self) -> None:
-        self.results: Dict[str, Dict] = {}
+    def __init__(self) -> None: self.results: Dict[str, Dict] = {}
         self.start_time = time.time()
 
-    async def run_test_group(self, group_name: str, test_paths: List[str]) -> Dict:
-        """Run a single test group and return results."""
-        logger.info(f"🚀 Starting {group_name}...")
+    async def run_test_group(self, group_name: str, test_paths: List[str]) -> Dict: logger.info(f"🚀 Starting {group_name}...")
 
         # Filter paths that actually exist
         existing_paths = []
@@ -149,9 +146,7 @@ class TestRunner:
                 "total": 0,
             }
 
-    def _parse_pytest_output(self, output: str) -> Tuple[int, int, int]:
-        """Parse pytest output to extract test counts."""
-        lines = output.split("\n")
+    def _parse_pytest_output(self, output: str) -> Tuple[int, int, int]: lines = output.split("\n")
 
         for line in lines:
             if "passed" in line and ("failed" in line or "error" in line):
@@ -187,9 +182,7 @@ class TestRunner:
 
         return 0, 0, 0
 
-    async def run_all_groups(self) -> None:
-        """Run all test groups concurrently."""
-        logger.info("🧪 Starting ruleIQ Chunked Test Execution")
+    async def run_all_groups(self) -> None: logger.info("🧪 Starting ruleIQ Chunked Test Execution")
         logger.info(f"📊 Running {len(TEST_GROUPS)} test groups asynchronously")
         logger.info("=" * 60)
 
@@ -213,9 +206,7 @@ class TestRunner:
 
         self._print_summary()
 
-    def _print_summary(self) -> None:
-        """Print comprehensive test execution summary."""
-        total_duration = time.time() - self.start_time
+    def _print_summary(self) -> None: total_duration = time.time() - self.start_time
 
         logger.info("\n" + "=" * 60)
         logger.info("📋 CHUNKED TEST EXECUTION SUMMARY")
@@ -262,9 +253,7 @@ class TestRunner:
         logger.info("\n📁 Test result files: test_results_group*.xml")
         logger.info("=" * 60)
 
-async def main() -> None:
-    """Main execution function."""
-    runner = TestRunner()
+async def main() -> None: runner = TestRunner()
     await runner.run_all_groups()
 
 if __name__ == "__main__":

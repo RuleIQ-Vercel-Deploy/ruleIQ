@@ -179,6 +179,7 @@ def require_permission(permission: str) ->Any:
 
     async def check_permission(current_user: UserWithRoles=Depends(
         get_current_active_user_with_roles)) ->UserWithRoles:
+        """Check Permission"""
         if not current_user.has_permission(permission):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Permission '{permission}' required")
@@ -198,6 +199,7 @@ def require_any_permission(permissions: List[str]) ->Any:
 
     async def check_permissions(current_user: UserWithRoles=Depends(
         get_current_active_user_with_roles)) ->UserWithRoles:
+        """Check Permissions"""
         if not current_user.has_any_permission(permissions):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                 detail=
@@ -218,6 +220,7 @@ def require_all_permissions(permissions: List[str]) ->Any:
 
     async def check_permissions(current_user: UserWithRoles=Depends(
         get_current_active_user_with_roles)) ->UserWithRoles:
+        """Check Permissions"""
         if not current_user.has_all_permissions(permissions):
             missing = [p for p in permissions if not current_user.
                 has_permission(p)]
@@ -239,6 +242,7 @@ def require_role(role: str) ->Any:
 
     async def check_role(current_user: UserWithRoles=Depends(
         get_current_active_user_with_roles)) ->UserWithRoles:
+        """Check Role"""
         if not current_user.has_role(role):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"Role '{role}' required")
@@ -258,6 +262,7 @@ def require_any_role(roles: List[str]) ->Any:
 
     async def check_roles(current_user: UserWithRoles=Depends(
         get_current_active_user_with_roles)) ->UserWithRoles:
+        """Check Roles"""
         if not current_user.has_any_role(roles):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                 detail=f"One of these roles required: {', '.join(roles)}")
@@ -279,6 +284,7 @@ def require_framework_access(framework_id: str, access_level: str='read'
 
     async def check_framework_access(current_user: UserWithRoles=Depends(
         get_current_active_user_with_roles)) ->UserWithRoles:
+        """Check Framework Access"""
         if not current_user.can_access_framework(framework_id, access_level):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                 detail=
@@ -323,6 +329,7 @@ def require_framework_access_level(framework_id: str, access_level: str='read'
 
     async def check_access(current_user: UserWithRoles=Depends(
         get_current_active_user_with_roles)) ->UserWithRoles:
+        """Check Access"""
         if not check_framework_access_permission(current_user, framework_id,
             access_level):
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,

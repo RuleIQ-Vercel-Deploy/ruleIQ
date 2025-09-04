@@ -6,6 +6,7 @@ import time
 import json
 
 def test_freemium_flow():
+    """Test Freemium Flow"""
     with sync_playwright() as p:
         # Launch browser
         browser = p.chromium.launch(

@@ -19,6 +19,7 @@ logger = get_logger(__name__)
 
 class IntegrationStatus(str, Enum):
     CONNECTED = 'connected'
+    """Class for IntegrationStatus"""
     DISCONNECTED = 'disconnected'
     ERROR = 'error'
     NEEDS_REAUTH = 'needs_reauth'
@@ -27,6 +28,7 @@ class IntegrationStatus(str, Enum):
 @dataclass
 class IntegrationConfig:
     user_id: UUID
+    """Class for IntegrationConfig"""
     provider: str
     credentials: Dict[str, Any]
     settings: Optional[Dict[str, Any]] = None
@@ -35,6 +37,7 @@ class IntegrationConfig:
 
 class BaseIntegration(ABC):
 
+    """Class for BaseIntegration"""
     def __init__(self, config: IntegrationConfig) ->None:
         self.config = config
         self.cipher = get_cipher_suite()
@@ -50,26 +53,32 @@ class BaseIntegration(ABC):
     @abstractmethod
     def provider_name(self) ->str:
         pass
+        """Provider Name"""
 
     @abstractmethod
     async def test_connection(self) ->bool:
         pass
+        """Test Connection"""
 
     @abstractmethod
     async def authenticate(self) ->bool:
         pass
+        """Authenticate"""
 
     @abstractmethod
     async def collect_evidence(self, evidence_type: str, since: Optional[
         datetime]=None) ->List[Dict[str, Any]]:
+        """Collect Evidence"""
         pass
 
     @abstractmethod
     async def get_available_evidence_types(self) ->List[Dict[str, Any]]:
         pass
+        """Get Available Evidence Types"""
 
     async def validate_credentials(self, credentials_to_test: Dict[str, Any]
         ) ->bool:
+        """Validate Credentials"""
         original_creds = self.config.credentials
         self.config.credentials = credentials_to_test
         try:
@@ -84,6 +93,7 @@ class BaseIntegration(ABC):
 
     def encrypt_credentials_to_str(self, credentials_dict: Dict[str, Any]
         ) ->str:
+        """Encrypt Credentials To Str"""
         if not self.cipher:
             logger.error(
                 'Cannot encrypt credentials: Fernet cipher is not initialized.',
@@ -104,6 +114,7 @@ class BaseIntegration(ABC):
 
     def decrypt_credentials_from_str(self, encrypted_credentials_str: str
         ) ->Dict[str, Any]:
+        """Decrypt Credentials From Str"""
         if not self.cipher:
             logger.error(
                 'Cannot decrypt credentials: Fernet cipher is not initialized.',
@@ -129,12 +140,16 @@ class BaseIntegration(ABC):
 
 class IntegrationError(Exception):
     pass
+    """Class for IntegrationError"""
 
 class AuthenticationError(IntegrationError):
     pass
+    """Class for AuthenticationError"""
 
 class ConnectionError(IntegrationError):
     pass
+    """Class for ConnectionError"""
 
 class EvidenceCollectionError(IntegrationError):
     pass
+    """Class for EvidenceCollectionError"""

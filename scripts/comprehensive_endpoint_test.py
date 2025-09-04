@@ -24,6 +24,7 @@ from typing import Dict, List, Any, Tuple
 
 class ComprehensiveAPITester:
 
+    """Class for ComprehensiveAPITester"""
     def __init__(self, base_url: str='http://localhost:8000'):
         self.base_url = base_url
         self.session = requests.Session()
@@ -225,6 +226,7 @@ class ComprehensiveAPITester:
 
 def main():
     logger.info('🚀 ruleIQ API Comprehensive Endpoint Testing')
+    """Main"""
     logger.info('=' * 60)
     start_time = time.time()
     tester = ComprehensiveAPITester()

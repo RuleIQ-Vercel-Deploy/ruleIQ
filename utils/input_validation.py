@@ -10,14 +10,10 @@ from typing import Any, Dict, List, Optional
 from uuid import UUID
 from enum import Enum
 
-class ValidationError(Exception):
-    """Custom exception for validation errors."""
-
+class ValidationError(Exception): 
     pass
 
-class FieldType(Enum):
-    """Supported field types for validation."""
-
+class FieldType(Enum): 
     STRING = "string"
     INTEGER = "integer"
     FLOAT = "float"
@@ -164,7 +160,7 @@ class FieldValidator:
 
     @staticmethod
     def validate_email(value: Any) -> str:
-        """Validate email address."""
+        """Validate email input."""
         if not isinstance(value, str):
             raise ValidationError("Email must be a string")
 
@@ -176,7 +172,7 @@ class FieldValidator:
 
     @staticmethod
     def validate_url(value: Any) -> str:
-        """Validate URL."""
+        """Validate URL input."""
         if not isinstance(value, str):
             raise ValidationError("URL must be a string")
 
@@ -188,7 +184,7 @@ class FieldValidator:
 
     @staticmethod
     def validate_enum(value: Any, allowed_values: List[str]) -> str:
-        """Validate enum value against allowed list."""
+        """Validate enum input."""
         if not isinstance(value, str):
             value = str(value)
 
@@ -457,7 +453,7 @@ class WhitelistValidator:
         return definitions.get(self.model_name, {})
 
     def validate_field(self, field_name: str, value: Any) -> Any:
-        """Validate a single field value."""
+        """Validate a single field."""
         if field_name not in self.field_definitions:
             raise ValidationError(
                 f"Field '{field_name}' is not allowed for updates on {self.model_name}",
@@ -514,7 +510,7 @@ class WhitelistValidator:
             raise ValidationError(f"Field '{field_name}': {str(e)}")
 
     def validate_update_data(self, update_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Validate all fields in update data against whitelist."""
+        """Validate update data."""
         if not isinstance(update_data, dict):
             raise ValidationError("Update data must be a dictionary")
 
@@ -551,7 +547,7 @@ class SecurityValidator:
 
     @staticmethod
     def scan_for_dangerous_patterns(value: str) -> bool:
-        """Scan input for dangerous patterns."""
+        """Scan for dangerous patterns in string."""
         if not isinstance(value, str):
             return False
 
@@ -563,9 +559,9 @@ class SecurityValidator:
 
     @staticmethod
     def validate_no_dangerous_content(data: Dict[str, Any]) -> None:
-        """Validate that input data contains no dangerous patterns."""
-
+        """Validate no dangerous content in data."""
         def check_value(val) -> None:
+            """Check Value"""
             if isinstance(val, str):
                 if SecurityValidator.scan_for_dangerous_patterns(val):
                     raise ValidationError(
@@ -583,7 +579,7 @@ class SecurityValidator:
 
 # Convenience function for evidence service
 def validate_evidence_update(update_data: Dict[str, Any]) -> Dict[str, Any]:
-    """Validate evidence item update data."""
+    """Validate evidence update data."""
     # Security scan first
     SecurityValidator.validate_no_dangerous_content(update_data)
 

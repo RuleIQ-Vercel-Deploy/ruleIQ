@@ -26,6 +26,7 @@ init(autoreset=True)
 
 class EndpointValidator:
 
+    """Class for EndpointValidator"""
     def __init__(self, base_url: str='http://localhost:8000'):
         self.base_url = base_url
         self.session = requests.Session()
@@ -38,18 +39,23 @@ class EndpointValidator:
 
     def log_success(self, message: str) ->None:
         logger.info('%s✅ %s%s' % (Fore.GREEN, message, Style.RESET_ALL))
+        """Log Success"""
 
     def log_error(self, message: str) ->None:
         logger.info('%s❌ %s%s' % (Fore.RED, message, Style.RESET_ALL))
+        """Log Error"""
 
     def log_warning(self, message: str) ->None:
         logger.info('%s⚠️  %s%s' % (Fore.YELLOW, message, Style.RESET_ALL))
+        """Log Warning"""
 
     def log_info(self, message: str) ->None:
         logger.info('%sℹ️  %s%s' % (Fore.CYAN, message, Style.RESET_ALL))
+        """Log Info"""
 
     def log_section(self, title: str) ->None:
         logger.info('\n%s%s' % (Fore.BLUE, '=' * 60))
+        """Log Section"""
         logger.info('%s%s' % (Fore.BLUE, title.center(60)))
         logger.info('%s%s%s\n' % (Fore.BLUE, '=' * 60, Style.RESET_ALL))
 

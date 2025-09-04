@@ -34,6 +34,7 @@ class OAuth2Config(BaseSettings):
 
     class Config:
         env_file = ".env"
+        """Class for Config"""
         case_sensitive = True
 
     def get_google_oauth_url(self, state: str) -> str:

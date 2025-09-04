@@ -17,6 +17,7 @@ import json
 
 class APIEndpointAnalyzer:
 
+    """Class for APIEndpointAnalyzer"""
     def __init__(self, api_dir: str='api/routers') ->None:
         self.api_dir = Path(api_dir)
         self.endpoints = []

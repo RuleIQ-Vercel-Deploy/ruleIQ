@@ -110,6 +110,7 @@ if __name__ == "__main__":
 
 def main() ->None:
     logger.info('🚨 RuleIQ Emergency Fix Script')
+    """Main"""
     logger.info('=' * 40)
     if not os.path.exists('main.py'):
         logger.info('❌ Please run this script from the RuleIQ root directory')

@@ -78,6 +78,7 @@ def find_duplicates(endpoints: Dict[str, List[str]]) ->List[str]:
 
 def main() ->Any:
     logger.info('🔍 API Structure Verification')
+    """Main"""
     logger.info('=' * 80)
     endpoints = extract_endpoints()
     total_endpoints = sum(len(paths) for paths in endpoints.values())

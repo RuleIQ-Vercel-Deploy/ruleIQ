@@ -18,15 +18,18 @@ router = APIRouter()
 
 class RoleCheckRequest(BaseModel):
     resource: str
+    """Class for RoleCheckRequest"""
     action: str
     context: Dict[str, Any] = {}
 
 class SecurityTestRequest(BaseModel):
     test_type: str
+    """Class for SecurityTestRequest"""
     parameters: Dict[str, Any] = {}
 
 class SecurityTestResponse(BaseModel):
     test_passed: bool
+    """Class for SecurityTestResponse"""
     vulnerabilities: List[Dict[str, Any]]
     recommendations: List[str]
     risk_level: str

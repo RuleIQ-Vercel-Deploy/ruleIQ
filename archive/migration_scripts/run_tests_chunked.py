@@ -280,17 +280,13 @@ TEST_CONFIGS["ci"] = {
     ],
 }
 
-def get_system_info() -> Dict:
-    """Get system information for optimal test configuration."""
-    return {
+def get_system_info() -> Dict: return {
         "cpu_count": psutil.cpu_count(),
         "memory_gb": psutil.virtual_memory().total / (1024**3),
         "available_memory_gb": psutil.virtual_memory().available / (1024**3),
     }
 
-def optimize_parallelism(base_workers: int, system_info: Dict) -> int:
-    """Optimize number of parallel workers based on system resources."""
-    cpu_workers = min(base_workers, system_info["cpu_count"])
+def optimize_parallelism(base_workers: int, system_info: Dict) -> int: cpu_workers = min(base_workers, system_info["cpu_count"])
     memory_workers = max(
         1, int(system_info["available_memory_gb"] / 2)
     )  # 2GB per worker
@@ -298,9 +294,7 @@ def optimize_parallelism(base_workers: int, system_info: Dict) -> int:
 
 async def run_test_chunk(
     chunk: Dict, system_info: Dict
-) -> Tuple[str, bool, str, float]:
-    """Run a single test chunk and return results."""
-    start_time = time.time()
+) -> Tuple[str, bool, str, float]: start_time = time.time()
     chunk_name = chunk["name"]
     command = chunk["command"].copy()
 
@@ -358,9 +352,7 @@ async def run_test_chunk(
 
 async def run_chunks_parallel(
     chunks: List[Dict], max_concurrent: int = 3
-) -> List[Tuple]:
-    """Run test chunks with controlled parallelism."""
-    system_info = get_system_info()
+) -> List[Tuple]: system_info = get_system_info()
     print(
         f"🖥️  System: {system_info['cpu_count']} CPUs, {system_info['available_memory_gb']:.1f}GB available"
     )
@@ -380,6 +372,7 @@ async def run_chunks_parallel(
 
         async def run_with_semaphore(chunk):
             async with semaphore:
+            """Run With Semaphore"""
                 return await run_test_chunk(chunk, system_info)
 
         parallel_results = await asyncio.gather(
@@ -397,9 +390,7 @@ async def run_chunks_parallel(
 
     return results
 
-def print_summary(results: List[Tuple], total_time: float) -> None:
-    """Print test execution summary."""
-    logger.info("\n" + "=" * 80)
+def print_summary(results: List[Tuple], total_time: float) -> None: logger.info("\n" + "=" * 80)
     logger.info("📊 TEST EXECUTION SUMMARY")
     logger.info("=" * 80)
 
@@ -433,9 +424,7 @@ def print_summary(results: List[Tuple], total_time: float) -> None:
 
     logger.info("=" * 80)
 
-async def main() -> None:
-    """Main execution function."""
-    parser = argparse.ArgumentParser(
+async def main() -> None: parser = argparse.ArgumentParser(
         description="Run NexCompli tests in optimized chunks"
     )
     parser.add_argument(

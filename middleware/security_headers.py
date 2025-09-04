@@ -69,8 +69,7 @@ class SecurityHeadersMiddleware:
         }
 
     async def __call__(self, scope, receive, send):
-        """
-        ASGI middleware interface
+        """ASGI middleware interface
 
         Args:
             scope: ASGI connection scope
@@ -94,7 +93,6 @@ class SecurityHeadersMiddleware:
         response_status = None
 
         async def send_wrapper(message):
-            """Wrapper to add headers to response"""
             nonlocal response_status
 
             if message["type"] == "http.response.start":
@@ -129,7 +127,12 @@ class SecurityHeadersMiddleware:
         await self.app(scope, receive, send_wrapper)
 
     def _add_basic_security_headers(self, response: Response) -> None:
-        """Add basic security headers"""
+        """
+        Add basic security headers to response
+        
+        Args:
+            response: HTTP response object
+        """
         # Prevent MIME type sniffing
         response.headers["X-Content-Type-Options"] = "nosniff"
 
@@ -221,7 +224,12 @@ class SecurityHeadersMiddleware:
             response.status_code = 204
 
     def _add_advanced_security_headers(self, response: Response) -> None:
-        """Add advanced security headers"""
+        """
+        Add advanced security headers
+        
+        Args:
+            response: HTTP response object
+        """
         # Expect-CT for Certificate Transparency
         response.headers["Expect-CT"] = "max-age=86400, enforce"
 
@@ -240,7 +248,12 @@ class SecurityHeadersMiddleware:
             response.headers["Expires"] = "0"
 
     def _generate_nonce(self) -> str:
-        """Generate a secure CSP nonce"""
+        """
+        Generate a cryptographically secure nonce
+        
+        Returns:
+            Secure random nonce string
+        """
         return secrets.token_urlsafe(16)
 
     def update_csp_directive(self, directive: str, values: List[str]) -> None:
@@ -352,13 +365,23 @@ class CSPViolationHandler:
             return JSONResponse(status_code=400, content={"error": str(e)})
 
     async def _persist_violation(self, violation: Dict[str, Any]) -> None:
-        """Persist violation to storage backend"""
+        """
+        Persist violation to storage backend
+        
+        Args:
+            violation: Violation data to persist
+        """
         if self.storage_backend:
             # Implementation depends on storage backend
             pass
 
     def _log_violation(self, violation: Dict[str, Any]) -> None:
-        """Log CSP violation for monitoring"""
+        """
+        Log CSP violation for monitoring
+        
+        Args:
+            violation: Violation data to log
+        """
         import logging
 
         logger = logging.getLogger(__name__)

@@ -18,14 +18,13 @@ from contextlib import contextmanager
 from logging.handlers import RotatingFileHandler
 from pythonjsonlogger import jsonlogger
 
-class ContextFilter(logging.Filter):
-    """Add contextual information to log records"""
-
+class ContextFilter(logging.Filter): 
     def __init__(self, context: Optional[Dict[str, Any]]=None):
         super().__init__()
         self.context = context or {}
 
     def filter(self, record) ->bool:
+        """Filter"""
         for key, value in self.context.items():
             setattr(record, key, value)
         record.timestamp = datetime.now(timezone.utc).isoformat()
@@ -43,8 +42,8 @@ class PerformanceLogger:
 
     @contextmanager
     def timer(self, operation: str, threshold_ms: float=1000.0) ->Generator[
-        Any, None, None]:
         """Context manager to time operations"""
+        Any, None, None]:
         start_time = time.perf_counter()
         try:
             yield
@@ -58,8 +57,8 @@ class PerformanceLogger:
                 threshold_ms, 'event_type': 'performance'})
 
     def log_metric(self, metric_name: str, value: float, unit: str='count'
-        ) ->None:
         """Log a custom metric"""
+        ) ->None:
         self.logger.info('Metric: %s = %s %s' % (metric_name, value, unit),
             extra={'metric_name': metric_name, 'metric_value': value,
             'metric_unit': unit, 'event_type': 'metric'})
@@ -73,9 +72,7 @@ class DebugLogger:
         self.performance = PerformanceLogger(self.logger)
         self.setup_logger(level)
 
-    def setup_logger(self, level: str) ->None:
-        """Configure logger with appropriate handlers and formatters"""
-        self.logger.setLevel(getattr(logging, level.upper()))
+    def setup_logger(self, level: str) ->None: self.logger.setLevel(getattr(logging, level.upper()))
         self.logger.handlers.clear()
         if os.getenv('ENVIRONMENT', 'development') == 'development':
             console_handler = logging.StreamHandler(sys.stdout)
@@ -98,17 +95,15 @@ class DebugLogger:
         context_filter = ContextFilter()
         self.logger.addFilter(context_filter)
 
-    def set_context(self, **context) ->None:
-        """Set logging context for this session"""
-        for handler in self.logger.handlers:
+    def set_context(self, **context) ->None: for handler in self.logger.handlers:
             if hasattr(handler, 'filters'):
                 for filter_obj in handler.filters:
                     if isinstance(filter_obj, ContextFilter):
                         filter_obj.context.update(context)
 
     def debug_request(self, request_data: Dict[str, Any], response_data:
-        Optional[Dict[str, Any]]=None) ->None:
         """Log detailed request/response information"""
+        Optional[Dict[str, Any]]=None) ->None:
         log_data = {'event_type': 'api_request', 'request': request_data,
             'timestamp': datetime.now(timezone.utc).isoformat()}
         if response_data:
@@ -116,8 +111,8 @@ class DebugLogger:
         self.logger.debug('API Request Debug', extra=log_data)
 
     def debug_db_query(self, query: str, params: Optional[Dict[str, Any]]=
-        None, duration_ms: Optional[float]=None) ->None:
         """Log database query information"""
+        None, duration_ms: Optional[float]=None) ->None:
         log_data = {'event_type': 'db_query', 'query': query[:500],
             'params': params or {}, 'timestamp': datetime.now(timezone.utc)
             .isoformat()}
@@ -126,8 +121,8 @@ class DebugLogger:
         self.logger.debug('Database Query', extra=log_data)
 
     def debug_external_call(self, service: str, endpoint: str, method: str,
-        response_code: Optional[int]=None) ->None:
         """Log external service calls"""
+        response_code: Optional[int]=None) ->None:
         log_data = {'event_type': 'external_call', 'service': service,
             'endpoint': endpoint, 'method': method, 'timestamp': datetime.
             now(timezone.utc).isoformat()}
@@ -136,25 +131,23 @@ class DebugLogger:
         self.logger.debug('External Service Call', extra=log_data)
 
     def error_with_context(self, message: str, error: Exception, context:
-        Optional[Dict[str, Any]]=None) ->None:
         """Log errors with full context and stack trace"""
+        Optional[Dict[str, Any]]=None) ->None:
         error_data = {'event_type': 'error', 'error_type': type(error).
             __name__, 'error_message': str(error), 'stack_trace': traceback
             .format_exc(), 'context': context or {}, 'timestamp': datetime.
             now(timezone.utc).isoformat()}
         self.logger.error('Error: %s' % message, extra=error_data)
 
-    def security_event(self, event_type: str, details: Dict[str, Any]) ->None:
-        """Log security-related events"""
-        security_data = {'event_type': 'security', 'security_event':
+    def security_event(self, event_type: str, details: Dict[str, Any]) ->None: security_data = {'event_type': 'security', 'security_event':
             event_type, 'details': details, 'timestamp': datetime.now(
             timezone.utc).isoformat()}
         self.logger.warning('Security Event: %s' % event_type, extra=
             security_data)
 
     def compliance_event(self, action: str, framework: str, result: str,
-        details: Optional[Dict[str, Any]]=None) ->None:
         """Log compliance-related actions"""
+        details: Optional[Dict[str, Any]]=None) ->None:
         compliance_data = {'event_type': 'compliance', 'action': action,
             'framework': framework, 'result': result, 'details': details or
             {}, 'timestamp': datetime.now(timezone.utc).isoformat()}
@@ -178,8 +171,7 @@ class DebugMiddleware:
         start_time = time.perf_counter()
 
         async def send_wrapper(message) ->None:
-            if message['type'] == 'http.response.start':
-                duration_ms = (time.perf_counter() - start_time) * 1000
+            if message['type'] == 'http.response.start': duration_ms = (time.perf_counter() - start_time) * 1000
                 self.logger.performance.log_metric(
                     f"request_duration_{scope['method'].lower()}",
                     duration_ms, 'ms')
@@ -192,13 +184,15 @@ class DebugMiddleware:
         await self.app(scope, receive, send_wrapper)
 
 def debug_function(logger: DebugLogger, include_args: bool=False,
-    include_result: bool=False) ->Any:
     """Decorator to debug function calls"""
+    include_result: bool=False) ->Any:
 
     def decorator(func) ->Any:
 
+        """Decorator"""
         @wraps(func)
         def wrapper(*args, **kwargs) ->Dict[str, Any]:
+            """Wrapper"""
             func_name = f'{func.__module__}.{func.__name__}'
             debug_data = {'function': func_name, 'event_type': 'function_call'}
             if include_args:
@@ -220,15 +214,15 @@ def debug_function(logger: DebugLogger, include_args: bool=False,
     return decorator
 
 def debug_async_function(logger: DebugLogger, include_args: bool=False,
-    include_result: bool=False) ->Any:
     """Decorator to debug async function calls"""
+    include_result: bool=False) ->Any:
 
     def decorator(func) ->Any:
 
+        """Decorator"""
         @wraps(func)
         async def wrapper(*args, **kwargs) ->Dict[str, Any]:
-            func_name = f'{func.__module__}.{func.__name__}'
-            debug_data = {'function': func_name, 'event_type':
+            func_name = f'{func.__module__}.{func.__name__}' debug_data = {'function': func_name, 'event_type':
                 'async_function_call'}
             if include_args:
                 debug_data['args'] = str(args)

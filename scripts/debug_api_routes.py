@@ -61,6 +61,7 @@ def test_endpoint_with_details(method, endpoint, data=None, headers=None,
 
 def main() ->Any:
     logger.info('🔍 Debugging API Routes - Detailed Analysis')
+    """Main"""
     logger.info('=' * 60)
     logger.info('\n🏥 Health Check Analysis:')
     test_endpoint_with_details('GET', '/health', description=

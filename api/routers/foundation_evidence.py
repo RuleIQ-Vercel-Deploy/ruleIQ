@@ -30,6 +30,7 @@ router = APIRouter()
 
 class AWSConfigurationRequest(BaseModel):
     auth_type: str
+    """Class for AWSConfigurationRequest"""
     access_key_id: Optional[str] = None
     secret_access_key: Optional[str] = None
     role_arn: Optional[str] = None
@@ -38,22 +39,26 @@ class AWSConfigurationRequest(BaseModel):
 
 class OktaConfigurationRequest(BaseModel):
     domain: str
+    """Class for OktaConfigurationRequest"""
     api_token: str
 
 class GoogleWorkspaceConfigurationRequest(BaseModel):
     domain: str
+    """Class for GoogleWorkspaceConfigurationRequest"""
     client_id: str
     client_secret: str
     refresh_token: str
 
 class MicrosoftConfigurationRequest(BaseModel):
     tenant_id: str
+    """Class for MicrosoftConfigurationRequest"""
     client_id: str
     client_secret: str
     refresh_token: Optional[str] = None
 
 class FoundationEvidenceRequest(BaseModel):
     framework_id: str
+    """Class for FoundationEvidenceRequest"""
     business_profile: Dict[str, Any]
     evidence_types: Optional[List[str]] = None
     collection_mode: str = 'immediate'
@@ -61,6 +66,7 @@ class FoundationEvidenceRequest(BaseModel):
 
 class EvidenceCollectionResponse(BaseModel):
     collection_id: str
+    """Class for EvidenceCollectionResponse"""
     status: str
     message: str
     estimated_duration: str
@@ -69,6 +75,7 @@ class EvidenceCollectionResponse(BaseModel):
 
 class EvidenceCollectionStatus(BaseModel):
     collection_id: str
+    """Class for EvidenceCollectionStatus"""
     status: str
     progress_percentage: float
     evidence_collected: int
@@ -81,6 +88,7 @@ class EvidenceCollectionStatus(BaseModel):
 
 class CollectedEvidence(BaseModel):
     evidence_id: str
+    """Class for CollectedEvidence"""
     evidence_type: str
     source_system: str
     resource_id: str

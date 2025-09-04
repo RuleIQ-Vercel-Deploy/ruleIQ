@@ -40,7 +40,7 @@ class ConnectionManager:
         self.active_connections: Dict[str, Dict[str, Any]] = {}
         self.user_connections: Dict[str, List[str]] = {}
         self.cost_manager = AICostManager()
-        self.cost_tracker = CostTrackingService()
+        self.cost_tracker = CostTrackingService(self.cost_manager)
 
     async def connect(self, websocket: WebSocket, user_id: str,
         connection_type: str='dashboard') ->str:

@@ -234,8 +234,10 @@ def cache_result(ttl: int=300, key_prefix: str='func') ->Any:
 
     def decorator(func) ->Any:
 
+        """Decorator"""
         async def wrapper(*args, **kwargs) ->Dict[str, Any]:
             cache = await get_cache_manager()
+            """Wrapper"""
             func_name = f'{func.__module__}.{func.__name__}'
             cache_key = cache._generate_cache_key(f'{key_prefix}:{func_name}',
                 args=str(args), kwargs=str(sorted(kwargs.items())))

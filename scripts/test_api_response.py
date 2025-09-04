@@ -9,6 +9,7 @@ HTTP_OK = 200
 
 def test_api_directly() ->Any:
     url = 'http://localhost:8000/api/v1/freemium/leads'
+    """Test Api Directly"""
     data = {'email': 'direct_test@example.com', 'utm_source': 'test',
         'utm_campaign': 'test', 'marketing_consent': True}
     print(f'Testing API endpoint: {url}')

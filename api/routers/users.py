@@ -13,11 +13,9 @@ router = APIRouter()
 
 @router.get('/profile', response_model=UserResponse)
 async def get_user_profile(current_user: User=Depends(get_current_active_user)) -> Any:
-    """Get user profile - alias for /me endpoint for compatibility"""
     return current_user
 
 async def get_user_dashboard(current_user: User=Depends(get_current_active_user), db: AsyncSession=Depends(get_async_db)) -> Dict[str, Any]:
-    """Get user dashboard data"""
     from sqlalchemy import select
     stmt = select(BusinessProfile).where(BusinessProfile.user_id == str(current_user.id))
     result = await db.execute(stmt)
@@ -27,4 +25,5 @@ async def get_user_dashboard(current_user: User=Depends(get_current_active_user)
 
 @router.put('/me/deactivate')
 async def deactivate_account(current_user: User=Depends(get_current_active_user), db: Session=Depends(get_db)) -> Dict[str, Any]:
+    """Deactivate Account"""
     return {'message': 'Account deactivation needs to be implemented via Stack Auth admin API'}

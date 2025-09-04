@@ -11,6 +11,7 @@ from database.db_setup import Base
 
 class ReadinessAssessment(Base):
     __tablename__ = "readiness_assessments"
+    """Class for ReadinessAssessment"""
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)

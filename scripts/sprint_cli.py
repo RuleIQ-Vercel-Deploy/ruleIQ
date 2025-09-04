@@ -20,9 +20,7 @@ class SprintCLI:
     def __init__(self) ->None:
         self.manager = SprintManager()
 
-    def init_sprint(self, args) ->Any:
-        """Initialize a new sprint"""
-        logger.info('🚀 Initializing new sprint for ruleIQ project...')
+    def init_sprint(self, args) ->Any: logger.info('🚀 Initializing new sprint for ruleIQ project...')
         if args.interactive:
             sprint_data = self._get_sprint_data_interactive()
         else:
@@ -37,9 +35,7 @@ class SprintCLI:
         logger.info('   👥 Team: %s' % ', '.join(sprint.team_members))
         return sprint.id
 
-    def generate_sprint_stories(self, args) ->Any:
-        """Generate user stories for the sprint"""
-        logger.info('📝 Generating user stories based on ruleIQ roadmap...')
+    def generate_sprint_stories(self, args) ->Any: logger.info('📝 Generating user stories based on ruleIQ roadmap...')
         sprint_id = args.sprint_id or 'current_sprint'
         stories = self.manager.generate_sprint_stories(sprint_id, {})
         logger.info('✅ Generated %s user stories:' % len(stories))
@@ -58,9 +54,7 @@ class SprintCLI:
             logger.info()
         return stories
 
-    def analyze_stories(self, args) ->None:
-        """Analyze user stories for completeness and risks"""
-        logger.info('🔍 Analyzing sprint stories...')
+    def analyze_stories(self, args) ->None: logger.info('🔍 Analyzing sprint stories...')
         sprint_id = args.sprint_id or 'current_sprint'
         stories = self.manager.generate_sprint_stories(sprint_id, {})
         analysis = self.manager.analyze_stories(stories)
@@ -103,9 +97,7 @@ class SprintCLI:
             for dep in analysis['dependencies']:
                 logger.info('   • %s' % dep)
 
-    def decompose_stories(self, args) ->None:
-        """Break down stories into implementation tasks"""
-        logger.info('🔧 Decomposing stories into implementation tasks...')
+    def decompose_stories(self, args) ->None: logger.info('🔧 Decomposing stories into implementation tasks...')
         sprint_id = args.sprint_id or 'current_sprint'
         story_id = args.story_id
         stories = self.manager.generate_sprint_stories(sprint_id, {})
@@ -145,9 +137,7 @@ class SprintCLI:
             logger.info('   📊 Total task hours: %sh' % total_task_hours)
             logger.info()
 
-    def track_sprint_implementation(self, args) ->None:
-        """Track sprint implementation progress"""
-        logger.info('📈 Tracking sprint implementation progress...')
+    def track_sprint_implementation(self, args) ->None: logger.info('📈 Tracking sprint implementation progress...')
         sprint_id = args.sprint_id or 'current_sprint'
         progress = self._create_mock_progress_data(sprint_id)
         logger.info('📊 Sprint Progress Dashboard')
@@ -195,9 +185,7 @@ class SprintCLI:
             for rec in progress['recommendations']:
                 logger.info('   • %s' % rec)
 
-    def show_current_status(self, args) ->None:
-        """Show current project status and next steps"""
-        logger.info('📊 ruleIQ Project Status Dashboard')
+    def show_current_status(self, args) ->None: logger.info('📊 ruleIQ Project Status Dashboard')
         logger.info('=' * 50)
         current_status = {'project_completion': '98%', 'sprint_1_status':
             '67% complete (ahead of schedule)', 'completed_features': [
@@ -228,9 +216,7 @@ class SprintCLI:
             logger.info('   %s: %s' % (metric.replace('_', ' ').title(), value),
                 )
 
-    def _get_sprint_data_interactive(self) ->Dict[str, Any]:
-        """Get sprint data from user input"""
-        logger.info('\n📝 Enter sprint details:')
+    def _get_sprint_data_interactive(self) ->Dict[str, Any]: logger.info('\n📝 Enter sprint details:')
         name = input('Sprint name (default: Sprint 2 - Evidence & Design): '
             ) or 'Sprint 2 - Evidence & Design'
         goal = input(
@@ -256,18 +242,14 @@ class SprintCLI:
             'end_date': end_date, 'capacity_hours': float(capacity),
             'velocity_target': int(velocity), 'team_members': team_members}
 
-    def _get_default_sprint_data(self) ->Dict[str, Any]:
-        """Get default sprint data for ruleIQ"""
-        return {'id': 'sprint_2_evidence_design', 'name':
+    def _get_default_sprint_data(self) ->Dict[str, Any]: return {'id': 'sprint_2_evidence_design', 'name':
             'Sprint 2: Evidence Classification & Design System', 'goal':
             'Complete RBAC system, implement evidence auto-classification, and finalize teal design system migration'
             , 'start_date': '2025-08-01', 'end_date': '2025-08-15',
             'capacity_hours': 120.0, 'velocity_target': 40, 'team_members':
             ['Lead Developer', 'Frontend Developer', 'AI Engineer']}
 
-    def _create_mock_progress_data(self, sprint_id: str) ->Dict[str, Any]:
-        """Create mock progress data for demonstration"""
-        return {'sprint_id': sprint_id, 'sprint_name':
+    def _create_mock_progress_data(self, sprint_id: str) ->Dict[str, Any]: return {'sprint_id': sprint_id, 'sprint_name':
             'Sprint 2: Evidence Classification & Design System',
             'start_date': '2025-08-01', 'end_date': '2025-08-15',
             'days_remaining': 7, 'total_stories': 5, 'completed_stories': 1,
@@ -284,9 +266,7 @@ class SprintCLI:
             'Consider early testing of completed RBAC features',
             'Monitor design system migration progress closely']}
 
-def main() ->None:
-    """Main CLI entry point"""
-    parser = argparse.ArgumentParser(description=
+def main() ->None: parser = argparse.ArgumentParser(description=
         'ruleIQ Sprint Management System', formatter_class=argparse.
         RawDescriptionHelpFormatter, epilog=
         """

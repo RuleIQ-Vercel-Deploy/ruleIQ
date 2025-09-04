@@ -12,8 +12,7 @@ from typing import List, Dict, Any
 import subprocess
 
 class SecurityFixer:
-    def __init__(self):
-        self.project_root = Path(__file__).parent.parent
+    def __init__(self): self.project_root = Path(__file__).parent.parent
         self.fixes_applied = []
         self.files_to_fix = [
             "services/ai/evaluation/tools/ingestion_fixed.py",
@@ -23,9 +22,7 @@ class SecurityFixer:
             "scripts/add_supersedes_relationships.py"
         ]
         
-    def fix_hardcoded_passwords(self) -> List[Dict[str, Any]]:
-        """Fix all remaining hardcoded Neo4j passwords"""
-        fixes = []
+    def fix_hardcoded_passwords(self) -> List[Dict[str, Any]]: fixes = []
         
         for file_path in self.files_to_fix:
             full_path = self.project_root / file_path
@@ -65,9 +62,7 @@ class SecurityFixer:
                 
         return fixes
     
-    def create_doppler_config(self):
-        """Create Doppler configuration template"""
-        doppler_config = {
+    def create_doppler_config(self): doppler_config = {
             "project": "ruleiq",
             "config": "dev",
             "secrets": {
@@ -89,9 +84,7 @@ class SecurityFixer:
         print(f"✅ Created Doppler configuration template: {config_path}")
         return config_path
     
-    def add_security_middleware(self):
-        """Create security middleware for the application"""
-        middleware_code = '''"""
+    def add_security_middleware(self): middleware_code = '''"""
 Security middleware for ruleIQ platform
 Implements OWASP security best practices
 """
@@ -104,9 +97,7 @@ import hashlib
 import secrets
 from typing import Optional
 
-class SecurityMiddleware(BaseHTTPMiddleware):
-    """Comprehensive security middleware"""
-    
+class SecurityMiddleware(BaseHTTPMiddleware): 
     def __init__(self, app, **kwargs):
         super().__init__(app)
         self.sql_injection_patterns = [
@@ -135,9 +126,7 @@ class SecurityMiddleware(BaseHTTPMiddleware):
         
         return response
     
-    def validate_input(self, input_str: str) -> bool:
-        """Validate input against SQL injection and XSS patterns"""
-        if not input_str:
+    def validate_input(self, input_str: str) -> bool: if not input_str:
             return True
             
         input_lower = input_str.lower()
@@ -154,9 +143,7 @@ class SecurityMiddleware(BaseHTTPMiddleware):
         
         return True
 
-class AuthorizationMiddleware(BaseHTTPMiddleware):
-    """Authorization middleware for resource access control"""
-    
+class AuthorizationMiddleware(BaseHTTPMiddleware): 
     async def dispatch(self, request: Request, call_next):
         # Skip auth for public endpoints
         public_paths = ["/health", "/docs", "/openapi.json", "/auth/login"]
@@ -176,13 +163,9 @@ class AuthorizationMiddleware(BaseHTTPMiddleware):
         # For now, pass through to next middleware
         return await call_next(request)
 
-def generate_secure_secret(length: int = 32) -> str:
-    """Generate cryptographically secure secret"""
-    return secrets.token_urlsafe(length)
+def generate_secure_secret(length: int = 32) -> str: return secrets.token_urlsafe(length)
 
-def hash_password(password: str, salt: Optional[str] = None) -> tuple[str, str]:
-    """Hash password with salt"""
-    if not salt:
+def hash_password(password: str, salt: Optional[str] = None) -> tuple[str, str]: if not salt:
         salt = secrets.token_hex(32)
     
     password_hash = hashlib.pbkdf2_hmac(
@@ -202,9 +185,7 @@ def hash_password(password: str, salt: Optional[str] = None) -> tuple[str, str]:
         print(f"✅ Created enhanced security middleware: {middleware_path}")
         return middleware_path
     
-    def run_security_scan(self):
-        """Run bandit security scan"""
-        try:
+    def run_security_scan(self): try:
             # Install bandit if not present
             subprocess.run(["pip", "install", "bandit"], capture_output=True)
             
@@ -222,9 +203,7 @@ def hash_password(password: str, salt: Optional[str] = None) -> tuple[str, str]:
             print(f"⚠️  Could not run security scan: {e}")
             return False
     
-    def generate_report(self, fixes: List[Dict[str, Any]]):
-        """Generate security fix report"""
-        report = {
+    def generate_report(self, fixes: List[Dict[str, Any]]): report = {
             "timestamp": "2025-09-02",
             "vulnerabilities_fixed": {
                 "CRITICAL": {
@@ -269,6 +248,7 @@ def hash_password(password: str, salt: Optional[str] = None) -> tuple[str, str]:
         return report
 
 def main():
+    """Main"""
     print("🔒 Starting Security Vulnerability Fix Process\n")
     
     fixer = SecurityFixer()

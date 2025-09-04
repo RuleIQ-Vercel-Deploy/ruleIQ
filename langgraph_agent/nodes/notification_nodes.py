@@ -51,7 +51,6 @@ class NotificationChannel:
     IN_APP = 'in_app'
 
 class DeliveryStatus(BaseModel):
-    """Delivery status for a notification"""
     channel: str
     status: str
     timestamp: datetime
@@ -59,7 +58,6 @@ class DeliveryStatus(BaseModel):
     metadata: Dict[str, Any] = Field(default_factory=dict)
 
 class NotificationMetrics(BaseModel):
-    """Metrics for notification delivery"""
     total_recipients: int = 0
     delivered: int = 0
     failed: int = 0
@@ -69,7 +67,6 @@ class NotificationMetrics(BaseModel):
     bounce_rate: float = 0.0
 
 class NotificationState(BaseModel):
-    """Enhanced notification state"""
     notification_id: str
     status: str
     priority: int = NotificationPriority.MEDIUM
@@ -101,13 +98,11 @@ class EnhancedNotificationNode:
         self.return_value = None
 
     def _should_retry(self, state: Dict[str, Any]) -> bool:
-        """Check if notification should be retried"""
         retry_count = state.get('retry_count', 0)
         max_retries = state.get('max_retries', 3)
         return retry_count < max_retries
 
     def _add_to_dead_letter_queue(self, state: Dict[str, Any]) -> None:
-        """Add failed notification to dead letter queue"""
         if not hasattr(self, 'dead_letter_queue'):
             self.dead_letter_queue = []
         dlq_entry = {'notification_id': state.get('task_id'), 'timestamp': datetime.now().isoformat(), 'final_status': state.get('task_status'), 'retry_count': state.get('retry_count'), 'errors': state.get('errors', []), 'original_message': state.get('task_params')}
@@ -115,7 +110,6 @@ class EnhancedNotificationNode:
         logger.warning(f"Added notification {state.get('task_id')} to DLQ")
 
     def _check_circuit_breaker(self, channel: str) -> bool:
-        """Check if circuit breaker is open for a channel"""
         if channel not in self.circuit_breaker_failures:
             self.circuit_breaker_failures[channel] = 0
             return False
@@ -127,7 +121,6 @@ class EnhancedNotificationNode:
         return False
 
     def _trip_circuit_breaker(self, channel: str) -> None:
-        """Trip the circuit breaker for a channel"""
         if channel not in self.circuit_breaker_failures:
             self.circuit_breaker_failures[channel] = 0
         self.circuit_breaker_failures[channel] += 1
@@ -136,14 +129,12 @@ class EnhancedNotificationNode:
             logger.warning(f'Circuit breaker tripped for {channel}')
 
     def _reset_circuit_breaker(self, channel: str) -> None:
-        """Reset circuit breaker for a channel"""
         if channel in self.circuit_breaker_failures:
             self.circuit_breaker_failures[channel] = 0
             if channel in self.circuit_breaker_last_failure:
                 del self.circuit_breaker_last_failure[channel]
 
     def _check_rate_limit(self, channel: str) -> bool:
-        """Check if rate limit is exceeded for a channel"""
         if not hasattr(self, 'rate_limits'):
             self.rate_limits = {'email': 100, 'sms': 50, 'slack': 60, 'webhook': 200, 'push': 150}
         if not hasattr(self, 'rate_limit_counters'):
@@ -157,30 +148,25 @@ class EnhancedNotificationNode:
         return len(self.rate_limit_counters[channel]) >= limit
 
     def _record_rate_limit_usage(self, channel: str) -> None:
-        """Record usage for rate limiting"""
         if channel not in self.rate_limit_counters:
             self.rate_limit_counters[channel] = []
         self.rate_limit_counters[channel].append(time.time())
 
     async def _apply_jitter(self, base_delay: float) -> float:
-        """Apply jitter to retry delay"""
         jitter = random.uniform(0, base_delay * 0.1)
         return base_delay + jitter
 
     def _update_state_status(self, state: Dict[str, Any], new_status: str) -> None:
-        """Update state status with tracking"""
         state['task_status'] = new_status
         if 'status_history' not in state:
             state['status_history'] = []
         state['status_history'].append({'status': new_status, 'timestamp': datetime.now().isoformat()})
 
     async def _process_alert(self, alert: Dict[str, Any]) -> Dict[str, Any]:
-        """Process a single alert"""
         await asyncio.sleep(0.01)
         return {'recipient': alert.get('recipient'), 'status': 'sent', 'timestamp': datetime.now().isoformat()}
 
     def _categorize_error(self, error: Exception) -> str:
-        """Categorize error for proper handling"""
         error_str = str(error).lower()
         if 'timeout' in error_str:
             return 'timeout'
@@ -196,7 +182,6 @@ class EnhancedNotificationNode:
             return 'unknown'
 
     async def handle_task_failure(self, state: Dict[str, Any], error: Optional[Exception]=None) -> Dict[str, Any]:
-        """Handle task failure and determine if retry is needed"""
         state['task_status'] = 'failed'
         if error:
             error_type = self._categorize_error(error)
@@ -212,20 +197,17 @@ class EnhancedNotificationNode:
         return state
 
     def _update_state_status(self, state: Dict[str, Any], status: str) -> None:
-        """Update the task status with state transition logging"""
         old_status = state.get('task_status', 'unknown')
         state['task_status'] = status
         logger.info(f'State transition: {old_status} -> {status}')
 
     @traceable(name='save_checkpoint')
     async def save_checkpoint(self, state: Dict[str, Any], checkpoint_id: str) -> None:
-        """Save state checkpoint for recovery"""
         if self.checkpoint_saver:
             await self.checkpoint_saver.save({'checkpoint_id': checkpoint_id, 'state': state, 'timestamp': datetime.now(timezone.utc).isoformat()})
 
     @traceable(name='restore_checkpoint')
     async def restore_checkpoint(self, checkpoint_id: str) -> Optional[Dict[str, Any]]:
-        """Restore state from checkpoint"""
         if self.checkpoint_saver:
             checkpoint = await self.checkpoint_saver.get(checkpoint_id)
             if checkpoint:
@@ -233,7 +215,6 @@ class EnhancedNotificationNode:
         return None
 
     async def recover_from_crash(self, checkpoint_id: str) -> Dict[str, Any]:
-        """Recover from system crash using checkpoint"""
         state = await self.restore_checkpoint(checkpoint_id)
         if state:
             state['task_status'] = 'pending'
@@ -242,11 +223,9 @@ class EnhancedNotificationNode:
         return state
 
     def _should_retry(self, state: Dict[str, Any]) -> bool:
-        """Determine if task should be retried"""
         return state.get('retry_count', 0) < state.get('max_retries', 3) and state.get('task_status') == 'failed' and self._is_transient_error(state.get('errors', []))
 
     def _is_transient_error(self, errors: List[Dict[str, Any]]) -> bool:
-        """Check if error is transient and retryable"""
         if not errors:
             return False
         last_error = errors[-1]
@@ -254,17 +233,14 @@ class EnhancedNotificationNode:
         return any((err in str(last_error.get('error', '')) for err in transient_errors))
 
     def _calculate_retry_delay(self, retry_count: int) -> float:
-        """Calculate exponential backoff delay"""
         return min(300, 2 ** retry_count)
 
     def _calculate_retry_delay_with_jitter(self, retry_count: int) -> float:
-        """Calculate delay with jitter to avoid thundering herd"""
         base_delay = self._calculate_retry_delay(retry_count)
         jitter = random.uniform(0, base_delay * 0.1)
         return base_delay + jitter
 
     def _circuit_breaker_status(self, service: str) -> str:
-        """Get circuit breaker status for a service"""
         failures = self.circuit_breaker_failures.get(service, {})
         failure_count = failures.get('count', 0)
         last_failure = failures.get('last_failure')
@@ -279,19 +255,16 @@ class EnhancedNotificationNode:
         return CircuitBreakerStatus.CLOSED
 
     def _record_circuit_breaker_failure(self, service: str) -> None:
-        """Record a failure for circuit breaker"""
         if service not in self.circuit_breaker_failures:
             self.circuit_breaker_failures[service] = {'count': 0}
         self.circuit_breaker_failures[service]['count'] += 1
         self.circuit_breaker_failures[service]['last_failure'] = datetime.now(timezone.utc)
 
     async def _send_to_dlq(self, state: Dict[str, Any]) -> None:
-        """Send failed message to dead letter queue"""
         dlq_message = {'original_state': state, 'failure_time': datetime.now(timezone.utc).isoformat(), 'failure_reason': state.get('errors', [])[-1] if state.get('errors') else 'Unknown'}
         logger.error(f'Sending to DLQ: {dlq_message}')
 
     async def _send_email_notification(self, recipient_email: str, subject: str, body: str, html_body: Optional[str]=None) -> DeliveryStatus:
-        """Send email notification with proper mocking support"""
         try:
             msg = MIMEMultipart('alternative')
             msg['From'] = 'noreply@ruleiq.com'
@@ -307,7 +280,6 @@ class EnhancedNotificationNode:
             return DeliveryStatus(channel=NotificationChannel.EMAIL, status='failed', timestamp=datetime.now(timezone.utc), error=str(e))
 
     async def _send_sms_notification(self, phone_number: str, message: str) -> DeliveryStatus:
-        """Send SMS notification"""
         try:
             logger.info(f'SMS sent to {phone_number}: {message[:50]}...')
             return DeliveryStatus(channel=NotificationChannel.SMS, status='sent', timestamp=datetime.now(timezone.utc))
@@ -315,7 +287,6 @@ class EnhancedNotificationNode:
             return DeliveryStatus(channel=NotificationChannel.SMS, status='failed', timestamp=datetime.now(timezone.utc), error=str(e))
 
     async def _send_slack_notification(self, channel: str, message: str, attachments: Optional[List[Dict]]=None) -> DeliveryStatus:
-        """Send Slack notification"""
         try:
             logger.info(f'Slack message sent to {channel}')
             return DeliveryStatus(channel=NotificationChannel.SLACK, status='delivered', timestamp=datetime.now(timezone.utc))
@@ -323,7 +294,6 @@ class EnhancedNotificationNode:
             return DeliveryStatus(channel=NotificationChannel.SLACK, status='failed', timestamp=datetime.now(timezone.utc), error=str(e))
 
     async def send_webhook_notification(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Send webhook notification"""
         webhook_url = state['task_params'].get('webhook_url')
         payload = state['task_params'].get('payload', {})
         headers = state['task_params'].get('headers', {})
@@ -334,7 +304,6 @@ class EnhancedNotificationNode:
         return state
 
     async def send_push_notification(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Send push notification to mobile/web"""
         device_tokens = state['task_params'].get('device_tokens', [])
         notification = state['task_params'].get('notification', {})
         state['task_result'] = {'delivered': len(device_tokens), 'failed': 0, 'tokens_processed': device_tokens}
@@ -342,7 +311,6 @@ class EnhancedNotificationNode:
         return state
 
     async def render_and_send_email(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Render email template and send"""
         template_id = state['task_params'].get('template_id')
         template_vars = state['task_params'].get('template_vars', {})
         rendered_content = f'Template {template_id} with vars: {template_vars}'
@@ -351,7 +319,6 @@ class EnhancedNotificationNode:
         return state
 
     async def process_batch(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Process notifications in batch"""
         alerts = state['task_params'].get('alerts', [])
         processed = 0
         failed = 0
@@ -371,7 +338,6 @@ class EnhancedNotificationNode:
         return state
 
     async def process_batch_with_rate_limit(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Process batch with rate limiting"""
         messages = state['task_params'].get('messages', [])
         rate_limit = state['task_params'].get('rate_limit', 10)
         start_time = asyncio.get_event_loop().time()
@@ -395,7 +361,6 @@ class EnhancedNotificationNode:
         return state
 
     async def process_batch_chunked(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Process large batches in chunks"""
         user_ids = state['task_params'].get('user_ids', [])
         chunk_size = state['task_params'].get('chunk_size', 50)
         chunks_processed = 0
@@ -408,18 +373,17 @@ class EnhancedNotificationNode:
         return state
 
     async def _process_chunk(self, chunk: List[str]) -> Dict[str, Any]:
-        """Process a single chunk of items"""
         await asyncio.sleep(0.01)
         return {'success': True}
 
     async def process_batch_parallel(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Process batch items in parallel"""
         alerts = state['task_params'].get('alerts', [])
         parallel_workers = state['task_params'].get('parallel_workers', 3)
         semaphore = asyncio.Semaphore(parallel_workers)
 
         async def process_with_semaphore(alert) -> Any:
             async with semaphore:
+                """Process With Semaphore"""
                 return await self._process_alert(alert)
         results = await asyncio.gather(*[process_with_semaphore(alert) for alert in alerts])
         state['task_result'] = results
@@ -428,12 +392,10 @@ class EnhancedNotificationNode:
         return state
 
     async def _process_alert(self, alert: Dict[str, Any]) -> Dict[str, Any]:
-        """Process a single alert"""
         await asyncio.sleep(0.01)
         return {'success': True}
 
     async def process_priority_queue(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Process notifications by priority"""
         notifications = state['task_params'].get('notifications', [])
         priority_map = {'critical': 4, 'high': 3, 'medium': 2, 'low': 1}
         sorted_notifications = sorted(notifications, key=lambda x: priority_map.get(x.get('priority', 'low'), 1), reverse=True)
@@ -442,7 +404,6 @@ class EnhancedNotificationNode:
         return state
 
     async def send_throttled_notifications(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Send notifications with per-recipient throttling"""
         recipient = state['task_params'].get('recipient')
         notifications = state['task_params'].get('notifications', [])
         throttle_limit = state['task_params'].get('throttle_limit', 3)
@@ -457,7 +418,6 @@ class EnhancedNotificationNode:
         return state
 
     async def process_with_ai(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Process with AI-generated content"""
         max_tokens = state['task_params'].get('max_tokens', 500)
         state['task_result'] = {'generated_content': 'AI generated summary', 'token_usage': {'total': 350, 'prompt': 100, 'completion': 250}}
         state['execution_metrics'] = {'token_usage': {'total': 350}, 'cost_usd': 0.007}
@@ -465,7 +425,6 @@ class EnhancedNotificationNode:
         return state
 
     async def process_with_budget_check(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Check budget before processing"""
         daily_budget = state['task_params'].get('daily_budget_usd', 10.0)
         current_spend = state['task_params'].get('current_spend_usd', 0.0)
         estimated_cost = 0.1
@@ -477,7 +436,6 @@ class EnhancedNotificationNode:
         return state
 
     async def send_with_pii_redaction(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Send notification with PII redaction"""
         import re
         message = state['task_params'].get('message', '')
         message = re.sub('\\b\\d{3}-\\d{2}-\\d{4}\\b', '[REDACTED]', message)
@@ -488,7 +446,6 @@ class EnhancedNotificationNode:
 
     @traceable(name='send_compliance_alert')
     async def send_compliance_alert(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Send compliance alert with full feature support"""
         try:
             self._update_state_status(state, 'running')
             alert_type = state.get('task_params', {}).get('alert_type', 'compliance')
@@ -524,7 +481,6 @@ class EnhancedNotificationNode:
             return state
 
     async def broadcast_notification(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Broadcast notification to multiple channels"""
         channels = state.get('task_params', {}).get('channels', ['email'])
         results = []
         for channel in channels:
@@ -542,7 +498,6 @@ class EnhancedNotificationNode:
         return state
 
     async def _send_to_channel(self, channel: str, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Send notification to specific channel"""
         params = state.get('task_params', {})
         if channel == 'email':
             return await self._send_email_notification(recipient_email=params.get('recipient'), subject=params.get('subject', 'Notification'), body=params.get('message', ''))
@@ -557,7 +512,6 @@ class EnhancedNotificationNode:
 
     @traceable(name='send_weekly_summary')
     async def send_weekly_summary(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Send weekly compliance summary"""
         try:
             self._update_state_status(state, 'running')
             logger.info('Generating and sending weekly summary')
@@ -573,7 +527,6 @@ class EnhancedNotificationNode:
 
     @traceable(name='broadcast_notification')
     async def broadcast_notification(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Broadcast notification to multiple channels"""
         try:
             self._update_state_status(state, 'running')
             message = state.get('task_params', {}).get('message', '')
@@ -603,7 +556,6 @@ class EnhancedNotificationNode:
 
     @traceable(name='process_notification')
     async def process(self, state: Dict[str, Any]) -> Dict[str, Any]:
-        """Main entry point for notification processing"""
         task_type = state.get('task_type', '')
         task_status = state.get('task_status', 'pending')
         if task_status == 'failed':
@@ -654,8 +606,7 @@ NotificationTaskNode = EnhancedNotificationNode
 
 @track_node_cost(node_name='notification', track_tokens=False)
 async def notification_node(state: Dict[str, Any]) -> Dict[str, Any]:
-    """
-    Main notification node wrapper for LangGraph integration.
+    """Main notification node wrapper for LangGraph integration.
 
     This function wraps the EnhancedNotificationNode for use in the
     LangGraph workflow.

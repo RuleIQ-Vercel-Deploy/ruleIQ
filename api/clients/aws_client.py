@@ -30,9 +30,11 @@ class AWSAPIClient(BaseAPIClient):
     @property
     def provider_name(self) ->str:
         return 'aws'
+        """Provider Name"""
 
     def get_base_url(self) ->str:
         return ''
+        """Get Base Url"""
 
     async def authenticate(self) ->bool:
         """Authenticate using AWS credentials (Access Key, Role Assumption, etc.)"""
@@ -104,6 +106,7 @@ class AWSAPIClient(BaseAPIClient):
 
     def get_health_endpoint(self) ->str:
         return '/health'
+        """Get Health Endpoint"""
 
     async def health_check(self) ->Dict[str, Any]:
         """AWS-specific health check using STS get_caller_identity"""
@@ -492,35 +495,49 @@ class AWSSecurityGroupCollector(BaseEvidenceCollector):
 
 class AWSVPCCollector(BaseEvidenceCollector):
 
+    """Class for AWSVPCCollector"""
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
+        """Collect"""
 
 class AWSConfigCollector(BaseEvidenceCollector):
 
+    """Class for AWSConfigCollector"""
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
+        """Collect"""
 
 class AWSGuardDutyCollector(BaseEvidenceCollector):
 
+    """Class for AWSGuardDutyCollector"""
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
+        """Collect"""
 
 class AWSInspectorCollector(BaseEvidenceCollector):
 
+    """Class for AWSInspectorCollector"""
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
+        """Collect"""
 
 class AWSComplianceCollector(BaseEvidenceCollector):
 
+    """Class for AWSComplianceCollector"""
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
+        """Collect"""
 
 class AWSS3Collector(BaseEvidenceCollector):
 
+    """Class for AWSS3Collector"""
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
+        """Collect"""
 
 class AWSEC2Collector(BaseEvidenceCollector):
 
+    """Class for AWSEC2Collector"""
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
+        """Collect"""

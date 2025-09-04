@@ -17,14 +17,14 @@ from services.ai.cost_management import (
     CostTrackingService,
     BudgetAlertService,
     CostOptimizationService,
-    AIUsageMetrics,
-    CostMetrics,
-    BudgetAlert,
-    CostOptimization,
-    ModelCostConfig,
-    UsageType,
-    AlertType,
-    OptimizationStrategy,
+    CostEntry as AIUsageMetrics,
+    CostEntry as CostMetrics,
+    BudgetConfig as BudgetAlert,
+    CostEntry as CostOptimization,
+    BudgetConfig as ModelCostConfig,
+    AIService as UsageType,
+    AIService as AlertType,
+    AIService as OptimizationStrategy,
 )
 
 class TestAIUsageMetrics:

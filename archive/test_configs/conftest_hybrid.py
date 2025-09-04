@@ -59,9 +59,7 @@ class HybridDatabaseManager:
         self._async_engine = None
         self._initialized = False
 
-    def _initialize_engines(self) -> None:
-        """Initialize both sync and async engines."""
-        if self._initialized:
+    def _initialize_engines(self) -> None: if self._initialized:
             return
 
         # Get database URLs
@@ -105,31 +103,21 @@ class HybridDatabaseManager:
 
         self._initialized = True
 
-    def get_sync_engine(self):
-        """Get sync engine for TestClient tests."""
-        self._initialize_engines()
+    def get_sync_engine(self): self._initialize_engines()
         return self._sync_engine
 
-    def get_async_engine(self):
-        """Get async engine for pure async tests."""
-        self._initialize_engines()
+    def get_async_engine(self): self._initialize_engines()
         return self._async_engine
 
-    def create_sync_session(self) -> sessionmaker:
-        """Create sync session factory."""
-        engine = self.get_sync_engine()
+    def create_sync_session(self) -> sessionmaker: engine = self.get_sync_engine()
         return sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-    async def create_tables(self) -> None:
-        """Create database tables for tests."""
-        # Create tables using async engine
+    async def create_tables(self) -> None: # Create tables using async engine
         async_engine = self.get_async_engine()
         async with async_engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
 
-    async def drop_tables(self) -> None:
-        """Drop database tables after tests."""
-        if not self._initialized:
+    async def drop_tables(self) -> None: if not self._initialized:
             return
 
         try:
@@ -139,9 +127,7 @@ class HybridDatabaseManager:
         except (ValueError, TypeError) as e:
             print(f"Warning: Table cleanup failed: {e}")
 
-    async def dispose(self) -> None:
-        """Dispose of database engines."""
-        if self._sync_engine:
+    async def dispose(self) -> None: if self._sync_engine:
             self._sync_engine.dispose()
         if self._async_engine:
             await self._async_engine.dispose()
@@ -151,17 +137,13 @@ class HybridDatabaseManager:
 _hybrid_db_manager = HybridDatabaseManager()
 
 @pytest.fixture(scope="session")
-def event_loop():
-    """Create event loop for entire test session."""
-    loop = asyncio.new_event_loop()
+def event_loop(): loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     yield loop
     loop.close()
 
 @pytest.fixture(scope="session", autouse=True)
-async def setup_test_database():
-    """Set up database for test session with proper cleanup."""
-    # Create tables
+async def setup_test_database(): # Create tables
     await _hybrid_db_manager.create_tables()
 
     yield
@@ -172,9 +154,7 @@ async def setup_test_database():
 
 # SYNC FIXTURES (for TestClient tests)
 @pytest.fixture
-def sync_db_session():
-    """Sync database session for TestClient tests."""
-    SessionLocal = _hybrid_db_manager.create_sync_session()
+def sync_db_session(): SessionLocal = _hybrid_db_manager.create_sync_session()
     session = SessionLocal()
 
     try:
@@ -186,9 +166,7 @@ def sync_db_session():
         session.close()
 
 @pytest.fixture
-def sync_db_session_isolated():
-    """Isolated sync database session for TestClient tests (new session each time)."""
-    SessionLocal = _hybrid_db_manager.create_sync_session()
+def sync_db_session_isolated(): SessionLocal = _hybrid_db_manager.create_sync_session()
     session = SessionLocal()
 
     try:
@@ -200,9 +178,7 @@ def sync_db_session_isolated():
         session.close()
 
 @pytest.fixture
-def sync_sample_user(sync_db_session):
-    """Create a sample user for sync tests."""
-    # Use a fixed UUID for consistency across tests
+def sync_sample_user(sync_db_session): # Use a fixed UUID for consistency across tests
     from uuid import UUID
 
     fixed_user_id = UUID("12345678-1234-5678-9012-123456789012")
@@ -219,9 +195,7 @@ def sync_sample_user(sync_db_session):
     return user
 
 @pytest.fixture(scope="session")
-def sync_sample_business_profile_session():
-    """Create a sample business profile for sync tests (session scope)."""
-    # Use a fixed UUID for the business profile for consistency
+def sync_sample_business_profile_session(): # Use a fixed UUID for the business profile for consistency
     from uuid import UUID
 
     fixed_profile_id = UUID("87654321-4321-8765-4321-876543218765")
@@ -251,9 +225,9 @@ def sync_sample_business_profile_session():
 
 @pytest.fixture
 def sync_sample_business_profile(
+    """Create a sample business profile for sync tests."""
     sync_db_session, sync_sample_user, sync_sample_business_profile_session
 ):
-    """Create a sample business profile for sync tests."""
     from database.business_profile import BusinessProfile
 
     # Check if profile already exists
@@ -286,9 +260,7 @@ def sync_sample_business_profile(
 
 # ASYNC FIXTURES (for pure async tests)
 @pytest.fixture
-async def async_db_session() -> AsyncGenerator[AsyncSession, None]:
-    """Async database session for pure async tests."""
-    async_engine = _hybrid_db_manager.get_async_engine()
+async def async_db_session() -> AsyncGenerator[AsyncSession, None]: async_engine = _hybrid_db_manager.get_async_engine()
     async with AsyncSession(async_engine, expire_on_commit=False) as session:
         try:
             yield session
@@ -300,9 +272,7 @@ async def async_db_session() -> AsyncGenerator[AsyncSession, None]:
             await session.close()
 
 @pytest.fixture
-async def async_sample_user(async_db_session: AsyncSession) -> User:
-    """Create a sample user for async tests."""
-    user = User(
+async def async_sample_user(async_db_session: AsyncSession) -> User: user = User(
         id=uuid4(),
         email="test@example.com",
         hashed_password="fake_password_hash",
@@ -346,9 +316,7 @@ async def async_sample_business_profile(
 
 # TESTCLIENT FIXTURES (uses sync database)
 @pytest.fixture
-def authenticated_test_client(sync_db_session, sync_sample_user):
-    """Create FastAPI test client with sync database AND authentication overrides."""
-    from main import app
+def authenticated_test_client(sync_db_session, sync_sample_user): from main import app
     from api.dependencies.auth import get_current_active_user, get_current_user
     from database.db_setup import get_async_db, get_db
 
@@ -440,9 +408,7 @@ def authenticated_test_client(sync_db_session, sync_sample_user):
         app.dependency_overrides.update(original_overrides)
 
 @pytest.fixture
-def unauthenticated_test_client(sync_db_session):
-    """Create FastAPI test client with sync database but NO authentication overrides."""
-    from main import app
+def unauthenticated_test_client(sync_db_session): from main import app
     from database.db_setup import get_async_db, get_db
 
     # Override database dependencies only
@@ -520,46 +486,32 @@ def unauthenticated_test_client(sync_db_session):
 
 # Default test_client fixture uses authenticated client
 @pytest.fixture
-def test_client(authenticated_test_client):
-    """Default test client with authentication (for backward compatibility)."""
-    return authenticated_test_client
+def test_client(authenticated_test_client): return authenticated_test_client
 
 # AUTHENTICATION FIXTURES
 @pytest.fixture
-def auth_token(sync_sample_user: User) -> str:
-    """Generate authentication token for tests."""
-    from datetime import timedelta
+def auth_token(sync_sample_user: User) -> str: from datetime import timedelta
     from api.dependencies.auth import create_access_token
 
     token_data = {"sub": str(sync_sample_user.id)}
     return create_access_token(data=token_data, expires_delta=timedelta(minutes=30))
 
 @pytest.fixture
-def authenticated_headers(auth_token: str) -> Dict[str, str]:
-    """Provide authenticated headers for API tests."""
-    return {"Authorization": f"Bearer {auth_token}"}
+def authenticated_headers(auth_token: str) -> Dict[str, str]: return {"Authorization": f"Bearer {auth_token}"}
 
 # COMPATIBILITY FIXTURES (for backward compatibility)
 @pytest.fixture
-def client(authenticated_test_client):
-    """Alias for authenticated_test_client for backward compatibility."""
-    return authenticated_test_client
+def client(authenticated_test_client): return authenticated_test_client
 
 @pytest.fixture
-def sample_user(sync_sample_user):
-    """Alias for sync_sample_user for backward compatibility."""
-    return sync_sample_user
+def sample_user(sync_sample_user): return sync_sample_user
 
 @pytest.fixture
-def sample_business_profile(sync_sample_business_profile):
-    """Alias for sync_sample_business_profile for backward compatibility."""
-    return sync_sample_business_profile
+def sample_business_profile(sync_sample_business_profile): return sync_sample_business_profile
 
 # MOCK AI FIXTURES
 @pytest.fixture(autouse=True)
-def mock_ai_services():
-    """Mock AI services to prevent external API calls."""
-    import unittest.mock
+def mock_ai_services(): import unittest.mock
 
     # Mock Google Generative AI
     mock_genai = unittest.mock.MagicMock()

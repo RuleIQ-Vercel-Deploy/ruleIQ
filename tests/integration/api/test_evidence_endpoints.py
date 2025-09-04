@@ -77,7 +77,7 @@ class TestEvidenceEndpoints:
         sample_compliance_framework, sample_business_profile):
         """Test creating evidence item without authentication"""
         from fastapi.testclient import TestClient
-        from main import app
+        from api.main import app
         unauthenticated_client = TestClient(app)
         evidence_data = {'title': 'Test Evidence', 'description':
             'Test description', 'control_id': 'A.5.1.1', 'framework_id':

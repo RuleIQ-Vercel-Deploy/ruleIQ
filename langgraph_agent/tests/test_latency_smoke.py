@@ -31,6 +31,7 @@ class LatencyTestHelper:
 
         async def wrapper(*args, **kwargs):
             start_time = time.time()
+            """Wrapper"""
             result = await func(*args, **kwargs)
             end_time = time.time()
             execution_time_ms = (end_time - start_time) * 1000
@@ -107,6 +108,7 @@ class TestGraphLatency:
 
         async def mock_invoke(state, config=None):
             # Simulate realistic processing time (100-300ms)
+            """Mock Invoke"""
             await asyncio.sleep(0.15)  # 150ms
             state["current_node"] = "compliance_analyzer"
             state["next_node"] = "END"
@@ -144,6 +146,7 @@ class TestGraphLatency:
 
         async def mock_invoke_variable(state, config=None):
             nonlocal call_count
+            """Mock Invoke Variable"""
             delay = latency_variations[call_count % len(latency_variations)]
             call_count += 1
             await asyncio.sleep(delay)
@@ -185,6 +188,7 @@ class TestGraphLatency:
         # Mock streaming with delays
         async def mock_stream(state, config=None):
             # First chunk should come quickly
+            """Mock Stream"""
             await asyncio.sleep(0.05)  # 50ms to first token
             yield {"chunk": 1, "type": "start"}
 
@@ -224,6 +228,7 @@ class TestGraphLatency:
 
         async def mock_invoke_concurrent(state, config=None):
             # Simulate realistic processing with some variability
+            """Mock Invoke Concurrent"""
             await asyncio.sleep(
                 0.1 + (hash(config.configurable["company_id"]) % 100) / 1000
             )
@@ -499,6 +504,7 @@ class TestSmokeTestRunner:
         # Mock graph function with realistic behavior
         async def mock_graph_function(company_id, user_input, **kwargs):
             # Simulate variable processing time
+            """Mock Graph Function"""
             base_delay = 0.05  # 50ms base
             complexity_factor = len(user_input) / 1000  # More complex = slower
             await asyncio.sleep(base_delay + complexity_factor)
@@ -547,6 +553,7 @@ class TestSmokeTestRunner:
 
         async def failing_graph_function(company_id, user_input, **kwargs):
             nonlocal call_count
+            """Failing Graph Function"""
             call_count += 1
 
             # Fail every 3rd call
@@ -585,6 +592,7 @@ class TestRealisticLatencyBenchmarks:
 
         async def realistic_invoke(state, config=None):
             user_input = state["messages"][0].content
+            """Realistic Invoke"""
 
             # Simulate realistic processing times based on complexity
             if "simple" in user_input.lower():

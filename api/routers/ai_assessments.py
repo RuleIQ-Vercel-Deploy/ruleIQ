@@ -33,6 +33,7 @@ router = APIRouter(tags=['AI Assessment Assistant'])
 
 class AIHelpRequest(BaseModel):
     question_id: str
+    """Class for AIHelpRequest"""
     question_text: str
     framework_id: str
     section_id: Optional[str] = None
@@ -40,6 +41,7 @@ class AIHelpRequest(BaseModel):
 
 class AIHelpResponse(BaseModel):
     guidance: str
+    """Class for AIHelpResponse"""
     confidence_score: float = Field(ge=0.0, le=1.0)
     related_topics: Optional[List[str]] = None
     follow_up_suggestions: Optional[List[str]] = None
@@ -49,12 +51,14 @@ class AIHelpResponse(BaseModel):
 
 class AIFollowUpRequest(BaseModel):
     framework_id: str
+    """Class for AIFollowUpRequest"""
     current_answers: Dict[str, Any]
     business_context: Optional[Dict[str, Any]] = None
     max_questions: int = Field(default=3, ge=1, le=10)
 
 class AIFollowUpQuestion(BaseModel):
     id: str
+    """Class for AIFollowUpQuestion"""
     text: str
     type: str
     options: Optional[List[Dict[str, str]]] = None
@@ -63,17 +67,20 @@ class AIFollowUpQuestion(BaseModel):
 
 class AIFollowUpResponse(BaseModel):
     questions: List[AIFollowUpQuestion]
+    """Class for AIFollowUpResponse"""
     total_generated: int
     request_id: str
     generated_at: str
 
 class AIAnalysisRequest(BaseModel):
     assessment_results: Dict[str, Any]
+    """Class for AIAnalysisRequest"""
     framework_id: str
     business_profile_id: str
 
 class Gap(BaseModel):
     id: str
+    """Class for Gap"""
     section: str
     severity: str
     description: str
@@ -83,6 +90,7 @@ class Gap(BaseModel):
 
 class Recommendation(BaseModel):
     id: str
+    """Class for Recommendation"""
     title: str
     description: str
     priority: str
@@ -93,6 +101,7 @@ class Recommendation(BaseModel):
 
 class AIAnalysisResponse(BaseModel):
     gaps: List[Gap]
+    """Class for AIAnalysisResponse"""
     recommendations: List[Recommendation]
     risk_assessment: Dict[str, Any]
     compliance_insights: Dict[str, Any]
@@ -102,6 +111,7 @@ class AIAnalysisResponse(BaseModel):
 
 class AIRecommendationRequest(BaseModel):
     gaps: List[Dict[str, Any]]
+    """Class for AIRecommendationRequest"""
     business_profile: Dict[str, Any]
     existing_policies: Optional[List[str]] = None
     industry_context: Optional[str] = None
@@ -109,6 +119,7 @@ class AIRecommendationRequest(BaseModel):
 
 class ImplementationPhase(BaseModel):
     phase_number: int
+    """Class for ImplementationPhase"""
     phase_name: str
     duration_weeks: int
     tasks: List[str]
@@ -116,11 +127,13 @@ class ImplementationPhase(BaseModel):
 
 class ImplementationPlan(BaseModel):
     phases: List[ImplementationPhase]
+    """Class for ImplementationPlan"""
     total_timeline_weeks: int
     resource_requirements: List[str]
 
 class AIRecommendationResponse(BaseModel):
     recommendations: List[Recommendation]
+    """Class for AIRecommendationResponse"""
     implementation_plan: ImplementationPlan
     success_metrics: List[str]
     request_id: str
@@ -128,6 +141,7 @@ class AIRecommendationResponse(BaseModel):
 
 class AIFeedbackRequest(BaseModel):
     interaction_id: str
+    """Class for AIFeedbackRequest"""
     helpful: bool
     rating: Optional[int] = Field(None, ge=1, le=5)
     comments: Optional[str] = None
@@ -135,6 +149,7 @@ class AIFeedbackRequest(BaseModel):
 
 class AIMetricsResponse(BaseModel):
     response_times: Dict[str, float]
+    """Class for AIMetricsResponse"""
     accuracy_score: float
     user_satisfaction: float
     total_interactions: int
@@ -249,6 +264,7 @@ async def get_question_help_stream(framework_id: str, request:
 
     async def generate_help_stream() ->AsyncGenerator[Any, None]:
         try:
+            """Generate Help Stream"""
             profile = await get_user_business_profile(current_user, db)
             assistant = ComplianceAssistant(db)
             metadata = StreamingMetadata(request_id=
@@ -461,6 +477,7 @@ async def analyze_assessment_results_stream(request: AIAnalysisRequest,
 
     async def generate_analysis_stream() ->AsyncGenerator[Any, None]:
         try:
+            """Generate Analysis Stream"""
             profile = await get_user_business_profile(current_user, db,
                 request.business_profile_id)
             assistant = ComplianceAssistant(db)
@@ -569,6 +586,7 @@ async def generate_personalized_recommendations_stream(request:
 
     async def generate_recommendations_stream() ->AsyncGenerator[Any, None]:
         try:
+            """Generate Recommendations Stream"""
             profile = await get_user_business_profile(current_user, db,
                 getattr(request, 'business_profile_id', None))
             assistant = ComplianceAssistant(db)

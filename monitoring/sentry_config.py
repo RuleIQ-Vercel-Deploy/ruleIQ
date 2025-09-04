@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_sentry_environment() -> str:
-    """Get the appropriate Sentry environment based on settings."""
+    """Get the appropriate Sentry environment."""
     if settings.is_testing:
         return "testing"
     elif settings.is_production:
@@ -35,7 +35,14 @@ def get_sentry_environment() -> str:
 
 
 def get_release_version() -> str:
-    """Get the release version for Sentry tracking."""
+    """Get the release version for Sentry.
+    
+    Try to get from environment variable first, then git commit hash,
+    falling back to settings version.
+    
+    Returns:
+        Release version string in format ruleiq@version
+    """
     # Try to get from environment variable first
     version = os.getenv("RELEASE_VERSION")
     if version:
@@ -57,8 +64,7 @@ def get_release_version() -> str:
 
 
 def before_send(event: Dict[str, Any], hint: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-    """
-    Filter and modify events before sending to Sentry.
+    """Filter and modify events before sending to Sentry.
     
     Args:
         event: The event data to be sent
@@ -106,8 +112,7 @@ def before_send(event: Dict[str, Any], hint: Dict[str, Any]) -> Optional[Dict[st
 
 
 def traces_sampler(sampling_context: Dict[str, Any]) -> float:
-    """
-    Dynamic sampling based on the transaction.
+    """Dynamic sampling based on the transaction.
     
     Args:
         sampling_context: Context about the transaction
@@ -143,7 +148,11 @@ def traces_sampler(sampling_context: Dict[str, Any]) -> float:
 
 
 def init_sentry() -> None:
-    """Initialize Sentry SDK with comprehensive configuration."""
+    """Initialize Sentry error tracking and performance monitoring.
+    
+    Configures Sentry with appropriate integrations, sampling rates,
+    and filtering based on the environment.
+    """
     if not settings.enable_sentry or not settings.sentry_dsn:
         logger.info("Sentry integration disabled or DSN not configured")
         return
@@ -215,8 +224,7 @@ def init_sentry() -> None:
 
 
 def capture_exception(error: Exception, context: Optional[Dict[str, Any]] = None) -> None:
-    """
-    Capture an exception with optional context.
+    """Capture an exception with optional context.
     
     Args:
         error: The exception to capture
@@ -234,8 +242,7 @@ def capture_exception(error: Exception, context: Optional[Dict[str, Any]] = None
 
 
 def capture_message(message: str, level: str = "info", context: Optional[Dict[str, Any]] = None) -> None:
-    """
-    Capture a message with optional context.
+    """Capture a message with optional context.
     
     Args:
         message: The message to capture
@@ -254,8 +261,7 @@ def capture_message(message: str, level: str = "info", context: Optional[Dict[st
 
 
 def set_user_context(user_id: str, email: Optional[str] = None, username: Optional[str] = None) -> None:
-    """
-    Set user context for Sentry events.
+    """Set user context for Sentry events.
     
     Args:
         user_id: The user's ID
@@ -273,8 +279,7 @@ def set_user_context(user_id: str, email: Optional[str] = None, username: Option
 
 
 def add_breadcrumb(message: str, category: str = "custom", level: str = "info", data: Optional[Dict[str, Any]] = None) -> None:
-    """
-    Add a breadcrumb for better error context.
+    """Add a breadcrumb for better error context.
     
     Args:
         message: The breadcrumb message
@@ -294,8 +299,7 @@ def add_breadcrumb(message: str, category: str = "custom", level: str = "info", 
 
 
 def start_transaction(name: str, op: str = "http.server") -> Any:
-    """
-    Start a performance monitoring transaction.
+    """Start a performance monitoring transaction.
     
     Args:
         name: Name of the transaction
@@ -311,14 +315,14 @@ def start_transaction(name: str, op: str = "http.server") -> Any:
 
 
 def measure_performance(name: str, op: str = "function"):
-    """
-    Decorator to measure function performance.
+    """Decorator to measure function performance.
     
     Args:
         name: Name of the span
         op: Operation type
     """
     def decorator(func):
+        """Decorator"""
         def wrapper(*args, **kwargs):
             if not settings.enable_sentry or not settings.enable_performance_monitoring:
                 return func(*args, **kwargs)

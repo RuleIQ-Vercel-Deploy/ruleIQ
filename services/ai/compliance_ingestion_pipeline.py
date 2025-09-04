@@ -31,9 +31,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-class IngestionStatus(Enum):
-    """Ingestion status tracking"""
-
+class IngestionStatus(Enum): 
     PENDING = "pending"
     IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
@@ -41,9 +39,7 @@ class IngestionStatus(Enum):
     PARTIAL = "partial"
     RETRY = "retry"
 
-class DataQuality(Enum):
-    """Data quality indicators"""
-
+class DataQuality(Enum): 
     HIGH = "high"
     MEDIUM = "medium"
     LOW = "low"
@@ -67,22 +63,16 @@ class IngestionMetrics:
     data_quality_scores: Dict[str, float] = field(default_factory=dict)
 
     @property
-    def success_rate(self) -> float:
-        """Calculate success rate"""
-        if self.total_items == 0:
+    def success_rate(self) -> float: if self.total_items == 0:
             return 0.0
         return self.successful_items / self.total_items
 
     @property
-    def duration_seconds(self) -> Optional[float]:
-        """Calculate processing duration"""
-        if self.end_time:
+    def duration_seconds(self) -> Optional[float]: if self.end_time:
             return (self.end_time - self.start_time).total_seconds()
         return None
 
-    def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary for logging/storage"""
-        return {
+    def to_dict(self) -> Dict[str, Any]: return {
             "total_items": self.total_items,
             "successful_items": self.successful_items,
             "failed_items": self.failed_items,
@@ -103,9 +93,7 @@ class IngestionMetrics:
             ),
         }
 
-class ComplianceDataValidator(BaseModel):
-    """Enterprise-grade validation for compliance data"""
-
+class ComplianceDataValidator(BaseModel): 
     id: str = Field(..., min_length=1, max_length=200)
     title: str = Field(..., min_length=1, max_length=500)
     url: Optional[str] = Field(None, pattern="^https?://")
@@ -121,18 +109,14 @@ class ComplianceDataValidator(BaseModel):
     implementation_complexity: Optional[int] = Field(None, ge=1, le=10)
 
     @validator("business_triggers")
-    def validate_business_triggers(cls, v):
-        """Validate business trigger structure"""
-        if v is not None:
+    def validate_business_triggers(cls, v): if v is not None:
             required_keys = {"industry", "data_types", "jurisdiction"}
             if not any(key in v for key in required_keys):
                 logger.warning(f"Business triggers missing key fields: {v}")
         return v
 
     @validator("risk_metadata")
-    def validate_risk_metadata(cls, v):
-        """Validate risk metadata structure"""
-        if v is not None:
+    def validate_risk_metadata(cls, v): if v is not None:
             if "base_risk_score" in v:
                 score = v["base_risk_score"]
                 if not (0 <= score <= 10):
@@ -190,14 +174,10 @@ class Neo4jComplianceIngestion:
         self._processed_ids: Set[str] = set()
         self._failed_ids: Set[str] = set()
 
-    async def __aenter__(self):
-        """Async context manager entry"""
-        await self.verify_connection()
+    async def __aenter__(self): await self.verify_connection()
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        """Async context manager exit with cleanup"""
-        await self.close()
+    async def __aexit__(self, exc_type, exc_val, exc_tb): await self.close()
 
     @retry(
         stop=stop_after_attempt(3),
@@ -205,9 +185,7 @@ class Neo4jComplianceIngestion:
         retry=retry_if_exception_type((ServiceUnavailable, SessionExpired)),
         before_sleep=before_sleep_log(logger, logging.WARNING),
     )
-    async def verify_connection(self) -> bool:
-        """
-        Verify Neo4j connection with retry logic
+    async def verify_connection(self) -> bool: Verify Neo4j connection with retry logic
 
         Returns:
             True if connection successful
@@ -222,9 +200,7 @@ class Neo4jComplianceIngestion:
             logger.error(f"Failed to connect to Neo4j: {e}")
             raise
 
-    async def create_indexes_and_constraints(self) -> None:
-        """
-        Create necessary indexes and constraints for optimal performance
+    async def create_indexes_and_constraints(self) -> None: Create necessary indexes and constraints for optimal performance
         Production-critical for query performance at scale
         """
         index_queries = [
@@ -254,9 +230,7 @@ class Neo4jComplianceIngestion:
                 except Exception as e:
                     logger.warning(f"Index creation warning (may already exist): {e}")
 
-    def _generate_node_hash(self, data: Dict[str, Any]) -> str:
-        """
-        Generate deterministic hash for deduplication
+    def _generate_node_hash(self, data: Dict[str, Any]) -> str: Generate deterministic hash for deduplication
 
         Args:
             data: Node data
@@ -272,9 +246,7 @@ class Neo4jComplianceIngestion:
         stable_string = json.dumps(stable_fields, sort_keys=True)
         return hashlib.sha256(stable_string.encode()).hexdigest()
 
-    def _assess_data_quality(self, item: Dict[str, Any]) -> Tuple[DataQuality, float]:
-        """
-        Assess data quality for monitoring and filtering
+    def _assess_data_quality(self, item: Dict[str, Any]) -> Tuple[DataQuality, float]: Assess data quality for monitoring and filtering
 
         Args:
             item: Data item to assess
@@ -594,9 +566,7 @@ class Neo4jComplianceIngestion:
             )
             raise
 
-    async def ingest_relationships(self, relationships_path: Path) -> IngestionMetrics:
-        """
-        Ingest regulatory relationships from relationships manifest
+    async def ingest_relationships(self, relationships_path: Path) -> IngestionMetrics: Ingest regulatory relationships from relationships manifest
 
         Args:
             relationships_path: Path to relationships JSON
@@ -627,9 +597,7 @@ class Neo4jComplianceIngestion:
             }]->(target)
             SET r.description = rel.description,
                 r.updated_at = datetime()
-            RETURN source.id as source, target.id as target, type(r) as relationship
-            """
-
+            RETURN source.id as source, target.id as target, type(r) as relationship 
             # Process relationships
             async with self.driver.session(database=self.database) as session:
                 for source_id, source_data in regulatory_relationships.items():
@@ -667,9 +635,7 @@ class Neo4jComplianceIngestion:
             metrics.errors.append({"error": str(e)})
             raise
 
-    async def ingest_enforcement_data(self, enforcement_path: Path) -> IngestionMetrics:
-        """
-        Ingest enforcement database for evidence and patterns
+    async def ingest_enforcement_data(self, enforcement_path: Path) -> IngestionMetrics: Ingest enforcement database for evidence and patterns
 
         Args:
             enforcement_path: Path to enforcement JSON
@@ -732,9 +698,7 @@ class Neo4jComplianceIngestion:
             metrics.errors.append({"error": str(e)})
             raise
 
-    async def verify_ingestion(self) -> Dict[str, Any]:
-        """
-        Verify ingestion completeness and data integrity
+    async def verify_ingestion(self) -> Dict[str, Any]: Verify ingestion completeness and data integrity
 
         Returns:
             Verification report
@@ -772,9 +736,7 @@ class Neo4jComplianceIngestion:
         logger.info(f"Verification report: {verification_report}")
         return verification_report
 
-    async def close(self):
-        """Close Neo4j driver connection"""
-        await self.driver.close()
+    async def close(self): await self.driver.close()
         logger.info("Neo4j connection closed")
 
 # Integration with IQ Agent
@@ -784,9 +746,7 @@ class IQComplianceIntegration:
     Provides high-performance queries and intelligent filtering
     """
 
-    def __init__(self, neo4j_driver):
-        """
-        Initialize integration with Neo4j driver
+    def __init__(self, neo4j_driver): Initialize integration with Neo4j driver
 
         Args:
             neo4j_driver: AsyncNeo4j driver instance
@@ -796,9 +756,7 @@ class IQComplianceIntegration:
 
     async def get_applicable_regulations(
         self, business_profile: Dict[str, Any], risk_threshold: float = 5.0
-    ) -> List[Dict[str, Any]]:
-        """
-        Get regulations applicable to a business profile
+    ) -> List[Dict[str, Any]]: Get regulations applicable to a business profile
 
         Args:
             business_profile: Business context data
@@ -850,9 +808,7 @@ class IQComplianceIntegration:
 
     async def calculate_control_overlap(
         self, regulation_ids: List[str]
-    ) -> Dict[str, Any]:
-        """
-        Calculate control overlap between regulations
+    ) -> Dict[str, Any]: Calculate control overlap between regulations
 
         Args:
             regulation_ids: List of regulation IDs to compare
@@ -884,9 +840,7 @@ class IQComplianceIntegration:
 
     async def get_enforcement_evidence(
         self, regulation_id: str, limit: int = 3
-    ) -> List[Dict[str, Any]]:
-        """
-        Get enforcement evidence for a regulation
+    ) -> List[Dict[str, Any]]: Get enforcement evidence for a regulation
 
         Args:
             regulation_id: Regulation ID
@@ -918,9 +872,7 @@ if __name__ == "__main__":
 
     load_dotenv()
 
-    async def test_ingestion():
-        """Test the ingestion pipeline"""
-
+    async def test_ingestion(): 
         neo4j_uri = os.getenv("NEO4J_URI", "bolt://localhost:7687")
         neo4j_user = os.getenv("NEO4J_USER", "neo4j")
         neo4j_password = os.getenv("NEO4J_PASSWORD", "password")

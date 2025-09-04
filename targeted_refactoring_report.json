@@ -1,0 +1,24 @@
+{
+  "summary": {
+    "targets_processed": 5,
+    "successful_refactorings": 4,
+    "failed_refactorings": 1,
+    "total_complexity_reduced": 37,
+    "estimated_new_grade": "B"
+  },
+  "failed_targets": [
+    {
+      "file": "owasp_security_fixes.py",
+      "function": "apply_security_headers",
+      "line": 86,
+      "complexity": 17,
+      "strategy": "simplify_conditionals"
+    }
+  ],
+  "next_steps": [
+    "Review refactored files (*refactored.py)",
+    "Run tests to ensure functionality preserved",
+    "Replace original files with refactored versions if tests pass",
+    "Re-run SonarCloud analysis to verify improvement"
+  ]
+}

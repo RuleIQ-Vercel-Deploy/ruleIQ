@@ -29,6 +29,7 @@ class ComplianceGap:
     priority: int = 0
 
     def to_dict(self) ->Dict[str, Any]:
+        """To Dict"""
         return {'id': self.id, 'section': self.section, 'severity': self.
             severity, 'description': self.description, 'impact': self.
             impact, 'current_state': self.current_state, 'target_state':
@@ -48,23 +49,20 @@ class ComplianceRecommendation:
     resources_required: List[str]
 
     def to_dict(self) ->Dict[str, Any]:
+        """To Dict"""
         return {'id': self.id, 'title': self.title, 'description': self.
             description, 'priority': self.priority, 'implementation_effort':
             self.implementation_effort, 'cost_impact': self.cost_impact,
             'timeline': self.timeline, 'dependencies': self.dependencies,
             'resources_required': self.resources_required}
 
-class GapAnalysisTool(BaseTool):
-    """Tool for extracting and analyzing compliance gaps from assessment responses"""
-
+class GapAnalysisTool(BaseTool): 
     def __init__(self) ->None:
         super().__init__(name='extract_compliance_gaps', description=
             'Extract compliance gaps from assessment responses and analyze their severity and impact'
             )
 
-    def get_function_schema(self) ->Dict[str, Any]:
-        """Get the function schema for Google Generative AI function calling"""
-        return {'name': 'extract_compliance_gaps', 'description':
+    def get_function_schema(self) ->Dict[str, Any]: return {'name': 'extract_compliance_gaps', 'description':
             'Extract compliance gaps from assessment responses',
             'parameters': {'type': 'object', 'properties': {'gaps': {'type':
             'array', 'description': 'List of identified compliance gaps',
@@ -94,8 +92,7 @@ class GapAnalysisTool(BaseTool):
             'estimated_effort']}}
 
     async def execute(self, parameters: Dict[str, Any], context: Optional[
-        Dict[str, Any]]=None) ->ToolResult:
-        """Execute gap analysis on provided data"""
+        Dict[str, Any]]=None) -> ToolResult:
         try:
             gaps_data = parameters.get('gaps', [])
             overall_risk = parameters.get('overall_risk_level', 'medium')
@@ -131,15 +128,12 @@ class GapAnalysisTool(BaseTool):
             return ToolResult(success=False, error=
                 f'Gap analysis execution failed: {e!s}')
 
-    def _calculate_priority(self, severity: str, index: int) ->int:
-        """Calculate priority score for gap ordering"""
-        severity_scores = {'critical': 100, 'high': 75, 'medium': 50, 'low': 25
-            }
+    def _calculate_priority(self, severity: str, index: int) -> int:
+        severity_scores = {'critical': 100, 'high': 75, 'medium': 50, 'low': 25}
         base_score = severity_scores.get(severity, 50)
         return base_score - index * 2
 
-    def _analyze_severity_breakdown(self, gaps: List[Dict[str, Any]]) ->Dict[
-        str, int]:
+    def _analyze_severity_breakdown(self, gaps: List[Dict[str, Any]]) -> Dict[str, int]:
         """Analyze breakdown of gap severities"""
         breakdown = {'critical': 0, 'high': 0, 'medium': 0, 'low': 0}
         for gap in gaps:
@@ -148,8 +142,7 @@ class GapAnalysisTool(BaseTool):
                 breakdown[severity] += 1
         return breakdown
 
-    def _generate_gap_recommendations(self, gaps: List[Dict[str, Any]]) ->List[
-        str]:
+    def _generate_gap_recommendations(self, gaps: List[Dict[str, Any]]) -> List[str]:
         """Generate high-level recommendations based on gaps"""
         recommendations = []
         high_severity_count = sum(1 for gap in gaps if gap.get('severity') in
@@ -171,18 +164,14 @@ class GapAnalysisTool(BaseTool):
                 'Implement ISO 27001 security controls systematically')
         return recommendations
 
-class RecommendationGenerationTool(BaseTool):
-    """Tool for generating prioritized compliance recommendations"""
-
+class RecommendationGenerationTool(BaseTool): 
     def __init__(self) ->None:
         super().__init__(name='generate_compliance_recommendations',
             description=
             'Generate prioritized compliance recommendations based on assessment analysis'
             )
 
-    def get_function_schema(self) ->Dict[str, Any]:
-        """Get the function schema for Google Generative AI function calling"""
-        return {'name': 'generate_compliance_recommendations',
+    def get_function_schema(self) ->Dict[str, Any]: return {'name': 'generate_compliance_recommendations',
             'description':
             'Generate prioritized compliance recommendations', 'parameters':
             {'type': 'object', 'properties': {'recommendations': {'type':
@@ -221,8 +210,7 @@ class RecommendationGenerationTool(BaseTool):
             'budget_estimate']}}
 
     async def execute(self, parameters: Dict[str, Any], context: Optional[
-        Dict[str, Any]]=None) ->ToolResult:
-        """Execute recommendation generation"""
+        Dict[str, Any]]=None) -> ToolResult:
         try:
             recommendations_data = parameters.get('recommendations', [])
             roadmap = parameters.get('implementation_roadmap', {})
@@ -265,8 +253,7 @@ class RecommendationGenerationTool(BaseTool):
             return ToolResult(success=False, error=
                 f'Recommendation generation execution failed: {e!s}')
 
-    def _analyze_priority_breakdown(self, recommendations: List[Dict[str, Any]]
-        ) ->Dict[str, int]:
+    def _analyze_priority_breakdown(self, recommendations: List[Dict[str, Any]]) -> Dict[str, int]:
         """Analyze breakdown of recommendation priorities"""
         breakdown = {'critical': 0, 'high': 0, 'medium': 0, 'low': 0}
         for rec in recommendations:
@@ -275,8 +262,7 @@ class RecommendationGenerationTool(BaseTool):
                 breakdown[priority] += 1
         return breakdown
 
-    def _identify_quick_wins(self, recommendations: List[Dict[str, Any]]
-        ) ->List[Dict[str, str]]:
+    def _identify_quick_wins(self, recommendations: List[Dict[str, Any]]) -> List[Dict[str, str]]:
         """Identify quick win recommendations"""
         quick_wins = []
         for rec in recommendations:
@@ -288,8 +274,7 @@ class RecommendationGenerationTool(BaseTool):
                     'implementation_effort'], 'timeline': rec['timeline']})
         return quick_wins
 
-    def _identify_major_initiatives(self, recommendations: List[Dict[str, Any]]
-        ) ->List[Dict[str, str]]:
+    def _identify_major_initiatives(self, recommendations: List[Dict[str, Any]]) -> List[Dict[str, str]]:
         """Identify major initiative recommendations"""
         major_initiatives = []
         for rec in recommendations:

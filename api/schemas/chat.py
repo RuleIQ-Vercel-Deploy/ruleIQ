@@ -27,6 +27,7 @@ class MessageResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        """Class for Config"""
         populate_by_name = True
 
 class ConversationSummary(BaseModel):
@@ -41,6 +42,7 @@ class ConversationSummary(BaseModel):
 
     class Config:
         from_attributes = True
+        """Class for Config"""
 
 class ConversationResponse(BaseModel):
     """Response schema for a conversation with messages."""
@@ -54,6 +56,7 @@ class ConversationResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        """Class for Config"""
 
 class CreateConversationRequest(BaseModel):
     """Request schema for creating a new conversation."""

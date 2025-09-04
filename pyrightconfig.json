@@ -1,0 +1,70 @@
+{
+  "include": [
+    "api",
+    "services",
+    "database",
+    "config",
+    "langgraph_agent",
+    "monitoring",
+    "middleware",
+    "tests"
+  ],
+  "exclude": [
+    "**/__pycache__",
+    "**/backup_*",
+    ".venv",
+    "venv",
+    "node_modules"
+  ],
+  "venvPath": ".",
+  "venv": ".venv",
+  "pythonVersion": "3.11",
+  "pythonPlatform": "Linux",
+  "typeCheckingMode": "basic",
+  "reportMissingImports": true,
+  "reportMissingTypeStubs": false,
+  "reportGeneralTypeIssues": "warning",
+  "reportOptionalMemberAccess": false,
+  "reportOptionalCall": false,
+  "reportOptionalIterable": false,
+  "reportOptionalContextManager": false,
+  "reportOptionalOperand": false,
+  "reportTypedDictNotRequiredAccess": false,
+  "reportUntypedFunctionDecorator": false,
+  "reportUntypedClassDecorator": false,
+  "reportUntypedBaseClass": false,
+  "reportUnusedImport": true,
+  "reportUnusedClass": true,
+  "reportUnusedFunction": true,
+  "reportUnusedVariable": true,
+  "reportDuplicateImport": true,
+  "reportWildcardImportFromLibrary": true,
+  "reportInvalidStringEscapeSequence": true,
+  "reportInvalidTypeVarUse": true,
+  "reportCallInDefaultInitializer": true,
+  "reportUnnecessaryIsInstance": true,
+  "reportUnnecessaryCast": true,
+  "reportUnnecessaryComparison": true,
+  "reportAssertAlwaysTrue": true,
+  "reportSelfClsParameterName": true,
+  "reportUnusedExpression": true,
+  "reportMatchNotExhaustive": true,
+  "reportShadowedImports": true,
+  "executionEnvironments": [
+    {
+      "root": ".",
+      "pythonVersion": "3.11",
+      "pythonPlatform": "Linux",
+      "extraPaths": [
+        ".",
+        "api",
+        "services",
+        "database",
+        "config",
+        "langgraph_agent",
+        "monitoring",
+        "middleware"
+      ]
+    }
+  ]
+}

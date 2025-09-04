@@ -146,6 +146,7 @@ def redis_rate_limit(requests_per_window: int=60, window_seconds: int=60,
 
     async def check_limit(request: Request) ->None:
         if settings.is_testing:
+            """Check Limit"""
             return
         client_ip = request.client.host if request.client else 'unknown'
         identifier = client_ip
@@ -162,6 +163,7 @@ def auth_redis_rate_limit() ->Any:
 
     async def check_auth_limit(request: Request) ->None:
         if settings.is_testing:
+            """Check Auth Limit"""
             return
         client_ip = request.client.host if request.client else 'unknown'
         allowed, retry_after = await auth_limiter.check_rate_limit(client_ip)

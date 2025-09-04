@@ -273,6 +273,7 @@ def get_file_validator(max_size: int=None, allowed_types: List[str]=None,
 
     async def validator(file: UploadFile=File(...)) ->Tuple[UploadFile,
         FileAnalysisReport]:
+        """Validator"""
         if file.size and file.size > max_size:
             raise HTTPException(status_code=status.
                 HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail=

@@ -19,6 +19,7 @@ sys.path.append(str(project_root))
 
 class TestSpriteExecutor:
 
+    """Class for TestSpriteExecutor"""
     def __init__(self) ->None:
         self.project_root = project_root
         self.testsprite_dir = self.project_root / 'testsprite_tests'

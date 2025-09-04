@@ -11,12 +11,14 @@ from pydantic import BaseModel, Field, validator
 
 class ReportFormat(str, Enum):
     PDF = 'pdf'
+    """Class for ReportFormat"""
     JSON = 'json'
     HTML = 'html'
     CSV = 'csv'
 
 class ReportType(str, Enum):
     EXECUTIVE_SUMMARY = 'executive_summary'
+    """Class for ReportType"""
     GAP_ANALYSIS = 'gap_analysis'
     EVIDENCE_REPORT = 'evidence_report'
     AUDIT_READINESS = 'audit_readiness'
@@ -26,6 +28,7 @@ class ReportType(str, Enum):
 
 class ReportFrequency(str, Enum):
     DAILY = 'daily'
+    """Class for ReportFrequency"""
     WEEKLY = 'weekly'
     MONTHLY = 'monthly'
     CUSTOM = 'custom'
@@ -41,6 +44,7 @@ class ReportParameters(BaseModel):
     @validator('end_date', always=True)
     def validate_date_range(self, v, values) -> Any:
         if 'start_date' in values and v and values['start_date'] and (v < values['start_date']):
+            """Validate Date Range"""
             raise ValueError('End date cannot be before start date.')
         return v
 
@@ -54,17 +58,20 @@ class ScheduleConfig(BaseModel):
     @validator('cron_expression', always=True)
     def validate_cron(self, v, values) -> Any:
         if v and values.get('frequency') != ReportFrequency.CUSTOM:
+            """Validate Cron"""
             raise ValueError('cron_expression can only be set for custom frequency.')
         return v
 
 class GenerateReportRequest(BaseModel):
     business_profile_id: UUID
+    """Class for GenerateReportRequest"""
     report_type: ReportType
     format: ReportFormat = ReportFormat.PDF
     parameters: ReportParameters = Field(default_factory=ReportParameters)
 
 class ReportResponse(BaseModel):
     report_id: str
+    """Class for ReportResponse"""
     report_type: ReportType
     format: ReportFormat
     content: Union[str, Dict[str, Any]]
@@ -74,6 +81,7 @@ class ReportResponse(BaseModel):
 
 class CreateScheduleRequest(BaseModel):
     business_profile_id: UUID
+    """Class for CreateScheduleRequest"""
     report_type: ReportType
     format: ReportFormat
     frequency: ReportFrequency
@@ -84,6 +92,7 @@ class CreateScheduleRequest(BaseModel):
     @validator('recipients')
     def validate_recipients(self, v) -> Any:
         import re
+        """Validate Recipients"""
         email_pattern = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'
         for email in v:
             if not re.match(email_pattern, email):
@@ -92,6 +101,7 @@ class CreateScheduleRequest(BaseModel):
 
 class ScheduleResponse(BaseModel):
     id: UUID
+    """Class for ScheduleResponse"""
     business_profile_id: UUID
     report_type: ReportType
     format: ReportFormat
@@ -107,9 +117,11 @@ class ScheduleResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        """Class for Config"""
 
 class UpdateScheduleRequest(BaseModel):
     frequency: Optional[ReportFrequency] = None
+    """Class for UpdateScheduleRequest"""
     recipients: Optional[List[str]] = None
     parameters: Optional[ReportParameters] = None
     active: Optional[bool] = None
@@ -118,6 +130,7 @@ class UpdateScheduleRequest(BaseModel):
     @validator('recipients')
     def validate_recipients(self, v) -> Any:
         if v is not None:
+            """Validate Recipients"""
             import re
             email_pattern = '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'
             for email in v:
@@ -127,10 +140,12 @@ class UpdateScheduleRequest(BaseModel):
 
 class ScheduleListResponse(BaseModel):
     schedules: List[ScheduleResponse]
+    """Class for ScheduleListResponse"""
     total: int
 
 class ReportHistoryItem(BaseModel):
     report_id: str
+    """Class for ReportHistoryItem"""
     report_type: ReportType
     format: ReportFormat
     generated_at: datetime
@@ -140,12 +155,14 @@ class ReportHistoryItem(BaseModel):
 
 class ReportHistoryResponse(BaseModel):
     reports: List[ReportHistoryItem]
+    """Class for ReportHistoryResponse"""
     total: int
     page: int
     per_page: int
 
 class ReportStatsResponse(BaseModel):
     total_reports_generated: int
+    """Class for ReportStatsResponse"""
     reports_this_month: int
     active_schedules: int
     most_popular_report_type: str
@@ -156,6 +173,7 @@ class ReportStatsResponse(BaseModel):
 
 class ExecuteScheduleResponse(BaseModel):
     status: str
+    """Class for ExecuteScheduleResponse"""
     task_id: Optional[str] = None
     schedule_id: str
     executed_at: datetime

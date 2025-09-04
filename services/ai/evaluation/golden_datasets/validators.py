@@ -32,9 +32,7 @@ MAX_REGEX_COMPLEXITY = 100
 RATE_LIMIT_WINDOW = 60
 RATE_LIMIT_MAX_CALLS = 100
 
-class DataClassification(Enum):
-    """Data classification levels for compliance."""
-    PUBLIC = 'public'
+class DataClassification(Enum): PUBLIC = 'public'
     INTERNAL = 'internal'
     CONFIDENTIAL = 'confidential'
     RESTRICTED = 'restricted'
@@ -50,42 +48,35 @@ class ValidationResult:
     data_classification: DataClassification = DataClassification.INTERNAL
 
     @property
-    def is_valid(self) ->bool:
-        """Check if validation passed."""
-        return self.valid
+    def is_valid(self) ->bool: return self.valid
 
-    def add_error(self, error: str) ->None:
-        """Add an error message (sanitized for security)."""
-        sanitized_error = self._sanitize_message(error)
+    def add_error(self, error: str) ->None: sanitized_error = self._sanitize_message(error)
         self.errors.append(sanitized_error)
         self.valid = False
         logger.debug('Validation error in layer %s: %s' % (self.layer, error))
 
-    def add_warning(self, warning: str) ->None:
-        """Add a warning message (sanitized for security)."""
-        sanitized_warning = self._sanitize_message(warning)
+    def add_warning(self, warning: str) ->None: sanitized_warning = self._sanitize_message(warning)
         self.warnings.append(sanitized_warning)
         logger.debug('Validation warning in layer %s: %s' % (self.layer,
             warning))
 
-    def _sanitize_message(self, message: str) ->str:
-        """Sanitize message to prevent information disclosure."""
-        sanitized = re.sub("'[^']*'", "'[REDACTED]'", message)
+    def _sanitize_message(self, message: str) ->str: sanitized = re.sub("'[^']*'", "'[REDACTED]'", message)
         sanitized = re.sub('"[^"]*"', '"[REDACTED]"', sanitized)
         if len(sanitized) > HTTP_OK:
             sanitized = sanitized[:197] + '...'
         return sanitized
 
 def rate_limit(max_calls: int=RATE_LIMIT_MAX_CALLS, window: int=
-    RATE_LIMIT_WINDOW) ->Any:
     """Rate limiting decorator to prevent abuse."""
+    RATE_LIMIT_WINDOW) ->Any:
     call_times = defaultdict(list)
 
     def decorator(func) ->Any:
-
+        """Decorator"""
         @wraps(func)
         def wrapper(*args, **kwargs) ->Any:
             now = time.time()
+            """Wrapper"""
             key = f'{func.__name__}'
             call_times[key] = [t for t in call_times[key] if now - t < window]
             if len(call_times[key]) >= max_calls:
@@ -124,6 +115,7 @@ def validate_input_bounds(data: Any, max_length: int=MAX_INPUT_LENGTH) ->None:
     if isinstance(data, (dict, list)):
 
         def check_depth(obj, depth=0, max_depth=10) ->None:
+            """Check Depth"""
             if depth > max_depth:
                 raise ValueError('Input structure too deeply nested')
             if isinstance(obj, dict):
@@ -137,9 +129,7 @@ def validate_input_bounds(data: Any, max_length: int=MAX_INPUT_LENGTH) ->None:
 class DeepValidator:
     """Multi-layer validation for Golden Dataset entries with security controls."""
 
-    def __init__(self):
-        """Initialize validator with security features."""
-        self.known_frameworks = {'GDPR', 'HIPAA', 'CCPA', 'PCI-DSS', 'SOX',
+    def __init__(self): self.known_frameworks = {'GDPR', 'HIPAA', 'CCPA', 'PCI-DSS', 'SOX',
             'ISO27001', 'NIST', 'FERPA', 'GLBA'}
         self.known_jurisdictions = {'US', 'EU', 'UK', 'CA', 'AU', 'JP',
             'CN', 'IN', 'BR'}
@@ -537,9 +527,7 @@ class DeepValidator:
 class ExternalDataValidator:
     """Validator for external data sources with trust scoring."""
 
-    def __init__(self):
-        """Initialize external data validator."""
-        self.trusted_sources = {'official_regulation': 1.0,
+    def __init__(self): self.trusted_sources = {'official_regulation': 1.0,
             'regulatory_document': 0.9, 'official_guidance': 0.85,
             'industry_standard': 0.7, 'expert_review': 0.6, 'manual': 0.5,
             'automated': 0.3}
@@ -620,24 +608,18 @@ class ExternalDataValidator:
             logger.error('Error calculating trust score: %s' % e)
             return 0.0
 
-    def _get_source_reputation(self, source_kind: str) ->float:
-        """Get reputation score for source kind."""
-        reputation_scores = {'regulatory_document': 1.0,
+    def _get_source_reputation(self, source_kind: str) ->float: reputation_scores = {'regulatory_document': 1.0,
             'official_guidance': 0.9, 'official_regulation': 0.95,
             'industry_standard': 0.8, 'expert_review': 0.7, 'manual': 0.6,
             'automated': 0.5, 'unknown': 0.3}
         return reputation_scores.get(source_kind, 0.3)
 
-    def _get_extraction_confidence(self, method: str) ->float:
-        """Get confidence score for extraction method."""
-        method_scores = {'automated_extraction': 0.9, 'expert_review': 0.95,
+    def _get_extraction_confidence(self, method: str) ->float: method_scores = {'automated_extraction': 0.9, 'expert_review': 0.95,
             'manual_extraction': 0.8, 'manual': 0.7, 'automated': 0.6,
             'unknown': 0.3}
         return method_scores.get(method, 0.5)
 
-    def _get_temporal_relevance(self, created_at: datetime) ->float:
-        """Get temporal relevance score based on age."""
-        if not created_at:
+    def _get_temporal_relevance(self, created_at: datetime) ->float: if not created_at:
             return 0.5
         age_days = (datetime.now() - created_at).days
         if age_days <= DEFAULT_TIMEOUT:
@@ -651,9 +633,7 @@ class ExternalDataValidator:
         else:
             return 0.3
 
-    def _get_version_stability(self, version: Optional[str]) ->float:
-        """Get stability score based on version."""
-        if not version:
+    def _get_version_stability(self, version: Optional[str]) ->float: if not version:
             return 0.5
         try:
             parts = version.split('.')
@@ -703,8 +683,8 @@ class ExternalDataValidator:
         return is_valid, trust_score, issues
 
     def _calculate_source_score(self, data: Dict[str, Any], source_url:
-        Optional[str]) ->float:
         """Calculate source credibility score."""
+        Optional[str]) ->float:
         score = 0.0
         if 'source' in data:
             source = data['source']
@@ -718,9 +698,7 @@ class ExternalDataValidator:
                 score = min(1.0, score + 0.1)
         return score
 
-    def _calculate_completeness_score(self, data: Dict[str, Any]) ->float:
-        """Calculate data completeness score."""
-        if 'data' in data:
+    def _calculate_completeness_score(self, data: Dict[str, Any]) ->float: if 'data' in data:
             inner_data = data['data']
         else:
             inner_data = data
@@ -734,9 +712,7 @@ class ExternalDataValidator:
             ) if optional_fields else 0.0
         return 0.7 * required_score + 0.3 * optional_score
 
-    def _calculate_consistency_score(self, data: Dict[str, Any]) ->float:
-        """Calculate data consistency score."""
-        score = 1.0
+    def _calculate_consistency_score(self, data: Dict[str, Any]) ->float: score = 1.0
         if 'data' in data:
             inner_data = data['data']
             if 'id' in inner_data:
@@ -748,9 +724,7 @@ class ExternalDataValidator:
                     score -= 0.1
         return max(0.0, score)
 
-    def _calculate_timeliness_score(self, data: Dict[str, Any]) ->float:
-        """Calculate data timeliness score."""
-        score = 1.0
+    def _calculate_timeliness_score(self, data: Dict[str, Any]) ->float: score = 1.0
         now = datetime.now()
         if 'created_at' in data:
             try:

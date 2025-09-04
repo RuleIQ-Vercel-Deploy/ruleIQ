@@ -64,9 +64,7 @@ class DatabaseTestManager:
         self._max_connections = 10
 
     @asynccontextmanager
-    async def get_engine(self) -> AsyncEngine:
-        """Get or create async engine with connection limits."""
-        if self._engine is None:
+    async def get_engine(self) -> AsyncEngine: if self._engine is None:
             from sqlalchemy.ext.asyncio import create_async_engine
 
             # Get database URLs
@@ -102,15 +100,11 @@ class DatabaseTestManager:
             # Don't dispose here - let session manager handle it
             pass
 
-    async def create_tables(self) -> None:
-        """Create database tables for tests."""
-        async with self.get_engine() as engine:
+    async def create_tables(self) -> None: async with self.get_engine() as engine:
             async with engine.begin() as conn:
                 await conn.run_sync(Base.metadata.create_all)
 
-    async def drop_tables(self) -> None:
-        """Drop database tables after tests."""
-        if self._engine is None:
+    async def drop_tables(self) -> None: if self._engine is None:
             return
 
         try:
@@ -125,9 +119,7 @@ class DatabaseTestManager:
             except Exception as schema_error:
                 print(f"Warning: Schema cleanup failed: {schema_error}")
 
-    async def dispose(self) -> None:
-        """Dispose of the database engine."""
-        if self._engine is not None:
+    async def dispose(self) -> None: if self._engine is not None:
             try:
                 await self._engine.dispose()
             except (ValueError, TypeError) as e:
@@ -139,17 +131,13 @@ class DatabaseTestManager:
 _db_manager = DatabaseTestManager()
 
 @pytest.fixture(scope="session")
-def event_loop():
-    """Create event loop for entire test session."""
-    loop = asyncio.new_event_loop()
+def event_loop(): loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     yield loop
     loop.close()
 
 @pytest.fixture(scope="session", autouse=True)
-async def setup_test_database():
-    """Set up database for test session with proper cleanup."""
-    # Create tables
+async def setup_test_database(): # Create tables
     await _db_manager.create_tables()
 
     yield
@@ -159,9 +147,7 @@ async def setup_test_database():
     await _db_manager.dispose()
 
 @pytest.fixture
-async def async_db_session() -> AsyncGenerator[AsyncSession, None]:
-    """Provide async database session with proper cleanup."""
-    async with _db_manager.get_engine() as engine:
+async def async_db_session() -> AsyncGenerator[AsyncSession, None]: async with _db_manager.get_engine() as engine:
         async with AsyncSession(engine, expire_on_commit=False) as session:
             try:
                 yield session
@@ -172,9 +158,7 @@ async def async_db_session() -> AsyncGenerator[AsyncSession, None]:
                 await session.close()
 
 @pytest.fixture
-async def sample_user(async_db_session: AsyncSession) -> User:
-    """Create a sample user for tests."""
-    user = User(
+async def sample_user(async_db_session: AsyncSession) -> User: user = User(
         id=uuid4(),
         email="test@example.com",
         hashed_password="fake_password_hash",
@@ -263,24 +247,18 @@ async def sample_evidence_item(
 
 # Authentication fixtures with proper async handling
 @pytest.fixture
-def auth_token(sample_user: User) -> str:
-    """Generate authentication token for tests."""
-    from datetime import timedelta, timezone
+def auth_token(sample_user: User) -> str: from datetime import timedelta, timezone
     from api.dependencies.auth import create_access_token
 
     token_data = {"sub": str(sample_user.id)}
     return create_access_token(data=token_data, expires_delta=timedelta(minutes=30))
 
 @pytest.fixture
-def authenticated_headers(auth_token: str) -> dict:
-    """Provide authenticated headers for API tests."""
-    return {"Authorization": f"Bearer {auth_token}"}
+def authenticated_headers(auth_token: str) -> dict: return {"Authorization": f"Bearer {auth_token}"}
 
 # API client fixture with proper dependency overrides
 @pytest.fixture
-def client() -> TestClient:
-    """Create FastAPI test client with database overrides."""
-    from main import app
+def client() -> TestClient: from main import app
     from api.dependencies.auth import get_current_active_user, get_current_user
     from database.db_setup import get_async_db
     from database.user import User
@@ -295,8 +273,7 @@ def client() -> TestClient:
     )
 
     async def override_get_async_db():
-        async with _db_manager.get_engine() as engine:
-            async with AsyncSession(engine, expire_on_commit=False) as session:
+        async with _db_manager.get_engine() as engine: async with AsyncSession(engine, expire_on_commit=False) as session:
                 try:
                     yield session
                 except (ValueError, TypeError):
@@ -307,10 +284,12 @@ def client() -> TestClient:
 
     # Simple auth overrides that always return the test user
     def override_get_current_user():
+        """Override Get Current User"""
         return test_user
 
     def override_get_current_active_user():
         return test_user
+        """Override Get Current Active User"""
 
     # Store original overrides
     original_overrides = app.dependency_overrides.copy()

@@ -29,6 +29,7 @@ TIMEOUT = aiohttp.ClientTimeout(total=5)
 
 class Colors:
     GREEN = '\x1b[92m'
+    """Class for Colors"""
     RED = '\x1b[91m'
     YELLOW = '\x1b[93m'
     BLUE = '\x1b[94m'
@@ -43,6 +44,7 @@ def colored(text: str, color: str) ->str:
 
 class APIAlignmentTester:
 
+    """Class for APIAlignmentTester"""
     def __init__(self):
         self.results = {'total': 0, 'passed': 0, 'failed': 0, 'warnings': 0,
             'endpoints': [], 'failures': [], 'warnings_list': [],

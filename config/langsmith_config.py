@@ -39,7 +39,8 @@ except ImportError:
     from contextlib import contextmanager
 
     @contextmanager
-    def tracing_v2_enabled(**kwargs) ->Generator[Any, None, None]:
+    def tracing_v2_enabled(**kwargs) -> Generator[Any, None, None]:
+        """Tracing V2 Enabled"""
         yield
 logger = get_logger(__name__)
 
@@ -47,28 +48,23 @@ class LangSmithConfig:
     """Configuration manager for LangSmith tracing."""
 
     @staticmethod
-    def is_tracing_enabled() ->bool:
-        """Check if LangSmith tracing is enabled."""
+    def is_tracing_enabled() -> bool: 
         return os.getenv('LANGCHAIN_TRACING_V2', 'false').lower() == 'true'
 
     @staticmethod
-    def get_api_key() ->Optional[str]:
-        """Get LangSmith API key from environment."""
+    def get_api_key() -> Optional[str]: 
         return os.getenv('LANGCHAIN_API_KEY')
 
     @staticmethod
-    def get_project_name() ->str:
-        """Get LangSmith project name."""
+    def get_project_name() -> str: 
         return os.getenv('LANGCHAIN_PROJECT', 'ruleiq-assessment')
 
     @staticmethod
-    def get_endpoint() ->str:
-        """Get LangSmith API endpoint."""
-        return os.getenv('LANGCHAIN_ENDPOINT',
-            'https://api.smith.langchain.com')
+    def get_endpoint() -> str: 
+        return os.getenv('LANGCHAIN_ENDPOINT', 'https://api.smith.langchain.com')
 
     @staticmethod
-    def validate_configuration() ->bool:
+    def validate_configuration() -> bool: 
         """
         Validate LangSmith configuration.
 
@@ -98,8 +94,7 @@ class LangSmithConfig:
         return True
 
     @staticmethod
-    def get_trace_metadata(session_id: Optional[str]=None, lead_id:
-        Optional[str]=None, **kwargs) ->Dict[str, Any]:
+    def get_trace_metadata(session_id: Optional[str] = None, lead_id: Optional[str] = None, **kwargs) -> Dict[str, Any]:
         """
         Generate metadata for tracing.
 
@@ -111,9 +106,11 @@ class LangSmithConfig:
         Returns:
             Metadata dictionary for tracing
         """
-        metadata = {'application': 'ruleiq', 'component':
-            'assessment_agent', 'environment': os.getenv('ENVIRONMENT',
-            'development')}
+        metadata = {
+            'application': 'ruleiq', 
+            'component': 'assessment_agent', 
+            'environment': os.getenv('ENVIRONMENT', 'development')
+        }
         if session_id:
             metadata['session_id'] = session_id
         if lead_id:
@@ -122,8 +119,7 @@ class LangSmithConfig:
         return metadata
 
     @staticmethod
-    def get_trace_tags(operation: str, phase: Optional[str]=None, **kwargs
-        ) ->list:
+    def get_trace_tags(operation: str, phase: Optional[str] = None, **kwargs) -> List[str]:
         """
         Generate tags for tracing.
 
@@ -143,7 +139,7 @@ class LangSmithConfig:
         return tags
 
     @staticmethod
-    def add_custom_tags(tags: List[str], **custom_tags) ->List[str]:
+    def add_custom_tags(tags: List[str], **custom_tags) -> List[str]: 
         """
         Add custom tags for enhanced filtering in LangSmith UI.
 
@@ -182,9 +178,13 @@ class LangSmithConfig:
         return enhanced_tags
 
     @staticmethod
-    def create_filter_query(session_id: Optional[str]=None, user_id:
-        Optional[str]=None, phase: Optional[str]=None, status: Optional[str
-        ]=None, date_range: Optional[tuple]=None) ->Dict[str, Any]:
+    def create_filter_query(
+        session_id: Optional[str] = None, 
+        user_id: Optional[str] = None, 
+        phase: Optional[str] = None, 
+        status: Optional[str] = None, 
+        date_range: Optional[tuple] = None
+    ) -> Dict[str, Any]:
         """
         Create a filter query for LangSmith traces.
 
@@ -212,14 +212,14 @@ class LangSmithConfig:
             query['metadata.status'] = status
         if date_range:
             start_date, end_date = date_range
-            query['date_range'] = {'start': start_date.isoformat() if
-                hasattr(start_date, 'isoformat') else start_date, 'end': 
-                end_date.isoformat() if hasattr(end_date, 'isoformat') else
-                end_date}
+            query['date_range'] = {
+                'start': start_date.isoformat() if hasattr(start_date, 'isoformat') else start_date, 
+                'end': end_date.isoformat() if hasattr(end_date, 'isoformat') else end_date
+            }
         return query
 
     @staticmethod
-    def _extract_metadata(args: tuple, kwargs: dict) ->Dict[str, Any]:
+    def _extract_metadata(args: tuple, kwargs: dict) -> Dict[str, Any]: 
         """
         Extract metadata from function arguments.
 
@@ -250,7 +250,7 @@ class LangSmithConfig:
         return metadata
 
     @staticmethod
-    def _generate_tags(operation: str, metadata: Dict[str, Any]) ->List[str]:
+    def _generate_tags(operation: str, metadata: Dict[str, Any]) -> List[str]: 
         """
         Generate tags from operation and metadata.
 
@@ -273,8 +273,12 @@ class LangSmithConfig:
             tags.append(f'{parts[0]}.{parts[1]}')
         return tags
 
-def with_langsmith_tracing(operation: str, include_input: bool=True,
-    include_output: bool=True, custom_name: Optional[str]=None) ->Any:
+def with_langsmith_tracing(
+    operation: str, 
+    include_input: bool = True,
+    include_output: bool = True, 
+    custom_name: Optional[str] = None
+) -> Any:
     """
     Enhanced decorator for adding LangSmith tracing to async functions.
 
@@ -288,34 +292,38 @@ def with_langsmith_tracing(operation: str, include_input: bool=True,
         Decorated function with LangSmith tracing
     """
 
-    def decorator(func) ->Any:
-
+    def decorator(func) -> Any:
+        """Decorator"""
         @wraps(func)
-        async def wrapper(*args, **kwargs) ->Any:
-            if not LangSmithConfig.is_tracing_enabled():
+        async def wrapper(*args, **kwargs) -> Any:
+            if not LangSmithConfig.is_tracing_enabled(): 
                 return await func(*args, **kwargs)
             metadata = LangSmithConfig._extract_metadata(args, kwargs)
             metadata['operation'] = operation
             metadata['function'] = func.__name__
             metadata['module'] = func.__module__
             if include_input:
-                metadata['inputs'] = {'args': str(args)[:500], 'kwargs':
-                    str(kwargs)[:500]}
+                metadata['inputs'] = {
+                    'args': str(args)[:500], 
+                    'kwargs': str(kwargs)[:500]
+                }
             tags = LangSmithConfig._generate_tags(operation, metadata)
             run_name = custom_name if custom_name else operation
             start_time = time.perf_counter()
             final_metadata = metadata.copy()
             try:
-                with tracing_v2_enabled(project_name=LangSmithConfig.
-                    get_project_name(), tags=tags, metadata=final_metadata,
-                    run_name=run_name):
+                with tracing_v2_enabled(
+                    project_name=LangSmithConfig.get_project_name(), 
+                    tags=tags, 
+                    metadata=final_metadata,
+                    run_name=run_name
+                ):
                     result = await func(*args, **kwargs)
                     execution_time = time.perf_counter() - start_time
                     final_metadata['execution_time_seconds'] = execution_time
                     final_metadata['status'] = 'success'
                     if include_output:
-                        final_metadata['output'] = str(result)[:500
-                            ] if result else None
+                        final_metadata['output'] = str(result)[:500] if result else None
                     logger.debug('Traced %s - %s (execution_time: %ss)' % (
                         operation, func.__name__, execution_time))
                     return result
@@ -325,8 +333,7 @@ def with_langsmith_tracing(operation: str, include_input: bool=True,
                 final_metadata['status'] = 'error'
                 final_metadata['error'] = str(e)
                 final_metadata['error_type'] = type(e).__name__
-                logger.error('Error in traced function %s: %s' % (func.
-                    __name__, str(e)))
+                logger.error('Error in traced function %s: %s' % (func.__name__, str(e)))
                 raise
         return wrapper
     return decorator

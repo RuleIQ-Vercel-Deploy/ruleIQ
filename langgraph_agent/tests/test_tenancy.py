@@ -232,6 +232,7 @@ class TestGraphTenancy:
         # Mock different responses for different companies
         def mock_invoke(state, config=None):
             company_id = UUID(config.configurable["company_id"])
+            """Mock Invoke"""
             state["company_id"] = company_id
             if company_id == company_a:
                 state["messages"].append(
@@ -273,6 +274,7 @@ class TestGraphTenancy:
 
         def capture_config(state, config=None):
             nonlocal captured_config
+            """Capture Config"""
             captured_config = config
             return state
 
@@ -301,6 +303,7 @@ class TestGraphTenancy:
         # Mock streaming chunks with company context
         async def mock_stream(state, config=None):
             company_from_config = UUID(config.configurable["company_id"])
+            """Mock Stream"""
             yield {"company_id": company_from_config, "chunk": 1}
             yield {"company_id": company_from_config, "chunk": 2}
 

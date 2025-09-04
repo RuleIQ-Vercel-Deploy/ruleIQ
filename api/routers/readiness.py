@@ -20,8 +20,7 @@ router = APIRouter()
 
 @router.get('/assessment')
 async def get_readiness_assessment(framework_id: Optional[UUID]=None,
-    current_user: User=Depends(get_current_active_user), db: AsyncSession=
-    Depends(get_async_db)) ->Any:
+    current_user: User=Depends(get_current_active_user), db: AsyncSession= Depends(get_async_db)) ->Any:
     from sqlalchemy import select
     from database.compliance_framework import ComplianceFramework
     if not framework_id:
@@ -82,7 +81,6 @@ async def generate_report(report_config: ComplianceReport, current_user:
 async def generate_compliance_report_endpoint(report_request:
     ComplianceReport, current_user: User=Depends(get_current_active_user),
     db: AsyncSession=Depends(get_async_db)) ->Dict[str, Any]:
-    """Generate compliance reports."""
     from uuid import uuid4
     report_id = str(uuid4())
     framework_name = report_request.framework or 'GDPR'
@@ -94,7 +92,6 @@ async def generate_compliance_report_endpoint(report_request:
 @router.get('/reports/{report_id}/download')
 async def download_compliance_report(report_id: str, current_user: User=
     Depends(get_current_active_user)) ->Dict[str, Any]:
-    """Download a generated compliance report."""
     return {'report_id': report_id, 'status': 'ready', 'message':
         'Report is ready for download', 'content_type': 'application/pdf',
         'size': 1024}
@@ -104,7 +101,6 @@ async def download_compliance_report(report_id: str, current_user: User=
 async def get_readiness_by_profile(business_profile_id: str, current_user:
     User=Depends(get_current_active_user), db: AsyncSession=Depends(
     get_async_db)) ->Dict[str, Any]:
-    """Get readiness assessment for a specific business profile."""
     return {'business_profile_id': business_profile_id, 'overall_readiness':
         75, 'frameworks': [{'name': 'GDPR', 'readiness_score': 80, 'status':
         'Good'}, {'name': 'ISO 27001', 'readiness_score': 70, 'status':
@@ -116,7 +112,6 @@ async def get_readiness_by_profile(business_profile_id: str, current_user:
 async def get_compliance_gaps(business_profile_id: str, current_user: User=
     Depends(get_current_active_user), db: AsyncSession=Depends(get_async_db)
     ) ->Dict[str, Any]:
-    """Identify compliance gaps for a business profile."""
     return {'business_profile_id': business_profile_id, 'gaps': [{
         'framework': 'GDPR', 'category': 'Data Protection', 'gap':
         'Missing data retention policy', 'severity': 'high',
@@ -130,7 +125,6 @@ async def get_compliance_gaps(business_profile_id: str, current_user: User=
 async def generate_compliance_roadmap(roadmap_request: dict, current_user:
     User=Depends(get_current_active_user), db: AsyncSession=Depends(
     get_async_db)) ->Dict[str, Any]:
-    """Generate a customized compliance roadmap."""
     business_profile_id = roadmap_request.get('business_profile_id', '')
     target_frameworks = roadmap_request.get('frameworks', ['GDPR'])
     timeline = roadmap_request.get('timeline', '6_months')
@@ -150,7 +144,6 @@ async def generate_compliance_roadmap(roadmap_request: dict, current_user:
 async def quick_readiness_assessment(assessment_request: dict, current_user:
     User=Depends(get_current_active_user), db: AsyncSession=Depends(
     get_async_db)) ->Dict[str, Any]:
-    """Perform a quick readiness assessment based on minimal inputs."""
     business_type = assessment_request.get('business_type', 'technology')
     assessment_request.get('size', 'small')
     assessment_request.get('regions', ['EU'])
@@ -169,7 +162,6 @@ async def quick_readiness_assessment(assessment_request: dict, current_user:
 async def get_readiness_trends(business_profile_id: str, period: str='30d',
     current_user: User=Depends(get_current_active_user), db: AsyncSession=
     Depends(get_async_db)) ->Dict[str, Any]:
-    """Get historical readiness trends for a business profile."""
     return {'business_profile_id': business_profile_id, 'period': period,
         'overall_trend': 'improving', 'trend_data': [{'date': '2024-01-01',
         'score': 65}, {'date': '2024-01-08', 'score': 68}, {'date':
@@ -184,7 +176,6 @@ async def get_readiness_trends(business_profile_id: str, period: str='30d',
 async def get_industry_benchmarks(industry: str='technology', size: str=
     'small', current_user: User=Depends(get_current_active_user), db:
     AsyncSession=Depends(get_async_db)) ->Dict[str, Any]:
-    """Get industry benchmarks for compliance readiness."""
     return {'industry': industry, 'company_size': size, 'benchmarks': {
         'average_readiness': 72, 'top_quartile': 85, 'your_position':
         'above_average', 'percentile': 65}, 'framework_benchmarks': {'GDPR':

@@ -19,8 +19,7 @@ class TestAIFallback(unittest.TestCase):
     @patch("services.ai.assistant.get_ai_model")
     @patch("services.ai.assistant.AICircuitBreaker")
     @patch("services.ai.assistant.get_instruction_manager")
-    def test_model_fallback_logic(
-        self, mock_get_instruction_manager, mock_circuit_breaker, mock_get_ai_model
+    def test_model_fallback_logic( self, mock_get_instruction_manager, mock_circuit_breaker, mock_get_ai_model
     ) -> None:
         """
         Test the AI model fallback mechanism by simulating model failures.

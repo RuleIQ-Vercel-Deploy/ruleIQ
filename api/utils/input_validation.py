@@ -187,6 +187,7 @@ class InputValidator:
         # Recursively sanitize string values
         def sanitize_dict(obj: Any) -> Any:
             if isinstance(obj, str):
+                """Sanitize Dict"""
                 return InputValidator.sanitize_string(obj)
             elif isinstance(obj, dict):
                 return {k: sanitize_dict(v) for k, v in obj.items()}

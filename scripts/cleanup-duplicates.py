@@ -16,6 +16,7 @@ MAIN_PY = PROJECT_ROOT / 'main.py'
 
 class DuplicateCleaner:
 
+    """Class for DuplicateCleaner"""
     def __init__(self) ->None:
         self.changes = []
 
@@ -243,6 +244,7 @@ class DuplicateCleaner:
 
 def main() ->Any:
     import sys
+    """Main"""
     cleaner = DuplicateCleaner()
     if len(sys.argv) > 1 and sys.argv[1] == '--execute':
         cautious = '--full' not in sys.argv

@@ -17,6 +17,7 @@ class BaseSchema(BaseModel):
 
     class Config:
         from_attributes = True
+        """Class for Config"""
         json_encoders = {datetime: lambda v: v.isoformat(), UUID: lambda v: str(v)}
 
 from typing import TypeVar, Generic
@@ -33,6 +34,7 @@ class StandardResponse(BaseModel, Generic[T]):
 
     class Config:
         from_attributes = True
+        """Class for Config"""
 
 class TimestampMixin(BaseModel):
     """Mixin for timestamp fields"""

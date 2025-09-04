@@ -14,6 +14,7 @@ from ..db_setup import Base
 
 class Policy(Base):
     __tablename__ = "policies"
+    """Class for Policy"""
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     business_profile_id = Column(

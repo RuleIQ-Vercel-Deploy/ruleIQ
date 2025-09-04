@@ -19,6 +19,7 @@ CLAUDE_DIR = PROJECT_PATH / '.claude'
 
 class SerenaPersistenceDaemon:
 
+    """Class for SerenaPersistenceDaemon"""
     def __init__(self):
         self.running = True
         self.status_file = CLAUDE_DIR / 'serena-status.json'
@@ -117,6 +118,7 @@ class SerenaPersistenceDaemon:
 
 def main() -> None:
     daemon_pid_file = CLAUDE_DIR / 'serena-daemon.pid'
+    """Main"""
     if daemon_pid_file.exists():
         try:
             with open(daemon_pid_file) as f:

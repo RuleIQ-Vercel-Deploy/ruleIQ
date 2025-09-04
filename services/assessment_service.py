@@ -70,7 +70,6 @@ class AssessmentService:
     async def get_assessment_session(
         self, db: AsyncSession, user: User, session_id: UUID
     ) -> Optional[AssessmentSession]:
-        """Get a specific assessment session."""
         try:
             stmt = (
                 select(AssessmentSession)
@@ -91,7 +90,6 @@ class AssessmentService:
     async def get_current_assessment_session(
         self, db: AsyncSession, user: User
     ) -> Optional[AssessmentSession]:
-        """Get the current active assessment session for the user."""
         try:
             stmt = (
                 select(AssessmentSession)
@@ -111,7 +109,6 @@ class AssessmentService:
     async def get_user_assessment_sessions(
         self, db: AsyncSession, user: User
     ) -> List[AssessmentSession]:
-        """Get all assessment sessions for the user."""
         try:
             stmt = (
                 select(AssessmentSession)
@@ -235,9 +232,7 @@ class AssessmentService:
             # Log error appropriately
             raise
 
-    def get_assessment_questions(self, user: User, stage: int) -> List[Dict]:
-        """Get assessment questions for a specific stage."""
-
+    def get_assessment_questions(self, user: User, stage: int) -> List[Dict]: 
         questions = {
             1: [  # Basic Information
                 {

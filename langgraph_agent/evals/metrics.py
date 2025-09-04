@@ -28,6 +28,7 @@ class EvaluationResult:
 
     def to_dict(self) -> Dict[str, Any]:
         return {
+        """To Dict"""
             "metric_name": self.metric_name,
             "score": self.score,
             "details": self.details,

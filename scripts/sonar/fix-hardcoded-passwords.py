@@ -4,9 +4,7 @@
 from typing import Anyimport os
 import re
 
-def fix_hardcoded_passwords() -> Any:
-    """Replace hardcoded passwords with environment variables."""
-    
+def fix_hardcoded_passwords() -> Any: 
     files_to_fix = [
         ('archive/scripts/capture_test_errors.py', [11, 34]),
         ('archive/test_configs/conftest_fixed.py', [45]),
@@ -44,9 +42,7 @@ def fix_hardcoded_passwords() -> Any:
                 f.writelines(lines)
             print(f"✓ Fixed {filepath}")
 
-def remove_sonarqube_tokens() -> Any:
-    """Remove SonarQube tokens from code."""
-    
+def remove_sonarqube_tokens() -> Any: 
     files_with_tokens = [
         'sonarcloud/get_blocker_issues.py',
         'sonarcloud/get_detailed_blockers.py', 

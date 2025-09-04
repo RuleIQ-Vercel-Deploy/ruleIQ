@@ -12,20 +12,14 @@ logger = logging.getLogger(__name__)
 class ComplianceQueryEngine:
     """Query engine for compliance data in Neo4j."""
 
-    def __init__(self, uri: str, user: str, password: str):
-        """Initialize query engine with Neo4j connection."""
-        self.driver = AsyncGraphDatabase.driver(uri, auth=(user, password))
+    def __init__(self, uri: str, user: str, password: str): self.driver = AsyncGraphDatabase.driver(uri, auth=(user, password))
         self.logger = logging.getLogger(self.__class__.__name__)
 
-    async def close(self):
-        """Close Neo4j driver connection."""
-        await self.driver.close()
+    async def close(self): await self.driver.close()
 
     async def get_applicable_regulations(
         self, business_profile: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
-        """
-        Get regulations applicable to a business profile.
+    ) -> List[Dict[str, Any]]: Get regulations applicable to a business profile.
 
         Args:
             business_profile: Dictionary with business attributes
@@ -52,9 +46,7 @@ class ComplianceQueryEngine:
                 regulations.append(reg)
             return regulations
 
-    async def get_regulation_risk_analysis(self, regulation_id: str) -> Dict[str, Any]:
-        """
-        Get risk analysis for a specific regulation.
+    async def get_regulation_risk_analysis(self, regulation_id: str) -> Dict[str, Any]: Get risk analysis for a specific regulation.
 
         Args:
             regulation_id: Regulation identifier
@@ -65,9 +57,7 @@ class ComplianceQueryEngine:
         query = """
         MATCH (r:Regulation {id: $reg_id})
         OPTIONAL MATCH (r)-[:HAS_ENFORCEMENT]->(e:Enforcement)
-        RETURN r, collect(e) as enforcements
-        """
-
+        RETURN r, collect(e) as enforcements 
         async with self.driver.session() as session:
             result = await session.run(query, reg_id=regulation_id)
             record = await result.single()
@@ -96,9 +86,7 @@ class ComplianceQueryEngine:
                 ),
             }
 
-    async def get_suggested_controls(self, regulation_id: str) -> List[str]:
-        """
-        Get suggested controls for a regulation.
+    async def get_suggested_controls(self, regulation_id: str) -> List[str]: Get suggested controls for a regulation.
 
         Args:
             regulation_id: Regulation identifier
@@ -118,9 +106,7 @@ class ComplianceQueryEngine:
                 return record["controls"]
             return []
 
-    async def get_automation_statistics(self) -> Dict[str, Any]:
-        """
-        Get automation potential statistics across all regulations.
+    async def get_automation_statistics(self) -> Dict[str, Any]: Get automation potential statistics across all regulations.
 
         Returns:
             Statistics on automation potential
@@ -133,9 +119,7 @@ class ComplianceQueryEngine:
             min(r.automation_potential) as min_potential,
             max(r.automation_potential) as max_potential,
             count(r) as regulation_count,
-            count(CASE WHEN r.automation_potential >= 0.7 THEN 1 END) as high_automation_count
-        """
-
+            count(CASE WHEN r.automation_potential >= 0.7 THEN 1 END) as high_automation_count 
         async with self.driver.session() as session:
             result = await session.run(query)
             record = await result.single()
@@ -143,9 +127,7 @@ class ComplianceQueryEngine:
 
     async def get_regulation_dependencies(
         self, regulation_id: str
-    ) -> List[Dict[str, Any]]:
-        """
-        Get regulations that this regulation depends on.
+    ) -> List[Dict[str, Any]]: Get regulations that this regulation depends on.
 
         Args:
             regulation_id: Regulation identifier
@@ -167,9 +149,7 @@ class ComplianceQueryEngine:
 
     async def find_equivalent_regulations(
         self, regulation_id: str
-    ) -> List[Dict[str, Any]]:
-        """
-        Find regulations equivalent to the given one.
+    ) -> List[Dict[str, Any]]: Find regulations equivalent to the given one.
 
         Args:
             regulation_id: Regulation identifier
@@ -191,9 +171,7 @@ class ComplianceQueryEngine:
 
     async def find_conflicting_regulations(
         self, regulation_id: str
-    ) -> List[Dict[str, Any]]:
-        """
-        Find regulations that conflict with the given one.
+    ) -> List[Dict[str, Any]]: Find regulations that conflict with the given one.
 
         Args:
             regulation_id: Regulation identifier

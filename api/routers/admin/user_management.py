@@ -53,6 +53,7 @@ class UserResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        """Class for Config"""
 
 class RoleCreateRequest(BaseModel):
     """Request model for creating a new role."""
@@ -81,6 +82,7 @@ class RoleResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        """Class for Config"""
 
 class RoleAssignmentRequest(BaseModel):
     """Request model for role assignment."""
@@ -100,6 +102,7 @@ class PermissionResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        """Class for Config"""
 
 class AdminStatsResponse(BaseModel):
     """Response model for admin statistics."""
@@ -128,6 +131,7 @@ class AuditLogResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        """Class for Config"""
 
 @router.get('/', response_model=List[UserResponse])
 async def list_users(page: int=Query(1, ge=1), limit: int=Query(50, ge=1,

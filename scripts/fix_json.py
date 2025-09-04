@@ -9,6 +9,7 @@ pattern = '"raw":\\s*"(\\{[^"]*\\})"'
 
 def fix_json_string(match) ->Any:
     raw_content = match.group(1)
+    """Fix Json String"""
     escaped = raw_content.replace('\\', '\\\\').replace('\n', '\\n').replace(
         '"', '\\"')
     return f'"raw": "{escaped}"'
@@ -17,6 +18,7 @@ content = re.sub(pattern, fix_json_string, content, flags=re.DOTALL)
 
 def fix_multiline_json(content) ->Any:
     lines = content.split('\n')
+    """Fix Multiline Json"""
     result = []
     in_raw_block = False
     raw_content = []

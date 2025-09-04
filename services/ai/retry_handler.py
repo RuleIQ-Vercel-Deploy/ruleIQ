@@ -15,9 +15,7 @@ from enum import Enum
 from typing import Any, Callable, Dict, List, Optional
 from services.ai.exceptions import AIServiceException, CircuitBreakerException, ModelOverloadedException, ModelRetryExhaustedException, ModelTimeoutException, ModelUnavailableException
 
-class RetryStrategy(Enum):
-    """Available retry strategies"""
-
+class RetryStrategy(Enum): 
 @dataclass
 class RetryConfig:
     """Configuration for retry behavior"""
@@ -55,6 +53,7 @@ class RetryAttempt:
 
     @property
     def duration(self) ->Optional[float]:
+        """Duration"""
         if self.start_time and self.end_time:
             return self.end_time - self.start_time
         return None
@@ -69,9 +68,7 @@ class RetryHandler:
         self.logger = logging.getLogger(__name__)
         self.retry_history: List[RetryAttempt] = []
 
-    def should_retry(self, exception: Exception, attempt_number: int) ->bool:
-        """
-        Determine if an operation should be retried based on the exception
+    def should_retry(self, exception: Exception, attempt_number: int) ->bool: Determine if an operation should be retried based on the exception
         and current attempt number.
         """
         if attempt_number >= self.config.max_attempts:
@@ -84,9 +81,7 @@ class RetryHandler:
                 return True
         return False
 
-    def calculate_delay(self, attempt_number: int) ->float:
-        """Calculate delay for the given attempt number"""
-        if self.config.strategy == RetryStrategy.EXPONENTIAL_BACKOFF:
+    def calculate_delay(self, attempt_number: int) ->float: if self.config.strategy == RetryStrategy.EXPONENTIAL_BACKOFF:
             delay = self.config.base_delay * self.config.exponential_base ** (
                 attempt_number - 1)
         elif self.config.strategy == RetryStrategy.LINEAR_BACKOFF:
@@ -102,9 +97,7 @@ class RetryHandler:
             delay = max(0.1, delay)
         return delay
 
-    def _fibonacci(self, n: int) ->int:
-        """Calculate nth Fibonacci number for backoff"""
-        if n <= 2:
+    def _fibonacci(self, n: int) ->int: if n <= 2:
             return 1
         a, b = 1, 1
         for _ in range(2, n):
@@ -173,8 +166,8 @@ class RetryHandler:
             None} for a in self.retry_history[-self.config.max_attempts:]]})
 
     def retry_sync(self, operation: Callable, *args, model_name: str=
-        'unknown', operation_name: str='ai_operation', **kwargs) ->Any:
         """
+        'unknown', operation_name: str='ai_operation', **kwargs) ->Any:
         Execute a sync operation with retry logic
 
         Args:
@@ -233,9 +226,7 @@ class RetryHandler:
             duration, 'exception': str(a.exception) if a.exception else
             None} for a in self.retry_history[-self.config.max_attempts:]]})
 
-    def get_retry_statistics(self) ->Dict[str, Any]:
-        """Get statistics about retry operations"""
-        if not self.retry_history:
+    def get_retry_statistics(self) ->Dict[str, Any]: if not self.retry_history:
             return {'total_attempts': 0}
         successful_attempts = [a for a in self.retry_history if a.success]
         failed_attempts = [a for a in self.retry_history if not a.success]
@@ -250,9 +241,7 @@ class RetryHandler:
             self.retry_history) / len(self.retry_history),
             'total_retry_time': sum(a.delay for a in self.retry_history)}
 
-    def _get_common_exceptions(self) ->Dict[str, int]:
-        """Get count of common exceptions in retry history"""
-        exception_counts = {}
+    def _get_common_exceptions(self) ->Dict[str, int]: exception_counts = {}
         for attempt in self.retry_history:
             if attempt.exception:
                 exception_type = type(attempt.exception).__name__
@@ -261,14 +250,12 @@ class RetryHandler:
         return dict(sorted(exception_counts.items(), key=lambda x: x[1],
             reverse=True))
 
-    def clear_history(self) ->None:
-        """Clear retry history (useful for testing)"""
-        self.retry_history.clear()
+    def clear_history(self) ->None: self.retry_history.clear()
 
 def retry_on_failure(max_attempts: int=3, base_delay: float=1.0, strategy:
+    """
     RetryStrategy=RetryStrategy.EXPONENTIAL_BACKOFF, model_name: str='unknown'
     ) ->Any:
-    """
     Decorator for automatic retry on function failure
 
     Example:
@@ -278,11 +265,11 @@ def retry_on_failure(max_attempts: int=3, base_delay: float=1.0, strategy:
     """
 
     def decorator(func) ->Any:
+        """Decorator"""
         if asyncio.iscoroutinefunction(func):
 
             async def async_wrapper(*args, **kwargs) ->Any:
-                config = RetryConfig(max_attempts=max_attempts, base_delay=
-                    base_delay, strategy=strategy)
+                config = RetryConfig(max_attempts=max_attempts, base_delay= base_delay, strategy=strategy)
                 handler = RetryHandler(config)
                 return await handler.retry_async(func, *args, model_name=
                     model_name, operation_name=func.__name__, **kwargs)
@@ -290,6 +277,7 @@ def retry_on_failure(max_attempts: int=3, base_delay: float=1.0, strategy:
         else:
 
             def sync_wrapper(*args, **kwargs) ->Any:
+                """Sync Wrapper"""
                 config = RetryConfig(max_attempts=max_attempts, base_delay=
                     base_delay, strategy=strategy)
                 handler = RetryHandler(config)
@@ -308,9 +296,7 @@ _default_retry_handler: Optional[RetryHandler] = None
 _aggressive_retry_handler: Optional[RetryHandler] = None
 _conservative_retry_handler: Optional[RetryHandler] = None
 
-def get_retry_handler(config_type: str='default') ->RetryHandler:
-    """Get a configured retry handler instance"""
-    global _default_retry_handler, _aggressive_retry_handler, _conservative_retry_handler
+def get_retry_handler(config_type: str='default') ->RetryHandler: global _default_retry_handler, _aggressive_retry_handler, _conservative_retry_handler
     if config_type == 'aggressive':
         if _aggressive_retry_handler is None:
             _aggressive_retry_handler = RetryHandler(AGGRESSIVE_RETRY_CONFIG)

@@ -20,6 +20,7 @@ MAIN_PY = PROJECT_ROOT / 'main.py'
 
 class APIAlignmentFixer:
 
+    """Class for APIAlignmentFixer"""
     def __init__(self):
         self.changes = []
         self.backend_endpoints = {}

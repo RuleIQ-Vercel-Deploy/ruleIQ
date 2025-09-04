@@ -39,9 +39,7 @@ class DeadCodeRemover:
             "risks": []
         }
         
-    def create_backup(self):
-        """Create backup before making changes"""
-        if not self.dry_run:
+    def create_backup(self): if not self.dry_run:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             self.backup_dir = self.project_root / f"backup_{timestamp}"
             print(f"📦 Creating backup at {self.backup_dir}...")
@@ -54,9 +52,7 @@ class DeadCodeRemover:
             shutil.copytree(self.project_root, self.backup_dir, ignore=ignore_patterns)
             print(f"✅ Backup created successfully")
             
-    def remove_celery_code(self):
-        """Remove all Celery-related code (completely replaced by LangGraph)"""
-        print("\n🔍 Removing Celery remnants...")
+    def remove_celery_code(self): print("\n🔍 Removing Celery remnants...")
         
         celery_patterns = [
             (r'from\s+celery\s+import.*\n', ''),
@@ -105,9 +101,7 @@ class DeadCodeRemover:
         self.report["metrics"]["lines_removed"] += lines_removed
         print(f"  ✅ Removed Celery code from {files_modified} files ({lines_removed} lines)")
         
-    def remove_unused_imports(self):
-        """Remove unused imports from Python files"""
-        print("\n🔍 Removing unused imports...")
+    def remove_unused_imports(self): print("\n🔍 Removing unused imports...")
         
         if not self.dry_run:
             try:
@@ -130,9 +124,7 @@ class DeadCodeRemover:
         else:
             print("  📝 Would run autoflake to remove unused imports (dry run)")
             
-    def remove_commented_code(self):
-        """Remove large blocks of commented code"""
-        print("\n🔍 Removing commented code blocks...")
+    def remove_commented_code(self): print("\n🔍 Removing commented code blocks...")
         
         files_modified = 0
         total_lines_removed = 0
@@ -189,9 +181,7 @@ class DeadCodeRemover:
         self.report["metrics"]["lines_removed"] += total_lines_removed
         print(f"  ✅ Removed {total_lines_removed} lines of commented code from {files_modified} files")
         
-    def remove_console_logs(self):
-        """Remove console.log statements from JavaScript/TypeScript"""
-        print("\n🔍 Removing console.log statements...")
+    def remove_console_logs(self): print("\n🔍 Removing console.log statements...")
         
         files_modified = 0
         lines_removed = 0
@@ -230,9 +220,7 @@ class DeadCodeRemover:
         self.report["metrics"]["lines_removed"] += lines_removed
         print(f"  ✅ Removed console.log from {files_modified} files ({lines_removed} lines)")
         
-    def remove_empty_files(self):
-        """Remove empty or near-empty Python files"""
-        print("\n🔍 Removing empty files...")
+    def remove_empty_files(self): print("\n🔍 Removing empty files...")
         
         files_deleted = 0
         
@@ -264,9 +252,7 @@ class DeadCodeRemover:
         self.report["metrics"]["files_deleted"] += files_deleted
         print(f"  ✅ Removed {files_deleted} empty files")
         
-    def remove_old_backups(self):
-        """Remove old backup and temporary files"""
-        print("\n🔍 Removing old backup files...")
+    def remove_old_backups(self): print("\n🔍 Removing old backup files...")
         
         backup_patterns = ['*.bak', '*.backup', '*.old', '*~', '*.orig', '*.tmp']
         files_deleted = 0
@@ -286,9 +272,7 @@ class DeadCodeRemover:
         self.report["metrics"]["files_deleted"] += files_deleted
         print(f"  ✅ Removed {files_deleted} backup/temporary files")
         
-    def clean_unused_dependencies(self):
-        """Identify unused dependencies in requirements.txt and package.json"""
-        print("\n🔍 Analyzing unused dependencies...")
+    def clean_unused_dependencies(self): print("\n🔍 Analyzing unused dependencies...")
         
         # Python dependencies
         unused_python = []
@@ -324,9 +308,7 @@ class DeadCodeRemover:
                 "recommendation": "Review and remove if truly unused"
             })
             
-    def clean_env_variables(self):
-        """Remove unused environment variables"""
-        print("\n🔍 Cleaning environment variables...")
+    def clean_env_variables(self): print("\n🔍 Cleaning environment variables...")
         
         env_files = ['.env', '.env.example', '.env.local']
         all_vars = {}
@@ -364,9 +346,7 @@ class DeadCodeRemover:
             
             self.report["removed"]["config"].extend(list(unused_vars))
             
-    def generate_final_report(self):
-        """Generate comprehensive removal report"""
-        print("\n" + "="*80)
+    def generate_final_report(self): print("\n" + "="*80)
         print("DEAD CODE REMOVAL REPORT")
         print("="*80)
         
@@ -407,9 +387,7 @@ class DeadCodeRemover:
             
         return self.report["metrics"]["lines_removed"]
         
-    def run_tests(self):
-        """Run tests to ensure nothing broke"""
-        print("\n🧪 Running tests to verify functionality...")
+    def run_tests(self): print("\n🧪 Running tests to verify functionality...")
         
         try:
             # Run Python tests
@@ -432,9 +410,7 @@ class DeadCodeRemover:
         except FileNotFoundError:
             print("  ⚠️  pytest not available")
             
-def main():
-    """Main execution"""
-    import argparse
+def main(): import argparse
     
     parser = argparse.ArgumentParser(description="Dead Code Removal for RuleIQ")
     parser.add_argument("--execute", action="store_true", 

@@ -21,6 +21,7 @@ TEST_TOKEN = 'your-test-token-here'
 
 class APIConnectionTester:
 
+    """Class for APIConnectionTester"""
     def __init__(self):
         self.headers = {'Authorization': f'Bearer {TEST_TOKEN}',
             'Content-Type': 'application/json'}

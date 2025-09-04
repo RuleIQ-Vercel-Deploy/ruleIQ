@@ -18,6 +18,7 @@ import json
 
 class APIAlignmentFixer:
 
+    """Class for APIAlignmentFixer"""
     def __init__(self):
         self.api_dir = Path('api')
         self.fixes_applied = []

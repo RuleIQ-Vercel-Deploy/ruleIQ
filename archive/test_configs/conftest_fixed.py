@@ -137,14 +137,10 @@ from database.generated_policy import GeneratedPolicy
 pytest_plugins = ("pytest_asyncio",)
 
 @pytest.fixture(scope="session")
-def event_loop_policy():
-    """Set event loop policy for the test session."""
-    return asyncio.get_event_loop_policy()
+def event_loop_policy(): return asyncio.get_event_loop_policy()
 
 @pytest.fixture(scope="session")
-def event_loop():
-    """Create event loop for entire test session."""
-    policy = asyncio.get_event_loop_policy()
+def event_loop(): policy = asyncio.get_event_loop_policy()
     loop = policy.new_event_loop()
     asyncio.set_event_loop(loop)
     yield loop
@@ -154,9 +150,7 @@ def event_loop():
 # DATABASE URL MANAGEMENT
 # =============================================================================
 
-def get_test_database_url():
-    """Get test database URLs."""
-    db_url = os.environ["DATABASE_URL"]
+def get_test_database_url(): db_url = os.environ["DATABASE_URL"]
 
     # Sync URL
     sync_url = db_url
@@ -172,9 +166,7 @@ def get_test_database_url():
     return evidence
 
 @pytest.fixture
-def sample_policy_document(db_session, sample_business_profile):
-    """Create a sample policy document for tests."""
-    policy = GeneratedPolicy(
+def sample_policy_document(db_session, sample_business_profile): policy = GeneratedPolicy(
         id=uuid4(),
         user_id=sample_business_profile.user_id,
         business_profile_id=sample_business_profile.id,
@@ -195,14 +187,10 @@ def sample_policy_document(db_session, sample_business_profile):
 # =============================================================================
 
 @pytest.fixture(autouse=True)
-def ensure_ai_mocking():
-    """Ensure all tests use mocked AI instead of real API calls."""
-    return mock_model
+def ensure_ai_mocking(): return mock_model
 
 @pytest.fixture
-def mock_ai_client():
-    """Provide a mock AI client for testing AI-related functionality."""
-    from unittest.mock import Mock, patch, AsyncMock
+def mock_ai_client(): from unittest.mock import Mock, patch, AsyncMock
 
     mock_client = Mock()
 
@@ -219,9 +207,7 @@ def mock_ai_client():
 # =============================================================================
 
 @pytest.fixture
-def sample_business_profile_data():
-    """Sample business profile data for testing."""
-    return {
+def sample_business_profile_data(): return {
         "company_name": f"Test Company {uuid4().hex[:8]}",
         "industry": "Technology",
         "employee_count": 50,
@@ -242,9 +228,7 @@ def sample_business_profile_data():
     }
 
 @pytest.fixture
-def compliance_golden_dataset():
-    """Load comprehensive compliance questions from golden dataset JSON files."""
-    dataset_path = (
+def compliance_golden_dataset(): dataset_path = (
         Path(__file__).parent / "ai" / "golden_datasets" / "gdpr_questions.json"
     )
 
@@ -274,16 +258,10 @@ def compliance_golden_dataset():
 # =============================================================================
 
 @pytest.fixture
-def authenticated_test_client(client):
-    """Alias for backward compatibility."""
-    return client
+def authenticated_test_client(client): return client
 
 @pytest.fixture
-def unauthenticated_test_client(unauthenticated_client):
-    """Alias for backward compatibility."""
-    return unauthenticated_client
+def unauthenticated_test_client(unauthenticated_client): return unauthenticated_client
 
 @pytest.fixture
-def test_client(client):
-    """Alias for backward compatibility."""
-    return client
+def test_client(client): return client

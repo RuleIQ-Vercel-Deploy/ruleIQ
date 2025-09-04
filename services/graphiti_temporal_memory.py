@@ -13,9 +13,7 @@ from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
-class TemporalGranularity(Enum):
-    """Time granularity levels for regulatory changes"""
-
+class TemporalGranularity(Enum): 
     REAL_TIME = "real_time"  # Immediate changes
     DAILY = "daily"  # Daily consolidation
     WEEKLY = "weekly"  # Weekly summaries
@@ -23,9 +21,7 @@ class TemporalGranularity(Enum):
     QUARTERLY = "quarterly"  # Quarterly reviews
     ANNUAL = "annual"  # Annual compliance
 
-class ChangeType(Enum):
-    """Types of regulatory changes"""
-
+class ChangeType(Enum): 
     NEW_REGULATION = "new_regulation"
     AMENDMENT = "amendment"
     REPEAL = "repeal"
@@ -87,9 +83,7 @@ class GraphitiTemporalMemory:
         self.regulatory_clocks: Dict[str, RegulatoryClock] = {}
         self.change_history: List[Dict[str, Any]] = []
 
-    async def add_temporal_node(self, node: TemporalNode) -> str:
-        """Add a time-aware node to the graph"""
-        with self.driver.session() as session:
+    async def add_temporal_node(self, node: TemporalNode) -> str: with self.driver.session() as session:
             query = """
             CREATE (n:TemporalEntity {
                 node_id: $node_id,
@@ -129,9 +123,7 @@ class GraphitiTemporalMemory:
 
             return result.single()["node_id"]
 
-    async def add_temporal_edge(self, edge: TemporalEdge) -> str:
-        """Add a time-aware relationship to the graph"""
-        with self.driver.session() as session:
+    async def add_temporal_edge(self, edge: TemporalEdge) -> str: with self.driver.session() as session:
             query = """
             MATCH (s:TemporalEntity {node_id: $source_id})
             MATCH (t:TemporalEntity {node_id: $target_id})
@@ -162,9 +154,7 @@ class GraphitiTemporalMemory:
 
     async def query_at_time(
         self, timestamp: datetime, entity_type: Optional[str] = None
-    ) -> List[TemporalNode]:
-        """Query the graph state at a specific point in time"""
-        with self.driver.session() as session:
+    ) -> List[TemporalNode]: with self.driver.session() as session:
             query = """
             MATCH (n:TemporalEntity)
             WHERE datetime($timestamp) >= n.valid_from
@@ -239,9 +229,7 @@ class GraphitiTemporalMemory:
         jurisdiction: Optional[str] = None,
         start_date: Optional[datetime] = None,
         end_date: Optional[datetime] = None,
-    ) -> List[Dict[str, Any]]:
-        """Get timeline of regulatory changes"""
-        with self.driver.session() as session:
+    ) -> List[Dict[str, Any]]: with self.driver.session() as session:
             query = """
             MATCH (n:TemporalEntity {entity_type: 'regulatory_change'})
             WHERE 1=1
@@ -286,9 +274,7 @@ class GraphitiTemporalMemory:
 
     async def predict_future_state(
         self, future_date: datetime, entity_type: Optional[str] = None
-    ) -> Dict[str, Any]:
-        """Predict compliance state at a future date based on known changes"""
-
+    ) -> Dict[str, Any]: 
         # Get current state
         current_state = await self.query_at_time(datetime.now(), entity_type)
 
@@ -298,9 +284,7 @@ class GraphitiTemporalMemory:
             MATCH (n:TemporalEntity)
             WHERE n.metadata CONTAINS 'effective_date'
             AND datetime($future_date) >= datetime(n.metadata.effective_date)
-            AND datetime($future_date) >= n.valid_from
-            """
-
+            AND datetime($future_date) >= n.valid_from 
             if entity_type:
                 query += " AND n.entity_type = $entity_type"
 
@@ -327,9 +311,7 @@ class GraphitiTemporalMemory:
 
     async def consolidate_temporal_knowledge(
         self, granularity: TemporalGranularity, jurisdiction: Optional[str] = None
-    ) -> Dict[str, Any]:
-        """Consolidate temporal knowledge at specified granularity"""
-
+    ) -> Dict[str, Any]: 
         consolidation_window = self._get_consolidation_window(granularity)
         start_date = datetime.now() - consolidation_window
 
@@ -362,9 +344,7 @@ class GraphitiTemporalMemory:
 
     async def detect_temporal_patterns(
         self, lookback_days: int = 90
-    ) -> List[Dict[str, Any]]:
-        """Detect patterns in regulatory changes over time"""
-
+    ) -> List[Dict[str, Any]]: 
         start_date = datetime.now() - timedelta(days=lookback_days)
         timeline = await self.get_regulatory_timeline(start_date=start_date)
 
@@ -418,9 +398,7 @@ class GraphitiTemporalMemory:
 
         return patterns
 
-    def _track_change(self, node: TemporalNode):
-        """Track change in history"""
-        self.change_history.append(
+    def _track_change(self, node: TemporalNode): self.change_history.append(
             {
                 "timestamp": datetime.now().isoformat(),
                 "node_id": node.node_id,
@@ -430,9 +408,7 @@ class GraphitiTemporalMemory:
             },
         )
 
-    def _dict_to_temporal_node(self, data: Dict) -> TemporalNode:
-        """Convert Neo4j result to TemporalNode"""
-        return TemporalNode(
+    def _dict_to_temporal_node(self, data: Dict) -> TemporalNode: return TemporalNode(
             node_id=data["node_id"],
             entity_type=data["entity_type"],
             content=(
@@ -463,9 +439,7 @@ class GraphitiTemporalMemory:
             ),
         )
 
-    def _get_consolidation_window(self, granularity: TemporalGranularity) -> timedelta:
-        """Get time window for consolidation"""
-        windows = {
+    def _get_consolidation_window(self, granularity: TemporalGranularity) -> timedelta: windows = {
             TemporalGranularity.REAL_TIME: timedelta(hours=1),
             TemporalGranularity.DAILY: timedelta(days=1),
             TemporalGranularity.WEEKLY: timedelta(weeks=1),
@@ -475,9 +449,7 @@ class GraphitiTemporalMemory:
         }
         return windows.get(granularity, timedelta(days=1))
 
-    def _calculate_prediction_confidence(self, future_date: datetime) -> float:
-        """Calculate confidence for future predictions"""
-        days_ahead = (future_date - datetime.now()).days
+    def _calculate_prediction_confidence(self, future_date: datetime) -> float: days_ahead = (future_date - datetime.now()).days
 
         if days_ahead <= 30:
             return 0.95
@@ -490,9 +462,7 @@ class GraphitiTemporalMemory:
         else:
             return 0.30
 
-    async def close(self):
-        """Close database connection"""
-        self.driver.close()
+    async def close(self): self.driver.close()
 
 class TemporalMemoryIntegration:
     """
@@ -504,9 +474,7 @@ class TemporalMemoryIntegration:
 
     async def process_regulatory_update(
         self, update_text: str, sources: List[str], jurisdiction: str = "UK"
-    ) -> Dict[str, Any]:
-        """Process a regulatory update and store in temporal memory"""
-
+    ) -> Dict[str, Any]: 
         # Extract key information (simplified - would use NLP in production)
         change_type = self._classify_change(update_text)
         effective_date = self._extract_effective_date(update_text)
@@ -533,9 +501,7 @@ class TemporalMemoryIntegration:
             "patterns_detected": patterns,
         }
 
-    async def get_compliance_forecast(self, months_ahead: int = 3) -> Dict[str, Any]:
-        """Get compliance forecast for coming months"""
-
+    async def get_compliance_forecast(self, months_ahead: int = 3) -> Dict[str, Any]: 
         future_date = datetime.now() + timedelta(days=months_ahead * 30)
         prediction = await self.memory.predict_future_state(future_date)
 
@@ -560,9 +526,7 @@ class TemporalMemoryIntegration:
             "risk_assessment": self._assess_compliance_risk(upcoming_deadlines),
         }
 
-    def _classify_change(self, text: str) -> ChangeType:
-        """Classify the type of regulatory change"""
-        text_lower = text.lower()
+    def _classify_change(self, text: str) -> ChangeType: text_lower = text.lower()
 
         if "new regulation" in text_lower or "introduces" in text_lower:
             return ChangeType.NEW_REGULATION
@@ -579,21 +543,15 @@ class TemporalMemoryIntegration:
         else:
             return ChangeType.EFFECTIVE_DATE
 
-    def _extract_effective_date(self, text: str) -> datetime:
-        """Extract effective date from text (simplified)"""
-        # In production, would use proper date extraction
+    def _extract_effective_date(self, text: str) -> datetime: # In production, would use proper date extraction
         return datetime.now() + timedelta(days=30)
 
-    def _extract_regulation_id(self, text: str) -> str:
-        """Extract regulation identifier (simplified)"""
-        # In production, would use NER or pattern matching
+    def _extract_regulation_id(self, text: str) -> str: # In production, would use NER or pattern matching
         import hashlib
 
         return f"REG_{hashlib.md5(text.encode()).hexdigest()[:8]}"
 
-    def _assess_compliance_risk(self, upcoming_changes: List[Dict]) -> str:
-        """Assess compliance risk based on upcoming changes"""
-        if len(upcoming_changes) == 0:
+    def _assess_compliance_risk(self, upcoming_changes: List[Dict]) -> str: if len(upcoming_changes) == 0:
             return "LOW"
         elif len(upcoming_changes) <= 3:
             return "MEDIUM"

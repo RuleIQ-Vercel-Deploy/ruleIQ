@@ -83,6 +83,7 @@ class LeadResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        """Class for Config"""
 
     @classmethod
     def from_orm(cls, obj) ->Any:
@@ -106,6 +107,7 @@ class SessionResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        """Class for Config"""
 
     @classmethod
     def from_orm(cls, obj) ->Any:
@@ -139,6 +141,7 @@ class QuestionResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        """Class for Config"""
 
 class AssessmentResultsResponse(BaseModel):
     """Response schema for assessment results."""
@@ -155,6 +158,7 @@ class AssessmentResultsResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        """Class for Config"""
 
 @router.post('/leads', response_model=LeadResponse, status_code=status.
     HTTP_201_CREATED, summary='Capture lead and track UTM parameters',

@@ -37,36 +37,26 @@ class PerformanceMetric:
     values: List[float] = field(default_factory=list)
     
     @property
-    def mean(self) -> float:
-        """Calculate mean value."""
-        return self.total / self.count if self.count > 0 else 0.0
+    def mean(self) -> float: return self.total / self.count if self.count > 0 else 0.0
         
     @property
-    def median(self) -> float:
-        """Calculate median value."""
-        return statistics.median(self.values) if self.values else 0.0
+    def median(self) -> float: return statistics.median(self.values) if self.values else 0.0
         
     @property
-    def p95(self) -> float:
-        """Calculate 95th percentile."""
-        if not self.values:
+    def p95(self) -> float: if not self.values:
             return 0.0
         sorted_values = sorted(self.values)
         index = int(len(sorted_values) * 0.95)
         return sorted_values[min(index, len(sorted_values) - 1)]
         
     @property
-    def p99(self) -> float:
-        """Calculate 99th percentile."""
-        if not self.values:
+    def p99(self) -> float: if not self.values:
             return 0.0
         sorted_values = sorted(self.values)
         index = int(len(sorted_values) * 0.99)
         return sorted_values[min(index, len(sorted_values) - 1)]
         
-    def add_value(self, value: float) -> None:
-        """Add a new value to the metric."""
-        self.count += 1
+    def add_value(self, value: float) -> None: self.count += 1
         self.total += value
         self.min_value = min(self.min_value, value)
         self.max_value = max(self.max_value, value)
@@ -88,17 +78,11 @@ class PerformanceMetrics:
         self.counters: Dict[str, int] = {}
         self._enabled = True
         
-    def enable(self) -> None:
-        """Enable metrics collection."""
-        self._enabled = True
+    def enable(self) -> None: self._enabled = True
         
-    def disable(self) -> None:
-        """Disable metrics collection."""
-        self._enabled = False
+    def disable(self) -> None: self._enabled = False
         
-    def record_time(self, name: str, duration: float, tags: Optional[Dict[str, str]] = None) -> None:
-        """Record a time measurement."""
-        if not self._enabled:
+    def record_time(self, name: str, duration: float, tags: Optional[Dict[str, str]] = None) -> None: if not self._enabled:
             return
             
         metric_name = f"{name}{'.' + '.'.join(f'{k}={v}' for k, v in tags.items()) if tags else ''}"
@@ -112,23 +96,17 @@ class PerformanceMetrics:
         if duration > 1.0:
             logger.warning(f"Slow operation detected: {name} took {duration:.2f}s")
             
-    def increment_counter(self, name: str, value: int = 1) -> None:
-        """Increment a counter metric."""
-        if not self._enabled:
+    def increment_counter(self, name: str, value: int = 1) -> None: if not self._enabled:
             return
             
         self.counters[name] = self.counters.get(name, 0) + value
         
-    def start_timer(self, name: str) -> None:
-        """Start a timer."""
-        if not self._enabled:
+    def start_timer(self, name: str) -> None: if not self._enabled:
             return
             
         self.timers[name] = time.perf_counter()
         
-    def stop_timer(self, name: str) -> float:
-        """Stop a timer and record the duration."""
-        if not self._enabled or name not in self.timers:
+    def stop_timer(self, name: str) -> float: if not self._enabled or name not in self.timers:
             return 0.0
             
         duration = time.perf_counter() - self.timers[name]
@@ -137,9 +115,7 @@ class PerformanceMetrics:
         return duration
         
     @asynccontextmanager
-    async def measure(self, name: str, tags: Optional[Dict[str, str]] = None):
-        """Context manager for measuring async operations."""
-        start = time.perf_counter()
+    async def measure(self, name: str, tags: Optional[Dict[str, str]] = None): start = time.perf_counter()
         try:
             yield
         finally:
@@ -147,9 +123,7 @@ class PerformanceMetrics:
                 duration = time.perf_counter() - start
                 self.record_time(name, duration, tags)
                 
-    def get_metrics_summary(self) -> Dict[str, Any]:
-        """Get summary of all metrics."""
-        summary = {
+    def get_metrics_summary(self) -> Dict[str, Any]: summary = {
             'timestamp': datetime.utcnow().isoformat(),
             'timings': {},
             'counters': self.counters.copy()
@@ -169,9 +143,7 @@ class PerformanceMetrics:
                 
         return summary
         
-    def get_slow_operations(self, threshold: float = 1.0) -> List[Dict[str, Any]]:
-        """Get operations that exceeded the threshold."""
-        slow_ops = []
+    def get_slow_operations(self, threshold: float = 1.0) -> List[Dict[str, Any]]: slow_ops = []
         
         for name, metric in self.metrics.items():
             if metric.max_value > threshold:
@@ -185,28 +157,27 @@ class PerformanceMetrics:
                 
         return sorted(slow_ops, key=lambda x: x['max_time'], reverse=True)
         
-    def reset(self) -> None:
-        """Reset all metrics."""
-        self.metrics.clear()
+    def reset(self) -> None: self.metrics.clear()
         self.timers.clear()
         self.counters.clear()
 
 
-def measure_performance(name: str, tags: Optional[Dict[str, str]] = None):
-    """
-    Decorator for measuring function performance.
+def measure_performance(name: str, tags: Optional[Dict[str, str]] = None): Decorator for measuring function performance.
     """
     def decorator(func):
+        """Decorator"""
         if asyncio.iscoroutinefunction(func):
             @wraps(func)
             async def async_wrapper(*args, **kwargs):
                 metrics = get_metrics()
+                """Async Wrapper"""
                 async with metrics.measure(name or func.__name__, tags):
                     return await func(*args, **kwargs)
             return async_wrapper
         else:
             @wraps(func)
             def sync_wrapper(*args, **kwargs):
+                """Sync Wrapper"""
                 metrics = get_metrics()
                 start = time.perf_counter()
                 try:
@@ -227,9 +198,7 @@ class QueryPerformanceTracker:
         self.metrics = metrics
         self.query_patterns: Dict[str, List[float]] = {}
         
-    def track_query(self, query_type: str, duration: float, row_count: int = 0) -> None:
-        """Track a query execution."""
-        # Record base metric
+    def track_query(self, query_type: str, duration: float, row_count: int = 0) -> None: # Record base metric
         self.metrics.record_time(
             f"db.query.{query_type}",
             duration,
@@ -256,9 +225,7 @@ class QueryPerformanceTracker:
                     f"recent avg {recent_avg:.3f}s vs overall {overall_avg:.3f}s"
                 )
                 
-    def get_query_stats(self) -> Dict[str, Any]:
-        """Get query performance statistics."""
-        stats = {}
+    def get_query_stats(self) -> Dict[str, Any]: stats = {}
         
         for query_type, durations in self.query_patterns.items():
             if durations:
@@ -286,35 +253,23 @@ class CachePerformanceTracker:
         self.sets = 0
         self.deletes = 0
         
-    def record_hit(self) -> None:
-        """Record a cache hit."""
-        self.hits += 1
+    def record_hit(self) -> None: self.hits += 1
         self.metrics.increment_counter('cache.hit')
         
-    def record_miss(self) -> None:
-        """Record a cache miss."""
-        self.misses += 1
+    def record_miss(self) -> None: self.misses += 1
         self.metrics.increment_counter('cache.miss')
         
-    def record_set(self, duration: float) -> None:
-        """Record a cache set operation."""
-        self.sets += 1
+    def record_set(self, duration: float) -> None: self.sets += 1
         self.metrics.record_time('cache.set', duration)
         
-    def record_delete(self, duration: float) -> None:
-        """Record a cache delete operation."""
-        self.deletes += 1
+    def record_delete(self, duration: float) -> None: self.deletes += 1
         self.metrics.record_time('cache.delete', duration)
         
     @property
-    def hit_rate(self) -> float:
-        """Calculate cache hit rate."""
-        total = self.hits + self.misses
+    def hit_rate(self) -> float: total = self.hits + self.misses
         return self.hits / total if total > 0 else 0.0
         
-    def get_stats(self) -> Dict[str, Any]:
-        """Get cache performance statistics."""
-        return {
+    def get_stats(self) -> Dict[str, Any]: return {
             'hits': self.hits,
             'misses': self.misses,
             'sets': self.sets,
@@ -328,9 +283,7 @@ class CachePerformanceTracker:
 _metrics_instance: Optional[PerformanceMetrics] = None
 
 
-def get_metrics() -> PerformanceMetrics:
-    """Get or create metrics singleton."""
-    global _metrics_instance
+def get_metrics() -> PerformanceMetrics: global _metrics_instance
     if _metrics_instance is None:
         _metrics_instance = PerformanceMetrics()
     return _metrics_instance

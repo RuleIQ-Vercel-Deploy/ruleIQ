@@ -9,6 +9,7 @@ from .db_setup import Base
 
 class AssessmentQuestion(Base):
     __tablename__ = "assessment_questions"
+    """Class for AssessmentQuestion"""
     id = Column(PG_UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     session_id = Column(
         PG_UUID(as_uuid=True), ForeignKey("assessment_sessions.id"), nullable=False,

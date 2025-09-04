@@ -1,0 +1,166 @@
+# Code Quality Issues
+
+## TODO Comments to Address
+
+### NOTE (144 items)
+
+- [ ] **/home/omar/Documents/ruleIQ/main.py:86** - SecurityMiddleware auth is disabled as JWT middleware handles authentication
+- [ ] **/home/omar/Documents/ruleIQ/services/assessment_service.py:55** - column name is truncated in model
+- [ ] **/home/omar/Documents/ruleIQ/scripts/testsprite_generate_code_and_execute.py:76** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/scripts/testsprite_generate_code_and_execute.py:82** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/scripts/sonar/fix-todos.py:81** - Implementation pending',
+- [ ] **/home/omar/Documents/ruleIQ/database/performance_indexes.py:82** - ANALYZE doesn't support parameters, so we validate table names
+- [ ] **/home/omar/Documents/ruleIQ/database/assessment_lead.py:62** - this is the correct column name
+- [ ] **/home/omar/Documents/ruleIQ/database/models.py:51** - This Evidence model appears to be a duplicate of EvidenceItem
+- [ ] **/home/omar/Documents/ruleIQ/database/models/evidence.py:37** - This Evidence model appears to be a duplicate of EvidenceItem
+- [ ] **/home/omar/Documents/ruleIQ/langgraph_agent/services/compliance_analyzer.py:22** - compliance_queries will be initialized when needed
+- [ ] **/home/omar/Documents/ruleIQ/langgraph_agent/graph/error_handler.py:250** - In production, you would refresh connection pool here
+- [ ] **/home/omar/Documents/ruleIQ/langgraph_agent/agents/memory_manager.py:562** - Graphiti handles most cleanup automatically
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/main.py:85** - SecurityMiddleware auth is disabled as JWT middleware handles authentication
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/services/assessment_service.py:56** - column name is truncated in model
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/scripts/testsprite_generate_code_and_execute.py:77** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/scripts/testsprite_generate_code_and_execute.py:83** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/scripts/sonar/fix-todos.py:82** - Implementation pending',
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/database/performance_indexes.py:84** - ANALYZE doesn't support parameters, so we validate table names
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/database/assessment_lead.py:63** - this is the correct column name
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/database/models.py:56** - This Evidence model appears to be a duplicate of EvidenceItem
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/database/models/evidence.py:39** - This Evidence model appears to be a duplicate of EvidenceItem
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/langgraph_agent/services/compliance_analyzer.py:23** - compliance_queries will be initialized when needed
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/langgraph_agent/graph/error_handler.py:252** - In production, you would refresh connection pool here
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/langgraph_agent/agents/memory_manager.py:571** - Graphiti handles most cleanup automatically
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/test_usability.py:33** - welcome_message and next_steps are nice-to-have features
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/test_usability.py:361** - Not asserting this as it depends on context
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/test_usability.py:460** - This is more of a design guideline than a hard requirement
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/test_rag_processing.py:114** - In a real implementation, you'd want to clean up test chunks
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/test_ai_ethics.py:588** - inclusive terms might not always be present, but exclusive terms should be avoided
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/test_integration.py:24** - The actual method to check nodes may vary based on LangGraph version
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/test_integration.py:76** - We're not running the full workflow, just testing it doesn't crash
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/performance/test_database_performance.py:76** - benchmark stats are available after test completion
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/performance/test_database_performance.py:127** - benchmark stats are available after test completion
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/performance/test_database_performance.py:204** - benchmark stats are available after test completion
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/performance/test_database_performance.py:264** - benchmark stats are available after test completion
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/performance/test_database_performance.py:568** - benchmark times are in seconds, so 0.5 = 500ms
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/database/test_freemium_models.py:349** - This test verifies the relationship will work when implemented
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/database/test_freemium_models.py:381** - This behavior will be implemented in the model relationships
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:31** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:35** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:39** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:43** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:59** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:63** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:67** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:71** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:87** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:91** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:95** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:99** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:115** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:119** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:123** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:127** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:143** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:147** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:151** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/testsprite_generated/test_frontend_testsprite.py:155** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/unit/services/test_evidence_service.py:19** - Using fast_db_session from conftest_optimized for performance
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/tests/integration/api/test_iq_agent_endpoints.py:263** - This test may need adjustment based on actual rate limits
+- [ ] **/home/omar/Documents/ruleIQ/api/v1/performance.py:315** - Actual pool resizing would require recreating the engine
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/main.py:85** - SecurityMiddleware auth is disabled as JWT middleware handles authentication
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/services/assessment_service.py:56** - column name is truncated in model
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/scripts/testsprite_generate_code_and_execute.py:77** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/scripts/testsprite_generate_code_and_execute.py:83** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/scripts/sonar/fix-todos.py:82** - Implementation pending',
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/database/performance_indexes.py:84** - ANALYZE doesn't support parameters, so we validate table names
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/database/assessment_lead.py:63** - this is the correct column name
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/database/models.py:56** - This Evidence model appears to be a duplicate of EvidenceItem
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/database/models/evidence.py:39** - This Evidence model appears to be a duplicate of EvidenceItem
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/langgraph_agent/services/compliance_analyzer.py:23** - compliance_queries will be initialized when needed
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/langgraph_agent/graph/error_handler.py:252** - In production, you would refresh connection pool here
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/langgraph_agent/agents/memory_manager.py:571** - Graphiti handles most cleanup automatically
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/test_usability.py:33** - welcome_message and next_steps are nice-to-have features
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/test_usability.py:361** - Not asserting this as it depends on context
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/test_usability.py:460** - This is more of a design guideline than a hard requirement
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/test_rag_processing.py:114** - In a real implementation, you'd want to clean up test chunks
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/test_ai_ethics.py:588** - inclusive terms might not always be present, but exclusive terms should be avoided
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/test_integration.py:24** - The actual method to check nodes may vary based on LangGraph version
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/test_integration.py:76** - We're not running the full workflow, just testing it doesn't crash
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/performance/test_database_performance.py:76** - benchmark stats are available after test completion
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/performance/test_database_performance.py:127** - benchmark stats are available after test completion
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/performance/test_database_performance.py:204** - benchmark stats are available after test completion
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/performance/test_database_performance.py:264** - benchmark stats are available after test completion
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/performance/test_database_performance.py:568** - benchmark times are in seconds, so 0.5 = 500ms
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/database/test_freemium_models.py:349** - This test verifies the relationship will work when implemented
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/database/test_freemium_models.py:381** - This behavior will be implemented in the model relationships
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:31** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:35** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:39** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:43** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:59** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:63** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:67** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:71** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:87** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:91** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:95** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:99** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:115** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:119** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:123** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:127** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:143** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:147** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:151** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/testsprite_generated/test_frontend_testsprite.py:155** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/unit/services/test_evidence_service.py:19** - Using fast_db_session from conftest_optimized for performance
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/tests/integration/api/test_iq_agent_endpoints.py:263** - This test may need adjustment based on actual rate limits
+- [ ] **/home/omar/Documents/ruleIQ/tests/test_usability.py:32** - welcome_message and next_steps are nice-to-have features
+- [ ] **/home/omar/Documents/ruleIQ/tests/test_usability.py:358** - Not asserting this as it depends on context
+- [ ] **/home/omar/Documents/ruleIQ/tests/test_usability.py:456** - This is more of a design guideline than a hard requirement
+- [ ] **/home/omar/Documents/ruleIQ/tests/test_rag_processing.py:112** - In a real implementation, you'd want to clean up test chunks
+- [ ] **/home/omar/Documents/ruleIQ/tests/test_ai_ethics.py:582** - inclusive terms might not always be present, but exclusive terms should be avoided
+- [ ] **/home/omar/Documents/ruleIQ/tests/test_integration.py:23** - The actual method to check nodes may vary based on LangGraph version
+- [ ] **/home/omar/Documents/ruleIQ/tests/test_integration.py:75** - We're not running the full workflow, just testing it doesn't crash
+- [ ] **/home/omar/Documents/ruleIQ/tests/performance/test_database_performance.py:75** - benchmark stats are available after test completion
+- [ ] **/home/omar/Documents/ruleIQ/tests/performance/test_database_performance.py:126** - benchmark stats are available after test completion
+- [ ] **/home/omar/Documents/ruleIQ/tests/performance/test_database_performance.py:203** - benchmark stats are available after test completion
+- [ ] **/home/omar/Documents/ruleIQ/tests/performance/test_database_performance.py:263** - benchmark stats are available after test completion
+- [ ] **/home/omar/Documents/ruleIQ/tests/performance/test_database_performance.py:564** - benchmark times are in seconds, so 0.5 = 500ms
+- [ ] **/home/omar/Documents/ruleIQ/tests/database/test_freemium_models.py:343** - This test verifies the relationship will work when implemented
+- [ ] **/home/omar/Documents/ruleIQ/tests/database/test_freemium_models.py:375** - This behavior will be implemented in the model relationships
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:29** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:33** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:37** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:41** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:56** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:60** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:64** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:68** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:83** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:87** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:91** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:95** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:110** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:114** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:118** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:122** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:137** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:141** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:145** - Implementation pending action step
+- [ ] **/home/omar/Documents/ruleIQ/tests/testsprite_generated/test_frontend_testsprite.py:149** - Implementation pending assertion
+- [ ] **/home/omar/Documents/ruleIQ/tests/integration/api/test_iq_agent_endpoints.py:262** - This test may need adjustment based on actual rate limits
+
+### TODO (12 items)
+
+- [ ] **/home/omar/Documents/ruleIQ/scripts/code_quality_scanner.py:342** - Comments to Address\n\n")
+- [ ] **/home/omar/Documents/ruleIQ/scripts/sonar/fix-todos.py:156** - Tracking Document\n\n")
+- [ ] **/home/omar/Documents/ruleIQ/monitoring/metrics.py:442** - Implement evidence counting
+- [ ] **/home/omar/Documents/ruleIQ/monitoring/metrics.py:443** - Get from AI cost monitoring
+- [ ] **/home/omar/Documents/ruleIQ/monitoring/metrics.py:444** - Get from AI cost monitoring
+- [ ] **/home/omar/Documents/ruleIQ/monitoring/metrics.py:445** - Get from AI cost monitoring
+- [ ] **/home/omar/Documents/ruleIQ/monitoring/metrics.py:446** - Get from AI cost monitoring
+- [ ] **/home/omar/Documents/ruleIQ/monitoring/metrics.py:507** - Get from connection tracking
+- [ ] **/home/omar/Documents/ruleIQ/monitoring/alerting.py:369** - Implement email sending
+- [ ] **/home/omar/Documents/ruleIQ/backup_dead_code_20250903_044305/scripts/sonar/fix-todos.py:157** - Tracking Document\n\n")
+- [ ] **/home/omar/Documents/ruleIQ/api/routers/monitoring_enhanced.py:349** - Implement actual audit log retrieval from database
+- [ ] **/home/omar/Documents/ruleIQ/backup_20250903_042619/scripts/sonar/fix-todos.py:157** - Tracking Document\n\n")
+

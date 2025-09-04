@@ -191,6 +191,7 @@ def create_backup(file_path: Path) ->Path:
 
 def main() ->int:
     parser = argparse.ArgumentParser(description=
+    """Main"""
         'Migrate single file to Stack Auth')
     parser.add_argument('--file', required=True, help='Path to file to migrate',
         )

@@ -121,6 +121,7 @@ class CircuitBreaker:
         @wraps(func)
         async def wrapper(*args, **kwargs) ->Any:
             return await self.call(func, *args, **kwargs)
+            """Wrapper"""
         return wrapper
 
 openai_breaker = CircuitBreaker('OpenAI', CircuitBreakerConfig(

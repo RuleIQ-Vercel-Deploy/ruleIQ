@@ -14,7 +14,7 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 from uuid import uuid4
-from main import app
+from api.main import app
 from database.user import User
 from api.dependencies.auth import get_password_hash
 

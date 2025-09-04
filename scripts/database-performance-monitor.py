@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 
 class DatabasePerformanceMonitor:
 
+    """Class for DatabasePerformanceMonitor"""
     def __init__(self, connection_string: str) ->None:
         self.connection_string = connection_string
         self.results = {'timestamp': datetime.now().isoformat(),

@@ -48,26 +48,22 @@ class EnforcementAnalyzer:
     """
 
     def __init__(self, enforcement_db_path: str=
-        'data/enforcement/uk_enforcement_database.json'):
         """Initialize with enforcement database"""
+        'data/enforcement/uk_enforcement_database.json'):
         self.db_path = Path(enforcement_db_path)
         self.enforcement_data = self._load_database()
         self.patterns_cache = {}
         self.sector_risks = {}
         self._analyze_patterns()
 
-    def _load_database(self) ->Dict[str, Any]:
-        """Load enforcement database"""
-        if not self.db_path.exists():
+    def _load_database(self) ->Dict[str, Any]: if not self.db_path.exists():
             logger.info('Warning: Enforcement database not found at %s' %
                 self.db_path)
             return {'enforcement_actions': [], 'pattern_analysis': {}}
         with open(self.db_path, 'r') as f:
             return json.load(f)
 
-    def _analyze_patterns(self) ->None:
-        """Pre-analyze patterns for quick retrieval"""
-        actions = self.enforcement_data.get('enforcement_actions', [])
+    def _analyze_patterns(self) ->None: actions = self.enforcement_data.get('enforcement_actions', [])
         pattern_groups = defaultdict(list)
         for action in actions:
             for tag in action.get('pattern_tags', []):
@@ -91,9 +87,7 @@ class EnforcementAnalyzer:
                 _calculate_risk_multiplier(penalties, len(actions)),
                 evidence_references=[a['id'] for a in actions[:3]])
 
-    def _categorize_pattern(self, pattern_tag: str) ->str:
-        """Categorize pattern type"""
-        categories = {'technical': ['technical_measures', 'access_control',
+    def _categorize_pattern(self, pattern_tag: str) ->str: categories = {'technical': ['technical_measures', 'access_control',
             'security', 'encryption'], 'governance': ['governance',
             'oversight', 'management', 'accountability'], 'consumer': [
             'consumer', 'customer', 'fairness', 'vulnerable'], 'data': [
@@ -106,8 +100,8 @@ class EnforcementAnalyzer:
         return 'general'
 
     def _calculate_risk_multiplier(self, penalties: List[float], frequency: int
-        ) ->float:
         """Calculate risk multiplier based on enforcement patterns"""
+        ) ->float:
         if not penalties:
             return 1.0
         avg_penalty = statistics.mean(penalties)
@@ -116,8 +110,8 @@ class EnforcementAnalyzer:
         return 1.0 + penalty_factor * 0.5 + frequency_factor * 0.3
 
     def get_enforcement_evidence(self, regulation: str, violation_type:
-        Optional[str]=None, sector: Optional[str]=None) ->List[Dict[str, Any]]:
         """
+        Optional[str]=None, sector: Optional[str]=None) ->List[Dict[str, Any]]:
         Get enforcement evidence for IQ's ≥3 sources requirement
 
         Args:
@@ -151,8 +145,8 @@ class EnforcementAnalyzer:
         return relevant_actions[:5]
 
     def calculate_risk_adjustment(self, base_risk: float, regulation: str,
-        business_context: Dict[str, Any]) ->Tuple[float, str]:
         """
+        business_context: Dict[str, Any]) ->Tuple[float, str]:
         Adjust risk score based on enforcement patterns
 
         Args:
@@ -201,8 +195,8 @@ class EnforcementAnalyzer:
         return adjusted_risk, explanation
 
     def identify_compliance_gaps(self, business_profile: Dict[str, Any],
-        current_controls: List[str]) ->List[Dict[str, Any]]:
         """
+        current_controls: List[str]) ->List[Dict[str, Any]]:
         Identify potential compliance gaps based on enforcement patterns
 
         Args:
@@ -232,9 +226,7 @@ class EnforcementAnalyzer:
         gaps.sort(key=lambda x: x['priority_score'], reverse=True)
         return gaps[:10]
 
-    def _get_gap_remediation(self, gap: str) ->str:
-        """Get remediation recommendation for a gap"""
-        remediations = {'access_control_policy':
+    def _get_gap_remediation(self, gap: str) ->str: remediations = {'access_control_policy':
             'Implement role-based access control with MFA',
             'incident_response_plan':
             'Develop and test incident response procedures',
@@ -258,8 +250,8 @@ class EnforcementAnalyzer:
             f"Implement controls to address {gap.replace('_', ' ')}")
 
     def get_regulatory_trends(self, regulator: Optional[str]=None,
-        timeframe_days: int=365) ->List[RegulatoryTrend]:
         """
+        timeframe_days: int=365) ->List[RegulatoryTrend]:
         Analyze regulatory trends for predictive insights
 
         Args:
@@ -307,8 +299,8 @@ class EnforcementAnalyzer:
         return trends
 
     def _predict_regulatory_focus(self, regulator: str, recent_actions:
-        List[Dict]) ->List[str]:
         """Predict future regulatory focus areas"""
+        List[Dict]) ->List[str]:
         predictions = []
         pattern_trajectory = defaultdict(int)
         for i, action in enumerate(recent_actions):
@@ -327,8 +319,8 @@ class EnforcementAnalyzer:
         return list(set(predictions))[:5]
 
     def generate_enforcement_summary(self, regulation: str,
-        business_context: Dict[str, Any]) ->Dict[str, Any]:
         """
+        business_context: Dict[str, Any]) ->Dict[str, Any]:
         Generate comprehensive enforcement summary for IQ agent
 
         Args:
@@ -362,8 +354,8 @@ class EnforcementAnalyzer:
             self._calculate_confidence(len(evidence))}
 
     def _generate_recommendations(self, evidence: List[Dict], gaps: List[Dict]
-        ) ->List[str]:
         """Generate actionable recommendations"""
+        ) ->List[str]:
         recommendations = []
         if gaps:
             top_gap = gaps[0]
@@ -384,9 +376,7 @@ class EnforcementAnalyzer:
                 'Establish board-level compliance oversight'])
         return recommendations[:5]
 
-    def _calculate_confidence(self, evidence_count: int) ->str:
-        """Calculate confidence level based on available evidence"""
-        if evidence_count >= 5:
+    def _calculate_confidence(self, evidence_count: int) ->str: if evidence_count >= 5:
             return 'HIGH'
         elif evidence_count >= 3:
             return 'MEDIUM'
@@ -398,16 +388,14 @@ class EnforcementAnalyzer:
 class IQEnforcementIntegration:
     """
     Integrates enforcement intelligence into IQ's decision-making
-    Implements the learn() and remember() capabilities with real-world data
-    """
-
+    Implements the learn() and remember() capabilities with real-world data 
     def __init__(self, enforcement_analyzer: EnforcementAnalyzer):
         self.analyzer = enforcement_analyzer
         self.learning_cache = {}
 
     def enhance_risk_assessment(self, regulation_id: str, business_profile:
-        Dict[str, Any], current_risk: float) ->Dict[str, Any]:
         """
+        Dict[str, Any], current_risk: float) ->Dict[str, Any]:
         Enhance IQ's risk assessment with enforcement data
         Supports IQ's _assess_node() function
         """
@@ -423,8 +411,8 @@ class IQEnforcementIntegration:
             'compliance_gaps'], 'learning_points': summary['lessons_learned']}
 
     def learn_from_enforcement(self, regulation_id: str, sector: str) ->Dict[
-        str, Any]:
         """
+        str, Any]:
         Extract learning patterns for IQ's _learn_node()
         """
         cache_key = f'{regulation_id}:{sector}'
@@ -446,9 +434,7 @@ class IQEnforcementIntegration:
         self.learning_cache[cache_key] = learning
         return learning
 
-    def _extract_insights(self, patterns: List[Dict]) ->List[str]:
-        """Extract key insights from patterns"""
-        insights = []
+    def _extract_insights(self, patterns: List[Dict]) ->List[str]: insights = []
         if patterns:
             top_pattern = patterns[0]
             insights.append(
@@ -467,8 +453,8 @@ class IQEnforcementIntegration:
         return insights
 
     def get_evidence_for_claim(self, claim_type: str, regulation: str,
-        context: Dict[str, Any]) ->List[Dict[str, Any]]:
         """
+        context: Dict[str, Any]) ->List[Dict[str, Any]]:
         Provide evidence for IQ's claims (≥3 sources requirement)
         """
         enforcement_evidence = self.analyzer.get_enforcement_evidence(

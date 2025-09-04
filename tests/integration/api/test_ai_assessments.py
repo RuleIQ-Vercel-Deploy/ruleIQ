@@ -109,7 +109,7 @@ class TestAIAssessmentEndpoints:
             mock_get_user_business_profile)
         ai_assessments.ComplianceAssistant.return_value = self.mock_assistant
         ai_assessments.ai_rate_limit_stats.record_request.return_value = None
-        from main import app
+        from api.main import app
         from api.dependencies.auth import get_current_active_user
         from database.db_setup import get_async_db
         app.dependency_overrides[get_current_active_user
@@ -142,7 +142,7 @@ class TestAIAssessmentEndpoints:
 
     def test_ai_help_endpoint_authentication_required(self, client):
         """Test AI help endpoint requires authentication"""
-        from main import app
+        from api.main import app
         from api.dependencies.auth import get_current_active_user
         current_override = app.dependency_overrides.get(get_current_active_user
             )
@@ -358,7 +358,7 @@ class TestAIRateLimiting:
                 'source_references': ['source1'], 'request_id':
                 'test-request-id', 'generated_at': '2024-01-01T00:00:00Z'}
         mock_assistant.get_assessment_help = mock_get_assessment_help
-        from main import app
+        from api.main import app
         from api.dependencies.auth import get_current_active_user
         from database.db_setup import get_async_db
         app.dependency_overrides[get_current_active_user] = lambda : mock_user

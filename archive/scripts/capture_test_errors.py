@@ -37,6 +37,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def test_session_creation():
     session = SessionLocal()
+    """Test Session Creation"""
     try:
         # Clean up
         session.query(FreemiumAssessmentSession).delete()
@@ -85,6 +86,7 @@ def test_session_creation():
 
 def test_ai_question():
     session = SessionLocal()
+    """Test Ai Question"""
     try:
         # Clean up
         session.query(AIQuestionBank).delete()
@@ -123,6 +125,7 @@ def test_ai_question():
 
 def test_lead_scoring_event():
     session = SessionLocal()
+    """Test Lead Scoring Event"""
     try:
         # Clean up
         session.query(LeadScoringEvent).delete()
@@ -160,6 +163,7 @@ def test_lead_scoring_event():
 
 def test_conversion_event():
     session = SessionLocal()
+    """Test Conversion Event"""
     try:
         # Clean up
         session.query(ConversionEvent).delete()

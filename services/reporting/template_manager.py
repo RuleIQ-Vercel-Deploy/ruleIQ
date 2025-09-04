@@ -12,9 +12,7 @@ class TemplateManager:
     def __init__(self) -> None:
         self.templates = self._load_default_templates()
 
-    def _load_default_templates(self) -> Dict[str, Dict]:
-        """Load default report templates"""
-        return {
+    def _load_default_templates(self) -> Dict[str, Dict]: return {
             "executive_summary": {
                 "name": "Executive Summary",
                 "description": "High-level overview for executives and stakeholders",
@@ -77,13 +75,9 @@ class TemplateManager:
             },
         }
 
-    def get_template(self, template_name: str) -> Optional[Dict]:
-        """Get a specific template"""
-        return self.templates.get(template_name)
+    def get_template(self, template_name: str) -> Optional[Dict]: return self.templates.get(template_name)
 
-    def list_templates(self) -> List[Dict[str, str]]:
-        """List all available templates"""
-        return [
+    def list_templates(self) -> List[Dict[str, str]]: return [
             {
                 "name": name,
                 "display_name": template["name"],
@@ -93,9 +87,9 @@ class TemplateManager:
         ]
 
     def customize_template(
+        """Apply customizations to a template"""
         self, template_name: str, customizations: Dict[str, Any]
     ) -> Dict:
-        """Apply customizations to a template"""
         template = self.get_template(template_name)
         if not template:
             raise ValueError(f"Template '{template_name}' not found")
@@ -124,9 +118,9 @@ class TemplateManager:
         return customized
 
     def get_section_content(
+        """Get content for a specific report section"""
         self, section_name: str, report_data: Dict[str, Any]
     ) -> Dict[str, Any]:
-        """Get content for a specific report section"""
         section_builders = {
             "executive_overview": self._build_executive_overview,
             "key_metrics": self._build_key_metrics,
@@ -151,92 +145,72 @@ class TemplateManager:
         return builder(report_data)
 
     # Section builders
-    def _build_executive_overview(self, report_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Build executive overview section"""
-        business_profile = report_data.get("business_profile", {})
+    def _build_executive_overview(self, report_data: Dict[str, Any]) -> Dict[str, Any]: business_profile = report_data.get("business_profile", {})
         return {
             "title": "Executive Overview",
             "content": f"Compliance overview for {business_profile.get('name', 'organization')}",
             "data": business_profile,
         }
 
-    def _build_key_metrics(self, report_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Build key metrics section"""
-        return {
+    def _build_key_metrics(self, report_data: Dict[str, Any]) -> Dict[str, Any]: return {
             "title": "Key Performance Indicators",
             "content": "Performance metrics and KPIs",
             "data": report_data.get("key_metrics", {}),
         }
 
-    def _build_framework_status(self, report_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Build framework status section"""
-        return {
+    def _build_framework_status(self, report_data: Dict[str, Any]) -> Dict[str, Any]: return {
             "title": "Compliance Framework Status",
             "content": "Status of compliance frameworks",
             "data": report_data.get("summary", {}),
         }
 
-    def _build_recommendations(self, report_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Build recommendations section"""
-        return {
+    def _build_recommendations(self, report_data: Dict[str, Any]) -> Dict[str, Any]: return {
             "title": "Priority Recommendations",
             "content": "Recommended actions for improvement",
             "data": report_data.get("recommendations", [])
         }
 
-    def _build_gap_summary(self, report_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Build gap summary section"""
-        return {
+    def _build_gap_summary(self, report_data: Dict[str, Any]) -> Dict[str, Any]: return {
             "title": "Gap Analysis Summary",
             "content": "Summary of identified compliance gaps",
             "data": report_data.get("summary", {}),
         }
 
-    def _build_gap_details(self, report_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Build gap details section"""
-        return {
+    def _build_gap_details(self, report_data: Dict[str, Any]) -> Dict[str, Any]: return {
             "title": "Detailed Gap Analysis",
             "content": "Detailed breakdown of compliance gaps",
             "data": report_data.get("gaps", {}),
         }
 
-    def _build_remediation_plan(self, report_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Build remediation plan section"""
-        return {
+    def _build_remediation_plan(self, report_data: Dict[str, Any]) -> Dict[str, Any]: return {
             "title": "Remediation Plan",
             "content": "Prioritized plan for addressing gaps",
             "data": report_data.get("remediation_plan", [])
         }
 
-    def _build_collection_summary(self, report_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Build evidence collection summary section"""
-        return {
+    def _build_collection_summary(self, report_data: Dict[str, Any]) -> Dict[str, Any]: return {
             "title": "Evidence Collection Summary",
             "content": "Overview of evidence collection progress",
             "data": report_data.get("evidence_summary", {}),
         }
 
     def _build_automation_opportunities(
+        """Build automation opportunities section"""
         self, report_data: Dict[str, Any]
     ) -> Dict[str, Any]:
-        """Build automation opportunities section"""
         return {
             "title": "Automation Opportunities",
             "content": "Opportunities to automate evidence collection",
             "data": report_data.get("automation_opportunities", []),
         }
 
-    def _build_readiness_scores(self, report_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Build readiness scores section"""
-        return {
+    def _build_readiness_scores(self, report_data: Dict[str, Any]) -> Dict[str, Any]: return {
             "title": "Audit Readiness Scores",
             "content": "Assessment of audit readiness by framework",
             "data": report_data.get("readiness_scores", {}),
         }
 
-    def _build_critical_items(self, report_data: Dict[str, Any]) -> Dict[str, Any]:
-        """Build critical items section"""
-        return {
+    def _build_critical_items(self, report_data: Dict[str, Any]) -> Dict[str, Any]: return {
             "title": "Critical Items",
             "content": "Items requiring immediate attention",
             "data": report_data.get("critical_items", []),

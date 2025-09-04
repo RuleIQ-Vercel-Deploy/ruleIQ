@@ -23,9 +23,7 @@ from config.logging_config import get_logger
 
 logger = get_logger(__name__)
 
-class CostAwareCircuitBreakerConfig(CircuitBreakerConfig):
-    """Extended circuit breaker configuration with cost awareness."""
-
+class CostAwareCircuitBreakerConfig(CircuitBreakerConfig): 
     def __init__(
         self,
         failure_threshold: int = 5,
@@ -47,9 +45,7 @@ class CostAwareCircuitBreakerConfig(CircuitBreakerConfig):
         self.cost_spike_threshold = cost_spike_threshold
         self.track_cost_efficiency = track_cost_efficiency
 
-class CostAwareCircuitBreaker(AICircuitBreaker):
-    """
-    Enhanced circuit breaker with cost tracking and budget awareness.
+class CostAwareCircuitBreaker(AICircuitBreaker): Enhanced circuit breaker with cost tracking and budget awareness.
 
     Integrates cost management into circuit breaker decisions, providing
     budget enforcement and cost-based circuit tripping.
@@ -334,9 +330,7 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
                 if entry["timestamp"] > cutoff_time,
             ]
 
-    async def check_cost_spike(self, model_name: str, service_name: str) -> bool:
-        """Check if recent usage represents a cost spike."""
-
+    async def check_cost_spike(self, model_name: str, service_name: str) -> bool: 
         if not self.cost_config.track_cost_efficiency:
             return False
 
@@ -357,9 +351,7 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
 
             return latest_tokens > avg_tokens * self.cost_config.cost_spike_threshold
 
-    def get_cost_aware_status(self) -> Dict[str, Any]:
-        """Get circuit breaker status with cost information."""
-
+    def get_cost_aware_status(self) -> Dict[str, Any]: 
         base_status = self.get_status()
 
         # Add cost-specific information
@@ -380,9 +372,7 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
 
         return {**base_status, "cost_awareness": cost_status}
 
-    async def get_cost_efficiency_metrics(self) -> Dict[str, Any]:
-        """Get cost efficiency metrics for circuit breaker decisions."""
-
+    async def get_cost_efficiency_metrics(self) -> Dict[str, Any]: 
         try:
             # Get recent cost trends
             trends = await self.cost_tracker.get_cost_trends(7)
@@ -499,18 +489,14 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
 # Global cost-aware circuit breaker instance
 _cost_aware_circuit_breaker: Optional[CostAwareCircuitBreaker] = None
 
-def get_cost_aware_circuit_breaker() -> CostAwareCircuitBreaker:
-    """Get global cost-aware circuit breaker instance."""
-    global _cost_aware_circuit_breaker
+def get_cost_aware_circuit_breaker() -> CostAwareCircuitBreaker: global _cost_aware_circuit_breaker
 
     if _cost_aware_circuit_breaker is None:
         _cost_aware_circuit_breaker = CostAwareCircuitBreaker()
 
     return _cost_aware_circuit_breaker
 
-def reset_cost_aware_circuit_breaker() -> None:
-    """Reset global cost-aware circuit breaker instance."""
-    global _cost_aware_circuit_breaker
+def reset_cost_aware_circuit_breaker() -> None: global _cost_aware_circuit_breaker
     _cost_aware_circuit_breaker = None
 
 # Convenience function for easy integration

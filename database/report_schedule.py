@@ -11,6 +11,7 @@ from .db_setup import Base
 
 class ReportSchedule(Base):
     __tablename__ = 'report_schedules'
+    """Class for ReportSchedule"""
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUID(as_uuid=True), ForeignKey('users.id'), nullable=False)
     business_profile_id = Column(UUID(as_uuid=True), ForeignKey('business_profiles.id'), nullable=False)
@@ -25,4 +26,5 @@ class ReportSchedule(Base):
     business_profile = relationship('BusinessProfile')
 
     def to_dict(self) -> Dict[str, Any]:
+        """To Dict"""
         return {'id': str(self.id), 'user_id': str(self.user_id), 'business_profile_id': str(self.business_profile_id), 'report_type': self.report_type, 'frequency': self.frequency, 'parameters': self.parameters, 'recipients': self.recipients, 'active': self.active, 'created_at': self.created_at.isoformat() if self.created_at else None, 'last_run_at': self.last_run_at.isoformat() if self.last_run_at else None}

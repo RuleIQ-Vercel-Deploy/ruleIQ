@@ -22,9 +22,7 @@ from .analytics_monitor import MetricEvent, MetricType, get_analytics_monitor
 
 logger = get_logger(__name__)
 
-class ExperimentType(Enum):
-    """Types of A/B experiments."""
-
+class ExperimentType(Enum): 
 #     AI_MODEL_COMPARISON = "ai_model_comparison"  # Unused variable
 #     PROMPT_OPTIMIZATION = "prompt_optimization"  # Unused variable
 #     FEATURE_ROLLOUT = "feature_rollout"  # Unused variable
@@ -35,9 +33,7 @@ class ExperimentType(Enum):
 #     CATEGORICAL = "categorical"  # User preferences, status categories  # Unused variable
 #     COUNT = "count"  # Number of actions, events  # Unused variable
 
-class StatisticalTest(Enum):
-    """Available statistical tests."""
-
+class StatisticalTest(Enum): 
 #     T_TEST = "t_test"  # Two-sample t-test for continuous metrics  # Unused variable
 #     WELCH_T_TEST = "welch_t_test"  # Welch's t-test (unequal variances)  # Unused variable
 #     CHI_SQUARED = "chi_squared"  # Chi-squared test for categorical data  # Unused variable
@@ -45,9 +41,7 @@ class StatisticalTest(Enum):
 #     KOLMOGOROV_SMIRNOV = "ks_test"  # Distribution comparison  # Unused variable
 #     FISHER_EXACT = "fisher_exact"  # Exact test for small samples  # Unused variable
 
-class ExperimentStatus(Enum):
-    """Experiment lifecycle status."""
-
+class ExperimentStatus(Enum): 
 #     DRAFT = "draft"  # Unused variable
 #     RUNNING = "running"  # Unused variable
 #     PAUSED = "paused"  # Unused variable
@@ -136,9 +130,7 @@ class ExperimentData:
 class ABTestingFramework:
     """Comprehensive A/B Testing Framework with rigorous statistical analysis."""
 
-    def __init__(self) -> None:
-        """Initialize the A/B testing framework."""
-        self.experiments: Dict[str, ExperimentConfig] = {}
+    def __init__(self) -> None: self.experiments: Dict[str, ExperimentConfig] = {}
         self.experiment_data: Dict[str, List[ExperimentData]] = {}
         self.experiment_status: Dict[str, ExperimentStatus] = {}
         self.experiment_results: Dict[str, List[StatisticalResult]] = {}
@@ -150,9 +142,7 @@ class ABTestingFramework:
         self.confidence_levels = [0.90, 0.95, 0.99]
         self.effect_size_thresholds = {"small": 0.2, "medium": 0.5, "large": 0.8}
 
-    def create_experiment(self, config: ExperimentConfig) -> str:
-        """
-        Create a new A/B experiment.
+    def create_experiment(self, config: ExperimentConfig) -> str: Create a new A/B experiment.
 
         Args:
             config: Experiment configuration
@@ -198,9 +188,7 @@ class ABTestingFramework:
 
         return experiment_id
 
-    def start_experiment(self, experiment_id: str) -> bool:
-        """
-        Start an experiment.
+    def start_experiment(self, experiment_id: str) -> bool: Start an experiment.
 
         Args:
             experiment_id: ID of experiment to start
@@ -232,9 +220,9 @@ class ABTestingFramework:
         return True
 
     def assign_variant(
+        """
         self, experiment_id: str, user_id: str, context: Optional[Dict[str, Any]] = None
     ) -> str:
-        """
         Assign a user to an experiment variant.
 
         Args:
@@ -336,9 +324,9 @@ class ABTestingFramework:
         return True
 
     def analyze_experiment(
+        """
         self, experiment_id: str, confidence_level: float = 0.95
     ) -> StatisticalResult:
-        """
         Perform rigorous statistical analysis of an experiment.
 
         Args:
@@ -391,9 +379,7 @@ class ABTestingFramework:
 
         return result
 
-    def _validate_experiment_config(self, config: ExperimentConfig) -> None:
-        """Validate experiment configuration."""
-        if config.significance_level <= 0 or config.significance_level >= 1:
+    def _validate_experiment_config(self, config: ExperimentConfig) -> None: if config.significance_level <= 0 or config.significance_level >= 1:
             raise ValueError("Significance level must be between 0 and 1")
 
         if config.power <= 0 or config.power >= 1:
@@ -405,9 +391,7 @@ class ABTestingFramework:
         if config.min_sample_size < 10:
             raise ValueError("Minimum sample size should be at least 10")
 
-    def _calculate_sample_size(self, config: ExperimentConfig) -> int:
-        """
-        Calculate required sample size for adequate statistical power.
+    def _calculate_sample_size(self, config: ExperimentConfig) -> int: Calculate required sample size for adequate statistical power.
 
         Args:
             config: Experiment configuration
@@ -429,9 +413,9 @@ class ABTestingFramework:
         return max(int(np.ceil(n)), config.min_sample_size)
 
     def _group_data_by_variant(
+        """Group experiment data by variant."""
         self, data: List[ExperimentData]
     ) -> Dict[str, List[Union[float, int, str, bool]]]:
-        """Group experiment data by variant."""
         variant_data = defaultdict(list)
 
         for data_point in data:
@@ -440,9 +424,9 @@ class ABTestingFramework:
         return dict(variant_data)
 
     def _select_statistical_test(
+        """
         self, metric_type: MetricType, variant_data: Dict[str, List]
     ) -> StatisticalTest:
-        """
         Select appropriate statistical test based on data characteristics.
 
         Args:
@@ -630,17 +614,15 @@ class ABTestingFramework:
             },
         )
 
-    def _get_category_counts(self, data: List) -> Dict[str, int]:
-        """Get counts for each category in categorical data."""
-        counts = defaultdict(int)
+    def _get_category_counts(self, data: List) -> Dict[str, int]: counts = defaultdict(int)
         for value in data:
             counts[str(value)] += 1
         return dict(counts)
 
     def _calculate_power(
+        """
         self, effect_size: float, n1: int, n2: int, alpha: float
     ) -> float:
-        """
         Calculate statistical power for the test.
 
         Args:
@@ -700,9 +682,7 @@ class ABTestingFramework:
         else:
             return f"CONTINUE MONITORING: p={p_value:.4f}, effect size={effect_size:.3f}, power={power:.2f}"
 
-    def get_experiment_summary(self, experiment_id: str) -> Dict[str, Any]:
-        """
-        Get comprehensive summary of an experiment.
+    def get_experiment_summary(self, experiment_id: str) -> Dict[str, Any]: Get comprehensive summary of an experiment.
 
         Args:
             experiment_id: ID of the experiment
@@ -763,9 +743,7 @@ class ABTestingFramework:
 # Global instance
 _ab_testing_framework: Optional[ABTestingFramework] = None
 
-def get_ab_testing_framework() -> ABTestingFramework:
-    """Get global A/B testing framework instance."""
-    global _ab_testing_framework
+def get_ab_testing_framework() -> ABTestingFramework: global _ab_testing_framework
     if _ab_testing_framework is None:
         _ab_testing_framework = ABTestingFramework()
     return _ab_testing_framework
@@ -806,9 +784,9 @@ def create_ai_model_experiment(
     return framework.create_experiment(config)
 
 def create_prompt_optimization_experiment(
+    """
     original_prompt: str, optimized_prompt: str, metric: str = "task_completion_rate"
 ) -> str:
-    """
     Create an A/B experiment for prompt optimization.
 
     Args:

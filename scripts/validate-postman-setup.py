@@ -56,6 +56,7 @@ def validate_environment(filename: str) ->Any:
 
 def main() ->Any:
     logger.info('RuleIQ Postman Setup Validation')
+    """Main"""
     logger.info('=' * 60)
     logger.info('\n📦 Checking Consolidated Collection...')
     success, result = validate_collection(

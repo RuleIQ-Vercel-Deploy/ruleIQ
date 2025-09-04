@@ -14,42 +14,32 @@ from typing import Any, Dict, List, Literal, Optional, TypedDict, Union
 # Core Response Types and Enums
 # =====================================================================
 
-class SeverityLevel(str, Enum):
-    """Severity levels for gaps, issues, and recommendations."""
-
+class SeverityLevel(str, Enum): 
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
     CRITICAL = "critical"
 
-class PriorityLevel(str, Enum):
-    """Priority levels for recommendations and actions."""
-
+class PriorityLevel(str, Enum): 
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
 #     URGENT = "urgent"  # Unused variable
 
-class ConfidenceLevel(str, Enum):
-    """Confidence levels for AI assessments."""
-
+class ConfidenceLevel(str, Enum): 
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
 #     VERY_HIGH = "very_high"  # Unused variable
 
-class ImplementationEffort(str, Enum):
-    """Implementation effort estimates."""
-
+class ImplementationEffort(str, Enum): 
 #     MINIMAL = "minimal"  # < 1 week  # Unused variable
     LOW = "low"  # 1-2 weeks
     MEDIUM = "medium"  # 2-6 weeks
     HIGH = "high"  # 6-12 weeks
 #     EXTENSIVE = "extensive"  # > 12 weeks  # Unused variable
 
-class RiskLevel(str, Enum):
-    """Risk assessment levels."""
-
+class RiskLevel(str, Enum): 
 #     LOW = "low"  # Unused variable
 #     MEDIUM = "medium"  # Unused variable
 #     HIGH = "high"  # Unused variable
@@ -59,9 +49,7 @@ class RiskLevel(str, Enum):
 # Gap Analysis Schemas
 # =====================================================================
 
-class Gap(TypedDict):
-    """Individual compliance gap identified in assessment."""
-
+class Gap(TypedDict): 
     id: str
     title: str
     description: str
@@ -79,9 +67,7 @@ class Gap(TypedDict):
     affected_systems: List[str]
     stakeholders: List[str]
 
-class GapAnalysisResponse(TypedDict):
-    """Complete gap analysis response structure."""
-
+class GapAnalysisResponse(TypedDict): 
     gaps: List[Gap]
     overall_risk_level: RiskLevel
     priority_order: List[str]  # Gap IDs in priority order
@@ -97,9 +83,7 @@ class GapAnalysisResponse(TypedDict):
 # Recommendation Schemas
 # =====================================================================
 
-class Recommendation(TypedDict):
-    """Individual compliance recommendation."""
-
+class Recommendation(TypedDict): 
     id: str
     title: str
     description: str
@@ -118,9 +102,7 @@ class Recommendation(TypedDict):
     automation_potential: float  # 0.0 - 1.0
     roi_estimate: Optional[str]
 
-class ImplementationPhase(TypedDict):
-    """Implementation phase for recommendation rollout."""
-
+class ImplementationPhase(TypedDict): 
     phase_number: int
     phase_name: str
     duration_weeks: int
@@ -129,9 +111,7 @@ class ImplementationPhase(TypedDict):
     resources_required: List[str]
     success_criteria: List[str]
 
-class ImplementationPlan(TypedDict):
-    """Complete implementation plan for recommendations."""
-
+class ImplementationPlan(TypedDict): 
     total_duration_weeks: int
     phases: List[ImplementationPhase]
     resource_allocation: Dict[str, str]
@@ -140,9 +120,7 @@ class ImplementationPlan(TypedDict):
     success_metrics: List[str]
     milestone_checkpoints: List[str]
 
-class RecommendationResponse(TypedDict):
-    """Complete recommendation response structure."""
-
+class RecommendationResponse(TypedDict): 
     recommendations: List[Recommendation]
     implementation_plan: ImplementationPlan
     prioritization_rationale: str
@@ -156,9 +134,7 @@ class RecommendationResponse(TypedDict):
 # Assessment Analysis Schemas
 # =====================================================================
 
-class ComplianceInsight(TypedDict):
-    """Key compliance insight from assessment analysis."""
-
+class ComplianceInsight(TypedDict): 
     insight_type: Literal["strength", "weakness", "opportunity", "threat"]
     title: str
     description: str
@@ -166,9 +142,7 @@ class ComplianceInsight(TypedDict):
     framework_area: str
     actionable_steps: List[str]
 
-class EvidenceRequirement(TypedDict):
-    """Evidence requirement identified from assessment."""
-
+class EvidenceRequirement(TypedDict): 
     evidence_type: str
     description: str
     framework_reference: str
@@ -179,9 +153,7 @@ class EvidenceRequirement(TypedDict):
     validation_criteria: List[str]
     retention_period: Optional[str]
 
-class RiskAssessment(TypedDict):
-    """Risk assessment results."""
-
+class RiskAssessment(TypedDict): 
     overall_risk_level: RiskLevel
     risk_score: float  # 0.0 - 100.0
     top_risk_factors: List[str]
@@ -191,9 +163,7 @@ class RiskAssessment(TypedDict):
     reputational_risk: float
     financial_risk: float
 
-class ComplianceMetrics(TypedDict):
-    """Quantitative compliance metrics."""
-
+class ComplianceMetrics(TypedDict): 
     overall_compliance_score: float  # 0.0 - 100.0
     framework_scores: Dict[str, float]
     maturity_level: Literal["initial", "developing", "defined", "managed", "optimized"]
@@ -201,9 +171,7 @@ class ComplianceMetrics(TypedDict):
     gap_count_by_severity: Dict[SeverityLevel, int]
     improvement_trend: Literal["improving", "stable", "declining"]
 
-class AssessmentAnalysisResponse(TypedDict):
-    """Complete assessment analysis response structure."""
-
+class AssessmentAnalysisResponse(TypedDict): 
     gaps: List[Gap]
     recommendations: List[Recommendation]
     risk_assessment: RiskAssessment
@@ -219,9 +187,7 @@ class AssessmentAnalysisResponse(TypedDict):
 # Help and Guidance Schemas
 # =====================================================================
 
-class GuidanceResponse(TypedDict):
-    """Response for assessment question help/guidance."""
-
+class GuidanceResponse(TypedDict): 
     guidance: str
     confidence_score: float
     related_topics: List[str]
@@ -232,9 +198,7 @@ class GuidanceResponse(TypedDict):
     common_pitfalls: List[str]
     implementation_tips: List[str]
 
-class FollowUpQuestion(TypedDict):
-    """Follow-up question for assessment completion."""
-
+class FollowUpQuestion(TypedDict): 
     question_id: str
     question_text: str
     category: str
@@ -243,9 +207,7 @@ class FollowUpQuestion(TypedDict):
     context: str
     validation_criteria: List[str]
 
-class FollowUpResponse(TypedDict):
-    """Response for assessment follow-up questions."""
-
+class FollowUpResponse(TypedDict): 
     follow_up_questions: List[FollowUpQuestion]
     recommendations: List[str]
     confidence_score: float
@@ -257,9 +219,7 @@ class FollowUpResponse(TypedDict):
 # Evidence and Workflow Schemas
 # =====================================================================
 
-class EvidenceItem(TypedDict):
-    """Individual evidence item recommendation."""
-
+class EvidenceItem(TypedDict): 
     evidence_id: str
     title: str
     description: str
@@ -273,9 +233,7 @@ class EvidenceItem(TypedDict):
     validation_requirements: List[str]
     retention_period: str
 
-class WorkflowStep(TypedDict):
-    """Individual step in evidence collection workflow."""
-
+class WorkflowStep(TypedDict): 
     step_number: int
     title: str
     description: str
@@ -286,9 +244,7 @@ class WorkflowStep(TypedDict):
     validation_criteria: List[str]
     automation_opportunities: List[str]
 
-class WorkflowPhase(TypedDict):
-    """Phase in evidence collection workflow."""
-
+class WorkflowPhase(TypedDict): 
     phase_number: int
     phase_name: str
     objective: str
@@ -297,9 +253,7 @@ class WorkflowPhase(TypedDict):
     success_criteria: List[str]
     dependencies: List[str]
 
-class EvidenceWorkflow(TypedDict):
-    """Complete evidence collection workflow."""
-
+class EvidenceWorkflow(TypedDict): 
     workflow_id: str
     title: str
     description: str
@@ -315,9 +269,7 @@ class EvidenceWorkflow(TypedDict):
 # Policy Generation Schemas
 # =====================================================================
 
-class PolicySection(TypedDict):
-    """Individual section of a generated policy."""
-
+class PolicySection(TypedDict): 
     section_number: str
     title: str
     content: str
@@ -325,9 +277,7 @@ class PolicySection(TypedDict):
     compliance_references: List[str]
     implementation_notes: List[str]
 
-class PolicyDocument(TypedDict):
-    """Complete generated policy document."""
-
+class PolicyDocument(TypedDict): 
     policy_id: str
     title: str
     version: str
@@ -343,9 +293,7 @@ class PolicyDocument(TypedDict):
 # Chat and Conversation Schemas
 # =====================================================================
 
-class IntentClassification(TypedDict):
-    """User intent classification result."""
-
+class IntentClassification(TypedDict): 
     intent_type: Literal[
         "evidence_query",
         "compliance_check",
@@ -358,9 +306,7 @@ class IntentClassification(TypedDict):
     context_requirements: List[str]
     suggested_actions: List[str]
 
-class ChatResponse(TypedDict):
-    """General chat response structure."""
-
+class ChatResponse(TypedDict): 
     response_text: str
     intent_classification: IntentClassification
     confidence_score: float
@@ -372,9 +318,7 @@ class ChatResponse(TypedDict):
 # Meta Response Schemas
 # =====================================================================
 
-class ResponseMetadata(TypedDict):
-    """Metadata for all AI responses."""
-
+class ResponseMetadata(TypedDict): 
     response_id: str
     timestamp: str
     model_used: str
@@ -384,9 +328,7 @@ class ResponseMetadata(TypedDict):
     validation_status: Literal["valid", "invalid", "partially_valid"]
     validation_errors: List[str]
 
-class StructuredAIResponse(TypedDict):
-    """Wrapper for all structured AI responses."""
-
+class StructuredAIResponse(TypedDict): 
     metadata: ResponseMetadata
     response_type: str
     payload: Union[
@@ -407,9 +349,7 @@ class StructuredAIResponse(TypedDict):
 # Error and Validation Schemas
 # =====================================================================
 
-class ValidationError(TypedDict):
-    """Schema validation error details."""
-
+class ValidationError(TypedDict): 
     field_path: str
     error_type: str
     error_message: str
@@ -417,9 +357,7 @@ class ValidationError(TypedDict):
     actual_value: Any
     suggestion: Optional[str]
 
-class SchemaValidationResult(TypedDict):
-    """Result of schema validation operation."""
-
+class SchemaValidationResult(TypedDict): 
     is_valid: bool
     schema_name: str
     validation_errors: List[ValidationError]

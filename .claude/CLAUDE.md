@@ -1,5 +1,21 @@
 # RuleIQ Project Rules
 
+## ⛔ CRITICAL SAFETY RULES - NEVER VIOLATE
+
+### DESTRUCTIVE ACTIONS REQUIRING EXPLICIT APPROVAL
+1. **NO mass refactoring** without explicit permission
+2. **NO bulk file modifications** (>5 files requires approval)
+3. **NO automated "fix-all" scripts** without approval
+4. **NO structural changes** (moving code between files) without approval
+5. **ALWAYS test** after EACH file modification
+6. **ALWAYS create backups** before changes
+
+### REFACTORING SAFEGUARDS
+- See `.claude/REFACTORING_SAFEGUARDS.md` for detailed rules
+- Use `.claude/refactoring-guard.py` before any refactoring
+- One file at a time, test after each change
+- Stop immediately if syntax errors occur
+
 ## Mission
 Execute 49 prioritized tasks (P0-P7) for the RuleIQ compliance automation platform with strict quality gates and timeframe enforcement.
 

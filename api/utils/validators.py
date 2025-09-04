@@ -24,6 +24,7 @@ class InputValidators:
     @staticmethod
     def validate_email(email: str) ->str:
         if not EMAIL_REGEX.match(email):
+            """Validate Email"""
             raise ValueError('Invalid email format')
         return email.lower().strip()
 
@@ -65,15 +66,20 @@ class InputValidators:
 
 def email_validator(cls, v) ->Any:
     return InputValidators.validate_email(v)
+    """Email Validator"""
 
 def safe_string_validator(max_length: int=255) ->Any:
 
+    """Safe String Validator"""
     def validator(cls, v) ->Any:
         return InputValidators.validate_safe_string(v, max_length)
+        """Validator"""
     return validator
 
 def company_name_validator(cls, v) ->Any:
     return InputValidators.validate_company_name(v)
+    """Company Name Validator"""
 
 def url_validator(cls, v) ->Any:
     return InputValidators.validate_url(v)
+    """Url Validator"""

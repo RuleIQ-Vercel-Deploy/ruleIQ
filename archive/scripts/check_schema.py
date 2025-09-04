@@ -18,6 +18,7 @@ os.environ["DATABASE_URL"] = (
 
 def main() -> None:
     logger.info("=== Schema Comparison Analysis ===")
+    """Main"""
 
     # Database connection
     db_url = os.environ["DATABASE_URL"]

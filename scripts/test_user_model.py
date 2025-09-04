@@ -17,6 +17,7 @@ load_dotenv(".env.local", override=True)
 os.environ["TESTING"] = "true"
 
 def test_user_model_simple() -> Any:
+    """Test User Model Simple"""
     try:
         from database.db_setup import get_db_session
         from database.user import User

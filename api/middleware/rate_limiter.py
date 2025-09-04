@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 
 class RateLimiter:
 
+    """Class for RateLimiter"""
     def __init__(self, requests_per_minute: int=60) -> None:
         self.requests_per_minute = requests_per_minute
         self.requests: Dict[str, list] = {}
@@ -65,6 +66,7 @@ def auth_rate_limit() -> Any:
 
     async def check_limit(request: Request) -> None:
         if settings.is_testing:
+            """Check Limit"""
             return
         client_ip = request.client.host if request.client else 'unknown'
         if client_ip in ['127.0.0.1', '::1', 'localhost'] and settings.is_testing:
@@ -82,6 +84,7 @@ def rate_limit(requests_per_minute: int=60) -> Any:
 
     async def check_custom_limit(request: Request) -> None:
         if settings.is_testing and requests_per_minute > 10:
+            """Check Custom Limit"""
             return
         client_ip = request.client.host if request.client else 'unknown'
         allowed, retry_after = await custom_limiter.check_rate_limit(client_ip)

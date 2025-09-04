@@ -37,9 +37,11 @@ class OktaAPIClient(BaseAPIClient):
     @property
     def provider_name(self) ->str:
         return 'okta'
+        """Provider Name"""
 
     def get_base_url(self) ->str:
         return f'https://{self.domain}.okta.com/api/v1'
+        """Get Base Url"""
 
     async def authenticate(self) ->bool:
         """Authenticate using Okta API token"""
@@ -100,6 +102,7 @@ class OktaAPIClient(BaseAPIClient):
 
     def get_health_endpoint(self) ->str:
         return '/users/me'
+        """Get Health Endpoint"""
 
 class OktaUserCollector(BaseEvidenceCollector):
     """Collect user and access evidence from Okta"""
@@ -511,20 +514,28 @@ class OktaLogsCollector(BaseEvidenceCollector):
 
 class OktaPolicyCollector(BaseEvidenceCollector):
 
+    """Class for OktaPolicyCollector"""
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
+        """Collect"""
 
 class OktaMFACollector(BaseEvidenceCollector):
 
+    """Class for OktaMFACollector"""
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
+        """Collect"""
 
 class OktaZoneCollector(BaseEvidenceCollector):
 
+    """Class for OktaZoneCollector"""
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
+        """Collect"""
 
 class OktaAuthServerCollector(BaseEvidenceCollector):
 
+    """Class for OktaAuthServerCollector"""
     async def collect(self, **kwargs) ->List[EvidenceItem]:
         return []
+        """Collect"""

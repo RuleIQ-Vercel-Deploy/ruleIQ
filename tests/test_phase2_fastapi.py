@@ -1,16 +1,16 @@
 """
-
-# Constants
-HTTP_UNAUTHORIZED = 401
-
 Test Phase 2 Stack Auth endpoints using FastAPI TestClient
 Phase 2: Assessment & AI Endpoints
 """
 import sys
 from pathlib import Path
 from fastapi.testclient import TestClient
-sys.path.insert(0, str(Path(__file__).parent))
-from main import app
+
+# Constants
+HTTP_UNAUTHORIZED = 401
+
+# sys.path.insert(0, str(Path(__file__).parent))
+from api.main import app
 
 def test_phase2_endpoints():
     """Test Phase 2 endpoints with FastAPI TestClient"""
@@ -68,7 +68,7 @@ def test_phase2_endpoints():
     total = len(results)
     for endpoint, result in results:
         status = '✅ PROTECTED' if result else '❌ UNPROTECTED'
-        print(f'   {endpoint:40} {status}')
+        print(f'   {endpoint:45} {status}')
     print(f'\n   Results: {passed}/{total} endpoints properly protected')
     return passed == total
 
@@ -76,9 +76,7 @@ if __name__ == '__main__':
     success = test_phase2_endpoints()
     if success:
         print('\n🎉 Phase 2 migration successful!')
-        print(
-            '   All Assessment & AI endpoints are properly protected by Stack Auth'
-            )
+        print('   All AI/Assessment endpoints are properly protected')
     else:
         print('\n⚠️  Phase 2 migration needs attention')
         print('   Some endpoints are not properly protected')

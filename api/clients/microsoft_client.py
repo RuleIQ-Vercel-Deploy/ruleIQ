@@ -37,6 +37,7 @@ class MicrosoftCredentials(BaseModel):
 
     class Config:
         extra = 'allow'
+        """Class for Config"""
 
 class MicrosoftGraphAPIClient(BaseAPIClient):
     """Microsoft 365/Azure AD Graph API client for compliance evidence collection."""

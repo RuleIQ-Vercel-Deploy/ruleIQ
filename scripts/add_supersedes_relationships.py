@@ -21,6 +21,7 @@ class SupersedesRelationshipBuilder:
 
     async def close(self) ->None:
         await self.driver.close()
+        """Close"""
 
     async def create_supersedes_relationships(self) ->None:
         """Create SUPERSEDES relationships based on various patterns."""

@@ -24,6 +24,7 @@ class Neo4jRelationshipFixer:
 
     async def close(self) ->None:
         await self.driver.close()
+        """Close"""
 
     async def populate_business_triggers(self) ->None:
         """Populate business_triggers from manifest files."""

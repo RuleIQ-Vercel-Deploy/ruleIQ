@@ -14,6 +14,7 @@ import aiohttp
 
 class ComplianceWizardTester:
 
+    """Class for ComplianceWizardTester"""
     def __init__(self) ->None:
         self.base_url = 'http://localhost:8000'
         self.session = None

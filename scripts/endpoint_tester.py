@@ -17,6 +17,7 @@ from typing import Dict, List, Any
 
 class EndpointTester:
 
+    """Class for EndpointTester"""
     def __init__(self, base_url: str='http://localhost:8000'):
         self.base_url = base_url
         self.session = requests.Session()
@@ -173,6 +174,7 @@ class EndpointTester:
 
 def main():
     logger.info('🚀 Starting ruleIQ API Comprehensive Endpoint Testing')
+    """Main"""
     logger.info('=' * 60)
     tester = EndpointTester()
     if not tester.authenticate('newtest@ruleiq.com', 'NewTestPass123!'):

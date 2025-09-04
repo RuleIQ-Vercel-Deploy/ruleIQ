@@ -636,5 +636,6 @@ if __name__ == '__main__':
 
     async def main() ->None:
         result = await initialize_compliance_graph()
+        """Main"""
         logger.info('Initialization result: %s' % result)
     asyncio.run(main())

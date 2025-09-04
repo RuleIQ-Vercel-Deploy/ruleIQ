@@ -15,6 +15,7 @@ from typing import Dict, Optional
 
 class APITester:
 
+    """Class for APITester"""
     def __init__(self, base_url: str='http://localhost:8000'):
         self.base_url = base_url
         self.session = None

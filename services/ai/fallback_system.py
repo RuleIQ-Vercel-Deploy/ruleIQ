@@ -14,9 +14,7 @@ from typing import Any, Dict, Optional
 
 from services.ai.exceptions import AIServiceException
 
-class FallbackLevel(Enum):
-    """Levels of fallback degradation"""
-
+class FallbackLevel(Enum): 
 #     NONE = "none"  # No fallback, fail immediately  # Unused variable
 #     BASIC = "basic"  # Basic static responses  # Unused variable
 #     CACHED = "cached"  # Use cached responses  # Unused variable
@@ -33,9 +31,7 @@ class FallbackResponse:
     generated_at: datetime = field(default_factory=datetime.now)
     metadata: Dict[str, Any] = field(default_factory=dict)
 
-    def to_dict(self) -> Dict[str, Any]:
-        """Convert to dictionary for API responses"""
-        return {
+    def to_dict(self) -> Dict[str, Any]: return {
             "content": self.content,
             "confidence": self.confidence,
             "source": self.source,
@@ -51,9 +47,7 @@ class FallbackTemplateManager:
         self.templates = self._initialize_templates()
         self.logger = logging.getLogger(__name__)
 
-    def _initialize_templates(self) -> Dict[str, Dict[str, Any]]:
-        """Initialize static fallback templates"""
-        return {
+    def _initialize_templates(self) -> Dict[str, Dict[str, Any]]: return {
             # Assessment help templates
             "assessment_help": {
                 "gdpr": {
@@ -214,9 +208,9 @@ We apologize for the inconvenience and are working to restore full service quick
         }
 
     def get_template(
+        """Get a fallback template"""
         self, template_type: str, subtype: str = "general"
     ) -> Optional[Dict[str, Any]]:
-        """Get a fallback template"""
         if template_type in self.templates:
             if subtype in self.templates[template_type]:
                 return self.templates[template_type][subtype]
@@ -225,9 +219,9 @@ We apologize for the inconvenience and are working to restore full service quick
         return None
 
     def get_assessment_help_fallback(
+        """Get fallback response for assessment help"""
         self, framework: str = "general"
     ) -> FallbackResponse:
-        """Get fallback response for assessment help"""
         template = self.get_template("assessment_help", framework.lower())
 
         if template:
@@ -245,9 +239,9 @@ We apologize for the inconvenience and are working to restore full service quick
             )
 
     def get_recommendations_fallback(
+        """Get fallback response for recommendations"""
         self, risk_level: str = "medium"
     ) -> FallbackResponse:
-        """Get fallback response for recommendations"""
         template = self.get_template("assessment_recommendations", risk_level.lower())
 
         if template:
@@ -267,9 +261,7 @@ We apologize for the inconvenience and are working to restore full service quick
                 source="default_fallback",
             )
 
-    def get_service_unavailable_fallback(self) -> FallbackResponse:
-        """Get service unavailable message"""
-        template = self.templates["service_unavailable"]
+    def get_service_unavailable_fallback(self) -> FallbackResponse: template = self.templates["service_unavailable"]
 
         return FallbackResponse(
             content=template["content"],
@@ -286,9 +278,7 @@ class CacheManager:
         self.cache_ttl = timedelta(hours=cache_ttl_hours)
         self.logger = logging.getLogger(__name__)
 
-    def _generate_cache_key(self, operation: str, context: Dict[str, Any]) -> str:
-        """Generate cache key from operation and context"""
-        # Create a simple hash of the operation and key context elements
+    def _generate_cache_key(self, operation: str, context: Dict[str, Any]) -> str: # Create a simple hash of the operation and key context elements
         key_elements = [operation]
 
         # Add framework if present
@@ -302,9 +292,9 @@ class CacheManager:
         return "|".join(key_elements)
 
     def store_response(
+        """Store a successful AI response in cache"""
         self, operation: str, context: Dict[str, Any], response: str
     ) -> None:
-        """Store a successful AI response in cache"""
         cache_key = self._generate_cache_key(operation, context)
 
         self.cache[cache_key] = {
@@ -317,9 +307,9 @@ class CacheManager:
         self.logger.debug(f"Cached response for key: {cache_key}")
 
     def get_cached_response(
+        """Get cached response if available and not expired"""
         self, operation: str, context: Dict[str, Any]
     ) -> Optional[FallbackResponse]:
-        """Get cached response if available and not expired"""
         cache_key = self._generate_cache_key(operation, context)
 
         if cache_key in self.cache:
@@ -345,9 +335,7 @@ class CacheManager:
 
         return None
 
-    def clear_expired_cache(self) -> None:
-        """Remove all expired cache entries"""
-        current_time = datetime.now()
+    def clear_expired_cache(self) -> None: current_time = datetime.now()
         expired_keys = []
 
         for key, item in self.cache.items():
@@ -380,9 +368,7 @@ class FallbackSystem:
             "fallback_by_source": {},
         }
 
-    def should_use_fallback(self, exception: Exception) -> bool:
-        """Determine if fallback should be used for the given exception"""
-        if self.fallback_level == FallbackLevel.NONE:
+    def should_use_fallback(self, exception: Exception) -> bool: if self.fallback_level == FallbackLevel.NONE:
             return False
 
         # Always use fallback for service unavailability
@@ -446,9 +432,9 @@ class FallbackSystem:
         )
 
     def _get_template_response(
+        """Get response from templates"""
         self, operation: str, context: Dict[str, Any]
     ) -> Optional[FallbackResponse]:
-        """Get response from templates"""
         if operation == "assessment_help":
             framework = context.get("framework", "general")
             return self.template_manager.get_assessment_help_fallback(framework)
@@ -460,9 +446,9 @@ class FallbackSystem:
         return None
 
     def _get_basic_response(
+        """Get basic fallback response"""
         self, operation: str, exception: Optional[Exception]
     ) -> FallbackResponse:
-        """Get basic fallback response"""
         if exception:
             content = (
                 f"The {operation} service is temporarily unavailable due to: {exception!s}. Please try f
@@ -481,9 +467,7 @@ class FallbackSystem:
             },
         )
 
-    def _update_fallback_stats(self, operation: str, source: str) -> None:
-        """Update fallback usage statistics"""
-        self.fallback_stats["total_fallbacks"] += 1
+    def _update_fallback_stats(self, operation: str, source: str) -> None: self.fallback_stats["total_fallbacks"] += 1
 
         if operation not in self.fallback_stats["fallback_by_type"]:
             self.fallback_stats["fallback_by_type"][operation] = 0
@@ -494,39 +478,33 @@ class FallbackSystem:
         self.fallback_stats["fallback_by_source"][source] += 1
 
     def cache_successful_response(
+        """Cache a successful AI response for future fallback use"""
         self, operation: str, context: Dict[str, Any], response: str
     ) -> None:
-        """Cache a successful AI response for future fallback use"""
         if self.fallback_level in [FallbackLevel.CACHED, FallbackLevel.COMPREHENSIVE]:
             self.cache_manager.store_response(operation, context, response)
 
-    def get_fallback_statistics(self) -> Dict[str, Any]:
-        """Get fallback usage statistics"""
-        return {
+    def get_fallback_statistics(self) -> Dict[str, Any]: return {
             "fallback_level": self.fallback_level.value,
             "statistics": self.fallback_stats.copy(),
             "cache_entries": len(self.cache_manager.cache),
             "template_types": list(self.template_manager.templates.keys()),
         }
 
-    def perform_maintenance(self) -> None:
-        """Perform routine maintenance (clear expired cache, etc.)"""
-        self.cache_manager.clear_expired_cache()
+    def perform_maintenance(self) -> None: self.cache_manager.clear_expired_cache()
         self.logger.info("Fallback system maintenance completed")
 
 # Global fallback system instance
 _fallback_system: Optional[FallbackSystem] = None
 
 def get_fallback_system(
+    """Get global fallback system instance"""
     fallback_level: FallbackLevel = FallbackLevel.COMPREHENSIVE,
 ) -> FallbackSystem:
-    """Get global fallback system instance"""
     global _fallback_system
     if _fallback_system is None:
         _fallback_system = FallbackSystem(fallback_level)
     return _fallback_system
 
-def reset_fallback_system() -> None:
-    """Reset global fallback system (for testing)"""
-    global _fallback_system
+def reset_fallback_system() -> None: global _fallback_system
     _fallback_system = None

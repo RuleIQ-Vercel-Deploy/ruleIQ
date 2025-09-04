@@ -37,9 +37,7 @@ class TracingConfig:
         self.tracing_enabled = os.getenv('TRACING_ENABLED', 'true').lower(
             ) == 'true'
 
-    def setup_tracing(self) ->Optional[trace.Tracer]:
-        """Initialize OpenTelemetry tracing"""
-        if not self.tracing_enabled:
+    def setup_tracing(self) ->Optional[trace.Tracer]: if not self.tracing_enabled:
             logger.info('Tracing is disabled')
             return None
         try:
@@ -58,9 +56,7 @@ class TracingConfig:
             logger.error('Failed to initialize tracing: %s' % e)
             return None
 
-    def _setup_exporters(self, tracer_provider: TracerProvider):
-        """Set up trace exporters"""
-        exporters = []
+    def _setup_exporters(self, tracer_provider: TracerProvider): exporters = []
         if self.otlp_endpoint:
             otlp_exporter = OTLPSpanExporter(endpoint=self.otlp_endpoint)
             exporters.append(otlp_exporter)
@@ -75,9 +71,7 @@ class TracingConfig:
             span_processor = BatchSpanProcessor(exporter)
             tracer_provider.add_span_processor(span_processor)
 
-    def _instrument_libraries(self):
-        """Automatically instrument common libraries"""
-        try:
+    def _instrument_libraries(self): try:
             FastAPIInstrumentor.instrument()
             RequestsInstrumentor().instrument()
             SQLAlchemyInstrumentor().instrument()
@@ -95,8 +89,8 @@ class CustomTracer:
         self.enabled = tracer is not None
 
     def start_span(self, name: str, attributes: Optional[Dict[str, Any]]=
-        None, kind: trace.SpanKind=trace.SpanKind.INTERNAL) ->Any:
         """Start a new span with custom attributes"""
+        None, kind: trace.SpanKind=trace.SpanKind.INTERNAL) ->Any:
         if not self.enabled:
             return trace.INVALID_SPAN
         span = self.tracer.start_span(name, kind=kind)
@@ -106,8 +100,8 @@ class CustomTracer:
         return span
 
     def trace_api_call(self, endpoint: str, method: str, user_id: Optional[
-        str]=None) ->Any:
         """Trace API endpoint calls"""
+        str]=None) ->Any:
         attributes = {'http.method': method, 'http.route': endpoint,
             'service.name': 'ruleiq-api'}
         if user_id:
@@ -116,8 +110,8 @@ class CustomTracer:
             attributes, kind=trace.SpanKind.SERVER)
 
     def trace_database_operation(self, operation: str, table: str, query_id:
-        Optional[str]=None) ->Any:
         """Trace database operations"""
+        Optional[str]=None) ->Any:
         attributes = {'db.operation': operation, 'db.table': table,
             'db.system': 'postgresql'}
         if query_id:
@@ -126,24 +120,24 @@ class CustomTracer:
             kind=trace.SpanKind.CLIENT)
 
     def trace_external_call(self, service: str, endpoint: str, method: str=
-        'GET') ->Any:
         """Trace external service calls"""
+        'GET') ->Any:
         attributes = {'http.method': method, 'http.url': endpoint,
             'service.name': service}
         return self.start_span(f'external.{service}', attributes=attributes,
             kind=trace.SpanKind.CLIENT)
 
     def trace_ai_operation(self, operation: str, model: str, tokens:
-        Optional[int]=None) ->Any:
         """Trace AI service operations"""
+        Optional[int]=None) ->Any:
         attributes = {'ai.operation': operation, 'ai.model': model}
         if tokens:
             attributes['ai.tokens'] = tokens
         return self.start_span(f'ai.{operation}', attributes=attributes)
 
     def add_user_context(self, span, user_id: str, business_profile_id:
-        Optional[str]=None) ->None:
         """Add user context to spans"""
+        Optional[str]=None) ->None:
         if not self.enabled:
             return
         span.set_attribute('user.id', user_id)
@@ -154,39 +148,36 @@ _tracing_config = TracingConfig()
 _base_tracer = _tracing_config.setup_tracing()
 tracer = CustomTracer(_base_tracer)
 
-def trace_endpoint(endpoint: str, method: str='GET') ->Any:
-    """Decorator to trace FastAPI endpoints"""
-
+def trace_endpoint(endpoint: str, method: str='GET') ->Any: 
     def decorator(func) ->Any:
-
+        """Decorator"""
         def wrapper(*args, **kwargs) ->Any:
             if not tracer.enabled:
+            """Wrapper"""
                 return func(*args, **kwargs)
             with tracer.trace_api_call(endpoint, method):
                 return func(*args, **kwargs)
         return wrapper
     return decorator
 
-def trace_db_operation(operation: str, table: str) ->Any:
-    """Decorator to trace database operations"""
-
+def trace_db_operation(operation: str, table: str) ->Any: 
     def decorator(func) ->Any:
-
+        """Decorator"""
         def wrapper(*args, **kwargs) ->Any:
             if not tracer.enabled:
+            """Wrapper"""
                 return func(*args, **kwargs)
             with tracer.trace_database_operation(operation, table):
                 return func(*args, **kwargs)
         return wrapper
     return decorator
 
-def trace_external_service(service: str) ->Any:
-    """Decorator to trace external service calls"""
-
+def trace_external_service(service: str) ->Any: 
     def decorator(func) ->Any:
-
+        """Decorator"""
         def wrapper(*args, **kwargs) ->Any:
             if not tracer.enabled:
+            """Wrapper"""
                 return func(*args, **kwargs)
             with tracer.trace_external_call(service, str(args[0]) if args else
                 'unknown'):

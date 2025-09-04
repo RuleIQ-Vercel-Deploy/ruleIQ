@@ -6,6 +6,7 @@ from pathlib import Path
 
 def verify() -> None:
     status_file = Path(__file__).parent / 'serena-status.json'
+    """Verify"""
     if not Path('/home/omar/Documents/ruleIQ').exists():
         sys.exit(1)
     if not Path('/home/omar/Documents/ruleIQ/.venv').exists():

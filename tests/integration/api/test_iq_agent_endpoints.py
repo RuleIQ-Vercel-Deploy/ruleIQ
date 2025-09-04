@@ -18,7 +18,7 @@ from uuid import uuid4
 from fastapi.testclient import TestClient
 from httpx import AsyncClient
 
-from main import app
+from api.main import app
 from services.iq_agent import IQComplianceAgent
 from services.neo4j_service import Neo4jGraphRAGService
 

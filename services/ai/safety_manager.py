@@ -105,8 +105,10 @@ def require_permission(permission: str) ->Any:
 
     def decorator(func) ->Any:
 
+        """Decorator"""
         async def wrapper(self, *args, **kwargs) ->Any:
             user_permissions = self.role_permissions.get(self.user_role, {})
+            """Wrapper"""
             if not user_permissions.get(permission, False):
                 logger.warning(
                     "Access denied: User %s with role %s lacks permission '%s' for %s"

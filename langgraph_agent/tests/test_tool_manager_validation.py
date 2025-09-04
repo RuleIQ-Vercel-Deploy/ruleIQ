@@ -478,6 +478,7 @@ class TestErrorHandling:
         # Mock _execute to take longer than timeout
         async def slow_execute(*args, **kwargs):
             await asyncio.sleep(0.01)  # 10ms delay
+            """Slow Execute"""
             return {"result": "success"}
 
         tool._execute = slow_execute
@@ -497,6 +498,7 @@ class TestErrorHandling:
         # Mock _execute to raise exception
         async def failing_execute(*args, **kwargs):
             raise ValueError("Test error")
+            """Failing Execute"""
 
         tool._execute = failing_execute
 

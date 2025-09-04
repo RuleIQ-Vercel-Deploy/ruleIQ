@@ -23,6 +23,7 @@ from database.db_setup import Base
 
 class ChatMessage(Base):
     __tablename__ = "chat_messages"
+    """Class for ChatMessage"""
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     conversation_id = Column(

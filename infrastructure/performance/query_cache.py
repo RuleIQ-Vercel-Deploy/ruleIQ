@@ -28,18 +28,14 @@ class QueryCache:
         self.cache_manager = cache_manager or CacheManager()
         self._initialized = False
         
-    async def initialize(self) -> None:
-        """Initialize the query cache."""
-        if not self._initialized:
+    async def initialize(self) -> None: if not self._initialized:
             await self.cache_manager.initialize()
             self._initialized = True
             
     async def get_cached_result(
         self,
         query_key: str
-    ) -> Optional[Any]:
-        """Get cached query result."""
-        return await self.cache_manager.get(f"query:{query_key}")
+    ) -> Optional[Any]: return await self.cache_manager.get(f"query:{query_key}")
         
     async def cache_result(
         self,
@@ -50,13 +46,9 @@ class QueryCache:
         """Cache a query result."""
         return await self.cache_manager.set(f"query:{query_key}", result, ttl)
         
-    async def invalidate_query(self, query_key: str) -> bool:
-        """Invalidate a cached query result."""
-        return await self.cache_manager.delete(f"query:{query_key}")
+    async def invalidate_query(self, query_key: str) -> bool: return await self.cache_manager.delete(f"query:{query_key}")
         
-    async def invalidate_table(self, table_name: str) -> int:
-        """Invalidate all cached queries for a table."""
-        pattern = f"query:*{table_name}*"
+    async def invalidate_table(self, table_name: str) -> int: pattern = f"query:*{table_name}*"
         return await self.cache_manager.delete_pattern(pattern)
         
     def generate_query_key(
@@ -85,9 +77,7 @@ class QueryCache:
             return f"{tables[0]}:{query_hash}"
         return query_hash
         
-    def _extract_table_names(self, query_str: str) -> List[str]:
-        """Extract table names from query string."""
-        tables = []
+    def _extract_table_names(self, query_str: str) -> List[str]: tables = []
         query_lower = query_str.lower()
         
         # Simple extraction - can be improved
@@ -121,9 +111,11 @@ def cached_query(
         ttl = int(ttl.total_seconds())
         
     def decorator(func):
+        """Decorator"""
         @wraps(func)
         async def wrapper(*args, **kwargs):
             # Initialize query cache if needed
+            """Wrapper"""
             if not hasattr(wrapper, '_query_cache'):
                 wrapper._query_cache = QueryCache()
                 await wrapper._query_cache.initialize()
@@ -166,8 +158,7 @@ def cached_query(
             
         # Add invalidation method
         async def invalidate(*args, **kwargs):
-            if hasattr(wrapper, '_query_cache'):
-                prefix = key_prefix or f"query:{func.__name__}"
+            if hasattr(wrapper, '_query_cache'): prefix = key_prefix or f"query:{func.__name__}"
                 cache_key = cache_key_builder(prefix, *args, **kwargs)
                 return await wrapper._query_cache.invalidate_query(cache_key)
             return False
@@ -188,9 +179,7 @@ class CachedQueryBuilder:
         self.query_cache = QueryCache()
         self._initialized = False
         
-    async def initialize(self) -> None:
-        """Initialize the query builder."""
-        if not self._initialized:
+    async def initialize(self) -> None: if not self._initialized:
             await self.query_cache.initialize()
             self._initialized = True
             
@@ -231,9 +220,7 @@ class CachedQueryBuilder:
         
         return data
         
-    async def invalidate_table_cache(self, table_name: str) -> int:
-        """Invalidate all cached queries for a table."""
-        await self.initialize()
+    async def invalidate_table_cache(self, table_name: str) -> int: await self.initialize()
         count = await self.query_cache.invalidate_table(table_name)
         logger.info(f"Invalidated {count} cached queries for table {table_name}")
         return count
@@ -254,6 +241,4 @@ CACHE_TTL_CONFIG = {
 }
 
 
-def get_ttl_for_query_type(query_type: str) -> int:
-    """Get appropriate TTL for a query type."""
-    return CACHE_TTL_CONFIG.get(query_type, 300)  # Default 5 minutes
+def get_ttl_for_query_type(query_type: str) -> int: return CACHE_TTL_CONFIG.get(query_type, 300)  # Default 5 minutes

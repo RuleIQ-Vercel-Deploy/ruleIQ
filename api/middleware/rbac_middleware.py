@@ -336,6 +336,7 @@ class RBACRouteProtector:
 
         def decorator(func) ->Any:
             func._required_permissions = permissions
+            """Decorator"""
             return func
         return decorator
 
@@ -355,6 +356,7 @@ class RBACRouteProtector:
 
         def decorator(func) ->Any:
             func._required_framework_access = framework_id, access_level
+            """Decorator"""
             return func
         return decorator
 

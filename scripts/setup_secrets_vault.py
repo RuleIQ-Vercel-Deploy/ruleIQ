@@ -27,25 +27,17 @@ class SecretsVaultSetup:
             f"🔐 Initializing Secrets Vault Setup for '{secret_name}' in {region_name}",
             )
 
-    def generate_secure_key(self, length: int=32) ->str:
-        """Generate cryptographically secure key"""
-        alphabet = string.ascii_letters + string.digits + '!@#$%^&*(-_=+)'
+    def generate_secure_key(self, length: int=32) ->str: alphabet = string.ascii_letters + string.digits + '!@#$%^&*(-_=+)'
         return ''.join(secrets.choice(alphabet) for _ in range(length))
 
-    def generate_jwt_secret(self) ->str:
-        """Generate secure JWT secret (base64 encoded)"""
-        import base64
+    def generate_jwt_secret(self) ->str: import base64
         random_bytes = secrets.token_bytes(32)
         return base64.b64encode(random_bytes).decode('utf-8')
 
-    def generate_fernet_key(self) ->str:
-        """Generate Fernet encryption key"""
-        from cryptography.fernet import Fernet
+    def generate_fernet_key(self) ->str: from cryptography.fernet import Fernet
         return Fernet.generate_key().decode('utf-8')
 
-    def create_production_secrets(self) ->Dict[str, str]:
-        """
-        🔐 Generate all production secrets for RuleIQ
+    def create_production_secrets(self) ->Dict[str, str]: 🔐 Generate all production secrets for RuleIQ
         IMPORTANT: Review and update these values for actual production use
         """
         logger.info('🔐 Generating secure production secrets...')
@@ -108,9 +100,7 @@ class SecretsVaultSetup:
         logger.info('✅ Generated %s secrets' % len(secrets_data))
         return secrets_data
 
-    def create_secret(self, secrets_data: Dict[str, str]) ->bool:
-        """Create secret in AWS Secrets Manager"""
-        try:
+    def create_secret(self, secrets_data: Dict[str, str]) ->bool: try:
             logger.info("🔐 Creating secret '%s' in AWS Secrets Manager..." %
                 self.secret_name)
             response = self.client.create_secret(Name=self.secret_name,
@@ -140,9 +130,7 @@ class SecretsVaultSetup:
             logger.info('❌ Unexpected error creating secret: %s' % e)
             return False
 
-    def update_secret(self, secrets_data: Dict[str, str]) ->bool:
-        """Update existing secret in AWS Secrets Manager"""
-        try:
+    def update_secret(self, secrets_data: Dict[str, str]) ->bool: try:
             logger.info("🔐 Updating secret '%s' in AWS Secrets Manager..." %
                 self.secret_name)
             response = self.client.update_secret(SecretId=self.secret_name,
@@ -158,9 +146,7 @@ class SecretsVaultSetup:
             logger.info('❌ Unexpected error updating secret: %s' % e)
             return False
 
-    def get_secret(self) ->Dict[str, Any]:
-        """Retrieve secret from AWS Secrets Manager"""
-        try:
+    def get_secret(self) ->Dict[str, Any]: try:
             print(
                 f"🔐 Retrieving secret '{self.secret_name}' from AWS Secrets Manager...",
                 )
@@ -175,9 +161,7 @@ class SecretsVaultSetup:
             logger.info('❌ Unexpected error retrieving secret: %s' % e)
             return {}
 
-    def delete_secret(self, force_delete: bool=False) ->bool:
-        """Delete secret from AWS Secrets Manager"""
-        try:
+    def delete_secret(self, force_delete: bool=False) ->bool: try:
             recovery_days = 7 if not force_delete else 0
             print(
                 f"🗑️  Deleting secret '{self.secret_name}' (recovery window: {recovery_days} days)...",
@@ -202,9 +186,7 @@ class SecretsVaultSetup:
             logger.info('❌ Unexpected error deleting secret: %s' % e)
             return False
 
-    def setup_vault(self, update_if_exists: bool=False) ->bool:
-        """🔐 Complete vault setup process"""
-        logger.info('🚀 Starting RuleIQ Secrets Vault Setup...')
+    def setup_vault(self, update_if_exists: bool=False) ->bool: logger.info('🚀 Starting RuleIQ Secrets Vault Setup...')
         logger.info('=' * 50)
         secrets_data = self.create_production_secrets()
         if not self.create_secret(secrets_data):
@@ -232,9 +214,7 @@ class SecretsVaultSetup:
             )
         return True
 
-    def create_iam_policy(self) ->str:
-        """Generate IAM policy for RuleIQ application to access secrets"""
-        policy = {'Version': '2012-10-17', 'Statement': [{'Effect': 'Allow',
+    def create_iam_policy(self) ->str: policy = {'Version': '2012-10-17', 'Statement': [{'Effect': 'Allow',
             'Action': ['secretsmanager:GetSecretValue',
             'secretsmanager:DescribeSecret'], 'Resource':
             f'arn:aws:secretsmanager:{self.region_name}:*:secret:{self.secret_name}*'
@@ -248,9 +228,7 @@ class SecretsVaultSetup:
             )
         return json.dumps(policy, indent=2)
 
-def main() ->None:
-    """🔐 Main CLI interface for Secrets Vault Setup"""
-    import argparse
+def main() ->None: import argparse
     parser = argparse.ArgumentParser(description='🔐 RuleIQ Secrets Vault Setup',
         )
     parser.add_argument('--region', default='us-east-1', help='AWS region')

@@ -1,0 +1,2500 @@
+{
+  "summary": {
+    "total_complex_functions": 305,
+    "files_affected": 179,
+    "total_complexity_reduction_needed": 4293,
+    "critical_functions": 82,
+    "high_functions": 94,
+    "medium_functions": 129
+  },
+  "top_10_complex_functions": [
+    {
+      "file": "/home/omar/Documents/ruleIQ/scripts/sonar/fix-return-annotations.py",
+      "function": "infer_return_type",
+      "line": 39,
+      "complexity": 255,
+      "reduction_needed": 240
+    },
+    {
+      "file": "/home/omar/Documents/ruleIQ/services/ai/assistant.py",
+      "function": "_extract_response_text",
+      "line": 2504,
+      "complexity": 161,
+      "reduction_needed": 146
+    },
+    {
+      "file": "/home/omar/Documents/ruleIQ/scripts/sonar/fix-type-hints.py",
+      "function": "add_type_hints_to_file",
+      "line": 36,
+      "complexity": 152,
+      "reduction_needed": 137
+    },
+    {
+      "file": "/home/omar/Documents/ruleIQ/scripts/sonar/fix-long-lines.py",
+      "function": "fix_long_lines_in_file",
+      "line": 9,
+      "complexity": 132,
+      "reduction_needed": 117
+    },
+    {
+      "file": "/home/omar/Documents/ruleIQ/scripts/sonar/fix-blind-exceptions.py",
+      "function": "fix_blind_exceptions_in_file",
+      "line": 90,
+      "complexity": 119,
+      "reduction_needed": 104
+    },
+    {
+      "file": "/home/omar/Documents/ruleIQ/scripts/sonar/fix-resource-leaks.py",
+      "function": "fix_unclosed_files",
+      "line": 12,
+      "complexity": 118,
+      "reduction_needed": 103
+    },
+    {
+      "file": "/home/omar/Documents/ruleIQ/scripts/sonar/fix-python-final.py",
+      "function": "fix_long_lines",
+      "line": 53,
+      "complexity": 114,
+      "reduction_needed": 99
+    },
+    {
+      "file": "/home/omar/Documents/ruleIQ/scripts/sonar/fix-todos.py",
+      "function": "fix_critical_todos",
+      "line": 64,
+      "complexity": 88,
+      "reduction_needed": 73
+    },
+    {
+      "file": "/home/omar/Documents/ruleIQ/scripts/test-health-monitor.py",
+      "function": "run_frontend_tests",
+      "line": 77,
+      "complexity": 82,
+      "reduction_needed": 67
+    },
+    {
+      "file": "/home/omar/Documents/ruleIQ/langgraph_agent/utils/cost_tracking.py",
+      "function": "track_node_cost",
+      "line": 32,
+      "complexity": 80,
+      "reduction_needed": 65
+    }
+  ],
+  "recommendations": {
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-return-annotations.py:infer_return_type": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/assistant.py:_extract_response_text": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-type-hints.py:add_type_hints_to_file": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-long-lines.py:fix_long_lines_in_file": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-blind-exceptions.py:fix_blind_exceptions_in_file": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-resource-leaks.py:fix_unclosed_files": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-python-final.py:fix_long_lines": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-todos.py:fix_critical_todos": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/test-health-monitor.py:run_frontend_tests": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/utils/cost_tracking.py:track_node_cost": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/utils/cost_tracking.py:decorator": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/routers/auth_monitoring.py:list_protected_routes": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/comprehensive_test_audit.py:run_test_file": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-duplicated-literals.py:fix_duplicated_literals": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-type-hints.py:infer_type_from_name": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/automation/evidence_processor.py:_fallback_classification": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-python-comprehensive.py:fix_long_lines": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-python-final.py:fix_specific_files": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/automation/quality_scorer.py:_parse_quality_response": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-todos.py:analyze_todos": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/test_complete_integration.py:run_complete_integration_test": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py:_build_obligation_index": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-return-annotations.py:add_return_annotations": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-magic-values.py:add_constants_to_file": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/analyze-connections.py:analyze_connections": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/directory_test_runner.py:run_tests_in_directory": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-python-comprehensive.py:fix_magic_values": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/exceptions.py:map_gemini_error": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/assistant.py:_classify_intent": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-undefined-names.py:fix_file": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/graph/error_handler.py:_classify_error": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/automation/quality_scorer.py:_parse_similarity_response": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/update-api-visualization.py:process_connections": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/assistant.py:_stream_response": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/response_processor.py:_extract_json_from_text": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/evaluation/golden_datasets/cli.py:write_markdown_report": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-python-comprehensive.py:fix_unused_variables": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/mocks/mock_redis.py:execute": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/freemium_assessment_service.py:process_answer": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/feedback_analyzer.py:identify_patterns": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/implement-api-alignment.py:remove_duplicate_endpoints": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/graph/enhanced_state.py:merge_compliance_data": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/dependencies/file.py:analyze_file_comprehensively": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/prompt_templates.py:analyze_input": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/verify_auth_system.py:verify_stack_auth_removal": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-critical-datetime.py:fix_datetime_utcnow": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/fix_json.py:fix_multiline_json": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-unused-code.py:remove_unused_variables": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/app/core/monitoring/opentelemetry_metrics.py:record_batch": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/rag_self_critic.py:main": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/quality_monitor.py:_generate_improvement_suggestions": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/safety_manager.py:evaluate_content_safety": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/evaluation/metrics/coverage_metrics.py:coverage_summary": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/background/evidence_collection.py:execute_foundation_evidence_collection": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/test-utility-scripts/analyze_test_failures.py:categorize_test_issues": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/security_scan_and_fix.refactored.py:scan_authentication_issues": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/security_scan_and_fix.py:scan_authentication_issues": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/automation/evidence_processor.py:_parse_classification_response": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/categorize_uk_obligations.py:main": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/extract_official_iso_metadata.py:extract_iso_metadata": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/comprehensive_test_audit.py:generate_report": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/app/core/monitoring/opentelemetry_metrics.py:collect_metrics_by_labels": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/automation_scorer.py:_determine_automation_category": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/verify_doppler_secrets.py:validate_secret_format": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sprint_management.py:main": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-unused-code.py:get_unused_imports": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-unused-code.py:main": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/config/langsmith_feedback.py:batch_submit_to_langsmith": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/graph/reducers.py:append_to_memory": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-future-annotations.py:add_future_annotations": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/archive/migration_scripts/context_monitor.py:scan_for_changes": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/sonarcloud/check_sonar_results.py:main": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/security_scan_and_fix.refactored.py:main": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/security_scan_and_fix.py:main": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/feedback_storage.py:import_feedback": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/assistant.py:_parse_questions_response": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/fix_neo4j_relationships.py:_generate_business_triggers": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/app/core/monitoring/sentry_integration.py:before_send_filter": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/config/langsmith_feedback.py:analyze_feedback_trends": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/agents/memory_manager.py:get_relevant_memories": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/policy_generator.py:generate_policy_stream": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/assistant.py:_parse_assessment_recommendations_response": [
+      "\ud83d\udd34 CRITICAL: Split this function into multiple smaller functions",
+      "Consider using a class to encapsulate related functionality",
+      "Extract complex conditional logic into separate methods",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/verify-api-structure.py:main": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/monitoring/alerting.py:_send_notifications": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/sonarcloud/fix_s930_violations.py:fix_file": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-future-annotations.py:needs_future_annotations": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-backend-endpoints.py:main": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/sonarcloud/get_blocker_issues.py:main": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/clients/okta_client.py:collect": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/test_iq_integration.py:test_iq_neo4j_integration": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/feedback_storage.py:export_feedback": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/run_integration_tests.py:generate_report": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/debug_api_analysis.py:print_analysis_report": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-print-to-logging.py:visit_Call": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-resource-leaks.py:fix_session_issues": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/archive/migration_scripts/context_monitor.py:_get_update_recommendations": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/assessment_agent.py:process_user_response": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-magic-values.py:visit_Call": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/utils/cost_tracking.py:async_wrapper": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/utils/cost_tracking.py:sync_wrapper": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/test_e2e_workflows.py:test_comprehensive_audit_trail": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/owasp_security_fixes.py:fix_a02_cryptographic_failures": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/evidence_service.py:list_evidence_items_paginated": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/test-health-monitor.py:run_backend_tests": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-long-lines.py:main": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-type-hints.py:main": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/archive/scripts/fix_tdd_tests.py:fix_test_file": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/clients/aws_client.py:_calculate_policy_quality_score": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/dependencies/file.py:get_file_validator": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/routers/feedback.py:get_feedback_aggregation": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/routers/evidence.py:get_control_mapping_suggestions": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/routers/foundation_evidence.py:start_foundation_evidence_collection": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/security/test_authentication.py:test_unauthenticated_access_denied": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/security_fixes_critical.py:fix_sql_injection_risks": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/compliance_memory_manager.py:consolidate_compliance_knowledge": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/migrate_stack_auth_single.py:analyze_file": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/api_audit.py:analyze_auth_requirements": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/cleanup-duplicates.py:remove_endpoint": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/analyze-duplicates.py:analyze_usage": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-print-to-logging.py:fix_print_statements": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/routers/evidence.py:get_quality_benchmark": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/assessment_agent.py:_analyze_context_node": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/assistant.py:generate_recommendations": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-blind-exceptions.py:visit_Call": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-trailing-commas.py:fix_trailing_commas_in_file": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/nodes/evidence_nodes.py:process_evidence": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/dependencies/file.py:validate_and_analyze": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/routers/audit_export.py:_categorize_security_event": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/routers/evidence.py:get_classification_statistics": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/routers/evidence.py:get_quality_trends": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/routers/compliance.py:get_compliance_status": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/fixtures/state_fixtures.py:create_test_state": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/security_scan_and_fix.refactored.py:_scan_hardcoded_secrets_part_1": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/security_scan_and_fix.py:scan_hardcoded_secrets": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/test-all-api-connections.py:test_endpoint": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/backup_databases.py:backup_neon": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/analyze-duplicates.py:generate_report": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-api-alignment.py:find_mismatches": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/config/langsmith_evaluators.py:evaluate_evidence_run": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/routers/audit_export.py:_get_framework_specific_report": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/owasp_security_fixes.py:fix_a03_injection": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/assistant.py:_extract_entities": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/assistant.py:generate_contextual_question": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/agents/pydantic_ai_framework.py:_adjust_response_for_trust_level": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/scrapers/regulation_scraper.py:_get_wait_selector": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/scrapers/regulation_scraper.py:scrape_all_regulations": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/fetch_real_regulations.py:get_uk_legislation_urls": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/comprehensive_test_audit.py:categorize_tests": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-return-annotations.py:visit_FunctionDef": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/clients/aws_client.py:_collect_iam_users": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/dependencies/file.py:validator": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/routers/evidence_collection.py:list_collection_plans": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/test_config_env.py:test_environment_loading": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/performance/run_performance_tests.py:generate_recommendations": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/critical_security_remediation.py:fix_input_validation": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/neo4j_service.py:_initialize_schema": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/api_key_management.py:validate_api_key": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/feedback_analyzer.py:get_sentiment_breakdown": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/evaluation/golden_datasets/cli.py:validate_and_report": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/test_freemium_assessment.py:test_answer_questions": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/verify-api-structure.py:find_duplicates": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/categorize_uk_obligations.py:identify_regulation": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/comprehensive_endpoint_validator.py:generate_report": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sprint_management.py:decompose_stories": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/archive/migration_scripts/context_monitor.py:generate_change_report": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/config/__init__.py:validate_config": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/scheduler/task_scheduler.py:_calculate_next_run": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/agents/rag_system.py:retrieve_relevant_docs": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py:_initialize_schema": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/dependencies/file.py:detect_mime_type_fallback": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/routers/freemium.py:from_orm": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/routers/ai_cost_websocket.py:handle_websocket_message": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/test_legislation_access.py:test_direct_access": [
+      "\ud83d\udfe0 HIGH: Extract nested loops into separate functions",
+      "Use early returns to reduce nesting levels",
+      "Consider using guard clauses at the beginning",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/owasp_security_fixes.py:fix_a01_broken_access_control": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/neo4j_service.py:_create_schema": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/prompt_templates.py:validate_prompt_safety": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/feedback_analyzer.py:analyze_user_patterns": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/evaluation/report_generator.py:_clean_for_json": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/verify-api-structure.py:check_naming_conventions": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/comprehensive_endpoint_validator.py:test_endpoint": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/debug_api_analysis.py:_identify_issues": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sprint_management.py:analyze_stories": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-react-entities.py:process_files": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-console-statements.py:process_files": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/archive/scripts/import_archon_to_supabase.py:import_archon_data": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py:_create_schema": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/test-utility-scripts/analyze_all_failures.py:run_tests_and_analyze": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/middleware/security_middleware.py:__call__": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/response_cache.py:_classify_content_type": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/assistant.py:_parse_text_workflow": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/automation/quality_scorer.py:_prepare_content_for_analysis": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/security/authorization.py:_evaluate_conditions": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/scrapers/regulation_scraper.py:test_single_regulation": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/update-postman-collection.py:process_items": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/debug_api_analysis.py:_generate_recommendations": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-logging-fstrings.py:_is_logging_call": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/database/db_setup.py:get_database_urls": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/archive/scripts/export_archon_data.py:export_archon_data": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/archive/scripts/check_schema.py:main": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/archive/test_scripts_additional/ai_test_script.py:test_api_endpoints": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/config/startup_validation.py:_validate_file_system": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/sonarcloud/fix_s930_violations.py:main": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/graph/enhanced_app.py:_profile_builder_node": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/middleware/rbac_middleware.py:dispatch": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/routers/foundation_evidence.py:check_foundation_integrations_health": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/test_master_integration_runner.py:test_master_integration": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/compliance_memory_manager.py:prune_old_memories": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/agentic_rag.py:_extract_and_store_code_examples": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/agentic_rag.py:_classify_code_example": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/rag_fact_checker.py:_assess_source_quality": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/reporting/pdf_generator.py:generate_pdf": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/reporting/pdf_generator.py:_build_gap_analysis": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/assistant.py:get_assessment_help": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/assistant.py:_generate_ai_response": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/automation/evidence_processor.py:_ai_classify_evidence": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/evidence/orchestrator_v2.py:merge_duplicates": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/scrapers/regulation_scraper.py:scrape_regulation": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/debug_freemium_tables.py:main": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/stack_auth_dry_run.py:analyze_router_file": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/test-api-alignment.py:print_summary": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/ingest_iso_to_neo4j.py:ingest_manifest": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/implement-api-alignment.py:fix_parameter_naming": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-print-to-logging.py:regex_replace_prints": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-print-to-logging.py:main": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-return-annotations.py:main": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-unused-code.py:remove_unused_imports": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/monitoring/alerting.py:evaluate_rules": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/archive/scripts/export_archon_to_json.py:export_archon_data": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/nodes/reporting_nodes_real.py:send_summary_notifications_node": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/routers/compliance.py:query_compliance": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/performance/run_performance_tests.py:print_summary": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/critical_security_remediation.py:fix_sql_injection_vulnerabilities": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/security_scan_and_fix.refactored.py:scan_input_validation": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/main.py:api_detailed_health_check": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/security_scan_and_fix_refactored.py:_calculate_summary": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/security_scan_and_fix.py:scan_input_validation": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/assessment_agent.py:_generate_question_node": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/iq_agent.py:process_query_with_context": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/webhook_verification.py:verify_webhook": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/cost_management.py:select_optimal_model": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/feedback_analyzer.py:aggregate_by_time_window": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/assistant.py:_handle_function_calls": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/assistant.py:_generate_response_with_tools": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/assistant.py:_prioritize_recommendations": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/evaluation/metrics/quality_metrics.py:dataset_quality_summary": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/evaluation/tools/ingestion.py:ingest_from_file": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/analyze-all-missing-connections.py:analyze_connected_patterns": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/init_rbac.py:assign_permissions_to_roles": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/debug_api_routes.py:test_endpoint_with_details": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/comprehensive_test_audit.py:discover_all_test_files": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/comprehensive_test_audit.py:collect_tests_from_file": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/debug_api_analysis.py:analyze_routes": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/comprehensive_endpoint_test.py:_test_single_endpoint": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/endpoint_tester.py:test_endpoint": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-future-annotations.py:main": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-magic-values.py:visit_Compare": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/app/core/monitoring/setup.py:setup_monitoring": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/graph/reducers.py:merge_context": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/models/compliance_state.py:validate_decisions": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/agents/memory_manager.py:load_user_context": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/clients/base_api_client.py:_execute_request": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/routers/chat.py:send_iq_message": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/test_usability.py:test_complexity_progressive_disclosure": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/test_e2e_workflows.py:test_external_service_failure_fallback": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/test_auth_flow.py:test_auth_flow": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/performance/test_api_performance.py:test_peak_usage_simulation": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/monitoring/test_metrics.py:test_execution_tracker": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/monitoring/test_metrics.py:pytest_runtest_makereport": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/mocks/mock_redis.py:hset": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/main_refactored.py:parse_command_line_args": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/security_scan_and_fix.refactored.py:scan_sql_injection": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/security_fixes_critical.py:add_rate_limiting_to_endpoints": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/security_fixes_critical.py:fix_input_validation": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/security_scan_and_fix.py:scan_sql_injection": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/rag_fact_checker.py:_calculate_reliability": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/session_management.py:validate_session": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/reporting/pdf_generator.py:_build_executive_summary": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/health_monitor.py:_update_health_metrics": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/prompt_templates.py:_sanitize_content": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/quality_monitor.py:_incorporate_user_feedback": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/ai/evaluation/tools/ingestion_fixed.py:ingest_from_file": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/api/regulation_api_client.py:_extract_penalties_from_xml": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/api/enforcement_api_client.py:_extract_amount": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/services/evidence/orchestrator_v2.py:collect_parallel": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/migrate_stack_auth_single.py:print_dry_run_report": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/migrate_stack_auth_single.py:apply_migrations": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/api_audit.py:generate_markdown_docs": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/quick_test_audit.py:run_pytest_json": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/run_failing_tests.py:run_tests": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/verify_doppler_secrets.py:verify_environment_configs": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/init_neo4j_compliance_graph.py:create_compliance_data": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/demo_sprint_management.py:demo_sprint_management": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/add_supersedes_relationships.py:_create_version_supersessions": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/scripts/sonar/fix-python-comprehensive.py:fix_ambiguous_variables": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/archive/migration_scripts/run_ai_optimization_tests.py:main": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/config/langsmith_evaluators.py:aggregate_metrics": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/langgraph_agent/graph/master_integration_graph.py:_router_node": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/clients/aws_client.py:_collect_iam_policies": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/api/dependencies/auth_enhanced.py:decode_token": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/test_phase2_fastapi.py:test_phase2_endpoints": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/test_phase3_fastapi.py:test_phase3_endpoints": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ],
+    "/home/omar/Documents/ruleIQ/tests/monitoring/test_metrics.py:analyze_test_performance_trends": [
+      "\ud83d\udfe1 MEDIUM: Simplify conditional logic",
+      "Replace nested if-else with dictionary dispatch or strategy pattern",
+      "Extract validation logic into separate functions",
+      "Use more descriptive variable names",
+      "Add type hints for better clarity",
+      "Consider breaking down long chains of operations"
+    ]
+  }
+}

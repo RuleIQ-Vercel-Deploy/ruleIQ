@@ -17,7 +17,7 @@ except ImportError:
     from typing_extensions import Self
 from datetime import datetime, timezone
 import logging
-from services.ai.cost_management import AICostManager, AIUsageMetrics
+from services.ai.cost_management import AICostManager, CostEntry as AIUsageMetrics
 logger = logging.getLogger(__name__)
 F = TypeVar('F', bound=Callable[..., Any])
 _cost_manager: Optional[AICostManager] = None
@@ -51,12 +51,14 @@ def track_node_cost(node_name: Optional[str]=None, service_name: str='langgraph'
 
     def decorator(func: F) -> F:
         is_async = asyncio.iscoroutinefunction(func)
+        """Decorator"""
         actual_node_name = node_name or func.__name__
         if is_async:
 
             @functools.wraps(func)
             async def async_wrapper(*args, **kwargs) -> Any:
                 start_time = time.time()
+                """Async Wrapper"""
                 cost_manager = get_cost_manager()
                 state = None
                 if args and hasattr(args[0], '__dict__'):
@@ -99,6 +101,7 @@ def track_node_cost(node_name: Optional[str]=None, service_name: str='langgraph'
             @functools.wraps(func)
             def sync_wrapper(*args, **kwargs) -> Any:
                 start_time = time.time()
+                """Sync Wrapper"""
                 cost_manager = get_cost_manager()
                 state = None
                 if args and hasattr(args[0], '__dict__'):

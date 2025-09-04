@@ -60,9 +60,7 @@ class ResponseCompressor:
         return True
         
     @staticmethod
-    def get_best_encoding(accept_encoding: str) -> Optional[str]:
-        """Get the best encoding based on client preferences."""
-        accept_encoding = accept_encoding.lower()
+    def get_best_encoding(accept_encoding: str) -> Optional[str]: accept_encoding = accept_encoding.lower()
         
         # Priority order: br > zstd > gzip > deflate
         if 'br' in accept_encoding:
@@ -77,9 +75,7 @@ class ResponseCompressor:
         return None
         
     @staticmethod
-    def compress_data(data: bytes, encoding: str) -> Optional[bytes]:
-        """Compress data using specified encoding."""
-        try:
+    def compress_data(data: bytes, encoding: str) -> Optional[bytes]: try:
             if encoding == 'gzip':
                 return gzip.compress(data, compresslevel=6)
             elif encoding == 'br':
@@ -96,9 +92,7 @@ class ResponseCompressor:
         return None
 
 
-class CompressionMiddleware(BaseHTTPMiddleware):
-    """
-    Middleware for automatic response compression.
+class CompressionMiddleware(BaseHTTPMiddleware): Middleware for automatic response compression.
     """
     
     def __init__(
@@ -113,9 +107,7 @@ class CompressionMiddleware(BaseHTTPMiddleware):
         self.exclude_paths = exclude_paths or {'/health', '/metrics'}
         self.exclude_mediatype = exclude_mediatype or {'image/', 'video/', 'audio/'}
         
-    async def dispatch(self, request: Request, call_next: Callable) -> Response:
-        """Process request and compress response if applicable."""
-        
+    async def dispatch(self, request: Request, call_next: Callable) -> Response: 
         # Check if path should be excluded
         if request.url.path in self.exclude_paths:
             return await call_next(request)
@@ -160,9 +152,7 @@ class CompressionMiddleware(BaseHTTPMiddleware):
         # Compress regular response
         return await self._compress_response(response, encoding)
         
-    async def _compress_response(self, response: Response, encoding: str) -> Response:
-        """Compress a regular response."""
-        # Read response body
+    async def _compress_response(self, response: Response, encoding: str) -> Response: # Read response body
         body = b''
         async for chunk in response.body_iterator:
             body += chunk
@@ -196,9 +186,7 @@ class CompressionMiddleware(BaseHTTPMiddleware):
     ) -> StreamingResponse:
         """Compress a streaming response."""
         
-        async def compressed_stream():
-            """Generate compressed chunks."""
-            if encoding == 'gzip':
+        async def compressed_stream(): if encoding == 'gzip':
                 compressor = gzip.GzipFile(mode='wb', fileobj=None)
             elif encoding == 'zstd':
                 compressor = zstd.ZstdCompressor(level=3).compressobj()
@@ -258,13 +246,11 @@ class CompressionConfig:
         self.compression_level = compression_level
         self.algorithms = algorithms or {'gzip', 'br', 'zstd', 'deflate'}
         
-    def create_middleware(self, app) -> CompressionMiddleware:
-        """Create compression middleware with this configuration."""
-        if not self.enabled:
+    def create_middleware(self, app) -> CompressionMiddleware: if not self.enabled:
             # Return a no-op middleware
             class NoOpMiddleware(BaseHTTPMiddleware):
-                async def dispatch(self, request, call_next):
-                    return await call_next(request)
+                async def dispatch(self, request, call_next): return await call_next(request)
+                    """Dispatch"""
             return NoOpMiddleware(app)
             
         return CompressionMiddleware(

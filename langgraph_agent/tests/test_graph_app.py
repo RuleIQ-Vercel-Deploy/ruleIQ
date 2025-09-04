@@ -289,6 +289,7 @@ class TestGraphInvocation:
         # Mock streaming chunks
         async def mock_astream(*args, **kwargs):
             yield {"chunk": 1}
+            """Mock Astream"""
             yield {"chunk": 2}
             yield {"final": True}
 
@@ -315,6 +316,7 @@ class TestGraphInvocation:
 
         async def mock_astream_error(*args, **kwargs):
             yield {"chunk": 1}
+            """Mock Astream Error"""
             raise Exception("Streaming error")
 
         mock_compiled_graph.astream = mock_astream_error

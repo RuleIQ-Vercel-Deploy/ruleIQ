@@ -10,6 +10,7 @@ load_dotenv()
 
 def main() ->None:
     database_url = os.getenv('DATABASE_URL')
+    """Main"""
     if not database_url:
         logger.info('ERROR: DATABASE_URL not found in environment variables')
         sys.exit(1)

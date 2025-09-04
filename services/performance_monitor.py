@@ -359,8 +359,10 @@ def monitor_performance(endpoint_name: str=None) ->Any:
 
     def decorator(func) ->Any:
 
+        """Decorator"""
         async def wrapper(*args, **kwargs) ->Any:
             monitor = await get_performance_monitor()
+            """Wrapper"""
             name = endpoint_name or f'{func.__module__}.{func.__name__}'
             async with monitor.track_api_call(name):
                 return await func(*args, **kwargs)

@@ -98,9 +98,7 @@ class AgenticAssessmentService:
         self.llm_service = ComplianceAssistant()
         self._conversation_templates = self._load_conversation_templates()
 
-    async def initialize(self) -> None:
-        """Initialize the agentic assessment service"""
-        try:
+    async def initialize(self) -> None: try:
             self.context_service = await get_context_service()
             logger.info("Agentic assessment service initialized")
         except Exception as e:
@@ -114,9 +112,7 @@ class AgenticAssessmentService:
         session_id: str,
         framework_types: List[str],
         resume_previous: bool = False,
-    ) -> Dict[str, Any]:
-        """
-        Start a new conversational assessment or resume an existing one
+    ) -> Dict[str, Any]: Start a new conversational assessment or resume an existing one
 
         Args:
             user_id: User identifier
@@ -216,9 +212,7 @@ class AgenticAssessmentService:
         session_id: str,
         user_response: str,
         additional_context: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
-        """
-        Process user response in the conversation and determine next action
+    ) -> Dict[str, Any]: Process user response in the conversation and determine next action
 
         Args:
             session_id: Session identifier
@@ -316,9 +310,7 @@ class AgenticAssessmentService:
             logger.error(f"Failed to process conversation response: {e}")
             raise
 
-    async def pause_conversation(self, session_id: str) -> Dict[str, Any]:
-        """Pause an ongoing conversation for later resumption"""
-        try:
+    async def pause_conversation(self, session_id: str) -> Dict[str, Any]: try:
             conversation = await self._get_conversation(session_id)
             if not conversation:
                 raise ValueError(
@@ -360,9 +352,7 @@ class AgenticAssessmentService:
             logger.error(f"Failed to pause conversation: {e}")
             raise
 
-    async def get_conversation_summary(self, session_id: str) -> Dict[str, Any]:
-        """Get a summary of the current conversation state"""
-        try:
+    async def get_conversation_summary(self, session_id: str) -> Dict[str, Any]: try:
             conversation = await self._get_conversation(session_id)
             if not conversation:
                 raise ValueError(f"No conversation found for session {session_id}")
@@ -454,9 +444,7 @@ class AgenticAssessmentService:
 
     async def _get_next_question(
         self, conversation: AssessmentConversation
-    ) -> Optional[ConversationalQuestion]:
-        """Get the next appropriate question based on conversation context"""
-        try:
+    ) -> Optional[ConversationalQuestion]: try:
             # Determine question type needed
             if conversation.conversation_state == ConversationState.GATHERING_CONTEXT:
                 question_type = QuestionType.BASIC_INFO
@@ -497,9 +485,7 @@ class AgenticAssessmentService:
             logger.error(f"Failed to get next question: {e}")
             return None
 
-    def _load_conversation_templates(self) -> Dict[str, Any]:
-        """Load conversation templates for different frameworks"""
-        # For now, return a basic template structure
+    def _load_conversation_templates(self) -> Dict[str, Any]: # For now, return a basic template structure
         return {
             "ISO27001": {
                 "basic_info": [
@@ -560,9 +546,7 @@ class AgenticAssessmentService:
         conversation: AssessmentConversation,
         user_response: str,
         additional_context: Dict[str, Any],
-    ) -> Dict[str, Any]:
-        """Process and validate user response"""
-        try:
+    ) -> Dict[str, Any]: try:
             current_question = conversation.current_question
             if not current_question:
                 return {"raw_response": user_response}
@@ -612,9 +596,7 @@ class AgenticAssessmentService:
 
     async def _analyze_trust_signals(
         self, user_response: str, processed_response: Dict[str, Any]
-    ) -> List[str]:
-        """Analyze response for trust-building signals"""
-        trust_signals = []
+    ) -> List[str]: trust_signals = []
 
         # Analyze response completeness
         if len(user_response.strip()) > 50:
@@ -640,9 +622,7 @@ class AgenticAssessmentService:
 
     async def _determine_next_action(
         self, conversation: AssessmentConversation
-    ) -> Dict[str, Any]:
-        """Determine what action to take next in the conversation"""
-        try:
+    ) -> Dict[str, Any]: try:
             # Check if we need clarification on last response
             if conversation.pending_clarifications:
                 return {
@@ -670,9 +650,7 @@ class AgenticAssessmentService:
             logger.error(f"Failed to determine next action: {e}")
             return {"action": "complete"}  # Default to completion on error
 
-    def _estimate_total_questions(self, conversation: AssessmentConversation) -> int:
-        """Estimate total questions needed based on frameworks and context"""
-        framework_types = conversation.context_gathered.get("framework_types", [])
+    def _estimate_total_questions(self, conversation: AssessmentConversation) -> int: framework_types = conversation.context_gathered.get("framework_types", [])
 
         # Base questions per framework
         base_questions = {"ISO27001": 8, "GDPR": 6, "SOC2": 7}
@@ -689,18 +667,16 @@ class AgenticAssessmentService:
 
         return max(3, total)  # Minimum 3 questions
 
-    def _estimate_remaining_time(self, conversation: AssessmentConversation) -> int:
-        """Estimate remaining time in minutes"""
-        total_questions = self._estimate_total_questions(conversation)
+    def _estimate_remaining_time(self, conversation: AssessmentConversation) -> int: total_questions = self._estimate_total_questions(conversation)
         remaining_questions = total_questions - len(conversation.answered_questions)
 
         # Estimate 2-3 minutes per question on average
         return max(1, remaining_questions * 2.5)
 
     def _trust_level_sufficient(
+        """Check if user's trust level meets the requirement for a question"""
         self, user_trust: TrustLevel, required_trust: TrustLevel
     ) -> bool:
-        """Check if user's trust level meets the requirement for a question"""
         trust_order = [
             TrustLevel.UNKNOWN,
             TrustLevel.SKEPTICAL,
@@ -716,17 +692,13 @@ class AgenticAssessmentService:
 
         return user_index >= required_index
 
-    async def _store_conversation(self, conversation: AssessmentConversation) -> None:
-        """Store conversation state in context service"""
-        await self.context_service.update_session_context(
+    async def _store_conversation(self, conversation: AssessmentConversation) -> None: await self.context_service.update_session_context(
             conversation.session_id, {"agentic_assessment": asdict(conversation)},
         )
 
     async def _get_conversation(
         self, session_id: str
-    ) -> Optional[AssessmentConversation]:
-        """Retrieve conversation state from context service"""
-        session_context = await self.context_service.get_session_context(session_id)
+    ) -> Optional[AssessmentConversation]: session_context = await self.context_service.get_session_context(session_id)
         if (
             session_context
             and "agentic_assessment" in session_context.conversation_state
@@ -744,9 +716,7 @@ class AgenticAssessmentService:
 
     async def _resume_conversation(
         self, conversation: AssessmentConversation, new_session_id: str
-    ) -> Dict[str, Any]:
-        """Resume a paused conversation with a new session"""
-        conversation.session_id = new_session_id
+    ) -> Dict[str, Any]: conversation.session_id = new_session_id
         conversation.conversation_state = ConversationState.ASKING_QUESTIONS
         conversation.last_activity = datetime.now(timezone.utc)
 
@@ -766,17 +736,13 @@ class AgenticAssessmentService:
 
     async def _get_resumable_conversation(
         self, user_id: str
-    ) -> Optional[AssessmentConversation]:
-        """Find a resumable conversation for the user"""
-        # This would query for paused conversations
+    ) -> Optional[AssessmentConversation]: # This would query for paused conversations
         # For now, return None (no resumable conversations)
         return None
 
     async def _generate_final_assessment(
         self, conversation: AssessmentConversation
-    ) -> Dict[str, Any]:
-        """Generate the final assessment result from conversation"""
-        try:
+    ) -> Dict[str, Any]: try:
             # Record completion
             await self.context_service.store_interaction_context(
                 user_id=conversation.user_id,
@@ -841,9 +807,7 @@ class AgenticAssessmentService:
 # Global service instance
 _agentic_assessment_service = None
 
-async def get_agentic_assessment_service() -> AgenticAssessmentService:
-    """Get or create the agentic assessment service instance"""
-    global _agentic_assessment_service
+async def get_agentic_assessment_service() -> AgenticAssessmentService: global _agentic_assessment_service
     if _agentic_assessment_service is None:
         _agentic_assessment_service = AgenticAssessmentService()
         await _agentic_assessment_service.initialize()

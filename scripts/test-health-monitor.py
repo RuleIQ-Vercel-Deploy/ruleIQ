@@ -14,6 +14,7 @@ import sys
 
 class TestHealthMonitor:
 
+    """Class for TestHealthMonitor"""
     def __init__(self) ->None:
         self.metrics = {'backend_pass_rate': 0, 'frontend_pass_rate': 0,
             'backend_total_tests': 0, 'frontend_total_tests': 0,

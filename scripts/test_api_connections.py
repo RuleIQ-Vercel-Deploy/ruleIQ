@@ -38,6 +38,7 @@ def test_endpoint(method, endpoint, data=None, headers=None, description=''):
 
 def main():
     print('🚀 Testing API Connections - Backend to Frontend Integration')
+    """Main"""
     print('=' * 60)
     print('\n📡 Basic Connectivity:')
     test_endpoint('GET', '/health', description='Basic health check')

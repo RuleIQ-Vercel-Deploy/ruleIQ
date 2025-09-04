@@ -33,9 +33,7 @@ class PerformanceIntegration:
         self.pool_manager = None
         self._initialized = False
         
-    async def initialize(self) -> None:
-        """Initialize all performance components."""
-        if self._initialized:
+    async def initialize(self) -> None: if self._initialized:
             return
             
         logger.info("Initializing performance optimizations...")
@@ -55,9 +53,7 @@ class PerformanceIntegration:
         self._initialized = True
         logger.info("Performance optimizations initialized successfully")
         
-    def _setup_middleware(self) -> None:
-        """Setup performance-related middleware."""
-        
+    def _setup_middleware(self) -> None: 
         # Add compression middleware
         if settings.environment != "development":
             self.app.add_middleware(
@@ -71,9 +67,7 @@ class PerformanceIntegration:
             
         # Add request timing middleware
         @self.app.middleware("http")
-        async def add_process_time_header(request: Request, call_next):
-            """Add X-Process-Time header and track metrics."""
-            start_time = time.perf_counter()
+        async def add_process_time_header(request: Request, call_next): start_time = time.perf_counter()
             
             # Track request
             self.metrics.increment_counter("http.requests")
@@ -108,22 +102,16 @@ class PerformanceIntegration:
                 
             return response
             
-    def _setup_event_handlers(self) -> None:
-        """Setup application event handlers."""
-        
+    def _setup_event_handlers(self) -> None: 
         @self.app.on_event("startup")
-        async def startup_event():
-            """Initialize performance features on startup."""
-            await self.initialize()
+        async def startup_event(): await self.initialize()
             
             # Log initial stats
             pool_stats = await self.pool_manager.get_pool_stats()
             logger.info(f"Connection pools initialized: {pool_stats}")
             
         @self.app.on_event("shutdown")
-        async def shutdown_event():
-            """Cleanup on shutdown."""
-            logger.info("Shutting down performance components...")
+        async def shutdown_event(): logger.info("Shutting down performance components...")
             
             # Save metrics summary
             metrics_summary = self.metrics.get_metrics_summary()
@@ -139,9 +127,7 @@ class PerformanceIntegration:
             logger.info("Performance components shut down successfully")
 
 
-def setup_performance_optimizations(app: FastAPI) -> PerformanceIntegration:
-    """
-    Setup all performance optimizations for the FastAPI application.
+def setup_performance_optimizations(app: FastAPI) -> PerformanceIntegration: Setup all performance optimizations for the FastAPI application.
     
     Args:
         app: FastAPI application instance
@@ -164,9 +150,7 @@ def setup_performance_optimizations(app: FastAPI) -> PerformanceIntegration:
 
 
 # Database query optimization helpers
-def optimize_sqlalchemy_query(query):
-    """
-    Apply standard optimizations to a SQLAlchemy query.
+def optimize_sqlalchemy_query(query): Apply standard optimizations to a SQLAlchemy query.
     
     Args:
         query: SQLAlchemy query object
@@ -188,9 +172,7 @@ def optimize_sqlalchemy_query(query):
 
 
 # Caching decorators with performance tracking
-def cached_endpoint(ttl: int = 300, key_prefix: Optional[str] = None):
-    """
-    Decorator for caching FastAPI endpoint responses.
+def cached_endpoint(ttl: int = 300, key_prefix: Optional[str] = None): Decorator for caching FastAPI endpoint responses.
     
     Args:
         ttl: Cache time-to-live in seconds
@@ -201,9 +183,11 @@ def cached_endpoint(ttl: int = 300, key_prefix: Optional[str] = None):
     import json
     
     def decorator(func):
+        """Decorator"""
         @wraps(func)
         async def wrapper(*args, **kwargs):
             # Get cache manager
+            """Wrapper"""
             cache_manager = await get_cache_manager()
             metrics = get_metrics()
             
@@ -278,9 +262,7 @@ class BatchProcessor:
         return results
         
     @staticmethod
-    async def bulk_insert(db_session, models: list, batch_size: int = 100):
-        """
-        Bulk insert models into database.
+    async def bulk_insert(db_session, models: list, batch_size: int = 100): Bulk insert models into database.
         
         Args:
             db_session: Database session
@@ -307,9 +289,7 @@ class OptimizedJSONResponse:
     """
     
     @staticmethod
-    def serialize(data: Any) -> str:
-        """
-        Fast JSON serialization using orjson.
+    def serialize(data: Any) -> str: Fast JSON serialization using orjson.
         """
         try:
             import orjson
@@ -322,9 +302,7 @@ class OptimizedJSONResponse:
             return json.dumps(data, default=str)
             
     @staticmethod
-    def deserialize(data: str) -> Any:
-        """
-        Fast JSON deserialization.
+    def deserialize(data: str) -> Any: Fast JSON deserialization.
         """
         try:
             import orjson

@@ -26,7 +26,8 @@ from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from config.settings import settings
-from database import User, Assessment, BusinessProfile, Policy
+from database import User, AssessmentSession, BusinessProfile
+from database.generated_policy import GeneratedPolicy as Policy
 from database.db_setup import get_async_db
 
 logger = logging.getLogger(__name__)

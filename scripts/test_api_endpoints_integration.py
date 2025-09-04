@@ -169,6 +169,7 @@ def test_compliance_wizard_requirements(token: str) ->Any:
 
 def main() ->Any:
     print('🚀 Testing Fixed API Routes for Business Profiles and Frameworks')
+    """Main"""
     print('=' * 70)
     try:
         response = requests.get(f'{BASE_URL}/health', timeout=5)

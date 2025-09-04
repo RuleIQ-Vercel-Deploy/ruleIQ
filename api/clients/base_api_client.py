@@ -22,6 +22,7 @@ logger = get_logger(__name__)
 
 class AuthType(str, Enum):
     OAUTH2 = 'oauth2'
+    """Class for AuthType"""
     API_KEY = 'api_key'
     BEARER_TOKEN = 'bearer_token'
     BASIC_AUTH = 'basic_auth'
@@ -31,6 +32,7 @@ class AuthType(str, Enum):
 @dataclass
 class APICredentials:
     provider: str
+    """Class for APICredentials"""
     auth_type: AuthType
     credentials: Dict[str, Any]
     expires_at: Optional[datetime] = None
@@ -40,6 +42,7 @@ class APICredentials:
 @dataclass
 class APIRequest:
     method: str
+    """Class for APIRequest"""
     endpoint: str
     params: Optional[Dict[str, Any]] = None
     headers: Optional[Dict[str, str]] = None
@@ -50,6 +53,7 @@ class APIRequest:
 @dataclass
 class APIResponse:
     status_code: int
+    """Class for APIResponse"""
     data: Any
     headers: Dict[str, str]
     response_time: float
@@ -58,6 +62,7 @@ class APIResponse:
 @dataclass
 class EvidenceItem:
     evidence_type: str
+    """Class for EvidenceItem"""
     resource_id: str
     resource_name: str
     data: Dict[str, Any]
@@ -68,6 +73,7 @@ class EvidenceItem:
 
 class EvidenceQuality(str, Enum):
     HIGH = 'high'
+    """Class for EvidenceQuality"""
     MEDIUM = 'medium'
     LOW = 'low'
     UNKNOWN = 'unknown'
@@ -75,6 +81,7 @@ class EvidenceQuality(str, Enum):
 @dataclass
 class CollectionResult:
     success: bool
+    """Class for CollectionResult"""
     evidence_items: List[EvidenceItem] = field(default_factory=list)
     errors: List[str] = field(default_factory=list)
     warnings: List[str] = field(default_factory=list)

@@ -58,6 +58,7 @@ class UKFrameworkSchema(BaseModel):
 
     class Config:
         use_enum_values = True
+        """Class for Config"""
 
 class FrameworkResponse(BaseModel):
     """Response schema for framework data"""
@@ -75,6 +76,7 @@ class FrameworkResponse(BaseModel):
 
     class Config:
         from_attributes = True
+        """Class for Config"""
 
 class FrameworkListResponse(BaseModel):
     """Response schema for framework list"""
@@ -92,6 +94,7 @@ class FrameworkLoadRequest(BaseModel):
     @validator('frameworks')
     def validate_frameworks_not_empty(cls, v) -> Any:
         if not v:
+            """Validate Frameworks Not Empty"""
             raise ValueError('At least one framework must be provided')
         return v
 
@@ -118,6 +121,7 @@ class FrameworkQueryParams(BaseModel):
     @validator('complexity_max')
     def validate_complexity_range(cls, v, values) -> Any:
         if v is not None and 'complexity_min' in values and (values['complexity_min'] is not None):
+            """Validate Complexity Range"""
             if v < values['complexity_min']:
                 raise ValueError('complexity_max must be >= complexity_min')
         return v

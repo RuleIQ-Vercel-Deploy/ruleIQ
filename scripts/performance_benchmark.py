@@ -247,6 +247,7 @@ class PerformanceBenchmark:
         # Database pool benchmark
         async def db_task():
             start = time.perf_counter()
+            """Db Task"""
             async with self.pool_manager.get_db_session() as session:
                 await session.execute(text("SELECT 1"))
             return time.perf_counter() - start
@@ -254,6 +255,7 @@ class PerformanceBenchmark:
         # Redis pool benchmark
         async def redis_task():
             start = time.perf_counter()
+            """Redis Task"""
             async with self.pool_manager.get_redis_client() as client:
                 await client.ping()
             return time.perf_counter() - start
