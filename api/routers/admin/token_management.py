@@ -63,7 +63,7 @@ def require_admin_role(current_user: User=Depends(get_current_active_user)
             'Admin privileges required')
     return current_user
 
-@router.get('/statistics', response_model=BlacklistStatsResponse)
+@router.get('/token-statistics', response_model=BlacklistStatsResponse)
 async def get_blacklist_statistics(admin_user: User=Depends(require_admin_role)
     ) ->Any:
     """Get comprehensive blacklist statistics."""

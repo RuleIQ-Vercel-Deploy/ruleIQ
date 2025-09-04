@@ -276,6 +276,20 @@ async def start_assessment_session(request: Request, session_data:
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             'Failed to start assessment session')
 
+
+@router.post('/start-assessment', response_model=SessionResponse, status_code=
+    status.HTTP_201_CREATED, summary='Start AI assessment session (alias)',
+    description='Alias for /sessions endpoint for backwards compatibility',
+    dependencies=[Depends(rate_limit(requests_per_minute=10))])
+async def start_assessment_alias(request: Request, session_data:
+    SessionStartRequest, db: AsyncSession=Depends(get_async_db)
+    ) ->SessionResponse:
+    """
+    Alias endpoint for starting assessment sessions.
+    Calls the same logic as POST /sessions for backwards compatibility.
+    """
+    return await start_assessment_session(request, session_data, db)
+
 @router.get('/sessions/{token}', response_model=SessionResponse, summary=
     'Get assessment session progress', description=
     'Retrieve current session state, progress, and next question',
