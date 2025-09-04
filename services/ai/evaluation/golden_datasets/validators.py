@@ -32,7 +32,8 @@ MAX_REGEX_COMPLEXITY = 100
 RATE_LIMIT_WINDOW = 60
 RATE_LIMIT_MAX_CALLS = 100
 
-class DataClassification(Enum): PUBLIC = 'public'
+class DataClassification(Enum):
+    PUBLIC = 'public'
     INTERNAL = 'internal'
     CONFIDENTIAL = 'confidential'
     RESTRICTED = 'restricted'
@@ -48,33 +49,38 @@ class ValidationResult:
     data_classification: DataClassification = DataClassification.INTERNAL
 
     @property
-    def is_valid(self) ->bool: return self.valid
+    def is_valid(self):
+                 bool:
+        return self.valid
 
-    def add_error(self, error: str) ->None: sanitized_error = self._sanitize_message(error)
+    def add_error(self, error: str) -> None:
+        sanitized_error = self._sanitize_message(error)
         self.errors.append(sanitized_error)
         self.valid = False
         logger.debug('Validation error in layer %s: %s' % (self.layer, error))
 
-    def add_warning(self, warning: str) ->None: sanitized_warning = self._sanitize_message(warning)
+    def add_warning(self, warning: str) -> None:
+        sanitized_warning = self._sanitize_message(warning)
         self.warnings.append(sanitized_warning)
-        logger.debug('Validation warning in layer %s: %s' % (self.layer,
-            warning))
+        logger.debug('Validation warning in layer %s: %s' % (self.layer, warning))
 
-    def _sanitize_message(self, message: str) ->str: sanitized = re.sub("'[^']*'", "'[REDACTED]'", message)
+    def _sanitize_message(self, message: str) -> str:
+        sanitized = re.sub("'[^']*'", "'[REDACTED]'", message)
         sanitized = re.sub('"[^"]*"', '"[REDACTED]"', sanitized)
         if len(sanitized) > HTTP_OK:
             sanitized = sanitized[:197] + '...'
         return sanitized
 
-def rate_limit(max_calls: int=RATE_LIMIT_MAX_CALLS, window: int=
+def rate_limit(max_calls: int=RATE_LIMIT_MAX_CALLS, window: int=RATE_LIMIT_WINDOW) -> Any:
     """Rate limiting decorator to prevent abuse."""
-    RATE_LIMIT_WINDOW) ->Any:
     call_times = defaultdict(list)
 
-    def decorator(func) ->Any:
+    def decorator(func):
+                Any:
         """Decorator"""
         @wraps(func)
-        def wrapper(*args, **kwargs) ->Any:
+        def wrapper(*args, **kwargs):
+                                Any:
             now = time.time()
             """Wrapper"""
             key = f'{func.__name__}'
@@ -114,7 +120,8 @@ def validate_input_bounds(data: Any, max_length: int=MAX_INPUT_LENGTH) ->None:
         raise ValueError('Input exceeds maximum allowed size')
     if isinstance(data, (dict, list)):
 
-        def check_depth(obj, depth=0, max_depth=10) ->None:
+        def check_depth(obj, depth=0, max_depth=10):
+                                None:
             """Check Depth"""
             if depth > max_depth:
                 raise ValueError('Input structure too deeply nested')
@@ -251,7 +258,8 @@ class DeepValidator:
             data_classification.value))
 
     def validate_compliance_scenario(self, scenario: ComplianceScenario
-        ) ->List[ValidationResult]:
+        ):
+                                List[ValidationResult]:
         """Validate a compliance scenario.
 
         Args:
@@ -324,7 +332,8 @@ class DeepValidator:
         return result
 
     def _validate_cross_reference_layer(self, dataset: Dict[str, Any]
-        ) ->ValidationResult:
+        ):
+                                ValidationResult:
         """Validate cross-references and relationships.
 
         Checks:
@@ -439,7 +448,8 @@ class DeepValidator:
         return result
 
     def _validate_temporal_consistency(self, dataset: Dict[str, Any]
-        ) ->ValidationResult:
+        ):
+                                ValidationResult:
         """Validate temporal consistency.
 
         Checks:
@@ -521,7 +531,7 @@ class DeepValidator:
         if not temporal2.effective_to:
             return (temporal1.effective_from <= temporal2.effective_from <=
                 temporal1.effective_to if temporal1.effective_to else False)
-        return not (temporal1.effective_to < temporal2.effective_from or 
+        return not (temporal1.effective_to < temporal2.effective_from or
             temporal2.effective_to < temporal1.effective_from)
 
 class ExternalDataValidator:
@@ -648,7 +658,8 @@ class ExternalDataValidator:
         return 0.5
 
     def validate_external_source(self, data: Dict[str, Any], source_url:
-        Optional[str]=None) ->Tuple[bool, float, List[str]]:
+        Optional[str]=None):
+                                Tuple[bool, float, List[str]]:
         """Validate external data source.
 
         Args:
@@ -684,7 +695,8 @@ class ExternalDataValidator:
 
     def _calculate_source_score(self, data: Dict[str, Any], source_url:
         """Calculate source credibility score."""
-        Optional[str]) ->float:
+        Optional[str]):
+                                float:
         score = 0.0
         if 'source' in data:
             source = data['source']

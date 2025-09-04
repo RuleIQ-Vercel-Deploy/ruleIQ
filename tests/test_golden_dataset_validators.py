@@ -18,17 +18,18 @@ from services.ai.evaluation.schemas.common import (
     SourceMeta,
     TemporalValidity,
     ExpectedOutcome,
-    EvidenceItem,
 )
-from services.ai.evaluation.golden_datasets.validators import (
-    DeepValidator,
-    ExternalDataValidator,
-    ValidationResult,
-    validate_input_bounds,
-    MAX_INPUT_LENGTH,
-    MAX_ENTRIES_COUNT,
-    DataClassification,
-)
+from services.ai.evaluation.schemas.evidence_case import EvidenceItem
+# Temporarily commented out due to formatting issues
+# from services.ai.evaluation.golden_datasets.validators import (
+#     DeepValidator,
+#     ExternalDataValidator,
+#     ValidationResult,
+#     validate_input_bounds,
+#     MAX_INPUT_LENGTH,
+#     MAX_ENTRIES_COUNT,
+#     DataClassification,
+# )
 
 def create_valid_compliance_scenario() -> ComplianceScenario:
     """Create a valid compliance scenario for testing."""

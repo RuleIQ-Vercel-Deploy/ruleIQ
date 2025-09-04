@@ -9,7 +9,8 @@ from unittest.mock import Mock, AsyncMock, patch
 from sqlalchemy.ext.asyncio import AsyncSession
 
 # Fix imports - use available models and schemas
-from database.models import Policy as Assessment, Evidence  # Map Policy as Assessment
+from database.models.policy import Policy as Assessment  # Map Policy as Assessment
+from database.models.evidence import Evidence
 from api.schemas.models import (
     UserResponse as User,  # Map UserResponse as User
 )
