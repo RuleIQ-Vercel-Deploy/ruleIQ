@@ -167,8 +167,10 @@ def sample_user(db_session):
     from database import User
     from utils.auth import get_password_hash
     
+    import uuid
+    unique_email = f"test-{uuid.uuid4().hex[:8]}@example.com"
     user = User(
-        email="test@example.com",
+        email=unique_email,
         full_name="Test User",
         hashed_password=get_password_hash("TestPassword123!"),
         is_active=True
