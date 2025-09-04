@@ -78,8 +78,8 @@ class AssessmentService:
             )
             result = await db.execute(stmt)
             session = result.scalars().first()
-            # if not session:
-            #     raise NotFoundException(f"Assessment session {session_id} not found for user {user.id}")
+            if not session:
+                raise NotFoundException(f"Assessment session {session_id} not found for user {user.id}")
             return session
         except sa.exc.SQLAlchemyError as e:
             # Log error appropriately

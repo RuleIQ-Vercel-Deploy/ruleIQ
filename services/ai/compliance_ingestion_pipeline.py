@@ -886,23 +886,23 @@ if __name__ == "__main__":
             manifest_path = Path("data/manifests/compliance_ml_manifest_enhanced.json")
             if manifest_path.exists():
                 metrics = await pipeline.ingest_compliance_manifest(manifest_path)
-                print(f"Ingestion metrics: {metrics.to_dict()}")
+                logger.info(f"Ingestion metrics: {metrics.to_dict()}")
 
             # Ingest relationships
             relationships_path = Path("data/manifests/regulatory_relationships.json")
             if relationships_path.exists():
                 rel_metrics = await pipeline.ingest_relationships(relationships_path)
-                print(f"Relationship metrics: {rel_metrics.to_dict()}")
+                logger.info(f"Relationship metrics: {rel_metrics.to_dict()}")
 
             # Ingest enforcement data
             enforcement_path = Path("data/enforcement/uk_enforcement_database.json")
             if enforcement_path.exists():
                 enf_metrics = await pipeline.ingest_enforcement_data(enforcement_path)
-                print(f"Enforcement metrics: {enf_metrics.to_dict()}")
+                logger.info(f"Enforcement metrics: {enf_metrics.to_dict()}")
 
             # Verify ingestion
             verification = await pipeline.verify_ingestion()
-            print(f"Verification: {verification}")
+            logger.info(f"Verification: {verification}")
 
     # Run test
     asyncio.run(test_ingestion())

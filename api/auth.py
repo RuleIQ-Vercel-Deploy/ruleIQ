@@ -67,8 +67,8 @@ async def get_current_user(token: str=Depends(oauth2_scheme), db: Session=
         HTTP_401_UNAUTHORIZED, detail='Could not validate credentials',
         headers={'WWW-Authenticate': 'Bearer'})
     try:
-        print(
-            f"[AUTH DEBUG] JWT Secret: {settings.jwt_secret[:10] if settings.jwt_secret else 'None'}..."
+        logger.debug(
+            f"JWT Secret configured: {bool(settings.jwt_secret)}"
             )
         logger.info('[AUTH DEBUG] Token to decode: %s...' % token[:50])
         logger.info('[AUTH DEBUG] Algorithm: %s' % ALGORITHM)
