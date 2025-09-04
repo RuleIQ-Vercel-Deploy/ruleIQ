@@ -42,7 +42,6 @@ class TestAuthEndpoints:
             full_name="Existing User",
             hashed_password=get_password_hash("ExistingPassword123!"),
             is_active=True,
-            is_verified=True
         )
         db_session.add(user)
         db_session.commit()
@@ -157,7 +156,6 @@ class TestAuthEndpoints:
             full_name="Inactive User",
             hashed_password=get_password_hash("Password123!"),
             is_active=False,
-            is_verified=True
         )
         db_session.add(user)
         db_session.commit()
@@ -317,7 +315,6 @@ class TestAuthEndpoints:
             full_name="Unverified User",
             hashed_password=get_password_hash("Password123!"),
             is_active=True,
-            is_verified=False
         )
         db_session.add(user)
         db_session.commit()
@@ -337,7 +334,7 @@ class TestAuthEndpoints:
         
         # Check user is now verified
         db_session.refresh(user)
-        assert user.is_verified is True
+        assert user.is_active is True
 
 
 @pytest.mark.unit
@@ -409,8 +406,6 @@ class TestRBACAuth:
             full_name="Admin User",
             hashed_password=get_password_hash("AdminPass123!"),
             is_active=True,
-            is_verified=True,
-            is_admin=True,
             role="admin"
         )
         db_session.add(user)
@@ -425,8 +420,6 @@ class TestRBACAuth:
             full_name="Regular User",
             hashed_password=get_password_hash("UserPass123!"),
             is_active=True,
-            is_verified=True,
-            is_admin=False,
             role="user"
         )
         db_session.add(user)

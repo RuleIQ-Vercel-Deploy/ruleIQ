@@ -266,9 +266,7 @@ def admin_headers(db_session):
         email="admin@example.com",
         full_name="Admin User",
         hashed_password=get_password_hash("AdminPassword123!"),
-        is_active=True,
-        is_verified=True,
-        is_admin=True
+        is_active=True
     )
     db_session.add(admin_user)
     db_session.commit()

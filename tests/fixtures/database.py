@@ -171,8 +171,7 @@ def sample_user(db_session):
         email="test@example.com",
         full_name="Test User",
         hashed_password=get_password_hash("TestPassword123!"),
-        is_active=True,
-        is_verified=True
+        is_active=True
     )
     db_session.add(user)
     db_session.commit()
