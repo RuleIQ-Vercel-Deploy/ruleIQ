@@ -13,7 +13,7 @@ import asyncio
 from uuid import uuid4
 from datetime import datetime, timezone
 from typing import Dict, Any
-from tests.fixtures.state_fixtures import StateBuilder, TestScenario, create_test_state, create_batch_states, assert_state_transition, assert_error_recorded
+from tests.fixtures.state_fixtures import StateBuilder, ScenarioType, create_test_state, create_batch_states, assert_state_transition, assert_error_recorded
 from langgraph_agent.graph.enhanced_state import EnhancedComplianceState, WorkflowStatus, create_enhanced_initial_state, merge_tool_outputs, accumulate_errors, merge_compliance_data, increment_counter, update_metadata
 
 class TestStateInitialization:
@@ -61,12 +61,12 @@ class TestStateInitialization:
 
     def test_test_scenario_states(self):
         """Test that scenario states are properly configured."""
-        scenarios = [(TestScenario.INITIAL, WorkflowStatus.PENDING, 'start'
-            ), (TestScenario.IN_PROGRESS, WorkflowStatus.IN_PROGRESS,
-            'data_collection'), (TestScenario.ERROR_STATE, WorkflowStatus.
-            FAILED, 'validation'), (TestScenario.COMPLETED, WorkflowStatus.
-            COMPLETED, 'end'), (TestScenario.REVIEW_NEEDED, WorkflowStatus.
-            REVIEW_REQUIRED, 'human_review'), (TestScenario.RETRY_REQUIRED,
+        scenarios = [(ScenarioType.INITIAL, WorkflowStatus.PENDING, 'start'
+            ), (ScenarioType.IN_PROGRESS, WorkflowStatus.IN_PROGRESS,
+            'data_collection'), (ScenarioType.ERROR_STATE, WorkflowStatus.
+            FAILED, 'validation'), (ScenarioType.COMPLETED, WorkflowStatus.
+            COMPLETED, 'end'), (ScenarioType.REVIEW_NEEDED, WorkflowStatus.
+            REVIEW_REQUIRED, 'human_review'), (ScenarioType.RETRY_REQUIRED,
             WorkflowStatus.IN_PROGRESS, 'retry_handler')]
         for scenario, expected_status, expected_node in scenarios:
             state = create_test_state(scenario)
@@ -78,7 +78,7 @@ class TestStateTransitions:
 
     def test_state_transitions(self):
         """Test that state transitions maintain consistency."""
-        initial = create_test_state(TestScenario.INITIAL)
+        initial = create_test_state(ScenarioType.INITIAL)
         next_state = initial.copy()
         next_state['workflow_status'] = WorkflowStatus.IN_PROGRESS
         next_state['current_node'] = 'processing'
@@ -89,7 +89,7 @@ class TestStateTransitions:
 
     def test_error_state_transition(self):
         """Test transition to error state preserves context."""
-        state = create_test_state(TestScenario.IN_PROGRESS)
+        state = create_test_state(ScenarioType.IN_PROGRESS)
         original_data = state['compliance_data'].copy()
         state['workflow_status'] = WorkflowStatus.FAILED
         state['errors'].append({'type': 'ProcessingError', 'message':
@@ -100,7 +100,7 @@ class TestStateTransitions:
 
     def test_recovery_from_error(self):
         """Test recovery from error state."""
-        error_state = create_test_state(TestScenario.ERROR_STATE)
+        error_state = create_test_state(ScenarioType.ERROR_STATE)
         recovery_state = error_state.copy()
         recovery_state['workflow_status'] = WorkflowStatus.IN_PROGRESS
         recovery_state['current_node'] = 'retry_handler'
@@ -187,7 +187,7 @@ class TestStatePersistence:
     def test_state_serialization(self):
         """Test that state can be serialized for persistence."""
         import json
-        state = create_test_state(TestScenario.IN_PROGRESS)
+        state = create_test_state(ScenarioType.IN_PROGRESS)
         serialized = json.dumps(state, default=str)
         assert serialized
         deserialized = json.loads(serialized)
@@ -219,14 +219,14 @@ class TestStateValidation:
             WorkflowStatus.APPROVED, WorkflowStatus.REJECTED],
             WorkflowStatus.COMPLETED: [], WorkflowStatus.CANCELLED: []}
         for from_status, allowed_to in valid_transitions.items():
-            state = create_test_state(TestScenario.INITIAL)
+            state = create_test_state(ScenarioType.INITIAL)
             state['workflow_status'] = from_status
             for to_status in allowed_to:
                 assert to_status in allowed_to
 
     def test_retry_count_limits(self):
         """Test that retry count has reasonable limits."""
-        state = create_test_state(TestScenario.RETRY_REQUIRED)
+        state = create_test_state(ScenarioType.RETRY_REQUIRED)
         MAX_RETRIES = 5
         for i in range(MAX_RETRIES + 1):
             state['retry_count'] = i
@@ -238,7 +238,7 @@ class TestBatchStateOperations:
 
     def test_batch_state_creation(self):
         """Test creating multiple states in batch."""
-        states = create_batch_states(10, TestScenario.INITIAL)
+        states = create_batch_states(10, ScenarioType.INITIAL)
         assert len(states) == 10
         company_ids = [s['company_id'] for s in states]
         assert len(company_ids) == len(set(company_ids))
@@ -247,7 +247,7 @@ class TestBatchStateOperations:
 
     def test_parallel_state_processing(self):
         """Test that multiple states can be processed in parallel."""
-        states = create_batch_states(5, TestScenario.IN_PROGRESS)
+        states = create_batch_states(5, ScenarioType.IN_PROGRESS)
         for state in states:
             state['messages'].append({'role': 'system', 'content':
                 f"Processing {state['company_id']}"})

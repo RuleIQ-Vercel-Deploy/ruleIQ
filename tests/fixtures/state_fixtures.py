@@ -159,7 +159,7 @@ class StateBuilder:
         return state
 
 def create_test_state(
-    scenario: TestScenario = TestScenario.INITIAL, **overrides
+    scenario: ScenarioType = ScenarioType.INITIAL, **overrides
 ) -> EnhancedComplianceState:
     """
     Factory function to create test states for common scenarios.
@@ -180,12 +180,12 @@ def create_test_state(
     company_id = uuid4()
     initial_message = "Test initialization"
 
-    if scenario == TestScenario.INITIAL:
+    if scenario == ScenarioType.INITIAL:
         builder.with_status(WorkflowStatus.PENDING).with_node("start").add_message(
             "system", "Workflow initialized",
         )
 
-    elif scenario == TestScenario.IN_PROGRESS:
+    elif scenario == ScenarioType.IN_PROGRESS:
         builder.with_status(WorkflowStatus.IN_PROGRESS).with_node(
             "data_collection"
         ).add_message("system", "Processing compliance data").add_compliance_data(
@@ -194,26 +194,26 @@ def create_test_state(
             "data_collector", {"records": 100},
         )
 
-    elif scenario == TestScenario.ERROR_STATE:
+    elif scenario == ScenarioType.ERROR_STATE:
         builder.with_status(WorkflowStatus.FAILED).with_node("validation").add_error(
             "ValidationError", "Invalid data format"
         ).with_retry(2)
 
-    elif scenario == TestScenario.COMPLETED:
+    elif scenario == ScenarioType.COMPLETED:
         builder.with_status(WorkflowStatus.COMPLETED).with_node(
             "end"
         ).add_compliance_data("assessment_complete", True).add_compliance_data(
             "compliance_score", 0.95,
         )
 
-    elif scenario == TestScenario.REVIEW_NEEDED:
+    elif scenario == ScenarioType.REVIEW_NEEDED:
         builder.with_status(WorkflowStatus.REVIEW_REQUIRED).with_node(
             "human_review"
         ).add_compliance_data("requires_human_input", True).with_context(
             review_reason="Ambiguous compliance requirement",
         )
 
-    elif scenario == TestScenario.RETRY_REQUIRED:
+    elif scenario == ScenarioType.RETRY_REQUIRED:
         builder.with_status(WorkflowStatus.IN_PROGRESS).with_node(
             "retry_handler"
         ).with_retry(1).add_error("TransientError", "API temporarily unavailable")
@@ -227,7 +227,7 @@ def create_test_state(
     return builder.build_with_params(session_id, company_id, initial_message)
 
 def create_batch_states(
-    count: int = 5, scenario: TestScenario = TestScenario.INITIAL
+    count: int = 5, scenario: ScenarioType = ScenarioType.INITIAL
 ) -> List[EnhancedComplianceState]:
     """
     Create multiple test states for batch testing.
@@ -276,10 +276,7 @@ def assert_state_transition(
         ), f"Expected status {expected_status}, got {final_state['workflow_status']}"
 
     # Ensure state has progressed
-    assert (
-        final_state["metadata"]["last_updated"]
-        >= initial_state["metadata"]["last_updated"],
-    )
+    assert final_state["metadata"]["last_updated"] >= initial_state["metadata"]["last_updated"]
 
     # Check for state consistency
     assert (
@@ -320,12 +317,12 @@ def state_builder_fixture():
 def test_states_fixture():
     """Pytest fixture providing various test states."""
     return {
-        "initial": create_test_state(TestScenario.INITIAL),
-        "in_progress": create_test_state(TestScenario.IN_PROGRESS),
-        "error": create_test_state(TestScenario.ERROR_STATE),
-        "completed": create_test_state(TestScenario.COMPLETED),
-        "review": create_test_state(TestScenario.REVIEW_NEEDED),
-        "retry": create_test_state(TestScenario.RETRY_REQUIRED),
+        "initial": create_test_state(ScenarioType.INITIAL),
+        "in_progress": create_test_state(ScenarioType.IN_PROGRESS),
+        "error": create_test_state(ScenarioType.ERROR_STATE),
+        "completed": create_test_state(ScenarioType.COMPLETED),
+        "review": create_test_state(ScenarioType.REVIEW_NEEDED),
+        "retry": create_test_state(ScenarioType.RETRY_REQUIRED),
     }
 
 def create_compliance_context(

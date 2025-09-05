@@ -30,7 +30,7 @@ def parse_list_from_string(v: Any) -> list:
         return result
     return v
 
-class TestSettings(BaseSettings):
+class SimpleSettingsExample(BaseSettings):
     # Test without annotation
     simple_list: List[str] = Field(default=["a", "b"])
 
@@ -47,7 +47,7 @@ class TestSettings(BaseSettings):
 # Test 1: Without environment variables
 print("=== Test 1: No env vars ===")
 try:
-    settings1 = TestSettings()
+    settings1 = SimpleSettingsExample()
     print(
         f"Success: simple_list={settings1.simple_list}, annotated_list={settings1.annotated_list}",
     )
@@ -59,7 +59,7 @@ print("\n=== Test 2: Comma-separated ===")
 os.environ["SIMPLE_LIST"] = "x,y,z"
 os.environ["ANNOTATED_LIST"] = "p,q,r"
 try:
-    settings2 = TestSettings()
+    settings2 = SimpleSettingsExample()
     print(
         f"Success: simple_list={settings2.simple_list}, annotated_list={settings2.annotated_list}",
     )
@@ -71,7 +71,7 @@ print("\n=== Test 3: JSON format ===")
 os.environ["SIMPLE_LIST"] = '["x","y","z"]'
 os.environ["ANNOTATED_LIST"] = '["p","q","r"]'
 try:
-    settings3 = TestSettings()
+    settings3 = SimpleSettingsExample()
     print(
         f"Success: simple_list={settings3.simple_list}, annotated_list={settings3.annotated_list}",
     )

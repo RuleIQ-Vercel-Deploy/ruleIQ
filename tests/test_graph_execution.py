@@ -25,7 +25,7 @@ import json
 from tests.fixtures.mock_llm import MockLLM, mock_llm_factory
 from tests.fixtures.state_fixtures import (
     StateBuilder,
-    TestScenario,
+    ScenarioType,
     create_test_state,
     create_compliance_context,
 )
@@ -44,7 +44,7 @@ class TestNodeExecutionOrder:
         """Test nodes execute sequentially in a linear graph."""
         # Arrange
         graph = create_linear_graph()
-        initial_state = create_test_state(TestScenario.SIMPLE_COMPLIANCE)
+        initial_state = create_test_state(ScenarioType.SIMPLE_COMPLIANCE)
         expected_order = ["start", "process", "validate", "complete"]
 
         # Act
@@ -65,7 +65,7 @@ class TestNodeExecutionOrder:
         """Test parallel nodes can execute simultaneously."""
         # Arrange
         graph = create_parallel_graph()
-        initial_state = create_test_state(TestScenario.MULTI_OBLIGATION)
+        initial_state = create_test_state(ScenarioType.MULTI_OBLIGATION)
 
         # Act
         result = graph_test_harness.execute(graph, initial_state)
@@ -91,7 +91,7 @@ class TestNodeExecutionOrder:
         """Test cyclic graphs respect iteration limits."""
         # Arrange
         graph = create_cyclic_graph(max_iterations=3)
-        initial_state = create_test_state(TestScenario.WITH_RETRY)
+        initial_state = create_test_state(ScenarioType.WITH_RETRY)
 
         # Act
         result = graph_test_harness.execute(graph, initial_state)
@@ -105,7 +105,7 @@ class TestNodeExecutionOrder:
         """Test execution order when nodes are conditionally skipped."""
         # Arrange
         graph = create_conditional_graph()
-        initial_state = create_test_state(TestScenario.WITH_EXEMPTION)
+        initial_state = create_test_state(ScenarioType.WITH_EXEMPTION)
         initial_state.has_exemption = True
 
         # Act
@@ -129,7 +129,7 @@ class TestConditionalEdges:
         """Test basic if-then-else routing."""
         # Arrange
         graph = create_conditional_graph()
-        initial_state = create_test_state(TestScenario.SIMPLE_COMPLIANCE)
+        initial_state = create_test_state(ScenarioType.SIMPLE_COMPLIANCE)
         initial_state.confidence_score = 0.8  # High confidence
 
         # Act
@@ -152,7 +152,7 @@ class TestConditionalEdges:
 
         for confidence, expected_path in test_cases:
             graph = create_conditional_graph()
-            initial_state = create_test_state(TestScenario.SIMPLE_COMPLIANCE)
+            initial_state = create_test_state(ScenarioType.SIMPLE_COMPLIANCE)
             initial_state.confidence_score = confidence
 
             # Act
@@ -166,7 +166,7 @@ class TestConditionalEdges:
         """Test conditional edges that depend on state mutations."""
         # Arrange
         graph = create_conditional_graph()
-        initial_state = create_test_state(TestScenario.PROGRESSIVE_COMPLIANCE)
+        initial_state = create_test_state(ScenarioType.PROGRESSIVE_COMPLIANCE)
 
         # Act
         result = graph_test_harness.execute(graph, initial_state)
@@ -190,7 +190,7 @@ class TestConditionalEdges:
         mock_api.return_value = {"status": "requires_review", "reason": "high_risk"}
 
         graph = create_conditional_graph()
-        initial_state = create_test_state(TestScenario.WITH_EXTERNAL_CHECK)
+        initial_state = create_test_state(ScenarioType.WITH_EXTERNAL_CHECK)
 
         # Act
         result = graph_test_harness.execute(graph, initial_state)
@@ -204,7 +204,7 @@ class TestConditionalEdges:
         """Test behavior when conditional edge evaluation fails."""
         # Arrange
         graph = create_conditional_graph()
-        initial_state = create_test_state(TestScenario.INVALID_STATE)
+        initial_state = create_test_state(ScenarioType.INVALID_STATE)
         initial_state.confidence_score = None  # Will cause evaluation error
 
         # Act
@@ -222,7 +222,7 @@ class TestErrorHandling:
         """Test recovery from node execution errors."""
         # Arrange
         graph = create_linear_graph()
-        initial_state = create_test_state(TestScenario.WITH_ERROR)
+        initial_state = create_test_state(ScenarioType.WITH_ERROR)
 
         # Configure node to fail
         graph_test_harness.configure_node_to_fail("process", times=1)
@@ -240,7 +240,7 @@ class TestErrorHandling:
         """Test handling of node execution timeouts."""
         # Arrange
         graph = create_linear_graph()
-        initial_state = create_test_state(TestScenario.SIMPLE_COMPLIANCE)
+        initial_state = create_test_state(ScenarioType.SIMPLE_COMPLIANCE)
 
         # Configure node to timeout
         graph_test_harness.configure_node_timeout("validate", timeout_ms=100)
@@ -258,7 +258,7 @@ class TestErrorHandling:
         """Test handling of errors that cascade through the graph."""
         # Arrange
         graph = create_parallel_graph()
-        initial_state = create_test_state(TestScenario.WITH_ERROR)
+        initial_state = create_test_state(ScenarioType.WITH_ERROR)
 
         # Configure multiple nodes to fail
         graph_test_harness.configure_node_to_fail("check_obligation_1")
@@ -277,7 +277,7 @@ class TestErrorHandling:
         """Test that error handler nodes are properly invoked."""
         # Arrange
         graph = create_conditional_graph()
-        initial_state = create_test_state(TestScenario.WITH_ERROR)
+        initial_state = create_test_state(ScenarioType.WITH_ERROR)
 
         # Configure main path to fail
         graph_test_harness.configure_node_to_fail("process_compliance")
@@ -294,7 +294,7 @@ class TestErrorHandling:
         """Test handling of state validation errors."""
         # Arrange
         graph = create_linear_graph()
-        initial_state = create_test_state(TestScenario.INVALID_STATE)
+        initial_state = create_test_state(ScenarioType.INVALID_STATE)
         initial_state.company_id = None  # Invalid state
 
         # Act
@@ -312,7 +312,7 @@ class TestRetryMechanisms:
         """Test basic retry on node failure."""
         # Arrange
         graph = create_linear_graph()
-        initial_state = create_test_state(TestScenario.WITH_RETRY)
+        initial_state = create_test_state(ScenarioType.WITH_RETRY)
 
         # Configure node to fail twice then succeed
         graph_test_harness.configure_node_to_fail("process", times=2)
@@ -329,7 +329,7 @@ class TestRetryMechanisms:
         """Test exponential backoff between retries."""
         # Arrange
         graph = create_linear_graph()
-        initial_state = create_test_state(TestScenario.WITH_RETRY)
+        initial_state = create_test_state(ScenarioType.WITH_RETRY)
 
         # Configure node to fail with tracking of retry timing
         graph_test_harness.configure_node_to_fail("process", times=3)
@@ -351,7 +351,7 @@ class TestRetryMechanisms:
         """Test retry with jitter to prevent thundering herd."""
         # Arrange
         graph = create_linear_graph()
-        initial_state = create_test_state(TestScenario.WITH_RETRY)
+        initial_state = create_test_state(ScenarioType.WITH_RETRY)
 
         # Run multiple executions with same failure pattern
         graph_test_harness.configure_node_to_fail("process", times=2)
@@ -378,7 +378,7 @@ class TestRetryMechanisms:
         """Test behavior when retry budget is exhausted."""
         # Arrange
         graph = create_linear_graph()
-        initial_state = create_test_state(TestScenario.WITH_RETRY)
+        initial_state = create_test_state(ScenarioType.WITH_RETRY)
 
         # Configure node to always fail
         graph_test_harness.configure_node_to_fail("process", times=10)
@@ -396,7 +396,7 @@ class TestRetryMechanisms:
         """Test that only certain error types trigger retries."""
         # Arrange
         graph = create_linear_graph()
-        initial_state = create_test_state(TestScenario.WITH_ERROR)
+        initial_state = create_test_state(ScenarioType.WITH_ERROR)
 
         # Test different error types
         test_cases = [
@@ -424,7 +424,7 @@ class TestRetryMechanisms:
         """Test retry mechanism with partial state reset."""
         # Arrange
         graph = create_conditional_graph()
-        initial_state = create_test_state(TestScenario.WITH_RETRY)
+        initial_state = create_test_state(ScenarioType.WITH_RETRY)
 
         # Configure node to fail and track state changes
         graph_test_harness.configure_node_to_fail("analyze_compliance", times=2)
@@ -457,7 +457,7 @@ class TestGraphIntegration:
         """Test complete compliance checking workflow end-to-end."""
         # Arrange
         graph = create_conditional_graph()
-        initial_state = create_test_state(TestScenario.FULL_COMPLIANCE_CHECK)
+        initial_state = create_test_state(ScenarioType.FULL_COMPLIANCE_CHECK)
 
         # Mock external services
         graph_test_harness.mock_external_service(
@@ -483,7 +483,7 @@ class TestGraphIntegration:
         # Arrange
         graphs = [create_linear_graph() for _ in range(5)]
         states = [
-            create_test_state(TestScenario.SIMPLE_COMPLIANCE, company_id=f"company_{i}")
+            create_test_state(ScenarioType.SIMPLE_COMPLIANCE, company_id=f"company_{i}")
             for i in range(5)
         ]
 
@@ -508,7 +508,7 @@ class TestGraphIntegration:
         checkpoint_dir.mkdir()
 
         graph = create_linear_graph()
-        initial_state = create_test_state(TestScenario.WITH_CHECKPOINT)
+        initial_state = create_test_state(ScenarioType.WITH_CHECKPOINT)
 
         # Configure checkpoint after second node
         graph_test_harness.enable_checkpointing(checkpoint_dir)
@@ -537,7 +537,7 @@ class TestGraphIntegration:
         """Test that graphs emit proper observability metrics."""
         # Arrange
         graph = create_conditional_graph()
-        initial_state = create_test_state(TestScenario.SIMPLE_COMPLIANCE)
+        initial_state = create_test_state(ScenarioType.SIMPLE_COMPLIANCE)
 
         # Enable metrics collection
         graph_test_harness.enable_metrics_collection()

@@ -7,18 +7,18 @@ from uuid import uuid4
 import json
 
 # FIXME: notification_service module not found - commenting out temporarily
-# from services.notification_service import (
-#     NotificationService,
-#     EmailNotification,
-#     SMSNotification,
-#     PushNotification,
-#     InAppNotification,
-#     NotificationTemplate,
-#     NotificationQueue,
-#     NotificationPreferences,
-#     NotificationHistory,
-#     NotificationChannel
-# )
+from services.notification_service import (
+    NotificationService,
+    EmailNotification,
+    SMSNotification,
+    PushNotification,
+    InAppNotification,
+    NotificationTemplate,
+    NotificationQueue,
+    NotificationPreferences,
+    NotificationHistory,
+    NotificationChannel
+    )
 
 # Mock classes for testing until services.notification_service is available
 class NotificationService:
