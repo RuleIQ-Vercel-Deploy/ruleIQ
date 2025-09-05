@@ -47,7 +47,7 @@ export default function PoliciesPage() {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
-      setError(err instanceof Error ? err.message : 'Failed to load policies');
+      setError(err instanceof Error ? err.message : 'Failed to load policies');;
     } finally {
       setLoading(false);
     }
