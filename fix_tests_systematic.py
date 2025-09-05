@@ -28,7 +28,7 @@ class TestFixer:
         
         # Run pytest with detailed output
         result = subprocess.run(
-            ["python", "-m", "pytest", 
+            ["python3", "-m", "pytest", 
              "--tb=short",
              "-v",
              "--no-header",
@@ -290,7 +290,7 @@ setup_test_services()
         
         # Run a quick test to see improvement
         result = subprocess.run(
-            ["python", "-m", "pytest", 
+            ["python3", "-m", "pytest", 
              "--co", "-q"  # Just collect, don't run
             ],
             capture_output=True,
@@ -308,7 +308,7 @@ setup_test_services()
                 
                 # Now run a sample to estimate pass rate
                 sample_result = subprocess.run(
-                    ["python", "-m", "pytest", 
+                    ["python3", "-m", "pytest", 
                      "--maxfail=50",
                      "-q"
                     ],

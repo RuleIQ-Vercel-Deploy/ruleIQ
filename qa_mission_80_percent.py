@@ -33,7 +33,7 @@ class QAMission:
         
         # First collect all tests
         result = subprocess.run(
-            ["python", "-m", "pytest", "--co", "-q"],
+            ["python3", "-m", "pytest", "--co", "-q"],
             capture_output=True,
             text=True,
             timeout=30
@@ -46,7 +46,7 @@ class QAMission:
         
         # Run a quick test to get pass rate (first 100 tests)
         result = subprocess.run(
-            ["python", "-m", "pytest", 
+            ["python3", "-m", "pytest", 
              "--tb=no",
              "-q",
              "--maxfail=100",

@@ -16,12 +16,12 @@ log() {
 # Function to check if Serena is active using verification script
 check_serena_active() {
     if [ -f "$PROJECT_PATH/.claude/serena-verification.py" ]; then
-        cd "$PROJECT_PATH" && python .claude/serena-verification.py
+        cd "$PROJECT_PATH" && python3 .claude/serena-verification.py
         return $?
     else
         log "⚠️  Verification script not found, using basic check"
         # Fallback to basic check
-        if timeout 5 bash -c 'cd "'"$PROJECT_PATH"'" && python -c "
+        if timeout 5 bash -c 'cd "'"$PROJECT_PATH"'" && python3 -c "
 import sys
 sys.path.insert(0, \".\")
 try:

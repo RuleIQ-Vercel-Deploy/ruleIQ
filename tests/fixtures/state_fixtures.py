@@ -18,7 +18,7 @@ from langgraph_agent.graph.enhanced_state import (
     create_enhanced_initial_state,
 )
 
-class TestScenario(Enum):
+class ScenarioType(Enum):
     """Common test scenarios for state testing."""
 
     INITIAL = "initial"
