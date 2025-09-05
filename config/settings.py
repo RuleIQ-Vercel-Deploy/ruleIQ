@@ -155,7 +155,7 @@ class Settings(BaseSettings):
     # Database configuration
     database_url: str = Field(
         default_factory=lambda: (
-            os.getenv('TEST_DATABASE_URL', 'postgresql://postgres:postgres@localhost:5433/compliance_test')
+            os.getenv('TEST_DATABASE_URL', 'postgresql://omar@localhost:5432/postgres')
             if os.getenv('TESTING', '').lower() == 'true'
             else get_secret_or_env(
                 SecretKeys.DATABASE_URL if SECRETS_VAULT_AVAILABLE else 'database_url',
@@ -403,7 +403,7 @@ class Settings(BaseSettings):
         if not v or not v.startswith(('postgresql://', 'postgresql+asyncpg://', 'sqlite:///')):
             # In testing, provide a default
             if os.getenv('TESTING', '').lower() == 'true':
-                return 'postgresql://postgres:postgres@localhost:5433/compliance_test'
+                return 'postgresql://omar@localhost:5432/postgres'
             raise ValueError('Database URL must start with postgresql:// or sqlite:///')
         return v
 

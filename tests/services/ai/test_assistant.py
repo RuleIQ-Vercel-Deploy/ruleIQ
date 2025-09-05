@@ -49,7 +49,7 @@ class TestComplianceAssistant:
     @pytest.mark.asyncio
     async def test_init_assistant(self, mock_db, user_context):
         """Test assistant initialization"""
-        with patch('services.ai.assistant.get_safety_manager_for_user') as mock_safety:
+        with patch('services.ai.safety_manager.get_safety_manager_for_user') as mock_safety:
             mock_safety.return_value = Mock()
             
             assistant = ComplianceAssistant(mock_db, user_context)

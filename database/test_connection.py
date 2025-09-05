@@ -32,7 +32,7 @@ class TestDatabaseManager:
                 'TEST_DATABASE_URL',
                 os.getenv(
                     'DATABASE_URL',
-                    'postgresql://test_user:test_password@localhost:5433/ruleiq_test'
+                    'postgresql://omar@localhost:5432/postgres'
                 )
             )
         return os.getenv('DATABASE_URL', '')
