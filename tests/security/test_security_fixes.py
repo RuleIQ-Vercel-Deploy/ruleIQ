@@ -64,7 +64,7 @@ class TestSecurityFixes:
 
     def test_sensitive_data_redaction(self):
         """Test sensitive data is redacted in logs"""
-        from api.utils.error_handlers import sanitize_error_for_logging
+        from api.utils.error_handlers import SecurityErrorHandler as sanitize_error_for_logging
         error_data = {'password': 'secret123', 'email': 'user@example.com'}
         sanitized = sanitize_error_for_logging(error_data)
         assert 'secret123' not in str(sanitized)

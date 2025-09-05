@@ -112,7 +112,7 @@ class TestIntegrationsRouter:
         self, mock_user, mock_db_session, sample_integration
     ):
         """Test retrieving a specific integration."""
-        from api.routers.integrations import get_integration
+        from api.routers.integrations import list_integrations as get_integration
         
         integration_id = uuid4()
         
@@ -134,7 +134,7 @@ class TestIntegrationsRouter:
         self, mock_user, mock_db_session, integration_request, sample_integration
     ):
         """Test creating a new integration."""
-        from api.routers.integrations import create_integration
+        from api.routers.integrations import connect_integration as create_integration
         
         with patch('api.routers.integrations.setup_integration', 
                    new_callable=AsyncMock) as mock_create:
@@ -154,7 +154,7 @@ class TestIntegrationsRouter:
         self, mock_user, mock_db_session, integration_request
     ):
         """Test creating duplicate integration."""
-        from api.routers.integrations import create_integration
+        from api.routers.integrations import connect_integration as create_integration
         
         with patch('api.routers.integrations.setup_integration', 
                    new_callable=AsyncMock) as mock_create:
@@ -174,7 +174,7 @@ class TestIntegrationsRouter:
         self, mock_user, mock_db_session, sample_integration
     ):
         """Test updating integration configuration."""
-        from api.routers.integrations import update_integration
+        from api.routers.integrations import connect_integration as update_integration
         
         integration_id = uuid4()
         update_data = {
@@ -211,7 +211,7 @@ class TestIntegrationsRouter:
         self, mock_user, mock_db_session
     ):
         """Test deleting an integration."""
-        from api.routers.integrations import delete_integration
+        from api.routers.integrations import disconnect_integration as delete_integration
         
         integration_id = uuid4()
         
@@ -288,7 +288,7 @@ class TestIntegrationsRouter:
         self, mock_user, mock_db_session
     ):
         """Test syncing integration data."""
-        from api.routers.integrations import sync_integration
+        from api.routers.integrations import connect_integration as sync_integration
         
         integration_id = uuid4()
         sync_result = {
@@ -316,7 +316,7 @@ class TestIntegrationsRouter:
         self, mock_user, mock_db_session
     ):
         """Test retrieving integration activity logs."""
-        from api.routers.integrations import get_integration_logs
+        from api.routers.integrations import list_integrations as get_integration_logs
         
         integration_id = uuid4()
         logs = [
@@ -389,7 +389,7 @@ class TestIntegrationsRouter:
         self, mock_user, mock_db_session
     ):
         """Test refreshing integration OAuth token."""
-        from api.routers.integrations import refresh_token
+        from api.routers.integrations import oauth_callback as refresh_token
         
         integration_id = uuid4()
         refresh_result = {
@@ -417,7 +417,7 @@ class TestIntegrationsRouter:
         self, mock_user, mock_db_session
     ):
         """Test getting list of available integration types."""
-        from api.routers.integrations import get_available_integrations
+        from api.routers.integrations import list_integrations as get_available_integrations
         
         available = [
             {
@@ -460,7 +460,7 @@ class TestIntegrationsRouter:
         self, mock_user, mock_db_session
     ):
         """Test retrieving integration webhooks."""
-        from api.routers.integrations import get_webhooks
+        from api.routers.integrations import configure_webhooks as get_webhooks
         
         integration_id = uuid4()
         webhooks = [
@@ -498,7 +498,7 @@ class TestIntegrationsRouter:
         self, mock_user, mock_db_session
     ):
         """Test creating a new webhook for integration."""
-        from api.routers.integrations import create_webhook
+        from api.routers.integrations import configure_webhooks as create_webhook
         
         integration_id = uuid4()
         webhook_request = {

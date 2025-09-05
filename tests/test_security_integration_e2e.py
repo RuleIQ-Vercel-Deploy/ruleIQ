@@ -15,7 +15,7 @@ from unittest.mock import Mock, patch
 
 # Create mock app if main module not available
 try:
-    from main import app
+    from api.main import app
 except ImportError:
     from fastapi import FastAPI
     app = FastAPI()

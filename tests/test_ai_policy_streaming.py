@@ -294,7 +294,7 @@ class TestPolicyStreamingAPI:
     @pytest.fixture
     def client(self):
         """Create a test client."""
-        from main import app
+        from api.main import app
 
         return TestClient(app)
 

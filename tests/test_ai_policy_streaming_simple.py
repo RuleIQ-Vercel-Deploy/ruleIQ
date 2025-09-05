@@ -177,7 +177,7 @@ class TestPolicyStreamingAPI:
         sys.modules['services.redis_client'].get_redis_client = MagicMock(
             return_value=None)
         from fastapi.testclient import TestClient
-        from main import app
+        from api.main import app
         with TestClient(app) as client:
             with patch('api.dependencies.auth.get_current_user') as mock_auth:
                 mock_auth.return_value = Mock(id='test_user', email=

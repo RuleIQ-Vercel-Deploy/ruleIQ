@@ -315,7 +315,7 @@ class TestReportsRouter:
         self, mock_user, mock_db_session
     ):
         """Test checking report generation status."""
-        from api.routers.reports import get_report_status
+        from api.routers.reports import get_report as get_report_status
         
         report_id = uuid4()
         status = {
@@ -343,7 +343,7 @@ class TestReportsRouter:
         self, mock_user, mock_db_session
     ):
         """Test exporting report data as CSV."""
-        from api.routers.reports import export_report_data
+        from api.routers.reports import download_report as export_report_data
         
         report_id = uuid4()
         csv_data = "header1,header2\nvalue1,value2\n"
@@ -366,7 +366,7 @@ class TestReportsRouter:
         self, mock_user, mock_db_session
     ):
         """Test retrieving available report templates."""
-        from api.routers.reports import get_report_templates
+        from api.routers.reports import list_report_templates as get_report_templates
         
         templates = [
             {
@@ -430,7 +430,7 @@ class TestReportsRouter:
         self, mock_user, mock_db_session
     ):
         """Test batch report generation."""
-        from api.routers.reports import batch_generate_reports
+        from api.routers.reports import generate_report as batch_generate_reports
         
         batch_request = {
             "reports": [
@@ -468,7 +468,7 @@ class TestReportsRouter:
         self, mock_user, mock_db_session
     ):
         """Test sharing report with other users."""
-        from api.routers.reports import share_report
+        from api.routers.reports import upload_report as share_report
         
         report_id = uuid4()
         share_request = {

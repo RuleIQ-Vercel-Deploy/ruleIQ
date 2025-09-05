@@ -205,7 +205,7 @@ class TestBusinessProfilesRouter:
         self, mock_user, mock_db_session
     ):
         """Test successful deletion of business profile."""
-        from api.routers.business_profiles import delete_business_profile
+        from api.routers.business_profiles import delete_business_profile_by_id as delete_business_profile
         
         with patch('api.routers.business_profiles.delete_profile', 
                    new_callable=AsyncMock) as mock_delete:
@@ -227,7 +227,7 @@ class TestBusinessProfilesRouter:
         self, mock_user, mock_db_session
     ):
         """Test deleting non-existent business profile."""
-        from api.routers.business_profiles import delete_business_profile
+        from api.routers.business_profiles import delete_business_profile_by_id as delete_business_profile
         
         with patch('api.routers.business_profiles.delete_profile', 
                    new_callable=AsyncMock) as mock_delete:

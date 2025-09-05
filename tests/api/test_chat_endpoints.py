@@ -48,7 +48,7 @@ class TestChatEndpoints:
     def test_send_chat_message(self, client, auth_headers, sample_chat_message, mock_current_user):
         """Test sending a chat message."""
         with patch('api.dependencies.auth.get_current_user', return_value=mock_current_user):
-            with patch('services.ai.assistant_service.process_message') as mock_process:
+            with patch('services.ai.assistant.process_message') as mock_process:
                 mock_process.return_value = {
                     "response": "ISO 27001 requires implementing an ISMS...",
                     "message_id": str(uuid4()),
@@ -72,7 +72,7 @@ class TestChatEndpoints:
         conversation_id = str(uuid4())
         
         with patch('api.dependencies.auth.get_current_user', return_value=mock_current_user):
-            with patch('services.chat_service.get_conversation_history') as mock_history:
+            with patch('services.iq_agent.get_conversation_history') as mock_history:
                 mock_history.return_value = [
                     {
                         "message_id": str(uuid4()),
@@ -108,7 +108,7 @@ class TestChatEndpoints:
         }
         
         with patch('api.dependencies.auth.get_current_user', return_value=mock_current_user):
-            with patch('services.chat_service.create_conversation') as mock_create:
+            with patch('services.iq_agent.create_conversation') as mock_create:
                 mock_create.return_value = {
                     "conversation_id": str(uuid4()),
                     "title": payload["title"],
@@ -129,7 +129,7 @@ class TestChatEndpoints:
     def test_list_conversations(self, client, auth_headers, mock_current_user):
         """Test listing user conversations."""
         with patch('api.dependencies.auth.get_current_user', return_value=mock_current_user):
-            with patch('services.chat_service.list_conversations') as mock_list:
+            with patch('services.iq_agent.list_conversations') as mock_list:
                 mock_list.return_value = [
                     {
                         "conversation_id": str(uuid4()),
@@ -160,7 +160,7 @@ class TestChatEndpoints:
         conversation_id = str(uuid4())
         
         with patch('api.dependencies.auth.get_current_user', return_value=mock_current_user):
-            with patch('services.chat_service.delete_conversation') as mock_delete:
+            with patch('services.iq_agent.delete_conversation') as mock_delete:
                 mock_delete.return_value = True
                 
                 response = client.delete(
@@ -178,7 +178,7 @@ class TestChatEndpoints:
         }
         
         with patch('api.dependencies.auth.get_current_user', return_value=mock_current_user):
-            with patch('services.ai.assistant_service.stream_response') as mock_stream:
+            with patch('services.ai.assistant.stream_response') as mock_stream:
                 mock_stream.return_value = iter([
                     "GDPR Article 17 ",
                     "covers the right ",
@@ -203,7 +203,7 @@ class TestChatEndpoints:
         }
         
         with patch('api.dependencies.auth.get_current_user', return_value=mock_current_user):
-            with patch('services.ai.assistant_service.get_suggestions') as mock_suggest:
+            with patch('services.ai.assistant.get_suggestions') as mock_suggest:
                 mock_suggest.return_value = [
                     {"action": "Complete risk assessment", "priority": "high"},
                     {"action": "Review security policies", "priority": "medium"},
@@ -226,7 +226,7 @@ class TestChatEndpoints:
         query = "data protection"
         
         with patch('api.dependencies.auth.get_current_user', return_value=mock_current_user):
-            with patch('services.chat_service.search_conversations') as mock_search:
+            with patch('services.iq_agent.search_conversations') as mock_search:
                 mock_search.return_value = [
                     {
                         "conversation_id": str(uuid4()),
@@ -255,7 +255,7 @@ class TestChatEndpoints:
         conversation_id = str(uuid4())
         
         with patch('api.dependencies.auth.get_current_user', return_value=mock_current_user):
-            with patch('services.chat_service.export_conversation') as mock_export:
+            with patch('services.iq_agent.export_conversation') as mock_export:
                 mock_export.return_value = {
                     "format": "pdf",
                     "content": b"PDF content here",
@@ -280,7 +280,7 @@ class TestChatEndpoints:
         }
         
         with patch('api.dependencies.auth.get_current_user', return_value=mock_current_user):
-            with patch('services.chat_service.submit_feedback') as mock_feedback:
+            with patch('services.iq_agent.submit_feedback') as mock_feedback:
                 mock_feedback.return_value = {"success": True}
                 
                 response = client.post(
@@ -303,7 +303,7 @@ class TestChatEndpoints:
         }
         
         with patch('api.dependencies.auth.get_current_user', return_value=mock_current_user):
-            with patch('services.chat_service.update_context') as mock_update:
+            with patch('services.iq_agent.update_context') as mock_update:
                 mock_update.return_value = {"success": True}
                 
                 response = client.put(
@@ -327,7 +327,7 @@ class TestChatEndpoints:
         }
         
         with patch('api.dependencies.auth.get_current_user', return_value=mock_current_user):
-            with patch('services.ai.compliance_advisor.answer_question') as mock_advisor:
+            with patch('services.ai.assistant.answer_question') as mock_advisor:
                 mock_advisor.return_value = {
                     "answer": "GDPR penalties can reach up to €20 million or 4% of annual turnover...",
                     "confidence": 0.92,
@@ -353,7 +353,7 @@ class TestChatEndpoints:
     def test_chat_rate_limiting(self, client, auth_headers, mock_current_user):
         """Test rate limiting for chat endpoints."""
         with patch('api.dependencies.auth.get_current_user', return_value=mock_current_user):
-            with patch('api.middleware.rate_limiter.check_rate_limit') as mock_limit:
+            with patch('api.middleware.rate_limiter.general_limiter.check_rate_limit') as mock_limit:
                 mock_limit.return_value = {"allowed": False, "retry_after": 60}
                 
                 response = client.post(
@@ -368,7 +368,7 @@ class TestChatEndpoints:
     def test_chat_with_attachments(self, client, auth_headers, mock_current_user):
         """Test sending chat message with attachments."""
         with patch('api.dependencies.auth.get_current_user', return_value=mock_current_user):
-            with patch('services.chat_service.process_with_attachment') as mock_process:
+            with patch('services.iq_agent.process_with_attachment') as mock_process:
                 mock_process.return_value = {
                     "response": "I've analyzed the document...",
                     "extracted_info": {"type": "policy", "pages": 10}

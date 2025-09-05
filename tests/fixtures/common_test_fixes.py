@@ -150,8 +150,8 @@ def fix_environment_variables():
     required_vars = {
         "TESTING": "true",
         "ENVIRONMENT": "testing",
-        "DATABASE_URL": "postgresql://test_user:test_password@localhost:5433/ruleiq_test",
-        "TEST_DATABASE_URL": "postgresql://test_user:test_password@localhost:5433/ruleiq_test",
+        "DATABASE_URL": "postgresql://omar@localhost:5432/postgres",
+        "TEST_DATABASE_URL": "postgresql://omar@localhost:5432/postgres",
         "REDIS_URL": "redis://localhost:6380/0",
         "JWT_SECRET_KEY": "test-secret-key-for-testing",
         "OPENAI_API_KEY": "test-key",

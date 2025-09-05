@@ -678,7 +678,7 @@ class TestCostOptimizationStrategies:
     @pytest.mark.asyncio
     async def test_intelligent_model_routing(self):
         """Test intelligent routing to cost-effective models based on task complexity."""
-        from services.ai.cost_management import IntelligentModelRouter
+        from services.ai.cost_management import CostOptimizationService as IntelligentModelRouter
 
         router = IntelligentModelRouter()
 
@@ -705,7 +705,7 @@ class TestCostOptimizationStrategies:
     @pytest.mark.asyncio
     async def test_dynamic_caching_strategy(self):
         """Test dynamic caching based on cost-benefit analysis."""
-        from services.ai.cost_management import DynamicCacheManager
+        from services.ai.cost_management import AICostManager as DynamicCacheManager
 
         cache_manager = DynamicCacheManager()
 
@@ -734,7 +734,7 @@ class TestCostOptimizationStrategies:
     @pytest.mark.asyncio
     async def test_prompt_compression_optimization(self):
         """Test prompt compression to reduce token usage."""
-        from services.ai.cost_management import PromptOptimizer
+        from services.ai.cost_management import CostOptimizationService as PromptOptimizer
 
         optimizer = PromptOptimizer()
 
@@ -761,7 +761,7 @@ class TestCostOptimizationStrategies:
     @pytest.mark.asyncio
     async def test_batch_request_optimization(self):
         """Test batching multiple requests to reduce per-request overhead."""
-        from services.ai.cost_management import BatchRequestOptimizer
+        from services.ai.cost_management import CostTrackingService as BatchRequestOptimizer
 
         optimizer = BatchRequestOptimizer()
 
@@ -782,7 +782,7 @@ class TestCostReportingAndAnalytics:
     @pytest.mark.asyncio
     async def test_executive_cost_dashboard(self):
         """Test executive-level cost dashboard generation."""
-        from services.ai.cost_management import CostAnalyticsDashboard
+        from services.ai.cost_management import BudgetAlertService as CostAnalyticsDashboard
 
         dashboard = CostAnalyticsDashboard()
 
@@ -808,7 +808,7 @@ class TestCostReportingAndAnalytics:
     @pytest.mark.asyncio
     async def test_cost_attribution_analysis(self):
         """Test detailed cost attribution by user, service, and feature."""
-        from services.ai.cost_management import CostAttributionAnalyzer
+        from services.ai.cost_management import AICostManager as CostAttributionAnalyzer
 
         analyzer = CostAttributionAnalyzer()
 
@@ -829,7 +829,7 @@ class TestCostReportingAndAnalytics:
     @pytest.mark.asyncio
     async def test_predictive_cost_modeling(self):
         """Test predictive modeling for future cost estimation."""
-        from services.ai.cost_management import PredictiveCostModeler
+        from services.ai.cost_management import CostTrackingService as PredictiveCostModeler
 
         modeler = PredictiveCostModeler()
 

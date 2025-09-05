@@ -26,7 +26,7 @@ except ImportError:
         yield Mock()
 
 try:
-    from main import app
+    from api.main import app
 except ImportError:
     from fastapi import FastAPI
     app = FastAPI()
