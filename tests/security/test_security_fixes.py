@@ -27,10 +27,10 @@ class TestSecurityFixes:
 
     def test_jwt_secret_key_protection(self):
         """Test that JWT secret keys are properly protected"""
-        assert settings.secret_key != 'your-secret-key-here'
-        assert len(settings.secret_key) >= 32
+        assert settings.jwt_secret_key != 'your-secret-key-here'
+        assert len(settings.jwt_secret_key) >= 32
         config = SecurityConfig()
-        assert config.secret_key is not None
+        assert config.jwt_secret_key is not None
         assert config.jwt_algorithm == 'HS256'
 
     def test_input_sanitization(self):

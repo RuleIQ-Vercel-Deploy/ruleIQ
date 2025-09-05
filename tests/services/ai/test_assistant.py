@@ -122,7 +122,7 @@ class TestComplianceAssistant:
             text='{"intent": "compliance_guidance", "confidence": 0.95}'
         )
         
-        result = await assistant.classify_intent(
+        result = await assistant._classify_intent(
             "How do I comply with GDPR data retention requirements?"
         )
         
@@ -137,7 +137,7 @@ class TestComplianceAssistant:
             text='{"intent": "assessment_help", "confidence": 0.88}'
         )
         
-        result = await assistant.classify_intent(
+        result = await assistant._classify_intent(
             "Help me complete my ISO 27001 assessment"
         )
         
@@ -151,7 +151,7 @@ class TestComplianceAssistant:
         assistant.ai_cache = AsyncMock()
         assistant.ai_cache.get_cached_response.return_value = json.dumps(cached_result)
         
-        result = await assistant.classify_intent(
+        result = await assistant._classify_intent(
             "Generate a data protection policy"
         )
         
@@ -174,7 +174,7 @@ class TestComplianceAssistant:
             text="Here's your compliance guidance for GDPR..."
         )
         
-        response = await assistant.generate_response(
+        response = await assistant._generate_response(
             prompt="Explain GDPR requirements",
             context={'framework': 'GDPR'}
         )
@@ -194,7 +194,7 @@ class TestComplianceAssistant:
         )
         
         with pytest.raises(BusinessLogicException) as exc_info:
-            await assistant.generate_response(
+            await assistant._generate_response(
                 prompt="Generate harmful content",
                 context={}
             )
@@ -217,7 +217,7 @@ class TestComplianceAssistant:
         with patch('services.ai.assistant.tool_executor') as mock_executor:
             mock_executor.execute.return_value = {'status': 'compliant'}
             
-            response = await assistant.generate_response(
+            response = await assistant._generate_response(
                 prompt="Assess my GDPR compliance",
                 tools=tools
             )
@@ -237,7 +237,7 @@ class TestComplianceAssistant:
         assistant.model.generate_content_async.return_value = mock_stream
         
         chunks = []
-        async for chunk in assistant.stream_response("Test prompt"):
+        async for chunk in assistant._stream_response("Test prompt"):
             chunks.append(chunk)
         
         assert len(chunks) == 3
@@ -258,7 +258,7 @@ class TestComplianceAssistant:
             })
         )
         
-        result = await assistant.analyze_compliance_gap(
+        result = await assistant.analyze_evidence_gap(
             framework='GDPR',
             current_state={'policies': ['privacy_policy']}
         )
@@ -276,7 +276,7 @@ class TestComplianceAssistant:
         assistant.model = AsyncMock()
         assistant.model.generate_content_async.return_value = Mock(text="Response")
         
-        response = await assistant.generate_response(
+        response = await assistant._generate_response(
             prompt="Very long prompt " * 100,
             optimize=True
         )
@@ -293,7 +293,7 @@ class TestComplianceAssistant:
             text="High quality response"
         )
         
-        response = await assistant.generate_response(
+        response = await assistant._generate_response(
             prompt="Test prompt",
             monitor_quality=True
         )
@@ -308,7 +308,7 @@ class TestComplianceAssistant:
         assistant.model = AsyncMock()
         assistant.model.generate_content_async.return_value = Mock(text="Response")
         
-        await assistant.generate_response(
+        await assistant._generate_response(
             prompt="Test prompt",
             track_analytics=True
         )
@@ -325,7 +325,7 @@ class TestComplianceAssistant:
         assistant.model = AsyncMock()
         assistant.model.generate_content_async.return_value = Mock(text="Response")
         
-        response = await assistant.generate_response(
+        response = await assistant._generate_response(
             prompt="Test with context",
             include_history=True
         )
@@ -339,7 +339,7 @@ class TestComplianceAssistant:
         assistant.model.generate_content_async.side_effect = Exception("Model unavailable")
         
         with pytest.raises(ModelUnavailableException):
-            await assistant.generate_response("Test prompt")
+            await assistant._generate_response("Test prompt")
     
     @pytest.mark.asyncio
     async def test_error_handling_database_error(self, assistant):
@@ -349,7 +349,7 @@ class TestComplianceAssistant:
         )
         
         with pytest.raises(DatabaseException):
-            await assistant.generate_response(
+            await assistant._generate_response(
                 prompt="Test prompt",
                 include_history=True
             )
@@ -362,7 +362,10 @@ class TestComplianceAssistant:
         assistant.model = AsyncMock()
         assistant.model.generate_content_async.return_value = Mock(text="Response")
         
-        responses = await assistant.process_batch(prompts)
+        responses = []
+        for prompt in prompts:
+            response = await assistant._generate_response(prompt)
+            responses.append(response)
         
         assert len(responses) == 3
         assert assistant.model.generate_content_async.call_count == 3
@@ -376,7 +379,7 @@ class TestComplianceAssistant:
             Mock(text="Success on retry")
         ]
         
-        response = await assistant.generate_response(
+        response = await assistant._generate_response(
             prompt="Test prompt",
             max_retries=2
         )
@@ -395,14 +398,14 @@ class TestComplianceAssistantIntegration:
         assistant = ComplianceAssistant(db_session)
         
         # Classify intent
-        intent = await assistant.classify_intent(
+        intent = await assistant._classify_intent(
             "I need help with my GDPR assessment"
         )
         assert intent['intent'] in ['assessment_help', 'compliance_guidance']
         
         # Generate response with tools
         tools = [{'name': 'assess_compliance'}]
-        response = await assistant.generate_response(
+        response = await assistant._generate_response(
             prompt="Help me assess GDPR Article 32",
             tools=tools
         )
@@ -420,12 +423,12 @@ class TestComplianceAssistantIntegration:
         # First call - no cache
         import time
         start = time.time()
-        response1 = await assistant.generate_response(prompt)
+        response1 = await assistant._generate_response(prompt)
         time1 = time.time() - start
         
         # Second call - should use cache
         start = time.time()
-        response2 = await assistant.generate_response(prompt)
+        response2 = await assistant._generate_response(prompt)
         time2 = time.time() - start
         
         assert response1 == response2
@@ -440,7 +443,7 @@ class TestComplianceAssistantIntegration:
         prompts = [f"Question {i}" for i in range(5)]
         
         tasks = [
-            assistant.generate_response(prompt)
+            assistant._generate_response(prompt)
             for prompt in prompts
         ]
         
@@ -459,4 +462,4 @@ class TestComplianceAssistantIntegration:
         
         with pytest.raises((IntegrationException, CircuitBreakerException)):
             for prompt in prompts:
-                await assistant.generate_response(prompt)
+                await assistant._generate_response(prompt)

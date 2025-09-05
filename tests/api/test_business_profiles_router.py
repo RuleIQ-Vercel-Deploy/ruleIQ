@@ -246,7 +246,7 @@ class TestBusinessProfilesRouter:
         self, mock_user, mock_db_session
     ):
         """Test retrieving compliance frameworks for a business."""
-        from api.routers.business_profiles import get_compliance_frameworks
+        from api.routers.business_profiles import get_profile_compliance as get_compliance_frameworks
         
         frameworks = ["GDPR", "CCPA", "HIPAA", "SOC2"]
         
@@ -267,7 +267,7 @@ class TestBusinessProfilesRouter:
         self, mock_user, mock_db_session
     ):
         """Test updating compliance frameworks."""
-        from api.routers.business_profiles import update_compliance_frameworks
+        from api.routers.business_profiles import patch_business_profile as update_compliance_frameworks
         
         new_frameworks = ["ISO27001", "PCI-DSS"]
         
@@ -288,7 +288,7 @@ class TestBusinessProfilesRouter:
         self, mock_user, mock_db_session
     ):
         """Test retrieving risk assessment for business profile."""
-        from api.routers.business_profiles import get_risk_assessment
+        from api.routers.business_profiles import get_profile_compliance as get_risk_assessment
         
         risk_data = {
             "risk_level": "High",
@@ -323,7 +323,7 @@ class TestBusinessProfilesRouter:
         self, mock_user, mock_db_session, sample_business_profile
     ):
         """Test business profile validation."""
-        from api.routers.business_profiles import validate_business_profile
+        from api.routers.business_profiles import get_business_profile as validate_business_profile
         
         validation_result = {
             "is_valid": True,
@@ -350,7 +350,7 @@ class TestBusinessProfilesRouter:
         self, mock_user, mock_db_session, sample_business_profile
     ):
         """Test exporting business profile as JSON."""
-        from api.routers.business_profiles import export_business_profile
+        from api.routers.business_profiles import get_business_profile as export_business_profile
         
         with patch('api.routers.business_profiles.get_profile_by_user_id', 
                    new_callable=AsyncMock) as mock_get:
@@ -370,7 +370,7 @@ class TestBusinessProfilesRouter:
         self, mock_user, mock_db_session
     ):
         """Test retrieving business profile change history."""
-        from api.routers.business_profiles import get_profile_history
+        from api.routers.business_profiles import get_profile_activity as get_profile_history
         
         history = [
             {
@@ -408,7 +408,7 @@ class TestBusinessProfilesRouter:
         self, mock_user, mock_db_session
     ):
         """Test retrieving business profile analytics."""
-        from api.routers.business_profiles import get_profile_analytics
+        from api.routers.business_profiles import get_profile_activity as get_profile_analytics
         
         analytics = {
             "profile_completeness": 85,

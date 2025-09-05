@@ -33,7 +33,7 @@ class TestAIUsageMetrics:
     def test_metrics_initialization(self):
         """Test proper initialization of usage metrics."""
         metrics = AIUsageMetrics(
-            service_name="policy_generation",
+            service=AIService.GOOGLE,
             model_name="gemini-2.5-pro",
             input_tokens=1000,
             output_tokens=500,
@@ -43,7 +43,7 @@ class TestAIUsageMetrics:
             timestamp=datetime.now(),
         )
 
-        assert metrics.service_name == "policy_generation"
+        assert metrics.service == AIService.GOOGLE
         assert metrics.model_name == "gemini-2.5-pro"
         assert metrics.input_tokens == 1000
         assert metrics.output_tokens == 500
@@ -55,7 +55,7 @@ class TestAIUsageMetrics:
     def test_metrics_aggregation(self):
         """Test aggregation of multiple usage metrics."""
         metrics1 = AIUsageMetrics(
-            service_name="policy_generation",
+            service=AIService.GOOGLE,
             model_name="gemini-2.5-pro",
             input_tokens=1000,
             output_tokens=500,
@@ -66,7 +66,7 @@ class TestAIUsageMetrics:
         )
 
         metrics2 = AIUsageMetrics(
-            service_name="policy_generation",
+            service=AIService.GOOGLE,
             model_name="gemini-2.5-pro",
             input_tokens=800,
             output_tokens=400,
@@ -87,7 +87,7 @@ class TestAIUsageMetrics:
     def test_cost_per_token_calculation(self):
         """Test cost per token calculation."""
         metrics = AIUsageMetrics(
-            service_name="assessment_analysis",
+            service=AIService.OPENAI,
             model_name="gpt-4-turbo",
             input_tokens=2000,
             output_tokens=1000,
@@ -102,7 +102,7 @@ class TestAIUsageMetrics:
     def test_efficiency_score_calculation(self):
         """Test efficiency score based on cost vs. output quality."""
         metrics = AIUsageMetrics(
-            service_name="recommendation_generation",
+            service=AIService.ANTHROPIC,
             model_name="gemini-2.5-flash",
             input_tokens=500,
             output_tokens=1000,
@@ -184,7 +184,7 @@ class TestCostTrackingService:
     async def test_track_usage(self, cost_tracker):
         """Test tracking AI usage with automatic cost calculation."""
         usage = await cost_tracker.track_usage(
-            service_name="policy_generation",
+            service=AIService.GOOGLE,
             model_name="gemini-2.5-pro",
             input_tokens=1000,
             output_tokens=500,
@@ -372,7 +372,7 @@ class TestBudgetAlertService:
             total_tokens=25000,
             period_start=datetime.now().replace(hour=0, minute=0, second=0),
             period_end=datetime.now(),
-            service_name="policy_generation",
+            service=AIService.GOOGLE,
         )
 
         alerts = await alert_service.check_service_budget(
@@ -395,7 +395,7 @@ class TestCostOptimizationService:
         """Test analysis of model efficiency and recommendations."""
         usage_data = [
             AIUsageMetrics(
-                service_name="policy_generation",
+                service=AIService.GOOGLE,
                 model_name="gpt-4-turbo",
                 input_tokens=1000,
                 output_tokens=500,
@@ -406,7 +406,7 @@ class TestCostOptimizationService:
                 response_quality_score=0.95,
             ),
             AIUsageMetrics(
-                service_name="policy_generation",
+                service=AIService.GOOGLE,
                 model_name="gemini-2.5-pro",
                 input_tokens=1000,
                 output_tokens=500,
@@ -509,7 +509,7 @@ class TestAICostManager:
     async def test_track_api_call(self, cost_manager):
         """Test tracking a complete AI API call with cost calculation."""
         result = await cost_manager.track_ai_request(
-            service_name="policy_generation",
+            service=AIService.GOOGLE,
             model_name="gemini-2.5-pro",
             input_prompt="Generate a privacy policy for an e-commerce company.",
             response_content="Privacy Policy...",
@@ -531,7 +531,7 @@ class TestAICostManager:
         # Simulate multiple API calls
         for i in range(5):
             await cost_manager.track_ai_request(
-                service_name=f"service_{i % 2}",
+                service=AIService.GOOGLE if i % 2 == 0 else AIService.OPENAI,
                 model_name="gemini-2.5-pro",
                 input_prompt="Test prompt",
                 response_content="Test response",
@@ -556,7 +556,7 @@ class TestAICostManager:
         # Simulate usage approaching budget
         for _ in range(3):
             await cost_manager.track_ai_request(
-                service_name="policy_generation",
+                service=AIService.GOOGLE,
                 model_name="gpt-4-turbo",
                 input_prompt="Large prompt " * 100,
                 response_content="Large response " * 200,
@@ -580,7 +580,7 @@ class TestAICostManager:
         models = ["gemini-2.5-pro", "gpt-4-turbo", "gemini-2.5-flash"]
         for i in range(15):
             await cost_manager.track_ai_request(
-                service_name="policy_generation",
+                service=AIService.GOOGLE,
                 model_name=models[i % 3],
                 input_prompt="Test prompt",
                 response_content="Test response",
@@ -615,7 +615,7 @@ class TestAICostManager:
         """Test real-time cost monitoring and alerts."""
         with patch("services.ai.cost_management.websocket_manager") as mock_ws:
             await cost_manager.track_ai_request(
-                service_name="policy_generation",
+                service=AIService.GOOGLE,
                 model_name="gpt-4-turbo",
                 input_prompt="Expensive request",
                 response_content="Expensive response",
@@ -636,7 +636,7 @@ class TestAICostManager:
         try:
             for _ in range(10):  # This should exceed the limit
                 await cost_manager.track_ai_request(
-                    service_name="policy_generation",
+                    service=AIService.GOOGLE,
                     model_name="gpt-4-turbo",
                     input_prompt="Expensive request",
                     response_content="Expensive response",
@@ -657,7 +657,7 @@ class TestAICostManager:
             with patch("datetime.datetime") as mock_datetime:
                 mock_datetime.now.return_value = date
                 await cost_manager.track_ai_request(
-                    service_name="policy_generation",
+                    service=AIService.GOOGLE,
                     model_name="gemini-2.5-pro",
                     input_prompt="Historical request",
                     response_content="Historical response",
@@ -876,7 +876,7 @@ class TestIntegrationWithAIServices:
             }
 
             result = await cost_manager.track_ai_request(
-                service_name="policy_generation",
+                service=AIService.GOOGLE,
                 model_name="gemini-2.5-pro",
                 input_prompt="Generate privacy policy for tech startup",
                 response_content="Privacy policy content...",
@@ -903,7 +903,7 @@ class TestIntegrationWithAIServices:
         # Make enough requests to trigger alert
         for i in range(3):
             await cost_manager.track_ai_request(
-                service_name="test_service",
+                service=AIService.OPENAI,
                 model_name="gpt-4-turbo",
                 input_prompt="Test prompt " * 200,  # Large prompt
                 response_content="Test response " * 100,  # Large response
