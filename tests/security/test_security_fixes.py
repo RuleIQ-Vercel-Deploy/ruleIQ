@@ -90,7 +90,7 @@ class TestSecurityFixes:
     def test_sql_injection_prevention(self):
         """Test SQL injection prevention in database queries"""
         from database.query_optimization import QueryOptimizer
-        optimizer = QueryOptimizer()
+        optimizer = QueryOptimizer(db=Mock())
 
 class TestPerformanceFixes:
     """Test suite for performance optimization fixes"""
@@ -102,7 +102,7 @@ class TestPerformanceFixes:
     def test_n1_query_prevention(self):
         """Test N+1 query prevention is working"""
         from database.query_optimization import QueryOptimizer
-        optimizer = QueryOptimizer()
+        optimizer = QueryOptimizer(db=Mock())
         assert hasattr(optimizer, 'batch_load_related')
         assert hasattr(optimizer, 'optimize_query')
 

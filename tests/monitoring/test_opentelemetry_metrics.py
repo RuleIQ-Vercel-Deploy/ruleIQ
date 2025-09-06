@@ -451,7 +451,7 @@ class TestMetricsBridge:
     @patch("app.core.monitoring.metrics.MetricsCollector")
     def test_bridge_initialization(self, mock_metrics_collector):
         """Test that bridge properly connects both metric systems."""
-        bridge = MetricsBridge(mock_metrics_collector)
+        bridge = MetricsBridge(mock_metrics_collector, otel_collector=Mock())
 
         assert bridge is not None
         assert bridge.legacy_collector == mock_metrics_collector
@@ -463,7 +463,7 @@ class TestMetricsBridge:
         mock_counter = MagicMock()
         mock_metrics_collector.register_counter.return_value = mock_counter
 
-        bridge = MetricsBridge(mock_metrics_collector)
+        bridge = MetricsBridge(mock_metrics_collector, otel_collector=Mock())
 
         # Register counter through bridge
         counter = bridge.register_counter(
@@ -486,7 +486,7 @@ class TestMetricsBridge:
         mock_histogram = MagicMock()
         mock_metrics_collector.register_histogram.return_value = mock_histogram
 
-        bridge = MetricsBridge(mock_metrics_collector)
+        bridge = MetricsBridge(mock_metrics_collector, otel_collector=Mock())
 
         # Register histogram through bridge
         histogram = bridge.register_histogram(
@@ -513,7 +513,7 @@ class TestMetricsBridge:
         mock_gauge = MagicMock()
         mock_metrics_collector.register_gauge.return_value = mock_gauge
 
-        bridge = MetricsBridge(mock_metrics_collector)
+        bridge = MetricsBridge(mock_metrics_collector, otel_collector=Mock())
 
         # Register gauge through bridge
         gauge = bridge.register_gauge(name="test_gauge", description="Test gauge")
@@ -538,7 +538,7 @@ class TestMetricsBridge:
             "active_users": {"type": "gauge", "value": 25},
         }
 
-        bridge = MetricsBridge(mock_metrics_collector)
+        bridge = MetricsBridge(mock_metrics_collector, otel_collector=Mock())
         exporter = PrometheusExporter()
 
         # Sync and export
@@ -624,7 +624,7 @@ class TestIntegration:
         counter.increment(1)
 
         # Bridge should handle this transparently
-        bridge = MetricsBridge(collector)
+        bridge = MetricsBridge(collector, otel_collector=Mock())
         bridge.sync_all_metrics()
 
         metrics_data = bridge.otel_collector.collect_metrics()

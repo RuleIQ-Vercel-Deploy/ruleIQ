@@ -20,14 +20,14 @@ class TestPerformanceFixes:
 
     def test_query_optimizer_initialization(self):
         """Test QueryOptimizer is properly initialized"""
-        optimizer = QueryOptimizer()
+        optimizer = QueryOptimizer(db=Mock())
         assert optimizer is not None
         assert hasattr(optimizer, 'batch_load_related')
         assert hasattr(optimizer, 'optimize_query')
 
     def test_n1_query_prevention(self):
         """Test N+1 query prevention methods"""
-        optimizer = QueryOptimizer()
+        optimizer = QueryOptimizer(db=Mock())
         assert callable(getattr(optimizer, 'batch_load_related', None))
         assert callable(getattr(optimizer, 'optimize_query', None))
 
@@ -52,20 +52,20 @@ class TestPerformanceFixes:
 
     def test_batch_operations(self):
         """Test batch operations are implemented"""
-        optimizer = QueryOptimizer()
+        optimizer = QueryOptimizer(db=Mock())
         assert hasattr(optimizer, 'default_batch_size')
         assert optimizer.default_batch_size > 1
 
     def test_memory_leak_prevention(self):
         """Test memory leak prevention measures"""
-        optimizer = QueryOptimizer()
+        optimizer = QueryOptimizer(db=Mock())
         assert hasattr(settings, 'database_url')
         assert 'pool_size' in str(settings.database_url) or hasattr(settings,
             'db_pool_size')
 
     def test_query_performance_monitoring(self):
         """Test query performance monitoring"""
-        optimizer = QueryOptimizer()
+        optimizer = QueryOptimizer(db=Mock())
         assert hasattr(optimizer, 'measure_query_time')
         assert callable(getattr(optimizer, 'measure_query_time', None))
 
@@ -78,7 +78,7 @@ class TestPerformanceFixes:
 
     def test_slow_query_detection(self):
         """Test slow query detection"""
-        optimizer = QueryOptimizer()
+        optimizer = QueryOptimizer(db=Mock())
         assert hasattr(optimizer, 'slow_query_threshold')
         assert optimizer.slow_query_threshold > 0
 
@@ -88,7 +88,7 @@ class TestPerformanceFixes:
     def test_query_optimization_strategies(self, query_type,
         expected_optimization):
         """Test different query optimization strategies"""
-        optimizer = QueryOptimizer()
+        optimizer = QueryOptimizer(db=Mock())
         method_name = f'optimize_{query_type}'
         assert hasattr(optimizer, method_name) or hasattr(optimizer,
             'optimize_query')
@@ -120,7 +120,7 @@ class TestDatabaseIndexes:
 
     def test_index_performance_impact(self):
         """Test indexes improve query performance"""
-        optimizer = QueryOptimizer()
+        optimizer = QueryOptimizer(db=Mock())
         assert hasattr(optimizer, 'explain_query')
         assert callable(getattr(optimizer, 'explain_query', None))
 
