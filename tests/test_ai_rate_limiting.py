@@ -13,6 +13,14 @@ from unittest.mock import patch
 import pytest
 from api.middleware.ai_rate_limiter import AIRateLimiter, ai_analysis_limiter, ai_followup_limiter, ai_help_limiter, ai_recommendations_limiter, get_ai_rate_limit_stats
 
+# Test constants
+MAX_RETRIES = 3
+DEFAULT_RETRIES = 3
+DEFAULT_LIMIT = 100
+HOUR_SECONDS = 3600
+MINUTE_SECONDS = 60
+CONFIDENCE_THRESHOLD = 0.8
+
 class TestAIRateLimiter:
     """Test the AIRateLimiter class functionality."""
 

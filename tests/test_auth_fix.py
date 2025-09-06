@@ -10,6 +10,18 @@ import pytest
 from uuid import uuid4
 from unittest.mock import patch, AsyncMock
 
+# HTTP Status constants
+HTTP_OK = 200
+HTTP_CREATED = 201
+HTTP_UNAUTHORIZED = 401
+HTTP_NOT_FOUND = 404
+HTTP_UNPROCESSABLE_ENTITY = 422
+
+# Test constants  
+MAX_RETRIES = 3
+DEFAULT_LIMIT = 100
+CONFIDENCE_THRESHOLD = 0.8
+
 class TestAuthenticationFix:
     """Test authentication fixes for E2E tests."""
 

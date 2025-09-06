@@ -22,6 +22,15 @@ from pydantic import ValidationError
 import json
 from langgraph_agent.models.compliance_state import ComplianceState, EvidenceItem, Decision, CostSnapshot, WorkflowStatus, ActorType, MemoryStore, Context
 
+# Test constants
+MAX_RETRIES = 3
+DEFAULT_LIMIT = 100
+MINUTE_SECONDS = 60
+HIGH_CONFIDENCE_THRESHOLD = 0.8
+DEFAULT_RETRIES = 3
+CONFIDENCE_THRESHOLD = 0.8
+HOUR_SECONDS = 3600
+
 class TestComplianceStateInitialization:
     """Test basic state creation and initialization."""
 
