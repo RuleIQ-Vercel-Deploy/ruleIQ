@@ -24,7 +24,7 @@ python-magic==0.4.27
 
 # AI and LLM Interaction
 openai==1.57.4
-google-generativeai==0.8.3
+google-generativeai==0.8.5
 tiktoken==0.8.0
 mistralai==1.2.5
 
