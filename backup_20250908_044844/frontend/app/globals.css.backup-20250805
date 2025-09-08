@@ -1,0 +1,393 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Base font size - 112.5% = 18px on 16px browser default */
+    font-size: 112.5%;
+
+    /* LIGHT THEME - Professional Teal Design (Default) - High Contrast */
+    --background: 0 0% 100%; /* Pure white background #FFFFFF */
+    --foreground: 220 13% 18%; /* Dark charcoal text #1F2937 for high contrast */
+
+    --card: 0 0% 100%; /* White cards */
+    --card-foreground: 220 13% 18%; /* Dark text on white cards */
+
+    --popover: 0 0% 100%; /* White popover */
+    --popover-foreground: 220 13% 18%; /* Dark text */
+
+    --primary: 186 37% 32%; /* teal-600 #2C7A7B - main brand */
+    --primary-foreground: 0 0% 100%; /* White text on teal */
+
+    --secondary: 210 40% 98%; /* Very light gray-blue #F8FAFC */
+    --secondary-foreground: 220 13% 18%; /* Dark text */
+
+    --muted: 210 40% 96%; /* Light gray-blue background #F1F5F9 */
+    --muted-foreground: 215 16% 47%; /* Medium gray text #64748B - WCAG AA compliant */
+
+    --accent: 186 100% 94%; /* Very light teal #E6FFFA */
+    --accent-foreground: 186 40% 25%; /* Dark teal text #234E52 */
+
+    --destructive: 0 84% 60%; /* Error red #EF4444 */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%; /* Light gray borders #E2E8F0 */
+    --input: 214 32% 91%; /* Input borders */
+    --ring: 186 37% 32%; /* teal-600 focus ring */
+
+    --radius: 0.5rem;
+
+    /* Focus system variables */
+    --focus-ring: hsl(var(--primary));
+    --focus-offset: 2px;
+  }
+
+  /* Light theme (default - no class needed) */
+  .light {
+    --background: 0 0% 100%; /* White background */
+    --foreground: 220 13% 18%; /* Dark charcoal text #1F2937 */
+
+    --card: 0 0% 100%; /* White cards */
+    --card-foreground: 220 13% 18%; /* Dark text on cards */
+
+    --popover: 0 0% 100%; /* White popover */
+    --popover-foreground: 220 13% 18%; /* Dark text */
+
+    --primary: 186 37% 32%; /* teal-600 #2C7A7B - main brand */
+    --primary-foreground: 0 0% 100%; /* White text on teal */
+
+    --secondary: 210 40% 98%; /* Very light gray-blue #F8FAFC */
+    --secondary-foreground: 220 13% 18%; /* Dark text */
+
+    --muted: 210 40% 96%; /* Light backgrounds #F1F5F9 */
+    --muted-foreground: 215 16% 47%; /* Medium gray text #64748B */
+
+    --accent: 186 100% 94%; /* teal-100 #E6FFFA - light accent */
+    --accent-foreground: 186 40% 25%; /* Dark teal text #234E52 */
+
+    --destructive: 0 84% 60%; /* Error red */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%; /* Light gray borders #E2E8F0 */
+    --input: 214 32% 91%; /* Input borders */
+    --ring: 186 37% 32%; /* teal-600 focus ring */
+  }
+  .theme {
+    --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
+    --animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    @apply antialiased;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-base leading-relaxed text-foreground;
+    font-family:
+      var(--font-inter),
+      system-ui,
+      -apple-system,
+      sans-serif;
+  }
+
+  /* Typography scale using rem units */
+  h1 {
+    @apply text-4xl font-bold tracking-tight; /* 2.25rem */
+  }
+
+  h2 {
+    @apply text-3xl font-semibold tracking-tight; /* 1.875rem */
+  }
+
+  h3 {
+    @apply text-2xl font-semibold; /* 1.5rem */
+  }
+
+  h4 {
+    @apply text-xl font-medium; /* 1.25rem */
+  }
+
+  h5 {
+    @apply text-lg font-medium; /* 1.125rem */
+  }
+
+  h6 {
+    @apply text-base font-medium; /* 1rem */
+  }
+
+  p {
+    @apply text-base leading-relaxed; /* 1rem */
+  }
+
+  small {
+    @apply text-sm; /* 0.875rem */
+  }
+
+  /* Universal focus states using CSS variables */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-[var(--focus-ring)] ring-offset-[var(--focus-offset)] ring-offset-background transition-shadow duration-200;
+  }
+
+  /* Input-specific focus states */
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    @apply border-[var(--focus-ring)] ring-offset-0;
+  }
+
+  /* Interactive elements focus */
+  button:focus-visible,
+  a:focus-visible,
+  [role='button']:focus-visible {
+    @apply rounded-[calc(var(--radius)-2px)];
+  }
+
+  /* Card/Interactive element focus */
+  [role='button']:focus-visible,
+  [tabindex='0']:focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
+  }
+
+  /* Smooth transitions for interactive elements */
+  button,
+  a,
+  input,
+  textarea,
+  select,
+  [role='button'],
+  [tabindex='0'] {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  /* Hover states for interactive elements */
+  button:hover:not(:disabled),
+  a:hover,
+  [role='button']:hover {
+    @apply scale-[1.02];
+  }
+
+  /* Active/pressed states */
+  button:active:not(:disabled),
+  [role='button']:active {
+    @apply scale-[0.98];
+  }
+
+  /* Disabled states */
+  button:disabled,
+  input:disabled,
+  textarea:disabled,
+  select:disabled {
+    @apply cursor-not-allowed opacity-50;
+  }
+}
+
+@layer components {
+  /* Modern Gradient Text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-brand-primary via-brand-secondary to-brand-tertiary bg-clip-text text-transparent;
+  }
+
+  /* Animated Gradient Background */
+  .gradient-bg {
+    @apply bg-gradient-to-br from-gradient-from via-gradient-via to-gradient-to;
+    background-size: 400% 400%;
+    animation: gradient-shift 15s ease infinite;
+  }
+
+  @keyframes gradient-shift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* Glass Morphism Cards */
+  .glass-card {
+    @apply rounded-xl border border-glass-border bg-glass-white;
+  }
+
+  .glass-card:hover {
+    @apply border-glass-border-hover bg-glass-white-hover;
+  }
+
+  /* Neon Glow Effects */
+  .glow-purple {
+    box-shadow:
+      0 0 20px rgba(25, 39, 52, 0.5),
+      0 0 40px rgba(25, 39, 52, 0.3),
+      0 0 60px rgba(25, 39, 52, 0.1);
+  }
+
+  .glow-cyan {
+    box-shadow:
+      0 0 20px rgba(6, 182, 212, 0.5),
+      0 0 40px rgba(6, 182, 212, 0.3),
+      0 0 60px rgba(6, 182, 212, 0.1);
+  }
+
+  /* Modern Button Styles */
+  .btn-gradient {
+    @apply relative overflow-hidden bg-gradient-to-r from-brand-primary to-brand-secondary font-semibold text-white transition-all duration-300;
+  }
+
+  .btn-gradient:hover {
+    @apply shadow-lg;
+    transform: translateY(-2px);
+  }
+
+  .btn-gradient::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-r from-brand-secondary to-brand-tertiary opacity-0 transition-opacity duration-300;
+  }
+
+  .btn-gradient:hover::before {
+    @apply opacity-100;
+  }
+
+  /* Mesh Gradient Background */
+  .mesh-gradient {
+    background-image:
+      radial-gradient(at 40% 20%, hsla(262, 83%, 58%, 0.3) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, hsla(188, 95%, 43%, 0.3) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, hsla(158, 76%, 42%, 0.3) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, hsla(262, 83%, 58%, 0.2) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(188, 95%, 43%, 0.2) 0px, transparent 50%);
+  }
+
+  /* Elevation system for dark theme */
+  .elevation-low {
+    @apply shadow-sm shadow-black/20;
+  }
+
+  .elevation-medium {
+    @apply shadow-md shadow-black/30;
+  }
+
+  .elevation-high {
+    @apply shadow-lg shadow-black/40;
+  }
+
+  /* Skip to main content link (accessibility) */
+  .skip-link {
+    @apply absolute left-0 top-0 z-[100] -translate-y-full bg-primary px-4 py-2 text-primary-foreground transition-transform focus:translate-y-0;
+  }
+}
+
+/* Tiptap editor styles */
+.tiptap {
+  @apply max-w-none rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  min-height: 150px;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: hsl(var(--muted-foreground));
+  pointer-events: none;
+  height: 0;
+}
+
+/* Tiptap Editor Styles */
+@layer components {
+  .ProseMirror {
+    @apply min-h-[calc(100vh-200px)] p-4;
+  }
+  .ProseMirror:focus {
+    @apply outline-none;
+  }
+  .ProseMirror h1,
+  .ProseMirror h2,
+  .ProseMirror h3,
+  .ProseMirror h4,
+  .ProseMirror h5,
+  .ProseMirror h6 {
+    @apply text-primary; /* Primary color for headings */
+  }
+  .ProseMirror h1 {
+    @apply my-4 text-4xl font-bold;
+  }
+  .ProseMirror h2 {
+    @apply my-3 text-3xl font-semibold;
+  }
+  .ProseMirror h3 {
+    @apply my-2 text-2xl font-semibold;
+  }
+  .ProseMirror p {
+    @apply my-2 leading-relaxed;
+  }
+  .ProseMirror ul,
+  .ProseMirror ol {
+    @apply my-4 ml-6;
+  }
+  .ProseMirror ul {
+    @apply list-disc;
+  }
+  .ProseMirror ol {
+    @apply list-decimal;
+  }
+  .ProseMirror li {
+    @apply my-1;
+  }
+  .ProseMirror strong {
+    @apply font-bold;
+  }
+  .ProseMirror em {
+    @apply italic;
+  }
+  .ProseMirror u {
+    @apply underline;
+  }
+  .ProseMirror s {
+    @apply line-through;
+  }
+  .ProseMirror a {
+    @apply text-primary underline hover:text-primary/80;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@theme inline {
+  @keyframes shimmer-slide {
+    to {
+      transform: translate(calc(100cqw - 100%), 0);
+    }
+  }
+  @keyframes spin-around {
+    0% {
+      transform: translateZ(0) rotate(0);
+    }
+    15%,
+    35% {
+      transform: translateZ(0) rotate(90deg);
+    }
+    65%,
+    85% {
+      transform: translateZ(0) rotate(270deg);
+    }
+    100% {
+      transform: translateZ(0) rotate(360deg);
+    }
+  }
+}

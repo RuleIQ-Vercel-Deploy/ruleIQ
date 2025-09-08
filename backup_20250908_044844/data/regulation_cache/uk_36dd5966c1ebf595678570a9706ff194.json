@@ -1,0 +1,266 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/ukpga/2010/15/data.xml",
+  "fetched_at": "2025-08-31T18:15:28.825144",
+  "metadata": {
+    "title": "Equality Act 2010",
+    "description": "An Act to make provision to require Ministers of the Crown and others when making strategic decisions about the exercise of their functions to have regard to the desirability of reducing socio-economic inequalities; to reform and harmonise equality law and restate the greater part of the enactments relating to discrimination and harassment related to certain personal characteristics; to enable certain employers to be required to publish information about the differences in pay between male and female employees; to prohibit victimisation in certain circumstances; to require the exercise of certain functions to be with regard to the need to eliminate discrimination and other prohibited conduct; to enable duties to be imposed in relation to the exercise of public procurement functions; to increase equality of opportunity; to amend the law relating to rights and responsibilities in family relationships; and for connected purposes.",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "section-1",
+      "text": "11An authority to which this section applies must, when making decisions of a strategic nature about how to exercise its functions, have due regard to the desirability of exercising them in a way that is designed to reduce the inequalities of outcome which result from socio-economic disadvantage.2In deciding how to fulfil a duty to which it is subject under subsection (1), an authority must take into account any guidance issued in accordance with subsection (2A).2AThe guidance to be taken into a",
+      "type": "mandatory",
+      "keywords": [
+        "security"
+      ]
+    },
+    {
+      "id": "section-2",
+      "text": "21A Minister of the Crown may by regulations amend section 1 so as to\u2014aadd a public authority to the authorities that are subject to the duty under subsection (1) of that section;bremove an authority from those that are subject to the duty;cmake the duty apply, in the case of a particular authority, only in relation to certain functions that it has;din the case of an authority to which the application of the duty is already restricted to certain functions, remove or alter the restriction.2In sub",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-3",
+      "text": "3A failure in respect of a performance of a duty under section 1 does not confer a cause of action at private law.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-9",
+      "text": "91Race includes\u2014acolour;bnationality;cethnic or national origins.2In relation to the protected characteristic of race\u2014aa reference to a person who has a particular protected characteristic is a reference to a person of a particular racial group;ba reference to persons who share a protected characteristic is a reference to persons of the same racial group.3A racial group is a group of persons defined by reference to race; and a reference to a person's racial group is a reference to a racial group",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-20",
+      "text": "201Where this Act imposes a duty to make reasonable adjustments on a person, this section, sections 21 and 22 and the applicable Schedule apply; and for those purposes, a person on whom the duty is imposed is referred to as A.2The duty comprises the following three requirements.3The first requirement is a requirement, where a provision, criterion or practice of A's puts a disabled person at a substantial disadvantage in relation to a relevant matter in comparison with persons who are not disable",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-21",
+      "text": "211A failure to comply with the first, second or third requirement is a failure to comply with a duty to make reasonable adjustments.2A discriminates against a disabled person if A fails to comply with that duty in relation to that person.3A provision of an applicable Schedule which imposes a duty to comply with the first, second or third requirement applies only for the purpose of establishing whether A has contravened this Act by virtue of subsection (2); a failure to comply is, accordingly, n",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-23",
+      "text": "231On a comparison of cases for the purposes of section 13, 14,  19 or 19A  there must be no material difference between the circumstances relating to each case.2The circumstances relating to a case include a person's abilities if\u2014aon a comparison for the purposes of section 13, the protected characteristic is disability;bon a comparison for the purposes of section 14, one of the protected characteristics in the combination is disability.3If the protected characteristic is sexual orientation, th",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-26",
+      "text": "261A person (A) harasses another (B) if\u2014aA engages in unwanted conduct related to a relevant protected characteristic, andbthe conduct has the purpose or effect of\u2014iviolating B's dignity, oriicreating an intimidating, hostile, degrading, humiliating or offensive environment for B.2A also harasses B if\u2014aA engages in unwanted conduct of a sexual nature, andbthe conduct has the purpose or effect referred to in subsection (1)(b).3A also harasses B if\u2014aA or another person engages in unwanted conduct ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-29",
+      "text": "291A person (a  \u201cservice-provider\u201d) concerned with the provision of a service to the public or a section of the public (for payment or not) must not discriminate against a person requiring the service by not providing the person with the service.2A service-provider (A) must not, in providing the service, discriminate against a person (B)\u2014aas to the terms on which A provides the service to B;bby terminating the provision of the service to B;cby subjecting B to any other detriment.3A service-provi",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-33",
+      "text": "331A person (A) who has the right to dispose of premises must not discriminate against another (B)\u2014aas to the terms on which A offers to dispose of the premises to B;bby not disposing of the premises to B;cin A's treatment of B with respect to things done in relation to persons seeking premises.2Where an interest in a commonhold unit cannot be disposed of unless a particular person is a party to the disposal, that person must not discriminate against a person by not being a party to the disposal",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-34",
+      "text": "341A person whose permission is required for the disposal of premises must not discriminate against another by not giving permission for the disposal of the premises to the other.2A person whose permission is required for the disposal of premises must not, in relation to an application for permission to dispose of the premises, harass a person\u2014awho applies for permission to dispose of the premises, orbto whom the disposal would be made if permission were given.3A person whose permission is requi",
+      "type": "mandatory",
+      "keywords": [
+        "consent"
+      ]
+    },
+    {
+      "id": "section-35",
+      "text": "351A person (A) who manages premises must not discriminate against a person (B) who occupies the premises\u2014ain the way in which A allows B, or by not allowing B, to make use of a benefit or facility;bby evicting B (or taking steps for the purpose of securing B's eviction);cby subjecting B to any other detriment.2A person who manages premises must not, in relation to their management, harass\u2014aa person who occupies them;ba person who applies for them.3A person (A) who manages premises must not vict",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-36",
+      "text": "361A duty to make reasonable adjustments applies to\u2014aa controller of let premises;ba controller of premises to let;ca commonhold association;da responsible person in relation to common parts.2A controller of let premises is\u2014aa person by whom premises are let, orba person who manages them.3A controller of premises to let is\u2014aa person who has premises to let, orba person who manages them.4The reference in subsection (1)(c) to a commonhold association is a reference to the association in its capaci",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-37",
+      "text": "371The Scottish Ministers may by regulations provide that a disabled person is entitled to make relevant adjustments to common parts in relation to premises in Scotland.2The reference in subsection (1) to a disabled person is a reference to a disabled person who\u2014ais a tenant of the premises,bis an owner of the premises, orcis otherwise entitled to occupy the premises,and uses or intends to use the premises as the person's only or main home.3Before making regulations under subsection (1), the Sco",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "consent"
+      ]
+    },
+    {
+      "id": "section-39",
+      "text": "391An employer (A) must not discriminate against a person (B)\u2014ain the arrangements A makes for deciding to whom to offer employment;bas to the terms on which A offers B employment;cby not offering B employment.2An employer (A) must not discriminate against an employee of A's (B)\u2014aas to B's terms of employment;bin the way A affords B access, or by not affording B access, to opportunities for promotion, transfer or training or for receiving any other benefit, facility or service;cby dismissing B;d",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-40",
+      "text": "401An employer (A) must not, in relation to employment by A, harass a person (B)\u2014awho is an employee of A's;bwho has applied to A for employment.2. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .3. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .4. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-40A",
+      "text": "40A1An employer (A) must take reasonable steps to prevent sexual harassment of employees of A in the course of their employment.2\u201cSexual harassment\u201d in subsection (1) means harassment of the kind described in section 26(2) (unwanted conduct of a sexual nature).3A contravention of subsection (1) (or a contravention of section 111 or 112 that relates to a contravention of subsection (1)) is enforceable as an unlawful act under Part 1 of the Equality Act 2006 (and, by virtue of section 120(8) and (",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-41",
+      "text": "411A principal must not discriminate against a contract worker\u2014aas to the terms on which the principal allows the worker to do the work;bby not allowing the worker to do, or to continue to do, the work;cin the way the principal affords the worker access, or by not affording the worker access, to opportunities for receiving a benefit, facility or service;dby subjecting the worker to any other detriment.2A principal must not, in relation to contract work, harass a contract worker.3A principal must",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-44",
+      "text": "441A firm or proposed firm must not discriminate against a person\u2014ain the arrangements it makes for deciding to whom to offer a position as a partner;bas to the terms on which it offers the person a position as a partner;cby not offering the person a position as a partner.2A firm (A) must not discriminate against a partner (B)\u2014aas to the terms on which B is a partner;bin the way A affords B access, or by not affording B access, to opportunities for promotion, transfer or training or for receivin",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-45",
+      "text": "451An LLP or proposed LLP must not discriminate against a person\u2014ain the arrangements it makes for deciding to whom to offer a position as a member;bas to the terms on which it offers the person a position as a member;cby not offering the person a position as a member.2An LLP (A) must not discriminate against a member (B)\u2014aas to the terms on which B is a member;bin the way A affords B access, or by not affording B access, to opportunities for promotion, transfer or training or for receiving any ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-47",
+      "text": "471A barrister (A) must not discriminate against a person (B)\u2014ain the arrangements A makes for deciding to whom to offer a pupillage or tenancy;bas to the terms on which A offers B a pupillage or tenancy;cby not offering B a pupillage or tenancy.2A barrister (A) must not discriminate against a person (B) who is a pupil or tenant\u2014aas to the terms on which B is a pupil or tenant;bin the way A affords B access, or by not affording B access, to opportunities for training or gaining experience or for",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-48",
+      "text": "481An advocate (A) must not discriminate against a person (B)\u2014ain the arrangements A makes for deciding who to take as A's devil or to whom to offer membership of a stable;bas to the terms on which A offers to take B as A's devil or offers B membership of a stable;cby not offering to take B as A's devil or not offering B membership of a stable.2An advocate (A) must not discriminate against a person (B) who is a devil or a member of a stable\u2014aas to the terms on which B is a devil or a member of t",
+      "type": "mandatory",
+      "keywords": []
+    }
+  ],
+  "penalties": [
+    {
+      "type": "financial",
+      "amount": "\u00a35,000",
+      "context": "equal pay audits139a1regulations may make provision requiring an employment tribunal to order the respondent to carry out an equal pay audit in any case where the tribunal finds that there has been an"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 2 year",
+      "context": "forgery, etc.1881in this section  \u201crelevant document\u201d means\u2014aan exemption certificate issued under section 166, 169 or 171;ba notice of a kind mentioned in section 166(3)(b), 169(4)(b) or 171(4)(b);ca"
+    }
+  ],
+  "enforcement": {
+    "authority": [
+      "Secretary of State"
+    ],
+    "powers": [
+      "40A1An employer (A) must take reasonable steps to prevent sexual harassment of employees of A in the course of their employment.2\u201cSexual harassment\u201d in subsection (1) means harassment of the kind desc",
+      "551A person (an  \u201cemployment service-provider\u201d) concerned with the provision of an employment service must not discriminate against a person\u2014ain the arrangements the service-provider makes for selecti",
+      "601A person (A) to whom an application for work is made must not ask about the health of the applicant (B)\u2014abefore offering work to B, orbwhere A is not in a position to offer work to B, before includ",
+      "60A1A person (A) must not make a discriminatory statement in connection with a relevant decision that A makes or might make.2References in this section to a \u201crelevant decision\u201d are to be determined as",
+      "611An occupational pension scheme must be taken to include a non-discrimination rule.2A non-discrimination rule is a provision by virtue of which a responsible person (A)\u2014amust not discriminate agains",
+      "771A term of a person's work that purports to prevent or restrict the person (P) from disclosing or seeking to disclose information about the terms of P's work is unenforceable against P in so far as ",
+      "781Regulations may require employers to publish information relating to the pay of employees for the purpose of showing whether, by reference to factors of such description as is prescribed, there are",
+      "891This section applies for the purposes of this Chapter.2Nothing in this Chapter applies to anything done in connection with the content of the curriculum.3\u201cPupil\u201d\u2014ain relation to England and Wales, ",
+      "941This section applies for the purposes of this Chapter.2Nothing in this Chapter applies to anything done in connection with the content of the curriculum.3A reference to a student, in relation to an",
+      "1081A person (A) must not discriminate against another (B) if\u2014athe discrimination arises out of and is closely connected to a relationship which used to exist between them, andbconduct of a descriptio",
+      "1101A person (A) contravenes this section if\u2014aA is an employee or agent,bA does something which, by virtue of section 109(1) or (2), is treated as having been done by A's employer or principal (as the",
+      "1111A person (A) must not instruct another (B) to do in relation to a third person (C) anything which contravenes Part 3, 4, 5, 6 or 7 or section 108(1) or (2) or 112(1) (a basic contravention).2A per",
+      "1121A person (A) must not knowingly help another (B) to do anything which contravenes Part 3, 4, 5, 6 or 7 or section 108(1) or (2) or 111 (a basic contravention).2It is not a contravention of subsect",
+      "1161A claim is within this section if it may be made to\u2014athe First-tier Tribunal in accordance with Part 2 of Schedule 17,bthe  Education Tribunal for Wales  in accordance with Part 2 of that Schedule",
+      "139A1Regulations may make provision requiring an employment tribunal to order the respondent to carry out an equal pay audit in any case where the tribunal finds that there has been an equal pay breac",
+      "1421A term of a contract is unenforceable against a person in so far as it constitutes, promotes or provides for treatment of that or another person that is of a description prohibited by this Act.2A ",
+      "1431The county court or the sheriff may, on an application by a person who has an interest in a contract or other agreement which includes a term that is unenforceable as a result of section 142, make",
+      "1441A term of a contract is unenforceable by a person in whose favour it would operate in so far as it purports to exclude or limit a provision of or made under this Act.2A relevant non-contractual te",
+      "1451A term of a collective agreement is void in so far as it constitutes, promotes or provides for treatment of a description prohibited by this Act.2A rule of an undertaking is unenforceable against ",
+      "1461A qualifying person (P) may make a complaint to an employment tribunal that a term is void, or that a rule is unenforceable, as a result of section 145.2But subsection (1) applies only if\u2014athe ter",
+      "2081This section applies where the power to make an order or regulations under this Act is exercisable by a Minister of the Crown or the Treasury.2A statutory instrument containing (whether alone or w",
+      "21In preparing its accessibility strategy, a local authority must have regard to\u2014athe need to allocate adequate resources for implementing the strategy;bguidance as to the matters mentioned in sub-par",
+      "31The responsible body of a school in England and Wales must prepare\u2014aan accessibility plan;bfurther such plans at such times as may be prescribed.2An accessibility plan is a plan for, over a prescrib",
+      "41In preparing an accessibility plan, the responsible body must have regard to the need to allocate adequate resources for implementing the plan.2The proprietor of an independent educational instituti",
+      "51This sub-paragraph applies if the appropriate authority is satisfied (whether or not on a complaint) that a responsible body\u2014ahas acted or is proposing to act unreasonably in the discharge of a duty",
+      "41In the case of a maintained school within the meaning given by section 32 of the Education and Inspections Act 2006, a transitional exemption order may be made in accordance with such provision as i",
+      "61This paragraph applies in relation to the Welsh Tribunal.2The Welsh Ministers may by regulations make provision as to\u2014athe proceedings on a claim under paragraph ...  3A;bthe making of a claim.3The ",
+      "6AA1A party to any proceedings on a claim under paragraph (3A) before the Welsh Tribunal may appeal to the Upper Tribunal on any point of law arising from a decision made by the Welsh Tribunal in thos",
+      "6E1If the Welsh Ministers are satisfied (whether on a complaint or otherwise) that a local authority\u2014ahas acted, or is proposing to act, unreasonably in the discharge of a duty imposed by or under par",
+      "101The Scottish Ministers may make rules as to\u2014athe proceedings on a claim under paragraph 8;bthe making of a claim.2The rules may, in particular, include provision for or in connection with\u2014athe form",
+      "68After section 24 insert\u2014Enforcement powers: supplemental24A1This section has effect in relation to\u2014aan act which is unlawful because, by virtue of any of sections 13 to 18 of the Equality Act 2010, ",
+      "92The Education and Inspections Act 2006 is amended as follows.",
+      "94In section 91(7)\n\t\t\t(enforcement of disciplinary penalties) for  \u201cDisability Discrimination Act 1995 (c.50)\u201d substitute \u201c\n                  Equality Act 2010\n                \u201d.",
+      "96In section 48(2)(f) of the UK Borders Act 2007\n\t\t\t\t\t\t\t(recommendations by Chief Inspector of UK Border Agency) for  \u201csection 19D of the Race Relations Act 1976 (c.74)\u201d substitute \u201c\n                 ",
+      "97The Regulatory Enforcement and Sanctions Act 2008 is amended as follows."
+    ],
+    "procedures": []
+  },
+  "dates": [
+    {
+      "type": "deadline",
+      "date": "8 April 1976",
+      "context": "671If an occupational pension scheme does not include a sex equality rule, it is to be treated as including one.2 Where this section applies by virtue"
+    },
+    {
+      "type": "deadline",
+      "date": "17 May 1990",
+      "context": "671If an occupational pension scheme does not include a sex equality rule, it is to be treated as including one.2 Where this section applies by virtue"
+    },
+    {
+      "type": "deadline",
+      "date": "8 April 1976",
+      "context": "1331This section applies to proceedings before a court or employment tribunal on a complaint relating to\u2014aa breach of an equality rule, orba breach of"
+    },
+    {
+      "type": "deadline",
+      "date": "17 May 1990",
+      "context": "1331This section applies to proceedings before a court or employment tribunal on a complaint relating to\u2014aa breach of an equality rule, orba breach of"
+    },
+    {
+      "type": "deadline",
+      "date": "14",
+      "context": "140AA1In this section\u2014a. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .b\u201cADR entity\u201d means a person whose name appears on a list mainta"
+    },
+    {
+      "type": "deadline",
+      "date": "14",
+      "context": "140AA1In this section\u2014a. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .b\u201cADR entity\u201d means a person whose name appears on a list mainta"
+    },
+    {
+      "type": "deadline",
+      "date": "18 May 2005",
+      "context": "1931A person does not contravene this Act only by restricting the provision of benefits to persons who share a protected characteristic if\u2014athe person"
+    },
+    {
+      "type": "deadline",
+      "date": "17 May 1990",
+      "context": "61Regulations may amend this Part of this Schedule so as to add, vary or omit provision about cases where a difference as between men and women in the"
+    },
+    {
+      "type": "deadline",
+      "date": "5 December 2005",
+      "context": "181A person does not contravene this Part of this Act, so far as relating to sexual orientation, by doing anything which prevents or restricts a perso"
+    }
+  ],
+  "controls": [
+    "consent_management",
+    "audit_logging",
+    "data_minimization",
+    "training",
+    "access_control",
+    "incident_response"
+  ],
+  "xml_length": 3507730
+}

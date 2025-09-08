@@ -1,0 +1,566 @@
+{
+  "timestamp": "2025-08-26T15:44:18+01:00",
+  "summary": {
+    "total_frontend_endpoints": 112,
+    "total_backend_endpoints": 213,
+    "trailing_slash_issues": 8,
+    "missing_backend": 22,
+    "path_param_mismatches": 35
+  },
+  "mismatches": {
+    "trailing_slash": [
+      {
+        "service": "integrations.service",
+        "frontend": "/api/v1/integrations",
+        "backend": "/api/v1/integrations/",
+        "line": 22
+      },
+      {
+        "service": "policies.service",
+        "frontend": "/api/v1/policies",
+        "backend": "/api/v1/policies/",
+        "line": 31
+      },
+      {
+        "service": "assessments.service",
+        "frontend": "/api/v1/assessments",
+        "backend": "/api/v1/assessments/",
+        "line": 33
+      },
+      {
+        "service": "assessments.service",
+        "frontend": "/api/v1/assessments",
+        "backend": "/api/v1/assessments/",
+        "line": 33
+      },
+      {
+        "service": "evidence.service",
+        "frontend": "/api/v1/evidence",
+        "backend": "/api/v1/evidence/",
+        "line": 52
+      },
+      {
+        "service": "evidence.service",
+        "frontend": "/api/v1/evidence",
+        "backend": "/api/v1/evidence/",
+        "line": 52
+      },
+      {
+        "service": "dashboard.service",
+        "frontend": "/api/v1/dashboard",
+        "backend": "/api/v1/dashboard/",
+        "line": 82
+      },
+      {
+        "service": "frameworks.service",
+        "frontend": "/api/v1/frameworks",
+        "backend": "/api/v1/frameworks/",
+        "line": 18
+      }
+    ],
+    "missing_backend": [
+      {
+        "service": "integrations.service",
+        "endpoint": "/integrations/connect",
+        "method": "POST",
+        "line": 30
+      },
+      {
+        "service": "implementation.service",
+        "endpoint": "/implementation/plans/${planId}",
+        "method": "GET",
+        "line": 85
+      },
+      {
+        "service": "implementation.service",
+        "endpoint": "/implementation/plans",
+        "method": "POST",
+        "line": 75
+      },
+      {
+        "service": "implementation.service",
+        "endpoint": "/implementation/recommendations",
+        "method": "GET",
+        "line": 168
+      },
+      {
+        "service": "implementation.service",
+        "endpoint": "/implementation/resources/${frameworkId}",
+        "method": "GET",
+        "line": 206
+      },
+      {
+        "service": "implementation.service",
+        "endpoint": "/implementation/plans/${planId}/analytics",
+        "method": "GET",
+        "line": 249
+      },
+      {
+        "service": "foundation-evidence.service",
+        "endpoint": "/foundation/evidence/aws/configure",
+        "method": "POST",
+        "line": 98
+      },
+      {
+        "service": "foundation-evidence.service",
+        "endpoint": "/foundation/evidence/okta/configure",
+        "method": "POST",
+        "line": 113
+      },
+      {
+        "service": "foundation-evidence.service",
+        "endpoint": "/foundation/evidence/google/configure",
+        "method": "POST",
+        "line": 128
+      },
+      {
+        "service": "foundation-evidence.service",
+        "endpoint": "/foundation/evidence/microsoft/configure",
+        "method": "POST",
+        "line": 143
+      },
+      {
+        "service": "foundation-evidence.service",
+        "endpoint": "/foundation/evidence/health",
+        "method": "GET",
+        "line": 207
+      },
+      {
+        "service": "reports.service",
+        "endpoint": "/reports/history",
+        "method": "GET",
+        "line": 37
+      },
+      {
+        "service": "reports.service",
+        "endpoint": "/reports/scheduled",
+        "method": "GET",
+        "line": 100
+      },
+      {
+        "service": "reports.service",
+        "endpoint": "/reports/templates",
+        "method": "GET",
+        "line": 135
+      },
+      {
+        "service": "reports.service",
+        "endpoint": "/reports/analytics",
+        "method": "GET",
+        "line": 172
+      },
+      {
+        "service": "business-profiles.service",
+        "endpoint": "/business-profiles",
+        "method": "GET",
+        "line": 28
+      },
+      {
+        "service": "business-profiles.service",
+        "endpoint": "/business-profiles/${id}",
+        "method": "GET",
+        "line": 41
+      },
+      {
+        "service": "business-profiles.service",
+        "endpoint": "/business-profiles",
+        "method": "POST",
+        "line": 28
+      },
+      {
+        "service": "business-profiles.service",
+        "endpoint": "/business-profiles/${id}",
+        "method": "PUT",
+        "line": 41
+      },
+      {
+        "service": "business-profiles.service",
+        "endpoint": "/business-profiles/${id}/compliance",
+        "method": "GET",
+        "line": 95
+      },
+      {
+        "service": "business-profiles.service",
+        "endpoint": "/business-profiles",
+        "method": "POST",
+        "line": 28
+      },
+      {
+        "service": "chat.service",
+        "endpoint": "/ai/optimization/cache/clear?pattern=${encodeURIComponent(pattern)}",
+        "method": "DELETE",
+        "line": 207
+      }
+    ],
+    "missing_frontend": [],
+    "path_param_mismatch": [
+      {
+        "service": "integrations.service",
+        "frontend": "/api/v1/integrations/${integrationId}/test",
+        "backend": "/api/v1/integrations/{integrationId}/test",
+        "line": 61
+      },
+      {
+        "service": "integrations.service",
+        "frontend": "/api/v1/integrations/${integrationId}/sync-history",
+        "backend": "/api/v1/integrations/{integrationId}/sync-history",
+        "line": 100
+      },
+      {
+        "service": "integrations.service",
+        "frontend": "/api/v1/integrations/${integrationId}/webhooks",
+        "backend": "/api/v1/integrations/{integrationId}/webhooks",
+        "line": 115
+      },
+      {
+        "service": "integrations.service",
+        "frontend": "/api/v1/integrations/${integrationId}/logs",
+        "backend": "/api/v1/integrations/{integrationId}/logs",
+        "line": 140
+      },
+      {
+        "service": "policies.service",
+        "frontend": "/api/v1/policies/${id}",
+        "backend": "/api/v1/policies/{id}",
+        "line": 39
+      },
+      {
+        "service": "policies.service",
+        "frontend": "/api/v1/policies/${id}/status",
+        "backend": "/api/v1/policies/{id}/status",
+        "line": 66
+      },
+      {
+        "service": "policies.service",
+        "frontend": "/api/v1/policies/${id}/approve",
+        "backend": "/api/v1/policies/{id}/approve",
+        "line": 80
+      },
+      {
+        "service": "policies.service",
+        "frontend": "/api/v1/policies/${id}/regenerate-section",
+        "backend": "/api/v1/policies/{id}/regenerate-section",
+        "line": 95
+      },
+      {
+        "service": "policies.service",
+        "frontend": "/api/v1/policies/${id}/clone",
+        "backend": "/api/v1/policies/{id}/clone",
+        "line": 134
+      },
+      {
+        "service": "policies.service",
+        "frontend": "/api/v1/policies/${id}/versions",
+        "backend": "/api/v1/policies/{id}/versions",
+        "line": 151
+      },
+      {
+        "service": "monitoring.service",
+        "frontend": "/api/v1/monitoring/alerts/${alertId}/resolve",
+        "backend": "/api/v1/monitoring/alerts/{alertId}/resolve",
+        "line": 63
+      },
+      {
+        "service": "reports.service",
+        "frontend": "/api/v1/reports/${id}",
+        "backend": "/api/v1/reports/{reportId}",
+        "line": 47
+      },
+      {
+        "service": "readiness.service",
+        "frontend": "/api/v1/readiness/${businessProfileId}",
+        "backend": "/api/v1/readiness/{business_profile_id}",
+        "line": 48
+      },
+      {
+        "service": "readiness.service",
+        "frontend": "/api/v1/readiness/gaps/${businessProfileId}",
+        "backend": "/api/v1/readiness/gaps/{business_profile_id}",
+        "line": 57
+      },
+      {
+        "service": "readiness.service",
+        "frontend": "/api/v1/readiness/trends/${businessProfileId}",
+        "backend": "/api/v1/readiness/trends/{business_profile_id}",
+        "line": 149
+      },
+      {
+        "service": "chat.service",
+        "frontend": "/api/v1/chat/conversations/${id}",
+        "backend": "/api/v1/chat/conversations/{conversation_id}",
+        "line": 59
+      },
+      {
+        "service": "assessments.service",
+        "frontend": "/api/v1/assessments/${id}",
+        "backend": "/api/v1/assessments/{id}",
+        "line": 43
+      },
+      {
+        "service": "assessments.service",
+        "frontend": "/api/v1/assessments/${id}",
+        "backend": "/api/v1/assessments/{id}",
+        "line": 43
+      },
+      {
+        "service": "assessments.service",
+        "frontend": "/api/v1/assessments/${id}/complete",
+        "backend": "/api/v1/assessments/{id}/complete",
+        "line": 98
+      },
+      {
+        "service": "assessments.service",
+        "frontend": "/api/v1/assessments/${id}/results",
+        "backend": "/api/v1/assessments/{id}/results",
+        "line": 106
+      },
+      {
+        "service": "evidence.service",
+        "frontend": "/api/v1/evidence/${id}",
+        "backend": "/api/v1/evidence/{id}",
+        "line": 62
+      },
+      {
+        "service": "evidence.service",
+        "frontend": "/api/v1/evidence/${id}",
+        "backend": "/api/v1/evidence/{id}",
+        "line": 62
+      },
+      {
+        "service": "evidence.service",
+        "frontend": "/api/v1/evidence/${id}/automation",
+        "backend": "/api/v1/evidence/{id}/automation",
+        "line": 138
+      },
+      {
+        "service": "evidence.service",
+        "frontend": "/api/v1/evidence/dashboard/${frameworkId}",
+        "backend": "/api/v1/evidence/dashboard/{framework_id}",
+        "line": 154
+      },
+      {
+        "service": "evidence.service",
+        "frontend": "/api/v1/evidence/${id}/classify",
+        "backend": "/api/v1/evidence/{id}/classify",
+        "line": 173
+      },
+      {
+        "service": "evidence.service",
+        "frontend": "/api/v1/evidence/requirements/${frameworkId}",
+        "backend": "/api/v1/evidence/requirements/{framework_id}",
+        "line": 201
+      },
+      {
+        "service": "evidence.service",
+        "frontend": "/api/v1/evidence/${id}/quality",
+        "backend": "/api/v1/evidence/{id}/quality",
+        "line": 215
+      },
+      {
+        "service": "frameworks.service",
+        "frontend": "/api/v1/frameworks/${id}",
+        "backend": "/api/v1/frameworks/{id}",
+        "line": 26
+      },
+      {
+        "service": "frameworks.service",
+        "frontend": "/api/v1/frameworks/${frameworkId}/controls",
+        "backend": "/api/v1/frameworks/{framework_id}/controls",
+        "line": 55
+      },
+      {
+        "service": "frameworks.service",
+        "frontend": "/api/v1/frameworks/${frameworkId}/implementation-guide",
+        "backend": "/api/v1/frameworks/{framework_id}/implementation-guide",
+        "line": 75
+      },
+      {
+        "service": "frameworks.service",
+        "frontend": "/api/v1/frameworks/${frameworkId}/compliance-status",
+        "backend": "/api/v1/frameworks/{framework_id}/compliance-status",
+        "line": 98
+      },
+      {
+        "service": "frameworks.service",
+        "frontend": "/api/v1/frameworks/${frameworkId}/maturity-assessment",
+        "backend": "/api/v1/frameworks/{framework_id}/maturity-assessment",
+        "line": 148
+      },
+      {
+        "service": "compliance.service",
+        "frontend": "/api/v1/compliance/status/${frameworkId}",
+        "backend": "/api/v1/compliance/status/{framework_id}",
+        "line": 69
+      },
+      {
+        "service": "compliance.service",
+        "frontend": "/api/v1/compliance/tasks/${taskId}",
+        "backend": "/api/v1/compliance/tasks/{task_id}",
+        "line": 109
+      },
+      {
+        "service": "compliance.service",
+        "frontend": "/api/v1/compliance/risks/${riskId}",
+        "backend": "/api/v1/compliance/risks/{risk_id}",
+        "line": 146
+      }
+    ]
+  },
+  "fixes": {
+    "backend_fixes": [
+      {
+        "type": "remove_trailing_slash",
+        "endpoint": "/api/v1/integrations/",
+        "fix_to": "/api/v1/integrations"
+      },
+      {
+        "type": "remove_trailing_slash",
+        "endpoint": "/api/v1/policies/",
+        "fix_to": "/api/v1/policies"
+      },
+      {
+        "type": "remove_trailing_slash",
+        "endpoint": "/api/v1/assessments/",
+        "fix_to": "/api/v1/assessments"
+      },
+      {
+        "type": "remove_trailing_slash",
+        "endpoint": "/api/v1/assessments/",
+        "fix_to": "/api/v1/assessments"
+      },
+      {
+        "type": "remove_trailing_slash",
+        "endpoint": "/api/v1/evidence/",
+        "fix_to": "/api/v1/evidence"
+      },
+      {
+        "type": "remove_trailing_slash",
+        "endpoint": "/api/v1/evidence/",
+        "fix_to": "/api/v1/evidence"
+      },
+      {
+        "type": "remove_trailing_slash",
+        "endpoint": "/api/v1/dashboard/",
+        "fix_to": "/api/v1/dashboard"
+      },
+      {
+        "type": "remove_trailing_slash",
+        "endpoint": "/api/v1/frameworks/",
+        "fix_to": "/api/v1/frameworks"
+      }
+    ],
+    "frontend_fixes": [],
+    "new_endpoints_needed": [
+      {
+        "method": "POST",
+        "endpoint": "/integrations/connect",
+        "service": "integrations.service"
+      },
+      {
+        "method": "GET",
+        "endpoint": "/implementation/plans/${planId}",
+        "service": "implementation.service"
+      },
+      {
+        "method": "POST",
+        "endpoint": "/implementation/plans",
+        "service": "implementation.service"
+      },
+      {
+        "method": "GET",
+        "endpoint": "/implementation/recommendations",
+        "service": "implementation.service"
+      },
+      {
+        "method": "GET",
+        "endpoint": "/implementation/resources/${frameworkId}",
+        "service": "implementation.service"
+      },
+      {
+        "method": "GET",
+        "endpoint": "/implementation/plans/${planId}/analytics",
+        "service": "implementation.service"
+      },
+      {
+        "method": "POST",
+        "endpoint": "/foundation/evidence/aws/configure",
+        "service": "foundation-evidence.service"
+      },
+      {
+        "method": "POST",
+        "endpoint": "/foundation/evidence/okta/configure",
+        "service": "foundation-evidence.service"
+      },
+      {
+        "method": "POST",
+        "endpoint": "/foundation/evidence/google/configure",
+        "service": "foundation-evidence.service"
+      },
+      {
+        "method": "POST",
+        "endpoint": "/foundation/evidence/microsoft/configure",
+        "service": "foundation-evidence.service"
+      },
+      {
+        "method": "GET",
+        "endpoint": "/foundation/evidence/health",
+        "service": "foundation-evidence.service"
+      },
+      {
+        "method": "GET",
+        "endpoint": "/reports/history",
+        "service": "reports.service"
+      },
+      {
+        "method": "GET",
+        "endpoint": "/reports/scheduled",
+        "service": "reports.service"
+      },
+      {
+        "method": "GET",
+        "endpoint": "/reports/templates",
+        "service": "reports.service"
+      },
+      {
+        "method": "GET",
+        "endpoint": "/reports/analytics",
+        "service": "reports.service"
+      },
+      {
+        "method": "GET",
+        "endpoint": "/business-profiles",
+        "service": "business-profiles.service"
+      },
+      {
+        "method": "GET",
+        "endpoint": "/business-profiles/${id}",
+        "service": "business-profiles.service"
+      },
+      {
+        "method": "POST",
+        "endpoint": "/business-profiles",
+        "service": "business-profiles.service"
+      },
+      {
+        "method": "PUT",
+        "endpoint": "/business-profiles/${id}",
+        "service": "business-profiles.service"
+      },
+      {
+        "method": "GET",
+        "endpoint": "/business-profiles/${id}/compliance",
+        "service": "business-profiles.service"
+      },
+      {
+        "method": "POST",
+        "endpoint": "/business-profiles",
+        "service": "business-profiles.service"
+      },
+      {
+        "method": "DELETE",
+        "endpoint": "/ai/optimization/cache/clear?pattern=${encodeURIComponent(pattern)}",
+        "service": "chat.service"
+      }
+    ]
+  }
+}

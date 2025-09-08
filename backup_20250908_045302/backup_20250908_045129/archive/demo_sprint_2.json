@@ -1,0 +1,19 @@
+{
+  "id": "demo_sprint_2",
+  "name": "Sprint 2: Evidence Classification & Design System",
+  "goal": "Complete RBAC, implement evidence auto-classification, and finalize teal design system migration",
+  "start_date": "2025-08-01",
+  "end_date": "2025-08-15",
+  "capacity_hours": 120.0,
+  "team_members": [
+    "Lead Developer",
+    "Frontend Developer",
+    "AI Engineer"
+  ],
+  "stories": [],
+  "status": "PLANNING",
+  "velocity_target": 40,
+  "actual_velocity": 0,
+  "retrospective_notes": null,
+  "created_at": "2025-07-28T00:25:16.241918"
+}

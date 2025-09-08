@@ -1,0 +1,501 @@
+{
+  "audit_metadata": {
+    "generated_at": "2025-08-22T14:40:00Z",
+    "total_endpoints": 235,
+    "api_version": "2.0.0",
+    "base_url": "http://localhost:8000",
+    "authentication": "JWT Bearer Token",
+    "rate_limiting": {
+      "general": "100 requests/minute",
+      "ai_endpoints": "3-20 requests/minute",
+      "auth_endpoints": "5 requests/minute"
+    }
+  },
+  "endpoint_categories": {
+    "authentication": {
+      "prefix": "/api/v1/auth",
+      "description": "User registration, login, token management",
+      "endpoints": [
+        {
+          "path": "/api/v1/auth/register",
+          "method": "POST",
+          "description": "Register new user account",
+          "auth_required": false,
+          "rate_limit": "auth_rate_limit",
+          "request_schema": "UserCreate",
+          "response_schema": "RegisterResponse",
+          "status_codes": [201, 409, 422],
+          "tags": ["Authentication"]
+        },
+        {
+          "path": "/api/v1/auth/token",
+          "method": "POST", 
+          "description": "Login and obtain access token",
+          "auth_required": false,
+          "rate_limit": "auth_rate_limit",
+          "request_schema": "OAuth2PasswordRequestForm",
+          "response_schema": "Token",
+          "status_codes": [200, 401, 422],
+          "tags": ["Authentication"]
+        },
+        {
+          "path": "/api/v1/auth/login",
+          "method": "POST",
+          "description": "User login with credentials", 
+          "auth_required": false,
+          "rate_limit": "auth_rate_limit",
+          "request_schema": "LoginRequest",
+          "response_schema": "Token",
+          "status_codes": [200, 401, 422],
+          "tags": ["Authentication"]
+        },
+        {
+          "path": "/api/v1/auth/refresh",
+          "method": "POST",
+          "description": "Refresh access token",
+          "auth_required": true,
+          "auth_type": "refresh_token",
+          "rate_limit": "auth_rate_limit",
+          "response_schema": "Token", 
+          "status_codes": [200, 401, 422],
+          "tags": ["Authentication"]
+        },
+        {
+          "path": "/api/v1/auth/me",
+          "method": "GET",
+          "description": "Get current user information",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "response_schema": "UserResponse",
+          "status_codes": [200, 401, 422],
+          "tags": ["Authentication"]
+        },
+        {
+          "path": "/api/v1/auth/logout",
+          "method": "POST",
+          "description": "Logout current user",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "response_schema": "dict",
+          "status_codes": [200, 401],
+          "tags": ["Authentication"]
+        }
+      ]
+    },
+    "ai_assessments": {
+      "prefix": "/api/v1/ai-assessments", 
+      "description": "AI-powered compliance assessment assistance",
+      "endpoints": [
+        {
+          "path": "/api/v1/ai-assessments/help",
+          "method": "POST",
+          "description": "Get AI help for assessment questions",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "rate_limit": "ai_help_rate_limit",
+          "request_schema": "AIHelpRequest",
+          "response_schema": "AIHelpResponse",
+          "status_codes": [200, 401, 429, 503],
+          "tags": ["AI Assessment Assistant"]
+        },
+        {
+          "path": "/api/v1/ai-assessments/help/stream", 
+          "method": "POST",
+          "description": "Get streaming AI help for assessment questions",
+          "auth_required": true,
+          "auth_type": "bearer_token", 
+          "rate_limit": "ai_help_rate_limit",
+          "request_schema": "AIHelpRequest",
+          "response_type": "text/plain (streaming)",
+          "status_codes": [200, 401, 429, 503],
+          "tags": ["AI Assessment Assistant"]
+        },
+        {
+          "path": "/api/v1/ai-assessments/followup",
+          "method": "POST",
+          "description": "Generate AI follow-up questions",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "rate_limit": "ai_followup_rate_limit", 
+          "request_schema": "AIFollowUpRequest",
+          "response_schema": "AIFollowUpResponse",
+          "status_codes": [200, 401, 429, 503],
+          "tags": ["AI Assessment Assistant"]
+        },
+        {
+          "path": "/api/v1/ai-assessments/analysis",
+          "method": "POST",
+          "description": "Comprehensive AI analysis of assessment results",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "rate_limit": "ai_analysis_rate_limit",
+          "request_schema": "AIAnalysisRequest",
+          "response_schema": "AIAnalysisResponse", 
+          "status_codes": [200, 401, 404, 429, 503],
+          "tags": ["AI Assessment Assistant"]
+        },
+        {
+          "path": "/api/v1/ai-assessments/analysis/stream",
+          "method": "POST", 
+          "description": "Streaming AI analysis of assessment results",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "rate_limit": "ai_analysis_rate_limit",
+          "request_schema": "AIAnalysisRequest", 
+          "response_type": "text/plain (streaming)",
+          "status_codes": [200, 401, 404, 429, 503],
+          "tags": ["AI Assessment Assistant"]
+        },
+        {
+          "path": "/api/v1/ai-assessments/recommendations",
+          "method": "POST",
+          "description": "Generate personalized compliance recommendations",
+          "auth_required": true,
+          "auth_type": "bearer_token", 
+          "rate_limit": "ai_recommendations_rate_limit",
+          "request_schema": "AIRecommendationRequest",
+          "response_schema": "AIRecommendationResponse",
+          "status_codes": [200, 401, 404, 429, 503],
+          "tags": ["AI Assessment Assistant"]
+        }
+      ]
+    },
+    "business_profiles": {
+      "prefix": "/api/v1/business-profiles",
+      "description": "Business profile data management",
+      "endpoints": [
+        {
+          "path": "/api/v1/business-profiles",
+          "method": "POST",
+          "description": "Create new business profile",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "request_schema": "BusinessProfileCreate", 
+          "response_schema": "BusinessProfileResponse",
+          "status_codes": [201, 401, 422],
+          "tags": ["Business Profiles"]
+        },
+        {
+          "path": "/api/v1/business-profiles/me",
+          "method": "GET",
+          "description": "Get current user's business profile",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "response_schema": "BusinessProfileResponse",
+          "status_codes": [200, 401, 404],
+          "tags": ["Business Profiles"]
+        },
+        {
+          "path": "/api/v1/business-profiles/me",
+          "method": "PUT",
+          "description": "Update current user's business profile",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "request_schema": "BusinessProfileUpdate",
+          "response_schema": "BusinessProfileResponse", 
+          "status_codes": [200, 401, 404, 422],
+          "tags": ["Business Profiles"]
+        },
+        {
+          "path": "/api/v1/business-profiles/{profile_id}",
+          "method": "GET",
+          "description": "Get business profile by ID",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "parameters": [{"name": "profile_id", "type": "uuid", "location": "path"}],
+          "response_schema": "BusinessProfileResponse",
+          "status_codes": [200, 401, 404],
+          "tags": ["Business Profiles"] 
+        },
+        {
+          "path": "/api/v1/business-profiles/{profile_id}",
+          "method": "PUT", 
+          "description": "Update business profile by ID",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "parameters": [{"name": "profile_id", "type": "uuid", "location": "path"}],
+          "request_schema": "BusinessProfileUpdate",
+          "response_schema": "BusinessProfileResponse",
+          "status_codes": [200, 401, 404, 422],
+          "tags": ["Business Profiles"]
+        },
+        {
+          "path": "/api/v1/business-profiles/{profile_id}",
+          "method": "DELETE",
+          "description": "Delete business profile by ID", 
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "parameters": [{"name": "profile_id", "type": "uuid", "location": "path"}],
+          "response_schema": "dict",
+          "status_codes": [200, 401, 404],
+          "tags": ["Business Profiles"]
+        }
+      ]
+    },
+    "assessments": {
+      "prefix": "/api/v1/assessments",
+      "description": "Compliance assessment management and execution",
+      "endpoints": [
+        {
+          "path": "/api/v1/assessments/quick",
+          "method": "POST",
+          "description": "Generate quick compliance recommendations",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "rbac_permission": "assessment_create",
+          "request_schema": "QuickAssessmentRequest",
+          "response_schema": "QuickAssessmentResponse",
+          "status_codes": [200, 401, 403, 422],
+          "tags": ["Assessments"]
+        },
+        {
+          "path": "/api/v1/assessments",
+          "method": "GET",
+          "description": "List user's assessments",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "rbac_permission": "assessment_list",
+          "parameters": [
+            {"name": "framework_id", "type": "uuid", "location": "query", "required": false},
+            {"name": "status", "type": "string", "location": "query", "required": false}
+          ],
+          "response_schema": "List[AssessmentResponse]",
+          "status_codes": [200, 401, 403],
+          "tags": ["Assessments"]
+        },
+        {
+          "path": "/api/v1/assessments",
+          "method": "POST",
+          "description": "Create new assessment",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "rbac_permission": "assessment_create",
+          "request_schema": "AssessmentCreate",
+          "response_schema": "AssessmentResponse",
+          "status_codes": [201, 401, 403, 422],
+          "tags": ["Assessments"]
+        },
+        {
+          "path": "/api/v1/assessments/{assessment_id}/start",
+          "method": "POST",
+          "description": "Start assessment session",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "rbac_permission": "assessment_take",
+          "parameters": [{"name": "assessment_id", "type": "uuid", "location": "path"}],
+          "response_schema": "AssessmentSessionResponse",
+          "status_codes": [200, 401, 403, 404, 422],
+          "tags": ["Assessments"]
+        }
+      ]
+    },
+    "frameworks": {
+      "prefix": "/api/v1/frameworks",
+      "description": "Compliance framework management",
+      "endpoints": [
+        {
+          "path": "/api/v1/frameworks",
+          "method": "GET",
+          "description": "List available compliance frameworks",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "rbac_permission": "framework_list",
+          "parameters": [
+            {"name": "industry", "type": "string", "location": "query", "required": false},
+            {"name": "region", "type": "string", "location": "query", "required": false}
+          ],
+          "response_schema": "List[FrameworkResponse]",
+          "status_codes": [200, 401, 403],
+          "tags": ["Compliance Frameworks"]
+        },
+        {
+          "path": "/api/v1/frameworks/public",
+          "method": "GET",
+          "description": "List public frameworks (no auth required)",
+          "auth_required": false,
+          "response_schema": "List[PublicFrameworkResponse]",
+          "status_codes": [200],
+          "tags": ["Compliance Frameworks"]
+        },
+        {
+          "path": "/api/v1/frameworks/{framework_id}",
+          "method": "GET",
+          "description": "Get framework details",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "rbac_permission": "framework_view",
+          "parameters": [{"name": "framework_id", "type": "uuid", "location": "path"}],
+          "response_schema": "FrameworkDetailResponse",
+          "status_codes": [200, 401, 403, 404],
+          "tags": ["Compliance Frameworks"]
+        },
+        {
+          "path": "/api/v1/frameworks/recommendations",
+          "method": "GET",
+          "description": "Get framework recommendations for user",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "response_schema": "FrameworkRecommendationResponse",
+          "status_codes": [200, 401, 422],
+          "tags": ["Compliance Frameworks"]
+        }
+      ]
+    },
+    "freemium": {
+      "prefix": "/api/v1/freemium",
+      "description": "Public freemium compliance assessment",
+      "endpoints": [
+        {
+          "path": "/api/v1/freemium/lead-capture",
+          "method": "POST",
+          "description": "Capture lead information",
+          "auth_required": false,
+          "rate_limit": "freemium_rate_limit",
+          "request_schema": "LeadCaptureRequest",
+          "response_schema": "LeadResponse",
+          "status_codes": [200, 422, 429],
+          "tags": ["Freemium Assessment"]
+        },
+        {
+          "path": "/api/v1/freemium/assessment/start",
+          "method": "POST",
+          "description": "Start freemium assessment session",
+          "auth_required": false,
+          "rate_limit": "freemium_rate_limit",
+          "request_schema": "SessionStartRequest",
+          "response_schema": "SessionResponse",
+          "status_codes": [200, 422, 429],
+          "tags": ["Freemium Assessment"]
+        },
+        {
+          "path": "/api/v1/freemium/assessment/{session_id}/progress",
+          "method": "GET",
+          "description": "Get assessment session progress",
+          "auth_required": false,
+          "parameters": [{"name": "session_id", "type": "uuid", "location": "path"}],
+          "response_schema": "QuestionResponse",
+          "status_codes": [200, 404],
+          "tags": ["Freemium Assessment"]
+        },
+        {
+          "path": "/api/v1/freemium/assessment/{session_id}/answer",
+          "method": "POST",
+          "description": "Submit assessment answer",
+          "auth_required": false,
+          "rate_limit": "freemium_rate_limit",
+          "parameters": [{"name": "session_id", "type": "uuid", "location": "path"}],
+          "request_schema": "AnswerSubmissionRequest",
+          "response_schema": "QuestionResponse",
+          "status_codes": [200, 404, 422, 429],
+          "tags": ["Freemium Assessment"]
+        },
+        {
+          "path": "/api/v1/freemium/assessment/{session_id}/results",
+          "method": "GET",
+          "description": "Get freemium assessment results",
+          "auth_required": false,
+          "parameters": [{"name": "session_id", "type": "uuid", "location": "path"}],
+          "response_schema": "AssessmentResultsResponse",
+          "status_codes": [200, 404],
+          "tags": ["Freemium Assessment"]
+        },
+        {
+          "path": "/api/v1/freemium/health",
+          "method": "GET",
+          "description": "Freemium service health check",
+          "auth_required": false,
+          "response_schema": "dict",
+          "status_codes": [200],
+          "tags": ["Freemium Assessment"]
+        }
+      ]
+    },
+    "iq_agent": {
+      "prefix": "/api/v1/iq-agent",
+      "description": "Intelligent Compliance Agent - autonomous compliance assistant",
+      "endpoints": [
+        {
+          "path": "/api/v1/iq-agent/process",
+          "method": "POST",
+          "description": "Process compliance query with autonomous agent",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "rate_limit": "iq_agent_rate_limit",
+          "request_schema": "IQAgentRequest",
+          "response_schema": "IQAgentResponse",
+          "status_codes": [200, 401, 429, 503],
+          "tags": ["IQ Agent"]
+        },
+        {
+          "path": "/api/v1/iq-agent/process/stream",
+          "method": "POST",
+          "description": "Process compliance query with streaming response",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "rate_limit": "iq_agent_rate_limit",
+          "request_schema": "IQAgentRequest",
+          "response_type": "text/plain (streaming)",
+          "status_codes": [200, 401, 429, 503],
+          "tags": ["IQ Agent"]
+        },
+        {
+          "path": "/api/v1/iq-agent/health",
+          "method": "GET",
+          "description": "IQ Agent service health status",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "response_schema": "IQAgentHealthResponse",
+          "status_codes": [200, 401, 503],
+          "tags": ["IQ Agent"]
+        },
+        {
+          "path": "/api/v1/iq-agent/capabilities",
+          "method": "GET",
+          "description": "Get IQ Agent capabilities and tools",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "response_schema": "IQAgentCapabilitiesResponse",
+          "status_codes": [200, 401],
+          "tags": ["IQ Agent"]
+        }
+      ]
+    },
+    "monitoring": {
+      "prefix": "/api/v1/monitoring",
+      "description": "System monitoring and health metrics",
+      "endpoints": [
+        {
+          "path": "/api/v1/monitoring/health",
+          "method": "GET",
+          "description": "System health check",
+          "auth_required": false,
+          "response_schema": "HealthResponse",
+          "status_codes": [200, 503],
+          "tags": ["Monitoring"]
+        },
+        {
+          "path": "/api/v1/monitoring/metrics",
+          "method": "GET",
+          "description": "System performance metrics",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "rbac_permission": "monitoring_view",
+          "response_schema": "MetricsResponse",
+          "status_codes": [200, 401, 403],
+          "tags": ["Monitoring"]
+        },
+        {
+          "path": "/api/v1/monitoring/database",
+          "method": "GET",
+          "description": "Database health and statistics",
+          "auth_required": true,
+          "auth_type": "bearer_token",
+          "rbac_permission": "monitoring_view",
+          "response_schema": "DatabaseMetricsResponse",
+          "status_codes": [200, 401, 403, 503],
+          "tags": ["Monitoring"]
+        }
+      ]
+    }
+  }
+}

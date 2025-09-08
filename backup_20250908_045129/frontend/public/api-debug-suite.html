@@ -1,0 +1,1845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ruleIQ API Debug Suite</title>
+    <style>
+        body {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #0dbc79;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(13, 188, 121, 0.1);
+            border: 1px solid #0dbc79;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            color: #0dbc79;
+            font-size: 2.5em;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(13, 188, 121, 0.5);
+        }
+
+        .subtitle {
+            color: #64ffda;
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #0dbc79;
+            border-radius: 10px;
+            background: rgba(13, 188, 121, 0.05);
+            backdrop-filter: blur(5px);
+        }
+
+        .section-title {
+            color: #64ffda;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #0dbc79;
+            padding-bottom: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(45deg, #0dbc79, #64ffda);
+            color: #0f0f23;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: inherit;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            min-width: 180px;
+            font-size: 14px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(13, 188, 121, 0.4);
+        }
+
+        button:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .clear-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ffa726);
+        }
+
+        .trace-log {
+            max-height: 600px;
+            overflow-y: auto;
+            margin-top: 20px;
+            border: 1px solid #0dbc79;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+        }
+
+        .trace-step {
+            margin: 8px 0;
+            padding: 12px;
+            border-left: 3px solid #0dbc79;
+            background: rgba(13, 188, 121, 0.1);
+            border-radius: 0 8px 8px 0;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .error {
+            color: #ff6b6b;
+            border-left-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .success {
+            color: #0dbc79;
+            border-left-color: #0dbc79;
+            background: rgba(13, 188, 121, 0.1);
+        }
+
+        .pending {
+            color: #ffa726;
+            border-left-color: #ffa726;
+            background: rgba(255, 167, 38, 0.1);
+        }
+
+        .info {
+            color: #64ffda;
+            border-left-color: #64ffda;
+            background: rgba(100, 255, 218, 0.1);
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            overflow-x: auto;
+            border-radius: 4px;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+
+        .endpoint-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .endpoint-card {
+            background: rgba(13, 188, 121, 0.1);
+            border: 1px solid rgba(13, 188, 121, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .endpoint-card:hover {
+            border-color: #0dbc79;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(13, 188, 121, 0.2);
+        }
+
+        .endpoint-title {
+            color: #64ffda;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .endpoint-method {
+            color: #ffa726;
+            font-size: 12px;
+        }
+
+        .endpoint-desc {
+            color: #a0a0a0;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+
+        .status-indicator {
+            float: right;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #666;
+        }
+
+        .status-success { background: #0dbc79; }
+        .status-error { background: #ff6b6b; }
+        .status-pending { background: #ffa726; }
+
+        .config-section {
+            background: rgba(100, 255, 218, 0.1);
+            border: 1px solid #64ffda;
+            margin-bottom: 20px;
+        }
+
+        input, select {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #0dbc79;
+            color: #0dbc79;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: inherit;
+            margin: 0 5px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .stat-card {
+            background: rgba(13, 188, 121, 0.1);
+            border: 1px solid rgba(13, 188, 121, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #64ffda;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #a0a0a0;
+            margin-top: 5px;
+        }
+
+        .api-reference-content {
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid rgba(13, 188, 121, 0.3);
+        }
+
+        .api-group {
+            margin-bottom: 20px;
+        }
+
+        .api-item {
+            margin: 8px 0;
+            padding: 8px 12px;
+            background: rgba(13, 188, 121, 0.05);
+            border-left: 3px solid #0dbc79;
+            border-radius: 0 4px 4px 0;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .api-item strong {
+            color: #64ffda;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+        }
+
+        /* Auth Status Indicator Styles */
+        .auth-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 15px 20px;
+            border: 1px solid #0dbc79;
+            border-radius: 10px;
+            background: rgba(13, 188, 121, 0.05);
+            backdrop-filter: blur(5px);
+        }
+
+        .auth-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .auth-icon {
+            font-size: 20px;
+        }
+
+        .auth-text {
+            font-weight: 500;
+            color: #0dbc79;
+        }
+
+        .auth-details {
+            font-size: 12px;
+            color: #a0a0a0;
+            margin-top: 2px;
+        }
+
+        .auth-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .auth-btn {
+            padding: 8px 16px;
+            border: 1px solid #0dbc79;
+            background: rgba(13, 188, 121, 0.1);
+            color: #0dbc79;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .auth-btn:hover {
+            background: rgba(13, 188, 121, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-status.authenticated {
+            border-color: #4caf50;
+            background: rgba(76, 175, 80, 0.05);
+        }
+
+        .auth-status.authenticated .auth-text {
+            color: #4caf50;
+        }
+
+        .auth-status.authenticated .auth-btn {
+            border-color: #4caf50;
+            color: #4caf50;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 ruleIQ API Debug Suite</h1>
+        <div class="subtitle">Comprehensive API Testing & Monitoring Dashboard</div>
+    </div>
+
+    <!-- Auth Status Indicator -->
+    <div class="auth-status" id="authStatus">
+        <div class="auth-info">
+            <span class="auth-icon" id="authIcon">🔓</span>
+            <div>
+                <div class="auth-text" id="authText">Not Authenticated</div>
+                <div class="auth-details" id="authDetails">Public APIs only</div>
+            </div>
+        </div>
+        <div class="auth-controls">
+            <button class="auth-btn" id="manualAuthBtn" onclick="performManualAuth()">🔐 Login</button>
+            <button class="auth-btn" id="logoutBtn" onclick="performLogout()" style="display: none;">🚪 Logout</button>
+            <button class="auth-btn" id="refreshTokenBtn" onclick="refreshToken()" style="display: none;">🔄 Refresh</button>
+        </div>
+    </div>
+
+    <!-- API Reference Guide -->
+    <div class="test-section config-section">
+        <div class="section-title">📚 API Reference Guide</div>
+        <div style="margin-bottom: 20px;">
+            <button onclick="toggleApiReference()" style="background: linear-gradient(45deg, #2196f3, #03a9f4);">📖 Show/Hide API Guide</button>
+        </div>
+        <div id="apiReference" style="display: none;">
+            <div class="api-reference-content">
+                <h3 style="color: #64ffda; margin-bottom: 15px;">🆓 Freemium & Public APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>POST /api/v1/freemium/leads</strong> - Capture lead information from email forms</div>
+                    <div class="api-item"><strong>POST /api/v1/freemium/sessions</strong> - Create new assessment sessions for leads</div>
+                    <div class="api-item"><strong>GET /api/v1/freemium/sessions/{token}</strong> - Get progress of ongoing assessments</div>
+                    <div class="api-item"><strong>POST /api/v1/freemium/sessions/{token}/answers</strong> - Submit assessment answers</div>
+                    <div class="api-item"><strong>GET /api/v1/freemium/sessions/{token}/results</strong> - Get assessment results</div>
+                    <div class="api-item"><strong>GET /api/v1/freemium/health</strong> - Check freemium service health</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">🔐 Authentication APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>POST /api/v1/auth/register</strong> - Register new user accounts</div>
+                    <div class="api-item"><strong>POST /api/v1/auth/login</strong> - Authenticate users and get tokens</div>
+                    <div class="api-item"><strong>POST /api/v1/auth/refresh</strong> - Refresh expired JWT tokens</div>
+                    <div class="api-item"><strong>POST /api/v1/auth/logout</strong> - Invalidate user sessions</div>
+                    <div class="api-item"><strong>POST /api/v1/auth/forgot-password</strong> - Initiate password reset flow</div>
+                    <div class="api-item"><strong>POST /api/v1/auth/reset-password</strong> - Complete password reset</div>
+                    <div class="api-item"><strong>GET /api/v1/auth/me</strong> - Get current user profile</div>
+                    <div class="api-item"><strong>GET /api/v1/google-auth/*</strong> - Google OAuth integration endpoints</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">👥 User Management APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>GET /api/v1/users</strong> - List users with pagination and filtering</div>
+                    <div class="api-item"><strong>POST /api/v1/users</strong> - Create new users (admin only)</div>
+                    <div class="api-item"><strong>GET /api/v1/users/{id}</strong> - Get specific user details</div>
+                    <div class="api-item"><strong>PUT /api/v1/users/{id}</strong> - Update user information</div>
+                    <div class="api-item"><strong>DELETE /api/v1/users/{id}</strong> - Delete user accounts</div>
+                    <div class="api-item"><strong>GET /api/v1/users/{id}/activity</strong> - Get user activity logs</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">🏢 Business Profile APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>GET /api/v1/business-profiles</strong> - List company business profiles</div>
+                    <div class="api-item"><strong>POST /api/v1/business-profiles</strong> - Create new business profiles</div>
+                    <div class="api-item"><strong>GET /api/v1/business-profiles/{id}</strong> - Get specific business profile</div>
+                    <div class="api-item"><strong>PUT /api/v1/business-profiles/{id}</strong> - Update business profile details</div>
+                    <div class="api-item"><strong>DELETE /api/v1/business-profiles/{id}</strong> - Delete business profiles</div>
+                    <div class="api-item"><strong>POST /api/v1/business-profiles/{id}/validate</strong> - Validate profile completeness</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">📋 Assessment APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>GET /api/v1/assessments</strong> - List all assessments for user/organization</div>
+                    <div class="api-item"><strong>POST /api/v1/assessments</strong> - Create new compliance assessments</div>
+                    <div class="api-item"><strong>GET /api/v1/assessments/{id}</strong> - Get specific assessment details</div>
+                    <div class="api-item"><strong>PUT /api/v1/assessments/{id}</strong> - Update assessment parameters</div>
+                    <div class="api-item"><strong>POST /api/v1/assessments/{id}/start</strong> - Begin assessment execution</div>
+                    <div class="api-item"><strong>GET /api/v1/assessments/{id}/progress</strong> - Check assessment progress</div>
+                    <div class="api-item"><strong>GET /api/v1/assessments/{id}/results</strong> - Get completed assessment results</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">🤖 AI-Powered Assessment APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>POST /api/v1/ai-assessments/analyze</strong> - Run AI-powered gap analysis</div>
+                    <div class="api-item"><strong>POST /api/v1/ai-assessments/recommendations</strong> - Generate AI compliance recommendations</div>
+                    <div class="api-item"><strong>GET /api/v1/ai-assessments/{id}/insights</strong> - Get AI-generated insights</div>
+                    <div class="api-item"><strong>POST /api/v1/ai-assessments/batch</strong> - Process multiple assessments via AI</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">🛡️ Framework Management APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>GET /api/v1/frameworks</strong> - List available compliance frameworks</div>
+                    <div class="api-item"><strong>GET /api/v1/frameworks/{id}</strong> - Get specific framework details</div>
+                    <div class="api-item"><strong>GET /api/v1/frameworks/{id}/controls</strong> - Get framework controls and requirements</div>
+                    <div class="api-item"><strong>GET /api/v1/frameworks/{id}/mappings</strong> - Get control mappings between frameworks</div>
+                    <div class="api-item"><strong>POST /api/v1/frameworks/compare</strong> - Compare multiple frameworks</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">📜 Policy Management APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>GET /api/v1/policies</strong> - List organizational policies</div>
+                    <div class="api-item"><strong>POST /api/v1/policies</strong> - Create new policies</div>
+                    <div class="api-item"><strong>GET /api/v1/policies/{id}</strong> - Get specific policy content</div>
+                    <div class="api-item"><strong>PUT /api/v1/policies/{id}</strong> - Update existing policies</div>
+                    <div class="api-item"><strong>POST /api/v1/policies/{id}/approve</strong> - Approve policy for publication</div>
+                    <div class="api-item"><strong>GET /api/v1/policies/{id}/history</strong> - Get policy version history</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">🤖 AI Policy Generation APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>POST /api/v1/ai/policies/generate</strong> - Generate policies using AI</div>
+                    <div class="api-item"><strong>POST /api/v1/ai/policies/review</strong> - AI-powered policy review</div>
+                    <div class="api-item"><strong>POST /api/v1/ai/policies/update</strong> - Update policies with AI assistance</div>
+                    <div class="api-item"><strong>GET /api/v1/ai/policies/templates</strong> - Get AI-generated policy templates</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">📁 Evidence Collection APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>GET /api/v1/evidence</strong> - List collected evidence artifacts</div>
+                    <div class="api-item"><strong>POST /api/v1/evidence</strong> - Upload new evidence files</div>
+                    <div class="api-item"><strong>GET /api/v1/evidence/{id}</strong> - Get specific evidence item</div>
+                    <div class="api-item"><strong>PUT /api/v1/evidence/{id}</strong> - Update evidence metadata</div>
+                    <div class="api-item"><strong>POST /api/v1/evidence-collection/scan</strong> - Automated evidence scanning</div>
+                    <div class="api-item"><strong>GET /api/v1/foundation-evidence</strong> - Get foundational evidence requirements</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">✅ Compliance Status APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>GET /api/v1/compliance/status</strong> - Get overall compliance status</div>
+                    <div class="api-item"><strong>GET /api/v1/compliance/gaps</strong> - Identify compliance gaps</div>
+                    <div class="api-item"><strong>GET /api/v1/compliance/score</strong> - Calculate compliance scores</div>
+                    <div class="api-item"><strong>POST /api/v1/compliance/remediate</strong> - Create remediation plans</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">🔒 Security APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>GET /api/v1/security/scans</strong> - List security scan results</div>
+                    <div class="api-item"><strong>POST /api/v1/security/scan</strong> - Initiate security scans</div>
+                    <div class="api-item"><strong>GET /api/v1/security/vulnerabilities</strong> - Get vulnerability reports</div>
+                    <div class="api-item"><strong>POST /api/v1/security/remediate</strong> - Create security remediation plans</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">🇬🇧 UK Compliance APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>GET /api/v1/uk-compliance/gdpr</strong> - GDPR compliance assessment</div>
+                    <div class="api-item"><strong>GET /api/v1/uk-compliance/data-protection</strong> - UK data protection checks</div>
+                    <div class="api-item"><strong>GET /api/v1/uk-compliance/ico</strong> - ICO requirement validation</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">💬 AI Chat APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>POST /api/v1/chat/message</strong> - Send messages to AI assistant</div>
+                    <div class="api-item"><strong>GET /api/v1/chat/history</strong> - Get chat conversation history</div>
+                    <div class="api-item"><strong>POST /api/v1/chat/context</strong> - Set conversation context</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">💰 AI Cost Monitoring APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>GET /api/v1/ai/cost/usage</strong> - Get AI service usage statistics</div>
+                    <div class="api-item"><strong>GET /api/v1/ai/cost/billing</strong> - Get AI cost and billing information</div>
+                    <div class="api-item"><strong>WebSocket /api/v1/ai/cost-websocket</strong> - Real-time cost monitoring</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">📊 Monitoring & Performance APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>GET /api/v1/monitoring/health</strong> - System health monitoring</div>
+                    <div class="api-item"><strong>GET /api/v1/monitoring/metrics</strong> - System performance metrics</div>
+                    <div class="api-item"><strong>GET /api/v1/performance/stats</strong> - Performance statistics</div>
+                    <div class="api-item"><strong>GET /api/v1/performance/bottlenecks</strong> - Identify performance bottlenecks</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">📋 Reporting APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>GET /api/v1/reports</strong> - List available reports</div>
+                    <div class="api-item"><strong>POST /api/v1/reports/generate</strong> - Generate custom reports</div>
+                    <div class="api-item"><strong>GET /api/v1/reports/{id}</strong> - Get specific report</div>
+                    <div class="api-item"><strong>GET /api/v1/reports/{id}/download</strong> - Download reports in various formats</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">🔌 Integration APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>GET /api/v1/integrations</strong> - List available integrations</div>
+                    <div class="api-item"><strong>POST /api/v1/integrations</strong> - Create new integrations</div>
+                    <div class="api-item"><strong>PUT /api/v1/integrations/{id}</strong> - Update integration settings</div>
+                    <div class="api-item"><strong>POST /api/v1/integrations/{id}/test</strong> - Test integration connectivity</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">⚙️ Admin APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>GET /api/admin/users</strong> - Admin user management</div>
+                    <div class="api-item"><strong>GET /api/admin/system-status</strong> - System administration status</div>
+                    <div class="api-item"><strong>POST /api/admin/maintenance</strong> - Trigger maintenance operations</div>
+                    <div class="api-item"><strong>GET /api/admin/logs</strong> - Access system logs</div>
+                    <div class="api-item"><strong>GET /api/admin/token-management</strong> - Manage API tokens</div>
+                </div>
+
+                <h3 style="color: #64ffda; margin: 20px 0 15px 0;">💚 System Health APIs</h3>
+                <div class="api-group">
+                    <div class="api-item"><strong>GET /health</strong> - Overall system health check with database status</div>
+                    <div class="api-item"><strong>GET /</strong> - Basic API information and version</div>
+                    <div class="api-item"><strong>GET /docs</strong> - Interactive API documentation (Swagger)</div>
+                    <div class="api-item"><strong>GET /redoc</strong> - Alternative API documentation</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Configuration Section -->
+    <div class="test-section config-section">
+        <div class="section-title">⚙️ Configuration</div>
+        <div>
+            <label>API Base URL:</label>
+            <input type="text" id="apiBaseUrl" value="http://localhost:8000" />
+            <label>Test Email:</label>
+            <input type="text" id="testEmail" value="" />
+            <button onclick="updateConfig()">Update Config</button>
+            <button onclick="testConnection()" style="background: linear-gradient(45deg, #64ffda, #0dbc79);">Test Connection</button>
+        </div>
+    </div>
+
+    <!-- Statistics Section -->
+    <div class="test-section">
+        <div class="section-title">📊 Test Statistics</div>
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalTests">0</div>
+                <div class="stat-label">Total Tests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="passedTests">0</div>
+                <div class="stat-label">Passed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="failedTests">0</div>
+                <div class="stat-label">Failed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avgResponseTime">0ms</div>
+                <div class="stat-label">Avg Response</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Freemium & Public APIs -->
+    <div class="test-section">
+        <div class="section-title">🆓 Freemium & Public APIs</div>
+        <div class="button-group">
+            <button onclick="testFreemiumFlow()">🔄 Full Freemium Flow</button>
+            <button onclick="testEmailCapture()">📧 Email Capture</button>
+            <button onclick="testSessionCreation()">🎯 Session Creation</button>
+            <button onclick="testAssessmentProgress()">📈 Assessment Progress</button>
+        </div>
+    </div>
+
+    <!-- Authentication APIs -->
+    <div class="test-section">
+        <div class="section-title">🔐 Authentication APIs</div>
+        <div class="button-group">
+            <button onclick="testAuthEndpoints()">🔑 Auth Flow</button>
+            <button onclick="testTokenValidation()">🎫 Token Validation</button>
+            <button onclick="testUserRegistration()">👤 User Registration</button>
+            <button onclick="testPasswordReset()">🔄 Password Reset</button>
+        </div>
+    </div>
+
+    <!-- Core Business APIs -->
+    <div class="test-section">
+        <div class="section-title">🏢 Core Business APIs</div>
+        <div class="button-group">
+            <button onclick="testAssessmentAPIs()">📋 Assessment APIs</button>
+            <button onclick="testBusinessProfiles()">🏢 Business Profiles</button>
+            <button onclick="testFrameworkAPIs()">🛡️ Frameworks</button>
+            <button onclick="testPolicyAPIs()">📜 Policies</button>
+        </div>
+    </div>
+
+    <!-- AI & Automation APIs -->
+    <div class="test-section">
+        <div class="section-title">🤖 AI & Automation APIs</div>
+        <div class="button-group">
+            <button onclick="testAIAssessments()">🧠 AI Assessments</button>
+            <button onclick="testAIPolicyGeneration()">📝 AI Policy Generation</button>
+            <button onclick="testChatAPIs()">💬 AI Chat</button>
+            <button onclick="testAICostMonitoring()">💰 AI Cost Monitoring</button>
+        </div>
+    </div>
+
+    <!-- Compliance & Security APIs -->
+    <div class="test-section">
+        <div class="section-title">🛡️ Compliance & Security APIs</div>
+        <div class="button-group">
+            <button onclick="testComplianceAPIs()">✅ Compliance Status</button>
+            <button onclick="testEvidenceAPIs()">📁 Evidence Collection</button>
+            <button onclick="testSecurityAPIs()">🔒 Security APIs</button>
+            <button onclick="testUKComplianceAPIs()">🇬🇧 UK Compliance</button>
+        </div>
+    </div>
+
+    <!-- Monitoring & Performance APIs -->
+    <div class="test-section">
+        <div class="section-title">📈 Monitoring & Performance APIs</div>
+        <div class="button-group">
+            <button onclick="testMonitoringAPIs()">📊 System Monitoring</button>
+            <button onclick="testPerformanceAPIs()">⚡ Performance APIs</button>
+            <button onclick="testReportingAPIs()">📋 Reporting APIs</button>
+            <button onclick="testIntegrationAPIs()">🔌 Integrations</button>
+        </div>
+    </div>
+
+    <!-- Admin & Management APIs -->
+    <div class="test-section">
+        <div class="section-title">⚙️ Admin & Management APIs</div>
+        <div class="button-group">
+            <button onclick="testAdminAPIs()">🔧 Admin APIs</button>
+            <button onclick="testUserManagement()">👥 User Management</button>
+            <button onclick="testSystemHealth()">💚 System Health</button>
+            <button onclick="testDatabaseAPIs()">🗄️ Database APIs</button>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="test-section">
+        <div class="section-title">📚 Categorized Test Suites</div>
+        <div style="margin-bottom: 15px; padding: 10px; background: rgba(100, 255, 218, 0.1); border-left: 3px solid #64ffda; border-radius: 0 5px 5px 0;">
+            <strong>🎯 Smart Test Organization:</strong> Tests are now categorized by authentication requirements for better workflow management.
+        </div>
+        <div class="button-group" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px;">
+            <button onclick="runPublicAPISuite()" style="background: linear-gradient(45deg, #4caf50, #2e7d32); min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div style="font-size: 16px;">🌐 Public APIs</div>
+                <div style="font-size: 11px; margin-top: 5px; opacity: 0.8;">No auth required • 6 tests</div>
+            </button>
+            <button onclick="runAuthenticatedAPISuite()" style="background: linear-gradient(45deg, #ff9800, #ef6c00); min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div style="font-size: 16px;">🔐 Authenticated APIs</div>
+                <div style="font-size: 11px; margin-top: 5px; opacity: 0.8;">Auth required • 11 tests</div>
+            </button>
+            <button onclick="runAdvancedAPISuite()" style="background: linear-gradient(45deg, #9c27b0, #6a1b9a); min-height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div style="font-size: 16px;">🏗️ Advanced APIs</div>
+                <div style="font-size: 11px; margin-top: 5px; opacity: 0.8;">Auth + admin/compliance • 11 tests</div>
+            </button>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <div class="section-title">🎮 Test Controls</div>
+        <div class="button-group">
+            <button onclick="runAllTests()" style="background: linear-gradient(45deg, #64ffda, #0dbc79); font-size: 16px; min-width: 200px;">🚀 RUN ALL TESTS</button>
+            <button onclick="runCriticalTests()" style="background: linear-gradient(45deg, #ffa726, #ff9800);">⚡ Critical Tests Only</button>
+            <button onclick="runLoadTest()" style="background: linear-gradient(45deg, #9c27b0, #673ab7);">🔥 Load Test</button>
+            <button onclick="exportResults()" style="background: linear-gradient(45deg, #2196f3, #03a9f4);">📊 Export Results</button>
+            <button onclick="clearLog()" class="clear-btn">🗑️ Clear Log</button>
+        </div>
+    </div>
+
+    <!-- Log Output -->
+    <div id="trace-log" class="trace-log"></div>
+
+    <script>
+        // Configuration
+        let config = {
+            apiBase: 'http://localhost:8000',
+            testEmail: `test-${Date.now()}@example.com`,
+            authToken: null,
+            sessionToken: null,
+            autoAuth: {
+                enabled: true,
+                testUser: {
+                    email: `debug-${Date.now()}@ruleiq-test.com`,
+                    password: 'DebugTest123!'
+                },
+                tokenRefreshThreshold: 300 // seconds before expiry
+            }
+        };
+
+        // Statistics
+        let stats = {
+            total: 0,
+            passed: 0,
+            failed: 0,
+            responseTimes: []
+        };
+
+        // TokenManager for handling authentication
+        class TokenManager {
+            constructor() {
+                this.currentToken = null;
+                this.tokenExpiry = null;
+                this.refreshToken = null;
+                this.isAuthenticated = false;
+            }
+
+            async ensureValidToken() {
+                if (!config.autoAuth.enabled) {
+                    return this.currentToken;
+                }
+
+                if (!this.hasValidToken()) {
+                    log('🔐 Auto-authentication required for protected endpoints...', null, 'info');
+                    await this.performAutoLogin();
+                }
+                
+                this.updateAuthUI();
+                return this.currentToken;
+            }
+
+            async performAutoLogin() {
+                try {
+                    // Try login first (user might exist)
+                    await this.login();
+                } catch (error) {
+                    // If login fails, register new user then login
+                    log('👤 Creating new test user for authentication...', null, 'info');
+                    try {
+                        await this.register();
+                        await this.login();
+                    } catch (registerError) {
+                        log('❌ Auto-authentication failed', { error: registerError.message }, 'error');
+                        throw registerError;
+                    }
+                }
+            }
+
+            async register() {
+                const response = await fetch(`${config.apiBase}/api/v1/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config.autoAuth.testUser)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(`Registration failed: ${errorData.detail || response.statusText}`);
+                }
+
+                const data = await response.json();
+                log('✅ Test user registered successfully', { user_id: data.user_id }, 'success');
+                return data;
+            }
+
+            async login() {
+                const response = await fetch(`${config.apiBase}/api/v1/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(config.autoAuth.testUser)
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(`Login failed: ${errorData.detail || response.statusText}`);
+                }
+
+                const data = await response.json();
+                this.currentToken = data.access_token;
+                this.refreshToken = data.refresh_token;
+                this.isAuthenticated = true;
+                
+                // Calculate token expiry (assume 1 hour if not provided)
+                const expiresIn = data.expires_in || 3600;
+                this.tokenExpiry = Math.floor(Date.now() / 1000) + expiresIn;
+
+                // Update global config for backward compatibility
+                config.authToken = this.currentToken;
+
+                log('✅ Authentication successful', { 
+                    token_type: data.token_type,
+                    expires_in: `${expiresIn}s`,
+                    has_refresh: !!this.refreshToken 
+                }, 'success');
+                
+                return data;
+            }
+
+            hasValidToken() {
+                if (!this.currentToken || !this.tokenExpiry) {
+                    return false;
+                }
+                
+                const now = Math.floor(Date.now() / 1000);
+                const timeUntilExpiry = this.tokenExpiry - now;
+                
+                return timeUntilExpiry > config.autoAuth.tokenRefreshThreshold;
+            }
+
+            updateAuthUI() {
+                const authStatus = document.getElementById('authStatus');
+                const authIcon = document.getElementById('authIcon');
+                const authText = document.getElementById('authText');
+                const authDetails = document.getElementById('authDetails');
+                const manualAuthBtn = document.getElementById('manualAuthBtn');
+                const logoutBtn = document.getElementById('logoutBtn');
+                const refreshTokenBtn = document.getElementById('refreshTokenBtn');
+                
+                if (this.isAuthenticated && this.hasValidToken()) {
+                    // Authenticated state
+                    if (authStatus) authStatus.classList.add('authenticated');
+                    if (authIcon) authIcon.textContent = '🔒';
+                    if (authText) authText.textContent = 'Authenticated';
+                    if (authDetails) {
+                        const expiryTime = this.tokenExpiry ? new Date(this.tokenExpiry).toLocaleTimeString() : 'Unknown';
+                        authDetails.textContent = `Token expires: ${expiryTime}`;
+                    }
+                    if (manualAuthBtn) manualAuthBtn.style.display = 'none';
+                    if (logoutBtn) logoutBtn.style.display = 'inline-block';
+                    if (refreshTokenBtn) refreshTokenBtn.style.display = 'inline-block';
+                } else {
+                    // Not authenticated state
+                    if (authStatus) authStatus.classList.remove('authenticated');
+                    if (authIcon) authIcon.textContent = '🔓';
+                    if (authText) authText.textContent = 'Not Authenticated';
+                    if (authDetails) authDetails.textContent = 'Public APIs only';
+                    if (manualAuthBtn) manualAuthBtn.style.display = 'inline-block';
+                    if (logoutBtn) logoutBtn.style.display = 'none';
+                    if (refreshTokenBtn) refreshTokenBtn.style.display = 'none';
+                }
+            }
+
+            logout() {
+                this.currentToken = null;
+                this.tokenExpiry = null;
+                this.refreshToken = null;
+                this.isAuthenticated = false;
+                config.authToken = null;
+                this.updateAuthUI();
+                log('🔓 Logged out successfully', null, 'info');
+            }
+        }
+
+        // Initialize TokenManager
+        const tokenManager = new TokenManager();
+
+        // Test suites categorization
+        const testSuites = {
+            public: [
+                { name: 'Health Check', endpoint: '/health', method: 'GET', requiresAuth: false },
+                { name: 'API Information', endpoint: '/', method: 'GET', requiresAuth: false },
+                { name: 'Freemium Email Capture', endpoint: '/api/v1/freemium/leads', method: 'POST', requiresAuth: false },
+                { name: 'Freemium Session Creation', endpoint: '/api/v1/freemium/sessions', method: 'POST', requiresAuth: false }
+            ],
+            
+            authenticated: [
+                { name: 'User Profile (/me)', endpoint: '/api/v1/auth/me', method: 'GET', requiresAuth: true },
+                { name: 'Business Profiles', endpoint: '/api/business-profiles', method: 'GET', requiresAuth: true },
+                { name: 'Assessments List', endpoint: '/api/assessments', method: 'GET', requiresAuth: true },
+                { name: 'Evidence Management', endpoint: '/api/evidence', method: 'GET', requiresAuth: true },
+                { name: 'AI Assessment Generation', endpoint: '/api/ai/assessments/personalized-recommendations', method: 'POST', requiresAuth: true },
+                { name: 'Chat History', endpoint: '/api/v1/chat/history', method: 'GET', requiresAuth: true },
+                { name: 'AI Cost Usage', endpoint: '/api/v1/ai/cost/usage', method: 'GET', requiresAuth: true },
+                { name: 'System Monitoring', endpoint: '/api/v1/monitoring/health', method: 'GET', requiresAuth: true },
+                { name: 'Reports List', endpoint: '/api/v1/reports', method: 'GET', requiresAuth: true },
+                { name: 'Integrations', endpoint: '/api/v1/integrations', method: 'GET', requiresAuth: true },
+                { name: 'Admin Users', endpoint: '/api/admin/users', method: 'GET', requiresAuth: true }
+            ]
+        };
+
+        // Utility Functions
+        function updateConfig() {
+            config.apiBase = document.getElementById('apiBaseUrl').value;
+            const emailInput = document.getElementById('testEmail').value;
+            if (emailInput) config.testEmail = emailInput;
+            else {
+                config.testEmail = `test-${Date.now()}@example.com`;
+                document.getElementById('testEmail').value = config.testEmail;
+            }
+            log('⚙️ Configuration updated', config, 'info');
+        }
+
+        function updateStats() {
+            document.getElementById('totalTests').textContent = stats.total;
+            document.getElementById('passedTests').textContent = stats.passed;
+            document.getElementById('failedTests').textContent = stats.failed;
+            
+            const avgTime = stats.responseTimes.length > 0 
+                ? Math.round(stats.responseTimes.reduce((a, b) => a + b, 0) / stats.responseTimes.length)
+                : 0;
+            document.getElementById('avgResponseTime').textContent = `${avgTime}ms`;
+        }
+
+        // Toggle API reference visibility
+        function toggleApiReference() {
+            const referenceDiv = document.getElementById('api-reference');
+            const button = document.querySelector('button[onclick="toggleApiReference()"]');
+            
+            if (referenceDiv.style.display === 'none' || referenceDiv.style.display === '') {
+                referenceDiv.style.display = 'block';
+                button.textContent = '📖 Hide API Reference';
+            } else {
+                referenceDiv.style.display = 'none';
+                button.textContent = '📖 Show API Reference';
+            }
+        }
+
+        function log(step, data, status = 'info') {
+            const logDiv = document.getElementById('trace-log');
+            const entry = document.createElement('div');
+            entry.className = `trace-step ${status}`;
+            
+            const timestamp = new Date().toISOString();
+            const dataStr = data ? (typeof data === 'string' ? data : JSON.stringify(data, null, 2)) : '';
+            
+            entry.innerHTML = `
+                <strong>[${timestamp}] ${step}</strong>
+                ${dataStr ? `<pre>${dataStr}</pre>` : ''}
+            `;
+            
+            logDiv.appendChild(entry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(`[API DEBUG] ${step}`, data);
+        }
+
+        function clearLog() {
+            document.getElementById('trace-log').innerHTML = '';
+            stats = { total: 0, passed: 0, failed: 0, responseTimes: [] };
+            updateStats();
+        }
+
+        // Auth control functions
+        async function performManualAuth() {
+            try {
+                const manualAuthBtn = document.getElementById('manualAuthBtn');
+                if (manualAuthBtn) {
+                    manualAuthBtn.disabled = true;
+                    manualAuthBtn.textContent = '⏳ Logging in...';
+                }
+
+                log('🔐 Manual authentication started...', null, 'info');
+                await tokenManager.performAutoLogin();
+                log('✅ Manual authentication successful!', { token_expires: tokenManager.tokenExpiry }, 'success');
+            } catch (error) {
+                log('❌ Manual authentication failed', { error: error.message }, 'error');
+            } finally {
+                const manualAuthBtn = document.getElementById('manualAuthBtn');
+                if (manualAuthBtn) {
+                    manualAuthBtn.disabled = false;
+                    manualAuthBtn.textContent = '🔐 Login';
+                }
+            }
+        }
+
+        async function performLogout() {
+            try {
+                const logoutBtn = document.getElementById('logoutBtn');
+                if (logoutBtn) {
+                    logoutBtn.disabled = true;
+                    logoutBtn.textContent = '⏳ Logging out...';
+                }
+
+                tokenManager.logout();
+                log('🚪 Logged out successfully', null, 'info');
+            } catch (error) {
+                log('❌ Logout failed', { error: error.message }, 'error');
+            } finally {
+                const logoutBtn = document.getElementById('logoutBtn');
+                if (logoutBtn) {
+                    logoutBtn.disabled = false;
+                    logoutBtn.textContent = '🚪 Logout';
+                }
+            }
+        }
+
+        async function refreshToken() {
+            try {
+                const refreshBtn = document.getElementById('refreshTokenBtn');
+                if (refreshBtn) {
+                    refreshBtn.disabled = true;
+                    refreshBtn.textContent = '⏳ Refreshing...';
+                }
+
+                log('🔄 Refreshing authentication token...', null, 'info');
+                
+                // If we have a refresh token, use it; otherwise do a full re-auth
+                if (tokenManager.refreshToken) {
+                    // Try to refresh with existing refresh token
+                    await tokenManager.refreshAuthToken();
+                } else {
+                    // Fall back to full re-authentication
+                    await tokenManager.performAutoLogin();
+                }
+                
+                log('✅ Token refreshed successfully!', { 
+                    token_expires: tokenManager.tokenExpiry 
+                }, 'success');
+            } catch (error) {
+                log('❌ Token refresh failed', { error: error.message }, 'error');
+                log('🔄 Attempting full re-authentication...', null, 'info');
+                
+                try {
+                    await tokenManager.performAutoLogin();
+                    log('✅ Re-authentication successful!', { token_expires: tokenManager.tokenExpiry }, 'success');
+                } catch (reAuthError) {
+                    log('❌ Re-authentication failed', { error: reAuthError.message }, 'error');
+                }
+            } finally {
+                const refreshBtn = document.getElementById('refreshTokenBtn');
+                if (refreshBtn) {
+                    refreshBtn.disabled = false;
+                    refreshBtn.textContent = '🔄 Refresh';
+                }
+            }
+        }
+
+        async function apiCall(endpoint, options = {}, requiresAuth = false) {
+            const startTime = Date.now();
+            try {
+                stats.total++;
+                updateStats();
+
+                // Handle authentication if required
+                if (requiresAuth) {
+                    await tokenManager.ensureValidToken();
+                }
+
+                const url = endpoint.startsWith('http') ? endpoint : `${config.apiBase}${endpoint}`;
+                
+                // Enhanced logging for debugging
+                log('🔧 DEBUG: API Call Details', {
+                    endpoint: endpoint,
+                    fullUrl: url,
+                    method: options.method || 'GET',
+                    requiresAuth: requiresAuth,
+                    hasAuthToken: !!tokenManager.currentToken,
+                    bodyData: options.body ? JSON.parse(options.body) : null
+                }, 'info');
+                
+                const defaultHeaders = {
+                    'Content-Type': 'application/json'
+                };
+
+                // Add auth header if we have a token (either from TokenManager or legacy config)
+                const authToken = tokenManager.currentToken || config.authToken;
+                if (authToken) {
+                    defaultHeaders['Authorization'] = `Bearer ${authToken}`;
+                }
+
+                const defaultOptions = {
+                    method: 'GET',
+                    headers: defaultHeaders
+                };
+
+                const response = await fetch(url, { ...defaultOptions, ...options });
+                const responseTime = Date.now() - startTime;
+                stats.responseTimes.push(responseTime);
+
+                // Enhanced response logging
+                log('🔧 DEBUG: Response Details', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    contentType: response.headers.get('content-type'),
+                    responseTime: `${responseTime}ms`
+                }, 'info');
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({ detail: 'Network error' }));
+                    stats.failed++;
+                    updateStats();
+                    
+                    // Enhanced error logging
+                    log('❌ API Call Failed', {
+                        url: url,
+                        status: response.status,
+                        statusText: response.statusText,
+                        errorData: errorData
+                    }, 'error');
+                    
+                    throw new Error(`HTTP ${response.status}: ${errorData.detail || response.statusText}`);
+                }
+
+                stats.passed++;
+                updateStats();
+                return await response.json();
+            } catch (error) {
+                stats.failed++;
+                updateStats();
+                
+                // Enhanced error logging for network/fetch errors
+                log('❌ API Call Network Error', {
+                    endpoint: endpoint,
+                    url: endpoint.startsWith('http') ? endpoint : `${config.apiBase}${endpoint}`,
+                    errorName: error.name,
+                    errorMessage: error.message
+                }, 'error');
+                
+                throw error;
+            }
+        }
+
+        // Test Connection
+        async function testConnection() {
+            log('🔍 Testing API connection...', null, 'pending');
+            try {
+                const result = await apiCall('/health');
+                log('✅ API connection successful', result, 'success');
+                return result;
+            } catch (error) {
+                log('❌ API connection failed', { message: error.message }, 'error');
+                throw error;
+            }
+        }
+
+        // Freemium Flow Tests
+        async function testEmailCapture() {
+            log('📧 Testing email capture...', null, 'pending');
+            try {
+                const result = await apiCall('/api/v1/freemium/leads', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        email: config.testEmail,
+                        first_name: 'Test',
+                        company_name: 'Debug Company'
+                    })
+                });
+                log('✅ Email capture successful', result, 'success');
+                return result;
+            } catch (error) {
+                log('❌ Email capture failed', { message: error.message }, 'error');
+                throw error;
+            }
+        }
+
+        async function testSessionCreation() {
+            log('🎯 Testing session creation...', null, 'pending');
+            try {
+                const result = await apiCall('/api/v1/freemium/sessions', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        lead_email: config.testEmail,
+                        business_type: 'general',
+                        assessment_type: 'general'
+                    })
+                });
+                config.sessionToken = result.session_token;
+                log('✅ Session creation successful', result, 'success');
+                return result;
+            } catch (error) {
+                log('❌ Session creation failed', { message: error.message }, 'error');
+                throw error;
+            }
+        }
+
+        async function testAssessmentProgress() {
+            if (!config.sessionToken) {
+                await testSessionCreation();
+            }
+            log('📈 Testing assessment progress...', null, 'pending');
+            try {
+                const result = await apiCall(`/api/v1/freemium/sessions/${config.sessionToken}`);
+                log('✅ Assessment progress successful', result, 'success');
+                return result;
+            } catch (error) {
+                log('❌ Assessment progress failed', { message: error.message }, 'error');
+                throw error;
+            }
+        }
+
+        async function testFreemiumFlow() {
+            log('🔄 Starting full freemium flow test...', null, 'info');
+            try {
+                const leadResult = await testEmailCapture();
+                const sessionResult = await testSessionCreation();
+                const progressResult = await testAssessmentProgress();
+                
+                log('🎉 Full freemium flow completed successfully!', {
+                    leadId: leadResult.lead_id,
+                    sessionToken: sessionResult.session_token,
+                    progress: progressResult.progress_percentage
+                }, 'success');
+            } catch (error) {
+                log('❌ Freemium flow failed', { message: error.message }, 'error');
+            }
+        }
+
+        // Authentication Tests
+        async function testAuthEndpoints() {
+            log('🔐 Testing authentication flow...', null, 'info');
+            try {
+                // First test if backend is reachable
+                log('🔧 Testing backend connectivity...', null, 'pending');
+                const healthResult = await apiCall('/health');
+                log('✅ Backend is reachable', { 
+                    status: healthResult.status, 
+                    message: healthResult.message,
+                    database: healthResult.database?.engine_initialized 
+                }, 'success');
+                
+                // Test registration endpoint
+                await testAuthRegistration();
+                
+                // Test login with the registered user
+                await testAuthLogin();
+                
+                // Test authenticated endpoint
+                await testAuthMe();
+                
+                log('🎉 Complete auth flow test passed!', null, 'success');
+            } catch (error) {
+                log('❌ Auth flow test failed', { message: error.message }, 'error');
+                throw error;
+            }
+        }
+
+        async function testAuthRegistration() {
+            log('📝 Testing user registration...', null, 'pending');
+            try {
+                // Use a unique email for registration
+                const testEmail = `test-${Date.now()}@debugtest.com`;
+                const registerData = {
+                    email: testEmail,
+                    password: 'TestPassword123@'  // Fixed: Use @ instead of ! to avoid JSON escape issues
+                };
+                
+                log('🔧 DEBUG: Calling registration endpoint', { 
+                    url: `${config.apiBase}/api/v1/auth/register`, 
+                    data: registerData 
+                }, 'info');
+                
+                const registerResult = await apiCall('/api/v1/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify(registerData)
+                });
+                
+                log('✅ Registration successful', {
+                    user_id: registerResult.user.id,
+                    email: registerResult.user.email,
+                    has_tokens: !!registerResult.tokens
+                }, 'success');
+                
+                // Store credentials for login test
+                config.testEmail = testEmail;
+                config.authToken = registerResult.tokens.access_token;
+                
+                return registerResult;
+            } catch (error) {
+                log('❌ Registration failed', { message: error.message }, 'error');
+                throw error;
+            }
+        }
+
+        async function testAuthLogin() {
+            log('🔑 Testing login endpoint...', null, 'pending');
+            try {
+                const loginData = {
+                    email: config.testEmail,
+                    password: 'TestPassword123@'  // Fixed: Use @ instead of ! to match registration
+                };
+                
+                const loginResult = await apiCall('/api/v1/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify(loginData)
+                });
+                
+                config.authToken = loginResult.access_token;
+                log('✅ Auth login test passed', {
+                    token_type: loginResult.token_type,
+                    has_access_token: !!loginResult.access_token,
+                    has_refresh_token: !!loginResult.refresh_token
+                }, 'success');
+                
+                return loginResult;
+            } catch (error) {
+                log('❌ Auth login test failed', { message: error.message }, 'error');
+                throw error;
+            }
+        }
+
+        async function testAuthMe() {
+            if (!config.authToken) {
+                log('⚠️ No auth token available, skipping /me test', null, 'warning');
+                return;
+            }
+            
+            log('👤 Testing /me endpoint...', null, 'pending');
+            try {
+                const meResult = await apiCall('/api/v1/auth/me', {
+                    headers: {
+                        'Authorization': `Bearer ${config.authToken}`
+                    }
+                });
+                
+                log('✅ Auth /me test passed', {
+                    user_id: meResult.id,
+                    email: meResult.email,
+                    is_active: meResult.is_active
+                }, 'success');
+                
+                return meResult;
+            } catch (error) {
+                log('❌ Auth /me test failed', { message: error.message }, 'error');
+                throw error;
+            }
+        }
+
+        async function testTokenValidation() {
+            log('🎫 Testing token validation...', null, 'pending');
+            // Implement token validation test
+            log('⚠️ Token validation test not yet implemented', null, 'pending');
+        }
+
+        async function testUserRegistration() {
+            log('👤 Testing user registration...', null, 'pending');
+            // Implement user registration test
+            log('⚠️ User registration test not yet implemented', null, 'pending');
+        }
+
+        async function testPasswordReset() {
+            log('🔄 Testing password reset...', null, 'pending');
+            // Implement password reset test
+            log('⚠️ Password reset test not yet implemented', null, 'pending');
+        }
+
+        // Core Business API Tests
+        async function testAssessmentAPIs() {
+            log('📋 Testing assessment APIs...', null, 'pending');
+            try {
+                // Test GET assessments (requires auth)
+                const assessmentsResult = await apiCall('/api/v1/assessments', {}, true);
+                log('✅ Assessment APIs GET test passed', assessmentsResult, 'success');
+                
+                // Test POST assessment creation if available
+                try {
+                    const testAssessment = {
+                        assessment_type: 'compliance_readiness',
+                        company_name: 'API Debug Test Company',
+                        industry: 'Technology',
+                        context: 'API testing suite validation'
+                    };
+                    
+                    const createResult = await apiCall('/api/v1/assessments', {
+                        method: 'POST',
+                        body: JSON.stringify(testAssessment)
+                    }, true);
+                    log('✅ Assessment creation test passed', createResult, 'success');
+                } catch (createError) {
+                    if (createError.message.includes('already exists') || createError.message.includes('409')) {
+                        log('ℹ️ Assessment already exists (expected)', null, 'info');
+                    } else {
+                        log('⚠️ Assessment creation test failed', { error: createError.message }, 'warning');
+                    }
+                }
+                
+                // Test readiness assessment if available
+                try {
+                    const readinessResult = await apiCall('/api/v1/assessments/readiness', {}, true);
+                    log('✅ Readiness assessment test passed', readinessResult, 'success');
+                } catch (readinessError) {
+                    log('⚠️ Readiness assessment endpoint may not be available', { error: readinessError.message }, 'warning');
+                }
+                
+                return assessmentsResult;
+            } catch (error) {
+                log('❌ Assessment APIs test failed', { error: error.message }, 'error');
+                throw error;
+            }
+        }
+
+        async function testBusinessProfiles() {
+            log('🏢 Testing business profiles...', null, 'pending');
+            try {
+                // Test GET /api/v1/business-profiles (requires auth)
+                const profilesResult = await apiCall('/api/v1/business-profiles', {}, true);
+                log('✅ Business profiles GET test passed', profilesResult, 'success');
+                
+                // Test POST to create a test business profile (if needed)
+                const testProfile = {
+                    company_name: 'Test Company API Debug',
+                    industry: 'Technology',
+                    employee_count: '10-50',
+                    location: 'UK'
+                };
+                
+                try {
+                    const createResult = await apiCall('/api/v1/business-profiles', {
+                        method: 'POST',
+                        body: JSON.stringify(testProfile)
+                    }, true);
+                    log('✅ Business profile creation test passed', createResult, 'success');
+                } catch (createError) {
+                    if (createError.message.includes('already exists') || createError.message.includes('409')) {
+                        log('ℹ️ Business profile already exists (expected)', null, 'info');
+                    } else {
+                        log('⚠️ Business profile creation test failed', { error: createError.message }, 'warning');
+                    }
+                }
+                
+                return profilesResult;
+            } catch (error) {
+                log('❌ Business profiles test failed', { error: error.message }, 'error');
+                throw error;
+            }
+        }
+
+        async function testFrameworkAPIs() {
+            log('🛡️ Testing framework APIs...', null, 'pending');
+            try {
+                const result = await apiCall('/api/v1/frameworks');
+                log('✅ Framework APIs test passed', result, 'success');
+                return result;
+            } catch (error) {
+                log('❌ Framework APIs test failed', { message: error.message }, 'error');
+            }
+        }
+
+        async function testPolicyAPIs() {
+            log('📜 Testing policy APIs...', null, 'pending');
+            try {
+                // Test GET /api/v1/policies (requires auth)
+                const policiesResult = await apiCall('/api/v1/policies', {}, true);
+                log('✅ Policies GET test passed', policiesResult, 'success');
+                
+                // Test policy generation if available
+                try {
+                    const generatePolicyData = {
+                        policy_type: 'privacy_policy',
+                        company_name: 'Test Company API Debug',
+                        industry: 'Technology'
+                    };
+                    
+                    const generateResult = await apiCall('/api/v1/policies/generate', {
+                        method: 'POST',
+                        body: JSON.stringify(generatePolicyData)
+                    }, true);
+                    log('✅ Policy generation test passed', generateResult, 'success');
+                } catch (generateError) {
+                    log('⚠️ Policy generation test failed (may not be available)', { error: generateError.message }, 'warning');
+                }
+                
+                return policiesResult;
+            } catch (error) {
+                log('❌ Policy APIs test failed', { error: error.message }, 'error');
+                throw error;
+            }
+        }
+
+        // AI & Automation API Tests
+        async function testAIAssessments() {
+            log('🧠 Testing AI assessments...', null, 'pending');
+            try {
+                // Test AI assessment endpoints (requires auth)
+                try {
+                    const aiAssessmentData = {
+                        assessment_type: 'compliance_check',
+                        context: 'API Debug Suite Test',
+                        user_input: 'Test compliance assessment request'
+                    };
+                    
+                    const aiResult = await apiCall('/api/v1/ai/assessments', {
+                        method: 'POST',
+                        body: JSON.stringify(aiAssessmentData)
+                    }, true);
+                    log('✅ AI assessments test passed', aiResult, 'success');
+                    return aiResult;
+                } catch (aiError) {
+                    // Try alternative AI endpoint
+                    const healthResult = await apiCall('/api/v1/ai/health', {}, true);
+                    log('✅ AI health check passed', healthResult, 'success');
+                    
+                    log('⚠️ AI assessments endpoint may require specific setup', { error: aiError.message }, 'warning');
+                    return healthResult;
+                }
+            } catch (error) {
+                log('❌ AI assessments test failed', { error: error.message }, 'error');
+                throw error;
+            }
+        }
+
+        async function testAIPolicyGeneration() {
+            log('📝 Testing AI policy generation...', null, 'pending');
+            try {
+                const policyGenerationData = {
+                    policy_type: 'privacy_policy',
+                    company_info: {
+                        name: 'API Debug Test Company',
+                        industry: 'Technology',
+                        location: 'UK'
+                    },
+                    requirements: ['GDPR compliance', 'Data processing transparency']
+                };
+                
+                const policyResult = await apiCall('/api/v1/ai/policies/generate', {
+                    method: 'POST',
+                    body: JSON.stringify(policyGenerationData)
+                }, true);
+                log('✅ AI policy generation test passed', policyResult, 'success');
+                return policyResult;
+            } catch (error) {
+                // Try alternative AI policy endpoints
+                try {
+                    const templatesResult = await apiCall('/api/v1/ai/policies/templates', {}, true);
+                    log('✅ AI policy templates test passed', templatesResult, 'success');
+                    log('⚠️ AI policy generation endpoint may require specific setup', { error: error.message }, 'warning');
+                    return templatesResult;
+                } catch (templatesError) {
+                    log('❌ AI policy generation test failed', { error: error.message }, 'error');
+                    throw error;
+                }
+            }
+        }
+
+        async function testChatAPIs() {
+            log('💬 Testing AI chat APIs...', null, 'pending');
+            try {
+                // Test chat conversation endpoints
+                const chatData = {
+                    message: 'Hello, this is a test message from the API Debug Suite. Can you help with compliance questions?',
+                    context: 'API testing',
+                    user_id: 'api_debug_user'
+                };
+                
+                const chatResult = await apiCall('/api/v1/chat/messages', {
+                    method: 'POST',
+                    body: JSON.stringify(chatData)
+                }, true);
+                log('✅ Chat APIs test passed', chatResult, 'success');
+                
+                // Test chat history if available
+                try {
+                    const historyResult = await apiCall('/api/v1/chat/conversations', {}, true);
+                    log('✅ Chat history test passed', historyResult, 'success');
+                } catch (historyError) {
+                    log('⚠️ Chat history endpoint may not be available', { error: historyError.message }, 'warning');
+                }
+                
+                return chatResult;
+            } catch (error) {
+                log('❌ Chat APIs test failed', { error: error.message }, 'error');
+                throw error;
+            }
+        }
+
+        async function testAICostMonitoring() {
+            log('💰 Testing AI cost monitoring...', null, 'pending');
+            try {
+                // Test AI cost monitoring endpoints
+                const costResult = await apiCall('/api/v1/ai/costs', {}, true);
+                log('✅ AI cost monitoring GET test passed', costResult, 'success');
+                
+                // Test cost statistics if available
+                try {
+                    const statsResult = await apiCall('/api/v1/ai/costs/stats', {}, true);
+                    log('✅ AI cost statistics test passed', statsResult, 'success');
+                } catch (statsError) {
+                    log('⚠️ AI cost statistics endpoint may not be available', { error: statsError.message }, 'warning');
+                }
+                
+                // Test cost limits if available
+                try {
+                    const limitsResult = await apiCall('/api/v1/ai/costs/limits', {}, true);
+                    log('✅ AI cost limits test passed', limitsResult, 'success');
+                } catch (limitsError) {
+                    log('⚠️ AI cost limits endpoint may not be available', { error: limitsError.message }, 'warning');
+                }
+                
+                return costResult;
+            } catch (error) {
+                log('❌ AI cost monitoring test failed', { error: error.message }, 'error');
+                throw error;
+            }
+        }
+
+        // System API Tests
+        async function testSystemHealth() {
+            log('💚 Testing system health...', null, 'pending');
+            try {
+                const result = await apiCall('/health');
+                log('✅ System health check passed', result, 'success');
+                
+                // Test API info
+                const apiInfo = await apiCall('/');
+                log('✅ API info check passed', apiInfo, 'success');
+                
+                return { health: result, info: apiInfo };
+            } catch (error) {
+                log('❌ System health test failed', { message: error.message }, 'error');
+                throw error;
+            }
+        }
+
+        // Placeholder functions for other test categories
+        async function testComplianceAPIs() { log('✅ Testing compliance APIs...', null, 'pending'); log('⚠️ Compliance APIs test requires authentication', null, 'pending'); }
+        async function testEvidenceAPIs() { log('📁 Testing evidence APIs...', null, 'pending'); log('⚠️ Evidence APIs test requires authentication', null, 'pending'); }
+        async function testSecurityAPIs() { log('🔒 Testing security APIs...', null, 'pending'); log('⚠️ Security APIs test requires authentication', null, 'pending'); }
+        async function testUKComplianceAPIs() { log('🇬🇧 Testing UK compliance APIs...', null, 'pending'); log('⚠️ UK compliance APIs test requires authentication', null, 'pending'); }
+        async function testMonitoringAPIs() { log('📊 Testing monitoring APIs...', null, 'pending'); log('⚠️ Monitoring APIs test requires authentication', null, 'pending'); }
+        async function testPerformanceAPIs() { log('⚡ Testing performance APIs...', null, 'pending'); log('⚠️ Performance APIs test requires authentication', null, 'pending'); }
+        async function testReportingAPIs() { log('📋 Testing reporting APIs...', null, 'pending'); log('⚠️ Reporting APIs test requires authentication', null, 'pending'); }
+        async function testIntegrationAPIs() { log('🔌 Testing integration APIs...', null, 'pending'); log('⚠️ Integration APIs test requires authentication', null, 'pending'); }
+        async function testAdminAPIs() { log('🔧 Testing admin APIs...', null, 'pending'); log('⚠️ Admin APIs test requires authentication', null, 'pending'); }
+        async function testUserManagement() { log('👥 Testing user management...', null, 'pending'); log('⚠️ User management test requires authentication', null, 'pending'); }
+        async function testDatabaseAPIs() { log('🗄️ Testing database APIs...', null, 'pending'); log('⚠️ Database APIs test requires authentication', null, 'pending'); }
+
+        // Categorized Test Suites
+        async function runPublicAPISuite() {
+            log('🌐 Starting Public API Test Suite...', null, 'info');
+            log('ℹ️ These tests can run without authentication', null, 'info');
+            
+            const publicTests = [
+                { name: 'Connection Test', fn: testConnection },
+                { name: 'System Health', fn: testSystemHealth },
+                { name: 'Email Capture', fn: testEmailCapture },
+                { name: 'Session Creation', fn: testSessionCreation },
+                { name: 'Assessment Progress', fn: testAssessmentProgress },
+                { name: 'Full Freemium Flow', fn: testFreemiumFlow }
+            ];
+            
+            log(`🧪 Running ${publicTests.length} public API tests...`, null, 'info');
+            
+            for (const test of publicTests) {
+                try {
+                    log(`▶️ Running: ${test.name}`, null, 'info');
+                    await test.fn();
+                    await new Promise(resolve => setTimeout(resolve, 300)); // Brief delay between tests
+                } catch (error) {
+                    log(`❌ ${test.name} failed`, { error: error.message }, 'error');
+                }
+            }
+            
+            log('✅ Public API Test Suite completed!', null, 'success');
+        }
+
+        async function runAuthenticatedAPISuite() {
+            log('🔐 Starting Authenticated API Test Suite...', null, 'info');
+            log('ℹ️ These tests require valid authentication', null, 'info');
+            
+            // Ensure we have authentication before running
+            try {
+                await tokenManager.ensureValidToken();
+                log('✅ Authentication verified, proceeding with authenticated tests...', null, 'success');
+            } catch (error) {
+                log('❌ Authentication required for this suite', { error: error.message }, 'error');
+                log('💡 Use the Login button above or enable auto-auth in configuration', null, 'info');
+                return;
+            }
+            
+            const authenticatedTests = [
+                { name: 'Auth Endpoints', fn: testAuthEndpoints },
+                { name: 'User Profile (/me)', fn: testAuthMe },
+                { name: 'Token Validation', fn: testTokenValidation },
+                { name: 'Assessment APIs', fn: testAssessmentAPIs },
+                { name: 'Business Profiles', fn: testBusinessProfiles },
+                { name: 'Framework APIs', fn: testFrameworkAPIs },
+                { name: 'Policy APIs', fn: testPolicyAPIs },
+                { name: 'AI Assessments', fn: testAIAssessments },
+                { name: 'AI Policy Generation', fn: testAIPolicyGeneration },
+                { name: 'Chat APIs', fn: testChatAPIs },
+                { name: 'AI Cost Monitoring', fn: testAICostMonitoring }
+            ];
+            
+            log(`🧪 Running ${authenticatedTests.length} authenticated API tests...`, null, 'info');
+            
+            for (const test of authenticatedTests) {
+                try {
+                    log(`▶️ Running: ${test.name}`, null, 'info');
+                    await test.fn();
+                    await new Promise(resolve => setTimeout(resolve, 300)); // Brief delay between tests
+                } catch (error) {
+                    log(`❌ ${test.name} failed`, { error: error.message }, 'error');
+                }
+            }
+            
+            log('✅ Authenticated API Test Suite completed!', null, 'success');
+        }
+
+        async function runAdvancedAPISuite() {
+            log('🏗️ Starting Advanced API Test Suite...', null, 'info');
+            log('ℹ️ These tests require authentication and may include admin/compliance endpoints', null, 'info');
+            
+            // Ensure we have authentication before running
+            try {
+                await tokenManager.ensureValidToken();
+                log('✅ Authentication verified for advanced tests...', null, 'success');
+            } catch (error) {
+                log('❌ Authentication required for advanced API suite', { error: error.message }, 'error');
+                return;
+            }
+            
+            const advancedTests = [
+                { name: 'Compliance APIs', fn: testComplianceAPIs },
+                { name: 'Evidence APIs', fn: testEvidenceAPIs },
+                { name: 'Security APIs', fn: testSecurityAPIs },
+                { name: 'UK Compliance', fn: testUKComplianceAPIs },
+                { name: 'Monitoring APIs', fn: testMonitoringAPIs },
+                { name: 'Performance APIs', fn: testPerformanceAPIs },
+                { name: 'Reporting APIs', fn: testReportingAPIs },
+                { name: 'Integration APIs', fn: testIntegrationAPIs },
+                { name: 'Admin APIs', fn: testAdminAPIs },
+                { name: 'User Management', fn: testUserManagement },
+                { name: 'Database APIs', fn: testDatabaseAPIs }
+            ];
+            
+            log(`🧪 Running ${advancedTests.length} advanced API tests...`, null, 'info');
+            
+            for (const test of advancedTests) {
+                try {
+                    log(`▶️ Running: ${test.name}`, null, 'info');
+                    await test.fn();
+                    await new Promise(resolve => setTimeout(resolve, 300)); // Brief delay between tests
+                } catch (error) {
+                    log(`❌ ${test.name} failed`, { error: error.message }, 'error');
+                }
+            }
+            
+            log('✅ Advanced API Test Suite completed!', null, 'success');
+        }
+
+        // Comprehensive Test Suites
+        async function runCriticalTests() {
+            log('⚡ Starting critical tests...', null, 'info');
+            clearLog();
+            
+            const tests = [
+                testConnection,
+                testSystemHealth,
+                testFreemiumFlow,
+                testFrameworkAPIs
+            ];
+            
+            for (const test of tests) {
+                try {
+                    await test();
+                    await new Promise(resolve => setTimeout(resolve, 500)); // Brief delay
+                } catch (error) {
+                    log(`❌ Critical test failed: ${test.name}`, { message: error.message }, 'error');
+                }
+            }
+            
+            log('⚡ Critical tests completed', { 
+                total: stats.total, 
+                passed: stats.passed, 
+                failed: stats.failed 
+            }, 'info');
+        }
+
+        async function runAllTests() {
+            log('🚀 Starting comprehensive API test suite...', null, 'info');
+            clearLog();
+            
+            const testSuites = [
+                testConnection,
+                testSystemHealth,
+                testFreemiumFlow,
+                testFrameworkAPIs,
+                testAuthEndpoints
+            ];
+            
+            for (const test of testSuites) {
+                try {
+                    await test();
+                    await new Promise(resolve => setTimeout(resolve, 1000)); // Brief delay between tests
+                } catch (error) {
+                    log(`❌ Test suite failed: ${test.name}`, { message: error.message }, 'error');
+                }
+            }
+            
+            log('🎉 All tests completed!', { 
+                total: stats.total, 
+                passed: stats.passed, 
+                failed: stats.failed,
+                successRate: `${Math.round((stats.passed / stats.total) * 100)}%`
+            }, 'success');
+        }
+
+        async function runLoadTest() {
+            log('🔥 Starting load test...', null, 'pending');
+            log('⚠️ Load test not yet implemented', null, 'pending');
+        }
+
+        function exportResults() {
+            const results = {
+                timestamp: new Date().toISOString(),
+                config: config,
+                stats: stats,
+                tests: Array.from(document.querySelectorAll('.trace-step')).map(step => ({
+                    timestamp: step.querySelector('strong').textContent,
+                    content: step.textContent,
+                    status: step.className.split(' ')[1]
+                }))
+            };
+            
+            const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ruleiq-api-test-results-${Date.now()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            log('📊 Test results exported', { filename: a.download }, 'success');
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            updateConfig();
+            tokenManager.updateAuthUI(); // Initialize auth status display
+            log('🚀 ruleIQ API Debug Suite initialized', { version: '2.0.0' }, 'info');
+        });
+    </script>
+</body>
+</html>

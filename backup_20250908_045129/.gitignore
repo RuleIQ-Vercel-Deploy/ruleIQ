@@ -1,0 +1,214 @@
+# -----------------------------------------------------------------------------
+
+# Windsurf Ignore File (.windsurfignore)
+
+# Any path or glob listed below will be excluded from Windsurf’s AI indexing
+
+# and autonomous edits.  Syntax is identical to .gitignore.
+
+# -----------------------------------------------------------------------------
+
+\############################
+
+1. Dependency directories
+
+node_modules/
+bower_components/
+vendor/
+.venv/
+venv/
+env/
+
+Python byte‑code caches (match anywhere)
+
+**/pycache/
+
+Exclude all compiled Python files
+
+*.py[cod]
+
+2. Build / output artefacts Build / output artefacts
+
+dist/
+build/
+out/
+target/
+coverage/
+*.egg-info/
+
+3. Packaging leftovers
+
+*.tar.gz
+*.whl
+
+4. Logs & runtime state
+
+*.log
+.log.
+
+Coverage DB created by pytest / coverage.py
+
+.coverage
+coverage.*
+
+IDE & tooling debug logs
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pip-log.txt
+*.pid
+
+5. Environment & secrets Environment & secrets
+
+.env
+.env.*
+*.pem
+*.key
+*.crt
+*.pfx
+secrets/
+credentials.json
+
+6. IDE / editor metadata
+
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Augment local settings
+.augment-guidelines/settings.local.json
+
+7. OS‑specific cruft
+
+.DS_Store
+Thumbs.db
+*.swp
+*~
+*.bak
+
+8. Test artefacts
+
+pytest_cache/
+test-results/
+junit-results/
+coverage.xml
+
+9. Temporary files
+
+tmp/
+Temp/
+*.tmp
+*.cache
+
+10. Generated docs
+
+docs/_build/
+
+11. Container & infrastructure
+
+.docker/
+*.tfstate
+.tfstate.
+
+12. Lock‑files (exclude from LLM, keep in VCS)
+
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+13. Large binary assets
+
+*.iso
+*.dmg
+*.zip
+*.rar
+*.7z
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.mp4
+*.mov
+
+-----------------------------------------------------------------------------
+
+End of file
+
+-----------------------------------------------------------------------------
+
+
+# Environment files - Security Critical
+!.env.example
+.env
+.env.local
+.env.*.local
+.env.production
+.env.staging
+
+# Secure key storage directory
+.secrets/
+**/.secrets/
+
+# Cache files with potential secrets
+.serena/cache/
+*/.serena/cache/
+**/.serena/cache/
+
+# Debug and testing tools - keep out of version control
+debug-suite.html
+*.pkl
+
+# Backup environment files
+.env.local.backup*
+.env.backup*
+# Environment files
+!.env.example
+.env
+.env.local
+.env.*.local
+
+# Cache files with potential secrets
+.serena/cache/
+*/.serena/cache/
+**/.serena/cache/
+.claude/
+**/claude/
+**/.claude/
+# Debug and testing tools - keep out of version control
+debug-suite.html
+
+# Tool-specific session files (Added for cleanup)
+#.claude/serena-*.sh
+#.claude/serena-*.json
+#.claude/serena-*.flag
+#.serena/memories/
+.cursor/rules/
+.windsurfrules
+.augment-guidelines/
+
+# Design iterations and generated files
+.superdesign/
+ruleIQ*.html
+
+# Runtime and schedule files
+celerybeat-schedule*
+
+# Context and analysis files (auto-generated)
+.context/
+
+# Legacy and migration folders
+frontend/legacy/
+results.json
+postman/environment-doppler-synced.json
+postman/newman-environment-doppler.json
+
+# Test artifacts and configs
+test_artifacts/
+test_configs/docker-compose.test.yml
+*.coverage
+coverage.xml
+test-*.html

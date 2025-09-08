@@ -1,0 +1,11 @@
+ignoredBuiltDependencies:
+  - core-js
+  - core-js-pure
+  - unrs-resolver
+
+onlyBuiltDependencies:
+  - '@sentry/cli'
+  - '@swc/core'
+  - esbuild
+  - msw
+  - sharp

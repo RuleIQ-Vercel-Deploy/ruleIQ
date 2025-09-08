@@ -1,0 +1,315 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for manual deployment'
+        required: true
+        default: 'Manual production deployment'
+      skip_approval:
+        description: 'Skip manual approval (emergency only)'
+        type: boolean
+        default: false
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  # Pre-deployment validation
+  validate-deployment:
+    name: Validate Deployment Readiness
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Check staging deployment
+        run: |
+          echo "Checking if staging deployment is healthy..."
+          # Verify staging is running the same or earlier version
+          # curl -f https://staging.ruleiq.com/health || exit 1
+      
+      - name: Verify all tests passed
+        run: |
+          echo "Verifying CI pipeline status..."
+          # Check that all CI checks passed on this commit
+      
+      - name: Check for blocking issues
+        run: |
+          echo "Checking for any blocking issues..."
+          # Query GitHub issues for blocking labels
+          # gh issue list --label "blocking-production" --state open
+
+  # Manual approval gate (except for emergency deployments)
+  approval:
+    name: Manual Approval
+    runs-on: ubuntu-latest
+    needs: validate-deployment
+    if: github.event.inputs.skip_approval != 'true'
+    environment:
+      name: production-approval
+    
+    steps:
+      - name: Request approval
+        run: |
+          echo "🔄 Deployment to production requires manual approval"
+          echo "Please review the changes and approve in GitHub Actions"
+
+  # Build and Push Production Image
+  build-and-push:
+    name: Build and Push Production Image
+    runs-on: ubuntu-latest
+    needs: [validate-deployment, approval]
+    if: always() && (needs.approval.result == 'success' || github.event.inputs.skip_approval == 'true')
+    permissions:
+      contents: read
+      packages: write
+    
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tags }}
+      image-digest: ${{ steps.build.outputs.digest }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=sha,prefix=prod-
+            type=raw,value=production
+            type=raw,value=latest
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+      
+      - name: Build and push Docker image
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            BUILD_DATE=${{ github.event.head_commit.timestamp }}
+            VCS_REF=${{ github.sha }}
+            VERSION=prod-${{ github.sha }}
+            ENVIRONMENT=production
+
+  # Create backup before deployment
+  backup-current-deployment:
+    name: Backup Current Deployment
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    
+    steps:
+      - name: Create database backup
+        run: |
+          echo "Creating database backup..."
+          # doppler run --config=prd -- pg_dump $DATABASE_URL > backup-$(date +%Y%m%d-%H%M%S).sql
+          # Upload to S3 or other backup storage
+      
+      - name: Tag current production image
+        run: |
+          echo "Tagging current production image for rollback..."
+          # docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:production
+          # docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:production \
+          #   ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:rollback-$(date +%Y%m%d-%H%M%S)
+          # docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:rollback-$(date +%Y%m%d-%H%M%S)
+      
+      - name: Save deployment state
+        run: |
+          echo "Saving current deployment state..."
+          # Save current environment variables, configs, etc.
+
+  # Deploy to Production (Blue-Green Deployment)
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build-and-push, backup-current-deployment]
+    environment:
+      name: production
+      url: https://app.ruleiq.com
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Doppler CLI
+        uses: dopplerhq/cli-action@v3
+      
+      - name: Configure production credentials
+        run: |
+          echo "Configuring production deployment credentials..."
+          # Configure kubectl, AWS CLI, or other deployment tools
+      
+      - name: Fetch production secrets
+        run: |
+          doppler secrets download \
+            --no-file \
+            --format=env \
+            --config=prd \
+            --token=${{ secrets.DOPPLER_TOKEN_PRODUCTION }} > .env.production
+      
+      - name: Deploy to production (Blue environment)
+        run: |
+          echo "Deploying to Blue environment..."
+          echo "Image: ${{ needs.build-and-push.outputs.image-tag }}"
+          
+          # Deploy to blue environment first
+          # kubectl set image deployment/ruleiq-blue \
+          #   ruleiq=${{ needs.build-and-push.outputs.image-tag }} \
+          #   --namespace=production
+          
+          echo "Blue deployment completed"
+      
+      - name: Run database migrations
+        run: |
+          echo "Running production database migrations..."
+          # docker run --env-file=.env.production \
+          #   ${{ needs.build-and-push.outputs.image-tag }} \
+          #   alembic upgrade head
+      
+      - name: Health check on Blue
+        run: |
+          echo "Performing health check on Blue environment..."
+          sleep 60
+          # curl -f https://blue.ruleiq.com/health || exit 1
+          echo "Blue environment is healthy"
+      
+      - name: Run smoke tests on Blue
+        run: |
+          echo "Running smoke tests on Blue environment..."
+          # pytest tests/e2e/ -m "production_smoke" --base-url=https://blue.ruleiq.com
+      
+      - name: Switch traffic to Blue
+        run: |
+          echo "Switching production traffic to Blue environment..."
+          # Update load balancer or ingress to point to blue
+          # kubectl patch ingress ruleiq-ingress \
+          #   -p '{"spec":{"rules":[{"host":"app.ruleiq.com","http":{"paths":[{"backend":{"serviceName":"ruleiq-blue"}}]}}]}}'
+          echo "Traffic switched to Blue environment"
+      
+      - name: Monitor deployment
+        run: |
+          echo "Monitoring deployment for 5 minutes..."
+          # Monitor metrics, logs, error rates
+          sleep 300
+          echo "Deployment monitoring completed"
+
+  # Automated rollback on failure
+  rollback:
+    name: Automatic Rollback
+    runs-on: ubuntu-latest
+    needs: deploy-production
+    if: failure()
+    
+    steps:
+      - name: Initiate rollback
+        run: |
+          echo "⚠️ Deployment failed, initiating automatic rollback..."
+          
+          # Switch traffic back to green environment
+          # kubectl patch ingress ruleiq-ingress \
+          #   -p '{"spec":{"rules":[{"host":"app.ruleiq.com","http":{"paths":[{"backend":{"serviceName":"ruleiq-green"}}]}}]}}'
+          
+          echo "Rollback completed"
+      
+      - name: Restore database if needed
+        run: |
+          echo "Checking if database rollback is needed..."
+          # If migrations were applied, rollback
+          # alembic downgrade -1
+      
+      - name: Notify rollback
+        run: |
+          echo "❌ Production deployment failed and was rolled back"
+          echo "Rollback completed at $(date)"
+          # Send critical notifications
+
+  # Post-deployment validation
+  post-deployment-validation:
+    name: Post-Deployment Validation
+    runs-on: ubuntu-latest
+    needs: deploy-production
+    if: success()
+    
+    steps:
+      - name: Run full E2E tests
+        run: |
+          echo "Running full E2E test suite..."
+          # pytest tests/e2e/ --base-url=https://app.ruleiq.com
+      
+      - name: Performance testing
+        run: |
+          echo "Running performance tests..."
+          # Run load tests to verify performance
+      
+      - name: Security scanning
+        run: |
+          echo "Running security scans..."
+          # Run OWASP ZAP or similar security scanning
+      
+      - name: Update Green environment
+        run: |
+          echo "Updating Green environment to match Blue..."
+          # kubectl set image deployment/ruleiq-green \
+          #   ruleiq=${{ needs.build-and-push.outputs.image-tag }} \
+          #   --namespace=production
+          echo "Green environment updated for next deployment"
+
+  # Deployment notification
+  notify:
+    name: Deployment Notification
+    runs-on: ubuntu-latest
+    needs: [deploy-production, post-deployment-validation]
+    if: always()
+    
+    steps:
+      - name: Notify success
+        if: needs.deploy-production.result == 'success'
+        run: |
+          echo "✅ Production deployment successful!"
+          echo "Version: ${{ github.sha }}"
+          echo "URL: https://app.ruleiq.com"
+          echo "Deployed by: ${{ github.actor }}"
+          echo "Time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          # Send success notifications to Slack/Discord/Email
+      
+      - name: Notify failure
+        if: needs.deploy-production.result == 'failure'
+        run: |
+          echo "❌ Production deployment failed!"
+          echo "Failed version: ${{ github.sha }}"
+          echo "Automatic rollback was triggered"
+          # Send failure notifications to Slack/Discord/Email
+      
+      - name: Create deployment record
+        run: |
+          echo "Creating deployment record..."
+          # Log deployment to tracking system
+          # Create GitHub release
+          # Update deployment dashboard

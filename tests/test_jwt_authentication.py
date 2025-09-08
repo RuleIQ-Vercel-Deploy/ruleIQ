@@ -26,7 +26,7 @@ from api.dependencies.auth import (
     ALGORITHM
 )
 from api.dependencies.token_blacklist import (
-    TokenBlacklistService,
+    EnhancedTokenBlacklist as TokenBlacklistService,
     blacklist_token,
     is_token_blacklisted
 )

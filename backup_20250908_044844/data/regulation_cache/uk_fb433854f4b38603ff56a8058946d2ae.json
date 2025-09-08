@@ -1,0 +1,433 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/ukpga/2021/1/data.xml",
+  "fetched_at": "2025-08-31T18:16:13.130474",
+  "metadata": {
+    "title": "Pension Schemes Act 2021",
+    "description": "An Act to make provision about pension schemes.",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "section-2",
+      "text": "21A benefit provided under a pension scheme is a  \u201cqualifying benefit\u201d if\u2014athe benefit is provided out of the available assets of the scheme,bunder the rules of the scheme, the rate or amount of the benefit is subject to periodic adjustments designed to achieve a balance between the value of the available assets of the scheme and the required amount, andcthe benefit is not of a description specified in regulations made by the Secretary of State.2In subsection (1)\u2014\u201cthe available assets of the sch",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-3",
+      "text": "31A pension scheme is a  \u201cqualifying scheme\u201d if it meets the requirements in this section.2The scheme must be an occupational pension scheme established under an irrevocable trust by a person or persons to whom section 1(2)(a)\n\t\t\t\t\t(employer) of the Pension Schemes Act 1993 applied when the scheme was established (without other persons).3The scheme must be used, or intended to be used, only by\u2014aa single employer, orbtwo or more employers that are connected with each other.4The scheme must not be",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-7",
+      "text": "71A person may not operate a collective money purchase scheme unless the scheme is authorised.2Section 10 of the Pensions Act 1995 (civil penalties) applies to a person who breaches subsection (1).3If the Pensions Regulator becomes aware that a collective money purchase scheme is being operated without authorisation, it must notify the trustees of the scheme that the scheme is not authorised.4The notification must\u2014aexplain that the notification is a triggering event (see section 31), andbinclude",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-8",
+      "text": "81The trustees of a collective money purchase scheme may apply to the Pensions Regulator for authorisation.2An application must be made in the manner and form specified by the Pensions Regulator.3An application must include\u2014athe scheme's viability report and viability certificate (see section 13), andbthe scheme's continuity strategy (see section 17).4The Secretary of State may by regulations\u2014aspecify other information that must be included in an application;brequire a fee to be paid to the Pens",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-9",
+      "text": "91Where an application is made for authorisation of a collective money purchase scheme under section 8, the Pensions Regulator must decide whether it is satisfied that the scheme meets the authorisation criteria.2The Pensions Regulator must make that decision within the period of six months beginning with the day on which the Pensions Regulator received the application.3The authorisation criteria are\u2014athat the persons involved in the scheme are fit and proper persons (see section 11),bthat the d",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-11",
+      "text": "111This section applies for the purposes of enabling the Pensions Regulator to decide whether it is satisfied that the persons involved in a collective money purchase scheme are fit and proper persons (see section 9(3)(a)).2The Pensions Regulator must assess whether each of the following is a fit and proper person to act in relation to the scheme in the capacity mentioned\u2014aa person who establishes the scheme;ba trustee;ca person who (alone or with others) has power to appoint or remove a trustee",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-12",
+      "text": "121This section applies for the purposes of enabling the Pensions Regulator to decide whether it is satisfied that the design of a collective money purchase scheme is sound (see section 9(3)(b)).2In deciding whether the design of a collective money purchase scheme is sound, the Pensions Regulator must take into account\u2014athe scheme's viability report and viability certificate (see section 13);bany matters specified in regulations made by the Secretary of State.3Regulations under subsection (2)(b)",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-13",
+      "text": "131The trustees of a collective money purchase scheme must\u2014aprepare a document explaining the design of the scheme and the reasons that they consider the design to be sound (a  \u201cviability report\u201d), andbobtain a certificate from the scheme actuary certifying that, in the actuary's opinion, the design of the scheme is sound (a  \u201cviability certificate\u201d).2The scheme actuary may not give a viability certificate unless satisfied that the scheme has rules that meet the requirements of section 18 and an",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-14",
+      "text": "141This section applies for the purposes of enabling the Pensions Regulator to decide whether it is satisfied that a collective money purchase scheme is financially sustainable (see section 9(3)(c)).2In order to be satisfied that a collective money purchase scheme is financially sustainable, the Pensions Regulator must be satisfied that the scheme has sufficient financial resources to meet the following costs\u2014athe costs of setting up and running the scheme, andbin the event of a triggering event",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-15",
+      "text": "151This section applies for the purposes of enabling the Pensions Regulator to decide whether it is satisfied that a collective money purchase scheme has adequate systems and processes for communicating with members and others (see section 9(3)(d)).2In order to be satisfied that a scheme has adequate systems and processes for communicating with members and others, the Pensions Regulator must be satisfied that the scheme has adequate systems and processes\u2014afor providing information in relation to",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-16",
+      "text": "161This section applies for the purposes of enabling the Pensions Regulator to decide whether it is satisfied that the systems and processes used in running a collective money purchase scheme are sufficient to ensure that it is run effectively (see section 9(3)(e)).2In deciding whether it is satisfied that the systems and processes used in running the scheme are sufficient for that purpose, the Pensions Regulator must take into account any matters specified in regulations made by the Secretary o",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-17",
+      "text": "171This section applies for the purposes of enabling the Pensions Regulator to decide whether it is satisfied that a collective money purchase scheme has an adequate continuity strategy (see section 9(3)(f)).2The trustees of a collective money purchase scheme must prepare a document addressing how the interests of members of the scheme are to be protected if a triggering event (see section 31) occurs in relation to the scheme (a  \u201ccontinuity strategy\u201d).3A continuity strategy must include a secti",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-18",
+      "text": "181A collective money purchase scheme must have rules about how the rate or amount of benefits provided under the scheme is to be determined.2The rules must include\u2014arules for determining the available assets of the scheme and their value,brules for determining the required amount, andcrules about how the rate or amount of benefits provided under the scheme is to be adjusted from time to time, including rules about when adjustments are to take effect.3In this section  \u201cthe available assets of th",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-19",
+      "text": "191The trustees of a collective money purchase scheme must obtain the advice of the scheme actuary before making a decision as to the methods and assumptions to be used in determining the matters mentioned in section 18(1) and (2).2The Secretary of State may by regulations specify requirements with which the scheme actuary must comply when advising the trustees in accordance with subsection (1).3Regulations under subsection (2) may, among other things, require the scheme actuary to have regard t",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-20",
+      "text": "201The trustees of a collective money purchase scheme must obtain actuarial valuations in accordance with this section and regulations under subsection (5).2In this Part  \u201cactuarial valuation\u201d means a report prepared and signed by the scheme actuary setting out\u2014athe available assets of the scheme and their value;bthe required amount;cwhether an adjustment to the rate or amount of benefits provided under the scheme is required and, if so, the amount of the adjustment.3In this section  \u201cthe availa",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-21",
+      "text": "21A scheme actuary who prepares an actuarial valuation in pursuance of a provision of this Part must certify that the matters mentioned in section 20(2) have been determined in accordance with the scheme rules.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-22",
+      "text": "221This section applies where an adjustment to the rate or amount of benefits provided under a collective money purchase scheme is required in accordance with the scheme rules.2The trustees must as soon as is reasonably practicable report in writing to the Pensions Regulator if the adjustment\u2014ais not made in accordance with the most recent actuarial valuation, orbdoes not take effect in accordance with the scheme rules.3A report under subsection (2) must\u2014aexplain why the adjustment was not made ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-23",
+      "text": "231The powers conferred by this section are exercisable where it appears to the Pensions Regulator (as a result of a report made to it or otherwise) that the trustees of a collective money purchase scheme have without good reason\u2014afailed to comply with a requirement imposed by or under this Part to obtain an actuarial valuation, orbfailed to secure that any adjustment to the rate or amount of benefits provided under the scheme which is required in accordance with the scheme rules\u2014iis made in acc",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-25",
+      "text": "251Chapter 1 of Part 4ZA of the Pension Schemes Act 1993 (transfer rights: general) is amended as follows.2In section 93 (scope of Chapter 1)\u2014ain subsection (7)\n\t\t\t\t\t\t\t(crystallisation events), in paragraph (b), after  \u201cmoney purchase benefits\u201d insert \u201c\n                        other than collective money purchase benefits\n                      \u201d;bafter subsection (10) insert\u201410AWhere a pension scheme is divided into sections, each section that is a collective money purchase scheme for the purpos",
+      "type": "mandatory",
+      "keywords": [
+        "consent"
+      ]
+    },
+    {
+      "id": "",
+      "text": "99A1If the trustees receive an application under section 95 relating to money purchase benefits that are collective money purchase benefits\u2014athey must give the member notice in writing of the cash equivalent that relates to those benefits, andbthey must not without the written consent of the member enter into an agreement with a third party to use the member's cash equivalent in a way specified in section 95(2) before the end of the period mentioned in subsection (2).2The period referred to in s",
+      "type": "mandatory",
+      "keywords": [
+        "consent"
+      ]
+    },
+    {
+      "id": "section-26",
+      "text": "261The Pensions Regulator must maintain and publish a list of authorised collective money purchase schemes.2The list\u2014amust identify each authorised collective money purchase scheme by name, andbmay include any other information that the Pensions Regulator considers appropriate.",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-27",
+      "text": "271The Pensions Regulator may by notice require the trustees of a collective money purchase scheme to submit a supervisory return.2The Secretary of State may make regulations setting out the information that the Pensions Regulator may require in a supervisory return.3The notice must specify\u2014athe information required to be included in the return,bthe manner and form in which the return must be submitted, andcthe period (of at least 28 days) within which the return must be submitted.4The trustees ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-28",
+      "text": "281Where a person mentioned in subsection (2) becomes aware of the fact that a significant event has occurred in relation to an authorised collective money purchase scheme, the person must (subject to subsections (6) and (7)) give notice of that fact, in writing, to the Pensions Regulator as soon as reasonably practicable.2The persons are\u2014aa trustee of the scheme;ban employer in relation to the scheme;ca person who (alone or with others) has power to appoint or remove a trustee;da person who (al",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-29",
+      "text": "291The Pensions Regulator may give a risk notice to the trustees of a collective money purchase scheme if the Regulator considers that\u2014athere is an issue of concern in relation to the scheme, andbthe scheme will breach the authorisation criteria, or is likely to breach them, if the issue is not resolved.2A risk notice is a notice that requires the trustees of the scheme to submit to the Pensions Regulator a plan (a  \u201cresolution plan\u201d) setting out proposals for resolving the issue of concern.3A r",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-30",
+      "text": "301If the Pensions Regulator stops being satisfied that an authorised collective money purchase scheme meets the authorisation criteria, it may decide to withdraw the scheme's authorisation.2A warning notice under the standard procedure or a determination notice under the special procedure given in relation to a decision under subsection (1) must\u2014aexplain that the issue of the notice is a triggering event (see section 31), andbinclude an explanation of the trustees' duties under sections 31 to 4",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-31",
+      "text": "311A triggering event occurs in relation to a collective money purchase scheme if an event within the second column of the triggering events table occurs in relation to it, subject to subsection (2).2An event within any of items 4 to 9 of the triggering events table is not a triggering event in relation to a collective money purchase scheme if it occurs within an existing triggering event period for the scheme (see section 32).3A triggering event occurs on the date specified in relation to the e",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-33",
+      "text": "331If a triggering event listed in the first column of the table in subsection (2) occurs in relation to a collective money purchase scheme, each person specified in relation to the event in the second column of that table must (subject to subsections (12) and (13)) notify the Pensions Regulator of the occurrence of the event.2The table is\u2014EventSpecified personItem 4 triggering event (an insolvency event occurs in relation to an employer or a relevant former employer)The employer or relevant for",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-34",
+      "text": "341If a triggering event occurs in relation to a collective money purchase scheme, the trustees must pursue one of the continuity options.2The continuity options are\u2014acontinuity option 1 (discharge of liabilities and winding up)\n\t\t\t\t\t\t\t(see section 36);bcontinuity option 2 (resolving triggering event)\n\t\t\t\t\t\t\t(see section 37);ccontinuity option 3 (conversion to closed scheme)\n\t\t\t\t\t\t\t(see section 38).3The trustees must pursue continuity option 1\u2014aif the triggering event is an item 1 or 2 triggerin",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-36",
+      "text": "361Where the trustees of a collective money purchase scheme are required, or decide, to pursue continuity option 1, they must\u2014aquantify, in the case of each beneficiary, the amount that represents the value of the beneficiary's accrued rights to benefits under the scheme;bformulate a proposal for discharging the scheme's liability to each beneficiary in respect of those rights, in one of the ways set out in subsection (2);cnotify each employer and relevant former employer, and each beneficiary, ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-37",
+      "text": "371Where the trustees of a collective money purchase scheme decide to pursue continuity option 2, they must attempt to resolve the triggering event.2The trustees must notify the Pensions Regulator when they consider that the triggering event has been resolved.3The notification must\u2014aset out how the trustees consider that the triggering event has been resolved;bbe given before the end of the period specified in regulations made by the Secretary of State.4After receiving the notification, the Pens",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-38",
+      "text": "381This section applies where the trustees of a collective money purchase scheme decide to pursue continuity option 3.2The trustees must notify the Pensions Regulator when they consider that preparations for the conversion of the scheme into a closed scheme are complete.3The Secretary of State may by regulations require notification under subsection (2) to be given before the end of a period specified in the regulations.4If the Pensions Regulator is satisfied\u2014athat preparations for the conversio",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-39",
+      "text": "391If a triggering event occurs in relation to a collective money purchase scheme, the trustees must\u2014aproduce a document setting out how the interests of members of the scheme are to be protected following the occurrence of the event (an  \u201cimplementation strategy\u201d), andbsubmit it to the Pensions Regulator for approval before the end of a period specified in regulations made by the Secretary of State.This is subject to subsections (2)(a) and (3)(a).2If an item 1, 2 or 3 triggering event occurs wi",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-40",
+      "text": "401The Pensions Regulator may approve an implementation strategy only if it is satisfied that the strategy is adequate.2Subsections (3) to (6) apply for the purposes of enabling the Pensions Regulator to decide whether it is satisfied that an implementation strategy for a collective money purchase scheme is adequate.3An implementation strategy must include information about the levels of administration charges in relation to members of the scheme.4The information must\u2014arelate to the levels of ad",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-41",
+      "text": "411When the Pensions Regulator has notified the trustees of a collective money purchase scheme that an implementation strategy relating to the scheme is approved, the trustees must\u2014apursue the continuity option identified in the strategy, andbtake such other steps as are identified in the strategy in order to carry it out.2The Secretary of State may by regulations require the trustees of a collective money purchase scheme to make available an approved implementation strategy relating to the sche",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-43",
+      "text": "431During a triggering event period for a collective money purchase scheme, the trustees must submit reports to the Pensions Regulator.2The first report must be submitted before the end of a period specified in regulations made by the Secretary of State.3Subsequent reports must be submitted at intervals specified by the Pensions Regulator.4The reports must\u2014areport on progress in carrying out the implementation strategy,brecord events or decisions of a description specified in regulations made by",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-44",
+      "text": "441This section applies during a triggering event period for a collective money purchase scheme.2The Pensions Regulator may make a pause order in relation to the scheme if either of the following two conditions is met.3Condition 1 is that the Pensions Regulator is satisfied that making a pause order will help the trustees to carry out the implementation strategy.4Condition 2 is that the Pensions Regulator is satisfied that\u2014athere is, or is likely to be if a pause order is not made, an immediate ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-45",
+      "text": "451During a triggering event period for a collective money purchase scheme, the trustees must not\u2014aimpose administration charges on or in respect of members at levels above those set out in the implementation strategy,bimpose new administration charges on or in respect of members, orcimpose administration charges on or in respect of a member in consequence of the member leaving, or deciding to leave, the scheme during that period.2The trustees of a receiving scheme that is a collective money pur",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-46",
+      "text": "461The Secretary of State may by regulations require the trustees of a collective money purchase scheme to publish information relating to the scheme that is specified or described in the regulations.2Regulations under subsection (1) may, among other things\u2014arequire the trustees to publish a document specified or described in the regulations;brequire information or a document to be made available free of charge;crequire information or a document to be provided to a person in a form or by means s",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    }
+  ],
+  "penalties": [
+    {
+      "type": "financial",
+      "amount": "\u00a350,000",
+      "context": "fixed penalty notices and escalating penalty notices112after section 77 of the pensions act 2004 (penalties relating to sections 72 to 75) insert\u2014fixed penalty notices77a1the regulator may issue a fix"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310,000",
+      "context": "fixed penalty notices and escalating penalty notices112after section 77 of the pensions act 2004 (penalties relating to sections 72 to 75) insert\u2014fixed penalty notices77a1the regulator may issue a fix"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000",
+      "context": "fixed penalty notices77a1the regulator may issue a fixed penalty notice to a person if it considers that the person\u2014ahas failed to comply with a notice under section 72 or 72a,bhas failed to comply wi"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310,000",
+      "context": "escalating penalty notices77b1the regulator may issue an escalating penalty notice to a person if it considers that the person has failed to comply with a notice under section 72 or 72a.2but the regul"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a31 million",
+      "context": "financial penalties115after section 88 of the pensions act 2004 insert\u2014financial penaltiesfinancial penalties88a1where the regulator is satisfied that by reason of an act this section applies to a per"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a31 million",
+      "context": "financial penalties88a1where the regulator is satisfied that by reason of an act this section applies to a person, the regulator may issue a notice to the person requiring the person to pay a penalty "
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a35,000,",
+      "context": "information from occupational pension schemes1191the pensions act 2004 is amended as follows.2after section 238c of the pensions act 2004 (inserted by section 118) insert\u2014information from occupational"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000,",
+      "context": "information from occupational pension schemes1191the pensions act 2004 is amended as follows.2after section 238c of the pensions act 2004 (inserted by section 118) insert\u2014information from occupational"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a35,000,",
+      "context": "compliance238g1regulations may make provision with a view to securing that the trustees or managers of a relevant occupational pension scheme comply with a provision of regulations under section 238d."
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000,",
+      "context": "compliance238g1regulations may make provision with a view to securing that the trustees or managers of a relevant occupational pension scheme comply with a provision of regulations under section 238d."
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a35,000,",
+      "context": "climate change risk1241the pensions act 1995 is amended as follows.2after section 41 insert\u2014climate change risk41a1regulations may impose requirements on the trustees or managers of an occupational pe"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000,",
+      "context": "climate change risk1241the pensions act 1995 is amended as follows.2after section 41 insert\u2014climate change risk41a1regulations may impose requirements on the trustees or managers of an occupational pe"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a35,000,",
+      "context": "sections 41a and 41b: compliance41c1regulations may make provision with a view to ensuring compliance with a provision of regulations under section 41a or 41b.2the regulations may in particular\u2014aprovi"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000,",
+      "context": "sections 41a and 41b: compliance41c1regulations may make provision with a view to ensuring compliance with a provision of regulations under section 41a or 41b.2the regulations may in particular\u2014aprovi"
+    }
+  ],
+  "enforcement": {
+    "authority": [
+      "Secretary of State",
+      "FCA"
+    ],
+    "powers": [
+      "1111Section 73 of the Pensions Act 2004 (inspection of premises) is amended as follows.2In subsection (2)\u2014aafter paragraph (da) insert\u2014dbthe Pension Schemes Act 2017;dcPart 1 of the Pension Schemes Ac",
+      "112After section 77 of the Pensions Act 2004 (penalties relating to sections 72 to 75) insert\u2014Fixed penalty notices77A1The Regulator may issue a fixed penalty notice to a person if it considers that t",
+      "77A1The Regulator may issue a fixed penalty notice to a person if it considers that the person\u2014ahas failed to comply with a notice under section 72 or 72A,bhas failed to comply with a requirement unde",
+      "113After section 80 of the Pensions Act 2004 (offences of providing false or misleading information) insert\u2014Financial penalty for providing false or misleading information to Regulator80A1Section 88A ",
+      "80A1Section 88A (financial penalties) applies to a person who has knowingly or recklessly provided the Regulator with information which is false or misleading in a material particular, if the informat",
+      "114After section 80A of the Pensions Act 2004 (inserted by section 113) insert\u2014Financial penalty for providing false or misleading information to trustees or managers80B1This section applies in relati",
+      "80B1This section applies in relation to an occupational pension scheme other than\u2014aa money purchase scheme, orba prescribed scheme or a scheme of a prescribed description.2Section 88A (financial penal",
+      "115After section 88 of the Pensions Act 2004 insert\u2014Financial penaltiesFinancial penalties88A1Where the Regulator is satisfied that by reason of an act this section applies to a person, the Regulator ",
+      "88C1A penalty under section 88A is recoverable by the Regulator.2In England and Wales, such a penalty is, if the county court so orders, recoverable under section 85 of the County Courts Act 1984 or o",
+      "1181The Pensions Act 2004 is amended as follows.2After section 238 insert\u2014Pensions dashboardsQualifying pensions dashboard service238A1A pensions dashboard service is an electronic communications serv",
+      "238B1Requirements prescribed under section 238A(2) may make provision about\u2014adealing with requests for information about pensions, including provision about the use of intermediaries;bthe involvement ",
+      "4In section 75 (inspection of premises: powers of inspectors), in subsection (1)\u2014aafter  \u201csubsection (1),\u201d insert \u201c\n                    (2A),\n                  \u201d;bfor  \u201c(3) or (4)\u201d substitute \u201c\n      ",
+      "51Section 76 (inspection of premises: supplementary) is amended as follows.2In subsection (3)(a)\u2014aafter  \u201cvirtue of\u201d, in the second place it occurs, insert \u201c\n                        section 77A, 77B o",
+      "121Section 316 (Parliamentary control of subordinate legislation) is amended as follows.2In subsection (2) (regulations and orders subject to affirmative procedure), after paragraph (za) insert\u2014zaareg",
+      "101Article 68 (inspection of premises) is amended as follows.2In paragraph (2)\u2014aafter sub-paragraph (da) insert\u2014dbPart 2 of the Pension Schemes Act 2021;;bin sub-paragraph (e)\u2014iat the beginning insert",
+      "11After Article 72 (penalties relating to Articles 67 to 70) insert\u2014Fixed penalty notices72A1The Regulator may issue a fixed penalty notice to a person if it considers that the person\u2014ahas failed to c",
+      "72A1The Regulator may issue a fixed penalty notice to a person if it considers that the person\u2014ahas failed to comply with a notice under Article 67 or 67A,bhas failed to comply with a requirement unde",
+      "12After Article 75 (offences of providing false or misleading information) insert\u2014Financial penalty for providing false or misleading information to Regulator75A1Article 83A (financial penalties) appl",
+      "75A1Article 83A (financial penalties) applies to a person who has knowingly or recklessly provided the Regulator with information which is false or misleading in a material particular, if the informat",
+      "13After Article 75A (inserted by paragraph 12) insert\u2014Financial penalty for providing false or misleading information to trustees or managers75B1This Article applies in relation to an occupational pen",
+      "75B1This Article applies in relation to an occupational pension scheme other than\u2014aa money purchase scheme, orba prescribed scheme or a scheme of a prescribed description.2Article 83A (financial penal",
+      "14After Article 83 insert\u2014Financial penaltiesFinancial penalties83A1Where the Regulator is satisfied that by reason of an act this Article applies to a person, the Regulator may issue a notice to the ",
+      "83C1A penalty under Article 83A is recoverable by the Regulator.2Such a penalty is, if the county court so orders, recoverable under Article 4 of the Judgments Enforcement (Northern Ireland) Order 198",
+      "18In Article 70 (inspection of premises: powers of inspectors), in paragraph (1)\u2014aafter  \u201cparagraph (1),\u201d insert \u201c\n                      (2A),\n                    \u201d;bfor  \u201c(3) or (4)\u201d substitute \u201c\n   ",
+      "191Article 71 (inspection of premises: supplementary) is amended as follows.2In paragraph (3)(a)\u2014aafter  \u201cvirtue of\u201d, in the second place it occurs, insert \u201c\n                          Article 72A, 72B",
+      "261Article 288 (Assembly etc. control of orders and regulations) is amended as follows.2In paragraph (3) (orders and regulations subject to confirmatory procedure), after sub-paragraph (aa) insert\u2014aaa",
+      "2After Article 215 insert\u2014Pensions dashboardsQualifying pensions dashboard service215A1A pensions dashboard service is an electronic communications service by means of which information about pensions",
+      "215B1Requirements prescribed under Article 215A(2) may make provision about\u2014adealing with requests for information about pensions, including provision about the use of intermediaries;bthe involvement ",
+      "121The Pensions (Northern Ireland) Order 1995 (S.I. 1995/3213 (N.I. 22)) is amended as follows.2After Article 41 insert\u2014Climate change risk41A1Regulations may impose requirements on the trustees or ma",
+      "41C1Regulations may make provision with a view to ensuring compliance with a provision of regulations under Article 41A or 41B.2The regulations may in particular\u2014aprovide for the Authority to issue a "
+    ],
+    "procedures": []
+  },
+  "dates": [
+    {
+      "type": "deadline",
+      "date": "6",
+      "context": "251Chapter 1 of Part 4ZA of the Pension Schemes Act 1993 (transfer rights: general) is amended as follows.2In section 93 (scope of Chapter 1)\u2014ain subs"
+    },
+    {
+      "type": "deadline",
+      "date": "6",
+      "context": "761Chapter 1 of Part 4ZA of the Pension Schemes (Northern Ireland) Act 1993 (transfer rights: general) is amended as follows.2In section 89 (scope of "
+    }
+  ],
+  "controls": [
+    "consent_management",
+    "audit_logging",
+    "data_minimization",
+    "incident_response"
+  ],
+  "xml_length": 1592527
+}

@@ -1,0 +1,451 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/ukpga/2017/22/data.xml",
+  "fetched_at": "2025-08-31T18:15:26.595513",
+  "metadata": {
+    "title": "Criminal Finances Act 2017",
+    "description": "An Act to amend the Proceeds of Crime Act 2002; make provision in connection with terrorist property; create corporate offences for cases where a person associated with a body corporate or partnership facilitates the commission by another person of a tax evasion offence; and for connected purposes.",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "section-1",
+      "text": "1In Chapter 2 of Part 8 of the Proceeds of Crime Act 2002 (investigations: England and Wales and Northern Ireland), after section 362 insert\u2014Unexplained wealth ordersUnexplained wealth orders362A1The High Court may, on an application made by an enforcement authority, make an unexplained wealth order in respect of any property if the court is satisfied that each of the requirements for the making of the order is fulfilled.2An application for an order must\u2014aspecify or describe the property in resp",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting",
+        "retention"
+      ]
+    },
+    {
+      "id": "",
+      "text": "362A1The High Court may, on an application made by an enforcement authority, make an unexplained wealth order in respect of any property if the court is satisfied that each of the requirements for the making of the order is fulfilled.2An application for an order must\u2014aspecify or describe the property in respect of which the order is sought, andbspecify the person whom the enforcement authority thinks holds the property (\u201cthe respondent\u201d)\n\t\t\t\t\t\t\t\t\t\t\t(and the person specified may include a person ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "362B1These are the requirements for the making of an unexplained wealth order in respect of any property.2The High Court must be satisfied that there is reasonable cause to believe that\u2014athe respondent holds the property, andbthe value of the property is greater than \u00a350,000.3The High Court must be satisfied that there are reasonable grounds for suspecting that the known sources of the respondent's lawfully obtained income would have been insufficient for the purposes of enabling the respondent ",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "362D1This section applies in a case where, before the end of the response period (as defined by section 362C(4)), the respondent complies, or purports to comply, with the requirements imposed by an unexplained wealth order in respect of any property in relation to which the order is made.2If an interim freezing order has effect in relation to the property (see section 362J), the enforcement authority must determine what enforcement or investigatory proceedings, if any, it considers ought to be t",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-2",
+      "text": "2After section 362I of the Proceeds of Crime Act 2002 (inserted by section 1 above) insert\u2014Unexplained wealth orders: interim freezing of propertyApplication for interim freezing order362J1This section applies where the High Court makes an unexplained wealth order in respect of any property.2The court may make an interim freezing order in respect of the property if the court considers it necessary to do so for the purposes of avoiding the risk of any recovery order that might subsequently be obt",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "362J1This section applies where the High Court makes an unexplained wealth order in respect of any property.2The court may make an interim freezing order in respect of the property if the court considers it necessary to do so for the purposes of avoiding the risk of any recovery order that might subsequently be obtained being frustrated.3An interim freezing order is an order that prohibits the respondent to the unexplained wealth order, and any other person with an interest in the property, from",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "362K1The High Court may at any time vary or discharge an interim freezing order.2The High Court must discharge an interim freezing order, so far as it has effect in relation to any property, in each of the following three cases.3The first case is where\u2014athe applicable 48 hour period has ended, andba relevant application has not been made before the end of that period in relation to the property concerned.4The second case is where\u2014aa relevant application has been made before the end of the applic",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "362L1The power to vary an interim freezing order includes (amongst other things) power to make exclusions as follows\u2014apower to exclude property from the order, andbpower, otherwise than by excluding property from the order, to make exclusions from the prohibition on dealing with the property to which the order applies.2Exclusions from the prohibition on dealing with the property to which the order applies (other than exclusions of property from the order) may also be made when the order is made.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "362M1While an interim freezing order has effect\u2014athe High Court may stay any action, execution or other legal process in respect of the property to which the order applies, andbno distress may be levied, and no power to use the procedure in Schedule 12 to the Tribunals, Courts and Enforcement Act 2007 (taking control of goods) may be exercised, against the property to which the order applies except with the leave of the High Court and subject to any terms the court may impose.2If a court (whethe",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "362N1This section applies where the High Court makes an interim freezing order on an application by an enforcement authority.2The court may, on an application by the enforcement authority, by order appoint a receiver in respect of any property to which the interim freezing order applies.3An application under subsection (2) may be made at the same time as the application for the interim freezing order or at any time afterwards.4The application may be made without notice if the circumstances of th",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "362O1If the High Court appoints a receiver under section 362N on an application by an enforcement authority, the court may act under this section on the application of the authority.2The court may by order authorise or require the receiver\u2014ato exercise any of the powers mentioned in paragraph 5 of Schedule 6 (management powers) in relation to any property in respect of which the receiver is appointed;bto take any other steps the court thinks appropriate in connection with the management of any s",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "362P1Any of the following persons may at any time apply to the High Court for directions as to the exercise of the functions of a receiver appointed under section 362N\u2014athe receiver;ba party to the proceedings for the appointment of the receiver or the interim freezing order concerned;ca person affected by an action taken by the receiver;da person who may be affected by an action proposed to be taken by the receiver.2Before it gives directions under subsection (1) the court must give an opportun",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "362R1Where an interim freezing order in respect of any property is discharged, the person to whom the property belongs may make an application to the High Court for the payment of compensation.2The application must be made within the period of three months beginning with the discharge of the interim freezing order.3The court may order compensation to be paid to the applicant only if satisfied that\u2014athe applicant has suffered loss as a result of the making of the interim freezing order,bthere has",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-3",
+      "text": "3After section 362R of the Proceeds of Crime Act 2002 (inserted by section 2 above) insert\u2014Unexplained wealth orders: enforcement abroadEnforcement abroad: enforcement authority362S1This section applies if\u2014athe High Court makes an unexplained wealth order in respect of any property,bit appears to the enforcement authority that the risk mentioned in section 362J(2) applies in relation to the property, andcthe enforcement authority believes that the property is in a country outside the United King",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "362T1This section applies if\u2014aan interim freezing order has effect in relation to property, andbthe receiver appointed under section 362N in respect of the property believes that it is in a country outside the United Kingdom (the receiving country).2The receiver may send a request for assistance in relation to the property to the Secretary of State with a view to it being forwarded under this section.3The Secretary of State must forward the request for assistance to the government of the receivi",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-4",
+      "text": "4In Chapter 3 of Part 8 of the Proceeds of Crime Act 2002 (investigations: Scotland), after section 396 insert\u2014Unexplained wealth ordersUnexplained wealth orders396A1The Court of Session may, on an application made by the Scottish Ministers, make an unexplained wealth order in respect of any property if the court is satisfied that each of the requirements for the making of the order is fulfilled.2An application for an order must\u2014aspecify or describe the property in respect of which the order is ",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting",
+        "retention"
+      ]
+    },
+    {
+      "id": "",
+      "text": "396A1The Court of Session may, on an application made by the Scottish Ministers, make an unexplained wealth order in respect of any property if the court is satisfied that each of the requirements for the making of the order is fulfilled.2An application for an order must\u2014aspecify or describe the property in respect of which the order is sought, andbspecify the person whom the Scottish Ministers think holds the property (\u201cthe respondent\u201d)\n\t\t\t\t\t\t\t\t\t\t\t(and the person specified may include a person ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "396B1These are the requirements for the making of an unexplained wealth order in respect of any property.2The Court of Session must be satisfied that there is reasonable cause to believe that\u2014athe respondent holds the property, andbthe value of the property is greater than \u00a350,000.3The Court of Session must be satisfied that there are reasonable grounds for suspecting that the known sources of the respondent's lawfully obtained income would have been insufficient for the purposes of enabling the",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "396D1This section applies in a case where the respondent complies, or purports to comply, with the requirements imposed by an unexplained wealth order in respect of any property in relation to which the order is made before the end of the response period (as defined by section 396C(4)).2If an interim freezing order has effect in relation to the property (see section 396J), the Scottish Ministers must\u2014aconsider whether the Lord Advocate should be given an opportunity to determine what enforcement",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-5",
+      "text": "5After section 396I of the Proceeds of Crime Act 2002 (inserted by section 4 above) insert\u2014Unexplained wealth orders: interim freezing of propertyApplication for interim freezing order396J1This section applies where the Court of Session makes an unexplained wealth order in respect of any property.2The court may make an interim freezing order in respect of the property if the court considers it necessary to do so for the purposes of avoiding the risk of any recovery order that might subsequently ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "396J1This section applies where the Court of Session makes an unexplained wealth order in respect of any property.2The court may make an interim freezing order in respect of the property if the court considers it necessary to do so for the purposes of avoiding the risk of any recovery order that might subsequently be obtained being frustrated.3An interim freezing order is an order that prohibits the respondent to the unexplained wealth order, and any other person with an interest in the property",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "396K1The Court of Session may at any time vary or recall an interim freezing order.2The Court of Session must recall an interim freezing order, so far as it has effect in relation to any property, in each of the following three cases.3The first case is where\u2014athe applicable 48 hour period has ended, andba relevant application has not been made before the end of that period in relation to the property concerned.4The second case is where\u2014aa relevant application has been made before the end of the ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "396L1The power to vary an interim freezing order includes (amongst other things) power to make exclusions as follows\u2014apower to exclude property from the order, andbpower, otherwise than by excluding property from the order, to make exclusions from the prohibition on dealing with the property to which the order applies.2Exclusions from the prohibition on dealing with the property to which the order applies (other than exclusions of property from the order) may also be made when the order is made.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "396M1While an interim freezing order has effect the Court of Session may sist any action, execution or other legal process in respect of the property to which the order applies.2If a court (whether the Court of Session or any other court) in which proceedings are pending in respect of any property is satisfied that an interim freezing order has been applied for or made in respect of the property, it may\u2014asist the proceedings, orballow them to continue on any terms it thinks fit.3Before exercisin",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "396N1On the application of the Scottish Ministers the Court of Session may, in relation to moveable property to which an interim freezing order applies (whether generally or to such of it as is specified in the application), grant warrant for arrestment.2An application under subsection (1) may be made at the same time as the application for the interim freezing order or at any time afterwards.3A warrant for arrestment may be granted only if the property would be arrestable if the person entitled",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "396O1On the application of the Scottish Ministers, the Court of Session may, in relation to the property mentioned in subsection (2), grant warrant for inhibition against any person specified in an interim freezing order.2The property is heritable property situated in Scotland to which the interim freezing order applies (whether generally or to such of it as is specified in the application).3The warrant for inhibition\u2014ahas effect as if granted on the dependence of an action for debt by the Scott",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "396P1This section applies where the Court of Session makes an interim freezing order on an application by the Scottish Ministers.2The Court of Session may, on an application by the Scottish Ministers, by order appoint a receiver in respect of any property to which the interim freezing order applies.3An application under subsection (2) may be made at the same time as the application for the interim freezing order or at any time afterwards.4The application may be made without notice if the circums",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "396Q1If the Court of Session appoints a receiver under section 396P, the court may act under this section on the application of the Scottish Ministers.2The court may by order authorise or require the receiver\u2014ato exercise any of the powers mentioned in paragraph 5 of Schedule 6 (management powers) in relation to any property in respect of which the receiver is appointed;bto take any other steps the court thinks appropriate in connection with the management of any such property (including securin",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "",
+      "text": "396R1Any of the following persons may at any time apply to the Court of Session for directions as to the exercise of the functions of a receiver appointed under section 396P\u2014athe receiver;ba party to the proceedings for the appointment of the receiver or the interim freezing order concerned;ca person affected by an action taken by the receiver;da person who may be affected by an action proposed to be taken by the receiver.2Before it gives directions under subsection (1), the court must give an o",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "396S1Where an interim freezing order in respect of any property is recalled, the person to whom the property belongs may make an application to the Court of Session for the payment of compensation.2The application must be made within the period of three months beginning with the recall of the interim freezing order.3The court may order compensation to be paid to the applicant only if satisfied that\u2014athe applicant has suffered loss as a result of the making of the interim freezing order,bthere ha",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-6",
+      "text": "6After section 396S of the Proceeds of Crime Act 2002 (inserted by section 5 above) insert\u2014Unexplained wealth orders: enforcement abroadEnforcement abroad: Scottish Ministers396T1This section applies if\u2014athe Court of Session makes an unexplained wealth order in respect of any property,bit appears to the Scottish Ministers that the risk mentioned in section 396J(2) applies in relation to the property, andcthe Scottish Ministers believe that the property is in a country outside the United Kingdom ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "",
+      "text": "396U1This section applies if\u2014aan interim freezing order has effect in relation to property, andbthe receiver appointed under section 396P in respect of the property believes that it is in a country outside the United Kingdom (the receiving country).2The receiver may send a request for assistance in relation to the property to the Secretary of State with a view to it being forwarded under this section.3The Secretary of State must forward the request for assistance to the government of the receivi",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-7",
+      "text": "71Chapter 2 of Part 8 of the Proceeds of Crime Act 2002 (investigations: England and Wales and Northern Ireland) is amended as follows.2In section 357 (disclosure orders)\u2014ain subsection (2) omit  \u201cor a money laundering investigation\u201d;bomit subsection (2A);cin subsection (3), after paragraph (b) insert\u2014baa person specified in the application is subject to a money laundering investigation which is being carried out by an appropriate officer and the order is sought for the purposes of the investiga",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-9",
+      "text": "9In Part 11 of the Proceeds of Crime Act 2002 (co-operation), after section 445 insert\u2014Sharing of beneficial ownership information445A1The relevant Minister must prepare a report about the arrangements in place between\u2014athe government of the United Kingdom, andbthe government of each relevant territory,for the sharing of beneficial ownership information.2The report must include an assessment of the effectiveness of those arrangements, having regard to such international standards as appear to th",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    }
+  ],
+  "penalties": [
+    {
+      "type": "financial",
+      "amount": "\u00a350,000",
+      "context": "unexplained wealth orders: england and wales and northern ireland1in chapter 2 of part 8 of the proceeds of crime act 2002 (investigations: england and wales and northern ireland), after section 362 i"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 2 year",
+      "context": "unexplained wealth orders: england and wales and northern ireland1in chapter 2 of part 8 of the proceeds of crime act 2002 (investigations: england and wales and northern ireland), after section 362 i"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 2 year",
+      "context": "offence362e1a person commits an offence if, in purported compliance with a requirement imposed by an unexplained wealth order, the person\u2014amakes a statement that the person knows to be false or mislea"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a350,000",
+      "context": "unexplained wealth orders: scotland4in chapter 3 of part 8 of the proceeds of crime act 2002 (investigations: scotland), after section 396 insert\u2014unexplained wealth ordersunexplained wealth orders396a"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 12 month",
+      "context": "unexplained wealth orders: scotland4in chapter 3 of part 8 of the proceeds of crime act 2002 (investigations: scotland), after section 396 insert\u2014unexplained wealth ordersunexplained wealth orders396a"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 12 month",
+      "context": "offence396e1a person commits an offence if, in purported compliance with a requirement imposed by an unexplained wealth order, the person\u2014amakes a statement that the person knows to be false or mislea"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a35,000",
+      "context": "further information orders12after section 339zg of the proceeds of crime act 2002 (inserted by section 11 above) insert\u2014further information ordersfurther information orders339zh1a magistrates' court o"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a35,000",
+      "context": "further information orders339zh1a magistrates' court or (in scotland) the sheriff may, on an application made by a relevant person, make a further information order if satisfied that either condition "
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310,000",
+      "context": "forfeiture of certain personal (or moveable) property15in part 5 of the proceeds of crime act 2002 (civil recovery of the proceeds etc of unlawful conduct), after section 303a insert\u2014chapter 3arecover"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a310,000",
+      "context": "forfeiture of certain personal (or moveable) property15in part 5 of the proceeds of crime act 2002 (civil recovery of the proceeds etc of unlawful conduct), after section 303a insert\u2014chapter 3arecover"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a31,000",
+      "context": "forfeiture of certain personal (or moveable) property15in part 5 of the proceeds of crime act 2002 (civil recovery of the proceeds etc of unlawful conduct), after section 303a insert\u2014chapter 3arecover"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 6 month",
+      "context": "search and seizure warrants: assault and obstruction offences22after section 356 of the proceeds of crime act 2002 (and before the italic heading before section 357) insert\u2014certain offences in relatio"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 6 month",
+      "context": "certain offences in relation to execution of search and seizure warrants356a1a person commits an offence if the person assaults an appropriate person who is acting in the exercise of a power conferred"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 6 month",
+      "context": "assault and obstruction offence in relation to sfo officers23after section 453a of the proceeds of crime act 2002 insert\u2014certain offences in relation to sfo officers453b1a person commits an offence if"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 6 month",
+      "context": "certain offences in relation to sfo officers453b1a person commits an offence if the person assaults an sfo officer who is acting in the exercise of a relevant power.2a person commits an offence if the"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 12 month",
+      "context": "obstruction offence in relation to immigration officers25after section 453b of the proceeds of crime act 2002 (inserted by section 23 above) insert\u2014obstruction offence in relation to immigration offic"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 12 month",
+      "context": "obstruction offence in relation to immigration officers453c1a person commits an offence if the person resists or wilfully obstructs an immigration officer who is acting in the exercise of a relevant p"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a35,000",
+      "context": "further information orders37after section 22a of the terrorism act 2000 insert\u2014further information ordersfurther information orders22b1a magistrates' court or (in scotland) the sheriff may, on an appl"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a35,000",
+      "context": "further information orders22b1a magistrates' court or (in scotland) the sheriff may, on an application made by a law enforcement officer, make a further information order if satisfied that either cond"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 6 month",
+      "context": "offences in relation to counter-terrorism financial investigators421after section 120a of the terrorism act 2000 insert\u2014offences in relation to counter-terrorism financial investigators120b1a person c"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 6 month",
+      "context": "offences in relation to counter-terrorism financial investigators120b1a person commits an offence if the person assaults a counter-terrorism financial investigator who is acting in the exercise of a r"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 6 month",
+      "context": "offences in relation to counter-terrorism financial investigators10z81a person commits an offence if the person assaults a counter-terrorism financial investigator who is acting in the exercise of a p"
+    }
+  ],
+  "enforcement": {
+    "authority": [
+      "Secretary of State",
+      "Financial Conduct Authority"
+    ],
+    "powers": [
+      "1In Chapter 2 of Part 8 of the Proceeds of Crime Act 2002 (investigations: England and Wales and Northern Ireland), after section 362 insert\u2014Unexplained wealth ordersUnexplained wealth orders362A1The ",
+      "362A1The High Court may, on an application made by an enforcement authority, make an unexplained wealth order in respect of any property if the court is satisfied that each of the requirements for the",
+      "362D1This section applies in a case where, before the end of the response period (as defined by section 362C(4)), the respondent complies, or purports to comply, with the requirements imposed by an un",
+      "362G1An unexplained wealth order has effect in spite of any restriction on the disclosure of information (however imposed).2But subsections (1) to (5) of section 361 (rights in connection with privile",
+      "362I1An application for an unexplained wealth order may be made without notice.2Rules of court may make provision as to the practice and procedure to be followed in connection with proceedings relatin",
+      "2After section 362I of the Proceeds of Crime Act 2002 (inserted by section 1 above) insert\u2014Unexplained wealth orders: interim freezing of propertyApplication for interim freezing order362J1This sectio",
+      "362J1This section applies where the High Court makes an unexplained wealth order in respect of any property.2The court may make an interim freezing order in respect of the property if the court consid",
+      "362K1The High Court may at any time vary or discharge an interim freezing order.2The High Court must discharge an interim freezing order, so far as it has effect in relation to any property, in each o",
+      "362M1While an interim freezing order has effect\u2014athe High Court may stay any action, execution or other legal process in respect of the property to which the order applies, andbno distress may be levi",
+      "362N1This section applies where the High Court makes an interim freezing order on an application by an enforcement authority.2The court may, on an application by the enforcement authority, by order ap",
+      "362O1If the High Court appoints a receiver under section 362N on an application by an enforcement authority, the court may act under this section on the application of the authority.2The court may by ",
+      "362R1Where an interim freezing order in respect of any property is discharged, the person to whom the property belongs may make an application to the High Court for the payment of compensation.2The ap",
+      "3After section 362R of the Proceeds of Crime Act 2002 (inserted by section 2 above) insert\u2014Unexplained wealth orders: enforcement abroadEnforcement abroad: enforcement authority362S1This section appli",
+      "362S1This section applies if\u2014athe High Court makes an unexplained wealth order in respect of any property,bit appears to the enforcement authority that the risk mentioned in section 362J(2) applies in",
+      "4In Chapter 3 of Part 8 of the Proceeds of Crime Act 2002 (investigations: Scotland), after section 396 insert\u2014Unexplained wealth ordersUnexplained wealth orders396A1The Court of Session may, on an ap",
+      "396D1This section applies in a case where the respondent complies, or purports to comply, with the requirements imposed by an unexplained wealth order in respect of any property in relation to which t",
+      "6After section 396S of the Proceeds of Crime Act 2002 (inserted by section 5 above) insert\u2014Unexplained wealth orders: enforcement abroadEnforcement abroad: Scottish Ministers396T1This section applies ",
+      "9In Part 11 of the Proceeds of Crime Act 2002 (co-operation), after section 445 insert\u2014Sharing of beneficial ownership information445A1The relevant Minister must prepare a report about the arrangement",
+      "445A1The relevant Minister must prepare a report about the arrangements in place between\u2014athe government of the United Kingdom, andbthe government of each relevant territory,for the sharing of benefic",
+      "101Part 7 of the Proceeds of Crime Act 2002 (money laundering) is amended as follows.2In section 335 (appropriate consent), after subsection (6) insert\u20146ASubsection (6) is subject to\u2014asection 336A, wh",
+      "336D1This section provides for the meaning of terms used in sections 336A to 336C (and in this section).2\u201cThe court\u201d means\u2014ain relation to England and Wales or Northern Ireland, the Crown Court;bin re",
+      "11After section 339ZA of the Proceeds of Crime Act 2002 insert\u2014Voluntary disclosures within the regulated sector339ZB1A person (A) may disclose information to one or more other persons if conditions 1",
+      "339ZF1A relevant disclosure made in good faith does not breach\u2014aan obligation of confidence owed by the person making the disclosure, orbany other restriction on the disclosure of information,however ",
+      "15In Part 5 of the Proceeds of Crime Act 2002 (civil recovery of the proceeds etc of unlawful conduct), after section 303A insert\u2014CHAPTER 3ARecovery of listed assets in summary proceedingsDefinition o",
+      "303E1The powers conferred by section 303C may be exercised only with the appropriate approval unless, in the circumstances, it is not practicable to obtain that approval before exercising the power.2T",
+      "303L1The period for which property seized under section 303J, or any part of that property, may be detained may be extended by an order made\u2014ain England and Wales or Northern Ireland, by a magistrates",
+      "16In Part 5 of the Proceeds of Crime Act 2002 (civil recovery of the proceeds etc of unlawful conduct), after section 303Z (inserted by section 15 above) insert\u2014CHAPTER 3BForfeiture of money held in b",
+      "303Z11This section applies if an enforcement officer has reasonable grounds for suspecting that money held in an account maintained with a bank or building society\u2014ais recoverable property, orbis inte",
+      "303Z21The power to apply for an account freezing order is not exercisable if the money in relation to which the enforcement officer's suspicion exists is less in amount than the minimum amount.2An enf",
+      "303Z41The relevant court may at any time vary or set aside an account freezing order on an application made by\u2014aan enforcement officer, orbany person affected by the order.2But an enforcement officer ",
+      "303Z91This section applies while an account freezing order made by a magistrates' court has effect.In this section the account to which the order applies is  \u201cthe frozen account\u201d.2A senior officer may",
+      "303Z111An account forfeiture notice lapses if\u2014aan objection is made within the period for objecting specified in the notice under section 303Z9(4)(c),ban application is made under section 303Z14 for t",
+      "303Z141This section applies while an account freezing order has effect.In this section the account to which the account freezing order applies is  \u201cthe frozen account\u201d.2An application for the forfeitu",
+      "191The Proceeds of Crime Act 2002 is amended as follows.2In section 316 (civil recovery of the proceeds etc of unlawful conduct: general interpretation), in the definition of  \u201cenforcement authority\u201d ",
+      "201The Proceeds of Crime Act 2002 is amended as follows.2In section 316 (civil recovery of the proceeds etc of unlawful conduct: general interpretation), in the definition of  \u201cenforcement authority\u201d ",
+      "291The Proceeds of Crime Act 2002 is amended as follows.2After section 245 insert\u2014Notice to local authority: Scotland245ZA1This section applies if, in proceedings under this Chapter for a recovery ord",
+      "245ZA1This section applies if, in proceedings under this Chapter for a recovery order, the enforcement authority applies under section 266(8ZA) for decree of removing and warrant for ejection in relat",
+      "341The Proceeds of Crime Act 2002 is amended in accordance with subsections (2) to (10).2In section 82 (free property: England and Wales)\u2014ain subsection (2), after paragraph (e) insert\u2014eaparagraph 3(2",
+      "36After section 21C of the Terrorism Act 2000 insert\u2014Voluntary disclosures within the regulated sector21CA1A person (A) may disclose information to one or more other persons if\u2014aconditions 1 to 4 are ",
+      "21CE1A relevant disclosure made in good faith does not breach\u2014aan obligation of confidence owed by the person making the disclosure, orbany other restriction on the disclosure of information,however i",
+      "37After section 22A of the Terrorism Act 2000 insert\u2014Further information ordersFurther information orders22B1A magistrates' court or (in Scotland) the sheriff may, on an application made by a law enfo",
+      "22B1A magistrates' court or (in Scotland) the sheriff may, on an application made by a law enforcement officer, make a further information order if satisfied that either condition 1 or condition 2 is ",
+      "43After section 120B of the Terrorism Act 2000 (inserted by section 42 above) insert\u2014Enforcement of orders in other parts of United Kingdom120C1Her Majesty may by Order in Council make provision for a",
+      "120C1Her Majesty may by Order in Council make provision for an investigatory order made in one part of the United Kingdom to be enforced in another part.2In subsection (1)\n\t\t\t\t\t\t\t\t \u201cinvestigatory orde",
+      "2After paragraph 10 insert\u2014\n                  PART 4A\n                Forfeiture of terrorist assetsDefinition of  \u201clisted asset\u201d10A1In this Part of this Schedule, a  \u201clisted asset\u201d means an item of p",
+      "10D1The period for which property seized under paragraph 10B, or any part of that property, may be detained may be extended by an order made\u2014ain England and Wales or Northern Ireland, by a magistrates",
+      "2After paragraph 10P (inserted by Schedule 3 above) insert\u2014\n                  PART 4B\n                Forfeiture of terrorist money held in bank and building society accountsApplication for account fr",
+      "10Q1This paragraph applies if an enforcement officer has reasonable grounds for suspecting that money held in an account maintained with a bank or building society\u2014ais within subsection (1)(a) or (b) ",
+      "10T1The relevant court may at any time vary or set aside an account freezing order on an application made by\u2014aan enforcement officer, orbany person affected by the order.2But an enforcement officer ma",
+      "10W1This paragraph applies while an account freezing order has effect.2A senior officer may give a notice for the purpose of forfeiting money held in the frozen account (whether all or part of the cre",
+      "10Y1An account forfeiture notice lapses if\u2014aan objection is made within the period for objecting specified in the notice under paragraph 10W(4)(c),ban application is made under paragraph 10Z2 for the ",
+      "10Z21This paragraph applies while an account freezing order has effect.2An application for the forfeiture of money held in the frozen account (whether all or part of the credit balance of the account)",
+      "31Paragraph 19 (general interpretation) is amended as follows.2In sub-paragraph (1), at the appropriate places insert\u2014\u201caccount forfeiture notice\u201d\n\t\t\t\t\t\t\t\t(in Part 4B) has the meaning given by paragrap",
+      "31Section 18 of the Civil Jurisdiction and Judgments Act 1982 (enforcement of UK judgments in other parts of UK) is amended as follows.2In subsection (2)(f), at the end insert \u201c\n                    or",
+      "13In Schedule 14 (exercise of officers' powers)\u2014afor  \u201cterrorist cash\u201d, in each place, substitute \u201c\n                    terrorist property\n                  \u201d;bin paragraph 1(a), after  \u201cprovisions\u201d i",
+      "301Section 278 (limit on recovery) is amended as follows.2In subsection (6A)\u2014ain paragraph (a), after  \u201csection 297A\u201d insert \u201c\n                        or an account forfeiture notice under section 303",
+      "361Section 316 (general interpretation of Part 5) is amended as follows.2In subsection (1)\u2014ain the definition of  \u201cassociated property\u201d, after  \u201cproperty\u201d\u201d insert \u201c\n                        (in Chapter",
+      "59In section 378 (officers), after subsection (3B) insert\u20143CIn relation to a detained property investigation these are appropriate officers\u2014aa constable;ban SFO officer;can accredited financial invest",
+      "761Section 416 (Part 8: other interpretative provisions) is amended as follows.2In subsection (1), after the entry for  \u201cdetained cash investigation\u201d insert\u2014detained property investigation: section 34",
+      "83In section 443 (enforcement in different parts of the United Kingdom), in subsection (1) after paragraph (c) insert\u2014cafor an order made by a court under Part 7 in one part of the United Kingdom to b",
+      "911Section 214 (expressions used in Part 15) is amended as follows.2In subsection (1)\u2014aomit  \u201cand\u201d after the definition of  \u201ca decree for removing from heritable property\u201d, andbafter the definition of"
+    ],
+    "procedures": []
+  },
+  "dates": [
+    {
+      "type": "deadline",
+      "date": "1 July 2019",
+      "context": "9In Part 11 of the Proceeds of Crime Act 2002 (co-operation), after section 445 insert\u2014Sharing of beneficial ownership information445A1The relevant Mi"
+    },
+    {
+      "type": "deadline",
+      "date": "1 July 2019",
+      "context": "445A1The relevant Minister must prepare a report about the arrangements in place between\u2014athe government of the United Kingdom, andbthe government of "
+    }
+  ],
+  "controls": [
+    "consent_management",
+    "audit_logging",
+    "data_minimization",
+    "training",
+    "security_testing",
+    "access_control",
+    "incident_response"
+  ],
+  "xml_length": 1292669
+}

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" viewBox="0 0 375 375" preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <mask id="diag-cut" maskUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="100%" height="100%" fill="white"/>
+      <line x1="-0.000866268" y1="2.997632" x2="168.196508" y2="2.996605"
+            transform="matrix(0.611217 -0.433197 0.433197 0.611217 53.244932 225.382264)"
+            stroke="black" stroke-width="8" stroke-linecap="square" />
+    </mask>
+  </defs>
+
+  <!-- turquoise stripes with consistent spacing -->
+  <g id="stripes" mask="url(#diag-cut)">
+    <rect x="36.730469" y="139.730469" width="103.5" height="9.75" fill="#2C7A7B"/>
+    <rect x="36.730469" y="152.480469" width="103.5" height="9.75" fill="#2C7A7B"/>
+    <rect x="36.730469" y="165.230469" width="103.5" height="9.75" fill="#2C7A7B"/>
+    <rect x="36.730469" y="177.980469" width="103.5" height="9.75" fill="#2C7A7B"/>
+    <rect x="36.730469" y="190.730469" width="103.5" height="9.75" fill="#2C7A7B"/>
+    <rect x="36.730469" y="203.480469" width="103.5" height="9.75" fill="#2C7A7B"/>
+    <rect x="36.730469" y="216.230469" width="103.5" height="9.75" fill="#2C7A7B"/>
+  </g>
+</svg>

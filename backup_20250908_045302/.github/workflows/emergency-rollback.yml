@@ -1,0 +1,92 @@
+name: Emergency Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to rollback'
+        required: true
+        type: choice
+        options:
+          - staging
+          - production
+      target_version:
+        description: 'Target version/tag to rollback to (leave empty for previous)'
+        required: false
+        default: ''
+      reason:
+        description: 'Reason for rollback'
+        required: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  validate-rollback:
+    name: Validate Rollback Request
+    runs-on: ubuntu-latest
+    outputs:
+      current_version: ${{ steps.current.outputs.current_version }}
+      target_version: ${{ steps.target.outputs.target_version }}
+    
+    steps:
+      - name: Validate inputs
+        run: |
+          echo "🔄 Rollback requested"
+          echo "Environment: ${{ github.event.inputs.environment }}"
+          echo "Target: ${{ github.event.inputs.target_version || 'Previous version' }}"
+          echo "Reason: ${{ github.event.inputs.reason }}"
+          echo "Initiated by: ${{ github.actor }}"
+      
+      - name: Get current version
+        id: current
+        run: |
+          echo "current_version=current-${{ github.sha }}" >> $GITHUB_OUTPUT
+      
+      - name: Determine target version
+        id: target
+        run: |
+          TARGET="${{ github.event.inputs.target_version }}"
+          [ -z "$TARGET" ] && TARGET="previous"
+          echo "target_version=$TARGET" >> $GITHUB_OUTPUT
+
+  approval:
+    name: Rollback Approval
+    runs-on: ubuntu-latest
+    needs: validate-rollback
+    if: github.event.inputs.environment == 'production'
+    environment:
+      name: production-rollback
+    
+    steps:
+      - name: Request approval
+        run: echo "⚠️ Production rollback requires manual approval"
+
+  execute-rollback:
+    name: Execute Rollback
+    runs-on: ubuntu-latest
+    needs: [validate-rollback, approval]
+    if: always() && (needs.approval.result == 'success' || github.event.inputs.environment == 'staging')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Execute rollback
+        run: |
+          echo "Rolling back ${{ github.event.inputs.environment }}"
+          echo "From: ${{ needs.validate-rollback.outputs.current_version }}"
+          echo "To: ${{ needs.validate-rollback.outputs.target_version }}"
+          # Add actual rollback commands here
+      
+      - name: Verify rollback
+        run: |
+          echo "Verifying rollback health..."
+          # Add health checks here
+      
+      - name: Notify team
+        if: always()
+        run: |
+          STATUS="${{ job.status == 'success' && '✅ Success' || '❌ Failed' }}"
+          echo "$STATUS: Rollback ${{ github.event.inputs.environment }}"

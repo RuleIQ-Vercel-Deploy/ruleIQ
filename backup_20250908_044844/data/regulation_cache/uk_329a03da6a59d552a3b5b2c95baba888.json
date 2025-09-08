@@ -1,0 +1,96 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/uksi/2005/1529/data.xml",
+  "fetched_at": "2025-08-31T18:15:59.406125",
+  "metadata": {
+    "title": "The Financial Services and Markets Act 2000 (Financial Promotion) Order 2005",
+    "description": "(This note does not form part of the Order)",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "article-9",
+      "text": "9Where a communication must, if it is to fall within any provision of this Order, be accompanied by an indication of any matter, the indication must be presented to the recipient\u2014ain a way that can be easily understood; andbin such manner as, depending on the means by which the communication is made or directed, is best calculated to bring the matter in question to the attention of the recipient and to allow him to consider it.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-12",
+      "text": "121Subject to paragraphs (2) and (7) paragraphs (2), (7) and (8), the financial promotion restriction does not apply to any communication\u2014awhich is made (whether from inside or outside the United Kingdom) to a person who receives the communication outside the United Kingdom; orbwhich is directed (whether from inside or outside the United Kingdom) only at persons outside the United Kingdom.2Paragraph (1) does not apply to an unsolicited real time communication unless\u2014ait is made from a place outs",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-18",
+      "text": "181Subject to paragraph (4), the financial promotion restriction does not apply to any communication which is made or directed by a person who acts as a mere conduit for it.2A person acts as a mere conduit for a communication if\u2014ahe communicates it in the course of an activity carried on by him, the principal purpose of which is transmitting or receiving material provided to him by others;bthe content of the communication is wholly devised by another person; andcthe nature of the service provide",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-20C",
+      "text": "20CThe financial promotion restriction does not apply to any communication required by Article 13 of Regulation (EU) No 1286/2014 of the European Parliament and of the Council of 26 November 2014 on key information documents for packaged retail and insurance-based investment products.",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-25",
+      "text": "251The financial promotion restriction does not apply to any non-real time communication which relates to a relevant insurance activity and concerns only\u2014aa contract of reinsurance; orba contract that covers large risks.2\u201cLarge risks\u201d means\u2014arisks falling within paragraph 4 (railway rolling stock), 5 (aircraft), 6 (ships), 7 (goods in transit), 11 (aircraft liability) or 12 (liability of ships) of Schedule 1 to the Regulated Activities Order;brisks falling within paragraph 14 (credit) or 15 (sur",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "article-29",
+      "text": "291Subject to paragraph (2), the financial promotion restriction does not apply to any communication which is required or authorised by or under any enactment other than the Act.2This article does not apply to a communication which relates to a controlled activity falling within paragraph 4B,  10, 10A , 10B, 10BA or 10BB  of Schedule 1 or within paragraph 11 in so far as it relates to that activity.3A communication which may be made because a condition imposed by regulation 49 or 50 of the Alter",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "article-41",
+      "text": "411The financial promotion restriction does not apply to any communication which\u2014ais a non-real time communication or a solicited real time communication;bis communicated by a body corporate (\u201cA\u201d) that is not an open-ended investment company;cis made to or may reasonably be regarded as directed at persons entitled to bearer instruments issued by A, a parent undertaking of A or a subsidiary undertaking of A; anddis required or permitted by the rules of a relevant market to be communicated to hold",
+      "type": "mandatory",
+      "keywords": []
+    }
+  ],
+  "penalties": [],
+  "enforcement": {
+    "authority": [
+      "FCA"
+    ],
+    "powers": [
+      "641If the requirements of paragraphs (2) and (3) are met, the financial promotion restriction does not apply to any communication which is communicated in connection with a takeover offer for a releva",
+      "4C1Where the conditions in sub-paragraphs (2), (2A) and (2C) are  satisfied, operating an electronic system which enables the operator (\u201cA\u201d) to facilitate persons (\u201cB\u201d and \u201cC\u201d) becoming the lender and",
+      "13An indication of the place where additional material listed in Part III may be inspected.",
+      "14The audited accounts of the company in respect of the latest accounting reference period for which the period for laying and delivering accounts under  the 2006 Act  has passed or, if accounts in re",
+      "16An indication by the directors of the company, acting as a board, of the following matters\u2014awhether or not there has been any material change in the financial position or prospects of the company si",
+      "281Subject to sub-paragraph (2), if the consideration or any part of the consideration for the shares or debentures to be acquired is shares in or debentures of an offeror\u2014aan indication of the nature",
+      "38In a case in which the offeror is a body corporate which is required to deliver accounts under  the 2006 Act, particulars of the assets and liabilities as shown in its audited accounts in respect of",
+      "43In the case of a company that does not fall within paragraph 45\u2014athe audited accounts of the company in respect of the last two accounting reference periods for which the laying and delivering of ac",
+      "44In the case of an offeror which is required to deliver accounts to the registrar of companies and which does not fall within paragraph 45\u2014athe audited accounts of the offeror in respect of the last ",
+      "45In the case of a company or an offeror\u2014awhich was incorporated during the period of three years immediately preceding the date on which the invitation or inducement in question was first communicate"
+    ],
+    "procedures": []
+  },
+  "dates": [
+    {
+      "type": "deadline",
+      "date": "12",
+      "context": "141Where a person makes or directs a communication (\u201cthe first communication\u201d) which is exempt from the financial promotion restriction because, in co"
+    }
+  ],
+  "controls": [
+    "encryption",
+    "consent_management",
+    "audit_logging",
+    "data_minimization",
+    "training",
+    "access_control",
+    "incident_response"
+  ],
+  "xml_length": 1401639
+}

@@ -1,0 +1,79 @@
+# Prometheus configuration for AI Assessment Freemium Strategy monitoring
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'ruleiq-freemium'
+    environment: 'production'
+
+rule_files:
+  - "freemium_alerts.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+scrape_configs:
+  # FastAPI application metrics
+  - job_name: 'ruleiq-freemium-api'
+    static_configs:
+      - targets: ['app:8000']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+    scrape_timeout: 5s
+    params:
+      module: [http_2xx]
+
+  # Celery worker metrics
+  - job_name: 'ruleiq-celery-worker'
+    static_configs:
+      - targets: ['celery_worker:9540']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  # Redis metrics
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis:6379']
+    metrics_path: '/metrics'
+    scrape_interval: 15s
+
+  # Nginx metrics
+  - job_name: 'nginx'
+    static_configs:
+      - targets: ['nginx:9113']
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Node exporter for system metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 15s
+
+  # Postgres exporter for database metrics
+  - job_name: 'postgres-exporter'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+    scrape_interval: 15s
+
+  # Custom freemium metrics
+  - job_name: 'freemium-metrics'
+    static_configs:
+      - targets: ['app:8000']
+    metrics_path: '/api/v1/monitoring/freemium-metrics'
+    scrape_interval: 30s
+    params:
+      format: ['prometheus']
+
+  # Business metrics scraping
+  - job_name: 'freemium-business-metrics'
+    static_configs:
+      - targets: ['app:8000']
+    metrics_path: '/api/v1/monitoring/business-metrics'
+    scrape_interval: 60s
+    params:
+      format: ['prometheus']

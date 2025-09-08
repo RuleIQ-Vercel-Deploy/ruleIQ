@@ -1,0 +1,4773 @@
+{
+  "schema_version": "2.0",
+  "created_at": "2025-08-31",
+  "original_version": "1.0",
+  "owner": "Omar Al-Bakri",
+  "description": "Enhanced compliance manifest with business context mappings and risk intelligence",
+  "priority_scale": "5=must-ingest, 4=high, 3=supplemental, 2=metadata-only/paywalled",
+  "metadata": {
+    "total_items": 156,
+    "last_updated": "2025-08-31",
+    "enhancement_version": "1.0",
+    "risk_scoring_methodology": "Based on enforcement frequency, penalty severity, and implementation complexity",
+    "automation_scoring_methodology": "0-1 scale based on availability of APIs, clear rules, and measurability"
+  },
+  "items": [
+    {
+      "id": "gdpr-eu-2016-679",
+      "title": "General Data Protection Regulation (EU) 2016/679",
+      "url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng",
+      "tags": [
+        "law",
+        "privacy",
+        "EU",
+        "data-protection"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "eur-lex",
+        "2016/679",
+        "GDPR"
+      ],
+      "business_triggers": {
+        "handles_personal_data": true,
+        "has_eu_customers": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 10,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "data_subject_request_portal",
+        "breach_notification_procedure",
+        "data_processing_agreements",
+        "consent_management_system",
+        "privacy_policy_implementation"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "DSAR Log",
+        "Data Breach Log",
+        "DPA Register",
+        "Consent Records",
+        "Privacy Policy Document"
+      ]
+    },
+    {
+      "id": "uk-gdpr-ico-overview",
+      "title": "UK GDPR \u2013 ICO Guidance",
+      "url": "https://ico.org.uk/for-organisations/data-protection-and-the-eu/data-protection-and-the-eu-in-detail/the-uk-gdpr/",
+      "tags": [
+        "guidance",
+        "privacy",
+        "UK",
+        "data-protection"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "ico.org.uk",
+        "UK GDPR"
+      ],
+      "business_triggers": {
+        "handles_personal_data": true,
+        "has_eu_customers": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 10,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "data_subject_request_portal",
+        "breach_notification_procedure",
+        "data_processing_agreements",
+        "consent_management_system",
+        "privacy_policy_implementation"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "DSAR Log",
+        "Data Breach Log",
+        "DPA Register",
+        "Consent Records",
+        "Privacy Policy Document"
+      ]
+    },
+    {
+      "id": "uk-data-protection-act-2018",
+      "title": "Data Protection Act 2018",
+      "url": "https://www.legislation.gov.uk/ukpga/2018/12/contents",
+      "tags": [
+        "law",
+        "privacy",
+        "UK",
+        "data-protection"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2018/12",
+        "Data Protection Act"
+      ],
+      "business_triggers": {
+        "handles_personal_data": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "data_subject_request_portal",
+        "breach_notification_procedure",
+        "data_processing_agreements",
+        "consent_management_system",
+        "privacy_policy_implementation"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "DSAR Log",
+        "Data Breach Log",
+        "DPA Register",
+        "Consent Records",
+        "Privacy Policy Document"
+      ]
+    },
+    {
+      "id": "uk-fsma-2000",
+      "title": "Financial Services and Markets Act 2000",
+      "url": "https://www.legislation.gov.uk/ukpga/2000/8/contents",
+      "tags": [
+        "law",
+        "finance",
+        "UK",
+        "FCA",
+        "prudential"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2000/8",
+        "FSMA"
+      ],
+      "business_triggers": {
+        "industry": "finance",
+        "provides_financial_services": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 10,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "risk_management_framework",
+        "capital_adequacy_monitoring",
+        "regulatory_reporting_system",
+        "compliance_monitoring_system"
+      ],
+      "automation_potential": 0.4,
+      "evidence_templates": [
+        "Regulatory Filing Records"
+      ]
+    },
+    {
+      "id": "uk-money-laundering-regulations-2017",
+      "title": "Money Laundering, Terrorist Financing and Transfer of Funds Regulations 2017",
+      "url": "https://www.legislation.gov.uk/uksi/2017/692/contents",
+      "tags": [
+        "law",
+        "AML",
+        "UK",
+        "CTF",
+        "KYC"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2017/692",
+        "MLR"
+      ],
+      "business_triggers": {
+        "processes_payments": true,
+        "provides_financial_services": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 10,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "pep_screening_system",
+        "customer_due_diligence_procedure",
+        "transaction_monitoring_system",
+        "suspicious_activity_reporting",
+        "sanctions_screening"
+      ],
+      "automation_potential": 0.4,
+      "evidence_templates": [
+        "CDD Records",
+        "Transaction Monitoring Reports",
+        "SAR Filing Records"
+      ]
+    },
+    {
+      "id": "uk-bribery-act-2010",
+      "title": "Bribery Act 2010",
+      "url": "https://www.legislation.gov.uk/ukpga/2010/23/contents",
+      "tags": [
+        "law",
+        "anti-corruption",
+        "UK",
+        "criminal"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2010/23",
+        "Bribery Act"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-modern-slavery-act-2015",
+      "title": "Modern Slavery Act 2015",
+      "url": "https://www.legislation.gov.uk/ukpga/2015/30/contents",
+      "tags": [
+        "law",
+        "ESG",
+        "UK",
+        "supply-chain",
+        "human-rights"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2015/30",
+        "Modern Slavery"
+      ],
+      "business_triggers": {
+        "uses_ai_systems": true,
+        "automated_decision_making": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-companies-act-2006",
+      "title": "Companies Act 2006",
+      "url": "https://www.legislation.gov.uk/ukpga/2006/46/contents",
+      "tags": [
+        "law",
+        "corporate",
+        "UK",
+        "governance"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2006/46",
+        "Companies Act"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-corporate-governance-code",
+      "title": "UK Corporate Governance Code (FRC)",
+      "url": "https://www.frc.org.uk/library/standards-codes-policy/corporate-governance/uk-corporate-governance-code/",
+      "tags": [
+        "governance",
+        "UK",
+        "FRC",
+        "listed-companies"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "frc.org.uk",
+        "Corporate Governance Code"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-equality-act-2010",
+      "title": "Equality Act 2010",
+      "url": "https://www.legislation.gov.uk/ukpga/2010/15/contents",
+      "tags": [
+        "law",
+        "employment",
+        "UK",
+        "discrimination",
+        "ESG"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2010/15",
+        "Equality Act"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-proceeds-of-crime-act-2002",
+      "title": "Proceeds of Crime Act 2002 (POCA)",
+      "url": "https://www.legislation.gov.uk/ukpga/2002/29/contents",
+      "tags": [
+        "law",
+        "AML",
+        "UK",
+        "criminal",
+        "proceeds"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2002/29",
+        "POCA"
+      ],
+      "business_triggers": {
+        "processes_payments": true,
+        "provides_financial_services": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 10,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-criminal-finances-act-2017",
+      "title": "Criminal Finances Act 2017",
+      "url": "https://www.legislation.gov.uk/ukpga/2017/22/contents",
+      "tags": [
+        "law",
+        "tax-evasion",
+        "UK",
+        "criminal"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2017/22",
+        "Criminal Finances"
+      ],
+      "business_triggers": {
+        "industry": "finance",
+        "provides_financial_services": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 9,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-sanctions-anti-money-laundering-act-2018",
+      "title": "Sanctions and Anti-Money Laundering Act 2018",
+      "url": "https://www.legislation.gov.uk/ukpga/2018/13/contents",
+      "tags": [
+        "law",
+        "sanctions",
+        "UK",
+        "AML"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2018/13",
+        "SAMLA"
+      ],
+      "business_triggers": {
+        "processes_payments": true,
+        "provides_financial_services": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 10,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "pep_screening_system",
+        "customer_due_diligence_procedure",
+        "transaction_monitoring_system",
+        "suspicious_activity_reporting",
+        "sanctions_screening"
+      ],
+      "automation_potential": 0.4,
+      "evidence_templates": [
+        "CDD Records",
+        "Transaction Monitoring Reports",
+        "SAR Filing Records"
+      ]
+    },
+    {
+      "id": "uk-online-safety-act-2023",
+      "title": "Online Safety Act 2023",
+      "url": "https://www.legislation.gov.uk/ukpga/2023/50/contents",
+      "tags": [
+        "law",
+        "platforms",
+        "UK",
+        "content-moderation",
+        "child-safety"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2023/50",
+        "Online Safety Act"
+      ],
+      "business_triggers": {
+        "country": "UK",
+        "online_platform": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-economic-crime-transparency-act-2022",
+      "title": "Economic Crime (Transparency and Enforcement) Act 2022",
+      "url": "https://www.legislation.gov.uk/ukpga/2022/10/contents",
+      "tags": [
+        "law",
+        "transparency",
+        "UK",
+        "beneficial-ownership"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2022/10",
+        "ECTA"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-financial-services-act-2021",
+      "title": "Financial Services Act 2021",
+      "url": "https://www.legislation.gov.uk/ukpga/2021/22/contents",
+      "tags": [
+        "law",
+        "finance",
+        "UK",
+        "prudential"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2021/22",
+        "FS Act 2021"
+      ],
+      "business_triggers": {
+        "industry": "finance",
+        "provides_financial_services": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "risk_management_framework",
+        "capital_adequacy_monitoring",
+        "regulatory_reporting_system",
+        "compliance_monitoring_system"
+      ],
+      "automation_potential": 0.4,
+      "evidence_templates": [
+        "Regulatory Filing Records"
+      ]
+    },
+    {
+      "id": "uk-payment-services-regulations-2017",
+      "title": "Payment Services Regulations 2017 (PSR)",
+      "url": "https://www.legislation.gov.uk/uksi/2017/752/contents",
+      "tags": [
+        "law",
+        "payments",
+        "UK",
+        "PSD2",
+        "SCA"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2017/752",
+        "PSR"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "network_segmentation",
+        "pci_compliance_scanning",
+        "cardholder_data_encryption",
+        "payment_security_monitoring"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "Compliance Documentation",
+        "Risk Assessment Report",
+        "Audit Trail"
+      ]
+    },
+    {
+      "id": "uk-electronic-money-regulations-2011",
+      "title": "Electronic Money Regulations 2011",
+      "url": "https://www.legislation.gov.uk/uksi/2011/99/contents",
+      "tags": [
+        "law",
+        "e-money",
+        "UK",
+        "payments"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2011/99",
+        "EMR"
+      ],
+      "business_triggers": {
+        "country": "UK",
+        "issues_emoney": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "network_segmentation",
+        "pci_compliance_scanning",
+        "cardholder_data_encryption",
+        "payment_security_monitoring"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "Compliance Documentation",
+        "Risk Assessment Report",
+        "Audit Trail"
+      ]
+    },
+    {
+      "id": "uk-consumer-rights-act-2015",
+      "title": "Consumer Rights Act 2015",
+      "url": "https://www.legislation.gov.uk/ukpga/2015/15/contents",
+      "tags": [
+        "law",
+        "consumer",
+        "UK",
+        "contracts"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2015/15",
+        "Consumer Rights"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-competition-act-1998",
+      "title": "Competition Act 1998",
+      "url": "https://www.legislation.gov.uk/ukpga/1998/41/contents",
+      "tags": [
+        "law",
+        "competition",
+        "UK",
+        "antitrust"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "1998/41",
+        "Competition Act"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-enterprise-act-2002",
+      "title": "Enterprise Act 2002",
+      "url": "https://www.legislation.gov.uk/ukpga/2002/40/contents",
+      "tags": [
+        "law",
+        "competition",
+        "UK",
+        "merger-control"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2002/40",
+        "Enterprise Act"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-fraud-act-2006",
+      "title": "Fraud Act 2006",
+      "url": "https://www.legislation.gov.uk/ukpga/2006/35/contents",
+      "tags": [
+        "law",
+        "fraud",
+        "UK",
+        "criminal"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2006/35",
+        "Fraud Act"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-computer-misuse-act-1990",
+      "title": "Computer Misuse Act 1990",
+      "url": "https://www.legislation.gov.uk/ukpga/1990/18/contents",
+      "tags": [
+        "law",
+        "cybercrime",
+        "UK",
+        "security"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "1990/18",
+        "Computer Misuse"
+      ],
+      "business_triggers": {
+        "requires_cyber_certification": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.8,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "fca-handbook",
+      "title": "FCA Handbook",
+      "url": "https://www.handbook.fca.org.uk/",
+      "tags": [
+        "regulation",
+        "finance",
+        "UK",
+        "FCA",
+        "conduct"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "handbook.fca.org.uk",
+        "FCA Handbook"
+      ],
+      "business_triggers": {
+        "industry": "finance",
+        "provides_financial_services": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "risk_management_framework",
+        "capital_adequacy_monitoring",
+        "regulatory_reporting_system",
+        "compliance_monitoring_system"
+      ],
+      "automation_potential": 0.5,
+      "evidence_templates": [
+        "Regulatory Filing Records"
+      ]
+    },
+    {
+      "id": "fca-senior-managers-regime",
+      "title": "FCA Senior Managers and Certification Regime (SM&CR)",
+      "url": "https://www.fca.org.uk/firms/senior-managers-certification-regime",
+      "tags": [
+        "regulation",
+        "governance",
+        "UK",
+        "accountability"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "fca.org.uk",
+        "SM&CR"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "pra-rulebook",
+      "title": "PRA Rulebook",
+      "url": "https://www.prarulebook.co.uk/",
+      "tags": [
+        "regulation",
+        "prudential",
+        "UK",
+        "PRA",
+        "banking"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "prarulebook.co.uk",
+        "PRA Rulebook"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "ico-gdpr-guide",
+      "title": "ICO Guide to UK GDPR",
+      "url": "https://ico.org.uk/for-organisations/guide-to-data-protection/guide-to-the-general-data-protection-regulation-gdpr/",
+      "tags": [
+        "guidance",
+        "privacy",
+        "UK",
+        "ICO"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "ico.org.uk",
+        "guide-to-gdpr"
+      ],
+      "business_triggers": {
+        "handles_personal_data": true,
+        "has_eu_customers": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 10,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "data_subject_request_portal",
+        "breach_notification_procedure",
+        "data_processing_agreements",
+        "consent_management_system",
+        "privacy_policy_implementation"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "DSAR Log",
+        "Data Breach Log",
+        "DPA Register",
+        "Consent Records",
+        "Privacy Policy Document"
+      ]
+    },
+    {
+      "id": "ico-pecr",
+      "title": "ICO Privacy and Electronic Communications Regulations (PECR)",
+      "url": "https://ico.org.uk/for-organisations/direct-marketing-and-privacy-and-electronic-communications/",
+      "tags": [
+        "guidance",
+        "privacy",
+        "UK",
+        "marketing",
+        "cookies"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "ico.org.uk",
+        "PECR"
+      ],
+      "business_triggers": {
+        "handles_personal_data": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "data_subject_request_portal",
+        "breach_notification_procedure",
+        "data_processing_agreements",
+        "consent_management_system",
+        "privacy_policy_implementation"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "DSAR Log",
+        "Data Breach Log",
+        "DPA Register",
+        "Consent Records",
+        "Privacy Policy Document"
+      ]
+    },
+    {
+      "id": "ico-ai-guidance",
+      "title": "ICO Guidance on AI and Data Protection",
+      "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/artificial-intelligence/",
+      "tags": [
+        "guidance",
+        "AI",
+        "UK",
+        "privacy"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "ico.org.uk",
+        "AI guidance"
+      ],
+      "business_triggers": {
+        "uses_ai_systems": true,
+        "automated_decision_making": true,
+        "handles_personal_data": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "suggested_controls": [
+        "data_subject_request_portal",
+        "breach_notification_procedure",
+        "data_processing_agreements",
+        "consent_management_system",
+        "privacy_policy_implementation"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "DSAR Log",
+        "Data Breach Log",
+        "DPA Register",
+        "Consent Records",
+        "Privacy Policy Document"
+      ]
+    },
+    {
+      "id": "uk-nis-regulations-2018",
+      "title": "Network and Information Systems Regulations 2018",
+      "url": "https://www.legislation.gov.uk/uksi/2018/506/contents",
+      "tags": [
+        "law",
+        "cybersecurity",
+        "UK",
+        "critical-infrastructure"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2018/506",
+        "NIS"
+      ],
+      "business_triggers": {
+        "requires_cyber_certification": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-telecoms-security-act-2021",
+      "title": "Telecommunications (Security) Act 2021",
+      "url": "https://www.legislation.gov.uk/ukpga/2021/31/contents",
+      "tags": [
+        "law",
+        "telecoms",
+        "UK",
+        "security",
+        "5G"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2021/31",
+        "Telecoms Security"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.8,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "uk-health-and-social-care-act-2012",
+      "title": "Health and Social Care Act 2012",
+      "url": "https://www.legislation.gov.uk/ukpga/2012/7/contents",
+      "tags": [
+        "law",
+        "healthcare",
+        "UK",
+        "NHS"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2012/7",
+        "Health Social Care"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-financial-promotions-order",
+      "title": "Financial Services and Markets Act 2000 (Financial Promotion) Order 2005",
+      "url": "https://www.legislation.gov.uk/uksi/2005/1529/contents",
+      "tags": [
+        "regulation",
+        "marketing",
+        "UK",
+        "finance"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2005/1529",
+        "FPO"
+      ],
+      "business_triggers": {
+        "industry": "finance",
+        "provides_financial_services": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "risk_management_framework",
+        "capital_adequacy_monitoring",
+        "regulatory_reporting_system",
+        "compliance_monitoring_system"
+      ],
+      "automation_potential": 0.5,
+      "evidence_templates": [
+        "Regulatory Filing Records"
+      ]
+    },
+    {
+      "id": "uk-mifir",
+      "title": "UK MiFIR (Markets in Financial Instruments Regulation)",
+      "url": "https://www.legislation.gov.uk/eur/2014/600/contents",
+      "tags": [
+        "regulation",
+        "markets",
+        "UK",
+        "trading",
+        "transparency"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2014/600",
+        "UK MiFIR"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-emir",
+      "title": "UK EMIR (European Market Infrastructure Regulation)",
+      "url": "https://www.legislation.gov.uk/eur/2012/648/contents",
+      "tags": [
+        "regulation",
+        "derivatives",
+        "UK",
+        "clearing"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2012/648",
+        "UK EMIR"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-sftr",
+      "title": "UK SFTR (Securities Financing Transactions Regulation)",
+      "url": "https://www.legislation.gov.uk/eur/2015/2365/contents",
+      "tags": [
+        "regulation",
+        "securities",
+        "UK",
+        "repo",
+        "transparency"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2015/2365",
+        "UK SFTR"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-benchmarks-regulation",
+      "title": "UK Benchmarks Regulation",
+      "url": "https://www.legislation.gov.uk/eur/2016/1011/contents",
+      "tags": [
+        "regulation",
+        "benchmarks",
+        "UK",
+        "LIBOR"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2016/1011",
+        "UK BMR"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-market-abuse-regulation",
+      "title": "UK Market Abuse Regulation (UK MAR)",
+      "url": "https://www.legislation.gov.uk/eur/2014/596/contents",
+      "tags": [
+        "regulation",
+        "insider-trading",
+        "UK",
+        "market-manipulation"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2014/596",
+        "UK MAR"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-prospectus-regulation",
+      "title": "UK Prospectus Regulation",
+      "url": "https://www.legislation.gov.uk/eur/2017/1129/contents",
+      "tags": [
+        "regulation",
+        "securities",
+        "UK",
+        "disclosure"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2017/1129",
+        "UK PR"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-crd-v",
+      "title": "UK CRD V (Capital Requirements Directive)",
+      "url": "https://www.bankofengland.co.uk/prudential-regulation/publication/2020/capital-requirements-directive-v",
+      "tags": [
+        "regulation",
+        "capital",
+        "UK",
+        "banking",
+        "prudential"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "bankofengland.co.uk",
+        "CRD V"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-ifpr",
+      "title": "UK Investment Firms Prudential Regime (IFPR)",
+      "url": "https://www.fca.org.uk/firms/investment-firms-prudential-regime-ifpr",
+      "tags": [
+        "regulation",
+        "investment-firms",
+        "UK",
+        "prudential"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "fca.org.uk",
+        "IFPR"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-building-societies-act-1986",
+      "title": "Building Societies Act 1986",
+      "url": "https://www.legislation.gov.uk/ukpga/1986/53/contents",
+      "tags": [
+        "law",
+        "building-societies",
+        "UK",
+        "mutuals"
+      ],
+      "priority": 3,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "1986/53",
+        "Building Societies"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-pension-schemes-act-2021",
+      "title": "Pension Schemes Act 2021",
+      "url": "https://www.legislation.gov.uk/ukpga/2021/1/contents",
+      "tags": [
+        "law",
+        "pensions",
+        "UK",
+        "retirement"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2021/1",
+        "Pension Schemes"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-insurance-act-2015",
+      "title": "Insurance Act 2015",
+      "url": "https://www.legislation.gov.uk/ukpga/2015/4/contents",
+      "tags": [
+        "law",
+        "insurance",
+        "UK",
+        "contracts"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2015/4",
+        "Insurance Act"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-third-parties-rights-act-1999",
+      "title": "Contracts (Rights of Third Parties) Act 1999",
+      "url": "https://www.legislation.gov.uk/ukpga/1999/31/contents",
+      "tags": [
+        "law",
+        "contracts",
+        "UK"
+      ],
+      "priority": 3,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "1999/31",
+        "Third Parties"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "soc2-trust-services-criteria",
+      "title": "SOC 2 Trust Services Criteria (AICPA)",
+      "url": "https://us.aicpa.org/interestareas/frc/assuranceadvisoryservices/aicpasoc2report",
+      "tags": [
+        "standard",
+        "security",
+        "audit",
+        "trust-services"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "aicpa.org",
+        "SOC 2",
+        "Trust Services"
+      ],
+      "business_triggers": {
+        "b2b_saas": true,
+        "processes_customer_data": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.8,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "soc2-security-principle",
+      "title": "SOC 2 Security Principle (CC6)",
+      "url": "https://www.aicpa.org/resources/landing/system-and-organization-controls-soc-suite-of-services",
+      "tags": [
+        "standard",
+        "security",
+        "controls",
+        "SOC2"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "aicpa.org",
+        "CC6",
+        "Security"
+      ],
+      "business_triggers": {
+        "b2b_saas": true,
+        "processes_customer_data": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.8,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "soc2-availability-principle",
+      "title": "SOC 2 Availability Principle (A1)",
+      "url": "https://www.aicpa.org/resources/landing/system-and-organization-controls-soc-suite-of-services",
+      "tags": [
+        "standard",
+        "availability",
+        "uptime",
+        "SOC2"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "aicpa.org",
+        "A1",
+        "Availability"
+      ],
+      "business_triggers": {
+        "b2b_saas": true,
+        "processes_customer_data": true,
+        "uses_ai_systems": true,
+        "automated_decision_making": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 6,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.6
+    },
+    {
+      "id": "soc2-confidentiality-principle",
+      "title": "SOC 2 Confidentiality Principle (C1)",
+      "url": "https://www.aicpa.org/resources/landing/system-and-organization-controls-soc-suite-of-services",
+      "tags": [
+        "standard",
+        "confidentiality",
+        "data-protection",
+        "SOC2"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "aicpa.org",
+        "C1",
+        "Confidentiality"
+      ],
+      "business_triggers": {
+        "b2b_saas": true,
+        "processes_customer_data": true,
+        "handles_personal_data": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 6,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.7
+    },
+    {
+      "id": "soc2-processing-integrity",
+      "title": "SOC 2 Processing Integrity Principle (PI1)",
+      "url": "https://www.aicpa.org/resources/landing/system-and-organization-controls-soc-suite-of-services",
+      "tags": [
+        "standard",
+        "integrity",
+        "accuracy",
+        "SOC2"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "aicpa.org",
+        "PI1",
+        "Processing Integrity"
+      ],
+      "business_triggers": {
+        "b2b_saas": true,
+        "processes_customer_data": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 6,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.6
+    },
+    {
+      "id": "soc2-privacy-principle",
+      "title": "SOC 2 Privacy Principle (P1-P8)",
+      "url": "https://www.aicpa.org/resources/landing/system-and-organization-controls-soc-suite-of-services",
+      "tags": [
+        "standard",
+        "privacy",
+        "personal-information",
+        "SOC2"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "aicpa.org",
+        "P1-P8",
+        "Privacy"
+      ],
+      "business_triggers": {
+        "b2b_saas": true,
+        "processes_customer_data": true,
+        "handles_personal_data": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "data_subject_request_portal",
+        "breach_notification_procedure",
+        "data_processing_agreements",
+        "consent_management_system",
+        "privacy_policy_implementation"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "DSAR Log",
+        "Data Breach Log",
+        "DPA Register",
+        "Consent Records",
+        "Privacy Policy Document"
+      ]
+    },
+    {
+      "id": "iso-27001-2022",
+      "title": "ISO/IEC 27001:2022 Information Security Management Systems",
+      "url": "https://www.iso.org/standard/27001",
+      "tags": [
+        "standard",
+        "security",
+        "ISMS",
+        "ISO"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "iso.org",
+        "27001:2022",
+        "ISMS"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.8,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "iso-27002-2022",
+      "title": "ISO/IEC 27002:2022 Information Security Controls",
+      "url": "https://www.iso.org/standard/75652.html",
+      "tags": [
+        "standard",
+        "security",
+        "controls",
+        "ISO"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "iso.org",
+        "27002:2022",
+        "Controls"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.8,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "iso-27017",
+      "title": "ISO/IEC 27017 Cloud Security",
+      "url": "https://www.iso.org/standard/43757.html",
+      "tags": [
+        "standard",
+        "cloud",
+        "security",
+        "ISO"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "iso.org",
+        "27017",
+        "Cloud Security"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.8,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "iso-27018",
+      "title": "ISO/IEC 27018 Cloud Privacy",
+      "url": "https://www.iso.org/standard/76559.html",
+      "tags": [
+        "standard",
+        "cloud",
+        "privacy",
+        "PII",
+        "ISO"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "iso.org",
+        "27018",
+        "Cloud Privacy"
+      ],
+      "business_triggers": {
+        "handles_personal_data": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "data_subject_request_portal",
+        "breach_notification_procedure",
+        "data_processing_agreements",
+        "consent_management_system"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "DSAR Log",
+        "Data Breach Log",
+        "DPA Register",
+        "Consent Records"
+      ]
+    },
+    {
+      "id": "iso-27701",
+      "title": "ISO/IEC 27701 Privacy Information Management",
+      "url": "https://www.iso.org/standard/71670.html",
+      "tags": [
+        "standard",
+        "privacy",
+        "PIMS",
+        "GDPR",
+        "ISO"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "iso.org",
+        "27701",
+        "PIMS"
+      ],
+      "business_triggers": {
+        "handles_personal_data": true,
+        "has_eu_customers": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "data_subject_request_portal",
+        "breach_notification_procedure",
+        "data_processing_agreements",
+        "consent_management_system"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "DSAR Log",
+        "Data Breach Log",
+        "DPA Register",
+        "Consent Records"
+      ]
+    },
+    {
+      "id": "iso-31000",
+      "title": "ISO 31000 Risk Management",
+      "url": "https://www.iso.org/iso-31000-risk-management.html",
+      "tags": [
+        "standard",
+        "risk",
+        "governance",
+        "ISO"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "iso.org",
+        "31000",
+        "Risk Management"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 6,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.6,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "iso-22301",
+      "title": "ISO 22301 Business Continuity Management",
+      "url": "https://www.iso.org/standard/75106.html",
+      "tags": [
+        "standard",
+        "BCM",
+        "resilience",
+        "ISO"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "iso.org",
+        "22301",
+        "Business Continuity"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 6,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.6,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "iso-9001",
+      "title": "ISO 9001 Quality Management Systems",
+      "url": "https://www.iso.org/iso-9001-quality-management.html",
+      "tags": [
+        "standard",
+        "quality",
+        "QMS",
+        "ISO"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "iso.org",
+        "9001",
+        "Quality Management"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 6,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.6,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "iso-14001",
+      "title": "ISO 14001 Environmental Management",
+      "url": "https://www.iso.org/iso-14001-environmental-management.html",
+      "tags": [
+        "standard",
+        "environmental",
+        "ESG",
+        "ISO"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "iso.org",
+        "14001",
+        "Environmental"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 6,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.6,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "iso-45001",
+      "title": "ISO 45001 Occupational Health and Safety",
+      "url": "https://www.iso.org/iso-45001-occupational-health-and-safety.html",
+      "tags": [
+        "standard",
+        "health-safety",
+        "OHSMS",
+        "ISO"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "iso.org",
+        "45001",
+        "Health Safety"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 6,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.6,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "iso-37001",
+      "title": "ISO 37001 Anti-bribery Management Systems",
+      "url": "https://www.iso.org/iso-37001-anti-bribery-management.html",
+      "tags": [
+        "standard",
+        "anti-bribery",
+        "compliance",
+        "ISO"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "iso.org",
+        "37001",
+        "Anti-bribery"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 6,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.6,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "iso-37301",
+      "title": "ISO 37301 Compliance Management Systems",
+      "url": "https://www.iso.org/standard/75080.html",
+      "tags": [
+        "standard",
+        "compliance",
+        "CMS",
+        "ISO"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "iso.org",
+        "37301",
+        "Compliance Management"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 6,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.6,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "iso-20000",
+      "title": "ISO/IEC 20000 IT Service Management",
+      "url": "https://www.iso.org/standard/70636.html",
+      "tags": [
+        "standard",
+        "ITSM",
+        "service",
+        "ISO"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "iso.org",
+        "20000",
+        "IT Service"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 6,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.6,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "iso-23301",
+      "title": "ISO/IEC 23301 Digital Identity",
+      "url": "https://www.iso.org/standard/75302.html",
+      "tags": [
+        "standard",
+        "identity",
+        "digital",
+        "ISO"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "iso.org",
+        "23301",
+        "Digital Identity"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 6,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.6,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "iso-23053",
+      "title": "ISO/IEC 23053 Open Source Software",
+      "url": "https://www.iso.org/standard/74443.html",
+      "tags": [
+        "standard",
+        "open-source",
+        "software",
+        "ISO"
+      ],
+      "priority": 3,
+      "dedupe_hints": [
+        "iso.org",
+        "23053",
+        "Open Source"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 6,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.6,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "iso-38500",
+      "title": "ISO/IEC 38500 IT Governance",
+      "url": "https://www.iso.org/standard/74873.html",
+      "tags": [
+        "standard",
+        "governance",
+        "IT",
+        "ISO"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "iso.org",
+        "38500",
+        "IT Governance"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 6,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.6,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "uk-ai-regulation-proposal-2024",
+      "title": "UK AI Regulation Framework (Proposed)",
+      "url": "https://www.gov.uk/government/publications/ai-regulation-a-pro-innovation-approach",
+      "tags": [
+        "proposed",
+        "AI",
+        "UK",
+        "innovation"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "gov.uk",
+        "AI Regulation",
+        "Pro-innovation"
+      ],
+      "business_triggers": {
+        "uses_ai_systems": true,
+        "automated_decision_making": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-ai-white-paper-2023",
+      "title": "UK AI White Paper - Pro-innovation Approach",
+      "url": "https://www.gov.uk/government/publications/ai-regulation-a-pro-innovation-approach/white-paper",
+      "tags": [
+        "guidance",
+        "AI",
+        "UK",
+        "white-paper"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "gov.uk",
+        "AI White Paper",
+        "2023"
+      ],
+      "business_triggers": {
+        "uses_ai_systems": true,
+        "automated_decision_making": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-cyber-security-strategy-2022",
+      "title": "UK National Cyber Security Strategy 2022",
+      "url": "https://www.gov.uk/government/publications/national-cyber-strategy-2022",
+      "tags": [
+        "strategy",
+        "cybersecurity",
+        "UK",
+        "national"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "gov.uk",
+        "Cyber Strategy",
+        "2022"
+      ],
+      "business_triggers": {
+        "requires_cyber_certification": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 4,
+        "typical_implementation_timeline": "3-6 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-cyber-essentials-plus",
+      "title": "UK Cyber Essentials Plus Certification",
+      "url": "https://www.ncsc.gov.uk/cyberessentials/overview",
+      "tags": [
+        "certification",
+        "cybersecurity",
+        "UK",
+        "NCSC"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "ncsc.gov.uk",
+        "Cyber Essentials",
+        "Plus"
+      ],
+      "business_triggers": {
+        "requires_cyber_certification": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 4,
+        "typical_implementation_timeline": "3-6 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-product-security-telecoms-act-2022",
+      "title": "UK Product Security and Telecommunications Infrastructure Act 2022",
+      "url": "https://www.legislation.gov.uk/ukpga/2022/46/contents",
+      "tags": [
+        "law",
+        "IoT",
+        "UK",
+        "product-security"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2022/46",
+        "PSTI"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-critical-national-infrastructure",
+      "title": "UK Critical National Infrastructure Protection",
+      "url": "https://www.ncsc.gov.uk/section/private-sector-cni/cni",
+      "tags": [
+        "guidance",
+        "CNI",
+        "UK",
+        "critical-infrastructure"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "ncsc.gov.uk",
+        "CNI",
+        "Critical Infrastructure"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-ransomware-guidance",
+      "title": "NCSC Ransomware Guidance",
+      "url": "https://www.ncsc.gov.uk/ransomware/home",
+      "tags": [
+        "guidance",
+        "ransomware",
+        "UK",
+        "incident-response"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "ncsc.gov.uk",
+        "Ransomware",
+        "Guidance"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-cloud-security-principles",
+      "title": "NCSC Cloud Security Principles",
+      "url": "https://www.ncsc.gov.uk/collection/cloud/the-cloud-security-principles",
+      "tags": [
+        "guidance",
+        "cloud",
+        "UK",
+        "security-principles"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "ncsc.gov.uk",
+        "Cloud Security",
+        "Principles"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-zero-trust-architecture",
+      "title": "NCSC Zero Trust Architecture Guidance",
+      "url": "https://www.ncsc.gov.uk/collection/zero-trust-architecture",
+      "tags": [
+        "guidance",
+        "zero-trust",
+        "UK",
+        "architecture"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "ncsc.gov.uk",
+        "Zero Trust",
+        "Architecture"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-supply-chain-security",
+      "title": "NCSC Supply Chain Security Guidance",
+      "url": "https://www.ncsc.gov.uk/collection/supply-chain-security",
+      "tags": [
+        "guidance",
+        "supply-chain",
+        "UK",
+        "third-party"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "ncsc.gov.uk",
+        "Supply Chain",
+        "Security"
+      ],
+      "business_triggers": {
+        "uses_ai_systems": true,
+        "automated_decision_making": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-age-appropriate-design-code",
+      "title": "UK Age Appropriate Design Code (Children's Code)",
+      "url": "https://ico.org.uk/for-organisations/childrens-code-hub/",
+      "tags": [
+        "code",
+        "children",
+        "UK",
+        "ICO",
+        "privacy"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "ico.org.uk",
+        "Children's Code",
+        "AADC"
+      ],
+      "business_triggers": {
+        "handles_personal_data": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "data_subject_request_portal",
+        "breach_notification_procedure",
+        "data_processing_agreements",
+        "consent_management_system",
+        "privacy_policy_implementation"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "DSAR Log",
+        "Data Breach Log",
+        "DPA Register",
+        "Consent Records",
+        "Privacy Policy Document"
+      ]
+    },
+    {
+      "id": "uk-ai-auditing-framework",
+      "title": "ICO AI Auditing Framework",
+      "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/artificial-intelligence/guidance-on-ai-and-data-protection/ai-auditing-framework/",
+      "tags": [
+        "framework",
+        "AI",
+        "UK",
+        "audit",
+        "ICO"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "ico.org.uk",
+        "AI Auditing",
+        "Framework"
+      ],
+      "business_triggers": {
+        "uses_ai_systems": true,
+        "automated_decision_making": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.6
+    },
+    {
+      "id": "uk-biometrics-guidance",
+      "title": "ICO Biometric Data Guidance",
+      "url": "https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/lawful-basis/biometric-data-guidance/",
+      "tags": [
+        "guidance",
+        "biometrics",
+        "UK",
+        "ICO",
+        "privacy"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "ico.org.uk",
+        "Biometric",
+        "Guidance"
+      ],
+      "business_triggers": {
+        "handles_personal_data": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "data_subject_request_portal",
+        "breach_notification_procedure",
+        "data_processing_agreements",
+        "consent_management_system",
+        "privacy_policy_implementation"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "DSAR Log",
+        "Data Breach Log",
+        "DPA Register",
+        "Consent Records",
+        "Privacy Policy Document"
+      ]
+    },
+    {
+      "id": "uk-data-sharing-code",
+      "title": "ICO Data Sharing Code of Practice",
+      "url": "https://ico.org.uk/for-organisations/data-sharing-a-code-of-practice/",
+      "tags": [
+        "code",
+        "data-sharing",
+        "UK",
+        "ICO"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "ico.org.uk",
+        "Data Sharing",
+        "Code"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-direct-marketing-code",
+      "title": "ICO Direct Marketing Code of Practice",
+      "url": "https://ico.org.uk/for-organisations/direct-marketing-and-privacy-and-electronic-communications/",
+      "tags": [
+        "code",
+        "marketing",
+        "UK",
+        "ICO"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "ico.org.uk",
+        "Direct Marketing",
+        "Code"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-surveillance-camera-code",
+      "title": "UK Surveillance Camera Code of Practice",
+      "url": "https://www.gov.uk/government/publications/surveillance-camera-code-of-practice",
+      "tags": [
+        "code",
+        "surveillance",
+        "UK",
+        "cameras",
+        "privacy"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "gov.uk",
+        "Surveillance Camera",
+        "Code"
+      ],
+      "business_triggers": {
+        "handles_personal_data": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "data_subject_request_portal",
+        "breach_notification_procedure",
+        "data_processing_agreements",
+        "consent_management_system",
+        "privacy_policy_implementation"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "DSAR Log",
+        "Data Breach Log",
+        "DPA Register",
+        "Consent Records",
+        "Privacy Policy Document"
+      ]
+    },
+    {
+      "id": "uk-investigatory-powers-act-2016",
+      "title": "Investigatory Powers Act 2016",
+      "url": "https://www.legislation.gov.uk/ukpga/2016/25/contents",
+      "tags": [
+        "law",
+        "surveillance",
+        "UK",
+        "interception"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "legislation.gov.uk",
+        "2016/25",
+        "IPA"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-digital-identity-trust-framework",
+      "title": "UK Digital Identity and Attributes Trust Framework",
+      "url": "https://www.gov.uk/government/publications/uk-digital-identity-attributes-trust-framework-updated-version",
+      "tags": [
+        "framework",
+        "digital-identity",
+        "UK",
+        "trust"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "gov.uk",
+        "Digital Identity",
+        "Trust Framework"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-algorithmic-transparency-standard",
+      "title": "UK Algorithmic Transparency Standard",
+      "url": "https://www.gov.uk/government/publications/algorithmic-transparency-standard",
+      "tags": [
+        "standard",
+        "AI",
+        "UK",
+        "transparency",
+        "algorithms"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "gov.uk",
+        "Algorithmic Transparency",
+        "Standard"
+      ],
+      "business_triggers": {
+        "uses_ai_systems": true,
+        "automated_decision_making": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 6,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.6
+    },
+    {
+      "id": "uk-data-ethics-framework",
+      "title": "UK Data Ethics Framework",
+      "url": "https://www.gov.uk/government/publications/data-ethics-framework",
+      "tags": [
+        "framework",
+        "ethics",
+        "UK",
+        "data"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "gov.uk",
+        "Data Ethics",
+        "Framework"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-green-finance-strategy",
+      "title": "UK Green Finance Strategy",
+      "url": "https://www.gov.uk/government/publications/green-finance-strategy",
+      "tags": [
+        "strategy",
+        "ESG",
+        "UK",
+        "green-finance",
+        "climate"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "gov.uk",
+        "Green Finance",
+        "Strategy"
+      ],
+      "business_triggers": {
+        "industry": "finance",
+        "provides_financial_services": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 9,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-tcfd-requirements",
+      "title": "UK TCFD (Task Force on Climate-related Financial Disclosures)",
+      "url": "https://www.gov.uk/government/publications/uk-joint-regulator-and-government-tcfd-taskforce-interim-report-and-roadmap",
+      "tags": [
+        "disclosure",
+        "climate",
+        "UK",
+        "TCFD",
+        "ESG"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "gov.uk",
+        "TCFD",
+        "Climate Disclosures"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-sustainable-disclosure-requirements",
+      "title": "UK Sustainability Disclosure Requirements (SDR)",
+      "url": "https://www.fca.org.uk/publications/policy-statements/ps22-12-sustainability-disclosure-requirements-sdr",
+      "tags": [
+        "disclosure",
+        "sustainability",
+        "UK",
+        "FCA",
+        "ESG"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "fca.org.uk",
+        "SDR",
+        "Sustainability Disclosure"
+      ],
+      "business_triggers": {
+        "uses_ai_systems": true,
+        "automated_decision_making": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-stewardship-code-2020",
+      "title": "UK Stewardship Code 2020",
+      "url": "https://www.frc.org.uk/investors/uk-stewardship-code",
+      "tags": [
+        "code",
+        "stewardship",
+        "UK",
+        "FRC",
+        "ESG"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "frc.org.uk",
+        "Stewardship Code",
+        "2020"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-modern-slavery-registry",
+      "title": "UK Modern Slavery Statement Registry",
+      "url": "https://modern-slavery-statement-registry.service.gov.uk/",
+      "tags": [
+        "registry",
+        "modern-slavery",
+        "UK",
+        "transparency"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "gov.uk",
+        "Modern Slavery",
+        "Registry"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-gender-pay-gap-reporting",
+      "title": "UK Gender Pay Gap Reporting",
+      "url": "https://www.gov.uk/guidance/gender-pay-gap-reporting-overview",
+      "tags": [
+        "reporting",
+        "equality",
+        "UK",
+        "gender",
+        "ESG"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "gov.uk",
+        "Gender Pay Gap",
+        "Reporting"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-corporate-criminal-offence",
+      "title": "UK Corporate Criminal Offence of Failure to Prevent Tax Evasion",
+      "url": "https://www.gov.uk/government/publications/corporate-offences-for-failing-to-prevent-criminal-facilitation-of-tax-evasion",
+      "tags": [
+        "law",
+        "tax",
+        "UK",
+        "criminal",
+        "corporate"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "gov.uk",
+        "Corporate Criminal",
+        "Tax Evasion"
+      ],
+      "business_triggers": {
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "uk-economic-crime-levy",
+      "title": "UK Economic Crime Levy",
+      "url": "https://www.gov.uk/government/publications/economic-crime-levy",
+      "tags": [
+        "levy",
+        "economic-crime",
+        "UK",
+        "AML"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "gov.uk",
+        "Economic Crime",
+        "Levy"
+      ],
+      "business_triggers": {
+        "processes_payments": true,
+        "provides_financial_services": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 10,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-failure-to-prevent-fraud",
+      "title": "UK Failure to Prevent Fraud Offence (Upcoming)",
+      "url": "https://www.gov.uk/government/consultations/corporate-liability-for-economic-crime-call-for-evidence",
+      "tags": [
+        "upcoming",
+        "fraud",
+        "UK",
+        "corporate-liability"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "gov.uk",
+        "Failure to Prevent",
+        "Fraud"
+      ],
+      "business_triggers": {
+        "uses_ai_systems": true,
+        "automated_decision_making": true,
+        "country": "UK"
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uk-online-harms-white-paper",
+      "title": "UK Online Harms White Paper",
+      "url": "https://www.gov.uk/government/consultations/online-harms-white-paper",
+      "tags": [
+        "white-paper",
+        "online-safety",
+        "UK",
+        "platforms"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "gov.uk",
+        "Online Harms",
+        "White Paper"
+      ],
+      "business_triggers": {
+        "country": "UK",
+        "online_platform": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "hipaa-privacy-rule",
+      "title": "HIPAA Privacy Rule (HHS)",
+      "url": "https://www.hhs.gov/hipaa/for-professionals/privacy/laws-regulations/index.html",
+      "tags": [
+        "law",
+        "healthcare",
+        "US",
+        "privacy"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "hhs.gov",
+        "HIPAA",
+        "Privacy Rule"
+      ],
+      "business_triggers": {
+        "handles_personal_data": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "data_subject_request_portal",
+        "breach_notification_procedure",
+        "data_processing_agreements",
+        "consent_management_system",
+        "privacy_policy_implementation"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "DSAR Log",
+        "Data Breach Log",
+        "DPA Register",
+        "Consent Records",
+        "Privacy Policy Document"
+      ]
+    },
+    {
+      "id": "hipaa-security-rule",
+      "title": "HIPAA Security Rule (HHS)",
+      "url": "https://www.hhs.gov/hipaa/for-professionals/security/laws-regulations/index.html",
+      "tags": [
+        "law",
+        "healthcare",
+        "US",
+        "security"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "hhs.gov",
+        "HIPAA",
+        "Security Rule"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.8,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "sox-full-text",
+      "title": "Sarbanes\u2013Oxley Act (Full Text, U.S.)",
+      "url": "https://www.govinfo.gov/content/pkg/COMPS-1883/pdf/COMPS-1883.pdf",
+      "tags": [
+        "law",
+        "finance",
+        "US",
+        "internal-controls",
+        "ICFR"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "govinfo.gov",
+        "Sarbanes",
+        "SOX"
+      ],
+      "business_triggers": {
+        "industry": "finance",
+        "provides_financial_services": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "risk_management_framework",
+        "capital_adequacy_monitoring",
+        "regulatory_reporting_system",
+        "compliance_monitoring_system"
+      ],
+      "automation_potential": 0.4,
+      "evidence_templates": [
+        "Regulatory Filing Records"
+      ]
+    },
+    {
+      "id": "eu-dsa",
+      "title": "EU Digital Services Act",
+      "url": "https://eur-lex.europa.eu/eli/reg/2022/2065/oj",
+      "tags": [
+        "law",
+        "platforms",
+        "EU",
+        "transparency"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "eur-lex",
+        "2022/2065",
+        "DSA"
+      ],
+      "business_triggers": {
+        "has_eu_customers": true,
+        "online_platform": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "eu-ai-act",
+      "title": "EU Artificial Intelligence Act",
+      "url": "https://eur-lex.europa.eu/eli/reg/2024/1689/oj",
+      "tags": [
+        "law",
+        "AI",
+        "EU",
+        "risk-based"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "eur-lex",
+        "2024/1689",
+        "AI Act"
+      ],
+      "business_triggers": {
+        "uses_ai_systems": true,
+        "automated_decision_making": true,
+        "has_eu_customers": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "dora",
+      "title": "Digital Operational Resilience Act (DORA)",
+      "url": "https://eur-lex.europa.eu/eli/reg/2022/2554/oj",
+      "tags": [
+        "law",
+        "finance",
+        "EU",
+        "operational-resilience"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "eur-lex",
+        "2022/2554",
+        "DORA"
+      ],
+      "business_triggers": {
+        "industry": "finance",
+        "provides_financial_services": true,
+        "has_eu_customers": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "risk_management_framework",
+        "capital_adequacy_monitoring",
+        "regulatory_reporting_system",
+        "compliance_monitoring_system"
+      ],
+      "automation_potential": 0.4,
+      "evidence_templates": [
+        "Regulatory Filing Records"
+      ]
+    },
+    {
+      "id": "psd2",
+      "title": "PSD2 \u2013 Payment Services Directive (EU) 2015/2366",
+      "url": "https://eur-lex.europa.eu/eli/dir/2015/2366/oj",
+      "tags": [
+        "law",
+        "payments",
+        "EU",
+        "SCA"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "eur-lex",
+        "2015/2366",
+        "PSD2"
+      ],
+      "business_triggers": {
+        "has_eu_customers": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "network_segmentation",
+        "pci_compliance_scanning",
+        "cardholder_data_encryption",
+        "payment_security_monitoring"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "Compliance Documentation",
+        "Risk Assessment Report",
+        "Audit Trail"
+      ]
+    },
+    {
+      "id": "mica",
+      "title": "Markets in Crypto-assets (MiCA)",
+      "url": "https://eur-lex.europa.eu/eli/reg/2023/1114/oj",
+      "tags": [
+        "law",
+        "crypto",
+        "EU",
+        "prudential"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "eur-lex",
+        "2023/1114",
+        "MiCA"
+      ],
+      "business_triggers": {
+        "has_eu_customers": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.4
+    },
+    {
+      "id": "ccpa-cpra-statute",
+      "title": "California Consumer Privacy Act / CPRA (Statute)",
+      "url": "https://leginfo.legislature.ca.gov/faces/codes_displayText.xhtml?lawCode=CIV&division=3.&title=1.81.5.&part=4.&chapter=&article=",
+      "tags": [
+        "law",
+        "privacy",
+        "US-CA"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "leginfo.legislature.ca.gov",
+        "CCPA",
+        "CPRA"
+      ],
+      "business_triggers": {
+        "handles_personal_data": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "data_subject_request_portal",
+        "breach_notification_procedure",
+        "data_processing_agreements",
+        "consent_management_system",
+        "privacy_policy_implementation"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "DSAR Log",
+        "Data Breach Log",
+        "DPA Register",
+        "Consent Records",
+        "Privacy Policy Document"
+      ]
+    },
+    {
+      "id": "ccpa-cpra-regulations",
+      "title": "California Privacy Protection Agency \u2013 CPRA Regulations",
+      "url": "https://cppa.ca.gov/regulations/",
+      "tags": [
+        "regulations",
+        "privacy",
+        "US-CA"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "cppa.ca.gov",
+        "regulations"
+      ],
+      "business_triggers": {
+        "handles_personal_data": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "data_subject_request_portal",
+        "breach_notification_procedure",
+        "data_processing_agreements",
+        "consent_management_system",
+        "privacy_policy_implementation"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "DSAR Log",
+        "Data Breach Log",
+        "DPA Register",
+        "Consent Records",
+        "Privacy Policy Document"
+      ]
+    },
+    {
+      "id": "nist-csf-2-0",
+      "title": "NIST Cybersecurity Framework 2.0",
+      "url": "https://csrc.nist.gov/pubs/cswp/29/the-nist-cybersecurity-framework-csf-20/final",
+      "tags": [
+        "framework",
+        "governance",
+        "risk",
+        "security"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "csrc.nist.gov",
+        "CSF",
+        "2.0"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.8,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "nist-800-53-r5",
+      "title": "NIST SP 800-53 Rev. 5 \u2013 Security and Privacy Controls",
+      "url": "https://csrc.nist.gov/pubs/sp/800/53/r5/final",
+      "tags": [
+        "controls",
+        "catalog",
+        "security",
+        "privacy"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "csrc.nist.gov",
+        "800-53",
+        "Rev.5"
+      ],
+      "business_triggers": {
+        "handles_personal_data": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "data_subject_request_portal",
+        "breach_notification_procedure",
+        "data_processing_agreements",
+        "consent_management_system"
+      ],
+      "automation_potential": 0.8,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "DSAR Log",
+        "Data Breach Log",
+        "DPA Register",
+        "Consent Records"
+      ]
+    },
+    {
+      "id": "nist-800-37-r2",
+      "title": "NIST SP 800-37 Rev. 2 \u2013 Risk Management Framework",
+      "url": "https://csrc.nist.gov/pubs/sp/800/37/r2/final",
+      "tags": [
+        "framework",
+        "authorization",
+        "risk",
+        "A&A"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "csrc.nist.gov",
+        "800-37",
+        "RMF"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "nist-800-30-r1",
+      "title": "NIST SP 800-30 Rev. 1 \u2013 Guide for Conducting Risk Assessments",
+      "url": "https://csrc.nist.gov/pubs/sp/800/30/r1/final",
+      "tags": [
+        "risk",
+        "methodology",
+        "assessment"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "csrc.nist.gov",
+        "800-30"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "nist-800-39",
+      "title": "NIST SP 800-39 \u2013 Managing Information Security Risk",
+      "url": "https://csrc.nist.gov/pubs/sp/800/39/final",
+      "tags": [
+        "risk",
+        "governance",
+        "strategy"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "csrc.nist.gov",
+        "800-39"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "nist-800-171-r3",
+      "title": "NIST SP 800-171 Rev. 3 \u2013 Protecting CUI",
+      "url": "https://csrc.nist.gov/pubs/sp/800/171/r3/final",
+      "tags": [
+        "supplier",
+        "controls",
+        "CUI",
+        "third-party"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "csrc.nist.gov",
+        "800-171"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "nist-800-207",
+      "title": "NIST SP 800-207 \u2013 Zero Trust Architecture",
+      "url": "https://csrc.nist.gov/pubs/sp/800/207/final",
+      "tags": [
+        "zero-trust",
+        "policy",
+        "architecture"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "csrc.nist.gov",
+        "800-207"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "nist-800-162",
+      "title": "NIST SP 800-162 (upd2) \u2013 Attribute Based Access Control",
+      "url": "https://csrc.nist.gov/pubs/sp/800/162/upd2/final",
+      "tags": [
+        "access-control",
+        "policy",
+        "ABAC"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "csrc.nist.gov",
+        "800-162"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "nist-privacy-framework",
+      "title": "NIST Privacy Framework",
+      "url": "https://www.nist.gov/privacy-framework",
+      "tags": [
+        "privacy",
+        "governance",
+        "risk"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "nist.gov",
+        "privacy-framework"
+      ],
+      "business_triggers": {
+        "handles_personal_data": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 9,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "data_subject_request_portal",
+        "breach_notification_procedure",
+        "data_processing_agreements",
+        "consent_management_system",
+        "privacy_policy_implementation"
+      ],
+      "automation_potential": 0.7,
+      "evidence_templates": [
+        "DSAR Log",
+        "Data Breach Log",
+        "DPA Register",
+        "Consent Records",
+        "Privacy Policy Document"
+      ]
+    },
+    {
+      "id": "nist-ai-rmf-1-0",
+      "title": "NIST AI Risk Management Framework 1.0",
+      "url": "https://www.nist.gov/itl/ai-risk-management-framework",
+      "tags": [
+        "AI",
+        "risk",
+        "governance"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "nist.gov",
+        "AI RMF"
+      ],
+      "business_triggers": {
+        "uses_ai_systems": true,
+        "automated_decision_making": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "oscal",
+      "title": "NIST OSCAL \u2013 Open Security Controls Assessment Language",
+      "url": "https://pages.nist.gov/OSCAL/",
+      "tags": [
+        "compliance-as-code",
+        "controls",
+        "automation",
+        "evidence"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "pages.nist.gov",
+        "OSCAL"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "iso-27001",
+      "title": "ISO/IEC 27001 (ISMS) \u2013 Landing Page",
+      "url": "https://www.iso.org/standard/27001",
+      "tags": [
+        "standard",
+        "security",
+        "ISMS",
+        "paywalled"
+      ],
+      "priority": 2,
+      "dedupe_hints": [
+        "iso.org",
+        "27001"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.8,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "iso-42001",
+      "title": "ISO/IEC 42001 (AI Management System) \u2013 Landing Page",
+      "url": "https://www.iso.org/standard/42001",
+      "tags": [
+        "standard",
+        "AI",
+        "management-system",
+        "paywalled"
+      ],
+      "priority": 2,
+      "dedupe_hints": [
+        "iso.org",
+        "42001"
+      ],
+      "business_triggers": {
+        "uses_ai_systems": true,
+        "automated_decision_making": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 6,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 7,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.6,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "cobit",
+      "title": "COBIT (ISACA) \u2013 IT Governance Framework",
+      "url": "https://www.isaca.org/resources/cobit",
+      "tags": [
+        "governance",
+        "IT",
+        "controls"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "isaca.org",
+        "COBIT"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "pci-dss-overview",
+      "title": "PCI DSS \u2013 Official Overview",
+      "url": "https://www.pcisecuritystandards.org/standards/pci-dss/",
+      "tags": [
+        "payments",
+        "security",
+        "standard"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "pcisecuritystandards.org",
+        "PCI DSS"
+      ],
+      "business_triggers": {
+        "processes_payments": true,
+        "stores_card_data": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 10,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 9,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "network_segmentation",
+        "payment_security_monitoring",
+        "incident_response_plan",
+        "cardholder_data_encryption"
+      ],
+      "automation_potential": 0.8,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records"
+      ]
+    },
+    {
+      "id": "pci-doc-library",
+      "title": "PCI SSC \u2013 Document Library",
+      "url": "https://www.pcisecuritystandards.org/document_library/",
+      "tags": [
+        "payments",
+        "security",
+        "guidance"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "pcisecuritystandards.org",
+        "Document Library"
+      ],
+      "business_triggers": {
+        "processes_payments": true,
+        "stores_card_data": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 10,
+        "enforcement_frequency": "very_high",
+        "implementation_complexity": 9,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "network_segmentation",
+        "payment_security_monitoring",
+        "incident_response_plan",
+        "cardholder_data_encryption"
+      ],
+      "automation_potential": 0.8,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records"
+      ]
+    },
+    {
+      "id": "mitre-attack",
+      "title": "MITRE ATT&CK",
+      "url": "https://attack.mitre.org/",
+      "tags": [
+        "threat-model",
+        "detections",
+        "controls-mapping"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "attack.mitre.org",
+        "ATT&CK"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "cis-controls-v8-1",
+      "title": "CIS Critical Security Controls v8.1",
+      "url": "https://www.cisecurity.org/controls/v8-1",
+      "tags": [
+        "controls",
+        "prioritization",
+        "security"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "cisecurity.org",
+        "CIS Controls"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 8,
+        "enforcement_frequency": "high",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "suggested_controls": [
+        "security_policy_framework",
+        "incident_response_plan",
+        "security_awareness_training",
+        "vulnerability_management",
+        "access_control_matrix"
+      ],
+      "automation_potential": 0.8,
+      "evidence_templates": [
+        "Security Policy Documentation",
+        "Incident Response Records",
+        "Access Control Reviews"
+      ]
+    },
+    {
+      "id": "opa",
+      "title": "Open Policy Agent (OPA) \u2013 Docs",
+      "url": "https://www.openpolicyagent.org/docs/latest/",
+      "tags": [
+        "policy-as-code",
+        "enforcement",
+        "rego"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "openpolicyagent.org",
+        "docs"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "opentelemetry",
+      "title": "OpenTelemetry \u2013 Docs",
+      "url": "https://opentelemetry.io/docs/",
+      "tags": [
+        "telemetry",
+        "evidence",
+        "observability"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "opentelemetry.io",
+        "docs"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "spdx-spec",
+      "title": "SPDX Specification (SBOM) v1.1 PDF",
+      "url": "https://spdx.dev/wp-content/uploads/sites/31/2023/09/spdx-1.1.pdf",
+      "tags": [
+        "sbom",
+        "supply-chain",
+        "compliance"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "spdx.dev",
+        "SPDX"
+      ],
+      "business_triggers": {
+        "uses_ai_systems": true,
+        "automated_decision_making": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "cyclonedx-spec",
+      "title": "CycloneDX \u2013 Specification",
+      "url": "https://cyclonedx.org/specification/",
+      "tags": [
+        "sbom",
+        "supply-chain",
+        "compliance"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "cyclonedx.org",
+        "specification"
+      ],
+      "business_triggers": {
+        "uses_ai_systems": true,
+        "automated_decision_making": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "slsa-spec",
+      "title": "SLSA \u2013 Supply-chain Levels for Software Artifacts",
+      "url": "https://slsa.dev/spec/v1.0/about",
+      "tags": [
+        "supply-chain",
+        "provenance",
+        "attestation"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "slsa.dev",
+        "spec"
+      ],
+      "business_triggers": {
+        "uses_ai_systems": true,
+        "automated_decision_making": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "sklearn-model-eval",
+      "title": "scikit-learn: Model Evaluation & Metrics",
+      "url": "https://scikit-learn.org/stable/modules/model_evaluation.html",
+      "tags": [
+        "metrics",
+        "evaluation",
+        "ml"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "scikit-learn.org",
+        "model_evaluation"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "sklearn-cross-validation",
+      "title": "scikit-learn: Cross-Validation",
+      "url": "https://scikit-learn.org/stable/modules/cross_validation.html",
+      "tags": [
+        "validation",
+        "splits",
+        "ml"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "scikit-learn.org",
+        "cross_validation"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "sklearn-pitfalls",
+      "title": "scikit-learn: Common Pitfalls (Leakage, Pipelines)",
+      "url": "https://scikit-learn.org/stable/common_pitfalls.html",
+      "tags": [
+        "leakage",
+        "pipelines",
+        "ml"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "scikit-learn.org",
+        "pitfalls"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "sklearn-calibration",
+      "title": "scikit-learn: Probability Calibration",
+      "url": "https://scikit-learn.org/stable/modules/calibration.html",
+      "tags": [
+        "calibration",
+        "metrics",
+        "ml"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "scikit-learn.org",
+        "calibration"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "sklearn-brier",
+      "title": "scikit-learn: Brier Score",
+      "url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.brier_score_loss.html",
+      "tags": [
+        "metrics",
+        "calibration",
+        "ml"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "scikit-learn.org",
+        "brier_score_loss"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "sklearn-timeseriessplit",
+      "title": "scikit-learn: TimeSeriesSplit",
+      "url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html",
+      "tags": [
+        "time-series",
+        "validation",
+        "ml"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "scikit-learn.org",
+        "TimeSeriesSplit"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "tfdv",
+      "title": "TensorFlow Data Validation (TFDV)",
+      "url": "https://www.tensorflow.org/tfx/data_validation",
+      "tags": [
+        "data-quality",
+        "validation",
+        "mlops"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "tensorflow.org",
+        "data_validation"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "tfma",
+      "title": "TensorFlow Model Analysis (TFMA)",
+      "url": "https://www.tensorflow.org/tfx/model_analysis",
+      "tags": [
+        "evaluation",
+        "fairness",
+        "mlops"
+      ],
+      "priority": 5,
+      "dedupe_hints": [
+        "tensorflow.org",
+        "model_analysis"
+      ],
+      "business_triggers": {
+        "uses_ai_systems": true,
+        "automated_decision_making": true
+      },
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 10,
+        "typical_implementation_timeline": "18-24 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "great-expectations",
+      "title": "Great Expectations \u2013 Docs",
+      "url": "https://docs.greatexpectations.io/",
+      "tags": [
+        "data-quality",
+        "validation",
+        "testing"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "greatexpectations.io",
+        "docs"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "aws-deequ",
+      "title": "Deequ (AWS Labs) \u2013 Repository",
+      "url": "https://github.com/awslabs/deequ",
+      "tags": [
+        "data-quality",
+        "spark",
+        "validation"
+      ],
+      "priority": 3,
+      "dedupe_hints": [
+        "github.com",
+        "deequ"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "evidently",
+      "title": "Evidently AI \u2013 Docs",
+      "url": "https://docs.evidentlyai.com/",
+      "tags": [
+        "monitoring",
+        "drift",
+        "data-quality"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "evidentlyai.com",
+        "docs"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.8
+    },
+    {
+      "id": "whylogs",
+      "title": "whylogs \u2013 Docs",
+      "url": "https://whylogs.ai/docs/",
+      "tags": [
+        "data-logging",
+        "profiles",
+        "monitoring"
+      ],
+      "priority": 3,
+      "dedupe_hints": [
+        "whylogs.ai",
+        "docs"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.8
+    },
+    {
+      "id": "hf-datasets",
+      "title": "Hugging Face Datasets \u2013 Docs",
+      "url": "https://huggingface.co/docs/datasets/en/index",
+      "tags": [
+        "datasets",
+        "loading",
+        "streaming"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "huggingface.co",
+        "datasets"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "hf-evaluate",
+      "title": "Hugging Face Evaluate \u2013 Docs",
+      "url": "https://huggingface.co/docs/evaluate/en/index",
+      "tags": [
+        "metrics",
+        "evaluation"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "huggingface.co",
+        "evaluate"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "openml-docs",
+      "title": "OpenML \u2013 Documentation",
+      "url": "https://docs.openml.org/",
+      "tags": [
+        "datasets",
+        "benchmarks",
+        "metadata"
+      ],
+      "priority": 3,
+      "dedupe_hints": [
+        "openml.org",
+        "docs"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "uci-ml-repo",
+      "title": "UCI Machine Learning Repository",
+      "url": "https://archive.ics.uci.edu/",
+      "tags": [
+        "datasets",
+        "benchmarks"
+      ],
+      "priority": 3,
+      "dedupe_hints": [
+        "ics.uci.edu",
+        "Machine Learning Repository"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "wilds",
+      "title": "WILDS \u2013 OOD Robustness Benchmark",
+      "url": "https://wilds.stanford.edu/",
+      "tags": [
+        "benchmarks",
+        "distribution-shift",
+        "robustness"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "stanford.edu",
+        "WILDS"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "wilds-paper",
+      "title": "WILDS Paper (ICML 2021)",
+      "url": "https://proceedings.mlr.press/v139/koh21a/koh21a.pdf",
+      "tags": [
+        "paper",
+        "robustness",
+        "benchmarks"
+      ],
+      "priority": 3,
+      "dedupe_hints": [
+        "proceedings.mlr.press",
+        "koh21a.pdf"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "dataperf",
+      "title": "DataPerf \u2013 Data-Centric AI Benchmarks",
+      "url": "https://www.dataperf.org/",
+      "tags": [
+        "benchmarks",
+        "data-centric",
+        "selection"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "dataperf.org",
+        "benchmarks"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "dataperf-paper",
+      "title": "DataPerf Paper (arXiv)",
+      "url": "https://arxiv.org/abs/2207.10062",
+      "tags": [
+        "paper",
+        "benchmarks",
+        "data-centric"
+      ],
+      "priority": 3,
+      "dedupe_hints": [
+        "arxiv.org",
+        "2207.10062"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "ml-test-score",
+      "title": "The ML Test Score \u2013 Production Readiness Rubric",
+      "url": "https://research.google/pubs/the-ml-test-score-a-rubric-for-ml-production-readiness-and-technical-debt-reduction/",
+      "tags": [
+        "production",
+        "testing",
+        "mlops"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "research.google",
+        "ML Test Score"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "hidden-tech-debt",
+      "title": "Hidden Technical Debt in ML Systems",
+      "url": "https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems.pdf",
+      "tags": [
+        "paper",
+        "mlops",
+        "risk"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "papers.nips.cc",
+        "technical debt"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "datasheets-for-datasets",
+      "title": "Datasheets for Datasets (arXiv PDF)",
+      "url": "https://arxiv.org/pdf/1803.09010",
+      "tags": [
+        "documentation",
+        "datasets",
+        "governance"
+      ],
+      "priority": 4,
+      "dedupe_hints": [
+        "arxiv.org",
+        "1803.09010"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 8,
+        "typical_implementation_timeline": "12-18 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "data-cards-playbook",
+      "title": "Google PAIR \u2013 Data Cards Playbook",
+      "url": "https://pair.withgoogle.com/tools/",
+      "tags": [
+        "documentation",
+        "datasets",
+        "governance"
+      ],
+      "priority": 3,
+      "dedupe_hints": [
+        "withgoogle.com",
+        "Data Cards"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "fpp3",
+      "title": "Forecasting: Principles and Practice (FPP3)",
+      "url": "https://otexts.com/fpp3/",
+      "tags": [
+        "time-series",
+        "evaluation",
+        "forecasting"
+      ],
+      "priority": 3,
+      "dedupe_hints": [
+        "otexts.com",
+        "fpp3"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.5
+    },
+    {
+      "id": "stanford-ir-book",
+      "title": "Introduction to Information Retrieval",
+      "url": "https://nlp.stanford.edu/IR-book/information-retrieval-book.html",
+      "tags": [
+        "ranking",
+        "metrics",
+        "evaluation"
+      ],
+      "priority": 3,
+      "dedupe_hints": [
+        "stanford.edu",
+        "IR-book"
+      ],
+      "business_triggers": {},
+      "risk_metadata": {
+        "base_risk_score": 5,
+        "enforcement_frequency": "medium",
+        "implementation_complexity": 6,
+        "typical_implementation_timeline": "6-12 months"
+      },
+      "automation_potential": 0.5
+    }
+  ]
+}

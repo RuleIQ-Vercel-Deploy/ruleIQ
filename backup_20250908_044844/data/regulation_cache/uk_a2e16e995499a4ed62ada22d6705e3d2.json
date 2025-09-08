@@ -1,0 +1,518 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/ukpga/2023/50/data.xml",
+  "fetched_at": "2025-08-31T18:15:41.040292",
+  "metadata": {
+    "title": "Online Safety Act 2023",
+    "description": "",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "section-7",
+      "text": "71Subsections (2) to (6) apply to determine which of the duties set out in this Chapter (and, in the case of combined services, Chapter 3) must be complied with by providers of regulated user-to-user services.2All providers of regulated user-to-user services must comply with the following duties in relation to each such service which they provide\u2014athe duties about illegal content risk assessments set out in section 9,bthe duties about illegal content set out in section 10(2) to (8),cthe duty abo",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-8",
+      "text": "8\n\n\n1\n\nA duty set out in this Chapter which must be complied with in relation to a user-to-user service that includes regulated provider pornographic content does not extend to\u2014\n\na\n\nthe regulated provider pornographic content, or\n\n\n\nb\n\nthe design, operation or use of the service so far as relating to that content.\n\n\n\n\nSee Part 5 for the duties which relate to regulated provider pornographic content, and the meaning of that term.\n\n\n\n2\n\nA duty set out in this Chapter which must be complied with in",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-9",
+      "text": "9\n\n\n1\n\nThis section sets out the duties about risk assessments which apply in relation to all regulated user-to-user services.\n\n\n\n2\n\nA duty to carry out a suitable and sufficient illegal content risk assessment at a time set out in, or as provided by, Schedule 3.\n\n\n\n3\n\nA duty to take appropriate steps to keep an illegal content risk assessment up to date, including when OFCOM make any significant change to a risk profile that relates to services of the kind in question.\n\n\n\n4\n\nBefore making any s",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "section-10",
+      "text": "10\n\n\n1\n\nThis section sets out the duties about illegal content which apply in relation to regulated user-to-user services (as indicated by the headings).\n\n\n\nAll services\n\n2\n\nA duty, in relation to a service, to take or use proportionate measures relating to the design or operation of the service to\u2014\n\na\n\nprevent individuals from encountering priority illegal content by means of the service,\n\n\n\nb\n\neffectively mitigate and manage the risk of the service being used for the commission or facilitation",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-11",
+      "text": "11\n\n\n1\n\nThis section sets out the duties about risk assessments which apply in relation to regulated user-to-user services that are likely to be accessed by children (in addition to the duties about risk assessments set out in section 9 and, in the case of services likely to be accessed by children which are Category 1 services, the duties about assessments set out in section 14).\n\n\n\n2\n\nA duty to carry out a suitable and sufficient children\u2019s risk assessment at a time set out in, or as provided ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-12",
+      "text": "12\n\n\n1\n\nThis section sets out the duties to protect children\u2019s online safety which apply in relation to regulated user-to-user services that are likely to be accessed by children (as indicated by the headings).\n\n\n\nAll services\n\n2\n\nA duty, in relation to a service, to take or use proportionate measures relating to the design or operation of the service to effectively\u2014\n\na\n\nmitigate and manage the risks of harm to children in different age groups, as identified in the most recent children\u2019s risk as",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-13",
+      "text": "13\n\n\n1\n\nIn determining what is proportionate for the purposes of section 12, the following factors, in particular, are relevant\u2014\n\na\n\nall the findings of the most recent children\u2019s risk assessment (including as to levels of risk and as to nature, and severity, of potential harm to children), and\n\n\n\nb\n\nthe size and capacity of the provider of a service.\n\n\n\n\n\n2\n\nSo far as a duty set out in section 12 relates to non-designated content that is harmful to children, the duty is to be taken to extend on",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-14",
+      "text": "14\n\n\n1\n\nThis section sets out the duties about assessments related to adult user empowerment which apply in relation to Category 1 services (in addition to the duties about risk assessments set out in section 9 and, in the case of Category 1 services likely to be accessed by children, section 11).\n\n\n\n2\n\nA duty to carry out a suitable and sufficient assessment for the purposes of section 15(2) at a time set out in, or as provided by, Schedule 3.\n\n\n\n3\n\nA duty to take appropriate steps to keep such",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "section-15",
+      "text": "15\n\n\n1\n\nThis section sets out the duties to empower adult users which apply in relation to Category 1 services.\n\n\n\n2\n\nA duty to include in a service, to the extent that it is proportionate to do so, features which adult users may use or apply if they wish to increase their control over content to which this subsection applies.\n\n\n\n3\n\nThe features referred to in subsection (2) are those which, if used or applied by a user, result in the use by the service of systems or processes designed to effect",
+      "type": "mandatory",
+      "keywords": [
+        "retention",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-16",
+      "text": "16\n\n\n1\n\nIn determining what is proportionate for the purposes of section 15(2), the following factors, in particular, are relevant\u2014\n\na\n\nall the findings of the most recent assessment under section 14, and\n\n\n\nb\n\nthe size and capacity of the provider of the service.\n\n\n\n\n\n2\n\nSection 15(2) applies to content that\u2014\n\na\n\nis regulated user-generated content in relation to the service in question, and\n\n\n\nb\n\nis within subsection (3), (4) or (5).\n\n\n\n\n\n3\n\nContent is within this subsection if it encourages, ",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-17",
+      "text": "17\n\n\n1\n\nThis section sets out the duties to protect content of democratic importance which apply in relation to Category 1 services.\n\n\n\n2\n\nA duty to operate a service using proportionate systems and processes designed to ensure that the importance of the free expression of content of democratic importance is taken into account when making decisions about\u2014\n\na\n\nhow to treat such content (especially decisions about whether to take it down or restrict users\u2019 access to it), and\n\n\n\nb\n\nwhether to take ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-18",
+      "text": "18\n\n\n1\n\nThis section sets out the duties to protect news publisher content which apply in relation to Category 1 services.\n\n\n\n2\n\nSubject to subsections (4), (5) and (8), a duty, in relation to a service, to take the steps set out in subsection (3) before\u2014\n\na\n\ntaking action in relation to content present on the service that is news publisher content, or\n\n\n\nb\n\ntaking action against a user who is a recognised news publisher.\n\n\n\n\n\n3\n\nThe steps referred to in subsection (2) are\u2014\n\na\n\nto give the recog",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-19",
+      "text": "19\n\n\n1\n\nThis section sets out the duties to protect journalistic content which apply in relation to Category 1 services.\n\n\n\nThe duties\n\n2\n\nA duty to operate a service using proportionate systems and processes designed to ensure that the importance of the free expression of journalistic content is taken into account when making decisions about\u2014\n\na\n\nhow to treat such content (especially decisions about whether to take it down or restrict users\u2019 access to it), and\n\n\n\nb\n\nwhether to take action again",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-20",
+      "text": "20\n\n\n1\n\nThis section sets out the duty about content reporting which applies in relation to all regulated user-to-user services.\n\n\n\n2\n\nA duty to operate a service using systems and processes that allow users and affected persons to easily report content which they consider to be content of a kind specified below (with the duty extending to different kinds of content depending on the kind of service, as indicated by the headings).\n\n\n\nAll services\n\n3\n\nIllegal content.\n\n\n\n\nServices likely to be acc",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-21",
+      "text": "21\n\n\n1\n\nThis section sets out the duties about complaints procedures which apply in relation to all regulated user-to-user services.\n\n\n\n2\n\nA duty to operate a complaints procedure in relation to a service that\u2014\n\na\n\nallows for relevant kinds of complaint to be made (as set out under the headings below),\n\n\n\nb\n\nprovides for appropriate action to be taken by the provider of the service in response to complaints of a relevant kind, and\n\n\n\nc\n\nis easy to access, easy to use (including by children) and ",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-22",
+      "text": "22\n\n\n1\n\nThis section sets out the duties about freedom of expression and privacy which apply in relation to regulated user-to-user services (as indicated by the headings).\n\n\n\nAll services\n\n2\n\nWhen deciding on, and implementing, safety measures and policies, a duty to have particular regard to the importance of protecting users\u2019 right to freedom of expression within the law.\n\n\n\n3\n\nWhen deciding on, and implementing, safety measures and policies, a duty to have particular regard to the importance ",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-23",
+      "text": "23\n\n\n1\n\nThis section sets out the record-keeping and review duties which apply in relation to regulated user-to-user services (as indicated by the headings).\n\n\n\nAll services\n\n2\n\nA duty to make and keep a written record, in an easily understandable form, of all aspects of every risk assessment under section 9 or 11, including details about how the assessment was carried out and its findings.\n\n\n\n3\n\nA duty to make and keep a written record of any measures taken or in use to comply with a relevant d",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-24",
+      "text": "24\n\n\n1\n\nSubsections (2) to (4) apply to determine which of the duties set out in this Chapter must be complied with by providers of regulated search services.\n\n\n\n2\n\nAll providers of regulated search services must comply with the following duties in relation to each such service which they provide\u2014\n\na\n\nthe duties about illegal content risk assessments set out in section 26,\n\n\n\nb\n\nthe duties about illegal content set out in section 27(2) to (8),\n\n\n\nc\n\nthe duty about content reporting set out in se",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-25",
+      "text": "25\n\n\n1\n\nA duty set out in this Chapter which must be complied with in relation to a search service extends only to\u2014\n\na\n\nthe search content of the service,\n\n\n\nb\n\nthe design, operation and use of the search engine in the United Kingdom, and\n\n\n\nc\n\nin the case of a duty that is expressed to apply in relation to users of a service, the design, operation and use of the search engine as it affects United Kingdom users of the service.\n\n\n\n\n\n2\n\nFor the purposes of the application of this Chapter in relati",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-26",
+      "text": "26\n\n\n1\n\nThis section sets out the duties about risk assessments which apply in relation to all regulated search services.\n\n\n\n2\n\nA duty to carry out a suitable and sufficient illegal content risk assessment at a time set out in, or as provided by, Schedule 3.\n\n\n\n3\n\nA duty to take appropriate steps to keep an illegal content risk assessment up to date, including when OFCOM make any significant change to a risk profile that relates to services of the kind in question.\n\n\n\n4\n\nBefore making any signif",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "section-27",
+      "text": "27\n\n\n1\n\nThis section sets out the duties about illegal content which apply in relation to regulated search services (as indicated by the headings).\n\n\n\nAll services\n\n2\n\nA duty, in relation to a service, to take or use proportionate measures relating to the design or operation of the service to effectively mitigate and manage the risks of harm to individuals, as identified in the most recent illegal content risk assessment of the service (see section 26(5)(c)).\n\n\n\n3\n\nA duty to operate a service us",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-28",
+      "text": "28\n\n\n1\n\nThis section sets out the duties about risk assessments which apply in relation to regulated search services that are likely to be accessed by children (in addition to the duties about risk assessments set out in section 26).\n\n\n\n2\n\nA duty to carry out a suitable and sufficient children\u2019s risk assessment at a time set out in, or as provided by, Schedule 3.\n\n\n\n3\n\nA duty to take appropriate steps to keep a children\u2019s risk assessment up to date, including when OFCOM make any significant chan",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "section-29",
+      "text": "29\n\n\n1\n\nThis section sets out the duties to protect children\u2019s online safety which apply in relation to regulated search services that are likely to be accessed by children (as indicated by the headings).\n\n\n\nAll services\n\n2\n\nA duty, in relation to a service, to take or use proportionate measures relating to the design or operation of the service to effectively\u2014\n\na\n\nmitigate and manage the risks of harm to children in different age groups, as identified in the most recent children\u2019s risk assessme",
+      "type": "mandatory",
+      "keywords": [
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-30",
+      "text": "30\n\n\n1\n\nIn determining what is proportionate for the purposes of section 29, the following factors, in particular, are relevant\u2014\n\na\n\nall the findings of the most recent children\u2019s risk assessment (including as to levels of risk and as to nature, and severity, of potential harm to children), and\n\n\n\nb\n\nthe size and capacity of the provider of a service.\n\n\n\n\n\n2\n\nSo far as a duty set out in section 29 relates to non-designated content that is harmful to children, the duty is to be taken to extend on",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-31",
+      "text": "31\n\n\n1\n\nThis section sets out the duty about content reporting which applies in relation to all regulated search services.\n\n\n\n2\n\nA duty to operate a service using systems and processes that allow users and affected persons to easily report search content which they consider to be content of a kind specified below (with the duty extending to content that is harmful to children depending on the kind of service, as indicated by the headings).\n\n\n\nAll services\n\n3\n\nIllegal content.\n\n\n\n\nServices likely",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-32",
+      "text": "32\n\n\n1\n\nThis section sets out the duties about complaints procedures which apply in relation to all regulated search services.\n\n\n\n2\n\nA duty to operate a complaints procedure in relation to a service that\u2014\n\na\n\nallows for relevant kinds of complaint to be made (as set out under the headings below),\n\n\n\nb\n\nprovides for appropriate action to be taken by the provider of the service in response to complaints of a relevant kind, and\n\n\n\nc\n\nis easy to access, easy to use (including by children) and transp",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-33",
+      "text": "33\n\n\n1\n\nThis section sets out the duties about freedom of expression and privacy which apply in relation to all regulated search services.\n\n\n\n2\n\nWhen deciding on, and implementing, safety measures and policies, a duty to have particular regard to the importance of protecting the rights of users and interested persons to freedom of expression within the law.\n\n\n\n3\n\nWhen deciding on, and implementing, safety measures and policies, a duty to have particular regard to the importance of protecting use",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-34",
+      "text": "34\n\n\n1\n\nThis section sets out the record-keeping and review duties which apply in relation to regulated search services (as indicated by the headings).\n\n\n\nAll services\n\n2\n\nA duty to make and keep a written record, in an easily understandable form, of all aspects of every risk assessment under section 26 or 28, including details about how the assessment was carried out and its findings.\n\n\n\n3\n\nA duty to make and keep a written record of any measures taken or in use to comply with a relevant duty w",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-36",
+      "text": "36\n\n\n1\n\nA provider of a Part 3 service must carry out the first children\u2019s access assessment at a time set out in, or as provided by, Schedule 3.\n\n\n\n2\n\nSubsections (3) and (4) apply to a provider of a Part 3 service during any period when the service is not treated as likely to be accessed by children (see section 37).\n\n\n\n3\n\nThe provider must carry out children\u2019s access assessments of the service not more than one year apart.\n\n\n\n4\n\nThe provider must carry out a children\u2019s access assessment of th",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "section-37",
+      "text": "37\n\n\n1\n\nFor the purposes of this Part, a Part 3 service is to be treated as \u201clikely to be accessed by children\u201d in the following three cases (with the result that the duties set out in sections 11 and 12, or (as the case may be) sections 28 and 29, apply in relation to the service).\n\n\n\n2\n\nThe first case is where a children\u2019s access assessment carried out by the provider of the service concludes that\u2014\n\na\n\nit is possible for children to access the service or a part of it, and\n\n\n\nb\n\nthe child user ",
+      "type": "mandatory",
+      "keywords": [
+        "audit"
+      ]
+    },
+    {
+      "id": "section-38",
+      "text": "38\n\n\n1\n\nA provider of a Category 1 service must operate the service using proportionate systems and processes designed to\u2014\n\na\n\nprevent individuals from encountering content consisting of fraudulent advertisements by means of the service;\n\n\n\nb\n\nminimise the length of time for which any such content is present;\n\n\n\nc\n\nwhere the provider is alerted by a person to the presence of such content, or becomes aware of it in any other way, swiftly take down such content.\n\n\n\n\n\n2\n\nA provider of a Category 1 ",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-39",
+      "text": "39\n\n\n1\n\nA provider of a Category 2A service must operate the service using proportionate systems and processes designed to\u2014\n\na\n\nprevent individuals from encountering content consisting of fraudulent advertisements in or via search results of the service;\n\n\n\nb\n\nif any such content may be encountered in or via search results of the service, minimise the length of time that that is the case;\n\n\n\nc\n\nwhere the provider is alerted by a person to the fact that such content may be so encountered, or beco",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-41",
+      "text": "41\n\n\n1\n\nOFCOM must prepare and issue a code of practice for providers of Part 3 services describing measures recommended for the purpose of compliance with duties set out in section 10 or 27 (illegal content) so far as relating to terrorism content or offences within Schedule 5 (terrorism offences).\n\n\n\n2\n\nOFCOM must prepare and issue a code of practice for providers of Part 3 services describing measures recommended for the purpose of compliance with duties set out in section 10 or 27 (illegal c",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-42",
+      "text": "42\n\nSchedule 4 contains\u2014\n\na\n\nprovision about the principles OFCOM must consider when preparing codes of practice under section 41,\n\n\n\nb\n\nthe online safety objectives (and a power for the Secretary of State by regulations to revise those objectives),\n\n\n\nc\n\nprovision about the measures that may be described in codes of practice (including, in particular, constraints on the recommendation of the use of proactive technology), and\n\n\n\nd\n\nother provision related to codes of practice.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-43",
+      "text": "43\n\n\n1\n\nWhere OFCOM have prepared a draft of a code of practice under section 41, they must submit the draft to the Secretary of State.\n\n\n\n2\n\nUnless the Secretary of State intends to give a direction to OFCOM under section 44(1), (2) or (3) in relation to the draft, the Secretary of State must, as soon as reasonably practicable, lay the draft before Parliament.\n\n\n\n3\n\nIf, within the 40-day period, either House of Parliament resolves not to approve the draft\u2014\n\na\n\nOFCOM must not issue the code of p",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-44",
+      "text": "44\n\n\n1\n\nThe Secretary of State may direct OFCOM to modify a draft of a code of practice submitted under section 43(1) if the Secretary of State believes that modifications are required for the purpose of securing compliance with an international obligation of the United Kingdom.\n\n\n\n2\n\nThe Secretary of State may direct OFCOM to modify a draft of a code of practice, other than a terrorism or CSEA code of practice, submitted under section 43(1) if the Secretary of State believes that modifications ",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-45",
+      "text": "45\n\n\n1\n\nThis section sets out the procedure that applies where a draft of a code of practice is laid before Parliament under section 44(12).\n\n\n\n2\n\nIf the draft contains modifications made following a direction given under section 44(1), (2) or (3)(b), the affirmative procedure applies.\n\n\n\n3\n\nIf the draft contains modifications made following a direction given under section 44(3)(a), (4) or (5), the negative procedure applies.\n\n\n\n4\n\nThe \u201caffirmative procedure\u201d is as follows\u2014\n\na\n\na code of practic",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-46",
+      "text": "46\n\n\n1\n\nOFCOM must publish each code of practice issued under section 43 or 45 within the period of three days beginning with the day on which it is issued.\n\n\n\n2\n\nWhere amendments of a code of practice are issued under either of those sections, OFCOM must publish the amended code of practice within the period of three days beginning with the day on which the amendments are issued.\n\n\n\n3\n\nWhere a code of practice is withdrawn, OFCOM must publish a notice to that effect.",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-47",
+      "text": "47\n\n\n1\n\nOFCOM must keep under review each code of practice published under section 46.\n\n\n\n2\n\nThe Secretary of State may require OFCOM to review a terrorism or CSEA code of practice published under section 46 if the Secretary of State considers a review to be necessary for reasons of national security or public safety (and the Secretary of State must notify OFCOM whether the reasons fall into the category of national security or public safety).\n\n\n\n3\n\nOFCOM must carry out a review of the code of p",
+      "type": "mandatory",
+      "keywords": [
+        "security",
+        "reporting",
+        "audit"
+      ]
+    },
+    {
+      "id": "section-48",
+      "text": "48\n\n\n1\n\nThis section applies if\u2014\n\na\n\nOFCOM propose to amend a code of practice under section 41, and\n\n\n\nb\n\nOFCOM consider that the minor nature of the proposal means that\u2014\n\ni\n\nconsultation is unnecessary, and\n\n\n\nii\n\nthe proposed amendments should not be required to be laid before Parliament.\n\n\n\n\n\n\n\n2\n\nOFCOM must notify the Secretary of State of the proposed amendments.\n\n\n\n3\n\nIf the Secretary of State agrees with OFCOM that it is appropriate\u2014\n\na\n\nthe consultation requirements set out in section 4",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-49",
+      "text": "49\n\n\nDuties set out in Chapters 2 and 3\n\n1\n\nA provider of a Part 3 service is to be treated as complying with a relevant duty if the provider takes or uses the measures described in a code of practice which are recommended for the purpose of compliance with the duty in question.\n\n\n\n2\n\nA provider of a user-to-user service\u2014\n\na\n\nis to be treated as complying with the duty set out in section 22(2) (freedom of expression) if the provider takes or uses such of the relevant recommended measures as inco",
+      "type": "mandatory",
+      "keywords": [
+        "data_protection",
+        "reporting"
+      ]
+    },
+    {
+      "id": "section-50",
+      "text": "50\n\n\n1\n\nA failure by a provider of a Part 3 service to act in accordance with a provision of a code of practice does not of itself make the provider liable to legal proceedings in a court or tribunal.\n\n\n\n2\n\nA code of practice is admissible in evidence in legal proceedings.\n\n\n\n3\n\nIn any proceedings in a court or tribunal, the court or tribunal must take into account a provision of a code of practice in determining a question arising in the proceedings if\u2014\n\na\n\nthe question relates to a time when t",
+      "type": "mandatory",
+      "keywords": [
+        "reporting"
+      ]
+    }
+  ],
+  "penalties": [
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 12 month",
+      "context": "offence in relation to csea reporting691a person commits an offence if, in purported compliance with a requirement under section 66\u2014athe person provides information that is false in a material respect"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 12 month",
+      "context": "penalties for information offences\n113\n\n\n1\n\na person who commits an offence under section 109(1), 110(2) or 111(1) is liable\u2014\n\na\n\non summary conviction in england and wales, to a fine;\n\n\n\nb\n\non summar"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 12 month",
+      "context": "confirmation decisions: offences\n138\n\n\n1\n\na person to whom a confirmation decision is given commits an offence if, without reasonable excuse, the person fails to comply with a requirement imposed by t"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 6 month",
+      "context": "false communications offence\n179\n\n\n1\n\na person commits an offence if\u2014\n\na\n\nthe person sends a message (see section 182),\n\n\n\nb\n\nthe message conveys information that the person knows to be false,\n\n\n\nc\n\na"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 6 month",
+      "context": "threatening communications offence\n181\n\n\n1\n\na person commits an offence if\u2014\n\na\n\nthe person sends a message (see section 182),\n\n\n\nb\n\nthe message conveys a threat of death or serious harm, and\n\n\n\nc\n\nat "
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 6 month",
+      "context": "offences of sending or showing flashing images electronically\n183\n\n\n1\n\na person (a) commits an offence if\u2014\n\na\n\na sends a communication by electronic means which consists of or includes flashing images"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 12 month",
+      "context": "offence of encouraging or assisting serious self-harm\n184\n\n\n1\n\na person (d) commits an offence if\u2014\n\na\n\nd does a relevant act capable of encouraging or assisting the serious self-harm of another person"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 2 year",
+      "context": "sharing or threatening to share intimate photograph or film\n188\n\nin the sexual offences act 2003, after section 66a (inserted by section 187), insert\u2014\n\n\nsharing or threatening to share intimate photog"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 2 year",
+      "context": "sharing or threatening to share intimate photograph or film\n\n66b\n\n\n1\n\na person (a) commits an offence if\u2014\n\na\n\na intentionally shares a photograph or film which shows, or appears to show, another perso"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 12 month",
+      "context": "offences181a person commits an offence if\u2014athe person intentionally obstructs a person acting under this schedule;bthe person fails, without reasonable excuse, to comply with any requirement imposed b"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a318 million",
+      "context": "maximum amount of penalties\n4\n\n\n1\n\nwhere a penalty is imposed on a person in respect of a regulated service provided by that person, the maximum amount of the penalty for which the person is liable is"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a318 million",
+      "context": "maximum amount of penalties\n4\n\n\n1\n\nwhere a penalty is imposed on a person in respect of a regulated service provided by that person, the maximum amount of the penalty for which the person is liable is"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a318 million",
+      "context": "maximum amount of penalties\n4\n\n\n1\n\nwhere a penalty is imposed on a person in respect of a regulated service provided by that person, the maximum amount of the penalty for which the person is liable is"
+    },
+    {
+      "type": "financial",
+      "amount": "\u00a318 million",
+      "context": "maximum amount of penalties: group of entities\n5\n\n\n1\n\nthis paragraph contains modifications of paragraph 4 in a case where, in accordance with schedule 15, two or more entities are jointly and several"
+    },
+    {
+      "type": "criminal",
+      "description": "Imprisonment up to 12 month",
+      "context": "sexual offences act 2003161the sexual offences act 2003 is amended as follows.2in section 78 (meaning of \u201csexual\u201d), after \u201c15a\u201d insert \u201c, 66b to 66d\u201d.3in section 136a(3a) (specified child sex offences"
+    }
+  ],
+  "enforcement": {
+    "authority": [
+      "Secretary of State",
+      "Information Commissioner"
+    ],
+    "powers": [
+      "2\n\n\n1\n\nParts 2 to 9 and 11 and 12 of this Act contain provision about the regulation by OFCOM of certain internet services.\n\n\n\n2\n\nPart 2 contains key definitions, including the definition of a user-to",
+      "41\n\n\n1\n\nOFCOM must prepare and issue a code of practice for providers of Part 3 services describing measures recommended for the purpose of compliance with duties set out in section 10 or 27 (illegal ",
+      "50\n\n\n1\n\nA failure by a provider of a Part 3 service to act in accordance with a provision of a code of practice does not of itself make the provider liable to legal proceedings in a court or tribunal.",
+      "741This section applies for the purposes of this Chapter.2\u201cRegulated user-generated content\u201d has the same meaning as in Part 3 (see section 55), and references to such content are to content that is r",
+      "78\n\n\n1\n\nOFCOM must produce guidance about\u2014\n\na\n\nhow OFCOM will determine which information they will require transparency reports under section 77 to contain, including\u2014\n\ni\n\nthe principles that they wi",
+      "1041OFCOM may exercise the powers in this section where they consider that it is necessary to do so for either of the following purposes\u2014aassisting OFCOM in identifying and assessing a failure, or pos",
+      "105\n\n\n1\n\nIf OFCOM open an investigation into whether a provider of a regulated service has failed, or is failing, to comply with any requirement mentioned in subsection (2), the provider must co-opera",
+      "107\n\nSchedule 12 makes provision about\u2014\n\na\n\nOFCOM\u2019s powers of entry and inspection, and\n\n\n\nb\n\nthe carrying out of audits by OFCOM.",
+      "111\n\n\n1\n\nA person commits an offence if the person fails without reasonable excuse to comply with a requirement of an audit notice.\n\n\n\n2\n\nA person commits an offence if, in response to an audit notice",
+      "125\n\n\n1\n\nIn this section \u201ca notice\u201d means a notice under section 121(1) (including a further notice under that provision).\n\n\n\n2\n\nIf a provider is already using accredited technology in relation to the",
+      "130\n\n\n1\n\nOFCOM may give a notice under this section (a \u201cprovisional notice of contravention\u201d) relating to a regulated service to the provider of the service if they consider that there are reasonable ",
+      "131\n\n\n1\n\nReferences in this Chapter to \u201cenforceable requirements\u201d are to\u2014\n\na\n\nthe duties or requirements set out in the provisions of this Act specified in the table in subsection (2), and\n\n\n\nb\n\nthe r",
+      "133\n\n\n1\n\nA confirmation decision may require the person to whom it is given to take such steps as OFCOM consider appropriate (including steps relating to the use of a system or process) for either or ",
+      "137\n\n\n1\n\nA confirmation decision may require the person to whom it is given to do either or both of the following, depending on what was proposed in the provisional notice of contravention (see paragr",
+      "139\n\n\n1\n\nThis section applies if\u2014\n\na\n\nOFCOM have given a confirmation decision to a person,\n\n\n\nb\n\nthe decision includes requirements of a kind described in section 133(1) (requirements to take steps),",
+      "142\n\n\n1\n\nSubsection (2) applies in relation to\u2014\n\na\n\na notice under section 140(2), and\n\n\n\nb\n\na notice under section 141(2) stating that OFCOM propose to impose a penalty.\n\n\n\n\n\n2\n\nSuch a notice must\u2014\n\n",
+      "144\n\n\n1\n\nOFCOM may apply to the court for an order under this section (a \u201cservice restriction order\u201d) in relation to a regulated service where they consider that\u2014\n\na\n\nthe grounds in subsection (3) app",
+      "145\n\n\n1\n\nOFCOM may apply to the court for an interim order under this section (an \u201cinterim service restriction order\u201d) in relation to a regulated service where they consider that\u2014\n\na\n\nthe grounds in s",
+      "148\n\n\n1\n\nWhere OFCOM apply for a business disruption order in respect of a failure by a provider of a regulated service to comply with an enforceable requirement, nothing in sections 144 to 147 is to ",
+      "150\n\n\n1\n\nThis section applies where\u2014\n\na\n\nOFCOM have given a person (and not withdrawn) any of the following\u2014\n\ni\n\na confirmation decision;\n\n\n\nii\n\na penalty notice under section 139;\n\n\n\niii\n\na penalty n",
+      "151\n\n\n1\n\nOFCOM must produce guidance for providers of regulated services about how OFCOM propose to exercise their functions under this Chapter.\n\n\n\n2\n\nThe guidance must, in particular, give informatio",
+      "154A1The Secretary of State may by regulations require providers of regulated services to provide information for purposes related to the carrying out of independent research into online safety matter",
+      "178\n\n\n1\n\nThe Secretary of State must review the operation of\u2014\n\na\n\nthe regulatory framework provided for in this Act, and\n\n\n\nb\n\nsection 11 of the Communications Act, to the extent that that section rel",
+      "1941OFCOM must publish guidance to which this section applies within the period of 18 months beginning with the day on which this Act is passed.2This section applies to\u2014athe first guidance under secti",
+      "198\n\n\n1\n\nA power conferred by Chapter 6 of Part 7 (enforcement powers) to give a notice to a provider of a regulated service is to be read as including power to give a notice to a person who was, at t",
+      "204\n\n\n1\n\nReferences in this Act to an internet service, a user-to-user service or a search service include such a service provided from outside the United Kingdom (as well as such a service provided f",
+      "216\n\n\n1\n\nIn this section (except in subsection (4)(c)) \u201cregulations\u201d means regulations under section 215(1).\n\n\n\n2\n\nProvision may be made by regulations only for or in connection with the purposes of m",
+      "227\n\n\n1\n\nFor the purposes of this Act a user is a \u201cUnited Kingdom user\u201d of a service if\u2014\n\na\n\nwhere the user is an individual, the individual is in the United Kingdom;\n\n\n\nb\n\nwhere the user is an entity",
+      "236\n\n\n1\n\nIn this Act\u2014\n\n\n\n\u201cadult\u201d means a person aged 18 or over;\n\n\n\n\n\u201caudit notice\u201d means a notice given under paragraph 4 of Schedule 12;\n\n\n\n\n\u201cautomated tool\u201d includes bot;\n\n\n\n\n\u201ccapacity\u201d: any refere",
+      "237\n\nThe following table sets out terms defined or explained for this Act or for a Part of this Act.\n\n\n\n\nTermProvision\nadultsection 236age estimationsection 230age verificationsection 230audit notices",
+      "71A user-to-user service or a search service is exempt if the conditions in sub-paragraph (2) are met in relation to the service.2The conditions are\u2014athe user-to-user service or search service is an i",
+      "22In paragraph 19, \u201cindependent training provider\u201d means a provider\u2014athat is a provider of post-16 education or training carried on, or partly carried on, in England\u2014ito which Chapter 3 of Part 8 of t",
+      "17\n\nCo-operation by a provider with government, regulatory or other public sector bodies in the United Kingdom, in particular those involved in the enforcement of the criminal law.",
+      "33\n\nCo-operation by a provider with government, regulatory or other public sector bodies in the United Kingdom, in particular those involved in the enforcement of the criminal law.",
+      "1\n\n\n1\n\nAn internet service, other than a user-to-user service or a search service, in relation to which the conditions in sub-paragraph (2) are met.\n\n\n\n2\n\nThe conditions are\u2014\n\na\n\nthe internet service ",
+      "11OFCOM may authorise persons to\u2014aexercise powers of entry and inspection under paragraph 2;bcarry out audits in accordance with notices under paragraph 4;capply for a warrant to be issued under parag",
+      "21The powers conferred by this paragraph may be exercised in relation to premises only if OFCOM\u2014abelieve that the premises are being used by the provider of a regulated service in connection with the ",
+      "31This paragraph applies where OFCOM intend to exercise the powers conferred by paragraph 2 to enter and inspect premises.2OFCOM may give the occupier of the premises a notice requiring relevant infor",
+      "41OFCOM may give the provider of a regulated service a notice (an \u201caudit notice\u201d) requiring the provider to permit OFCOM to carry out an audit\u2014ato assess whether the provider has complied or is comply",
+      "51A justice of the peace or (in Northern Ireland) a lay magistrate may issue a warrant in relation to premises specified in an application only if satisfied on sworn information in writing given by an",
+      "7An authorised person executing a warrant may do any of the following for the purposes of OFCOM\u2019s investigation into whether there is, or has been, a failure referred to in paragraph 5(1)(b)(i)\u2014aenter",
+      "161Where a warrant is executed\u2014ait must be returned to the appropriate person (see sub-paragraph (3)) after being executed, andbthe person by whom it is executed must write on the warrant a statement ",
+      "171This paragraph applies in relation to\u2014apowers conferred by paragraph 2 (entry and inspection without warrant), andbpowers exercisable under a warrant.2Those powers are not exercisable in respect of",
+      "20References in this Schedule to a person \u201cacting under this Schedule\u201d are to a person acting\u2014ain the exercise of powers conferred by paragraph 2 (entry and inspection without warrant), orbin the exec",
+      "21In this Schedule \u201cenforceable requirement\u201d has the same meaning as in Chapter 6 of Part 7 (see section 131), except that\u2014ait does not include\u2014ia requirement under (or a requirement of a notice under",
+      "6\n\n\n1\n\nIn England and Wales, a penalty is recoverable\u2014\n\na\n\nif the county court so orders, as if it were payable under an order of that court;\n\n\n\nb\n\nif the High Court so orders, as if it were payable u",
+      "4In Schedule 3 to the Regulatory Enforcement and Sanctions Act 2008 (relevant enactments for the purposes of relevant functions to which Parts 1 and 2 of that Act apply), at the appropriate place inse",
+      "31This paragraph applies in relation to a pre-existing Part 4B service which\u2014ais within the definition in paragraph (a) of paragraph 1(1), andbis also a regulated user-to-user service.2Both this Act a",
+      "301The repeal of sections 368Y(3)(b) and 368Z10 (demands for information) does not affect the application of those provisions after the repeal time in a case in which\u2014aOFCOM require information after ",
+      "311The repeal of sections 368W and 368Z4 (enforcement of section 368V) does not affect the application of those sections after the repeal time in a case in which OFCOM\u2014amade a determination as mention"
+    ],
+    "procedures": []
+  },
+  "dates": [],
+  "controls": [
+    "encryption",
+    "consent_management",
+    "audit_logging",
+    "data_minimization",
+    "training",
+    "access_control",
+    "risk_assessment",
+    "incident_response"
+  ],
+  "xml_length": 3051499
+}

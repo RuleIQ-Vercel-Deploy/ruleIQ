@@ -1,0 +1,71 @@
+name: Frontend Quality Gates
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - "frontend/**"
+  workflow_call:
+
+jobs:
+  quality-checks:
+    name: Frontend Code Quality
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js and pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "pnpm"
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run Lint Check (Zero Tolerance)
+        run: pnpm lint
+
+      - name: Run Type Check (Enforcement)
+        run: pnpm typecheck
+
+      - name: Run Tests with Coverage
+        id: coverage
+        run: pnpm test --coverage
+
+      - name: Check Test Coverage
+        run: |
+          # This is a placeholder for a more robust coverage check.
+          # In a real project, you would use a tool to parse the coverage report
+          # and fail the build if it's below a certain threshold.
+          echo "Coverage check placeholder. Implement a real check here."
+          # Example using a simple grep (would need adjustment for your coverage report format)
+          # pnpm test --coverage | grep "All files" | awk '{print $4}' | sed 's/%//' | while read -r val; do
+          #   if (( $(echo "$val < 80" | bc -l) )); then
+          #     echo "Error: Test coverage is below 80%."
+          #     exit 1
+          #   fi
+          # done
+
+      - name: Run Build Verification
+        run: pnpm build
+
+      - name: Notify on Failure
+        if: ${{ failure() }}
+        uses: rt-actions/slack-notify-release@v2.0.1
+        with:
+          status: "failure"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          message: "Frontend quality checks failed in ${{ github.repository }} on branch ${{ github.ref_name }}."

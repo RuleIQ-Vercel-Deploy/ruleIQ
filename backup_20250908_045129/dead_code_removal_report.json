@@ -1,0 +1,392 @@
+{
+  "removed": {
+    "files": [
+      "tests/test_minimal.py",
+      "api/integrations/xero_integration.py",
+      "backup_20250903_042619/tests/test_minimal.py",
+      "backup_20250903_042619/api/integrations/xero_integration.py",
+      "pytest.ini.backup",
+      ".claude/settings.local.json.backup",
+      "frontend/.env.local.backup",
+      "frontend/eslint.config.mjs.backup",
+      "frontend/tsconfig.json.backup",
+      "backup_20250903_042619/pytest.ini.backup",
+      "archive/test_configs/conftest.py.backup",
+      "frontend/tests/critical-fixes/assessment-components.test.tsx.backup",
+      "frontend/tests/integration/ai-assessment-flow.test.tsx.backup",
+      "frontend/tests/components/dashboard/analytics-page.test.tsx.backup",
+      "frontend/tests/components/auth/auth-flow.test.tsx.backup",
+      "backups/backup_20250903_042619/.claude/settings.local.json.backup",
+      "backups/backup_20250903_042619/frontend/.env.local.backup",
+      "backup_20250903_042619/frontend/eslint.config.mjs.backup",
+      "backup_20250903_042619/frontend/tsconfig.json.backup",
+      "backup_20250903_042619/archive/test_configs/conftest.py.backup",
+      "backup_20250903_042619/frontend/tests/critical-fixes/assessment-components.test.tsx.backup",
+      "backup_20250903_042619/frontend/tests/integration/ai-assessment-flow.test.tsx.backup",
+      "backup_20250903_042619/frontend/tests/components/dashboard/analytics-page.test.tsx.backup",
+      "backup_20250903_042619/frontend/tests/components/auth/auth-flow.test.tsx.backup",
+      "frontend/.next/cache/webpack/server-development/index.pack.gz.old",
+      "frontend/.next/cache/webpack/client-development/index.pack.gz.old",
+      "frontend/.next/cache/webpack/edge-server-development/index.pack.gz.old"
+    ],
+    "imports": [],
+    "functions": [],
+    "classes": [],
+    "variables": [],
+    "comments": [
+      {
+        "file": "alembic/env.py",
+        "lines": 4,
+        "start": 36
+      },
+      {
+        "file": "tests/test_phase3_rag_standardization.py",
+        "lines": 6,
+        "start": 23
+      },
+      {
+        "file": "tests/test_graph_execution.py",
+        "lines": 4,
+        "start": 24
+      },
+      {
+        "file": "archive/test_configs/conftest_old.py",
+        "lines": 5,
+        "start": 119
+      },
+      {
+        "file": "archive/test_configs/conftest_old.py",
+        "lines": 4,
+        "start": 130
+      },
+      {
+        "file": "archive/test_configs/conftest_old.py",
+        "lines": 4,
+        "start": 360
+      },
+      {
+        "file": "archive/test_configs/conftest_old.py",
+        "lines": 7,
+        "start": 378
+      },
+      {
+        "file": "archive/test_configs/conftest_old.py",
+        "lines": 4,
+        "start": 386
+      },
+      {
+        "file": "archive/test_configs/conftest_old.py",
+        "lines": 4,
+        "start": 402
+      },
+      {
+        "file": "archive/test_configs/conftest_old.py",
+        "lines": 4,
+        "start": 408
+      },
+      {
+        "file": "archive/test_configs/conftest_old.py",
+        "lines": 4,
+        "start": 432
+      },
+      {
+        "file": "archive/test_configs/conftest_old.py",
+        "lines": 10,
+        "start": 454
+      },
+      {
+        "file": "archive/test_configs/conftest_old.py",
+        "lines": 5,
+        "start": 465
+      },
+      {
+        "file": "archive/test_configs/conftest_old.py",
+        "lines": 5,
+        "start": 485
+      },
+      {
+        "file": "archive/test_configs/conftest_old.py",
+        "lines": 5,
+        "start": 491
+      },
+      {
+        "file": "api/routers/chat.py",
+        "lines": 23,
+        "start": 749
+      },
+      {
+        "file": "api/routers/chat.py",
+        "lines": 130,
+        "start": 1216
+      },
+      {
+        "file": "backup_20250903_042619/alembic/env.py",
+        "lines": 4,
+        "start": 36
+      },
+      {
+        "file": "backup_20250903_042619/tests/test_phase3_rag_standardization.py",
+        "lines": 6,
+        "start": 23
+      },
+      {
+        "file": "backup_20250903_042619/tests/test_graph_execution.py",
+        "lines": 4,
+        "start": 24
+      },
+      {
+        "file": "backup_20250903_042619/archive/test_configs/conftest_old.py",
+        "lines": 5,
+        "start": 119
+      },
+      {
+        "file": "backup_20250903_042619/archive/test_configs/conftest_old.py",
+        "lines": 4,
+        "start": 130
+      },
+      {
+        "file": "backup_20250903_042619/archive/test_configs/conftest_old.py",
+        "lines": 4,
+        "start": 360
+      },
+      {
+        "file": "backup_20250903_042619/archive/test_configs/conftest_old.py",
+        "lines": 7,
+        "start": 378
+      },
+      {
+        "file": "backup_20250903_042619/archive/test_configs/conftest_old.py",
+        "lines": 4,
+        "start": 386
+      },
+      {
+        "file": "backup_20250903_042619/archive/test_configs/conftest_old.py",
+        "lines": 4,
+        "start": 402
+      },
+      {
+        "file": "backup_20250903_042619/archive/test_configs/conftest_old.py",
+        "lines": 4,
+        "start": 408
+      },
+      {
+        "file": "backup_20250903_042619/archive/test_configs/conftest_old.py",
+        "lines": 4,
+        "start": 432
+      },
+      {
+        "file": "backup_20250903_042619/archive/test_configs/conftest_old.py",
+        "lines": 10,
+        "start": 454
+      },
+      {
+        "file": "backup_20250903_042619/archive/test_configs/conftest_old.py",
+        "lines": 5,
+        "start": 465
+      },
+      {
+        "file": "backup_20250903_042619/archive/test_configs/conftest_old.py",
+        "lines": 5,
+        "start": 485
+      },
+      {
+        "file": "backup_20250903_042619/archive/test_configs/conftest_old.py",
+        "lines": 5,
+        "start": 491
+      },
+      {
+        "file": "backup_20250903_042619/api/routers/chat.py",
+        "lines": 23,
+        "start": 749
+      },
+      {
+        "file": "backup_20250903_042619/api/routers/chat.py",
+        "lines": 130,
+        "start": 1216
+      }
+    ],
+    "config": [
+      "ENCRYPTION_KEY",
+      "HOST",
+      "JWT_ALGORITHM",
+      "CELERY_RESULT_BACKEND",
+      "PORT",
+      "ENABLE_AI_FEATURES",
+      "SECURE_SSL_REDIRECT",
+      "ENABLE_COMPRESSION",
+      "SESSION_COOKIE_SECURE",
+      "NEO4J_DATABASE",
+      "REDIS_HOST",
+      "CHAT_HISTORY_LIMIT",
+      "NEXT_PUBLIC_APP_URL",
+      "LOG_MAX_BYTES",
+      "AWS_REGION",
+      "SMTP_USE_TLS",
+      "API_WORKERS",
+      "LANGCHAIN_TRACING_V2",
+      "ASSESSMENT_TIMEOUT",
+      "AWS_S3_BUCKET",
+      "ENABLE_ADVANCED_ANALYTICS",
+      "MICROSOFT_CLIENT_SECRET",
+      "JWT_ACCESS_TOKEN_EXPIRE_MINUTES",
+      "ENABLE_EMAIL_NOTIFICATIONS",
+      "ANTHROPIC_API_KEY",
+      "CORS_ALLOW_HEADERS",
+      "MAX_FILE_SIZE",
+      "NEO4J_USERNAME",
+      "SMTP_USERNAME",
+      "STRIPE_WEBHOOK_SECRET",
+      "JWT_SECRET",
+      "HEALTH_CHECK_PATH",
+      "CORS_ALLOW_METHODS",
+      "SMTP_PORT",
+      "APP_URL",
+      "DB_POOL_RECYCLE",
+      "TEMP_DIR",
+      "RATE_LIMIT_PER_MINUTE",
+      "SMTP_PASSWORD",
+      "GOOGLE_AI_API_KEY",
+      "SENTRY_DSN",
+      "FERNET_KEY",
+      "CACHE_TTL",
+      "OKTA_CLIENT_SECRET",
+      "LOG_FILE",
+      "SECRET_KEY",
+      "RATE_LIMIT_WINDOW",
+      "LOG_FORMAT",
+      "ENABLE_REAL_TIME_NOTIFICATIONS",
+      "WORKERS",
+      "OPENAI_TEMPERATURE",
+      "DEFAULT_PAGE_SIZE",
+      "ALLOWED_EXTENSIONS",
+      "HEALTH_CHECK_TIMEOUT",
+      "REDIS_URL",
+      "ENABLE_OAUTH",
+      "OPENAI_API_KEY",
+      "READINESS_CHECK_PATH",
+      "RATE_LIMIT_BURST",
+      "ENABLE_FILE_UPLOAD",
+      "ENABLE_CACHING",
+      "CLAUDE_MODEL",
+      "CACHE_REDIS_URL",
+      "SESSION_COOKIE_HTTPONLY",
+      "MICROSOFT_CLIENT_ID",
+      "LANGCHAIN_PROJECT",
+      "AWS_SECRET_ACCESS_KEY",
+      "TEST_PARALLEL",
+      "SMTP_FROM_NAME",
+      "ENABLE_AI_PROCESSING",
+      "NEXT_PUBLIC_API_URL",
+      "REDIS_PORT",
+      "OPENAI_MODEL",
+      "NEO4J_URI",
+      "GOOGLE_CLIENT_SECRET",
+      "OKTA_CLIENT_ID",
+      "RELOAD",
+      "GOOGLE_API_KEY",
+      "REDIS_DB",
+      "GOOGLE_CLIENT_ID",
+      "DEBUG_TOOLBAR",
+      "DB_MAX_OVERFLOW",
+      "LOG_LEVEL",
+      "COMPRESSION_LEVEL",
+      "TEST_COVERAGE",
+      "API_HOST",
+      "LOG_BACKUP_COUNT",
+      "SESSION_REDIS_URL",
+      "AWS_ACCESS_KEY_ID",
+      "ENABLE_MONITORING",
+      "APP_VERSION",
+      "ALLOWED_FILE_TYPES",
+      "ENABLE_ERROR_TRACKING",
+      "HEALTH_CHECK_INTERVAL",
+      "CORS_ALLOWED_ORIGINS",
+      "LANGCHAIN_API_KEY",
+      "DEBUG",
+      "APP_NAME",
+      "ENABLE_DEBUG_TOOLBAR",
+      "CORS_ORIGINS",
+      "LANGCHAIN_ENDPOINT",
+      "METRICS_PORT",
+      "TEST_RUNNER",
+      "TEST_DATABASE_URL",
+      "STRIPE_SECRET_KEY",
+      "SESSION_COOKIE_SAMESITE",
+      "REDIS_MAX_CONNECTIONS",
+      "NEO4J_PASSWORD",
+      "CELERY_BROKER_URL",
+      "ENABLE_METRICS",
+      "CORS_ALLOW_CREDENTIALS",
+      "MAX_PAGE_SIZE",
+      "RATE_LIMIT_ENABLED",
+      "OPENAI_MAX_TOKENS",
+      "API_PORT",
+      "DATABASE_URL",
+      "SMTP_FROM_EMAIL",
+      "PROFILER_ENABLED",
+      "DB_POOL_TIMEOUT",
+      "JWT_REFRESH_TOKEN_EXPIRE_DAYS",
+      "JWT_SECRET_KEY",
+      "REDIS_DECODE_RESPONSES",
+      "ENVIRONMENT",
+      "SQL_DEBUG",
+      "RATE_LIMIT_REQUESTS",
+      "SMTP_HOST",
+      "JWT_EXPIRATION_DELTA_SECONDS",
+      "ENABLE_PROFILING",
+      "MOCK_EXTERNAL_SERVICES",
+      "AWS_S3_REGION",
+      "API_VERSION",
+      "ALLOWED_HOSTS",
+      "DB_POOL_SIZE",
+      "SENTRY_ENVIRONMENT",
+      "ENABLE_SQL_ECHO",
+      "REDIS_API",
+      "STRIPE_PUBLISHABLE_KEY",
+      "HOT_RELOAD",
+      "UPLOAD_DIR"
+    ]
+  },
+  "metrics": {
+    "lines_removed": 456,
+    "files_deleted": 27,
+    "files_modified": 12,
+    "size_reduction_bytes": 0
+  },
+  "risks": [
+    {
+      "type": "unused_dependencies",
+      "packages": [
+        "uvicorn[standard]",
+        "psycopg2-binary",
+        "python-jose[cryptography]",
+        "passlib[bcrypt]",
+        "python-dotenv",
+        "python-magic",
+        "google-generativeai",
+        "tiktoken",
+        "python-docx",
+        "google-api-python-client",
+        "google-auth-httplib2",
+        "google-auth-oauthlib",
+        "msal",
+        "azure-identity",
+        "pytest-dotenv",
+        "isort",
+        "flake8",
+        "python-json-logger",
+        "PyYAML",
+        "python-multipart",
+        "email-validator",
+        "dnspython",
+        "orjson",
+        "pytest-cov",
+        "opentelemetry-sdk",
+        "opentelemetry-exporter-otlp",
+        "opentelemetry-exporter-prometheus",
+        "opentelemetry-instrumentation"
+      ],
+      "recommendation": "Review and remove if truly unused"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "ecosystems": [
+    {
+      "name": "pip",
+      "total_dependencies": 326,
+      "outdated_packages": 65,
+      "critical_updates": [
+        "alembic",
+        "anthropic",
+        "boto3",
+        "botocore",
+        "cachetools"
+      ]
+    },
+    {
+      "name": "npm",
+      "total_dependencies": 3,
+      "production_deps": 3,
+      "dev_deps": 0
+    }
+  ],
+  "scan_timestamp": "2025-09-02T19:00:00Z"
+}

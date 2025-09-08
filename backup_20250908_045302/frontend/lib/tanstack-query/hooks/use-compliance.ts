@@ -1,0 +1,247 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
+import { complianceService } from '@/lib/api/compliance.service';
+
+import {
+  createQueryKey,
+  type BaseQueryOptions,
+  type BaseMutationOptions,
+  type PaginationParams,
+  type PaginatedResponse,
+} from './base';
+
+import type {
+  ComplianceStatus,
+  ComplianceScore,
+  ComplianceRequirement,
+  ComplianceSummary,
+  ComplianceGap,
+  ComplianceTask,
+  ComplianceEvidence,
+} from '@/types/api';
+
+// Query keys
+const COMPLIANCE_KEY = 'compliance';
+
+export const complianceKeys = {
+  all: [COMPLIANCE_KEY] as const,
+  status: (businessProfileId?: string) =>
+    createQueryKey(COMPLIANCE_KEY, 'status', { businessProfileId }),
+  score: (businessProfileId?: string, frameworkId?: string) =>
+    createQueryKey(COMPLIANCE_KEY, 'score', { businessProfileId, frameworkId }),
+  requirements: (frameworkId: string) =>
+    createQueryKey(COMPLIANCE_KEY, 'requirements', { frameworkId }),
+  summary: (businessProfileId?: string) =>
+    createQueryKey(COMPLIANCE_KEY, 'summary', { businessProfileId }),
+  gaps: (businessProfileId?: string, frameworkId?: string) =>
+    createQueryKey(COMPLIANCE_KEY, 'gaps', { businessProfileId, frameworkId }),
+  tasks: (params?: PaginationParams) => createQueryKey(COMPLIANCE_KEY, 'tasks', params),
+  evidence: (requirementId: string) =>
+    createQueryKey(COMPLIANCE_KEY, 'evidence', { requirementId }),
+  frameworks: () => createQueryKey(COMPLIANCE_KEY, 'frameworks'),
+};
+
+// Hook to fetch compliance status
+export function useComplianceStatus(
+  businessProfileId?: string,
+  options?: BaseQueryOptions<ComplianceStatus>,
+) {
+  return useQuery({
+    queryKey: complianceKeys.status(businessProfileId),
+    queryFn: () => complianceService.getComplianceStatus(businessProfileId),
+    ...options,
+  });
+}
+
+// Hook to fetch compliance score
+export function useComplianceScore(
+  businessProfileId?: string,
+  frameworkId?: string,
+  options?: BaseQueryOptions<ComplianceScore>,
+) {
+  return useQuery({
+    queryKey: complianceKeys.score(businessProfileId, frameworkId),
+    queryFn: () => complianceService.getComplianceScore(businessProfileId, frameworkId),
+    ...options,
+  });
+}
+
+// Hook to fetch compliance requirements
+export function useComplianceRequirements(
+  frameworkId: string,
+  options?: BaseQueryOptions<ComplianceRequirement[]>,
+) {
+  return useQuery({
+    queryKey: complianceKeys.requirements(frameworkId),
+    queryFn: () => complianceService.getRequirements(frameworkId),
+    enabled: !!frameworkId,
+    ...options,
+  });
+}
+
+// Hook to fetch compliance summary
+export function useComplianceSummary(
+  businessProfileId?: string,
+  options?: BaseQueryOptions<ComplianceSummary>,
+) {
+  return useQuery({
+    queryKey: complianceKeys.summary(businessProfileId),
+    queryFn: () => complianceService.getComplianceSummary(businessProfileId),
+    ...options,
+  });
+}
+
+// Hook to fetch compliance gaps
+export function useComplianceGaps(
+  businessProfileId?: string,
+  frameworkId?: string,
+  options?: BaseQueryOptions<ComplianceGap[]>,
+) {
+  return useQuery({
+    queryKey: complianceKeys.gaps(businessProfileId, frameworkId),
+    queryFn: () => complianceService.getComplianceGaps(businessProfileId, frameworkId),
+    ...options,
+  });
+}
+
+// Hook to fetch compliance tasks
+export function useComplianceTasks(
+  params?: PaginationParams & {
+    status?: string;
+    priority?: string;
+    assigned_to?: string;
+  },
+  options?: BaseQueryOptions<PaginatedResponse<ComplianceTask>>,
+) {
+  return useQuery({
+    queryKey: complianceKeys.tasks(params),
+    queryFn: () => complianceService.getTasks(params),
+    ...options,
+  });
+}
+
+// Hook to fetch evidence for a requirement
+export function useComplianceEvidence(
+  requirementId: string,
+  options?: BaseQueryOptions<ComplianceEvidence[]>,
+) {
+  return useQuery({
+    queryKey: complianceKeys.evidence(requirementId),
+    queryFn: () => complianceService.getEvidenceForRequirement(requirementId),
+    enabled: !!requirementId,
+    ...options,
+  });
+}
+
+// Hook to update requirement status
+export function useUpdateRequirementStatus(
+  options?: BaseMutationOptions<
+    ComplianceRequirement,
+    unknown,
+    { requirementId: string; status: string; evidence?: string }
+  >,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ requirementId, status, evidence }) =>
+      complianceService.updateRequirementStatus(requirementId, status, evidence),
+    onSuccess: (_, variables) => {
+      // Invalidate related queries
+      queryClient.invalidateQueries({ queryKey: complianceKeys.all });
+      queryClient.invalidateQueries({ queryKey: complianceKeys.evidence(variables.requirementId) });
+    },
+    ...options,
+  });
+}
+
+// Hook to create compliance task
+export function useCreateComplianceTask(
+  options?: BaseMutationOptions<ComplianceTask, unknown, any>,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data) => complianceService.createTask(data),
+    onSuccess: () => {
+      // Invalidate tasks list
+      queryClient.invalidateQueries({ queryKey: complianceKeys.tasks() });
+    },
+    ...options,
+  });
+}
+
+// Hook to update compliance task
+export function useUpdateComplianceTask(
+  options?: BaseMutationOptions<ComplianceTask, unknown, { taskId: string; data: unknown }>,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ taskId, data }) => complianceService.updateTask(taskId, data),
+    onSuccess: () => {
+      // Invalidate tasks list
+      queryClient.invalidateQueries({ queryKey: complianceKeys.tasks() });
+    },
+    ...options,
+  });
+}
+
+// Hook to attach evidence to requirement
+export function useAttachEvidence(
+  options?: BaseMutationOptions<void, unknown, { requirementId: string; evidenceId: string }>,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ requirementId, evidenceId }) =>
+      complianceService.attachEvidence(requirementId, evidenceId),
+    onSuccess: (_, variables) => {
+      // Invalidate evidence for this requirement
+      queryClient.invalidateQueries({ queryKey: complianceKeys.evidence(variables.requirementId) });
+    },
+    ...options,
+  });
+}
+
+// Hook to run compliance check
+export function useRunComplianceCheck(
+  options?: BaseMutationOptions<
+    ComplianceStatus,
+    unknown,
+    { businessProfileId?: string; frameworkId?: string }
+  >,
+) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ businessProfileId, frameworkId }) =>
+      complianceService.runComplianceCheck(businessProfileId, frameworkId),
+    onSuccess: (_, variables) => {
+      // Invalidate all compliance data
+      queryClient.invalidateQueries({ queryKey: complianceKeys.all });
+      queryClient.invalidateQueries({
+        queryKey: complianceKeys.status(variables.businessProfileId),
+      });
+      queryClient.invalidateQueries({
+        queryKey: complianceKeys.score(variables.businessProfileId, variables.frameworkId),
+      });
+    },
+    ...options,
+  });
+}
+
+// Hook to export compliance report
+export function useExportComplianceReport() {
+  return useMutation({
+    mutationFn: ({
+      businessProfileId,
+      frameworkId,
+      format,
+    }: {
+      businessProfileId?: string;
+      frameworkId?: string;
+      format: 'pdf' | 'excel' | 'csv';
+    }) => complianceService.exportComplianceReport(businessProfileId, frameworkId, format),
+  });
+}

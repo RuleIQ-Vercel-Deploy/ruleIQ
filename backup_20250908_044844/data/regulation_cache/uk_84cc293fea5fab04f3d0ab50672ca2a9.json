@@ -1,0 +1,78 @@
+{
+  "success": true,
+  "url": "https://www.legislation.gov.uk/ukpga/1999/31/data.xml",
+  "fetched_at": "2025-08-31T18:16:17.884707",
+  "metadata": {
+    "title": "Contracts (Rights of Third Parties) Act 1999",
+    "description": "An Act to make provision for the enforcement of contractual terms by third parties.",
+    "type": "",
+    "year": "",
+    "number": ""
+  },
+  "requirements": [
+    {
+      "id": "section-1",
+      "text": "11Subject to the provisions of this Act, a person who is not a party to a contract (a \u201cthird party\u201d) may in his own right enforce a term of the contract if\u2014athe contract expressly provides that he may, orbsubject to subsection (2), the term purports to confer a benefit on him.2Subsection (1)(b) does not apply if on a proper construction of the contract it appears that the parties did not intend the term to be enforceable by the third party.3The third party must be expressly identified in the con",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-2",
+      "text": "21Subject to the provisions of this section, where a third party has a right under section 1 to enforce a term of the contract, the parties to the contract may not, by agreement, rescind the contract, or vary it in such a way as to extinguish or alter his entitlement under that right, without his consent if\u2014athe third party has communicated his assent to the term to the promisor,bthe promisor is aware that the third party has relied on the term, orcthe promisor can reasonably be expected to have",
+      "type": "mandatory",
+      "keywords": [
+        "consent"
+      ]
+    },
+    {
+      "id": "section-3",
+      "text": "31Subsections (2) to (5) apply where, in reliance on section 1, proceedings for the enforcement of a term of a contract are brought by a third party.2The promisor shall have available to him by way of defence or set-off any matter that\u2014aarises from or in connection with the contract and is relevant to the term, andbwould have been available to him by way of defence or set-off if the proceedings had been brought by the promisee.3The promisor shall also have available to him by way of defence or s",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-5",
+      "text": "5Where under section 1 a term of a contract is enforceable by a third party, and the promisee has recovered from the promisor a sum in respect of\u2014athe third party\u2019s loss in respect of the term, orbthe expense to the promisee of making good to the third party the default of the promisor,then, in any proceedings brought in reliance on that section by the third party, the court or arbitral tribunal shall reduce any award to the third party to such extent as it thinks appropriate to take account of ",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-7",
+      "text": "71Section 1 does not affect any right or remedy of a third party that exists or is available apart from this Act.2Section 2(2) of the Unfair Contract Terms Act 1977 (restriction on exclusion etc. of liability for negligence) shall not apply where the negligence consists of the breach of an obligation arising from a term of a contract and the person seeking to enforce it is a third party acting in reliance on section 1.3In sections 5 and 8 of the Limitation Act 1980 the references to an action fo",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-8",
+      "text": "81Where\u2014aa right under section 1 to enforce a term (\u201cthe substantive term\u201d) is subject to a term providing for the submission of disputes to arbitration (\u201cthe arbitration agreement\u201d), andbthe arbitration agreement is an agreement in writing for the purposes of Part I of the Arbitration Act 1996,the third party shall be treated for the purposes of that Act as a party to the arbitration agreement as regards disputes between himself and the promisor relating to the enforcement of the substantive te",
+      "type": "mandatory",
+      "keywords": []
+    },
+    {
+      "id": "section-9",
+      "text": "91In its application to Northern Ireland, this Act has effect with the modifications specified in subsections (2) and (3).2. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .3In section 7, for subsection (3) there is substituted\u20143In Articles 4(a) and 15 of the Limitation (Northern Ireland) Order 1989, the references to an action founded on a simple contract and an action upon an instrument under seal shall respectively include references to an action brought in reliance on section 1 ",
+      "type": "mandatory",
+      "keywords": []
+    }
+  ],
+  "penalties": [],
+  "enforcement": {
+    "authority": [],
+    "powers": [
+      "11Subject to the provisions of this Act, a person who is not a party to a contract (a \u201cthird party\u201d) may in his own right enforce a term of the contract if\u2014athe contract expressly provides that he may",
+      "21Subject to the provisions of this section, where a third party has a right under section 1 to enforce a term of the contract, the parties to the contract may not, by agreement, rescind the contract,",
+      "31Subsections (2) to (5) apply where, in reliance on section 1, proceedings for the enforcement of a term of a contract are brought by a third party.2The promisor shall have available to him by way of",
+      "4Section 1 does not affect any right of the promisee to enforce any term of the contract.",
+      "5Where under section 1 a term of a contract is enforceable by a third party, and the promisee has recovered from the promisor a sum in respect of\u2014athe third party\u2019s loss in respect of the term, orbthe",
+      "61Section 1 confers no rights on a third party in the case of a contract on a bill of exchange, promissory note or other negotiable instrument.2Section 1 confers no rights on a third party in the case",
+      "71Section 1 does not affect any right or remedy of a third party that exists or is available apart from this Act.2Section 2(2) of the Unfair Contract Terms Act 1977 (restriction on exclusion etc. of l",
+      "81Where\u2014aa right under section 1 to enforce a term (\u201cthe substantive term\u201d) is subject to a term providing for the submission of disputes to arbitration (\u201cthe arbitration agreement\u201d), andbthe arbitrat"
+    ],
+    "procedures": []
+  },
+  "dates": [],
+  "controls": [
+    "consent_management"
+  ],
+  "xml_length": 58678
+}
