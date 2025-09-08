@@ -8,6 +8,7 @@ import { QuickActionsPanel } from '@/components/dashboard/quick-actions';
 import { AppSidebar } from '@/components/navigation/app-sidebar';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 import { ChatWidget } from '@/components/chat/chat-widget';
+import { EnvBadge } from '@/components/ui/env-badge';
 import { useAuthStore } from '@/lib/stores/auth.store';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -30,6 +31,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <AppSidebar />
       <SidebarInset>
         {children}
+        <EnvBadge />
         <QuickActionsPanel />
         <KeyboardShortcutsDialog />
         <CommandPalette />

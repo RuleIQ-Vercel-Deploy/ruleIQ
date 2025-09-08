@@ -308,14 +308,18 @@ class Settings(BaseSettings):
     error_monitoring_enabled: bool = Field(default=True, description='Enable error monitoring')
     
     # Celery configuration
-            default_factory=lambda: (
+    celery_broker_url: str = Field(
+        default_factory=lambda: (
             'redis://localhost:6380/1' if os.getenv('TESTING', '').lower() == 'true'
-            else get_secret_or_env('        ),
+            else get_secret_or_env('CELERY_BROKER_URL', 'redis://localhost:6379/1')
+        ),
         description='Celery broker URL'
     )
-            default_factory=lambda: (
+    celery_result_backend: str = Field(
+        default_factory=lambda: (
             'redis://localhost:6380/2' if os.getenv('TESTING', '').lower() == 'true'
-            else get_secret_or_env('        ),
+            else get_secret_or_env('CELERY_RESULT_BACKEND', 'redis://localhost:6379/2')
+        ),
         description='Celery result backend'
     )
     celery_task_timeout: int = Field(default=300, description='Celery task timeout (seconds)')

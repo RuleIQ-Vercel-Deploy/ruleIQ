@@ -214,6 +214,7 @@
     "jsdom": "^26.1.0",
     "lint-staged": "^16.1.2",
     "msw": "^2.10.2",
+    "openapi-typescript": "^7.9.1",
     "playwright": "^1.54.1",
     "postcss": "^8.5",
     "prettier": "^3.6.2",
