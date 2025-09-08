@@ -62,11 +62,11 @@ class DeadCodeRemover:
             (r'from\s+celery\s+import.*\n', ''),
             (r'import\s+celery.*\n', ''),
             (r'@app\.task.*\n', ''),
-            (r'            (r'\.delay\([^)]*\)', '()'),  # Convert () to regular calls
-            (r'\.apply_async\([^)]*\)', '()'),  # Convert () to regular calls
+            (r'\.delay\([^)]*\)', '()'),  # Convert to regular calls
+            (r'\.apply_async\([^)]*\)', '()'),  # Convert to regular calls
             (r'CELERY_[A-Z_]+\s*=.*\n', ''),
             (r'celery_app\s*=.*\n', ''),
-            (r'            (r'        ]
+        ]
         
         files_modified = 0
         lines_removed = 0

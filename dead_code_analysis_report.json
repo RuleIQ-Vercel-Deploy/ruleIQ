@@ -1,0 +1,1546 @@
+{
+  "celery_remnants": [
+    "scripts/execute_dead_code_analysis.py",
+    "scripts/dead_code_removal.py",
+    "scripts/dead_code_analysis.py",
+    "scripts/emergency_fix.py",
+    "scripts/deploy.py",
+    "celery_backup_20250902_171317/celery_app.py",
+    "config/tracing.py",
+    "config/logging_config.py",
+    "config/settings.py",
+    "tests/test_fixtures_validation.py",
+    "tests/test_master_integration.py",
+    "tests/conftest.py",
+    "tests/test_reporting_nodes.py",
+    "tests/test_phase4_celery_migration.py",
+    "tests/test_master_integration_runner.py",
+    "tests/test_notification_basic.py",
+    "tests/test_compliance_nodes.py",
+    "scripts/sonar/remove-celery-code.py",
+    "app/core/doppler_config.py",
+    "celery_backup_20250902_171317/workers/notification_tasks.py",
+    "celery_backup_20250902_171317/workers/reporting_tasks.py",
+    "celery_backup_20250902_171317/workers/evidence_tasks.py",
+    "celery_backup_20250902_171317/workers/compliance_tasks.py",
+    "celery_backup_20250902_171317/workers/monitoring_tasks.py",
+    "langgraph_agent/graph/unified_state.py",
+    "langgraph_agent/graph/master_integration_graph.py",
+    "langgraph_agent/graph/celery_migration_graph.py",
+    "langgraph_agent/scheduler/task_scheduler.py",
+    "langgraph_agent/scheduler/__init__.py",
+    "langgraph_agent/nodes/evidence_nodes.py",
+    "langgraph_agent/nodes/celery_migration_nodes.py",
+    "langgraph_agent/nodes/notification_nodes.py",
+    "langgraph_agent/nodes/reporting_nodes_real.py",
+    "langgraph_agent/nodes/reporting_nodes.py",
+    "langgraph_agent/nodes/compliance_nodes_real.py",
+    "langgraph_agent/nodes/compliance_nodes.py",
+    "backup_20250903_042619/scripts/execute_dead_code_analysis.py",
+    "backup_20250903_042619/scripts/dead_code_removal.py",
+    "backup_20250903_042619/scripts/dead_code_analysis.py",
+    "backup_20250903_042619/scripts/emergency_fix.py",
+    "backup_20250903_042619/scripts/deploy.py",
+    "backup_20250903_042619/celery_backup_20250902_171317/celery_app.py",
+    "backup_20250903_042619/config/tracing.py",
+    "backup_20250903_042619/config/logging_config.py",
+    "backup_20250903_042619/config/settings.py",
+    "backup_20250903_042619/tests/test_fixtures_validation.py",
+    "backup_20250903_042619/tests/test_master_integration.py",
+    "backup_20250903_042619/tests/conftest.py",
+    "backup_20250903_042619/tests/test_reporting_nodes.py",
+    "backup_20250903_042619/tests/test_phase4_celery_migration.py",
+    "backup_20250903_042619/tests/test_master_integration_runner.py",
+    "backup_20250903_042619/tests/test_notification_basic.py",
+    "backup_20250903_042619/tests/test_compliance_nodes.py",
+    "backup_20250903_042619/scripts/sonar/remove-celery-code.py",
+    "backup_20250903_042619/app/core/doppler_config.py",
+    "backup_20250903_042619/celery_backup_20250902_171317/workers/notification_tasks.py",
+    "backup_20250903_042619/celery_backup_20250902_171317/workers/reporting_tasks.py",
+    "backup_20250903_042619/celery_backup_20250902_171317/workers/evidence_tasks.py",
+    "backup_20250903_042619/celery_backup_20250902_171317/workers/compliance_tasks.py",
+    "backup_20250903_042619/celery_backup_20250902_171317/workers/monitoring_tasks.py",
+    "backup_20250903_042619/langgraph_agent/graph/unified_state.py",
+    "backup_20250903_042619/langgraph_agent/graph/master_integration_graph.py",
+    "backup_20250903_042619/langgraph_agent/graph/celery_migration_graph.py",
+    "backup_20250903_042619/langgraph_agent/scheduler/task_scheduler.py",
+    "backup_20250903_042619/langgraph_agent/scheduler/__init__.py",
+    "backup_20250903_042619/langgraph_agent/nodes/evidence_nodes.py",
+    "backup_20250903_042619/langgraph_agent/nodes/celery_migration_nodes.py",
+    "backup_20250903_042619/langgraph_agent/nodes/notification_nodes.py",
+    "backup_20250903_042619/langgraph_agent/nodes/reporting_nodes_real.py",
+    "backup_20250903_042619/langgraph_agent/nodes/reporting_nodes.py",
+    "backup_20250903_042619/langgraph_agent/nodes/compliance_nodes_real.py",
+    "backup_20250903_042619/langgraph_agent/nodes/compliance_nodes.py",
+    "backup_20250903_042619/tests/fixtures/external_services.py",
+    "tests/fixtures/external_services.py"
+  ],
+  "commented_code": {
+    "tests/test_graph_execution.py": [
+      {
+        "start": 24,
+        "end": 27,
+        "lines": 4
+      }
+    ],
+    "archive/test_configs/conftest_old.py": [
+      {
+        "start": 360,
+        "end": 363,
+        "lines": 4
+      },
+      {
+        "start": 407,
+        "end": 410,
+        "lines": 4
+      }
+    ],
+    "api/routers/chat.py": [
+      {
+        "start": 1216,
+        "end": 1315,
+        "lines": 9
+      }
+    ],
+    "backup_20250903_042619/tests/test_graph_execution.py": [
+      {
+        "start": 24,
+        "end": 27,
+        "lines": 4
+      }
+    ],
+    "backup_20250903_042619/archive/test_configs/conftest_old.py": [
+      {
+        "start": 360,
+        "end": 363,
+        "lines": 4
+      },
+      {
+        "start": 407,
+        "end": 410,
+        "lines": 4
+      }
+    ],
+    "backup_20250903_042619/api/routers/chat.py": [
+      {
+        "start": 1216,
+        "end": 1315,
+        "lines": 9
+      }
+    ]
+  },
+  "console_logs": {},
+  "empty_files": [
+    "api/integrations/xero_integration.py",
+    "backup_20250903_042619/api/integrations/xero_integration.py"
+  ],
+  "unused_imports": 0,
+  "old_files": [
+    "pytest.ini.backup",
+    ".claude/settings.local.json.backup",
+    "frontend/.env.local.backup",
+    "frontend/eslint.config.mjs.backup",
+    "frontend/tsconfig.json.backup",
+    "backup_20250903_042619/pytest.ini.backup",
+    "archive/test_configs/conftest.py.backup",
+    "frontend/tests/critical-fixes/assessment-components.test.tsx.backup",
+    "frontend/tests/integration/ai-assessment-flow.test.tsx.backup",
+    "frontend/tests/components/dashboard/analytics-page.test.tsx.backup",
+    "frontend/tests/components/auth/auth-flow.test.tsx.backup",
+    "backups/backup_20250903_042619/.claude/settings.local.json.backup",
+    "backups/backup_20250903_042619/frontend/.env.local.backup",
+    "backup_20250903_042619/frontend/eslint.config.mjs.backup",
+    "backup_20250903_042619/frontend/tsconfig.json.backup",
+    "backup_20250903_042619/archive/test_configs/conftest.py.backup",
+    "backup_20250903_042619/frontend/tests/critical-fixes/assessment-components.test.tsx.backup",
+    "backup_20250903_042619/frontend/tests/integration/ai-assessment-flow.test.tsx.backup",
+    "backup_20250903_042619/frontend/tests/components/dashboard/analytics-page.test.tsx.backup",
+    "backup_20250903_042619/frontend/tests/components/auth/auth-flow.test.tsx.backup",
+    "frontend/.next/cache/webpack/server-development/index.pack.gz.old",
+    "frontend/.next/cache/webpack/client-development/index.pack.gz.old",
+    "frontend/.next/cache/webpack/edge-server-development/index.pack.gz.old"
+  ],
+  "skipped_tests": {
+    ".venv/lib/python3.11/site-packages/sympy/matrices/tests/test_matrices.py": [
+      "test_issue_19809"
+    ],
+    ".venv/lib/python3.11/site-packages/sympy/matrices/tests/test_matrixbase.py": [
+      "test_issue_19809"
+    ],
+    ".venv/lib/python3.11/site-packages/sympy/core/tests/test_symbol.py": [
+      "test_issue_gh_16734"
+    ],
+    ".venv/lib/python3.11/site-packages/sympy/codegen/tests/test_algorithms.py": [
+      "test_newtons_method_function__ccode_parameters"
+    ],
+    ".venv/lib/python3.11/site-packages/sympy/codegen/tests/test_applications.py": [
+      "test_copying_function"
+    ],
+    ".venv/lib/python3.11/site-packages/sympy/utilities/tests/test_misc.py": [
+      "test_debug_output"
+    ],
+    ".venv/lib/python3.11/site-packages/sympy/utilities/_compilation/tests/test_compilation.py": [
+      "test_compile_sources"
+    ],
+    ".venv/lib/python3.11/site-packages/sympy/plotting/tests/test_plot.py": [
+      "test_issue_11461"
+    ],
+    ".venv/lib/python3.11/site-packages/gevent/tests/test__fileobject.py": [
+      "test_seek",
+      "test_str_default_to_native",
+      "test_text_encoding",
+      "test_does_not_leak_on_exception",
+      "test_rbU_produces_bytes_readline",
+      "test_rU_produces_native",
+      "test_r_readline_produces_native",
+      "test_r_readline_on_fobject_produces_native",
+      "test_readinto_serial"
+    ],
+    ".venv/lib/python3.11/site-packages/gevent/tests/test__socket.py": [
+      "test_sendall_array",
+      "test_connect_ex_gaierror",
+      "test_connect_ex_not_call_connect",
+      "test_base_exception"
+    ],
+    ".venv/lib/python3.11/site-packages/gevent/tests/test__all__.py": [
+      "test_implements_subset_of_stdlib_all",
+      "test_implements_actually_implements",
+      "test_imports_actually_imports",
+      "test_extensions_actually_extend",
+      "test_completeness"
+    ],
+    ".venv/lib/python3.11/site-packages/gevent/tests/test___monitor.py": [
+      "test_get_process"
+    ],
+    ".venv/lib/python3.11/site-packages/gevent/tests/test__os.py": [
+      "_test_if_pipe_blocks"
+    ],
+    ".venv/lib/python3.11/site-packages/gevent/tests/test__greenio.py": [
+      "test_del_closes_socket"
+    ],
+    ".venv/lib/python3.11/site-packages/joblib/test/test_parallel.py": [
+      "test_backend_no_multiprocessing",
+      "test_parallel_thread_limit",
+      "test_dask_backend_when_dask_not_installed"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/cluster/tests/test_hierarchy.py": [
+      "test_linkage_non_finite_elements_in_distance_matrix",
+      "test_centroid_neg_distance",
+      "test_gh_22183",
+      "test_Heap"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/ndimage/tests/test_filters.py": [
+      "test_gaussian_kernel1d",
+      "test_multiple_modes",
+      "test_multiple_modes_sequentially",
+      "test_multiple_modes_uniform",
+      "test_gaussian_filter_float16"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/ndimage/tests/test_morphology.py": [
+      "test_morphological_gradient01",
+      "test_morphological_laplace01",
+      "test_white_tophat01",
+      "test_white_tophat04",
+      "test_black_tophat01",
+      "test_black_tophat04"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/ndimage/tests/test_measurements.py": [
+      "test_label11_inplace",
+      "test_label_output_wrong_size",
+      "test_ticket_742",
+      "test_histogram03",
+      "test_watershed_ift07",
+      "test_watershed_ift08",
+      "test_watershed_ift09"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/ndimage/tests/test_interpolation.py": [
+      "test_geometric_transform_endianness_with_output_parameter",
+      "test_geometric_transform_with_string_output",
+      "test_map_coordinates03",
+      "test_map_coordinates_endianness_with_output_parameter",
+      "test_map_coordinates_with_string_output",
+      "test_affine_transform_1d_endianness_with_output_parameter",
+      "test_affine_transform_multi_d_endianness_with_output_parameter",
+      "test_affine_transform_with_string_output",
+      "test_zoom_output_shape"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/stats/tests/test_morestats.py": [
+      "test_directional_stats_list_ndarray_input"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/stats/tests/test_rank.py": [
+      "test_rankdata_object_string"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/stats/tests/test_axis_nan_policy.py": [
+      "test_masked_dtype",
+      "test_mixed_mask_nan_1",
+      "test_mixed_mask_nan_2"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/stats/tests/test_marray.py": [
+      "test_ttest_ind_from_stats"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/stats/tests/test_stats.py": [
+      "test_zmap_nan_policy_raise",
+      "test_zscore_nan_raise",
+      "test_zscore_masked_element_0_gh19039",
+      "test_gzscore_masked_array",
+      "test_precision_loss_gh15554",
+      "test_permutation_not_implement_for_xp",
+      "test_permutation_not_implement_for_xp",
+      "test_confidence_interval",
+      "test_ttest_1samp_new_omit",
+      "test_jarque_bera_array_like",
+      "test_jarque_bera_too_few_observations",
+      "test_weights_masked_1d_array",
+      "test_weights_masked_1d_array",
+      "test_weights_masked_1d_array",
+      "test_1d_numeric_array_like_input",
+      "test_raises_error_non_numeric_input",
+      "test_dtype_iv_non_numeric",
+      "test_nan_policy_warns",
+      "test_nan_policy_warns",
+      "test_nan_policy_raise",
+      "test_axis_nan_policy_keepdims_nanpolicy"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/stats/tests/test_variation.py": [
+      "test_scalar",
+      "test_axis_none"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/signal/tests/test_signaltools.py": [
+      "test_zero_rank_python_scalars",
+      "test_2d_arrays",
+      "test_input_swapping",
+      "test_valid_mode2",
+      "test_same_mode",
+      "test_invalid_shapes",
+      "test_convolve_method",
+      "test_convolve_method_large_input",
+      "test_mismatched_dims",
+      "test_dtype_deprecation",
+      "test_2d_arrays",
+      "test_valid_mode",
+      "test_valid_mode_complx",
+      "test_fillvalue",
+      "test_wrap_boundary",
+      "test_sym_boundary",
+      "test_boundary_extension_same",
+      "test_boundary_extension_full",
+      "test_large_array",
+      "test_valid_mode_ignore_nonaxes",
+      "test_zero_rank",
+      "test_fft_nan",
+      "test_none",
+      "test_odd_strides",
+      "test_basic",
+      "test_rfft",
+      "test_input_domain",
+      "test_rank_1_IIR_init_cond",
+      "test_rank_1_FIR_init_cond",
+      "test_rank_2_IIR_axis_0_init_cond",
+      "test_rank_2_IIR_axis_1_init_cond",
+      "test_rank_3_IIR",
+      "test_rank_3_IIR_init_cond",
+      "test_rank_3_FIR",
+      "test_rank_3_FIR_init_cond",
+      "test_zi_pseudobroadcast",
+      "test_scalar_a",
+      "test_zi_some_singleton_dims",
+      "test_bad_size_zi",
+      "test_lfiltic_bad_zi",
+      "test_short_x_FIR",
+      "test_short_x_IIR",
+      "test_lfilter_bad_object",
+      "test_lfilter_notimplemented_input",
+      "test_method",
+      "test_rank3_valid",
+      "test_rank3_same",
+      "test_rank3_all",
+      "test_invalid_shapes",
+      "test_invalid_params",
+      "test_mismatched_dims",
+      "test_numpy_fastpath",
+      "test_dtype_deprecation",
+      "test_correlation_lags_invalid_mode",
+      "test_rank3",
+      "test_rank0",
+      "test_consistency_correlate_funcs_2",
+      "test_invalid_shapes",
+      "test_array_like",
+      "test_basic",
+      "test_sine",
+      "test_axis",
+      "test_gust_simple",
+      "test_equivalence",
+      "test_choose_conv_dtype_deprecation",
+      "test_array_like",
+      "test_envelope_verify_parameters",
+      "test_envelope_verify_axis_parameter",
+      "test_envelope_verify_axis_parameter_complex",
+      "test_rank1",
+      "test_rank2",
+      "test_rank3",
+      "test_initial_conditions",
+      "test_initial_conditions_2",
+      "test_initial_conditions_3d_axis1",
+      "test_bad_zi_shape",
+      "test_sosfilt_zi",
+      "test_sosfilt_zi_2",
+      "test_dtype_deprecation",
+      "test_array_like",
+      "test_copy"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/signal/tests/test_upfirdn.py": [
+      "test_valid_input",
+      "test_output_len_long_input"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/signal/tests/test_splines.py": [
+      "test_symiir1_ic_fails"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/signal/tests/test_fir_filter_design.py": [
+      "test02",
+      "test03",
+      "test04",
+      "test06",
+      "test_input_modyfication",
+      "test_firls",
+      "test_hilbert"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/signal/tests/test_windows.py": [
+      "test_correctness",
+      "test_degenerate_signle_samples",
+      "test_cheb_odd",
+      "test_cheb_even",
+      "test_dpss",
+      "test_windowfunc_basics"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/signal/tests/test_bsplines.py": [
+      "test_spline_filter",
+      "test_spline_filter_complex",
+      "test_gauss_spline_list",
+      "test_cspline1d",
+      "test_qspline1d",
+      "test_cspline1d_eval",
+      "test_qspline1d_eval"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/signal/tests/test_filter_design.py": [
+      "test_conj_pair",
+      "test_basic",
+      "test_freq_range",
+      "test_vs_freqs",
+      "test_freqz_sos_design",
+      "test_fs_param2",
+      "test_fs_param2",
+      "test_basic",
+      "test_basic",
+      "test_basic"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/fft/tests/test_helper.py": [
+      "test_next_fast_len",
+      "test_axes_keyword",
+      "test_uneven_dims"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/fft/tests/test_basic.py": [
+      "test_identity_extensive",
+      "test_fft_n"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/_lib/tests/test__util.py": [
+      "test_contains_nan_with_strings"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/integrate/tests/test_quadrature.py": [
+      "test_masked"
+    ],
+    ".venv/lib/python3.11/site-packages/scipy/spatial/tests/test_distance.py": [
+      "test_pdist_custom_notdouble"
+    ],
+    ".venv/lib/python3.11/site-packages/sklearn/tests/test_docstring_parameters_consistency.py": [
+      "test_class_docstring_consistency",
+      "test_function_docstring_consistency"
+    ],
+    ".venv/lib/python3.11/site-packages/sklearn/ensemble/tests/test_forest.py": [
+      "test_backend_respected"
+    ],
+    ".venv/lib/python3.11/site-packages/sklearn/ensemble/tests/test_gradient_boosting.py": [
+      "test_huber_exact_backward_compat"
+    ],
+    ".venv/lib/python3.11/site-packages/sklearn/linear_model/tests/test_logistic.py": [
+      "test_lr_liblinear_warning"
+    ],
+    ".venv/lib/python3.11/site-packages/sklearn/_loss/tests/test_loss.py": [
+      "test_derivatives"
+    ],
+    ".venv/lib/python3.11/site-packages/sklearn/preprocessing/tests/test_data.py": [
+      "test_standard_scaler_numerical_stability"
+    ],
+    ".venv/lib/python3.11/site-packages/sklearn/feature_selection/tests/test_from_model.py": [
+      "test_feature_importances",
+      "test_2d_coef"
+    ],
+    ".venv/lib/python3.11/site-packages/sklearn/manifold/tests/test_t_sne.py": [
+      "test_n_iter_without_progress"
+    ],
+    ".venv/lib/python3.11/site-packages/sklearn/svm/tests/test_sparse.py": [
+      "test_sparse_oneclasssvm"
+    ],
+    ".venv/lib/python3.11/site-packages/sklearn/utils/tests/test_testing.py": [
+      "test_check_docstring_parameters",
+      "test_assert_docstring_consistency_object_type",
+      "test_assert_docstring_consistency_error_msg",
+      "test_assert_docstring_consistency_descr_regex_pattern"
+    ],
+    ".venv/lib/python3.11/site-packages/sklearn/utils/tests/test_validation.py": [
+      "test_check_array_array_api_has_non_finite",
+      "test_check_array_on_sparse_inputs_with_array_api_enabled"
+    ],
+    ".venv/lib/python3.11/site-packages/sklearn/utils/tests/test_extmath.py": [
+      "test_incremental_variance_numerical_stability"
+    ],
+    ".venv/lib/python3.11/site-packages/sklearn/utils/tests/test_array_api.py": [
+      "test_get_namespace_ndarray_with_dispatch",
+      "test_get_namespace_array_api",
+      "test_device_inspection",
+      "test_convert_estimator_to_array_api"
+    ],
+    ".venv/lib/python3.11/site-packages/psutil/tests/test_connections.py": [
+      "test_combos"
+    ],
+    ".venv/lib/python3.11/site-packages/psutil/tests/test_unicode.py": [
+      "test_net_connections"
+    ],
+    ".venv/lib/python3.11/site-packages/psutil/tests/test_process.py": [
+      "test_io_counters"
+    ],
+    ".venv/lib/python3.11/site-packages/psutil/tests/test_memleaks.py": [
+      "test_num_threads",
+      "test_threads"
+    ],
+    ".venv/lib/python3.11/site-packages/psutil/tests/test_linux.py": [
+      "test_against_df"
+    ],
+    ".venv/lib/python3.11/site-packages/setuptools/tests/test_distutils_adoption.py": [
+      "test_distutils_stdlib"
+    ],
+    ".venv/lib/python3.11/site-packages/setuptools/tests/test_sdist.py": [
+      "test_write_manifest_skips_non_utf8_filenames",
+      "test_sdist_with_latin1_encoded_filename"
+    ],
+    ".venv/lib/python3.11/site-packages/chromadb/test/property/test_fork.py": [
+      "test_fork",
+      "test_fork_with_log_migration"
+    ],
+    ".venv/lib/python3.11/site-packages/chromadb/test/distributed/test_reroute.py": [
+      "test_reroute"
+    ],
+    ".venv/lib/python3.11/site-packages/chromadb/test/distributed/test_log_backpressure.py": [
+      "test_log_backpressure"
+    ],
+    ".venv/lib/python3.11/site-packages/chromadb/test/distributed/test_repair_collection_log_offset.py": [
+      "test_repair_collection_log_offset"
+    ],
+    ".venv/lib/python3.11/site-packages/chromadb/test/distributed/test_log_failover.py": [
+      "test_log_immediate_failover",
+      "test_log_failover",
+      "test_log_failover_with_compaction",
+      "test_log_failover_with_query_operations",
+      "test_log_failover_with_compaction_and_gc_delay",
+      "test_log_failover_with_migration_and_gc_delay"
+    ],
+    ".venv/lib/python3.11/site-packages/chromadb/test/distributed/test_sanity.py": [
+      "test_add",
+      "test_add_include_all_with_compaction_delay"
+    ],
+    ".venv/lib/python3.11/site-packages/chromadb/test/segment/distributed/test_memberlist_provider.py": [
+      "test_can_get_memberlist",
+      "test_can_update_memberlist_multiple_times",
+      "test_stop_memberlist_kills_thread"
+    ],
+    ".venv/lib/python3.11/site-packages/pyflakes/test/test_undefined_names.py": [
+      "test_undefinedExceptionNameObscuringLocalVariable",
+      "test_undefinedExceptionNameObscuringGlobalVariable",
+      "test_undefinedExceptionNameObscuringGlobalVariable2",
+      "test_unused_global"
+    ],
+    ".venv/lib/python3.11/site-packages/pyflakes/test/test_api.py": [
+      "test_permissionDenied"
+    ],
+    ".venv/lib/python3.11/site-packages/pyflakes/test/test_imports.py": [
+      "test_importingForImportError",
+      "test_futureImportUndefined",
+      "test_futureImportStar"
+    ],
+    ".venv/lib/python3.11/site-packages/pyflakes/test/test_other.py": [
+      "test_doubleAssignment",
+      "test_unusedReassignedVariable",
+      "test_exception_unused_in_except_star",
+      "test_t_string",
+      "test_t_string_missing_placeholders"
+    ],
+    ".venv/lib/python3.11/site-packages/pyflakes/test/test_type_annotations.py": [
+      "test_postponed_annotations_py314",
+      "test_variadic_generics",
+      "test_type_statements",
+      "test_type_parameters_functions",
+      "test_type_parameters_do_not_escape_function_scopes",
+      "test_type_parameters_classes",
+      "test_type_parameters_do_not_escape_class_scopes",
+      "test_type_parameters_TypeVarTuple",
+      "test_type_parameters_ParamSpec",
+      "test_type_parameter_defaults"
+    ],
+    ".venv/lib/python3.11/site-packages/pyflakes/test/test_doctests.py": [
+      "test_importBeforeAndInDoctest"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sympy/matrices/tests/test_matrices.py": [
+      "test_issue_19809"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sympy/matrices/tests/test_matrixbase.py": [
+      "test_issue_19809"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sympy/core/tests/test_symbol.py": [
+      "test_issue_gh_16734"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sympy/codegen/tests/test_algorithms.py": [
+      "test_newtons_method_function__ccode_parameters"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sympy/codegen/tests/test_applications.py": [
+      "test_copying_function"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sympy/utilities/tests/test_misc.py": [
+      "test_debug_output"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sympy/utilities/_compilation/tests/test_compilation.py": [
+      "test_compile_sources"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sympy/plotting/tests/test_plot.py": [
+      "test_issue_11461"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/gevent/tests/test__fileobject.py": [
+      "test_seek",
+      "test_str_default_to_native",
+      "test_text_encoding",
+      "test_does_not_leak_on_exception",
+      "test_rbU_produces_bytes_readline",
+      "test_rU_produces_native",
+      "test_r_readline_produces_native",
+      "test_r_readline_on_fobject_produces_native",
+      "test_readinto_serial"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/gevent/tests/test__socket.py": [
+      "test_sendall_array",
+      "test_connect_ex_gaierror",
+      "test_connect_ex_not_call_connect",
+      "test_base_exception"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/gevent/tests/test__all__.py": [
+      "test_implements_subset_of_stdlib_all",
+      "test_implements_actually_implements",
+      "test_imports_actually_imports",
+      "test_extensions_actually_extend",
+      "test_completeness"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/gevent/tests/test___monitor.py": [
+      "test_get_process"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/gevent/tests/test__os.py": [
+      "_test_if_pipe_blocks"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/gevent/tests/test__greenio.py": [
+      "test_del_closes_socket"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/joblib/test/test_parallel.py": [
+      "test_backend_no_multiprocessing",
+      "test_parallel_thread_limit",
+      "test_dask_backend_when_dask_not_installed"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pandas/tests/extension/test_numpy.py": [
+      "test_series_constructor_scalar_with_index",
+      "test_getitem_scalar",
+      "test_shift_fill_value",
+      "test_fillna_copy_frame",
+      "test_fillna_copy_series",
+      "test_searchsorted",
+      "test_insert_invalid",
+      "test_fillna_series",
+      "test_fillna_frame",
+      "test_setitem_invalid",
+      "test_setitem_sequence_broadcasts",
+      "test_setitem_scalar_key_sequence_raise",
+      "test_setitem_slice",
+      "test_setitem_loc_iloc_slice"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pandas/tests/io/parser/test_index_col.py": [
+      "test_infer_index_col",
+      "test_empty_with_index_col_false",
+      "test_infer_types_boolean_sum"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pandas/tests/io/parser/test_na_values.py": [
+      "test_na_trailing_columns"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pandas/tests/io/parser/test_quoting.py": [
+      "test_bad_quote_char"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pandas/tests/io/parser/test_header.py": [
+      "test_names_longer_than_header_but_equal_with_data_rows",
+      "test_header_none_and_implicit_index",
+      "test_header_none_and_implicit_index_in_second_row"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pandas/tests/io/parser/test_encoding.py": [
+      "test_read_csv_unicode"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pandas/tests/io/parser/test_parse_dates.py": [
+      "test_csv_custom_parser",
+      "test_parse_dates_implicit_first_col",
+      "test_infer_first_column_as_index"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pandas/tests/io/parser/common/test_file_buffer_url.py": [
+      "test_file_descriptor_leak"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pandas/tests/io/parser/common/test_float.py": [
+      "test_float_parser"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pandas/tests/io/parser/common/test_common_basic.py": [
+      "test_missing_trailing_delimiters",
+      "test_trailing_delimiters",
+      "test_whitespace_lines",
+      "test_first_row_bom",
+      "test_first_row_bom_unquoted",
+      "test_no_header_two_extra_columns",
+      "test_dict_keys_as_names",
+      "test_short_single_line"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pandas/tests/io/parser/common/test_index.py": [
+      "test_multi_index_no_level_names_implicit",
+      "test_read_duplicate_index_implicit",
+      "test_read_csv_no_index_name",
+      "test_empty_with_index",
+      "test_empty_with_multi_index",
+      "test_empty_with_reversed_multi_index"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pandas/tests/io/parser/usecols/test_usecols_basic.py": [
+      "test_usecols_implicit_index_col"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pandas/tests/io/parser/usecols/test_parse_dates.py": [
+      "test_usecols_with_parse_dates2"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pandas/tests/io/parser/dtypes/test_empty.py": [
+      "test_dtype_all_columns_empty",
+      "test_empty_pass_dtype",
+      "test_empty_with_index_pass_dtype",
+      "test_empty_with_multi_index_pass_dtype",
+      "test_empty_with_mangled_column_pass_dtype_by_names",
+      "test_empty_with_mangled_column_pass_dtype_by_indexes",
+      "test_empty_with_dup_column_pass_dtype_by_indexes",
+      "test_empty_dtype"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/cluster/tests/test_hierarchy.py": [
+      "test_linkage_non_finite_elements_in_distance_matrix",
+      "test_centroid_neg_distance",
+      "test_gh_22183",
+      "test_Heap"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/ndimage/tests/test_filters.py": [
+      "test_gaussian_kernel1d",
+      "test_multiple_modes",
+      "test_multiple_modes_sequentially",
+      "test_multiple_modes_uniform",
+      "test_gaussian_filter_float16"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/ndimage/tests/test_morphology.py": [
+      "test_morphological_gradient01",
+      "test_morphological_laplace01",
+      "test_white_tophat01",
+      "test_white_tophat04",
+      "test_black_tophat01",
+      "test_black_tophat04"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/ndimage/tests/test_measurements.py": [
+      "test_label11_inplace",
+      "test_label_output_wrong_size",
+      "test_ticket_742",
+      "test_histogram03",
+      "test_watershed_ift07",
+      "test_watershed_ift08",
+      "test_watershed_ift09"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/ndimage/tests/test_interpolation.py": [
+      "test_geometric_transform_endianness_with_output_parameter",
+      "test_geometric_transform_with_string_output",
+      "test_map_coordinates03",
+      "test_map_coordinates_endianness_with_output_parameter",
+      "test_map_coordinates_with_string_output",
+      "test_affine_transform_1d_endianness_with_output_parameter",
+      "test_affine_transform_multi_d_endianness_with_output_parameter",
+      "test_affine_transform_with_string_output",
+      "test_zoom_output_shape"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/stats/tests/test_morestats.py": [
+      "test_directional_stats_list_ndarray_input"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/stats/tests/test_rank.py": [
+      "test_rankdata_object_string"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/stats/tests/test_axis_nan_policy.py": [
+      "test_masked_dtype",
+      "test_mixed_mask_nan_1",
+      "test_mixed_mask_nan_2"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/stats/tests/test_marray.py": [
+      "test_ttest_ind_from_stats"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/stats/tests/test_stats.py": [
+      "test_zmap_nan_policy_raise",
+      "test_zscore_nan_raise",
+      "test_zscore_masked_element_0_gh19039",
+      "test_gzscore_masked_array",
+      "test_precision_loss_gh15554",
+      "test_permutation_not_implement_for_xp",
+      "test_permutation_not_implement_for_xp",
+      "test_confidence_interval",
+      "test_ttest_1samp_new_omit",
+      "test_jarque_bera_array_like",
+      "test_jarque_bera_too_few_observations",
+      "test_weights_masked_1d_array",
+      "test_weights_masked_1d_array",
+      "test_weights_masked_1d_array",
+      "test_1d_numeric_array_like_input",
+      "test_raises_error_non_numeric_input",
+      "test_dtype_iv_non_numeric",
+      "test_nan_policy_warns",
+      "test_nan_policy_warns",
+      "test_nan_policy_raise",
+      "test_axis_nan_policy_keepdims_nanpolicy"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/stats/tests/test_variation.py": [
+      "test_scalar",
+      "test_axis_none"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/signal/tests/test_signaltools.py": [
+      "test_zero_rank_python_scalars",
+      "test_2d_arrays",
+      "test_input_swapping",
+      "test_valid_mode2",
+      "test_same_mode",
+      "test_invalid_shapes",
+      "test_convolve_method",
+      "test_convolve_method_large_input",
+      "test_mismatched_dims",
+      "test_dtype_deprecation",
+      "test_2d_arrays",
+      "test_valid_mode",
+      "test_valid_mode_complx",
+      "test_fillvalue",
+      "test_wrap_boundary",
+      "test_sym_boundary",
+      "test_boundary_extension_same",
+      "test_boundary_extension_full",
+      "test_large_array",
+      "test_valid_mode_ignore_nonaxes",
+      "test_zero_rank",
+      "test_fft_nan",
+      "test_none",
+      "test_odd_strides",
+      "test_basic",
+      "test_rfft",
+      "test_input_domain",
+      "test_rank_1_IIR_init_cond",
+      "test_rank_1_FIR_init_cond",
+      "test_rank_2_IIR_axis_0_init_cond",
+      "test_rank_2_IIR_axis_1_init_cond",
+      "test_rank_3_IIR",
+      "test_rank_3_IIR_init_cond",
+      "test_rank_3_FIR",
+      "test_rank_3_FIR_init_cond",
+      "test_zi_pseudobroadcast",
+      "test_scalar_a",
+      "test_zi_some_singleton_dims",
+      "test_bad_size_zi",
+      "test_lfiltic_bad_zi",
+      "test_short_x_FIR",
+      "test_short_x_IIR",
+      "test_lfilter_bad_object",
+      "test_lfilter_notimplemented_input",
+      "test_method",
+      "test_rank3_valid",
+      "test_rank3_same",
+      "test_rank3_all",
+      "test_invalid_shapes",
+      "test_invalid_params",
+      "test_mismatched_dims",
+      "test_numpy_fastpath",
+      "test_dtype_deprecation",
+      "test_correlation_lags_invalid_mode",
+      "test_rank3",
+      "test_rank0",
+      "test_consistency_correlate_funcs_2",
+      "test_invalid_shapes",
+      "test_array_like",
+      "test_basic",
+      "test_sine",
+      "test_axis",
+      "test_gust_simple",
+      "test_equivalence",
+      "test_choose_conv_dtype_deprecation",
+      "test_array_like",
+      "test_envelope_verify_parameters",
+      "test_envelope_verify_axis_parameter",
+      "test_envelope_verify_axis_parameter_complex",
+      "test_rank1",
+      "test_rank2",
+      "test_rank3",
+      "test_initial_conditions",
+      "test_initial_conditions_2",
+      "test_initial_conditions_3d_axis1",
+      "test_bad_zi_shape",
+      "test_sosfilt_zi",
+      "test_sosfilt_zi_2",
+      "test_dtype_deprecation",
+      "test_array_like",
+      "test_copy"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/signal/tests/test_upfirdn.py": [
+      "test_valid_input",
+      "test_output_len_long_input"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/signal/tests/test_splines.py": [
+      "test_symiir1_ic_fails"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/signal/tests/test_fir_filter_design.py": [
+      "test02",
+      "test03",
+      "test04",
+      "test06",
+      "test_input_modyfication",
+      "test_firls",
+      "test_hilbert"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/signal/tests/test_windows.py": [
+      "test_correctness",
+      "test_degenerate_signle_samples",
+      "test_cheb_odd",
+      "test_cheb_even",
+      "test_dpss",
+      "test_windowfunc_basics"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/signal/tests/test_bsplines.py": [
+      "test_spline_filter",
+      "test_spline_filter_complex",
+      "test_gauss_spline_list",
+      "test_cspline1d",
+      "test_qspline1d",
+      "test_cspline1d_eval",
+      "test_qspline1d_eval"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/signal/tests/test_filter_design.py": [
+      "test_conj_pair",
+      "test_basic",
+      "test_freq_range",
+      "test_vs_freqs",
+      "test_freqz_sos_design",
+      "test_fs_param2",
+      "test_fs_param2",
+      "test_basic",
+      "test_basic",
+      "test_basic"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/fft/tests/test_helper.py": [
+      "test_next_fast_len",
+      "test_axes_keyword",
+      "test_uneven_dims"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/fft/tests/test_basic.py": [
+      "test_identity_extensive",
+      "test_fft_n"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/_lib/tests/test__util.py": [
+      "test_contains_nan_with_strings"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/integrate/tests/test_quadrature.py": [
+      "test_masked"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/scipy/spatial/tests/test_distance.py": [
+      "test_pdist_custom_notdouble"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sklearn/tests/test_docstring_parameters_consistency.py": [
+      "test_class_docstring_consistency",
+      "test_function_docstring_consistency"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sklearn/ensemble/tests/test_forest.py": [
+      "test_backend_respected"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sklearn/ensemble/tests/test_gradient_boosting.py": [
+      "test_huber_exact_backward_compat"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sklearn/linear_model/tests/test_logistic.py": [
+      "test_lr_liblinear_warning"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sklearn/_loss/tests/test_loss.py": [
+      "test_derivatives"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sklearn/preprocessing/tests/test_data.py": [
+      "test_standard_scaler_numerical_stability"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sklearn/feature_selection/tests/test_from_model.py": [
+      "test_feature_importances",
+      "test_2d_coef"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sklearn/manifold/tests/test_t_sne.py": [
+      "test_n_iter_without_progress"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sklearn/svm/tests/test_sparse.py": [
+      "test_sparse_oneclasssvm"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sklearn/utils/tests/test_testing.py": [
+      "test_check_docstring_parameters",
+      "test_assert_docstring_consistency_object_type",
+      "test_assert_docstring_consistency_error_msg",
+      "test_assert_docstring_consistency_descr_regex_pattern"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sklearn/utils/tests/test_validation.py": [
+      "test_check_array_array_api_has_non_finite",
+      "test_check_array_on_sparse_inputs_with_array_api_enabled"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sklearn/utils/tests/test_extmath.py": [
+      "test_incremental_variance_numerical_stability"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/sklearn/utils/tests/test_array_api.py": [
+      "test_get_namespace_ndarray_with_dispatch",
+      "test_get_namespace_array_api",
+      "test_device_inspection",
+      "test_convert_estimator_to_array_api"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/psutil/tests/test_connections.py": [
+      "test_combos"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/psutil/tests/test_unicode.py": [
+      "test_net_connections"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/psutil/tests/test_process.py": [
+      "test_io_counters"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/psutil/tests/test_memleaks.py": [
+      "test_num_threads",
+      "test_threads"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/psutil/tests/test_linux.py": [
+      "test_against_df"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/setuptools/tests/test_distutils_adoption.py": [
+      "test_distutils_stdlib"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/setuptools/tests/test_sdist.py": [
+      "test_write_manifest_skips_non_utf8_filenames",
+      "test_sdist_with_latin1_encoded_filename"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pyflakes/test/test_undefined_names.py": [
+      "test_undefinedExceptionNameObscuringLocalVariable",
+      "test_undefinedExceptionNameObscuringGlobalVariable",
+      "test_undefinedExceptionNameObscuringGlobalVariable2",
+      "test_unused_global"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pyflakes/test/test_api.py": [
+      "test_permissionDenied"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pyflakes/test/test_imports.py": [
+      "test_importingForImportError",
+      "test_futureImportUndefined",
+      "test_futureImportStar"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pyflakes/test/test_other.py": [
+      "test_doubleAssignment",
+      "test_unusedReassignedVariable",
+      "test_exception_unused_in_except_star",
+      "test_t_string",
+      "test_t_string_missing_placeholders"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pyflakes/test/test_type_annotations.py": [
+      "test_postponed_annotations_py314",
+      "test_variadic_generics",
+      "test_type_statements",
+      "test_type_parameters_functions",
+      "test_type_parameters_do_not_escape_function_scopes",
+      "test_type_parameters_classes",
+      "test_type_parameters_do_not_escape_class_scopes",
+      "test_type_parameters_TypeVarTuple",
+      "test_type_parameters_ParamSpec",
+      "test_type_parameter_defaults"
+    ],
+    "backups/backup_20250903_042619/.venv/lib64/python3.11/site-packages/pyflakes/test/test_doctests.py": [
+      "test_importBeforeAndInDoctest"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sympy/matrices/tests/test_matrices.py": [
+      "test_issue_19809"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sympy/matrices/tests/test_matrixbase.py": [
+      "test_issue_19809"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sympy/core/tests/test_symbol.py": [
+      "test_issue_gh_16734"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sympy/codegen/tests/test_algorithms.py": [
+      "test_newtons_method_function__ccode_parameters"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sympy/codegen/tests/test_applications.py": [
+      "test_copying_function"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sympy/utilities/tests/test_misc.py": [
+      "test_debug_output"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sympy/utilities/_compilation/tests/test_compilation.py": [
+      "test_compile_sources"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sympy/plotting/tests/test_plot.py": [
+      "test_issue_11461"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/gevent/tests/test__fileobject.py": [
+      "test_seek",
+      "test_str_default_to_native",
+      "test_text_encoding",
+      "test_does_not_leak_on_exception",
+      "test_rbU_produces_bytes_readline",
+      "test_rU_produces_native",
+      "test_r_readline_produces_native",
+      "test_r_readline_on_fobject_produces_native",
+      "test_readinto_serial"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/gevent/tests/test__socket.py": [
+      "test_sendall_array",
+      "test_connect_ex_gaierror",
+      "test_connect_ex_not_call_connect",
+      "test_base_exception"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/gevent/tests/test__all__.py": [
+      "test_implements_subset_of_stdlib_all",
+      "test_implements_actually_implements",
+      "test_imports_actually_imports",
+      "test_extensions_actually_extend",
+      "test_completeness"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/gevent/tests/test___monitor.py": [
+      "test_get_process"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/gevent/tests/test__os.py": [
+      "_test_if_pipe_blocks"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/gevent/tests/test__greenio.py": [
+      "test_del_closes_socket"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/joblib/test/test_parallel.py": [
+      "test_backend_no_multiprocessing",
+      "test_parallel_thread_limit",
+      "test_dask_backend_when_dask_not_installed"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pandas/tests/extension/test_numpy.py": [
+      "test_series_constructor_scalar_with_index",
+      "test_getitem_scalar",
+      "test_shift_fill_value",
+      "test_fillna_copy_frame",
+      "test_fillna_copy_series",
+      "test_searchsorted",
+      "test_insert_invalid",
+      "test_fillna_series",
+      "test_fillna_frame",
+      "test_setitem_invalid",
+      "test_setitem_sequence_broadcasts",
+      "test_setitem_scalar_key_sequence_raise",
+      "test_setitem_slice",
+      "test_setitem_loc_iloc_slice"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pandas/tests/io/parser/test_index_col.py": [
+      "test_infer_index_col",
+      "test_empty_with_index_col_false",
+      "test_infer_types_boolean_sum"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pandas/tests/io/parser/test_na_values.py": [
+      "test_na_trailing_columns"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pandas/tests/io/parser/test_quoting.py": [
+      "test_bad_quote_char"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pandas/tests/io/parser/test_header.py": [
+      "test_names_longer_than_header_but_equal_with_data_rows",
+      "test_header_none_and_implicit_index",
+      "test_header_none_and_implicit_index_in_second_row"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pandas/tests/io/parser/test_encoding.py": [
+      "test_read_csv_unicode"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pandas/tests/io/parser/test_parse_dates.py": [
+      "test_csv_custom_parser",
+      "test_parse_dates_implicit_first_col",
+      "test_infer_first_column_as_index"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pandas/tests/io/parser/common/test_file_buffer_url.py": [
+      "test_file_descriptor_leak"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pandas/tests/io/parser/common/test_float.py": [
+      "test_float_parser"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pandas/tests/io/parser/common/test_common_basic.py": [
+      "test_missing_trailing_delimiters",
+      "test_trailing_delimiters",
+      "test_whitespace_lines",
+      "test_first_row_bom",
+      "test_first_row_bom_unquoted",
+      "test_no_header_two_extra_columns",
+      "test_dict_keys_as_names",
+      "test_short_single_line"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pandas/tests/io/parser/common/test_index.py": [
+      "test_multi_index_no_level_names_implicit",
+      "test_read_duplicate_index_implicit",
+      "test_read_csv_no_index_name",
+      "test_empty_with_index",
+      "test_empty_with_multi_index",
+      "test_empty_with_reversed_multi_index"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pandas/tests/io/parser/usecols/test_usecols_basic.py": [
+      "test_usecols_implicit_index_col"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pandas/tests/io/parser/usecols/test_parse_dates.py": [
+      "test_usecols_with_parse_dates2"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pandas/tests/io/parser/dtypes/test_empty.py": [
+      "test_dtype_all_columns_empty",
+      "test_empty_pass_dtype",
+      "test_empty_with_index_pass_dtype",
+      "test_empty_with_multi_index_pass_dtype",
+      "test_empty_with_mangled_column_pass_dtype_by_names",
+      "test_empty_with_mangled_column_pass_dtype_by_indexes",
+      "test_empty_with_dup_column_pass_dtype_by_indexes",
+      "test_empty_dtype"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/cluster/tests/test_hierarchy.py": [
+      "test_linkage_non_finite_elements_in_distance_matrix",
+      "test_centroid_neg_distance",
+      "test_gh_22183",
+      "test_Heap"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/ndimage/tests/test_filters.py": [
+      "test_gaussian_kernel1d",
+      "test_multiple_modes",
+      "test_multiple_modes_sequentially",
+      "test_multiple_modes_uniform",
+      "test_gaussian_filter_float16"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/ndimage/tests/test_morphology.py": [
+      "test_morphological_gradient01",
+      "test_morphological_laplace01",
+      "test_white_tophat01",
+      "test_white_tophat04",
+      "test_black_tophat01",
+      "test_black_tophat04"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/ndimage/tests/test_measurements.py": [
+      "test_label11_inplace",
+      "test_label_output_wrong_size",
+      "test_ticket_742",
+      "test_histogram03",
+      "test_watershed_ift07",
+      "test_watershed_ift08",
+      "test_watershed_ift09"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/ndimage/tests/test_interpolation.py": [
+      "test_geometric_transform_endianness_with_output_parameter",
+      "test_geometric_transform_with_string_output",
+      "test_map_coordinates03",
+      "test_map_coordinates_endianness_with_output_parameter",
+      "test_map_coordinates_with_string_output",
+      "test_affine_transform_1d_endianness_with_output_parameter",
+      "test_affine_transform_multi_d_endianness_with_output_parameter",
+      "test_affine_transform_with_string_output",
+      "test_zoom_output_shape"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/stats/tests/test_morestats.py": [
+      "test_directional_stats_list_ndarray_input"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/stats/tests/test_rank.py": [
+      "test_rankdata_object_string"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/stats/tests/test_axis_nan_policy.py": [
+      "test_masked_dtype",
+      "test_mixed_mask_nan_1",
+      "test_mixed_mask_nan_2"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/stats/tests/test_marray.py": [
+      "test_ttest_ind_from_stats"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/stats/tests/test_stats.py": [
+      "test_zmap_nan_policy_raise",
+      "test_zscore_nan_raise",
+      "test_zscore_masked_element_0_gh19039",
+      "test_gzscore_masked_array",
+      "test_precision_loss_gh15554",
+      "test_permutation_not_implement_for_xp",
+      "test_permutation_not_implement_for_xp",
+      "test_confidence_interval",
+      "test_ttest_1samp_new_omit",
+      "test_jarque_bera_array_like",
+      "test_jarque_bera_too_few_observations",
+      "test_weights_masked_1d_array",
+      "test_weights_masked_1d_array",
+      "test_weights_masked_1d_array",
+      "test_1d_numeric_array_like_input",
+      "test_raises_error_non_numeric_input",
+      "test_dtype_iv_non_numeric",
+      "test_nan_policy_warns",
+      "test_nan_policy_warns",
+      "test_nan_policy_raise",
+      "test_axis_nan_policy_keepdims_nanpolicy"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/stats/tests/test_variation.py": [
+      "test_scalar",
+      "test_axis_none"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/signal/tests/test_signaltools.py": [
+      "test_zero_rank_python_scalars",
+      "test_2d_arrays",
+      "test_input_swapping",
+      "test_valid_mode2",
+      "test_same_mode",
+      "test_invalid_shapes",
+      "test_convolve_method",
+      "test_convolve_method_large_input",
+      "test_mismatched_dims",
+      "test_dtype_deprecation",
+      "test_2d_arrays",
+      "test_valid_mode",
+      "test_valid_mode_complx",
+      "test_fillvalue",
+      "test_wrap_boundary",
+      "test_sym_boundary",
+      "test_boundary_extension_same",
+      "test_boundary_extension_full",
+      "test_large_array",
+      "test_valid_mode_ignore_nonaxes",
+      "test_zero_rank",
+      "test_fft_nan",
+      "test_none",
+      "test_odd_strides",
+      "test_basic",
+      "test_rfft",
+      "test_input_domain",
+      "test_rank_1_IIR_init_cond",
+      "test_rank_1_FIR_init_cond",
+      "test_rank_2_IIR_axis_0_init_cond",
+      "test_rank_2_IIR_axis_1_init_cond",
+      "test_rank_3_IIR",
+      "test_rank_3_IIR_init_cond",
+      "test_rank_3_FIR",
+      "test_rank_3_FIR_init_cond",
+      "test_zi_pseudobroadcast",
+      "test_scalar_a",
+      "test_zi_some_singleton_dims",
+      "test_bad_size_zi",
+      "test_lfiltic_bad_zi",
+      "test_short_x_FIR",
+      "test_short_x_IIR",
+      "test_lfilter_bad_object",
+      "test_lfilter_notimplemented_input",
+      "test_method",
+      "test_rank3_valid",
+      "test_rank3_same",
+      "test_rank3_all",
+      "test_invalid_shapes",
+      "test_invalid_params",
+      "test_mismatched_dims",
+      "test_numpy_fastpath",
+      "test_dtype_deprecation",
+      "test_correlation_lags_invalid_mode",
+      "test_rank3",
+      "test_rank0",
+      "test_consistency_correlate_funcs_2",
+      "test_invalid_shapes",
+      "test_array_like",
+      "test_basic",
+      "test_sine",
+      "test_axis",
+      "test_gust_simple",
+      "test_equivalence",
+      "test_choose_conv_dtype_deprecation",
+      "test_array_like",
+      "test_envelope_verify_parameters",
+      "test_envelope_verify_axis_parameter",
+      "test_envelope_verify_axis_parameter_complex",
+      "test_rank1",
+      "test_rank2",
+      "test_rank3",
+      "test_initial_conditions",
+      "test_initial_conditions_2",
+      "test_initial_conditions_3d_axis1",
+      "test_bad_zi_shape",
+      "test_sosfilt_zi",
+      "test_sosfilt_zi_2",
+      "test_dtype_deprecation",
+      "test_array_like",
+      "test_copy"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/signal/tests/test_upfirdn.py": [
+      "test_valid_input",
+      "test_output_len_long_input"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/signal/tests/test_splines.py": [
+      "test_symiir1_ic_fails"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/signal/tests/test_fir_filter_design.py": [
+      "test02",
+      "test03",
+      "test04",
+      "test06",
+      "test_input_modyfication",
+      "test_firls",
+      "test_hilbert"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/signal/tests/test_windows.py": [
+      "test_correctness",
+      "test_degenerate_signle_samples",
+      "test_cheb_odd",
+      "test_cheb_even",
+      "test_dpss",
+      "test_windowfunc_basics"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/signal/tests/test_bsplines.py": [
+      "test_spline_filter",
+      "test_spline_filter_complex",
+      "test_gauss_spline_list",
+      "test_cspline1d",
+      "test_qspline1d",
+      "test_cspline1d_eval",
+      "test_qspline1d_eval"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/signal/tests/test_filter_design.py": [
+      "test_conj_pair",
+      "test_basic",
+      "test_freq_range",
+      "test_vs_freqs",
+      "test_freqz_sos_design",
+      "test_fs_param2",
+      "test_fs_param2",
+      "test_basic",
+      "test_basic",
+      "test_basic"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/fft/tests/test_helper.py": [
+      "test_next_fast_len",
+      "test_axes_keyword",
+      "test_uneven_dims"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/fft/tests/test_basic.py": [
+      "test_identity_extensive",
+      "test_fft_n"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/_lib/tests/test__util.py": [
+      "test_contains_nan_with_strings"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/integrate/tests/test_quadrature.py": [
+      "test_masked"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/scipy/spatial/tests/test_distance.py": [
+      "test_pdist_custom_notdouble"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sklearn/tests/test_docstring_parameters_consistency.py": [
+      "test_class_docstring_consistency",
+      "test_function_docstring_consistency"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sklearn/ensemble/tests/test_forest.py": [
+      "test_backend_respected"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sklearn/ensemble/tests/test_gradient_boosting.py": [
+      "test_huber_exact_backward_compat"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sklearn/linear_model/tests/test_logistic.py": [
+      "test_lr_liblinear_warning"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sklearn/_loss/tests/test_loss.py": [
+      "test_derivatives"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sklearn/preprocessing/tests/test_data.py": [
+      "test_standard_scaler_numerical_stability"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sklearn/feature_selection/tests/test_from_model.py": [
+      "test_feature_importances",
+      "test_2d_coef"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sklearn/manifold/tests/test_t_sne.py": [
+      "test_n_iter_without_progress"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sklearn/svm/tests/test_sparse.py": [
+      "test_sparse_oneclasssvm"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sklearn/utils/tests/test_testing.py": [
+      "test_check_docstring_parameters",
+      "test_assert_docstring_consistency_object_type",
+      "test_assert_docstring_consistency_error_msg",
+      "test_assert_docstring_consistency_descr_regex_pattern"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sklearn/utils/tests/test_validation.py": [
+      "test_check_array_array_api_has_non_finite",
+      "test_check_array_on_sparse_inputs_with_array_api_enabled"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sklearn/utils/tests/test_extmath.py": [
+      "test_incremental_variance_numerical_stability"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/sklearn/utils/tests/test_array_api.py": [
+      "test_get_namespace_ndarray_with_dispatch",
+      "test_get_namespace_array_api",
+      "test_device_inspection",
+      "test_convert_estimator_to_array_api"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/psutil/tests/test_connections.py": [
+      "test_combos"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/psutil/tests/test_unicode.py": [
+      "test_net_connections"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/psutil/tests/test_process.py": [
+      "test_io_counters"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/psutil/tests/test_memleaks.py": [
+      "test_num_threads",
+      "test_threads"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/psutil/tests/test_linux.py": [
+      "test_against_df"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/setuptools/tests/test_distutils_adoption.py": [
+      "test_distutils_stdlib"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/setuptools/tests/test_sdist.py": [
+      "test_write_manifest_skips_non_utf8_filenames",
+      "test_sdist_with_latin1_encoded_filename"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pyflakes/test/test_undefined_names.py": [
+      "test_undefinedExceptionNameObscuringLocalVariable",
+      "test_undefinedExceptionNameObscuringGlobalVariable",
+      "test_undefinedExceptionNameObscuringGlobalVariable2",
+      "test_unused_global"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pyflakes/test/test_api.py": [
+      "test_permissionDenied"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pyflakes/test/test_imports.py": [
+      "test_importingForImportError",
+      "test_futureImportUndefined",
+      "test_futureImportStar"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pyflakes/test/test_other.py": [
+      "test_doubleAssignment",
+      "test_unusedReassignedVariable",
+      "test_exception_unused_in_except_star",
+      "test_t_string",
+      "test_t_string_missing_placeholders"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pyflakes/test/test_type_annotations.py": [
+      "test_postponed_annotations_py314",
+      "test_variadic_generics",
+      "test_type_statements",
+      "test_type_parameters_functions",
+      "test_type_parameters_do_not_escape_function_scopes",
+      "test_type_parameters_classes",
+      "test_type_parameters_do_not_escape_class_scopes",
+      "test_type_parameters_TypeVarTuple",
+      "test_type_parameters_ParamSpec",
+      "test_type_parameter_defaults"
+    ],
+    "backups/backup_20250903_042619/.venv/lib/python3.11/site-packages/pyflakes/test/test_doctests.py": [
+      "test_importBeforeAndInDoctest"
+    ]
+  }
+}

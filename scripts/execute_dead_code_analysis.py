@@ -21,7 +21,7 @@ def analyze_celery_remnants():
         r'celery',
         r'Celery',
         r'@app\.task',
-        r'        r'\.delay\(',
+        r'\.delay\(',
         r'\.apply_async\(',
         r'CELERY_',
         r'broker_url',
