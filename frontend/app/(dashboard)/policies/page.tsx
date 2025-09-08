@@ -20,12 +20,14 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useToast } from '@/hooks/use-toast';
 import { policyService } from '@/lib/api/policies.service';
 
 import type { Policy } from '@/types/api';
 
 export default function PoliciesPage() {
   const router = useRouter();
+  const { toast } = useToast();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [policies, setPolicies] = useState<Policy[]>([]);
@@ -43,10 +45,8 @@ export default function PoliciesPage() {
         page_size: 50,
       });
       setPolicies(response.policies);
-    } catch {} {
-      // TODO: Replace with proper logging
-
-      // // TODO: Replace with proper logging
+    } catch (err) {
+      console.error('Failed to fetch policies:', err);
       setError(err instanceof Error ? err.message : 'Failed to load policies');
     } finally {
       setLoading(false);
@@ -100,9 +100,13 @@ export default function PoliciesPage() {
       } else {
         await policyService.exportPolicyAsWord(policyId);
       }
-    } catch {} {
-      // TODO: Replace with proper logging
-      // // TODO: Replace with proper logging
+    } catch (err) {
+      console.error(`Failed to export policy as ${format}:`, err);
+      toast({
+        title: 'Export failed',
+        description: `Unable to export policy as ${format.toUpperCase()}. Please try again.`,
+        variant: 'destructive',
+      });
     }
   };
 

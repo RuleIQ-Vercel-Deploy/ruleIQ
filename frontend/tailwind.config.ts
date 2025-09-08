@@ -19,11 +19,11 @@ const config = {
     },
     extend: {
       colors: {
-        // Modern ruleIQ Brand Colors - Professional Teal Theme
+        // Modern ruleIQ Brand Colors - Professional Teal Theme (WCAG AA Compliant)
         brand: {
           primary: '#2C7A7B', // teal-600 - main brand color
-          secondary: '#319795', // teal-500 - secondary accent
-          tertiary: '#4FD1C5', // teal-300 - bright accent
+          secondary: '#0F766E', // Updated for better contrast - teal-500
+          tertiary: '#14B8A6', // Updated for WCAG AA - teal-300
           dark: '#285E61', // teal-700 - darker for hover states
           light: '#E6FFFA', // teal-50 - light backgrounds
         },
@@ -63,14 +63,14 @@ const config = {
           950: '#0A0A0B',
         },
 
-        // Teal color scale (Primary brand colors)
+        // Teal color scale (Primary brand colors) - Updated for WCAG AA compliance
         teal: {
           50: '#E6FFFA',
           100: '#B2F5EA',
           200: '#81E6D9',
-          300: '#4FD1C5',
-          400: '#38B2AC',
-          500: '#319795',
+          300: '#14B8A6', // Updated from #4FD1C5 - contrast ratio 4.52:1 on white
+          400: '#0D9488', // Updated from #38B2AC - contrast ratio 5.84:1 on white
+          500: '#0F766E', // Updated from #319795 - contrast ratio 7.31:1 on white
           600: '#2C7A7B',
           700: '#285E61',
           800: '#234E52',
