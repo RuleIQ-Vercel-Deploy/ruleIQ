@@ -1,13 +1,7 @@
 """
 
 # Constants
-HTTP_INTERNAL_SERVER_ERROR = 500
-HTTP_NOT_FOUND = 404
-HTTP_OK = 200
-HTTP_UNAUTHORIZED = 401
-HTTP_UNPROCESSABLE_ENTITY = 422
 
-MAX_RETRIES = 3
 
 Integration Tests for AI Assessment Endpoints
 
@@ -21,6 +15,15 @@ import pytest
 from fastapi.testclient import TestClient
 from services.ai.assistant import ComplianceAssistant
 from services.ai.exceptions import AIContentFilterException, AIQuotaExceededException, AIServiceException, AITimeoutException
+
+from tests.test_constants import (
+    HTTP_INTERNAL_SERVER_ERROR,
+    HTTP_NOT_FOUND,
+    HTTP_OK,
+    HTTP_UNAUTHORIZED,
+    HTTP_UNPROCESSABLE_ENTITY,
+    MAX_RETRIES
+)
 
 
 @pytest.mark.integration

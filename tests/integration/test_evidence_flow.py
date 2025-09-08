@@ -1,8 +1,6 @@
 """
 
 # Constants
-HTTP_BAD_REQUEST = 400
-HTTP_OK = 200
 
 Integration tests for the end-to-end evidence collection and reporting flow.
 """
@@ -10,6 +8,11 @@ from unittest.mock import Mock, patch
 import pytest
 from database import db_setup
 from database.db_setup import Base
+
+from tests.test_constants import (
+    HTTP_BAD_REQUEST,
+    HTTP_OK
+)
 
 
 @pytest.fixture(scope='session', autouse=True)

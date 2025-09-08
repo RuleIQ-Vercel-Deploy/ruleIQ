@@ -12,10 +12,13 @@ from langgraph.graph.message import add_messages
 from database.evidence_item import EvidenceItem
 from langgraph_agent.nodes.evidence_nodes import EvidenceCollectionNode, evidence_node
 
+from tests.test_constants import (
+    MAX_RETRIES
+)
+
 # Constants
 DEFAULT_RETRIES = 5
 HALF_RATIO = 0.5
-MAX_RETRIES = 3
 
 
 

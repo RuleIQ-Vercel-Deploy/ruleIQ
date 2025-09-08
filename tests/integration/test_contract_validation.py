@@ -2,14 +2,8 @@
 from __future__ import annotations
 
 # Constants
-HTTP_CREATED = 201
-HTTP_NOT_FOUND = 404
-HTTP_OK = 200
-HTTP_UNAUTHORIZED = 401
-HTTP_UNPROCESSABLE_ENTITY = 422
 
 HALF_RATIO = 0.5
-MAX_RETRIES = 3
 
 
 API Contract Validation Tests
@@ -31,6 +25,15 @@ from pydantic import BaseModel, ValidationError
 from api.main import app
 from api.schemas import *
 from tests.utils.auth_test_utils import TestAuthManager
+
+from tests.test_constants import (
+    HTTP_CREATED,
+    HTTP_NOT_FOUND,
+    HTTP_OK,
+    HTTP_UNAUTHORIZED,
+    HTTP_UNPROCESSABLE_ENTITY,
+    MAX_RETRIES
+)
 
 
 @pytest.mark.contract
@@ -96,19 +99,19 @@ class TestAPIContractValidation:
             'created_at', 'updated_at']
         for field in required_fields:
             assert field in assessment_response, f'Required field {field} missing from response'
-        assert isinstance(assessment_response['id'], str)
+        assert isinstance(assessment_response.get('id'), str)
         assert isinstance(assessment_response['name'], str)
         assert isinstance(assessment_response['framework'], str)
         assert isinstance(assessment_response['status'], str)
         assert isinstance(assessment_response['created_at'], str)
-        assessment_id = assessment_response['id']
+        assessment_id = assessment_response.get('id')
         response = await async_client.get(f'/assessments/{assessment_id}',
             headers=auth_headers)
         assert response.status_code == HTTP_OK
         get_response = response.json()
         for field in required_fields:
             assert field in get_response
-        assert get_response['id'] == assessment_id
+        assert get_response.get('id') == assessment_id
         assert get_response['name'] == valid_assessment_data['name']
 
     @pytest.mark.asyncio
@@ -134,9 +137,9 @@ class TestAPIContractValidation:
             'expires_in']
         for field in required_auth_fields:
             assert field in login_response, f'Required field {field} missing from login response'
-        assert login_response['token_type'] == 'bearer'
-        assert isinstance(login_response['access_token'], str)
-        assert len(login_response['access_token']) > 20
+        assert login_response.get('token_type') == 'bearer'
+        assert isinstance(login_response.get('access_token'), str)
+        assert len(login_response.get('access_token')) > 20
 
     @pytest.mark.asyncio
     async def test_iq_agent_endpoint_contract_validation(self, async_client:
@@ -190,7 +193,7 @@ class TestAPIContractValidation:
             'evidence_type', 'status', 'created_at']
         for field in required_fields:
             assert field in evidence_response, f'Required field {field} missing from evidence response'
-        assert isinstance(evidence_response['id'], str)
+        assert isinstance(evidence_response.get('id'), str)
         assert evidence_response['title'] == metadata['title']
         assert evidence_response['evidence_type'] == metadata['evidence_type']
         assert evidence_response['status'] in ['uploaded', 'processing',
@@ -233,7 +236,7 @@ class TestAPIContractValidation:
         assessment_response = response.json()
         assert len(assessment_response['name']) > 16
         assert 'description' in assessment_response
-        assessment_id = assessment_response['id']
+        assessment_id = assessment_response.get('id')
         response = await async_client.get(f'/assessments/{assessment_id}',
             headers=auth_headers)
         retrieved_assessment = response.json()

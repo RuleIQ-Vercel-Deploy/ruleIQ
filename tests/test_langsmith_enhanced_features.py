@@ -2,12 +2,10 @@
 from __future__ import annotations
 
 # Constants
-HTTP_INTERNAL_SERVER_ERROR = 500
 
 FIVE_MINUTES_SECONDS = 300
 
 DEFAULT_RETRIES = 5
-MAX_RETRIES = 3
 
 
 Test enhanced LangSmith features including evaluation, feedback, and performance benchmarking.
@@ -20,6 +18,11 @@ from datetime import datetime
 from config.langsmith_config import LangSmithConfig, with_langsmith_tracing
 from config.langsmith_evaluators import LangSmithEvaluator, EvaluationMetrics, PerformanceBenchmark
 from config.langsmith_feedback import LangSmithFeedbackCollector, FeedbackItem, FeedbackType, FeedbackAnalyzer
+
+from tests.test_constants import (
+    HTTP_INTERNAL_SERVER_ERROR,
+    MAX_RETRIES
+)
 
 
 class TestEnhancedTracing:

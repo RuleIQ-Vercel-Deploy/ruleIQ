@@ -1,7 +1,6 @@
 """
 
 # Constants
-HTTP_UNAUTHORIZED = 401
 
 Test Phase 2 Stack Auth endpoints using FastAPI TestClient
 Phase 2: Assessment & AI Endpoints
@@ -11,6 +10,10 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 sys.path.insert(0, str(Path(__file__).parent))
 from main import app
+
+from tests.test_constants import (
+    HTTP_UNAUTHORIZED
+)
 
 
 def test_phase2_endpoints():

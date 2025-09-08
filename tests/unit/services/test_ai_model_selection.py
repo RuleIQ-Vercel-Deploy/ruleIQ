@@ -2,7 +2,6 @@
 
 # Constants
 DEFAULT_RETRIES = 5.0
-MAX_RETRIES = 3
 
 Unit tests for AI Model Selection and Configuration.
 
@@ -13,6 +12,10 @@ import os
 from unittest.mock import Mock, patch
 import pytest
 from config.ai_config import MODEL_FALLBACK_CHAIN, MODEL_METADATA, AIConfig, ModelMetadata, ModelType, get_ai_model
+
+from tests.test_constants import (
+    MAX_RETRIES
+)
 
 
 class TestModelMetadata:

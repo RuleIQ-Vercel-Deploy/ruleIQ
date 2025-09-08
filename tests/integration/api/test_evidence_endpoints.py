@@ -1,16 +1,7 @@
 """
 
 # Constants
-HTTP_CREATED = 201
-HTTP_FORBIDDEN = 403
-HTTP_NOT_FOUND = 404
-HTTP_NO_CONTENT = 204
-HTTP_OK = 200
-HTTP_UNAUTHORIZED = 401
-HTTP_UNPROCESSABLE_ENTITY = 422
 
-DEFAULT_LIMIT = 100
-MAX_RETRIES = 3
 
 Integration Tests for Evidence API Endpoints
 
@@ -21,6 +12,18 @@ from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 import pytest
 from tests.conftest import assert_api_response_security
+
+from tests.test_constants import (
+    DEFAULT_LIMIT,
+    HTTP_CREATED,
+    HTTP_FORBIDDEN,
+    HTTP_NOT_FOUND,
+    HTTP_NO_CONTENT,
+    HTTP_OK,
+    HTTP_UNAUTHORIZED,
+    HTTP_UNPROCESSABLE_ENTITY,
+    MAX_RETRIES
+)
 
 
 @pytest.mark.integration

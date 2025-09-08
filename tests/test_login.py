@@ -1,12 +1,15 @@
 """
 
 # Constants
-HTTP_OK = 200
 
 Test login with created user
 """
 import requests
 import json
+
+from tests.test_constants import (
+    HTTP_OK
+)
 
 
 def test_login():

@@ -1,14 +1,9 @@
 """
 
 # Constants
-HTTP_BAD_REQUEST = 400
-HTTP_INTERNAL_SERVER_ERROR = 500
-HTTP_NOT_FOUND = 404
-HTTP_OK = 200
 
 MINUTE_SECONDS = 60
 
-MAX_RETRIES = 3
 
 Tests for monitoring components.
 """
@@ -27,6 +22,14 @@ from app.core.monitoring.error_handler import ApplicationError, ValidationError,
 from app.core.monitoring.metrics import Counter, Gauge, Histogram, Summary, MetricsCollector, track_request, track_error, track_exception, get_metrics
 from app.core.monitoring.health import HealthStatus, HealthCheckResult, HealthCheck, DatabaseHealthCheck, RedisHealthCheck, DiskSpaceHealthCheck, MemoryHealthCheck, ExternalServiceHealthCheck, HealthCheckRegistry, run_health_checks
 from app.core.monitoring.shutdown import GracefulShutdown, ConnectionDrainer, get_shutdown_manager, get_connection_drainer
+
+from tests.test_constants import (
+    HTTP_BAD_REQUEST,
+    HTTP_INTERNAL_SERVER_ERROR,
+    HTTP_NOT_FOUND,
+    HTTP_OK,
+    MAX_RETRIES
+)
 
 
 class TestLogger:

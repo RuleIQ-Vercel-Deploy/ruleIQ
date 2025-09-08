@@ -4,9 +4,7 @@
 DEFAULT_TIMEOUT = 30
 
 CONFIDENCE_THRESHOLD = 0.8
-DEFAULT_LIMIT = 100
 DEFAULT_RETRIES = 5
-MAX_RETRIES = 3
 
 Unit Tests for Google Cached Content Integration
 
@@ -20,6 +18,11 @@ import pytest
 from unittest.mock import AsyncMock, Mock, patch
 from uuid import uuid4
 from services.ai.cached_content import GoogleCachedContentManager, CacheContentType, CacheLifecycleConfig, get_cached_content_manager
+
+from tests.test_constants import (
+    DEFAULT_LIMIT,
+    MAX_RETRIES
+)
 
 
 @pytest.mark.unit

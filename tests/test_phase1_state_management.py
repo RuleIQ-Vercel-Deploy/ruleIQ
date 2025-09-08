@@ -4,7 +4,6 @@
 DEFAULT_TIMEOUT = 30.0
 
 DEFAULT_RETRIES = 5
-MAX_RETRIES = 3
 
 Test suite for Phase 1: Enhanced state management with TypedDict and reducers.
 
@@ -21,6 +20,10 @@ from uuid import uuid4
 from datetime import datetime, timedelta, timezone
 from langgraph_agent.graph.enhanced_state import EnhancedComplianceState, WorkflowStatus, create_enhanced_initial_state, merge_tool_outputs, accumulate_errors, merge_compliance_data, increment_counter, update_metadata, StateTransition, StateAggregator
 from langgraph_agent.graph.enhanced_app import EnhancedComplianceGraph
+
+from tests.test_constants import (
+    MAX_RETRIES
+)
 
 
 class TestStateReducers:

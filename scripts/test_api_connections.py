@@ -1,13 +1,16 @@
 """
 
 # Constants
-HTTP_BAD_REQUEST = 400
 
 Quick API connection test for backend-to-frontend connections
 Tests the main endpoints that were failing in the API Debug Suite
 """
 import requests
 import json
+
+from tests.test_constants import (
+    HTTP_BAD_REQUEST
+)
 BASE_URL = 'http://localhost:8000'
 
 

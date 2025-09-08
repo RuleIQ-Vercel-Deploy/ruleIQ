@@ -2,8 +2,6 @@
 from __future__ import annotations
 
 # Constants
-DEFAULT_LIMIT = 100
-MAX_RETRIES = 3
 
 
 Unit tests for AI Streaming Implementation.
@@ -18,6 +16,11 @@ from uuid import uuid4
 import pytest
 from services.ai.assistant import ComplianceAssistant
 from services.ai.exceptions import ModelUnavailableException
+
+from tests.test_constants import (
+    DEFAULT_LIMIT,
+    MAX_RETRIES
+)
 
 
 class MockStreamingResponse:

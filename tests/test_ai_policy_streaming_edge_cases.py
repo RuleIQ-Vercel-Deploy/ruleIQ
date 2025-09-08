@@ -1,9 +1,7 @@
 """
 
 # Constants
-DEFAULT_LIMIT = 100
 DEFAULT_RETRIES = 5
-MAX_RETRIES = 3
 
 Edge case tests for AI Policy streaming functionality.
 Tests timeout handling, partial failures, reconnection scenarios, and buffer management.
@@ -19,6 +17,11 @@ from fastapi import HTTPException
 from api.schemas.ai_policy import PolicyGenerationRequest, PolicyType, BusinessContext, PolicyStreamingChunk
 from services.ai.policy_generator import PolicyGenerator
 from database.compliance_framework import ComplianceFramework
+
+from tests.test_constants import (
+    DEFAULT_LIMIT,
+    MAX_RETRIES
+)
 
 
 class TestStreamingEdgeCases:

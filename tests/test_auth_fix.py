@@ -1,14 +1,17 @@
 """
 
 # Constants
-HTTP_OK = 200
-HTTP_UNAUTHORIZED = 401
 
 Fix for E2E test authentication issues.
 """
 import pytest
 from uuid import uuid4
 from unittest.mock import patch, AsyncMock
+
+from tests.test_constants import (
+    HTTP_OK,
+    HTTP_UNAUTHORIZED
+)
 
 
 class TestAuthenticationFix:

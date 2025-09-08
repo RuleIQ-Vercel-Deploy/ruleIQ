@@ -2,7 +2,6 @@
 
 # Constants
 DEFAULT_RETRIES = 5
-MAX_RETRIES = 3
 
 Test AI Rate Limiting Implementation
 Tests for Phase 2.1: Backend AI Endpoints - Rate Limiting
@@ -12,6 +11,10 @@ import time
 from unittest.mock import patch
 import pytest
 from api.middleware.ai_rate_limiter import AIRateLimiter, ai_analysis_limiter, ai_followup_limiter, ai_help_limiter, ai_recommendations_limiter, get_ai_rate_limit_stats
+
+from tests.test_constants import (
+    MAX_RETRIES
+)
 
 
 class TestAIRateLimiter:

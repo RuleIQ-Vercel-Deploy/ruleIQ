@@ -1,12 +1,15 @@
 """
 
 # Constants
-HTTP_OK = 200
-HTTP_UNAUTHORIZED = 401
 
 Test fixture isolation to debug the test client issue.
 """
 import pytest
+
+from tests.test_constants import (
+    HTTP_OK,
+    HTTP_UNAUTHORIZED
+)
 
 
 def test_authenticated_client_works(client, authenticated_headers,

@@ -2,10 +2,6 @@
 from __future__ import annotations
 
 # Constants
-HTTP_CONFLICT = 409
-HTTP_CREATED = 201
-HTTP_OK = 200
-HTTP_UNAUTHORIZED = 401
 
 
 JWT Authentication Integration Tests
@@ -18,6 +14,13 @@ from uuid import uuid4
 from main import app
 from database.user import User
 from api.dependencies.auth import get_password_hash
+
+from tests.test_constants import (
+    HTTP_CONFLICT,
+    HTTP_CREATED,
+    HTTP_OK,
+    HTTP_UNAUTHORIZED
+)
 
 
 @pytest.fixture

@@ -9,8 +9,11 @@ from services.ai.evaluation.golden_datasets.versioning import DatasetVersion, Ve
 from services.ai.evaluation.schemas.compliance_scenario import ComplianceScenario
 from services.ai.evaluation.schemas.common import RegCitation, SourceMeta, TemporalValidity, ExpectedOutcome
 
+from tests.test_constants import (
+    MAX_RETRIES
+)
+
 # Constants
-MAX_RETRIES = 3
 
 
 

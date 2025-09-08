@@ -1,8 +1,6 @@
 """
 
 # Constants
-HTTP_FORBIDDEN = 403
-HTTP_NOT_FOUND = 404
 
 Simple test to verify SMB ownership logic without database.
 """
@@ -12,6 +10,11 @@ from uuid import uuid4
 from fastapi import HTTPException
 from services.data_access import DataAccess
 from database.user import User
+
+from tests.test_constants import (
+    HTTP_FORBIDDEN,
+    HTTP_NOT_FOUND
+)
 
 
 class TestDataAccessOwnership:

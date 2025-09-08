@@ -2,12 +2,9 @@
 from __future__ import annotations
 
 # Constants
-HTTP_INTERNAL_SERVER_ERROR = 500
-HTTP_OK = 200
 
 MINUTE_SECONDS = 60
 
-DEFAULT_LIMIT = 100
 DEFAULT_RETRIES = 5.0
 
 
@@ -25,6 +22,12 @@ from uuid import UUID
 import pytest
 from services.ai.assistant import ComplianceAssistant
 from services.ai.exceptions import AITimeoutException
+
+from tests.test_constants import (
+    DEFAULT_LIMIT,
+    HTTP_INTERNAL_SERVER_ERROR,
+    HTTP_OK
+)
 
 
 @pytest.mark.performance

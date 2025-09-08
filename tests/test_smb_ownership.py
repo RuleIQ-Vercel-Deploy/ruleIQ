@@ -1,10 +1,6 @@
 """
 
 # Constants
-HTTP_CREATED = 201
-HTTP_FORBIDDEN = 403
-HTTP_OK = 200
-HTTP_UNAUTHORIZED = 401
 
 Test SMB-focused ownership model for business profiles.
 Verifies simple ownership without complex RBAC.
@@ -20,6 +16,13 @@ from api.dependencies.auth import create_access_token
 import uuid
 from datetime import datetime, timedelta, timezone
 import os
+
+from tests.test_constants import (
+    HTTP_CREATED,
+    HTTP_FORBIDDEN,
+    HTTP_OK,
+    HTTP_UNAUTHORIZED
+)
 SQLALCHEMY_DATABASE_URL = os.getenv('TEST_DATABASE_URL',
     'postgresql+asyncpg://postgres:postgres@localhost:5433/compliance_test'
     ).replace('postgresql://', 'postgresql+asyncpg://')

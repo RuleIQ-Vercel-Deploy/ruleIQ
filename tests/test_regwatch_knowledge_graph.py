@@ -2,7 +2,6 @@
 
 # Constants
 MAX_ITEMS = 1000
-MAX_RETRIES = 3
 
 Test Suite for RegWatch Knowledge Graph with Memory Management Integration
 Phase 5: Comprehensive TDD implementation for regulatory knowledge graph
@@ -14,6 +13,10 @@ from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Any, Optional
 import json
 import uuid
+
+from tests.test_constants import (
+    MAX_RETRIES
+)
 
 
 class TestGraphDataStructures:

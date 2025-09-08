@@ -1,7 +1,6 @@
 """
 
 # Constants
-MAX_RETRIES = 3
 
 Test suite for LangGraph state management.
 
@@ -15,6 +14,10 @@ from datetime import datetime, timezone
 from typing import Dict, Any
 from tests.fixtures.state_fixtures import StateBuilder, TestScenario, create_test_state, create_batch_states, assert_state_transition, assert_error_recorded
 from langgraph_agent.graph.enhanced_state import EnhancedComplianceState, WorkflowStatus, create_enhanced_initial_state, merge_tool_outputs, accumulate_errors, merge_compliance_data, increment_counter, update_metadata
+
+from tests.test_constants import (
+    MAX_RETRIES
+)
 
 
 class TestStateInitialization:
@@ -232,7 +235,6 @@ class TestStateValidation:
     def test_retry_count_limits(self):
         """Test that retry count has reasonable limits."""
         state = create_test_state(TestScenario.RETRY_REQUIRED)
-        MAX_RETRIES = 5
         for i in range(MAX_RETRIES + 1):
             state['retry_count'] = i
             if i >= MAX_RETRIES:

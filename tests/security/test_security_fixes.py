@@ -1,7 +1,6 @@
 """
 
 # Constants
-HTTP_UNAUTHORIZED = 401
 
 Comprehensive security test suite for backend fixes
 Tests all security vulnerabilities that were identified and fixed
@@ -20,6 +19,10 @@ from api.utils.input_validation import InputValidator
 from api.utils.error_handlers import ValidationException, AuthenticationException
 from api.dependencies.file import EnhancedFileValidator
 from core.security.credential_encryption import CredentialEncryption
+
+from tests.test_constants import (
+    HTTP_UNAUTHORIZED
+)
 client = TestClient(app)
 
 

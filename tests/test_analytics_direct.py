@@ -3,8 +3,11 @@ import traceback
 import sys
 import os
 
+from tests.test_constants import (
+    HTTP_OK
+)
+
 # Constants
-HTTP_OK = 200
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 os.environ['DATABASE_URL'] = 'sqlite:///./test.db'

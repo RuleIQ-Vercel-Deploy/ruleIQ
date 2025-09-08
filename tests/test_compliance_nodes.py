@@ -4,7 +4,6 @@ from __future__ import annotations
 # Constants
 MINUTE_SECONDS = 60
 
-DEFAULT_LIMIT = 100.0
 
 
 Comprehensive test suite for compliance nodes.
@@ -21,6 +20,10 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),
     '..')))
 from langgraph_agent.nodes.compliance_nodes import compliance_check_node, extract_requirements_from_rag, check_compliance_status, assess_compliance_risk
 from langgraph_agent.graph.unified_state import UnifiedComplianceState
+
+from tests.test_constants import (
+    DEFAULT_LIMIT
+)
 
 
 class TestComplianceCheckNode:

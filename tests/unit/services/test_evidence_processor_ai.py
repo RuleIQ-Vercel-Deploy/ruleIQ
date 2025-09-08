@@ -1,8 +1,6 @@
 """
 
 # Constants
-DEFAULT_LIMIT = 100
-MAX_RETRIES = 3
 
 Unit Tests for AI-Enhanced Evidence Processor
 
@@ -14,6 +12,11 @@ from uuid import uuid4
 import pytest
 from database.evidence_item import EvidenceItem
 from services.automation.evidence_processor import EvidenceProcessor
+
+from tests.test_constants import (
+    DEFAULT_LIMIT,
+    MAX_RETRIES
+)
 
 
 @pytest.mark.unit

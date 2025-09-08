@@ -2,9 +2,7 @@
 from __future__ import annotations
 
 # Constants
-HTTP_FORBIDDEN = 403
 
-MAX_RETRIES = 3
 
 
 Test Suite for RBAC System
@@ -27,6 +25,11 @@ from api.dependencies.rbac_auth import UserWithRoles, create_access_token_with_r
 from database.rbac import Role, Permission, UserRole, RolePermission, FrameworkAccess
 from database.user import User
 from services.rbac_service import RBACService
+
+from tests.test_constants import (
+    HTTP_FORBIDDEN,
+    MAX_RETRIES
+)
 
 
 class TestRBACModels:

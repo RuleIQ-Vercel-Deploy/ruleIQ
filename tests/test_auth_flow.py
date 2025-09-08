@@ -1,8 +1,6 @@
 """
 
 # Constants
-HTTP_OK = 200
-HTTP_UNAUTHORIZED = 401
 
 Test complete Stack Auth flow with actual server
 """
@@ -12,6 +10,11 @@ import time
 import sys
 import os
 from dotenv import load_dotenv
+
+from tests.test_constants import (
+    HTTP_OK,
+    HTTP_UNAUTHORIZED
+)
 load_dotenv()
 
 

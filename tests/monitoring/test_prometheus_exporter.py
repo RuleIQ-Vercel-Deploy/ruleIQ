@@ -1,9 +1,6 @@
 """
 
 # Constants
-HTTP_INTERNAL_SERVER_ERROR = 500
-HTTP_NOT_FOUND = 404
-HTTP_OK = 200
 
 Test suite specifically for Prometheus metrics exporter.
 """
@@ -15,6 +12,12 @@ import pytest
 import aiohttp
 from prometheus_client import CollectorRegistry, Counter, Gauge, Histogram, Summary, generate_latest, CONTENT_TYPE_LATEST
 from app.core.monitoring.prometheus_exporter import PrometheusMetricsExporter, MetricsHTTPServer, PrometheusFormatter, MetricTypeMapper, LabelSanitizer
+
+from tests.test_constants import (
+    HTTP_INTERNAL_SERVER_ERROR,
+    HTTP_NOT_FOUND,
+    HTTP_OK
+)
 
 
 class TestPrometheusFormatter:

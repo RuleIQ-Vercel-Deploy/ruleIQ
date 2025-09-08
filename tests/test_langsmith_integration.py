@@ -2,8 +2,6 @@
 from __future__ import annotations
 
 # Constants
-DEFAULT_LIMIT = 100
-MAX_RETRIES = 3
 
 
 Comprehensive test suite for LangSmith integration with LangGraph.
@@ -28,6 +26,11 @@ import json
 import time
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from config.langsmith_config import LangSmithConfig, with_langsmith_tracing, LANGSMITH_SETUP_INSTRUCTIONS
+
+from tests.test_constants import (
+    DEFAULT_LIMIT,
+    MAX_RETRIES
+)
 
 
 class TestLangSmithConfiguration:

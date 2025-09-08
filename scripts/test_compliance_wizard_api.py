@@ -2,8 +2,6 @@
 from __future__ import annotations
 
 # Constants
-HTTP_CREATED = 201
-HTTP_OK = 200
 
 
 Test the compliance wizard API integration with corrected routes.
@@ -12,6 +10,11 @@ Verifies that the frontend can successfully connect to backend APIs.
 from typing import Any, Dict, List, Optional
 import asyncio
 import aiohttp
+
+from tests.test_constants import (
+    HTTP_CREATED,
+    HTTP_OK
+)
 
 
 class ComplianceWizardTester:

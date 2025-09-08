@@ -1,9 +1,6 @@
 """
 
 # Constants
-HTTP_INTERNAL_SERVER_ERROR = 500
-HTTP_NOT_FOUND = 404
-HTTP_OK = 200
 
 Integration Tests for Analytics and Performance API Endpoints
 
@@ -13,6 +10,12 @@ with real API interactions and response validation.
 from unittest.mock import AsyncMock, patch
 import pytest
 from tests.conftest import assert_api_response_security
+
+from tests.test_constants import (
+    HTTP_INTERNAL_SERVER_ERROR,
+    HTTP_NOT_FOUND,
+    HTTP_OK
+)
 
 
 @pytest.mark.integration

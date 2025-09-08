@@ -2,9 +2,6 @@
 from __future__ import annotations
 
 # Constants
-HTTP_BAD_REQUEST = 400
-HTTP_NOT_FOUND = 404
-HTTP_OK = 200
 
 
 Test script to verify business-profiles and frameworks endpoints are working properly
@@ -15,6 +12,12 @@ import requests
 import json
 import sys
 from datetime import datetime
+
+from tests.test_constants import (
+    HTTP_BAD_REQUEST,
+    HTTP_NOT_FOUND,
+    HTTP_OK
+)
 BASE_URL = 'http://localhost:8000'
 
 

@@ -7,8 +7,11 @@ import time
 import requests
 from typing import Dict, Any
 
+from tests.test_constants import (
+    HTTP_OK
+)
+
 # Constants
-HTTP_OK = 200
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 

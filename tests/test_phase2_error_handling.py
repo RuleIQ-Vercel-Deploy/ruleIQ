@@ -4,7 +4,6 @@
 DEFAULT_TIMEOUT = 30.0
 MINUTE_SECONDS = 60.0
 
-MAX_RETRIES = 3.0
 
 Test suite for Phase 2: Centralized error handling system.
 
@@ -25,6 +24,10 @@ from langgraph.graph import END
 from langgraph_agent.graph.error_handler import ErrorHandlerNode, should_route_to_error_handler, get_recovery_node
 from langgraph_agent.graph.enhanced_state import EnhancedComplianceState, WorkflowStatus, create_enhanced_initial_state
 from langgraph_agent.graph.enhanced_app import EnhancedComplianceGraph
+
+from tests.test_constants import (
+    MAX_RETRIES
+)
 
 
 class TestErrorClassification:

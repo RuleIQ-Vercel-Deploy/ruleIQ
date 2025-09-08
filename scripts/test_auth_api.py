@@ -2,9 +2,6 @@
 from __future__ import annotations
 
 # Constants
-HTTP_BAD_REQUEST = 400
-HTTP_CREATED = 201
-HTTP_OK = 200
 
 
 Authenticated API Test Script
@@ -13,6 +10,12 @@ Tests ruleIQ API endpoints with proper authentication.
 import asyncio
 import aiohttp
 from typing import Dict, Optional
+
+from tests.test_constants import (
+    HTTP_BAD_REQUEST,
+    HTTP_CREATED,
+    HTTP_OK
+)
 
 
 class APITester:
