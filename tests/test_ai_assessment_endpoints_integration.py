@@ -1,7 +1,6 @@
 """
 
 # Constants
-HTTP_OK = 200
 
 Integration tests for AI Assessment endpoints with ComplianceAssistant (Phase 2.2).
 
@@ -12,6 +11,10 @@ import pytest
 from fastapi.testclient import TestClient
 from main import app
 from services.ai.assistant import ComplianceAssistant
+
+from tests.test_constants import (
+    HTTP_OK
+)
 
 
 @pytest.fixture

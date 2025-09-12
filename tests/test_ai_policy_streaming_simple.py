@@ -1,7 +1,6 @@
 """
 
 # Constants
-HTTP_OK = 200
 
 Simple integration tests for AI Policy streaming functionality.
 Tests the actual streaming implementation with minimal mocking.
@@ -14,6 +13,10 @@ from typing import AsyncGenerator
 from api.schemas.ai_policy import PolicyGenerationRequest, PolicyType, CustomizationLevel, TargetAudience, BusinessContext
 from services.ai.policy_generator import PolicyGenerator
 from database.compliance_framework import ComplianceFramework
+
+from tests.test_constants import (
+    HTTP_OK
+)
 
 
 class TestPolicyStreamingSimple:

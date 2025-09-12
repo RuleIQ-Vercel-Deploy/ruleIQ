@@ -1,10 +1,8 @@
 """
 
 # Constants
-DEFAULT_LIMIT = 100
 DEFAULT_RETRIES = 5
 HIGH_CONFIDENCE_THRESHOLD = 0.95
-MAX_RETRIES = 3
 
 Comprehensive test suite for Master Integration Graph with real services.
 
@@ -27,6 +25,11 @@ from langgraph_agent.graph.master_integration_graph import MasterIntegrationGrap
 from langgraph_agent.graph.enhanced_state import WorkflowStatus
 from langgraph_agent.agents.rag_system import RAGConfig
 from langgraph_agent.core.neo4j_service import Neo4jGraphRAGService as Neo4jService
+
+from tests.test_constants import (
+    DEFAULT_LIMIT,
+    MAX_RETRIES
+)
 TEST_DATABASE_URL = os.getenv('TEST_DATABASE_URL',
     'postgresql://testuser:testpass@localhost:5432/testdb')
 NEO4J_URI = os.getenv('NEO4J_URI', 'bolt://localhost:7687')

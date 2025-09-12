@@ -1,7 +1,6 @@
 """
 
 # Constants
-MAX_RETRIES = 3
 
 Unit tests for integration service
 """
@@ -12,6 +11,10 @@ import uuid
 from database.services.integration_service import IntegrationService, EvidenceCollectionService
 from database.models.integrations import Integration, EvidenceCollection, IntegrationEvidenceItem
 from api.clients.base_api_client import APICredentials, AuthType
+
+from tests.test_constants import (
+    MAX_RETRIES
+)
 
 
 class TestIntegrationService:

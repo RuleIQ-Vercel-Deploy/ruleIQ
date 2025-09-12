@@ -1,15 +1,18 @@
 """
 
 # Constants
-HTTP_CREATED = 201
-HTTP_OK = 200
-HTTP_UNAUTHORIZED = 401
 
 Integration Tests for Google Cached Content API Endpoints
 
 Tests the cached content metrics endpoint and integration with AI services.
 """
 import pytest
+
+from tests.test_constants import (
+    HTTP_CREATED,
+    HTTP_OK,
+    HTTP_UNAUTHORIZED
+)
 
 
 @pytest.mark.integration

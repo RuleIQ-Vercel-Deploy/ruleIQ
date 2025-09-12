@@ -1,9 +1,7 @@
 """
 
 # Constants
-DEFAULT_LIMIT = 100
 DEFAULT_RETRIES = 5
-MAX_RETRIES = 3
 
 Unit Tests for ComplianceGPT Core Services
 
@@ -28,6 +26,11 @@ from services.framework_service import calculate_framework_relevance, get_framew
 from services.implementation_service import generate_implementation_plan, update_task_status
 from services.policy_service import generate_compliance_policy
 from services.readiness_service import generate_compliance_report, generate_readiness_assessment, get_readiness_dashboard
+
+from tests.test_constants import (
+    DEFAULT_LIMIT,
+    MAX_RETRIES
+)
 
 
 @pytest.mark.unit

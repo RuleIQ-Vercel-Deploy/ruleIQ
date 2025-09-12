@@ -3,10 +3,8 @@
 # Constants
 MINUTE_SECONDS = 60
 
-DEFAULT_LIMIT = 100
 DEFAULT_RETRIES = 5
 HIGH_CONFIDENCE_THRESHOLD = 0.95
-MAX_RETRIES = 3
 
 Test suite for ComplianceState Pydantic model following TDD principles.
 
@@ -21,6 +19,11 @@ from typing import Dict, List, Optional, Any
 from pydantic import ValidationError
 import json
 from langgraph_agent.models.compliance_state import ComplianceState, EvidenceItem, Decision, CostSnapshot, WorkflowStatus, ActorType, MemoryStore, Context
+
+from tests.test_constants import (
+    DEFAULT_LIMIT,
+    MAX_RETRIES
+)
 
 
 class TestComplianceStateInitialization:

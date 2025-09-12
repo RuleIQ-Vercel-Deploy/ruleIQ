@@ -1,14 +1,4 @@
 """
-
-# Constants
-HTTP_CREATED = 201
-HTTP_FORBIDDEN = 403
-HTTP_INTERNAL_SERVER_ERROR = 500
-HTTP_NOT_FOUND = 404
-HTTP_OK = 200
-HTTP_UNAUTHORIZED = 401
-HTTP_UNPROCESSABLE_ENTITY = 422
-
 Security Testing Suite for ComplianceGPT
 
 This module contains comprehensive security tests including:
@@ -22,6 +12,17 @@ from unittest.mock import patch
 import requests
 import json
 import pytest
+
+from tests.test_constants import (
+    HTTP_OK,
+    HTTP_CREATED,
+    HTTP_BAD_REQUEST,
+    HTTP_UNAUTHORIZED,
+    HTTP_FORBIDDEN,
+    HTTP_NOT_FOUND,
+    HTTP_UNPROCESSABLE_ENTITY,
+    HTTP_INTERNAL_SERVER_ERROR,
+)
 
 
 @pytest.mark.security

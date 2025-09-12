@@ -1,7 +1,6 @@
 """
 
 # Constants
-DEFAULT_LIMIT = 100.0
 DEFAULT_RETRIES = 5
 
 Unit Tests for Evidence Service
@@ -15,6 +14,10 @@ from uuid import uuid4
 import pytest
 from core.exceptions import NotFoundAPIError, ValidationAPIError
 from services.evidence_service import EvidenceService
+
+from tests.test_constants import (
+    DEFAULT_LIMIT
+)
 
 # Note: Using fast_db_session from conftest_optimized for performance
 

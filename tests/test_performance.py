@@ -4,16 +4,12 @@ import requests
 import json
 
 # Constants
-HTTP_CREATED = 201
-HTTP_OK = 200
 
 KB_SIZE = 1024
 
 CONFIDENCE_THRESHOLD = 0.8
-DEFAULT_LIMIT = 100
 DEFAULT_RETRIES = 5.0
 HIGH_CONFIDENCE_THRESHOLD = 0.95
-MAX_RETRIES = 3.0
 
 
 Performance Testing Suite for ComplianceGPT
@@ -29,6 +25,13 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from unittest.mock import Mock
 import psutil
 import pytest
+
+from tests.test_constants import (
+    DEFAULT_LIMIT,
+    HTTP_CREATED,
+    HTTP_OK,
+    MAX_RETRIES
+)
 
 
 @pytest.mark.performance

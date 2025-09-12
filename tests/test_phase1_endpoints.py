@@ -1,8 +1,6 @@
 """
 
 # Constants
-HTTP_OK = 200
-HTTP_UNAUTHORIZED = 401
 
 Test Phase 1 Stack Auth endpoints
 Quick integration test to verify authentication is working
@@ -10,6 +8,11 @@ Quick integration test to verify authentication is working
 import requests
 import json
 import sys
+
+from tests.test_constants import (
+    HTTP_OK,
+    HTTP_UNAUTHORIZED
+)
 BASE_URL = 'http://localhost:8000'
 
 

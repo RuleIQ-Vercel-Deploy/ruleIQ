@@ -1,8 +1,6 @@
 """
 
 # Constants
-HTTP_CREATED = 201
-HTTP_OK = 200
 
 TestSprite Generated Authentication Tests
 Generated on: 2025-08-01T22:39:51.373546
@@ -11,6 +9,11 @@ import pytest
 import requests
 from fastapi.testclient import TestClient
 from main import app
+
+from tests.test_constants import (
+    HTTP_CREATED,
+    HTTP_OK
+)
 
 
 class TestAuthenticationFlow:

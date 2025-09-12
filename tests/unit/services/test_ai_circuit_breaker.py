@@ -1,7 +1,6 @@
 """
 
 # Constants
-MAX_RETRIES = 3
 
 Unit tests for AI Circuit Breaker functionality.
 
@@ -13,6 +12,10 @@ from unittest.mock import patch
 import pytest
 from services.ai.circuit_breaker import AICircuitBreaker, CircuitBreakerConfig, CircuitState
 from services.ai.exceptions import AIServiceException
+
+from tests.test_constants import (
+    MAX_RETRIES
+)
 
 
 class TestAICircuitBreaker:

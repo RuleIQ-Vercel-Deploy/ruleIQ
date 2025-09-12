@@ -6,12 +6,15 @@ import sys
 import os
 
 # Constants
-HTTP_OK = 200
-HTTP_UNAUTHORIZED = 401
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),
     '..')))
 from main import app
+
+from tests.test_constants import (
+    HTTP_OK,
+    HTTP_UNAUTHORIZED
+)
 client = TestClient(app)
 
 

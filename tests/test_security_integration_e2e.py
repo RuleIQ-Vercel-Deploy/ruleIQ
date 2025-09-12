@@ -2,10 +2,7 @@
 from __future__ import annotations
 
 # Constants
-HTTP_OK = 200
-HTTP_UNAUTHORIZED = 401
 
-DEFAULT_LIMIT = 100
 
 
 End-to-End Security Integration Tests
@@ -20,6 +17,12 @@ from datetime import datetime
 import os
 from main import app
 from database.db_setup import get_db
+
+from tests.test_constants import (
+    DEFAULT_LIMIT,
+    HTTP_OK,
+    HTTP_UNAUTHORIZED
+)
 
 
 class TestSecurityIntegrationE2E:

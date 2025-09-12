@@ -1,12 +1,15 @@
 """
 
 # Constants
-HTTP_OK = 200
 
 Test different methods to access legislation.gov.uk API
 """
 import requests
 import time
+
+from tests.test_constants import (
+    HTTP_OK
+)
 
 
 def test_direct_access():

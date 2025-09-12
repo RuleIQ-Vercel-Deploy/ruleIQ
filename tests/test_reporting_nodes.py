@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 # Constants
-MAX_RETRIES = 3
 
 
 Comprehensive test suite for reporting nodes.
@@ -19,6 +18,10 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),
     '..')))
 from langgraph_agent.graph.unified_state import UnifiedComplianceState
+
+from tests.test_constants import (
+    MAX_RETRIES
+)
 
 
 class TestGenerateReportNode:

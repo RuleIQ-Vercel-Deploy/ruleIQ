@@ -3,8 +3,6 @@
 # Constants
 DEFAULT_TIMEOUT = 30
 
-DEFAULT_LIMIT = 100
-MAX_RETRIES = 3
 
 Unit Tests for Enhanced Quality Scorer
 
@@ -17,6 +15,11 @@ from uuid import uuid4
 import pytest
 from database.evidence_item import EvidenceItem
 from services.automation.quality_scorer import QualityScorer
+
+from tests.test_constants import (
+    DEFAULT_LIMIT,
+    MAX_RETRIES
+)
 
 
 @pytest.mark.unit

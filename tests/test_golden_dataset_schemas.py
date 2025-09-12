@@ -7,8 +7,11 @@ from services.ai.evaluation.schemas.compliance_scenario import ComplianceScenari
 from services.ai.evaluation.schemas.evidence_case import EvidenceCase, EvidenceItem, FrameworkMap
 from services.ai.evaluation.schemas.regulatory_qa import RegulatoryQAPair
 
+from tests.test_constants import (
+    MAX_RETRIES
+)
+
 # Constants
-MAX_RETRIES = 3
 
 
 

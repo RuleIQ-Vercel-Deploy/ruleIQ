@@ -1,7 +1,6 @@
 """
 
 # Constants
-HTTP_OK = 200
 
 Integration tests for AI Optimization Endpoints.
 
@@ -16,6 +15,10 @@ from httpx import AsyncClient
 from services.ai.assistant import ComplianceAssistant
 from services.ai.circuit_breaker import AICircuitBreaker
 from services.ai.exceptions import ModelUnavailableException
+
+from tests.test_constants import (
+    HTTP_OK
+)
 
 
 class TestAIOptimizationEndpoints:

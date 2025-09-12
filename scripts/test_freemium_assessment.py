@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 # Constants
-HTTP_OK = 200
 
 
 Automated test script for the freemium assessment feature.
@@ -14,6 +13,10 @@ import time
 from typing import Dict, Any
 import httpx
 from datetime import datetime
+
+from tests.test_constants import (
+    HTTP_OK
+)
 BASE_URL = 'http://localhost:8000/api/v1'
 TEST_EMAIL = f'test_{int(time.time())}@example.com'
 EXPECTED_MIN_QUESTIONS = 5

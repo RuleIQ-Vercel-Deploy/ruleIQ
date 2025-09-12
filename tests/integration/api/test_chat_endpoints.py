@@ -1,10 +1,6 @@
 """
 
 # Constants
-HTTP_BAD_REQUEST = 400
-HTTP_NOT_FOUND = 404
-HTTP_OK = 200
-HTTP_UNPROCESSABLE_ENTITY = 422
 
 Integration Tests for Chat API Endpoints
 
@@ -15,6 +11,13 @@ from unittest.mock import patch
 from uuid import uuid4
 import pytest
 from tests.conftest import assert_api_response_security
+
+from tests.test_constants import (
+    HTTP_BAD_REQUEST,
+    HTTP_NOT_FOUND,
+    HTTP_OK,
+    HTTP_UNPROCESSABLE_ENTITY
+)
 
 
 @pytest.mark.integration

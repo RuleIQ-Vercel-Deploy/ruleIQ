@@ -1,12 +1,7 @@
 """
 
 # Constants
-HTTP_BAD_REQUEST = 400
-HTTP_NOT_FOUND = 404
-HTTP_OK = 200
-HTTP_UNPROCESSABLE_ENTITY = 422
 
-MAX_RETRIES = 3
 
 Integration Tests for Enhanced Chat API Endpoints
 
@@ -16,6 +11,14 @@ and policy generation endpoints with real database interactions.
 from unittest.mock import patch
 import pytest
 from tests.conftest import assert_api_response_security
+
+from tests.test_constants import (
+    HTTP_BAD_REQUEST,
+    HTTP_NOT_FOUND,
+    HTTP_OK,
+    HTTP_UNPROCESSABLE_ENTITY,
+    MAX_RETRIES
+)
 
 
 @pytest.mark.integration

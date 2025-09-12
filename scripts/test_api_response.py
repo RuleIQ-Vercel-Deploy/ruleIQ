@@ -4,8 +4,11 @@ from typing import Any, Dict, List, Optional
 import requests
 import json
 
+from tests.test_constants import (
+    HTTP_OK
+)
+
 # Constants
-HTTP_OK = 200
 
 
 

@@ -2,7 +2,6 @@
 
 # Constants
 DEFAULT_RETRIES = 5
-MAX_RETRIES = 3
 
 Simple runner to test the Master Integration Graph with real services.
 
@@ -26,6 +25,10 @@ os.environ['NEO4J_USERNAME'] = os.getenv('NEO4J_USERNAME', 'neo4j')
 os.environ['NEO4J_PASSWORD'] = os.getenv('NEO4J_PASSWORD', 'ruleiq123')
 from langgraph_agent.graph.master_integration_graph import MasterIntegrationGraph
 from langgraph_agent.agents.rag_system import RAGConfig
+
+from tests.test_constants import (
+    MAX_RETRIES
+)
 
 
 async def test_master_integration():

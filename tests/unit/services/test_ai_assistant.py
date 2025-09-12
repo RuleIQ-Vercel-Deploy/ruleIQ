@@ -4,7 +4,6 @@
 DEFAULT_TIMEOUT = 30
 
 HALF_RATIO = 0.5
-MAX_RETRIES = 3
 
 Unit Tests for AI Assistant Service
 
@@ -17,6 +16,10 @@ from unittest.mock import AsyncMock, Mock, patch
 from uuid import uuid4
 import pytest
 from services.ai.assistant import ComplianceAssistant
+
+from tests.test_constants import (
+    MAX_RETRIES
+)
 
 
 @pytest.mark.unit

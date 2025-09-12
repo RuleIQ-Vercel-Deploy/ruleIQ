@@ -15,17 +15,10 @@ Security: Rate limiting and input validation
 from __future__ import annotations
 
 # Constants
-HTTP_BAD_REQUEST = 400
-HTTP_OK = 200
-HTTP_SERVICE_UNAVAILABLE = 503
-HTTP_UNAUTHORIZED = 401
-HTTP_UNPROCESSABLE_ENTITY = 422
 
 DEFAULT_TIMEOUT = 30
 
-DEFAULT_LIMIT = 100
 DEFAULT_RETRIES = 5
-MAX_RETRIES = 3
 import pytest
 import asyncio
 from datetime import datetime, timedelta, timezone
@@ -61,6 +54,16 @@ from services.ai.assistant import ComplianceAssistant
 from services.ai.exceptions import CircuitBreakerException as CircuitBreakerError
 from database.freemium_assessment_session import FreemiumAssessmentSession as FreemiumSession
 from database.user import User
+
+from tests.test_constants import (
+    DEFAULT_LIMIT,
+    HTTP_BAD_REQUEST,
+    HTTP_OK,
+    HTTP_SERVICE_UNAVAILABLE,
+    HTTP_UNAUTHORIZED,
+    HTTP_UNPROCESSABLE_ENTITY,
+    MAX_RETRIES
+)
 
 
 class TestFreemiumEmailCapture:

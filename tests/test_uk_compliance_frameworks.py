@@ -1,11 +1,7 @@
 """
 
 # Constants
-HTTP_CREATED = 201
-HTTP_OK = 200
 
-DEFAULT_LIMIT = 100
-MAX_RETRIES = 3
 
 Test specifications for UK compliance frameworks integration.
 
@@ -16,6 +12,13 @@ from datetime import datetime
 from database.compliance_framework import ComplianceFramework
 from services.compliance_loader import UKComplianceLoader
 from api.schemas.compliance import UKFrameworkSchema
+
+from tests.test_constants import (
+    DEFAULT_LIMIT,
+    HTTP_CREATED,
+    HTTP_OK,
+    MAX_RETRIES
+)
 
 
 class TestUKComplianceFrameworksLoading:
