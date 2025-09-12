@@ -6,6 +6,8 @@ import { type NextRequest } from 'next/server';
  * CSRF token utilities for ruleIQ
  */
 
+export const CSRF_HEADER_NAME = 'x-csrf-token';
+
 /**
  * Verify CSRF token from request
  */
@@ -39,7 +41,7 @@ export function verifyCsrfToken(request: NextRequest): boolean {
     }
 
     return true;
-  } catch {
+  } catch (error) {
     // TODO: Replace with proper logging
 
     // // TODO: Replace with proper logging
@@ -81,7 +83,7 @@ export async function extractCsrfFromFormData(request: NextRequest): Promise<str
   try {
     const formData = await request.formData();
     return (formData.get('_csrf') as string) || null;
-  } catch {
+  } catch (error) {
     return null;
   }
 }

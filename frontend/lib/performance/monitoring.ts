@@ -91,7 +91,7 @@ class PerformanceMonitor {
 
       // Navigation timing
       this.observeNavigationTiming();
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
     }
   }
@@ -107,7 +107,7 @@ class PerformanceMonitor {
 
       observer.observe({ entryTypes: [entryType] });
       this.observers.push(observer);
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
     }
   }
@@ -129,11 +129,11 @@ class PerformanceMonitor {
         this.recordMetric('TTFB', ttfb);
 
         // DOM Content Loaded
-        const dcl = navigation.domContentLoadedEventEnd - navigation.navigationStart;
+        const dcl = navigation.domContentLoadedEventEnd - navigation.fetchStart;
         this.recordMetric('DCL', dcl);
 
         // Load Complete
-        const loadComplete = navigation.loadEventEnd - navigation.navigationStart;
+        const loadComplete = navigation.loadEventEnd - navigation.fetchStart;
         this.recordMetric('LOAD', loadComplete);
       }
     });
@@ -206,8 +206,8 @@ class PerformanceMonitor {
     }
 
     // Example: Send to Google Analytics
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'performance_metric', {
+    if (typeof window !== 'undefined' && 'gtag' in window) {
+      (window as any).gtag('event', 'performance_metric', {
         metric_name: metric.name,
         metric_value: metric.value,
         metric_rating: metric.rating,
@@ -229,7 +229,7 @@ class PerformanceMonitor {
 
       try {
         await fn();
-      } catch {
+      } catch (error) {
         // TODO: Replace with proper logging
         // // TODO: Replace with proper logging
       }

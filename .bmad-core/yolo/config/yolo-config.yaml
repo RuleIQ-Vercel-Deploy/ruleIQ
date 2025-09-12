@@ -1,0 +1,61 @@
+# YOLO System Configuration
+# This file configures all tunable parameters for the YOLO autonomous workflow system
+
+# System Configuration
+system:
+  mode: active  # active, paused, off
+  log_level: INFO
+  state_file: .bmad-core/yolo/state/yolo-state.json
+  enable_telemetry: true
+  
+# Agent Token Limits (in tokens)
+agent_limits:
+  pm: 6000
+  architect: 8000
+  po: 5000
+  sm: 4000
+  dev: 10000
+  qa: 6000
+  security: 5000
+  devops: 5000
+  documentation: 4000
+
+# Context Management
+context:
+  summarization_threshold: 0.7
+  refresh_strategy: sliding_window  # sliding_window, priority_based, lru
+  archive_old_context: true
+  archive_after_days: 7
+  max_total_tokens: 50000
+  
+# Retry Configuration
+retry:
+  max_attempts: 3
+  backoff_factor: 2.0
+  max_backoff_seconds: 60
+  circuit_breaker_threshold: 5
+  circuit_breaker_timeout: 300
+
+# Safety Configuration
+safety:
+  require_human_for:
+    - password_hashing
+    - database_migrations
+    - deployment_prod
+    - security_patches
+    - user_data_deletion
+  auto_approve_after_seconds: 3600
+  
+# Workflow Configuration
+workflow:
+  default_timeout_seconds: 300
+  handoff_timeout_seconds: 30
+  max_concurrent_agents: 3
+  enable_parallel_workflows: false
+  
+# Monitoring
+monitoring:
+  metrics_port: 9090
+  health_check_port: 8080
+  export_interval_seconds: 60
+  retention_days: 30

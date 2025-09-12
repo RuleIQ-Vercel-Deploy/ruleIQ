@@ -29,7 +29,7 @@ export default function TestErrorPage() {
       await new Promise((_, reject) => {
         setTimeout(() => reject(new Error('Async operation failed')), 100);
       });
-    } catch {
+    } catch (error) {
       Sentry.captureException(error, {
         tags: {
           test: true,

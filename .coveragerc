@@ -1,0 +1,63 @@
+[run]
+branch = True
+source = .
+omit = 
+    */tests/*
+    */test_*
+    */__pycache__/*
+    */venv/*
+    */venv_linux/*
+    */.venv/*
+    */migrations/*
+    */alembic/*
+    */config/*
+    setup.py
+    */site-packages/*
+    */dist-packages/*
+    */node_modules/*
+    frontend/*
+    docs/*
+    scripts/*
+
+[report]
+precision = 2
+show_missing = True
+skip_covered = False
+sort = Cover
+exclude_lines =
+    # Skip any code marked as no cover
+    pragma: no cover
+    
+    # Skip debug-only code
+    def __repr__
+    if self\.debug
+    if settings\.DEBUG
+    
+    # Skip any code that shouldn't run during tests
+    if __name__ == .__main__.:
+    if TYPE_CHECKING:
+    
+    # Skip abstract methods
+    @(abc\.)?abstractmethod
+    raise NotImplementedError
+    
+    # Skip defensive code that shouldn't be reached
+    raise AssertionError
+    
+    # Skip code for optional dependencies
+    except ImportError
+    
+    # Skip logging statements
+    logger\.
+    logging\.
+
+[html]
+directory = htmlcov
+title = RuleIQ Integration Test Coverage
+
+[xml]
+output = coverage.xml
+
+[json]
+output = coverage.json
+pretty_print = True

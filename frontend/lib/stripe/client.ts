@@ -140,11 +140,11 @@ export const formatPrice = (amount: number, currency: string = 'gbp'): string =>
 };
 
 export const getPlanFeatures = (planId: PricingPlan): string[] => {
-  return PRICING_PLANS[planId]?.features || [];
+  return [...(PRICING_PLANS[planId]?.features || [])];
 };
 
 export const isPlanPopular = (planId: PricingPlan): boolean => {
-  return PRICING_PLANS[planId]?.popular === true;
+  return (PRICING_PLANS[planId] as any)?.popular === true;
 };
 
 export const getPlanByPriceId = (stripePriceId: string): PricingPlanDetails | null => {

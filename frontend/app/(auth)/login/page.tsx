@@ -30,7 +30,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      await authService.login({ email, password, remember_me: rememberMe });
+      await authService.login(email, password);
       toast({
         title: 'Welcome back!',
         description: 'You have successfully logged in.',

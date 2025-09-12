@@ -141,18 +141,28 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
               'loadProfile/success',
             );
           } catch (error: unknown) {
+            const errorCode = 
+              error && typeof error === 'object' && 'code' in error 
+                ? (error as any).code 
+                : undefined;
+            
             const errorType =
-              error.code === 'NETWORK_ERROR'
+              errorCode === 'NETWORK_ERROR'
                 ? 'network'
-                : error.code === 'PERMISSION_DENIED'
+                : errorCode === 'PERMISSION_DENIED'
                   ? 'permission'
-                  : error.code === 'TIMEOUT'
+                  : errorCode === 'TIMEOUT'
                     ? 'timeout'
                     : 'unknown';
 
             set(
               {
-                error: error.detail || error.message || 'Failed to load profile',
+                error: 
+                  error && typeof error === 'object' && 'detail' in error
+                    ? (error as any).detail
+                    : error && typeof error === 'object' && 'message' in error
+                      ? (error as any).message
+                      : 'Failed to load profile',
                 errorType,
                 isLoading: false,
                 retryCount: get().retryCount + 1,
@@ -203,19 +213,31 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
               'saveProfile/success',
             );
           } catch (error: unknown) {
-            const errorType = error.message?.includes('validation')
+            const errorMessage = 
+              error && typeof error === 'object' && 'message' in error 
+                ? (error as any).message 
+                : undefined;
+            const errorCode = 
+              error && typeof error === 'object' && 'code' in error 
+                ? (error as any).code 
+                : undefined;
+            
+            const errorType = errorMessage?.includes('validation')
               ? 'validation'
-              : error.code === 'NETWORK_ERROR'
+              : errorCode === 'NETWORK_ERROR'
                 ? 'network'
-                : error.code === 'PERMISSION_DENIED'
+                : errorCode === 'PERMISSION_DENIED'
                   ? 'permission'
-                  : error.code === 'TIMEOUT'
-                    ? 'timeout'
-                    : 'unknown';
+                : errorCode === 'TIMEOUT'
+                  ? 'timeout'
+                  : 'unknown';
 
             set(
               {
-                error: error.detail || error.message || 'Failed to save profile',
+                error: 
+                  error && typeof error === 'object' && 'detail' in error
+                    ? (error as any).detail
+                    : errorMessage || 'Failed to save profile',
                 errorType,
                 isSaving: false,
                 retryCount: get().retryCount + 1,
@@ -269,7 +291,12 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
           } catch (error: unknown) {
             set(
               {
-                error: error.detail || error.message || 'Failed to update profile',
+                error: 
+                  error && typeof error === 'object' && 'detail' in error
+                    ? (error as any).detail
+                    : error && typeof error === 'object' && 'message' in error
+                      ? (error as any).message
+                      : 'Failed to update profile',
                 isSaving: false,
               },
               false,
@@ -295,7 +322,12 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
           } catch (error: unknown) {
             set(
               {
-                error: error.detail || error.message || 'Failed to delete profile',
+                error: 
+                  error && typeof error === 'object' && 'detail' in error
+                    ? (error as any).detail
+                    : error && typeof error === 'object' && 'message' in error
+                      ? (error as any).message
+                      : 'Failed to delete profile',
                 isLoading: false,
               },
               false,
@@ -473,7 +505,10 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
           } catch (error: unknown) {
             set(
               {
-                error: error.message || 'Validation failed',
+                error: 
+                  error && typeof error === 'object' && 'message' in error
+                    ? (error as any).message
+                    : 'Validation failed',
                 isValidating: false,
               },
               false,
@@ -518,7 +553,10 @@ export const useBusinessProfileStore = create<BusinessProfileState>()(
           } catch (error: unknown) {
             set(
               {
-                error: error.message || 'Validation failed',
+                error: 
+                  error && typeof error === 'object' && 'message' in error
+                    ? (error as any).message
+                    : 'Validation failed',
                 isValidating: false,
               },
               false,

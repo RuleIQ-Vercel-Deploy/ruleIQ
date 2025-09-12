@@ -9,7 +9,14 @@ import {
   ExternalLink,
   AlertTriangle,
   CheckCircle,
-  } from 'lucide-react';
+  Shield,
+  Loader2,
+  RefreshCw,
+  TrendingUp,
+  Clock,
+  Users,
+  ArrowRight,
+} from 'lucide-react';
 import { useFreemiumStore } from '../../lib/stores/freemium-store';
 import {
   getSeverityColor,
@@ -230,7 +237,7 @@ export function FreemiumResults({ token, className = '' }: FreemiumResultsProps)
           onCtaClick={() => handleConversionClick(results.conversion_cta)}
           onEmailShare={handleEmailShare}
           gapsCount={results.compliance_gaps.length}
-          riskScore: _riskScore={results.risk_score}
+          riskScore={results.risk_score}
         />
       )}
     </div>
@@ -271,7 +278,7 @@ interface ConversionCTAProps {
   onCtaClick: () => void;
   onEmailShare: () => void;
   gapsCount: number;
-  riskScore: _riskScore: number;
+  riskScore: number;
 }
 
 function ConversionCTA({

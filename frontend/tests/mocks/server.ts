@@ -1,4 +1,5 @@
 import { setupServer } from 'msw/node';
+import { type RequestHandler } from 'msw';
 import { handlers } from './api-handlers';
 
 // Setup requests interception using the given handlers
@@ -10,6 +11,6 @@ export const resetHandlers = () => {
 };
 
 // Helper to add additional handlers for specific tests
-export const addHandlers = (...newHandlers: unknown[]) => {
+export const addHandlers = (...newHandlers: RequestHandler[]) => {
   server.use(...newHandlers);
 };

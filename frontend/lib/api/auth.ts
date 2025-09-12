@@ -31,8 +31,8 @@ class AuthAPIClient {
     const tokens = useAuthStore.getState().tokens;
     return {
       'Content-Type': 'application/json',
-      ...(tokens?.access_token && {
-        Authorization: `Bearer ${tokens.access_token}`,
+      ...(tokens?.access && {
+        Authorization: `Bearer ${tokens.access}`,
       }),
     };
   }
@@ -104,13 +104,13 @@ class AuthAPIClient {
   async logout(): Promise<void> {
     const tokens = useAuthStore.getState().tokens;
 
-    if (tokens?.access_token) {
+    if (tokens?.access) {
       try {
         await fetch(`${API_BASE_URL}/api/v1/auth/logout`, {
           method: 'POST',
           headers: this.getAuthHeaders(),
         });
-      } catch {
+      } catch (error) {
         // Ignore logout errors
         // TODO: Replace with proper logging
       }

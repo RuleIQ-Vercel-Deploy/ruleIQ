@@ -8,7 +8,7 @@ import secrets
 from datetime import datetime, timedelta, timezone
 from typing import Dict, Optional, Any
 from uuid import UUID
-from fastapi import Depends, HTTPException, status, Request, Header
+from fastapi import Depends, HTTPException, status, Request, Header, WebSocket, Query
 from fastapi.security import OAuth2PasswordBearer
 from jose import ExpiredSignatureError, JWTError, jwt
 from passlib.context import CryptContext
@@ -129,7 +129,7 @@ def validate_token_expiry(payload: Dict) ->None:
     exp = payload.get('exp')
     if not exp:
         raise NotAuthenticatedException('Token missing expiration time.')
-    exp_datetime = datetime.fromtimestamp(exp)
+    exp_datetime = datetime.fromtimestamp(exp, tz=timezone.utc)
     current_time = datetime.now(timezone.utc)
     if exp_datetime < current_time:
         raise NotAuthenticatedException(
@@ -259,3 +259,60 @@ async def get_api_key_auth(request: Request, x_api_key: str=Header(None,
         raise HTTPException(status_code=status.
             HTTP_500_INTERNAL_SERVER_ERROR, detail=
             'Authentication service unavailable')
+
+
+async def verify_websocket_token(
+    websocket: WebSocket,
+    token: str = Query(..., description="JWT token for authentication")
+) -> User:
+    """
+    Verify JWT token for WebSocket connections.
+    
+    WebSocket connections can't use standard HTTP headers for authentication,
+    so we accept the token as a query parameter.
+    
+    Args:
+        websocket: The WebSocket connection
+        token: JWT token passed as query parameter
+        
+    Returns:
+        User: The authenticated user
+        
+    Raises:
+        WebSocketException: If authentication fails
+    """
+    from fastapi import WebSocketException
+    
+    try:
+        # Decode and verify the token
+        payload = decode_token(token)
+        user_id = payload.get("sub")
+        
+        if not user_id:
+            await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+            raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)
+            
+        # Check if token is blacklisted
+        if is_token_blacklisted(token):
+            await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+            raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)
+            
+        # Get user from database
+        db = get_async_db()
+        async for session in db:
+            result = await session.execute(
+                select(User).where(User.id == UUID(user_id))
+            )
+            user = result.scalars().first()
+            break
+            
+        if not user or not user.is_active:
+            await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+            raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)
+            
+        return user
+        
+    except (JWTError, ExpiredSignatureError, Exception) as e:
+        logger.warning(f"WebSocket authentication failed: {e}")
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+        raise WebSocketException(code=status.WS_1008_POLICY_VIOLATION)

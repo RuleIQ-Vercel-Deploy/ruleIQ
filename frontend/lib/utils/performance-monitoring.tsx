@@ -120,14 +120,14 @@ export function withPerformanceMonitoring<T>(
       });
       return result;
     })
-    .catch(() => {
+    .catch((error) => {
       const duration = performance.now() - startTime;
       performanceMonitor.record({
         operation,
         duration,
         timestamp: Date.now(),
         success: false,
-        error: error.message || String(error),
+        error: error?.message || String(error),
         metadata,
       });
       throw error;
@@ -157,7 +157,7 @@ export const performanceMiddleware = (config: any) => (set: any, get: any, api: 
       }
 
       return result;
-    } catch {
+    } catch (error) {
       const duration = performance.now() - startTime;
       performanceMonitor.record({
         operation: `store.${action}`,

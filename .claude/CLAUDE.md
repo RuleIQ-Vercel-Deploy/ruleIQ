@@ -1,4 +1,4 @@
-# RuleIQ Project Rules
+/# RuleIQ Project Rules
 
 ## Mission
 Execute 49 prioritized tasks (P0-P7) for the RuleIQ compliance automation platform with strict quality gates and timeframe enforcement.

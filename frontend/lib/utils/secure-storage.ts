@@ -38,7 +38,7 @@ class SecureStorage {
           ['encrypt', 'decrypt'],
         );
         return this.encryptionKey;
-      } catch {
+      } catch (error) {
         // TODO: Replace with proper logging
       }
     }
@@ -79,7 +79,7 @@ class SecureStorage {
 
       // Return base64 encoded result
       return btoa(String.fromCharCode(...combined));
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -111,7 +111,7 @@ class SecureStorage {
       // Convert back to string
       const decoder = new TextDecoder();
       return decoder.decode(decryptedBuffer);
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -168,7 +168,7 @@ class SecureStorage {
       if (options.expiry) {
         sessionStorage.setItem(this.SESSION_EXPIRY_KEY, options.expiry.toString());
       }
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -187,7 +187,7 @@ class SecureStorage {
       }
 
       return await this.decrypt(encryptedToken);
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -296,7 +296,7 @@ class SecureStorage {
       sessionStorage.removeItem('ruleiq_refresh_token');
       sessionStorage.removeItem('ruleiq_session_expiry');
       // TODO: Replace with proper logging
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
       // // TODO: Replace with proper logging
     }

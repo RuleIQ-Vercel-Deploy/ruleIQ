@@ -177,7 +177,7 @@ describe('FreemiumService', () => {
 
       const request: FreemiumEmailCaptureRequest = {
         email: '  TEST@EXAMPLE.COM  ',
-        utm_source: &apos;<script>alert(&quot;xss")</script>google',
+        utm_source: '<script>alert("xss")</script>google',
         consent_marketing: true,
         consent_terms: true
       };
@@ -185,7 +185,7 @@ describe('FreemiumService', () => {
       await captureEmail(request);
 
       expect(capturedRequest.email).toBe('  TEST@EXAMPLE.COM  '); // Raw email (service doesn't sanitize)
-      expect(capturedRequest.utm_source).toBe(&apos;<script>alert(&quot;xss")</script>google'); // Raw UTM (service doesn't sanitize)
+      expect(capturedRequest.utm_source).toBe('<script>alert("xss")</script>google'); // Raw UTM (service doesn't sanitize)
     });
   });
 

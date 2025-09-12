@@ -35,6 +35,7 @@ export enum PolicyCategory {
 
 export enum PolicyStatus {
   DRAFT = 'draft',
+  PENDING_APPROVAL = 'pending_approval',
   UNDER_REVIEW = 'under_review',
   APPROVED = 'approved',
   PUBLISHED = 'published',
@@ -94,6 +95,7 @@ export enum EvidenceType {
 
 export enum EvidenceStatus {
   PENDING = 'pending',
+  UNDER_REVIEW = 'under_review',
   VERIFIED = 'verified',
   REJECTED = 'rejected',
   EXPIRED = 'expired',
@@ -127,6 +129,7 @@ export enum RiskCategory {
 export enum RiskStatus {
   IDENTIFIED = 'identified',
   ASSESSED = 'assessed',
+  MONITORING = 'monitoring',
   MITIGATED = 'mitigated',
   ACCEPTED = 'accepted',
   CLOSED = 'closed',
@@ -169,9 +172,11 @@ export interface User {
 
 export enum UserRole {
   ADMIN = 'admin',
+  MANAGER = 'manager',
   USER = 'user',
   VIEWER = 'viewer',
   AUDITOR = 'auditor',
+  COMPLIANCE_OFFICER = 'compliance_officer',
 }
 
 export interface LoginRequest {

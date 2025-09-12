@@ -41,7 +41,7 @@ function AsyncBrokenComponent() {
           reject(new Error('This is an async error!'));
         }, 1000);
       });
-    } catch {
+    } catch (error) {
       throwAsyncError(error as Error);
     }
   };

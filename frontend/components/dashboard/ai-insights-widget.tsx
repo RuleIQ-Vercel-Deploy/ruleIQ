@@ -130,7 +130,7 @@ export function AIInsightsWidget({
     } else {
       try {
         await dashboardService.dismissInsight(insightId);
-      } catch {
+      } catch (error) {
         // TODO: Replace with proper logging
         // // TODO: Replace with proper logging
       }
@@ -153,7 +153,7 @@ export function AIInsightsWidget({
     } else {
       try {
         await dashboardService.bookmarkInsight(insightId);
-      } catch {
+      } catch (error) {
         // TODO: Replace with proper logging
         // // TODO: Replace with proper logging
       }

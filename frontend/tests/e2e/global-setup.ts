@@ -62,7 +62,7 @@ async function globalSetup(config: FullConfig) {
         if (response && response.ok()) {
           isReady = true;
         }
-      } catch {
+      } catch (error) {
         // TODO: Replace with proper logging
         retries--;
         if (retries > 0) {
@@ -98,10 +98,10 @@ async function globalSetup(config: FullConfig) {
 
     // Create test user if needed (optional)
     // await createTestUser(page);
-  } catch {
+  } catch (error) {
     // Development logging - consider proper logger
 
-    console.error('❌ Global setup failed:', _error);
+    console.error('❌ Global setup failed:', error);
     // Take a screenshot for debugging
     await page.screenshot({
       path: 'test-results/screenshots/setup-error.png',

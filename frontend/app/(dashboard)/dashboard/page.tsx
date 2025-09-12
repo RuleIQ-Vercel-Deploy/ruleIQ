@@ -138,7 +138,7 @@ export default function Dashboard() {
   }, []);
 
   // Default chart data for when API doesn't provide historical data
-  const _complianceData = dashboardData?.compliance_trends
+  const _complianceData = (dashboardData as any)?.compliance_trends
     ?.slice(-7)
     .map((t: { score: number }) => t.score) || [85, 87, 89, 92, 88, 95, 98];
   const _alertsData = [12, 8, 15, 6, 9, 4, 3];
@@ -197,7 +197,7 @@ export default function Dashboard() {
               <>
                 <EnhancedMetricCard
                   title="Compliance Score"
-                  value={dashboardData?.compliance_score || 92}
+                  value={(dashboardData as any)?.compliance_score || 92}
                   suffix="%"
                   description="Overall compliance health"
                   icon={<Shield className="h-5 w-5" />}
@@ -206,7 +206,7 @@ export default function Dashboard() {
                 />
                 <EnhancedMetricCard
                   title="Active Alerts"
-                  value={dashboardData?.active_alerts || 3}
+                  value={(dashboardData as any)?.active_alerts || 3}
                   description="Requires immediate attention"
                   icon={<AlertTriangle className="h-5 w-5" />}
                   change={{ value: 23, trend: 'down' }}
@@ -214,7 +214,7 @@ export default function Dashboard() {
                 />
                 <EnhancedMetricCard
                   title="AI Insights"
-                  value={dashboardData?.ai_insights_count || 12}
+                  value={(dashboardData as any)?.ai_insights_count || 12}
                   description="New recommendations this week"
                   icon={<Brain className="h-5 w-5" />}
                   change={{ value: 15, trend: 'up' }}
@@ -222,7 +222,7 @@ export default function Dashboard() {
                 />
                 <EnhancedMetricCard
                   title="Tasks Completed"
-                  value={`${dashboardData?.tasks_completed || 24}/${dashboardData?.total_tasks || 30}`}
+                  value={`${(dashboardData as any)?.tasks_completed || 24}/${(dashboardData as any)?.total_tasks || 30}`}
                   description="This month's progress"
                   icon={<FileCheck className="h-5 w-5" />}
                   change={{ value: 12, trend: 'up' }}
@@ -239,7 +239,7 @@ export default function Dashboard() {
               <Skeleton className="h-[400px]" />
             ) : (
               <AIInsightsWidget
-                insights={dashboardData?.insights || []}
+                insights={(dashboardData as any)?.insights || []}
                 complianceProfile={complianceProfile || { priorities: [], maturityLevel: '' }}
                 onboardingData={onboardingData || { fullName: '', timeline: '' }}
               />
@@ -251,10 +251,10 @@ export default function Dashboard() {
             ) : (
               <ComplianceScoreWidget
                 data={{
-                  overall_score: dashboardData?.compliance_score || 0,
+                  overall_score: (dashboardData as any)?.compliance_score || 0,
                   trend: 'up',
                   last_updated: new Date().toISOString(),
-                  frameworks: dashboardData?.framework_scores || [],
+                  frameworks: (dashboardData as any)?.framework_scores || [],
                 }}
               />
             )}
@@ -263,7 +263,7 @@ export default function Dashboard() {
             {isLoading ? (
               <Skeleton className="h-[400px]" />
             ) : (
-              <PendingTasksWidget tasks={dashboardData?.pending_tasks || []} />
+              <PendingTasksWidget tasks={(dashboardData as any)?.pending_tasks || []} />
             )}
           </div>
 
@@ -279,7 +279,7 @@ export default function Dashboard() {
               <Skeleton className="h-[400px]" />
             ) : (
               <ComplianceTrendChart
-                data={dashboardData?.compliance_trends || generateMockTrendData()}
+                data={(dashboardData as any)?.compliance_trends || generateMockTrendData()}
               />
             )}
 
@@ -289,8 +289,8 @@ export default function Dashboard() {
             ) : (
               <FrameworkBreakdownChart
                 data={
-                  dashboardData?.framework_scores
-                    ? Object.entries(dashboardData.framework_scores).map(([framework, score]) => ({
+                  (dashboardData as any)?.framework_scores
+                    ? Object.entries((dashboardData as any).framework_scores).map(([framework, score]) => ({
                         framework,
                         score: score as number,
                       }))
@@ -306,21 +306,21 @@ export default function Dashboard() {
             {isLoading ? (
               <Skeleton className="h-[300px]" />
             ) : (
-              <TaskProgressChart data={dashboardData?.task_progress || generateMockTaskData()} />
+              <TaskProgressChart data={(dashboardData as any)?.task_progress || generateMockTaskData()} />
             )}
 
             {/* Risk Matrix */}
             {isLoading ? (
               <Skeleton className="h-[300px]" />
             ) : (
-              <RiskMatrix risks={dashboardData?.risks || generateMockRiskData()} />
+              <RiskMatrix risks={(dashboardData as any)?.risks || generateMockRiskData()} />
             )}
 
             {/* Activity Heatmap */}
             {isLoading ? (
               <Skeleton className="h-[300px]" />
             ) : (
-              <ActivityHeatmap data={dashboardData?.activity_data || generateMockActivityData()} />
+              <ActivityHeatmap data={(dashboardData as any)?.activity_data || generateMockActivityData()} />
             )}
           </div>
 
@@ -334,7 +334,7 @@ export default function Dashboard() {
               {isLoading ? (
                 <Skeleton className="h-[300px]" />
               ) : (
-                <DataTable assessments={dashboardData?.recent_activity || []} />
+                <DataTable assessments={(dashboardData as any)?.recent_activity || []} />
               )}
             </CardContent>
           </Card>

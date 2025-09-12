@@ -14,7 +14,17 @@ export const queryClient = new QueryClient({
       // Retry failed requests 3 times with exponential backoff
       retry: (failureCount, error: unknown) => {
         // Don't retry on 4xx errors (client errors)
-        if (error?.response?.status >= 400 && error?.response?.status < 500) {
+        if (
+          error &&
+          typeof error === 'object' &&
+          'response' in error &&
+          error.response &&
+          typeof error.response === 'object' &&
+          'status' in error.response &&
+          typeof (error.response as any).status === 'number' &&
+          (error.response as any).status >= 400 &&
+          (error.response as any).status < 500
+        ) {
           return false;
         }
         return failureCount < 3;
@@ -50,7 +60,7 @@ const safeStorage = {
       if (typeof window !== 'undefined' && window.localStorage) {
         return window.localStorage.getItem(key);
       }
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
     }
     return null;
@@ -60,7 +70,7 @@ const safeStorage = {
       if (typeof window !== 'undefined' && window.localStorage) {
         window.localStorage.setItem(key, value);
       }
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
     }
   },
@@ -69,7 +79,7 @@ const safeStorage = {
       if (typeof window !== 'undefined' && window.localStorage) {
         window.localStorage.removeItem(key);
       }
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
     }
   },
@@ -93,7 +103,7 @@ if (typeof window !== 'undefined') {
     //   persister,
     //   maxAge: 1000 * 60 * 60 * 24, // 24 hours
     // });
-  } catch {
+  } catch (error) {
     // TODO: Replace with proper logging
   }
 }

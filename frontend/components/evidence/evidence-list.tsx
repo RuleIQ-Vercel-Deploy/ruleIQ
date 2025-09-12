@@ -15,13 +15,13 @@ interface Evidence {
 interface EvidenceListProps {
   evidence?: Evidence[];
   onEvidenceClick?: (evidenceId: string) => void;
-  onStatusChange: _onStatusChange?: (evidenceId: string, status: string) => void;
+  onStatusChange?: (evidenceId: string, status: string) => void;
 }
 
 export function EvidenceList({
   evidence = [],
   onEvidenceClick,
-  onStatusChange: _onStatusChange,
+  onStatusChange,
 }: EvidenceListProps) {
   const defaultEvidence: Evidence[] = [
     {

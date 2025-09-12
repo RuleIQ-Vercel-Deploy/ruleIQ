@@ -24,9 +24,9 @@ if (isValidDsn) {
       }),
       Sentry.replayIntegration({
         // Capture 10% of the sessions in production
-        sessionSampleRate: process.env.NODE_ENV === 'production' ? 0.1 : 1.0,
         // Of those, capture 100% of error sessions
-        errorSampleRate: 1.0,
+        mask: [],
+        blockAllMedia: false,
       }),
     ],
 

@@ -156,9 +156,6 @@ export default defineConfig({
       // Hide caret
       caret: 'hide',
 
-      // Wait for fonts
-      fonts: 'wait',
-
       // Screenshot scale
       scale: 'device',
     },

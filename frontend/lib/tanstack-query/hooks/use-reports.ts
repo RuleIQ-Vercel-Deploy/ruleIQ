@@ -1,6 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { reportService } from '@/lib/api/reports.service';
+import { 
+  reportService,
+  type GenerateReportRequest,
+  type ScheduleReportRequest,
+} from '@/lib/api/reports.service';
 
 import {
   createQueryKey,
@@ -12,11 +16,27 @@ import {
 
 import type {
   Report,
-  CreateReportRequest,
-  UpdateReportRequest,
-  ReportTemplate,
-  ReportSchedule,
 } from '@/types/api';
+
+// Define locally until available in @/types/api
+interface ReportTemplate {
+  id: string;
+  name: string;
+  description: string;
+  report_type: string;
+  sections: string[];
+  preview_url?: string;
+}
+
+interface ReportSchedule {
+  id: string;
+  report_config: GenerateReportRequest;
+  schedule: any;
+  recipients: string[];
+  active: boolean;
+  last_run?: string;
+  next_run: string;
+}
 
 // Query keys
 const REPORT_KEY = 'reports';
@@ -36,15 +56,23 @@ export const reportKeys = {
 // Hook to fetch reports list
 export function useReports(
   params?: PaginationParams & {
-    framework_id?: string;
-    type?: string;
-    status?: string;
+    report_type?: string;
   },
   options?: BaseQueryOptions<PaginatedResponse<Report>>,
 ) {
   return useQuery({
     queryKey: reportKeys.list(params),
-    queryFn: () => reportService.getReports(params),
+    queryFn: async () => {
+      const response = await reportService.getReportHistory(params);
+      // Transform to PaginatedResponse
+      return {
+        items: response.items,
+        total: response.total,
+        page: params?.page || 1,
+        page_size: params?.page_size || 20,
+        total_pages: Math.ceil(response.total / (params?.page_size || 20)),
+      } as PaginatedResponse<Report>;
+    },
     ...options,
   });
 }
@@ -60,10 +88,13 @@ export function useReport(id: string, options?: BaseQueryOptions<Report>) {
 }
 
 // Hook to fetch report templates
-export function useReportTemplates(options?: BaseQueryOptions<ReportTemplate[]>) {
+export function useReportTemplates(reportType?: string, options?: BaseQueryOptions<ReportTemplate[]>) {
   return useQuery({
     queryKey: reportKeys.templates(),
-    queryFn: () => reportService.getTemplates(),
+    queryFn: async () => {
+      const response = await reportService.getReportTemplates(reportType);
+      return response.templates as ReportTemplate[];
+    },
     ...options,
   });
 }
@@ -72,19 +103,22 @@ export function useReportTemplates(options?: BaseQueryOptions<ReportTemplate[]>)
 export function useReportSchedules(options?: BaseQueryOptions<ReportSchedule[]>) {
   return useQuery({
     queryKey: reportKeys.schedules(),
-    queryFn: () => reportService.getSchedules(),
+    queryFn: async () => {
+      const response = await reportService.getScheduledReports();
+      return response.schedules as ReportSchedule[];
+    },
     ...options,
   });
 }
 
 // Hook to generate report
 export function useGenerateReport(
-  options?: BaseMutationOptions<Report, unknown, CreateReportRequest>,
+  options?: BaseMutationOptions<Report, unknown, GenerateReportRequest>,
 ) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: CreateReportRequest) => reportService.generateReport(data),
+    mutationFn: (data: GenerateReportRequest) => reportService.generateReport(data),
     onSuccess: (newReport) => {
       // Add to cache and invalidate list
       queryClient.setQueryData(reportKeys.detail(newReport.id), newReport);
@@ -94,18 +128,17 @@ export function useGenerateReport(
   });
 }
 
-// Hook to update report
-export function useUpdateReport(
-  options?: BaseMutationOptions<Report, unknown, { id: string; data: UpdateReportRequest }>,
+// Hook to schedule report
+export function useScheduleReport(
+  options?: BaseMutationOptions<{ schedule_id: string; message: string; next_run: string }, unknown, ScheduleReportRequest>,
 ) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }) => reportService.updateReport(id, data),
-    onSuccess: (updatedReport, variables) => {
-      // Update cache
-      queryClient.setQueryData(reportKeys.detail(variables.id), updatedReport);
-      queryClient.invalidateQueries({ queryKey: reportKeys.lists() });
+    mutationFn: (data: ScheduleReportRequest) => reportService.scheduleReport(data),
+    onSuccess: () => {
+      // Invalidate schedules list
+      queryClient.invalidateQueries({ queryKey: reportKeys.schedules() });
     },
     ...options,
   });
@@ -129,19 +162,18 @@ export function useDeleteReport(options?: BaseMutationOptions<void, unknown, str
 // Hook to download report
 export function useDownloadReport() {
   return useMutation({
-    mutationFn: ({ id, format }: { id: string; format: 'pdf' | 'excel' | 'csv' }) =>
-      reportService.downloadReport(id, format),
+    mutationFn: (id: string) => reportService.downloadReport(id),
   });
 }
 
-// Hook to schedule report
-export function useScheduleReport(
-  options?: BaseMutationOptions<ReportSchedule, unknown, { reportId: string; schedule: any }>,
+// Hook to update scheduled report
+export function useUpdateScheduledReport(
+  options?: BaseMutationOptions<void, unknown, { scheduleId: string; data: Partial<ScheduleReportRequest> }>,
 ) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ reportId, schedule }) => reportService.scheduleReport(reportId, schedule),
+    mutationFn: ({ scheduleId, data }) => reportService.updateScheduledReport(scheduleId, data),
     onSuccess: () => {
       // Invalidate schedules
       queryClient.invalidateQueries({ queryKey: reportKeys.schedules() });
@@ -150,12 +182,16 @@ export function useScheduleReport(
   });
 }
 
-// Hook to share report
-export function useShareReport(
-  options?: BaseMutationOptions<void, unknown, { id: string; emails: string[] }>,
-) {
+// Hook to delete scheduled report
+export function useDeleteScheduledReport(options?: BaseMutationOptions<void, unknown, string>) {
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationFn: ({ id, emails }) => reportService.shareReport(id, emails),
+    mutationFn: (scheduleId: string) => reportService.deleteScheduledReport(scheduleId),
+    onSuccess: () => {
+      // Invalidate schedules
+      queryClient.invalidateQueries({ queryKey: reportKeys.schedules() });
+    },
     ...options,
   });
 }

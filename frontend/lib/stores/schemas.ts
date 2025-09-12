@@ -22,19 +22,23 @@ export const AssessmentsArraySchema = z.array(AssessmentSchema);
 export const EvidenceItemSchema = z.object({
   id: z.string().min(1, 'Evidence ID is required'),
   title: z.string().min(1, 'Evidence title is required'),
-  description: z.string().optional(),
-  status: z.enum(['pending', 'collected', 'verified', 'rejected'], {
-    errorMap: () => ({ message: 'Status must be one of: pending, collected, verified, rejected' }),
-  }),
+  description: z.string(),
+  control_id: z.string().min(1, 'Control ID is required'),
+  framework_id: z.string().min(1, 'Framework ID is required'),
+  business_profile_id: z.string().min(1, 'Business profile ID is required'),
   evidence_type: z.string().min(1, 'Evidence type is required'),
+  source: z.string().min(1, 'Source is required'),
+  tags: z.array(z.string()),
+  status: z.enum(['pending', 'collected', 'approved', 'rejected', 'needs_review'], {
+    errorMap: () => ({ message: 'Status must be one of: pending, collected, approved, rejected, needs_review' }),
+  }),
+  quality_score: z.number().min(0).max(100).optional(),
+  metadata: z.record(z.any()).optional(),
   file_url: z.string().url().optional(),
   file_name: z.string().optional(),
   file_size: z.number().int().min(0).optional(),
-  control_mapping: z.array(z.string()).optional(),
-  framework_id: z.string().min(1, 'Framework ID is required'),
-  business_profile_id: z.string().min(1, 'Business profile ID is required'),
-  created_at: z.string().datetime().optional(),
-  updated_at: z.string().datetime().optional(),
+  created_at: z.string(),
+  updated_at: z.string(),
 });
 
 export const EvidenceArraySchema = z.array(EvidenceItemSchema);
@@ -110,7 +114,7 @@ export const LoadingStateSchema = z.boolean();
 export function safeValidate<T>(schema: z.ZodSchema<T>, data: unknown, context: string): T {
   try {
     return schema.parse(data);
-  } catch {
+  } catch (error) {
     if (error instanceof z.ZodError) {
       // TODO: Replace with proper logging
 

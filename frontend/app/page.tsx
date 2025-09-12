@@ -81,7 +81,7 @@ const HeroSection = ({ showEmailCapture, setShowEmailCapture }: HeroSectionProps
           }
         }, 500);
       }, 100);
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -192,15 +192,20 @@ const HeroSection = ({ showEmailCapture, setShowEmailCapture }: HeroSectionProps
             <div className="w-full max-w-md">
               {!showEmailCapture ? (
                 <div className="flex flex-col items-center gap-4">
-                  <Button
-                    size="lg"
-                    variant="default"
-                    className="group"
-                    onClick={() => setShowEmailCapture(true)}
+                  <button
+                    className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-all duration-250 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-gradient-to-r from-teal-700 via-teal-600 to-teal-500 text-white shadow-elevation-low hover:shadow-elevation-medium hover:scale-[1.02] active:scale-[0.98] group h-11 px-8 text-base"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      console.log('Button clicked! Setting showEmailCapture to true');
+                      setShowEmailCapture(true);
+                      return false;
+                    }}
+                    type="button"
                   >
                     Start Free AI Assessment
                     <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                  </Button>
+                  </button>
                   <div className="flex gap-4">
                     <Button size="sm" variant="ghost" onClick={() => router.push('/login')}>
                       Already have an account?
@@ -421,6 +426,10 @@ export default function HomePage() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    console.log('showEmailCapture state changed to:', showEmailCapture);
+  }, [showEmailCapture]);
 
   if (!mounted) {
     return (

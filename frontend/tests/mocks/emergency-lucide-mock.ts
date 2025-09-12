@@ -127,7 +127,7 @@ const iconList = [
 ];
 
 // Create the mock object
-const LucideMocks = {};
+const LucideMocks: Record<string, ReturnType<typeof createEmergencyIconMock>> = {};
 iconList.forEach((iconName) => {
   LucideMocks[iconName] = createEmergencyIconMock(iconName);
 });
@@ -135,13 +135,15 @@ iconList.forEach((iconName) => {
 // Create a proxy for any missing icons
 export const EmergencyLucideProxy = new Proxy(LucideMocks, {
   get(target, prop) {
-    if (prop in target) {
+    if (typeof prop === 'string' && prop in target) {
       return target[prop];
     }
     // Create a mock for any missing icon on the fly
     // TODO: Replace with proper logging
     const newMock = createEmergencyIconMock(String(prop));
-    target[prop] = newMock;
+    if (typeof prop === 'string') {
+      target[prop] = newMock;
+    }
     return newMock;
   },
 });

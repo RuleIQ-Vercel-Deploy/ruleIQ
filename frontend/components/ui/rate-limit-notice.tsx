@@ -194,17 +194,20 @@ export function useRateLimitState(_operation: string) {
   } | null>(null);
 
   const handleRateLimitError = React.useCallback((error: unknown) => {
-    if (error.response?.status === 429) {
-      const rateLimitError = error.response.data;
-      setRateLimitInfo({
-        isRateLimited: true,
-        retryAfter: rateLimitError.error.retry_after,
-        limit: rateLimitError.error.limit,
-        window: rateLimitError.error.window,
-        remaining: 0,
-        suggestion: rateLimitError.suggestion,
-      });
-      return true;
+    if (error && typeof error === 'object' && 'response' in error) {
+      const errorWithResponse = error as { response?: { status?: number; data?: any } };
+      if (errorWithResponse.response?.status === 429) {
+        const rateLimitError = errorWithResponse.response.data;
+        setRateLimitInfo({
+          isRateLimited: true,
+          retryAfter: rateLimitError.error.retry_after,
+          limit: rateLimitError.error.limit,
+          window: rateLimitError.error.window,
+          remaining: 0,
+          suggestion: rateLimitError.suggestion,
+        });
+        return true;
+      }
     }
     return false;
   }, []);

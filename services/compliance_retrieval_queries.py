@@ -37,6 +37,12 @@ logger = logging.getLogger(__name__)
 
 class QueryCategory(Enum):
     """Enumeration of query categories for compliance analysis"""
+    REGULATORY_COVERAGE = "regulatory_coverage"
+    COMPLIANCE_GAPS = "compliance_gaps"
+    CROSS_JURISDICTIONAL = "cross_jurisdictional"
+    RISK_CONVERGENCE = "risk_convergence"
+    TEMPORAL_CHANGES = "temporal_changes"
+    ENFORCEMENT_LEARNING = "enforcement_learning"
 
 
 @dataclass

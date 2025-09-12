@@ -103,7 +103,7 @@ class BusinessProfileService {
     try {
       const profiles = await this.getBusinessProfiles();
       return profiles.length > 0 ? profiles[0] : null;
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -134,7 +134,7 @@ class BusinessProfileService {
         }
         return transformed;
       }
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -167,7 +167,7 @@ class BusinessProfileService {
       if (profile && profile.id) {
         await this.deleteBusinessProfile(profile.id);
       }
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -184,7 +184,7 @@ class BusinessProfileService {
         '/frameworks/recommendations',
       );
       return response;
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging

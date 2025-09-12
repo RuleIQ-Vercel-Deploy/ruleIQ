@@ -104,7 +104,9 @@ export const useChatStore = create<ChatState>()(
           } else {
             // Other errors - show briefly but don't block
             set({
-              error: error.message || 'Failed to load conversations',
+              error: error && typeof error === 'object' && 'message' in error
+                ? (error as any).message
+                : 'Failed to load conversations',
               isLoadingConversations: false,
               conversations: [], // Still allow UI to render
             });
@@ -128,7 +130,10 @@ export const useChatStore = create<ChatState>()(
           get().connectWebSocket(conversationId);
         } catch (error: unknown) {
           set({
-            error: error.message || 'Failed to load conversation',
+            error: 
+              error && typeof error === 'object' && 'message' in error
+                ? (error as any).message
+                : 'Failed to load conversation',
             isLoadingMessages: false,
           });
         }
@@ -154,7 +159,9 @@ export const useChatStore = create<ChatState>()(
           // Connect WebSocket for the new conversation
           get().connectWebSocket(response.conversation.id);
         } catch (error: unknown) {
-          set({ error: error.message || 'Failed to create conversation' });
+          set({ error: error && typeof error === 'object' && 'message' in error
+                ? (error as any).message
+                : 'Failed to create conversation' });
         }
       },
 
@@ -230,7 +237,7 @@ export const useChatStore = create<ChatState>()(
                   content: message,
                 });
               }
-            } catch {
+            } catch (error) {
               // If IQ status check fails, fallback to regular chat
               response = await chatService.sendMessage(conversationId, {
                 content: message,
@@ -258,7 +265,9 @@ export const useChatStore = create<ChatState>()(
               [conversationId]:
                 state.messages[conversationId]?.filter((msg) => msg.id !== tempMessage.id) || [],
             },
-            error: error.message || 'Failed to send message',
+            error: error && typeof error === 'object' && 'message' in error
+                ? (error as any).message
+                : 'Failed to send message',
             isSendingMessage: false,
           }));
         }
@@ -288,7 +297,9 @@ export const useChatStore = create<ChatState>()(
             return newState;
           });
         } catch (error: unknown) {
-          set({ error: error.message || 'Failed to delete conversation' });
+          set({ error: error && typeof error === 'object' && 'message' in error
+                ? (error as any).message
+                : 'Failed to delete conversation' });
         }
       },
 
@@ -311,16 +322,28 @@ export const useChatStore = create<ChatState>()(
         const cleanup = chatService.addMessageHandler((message: ChatWebSocketMessage) => {
           switch (message.type) {
             case 'connection':
-              set({ isConnected: message.data.status === 'connected' });
+              set({ 
+                isConnected: !!(
+                  message.data && 
+                  typeof message.data === 'object' && 
+                  'status' in message.data &&
+                  (message.data as any).status === 'connected'
+                )
+              });
               break;
 
             case 'message':
               // Add received message to the conversation
-              if (message.data.conversation_id === conversationId) {
+              if (
+                message.data &&
+                typeof message.data === 'object' &&
+                'conversation_id' in message.data &&
+                (message.data as any).conversation_id === conversationId
+              ) {
                 set((state) => ({
                   messages: {
                     ...state.messages,
-                    [conversationId]: [...(state.messages[conversationId] || []), message.data],
+                    [conversationId]: [...(state.messages[conversationId] || []), message.data as ChatMessage],
                   },
                 }));
               }
@@ -328,19 +351,34 @@ export const useChatStore = create<ChatState>()(
 
             case 'typing':
               // Handle typing indicators
-              if (message.data.action === 'start') {
-                set((state) => ({
-                  typingUsers: [...state.typingUsers, message.data.user],
-                }));
-              } else if (message.data.action === 'stop') {
-                set((state) => ({
-                  typingUsers: state.typingUsers.filter((u) => u !== message.data.user),
-                }));
+              if (
+                message.data &&
+                typeof message.data === 'object' &&
+                'action' in message.data &&
+                'user' in message.data
+              ) {
+                const data = message.data as any;
+                if (data.action === 'start') {
+                  set((state) => ({
+                    typingUsers: [...state.typingUsers, data.user],
+                  }));
+                } else if (data.action === 'stop') {
+                  set((state) => ({
+                    typingUsers: state.typingUsers.filter((u) => u !== data.user),
+                  }));
+                }
               }
               break;
 
             case 'error':
-              set({ error: message.data.message || 'WebSocket error occurred' });
+              set({ 
+                error: 
+                  message.data && 
+                  typeof message.data === 'object' && 
+                  'message' in message.data
+                    ? (message.data as any).message
+                    : 'WebSocket error occurred' 
+              });
               break;
           }
         });
@@ -391,7 +429,9 @@ export const useChatStore = create<ChatState>()(
           // Connect WebSocket for the widget conversation
           get().connectWebSocket(response.conversation.id);
         } catch (error: unknown) {
-          set({ error: error.message || 'Failed to create widget conversation' });
+          set({ error: error && typeof error === 'object' && 'message' in error
+                ? (error as any).message
+                : 'Failed to create widget conversation' });
         }
       },
 
@@ -414,7 +454,9 @@ export const useChatStore = create<ChatState>()(
           get().connectWebSocket(state.widgetConversationId);
         } catch (error: unknown) {
           set({
-            error: error.message || 'Failed to load widget conversation',
+            error: error && typeof error === 'object' && 'message' in error
+                ? (error as any).message
+                : 'Failed to load widget conversation',
             isLoadingMessages: false,
           });
         }

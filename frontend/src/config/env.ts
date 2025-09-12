@@ -81,7 +81,10 @@ if (!!process.env['SKIP_ENV_VALIDATION'] === false) {
     throw new Error('Invalid environment variables');
   }
 
-  env = parsed.data;
+  env = {
+    ...parsed.data,
+    NODE_ENV: process.env.NODE_ENV as 'development' | 'production' | 'test' || 'development'
+  } as typeof combinedSchema._output;
 } else {
   // When validation is skipped, we still need to transform the values
   // to match the expected output types (e.g., string to boolean conversions)

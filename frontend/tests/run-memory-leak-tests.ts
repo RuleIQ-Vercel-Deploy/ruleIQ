@@ -67,10 +67,10 @@ function runTest(testFile: string): Promise<TestResult> {
           if (leakMatch) {
             const leakInfo = leakMatch[1];
             memoryLeaks = {
-              eventListeners: leakInfo.match(/Event Listeners: (\d+)/)?.[1] || '0',
-              timers: leakInfo.match(/Timers: (\d+)/)?.[1] || '0',
-              intervals: leakInfo.match(/Intervals: (\d+)/)?.[1] || '0',
-              abortControllers: leakInfo.match(/AbortControllers: (\d+)/)?.[1] || '0',
+              eventListeners: parseInt(leakInfo.match(/Event Listeners: (\d+)/)?.[1] || '0', 10),
+              timers: parseInt(leakInfo.match(/Timers: (\d+)/)?.[1] || '0', 10),
+              intervals: parseInt(leakInfo.match(/Intervals: (\d+)/)?.[1] || '0', 10),
+              abortControllers: parseInt(leakInfo.match(/AbortControllers: (\d+)/)?.[1] || '0', 10),
             };
           }
 

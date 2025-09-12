@@ -1,0 +1,320 @@
+# RuleIQ Monitoring Alert Rules
+# Prometheus AlertManager Configuration
+
+global:
+  resolve_timeout: 5m
+  smtp_smarthost: 'smtp.gmail.com:587'
+  smtp_from: 'alerts@ruleiq.com'
+  smtp_auth_username: '{{ SMTP_USERNAME }}'
+  smtp_auth_password: '{{ SMTP_PASSWORD }}'
+
+route:
+  group_by: ['alertname', 'cluster', 'service']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'default-receiver'
+  
+  routes:
+  # Critical alerts - immediate notification
+  - match:
+      severity: critical
+    receiver: 'critical-receiver'
+    group_wait: 0s
+    repeat_interval: 5m
+  
+  # Security alerts - immediate notification
+  - match:
+      category: security
+    receiver: 'security-receiver'
+    group_wait: 0s
+    repeat_interval: 10m
+  
+  # Performance alerts
+  - match:
+      category: performance
+    receiver: 'performance-receiver'
+    group_wait: 30s
+    repeat_interval: 30m
+
+receivers:
+- name: 'default-receiver'
+  email_configs:
+  - to: 'ops@ruleiq.com'
+    send_resolved: true
+  webhook_configs:
+  - url: 'http://localhost:8000/api/v1/webhooks/alerts'
+    send_resolved: true
+
+- name: 'critical-receiver'
+  email_configs:
+  - to: 'oncall@ruleiq.com'
+    send_resolved: true
+  pagerduty_configs:
+  - service_key: '{{ PAGERDUTY_SERVICE_KEY }}'
+    client: 'RuleIQ Production'
+    client_url: 'https://ruleiq.com'
+  slack_configs:
+  - api_url: '{{ SLACK_WEBHOOK_URL }}'
+    channel: '#critical-alerts'
+    title: 'Critical Alert'
+    text: '{{ range .Alerts }}{{ .Annotations.summary }}{{ end }}'
+
+- name: 'security-receiver'
+  email_configs:
+  - to: 'security@ruleiq.com'
+    send_resolved: true
+  slack_configs:
+  - api_url: '{{ SLACK_WEBHOOK_URL }}'
+    channel: '#security-alerts'
+    title: 'Security Alert'
+    text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
+
+- name: 'performance-receiver'
+  email_configs:
+  - to: 'dev@ruleiq.com'
+    send_resolved: true
+  slack_configs:
+  - api_url: '{{ SLACK_WEBHOOK_URL }}'
+    channel: '#performance-alerts'
+
+inhibit_rules:
+- source_match:
+    severity: 'critical'
+  target_match:
+    severity: 'warning'
+  equal: ['alertname', 'cluster', 'service']
+
+---
+# Alert Rules
+
+groups:
+- name: application_alerts
+  interval: 10s
+  rules:
+  
+  # Error Rate Alert
+  - alert: HighErrorRate
+    expr: |
+      (sum(rate(ruleiq_errors_total[1m])) / sum(rate(ruleiq_requests_total[1m]))) > 0.05
+    for: 1m
+    labels:
+      severity: critical
+      category: application
+    annotations:
+      summary: "High error rate detected ({{ $value | humanizePercentage }})"
+      description: "Error rate is above 5% for 1 minute. Current: {{ $value | humanizePercentage }}"
+      runbook_url: "https://wiki.ruleiq.com/runbooks/high-error-rate"
+  
+  # Response Time Alert
+  - alert: SlowResponseTime
+    expr: |
+      histogram_quantile(0.95, rate(ruleiq_request_duration_seconds_bucket[2m])) > 2
+    for: 2m
+    labels:
+      severity: warning
+      category: performance
+    annotations:
+      summary: "Response time degraded (p95: {{ $value }}s)"
+      description: "95th percentile response time is above 2 seconds for 2 minutes"
+  
+  # Database Connection Alert
+  - alert: DatabaseConnectionPoolExhausted
+    expr: |
+      (ruleiq_db_connections_active / ruleiq_db_connections_total) > 0.8
+    for: 1m
+    labels:
+      severity: critical
+      category: database
+    annotations:
+      summary: "Database connection pool near exhaustion ({{ $value | humanizePercentage }})"
+      description: "Database connections are above 80% utilized"
+  
+  # Redis Connection Alert
+  - alert: RedisConnectionFailure
+    expr: |
+      up{job="redis"} == 0
+    for: 30s
+    labels:
+      severity: critical
+      category: infrastructure
+    annotations:
+      summary: "Redis connection failure"
+      description: "Cannot connect to Redis cache service"
+  
+  # Authentication Spike Alert
+  - alert: AuthenticationFailureSpike
+    expr: |
+      rate(ruleiq_auth_failures_total[1m]) > 100
+    for: 1m
+    labels:
+      severity: critical
+      category: security
+    annotations:
+      summary: "Authentication failure spike detected"
+      description: "More than 100 authentication failures per minute. Possible attack."
+  
+  # JWT Validation Errors
+  - alert: JWTValidationErrors
+    expr: |
+      rate(ruleiq_jwt_validation_errors_total[5m]) > 10
+    for: 5m
+    labels:
+      severity: warning
+      category: security
+    annotations:
+      summary: "High JWT validation error rate"
+      description: "JWT validation errors detected. Check token generation and validation."
+  
+  # AI Cost Alert
+  - alert: AICodeExceededThreshold
+    expr: |
+      rate(ruleiq_ai_cost_usd_total[1m]) > 10
+    for: 1m
+    labels:
+      severity: warning
+      category: cost
+    annotations:
+      summary: "AI costs exceeding threshold (${{ $value }}/min)"
+      description: "AI API costs are above $10 per minute"
+  
+  # Session Loss Alert
+  - alert: SessionDataLoss
+    expr: |
+      delta(ruleiq_active_sessions[5m]) < -100
+    for: 1m
+    labels:
+      severity: critical
+      category: application
+    annotations:
+      summary: "Significant session loss detected"
+      description: "More than 100 sessions lost in 5 minutes"
+  
+  # Feature Flag Errors
+  - alert: FeatureFlagEvaluationErrors
+    expr: |
+      rate(ruleiq_feature_flag_evaluations_total{result="error"}[5m]) > 0.1
+    for: 5m
+    labels:
+      severity: warning
+      category: application
+    annotations:
+      summary: "Feature flag evaluation errors"
+      description: "Feature flag system experiencing errors"
+  
+  # System Health Score
+  - alert: SystemHealthDegraded
+    expr: |
+      ruleiq_system_health_score < 70
+    for: 5m
+    labels:
+      severity: warning
+      category: system
+    annotations:
+      summary: "System health degraded (score: {{ $value }})"
+      description: "Overall system health score below 70 for 5 minutes"
+  
+  # Cache Performance
+  - alert: LowCacheHitRate
+    expr: |
+      (sum(rate(ruleiq_cache_hits_total[5m])) / 
+       (sum(rate(ruleiq_cache_hits_total[5m])) + sum(rate(ruleiq_cache_misses_total[5m])))) < 0.5
+    for: 10m
+    labels:
+      severity: warning
+      category: performance
+    annotations:
+      summary: "Cache hit rate below 50%"
+      description: "Cache performance degraded, hit rate: {{ $value | humanizePercentage }}"
+
+- name: infrastructure_alerts
+  interval: 30s
+  rules:
+  
+  # Service Availability
+  - alert: ServiceUnavailable
+    expr: |
+      ruleiq_service_availability == 0
+    for: 1m
+    labels:
+      severity: critical
+      category: infrastructure
+    annotations:
+      summary: "Service {{ $labels.service_name }} is unavailable"
+      description: "Service health check failed for {{ $labels.service_name }}"
+  
+  # Disk Space Alert
+  - alert: DiskSpaceLow
+    expr: |
+      node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} < 0.1
+    for: 5m
+    labels:
+      severity: warning
+      category: infrastructure
+    annotations:
+      summary: "Low disk space ({{ $value | humanizePercentage }} remaining)"
+      description: "Less than 10% disk space remaining on root filesystem"
+  
+  # Memory Alert
+  - alert: HighMemoryUsage
+    expr: |
+      (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) > 0.9
+    for: 5m
+    labels:
+      severity: warning
+      category: infrastructure
+    annotations:
+      summary: "High memory usage ({{ $value | humanizePercentage }})"
+      description: "Memory usage above 90% for 5 minutes"
+  
+  # CPU Alert
+  - alert: HighCPUUsage
+    expr: |
+      100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+    for: 10m
+    labels:
+      severity: warning
+      category: infrastructure
+    annotations:
+      summary: "High CPU usage ({{ $value }}%)"
+      description: "CPU usage above 80% for 10 minutes"
+
+- name: security_alerts
+  interval: 10s
+  rules:
+  
+  # Suspicious Request Patterns
+  - alert: SuspiciousRequestPattern
+    expr: |
+      rate(ruleiq_suspicious_requests_total[5m]) > 10
+    for: 1m
+    labels:
+      severity: critical
+      category: security
+    annotations:
+      summary: "Suspicious request patterns detected"
+      description: "Potential security threat: {{ $labels.pattern_type }}"
+  
+  # Unauthorized Access Attempts
+  - alert: UnauthorizedAccessAttempts
+    expr: |
+      rate(ruleiq_auth_attempts_total{result="unauthorized"}[5m]) > 50
+    for: 1m
+    labels:
+      severity: critical
+      category: security
+    annotations:
+      summary: "High rate of unauthorized access attempts"
+      description: "More than 50 unauthorized access attempts per minute"
+  
+  # SSL Certificate Expiry
+  - alert: SSLCertificateExpiringSoon
+    expr: |
+      probe_ssl_earliest_cert_expiry - time() < 86400 * 7
+    for: 1h
+    labels:
+      severity: warning
+      category: security
+    annotations:
+      summary: "SSL certificate expiring soon"
+      description: "SSL certificate expires in less than 7 days"

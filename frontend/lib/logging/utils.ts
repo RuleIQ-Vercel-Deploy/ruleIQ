@@ -32,8 +32,8 @@ export const withRequestLogging = (handler: Function) => async (req: any, res: a
   } catch (error: unknown) {
     log.error(`Request error: ${method} ${url}`, {
       status: 500,
-      errorMessage: error.message,
-      stack: error.stack,
+      errorMessage: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
     });
     // Re-throw the error to be handled by global error handlers
     throw error;

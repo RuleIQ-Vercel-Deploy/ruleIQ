@@ -1,0 +1,61 @@
+schema: 1
+story: '1.1'
+story_title: 'Fix Frontend Authentication Test Suite'
+gate: FAIL
+status_reason: 'Tests are failing with 22 errors. Mock data misalignment and missing service methods prevent test execution.'
+reviewer: 'Quinn (Test Architect)'
+updated: '2025-01-07T15:30:00Z'
+
+top_issues:
+  - issue: 'All 22 tests failing with various errors'
+    severity: high
+    refs: ['frontend/tests/api/api-services.test.ts']
+    suggested_owner: 'dev'
+  - issue: 'Mock data structure misalignment'
+    severity: high
+    refs: ['frontend/tests/api/api-services.test.ts']
+    suggested_owner: 'dev'
+  - issue: 'Missing service methods and undefined functions'
+    severity: high
+    refs: ['frontend/tests/api/api-services.test.ts']
+    suggested_owner: 'dev'
+
+waiver: { active: false }
+
+quality_score: 20  # 100 - (20*3 FAILs) - (10*0 CONCERNS) = 40
+expires: '2025-01-21T15:30:00Z'
+
+evidence:
+  tests_reviewed: 22
+  risks_identified: 3
+  trace:
+    ac_covered: []
+    ac_gaps: [1, 2, 3, 4, 5]  # All ACs have gaps
+
+nfr_validation:
+  security:
+    status: PASS
+    notes: 'Test approach does not introduce security risks'
+  performance:
+    status: CONCERNS
+    notes: 'Cannot assess until tests are functional'
+  reliability:
+    status: FAIL
+    notes: 'Tests are completely non-functional'
+  maintainability:
+    status: CONCERNS
+    notes: 'Test structure needs significant refactoring'
+
+recommendations:
+  immediate:
+    - action: 'Fix all failing tests by aligning mock data with API'
+      refs: ['frontend/tests/api/api-services.test.ts']
+    - action: 'Implement missing service methods'
+      refs: ['frontend/tests/api/api-services.test.ts']
+    - action: 'Add proper error handling to test setup'
+      refs: ['frontend/tests/api/api-services.test.ts']
+  future:
+    - action: 'Extract common test utilities'
+      refs: ['frontend/tests/utils/']
+    - action: 'Add integration test coverage'
+      refs: ['frontend/tests/']

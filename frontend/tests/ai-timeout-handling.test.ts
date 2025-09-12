@@ -21,7 +21,7 @@ describe('AI Timeout Handling Tests', () => {
         try {
           const result = await Promise.race([promise, timeoutPromise]);
           return result;
-        } catch {
+        } catch (error) {
           if (error instanceof Error && error.message.includes('timed out')) {
             throw new Error(`${operation} is taking longer than expected. Please try again.`);
           }
@@ -53,7 +53,7 @@ describe('AI Timeout Handling Tests', () => {
         try {
           const result = await Promise.race([promise, timeoutPromise]);
           return result;
-        } catch {
+        } catch (error) {
           if (error instanceof Error && error.message.includes('timed out')) {
             throw new Error(`${operation} is taking longer than expected. Please try again.`);
           }
@@ -131,7 +131,7 @@ describe('AI Timeout Handling Tests', () => {
 
         try {
           return await Promise.race([aiRequest, timeoutPromise]);
-        } catch {
+        } catch (error) {
           if (error instanceof Error && error.message.includes('timed out')) {
             // Return fallback response
             return {
@@ -190,7 +190,7 @@ describe('AI Timeout Handling Tests', () => {
 
         try {
           return await Promise.race([aiRequest, timeoutPromise]);
-        } catch {
+        } catch (error) {
           if (error instanceof Error && error.message.includes('timed out')) {
             // Return fallback analysis
             return {
@@ -275,7 +275,7 @@ describe('AI Timeout Handling Tests', () => {
 
         try {
           return await Promise.race([aiRequest, timeoutPromise]);
-        } catch {
+        } catch (error) {
           if (error instanceof Error && error.message.includes('timed out')) {
             return {
               analysis:
@@ -360,7 +360,7 @@ describe('AI Timeout Handling Tests', () => {
 
         try {
           await Promise.race([errorPromise, timeoutPromise]);
-        } catch {
+        } catch (error) {
           if (error instanceof Error) {
             if (error.message.includes('timed out')) {
               return { type: 'timeout', message: 'Request timed out', fallback: true };

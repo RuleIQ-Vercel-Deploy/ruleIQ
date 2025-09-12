@@ -53,7 +53,7 @@ const LocalStorageComponent = () => {
 
   return (
     <div data-testid="hydrated-content">
-      <p>Hydrated: {value || &apos;No value'}</p>
+      <p>Hydrated: {value || 'No value'}</p>
     </div>
   );
 };
@@ -140,7 +140,7 @@ describe('Hydration Safety Tests', () => {
 
         return (
           <div data-testid="hydrated-content">
-            <p>Hydrated: {value || &apos;No value'}</p>
+            <p>Hydrated: {value || 'No value'}</p>
           </div>
         );
       };
@@ -258,7 +258,7 @@ describe('Hydration Safety Tests', () => {
               try {
                 const authData = JSON.parse(storedAuth);
                 setIsAuthenticated(authData.state?.isAuthenticated || false);
-              } catch {
+              } catch (error) {
                 setIsAuthenticated(false);
               }
             }

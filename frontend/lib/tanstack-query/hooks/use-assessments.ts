@@ -13,10 +13,14 @@ import {
 import type {
   Assessment,
   AssessmentQuestion,
+} from '@/types/api';
+
+// Import types from the service
+import type {
   CreateAssessmentRequest,
   UpdateAssessmentRequest,
-  SubmitResponseRequest,
-} from '@/types/api';
+  SubmitAssessmentAnswerRequest as SubmitResponseRequest,
+} from '@/lib/api/assessments.service';
 
 // Query keys
 const ASSESSMENT_KEY = 'assessments';
@@ -39,7 +43,17 @@ export function useAssessments(
 ) {
   return useQuery({
     queryKey: assessmentKeys.list(params),
-    queryFn: () => assessmentService.getAssessments(params),
+    queryFn: async () => {
+      const response = await assessmentService.getAssessments(params);
+      // Transform to match PaginatedResponse type
+      return {
+        items: response.items,
+        total: response.total,
+        page: params?.page || 1,
+        page_size: params?.page_size || 10,
+        total_pages: Math.ceil(response.total / (params?.page_size || 10)),
+      } as PaginatedResponse<Assessment>;
+    },
     ...options,
   });
 }
@@ -121,7 +135,7 @@ export function useSubmitAssessmentResponse(
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ assessmentId, data }) => assessmentService.submitResponse(assessmentId, data),
+    mutationFn: ({ assessmentId, data }) => assessmentService.submitAssessmentAnswer(assessmentId, data),
     onSuccess: (_, variables) => {
       // Invalidate assessment details and results
       queryClient.invalidateQueries({ queryKey: assessmentKeys.detail(variables.assessmentId) });
@@ -148,12 +162,13 @@ export function useDeleteAssessment(options?: BaseMutationOptions<void, unknown,
 
 // Hook to start quick assessment
 export function useStartQuickAssessment(
-  options?: BaseMutationOptions<Assessment, unknown, { framework_id: string }>,
+  options?: BaseMutationOptions<any, unknown, { business_profile_id: string; framework_id: string }>,
 ) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ framework_id }) => assessmentService.startQuickAssessment(framework_id),
+    mutationFn: ({ business_profile_id, framework_id }) => 
+      assessmentService.getQuickAssessment(business_profile_id, framework_id),
     onSuccess: () => {
       // Invalidate assessments list
       queryClient.invalidateQueries({ queryKey: assessmentKeys.lists() });

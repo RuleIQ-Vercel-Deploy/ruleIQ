@@ -125,10 +125,13 @@ export const useAssessmentStore = create<AssessmentState>()(
           await withPerformanceMonitoring(
             'loadAssessments',
             async () => {
+              const page = typeof params?.page === 'number' ? params.page : get().currentPage;
+              const page_size = typeof params?.page_size === 'number' ? params.page_size : get().pageSize;
+              
               const { items, total } = await assessmentService.getAssessments({
                 ...params,
-                page: params?.page || get().currentPage,
-                page_size: params?.page_size || get().pageSize,
+                page,
+                page_size,
               });
 
               set(
@@ -398,7 +401,7 @@ export const useAssessmentStore = create<AssessmentState>()(
             // Note: Schema validation may not match Assessment interface exactly
             // For now, we'll trust the input data and just set it
             set({ assessments }, false, 'setAssessments');
-          } catch {
+          } catch (error) {
             // TODO: Replace with proper logging
             set({ assessments }, false, 'setAssessments');
           }
@@ -414,7 +417,7 @@ export const useAssessmentStore = create<AssessmentState>()(
               false,
               'addAssessment',
             );
-          } catch {
+          } catch (error) {
             // TODO: Replace with proper logging
             set(
               (state) => ({
@@ -430,7 +433,7 @@ export const useAssessmentStore = create<AssessmentState>()(
           try {
             safeValidate(LoadingStateSchema, loading, 'setLoading');
             set({ isLoading: loading }, false, 'setLoading');
-          } catch {
+          } catch (error) {
             // TODO: Replace with proper logging
             set({ isLoading: loading }, false, 'setLoading');
           }
@@ -441,7 +444,7 @@ export const useAssessmentStore = create<AssessmentState>()(
             safeValidate(FrameworksArraySchema, frameworks, 'setFrameworks');
             // Note: frameworks are not part of this store, but adding for test compatibility
             // TODO: Replace with proper logging
-          } catch {
+          } catch (error) {
             // TODO: Replace with proper logging
           }
         },

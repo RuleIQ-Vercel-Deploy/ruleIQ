@@ -33,7 +33,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
             {JSON.stringify(parsed, null, 2)}
           </pre>
         );
-      } catch {
+      } catch (error) {
         // Not valid JSON, render as text
       }
     }

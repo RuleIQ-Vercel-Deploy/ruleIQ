@@ -262,16 +262,16 @@ describe('FreemiumStore', () => {
     it('sanitizes UTM parameters', () => {
       const { result } = renderHook(() => useFreemiumStore());
       const maliciousUtmParams = {
-        utm_source: &apos;<script>alert(&quot;xss")</script>google',
+        utm_source: '<script>alert("xss")</script>google',
         utm_campaign: 'javascript:void(0)',
-        utm_medium: &apos;data:text/html,<script>alert(1)</script>'
+        utm_medium: 'data:text/html,<script>alert(1)</script>'
       };
 
       act(() => {
         result.current.setUtmParams(maliciousUtmParams);
       });
 
-      expect(result.current.utmSource).not.toContain(&apos;<script>');
+      expect(result.current.utmSource).not.toContain('<script>');
       expect(result.current.utmCampaign).not.toContain('javascript:');
       expect(result.current.utmMedium).not.toContain('data:');
     });

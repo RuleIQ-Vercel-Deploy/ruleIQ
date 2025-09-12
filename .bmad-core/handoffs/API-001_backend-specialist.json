@@ -1,0 +1,11 @@
+{
+  "task": {
+    "id": "API-001",
+    "title": "Fix API routing issues",
+    "type": "backend",
+    "assignee": "backend-specialist"
+  },
+  "agent": "backend-specialist",
+  "timestamp": "2025-09-09T00:07:16.990590",
+  "status": "in_progress"
+}

@@ -39,7 +39,10 @@ export function useErrorHandler(options: UseErrorHandlerOptions = {}) {
         processedError = error;
       } else {
         // Create a generic error
-        processedError = new APIError(error.message || 'An unexpected error occurred', 0, _error);
+        const message = error && typeof error === 'object' && 'message' in error 
+          ? (error as any).message 
+          : 'An unexpected error occurred';
+        processedError = new APIError(message, 0, error);
       }
 
       setError(processedError);
@@ -135,7 +138,7 @@ export function useAsyncError() {
       try {
         const result = await asyncFunction();
         return result;
-      } catch {
+      } catch (error) {
         handleError(error);
         return null;
       } finally {
@@ -166,25 +169,35 @@ export function useFormError(context: string = 'form') {
       handleError(error);
 
       // Extract field-specific errors if available
-      if (error.response?.data?.errors) {
-        const { errors } = error.response.data;
-        const fieldErrorMap: Record<string, string> = {};
+      if (error && typeof error === 'object' && 'response' in error) {
+        const errorWithResponse = error as { response?: { data?: { errors?: any } } };
+        if (errorWithResponse.response?.data?.errors) {
+          const { errors } = errorWithResponse.response.data;
+          const fieldErrorMap: Record<string, string> = {};
 
-        Object.entries(errors).forEach(([field, messages]) => {
-          if (Array.isArray(messages)) {
-            fieldErrorMap[field] = messages[0];
-          } else {
-            fieldErrorMap[field] = String(messages);
-          }
-        });
+          Object.entries(errors).forEach(([field, messages]) => {
+            if (Array.isArray(messages)) {
+              fieldErrorMap[field] = messages[0];
+            } else {
+              fieldErrorMap[field] = String(messages);
+            }
+          });
 
-        setFieldErrors(fieldErrorMap);
+          setFieldErrors(fieldErrorMap);
+        } else if (error instanceof EnhancedApiError && error.type === ErrorType.VALIDATION) {
+          // Show general validation error
+          toast.error(error.userMessage);
+        } else {
+          // Show general error
+          const message = 'message' in error ? (error as any).message : 'Form submission failed';
+          toast.error(message);
+        }
       } else if (error instanceof EnhancedApiError && error.type === ErrorType.VALIDATION) {
         // Show general validation error
         toast.error(error.userMessage);
       } else {
         // Show general error
-        toast.error(error.message || 'Form submission failed');
+        toast.error('Form submission failed');
       }
     },
     [handleError],

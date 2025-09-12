@@ -118,7 +118,7 @@ const fileFixes = {
     { pattern: /const \{ assessment_completed, assessment_data/g, replacement: 'const { assessment_completed: _assessment_completed, assessment_data: _assessment_data' },
   ],
   'lib/api/client.ts': [
-    { pattern: /} catch \(refreshError\)/g, replacement: '} catch {}' },
+    { pattern: /} catch \(refreshError\)/g, replacement: '} catch (error) {}' },
   ],
   'lib/api/error-handler.ts': [
     { pattern: /const errorLog =/g, replacement: 'const _errorLog =' },
@@ -134,7 +134,7 @@ const fileFixes = {
   ],
   'lib/stores/business-profile.store.ts': [
     { pattern: /import type \{([^}]*),?\s*APIBusinessProfile[^}]*\}/g, replacement: 'import type {$1}' },
-    { pattern: /} catch \(error\)/g, replacement: '} catch {}' },
+    { pattern: /} catch \(error\)/g, replacement: '} catch (error) {}' },
   ],
   'lib/stores/freemium-store.ts': [
     { pattern: /import type \{([^}]*),?\s*FreemiumActions[^}]*\}/g, replacement: 'import type {$1}' },
@@ -159,7 +159,7 @@ const fileFixes = {
     { pattern: /const isPublicPath =/g, replacement: 'const _isPublicPath =' },
   ],
   'scripts/bundle-analyzer.js': [
-    { pattern: /} catch \(error\)/g, replacement: '} catch {}' },
+    { pattern: /} catch \(error\)/g, replacement: '} catch (error) {}' },
     { pattern: /const violations =/g, replacement: 'const _violations =' },
   ],
   'scripts/fix-typescript-errors.ts': [

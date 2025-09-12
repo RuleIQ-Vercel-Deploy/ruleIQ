@@ -27,7 +27,7 @@ export default function ResetPasswordPage() {
     setIsLoading(true);
 
     try {
-      await authService.resetPassword({ email });
+      await authService.requestPasswordReset(email);
       setIsSubmitted(true);
       toast({
         title: 'Reset link sent!',

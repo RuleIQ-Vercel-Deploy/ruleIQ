@@ -1,0 +1,11 @@
+{
+  "task": {
+    "id": "SEC-002",
+    "title": "Secure RabbitMQ connection",
+    "type": "security",
+    "assignee": "backend-specialist"
+  },
+  "agent": "backend-specialist",
+  "timestamp": "2025-09-09T00:07:15.989121",
+  "status": "in_progress"
+}

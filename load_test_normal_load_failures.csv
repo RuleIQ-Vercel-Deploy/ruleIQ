@@ -1,0 +1,3 @@
+Method,Name,Error,Occurrences
+POST,/api/auth/login,"ConnectionRefusedError(111, 'Connection refused')",50
+POST,/api/auth/register,"ConnectionRefusedError(111, 'Connection refused')",650

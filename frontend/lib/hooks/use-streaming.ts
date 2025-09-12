@@ -121,7 +121,7 @@ export function useStreaming(): [StreamingState, StreamingControls] {
           }));
         },
 
-        onError: () => {
+        onError: (error: string) => {
           stopTimer();
           setState((prev) => ({
             ...prev,
@@ -134,7 +134,7 @@ export function useStreaming(): [StreamingState, StreamingControls] {
 
       try {
         await streamFn(options);
-      } catch {
+      } catch (error) {
         stopTimer();
         setState((prev) => ({
           ...prev,

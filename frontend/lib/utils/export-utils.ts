@@ -14,7 +14,9 @@ export class DataExporter {
     const { filename = 'export', headers } = options;
 
     // Extract headers from data if not provided
-    const columnHeaders = headers || (data.length > 0 ? Object.keys(data[0]) : []);
+    const columnHeaders = headers || (data.length > 0 && typeof data[0] === 'object' && data[0] !== null 
+      ? Object.keys(data[0] as Record<string, any>) 
+      : []);
 
     // Create CSV content
     const csvContent = [
@@ -22,7 +24,7 @@ export class DataExporter {
       ...data.map((row) =>
         columnHeaders
           .map((header) => {
-            const value = row[header];
+            const value = (row as any)[header];
             if (value === null || value === undefined) return '';
             if (typeof value === 'string' && value.includes(',')) {
               return `"${value.replace(/"/g, '""')}"`;
@@ -82,10 +84,12 @@ export class DataExporter {
     doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 25);
 
     // Prepare table data
-    const columnHeaders = headers || (data.length > 0 ? Object.keys(data[0]) : []);
+    const columnHeaders = headers || (data.length > 0 && typeof data[0] === 'object' && data[0] !== null
+      ? Object.keys(data[0] as Record<string, any>)
+      : []);
     const tableData = data.map((row) =>
       columnHeaders.map((header) => {
-        const value = row[header];
+        const value = (row as any)[header];
         return value === null || value === undefined ? '' : String(value);
       }),
     );
@@ -173,11 +177,13 @@ export const transformDataForExport = (
   return data.map((row) => {
     const transformedRow: Record<string, any> = {};
 
-    Object.entries(row).forEach(([key, value]) => {
-      const mappedKey = columnMapping?.[key] || key;
-      const formatter = valueFormatters?.[key];
-      transformedRow[mappedKey] = formatter ? formatter(value) : value;
-    });
+    if (typeof row === 'object' && row !== null) {
+      Object.entries(row as Record<string, any>).forEach(([key, value]) => {
+        const mappedKey = columnMapping?.[key] || key;
+        const formatter = valueFormatters?.[key];
+        transformedRow[mappedKey] = formatter ? formatter(value) : value;
+      });
+    }
 
     return transformedRow;
   });

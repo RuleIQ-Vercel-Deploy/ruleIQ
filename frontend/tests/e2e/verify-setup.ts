@@ -25,7 +25,7 @@ async function verifySetup() {
     const playwrightVersion = require('@playwright/test/package.json').version;
     // TODO: Replace with proper logging
     results.playwright = true;
-  } catch {
+  } catch (error) {
     // TODO: Replace with proper logging
   }
 
@@ -35,7 +35,7 @@ async function verifySetup() {
     await browser.close();
     // TODO: Replace with proper logging
     results.browsers = true;
-  } catch {
+  } catch (error) {
     // TODO: Replace with proper logging
   }
 

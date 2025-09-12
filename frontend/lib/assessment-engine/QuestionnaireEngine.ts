@@ -158,7 +158,7 @@ export class QuestionnaireEngine {
       if (this.config.onProgress) {
         this.config.onProgress(this.getProgress());
       }
-    } catch {
+    } catch (error) {
       if (this.config.onError) {
         this.config.onError(error as Error);
       }
@@ -189,7 +189,7 @@ export class QuestionnaireEngine {
       this.initializeVisibleQuestions();
 
       return true;
-    } catch {
+    } catch (error) {
       if (this.config.onError) {
         this.config.onError(error as Error);
       }
@@ -556,7 +556,7 @@ export class QuestionnaireEngine {
         // Fall back to mock recommendations
         return this.generateMockRecommendations(gaps);
       }
-    } catch {
+    } catch (error) {
       // Log error but don't break the assessment
       // TODO: Replace with proper logging
 
@@ -1022,7 +1022,7 @@ export class QuestionnaireEngine {
         this.currentAIQuestionIndex = 0;
         this.isInAIQuestionMode = true;
       }
-    } catch {
+    } catch (error) {
       // Log error but don't break the assessment
       // TODO: Replace with proper logging
 
@@ -1188,7 +1188,7 @@ export class QuestionnaireEngine {
       }
 
       return result;
-    } catch {
+    } catch (error) {
       // Ensure timeout is cleared on error
       if (timeoutId) {
         clearTimeout(timeoutId);

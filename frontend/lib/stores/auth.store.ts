@@ -11,16 +11,22 @@ export interface AuthTokens {
 interface AuthState {
   // State
   user: User | null;
-  tokens: AuthTokens | null;
+  tokens: { access: string | null; refresh: string | null };
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+  sessionExpiry: string | null;
+  accessToken: string | null;
+  refreshTokenValue: string | null;
+  permissions: string[];
+  role: string | null;
 
   // Actions
-  login: (email: string, password: string) => Promise<void>;
+  login: (params: { email: string; password: string; rememberMe?: boolean }) => Promise<void>;
   register: (email: string, password: string, fullName?: string) => Promise<void>;
-  logout: () => void;
-  refreshToken: () => Promise<void>;
+  logout: () => Promise<void>;
+  refreshTokens: () => Promise<void>;
+  refreshToken: () => Promise<void>; // Alias for test compatibility
   setUser: (user: User) => void;
   setTokens: (tokens: AuthTokens) => void;
   clearError: () => void;
@@ -33,6 +39,10 @@ interface AuthState {
   verifyEmail: (token: string) => Promise<void>;
   updateProfile: (data: Partial<User>) => Promise<User>;
   changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
+  hasPermission: (permission: string) => boolean;
+  hasRole: (role: string) => boolean;
+  hasAnyPermission: (permissions: string[]) => boolean;
+  hasAllPermissions: (permissions: string[]) => boolean;
 }
 
 interface _AuthStateInternal {
@@ -60,13 +70,18 @@ export const useAuthStore = create<AuthState>()(
     (set, get) => ({
       // Initial state
       user: null,
-      tokens: null,
+      tokens: null as any, // Fixed: Should be null initially, not an object
       isAuthenticated: false,
       isLoading: false,
       error: null,
+      sessionExpiry: null,
+      accessToken: null,
+      refreshTokenValue: null,
+      permissions: [],
+      role: null,
 
       // Actions
-      login: async (email: string, password: string) => {
+      login: async ({ email, password, rememberMe = false }) => {
         set({ isLoading: true, error: null });
 
         try {
@@ -99,20 +114,33 @@ export const useAuthStore = create<AuthState>()(
 
           const user: User = await userResponse.json();
 
+          // Extract permissions and role from user if available
+          const permissions = (user as any).permissions || [];
+          const role = (user as any).role || null;
+
           set({
             user,
-            tokens,
+            tokens: { access: tokens.access_token, refresh: tokens.refresh_token },
             isAuthenticated: true,
             isLoading: false,
             error: null,
+            accessToken: tokens.access_token,
+            refreshTokenValue: tokens.refresh_token,
+            permissions,
+            role,
+            sessionExpiry: rememberMe ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() : null,
           });
-        } catch {
+        } catch (error) {
           set({
             user: null,
-            tokens: null,
+            tokens: { access: null, refresh: null },
             isAuthenticated: false,
             isLoading: false,
             error: error instanceof Error ? error.message : 'Login failed',
+            accessToken: null,
+            refreshTokenValue: null,
+            permissions: [],
+            role: null,
           });
           throw error;
         }
@@ -148,54 +176,72 @@ export const useAuthStore = create<AuthState>()(
             throw new Error(errorMessage);
           }
 
-          const { user, tokens } = await registerResponse.json();
+          const { user, tokens: responseTokens } = await registerResponse.json();
 
           set({
             user,
-            tokens,
+            tokens: { 
+              access: responseTokens?.access_token || responseTokens?.access || null, 
+              refresh: responseTokens?.refresh_token || responseTokens?.refresh || null 
+            },
             isAuthenticated: true,
             isLoading: false,
             error: null,
+            accessToken: responseTokens?.access_token || responseTokens?.access || null,
+            refreshTokenValue: responseTokens?.refresh_token || responseTokens?.refresh || null,
+            permissions: (user as any).permissions || [],
+            role: (user as any).role || null,
           });
-        } catch {
+        } catch (error) {
           set({
             user: null,
-            tokens: null,
+            tokens: { access: null, refresh: null },
             isAuthenticated: false,
             isLoading: false,
             error: error instanceof Error ? error.message : 'Registration failed',
+            accessToken: null,
+            refreshTokenValue: null,
+            permissions: [],
+            role: null,
           });
           throw error;
         }
       },
 
-      logout: () => {
+      logout: async () => {
         const { tokens } = get();
 
         // Call logout endpoint if we have a token
-        if (tokens?.access_token) {
-          fetch(`${API_BASE_URL}/api/v1/auth/logout`, {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${tokens.access_token}`,
-            },
-          }).catch(() => {
+        if (tokens?.access) {
+          try {
+            await fetch(`${API_BASE_URL}/api/v1/auth/logout`, {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${tokens.access}`,
+              },
+            });
+          } catch {
             // Ignore errors on logout
-          });
+          }
         }
 
         set({
           user: null,
-          tokens: null,
+          tokens: { access: null, refresh: null },
           isAuthenticated: false,
           error: null,
+          accessToken: null,
+          refreshTokenValue: null,
+          permissions: [],
+          role: null,
+          sessionExpiry: null,
         });
       },
 
-      refreshToken: async () => {
+      refreshTokens: async () => {
         const { tokens } = get();
 
-        if (!tokens?.refresh_token) {
+        if (!tokens?.refresh) {
           throw new Error('No refresh token available');
         }
 
@@ -205,7 +251,7 @@ export const useAuthStore = create<AuthState>()(
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ refresh_token: tokens.refresh_token }),
+            body: JSON.stringify({ refresh_token: tokens.refresh }),
           });
 
           if (!response.ok) {
@@ -215,12 +261,14 @@ export const useAuthStore = create<AuthState>()(
           const newTokens: AuthTokens = await response.json();
 
           set({
-            tokens: newTokens,
+            tokens: { access: newTokens.access_token, refresh: newTokens.refresh_token },
+            accessToken: newTokens.access_token,
+            refreshTokenValue: newTokens.refresh_token,
             error: null,
           });
-        } catch {
+        } catch (error) {
           // If refresh fails, logout the user
-          get().logout();
+          await get().logout();
           throw error;
         }
       },
@@ -230,7 +278,12 @@ export const useAuthStore = create<AuthState>()(
       },
 
       setTokens: (tokens: AuthTokens) => {
-        set({ tokens, isAuthenticated: true });
+        set({ 
+          tokens: { access: tokens.access_token, refresh: tokens.refresh_token },
+          accessToken: tokens.access_token,
+          refreshTokenValue: tokens.refresh_token,
+          isAuthenticated: true 
+        });
       },
 
       clearError: () => {
@@ -240,7 +293,7 @@ export const useAuthStore = create<AuthState>()(
       checkAuthStatus: async () => {
         const { tokens } = get();
 
-        if (!tokens?.access_token) {
+        if (!tokens?.access) {
           set({ isAuthenticated: false, user: null });
           return;
         }
@@ -248,19 +301,19 @@ export const useAuthStore = create<AuthState>()(
         try {
           const response = await fetch(`${API_BASE_URL}/api/v1/auth/me`, {
             headers: {
-              Authorization: `Bearer ${tokens.access_token}`,
+              Authorization: `Bearer ${tokens.access}`,
             },
           });
 
           if (!response.ok) {
             // Try to refresh token
-            await get().refreshToken();
+            await get().refreshTokens();
             return;
           }
 
           const user: User = await response.json();
           set({ user, isAuthenticated: true });
-        } catch {
+        } catch (error) {
           // If all fails, logout
           get().logout();
         }
@@ -275,7 +328,7 @@ export const useAuthStore = create<AuthState>()(
       },
 
       getToken: () => {
-        return get().tokens?.access_token || null;
+        return get().tokens?.access || null;
       },
 
       requestPasswordReset: async (email: string) => {
@@ -292,7 +345,7 @@ export const useAuthStore = create<AuthState>()(
             const errorData = await response.json();
             throw new Error(errorData.detail || 'Password reset request failed');
           }
-        } catch {
+        } catch (error) {
           // TODO: Replace with proper logging
 
           // // TODO: Replace with proper logging
@@ -314,7 +367,7 @@ export const useAuthStore = create<AuthState>()(
             const errorData = await response.json();
             throw new Error(errorData.detail || 'Password reset failed');
           }
-        } catch {
+        } catch (error) {
           throw error;
         }
       },
@@ -333,7 +386,7 @@ export const useAuthStore = create<AuthState>()(
             const errorData = await response.json();
             throw new Error(errorData.detail || 'Email verification failed');
           }
-        } catch {
+        } catch (error) {
           throw error;
         }
       },
@@ -341,7 +394,7 @@ export const useAuthStore = create<AuthState>()(
       updateProfile: async (data: Partial<User>) => {
         const { tokens } = get();
 
-        if (!tokens?.access_token) {
+        if (!tokens?.access) {
           throw new Error('Not authenticated');
         }
 
@@ -350,7 +403,7 @@ export const useAuthStore = create<AuthState>()(
             method: 'PATCH',
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${tokens.access_token}`,
+              Authorization: `Bearer ${tokens.access}`,
             },
             body: JSON.stringify(data),
           });
@@ -376,7 +429,7 @@ export const useAuthStore = create<AuthState>()(
           set({ user: updatedUser });
 
           return updatedUser;
-        } catch {
+        } catch (error) {
           throw error;
         }
       },
@@ -384,7 +437,7 @@ export const useAuthStore = create<AuthState>()(
       changePassword: async (currentPassword: string, newPassword: string) => {
         const { tokens } = get();
 
-        if (!tokens?.access_token) {
+        if (!tokens?.access) {
           throw new Error('Not authenticated');
         }
 
@@ -393,7 +446,7 @@ export const useAuthStore = create<AuthState>()(
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${tokens.access_token}`,
+              Authorization: `Bearer ${tokens.access}`,
             },
             body: JSON.stringify({
               current_password: currentPassword,
@@ -405,9 +458,36 @@ export const useAuthStore = create<AuthState>()(
             const errorData = await response.json();
             throw new Error(errorData.detail || 'Password change failed');
           }
-        } catch {
+        } catch (error) {
           throw error;
         }
+      },
+
+
+      // Permission and role checking methods
+      hasPermission: (permission: string) => {
+        const { permissions } = get();
+        return permissions.includes(permission);
+      },
+
+      hasRole: (role: string) => {
+        const state = get();
+        return state.role === role;
+      },
+
+      hasAnyPermission: (permissions: string[]) => {
+        const { permissions: userPermissions } = get();
+        return permissions.some(p => userPermissions.includes(p));
+      },
+
+      hasAllPermissions: (permissions: string[]) => {
+        const { permissions: userPermissions } = get();
+        return permissions.every(p => userPermissions.includes(p));
+      },
+
+      // Alias for refreshTokens to match test expectations
+      refreshToken: async () => {
+        return get().refreshTokens();
       },
     }),
     {

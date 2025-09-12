@@ -1,0 +1,12 @@
+{
+    "task": "PERF-004",
+    "status": "completed",
+    "config": {
+      "redis_host": "localhost",
+      "redis_port": 6379,
+      "ttl": {
+        "sessions": 3600,
+        "api_responses": 300
+      }
+    }
+  }

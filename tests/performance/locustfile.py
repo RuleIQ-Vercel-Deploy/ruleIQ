@@ -1,15 +1,5 @@
 """
-
-# Constants
-HTTP_CREATED = 201
-HTTP_OK = 200
-
-Advanced Performance Tests using Locust
-import logging
-logger = logging.getLogger(__name__)
-
-
-Comprehensive performance testing scenarios for ComplianceGPT backend
+Comprehensive performance testing scenarios for RuleIQ backend
 including user workflows, AI operations, and system stress testing.
 """
 import json

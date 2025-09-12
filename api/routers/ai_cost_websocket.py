@@ -11,7 +11,13 @@ import json
 import uuid
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Query
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Query, Depends, HTTPException, status
+from api.dependencies.auth import verify_websocket_token
+from api.dependencies.websocket_auth import (
+    verify_websocket_token_from_headers,
+    verify_websocket_token_with_fallback
+)
+from middleware.websocket_security import websocket_security
 from fastapi.websockets import WebSocketState
 from pydantic import BaseModel
 from services.ai.cost_management import AICostManager, CostTrackingService
@@ -190,16 +196,48 @@ connection_manager = ConnectionManager()
 
 
 @router.websocket('/realtime-dashboard')
-async def realtime_cost_dashboard(websocket: WebSocket, user_id: str=Query(
-    ..., description='User ID for connection'), dashboard_type: str=Query(
-    'general', description='Type of dashboard (general, admin, service)')
-    ) ->None:
+async def realtime_cost_dashboard(
+    websocket: WebSocket,
+    token: Optional[str] = Query(None, description='JWT token for authentication (deprecated - use headers)'),
+    dashboard_type: str = Query('general', description='Type of dashboard (general, admin, service)')
+) -> None:
     """
     WebSocket endpoint for real-time cost monitoring dashboard.
 
     Provides live updates of cost metrics, budget status, and alerts.
+    Requires JWT authentication via headers (preferred) or query parameter (deprecated).
+    
+    Authentication Headers:
+    - Authorization: Bearer <token>
+    - X-Auth-Token: <token>
+    - Sec-WebSocket-Protocol: token.<token>
     """
-    connection_id = None
+    connection_id = str(uuid.uuid4())
+    
+    # Validate connection security
+    if not await websocket_security.validate_connection(websocket, connection_id):
+        return
+    
+    # Authenticate user - prefer headers, fallback to query for compatibility
+    try:
+        # Try header authentication first
+        user = await verify_websocket_token_from_headers(websocket)
+        
+        # Fallback to query parameter if header auth fails
+        if not user and token:
+            logger.warning("Using deprecated query parameter authentication for WebSocket")
+            user = await verify_websocket_token(websocket, token)
+        
+        if not user:
+            logger.warning(f"WebSocket authentication failed")
+            await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+            return
+            
+        user_id = str(user.id)
+    except Exception as e:
+        logger.warning(f"WebSocket authentication failed: {e}")
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+        return
     try:
         connection_id = await connection_manager.connect(websocket=
             websocket, user_id=user_id, connection_type=
@@ -228,15 +266,28 @@ async def realtime_cost_dashboard(websocket: WebSocket, user_id: str=Query(
 
 
 @router.websocket('/budget-alerts')
-async def budget_alerts_websocket(websocket: WebSocket, user_id: str=Query(
-    ..., description='User ID for connection')) ->None:
+async def budget_alerts_websocket(websocket: WebSocket) ->None:
     """
     WebSocket endpoint for real-time budget alerts.
 
     Sends immediate notifications when budget thresholds are exceeded.
+    Requires JWT authentication via headers.
+    
+    Authentication Headers:
+    - Authorization: Bearer <token>
+    - X-Auth-Token: <token>
+    - Sec-WebSocket-Protocol: token.<token>
     """
     connection_id = None
+    
+    # Authenticate user via headers
     try:
+        user = await verify_websocket_token_from_headers(websocket)
+        if not user:
+            logger.warning("Budget alerts WebSocket authentication failed")
+            return
+        
+        user_id = str(user.id)
         connection_id = await connection_manager.connect(websocket=
             websocket, user_id=user_id, connection_type='budget_alerts')
         await connection_manager.subscribe_to_events(connection_id, [
@@ -269,15 +320,28 @@ async def budget_alerts_websocket(websocket: WebSocket, user_id: str=Query(
 
 
 @router.websocket('/service-monitoring/{service_name}')
-async def service_cost_monitoring(websocket: WebSocket, service_name: str,
-    user_id: str=Query(..., description='User ID for connection')) ->None:
+async def service_cost_monitoring(websocket: WebSocket, service_name: str) ->None:
     """
     WebSocket endpoint for monitoring specific service costs.
 
     Provides real-time cost updates for a specific AI service.
+    Requires JWT authentication via headers.
+    
+    Authentication Headers:
+    - Authorization: Bearer <token>
+    - X-Auth-Token: <token>
+    - Sec-WebSocket-Protocol: token.<token>
     """
     connection_id = None
+    
+    # Authenticate user via headers
     try:
+        user = await verify_websocket_token_from_headers(websocket)
+        if not user:
+            logger.warning(f"Service monitoring WebSocket authentication failed for {service_name}")
+            return
+        
+        user_id = str(user.id)
         connection_id = await connection_manager.connect(websocket=
             websocket, user_id=user_id, connection_type=
             f'service_{service_name}')

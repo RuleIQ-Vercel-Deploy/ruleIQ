@@ -139,9 +139,9 @@ export function DataTable({ className, assessments }: DataTableProps) {
 
     // Transform recent activities into assessment format
     return assessments
-      .filter((activity) => activity.type === 'assessment')
+      .filter((activity: any) => activity.type === 'assessment')
       .slice(0, 10)
-      .map((activity, index) => ({
+      .map((activity: any, index) => ({
         id: activity.id || index + 1,
         assessment: activity.description || activity.action || 'Assessment',
         status: getStatusFromActivity(activity),

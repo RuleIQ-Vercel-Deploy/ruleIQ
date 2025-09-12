@@ -36,7 +36,7 @@ describe('Duplicate Key Detection Tests', () => {
             <HomePage />
           </TestWrapper>,
         );
-      } catch {
+      } catch (error) {
         // TODO: Replace with proper logging
         throw error;
       } finally {
@@ -156,7 +156,7 @@ describe('Component Key Audit', () => {
           <Component />
         </TestWrapper>,
       );
-    } catch {
+    } catch (error) {
       if (error instanceof Error && error.message.includes('key')) {
         warnings.push(error.message);
       }

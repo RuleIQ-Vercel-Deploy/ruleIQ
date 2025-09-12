@@ -1,0 +1,114 @@
+# RuleIQ Prometheus Configuration
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'ruleiq-monitor'
+    environment: 'production'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+# Load rules once and periodically evaluate them
+rule_files:
+  - "alerts.yml"
+
+# Scrape configurations
+scrape_configs:
+  # RuleIQ Application metrics
+  - job_name: 'ruleiq-app'
+    static_configs:
+      - targets: ['host.docker.internal:8000']
+        labels:
+          service: 'ruleiq-api'
+          environment: 'production'
+    metrics_path: '/metrics'
+    scrape_interval: 10s
+
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+
+  # Node Exporter - System metrics
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node-exporter:9100']
+        labels:
+          service: 'node-exporter'
+
+  # cAdvisor - Container metrics
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+        labels:
+          service: 'cadvisor'
+
+  # PostgreSQL Exporter
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+        labels:
+          service: 'postgresql'
+          database: 'ruleiq'
+
+  # Redis Exporter
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+        labels:
+          service: 'redis'
+          cache: 'main'
+
+  # Blackbox Exporter - Endpoint monitoring
+  - job_name: 'blackbox-http'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - http://host.docker.internal:8000/health
+          - http://host.docker.internal:8000/api/v1/auth/health
+        labels:
+          probe_type: 'http'
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+  # FastAPI metrics
+  - job_name: 'fastapi'
+    static_configs:
+      - targets: ['host.docker.internal:8000']
+        labels:
+          service: 'fastapi'
+          app: 'ruleiq'
+    metrics_path: '/metrics'
+
+  # Feature Flag metrics
+  - job_name: 'feature-flags'
+    static_configs:
+      - targets: ['host.docker.internal:8000']
+        labels:
+          service: 'feature-flags'
+    metrics_path: '/api/v1/feature-flags/metrics'
+    scrape_interval: 30s
+
+  # AI Service metrics
+  - job_name: 'ai-service'
+    static_configs:
+      - targets: ['host.docker.internal:8000']
+        labels:
+          service: 'ai-service'
+    metrics_path: '/api/v1/ai/metrics'
+    scrape_interval: 30s

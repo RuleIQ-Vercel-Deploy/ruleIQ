@@ -90,7 +90,7 @@ export default function NewPolicyPage() {
 
       // Redirect to the generated policy
       router.push(`/policies/${generatedPolicy.id}`);
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging

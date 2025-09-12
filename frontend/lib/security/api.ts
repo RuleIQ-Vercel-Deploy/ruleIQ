@@ -88,7 +88,7 @@ export function getClientIp(request: NextRequest): string {
     return realIp;
   }
 
-  return request.ip || 'unknown';
+  return 'unknown';
 }
 
 /**
@@ -114,7 +114,7 @@ export async function validateRequestBody<T>(
     const validatedData = schema.parse(sanitizedBody);
 
     return validatedData;
-  } catch {
+  } catch (error) {
     if (error instanceof ZodError) {
       throw new ApiSecurityError('Validation failed', 'VALIDATION_ERROR', 400, error.errors);
     }
@@ -189,7 +189,7 @@ export function createSecureApiRoute<T = any>(
 
       // Call the actual handler
       return await handler(request, context);
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging

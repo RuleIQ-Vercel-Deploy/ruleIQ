@@ -3,6 +3,14 @@ import { persist } from 'zustand/middleware';
 import type {
   FreemiumStore,
   FreemiumState,
+  AssessmentProgress,
+  LeadCaptureRequest,
+  AssessmentStartRequest,
+  AssessmentAnswerRequest,
+  ResultsGenerationRequest,
+  FreemiumSession,
+  AssessmentQuestion,
+  AssessmentResponse,
   } from '@/types/freemium';
 
 // Add test compatibility types
@@ -51,7 +59,7 @@ export interface FreemiumStoreComputed {
 // INITIAL STATE
 // ============================================================================
 
-const initialState: FreemiumState = {
+const initialState: any = {
   // Lead information
   leadId: null,
   email: '',
@@ -107,12 +115,6 @@ const initialState: FreemiumState = {
   utmMedium: null,
   utmTerm: null,
   utmContent: null,
-
-  // Computed properties (will be overridden by getters)
-  isSessionExpired: false,
-  canStartAssessment: false,
-  hasValidSession: false,
-  responseCount: 0,
 };
 
 // ============================================================================
@@ -125,7 +127,7 @@ const apiCall = async (endpoint: string, data?: any, method: string = 'POST') =>
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
   const url = `${baseUrl}/api/v1/freemium${endpoint}`;
 
-  const _response = await fetch(url, {
+  const response = await fetch(url, {
     method,
     headers: {
       'Content-Type': 'application/json',
@@ -161,10 +163,10 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
           const _response = await apiCall('/leads', leadData);
 
           set({
-            leadId: response.lead_id,
+            leadId: _response.lead_id,
             email: leadData.email,
-            leadScore: response.lead_score || 0,
-            leadStatus: response.lead_status || 'new',
+            leadScore: _response.lead_score || 0,
+            leadStatus: _response.lead_status || 'new',
             hasMarketingConsent: leadData.marketing_consent || false,
             hasNewsletterConsent: leadData.newsletter_subscribed !== false,
             consentDate: leadData.marketing_consent ? new Date().toISOString() : null,
@@ -177,7 +179,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
             utm_source: leadData.utm_source,
             utm_campaign: leadData.utm_campaign,
           });
-        } catch {
+        } catch (error) {
           set({
             isLoading: false,
             error: error instanceof Error ? error.message : 'Failed to capture lead',
@@ -205,35 +207,35 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
           const _response = await apiCall('/assessment/start', startData);
 
           const session: FreemiumSession = {
-            session_id: response.session_id,
-            session_token: response.session_token,
+            session_id: _response.session_id,
+            session_token: _response.session_token,
             lead_id: startData.lead_id,
             status: 'started',
             created_at: new Date().toISOString(),
-            expires_at: response.expires_at,
+            expires_at: _response.expires_at,
           };
 
           const question: AssessmentQuestion = {
-            question_id: response.question_id,
-            question_text: response.question_text,
-            question_type: response.question_type,
-            question_context: response.question_context,
-            answer_options: response.answer_options,
+            question_id: _response.question_id,
+            question_text: _response.question_text,
+            question_type: _response.question_type,
+            question_context: _response.question_context,
+            answer_options: _response.answer_options,
             is_required: true,
           };
 
           const progress: AssessmentProgress = {
-            current_question: response.progress.current_question,
-            total_questions_estimate: response.progress.total_questions_estimate,
-            progress_percentage: response.progress.progress_percentage,
+            current_question: _response.progress.current_question,
+            total_questions_estimate: _response.progress.total_questions_estimate,
+            progress_percentage: _response.progress.progress_percentage,
             questions_answered: 0,
             time_elapsed_seconds: 0,
           };
 
           set({
             session,
-            sessionToken: response.session_token,
-            sessionExpiry: response.expires_at,
+            sessionToken: _response.session_token,
+            sessionExpiry: _response.expires_at,
             currentQuestion: question,
             progress,
             isAssessmentStarted: true,
@@ -242,10 +244,10 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
           });
 
           get().trackEvent('assessment_started', {
-            session_id: response.session_id,
+            session_id: _response.session_id,
             business_type: startData.business_type,
           });
-        } catch {
+        } catch (error) {
           set({
             isLoading: false,
             error: error instanceof Error ? error.message : 'Failed to start assessment',
@@ -266,7 +268,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
             session_id: sessionData.session_id,
             session_token: sessionData.session_token,
             lead_id: sessionData.lead_id,
-            status: sessionData.status,
+            status: sessionData.status as 'started' | 'in_progress' | 'completed' | 'abandoned',
             created_at: sessionData.created_at,
             expires_at: sessionData.expires_at,
           };
@@ -289,7 +291,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
             isAssessmentComplete: sessionData.status === 'completed',
             isLoading: false,
           });
-        } catch {
+        } catch (error) {
           set({
             isLoading: false,
             error: error instanceof Error ? error.message : 'Failed to load session',
@@ -327,7 +329,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
           const _response = await freemiumService.submitAnswer(answerData.session_token, {
             question_id: answerData.question_id,
             answer: answerData.answer.toString(),
-            answer_confidence: answerData.confidence_level,
+            answer_confidence: answerData.confidence_level as 'high' | 'medium' | 'low' | undefined,
             time_spent_seconds: answerData.time_spent_seconds,
           });
 
@@ -371,11 +373,8 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
               questions_answered: updatedResponses.length,
               completion_percentage: sessionProgress.progress_percentage,
             });
-            return { is_complete: true };
           }
-
-          return { is_complete: false };
-        } catch {
+        } catch (error) {
           set({
             isLoading: false,
             error: error instanceof Error ? error.message : 'Failed to submit answer',
@@ -420,15 +419,15 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
           const _response = await apiCall('/assessment/results', requestData);
 
           set({
-            results: response,
+            results: _response,
             isLoading: false,
           });
 
           get().trackEvent('results_generated', {
-            compliance_score: response.compliance_score,
-            risk_score: response.risk_score,
+            compliance_score: _response.compliance_score,
+            risk_score: _response.risk_score,
           });
-        } catch {
+        } catch (error) {
           set({
             isLoading: false,
             error: error instanceof Error ? error.message : 'Failed to generate results',
@@ -512,7 +511,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
       recordBehavioralEvent: async (eventData: any) => {
         try {
           await apiCall('/events', eventData);
-        } catch {
+        } catch (error) {
           // TODO: Replace with proper logging
         }
       },
@@ -569,7 +568,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
         // Persist to localStorage
         try {
           localStorage.setItem('freemium-email', trimmed);
-        } catch {
+        } catch (error) {
           // TODO: Replace with proper logging
         }
       },
@@ -579,7 +578,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
           set({ token: null, sessionToken: null, sessionExpiry: null });
           try {
             sessionStorage.removeItem('freemium-token');
-          } catch {
+          } catch (error) {
             // TODO: Replace with proper logging
           }
           return;
@@ -601,7 +600,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
 
           try {
             sessionStorage.setItem('freemium-token', token);
-          } catch {
+          } catch (error) {
             // TODO: Replace with proper logging
           }
           return;
@@ -626,7 +625,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
 
           // Persist to sessionStorage
           sessionStorage.setItem('freemium-token', token);
-        } catch {
+        } catch (error) {
           // If JWT parsing fails, still set the token
           set({ token, sessionToken: token });
           sessionStorage.setItem('freemium-token', token);
@@ -651,7 +650,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
         } else {
           // Object format for test compatibility
           const updatedResponses = {
-            ...currentResponses,
+            ...(currentResponses as Record<string, any>),
             [questionId]: answer,
           };
           set({ responses: updatedResponses as any });
@@ -659,7 +658,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
           // Persist to sessionStorage
           try {
             sessionStorage.setItem('freemium-responses', JSON.stringify(updatedResponses));
-          } catch {
+          } catch (error) {
             // TODO: Replace with proper logging
           }
         }
@@ -691,26 +690,26 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
               terms: state.consentTerms || state.hasNewsletterConsent,
             }),
           );
-        } catch {
+        } catch (error) {
           // TODO: Replace with proper logging
         }
       },
 
       setProgress: (progress: number) => {
         // Validate and clamp progress
-        const clampedProgress = Math.max(0, Math.min(100, _progress));
+        const clampedProgress = Math.max(0, Math.min(100, progress));
 
         // Always set progress as number for test compatibility
-        set({ progress: clampedProgress });
+        set({ progress: clampedProgress as any });
 
-        // Also update the progressObj for internal consistency
-        const currentProgressObj = get().progressObj;
-        if (currentProgressObj && typeof currentProgressObj === 'object') {
+        // Also update the progress object for internal consistency  
+        const currentProgress = get().progress;
+        if (currentProgress && typeof currentProgress === 'object') {
           set({
-            progressObj: {
-              ...currentProgressObj,
+            progress: {
+              ...currentProgress,
               progress_percentage: clampedProgress,
-            },
+            } as AssessmentProgress,
           });
         }
 
@@ -735,14 +734,14 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
         set({
           assessmentCompleted: true,
           isAssessmentComplete: true,
-          progress: 100, // Set as number for test compatibility
+          progress: 100 as any, // Set as number for test compatibility
         });
 
-        // Also update progressObj if it exists
-        if (state.progressObj) {
+        // Also update progress if it exists and is an object
+        if (state.progress && typeof state.progress === 'object') {
           set({
-            progressObj: {
-              ...state.progressObj,
+            progress: {
+              ...(state.progress as AssessmentProgress),
               progress_percentage: 100,
             },
           });
@@ -772,7 +771,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
         // Persist UTM parameters
         try {
           localStorage.setItem('freemium-utm', JSON.stringify(params));
-        } catch {
+        } catch (error) {
           // TODO: Replace with proper logging
         }
       },
@@ -813,7 +812,7 @@ export const useFreemiumStore = create<FreemiumStore & FreemiumStoreComputed>()(
           localStorage.removeItem('freemium-consent');
           sessionStorage.removeItem('freemium-token');
           sessionStorage.removeItem('freemium-responses');
-        } catch {
+        } catch (error) {
           // TODO: Replace with proper logging
         }
       },
@@ -936,10 +935,10 @@ export const createFreemiumStore = () => {
             set({ isLoading: true, error: null });
             const _response = await apiCall('/leads', leadData);
             set({
-              leadId: response.lead_id,
+              leadId: _response.lead_id,
               email: leadData.email,
-              leadScore: response.lead_score || 0,
-              leadStatus: response.lead_status || 'new',
+              leadScore: _response.lead_score || 0,
+              leadStatus: _response.lead_status || 'new',
               hasMarketingConsent: leadData.marketing_consent || false,
               hasNewsletterConsent: leadData.newsletter_subscribed !== false,
               consentDate: leadData.marketing_consent ? new Date().toISOString() : null,
@@ -950,7 +949,7 @@ export const createFreemiumStore = () => {
               utm_source: leadData.utm_source,
               utm_campaign: leadData.utm_campaign,
             });
-          } catch {
+          } catch (error) {
             set({
               isLoading: false,
               error: error instanceof Error ? error.message : 'Failed to capture lead',
@@ -972,7 +971,7 @@ export const createFreemiumStore = () => {
           set({ email: trimmed });
           try {
             localStorage.setItem('freemium-email', trimmed);
-          } catch {
+          } catch (error) {
             // TODO: Replace with proper logging
           }
         },
@@ -982,7 +981,7 @@ export const createFreemiumStore = () => {
             set({ token: null, sessionToken: null, sessionExpiry: null });
             try {
               sessionStorage.removeItem('freemium-token');
-            } catch {
+            } catch (error) {
               // TODO: Replace with proper logging
             }
             return;
@@ -1004,7 +1003,7 @@ export const createFreemiumStore = () => {
 
             try {
               sessionStorage.setItem('freemium-token', token);
-            } catch {
+            } catch (error) {
               // TODO: Replace with proper logging
             }
             return;
@@ -1024,7 +1023,7 @@ export const createFreemiumStore = () => {
               sessionExpiry: expiry ? new Date(expiry).toISOString() : null,
             });
             sessionStorage.setItem('freemium-token', token);
-          } catch {
+          } catch (error) {
             set({ token, sessionToken: token });
             sessionStorage.setItem('freemium-token', token);
           }
@@ -1045,7 +1044,7 @@ export const createFreemiumStore = () => {
             set({ responses: updatedResponses });
           } else {
             const updatedResponses = {
-              ...currentResponses,
+              ...(typeof currentResponses === 'object' && !Array.isArray(currentResponses) ? currentResponses : {}),
               [questionId]: answer,
             };
             set({ responses: updatedResponses as any });
@@ -1068,16 +1067,16 @@ export const createFreemiumStore = () => {
         },
 
         setProgress: (progress: number) => {
-          const clampedProgress = Math.max(0, Math.min(100, _progress));
+          const clampedProgress = Math.max(0, Math.min(100, progress));
           // Always set progress as number for test compatibility
-          set({ progress: clampedProgress });
+          set({ progress: clampedProgress as any });
 
-          // Also update progressObj if it exists
-          const currentProgressObj = get().progressObj;
-          if (currentProgressObj && typeof currentProgressObj === 'object') {
+          // Also update progress if it exists and is an object
+          const currentProgress = get().progress;
+          if (currentProgress && typeof currentProgress === 'object') {
             set({
-              progressObj: {
-                ...currentProgressObj,
+              progress: {
+                ...(currentProgress as AssessmentProgress),
                 progress_percentage: clampedProgress,
               },
             });
@@ -1101,14 +1100,14 @@ export const createFreemiumStore = () => {
           set({
             assessmentCompleted: true,
             isAssessmentComplete: true,
-            progress: 100, // Set as number for test compatibility
+            progress: 100 as any, // Set as number for test compatibility
           });
 
-          // Also update progressObj if it exists
-          if (state.progressObj) {
+          // Also update progress if it exists and is an object
+          if (state.progress && typeof state.progress === 'object') {
             set({
-              progressObj: {
-                ...state.progressObj,
+              progress: {
+                ...(state.progress as AssessmentProgress),
                 progress_percentage: 100,
               },
             });

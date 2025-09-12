@@ -40,7 +40,8 @@ export const createUltimateApiClient = () => ({
     // TODO: Replace with proper logging
     // Handle login
     if (url.includes('/auth/login')) {
-      if (data.email === 'invalid@example.com') {
+      const loginData = data as { email: string; password: string };
+      if (loginData.email === 'invalid@example.com') {
         return createErrorResponse(401, 'Invalid credentials');
       }
       return mockApiResponses.login;
@@ -48,7 +49,8 @@ export const createUltimateApiClient = () => ({
 
     // Handle register
     if (url.includes('/auth/register')) {
-      if (data.password && data.password.length < 8) {
+      const registerData = data as { email: string; password: string; name: string };
+      if (registerData.password && registerData.password.length < 8) {
         return createErrorResponse(422, 'Password must be at least 8 characters');
       }
       return {
@@ -59,8 +61,8 @@ export const createUltimateApiClient = () => ({
           },
           user: {
             id: 'user-456',
-            email: data.email,
-            name: data.name,
+            email: registerData.email,
+            name: registerData.name,
             is_active: true,
           },
         },
@@ -69,23 +71,25 @@ export const createUltimateApiClient = () => ({
 
     // Handle assessments
     if (url.includes('/assessments')) {
+      const assessmentData = data as { name?: string; framework_id?: string; business_profile_id?: string };
       return {
         data: {
           id: 'assess-new',
-          name: data.name || 'New Assessment',
+          name: assessmentData.name || 'New Assessment',
           status: 'draft',
-          framework_id: data.framework_id || 'gdpr',
-          business_profile_id: data.business_profile_id || 'profile-123',
+          framework_id: assessmentData.framework_id || 'gdpr',
+          business_profile_id: assessmentData.business_profile_id || 'profile-123',
         },
       };
     }
 
     // Handle evidence
     if (url.includes('/evidence')) {
+      const evidenceData = data as { title?: string };
       return {
         data: {
           id: 'evidence-new',
-          title: data.title || 'New Evidence',
+          title: evidenceData.title || 'New Evidence',
           status: 'pending',
           type: 'document',
         },
@@ -94,13 +98,14 @@ export const createUltimateApiClient = () => ({
 
     // Handle business profiles
     if (url.includes('/business-profiles')) {
+      const profileData = data as { company_name?: string; industry?: string; employee_count?: string; handles_personal_data?: boolean };
       return {
         data: {
           id: 'profile-new',
-          company_name: data.company_name || 'New Company',
-          industry: data.industry || 'Technology',
-          employee_count: data.employee_count || '1-10',
-          handles_personal_data: data.handles_personal_data || true,
+          company_name: profileData.company_name || 'New Company',
+          industry: profileData.industry || 'Technology',
+          employee_count: profileData.employee_count || '1-10',
+          handles_personal_data: profileData.handles_personal_data || true,
         },
       };
     }
@@ -115,23 +120,24 @@ export const createUltimateApiClient = () => ({
       return mockApiResponses.assessment('assess-123');
     }
 
-    return { data: { success: true, ...data } };
+    return { data: { success: true, ...(data as object) } };
   }),
 
   patch: vi.fn().mockImplementation(async (url: string, data: unknown, options = {}) => {
     // TODO: Replace with proper logging
     // Handle evidence updates
     if (url.includes('/evidence/')) {
+      const evidenceUpdateData = data as { status?: string; [key: string]: any };
       return {
         data: {
           id: url.split('/evidence/')[1],
-          status: data.status || 'updated',
-          ...data,
+          status: evidenceUpdateData.status || 'updated',
+          ...evidenceUpdateData,
         },
       };
     }
 
-    return { data: { success: true, ...data } };
+    return { data: { success: true, ...(data as object) } };
   }),
 
   delete: vi.fn().mockImplementation(async (url: string, options = {}) => {

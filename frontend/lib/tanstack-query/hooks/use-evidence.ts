@@ -10,12 +10,12 @@ import {
   type PaginatedResponse,
 } from './base';
 
+import type { EvidenceItem } from '@/types/api';
 import type {
-  EvidenceItem,
   CreateEvidenceRequest,
   UpdateEvidenceRequest,
-  BulkUpdateRequest,
-} from '@/types/api';
+  BulkUpdateEvidenceRequest as BulkUpdateRequest,
+} from '@/lib/api/evidence.service';
 
 // Query keys
 const EVIDENCE_KEY = 'evidence';
@@ -49,7 +49,17 @@ export function useEvidence(
 ) {
   return useQuery({
     queryKey: evidenceKeys.list(params),
-    queryFn: () => evidenceService.getEvidence(params),
+    queryFn: async () => {
+      const response = await evidenceService.getEvidence(params);
+      // Map to PaginatedResponse format
+      return {
+        items: response.items,
+        total: response.total,
+        page: params?.page || 1,
+        page_size: params?.page_size || 20,
+        total_pages: Math.ceil(response.total / (params?.page_size || 20)),
+      } as PaginatedResponse<EvidenceItem>;
+    },
     ...options,
   });
 }
@@ -58,30 +68,30 @@ export function useEvidence(
 export function useEvidenceItem(id: string, options?: BaseQueryOptions<EvidenceItem>) {
   return useQuery({
     queryKey: evidenceKeys.detail(id),
-    queryFn: () => evidenceService.getEvidenceById(id),
+    queryFn: () => evidenceService.getEvidenceItem(id),
     enabled: !!id,
     ...options,
   });
 }
 
-// Hook to fetch evidence statistics
-export function useEvidenceStats(options?: BaseQueryOptions<any>) {
-  return useQuery({
-    queryKey: evidenceKeys.stats(),
-    queryFn: () => evidenceService.getEvidenceStats(),
-    ...options,
-  });
-}
+// Hook to fetch evidence statistics - COMMENTED OUT: getEvidenceStats doesn't exist
+// export function useEvidenceStats(options?: BaseQueryOptions<any>) {
+//   return useQuery({
+//     queryKey: evidenceKeys.stats(),
+//     queryFn: () => evidenceService.getEvidenceStats(),
+//     ...options,
+//   });
+// }
 
-// Hook to fetch evidence for a specific control
-export function useControlEvidence(controlId: string, options?: BaseQueryOptions<EvidenceItem[]>) {
-  return useQuery({
-    queryKey: evidenceKeys.controlEvidence(controlId),
-    queryFn: () => evidenceService.getEvidenceByControl(controlId),
-    enabled: !!controlId,
-    ...options,
-  });
-}
+// Hook to fetch evidence for a specific control - COMMENTED OUT: getEvidenceByControl doesn't exist
+// export function useControlEvidence(controlId: string, options?: BaseQueryOptions<EvidenceItem[]>) {
+//   return useQuery({
+//     queryKey: evidenceKeys.controlEvidence(controlId),
+//     queryFn: () => evidenceService.getEvidenceByControl(controlId),
+//     enabled: !!controlId,
+//     ...options,
+//   });
+// }
 
 // Hook to create evidence
 export function useCreateEvidence(
@@ -126,11 +136,11 @@ export function useUpdateEvidence(
 }
 
 // Hook to upload evidence file
-export function useUploadEvidence(options?: BaseMutationOptions<EvidenceItem, unknown, FormData>) {
+export function useUploadEvidence(options?: BaseMutationOptions<EvidenceItem, unknown, File>) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (formData: FormData) => evidenceService.uploadEvidence(formData),
+    mutationFn: (file: File) => evidenceService.uploadEvidence(file),
     onSuccess: (newEvidence) => {
       // Add to cache and invalidate list
       queryClient.setQueryData(evidenceKeys.detail(newEvidence.id), newEvidence);
@@ -159,12 +169,16 @@ export function useDeleteEvidence(options?: BaseMutationOptions<void, unknown, s
 
 // Hook for bulk operations
 export function useBulkUpdateEvidence(
-  options?: BaseMutationOptions<void, unknown, BulkUpdateRequest>,
+  options?: BaseMutationOptions<
+    { updated_count: number; failed_count: number; failed_ids?: string[] },
+    unknown,
+    BulkUpdateRequest
+  >,
 ) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: BulkUpdateRequest) => evidenceService.bulkUpdate(data),
+    mutationFn: (data: BulkUpdateRequest) => evidenceService.bulkUpdateEvidence(data),
     onSuccess: () => {
       // Invalidate all evidence queries
       queryClient.invalidateQueries({ queryKey: evidenceKeys.all });
@@ -173,21 +187,21 @@ export function useBulkUpdateEvidence(
   });
 }
 
-// Hook to bulk delete evidence
-export function useBulkDeleteEvidence(options?: BaseMutationOptions<void, unknown, string[]>) {
-  const queryClient = useQueryClient();
+// Hook to bulk delete evidence - COMMENTED OUT: bulkDelete doesn't exist
+// export function useBulkDeleteEvidence(options?: BaseMutationOptions<void, unknown, string[]>) {
+//   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: (ids: string[]) => evidenceService.bulkDelete(ids),
-    onSuccess: (_, ids) => {
-      // Remove from cache
-      ids.forEach((id) => {
-        queryClient.removeQueries({ queryKey: evidenceKeys.detail(id) });
-      });
-      // Invalidate list and stats
-      queryClient.invalidateQueries({ queryKey: evidenceKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: evidenceKeys.stats() });
-    },
-    ...options,
-  });
-}
+//   return useMutation({
+//     mutationFn: (ids: string[]) => evidenceService.bulkDelete(ids),
+//     onSuccess: (_, ids) => {
+//       // Remove from cache
+//       ids.forEach((id) => {
+//         queryClient.removeQueries({ queryKey: evidenceKeys.detail(id) });
+//       });
+//       // Invalidate list and stats
+//       queryClient.invalidateQueries({ queryKey: evidenceKeys.lists() });
+//       queryClient.invalidateQueries({ queryKey: evidenceKeys.stats() });
+//     },
+//     ...options,
+//   });
+// }

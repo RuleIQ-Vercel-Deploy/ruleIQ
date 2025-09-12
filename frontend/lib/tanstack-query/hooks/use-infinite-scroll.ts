@@ -34,7 +34,7 @@ export function useInfiniteScroll<TData>({
     refetch,
   } = useInfiniteQuery({
     queryKey,
-    queryFn: ({ pageParam = 1 }) => queryFn({ page: pageParam, page_size: pageSize }),
+    queryFn: ({ pageParam = 1 }) => queryFn({ page: pageParam as number, page_size: pageSize }),
     getNextPageParam: (lastPage, pages) => {
       const currentPage = pages.length;
       const totalPages = Math.ceil(lastPage.total / lastPage.page_size);
@@ -56,8 +56,8 @@ export function useInfiniteScroll<TData>({
   }, [inView, fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   // Flatten all pages into a single array
-  const items = data?.pages.flatMap((page) => page.items) ?? [];
-  const total = data?.pages[0]?.total ?? 0;
+  const items = (data as any)?.pages?.flatMap((page: PaginatedResponse<TData>) => page.items) ?? [];
+  const total = (data as any)?.pages?.[0]?.total ?? 0;
 
   return {
     items,

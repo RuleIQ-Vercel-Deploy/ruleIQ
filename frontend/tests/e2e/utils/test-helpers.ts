@@ -6,7 +6,7 @@ import { TestSelectors } from '../fixtures/test-selectors';
  */
 
 export class TestHelpers {
-  constructor(private page: Page) {}
+  constructor(protected page: Page) {}
 
   /**
    * Get test selectors
@@ -93,7 +93,7 @@ export class TestHelpers {
       await expect(element).toBeVisible();
       await expect(element).toBeEnabled();
       return true;
-    } catch {
+    } catch (error) {
       return false;
     }
   }

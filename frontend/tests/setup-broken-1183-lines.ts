@@ -1,7 +1,9 @@
+import { server } from './mocks/server';
+
 // EMERGENCY: HTMLFormElement.prototype.requestSubmit polyfill
 if (typeof HTMLFormElement !== 'undefined' && !HTMLFormElement.prototype.requestSubmit) {
-  HTMLFormElement.prototype.requestSubmit = function (submitter) {
-    if (submitter && submitter.form !== this) {
+  HTMLFormElement.prototype.requestSubmit = function (this: HTMLFormElement, submitter?: HTMLElement) {
+    if (submitter && (submitter as any).form !== this) {
       throw new DOMException(
         'The specified element is not a descendant of this form element',
         'NotFoundError',
@@ -27,8 +29,8 @@ if (typeof HTMLFormElement !== 'undefined' && !HTMLFormElement.prototype.request
 }
 // Proper HTMLFormElement.prototype.requestSubmit polyfill
 if (!HTMLFormElement.prototype.requestSubmit) {
-  HTMLFormElement.prototype.requestSubmit = function (submitter) {
-    if (submitter && submitter.form !== this) {
+  HTMLFormElement.prototype.requestSubmit = function (this: HTMLFormElement, submitter?: HTMLElement) {
+    if (submitter && (submitter as HTMLButtonElement).form !== this) {
       throw new DOMException(
         'The specified element is not a descendant of this form element',
         'NotFoundError',
@@ -54,8 +56,8 @@ if (!HTMLFormElement.prototype.requestSubmit) {
 }
 // Proper HTMLFormElement.prototype.requestSubmit polyfill
 if (!HTMLFormElement.prototype.requestSubmit) {
-  HTMLFormElement.prototype.requestSubmit = function (submitter) {
-    if (submitter && submitter.form !== this) {
+  HTMLFormElement.prototype.requestSubmit = function (this: HTMLFormElement, submitter?: HTMLElement) {
+    if (submitter && (submitter as HTMLButtonElement).form !== this) {
       throw new DOMException(
         'The specified element is not a descendant of this form element',
         'NotFoundError',
@@ -93,11 +95,10 @@ process.env.NEXT_PUBLIC_ENABLE_ANALYTICS = 'false';
 process.env.NEXT_PUBLIC_ENABLE_SENTRY = 'false';
 process.env.NEXT_PUBLIC_ENABLE_MOCK_DATA = 'true';
 process.env.NEXT_PUBLIC_ENV = 'test';
-process.env.NODE_ENV = 'test';
+// NODE_ENV is read-only in Next.js, it's already set to 'test' by the test runner
 process.env.SKIP_ENV_VALIDATION = 'true';
 
 // Setup MSW server for API mocking
-import { server } from './mocks/server';
 
 // Global test setup
 beforeAll(() => {
@@ -229,7 +230,7 @@ beforeAll(() => {
 
   // Fix user-event clipboard redefinition issue
   const originalDefineProperty = Object.defineProperty;
-  Object.defineProperty = function (obj: any, prop: string, descriptor: PropertyDescriptor) {
+  (Object as any).defineProperty = function (obj: any, prop: string, descriptor: PropertyDescriptor) {
     if (prop === 'clipboard' && obj === navigator) {
       // Allow redefinition of clipboard property
       return originalDefineProperty.call(this, obj, prop, { ...descriptor, configurable: true });
@@ -444,12 +445,10 @@ afterAll(() => {
   server.close();
 });
 
-// MSW Server Setup
-import { setupServer } from 'msw/node';
-import { handlers } from './mocks/handlers';
+// MSW Server Setup - using server imported at the top of the file
+// import { handlers } from './mocks/handlers'; // Not needed, handlers imported via server module
 
-export const server = setupServer(...handlers);
-
+// Server lifecycle hooks - using imported server
 beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }));
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
@@ -458,11 +457,16 @@ afterAll(() => server.close());
 Object.defineProperty(global, 'File', {
   writable: true,
   value: class MockFile {
-    constructor(bits, name, options = {}) {
+    bits: any;
+    name: string;
+    type: string;
+    size: number;
+    
+    constructor(bits: any, name: string, options: any = {}) {
       this.bits = bits;
       this.name = name;
       this.type = options.type || '';
-      this.size = bits.reduce((acc, bit) => acc + (bit.length || 0), 0);
+      this.size = bits.reduce((acc: number, bit: any) => acc + (bit.length || 0), 0);
     }
   },
 });
@@ -470,19 +474,24 @@ Object.defineProperty(global, 'File', {
 Object.defineProperty(global, 'FileReader', {
   writable: true,
   value: class MockFileReader {
+    readyState: number;
+    result: string | null;
+    error: any;
+    onload: (() => void) | undefined;
+    
     constructor() {
       this.readyState = 0;
       this.result = null;
       this.error = null;
     }
 
-    readAsDataURL(file) {
+    readAsDataURL(file: any) {
       this.readyState = 2;
       this.result = 'data:text/plain;base64,dGVzdA==';
       if (this.onload) this.onload();
     }
 
-    readAsText(file) {
+    readAsText(file: any) {
       this.readyState = 2;
       this.result = 'test content';
       if (this.onload) this.onload();
@@ -674,8 +683,8 @@ vi.mock('lucide-react', () => ({
 // Fix HTMLFormElement.prototype.requestSubmit not implemented in JSDOM
 Object.defineProperty(HTMLFormElement.prototype, 'requestSubmit', {
   writable: true,
-  value: function (submitter) {
-    if (submitter && submitter.form !== this) {
+  value: function (this: HTMLFormElement, submitter?: HTMLElement) {
+    if (submitter && (submitter as any).form !== this) {
       throw new DOMException(
         'The specified element is not a descendant of this form element',
         'NotFoundError',
@@ -749,9 +758,6 @@ global.fetch = vi.fn().mockImplementation((url, options = {}) => {
 });
 
 // Import and use comprehensive Lucide React mock with proxy
-import { LucideProxy } from './mocks/lucide-react-complete';
-
-vi.mock('lucide-react', () => LucideProxy);
 
 // Import AI service mock
 import './mocks/ai-service-mock';
@@ -759,8 +765,8 @@ import './mocks/ai-service-mock';
 // Fix HTMLFormElement.prototype.requestSubmit not implemented in JSDOM
 Object.defineProperty(HTMLFormElement.prototype, 'requestSubmit', {
   writable: true,
-  value: function (submitter) {
-    if (submitter && submitter.form !== this) {
+  value: function (this: HTMLFormElement, submitter?: HTMLElement) {
+    if (submitter && (submitter as any).form !== this) {
       throw new DOMException(
         'The specified element is not a descendant of this form element',
         'NotFoundError',
@@ -785,10 +791,6 @@ Object.defineProperty(HTMLFormElement.prototype, 'requestSubmit', {
   },
 });
 
-// Import and use complete Lucide React mock
-import { LucideIconMocks } from './mocks/lucide-react-complete';
-
-vi.mock('lucide-react', () => LucideIconMocks);
 
 // Import all enhanced mocks
 import './mocks/api-client-setup';
@@ -834,9 +836,6 @@ global.fetch = vi.fn().mockImplementation((url, options = {}) => {
 });
 
 // Import and use comprehensive Lucide React mock with proxy
-import { LucideProxy } from './mocks/lucide-react-complete';
-
-vi.mock('lucide-react', () => LucideProxy);
 
 // Import AI service mock
 import './mocks/ai-service-mock';
@@ -1026,11 +1025,16 @@ vi.mock('lucide-react', () => ({
 Object.defineProperty(global, 'File', {
   writable: true,
   value: class MockFile {
-    constructor(bits, name, options = {}) {
+    bits: any;
+    name: string;
+    type: string;
+    size: number;
+    
+    constructor(bits: any, name: string, options: any = {}) {
       this.bits = bits;
       this.name = name;
       this.type = options.type || '';
-      this.size = bits.reduce((acc, bit) => acc + (bit.length || 0), 0);
+      this.size = bits.reduce((acc: number, bit: any) => acc + (bit.length || 0), 0);
     }
   },
 });
@@ -1038,19 +1042,24 @@ Object.defineProperty(global, 'File', {
 Object.defineProperty(global, 'FileReader', {
   writable: true,
   value: class MockFileReader {
+    readyState: number;
+    result: string | null;
+    error: any;
+    onload: (() => void) | undefined;
+    
     constructor() {
       this.readyState = 0;
       this.result = null;
       this.error = null;
     }
 
-    readAsDataURL(file) {
+    readAsDataURL(file: any) {
       this.readyState = 2;
       this.result = 'data:text/plain;base64,dGVzdA==';
       if (this.onload) this.onload();
     }
 
-    readAsText(file) {
+    readAsText(file: any) {
       this.readyState = 2;
       this.result = 'test content';
       if (this.onload) this.onload();
@@ -1124,7 +1133,7 @@ import { act } from '@testing-library/react';
 
 // Wrap all state updates in act()
 const originalSetTimeout = global.setTimeout;
-global.setTimeout = (callback, delay) => {
+(global as any).setTimeout = (callback: any, delay: any) => {
   return originalSetTimeout(() => {
     act(() => {
       callback();

@@ -1,0 +1,123 @@
+schema: 1
+story: 'EPIC-2025-001'
+story_title: 'Complete LangGraph and Golden Dataset Integration'
+gate: FAIL
+status_reason: 'Critical implementation gaps - QueryCategory enum is empty causing certain runtime failures'
+reviewer: 'Quinn (Test Architect)'
+updated: '2025-01-12T00:00:00Z'
+
+top_issues:
+  - severity: high
+    issue: 'QueryCategory enum is completely empty but referenced throughout codebase'
+    refs: ['services/compliance_retrieval_queries.py:38-40']
+    suggested_owner: dev
+  - severity: high
+    issue: 'Missing golden dataset versioned directory structure'
+    refs: ['services/ai/evaluation/data/golden_datasets/']
+    suggested_owner: dev
+  - severity: high
+    issue: 'Async/await implementation issues causing runtime errors'
+    refs: ['services/iq_agent.py', 'services/compliance_memory_manager.py']
+    suggested_owner: dev
+  - severity: medium
+    issue: 'LLM integration using deprecated ainvoke method'
+    refs: ['services/iq_agent.py:78']
+    suggested_owner: dev
+  - severity: medium
+    issue: 'Schema mismatches with data structures'
+    refs: ['ComplianceScenario', 'EvidenceCase', 'RegulatoryQAPair']
+    suggested_owner: dev
+
+waiver:
+  active: false
+
+quality_score: 0  # 100 - (20*5 FAILs) = 0
+
+expires: '2025-01-26T00:00:00Z'
+
+evidence:
+  tests_reviewed: 0  # No tests can run with empty enum
+  risks_identified: 5
+  trace:
+    ac_covered: []  # No ACs can be validated with broken code
+    ac_gaps: [1, 2, 3, 4, 5, 6]  # All stories have unmet ACs
+
+nfr_validation:
+  security:
+    status: CONCERNS
+    notes: 'Missing error handling could expose sensitive data in logs; no access control for golden datasets'
+  performance:
+    status: FAIL
+    notes: 'No caching layer, missing pagination for datasets, no connection pooling'
+  reliability:
+    status: FAIL
+    notes: 'Certain runtime failures from empty enum, no retry logic for external services'
+  maintainability:
+    status: CONCERNS
+    notes: 'Code structure is good but missing critical implementation makes it unmaintainable'
+
+recommendations:
+  immediate:  # Must fix before any testing
+    - action: 'Add all QueryCategory enum values (REGULATORY_COVERAGE, COMPLIANCE_GAPS, etc.)'
+      refs: ['services/compliance_retrieval_queries.py:38-40']
+    - action: 'Implement execute_compliance_query for all categories'
+      refs: ['services/compliance_retrieval_queries.py:567-579']
+    - action: 'Fix async/await coroutine comparison issues'
+      refs: ['services/iq_agent.py']
+    - action: 'Replace ainvoke with agenerate/acall for LLM'
+      refs: ['services/iq_agent.py:78']
+    - action: 'Create golden_datasets directory with v1.0.0 structure'
+      refs: ['services/ai/evaluation/data/']
+  future:  # Can be addressed after core fixes
+    - action: 'Add circuit breaker pattern for Neo4j and LLM calls'
+      refs: ['services/neo4j_service.py', 'services/iq_agent.py']
+    - action: 'Implement caching layer for golden datasets'
+      refs: ['services/ai/evaluation/']
+    - action: 'Add comprehensive logging and monitoring'
+      refs: ['all service files']
+
+test_recommendations:
+  story_1:
+    - 'Unit test each QueryCategory enum value'
+    - 'Test execute_compliance_query with all categories'
+    - 'Verify error handling for invalid categories'
+  story_2:
+    - 'Schema validation tests for all data models'
+    - 'Migration script tests with sample data'
+    - 'Backward compatibility tests'
+  story_3:
+    - 'Async operation tests with proper mocking'
+    - 'Concurrent request handling tests'
+    - 'Context manager tests for Neo4j'
+  story_4:
+    - 'LLM integration tests with mock responses'
+    - 'Retry logic tests with failures'
+    - 'Token counting accuracy tests'
+  story_5:
+    - 'Dataset loading performance tests'
+    - 'Versioning system tests'
+    - 'CLI tool integration tests'
+  story_6:
+    - 'End-to-end workflow tests'
+    - 'Performance benchmarks'
+    - 'Failure recovery tests'
+
+risk_summary:
+  technical_risk: 10  # Maximum - system cannot function
+  business_risk: 9   # Critical - blocks AI compliance features
+  security_risk: 6   # Medium - data exposure risks
+  performance_risk: 7 # High - no optimization implemented
+
+notes: |
+  This epic is in a critical state with fundamental implementation gaps.
+  The empty QueryCategory enum is a hard blocker that prevents any functionality.
+  All six stories are interdependent and blocked by Story 1's enum issue.
+  
+  Priority sequence:
+  1. Fix QueryCategory enum (Story 1) - IMMEDIATE
+  2. Fix async/await and LLM issues (Stories 3-4) - URGENT
+  3. Create infrastructure (Story 5) - HIGH
+  4. Align schemas (Story 2) - MEDIUM
+  5. Complete testing (Story 6) - AFTER 1-5
+  
+  This epic should not proceed to development until the enum is populated.

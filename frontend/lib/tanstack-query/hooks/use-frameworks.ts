@@ -10,7 +10,41 @@ import {
   type PaginatedResponse,
 } from './base';
 
-import type { Framework, FrameworkControl, FrameworkMapping, FrameworkCategory } from '@/types/api';
+// Define types locally until they're exported from the service
+interface Framework {
+  id: string;
+  name: string;
+  description?: string;
+  version?: string;
+  industry?: string;
+  jurisdiction?: string;
+  [key: string]: any;
+}
+
+interface FrameworkControl {
+  id: string;
+  framework_id: string;
+  code: string;
+  title: string;
+  description?: string;
+  [key: string]: any;
+}
+
+interface FrameworkMapping {
+  id: string;
+  source_framework_id: string;
+  target_framework_id: string;
+  mappings: any[];
+  [key: string]: any;
+}
+
+interface FrameworkCategory {
+  id: string;
+  name: string;
+  framework_id: string;
+  controls?: FrameworkControl[];
+  [key: string]: any;
+}
 
 // Query keys
 const FRAMEWORK_KEY = 'frameworks';
@@ -43,7 +77,17 @@ export function useFrameworks(
 ) {
   return useQuery({
     queryKey: frameworkKeys.list(params),
-    queryFn: () => frameworkService.getFrameworks(params),
+    queryFn: async () => {
+      const frameworks = await frameworkService.getFrameworks();
+      // Convert to PaginatedResponse format - note: no server-side filtering yet
+      return {
+        items: frameworks as unknown as Framework[],
+        total: frameworks.length,
+        page: params?.page || 1,
+        page_size: params?.page_size || 20,
+        total_pages: Math.ceil(frameworks.length / (params?.page_size || 20)),
+      } as PaginatedResponse<Framework>;
+    },
     ...options,
   });
 }
@@ -65,177 +109,196 @@ export function useFrameworkControls(
 ) {
   return useQuery({
     queryKey: frameworkKeys.controls(frameworkId),
-    queryFn: () => frameworkService.getFrameworkControls(frameworkId),
+    queryFn: async () => {
+      const response = await frameworkService.getFrameworkControls(frameworkId);
+      // Map the controls to FrameworkControl[] format
+      return response.controls.map((control) => ({
+        id: control.control_id,
+        framework_id: frameworkId,
+        code: control.control_id,
+        title: control.control_name,
+        description: control.description,
+        category: control.category,
+        priority: control.priority,
+        evidence_required: control.evidence_required,
+      } as FrameworkControl));
+    },
     enabled: !!frameworkId,
     ...options,
   });
 }
 
-// Hook to fetch single control
-export function useFrameworkControl(
-  frameworkId: string,
-  controlId: string,
-  options?: BaseQueryOptions<FrameworkControl>,
-) {
-  return useQuery({
-    queryKey: frameworkKeys.control(frameworkId, controlId),
-    queryFn: () => frameworkService.getFrameworkControl(frameworkId, controlId),
-    enabled: !!frameworkId && !!controlId,
-    ...options,
-  });
-}
+// // Hook to fetch single control
+// export function useFrameworkControl(
+//   frameworkId: string,
+//   controlId: string,
+//   options?: BaseQueryOptions<FrameworkControl>,
+// ) {
+//   return useQuery({
+//     queryKey: frameworkKeys.control(frameworkId, controlId),
+//     queryFn: () => frameworkService.getFrameworkControl(frameworkId, controlId),
+//     enabled: !!frameworkId && !!controlId,
+//     ...options,
+//   });
+// }
 
-// Hook to fetch framework mappings
-export function useFrameworkMappings(
-  frameworkId: string,
-  options?: BaseQueryOptions<FrameworkMapping[]>,
-) {
-  return useQuery({
-    queryKey: frameworkKeys.mappings(frameworkId),
-    queryFn: () => frameworkService.getFrameworkMappings(frameworkId),
-    enabled: !!frameworkId,
-    ...options,
-  });
-}
-
-// Hook to fetch framework categories
-export function useFrameworkCategories(
-  frameworkId: string,
-  options?: BaseQueryOptions<FrameworkCategory[]>,
-) {
-  return useQuery({
-    queryKey: frameworkKeys.categories(frameworkId),
-    queryFn: () => frameworkService.getFrameworkCategories(frameworkId),
-    enabled: !!frameworkId,
-    ...options,
-  });
-}
-
-// Hook to fetch applicable frameworks
-export function useApplicableFrameworks(
-  businessProfileId?: string,
-  options?: BaseQueryOptions<Framework[]>,
-) {
-  return useQuery({
-    queryKey: frameworkKeys.applicable(businessProfileId),
-    queryFn: () => frameworkService.getApplicableFrameworks(businessProfileId),
-    ...options,
-  });
-}
-
-// Hook to fetch framework recommendations
+// // Hook to fetch framework mappings
+// export function useFrameworkMappings(
+//   frameworkId: string,
+//   options?: BaseQueryOptions<FrameworkMapping[]>,
+// ) {
+//   return useQuery({
+//     queryKey: frameworkKeys.mappings(frameworkId),
+//     queryFn: () => frameworkService.getFrameworkMappings(frameworkId),
+//     enabled: !!frameworkId,
+//     ...options,
+//   });
+// }
+// 
+// // Hook to fetch framework categories
+// export function useFrameworkCategories(
+//   frameworkId: string,
+//   options?: BaseQueryOptions<FrameworkCategory[]>,
+// ) {
+//   return useQuery({
+//     queryKey: frameworkKeys.categories(frameworkId),
+//     queryFn: () => frameworkService.getFrameworkCategories(frameworkId),
+//     enabled: !!frameworkId,
+//     ...options,
+//   });
+// }
+// 
+// // Hook to fetch applicable frameworks
+// export function useApplicableFrameworks(
+//   businessProfileId?: string,
+//   options?: BaseQueryOptions<Framework[]>,
+// ) {
+//   return useQuery({
+//     queryKey: frameworkKeys.applicable(businessProfileId),
+//     queryFn: () => frameworkService.getApplicableFrameworks(businessProfileId),
+//     ...options,
+//   });
+// }
+// 
+// // Hook to fetch framework recommendations
 export function useFrameworkRecommendations(
   businessProfileId?: string,
   options?: BaseQueryOptions<any>,
 ) {
   return useQuery({
     queryKey: frameworkKeys.recommendations(businessProfileId),
-    queryFn: () => frameworkService.getFrameworkRecommendations(businessProfileId),
+    queryFn: () => {
+      if (!businessProfileId) {
+        return Promise.resolve([]);
+      }
+      return frameworkService.getFrameworkRecommendations(businessProfileId);
+    },
+    enabled: !!businessProfileId,
     ...options,
   });
 }
 
 // Hook to enable framework for business profile
-export function useEnableFramework(
-  options?: BaseMutationOptions<void, unknown, { frameworkId: string; businessProfileId?: string }>,
-) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ frameworkId, businessProfileId }) =>
-      frameworkService.enableFramework(frameworkId, businessProfileId),
-    onSuccess: (_, variables) => {
-      // Invalidate applicable frameworks and framework details
-      queryClient.invalidateQueries({
-        queryKey: frameworkKeys.applicable(variables.businessProfileId),
-      });
-      queryClient.invalidateQueries({
-        queryKey: frameworkKeys.detail(variables.frameworkId),
-      });
-    },
-    ...options,
-  });
-}
-
-// Hook to disable framework for business profile
-export function useDisableFramework(
-  options?: BaseMutationOptions<void, unknown, { frameworkId: string; businessProfileId?: string }>,
-) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ frameworkId, businessProfileId }) =>
-      frameworkService.disableFramework(frameworkId, businessProfileId),
-    onSuccess: (_, variables) => {
-      // Invalidate applicable frameworks and framework details
-      queryClient.invalidateQueries({
-        queryKey: frameworkKeys.applicable(variables.businessProfileId),
-      });
-      queryClient.invalidateQueries({
-        queryKey: frameworkKeys.detail(variables.frameworkId),
-      });
-    },
-    ...options,
-  });
-}
-
-// Hook to update control status
-export function useUpdateControlStatus(
-  options?: BaseMutationOptions<
-    FrameworkControl,
-    unknown,
-    {
-      frameworkId: string;
-      controlId: string;
-      status: string;
-      notes?: string;
-    }
-  >,
-) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ frameworkId, controlId, status, notes }) =>
-      frameworkService.updateControlStatus(frameworkId, controlId, status, notes),
-    onSuccess: (_, variables) => {
-      // Invalidate control and controls list
-      queryClient.invalidateQueries({
-        queryKey: frameworkKeys.control(variables.frameworkId, variables.controlId),
-      });
-      queryClient.invalidateQueries({
-        queryKey: frameworkKeys.controls(variables.frameworkId),
-      });
-    },
-    ...options,
-  });
-}
-
-// Hook to import framework
-export function useImportFramework(options?: BaseMutationOptions<Framework, unknown, FormData>) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (formData: FormData) => frameworkService.importFramework(formData),
-    onSuccess: () => {
-      // Invalidate frameworks list
-      queryClient.invalidateQueries({ queryKey: frameworkKeys.lists() });
-    },
-    ...options,
-  });
-}
-
-// Hook to export framework
-export function useExportFramework() {
-  return useMutation({
-    mutationFn: ({
-      frameworkId,
-      format,
-    }: {
-      frameworkId: string;
-      format: 'json' | 'csv' | 'excel';
-    }) => frameworkService.exportFramework(frameworkId, format),
-  });
-}
+// export function useEnableFramework(
+//   options?: BaseMutationOptions<void, unknown, { frameworkId: string; businessProfileId?: string }>,
+// ) {
+//   const queryClient = useQueryClient();
+// 
+//   return useMutation({
+//     mutationFn: ({ frameworkId, businessProfileId }) =>
+//       frameworkService.enableFramework(frameworkId, businessProfileId),
+//     onSuccess: (_, variables) => {
+//       // Invalidate applicable frameworks and framework details
+//       queryClient.invalidateQueries({
+//         queryKey: frameworkKeys.applicable(variables.businessProfileId),
+//       });
+//       queryClient.invalidateQueries({
+//         queryKey: frameworkKeys.detail(variables.frameworkId),
+//       });
+//     },
+//     ...options,
+//   });
+// }
+// 
+// // Hook to disable framework for business profile
+// export function useDisableFramework(
+//   options?: BaseMutationOptions<void, unknown, { frameworkId: string; businessProfileId?: string }>,
+// ) {
+//   const queryClient = useQueryClient();
+// 
+//   return useMutation({
+//     mutationFn: ({ frameworkId, businessProfileId }) =>
+//       frameworkService.disableFramework(frameworkId, businessProfileId),
+//     onSuccess: (_, variables) => {
+//       // Invalidate applicable frameworks and framework details
+//       queryClient.invalidateQueries({
+//         queryKey: frameworkKeys.applicable(variables.businessProfileId),
+//       });
+//       queryClient.invalidateQueries({
+//         queryKey: frameworkKeys.detail(variables.frameworkId),
+//       });
+//     },
+//     ...options,
+//   });
+// }
+// 
+// // Hook to update control status
+// export function useUpdateControlStatus(
+//   options?: BaseMutationOptions<
+//     FrameworkControl,
+//     unknown,
+//     {
+//       frameworkId: string;
+//       controlId: string;
+//       status: string;
+//       notes?: string;
+//     }
+//   >,
+// ) {
+//   const queryClient = useQueryClient();
+// 
+//   return useMutation({
+//     mutationFn: ({ frameworkId, controlId, status, notes }) =>
+//       frameworkService.updateControlStatus(frameworkId, controlId, status, notes),
+//     onSuccess: (_, variables) => {
+//       // Invalidate control and controls list
+//       queryClient.invalidateQueries({
+//         queryKey: frameworkKeys.control(variables.frameworkId, variables.controlId),
+//       });
+//       queryClient.invalidateQueries({
+//         queryKey: frameworkKeys.controls(variables.frameworkId),
+//       });
+//     },
+//     ...options,
+//   });
+// }
+// 
+// // Hook to import framework
+// export function useImportFramework(options?: BaseMutationOptions<Framework, unknown, FormData>) {
+//   const queryClient = useQueryClient();
+// 
+//   return useMutation({
+//     mutationFn: (formData: FormData) => frameworkService.importFramework(formData),
+//     onSuccess: () => {
+//       // Invalidate frameworks list
+//       queryClient.invalidateQueries({ queryKey: frameworkKeys.lists() });
+//     },
+//     ...options,
+//   });
+// }
+// 
+// // Hook to export framework
+// export function useExportFramework() {
+//   return useMutation({
+//     mutationFn: ({
+//       frameworkId,
+//       format,
+//     }: {
+//       frameworkId: string;
+//       format: 'json' | 'csv' | 'excel';
+//     }) => frameworkService.exportFramework(frameworkId, format),
+//   });
+// }
 
 // Hook to compare frameworks
 export function useCompareFrameworks(frameworkIds: string[], options?: BaseQueryOptions<any>) {

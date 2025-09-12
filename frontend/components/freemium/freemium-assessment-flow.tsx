@@ -12,7 +12,10 @@ import { Slider } from '../ui/slider';
 import {
   Loader2,
   ArrowRight,
-  } from 'lucide-react';
+  AlertCircle,
+  Brain,
+  Clock,
+} from 'lucide-react';
 import { freemiumService } from '../../lib/api/freemium.service';
 
 // Mock question structure for now
@@ -63,12 +66,12 @@ export function FreemiumAssessmentFlow({
       // If there's a current question in the session, use it
       if (progress.current_question_id) {
         // The session response should contain the current question data
-        // For now, extract from the progress response
+        // For now, create a placeholder question since the API doesn't return question details
         const question: AssessmentQuestion = {
           question_id: progress.current_question_id,
-          question_text: progress.question_text || 'Please describe your compliance needs',
-          question_type: progress.question_type || 'text',
-          answer_options: progress.answer_options,
+          question_text: 'Please describe your compliance needs',
+          question_type: 'text',
+          answer_options: undefined,
         };
         setCurrentQuestion(question);
       } else {
@@ -112,7 +115,7 @@ export function FreemiumAssessmentFlow({
     try {
       const response = await freemiumService.submitAnswer(token, {
         question_id: currentQuestion.question_id,
-        answer_text: currentAnswer.toString(), // Changed from 'answer' to 'answer_text'
+        answer: currentAnswer.toString(),
         answer_confidence: 'medium',
         time_spent_seconds: 30,
       });
@@ -144,8 +147,8 @@ export function FreemiumAssessmentFlow({
         // No next question but not complete - might be an error state
         setError('Unable to continue assessment. Please try again.');
       }
-    } catch {
-      console.error('Failed to submit answer:', _error);
+    } catch (error) {
+      console.error('Failed to submit answer:', error);
       setAnswerError(error instanceof Error ? error.message : 'Failed to submit answer');
     } finally {
       setIsSubmitting(false);

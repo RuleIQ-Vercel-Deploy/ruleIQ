@@ -1,6 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { policyService } from '@/lib/api/policies.service';
+import { 
+  policyService,
+  type GeneratePolicyRequest,
+  type UpdatePolicyStatusRequest,
+} from '@/lib/api/policies.service';
 
 import {
   createQueryKey,
@@ -12,10 +16,16 @@ import {
 
 import type {
   Policy,
-  GeneratePolicyRequest,
-  UpdatePolicyRequest,
-  PolicyTemplate,
 } from '@/types/api';
+
+// Define locally until available in @/types/api
+interface PolicyTemplate {
+  id: string;
+  name: string;
+  description: string;
+  framework: string;
+  sections: string[];
+}
 
 // Query keys
 const POLICY_KEY = 'policies';
@@ -38,7 +48,17 @@ export function usePolicies(
 ) {
   return useQuery({
     queryKey: policyKeys.list(params),
-    queryFn: () => policyService.getPolicies(params),
+    queryFn: async () => {
+      const response = await policyService.getPolicies(params);
+      // Transform the response to match PaginatedResponse
+      return {
+        items: response.policies,
+        total: response.policies.length,
+        page: params?.page || 1,
+        page_size: params?.page_size || 20,
+        total_pages: Math.ceil(response.policies.length / (params?.page_size || 20)),
+      } as PaginatedResponse<Policy>;
+    },
     ...options,
   });
 }
@@ -57,19 +77,26 @@ export function usePolicy(id: string, options?: BaseQueryOptions<Policy>) {
 export function usePolicyTemplates(options?: BaseQueryOptions<PolicyTemplate[]>) {
   return useQuery({
     queryKey: policyKeys.templates(),
-    queryFn: () => policyService.getTemplates(),
+    queryFn: async () => {
+      const response = await policyService.getPolicyTemplates();
+      return response.templates.map(t => ({
+        ...t,
+        [Symbol.for('key')]: t.id,
+      })) as PolicyTemplate[];
+    },
     ...options,
   });
 }
 
 // Hook to fetch policy types for a framework
-export function usePolicyTypes(frameworkId?: string, options?: BaseQueryOptions<string[]>) {
-  return useQuery({
-    queryKey: policyKeys.types(frameworkId),
-    queryFn: () => policyService.getPolicyTypes(frameworkId),
-    ...options,
-  });
-}
+// TODO: getPolicyTypes doesn't exist in the service, commenting out
+// export function usePolicyTypes(frameworkId?: string, options?: BaseQueryOptions<string[]>) {
+//   return useQuery({
+//     queryKey: policyKeys.types(frameworkId),
+//     queryFn: () => policyService.getPolicyTypes(frameworkId),
+//     ...options,
+//   });
+// }
 
 // Hook to generate policy
 export function useGeneratePolicy(
@@ -88,29 +115,30 @@ export function useGeneratePolicy(
   });
 }
 
-// Hook to update policy
-export function useUpdatePolicy(
-  options?: BaseMutationOptions<Policy, unknown, { id: string; data: UpdatePolicyRequest }>,
+// Hook to update policy status
+export function useUpdatePolicyStatus(
+  options?: BaseMutationOptions<{ id: string; status: string; approved: boolean }, unknown, { id: string; data: UpdatePolicyStatusRequest }>,
 ) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ id, data }) => policyService.updatePolicy(id, data),
-    onSuccess: (updatedPolicy, variables) => {
-      // Update cache
-      queryClient.setQueryData(policyKeys.detail(variables.id), updatedPolicy);
+    mutationFn: ({ id, data }) => 
+      policyService.updatePolicyStatus(id, data),
+    onSuccess: (_, variables) => {
+      // Invalidate cache
+      queryClient.invalidateQueries({ queryKey: policyKeys.detail(variables.id) });
       queryClient.invalidateQueries({ queryKey: policyKeys.lists() });
     },
     ...options,
   });
 }
 
-// Hook to delete policy
-export function useDeletePolicy(options?: BaseMutationOptions<void, unknown, string>) {
+// Hook to archive policy
+export function useArchivePolicy(options?: BaseMutationOptions<void, unknown, string>) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => policyService.deletePolicy(id),
+    mutationFn: (id: string) => policyService.archivePolicy(id),
     onSuccess: (_, id) => {
       // Remove from cache and invalidate list
       queryClient.removeQueries({ queryKey: policyKeys.detail(id) });
@@ -120,20 +148,26 @@ export function useDeletePolicy(options?: BaseMutationOptions<void, unknown, str
   });
 }
 
-// Hook to download policy
-export function useDownloadPolicy() {
+// Hook to export policy as PDF
+export function useExportPolicyAsPDF() {
   return useMutation({
-    mutationFn: ({ id, format }: { id: string; format: 'pdf' | 'docx' | 'txt' }) =>
-      policyService.downloadPolicy(id, format),
+    mutationFn: (id: string) => policyService.exportPolicyAsPDF(id),
+  });
+}
+
+// Hook to export policy as Word
+export function useExportPolicyAsWord() {
+  return useMutation({
+    mutationFn: (id: string) => policyService.exportPolicyAsWord(id),
   });
 }
 
 // Hook to clone policy
-export function useClonePolicy(options?: BaseMutationOptions<Policy, unknown, string>) {
+export function useClonePolicy(options?: BaseMutationOptions<Policy, unknown, { id: string; newName: string }>) {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (id: string) => policyService.clonePolicy(id),
+    mutationFn: ({ id, newName }) => policyService.clonePolicy(id, newName),
     onSuccess: (newPolicy) => {
       // Add to cache and invalidate list
       queryClient.setQueryData(policyKeys.detail(newPolicy.id), newPolicy);

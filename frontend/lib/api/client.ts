@@ -15,9 +15,9 @@ export class APIError extends Error {
 
 class APIClient {
   private async getAuthHeaders(): Promise<HeadersInit> {
-    const { tokens, refreshToken } = useAuthStore.getState();
+    const { tokens, refreshTokens } = useAuthStore.getState();
 
-    if (!tokens?.access_token) {
+    if (!tokens?.access) {
       throw new APIError('No authentication token available', 401);
     }
 
@@ -25,19 +25,19 @@ class APIClient {
     try {
       return {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${tokens.access_token}`,
+        Authorization: `Bearer ${tokens.access}`,
       };
-    } catch {
+    } catch (error) {
       // If we have a refresh token, try to refresh
-      if (tokens.refresh_token) {
+      if (tokens.refresh) {
         try {
-          await refreshToken();
+          await refreshTokens();
           const newTokens = useAuthStore.getState().tokens;
           return {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${newTokens?.access_token}`,
+            Authorization: `Bearer ${newTokens?.access}`,
           };
-        } catch {} {
+        } catch (error) {
           throw new APIError('Authentication failed', 401);
         }
       }
@@ -77,7 +77,7 @@ class APIClient {
       }
 
       return response.text() as unknown as T;
-    } catch {
+    } catch (error) {
       if (error instanceof APIError) {
         throw error;
       }
@@ -124,7 +124,7 @@ class APIClient {
       }
 
       return response.text() as unknown as T;
-    } catch {
+    } catch (error) {
       if (error instanceof APIError) {
         throw error;
       }
@@ -209,7 +209,7 @@ class APIClient {
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(downloadUrl);
-    } catch {
+    } catch (error) {
       if (error instanceof APIError) {
         throw error;
       }
@@ -258,7 +258,7 @@ class APIClient {
       }
 
       return response.text() as unknown as T;
-    } catch {
+    } catch (error) {
       if (error instanceof APIError) {
         throw error;
       }

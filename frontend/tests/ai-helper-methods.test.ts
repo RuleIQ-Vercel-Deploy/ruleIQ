@@ -289,7 +289,7 @@ describe('AI Helper Methods Tests', () => {
         try {
           const result = await Promise.race([promise, timeoutPromise]);
           return result;
-        } catch {
+        } catch (error) {
           if (error instanceof Error && error.message.includes('timed out')) {
             throw new Error(`${operation} is taking longer than expected. Please try again.`);
           }
@@ -308,7 +308,7 @@ describe('AI Helper Methods Tests', () => {
       try {
         await executeWithTimeout(slowPromise, 500, 'Slow operation');
         fail('Should have thrown timeout error');
-      } catch {
+      } catch (error) {
         expect(error).toBeInstanceOf(Error);
         expect((error as Error).message).toContain('is taking longer than expected');
       }

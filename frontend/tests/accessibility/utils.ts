@@ -1,5 +1,6 @@
 import { type RenderResult } from '@testing-library/react';
-import { axe, type AxeResults, type Result } from 'jest-axe';
+import { axe } from 'jest-axe';
+import type { AxeResults, Result } from 'axe-core';
 
 /**
  * Accessibility testing utilities for ruleIQ
@@ -39,7 +40,7 @@ export async function testAccessibility(
     exclude: options.exclude || [],
   };
 
-  return await axe(container, axeOptions);
+  return await axe(container, axeOptions) as unknown as AxeResults;
 }
 
 /**
@@ -93,7 +94,7 @@ export async function testKeyboardNavigation(
       throw new Error(`Expected focusable element not found: ${selector}`);
     }
 
-    if (!focusableElements.includes(element)) {
+    if (!Array.from(focusableElements).includes(element)) {
       throw new Error(`Element is not focusable: ${selector}`);
     }
   });

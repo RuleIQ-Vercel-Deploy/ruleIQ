@@ -74,7 +74,7 @@ export function AssessmentWizard({
           onSave(progress);
         }
       },
-      onError: () => {
+      onError: (error: Error) => {
         setError(error.message);
         toast({
           title: 'Error',
@@ -128,7 +128,7 @@ export function AssessmentWizard({
         const result = await engine.calculateResults();
         onComplete(result);
       }
-    } catch {
+    } catch (error) {
       // Handle validation errors
       setValidationError(error instanceof Error ? error.message : 'An error occurred');
     } finally {
@@ -158,7 +158,7 @@ export function AssessmentWizard({
         title: 'Progress Saved',
         description: 'Your assessment progress has been saved.',
       });
-    } catch {
+    } catch (error) {
       toast({
         title: 'Save Failed',
         description: 'Failed to save progress. Please try again.',

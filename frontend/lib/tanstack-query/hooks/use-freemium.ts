@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import * as freemiumApi from '../../api/freemium.service';
@@ -21,7 +22,7 @@ export const useFreemiumEmailCapture = () => {
     mutationFn: (data: freemiumApi.FreemiumEmailCaptureRequest) => freemiumApi.captureEmail(data),
     onSuccess: (response, variables) => {
       setEmail(variables.email);
-      setToken(response.token);
+      setToken(response.token || null);
       // Redirect to assessment flow
       router.push(`/freemium/assessment?token=${response.token}`);
     },
@@ -36,19 +37,14 @@ export const useFreemiumEmailCapture = () => {
  * Hook for starting assessment session
  */
 export const useFreemiumStartAssessment = (token: string | null) => {
-  const { markAssessmentStarted, setCurrentQuestion, incrementProgress } = useFreemiumStore();
+  const { markAssessmentStarted, setCurrentQuestion } = useFreemiumStore();
 
-  return useQuery({
+  const query = useQuery({
     queryKey: freemiumKeys.assessment(token || ''),
     queryFn: () => freemiumApi.startAssessment(token!),
     enabled: !!token,
     staleTime: 5 * 60 * 1000, // 5 minutes
-    onSuccess: (data) => {
-      markAssessmentStarted();
-      setCurrentQuestion(data.question_id);
-      incrementProgress(data.progress);
-    },
-    retry: (failureCount, error: unknown) => {
+    retry: (failureCount, error: any) => {
       // Don't retry if session expired or not found
       if (error?.message?.includes('expired') || error?.message?.includes('not found')) {
         return false;
@@ -56,6 +52,16 @@ export const useFreemiumStartAssessment = (token: string | null) => {
       return failureCount < 2;
     },
   });
+
+  // Handle success using useEffect instead of deprecated onSuccess
+  React.useEffect(() => {
+    if (query.data) {
+      markAssessmentStarted();
+      setCurrentQuestion(query.data.question_id);
+    }
+  }, [query.data, markAssessmentStarted, setCurrentQuestion]);
+
+  return query;
 };
 
 /**
@@ -64,20 +70,20 @@ export const useFreemiumStartAssessment = (token: string | null) => {
 export const useFreemiumAnswerQuestion = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { token, setCurrentQuestion, incrementProgress, markAssessmentComplete } =
+  const { token, setCurrentQuestion, markAssessmentCompleted } =
     useFreemiumStore();
 
   return useMutation({
     mutationFn: (answerData: freemiumApi.FreemiumAnswerRequest) =>
       freemiumApi.answerQuestion(token!, answerData),
     onSuccess: (response) => {
-      incrementProgress(response.progress);
+      // incrementProgress doesn't exist in the store
 
       if (response.assessment_complete || response.redirect_to_results) {
-        markAssessmentComplete();
+        markAssessmentCompleted();
         router.push(`/freemium/results?token=${token}`);
-      } else if (response.question_id) {
-        setCurrentQuestion(response.question_id);
+      } else if (response.next_question_id) {
+        setCurrentQuestion(response.next_question_id);
       }
 
       // Invalidate assessment query to get fresh data
@@ -85,7 +91,7 @@ export const useFreemiumAnswerQuestion = () => {
         queryKey: freemiumKeys.assessment(token || ''),
       });
     },
-    onError: (_error: unknown) => {
+    onError: (error: any) => {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -104,15 +110,12 @@ export const useFreemiumAnswerQuestion = () => {
 export const useFreemiumResults = (token: string | null) => {
   const { markResultsViewed } = useFreemiumStore();
 
-  return useQuery({
+  const query = useQuery({
     queryKey: freemiumKeys.results(token || ''),
     queryFn: () => freemiumApi.getResults(token!),
     enabled: !!token,
     staleTime: 10 * 60 * 1000, // 10 minutes
-    onSuccess: () => {
-      markResultsViewed();
-    },
-    retry: (failureCount, error: unknown) => {
+    retry: (failureCount, error: any) => {
       // Don't retry if results not found or expired
       if (error?.message?.includes('not found') || error?.message?.includes('expired')) {
         return false;
@@ -120,20 +123,30 @@ export const useFreemiumResults = (token: string | null) => {
       return failureCount < 2;
     },
   });
+
+  // Handle success with useEffect instead of deprecated onSuccess
+  React.useEffect(() => {
+    if (query.data) {
+      markResultsViewed();
+    }
+  }, [query.data, markResultsViewed]);
+
+  return query;
 };
 
 /**
  * Hook for tracking conversion events
  */
 export const useFreemiumConversionTracking = () => {
-  const { token, trackConversionEvent } = useFreemiumStore();
+  const { token } = useFreemiumStore();
 
   return useMutation({
     mutationFn: (trackingData: freemiumApi.ConversionTrackingRequest) =>
       freemiumApi.trackConversion(token!, trackingData),
-    onSuccess: (response, variables) => {
+    onSuccess: (_response, _variables) => {
       // Track locally regardless of API success
-      trackConversionEvent(variables.event_type);
+      // TODO: trackConversionEvent doesn't exist in the store yet
+      // trackConversionEvent(variables.event_type);
     },
     onError: () => {
       // Conversion tracking failures should not break UX
@@ -177,7 +190,10 @@ export const useFreemiumUtmCapture = () => {
   const captureUtmParams = () => {
     const { utm_source, utm_campaign } = freemiumApi.extractUtmParams();
     if (utm_source || utm_campaign) {
-      setUtmParams(utm_source, utm_campaign);
+      const params: Record<string, string> = {};
+      if (utm_source) params.utm_source = utm_source;
+      if (utm_campaign) params.utm_campaign = utm_campaign;
+      setUtmParams(params);
     }
   };
 

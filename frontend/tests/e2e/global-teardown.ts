@@ -8,10 +8,10 @@ async function globalTeardown(config: FullConfig) {
     // Clean up test files
     // await cleanupTestFiles();
     // TODO: Replace with proper logging
-  } catch {
+  } catch (error) {
     // Development logging - consider proper logger
 
-    console.error('❌ Global teardown failed:', _error);
+    console.error('❌ Global teardown failed:', error);
     // Don't throw here to avoid masking test failures
   }
 }

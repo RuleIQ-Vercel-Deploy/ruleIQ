@@ -190,7 +190,7 @@ export default function DataExportDemoPage() {
         });
         toast.success('Excel file generated successfully');
       }
-    } catch {
+    } catch (error) {
       toast.error('Export failed. Please try again.');
       // TODO: Replace with proper logging
 

@@ -2,10 +2,17 @@
 // This file exists for backward compatibility with existing imports
 
 import { useAuthStore } from '@/lib/stores/auth.store';
+import type { User } from '@/types/auth';
 
 export const authService = {
-  login: async (email: string, password: string) => {
-    return useAuthStore.getState().login(email, password);
+  login: async (params: { email: string; password: string } | string, password?: string) => {
+    // Handle both old and new signatures
+    if (typeof params === 'string') {
+      // Old signature: login(email, password)
+      return useAuthStore.getState().login({ email: params, password: password!, rememberMe: false });
+    }
+    // New signature: login({ email, password })
+    return useAuthStore.getState().login(params);
   },
 
   register: async (email: string, password: string, fullName?: string) => {
@@ -29,7 +36,23 @@ export const authService = {
   },
 
   refreshToken: async () => {
-    return useAuthStore.getState().refreshToken();
+    return useAuthStore.getState().refreshTokens();
+  },
+
+  // Add post method for token refresh
+  post: async (url: string, data?: any) => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    const response = await fetch(`${API_BASE_URL}${url}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) {
+      throw new Error(`API call failed: ${response.statusText}`);
+    }
+    return { data: await response.json() };
   },
 
   checkAuthStatus: async () => {
@@ -52,7 +75,7 @@ export const authService = {
     return useAuthStore.getState().verifyEmail(token);
   },
 
-  updateProfile: async (data: unknown) => {
+  updateProfile: async (data: Partial<User>) => {
     return useAuthStore.getState().updateProfile(data);
   },
 

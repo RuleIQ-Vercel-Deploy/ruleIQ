@@ -148,11 +148,11 @@ export default function CustomDashboardPage() {
       // Merge API data with mock data structure
       setDashboardData({
         ...generateMockData(),
-        compliance_score: apiData.compliance_score || 0,
-        framework_scores: apiData.framework_scores || {},
-        insights: apiData.insights || [],
-        pending_tasks: apiData.pending_tasks || [],
-        compliance_trends: apiData.compliance_trends || generateMockData().compliance_trends,
+        compliance_score: (apiData as any).compliance_score || 0,
+        framework_scores: (apiData as any).framework_scores || {},
+        insights: (apiData as any).insights || [],
+        pending_tasks: (apiData as any).pending_tasks || [],
+        compliance_trends: (apiData as any).compliance_trends || generateMockData().compliance_trends,
       });
     }
   }, [apiData]);

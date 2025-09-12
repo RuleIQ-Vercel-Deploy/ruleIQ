@@ -56,8 +56,8 @@ export function AdvancedMetricsChart({
             />
             <YAxis tick={{ fontSize: 12 }} />
             <Tooltip
-              formatter={(value: number, name: string, props: Record<string, unknown>) => [
-                formatValue(value, props.payload.unit),
+              formatter={(value: number, name: string, props: any) => [
+                formatValue(value, props?.payload?.unit),
                 name,
               ]}
               labelStyle={{ color: '#333' }}

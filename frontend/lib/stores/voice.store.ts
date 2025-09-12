@@ -147,7 +147,7 @@ const createActions = (set: any, get: any) => ({
     const capabilities = await get().checkCapabilities();
     if (!capabilities.speechRecognition) {
       const error: VoiceError = {
-        code: VoiceErrorCode.NOT_SUPPORTED,
+        code: 'NOT_SUPPORTED' as VoiceErrorCode,
         message: 'Speech recognition is not supported in this browser',
         recoverable: false,
       };
@@ -194,7 +194,7 @@ const createActions = (set: any, get: any) => ({
     const capabilities = await get().checkCapabilities();
     if (!capabilities.speechSynthesis) {
       const error: VoiceError = {
-        code: VoiceErrorCode.NOT_SUPPORTED,
+        code: 'NOT_SUPPORTED' as VoiceErrorCode,
         message: 'Speech synthesis is not supported in this browser',
         recoverable: false,
       };
@@ -235,7 +235,7 @@ const createActions = (set: any, get: any) => ({
     const capabilities = await get().checkCapabilities();
     if (!capabilities.calling || !capabilities.webRTC) {
       const error: VoiceError = {
-        code: VoiceErrorCode.NOT_SUPPORTED,
+        code: 'NOT_SUPPORTED' as VoiceErrorCode,
         message: 'Voice calling is not yet implemented',
         recoverable: true,
       };
@@ -334,12 +334,12 @@ const createActions = (set: any, get: any) => ({
         set({ isEnabled: true });
         return true;
       }
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
       const voiceError: VoiceError = {
-        code: VoiceErrorCode.PERMISSION_DENIED,
+        code: 'PERMISSION_DENIED' as VoiceErrorCode,
         message: 'Microphone permission denied',
         recoverable: true,
       };
@@ -364,7 +364,7 @@ const createActions = (set: any, get: any) => ({
 
         return hasAudio;
       }
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
       // // TODO: Replace with proper logging
     }

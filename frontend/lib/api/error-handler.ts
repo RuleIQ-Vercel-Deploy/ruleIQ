@@ -11,6 +11,7 @@ import { type AxiosError } from 'axios';
 export enum ErrorType {
   NETWORK = 'NETWORK',
   VALIDATION = 'VALIDATION',
+  AUTHENTICATION = 'AUTHENTICATION',
   PERMISSION = 'PERMISSION',
   NOT_FOUND = 'NOT_FOUND',
   TIMEOUT = 'TIMEOUT',
@@ -238,7 +239,7 @@ export async function retryWithBackoff<T>(
   for (let attempt = 1; attempt <= config.maxAttempts; attempt++) {
     try {
       return await fn();
-    } catch {
+    } catch (error) {
       lastError = error as Error;
 
       if (attempt === config.maxAttempts) {
@@ -293,6 +294,7 @@ export function getContextualErrorMessage(error: EnhancedApiError, context?: str
       [ErrorType.NETWORK]: 'Unable to connect. Please check your internet connection.',
       [ErrorType.SERVER]: 'Login service is temporarily unavailable. Please try again later.',
       [ErrorType.TIMEOUT]: 'Login is taking longer than expected. Please try again.',
+      [ErrorType.AUTHENTICATION]: 'Authentication failed. Please check your credentials.',
       [ErrorType.PERMISSION]: 'Access denied. Please check your credentials.',
       [ErrorType.NOT_FOUND]: 'Login endpoint not found. Please contact support.',
       [ErrorType.RATE_LIMIT]: 'Too many login attempts. Please wait and try again.',
@@ -303,6 +305,7 @@ export function getContextualErrorMessage(error: EnhancedApiError, context?: str
       [ErrorType.NETWORK]: 'Upload failed due to connection issues. Please try again.',
       [ErrorType.TIMEOUT]: 'Upload is taking too long. Please try with a smaller file.',
       [ErrorType.SERVER]: 'Upload service is temporarily unavailable.',
+      [ErrorType.AUTHENTICATION]: 'Authentication required. Please log in and try again.',
       [ErrorType.PERMISSION]: 'You do not have permission to upload files.',
       [ErrorType.NOT_FOUND]: 'Upload endpoint not found. Please contact support.',
       [ErrorType.RATE_LIMIT]: 'Upload rate limit exceeded. Please wait and try again.',
@@ -312,6 +315,7 @@ export function getContextualErrorMessage(error: EnhancedApiError, context?: str
       [ErrorType.VALIDATION]: 'Some fields contain invalid data. Please review and correct.',
       [ErrorType.NETWORK]: 'Unable to save due to connection issues. Your data is safe.',
       [ErrorType.SERVER]: 'Save failed. Please try again or contact support if the issue persists.',
+      [ErrorType.AUTHENTICATION]: 'Session expired. Please log in and try again.',
       [ErrorType.PERMISSION]: 'You do not have permission to save this data.',
       [ErrorType.NOT_FOUND]: 'Save endpoint not found. Please contact support.',
       [ErrorType.TIMEOUT]: 'Save operation timed out. Please try again.',

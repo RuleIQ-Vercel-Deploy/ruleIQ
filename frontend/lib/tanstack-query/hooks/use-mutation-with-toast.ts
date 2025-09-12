@@ -64,7 +64,7 @@ export function useMutationWithToast<TData = unknown, TError = unknown, TVariabl
     onError: (_error, variables) => {
       // Show error toast
       const message =
-        typeof errorMessage === 'function' ? errorMessage(error) : getErrorMessage(error);
+        typeof errorMessage === 'function' ? errorMessage(_error) : getErrorMessage(_error);
 
       toast({
         title: 'Error',
@@ -73,7 +73,7 @@ export function useMutationWithToast<TData = unknown, TError = unknown, TVariabl
       });
 
       // Call custom error handler
-      onError?.(error, variables);
+      onError?.(_error, variables);
     },
     ...mutationOptions,
   });

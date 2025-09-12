@@ -218,7 +218,7 @@ test.describe('CSS Performance Tests', () => {
               }
             }
           }
-        } catch {
+        } catch (error) {
           // Skip cross-origin stylesheets
         }
       }

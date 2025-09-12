@@ -103,7 +103,7 @@ test.describe('Browser Automation Setup', () => {
     try {
       await page.goto('/', { timeout: 5000 });
       expect(page.url()).toBeTruthy();
-    } catch {
+    } catch (error) {
       // If timeout occurs, verify it's handled gracefully
       // TODO: Replace with proper logging
       expect(error).toBeDefined();

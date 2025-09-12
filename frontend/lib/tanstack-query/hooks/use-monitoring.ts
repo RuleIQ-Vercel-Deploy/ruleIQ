@@ -23,7 +23,7 @@ export const monitoringKeys = {
 export function useSystemHealth(options?: BaseQueryOptions<any>) {
   return useQuery({
     queryKey: monitoringKeys.health(),
-    queryFn: () => monitoringService.getSystemHealth(),
+    queryFn: () => monitoringService.getHealthCheck(),
     refetchInterval: 30000, // Refresh every 30 seconds
     ...options,
   });
@@ -33,7 +33,7 @@ export function useSystemHealth(options?: BaseQueryOptions<any>) {
 export function useSystemMetrics(options?: BaseQueryOptions<any>) {
   return useQuery({
     queryKey: monitoringKeys.metrics(),
-    queryFn: () => monitoringService.getMetrics(),
+    queryFn: () => monitoringService.getSystemMetrics(),
     refetchInterval: 60000, // Refresh every minute
     ...options,
   });
@@ -43,7 +43,7 @@ export function useSystemMetrics(options?: BaseQueryOptions<any>) {
 export function usePerformanceMetrics(options?: BaseQueryOptions<any>) {
   return useQuery({
     queryKey: monitoringKeys.performance(),
-    queryFn: () => monitoringService.getPerformanceMetrics(),
+    queryFn: () => monitoringService.getApiPerformanceMetrics(),
     refetchInterval: 60000, // Refresh every minute
     ...options,
   });
@@ -61,7 +61,7 @@ export function useAlerts(
 ) {
   return useQuery({
     queryKey: monitoringKeys.alerts(),
-    queryFn: () => monitoringService.getAlerts(params),
+    queryFn: () => monitoringService.getSystemAlerts(params),
     refetchInterval: 30000, // Refresh every 30 seconds
     ...options,
   });
@@ -71,7 +71,11 @@ export function useAlerts(
 export function useAlert(id: string, options?: BaseQueryOptions<any>) {
   return useQuery({
     queryKey: monitoringKeys.alert(id),
-    queryFn: () => monitoringService.getAlert(id),
+    // TODO: getAlert method doesn't exist, using getSystemAlerts
+    queryFn: async () => {
+      const response = await monitoringService.getSystemAlerts();
+      return response.alerts?.find((a: any) => a.id === id);
+    },
     enabled: !!id,
     ...options,
   });
@@ -81,7 +85,7 @@ export function useAlert(id: string, options?: BaseQueryOptions<any>) {
 export function useSystemStatus(options?: BaseQueryOptions<any>) {
   return useQuery({
     queryKey: monitoringKeys.systemStatus(),
-    queryFn: () => monitoringService.getSystemStatus(),
+    queryFn: () => monitoringService.getDatabaseStatus(),
     refetchInterval: 15000, // Refresh every 15 seconds
     ...options,
   });
@@ -110,7 +114,7 @@ export function useAuditLogs(
 // Hook to fetch error logs
 export function useErrorLogs(
   params?: {
-    severity?: string;
+    severity?: 'info' | 'warning' | 'error';
     service?: string;
     start_date?: string;
     end_date?: string;
@@ -121,78 +125,83 @@ export function useErrorLogs(
 ) {
   return useQuery({
     queryKey: monitoringKeys.errorLogs(params),
-    queryFn: () => monitoringService.getErrorLogs(params),
+    queryFn: () => monitoringService.getErrorLogs(params as any),
     ...options,
   });
 }
 
 // Hook to acknowledge alert
-export function useAcknowledgeAlert(
-  options?: BaseMutationOptions<any, unknown, { id: string; notes?: string }>,
-) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ id, notes }) => monitoringService.acknowledgeAlert(id, notes),
-    onSuccess: (_, variables) => {
-      // Invalidate alerts and specific alert
-      queryClient.invalidateQueries({ queryKey: monitoringKeys.alerts() });
-      queryClient.invalidateQueries({ queryKey: monitoringKeys.alert(variables.id) });
-    },
-    ...options,
-  });
-}
+// TODO: acknowledgeAlert method doesn't exist in the service
+// export function useAcknowledgeAlert(
+//   options?: BaseMutationOptions<any, unknown, { id: string; notes?: string }>,
+// ) {
+//   const queryClient = useQueryClient();
+//
+//   return useMutation({
+//     mutationFn: ({ id, notes }) => monitoringService.acknowledgeAlert(id, notes),
+//     onSuccess: (_, variables) => {
+//       // Invalidate alerts and specific alert
+//       queryClient.invalidateQueries({ queryKey: monitoringKeys.alerts() });
+//       queryClient.invalidateQueries({ queryKey: monitoringKeys.alert(variables.id) });
+//     },
+//     ...options,
+//   });
+// }
 
 // Hook to resolve alert
-export function useResolveAlert(
-  options?: BaseMutationOptions<any, unknown, { id: string; resolution?: string }>,
-) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ id, resolution }) => monitoringService.resolveAlert(id, resolution),
-    onSuccess: (_, variables) => {
-      // Invalidate alerts and specific alert
-      queryClient.invalidateQueries({ queryKey: monitoringKeys.alerts() });
-      queryClient.invalidateQueries({ queryKey: monitoringKeys.alert(variables.id) });
-    },
-    ...options,
-  });
-}
+// TODO: resolveAlert method doesn't exist in the service
+// export function useResolveAlert(
+//   options?: BaseMutationOptions<any, unknown, { id: string; resolution?: string }>,
+// ) {
+//   const queryClient = useQueryClient();
+//
+//   return useMutation({
+//     mutationFn: ({ id, resolution }) => monitoringService.resolveAlert(id, resolution),
+//     onSuccess: (_, variables) => {
+//       // Invalidate alerts and specific alert
+//       queryClient.invalidateQueries({ queryKey: monitoringKeys.alerts() });
+//       queryClient.invalidateQueries({ queryKey: monitoringKeys.alert(variables.id) });
+//     },
+//     ...options,
+//   });
+// }
 
 // Hook to create alert
-export function useCreateAlert(options?: BaseMutationOptions<any, unknown, any>) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (data) => monitoringService.createAlert(data),
-    onSuccess: () => {
-      // Invalidate alerts list
-      queryClient.invalidateQueries({ queryKey: monitoringKeys.alerts() });
-    },
-    ...options,
-  });
-}
+// TODO: createAlert method doesn't exist in the service
+// export function useCreateAlert(options?: BaseMutationOptions<any, unknown, any>) {
+//   const queryClient = useQueryClient();
+//
+//   return useMutation({
+//     mutationFn: (data) => monitoringService.createAlert(data),
+//     onSuccess: () => {
+//       // Invalidate alerts list
+//       queryClient.invalidateQueries({ queryKey: monitoringKeys.alerts() });
+//     },
+//     ...options,
+//   });
+// }
 
 // Hook to export logs
-export function useExportLogs() {
-  return useMutation({
-    mutationFn: ({
-      type,
-      format,
-      params,
-    }: {
-      type: 'audit' | 'error' | 'all';
-      format: 'csv' | 'json' | 'pdf';
-      params?: any;
-    }) => monitoringService.exportLogs(type, format, params),
-  });
-}
+// TODO: exportLogs method doesn't exist in the service
+// export function useExportLogs() {
+//   return useMutation({
+//     mutationFn: ({
+//       type,
+//       format,
+//       params,
+//     }: {
+//       type: 'audit' | 'error' | 'all';
+//       format: 'csv' | 'json' | 'pdf';
+//       params?: any;
+//     }) => monitoringService.exportLogs(type, format, params),
+//   });
+// }
 
 // Hook to test alert notification
-export function useTestAlertNotification() {
-  return useMutation({
-    mutationFn: ({ channel, config }: { channel: 'email' | 'slack' | 'webhook'; config: any }) =>
-      monitoringService.testAlertNotification(channel, config),
-  });
-}
+// TODO: testAlertNotification method doesn't exist in the service
+// export function useTestAlertNotification() {
+//   return useMutation({
+//     mutationFn: ({ channel, config }: { channel: 'email' | 'slack' | 'webhook'; config: any }) =>
+//       monitoringService.testAlertNotification(channel, config),
+//   });
+// }

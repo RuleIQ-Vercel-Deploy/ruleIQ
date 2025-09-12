@@ -80,12 +80,12 @@ export default function ReportsPage() {
 
   const handleDownload = async (reportId: string, format: 'pdf' | 'excel' | 'csv' = 'pdf') => {
     try {
-      await downloadReportMutation.mutateAsync({ id: reportId, format });
+      await downloadReportMutation.mutateAsync(reportId);
       toast({
         title: 'Download started',
         description: `Your report is being downloaded as ${format.toUpperCase()}.`,
       });
-    } catch {
+    } catch (error) {
       toast({
         title: 'Download failed',
         description: 'There was an error downloading the report. Please try again.',

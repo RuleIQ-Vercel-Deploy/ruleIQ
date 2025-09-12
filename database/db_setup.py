@@ -100,30 +100,42 @@ Please copy env.template to .env.local and configure the variables."""
     @staticmethod
     def get_engine_kwargs(is_async: bool=False) ->Dict[str, Any]:
         """Get optimized engine configuration based on sync/async mode."""
+        # Import the enhanced pool configuration
         try:
-            base_kwargs = {'echo': os.getenv('SQLALCHEMY_ECHO', 'false').
-                lower() == 'true', 'pool_size': int(os.getenv(
-                'DB_POOL_SIZE', '10')), 'max_overflow': int(os.getenv(
-                'DB_MAX_OVERFLOW', '20')), 'pool_pre_ping': True,
-                'pool_recycle': int(os.getenv('DB_POOL_RECYCLE', '1800')),
-                'pool_timeout': int(os.getenv('DB_POOL_TIMEOUT', '30'))}
-        except ValueError as e:
-            logger.error('Invalid database configuration value: %s' % e)
-            raise ValueError(f'Invalid database configuration: {e}')
-        if is_async:
-            async_kwargs = {**base_kwargs, 'pool_reset_on_return': 'commit'}
-            db_url = os.getenv('DATABASE_URL', '')
-            connect_args = {'server_settings': {'jit': 'off',
-                'application_name': 'ruleIQ_backend'}}
-            if 'sslmode=require' in db_url:
-                connect_args['ssl'] = True
-            async_kwargs['connect_args'] = connect_args
-            return async_kwargs
-        else:
-            sync_kwargs = {**base_kwargs, 'connect_args': {'keepalives': 1,
-                'keepalives_idle': 30, 'keepalives_interval': 10,
-                'keepalives_count': 5, 'connect_timeout': 10}}
-            return sync_kwargs
+            from config.database_pool_config import ConnectionPoolConfig
+            is_production = os.getenv('ENVIRONMENT', 'development').lower() == 'production'
+            
+            if is_async:
+                return ConnectionPoolConfig.get_async_pool_settings(is_production)
+            else:
+                return ConnectionPoolConfig.get_pool_settings(is_production)
+        except ImportError:
+            # Fallback to original configuration if new config not available
+            logger.warning("Using fallback database pool configuration")
+            try:
+                base_kwargs = {'echo': os.getenv('SQLALCHEMY_ECHO', 'false').
+                    lower() == 'true', 'pool_size': int(os.getenv(
+                    'DB_POOL_SIZE', '10')), 'max_overflow': int(os.getenv(
+                    'DB_MAX_OVERFLOW', '20')), 'pool_pre_ping': True,
+                    'pool_recycle': int(os.getenv('DB_POOL_RECYCLE', '1800')),
+                    'pool_timeout': int(os.getenv('DB_POOL_TIMEOUT', '30'))}
+            except ValueError as e:
+                logger.error('Invalid database configuration value: %s' % e)
+                raise ValueError(f'Invalid database configuration: {e}')
+            if is_async:
+                async_kwargs = {**base_kwargs, 'pool_reset_on_return': 'commit'}
+                db_url = os.getenv('DATABASE_URL', '')
+                connect_args = {'server_settings': {'jit': 'off',
+                    'application_name': 'ruleIQ_backend'}}
+                if 'sslmode=require' in db_url:
+                    connect_args['ssl'] = True
+                async_kwargs['connect_args'] = connect_args
+                return async_kwargs
+            else:
+                sync_kwargs = {**base_kwargs, 'connect_args': {'keepalives': 1,
+                    'keepalives_idle': 30, 'keepalives_interval': 10,
+                    'keepalives_count': 5, 'connect_timeout': 10}}
+                return sync_kwargs
 
 
 def _init_sync_db() ->None:

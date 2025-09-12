@@ -79,7 +79,7 @@ export class PoliciesService {
         PolicyListItemSchema.parse(item);
       });
       
-      return validated;
+      return validated as PaginatedResponse<Policy>;
     } catch (error) {
       if (error instanceof z.ZodError) {
         console.error('Validation error in policies response:', error.errors);
@@ -95,7 +95,7 @@ export class PoliciesService {
   async getPolicy(id: string): Promise<Policy> {
     try {
       const response = await apiClient.get<any>(`${this.basePath}/${id}`);
-      return PolicySchema.parse(response);
+      return PolicySchema.parse(response) as Policy;
     } catch (error) {
       if (error instanceof z.ZodError) {
         console.error('Validation error in policy response:', error.errors);
@@ -111,7 +111,7 @@ export class PoliciesService {
   async createPolicy(data: CreatePolicyRequest): Promise<Policy> {
     try {
       const response = await apiClient.post<any>(this.basePath, data);
-      return PolicySchema.parse(response);
+      return PolicySchema.parse(response) as Policy;
     } catch (error) {
       if (error instanceof z.ZodError) {
         console.error('Validation error in created policy:', error.errors);
@@ -127,7 +127,7 @@ export class PoliciesService {
   async updatePolicy(id: string, data: UpdatePolicyRequest): Promise<Policy> {
     try {
       const response = await apiClient.patch<any>(`${this.basePath}/${id}`, data);
-      return PolicySchema.parse(response);
+      return PolicySchema.parse(response) as Policy;
     } catch (error) {
       if (error instanceof z.ZodError) {
         console.error('Validation error in updated policy:', error.errors);
@@ -148,7 +148,7 @@ export class PoliciesService {
    * Validate policy data against schema
    */
   validatePolicy(data: unknown): Policy {
-    return PolicySchema.parse(data);
+    return PolicySchema.parse(data) as Policy;
   }
 
   /**
@@ -158,7 +158,7 @@ export class PoliciesService {
     try {
       PolicyListItemSchema.parse(policy);
       return true;
-    } catch {
+    } catch (error) {
       return false;
     }
   }

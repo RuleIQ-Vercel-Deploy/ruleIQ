@@ -74,7 +74,7 @@ class PerformanceTester {
         cpuUsage: 0, // Would be measured server-side in real implementation
         networkLatency: endTime - startTime,
       };
-    } catch {
+    } catch (error) {
       const endTime = performance.now();
       return {
         responseTime: endTime - startTime,
@@ -100,7 +100,7 @@ class PerformanceTester {
         try {
           const metrics = await this.measureApiPerformance(endpoint, options);
           results.push(metrics.responseTime);
-        } catch {
+        } catch (error) {
           errors.push(error as Error);
         }
 

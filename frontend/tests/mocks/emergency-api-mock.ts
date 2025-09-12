@@ -35,25 +35,27 @@ export const createEmergencyApiClient = () => ({
   post: vi.fn().mockImplementation(async (url: string, data: unknown, options = {}) => {
     // TODO: Replace with proper logging
     if (url.includes('/auth/login')) {
-      if (data.email === 'invalid@example.com') {
+      const loginData = data as { email: string; password: string };
+      if (loginData.email === 'invalid@example.com') {
         throw new Error('Invalid credentials');
       }
       return {
         data: {
           tokens: { access_token: 'mock-token', refresh_token: 'mock-refresh' },
-          user: { id: 'user-123', email: data.email, name: 'Test User', is_active: true },
+          user: { id: 'user-123', email: loginData.email, name: 'Test User', is_active: true },
         },
       };
     }
 
     if (url.includes('/auth/register')) {
-      if (data.password && data.password.length < 8) {
+      const registerData = data as { email: string; password: string; name: string };
+      if (registerData.password && registerData.password.length < 8) {
         throw new Error('Password must be at least 8 characters');
       }
       return {
         data: {
           tokens: { access_token: 'new-token', refresh_token: 'new-refresh' },
-          user: { id: 'user-456', email: data.email, name: data.name, is_active: true },
+          user: { id: 'user-456', email: registerData.email, name: registerData.name, is_active: true },
         },
       };
     }

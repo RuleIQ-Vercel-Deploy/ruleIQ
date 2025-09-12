@@ -236,7 +236,7 @@ export function validateForm<T>(
   try {
     const validatedData = schema.parse(data);
     return { success: true, data: validatedData };
-  } catch {
+  } catch (error) {
     if (error instanceof z.ZodError) {
       const errors: Record<string, string> = {};
       error.errors.forEach((err) => {

@@ -46,12 +46,7 @@ export default function RegisterPage() {
     setIsLoading(true);
 
     try {
-      await authService.register({
-        name: formData.name,
-        email: formData.email,
-        company: formData.company,
-        password: formData.password,
-      });
+      await authService.register(formData.email, formData.password, formData.name);
       toast({
         title: 'Account created!',
         description: 'Please check your email to verify your account.',

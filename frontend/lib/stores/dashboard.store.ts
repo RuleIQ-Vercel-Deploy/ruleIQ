@@ -250,27 +250,26 @@ export const useDashboardStore = create<DashboardState>()(
 
           try {
             // Load dashboard data from API
-            const [dashboardData, recentActivities] = await Promise.all([
-              dashboardService.getDashboardMetrics(),
-              dashboardService.getRecentActivity(),
-            ]);
+            const userDashboard = await dashboardService.getUserDashboard();
+            const dashboardData = userDashboard.stats;
+            const recentActivities = userDashboard.recent_activity;
 
             // Transform API data to match our state structure
             const complianceScore: ComplianceScore = {
               overall_score: dashboardData.compliance_score || 0,
-              policy_score: dashboardData.policy_score || 0,
-              implementation_score: dashboardData.implementation_score || 0,
-              evidence_score: dashboardData.evidence_score || 0,
-              trend: dashboardData.compliance_trend || 'stable',
+              policy_score: (dashboardData as any).policy_score || 0,
+              implementation_score: (dashboardData as any).implementation_score || 0,
+              evidence_score: (dashboardData as any).evidence_score || 0,
+              trend: (dashboardData as any).compliance_trend || 'stable',
               lastUpdated: new Date(),
-              domain_scores: dashboardData.domain_scores || {},
-              control_scores: dashboardData.control_scores || {},
-              breakdown: dashboardData.framework_scores || [],
+              domain_scores: (dashboardData as any).domain_scores || {},
+              control_scores: (dashboardData as any).control_scores || {},
+              breakdown: (dashboardData as any).framework_scores || [],
             };
 
             // Transform tasks from API
             const tasks: Task[] =
-              dashboardData.pending_tasks?.map((task: any) => ({
+              (userDashboard.pending_tasks || []).map((task: any) => ({
                 id: task.id,
                 title: task.title,
                 category: task.category,
@@ -310,9 +309,40 @@ export const useDashboardStore = create<DashboardState>()(
                 complianceScore,
                 tasks,
                 activities,
-                frameworks: dashboardData.frameworks || [],
-                deadlines: dashboardData.upcoming_deadlines || [],
-                aiInsights: dashboardData.ai_insights || [],
+                frameworks: (userDashboard.framework_progress || []).map((fp) => ({
+                  id: fp.framework_id,
+                  name: fp.framework_name,
+                  progress: fp.compliance_percentage,
+                  status: fp.compliance_percentage === 100 ? 'complete' as const :
+                          fp.compliance_percentage === 0 ? 'not-started' as const : 'in-progress' as const,
+                  deadline: fp.next_review_date ? new Date(fp.next_review_date) : undefined,
+                  description: `${fp.controls_compliant}/${fp.controls_total} controls compliant`,
+                })),
+                deadlines: (userDashboard.upcoming_deadlines || []).map((d, index) => ({
+                  id: `deadline-${index}`,
+                  title: d.title,
+                  type: (d.type as 'compliance' | 'renewal' | 'audit' | 'review') || 'review',
+                  dueDate: new Date(d.date),
+                  framework: undefined,
+                  priority: d.days_remaining <= 7 ? 'critical' as const : 
+                           d.days_remaining <= 30 ? 'high' as const : 'medium' as const,
+                  description: undefined,
+                  notificationEnabled: true,
+                })),
+                aiInsights: (userDashboard.ai_insights || []).map((insight) => ({
+                  id: insight.id,
+                  type: insight.type,
+                  title: insight.title,
+                  description: insight.description,
+                  priority: insight.priority === 1 ? 'critical' as const :
+                           insight.priority === 2 ? 'high' as const :
+                           insight.priority === 3 ? 'medium' as const : 'low' as const,
+                  framework: undefined,
+                  actionable: !!insight.action,
+                  suggestedActions: insight.action ? [insight.action.label] : undefined,
+                  confidence: 0.8,
+                  timestamp: new Date(insight.created_at),
+                })),
               },
               false,
               'fetchDashboardData/success',
@@ -321,7 +351,12 @@ export const useDashboardStore = create<DashboardState>()(
             set(
               {
                 isLoading: false,
-                error: error.detail || error.message || 'Failed to fetch dashboard data',
+                error: 
+                  error && typeof error === 'object' && 'detail' in error
+                    ? (error as any).detail
+                    : error && typeof error === 'object' && 'message' in error
+                      ? (error as any).message
+                      : 'Failed to fetch dashboard data',
               },
               false,
               'fetchDashboardData/error',
@@ -360,23 +395,25 @@ export const useDashboardStore = create<DashboardState>()(
             // Refresh specific widget data based on widget type
             switch (widgetId) {
               case 'compliance-score':
-                const metrics = await dashboardService.getDashboardMetrics();
+                const userDashboardForWidget = await dashboardService.getUserDashboard();
+                const metrics = userDashboardForWidget.stats;
                 const complianceScore: ComplianceScore = {
                   overall_score: metrics.compliance_score || 0,
-                  policy_score: metrics.policy_score || 0,
-                  implementation_score: metrics.implementation_score || 0,
-                  evidence_score: metrics.evidence_score || 0,
-                  trend: metrics.compliance_trend || 'stable',
+                  policy_score: (metrics as any).policy_score || 0,
+                  implementation_score: (metrics as any).implementation_score || 0,
+                  evidence_score: (metrics as any).evidence_score || 0,
+                  trend: (metrics as any).compliance_trend || 'stable',
                   lastUpdated: new Date(),
-                  domain_scores: metrics.domain_scores || {},
-                  control_scores: metrics.control_scores || {},
-                  breakdown: metrics.framework_scores || [],
+                  domain_scores: (metrics as any).domain_scores || {},
+                  control_scores: (metrics as any).control_scores || {},
+                  breakdown: (metrics as any).framework_scores || [],
                 };
                 set({ complianceScore });
                 break;
 
               case 'activity-feed':
-                const activities = await dashboardService.getRecentActivity();
+                const dashboardDataForActivities = await dashboardService.getUserDashboard();
+                const activities = dashboardDataForActivities.recent_activity;
                 set({
                   activities: activities.map((activity: any) => ({
                     id: activity.id,
@@ -410,7 +447,12 @@ export const useDashboardStore = create<DashboardState>()(
                 widgetLoading: { ...state.widgetLoading, [widgetId]: false },
                 widgetErrors: {
                   ...state.widgetErrors,
-                  [widgetId]: error.detail || error.message || 'Refresh failed',
+                  [widgetId]: 
+                    error && typeof error === 'object' && 'detail' in error
+                      ? (error as any).detail
+                      : error && typeof error === 'object' && 'message' in error
+                        ? (error as any).message
+                        : 'Refresh failed',
                 },
               }),
               false,
@@ -492,7 +534,7 @@ export const useDashboardStore = create<DashboardState>()(
           );
         },
 
-        setWidgetError: (widgetId, _error) => {
+        setWidgetError: (widgetId, error) => {
           set(
             (state) => ({
               widgetErrors: { ...state.widgetErrors, [widgetId]: error },

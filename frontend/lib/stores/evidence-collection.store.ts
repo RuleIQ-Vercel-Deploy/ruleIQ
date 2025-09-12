@@ -3,9 +3,9 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage, devtools } from 'zustand/middleware';
 
-import { evidenceCollectionService } from '@/lib/api/evidence-collection.service';
+import { evidenceCollectionService, type CollectionPlanSummary } from '@/lib/api/evidence-collection.service';
 
-import type { EvidenceCollectionPlan, EvidenceTask, CollectionPlanSummary } from '@/types/api';
+import type { EvidenceCollectionPlan, EvidenceTask } from '@/types/api';
 
 interface EvidenceCollectionState {
   // Collection Plans
@@ -84,19 +84,21 @@ export const useEvidenceCollectionStore = create<EvidenceCollectionState>()(
 
             set(
               (state) => ({
+                ...state,
                 currentPlan: plan,
                 plans: [
                   ...state.plans,
                   {
-                    plan_id: plan.plan_id,
+                    id: plan.plan_id,
                     framework: plan.framework,
+                    status: 'pending',
+                    progress_percentage: 0,
                     total_tasks: plan.total_tasks,
                     completed_tasks: 0,
                     estimated_total_hours: plan.estimated_total_hours,
                     completion_target_date: plan.completion_target_date,
-                    status: 'pending',
                     created_at: plan.created_at,
-                  },
+                  } as CollectionPlanSummary,
                 ],
                 isCreatingPlan: false,
               }),
@@ -109,7 +111,12 @@ export const useEvidenceCollectionStore = create<EvidenceCollectionState>()(
             set(
               {
                 isCreatingPlan: false,
-                error: error.detail || error.message || 'Failed to create collection plan',
+                error: 
+                  error && typeof error === 'object' && 'detail' in error
+                    ? (error as any).detail
+                    : error && typeof error === 'object' && 'message' in error
+                      ? (error as any).message
+                      : 'Failed to create collection plan',
               },
               false,
               'createPlan/error',
@@ -135,7 +142,12 @@ export const useEvidenceCollectionStore = create<EvidenceCollectionState>()(
             set(
               {
                 isLoading: false,
-                error: error.detail || error.message || 'Failed to load collection plan',
+                error: 
+                  error && typeof error === 'object' && 'detail' in error
+                    ? (error as any).detail
+                    : error && typeof error === 'object' && 'message' in error
+                      ? (error as any).message
+                      : 'Failed to load collection plan',
               },
               false,
               'loadPlan/error',
@@ -163,7 +175,12 @@ export const useEvidenceCollectionStore = create<EvidenceCollectionState>()(
             set(
               {
                 isLoading: false,
-                error: error.detail || error.message || 'Failed to load collection plans',
+                error: 
+                  error && typeof error === 'object' && 'detail' in error
+                    ? (error as any).detail
+                    : error && typeof error === 'object' && 'message' in error
+                      ? (error as any).message
+                      : 'Failed to load collection plans',
               },
               false,
               'loadPlans/error',
@@ -196,7 +213,12 @@ export const useEvidenceCollectionStore = create<EvidenceCollectionState>()(
             set(
               {
                 isLoading: false,
-                error: error.detail || error.message || 'Failed to load priority tasks',
+                error: 
+                  error && typeof error === 'object' && 'detail' in error
+                    ? (error as any).detail
+                    : error && typeof error === 'object' && 'message' in error
+                      ? (error as any).message
+                      : 'Failed to load priority tasks',
               },
               false,
               'loadPriorityTasks/error',
@@ -245,8 +267,8 @@ export const useEvidenceCollectionStore = create<EvidenceCollectionState>()(
               set(
                 (state) => ({
                   plans: state.plans.map((plan) =>
-                    plan.plan_id === currentPlan.plan_id
-                      ? { ...plan, completed_tasks: plan.completed_tasks + 1 }
+                    plan.id === currentPlan.plan_id
+                      ? { ...plan, completed_tasks: (plan as any).completed_tasks + 1 }
                       : plan,
                   ),
                 }),
@@ -258,7 +280,12 @@ export const useEvidenceCollectionStore = create<EvidenceCollectionState>()(
             set(
               {
                 isUpdatingTask: false,
-                error: error.detail || error.message || 'Failed to update task status',
+                error: 
+                  error && typeof error === 'object' && 'detail' in error
+                    ? (error as any).detail
+                    : error && typeof error === 'object' && 'message' in error
+                      ? (error as any).message
+                      : 'Failed to update task status',
               },
               false,
               'updateTaskStatus/error',

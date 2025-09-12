@@ -25,7 +25,7 @@ from services.neo4j_service import Neo4jGraphRAGService
 from services.compliance_graph_initializer import initialize_compliance_graph
 from services.ai.exceptions import AIServiceException
 logger = logging.getLogger(__name__)
-router = APIRouter(prefix='/api/v1', tags=['IQ Agent - GraphRAG Intelligence'])
+router = APIRouter(tags=['IQ Agent - GraphRAG Intelligence'])
 _iq_agent: Optional[IQComplianceAgent] = None
 _neo4j_service: Optional[Neo4jGraphRAGService] = None
 

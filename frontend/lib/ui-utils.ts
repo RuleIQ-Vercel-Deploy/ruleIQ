@@ -237,7 +237,7 @@ export function getComplianceScoreColor(score: number): string {
 // Utility function to build button className
 export function getButtonClassName(
   variant: keyof typeof buttonVariants.variants = 'primary',
-  size: keyof typeof buttonVariants.sizes = 'md',
+  size: keyof typeof buttonVariants.sizes = 'default',
   className?: string,
 ): string {
   return cn(

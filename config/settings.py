@@ -166,6 +166,16 @@ class Settings(BaseSettings):
         ),
         description='Primary database URL'
     )
+    
+    @property
+    def async_database_url(self) -> str:
+        """Convert database URL to async format for asyncpg"""
+        url = self.database_url
+        if url.startswith('postgresql://'):
+            return url.replace('postgresql://', 'postgresql+asyncpg://')
+        elif url.startswith('postgres://'):
+            return url.replace('postgres://', 'postgresql+asyncpg://')
+        return url
     database_pool_size: int = Field(default=10, description='Database connection pool size')
     database_max_overflow: int = Field(default=20, description='Database max overflow connections')
     database_pool_timeout: int = Field(default=30, description='Database connection timeout (seconds)')

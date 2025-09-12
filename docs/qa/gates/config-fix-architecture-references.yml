@@ -1,0 +1,61 @@
+schema: 1
+story: 'CONFIG-001'
+story_title: 'Fix Architecture File References in Core Configuration'
+gate: FAIL
+status_reason: 'Referenced files do not exist. Only 1 of 3 files (CLAUDE.md) found. Agent initialization will fail.'
+reviewer: 'Quinn (Test Architect)'
+updated: '2025-01-07T15:45:00Z'
+
+top_issues:
+  - issue: 'docs/developer/architecture.md does not exist'
+    severity: high
+    refs: ['.bmad-core/core-config.yaml']
+    suggested_owner: 'dev'
+  - issue: 'docs/fullstack-architecture-2025/executive-summary.md does not exist'
+    severity: high
+    refs: ['.bmad-core/core-config.yaml']
+    suggested_owner: 'dev'
+  - issue: 'No validation of file existence before config update'
+    severity: high
+    refs: ['.bmad-core/core-config.yaml']
+    suggested_owner: 'dev'
+
+waiver: { active: false }
+
+quality_score: 40  # 100 - (20*3 FAILs) - (10*0 CONCERNS) = 40
+expires: '2025-01-21T15:45:00Z'
+
+evidence:
+  tests_reviewed: 0
+  risks_identified: 3
+  trace:
+    ac_covered: []
+    ac_gaps: [1, 2, 3, 4, 5]
+
+nfr_validation:
+  security:
+    status: PASS
+    notes: 'No security issues with configuration'
+  performance:
+    status: FAIL
+    notes: 'Agent initialization will fail due to missing files'
+  reliability:
+    status: FAIL
+    notes: 'System cannot start properly with missing dependencies'
+  maintainability:
+    status: FAIL
+    notes: 'Configuration references non-existent files'
+
+recommendations:
+  immediate:
+    - action: 'Create missing architecture files or update config to use existing files'
+      refs: ['docs/', '.bmad-core/core-config.yaml']
+    - action: 'Add file existence validation before config changes'
+      refs: ['scripts/']
+    - action: 'Test agent initialization after fixes'
+      refs: ['.bmad-core/']
+  future:
+    - action: 'Consolidate architecture documentation'
+      refs: ['docs/']
+    - action: 'Add pre-commit hook to validate config integrity'
+      refs: ['.husky/']

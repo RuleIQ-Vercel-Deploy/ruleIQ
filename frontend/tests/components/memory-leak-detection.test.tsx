@@ -258,9 +258,10 @@ describe('Memory Leak Detection Tests', () => {
       const LeakyTimerComponent = () => {
         React.useEffect(() => {
           // Intentionally not cleaning up to test detection
-          setTimeout(() =>
-    // TODO: Replace with proper logging
-          // Missing: return () => clearTimeout(timer);
+          setTimeout(() => {
+            // TODO: Replace with proper logging
+            // Missing: return () => clearTimeout(timer);
+          }, 1000);
         }, []);
 
         return <div>Leaky Timer Component</div>;

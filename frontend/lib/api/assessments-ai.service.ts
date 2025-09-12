@@ -290,23 +290,26 @@ class AssessmentAIService {
           // // TODO: Replace with proper logging
 
           // Handle rate limiting specifically - don't retry immediately
-          if (error.response?.status === 429) {
-            const rateLimitError = error.response.data as AIRateLimitError;
-            const retryAfter = rateLimitError.error.retry_after;
+          if (error && typeof error === 'object' && 'response' in error) {
+            const errorWithResponse = error as { response?: { status?: number; data?: any } };
+            if (errorWithResponse.response?.status === 429) {
+              const rateLimitError = errorWithResponse.response.data as AIRateLimitError;
+              const retryAfter = rateLimitError.error.retry_after;
 
-            return {
-              guidance: `Rate limit exceeded for AI help requests. ${rateLimitError.suggestion}`,
-              confidence_score: 0.1,
-              related_topics: ['Rate Limiting'],
-              follow_up_suggestions: [
-                `Wait ${retryAfter} seconds before trying again`,
-                'Consider reviewing existing guidance while waiting',
-                'Contact support if you need immediate assistance',
-              ],
-              source_references: [
-                `Rate limit: ${rateLimitError.error.limit} requests per ${rateLimitError.error.window}`,
-              ],
-            };
+              return {
+                guidance: `Rate limit exceeded for AI help requests. ${rateLimitError.suggestion}`,
+                confidence_score: 0.1,
+                related_topics: ['Rate Limiting'],
+                follow_up_suggestions: [
+                  `Wait ${retryAfter} seconds before trying again`,
+                  'Consider reviewing existing guidance while waiting',
+                  'Contact support if you need immediate assistance',
+                ],
+                source_references: [
+                  `Rate limit: ${rateLimitError.error.limit} requests per ${rateLimitError.error.window}`,
+                ],
+              };
+            }
           }
 
           // Enhanced error handling with fallback to mock data
@@ -349,15 +352,18 @@ class AssessmentAIService {
       // // TODO: Replace with proper logging
 
       // Handle rate limiting specifically
-      if (error.response?.status === 429) {
-        const rateLimitError = error.response.data as AIRateLimitError;
-        const retryAfter = rateLimitError.error.retry_after;
+      if (error && typeof error === 'object' && 'response' in error) {
+        const errorWithResponse = error as { response?: { status?: number; data?: any } };
+        if (errorWithResponse.response?.status === 429) {
+          const rateLimitError = errorWithResponse.response.data as AIRateLimitError;
+          const retryAfter = rateLimitError.error.retry_after;
 
-        return {
-          follow_up_questions: [],
-          reasoning: `Rate limit exceeded for AI follow-up questions. ${rateLimitError.suggestion}`,
-          estimated_completion_time: retryAfter,
-        };
+          return {
+            follow_up_questions: [],
+            reasoning: `Rate limit exceeded for AI follow-up questions. ${rateLimitError.suggestion}`,
+            estimated_completion_time: retryAfter,
+          };
+        }
       }
 
       // Enhanced error handling with fallback to mock data
@@ -385,7 +391,7 @@ class AssessmentAIService {
 
       // Development fallback
       return mockAIResponses.analysis;
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -451,7 +457,7 @@ class AssessmentAIService {
           'Zero retention-related compliance incidents',
         ],
       };
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -534,7 +540,7 @@ Can you provide guidance on how to answer this question correctly?`;
       } else {
         // TODO: Replace with proper logging
       }
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
       // // TODO: Replace with proper logging
       // Non-blocking - don't throw error for feedback submission
@@ -558,7 +564,7 @@ Can you provide guidance on how to answer this question correctly?`;
         total_interactions: number;
       }>('/ai/assessments/metrics');
       return response;
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -869,7 +875,7 @@ Can you provide guidance on how to answer this question correctly?`;
     try {
       const result = await Promise.race([aiRequest, timeoutPromise]);
       return result;
-    } catch {
+    } catch (error) {
       if (error instanceof Error && error.message.includes('timed out')) {
         // TODO: Replace with proper logging
         throw new Error(`${operation} is taking longer than expected. Please try again.`);
@@ -938,7 +944,7 @@ Can you provide guidance on how to answer this question correctly?`;
       const response = await this.executeWithTimeout(aiRequest, timeoutMs, 'Enhanced AI analysis');
 
       return response;
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -1007,7 +1013,7 @@ Can you provide guidance on how to answer this question correctly?`;
               eventSource.close();
               break;
           }
-        } catch {
+        } catch (error) {
           // TODO: Replace with proper logging
 
           // // TODO: Replace with proper logging
@@ -1019,7 +1025,7 @@ Can you provide guidance on how to answer this question correctly?`;
         options.onError?.('Connection error occurred');
         eventSource.close();
       };
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -1062,7 +1068,7 @@ Can you provide guidance on how to answer this question correctly?`;
               eventSource.close();
               break;
           }
-        } catch {
+        } catch (error) {
           // TODO: Replace with proper logging
 
           // // TODO: Replace with proper logging
@@ -1074,7 +1080,7 @@ Can you provide guidance on how to answer this question correctly?`;
         options.onError?.('Connection error occurred');
         eventSource.close();
       };
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging
@@ -1118,7 +1124,7 @@ Can you provide guidance on how to answer this question correctly?`;
               eventSource.close();
               break;
           }
-        } catch {
+        } catch (error) {
           // TODO: Replace with proper logging
 
           // // TODO: Replace with proper logging
@@ -1130,7 +1136,7 @@ Can you provide guidance on how to answer this question correctly?`;
         options.onError?.('Connection error occurred');
         eventSource.close();
       };
-    } catch {
+    } catch (error) {
       // TODO: Replace with proper logging
 
       // // TODO: Replace with proper logging

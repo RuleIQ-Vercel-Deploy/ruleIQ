@@ -215,6 +215,25 @@ class EvidenceService {
     const response = await apiClient.get<any>(`/evidence/${id}/quality`);
     return response;
   }
+
+  /**
+   * Upload evidence file (simple version for tests)
+   */
+  async uploadEvidence(file: File): Promise<EvidenceItem> {
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    const response = await apiClient.post<EvidenceItem>('/evidence/upload', formData);
+    return response;
+  }
+
+  /**
+   * Update evidence status (simple version for tests)
+   */
+  async updateEvidenceStatus(id: string, status: string): Promise<EvidenceItem> {
+    const response = await apiClient.patch<EvidenceItem>(`/evidence/${id}`, { status });
+    return response;
+  }
 }
 
 export const evidenceService = new EvidenceService();
