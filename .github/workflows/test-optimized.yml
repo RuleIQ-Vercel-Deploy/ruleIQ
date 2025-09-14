@@ -37,7 +37,7 @@ jobs:
       PYTEST_XDIST_WORKER_COUNT: 4
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 0  # For accurate coverage reports
     
@@ -145,7 +145,7 @@ jobs:
     if: always()
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     
     - name: Download all coverage reports
       uses: actions/download-artifact@v4
