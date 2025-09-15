@@ -65,6 +65,16 @@ class ComplianceAssistant:
             HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
             }
 
+    async def _get_cached_content_manager(self):
+        """Lazily initialize and return the cached content manager."""
+        if self.cached_content_manager is None:
+            try:
+                self.cached_content_manager = await get_cached_content_manager()
+            except Exception as e:
+                logger.warning('Failed to initialize cached content manager: %s' % e)
+                return None
+        return self.cached_content_manager
+
     def _estimate_tokens(self, text: Optional[str]) -> int:
         """Approximate token count when tokenizer not available."""
         if not text:
@@ -195,16 +205,11 @@ class ComplianceAssistant:
             raise ModelUnavailableException(model_name='unknown', reason=
                 f'Model selection failed: {e!s}')
 
-    async def _get_cached_content_manager(self):
-        """Initialize and return the cached content manager."""
-        if self.cached_content_manager is None:
-            self.cached_content_manager = await get_cached_content_manager()
-        return self.cached_content_manager
+    
 
-    async def _get_or_create_assessment_cache(self, framework_id: str,
+        async def _get_or_create_assessment_cache(self, framework_id: str,
         business_profile: Dict[str, Any], assessment_context: Optional[Dict
-        [str, Any]]=None):
-        """
+        [str, Any]]=No_code        """
         Get or create cached content for assessment context.
 
         Args:
@@ -2530,8 +2535,17 @@ Provide brief, practical guidance in JSON format with 'guidance' and 'confidence
             conversation_parts = [system_prompt, user_prompt]
             if cached_content:
                 logger.debug('Using cached content for %s task' % task_type)
-                response = model.generate_content(conversation_parts,
-                    cached_content=cached_content)
+                if hasattr(model, 'generate_content_async'):
+                    response = await model.generate_content_async(
+                        conversation_parts,
+                        cached_content=cached_content
+                    )
+                else:
+                    response = await asyncio.to_thread(
+                        model.generate_content,
+                        conversation_parts,
+                        cached_content=cached_content
+                    )
             else:
                 logger.debug('No cached content available for %s task' %
                     task_type)
@@ -2539,7 +2553,10 @@ Provide brief, practical guidance in JSON format with 'guidance' and 'confidence
                     model_name if hasattr(model, 'model_name') else 'unknown'))
                 logger.info('System prompt: %s...' % system_prompt[:100])
                 logger.info('User prompt: %s...' % user_prompt[:200])
-                response = model.generate_content(conversation_parts)
+                if hasattr(model, 'generate_content_async'):
+                    response = await model.generate_content_async(conversation_parts)
+                else:
+                    response = await asyncio.to_thread(model.generate_content, conversation_parts)
                 logger.info('Got response object: %s, type: %s' % (response
                      is not None, type(response)))
             response_time_ms = int((datetime.now(timezone.utc) - start_time).
