@@ -285,3 +285,14 @@ test-integration-core:
 	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite api-workflows
 	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite database
 	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite contracts
+
+# Repository cleanup
+.PHONY: repo-clean repo-clean-apply
+
+repo-clean:
+	@echo "🧹 Running repository cleanup (dry-run)..."
+	@python scripts/repo_cleanup.py
+
+repo-clean-apply:
+	@echo "🧹 Applying repository cleanup..."
+	@python scripts/repo_cleanup.py --apply --remove-empty-dirs
