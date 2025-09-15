@@ -2,29 +2,32 @@ from __future__ import annotations
 
 from __future__ import annotations
 
+from __future__ import annotations
+
 """Golden Dataset ingestion tool for Neo4j - Fixed version."""
 import logging
 import os
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
 
 import numpy as np
 
 from services.ai.evaluation.schemas.common import (
-    GoldenDoc,
-    GoldenChunk,
-    SourceMeta,
-    RegCitation,
     ExpectedOutcome,
+    GoldenChunk,
+    GoldenDoc,
+    RegCitation,
+    SourceMeta,
 )
 
 logger = logging.getLogger(__name__)
 
 
 class Neo4jConnectionFixed:
-    """Fixed Neo4j connection that uses environment configuration."""
+    """Neo4j connection that reads configuration from environment."""
+
     _instance = None
     _driver = None
 
@@ -34,20 +37,25 @@ class Neo4jConnectionFixed:
         return cls._instance
 
     def __init__(self):
-        """Initialize Neo4j driver from environment variables."""
+        """Initialize the Neo4j driver using environment variables."""
         if self._driver is None:
             from neo4j import GraphDatabase
 
-            # Non-secret defaults for URI and user are acceptable; password must come from env
-            self.uri = os.getenv("NEO4J_URI", "bolt://localhost:7688")
-            # Support both NEO4J_USER and NEO4J_USERNAME for compatibility
-            self.user = os.getenv("NEO4J_USER") or os.getenv("NEO4J_USERNAME", "neo4j")
-            self.password = os.getenv("NEO4J_PASSWORD")
-            if not self.password:
+            uri = os.getenv("NEO4J_URI")
+            # Accept either NEO4J_USERNAME or legacy NEO4J_USER
+            user = os.getenv("NEO4J_USERNAME") or os.getenv("NEO4J_USER")
+            password = os.getenv("NEO4J_PASSWORD")
+
+            if not uri or not user or not password:
                 raise ValueError(
-                    "NEO4J_PASSWORD environment variable is required for Neo4j connection"
+                    "Neo4j configuration not set. "
+                    "Please set NEO4J_URI, NEO4J_USERNAME (or NEO4J_USER), and NEO4J_PASSWORD."
                 )
-            logger.info("[Neo4jConnectionFixed] Connecting to: %s" % self.uri)
+
+            self.uri = uri
+            self.user = user
+            self.password = password
+            logger.info("[Neo4jConnectionFixed] Connecting to: %s", self.uri)
             self._driver = GraphDatabase.driver(self.uri, auth=(self.user, self.password))
 
     def get_driver(self) -> Any:
@@ -74,11 +82,13 @@ class DocumentProcessor:
         documents: List[GoldenDoc] = []
         for doc_data in data.get("documents", []):
             source_meta_data = doc_data.get("source_meta", {})
-            if "fetched_at" in source_meta_data and source_meta_data["fetched_at"]:
+            if "fetched_at" in source_meta_data and isinstance(
+                source_meta_data["fetched_at"], str
+            ):
                 source_meta_data["fetched_at"] = datetime.fromisoformat(
                     source_meta_data["fetched_at"].replace("Z", "+00:00")
                 )
-            source_meta = SourceMeta(**source_meta_data)
+            source_meta = SourceMeta(**source_meta_data) if source_meta_data else None
             doc = GoldenDoc(
                 doc_id=doc_data["doc_id"],
                 content=doc_data["content"],
@@ -112,9 +122,11 @@ class EmbeddingService:
                 from sentence_transformers import SentenceTransformer
 
                 self.model = SentenceTransformer(self.model_name)
-                logger.info("Loaded embedding model: %s" % self.model_name)
+                logger.info("Loaded embedding model: %s", self.model_name)
             except ImportError:
-                logger.info("sentence-transformers not installed, using mock embeddings")
+                logger.info(
+                    "sentence-transformers not installed, using mock embeddings"
+                )
 
     def generate_embedding(self, text: str) -> List[float]:
         """Generate embedding for text."""
@@ -187,7 +199,7 @@ class GoldenDatasetIngestion:
         }
         try:
             documents = self.processor.load_golden_dataset(file_path)
-            logger.info("Loaded %s documents" % len(documents))
+            logger.info("Loaded %s documents", len(documents))
             driver = self.neo4j.get_driver()
             with driver.session() as session:
                 try:
@@ -206,7 +218,7 @@ class GoldenDatasetIngestion:
                     )
                     logger.info("Vector index verified")
                 except Exception as e:
-                    logger.info("Index check: %s" % e)
+                    logger.info("Index check issue: %s", e)
             for doc in documents:
                 try:
                     if not self.processor.validate_document(doc):
@@ -251,15 +263,15 @@ class GoldenDatasetIngestion:
                             )
                             result["chunks_created"] += 1
                     result["documents_processed"] += 1
-                    logger.info("Processed document: %s" % doc.doc_id)
+                    logger.info("Processed document: %s", doc.doc_id)
                 except Exception as e:
                     error_msg = f"Failed to ingest document: {doc.doc_id} - {str(e)}"
                     result["errors"].append(error_msg)
-                    logger.info("%s" % error_msg)
+                    logger.info("%s", error_msg)
             result["success"] = result["documents_processed"] > 0
         except Exception as e:
             result["errors"].append(f"Ingestion pipeline error: {str(e)}")
-            logger.info("Pipeline error: %s" % e)
+            logger.info("Pipeline error: %s", e)
         return result
 
     def search_similar(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:

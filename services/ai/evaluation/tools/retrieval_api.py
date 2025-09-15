@@ -1,13 +1,10 @@
-from __future__ import annotations
-
-from __future__ import annotations
-
 """
 Golden Dataset Retrieval API for AI Evaluation.
 
 This module provides a REST API for querying the golden dataset using
 semantic similarity search powered by Neo4j vector indexes.
 """
+from __future__ import annotations
 
 from typing import List, Dict, Any, Optional
 import os
