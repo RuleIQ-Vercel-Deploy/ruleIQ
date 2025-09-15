@@ -29,6 +29,7 @@ from .prompt_templates import PromptTemplates
 from .quality_monitor import get_quality_monitor
 from .response_cache import get_ai_cache
 from .tools import get_tool_schemas, tool_executor
+from .cost_management import AICostManager
 logger = get_logger(__name__)
 
 
@@ -49,6 +50,7 @@ class ComplianceAssistant:
         self.analytics_monitor = None
         self.quality_monitor = None
         self.circuit_breaker = AICircuitBreaker()
+        self.cost_manager = AICostManager()
         from services.ai.safety_manager import get_safety_manager_for_user, ContentType
         self.safety_manager = get_safety_manager_for_user(self.user_context)
         self.content_type_map = {'assessment_help': ContentType.
