@@ -22,6 +22,14 @@ python-magic>=0.4.27
 openai>=1.0.0
 google-generativeai>=0.8.0
 tiktoken>=0.5.0
+# LangChain/LangGraph stack
+langchain-core>=0.2.0
+langchain-openai>=0.2.0
+langgraph>=0.2.27
+# Graph database
+neo4j>=5.22.0
+# Numerical utils
+numpy>=1.26.0
 
 # Asynchronous Task Queue
 

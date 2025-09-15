@@ -36,7 +36,8 @@ async def get_iq_agent() ->IQComplianceAgent:
     if _iq_agent is None:
         try:
             _neo4j_service = Neo4jGraphRAGService()
-            await _neo4j_service.connect()
+            # Initialize Neo4j service (connect() is not implemented on the service)
+            await _neo4j_service.initialize()
             _iq_agent = await create_iq_agent(_neo4j_service)
             logger.info('IQ Agent initialized successfully')
         except Exception as e:
@@ -53,7 +54,8 @@ async def get_neo4j_service() ->Neo4jGraphRAGService:
     if _neo4j_service is None:
         try:
             _neo4j_service = Neo4jGraphRAGService()
-            await _neo4j_service.connect()
+            # Initialize Neo4j service (connect() is not implemented on the service)
+            await _neo4j_service.initialize()
         except Exception as e:
             logger.error('Failed to initialize Neo4j service: %s' % str(e))
             raise HTTPException(status_code=status.

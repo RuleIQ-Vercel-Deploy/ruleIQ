@@ -34,6 +34,12 @@ logger = logging.getLogger(__name__)
 
 class MemoryType(Enum):
     """Types of memory in the compliance system"""
+    CONVERSATION = "conversation"
+    KNOWLEDGE_GRAPH = "knowledge_graph"
+    TEMPORAL_PATTERN = "temporal_pattern"
+    RISK_ASSESSMENT = "risk_assessment"
+    COMPLIANCE_RULE = "compliance_rule"
+    REGULATORY_CHANGE = "regulatory_change"
 
 
 @dataclass
