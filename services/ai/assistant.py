@@ -1,12 +1,11 @@
 """
-from __future__ import annotations
-import requests
-
 The primary AI service that orchestrates the conversational flow, classifies user intent,
 and generates intelligent responses asynchronously.
 """
+from __future__ import annotations
 import asyncio
 import json
+import requests
 from datetime import datetime
 from datetime import timezone
 from typing import Any, AsyncIterator, Dict, List, Optional, Tuple
@@ -2593,7 +2592,7 @@ Provide brief, practical guidance in JSON format with 'guidance' and 'confidence
                 ='general', context={'priority': 1})
             full_prompt = f'System: {system_prompt}\n\nUser: {user_prompt}'
             start_time = datetime.now(timezone.utc)
-            response = model.generate_content(full_prompt)
+            response = await asyncio.to_thread(model.generate_content, full_prompt)
             final_text = None
             if hasattr(response, 'text') and response.text:
                 final_text = response.text
