@@ -1,7 +1,4 @@
-"""
-from __future__ import annotations
-
-Database Connection Pool Monitoring Service
+"""Database Connection Pool Monitoring Service
 
 Provides comprehensive monitoring for database connection pools including:
 - Real-time pool metrics
@@ -10,6 +7,7 @@ Provides comprehensive monitoring for database connection pools including:
 - Alert threshold monitoring
 - Prometheus-compatible metrics export
 """
+from __future__ import annotations
 
 import asyncio
 import logging

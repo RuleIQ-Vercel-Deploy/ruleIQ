@@ -1,0 +1,14 @@
+{
+  "projectId": "your-project-id",
+  "onlyChanged": true,
+  "exitOnceUploaded": true,
+  "exitZeroOnChanges": true,
+  "skip": "dependabot/**",
+  "externals": ["public/**"],
+  "storybookBuildDir": "storybook-static",
+  "autoAcceptChanges": "main",
+  "zip": true,
+  "junitReport": true,
+  "diagnosticsFile": true,
+  "debug": false
+}

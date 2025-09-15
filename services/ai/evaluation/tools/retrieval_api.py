@@ -1,28 +1,27 @@
 """Golden Dataset Retrieval API for AI Evaluation.
 
+This module provides a REST API for querying the golden dataset using
+semantic similarity search powered by Neo4j vector indexes.
+"""
 from __future__ import annotations
+
+import os
+import sys
+from typing import List, Dict, Any, Optional
+
+from fastapi import FastAPI, HTTPException, Query
+from pydantic import BaseModel, Field
 import requests
+import uvicorn
+
+# Add parent directory to path for imports
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))))
+
+from services.ai.evaluation.tools.ingestion_fixed import GoldenDatasetIngestion, EmbeddingService
 
 # Constants
 HTTP_INTERNAL_SERVER_ERROR = 500
 HTTP_NOT_FOUND = 404
-
-
-This module provides a REST API for querying the golden dataset using
-semantic similarity search powered by Neo4j vector indexes.
-"""
-import os
-import sys
-os.environ['NEO4J_URI'] = 'bolt://localhost:7688'
-os.environ['NEO4J_USER'] = 'neo4j'
-os.environ['NEO4J_PASSWORD'] = 'ruleiq123'
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(os.path.
-    dirname(os.path.dirname(os.path.abspath(__file__)))))))
-from typing import List, Dict, Any, Optional
-from fastapi import FastAPI, HTTPException, Query
-from pydantic import BaseModel, Field
-import uvicorn
-from services.ai.evaluation.tools.ingestion_fixed import GoldenDatasetIngestion, EmbeddingService
 
 
 class SearchRequest(BaseModel):

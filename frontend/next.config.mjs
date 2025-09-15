@@ -2,6 +2,9 @@ import { withSentryConfig } from "@sentry/nextjs";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Transpile GSAP and its plugins for proper SSR support
+  transpilePackages: ['gsap', '@gsap/react'],
+  
   // Build configuration
   eslint: {
     ignoreDuringBuilds: true, // Allow build to proceed with ESLint warnings

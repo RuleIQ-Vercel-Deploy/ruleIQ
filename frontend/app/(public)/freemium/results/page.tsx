@@ -6,7 +6,7 @@ import { FreemiumResults } from '../../../../components/freemium/freemium-result
 import { Card, CardContent } from '../../../../components/ui/card';
 import { Button } from '../../../../components/ui/button';
 import { useFreemiumStore, useFreemiumSession } from '../../../../lib/stores/freemium-store';
-import { AlertTriangle, Loader2, ArrowLeft, Share2, Download } from 'lucide-react';
+import { AlertTriangle, Loader2, ArrowLeft, Share2, Download, Shield, Mail, Rocket } from 'lucide-react';
 
 function ResultsContent() {
   const searchParams = useSearchParams();
@@ -184,9 +184,9 @@ function ResultsContent() {
         <div className="container mx-auto px-4">
           <div className="space-y-4 text-center">
             <div className="flex flex-col items-center justify-center space-y-2 text-sm text-gray-500 sm:flex-row sm:space-x-6 sm:space-y-0">
-              <span>🔒 Your data is secure and never shared</span>
-              <span>📧 Results saved to {sessionData.email}</span>
-              <span>🚀 Powered by RuleIQ AI</span>
+              <span><Shield className="inline h-4 w-4 mr-1" />Your data is secure and never shared</span>
+              <span><Mail className="inline h-4 w-4 mr-1" />Results saved to {sessionData.email}</span>
+              <span><Rocket className="inline h-4 w-4 mr-1" />Powered by RuleIQ AI</span>
             </div>
 
             {/* Call to action for additional assessments */}

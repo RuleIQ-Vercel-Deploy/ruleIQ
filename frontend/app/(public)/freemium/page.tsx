@@ -28,7 +28,7 @@ export default function FreemiumLandingPage() {
             <div className="space-y-8">
               <div className="space-y-4">
                 <Badge className="border-teal-200 bg-teal-100 px-3 py-1 text-sm text-teal-700">
-                  🚀 AI-Powered Assessment
+                  FREE SECURITY ASSESSMENT AI-Powered Assessment
                 </Badge>
                 <h1 className="text-4xl font-bold leading-tight text-gray-900 lg:text-5xl">
                   Discover Your

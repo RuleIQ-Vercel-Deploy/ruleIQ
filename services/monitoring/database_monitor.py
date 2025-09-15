@@ -1,23 +1,24 @@
-"""
+"""Database monitoring service for connection pool and session lifecycle tracking."""
 from __future__ import annotations
 
-# Constants
-MAX_ITEMS = 1000
-
-
-Database monitoring service for connection pool and session lifecycle tracking.
-"""
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta, timezone
 from enum import Enum
 from typing import Any, Dict, List, Optional
 from config.logging_config import get_logger
 from database.db_setup import get_engine_info
+
+# Constants
+MAX_ITEMS = 1000
+
 logger = get_logger(__name__)
 
 
 class AlertLevel(Enum):
     """Alert severity levels."""
+    INFO = "info"
+    WARNING = "warning"
+    CRITICAL = "critical"
 
 
 @dataclass

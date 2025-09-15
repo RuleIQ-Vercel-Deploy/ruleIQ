@@ -75,7 +75,7 @@ export default function TestTheme() {
           {/* WCAG Compliance Status */}
           <div className="rounded-lg border-l-4 border-l-green-500 bg-green-50 p-6">
             <h3 className="mb-2 text-lg font-medium text-green-800">
-              ✅ WCAG 2.2 AA Compliance Status
+              Completed WCAG 2.2 AA Compliance Status
             </h3>
             <ul className="space-y-1 text-green-700">
               <li>• Text contrast ratio ≥ 4.5:1 for normal text</li>

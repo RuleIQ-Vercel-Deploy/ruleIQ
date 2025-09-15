@@ -66,7 +66,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={cn('h-full', inter.variable)} suppressHydrationWarning>
-      <body className="h-full antialiased" suppressHydrationWarning>
+      <body className="dark h-full antialiased bg-black" suppressHydrationWarning>
         <ThemeProvider defaultTheme="dark" storageKey="ruleiq-ui-theme">
           <QueryProvider>
             <GlobalErrorBoundary showErrorDetails={process.env.NODE_ENV === 'development'}>

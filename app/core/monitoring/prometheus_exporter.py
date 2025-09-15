@@ -522,110 +522,6 @@ class MetricsHTTPServer:
         return self._is_running
 
 class PrometheusMetricsExporter:
-    """Main Prometheus metrics exporter with registry support."""
-
-    def __init__(self, port: int=9090, registry=None):
-        """Initialize Prometheus metrics exporter.
-
-        Args:
-            port: Port for HTTP server
-            registry: Optional Prometheus registry
-        """
-        self.port = port
-        self.registry = registry or {}
-        self.formatter = PrometheusFormatter()
-        self.server = MetricsHTTPServer(port=port)
-        self.metrics = {}
-        self._collectors = []
-
-    def register_metric(self, metric_name: str, metric_type: str, description: str='', labels: List[str]=None) -> None:
-        """Register a new metric.
-
-        Args:
-            metric_name: Name of the metric
-            metric_type: Type of metric (counter, gauge, histogram, summary)
-            description: Metric description
-            labels: List of label names
-        """
-        self.metrics[metric_name] = {'type': metric_type, 'description': description, 'labels': labels or [], 'values': {}}
-
-    def update_metric(self, metric_name: str, value: float, labels: Dict[str, str]=None) -> None:
-        """Update a metric value.
-
-        Args:
-            metric_name: Name of the metric
-            value: Metric value
-            labels: Label values
-        """
-        if metric_name not in self.metrics:
-            raise ValueError(f'Metric {metric_name} not registered')
-        label_key = self._get_label_key(labels)
-        self.metrics[metric_name]['values'][label_key] = {'value': value, 'labels': labels or {}, 'timestamp': time.time()}
-
-    def update_metrics(self, updates: List[Tuple[str, float, Dict[str, str]]]) -> None:
-        """Update multiple metrics at once.
-
-        Args:
-            updates: List of (metric_name, value, labels) tuples
-        """
-        for metric_name, value, labels in updates:
-            self.update_metric(metric_name, value, labels)
-
-    def collect(self) -> str:
-        """Collect all metrics in Prometheus format.
-
-        Returns:
-            Prometheus formatted metrics string
-        """
-        output = []
-        for metric_name, metric_info in self.metrics.items():
-            for label_key, value_info in metric_info['values'].items():
-                metric_data = {'name': metric_name, 'type': metric_info['type'], 'description': metric_info['description'], 'value': value_info['value'], 'labels': value_info['labels']}
-                if 'timestamp' in value_info:
-                    metric_data['timestamp'] = value_info['timestamp']
-                formatted = self.formatter.format_metric(metric_data)
-                output.append(formatted)
-        return '\n\n'.join(output)
-
-    def generate_latest(self) -> str:
-        """Generate latest metrics in Prometheus format.
-
-        Returns:
-            Prometheus formatted metrics string
-        """
-        return self.collect()
-
-    def add_collector(self, collector) -> None:
-        """Add a custom collector.
-
-        Args:
-            collector: Collector instance with collect() method
-        """
-        self._collectors.append(collector)
-
-    def _get_label_key(self, labels: Dict[str, str]=None) -> str:
-        """Generate a unique key for label combination.
-
-        Args:
-            labels: Label dictionary
-
-        Returns:
-            Unique label key
-        """
-        if not labels:
-            return ''
-        return ','.join((f'{k}={v}' for k, v in sorted(labels.items())))
-
-    async def start(self) -> None:
-        """Start the HTTP server."""
-        self.server.set_metrics_callback(self.collect)
-        await self.server.start()
-
-    async def shutdown(self) -> None:
-        """Shutdown the HTTP server."""
-        await self.server.shutdown()
-
-class PrometheusMetricsExporter:
     """Main Prometheus metrics exporter."""
 
     def __init__(self, port: int=9090, path: str='/metrics', registry=None):
@@ -770,13 +666,13 @@ class PrometheusMetricsExporter:
                 logger.error(f'Error in custom collector: {e}')
         return '\n'.join(output) + '\n'
 
-    def start_http_server(self) -> None:
+    async def start_http_server(self) -> None:
         """Start the HTTP server for metrics endpoint."""
-        self.http_server.start()
+        await self.http_server.start()
 
-    def stop_http_server(self) -> None:
+    async def stop_http_server(self) -> None:
         """Stop the HTTP server."""
-        self.http_server.stop()
+        await self.http_server.stop()
 
     def get_metric_families(self) -> Dict[str, str]:
         """Get all registered metric families.
@@ -943,7 +839,3 @@ class PrometheusMetricsExporter:
         """Start the HTTP server synchronously."""
         import asyncio
         asyncio.run(self.start())
-
-    async def start_http_server(self) -> None:
-        """Start the HTTP server asynchronously."""
-        await self.http_server.start()

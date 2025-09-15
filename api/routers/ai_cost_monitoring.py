@@ -13,7 +13,7 @@ and real-time monitoring of AI service usage and expenses.
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from typing import Dict, List, Optional, Any
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
 from pydantic import BaseModel, Field
 from api.dependencies.auth import get_current_active_user
 from database.user import User
@@ -163,8 +163,8 @@ optimization_service = CostOptimizationService()
 @router.post('/track', response_model=CostTrackingResponse, status_code=
     status.HTTP_201_CREATED, dependencies=[Depends(get_current_active_user),
     Depends(RateLimited(requests=100, window=60))])
-async def track_ai_usage(request: CostTrackingRequest, current_user: User=
-    Depends(get_current_active_user)) ->Any:
+async def track_ai_usage(request: CostTrackingRequest, current_user: User = 
+    Depends(get_current_active_user)) -> Any:
     """
     Track AI usage and calculate costs.
 
@@ -197,7 +197,7 @@ async def track_ai_usage(request: CostTrackingRequest, current_user: User=
     requests=20, window=60))])
 async def get_daily_cost_analytics(target_date: Optional[date]=Query(None,
     description='Target date (default: today)'), include_hourly: bool=Query
-    (False, description='Include hourly breakdown')) ->Any:
+    (False, description='Include hourly breakdown')) -> Any:
     """
     Get comprehensive daily cost analytics.
 
@@ -231,7 +231,7 @@ async def get_daily_cost_analytics(target_date: Optional[date]=Query(None,
     requests=20, window=60))])
 async def get_cost_trends(days: int=Query(7, ge=1, le=90, description=
     'Number of days to analyze'), include_anomalies: bool=Query(True,
-    description='Include anomaly detection')) ->Any:
+    description='Include anomaly detection')) -> Any:
     """
     Get cost trends and patterns over time.
 
@@ -264,8 +264,8 @@ async def get_cost_trends(days: int=Query(7, ge=1, le=90, description=
 @router.post('/budget/configure', status_code=status.HTTP_200_OK,
     dependencies=[Depends(get_current_active_user), Depends(RateLimited(
     requests=10, window=60))])
-async def configure_budget(config: BudgetConfigRequest, current_user: User=
-    Depends(get_current_active_user)) ->Dict[str, Any]:
+async def configure_budget(config: BudgetConfigRequest, current_user: User = 
+    Depends(get_current_active_user)) -> Dict[str, Any]:
     """
     Configure budget limits and constraints.
 
@@ -291,7 +291,7 @@ async def configure_budget(config: BudgetConfigRequest, current_user: User=
 @router.get('/budget/status', response_model=BudgetStatusResponse,
     dependencies=[Depends(get_current_active_user), Depends(RateLimited(
     requests=30, window=60))])
-async def get_budget_status() ->Any:
+async def get_budget_status() -> Any:
     """
     Get current budget status and usage.
 
@@ -337,7 +337,7 @@ async def get_budget_status() ->Any:
 @router.get('/alerts', response_model=List[AlertResponse], dependencies=[
     Depends(get_current_active_user), Depends(RateLimited(requests=30,
     window=60))])
-async def get_budget_alerts() ->Any:
+async def get_budget_alerts() -> Any:
     """
     Get current budget alerts and warnings.
 
@@ -359,7 +359,7 @@ async def get_budget_alerts() ->Any:
 @router.get('/optimization/recommendations', response_model=List[
     OptimizationResponse], dependencies=[Depends(get_current_active_user),
     Depends(RateLimited(requests=10, window=60))])
-async def get_optimization_recommendations() ->Any:
+async def get_optimization_recommendations() -> Any:
     """
     Get cost optimization recommendations.
 
@@ -382,7 +382,7 @@ async def get_optimization_recommendations() ->Any:
 @router.post('/routing/select-model', response_model=ModelRoutingResponse,
     dependencies=[Depends(get_current_active_user), Depends(RateLimited(
     requests=50, window=60))])
-async def select_optimal_model(request: ModelRoutingRequest) ->Any:
+async def select_optimal_model(request: ModelRoutingRequest) -> Any:
     """
     Select optimal model based on task requirements and cost constraints.
 
@@ -414,7 +414,7 @@ async def select_optimal_model(request: ModelRoutingRequest) ->Any:
 async def generate_monthly_report(year: int=Query(..., ge=2020, le=2030,
     description='Year for report'), month: int=Query(..., ge=1, le=12,
     description='Month for report'), format: str=Query('json', regex=
-    '^(json|pdf)$', description='Report format')) ->Any:
+    '^(json|pdf)$', description='Report format')) -> Any:
     """
     Generate comprehensive monthly cost report.
 
@@ -438,8 +438,7 @@ async def generate_monthly_report(year: int=Query(..., ge=2020, le=2030,
 async def get_usage_by_service(service_name: str=Query(..., description=
     'Service name to analyze'), start_date: Optional[date]=Query(None,
     description='Start date (default: 7 days ago)'), end_date: Optional[
-    date]=Query(None, description='End date (default: today)')) ->Dict[str, Any
-    ]:
+    date]=Query(None, description='End date (default: today)')) -> Dict[str, Any]:
     """
     Get usage metrics for specific service over time range.
 
@@ -475,7 +474,7 @@ async def get_usage_by_service(service_name: str=Query(..., description=
 
 @router.get('/health', dependencies=[Depends(RateLimited(requests=60,
     window=60))])
-async def cost_monitoring_health() ->Dict[str, Any]:
+async def cost_monitoring_health() -> Dict[str, Any]:
     """
     Health check for cost monitoring system.
 
@@ -496,7 +495,7 @@ async def cost_monitoring_health() ->Dict[str, Any]:
 
 @router.delete('/cache/clear', dependencies=[Depends(
     get_current_active_user), Depends(RateLimited(requests=5, window=3600))])
-async def clear_cost_cache() ->Dict[str, Any]:
+async def clear_cost_cache() -> Dict[str, Any]:
     """
     Clear cost monitoring cache.
 

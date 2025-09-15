@@ -1,0 +1,3 @@
+[submodule "docs/iso27001-templates"]
+	path = docs/iso27001-templates
+	url = https://github.com/muhammadumar-usman/ISO27K1-Compliance_Documents.git

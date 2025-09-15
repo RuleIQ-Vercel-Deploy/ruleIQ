@@ -1,7 +1,8 @@
 """Golden Dataset ingestion tool for Neo4j - Fixed version."""
+from __future__ import annotations
+
 import logging
 logger = logging.getLogger(__name__)
-from __future__ import annotations
 import os
 if not os.getenv('NEO4J_URI'):
     os.environ['NEO4J_URI'] = 'bolt://localhost:7688'

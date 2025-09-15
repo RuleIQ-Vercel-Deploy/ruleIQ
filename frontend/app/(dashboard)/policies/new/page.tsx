@@ -1,34 +1,22 @@
 'use client';
 
-import * as React from 'react';
-import { useRouter } from 'next/navigation';
-import { Loader2 } from 'lucide-react';
-
+import { IntelligentPolicyWizard } from '@/components/policies/intelligent-policy-wizard';
 import { AppSidebar } from '@/components/navigation/app-sidebar';
 import { BreadcrumbNav } from '@/components/navigation/breadcrumb-nav';
-import { GenerationProgress } from '@/components/policies/wizard/generation-progress';
-import { SelectionCard } from '@/components/policies/wizard/selection-card';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { FormField } from '@/components/ui/form-field';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Stepper } from '@/components/ui/stepper';
-import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
-import {
-  frameworks,
-  policyTypes,
-  companyDetails,
-  scopeOptions,
-} from '@/lib/data/policy-wizard-data';
-import { policyService } from '@/lib/api/policies.service';
-
-const steps = ['Framework', 'Policy Type', 'Customize', 'Generate'];
 
 export default function NewPolicyPage() {
-  const router = useRouter();
-  const { toast } = useToast();
+  return (
+    <div className="flex min-h-screen w-full">
+      <AppSidebar />
+      <main className="flex flex-1 flex-col space-y-6 p-6 lg:p-8">
+        <BreadcrumbNav
+          items={[{ title: 'Policies', href: '/policies' }, { title: 'New Policy' }]}
+        />
+        <IntelligentPolicyWizard />
+      </main>
+    </div>
+  );
+}
   const [currentStep, setCurrentStep] = React.useState(1);
   const [selectedFrameworks, setSelectedFrameworks] = React.useState<string[]>([]);
   const [selectedPolicyType, setSelectedPolicyType] = React.useState<string | null>(null);
