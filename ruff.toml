@@ -29,8 +29,6 @@ ignore = [
     "PLR0911", # Too many return statements
     "S311",  # Non-cryptographic random usage
     "S603",  # Subprocess without shell
-    "S105",  # Hardcoded password
-    "S106",  # Hardcoded password func arg
     "S110",  # Try except pass
     "S101",  # Assert (primarily in test files)
 ]
@@ -69,6 +67,8 @@ exclude = [
     "F821",    # Undefined name (fixtures)
     "S113",    # Request without timeout (acceptable in tests)
     "S324",    # Hashlib insecure hash (acceptable in tests)
+    "S105",    # Hardcoded password allowed in tests
+    "S106",    # Hardcoded password func arg allowed in tests
 ]
 "*/__init__.py" = ["F401"]  # Allow unused imports in __init__.py
 

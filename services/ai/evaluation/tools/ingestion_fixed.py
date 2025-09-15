@@ -1,14 +1,10 @@
+from __future__ import annotations
+
 """Golden Dataset ingestion tool for Neo4j - Fixed version."""
 import logging
 logger = logging.getLogger(__name__)
-from __future__ import annotations
+
 import os
-if not os.getenv('NEO4J_URI'):
-    os.environ['NEO4J_URI'] = 'bolt://localhost:7688'
-if not os.getenv('NEO4J_USER'):
-    os.environ['NEO4J_USER'] = 'neo4j'
-if not os.getenv('NEO4J_PASSWORD'):
-    os.environ['NEO4J_PASSWORD'] = 'ruleiq123'
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 import json
