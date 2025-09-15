@@ -66,6 +66,72 @@ class ComplianceAssistant:
             HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_ONLY_HIGH,
             }
 
+    def _estimate_tokens(self, text: Optional[str]) -> int:
+        """Approximate token count when tokenizer not available."""
+        if not text:
+            return 0
+        try:
+            # Rough heuristic: 1 token ≈ 4 characters for English text
+            return max(1, len(text) // 4)
+        except Exception:
+            return 0
+
+    async def _track_ai_cost(
+        self,
+        service_name: str,
+        model_name: str,
+        input_texts: Any,
+        output_text: Optional[str],
+        start_time: datetime,
+        cache_hit: bool = False,
+        error_occurred: bool = False,
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        """Track AI request cost via AICostManager."""
+        try:
+            # Normalize input texts to a single concatenated string for estimation
+            if isinstance(input_texts, (list, tuple)):
+                input_concat = "\n".join([t for t in input_texts if isinstance(t, str)])
+            elif isinstance(input_texts, str):
+                input_concat = input_texts
+            else:
+                input_concat = ""
+
+            input_tokens = self._estimate_tokens(input_concat)
+            output_tokens = self._estimate_tokens(output_text or "")
+
+            # Do not attribute token costs for cache hits
+            if cache_hit:
+                input_tokens = 0
+                output_tokens = 0
+
+            response_time_ms = int((datetime.now(timezone.utc) - start_time).total_seconds() * 1000)
+            user_id = None
+            try:
+                user_id = self.user_context.get("user_id")
+            except Exception:
+                user_id = None
+            session_id = getattr(self, "current_session_id", None)
+            request_id = f"req_{int(datetime.now(timezone.utc).timestamp() * 1000)}"
+
+            await self.cost_manager.track_ai_request(
+                service_name=service_name,
+                model_name=model_name or "unknown",
+                input_prompt=input_concat,
+                response_content=output_text or "",
+                input_tokens=input_tokens,
+                output_tokens=output_tokens,
+                user_id=str(user_id) if user_id else None,
+                session_id=str(session_id) if session_id else None,
+                request_id=request_id,
+                response_time_ms=response_time_ms,
+                cache_hit=cache_hit,
+                error_occurred=error_occurred,
+                metadata=metadata or {},
+            )
+        except Exception as e:
+            logger.warning("Cost tracking failed: %s" % e)
+
     def _get_task_appropriate_model(self, task_type: str, context: Optional
         [Dict[str, Any]]=None, tools: Optional[List[Dict[str, Any]]]=None,
         cached_content=None) ->Tuple[Any, str]:
@@ -237,13 +303,11 @@ class ComplianceAssistant:
                 tools = get_tool_schemas(tool_names)
             else:
                 tools = self._get_tools_for_task(task_type)
-            model, instruction_id = self._get_task_appropriate_model(task_type,
-                context, tools)
-            logger.info('Generating response with %s tools for task: %s' %
-                (len(tools), task_type))
-            response = model.generate_content(prompt)
-            function_call_results = await self._handle_function_calls(response,
-                context)
+            model, instruction_id = self._get_task_appropriate_model(task_type, context, tools)
+            logger.info('Generating response with %s tools for task: %s' % (len(tools), task_type))
+            start_time = datetime.now(timezone.utc)
+            response = await asyncio.to_thread(model.generate_content, prompt)
+            function_call_results = await self._handle_function_calls(response, context)
             response_text = ''
             if hasattr(response, 'text') and response.text:
                 response_text = response.text
@@ -254,16 +318,38 @@ class ComplianceAssistant:
             try:
                 from .instruction_monitor import InstructionMetricType
                 self.instruction_manager.record_instruction_usage(
-                    instruction_id, metric_type=InstructionMetricType.
-                    RESPONSE_QUALITY, value=0.8, context={'task_type':
-                    task_type, 'tools_used': len(tools), 'function_calls':
-                    function_call_results.get('has_function_calls', False)})
+                    instruction_id,
+                    metric_type=InstructionMetricType.RESPONSE_QUALITY,
+                    value=0.8,
+                    context={
+                        'task_type': task_type,
+                        'tools_used': len(tools),
+                        'function_calls': function_call_results.get('has_function_calls', False),
+                    },
+                )
             except requests.RequestException as e:
                 logger.warning('Failed to record instruction usage: %s' % e)
-            return {'response_text': response_text, 'function_calls':
-                function_call_results, 'tools_used': [tool['name'] for tool in
-                tools], 'model_used': getattr(model, 'model_name',
-                'unknown'), 'instruction_id': instruction_id, 'success': True}
+            # Cost tracking
+            try:
+                await self._track_ai_cost(
+                    service_name=f'assistant.{task_type}',
+                    model_name=getattr(model, 'model_name', 'unknown'),
+                    input_texts=prompt,
+                    output_text=response_text,
+                    start_time=start_time,
+                    cache_hit=False,
+                    metadata={'tools_used': [tool['name'] for tool in tools], 'instruction_id': instruction_id},
+                )
+            except Exception as e:
+                logger.warning('Cost tracking (tools) failed: %s' % e)
+            return {
+                'response_text': response_text,
+                'function_calls': function_call_results,
+                'tools_used': [tool['name'] for tool in tools],
+                'model_used': getattr(model, 'model_name', 'unknown'),
+                'instruction_id': instruction_id,
+                'success': True,
+            }
         except (requests.RequestException, KeyError, IndexError) as e:
             logger.error('Error generating response with tools: %s' % e)
             return {'response_text':
@@ -404,6 +490,18 @@ class ComplianceAssistant:
                     logger.debug('Using cached AI response (fast path)')
                     await self.analytics_monitor.record_metric(MetricType.
                         CACHE, 'cache_hit', 1, metadata={'fast_path': True})
+                    try:
+                        await self._track_ai_cost(
+                            service_name='assistant.general',
+                            model_name='cache',
+                            input_texts=prompt,
+                            output_text=cached_response['response'],
+                            start_time=datetime.now(timezone.utc),
+                            cache_hit=True,
+                            metadata={'cache_type': 'local'},
+                        )
+                    except Exception as e:
+                        logger.warning('Cost tracking (cache) failed: %s' % e)
                     return cached_response['response']
             except asyncio.TimeoutError:
                 logger.debug(
@@ -468,6 +566,19 @@ class ComplianceAssistant:
                 asyncio.create_task(self._assess_response_quality(
                     response_id, response_text, optimized_prompt, safe_context),
                     )
+                # Cost tracking
+                try:
+                    await self._track_ai_cost(
+                        service_name='assistant.general',
+                        model_name=getattr(model, 'model_name', 'unknown'),
+                        input_texts=optimized_prompt,
+                        output_text=response_text,
+                        start_time=start_time,
+                        cache_hit=False,
+                        metadata={'optimized': optimization_metadata.get('optimized', True) if isinstance(optimization_metadata, dict) else True}
+                    )
+                except Exception as e:
+                    logger.warning('Cost tracking (gemini) failed: %s' % e)
                 return response_text
             except asyncio.TimeoutError:
                 logger.warning(
@@ -2412,7 +2523,7 @@ Provide brief, practical guidance in JSON format with 'guidance' and 'confidence
         Returns:
             AI generated response text
         """
-        start_time = datetime.now()
+        start_time = datetime.now(timezone.utc)
         cache_hit = cached_content is not None
         try:
             model, instruction_id = self._get_task_appropriate_model(task_type
@@ -2432,7 +2543,7 @@ Provide brief, practical guidance in JSON format with 'guidance' and 'confidence
                 response = model.generate_content(conversation_parts)
                 logger.info('Got response object: %s, type: %s' % (response
                      is not None, type(response)))
-            response_time_ms = int((datetime.now() - start_time).
+            response_time_ms = int((datetime.now(timezone.utc) - start_time).
                 total_seconds() * 1000)
             if self.cached_content_manager and context:
                 cache_key = self._generate_cache_key_for_context(context,
@@ -2446,6 +2557,19 @@ Provide brief, practical guidance in JSON format with 'guidance' and 'confidence
             response_text = self._extract_response_text(response)
             logger.debug('Response text for %s: %s' % (task_type, 
                 response_text[:200] if response_text else 'EMPTY'))
+            # Cost tracking
+            try:
+                await self._track_ai_cost(
+                    service_name=f'assistant.{task_type}',
+                    model_name=model_name,
+                    input_texts=conversation_parts,
+                    output_text=response_text,
+                    start_time=start_time,
+                    cache_hit=cache_hit,
+                    metadata={'instruction_id': instruction_id}
+                )
+            except Exception as e:
+                logger.warning('Cost tracking (cache flow) failed: %s' % e)
             return response_text
         except (ValueError, KeyError, IndexError) as e:
             try:
@@ -2468,35 +2592,59 @@ Provide brief, practical guidance in JSON format with 'guidance' and 'confidence
             model, instruction_id = self._get_task_appropriate_model(task_type
                 ='general', context={'priority': 1})
             full_prompt = f'System: {system_prompt}\n\nUser: {user_prompt}'
+            start_time = datetime.now(timezone.utc)
             response = model.generate_content(full_prompt)
+            final_text = None
             if hasattr(response, 'text') and response.text:
-                return response.text
+                final_text = response.text
             elif hasattr(response, 'candidates') and response.candidates:
                 candidate = response.candidates[0]
                 if hasattr(candidate, 'finish_reason'):
                     if candidate.finish_reason == 2:
                         logger.warning(
                             'AI response blocked by safety filters - providing compliance-focused fallback',
-                            )
-                        return (
+                        )
+                        final_text = (
                             "I understand you're asking about compliance matters. For regulatory compliance, it's important to follow established frameworks and maintain proper documentation. Could you please rephrase your question to be more specific about the compliance area you need help with?",
-                            )
+                        )
                     elif candidate.finish_reason == 3:
                         logger.warning(
-                            'AI response blocked due to recitation concerns')
-                        return (
+                            'AI response blocked due to recitation concerns'
+                        )
+                        final_text = (
                             "I can help with compliance guidance using my own analysis. Please rephrase your question and I'll provide original insights based on compliance best practices.",
-                            )
+                        )
                     else:
                         logger.warning(
-                            'AI response incomplete, finish_reason: %s' %
-                            candidate.finish_reason)
-                        return (
+                            'AI response incomplete, finish_reason: %s' % candidate.finish_reason
+                        )
+                        final_text = (
                             "I'm here to help with compliance and regulatory matters. Please try rephrasing your question to focus on specific compliance requirements.",
-                            )
-            return (
-                "I apologize, but I'm unable to provide a response at this time. Please try again later.",
+                        )
+                elif hasattr(candidate, 'content') and candidate.content:
+                    if hasattr(candidate.content, 'parts') and candidate.content.parts:
+                        parts = []
+                        for part in candidate.content.parts:
+                            if hasattr(part, 'text') and part.text:
+                                parts.append(part.text)
+                        if parts:
+                            final_text = '\n'.join(parts)
+            if final_text is None:
+                final_text = (
+                    "I apologize, but I'm unable to provide a response at this time. Please try again later.",
                 )
+            try:
+                await self._track_ai_cost(
+                    service_name='assistant.general',
+                    model_name=getattr(model, 'model_name', 'unknown'),
+                    input_texts=full_prompt,
+                    output_text=final_text if isinstance(final_text, str) else str(final_text),
+                    start_time=start_time,
+                    cache_hit=False,
+                )
+            except Exception as e:
+                logger.warning('Cost tracking (basic) failed: %s' % e)
+            return final_text
         except (KeyError, IndexError) as e:
             logger.error('Error generating AI response: %s' % e)
             return (
@@ -3419,11 +3567,25 @@ Compliance frameworks needed: {', '.join(compliance_needs[:3])}
                 task_type='recommendations', context={'business_profile':
                 business_profile, 'compliance_score': compliance_score})
             try:
+                start_time = datetime.now(timezone.utc)
                 response = await model_instance.generate_content_async([
                     system_prompt, user_prompt], generation_config={
                     'temperature': 0.3, 'max_output_tokens': 2000, 'top_p':
                     0.8, 'top_k': 40})
                 response_text = response.text.strip()
+                # Cost tracking for async generation
+                try:
+                    await self._track_ai_cost(
+                        service_name='assistant.recommendations',
+                        model_name=getattr(model_instance, 'model_name', 'unknown'),
+                        input_texts=[system_prompt, user_prompt],
+                        output_text=response_text,
+                        start_time=start_time,
+                        cache_hit=False,
+                        metadata={'async_generation': True, 'instruction_id': instruction_id},
+                    )
+                except Exception as e:
+                    logger.warning('Cost tracking (recommendations async) failed: %s' % e)
                 import json
                 import re
                 json_match = re.search('\\{.*\\}', response_text, re.DOTALL)
@@ -3467,6 +3629,20 @@ Compliance frameworks needed: {', '.join(compliance_needs[:3])}
                 logger.warning(
                     'AI model failed to generate recommendations: %s' %
                     model_error)
+                # Track error occurrence
+                try:
+                    await self._track_ai_cost(
+                        service_name='assistant.recommendations',
+                        model_name=getattr(model_instance, 'model_name', 'unknown'),
+                        input_texts=[system_prompt, user_prompt],
+                        output_text='',
+                        start_time=start_time if 'start_time' in locals() else datetime.now(timezone.utc),
+                        cache_hit=False,
+                        error_occurred=True,
+                        metadata={'async_generation': True, 'exception': str(model_error), 'instruction_id': instruction_id},
+                    )
+                except Exception as e:
+                    logger.warning('Cost tracking (recommendations async error) failed: %s' % e)
             logger.info('Using fallback recommendations')
             fallback_recommendations = []
             if compliance_score < 0.4:
