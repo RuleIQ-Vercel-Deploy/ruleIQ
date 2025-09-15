@@ -1,83 +1,93 @@
 #!/usr/bin/env python3
-"""Test document ingestion directly."""
+"""Test document ingestion directly (external service dependent).
 
-import sys
+Notes:
+- Marked as external and docker; skipped if required env vars not set.
+- Does not set or rely on hardcoded secrets.
+"""
+
 import os
+import sys
+import pytest
 from neo4j import GraphDatabase
 
-# Force correct Neo4j settings
-os.environ["NEO4J_URI"] = "bolt://localhost:7688"
-os.environ["NEO4J_PASSWORD"] = "ruleiq123"
+# Ensure local project importability if needed
+sys.path.insert(0, ".")
 
-# Now import after setting env vars
-from services.ai.evaluation.tools.ingest_docs import (
-    ManifestProcessor,
-    GoldenDatasetBuilder,
+NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7688")
+NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
+NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD")  # must be provided securely
+
+
+@pytest.mark.external
+@pytest.mark.docker
+@pytest.mark.skipif(
+    not NEO4J_PASSWORD,
+    reason="NEO4J_PASSWORD not set; skipping external Neo4j-dependent test",
 )
-
-
 def test_connection():
-    """Test Neo4j connection."""
-    driver = GraphDatabase.driver("bolt://localhost:7688", auth=("neo4j", "ruleiq123"))
+    """Test Neo4j connection using environment-provided credentials."""
+    driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
     try:
         with driver.session() as session:
             result = session.run("RETURN 1 as num")
-            print(f"Neo4j connection test: {result.single()['num']} - SUCCESS")
-    except Exception as e:
-        print(f"Neo4j connection failed: {e}")
+            assert result.single()["num"] == 1
     finally:
         driver.close()
 
 
-def ingest_documents():
-    """Ingest priority documents."""
-    # Load manifest
-    processor = ManifestProcessor(
+@pytest.mark.external
+@pytest.mark.docker
+@pytest.mark.skipif(
+    not NEO4J_PASSWORD,
+    reason="NEO4J_PASSWORD not set; skipping external Neo4j-dependent test",
+)
+def test_ingest_one_document_from_manifest(monkeypatch):
+    """Ingest a single priority document from manifest into Neo4j.
+
+    Skips if manifest path not available or env not configured.
+    """
+    # Defer heavy imports until after skip conditions
+    from services.ai.evaluation.tools.ingest_docs import (
+        ManifestProcessor,
+        GoldenDatasetBuilder,
+    )
+
+    manifest_path = os.getenv(
+        "GOLDEN_MANIFEST_PATH",
         "/home/omar/Documents/ruleIQ/data/manifests/compliance_ml_manifest.json",
     )
+    if not os.path.exists(manifest_path):
+        pytest.skip(f"Manifest not found at {manifest_path}")
+
+    # Build
+    processor = ManifestProcessor(manifest_path)
+    builder = GoldenDatasetBuilder()
+
+    # Ensure builder uses env-provided connection (no hardcoding)
+    conn = builder.graph_ingestion.connection
+    # If connection object exposes setters, ensure it picks env values
+    if hasattr(conn, "uri"):
+        conn.uri = NEO4J_URI
+    if hasattr(conn, "user"):
+        conn.user = NEO4J_USER
+    if hasattr(conn, "password"):
+        conn.password = NEO4J_PASSWORD
+
+    # Select a document deterministically if possible
     docs = processor.get_priority_documents(5)
+    if not docs:
+        pytest.skip("No priority documents found in manifest")
 
-    # Find accessible documents
-    accessible_docs = []
-    for doc in docs:
-        if "govinfo.gov" in doc.get("url", "") and doc["url"].endswith(".pdf"):
-            accessible_docs.append(doc)
+    # Prefer PDFs from trusted domains to reduce flakiness
+    candidate = next(
+        (d for d in docs if d.get("url", "").endswith(".pdf")), docs[0]
+    )
 
-    print(f"Found {len(accessible_docs)} accessible PDF documents")
+    golden_doc = builder.process_manifest_document(candidate)
+    assert golden_doc is not None
+    assert isinstance(golden_doc.content, str) and len(golden_doc.content) > 0
 
-    # Process first accessible document
-    if accessible_docs:
-        builder = GoldenDatasetBuilder()
-
-        # Manually fix the Neo4j connection
-        from services.ai.evaluation.infrastructure.neo4j_setup import Neo4jConnection
-
-        conn = builder.graph_ingestion.connection
-        conn.uri = "bolt://localhost:7688"
-        conn.password = "ruleiq123"
-
-        doc = accessible_docs[0]
-        print(f"\nProcessing: {doc['title']}")
-        print(f"URL: {doc['url']}")
-
-        golden_doc = builder.process_manifest_document(doc)
-        if golden_doc:
-            print(f"Document processed successfully!")
-            print(f"Content length: {len(golden_doc.content)} chars")
-
-            # Ingest into Neo4j
-            result = builder.ingest_document(golden_doc)
-            if result:
-                print("✅ Successfully ingested into Neo4j!")
-            else:
-                print("❌ Failed to ingest into Neo4j")
-        else:
-            print("Failed to process document")
-
-
-if __name__ == "__main__":
-    print("Testing Neo4j connection...")
-    test_connection()
-
-    print("\nStarting document ingestion...")
-    ingest_documents()
+    # Ingest (smoke)
+    success = builder.ingest_document(golden_doc)
+    assert success is True

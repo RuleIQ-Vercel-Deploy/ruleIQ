@@ -155,7 +155,7 @@ class TestEnvironmentSetup:
         # Set test database URL
         os.environ["DATABASE_URL"] = (
             f"postgresql://{self.test_db_user}:{self.test_db_password}@"
-            f"localhost:{self.test_db_port}/{self.test_db_name}",
+            f"localhost:{self.test_db_port}/{self.test_db_name}"
         )
         
         try:

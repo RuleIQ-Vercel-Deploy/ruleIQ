@@ -1,7 +1,5 @@
 """Document ingestion tool for golden datasets.
 
-from __future__ import annotations
-
 This script handles the complete ingestion pipeline:
 1. Load manifest via _load_manifest_clean
 2. Fetch each URL → extract text
@@ -9,6 +7,8 @@ This script handles the complete ingestion pipeline:
 4. Embed via BAAI/bge-small-en-v1.5
 5. Upsert to Neo4j
 """
+from __future__ import annotations
+
 import json
 import hashlib
 import argparse
