@@ -1,15 +1,11 @@
 """
-from __future__ import annotations
-import requests
-
-# Constants
-HTTP_INTERNAL_SERVER_ERROR = 500
-
-
 AI Optimization endpoints for ruleIQ API.
 
 Provides endpoints for AI model selection, health monitoring, and performance metrics.
 """
+from __future__ import annotations
+
+import requests
 from typing import Any, Dict
 from datetime import datetime, timezone
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -21,6 +17,10 @@ from api.dependencies.database import get_async_db
 from services.ai.assistant import ComplianceAssistant
 from config.cache import get_cache_manager
 from services.ai.circuit_breaker import AICircuitBreaker
+
+# Constants
+HTTP_INTERNAL_SERVER_ERROR = 500
+
 router = APIRouter()
 
 

@@ -1,21 +1,21 @@
 """
-from __future__ import annotations
-import requests
-
-# Constants
-MAX_ITEMS = 1000
-
-
 Comprehensive security middleware for ruleIQ backend
 """
-from typing import Any, Dict
+from __future__ import annotations
+
 import time
+import requests
+from typing import Any, Dict
 import uuid
 from fastapi import Request, Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
 from api.context import request_id_var, user_id_var
 from config.logging_config import get_logger
+
+# Constants
+MAX_ITEMS = 1000
+
 logger = get_logger(__name__)
 
 

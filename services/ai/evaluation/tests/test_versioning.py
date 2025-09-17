@@ -1,7 +1,6 @@
 """Test versioning utilities."""
 from __future__ import annotations
-from typing import Any, Dict, List, Optional
-import pytest
+from typing import Any
 from ..golden_datasets.versioning import is_semver
 
 # Constants

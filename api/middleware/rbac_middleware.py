@@ -1,15 +1,11 @@
 """
-from __future__ import annotations
-
-# Constants
-MAX_RETRIES = 3
-
-
 RBAC Middleware for Automatic API Protection
 
 Provides middleware that automatically enforces role-based access control
 on API endpoints based on route patterns and HTTP methods.
 """
+from __future__ import annotations
+
 import logging
 import time
 from typing import Dict, List, Optional, Pattern, Any
@@ -21,6 +17,10 @@ from starlette.responses import JSONResponse
 from api.dependencies.rbac_auth import UserWithRoles
 from database.db_setup import get_db
 from services.rbac_service import RBACService
+
+# Constants
+MAX_RETRIES = 3
+
 logger = logging.getLogger(__name__)
 
 

@@ -146,7 +146,8 @@ class GoogleWorkspaceIntegration(BaseIntegration):
                 evidence.append(self.format_evidence(evidence_type=
                     'user_access_logs', title=
                     'Google Workspace User Login Events', description=
-                    'Records of user login activities including successful and failed login attempts.'
+                    'Records of user login activities including '
+                    'successful and failed login attempts.'
                     , raw_data={'events': login_events, 'event_count': len(
                     login_events)}, compliance_frameworks=['SOC2',
                     'ISO27001', 'GDPR'], control_mappings={'SOC2':
@@ -157,7 +158,8 @@ class GoogleWorkspaceIntegration(BaseIntegration):
                 evidence.append(self.format_evidence(evidence_type=
                     'admin_activity_logs', title=
                     'Google Workspace Admin Activity', description=
-                    'Records of administrative actions including user management, security settings changes, and configuration updates.'
+                    'Records of administrative actions including user management, '
+                    'security settings changes, and configuration updates.'
                     , raw_data={'events': admin_events, 'event_count': len(
                     admin_events)}, compliance_frameworks=['SOC2',
                     'ISO27001'], control_mappings={'SOC2':

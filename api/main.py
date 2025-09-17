@@ -21,12 +21,21 @@ from sqlalchemy.exc import SQLAlchemyError
 
 # Constants
 HTTP_SERVICE_UNAVAILABLE = 503
-from api.routers import ai_assessments, ai_cost_monitoring, ai_cost_websocket, ai_optimization, ai_policy, assessments, auth, business_profiles, chat, compliance, evidence, evidence_collection, foundation_evidence, frameworks, freemium, implementation, integrations, iq_agent, monitoring, policies, readiness, rbac_auth, reports, security, uk_compliance, users
+from api.routers import (
+    ai_assessments, ai_cost_monitoring, ai_cost_websocket, ai_optimization,
+    ai_policy, assessments, auth, business_profiles, chat, compliance,
+    evidence, evidence_collection, foundation_evidence, frameworks,
+    freemium, implementation, integrations, iq_agent, monitoring,
+    policies, readiness, rbac_auth, reports, security, uk_compliance, users
+)
 from api.routers.admin import data_access, user_management, token_management
 from api.middleware.error_handler import error_handler_middleware
 from api.middleware.rate_limiter import rate_limit_middleware
 from api.middleware.security_headers import security_headers_middleware
-from database import test_async_database_connection, cleanup_db_connections, get_db, _AsyncSessionLocal as AsyncSessionLocal
+from database import (
+    test_async_database_connection, cleanup_db_connections, get_db,
+    _AsyncSessionLocal as AsyncSessionLocal
+)
 from config.settings import settings
 from monitoring.sentry import init_sentry
 from config.ai_config import ai_config

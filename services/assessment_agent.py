@@ -448,8 +448,8 @@ what's your primary industry?
 
         state["questions_answered"] += 1
 
-        # Update progress
-        progress = min((state["questions_answered"] / self.MIN_QUESTIONS) * 100, 100)
+        # Update progress (calculated but not used in this context)
+        # progress = min((state["questions_answered"] / self.MIN_QUESTIONS) * 100, 100)
 
         # Extract key information from answer
         if state["messages"]:

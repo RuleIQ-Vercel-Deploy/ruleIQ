@@ -1,10 +1,4 @@
 """
-from __future__ import annotations
-
-# Constants
-MAX_ITEMS = 1000
-
-
 Admin endpoints for token blacklist management.
 
 Provides administrative tools for:
@@ -13,6 +7,8 @@ Provides administrative tools for:
 - Analyzing security patterns
 - Performing maintenance operations
 """
+from __future__ import annotations
+
 from datetime import datetime, timezone
 from typing import Dict, Optional, Any
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -20,6 +16,10 @@ from pydantic import BaseModel
 from api.dependencies.auth import get_current_active_user
 from api.dependencies.token_blacklist import get_token_blacklist
 from database.user import User
+
+# Constants
+MAX_ITEMS = 1000
+
 router = APIRouter(prefix='/api/v1/admin/tokens', tags=['admin',
     'token-management'])
 

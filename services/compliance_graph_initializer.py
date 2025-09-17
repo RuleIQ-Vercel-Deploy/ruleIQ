@@ -498,8 +498,7 @@ class ComplianceGraphInitializer:
             """,
             ]
         for query in relationship_queries:
-            result = await self.neo4j.execute_query(query)
-            total_relationships += 1
+            await self.neo4j.execute_query(query)
         logger.info('Created relationship patterns: %s' % len(
             relationship_queries))
         return len(relationship_queries)

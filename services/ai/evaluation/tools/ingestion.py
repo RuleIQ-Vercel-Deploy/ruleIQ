@@ -2,11 +2,9 @@
 from __future__ import annotations
 import logging
 logger = logging.getLogger(__name__)
-from typing import List, Dict, Any, Optional
-from pathlib import Path
+from typing import List, Dict, Any
 import json
 from datetime import datetime
-import numpy as np
 from services.ai.evaluation.schemas.common import GoldenDoc, GoldenChunk, SourceMeta, RegCitation, ExpectedOutcome
 from services.ai.evaluation.infrastructure.neo4j_setup import Neo4jConnection
 

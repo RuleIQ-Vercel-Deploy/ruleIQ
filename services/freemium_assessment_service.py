@@ -1025,13 +1025,13 @@ class FreemiumAssessmentService:
 
             # If AI is available, generate a contextual follow-up question
             if self.circuit_breaker.is_model_available("gemini-2.5-flash"):
-                # Build context from previous answers
-                context = {
-                    "previous_answers": session.user_answers,
-                    "business_type": session.personalization_data.get("business_type"),
-                    "assessment_type": session.assessment_type,
-                    "questions_answered": len(answered_questions),
-                }
+                # Build context from previous answers (not used in this implementation)
+                # context = {
+                #     "previous_answers": session.user_answers,
+                #     "business_type": session.personalization_data.get("business_type"),
+                #     "assessment_type": session.assessment_type,
+                #     "questions_answered": len(answered_questions),
+                # }
 
                 # Generate a smart follow-up question based on what we've learned
                 follow_up = await self.assistant.generate_followup_questions(

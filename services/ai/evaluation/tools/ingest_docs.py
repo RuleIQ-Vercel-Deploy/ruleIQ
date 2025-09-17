@@ -18,7 +18,7 @@ from typing import Dict, List, Any, Optional
 from datetime import datetime, timezone
 import sys
 sys.path.append(str(Path(__file__).parent.parent.parent.parent))
-from services.ai.evaluation.tools.ingestion import DocumentProcessor, ChunkProcessor, EmbeddingGenerator, GraphIngestion, GoldenDatasetIngestion
+from services.ai.evaluation.tools.ingestion import DocumentProcessor, ChunkProcessor, EmbeddingGenerator, GraphIngestion
 from services.ai.evaluation.schemas.common import GoldenDoc, SourceMeta
 logging.basicConfig(level=logging.INFO, format=
     '%(asctime)s - %(name)s - %(levelname)s - %(message)s')

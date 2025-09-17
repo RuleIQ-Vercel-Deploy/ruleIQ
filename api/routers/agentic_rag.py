@@ -1,14 +1,9 @@
 """
-from __future__ import annotations
-
-# Constants
-HTTP_INTERNAL_SERVER_ERROR = 500
-HTTP_SERVICE_UNAVAILABLE = 503
-
-
 FastAPI router for Agentic RAG endpoints
 Provides seamless integration with LangGraph and Pydantic AI documentation
 """
+from __future__ import annotations
+
 from fastapi import APIRouter, HTTPException, Depends, Query
 from pydantic import BaseModel, Field
 from typing import Dict, Any, Optional
@@ -18,6 +13,11 @@ from api.dependencies.auth import get_current_active_user
 from database.user import User
 from api.middleware.rate_limiter import rate_limit
 from api.schemas.base import StandardResponse
+
+# Constants
+HTTP_INTERNAL_SERVER_ERROR = 500
+HTTP_SERVICE_UNAVAILABLE = 503
+
 logger = logging.getLogger(__name__)
 router = APIRouter(tags=['Agentic RAG'])
 

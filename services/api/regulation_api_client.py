@@ -272,7 +272,7 @@ class RegulationAPIClient:
         try:
             async with self.session.get(url) as response:
                 if response.status == HTTP_OK:
-                    content = await response.text()
+                    await response.text()  # Read response but don't use content
                     enforcements = []
                     return enforcements
         except (requests.RequestException, KeyError, IndexError) as e:
