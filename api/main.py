@@ -1,18 +1,16 @@
 """
-from __future__ import annotations
-
-# Constants
-HTTP_SERVICE_UNAVAILABLE = 503
-
-
 Main FastAPI application for ruleIQ API
 Production-ready FastAPI application with comprehensive configuration
 """
+from __future__ import annotations
+
 import logging
 import os
 import time
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator, Dict, Any
+
+import uvicorn
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
@@ -20,7 +18,9 @@ from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
-import uvicorn
+
+# Constants
+HTTP_SERVICE_UNAVAILABLE = 503
 from api.routers import ai_assessments, ai_cost_monitoring, ai_cost_websocket, ai_optimization, ai_policy, assessments, auth, business_profiles, chat, compliance, evidence, evidence_collection, foundation_evidence, frameworks, freemium, implementation, integrations, iq_agent, monitoring, policies, readiness, rbac_auth, reports, security, uk_compliance, users
 from api.routers.admin import data_access, user_management, token_management
 from api.middleware.error_handler import error_handler_middleware

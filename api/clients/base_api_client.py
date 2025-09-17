@@ -300,8 +300,9 @@ class BaseAPIClient(ABC):
         if not evidence_collector:
             supported_types = self.get_supported_evidence_types()
             raise UnsupportedEvidenceTypeException(
-                f"{evidence_type} not supported by {self.provider_name}. Supported types: {', '.join(supported_types)}",
-                )
+                f"{evidence_type} not supported by {self.provider_name}. "
+                f"Supported types: {', '.join(supported_types)}"
+            )
         return await evidence_collector.collect(**kwargs)
 
     def get_supported_evidence_types(self) ->List[str]:

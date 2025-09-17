@@ -25,39 +25,32 @@ logger = get_logger(__name__)
 
 class ExperimentType(Enum):
     """Types of A/B experiments."""
-
-#     AI_MODEL_COMPARISON = "ai_model_comparison"  # Unused variable
-#     PROMPT_OPTIMIZATION = "prompt_optimization"  # Unused variable
-#     FEATURE_ROLLOUT = "feature_rollout"  # Unused variable
-#     UI_OPTIMIZATION = "ui_optimization"  # Unused variable
-#     COMPLIANCE_EFFECTIVENESS = "compliance_effectiveness"  # Unused variable
-#     ASSESSMENT_METHODOLOGY = "assessment_methodology"  # Unused variable
-
-    # MetricType imported from analytics_monitor above
-#     CATEGORICAL = "categorical"  # User preferences, status categories  # Unused variable
-#     COUNT = "count"  # Number of actions, events  # Unused variable
+    AI_MODEL_COMPARISON = "ai_model_comparison"
+    PROMPT_OPTIMIZATION = "prompt_optimization"
+    FEATURE_ROLLOUT = "feature_rollout"
+    UI_OPTIMIZATION = "ui_optimization"
+    COMPLIANCE_EFFECTIVENESS = "compliance_effectiveness"
+    ASSESSMENT_METHODOLOGY = "assessment_methodology"
 
 
 class StatisticalTest(Enum):
     """Available statistical tests."""
-
-#     T_TEST = "t_test"  # Two-sample t-test for continuous metrics  # Unused variable
-#     WELCH_T_TEST = "welch_t_test"  # Welch's t-test (unequal variances)  # Unused variable
-#     CHI_SQUARED = "chi_squared"  # Chi-squared test for categorical data  # Unused variable
-#     MANN_WHITNEY = "mann_whitney"  # Non-parametric alternative to t-test  # Unused variable
-#     KOLMOGOROV_SMIRNOV = "ks_test"  # Distribution comparison  # Unused variable
-#     FISHER_EXACT = "fisher_exact"  # Exact test for small samples  # Unused variable
+    T_TEST = "t_test"  # Two-sample t-test for continuous metrics
+    WELCH_T_TEST = "welch_t_test"  # Welch's t-test (unequal variances)
+    CHI_SQUARED = "chi_squared"  # Chi-squared test for categorical data
+    MANN_WHITNEY = "mann_whitney"  # Non-parametric alternative to t-test
+    KOLMOGOROV_SMIRNOV = "ks_test"  # Distribution comparison
+    FISHER_EXACT = "fisher_exact"  # Exact test for small samples
 
 
 class ExperimentStatus(Enum):
     """Experiment lifecycle status."""
-
-#     DRAFT = "draft"  # Unused variable
-#     RUNNING = "running"  # Unused variable
-#     PAUSED = "paused"  # Unused variable
-#     COMPLETED = "completed"  # Unused variable
-#     CANCELLED = "cancelled"  # Unused variable
-#     ARCHIVED = "archived"  # Unused variable
+    DRAFT = "draft"
+    RUNNING = "running"
+    PAUSED = "paused"
+    COMPLETED = "completed"
+    CANCELLED = "cancelled"
+    ARCHIVED = "archived"
 
 
 @dataclass
@@ -686,15 +679,9 @@ class ABTestingFramework:
         """Generate actionable recommendation based on statistical results."""
         if is_significant and practical_significance:
             if effect_size > 0:
-                return f"IMPLEMENT: Treatment shows significant improvement (
-                    p={p_value:.4f},
-                    effect size={effect_size:.3f}
-                )"
+                return f"IMPLEMENT: Treatment shows significant improvement (p={p_value:.4f}, effect size={effect_size:.3f})"
             else:
-                return f"REJECT: Treatment shows significant degradation (
-                    p={p_value:.4f},
-                    effect size={effect_size:.3f}
-                )"
+                return f"REJECT: Treatment shows significant degradation (p={p_value:.4f}, effect size={effect_size:.3f})"
 
         elif is_significant and not practical_significance:
             return f"INCONCLUSIVE: Statistically significant but effect too small (effect size={effect_size:.3f})"

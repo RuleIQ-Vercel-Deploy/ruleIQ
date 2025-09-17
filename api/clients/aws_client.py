@@ -8,10 +8,18 @@ from botocore.exceptions import ClientError, NoCredentialsError, BotoCoreError
 from typing import Dict, List, Any, Optional
 import json
 from datetime import datetime, timedelta, timezone
-from .base_api_client import BaseAPIClient, APICredentials, EvidenceItem, BaseEvidenceCollector, APIException, AuthType
+from .base_api_client import (
+    BaseAPIClient,
+    APICredentials,
+    EvidenceItem,
+    BaseEvidenceCollector,
+    APIException,
+    AuthType,
+)
+from config.logging_config import get_logger
+
 SSH_PORT = 22
 RDP_PORT = 3389
-from config.logging_config import get_logger
 logger = get_logger(__name__)
 KEY_AGE_THRESHOLD_DAYS = 90
 
@@ -274,7 +282,7 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
                             role.get('Description', ''),
                             'max_session_duration': role.get(
                             'MaxSessionDuration', 3600), 'create_date':
-                            role['CreateDate'].isoformat(), 'last_used': 
+                            role['CreateDate'].isoformat(), 'last_used':
                             role.get('RoleLastUsed', {}).get('LastUsedDate',
                             '').isoformat() if role.get('RoleLastUsed', {})
                             .get('LastUsedDate') else None,

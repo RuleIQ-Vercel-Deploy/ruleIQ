@@ -308,13 +308,15 @@ def get_file_validator(max_size: int=None, allowed_types: List[str]=None,
                 SUSPICIOUS, ValidationResult.MALICIOUS]:
                 raise HTTPException(status_code=status.
                     HTTP_422_UNPROCESSABLE_ENTITY, detail=
-                    f"File rejected - Security analysis: {', '.join(analysis_report.threats_detected)}"
+                    f"File rejected - Security analysis: "
+                    f"{', '.join(analysis_report.threats_detected)}"
                     )
         elif security_level == 'standard':
             if analysis_report.validation_result == ValidationResult.MALICIOUS:
                 raise HTTPException(status_code=status.
                     HTTP_422_UNPROCESSABLE_ENTITY, detail=
-                    f"File rejected - Malicious content detected: {', '.join(analysis_report.threats_detected)}"
+                    f"File rejected - Malicious content detected: "
+                    f"{', '.join(analysis_report.threats_detected)}"
                     )
         if enable_content_validation:
             if not validate_file_content(content, file.content_type, file.
@@ -436,6 +438,7 @@ class EnhancedFileValidator:
                 raise HTTPException(status_code=status.
                     HTTP_422_UNPROCESSABLE_ENTITY, detail=
                     'File rejected - Malicious content detected')
-            elif analysis_report.validation_result == ValidationResult.SUSPICIOUS and self.enable_quarantine:
+            elif (analysis_report.validation_result == ValidationResult.SUSPICIOUS 
+                  and self.enable_quarantine):
                 quarantine_path = quarantine_file(content, analysis_report)
         return file, analysis_report, quarantine_path

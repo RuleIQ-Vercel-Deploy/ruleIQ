@@ -34,21 +34,21 @@ logger = logging.getLogger(__name__)
 
 
 class ConversationState(str, Enum):
-#     STARTING = "starting"  # Unused variable
-#     GATHERING_CONTEXT = "gathering_context"  # Unused variable
-#     ASKING_QUESTIONS = "asking_questions"  # Unused variable
-#     CLARIFYING = "clarifying"  # Unused variable
-#     SUMMARIZING = "summarizing"  # Unused variable
-#     COMPLETED = "completed"  # Unused variable
-#     PAUSED = "paused"  # Unused variable
+    STARTING = "starting"
+    GATHERING_CONTEXT = "gathering_context"
+    ASKING_QUESTIONS = "asking_questions"
+    CLARIFYING = "clarifying"
+    SUMMARIZING = "summarizing"
+    COMPLETED = "completed"
+    PAUSED = "paused"
 
 
 class QuestionType(str, Enum):
-#     BASIC_INFO = "basic_info"  # Unused variable
-#     COMPLIANCE_SPECIFIC = "compliance_specific"  # Unused variable
-#     FOLLOW_UP = "follow_up"  # Unused variable
-#     CLARIFICATION = "clarification"  # Unused variable
-#     VERIFICATION = "verification"  # Unused variable
+    BASIC_INFO = "basic_info"
+    COMPLIANCE_SPECIFIC = "compliance_specific"
+    FOLLOW_UP = "follow_up"
+    CLARIFICATION = "clarification"
+    VERIFICATION = "verification"
 
 
 @dataclass
@@ -471,7 +471,7 @@ class AgenticAssessmentService:
             # Get framework-specific questions
             framework_types = conversation.context_gathered.get("framework_types", [])
             answered_question_ids = [
-                q["question_id"] for q in conversation.answered_questions,
+                q["question_id"] for q in conversation.answered_questions
             ]
 
             # Find appropriate question from templates

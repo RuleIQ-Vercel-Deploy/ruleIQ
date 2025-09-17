@@ -1,26 +1,28 @@
 """
-from __future__ import annotations
-import logging
-
-# Constants
-HTTP_BAD_REQUEST = 400
-
-logger = logging.getLogger(__name__)
-
 Authentication module for NexCompli.
 
 Provides JWT token-based authentication, password hashing, and user verification.
 """
+from __future__ import annotations
+
+import logging
 from datetime import datetime, timedelta, timezone
 from typing import Any, Dict, Optional
+
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
+
 from config.settings import get_settings
 from database.db_setup import get_db
 from database.user import User
+
+# Constants
+HTTP_BAD_REQUEST = 400
+
+logger = logging.getLogger(__name__)
 settings = get_settings()
 ALGORITHM = settings.jwt_algorithm
 ACCESS_TOKEN_EXPIRE_MINUTES = settings.jwt_access_token_expire_minutes
@@ -73,8 +75,9 @@ async def get_current_user(token: str=Depends(oauth2_scheme), db: Session=
         headers={'WWW-Authenticate': 'Bearer'})
     try:
         print(
-            f"[AUTH DEBUG] JWT Secret: {settings.jwt_secret[:10] if settings.jwt_secret else 'None'}..."
-            )
+            f"[AUTH DEBUG] JWT Secret: "
+            f"{settings.jwt_secret[:10] if settings.jwt_secret else 'None'}..."
+        )
         logger.info('[AUTH DEBUG] Token to decode: %s...' % token[:50])
         logger.info('[AUTH DEBUG] Algorithm: %s' % ALGORITHM)
         payload = jwt.decode(token, settings.jwt_secret, algorithms=[ALGORITHM]

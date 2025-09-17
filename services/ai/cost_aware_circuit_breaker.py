@@ -218,10 +218,7 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
 
                 if current_usage + estimated_cost > daily_limit:
                     raise AIServiceException(
-                        message= (
-                            f"Request would exceed daily budget: ${current_usage + estimated_cost:.2f} > f
-                            f${daily_limit:.2f}"f,
-                        )
+                        message=f"Request would exceed daily budget: ${current_usage + estimated_cost:.2f} > ${daily_limit:.2f}",
                         service_name="Cost-Aware Circuit Breaker",
                         error_code="BUDGET_EXCEEDED",
                         context={
@@ -333,7 +330,7 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
             self._cost_history[key] = [
                 entry
                 for entry in self._cost_history[key]
-                if entry["timestamp"] > cutoff_time,
+                if entry["timestamp"] > cutoff_time
             ]
 
     async def check_cost_spike(self, model_name: str, service_name: str) -> bool:

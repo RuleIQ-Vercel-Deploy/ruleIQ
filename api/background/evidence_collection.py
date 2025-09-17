@@ -5,7 +5,10 @@ Background tasks for evidence collection
 """
 from typing import Dict, List, Any
 from database.db_setup import get_async_db
-from database.services.integration_service import EvidenceCollectionService, decrypt_integration_credentials
+from database.services.integration_service import (
+    EvidenceCollectionService,
+    decrypt_integration_credentials,
+)
 from api.clients.aws_client import AWSAPIClient
 from api.clients.okta_client import OktaAPIClient
 from api.clients.google_workspace_client import GoogleWorkspaceAPIClient

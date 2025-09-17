@@ -38,7 +38,7 @@ class TestDeepValidator:
                     framework="GDPR",
                     article="Article 33",
                     url="https://eur-lex.europa.eu/legal",
-                ),
+                )
             ],
             expected_outcome=ExpectedOutcome(
                 obligations=["notify_authority"], risk_level="high",
@@ -50,7 +50,7 @@ class TestDeepValidator:
                 domain="ico.org.uk",
                 fetched_at=datetime.now(timezone.utc),
                 confidence=0.9,
-            ),
+            )
         )
 
     def test_validate_all_layers_pass(self, validator: Any, valid_scenario: Any) -> Any:
@@ -76,7 +76,7 @@ class TestDeepValidator:
             version="0.1.0",
             source=SourceMeta(
                 origin="external", domain="test.com", fetched_at=datetime.now(timezone.utc),
-            ),
+            )
         )
 
         results = validator.validate([scenario])
@@ -98,7 +98,7 @@ class TestDeepValidator:
             version="0.1.0",
             source=SourceMeta(
                 origin="external", domain="test.com", fetched_at=datetime.now(timezone.utc),
-            ),
+            )
         )
 
         results = validator.validate([scenario])
@@ -119,14 +119,14 @@ class TestDeepValidator:
                     framework="GDPR",
                     article="Article 5",
                     url="https://random-blog.com/gdpr-guide",  # Non-authoritative,
-                ),
+                )
             ],
             expected_outcome=ExpectedOutcome(obligations=["test"], risk_level="low"),
             temporal=TemporalValidity(effective_from=date.today()),
             version="0.1.0",
             source=SourceMeta(
                 origin="external", domain="test.com", fetched_at=datetime.now(timezone.utc),
-            ),
+            )
         )
 
         results = validator.validate([scenario])
@@ -146,11 +146,11 @@ class TestDeepValidator:
             temporal=TemporalValidity(
                 effective_from=date(2020, 1, 1),
                 effective_to=date(2023, 1, 1),  # Expired,
-            ),
+            )
             version="0.1.0",
             source=SourceMeta(
                 origin="external", domain="test.com", fetched_at=datetime.now(timezone.utc),
-            ),
+            )
         )
 
         results = validator.validate([scenario])
@@ -170,7 +170,7 @@ class TestDeepValidator:
             version="0.1.0",
             source=SourceMeta(
                 origin="external", domain="test.com", fetched_at=datetime.now(timezone.utc),
-            ),
+            )
         )
 
         results = validator.validate([scenario])
@@ -204,9 +204,9 @@ class TestExternalDataValidator:
                 version="0.1.0",
                 source=SourceMeta(
                     origin="external", domain="ico.org.uk", fetched_at=datetime.now(timezone.utc),
-                ),
+                )
             )
-            for i in range(1, 6),
+            for i in range(1, 6)
         ]
 
     def test_source_reputation_authoritative(self, validator: Any) -> Any:
@@ -283,9 +283,9 @@ class TestExternalDataValidator:
                 version="0.1.0",
                 source=SourceMeta(
                     origin="external", domain="test.com", fetched_at=datetime.now(timezone.utc),
-                ),
+                )
             )
-            for _ in range(3),
+            for _ in range(3)
         ]
 
         score = validator._check_consistency(dataset)
@@ -307,9 +307,9 @@ class TestExternalDataValidator:
                 version="0.1.0",
                 source=SourceMeta(
                     origin="external", domain="test.com", fetched_at=datetime.now(timezone.utc),
-                ),
+                )
             )
-            for i, framework in enumerate(["GDPR", "HIPAA", "SOX", "UK GDPR", "CCPA"]),
+            for i, framework in enumerate(["GDPR", "HIPAA", "SOX", "UK GDPR", "CCPA"])
         ]
 
         score = validator._check_coverage(dataset)
@@ -356,9 +356,9 @@ class TestQualityMetrics:
                 version="0.1.0",
                 source=SourceMeta(
                     origin="external", domain="test.com", fetched_at=datetime.now(timezone.utc),
-                ),
+                )
             )
-            for i in range(10),
+            for i in range(10)
         ]
 
         metrics = dataset_quality_summary(dataset)
@@ -382,9 +382,9 @@ class TestQualityMetrics:
                 version="0.1.0",
                 source=SourceMeta(
                     origin="external", domain="test.com", fetched_at=datetime.now(timezone.utc),
-                ),
+                )
             )
-            for i in range(5),
+            for i in range(5)
         ]
 
         metrics = dataset_quality_summary(dataset)
@@ -419,7 +419,7 @@ class TestCoverageMetrics:
                     ]
                     if i < 3
                     else [RegCitation(framework="GDPR", article="Test")],
-                ),
+                )
                 expected_outcome=ExpectedOutcome(
                     obligations=["test"], risk_level="low",
                 ),
@@ -427,9 +427,9 @@ class TestCoverageMetrics:
                 version="0.1.0",
                 source=SourceMeta(
                     origin="external", domain="test.com", fetched_at=datetime.now(timezone.utc),
-                ),
+                )
             )
-            for i in range(5),
+            for i in range(5)
         ]
 
         metrics = coverage_summary(dataset)
@@ -453,11 +453,11 @@ class TestCoverageMetrics:
                 version="0.1.0",
                 source=SourceMeta(
                     origin="external", domain="test.com", fetched_at=datetime.now(timezone.utc),
-                ),
+                )
             )
             for i, framework in enumerate(
                 ["GDPR", "UK GDPR", "HIPAA", "SOX", "ISO27001", "CCPA"],
-            ),
+            )
         ]
 
         metrics = coverage_summary(dataset)
@@ -481,9 +481,9 @@ class TestCoverageMetrics:
                 version="0.1.0",
                 source=SourceMeta(
                     origin="external", domain="test.com", fetched_at=datetime.now(timezone.utc),
-                ),
+                )
             )
-            for i in range(5),
+            for i in range(5)
         ]
 
         metrics = coverage_summary(dataset)

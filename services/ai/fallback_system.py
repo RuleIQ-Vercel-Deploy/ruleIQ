@@ -17,12 +17,11 @@ from services.ai.exceptions import AIServiceException
 
 class FallbackLevel(Enum):
     """Levels of fallback degradation"""
-
-#     NONE = "none"  # No fallback, fail immediately  # Unused variable
-#     BASIC = "basic"  # Basic static responses  # Unused variable
-#     CACHED = "cached"  # Use cached responses  # Unused variable
-#     TEMPLATE = "template"  # Use response templates  # Unused variable
-#     COMPREHENSIVE = "comprehensive"  # Full fallback system  # Unused variable
+    NONE = "none"  # No fallback, fail immediately
+    BASIC = "basic"  # Basic static responses
+    CACHED = "cached"  # Use cached responses
+    TEMPLATE = "template"  # Use response templates
+    COMPREHENSIVE = "comprehensive"  # Full fallback system
 
 
 @dataclass

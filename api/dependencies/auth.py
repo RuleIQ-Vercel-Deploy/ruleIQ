@@ -33,8 +33,11 @@ def get_jwt_secret_key() ->str:
         doppler_token = os.getenv('DOPPLER_TOKEN')
         if not secret_key and not doppler_token:
             error_msg = (
-                'CRITICAL: Production environment requires proper secret configuration. Either set JWT_SECRET_KEY environment variable or configure Doppler:   - Set DOPPLER_TOKEN environment variable   - Or use: doppler run -- python main.py',
-                )
+                'CRITICAL: Production environment requires proper secret configuration. '
+                'Either set JWT_SECRET_KEY environment variable or configure Doppler: '
+                '- Set DOPPLER_TOKEN environment variable '
+                '- Or use: doppler run -- python main.py'
+            )
             logger.error(error_msg)
             sys.exit(1)
         if not secret_key:

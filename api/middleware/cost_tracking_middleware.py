@@ -1,29 +1,30 @@
 """
-from __future__ import annotations
-import requests
-import json
-
-# Constants
-HTTP_INTERNAL_SERVER_ERROR = 500
-
-
 Cost Tracking Middleware
 
 Automatically tracks AI costs for API requests and integrates with
 budget monitoring and optimization systems.
 """
+from __future__ import annotations
+
+import json
 import time
 import uuid
 from datetime import datetime
 from decimal import Decimal
 from typing import Any, Dict, Optional, Callable, Awaitable
+
+import requests
 from fastapi import Request, Response, HTTPException, status
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.responses import JSONResponse
-from services.ai.cost_management import AICostManager, CostTrackingService
-from services.ai.cost_aware_circuit_breaker import get_cost_aware_circuit_breaker
+
 from config.logging_config import get_logger
 from database.user import User
+from services.ai.cost_management import AICostManager, CostTrackingService
+from services.ai.cost_aware_circuit_breaker import get_cost_aware_circuit_breaker
+
+# Constants
+HTTP_INTERNAL_SERVER_ERROR = 500
 logger = get_logger(__name__)
 
 

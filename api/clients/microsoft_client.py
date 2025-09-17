@@ -1,28 +1,33 @@
 """
+Microsoft 365/Azure AD API Client for compliance evidence collection.
+Follows the foundation architecture pattern for enterprise API integrations.
+"""
 from __future__ import annotations
-import requests
+
 import json
+import logging
+import requests
+from datetime import datetime, timedelta, timezone
+from typing import Dict, List, Optional, Tuple
+
+import aiohttp
+from pydantic import BaseModel, Field
+
+from .base_api_client import (
+    BaseAPIClient,
+    APICredentials,
+    AuthType,
+    CollectionResult,
+    EvidenceQuality,
+)
 
 # Constants
 HTTP_OK = 200
-
 DEFAULT_TIMEOUT = 30
-
 CONFIDENCE_THRESHOLD = 0.8
 DEFAULT_LIMIT = 100
 HALF_RATIO = 0.5
 HIGH_CONFIDENCE_THRESHOLD = 0.95
-
-
-Microsoft 365/Azure AD API Client for compliance evidence collection.
-Follows the foundation architecture pattern for enterprise API integrations.
-"""
-import logging
-from datetime import datetime, timedelta, timezone
-from typing import Dict, List, Optional, Tuple
-import aiohttp
-from pydantic import BaseModel, Field
-from .base_api_client import BaseAPIClient, APICredentials, AuthType, CollectionResult, EvidenceQuality
 logger = logging.getLogger(__name__)
 
 

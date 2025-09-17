@@ -1,21 +1,26 @@
 """
+Google Workspace API Client for compliance evidence collection.
+Follows the foundation architecture pattern for enterprise API integrations.
+"""
 from __future__ import annotations
+
+import logging
+from datetime import datetime, timedelta, timezone
+from typing import Dict, List, Optional, Tuple, Any
+from pydantic import BaseModel, Field
+from .base_api_client import (
+    BaseAPIClient,
+    APICredentials,
+    AuthType,
+    CollectionResult,
+    EvidenceQuality,
+)
 
 # Constants
 CONFIDENCE_THRESHOLD = 0.8
 DEFAULT_RETRIES = 5
 HALF_RATIO = 0.5
 MAX_RETRIES = 3
-
-
-Google Workspace API Client for compliance evidence collection.
-Follows the foundation architecture pattern for enterprise API integrations.
-"""
-import logging
-from datetime import datetime, timedelta, timezone
-from typing import Dict, List, Optional, Tuple, Any
-from pydantic import BaseModel, Field
-from .base_api_client import BaseAPIClient, APICredentials, AuthType, CollectionResult, EvidenceQuality
 try:
     from google.auth.transport.requests import Request
     from google.oauth2.credentials import Credentials
