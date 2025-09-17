@@ -1,13 +1,11 @@
 """SQLAlchemy models for Agentic AI system."""
 
-from datetime import datetime
-from decimal import Decimal
-from typing import Optional, Dict, Any, List
+from typing import Dict, Any
 from uuid import uuid4
 
 from sqlalchemy import (
     Column, String, Boolean, Integer, Text, ForeignKey, Float,
-    DECIMAL, CheckConstraint, UniqueConstraint, TIMESTAMP
+    DECIMAL, CheckConstraint, TIMESTAMP
 )
 from sqlalchemy.dialects.postgresql import UUID, JSONB, ARRAY, INET
 from sqlalchemy.ext.declarative import declarative_base
@@ -20,7 +18,7 @@ Base = declarative_base()
 class SchemaVersion(Base):
     """Track database schema versions."""
     __tablename__ = "schema_versions"
-    
+
     version_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     version_number = Column(String(50), nullable=False, unique=True)
     description = Column(Text)
@@ -32,7 +30,7 @@ class SchemaVersion(Base):
 class Agent(Base):
     """AI Agent configuration and metadata."""
     __tablename__ = "agents"
-    
+
     agent_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     name = Column(String(100), nullable=False)
     persona_type = Column(String(50), nullable=False)
@@ -42,12 +40,12 @@ class Agent(Base):
     updated_at = Column(TIMESTAMP(timezone=True), server_default=func.current_timestamp(), onupdate=func.current_timestamp())
     is_active = Column(Boolean, default=True)
     version = Column(Integer, default=1, nullable=False)
-    
+
     # Relationships
     sessions = relationship("AgentSession", back_populates="agent", cascade="all, delete-orphan")
     knowledge_items = relationship("AgentKnowledge", back_populates="agent", cascade="all, delete-orphan")
     audit_logs = relationship("AgentAuditLog", back_populates="agent")
-    
+
     # Constraints
     __table_args__ = (
         CheckConstraint(
@@ -55,7 +53,7 @@ class Agent(Base):
             name="check_valid_persona_type"
         ),
     )
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert model to dictionary."""
         return {
@@ -73,7 +71,7 @@ class Agent(Base):
 class AgentSession(Base):
     """Agent interaction sessions with users."""
     __tablename__ = "agent_sessions"
-    
+
     session_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     agent_id = Column(UUID(as_uuid=True), ForeignKey("agents.agent_id", ondelete="CASCADE"), nullable=False)
     user_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id", ondelete="SET NULL"))
@@ -84,7 +82,7 @@ class AgentSession(Base):
     session_state = Column(String(20), default="active")
     session_metadata = Column('metadata', JSONB)  # Map to 'metadata' column in DB
     version = Column(Integer, default=1, nullable=False)
-    
+
     # Relationships
     agent = relationship("Agent", back_populates="sessions")
     user = relationship("User", backref="agent_sessions")
@@ -92,13 +90,13 @@ class AgentSession(Base):
     trust_metrics = relationship("TrustMetric", back_populates="session", cascade="all, delete-orphan")
     messages = relationship("ConversationHistory", back_populates="session", cascade="all, delete-orphan")
     audit_logs = relationship("AgentAuditLog", back_populates="session")
-    
+
     # Constraints
     __table_args__ = (
         CheckConstraint("trust_level >= 0 AND trust_level <= 4", name="check_trust_level_range"),
         CheckConstraint("session_state IN ('active', 'paused', 'completed', 'terminated')", name="check_session_state"),
     )
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert model to dictionary."""
         return {
@@ -117,7 +115,7 @@ class AgentSession(Base):
 class AgentDecision(Base):
     """Agent decisions and actions taken."""
     __tablename__ = "agent_decisions"
-    
+
     decision_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     session_id = Column(UUID(as_uuid=True), ForeignKey("agent_sessions.session_id", ondelete="CASCADE"), nullable=False)
     decision_type = Column(String(50), nullable=False)
@@ -128,10 +126,10 @@ class AgentDecision(Base):
     user_feedback = Column(String(20))
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.current_timestamp())
     execution_time_ms = Column(Integer)
-    
+
     # Relationships
     session = relationship("AgentSession", back_populates="decisions")
-    
+
     # Constraints
     __table_args__ = (
         CheckConstraint("confidence_score >= 0 AND confidence_score <= 1", name="check_confidence_score_range"),
@@ -141,7 +139,7 @@ class AgentDecision(Base):
             name="check_decision_type"
         ),
     )
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert model to dictionary."""
         return {
@@ -161,17 +159,17 @@ class AgentDecision(Base):
 class TrustMetric(Base):
     """Trust metrics for agent performance."""
     __tablename__ = "trust_metrics"
-    
+
     metric_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     session_id = Column(UUID(as_uuid=True), ForeignKey("agent_sessions.session_id", ondelete="CASCADE"), nullable=False)
     metric_type = Column(String(50), nullable=False)
     metric_value = Column(DECIMAL(5, 2), nullable=False)
     measurement_context = Column(JSONB)
     recorded_at = Column(TIMESTAMP(timezone=True), server_default=func.current_timestamp())
-    
+
     # Relationships
     session = relationship("AgentSession", back_populates="trust_metrics")
-    
+
     # Constraints
     __table_args__ = (
         CheckConstraint("metric_type IN ('accuracy', 'autonomy', 'complexity', 'reliability', 'efficiency')", name="check_metric_type"),
@@ -183,7 +181,7 @@ class TrustMetric(Base):
             (metric_type = 'efficiency' AND metric_value >= 0 AND metric_value <= 100)
         """, name="check_metric_value_ranges"),
     )
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert model to dictionary."""
         return {
@@ -199,7 +197,7 @@ class TrustMetric(Base):
 class AgentKnowledge(Base):
     """Agent knowledge base and patterns."""
     __tablename__ = "agent_knowledge"
-    
+
     knowledge_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     agent_id = Column(UUID(as_uuid=True), ForeignKey("agents.agent_id", ondelete="CASCADE"), nullable=False)
     knowledge_type = Column(String(50), nullable=False)
@@ -210,17 +208,17 @@ class AgentKnowledge(Base):
     success_rate = Column(DECIMAL(3, 2))
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.current_timestamp())
     last_used_at = Column(TIMESTAMP(timezone=True))
-    
+
     # Relationships
     agent = relationship("Agent", back_populates="knowledge_items")
-    
+
     # Constraints
     __table_args__ = (
         CheckConstraint("knowledge_type IN ('pattern', 'solution', 'preference', 'constraint', 'example')", name="check_knowledge_type"),
         CheckConstraint("domain IN ('frontend', 'backend', 'testing', 'security', 'infrastructure', 'documentation')", name="check_domain"),
         CheckConstraint("success_rate >= 0 AND success_rate <= 1", name="check_success_rate_range"),
     )
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert model to dictionary."""
         return {
@@ -239,7 +237,7 @@ class AgentKnowledge(Base):
 class ConversationHistory(Base):
     """Conversation history between users and agents."""
     __tablename__ = "conversation_history"
-    
+
     message_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     session_id = Column(UUID(as_uuid=True), ForeignKey("agent_sessions.session_id", ondelete="CASCADE"), nullable=False)
     role = Column(String(20), nullable=False)
@@ -249,17 +247,17 @@ class ConversationHistory(Base):
     created_at = Column(TIMESTAMP(timezone=True), server_default=func.current_timestamp())
     tokens_used = Column(Integer)
     model_used = Column(String(50))
-    
+
     # Relationships
     session = relationship("AgentSession", back_populates="messages")
     parent_message = relationship("ConversationHistory", remote_side=[message_id], backref="replies")
-    
+
     # Constraints
     __table_args__ = (
         CheckConstraint("role IN ('user', 'agent', 'system', 'tool')", name="check_role"),
         CheckConstraint("message_type IN ('text', 'code', 'command', 'file', 'error', 'warning', 'info')", name="check_message_type"),
     )
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert model to dictionary."""
         return {
@@ -278,7 +276,7 @@ class ConversationHistory(Base):
 class AgentAuditLog(Base):
     """Audit log for agent actions."""
     __tablename__ = "agent_audit_log"
-    
+
     audit_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
     agent_id = Column(UUID(as_uuid=True), ForeignKey("agents.agent_id", ondelete="RESTRICT"), nullable=False)
     session_id = Column(UUID(as_uuid=True), ForeignKey("agent_sessions.session_id", ondelete="SET NULL"))
@@ -289,17 +287,17 @@ class AgentAuditLog(Base):
     timestamp = Column(TIMESTAMP(timezone=True), server_default=func.current_timestamp())
     ip_address = Column(INET)
     user_agent = Column(Text)
-    
+
     # Relationships
     agent = relationship("Agent", back_populates="audit_logs")
     session = relationship("AgentSession", back_populates="audit_logs")
     user = relationship("User", backref="agent_audit_logs")
-    
+
     # Constraints
     __table_args__ = (
         CheckConstraint("risk_level IN ('low', 'medium', 'high', 'critical')", name="check_risk_level"),
     )
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert model to dictionary."""
         return {

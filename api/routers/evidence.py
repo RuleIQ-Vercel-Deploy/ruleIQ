@@ -512,7 +512,7 @@ async def get_classification_statistics(db: AsyncSession=Depends(
                     except (ValueError, TypeError):
                         pass
         unclassified_evidence = total_evidence - classified_evidence
-        classification_accuracy = (classified_evidence / total_evidence * 
+        classification_accuracy = (classified_evidence / total_evidence *
             100 if total_evidence > 0 else 0)
         return ClassificationStatsResponse(total_evidence=total_evidence,
             classified_evidence=classified_evidence, unclassified_evidence=
@@ -692,7 +692,7 @@ async def get_quality_benchmark(request: QualityBenchmarkRequest=Depends(),
                 'No evidence matches the specified criteria')
         user_average = sum(user_scores) / len(user_scores)
         benchmark_score = 75.0
-        percentile_rank = min(95, max(5, user_average / benchmark_score * 
+        percentile_rank = min(95, max(5, user_average / benchmark_score *
             50 + 25))
         score_ranges = {'excellent': 0, 'good': 0, 'acceptable': 0, 'poor': 0}
         for score in user_scores:

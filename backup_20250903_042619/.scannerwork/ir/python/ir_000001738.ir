@@ -1,53 +1,0 @@
-
-
-"priority"str
-"cost_impact"str
-"dependencies"str
-
-"timeline"str
- "implementation_effort"str
-"resources_required"str
-"title"str
-	"description"str
-"id"strself5 5("ƒ$
-"
-6 :(:"#new-object#Bdict#
-!
-6 6("#get-field# id: 
-
-6 6("	#map-set#:&
-$
-6( 6(2"#get-field# title: 
-
-6 6(2"	#map-set#:,
-*
-6C 7(
-"#get-field# description: 
-
-64 7("	#map-set#:	
-)
-'
-7% 7(2"#get-field# priority: 
-
-7 7(2"	#map-set#:6
-4
-8 8(&"#!#get-field# implementation_effort: 
-
-74 8(&"	#map-set#:,
-*
-87 8(G"#get-field# cost_impact: 
-
-8( 8(G"	#map-set#:)
-'
-9 9(%"#get-field# timeline: 
-
-9 9(%"	#map-set#:-
-+
-97 9(H"#get-field# dependencies: 
-
-9' 9(H"	#map-set#:3
-1
-:" :(9" #get-field# resources_required: 
-
-: :(9"	#map-set#:
-6 :(:*;/home/omar/Documents/ruleIQ/services/ai/assessment_tools.py

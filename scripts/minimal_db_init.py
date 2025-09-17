@@ -1,5 +1,4 @@
 """Minimal database initialization for testing"""
-from typing import Any, Dict, List, Optional
 import sys
 from pathlib import Path
 import logging

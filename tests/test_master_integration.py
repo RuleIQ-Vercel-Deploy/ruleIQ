@@ -389,7 +389,7 @@ class TestLongRunningStability:
             await asyncio.sleep(1 / requests_per_second)
         total_time = time.time() - start_time
         success_rate = (request_count - error_count) / max(request_count, 1)
-        print(f'Sustained load test results:')
+        print('Sustained load test results:')
         print(f'  Duration: {total_time:.1f}s')
         print(f'  Requests: {request_count}')
         print(f'  Errors: {error_count}')

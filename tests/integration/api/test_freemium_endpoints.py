@@ -29,7 +29,6 @@ from httpx import AsyncClient
 import json
 from api.main import app
 import jwt
-from datetime import datetime, timedelta
 
 
 def create_freemium_token(email: str, session_data: dict, expires_in: int=3600

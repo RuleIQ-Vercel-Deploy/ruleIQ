@@ -7,7 +7,6 @@ logger = logging.getLogger(__name__)
 import asyncio
 import sys
 from pathlib import Path
-from unittest.mock import patch, AsyncMock
 
 # Add current directory to path
 sys.path.insert(0, str(Path(__file__).parent))

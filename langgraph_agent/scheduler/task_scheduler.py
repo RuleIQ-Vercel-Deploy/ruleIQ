@@ -7,21 +7,18 @@ Phase 4 Implementation: Migrate from Celery to LangGraph nodes with Neon databas
 This scheduler replaces Celery Beat functionality using LangGraph's native features with
 Neon PostgreSQL for persistent state management.
 """
-from typing import Dict, Any, List, Optional, Annotated
+from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta
 from enum import Enum
 import asyncio
 import logging
 from dataclasses import dataclass
-from langchain_core.messages import HumanMessage, SystemMessage
 from langgraph.graph import StateGraph, END
 from langgraph.checkpoint.postgres import PostgresSaver
-from langgraph.prebuilt import ToolNode
 import psycopg
 from psycopg.rows import dict_row
 from ..graph.enhanced_state import EnhancedComplianceState
 from ..graph.error_handler import ErrorHandlerNode
-from ..core.constants import DATABASE_CONFIG
 logger = logging.getLogger(__name__)
 
 class TaskPriority(Enum):

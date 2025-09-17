@@ -1,91 +1,0 @@
-
-7regulation_api_client.RegulationAPIClient._get_xml_textM
-A/home/omar/Documents/ruleIQ/services/api/regulation_api_client.py„ „("7*Á
-7
-ˆ ˆ(3—”
-
-ˆ ˆ(3
-%1*'
-
-__unknown_file (
-	
-element*%
-
-__unknown_file (	
-
-xpath**
-
-__unknown_file (
-
-
-namespaces2findA
-?
-
-ˆ ˆ(3
-found"__id*"
-
-__unknown_file (
-
-%1K
-I
-
-‰7 ‰(A
-%3"__id*/
-
-__unknown_file (*
-
-found"
-text*
-8
-9*¢
-8
-‰ ‰(K
-I
-
-‰ ‰(
-%4"__id*/
-
-__unknown_file (*
-
-found"
-text>
-<
-
-‰ ‰(
-%2"__id*"
-
-__unknown_file (
-
-%4*
-10*Z
-9
-‰G ‰(NC
-A
-
-‰G ‰(N
-%2"__id*'
-
-__unknown_file (
-	
-default*
-10*&
-10
-‰G ‰(N"
-
-‰ ‰(N
-
-%2:
-
-„ „(#	
-element:
-
-„% „(/
-xpath:
-
-„1 „(A
-
-namespaces:
-
-„C …(	
-defaultB-+
-)regulation_api_client.RegulationAPIClientH

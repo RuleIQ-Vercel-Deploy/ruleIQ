@@ -13,7 +13,7 @@ Tests all 99+ API endpoints to ensure frontend-backend connectivity
 """
 import asyncio
 import httpx
-from typing import Dict, List, Tuple
+from typing import Tuple
 import json
 from datetime import datetime
 BASE_URL = 'http://localhost:8000/api/v1'

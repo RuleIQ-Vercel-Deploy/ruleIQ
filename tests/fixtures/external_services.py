@@ -16,7 +16,7 @@ from typing import Dict, Any, Optional
 def mock_openai():
     """Mock OpenAI API client."""
     mock = MagicMock()
-    
+
     # Mock chat completions
     mock.chat.completions.create = MagicMock()
     mock.chat.completions.create.return_value = MagicMock(
@@ -37,7 +37,7 @@ def mock_openai():
         model="gpt-4",
         id="mock-response-id"
     )
-    
+
     # Mock embeddings
     mock.embeddings.create = MagicMock()
     mock.embeddings.create.return_value = MagicMock(
@@ -48,7 +48,7 @@ def mock_openai():
         ],
         usage=MagicMock(total_tokens=10)
     )
-    
+
     return mock
 
 
@@ -56,7 +56,7 @@ def mock_openai():
 def mock_anthropic():
     """Mock Anthropic Claude API client."""
     mock = MagicMock()
-    
+
     mock.messages.create = MagicMock()
     mock.messages.create.return_value = MagicMock(
         content=[
@@ -74,11 +74,11 @@ def mock_anthropic():
             output_tokens=50
         )
     )
-    
+
     # Async version
     mock.messages.create_async = AsyncMock()
     mock.messages.create_async.return_value = mock.messages.create.return_value
-    
+
     return mock
 
 
@@ -86,7 +86,7 @@ def mock_anthropic():
 def mock_google_ai():
     """Mock Google Gemini AI client."""
     mock = MagicMock()
-    
+
     # Mock model
     mock_model = MagicMock()
     mock_model.generate_content = MagicMock()
@@ -106,13 +106,13 @@ def mock_google_ai():
             )
         ]
     )
-    
+
     # Async version
     mock_model.generate_content_async = AsyncMock()
     mock_model.generate_content_async.return_value = mock_model.generate_content.return_value
-    
+
     mock.GenerativeModel = MagicMock(return_value=mock_model)
-    
+
     return mock
 
 
@@ -122,14 +122,14 @@ def mock_google_ai():
 def mock_sendgrid():
     """Mock SendGrid email service."""
     mock = MagicMock()
-    
+
     mock.send = MagicMock()
     mock.send.return_value = MagicMock(
         status_code=202,
         body="",
         headers={"X-Message-Id": "mock-message-id"}
     )
-    
+
     return mock
 
 
@@ -139,13 +139,13 @@ def mock_smtp():
     with patch('smtplib.SMTP') as mock_smtp:
         instance = MagicMock()
         mock_smtp.return_value.__enter__.return_value = instance
-        
+
         instance.starttls = MagicMock()
         instance.login = MagicMock()
         instance.send_message = MagicMock()
         instance.sendmail = MagicMock()
         instance.quit = MagicMock()
-        
+
         yield instance
 
 
@@ -155,11 +155,11 @@ def mock_smtp():
 def mock_s3():
     """Mock AWS S3 client."""
     mock = MagicMock()
-    
+
     # Mock bucket operations
     mock.create_bucket = MagicMock(return_value={'Location': '/test-bucket'})
     mock.list_buckets = MagicMock(return_value={'Buckets': []})
-    
+
     # Mock object operations
     mock.put_object = MagicMock(return_value={'ETag': '"mock-etag"'})
     mock.get_object = MagicMock(return_value={
@@ -169,7 +169,7 @@ def mock_s3():
     })
     mock.delete_object = MagicMock(return_value={'DeleteMarker': True})
     mock.list_objects_v2 = MagicMock(return_value={'Contents': []})
-    
+
     # Mock presigned URLs
     mock.generate_presigned_url = MagicMock(
         return_value="https://s3.amazonaws.com/test-bucket/test-key?signature=mock"
@@ -178,7 +178,7 @@ def mock_s3():
         'url': 'https://s3.amazonaws.com/test-bucket',
         'fields': {'key': 'test-key', 'signature': 'mock'}
     })
-    
+
     return mock
 
 
@@ -186,7 +186,7 @@ def mock_s3():
 def mock_secrets_manager():
     """Mock AWS Secrets Manager client."""
     mock = MagicMock()
-    
+
     mock.get_secret_value = MagicMock(return_value={
         'SecretString': json.dumps({
             'database_url': 'postgresql://test@localhost/test',
@@ -196,19 +196,19 @@ def mock_secrets_manager():
         'Name': 'test-secret',
         'VersionId': 'mock-version-id'
     })
-    
+
     mock.create_secret = MagicMock(return_value={
         'ARN': 'arn:aws:secretsmanager:us-east-1:123456789:secret:test',
         'Name': 'test-secret',
         'VersionId': 'mock-version-id'
     })
-    
+
     mock.update_secret = MagicMock(return_value={
         'ARN': 'arn:aws:secretsmanager:us-east-1:123456789:secret:test',
         'Name': 'test-secret',
         'VersionId': 'mock-version-id-2'
     })
-    
+
     return mock
 
 
@@ -216,7 +216,7 @@ def mock_secrets_manager():
 def mock_cloudwatch():
     """Mock AWS CloudWatch client."""
     mock = MagicMock()
-    
+
     mock.put_metric_data = MagicMock()
     mock.get_metric_statistics = MagicMock(return_value={
         'Datapoints': [],
@@ -224,7 +224,7 @@ def mock_cloudwatch():
     })
     mock.put_metric_alarm = MagicMock()
     mock.describe_alarms = MagicMock(return_value={'MetricAlarms': []})
-    
+
     return mock
 
 
@@ -234,14 +234,14 @@ def mock_cloudwatch():
 def mock_stripe():
     """Mock Stripe payment service."""
     mock = MagicMock()
-    
+
     # Mock customer operations
     mock.Customer.create = MagicMock(return_value=MagicMock(
         id="cus_mock123",
         email="test@example.com",
         created=1234567890
     ))
-    
+
     # Mock payment intent
     mock.PaymentIntent.create = MagicMock(return_value=MagicMock(
         id="pi_mock123",
@@ -250,7 +250,7 @@ def mock_stripe():
         status="requires_payment_method",
         client_secret="pi_mock123_secret_mock"
     ))
-    
+
     # Mock subscription
     mock.Subscription.create = MagicMock(return_value=MagicMock(
         id="sub_mock123",
@@ -258,13 +258,13 @@ def mock_stripe():
         status="active",
         current_period_end=1234567890
     ))
-    
+
     # Mock webhook
     mock.Webhook.construct_event = MagicMock(return_value={
         'type': 'payment_intent.succeeded',
         'data': {'object': {'id': 'pi_mock123'}}
     })
-    
+
     return mock
 
 
@@ -274,7 +274,7 @@ def mock_stripe():
 def mock_google_oauth():
     """Mock Google OAuth client."""
     mock = MagicMock()
-    
+
     # Mock OAuth flow
     mock.Flow.from_client_config = MagicMock()
     flow_instance = MagicMock()
@@ -288,7 +288,7 @@ def mock_google_oauth():
         'expires_in': 3600
     })
     mock.Flow.from_client_config.return_value = flow_instance
-    
+
     # Mock ID token verification
     mock.id_token.verify_oauth2_token = MagicMock(return_value={
         'sub': 'mock-user-id',
@@ -297,7 +297,7 @@ def mock_google_oauth():
         'name': 'Test User',
         'picture': 'https://example.com/photo.jpg'
     })
-    
+
     return mock
 
 
@@ -307,7 +307,7 @@ def mock_google_oauth():
 def mock_neo4j():
     """Mock Neo4j graph database driver."""
     mock = MagicMock()
-    
+
     # Mock session
     session = MagicMock()
     session.run = MagicMock(return_value=MagicMock(
@@ -316,15 +316,15 @@ def mock_neo4j():
         ])
     ))
     session.close = MagicMock()
-    
+
     # Mock transaction
     tx = MagicMock()
     tx.run = session.run
     session.begin_transaction = MagicMock(return_value=tx)
-    
+
     mock.session = MagicMock(return_value=session)
     mock.close = MagicMock()
-    
+
     return mock
 
 
@@ -332,7 +332,7 @@ def mock_neo4j():
 def mock_elasticsearch():
     """Mock Elasticsearch client."""
     mock = MagicMock()
-    
+
     # Mock index operations
     mock.index = MagicMock(return_value={
         '_index': 'test-index',
@@ -340,7 +340,7 @@ def mock_elasticsearch():
         '_version': 1,
         'result': 'created'
     })
-    
+
     # Mock search
     mock.search = MagicMock(return_value={
         'hits': {
@@ -348,14 +348,14 @@ def mock_elasticsearch():
             'hits': []
         }
     })
-    
+
     # Mock bulk operations
     mock.bulk = MagicMock(return_value={
         'took': 5,
         'errors': False,
         'items': []
     })
-    
+
     return mock
 
 
@@ -378,18 +378,18 @@ def mock_sentry():
 def mock_datadog():
     """Mock Datadog monitoring."""
     mock = MagicMock()
-    
+
     # Mock metrics
     mock.statsd.increment = MagicMock()
     mock.statsd.decrement = MagicMock()
     mock.statsd.gauge = MagicMock()
     mock.statsd.histogram = MagicMock()
     mock.statsd.timing = MagicMock()
-    
+
     # Mock APM
     mock.tracer.trace = MagicMock()
     mock.tracer.current_span = MagicMock()
-    
+
     return mock
 
 
@@ -399,7 +399,7 @@ def mock_datadog():
 def mock_http_client():
     """Mock HTTP client for external API calls."""
     mock = MagicMock()
-    
+
     # Default successful response
     mock.get = MagicMock(return_value=MagicMock(
         status_code=200,
@@ -407,27 +407,27 @@ def mock_http_client():
         text='{"status": "success"}',
         headers={'Content-Type': 'application/json'}
     ))
-    
+
     mock.post = MagicMock(return_value=MagicMock(
         status_code=201,
         json=lambda: {'id': 'mock-id', 'status': 'created'},
         text='{"id": "mock-id"}',
         headers={'Content-Type': 'application/json'}
     ))
-    
+
     mock.put = MagicMock(return_value=MagicMock(
         status_code=200,
         json=lambda: {'status': 'updated'},
         text='{"status": "updated"}',
         headers={'Content-Type': 'application/json'}
     ))
-    
+
     mock.delete = MagicMock(return_value=MagicMock(
         status_code=204,
         text='',
         headers={}
     ))
-    
+
     return mock
 
 
@@ -435,15 +435,15 @@ def mock_http_client():
 def mock_webhook_client():
     """Mock webhook client for external notifications."""
     mock = MagicMock()
-    
+
     mock.send = MagicMock(return_value=MagicMock(
         status_code=200,
         json=lambda: {'delivered': True},
         text='{"delivered": true}'
     ))
-    
+
     mock.verify_signature = MagicMock(return_value=True)
-    
+
     return mock
 
 
@@ -453,25 +453,25 @@ def mock_webhook_client():
 def mock_celery_task():
     """Mock Celery task execution."""
     mock = MagicMock()
-    
+
     mock.delay = MagicMock(return_value=MagicMock(
         id='mock-task-id',
         state='PENDING',
         result=None
     ))
-    
+
     mock.apply_async = MagicMock(return_value=MagicMock(
         id='mock-task-id',
         state='PENDING',
         result=None
     ))
-    
+
     mock.apply = MagicMock(return_value=MagicMock(
         id='mock-task-id',
         state='SUCCESS',
         result={'status': 'completed'}
     ))
-    
+
     return mock
 
 
@@ -481,14 +481,14 @@ def mock_celery_task():
 def mock_file_storage():
     """Mock file storage operations."""
     mock = MagicMock()
-    
+
     mock.save = MagicMock(return_value="path/to/saved/file.pdf")
     mock.load = MagicMock(return_value=b"mock file content")
     mock.delete = MagicMock(return_value=True)
     mock.exists = MagicMock(return_value=True)
     mock.list_files = MagicMock(return_value=["file1.pdf", "file2.docx"])
     mock.get_url = MagicMock(return_value="https://storage.example.com/file.pdf")
-    
+
     return mock
 
 
@@ -510,7 +510,7 @@ def auto_mock_external_services(monkeypatch):
     monkeypatch.setenv("STRIPE_SECRET_KEY", "sk_test_mock")
     monkeypatch.setenv("SENDGRID_API_KEY", "test-key")
     monkeypatch.setenv("SENTRY_DSN", "")  # Disable Sentry in tests
-    
+
     # Patch common external service imports
     with patch('openai.OpenAI') as mock_openai:
         with patch('anthropic.Anthropic') as mock_anthropic:
@@ -523,7 +523,7 @@ def auto_mock_external_services(monkeypatch):
                         mock_gemini.return_value = MagicMock()
                         mock_boto.return_value = MagicMock()
                         mock_stripe_key = "sk_test_mock"
-                        
+
                         yield {
                             'openai': mock_openai,
                             'anthropic': mock_anthropic,
@@ -543,10 +543,10 @@ def create_mock_response(status_code: int = 200, json_data: Optional[Dict[str, A
     mock_response.json = MagicMock(return_value=json_data or {})
     mock_response.headers = {'Content-Type': 'application/json'}
     mock_response.raise_for_status = MagicMock()
-    
+
     if status_code >= 400:
         mock_response.raise_for_status.side_effect = Exception(f"HTTP {status_code} Error")
-    
+
     return mock_response
 
 
@@ -557,5 +557,5 @@ def create_mock_async_response(status_code: int = 200, json_data: Optional[Dict[
     mock_response.json = AsyncMock(return_value=json_data or {})
     mock_response.text = AsyncMock(return_value=json.dumps(json_data or {}))
     mock_response.headers = {'Content-Type': 'application/json'}
-    
+
     return mock_response

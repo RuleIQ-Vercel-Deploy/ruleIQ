@@ -1,184 +1,0 @@
-
-9security_middleware.SecurityMiddleware._authorize_requestG
-=/home/omar/Documents/ruleIQ/middleware/security_middleware.pyv v( "2*Í	
-2	w Ä(N
-L
-
-Å Å(
-%4"__id*2
-
-__unknown_file (*
-	
-request"
-stateK
-I
-
-Å Å('
-%5"__id*/
-
-__unknown_file (*
-
-%4"	
-user_idC
-A
-
-Å Å('	
-user_id"__id*"
-
-__unknown_file (
-
-%5ôñ
-
-Ç Ç(2
-%6*F
-
-__unknown_file (*(
-&security_middleware.SecurityMiddleware*'
-
-__unknown_file (
-	
-request2_extract_resourceD
-B
-
-Ç Ç(2
-
-resource"__id*"
-
-__unknown_file (
-
-%6O
-M
-
-É, É(:
-%7"__id*3
-
-__unknown_file (*
-	
-request"
-methodòï
-
-É É(;
-%8*F
-
-__unknown_file (*(
-&security_middleware.SecurityMiddleware*"
-
-__unknown_file (
-
-%72_map_method_to_actionB
-@
-
-É É(;
-action"__id*"
-
-__unknown_file (
-
-%8u
-s
-
-Ñ Ñ(1
-%9"__id*Y
-
-__unknown_file (=*;(
-&security_middleware.SecurityMiddleware"
-authz_service¢ü
-
-Ñ Ñ(|
-%10*"
-
-__unknown_file (
-
-%92check_permission:
-user_id
-	
-user_id:
-resource
-
-
-resource:
-action
-
-
-action:
-db
-
-dbK
-I
-
-Ñ Ñ(|
-has_permission"__id*#
-
-__unknown_file (
-
-%10u
-s
-
-Ö Ö(
-%11"__id*X
-
-__unknown_file (<*:(
-&security_middleware.SecurityMiddleware"
-enable_audit*
-4
-5*1
-4
-á á(" 
-
-á á(
-
-has_permission*º
-5Ü Ü(úu
-s
-
-Ü Ü($
-%1"__id*Y
-
-__unknown_file (=*;(
-&security_middleware.SecurityMiddleware"
-audit_servicei
-g
-
-Üf Ü(|
-%2"__concat*
-
-Üi Ü(o
-
-
-action*
-
-Üp Ü(q
-:*
-
-Ür Ü(z
-
-
-resource¬ø
-Ü Ü(ú
-%3*"
-
-__unknown_file (
-
-%12log_authorization:
-user_id
-	
-user_id:
-resource
-
-
-resource:
-
-permission
-
-%2:
-granted
-
-has_permission:
-db
-
-db*
-4:
-v' v(7	
-request:
-v9 v(D
-dbB*(
-&security_middleware.SecurityMiddlewareH

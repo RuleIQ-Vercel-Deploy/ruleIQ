@@ -13,7 +13,7 @@ and real-time monitoring of AI service usage and expenses.
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from typing import Dict, List, Optional, Any
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, Field
 from api.dependencies.auth import get_current_active_user
 from database.user import User
@@ -163,7 +163,7 @@ optimization_service = CostOptimizationService()
 @router.post('/track', response_model=CostTrackingResponse, status_code=
     status.HTTP_201_CREATED, dependencies=[Depends(get_current_active_user),
     Depends(RateLimited(requests=100, window=60))])
-async def track_ai_usage(request: CostTrackingRequest, current_user: User = 
+async def track_ai_usage(request: CostTrackingRequest, current_user: User =
     Depends(get_current_active_user)) -> Any:
     """
     Track AI usage and calculate costs.
@@ -212,7 +212,7 @@ async def get_daily_cost_analytics(target_date: Optional[date]=Query(None,
         total_tokens = daily_summary['total_tokens']
         return CostAnalyticsResponse(total_cost=total_cost, total_requests=
             total_requests, total_tokens=total_tokens,
-            average_cost_per_request=total_cost / total_requests if 
+            average_cost_per_request=total_cost / total_requests if
             total_requests > 0 else Decimal('0'), average_cost_per_token=
             total_cost / total_tokens if total_tokens > 0 else Decimal('0'),
             service_breakdown=daily_summary.get('service_breakdown', {}),
@@ -246,7 +246,7 @@ async def get_cost_trends(days: int=Query(7, ge=1, le=90, description=
                 ) / first_cost * 100 if first_cost > 0 else 0
         else:
             growth_rate = 0.0
-        seasonal_patterns = {'monday': 1.2, 'tuesday': 1.1, 'wednesday': 
+        seasonal_patterns = {'monday': 1.2, 'tuesday': 1.1, 'wednesday':
             1.0, 'thursday': 1.1, 'friday': 1.3, 'saturday': 0.7, 'sunday': 0.6
             }
         anomalies = []
@@ -264,7 +264,7 @@ async def get_cost_trends(days: int=Query(7, ge=1, le=90, description=
 @router.post('/budget/configure', status_code=status.HTTP_200_OK,
     dependencies=[Depends(get_current_active_user), Depends(RateLimited(
     requests=10, window=60))])
-async def configure_budget(config: BudgetConfigRequest, current_user: User = 
+async def configure_budget(config: BudgetConfigRequest, current_user: User =
     Depends(get_current_active_user)) -> Dict[str, Any]:
     """
     Configure budget limits and constraints.
@@ -458,7 +458,7 @@ async def get_usage_by_service(service_name: str=Query(..., description=
             start_date.isoformat(), 'end_date': end_date.isoformat()},
             'summary': {'total_cost': total_cost, 'total_requests':
             total_requests, 'total_tokens': total_tokens,
-            'average_cost_per_request': total_cost / total_requests if 
+            'average_cost_per_request': total_cost / total_requests if
             total_requests > 0 else Decimal('0'), 'average_cost_per_token':
             total_cost / total_tokens if total_tokens > 0 else Decimal('0')
             }, 'daily_breakdown': [{'date': metric.timestamp.date().

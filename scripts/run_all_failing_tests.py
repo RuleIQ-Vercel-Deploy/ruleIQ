@@ -7,7 +7,7 @@ Comprehensive test runner for all 32 failing tests.
 Runs tests with proper error reporting and summary.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 import subprocess
 import sys
 import os

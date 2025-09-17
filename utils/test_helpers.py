@@ -11,7 +11,7 @@ import os
 import signal
 import threading
 from contextlib import asynccontextmanager, contextmanager
-from typing import Any, Callable, Dict, Optional, TypeVar, Union
+from typing import Any, Callable, Dict, TypeVar
 from urllib.parse import urlparse
 import pytest
 
@@ -54,24 +54,24 @@ def sync_with_timeout(func: Callable, timeout: float, *args, **kwargs):
     """
     result = [None]
     exception = [None]
-    
+
     def target():
         try:
             result[0] = func(*args, **kwargs)
         except Exception as e:
             exception[0] = e
-    
+
     thread = threading.Thread(target=target)
     thread.daemon = True
     thread.start()
     thread.join(timeout)
-    
+
     if thread.is_alive():
         raise TimeoutError(f"Operation timed out after {timeout} seconds")
-    
+
     if exception[0]:
         raise exception[0]
-    
+
     return result[0]
 
 
@@ -154,7 +154,7 @@ def with_test_timeout(seconds: int):
     def decorator(test_func):
         # Add pytest timeout mark
         test_func = pytest.mark.timeout(seconds)(test_func)
-        
+
         if asyncio.iscoroutinefunction(test_func):
             @functools.wraps(test_func)
             async def async_wrapper(*args, **kwargs):
@@ -173,7 +173,7 @@ def with_test_timeout(seconds: int):
                     **kwargs,
                 )
             return sync_wrapper
-    
+
     return decorator
 
 
@@ -186,13 +186,13 @@ def create_smart_mock_ai_client():
         Mock AI client with intelligent responses
     """
     from unittest.mock import MagicMock
-    
+
     def generate_content(prompt: str):
         response = MagicMock()
-        
+
         # Return context-specific responses based on prompt
         prompt_lower = prompt.lower()
-        
+
         if 'gdpr' in prompt_lower:
             response.text = (
                 "GDPR (General Data Protection Regulation) is a comprehensive "
@@ -212,13 +212,13 @@ def create_smart_mock_ai_client():
             )
         else:
             response.text = f"Response for: {prompt[:50]}"
-        
+
         return response
-    
+
     mock_client = MagicMock()
     mock_client.generate_content = generate_content
     mock_client.generate_content_async = lambda p: asyncio.coroutine(generate_content)(p)
-    
+
     return mock_client
 
 
@@ -230,13 +230,13 @@ def create_smart_mock_openai():
         Mock OpenAI client
     """
     from unittest.mock import MagicMock
-    
+
     def create_completion(messages, **kwargs):
         last_message = messages[-1]['content'] if messages else ""
-        
+
         response = MagicMock()
         response.choices = [MagicMock()]
-        
+
         # Generate context-aware response
         if 'compliance' in last_message.lower():
             content = "Compliance requirements include regulatory adherence and documentation."
@@ -244,13 +244,13 @@ def create_smart_mock_openai():
             content = "GDPR compliance requires data protection measures."
         else:
             content = f"Response to: {last_message[:50]}"
-        
+
         response.choices[0].message.content = content
         return response
-    
+
     mock_client = MagicMock()
     mock_client.chat.completions.create = create_completion
-    
+
     return mock_client
 
 
@@ -277,7 +277,7 @@ def get_postgres_config() -> Dict[str, Any]:
         PostgreSQL configuration dictionary
     """
     database_url = os.getenv('DATABASE_URL', '')
-    
+
     if database_url:
         parsed = urlparse(database_url)
         return {
@@ -287,7 +287,7 @@ def get_postgres_config() -> Dict[str, Any]:
             'user': parsed.username,
             'password': parsed.password,
         }
-    
+
     return {
         'host': 'localhost',
         'port': 5432,
@@ -307,7 +307,7 @@ async def isolated_test_context():
         Test context with cleanup guaranteed
     """
     connections = {}
-    
+
     try:
         yield connections
     finally:
@@ -330,10 +330,10 @@ def timeout_context(seconds: float):
     """
     def timeout_handler(signum, frame):
         raise TimeoutError(f"Operation timed out after {seconds} seconds")
-    
+
     old_handler = signal.signal(signal.SIGALRM, timeout_handler)
     signal.alarm(int(seconds))
-    
+
     try:
         yield
     finally:

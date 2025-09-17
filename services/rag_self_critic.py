@@ -184,7 +184,7 @@ class RAGSelfCriticCommands:
                 results.append({'query': query, 'success': success,
                     'time_seconds': elapsed, 'overall_score': result.get(
                     'assessment', {}).get('overall_score', 0.0), 'approved':
-                    result.get('assessment', {}).get('approved_for_use', 
+                    result.get('assessment', {}).get('approved_for_use',
                     False)})
                 status = '✅' if success else '❌'
                 logger.info('%s Completed in %ss' % (status, elapsed))
@@ -205,7 +205,7 @@ class RAGSelfCriticCommands:
         logger.info('   Average Time: %ss' % avg_time)
         logger.info('   Average Score: %s' % avg_score)
         logger.info('   Approval Rate: %s%' % (approval_rate * 100))
-        return {'benchmark_results': results, 'summary': {'success_rate': 
+        return {'benchmark_results': results, 'summary': {'success_rate':
             successful / len(results), 'average_time': avg_time,
             'average_score': avg_score, 'approval_rate': approval_rate}}
 

@@ -1,54 +1,0 @@
-
-bY"Focus on observation and pattern identification. Avoid making specific recommendations."str
-D;"Build system prompt based on trust level and capabilities"str
-
-0int
-h
-_"Provide detailed suggestions with explanations. Always explain why you recommend each action."str
-
-	1int
-md"Take autonomous actions within your defined scope. Be proactive but always explain your reasoning."str
-
-2int
-ûñ"
-        You are a UK compliance agent operating at trust level {self.trust_level}.
-
-        Trust Level Guidelines:
-        - Level 0: Observe and learn only - provide insights but no actions
-        - Level 1: Make suggestions with detailed explanations
-        - Level 2: Collaborate on decisions - propose specific actions
-        - Level 3: Take autonomous actions within defined boundaries
-
-        Your expertise covers UK regulations including GDPR, Companies House requirements,
-        employment law, data protection, and industry-specific compliance frameworks.
-
-        Always provide:
-        1. Clear recommendations appropriate to your trust level
-        2. Confidence scores based on available information
-        3. Reasoning for your recommendations
-        4. Risk assessment (low/medium/high/critical)
-        5. Next steps the user should consider
-        "str
-
-3int
-pg"
-
-Trust Level {self.trust_level} Specific Guidance:
-{trust_level_specifics.get(self.trust_level, '')}"str
-f]"Propose specific actions and collaborate on implementation. You can suggest concrete steps."strselfC C(!"«+
-)
-E W(base_prompt"#id#:Bstr;
-9
-X  `(trust_level_specifics"#new-object#Bdict 
-
-X! Y(e"	#map-set#: 
-
-Z [(k"	#map-set#:	
- 
-
-\ ](i"	#map-set#: 
-
-^ _(p"	#map-set#:'
-%
-a d(4"	#binop +#2+:Bstr
-a d(4*D/home/omar/Documents/ruleIQ/services/agents/pydantic_ai_framework.py

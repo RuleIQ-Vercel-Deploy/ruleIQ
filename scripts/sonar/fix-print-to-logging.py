@@ -5,9 +5,8 @@ Converts print() calls to appropriate logging levels.
 import ast
 import os
 import re
-import sys
 from pathlib import Path
-from typing import List, Tuple, Optional, Any
+from typing import Any
 
 class PrintToLoggingTransformer(ast.NodeTransformer):
     """Transform print() calls to logging calls."""
@@ -111,7 +110,7 @@ def fix_print_statements(file_path: Path) -> bool:
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(new_content)
         return True
-    except (OSError, ValueError, KeyError) as e:
+    except (OSError, ValueError, KeyError):
         try:
             return regex_fix_prints(file_path)
         except OSError:
@@ -186,7 +185,7 @@ def main() -> None:
         if checked_count % 100 == 0:
             print(f'  Processed {checked_count}/{len(python_files)} files...')
     print('\n' + '=' * 60)
-    print(f'Results:')
+    print('Results:')
     print(f'  Files checked: {len(python_files)}')
     print(f'  Files fixed: {fixed_count}')
     print(f'  Files already correct: {len(python_files) - fixed_count}')

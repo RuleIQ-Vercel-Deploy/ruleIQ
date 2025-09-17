@@ -18,7 +18,7 @@ supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 logger.info("Setting up Archon schema in Supabase...")
 logger.info("Please go to your Supabase dashboard:")
-logger.info(f"https://supabase.com/dashboard/project/wohtxsiayhtvycvkamev/sql/new")
+logger.info("https://supabase.com/dashboard/project/wohtxsiayhtvycvkamev/sql/new")
 logger.info()
 print(
     "Then paste the contents of setup_archon_supabase.sql into the SQL Editor and run it."

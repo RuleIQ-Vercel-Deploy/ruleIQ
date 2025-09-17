@@ -7,9 +7,8 @@ Clean up duplicate and unused API endpoints
 """
 
 import json
-import re
 from pathlib import Path
-from typing import Dict, List, Set, Any
+from typing import Any
 PROJECT_ROOT = Path(__file__).parent.parent
 ROUTERS_DIR = PROJECT_ROOT / 'api' / 'routers'
 MAIN_PY = PROJECT_ROOT / 'main.py'
@@ -148,7 +147,7 @@ class DuplicateCleaner:
         new_lines = []
         modified = False
         for line in lines:
-            if (namespace == '/api/ai/assessments/' and 
+            if (namespace == '/api/ai/assessments/' and
                 'app.include_router(ai_assessments.router, prefix="/api/ai/assessments"'
                  in line):
                 new_lines.append('# DEPRECATED: ' + line)

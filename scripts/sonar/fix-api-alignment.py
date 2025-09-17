@@ -7,12 +7,11 @@ Comprehensive API Alignment Fix Script
 Fixes both backend and frontend to use consistent naming
 """
 
-import os
 import re
 import json
 import subprocess
 from pathlib import Path
-from typing import List, Dict, Tuple, Any
+from typing import List, Dict, Any
 PROJECT_ROOT = Path(__file__).parent.parent
 ROUTERS_DIR = PROJECT_ROOT / 'api' / 'routers'
 FRONTEND_API_DIR = PROJECT_ROOT / 'frontend' / 'lib' / 'api'

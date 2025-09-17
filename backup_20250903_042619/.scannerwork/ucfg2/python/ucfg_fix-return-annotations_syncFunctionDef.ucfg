@@ -1,10 +1,0 @@
-
->fix-return-annotations.ReturnTypeFinder.visit_AsyncFunctionDefM
-C/home/omar/Documents/ruleIQ/scripts/sonar/fix-return-annotations.py ("3*=
-3
-fix-return-annotations.py"
-" "
-implicit return:
-% ()
-nodeB+)
-'fix-return-annotations.ReturnTypeFinderH

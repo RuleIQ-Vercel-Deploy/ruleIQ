@@ -8,9 +8,7 @@ Automated test script for the freemium assessment feature.
 Tests the complete flow from lead capture through 5 questions.
 """
 import asyncio
-import json
 import time
-from typing import Dict, Any
 import httpx
 from datetime import datetime
 
@@ -77,7 +75,7 @@ class FreemiumAssessmentTester:
                         )
                     return True
                 else:
-                    print(f'⚠️ Session started but no first question provided')
+                    print('⚠️ Session started but no first question provided')
                     return False
             else:
                 print(f'❌ Failed to start session: {response.status_code}')
@@ -106,7 +104,7 @@ class FreemiumAssessmentTester:
                     self.current_question = session_data.get('current_question'
                         )
                     if not self.current_question:
-                        print(f'   ❌ No question available')
+                        print('   ❌ No question available')
                         return False
             question_text = self.current_question.get('question_text',
                 'Unknown question')
@@ -122,11 +120,11 @@ class FreemiumAssessmentTester:
                 if answer_response.status_code == HTTP_OK:
                     answer_data = answer_response.json()
                     self.questions_answered += 1
-                    print(f'   ✅ Answer submitted successfully')
+                    print('   ✅ Answer submitted successfully')
                     next_question = answer_data.get('next_question')
                     if next_question:
                         self.current_question = next_question
-                        print(f'   → Next question ready')
+                        print('   → Next question ready')
                     else:
                         self.current_question = None
                         if i < EXPECTED_MIN_QUESTIONS - 1:

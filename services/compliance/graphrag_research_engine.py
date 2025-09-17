@@ -7,14 +7,12 @@ Implements machine-actionable research prompts and knowledge graph integration
 import asyncio
 import json
 import logging
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from langchain.prompts import PromptTemplate
-from langchain.schema import Document
 from neo4j import AsyncGraphDatabase
-import numpy as np
 logger = logging.getLogger(__name__)
 
 

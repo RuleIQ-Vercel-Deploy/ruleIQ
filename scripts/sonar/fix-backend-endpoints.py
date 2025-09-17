@@ -7,7 +7,6 @@ Backend API Endpoint Alignment Script
 Fixes trailing slashes and standardizes endpoint naming
 """
 
-import os
 import re
 import json
 from pathlib import Path

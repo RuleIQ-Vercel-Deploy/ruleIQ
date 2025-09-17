@@ -8,12 +8,12 @@ performance, and system health.
 from __future__ import annotations
 
 import time
-from typing import Optional, Dict, Any
+from typing import Optional
 from functools import wraps
 from contextlib import contextmanager
 
 from prometheus_client import (
-    Counter, Histogram, Gauge, Summary, Info,
+    Counter, Histogram, Gauge, Info,
     CollectorRegistry, generate_latest, CONTENT_TYPE_LATEST
 )
 from fastapi import Response
@@ -196,11 +196,11 @@ APP_INFO = Info(
 
 class MetricsCollector:
     """Central metrics collection and management."""
-    
+
     def __init__(self):
         self.start_time = time.time()
         self._update_app_info()
-    
+
     def _update_app_info(self):
         """Update application info metrics."""
         from config.settings import settings
@@ -209,7 +209,7 @@ class MetricsCollector:
             'environment': getattr(settings, 'ENVIRONMENT', 'production'),
             'deployed_at': str(int(self.start_time))
         })
-    
+
     @contextmanager
     def track_request(self, method: str, endpoint: str):
         """Track request metrics."""
@@ -235,7 +235,7 @@ class MetricsCollector:
                 method=method,
                 endpoint=endpoint
             ).observe(duration)
-    
+
     @contextmanager
     def track_db_query(self, query_type: str):
         """Track database query metrics."""
@@ -245,70 +245,70 @@ class MetricsCollector:
         finally:
             duration = time.time() - start_time
             DB_QUERY_DURATION.labels(query_type=query_type).observe(duration)
-    
+
     def track_cache_access(self, cache_type: str, hit: bool):
         """Track cache access metrics."""
         if hit:
             CACHE_HITS.labels(cache_type=cache_type).inc()
         else:
             CACHE_MISSES.labels(cache_type=cache_type).inc()
-    
-    def track_ai_usage(self, model: str, operation: str, 
+
+    def track_ai_usage(self, model: str, operation: str,
                       tokens: int, cost: float, duration: float):
         """Track AI/ML usage metrics."""
         AI_TOKEN_USAGE.labels(model=model, operation=operation).inc(tokens)
         AI_COST_TOTAL.labels(model=model, operation=operation).inc(cost)
         AI_REQUEST_DURATION.labels(model=model, operation=operation).observe(duration)
-    
+
     def track_feature_flag(self, flag_name: str, result: str):
         """Track feature flag evaluation."""
         FEATURE_FLAG_EVALUATIONS.labels(
             flag_name=flag_name,
             result=result
         ).inc()
-    
+
     def track_auth_attempt(self, result: str, method: str = 'jwt'):
         """Track authentication attempt."""
         AUTH_ATTEMPTS.labels(result=result, method=method).inc()
         if result == 'failure':
             AUTH_FAILURES.labels(reason='invalid_credentials').inc()
-    
+
     def track_jwt_error(self, error_type: str):
         """Track JWT validation error."""
         JWT_VALIDATION_ERRORS.labels(error_type=error_type).inc()
-    
+
     def track_suspicious_request(self, pattern_type: str):
         """Track suspicious request pattern."""
         SUSPICIOUS_REQUESTS.labels(pattern_type=pattern_type).inc()
-    
+
     def update_session_count(self, count: int):
         """Update active session count."""
         ACTIVE_SESSIONS.set(count)
-    
+
     def update_db_connections(self, active: int, total: int, pool_type: str = 'main'):
         """Update database connection metrics."""
         DB_CONNECTIONS_ACTIVE.labels(pool_type=pool_type).set(active)
         DB_CONNECTIONS_TOTAL.labels(pool_type=pool_type).set(total)
-    
+
     def update_redis_connections(self, active: int, idle: int):
         """Update Redis connection metrics."""
         REDIS_CONNECTIONS.labels(status='active').set(active)
         REDIS_CONNECTIONS.labels(status='idle').set(idle)
-    
+
     def update_system_health(self, score: float):
         """Update system health score (0-100)."""
         SYSTEM_HEALTH.set(min(100, max(0, score)))
-    
+
     def update_service_availability(self, service_name: str, available: bool):
         """Update service availability status."""
         SERVICE_AVAILABILITY.labels(service_name=service_name).set(
             1.0 if available else 0.0
         )
-    
+
     def calculate_health_score(self) -> float:
         """Calculate overall system health score."""
         factors = []
-        
+
         # Error rate factor (lower is better)
         try:
             total_requests = REQUEST_COUNT._value.sum()
@@ -318,7 +318,7 @@ class MetricsCollector:
                 factors.append(max(0, 100 - (error_rate * 1000)))
         except:
             factors.append(100)
-        
+
         # DB connection utilization (optimal at 50-80%)
         try:
             active = DB_CONNECTIONS_ACTIVE._value.sum()
@@ -333,7 +333,7 @@ class MetricsCollector:
                     factors.append(max(0, 100 - ((util - 0.8) * 500)))
         except:
             factors.append(100)
-        
+
         # Cache hit rate (higher is better)
         try:
             hits = CACHE_HITS._value.sum()
@@ -344,12 +344,12 @@ class MetricsCollector:
                 factors.append(hit_rate * 100)
         except:
             factors.append(50)
-        
+
         # Calculate average
         if factors:
             return sum(factors) / len(factors)
         return 100.0
-    
+
     def get_metrics(self) -> bytes:
         """Generate Prometheus metrics output."""
         # Update system health before generating metrics

@@ -10,10 +10,7 @@ from enum import Enum
 import ipaddress
 from functools import wraps
 from fastapi import HTTPException, status, Request
-from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_
 from database.user import User
-from database.rbac import Role, Permission
 from services.cache_service import CacheService
 
 class PermissionType(str, Enum):

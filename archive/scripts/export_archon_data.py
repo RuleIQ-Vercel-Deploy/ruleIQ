@@ -52,7 +52,7 @@ def export_archon_data() -> Any:
             export_summary[table_name] = len(data)
             logger.info(f'  Exported {len(data)} records')
         else:
-            logger.info(f'  No data found or error occurred')
+            logger.info('  No data found or error occurred')
             export_summary[table_name] = 0
     for table_name, filters in large_tables.items():
         logger.info(f'Exporting {table_name} (large table)...')
@@ -72,7 +72,7 @@ def export_archon_data() -> Any:
         file_path = os.path.join(backup_dir, 'ruleiq_project.json')
         with open(file_path, 'w') as f:
             json.dump(ruleiq_project, f, indent=2, default=str)
-        logger.info(f'  Exported ruleIQ project data')
+        logger.info('  Exported ruleIQ project data')
     ruleiq_tasks = export_table('archon_tasks', {'project_id': ruleiq_project_id})
     if ruleiq_tasks:
         file_path = os.path.join(backup_dir, 'ruleiq_tasks.json')
@@ -83,7 +83,7 @@ def export_archon_data() -> Any:
     summary_path = os.path.join(backup_dir, 'backup_summary.json')
     with open(summary_path, 'w') as f:
         json.dump(summary, f, indent=2)
-    logger.info(f'\n✅ Backup complete!')
+    logger.info('\n✅ Backup complete!')
     logger.info(f'📁 Location: {backup_dir}')
     logger.info(f"📊 Total records exported: {summary['total_records']}")
     create_restoration_script(backup_dir)

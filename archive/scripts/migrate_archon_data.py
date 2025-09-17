@@ -4,8 +4,6 @@ import os
 import logging
 logger = logging.getLogger(__name__)
 from supabase import create_client
-import json
-from datetime import datetime
 OLD_SUPABASE_URL = 'https://nxmzlhiutzqvkyhhntez.supabase.co'
 OLD_SUPABASE_KEY = os.getenv('SUPABASE_SERVICE_ROLE_KEY', '')
 NEW_SUPABASE_URL = 'https://wohtxsiayhtvycvkamev.supabase.co'
@@ -27,7 +25,7 @@ def migrate_table(table_name, old_client, new_client, batch_size=100) -> Any:
                 break
             offset += batch_size
         if not all_data:
-            logger.info(f'  No data to migrate')
+            logger.info('  No data to migrate')
             return 0
         for i in range(0, len(all_data), batch_size):
             batch = all_data[i:i + batch_size]

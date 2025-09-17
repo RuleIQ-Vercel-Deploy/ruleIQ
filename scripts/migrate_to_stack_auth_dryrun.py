@@ -53,7 +53,7 @@ def analyze_file(file_path: Path) ->List[str]:
                     f'  Line {line_num}: {line.strip()} -> would change to use Stack Auth'
                     )
     for line_num, line in enumerate(lines, 1):
-        if ('from database import User' in line or 
+        if ('from database import User' in line or
             'from database.models import User' in line):
             changes.append(
                 f'  Line {line_num}: {line.strip()} -> User model import found, needs review'

@@ -18,7 +18,7 @@ from typing import Dict, List, Any, Optional
 from datetime import datetime, timezone
 import sys
 sys.path.append(str(Path(__file__).parent.parent.parent.parent))
-from services.ai.evaluation.tools.ingestion import DocumentProcessor, ChunkProcessor, EmbeddingGenerator, GraphIngestion, GoldenDatasetIngestion
+from services.ai.evaluation.tools.ingestion import DocumentProcessor, ChunkProcessor, EmbeddingGenerator, GraphIngestion
 from services.ai.evaluation.schemas.common import GoldenDoc, SourceMeta
 logging.basicConfig(level=logging.INFO, format=
     '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -78,7 +78,7 @@ class DocumentFetcher:
         self.session.headers.update({'User-Agent':
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
             })
-        retry = Retry(total=3, backoff_factor=0.3, status_forcelist=[500, 
+        retry = Retry(total=3, backoff_factor=0.3, status_forcelist=[500,
             502, 503, 504])
         adapter = HTTPAdapter(max_retries=retry)
         self.session.mount('http://', adapter)

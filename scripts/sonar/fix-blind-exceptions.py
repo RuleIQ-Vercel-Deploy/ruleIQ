@@ -4,9 +4,8 @@ Analyzes code context to determine appropriate specific exceptions.
 """
 import ast
 import os
-import re
 from pathlib import Path
-from typing import List, Set, Optional
+from typing import List
 
 class ExceptionAnalyzer(ast.NodeVisitor):
     """Analyze code to determine what exceptions might be raised."""
@@ -200,7 +199,7 @@ def main() -> None:
         if checked_count % 100 == 0:
             print(f'  Processed {checked_count}/{len(python_files)} files...')
     print('\n' + '=' * 60)
-    print(f'Results:')
+    print('Results:')
     print(f'  Files checked: {len(python_files)}')
     print(f'  Files fixed: {fixed_count}')
     print(f'  Files already using specific exceptions: {len(python_files) - fixed_count}')

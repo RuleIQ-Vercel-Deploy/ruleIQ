@@ -538,10 +538,9 @@ class APIKeyManager:
                     # CIDR notation
                     if request_addr in ipaddress.ip_network(allowed):
                         return True
-                else:
-                    # Single IP
-                    if request_addr == ipaddress.ip_address(allowed):
-                        return True
+                # Single IP
+                elif request_addr == ipaddress.ip_address(allowed):
+                    return True
 
             return False
         except (ValueError, ipaddress.AddressValueError):

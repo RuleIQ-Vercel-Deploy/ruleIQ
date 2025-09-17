@@ -267,7 +267,7 @@ class AIPerformanceOptimizer:
             'optimization_savings': round(self.performance_metrics.
             optimization_savings, 4)}, 'system_health': {
             'available_capacity': self.request_semaphore._value,
-            'queue_utilization': len(self.batch_queue) / self.batch_size * 
+            'queue_utilization': len(self.batch_queue) / self.batch_size *
             100, 'last_request_time': self.last_request_time}}
 
     def update_performance_metrics(self, response_time: float, token_count:

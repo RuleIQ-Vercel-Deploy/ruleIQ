@@ -3,17 +3,14 @@ Database models for API Key Management
 """
 
 from datetime import datetime
-from typing import Optional, List, Dict, Any
 from sqlalchemy import (
     Column,
     String,
     DateTime,
     Integer,
-    Boolean,
     JSON,
     ForeignKey,
     Index,
-    Text,
     ARRAY,
 )
 from sqlalchemy.orm import relationship

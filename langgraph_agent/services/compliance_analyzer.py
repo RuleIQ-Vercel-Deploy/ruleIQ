@@ -10,8 +10,7 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-from services.compliance_retrieval_queries import ComplianceRetrievalQueries
-from typing import Dict, List, Any, Optional
+from typing import Dict, Any
 from uuid import UUID
 
 
@@ -66,7 +65,7 @@ class ComplianceAnalyzer:
                     )
                 )
                 obligations.extend(framework_obligations)
-            except Exception as e:
+            except Exception:
                 # Add placeholder obligations if query fails
                 obligations.append(
                     {

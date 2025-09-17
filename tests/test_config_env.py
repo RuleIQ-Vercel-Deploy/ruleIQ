@@ -75,7 +75,7 @@ def test_environment_loading():
         elif "nTDlGluRj3" in jwt_key:
             print("✅ JWT_SECRET_KEY: Using environment value")
         else:
-            print(f"⚠️  JWT_SECRET_KEY: Unknown value")
+            print("⚠️  JWT_SECRET_KEY: Unknown value")
 
         # Redis URL check
         redis_url = config.REDIS_URL
@@ -93,7 +93,7 @@ def test_environment_loading():
         elif neo4j_password == "please_change":
             print("✅ NEO4J_PASSWORD: Using environment value")
         else:
-            print(f"⚠️  NEO4J_PASSWORD: Set to custom value")
+            print("⚠️  NEO4J_PASSWORD: Set to custom value")
 
         print("\n4. Configuration validation:")
         print("-" * 40)
@@ -139,7 +139,7 @@ def test_environment_override():
 
     print("\n2. Checking if override worked:")
     if config.DATABASE_URL == test_db_url:
-        print(f"✅ DATABASE_URL successfully overridden!")
+        print("✅ DATABASE_URL successfully overridden!")
     else:
         print(f"❌ DATABASE_URL not overridden. Got: {config.DATABASE_URL[:50]}...")
 
@@ -147,9 +147,9 @@ def test_environment_override():
     print("\n3. Testing with development config:")
     config_dev = reload_config("development")
     if config_dev.DATABASE_URL == test_db_url:
-        print(f"✅ Development config also uses environment override!")
+        print("✅ Development config also uses environment override!")
     else:
-        print(f"❌ Development config not using override")
+        print("❌ Development config not using override")
 
     return True
 

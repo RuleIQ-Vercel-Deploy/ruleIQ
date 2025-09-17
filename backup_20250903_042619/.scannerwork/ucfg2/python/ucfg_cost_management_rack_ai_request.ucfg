@@ -1,233 +1,0 @@
-
-:services.ai.cost_management.AICostManager.track_ai_requestF
-:/home/omar/Documents/ruleIQ/services/ai/cost_management.pyÙ Ù("2*Ä
-2
-à à(@w
-u
-
-á á('
-%1"__id*[
-
-__unknown_file (?*=+
-)services.ai.cost_management.AICostManager"
-cost_trackeräá
-
-á ç(&
-%2*"
-
-__unknown_file (
-
-%12track_usage: 
-service_name
-
-service_name:
-
-model_name
-
-
-model_name: 
-input_tokens
-
-input_tokens:"
-output_tokens
-
-output_tokens:
-user_id
-	
-user_id:
-
-session_id
-
-
-session_id:
-
-request_id
-
-
-request_id:4
-response_quality_score
-
-response_quality_score:(
-response_time_ms
-
-response_time_ms:
-	cache_hit
-
-	cache_hit:$
-error_occurred
-
-error_occurred: 
-request_metadata
-
-
-metadataA
-?
-
-á ç(&
-usage"__id*"
-
-__unknown_file (
-
-%2§¤
-
-è è(8
-%3*I
-
-__unknown_file (-+
-)services.ai.cost_management.AICostManager*%
-
-__unknown_file (	
-
-usage2_check_real_time_budget_alerts
-
-é ë(3
-%4"dictQ
-O
-
-é é(,
-%5"__id*5
-
-__unknown_file (*
-
-usage"
-
-request_id‘
-Ž
-
-é é(,
-%6"__mapSet*"
-
-__unknown_file (
-
-%4*(
-
-__unknown_file (
-
-usage_id*"
-
-__unknown_file (
-
-%5O
-M
-
-é: é(H
-%7"__id*3
-
-__unknown_file (*
-
-usage"
-
-cost_usd‘
-Ž
-
-é. é(H
-%8"__mapSet*"
-
-__unknown_file (
-
-%4*(
-
-__unknown_file (
-
-cost_usd*"
-
-__unknown_file (
-
-%7WU
-
-ê  ê(B
-%9*%
-
-__unknown_file (	
-
-usage2calculate_efficiency_scoreš
-—
-
-ê ê(B
-%10"__mapSet*"
-
-__unknown_file (
-
-%4*0
-
-__unknown_file (
-efficiency_score*"
-
-__unknown_file (
-
-%9V
-T
-
-ë ë(2
-%11"__id*9
-
-__unknown_file (*
-
-usage"
-cost_per_token™
-–
-
-ë ë(2
-%12"__mapSet*"
-
-__unknown_file (
-
-%4*.
-
-__unknown_file (
-cost_per_token*#
-
-__unknown_file (
-
-%11"
-
-é ë(3
-
-%4:
-
-Ù% Ù(6
-service_name:
-
-Ù8 Ù(G
-
-model_name:
-
-Ú Ú(
-input_prompt: 
-
-Ú Ú(0
-response_content:
-
-Ú2 Ú(C
-input_tokens:
-
-Û Û(
-output_tokens:
-
-Û Û(7	
-user_id:
-
-Û9 Ü(
-
-session_id:
-
-Ü Ü(:
-
-request_id:&
-
-Ý Ý(4
-response_quality_score: 
-
-Ý6 Þ(
-response_time_ms:
-
-Þ Þ(3
-	cache_hit:
-
-Þ5 ß(
-error_occurred:
-
-ß ß(6
-
-metadataB-+
-)services.ai.cost_management.AICostManagerH

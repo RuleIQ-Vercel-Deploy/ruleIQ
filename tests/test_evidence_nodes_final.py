@@ -173,8 +173,6 @@ class TestStaleEvidenceCleanup:
     async def test_process_evidence_stale_evidence_cleanup(self,
         mock_duplicate_detector, mock_processor_class, mock_get_db):
         """Test stale evidence cleanup during process_evidence."""
-        from datetime import datetime, timedelta
-        from sqlalchemy import update
         mock_duplicate_detector.is_duplicate = AsyncMock(return_value=False)
         mock_processor = MagicMock()
         mock_processor.process_evidence = MagicMock()

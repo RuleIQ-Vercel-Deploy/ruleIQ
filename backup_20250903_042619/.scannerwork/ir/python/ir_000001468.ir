@@ -1,20 +1,0 @@
-
-"SECRET_KEY"str
-6-"SECRET_KEY environment variable is required"str
-.%"Get the secret key for JWT signing."strself( (("š$
-"
-* *(%key"
-osgetenv:)
-'
-+ +("
-__bool__*:BboolH)
-'
-+ +("#unaryop !#2!:Bbool"
-+ +( *+ +(
-"B.
-,
-, ,(K"
-ValueError*:B
-ValueError2
-, ,(K"
-- -(*5/home/omar/Documents/ruleIQ/config/security_config.py

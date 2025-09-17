@@ -1,68 +1,0 @@
-
-Mapi.middleware.cost_tracking_middleware.RealTimeCostMonitor.disconnect_clientR
-F/home/omar/Documents/ruleIQ/api/middleware/cost_tracking_middleware.py≠ ≠("2*ù
-2
-Æ Æ(7ê
-ç
-
-Ø Ø(/
-%4"__id*s
-
-__unknown_file (W*U=
-;api.middleware.cost_tracking_middleware.RealTimeCostMonitor"
-active_connectionsqo
-
-Ø Ø(/
-%5*"
-
-__unknown_file (
-
-%4*)
-
-__unknown_file (
-
-	client_id2__contains__*
-3
-4*C
-3
-cost_tracking_middleware.py"
-¥ ¥(
-implicit return*ã
-4
-∞ ∞(2ê
-ç
-
-∞ ∞('
-%1"__id*s
-
-__unknown_file (W*U=
-;api.middleware.cost_tracking_middleware.RealTimeCostMonitor"
-active_connectionsz
-x
-
-± ≤(
-%2"__concat*=
-
-± ±(E/-
-+Client %s disconnected from cost monitoring*
-
-≤ ≤(
-
-	client_idfd
-
-± ≤(
-%3*&
-
-__unknown_file (
-
-
-logger*"
-
-__unknown_file (
-
-%22info*
-3:
-
-≠& ≠(4
-	client_idB?=
-;api.middleware.cost_tracking_middleware.RealTimeCostMonitorH

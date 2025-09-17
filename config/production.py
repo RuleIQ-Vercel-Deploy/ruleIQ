@@ -6,7 +6,6 @@ Settings optimized for production environment
 """
 
 from config.base import BaseConfig, Environment
-from typing import Optional
 import os
 
 

@@ -3,20 +3,15 @@ GDPR Compliance Module for RuleIQ.
 Implements data privacy, consent management, and compliance tracking.
 """
 
-import json
 import hashlib
 import logging
 from typing import Dict, Any, List, Optional, Set
 from datetime import datetime, timedelta
 from enum import Enum
-import asyncio
 
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_
-from fastapi import HTTPException, status
 
 from database.session import SessionLocal
-from core.config import settings
 
 logger = logging.getLogger(__name__)
 
@@ -43,7 +38,7 @@ class DataCategory(Enum):
 
 class GDPRComplianceManager:
     """Main GDPR compliance handler."""
-    
+
     def __init__(self):
         self.retention_periods = {
             DataCategory.BASIC: 365 * 3,  # 3 years
@@ -53,7 +48,7 @@ class GDPRComplianceManager:
             DataCategory.TECHNICAL: 90,  # 3 months
             DataCategory.SENSITIVE: 365 * 2,  # 2 years
         }
-        
+
         self.anonymization_fields = {
             'email': self._anonymize_email,
             'phone': self._anonymize_phone,
@@ -61,7 +56,7 @@ class GDPRComplianceManager:
             'name': self._anonymize_name,
             'address': self._anonymize_address,
         }
-    
+
     async def process_consent(
         self,
         user_id: str,
@@ -71,7 +66,7 @@ class GDPRComplianceManager:
         expires_in_days: Optional[int] = None
     ) -> Dict[str, Any]:
         """Process and record user consent."""
-        
+
         consent = {
             'consent_id': self._generate_consent_id(),
             'user_id': user_id,
@@ -82,63 +77,63 @@ class GDPRComplianceManager:
             'expires_at': None,
             'status': 'active'
         }
-        
+
         if expires_in_days:
             expires_at = datetime.utcnow() + timedelta(days=expires_in_days)
             consent['expires_at'] = expires_at.isoformat()
-        
+
         # Store consent record
         await self._store_consent(consent)
-        
+
         # Log consent event
         logger.info(f"Consent granted: {consent['consent_id']} for user {user_id}")
-        
+
         return consent
-    
+
     async def withdraw_consent(self, user_id: str, consent_id: str) -> Dict[str, Any]:
         """Process consent withdrawal."""
-        
+
         withdrawal = {
             'consent_id': consent_id,
             'user_id': user_id,
             'withdrawn_at': datetime.utcnow().isoformat(),
             'status': 'withdrawn'
         }
-        
+
         # Update consent record
         await self._update_consent_status(consent_id, 'withdrawn')
-        
+
         # Trigger data deletion if required
         await self._process_withdrawal_actions(user_id, consent_id)
-        
+
         logger.info(f"Consent withdrawn: {consent_id} for user {user_id}")
-        
+
         return withdrawal
-    
+
     async def get_user_consents(self, user_id: str) -> List[Dict[str, Any]]:
         """Get all consents for a user."""
-        
+
         db = SessionLocal()
         try:
             # Query consent records
             consents = db.query(ConsentRecord).filter(
                 ConsentRecord.user_id == user_id
             ).all()
-            
+
             return [self._serialize_consent(c) for c in consents]
         finally:
             db.close()
-    
+
     async def export_user_data(self, user_id: str) -> Dict[str, Any]:
         """Export all user data (GDPR Article 20 - Data portability)."""
-        
+
         export = {
             'export_id': self._generate_export_id(),
             'user_id': user_id,
             'exported_at': datetime.utcnow().isoformat(),
             'data': {}
         }
-        
+
         db = SessionLocal()
         try:
             # Collect user data from all tables
@@ -147,15 +142,15 @@ class GDPRComplianceManager:
             export['data']['evidence'] = await self._export_user_evidence(db, user_id)
             export['data']['consents'] = await self._export_user_consents(db, user_id)
             export['data']['audit_logs'] = await self._export_user_audit_logs(db, user_id)
-            
+
         finally:
             db.close()
-        
+
         # Log export event
         logger.info(f"Data export created: {export['export_id']} for user {user_id}")
-        
+
         return export
-    
+
     async def delete_user_data(
         self,
         user_id: str,
@@ -163,7 +158,7 @@ class GDPRComplianceManager:
         retain_anonymized: bool = True
     ) -> Dict[str, Any]:
         """Delete or anonymize user data (GDPR Article 17 - Right to erasure)."""
-        
+
         deletion = {
             'deletion_id': self._generate_deletion_id(),
             'user_id': user_id,
@@ -172,7 +167,7 @@ class GDPRComplianceManager:
             'retain_anonymized': retain_anonymized,
             'affected_records': {}
         }
-        
+
         db = SessionLocal()
         try:
             if retain_anonymized:
@@ -185,54 +180,54 @@ class GDPRComplianceManager:
                 deletion['affected_records'] = await self._delete_user_data_permanent(
                     db, user_id, categories
                 )
-            
+
             db.commit()
-            
+
         except Exception as e:
             db.rollback()
             logger.error(f"Data deletion failed for user {user_id}: {e}")
             raise
         finally:
             db.close()
-        
+
         # Log deletion event
         logger.info(f"Data deletion completed: {deletion['deletion_id']} for user {user_id}")
-        
+
         return deletion
-    
+
     async def check_retention_compliance(self) -> Dict[str, Any]:
         """Check and enforce data retention policies."""
-        
+
         compliance_check = {
             'check_id': self._generate_check_id(),
             'checked_at': datetime.utcnow().isoformat(),
             'expired_data': [],
             'actions_taken': []
         }
-        
+
         db = SessionLocal()
         try:
             for category, retention_days in self.retention_periods.items():
                 cutoff_date = datetime.utcnow() - timedelta(days=retention_days)
-                
+
                 # Find expired data
                 expired = await self._find_expired_data(db, category, cutoff_date)
                 compliance_check['expired_data'].extend(expired)
-                
+
                 # Process expired data
                 for record in expired:
                     action = await self._process_expired_data(db, record, category)
                     compliance_check['actions_taken'].append(action)
-            
+
             db.commit()
-            
+
         finally:
             db.close()
-        
+
         logger.info(f"Retention compliance check completed: {compliance_check['check_id']}")
-        
+
         return compliance_check
-    
+
     def _anonymize_email(self, email: str) -> str:
         """Anonymize email address."""
         parts = email.split('@')
@@ -240,86 +235,86 @@ class GDPRComplianceManager:
             anonymized = f"user_{hashlib.md5(email.encode()).hexdigest()[:8]}@{parts[1]}"
             return anonymized
         return "anonymous@example.com"
-    
+
     def _anonymize_phone(self, phone: str) -> str:
         """Anonymize phone number."""
         return "***-***-" + phone[-4:] if len(phone) >= 4 else "***-***-****"
-    
+
     def _anonymize_ip(self, ip: str) -> str:
         """Anonymize IP address."""
         parts = ip.split('.')
         if len(parts) == 4:
             return f"{parts[0]}.{parts[1]}.0.0"
         return "0.0.0.0"
-    
+
     def _anonymize_name(self, name: str) -> str:
         """Anonymize name."""
         return f"User_{hashlib.md5(name.encode()).hexdigest()[:8]}"
-    
+
     def _anonymize_address(self, address: str) -> str:
         """Anonymize address."""
         return "Anonymized Address"
-    
+
     def _generate_consent_id(self) -> str:
         """Generate unique consent ID."""
         timestamp = datetime.utcnow().timestamp()
         return f"consent_{hashlib.md5(str(timestamp).encode()).hexdigest()[:16]}"
-    
+
     def _generate_export_id(self) -> str:
         """Generate unique export ID."""
         timestamp = datetime.utcnow().timestamp()
         return f"export_{hashlib.md5(str(timestamp).encode()).hexdigest()[:16]}"
-    
+
     def _generate_deletion_id(self) -> str:
         """Generate unique deletion ID."""
         timestamp = datetime.utcnow().timestamp()
         return f"deletion_{hashlib.md5(str(timestamp).encode()).hexdigest()[:16]}"
-    
+
     def _generate_check_id(self) -> str:
         """Generate unique check ID."""
         timestamp = datetime.utcnow().timestamp()
         return f"check_{hashlib.md5(str(timestamp).encode()).hexdigest()[:16]}"
-    
+
     async def _store_consent(self, consent: Dict[str, Any]):
         """Store consent record in database."""
         # Implementation depends on your database schema
         pass
-    
+
     async def _update_consent_status(self, consent_id: str, status: str):
         """Update consent status in database."""
         # Implementation depends on your database schema
         pass
-    
+
     async def _process_withdrawal_actions(self, user_id: str, consent_id: str):
         """Process actions required after consent withdrawal."""
         # Implementation depends on your business logic
         pass
-    
+
     async def _export_user_profile(self, db: Session, user_id: str) -> Dict:
         """Export user profile data."""
         # Implementation depends on your database schema
         return {}
-    
+
     async def _export_user_assessments(self, db: Session, user_id: str) -> List[Dict]:
         """Export user assessment data."""
         # Implementation depends on your database schema
         return []
-    
+
     async def _export_user_evidence(self, db: Session, user_id: str) -> List[Dict]:
         """Export user evidence data."""
         # Implementation depends on your database schema
         return []
-    
+
     async def _export_user_consents(self, db: Session, user_id: str) -> List[Dict]:
         """Export user consent records."""
         # Implementation depends on your database schema
         return []
-    
+
     async def _export_user_audit_logs(self, db: Session, user_id: str) -> List[Dict]:
         """Export user audit logs."""
         # Implementation depends on your database schema
         return []
-    
+
     async def _anonymize_user_data(
         self,
         db: Session,
@@ -328,7 +323,7 @@ class GDPRComplianceManager:
     ) -> Dict[str, int]:
         """Anonymize user data in database."""
         affected = {}
-        
+
         # Anonymize user profile
         user = db.query(User).filter(User.id == user_id).first()
         if user:
@@ -336,12 +331,12 @@ class GDPRComplianceManager:
                 if hasattr(user, field):
                     setattr(user, field, anonymizer(getattr(user, field)))
             affected['user_profile'] = 1
-        
+
         # Anonymize related records
         # Implementation depends on your database schema
-        
+
         return affected
-    
+
     async def _delete_user_data_permanent(
         self,
         db: Session,
@@ -350,12 +345,12 @@ class GDPRComplianceManager:
     ) -> Dict[str, int]:
         """Permanently delete user data from database."""
         affected = {}
-        
+
         # Delete user and cascade to related records
         # Implementation depends on your database schema
-        
+
         return affected
-    
+
     async def _find_expired_data(
         self,
         db: Session,
@@ -365,7 +360,7 @@ class GDPRComplianceManager:
         """Find data that has exceeded retention period."""
         # Implementation depends on your database schema
         return []
-    
+
     async def _process_expired_data(
         self,
         db: Session,
@@ -380,7 +375,7 @@ class GDPRComplianceManager:
             'action': 'anonymized',
             'processed_at': datetime.utcnow().isoformat()
         }
-    
+
     def _serialize_consent(self, consent) -> Dict[str, Any]:
         """Serialize consent record."""
         return {
@@ -395,10 +390,10 @@ class GDPRComplianceManager:
 
 class ConsentValidator:
     """Validate consent for data processing operations."""
-    
+
     def __init__(self, gdpr_manager: GDPRComplianceManager):
         self.gdpr_manager = gdpr_manager
-    
+
     async def validate_processing(
         self,
         user_id: str,
@@ -406,26 +401,26 @@ class ConsentValidator:
         required_categories: List[DataCategory]
     ) -> bool:
         """Validate if processing is allowed under GDPR."""
-        
+
         # Get user consents
         consents = await self.gdpr_manager.get_user_consents(user_id)
-        
+
         # Check if there's valid consent for the purpose
         for consent in consents:
-            if (consent['purpose'] == purpose and 
+            if (consent['purpose'] == purpose and
                 consent['status'] == 'active' and
                 self._categories_covered(consent['data_categories'], required_categories)):
-                
+
                 # Check if consent is not expired
                 if consent.get('expires_at'):
                     expires_at = datetime.fromisoformat(consent['expires_at'])
                     if expires_at < datetime.utcnow():
                         return False
-                
+
                 return True
-        
+
         return False
-    
+
     def _categories_covered(
         self,
         consented: List[str],
@@ -439,24 +434,24 @@ class ConsentValidator:
 
 class PrivacyByDesign:
     """Implement privacy by design principles."""
-    
+
     @staticmethod
     def minimize_data_collection(data: Dict[str, Any], required_fields: Set[str]) -> Dict[str, Any]:
         """Minimize data collection to only required fields."""
         return {k: v for k, v in data.items() if k in required_fields}
-    
+
     @staticmethod
     def pseudonymize_identifier(identifier: str) -> str:
         """Create pseudonymous identifier."""
         return hashlib.sha256(identifier.encode()).hexdigest()
-    
+
     @staticmethod
     def encrypt_sensitive_data(data: str, key: bytes) -> bytes:
         """Encrypt sensitive data."""
         from cryptography.fernet import Fernet
         f = Fernet(key)
         return f.encrypt(data.encode())
-    
+
     @staticmethod
     def decrypt_sensitive_data(encrypted_data: bytes, key: bytes) -> str:
         """Decrypt sensitive data."""

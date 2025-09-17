@@ -403,11 +403,11 @@ RECOMMENDATIONS: [list recommendations]"""
         str, float]:
         """Calculate traditional algorithmic quality scores."""
         scores = {}
-        completeness_factors = [evidence.evidence_name is not None, 
+        completeness_factors = [evidence.evidence_name is not None,
             evidence.description is not None and len(evidence.description) >
             10, hasattr(evidence, 'control_reference') and bool(getattr(
             evidence, 'control_reference', None)), hasattr(evidence,
-            'file_path') and bool(getattr(evidence, 'file_path', None)), 
+            'file_path') and bool(getattr(evidence, 'file_path', None)),
             evidence.evidence_type is not None]
         scores['completeness'] = sum(int(factor) for factor in
             completeness_factors) / len(completeness_factors) * 100
@@ -424,7 +424,7 @@ RECOMMENDATIONS: [list recommendations]"""
             elif desc_length < DEFAULT_LIMIT:
                 scores['content_quality'] = desc_length / 100 * 100
             else:
-                scores['content_quality'] = max(50, 100 - (desc_length - 
+                scores['content_quality'] = max(50, 100 - (desc_length -
                     500) / 20)
         else:
             scores['content_quality'] = 20

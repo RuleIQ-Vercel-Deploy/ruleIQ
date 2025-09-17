@@ -1,38 +1,0 @@
-
-
-"evidence"str
-"report_title"str
-?6"Generates a report detailing all collected evidence."str
-"total_items"str
-$	"Collected Evidence Report"strself
-ê( ê(,profile
-ê. ê(Fparams
-ë ë("›#
-!
-
-ì ì(D"#unknown-value#3
-1
-
-ì ì(Devidence_items"#unknown-value#&
-$
-
-î ñ("#new-object#Bdict"
- 
-
-î î(;
-"	#map-set#:	,
-*
-
-ï ï("
-builtinslen*:Bint"
- 
-
-î= ï("	#map-set#:-
-+
-
-ï- ñ("?python-unknown?:Blist"
- 
-
-ï! ñ("	#map-set#:
-
-î ñ(*B/home/omar/Documents/ruleIQ/services/reporting/report_generator.py

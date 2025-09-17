@@ -123,7 +123,7 @@ class ComplianceGraphInitializer:
                 'requirements': requirements_created, 'controls':
                 controls_created, 'metrics': metrics_created,
                 'risk_assessments': risks_created, 'enforcement_cases':
-                enforcement_created}, 'relationships_created': 
+                enforcement_created}, 'relationships_created':
                 relationships_created + temporal_created, 'message':
                 'Compliance graph initialization completed successfully'}
             logger.info('Compliance graph initialization completed: %s' %

@@ -48,7 +48,7 @@ class LeadScoringService:
         self.db = db_session
         self.cache_manager = None
         self.SCORING_RULES = {'assessment_start': {'base_score': 15,
-            'category': 'engagement'}, 'question_answered': {'base_score': 
+            'category': 'engagement'}, 'question_answered': {'base_score':
             5, 'category': 'assessment', 'multiplier_field':
             'answer_quality'}, 'assessment_complete': {'base_score': 25,
             'category': 'conversion'}, 'results_viewed': {'base_score': 20,
@@ -57,14 +57,14 @@ class LeadScoringService:
             'category': 'engagement'}, 'email_open': {'base_score': 2,
             'category': 'engagement'}, 'email_click': {'base_score': 8,
             'category': 'engagement'}, 'consultation_booked': {'base_score':
-            50, 'category': 'conversion'}, 'trial_signup': {'base_score': 
+            50, 'category': 'conversion'}, 'trial_signup': {'base_score':
             75, 'category': 'conversion'}, 'demo_requested': {'base_score':
             40, 'category': 'conversion'}, 'pricing_viewed': {'base_score':
             15, 'category': 'intent'}, 'deep_engagement': {'base_score': 12,
             'category': 'engagement'}, 'repeat_visitor': {'base_score': 8,
             'category': 'engagement'}, 'social_share': {'base_score': 6,
             'category': 'engagement'}, 'unsubscribe': {'base_score': -10,
-            'category': 'disengagement'}, 'spam_complaint': {'base_score': 
+            'category': 'disengagement'}, 'spam_complaint': {'base_score':
             -25, 'category': 'disengagement'}}
         self.LEAD_QUALIFICATION_THRESHOLDS = {'hot': 75, 'warm': 50,
             'qualified': 25, 'cold': 0}
@@ -95,7 +95,7 @@ class LeadScoringService:
             logger.info('Tracking event for lead %s: %s' % (lead_id,
                 event_type))
             if score_impact is None:
-                score_impact = self._calculate_event_score(event_type, 
+                score_impact = self._calculate_event_score(event_type,
                     metadata or {})
             event_data = {'lead_id': lead_id, 'event_type': event_type,
                 'event_category': event_category, 'event_action':
@@ -207,7 +207,7 @@ class LeadScoringService:
             if not lead:
                 raise ValueError(f'Lead not found: {lead_id}')
             events_result = await self.db.execute(select(LeadScoringEvent).
-                where(and_(LeadScoringEvent.lead_id == lead_id, 
+                where(and_(LeadScoringEvent.lead_id == lead_id,
                 LeadScoringEvent.created_at >= cutoff_date)).order_by(desc(
                 LeadScoringEvent.created_at)))
             events = events_result.scalars().all()
@@ -256,7 +256,7 @@ class LeadScoringService:
                 start_date, end_date))
             from sqlalchemy import select, and_
             leads_result = await self.db.execute(select(AssessmentLead).
-                where(and_(AssessmentLead.created_at >= start_date, 
+                where(and_(AssessmentLead.created_at >= start_date,
                 AssessmentLead.created_at <= end_date)))
             leads = leads_result.scalars().all()
             if not leads:

@@ -8,10 +8,8 @@ This module replaces workers/evidence_tasks.py with native LangGraph implementat
 """
 from typing import Dict, Any, List, Optional, Union
 from datetime import datetime, timedelta, timezone
-from uuid import UUID
 import logging
-from langchain_core.messages import SystemMessage, HumanMessage
-from langgraph.prebuilt import ToolNode
+from langchain_core.messages import SystemMessage
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from database.db_setup import get_async_db
@@ -19,7 +17,7 @@ from database.evidence_item import EvidenceItem
 from services.automation.duplicate_detector import DuplicateDetector
 from langgraph_agent.utils.cost_tracking import track_node_cost
 from services.automation.evidence_processor import EvidenceProcessor
-from core.exceptions import BusinessLogicException, DatabaseException
+from core.exceptions import DatabaseException
 from langgraph_agent.graph.enhanced_state import EnhancedComplianceState
 from langgraph_agent.graph.unified_state import UnifiedComplianceState
 from config.langsmith_config import with_langsmith_tracing

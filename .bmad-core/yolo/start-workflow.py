@@ -5,7 +5,6 @@ Start the autonomous YOLO workflow for RuleIQ.
 import asyncio
 import json
 import importlib.util
-from datetime import datetime
 
 # Load YOLO system
 spec = importlib.util.spec_from_file_location('yolo_system', 'yolo-system.py')
@@ -16,14 +15,14 @@ async def start_ruleiq_workflow():
     """Start the RuleIQ autonomous workflow."""
     print("🚀 STARTING RULEIQ AUTONOMOUS WORKFLOW")
     print("=" * 70)
-    
+
     # Load existing state or create new orchestrator
     orchestrator = yolo_system.YOLOOrchestrator()
-    
+
     # Ensure YOLO is active
     if orchestrator.state.mode != yolo_system.YOLOMode.ACTIVE:
         await orchestrator.activate()
-    
+
     # Initial context for RuleIQ project
     initial_context = {
         "project": "RuleIQ Compliance Automation Platform",
@@ -49,7 +48,7 @@ async def start_ruleiq_workflow():
             "Setup error recovery"
         ]
     }
-    
+
     # Add context to manager
     if orchestrator.context_manager:
         for key, value in initial_context.items():
@@ -58,14 +57,14 @@ async def start_ruleiq_workflow():
                 key, json.dumps(value) if isinstance(value, (dict, list)) else value,
                 priority, "pm"
             )
-    
+
     # Set PM as current agent
     orchestrator.state.current_agent = yolo_system.AgentType.PM
     orchestrator.state.current_phase = yolo_system.WorkflowPhase.PLANNING
-    
+
     # Create first handoff: PM → Architect
     print("\n📋 Creating Initial Handoff: PM → ARCHITECT")
-    
+
     # PM makes initial decisions
     decisions = {}
     decision_points = [
@@ -73,13 +72,13 @@ async def start_ruleiq_workflow():
         ("testing_strategy", ["TDD", "BDD", "integration_first"]),
         ("deployment_approach", ["containers", "serverless", "traditional"])
     ]
-    
+
     for decision_type, options in decision_points:
         if not decision_type.startswith("deployment"):  # Skip safety-critical
             decision = orchestrator.make_decision(decision_type, options, initial_context)
             decisions[decision_type] = decision
             print(f"   • {decision_type}: {decision}")
-    
+
     # Create handoff package
     handoff = await orchestrator.handoff(
         to_agent=yolo_system.AgentType.ARCHITECT,
@@ -89,34 +88,34 @@ async def start_ruleiq_workflow():
         },
         context=initial_context
     )
-    
-    print(f"\n✅ Handoff created successfully!")
+
+    print("\n✅ Handoff created successfully!")
     print(f"   From: {handoff.from_agent.value}")
     print(f"   To: {handoff.to_agent.value}")
     print(f"   Context items: {len(handoff.context)}")
     print(f"   YOLO mode: {'ACTIVE' if handoff.yolo_mode else 'INACTIVE'}")
-    
+
     # Show current status
     status = orchestrator.get_status()
-    print(f"\n📊 Current Status:")
+    print("\n📊 Current Status:")
     print(f"   Phase: {status['phase']}")
     print(f"   Current Agent: {status['current_agent']}")
     print(f"   Next Agent: {status.get('next_agent', 'TBD')}")
     print(f"   Decisions Made: {status['decisions_made']}")
-    
+
     if 'context' in status:
-        print(f"\n💾 Context Manager:")
+        print("\n💾 Context Manager:")
         print(f"   Total Items: {status['context']['total_items']}")
         print(f"   Total Tokens: {status['context']['total_tokens']}")
-    
+
     print("\n" + "=" * 70)
     print("🎯 WORKFLOW INITIATED - AUTONOMOUS OPERATION IN PROGRESS")
     print("The system will continue making decisions and managing handoffs automatically.")
     print("=" * 70)
-    
+
     # Save state
     orchestrator._save_state()
-    
+
     return handoff
 
 if __name__ == "__main__":

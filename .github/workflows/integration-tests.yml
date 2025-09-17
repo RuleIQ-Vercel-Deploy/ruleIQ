@@ -180,16 +180,7 @@ jobs:
           # Check coverage thresholds
           coverage report --fail-under=80 || echo "Coverage below threshold"
       
-      - name: Upload coverage to Codecov
-        if: always()
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
-          flags: integration
-          name: integration-tests
-          fail_ci_if_error: false
-      
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v3

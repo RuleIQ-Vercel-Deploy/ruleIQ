@@ -6,7 +6,6 @@ import logging
 logger = logging.getLogger(__name__)
 import os
 import requests
-import json
 from collections import defaultdict
 SONAR_TOKEN = os.getenv('SONARCLOUD_TOKEN', '')
 SONAR_URL = 'https://sonarcloud.io/api'

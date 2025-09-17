@@ -113,7 +113,7 @@ def test_statistics(base_url: str='http://localhost:8001') ->bool:
             print(f"  Embedding Model: {data['embedding_model']}")
             print(f"  Embedding Dimension: {data['embedding_dimension']}")
             if data['documents']:
-                print(f'  Documents in dataset:')
+                print('  Documents in dataset:')
                 for doc in data['documents']:
                     print(f"    - {doc['doc_id']} (source: {doc['source']})")
             return True

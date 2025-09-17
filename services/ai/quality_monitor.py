@@ -100,7 +100,7 @@ class AIQualityMonitor:
         self.quality_thresholds = {QualityLevel.EXCELLENT: 8.5,
             QualityLevel.GOOD: 7.0, QualityLevel.SATISFACTORY: 5.5,
             QualityLevel.NEEDS_IMPROVEMENT: 3.5, QualityLevel.POOR: 0.0}
-        self.metrics = {'total_assessments': 0, 'average_quality_score': 
+        self.metrics = {'total_assessments': 0, 'average_quality_score':
             0.0, 'user_satisfaction_rate': 0.0, 'improvement_rate': 0.0}
 
     async def assess_response_quality(self, response_id: str, response_text:
@@ -244,7 +244,7 @@ class AIQualityMonitor:
             score += 1.0
         coverage_indicators = ['steps', 'requirements', 'considerations',
             'examples', 'implementation']
-        coverage_count = sum(1 for indicator in coverage_indicators if 
+        coverage_count = sum(1 for indicator in coverage_indicators if
             indicator in response_text.lower())
         score += coverage_count * 0.3
         return min(10.0, score)
@@ -341,7 +341,7 @@ class AIQualityMonitor:
             RELEVANCE: 0.2, QualityDimension.COMPLETENESS: 0.15,
             QualityDimension.CLARITY: 0.15, QualityDimension.ACTIONABILITY:
             0.15, QualityDimension.COMPLIANCE_ALIGNMENT: 0.1}
-        weighted_sum = sum(score.score * weights.get(dimension, 0.1) for 
+        weighted_sum = sum(score.score * weights.get(dimension, 0.1) for
             dimension, score in dimension_scores.items())
         return round(weighted_sum, 2)
 

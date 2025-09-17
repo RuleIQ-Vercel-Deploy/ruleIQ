@@ -209,7 +209,7 @@ class CacheManager:
         if self.redis_client:
             return
         now = datetime.now(timezone.utc)
-        expired_keys = [key for key, entry in self.memory_cache.items() if 
+        expired_keys = [key for key, entry in self.memory_cache.items() if
             now >= entry['expires_at']]
         for key in expired_keys:
             del self.memory_cache[key]

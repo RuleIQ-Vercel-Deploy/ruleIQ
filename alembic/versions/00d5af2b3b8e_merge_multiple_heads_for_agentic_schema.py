@@ -5,8 +5,6 @@ Revises: 433c68d53999, agentic_ai_schema_v1, create_feature_flags_tables
 Create Date: 2025-09-11 00:07:34.736077
 
 """
-from alembic import op
-import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.

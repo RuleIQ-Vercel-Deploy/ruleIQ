@@ -8,15 +8,13 @@ This agent operates in full observation mode where:
 - Rollback capability for any approved action
 """
 
-from typing import Dict, Any, List, Optional, Tuple
+from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta
 from uuid import uuid4
 from enum import Enum
-import json
-import asyncio
 from dataclasses import dataclass, field
 
-from services.agents.base import BaseAgent, AgentCapability
+from services.agents.base import BaseAgent
 from services.agents.trust import TrustLevel
 from services.agents.approval.workflow import ApprovalWorkflow, ApprovalState
 from services.agents.risk.assessor import RiskAssessor, RiskLevel
@@ -56,7 +54,7 @@ class BaseL0Agent(BaseAgent):
     explicit user approval. Provides detailed rationale for suggestions
     and maintains complete audit trail.
     """
-    
+
     # L0 Agent behavior configuration
     CAPABILITIES = {
         "execute": False,  # Cannot execute without approval
@@ -64,7 +62,7 @@ class BaseL0Agent(BaseAgent):
         "observe": True,   # Can observe system state
         "learn": True      # Can learn from interactions
     }
-    
+
     # Actions that always require approval
     APPROVAL_REQUIRED = [
         "code_generation",
@@ -74,7 +72,7 @@ class BaseL0Agent(BaseAgent):
         "api_calls",
         "database_queries"
     ]
-    
+
     # Risk thresholds for L0
     RISK_THRESHOLDS = {
         "low": 0.3,
@@ -82,10 +80,10 @@ class BaseL0Agent(BaseAgent):
         "high": 0.8,
         "critical": 0.95
     }
-    
+
     # Default timeout for approvals (5 minutes)
     DEFAULT_APPROVAL_TIMEOUT = timedelta(minutes=5)
-    
+
     def __init__(
         self,
         agent_id: str,
@@ -101,22 +99,22 @@ class BaseL0Agent(BaseAgent):
             trust_level=TrustLevel.L0_OBSERVED,
             config=config or {}
         )
-        
+
         # Initialize subsystems
         self.approval_workflow = ApprovalWorkflow()
         self.risk_assessor = RiskAssessor()
         self.auditor = L0Auditor(agent_id=agent_id)
         self.rollback_manager = RollbackManager()
-        
+
         # Suggestion tracking
         self.pending_suggestions: Dict[str, L0Suggestion] = {}
         self.suggestion_history: List[L0Suggestion] = []
-        
+
         # Learning metrics
         self.approval_rate = 0.0
         self.rejection_reasons: List[str] = []
         self.successful_patterns: List[Dict[str, Any]] = []
-    
+
     async def suggest_action(
         self,
         action_type: str,
@@ -138,17 +136,17 @@ class BaseL0Agent(BaseAgent):
         """
         # Generate rationale
         rationale = await self._generate_rationale(action_type, context)
-        
+
         # Assess risk
         risk_assessment = await self.risk_assessor.assess_action(
             action_type=action_type,
             context=context,
             code=code
         )
-        
+
         # Analyze impact
         impact = await self._analyze_impact(action_type, context, code)
-        
+
         # Create suggestion
         suggestion = L0Suggestion(
             action_type=action_type,
@@ -166,15 +164,15 @@ class BaseL0Agent(BaseAgent):
                 "risk_details": risk_assessment.details
             }
         )
-        
+
         # Store pending suggestion
         self.pending_suggestions[suggestion.id] = suggestion
-        
+
         # Log suggestion creation
         await self.auditor.log_suggestion(suggestion)
-        
+
         return suggestion
-    
+
     async def request_approval(
         self,
         suggestion: L0Suggestion,
@@ -193,7 +191,7 @@ class BaseL0Agent(BaseAgent):
             ApprovalState indicating the result
         """
         timeout = timeout or self.DEFAULT_APPROVAL_TIMEOUT
-        
+
         # Create approval request
         approval_request = await self.approval_workflow.create_request(
             suggestion_id=suggestion.id,
@@ -204,20 +202,20 @@ class BaseL0Agent(BaseAgent):
             risk_level=suggestion.risk_level,
             timeout=timeout
         )
-        
+
         # Wait for approval
         state = await self.approval_workflow.wait_for_approval(
             request_id=approval_request.id,
             timeout=timeout
         )
-        
+
         # Log approval decision
         await self.auditor.log_approval_decision(
             suggestion=suggestion,
             state=state,
             user_id=user_id
         )
-        
+
         # Update learning metrics
         if state == ApprovalState.APPROVED:
             self.approval_rate = (
@@ -232,13 +230,13 @@ class BaseL0Agent(BaseAgent):
             self.approval_rate = (
                 self.approval_rate * len(self.suggestion_history)
             ) / (len(self.suggestion_history) + 1)
-        
+
         # Move to history
         self.suggestion_history.append(suggestion)
         del self.pending_suggestions[suggestion.id]
-        
+
         return state
-    
+
     async def execute_with_rollback(
         self,
         suggestion: L0Suggestion,
@@ -259,46 +257,46 @@ class BaseL0Agent(BaseAgent):
             action_type=suggestion.action_type,
             context=suggestion.metadata.get("context", {})
         )
-        
+
         try:
             # Execute in dry-run mode if requested
             if dry_run:
                 result = await self._simulate_execution(suggestion)
             else:
                 result = await self._execute_suggestion(suggestion)
-            
+
             # Log successful execution
             await self.auditor.log_execution(
                 suggestion=suggestion,
                 result=result,
                 rollback_id=rollback_id
             )
-            
+
             return {
                 "status": "success",
                 "result": result,
                 "rollback_id": rollback_id,
                 "can_rollback": True
             }
-            
+
         except Exception as e:
             # Auto-rollback on failure
             await self.rollback_manager.rollback(rollback_id)
-            
+
             # Log failure
             await self.auditor.log_execution_failure(
                 suggestion=suggestion,
                 error=str(e),
                 rollback_id=rollback_id
             )
-            
+
             return {
                 "status": "failed",
                 "error": str(e),
                 "rollback_id": rollback_id,
                 "rolled_back": True
             }
-    
+
     async def _generate_rationale(
         self,
         action_type: str,
@@ -306,10 +304,10 @@ class BaseL0Agent(BaseAgent):
     ) -> str:
         """Generate detailed rationale for the suggestion"""
         rationale_parts = []
-        
+
         # Explain the action
         rationale_parts.append(f"Action: {action_type}")
-        
+
         # Explain why this action is suggested
         if action_type in ["code_generation", "code_modification"]:
             rationale_parts.append(
@@ -319,7 +317,7 @@ class BaseL0Agent(BaseAgent):
             rationale_parts.append(
                 "File operations are needed to manage project resources."
             )
-        
+
         # Include context reasoning
         if "error" in context:
             rationale_parts.append(
@@ -329,14 +327,14 @@ class BaseL0Agent(BaseAgent):
             rationale_parts.append(
                 f"This fulfills the request: {context['user_request']}"
             )
-        
+
         # Add safety notes
         rationale_parts.append(
             "This action requires approval for safety and can be rolled back if needed."
         )
-        
+
         return " ".join(rationale_parts)
-    
+
     async def _analyze_impact(
         self,
         action_type: str,
@@ -345,18 +343,18 @@ class BaseL0Agent(BaseAgent):
     ) -> List[str]:
         """Analyze the potential impact of an action"""
         impacts = []
-        
+
         if action_type == "code_generation":
             impacts.append("New code will be added to the project")
             if code and "class" in code:
                 impacts.append("New classes will be defined")
             if code and "def " in code:
                 impacts.append("New functions will be created")
-        
+
         elif action_type == "code_modification":
             impacts.append("Existing code will be modified")
             impacts.append("May affect dependent code")
-        
+
         elif action_type == "file_operations":
             if "create" in context.get("operation", ""):
                 impacts.append("New files will be created")
@@ -364,7 +362,7 @@ class BaseL0Agent(BaseAgent):
                 impacts.append("Files will be deleted (recoverable via rollback)")
             elif "modify" in context.get("operation", ""):
                 impacts.append("File contents will be changed")
-        
+
         elif action_type == "database_queries":
             if "SELECT" in str(code).upper():
                 impacts.append("Database will be queried (read-only)")
@@ -374,9 +372,9 @@ class BaseL0Agent(BaseAgent):
                 impacts.append("Existing data will be modified")
             elif "DELETE" in str(code).upper():
                 impacts.append("Data will be removed from database")
-        
+
         return impacts
-    
+
     async def _simulate_execution(
         self,
         suggestion: L0Suggestion
@@ -389,7 +387,7 @@ class BaseL0Agent(BaseAgent):
             "expected_impact": suggestion.impact,
             "risk_level": suggestion.risk_level.value
         }
-    
+
     async def _execute_suggestion(
         self,
         suggestion: L0Suggestion
@@ -403,7 +401,7 @@ class BaseL0Agent(BaseAgent):
             "result": "Action executed successfully",
             "timestamp": datetime.utcnow().isoformat()
         }
-    
+
     async def get_audit_trail(
         self,
         session_id: Optional[str] = None,
@@ -414,19 +412,19 @@ class BaseL0Agent(BaseAgent):
             session_id=session_id,
             limit=limit
         )
-    
+
     async def rollback_action(self, rollback_id: str) -> bool:
         """Rollback a previously executed action"""
         success = await self.rollback_manager.rollback(rollback_id)
-        
+
         # Log rollback
         await self.auditor.log_rollback(
             rollback_id=rollback_id,
             success=success
         )
-        
+
         return success
-    
+
     async def get_metrics(self) -> Dict[str, Any]:
         """Get performance and learning metrics"""
         return {

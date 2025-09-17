@@ -7,7 +7,7 @@ Implements compliance checking against regulations and requirements.
 
 import logging
 from datetime import datetime
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 from uuid import uuid4
 
 from langgraph_agent.graph.unified_state import UnifiedComplianceState

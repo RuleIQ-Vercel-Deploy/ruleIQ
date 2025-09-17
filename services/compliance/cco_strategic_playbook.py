@@ -9,16 +9,11 @@ MAX_RETRIES = 3
 CCO Strategic Playbook Integration (2025-2030)
 Implements strategic compliance planning and executive capabilities
 """
-import json
 import logging
-from typing import Dict, List, Optional, Any, Tuple
-from dataclasses import dataclass, field
+from typing import Dict, List, Any
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
-import asyncio
-import numpy as np
-import pandas as pd
-from pydantic import BaseModel, Field
 logger = logging.getLogger(__name__)
 
 
@@ -237,7 +232,7 @@ class CCOStrategicPlaybook:
         payback_period_months = total_cost / (total_benefit / 12
             ) if total_benefit > 0 else float('inf')
         return {'initiative_id': initiative.initiative_id, 'total_cost':
-            total_cost, 'total_benefit': total_benefit, 'net_benefit': 
+            total_cost, 'total_benefit': total_benefit, 'net_benefit':
             total_benefit - total_cost, 'roi_percentage': roi_percentage,
             'payback_period_months': payback_period_months,
             'cost_breakdown': costs, 'benefit_breakdown': benefits,
@@ -271,7 +266,7 @@ class CCOStrategicPlaybook:
             _assess_strategic_risk()}
         report['recommendations'] = [{'recommendation':
             'Approve 5-year strategic roadmap', 'rationale':
-            'Positions organization as compliance leader', 'investment': 
+            'Positions organization as compliance leader', 'investment':
             self.roadmap.investment_summary if self.roadmap else 'TBD',
             'decision_required': 'Board approval'}, {'recommendation':
             'Establish Compliance Innovation Fund', 'rationale':
@@ -341,7 +336,7 @@ class CCOStrategicPlaybook:
         plan['resource_requirements'] = {'team': {'project_manager':
             '1 FTE', 'technical_lead': '1 FTE', 'business_analysts':
             '2 FTE', 'developers': '3 FTE', 'trainers': '1 FTE'}, 'budget':
-            {'software': initiative.investment_required * 0.4, 'services': 
+            {'software': initiative.investment_required * 0.4, 'services':
             initiative.investment_required * 0.3, 'internal': initiative.
             investment_required * 0.2, 'contingency': initiative.
             investment_required * 0.1}, 'timeline': initiative.timeline}
@@ -387,7 +382,7 @@ class CCOStrategicPlaybook:
             expected_roi for i in self.strategic_initiatives),
             'realized_roi_ytd': sum(i.expected_roi * 0.4 for i in self.
             strategic_initiatives), 'roi_forecast_accuracy': 0.85,
-            'value_drivers': {'efficiency_gains': 0.4, 'risk_reduction': 
+            'value_drivers': {'efficiency_gains': 0.4, 'risk_reduction':
             0.3, 'cost_avoidance': 0.2, 'revenue_protection': 0.1}}
         return metrics
 

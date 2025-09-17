@@ -38,10 +38,10 @@ def main() -> None:
     for file_path in files_to_fix:
         logger.info(f'\n📝 Processing: {file_path}')
         if fix_hardcoded_passwords(file_path):
-            logger.info(f'  ✅ Fixed')
+            logger.info('  ✅ Fixed')
             fixed_count += 1
         else:
-            logger.info(f'  ⚠️  No changes needed or file not found')
+            logger.info('  ⚠️  No changes needed or file not found')
     supabase_file = 'archive/scripts/migrate_archon_data.py'
     logger.info(f'\n📝 Processing Supabase JWT secret: {supabase_file}')
     if os.path.exists(supabase_file):
@@ -53,12 +53,12 @@ def main() -> None:
                 content = 'import os\n' + content
             with open(supabase_file, 'w') as f:
                 f.write(content)
-            logger.info(f'  ✅ Fixed Supabase JWT secret')
+            logger.info('  ✅ Fixed Supabase JWT secret')
             fixed_count += 1
         else:
-            logger.info(f'  ⚠️  No Supabase JWT secret found')
+            logger.info('  ⚠️  No Supabase JWT secret found')
     else:
-        logger.info(f'  ⚠️  File not found')
+        logger.info('  ⚠️  File not found')
     logger.info('\n' + '=' * 60)
     logger.info(f'✅ Fixed {fixed_count}/{len(files_to_fix) + 1} files')
     logger.info('=' * 60)

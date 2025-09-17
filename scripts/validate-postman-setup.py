@@ -9,10 +9,9 @@ logger = logging.getLogger(__name__)
 
 Validate Postman collection setup for RuleIQ API
 """
-from typing import Any, Dict, List, Optional
+from typing import Any
 import json
 import os
-import sys
 
 
 def validate_collection(filename: str) ->Any:

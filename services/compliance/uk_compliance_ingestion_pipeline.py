@@ -7,15 +7,12 @@ Ingests all 108 UK regulatory documents and compliance manifest into graph
 import asyncio
 import json
 import logging
-from typing import Dict, List, Optional, Any, Tuple
+from typing import Dict, List, Optional, Any
 from pathlib import Path
-from datetime import datetime
 import hashlib
-from neo4j import AsyncGraphDatabase, Transaction
+from neo4j import AsyncGraphDatabase
 import PyPDF2
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.schema import Document
-import numpy as np
 logger = logging.getLogger(__name__)
 
 

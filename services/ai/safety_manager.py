@@ -147,9 +147,9 @@ class AdvancedSafetyManager:
         self.role_permissions = {'viewer': {'can_view_metrics': True,
             'can_view_audit_trail': False, 'can_create_profiles': False,
             'can_modify_settings': False, 'can_override_safety': False,
-            'max_content_risk_level': 'low'}, 'user': {'can_view_metrics': 
-            True, 'can_view_audit_trail': True, 'can_create_profiles': 
-            False, 'can_modify_settings': False, 'can_override_safety': 
+            'max_content_risk_level': 'low'}, 'user': {'can_view_metrics':
+            True, 'can_view_audit_trail': True, 'can_create_profiles':
+            False, 'can_modify_settings': False, 'can_override_safety':
             False, 'max_content_risk_level': 'medium'},
             'compliance_officer': {'can_view_metrics': True,
             'can_view_audit_trail': True, 'can_create_profiles': True,
@@ -584,7 +584,7 @@ class AdvancedSafetyManager:
         """Get audit trail for safety decisions."""
         self.require_permission('can_view_audit_trail', 'view audit trail')
         cutoff_time = datetime.now() - timedelta(hours=hours)
-        filtered_records = [record for record in self.decision_history if 
+        filtered_records = [record for record in self.decision_history if
             record.timestamp >= cutoff_time and (user_id is None or record.
             user_id == user_id) and (content_type is None or record.
             content_type == content_type)]
@@ -681,7 +681,7 @@ def get_safety_manager_for_user(user: Any, organization_id: Optional[str]=None
     ) ->AdvancedSafetyManager:
     """Get a properly configured safety manager for a user with role-based authorization."""
     user_context = {'user_id': str(user.id) if hasattr(user, 'id') else
-        None, 'role': getattr(user, 'role', 'user'), 'organization_id': 
+        None, 'role': getattr(user, 'role', 'user'), 'organization_id':
         organization_id or getattr(user, 'organization_id', None), 'email':
         getattr(user, 'email', None), 'is_active': getattr(user,
         'is_active', True)}

@@ -202,7 +202,7 @@ class CircuitBreakerMonitor:
                     AlertSeverity.WARNING: logging.WARNING, AlertSeverity.
                     ERROR: logging.ERROR, AlertSeverity.CRITICAL: logging.
                     CRITICAL}.get(alert.severity, logging.INFO)
-                self.logger.log(log_level, 
+                self.logger.log(log_level,
                     'CIRCUIT BREAKER ALERT [%s]: %s - %s' % (alert.severity
                     .value.upper(), alert.title, alert.message), extra={
                     'alert_id': alert.id, 'model_name': alert.model_name,

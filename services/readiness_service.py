@@ -58,7 +58,7 @@ async def generate_compliance_report(user: UserModel, framework: str,
         return {'report_metadata': {'user_id': user.id, 'framework':
             framework, 'report_type': report_type, 'generated_at': datetime
             .now(timezone.utc).isoformat()}, 'summary':
-            'This is a placeholder compliance report.', 'recommendations': 
+            'This is a placeholder compliance report.', 'recommendations':
             'Implement all the things.' if include_recommendations else
             'N/A', 'evidence': 'Evidence included.' if include_evidence else
             'N/A'}
@@ -141,7 +141,7 @@ async def get_readiness_dashboard(db: AsyncSession, user: UserModel) ->Dict[
     framework_data = []
     for fw in all_frameworks:
         assessment_stmt = select(ReadinessAssessmentModel).where(
-            ReadinessAssessmentModel.user_id == user.id, 
+            ReadinessAssessmentModel.user_id == user.id,
             ReadinessAssessmentModel.framework_id == fw.id).order_by(
             ReadinessAssessmentModel.created_at.desc())
         assessment_res = await db.execute(assessment_stmt)

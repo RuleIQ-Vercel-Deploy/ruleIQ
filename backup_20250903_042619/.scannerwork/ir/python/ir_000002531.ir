@@ -1,26 +1,0 @@
-
-0.1float
-	0.7float
-0.2float
-.%"Calculate risk reduction percentage"strself
-’" ’(&"‚3
-1
-
-” ”(."#get-field# current_maturity:(
-&
-
-” ”(4"#get-field# value:3
-1
-
-” ”(:"#dependent-value#*:Bfloat0
-.
-
-” ”(:"#dependent-value#:Bfloat(
-&
-
-” ”(@
-"
-builtinsmin*:	
-
-” ”(@
-*I/home/omar/Documents/ruleIQ/services/compliance/cco_strategic_playbook.py

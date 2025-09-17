@@ -104,11 +104,11 @@ class ComprehensiveAPITester:
                 'content_length': len(response.content), 'error': None}
         except requests.exceptions.Timeout:
             return {'endpoint': endpoint, 'method': method.upper(),
-                'status_code': None, 'response_time_ms': None, 'success': 
+                'status_code': None, 'response_time_ms': None, 'success':
                 False, 'content_length': 0, 'error': 'Request timeout'}
         except Exception as e:
             return {'endpoint': endpoint, 'method': method.upper(),
-                'status_code': None, 'response_time_ms': None, 'success': 
+                'status_code': None, 'response_time_ms': None, 'success':
                 False, 'content_length': 0, 'error': str(e)}
 
     def _calculate_group_summary(self, results: List[Dict]) ->Dict[str, Any]:
@@ -141,7 +141,7 @@ class ComprehensiveAPITester:
             200, 404], 'Get current user details')]
         all_results.append(self.test_endpoint_group(
             'Authentication & Users', auth_endpoints))
-        business_endpoints = [('GET', '/api/v1/business-profiles', [200, 
+        business_endpoints = [('GET', '/api/v1/business-profiles', [200,
             404], 'List business profiles'), ('GET',
             '/api/v1/business-profiles/current', [200, 404],
             'Get current business profile'), ('GET',
@@ -165,7 +165,7 @@ class ComprehensiveAPITester:
         all_results.append(self.test_endpoint_group(
             'Assessments & Questions', assessment_endpoints))
         ai_endpoints = [('GET', '/api/v1/ai-cost/current', [200, 404, 500],
-            'Current AI cost'), ('GET', '/api/v1/ai-cost/monthly', [200, 
+            'Current AI cost'), ('GET', '/api/v1/ai-cost/monthly', [200,
             404, 500], 'Monthly AI cost'), ('POST',
             '/api/v1/ai-assessments/start', [200, 400, 422, 500],
             'Start AI assessment'), ('GET', '/api/v1/ai-assessments/status',
@@ -181,7 +181,7 @@ class ComprehensiveAPITester:
         all_results.append(self.test_endpoint_group(
             'Evidence & Implementation', evidence_endpoints))
         reporting_endpoints = [('GET', '/api/v1/reports', [200, 404],
-            'List reports'), ('GET', '/api/v1/reports/compliance', [200, 
+            'List reports'), ('GET', '/api/v1/reports/compliance', [200,
             404], 'Compliance reports'), ('GET', '/api/v1/reports/export',
             [200, 404], 'Export reports')]
         all_results.append(self.test_endpoint_group('Reporting',

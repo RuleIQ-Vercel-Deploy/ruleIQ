@@ -4,10 +4,9 @@ from __future__ import annotations
 Monitoring endpoints for health checks and metrics.
 """
 
-from typing import Any, Dict, Optional
-from fastapi import APIRouter, Response, status, Depends, HTTPException
+from typing import Any, Dict
+from fastapi import APIRouter, status, HTTPException
 from fastapi.responses import PlainTextResponse
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.monitoring.health import (
     run_health_checks,
@@ -19,9 +18,7 @@ from app.core.monitoring.health import (
     ExternalServiceHealthCheck,
 )
 from app.core.monitoring.metrics import get_metrics
-from database.db_setup import get_db
 from config.settings import settings
-import redis.asyncio as redis
 
 router = APIRouter()
 

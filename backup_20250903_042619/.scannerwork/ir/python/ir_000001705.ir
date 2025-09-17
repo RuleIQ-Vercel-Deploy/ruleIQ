@@ -1,78 +1,0 @@
-
-"verificationCriteria"str
-8/"Convert to JSON-LD format for knowledge graph"str
-"ComplianceObligation"str
-"
-"controls"str
-	"actions"str
-("penalties"str
-+"automationScore"str
-"name"str
-%
-"deadline"str
-"regulation"str
-"requirementLevel"str
-
-"@context"str
-2)"https://schema.org/ComplianceObligation"str
-"applicableTo"str
-"description"str
-
-"@id"str
-"@type"strself= =("Ü$
-"
-? N(	"#new-object#Bdict 
-
-@ @(A"	#map-set#: 
-
-A A(+	"	#map-set#:.
-,
-B B(%"#get-field# obligation_id: 
-
-B B(%"	#map-set#:
-/
--
-C C(-"#get-field# regulation_ref: 
-
-C C(-"	#map-set#:&
-$
-D D("#get-field# title: 
-
-D D("	#map-set#:,
-*
-E E(+"#get-field# description: 
-
-E E(+"	#map-set#:1
-/
-F  F(5"#get-field# requirement_type: 
-
-F F(5"	#map-set#:4
-2
-G G(4"!#get-field# applicable_entities: 
-
-G G(4"	#map-set#:7
-5
-H H(2"$"#get-field# implementation_actions: 
-
-H H(2"	#map-set#:6
-4
-I$ I(> "#!#get-field# verification_criteria: 
-
-I I(>!"	#map-set#: )
-'
-J J(%#"#get-field# controls: 
-
-J J(%$"	#map-set#:"#)
-'
-K K(%&"#get-field# timeline: 
-
-K K(%'"	#map-set#:%&*
-(
-L L(')"#get-field# penalties: 
-
-L L('*"	#map-set#:()5
-3
-M M(8,"" #get-field# automation_potential: 
-
-M M(8-"	#map-set#:+,
-? N(	*G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py

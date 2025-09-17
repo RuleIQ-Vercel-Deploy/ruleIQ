@@ -13,7 +13,7 @@ This script:
 import os
 import re
 from pathlib import Path
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List
 import json
 
 
@@ -126,7 +126,7 @@ class APIAlignmentFixer:
             for pattern, replacement in patterns:
                 if re.search(pattern, content):
                     content = re.sub(pattern, replacement, content)
-                    changes.append(f'  Updated router prefix to use /api/v1/')
+                    changes.append('  Updated router prefix to use /api/v1/')
         if content != original_content:
             with open(file_path, 'w') as f:
                 f.write(content)

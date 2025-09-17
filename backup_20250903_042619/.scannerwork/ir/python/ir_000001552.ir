@@ -1,30 +1,0 @@
-
-ÚÐ"
-        MATCH (risk:Risk)
-        WHERE risk.risk_score >= 15
-        AND NOT EXISTS((risk)<-[:MITIGATES]-(:Control))
-        RETURN risk.name AS risk_name,
-               risk.category AS category,
-               risk.description AS description,
-               risk.risk_score AS score
-        ORDER BY risk.risk_score DESC
-        "str
-!"unmitigated_high_risks"str
-;2"Find high-risk areas needing immediate attention"strself
-æ) æ(-"Û(
-&
-è è(äquery"#id#:Bstr#
-!
-
-ò ò(1"#unknown-value#,
-*
-
-ò ò(1results"#unknown-value#&
-$
-
-ó ó(2"#new-object#Bdict"
- 
-
-ó ó(1	"	#map-set#:
-
-ó ó(2*A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py

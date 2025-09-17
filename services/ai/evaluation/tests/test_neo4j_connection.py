@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
-import pytest
-from unittest.mock import Mock, patch, MagicMock
-from neo4j import GraphDatabase
+from typing import Any
+from unittest.mock import Mock, patch
 from neo4j.exceptions import ServiceUnavailable
 
 # Import the module we'll create

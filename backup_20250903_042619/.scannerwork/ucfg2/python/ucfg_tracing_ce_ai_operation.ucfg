@@ -1,112 +1,0 @@
-
-.config.tracing.CustomTracer.trace_ai_operation9
--/home/omar/Documents/ruleIQ/config/tracing.pyä ä("2*±
-2
-å å()
-
-ç ç(C
-%4"dictú
-ô
-
-ç ç(/
-%5"__mapSet*"
-
-__unknown_file (
-
-%4*,
-
-__unknown_file (
-ai.operation*)
-
-__unknown_file (
-
-	operationî
-ë
-
-ç1 ç(B
-%6"__mapSet*"
-
-__unknown_file (
-
-%4*(
-
-__unknown_file (
-
-ai.model*%
-
-__unknown_file (	
-
-modelF
-D
-
-ç ç(C
-
-attributes"__id*"
-
-__unknown_file (
-
-%4*
-4
-5*ú
-4
-ê ê(HR
-P
-
-ê ê(0
-%1"__concat*
-
-ê! ê($
-ai.*
-
-ê% ê(.
-
-	operation†ù
-
-ê ê(H
-%2*;
-
-__unknown_file (
-config.tracing.CustomTracer*"
-
-__unknown_file (
-
-%12
-start_span:
-
-attributes
-
-
-attributes"
-
-ê ê(H
-
-%2* 
-5
-è è(,≥∞
-
-è è(,
-%3"dict.__setitem__**
-
-__unknown_file (
-
-
-attributes*)
-
-__unknown_file (
-	ai.tokens*&
-
-__unknown_file (
-
-
-tokens2__setitem__*
-4:
-
-ä! ä(/
-	operation:
-
-ä1 ä(;
-model:
-
-ä= ã(
-tokensB
-config.tracing.CustomTracerH

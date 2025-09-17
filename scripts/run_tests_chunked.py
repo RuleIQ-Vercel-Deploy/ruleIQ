@@ -37,7 +37,7 @@ TEST_CONFIGS = {'fast': {'description': 'Fast unit tests only', 'chunks': [
     'integration', '--tb=short', '--maxfail=5'], 'timeout': 600, 'parallel':
     True}, {'name': 'Database Integration Tests', 'command': ['python',
     '-m', 'pytest', 'tests/integration/database/', '-n', '1', '-m',
-    'database', '--tb=short', '--maxfail=5'], 'timeout': 400, 'parallel': 
+    'database', '--tb=short', '--maxfail=5'], 'timeout': 400, 'parallel':
     False}, {'name': 'Service Integration Tests', 'command': ['python',
     '-m', 'pytest', 'tests/integration/test_evidence_flow.py', '-n', '2',
     '--dist=worksteal', '-m', 'integration', '--tb=short', '--maxfail=5'],
@@ -63,7 +63,7 @@ TEST_CONFIGS = {'fast': {'description': 'Fast unit tests only', 'chunks': [
     'AI and compliance accuracy tests', 'chunks': [{'name':
     'AI Compliance Tests', 'command': ['python', '-m', 'pytest',
     'tests/ai/test_compliance_accuracy.py', '-n', '2', '--dist=worksteal',
-    '-m', 'ai', '--tb=short', '--maxfail=5'], 'timeout': 600, 'parallel': 
+    '-m', 'ai', '--tb=short', '--maxfail=5'], 'timeout': 600, 'parallel':
     True}]}}
 TEST_CONFIGS['full'] = {'description':
     'Complete test suite in optimized chunks', 'chunks': TEST_CONFIGS[

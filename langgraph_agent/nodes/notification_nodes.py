@@ -6,24 +6,16 @@ Implements comprehensive notification handling with state management,
 retry logic, batch processing, and multi-channel delivery
 """
 import asyncio
-import json
 import logging
 import random
-import smtplib
 import time
-from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, List, Optional, Tuple
-from uuid import UUID
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import aiohttp
 from langsmith import traceable
 from pydantic import BaseModel, Field
-from sqlalchemy import select
-from sqlalchemy.exc import SQLAlchemyError
-from core.exceptions import BusinessLogicException, DatabaseException, IntegrationException, NotFoundException
-from database.db_setup import get_async_db
-from database.user import User
 from langgraph_agent.graph.error_handler import ErrorHandlerNode
 from langgraph_agent.utils.cost_tracking import track_node_cost
 logger = logging.getLogger(__name__)

@@ -87,7 +87,7 @@ class SecurityAlertService:
             return
 
         # Prepare email content
-        subject = f"Security Alert: Multiple Failed Login Attempts"
+        subject = "Security Alert: Multiple Failed Login Attempts"
 
         html_body = f"""
         <html>

@@ -277,7 +277,7 @@ class ComplianceRetrievalQueries:
                 'domain_2'], 'business_function': record['function_2'],
                 'controls_count': record['controls_req2']}, 'risk_analysis':
                 {'control_status': control_status, 'shared_control_types':
-                record['shared_control_types'], 'control_overlap_ratio': 
+                record['shared_control_types'], 'control_overlap_ratio':
                 record['shared_control_types'] / max(len(record[
                 'control_types_1']) + len(record['control_types_2']), 1)}})
         return QueryResult(category=QueryCategory.RISK_CONVERGENCE.value,
@@ -357,7 +357,7 @@ class ComplianceRetrievalQueries:
             total_penalty_exposure += penalty_observed
             severity_multiplier = {'critical': 4, 'high': 3, 'medium': 2,
                 'low': 1}.get(risk_level, 1)
-            enforcement_multiplier = min(record['historical_violations'] * 
+            enforcement_multiplier = min(record['historical_violations'] *
                 0.5, 2.0)
             gap_severity = severity_multiplier * (1 + enforcement_multiplier)
             gap_data.append({'gap_id': record['requirement_id'],
@@ -378,14 +378,14 @@ class ComplianceRetrievalQueries:
                 'historical_violations': record['historical_violations'],
                 'max_penalty_observed': penalty_observed},
                 'gap_severity_score': round(gap_severity, 2),
-                'priority_level': ('critical' if gap_severity >= 8 else 
+                'priority_level': ('critical' if gap_severity >= 8 else
                 'high' if gap_severity >= DEFAULT_RETRIES else 'medium',)})
         return QueryResult(category=QueryCategory.COMPLIANCE_GAPS.value,
             query_id='compliance_gaps_001', timestamp=datetime.now(timezone
             .utc).isoformat(), data=gap_data, metadata={'total_gaps': len(
             gap_data), 'critical_gaps': critical_gaps, 'high_risk_gaps':
             high_risk_gaps, 'total_penalty_exposure':
-            total_penalty_exposure, 'business_functions_analyzed': 
+            total_penalty_exposure, 'business_functions_analyzed':
             business_functions or 'all', 'average_gap_severity': round(sum(
             gap['gap_severity_score'] for gap in gap_data) / max(len(
             gap_data), 1), 2)}, confidence_score=0.94)
@@ -553,7 +553,7 @@ class ComplianceRetrievalQueries:
         processed_patterns = {}
         for vtype, data in violation_patterns.items():
             processed_patterns[vtype] = {'frequency': data['count'],
-                'total_penalty': data['total_penalty'], 'average_penalty': 
+                'total_penalty': data['total_penalty'], 'average_penalty':
                 data['total_penalty'] / data['count'], 'organization_types':
                 list(data['organizations']), 'jurisdictions': list(data[
                 'jurisdictions']), 'risk_score': min(data['count'] * (data[

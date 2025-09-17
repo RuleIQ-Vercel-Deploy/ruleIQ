@@ -6,8 +6,7 @@ logger = logging.getLogger(__name__)
 Fix React unescaped entities by replacing them with proper JSX escaping
 """
 
-from typing import Any, Dict, List, Optional
-import os
+from typing import Any
 import re
 import glob
 

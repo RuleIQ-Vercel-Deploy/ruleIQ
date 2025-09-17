@@ -3,19 +3,18 @@ from __future__ import annotations
 
 OpenTelemetry metrics integration for comprehensive observability.
 """
-import json
 import logging
 import time
 from collections import defaultdict
 from contextlib import contextmanager
 from datetime import datetime, timezone
-from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Tuple, Generator
+from typing import Any, Callable, Dict, Iterable, List, Optional, Tuple, Generator
 from opentelemetry import metrics
 from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
 from opentelemetry.exporter.prometheus import PrometheusMetricReader
 from opentelemetry.metrics import CallbackOptions, Observation
 from opentelemetry.sdk.metrics import MeterProvider, Meter
-from opentelemetry.sdk.metrics.export import AggregationTemporality, ConsoleMetricExporter, PeriodicExportingMetricReader
+from opentelemetry.sdk.metrics.export import ConsoleMetricExporter, PeriodicExportingMetricReader
 from opentelemetry.sdk.resources import Resource
 from app.core.monitoring.metrics import MetricsCollector
 logger = logging.getLogger(__name__)
@@ -321,7 +320,7 @@ class PrometheusExporter:
         from prometheus_client import start_http_server
         try:
             start_http_server(self.port)
-        except (ValueError, TypeError) as e:
+        except (ValueError, TypeError):
             pass
 
     def format_metrics(self) -> str:

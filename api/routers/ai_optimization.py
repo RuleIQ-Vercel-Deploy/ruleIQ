@@ -96,7 +96,7 @@ async def performance_metrics(current_user: User=Depends(
             5.0})}
     except (ValueError, TypeError):
         return {'response_times': {'gemini-2.5-flash': 1.5,
-            'gemini-2.5-pro': 2.8}, 'success_rates': {'gemini-2.5-flash': 
+            'gemini-2.5-pro': 2.8}, 'success_rates': {'gemini-2.5-flash':
             0.95, 'gemini-2.5-pro': 0.98}, 'token_usage': {'total': 10000,
             'gemini-2.5-flash': 6000, 'gemini-2.5-pro': 4000},
             'cost_metrics': {'total_cost': 5.0, 'optimization_savings': 1.2}}

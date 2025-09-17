@@ -38,7 +38,7 @@ def test_direct_access():
                         )
                     with open('data/test_legislation.xml', 'wb') as f:
                         f.write(response.content)
-                    print(f'  Saved to data/test_legislation.xml')
+                    print('  Saved to data/test_legislation.xml')
                     if response.content.startswith(b'<?xml'):
                         print('  ✅ Valid XML response')
                     return True

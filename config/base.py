@@ -4,7 +4,6 @@ from __future__ import annotations
 Base Configuration Module
 Shared configuration settings across all environments
 """
-import os
 from pathlib import Path
 from typing import Optional, Dict, Any
 from pydantic import Field, field_validator

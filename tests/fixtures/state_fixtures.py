@@ -130,14 +130,14 @@ class StateBuilder:
     def build(self) -> EnhancedComplianceState:
         """Build the state object."""
         from uuid import uuid4
-        
+
         # Default parameters for backward compatibility
         session_id = str(uuid4())
         company_id = uuid4() if isinstance(self.company_id, str) else self.company_id
         initial_message = "Test initialization"
-        
+
         return self.build_with_params(session_id, company_id, initial_message)
-    
+
     def build_with_params(
         self, session_id: str, company_id: Any, initial_message: str
     ) -> EnhancedComplianceState:
@@ -175,9 +175,9 @@ def create_test_state(
         Configured test state
     """
     from uuid import uuid4
-    
+
     builder = StateBuilder()
-    
+
     # Create with proper arguments for enhanced initial state
     session_id = str(uuid4())
     company_id = uuid4()

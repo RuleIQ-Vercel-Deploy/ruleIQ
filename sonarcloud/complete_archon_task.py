@@ -4,7 +4,6 @@ Complete the Archon review task
 import logging
 logger = logging.getLogger(__name__)
 import requests
-import json
 ARCHON_URL = 'http://localhost:3737/api'
 TASK_ID = 'a1b426cb-277a-41c6-bdbe-52083e181e99'
 

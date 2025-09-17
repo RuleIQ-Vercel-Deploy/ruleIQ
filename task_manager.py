@@ -51,29 +51,29 @@ def check_deadlines():
     state = load_state()
     now = datetime.now()
     alerts = []
-    
+
     for task_id, task in state.get("tasks", {}).items():
         if task["status"] == "in_progress" and task.get("deadline"):
             deadline = datetime.fromisoformat(task["deadline"])
             time_left = deadline - now
-            
+
             if time_left < timedelta(hours=12) and task["priority"] == "P0":
                 alerts.append(f"⚠️  P0 task {task_id} deadline in {time_left.hours} hours!")
             elif time_left < timedelta(hours=36) and task["priority"] == "P1":
                 alerts.append(f"⚠️  P1 task {task_id} deadline in {time_left.hours} hours!")
-    
+
     return alerts
 def get_status():
     """Get current project status"""
     state = load_state()
-    
+
     # Count tasks by status
     total = len(state.get("tasks", {}))
     completed = len([t for t in state.get("tasks", {}).values() if t["status"] == "complete"])
     in_progress = len([t for t in state.get("tasks", {}).values() if t["status"] == "in_progress"])
     pending = len([t for t in state.get("tasks", {}).values() if t["status"] == "pending"])
-    
-    print(f"\n📊 RuleIQ Task Status")
+
+    print("\n📊 RuleIQ Task Status")
     print(f"{'='*40}")
     print(f"Current Priority: {state.get('current_priority', 'P0')}")
     print(f"Total Tasks: {total}")
@@ -81,11 +81,11 @@ def get_status():
     print(f"⏳ In Progress: {in_progress}")
     print(f"⏸️  Pending: {pending}")
     print(f"Progress: {completed/total*100:.1f}%")
-    
+
     # Check for alerts
     alerts = check_deadlines()
     if alerts:
-        print(f"\n🚨 Alerts:")
+        print("\n🚨 Alerts:")
         for alert in alerts:
             print(f"  {alert}")
 

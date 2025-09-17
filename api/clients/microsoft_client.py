@@ -198,7 +198,7 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                 total_users, 'enabled_users': enabled_users,
                 'disabled_users': total_users - enabled_users,
                 'users_with_recent_signin': users_with_recent_signin,
-                'activity_rate': users_with_recent_signin / total_users * 
+                'activity_rate': users_with_recent_signin / total_users *
                 100 if total_users > 0 else 0}}
             return CollectionResult(evidence_type='user_directory',
                 source_system='microsoft_365', resource_id='users',
@@ -258,7 +258,7 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                 'total_service_principals': len(service_principals),
                 'enabled_service_principals': len([sp for sp in
                 service_principals if sp.get('accountEnabled', False)]),
-                'multi_tenant_apps': len([app for app in applications if 
+                'multi_tenant_apps': len([app for app in applications if
                 app.get('signInAudience') == 'AzureADMultipleOrgs'])}}
             return CollectionResult(evidence_type='applications',
                 source_system='microsoft_365', resource_id='applications',
@@ -292,7 +292,7 @@ class MicrosoftGraphAPIClient(BaseAPIClient):
                 'total_signins': len(sign_ins), 'successful_signins': len(
                 successful_signins), 'failed_signins': len(failed_signins),
                 'risky_signins': len(risky_signins), 'success_rate': len(
-                successful_signins) / len(sign_ins) * 100 if sign_ins else 
+                successful_signins) / len(sign_ins) * 100 if sign_ins else
                 0, 'unique_users': len(set(s.get('userPrincipalName', '') for
                 s in sign_ins)), 'unique_apps': len(set(s.get(
                 'appDisplayName', '') for s in sign_ins))}}

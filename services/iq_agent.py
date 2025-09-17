@@ -625,7 +625,7 @@ Focus on actionable insights derived from the graph analysis.
         coverage = compliance_posture.get('overall_coverage', 0.0)
         critical_gaps = compliance_posture.get('critical_gaps', 0)
         convergence_patterns = risk_assessment.get('convergence_patterns', 0)
-        if (critical_gaps > DEFAULT_RETRIES or coverage < 0.4 or 
+        if (critical_gaps > DEFAULT_RETRIES or coverage < 0.4 or
             convergence_patterns > 10):
             return 'CRITICAL'
         elif critical_gaps > 2 or coverage < 0.7 or convergence_patterns > DEFAULT_RETRIES:

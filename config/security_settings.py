@@ -18,7 +18,7 @@ class SecurityEnvironment(str, Enum):
 
 class CORSConfig(BaseModel):
     """CORS configuration with production-ready defaults"""
-    
+
     # Allowed origins - explicit list, no wildcards in production
     allowed_origins: List[str] = Field(
         default_factory=lambda: [
@@ -27,19 +27,19 @@ class CORSConfig(BaseModel):
             "https://staging.ruleiq.com"
         ]
     )
-    
+
     # Allowed methods - explicit list
     allowed_methods: List[str] = Field(
         default_factory=lambda: [
-            "GET", 
-            "POST", 
-            "PUT", 
+            "GET",
+            "POST",
+            "PUT",
             "PATCH",
-            "DELETE", 
+            "DELETE",
             "OPTIONS"
         ]
     )
-    
+
     # Allowed headers - explicit list
     allowed_headers: List[str] = Field(
         default_factory=lambda: [
@@ -54,7 +54,7 @@ class CORSConfig(BaseModel):
             "Origin"
         ]
     )
-    
+
     # Exposed headers for client access
     exposed_headers: List[str] = Field(
         default_factory=lambda: [
@@ -66,11 +66,11 @@ class CORSConfig(BaseModel):
             "Content-Type"
         ]
     )
-    
+
     # Security settings
     allow_credentials: bool = True
     max_age: int = 3600  # 1 hour
-    
+
     # WebSocket CORS configuration
     websocket_origins: List[str] = Field(
         default_factory=lambda: [
@@ -79,7 +79,7 @@ class CORSConfig(BaseModel):
             "wss://staging.ruleiq.com"
         ]
     )
-    
+
     def get_config_for_environment(self, env: SecurityEnvironment) -> Dict[str, Any]:
         """Get environment-specific CORS configuration"""
         if env == SecurityEnvironment.DEVELOPMENT:
@@ -113,30 +113,30 @@ class CORSConfig(BaseModel):
 
 class JWTConfig(BaseModel):
     """JWT configuration with security best practices"""
-    
+
     # Token settings
     access_token_expire_minutes: int = 15
     refresh_token_expire_days: int = 7
     algorithm: str = "HS256"
-    
+
     # HttpOnly cookie settings
     use_httponly_cookies: bool = True
     cookie_secure: bool = True  # HTTPS only
     cookie_samesite: str = "strict"  # strict, lax, or none
     cookie_domain: Optional[str] = None
     cookie_path: str = "/"
-    
+
     # Security features
     enable_refresh_rotation: bool = True
     enable_jti_validation: bool = True  # JWT ID for revocation
     enable_audience_validation: bool = True
     issuer: str = "ruleiq.com"
     audience: List[str] = Field(default_factory=lambda: ["ruleiq-api"])
-    
+
     # Rate limiting for auth endpoints
     refresh_rate_limit: int = 5  # requests per 5 minutes
     refresh_rate_window: int = 300  # 5 minutes in seconds
-    
+
     # Secret rotation
     enable_secret_rotation: bool = True
     rotation_interval_days: int = 30
@@ -152,13 +152,13 @@ class RedisFailureStrategy(str, Enum):
 
 class RedisConfig(BaseModel):
     """Redis configuration with circuit breaker pattern"""
-    
+
     # Connection settings
     host: str = Field(default="localhost")
     port: int = Field(default=6379)
     db: int = Field(default=0)
     password: Optional[str] = None
-    
+
     # Connection pool settings
     max_connections: int = 50
     socket_timeout: int = 5
@@ -171,18 +171,18 @@ class RedisConfig(BaseModel):
             3: 5,  # TCP_KEEPCNT
         }
     )
-    
+
     # Circuit breaker settings
     failure_strategy: RedisFailureStrategy = RedisFailureStrategy.DEGRADED
     circuit_breaker_threshold: int = 5  # failures before opening
     circuit_breaker_timeout: int = 60  # seconds before retry
     circuit_breaker_half_open_requests: int = 3  # test requests in half-open state
-    
+
     # Fallback cache settings (for degraded mode)
     enable_local_cache: bool = True
     local_cache_ttl: int = 300  # 5 minutes
     local_cache_max_size: int = 1000  # max items
-    
+
     # Health check settings
     health_check_interval: int = 30  # seconds
     health_check_timeout: int = 5  # seconds
@@ -190,11 +190,11 @@ class RedisConfig(BaseModel):
 
 class RateLimitConfig(BaseModel):
     """Rate limiting configuration with burst allowance"""
-    
+
     # General rate limits
     default_rate_limit: int = 100  # requests per minute
     default_burst_size: int = 20  # burst allowance
-    
+
     # Endpoint-specific limits (requests per minute)
     endpoint_limits: Dict[str, Dict[str, int]] = Field(
         default_factory=lambda: {
@@ -207,20 +207,20 @@ class RateLimitConfig(BaseModel):
             "/api/v1/reports/generate": {"limit": 10, "burst": 3},
         }
     )
-    
+
     # Rate limiting strategy
     use_ip_based: bool = True  # IP-based for anonymous
     use_user_based: bool = True  # User-based for authenticated
     combine_limits: bool = False  # Apply both IP and user limits
-    
+
     # Token bucket algorithm settings
     refill_rate: float = 1.0  # tokens per second
     bucket_capacity: int = 100  # max tokens
-    
+
     # Configuration hot-reload
     enable_hot_reload: bool = True
     config_refresh_interval: int = 60  # seconds
-    
+
     # Response headers
     include_headers: bool = True
     header_prefix: str = "X-RateLimit"
@@ -228,19 +228,19 @@ class RateLimitConfig(BaseModel):
 
 class SecuritySettings(BaseModel):
     """Master security configuration"""
-    
+
     environment: SecurityEnvironment = Field(
         default_factory=lambda: SecurityEnvironment(
             os.getenv("ENVIRONMENT", "development").lower()
         )
     )
-    
+
     # Sub-configurations
     cors: CORSConfig = Field(default_factory=CORSConfig)
     jwt: JWTConfig = Field(default_factory=JWTConfig)
     redis: RedisConfig = Field(default_factory=RedisConfig)
     rate_limit: RateLimitConfig = Field(default_factory=RateLimitConfig)
-    
+
     # General security settings
     enable_security_headers: bool = True
     enable_csrf_protection: bool = True
@@ -248,7 +248,7 @@ class SecuritySettings(BaseModel):
     enable_content_type_sniffing_protection: bool = True
     enable_frame_options: bool = True
     frame_options_value: str = "DENY"
-    
+
     # CSP (Content Security Policy)
     enable_csp: bool = True
     csp_directives: Dict[str, str] = Field(
@@ -264,17 +264,17 @@ class SecuritySettings(BaseModel):
             "form-action": "'self'"
         }
     )
-    
+
     @property
     def is_production(self) -> bool:
         """Check if running in production"""
         return self.environment == SecurityEnvironment.PRODUCTION
-    
+
     @property
     def is_development(self) -> bool:
         """Check if running in development"""
         return self.environment == SecurityEnvironment.DEVELOPMENT
-    
+
     def get_cors_config(self) -> Dict[str, Any]:
         """Get CORS configuration for current environment"""
         return self.cors.get_config_for_environment(self.environment)

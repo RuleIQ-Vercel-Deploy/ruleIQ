@@ -311,7 +311,7 @@ async def get_profile_compliance(id: UUID, current_user=Depends(
     await audit_service.log_data_access(user_id=str(current_user.id),
         resource='compliance_report', resource_id=str(id), action='view',
         db=sync_db)
-    return {'profile_id': str(id), 'compliance_status': {'gdpr': {'score': 
+    return {'profile_id': str(id), 'compliance_status': {'gdpr': {'score':
         75, 'status': 'partial', 'last_assessment': '2024-01-15T10:30:00Z'},
         'iso27001': {'score': 82, 'status': 'partial', 'last_assessment':
         '2024-01-10T14:20:00Z'}, 'pci_dss': {'score': 65, 'status':

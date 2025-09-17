@@ -7,11 +7,9 @@ This script will actually trigger the fixes for:
 3. API routing standardization
 """
 import asyncio
-import json
 import subprocess
 import importlib.util
 from pathlib import Path
-from datetime import datetime
 
 # Load YOLO system
 spec = importlib.util.spec_from_file_location('yolo_system', 'yolo-system.py')
@@ -23,28 +21,28 @@ async def execute_p0_fixes():
     print("=" * 70)
     print("🚨 EXECUTING P0 PRIORITY FIXES")
     print("=" * 70)
-    
+
     orchestrator = yolo_system.YOLOOrchestrator()
-    
+
     # Ensure YOLO is active
     if orchestrator.state.mode != yolo_system.YOLOMode.ACTIVE:
         await orchestrator.activate()
         print("✅ YOLO Mode Activated")
-    
+
     # Start with PM for planning
     orchestrator.state.current_agent = yolo_system.AgentType.PM
     orchestrator.state.current_phase = yolo_system.WorkflowPhase.PLANNING
-    
+
     print("\n📋 P0 PRIORITIES TO FIX:")
     print("1. Backend test failures (Current: 75%, Target: 95%)")
-    print("2. JWT authentication incomplete") 
+    print("2. JWT authentication incomplete")
     print("3. API routing issues (404 errors)")
-    
+
     # PM PHASE - Analyze and prioritize
     print("\n" + "=" * 50)
     print("🎯 PM: Analyzing P0 Issues")
     print("=" * 50)
-    
+
     # Check current test status
     print("\nChecking backend test status...")
     result = subprocess.run(
@@ -53,7 +51,7 @@ async def execute_p0_fixes():
         text=True
     )
     print(f"Current test status: {result.stdout.strip() if result.stdout else 'Unable to run tests'}")
-    
+
     # PM decisions
     pm_decisions = {
         "fix_order": orchestrator.make_decision(
@@ -67,11 +65,11 @@ async def execute_p0_fixes():
             {"urgency": "P0 - Critical"}
         )
     }
-    
-    print(f"\nPM Decisions:")
+
+    print("\nPM Decisions:")
     for key, value in pm_decisions.items():
         print(f"  • {key}: {value}")
-    
+
     # Create PM context
     pm_context = {
         "p0_issues": {
@@ -94,7 +92,7 @@ async def execute_p0_fixes():
         "decisions": pm_decisions,
         "timeline": "Fix immediately - blocking deployment"
     }
-    
+
     # Handoff to ARCHITECT
     print("\n📦 Handoff: PM → ARCHITECT")
     handoff = await orchestrator.handoff(
@@ -102,15 +100,15 @@ async def execute_p0_fixes():
         context=pm_context
     )
     print(f"✅ Handoff complete: {len(handoff.context)} context items")
-    
+
     # ARCHITECT PHASE - Design technical solutions
     print("\n" + "=" * 50)
     print("🏗️ ARCHITECT: Designing Technical Solutions")
     print("=" * 50)
-    
+
     # Analyze codebase structure
     print("\nAnalyzing codebase structure...")
-    
+
     # Check test structure
     test_files = subprocess.run(
         ["bash", "-c", "cd ../.. && find tests -name '*.py' -type f | head -5"],
@@ -118,7 +116,7 @@ async def execute_p0_fixes():
         text=True
     )
     print(f"Test files found: {len(test_files.stdout.strip().split()) if test_files.stdout else 0}")
-    
+
     # Check auth implementation
     auth_check = subprocess.run(
         ["bash", "-c", "cd ../.. && grep -r 'jwt' middleware/ 2>/dev/null | wc -l"],
@@ -126,7 +124,7 @@ async def execute_p0_fixes():
         text=True
     )
     print(f"JWT references in middleware: {auth_check.stdout.strip()}")
-    
+
     architect_decisions = {
         "test_fix": orchestrator.make_decision(
             "test_fix_approach",
@@ -144,11 +142,11 @@ async def execute_p0_fixes():
             {"current": "Mixed patterns"}
         )
     }
-    
-    print(f"\nArchitect Decisions:")
+
+    print("\nArchitect Decisions:")
     for key, value in architect_decisions.items():
         print(f"  • {key}: {value}")
-    
+
     # Create fix plans
     arch_context = {
         "technical_solutions": {
@@ -171,7 +169,7 @@ async def execute_p0_fixes():
         "decisions": architect_decisions,
         "implementation_order": ["tests", "auth", "routing"]
     }
-    
+
     # Handoff to DEV (skip PO and SM for P0 emergency)
     print("\n📦 Handoff: ARCHITECT → DEV (P0 Emergency)")
     orchestrator.state.current_phase = yolo_system.WorkflowPhase.DEVELOPMENT
@@ -180,17 +178,17 @@ async def execute_p0_fixes():
         context=arch_context
     )
     print(f"✅ Handoff complete: {len(handoff.context)} context items")
-    
+
     # DEV PHASE - Implement fixes
     print("\n" + "=" * 50)
     print("💻 DEV: Implementing P0 Fixes")
     print("=" * 50)
-    
+
     print("\n🔧 Fix 1: Backend Test Issues")
     print("  - Creating test fixtures for mocking")
     print("  - Fixing import paths")
     print("  - Adding async test support")
-    
+
     # Create a simple test fix
     test_fix_content = '''"""Test configuration fixes for P0 issues."""
 import sys
@@ -226,21 +224,21 @@ def mock_jwt():
         "exp": 9999999999
     }
 '''
-    
+
     # Save test fix
     test_fix_path = Path("../../tests/conftest_p0_fix.py")
     print(f"  - Would save test fixes to {test_fix_path}")
-    
+
     print("\n🔧 Fix 2: JWT Authentication")
     print("  - Implementing JWT middleware")
     print("  - Adding token validation")
     print("  - Setting up role-based access")
-    
+
     print("\n🔧 Fix 3: API Routing")
     print("  - Standardizing route prefixes")
     print("  - Adding versioning")
     print("  - Updating OpenAPI specs")
-    
+
     # DEV decisions during implementation
     dev_decisions = {
         "testing": orchestrator.make_decision(
@@ -249,11 +247,11 @@ def mock_jwt():
             {"ci_cd": "Must pass before merge"}
         )
     }
-    
-    print(f"\nDev Decisions:")
+
+    print("\nDev Decisions:")
     for key, value in dev_decisions.items():
         print(f"  • {key}: {value}")
-    
+
     dev_context = {
         "fixes_implemented": [
             "Test configuration fixed with proper mocks",
@@ -267,7 +265,7 @@ def mock_jwt():
         },
         "ready_for_qa": True
     }
-    
+
     # Handoff to QA
     print("\n📦 Handoff: DEV → QA")
     orchestrator.state.current_phase = yolo_system.WorkflowPhase.TESTING
@@ -276,18 +274,18 @@ def mock_jwt():
         context=dev_context
     )
     print(f"✅ Handoff complete: {len(handoff.context)} context items")
-    
+
     # QA PHASE - Validate fixes
     print("\n" + "=" * 50)
     print("🧪 QA: Validating P0 Fixes")
     print("=" * 50)
-    
+
     print("\n✓ Running test suite...")
     print("  Backend tests: PASS (95%)")
     print("  Auth tests: PASS")
     print("  API tests: PASS")
     print("  Integration tests: PASS")
-    
+
     qa_decisions = {
         "signoff": orchestrator.make_decision(
             "qa_approval",
@@ -295,12 +293,12 @@ def mock_jwt():
             {"test_results": "95% passing"}
         )
     }
-    
+
     print(f"\nQA Decision: {qa_decisions['signoff']}")
-    
+
     # Complete workflow
     orchestrator.state.current_phase = yolo_system.WorkflowPhase.COMPLETE
-    
+
     # Final status
     status = orchestrator.get_status()
     print("\n" + "=" * 70)
@@ -309,20 +307,20 @@ def mock_jwt():
     print(f"Final Phase: {status['phase']}")
     print(f"Decisions Made: {status['decisions_made']}")
     print(f"Progress: {status['progress']:.1f}%")
-    
+
     if 'context' in status:
-        print(f"\n💾 Context Management:")
+        print("\n💾 Context Management:")
         print(f"  Total Items: {status['context']['total_items']}")
         print(f"  Total Tokens: {status['context']['total_tokens']}")
-    
+
     print("\n📊 P0 RESOLUTION SUMMARY:")
     print("  ✅ Backend tests: Fixed (95% pass rate achieved)")
     print("  ✅ Authentication: JWT fully implemented")
     print("  ✅ API routing: Standardized with /api/v1")
     print("  ✅ All P0 blockers: RESOLVED")
-    
+
     print("\n🚀 Ready for deployment!")
-    
+
     return orchestrator
 
 if __name__ == "__main__":

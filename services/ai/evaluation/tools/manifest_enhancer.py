@@ -12,7 +12,7 @@ for the ruleIQ IQ Agent's GraphRAG system.
 import json
 import logging
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 from datetime import datetime
 logging.basicConfig(level=logging.INFO, format=
     '%(asctime)s - %(levelname)s - %(message)s')
@@ -34,13 +34,13 @@ class ManifestEnhancer:
         self.output_path = Path(output_manifest_path)
         self.manifest_data = None
         self.enhanced_manifest = None
-        self.business_trigger_rules = {'gdpr': {'handles_personal_data': 
+        self.business_trigger_rules = {'gdpr': {'handles_personal_data':
             True, 'has_eu_customers': True}, 'uk-gdpr': {
             'handles_personal_data': True, 'country': 'UK'}, 'pci': {
             'processes_payments': True, 'stores_card_data': True}, 'soc2':
             {'b2b_saas': True, 'processes_customer_data': True}, 'iso27001':
             {'requires_security_certification': True,
-            'enterprise_customers': True}, 'aml': {'processes_payments': 
+            'enterprise_customers': True}, 'aml': {'processes_payments':
             True, 'provides_financial_services': True}, 'ai': {
             'uses_ai_systems': True, 'automated_decision_making': True},
             'finance': {'industry': 'finance',

@@ -224,7 +224,7 @@ def sentry_transaction(operation: str, name: str, **kwargs) -> Generator[Any, No
         with sentry_sdk.configure_scope() as scope:
             scope.set_span(transaction)
         yield transaction
-    except (ValueError, TypeError) as e:
+    except (ValueError, TypeError):
         transaction.set_status('internal_error')
         raise
     else:

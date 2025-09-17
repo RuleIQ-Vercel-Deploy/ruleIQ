@@ -5,10 +5,8 @@ Comprehensive error handling with custom exceptions and handlers.
 """
 
 import traceback
-import sys
-from typing import Any, Dict, Optional, Type, Union, Callable
+from typing import Any, Dict, Optional, Callable
 from datetime import datetime, timezone
-import json
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError

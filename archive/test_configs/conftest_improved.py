@@ -275,7 +275,7 @@ async def sample_evidence_item(
 @pytest.fixture
 def auth_token(sample_user: User) -> str:
     """Generate authentication token for tests."""
-    from datetime import timedelta, timezone
+    from datetime import timedelta
     from api.dependencies.auth import create_access_token
 
     token_data = {"sub": str(sample_user.id)}

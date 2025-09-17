@@ -443,7 +443,7 @@ class CostTrackingService:
         if today_cost > threshold:
             anomalies.append({'type': 'cost_spike', 'date': trends[-1][
                 'date'], 'cost': trends[-1]['cost'], 'threshold': Decimal(
-                str(threshold)), 'severity': 'high' if today_cost > 
+                str(threshold)), 'severity': 'high' if today_cost >
                 threshold * 1.5 else 'medium'})
         return anomalies
 
@@ -551,7 +551,7 @@ class BudgetAlertService:
         alerts = []
         if usage_percentage >= 80:
             alerts.append(BudgetAlert(alert_type=AlertType.
-                SERVICE_BUDGET_WARNING, severity='warning' if 
+                SERVICE_BUDGET_WARNING, severity='warning' if
                 usage_percentage < 100 else 'critical', message=
                 f'Service {service_name} budget {usage_percentage:.1f}% used',
                 current_usage=usage.total_cost, budget_limit=service_budget,
@@ -620,7 +620,7 @@ class CostOptimizationService:
             CACHING_IMPROVEMENT, recommendation=
             'Implement intelligent caching for repeated similar requests',
             potential_savings=total_savings, confidence_score=0.9,
-            implementation_effort='medium', priority='high' if 
+            implementation_effort='medium', priority='high' if
             total_savings > Decimal('10') else 'medium')
 
     async def analyze_batch_opportunities(self, individual_requests: List[
@@ -672,7 +672,7 @@ class CostOptimizationService:
             PROMPT_OPTIMIZATION, recommendation='; '.join(recommendations) if
             recommendations else 'Prompts are well optimized',
             potential_savings=potential_savings, confidence_score=0.8,
-            implementation_effort='medium', priority='high' if 
+            implementation_effort='medium', priority='high' if
             potential_savings > cost_per_success * Decimal('0.2') else 'low')
 
     async def generate_optimization_report(self, analysis_data: Dict[str, Any]
@@ -704,7 +704,7 @@ class CostOptimizationService:
             'recommendation': opt.recommendation, 'potential_savings': opt.
             potential_savings} for opt in priority_recommendations[:3]],
             'roi_analysis': {'current_monthly_cost': analysis_data.get(
-            'total_cost', Decimal('0')), 'projected_monthly_savings': 
+            'total_cost', Decimal('0')), 'projected_monthly_savings':
             total_potential_savings * 30, 'payback_period_days': 30}}
 
 
@@ -935,7 +935,7 @@ class CostAnalyticsDashboard:
         previous_month = cost_data.get('previous_month', Decimal('0'))
         growth_rate = float((current_month - previous_month) /
             previous_month * 100) if previous_month > 0 else 0
-        return {'cost_growth_rate': growth_rate, 'monthly_trend': 
+        return {'cost_growth_rate': growth_rate, 'monthly_trend':
             'increasing' if growth_rate > 0 else 'decreasing',
             'roi_analysis': {'cost_per_customer': current_month / 100,
             'efficiency_score': 85.5}, 'optimization_impact': {

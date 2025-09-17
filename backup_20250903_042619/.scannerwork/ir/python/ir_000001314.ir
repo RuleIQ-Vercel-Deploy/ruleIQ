@@ -1,845 +1,0 @@
-
-C"--dist=worksteal"str
-q500int
-&í"Database Performance Tests"str
-!Ç"API Performance Tests"str
-,È""AI and compliance accuracy tests"str
-
-"Fast unit tests only"str
-"pytest"str
-"fast"str
--300int
-S"1"str
-%±"End-to-end workflow tests"str
-2∂("tests/e2e/test_user_onboarding_flow.py"str
-1◊'"tests/security/test_authentication.py"str
-Ö"--maxfail=3"str
-ò"4"str
-	"description"str
-ÿ
-"__main__"str
-!@"tests/integration/api/"str
-+ï!"Fast Tests (Unit + Integration)"str
-"unit"str
-B"2"str
-"tests/unit/"str
-Í‡"
-from __future__ import annotations
-import logging
-logger = logging.getLogger(__name__)
-
-Chunked Test Execution Script for NexCompli
-
-This script provides optimized test execution strategies for different scenarios:
-- Fast: Unit tests only with high parallelism
-- Integration: Integration tests with medium parallelism
-- Full: All tests in optimized chunks
-- CI: Optimized for CI/CD environments
-- Performance: Performance tests with minimal parallelism
-
-Usage:
-    python scripts/run_tests_chunked.py --mode fast
-    python scripts/run_tests_chunked.py --mode integration
-    python scripts/run_tests_chunked.py --mode full
-    python scripts/run_tests_chunked.py --mode ci
-    python scripts/run_tests_chunked.py --mode performance
-"str
- >"API Integration Tests"str
-"--disable-warnings"str
-Ï"AI Compliance Tests"str
-%P"Database Integration Tests"str
-d400int
-"--tb=short"str
-§1200int
-$h"Service Integration Tests"str
-
-"--no-cov"str
-Ø"e2e"str
-	"command"str
-2j)"tests/integration/test_evidence_flow.py"str
--“#"Security and authentication tests"str
-*í "CI/CD optimized test execution"str
-•"tests/e2e/"str
-¥"User Onboarding E2E"str
-¶"smoke or critical"str
-Á"ai"str
-T
-"database"str
-"-m"str
-"Unit Tests"str
-é1800int
-"name"str
-3ˇ)"Complete test suite in optimized chunks"str
-K600int
-9"integration"str
-D"--maxfail=5"str
-NoneNoneType
-A"-n"str
-è"full"str
-,	"timeout"str
-}"performance"str
-&R"tests/integration/database/"str
-!á"--benchmark-sort=mean"str
- ’"Authentication Tests"str
-–
-"security"str
-5Ñ+"tests/performance/test_api_performance.py"str
-"python"str
-Mtruebool
-"chunks"str
-ø"ci"str
-/
-"parallel"str
-£"Critical E2E Tests"str
-
-0int
-"--maxfail=10"str
-ó"tests/integration/"str
-0falsebool
-∆900int
-%"Performance and load tests"str
-Ü"--benchmark-only"str
-(ô"not slow and not performance"str
-0Ó&"tests/ai/test_compliance_accuracy.py"str
-*;!"Integration tests with database"str
-:î0"tests/performance/test_database_performance.py"strlist"ÆW&
-$
- (Path"?python-unknown?&
-$
- ($Dict"?python-unknown?&
-$
- ($List"?python-unknown?'
-%
- ($Tuple"?python-unknown?3
-1
-	" ‡(TEST_CONFIGS"#new-object#Bdict$
-"
-# 8("#new-object#Bdict 
-
-$ $(-"	#map-set#:	
-$
-"
-& 6("#new-object#Bdict 
-
-' '($"	#map-set#:'
-%
-( 3("#unknown-value#Blist&
-$
-( 3("
-#is-exact#:Bbool
-
-( 3("
-#assume#:8
-6
-( 3( "#set-field# __collection_size:Bint&
-$
-( 3(!"#array-add-last#:&
-$
-( 3(""#array-add-last#:&
-$
-( 3(#"#array-add-last#:&
-$
-( 3($"#array-add-last#:&
-$
-( 3(%"#array-add-last#:&
-$
-( 3(&"#array-add-last#:&
-$
-( 3('"#array-add-last#:&
-$
-( 3(("#array-add-last#:&
-$
-( 3()"#array-add-last#:&
-$
-( 3(*"#array-add-last#: 
-
-( 3(+"	#map-set#: 
-
-4 4(."	#map-set#:,- 
-
-5 5(!1"	#map-set#:/0'
-%
-% 7(	2"#unknown-value#Blist&
-$
-% 7(	3"
-#is-exact#:2Bbool
-
-% 7(	4"
-#assume#:38
-6
-% 7(	5"#set-field# __collection_size:2Bint&
-$
-% 7(	6"#array-add-last#:2 
-
-% 7(	7"	#map-set#:2 
-
-# 8(8"	#map-set#:$
-"
-9 r(:"#new-object#Bdict 
-
-: :(8<"	#map-set#::	;$
-"
-< M(="#new-object#Bdict 
-
-= =(/?"	#map-set#:=>'
-%
-> J(E"#unknown-value#Blist&
-$
-> J(F"
-#is-exact#:EBbool
-
-> J(G"
-#assume#:F8
-6
-> J(H"#set-field# __collection_size:EBint+
-)
-> J(I"?python-unknown?*Blist 
-
-> J(J"	#map-set#:=I 
-
-K K(L"	#map-set#:=,K 
-
-L L( N"	#map-set#:=/M$
-"
-N ^(O"#new-object#Bdict 
-
-O O(4Q"	#map-set#:OP'
-%
-P [(U"#unknown-value#Blist&
-$
-P [(V"
-#is-exact#:UBbool
-
-P [(W"
-#assume#:V8
-6
-P [(X"#set-field# __collection_size:UBint&
-$
-P [(Y"#array-add-last#:U&
-$
-P [(Z"#array-add-last#:U&
-$
-P [(["#array-add-last#:U&
-$
-P [(\"#array-add-last#:UR&
-$
-P [(]"#array-add-last#:UA&
-$
-P [(^"#array-add-last#:US&
-$
-P [(_"#array-add-last#:U&
-$
-P [(`"#array-add-last#:UT&
-$
-P [(a"#array-add-last#:U&
-$
-P [(b"#array-add-last#:UD 
-
-P [(c"	#map-set#:OU 
-
-\ \(e"	#map-set#:O,d 
-
-] ](!f"	#map-set#:O/0$
-"
-_ p(g"#new-object#Bdict 
-
-` `(3i"	#map-set#:gh'
-%
-a m(k"#unknown-value#Blist&
-$
-a m(l"
-#is-exact#:kBbool
-
-a m(m"
-#assume#:l8
-6
-a m(n"#set-field# __collection_size:kBint+
-)
-a m(o"?python-unknown?*Blist 
-
-a m(p"	#map-set#:go 
-
-n n(r"	#map-set#:g,q 
-
-o o( s"	#map-set#:g/M'
-%
-; q(	t"#unknown-value#Blist&
-$
-; q(	u"
-#is-exact#:tBbool
-
-; q(	v"
-#assume#:u8
-6
-; q(	w"#set-field# __collection_size:tBint&
-$
-; q(	x"#array-add-last#:t=&
-$
-; q(	y"#array-add-last#:tO&
-$
-; q(	z"#array-add-last#:tg 
-
-; q(	{"	#map-set#::t 
-
-9 r(|"	#map-set#:9:%
-#
-	s õ(~"#new-object#Bdict!
-
-t t(3Ä"	#map-set#:~	&
-$
-	v à(Å"#new-object#Bdict#
-!
-w w(/É"	#map-set#:ÅÇ)
-'
-	x Ö(à"#unknown-value#Blist)
-'
-	x Ö(â"
-#is-exact#:àBbool 
-
-	x Ö(ä"
-#assume#:â;
-9
-	x Ö(ã"#set-field# __collection_size:àBint-
-+
-	x Ö(å"?python-unknown?*Blist$
-"
-	x Ö(ç"	#map-set#:Åå%
-#
-
-Ü Ü(è"	#map-set#:Å,é$
-"
-
-á á(!ê"	#map-set#:Å/0'
-%
-
-â ô(ë"#new-object#Bdict%
-#
-
-ä ä(4ì"	#map-set#:ëí*
-(
-
-ã ñ(ï"#unknown-value#Blist*
-(
-
-ã ñ(ñ"
-#is-exact#:ïBbool!
-
-
-ã ñ(ó"
-#assume#:ñ<
-:
-
-ã ñ(ò"#set-field# __collection_size:ïBint*
-(
-
-ã ñ(ô"#array-add-last#:ï*
-(
-
-ã ñ(ö"#array-add-last#:ï*
-(
-
-ã ñ(õ"#array-add-last#:ï+
-)
-
-ã ñ(ú"#array-add-last#:ïî*
-(
-
-ã ñ(ù"#array-add-last#:ïA*
-(
-
-ã ñ(û"#array-add-last#:ïS*
-(
-
-ã ñ(ü"#array-add-last#:ï*
-(
-
-ã ñ(†"#array-add-last#:ï}*
-(
-
-ã ñ(°"#array-add-last#:ï+
-)
-
-ã ñ(¢"#array-add-last#:ïÖ%
-#
-
-ã ñ(£"	#map-set#:ëï%
-#
-
-ó ó(•"	#map-set#:ë,§$
-"
-
-ò ò(!¶"	#map-set#:ë/0)
-'
-	u ö(	ß"#unknown-value#Blist)
-'
-	u ö(	®"
-#is-exact#:ßBbool 
-
-	u ö(	©"
-#assume#:®;
-9
-	u ö(	™"#set-field# __collection_size:ßBint*
-(
-	u ö(	´"#array-add-last#:ßÅ*
-(
-	u ö(	¨"#array-add-last#:ßë#
-!
-	u ö(	≠"	#map-set#:~ß"
- 
-	s õ(Æ"	#map-set#:}~'
-%
-
-ú ±(∞"#new-object#Bdict%
-#
-
-ù ù(2≤"	#map-set#:∞	±'
-%
-
-ü Ø(≥"#new-object#Bdict%
-#
-
-† †(-µ"	#map-set#:≥¥*
-(
-
-° ¨(∑"#unknown-value#Blist*
-(
-
-° ¨(∏"
-#is-exact#:∑Bbool!
-
-
-° ¨(π"
-#assume#:∏<
-:
-
-° ¨(∫"#set-field# __collection_size:∑Bint*
-(
-
-° ¨(ª"#array-add-last#:∑*
-(
-
-° ¨(º"#array-add-last#:∑*
-(
-
-° ¨(Ω"#array-add-last#:∑+
-)
-
-° ¨(æ"#array-add-last#:∑∂*
-(
-
-° ¨(ø"#array-add-last#:∑A*
-(
-
-° ¨(¿"#array-add-last#:∑S*
-(
-
-° ¨(¡"#array-add-last#:∑+
-)
-
-° ¨(¬"#array-add-last#:∑Ø*
-(
-
-° ¨(√"#array-add-last#:∑+
-)
-
-° ¨(ƒ"#array-add-last#:∑Ö%
-#
-
-° ¨(≈"	#map-set#:≥∑%
-#
-
-≠ ≠(«"	#map-set#:≥,∆$
-"
-
-Æ Æ(!»"	#map-set#:≥/0*
-(
-
-û ∞(	…"#unknown-value#Blist*
-(
-
-û ∞(	 "
-#is-exact#:…Bbool!
-
-
-û ∞(	À"
-#assume#: <
-:
-
-û ∞(	Ã"#set-field# __collection_size:…Bint+
-)
-
-û ∞(	Õ"#array-add-last#:…≥%
-#
-
-û ∞(	Œ"	#map-set#:∞…%
-#
-
-ú ±(œ"	#map-set#:Ø∞'
-%
-
-≤ »(—"#new-object#Bdict%
-#
-
-≥ ≥(:”"	#map-set#:—	“'
-%
-
-µ ∆(‘"#new-object#Bdict%
-#
-
-∂ ∂(.÷"	#map-set#:‘’*
-(
-
-∑ √(ÿ"#unknown-value#Blist*
-(
-
-∑ √(Ÿ"
-#is-exact#:ÿBbool!
-
-
-∑ √(⁄"
-#assume#:Ÿ<
-:
-
-∑ √(€"#set-field# __collection_size:ÿBint.
-,
-
-∑ √(‹"?python-unknown?*Blist%
-#
-
-∑ √(›"	#map-set#:‘‹$
-"
-
-ƒ ƒ(ﬁ"	#map-set#:‘,d$
-"
-
-≈ ≈( ﬂ"	#map-set#:‘/M*
-(
-
-¥ «(	‡"#unknown-value#Blist*
-(
-
-¥ «(	·"
-#is-exact#:‡Bbool!
-
-
-¥ «(	‚"
-#assume#:·<
-:
-
-¥ «(	„"#set-field# __collection_size:‡Bint+
-)
-
-¥ «(	‰"#array-add-last#:‡‘%
-#
-
-¥ «(	Â"	#map-set#:—‡%
-#
-
-≤ »(Ê"	#map-set#:–—'
-%
-
-…
- ﬂ(Ë"#new-object#Bdict%
-#
-
-   (9Í"	#map-set#:Ë	È'
-%
-
-Ã ›(Î"#new-object#Bdict%
-#
-
-Õ Õ(-Ì"	#map-set#:ÎÏ*
-(
-
-Œ ⁄(Ô"#unknown-value#Blist*
-(
-
-Œ ⁄("
-#is-exact#:ÔBbool!
-
-
-Œ ⁄(Ò"
-#assume#:<
-:
-
-Œ ⁄(Ú"#set-field# __collection_size:ÔBint.
-,
-
-Œ ⁄(Û"?python-unknown?*Blist%
-#
-
-Œ ⁄(Ù"	#map-set#:ÎÛ$
-"
-
-€ €(ı"	#map-set#:Î,K$
-"
-
-‹ ‹( ˆ"	#map-set#:Î/M*
-(
-
-À ﬁ(	˜"#unknown-value#Blist*
-(
-
-À ﬁ(	¯"
-#is-exact#:˜Bbool!
-
-
-À ﬁ(	˘"
-#assume#:¯<
-:
-
-À ﬁ(	˙"#set-field# __collection_size:˜Bint+
-)
-
-À ﬁ(	˚"#array-add-last#:˜Î%
-#
-
-À ﬁ(	¸"	#map-set#:Ë˜%
-#
-
-… ﬂ(˝"	#map-set#:ÁË'
-%
-
-„ Ì(˛"#new-object#Bdict%
-#
-
-‰ ‰(<Ä"	#map-set#:˛	ˇ%
-#
-
-Ê Ê(Å"#array-read#:&
-$
-
-Ê Ê(&Ç"#array-read#:Å%
-#
-
-Á
- Á(%É"#array-read#:9&
-$
-
-Á
- Á(/Ñ"#array-read#:É&
-$
-
-Ë
- Ë("Ö"#array-read#:–&
-$
-
-Ë
- Ë(,Ü"#array-read#:Ö&
-$
-
-È
- È(á"#array-read#:Á&
-$
-
-È
- È(&à"#array-read#:á&
-$
-
-Í
- Í(â"#array-read#:Ø&
-$
-
-Í
- Í('ä"#array-read#:â%
-#
-
-Î
- Î(%ã"#array-read#:}&
-$
-
-Î
- Î(/å"#array-read#:ã/
--
-
-Ê Î(/ç"	#binop +#2+:ÇÑÜàäå%
-#
-
-Â Ï(é"	#map-set#:˛ç'
-%
-„ Ì(ê"#array-write#:è˛'
-%
-
- ô(ë"#new-object#Bdict%
-#
-
-Ò Ò(3ì"	#map-set#:ë	í'
-%
-
-Û Ü(	î"#new-object#Bdict%
-#
-
-Ù Ù(5ñ"	#map-set#:îï*
-(
-
-ı É(ö"#unknown-value#Blist*
-(
-
-ı É(õ"
-#is-exact#:öBbool!
-
-
-ı É(ú"
-#assume#:õ<
-:
-
-ı É(ù"#set-field# __collection_size:öBint.
-,
-
-ı É(û"?python-unknown?*Blist%
-#
-
-ı É(ü"	#map-set#:îû$
-"
-
-Ñ Ñ(†"	#map-set#:î,K$
-"
-
-Ö Ö(°"	#map-set#:î/M'
-%
-
-á ó(	¢"#new-object#Bdict%
-#
-
-à à((§"	#map-set#:¢£*
-(
-
-â î(ß"#unknown-value#Blist*
-(
-
-â î(®"
-#is-exact#:ßBbool!
-
-
-â î(©"
-#assume#:®<
-:
-
-â î(™"#set-field# __collection_size:ßBint*
-(
-
-â î(´"#array-add-last#:ß*
-(
-
-â î(¨"#array-add-last#:ß*
-(
-
-â î(≠"#array-add-last#:ß+
-)
-
-â î(Æ"#array-add-last#:ß•*
-(
-
-â î(Ø"#array-add-last#:ßA*
-(
-
-â î(∞"#array-add-last#:ßS*
-(
-
-â î(±"#array-add-last#:ß+
-)
-
-â î(≤"#array-add-last#:ß¶*
-(
-
-â î(≥"#array-add-last#:ß+
-)
-
-â î(¥"#array-add-last#:ßÖ%
-#
-
-â î(µ"	#map-set#:¢ß$
-"
-
-ï ï(∂"	#map-set#:¢,d$
-"
-
-ñ ñ(∑"	#map-set#:¢/0*
-(
-
-Ú ò(∏"#unknown-value#Blist*
-(
-
-Ú ò(π"
-#is-exact#:∏Bbool!
-
-
-Ú ò(∫"
-#assume#:π<
-:
-
-Ú ò(ª"#set-field# __collection_size:∏Bint+
-)
-
-Ú ò(º"#array-add-last#:∏î+
-)
-
-Ú ò(Ω"#array-add-last#:∏¢%
-#
-
-Ú ò(æ"	#map-set#:ë∏'
-%
- ô(¿"#array-write#:øë'
-%
-ú •¡%closure"#new-object#&
-$
-ú •¬"#set-field# Dict:¡+
-)
-ú •√"?python-partial-apply?:¡'
-%
-• Æƒ%closure"#new-object#&
-$
-• Æ≈"#set-field# Dict:ƒ+
-)
-• Æ∆"?python-partial-apply?:ƒ'
-%
-Æ Î«%closure"#new-object#&
-$
-Æ Î»"#set-field# Dict:«'
-%
-Æ Î…"#set-field# Tuple:«+
-)
-Æ Î "?python-partial-apply?:«'
-%
-Î ïÀ%closure"#new-object#&
-$
-Î ïÃ"#set-field# List:À&
-$
-Î ïÕ"#set-field# Dict:À'
-%
-Î ïŒ"#set-field# Tuple:À+
-)
-Î ïœ"?python-partial-apply?:À'
-%
-ï ∫–%closure"#new-object#&
-$
-ï ∫—"#set-field# List:–'
-%
-ï ∫“"#set-field# Tuple:–+
-)
-ï ∫”"?python-partial-apply?:–'
-%
-∫ ‰‘%closure"#new-object#.
-,
-∫ ‰’"#set-field# TEST_CONFIGS:‘+
-)
-∫ ‰÷"?python-partial-apply?:‘$
-"
-
-‰ ‰(◊"#unknown-value#/
--
-
-‰ ‰(Ÿ"
-#binop ==#2==:◊ÿBbool"
-
-‰ ‰(Ÿ *‰ ‰("Ö$
-"
-
-Â Â(⁄"#unknown-value#$
-"
-
-Â Â(€"#unknown-value#/
--
-
-Â Â(‹"
-asyncio.runnersrun:⁄€" *J/home/omar/Documents/ruleIQ/archive/migration_scripts/run_tests_chunked.py

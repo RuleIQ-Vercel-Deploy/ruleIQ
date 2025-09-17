@@ -12,7 +12,7 @@ import re
 
 def fix_datetime_utcnow() -> Any:
     """Replace datetime.now(timezone.utc) with timezone-aware datetime.now(timezone.utc)."""
-    
+
     # Find all Python files
     python_files = []
     for root, dirs, files in os.walk('.'):
@@ -22,17 +22,17 @@ def fix_datetime_utcnow() -> Any:
         for file in files:
             if file.endswith('.py'):
                 python_files.append(os.path.join(root, file))
-    
+
     files_fixed = 0
     total_replacements = 0
-    
+
     for filepath in python_files:
         try:
             with open(filepath, 'r') as f:
                 content = f.read()
-            
+
             original_content = content
-            
+
             # Check if file uses datetime.now(timezone.utc)
             if 'datetime.now(timezone.utc)' in content or 'datetime.datetime.now(timezone.utc)' in content:
                 # Add timezone import if needed
@@ -52,10 +52,10 @@ def fix_datetime_utcnow() -> Any:
                         content,
                         count=1
                     )
-                
+
                 # Replace datetime.now(timezone.utc) with datetime.now(timezone.utc)
                 replacements = 0
-                
+
                 # Handle datetime.datetime.now(timezone.utc)
                 content, n = re.subn(
                     r'datetime\.datetime\.utcnow\(\)',
@@ -63,7 +63,7 @@ def fix_datetime_utcnow() -> Any:
                     content
                 )
                 replacements += n
-                
+
                 # Handle datetime.now(timezone.utc) (when datetime is imported as module)
                 content, n = re.subn(
                     r'(?<!datetime\.)datetime\.utcnow\(\)',
@@ -71,7 +71,7 @@ def fix_datetime_utcnow() -> Any:
                     content
                 )
                 replacements += n
-                
+
                 # Handle just datetime.now(timezone.utc) (when imported directly)
                 content, n = re.subn(
                     r'(?<![.\w])utcnow\(\)',
@@ -79,17 +79,17 @@ def fix_datetime_utcnow() -> Any:
                     content
                 )
                 replacements += n
-                
+
                 if content != original_content:
                     with open(filepath, 'w') as f:
                         f.write(content)
                     logger.info(f"✓ Fixed {filepath} ({replacements} replacements)")
                     files_fixed += 1
                     total_replacements += replacements
-                    
+
         except Exception as e:
             logger.info(f"Error processing {filepath}: {e}")
-    
+
     logger.info(f"\n✅ Fixed {files_fixed} files with {total_replacements} total replacements")
 
 if __name__ == "__main__":

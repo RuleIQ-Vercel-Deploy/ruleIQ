@@ -11,7 +11,7 @@ Verify API structure and naming conventions
 """
 import re
 from pathlib import Path
-from typing import Dict, List, Set, Any
+from typing import Dict, List, Any
 PROJECT_ROOT = Path(__file__).parent.parent
 ROUTERS_DIR = PROJECT_ROOT / 'api' / 'routers'
 MAIN_PY = PROJECT_ROOT / 'api' / 'main.py'
@@ -27,7 +27,7 @@ def extract_endpoints() ->Dict[str, List[str]]:
             content = f.read()
         pattern = '@router\\.(get|post|put|patch|delete)\\("([^"]+)"'
         matches = re.findall(pattern, content)
-        endpoints[router_file.stem] = [f'{method.upper()} {path}' for 
+        endpoints[router_file.stem] = [f'{method.upper()} {path}' for
             method, path in matches]
     return endpoints
 
@@ -123,7 +123,7 @@ def main() ->Any:
     policy_endpoints = {}
     for router, paths in endpoints.items():
         if 'polic' in router.lower() or 'ai' in router.lower():
-            policy_related = [p for p in paths if 'polic' in p.lower() or 
+            policy_related = [p for p in paths if 'polic' in p.lower() or
                 'generate' in p.lower()]
             if policy_related:
                 policy_endpoints[router] = policy_related

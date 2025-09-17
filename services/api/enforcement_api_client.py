@@ -10,9 +10,8 @@ This provides REAL penalty data, not guesses.
 """
 import asyncio
 import aiohttp
-import requests
 from typing import Dict, Any, List, Optional
-from datetime import datetime, timedelta
+from datetime import datetime
 import json
 import logging
 import re
@@ -121,10 +120,10 @@ class EnforcementAPIClient:
                             action = {'id': hashlib.md5(link['href'].encode
                                 ()).hexdigest()[:16], 'regulator': 'FCA',
                                 'type': 'enforcement', 'entity': self.
-                                _extract_entity_name(title.text), 'date': 
+                                _extract_entity_name(title.text), 'date':
                                 date.get('datetime', '') if date else '',
-                                'penalty_amount': amount, 'violation': 
-                                summary.text if summary else '', 'url': 
+                                'penalty_amount': amount, 'violation':
+                                summary.text if summary else '', 'url':
                                 self.endpoints['fca']['base'] + link['href'
                                 ,], 'status': 'published'}
                             actions.append(action)
@@ -320,7 +319,7 @@ class EnforcementAPIClient:
                 year = date[:4]
                 stats['by_year'][year] = stats['by_year'].get(year, 0) + 1
         penalties = [action.get('penalty_amount', 0) for action in actions if
-            isinstance(action.get('penalty_amount'), (int, float)) and 
+            isinstance(action.get('penalty_amount'), (int, float)) and
             action.get('penalty_amount', 0) > 0]
         if penalties:
             stats['average_penalty'] = sum(penalties) / len(penalties)

@@ -7,7 +7,7 @@ Test runner for the 32 failing tests.
 Run this after applying fixes to verify they work.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 import subprocess
 import sys
 test_files = ['tests/unit/services/test_cache_strategy_optimization.py',
@@ -24,7 +24,7 @@ def run_tests() ->Any:
         logger.info('\nRunning %s...' % test_file)
         cmd = [sys.executable, '-m', 'pytest', test_file, '-v', '--tb=short']
         result = subprocess.run(cmd, capture_output=True, text=True)
-        results[test_file] = {'returncode': result.returncode, 'passed': 
+        results[test_file] = {'returncode': result.returncode, 'passed':
             result.returncode == 0, 'output': result.stdout + result.stderr}
         if result.returncode == 0:
             logger.info('  ✓ PASSED')

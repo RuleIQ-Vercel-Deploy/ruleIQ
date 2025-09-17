@@ -6,13 +6,11 @@ HTTP_OK = 200
 
 logger = logging.getLogger(__name__)
 from __future__ import annotations
-from typing import Any, Dict, List, Optional
-import asyncio
+from typing import Any
 import sys
 import os
 sys.path.insert(0, '.')
 from fastapi.testclient import TestClient
-from sqlalchemy.orm import Session
 from unittest.mock import patch
 from dotenv import load_dotenv
 load_dotenv('.env.local', override=True)

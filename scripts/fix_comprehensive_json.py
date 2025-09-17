@@ -5,7 +5,6 @@ Addresses duplicate keys, malformed structures, and syntax errors
 from typing import Any, Dict, Tuple
 import json
 import re
-import sys
 from pathlib import Path
 import logging
 logger = logging.getLogger(__name__)

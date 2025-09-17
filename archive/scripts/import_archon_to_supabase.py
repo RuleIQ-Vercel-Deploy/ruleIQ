@@ -6,9 +6,7 @@ logger = logging.getLogger(__name__)
 Import Archon data to Supabase
 This script imports the Archon MCP data into a Supabase instance
 """
-import os
 import json
-from datetime import datetime
 from supabase import create_client, Client
 from pathlib import Path
 
@@ -71,7 +69,7 @@ def import_archon_data() -> bool:
     logger.info('=' * 60)
     logger.info(f'✅ Projects imported: {len(projects)}')
     logger.info(f'✅ Documents imported: {len(documents)}')
-    logger.info(f'⚠️  Tasks: Manual import required (see instructions above)')
+    logger.info('⚠️  Tasks: Manual import required (see instructions above)')
     logger.info('\n✨ Import complete!')
     logger.info('\nNext steps:')
     logger.info('1. Verify data in your Supabase dashboard')
@@ -81,8 +79,8 @@ def import_archon_data() -> bool:
     if save_config == 'y':
         config_file = Path('/home/omar/Documents/ruleIQ/archon_supabase_config.txt')
         with open(config_file, 'w') as f:
-            f.write(f'# Archon Supabase Configuration\n')
-            f.write(f"# Add these to Archon's .env file:\n\n")
+            f.write('# Archon Supabase Configuration\n')
+            f.write("# Add these to Archon's .env file:\n\n")
             f.write(f'SUPABASE_URL={SUPABASE_URL}\n')
             f.write(f'SUPABASE_SERVICE_KEY={SUPABASE_KEY}\n')
         logger.info(f'✅ Config saved to: {config_file}')

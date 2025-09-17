@@ -249,7 +249,7 @@ class OktaGroupCollector(BaseEvidenceCollector):
             url = '/groups'
             params = {'limit': 200}
             while url:
-                groups_request = APIRequest('GET', url, params=params if 
+                groups_request = APIRequest('GET', url, params=params if
                     url == '/groups' else None)
                 response = await self.api_client.make_request(groups_request)
                 for group in response.data:

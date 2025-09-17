@@ -4,9 +4,8 @@
 from __future__ import annotations
 
 import subprocess
-import os
 from pathlib import Path
-from typing import Dict, List
+from typing import Dict
 
 
 def find_test_directories():

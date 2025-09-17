@@ -11,11 +11,8 @@ from typing import Any, Dict, List, Optional, TypedDict
 from datetime import datetime, timedelta, timezone
 from uuid import uuid4
 
-from langgraph.graph import StateGraph, END
-from langgraph.prebuilt import ToolNode
-from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
+from langchain_core.messages import BaseMessage, AIMessage
 
-from ..graph.enhanced_state import EnhancedComplianceState
 from ..graph.error_handler import ErrorHandlerNode
 
 logger = logging.getLogger(__name__)
@@ -93,7 +90,7 @@ class ComplianceTaskNode:
             # Add success message
             state["messages"].append(
                 AIMessage(
-                    content=f"Successfully updated compliance scores for all frameworks"
+                    content="Successfully updated compliance scores for all frameworks"
                 )
             )
 

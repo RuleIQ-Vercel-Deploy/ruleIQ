@@ -1,240 +1,0 @@
-
-72."Use and regularly update anti-virus software"str
-"applicable_indu"str
--4$"Restrict access to cardholder data"str
-
-e7int
-
- 1int
-@"control_domains"str
-D"Monitoring"str
-"ecommerce"str
-E	"Testing"str
-	"description"str
-S"Network Scans"str
-/9&"Maintain information security policy"str
-j"estimated_cost_"str
-A"Network Security"str
-3*"Load PCI DSS UK implementation framework"str
-g"implementation_"str
-#"¬£0+"str
-"hospitality"str
-W"Training Records"str
-%"geographic_scop"str
-#6"Restrict physical access"str
-U"Access Logs"str
-)0 "Protect stored cardholder data"str
-R"evidence_types"str
-"retail"str
-k"¬£20,000-¬£100,000"str
-87/"Track and monitor access to network resources"str
-(5"Assign unique ID to each user"str
-"employee_thresh"str
-"financial_services"str
-"display_name"str
-d"complexity_scor"str
-B"Data Protection"str
-n"1.0"str
-"Financial Services"str
-ÿ
-Œ"
-        Payment Card Industry Data Security Standard for UK organizations handling cardholder data.
-        Mandatory for any organization that stores, processes, or transmits payment card data.
-        "str
-.3%"Develop and maintain secure systems"str
-"name"str
-#T"Penetration Test Reports"str
--"key_requirement"str
-""revenue_thresho"str
-C"Access Control"str
-m	"version"str
-*8!"Regularly test security systems"str
-6.-"Install and maintain firewall configuration"str
-./%"Do not use vendor-supplied defaults"str
-
-0int
-h20int
-"PCI_DSS_UK"str
-
-"category"str
-V"Security Policies"str
-21)"Encrypt transmission of cardholder data"str
-&"PCI DSS (UK Implementation)"str
-&"UK"str
-"X"Incident Response Plans"str
-F"Policy Management"strlist" &
-$
-
-Å õ(-"#new-object#Bdict"
- 
-
-Å Å( "	#map-set#:"
- 
-
-Å" Ç(%"	#map-set#:#
-!
-Ç' É(⁄"	#map-set#:	
-"
- 
-
-á
- á(*"	#map-set#:)
-'
-
-á? à(9"#unknown-value#Blist(
-&
-
-á? à(9"
-#is-exact#:Bbool
-
-
-á? à(9"
-#assume#::
-8
-
-á? à(9"#set-field# __collection_size:Bint(
-&
-
-á? à(9"#array-add-last#:(
-&
-
-á? à(9"#array-add-last#:(
-&
-
-á? à(9"#array-add-last#:(
-&
-
-á? à(9"#array-add-last#:"
- 
-
-á, à(9"	#map-set#:"
- 
-
-â â(!"	#map-set#: "
- 
-
-â â(6$"	#map-set#:"#)
-'
-
-ä ä('"#unknown-value#Blist(
-&
-
-ä ä(("
-#is-exact#:'Bbool
-
-
-ä ä()"
-#assume#:(:
-8
-
-ä ä(*"#set-field# __collection_size:'Bint(
-&
-
-ä ä(+"#array-add-last#:'&"
- 
-
-â8 ä(,"	#map-set#:%')
-'
-
-ä# ï(/:"#unknown-value#Blist(
-&
-
-ä# ï(/;"
-#is-exact#::Bbool
-
-
-ä# ï(/<"
-#assume#:;:
-8
-
-ä# ï(/="#set-field# __collection_size::Bint-
-+
-
-ä# ï(/>"?python-unknown?*Blist"
- 
-
-ä ï(/?"	#map-set#:->)
-'
-
-ïD ó(5G"#unknown-value#Blist(
-&
-
-ïD ó(5H"
-#is-exact#:GBbool
-
-
-ïD ó(5I"
-#assume#:H:
-8
-
-ïD ó(5J"#set-field# __collection_size:GBint(
-&
-
-ïD ó(5K"#array-add-last#:GA(
-&
-
-ïD ó(5L"#array-add-last#:GB(
-&
-
-ïD ó(5M"#array-add-last#:GC(
-&
-
-ïD ó(5N"#array-add-last#:GD(
-&
-
-ïD ó(5O"#array-add-last#:GE(
-&
-
-ïD ó(5P"#array-add-last#:GF"
- 
-
-ï1 ó(5Q"	#map-set#:@G)
-'
-
-óI ô(KY"#unknown-value#Blist(
-&
-
-óI ô(KZ"
-#is-exact#:YBbool
-
-
-óI ô(K["
-#assume#:Z:
-8
-
-óI ô(K\"#set-field# __collection_size:YBint(
-&
-
-óI ô(K]"#array-add-last#:YS(
-&
-
-óI ô(K^"#array-add-last#:YT(
-&
-
-óI ô(K_"#array-add-last#:YU(
-&
-
-óI ô(K`"#array-add-last#:YV(
-&
-
-óI ô(Ka"#array-add-last#:YW(
-&
-
-óI ô(Kb"#array-add-last#:YX"
- 
-
-ó7 ô(Kc"	#map-set#:RY"
- 
-
-ö ö(f"	#map-set#:de"
- 
-
-ö ö(3i"	#map-set#:gh"
- 
-
-ö5 õ(l"	#map-set#:jk"
- 
-
-õ õ(,o"	#map-set#:mn
-
-Å õ(-*9/home/omar/Documents/ruleIQ/scripts/load_uk_frameworks.py

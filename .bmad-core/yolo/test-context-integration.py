@@ -26,23 +26,23 @@ async def test_integration():
     print("=" * 60)
     print("Testing YOLO + Context Refresh Integration")
     print("=" * 60)
-    
+
     # Initialize orchestrator
     orchestrator = YOLOOrchestrator()
-    
+
     # Check if context manager is available
     if orchestrator.context_manager:
         print("✅ Context refresh system integrated successfully")
     else:
         print("⚠️  Context refresh system not available")
-    
+
     # Activate YOLO mode
     await orchestrator.activate()
     print("✅ YOLO mode activated")
-    
+
     # Test context during handoff
     print("\n📋 Testing handoff with context refresh...")
-    
+
     # Simulate some context
     test_context = {
         "current_task": "Implement user authentication",
@@ -51,7 +51,7 @@ async def test_integration():
         "pending_items": ["Frontend forms", "Email service integration"],
         "notes": "Using FastAPI with SQLAlchemy for backend"
     }
-    
+
     # Create handoff from PM to Architect
     orchestrator.state.current_agent = AgentType.PM
     package = await orchestrator.handoff(
@@ -59,15 +59,15 @@ async def test_integration():
         artifacts={"documents": ["PRD.md", "requirements.txt"]},
         context=test_context
     )
-    
+
     print(f"✅ Handoff created from {package.from_agent.value} to {package.to_agent.value}")
     print(f"   Context items: {len(package.context)}")
-    
+
     # Get status with context info
     status = orchestrator.get_status()
     print("\n📊 YOLO Status with Context:")
     print(json.dumps(status, indent=2, default=str))
-    
+
     # Test decision making
     print("\n🤖 Testing automated decision making...")
     decision = orchestrator.make_decision(
@@ -76,7 +76,7 @@ async def test_integration():
         context={"requirements": "Need async support and OpenAPI docs"}
     )
     print(f"✅ Decision made: {decision}")
-    
+
     # Simulate handoff to Dev
     package = await orchestrator.handoff(
         to_agent=AgentType.DEV,
@@ -84,7 +84,7 @@ async def test_integration():
         context={"framework": decision, "previous_context": test_context}
     )
     print(f"✅ Handoff to {package.to_agent.value} with refreshed context")
-    
+
     # Final status
     final_status = orchestrator.get_status()
     if "context" in final_status:
@@ -94,7 +94,7 @@ async def test_integration():
         if final_status['context'].get('agents'):
             for agent, info in final_status['context']['agents'].items():
                 print(f"   {agent}: {info['tokens']} tokens, {info['items']} items")
-    
+
     # Deactivate
     orchestrator.deactivate()
     print("\n✅ Test completed successfully!")

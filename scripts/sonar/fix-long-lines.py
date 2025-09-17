@@ -4,7 +4,6 @@ logger = logging.getLogger(__name__)
 from __future__ import annotations
 import os
 import re
-from typing import List
 
 def fix_long_lines_in_file(filepath: str, max_length: int=120) -> bool:
     """Fix long lines in a Python file."""

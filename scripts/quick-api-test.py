@@ -7,7 +7,6 @@ HTTP_INTERNAL_SERVER_ERROR = 500
 DEFAULT_LIMIT = 100
 
 logger = logging.getLogger(__name__)
-from typing import Any, Dict, List, Optional
 import asyncio
 import aiohttp
 import json
@@ -29,7 +28,7 @@ async def test_endpoints():
         '/api/v1/policies', 'Policies', True), ('POST',
         '/api/v1/ai/analyze', 'AI Analyze', True), ('GET',
         '/api/v1/ai/optimization/circuit-breaker/status', 'Circuit Breaker',
-        True), ('GET', '/api/v1/compliance/status', 'Compliance Status', 
+        True), ('GET', '/api/v1/compliance/status', 'Compliance Status',
         True), ('GET', '/api/v1/dashboard/stats', 'Dashboard Stats', True),
         ('GET', '/api/v1/monitoring/health', 'Monitoring Health', False), (
         'POST', '/api/v1/agentic-rag/find-examples', 'RAG Examples', True),
@@ -44,7 +43,7 @@ async def test_endpoints():
                 async with session.request(method, f'{BASE_URL}{path}',
                     timeout=aiohttp.ClientTimeout(total=2)) as response:
                     status = response.status
-                    if (status < HTTP_INTERNAL_SERVER_ERROR or 
+                    if (status < HTTP_INTERNAL_SERVER_ERROR or
                         auth_required and status in [401, 403]):
                         results['passed'] += 1
                         logger.info('✓ %s %s [%s] - %s' % (method, path,

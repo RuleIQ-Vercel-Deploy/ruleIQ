@@ -15,17 +15,14 @@ from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from langchain_community.vectorstores import FAISS
 from langchain.retrievers import (
     MultiQueryRetriever,
-    EnsembleRetriever,
     ContextualCompressionRetriever,
 )
 from langchain.retrievers.document_compressors import CohereRerank
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_core.documents import Document
 from typing import List, Optional, Dict, Any
 from uuid import UUID
 import logging
 import os
-from pathlib import Path
 
 logger = logging.getLogger(__name__)
 

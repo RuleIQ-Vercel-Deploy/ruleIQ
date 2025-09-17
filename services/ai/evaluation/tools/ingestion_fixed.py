@@ -10,12 +10,11 @@ if not os.getenv('NEO4J_USER'):
     os.environ['NEO4J_USER'] = 'neo4j'
 if not os.getenv('NEO4J_PASSWORD'):
     os.environ['NEO4J_PASSWORD'] = 'ruleiq123'
-from typing import List, Dict, Any, Optional
-from pathlib import Path
+from typing import List, Dict, Any
 import json
 from datetime import datetime
 import numpy as np
-from services.ai.evaluation.schemas.common import GoldenDoc, GoldenChunk, SourceMeta, RegCitation, ExpectedOutcome
+from services.ai.evaluation.schemas.common import GoldenDoc, GoldenChunk, SourceMeta
 
 
 class Neo4jConnectionFixed:

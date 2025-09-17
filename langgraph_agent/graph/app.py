@@ -5,7 +5,7 @@ Minimal runnable LangGraph application with PostgreSQL checkpointer.
 StateGraph with basic node structure and compilation.
 """
 import logging
-from typing import Dict, Any, Optional, AsyncGenerator, Generator
+from typing import Dict, Any, Optional, AsyncGenerator
 from uuid import UUID, uuid4
 from datetime import datetime, timezone
 from langgraph.graph import StateGraph, START, END

@@ -20,13 +20,13 @@ def test_session():
     """Create a test database session."""
     # Use test database from environment
     DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://test_user:test_password@localhost:5433/ruleiq_test")
-    
+
     engine = create_engine(DATABASE_URL)
     SessionLocal = sessionmaker(bind=engine)
     session = SessionLocal()
-    
+
     yield session
-    
+
     # Cleanup
     session.rollback()
     session.close()
@@ -40,10 +40,10 @@ def test_create_agent(test_session):
         capabilities={"languages": ["python"], "skills": ["testing"]},
         config={"max_tokens": 1000}
     )
-    
+
     test_session.add(agent)
     test_session.commit()
-    
+
     # Verify
     assert agent.agent_id is not None
     assert agent.name == "TestAgent"
@@ -62,7 +62,7 @@ def test_create_agent_session(test_session):
     )
     test_session.add(agent)
     test_session.commit()
-    
+
     # Create session
     session = AgentSession(
         agent_id=agent.agent_id,
@@ -71,10 +71,10 @@ def test_create_agent_session(test_session):
         context={"task": "testing"},
         session_state="active"
     )
-    
+
     test_session.add(session)
     test_session.commit()
-    
+
     # Verify
     assert session.session_id is not None
     assert session.trust_level == 2
@@ -88,11 +88,11 @@ def test_create_decision_with_feedback(test_session):
     agent = Agent(name="DecisionAgent", persona_type="architect", capabilities={})
     test_session.add(agent)
     test_session.commit()
-    
+
     agent_session = AgentSession(agent_id=agent.agent_id, user_id=uuid4())
     test_session.add(agent_session)
     test_session.commit()
-    
+
     # Create decision
     decision = AgentDecision(
         session_id=agent_session.session_id,
@@ -102,19 +102,19 @@ def test_create_decision_with_feedback(test_session):
         confidence_score=Decimal("0.85"),
         user_feedback="pending"
     )
-    
+
     test_session.add(decision)
     test_session.commit()
-    
+
     # Verify
     assert decision.decision_id is not None
     assert float(decision.confidence_score) == 0.85
     assert decision.user_feedback == "pending"
-    
+
     # Update feedback
     decision.user_feedback = "approved"
     test_session.commit()
-    
+
     assert decision.user_feedback == "approved"
 
 
@@ -124,11 +124,11 @@ def test_trust_metrics_validation(test_session):
     agent = Agent(name="MetricsAgent", persona_type="security", capabilities={})
     test_session.add(agent)
     test_session.commit()
-    
+
     agent_session = AgentSession(agent_id=agent.agent_id)
     test_session.add(agent_session)
     test_session.commit()
-    
+
     # Create valid metrics
     metrics = [
         TrustMetric(
@@ -147,17 +147,17 @@ def test_trust_metrics_validation(test_session):
             metric_value=Decimal("92.0")
         )
     ]
-    
+
     for metric in metrics:
         test_session.add(metric)
-    
+
     test_session.commit()
-    
+
     # Verify
     stored_metrics = test_session.query(TrustMetric).filter_by(
         session_id=agent_session.session_id
     ).all()
-    
+
     assert len(stored_metrics) == 3
     assert all(m.metric_id is not None for m in stored_metrics)
 
@@ -168,11 +168,11 @@ def test_conversation_history_thread(test_session):
     agent = Agent(name="ChatAgent", persona_type="documentation", capabilities={})
     test_session.add(agent)
     test_session.commit()
-    
+
     agent_session = AgentSession(agent_id=agent.agent_id)
     test_session.add(agent_session)
     test_session.commit()
-    
+
     # Create conversation thread
     msg1 = ConversationHistory(
         session_id=agent_session.session_id,
@@ -183,7 +183,7 @@ def test_conversation_history_thread(test_session):
     )
     test_session.add(msg1)
     test_session.commit()
-    
+
     msg2 = ConversationHistory(
         session_id=agent_session.session_id,
         role="agent",
@@ -195,7 +195,7 @@ def test_conversation_history_thread(test_session):
     )
     test_session.add(msg2)
     test_session.commit()
-    
+
     msg3 = ConversationHistory(
         session_id=agent_session.session_id,
         role="user",
@@ -206,12 +206,12 @@ def test_conversation_history_thread(test_session):
     )
     test_session.add(msg3)
     test_session.commit()
-    
+
     # Verify thread
     messages = test_session.query(ConversationHistory).filter_by(
         session_id=agent_session.session_id
     ).order_by(ConversationHistory.created_at).all()
-    
+
     assert len(messages) == 3
     assert messages[0].content == "How do I implement this?"
     assert messages[1].parent_message_id == msg1.message_id
@@ -224,7 +224,7 @@ def test_agent_knowledge_usage(test_session):
     agent = Agent(name="KnowledgeAgent", persona_type="developer", capabilities={})
     test_session.add(agent)
     test_session.commit()
-    
+
     # Create knowledge item
     knowledge = AgentKnowledge(
         agent_id=agent.agent_id,
@@ -239,17 +239,17 @@ def test_agent_knowledge_usage(test_session):
     )
     test_session.add(knowledge)
     test_session.commit()
-    
+
     # Verify
     assert knowledge.knowledge_id is not None
     assert knowledge.usage_count == 5
     assert float(knowledge.success_rate) == 0.8
-    
+
     # Update usage
     knowledge.usage_count += 1
     knowledge.last_used_at = datetime.utcnow()
     test_session.commit()
-    
+
     assert knowledge.usage_count == 6
 
 
@@ -259,11 +259,11 @@ def test_audit_log_creation(test_session):
     agent = Agent(name="AuditAgent", persona_type="security", capabilities={})
     test_session.add(agent)
     test_session.commit()
-    
+
     agent_session = AgentSession(agent_id=agent.agent_id)
     test_session.add(agent_session)
     test_session.commit()
-    
+
     # Create audit logs
     audit_logs = [
         AgentAuditLog(
@@ -287,17 +287,17 @@ def test_audit_log_creation(test_session):
             risk_level="critical"
         )
     ]
-    
+
     for log in audit_logs:
         test_session.add(log)
-    
+
     test_session.commit()
-    
+
     # Verify
     stored_logs = test_session.query(AgentAuditLog).filter_by(
         agent_id=agent.agent_id
     ).all()
-    
+
     assert len(stored_logs) == 3
     assert any(log.risk_level == "critical" for log in stored_logs)
     assert all(log.audit_id is not None for log in stored_logs)
@@ -309,11 +309,11 @@ def test_cascade_relationships(test_session):
     agent = Agent(name="CascadeAgent", persona_type="developer", capabilities={})
     test_session.add(agent)
     test_session.commit()
-    
+
     agent_session = AgentSession(agent_id=agent.agent_id)
     test_session.add(agent_session)
     test_session.commit()
-    
+
     decision = AgentDecision(
         session_id=agent_session.session_id,
         decision_type="review",
@@ -321,7 +321,7 @@ def test_cascade_relationships(test_session):
         action_taken={}
     )
     test_session.add(decision)
-    
+
     knowledge = AgentKnowledge(
         agent_id=agent.agent_id,
         knowledge_type="solution",
@@ -330,16 +330,16 @@ def test_cascade_relationships(test_session):
     )
     test_session.add(knowledge)
     test_session.commit()
-    
+
     # Store IDs for verification
     session_id = agent_session.session_id
     decision_id = decision.decision_id
     knowledge_id = knowledge.knowledge_id
-    
+
     # Delete agent (should cascade)
     test_session.delete(agent)
     test_session.commit()
-    
+
     # Verify cascaded deletes
     assert test_session.query(AgentSession).filter_by(session_id=session_id).first() is None
     assert test_session.query(AgentDecision).filter_by(decision_id=decision_id).first() is None
@@ -352,27 +352,27 @@ def test_version_tracking(test_session):
     agent = Agent(name="VersionAgent", persona_type="qa", capabilities={})
     test_session.add(agent)
     test_session.commit()
-    
+
     initial_version = agent.version
     assert initial_version == 1
-    
+
     # Update agent
     agent.capabilities = {"updated": True}
     agent.version += 1
     test_session.commit()
-    
+
     assert agent.version == 2
-    
+
     # Create session
     agent_session = AgentSession(agent_id=agent.agent_id)
     test_session.add(agent_session)
     test_session.commit()
-    
+
     assert agent_session.version == 1
-    
+
     # Update session
     agent_session.trust_level = 3
     agent_session.version += 1
     test_session.commit()
-    
+
     assert agent_session.version == 2

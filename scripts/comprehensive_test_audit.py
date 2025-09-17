@@ -14,7 +14,7 @@ import json
 import subprocess
 import time
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional, Set
+from typing import Dict, List, Tuple
 from datetime import datetime
 from collections import defaultdict
 
@@ -399,7 +399,7 @@ class TestSuiteAuditor:
         # Categorize tests
         self.test_categories = self.categorize_tests(self.test_files)
 
-        print(f"\n📊 Test Distribution:")
+        print("\n📊 Test Distribution:")
         for category, files in self.test_categories.items():
             print(f"  - {category}: {len(files)} files")
 
@@ -486,7 +486,7 @@ def main():
     print(f"Total Tests Discovered: {results['total_tests']}")
     print(f"Tests Executed: {results['executed_tests']}")
     print(f"Pass Rate: {results['pass_rate']:.1f}%")
-    print(f"Target: 95.0%")
+    print("Target: 95.0%")
 
     if results["pass_rate"] >= 95:
         print("✅ Target achieved!")

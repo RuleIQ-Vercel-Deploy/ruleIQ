@@ -1,27 +1,0 @@
-
-$"Handle unknown operations"str
-
-truebool
-	"offline_mode"str
-0.3float
-"operation"str
-vm"The {operation} operation is not available in offline mode. Please try again when AI services are restored."str
-"offline_unavailable"strself
-à" à(&	operation
-à( à(6context
-à8 à(O"­&
-$
-
-åE æ(9"#new-object#Bdict"
- 
-
-æ æ( "	#map-set#:	
-"
- 
-
-æ" æ(8"	#map-set#:)
-'
-
-ã æ(:"#unknown-value#:
-
-ã æ(:*7/home/omar/Documents/ruleIQ/services/ai/offline_mode.py

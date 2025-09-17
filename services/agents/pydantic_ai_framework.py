@@ -323,9 +323,9 @@ class AgentOrchestrator:
             'tribunal']
         gdpr_score = sum(1 for keyword in gdpr_keywords if keyword in
             request_lower)
-        companies_score = sum(1 for keyword in companies_keywords if 
+        companies_score = sum(1 for keyword in companies_keywords if
             keyword in request_lower)
-        employment_score = sum(1 for keyword in employment_keywords if 
+        employment_score = sum(1 for keyword in employment_keywords if
             keyword in request_lower)
         scores = {'gdpr': gdpr_score, 'companies_house': companies_score,
             'employment': employment_score}

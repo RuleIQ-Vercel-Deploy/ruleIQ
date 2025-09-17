@@ -120,7 +120,7 @@ def load_cyber_essentials_framework() ->Dict[str, Any]:
         'Access Management', 'Malware Protection', 'Patch Management'],
         'evidence_types': ['Network Diagrams', 'Configuration Standards',
         'Access Control Lists', 'Antivirus Reports',
-        'Patch Management Logs'], 'complexity_scor': 4, 'implementation_': 
+        'Patch Management Logs'], 'complexity_scor': 4, 'implementation_':
         8, 'estimated_cost_': '£2,000-£10,000', 'version': '1.0'}
 
 

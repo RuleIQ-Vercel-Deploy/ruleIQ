@@ -65,7 +65,7 @@ def get_secret_or_env(secret_key: str, env_key: Optional[str]=None) ->Optional[
         if value:
             logger.debug("🔐 Retrieved '%s' from test environment (%s)" % (secret_key, env_key))
         return value
-    
+
     if SECRETS_VAULT_AVAILABLE:
         try:
             vault = get_secrets_vault()
@@ -75,7 +75,7 @@ def get_secret_or_env(secret_key: str, env_key: Optional[str]=None) ->Optional[
                 return value
         except Exception as e:
             logger.warning("⚠️ Failed to get '%s' from vault: %s" % (secret_key, e))
-    
+
     env_key = env_key or secret_key.upper()
     value = os.getenv(env_key)
     if value:
@@ -120,14 +120,14 @@ class LogLevel(str, Enum):
 
 class Settings(BaseSettings):
     """Application settings with environment variable support."""
-    
+
     model_config = SettingsConfigDict(
         env_file='.env.test' if os.getenv('TESTING', '').lower() == 'true' else '.env',
         env_file_encoding='utf-8',
         case_sensitive=False,
         extra='ignore'
     )
-    
+
     # Core application settings
     app_name: str = Field(default='RuleIQ API', description='Application name')
     environment: Environment = Field(
@@ -153,7 +153,7 @@ class Settings(BaseSettings):
     @property
     def is_testing(self) ->bool:
         return self.environment == Environment.TESTING or os.getenv('TESTING', '').lower() == 'true'
-    
+
     # Database configuration
     database_url: str = Field(
         default_factory=lambda: (
@@ -166,7 +166,7 @@ class Settings(BaseSettings):
         ),
         description='Primary database URL'
     )
-    
+
     @property
     def async_database_url(self) -> str:
         """Convert database URL to async format for asyncpg"""
@@ -180,7 +180,7 @@ class Settings(BaseSettings):
     database_max_overflow: int = Field(default=20, description='Database max overflow connections')
     database_pool_timeout: int = Field(default=30, description='Database connection timeout (seconds)')
     database_pool_recycle: int = Field(default=3600, description='Database connection recycle time')
-    
+
     # Redis configuration
     redis_url: str = Field(
         default_factory=lambda: (
@@ -196,7 +196,7 @@ class Settings(BaseSettings):
     redis_max_connections: int = Field(default=20, description='Max Redis connections')
     redis_socket_keepalive: bool = Field(default=True, description='Redis socket keepalive')
     redis_socket_keepalive_options: Dict[str, int] = Field(default_factory=lambda: {}, description='Redis keepalive options')
-    
+
     # JWT configuration
     jwt_secret_key: str = Field(
         default_factory=lambda: (
@@ -212,7 +212,7 @@ class Settings(BaseSettings):
     jwt_algorithm: str = Field(default='HS256', description='JWT algorithm')
     jwt_access_token_expire_minutes: int = Field(default=30, description='JWT access token expiration (minutes)')
     jwt_refresh_token_expire_days: int = Field(default=30, description='JWT refresh token expiration (days)')
-    
+
     # Google OAuth configuration
     google_client_id: Optional[str] = Field(
         default_factory=lambda: (
@@ -235,7 +235,7 @@ class Settings(BaseSettings):
         description='Google OAuth client secret'
     )
     google_redirect_uri: str = Field(default='http://localhost:8000/api/v1/auth/google/callback', description='Google OAuth redirect URI')
-    
+
     # Google AI configuration
     google_api_key: str = Field(
         default_factory=lambda: (
@@ -251,7 +251,7 @@ class Settings(BaseSettings):
     gemini_temperature: float = Field(default=0.1, description='Gemini temperature')
     gemini_max_tokens: int = Field(default=4096, description='Gemini max tokens')
     gemini_timeout: int = Field(default=60, description='Gemini request timeout')
-    
+
     # AI rate limiting
     ai_rate_limit_tier_1: int = Field(default=20, description='AI Tier 1 requests per minute')
     ai_rate_limit_tier_2: int = Field(default=10, description='AI Tier 2 requests per minute')
@@ -259,7 +259,7 @@ class Settings(BaseSettings):
     ai_cost_tracking_enabled: bool = Field(default=True, description='Enable AI cost tracking')
     ai_monthly_budget_limit: float = Field(default=500.0, description='Monthly AI budget limit (USD)')
     ai_cost_alert_threshold: float = Field(default=0.8, description='Alert threshold (80% of budget)')
-    
+
     # File upload configuration
     max_file_size_mb: int = Field(default=10, description='Max file upload size (MB)')
     upload_directory: str = Field(default='./uploads', description='File upload directory')
@@ -269,7 +269,7 @@ class Settings(BaseSettings):
         default=['pdf', 'docx', 'doc', 'txt', 'csv', 'xlsx', 'json'],
         description='Allowed file extensions'
     )
-    
+
     # Security configuration
     password_min_length: int = Field(default=8, description='Minimum password length')
     bcrypt_rounds: int = Field(default=12, description='Bcrypt hashing rounds')
@@ -277,7 +277,7 @@ class Settings(BaseSettings):
     force_https: bool = Field(default=False, description='Force HTTPS in production')
     secure_cookies: bool = Field(default=False, description='Use secure cookies')
     csrf_protection_enabled: bool = Field(default=True, description='Enable CSRF protection')
-    
+
     # CORS configuration
     cors_origins: Union[List[str], str] = Field(default=['http://localhost:3000'])
     cors_allowed_origins: Union[List[str], str] = Field(
@@ -299,24 +299,24 @@ class Settings(BaseSettings):
                     pass
             return [item.strip() for item in v.split(',') if item.strip()]
         return []
-    
+
     # Rate limiting
     rate_limit_enabled: bool = Field(default=True, description='Enable rate limiting')
     rate_limit_per_minute: int = Field(default=100, description='General rate limit per minute')
     auth_rate_limit_per_minute: int = Field(default=5, description='Auth rate limit per minute')
-    
+
     # Logging configuration
     log_level: LogLevel = Field(default=LogLevel.INFO, description='Logging level')
     log_file_enabled: bool = Field(default=True, description='Enable file logging')
     log_file_path: str = Field(default='./logs/app.log', description='Log file path')
     log_file_max_bytes: int = Field(default=10000000, description='Max log file size (bytes)')
     log_file_backup_count: int = Field(default=5, description='Log file backup count')
-    
+
     # Monitoring configuration
     monitoring_enabled: bool = Field(default=True, description='Enable monitoring')
     performance_monitoring_enabled: bool = Field(default=True, description='Enable performance monitoring')
     error_monitoring_enabled: bool = Field(default=True, description='Enable error monitoring')
-    
+
     # Celery configuration
     celery_broker_url: str = Field(
         default_factory=lambda: (
@@ -333,18 +333,18 @@ class Settings(BaseSettings):
         description='Celery result backend'
     )
     celery_task_timeout: int = Field(default=300, description='Celery task timeout (seconds)')
-    
+
     # AWS configuration
     aws_access_key_id: Optional[str] = Field(default=None, description='AWS access key')
     aws_secret_access_key: Optional[str] = Field(default=None, description='AWS secret key')
     aws_region: str = Field(default='eu-west-2', description='AWS region')
     s3_bucket_name: Optional[str] = Field(default=None, description='S3 bucket name')
-    
+
     # Stripe configuration
     stripe_publishable_key: Optional[str] = Field(default=None, description='Stripe publishable key')
     stripe_secret_key: Optional[str] = Field(default=None, description='Stripe secret key')
     stripe_webhook_secret: Optional[str] = Field(default=None, description='Stripe webhook secret')
-    
+
     # Secrets vault configuration
     secrets_vault_enabled: bool = Field(
         default_factory=lambda: (
@@ -361,7 +361,7 @@ class Settings(BaseSettings):
         default_factory=lambda: os.getenv('SECRETS_MANAGER_SECRET_NAME', 'ruleiq-production-secrets'),
         description='AWS Secrets Manager secret name'
     )
-    
+
     # Sentry configuration
     sentry_dsn: Optional[str] = Field(
         default_factory=lambda: (
@@ -383,13 +383,13 @@ class Settings(BaseSettings):
     enable_performance_monitoring: bool = Field(default=True, description='Enable performance monitoring')
     traces_sample_rate: float = Field(default=0.1, description='Sentry traces sample rate (0.0-1.0)')
     profiles_sample_rate: float = Field(default=0.1, description='Sentry profiles sample rate (0.0-1.0)')
-    
+
     # Resource thresholds
     disk_warning_threshold: float = Field(default=80.0, description='Disk usage warning threshold (%)')
     disk_critical_threshold: float = Field(default=90.0, description='Disk usage critical threshold (%)')
     memory_warning_threshold: float = Field(default=85.0, description='Memory usage warning threshold (%)')
     memory_critical_threshold: float = Field(default=95.0, description='Memory usage critical threshold (%)')
-    
+
     # Debug configuration
     enable_debug_endpoints: bool = Field(
         default_factory=lambda: (
@@ -399,7 +399,7 @@ class Settings(BaseSettings):
         description='Enable debug endpoints'
     )
     metrics_endpoint_enabled: bool = Field(default=True, description='Enable Prometheus metrics endpoint')
-    
+
     # Feature flags
     agentic_assessments_enabled: bool = Field(default=False, description='Enable agentic assessments')
     ai_policy_generation_enabled: bool = Field(default=True, description='Enable AI policy generation')
@@ -481,7 +481,7 @@ class Settings(BaseSettings):
                 'message': 'SecretsVault disabled in testing environment',
                 'vault_type': 'None'
             }
-        
+
         if not SECRETS_VAULT_AVAILABLE:
             return {
                 'status': 'unavailable',
@@ -489,7 +489,7 @@ class Settings(BaseSettings):
                 'message': 'SecretsVault module not available',
                 'vault_type': 'None'
             }
-        
+
         try:
             from .secrets_vault import vault_health_check
             return vault_health_check()
@@ -507,7 +507,7 @@ class Settings(BaseSettings):
         if self.is_testing:
             logger.info('🧪 Testing environment: SecretsVault disabled, using test configuration')
             return
-        
+
         health = self.get_secrets_vault_health()
         if health['status'] == 'healthy':
             logger.info('✅ SecretsVault: AWS Secrets Manager connected and healthy')
@@ -517,7 +517,7 @@ class Settings(BaseSettings):
             logger.warning('⚠️ SecretsVault: Module unavailable, using environment fallback')
         else:
             logger.error('❌ SecretsVault: %s' % health['message'])
-        
+
         logger.info('🔐 Vault Configuration: enabled=%s, region=%s' % (
             self.secrets_vault_enabled, self.secrets_vault_region
         ))

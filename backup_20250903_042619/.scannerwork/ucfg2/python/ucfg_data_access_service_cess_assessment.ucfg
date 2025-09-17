@@ -1,120 +1,0 @@
-
-Dservices.data_access_service.DataAccessService.can_access_assessmentE
-;/home/omar/Documents/ruleIQ/services/data_access_service.pyi i("2*è
-2k t(F
-D
-u7 u(>
-%5"__id*,
-
-__unknown_file (*
-
-user"
-id£ 
-u u(?
-%6*N
-
-__unknown_file (20
-.services.data_access_service.DataAccessService*"
-
-__unknown_file (
-
-%52get_user_data_access_levelF
-D
-u u(?
-access_level"__id*"
-
-__unknown_file (
-
-%6š
-—
-v v(%
-%7"	__compare*"
-
-__unknown_file (
-==*,
-
-__unknown_file (
-
-access_level*(
-
-__unknown_file (
-
-all_data*
-8
-9*$
-4| |("
-| |(	
-
-False*#
-5{ {("
-{ {(
-
-True*»
-6z z(.£
- 
-z z(.
-%1"	__compare*"
-
-__unknown_file (
-==*,
-
-__unknown_file (
-
-access_level*1
-
-__unknown_file (
-organization_data*
-4
-5*‡
-7y y(1F
-D
-y* y(1
-%2"__id*,
-
-__unknown_file (*
-
-user"
-id›
-˜
-y y(1
-%3"	__compare*"
-
-__unknown_file (
-==*3
-
-__unknown_file (
-
-assessment_owner_id*"
-
-__unknown_file (
-
-%2"
-y y(1
-
-%3*²
-8x x(%š
-—
-x x(%
-%4"	__compare*"
-
-__unknown_file (
-==*,
-
-__unknown_file (
-
-access_level*(
-
-__unknown_file (
-
-own_data*
-6
-7*#
-9w w("
-w w(
-
-True:
-i$ i(7
-user:!
-j j(!
-assessment_owner_idB20
-.services.data_access_service.DataAccessServiceH

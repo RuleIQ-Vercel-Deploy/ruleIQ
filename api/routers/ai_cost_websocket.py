@@ -11,11 +11,10 @@ import json
 import uuid
 from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Query, Depends, HTTPException, status
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, Query, status
 from api.dependencies.auth import verify_websocket_token
 from api.dependencies.websocket_auth import (
-    verify_websocket_token_from_headers,
-    verify_websocket_token_with_fallback
+    verify_websocket_token_from_headers
 )
 from middleware.websocket_security import websocket_security
 from fastapi.websockets import WebSocketState
@@ -213,26 +212,26 @@ async def realtime_cost_dashboard(
     - Sec-WebSocket-Protocol: token.<token>
     """
     connection_id = str(uuid.uuid4())
-    
+
     # Validate connection security
     if not await websocket_security.validate_connection(websocket, connection_id):
         return
-    
+
     # Authenticate user - prefer headers, fallback to query for compatibility
     try:
         # Try header authentication first
         user = await verify_websocket_token_from_headers(websocket)
-        
+
         # Fallback to query parameter if header auth fails
         if not user and token:
             logger.warning("Using deprecated query parameter authentication for WebSocket")
             user = await verify_websocket_token(websocket, token)
-        
+
         if not user:
-            logger.warning(f"WebSocket authentication failed")
+            logger.warning("WebSocket authentication failed")
             await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
             return
-            
+
         user_id = str(user.id)
     except Exception as e:
         logger.warning(f"WebSocket authentication failed: {e}")
@@ -279,14 +278,14 @@ async def budget_alerts_websocket(websocket: WebSocket) ->None:
     - Sec-WebSocket-Protocol: token.<token>
     """
     connection_id = None
-    
+
     # Authenticate user via headers
     try:
         user = await verify_websocket_token_from_headers(websocket)
         if not user:
             logger.warning("Budget alerts WebSocket authentication failed")
             return
-        
+
         user_id = str(user.id)
         connection_id = await connection_manager.connect(websocket=
             websocket, user_id=user_id, connection_type='budget_alerts')
@@ -333,14 +332,14 @@ async def service_cost_monitoring(websocket: WebSocket, service_name: str) ->Non
     - Sec-WebSocket-Protocol: token.<token>
     """
     connection_id = None
-    
+
     # Authenticate user via headers
     try:
         user = await verify_websocket_token_from_headers(websocket)
         if not user:
             logger.warning(f"Service monitoring WebSocket authentication failed for {service_name}")
             return
-        
+
         user_id = str(user.id)
         connection_id = await connection_manager.connect(websocket=
             websocket, user_id=user_id, connection_type=

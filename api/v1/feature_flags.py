@@ -7,15 +7,12 @@ from typing import List, Optional, Dict, Any
 from datetime import datetime
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, HTTPException, Query, Body, Request
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from database.db_setup import get_db_session
 from services.feature_flag_service import (
-    EnhancedFeatureFlagService,
-    FeatureFlagConfig,
     get_feature_flag_service
 )
 from models.feature_flags import (
@@ -24,7 +21,6 @@ from models.feature_flags import (
     FeatureFlagStatus
 )
 from middleware.jwt_auth_v2 import jwt_required
-from services.auth_service import get_current_user
 
 
 # Router configuration
@@ -137,25 +133,25 @@ async def list_feature_flags(
     """
     try:
         query = db.query(FeatureFlagModel)
-        
+
         # Apply filters
         if environment:
             query = query.filter(
                 FeatureFlagModel.environments.contains([environment])
             )
-        
+
         if tag:
             query = query.filter(
                 FeatureFlagModel.tags.contains([tag])
             )
-        
+
         if enabled is not None:
             query = query.filter(FeatureFlagModel.enabled == enabled)
-        
+
         # Pagination
         total = query.count()
         flags = query.offset(skip).limit(limit).all()
-        
+
         # Convert to response models
         response = []
         for flag in flags:
@@ -180,9 +176,9 @@ async def list_feature_flags(
                 created_by=flag.created_by,
                 updated_by=flag.updated_by
             ))
-        
+
         return response
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error listing feature flags: {str(e)}")
 
@@ -197,10 +193,10 @@ async def get_feature_flag(
     """
     try:
         flag = db.query(FeatureFlagModel).filter_by(name=flag_name).first()
-        
+
         if not flag:
             raise HTTPException(status_code=404, detail=f"Feature flag '{flag_name}' not found")
-        
+
         return FeatureFlagResponse(
             id=flag.id,
             name=flag.name,
@@ -222,7 +218,7 @@ async def get_feature_flag(
             created_by=flag.created_by,
             updated_by=flag.updated_by
         )
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -244,12 +240,12 @@ async def create_feature_flag(
         # Get current user
         current_user = request.state.user
         user_id = str(current_user.get("sub", "system"))
-        
+
         # Check if flag already exists
         existing = db.query(FeatureFlagModel).filter_by(name=flag_request.name).first()
         if existing:
             raise HTTPException(status_code=409, detail=f"Feature flag '{flag_request.name}' already exists")
-        
+
         # Create new flag
         flag = FeatureFlagModel(
             name=flag_request.name,
@@ -268,9 +264,9 @@ async def create_feature_flag(
             created_by=user_id,
             updated_by=user_id
         )
-        
+
         db.add(flag)
-        
+
         # Create audit log
         audit = FeatureFlagAudit(
             feature_flag_id=flag.id,
@@ -280,14 +276,14 @@ async def create_feature_flag(
             reason="Initial creation"
         )
         db.add(audit)
-        
+
         db.commit()
         db.refresh(flag)
-        
+
         # Invalidate cache
         service = get_feature_flag_service()
         await service.invalidate_cache(flag.name)
-        
+
         return FeatureFlagResponse(
             id=flag.id,
             name=flag.name,
@@ -309,7 +305,7 @@ async def create_feature_flag(
             created_by=flag.created_by,
             updated_by=flag.updated_by
         )
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -333,12 +329,12 @@ async def update_feature_flag(
         # Get current user
         current_user = request.state.user
         user_id = str(current_user.get("sub", "system"))
-        
+
         # Get existing flag
         flag = db.query(FeatureFlagModel).filter_by(name=flag_name).first()
         if not flag:
             raise HTTPException(status_code=404, detail=f"Feature flag '{flag_name}' not found")
-        
+
         # Store previous state for audit
         previous_state = {
             "enabled": flag.enabled,
@@ -350,22 +346,22 @@ async def update_feature_flag(
             "expires_at": flag.expires_at.isoformat() if flag.expires_at else None,
             "starts_at": flag.starts_at.isoformat() if flag.starts_at else None,
         }
-        
+
         # Update fields if provided
         update_data = flag_update.dict(exclude_unset=True)
         for field, value in update_data.items():
             if field != "reason" and value is not None:
                 setattr(flag, field, value)
-        
+
         # Update status based on enabled state
         if "enabled" in update_data:
             flag.status = FeatureFlagStatus.ENABLED.value if flag.enabled else FeatureFlagStatus.DISABLED.value
-        
+
         # Update metadata
         flag.updated_at = datetime.utcnow()
         flag.updated_by = user_id
         flag.version += 1
-        
+
         # Create audit log
         audit = FeatureFlagAudit(
             feature_flag_id=flag.id,
@@ -377,14 +373,14 @@ async def update_feature_flag(
             reason=flag_update.reason or "Manual update via API"
         )
         db.add(audit)
-        
+
         db.commit()
         db.refresh(flag)
-        
+
         # Invalidate cache
         service = get_feature_flag_service()
         await service.invalidate_cache(flag.name)
-        
+
         return FeatureFlagResponse(
             id=flag.id,
             name=flag.name,
@@ -406,7 +402,7 @@ async def update_feature_flag(
             created_by=flag.created_by,
             updated_by=flag.updated_by
         )
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -429,12 +425,12 @@ async def delete_feature_flag(
         # Get current user
         current_user = request.state.user
         user_id = str(current_user.get("sub", "system"))
-        
+
         # Get existing flag
         flag = db.query(FeatureFlagModel).filter_by(name=flag_name).first()
         if not flag:
             raise HTTPException(status_code=404, detail=f"Feature flag '{flag_name}' not found")
-        
+
         # Create final audit log
         audit = FeatureFlagAudit(
             feature_flag_id=flag.id,
@@ -448,17 +444,17 @@ async def delete_feature_flag(
             reason="Deleted via API"
         )
         db.add(audit)
-        
+
         # Delete the flag (cascade will delete related records)
         db.delete(flag)
         db.commit()
-        
+
         # Invalidate cache
         service = get_feature_flag_service()
         await service.invalidate_cache(flag_name)
-        
+
         return None
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -478,18 +474,18 @@ async def evaluate_feature_flag(
     try:
         import time
         start_time = time.perf_counter()
-        
+
         service = get_feature_flag_service()
-        
+
         enabled, reason = await service.is_enabled_for_user(
             flag_name=flag_name,
             user_id=evaluation_request.user_id,
             environment=evaluation_request.environment,
             context=evaluation_request.context
         )
-        
+
         elapsed_ms = (time.perf_counter() - start_time) * 1000
-        
+
         return FeatureFlagEvaluationResponse(
             flag_name=flag_name,
             enabled=enabled,
@@ -498,7 +494,7 @@ async def evaluate_feature_flag(
             environment=evaluation_request.environment,
             evaluation_time_ms=elapsed_ms
         )
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error evaluating feature flag: {str(e)}")
 
@@ -514,10 +510,10 @@ async def evaluate_feature_flags_bulk(
     try:
         import time
         import asyncio
-        
+
         start_time = time.perf_counter()
         service = get_feature_flag_service()
-        
+
         # Evaluate all flags in parallel
         tasks = []
         for flag_name in evaluation_request.flag_names:
@@ -527,12 +523,12 @@ async def evaluate_feature_flags_bulk(
                 environment=evaluation_request.environment
             )
             tasks.append(task)
-        
+
         results = await asyncio.gather(*tasks, return_exceptions=True)
-        
+
         evaluations = {}
         reasons = {}
-        
+
         for flag_name, result in zip(evaluation_request.flag_names, results):
             if isinstance(result, Exception):
                 evaluations[flag_name] = False
@@ -541,15 +537,15 @@ async def evaluate_feature_flags_bulk(
                 enabled, reason = result
                 evaluations[flag_name] = enabled
                 reasons[flag_name] = reason
-        
+
         total_time_ms = (time.perf_counter() - start_time) * 1000
-        
+
         return FeatureFlagBulkEvaluationResponse(
             evaluations=evaluations,
             reasons=reasons,
             total_time_ms=total_time_ms
         )
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error evaluating feature flags: {str(e)}")
 
@@ -571,14 +567,14 @@ async def get_feature_flag_audit_trail(
         flag = db.query(FeatureFlagModel).filter_by(name=flag_name).first()
         if not flag:
             raise HTTPException(status_code=404, detail=f"Feature flag '{flag_name}' not found")
-        
+
         # Get audit logs
         audits = db.query(FeatureFlagAudit)\
             .filter_by(feature_flag_id=flag.id)\
             .order_by(FeatureFlagAudit.created_at.desc())\
             .limit(limit)\
             .all()
-        
+
         # Convert to response
         response = []
         for audit in audits:
@@ -593,9 +589,9 @@ async def get_feature_flag_audit_trail(
                 "reason": audit.reason,
                 "created_at": audit.created_at.isoformat()
             })
-        
+
         return response
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -615,26 +611,26 @@ async def get_feature_flag_metrics(
     """
     try:
         service = get_feature_flag_service()
-        
+
         # Get metrics from Redis
         metrics = {}
         now = datetime.utcnow()
-        
+
         for hour in range(hours):
             timestamp = now - timedelta(hours=hour)
             metrics_key = f"ff:metrics:{flag_name}:{timestamp.strftime('%Y%m%d%H')}"
-            
+
             hour_metrics = service.redis.hgetall(metrics_key)
             if hour_metrics:
                 metrics[timestamp.strftime('%Y-%m-%d %H:00')] = {
                     k: int(v) for k, v in hour_metrics.items()
                 }
-        
+
         return {
             "flag_name": flag_name,
             "period_hours": hours,
             "metrics": metrics
         }
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error retrieving metrics: {str(e)}")

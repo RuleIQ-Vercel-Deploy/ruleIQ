@@ -102,7 +102,7 @@ class TestHealthMonitor:
                                             ] = failed
                                     except (IndexError, ValueError):
                                         pass
-                        elif 'Tests' in line and ('passed' in line or 
+                        elif 'Tests' in line and ('passed' in line or
                             'failed' in line):
                             parts = line.split()
                             for i, part in enumerate(parts):

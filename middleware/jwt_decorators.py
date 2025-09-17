@@ -5,20 +5,17 @@ Provides decorator-based authentication for route protection.
 Part of SEC-005: Complete JWT Coverage Extension
 """
 from functools import wraps
-from typing import Optional, Callable, Any
-from fastapi import Depends, HTTPException, status, Request
+from typing import Optional, Callable
+from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
 from datetime import datetime, timezone
 import logging
 
-from config.settings import settings
 from api.dependencies.auth import (
-    decode_token,
     is_token_blacklisted,
     SECRET_KEY,
-    ALGORITHM,
-    get_current_user
+    ALGORITHM
 )
 from database.user import User
 
@@ -35,7 +32,7 @@ class JWTMiddleware:
     Provides decorator methods to require authentication on specific routes.
     Works in conjunction with JWTAuthMiddlewareV2 for comprehensive coverage.
     """
-    
+
     @staticmethod
     def require_auth(func: Callable) -> Callable:
         """
@@ -52,11 +49,11 @@ class JWTMiddleware:
             # The actual authentication is handled by get_current_user dependency
             # This decorator serves as a clear marker that the route requires auth
             return await func(*args, **kwargs)
-        
+
         # Mark the function as requiring authentication
         wrapper.__requires_auth__ = True
         return wrapper
-    
+
     @staticmethod
     def require_admin(func: Callable) -> Callable:
         """
@@ -78,11 +75,11 @@ class JWTMiddleware:
                     detail="Admin privileges required"
                 )
             return await func(*args, **kwargs)
-        
+
         wrapper.__requires_auth__ = True
         wrapper.__requires_admin__ = True
         return wrapper
-    
+
     @staticmethod
     def require_roles(*allowed_roles: str) -> Callable:
         """
@@ -106,12 +103,12 @@ class JWTMiddleware:
                             detail=f"Role required: {', '.join(allowed_roles)}"
                         )
                 return await func(*args, **kwargs)
-            
+
             wrapper.__requires_auth__ = True
             wrapper.__required_roles__ = allowed_roles
             return wrapper
         return decorator
-    
+
     @staticmethod
     def optional_auth(func: Callable) -> Callable:
         """
@@ -128,10 +125,10 @@ class JWTMiddleware:
         @wraps(func)
         async def wrapper(*args, **kwargs):
             return await func(*args, **kwargs)
-        
+
         wrapper.__optional_auth__ = True
         return wrapper
-    
+
     @staticmethod
     async def validate_token(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
         """
@@ -154,9 +151,9 @@ class JWTMiddleware:
                 detail="Authentication required",
                 headers={"WWW-Authenticate": "Bearer"}
             )
-        
+
         token = credentials.credentials
-        
+
         try:
             # Check if token is blacklisted
             if await is_token_blacklisted(token):
@@ -165,10 +162,10 @@ class JWTMiddleware:
                     detail="Token has been revoked",
                     headers={"WWW-Authenticate": "Bearer"}
                 )
-            
+
             # Decode and validate token
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-            
+
             # Check token type
             if payload.get('type') != 'access':
                 raise HTTPException(
@@ -176,7 +173,7 @@ class JWTMiddleware:
                     detail="Invalid token type",
                     headers={"WWW-Authenticate": "Bearer"}
                 )
-            
+
             # Check expiration
             exp = payload.get('exp')
             if exp:
@@ -187,9 +184,9 @@ class JWTMiddleware:
                         detail="Token has expired",
                         headers={"WWW-Authenticate": "Bearer"}
                     )
-            
+
             return payload
-            
+
         except JWTError as e:
             logger.error(f"JWT validation error: {e}")
             raise HTTPException(
@@ -210,13 +207,13 @@ async def get_current_user_optional(
     """
     if not credentials:
         return None
-    
+
     try:
         payload = await JWTMiddleware.validate_token(credentials)
         user_id = payload.get('sub')
         if not user_id:
             return None
-        
+
         from sqlalchemy.future import select
         result = await db.execute(select(User).where(User.id == user_id))
         return result.scalars().first()

@@ -10,7 +10,7 @@ import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any
 from uuid import UUID
 import hashlib
 from datetime import datetime, timezone

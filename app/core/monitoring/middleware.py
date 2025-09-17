@@ -90,7 +90,7 @@ class LoggingMiddleware(BaseHTTPMiddleware):
 
             return response
 
-        except Exception as e:
+        except Exception:
             # Calculate duration
             duration = time.time() - start_time
 
@@ -190,7 +190,7 @@ class PerformanceMiddleware(BaseHTTPMiddleware):
 
             return response
 
-        except Exception as e:
+        except Exception:
             duration = time.time() - start_time
             logger.error(
                 f"Request failed after {duration:.3f}s",

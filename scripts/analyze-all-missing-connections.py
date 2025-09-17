@@ -8,9 +8,8 @@ Analyze ALL missing connections and generate a comprehensive fix plan.
 
 import json
 import re
-from pathlib import Path
 from collections import defaultdict
-from typing import Dict, List, Any
+from typing import Any
 
 
 def extract_connections() ->Any:
@@ -118,7 +117,7 @@ def generate_documentation(plan: Any, missing_by_service: Any) ->Any:
     """Generate comprehensive documentation."""
     doc = []
     doc.append('# API Connection Fix Implementation Plan')
-    doc.append(f'\n## Summary')
+    doc.append('\n## Summary')
     doc.append(
         f"- **Total Missing Endpoints**: {plan['summary']['total_missing']}")
     doc.append(
@@ -126,7 +125,7 @@ def generate_documentation(plan: Any, missing_by_service: Any) ->Any:
     doc.append(
         f"- **Backend Endpoints to Create**: {plan['summary']['endpoints_to_create']}",
         )
-    doc.append(f'\n## Implementation by Router')
+    doc.append('\n## Implementation by Router')
     for router in plan['implementation_order']:
         router_info = plan['by_service'][router]
         doc.append(f"\n### {router}.py ({router_info['count']} endpoints)")
@@ -137,7 +136,7 @@ def generate_documentation(plan: Any, missing_by_service: Any) ->Any:
             doc.append(
                 f"| {endpoint['method']} | `{endpoint['path']}` | {endpoint['service']} |",
                 )
-    doc.append(f'\n## Frontend Services Breakdown')
+    doc.append('\n## Frontend Services Breakdown')
     for service, endpoints in sorted(missing_by_service.items()):
         doc.append(f'\n### {service} ({len(endpoints)} endpoints)')
         for endpoint in endpoints:

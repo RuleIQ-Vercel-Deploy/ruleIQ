@@ -5,8 +5,6 @@ Activate YOLO mode and start autonomous RuleIQ workflow.
 import asyncio
 import json
 import importlib.util
-from pathlib import Path
-from datetime import datetime
 
 # Load YOLO system
 spec = importlib.util.spec_from_file_location('yolo_system', 'yolo-system.py')
@@ -18,19 +16,19 @@ async def activate_and_start():
     print("=" * 70)
     print("🚀 ACTIVATING BMAD YOLO SYSTEM FOR RULEIQ")
     print("=" * 70)
-    
+
     # Initialize orchestrator
     orchestrator = yolo_system.YOLOOrchestrator()
-    
+
     # Activate YOLO mode
     await orchestrator.activate()
     print("✅ YOLO Mode: ACTIVE")
     print("✅ Context Refresh: ENABLED")
     print("✅ Autonomous Operation: READY")
-    
+
     # Set initial context for RuleIQ
     print("\n📋 Loading RuleIQ Project Context...")
-    
+
     initial_context = {
         "project": "RuleIQ Compliance Automation Platform",
         "objective": "Complete P0 and P1 priority tasks",
@@ -54,17 +52,17 @@ async def activate_and_start():
             "ci_cd": "GitHub Actions"
         }
     }
-    
+
     # Initialize as PM to start workflow
     orchestrator.state.current_agent = yolo_system.AgentType.PM
     orchestrator.state.current_phase = yolo_system.WorkflowPhase.PLANNING
-    
+
     # Add context to manager
     if orchestrator.context_manager:
         for key, value in initial_context.items():
             priority = (
-                yolo_system.ContextPriority.CRITICAL 
-                if key in ["immediate_priorities", "current_state"] 
+                yolo_system.ContextPriority.CRITICAL
+                if key in ["immediate_priorities", "current_state"]
                 else yolo_system.ContextPriority.HIGH
             )
             orchestrator.context_manager.add_context(
@@ -74,13 +72,13 @@ async def activate_and_start():
                 "pm"
             )
         print(f"✅ Loaded {len(initial_context)} context items")
-    
+
     # Make initial planning decisions
     print("\n🤖 Making Initial Decisions...")
-    
+
     decisions = {
         "approach": orchestrator.make_decision(
-            "fix_approach", 
+            "fix_approach",
             ["incremental_fixes", "complete_rewrite", "hybrid_approach"],
             {"priority": "Quick fixes for P0 issues"}
         ),
@@ -95,13 +93,13 @@ async def activate_and_start():
             {"team_size": "multi-agent", "urgency": "high"}
         )
     }
-    
+
     for key, value in decisions.items():
         print(f"   • {key}: {value}")
-    
+
     # Create first handoff to Architect
     print("\n📦 Creating Handoff: PM → ARCHITECT")
-    
+
     handoff = await orchestrator.handoff(
         to_agent=yolo_system.AgentType.ARCHITECT,
         artifacts={
@@ -114,12 +112,12 @@ async def activate_and_start():
             "next_steps": "Analyze architecture for fixing priority issues"
         }
     )
-    
-    print(f"✅ Handoff Complete!")
+
+    print("✅ Handoff Complete!")
     print(f"   • To: {handoff.to_agent.value}")
     print(f"   • Context Items: {len(handoff.context)}")
     print(f"   • Next Action: {handoff.next_action}")
-    
+
     # Display status
     status = orchestrator.get_status()
     print("\n" + "=" * 70)
@@ -129,12 +127,12 @@ async def activate_and_start():
     print(f"Phase: {status['phase']}")
     print(f"Current Agent: {status['current_agent']}")
     print(f"Decisions Made: {status['decisions_made']}")
-    
+
     if 'context' in status:
-        print(f"\n💾 Context Manager:")
+        print("\n💾 Context Manager:")
         print(f"   Total Items: {status['context']['total_items']}")
         print(f"   Total Tokens: {status['context']['total_tokens']}")
-    
+
     print("\n" + "=" * 70)
     print("🎯 AUTONOMOUS WORKFLOW STARTED!")
     print("=" * 70)
@@ -146,10 +144,10 @@ async def activate_and_start():
     print("  4. Fix RuleIQ priority issues")
     print("\nMonitor progress with: python3 monitor.py")
     print("=" * 70)
-    
+
     # Save state
     orchestrator._save_state()
-    
+
     return orchestrator
 
 if __name__ == "__main__":

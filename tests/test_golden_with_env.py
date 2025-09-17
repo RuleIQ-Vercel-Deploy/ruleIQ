@@ -63,13 +63,13 @@ def main():
         result = ingestion.ingest_from_file(str(sample_file))
 
         if result["success"]:
-            print(f"✅ Ingestion successful!")
+            print("✅ Ingestion successful!")
             print(f"   - Documents processed: {result['documents_processed']}")
             print(f"   - Chunks created: {result['chunks_created']}")
             if result.get("embeddings_generated"):
                 print(f"   - Embeddings generated: {result['embeddings_generated']}")
         else:
-            print(f"❌ Ingestion failed!")
+            print("❌ Ingestion failed!")
             for error in result.get("errors", []):
                 print(f"   - {error}")
             return 1

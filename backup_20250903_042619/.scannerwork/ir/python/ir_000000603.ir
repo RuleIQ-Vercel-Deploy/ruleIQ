@@ -1,5 +1,0 @@
-
-/&"Return the retriever's system prompt"strself} }("@.
-,
- (!"#get-field# SYSTEM_PROMPT:
- (!*:/home/omar/Documents/ruleIQ/services/graphrag_retriever.py

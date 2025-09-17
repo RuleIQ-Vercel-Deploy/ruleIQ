@@ -535,7 +535,7 @@ class TestComprehensiveAPIWorkflows:
         headers = test_user_with_token["headers"]
 
         # Test 1: Invalid resource access
-        response = await async_client.get(f"/assessments/invalid-uuid", headers=headers)
+        response = await async_client.get("/assessments/invalid-uuid", headers=headers)
         assert response.status_code == 404
         error_data = response.json()
         assert "detail" in error_data

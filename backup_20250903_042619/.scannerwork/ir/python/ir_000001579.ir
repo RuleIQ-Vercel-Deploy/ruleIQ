@@ -1,29 +1,0 @@
-
-
-"/\\{[^}]+\\}"str
-"/\\$\\{[^}]+\\}"str
-"/[^/]+"str
-;2"Check if paths match with parameter substitution"str
-"/\\d+"strself
-‡ ‡(frontend_path
-‡ ‡(,backend_path
-‡. ‡(?"Û2
-0
-
-‰ ‰(Cfrontend_pattern"	
-resub:2
-0
-
-Š ‹(	frontend_pattern"	
-resub:1
-/
-
-Œ Œ(Hbackend_pattern"	
-resub:
-,
-*
-
- (2"
-#binop ==#2==:	Bbool
-
- (2*>/home/omar/Documents/ruleIQ/scripts/sonar/fix-api-alignment.py

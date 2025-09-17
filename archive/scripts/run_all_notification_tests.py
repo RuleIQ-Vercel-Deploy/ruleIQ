@@ -10,8 +10,6 @@ logger = logging.getLogger(__name__)
 import asyncio
 import sys
 from pathlib import Path
-from unittest.mock import patch, AsyncMock, MagicMock
-import json
 
 # Add current directory to path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -90,7 +88,7 @@ class TestRunner:
                 else:
                     await method()
 
-                logger.info(f"    ✅ PASSED")
+                logger.info("    ✅ PASSED")
                 self.passed += 1
             except Exception as e:
                 logger.info(f"    ❌ FAILED: {str(e)}")

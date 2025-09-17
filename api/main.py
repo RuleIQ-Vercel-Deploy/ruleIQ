@@ -257,7 +257,7 @@ async def debug_config() ->Dict[str, Any]:
     return {'jwt_secret_first_10': settings.jwt_secret[:10] if settings.
         jwt_secret else None, 'jwt_secret_length': len(settings.jwt_secret) if
         settings.jwt_secret else 0, 'working_directory': os.getcwd(),
-        'env_file_exists': os.path.exists('.env.local'), 'JWT_SECRET_env': 
+        'env_file_exists': os.path.exists('.env.local'), 'JWT_SECRET_env':
         os.getenv('JWT_SECRET')[:10] if os.getenv('JWT_SECRET') else None}
 
 

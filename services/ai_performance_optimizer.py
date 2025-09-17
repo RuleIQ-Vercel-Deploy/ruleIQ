@@ -132,7 +132,7 @@ class AIPerformanceOptimizer:
 
         This would be enhanced with actual quality metrics in production.
         """
-        base_scores = {'gpt-4': 0.95, 'gpt-3.5-turbo': 0.85, 'gemini-pro': 
+        base_scores = {'gpt-4': 0.95, 'gpt-3.5-turbo': 0.85, 'gemini-pro':
             0.9, 'gemini-flash': 0.8}
         base_score = base_scores.get(model_name, 0.75)
         success_rate = model_data.get('successful_requests', 0) / max(

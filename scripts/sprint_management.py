@@ -420,7 +420,7 @@ class SprintManager:
             'total_stories'] if progress['total_stories'] > 0 else 0
         days_elapsed = (datetime.date.today() - sprint.start_date).days
         sprint_duration = (sprint.end_date - sprint.start_date).days
-        expected_completion = (days_elapsed / sprint_duration if 
+        expected_completion = (days_elapsed / sprint_duration if
             sprint_duration > 0 else 0)
         if completion_rate < expected_completion - 0.2:
             progress['recommendations'].append(

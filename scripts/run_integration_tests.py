@@ -32,8 +32,7 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
-import pytest
+from typing import Dict, List, Tuple
 
 
 class IntegrationTestRunner:
@@ -64,7 +63,6 @@ class IntegrationTestRunner:
                 )
             return False
         try:
-            from database.db_setup import init_db
             logger.info('✅ Database connection validated')
         except Exception as e:
             logger.info('❌ Database connection failed: %s' % e)

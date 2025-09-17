@@ -7,9 +7,8 @@ Structured logging implementation with multiple handlers and levels.
 import logging
 import json
 import sys
-import os
 from datetime import datetime, timezone
-from typing import Any, Dict, Optional, Union
+from typing import Optional, Union
 from enum import Enum
 from pathlib import Path
 import traceback

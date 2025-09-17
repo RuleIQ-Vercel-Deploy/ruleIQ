@@ -31,7 +31,7 @@ class SecurityMiddleware(BaseHTTPMiddleware):
         request_id = str(uuid.uuid4())
         request_id_var.set(request_id)
         logger.info('Request started', extra={'request_id': request_id,
-            'method': request.method, 'path': request.url.path, 'client': 
+            'method': request.method, 'path': request.url.path, 'client':
             request.client.host if request.client else 'unknown',
             'user_agent': request.headers.get('user-agent', 'unknown')})
         response = await call_next(request)

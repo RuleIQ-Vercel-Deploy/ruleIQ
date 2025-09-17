@@ -34,7 +34,7 @@ total_errors = 0
 for test_dir in test_dirs:
     if not os.path.exists(test_dir):
         continue
-        
+
     print(f"\n📁 Testing: {test_dir}")
     try:
         result = subprocess.run(
@@ -43,9 +43,9 @@ for test_dir in test_dirs:
             text=True,
             timeout=30,
         )
-        
+
         output = result.stdout + result.stderr
-        
+
         # Parse results
         for line in output.split('\n'):
             if 'passed' in line:
@@ -90,9 +90,9 @@ for test_dir in test_dirs:
                                 break
                             except (ValueError, KeyError, IndexError):
                                 pass
-                                
+
     except subprocess.TimeoutExpired:
-        print(f"  ⏱️  Timeout - tests took too long")
+        print("  ⏱️  Timeout - tests took too long")
     except (ValueError, KeyError, IndexError) as e:
         print(f"  ⚠️  Error: {e}")
 

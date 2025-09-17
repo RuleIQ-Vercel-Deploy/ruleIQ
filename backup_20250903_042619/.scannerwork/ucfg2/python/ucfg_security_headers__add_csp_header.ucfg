@@ -1,303 +1,0 @@
-
-:security_headers.SecurityHeadersMiddleware._add_csp_headerF
-:/home/omar/Documents/ruleIQ/middleware/security_headers.py ("2*
-13
-® ®(7sq
-
-® ®(-
-%15*%
-
-__unknown_file (	
-
-value*'
-
-__unknown_file (	
-{nonce}2__contains__*
-14
-15*ø
-14
-¯ ¯(NXV
-
-¯4 ¯(M
-%12*%
-
-__unknown_file (	
-
-value2format:
-nonce	
-
-nonce
-
-¯ ¯(N
-%13"list.append*0
-
-__unknown_file (
-
-processed_values*#
-
-__unknown_file (
-
-%122append*
-13
-11*¡
-15
-± ±(:„
-
-± ±(:
-%14"list.append*0
-
-__unknown_file (
-
-processed_values*%
-
-__unknown_file (	
-
-value2append*
-13
-11*†
-16
-¬ ¬()
-
-¬' ¬()
-%16"listM
-K
-
-¬ ¬()
-processed_values"__id*#
-
-__unknown_file (
-
-%16*
-13
-11*¦
-17
-´ ´(4†ƒ
-
-´ ´(4
-%17"list.append*.
-
-__unknown_file (
-
-csp_directives*)
-
-__unknown_file (
-
-	directive2append*
-16
-17
-8*Ä
-18
-¨ ¨(
-
-¨ ¨(
-%18"listK
-I
-
-¨ ¨(
-csp_directives"__id*#
-
-__unknown_file (
-
-%18x
-v
-
-©% ©(5
-%19"__id*[
-
-__unknown_file (?*=,
-*security_headers.SecurityHeadersMiddleware"
-default_cspA?
-
-©% ©(=
-%20*#
-
-__unknown_file (
-
-%192items*
-16
-17
-8*‘
-2
-ž ¤(w
-u
-
-¥ ¥(
-%21"__id*Z
-
-__unknown_file (>*<,
-*security_headers.SecurityHeadersMiddleware"
-
-custom_csp*
-5
-18*;
-3
-security_headers.py"
-¾ ¾(
-implicit return*§
-4
-¼ ¼(@Q
-O
-
-¼ ¼(
-%2"__id*5
-
-__unknown_file (*
-
-
-response"	
-headers½º
-
-¼ ¼(@
-%1"dict.__setitem__*"
-
-__unknown_file (
-
-%2*7
-
-__unknown_file (
-Content-Security-Policy**
-
-__unknown_file (
-
-
-csp_header2__setitem__*
-3*Ô
-5
-¦ ¦((v
-t
-
-¦ ¦((
-%3"__id*Z
-
-__unknown_file (>*<,
-*security_headers.SecurityHeadersMiddleware"
-
-custom_cspF
-D
-
-¦ ¦((
-
-csp_header"__id*"
-
-__unknown_file (
-
-%3*
-4*Ö
-6
-º º(2xv
-
-º º(2
-%4"str.join*"
-
-__unknown_file (
-; *.
-
-__unknown_file (
-
-csp_directives2joinF
-D
-
-º º(2
-
-csp_header"__id*"
-
-__unknown_file (
-
-%4*
-4*à
-7
-¸ ¸(Fv
-t
-
-¸4 ¸(C
-%5"__id*Z
-
-__unknown_file (>*<,
-*security_headers.SecurityHeadersMiddleware"
-
-report_uriS
-Q
-
-¸& ¸(E
-%6"__concat*
-
-¸( ¸(3
-report-uri *
-
-¸4 ¸(C
-
-%5}{
-
-¸ ¸(F
-%7"list.append*.
-
-__unknown_file (
-
-csp_directives*"
-
-__unknown_file (
-
-%62append*
-6*
-8
-· ·(v
-t
-
-· ·(
-%8"__id*Z
-
-__unknown_file (>*<,
-*security_headers.SecurityHeadersMiddleware"
-
-report_uri*
-6
-7*‚
-11
-² ²(Vyw
-
-²9 ²(S
-%9"str.join*!
-
-__unknown_file (
- *0
-
-__unknown_file (
-
-processed_values2joing
-e
-
-²* ²(U
-%10"__concat*
-
-²- ²(6
-
-	directive*
-
-²7 ²(8
- *
-
-²9 ²(S
-
-%9}
-
-² ²(V
-%11"list.append*.
-
-__unknown_file (
-
-csp_directives*#
-
-__unknown_file (
-
-%102append*
-16
-17
-8:
-
- (0
-
-response:
-
-2 (M
-nonceB.,
-*security_headers.SecurityHeadersMiddlewareH

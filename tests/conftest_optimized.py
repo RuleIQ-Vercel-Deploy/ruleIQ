@@ -38,17 +38,17 @@ def sqlite_engine():
         poolclass=StaticPool,
         echo=False  # Set to True for debugging
     )
-    
+
     # Enable foreign key constraints in SQLite
     @event.listens_for(engine, "connect")
     def set_sqlite_pragma(dbapi_conn, connection_record):
         cursor = dbapi_conn.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.close()
-    
+
     # Create all tables
     Base.metadata.create_all(engine)
-    
+
     return engine
 
 
@@ -62,7 +62,7 @@ def fast_db_session(sqlite_engine) -> Generator[Session, None, None]:
     """
     connection = sqlite_engine.connect()
     transaction = connection.begin()
-    
+
     # Configure session with connection
     SessionLocal = sessionmaker(
         autocommit=False,
@@ -70,17 +70,17 @@ def fast_db_session(sqlite_engine) -> Generator[Session, None, None]:
         bind=connection
     )
     session = SessionLocal()
-    
+
     # Begin nested transaction for additional safety
     nested = connection.begin_nested()
-    
+
     @event.listens_for(session, "after_transaction_end")
     def restart_savepoint(session, transaction):
         if transaction.nested and not transaction._parent.nested:
             nested = connection.begin_nested()
-    
+
     yield session
-    
+
     # Rollback and cleanup
     session.close()
     transaction.rollback()
@@ -95,7 +95,7 @@ def postgres_engine():
     Uses real PostgreSQL with optimized pool settings.
     """
     database_url = os.getenv("TEST_DATABASE_URL", "postgresql://test:test@localhost/test_ruleiq")
-    
+
     engine = create_engine(
         database_url,
         pool_size=5,
@@ -103,10 +103,10 @@ def postgres_engine():
         pool_pre_ping=True,
         echo=False
     )
-    
+
     # Create schema if needed
     Base.metadata.create_all(engine)
-    
+
     return engine
 
 
@@ -117,16 +117,16 @@ def integration_db_session(postgres_engine) -> Generator[Session, None, None]:
     """
     connection = postgres_engine.connect()
     transaction = connection.begin()
-    
+
     SessionLocal = sessionmaker(
         autocommit=False,
         autoflush=False,
         bind=connection
     )
     session = SessionLocal()
-    
+
     yield session
-    
+
     session.close()
     transaction.rollback()
     connection.close()
@@ -232,11 +232,11 @@ def mock_ai_client():
     class MockAIClient:
         def __init__(self):
             self.call_count = 0
-            
+
         def generate_response(self, prompt: str) -> str:
             self.call_count += 1
             return f"Mock response {self.call_count} for: {prompt[:50]}"
-        
+
         def analyze_compliance(self, text: str) -> Dict[str, Any]:
             return {
                 "compliant": True,
@@ -244,7 +244,7 @@ def mock_ai_client():
                 "issues": [],
                 "recommendations": ["Continue current practices"]
             }
-    
+
     return MockAIClient()
 
 
@@ -259,28 +259,28 @@ def redis_mock():
         def __init__(self):
             self.store = {}
             self.ttls = {}
-            
+
         def get(self, key: str):
             return self.store.get(key)
-        
+
         def set(self, key: str, value: Any, ex: int = None):
             self.store[key] = value
             if ex:
                 self.ttls[key] = time.time() + ex
             return True
-        
+
         def delete(self, key: str):
             self.store.pop(key, None)
             self.ttls.pop(key, None)
             return True
-        
+
         def exists(self, key: str):
             if key in self.ttls:
                 if time.time() > self.ttls[key]:
                     self.delete(key)
                     return False
             return key in self.store
-    
+
     return MockRedis()
 
 
@@ -292,12 +292,12 @@ def measure_test_duration(request):
     Helps identify slow tests for optimization.
     """
     start_time = time.time()
-    
+
     def finalizer():
         duration = time.time() - start_time
         test_name = request.node.name
         test_durations[test_name] = duration
-        
+
         # Mark slow tests
         if duration > 1.0:
             request.node.add_marker(pytest.mark.slow)
@@ -305,7 +305,7 @@ def measure_test_duration(request):
             request.node.add_marker(pytest.mark.medium)
         else:
             request.node.add_marker(pytest.mark.fast)
-    
+
     request.addfinalizer(finalizer)
 
 
@@ -318,14 +318,14 @@ def configure_test_environment():
     import logging
     logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
     logging.getLogger("urllib3").setLevel(logging.WARNING)
-    
+
     # Set test environment variables
     os.environ["TESTING"] = "true"
     os.environ["DATABASE_POOL_SIZE"] = "5"
     os.environ["REDIS_POOL_SIZE"] = "5"
-    
+
     yield
-    
+
     # Cleanup
     os.environ.pop("TESTING", None)
 
@@ -339,10 +339,10 @@ def temporary_database():
     """
     engine = create_engine("sqlite:///:memory:")
     Base.metadata.create_all(engine)
-    
+
     SessionLocal = sessionmaker(bind=engine)
     session = SessionLocal()
-    
+
     try:
         yield session
     finally:
@@ -365,17 +365,17 @@ def print_performance_summary():
     """Print test performance summary."""
     if not test_durations:
         return
-    
+
     total_time = sum(test_durations.values())
     avg_time = total_time / len(test_durations)
-    
+
     print(f"\n{'='*60}")
-    print(f"Test Performance Summary")
+    print("Test Performance Summary")
     print(f"{'='*60}")
     print(f"Total tests: {len(test_durations)}")
     print(f"Total time: {total_time:.2f}s")
     print(f"Average time: {avg_time:.4f}s")
-    print(f"\nSlowest tests:")
-    
+    print("\nSlowest tests:")
+
     for test_name, duration in get_slowest_tests():
         print(f"  {test_name}: {duration:.4f}s")

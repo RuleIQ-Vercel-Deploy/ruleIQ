@@ -316,7 +316,7 @@ class TestCustomTagging:
 
     def test_filter_query_creation(self):
         """Test creation of filter queries for LangSmith."""
-        from datetime import datetime, timedelta
+        from datetime import timedelta
         start_date = datetime(2024, 1, 1)
         end_date = datetime(2024, 1, 31)
         query = LangSmithConfig.create_filter_query(session_id='sess123',

@@ -1,7 +1,6 @@
 """Verify API alignment after fixes."""
 import logging
 logger = logging.getLogger(__name__)
-from typing import Any, Dict, List, Optional
 import re
 from pathlib import Path
 from collections import defaultdict

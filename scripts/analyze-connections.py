@@ -6,7 +6,6 @@ import logging
 logger = logging.getLogger(__name__)
 import json
 import re
-from pathlib import Path
 from collections import Counter
 
 

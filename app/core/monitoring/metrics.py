@@ -5,9 +5,9 @@ Metrics collection and monitoring implementation.
 """
 import time
 import asyncio
-from typing import Any, Dict, List, Optional, Union, AsyncGenerator, Generator
-from datetime import datetime, timedelta, timezone
-from collections import defaultdict, deque
+from typing import Any, Dict, List, Optional, AsyncGenerator, Generator
+from datetime import datetime, timezone
+from collections import deque
 from contextlib import contextmanager, asynccontextmanager
 import psutil
 import threading

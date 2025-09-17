@@ -56,7 +56,7 @@ def main() -> None:
             total_fixed += 1
             logger.info(f'  ✅ Fixed {len(file_fixes)} issues')
         else:
-            logger.info(f'  ⚠️  No changes made')
+            logger.info('  ⚠️  No changes made')
     logger.info('\n' + '=' * 60)
     logger.info(f'✅ Fixed files: {total_fixed}/{len(fixes_by_file)}')
     logger.info('=' * 60)

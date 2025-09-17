@@ -6,7 +6,7 @@ HTTP_OK = 200
 
 logger = logging.getLogger(__name__)
 from __future__ import annotations
-from typing import Any, Dict, List, Optional
+from typing import Any
 import requests
 import json
 BASE_URL = 'http://localhost:8000'

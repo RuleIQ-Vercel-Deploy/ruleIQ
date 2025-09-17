@@ -14,7 +14,7 @@ import sys
 import json
 import subprocess
 from datetime import datetime
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Tuple
 import re
 from urllib.parse import urlparse
 
@@ -126,7 +126,7 @@ class DopplerSecretsVerifier:
         environments = ['dev', 'staging', 'production']
         config_results = []
         for env in environments:
-            config = {'environment': env, 'exists': False, 'accessible': 
+            config = {'environment': env, 'exists': False, 'accessible':
                 False, 'secret_count': 0, 'locked': False}
             success, output = self.run_doppler_command(['configs',
                 '--project', 'ruleiq', '--json'])
@@ -248,7 +248,7 @@ Each verification was performed standalone without relying on cached or historic
             'format_valid'])
         has_value = sum(1 for r in self.verification_results if r[
             'value_present'])
-        report += f'\n## 6. Verification Metrics\n\n'
+        report += '\n## 6. Verification Metrics\n\n'
         report += f'- **Total Secrets**: {total_secrets}\n'
         report += f"""- **Accessible**: {accessible}/{total_secrets} ({accessible * 100 // total_secrets}%)
 """

@@ -92,7 +92,7 @@ class IQNeo4jIntegration:
                 'employee_count', 0)})
             async for record in result:
                 base_risk = record['base_risk'] or 5
-                enforcement_adjustment = min(record['enforcement_count'] * 
+                enforcement_adjustment = min(record['enforcement_count'] *
                     0.5, 3)
                 adjusted_risk = min(base_risk + enforcement_adjustment, 10)
                 regulation = {'id': record['regulation_id'], 'title':

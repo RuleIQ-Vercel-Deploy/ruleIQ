@@ -8,7 +8,6 @@ Implements MFA, password complexity, account lockout, and secure session managem
 import secrets
 import hashlib
 import base64
-import time
 from datetime import datetime, timedelta, timezone
 from typing import Optional, Dict, Any, Tuple
 import pyotp
@@ -16,11 +15,9 @@ import bcrypt
 import jwt
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-from sqlalchemy import and_, or_
 import re
 
 from config.settings import settings
-from database.user import User
 from services.cache_service import CacheService
 
 
@@ -305,7 +302,7 @@ class AuthenticationService:
         """Invalidate all sessions for a user"""
         # This would require tracking sessions per user
         # Implementation depends on session storage strategy
-        pattern = f"session:*"
+        pattern = "session:*"
         # Would need to iterate and check user_id in session data
         # Simplified for now
         pass

@@ -1,33 +1,0 @@
-
-'"Fix React unescaped entities"str
-"": "&ldquo;", \n        "str
-"'"str
-
-"""str
-"&apos;"str
-	"&rdquo;"str
-"&quot;"str
-) "(>\\s*[^<]*?)([\\\'"""])(.*?<)"strcontent   ("ª!
-
-+" +(0"#unknown-value#2
-0
-" #(replacements"#new-object#Bdict 
-
-" "(!"	#map-set#: 
-
-"# "(G	"	#map-set#: 
-
-# #("	#map-set#:
-+
-)
-$ $(2jsx_pattern"#id#:Bstr(
-&
-& +(%closure"#new-object#.
-,
-& +("#set-field# replacements:+
-)
-& +("?python-partial-apply?:'
-%
-+ +(:content"	
-resub:
-, ,(*5/home/omar/Documents/ruleIQ/scripts/sonar/fix-lint.py

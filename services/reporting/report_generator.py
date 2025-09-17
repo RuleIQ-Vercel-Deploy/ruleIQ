@@ -34,7 +34,7 @@ class ReportGenerator:
         """Generate a report based on type and parameters."""
         try:
             profile_res = await self.db.execute(select(BusinessProfile).
-                where(and_(BusinessProfile.id == business_profile_id, 
+                where(and_(BusinessProfile.id == business_profile_id,
                 BusinessProfile.user_id == user_id)))
             profile = profile_res.scalars().first()
             if not profile:
@@ -175,9 +175,9 @@ class ReportGenerator:
             total_evidence = total_evidence_res.scalar_one()
             active_evidence = active_evidence_res.scalar_one()
             total_policies = policies_res.scalar_one()
-            evidence_score = (active_evidence / total_evidence * 100 if 
+            evidence_score = (active_evidence / total_evidence * 100 if
                 total_evidence > 0 else 0)
-            policy_score = (100 if total_policies > DEFAULT_RETRIES else 
+            policy_score = (100 if total_policies > DEFAULT_RETRIES else
                 total_policies / 5 * 100)
             overall_score = (evidence_score + policy_score) / 2
             return {'overall_compliance_score': round(overall_score, 2),

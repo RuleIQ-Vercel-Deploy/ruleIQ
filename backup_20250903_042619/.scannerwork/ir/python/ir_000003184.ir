@@ -1,1844 +1,0 @@
-
-á	"/health"str
-ê"Audit Export"str
-L"name"str
-$Ö"/api/security/csp-report"str
-*ﬂ "Foundation Evidence Collection"str
-û"/api/v1/compliance"str
-ü"/api/v1/auth"str
-ﬁ"/api/v1/agentic-rag"str
-˘EÔ"\n    **ruleIQ API** provides comprehensive compliance automation for UK Small and Medium Businesses (SMBs).\n\n    ## Features\n    - ü§ñ **AI-Powered Assessments** with 6 specialized AI tools\n    - üìã **Policy Generation** with 25+ compliance frameworks\n    - üìÅ **Evidence Management** with automated validation\n    - üîê **RBAC Security** with JWT authentication\n    - üìä **Real-time Analytics** and compliance scoring\n\n    ## Authentication\n    All endpoints require JWT bearer token authentication except `/api/auth/*` endpoints.\n\n    Get your access token via `/api/auth/token` endpoint.\n\n    ## Rate Limiting\n    - **General endpoints**: 100 requests/minute\n    - **AI endpoints**: 3-20 requests/minute (tiered)\n    - **Authentication**: 5 requests/minute\n\n    ## Support\n    - **Documentation**: See `/docs/api/` for detailed guides\n    - **Interactive Testing**: Use this Swagger UI to test endpoints\n    - **Status**: Production-ready (98% complete, 671+ tests)\n    "str
-"Ø"Performance Monitoring"str
-c"Production server"str
-è"Evidence Collection"str
- Ø"Readiness Assessment"str
-œ
-"IQ Agent"str
-œ"Users"str
-Ó"/api/v1/assessments"str
-ﬁ"/api/v1/policies"str
-û"/api/v1/security"str
-^"Development server"str
-à"/api/v1/auth/login"str
-â"/api/test-utils"str
-ø
-"Webhooks"str
-!S"api-support@ruleiq.com"str
-
-i0int
-otruebool
-ü
-"Security"str
-%ã"/api/v1/freemium/sessions"str
-ﬂ"Business Profiles"str
-!æ"/api/v1/uk-compliance"str
- ü"AI Policy Generation"str
-ﬁ"/api/v1/chat"str
-è"Monitoring"str
- Œ"/api/v1/integrations"str
- ["http://localhost:8000"str
-è"AI Cost WebSocket"str
-Ó"/api/v1/dashboard"str
-"ä"/api/v1/freemium/leads"str
-ü"Compliance Status"str
-Ñfalsebool
-H"/redoc"str
-!œ"Compliance Frameworks"str
-Œ"/api/v1/users"str
-ˇ
-"Evidence"str
-Œ"/api/v1/iq-agent"str
-Ô"Dashboard"str
-Æ"/api/v1/performance"str
-é"/api/v1/monitoring"str
-˛"/api/v1/feedback"str
-!a"https://api.ruleiq.com"str
-ˇ"Human Feedback"str
-G"/docs"str
-ﬂ"AI Assistant"str
-˛"/api/v1/evidence"str
-˛"local"str
- Ô"Implementation Plans"str
-œ"üîê Secrets Vault"str
-%X"https://ruleiq.com/license"str
-∫
-"__main__"str
-Ô"Assessments"str
-'é"/api/v1/evidence-collection"str
-ø"RBAC Authentication"str
-¸"test"str
-Ô"AI Cost Monitoring"str
-æ"/api/v1/reports"str
-V"Proprietary"str
-Æ"/api/v1/ai"str
-O"url"str
-I"/openapi.json"str
-ä"Test Utilities"str
-ˇ
-"Payments"str
-Ø"/api/v1/auth/google"str
-%é"/api/v1/ai/cost-websocket"str
-"P"https://docs.ruleiq.com"str
-œ"Integrations"str
-F"2.0.0"str
-Ó"/api/v1/ai/cost"str
-ø"AI Optimization"str
-Ä	"/api/v1"str
-˚"development"str
-û"/api/v1/ai/policies"str
-+D""ruleIQ Compliance Automation API"str
-#Ø"AI Assessment Assistant"str
-˝	"testing"str
-ø
-"main:app"str
-Æ"/api/v1/readiness"str
-∞"Google OAuth"str
-"Ó"/api/v1/implementation"str
-Ø
-"API Keys"str
-'ﬁ"/api/v1/foundation/evidence"str
-Œ"/api/v1/frameworks"str
-ü"Freemium Assessment"str
-p"*"str
-]"description"str
-%ﬁ"/api/v1/business-profiles"str
-NoneNoneType
-M"ruleIQ API Support"str
-¯"production"str
-#æ"/api/v1/ai/optimization"str
-ﬂ
-"Policies"str
-ø"UK Compliance"str
-Å"Usage Dashboard"str
-˛"/api/v1/payments"str
-˜"ENVIRONMENT"str
-ﬂ"Agentic RAG"str
-R"email"str
-!â"/api/v1/auth/register"str
-†"Authentication"str
-ø	"Reports"strflist"øË$
-"
-
-Î Î(Ω"#unknown-value#$
-"
-
-Î Î(º"#unknown-value##
-!
-
-@à	 @(ê	J"#unknown-value#-
-+
- ("annotations"?python-unknown?%
-#
- (7Any"?python-unknown?0
-.
- (7AsyncGenerator"?python-unknown?&
-$
- (7Dict"?python-unknown?+
-)
- (7	Generator"?python-unknown?5
-3
- (*asynccontextmanager"?python-unknown?)
-'
- (<Depends"?python-unknown?)
-'
- (<FastAPI"?python-unknown?/
--
- (<	HTTPException"?python-unknown?)
-'
- (<
-Request"?python-unknown?0
-.
- (2CORSMiddleware"?python-unknown?9
-7
- (9get_current_active_user"?python-unknown?:
-8
- (Aerror_handler_middleware"?python-unknown?5
-3
-	 	(9RequestIDMiddleware"?python-unknown?.
-,
-
- 
-(‹agentic_rag"?python-unknown?1
-/
-
- 
-(‹ai_assessments"?python-unknown?5
-3
-
- 
-(‹ai_cost_monitoring"?python-unknown?4
-2
-
- 
-(‹ai_cost_websocket"?python-unknown?2
-0
-
- 
-(‹ai_optimization"?python-unknown?,
-*
-
- 
-(‹	ai_policy"?python-unknown?+
-)
-
- 
-(‹api_keys"?python-unknown?.
-,
-
- 
-(‹assessments"?python-unknown?'
-%
-
- 
-(‹auth"?python-unknown?4
-2
-
- 
-(‹business_profiles"?python-unknown?'
-%
-
- 
-(‹chat"?python-unknown?-
-+
-
- 
-(‹
-compliance"?python-unknown?,
-*
-
- 
-(‹	dashboard"?python-unknown?+
-)
-
- 
-(‹evidence"?python-unknown?6
-4
-
- 
-(‹evidence_collection"?python-unknown?+
-)
-
- 
-(‹feedback"?python-unknown?6
-4
-
- 
-(‹foundation_evidence"?python-unknown?-
-+
-
- 
-(‹ 
-frameworks"?python-unknown?+
-)
-
- 
-(‹!freemium"?python-unknown?.
-,
-
- 
-(‹"google_auth"?python-unknown?1
-/
-
- 
-(‹#implementation"?python-unknown?/
--
-
- 
-(‹$integrations"?python-unknown?+
-)
-
- 
-(‹%iq_agent"?python-unknown?-
-+
-
- 
-(‹&
-monitoring"?python-unknown?*
-(
-
- 
-(‹'payment"?python-unknown?9
-7
-
- 
-(‹(performance_monitoring"?python-unknown?+
-)
-
- 
-(‹)policies"?python-unknown?,
-*
-
- 
-(‹*	readiness"?python-unknown?*
-(
-
- 
-(‹+reports"?python-unknown?+
-)
-
- 
-(‹,security"?python-unknown?0
-.
-
- 
-(‹-secrets_vault"?python-unknown?-
-+
-
- 
-(‹.
-test_utils"?python-unknown?0
-.
-
- 
-(‹/uk_compliance"?python-unknown?(
-&
-
- 
-(‹0users"?python-unknown?+
-)
-
- 
-(‹1webhooks"?python-unknown?.
-,
- (*2admin_router"?python-unknown?+
-)
- (!3	rbac_auth"?python-unknown?1
-/
- (<4APIInfoResponse"?python-unknown?5
-3
- (<5HealthCheckResponse"?python-unknown?,
-*
- (;6
-get_logger"?python-unknown?/
--
- (;7setup_logging"?python-unknown?*
-(
- ($8settings"?python-unknown?)
-'
- (39init_db"?python-unknown?.
-,
- (3:get_async_db"?python-unknown?&
-$
- (;User"?python-unknown?4
-2
- (<"&
-config.logging_configsetup_logging!
-
- (="#unknown-value#>
-<
-	 (>logger"#
-config.logging_config
-get_logger:=$
-"
- @?%closure"#new-object#!
-
- @@"#set-field# Any:?$
-"
- @A"#set-field# logger:?>&
-$
- @B"#set-field# settings:?8'
-%
- @C"?python-partial-apply?:?&
-$
-
-@ö	 @(˝	K"#new-object#Bdict"
- 
-
-@õ	 @(∑	N"	#map-set#:KLM"
- 
-
-@π	 @(Ÿ	Q"	#map-set#:KOP"
- 
-
-@€	 @(¸	T"	#map-set#:KRS&
-$
-
-@å
- @(»
-U"#new-object#Bdict"
- 
-
-@ç
- @(¢
-W"	#map-set#:ULV"
- 
-
-@§
- @(«
-Y"	#map-set#:UOX&
-$
-
-@”
- @(òZ"#new-object#Bdict"
- 
-
-@‘
- @(Ú
-\"	#map-set#:ZO["
- 
-
-@Ù
- @(ó_"	#map-set#:Z]^&
-$
-
-@ö @(ﬂ`"#new-object#Bdict"
- 
-
-@õ @(∫b"	#map-set#:`Oa"
- 
-
-@º @(ﬁd"	#map-set#:`]c)
-'
-
-@“
- @(‡e"#unknown-value#Blist(
-&
-
-@“
- @(‡g"
-#is-exact#:efBbool
-
-
-@“
- @(‡h"
-#assume#:g:
-8
-
-@“
- @(‡j"#set-field# __collection_size:eiBint(
-&
-
-@“
- @(‡k"#array-add-last#:eZ(
-&
-
-@“
- @(‡l"#array-add-last#:e`I
-G
-	@ @(·mapp"	FastAPI:
-DEFGHIJKUeBfastapi.applications.FastAPI5
-3
-A1 A(Nn"" #get-field# cors_allowed_origins:8'
-%
-Av A({q"#unknown-value#Blist&
-$
-Av A({r"
-#is-exact#:qfBbool
-
-Av A({s"
-#assume#:r8
-6
-Av A({t"#set-field# __collection_size:qiBint&
-$
-Av A({u"#array-add-last#:qp)
-'
-
-Aã A(êv"#unknown-value#Blist(
-&
-
-Aã A(êw"
-#is-exact#:vfBbool
-
-
-Aã A(êx"
-#assume#:w:
-8
-
-Aã A(êy"#set-field# __collection_size:viBint(
-&
-
-Aã A(êz"#array-add-last#:vp3
-1
-A A(ë{"?python-unknown?:mnoqvBNoneType.
-,
-B B('|"?python-unknown?:mBNoneType#
-!
-C C(0}"?python-unknown?:0
-.
-D D(9~RBACMiddleware"?python-unknown?/
--
-E E(="?python-unknown?:m~oBNoneType8
-6
-F F(=Ärate_limit_middleware"?python-unknown?%
-#
-G G(-Å"?python-unknown?:Ä5
-3
-H H(=ÇSecurityMiddleware"?python-unknown?<
-:
-I I(AÉSecurityHeadersMiddleware"?python-unknown?7
-5
-J J(éÜ"?python-unknown?:	mÉoÑoÖBNoneType*
-(
-
-K≠ K(∏å"#unknown-value#Blist*
-(
-
-K≠ K(∏ç"
-#is-exact#:åfBbool!
-
-
-K≠ K(∏é"
-#assume#:ç<
-:
-
-K≠ K(∏è"#set-field# __collection_size:åiBint*
-(
-
-K≠ K(∏ê"#array-add-last#:åG*
-(
-
-K≠ K(∏ë"#array-add-last#:åI+
-)
-
-K≠ K(∏í"#array-add-last#:åá+
-)
-
-K≠ K(∏ì"#array-add-last#:åà+
-)
-
-K≠ K(∏î"#array-add-last#:åâ+
-)
-
-K≠ K(∏ï"#array-add-last#:åä+
-)
-
-K≠ K(∏ñ"#array-add-last#:åãD
-B
-	K K(πósecurity_middleware"#unknown-value#:
-mÑÑoooå%
-#
-L L(+ò"?python-unknown?:ó%
-#
-N Vô%closure"#new-object##
-!
-N Vö"#set-field# app:ôm$
-"
-N Võ"#set-field# Dict:ô#
-!
-N Vú"#set-field# Any:ô)
-'
-N Vù"?python-partial-apply?:ô(
-&
-V V(û"#get-field# router:(
-&
-V< V(N°"#unknown-value#Blist(
-&
-V< V(N¢"
-#is-exact#:°fBbool
-
-V< V(N£"
-#assume#:¢:
-8
-V< V(N§"#set-field# __collection_size:°iBint)
-'
-V< V(N•"#array-add-last#:°† 
-
-V V(O¶"#unknown-value# 
-
-V V(Oß"#unknown-value# 
-
-V V(O®"#unknown-value#&
-$
-V V(O©"#unknown-value#Bbool&
-$
-V V(O™"#unknown-value#Btype 
-
-V V(O´"#unknown-value# 
-
-V V(O¨"#unknown-value#d
-b
-V V(O≠".
-fastapi.applications.FastAPIinclude_router* :mûü°¶ß®©™´¨BNoneTypeH(
-&
-W W(%Æ"#get-field# router:"(
-&
-WJ W(Z±"#unknown-value#Blist(
-&
-WJ W(Z≤"
-#is-exact#:±fBbool
-
-WJ W(Z≥"
-#assume#:≤:
-8
-WJ W(Z¥"#set-field# __collection_size:±iBint)
-'
-WJ W(Zµ"#array-add-last#:±∞ 
-
-W W([∂"#unknown-value# 
-
-W W([∑"#unknown-value# 
-
-W W([∏"#unknown-value#&
-$
-W W([π"#unknown-value#Bbool&
-$
-W W([∫"#unknown-value#Btype 
-
-W W([ª"#unknown-value# 
-
-W W([º"#unknown-value#d
-b
-W W([Ω".
-fastapi.applications.FastAPIinclude_router* :mÆØ±∂∑∏π∫ªºBNoneTypeH(
-&
-X X(#æ"#get-field# router:3(
-&
-XA X(X¿"#unknown-value#Blist(
-&
-XA X(X¡"
-#is-exact#:¿fBbool
-
-XA X(X¬"
-#assume#:¡:
-8
-XA X(X√"#set-field# __collection_size:¿iBint)
-'
-XA X(Xƒ"#array-add-last#:¿ø 
-
-X X(Y≈"#unknown-value# 
-
-X X(Y∆"#unknown-value# 
-
-X X(Y«"#unknown-value#&
-$
-X X(Y»"#unknown-value#Bbool&
-$
-X X(Y…"#unknown-value#Btype 
-
-X X(Y "#unknown-value# 
-
-X X(YÀ"#unknown-value#d
-b
-X X(YÃ".
-fastapi.applications.FastAPIinclude_router* :mæü¿≈∆«»… ÀBNoneTypeH(
-&
-Y Y(Õ"#get-field# router:0(
-&
-Y> Y(G–"#unknown-value#Blist(
-&
-Y> Y(G—"
-#is-exact#:–fBbool
-
-Y> Y(G“"
-#assume#:—:
-8
-Y> Y(G”"#set-field# __collection_size:–iBint)
-'
-Y> Y(G‘"#array-add-last#:–œ 
-
-Y Y(H’"#unknown-value# 
-
-Y Y(H÷"#unknown-value# 
-
-Y Y(H◊"#unknown-value#&
-$
-Y Y(Hÿ"#unknown-value#Bbool&
-$
-Y Y(HŸ"#unknown-value#Btype 
-
-Y Y(H⁄"#unknown-value# 
-
-Y Y(H€"#unknown-value#d
-b
-Y Y(H‹".
-fastapi.applications.FastAPIinclude_router* :mÕŒ–’÷◊ÿŸ⁄€BNoneTypeH(
-&
-Z Z(+›"#get-field# router:(
-&
-ZV Z(k‡"#unknown-value#Blist(
-&
-ZV Z(k·"
-#is-exact#:‡fBbool
-
-ZV Z(k‚"
-#assume#:·:
-8
-ZV Z(k„"#set-field# __collection_size:‡iBint)
-'
-ZV Z(k‰"#array-add-last#:‡ﬂ 
-
-Z Z(lÂ"#unknown-value# 
-
-Z Z(lÊ"#unknown-value# 
-
-Z Z(lÁ"#unknown-value#&
-$
-Z Z(lË"#unknown-value#Bbool&
-$
-Z Z(lÈ"#unknown-value#Btype 
-
-Z Z(lÍ"#unknown-value# 
-
-Z Z(lÎ"#unknown-value#d
-b
-Z Z(lÏ".
-fastapi.applications.FastAPIinclude_router* :m›ﬁ‡ÂÊÁËÈÍÎBNoneTypeH(
-&
-[ [(%Ì"#get-field# router:(
-&
-[J [(Y"#unknown-value#Blist(
-&
-[J [(YÒ"
-#is-exact#:fBbool
-
-[J [(YÚ"
-#assume#:Ò:
-8
-[J [(YÛ"#set-field# __collection_size:iBint)
-'
-[J [(YÙ"#array-add-last#:Ô 
-
-[ [(Zı"#unknown-value# 
-
-[ [(Zˆ"#unknown-value# 
-
-[ [(Z˜"#unknown-value#&
-$
-[ [(Z¯"#unknown-value#Bbool&
-$
-[ [(Z˘"#unknown-value#Btype 
-
-[ [(Z˙"#unknown-value# 
-
-[ [(Z˚"#unknown-value#d
-b
-[ [(Z¸".
-fastapi.applications.FastAPIinclude_router* :mÌÓıˆ˜¯˘˙˚BNoneTypeH2
-0
-\ \(5˝usage_dashboard"?python-unknown?/
--
-\ \(5˛audit_export"?python-unknown?)
-'
-] ]()ˇ"#get-field# router:˝(
-&
-]B ](UÇ"#unknown-value#Blist(
-&
-]B ](UÉ"
-#is-exact#:ÇfBbool
-
-]B ](UÑ"
-#assume#:É:
-8
-]B ](UÖ"#set-field# __collection_size:ÇiBint)
-'
-]B ](UÜ"#array-add-last#:ÇÅ 
-
-] ](Vá"#unknown-value# 
-
-] ](Và"#unknown-value# 
-
-] ](Vâ"#unknown-value#&
-$
-] ](Vä"#unknown-value#Bbool&
-$
-] ](Vã"#unknown-value#Btype 
-
-] ](Vå"#unknown-value# 
-
-] ](Vç"#unknown-value#d
-b
-] ](Vé".
-fastapi.applications.FastAPIinclude_router* :mˇÄÇáàâäãåçBNoneTypeH)
-'
-^ ^(&è"#get-field# router:˛(
-&
-^? ^(Oë"#unknown-value#Blist(
-&
-^? ^(Oí"
-#is-exact#:ëfBbool
-
-^? ^(Oì"
-#assume#:í:
-8
-^? ^(Oî"#set-field# __collection_size:ëiBint)
-'
-^? ^(Oï"#array-add-last#:ëê 
-
-^ ^(Pñ"#unknown-value# 
-
-^ ^(Pó"#unknown-value# 
-
-^ ^(Pò"#unknown-value#&
-$
-^ ^(Pô"#unknown-value#Bbool&
-$
-^ ^(Pö"#unknown-value#Btype 
-
-^ ^(Põ"#unknown-value# 
-
-^ ^(Pú"#unknown-value#d
-b
-^ ^(Pù".
-fastapi.applications.FastAPIinclude_router* :mèÄëñóòôöõúBNoneTypeH(
-&
-_ _("û"#get-field# router:!(
-&
-_; _(R†"#unknown-value#Blist(
-&
-_; _(R°"
-#is-exact#:†fBbool
-
-_; _(R¢"
-#assume#:°:
-8
-_; _(R£"#set-field# __collection_size:†iBint)
-'
-_; _(R§"#array-add-last#:†ü 
-
-_ _(S•"#unknown-value# 
-
-_ _(S¶"#unknown-value# 
-
-_ _(Sß"#unknown-value#&
-$
-_ _(S®"#unknown-value#Bbool&
-$
-_ _(S©"#unknown-value#Btype 
-
-_ _(S™"#unknown-value# 
-
-_ _(S´"#unknown-value#d
-b
-_ _(S¨".
-fastapi.applications.FastAPIinclude_router* :mûÄ†•¶ß®©™´BNoneTypeH(
-&
-` `((≠"#get-field# router:(
-&
-`D `(_∞"#unknown-value#Blist(
-&
-`D `(_±"
-#is-exact#:∞fBbool
-
-`D `(_≤"
-#assume#:±:
-8
-`D `(_≥"#set-field# __collection_size:∞iBint)
-'
-`D `(_¥"#array-add-last#:∞Ø 
-
-` `(`µ"#unknown-value# 
-
-` `(`∂"#unknown-value# 
-
-` `(`∑"#unknown-value#&
-$
-` `(`∏"#unknown-value#Bbool&
-$
-` `(`π"#unknown-value#Btype 
-
-` `(`∫"#unknown-value# 
-
-` `(`ª"#unknown-value#d
-b
-` `(`º".
-fastapi.applications.FastAPIinclude_router* :m≠Æ∞µ∂∑∏π∫ªBNoneTypeH(
-&
-a a()Ω"#get-field# router:(
-&
-aR a(e¿"#unknown-value#Blist(
-&
-aR a(e¡"
-#is-exact#:¿fBbool
-
-aR a(e¬"
-#assume#:¡:
-8
-aR a(e√"#set-field# __collection_size:¿iBint)
-'
-aR a(eƒ"#array-add-last#:¿ø 
-
-a a(f≈"#unknown-value# 
-
-a a(f∆"#unknown-value# 
-
-a a(f«"#unknown-value#&
-$
-a a(f»"#unknown-value#Bbool&
-$
-a a(f…"#unknown-value#Btype 
-
-a a(f "#unknown-value# 
-
-a a(fÀ"#unknown-value#d
-b
-a a(fÃ".
-fastapi.applications.FastAPIinclude_router* :mΩæ¿≈∆«»… ÀBNoneTypeH(
-&
-b b($Õ"#get-field# router: (
-&
-bH b(a–"#unknown-value#Blist(
-&
-bH b(a—"
-#is-exact#:–fBbool
-
-bH b(a“"
-#assume#:—:
-8
-bH b(a”"#set-field# __collection_size:–iBint)
-'
-bH b(a‘"#array-add-last#:–œ 
-
-b b(b’"#unknown-value# 
-
-b b(b÷"#unknown-value# 
-
-b b(b◊"#unknown-value#&
-$
-b b(bÿ"#unknown-value#Bbool&
-$
-b b(bŸ"#unknown-value#Btype 
-
-b b(b⁄"#unknown-value# 
-
-b b(b€"#unknown-value#d
-b
-b b(b‹".
-fastapi.applications.FastAPIinclude_router* :mÕŒ–’÷◊ÿŸ⁄€BNoneTypeH(
-&
-c c("›"#get-field# router:)(
-&
-cD c(P‡"#unknown-value#Blist(
-&
-cD c(P·"
-#is-exact#:‡fBbool
-
-cD c(P‚"
-#assume#:·:
-8
-cD c(P„"#set-field# __collection_size:‡iBint)
-'
-cD c(P‰"#array-add-last#:‡ﬂ 
-
-c c(QÂ"#unknown-value# 
-
-c c(QÊ"#unknown-value# 
-
-c c(QÁ"#unknown-value#&
-$
-c c(QË"#unknown-value#Bbool&
-$
-c c(QÈ"#unknown-value#Btype 
-
-c c(QÍ"#unknown-value# 
-
-c c(QÎ"#unknown-value#d
-b
-c c(QÏ".
-fastapi.applications.FastAPIinclude_router* :m›ﬁ‡ÂÊÁËÈÍÎBNoneTypeH(
-&
-d d((Ì"#get-field# router:#(
-&
-dP d(h"#unknown-value#Blist(
-&
-dP d(hÒ"
-#is-exact#:fBbool
-
-dP d(hÚ"
-#assume#:Ò:
-8
-dP d(hÛ"#set-field# __collection_size:iBint)
-'
-dP d(hÙ"#array-add-last#:Ô 
-
-d d(iı"#unknown-value# 
-
-d d(iˆ"#unknown-value# 
-
-d d(i˜"#unknown-value#&
-$
-d d(i¯"#unknown-value#Bbool&
-$
-d d(i˘"#unknown-value#Btype 
-
-d d(i˙"#unknown-value# 
-
-d d(i˚"#unknown-value#d
-b
-d d(i¸".
-fastapi.applications.FastAPIinclude_router* :mÌÓıˆ˜¯˘˙˚BNoneTypeH(
-&
-e e("˝"#get-field# router:(
-&
-eD e(PÄ"#unknown-value#Blist(
-&
-eD e(PÅ"
-#is-exact#:ÄfBbool
-
-eD e(PÇ"
-#assume#:Å:
-8
-eD e(PÉ"#set-field# __collection_size:ÄiBint)
-'
-eD e(PÑ"#array-add-last#:Äˇ 
-
-e e(QÖ"#unknown-value# 
-
-e e(QÜ"#unknown-value# 
-
-e e(Qá"#unknown-value#&
-$
-e e(Qà"#unknown-value#Bbool&
-$
-e e(Qâ"#unknown-value#Btype 
-
-e e(Qä"#unknown-value# 
-
-e e(Qã"#unknown-value#d
-b
-e e(Qå".
-fastapi.applications.FastAPIinclude_router* :m˝˛ÄÖÜáàâäãBNoneTypeH(
-&
-f f(-ç"#get-field# router:(
-&
-fZ f(qê"#unknown-value#Blist(
-&
-fZ f(që"
-#is-exact#:êfBbool
-
-fZ f(qí"
-#assume#:ë:
-8
-fZ f(qì"#set-field# __collection_size:êiBint)
-'
-fZ f(qî"#array-add-last#:êè 
-
-f f(rï"#unknown-value# 
-
-f f(rñ"#unknown-value# 
-
-f f(ró"#unknown-value#&
-$
-f f(rò"#unknown-value#Bbool&
-$
-f f(rô"#unknown-value#Btype 
-
-f f(rö"#unknown-value# 
-
-f f(rõ"#unknown-value#d
-b
-f f(rú".
-fastapi.applications.FastAPIinclude_router* :mçéêïñóòôöõBNoneTypeH(
-&
-g g($ù"#get-field# router:(
-&
-gH g(]†"#unknown-value#Blist(
-&
-gH g(]°"
-#is-exact#:†fBbool
-
-gH g(]¢"
-#assume#:°:
-8
-gH g(]£"#set-field# __collection_size:†iBint)
-'
-gH g(]§"#array-add-last#:†ü 
-
-g g(^•"#unknown-value# 
-
-g g(^¶"#unknown-value# 
-
-g g(^ß"#unknown-value#&
-$
-g g(^®"#unknown-value#Bbool&
-$
-g g(^©"#unknown-value#Btype 
-
-g g(^™"#unknown-value# 
-
-g g(^´"#unknown-value#d
-b
-g g(^¨".
-fastapi.applications.FastAPIinclude_router* :mùû†•¶ß®©™´BNoneTypeH(
-&
-h h(#≠"#get-field# router:*(
-&
-hF h(^∞"#unknown-value#Blist(
-&
-hF h(^±"
-#is-exact#:∞fBbool
-
-hF h(^≤"
-#assume#:±:
-8
-hF h(^≥"#set-field# __collection_size:∞iBint)
-'
-hF h(^¥"#array-add-last#:∞Ø 
-
-h h(_µ"#unknown-value# 
-
-h h(_∂"#unknown-value# 
-
-h h(_∑"#unknown-value#&
-$
-h h(_∏"#unknown-value#Bbool&
-$
-h h(_π"#unknown-value#Btype 
-
-h h(_∫"#unknown-value# 
-
-h h(_ª"#unknown-value#d
-b
-h h(_º".
-fastapi.applications.FastAPIinclude_router* :m≠Æ∞µ∂∑∏π∫ªBNoneTypeH(
-&
-i i(!Ω"#get-field# router:+(
-&
-iB i(M¿"#unknown-value#Blist(
-&
-iB i(M¡"
-#is-exact#:¿fBbool
-
-iB i(M¬"
-#assume#:¡:
-8
-iB i(M√"#set-field# __collection_size:¿iBint)
-'
-iB i(Mƒ"#array-add-last#:¿ø 
-
-i i(N≈"#unknown-value# 
-
-i i(N∆"#unknown-value# 
-
-i i(N«"#unknown-value#&
-$
-i i(N»"#unknown-value#Bbool&
-$
-i i(N…"#unknown-value#Btype 
-
-i i(N "#unknown-value# 
-
-i i(NÀ"#unknown-value#d
-b
-i i(NÃ".
-fastapi.applications.FastAPIinclude_router* :mΩæ¿≈∆«»… ÀBNoneTypeH(
-&
-j j(&Õ"#get-field# router:$(
-&
-jL j(\–"#unknown-value#Blist(
-&
-jL j(\—"
-#is-exact#:–fBbool
-
-jL j(\“"
-#assume#:—:
-8
-jL j(\”"#set-field# __collection_size:–iBint)
-'
-jL j(\‘"#array-add-last#:–œ 
-
-j j(]’"#unknown-value# 
-
-j j(]÷"#unknown-value# 
-
-j j(]◊"#unknown-value#&
-$
-j j(]ÿ"#unknown-value#Bbool&
-$
-j j(]Ÿ"#unknown-value#Btype 
-
-j j(]⁄"#unknown-value# 
-
-j j(]€"#unknown-value#d
-b
-j j(]‹".
-fastapi.applications.FastAPIinclude_router* :mÕŒ–’÷◊ÿŸ⁄€BNoneTypeH(
-&
-k k(-›"#get-field# router:(
-&
-kZ k(|‡"#unknown-value#Blist(
-&
-kZ k(|·"
-#is-exact#:‡fBbool
-
-kZ k(|‚"
-#assume#:·:
-8
-kZ k(|„"#set-field# __collection_size:‡iBint)
-'
-kZ k(|‰"#array-add-last#:‡ﬂ 
-
-k k(}Â"#unknown-value# 
-
-k k(}Ê"#unknown-value# 
-
-k k(}Á"#unknown-value#&
-$
-k k(}Ë"#unknown-value#Bbool&
-$
-k k(}È"#unknown-value#Btype 
-
-k k(}Í"#unknown-value# 
-
-k k(}Î"#unknown-value#d
-b
-k k(}Ï".
-fastapi.applications.FastAPIinclude_router* :m›ﬁ‡ÂÊÁËÈÍÎBNoneTypeH(
-&
-l l(#Ì"#get-field# router:(
-&
-lF l(S"#unknown-value#Blist(
-&
-lF l(SÒ"
-#is-exact#:fBbool
-
-lF l(SÚ"
-#assume#:Ò:
-8
-lF l(SÛ"#set-field# __collection_size:iBint)
-'
-lF l(SÙ"#array-add-last#:Ô 
-
-l l(Tı"#unknown-value# 
-
-l l(Tˆ"#unknown-value# 
-
-l l(T˜"#unknown-value#&
-$
-l l(T¯"#unknown-value#Bbool&
-$
-l l(T˘"#unknown-value#Btype 
-
-l l(T˙"#unknown-value# 
-
-l l(T˚"#unknown-value#d
-b
-l l(T¸".
-fastapi.applications.FastAPIinclude_router* :mÌÓıˆ˜¯˘˙˚BNoneTypeH(
-&
-m m(!˝"#get-field# router:'(
-&
-mC m(OÄ"#unknown-value#Blist(
-&
-mC m(OÅ"
-#is-exact#:ÄfBbool
-
-mC m(OÇ"
-#assume#:Å:
-8
-mC m(OÉ"#set-field# __collection_size:ÄiBint)
-'
-mC m(OÑ"#array-add-last#:Äˇ 
-
-m m(PÖ"#unknown-value# 
-
-m m(PÜ"#unknown-value# 
-
-m m(Pá"#unknown-value#&
-$
-m m(Pà"#unknown-value#Bbool&
-$
-m m(Pâ"#unknown-value#Btype 
-
-m m(Pä"#unknown-value# 
-
-m m(Pã"#unknown-value#d
-b
-m m(På".
-fastapi.applications.FastAPIinclude_router* :m˝˛ÄÖÜáàâäãBNoneTypeH(
-&
-n n($ç"#get-field# router:&(
-&
-nH n(Vê"#unknown-value#Blist(
-&
-nH n(Vë"
-#is-exact#:êfBbool
-
-nH n(Ví"
-#assume#:ë:
-8
-nH n(Vì"#set-field# __collection_size:êiBint)
-'
-nH n(Vî"#array-add-last#:êè 
-
-n n(Wï"#unknown-value# 
-
-n n(Wñ"#unknown-value# 
-
-n n(Wó"#unknown-value#&
-$
-n n(Wò"#unknown-value#Bbool&
-$
-n n(Wô"#unknown-value#Btype 
-
-n n(Wö"#unknown-value# 
-
-n n(Wõ"#unknown-value#d
-b
-n n(Wú".
-fastapi.applications.FastAPIinclude_router* :mçéêïñóòôöõBNoneTypeH(
-&
-o o("ù"#get-field# router:,(
-&
-oD o(P†"#unknown-value#Blist(
-&
-oD o(P°"
-#is-exact#:†fBbool
-
-oD o(P¢"
-#assume#:°:
-8
-oD o(P£"#set-field# __collection_size:†iBint)
-'
-oD o(P§"#array-add-last#:†ü 
-
-o o(Q•"#unknown-value# 
-
-o o(Q¶"#unknown-value# 
-
-o o(Qß"#unknown-value#&
-$
-o o(Q®"#unknown-value#Bbool&
-$
-o o(Q©"#unknown-value#Btype 
-
-o o(Q™"#unknown-value# 
-
-o o(Q´"#unknown-value#d
-b
-o o(Q¨".
-fastapi.applications.FastAPIinclude_router* :mùû†•¶ß®©™´BNoneTypeH(
-&
-p p("≠"#get-field# router:%
-#
-p p(6Æ"#unknown-value#Bstr(
-&
-p) p(5∞"#unknown-value#Blist(
-&
-p) p(5±"
-#is-exact#:∞fBbool
-
-p) p(5≤"
-#assume#:±:
-8
-p) p(5≥"#set-field# __collection_size:∞iBint)
-'
-p) p(5¥"#array-add-last#:∞Ø 
-
-p p(6µ"#unknown-value# 
-
-p p(6∂"#unknown-value# 
-
-p p(6∑"#unknown-value#&
-$
-p p(6∏"#unknown-value#Bbool&
-$
-p p(6π"#unknown-value#Btype 
-
-p p(6∫"#unknown-value# 
-
-p p(6ª"#unknown-value#d
-b
-p p(6º".
-fastapi.applications.FastAPIinclude_router* :m≠Æ∞µ∂∑∏π∫ªBNoneTypeH(
-&
-q q("Ω"#get-field# router:1%
-#
-q q(6æ"#unknown-value#Bstr(
-&
-q) q(5¿"#unknown-value#Blist(
-&
-q) q(5¡"
-#is-exact#:¿fBbool
-
-q) q(5¬"
-#assume#:¡:
-8
-q) q(5√"#set-field# __collection_size:¿iBint)
-'
-q) q(5ƒ"#array-add-last#:¿ø 
-
-q q(6≈"#unknown-value# 
-
-q q(6∆"#unknown-value# 
-
-q q(6«"#unknown-value#&
-$
-q q(6»"#unknown-value#Bbool&
-$
-q q(6…"#unknown-value#Btype 
-
-q q(6 "#unknown-value# 
-
-q q(6À"#unknown-value#d
-b
-q q(6Ã".
-fastapi.applications.FastAPIinclude_router* :mΩæ¿≈∆«»… ÀBNoneTypeH(
-&
-r r('Õ"#get-field# router:-%
-#
-r r(CŒ"#unknown-value#Bstr(
-&
-r. r(B–"#unknown-value#Blist(
-&
-r. r(B—"
-#is-exact#:–fBbool
-
-r. r(B“"
-#assume#:—:
-8
-r. r(B”"#set-field# __collection_size:–iBint)
-'
-r. r(B‘"#array-add-last#:–œ 
-
-r r(C’"#unknown-value# 
-
-r r(C÷"#unknown-value# 
-
-r r(C◊"#unknown-value#&
-$
-r r(Cÿ"#unknown-value#Bbool&
-$
-r r(CŸ"#unknown-value#Btype 
-
-r r(C⁄"#unknown-value# 
-
-r r(C€"#unknown-value#d
-b
-r r(C‹".
-fastapi.applications.FastAPIinclude_router* :mÕŒ–’÷◊ÿŸ⁄€BNoneTypeH(
-&
-s s(›"#get-field# router:(
-&
-s< s(L‡"#unknown-value#Blist(
-&
-s< s(L·"
-#is-exact#:‡fBbool
-
-s< s(L‚"
-#assume#:·:
-8
-s< s(L„"#set-field# __collection_size:‡iBint)
-'
-s< s(L‰"#array-add-last#:‡ﬂ 
-
-s s(MÂ"#unknown-value# 
-
-s s(MÊ"#unknown-value# 
-
-s s(MÁ"#unknown-value#&
-$
-s s(MË"#unknown-value#Bbool&
-$
-s s(MÈ"#unknown-value#Btype 
-
-s s(MÍ"#unknown-value# 
-
-s s(MÎ"#unknown-value#d
-b
-s s(MÏ".
-fastapi.applications.FastAPIinclude_router* :m›ﬁ‡ÂÊÁËÈÍÎBNoneTypeH(
-&
-t t(,Ì"#get-field# router:(
-&
-tM t(c"#unknown-value#Blist(
-&
-tM t(cÒ"
-#is-exact#:fBbool
-
-tM t(cÚ"
-#assume#:Ò:
-8
-tM t(cÛ"#set-field# __collection_size:iBint)
-'
-tM t(cÙ"#array-add-last#:Ô 
-
-t t(dı"#unknown-value# 
-
-t t(dˆ"#unknown-value# 
-
-t t(d˜"#unknown-value#&
-$
-t t(d¯"#unknown-value#Bbool&
-$
-t t(d˘"#unknown-value#Btype 
-
-t t(d˙"#unknown-value# 
-
-t t(d˚"#unknown-value#d
-b
-t t(d¸".
-fastapi.applications.FastAPIinclude_router* :mÌÓıˆ˜¯˘˙˚BNoneTypeH(
-&
-u u("˝"#get-field# router:(
-&
-uD u(VÄ"#unknown-value#Blist(
-&
-uD u(VÅ"
-#is-exact#:ÄfBbool
-
-uD u(VÇ"
-#assume#:Å:
-8
-uD u(VÉ"#set-field# __collection_size:ÄiBint)
-'
-uD u(VÑ"#array-add-last#:Äˇ 
-
-u u(WÖ"#unknown-value# 
-
-u u(WÜ"#unknown-value# 
-
-u u(Wá"#unknown-value#&
-$
-u u(Wà"#unknown-value#Bbool&
-$
-u u(Wâ"#unknown-value#Btype 
-
-u u(Wä"#unknown-value# 
-
-u u(Wã"#unknown-value#d
-b
-u u(Wå".
-fastapi.applications.FastAPIinclude_router* :m˝˛ÄÖÜáàâäãBNoneTypeH(
-&
-v v(+ç"#get-field# router:(
-&
-vV v(kê"#unknown-value#Blist(
-&
-vV v(kë"
-#is-exact#:êfBbool
-
-vV v(kí"
-#assume#:ë:
-8
-vV v(kì"#set-field# __collection_size:êiBint)
-'
-vV v(kî"#array-add-last#:êè 
-
-v v(lï"#unknown-value# 
-
-v v(lñ"#unknown-value# 
-
-v v(ló"#unknown-value#&
-$
-v v(lò"#unknown-value#Bbool&
-$
-v v(lô"#unknown-value#Btype 
-
-v v(lö"#unknown-value# 
-
-v v(lõ"#unknown-value#d
-b
-v v(lú".
-fastapi.applications.FastAPIinclude_router* :mçéêïñóòôöõBNoneTypeH(
-&
-w w(#ù"#get-field# router:(
-&
-wH w(`†"#unknown-value#Blist(
-&
-wH w(`°"
-#is-exact#:†fBbool
-
-wH w(`¢"
-#assume#:°:
-8
-wH w(`£"#set-field# __collection_size:†iBint)
-'
-wH w(`§"#array-add-last#:†ü 
-
-w w(a•"#unknown-value# 
-
-w w(a¶"#unknown-value# 
-
-w w(aß"#unknown-value#&
-$
-w w(a®"#unknown-value#Bbool&
-$
-w w(a©"#unknown-value#Btype 
-
-w w(a™"#unknown-value# 
-
-w w(a´"#unknown-value#d
-b
-w w(a¨".
-fastapi.applications.FastAPIinclude_router* :mùû†•¶ß®©™´BNoneTypeH(
-&
-x x(0≠"#get-field# router:((
-&
-xU x(o∞"#unknown-value#Blist(
-&
-xU x(o±"
-#is-exact#:∞fBbool
-
-xU x(o≤"
-#assume#:±:
-8
-xU x(o≥"#set-field# __collection_size:∞iBint)
-'
-xU x(o¥"#array-add-last#:∞Ø 
-
-x x(pµ"#unknown-value# 
-
-x x(p∂"#unknown-value# 
-
-x x(p∑"#unknown-value#&
-$
-x x(p∏"#unknown-value#Bbool&
-$
-x x(pπ"#unknown-value#Btype 
-
-x x(p∫"#unknown-value# 
-
-x x(pª"#unknown-value#d
-b
-x x(pº".
-fastapi.applications.FastAPIinclude_router* :m≠Æ∞µ∂∑∏π∫ªBNoneTypeH(
-&
-y y('Ω"#get-field# router:/(
-&
-yN y(_¿"#unknown-value#Blist(
-&
-yN y(_¡"
-#is-exact#:¿fBbool
-
-yN y(_¬"
-#assume#:¡:
-8
-yN y(_√"#set-field# __collection_size:¿iBint)
-'
-yN y(_ƒ"#array-add-last#:¿ø 
-
-y y(`≈"#unknown-value# 
-
-y y(`∆"#unknown-value# 
-
-y y(`«"#unknown-value#&
-$
-y y(`»"#unknown-value#Bbool&
-$
-y y(`…"#unknown-value#Btype 
-
-y y(` "#unknown-value# 
-
-y y(`À"#unknown-value#d
-b
-y y(`Ã".
-fastapi.applications.FastAPIinclude_router* :mΩæ¿≈∆«»… ÀBNoneTypeH(
-&
-z z("Õ"#get-field# router:%(
-&
-zD z(P–"#unknown-value#Blist(
-&
-zD z(P—"
-#is-exact#:–fBbool
-
-zD z(P“"
-#assume#:—:
-8
-zD z(P”"#set-field# __collection_size:–iBint)
-'
-zD z(P‘"#array-add-last#:–œ 
-
-z z(Q’"#unknown-value# 
-
-z z(Q÷"#unknown-value# 
-
-z z(Q◊"#unknown-value#&
-$
-z z(Qÿ"#unknown-value#Bbool&
-$
-z z(QŸ"#unknown-value#Btype 
-
-z z(Q⁄"#unknown-value# 
-
-z z(Q€"#unknown-value#d
-b
-z z(Q‹".
-fastapi.applications.FastAPIinclude_router* :mÕŒ–’÷◊ÿŸ⁄€BNoneTypeH(
-&
-{ {(%›"#get-field# router:(
-&
-{J {(Y‡"#unknown-value#Blist(
-&
-{J {(Y·"
-#is-exact#:‡fBbool
-
-{J {(Y‚"
-#assume#:·:
-8
-{J {(Y„"#set-field# __collection_size:‡iBint)
-'
-{J {(Y‰"#array-add-last#:‡ﬂ 
-
-{ {(ZÂ"#unknown-value# 
-
-{ {(ZÊ"#unknown-value# 
-
-{ {(ZÁ"#unknown-value#&
-$
-{ {(ZË"#unknown-value#Bbool&
-$
-{ {(ZÈ"#unknown-value#Btype 
-
-{ {(ZÍ"#unknown-value# 
-
-{ {(ZÎ"#unknown-value#d
-b
-{ {(ZÏ".
-fastapi.applications.FastAPIinclude_router* :m›ﬁ‡ÂÊÁËÈÍÎBNoneTypeH%
-#
-| |( Ì"#unknown-value#Bstr 
-
-| |( Ó"#unknown-value# 
-
-| |( Ô"#unknown-value# 
-
-| |( "#unknown-value# 
-
-| |( Ò"#unknown-value#&
-$
-| |( Ú"#unknown-value#Bbool&
-$
-| |( Û"#unknown-value#Btype 
-
-| |( Ù"#unknown-value# 
-
-| |( ı"#unknown-value#c
-a
-| |( ˆ".
-fastapi.applications.FastAPIinclude_router* :m2ÌÓÔÒÚÛÙıBNoneTypeH#
-!
-~ ~()˘"
-osgetenv:˜¯"
- 
-~ ~(1˙"lower* :˘H(
-&
-~5 ~(`ˇ"#unknown-value#Blist(
-&
-~5 ~(`Ä"
-#is-exact#:ˇfBbool
-
-~5 ~(`Å"
-#assume#:Ä:
-8
-~5 ~(`Ç"#set-field# __collection_size:ˇiBint)
-'
-~5 ~(`É"#array-add-last#:ˇ˚)
-'
-~5 ~(`Ñ"#array-add-last#:ˇ¸)
-'
-~5 ~(`Ö"#array-add-last#:ˇ˝)
-'
-~5 ~(`Ü"#array-add-last#:ˇ˛-
-+
-~ ~(`á"
-#binop in#2in:˙ˇBbool"
-~ ~(`á *~ ~("˛(
-&
- ((à"#get-field# router:.(
-&
-I ([ã"#unknown-value#Blist(
-&
-I ([å"
-#is-exact#:ãfBbool
-
-I ([ç"
-#assume#:å:
-8
-I ([é"#set-field# __collection_size:ãiBint)
-'
-I ([è"#array-add-last#:ãä"
- 
- (\ê"#unknown-value#"
- 
- (\ë"#unknown-value#"
- 
- (\í"#unknown-value#(
-&
- (\ì"#unknown-value#Bbool(
-&
- (\î"#unknown-value#Btype"
- 
- (\ï"#unknown-value#"
- 
- (\ñ"#unknown-value#f
-d
- (\ó".
-fastapi.applications.FastAPIinclude_router* :màâãêëíìîïñBNoneTypeH"ò*æuvicorn ºΩ'
-%
-Å Üò%closure"#new-object#%
-#
-Å Üô"#set-field# app:òm&
-$
-Å Üö"#set-field# User:ò;&
-$
-Å Üõ"#set-field# Dict:ò%
-#
-Å Üú"#set-field# Any:ò+
-)
-Å Üù"?python-partial-apply?:ò'
-%
-Ü ãû%closure"#new-object#%
-#
-Ü ãü"#set-field# app:ûm1
-/
-Ü ã†"#set-field# APIInfoResponse:û4%
-#
-Ü ã°"#set-field# Any:û+
-)
-Ü ã¢"?python-partial-apply?:û'
-%
-ã µ£%closure"#new-object#%
-#
-ã µ§"#set-field# app:£m5
-3
-ã µ•"!#set-field# HealthCheckResponse:£5%
-#
-ã µ¶"#set-field# Any:£(
-&
-ã µß"#set-field# logger:£>+
-)
-ã µ®"?python-partial-apply?:£'
-%
-µ ¿©%closure"#new-object#%
-#
-µ ¿™"#set-field# app:©m%
-#
-µ ¿´"#set-field# Any:©+
-)
-µ ¿¨"?python-partial-apply?:©'
-%
-¿ ∆≠%closure"#new-object#%
-#
-¿ ∆Æ"#set-field# app:≠m5
-3
-¿ ∆Ø"!#set-field# HealthCheckResponse:≠5%
-#
-¿ ∆∞"#set-field# Any:≠+
-)
-¿ ∆±"?python-partial-apply?:≠'
-%
-∆ Í≤%closure"#new-object#%
-#
-∆ Í≥"#set-field# app:≤m5
-3
-∆ Í¥"!#set-field# HealthCheckResponse:≤5%
-#
-∆ Íµ"#set-field# Any:≤*
-(
-∆ Í∂"#set-field# settings:≤8(
-&
-∆ Í∑"#set-field# logger:≤>+
-)
-∆ Í∏"?python-partial-apply?:≤$
-"
-
-Í Í(π"#unknown-value#/
--
-
-Í Í(ª"
-#binop ==#2==:π∫Bbool"
-
-Í Í(ª *Í Í("º(
-&
-
-Î! Î(.¿"#get-field# host:8(
-&
-
-Î5 Î(B¡"#get-field# port:82
-0
-
-ÎK Î(b¬"#get-field# is_development:8*
-(
-
-Î Î(c√"run* :
-æø¿¡¬H" *#/home/omar/Documents/ruleIQ/main.py

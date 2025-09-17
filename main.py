@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Any, AsyncGenerator, Dict, Generator
+from typing import Any, AsyncGenerator, Dict
 from contextlib import asynccontextmanager
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, Request
@@ -96,7 +96,7 @@ app.middleware('http')(rate_limit_middleware)
 # from middleware.jwt_auth_v2 import JWTAuthMiddlewareV2
 # app.add_middleware(JWTAuthMiddlewareV2)
 
-# Add Comprehensive Audit Logging Middleware  
+# Add Comprehensive Audit Logging Middleware
 from middleware.audit_logging import setup_audit_logging
 audit_logger = setup_audit_logging(app)
 

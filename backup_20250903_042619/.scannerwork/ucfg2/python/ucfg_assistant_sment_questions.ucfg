@@ -1,290 +1,0 @@
-
-Gservices.ai.assistant.ComplianceAssistant.generate_assessment_questions@
-4/home/omar/Documents/ruleIQ/services/ai/assistant.pyÀ À(+"7*Ø 
-7
-Ï Ï(L¤¡
-
-Ï Ï(L
-%7*0
-
-__unknown_file (
-
-business_context*-
-
-__unknown_file (
-business_type*'
-
-__unknown_file (	
-general2getI
-G
-
-Ï Ï(L
-business_type"__id*"
-
-__unknown_file (
-
-%7¡ž
-
-Ð Ð(H
-%8*0
-
-__unknown_file (
-
-business_context*,
-
-__unknown_file (
-company_size*%
-
-__unknown_file (	
-small2getH
-F
-
-Ð Ð(H
-company_size"__id*"
-
-__unknown_file (
-
-%8¦£
-
-Ñ Ò(
-%9*0
-
-__unknown_file (
-
-business_context*/
-
-__unknown_file (
-assessment_type*'
-
-__unknown_file (	
-general2getK
-I
-
-Ñ Ò(
-assessment_type"__id*"
-
-__unknown_file (
-
-%9†
-ƒ
-
-Ó Õ(
-system_prompt"__id*Ý
-
-__unknown_file (À½
-ºYou are a compliance assessment expert. Generate practical, business-relevant compliance questions for organizations. Always use 'question_id' as the field name for question identifiers.ó
-ð
-
-Ö û(
-%10"__concat*(
-
-Ö ×(
-
-            Generate *
-
-× ×(#
-
-max_questions*9
-
-×$ ×(K+)
-' compliance assessment questions for a *
-
-×L ×(Y
-
-business_type*!
-
-×Z ×(i
- business with *
-
-×j ×(v
-
-company_size*;
-
-×w Ø(-+
-) employees.
-            Assessment type: *!
-
-Ø Ø(-
-
-assessment_type*1
-
-Ø. Ù(#!
-
-            Difficulty level: *"
-
-Ù Ù(/
-
-difficulty_level*è
-
-Ù0 ñ(#ÙÖ
-Ó
-            
-            Questions should cover:
-            - Data protection and privacy (GDPR compliance)
-            - Security practices and policies
-            - Employee training and awareness
-            - Risk management processes
-            - Documentation and record keeping
-            
-            IMPORTANT: Use 'question_id' as the field name (not 'id').
-            
-            Return the questions in this EXACT JSON format:
-            {{
-                "questions": [
-                    {{
-                        "question_id": "q1",
-                        "question": "Question text",
-                        "type": "multiple_choice",
-                        "options": ["Option A", "Option B", "Option C", "Option D"],
-                        "category": "data_protection",
-                        "difficulty": "medium",
-                        "compliance_weight": 1.0
-                    }},
-                ],
-                "total_questions": *
-
-ñ$ ñ(1
-
-max_questions*;
-
-ñ2 ò('-+
-),
-                "assessment_context": "*!
-
-ò( ò(7
-
-assessment_type*m
-
-ò8 ö(_]
-["
-            }}
-            
-            Ensure questions are:
-            1. Relevant to *
-
-ö ö()
-
-business_type*=
-
-ö* ÷(/-
-+ businesses
-            2. Appropriate for *
-
-÷  ÷(,
-
-company_size*Ô
-
-÷- û(ÅÂ
-¿ organizations
-            3. Clear and actionable
-            4. Varied in difficulty if mixed level requested
-            5. Use 'question_id' field name (critical requirement)
-            H
-F
-
-Ö û(
-user_prompt"__id*#
-
-__unknown_file (
-
-%10
-
-þ9 ÿ(<
-%11"dict£
- 
-
-þ: ÿ(
-%12"__mapSet*#
-
-__unknown_file (
-
-%11*-
-
-__unknown_file (
-business_type*-
-
-__unknown_file (
-
-business_type¡
-ž
-
-ÿ ÿ(;
-%13"__mapSet*#
-
-__unknown_file (
-
-%11*,
-
-__unknown_file (
-company_size*,
-
-__unknown_file (
-
-company_sizeþ
-
-ü ÿ(=
-%14*I
-
-__unknown_file (-+
-)services.ai.assistant.ComplianceAssistant2 _generate_ai_response_with_cache:"
-system_prompt
-
-system_prompt:
-user_prompt
-
-user_prompt:$
-	task_type
-question_generation:
-context
-
-%11E
-C
-
-ü ÿ(=
-
-response"__id*#
-
-__unknown_file (
-
-%14†ƒ
-
-€ (/
-%15*I
-
-__unknown_file (-+
-)services.ai.assistant.ComplianceAssistant*(
-
-__unknown_file (
-
-
-response*-
-
-__unknown_file (
-
-max_questions*/
-
-__unknown_file (
-
-assessment_type2_parse_questions_responseK
-I
-
-€ (/
-questions_data"__id*#
-
-__unknown_file (
-
-%15" 
-
-‚ ‚(!
-
-questions_data: 
-
-À2 Á(
-business_context:
-
-Á Á('
-max_questions: 
-
-Á) Á(F
-difficulty_levelB-+
-)services.ai.assistant.ComplianceAssistantH

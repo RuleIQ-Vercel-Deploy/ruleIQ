@@ -251,7 +251,7 @@ class AIResponseCache:
             self.metrics['hits'], 'total_misses': self.metrics['misses'],
             'total_requests': self.metrics['total_requests'],
             'estimated_cost_savings': round(self.metrics['cost_savings'], 4
-            ), 'cache_size_mb': round(self.metrics['cache_size_bytes'] / 
+            ), 'cache_size_mb': round(self.metrics['cache_size_bytes'] /
             1024 / 1024, 2), 'ttl_config': {ct.value: ttl for ct, ttl in
             self.ttl_config.items()}}
 

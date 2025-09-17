@@ -135,7 +135,7 @@ class TestEnhancedAuthentication:
     @pytest.mark.asyncio
     async def test_account_lockout_mechanism(self):
         """Test account lockout after failed attempts"""
-        from datetime import datetime, timedelta
+        from datetime import datetime
 
         class AccountLockout:
             def __init__(self, max_attempts=5, lockout_duration_minutes=30):
@@ -201,7 +201,7 @@ class TestEnhancedAuthentication:
     @pytest.mark.asyncio
     async def test_session_management(self):
         """Test secure session handling"""
-        from datetime import datetime, timedelta
+        from datetime import datetime
         import hashlib
 
         class SessionManager:
@@ -484,7 +484,6 @@ class TestDataEncryption:
     async def test_field_level_encryption(self, sample_sensitive_data):
         """Test encryption of specific fields"""
         from cryptography.fernet import Fernet
-        import json
 
         class FieldEncryptor:
             def __init__(self, key: bytes = None):
@@ -647,7 +646,6 @@ class TestAuditLogging:
     async def test_security_event_logging(self, sample_audit_event):
         """Test security event capture"""
         from datetime import datetime
-        import hashlib
 
         class AuditLogger:
             def __init__(self):
@@ -830,7 +828,6 @@ class TestSecurityHeaders:
     @pytest.mark.asyncio
     async def test_security_headers_presence(self, security_headers_expected):
         """Test presence of security headers"""
-        from typing import Dict
 
         class SecurityHeadersMiddleware:
             def __init__(self):
@@ -961,7 +958,7 @@ class TestVulnerabilityPrevention:
     async def test_sql_injection_prevention(self):
         """Test SQL injection protection"""
         import re
-        from typing import Any, List, Tuple
+        from typing import Tuple
 
         class SQLSanitizer:
             def __init__(self):

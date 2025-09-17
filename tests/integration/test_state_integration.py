@@ -395,7 +395,6 @@ class TestReducerIntegration:
     @pytest.mark.integration
     def test_cost_tracker_reducer(self):
         """Test cost tracking accumulation."""
-        from langgraph_agent.models.compliance_state import CostSnapshot
 
         existing = {
             "total_tokens": 100,

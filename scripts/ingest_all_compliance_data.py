@@ -12,7 +12,7 @@ from neo4j import AsyncGraphDatabase
 from dotenv import load_dotenv
 import logging
 from datetime import datetime
-from typing import Dict, Any, List
+from typing import Dict, List
 logging.basicConfig(level=logging.INFO, format=
     '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -282,7 +282,7 @@ class ComplianceDataIngestion:
                             r.description = $description
                         """
                         params = {'source_id': source_id, 'target_id': rel.
-                            get('target'), 'strength': rel.get('strength', 
+                            get('target'), 'strength': rel.get('strength',
                             0.5), 'overlap': rel.get('control_overlap', 0),
                             'description': rel.get('description', '')}
                         await session.run(query, params)

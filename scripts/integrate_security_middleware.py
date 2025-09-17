@@ -5,13 +5,12 @@ This script shows how to integrate JWT validation, rate limiting, and CORS
 configuration into the main FastAPI application.
 """
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 import logging
 
 # Import security middleware
 from middleware.jwt_auth_v2 import JWTAuthMiddlewareV2
 from middleware.rate_limiter import RateLimitMiddleware
-from middleware.cors_config import setup_cors, CORSConfig
+from middleware.cors_config import setup_cors
 
 logger = logging.getLogger(__name__)
 
@@ -28,44 +27,44 @@ def setup_security_middleware(app: FastAPI) -> None:
     Args:
         app: FastAPI application instance
     """
-    
+
     # ============================================================
     # Story 1.3: CORS Configuration
     # ============================================================
     logger.info("Setting up CORS middleware...")
-    
+
     # Method 1: Using our custom setup function
     setup_cors(app)
-    
+
     # Alternative Method 2: Manual configuration
     # cors_config = CORSConfig()
     # app.add_middleware(
     #     CORSMiddleware,
     #     **cors_config.to_middleware_kwargs()
     # )
-    
+
     logger.info("✓ CORS middleware configured")
-    
+
     # ============================================================
     # Story 1.2: Rate Limiting
     # ============================================================
     logger.info("Setting up rate limiting middleware...")
-    
+
     # Add rate limiting middleware
     app.add_middleware(RateLimitMiddleware)
-    
+
     logger.info("✓ Rate limiting middleware configured")
-    
+
     # ============================================================
     # Story 1.1: JWT Validation Enhancement
     # ============================================================
     logger.info("Setting up JWT authentication middleware v2...")
-    
+
     # Add JWT middleware (already exists, we enhanced it)
     app.add_middleware(JWTAuthMiddlewareV2)
-    
+
     logger.info("✓ JWT authentication middleware v2 configured")
-    
+
     # Log middleware stack
     logger.info(
         "Security middleware stack configured:\n"
@@ -90,22 +89,22 @@ def create_secure_app() -> FastAPI:
         docs_url="/docs",
         redoc_url="/redoc"
     )
-    
+
     # Configure security middleware
     setup_security_middleware(app)
-    
+
     # Add API routers (example)
     # from api.routers import auth, users, assessments
     # app.include_router(auth.router, prefix="/api/v1")
     # app.include_router(users.router, prefix="/api/v1")
     # app.include_router(assessments.router, prefix="/api/v1")
-    
+
     # Add health check endpoint
     @app.get("/health")
     async def health_check():
         """Health check endpoint (public, no auth required)."""
         return {"status": "healthy", "service": "ruleiq-api"}
-    
+
     # Add root endpoint
     @app.get("/")
     async def root():
@@ -119,7 +118,7 @@ def create_secure_app() -> FastAPI:
                 "cors": "configured"
             }
         }
-    
+
     return app
 
 
@@ -313,25 +312,25 @@ def print_integration_summary():
     print("\n" + "="*60)
     print("SECURITY MIDDLEWARE INTEGRATION COMPLETE")
     print("="*60)
-    
+
     print("\n✅ Story 1.1: JWT Validation")
     print("   - Enhanced JWT validation with strict claim checks")
     print("   - Token blacklisting service with Redis")
     print("   - Refresh token mechanism")
     print("   - Performance target: <10ms validation")
-    
+
     print("\n✅ Story 1.2: Rate Limiting")
     print("   - Tiered rate limits (Anonymous/Auth/Premium/Enterprise)")
     print("   - Redis-backed sliding window algorithm")
     print("   - Per-endpoint configuration")
     print("   - Rate limit headers in responses")
-    
+
     print("\n✅ Story 1.3: CORS Configuration")
     print("   - Environment-specific origins")
     print("   - No wildcards in production")
     print("   - Proper preflight handling")
     print("   - Credentials support for JWT")
-    
+
     print("\n📁 Files Created:")
     print("   - /services/token_blacklist_service.py")
     print("   - /middleware/rate_limiter.py")
@@ -339,31 +338,31 @@ def print_integration_summary():
     print("   - /tests/test_jwt_validation.py")
     print("   - /tests/test_rate_limiting.py")
     print("   - /tests/test_cors.py")
-    
+
     print("\n🔧 Integration Steps:")
     print("   1. Update main.py with middleware configuration")
     print("   2. Configure Redis connection in settings")
     print("   3. Set environment variables for CORS origins")
     print("   4. Run tests to validate implementation")
     print("   5. Deploy with feature flags for gradual rollout")
-    
+
     print("\n⚙️ Environment Variables Required:")
     print("   - ENVIRONMENT (development/staging/production)")
     print("   - REDIS_HOST, REDIS_PORT, REDIS_PASSWORD")
     print("   - CORS_ORIGINS (optional override)")
     print("   - JWT_ISSUER, JWT_AUDIENCE")
     print("   - RATE_LIMIT_IP_WHITELIST (optional)")
-    
+
     print("\n" + "="*60)
 
 
 if __name__ == "__main__":
     # Print the integration summary
     print_integration_summary()
-    
+
     # Save the example main.py
     with open("main_example.py", "w") as f:
         f.write(MAIN_PY_EXAMPLE)
-    
+
     print("\n💾 Example main.py saved to 'main_example.py'")
     print("\n🚀 Security middleware implementation complete!")

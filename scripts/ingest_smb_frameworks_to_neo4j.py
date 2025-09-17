@@ -11,9 +11,8 @@ import json
 import os
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Any
+from typing import Any
 from neo4j import GraphDatabase
-import hashlib
 
 
 class SMBFrameworkNeo4jIngestion:

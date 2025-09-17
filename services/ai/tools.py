@@ -312,12 +312,12 @@ class ToolExecutor:
                 tool_usage[tool_name] = {'count': 0, 'success_rate': 0}
             tool_usage[tool_name]['count'] += 1
         for tool_name in tool_usage:
-            tool_executions = [exec for exec in self.execution_history if 
+            tool_executions = [exec for exec in self.execution_history if
                 exec['tool_name'] == tool_name]
             successes = sum(1 for exec in tool_executions if exec['success'])
             tool_usage[tool_name]['success_rate'] = successes / len(
                 tool_executions)
-        return {'total_executions': total_executions, 'success_rate': 
+        return {'total_executions': total_executions, 'success_rate':
             successful_executions / total_executions,
             'average_execution_time': avg_execution_time, 'tool_usage':
             tool_usage}

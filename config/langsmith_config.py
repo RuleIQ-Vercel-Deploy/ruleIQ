@@ -214,7 +214,7 @@ class LangSmithConfig:
         if date_range:
             start_date, end_date = date_range
             query['date_range'] = {'start': start_date.isoformat() if
-                hasattr(start_date, 'isoformat') else start_date, 'end': 
+                hasattr(start_date, 'isoformat') else start_date, 'end':
                 end_date.isoformat() if hasattr(end_date, 'isoformat') else
                 end_date}
         return query

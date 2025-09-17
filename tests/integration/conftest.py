@@ -32,21 +32,21 @@ def integration_db_session(test_db_engine) -> Generator[Session, None, None]:
     """
     connection = test_db_engine.connect()
     transaction = connection.begin()
-    
+
     # Create session factory bound to this connection
     SessionMaker = sessionmaker(bind=connection)
     session = SessionMaker()
-    
+
     # Setup savepoint for nested transactions
     nested = connection.begin_nested()
-    
+
     @event.listens_for(session, "after_transaction_end")
     def restart_savepoint(session, transaction):
         """Restart savepoint after each nested transaction."""
         nonlocal nested
         if transaction.nested and not transaction._parent.nested:
             nested = connection.begin_nested()
-    
+
     try:
         yield session
     finally:
@@ -65,14 +65,14 @@ async def async_integration_db_session() -> AsyncGenerator[AsyncSession, None]:
     """
     manager = get_test_db_manager()
     db_url = manager.get_test_db_url()
-    
+
     # Convert to async URL
     if '+asyncpg' not in db_url:
         if '+psycopg2' in db_url:
             db_url = db_url.replace('+psycopg2', '+asyncpg')
         elif 'postgresql://' in db_url and '+' not in db_url:
             db_url = db_url.replace('postgresql://', 'postgresql+asyncpg://')
-    
+
     # Create async engine
     async_engine = create_async_engine(
         db_url,
@@ -81,21 +81,21 @@ async def async_integration_db_session() -> AsyncGenerator[AsyncSession, None]:
         max_overflow=20,
         pool_pre_ping=True
     )
-    
+
     # Create session factory
     async_session_factory = async_sessionmaker(
         bind=async_engine,
         class_=AsyncSession,
         expire_on_commit=False
     )
-    
+
     async with async_engine.begin() as conn:
         # Start transaction
         async with async_session_factory(bind=conn) as session:
             async with session.begin():
                 yield session
                 # Automatic rollback on context exit
-    
+
     await async_engine.dispose()
 
 
@@ -107,7 +107,7 @@ def mock_all_external_services():
     Comprehensively mock all external services for integration tests.
     """
     mocks = {}
-    
+
     # Mock Stripe
     with patch('stripe.Customer') as mock_customer:
         mock_customer.create.return_value = MagicMock(
@@ -119,7 +119,7 @@ def mock_all_external_services():
             subscriptions=MagicMock(data=[])
         )
         mocks['stripe_customer'] = mock_customer
-    
+
     # Mock SendGrid
     with patch('sendgrid.SendGridAPIClient') as mock_sendgrid:
         mock_sg_instance = MagicMock()
@@ -130,7 +130,7 @@ def mock_all_external_services():
         )
         mock_sendgrid.return_value = mock_sg_instance
         mocks['sendgrid'] = mock_sendgrid
-    
+
     # Mock AWS S3
     with patch('boto3.client') as mock_boto:
         s3_mock = MagicMock()
@@ -140,16 +140,16 @@ def mock_all_external_services():
             'ContentType': 'application/pdf'
         }
         s3_mock.generate_presigned_url.return_value = "https://s3.test.url"
-        
+
         def boto_client_factory(service_name, **kwargs):
             if service_name == 's3':
                 return s3_mock
             return MagicMock()
-        
+
         mock_boto.side_effect = boto_client_factory
         mocks['boto'] = mock_boto
         mocks['s3'] = s3_mock
-    
+
     # Mock OpenAI
     with patch('openai.OpenAI') as mock_openai_class:
         mock_openai = MagicMock()
@@ -162,12 +162,12 @@ def mock_all_external_services():
         )
         mock_openai_class.return_value = mock_openai
         mocks['openai'] = mock_openai
-    
+
     # Mock Redis with fakeredis
     fake_redis = fakeredis.FakeRedis(decode_responses=True)
     with patch('redis.Redis', return_value=fake_redis):
         mocks['redis'] = fake_redis
-    
+
     # Mock Celery tasks
     with patch('celery.Task.delay') as mock_delay:
         mock_delay.return_value = MagicMock(
@@ -176,9 +176,9 @@ def mock_all_external_services():
             result={'status': 'completed'}
         )
         mocks['celery'] = mock_delay
-    
+
     yield mocks
-    
+
     # Cleanup
     if 'redis' in mocks:
         mocks['redis'].flushall()
@@ -194,19 +194,19 @@ def integration_client(integration_db_session, mock_all_external_services):
     from fastapi.testclient import TestClient
     from main import app
     from database import get_db
-    
+
     # Override database dependency
     def override_get_db():
         try:
             yield integration_db_session
         finally:
             pass
-    
+
     app.dependency_overrides[get_db] = override_get_db
-    
+
     with TestClient(app) as client:
         yield client
-    
+
     # Clear overrides
     app.dependency_overrides.clear()
 
@@ -219,19 +219,19 @@ async def async_integration_client(async_integration_db_session, mock_all_extern
     from httpx import AsyncClient
     from main import app
     from database import get_db
-    
+
     # Override database dependency
     async def override_get_db():
         try:
             yield async_integration_db_session
         finally:
             pass
-    
+
     app.dependency_overrides[get_db] = override_get_db
-    
+
     async with AsyncClient(app=app, base_url="http://test") as client:
         yield client
-    
+
     # Clear overrides
     app.dependency_overrides.clear()
 
@@ -245,7 +245,7 @@ def integration_auth_headers(integration_db_session):
     """
     from database import User
     from utils.auth import create_access_token, get_password_hash
-    
+
     # Create test user
     user = User(
         email="integration@test.com",
@@ -256,10 +256,10 @@ def integration_auth_headers(integration_db_session):
     )
     integration_db_session.add(user)
     integration_db_session.commit()
-    
+
     # Create JWT token
     token = create_access_token(data={"sub": user.email})
-    
+
     return {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json",
@@ -274,7 +274,7 @@ def integration_admin_headers(integration_db_session):
     """
     from database import User
     from utils.auth import create_access_token, get_password_hash
-    
+
     # Create admin user
     admin = User(
         email="admin@integration.test",
@@ -286,10 +286,10 @@ def integration_admin_headers(integration_db_session):
     )
     integration_db_session.add(admin)
     integration_db_session.commit()
-    
+
     # Create JWT token with admin claim
     token = create_access_token(data={"sub": admin.email, "admin": True})
-    
+
     return {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json",
@@ -309,11 +309,11 @@ def performance_monitor():
             self.metrics = {}
             self.start_time = None
             self.end_time = None
-        
+
         def start(self, operation: str):
             """Start timing an operation."""
             self.metrics[operation] = {'start': time.time()}
-        
+
         def end(self, operation: str):
             """End timing an operation."""
             if operation in self.metrics:
@@ -322,11 +322,11 @@ def performance_monitor():
                     self.metrics[operation]['end'] - 
                     self.metrics[operation]['start']
                 )
-        
+
         def get_duration(self, operation: str) -> float:
             """Get duration of an operation in seconds."""
             return self.metrics.get(operation, {}).get('duration', 0)
-        
+
         def assert_performance(self, operation: str, max_duration: float):
             """Assert that an operation completed within the specified time."""
             duration = self.get_duration(operation)
@@ -334,7 +334,7 @@ def performance_monitor():
                 f"Operation '{operation}' took {duration:.2f}s, "
                 f"expected <= {max_duration}s"
             )
-        
+
         def get_report(self) -> dict:
             """Get a performance report."""
             return {
@@ -344,7 +344,7 @@ def performance_monitor():
                 }
                 for op, data in self.metrics.items()
             }
-    
+
     return PerformanceMonitor()
 
 
@@ -358,7 +358,7 @@ def sample_integration_data(integration_db_session):
     from database import User, BusinessProfile, ComplianceFramework, AssessmentSession
     from utils.auth import get_password_hash
     import json
-    
+
     # Create users
     users = []
     for i in range(3):
@@ -371,9 +371,9 @@ def sample_integration_data(integration_db_session):
         )
         integration_db_session.add(user)
         users.append(user)
-    
+
     integration_db_session.commit()
-    
+
     # Create business profiles
     profiles = []
     for user in users:
@@ -387,9 +387,9 @@ def sample_integration_data(integration_db_session):
         )
         integration_db_session.add(profile)
         profiles.append(profile)
-    
+
     integration_db_session.commit()
-    
+
     # Create compliance frameworks
     frameworks = []
     framework_data = [
@@ -397,7 +397,7 @@ def sample_integration_data(integration_db_session):
         ("SOC 2", "Service Organization Control 2"),
         ("ISO 27001", "Information Security Management")
     ]
-    
+
     for name, description in framework_data:
         framework = ComplianceFramework(
             name=name,
@@ -410,9 +410,9 @@ def sample_integration_data(integration_db_session):
         )
         integration_db_session.add(framework)
         frameworks.append(framework)
-    
+
     integration_db_session.commit()
-    
+
     # Create assessment sessions
     assessments = []
     for user, framework in zip(users, frameworks):
@@ -424,9 +424,9 @@ def sample_integration_data(integration_db_session):
         )
         integration_db_session.add(assessment)
         assessments.append(assessment)
-    
+
     integration_db_session.commit()
-    
+
     return {
         'users': users,
         'profiles': profiles,
@@ -460,33 +460,32 @@ def isolated_test_db(worker_id):
     """
     Create an isolated database schema for parallel test execution.
     """
-    from sqlalchemy import create_engine, text
-    
+
     manager = get_test_db_manager()
     base_url = manager.get_test_db_url()
-    
+
     # Create a schema name based on worker ID
     schema_name = f"test_{worker_id}_{int(time.time())}"
-    
+
     # Create engine without specifying schema
     engine = create_engine(base_url)
-    
+
     # Create schema
     with engine.connect() as conn:
         conn.execute(text(f"CREATE SCHEMA IF NOT EXISTS {schema_name}"))
         conn.commit()
-    
+
     # Update search path to use the new schema
     schema_url = f"{base_url}?options=-csearch_path={schema_name}"
     schema_engine = create_engine(schema_url)
-    
+
     yield schema_engine
-    
+
     # Cleanup: Drop schema
     with engine.connect() as conn:
         conn.execute(text(f"DROP SCHEMA IF EXISTS {schema_name} CASCADE"))
         conn.commit()
-    
+
     engine.dispose()
     schema_engine.dispose()
 

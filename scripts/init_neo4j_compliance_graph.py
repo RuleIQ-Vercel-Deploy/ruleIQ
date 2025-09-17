@@ -9,7 +9,6 @@ Initialize Neo4j compliance graph with CCO compliance playbook data
 import os
 import sys
 import time
-from typing import Optional
 from neo4j import GraphDatabase
 from neo4j.exceptions import ServiceUnavailable
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -231,14 +230,14 @@ class ComplianceGraphInitializer:
                         , control_id=control['id'], req_id=req_id)
             logger.info('   Creating metrics...')
             metrics = [{'id': 'metric_consent_rate', 'name':
-                'Consent Collection Rate', 'type': 'Percentage', 'target': 
+                'Consent Collection Rate', 'type': 'Percentage', 'target':
                 100, 'control': 'ctrl_consent_mgmt'}, {'id':
                 'metric_breach_time', 'name': 'Breach Notification Time',
                 'type': 'Hours', 'target': 72, 'control':
                 'ctrl_breach_proc'}, {'id': 'metric_access_review', 'name':
                 'Access Review Frequency', 'type': 'Days', 'target': 90,
                 'control': 'ctrl_access_mgmt'}, {'id': 'metric_uptime',
-                'name': 'System Uptime', 'type': 'Percentage', 'target': 
+                'name': 'System Uptime', 'type': 'Percentage', 'target':
                 99.9, 'control': 'ctrl_monitoring'}, {'id':
                 'metric_risk_review', 'name': 'Risk Review Frequency',
                 'type': 'Days', 'target': 180, 'control': 'ctrl_risk_assess'}]

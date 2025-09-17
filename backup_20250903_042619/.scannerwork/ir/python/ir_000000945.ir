@@ -1,22 +1,0 @@
-
-falsebool
-$"Validate document schema."strselfM M(docM  M((3/services.ai.evaluation.schemas.common.GoldenDoc"I)
-'
-O O(%"#is-instance#:Bbool"
-O O(% *O O(
-"j'
-%
-P P(""#get-field# doc_id:)
-'
-P P(""
-__bool__*:BboolH"
-P P(" "
-Q Q("<(
-&
-P' P(2"#get-field# content:
-P P(2"U*	/
--
-P P(3
-"#dependent-value#*:	Bbool
-P P(3
-*K/home/omar/Documents/ruleIQ/services/ai/evaluation/tools/ingestion_fixed.py

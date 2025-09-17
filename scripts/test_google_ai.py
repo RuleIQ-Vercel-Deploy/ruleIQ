@@ -41,34 +41,34 @@ class GoogleAITester:
     def __init__(self):
         self.api_key = os.getenv('GOOGLE_AI_API_KEY')
         self.base_url = "https://generativelanguage.googleapis.com/v1beta"
-        
+
     def test_api_key(self) -> bool:
         """Test if API key is configured and valid"""
         print_section("Testing Google AI API Key Configuration")
-        
+
         if not self.api_key:
             print_error("GOOGLE_AI_API_KEY not found in environment")
             return False
-        
+
         if self.api_key.startswith('your-') or self.api_key == 'your-google-ai-api-key-here':
             print_error("GOOGLE_AI_API_KEY appears to be a placeholder")
             return False
-        
+
         # Mask the API key for display
         masked_key = self.api_key[:10] + "..." + self.api_key[-4:]
         print_info(f"API Key found: {masked_key}")
-        
+
         return True
-    
+
     def test_api_connection(self) -> bool:
         """Test basic API connectivity"""
         print_section("Testing Google AI API Connection")
-        
+
         url = f"{self.base_url}/models?key={self.api_key}"
-        
+
         try:
             response = requests.get(url, timeout=10)
-            
+
             if response.status_code == 200:
                 print_success("API connection successful!")
                 return True
@@ -82,37 +82,37 @@ class GoogleAITester:
                 print_error(f"API connection failed: HTTP {response.status_code}")
                 print_info(f"Response: {response.text[:200]}")
                 return False
-                
+
         except requests.exceptions.Timeout:
             print_error("API request timed out")
             return False
         except Exception as e:
             print_error(f"API connection error: {e}")
             return False
-    
+
     def list_available_models(self) -> List[Dict[str, Any]]:
         """List all available Gemini models"""
         print_section("Listing Available Gemini Models")
-        
+
         url = f"{self.base_url}/models?key={self.api_key}"
-        
+
         try:
             response = requests.get(url, timeout=10)
-            
+
             if response.status_code == 200:
                 data = response.json()
                 models = data.get('models', [])
-                
+
                 # Filter for Gemini models
                 gemini_models = [m for m in models if 'gemini' in m.get('name', '').lower()]
-                
+
                 print_success(f"Found {len(gemini_models)} Gemini models")
-                
+
                 # Categorize models
                 pro_models = [m for m in gemini_models if 'gemini-pro' in m.get('name', '').lower()]
                 pro_vision_models = [m for m in gemini_models if 'gemini-pro-vision' in m.get('name', '').lower()]
                 flash_models = [m for m in gemini_models if 'flash' in m.get('name', '').lower()]
-                
+
                 if pro_models:
                     print_info(f"\nGemini Pro Models ({len(pro_models)}):")
                     for model in pro_models[:5]:
@@ -120,36 +120,36 @@ class GoogleAITester:
                         supported = model.get('supportedGenerationMethods', [])
                         print(f"  - {name}")
                         print(f"    Methods: {', '.join(supported)}")
-                
+
                 if flash_models:
                     print_info(f"\nGemini Flash Models ({len(flash_models)}):")
                     for model in flash_models[:3]:
                         name = model.get('name', 'Unknown')
                         print(f"  - {name}")
-                
+
                 if pro_vision_models:
                     print_info(f"\nGemini Pro Vision Models ({len(pro_vision_models)}):")
                     for model in pro_vision_models[:3]:
                         name = model.get('name', 'Unknown')
                         print(f"  - {name}")
-                
+
                 return gemini_models
             else:
                 print_error(f"Failed to list models: HTTP {response.status_code}")
                 return []
-                
+
         except Exception as e:
             print_error(f"Error listing models: {e}")
             return []
-    
+
     def test_text_generation(self) -> bool:
         """Test actual text generation with Gemini"""
         print_section("Testing Gemini Text Generation")
-        
+
         try:
             # Configure the API
             genai.configure(api_key=self.api_key)
-            
+
             # Try different model versions
             model_names = [
                 'gemini-1.5-flash',
@@ -157,49 +157,49 @@ class GoogleAITester:
                 'gemini-pro',
                 'gemini-1.0-pro'
             ]
-            
+
             working_model = None
             for model_name in model_names:
                 try:
                     print_info(f"Trying model: {model_name}")
                     model = genai.GenerativeModel(model_name)
-                    
+
                     # Simple test prompt
                     prompt = "Write a one-sentence description of what RuleIQ compliance software does."
-                    
+
                     response = model.generate_content(prompt)
-                    
+
                     if response and response.text:
                         print_success(f"Model {model_name} works!")
                         print_info(f"Response: {response.text[:200]}")
                         working_model = model_name
                         break
-                        
+
                 except Exception as e:
                     print_warning(f"Model {model_name} failed: {str(e)[:100]}")
                     continue
-            
+
             if working_model:
                 print_success(f"\nRecommended model for production: {working_model}")
                 return True
             else:
                 print_error("No working text generation model found")
                 return False
-                
+
         except Exception as e:
             print_error(f"Text generation test failed: {e}")
             return False
-    
+
     def test_advanced_features(self) -> bool:
         """Test advanced Gemini features"""
         print_section("Testing Advanced Gemini Features")
-        
+
         try:
             genai.configure(api_key=self.api_key)
-            
+
             # Use the most capable model
             model = genai.GenerativeModel('gemini-1.5-flash')
-            
+
             # Test 1: JSON mode
             print_info("Testing JSON output mode...")
             try:
@@ -224,7 +224,7 @@ class GoogleAITester:
                         print_warning("Response received but not valid JSON")
             except Exception as e:
                 print_warning(f"JSON mode test failed: {str(e)[:100]}")
-            
+
             # Test 2: System instructions / Chat
             print_info("\nTesting chat/conversation mode...")
             try:
@@ -233,14 +233,14 @@ class GoogleAITester:
                 if response.text:
                     print_success("Chat mode works")
                     print_info(f"Response length: {len(response.text)} chars")
-                    
+
                     # Test conversation memory
                     response2 = chat.send_message("Can you make that shorter?")
                     if response2.text and len(response2.text) < len(response.text):
                         print_success("Conversation context maintained")
             except Exception as e:
                 print_warning(f"Chat mode test failed: {str(e)[:100]}")
-            
+
             # Test 3: Safety settings
             print_info("\nTesting safety settings configuration...")
             try:
@@ -250,7 +250,7 @@ class GoogleAITester:
                         "threshold": "BLOCK_ONLY_HIGH"
                     }
                 ]
-                
+
                 model_safe = genai.GenerativeModel(
                     'gemini-1.5-flash',
                     safety_settings=safety_settings
@@ -260,26 +260,26 @@ class GoogleAITester:
                     print_success("Safety settings configuration works")
             except Exception as e:
                 print_warning(f"Safety settings test failed: {str(e)[:100]}")
-            
+
             return True
-            
+
         except Exception as e:
             print_error(f"Advanced features test failed: {e}")
             return False
-    
+
     def test_rate_limits(self) -> bool:
         """Test API rate limits and quotas"""
         print_section("Testing Rate Limits and Quotas")
-        
+
         try:
             # Make a few rapid requests to test rate limiting
             genai.configure(api_key=self.api_key)
             model = genai.GenerativeModel('gemini-1.5-flash')
-            
+
             print_info("Testing rapid requests...")
             successful_requests = 0
             rate_limited = False
-            
+
             for i in range(5):
                 try:
                     response = model.generate_content(f"Say 'test {i}'")
@@ -292,7 +292,7 @@ class GoogleAITester:
                         print_warning(f"  Request {i+1}: Rate limited")
                     else:
                         print(f"  Request {i+1}: Failed - {str(e)[:50]}")
-            
+
             if successful_requests > 0:
                 print_success(f"Completed {successful_requests}/5 requests successfully")
                 if rate_limited:
@@ -303,15 +303,15 @@ class GoogleAITester:
             else:
                 print_error("All requests failed")
                 return False
-                
+
         except Exception as e:
             print_error(f"Rate limit test failed: {e}")
             return False
-    
+
     def generate_integration_code(self):
         """Generate sample integration code for the application"""
         print_section("Sample Integration Code for RuleIQ")
-        
+
         print_info("Python/FastAPI Backend Integration:")
         print("""
 ```python
@@ -372,7 +372,7 @@ class GoogleAIService:
         return response.text
 ```
         """)
-        
+
         print_info("\nEnvironment Configuration (.env):")
         print("""
 # Google AI Configuration (Primary AI Service)
@@ -394,13 +394,13 @@ def main():
     print(f"\n{Fore.CYAN}{'='*60}")
     print("Google Generative AI (Gemini) Integration Test")
     print(f"{'='*60}{Style.RESET_ALL}")
-    
+
     tester = GoogleAITester()
-    
+
     # Track test results
     tests_passed = 0
     tests_total = 0
-    
+
     # Test 1: API Key
     tests_total += 1
     if tester.test_api_key():
@@ -408,41 +408,41 @@ def main():
     else:
         print_error("Cannot proceed without valid API key")
         return 1
-    
+
     # Test 2: API Connection
     tests_total += 1
     if tester.test_api_connection():
         tests_passed += 1
-    
+
     # Test 3: List Models
     tests_total += 1
     models = tester.list_available_models()
     if models:
         tests_passed += 1
-    
+
     # Test 4: Text Generation
     tests_total += 1
     if tester.test_text_generation():
         tests_passed += 1
-    
+
     # Test 5: Advanced Features
     tests_total += 1
     if tester.test_advanced_features():
         tests_passed += 1
-    
+
     # Test 6: Rate Limits
     tests_total += 1
     if tester.test_rate_limits():
         tests_passed += 1
-    
+
     # Generate integration code
     if tests_passed > 3:
         tester.generate_integration_code()
-    
+
     # Summary
     print_section("Test Summary")
     print(f"\n{Fore.CYAN}Tests Passed: {tests_passed}/{tests_total}{Style.RESET_ALL}")
-    
+
     if tests_passed == tests_total:
         print_success("\n🎉 Google AI integration is perfectly configured!")
         print_success("Gemini is ready to be used as the primary AI service")
@@ -464,6 +464,6 @@ if __name__ == "__main__":
         import subprocess
         subprocess.check_call([sys.executable, "-m", "pip", "install", "google-generativeai"])
         print_success("Package installed successfully")
-    
+
     exit_code = main()
     sys.exit(exit_code)

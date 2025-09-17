@@ -10,7 +10,7 @@ import argparse
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any, Dict
 from ..schemas import ComplianceScenario, EvidenceCase, RegulatoryQAPair
 from .loaders import load_jsonl
 from .versioning import is_semver

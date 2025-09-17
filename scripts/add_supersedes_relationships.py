@@ -9,7 +9,6 @@ import asyncio
 import logging
 from neo4j import AsyncGraphDatabase
 import re
-from datetime import datetime
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -95,7 +94,7 @@ class SupersedesRelationshipBuilder:
                         RETURN new.id as new_reg, old.id as old_reg
                     """
                         , new_id=newer['id'], old_id=older['id'],
-                        description=f'Newer version supersedes older version')
+                        description='Newer version supersedes older version')
                     if await result.single():
                         count += 1
                         logger.info('Version supersession: %s -> %s' % (

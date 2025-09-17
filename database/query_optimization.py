@@ -83,7 +83,7 @@ class QueryOptimizer:
         from database.compliance_framework import ComplianceFramework
         from database.assessment_session import AssessmentSession
         query = select(ComplianceFramework, func.count(AssessmentSession.id
-            ).label('usage_count')).outerjoin(AssessmentSession, 
+            ).label('usage_count')).outerjoin(AssessmentSession,
             AssessmentSession.framework_id == ComplianceFramework.id).where(
             ComplianceFramework.is_active).group_by(ComplianceFramework.id
             ).order_by(func.count(AssessmentSession.id).desc())

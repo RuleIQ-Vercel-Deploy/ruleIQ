@@ -1,119 +1,0 @@
-
-(api.dependencies.rbac_auth.UserWithRolesC
-9/home/omar/Documents/ruleIQ/api/dependencies/rbac_auth.py ("2*ú	
-2 (n
-l
- (4*
-(api.dependencies.rbac_auth.UserWithRoles"
-user"__id*$
-
-__unknown_file (
-
-userp
-n
- (5*
-(api.dependencies.rbac_auth.UserWithRoles"
-roles"__id*%
-
-__unknown_file (	
-
-roles|
-z
- (&;*
-(api.dependencies.rbac_auth.UserWithRoles"
-permissions"__id*+
-
-__unknown_file (
-
-permissions‘
-Ž
-   (:E*
-(api.dependencies.rbac_auth.UserWithRoles"
-accessible_frameworks"__id*5
-
-__unknown_file (
-
-accessible_frameworksF
-D
-! !(
-%2"__id*,
-
-__unknown_file (*
-
-user"
-idj
-h
-! !(2*
-(api.dependencies.rbac_auth.UserWithRoles"
-id"__id*"
-
-__unknown_file (
-
-%2I
-G
-" "(
-%3"__id*/
-
-__unknown_file (*
-
-user"
-emailm
-k
-" "(5*
-(api.dependencies.rbac_auth.UserWithRoles"
-email"__id*"
-
-__unknown_file (
-
-%3M
-K
-# #('
-%4"__id*3
-
-__unknown_file (*
-
-user"
-	is_activeq
-o
-# #('9*
-(api.dependencies.rbac_auth.UserWithRoles"
-	is_active"__id*"
-
-__unknown_file (
-
-%4N
-L
-$ $()
-%5"__id*4
-
-__unknown_file (*
-
-user"
-
-created_atr
-p
-$ $():*
-(api.dependencies.rbac_auth.UserWithRoles"
-
-created_at"__id*"
-
-__unknown_file (
-
-%5*
-3*a
-3
-rbac_auth.py:8
-& &(
-%1"(api.dependencies.rbac_auth.UserWithRoles"
-& &(
-
-%1:
- (!
-user:
-# (4
-roles:
-6 (	
-permissions:#
- (,
-accessible_frameworksB,*
-(api.dependencies.rbac_auth.UserWithRolesH

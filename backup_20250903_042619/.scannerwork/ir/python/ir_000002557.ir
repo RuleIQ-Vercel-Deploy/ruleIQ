@@ -1,153 +1,0 @@
-
-"self.logger"str
-	"logging"str
-"logger"str
-"log"str
-	"_logger"str
-
-#0int
-5"attr"str
-"_log"str
-
-"self.log"str
-2)"Check if this is a logging method call."str
-Ifalsebool
-trueboolself. .(node. .(-	ast.Nameast.Attribute	 tuple"p%
-#
-1 1("#get-field# func:)
-'
-1 1(/"#is-instance#:Bbool"
-1 1(/ *1 1(
-"¤%
-#
-2 2(#"#get-field# func:&
-$
-2 2()"#get-field# value:)
-'
-2 2(4
-"#is-instance#:	Bbool&"$
-2 2(4
- *2 2(29 9("
-? ?(I"¶%
-#
-3 3("#get-field# func:&
-$
-3 3(""#get-field# value:#
-!
-3 3(%"#get-field# id:*
-(
-3 3(2"
-#binop ==#2==:Bbool"
-3 3(2 "š%
-#
-9 9(%0"#get-field# func:&
-$
-9 9(+1"#get-field# value:0)
-'
-9 9(;2"#is-instance#:1Bbool"
-9 9(;2 *9 9("¾%
-#
-37 3(@"#get-field# func:%
-#
-37 3(E"#get-field# attr:0
-.
-3I 3(]"#get-field# logging_methods:*
-(
-37 3(]"
-#binop in#2in:Bbool
-3 3(]"2*"
-3 3(] *3 3("
-4 4("Û%
-#
-6 6("#get-field# func:&
-$
-6 6(""#get-field# value:#
-!
-6 6(%"#get-field# id:(
-&
-6) 6(h"#unknown-value#Btuple&
-$
-6) 6(h!"
-#is-exact#: Bbool
-
-6) 6(h""
-#assume#:!8
-6
-6) 6(h$"#set-field# __collection_size:#Bint&
-$
-6) 6(h%"#array-add-last#:&
-$
-6) 6(h&"#array-add-last#:&
-$
-6) 6(h'"#array-add-last#:&
-$
-6) 6(h("#array-add-last#:&
-$
-6) 6(h)"#array-add-last#:&
-$
-6) 6(h*"#array-add-last#:*
-(
-6 6(h+"
-#binop in#2in:Bbool"
-6 6(h+	 
-*6 6("¾	%
-#
-7 7($,"#get-field# func:%
-#
-7 7()-"#get-field# attr:,0
-.
-7- 7(A."#get-field# logging_methods:*
-(
-7 7(A/"
-#binop in#2in:-.Bbool
-7 7(A/"
-"—%
-#
-: :(%3"#get-field# func:&
-$
-: :(+4"#get-field# value:30
-.
-: :(46"
-builtinshasattr*:45Bbool"
-: :(46 ""ÿ%
-#
-; ;(7"#get-field# func:&
-$
-; ;(#8"#get-field# value:7%
-#
-; ;((9"#get-field# attr:8(
-&
-;, ;(P:"#unknown-value#Btuple&
-$
-;, ;(P;"
-#is-exact#:: Bbool
-
-;, ;(P<"
-#assume#:;8
-6
-;, ;(P="#set-field# __collection_size::#Bint&
-$
-;, ;(P>"#array-add-last#::&
-$
-;, ;(P?"#array-add-last#::&
-$
-;, ;(P@"#array-add-last#::&
-$
-;, ;(PA"#array-add-last#::*
-(
-; ;(PB"
-#binop in#2in:9:Bbool
-: ;(P"(*C6B"
-: ;(PC "¾%
-#
-< <(D"#get-field# func:%
-#
-< <("E"#get-field# attr:D0
-.
-<& <(:F"#get-field# logging_methods:*
-(
-< <(:G"
-#binop in#2in:EFBbool
-: <(:"2*HCG"
-: <(;H *: :("
-= =("*A/home/omar/Documents/ruleIQ/scripts/sonar/fix-logging-fstrings.py

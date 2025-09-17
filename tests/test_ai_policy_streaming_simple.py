@@ -177,7 +177,6 @@ class TestPolicyStreamingAPI:
     async def test_stream_endpoint_format(self):
         """Test that the streaming endpoint returns proper format."""
         import sys
-        from unittest.mock import MagicMock
         sys.modules['services.redis_client'] = MagicMock()
         sys.modules['services.redis_client'].get_redis_client = MagicMock(
             return_value=None)

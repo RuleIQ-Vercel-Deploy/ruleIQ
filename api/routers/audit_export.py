@@ -330,18 +330,18 @@ def _get_framework_specific_report(framework: str, logs: List[AuditLog]
     ) ->Dict:
     """Generate framework-specific compliance report section."""
     if framework.upper() == 'GDPR':
-        return {'data_access_requests': len([log for log in logs if 
+        return {'data_access_requests': len([log for log in logs if
             'data_access_request' in log.action]), 'data_deletion_requests':
             len([log for log in logs if 'data_deletion' in log.action]),
             'consent_updates': len([log for log in logs if 'consent' in log
-            .action]), 'breach_notifications': len([log for log in logs if 
+            .action]), 'breach_notifications': len([log for log in logs if
             'breach' in log.action])}
     elif framework.upper() == 'ISO27001':
         return {'access_control_events': len([log for log in logs if
             _is_security_event(log.action)]), 'change_management': len([log for
             log in logs if _is_modification(log.action)]),
             'incident_responses': len([log for log in logs if 'incident' in
-            log.action]), 'risk_assessments': len([log for log in logs if 
+            log.action]), 'risk_assessments': len([log for log in logs if
             'risk' in log.action])}
     else:
         return {'message': f'No specific report format for {framework}'}

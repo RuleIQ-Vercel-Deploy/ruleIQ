@@ -5,29 +5,28 @@ Implements connection pooling, query optimization, caching, and monitoring.
 
 import time
 import logging
-from typing import Dict, Any, List, Optional, Tuple
-from datetime import datetime, timedelta
+from typing import Dict, Any
+from datetime import datetime
 from functools import wraps
 import asyncio
 from contextlib import asynccontextmanager
 
-from sqlalchemy import create_engine, event, text, Index, inspect
+from sqlalchemy import create_engine, event, Index, inspect
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
-from sqlalchemy.orm import Session, sessionmaker, Query
+from sqlalchemy.orm import sessionmaker, Query
 from sqlalchemy.pool import QueuePool, NullPool, StaticPool
 from sqlalchemy.sql import Select
 import redis
 from redis import ConnectionPool
 
 from core.config import settings
-from database.session import Base
 
 logger = logging.getLogger(__name__)
 
 
 class DatabaseOptimizer:
     """Main database optimization handler."""
-    
+
     def __init__(self):
         self.pool_size = settings.DB_POOL_SIZE if hasattr(settings, 'DB_POOL_SIZE') else 20
         self.max_overflow = settings.DB_MAX_OVERFLOW if hasattr(settings, 'DB_MAX_OVERFLOW') else 10
@@ -37,7 +36,7 @@ class DatabaseOptimizer:
         self.slow_query_threshold = 1.0  # seconds
         self.redis_client = None
         self._init_redis()
-        
+
     def _init_redis(self):
         """Initialize Redis connection for caching."""
         try:
@@ -59,16 +58,16 @@ class DatabaseOptimizer:
         except Exception as e:
             logger.warning(f"Redis not available for caching: {e}")
             self.redis_client = None
-    
+
     def create_optimized_engine(self, database_url: str, is_async: bool = False):
         """Create optimized database engine with connection pooling."""
-        
+
         # Determine pool class based on database type
         if 'sqlite' in database_url:
             pool_class = StaticPool if ':memory:' in database_url else NullPool
         else:
             pool_class = QueuePool
-        
+
         engine_params = {
             'poolclass': pool_class,
             'pool_size': self.pool_size,
@@ -82,7 +81,7 @@ class DatabaseOptimizer:
                 'application_name': 'ruleiq_optimized',
             }
         }
-        
+
         # PostgreSQL specific optimizations
         if 'postgresql' in database_url:
             engine_params['connect_args'].update({
@@ -96,35 +95,35 @@ class DatabaseOptimizer:
                 },
                 'options': '-c statement_timeout=30000'  # 30 second timeout
             })
-        
+
         if is_async:
             engine = create_async_engine(database_url, **engine_params)
         else:
             engine = create_engine(database_url, **engine_params)
-        
+
         # Add event listeners for monitoring
         self._add_engine_listeners(engine)
-        
+
         return engine
-    
+
     def _add_engine_listeners(self, engine):
         """Add event listeners for query monitoring and optimization."""
-        
+
         @event.listens_for(engine, "before_execute")
         def receive_before_execute(conn, clauseelement, multiparams, params, execution_options):
             conn.info.setdefault('query_start_time', []).append(time.time())
             conn.info.setdefault('query_text', []).append(str(clauseelement))
-        
+
         @event.listens_for(engine, "after_execute")
         def receive_after_execute(conn, clauseelement, multiparams, params, execution_options, result):
             total_time = time.time() - conn.info['query_start_time'].pop(-1)
             query_text = conn.info['query_text'].pop(-1)
-            
+
             # Log slow queries
             if total_time > self.slow_query_threshold:
                 logger.warning(f"Slow query detected ({total_time:.2f}s): {query_text[:200]}")
                 self._analyze_slow_query(query_text, total_time)
-    
+
     def _analyze_slow_query(self, query: str, execution_time: float):
         """Analyze and log slow queries for optimization."""
         analysis = {
@@ -133,56 +132,56 @@ class DatabaseOptimizer:
             'timestamp': datetime.utcnow().isoformat(),
             'suggestions': []
         }
-        
+
         # Basic query analysis
         query_lower = query.lower()
-        
+
         if 'select *' in query_lower:
             analysis['suggestions'].append("Avoid SELECT *, specify needed columns")
-        
+
         if 'not in' in query_lower or 'not exists' in query_lower:
             analysis['suggestions'].append("Consider using LEFT JOIN with NULL check")
-        
+
         if query_lower.count('join') > 3:
             analysis['suggestions'].append("Many JOINs detected, consider denormalization")
-        
+
         if 'like' in query_lower and '% ' in query:
             analysis['suggestions'].append("Leading wildcard in LIKE may prevent index use")
-        
+
         logger.info(f"Query analysis: {analysis}")
-    
+
     def create_indexes(self, engine):
         """Create optimized indexes for common queries."""
-        
+
         indexes = [
             # User and authentication indexes
             Index('ix_users_email_active', 'users', 'email', 'is_active'),
             Index('ix_users_created_at', 'users', 'created_at'),
-            
+
             # Assessment indexes
             Index('ix_assessments_user_framework', 'assessments', 'user_id', 'framework_id'),
             Index('ix_assessments_status_created', 'assessments', 'status', 'created_at'),
-            
+
             # Evidence indexes
             Index('ix_evidence_user_framework', 'evidence', 'user_id', 'framework_id'),
             Index('ix_evidence_status', 'evidence', 'status'),
-            
+
             # Audit log indexes
             Index('ix_audit_logs_user_timestamp', 'audit_logs', 'user_id', 'timestamp'),
             Index('ix_audit_logs_event_type', 'audit_logs', 'event_type'),
-            
+
             # Session indexes
             Index('ix_sessions_token', 'sessions', 'token'),
             Index('ix_sessions_expires_at', 'sessions', 'expires_at'),
         ]
-        
+
         inspector = inspect(engine)
         existing_indexes = set()
-        
+
         for table_name in inspector.get_table_names():
             for index in inspector.get_indexes(table_name):
                 existing_indexes.add(index['name'])
-        
+
         created_count = 0
         for index in indexes:
             if index.name not in existing_indexes:
@@ -192,53 +191,53 @@ class DatabaseOptimizer:
                     logger.info(f"Created index: {index.name}")
                 except Exception as e:
                     logger.warning(f"Failed to create index {index.name}: {e}")
-        
+
         logger.info(f"Index optimization complete. Created {created_count} new indexes")
-    
+
     def optimize_query(self, query: Query) -> Query:
         """Apply query optimizations."""
-        
+
         # Add query hints
         query = query.execution_options(
             synchronize_session=False,
             populate_existing=True,
             autoflush=False
         )
-        
+
         # Enable query result caching
         if self.redis_client:
             query = query.execution_options(
                 cache_key=self._generate_cache_key(str(query))
             )
-        
+
         return query
-    
+
     def _generate_cache_key(self, query_str: str) -> str:
         """Generate cache key for query results."""
         import hashlib
         return f"query_cache:{hashlib.md5(query_str.encode()).hexdigest()}"
-    
+
     async def cached_query(self, session: AsyncSession, query: Select, cache_ttl: int = 300):
         """Execute query with caching."""
-        
+
         if not self.redis_client:
             # No cache available, execute directly
             result = await session.execute(query)
             return result.scalars().all()
-        
+
         # Generate cache key
         cache_key = self._generate_cache_key(str(query))
-        
+
         # Check cache
         cached_result = self.redis_client.get(cache_key)
         if cached_result:
             import pickle
             return pickle.loads(cached_result)
-        
+
         # Execute query
         result = await session.execute(query)
         data = result.scalars().all()
-        
+
         # Cache result
         import pickle
         self.redis_client.setex(
@@ -246,9 +245,9 @@ class DatabaseOptimizer:
             cache_ttl,
             pickle.dumps(data)
         )
-        
+
         return data
-    
+
     def invalidate_cache(self, pattern: str = "*"):
         """Invalidate cached query results."""
         if self.redis_client:
@@ -260,13 +259,13 @@ class DatabaseOptimizer:
 
 class ConnectionPoolManager:
     """Manage database connection pools efficiently."""
-    
+
     def __init__(self, optimizer: DatabaseOptimizer):
         self.optimizer = optimizer
         self.pools: Dict[str, Any] = {}
         self.pool_stats: Dict[str, Dict] = {}
         self._monitor_task = None
-    
+
     def get_pool(self, name: str = "default") -> Any:
         """Get or create a connection pool."""
         if name not in self.pools:
@@ -277,13 +276,13 @@ class ConnectionPoolManager:
                 'errors': 0
             }
         return self.pools[name]
-    
+
     def _create_pool(self, name: str) -> Any:
         """Create a new connection pool."""
         database_url = getattr(settings, f'DATABASE_URL_{name.upper()}', settings.DATABASE_URL)
         engine = self.optimizer.create_optimized_engine(database_url)
         return sessionmaker(bind=engine)
-    
+
     async def monitor_pools(self):
         """Monitor connection pool health."""
         while True:
@@ -292,7 +291,7 @@ class ConnectionPoolManager:
                     # Get pool statistics
                     engine = pool.kw['bind']
                     pool_impl = engine.pool
-                    
+
                     stats = {
                         'size': pool_impl.size(),
                         'checked_in': pool_impl.checkedin(),
@@ -300,23 +299,23 @@ class ConnectionPoolManager:
                         'overflow': pool_impl.overflow(),
                         'total': pool_impl.total()
                     }
-                    
+
                     self.pool_stats[name].update(stats)
-                    
+
                     # Log if pool is exhausted
                     if stats['checked_out'] >= self.optimizer.pool_size:
                         logger.warning(f"Connection pool '{name}' is exhausted: {stats}")
-                    
+
                 except Exception as e:
                     logger.error(f"Error monitoring pool '{name}': {e}")
-            
+
             await asyncio.sleep(60)  # Check every minute
-    
+
     def start_monitoring(self):
         """Start pool monitoring task."""
         if not self._monitor_task:
             self._monitor_task = asyncio.create_task(self.monitor_pools())
-    
+
     def get_stats(self) -> Dict[str, Dict]:
         """Get current pool statistics."""
         return self.pool_stats
@@ -324,7 +323,7 @@ class ConnectionPoolManager:
 
 class QueryOptimizationDecorator:
     """Decorators for query optimization."""
-    
+
     @staticmethod
     def with_retry(max_attempts: int = 3, delay: float = 1.0):
         """Retry database operations on failure."""
@@ -342,7 +341,7 @@ class QueryOptimizationDecorator:
                         else:
                             logger.error(f"Failed after {max_attempts} attempts: {e}")
                 raise last_exception
-            
+
             @wraps(func)
             def sync_wrapper(*args, **kwargs):
                 last_exception = None
@@ -356,10 +355,10 @@ class QueryOptimizationDecorator:
                         else:
                             logger.error(f"Failed after {max_attempts} attempts: {e}")
                 raise last_exception
-            
+
             return async_wrapper if asyncio.iscoroutinefunction(func) else sync_wrapper
         return decorator
-    
+
     @staticmethod
     def with_timeout(timeout: float = 30.0):
         """Add timeout to database operations."""

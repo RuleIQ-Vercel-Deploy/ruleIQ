@@ -7,7 +7,6 @@ import logging
 logger = logging.getLogger(__name__)
 import json
 import subprocess
-import sys
 from datetime import datetime
 from pathlib import Path
 RULEIQ_PROJECT_ID = '342d657c-fb73-4f71-9b6e-302857319aac'
@@ -76,9 +75,9 @@ def export_archon_data() -> Any:
     export_file = backup_dir / 'archon_export.json'
     with open(export_file, 'w') as f:
         json.dump(export_data, f, indent=2, default=str)
-    logger.info(f'\n✅ Export complete!')
+    logger.info('\n✅ Export complete!')
     logger.info(f'📁 Location: {backup_dir}')
-    logger.info(f'📊 Summary:')
+    logger.info('📊 Summary:')
     for table, data in export_data['tables'].items():
         logger.info(f'   - {table}: {len(data)} records')
     create_import_script(backup_dir, export_data)

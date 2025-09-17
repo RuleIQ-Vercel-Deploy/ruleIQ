@@ -306,7 +306,7 @@ class SecretsVault:
             'env': 'Local Environment Variables'}
         status = {'vault_type': backend_map.get(self.backend, 'Unknown'),
             'backend': self.backend, 'enabled': True, 'region': self.
-            region_name if self.backend == 'aws' else None, 'secret_name': 
+            region_name if self.backend == 'aws' else None, 'secret_name':
             self.secret_name if self.backend == 'aws' else None, 'status':
             'unknown'}
         if self.backend == 'doppler':
@@ -358,8 +358,8 @@ class SecretsVault:
         if doppler_token:
             return {'status': 'healthy', 'message':
                 'Doppler secrets management active with token authentication',
-                'project': doppler_project or 'Not specified', 'config': 
-                doppler_config or 'default', 'environment': 
+                'project': doppler_project or 'Not specified', 'config':
+                doppler_config or 'default', 'environment':
                 doppler_environment or 'Not specified', 'token_configured':
                 True}
         elif doppler_project:

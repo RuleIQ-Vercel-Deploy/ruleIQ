@@ -1,269 +1,0 @@
-
-"total_requests"str
-."batching_enabled"str
-A"cost_optimization"str
-""cache_hit_rate"str
-G"estimated_cost"str
-1("Get comprehensive performance metrics."str
-'"current_queue_size"str
-"division by zero"bool
-
-0int
-:"batch_size"str
-
-J4int
-1000int
-`100int
- C"estimated_token_usage"str
-#"average_response_time_ms"str
-&4"parallel_processing_enabled"str
-c"last_request_time"str
-"7"max_concurrent_requests"str
- ="batch_timeout_seconds"str
-Y"queue_utilization"str
-
-2int
-1"compression_enabled"str
- ,"optimization_settings"str
-"S3518"bool
-"request_statistics"str
-U"available_capacity"str
-S"system_health"str
-"a"bool
-M"optimization_savings"strself
-¯& ¯(*"∏6
-4
-
-˙ ˙(#"!#get-field# performance_metrics:0
-.
-
-˙ ˙(1"#get-field# request_count:*
-(
-
-˙ ˙(5"	#binop >#2>:Bbool "
-
-˙ ˙(5 *
-˙ ˙(
-"‹6
-4
-
-˚> ¸(#"!#get-field# performance_metrics:6
-4
-
-˚> ¸(7"!#get-field# total_response_time:6
-4
-
-¸: ˝(#	"!#get-field# performance_metrics:0
-.
-
-¸: ˝(1
-"#get-field# request_count:	,
-*
-
-˚> ˝(1"
-#binop !=#2!=:
-Bbool"
- 
-
-˚> ˝(1"
-#assert#:3
-1
-
-˚> ˝(1"#dependent-value#*:
-Bfloat6
-4
-
-˚ ˚($"!#get-field# performance_metrics:9
-7
-
-˚ ˚(:"#!#set-field# average_response_time:"î&
-$
-
-˛ è(>"#new-object#Bdict&
-$
-
-˛& Ç(<"#new-object#Bdict6
-4
-
-˛9 ˇ("!#get-field# performance_metrics:0
-.
-
-˛9 ˇ(-"#get-field# request_count:"
- 
-
-˛' ˇ(-"	#map-set#:6
-4
-
-Ä Ä(*"!#get-field# performance_metrics:8
-6
-
-Ä Ä(@"#!#get-field# average_response_time:'
-%
-
-Ä Ä(G"	#binop *#*2*:*
-(
-
-Ä Ä(K "
-builtinsround*:"
- 
-
-ˇ/ Ä(K!"	#map-set#: 6
-4
-
-Å$ Å(<#"!#get-field# performance_metrics:1
-/
-
-Å$ Å(K$"#get-field# cache_hit_rate:#*
-(
-
-Å Ç(%"
-builtinsround*:$"
- 
-
-Å Ç(&"	#map-set#:"%.
-,
-
-Ç* Ç(:("#get-field# batch_queue:,
-*
-
-Ç& Ç(;)"
-builtinslen*:(Bint"
- 
-
-Ç Ç(;*"	#map-set#:')"
- 
-
-˛ Ç(<+"	#map-set#:&
-$
-
-É% à(-"#new-object#Bdict2
-0
-
-É: Ñ(/"#get-field# enable_batching:"
- 
-
-É& Ñ(0"	#map-set#:-./5
-3
-
-Ñ4 Ñ(K2" #get-field# enable_compression:"
- 
-
-Ñ Ñ(K3"	#map-set#:-12=
-;
-
-Ö+ Ö(J5"(&#get-field# enable_parallel_processing:"
- 
-
-Ö Ö(J6"	#map-set#:-45:
-8
-
-Ü' Ü(C8"%##get-field# max_concurrent_requests:"
- 
-
-Ü Ü(C9"	#map-set#:-78-
-+
-
-á á();"#get-field# batch_size:"
- 
-
-á á()<"	#map-set#:-:;0
-.
-
-áD à(>"#get-field# batch_timeout:"
- 
-
-á+ à(?"	#map-set#:-=>"
- 
-
-É à(@"	#map-set#:,-&
-$
-
-à1 å(%B"#new-object#Bdict6
-4
-
-â â($D"!#get-field# performance_metrics:.
-,
-
-â â(0E"#get-field# token_usage:D"
- 
-
-à2 â(0F"	#map-set#:BCE6
-4
-
-ä ä($H"!#get-field# performance_metrics:0
-.
-
-ä ä(2I"#get-field# cost_estimate:H*
-(
-
-âD ä(6K"
-builtinsround*:IJ"
- 
-
-â2 ä(6L"	#map-set#:BGK6
-4
-
-ã* ã(BN"!#get-field# performance_metrics:7
-5
-
-ã* å( O"" #get-field# optimization_savings:N*
-(
-
-ã$ å($P"
-builtinsround*:OJ"
- 
-
-ã å($Q"	#map-set#:BMP"
- 
-
-à å(%R"	#map-set#:AB&
-$
-
-å8 è(=T"#new-object#Bdict4
-2
-
-ç" ç(8V"#get-field# request_semaphore:)
-'
-
-ç" ç(?W"#get-field# _value:V"
- 
-
-ç ç(?X"	#map-set#:TUW.
-,
-
-é% é(5Z"#get-field# batch_queue:,
-*
-
-é! é(6["
-builtinslen*:ZBint-
-+
-
-é9 é(H\"#get-field# batch_size:,
-*
-
-é! é(H]"
-#binop !=#2!=:\Bbool"
- 
-
-é! é(H^"
-#assert#:]3
-1
-
-é! é(H_"#dependent-value#*:[\Bfloat3
-1
-
-é! è(a"#dependent-value#*:_`Bfloat"
- 
-
-é è(b"	#map-set#:TYa4
-2
-
-è& è(<d"#get-field# last_request_time:"
- 
-
-è è(<e"	#map-set#:Tcd"
- 
-
-å' è(=f"	#map-set#:ST
-
-˛ è(>*@/home/omar/Documents/ruleIQ/services/ai/performance_optimizer.py

@@ -1,74 +1,0 @@
-
-™†"You are an expert compliance consultant specializing in {framework}.
-        Generate intelligent, context-aware evidence collection recommendations based on the organization's
-        specific situation, maturity level, and existing compliance posture.
-
-        Focus on:
-        1. Practical, actionable recommendations
-        2. Prioritization based on risk and business impact
-        3. Consideration of organizational capacity and maturity
-        4. Industry-specific requirements and best practices
-        5. Automation opportunities where applicable
-
-        Return recommendations as a JSON array with this structure:
-        [{{
-            "control_id": "AC-1",
-            "title": "Access Control Policy",
-            "description": "Specific action to take",
-            "priority": "High|Medium|Low",
-            "effort_hours": 8,
-            "automation_possible": true,
-            "business_justification": "Why this is important for this organization",
-            "implementation_steps": ["Step 1", "Step 2", "Step 3"]
-        }}]"str
-"system"str
-Ö
-˚"
-        Organization Profile:
-        - Company: {business_context.get('company_name', 'Unknown')}
-        - Industry: {business_context.get('industry', 'Unknown')}
-        - Size: {business_context.get('employee_count', 0)} employees
-        - Maturity Level: {maturity_analysis.get('maturity_level', 'Basic')}
-        - Maturity Score: {maturity_analysis.get('maturity_score', 40)}/100
-
-        Current Compliance Status:
-        - Framework: {framework}
-        - Completion: {gaps_analysis.get('completion_percentage', 0)}%
-        - Evidence Items: {len(existing_evidence)}
-        - Critical Gaps: {len(gaps_analysis.get('critical_gaps', []))}
-
-        Existing Evidence Types:
-        {self._summarize_evidence_types(existing_evidence)}
-
-        Critical Gaps Identified:
-        {gaps_analysis.get('critical_gaps', [])}
-
-        Generate 8-12 prioritized recommendations that address the most critical gaps while
-        considering the organization's maturity level and capacity for implementation.
-        "str
-"user"str
-G>"Build a comprehensive prompt for contextual recommendations."strself
-–0 –(4 business_context
-–6 —(!existing_evidence
-— —(5!maturity_analysis
-—7 “(gaps_analysis
-“ “(5	framework
-“7 “(E"‚/
--
-
-’ Í(	system_prompt"#id#:Bstr-
-+
-
-Î Å(user_prompt"#id#:
-Bstr&
-$
-
-Ç Ç(="#new-object#Bdict"
- 
-
-Ç Ç('"	#map-set#:	"
- 
-
-Ç) Ç(<"	#map-set#:
-
-Ç Ç(=*4/home/omar/Documents/ruleIQ/services/ai/assistant.py

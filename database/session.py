@@ -9,7 +9,6 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sess
 from typing import Generator, AsyncGenerator
 
 from config.settings import settings
-from database.db_setup import Base
 
 # Sync engine and session
 engine = create_engine(settings.database_url, echo=settings.debug)

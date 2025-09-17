@@ -11,7 +11,6 @@ import json
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Any
-import hashlib
 ISO_STANDARDS = {'ISO 27001:2022': {'title':
     'Information Security Management System', 'version': '2022', 'clauses':
     {'4': {'title': 'Context of the organization', 'controls': [{'id':
@@ -324,7 +323,7 @@ def extract_iso_obligations() ->Any:
                     'clause_title': clause_data['title'], 'control_id':
                     control['id'], 'title': control['title'], 'description':
                     control['description'], 'type': control['type'],
-                    'category': control['category'], 'compliance_level': 
+                    'category': control['category'], 'compliance_level':
                     'mandatory' if control['type'] == 'mandatory' else
                     'recommended', 'obligation_id':
                     f"{standard_name.replace(':', '_').replace(' ', '_')}-{control['id']}",

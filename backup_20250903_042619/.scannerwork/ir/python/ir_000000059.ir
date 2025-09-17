@@ -1,69 +1,0 @@
-
-
-"evidence"str
-"error_message"str
-1000int
-"source_id"str
-"data"str
- "Convert to dictionary"str
-"status"str
-"collection_time_ms"str
-
-"duration"strself[ [($	 orchestrator_v2.CollectionStatus"Ò%
-#
-	] ](•"#new-object#Bdict*
-(
-] ](+"#get-field# source_id: 
-
-] ](+"	#map-set#:'
-%
-]W ](b"#get-field# status:)
-'
-]L ](u
-"#is-instance#:	Bbool&"$
-]L ](u
- *]I ](K2]v ](z"d'
-%
-]7 ](B"#get-field# status:&
-$
-]7 ](H"#get-field# value:
-	]7 ](Ü"=(
-&
-	]{ ](Ü"#get-field# status:
-	]7 ](Ü"ã*!
-
-	]- ](Ü"	#map-set#:+
-)
-
-]î ](°"#get-field# evidence:"
- 
-
-]à ](°"	#map-set#:+
-)
-
-]´ ](∏"#get-field# evidence:"
- 
-
-]£ ](∏"	#map-set#:0
-.
-
-]À ](›"#get-field# error_message:"
- 
-
-]∫ ](›"	#map-set#:+
-)
-
-]Î ](¯"#get-field# duration:"
- 
-
-]ﬂ ](¯"	#map-set#:+
-)
-
-]ê ](ù"#get-field# duration:'
-%
-
-]ê ](§"	#binop *#*2*:"
- 
-
-]˙ ](§ "	#map-set#:
-	] ](•*@/home/omar/Documents/ruleIQ/services/evidence/orchestrator_v2.py

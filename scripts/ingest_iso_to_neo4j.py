@@ -10,7 +10,6 @@ import json
 import os
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Any
 from neo4j import GraphDatabase
 
 

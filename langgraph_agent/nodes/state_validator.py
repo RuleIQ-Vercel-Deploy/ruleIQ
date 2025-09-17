@@ -6,7 +6,6 @@ State validator node for validating and preparing workflow state.
 
 import logging
 from datetime import datetime
-from typing import Optional
 
 from langgraph_agent.graph.unified_state import UnifiedComplianceState
 

@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 Script to fix undefined variables in catch blocks and similar patterns.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 import os
 import re
 import glob
@@ -17,7 +17,7 @@ def fix_undefined_error_vars(content: str) ->Any:
     patterns = [(
         '(\\s*}\\s*catch\\s*{\\s*[^}]*?)(console\\.error\\([^,]+,\\s*err\\))',
         lambda m: m.group(1).replace('catch {', 'catch (err) {') + m.group(
-        2)), ('(\\s*}\\s*catch\\s*{\\s*[^}]*?)(setError\\(err)', lambda m: 
+        2)), ('(\\s*}\\s*catch\\s*{\\s*[^}]*?)(setError\\(err)', lambda m:
         m.group(1).replace('catch {', 'catch (err) {') + m.group(2)), (
         '(\\s*}\\s*catch\\s*{\\s*[^}]*?)(console\\.error\\([^,]+,\\s*error\\))'
         , lambda m: m.group(1).replace('catch {', 'catch (error) {') + m.

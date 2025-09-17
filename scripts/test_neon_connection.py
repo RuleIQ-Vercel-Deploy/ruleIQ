@@ -4,14 +4,12 @@ Test script to verify Neon database connection
 Ensures we're connecting to Neon cloud and not local PostgreSQL
 """
 
-from typing import Any, Dict, List, Optional
 import os
 import sys
 import asyncio
 from dotenv import load_dotenv
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import text, inspect
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy import text
 from urllib.parse import urlparse
 
 # Load environment variables
@@ -30,7 +28,7 @@ async def test_neon_connection():
     # Parse the URL to check if it's Neon
     parsed = urlparse(database_url.replace("postgresql+asyncpg://", "postgresql://"))
 
-    print(f"🔍 Database Connection Details:")
+    print("🔍 Database Connection Details:")
     print(f"   Host: {parsed.hostname}")
     print(f"   Port: {parsed.port or 5432}")
     print(f"   Database: {parsed.path.lstrip('/')}")
@@ -89,7 +87,7 @@ async def test_neon_connection():
             # Test basic query
             result = await conn.execute(text("SELECT version()"))
             version = result.scalar()
-            print(f"\n✅ Successfully connected to database!")
+            print("\n✅ Successfully connected to database!")
             print(f"   PostgreSQL version: {version}")
 
             # Check for Neon-specific settings
@@ -147,11 +145,11 @@ async def test_neon_connection():
                     text("SELECT version_num FROM alembic_version"),
                 )
                 migration_version = result.scalar()
-                print(f"\n🔄 Database migrations:")
+                print("\n🔄 Database migrations:")
                 print(f"   Current version: {migration_version}")
             else:
                 print(
-                    f"\n⚠️  No alembic_version table found - migrations may not be initialized",
+                    "\n⚠️  No alembic_version table found - migrations may not be initialized",
                 )
 
         await engine.dispose()
@@ -161,7 +159,7 @@ async def test_neon_connection():
         return True
 
     except Exception as e:
-        print(f"\n❌ Failed to connect to database:")
+        print("\n❌ Failed to connect to database:")
         print(f"   Error: {str(e)}")
 
         if "connection refused" in str(e).lower():

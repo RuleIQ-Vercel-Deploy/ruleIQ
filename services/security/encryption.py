@@ -10,19 +10,15 @@ import json
 import logging
 import os
 import secrets
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, Optional, Tuple
 from datetime import datetime, timedelta, timezone
 from cryptography.fernet import Fernet, MultiFernet
-from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import rsa, padding
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.ciphers.aead import ChaCha20Poly1305, AESGCM
 import aiofiles
 import aiofiles.os
-from database import User
-from database.db_setup import get_async_db
 from services.cache_service import CacheService
 from config.settings import settings
 logger = logging.getLogger(__name__)

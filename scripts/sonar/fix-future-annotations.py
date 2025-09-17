@@ -6,9 +6,7 @@ import logging
 logger = logging.getLogger(__name__)
 import ast
 import os
-import sys
 from pathlib import Path
-from typing import List, Tuple
 
 def needs_future_annotations(file_path: Path) -> bool:
     """Check if file needs future annotations import."""
@@ -106,7 +104,7 @@ def main() -> None:
         if checked_count % 100 == 0:
             logger.info(f'  Processed {checked_count}/{len(python_files)} files...')
     logger.info('\n' + '=' * 60)
-    logger.info(f'Results:')
+    logger.info('Results:')
     logger.info(f'  Files checked: {len(python_files)}')
     logger.info(f'  Files fixed: {fixed_count}')
     logger.info(f'  Files already correct: {len(python_files) - fixed_count}')

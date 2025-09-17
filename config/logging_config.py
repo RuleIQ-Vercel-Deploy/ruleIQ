@@ -43,7 +43,7 @@ def get_logging_config(log_level: str) ->Dict[str, Any]:
         'logging.handlers.RotatingFileHandler', 'filename': 'logs/app.log',
         'maxBytes': 10485760, 'backupCount': 5, 'formatter': 'json'},
         'error_file': {'class': 'logging.handlers.RotatingFileHandler',
-        'filename': 'logs/error.log', 'maxBytes': 10485760, 'backupCount': 
+        'filename': 'logs/error.log', 'maxBytes': 10485760, 'backupCount':
         5, 'formatter': 'json', 'level': 'ERROR'}}, 'root': {'handlers': [
         'console', 'file', 'error_file'], 'level': log_level}, 'loggers': {
         'uvicorn': {'handlers': ['console', 'file'], 'level': 'INFO',
@@ -84,7 +84,7 @@ class ComplianceLogger:
         """Log compliance-related events."""
         self.logger.info('Compliance event: %s' % event_type, extra={
             'event_type': 'compliance_event', 'compliance_framework':
-            framework, 'compliance_event_type': event_type, 'details': 
+            framework, 'compliance_event_type': event_type, 'details':
             details or {}})
 
     def log_ai_interaction(self, model: str, prompt_type: str, tokens_used:

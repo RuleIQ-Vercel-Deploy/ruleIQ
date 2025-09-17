@@ -16,11 +16,9 @@ Comprehensive Endpoint Validator for RuleIQ API
 Tests all endpoints and verifies they affect their relative surfaces correctly
 """
 import json
-import time
 import requests
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Optional
 from datetime import datetime
-import sys
 from colorama import init, Fore, Style
 init(autoreset=True)
 
@@ -260,7 +258,7 @@ class EndpointValidator:
         print(
             f'{Fore.GREEN}Successful: {successful_tests} ({successful_tests / total_tests * 100:.1f}%)'
             )
-        logger.info('%sFailed: %s (%s%)' % (Fore.RED, failed_tests, 
+        logger.info('%sFailed: %s (%s%)' % (Fore.RED, failed_tests,
             failed_tests / total_tests * 100))
         logger.info('Average Response Time: %ss\n' % avg_response_time)
         logger.info('Status Code Distribution:')

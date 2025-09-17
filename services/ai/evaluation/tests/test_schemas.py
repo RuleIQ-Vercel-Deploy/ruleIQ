@@ -1,8 +1,7 @@
 """Test golden dataset schemas."""
 import pytest
 from datetime import date, datetime, timezone
-from typing import Optional
-from pydantic import ValidationError, HttpUrl
+from pydantic import ValidationError
 from ..schemas.common import RegCitation, SourceMeta, TemporalValidity
 from ..schemas.compliance_scenario import ComplianceScenario, ExpectedOutcome
 from ..schemas.evidence_case import EvidenceCase, EvidenceItem, FrameworkMap

@@ -248,7 +248,7 @@ class AIAnalyticsMonitor:
         return {'period': {'start': start_time.isoformat(), 'end': end_time
             .isoformat(), 'days': days}, 'cost_summary': {'total_cost':
             round(total_cost, 4), 'average_daily_cost': round(total_cost /
-            days, 4), 'total_tokens': int(total_tokens), 'cost_per_token': 
+            days, 4), 'total_tokens': int(total_tokens), 'cost_per_token':
             round(total_cost / total_tokens, 6) if total_tokens > 0 else 0},
             'daily_cost_trend': dict(sorted(daily_costs.items())),
             'cost_by_content_type': dict(sorted(cost_by_type.items(), key=
@@ -265,7 +265,7 @@ class AIAnalyticsMonitor:
 
     async def _calculate_optimization_savings(self) ->float:
         """Calculate estimated savings from optimization."""
-        optimized_requests = len([m for m in self.metrics if 
+        optimized_requests = len([m for m in self.metrics if
             'optimization_metadata' in m.metadata])
         estimated_savings_per_optimization = 0.0005
         return optimized_requests * estimated_savings_per_optimization
@@ -274,7 +274,7 @@ class AIAnalyticsMonitor:
         """Get AI response quality metrics and feedback analysis."""
         return {'overall_quality_score': 8.5, 'quality_trends': {
             'recommendations': 8.7, 'policies': 8.9, 'workflows': 8.3,
-            'analysis': 8.1}, 'feedback_summary': {'total_feedback_items': 
+            'analysis': 8.1}, 'feedback_summary': {'total_feedback_items':
             150, 'positive_feedback': 85, 'negative_feedback': 15,
             'neutral_feedback': 50, 'satisfaction_rate': 85.0},
             'improvement_areas': [

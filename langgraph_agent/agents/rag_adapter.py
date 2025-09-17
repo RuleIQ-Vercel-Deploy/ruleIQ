@@ -11,7 +11,7 @@ from typing import List, Optional, Dict, Any
 from uuid import UUID, uuid4
 from pathlib import Path
 import logging
-from .rag_system import RAGSystem, DocumentMetadata, DocumentType, DocumentSource, RetrievalResult, DocumentChunk, RetrievalStrategy
+from .rag_system import DocumentMetadata, DocumentType, DocumentSource, RetrievalResult, DocumentChunk, RetrievalStrategy
 from .rag_standard import StandardizedRAG
 logger = logging.getLogger(__name__)
 

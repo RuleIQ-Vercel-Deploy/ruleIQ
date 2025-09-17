@@ -1,7 +1,6 @@
 """API endpoints for AI response validation."""
 
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, status
-from fastapi.responses import JSONResponse
 from typing import List, Optional, Dict, Any
 from datetime import datetime
 import asyncio
@@ -12,8 +11,6 @@ from models.validation import (
     ValidationRequest,
     BatchValidationRequest,
     BatchValidationResult,
-    HumanReviewRequest,
-    ValidationAuditEntry,
     ReviewPriority
 )
 from middleware.circuit_breaker import CircuitBreaker
@@ -66,14 +63,14 @@ async def validate_response(
             context = request.context or {}
             context["user_id"] = current_user.get("user_id")
             context["session_id"] = request.session_id
-            
+
             # Perform validation
             result = await validator.validate_response(
                 response=request.response_text,
                 context=context,
                 response_id=str(request.request_id)
             )
-            
+
             # Schedule audit logging in background
             background_tasks.add_task(
                 log_validation_audit,
@@ -82,7 +79,7 @@ async def validate_response(
                 result,
                 current_user
             )
-            
+
             # Schedule human review if needed
             if result.requires_human_review:
                 background_tasks.add_task(
@@ -91,9 +88,9 @@ async def validate_response(
                     request,
                     result
                 )
-            
+
             return result
-            
+
     except Exception as e:
         logger.error(f"Validation error: {str(e)}")
         raise HTTPException(
@@ -123,7 +120,7 @@ async def validate_batch(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Maximum 10 responses per batch"
             )
-        
+
         # Prepare responses and contexts
         responses = [req.response_text for req in batch_request.responses]
         contexts = []
@@ -133,7 +130,7 @@ async def validate_batch(
             context["session_id"] = req.session_id
             context["batch_id"] = str(batch_request.batch_id)
             contexts.append(context)
-        
+
         # Perform batch validation with timeout
         try:
             results = await asyncio.wait_for(
@@ -149,14 +146,14 @@ async def validate_batch(
                 status_code=status.HTTP_408_REQUEST_TIMEOUT,
                 detail=f"Batch validation timeout after {batch_request.timeout_seconds} seconds"
             )
-        
+
         # Calculate batch statistics
         total_confidence = sum(r.confidence_score for r in results)
         successful = sum(1 for r in results if r.is_valid)
         failed = sum(1 for r in results if not r.is_valid)
         requiring_review = sum(1 for r in results if r.requires_human_review)
         total_time = sum(r.processing_time_ms for r in results)
-        
+
         batch_result = BatchValidationResult(
             batch_id=batch_request.batch_id,
             total_responses=len(results),
@@ -167,7 +164,7 @@ async def validate_batch(
             total_processing_time_ms=total_time,
             results=[r.model_dump() for r in results]
         )
-        
+
         # Schedule batch audit logging
         background_tasks.add_task(
             log_batch_validation_audit,
@@ -177,9 +174,9 @@ async def validate_batch(
             results,
             current_user
         )
-        
+
         return batch_result
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -200,7 +197,7 @@ async def get_validation_metrics(
     try:
         metrics = validator.get_metrics()
         health = await validator.health_check()
-        
+
         return {
             "metrics": metrics.model_dump(),
             "health": health,
@@ -227,20 +224,20 @@ async def get_review_queue(
     try:
         # Query review queue from database
         from models.validation_audit import HumanReviewQueue
-        
+
         query = db.query(HumanReviewQueue)
-        
+
         if priority:
             query = query.filter(HumanReviewQueue.priority == priority)
         if status:
             query = query.filter(HumanReviewQueue.status == status)
-        
+
         # Order by priority score and creation time
         items = query.order_by(
             HumanReviewQueue.priority_score.desc(),
             HumanReviewQueue.created_at
         ).limit(limit).all()
-        
+
         return [
             {
                 "review_id": str(item.review_id),
@@ -254,7 +251,7 @@ async def get_review_queue(
             }
             for item in items
         ]
-        
+
     except Exception as e:
         logger.error(f"Error getting review queue: {str(e)}")
         raise HTTPException(
@@ -277,18 +274,18 @@ async def complete_review(
     try:
         from models.validation_audit import HumanReviewQueue
         import uuid
-        
+
         # Find review item
         review = db.query(HumanReviewQueue).filter(
             HumanReviewQueue.review_id == uuid.UUID(review_id)
         ).first()
-        
+
         if not review:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Review item not found"
             )
-        
+
         # Update review
         review.status = "completed"
         review.review_decision = decision
@@ -296,16 +293,16 @@ async def complete_review(
         review.corrections_applied = corrections
         review.completed_at = datetime.utcnow()
         review.assigned_to = current_user.get("user_id")
-        
+
         db.commit()
-        
+
         return {
             "review_id": review_id,
             "status": "completed",
             "decision": decision,
             "completed_at": review.completed_at.isoformat()
         }
-        
+
     except HTTPException:
         raise
     except Exception as e:
@@ -328,7 +325,7 @@ async def log_validation_audit(
     try:
         from models.validation_audit import ValidationAudit
         import hashlib
-        
+
         audit_entry = ValidationAudit(
             validation_id=result.response_id,
             request_id=request.request_id,
@@ -351,10 +348,10 @@ async def log_validation_audit(
             regulation_count=len(result.matched_regulations),
             metadata=result.metadata
         )
-        
+
         db.add(audit_entry)
         db.commit()
-        
+
     except Exception as e:
         logger.error(f"Error logging audit: {str(e)}")
         db.rollback()
@@ -368,7 +365,7 @@ async def create_review_request(
     """Create human review request for low confidence validation."""
     try:
         from models.validation_audit import HumanReviewQueue
-        
+
         # Calculate priority based on confidence
         if result.confidence_score < 30:
             priority = "critical"
@@ -382,7 +379,7 @@ async def create_review_request(
         else:
             priority = "low"
             priority_score = 25
-        
+
         review_request = HumanReviewQueue(
             validation_id=result.response_id,
             audit_id=request.request_id,
@@ -396,10 +393,10 @@ async def create_review_request(
             response_text=request.response_text,
             suggested_corrections=[]
         )
-        
+
         db.add(review_request)
         db.commit()
-        
+
     except Exception as e:
         logger.error(f"Error creating review request: {str(e)}")
         db.rollback()

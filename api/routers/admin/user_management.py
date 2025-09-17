@@ -246,7 +246,7 @@ async def update_user(user_id: UUID, request: UserUpdateRequest,
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=
             'User not found')
     if request.email is not None:
-        existing = db.query(User).filter(and_(User.email == request.email, 
+        existing = db.query(User).filter(and_(User.email == request.email,
             User.id != user_id)).first()
         if existing:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,

@@ -18,7 +18,7 @@ Verifies 100% connectivity after cleanup
 import json
 import asyncio
 import aiohttp
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List, Optional
 from datetime import datetime
 from pathlib import Path
 import sys
@@ -137,12 +137,12 @@ class APIAlignmentTester:
             'POST', '/api/v1/business-profiles', 'Create business profile',
             True), ('GET', '/api/v1/business-profiles/{id}',
             'Get business profile', True), ('PUT',
-            '/api/v1/business-profiles/{id}', 'Update business profile', 
+            '/api/v1/business-profiles/{id}', 'Update business profile',
             True), ('GET', '/api/v1/assessments', 'List assessments', True),
             ('POST', '/api/v1/assessments', 'Create assessment', True), (
             'GET', '/api/v1/assessments/{id}', 'Get assessment', True), (
             'PUT', '/api/v1/assessments/{id}', 'Update assessment', True),
-            ('DELETE', '/api/v1/assessments/{id}', 'Delete assessment', 
+            ('DELETE', '/api/v1/assessments/{id}', 'Delete assessment',
             True), ('POST', '/api/v1/freemium-assessment',
             'Create freemium assessment', False), ('GET',
             '/api/v1/freemium-assessment/questions',
@@ -151,7 +151,7 @@ class APIAlignmentTester:
             'Generate questions', True), ('POST',
             '/api/v1/ai/evaluate-answers', 'Evaluate answers', True), (
             'GET', '/api/v1/ai/frameworks', 'List AI frameworks', True), (
-            'POST', '/api/v1/ai/recommendations', 'Get recommendations', 
+            'POST', '/api/v1/ai/recommendations', 'Get recommendations',
             True), ('GET', '/api/v1/ai/metrics', 'Get AI metrics', True), (
             'POST', '/api/v1/ai/optimization/analyze', 'Optimize analysis',
             True), ('GET', '/api/v1/ai/optimization/suggestions',
@@ -209,26 +209,26 @@ class APIAlignmentTester:
             '/api/v1/reports/{id}', 'Get report', True), ('GET',
             '/api/v1/reports/{id}/download', 'Download report', True), (
             'GET', '/api/v1/integrations', 'List integrations', True), (
-            'POST', '/api/v1/integrations/connect', 'Connect integration', 
+            'POST', '/api/v1/integrations/connect', 'Connect integration',
             True), ('DELETE', '/api/v1/integrations/{id}',
             'Disconnect integration', True), ('GET',
             '/api/v1/dashboard/stats', 'Dashboard stats', True), ('GET',
             '/api/v1/dashboard/metrics', 'Dashboard metrics', True), ('GET',
             '/api/v1/dashboard/activity', 'Dashboard activity', True), (
-            'POST', '/api/v1/payments/create-checkout', 'Create checkout', 
-            True), ('POST', '/api/v1/payments/webhook', 'Payment webhook', 
+            'POST', '/api/v1/payments/create-checkout', 'Create checkout',
+            True), ('POST', '/api/v1/payments/webhook', 'Payment webhook',
             False), ('GET', '/api/v1/payments/subscription',
             'Get subscription', True), ('GET', '/api/v1/monitoring/health',
             'Health check', False), ('GET', '/api/v1/monitoring/metrics',
             'Monitoring metrics', True), ('GET',
             '/api/v1/monitoring/alerts', 'Monitoring alerts', True), ('GET',
             '/api/v1/performance/metrics', 'Performance metrics', True), (
-            'GET', '/api/v1/performance/insights', 'Performance insights', 
+            'GET', '/api/v1/performance/insights', 'Performance insights',
             True), ('GET', '/api/v1/performance/trends',
             'Performance trends', True), ('GET',
             '/api/v1/security/audit-log', 'Audit log', True), ('GET',
             '/api/v1/security/active-sessions', 'Active sessions', True), (
-            'POST', '/api/v1/security/revoke-session', 'Revoke session', 
+            'POST', '/api/v1/security/revoke-session', 'Revoke session',
             True), ('GET', '/api/secrets/list', 'List secrets', True), (
             'POST', '/api/secrets/store', 'Store secret', True), ('GET',
             '/api/secrets/retrieve/{key}', 'Retrieve secret', True), (
@@ -240,8 +240,8 @@ class APIAlignmentTester:
             '/api/v1/ai/cost/budget', 'Cost budget', True), ('GET',
             '/api/v1/ai/cost-websocket/ws', 'Cost WebSocket', True), (
             'POST', '/api/v1/iq-agent/query', 'IQ Agent query', True), (
-            'GET', '/api/v1/iq-agent/suggestions', 'IQ Agent suggestions', 
-            True), ('GET', '/api/v1/iq-agent/history', 'IQ Agent history', 
+            'GET', '/api/v1/iq-agent/suggestions', 'IQ Agent suggestions',
+            True), ('GET', '/api/v1/iq-agent/history', 'IQ Agent history',
             True), ('POST', '/api/v1/agentic-rag/find-examples',
             'Find examples', True), ('POST',
             '/api/v1/agentic-rag/fact-check', 'Fact check', True), ('POST',

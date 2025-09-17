@@ -2,12 +2,11 @@
 from __future__ import annotations
 import logging
 logger = logging.getLogger(__name__)
-from typing import List, Dict, Any, Optional
-from pathlib import Path
+from typing import List, Dict, Any
 import json
 from datetime import datetime
 import numpy as np
-from services.ai.evaluation.schemas.common import GoldenDoc, GoldenChunk, SourceMeta, RegCitation, ExpectedOutcome
+from services.ai.evaluation.schemas.common import GoldenDoc, GoldenChunk, SourceMeta
 from services.ai.evaluation.infrastructure.neo4j_setup import Neo4jConnection
 
 
@@ -104,7 +103,6 @@ class EmbeddingGenerator:
     def generate_embedding(self, text: str, normalize: bool=False) ->List[float
         ]:
         """Generate embedding for a single text."""
-        import numpy as np
         embedding = self.model.encode([text], convert_to_tensor=False)[0]
         if isinstance(embedding, np.ndarray):
             embedding = embedding.tolist()
@@ -116,7 +114,6 @@ class EmbeddingGenerator:
 
     def generate_embeddings_batch(self, texts: List[str]) ->List[List[float]]:
         """Generate embeddings for multiple texts."""
-        import numpy as np
         embeddings = self.model.encode(texts, convert_to_tensor=False)
         result = []
         for embedding in embeddings:

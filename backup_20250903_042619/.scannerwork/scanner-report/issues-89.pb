@@ -1,6 +1,0 @@
-c
-pythonS2068H"password" detected here, review this potentially hard-coded credential. 2 *ó
-pythonS5713WRemove this redundant Exception class; it derives from another which is already caught. 2
-ÅÅ2 ::
-Y
-ÅÅ' 0Parent class.

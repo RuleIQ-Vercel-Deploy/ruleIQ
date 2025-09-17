@@ -1,1 +1,0 @@
-"""Golden Dataset evaluation tools."""

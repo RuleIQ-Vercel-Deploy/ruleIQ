@@ -225,7 +225,7 @@ class TestPrometheusExporter:
 
         # Make HTTP request to metrics endpoint
         async with aiohttp.ClientSession() as session:
-            async with session.get(f"http://localhost:9090/metrics") as response:
+            async with session.get("http://localhost:9090/metrics") as response:
                 assert response.status == 200
                 content = await response.text()
                 assert "test_metric" in content
@@ -607,7 +607,7 @@ class TestIntegration:
         import aiohttp
 
         async with aiohttp.ClientSession() as session:
-            async with session.get(f"http://localhost:9091/metrics") as response:
+            async with session.get("http://localhost:9091/metrics") as response:
                 assert response.status == 200
                 content = await response.text()
 

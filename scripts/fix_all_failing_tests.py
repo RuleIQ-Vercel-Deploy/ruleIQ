@@ -70,13 +70,13 @@ def fix_cache_strategy_tests() ->None:
     """Fix cache strategy and cached content tests."""
     logger.info('\n1. Fixing Cache Strategy Tests...')
     test_files = [project_root /
-        'tests/unit/services/test_cache_strategy_optimization.py', 
+        'tests/unit/services/test_cache_strategy_optimization.py',
         project_root / 'tests/unit/services/test_cached_content.py']
     for test_file in test_files:
         if test_file.exists():
             with open(test_file, 'r') as f:
                 content = f.read()
-            if ('@pytest.fixture' in content and 
+            if ('@pytest.fixture' in content and
                 'def optimized_cache_config():' in content):
                 logger.info('  ✓ %s already fixed' % test_file.name)
             else:

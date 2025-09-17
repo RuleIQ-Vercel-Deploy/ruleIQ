@@ -94,7 +94,7 @@ class SmartEvidenceCollector:
         self.task_queue: List[EvidenceTask] = []
         self.automation_rules: Dict[str, Dict[str, Any]] = {}
         self._initialize_automation_rules()
-        self.metrics = {'tasks_completed': 0, 'automation_success_rate': 
+        self.metrics = {'tasks_completed': 0, 'automation_success_rate':
             0.0, 'average_completion_time': 0.0, 'efficiency_score': 0.0}
 
     def _initialize_automation_rules(self) ->None:
@@ -114,7 +114,7 @@ class SmartEvidenceCollector:
             'Vulnerability scanners', 'Security assessment tools'],
             'effort_reduction': 0.7, 'success_rate': 0.8},
             'training_record': {'automation_level': AutomationLevel.MANUAL,
-            'tools': ['Learning management systems'], 'effort_reduction': 
+            'tools': ['Learning management systems'], 'effort_reduction':
             0.3, 'success_rate': 0.7}, 'interview_documentation': {
             'automation_level': AutomationLevel.MANUAL, 'tools': [
             'Interview templates', 'Documentation tools'],

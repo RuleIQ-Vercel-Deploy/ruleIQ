@@ -11,7 +11,7 @@ Part of Phase 6: Response Schema Validation implementation.
 import json
 import traceback
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, Tuple, TypeVar, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 from uuid import uuid4
 from config.logging_config import get_logger
 from .validation_models import validate_ai_response
@@ -174,7 +174,7 @@ class AIResponseProcessor:
         metadata = {'response_id': str(uuid4()), 'timestamp': datetime.now(
             timezone.utc).isoformat(), 'model_used': model_used,
             'processing_time_ms': processing_time_ms, 'confidence_score':
-            payload.get('confidence_score', 0.8 if validation_passed else 
+            payload.get('confidence_score', 0.8 if validation_passed else
             0.5), 'schema_version': '1.0.0', 'validation_status': 'valid' if
             validation_passed and not errors else 'invalid' if errors else
             'partially_valid', 'validation_errors': errors}

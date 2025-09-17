@@ -104,7 +104,7 @@ Please copy env.template to .env.local and configure the variables."""
         try:
             from config.database_pool_config import ConnectionPoolConfig
             is_production = os.getenv('ENVIRONMENT', 'development').lower() == 'production'
-            
+
             if is_async:
                 return ConnectionPoolConfig.get_async_pool_settings(is_production)
             else:
@@ -186,12 +186,12 @@ def init_db() ->bool:
         logger.info('Initializing database...')
         _init_sync_db()
         _init_async_db()
-        
+
         # Create all tables if they don't exist
         if _ENGINE is not None:
             Base.metadata.create_all(bind=_ENGINE)
             logger.info('Database tables created/verified')
-        
+
         if not test_database_connection():
             return False
         logger.info('Database initialization completed successfully')

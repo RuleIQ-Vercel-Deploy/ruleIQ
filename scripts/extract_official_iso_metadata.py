@@ -11,7 +11,7 @@ import csv
 import json
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Any
+from typing import Any
 
 
 def extract_iso_metadata() ->Any:

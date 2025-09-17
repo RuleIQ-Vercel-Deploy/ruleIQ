@@ -7,12 +7,10 @@ Connects to real ReportGenerator, PDFGenerator, and ReportScheduler services.
 
 import logging
 import os
-import json
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, Any, List, Optional
 from uuid import UUID
-import asyncio
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
@@ -21,7 +19,7 @@ import smtplib
 import aiofiles
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_
+from sqlalchemy import select
 
 from langgraph_agent.graph.state import ComplianceAgentState
 from database.business_profile import BusinessProfile as BusinessProfileModel
@@ -31,8 +29,6 @@ from database.compliance_framework import (
 )
 from services.reporting.report_generator import ReportGenerator
 from services.reporting.pdf_generator import PDFGenerator
-from langgraph_agent.graph.state import ComplianceAgentState
-from langgraph_agent.utils.cost_tracking import track_node_cost
 from services.reporting.report_scheduler import ReportScheduler
 from database.report_schedule import ReportSchedule as ReportScheduleModel
 from config.settings import settings
@@ -65,16 +61,16 @@ def _send_email_directly(
         smtp_user = getattr(settings, 'SMTP_USER', '')
         smtp_password = getattr(settings, 'SMTP_PASSWORD', '')
         smtp_from = getattr(settings, 'SMTP_FROM', 'noreply@ruleiq.com')
-        
+
         # Create message
         msg = MIMEMultipart()
         msg['From'] = smtp_from
         msg['To'] = ', '.join(recipients)
         msg['Subject'] = subject
-        
+
         # Add body
         msg.attach(MIMEText(body, 'plain'))
-        
+
         # Add attachments if provided
         if attachments:
             for attachment in attachments:
@@ -86,17 +82,17 @@ def _send_email_directly(
                     f'attachment; filename={attachment["filename"]}'
                 )
                 msg.attach(part)
-        
+
         # Send email
         with smtplib.SMTP(smtp_host, smtp_port) as server:
             if smtp_user and smtp_password:
                 server.starttls()
                 server.login(smtp_user, smtp_password)
             server.send_message(msg)
-        
+
         logger.info(f"Email sent successfully to {recipients}")
         return True
-        
+
     except Exception as e:
         logger.error(f"Failed to send email: {e}")
         return False

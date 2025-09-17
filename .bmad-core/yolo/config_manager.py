@@ -27,12 +27,12 @@ class YOLOConfig:
     safety: Dict[str, Any]
     workflow: Dict[str, Any]
     monitoring: Dict[str, Any]
-    
+
     @classmethod
     def from_dict(cls, data: Dict[str, Any]) -> 'YOLOConfig':
         """Create config from dictionary."""
         return cls(**data)
-    
+
     def get_agent_limit(self, agent: str) -> int:
         """Get token limit for agent."""
         return self.agent_limits.get(agent.lower(), 5000)
@@ -40,7 +40,7 @@ class YOLOConfig:
 
 class ConfigManager:
     """Manages YOLO configuration with hot reload."""
-    
+
     CONFIG_SCHEMA = {
         "type": "object",
         "properties": {
@@ -110,7 +110,7 @@ class ConfigManager:
         },
         "required": ["system", "agent_limits"]
     }
-    
+
     def __init__(self, config_path: str = None):
         """Initialize configuration manager."""
         self.config_path = Path(config_path or ".bmad-core/yolo/config/yolo-config.yaml")
@@ -120,7 +120,7 @@ class ConfigManager:
         self._config_checksum: Optional[str] = None  # For integrity validation
         self._load_config()
         self._setup_watcher()
-        
+
     def _calculate_checksum(self, file_path: Path) -> str:
         """Calculate SHA256 checksum of a file."""
         sha256_hash = hashlib.sha256()
@@ -129,25 +129,25 @@ class ConfigManager:
                 for byte_block in iter(lambda: f.read(4096), b""):
                     sha256_hash.update(byte_block)
         return sha256_hash.hexdigest()
-    
+
     def _validate_config_integrity(self) -> bool:
         """Validate config file integrity using checksum."""
         if not self.config_path.exists():
             return True  # No file to validate
-        
+
         new_checksum = self._calculate_checksum(self.config_path)
         if self._config_checksum is None:
             # First load, store checksum
             self._config_checksum = new_checksum
             return True
-        
+
         if new_checksum != self._config_checksum:
             logger.info(f"Config file changed (checksum: {new_checksum[:8]}...)")
             self._config_checksum = new_checksum
             return True
-        
+
         return True
-    
+
     def _load_config(self):
         """Load configuration from file with environment overrides (thread-safe)."""
         with self._config_lock:
@@ -156,7 +156,7 @@ class ConfigManager:
                 if not self._validate_config_integrity():
                     logger.warning("Config file integrity check failed, using cached config")
                     return
-                
+
                 # Load base config from file
                 if self.config_path.exists():
                     with open(self.config_path) as f:
@@ -164,22 +164,22 @@ class ConfigManager:
                 else:
                     logger.warning(f"Config file not found at {self.config_path}, using defaults")
                     data = self._get_default_config()
-                
+
                 # Apply environment variable overrides
                 data = self._apply_env_overrides(data)
-                
+
                 # Validate configuration
                 jsonschema.validate(data, self.CONFIG_SCHEMA)
-                
+
                 # Ensure all required sections exist
                 for section in ['system', 'agent_limits', 'context', 'retry', 'safety', 'workflow', 'monitoring']:
                     if section not in data:
                         data[section] = self._get_default_config()[section]
-                
+
                 # Create config object
                 self.config = YOLOConfig.from_dict(data)
                 logger.info("Configuration loaded successfully")
-            
+
             except yaml.YAMLError as e:
                 logger.error(f"Error parsing YAML config: {e}")
                 self.config = YOLOConfig.from_dict(self._get_default_config())
@@ -189,14 +189,14 @@ class ConfigManager:
             except Exception as e:
                 logger.error(f"Error loading config: {e}")
                 self.config = YOLOConfig.from_dict(self._get_default_config())
-        
+
     def _apply_env_overrides(self, config: Dict[str, Any]) -> Dict[str, Any]:
         """Apply environment variable overrides."""
         # Example: YOLO_AGENT_LIMITS_DEV=15000
         for key, value in os.environ.items():
             if key.startswith('YOLO_'):
                 parts = key[5:].lower().split('_')
-                
+
                 # Handle special cases where config keys have underscores
                 # YOLO_AGENT_LIMITS_DEV -> agent_limits.dev
                 if len(parts) >= 3 and parts[0] == 'agent' and parts[1] == 'limits':
@@ -223,17 +223,17 @@ class ConfigManager:
                     combined_key = f"{parts[0]}_{parts[1]}"
                     if combined_key in config and len(parts) > 2:
                         parts = [combined_key] + parts[2:]
-                
+
                 # Skip if parts doesn't map to a valid config path
                 if len(parts) >= 2 and parts[0] in config:
                     self._set_nested(config, parts, value)
         return config
-    
+
     def _set_nested(self, d: Dict, keys: List[str], value: str):
         """Set nested dictionary value."""
         for key in keys[:-1]:
             d = d.setdefault(key, {})
-        
+
         # Convert value to appropriate type
         try:
             # Try integer first
@@ -249,7 +249,7 @@ class ConfigManager:
                 else:
                     # Keep as string
                     d[keys[-1]] = value
-    
+
     def _get_default_config(self) -> Dict[str, Any]:
         """Get default configuration."""
         return {
@@ -301,22 +301,22 @@ class ConfigManager:
                 "retention_days": 30
             }
         }
-    
+
     def _setup_watcher(self):
         """Setup file watcher for hot reload."""
         if not self.config_path.exists():
             logger.warning("Config file doesn't exist, skipping watcher setup")
             return
-            
+
         class ConfigReloadHandler(FileSystemEventHandler):
             def __init__(self, config_manager):
                 self.config_manager = config_manager
-                
+
             def on_modified(self, event):
                 if event.src_path == str(self.config_manager.config_path):
-                    logger.info(f"Config file changed, reloading...")
+                    logger.info("Config file changed, reloading...")
                     self.config_manager._load_config()
-        
+
         try:
             self.observer = Observer()
             self.observer.schedule(
@@ -328,22 +328,22 @@ class ConfigManager:
             logger.info("Config file watcher started")
         except Exception as e:
             logger.warning(f"Could not start config file watcher: {e}")
-    
+
     def stop_watcher(self):
         """Stop the file watcher."""
         if self.observer and self.observer.is_alive():
             self.observer.stop()
             self.observer.join()
-    
+
     def get(self, key_path: str, default: Any = None) -> Any:
         """Get configuration value by dot-notation path (thread-safe)."""
         with self._config_lock:
             if not self.config:
                 return default
-                
+
             keys = key_path.split('.')
             value = self.config.__dict__
-            
+
             for key in keys:
                 if isinstance(value, dict):
                     value = value.get(key)
@@ -352,11 +352,11 @@ class ConfigManager:
                 if value is None:
                     return default
             return value
-    
+
     def reload(self):
         """Manually reload configuration."""
         self._load_config()
-        
+
     def __del__(self):
         """Cleanup watcher on deletion."""
         self.stop_watcher()

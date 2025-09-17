@@ -5,7 +5,6 @@ Abacus AI Client with Doppler Secrets Management
 This replaces the old client with hardcoded credentials.
 All secrets are now managed through Doppler.
 """
-import os
 from typing import Optional, Dict, Any
 import logging
 from app.core.doppler_config import DopplerConfig

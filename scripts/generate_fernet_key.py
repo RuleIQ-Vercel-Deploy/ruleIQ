@@ -12,7 +12,6 @@ Example:
   python scripts/generate_fernet_key.py
 """
 
-from typing import Any, Dict, List, Optional
 from cryptography.fernet import Fernet
 
 

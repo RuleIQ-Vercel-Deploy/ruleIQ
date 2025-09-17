@@ -1,73 +1,0 @@
-
-1("Check for existing logger definitions."str
-	"logging"str
-
-0int
-"getLogger"strself# #(node# #(	ast.Attributeast.Nameast.Call"q&
-$
-% %( "#get-field# value:)
-'
-% %(+"#is-instance#:Bbool"
-% %(+ *% %(
-"š&
-$
-& &($"#get-field# value:%
-#
-& &()"#get-field# func:)
-'
-& &(9
-"#is-instance#:	Bbool"
-& &(9
- *& &("
-* *("¸&
-$
-' '(("#get-field# value:%
-#
-' '(-"#get-field# func:&
-$
-' '(3"#get-field# value:)
-'
-' '(>"#is-instance#:Bbool"
-' '(> ""Ú&
-$
-'C '(M"#get-field# value:%
-#
-'C '(R"#get-field# func:&
-$
-'C '(X"#get-field# value:#
-!
-'C '(["#get-field# id:*
-(
-'C '(h"
-#binop ==#2==:Bbool
-' '(h"(*"
-' '(h "·&
-$
-'n '(x"#get-field# value:%
-#
-'n '(}"#get-field# func:&
-$
-	'n '(‚"#get-field# attr:+
-)
-	'n '(‘"
-#binop ==#2==:Bbool
-	' '(’"3*"
-	' '(’	 
-*' '("™	(
-&
-(" ((."#get-field# targets:"
- 
-(" ((1"#array-read#:)
-'
-( ((< "#is-instance#:Bbool"
-( ((<  *( (("
-"ª(
-&
-)+ )(7!"#get-field# targets:"
- 
-)+ )(:""#array-read#:!#
-!
-)+ )(=#"#get-field# id:"-
-+
-) )(($"#set-field# logger_name:#"
-*A/home/omar/Documents/ruleIQ/scripts/sonar/fix-print-to-logging.py

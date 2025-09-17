@@ -9,7 +9,7 @@ import os
 import sys
 from typing import List, Dict, Any, Optional
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 import requests
 import uvicorn

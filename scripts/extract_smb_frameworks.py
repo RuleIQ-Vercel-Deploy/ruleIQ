@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 import json
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Any
+from typing import Any
 import hashlib
 SMB_FRAMEWORKS = {'ISO 27001:2022': {'title':
     'Information Security Management System', 'source':

@@ -5,7 +5,7 @@ AI Policy Generation API Router
 
 Provides endpoints for AI-powered policy generation with dual provider support.
 """
-from typing import Optional, Any, Dict, AsyncGenerator, Generator
+from typing import Optional, Any, Dict, AsyncGenerator
 from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from sqlalchemy.orm import Session
 from database.db_setup import get_db
@@ -205,7 +205,7 @@ async def get_policy_templates(framework_id: Optional[str]=None,
         description='Data governance policy for FCA-regulated firms',
         policy_type='data_governance_policy', framework_compatibility=[
         'FCA_REGULATORY'], sections=['governance_framework', 'data_quality',
-        'regulatory_reporting'], customization_options={'include_smcr': 
+        'regulatory_reporting'], customization_options={'include_smcr':
         True, 'include_operational_resilience': True}), PolicyTemplate(id=
         'cyber_essentials_security', name=
         'Cyber Essentials Security Policy', description=

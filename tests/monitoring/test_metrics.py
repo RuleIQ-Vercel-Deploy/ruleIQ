@@ -136,12 +136,12 @@ metrics_collector = MetricsCollector()
 # Create proper test class that uses fixtures instead of __init__
 class TestMetricsCollector:
     """Test class for MetricsCollector functionality"""
-    
+
     @pytest.fixture(autouse=True)
     def setup_method(self):
         """Set up a fresh metrics collector for each test"""
         self.collector = MetricsCollector()
-    
+
     def test_basic_functionality(self):
         """Test basic metrics collection functionality"""
         # Test that the collector was properly initialized
@@ -149,12 +149,12 @@ class TestMetricsCollector:
         assert "test_executions" in self.collector.metrics
         assert "performance_data" in self.collector.metrics
         assert "resource_usage" in self.collector.metrics
-        
+
     def test_system_metrics_collection(self):
         """Test system metrics collection"""
         self.collector.collect_system_metrics()
         assert len(self.collector.metrics["resource_usage"]) == 1
-        
+
         resource_metric = self.collector.metrics["resource_usage"][0]
         assert "cpu_percent" in resource_metric
         assert "memory_percent" in resource_metric

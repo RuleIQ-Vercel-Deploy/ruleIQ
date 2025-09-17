@@ -5,7 +5,6 @@ logger = logging.getLogger(__name__)
 
 Import full document content to Supabase from Archon MCP data
 """
-import json
 from supabase import create_client, Client
 SUPABASE_URL = 'https://wohtxsiayhtvycvkamev.supabase.co'
 SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndvaHR4c2lheWh0dnljdmthbWV2Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NjYyNTczOSwiZXhwIjoyMDcyMjAxNzM5fQ.mzmZQ_cBvjr0B1oSuRrjZ_jk4HqM7Xz0bETDo29RzI0'

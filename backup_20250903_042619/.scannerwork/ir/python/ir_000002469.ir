@@ -1,62 +1,0 @@
-
-¥›"
-    Decorator for adding retry logic to functions.
-
-    Args:
-        max_attempts: Maximum number of retry attempts
-        base_delay: Base delay between retries in seconds
-        max_delay: Maximum delay between retries in seconds
-        exponential_base: Base for exponential backoff calculation
-        jitter: Whether to add random jitter to delays
-        exceptions: Tuple of exceptions that should trigger retries
-        on_retry: Optional callback function called on each retry
-
-    Example:
-        @retry(max_attempts=3, exceptions=(ConnectionError, TimeoutError))
-        async def api_call():
-            # Your API call here
-            pass
-    "strmax_attempts
-‰
- ‰(
-base_delay
-‰ ‰(4	max_delay
-‰6 ‰(K exponential_base
-Š Š(jitter
-Š! Š(2
-exceptions
-Š4 ‹(on_retry
-‹ ‹(2"ã#
-!
-
-± ±("#unknown-value#*
-(
-
-Ÿ ±(	%closure"#new-object#0
-.
-
-Ÿ ±(
-"#set-field# max_attempts:	.
-,
-
-Ÿ ±("#set-field# base_delay:	-
-+
-
-Ÿ ±("#set-field# max_delay:	4
-2
-
-Ÿ ±("#set-field# exponential_base:	*
-(
-
-Ÿ ±("#set-field# jitter:	.
-,
-
-Ÿ ±("#set-field# exceptions:	,
-*
-
-Ÿ ±("#set-field# on_retry:	-
-+
-
-Ÿ ±("?python-partial-apply?:	
-
-± ±(*./home/omar/Documents/ruleIQ/api/utils/retry.py

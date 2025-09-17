@@ -1,32 +1,0 @@
-
-"Microsoft 365"str
-"Zoom"str
-	"Dropbox"str
-
-0int
-"Google Workspace"str
-&"Atlassian (Jira/Confluence)"str
-"Salesforce"str
-"Box"str
-B9"Get list of common SaaS tools for integration guidance."str
-"Slack"str
-
-
-"DocuSign"str
-"Other"str
-	"HubSpot"str
-"ServiceNow"str
-		"Zendesk"strlist"í(
-&
-	x †("#unknown-value#Blist'
-%
-	x †("
-#is-exact#:Bbool
-
-	x †("
-#assume#:9
-7
-	x †("#set-field# __collection_size:Bint,
-*
-	x †("?python-unknown?*Blist
-	x †(*8/home/omar/Documents/ruleIQ/services/business_service.py

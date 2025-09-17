@@ -46,7 +46,7 @@ class StackAuthDryRunValidator:
         results = {'file': str(router_path.relative_to(self.project_root)),
             'has_jwt_imports': False, 'has_stack_auth_imports': False,
             'jwt_dependencies': [], 'stack_auth_dependencies': [],
-            'endpoints_count': 0, 'protected_endpoints': 0, 'mixed_auth': 
+            'endpoints_count': 0, 'protected_endpoints': 0, 'mixed_auth':
             False, 'conversion_ready': False}
         try:
             with open(router_path, 'r', encoding='utf-8') as f:
@@ -255,7 +255,7 @@ class StackAuthDryRunValidator:
             'file'] for r in mixed_auth], 'phase_2_jwt_only': [r['file'] for
             r in needs_conversion], 'phase_3_validation': [r['file'] for r in
             already_converted]}, 'estimated_time_minutes': len(
-            needs_conversion) * 5 + len(mixed_auth) * 10, 'risk_level': 
+            needs_conversion) * 5 + len(mixed_auth) * 10, 'risk_level':
             'LOW' if len(mixed_auth) == 0 else 'MEDIUM'}
         return plan
 

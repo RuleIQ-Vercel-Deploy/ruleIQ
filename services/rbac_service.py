@@ -450,7 +450,7 @@ def initialize_rbac_system(db: Session) ->None:
         'Manage compliance frameworks and policies', True), ('assessor',
         'Assessor', 'Create and manage compliance assessments', True), (
         'viewer', 'Viewer', 'Read-only access to compliance data', True), (
-        'business_user', 'Business User', 'Standard business user access', 
+        'business_user', 'Business User', 'Standard business user access',
         True)]
     for name, display_name, description, is_system in default_roles:
         try:

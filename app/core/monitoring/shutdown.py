@@ -7,8 +7,7 @@ import asyncio
 import signal
 import sys
 from typing import Optional, Set, Callable, Any
-from datetime import datetime, timedelta, timezone
-import logging
+from datetime import datetime, timezone
 from .logger import get_logger
 logger = get_logger(__name__)
 

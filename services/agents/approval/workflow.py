@@ -48,19 +48,19 @@ class ApprovalWorkflow:
     """
     Manages approval workflows for L0 agent actions
     """
-    
+
     def __init__(self):
         """Initialize approval workflow engine"""
         self.pending_requests: Dict[str, ApprovalRequest] = {}
         self.completed_requests: List[ApprovalRequest] = []
         self.approval_callbacks: Dict[str, asyncio.Event] = {}
         self.timeout_tasks: Dict[str, asyncio.Task] = {}
-        
+
         # Configuration
         self.max_pending_requests = 10
         self.default_timeout = timedelta(minutes=5)
         self.allow_bulk_approval = True
-        
+
     async def create_request(
         self,
         suggestion_id: str,
@@ -94,7 +94,7 @@ class ApprovalWorkflow:
         # Check pending request limit
         if len(self.pending_requests) >= self.max_pending_requests:
             raise ValueError(f"Maximum pending requests ({self.max_pending_requests}) exceeded")
-        
+
         # Create request
         timeout = timeout or self.default_timeout
         request = ApprovalRequest(
@@ -107,20 +107,20 @@ class ApprovalWorkflow:
             expires_at=datetime.utcnow() + timeout,
             metadata=metadata or {}
         )
-        
+
         # Store request
         self.pending_requests[request.id] = request
-        
+
         # Create event for this request
         self.approval_callbacks[request.id] = asyncio.Event()
-        
+
         # Schedule timeout
         self.timeout_tasks[request.id] = asyncio.create_task(
             self._handle_timeout(request.id, timeout)
         )
-        
+
         return request
-    
+
     async def approve_request(
         self,
         request_id: str,
@@ -140,36 +140,36 @@ class ApprovalWorkflow:
         """
         if request_id not in self.pending_requests:
             return False
-        
+
         request = self.pending_requests[request_id]
-        
+
         # Check if request is still valid
         if request.state != ApprovalState.PENDING:
             return False
-        
+
         if datetime.utcnow() > request.expires_at:
             request.state = ApprovalState.TIMEOUT
             return False
-        
+
         # Update request
         request.state = ApprovalState.APPROVED
         request.approved_by = approved_by
         request.approval_note = approval_note
-        
+
         # Cancel timeout task
         if request_id in self.timeout_tasks:
             self.timeout_tasks[request_id].cancel()
             del self.timeout_tasks[request_id]
-        
+
         # Move to completed
         self._complete_request(request_id)
-        
+
         # Signal approval
         if request_id in self.approval_callbacks:
             self.approval_callbacks[request_id].set()
-        
+
         return True
-    
+
     async def reject_request(
         self,
         request_id: str,
@@ -189,32 +189,32 @@ class ApprovalWorkflow:
         """
         if request_id not in self.pending_requests:
             return False
-        
+
         request = self.pending_requests[request_id]
-        
+
         # Check if request is still valid
         if request.state != ApprovalState.PENDING:
             return False
-        
+
         # Update request
         request.state = ApprovalState.REJECTED
         request.approved_by = rejected_by
         request.rejected_reason = reason
-        
+
         # Cancel timeout task
         if request_id in self.timeout_tasks:
             self.timeout_tasks[request_id].cancel()
             del self.timeout_tasks[request_id]
-        
+
         # Move to completed
         self._complete_request(request_id)
-        
+
         # Signal rejection
         if request_id in self.approval_callbacks:
             self.approval_callbacks[request_id].set()
-        
+
         return True
-    
+
     async def cancel_request(self, request_id: str) -> bool:
         """
         Cancel a pending request
@@ -227,30 +227,30 @@ class ApprovalWorkflow:
         """
         if request_id not in self.pending_requests:
             return False
-        
+
         request = self.pending_requests[request_id]
-        
+
         # Check if request is still pending
         if request.state != ApprovalState.PENDING:
             return False
-        
+
         # Update state
         request.state = ApprovalState.CANCELLED
-        
+
         # Cancel timeout task
         if request_id in self.timeout_tasks:
             self.timeout_tasks[request_id].cancel()
             del self.timeout_tasks[request_id]
-        
+
         # Move to completed
         self._complete_request(request_id)
-        
+
         # Signal cancellation
         if request_id in self.approval_callbacks:
             self.approval_callbacks[request_id].set()
-        
+
         return True
-    
+
     async def bulk_approve(
         self,
         request_ids: List[str],
@@ -270,15 +270,15 @@ class ApprovalWorkflow:
         """
         if not self.allow_bulk_approval:
             raise ValueError("Bulk approval is disabled")
-        
+
         results = {}
         for request_id in request_ids:
             results[request_id] = await self.approve_request(
                 request_id, approved_by, approval_note
             )
-        
+
         return results
-    
+
     async def wait_for_approval(
         self,
         request_id: str,
@@ -296,12 +296,12 @@ class ApprovalWorkflow:
         """
         if request_id not in self.pending_requests:
             raise ValueError(f"Request {request_id} not found")
-        
+
         if request_id not in self.approval_callbacks:
             raise ValueError(f"No callback registered for request {request_id}")
-        
+
         event = self.approval_callbacks[request_id]
-        
+
         # Wait for event or timeout
         try:
             if timeout:
@@ -313,40 +313,40 @@ class ApprovalWorkflow:
             if request_id in self.pending_requests:
                 self.pending_requests[request_id].state = ApprovalState.TIMEOUT
                 self._complete_request(request_id)
-        
+
         # Get final state
         if request_id in self.completed_requests:
             request = next(r for r in self.completed_requests if r.id == request_id)
         else:
             request = self.pending_requests.get(request_id)
-        
+
         return request.state if request else ApprovalState.TIMEOUT
-    
+
     async def _handle_timeout(self, request_id: str, timeout: timedelta):
         """Handle request timeout"""
         await asyncio.sleep(timeout.total_seconds())
-        
+
         if request_id in self.pending_requests:
             request = self.pending_requests[request_id]
             if request.state == ApprovalState.PENDING:
                 request.state = ApprovalState.TIMEOUT
                 self._complete_request(request_id)
-                
+
                 # Signal timeout
                 if request_id in self.approval_callbacks:
                     self.approval_callbacks[request_id].set()
-    
+
     def _complete_request(self, request_id: str):
         """Move request from pending to completed"""
         if request_id in self.pending_requests:
             request = self.pending_requests[request_id]
             self.completed_requests.append(request)
             del self.pending_requests[request_id]
-            
+
             # Clean up callback
             if request_id in self.approval_callbacks:
                 del self.approval_callbacks[request_id]
-    
+
     def get_pending_requests(
         self,
         user_id: Optional[str] = None,
@@ -363,15 +363,15 @@ class ApprovalWorkflow:
             List of pending requests
         """
         requests = list(self.pending_requests.values())
-        
+
         if user_id:
             requests = [r for r in requests if r.user_id == user_id]
-        
+
         if risk_level:
             requests = [r for r in requests if r.risk_level == risk_level]
-        
+
         return requests
-    
+
     def get_request_history(
         self,
         user_id: Optional[str] = None,
@@ -390,15 +390,15 @@ class ApprovalWorkflow:
             List of historical requests
         """
         requests = self.completed_requests[-limit:]
-        
+
         if user_id:
             requests = [r for r in requests if r.user_id == user_id]
-        
+
         if state:
             requests = [r for r in requests if r.state == state]
-        
+
         return requests
-    
+
     def cancel_all_pending(self) -> int:
         """
         Cancel all pending requests (emergency stop)
@@ -408,17 +408,17 @@ class ApprovalWorkflow:
         """
         cancelled = 0
         request_ids = list(self.pending_requests.keys())
-        
+
         for request_id in request_ids:
             if asyncio.run(self.cancel_request(request_id)):
                 cancelled += 1
-        
+
         return cancelled
-    
+
     def get_statistics(self) -> Dict[str, Any]:
         """Get workflow statistics"""
         total_completed = len(self.completed_requests)
-        
+
         if total_completed == 0:
             return {
                 "pending": len(self.pending_requests),
@@ -429,12 +429,12 @@ class ApprovalWorkflow:
                 "cancelled": 0,
                 "approval_rate": 0.0
             }
-        
+
         approved = sum(1 for r in self.completed_requests if r.state == ApprovalState.APPROVED)
         rejected = sum(1 for r in self.completed_requests if r.state == ApprovalState.REJECTED)
         timeout = sum(1 for r in self.completed_requests if r.state == ApprovalState.TIMEOUT)
         cancelled = sum(1 for r in self.completed_requests if r.state == ApprovalState.CANCELLED)
-        
+
         return {
             "pending": len(self.pending_requests),
             "completed": total_completed,

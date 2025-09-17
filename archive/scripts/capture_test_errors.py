@@ -28,7 +28,7 @@ from database import (
     LeadScoringEvent,
     ConversionEvent,
 )
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from decimal import Decimal
 
 engine = create_engine(os.getenv("TEST_DATABASE_URL", "postgresql://postgres:postgres@localhost:5433/compliance_test"))

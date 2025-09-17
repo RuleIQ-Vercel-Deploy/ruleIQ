@@ -274,7 +274,7 @@ class AWSIAMEvidenceCollector(BaseEvidenceCollector):
                             role.get('Description', ''),
                             'max_session_duration': role.get(
                             'MaxSessionDuration', 3600), 'create_date':
-                            role['CreateDate'].isoformat(), 'last_used': 
+                            role['CreateDate'].isoformat(), 'last_used':
                             role.get('RoleLastUsed', {}).get('LastUsedDate',
                             '').isoformat() if role.get('RoleLastUsed', {})
                             .get('LastUsedDate') else None,

@@ -13,7 +13,7 @@ os.environ['DATABASE_URL'] = 'postgresql://postgres:postgres@localhost:5433/comp
 import psycopg
 from psycopg.rows import dict_row
 from langgraph.checkpoint.postgres import PostgresSaver
-from langgraph.graph import StateGraph, START, END
+from langgraph.graph import StateGraph, END
 from tests.integration.test_state_integration import ComplianceStateDict, ComplianceState, compliance_state_to_dict
 
 async def main():
@@ -53,7 +53,7 @@ async def main():
         logger.info('7. Checking saved state...')
         saved_state = checkpointer.get(config)
         if saved_state:
-            logger.info(f'   ✅ State saved successfully')
+            logger.info('   ✅ State saved successfully')
             logger.info(f"      Thread ID: {saved_state.config.get('configurable', {}).get('thread_id')}")
             logger.info(f'      Has values: {bool(saved_state.values)}')
         else:

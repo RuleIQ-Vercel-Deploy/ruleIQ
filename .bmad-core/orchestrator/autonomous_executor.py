@@ -12,17 +12,17 @@ from typing import Dict, List, Any
 
 class P0TaskExecutor:
     """Execute P0 blocker tasks autonomously"""
-    
+
     def __init__(self):
         self.project_root = Path("/home/omar/Documents/ruleIQ")
         self.handoff_dir = self.project_root / ".bmad-core/handoffs"
         self.handoff_dir.mkdir(parents=True, exist_ok=True)
-        
+
         # P0 tasks identified from Archon (24-hour deadline)
         self.p0_tasks = [
             {
                 "id": "SEC-001",
-                "title": "Fix authentication middleware bypass", 
+                "title": "Fix authentication middleware bypass",
                 "file": "frontend/middleware.ts",
                 "line": 11,
                 "priority": "P0-CRITICAL",
@@ -51,22 +51,22 @@ class P0TaskExecutor:
                 "agent": "devops-specialist"
             }
         ]
-        
+
         # P0 tasks with specific security focus
         self.security_p0_tasks = [
             {"id": "SEC-002", "title": "Implement JWT validation", "depends_on": "SEC-001"},
             {"id": "SEC-003", "title": "Add rate limiting middleware", "depends_on": "SEC-001"},
             {"id": "SEC-004", "title": "Implement CORS configuration", "depends_on": "SEC-001"}
         ]
-        
+
     async def execute_sec_001(self) -> Dict[str, Any]:
         """Fix critical authentication middleware bypass"""
         print("\n🔴 CRITICAL: Executing SEC-001 - Authentication Bypass Fix")
         print("-" * 60)
-        
+
         # Read the vulnerable file
         middleware_path = self.project_root / "frontend/middleware.ts"
-        
+
         if not middleware_path.exists():
             # Create the middleware if it doesn't exist
             print("⚠️  Middleware file not found, creating secure implementation...")
@@ -132,7 +132,7 @@ export const config = {
                 status = "fixed"
             else:
                 status = "already_secure"
-        
+
         result = {
             "task_id": "SEC-001",
             "status": status,
@@ -141,23 +141,23 @@ export const config = {
             "security_impact": "CRITICAL - Prevents unauthorized access",
             "next_steps": ["SEC-002", "SEC-003", "SEC-004"]
         }
-        
+
         # Save handoff
         handoff_path = self.handoff_dir / "SEC-001_complete.json"
         handoff_path.write_text(json.dumps(result, indent=2))
-        
+
         print(f"✅ SEC-001 {status}: Authentication middleware secured")
         return result
-    
+
     async def execute_ff_001(self) -> Dict[str, Any]:
         """Implement feature flags system"""
         print("\n🚩 Executing FF-001 - Feature Flags System")
         print("-" * 60)
-        
+
         # Create feature flags configuration
         ff_config_path = self.project_root / "config/feature_flags.py"
         ff_config_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         feature_flag_code = '''"""
 Feature Flags System for RuleIQ
 Enables safe rollout of new features with gradual deployment
@@ -315,9 +315,9 @@ class FeatureNotEnabledException(Exception):
 # async def get_dashboard_data(user_id: str):
 #     return {"data": "new dashboard"}
 '''
-        
+
         ff_config_path.write_text(feature_flag_code)
-        
+
         result = {
             "task_id": "FF-001",
             "status": "completed",
@@ -331,27 +331,27 @@ class FeatureNotEnabledException(Exception):
                 "Decorator pattern for easy integration"
             ]
         }
-        
+
         handoff_path = self.handoff_dir / "FF-001_complete.json"
         handoff_path.write_text(json.dumps(result, indent=2))
-        
+
         print("✅ FF-001 complete: Feature flags system implemented")
         return result
-    
+
     async def execute_test_001(self) -> Dict[str, Any]:
         """Setup integration test framework"""
         print("\n🧪 Executing TEST-001 - Integration Test Framework")
         print("-" * 60)
-        
+
         # Create test configuration
         test_config_path = self.project_root / "tests/conftest.py"
         test_config_path.parent.mkdir(parents=True, exist_ok=True)
-        
+
         print("📦 Setting up pytest infrastructure...")
         print("🔄 Configuring database rollback mechanisms...")
         print("🎭 Creating mock services...")
         print("⚡ Enabling parallel test execution...")
-        
+
         result = {
             "task_id": "TEST-001",
             "status": "in_progress",
@@ -365,23 +365,23 @@ class FeatureNotEnabledException(Exception):
             "target_coverage": "80%",
             "execution_time": "<5 minutes"
         }
-        
+
         handoff_path = self.handoff_dir / "TEST-001_progress.json"
         handoff_path.write_text(json.dumps(result, indent=2))
-        
+
         print("⏳ TEST-001 in progress: Integration test framework setup")
         return result
-    
+
     async def execute_mon_001(self) -> Dict[str, Any]:
         """Implement monitoring and user impact mitigation"""
         print("\n📊 Executing MON-001 - Monitoring & User Impact Mitigation")
         print("-" * 60)
-        
+
         print("📈 Setting up Prometheus metrics...")
         print("📊 Creating Grafana dashboards...")
         print("🚨 Configuring PagerDuty alerts...")
         print("♻️ Implementing automatic rollback triggers...")
-        
+
         result = {
             "task_id": "MON-001",
             "status": "in_progress",
@@ -398,13 +398,13 @@ class FeatureNotEnabledException(Exception):
                 "recovery_time": "<5 minutes"
             }
         }
-        
+
         handoff_path = self.handoff_dir / "MON-001_progress.json"
         handoff_path.write_text(json.dumps(result, indent=2))
-        
+
         print("⏳ MON-001 in progress: Monitoring setup")
         return result
-    
+
     async def orchestrate(self):
         """Main orchestration loop"""
         print("=" * 60)
@@ -412,36 +412,36 @@ class FeatureNotEnabledException(Exception):
         print(f"⏰ Started: {datetime.now().isoformat()}")
         print(f"⏰ P0 Deadline: {(datetime.now() + timedelta(hours=24)).isoformat()}")
         print("=" * 60)
-        
+
         # Execute P0 tasks in priority order
         results = []
-        
+
         # SEC-001 is the highest priority - blocks everything
         results.append(await self.execute_sec_001())
-        
+
         # Execute remaining P0 tasks in parallel
         parallel_tasks = [
             self.execute_ff_001(),
             self.execute_test_001(),
             self.execute_mon_001()
         ]
-        
+
         parallel_results = await asyncio.gather(*parallel_tasks)
         results.extend(parallel_results)
-        
+
         # Generate final report
         self.generate_report(results)
-        
+
         print("\n" + "=" * 60)
         print("✅ P0 Task Execution Initiated")
         print("📁 Handoffs saved to .bmad-core/handoffs/")
         print("⏰ Monitor progress - 24 hour deadline enforced")
         print("=" * 60)
-    
+
     def generate_report(self, results: List[Dict[str, Any]]):
         """Generate execution report"""
         report_path = self.handoff_dir / f"p0_execution_{datetime.now().strftime('%Y%m%d_%H%M%S')}.md"
-        
+
         report = f"""# P0 Task Execution Report
 Generated: {datetime.now().isoformat()}
 
@@ -453,7 +453,7 @@ Generated: {datetime.now().isoformat()}
 ## Task Status
 
 """
-        
+
         for result in results:
             report += f"""### {result['task_id']}
 - Status: **{result['status']}**
@@ -462,7 +462,7 @@ Generated: {datetime.now().isoformat()}
             if 'next_steps' in result:
                 report += f"- Next Steps: {', '.join(result['next_steps'])}\n"
             report += "\n"
-        
+
         report += """
 ## Priority Gates
 ✅ P0 tasks initiated - P1 work can begin after completion
@@ -479,7 +479,7 @@ Generated: {datetime.now().isoformat()}
 3. Confirm test framework is running
 4. Check monitoring dashboard availability
 """
-        
+
         report_path.write_text(report)
         print(f"\n📄 Report generated: {report_path}")
 

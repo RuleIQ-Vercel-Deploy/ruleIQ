@@ -8,7 +8,6 @@ Provides document retrieval and query capabilities.
 import logging
 from typing import Dict, Any, List
 from langgraph_agent.graph.unified_state import UnifiedComplianceState
-from langgraph_agent.utils.cost_tracking import track_node_cost
 from config.langsmith_config import with_langsmith_tracing
 
 logger = logging.getLogger(__name__)

@@ -1,34 +1,0 @@
-
- "tool_execution_counts"str
-"tools_by_type"str
-"total_tools"str
-0'"Get statistics about registered tools"strself
-´ ´( "Ý&
-$
-
-¶ ¹(C"#new-object#Bdict)
-'
-
-¶# ¶(."#get-field# _tools:,
-*
-
-¶ ¶(/"
-builtinslen*:Bint"
- 
-
-¶ ¶(/"	#map-set#:-
-+
-
-¶B ¸("	"?python-unknown?:Bdict"
- 
-
-¶1 ¸("
-"	#map-set#:	-
-+
-
-¸= ¹(B"?python-unknown?:Bdict"
- 
-
-¸$ ¹(B"	#map-set#:
-
-¶ ¹(C*0/home/omar/Documents/ruleIQ/services/ai/tools.py

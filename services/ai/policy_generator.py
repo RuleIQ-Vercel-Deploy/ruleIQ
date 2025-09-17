@@ -12,7 +12,7 @@ import time
 import hashlib
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Any, AsyncGenerator, Generator
+from typing import Dict, List, Optional, Any, AsyncGenerator
 from dataclasses import dataclass
 from services.ai.circuit_breaker import AICircuitBreaker
 from database.compliance_framework import ComplianceFramework
@@ -562,7 +562,7 @@ Improvements: {', '.join(feedback)}"""
         suggestions = []
         missing_sections = []
         if framework.name == 'ICO_GDPR_UK':
-            if ('ICO Registration' not in policy_content and 
+            if ('ICO Registration' not in policy_content and
                 'ICO registration' not in policy_content):
                 errors.append('ICO registration number missing')
             if not any(contact in policy_content.lower() for contact in [

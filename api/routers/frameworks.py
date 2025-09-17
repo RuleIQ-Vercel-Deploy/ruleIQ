@@ -166,9 +166,9 @@ async def compare_frameworks(comparison_data: dict, current_user:
     AsyncSession=Depends(get_async_db)) ->Dict[str, Any]:
     """Compare multiple frameworks."""
     framework_ids = comparison_data.get('framework_ids', [])
-    return {'frameworks': framework_ids, 'comparison': {'common_controls': 
+    return {'frameworks': framework_ids, 'comparison': {'common_controls':
         45, 'unique_controls': {(framework_ids[0] if len(framework_ids) > 0
-         else 'framework1'): 12, (framework_ids[1] if len(framework_ids) > 
+         else 'framework1'): 12, (framework_ids[1] if len(framework_ids) >
         1 else 'framework2'): 8}, 'complexity': {(framework_ids[0] if len(
         framework_ids) > 0 else 'framework1'): 'High', (framework_ids[1] if
         len(framework_ids) > 1 else 'framework2'): 'Medium'},

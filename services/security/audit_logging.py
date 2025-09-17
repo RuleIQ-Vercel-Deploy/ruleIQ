@@ -10,9 +10,6 @@ from typing import Dict, List, Any, Optional
 from enum import Enum
 import uuid
 from sqlalchemy.orm import Session
-from sqlalchemy import Column, String, DateTime, JSON, Integer, Boolean, Text
-from sqlalchemy.ext.declarative import declarative_base
-from database import Base
 from database.rbac import AuditLog
 from services.cache_service import CacheService
 from config.settings import settings
@@ -85,7 +82,7 @@ class AuditLoggingService:
         audit_log = {'user_id': user_id, 'action':
             f'{event_type.value}:{action.value}', 'resource_type':
             truncated_resource, 'resource_id': resource_id, 'ip_address':
-            ip_address, 'user_agent': user_agent, 'severity': 'error' if 
+            ip_address, 'user_agent': user_agent, 'severity': 'error' if
             result == 'FAILURE' else 'info', 'details': json.dumps({
             'event_id': event_id, 'event_type': event_type.value, 'action':
             action.value, 'result': result, 'error_message': error_message,

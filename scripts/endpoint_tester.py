@@ -75,7 +75,7 @@ class EndpointTester:
                 'content_length': len(response.content), 'error': None}
         except Exception as e:
             return {'endpoint': endpoint, 'method': method.upper(),
-                'status_code': None, 'response_time_ms': None, 'success': 
+                'status_code': None, 'response_time_ms': None, 'success':
                 False, 'content_length': 0, 'error': str(e)}
 
     def run_endpoint_tests(self) ->Dict[str, List[Dict]]:
@@ -94,7 +94,7 @@ class EndpointTester:
                 f"{status} {method} {endpoint} - {result['status_code']} ({result.get('response_time_ms', 'N/A')}ms)"
                 )
         logger.info('\n🏢 Testing Business Profile Endpoints...')
-        business_tests = [('GET', '/api/v1/business-profiles', None, [200, 
+        business_tests = [('GET', '/api/v1/business-profiles', None, [200,
             404]), ('GET', '/api/v1/business-profiles/current', None, [200,
             404])]
         for method, endpoint, data, codes in business_tests:
@@ -116,7 +116,7 @@ class EndpointTester:
                 )
         logger.info('\n🧠 Testing AI Service Endpoints...')
         ai_tests = [('POST', '/api/v1/ai-assessments/analysis/stream', {
-            'assessment_results': {}, 'framework_id': 'gdpr'}, [200, 400, 
+            'assessment_results': {}, 'framework_id': 'gdpr'}, [200, 400,
             422, 500]), ('GET', '/api/v1/ai-cost/current', None, [200, 404])]
         for method, endpoint, data, codes in ai_tests:
             result = self.test_endpoint(method, endpoint, data, codes)

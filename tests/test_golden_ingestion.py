@@ -35,13 +35,13 @@ def main():
         result = ingestion.ingest_from_file(str(sample_file))
 
         if result["success"]:
-            print(f"✅ Ingestion successful!")
+            print("✅ Ingestion successful!")
             print(f"   - Documents processed: {result['documents_processed']}")
             print(f"   - Chunks created: {result['chunks_created']}")
             if result.get("embeddings_generated"):
                 print(f"   - Embeddings generated: {result['embeddings_generated']}")
         else:
-            print(f"❌ Ingestion failed!")
+            print("❌ Ingestion failed!")
             for error in result.get("errors", []):
                 print(f"   - {error}")
             return 1
@@ -86,7 +86,7 @@ def main():
             )
             embedding_count = result.single()["embedding_count"]
 
-            print(f"✅ Neo4j verification:")
+            print("✅ Neo4j verification:")
             print(f"   - Golden documents: {doc_count}")
             print(f"   - Golden chunks: {chunk_count}")
             print(f"   - Chunks with embeddings: {embedding_count}")

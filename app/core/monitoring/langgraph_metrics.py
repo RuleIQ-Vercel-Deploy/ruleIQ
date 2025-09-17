@@ -3,15 +3,14 @@ from __future__ import annotations
 
 LangGraph-specific metrics collection and monitoring.
 """
-import asyncio
 import logging
 import time
 from collections import defaultdict, deque
-from contextlib import asynccontextmanager, contextmanager
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Any, Deque, Dict, List, Optional, Set, Tuple, Union, Generator
+from typing import Any, Deque, Dict, List, Optional, Tuple, Union, Generator
 import psutil
 logger = logging.getLogger(__name__)
 
@@ -1226,7 +1225,7 @@ class CheckpointMetrics:
         Returns:
             Cleanup metrics
         """
-        from datetime import datetime, timedelta
+        from datetime import datetime
         if not hasattr(self, '_checkpoint_timestamps'):
             return {'removed_count': 0, 'removed_size_bytes': 0, 'retained_count': 0, 'retained_size_bytes': 0}
         cutoff_time = datetime.now() - timedelta(hours=retention_hours)

@@ -9,7 +9,7 @@ Categorize and map UK regulatory obligations to specific regulations.
 import json
 import re
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, Any
 from datetime import datetime
 REGULATION_PATTERNS = {'GDPR/DPA': ['data.?protection', 'gdpr',
     'ukpga/2018/12', 'personal.?data', 'privacy'], 'FCA': [

@@ -556,7 +556,7 @@ class AgenticRAGSystem:
                 params['max_results'] = max_results
                 result = conn.execute(text(sql), params)
                 return [{'id': row[0], 'content':
-                    f'```python\n{row[1]}\n```\n\n{row[2]}', 'metadata': 
+                    f'```python\n{row[1]}\n```\n\n{row[2]}', 'metadata':
                     json.loads(row[3]) if row[3] else {}, 'source': row[4],
                     'framework': row[5], 'example_type': row[6],
                     'similarity': float(row[7])} for row in result.fetchall()]
@@ -615,7 +615,7 @@ class AgenticRAGSystem:
             vector_score = result['similarity']
             vector_rank = len(vector_results) - i
             result_dict[result_id] = {**result, 'vector_score':
-                vector_score, 'vector_rank': vector_rank, 'keyword_score': 
+                vector_score, 'vector_rank': vector_rank, 'keyword_score':
                 0, 'keyword_rank': 0}
         for i, result in enumerate(keyword_results):
             result_id = result['id']

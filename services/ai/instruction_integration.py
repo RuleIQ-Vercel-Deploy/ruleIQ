@@ -300,7 +300,7 @@ class InstructionManager:
         Optional[str], user_persona: Optional[str], task_complexity: str
         ) ->str:
         """Create a unique instruction ID based on parameters"""
-        components = [instruction_type, framework or 'generic', 
+        components = [instruction_type, framework or 'generic',
             user_persona or 'default', task_complexity]
         return f"instr_{'-'.join(components)}"
 

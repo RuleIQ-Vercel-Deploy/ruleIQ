@@ -62,7 +62,7 @@ def ingest_documents():
 
         golden_doc = builder.process_manifest_document(doc)
         if golden_doc:
-            print(f"Document processed successfully!")
+            print("Document processed successfully!")
             print(f"Content length: {len(golden_doc.content)} chars")
 
             # Ingest into Neo4j

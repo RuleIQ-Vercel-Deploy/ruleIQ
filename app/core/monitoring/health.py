@@ -5,9 +5,8 @@ Health check implementation with multiple check types.
 """
 
 import asyncio
-import os
 import psutil
-from typing import Any, Dict, List, Optional, Callable, Union
+from typing import Any, Dict, List, Optional, Callable
 from datetime import datetime, timedelta, timezone
 from enum import Enum
 import aiohttp

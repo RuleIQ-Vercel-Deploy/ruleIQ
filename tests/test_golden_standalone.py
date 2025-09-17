@@ -108,7 +108,7 @@ def test_direct_neo4j():
             )
             chunk_count = chunk_result.single()["chunk_count"]
 
-            print(f"\n📊 Current golden dataset status:")
+            print("\n📊 Current golden dataset status:")
             print(f"  - Documents: {doc_count}")
             print(f"  - Chunks: {chunk_count}")
 

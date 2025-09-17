@@ -1,141 +1,0 @@
-
-*services.ai.tools.ToolRegistry.remove_tool<
-0/home/omar/Documents/ruleIQ/services/ai/tools.py   ("2*î
-2
-¡ ©(f
-d
-
-ª ª(
-%9"__id*J
-
-__unknown_file (.*, 
-services.ai.tools.ToolRegistry"
-_toolsmk
-
-ª ª(
-%10*"
-
-__unknown_file (
-
-%9*$
-
-__unknown_file (
-
-name2__contains__*
-4
-9*(
-4
-² ²("
-
-² ²(	
-
-False*ú
-5
-° °(Ai
-g
-
-° °(@
-%1"__concat*1
-
-° °(9#!
-Removed tool '%s' from registry*
-
-°< °(@
-
-namefd
-
-° °(A
-%2*&
-
-__unknown_file (
-
-
-logger*"
-
-__unknown_file (
-
-%12info"
-
-± ±(
-
-True*‹
-7
-­ ­( om
-
-­ ­( 
-%4*%
-
-__unknown_file (	
-
-tools*$
-
-__unknown_file (
-
-tool2__contains__*	
-5
-7
-8*
-8
-® ®(&ig
-
-® ®(&
-%3*%
-
-__unknown_file (	
-
-tools*$
-
-__unknown_file (
-
-tool2remove*
-5*Ö
-9
-« «((f
-d
-
-« «(
-%5"__id*J
-
-__unknown_file (.*, 
-services.ai.tools.ToolRegistry"
-_toolsca
-
-« «((
-%6*"
-
-__unknown_file (
-
-%5*$
-
-__unknown_file (
-
-name2pop@
->
-
-« «((
-tool"__id*"
-
-__unknown_file (
-
-%6m
-k
-
-¬% ¬(7
-%7"__id*Q
-
-__unknown_file (5*3 
-services.ai.tools.ToolRegistry"
-_tool_by_type?=
-
-¬% ¬(?
-%8*"
-
-__unknown_file (
-
-%72items*
-5
-7:
-
-   (#
-nameB" 
-services.ai.tools.ToolRegistryH

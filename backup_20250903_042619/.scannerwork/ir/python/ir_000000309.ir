@@ -1,9 +1,0 @@
-
-"cancelled"str
--$"Check if conversion was cancelled."strselfm m("o1
-/
-o o($"#get-field# conversion_stage:*
-(
-o o(3"
-#binop ==#2==:Bbool
-o o(3*8/home/omar/Documents/ruleIQ/database/conversion_event.py

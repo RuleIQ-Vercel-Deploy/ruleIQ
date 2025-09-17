@@ -12,7 +12,7 @@ Dedicated endpoints for AI-powered assessment features including:
 """
 import logging
 from datetime import datetime, timezone
-from typing import Any, Dict, List, Optional, AsyncGenerator, Generator
+from typing import Any, Dict, List, Optional, AsyncGenerator
 from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import StreamingResponse
@@ -678,7 +678,7 @@ async def get_ai_metrics(current_user: User=Depends(get_current_active_user,
     try:
         metrics = {'response_times': {'avg': 1.2, 'p95': 3.5, 'p99': 8.1},
             'accuracy_score': 0.87, 'user_satisfaction': 4.2,
-            'total_interactions': 1247, 'quota_usage': {'requests_used': 
+            'total_interactions': 1247, 'quota_usage': {'requests_used':
             8432, 'requests_limit': 10000, 'tokens_used': 245678,
             'tokens_limit': 500000, 'cost_usd': 12.34}}
         return AIMetricsResponse(**metrics)

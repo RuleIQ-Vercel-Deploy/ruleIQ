@@ -9,11 +9,10 @@ import re
 import time
 from collections import defaultdict
 import http.server
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import HTTPServer
 import threading
 from threading import Thread
-from typing import Any, Dict, List, Optional, Set, Tuple, Generator
-from urllib.parse import parse_qs, urlparse
+from typing import Any, Dict, List, Optional, Generator
 logger = logging.getLogger(__name__)
 CONTENT_TYPE_LATEST = 'text/plain; version=0.0.4; charset=utf-8'
 

@@ -11,13 +11,12 @@ Uses XML APIs instead of scraping for better reliability and structure.
 import asyncio
 import requests
 import xml.etree.ElementTree as ET
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 from datetime import datetime
 import json
 import logging
 from pathlib import Path
 import hashlib
-from urllib.parse import urlparse
 import re
 from concurrent.futures import ThreadPoolExecutor
 logging.basicConfig(level=logging.INFO)

@@ -7,11 +7,10 @@ Backup script for Neon PostgreSQL and Neo4j databases
 Creates timestamped backups before major refactoring
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 import os
 import sys
 import json
-import subprocess
 from datetime import datetime
 from pathlib import Path
 import asyncio
@@ -87,7 +86,6 @@ async def backup_neon() ->bool:
     if not database_url:
         logger.info('❌ DATABASE_URL not found')
         return False
-    from urllib.parse import urlparse
     import re
     pg_url = database_url.replace('postgresql+asyncpg://', 'postgresql://')
     if '?' in pg_url:
@@ -96,9 +94,7 @@ async def backup_neon() ->bool:
     neon_backup_dir.mkdir(exist_ok=True)
     schema_file = neon_backup_dir / 'schema.sql'
     try:
-        from sqlalchemy import create_engine, inspect, MetaData
         from sqlalchemy.ext.asyncio import create_async_engine
-        import asyncpg
         clean_url = re.sub('[?&](sslmode|channel_binding)=[^&]*', '',
             database_url)
         if '?' not in clean_url and '&' in clean_url:

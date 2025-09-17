@@ -232,7 +232,7 @@ async def get_current_user(db: Session=Depends(get_db), token: str=Depends(
         is_active, 'created_at': user.created_at.isoformat() if hasattr(
         user.created_at, 'isoformat') else str(user.created_at), 'roles':
         roles, 'permissions': permissions, 'total_permissions': len(
-        permissions), 'assessment_permissions': [p for p in permissions if 
+        permissions), 'assessment_permissions': [p for p in permissions if
         'assessment' in p.lower()]}
 
 

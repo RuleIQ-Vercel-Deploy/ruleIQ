@@ -15,7 +15,7 @@ import time
 import psutil
 import statistics
 from datetime import datetime, timedelta, timezone
-from typing import Dict, List, Any, AsyncGenerator, Generator
+from typing import Dict, List, Any, AsyncGenerator
 from dataclasses import dataclass, asdict
 from contextlib import asynccontextmanager
 from sqlalchemy import text
@@ -158,9 +158,9 @@ class PerformanceMonitor:
                 keyspace_hits = info.get('keyspace_hits', 0)
                 keyspace_misses = info.get('keyspace_misses', 0)
                 total_requests = keyspace_hits + keyspace_misses
-                hit_rate = (keyspace_hits / total_requests if 
+                hit_rate = (keyspace_hits / total_requests if
                     total_requests > 0 else 0)
-                miss_rate = (keyspace_misses / total_requests if 
+                miss_rate = (keyspace_misses / total_requests if
                     total_requests > 0 else 0)
                 return CacheMetrics(hit_rate=hit_rate, miss_rate=miss_rate,
                     eviction_rate=info.get('evicted_keys', 0) /
@@ -188,7 +188,7 @@ class PerformanceMonitor:
                 avg_time = statistics.mean(times)
                 slowest_endpoints.append({'endpoint': endpoint,
                     'avg_response_time': avg_time, 'call_count': len(times),
-                    'p95_time': sorted(times)[int(len(times) * 0.95)] if 
+                    'p95_time': sorted(times)[int(len(times) * 0.95)] if
                     len(times) > 20 else avg_time})
         if not all_response_times:
             return APIMetrics(0, 0, 0, 0, 0, [])

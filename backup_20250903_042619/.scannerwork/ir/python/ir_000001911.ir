@@ -1,72 +1,0 @@
-
-#"compliance_status"str
-
-"industry"str
-	"business_profile_id"str
-
-0int
-"business_profile"str
-%"overall_score"str
-"name"str
-'"framework_scores"str
-"Unknown Industry"str
-"recent_evidence"str
-MD"Returns a default context when profile information is unavailable."str
-"frameworks"str
-"Unknown Company"str
-"conversation_id"strself> >(!conversation_id># >(8!business_profile_id? ?(!list"°$
-"
-A E(N"#new-object#Bdict.
-,
-A# A(7"#dependent-value#*:Bstr 
-
-A A(7"	#map-set#:.
-,
-B# B(;
-"#dependent-value#*:Bstr 
-
-B B(;"	#map-set#:	
-$
-"
-C  D(1"#new-object#Bdict 
-
-C! C(:"	#map-set#: 
-
-C< D("	#map-set#:'
-%
-D. D(0"#unknown-value#Blist&
-$
-D. D(0"
-#is-exact#:Bbool
-
-D. D(0"
-#assume#:8
-6
-D. D(0"#set-field# __collection_size:Bint 
-
-D  D(0"	#map-set#: 
-
-C D(1"	#map-set#:'
-%
-DF D(H"#unknown-value#Blist&
-$
-DF D(H"
-#is-exact#:Bbool
-
-DF D(H "
-#assume#:8
-6
-DF D(H!"#set-field# __collection_size:Bint 
-
-D3 D(H""	#map-set#:$
-"
-E! E(M$"#new-object#Bdict 
-
-E" E(4&"	#map-set#:$%$
-"
-EJ E(L("#new-object#Bdict 
-
-E6 E(L)"	#map-set#:$'( 
-
-E E(M*"	#map-set#:#$
-A E(N*:/home/omar/Documents/ruleIQ/services/ai/context_manager.py

@@ -58,7 +58,7 @@ def migrate_file(file_path: Path, dry_run: bool=False) ->List[str]:
                     f'  - Line {content[:match.start()].count(chr(10)) + 1}: {match.group()} -> {replacement}',
                     )
             content = re.sub(pattern, replacement, content)
-    if ('from database import User' in content or 
+    if ('from database import User' in content or
         'from database.models import User' in content):
         user_pattern = '\\bUser\\b(?!\\s*\\()'
         if re.search(user_pattern, content):

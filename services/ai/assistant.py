@@ -454,9 +454,9 @@ class ComplianceAssistant:
                         response_time, estimated_tokens)
                 asyncio.create_task(self._record_ai_analytics(response_time,
                     estimated_tokens, safe_context, optimization_metadata))
-                cache_metadata = {'response_time_ms': int(response_time * 
+                cache_metadata = {'response_time_ms': int(response_time *
                     1000), 'prompt_length': len(prompt), 'response_length':
-                    len(response_text), 'model': 'gemini', 'optimized': 
+                    len(response_text), 'model': 'gemini', 'optimized':
                     True, 'generation_config': generation_config}
                 asyncio.create_task(self.ai_cache.cache_response(prompt,
                     response_text, safe_context, cache_metadata))
@@ -529,13 +529,13 @@ Please try your question again or contact support for immediate assistance."""
                 'framework') if context else 'unknown',
                 'optimization_applied': bool(optimization_metadata)})
             await self.analytics_monitor.record_metric(MetricType.USAGE,
-                'token_usage', token_count, metadata={'content_type': 
+                'token_usage', token_count, metadata={'content_type':
                 context.get('content_type') if context else 'unknown',
                 'framework': context.get('framework') if context else
                 'unknown'})
             estimated_cost = token_count * 1e-05
             await self.analytics_monitor.record_metric(MetricType.COST,
-                'cost_estimate', estimated_cost, metadata={'content_type': 
+                'cost_estimate', estimated_cost, metadata={'content_type':
                 context.get('content_type') if context else 'unknown',
                 'framework': context.get('framework') if context else
                 'unknown', 'token_count': token_count})
@@ -943,7 +943,7 @@ Please try your question again or contact support for immediate assistance."""
             'Implement']}, {'control_id': 'GDPR-2', 'title':
             'Data Subject Rights Procedures', 'description':
             'Implement procedures for handling data subject requests',
-            'priority': 'High', 'effort_hours': 12, 'automation_possible': 
+            'priority': 'High', 'effort_hours': 12, 'automation_possible':
             True, 'business_justification': 'Essential for GDPR compliance',
             'implementation_steps': ['Design workflow', 'Create forms',
             'Train staff']}], 'ISO27001': [{'control_id': 'ISO-A.5.1',
@@ -1287,12 +1287,12 @@ Please try your question again or contact support for immediate assistance."""
         return {'total_manual_hours': total_manual_hours,
             'total_automated_hours': total_automated_hours,
             'estimated_weeks_manual': round(total_manual_hours / 40, 1),
-            'estimated_weeks_automated': round(total_automated_hours / 40, 
+            'estimated_weeks_automated': round(total_automated_hours / 40,
             1), 'phases_count': phases_count, 'steps_count': steps_count,
             'phase_breakdown': phase_efforts, 'effort_savings': {
             'hours_saved': total_manual_hours - total_automated_hours,
             'percentage_saved': round((total_manual_hours -
-            total_automated_hours) / total_manual_hours * 100, 1) if 
+            total_automated_hours) / total_manual_hours * 100, 1) if
             total_manual_hours > 0 else 0}}
 
     def _get_fallback_workflow(self, framework: str, control_id: str,
@@ -1327,7 +1327,7 @@ Please try your question again or contact support for immediate assistance."""
             'effort_savings_percentage': 20.0, 'manual_hours': 12,
             'automated_hours': 10, 'hours_saved': 2}, 'effort_estimation':
             {'total_manual_hours': 12, 'total_automated_hours': 10,
-            'estimated_weeks_manual': 0.3, 'estimated_weeks_automated': 
+            'estimated_weeks_manual': 0.3, 'estimated_weeks_automated':
             0.25, 'phases_count': 2, 'steps_count': 2}}
 
     async def generate_customized_policy(self, user: User,
@@ -1349,7 +1349,7 @@ Please try your question again or contact support for immediate assistance."""
             maturity_analysis = await self._analyze_compliance_maturity(
                 business_context, existing_evidence, framework)
             policy = await self._generate_contextual_policy(framework,
-                policy_type, business_context, maturity_analysis, 
+                policy_type, business_context, maturity_analysis,
                 customization_options or {})
             policy['implementation_guidance'
                 ] = self._generate_policy_implementation_guidance(policy,
@@ -1662,7 +1662,7 @@ Please try your question again or contact support for immediate assistance."""
             'duration_weeks': 2 if org_size in ['micro', 'small'] else 4,
             'activities': ['Review and approve policy',
             'Identify key stakeholders', 'Establish governance structure']},
-            {'phase': 'Phase 2: Implementation', 'duration_weeks': 4 if 
+            {'phase': 'Phase 2: Implementation', 'duration_weeks': 4 if
             org_size in ['micro', 'small'] else 8, 'activities': [
             'Deploy controls and procedures',
             'Train staff on new requirements',
@@ -2086,7 +2086,7 @@ Please try your question again or contact support for immediate assistance."""
         confidence = 0.9 if hallucination_detected else 0.1
         return {'hallucination_detected': hallucination_detected,
             'confidence': confidence, 'suspicious_claims':
-            suspicious_claims, 'verified_claims': [], 'recommendation': 
+            suspicious_claims, 'verified_claims': [], 'recommendation':
             'flag_for_review' if hallucination_detected else 'approved'}
 
     async def analyze_evidence_gap(self, business_profile_id: UUID,
@@ -2442,7 +2442,7 @@ Provide brief, practical guidance in JSON format with 'guidance' and 'confidence
             model_name = getattr(model, 'model_name', 'unknown')
             self.circuit_breaker.record_success(model_name)
             response_text = self._extract_response_text(response)
-            logger.debug('Response text for %s: %s' % (task_type, 
+            logger.debug('Response text for %s: %s' % (task_type,
                 response_text[:200] if response_text else 'EMPTY'))
             return response_text
         except (ValueError, KeyError, IndexError) as e:
@@ -3081,7 +3081,7 @@ Provide brief, practical guidance in JSON format with 'guidance' and 'confidence
         casual_count = sum(1 for pattern in casual_patterns if re.search(
             pattern, response_lower))
         total_indicators = len(professional_indicators)
-        professional_score = (professional_count / total_indicators if 
+        professional_score = (professional_count / total_indicators if
             total_indicators > 0 else 0)
         tone_score = max(0, professional_score - casual_count * 0.2)
         tone_appropriate = tone_score >= 0.6 and casual_count == 0
@@ -3093,7 +3093,7 @@ Provide brief, practical guidance in JSON format with 'guidance' and 'confidence
         if casual_count > 0 and 'bypass' in response_lower:
             issues.append('potentially_misleading')
         return {'tone_appropriate': tone_appropriate, 'tone_score':
-            tone_score, 'issues': issues, 'professional_language': 
+            tone_score, 'issues': issues, 'professional_language':
             casual_count == 0}
 
     async def _generate_response_legacy(self, *args, **kwargs) ->Dict[str, Any
@@ -3732,7 +3732,6 @@ Analyze this conversation and provide insights in JSON format."""
         business_type: str, company_size: str, priority_level: str,
         focus_areas: List[str]) ->Dict[str, Any]:
         """Generate fallback recommendations when AI is unavailable."""
-        from typing import List
         recommendations = []
         if compliance_score < 30:
             recommendations.extend([{'id': 'rec_critical_1', 'title':
@@ -3775,7 +3774,7 @@ Analyze this conversation and provide insights in JSON format."""
         else:
             recommendations.extend([{'id': 'rec_optimize_1', 'title':
                 'Pursue Certification', 'description':
-                f'Consider pursuing ISO 27001 or SOC 2 certification to demonstrate compliance maturity.'
+                'Consider pursuing ISO 27001 or SOC 2 certification to demonstrate compliance maturity.'
                 , 'priority': 'low', 'timeline': '90-days', 'steps': [
                 'Gap analysis against standard',
                 'Implement required controls', 'Engage certification body'],
@@ -3897,7 +3896,7 @@ Analyze this conversation and provide insights in JSON format."""
             'Does your organization have a documented data protection policy?',
             'type': 'multiple_choice', 'options': ['Yes, comprehensive',
             'Yes, basic', 'In development', 'No'], 'category':
-            'data_protection', 'difficulty': 'easy', 'compliance_weight': 
+            'data_protection', 'difficulty': 'easy', 'compliance_weight':
             1.5}, {'question_id': 'q2', 'question':
             'How often do you conduct security awareness training for employees?'
             , 'type': 'multiple_choice', 'options': ['Monthly', 'Quarterly',
@@ -3968,7 +3967,7 @@ Analyze this conversation and provide insights in JSON format."""
                 return {'response_times': {'gemini-2.5-flash': 1.5,
                     'gemini-2.5-pro': 2.8}, 'success_rates': {
                     'gemini-2.5-flash': 0.95, 'gemini-2.5-pro': 0.98},
-                    'token_usage': {'total': 10000, 'gemini-2.5-flash': 
+                    'token_usage': {'total': 10000, 'gemini-2.5-flash':
                     6000, 'gemini-2.5-pro': 4000}, 'cost_metrics': {
                     'total_cost': 5.0, 'optimization_savings': 1.2}}
         except (ValueError, TypeError) as e:

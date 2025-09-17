@@ -173,7 +173,7 @@ class ServiceHealthMonitor:
             response_time = (time.time() - start_time) * 1000
             self.logger.error('Health check failed for %s: %s' % (
                 service_name, e))
-            await self._update_health_metrics(service_name, {'healthy': 
+            await self._update_health_metrics(service_name, {'healthy':
                 False, 'error': str(e)}, response_time)
 
     async def _update_health_metrics(self, service_name: str, result: Dict[
@@ -353,7 +353,7 @@ class ServiceHealthMonitor:
         if service_name not in self.health_history:
             return []
         cutoff_time = datetime.now() - timedelta(hours=hours)
-        return [entry for entry in self.health_history[service_name] if 
+        return [entry for entry in self.health_history[service_name] if
             datetime.fromisoformat(entry['timestamp']) > cutoff_time]
 
     def get_health_trends(self) ->Dict[str, Any]:
@@ -371,7 +371,7 @@ class ServiceHealthMonitor:
                 second_half_success = sum(1 for h in second_half if h.get(
                     'success', False)) / len(second_half)
                 trend_direction = ('improving' if second_half_success >
-                    first_half_success else 'declining' if 
+                    first_half_success else 'declining' if
                     second_half_success < first_half_success else 'stable')
                 trends[service_name] = {'trend_direction': trend_direction,
                     'success_rate_change': (second_half_success -

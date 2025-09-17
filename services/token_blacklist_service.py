@@ -7,8 +7,8 @@ Provides Redis-based token blacklisting for logout and token invalidation.
 from __future__ import annotations
 
 import json
-from typing import Optional, Set, Dict, Any
-from datetime import datetime, timedelta, timezone
+from typing import Optional, Dict, Any
+from datetime import datetime, timezone
 import redis
 import logging
 from contextlib import contextmanager
@@ -28,14 +28,14 @@ class TokenBlacklistService:
     - Automatic expiry cleanup
     - Performance optimized with Redis sets
     """
-    
+
     def __init__(self, redis_client: Optional[redis.Redis] = None):
         """Initialize the token blacklist service."""
         self.redis_client = redis_client or self._get_redis_client()
         self.blacklist_prefix = "token_blacklist:"
         self.blacklist_set_key = "token_blacklist:active"
         self.stats_key = "token_blacklist:stats"
-        
+
     def _get_redis_client(self) -> redis.Redis:
         """Get Redis client with connection pooling."""
         pool = redis.ConnectionPool(
@@ -50,7 +50,7 @@ class TokenBlacklistService:
             health_check_interval=30
         )
         return redis.Redis(connection_pool=pool, decode_responses=True)
-    
+
     def add_to_blacklist(
         self,
         token_jti: str,
@@ -76,7 +76,7 @@ class TokenBlacklistService:
             if ttl <= 0:
                 logger.debug(f"Token {token_jti} already expired, not blacklisting")
                 return True
-            
+
             # Create blacklist entry
             blacklist_data = {
                 "jti": token_jti,
@@ -85,38 +85,38 @@ class TokenBlacklistService:
                 "user_id": user_id,
                 "reason": reason
             }
-            
+
             # Use pipeline for atomic operations
             pipe = self.redis_client.pipeline()
-            
+
             # Store blacklist entry with TTL
             entry_key = f"{self.blacklist_prefix}{token_jti}"
             pipe.setex(entry_key, ttl, json.dumps(blacklist_data))
-            
+
             # Add to active set for fast lookups
             pipe.sadd(self.blacklist_set_key, token_jti)
-            
+
             # Update statistics
             pipe.hincrby(self.stats_key, "total_blacklisted", 1)
             pipe.hincrby(self.stats_key, f"reason:{reason}", 1)
-            
+
             # Execute pipeline
             results = pipe.execute()
-            
+
             logger.info(f"Token {token_jti} blacklisted for user {user_id}, reason: {reason}")
-            
+
             # Schedule cleanup of expired entry from set
             self._schedule_cleanup(token_jti, ttl)
-            
+
             return all(results)
-            
+
         except redis.RedisError as e:
             logger.error(f"Redis error blacklisting token {token_jti}: {e}")
             return False
         except Exception as e:
             logger.error(f"Unexpected error blacklisting token {token_jti}: {e}")
             return False
-    
+
     def is_blacklisted(self, token_jti: str) -> bool:
         """
         Check if a token is blacklisted.
@@ -130,7 +130,7 @@ class TokenBlacklistService:
         try:
             # Fast check using set membership
             is_in_set = self.redis_client.sismember(self.blacklist_set_key, token_jti)
-            
+
             if is_in_set:
                 # Verify entry still exists (handle race conditions)
                 entry_key = f"{self.blacklist_prefix}{token_jti}"
@@ -141,11 +141,11 @@ class TokenBlacklistService:
                 else:
                     # Entry expired, remove from set
                     self.redis_client.srem(self.blacklist_set_key, token_jti)
-                    
+
             # Update miss counter
             self.redis_client.hincrby(self.stats_key, "check_misses", 1)
             return False
-            
+
         except redis.RedisError as e:
             logger.error(f"Redis error checking blacklist for {token_jti}: {e}")
             # Fail open for availability (configurable)
@@ -153,7 +153,7 @@ class TokenBlacklistService:
         except Exception as e:
             logger.error(f"Unexpected error checking blacklist for {token_jti}: {e}")
             return False
-    
+
     def remove_from_blacklist(self, token_jti: str) -> bool:
         """
         Remove a token from the blacklist (admin action).
@@ -166,34 +166,34 @@ class TokenBlacklistService:
         """
         try:
             pipe = self.redis_client.pipeline()
-            
+
             # Remove entry
             entry_key = f"{self.blacklist_prefix}{token_jti}"
             pipe.delete(entry_key)
-            
+
             # Remove from set
             pipe.srem(self.blacklist_set_key, token_jti)
-            
+
             # Update stats
             pipe.hincrby(self.stats_key, "total_removed", 1)
-            
+
             results = pipe.execute()
-            
+
             if results[0] or results[1]:
                 logger.info(f"Token {token_jti} removed from blacklist")
                 return True
             return False
-            
+
         except redis.RedisError as e:
             logger.error(f"Redis error removing {token_jti} from blacklist: {e}")
             return False
-    
+
     def _schedule_cleanup(self, token_jti: str, ttl: int):
         """Schedule cleanup of expired token from set."""
         # This would integrate with APScheduler or Celery
         # For now, rely on lazy cleanup during checks
         pass
-    
+
     def cleanup_expired(self) -> int:
         """
         Clean up expired entries from the active set.
@@ -203,29 +203,29 @@ class TokenBlacklistService:
         """
         try:
             cleaned = 0
-            
+
             # Get all tokens in active set
             active_tokens = self.redis_client.smembers(self.blacklist_set_key)
-            
+
             for token_jti in active_tokens:
                 entry_key = f"{self.blacklist_prefix}{token_jti}"
-                
+
                 # Check if entry still exists
                 if not self.redis_client.exists(entry_key):
                     # Entry expired, remove from set
                     self.redis_client.srem(self.blacklist_set_key, token_jti)
                     cleaned += 1
-            
+
             if cleaned > 0:
                 logger.info(f"Cleaned up {cleaned} expired tokens from blacklist")
                 self.redis_client.hincrby(self.stats_key, "total_cleaned", cleaned)
-            
+
             return cleaned
-            
+
         except redis.RedisError as e:
             logger.error(f"Redis error during cleanup: {e}")
             return 0
-    
+
     def get_stats(self) -> Dict[str, Any]:
         """Get blacklist statistics."""
         try:
@@ -234,27 +234,27 @@ class TokenBlacklistService:
             return {k: int(v) if v.isdigit() else v for k, v in stats.items()}
         except redis.RedisError:
             return {}
-    
+
     def clear_all(self) -> bool:
         """Clear all blacklisted tokens (admin action)."""
         try:
             # Get all keys
             pattern = f"{self.blacklist_prefix}*"
             keys = list(self.redis_client.scan_iter(match=pattern))
-            
+
             if keys:
                 # Delete all blacklist entries
                 self.redis_client.delete(*keys)
-            
+
             # Clear the active set
             self.redis_client.delete(self.blacklist_set_key)
-            
+
             # Reset stats
             self.redis_client.delete(self.stats_key)
-            
+
             logger.warning("All blacklisted tokens cleared")
             return True
-            
+
         except redis.RedisError as e:
             logger.error(f"Redis error clearing blacklist: {e}")
             return False

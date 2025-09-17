@@ -68,7 +68,7 @@ async def get_compliance_status(current_user: User=Depends(
                 framework_evidence_stmt)
             framework_evidence = framework_evidence_result.scalars().all()
             assessment_stmt = select(ReadinessAssessment).where(
-                ReadinessAssessment.user_id == str(current_user.id), 
+                ReadinessAssessment.user_id == str(current_user.id),
                 ReadinessAssessment.framework_id == framework.id).order_by(
                 ReadinessAssessment.created_at.desc())
             assessment_result = await db.execute(assessment_stmt)

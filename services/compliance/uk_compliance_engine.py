@@ -8,15 +8,11 @@ Integrates all UK regulations with machine-actionable obligations
 import json
 import logging
 from typing import Dict, List, Optional, Any, Tuple
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
-from pathlib import Path
 
-from pydantic import BaseModel, Field
 from langchain.prompts import PromptTemplate
-from langchain.chains import LLMChain
-from langchain.schema import Document
 
 logger = logging.getLogger(__name__)
 

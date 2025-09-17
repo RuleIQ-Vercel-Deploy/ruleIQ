@@ -1,26 +1,0 @@
-
-	0.95float
-3*"Calculate stakeholder satisfaction score"str
-0.08float
-0.6floatself
-–, –(0"‚3
-1
-
-˜ ˜(."#get-field# current_maturity:(
-&
-
-˜ ˜(4"#get-field# value:3
-1
-
-˜ ˜(;"#dependent-value#*:Bfloat0
-.
-
-˜ ˜(;"#dependent-value#:Bfloat(
-&
-
-˜ ˜(B
-"
-builtinsmin*:	
-
-˜ ˜(B
-*I/home/omar/Documents/ruleIQ/services/compliance/cco_strategic_playbook.py

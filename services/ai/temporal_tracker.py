@@ -470,7 +470,7 @@ class TemporalTracker:
                     event_type=ComplianceEventType.ENFORCEMENT_ACTION,
                     event_date=next_date,
                     urgency=ComplianceUrgency.MEDIUM,
-                    description=f"Predicted enforcement review based on historical pattern",
+                    description="Predicted enforcement review based on historical pattern",
                     action_required="Ensure compliance to avoid enforcement action",
                     impact_score=8.0,
                     estimated_effort_hours=40,
@@ -809,7 +809,7 @@ async def main():
     # Security: Credentials now loaded from environment via Doppler
     neo4j_user = os.getenv("NEO4J_USER", "neo4j")
     neo4j_password = os.getenv("NEO4J_PASSWORD")
-    
+
     if not neo4j_password:
         raise ValueError("NEO4J_PASSWORD environment variable not set. Configure via Doppler.")
 
@@ -832,7 +832,7 @@ async def main():
         # Generate compliance timeline
         timeline = await tracker.generate_compliance_timeline(business_profile)
 
-        logger.info(f"\n⏰ Compliance Timeline Analysis:")
+        logger.info("\n⏰ Compliance Timeline Analysis:")
         logger.info(f"  Current Date: {timeline.current_date.strftime('%Y-%m-%d')}")
         logger.info(f"  Overdue Items: {len(timeline.overdue_events)}")
         logger.info(f"  Next 30 Days: {len(timeline.events_30_days)} events")
@@ -841,7 +841,7 @@ async def main():
         logger.info(f"  Next 365 Days: {len(timeline.events_365_days)} events")
 
         if timeline.overdue_events:
-            logger.info(f"\n🚨 OVERDUE ITEMS:")
+            logger.info("\n🚨 OVERDUE ITEMS:")
             for event in timeline.overdue_events[:3]:
                 days_overdue = (datetime.now() - event.event_date).days
                 logger.info(f"  • {event.regulation_title}")
@@ -850,7 +850,7 @@ async def main():
                 )
 
         if timeline.events_30_days:
-            logger.info(f"\n📌 NEXT 30 DAYS:")
+            logger.info("\n📌 NEXT 30 DAYS:")
             for event in timeline.events_30_days[:5]:
                 days_until = (event.event_date - datetime.now()).days
                 logger.info(f"  • {event.regulation_title}")
@@ -859,7 +859,7 @@ async def main():
 
         # Seasonal patterns
         if timeline.seasonal_patterns.get("peak_months"):
-            logger.info(f"\n📊 Seasonal Patterns:")
+            logger.info("\n📊 Seasonal Patterns:")
             logger.info(f"  Peak Months: {timeline.seasonal_patterns['peak_months']}")
             logger.info(
                 f"  Recommendation: {timeline.seasonal_patterns['recommendation']}",
@@ -867,7 +867,7 @@ async def main():
 
         # Resource forecast
         if timeline.resource_forecast:
-            logger.info(f"\n👥 Resource Forecast:")
+            logger.info("\n👥 Resource Forecast:")
             logger.info(
                 f"  Average Utilization: {timeline.resource_forecast['average_utilization']:.1%}",
             )
@@ -883,7 +883,7 @@ async def main():
             )
 
         # Test amendment tracking
-        logger.info(f"\n📝 Amendment Pattern Analysis:")
+        logger.info("\n📝 Amendment Pattern Analysis:")
 
         test_regulation = "gdpr-eu-2016-679"
         patterns = await tracker.track_amendment_patterns(test_regulation)
@@ -899,7 +899,7 @@ async def main():
             )
 
         # Generate compliance calendar
-        logger.info(f"\n📆 Compliance Calendar (Next 3 Months):")
+        logger.info("\n📆 Compliance Calendar (Next 3 Months):")
 
         calendar = await tracker.generate_compliance_calendar(
             business_profile, months_ahead=3,

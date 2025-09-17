@@ -1,7 +1,0 @@
-
-#"Key for global IP limits"str
--$"rate_limit:ip:{ip}:global:{window}"strip
-‚ ‚(window
-‚ ‚(*"
-
-„ „(4*C/home/omar/Documents/ruleIQ/config/rate-limiting/freemium-limits.py

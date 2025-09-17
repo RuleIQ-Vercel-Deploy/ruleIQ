@@ -19,7 +19,7 @@ depends_on = None
 
 def upgrade() -> None:
     """Create feature flag related tables"""
-    
+
     # Create feature_flags table
     op.create_table(
         'feature_flags',
@@ -43,10 +43,10 @@ def upgrade() -> None:
         sa.Column('updated_by', sa.String(255), nullable=True),
         sa.Column('version', sa.Integer(), default=1, nullable=False),
     )
-    
+
     # Create index on name for fast lookups
     op.create_index('ix_feature_flags_name', 'feature_flags', ['name'])
-    
+
     # Create feature_flag_audits table
     op.create_table(
         'feature_flag_audits',
@@ -66,11 +66,11 @@ def upgrade() -> None:
         sa.Column('ticket_id', sa.String(100), nullable=True),
         sa.Column('created_at', sa.DateTime(timezone=True), server_default=sa.func.now()),
     )
-    
+
     # Create index on feature_flag_id for audit trail queries
     op.create_index('ix_feature_flag_audits_flag_id', 'feature_flag_audits', ['feature_flag_id'])
     op.create_index('ix_feature_flag_audits_created_at', 'feature_flag_audits', ['created_at'])
-    
+
     # Create feature_flag_evaluations table
     op.create_table(
         'feature_flag_evaluations',
@@ -86,12 +86,12 @@ def upgrade() -> None:
         sa.Column('context', postgresql.JSONB(), default=dict),
         sa.Column('evaluated_at', sa.DateTime(timezone=True), server_default=sa.func.now()),
     )
-    
+
     # Create indexes for analytics queries
     op.create_index('ix_feature_flag_evaluations_flag_id', 'feature_flag_evaluations', ['feature_flag_id'])
     op.create_index('ix_feature_flag_evaluations_user_id', 'feature_flag_evaluations', ['user_id'])
     op.create_index('ix_feature_flag_evaluations_evaluated_at', 'feature_flag_evaluations', ['evaluated_at'])
-    
+
     # Create feature_flag_groups table
     op.create_table(
         'feature_flag_groups',
@@ -107,10 +107,10 @@ def upgrade() -> None:
         sa.Column('updated_at', sa.DateTime(timezone=True), server_default=sa.func.now(), onupdate=sa.func.now()),
         sa.Column('created_by', sa.String(255), nullable=True),
     )
-    
+
     # Create index on group name
     op.create_index('ix_feature_flag_groups_name', 'feature_flag_groups', ['name'])
-    
+
     # Insert default feature flags
     op.execute("""
         INSERT INTO feature_flags (id, name, description, enabled, status, percentage, environments, created_by, updated_by)
@@ -124,7 +124,7 @@ def upgrade() -> None:
 
 def downgrade() -> None:
     """Drop feature flag related tables"""
-    
+
     # Drop indexes
     op.drop_index('ix_feature_flag_groups_name', 'feature_flag_groups')
     op.drop_index('ix_feature_flag_evaluations_evaluated_at', 'feature_flag_evaluations')
@@ -133,7 +133,7 @@ def downgrade() -> None:
     op.drop_index('ix_feature_flag_audits_created_at', 'feature_flag_audits')
     op.drop_index('ix_feature_flag_audits_flag_id', 'feature_flag_audits')
     op.drop_index('ix_feature_flags_name', 'feature_flags')
-    
+
     # Drop tables in reverse order (due to foreign keys)
     op.drop_table('feature_flag_groups')
     op.drop_table('feature_flag_evaluations')

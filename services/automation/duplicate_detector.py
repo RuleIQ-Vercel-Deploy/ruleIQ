@@ -45,7 +45,7 @@ class DuplicateDetector:
             cutoff_time = datetime.now(timezone.utc) - timedelta(hours=
                 time_window_hours)
             stmt = select(EvidenceItem).where(and_(EvidenceItem.user_id ==
-                user_id, EvidenceItem.created_at > cutoff_time, 
+                user_id, EvidenceItem.created_at > cutoff_time,
                 EvidenceItem.metadata['content_hash'].as_string() ==
                 content_hash)).limit(1)
             result = await db.execute(stmt)
@@ -73,7 +73,7 @@ class DuplicateDetector:
                 cutoff_date, EvidenceItem.status == 'duplicate'))
             duplicate_res = await db.execute(duplicate_stmt)
             duplicate_items = duplicate_res.scalar_one()
-            duplicate_rate = (duplicate_items / total_items * 100 if 
+            duplicate_rate = (duplicate_items / total_items * 100 if
                 total_items > 0 else 0)
             return {'total_items': total_items, 'duplicate_items':
                 duplicate_items, 'unique_items': total_items -

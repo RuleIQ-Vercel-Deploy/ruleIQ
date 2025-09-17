@@ -9,7 +9,7 @@ Analyze and identify duplicate API endpoints in the ruleIQ codebase
 import json
 import re
 from pathlib import Path
-from typing import Dict, List, Set, Any
+from typing import Dict, List, Any
 from collections import defaultdict
 PROJECT_ROOT = Path(__file__).parent.parent
 ROUTERS_DIR = PROJECT_ROOT / 'api' / 'routers'

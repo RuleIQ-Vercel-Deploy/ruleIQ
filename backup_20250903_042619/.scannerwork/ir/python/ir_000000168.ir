@@ -1,37 +1,0 @@
-
-„Ÿ"Get transition history.
-
-        Args:
-            workflow_id: Specific workflow or None for all
-            limit: Maximum number of transitions to return
-
-        Returns:
-            List of transitions
-        "strself
-Ü Ü(#workflow_id
-Ü% Ü(Dlimit
-ÜF Ü(T"[+
-)
-
-ê ê("
-__bool__*:BboolH,"*
-
-ê ê( *
-ê ê(
-2
-í í("E;
-9
-
-ë ë([transitions"?python-unknown?:Blist"v/
--
-
-ì ì(0"#get-field# _transitions:;
-9
-
-ì ì(1transitions"
-builtinslist*:Blist"?)
-'
-
-î î(#	"#unknown-value#Blist
-
-î î(#	*D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py

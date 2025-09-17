@@ -7,7 +7,7 @@ import logging
 from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional, Tuple
 from dataclasses import dataclass
-from functools import lru_cache, wraps
+from functools import wraps
 from collections import defaultdict
 from enum import Enum
 from services.ai.evaluation.schemas.compliance_scenario import ComplianceScenario
@@ -537,7 +537,7 @@ class DeepValidator:
         if not temporal2.effective_to:
             return (temporal1.effective_from <= temporal2.effective_from <=
                 temporal1.effective_to if temporal1.effective_to else False)
-        return not (temporal1.effective_to < temporal2.effective_from or 
+        return not (temporal1.effective_to < temporal2.effective_from or
             temporal2.effective_to < temporal1.effective_from)
 
 

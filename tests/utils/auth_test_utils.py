@@ -83,7 +83,7 @@ class TestAuthManager:
 # Create a class for the global auth manager that doesn't have __init__
 class GlobalTestAuthManager:
     """Global test auth manager for utility functions."""
-    
+
     def __init__(self):
         """Initialize the global auth manager."""
         self.test_users = {}

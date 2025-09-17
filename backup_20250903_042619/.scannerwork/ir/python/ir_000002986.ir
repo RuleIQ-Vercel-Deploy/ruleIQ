@@ -1,173 +1,0 @@
-
-9"System Configuration"str
-"applicable_indu"str
-]"estimated_cost_"str
-G"evidence_types"str
-8"Network Security"str
-
-1int
-"display_name"str
-"Cybersecurity"str
-"employee_thresh"str
-<"Patch Management"str
-;"Malware Protection"str
-/&"Load Cyber Essentials framework data"str
-'"key_requirement"str
-`	"version"str
-"Cyber Essentials"str
-	"description"str
-H"Network Diagrams"str
-7"control_domains"str
-,"Patch management"str
-"name"str
-a"1.0"str
-¬
-¢"
-        UK Government-backed cybersecurity certification scheme.
-        Covers basic cyber security controls to protect against common cyber attacks.
-        "str
-W"complexity_scor"str
-"Â£0+"str
-"all"str
-
-[8int
-
-X4int
-
-0int
-"revenue_thresho"str
-"I"Configuration Standards"str
-
-"category"str
-+"Malware protection"str
-K"Antivirus Reports"str
- "UK"str
-^"Â£2,000-Â£10,000"str
-:"Access Management"str
-3(*"Boundary firewalls and internet gateways"str
-)"Secure configuration"str
-J"Access Control Lists"str
-Z"implementation_"str
-"CYBER_ESSENTIALS_UK"str
-"geographic_scop"str
- L"Patch Management Logs"str
-*"Access control"strlist"¯$
-"
-l |(A"#new-object#Bdict 
-
-l l()"	#map-set#: 
-
-l+ m("	#map-set#:!
-
-	m n(®"	#map-set#:	
- 
-
-r
- r(%"	#map-set#:'
-%
-r: r(A"#unknown-value#Blist&
-$
-r: r(A"
-#is-exact#:Bbool
-
-r: r(A"
-#assume#:8
-6
-r: r(A"#set-field# __collection_size:Bint&
-$
-r: r(A"#array-add-last#: 
-
-r' r(A"	#map-set#: 
-
-s s("	#map-set#: 
-
-s s(6"	#map-set#:'
-%
-t t(!"#unknown-value#Blist&
-$
-t t(""
-#is-exact#:!Bbool
-
-t t(#"
-#assume#:"8
-6
-t t($"#set-field# __collection_size:!Bint&
-$
-t t(%"#array-add-last#:!  
-
-s8 t(&"	#map-set#:!'
-%
-t# v(C-"#unknown-value#Blist&
-$
-t# v(C."
-#is-exact#:-Bbool
-
-t# v(C/"
-#assume#:.8
-6
-t# v(C0"#set-field# __collection_size:-Bint&
-$
-t# v(C1"#array-add-last#:-(&
-$
-t# v(C2"#array-add-last#:-)&
-$
-t# v(C3"#array-add-last#:-*&
-$
-t# v(C4"#array-add-last#:-+&
-$
-t# v(C5"#array-add-last#:-, 
-
-t v(C6"	#map-set#:'-'
-%
-w x(F="#unknown-value#Blist&
-$
-w x(F>"
-#is-exact#:=Bbool
-
-w x(F?"
-#assume#:>8
-6
-w x(F@"#set-field# __collection_size:=Bint&
-$
-w x(FA"#array-add-last#:=8&
-$
-w x(FB"#array-add-last#:=9&
-$
-w x(FC"#array-add-last#:=:&
-$
-w x(FD"#array-add-last#:=;&
-$
-w x(FE"#array-add-last#:=< 
-
-w x(FF"	#map-set#:7='
-%
-y {( M"#unknown-value#Blist&
-$
-y {( N"
-#is-exact#:MBbool
-
-y {( O"
-#assume#:N8
-6
-y {( P"#set-field# __collection_size:MBint&
-$
-y {( Q"#array-add-last#:MH&
-$
-y {( R"#array-add-last#:MI&
-$
-y {( S"#array-add-last#:MJ&
-$
-y {( T"#array-add-last#:MK&
-$
-y {( U"#array-add-last#:ML 
-
-y {( V"	#map-set#:GM 
-
-{" {(6Y"	#map-set#:WX 
-
-{8 |(	\"	#map-set#:Z[ 
-
-| |(._"	#map-set#:]^ 
-
-|0 |(@b"	#map-set#:`a
-l |(A*9/home/omar/Documents/ruleIQ/scripts/load_uk_frameworks.py

@@ -7,7 +7,6 @@ from __future__ import annotations
 import subprocess
 import json
 from pathlib import Path
-from typing import Dict, List
 
 
 def run_pytest_json() -> Any:
@@ -63,7 +62,7 @@ def run_pytest_json() -> Any:
         if total > 0:
             pass_rate = (passed / total) * 100
             print(f"\nPass Rate: {pass_rate:.1f}%")
-            print(f"Target: 95.0%")
+            print("Target: 95.0%")
             print(f"Gap: {95.0 - pass_rate:.1f}%")
 
         # Show failed tests

@@ -8,7 +8,7 @@ These reducers are used with Annotated types to provide intelligent
 state accumulation and merging logic.
 """
 
-from typing import Dict, List, Any, Optional, Union
+from typing import Dict, List, Any, Union
 from datetime import datetime
 import copy
 

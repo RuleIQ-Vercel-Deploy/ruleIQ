@@ -87,7 +87,7 @@ class AIConfig:
             'category': 'HARM_CATEGORY_SEXUALLY_EXPLICIT', 'threshold':
             'BLOCK_MEDIUM_AND_ABOVE'}, {'category':
             'HARM_CATEGORY_DANGEROUS_CONTENT', 'threshold': 'BLOCK_ONLY_HIGH'}]
-        self.retry_config = {'default': {'max_attempts': 3, 'base_delay': 
+        self.retry_config = {'default': {'max_attempts': 3, 'base_delay':
             1.0, 'max_delay': 60.0, 'strategy': 'exponential_backoff',
             'jitter': True}, 'quick_operations': {'max_attempts': 2,
             'base_delay': 0.5, 'max_delay': 10.0, 'strategy':
@@ -98,7 +98,7 @@ class AIConfig:
             'max_delay': 60.0, 'strategy': 'fibonacci_backoff', 'jitter': True}
             }
         self.circuit_breaker_config = {'failure_threshold': 5,
-            'recovery_timeout': 60, 'success_threshold': 3, 'time_window': 
+            'recovery_timeout': 60, 'success_threshold': 3, 'time_window':
             60, 'model_timeouts': {ModelType.GEMINI_25_PRO.value: 45.0,
             ModelType.GEMINI_25_FLASH.value: 30.0, ModelType.GEMMA_3.value:
             15.0, ModelType.GEMINI_FLASH.value: 30.0}}

@@ -1,5 +1,0 @@
-npm error Missing script: "sonar"
-npm error
-npm error To see a list of scripts, run:
-npm error   npm run
-npm error A complete log of this run can be found in: /home/omar/.npm/_logs/2025-09-02T12_48_32_350Z-debug-0.log

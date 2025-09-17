@@ -10,7 +10,7 @@ This is particularly useful for testing scenarios where new users need
 to have assessment permissions.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))

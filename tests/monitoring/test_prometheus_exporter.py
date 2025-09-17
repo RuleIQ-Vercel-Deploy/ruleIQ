@@ -334,7 +334,7 @@ class TestPrometheusMetricsExporter:
         counter = self.exporter.register_counter('integration_counter')
         counter.inc()
         async with aiohttp.ClientSession() as session:
-            async with session.get(f'http://localhost:9097/metrics'
+            async with session.get('http://localhost:9097/metrics'
                 ) as response:
                 assert response.status == HTTP_OK
                 content = await response.text()

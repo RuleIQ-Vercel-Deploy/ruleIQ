@@ -1,60 +1,0 @@
-
-"check"str
-&"/home/omar/Documents/ruleIQ"str
-"ruff"str
-"api"str
-truebool
-
-
-0int
-.%"Get all ruff issues in JSON format."str
-"--output-format=json"strlist"ê'
-%
- (L"#unknown-value#Blist&
-$
- (L"
-#is-exact#:Bbool
-
- (L	"
-#assume#:8
-6
- (L"#set-field# __collection_size:
-Bint&
-$
- (L"#array-add-last#:&
-$
- (L"#array-add-last#:&
-$
- (L"#array-add-last#:&
-$
- (L"#array-add-last#:M
-K
-	 (êresult"
-
-subprocessrun:Bsubprocess.CompletedProcess+
-)
- ("#get-field# returncode:*
-(
- ("
-#binop ==#2==:
-Bbool"
- ( * ("º'
-%
- ("#unknown-value#Blist&
-$
- ("
-#is-exact#:Bbool
-
- ("
-#assume#:8
-6
- ("#set-field# __collection_size:
-Bint
- ("Ü'
-%
- (#"#get-field# stdout:!
-
- ("#unknown-value#&
-$
- ($"?python-unknown?:
- ($*E/home/omar/Documents/ruleIQ/scripts/sonar/fix-python-comprehensive.py

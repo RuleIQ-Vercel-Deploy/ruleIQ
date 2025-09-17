@@ -1,35 +1,0 @@
-
--$"Get information about API version."str
-"supported"str
-"deprecated"str
-	"version"str
-"latest"strself1 1(version1 1(+"à%
-#
-	3 3(¬"#new-object#Bdict 
-
-3 3(""	#map-set#:3
-1
-3< 3(S" #get-field# SUPPORTED_VERSIONS:*
-(
-31 3(S	"
-#binop in#2in:Bbool 
-
-3$ 3(S
-"	#map-set#:	/
--
-3j 3(}"#get-field# LATEST_VERSION:*
-(
-3_ 3(}"
-#binop ==#2==:Bbool 
-
-3U 3(}"	#map-set#:1
-/
-
-3˜ 3(«"#get-field# LATEST_VERSION:,
-*
-
-3 3(«"
-#binop !=#2!=:Bbool!
-
-	3 3(«"	#map-set#:
-	3 3(¬*</home/omar/Documents/ruleIQ/api/middleware/api_versioning.py

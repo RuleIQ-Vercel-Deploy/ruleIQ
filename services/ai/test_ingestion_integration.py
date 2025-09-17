@@ -11,13 +11,13 @@ Tests the full flow from manifest files to IQ agent queries.
 import asyncio
 import json
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any
 import logging
 from datetime import datetime
 logging.basicConfig(level=logging.INFO, format=
     '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
-from services.ai.compliance_ingestion_pipeline import Neo4jComplianceIngestion, IngestionMetrics
+from services.ai.compliance_ingestion_pipeline import Neo4jComplianceIngestion
 from services.ai.compliance_query_engine import ComplianceQueryEngine
 from services.neo4j_service import Neo4jGraphRAGService
 from services.iq_agent import IQComplianceAgent
@@ -91,8 +91,8 @@ class IngestionIntegrationTest:
             else:
                 logger.warning('UK regulations file not found')
             logger.info('\n3. Testing business trigger matching...')
-            test_profile = {'industry': 'finance', 'processes_payments': 
-                True, 'has_eu_customers': True, 'stores_customer_data': 
+            test_profile = {'industry': 'finance', 'processes_payments':
+                True, 'has_eu_customers': True, 'stores_customer_data':
                 True, 'annual_revenue': 50000000, 'employee_count': 150,
                 'country': 'UK'}
             applicable = await self.query_engine.get_applicable_regulations(
@@ -214,7 +214,7 @@ class IngestionIntegrationTest:
                 [])), 'priority_actions': [a.get('title') for a in plan.get
                 ('actions', [])[:3]], 'considers_dependencies': any(
                 'depend' in str(a).lower() for a in plan.get('actions', [])
-                ), 'automation_enabled': any(a.get('automation_potential', 
+                ), 'automation_enabled': any(a.get('automation_potential',
                 0) > HALF_RATIO for a in plan.get('actions', []))}
             logger.info('✓ IQ generated %s compliance actions' % results[
                 'planning']['action_count'])
@@ -266,7 +266,7 @@ class IngestionIntegrationTest:
             'python_version': '3.11+', 'test_type':
             'end-to-end integration'}, 'results': self.metrics, 'summary':
             {'phase1_success': self.metrics.get('phase1', {}).get(
-            'main_manifest', {}).get('success', False), 'phase2_success': 
+            'main_manifest', {}).get('success', False), 'phase2_success':
             'error' not in self.metrics.get('phase2', {}),
             'iq_integration_success': 'error' not in self.metrics.get(
             'iq_integration', {}), 'total_regulations_ingested': sum([self.

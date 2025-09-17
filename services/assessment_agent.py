@@ -21,9 +21,6 @@ from enum import Enum
 from langgraph.graph import StateGraph, add_messages, END
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
-from typing import Optional, Any
-import asyncio
-import os
 from config.settings import get_settings
 from langchain_core.messages import HumanMessage, AIMessage
 from langchain_core.tracers.context import tracing_v2_enabled

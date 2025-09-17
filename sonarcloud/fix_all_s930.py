@@ -39,10 +39,10 @@ def main() -> None:
     for file_path in files_to_fix:
         logger.info(f'\n📝 Processing: {file_path}')
         if fix_validate_api_key_calls(file_path):
-            logger.info(f'  ✅ Fixed')
+            logger.info('  ✅ Fixed')
             fixed_count += 1
         else:
-            logger.info(f'  ⚠️  No changes needed or file not found')
+            logger.info('  ⚠️  No changes needed or file not found')
     logger.info('\n' + '=' * 60)
     logger.info(f'✅ Fixed {fixed_count}/{len(files_to_fix)} files')
     logger.info('=' * 60)

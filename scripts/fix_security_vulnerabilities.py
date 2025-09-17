@@ -4,7 +4,6 @@ Security vulnerability fix script for ruleIQ platform
 Addresses critical security issues identified in security audit
 """
 
-import os
 import re
 import json
 from pathlib import Path
@@ -22,39 +21,39 @@ class SecurityFixer:
             "scripts/fix_neo4j_relationships.py",
             "scripts/add_supersedes_relationships.py"
         ]
-        
+
     def fix_hardcoded_passwords(self) -> List[Dict[str, Any]]:
         """Fix all remaining hardcoded Neo4j passwords"""
         fixes = []
-        
+
         for file_path in self.files_to_fix:
             full_path = self.project_root / file_path
-            
+
             if not full_path.exists():
                 print(f"⚠️  File not found: {file_path}")
                 continue
-                
+
             with open(full_path, 'r') as f:
                 content = f.read()
-            
+
             # Check if file has hardcoded password
             if "neo4j_password = 'ruleiq123'" in content or 'neo4j_password = "ruleiq123"' in content:
                 # Add import if not present
                 if "import os" not in content:
                     content = "import os\n" + content
-                
+
                 # Replace hardcoded password
                 old_pattern = r'neo4j_password\s*=\s*["\']ruleiq123["\']'
                 new_code = '''neo4j_password = os.getenv("NEO4J_PASSWORD")
     if not neo4j_password:
         raise ValueError("NEO4J_PASSWORD environment variable not set. Configure via Doppler.")'''
-                
+
                 content = re.sub(old_pattern, new_code, content)
-                
+
                 # Write fixed content
                 with open(full_path, 'w') as f:
                     f.write(content)
-                
+
                 fixes.append({
                     "file": file_path,
                     "issue": "Hardcoded Neo4j password",
@@ -63,9 +62,9 @@ class SecurityFixer:
                 print(f"✅ Fixed hardcoded password in: {file_path}")
             else:
                 print(f"✓ No hardcoded password found in: {file_path}")
-                
+
         return fixes
-    
+
     def create_doppler_config(self):
         """Create Doppler configuration template"""
         doppler_config = {
@@ -82,14 +81,14 @@ class SecurityFixer:
                 "ANTHROPIC_API_KEY": "Your Anthropic API key"
             }
         }
-        
+
         config_path = self.project_root / ".doppler.example.json"
         with open(config_path, 'w') as f:
             json.dump(doppler_config, f, indent=2)
-        
+
         print(f"✅ Created Doppler configuration template: {config_path}")
         return config_path
-    
+
     def add_security_middleware(self):
         """Create security middleware for the application"""
         middleware_code = '''"""
@@ -195,20 +194,20 @@ def hash_password(password: str, salt: Optional[str] = None) -> tuple[str, str]:
     
     return password_hash.hex(), salt
 '''
-        
+
         middleware_path = self.project_root / "middleware" / "security_middleware_enhanced.py"
         with open(middleware_path, 'w') as f:
             f.write(middleware_code)
-        
+
         print(f"✅ Created enhanced security middleware: {middleware_path}")
         return middleware_path
-    
+
     def run_security_scan(self):
         """Run bandit security scan"""
         try:
             # Install bandit if not present
             subprocess.run(["pip", "install", "bandit"], capture_output=True)
-            
+
             # Run bandit scan
             result = subprocess.run(
                 ["bandit", "-r", ".", "-f", "json", "-o", "bandit_report.json"],
@@ -216,13 +215,13 @@ def hash_password(password: str, salt: Optional[str] = None) -> tuple[str, str]:
                 text=True,
                 cwd=self.project_root
             )
-            
+
             print("✅ Security scan completed. Report: bandit_report.json")
             return True
         except Exception as e:
             print(f"⚠️  Could not run security scan: {e}")
             return False
-    
+
     def generate_report(self, fixes: List[Dict[str, Any]]):
         """Generate security fix report"""
         report = {
@@ -256,44 +255,44 @@ def hash_password(password: str, salt: Optional[str] = None) -> tuple[str, str]:
                 "A05_security_misconfiguration": "IMPROVED"
             }
         }
-        
+
         report_path = self.project_root / "security_fix_report.json"
         with open(report_path, 'w') as f:
             json.dump(report, f, indent=2)
-        
+
         print(f"\n✅ Security fix report generated: {report_path}")
         print("\n📊 Summary:")
         print(f"  - Critical vulnerabilities fixed: {len(fixes) + 3}")
         print(f"  - Files modified: {report['vulnerabilities_fixed']['files_modified']}")
-        print(f"  - OWASP compliance improved: 4 categories")
-        
+        print("  - OWASP compliance improved: 4 categories")
+
         return report
 
 def main():
     print("🔒 Starting Security Vulnerability Fix Process\n")
-    
+
     fixer = SecurityFixer()
-    
+
     # 1. Fix hardcoded passwords
     print("Step 1: Fixing hardcoded passwords...")
     fixes = fixer.fix_hardcoded_passwords()
-    
+
     # 2. Create Doppler config
     print("\nStep 2: Creating Doppler configuration...")
     fixer.create_doppler_config()
-    
+
     # 3. Add security middleware
     print("\nStep 3: Creating security middleware...")
     fixer.add_security_middleware()
-    
+
     # 4. Run security scan
     print("\nStep 4: Running security scan...")
     fixer.run_security_scan()
-    
+
     # 5. Generate report
     print("\nStep 5: Generating report...")
     report = fixer.generate_report(fixes)
-    
+
     print("\n✅ Security vulnerability fixes completed!")
     print("\n⚠️  Important Next Steps:")
     print("1. Configure Doppler: doppler setup")

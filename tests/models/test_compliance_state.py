@@ -77,7 +77,6 @@ class TestActorValidation:
 
     def test_invalid_actor_type_raises_error(self):
         """Test that invalid actor types raise validation error."""
-        from pydantic import ValidationError
         data = {'case_id': 'test-invalid', 'actor': 'InvalidActor',
             'objective': 'Test invalid', 'trace_id': str(uuid4())}
         with pytest.raises(ValidationError):
@@ -85,7 +84,6 @@ class TestActorValidation:
 
     def test_actor_type_case_sensitive(self):
         """Test that actor validation is case-sensitive."""
-        from pydantic import ValidationError
         data = {'case_id': 'test-case', 'actor': 'policyauthor',
             'objective': 'Test case sensitivity', 'trace_id': str(uuid4())}
         with pytest.raises(ValidationError):
@@ -123,7 +121,6 @@ class TestEvidenceAccumulation:
 
     def test_evidence_item_validation(self):
         """Test evidence items must have required fields."""
-        from pydantic import ValidationError
         invalid_evidence = [{'type': 'document'}]
         data = {'case_id': 'test-evidence-003', 'actor':
             'EvidenceCollector', 'objective': 'Test validation', 'evidence':
@@ -234,7 +231,6 @@ class TestDecisionTracking:
 
     def test_decision_accumulation(self):
         """Test decisions are accumulated in order."""
-        from langgraph_agent.models.compliance_state import Decision
         initial_decisions = [{'id': 'dec-001', 'timestamp': datetime.now().
             isoformat(), 'actor': 'PolicyAuthor', 'action': 'draft_policy'}]
         data = {'case_id': 'test-decision-003', 'actor': 'PolicyAuthor',
@@ -296,7 +292,6 @@ class TestTraceIdGeneration:
 
     def test_trace_id_required(self):
         """Test trace_id is a required field."""
-        from pydantic import ValidationError
         data = {'case_id': 'test-trace-001', 'actor': 'PolicyAuthor',
             'objective': 'Test trace'}
         with pytest.raises(ValidationError):
@@ -304,7 +299,6 @@ class TestTraceIdGeneration:
 
     def test_trace_id_format_validation(self):
         """Test trace_id must be valid UUID format."""
-        from pydantic import ValidationError
         data = {'case_id': 'test-trace-002', 'actor': 'PolicyAuthor',
             'objective': 'Test trace format', 'trace_id': 'invalid-uuid'}
         with pytest.raises(ValidationError):
@@ -371,7 +365,6 @@ class TestStateTransitions:
 
     def test_invalid_workflow_status(self):
         """Test invalid workflow status raises error."""
-        from pydantic import ValidationError
         data = {'case_id': 'test-status-invalid', 'actor': 'PolicyAuthor',
             'objective': 'Test invalid status', 'trace_id': str(uuid4()),
             'workflow_status': 'invalid_status'}
@@ -431,7 +424,6 @@ class TestStateValidation:
 
     def test_case_id_required(self):
         """Test case_id is required and non-empty."""
-        from pydantic import ValidationError
         data = {'actor': 'PolicyAuthor', 'objective': 'Test case_id',
             'trace_id': str(uuid4())}
         with pytest.raises(ValidationError):
@@ -439,7 +431,6 @@ class TestStateValidation:
 
     def test_objective_required(self):
         """Test objective is required and non-empty."""
-        from pydantic import ValidationError
         data = {'case_id': 'test-val-001', 'actor': 'PolicyAuthor',
             'trace_id': str(uuid4())}
         with pytest.raises(ValidationError):
@@ -447,7 +438,6 @@ class TestStateValidation:
 
     def test_empty_strings_validation(self):
         """Test empty strings are not allowed for required fields."""
-        from pydantic import ValidationError
         data = {'case_id': '', 'actor': 'PolicyAuthor', 'objective':
             'Test empty', 'trace_id': str(uuid4())}
         with pytest.raises(ValidationError):

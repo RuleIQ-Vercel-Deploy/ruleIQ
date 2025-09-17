@@ -47,7 +47,7 @@ def fix_multiline_json(content) ->Any:
                     raw_content = []
                     raw_prefix = ''
                     continue
-            elif line.strip() == '}' and (i + 1 >= len(lines) or lines[i + 
+            elif line.strip() == '}' and (i + 1 >= len(lines) or lines[i +
                 1].strip().startswith('}')):
                 raw_content.append(line)
                 json_str = '\n'.join(raw_content)

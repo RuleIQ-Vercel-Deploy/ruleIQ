@@ -10,14 +10,14 @@ management infrastructure.
 import asyncio
 import functools
 import time
-from typing import Any, Callable, Dict, Optional, TypeVar, Union
+from typing import Any, Callable, Dict, Optional, TypeVar
 try:
     from typing import Self
 except ImportError:
     from typing_extensions import Self
 from datetime import datetime, timezone
 import logging
-from services.ai.cost_management import AICostManager, AIUsageMetrics
+from services.ai.cost_management import AICostManager
 logger = logging.getLogger(__name__)
 F = TypeVar('F', bound=Callable[..., Any])
 _cost_manager: Optional[AICostManager] = None

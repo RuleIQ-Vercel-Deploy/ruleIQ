@@ -3,10 +3,8 @@
 Comprehensive test suite fixer to achieve 100% test coverage.
 """
 
-import os
 import sys
 import subprocess
-import json
 from pathlib import Path
 
 
@@ -59,7 +57,7 @@ def fix_import_issues(file_path):
 
     changed = False
     for old, new in fixes.items():
-        if old in content and not new in content:
+        if old in content and new not in content:
             content = content.replace(old, new)
             changed = True
 

@@ -63,7 +63,6 @@ class FreemiumAssessmentService:
         Async factory method to create a FreemiumAssessmentService instance.
         This properly initializes the async AssessmentAgent.
         """
-        from services.assessment_agent import AssessmentAgent
 
         # Create the AssessmentAgent using its async factory method
         assessment_agent = await AssessmentAgent.create(db_session)

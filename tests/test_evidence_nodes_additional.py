@@ -206,7 +206,7 @@ class TestEvidenceNodeFunction:
 
     async def test_evidence_node_instance(self):
         """Test evidence_node is an instance of EvidenceCollectionNode."""
-        from langgraph_agent.nodes.evidence_nodes import evidence_node, EvidenceCollectionNode
+        from langgraph_agent.nodes.evidence_nodes import EvidenceCollectionNode
         assert isinstance(evidence_node, EvidenceCollectionNode)
 
     @patch('langgraph_agent.nodes.evidence_nodes.get_async_db')
@@ -215,7 +215,6 @@ class TestEvidenceNodeFunction:
     async def test_evidence_node_process(self, mock_duplicate_detector,
         mock_processor_class, mock_get_db):
         """Test calling evidence_node's process_evidence method."""
-        from langgraph_agent.nodes.evidence_nodes import evidence_node
         mock_duplicate_detector.is_duplicate = AsyncMock(return_value=False)
         mock_processor = MagicMock()
         mock_processor.process_evidence = MagicMock()

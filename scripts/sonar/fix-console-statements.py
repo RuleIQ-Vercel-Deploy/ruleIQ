@@ -4,7 +4,6 @@ Fix console statements by replacing them with TODO comments or proper logging pa
 from typing import Any, Tuple
 import logging
 logger = logging.getLogger(__name__)
-import os
 import re
 import glob
 

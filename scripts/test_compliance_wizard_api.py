@@ -7,7 +7,7 @@ from __future__ import annotations
 Test the compliance wizard API integration with corrected routes.
 Verifies that the frontend can successfully connect to backend APIs.
 """
-from typing import Any, Dict, List, Optional
+from typing import Any
 import asyncio
 import aiohttp
 

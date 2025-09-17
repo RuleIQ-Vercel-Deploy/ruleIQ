@@ -7,9 +7,8 @@ Extract all UK regulatory obligations from cached documents.
 """
 
 import json
-import os
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Dict, Any
 from datetime import datetime
 import hashlib
 

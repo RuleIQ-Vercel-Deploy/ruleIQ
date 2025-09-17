@@ -7,7 +7,7 @@ Provides comprehensive error handling, retry logic, and circuit breaking.
 import logging
 import traceback
 from datetime import datetime, timedelta
-from typing import Dict, Any, Optional, Callable
+from typing import Dict, Any, Callable
 from uuid import uuid4
 from functools import wraps
 from langgraph_agent.graph.unified_state import UnifiedComplianceState

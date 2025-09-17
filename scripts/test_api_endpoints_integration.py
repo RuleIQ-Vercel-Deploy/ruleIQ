@@ -7,7 +7,7 @@ from __future__ import annotations
 Test script to verify business-profiles and frameworks endpoints are working properly
 Specifically testing the endpoints that are failing in the frontend
 """
-from typing import Any, Dict, List, Optional
+from typing import Any
 import requests
 import json
 import sys

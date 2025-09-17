@@ -1,43 +1,0 @@
-
-"regulation_controls"str
-"regulation"str
-MD"Natural language query: What controls do we need for [REGULATION]?"str
-ðæ"
-        MATCH (reg:Regulation {name: $regulation})-[:REQUIRES]->(req:Requirement)
-        OPTIONAL MATCH (req)<-[:IMPLEMENTS]-(ctrl:Control)
-        RETURN req.title AS requirement,
-               req.mandatory AS is_mandatory,
-               COLLECT(ctrl.name) AS existing_controls,
-               CASE 
-                 WHEN SIZE(COLLECT(ctrl)) = 0 THEN 'MISSING'
-                 ELSE 'IMPLEMENTED'
-               END AS status
-        ORDER BY req.mandatory DESC, status
-        "strself
-æ, æ(0
-regulation
-æ2 æ(A"¯(
-&
-é é(úquery"#id#:Bstr.
-,
-
-õ õ(+params"#new-object#Bdict"
- 
-
-õ õ(*"	#map-set#:#
-!
-
-ö ö(9	"#unknown-value#,
-*
-
-ö ö(9
-results"#unknown-value#&
-$
-
-÷ ÷(/"#new-object#Bdict"
- 
-
-÷ ÷(."	#map-set#:
-
-
-÷ ÷(/*A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py

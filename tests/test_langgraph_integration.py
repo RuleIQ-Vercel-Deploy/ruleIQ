@@ -65,11 +65,11 @@ def golden_dataset_path(tmp_path):
     """Create temporary golden dataset structure."""
     dataset_dir = tmp_path / "golden_datasets"
     dataset_dir.mkdir()
-    
+
     # Create v1.0.0 directory
     version_dir = dataset_dir / "v1.0.0"
     version_dir.mkdir()
-    
+
     # Create sample dataset
     dataset_file = version_dir / "dataset.jsonl"
     sample_data = [
@@ -94,11 +94,11 @@ def golden_dataset_path(tmp_path):
             }
         }
     ]
-    
+
     with open(dataset_file, 'w') as f:
         for item in sample_data:
             f.write(json.dumps(item) + '\n')
-    
+
     # Create metadata
     metadata_file = version_dir / "metadata.json"
     metadata = {
@@ -113,13 +113,13 @@ def golden_dataset_path(tmp_path):
     }
     with open(metadata_file, 'w') as f:
         json.dump(metadata, f)
-    
+
     return dataset_dir
 
 
 class TestLangGraphWorkflow:
     """Test LangGraph workflow integration."""
-    
+
     @pytest.mark.asyncio
     async def test_iq_agent_initialization(self, mock_neo4j_service):
         """Test IQ agent can be initialized with dependencies."""
@@ -128,12 +128,12 @@ class TestLangGraphWorkflow:
             postgres_session=None,
             llm_model='gpt-4'
         )
-        
+
         assert agent is not None
         assert agent.neo4j == mock_neo4j_service
         assert agent.workflow is not None
         assert agent.memory_manager is not None
-    
+
     @pytest.mark.asyncio
     async def test_workflow_execution(self, mock_neo4j_service, mock_llm):
         """Test complete workflow execution."""
@@ -142,19 +142,19 @@ class TestLangGraphWorkflow:
             postgres_session=None
         )
         agent.llm = mock_llm
-        
+
         # Execute query
         result = await agent.process_query(
             user_query="What are GDPR requirements?",
             context={"test": True}
         )
-        
+
         assert result['status'] == 'success'
         assert 'summary' in result
         assert 'artifacts' in result
         assert 'llm_response' in result
         assert result['llm_response'] == "This is a compliance guidance response."
-    
+
     @pytest.mark.asyncio
     async def test_perceive_node(self, mock_neo4j_service):
         """Test the perceive node in workflow."""
@@ -162,7 +162,7 @@ class TestLangGraphWorkflow:
             neo4j_service=mock_neo4j_service,
             postgres_session=None
         )
-        
+
         state = IQAgentState(
             current_query="Check GDPR compliance",
             graph_context={},
@@ -174,16 +174,16 @@ class TestLangGraphWorkflow:
             patterns_detected=[],
             messages=[]
         )
-        
+
         # Mock the compliance query execution
         with patch('services.iq_agent.execute_compliance_query') as mock_exec:
             mock_exec.return_value = Mock(
                 data={'coverage': 0.85},
                 metadata={'overall_coverage': 0.85, 'total_gaps': 3}
             )
-            
+
             updated_state = await agent._perceive_node(state)
-            
+
             assert 'coverage_analysis' in updated_state.graph_context
             assert updated_state.compliance_posture['overall_coverage'] == 0.85
             assert updated_state.compliance_posture['total_gaps'] == 3
@@ -191,55 +191,55 @@ class TestLangGraphWorkflow:
 
 class TestGoldenDatasets:
     """Test golden dataset functionality."""
-    
+
     def test_jsonl_loader(self, tmp_path):
         """Test JSONL file loading and saving."""
         file_path = tmp_path / "test.jsonl"
         loader = JSONLLoader(str(file_path))
-        
+
         # Test save
         data = [
             {"id": 1, "name": "test1"},
             {"id": 2, "name": "test2"}
         ]
         loader.save(data)
-        
+
         # Test load
         loaded_data = loader.load()
         assert len(loaded_data) == 2
         assert loaded_data[0]["id"] == 1
         assert loaded_data[1]["name"] == "test2"
-    
+
     def test_golden_dataset_loader(self, golden_dataset_path):
         """Test golden dataset loader with versions."""
         loader = GoldenDatasetLoader(str(golden_dataset_path))
-        
+
         # Load latest version
         data = loader.load_latest()
         assert len(data) == 2
         assert data[0]["type"] == "compliance_scenario"
         assert data[1]["type"] == "regulatory_qa"
-        
+
         # Parse dataset
         parsed = loader.parse_dataset(data)
         assert len(parsed['compliance_scenarios']) == 1
         assert len(parsed['regulatory_qa']) == 1
         assert parsed['evidence_cases'] == []
-    
+
     def test_dataset_registry(self, golden_dataset_path):
         """Test dataset registry management."""
         registry = DatasetRegistry()
-        
+
         # Register dataset
         registry.register_dataset(
             name="test_dataset",
             path=str(golden_dataset_path),
             version="1.0.0"
         )
-        
+
         assert "test_dataset" in registry.datasets
         assert registry.datasets["test_dataset"]["path"] == str(golden_dataset_path)
-        
+
         # Load dataset through registry
         loader = registry.loaders["test_dataset"]
         data = loader.load_latest()
@@ -248,18 +248,18 @@ class TestGoldenDatasets:
 
 class TestIntegrationWithAPI:
     """Test integration with API endpoints."""
-    
+
     @pytest.mark.asyncio
     async def test_iq_agent_api_integration(self, mock_neo4j_service):
         """Test IQ agent can be created and used in API context."""
         with patch('services.iq_agent.Neo4jGraphRAGService') as mock_neo4j_class:
             mock_neo4j_class.return_value = mock_neo4j_service
-            
+
             # Test agent creation
             agent = await create_iq_agent(mock_neo4j_service)
             assert agent is not None
             assert isinstance(agent, IQComplianceAgent)
-    
+
     @pytest.mark.asyncio
     async def test_langgraph_state_management(self, mock_neo4j_service):
         """Test LangGraph state management through workflow."""
@@ -267,7 +267,7 @@ class TestIntegrationWithAPI:
             neo4j_service=mock_neo4j_service,
             postgres_session=None
         )
-        
+
         # Create initial state
         initial_state = IQAgentState(
             current_query="Test query",
@@ -281,7 +281,7 @@ class TestIntegrationWithAPI:
             messages=[],
             step_count=0
         )
-        
+
         # Verify state fields
         assert initial_state.current_query == "Test query"
         assert initial_state.step_count == 0
@@ -291,30 +291,30 @@ class TestIntegrationWithAPI:
 
 class TestGoldenDatasetIntegration:
     """Test golden dataset integration with evaluation system."""
-    
+
     def test_golden_dataset_structure(self, golden_dataset_path):
         """Verify golden dataset structure matches expected format."""
         loader = GoldenDatasetLoader(str(golden_dataset_path))
         data = loader.load_version("1.0.0")
-        
+
         # Check structure
         for item in data:
             assert "type" in item
             assert "data" in item
             assert item["type"] in ["compliance_scenario", "regulatory_qa", "evidence_case"]
-    
+
     def test_sample_golden_dataset_exists(self):
         """Verify sample golden dataset file exists."""
         sample_path = Path("services/ai/evaluation/data/sample_golden_dataset.json")
         assert sample_path.exists(), "Sample golden dataset should exist"
-        
+
         # Load and verify structure
         with open(sample_path) as f:
             data = json.load(f)
-        
+
         assert "documents" in data
         assert len(data["documents"]) > 0
-        
+
         # Check document structure
         for doc in data["documents"]:
             assert "doc_id" in doc
@@ -337,24 +337,24 @@ async def test_end_to_end_workflow():
             ]
         }]
     })
-    
+
     # Create agent
     agent = IQComplianceAgent(
         neo4j_service=mock_neo4j,
         postgres_session=None
     )
-    
+
     # Mock LLM response
     with patch.object(agent.llm, 'ainvoke') as mock_llm:
         mock_llm.return_value = Mock(
             content="Based on ISO 27001, you need to implement access controls."
         )
-        
+
         # Process query
         result = await agent.process_query(
             user_query="What are ISO 27001 access control requirements?"
         )
-        
+
         # Verify result
         assert result['status'] == 'success'
         assert 'ISO 27001' in str(result['artifacts']['compliance_data'])

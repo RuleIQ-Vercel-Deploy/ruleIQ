@@ -11,7 +11,6 @@ Usage:
     python scripts/test_langsmith_tracing.py
 """
 
-from typing import Any, Dict, List, Optional
 import asyncio
 import os
 import sys

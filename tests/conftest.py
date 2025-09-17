@@ -262,10 +262,10 @@ def authenticated_client(client, authenticated_headers):
 def authenticated_headers(sample_user, db_session):
     """Create authenticated headers for testing."""
     from utils.auth import create_access_token
-    
+
     # Create a real JWT token for the sample user
     token = create_access_token(data={"sub": sample_user.email})
-    
+
     return {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json",
@@ -277,7 +277,7 @@ def admin_headers(db_session):
     """Create admin authenticated headers for testing."""
     from database import User
     from utils.auth import get_password_hash, create_access_token
-    
+
     # Create admin user
     admin_user = User(
         email="admin@example.com",
@@ -289,10 +289,10 @@ def admin_headers(db_session):
     )
     db_session.add(admin_user)
     db_session.commit()
-    
+
     # Create token
     token = create_access_token(data={"sub": admin_user.email, "admin": True})
-    
+
     return {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json",
@@ -373,7 +373,7 @@ async def async_client():
     """Create an async test client for FastAPI application."""
     from httpx import AsyncClient
     from main import app
-    
+
     async with AsyncClient(app=app, base_url="http://test") as client:
         yield client
 
@@ -391,12 +391,12 @@ def cleanup_uploads(tmp_path):
     """Ensure upload directory is clean for each test."""
     upload_dir = tmp_path / "uploads"
     upload_dir.mkdir(exist_ok=True)
-    
+
     # Set upload directory for tests
     os.environ["UPLOAD_DIRECTORY"] = str(upload_dir)
-    
+
     yield upload_dir
-    
+
     # Cleanup after test
     import shutil
     if upload_dir.exists():
@@ -408,7 +408,7 @@ def reset_singleton_instances():
     """Reset singleton instances between tests."""
     # Reset any singleton patterns used in the codebase
     yield
-    
+
     # Clear any module-level caches
     import sys
     modules_to_reload = [m for m in sys.modules if m.startswith('agents.') or m.startswith('utils.')]

@@ -1,8 +1,7 @@
 """Evaluation pipeline for AI quality assessment."""
 from __future__ import annotations
 import asyncio
-import json
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional, Callable, Tuple
 from dataclasses import dataclass, field
 from enum import Enum
@@ -275,7 +274,7 @@ class RegressionDetector:
             if values[i] < values[i - 1]:
                 consecutive_declines += 1
         return {'direction': direction, 'slope': float(slope), 'r_squared':
-            float(r_value ** 2), 'p_value': float(p_value), 'consistent': 
+            float(r_value ** 2), 'p_value': float(p_value), 'consistent':
             consecutive_declines == len(values) - 1 if direction ==
             'declining' else False}
 

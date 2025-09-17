@@ -1,28 +1,0 @@
-
-"cpu_count"str
-
-1int
-
-
-2int
-I@"Optimize number of parallel workers based on system resources."str
-"available_memory_gb"strbase_workersZ Z(*system_infoZ, Z(="É"
- 
-\$ \(<"#array-read#:3
-1
-\ \(=cpu_workers"
-builtinsmin*:"
- 
-]  ](B	"#array-read#:*
-(
-]  ](F"#dependent-value#*:	
-.
-,
-] ](G"#dependent-value#*:Bint6
-4
-] ](Hmemory_workers"
-builtinsmax*:&
-$
-^ ^(+"
-builtinsmin*:
-^ ^(+*8/home/omar/Documents/ruleIQ/scripts/run_tests_chunked.py

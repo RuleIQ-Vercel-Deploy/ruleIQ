@@ -701,10 +701,10 @@ class InstructionPerformanceMonitor:
             if bucket_metrics:
                 quality_scores = [m.value for m in bucket_metrics if m.
                     metric_type == InstructionMetricType.RESPONSE_QUALITY]
-                buckets.append({'period': f'bucket_{i}', 'avg_quality': 
-                    statistics.mean(quality_scores) if quality_scores else 
+                buckets.append({'period': f'bucket_{i}', 'avg_quality':
+                    statistics.mean(quality_scores) if quality_scores else
                     0, 'sample_size': len(bucket_metrics)})
-        return {'trend_buckets': buckets, 'overall_trend': 'improving' if 
+        return {'trend_buckets': buckets, 'overall_trend': 'improving' if
             len(buckets) >= 2 and buckets[-1]['avg_quality'] > buckets[0][
             'avg_quality'] else 'stable'}
 

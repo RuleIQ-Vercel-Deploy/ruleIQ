@@ -4,9 +4,8 @@ Analyzes function bodies to infer appropriate return types.
 """
 import ast
 import os
-import sys
 from pathlib import Path
-from typing import List, Optional, Set, Dict, Any
+from typing import List, Optional, Any
 
 class ReturnTypeFinder(ast.NodeVisitor):
     """Find return statements in a function to infer return type."""
@@ -227,7 +226,7 @@ def add_return_annotations(file_path: Path) -> bool:
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(new_content)
         return True
-    except Exception as e:
+    except Exception:
         return False
 
 def main() -> None:
@@ -255,7 +254,7 @@ def main() -> None:
         if checked_count % 100 == 0:
             print(f'  Processed {checked_count}/{len(python_files)} files...')
     print('\n' + '=' * 60)
-    print(f'Results:')
+    print('Results:')
     print(f'  Files checked: {len(python_files)}')
     print(f'  Files with annotations added: {fixed_count}')
     print(f'  Files already annotated: {len(python_files) - fixed_count}')

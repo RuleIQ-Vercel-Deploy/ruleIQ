@@ -1,57 +1,0 @@
-
-+""Proactive stakeholder engagement"str
-"Industry position"str
-
-0int
-"mitigation"str
-"trend"str
-"LOW"str
-
-	"factors"str
-"level"str
-) "Assess reputational risk level"str
-"STABLE"str
-#"Regulatory relationships"str
-"Public perception"strself
-µ" µ(&list"ú&
-$
-
-· º(/"#new-object#Bdict"
- 
-
-· ·("	#map-set#:"
- 
-
-·  ·(1	"	#map-set#:)
-'
-
-·> ¹( "#unknown-value#Blist(
-&
-
-·> ¹( "
-#is-exact#:Bbool
-
-
-·> ¹( "
-#assume#::
-8
-
-·> ¹( "#set-field# __collection_size:Bint(
-&
-
-·> ¹( "#array-add-last#:(
-&
-
-·> ¹( "#array-add-last#:(
-&
-
-·> ¹( "#array-add-last#:"
- 
-
-·3 ¹( "	#map-set#:
-"
- 
-
-¹" º(."	#map-set#:
-
-· º(/*I/home/omar/Documents/ruleIQ/services/compliance/cco_strategic_playbook.py
