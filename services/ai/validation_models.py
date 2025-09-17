@@ -41,31 +41,31 @@ class ImplementationEffort(str, Enum):
 
 
 class RiskLevel(str, Enum):
-#     LOW = "low"  # Unused variable
-#     MEDIUM = "medium"  # Unused variable
-#     HIGH = "high"  # Unused variable
-#     CRITICAL = "critical"  # Unused variable
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
 
 
 class MaturityLevel(str, Enum):
-#     INITIAL = "initial"  # Unused variable
-#     DEVELOPING = "developing"  # Unused variable
-#     DEFINED = "defined"  # Unused variable
-#     MANAGED = "managed"  # Unused variable
-#     OPTIMIZED = "optimized"  # Unused variable
+    INITIAL = "initial"
+    DEVELOPING = "developing"
+    DEFINED = "defined"
+    MANAGED = "managed"
+    OPTIMIZED = "optimized"
 
 
 class TrendDirection(str, Enum):
-#     IMPROVING = "improving"  # Unused variable
-#     STABLE = "stable"  # Unused variable
-#     DECLINING = "declining"  # Unused variable
+    IMPROVING = "improving"
+    STABLE = "stable"
+    DECLINING = "declining"
 
 
 class InsightType(str, Enum):
-#     STRENGTH = "strength"  # Unused variable
-#     WEAKNESS = "weakness"  # Unused variable
-#     OPPORTUNITY = "opportunity"  # Unused variable
-#     THREAT = "threat"  # Unused variable
+    STRENGTH = "strength"
+    WEAKNESS = "weakness"
+    OPPORTUNITY = "opportunity"
+    THREAT = "threat"
 
 
 # =====================================================================
@@ -476,7 +476,7 @@ class FollowUpQuestionValidationModel(BaseModel):
     )
 
     class Config:
-#         use_enum_values = True  # Unused variable
+        use_enum_values = True
 
 
 class FollowUpValidationModel(BaseModel):

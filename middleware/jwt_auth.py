@@ -10,8 +10,8 @@ This middleware provides comprehensive JWT authentication with:
 from __future__ import annotations
 
 import time
-from typing import Optional, Dict, Any, List, Set
-from fastapi import Request, Response, HTTPException, status
+from typing import Optional, Dict, Any, List
+from fastapi import Request, status
 from fastapi.responses import JSONResponse
 from jose import JWTError, jwt, ExpiredSignatureError
 from datetime import datetime, timezone
@@ -20,7 +20,6 @@ import re
 
 from config.settings import settings
 from api.dependencies.auth import (
-    decode_token,
     is_token_blacklisted,
     SECRET_KEY,
     ALGORITHM

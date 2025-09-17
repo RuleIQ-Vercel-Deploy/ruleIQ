@@ -584,7 +584,6 @@ class AutomationScorer:
 
             # Calculate metrics
             total_hours = sum(opp.effort_hours for opp in opportunities)
-            total_savings = sum(opp.estimated_savings_annual for opp in opportunities)
             avg_roi = np.mean(
                 [
                     opp.roi_months
@@ -896,7 +895,7 @@ async def main():
         # Generate automation roadmap
         roadmap = await scorer.generate_automation_roadmap(business_profile)
 
-        logger.info(f"\n📊 Automation Analysis Complete:")
+        logger.info("\n📊 Automation Analysis Complete:")
         logger.info(f"  Total Opportunities: {roadmap.total_opportunities}")
         logger.info(f"  Quick Wins: {len(roadmap.quick_wins)}")
         logger.info(f"  Strategic Initiatives: {len(roadmap.strategic_initiatives)}")
@@ -906,7 +905,7 @@ async def main():
         logger.info(f"  Risk Reduction: {roadmap.risk_reduction:.1%}")
 
         if roadmap.quick_wins:
-            logger.info(f"\n🎯 Top Quick Wins:")
+            logger.info("\n🎯 Top Quick Wins:")
             for opp in roadmap.quick_wins[:5]:
                 logger.info(f"  • {opp.title}")
                 logger.info(
@@ -914,7 +913,7 @@ async def main():
                 )
 
         if roadmap.phases:
-            logger.info(f"\n📅 Implementation Phases:")
+            logger.info("\n📅 Implementation Phases:")
             for phase in roadmap.phases:
                 logger.info(
                     f"  Phase {phase['phase']}: {phase['name']} ({phase['duration']})",
@@ -927,7 +926,7 @@ async def main():
         gaps = await scorer.analyze_automation_gaps(business_profile)
 
         if gaps["recommendations"]:
-            logger.info(f"\n💡 Recommendations:")
+            logger.info("\n💡 Recommendations:")
             for rec in gaps["recommendations"]:
                 logger.info(f"  • {rec}")
 
@@ -936,7 +935,7 @@ async def main():
             all_opportunities = roadmap.quick_wins + roadmap.strategic_initiatives
             investment = await scorer.estimate_automation_investment(all_opportunities)
 
-            logger.info(f"\n💰 Investment Analysis:")
+            logger.info("\n💰 Investment Analysis:")
             logger.info(f"  Total Investment: ${investment['total_investment']:,.0f}")
             logger.info(f"  Annual Savings: ${investment['annual_savings']:,.0f}")
             logger.info(

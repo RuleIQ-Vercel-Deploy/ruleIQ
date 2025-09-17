@@ -3,7 +3,7 @@ Security middleware for ruleIQ platform
 Implements OWASP security best practices
 """
 
-from fastapi import Request, HTTPException
+from fastapi import Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 import re

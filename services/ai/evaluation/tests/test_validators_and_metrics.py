@@ -145,8 +145,8 @@ class TestDeepValidator:
             expected_outcome=ExpectedOutcome(obligations=["test"], risk_level="low"),
             temporal=TemporalValidity(
                 effective_from=date(2020, 1, 1),
-                effective_to=date(2023, 1, 1),  # Expired,
-            )
+                effective_to=date(2023, 1, 1),  # Expired
+            ),
             version="0.1.0",
             source=SourceMeta(
                 origin="external", domain="test.com", fetched_at=datetime.now(timezone.utc),
@@ -419,7 +419,7 @@ class TestCoverageMetrics:
                     ]
                     if i < 3
                     else [RegCitation(framework="GDPR", article="Test")],
-                )
+                ),
                 expected_outcome=ExpectedOutcome(
                     obligations=["test"], risk_level="low",
                 ),

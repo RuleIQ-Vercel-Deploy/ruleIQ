@@ -113,7 +113,7 @@ class StartupValidator:
             engine = create_engine(self.config.DATABASE_URL, connect_args={
                 'connect_timeout': 5})
             with engine.connect() as conn:
-                result = conn.execute('SELECT 1')
+                conn.execute('SELECT 1')
                 logger.debug('Database connection successful')
         except ImportError:
             self.warnings.append(

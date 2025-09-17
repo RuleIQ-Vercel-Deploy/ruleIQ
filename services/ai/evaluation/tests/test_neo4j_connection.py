@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional
+from typing import Any, List, Optional
 import pytest
 from unittest.mock import Mock, patch, MagicMock
 from neo4j import GraphDatabase

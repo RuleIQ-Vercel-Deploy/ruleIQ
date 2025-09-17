@@ -3,7 +3,8 @@ Graphiti Temporal Memory Framework for ruleIQ
 Implements time-aware knowledge graphs for regulatory tracking
 """
 
-from typing import Dict, List, Optional, Anyfrom dataclasses import dataclass, field
+from typing import Dict, List, Optional, Any
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
 import json
@@ -383,16 +384,16 @@ class GraphitiTemporalMemory:
                     c
                     for c in timeline
                     if datetime.fromisoformat(c["valid_from"])
-                    > datetime.now() - timedelta(days=30),
-                ],
+                    > datetime.now() - timedelta(days=30)
+                ]
             )
             older_rate = len(
                 [
                     c
                     for c in timeline
                     if datetime.fromisoformat(c["valid_from"])
-                    <= datetime.now() - timedelta(days=30),
-                ],
+                    <= datetime.now() - timedelta(days=30)
+                ]
             )
 
             if recent_rate > older_rate * 1.5:

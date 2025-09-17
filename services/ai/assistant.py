@@ -394,7 +394,6 @@ class ComplianceAssistant:
                 self.quality_monitor = await get_quality_monitor()
             safe_context = context or {}
             priority = safe_context.get('priority', 1)
-            cache_key = f'fast_{hash(prompt)}_{hash(str(safe_context))}'
             try:
                 cached_response = await asyncio.wait_for(self.ai_cache.
                     get_cached_response(prompt, safe_context), timeout=0.5)
@@ -3732,7 +3731,6 @@ Analyze this conversation and provide insights in JSON format."""
         business_type: str, company_size: str, priority_level: str,
         focus_areas: List[str]) ->Dict[str, Any]:
         """Generate fallback recommendations when AI is unavailable."""
-        from typing import List
         recommendations = []
         if compliance_score < 30:
             recommendations.extend([{'id': 'rec_critical_1', 'title':
@@ -3775,7 +3773,7 @@ Analyze this conversation and provide insights in JSON format."""
         else:
             recommendations.extend([{'id': 'rec_optimize_1', 'title':
                 'Pursue Certification', 'description':
-                f'Consider pursuing ISO 27001 or SOC 2 certification to demonstrate compliance maturity.'
+                'Consider pursuing ISO 27001 or SOC 2 certification to demonstrate compliance maturity.'
                 , 'priority': 'low', 'timeline': '90-days', 'steps': [
                 'Gap analysis against standard',
                 'Implement required controls', 'Engage certification body'],

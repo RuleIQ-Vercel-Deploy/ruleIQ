@@ -6,7 +6,6 @@ Provides custom evaluation metrics for traced runs
 """
 from typing import Dict, Any, Optional, List
 from dataclasses import dataclass
-import json
 import logging
 logger = logging.getLogger(__name__)
 

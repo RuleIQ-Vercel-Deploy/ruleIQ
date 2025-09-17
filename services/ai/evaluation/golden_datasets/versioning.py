@@ -163,7 +163,7 @@ class VersionManager:
             Path to the created version directory
         """
         # Validate version
-        version_obj = DatasetVersion(version)
+        DatasetVersion(version)
 
         # Create version directory
         version_dir = self.base_path / f"v{version}"

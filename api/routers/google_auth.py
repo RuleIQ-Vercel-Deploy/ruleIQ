@@ -91,7 +91,7 @@ async def google_callback(request: Request, code: Optional[str]=None, state: Opt
         import hashlib
         random_password = secrets.token_urlsafe(32)
         secure_hash = hashlib.sha256(f"{random_password}{user_info.email}".encode()).hexdigest()
-        
+
         db_user = User(
             id=uuid4(), 
             email=user_info.email, 
@@ -144,7 +144,7 @@ async def google_mobile_login(google_token: str, db: Session=Depends(get_db), _:
         import hashlib
         random_password = secrets.token_urlsafe(32)
         secure_hash = hashlib.sha256(f"{random_password}{user_info.email}".encode()).hexdigest()
-        
+
         db_user = User(
             id=uuid4(), 
             email=user_info.email, 

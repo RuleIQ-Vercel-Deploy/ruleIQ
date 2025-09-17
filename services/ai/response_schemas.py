@@ -473,22 +473,22 @@ class SchemaValidationResult(TypedDict):
 # =====================================================================
 
 # Union of all possible AI response types
-# AIResponseType = Union[  # Unused variable
-    GapAnalysisResponse,
-    RecommendationResponse,
-    AssessmentAnalysisResponse,
-    GuidanceResponse,
-    FollowUpResponse,
-    ChatResponse,
-    PolicyDocument,
-    EvidenceWorkflow,
-]
+# AIResponseType = Union[
+#     GapAnalysisResponse,
+#     RecommendationResponse,
+#     AssessmentAnalysisResponse,
+#     GuidanceResponse,
+#     FollowUpResponse,
+#     ChatResponse,
+#     PolicyDocument,
+#     EvidenceWorkflow,
+# ]
 
 # Union of all structured response schemas
-# StructuredResponseSchema = Union[  # Unused variable
-    GapAnalysisResponse,
-    RecommendationResponse,
-    AssessmentAnalysisResponse,
-    GuidanceResponse,
-    FollowUpResponse,
-]
+# StructuredResponseSchema = Union[
+#     GapAnalysisResponse,
+#     RecommendationResponse,
+#     AssessmentAnalysisResponse,
+#     GuidanceResponse,
+#     FollowUpResponse,
+# ]

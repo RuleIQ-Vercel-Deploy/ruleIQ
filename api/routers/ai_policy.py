@@ -5,7 +5,7 @@ AI Policy Generation API Router
 
 Provides endpoints for AI-powered policy generation with dual provider support.
 """
-from typing import Optional, Any, Dict, AsyncGenerator, Generator
+from typing import Optional, Any, Dict, AsyncGenerator
 from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from sqlalchemy.orm import Session
 from database.db_setup import get_db

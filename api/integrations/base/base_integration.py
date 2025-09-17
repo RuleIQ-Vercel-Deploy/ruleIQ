@@ -43,10 +43,14 @@ class BaseIntegration(ABC):
         self.cipher = get_cipher_suite()
         if not self.cipher:
             logger.error(
-                'Fernet cipher not available for integration %s for user %s. Cannot proceed without encryption.'
-                 % (self.config.provider, self.config.user_id))
+                'Fernet cipher not available for integration %s for user %s. '
+                'Cannot proceed without encryption.' % (
+                    self.config.provider, self.config.user_id
+                )
+            )
             raise IntegrationError(
-                'Encryption cipher not available. Cannot create integration without secure credential storage.',
+                'Encryption cipher not available. '
+                'Cannot create integration without secure credential storage.',
                 )
 
     @property
@@ -121,7 +125,8 @@ class BaseIntegration(ABC):
             return json.loads(credentials_json)
         except InvalidToken as e:
             logger.error(
-                'Failed to decrypt credentials: Invalid Fernet token. Key might be wrong or data corrupted.',
+                'Failed to decrypt credentials: Invalid Fernet token. '
+                'Key might be wrong or data corrupted.',
                 )
             raise IntegrationError('Invalid credentials token') from e
         except Exception as e:

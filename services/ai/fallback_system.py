@@ -261,10 +261,10 @@ We apologize for the inconvenience and are working to restore full service quick
             )
         else:
             return FallbackResponse(
-                content= (
+                content=(
                     "Recommendations are temporarily unavailable. Please contact support for personalized "
-                    "guidance."",
-                )
+                    "guidance.",
+                ),
                 confidence=0.3,
                 source="default_fallback",
             )
@@ -470,8 +470,8 @@ class FallbackSystem:
         """Get basic fallback response"""
         if exception:
             content = (
-                f"The {operation} service is temporarily unavailable due to: {exception!s}. Please try f
-                fagain later or contact support.f,
+                f"The {operation} service is temporarily unavailable due to: {exception!s}. "
+                f"Please try again later or contact support."
             )
         else:
             content = f"The {operation} service is temporarily unavailable. Please try again later."

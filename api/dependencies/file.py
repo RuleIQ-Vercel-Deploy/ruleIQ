@@ -438,7 +438,7 @@ class EnhancedFileValidator:
                 raise HTTPException(status_code=status.
                     HTTP_422_UNPROCESSABLE_ENTITY, detail=
                     'File rejected - Malicious content detected')
-            elif (analysis_report.validation_result == ValidationResult.SUSPICIOUS 
+            elif (analysis_report.validation_result == ValidationResult.SUSPICIOUS
                   and self.enable_quarantine):
                 quarantine_path = quarantine_file(content, analysis_report)
         return file, analysis_report, quarantine_path

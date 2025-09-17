@@ -3,10 +3,8 @@ from __future__ import annotations
 import json
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
-from matplotlib.figure import Figure
 import numpy as np
 import pandas as pd
 from jinja2 import Template
@@ -65,7 +63,7 @@ class ReportGenerator:
         ) ->Path:
         """Generate Markdown report."""
         md_lines = []
-        md_lines.append(f'# Evaluation Report')
+        md_lines.append('# Evaluation Report')
         md_lines.append(f"\n**Generated:** {result.get('timestamp', 'N/A')}\n")
         if 'summary' in result:
             md_lines.append('## Summary\n')

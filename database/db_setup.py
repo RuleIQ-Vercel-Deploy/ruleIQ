@@ -174,12 +174,12 @@ def init_db() ->bool:
         logger.info('Initializing database...')
         _init_sync_db()
         _init_async_db()
-        
+
         # Create all tables if they don't exist
         if _ENGINE is not None:
             Base.metadata.create_all(bind=_ENGINE)
             logger.info('Database tables created/verified')
-        
+
         if not test_database_connection():
             return False
         logger.info('Database initialization completed successfully')

@@ -115,8 +115,6 @@ class PerformanceProfiler:
     def profile_operation(self, operation: str, context: Optional[Dict[str, Any]]=None) -> Generator[Any, None, None]:
         """Context manager to profile a synchronous operation"""
         start_time = time.perf_counter()
-        start_memory = self._process.memory_info().rss / 1024 / 1024
-        start_cpu = self._process.cpu_percent()
         try:
             yield
         except (ValueError, TypeError):
@@ -134,8 +132,6 @@ class PerformanceProfiler:
     async def profile_async_operation(self, operation: str, context: Optional[Dict[str, Any]]=None) -> AsyncGenerator[Any, None]:
         """Context manager to profile an asynchronous operation"""
         start_time = time.perf_counter()
-        start_memory = self._process.memory_info().rss / 1024 / 1024
-        start_cpu = self._process.cpu_percent()
         try:
             yield
         except (ValueError, TypeError):

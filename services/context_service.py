@@ -29,32 +29,32 @@ logger = logging.getLogger(__name__)
 
 
 class InteractionType(str, Enum):
-#     ASSESSMENT_START = "assessment_start"  # Unused variable
-#     ASSESSMENT_CONTINUE = "assessment_continue"  # Unused variable
-#     ASSESSMENT_COMPLETE = "assessment_complete"  # Unused variable
-#     POLICY_GENERATION = "policy_generation"  # Unused variable
-#     POLICY_APPROVAL = "policy_approval"  # Unused variable
-#     BUSINESS_PROFILE_UPDATE = "business_profile_update"  # Unused variable
-#     QUESTION_ASKED = "question_asked"  # Unused variable
-#     RECOMMENDATION_ACCEPTED = "recommendation_accepted"  # Unused variable
-#     RECOMMENDATION_REJECTED = "recommendation_rejected"  # Unused variable
-#     AUTOMATION_DELEGATED = "automation_delegated"  # Unused variable
-#     ERROR_ENCOUNTERED = "error_encountered"  # Unused variable
+    ASSESSMENT_START = "assessment_start"
+    ASSESSMENT_CONTINUE = "assessment_continue"
+    ASSESSMENT_COMPLETE = "assessment_complete"
+    POLICY_GENERATION = "policy_generation"
+    POLICY_APPROVAL = "policy_approval"
+    BUSINESS_PROFILE_UPDATE = "business_profile_update"
+    QUESTION_ASKED = "question_asked"
+    RECOMMENDATION_ACCEPTED = "recommendation_accepted"
+    RECOMMENDATION_REJECTED = "recommendation_rejected"
+    AUTOMATION_DELEGATED = "automation_delegated"
+    ERROR_ENCOUNTERED = "error_encountered"
 
 
 class TrustLevel(str, Enum):
-#     UNKNOWN = "unknown"  # New user, no history  # Unused variable
-#     SKEPTICAL = "skeptical"  # User questions recommendations  # Unused variable
-#     CAUTIOUS = "cautious"  # User reviews before accepting  # Unused variable
-#     TRUSTING = "trusting"  # User accepts most recommendations  # Unused variable
-#     DELEGATING = "delegating"  # User delegates tasks to system  # Unused variable
+    UNKNOWN = "unknown"  # New user, no history
+    SKEPTICAL = "skeptical"  # User questions recommendations
+    CAUTIOUS = "cautious"  # User reviews before accepting
+    TRUSTING = "trusting"  # User accepts most recommendations
+    DELEGATING = "delegating"  # User delegates tasks to system
 
 
 class CommunicationStyle(str, Enum):
-#     FORMAL = "formal"  # Business formal language  # Unused variable
-#     CASUAL = "casual"  # Friendly, conversational  # Unused variable
-#     TECHNICAL = "technical"  # Technical jargon, detailed explanations  # Unused variable
-#     CONCISE = "concise"  # Brief, to-the-point responses  # Unused variable
+    FORMAL = "formal"  # Business formal language
+    CASUAL = "casual"  # Friendly, conversational
+    TECHNICAL = "technical"  # Technical jargon, detailed explanations
+    CONCISE = "concise"  # Brief, to-the-point responses
 
 
 @dataclass

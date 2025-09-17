@@ -147,7 +147,6 @@ class ErrorTracker:
     def determine_severity(self, error_type: str, message: str, context:
         Dict[str, Any]) ->ErrorSeverity:
         """Automatically determine error severity"""
-        error_lower = error_type.lower()
         message_lower = message.lower()
         if any(critical_term in message_lower for critical_term in [
             'database', 'connection', 'authentication', 'security', 'critical']

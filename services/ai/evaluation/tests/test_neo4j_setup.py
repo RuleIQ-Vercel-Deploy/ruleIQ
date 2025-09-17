@@ -174,7 +174,7 @@ class TestNeo4jSetup:
             # Verify memory settings are applied
             assert (
                 "server.memory.heap.initial_size" in config
-                or "dbms.memory.heap.initial_size" in config,
+                or "dbms.memory.heap.initial_size" in config
             )
 
         driver.close()

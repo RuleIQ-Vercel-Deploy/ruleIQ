@@ -212,8 +212,9 @@ class EnhancedTokenBlacklist:
         await self._ensure_initialized()
         try:
             logger.warning(
-                'Mass token blacklist requested for user %s - requires token registry implementation'
-                 % user_id)
+                'Mass token blacklist requested for user %s - '
+                'requires token registry implementation' % user_id
+            )
             await self._update_metrics('bulk_operation')
             return 0
         except Exception as e:
@@ -325,8 +326,9 @@ class EnhancedTokenBlacklist:
                 if count > 10:
                     await self._update_metrics('suspicious_pattern')
                     logger.warning(
-                        'Suspicious blacklist pattern detected: IP=                             %s, User=%s'
-                         % (entry.ip_address, entry.user_id))
+                        'Suspicious blacklist pattern detected: '
+                        'IP=%s, User=%s' % (entry.ip_address, entry.user_id)
+                    )
                 await self.cache_manager.set(recent_pattern_key, str(count),
                     ttl=3600)
         except Exception as e:

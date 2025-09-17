@@ -154,7 +154,7 @@ class SecurityMiddleware:
                 if body:
                     body_str = body.decode('utf-8')
                     if self._contains_sql_pattern(body_str):
-                        logger.warning(f'Potential SQL injection in request body')
+                        logger.warning('Potential SQL injection in request body')
                         return True
             except requests.RequestException:
                 pass

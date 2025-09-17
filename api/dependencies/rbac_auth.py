@@ -11,7 +11,13 @@ from typing import Dict, List, Optional, Any
 from uuid import UUID
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from api.dependencies.auth import create_access_token, create_refresh_token, decode_token, oauth2_scheme, get_current_user as base_get_current_user
+from api.dependencies.auth import (
+    create_access_token,
+    create_refresh_token,
+    decode_token,
+    oauth2_scheme,
+    get_current_user as base_get_current_user,
+)
 from core.exceptions import NotAuthenticatedException
 from database.db_setup import get_async_db, get_db
 from database.user import User

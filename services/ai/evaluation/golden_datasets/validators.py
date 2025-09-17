@@ -7,7 +7,7 @@ import logging
 from datetime import datetime, timezone
 from typing import List, Dict, Any, Optional, Tuple
 from dataclasses import dataclass
-from functools import lru_cache, wraps
+, wraps
 from collections import defaultdict
 from enum import Enum
 from services.ai.evaluation.schemas.compliance_scenario import ComplianceScenario

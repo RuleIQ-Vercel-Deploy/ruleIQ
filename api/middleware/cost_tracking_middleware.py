@@ -177,7 +177,7 @@ class CostTrackingMiddleware(BaseHTTPMiddleware):
                     'output_tokens', 0), user_id=tracking_info['user_id'],
                     session_id=tracking_info['session_id'], request_id=
                     tracking_info['request_id'], response_time_ms=
-                    response_time, cache_hit=token_usage.get('cache_hit', 
+                    response_time, cache_hit=token_usage.get('cache_hit',
                     False), error_occurred=False, metadata={'endpoint':
                     tracking_info['endpoint'], 'status_code': response.
                     status_code, 'middleware': 'cost_tracking'})
