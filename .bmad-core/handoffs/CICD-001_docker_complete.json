@@ -1,9 +1,0 @@
-{
-    "task": "CICD-001",
-    "status": "completed",
-    "pipeline": {
-      "stages": ["test", "build", "deploy"],
-      "environments": ["dev", "staging", "production"],
-      "rollback": true
-    }
-  }
