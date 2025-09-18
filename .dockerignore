@@ -61,3 +61,54 @@ htmlcov/
 Dockerfile*
 docker-compose*
 .dockerignore
+
+# -------------------------------------------------------------------
+# Additional excludes to shrink Docker build context and image size
+# (Preprod backend image does not need these)
+# -------------------------------------------------------------------
+
+# Large/backup/generated data
+backup_*/
+backups/
+archive/
+audit/
+
+# Frontend assets (not needed for backend image)
+frontend/
+**/node_modules/
+**/.next/
+**/dist/
+
+# Docs and Postman collections
+docs/
+postman/
+
+# Scanners and analysis outputs
+.scannerwork/
+sonarcloud/
+.VSCodeCounter/
+scannerwork/
+dead_code_*/
+dead_code_*.*
+load_test_*.*
+bandit_report.json
+lint_results.json
+outdated_deps.json
+current_deps.json
+security_audit.json
+security_audit_progress.md
+security_audit_report.md
+dead_code_analysis_report.json
+dead_code_removal_report.json
+dead_code_removal_final_report.md
+
+# Test artifacts
+tests/
+test-results.xml
+htmlcov/
+.pytest_cache/
+
+# Local/runtime uploads and logs
+uploads/
+logs/
+*.log
