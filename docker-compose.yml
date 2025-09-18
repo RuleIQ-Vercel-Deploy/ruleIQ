@@ -3,60 +3,77 @@ version: '3.8'
 services:
   app:
     build: .
+    container_name: ruleiq_app
     ports:
       - "8000:8000"
-    env_file:
-      - .env.local
-    depends_on:
-      redis:
-        condition: service_healthy
-    volumes:
-      - .:/app
-    restart: unless-stopped
-    networks:
-      - compliancegpt-network
-
-  celery_worker:
-    build: .
-    command: celery -A celery_app worker --loglevel=debug --concurrency=2 --pool=solo --queues=evidence,compliance,notifications,reports
-    env_file:
-      - .env.local
     environment:
-      - PYTHONUNBUFFERED=1
-      - PYTHONPATH=/app:$PYTHONPATH
+      # Application configuration (override via environment/Doppler in CI/Prod)
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/ruleiq
+      - REDIS_URL=redis://redis:6379/0
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=neo4jpassword
+      - JWT_SECRET=change-this-in-doppler
     depends_on:
+      postgres:
+        condition: service_healthy
       redis:
         condition: service_healthy
+      neo4j:
+        condition: service_started
     volumes:
       - .:/app
     restart: unless-stopped
     networks:
-      - compliancegpt-network
+      - ruleiq
+
+  test:
+    build: .
+    container_name: ruleiq_tests
+    profiles: ["test"]
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/ruleiq
+      - REDIS_URL=redis://redis:6379/0
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=neo4jpassword
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      neo4j:
+        condition: service_started
+    command: >
+      sh -lc "pytest -n auto --dist=worksteal --tb=short --maxfail=1"
+    volumes:
+      - .:/app
+    networks:
+      - ruleiq
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: ruleiq_postgres
+    environment:
+      - POSTGRES_DB=ruleiq
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "celery", "-A", "celery_app", "inspect", "ping"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  celery_beat:
-    build: .
-    command: celery -A celery_app beat --loglevel=debug
-    env_file:
-      - .env.local
-    environment:
-      - PYTHONUNBUFFERED=1
-      - PYTHONPATH=/app:$PYTHONPATH
-    depends_on:
-      redis:
-        condition: service_healthy
-    volumes:
-      - .:/app
-    restart: unless-stopped
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ruleiq"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
-      - compliancegpt-network
+      - ruleiq
 
   redis:
     image: redis:7-alpine
+    container_name: ruleiq_redis
     ports:
       - "6379:6379"
     volumes:
@@ -68,11 +85,31 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - compliancegpt-network
+      - ruleiq
+
+  neo4j:
+    image: neo4j:5.20.0-community
+    container_name: ruleiq_neo4j
+    environment:
+      - NEO4J_AUTH=neo4j/neo4jpassword
+      - NEO4J_dbms_security_procedures_unrestricted=apoc.*
+      - NEO4J_dbms_memory_heap_initial__size=512m
+      - NEO4J_dbms_memory_heap_max__size=512m
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
+    networks:
+      - ruleiq
 
 volumes:
+  pg_data:
   redis_data:
+  neo4j_data:
+  neo4j_logs:
 
 networks:
-  compliancegpt-network:
+  ruleiq:
     driver: bridge
