@@ -22,7 +22,7 @@ from sqlalchemy import text
 from sqlalchemy.exc import SQLAlchemyError
 import uvicorn
 from api.routers import ai_assessments, ai_cost_monitoring, ai_cost_websocket, ai_optimization, ai_policy, assessments, auth, business_profiles, chat, compliance, evidence, evidence_collection, foundation_evidence, frameworks, freemium, implementation, integrations, iq_agent, monitoring, policies, readiness, rbac_auth, reports, security, uk_compliance, users
-from api.routers.admin import data_access, user_management, token_management
+from api.routers.admin import data_access, user_management, token_management, safety_decisions
 from api.middleware.error_handler import error_handler_middleware
 from api.middleware.rate_limiter import rate_limit_middleware
 from api.middleware.security_headers import security_headers_middleware
@@ -143,6 +143,8 @@ app.include_router(data_access.router, prefix='/api/v1/admin', tags=[
     'admin', 'data-access'])
 app.include_router(token_management.router, prefix='/api/v1/admin', tags=[
     'admin', 'token-management'])
+app.include_router(safety_decisions.router, prefix='/api/v1/admin', tags=[
+    'admin', 'safety-decisions'])
 
 
 @app.exception_handler(HTTPException)

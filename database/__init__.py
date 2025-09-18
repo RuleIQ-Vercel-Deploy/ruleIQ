@@ -33,6 +33,7 @@ from .generated_policy import GeneratedPolicy
 from .chat_conversation import ChatConversation
 from .chat_message import ChatMessage
 from .report_schedule import ReportSchedule
+from .safety_decision import SafetyDecision
 
 # Freemium models
 from .assessment_lead import AssessmentLead
@@ -89,6 +90,7 @@ __all__ = [
     "ChatConversation",
     "ChatMessage",
     "ReportSchedule",
+    "SafetyDecision",
     # Freemium models
     "AssessmentLead",
     "FreemiumAssessmentSession",

@@ -12,6 +12,7 @@ Advanced Safety & Configuration Manager for AI Services
 Provides enterprise-grade safety settings, content filtering, and compliance-focused
 safety management with dynamic configuration and audit capabilities.
 """
+import os
 from datetime import datetime, timedelta
 from enum import Enum
 from typing import Any, Dict, List, Optional
@@ -20,6 +21,16 @@ from uuid import uuid4
 from google.generativeai.types import HarmBlockThreshold, HarmCategory
 from config.logging_config import get_logger
 logger = get_logger(__name__)
+
+# Persistence for durable safety decisions
+try:
+    from database.services.safety_decision_service import (
+        persist_safety_decision_background,
+        compute_request_hash,
+    )
+except Exception:  # Fallback if database layer not available in some contexts
+    persist_safety_decision_background = None
+    compute_request_hash = None
 
 
 class SafetyLevel(Enum):
@@ -460,6 +471,43 @@ class AdvancedSafetyManager:
         self._update_metrics(record)
         logger.info('Safety decision %s: %s - %s' % (decision_id, decision.
             value, reasoning))
+
+        # Persist decision asynchronously to durable audit trail (non-blocking)
+        try:
+            persist_enabled = os.getenv("SAFETY_PERSIST_ENABLED", "true").lower() in {"1", "true", "yes", "on"}
+            if persist_enabled and persist_safety_decision_background and compute_request_hash:
+                req_hash = compute_request_hash(
+                    input_content=input_content,
+                    response_content=response_content,
+                    content_type=content_type.value,
+                    user_id=user_id or self.user_id,
+                    session_id=session_id,
+                    applied_filters=applied_filters,
+                )
+                meta = {
+                    "reasoning": reasoning,
+                    "safety_profile": profile_name,
+                    "profile_level": profile.level.value,
+                    "response_length": len(response_content),
+                    "user_role": self.user_role,
+                    "environment": self.user_context.get("environment"),
+                }
+                persist_safety_decision_background(
+                    org_id=self.organization_id,
+                    business_profile_id=self.user_context.get("business_profile_id"),
+                    user_id=user_id or self.user_id,
+                    conversation_id=self.user_context.get("conversation_id"),
+                    content_type=content_type.value,
+                    decision=decision.value,
+                    confidence=confidence_score,
+                    applied_filters=applied_filters,
+                    request_hash=req_hash,
+                    metadata=meta,
+                )
+        except Exception:
+            # Do not block on persistence errors
+            pass
+
         return record
 
     def _check_blocked_content(self, content: str, profile: SafetyProfile
