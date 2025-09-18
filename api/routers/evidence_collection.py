@@ -44,9 +44,8 @@ async def create_collection_plan(plan_request: CollectionPlanCreate, db:
         existing_evidence = []
         if plan_request.include_existing_evidence:
             from sqlalchemy import select
-            from database.models import Evidence
-            evidence_query = select(Evidence).where(Evidence.
-                business_profile_id == profile.id)
+            from database import Evidence
+            evidence_query = select(Evidence).where(Evidence.business_profile_id == profile.id)
             if plan_request.framework:
                 evidence_query = evidence_query.join('compliance_frameworks'
                     ).where(Evidence.framework_id.in_(select(
