@@ -143,8 +143,7 @@ app.include_router(data_access.router, prefix='/api/v1/admin', tags=[
     'admin', 'data-access'])
 app.include_router(token_management.router, prefix='/api/v1/admin', tags=[
     'admin', 'token-management'])
-app.include_router(safety_decisions.router, prefix='/api/v1/admin', tags=[
-    'admin', 'safety-decisions'])
+app.include_router(safety_decisions.router)
 
 
 @app.exception_handler(HTTPException)
