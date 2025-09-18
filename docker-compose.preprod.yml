@@ -1,0 +1,132 @@
+version: '3.8'
+
+# Preproduction stack (self-contained) for verification without external services.
+# - Runs API + Postgres + Redis + Neo4j (+ optional NGINX at :8080)
+# - Uses local containers and applies Alembic migrations automatically on app start
+# - You can override any ${...} with Doppler:
+#     doppler run -p ruleiq -c stg -- docker compose -f docker-compose.preprod.yml up -d
+#
+# Access:
+# - API direct: http://localhost:8000
+# - (Optional) NGINX proxy: http://localhost:8080
+
+services:
+  app:
+    build: .
+    container_name: ruleiq_preprod_app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      neo4j:
+        condition: service_started
+    environment:
+      # App environment
+      - ENVIRONMENT=staging
+      - DEBUG=false
+
+      # Database (local Postgres service by default; override with Doppler if desired)
+      - DATABASE_URL=${DATABASE_URL:-postgresql+psycopg2://postgres:postgres@postgres:5432/ruleiq_preprod}
+
+      # Redis (local Redis service by default)
+      - REDIS_URL=${REDIS_URL:-redis://redis:6379/0}
+
+      # Neo4j (local Neo4j service by default)
+      - NEO4J_URI=${NEO4J_URI:-bolt://neo4j:7687}
+      - NEO4J_USER=${NEO4J_USER:-neo4j}
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD:-neo4jpassword}
+
+      # Secrets (fallbacks provided; override with Doppler in real deployments)
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-dev-preprod-secret-change-me-12345678901234567890}
+      - FERNET_KEY=${FERNET_KEY:-PiuMdniC0TBtnLTactkEi7TZSpQq_PA_tkg5olwDQbM=}
+
+      # Optional APIs (safe fallbacks)
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-test-google-api-key}
+
+    command: >
+      sh -lc "alembic upgrade head &&
+              uvicorn main:app --host 0.0.0.0 --port 8000"
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    networks:
+      - ruleiq-preprod
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: ruleiq_preprod_postgres
+    environment:
+      - POSTGRES_DB=ruleiq_preprod
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5434:5432"    # avoid conflict with any local Postgres
+    volumes:
+      - pg_preprod_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ruleiq_preprod"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    restart: unless-stopped
+    networks:
+      - ruleiq-preprod
+
+  redis:
+    image: redis:7-alpine
+    container_name: ruleiq_preprod_redis
+    command: redis-server --appendonly yes
+    ports:
+      - "6381:6379"    # avoid conflict with any local Redis
+    volumes:
+      - redis_preprod_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - ruleiq-preprod
+
+  neo4j:
+    image: neo4j:5.26.10-community
+    container_name: ruleiq_preprod_neo4j
+    environment:
+      - NEO4J_AUTH=neo4j/neo4jpassword
+      - NEO4J_dbms_memory_heap_initial__size=512m
+      - NEO4J_dbms_memory_heap_max__size=512m
+      - NEO4J_dbms_memory_pagecache_size=512m
+    ports:
+      - "7475:7474"    # HTTP (browser)
+      - "7688:7687"    # Bolt
+    volumes:
+      - neo4j_preprod_data:/data
+      - neo4j_preprod_logs:/logs
+    restart: unless-stopped
+    networks:
+      - ruleiq-preprod
+
+  nginx:
+    image: nginx:alpine
+    container_name: ruleiq_preprod_nginx
+    depends_on:
+      - app
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./nginx.preprod.conf:/etc/nginx/nginx.conf:ro
+    restart: unless-stopped
+    networks:
+      - ruleiq-preprod
+
+volumes:
+  pg_preprod_data:
+  redis_preprod_data:
+  neo4j_preprod_data:
+  neo4j_preprod_logs:
+
+networks:
+  ruleiq-preprod:
+    driver: bridge
