@@ -231,6 +231,27 @@ make migrate-prod     # production
 python main.py  # Runs on http://localhost:8000
 ```
 
+### Run the app with Doppler
+
+Use Doppler to inject secrets for dev/stg/prod without .env files:
+
+```bash
+# One command: start backend + frontend (uses ./start)
+doppler run -p ruleiq -c dev -- ./start
+
+# Or run backend only (dev hot-reload)
+doppler run -p ruleiq -c dev -- python main.py --reload
+
+# Frontend only (Next.js)
+cd frontend && doppler run -p ruleiq -c dev -- pnpm dev
+
+# Makefile shortcuts
+make run-app-dev         # backend + frontend with Doppler (dev)
+make run-backend-dev     # backend only with Doppler (dev)
+make run-app-stg         # staging
+make run-app-prod        # production
+```
+
 #### Frontend Setup
 
 ```bash

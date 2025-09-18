@@ -343,3 +343,45 @@ migrate-revision:
 	@echo "📝 Creating Alembic revision: MSG='$(MSG)' (CONF=$(CONF))..."
 	@if [ -z "$(MSG)" ]; then echo "Please specify MSG='your revision message'"; exit 1; fi
 	doppler run -p ruleiq -c $(CONF) -- alembic revision -m "$(MSG)"
+
+# -----------------------------
+# Run app via Doppler
+# -----------------------------
+.PHONY: run-app run-app-dev run-app-stg run-app-prod run-backend run-backend-dev run-backend-stg run-backend-prod run-frontend-dev
+
+# Run both backend and frontend using ./start script (dev by default). Override with CONF=stg|prod
+run-app:
+	@echo "🚀 Starting full app (backend + frontend) with Doppler (CONF=$(CONF))..."
+	doppler run -p ruleiq -c $(CONF) -- ./start
+
+run-app-dev:
+	@$(MAKE) run-app CONF=dev
+
+run-app-stg:
+	@$(MAKE) run-app CONF=stg
+
+run-app-prod:
+	@$(MAKE) run-app CONF=prod
+
+# Run backend only (FastAPI). Uses --reload for dev.
+run-backend:
+	@echo "🧠 Starting backend with Doppler (CONF=$(CONF))..."
+	@if [ "$(CONF)" = "dev" ]; then \
+		doppler run -p ruleiq -c $(CONF) -- python main.py --reload ; \
+	else \
+		doppler run -p ruleiq -c $(CONF) -- python main.py ; \
+	fi
+
+run-backend-dev:
+	@$(MAKE) run-backend CONF=dev
+
+run-backend-stg:
+	@$(MAKE) run-backend CONF=stg
+
+run-backend-prod:
+	@$(MAKE) run-backend CONF=prod
+
+# Run frontend only (Next.js) in dev mode
+run-frontend-dev:
+	@echo "🖥️  Starting frontend (Next.js) with Doppler (dev)..."
+	cd frontend && doppler run -p ruleiq -c dev -- pnpm dev
