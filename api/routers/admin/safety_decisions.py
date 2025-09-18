@@ -25,6 +25,13 @@ from database.services.retention_service import (
     is_auto_purge_enabled,
 )
 
+# For PDF export
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle
+import io
+
 router = APIRouter(prefix="/api/v1/admin/safety-decisions", tags=["admin", "safety-decisions"])
 
 
@@ -221,6 +228,84 @@ async def export_safety_decisions_csv(
     return StreamingResponse(
         generate(),
         media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename={filename}"},
+    )
+
+
+@router.get("/export.pdf")
+async def export_safety_decisions_pdf(
+    org_id: Optional[str] = Query(None),
+    business_profile_id: Optional[UUID] = Query(None),
+    user_id: Optional[UUID] = Query(None),
+    conversation_id: Optional[UUID] = Query(None),
+    content_type: Optional[str] = Query(None),
+    decision: Optional[str] = Query(None),
+    start_at: Optional[datetime] = Query(None),
+    end_at: Optional[datetime] = Query(None),
+    limit: int = Query(2000, ge=1, le=10000),
+    current_user: UserWithRoles = Depends(require_permission("admin_audit")),
+    db: Session = Depends(get_db),
+) -> StreamingResponse:
+    import json
+
+    query = db.query(SafetyDecision)
+    query = _apply_filters(
+        query,
+        org_id,
+        business_profile_id,
+        user_id,
+        conversation_id,
+        content_type,
+        decision,
+        start_at,
+        end_at,
+    )
+    rows = query.order_by(desc(SafetyDecision.created_at)).limit(limit).all()
+
+    # Build PDF in memory
+    buffer = io.BytesIO()
+    doc = SimpleDocTemplate(buffer, pagesize=A4, title="Safety Decisions Export")
+    styles = getSampleStyleSheet()
+    elements = []
+    title = "Safety Decisions Export"
+    subtitle = f"Generated at: {datetime.utcnow().replace(tzinfo=timezone.utc).isoformat()} | Count: {len(rows)}"
+    elements.append(Paragraph(title, styles["Title"]))
+    elements.append(Paragraph(subtitle, styles["Normal"]))
+    elements.append(Spacer(1, 12))
+
+    headers = ["created_at", "id", "org_id", "content_type", "decision", "confidence", "record_hash"]
+    data = [headers]
+    for r in rows:
+        d = r.to_dict()
+        data.append([
+            d.get("created_at"),
+            d.get("id"),
+            (d.get("org_id") or "")[:24],
+            d.get("content_type"),
+            d.get("decision"),
+            "" if d.get("confidence") is None else f"{d.get('confidence'):.2f}",
+            (d.get("record_hash") or "")[:16] + "…",
+        ])
+
+    table = Table(data, repeatRows=1)
+    table.setStyle(TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
+        ("TEXTCOLOR", (0, 0), (-1, 0), colors.black),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        ("FONTSIZE", (0, 0), (-1, -1), 8),
+        ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+        ("GRID", (0, 0), (-1, -1), 0.25, colors.grey),
+        ("ROWBACKGROUNDS", (0, 1), (-1, -1), [colors.whitesmoke, colors.lightyellow]),
+    ]))
+    elements.append(table)
+
+    doc.build(elements)
+    buffer.seek(0)
+
+    filename = f"safety_decisions_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.pdf"
+    return StreamingResponse(
+        buffer,
+        media_type="application/pdf",
         headers={"Content-Disposition": f"attachment; filename={filename}"},
     )
 
