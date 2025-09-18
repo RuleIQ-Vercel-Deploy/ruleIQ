@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import sys
+import logging
 from logging.config import fileConfig
 
 # Add the project root to Python path first (needed for database import)
@@ -28,6 +29,31 @@ config = context.config
 # This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
+
+logger = logging.getLogger("alembic.env")
+
+# Resolve SQLAlchemy URL from environment if available.
+# Priority:
+#   1) ALEMBIC_DATABASE_URL
+#   2) DATABASE_URL (converted to sync psycopg2)
+#   3) alembic.ini sqlalchemy.url (fallback)
+def _to_sync_url(db_url: str) -> str:
+    """Convert a DB URL to a synchronous psycopg2 URL for Alembic."""
+    url = db_url
+    if "+asyncpg" in url:
+        url = url.replace("+asyncpg", "+psycopg2")
+    elif "postgresql://" in url and "+" not in url:
+        url = url.replace("postgresql://", "postgresql+psycopg2://", 1)
+    return url
+
+
+env_url = os.getenv("ALEMBIC_DATABASE_URL") or os.getenv("DATABASE_URL")
+if env_url:
+    sync_url = _to_sync_url(env_url)
+    config.set_main_option("sqlalchemy.url", sync_url)
+    logger.info("Alembic using database URL from environment (sync): %s", sync_url.split("@")[-1] if "@" in sync_url else sync_url)
+else:
+    logger.info("Alembic using database URL from alembic.ini (no env override found)")
 
 # Add your model's MetaData object here
 # for 'autogenerate' support
