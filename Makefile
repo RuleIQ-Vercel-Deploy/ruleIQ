@@ -159,7 +159,7 @@ test-memory:
 
 # Stress testing
 test-stress:
-	for i in {1..5}; do echo "Stress run $$i"; make test-fast || exit 1; done
+	for i in {1..5}; do echo "Stress run $i"; make test-fast || exit 1; done
 
 # Test specific files or patterns
 test-file:
@@ -296,3 +296,50 @@ repo-clean:
 repo-clean-apply:
 	@echo "🧹 Applying repository cleanup..."
 	@python scripts/repo_cleanup.py --apply --remove-empty-dirs
+
+# -----------------------------
+# Database migrations via Doppler
+# -----------------------------
+.PHONY: migrate-dev migrate-stg migrate-prod migrate-upgrade migrate-downgrade-one migrate-current migrate-history migrate-revision
+
+# Default Doppler configuration (override with CONF=stg or CONF=prod)
+CONF ?= dev
+
+migrate-dev:
+	@echo "🏗️  Running Alembic migrations against dev via Doppler..."
+	doppler run -p ruleiq -c dev -- alembic upgrade head
+
+migrate-stg:
+	@echo "🏗️  Running Alembic migrations against stg via Doppler..."
+	doppler run -p ruleiq -c stg -- alembic upgrade head
+
+migrate-prod:
+	@echo "🏗️  Running Alembic migrations against prod via Doppler..."
+	doppler run -p ruleiq -c prod -- alembic upgrade head
+
+# Upgrade to a specific target revision (e.g., TARGET=head or TARGET=9f1e4a78f2b0)
+migrate-upgrade:
+	@echo "🏗️  Upgrading Alembic to TARGET=$(TARGET) with CONF=$(CONF) (doppler)..."
+	@if [ -z "$(TARGET)" ]; then echo "Please specify TARGET=head or a revision id, optionally CONF=dev|stg|prod"; exit 1; fi
+	doppler run -p ruleiq -c $(CONF) -- alembic upgrade $(TARGET)
+
+# Downgrade a single revision
+migrate-downgrade-one:
+	@echo "↩️  Downgrading one revision with CONF=$(CONF) (doppler)..."
+	doppler run -p ruleiq -c $(CONF) -- alembic downgrade -1
+
+# Show current revision
+migrate-current:
+	@echo "ℹ️  Current Alembic revision (CONF=$(CONF))..."
+	doppler run -p ruleiq -c $(CONF) -- alembic current
+
+# Show migration history
+migrate-history:
+	@echo "🕘 Alembic migration history (CONF=$(CONF))..."
+	doppler run -p ruleiq -c $(CONF) -- alembic history
+
+# Create a new revision (requires MSG="your message")
+migrate-revision:
+	@echo "📝 Creating Alembic revision: MSG='$(MSG)' (CONF=$(CONF))..."
+	@if [ -z "$(MSG)" ]; then echo "Please specify MSG='your revision message'"; exit 1; fi
+	doppler run -p ruleiq -c $(CONF) -- alembic revision -m "$(MSG)"
