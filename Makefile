@@ -1,133 +1,121 @@
-# ruleIQ Test Execution Makefile
-# Provides convenient shortcuts for running tests in different modes
+# Makefile for ruleIQ
+# Provides test, migration, and run commands with Doppler-based secrets management.
 
-.PHONY: help test-fast test-integration test-performance test-full test-ci test-ai test-security test-e2e test-parallel test-sequential install-test-deps test-groups test-groups-parallel test-groups-list test-group-unit test-group-ai test-group-api test-group-endpoints test-group-advanced test-group-e2e
+SHELL := /bin/sh
+.DEFAULT_GOAL := help
 
-# Default target
-help:
-	@echo "ruleIQ Test Execution Commands"
-	@echo "==============================="
-	@echo ""
-	@echo "🎯 NEW: Independent Test Groups (100% Functionality):"
-	@echo "  make test-groups         - Run all 6 groups sequentially"
-	@echo "  make test-groups-parallel- Run all 6 groups in parallel (fastest)"
-	@echo "  make test-groups-list    - List all test groups"
-	@echo "  make test-group-unit     - Unit tests (2-3 min)"
-	@echo "  make test-group-ai       - AI core tests (3-4 min)"
-	@echo "  make test-group-api      - Basic API tests (4-5 min)"
-	@echo "  make test-group-endpoints- AI endpoints (5-6 min)"
-	@echo "  make test-group-advanced - Advanced features (3-4 min)"
-	@echo "  make test-group-e2e      - End-to-end tests (6-8 min)"
-	@echo ""
-	@echo "Legacy Test Modes:"
-	@echo "  make test-fast        - Fast unit tests only (high parallelism)"
-	@echo "  make test-integration - Integration tests (medium parallelism)"
-	@echo "  make test-performance - Performance tests (sequential)"
-	@echo "  make test-ai          - AI and compliance tests"
-	@echo "  make test-security    - Security and auth tests"
-	@echo "  make test-e2e         - End-to-end workflow tests"
-	@echo ""
-	@echo "Comprehensive Modes:"
-	@echo "  make test-full        - Complete test suite (optimized chunks)"
-	@echo "  make test-ci          - CI/CD optimized execution"
-	@echo ""
-	@echo "Traditional Modes:"
-	@echo "  make test-parallel    - All tests with pytest-xdist"
-	@echo "  make test-sequential  - All tests sequentially"
-	@echo ""
-	@echo "Utilities:"
-	@echo "  make install-test-deps - Install test dependencies"
-	@echo "  make list-test-modes   - List all available test modes"
-	@echo "  make test-info         - Show system info for test optimization"
+# Project settings
+PROJECT_NAME     ?= ruleIQ
+PYTHON           ?= python
+VENV             ?= .venv
+VENV_BIN         ?= $(VENV)/bin
+ACTIVATE          = . $(VENV_BIN)/activate
 
-# Install test dependencies
-install-test-deps:
+# Doppler configuration
+DOPPLER_PROJECT  ?= ruleiq
+DOPPLER_CONFIG   ?= dev
+# Back-compat: allow CONF to override the config if provided
+CONF             ?= $(DOPPLER_CONFIG)
+DOPPLER_CONFIG    = $(CONF)
+
+DOPPLER_RUN       = doppler run -p $(DOPPLER_PROJECT) -c $(DOPPLER_CONFIG) --
+
+# -------------------------------------------------------------------
+# Help
+# -------------------------------------------------------------------
+.PHONY: help
+help: ## Show available make targets
+	@echo "Make targets for $(PROJECT_NAME)"
+	@echo
+	@awk 'BEGIN {FS = ":.*##"; printf ""} /^[a-zA-Z0-9_.-]+:.*##/ {printf "  %-30s %s\n", $1, $2}' $(MAKEFILE_LIST)
+	@echo
+	@echo "Configuration:"
+	@echo "  DOPPLER_PROJECT=$(DOPPLER_PROJECT) DOPPLER_CONFIG=$(DOPPLER_CONFIG)"
+
+# -------------------------------------------------------------------
+# Tests
+# -------------------------------------------------------------------
+.PHONY: install-test-deps test-fast test-integration test-performance test-full test-ci test-ai test-security test-e2e \
+        test-parallel test-sequential list-test-modes test-info test-quick test-dev test-all test-unit test-api test-database \
+        test-slow test-smoke test-coverage test-coverage-fast test-benchmark clean-test test-watch test-profile test-py311 \
+        test-py312 test-py313 test-memory test-stress test-file test-pattern test-docker test-report test-continuous
+
+install-test-deps: ## Install test dependencies
 	pip install pytest-xdist pytest-parallel pytest-benchmark pytest-timeout pytest-asyncio
 
 # Chunked test execution modes
-test-fast:
-	@echo "🚀 Running fast unit tests..."
-	@. .venv/bin/activate && python scripts/run_tests_chunked.py --mode fast
+test-fast: ## Run fast unit tests
+	@$(ACTIVATE) && $(PYTHON) scripts/run_tests_chunked.py --mode fast
 
-test-integration:
-	@echo "🔗 Running integration tests..."
-	@. .venv/bin/activate && python scripts/run_tests_chunked.py --mode integration
+test-integration: ## Run integration tests
+	@$(ACTIVATE) && $(PYTHON) scripts/run_tests_chunked.py --mode integration
 
-test-performance:
-	@echo "⚡ Running performance tests..."
-	@. .venv/bin/activate && python scripts/run_tests_chunked.py --mode performance
+test-performance: ## Run performance tests
+	@$(ACTIVATE) && $(PYTHON) scripts/run_tests_chunked.py --mode performance
 
-test-ai:
-	@echo "🤖 Running AI and compliance tests..."
-	@. .venv/bin/activate && python scripts/run_tests_chunked.py --mode ai
+test-ai: ## Run AI and compliance tests
+	@$(ACTIVATE) && $(PYTHON) scripts/run_tests_chunked.py --mode ai
 
-test-security:
-	@echo "🔒 Running security tests..."
-	@. .venv/bin/activate && python scripts/run_tests_chunked.py --mode security
+test-security: ## Run security and auth tests
+	@$(ACTIVATE) && $(PYTHON) scripts/run_tests_chunked.py --mode security
 
-test-e2e:
-	@echo "🎯 Running end-to-end tests..."
-	@. .venv/bin/activate && python scripts/run_tests_chunked.py --mode e2e
+test-e2e: ## Run end-to-end tests
+	@$(ACTIVATE) && $(PYTHON) scripts/run_tests_chunked.py --mode e2e
 
-test-full:
-	@echo "🎪 Running complete test suite..."
-	@. .venv/bin/activate && python scripts/run_tests_chunked.py --mode full
+test-full: ## Run full test suite
+	@$(ACTIVATE) && $(PYTHON) scripts/run_tests_chunked.py --mode full
 
-test-ci:
-	@echo "🏗️ Running CI-optimized tests..."
-	@. .venv/bin/activate && python scripts/run_tests_chunked.py --mode ci
+test-ci: ## Run CI-optimized test suite
+	@$(ACTIVATE) && $(PYTHON) scripts/run_tests_chunked.py --mode ci
 
 # Traditional pytest execution
-test-parallel:
-	@echo "⚡ Running all tests with pytest-xdist..."
-	python -m pytest -n auto --dist=worksteal --tb=short --maxfail=5
+test-parallel: ## Run all tests with pytest-xdist
+	$(PYTHON) -m pytest -n auto --dist=worksteal --tb=short --maxfail=5
 
-test-sequential:
-	@echo "📝 Running all tests sequentially..."
-	python -m pytest --tb=short --maxfail=5
+test-sequential: ## Run all tests sequentially
+	$(PYTHON) -m pytest --tb=short --maxfail=5
 
-# Utility commands
-list-test-modes:
-	python scripts/run_tests_chunked.py --list-modes
+# Utilities
+list-test-modes: ## List available test modes
+	$(PYTHON) scripts/run_tests_chunked.py --list-modes
 
-test-info:
-	@echo "System Information for Test Optimization:"
-	@python -c "import psutil; print(f'CPUs: {psutil.cpu_count()}, Memory: {psutil.virtual_memory().total/(1024**3):.1f}GB, Available: {psutil.virtual_memory().available/(1024**3):.1f}GB')"
+test-info: ## Show system info for test optimization
+	@$(PYTHON) -c "import psutil; print(f'CPUs: {psutil.cpu_count()}, Memory: {psutil.virtual_memory().total/(1024**3):.1f}GB, Available: {psutil.virtual_memory().available/(1024**3):.1f}GB')"
 
 # Development shortcuts
-test-quick: test-fast
-test-dev: test-integration
-test-all: test-full
+test-quick: test-fast ## Alias: quick unit tests
+test-dev: test-integration ## Alias: integration tests
+test-all: test-full ## Alias: full suite
 
-# Specific test categories with markers
-test-unit:
-	python -m pytest -m unit -n auto --dist=worksteal
+# Markers
+test-unit: ## Run tests marked 'unit'
+	$(PYTHON) -m pytest -m unit -n auto --dist=worksteal
 
-test-api:
-	python -m pytest -m api -n 2 --dist=worksteal
+test-api: ## Run tests marked 'api'
+	$(PYTHON) -m pytest -m api -n 2 --dist=worksteal
 
-test-database:
-	python -m pytest -m database -n 1
+test-database: ## Run tests marked 'database'
+	$(PYTHON) -m pytest -m database -n 1
 
-test-slow:
-	python -m pytest -m slow -n 1
+test-slow: ## Run tests marked 'slow'
+	$(PYTHON) -m pytest -m slow -n 1
 
-test-smoke:
-	python -m pytest -m smoke -n auto --dist=worksteal
+test-smoke: ## Run smoke tests
+	$(PYTHON) -m pytest -m smoke -n auto --dist=worksteal
 
-# Coverage reports
-test-coverage:
-	python -m pytest --cov=. --cov-report=html --cov-report=term-missing --cov-fail-under=70 --cov-branch
+# Coverage
+test-coverage: ## Run tests with coverage report
+	$(PYTHON) -m pytest --cov=. --cov-report=html --cov-report=term-missing --cov-fail-under=70 --cov-branch
 
-test-coverage-fast:
-	python -m pytest tests/unit/ -m unit --cov=. --cov-report=html --cov-report=term-missing --cov-fail-under=70 --cov-branch
+test-coverage-fast: ## Run unit tests with coverage (fast)
+	$(PYTHON) -m pytest tests/unit/ -m unit --cov=. --cov-report=html --cov-report=term-missing --cov-fail-under=70 --cov-branch
 
-# Benchmark specific tests
-test-benchmark:
-	python -m pytest tests/performance/ --benchmark-only --benchmark-sort=mean
+# Benchmark
+test-benchmark: ## Run benchmark tests
+	$(PYTHON) -m pytest tests/performance/ --benchmark-only --benchmark-sort=mean
 
-# Clean up test artifacts
-clean-test:
+# Cleanup
+clean-test: ## Remove test artifacts
 	rm -rf .pytest_cache/
 	rm -rf htmlcov/
 	rm -f coverage.xml coverage.json
@@ -135,253 +123,211 @@ clean-test:
 	find . -name "*.pyc" -delete
 	find . -name "__pycache__" -type d -exec rm -rf {} +
 
-# Watch mode for development (requires pytest-watch)
-test-watch:
+# Watch (requires pytest-watch)
+test-watch: ## Watch mode (requires pytest-watch)
 	ptw --runner "python -m pytest -n auto --dist=worksteal"
 
-# Profile test execution
-test-profile:
-	python -m pytest --profile --profile-svg
+# Profiling
+test-profile: ## Profile test execution
+	$(PYTHON) -m pytest --profile --profile-svg
 
-# Test with different Python versions (if available)
-test-py311:
+# Python versions
+test-py311: ## Run tests on Python 3.11 (if available)
 	python3.11 -m pytest -n auto --dist worksteal
 
-test-py312:
+test-py312: ## Run tests on Python 3.12 (if available)
 	python3.12 -m pytest -n auto --dist worksteal
 
-test-py313:
+test-py313: ## Run tests on Python 3.13 (if available)
 	python3.13 -m pytest -n auto --dist worksteal
 
 # Memory profiling
-test-memory:
-	python -m pytest -m memory --tb=short
+test-memory: ## Run memory-related tests
+	$(PYTHON) -m pytest -m memory --tb=short
 
 # Stress testing
-test-stress:
-	for i in {1..5}; do echo "Stress run $i"; make test-fast || exit 1; done
+test-stress: ## Run stress tests (repeats fast tests)
+	for i in 1 2 3 4 5; do $(MAKE) test-fast || exit 1; done
 
-# Test specific files or patterns
-test-file:
-	@echo "Usage: make test-file FILE=path/to/test_file.py"
+# Specific files/patterns
+test-file: ## Run a specific test file (FILE=path/to/test_file.py)
 	@if [ -z "$(FILE)" ]; then echo "Please specify FILE=path/to/test_file.py"; exit 1; fi
-	python -m pytest $(FILE) -v
+	$(PYTHON) -m pytest $(FILE) -v
 
-test-pattern:
-	@echo "Usage: make test-pattern PATTERN=test_name_pattern"
+test-pattern: ## Run tests matching a pattern (PATTERN=pattern)
 	@if [ -z "$(PATTERN)" ]; then echo "Please specify PATTERN=test_name_pattern"; exit 1; fi
-	python -m pytest -k "$(PATTERN)" -v
+	$(PYTHON) -m pytest -k "$(PATTERN)" -v
 
-# Docker-based testing (if Docker is available)
-test-docker:
+# Docker-based testing
+test-docker: ## Run tests via docker-compose
 	docker-compose -f docker-compose.test.yml up --build --abort-on-container-exit
 
-# Generate test report
-test-report:
-	python scripts/run_tests_chunked.py --mode full > test_report.txt 2>&1
+# Reports and continuous testing
+test-report: ## Generate test report to test_report.txt
+	$(PYTHON) scripts/run_tests_chunked.py --mode full > test_report.txt 2>&1
 	@echo "Test report generated: test_report.txt"
 
-# Continuous testing for development
-test-continuous:
-	@echo "Starting continuous testing (Ctrl+C to stop)..."
+test-continuous: ## Run fast tests on a loop (Ctrl+C to stop)
 	@while true; do \
-		echo "Running fast tests..."; \
-		make test-fast; \
-		echo "Waiting 30 seconds..."; \
+		$(MAKE) test-fast; \
 		sleep 30; \
 	done
 
-# NEW: Independent Test Groups (100% Functionality)
-test-groups:
-	@echo "🎯 Running all test groups sequentially..."
-	python test_groups.py all
+# -------------------------------------------------------------------
+# Test groups (independent groups)
+# -------------------------------------------------------------------
+.PHONY: test-groups test-groups-parallel test-groups-list test-group-unit test-group-ai test-group-api test-group-endpoints test-group-advanced test-group-e2e test-quick-groups test-core-groups
 
-test-groups-parallel:
-	@echo "⚡ Running all test groups in parallel..."
-	python test_groups.py parallel
+test-groups: ## Run all test groups sequentially
+	$(PYTHON) test_groups.py all
 
-test-groups-list:
-	@echo "📋 Listing all test groups..."
-	python test_groups.py list
+test-groups-parallel: ## Run all test groups in parallel
+	$(PYTHON) test_groups.py parallel
 
-test-group-unit:
-	@echo "🔧 Running unit tests..."
-	python test_groups.py group1_unit
+test-groups-list: ## List all test groups
+	$(PYTHON) test_groups.py list
 
-test-group-ai:
-	@echo "🤖 Running AI core tests..."
-	python test_groups.py group2_ai_core
+test-group-unit: ## Run Unit group
+	$(PYTHON) test_groups.py group1_unit
 
-test-group-api:
-	@echo "🌐 Running basic API tests..."
-	python test_groups.py group3_api_basic
+test-group-ai: ## Run AI Core group
+	$(PYTHON) test_groups.py group2_ai_core
 
-test-group-endpoints:
-	@echo "🚀 Running AI endpoints tests..."
-	python test_groups.py group4_ai_endpoints
+test-group-api: ## Run API Basic group
+	$(PYTHON) test_groups.py group3_api_basic
 
-test-group-advanced:
-	@echo "⚙️ Running advanced features tests..."
-	python test_groups.py group5_advanced
+test-group-endpoints: ## Run AI Endpoints group
+	$(PYTHON) test_groups.py group4_ai_endpoints
 
-test-group-e2e:
-	@echo "🎯 Running end-to-end tests..."
-	python test_groups.py group6_e2e
+test-group-advanced: ## Run Advanced Features group
+	$(PYTHON) test_groups.py group5_advanced
 
-# Quick combinations for development
-test-quick-groups:
-	@echo "⚡ Running quick test groups (Unit + AI)..."
-	python test_groups.py group1_unit && python test_groups.py group2_ai_core
+test-group-e2e: ## Run End-to-End group
+	$(PYTHON) test_groups.py group6_e2e
 
-test-core-groups:
-	@echo "🎯 Running core test groups (Unit + AI + API)..."
-	python test_groups.py group1_unit && python test_groups.py group2_ai_core && python test_groups.py group3_api_basic
+test-quick-groups: ## Run Unit + AI groups
+	$(PYTHON) test_groups.py group1_unit && $(PYTHON) test_groups.py group2_ai_core
 
-# Integration Testing Commands
-test-integration-comprehensive:
-	@echo "🔗 Running comprehensive integration tests..."
-	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite all
+test-core-groups: ## Run Unit + AI + API groups
+	$(PYTHON) test_groups.py group1_unit && $(PYTHON) test_groups.py group2_ai_core && $(PYTHON) test_groups.py group3_api_basic
 
-test-integration-api-workflows:
-	@echo "🌐 Running API workflow integration tests..."
-	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite api-workflows
+# -------------------------------------------------------------------
+# Integration testing suites
+# -------------------------------------------------------------------
+.PHONY: test-integration-comprehensive test-integration-api-workflows test-integration-external-services \
+        test-integration-contracts test-integration-database test-integration-security test-integration-performance \
+        test-integration-ai-services test-integration-e2e test-integration-quick test-integration-core
 
-test-integration-external-services:
-	@echo "🌍 Running external service integration tests..."
-	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite external-services
+test-integration-comprehensive: ## Run all integration test suites
+	@$(ACTIVATE) && $(PYTHON) scripts/run_integration_tests.py --suite all
 
-test-integration-contracts:
-	@echo "📋 Running contract validation tests..."
-	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite contracts
+test-integration-api-workflows: ## Run API workflow integration tests
+	@$(ACTIVATE) && $(PYTHON) scripts/run_integration_tests.py --suite api-workflows
 
-test-integration-database:
-	@echo "🗄️ Running database integration tests..."
-	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite database
+test-integration-external-services: ## Run external services integration tests
+	@$(ACTIVATE) && $(PYTHON) scripts/run_integration_tests.py --suite external-services
 
-test-integration-security:
-	@echo "🔒 Running security integration tests..."
-	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite security
+test-integration-contracts: ## Run contract validation tests
+	@$(ACTIVATE) && $(PYTHON) scripts/run_integration_tests.py --suite contracts
 
-test-integration-performance:
-	@echo "⚡ Running performance integration tests..."
-	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite performance
+test-integration-database: ## Run database integration tests
+	@$(ACTIVATE) && $(PYTHON) scripts/run_integration_tests.py --suite database
 
-test-integration-ai-services:
-	@echo "🤖 Running AI service integration tests..."
-	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite ai-services
+test-integration-security: ## Run security integration tests
+	@$(ACTIVATE) && $(PYTHON) scripts/run_integration_tests.py --suite security
 
-test-integration-e2e:
-	@echo "🎯 Running end-to-end integration tests..."
-	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite e2e
+test-integration-performance: ## Run performance integration tests
+	@$(ACTIVATE) && $(PYTHON) scripts/run_integration_tests.py --suite performance
 
-# Integration test shortcuts
-test-integration-quick:
-	@echo "⚡ Running quick integration tests (API workflows + contracts)..."
-	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite api-workflows
-	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite contracts
+test-integration-ai-services: ## Run AI service integration tests
+	@$(ACTIVATE) && $(PYTHON) scripts/run_integration_tests.py --suite ai-services
 
-test-integration-core:
-	@echo "🎯 Running core integration tests..."
-	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite api-workflows
-	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite database
-	@. .venv/bin/activate && python scripts/run_integration_tests.py --suite contracts
+test-integration-e2e: ## Run end-to-end integration tests
+	@$(ACTIVATE) && $(PYTHON) scripts/run_integration_tests.py --suite e2e
 
+test-integration-quick: ## Quick integration tests (API workflows + contracts)
+	@$(ACTIVATE) && $(PYTHON) scripts/run_integration_tests.py --suite api-workflows
+	@$(ACTIVATE) && $(PYTHON) scripts/run_integration_tests.py --suite contracts
+
+test-integration-core: ## Core integration tests (API workflows + database + contracts)
+	@$(ACTIVATE) && $(PYTHON) scripts/run_integration_tests.py --suite api-workflows
+	@$(ACTIVATE) && $(PYTHON) scripts/run_integration_tests.py --suite database
+	@$(ACTIVATE) && $(PYTHON) scripts/run_integration_tests.py --suite contracts
+
+# -------------------------------------------------------------------
 # Repository cleanup
+# -------------------------------------------------------------------
 .PHONY: repo-clean repo-clean-apply
 
-repo-clean:
-	@echo "🧹 Running repository cleanup (dry-run)..."
-	@python scripts/repo_cleanup.py
+repo-clean: ## Dry-run repository cleanup
+	$(PYTHON) scripts/repo_cleanup.py
 
-repo-clean-apply:
-	@echo "🧹 Applying repository cleanup..."
-	@python scripts/repo_cleanup.py --apply --remove-empty-dirs
+repo-clean-apply: ## Apply repository cleanup
+	$(PYTHON) scripts/repo_cleanup.py --apply --remove-empty-dirs
 
-# -----------------------------
+# -------------------------------------------------------------------
 # Database migrations via Doppler
-# -----------------------------
+# -------------------------------------------------------------------
 .PHONY: migrate-dev migrate-stg migrate-prod migrate-upgrade migrate-downgrade-one migrate-current migrate-history migrate-revision
 
-# Default Doppler configuration (override with CONF=stg or CONF=prod)
-CONF ?= dev
+migrate-dev: ## Run Alembic migrations (dev)
+	@$(MAKE) migrate-upgrade DOPPLER_CONFIG=dev TARGET=head
 
-migrate-dev:
-	@echo "🏗️  Running Alembic migrations against dev via Doppler..."
-	doppler run -p ruleiq -c dev -- alembic upgrade head
+migrate-stg: ## Run Alembic migrations (stg)
+	@$(MAKE) migrate-upgrade DOPPLER_CONFIG=stg TARGET=head
 
-migrate-stg:
-	@echo "🏗️  Running Alembic migrations against stg via Doppler..."
-	doppler run -p ruleiq -c stg -- alembic upgrade head
+migrate-prod: ## Run Alembic migrations (prod)
+	@$(MAKE) migrate-upgrade DOPPLER_CONFIG=prod TARGET=head
 
-migrate-prod:
-	@echo "🏗️  Running Alembic migrations against prod via Doppler..."
-	doppler run -p ruleiq -c prod -- alembic upgrade head
+migrate-upgrade: ## Upgrade Alembic to TARGET (TARGET=head or revision id)
+	@if [ -z "$(TARGET)" ]; then echo "Specify TARGET=head or a revision id"; exit 1; fi
+	$(DOPPLER_RUN) alembic upgrade $(TARGET)
 
-# Upgrade to a specific target revision (e.g., TARGET=head or TARGET=9f1e4a78f2b0)
-migrate-upgrade:
-	@echo "🏗️  Upgrading Alembic to TARGET=$(TARGET) with CONF=$(CONF) (doppler)..."
-	@if [ -z "$(TARGET)" ]; then echo "Please specify TARGET=head or a revision id, optionally CONF=dev|stg|prod"; exit 1; fi
-	doppler run -p ruleiq -c $(CONF) -- alembic upgrade $(TARGET)
+migrate-downgrade-one: ## Downgrade a single Alembic revision
+	$(DOPPLER_RUN) alembic downgrade -1
 
-# Downgrade a single revision
-migrate-downgrade-one:
-	@echo "↩️  Downgrading one revision with CONF=$(CONF) (doppler)..."
-	doppler run -p ruleiq -c $(CONF) -- alembic downgrade -1
+migrate-current: ## Show current Alembic revision
+	$(DOPPLER_RUN) alembic current
 
-# Show current revision
-migrate-current:
-	@echo "ℹ️  Current Alembic revision (CONF=$(CONF))..."
-	doppler run -p ruleiq -c $(CONF) -- alembic current
+migrate-history: ## Show Alembic migration history
+	$(DOPPLER_RUN) alembic history
 
-# Show migration history
-migrate-history:
-	@echo "🕘 Alembic migration history (CONF=$(CONF))..."
-	doppler run -p ruleiq -c $(CONF) -- alembic history
+migrate-revision: ## Create a new Alembic revision (MSG="your message")
+	@if [ -z "$(MSG)" ]; then echo "Specify MSG='your revision message'"; exit 1; fi
+	$(DOPPLER_RUN) alembic revision -m "$(MSG)"
 
-# Create a new revision (requires MSG="your message")
-migrate-revision:
-	@echo "📝 Creating Alembic revision: MSG='$(MSG)' (CONF=$(CONF))..."
-	@if [ -z "$(MSG)" ]; then echo "Please specify MSG='your revision message'"; exit 1; fi
-	doppler run -p ruleiq -c $(CONF) -- alembic revision -m "$(MSG)"
-
-# -----------------------------
+# -------------------------------------------------------------------
 # Run app via Doppler
-# -----------------------------
+# -------------------------------------------------------------------
 .PHONY: run-app run-app-dev run-app-stg run-app-prod run-backend run-backend-dev run-backend-stg run-backend-prod run-frontend-dev
 
-# Run both backend and frontend using ./start script (dev by default). Override with CONF=stg|prod
-run-app:
-	@echo "🚀 Starting full app (backend + frontend) with Doppler (CONF=$(CONF))..."
-	doppler run -p ruleiq -c $(CONF) -- ./start
+run-app: ## Run backend and frontend (./start) with Doppler
+	$(DOPPLER_RUN) ./start
 
-run-app-dev:
-	@$(MAKE) run-app CONF=dev
+run-app-dev: ## Run backend and frontend (dev)
+	@$(MAKE) run-app DOPPLER_CONFIG=dev
 
-run-app-stg:
-	@$(MAKE) run-app CONF=stg
+run-app-stg: ## Run backend and frontend (stg)
+	@$(MAKE) run-app DOPPLER_CONFIG=stg
 
-run-app-prod:
-	@$(MAKE) run-app CONF=prod
+run-app-prod: ## Run backend and frontend (prod)
+	@$(MAKE) run-app DOPPLER_CONFIG=prod
 
-# Run backend only (FastAPI). Uses --reload for dev.
-run-backend:
-	@echo "🧠 Starting backend with Doppler (CONF=$(CONF))..."
-	@if [ "$(CONF)" = "dev" ]; then \
-		doppler run -p ruleiq -c $(CONF) -- python main.py --reload ; \
+run-backend: ## Run backend with Doppler (uses --reload in dev)
+	@if [ "$(DOPPLER_CONFIG)" = "dev" ]; then \
+		$(DOPPLER_RUN) $(PYTHON) main.py --reload ; \
 	else \
-		doppler run -p ruleiq -c $(CONF) -- python main.py ; \
+		$(DOPPLER_RUN) $(PYTHON) main.py ; \
 	fi
 
-run-backend-dev:
-	@$(MAKE) run-backend CONF=dev
+run-backend-dev: ## Run backend (dev)
+	@$(MAKE) run-backend DOPPLER_CONFIG=dev
 
-run-backend-stg:
-	@$(MAKE) run-backend CONF=stg
+run-backend-stg: ## Run backend (stg)
+	@$(MAKE) run-backend DOPPLER_CONFIG=stg
 
-run-backend-prod:
-	@$(MAKE) run-backend CONF=prod
+run-backend-prod: ## Run backend (prod)
+	@$(MAKE) run-backend DOPPLER_CONFIG=prod
 
-# Run frontend only (Next.js) in dev mode
-run-frontend-dev:
-	@echo "🖥️  Starting frontend (Next.js) with Doppler (dev)..."
-	cd frontend && doppler run -p ruleiq -c dev -- pnpm dev
+run-frontend-dev: ## Run frontend (Next.js) with Doppler (dev)
+	cd frontend && $(DOPPLER_RUN) pnpm dev
