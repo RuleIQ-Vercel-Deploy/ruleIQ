@@ -219,6 +219,14 @@ cp .env.template .env
 python database/init_db.py      # PostgreSQL schema
 python services/neo4j_service.py  # Neo4j knowledge graph
 
+# Run database migrations with Alembic (Doppler)
+# Uses ALEMBIC_DATABASE_URL if set; falls back to DATABASE_URL
+doppler run -p ruleiq -c dev -- alembic upgrade head
+# or use Makefile shortcuts:
+make migrate-dev      # dev
+make migrate-stg      # staging
+make migrate-prod     # production
+
 # Start the backend server
 python main.py  # Runs on http://localhost:8000
 ```
