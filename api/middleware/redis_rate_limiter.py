@@ -108,13 +108,20 @@ class RedisRateLimiter:
             await self.redis_client.close()
 
 
-general_limiter = RedisRateLimiter(requests_per_window=settings.
-    rate_limit_requests, window_seconds=settings.rate_limit_window,
-    key_prefix='general')
-auth_limiter = RedisRateLimiter(requests_per_window=10, window_seconds=60,
-    key_prefix='auth')
-api_limiter = RedisRateLimiter(requests_per_window=100, window_seconds=60,
-    key_prefix='api')
+# Map to settings fields available in config/settings.py with safe fallbacks
+_requests_pm = getattr(settings, "rate_limit_per_minute", 100)
+_auth_requests_pm = getattr(settings, "auth_rate_limit_per_minute", 10)
+_window_secs = getattr(settings, "rate_limit_window", 60) if hasattr(settings, "rate_limit_window") else 60
+
+general_limiter = RedisRateLimiter(
+    requests_per_window=_requests_pm, window_seconds=_window_secs, key_prefix='general'
+)
+auth_limiter = RedisRateLimiter(
+    requests_per_window=_auth_requests_pm, window_seconds=_window_secs, key_prefix='auth'
+)
+api_limiter = RedisRateLimiter(
+    requests_per_window=_requests_pm, window_seconds=_window_secs, key_prefix='api'
+)
 
 
 async def redis_rate_limit_middleware(request: Request, call_next) ->Any:

@@ -39,8 +39,9 @@ if settings.is_testing:
     general_limiter = RateLimiter(requests_per_minute=100)
     auth_limiter = RateLimiter(requests_per_minute=50)
 else:
-    general_limiter = RateLimiter(requests_per_minute=settings.rate_limit_requests)
-    auth_limiter = RateLimiter(requests_per_minute=10)
+    # Use settings fields defined in config/settings.py
+    general_limiter = RateLimiter(requests_per_minute=getattr(settings, "rate_limit_per_minute", 100))
+    auth_limiter = RateLimiter(requests_per_minute=getattr(settings, "auth_rate_limit_per_minute", 10))
 strict_test_limiter = RateLimiter(requests_per_minute=4)
 
 async def rate_limit_middleware(request: Request, call_next) -> Any:
