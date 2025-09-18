@@ -8,7 +8,7 @@ export interface ValidationRule {
   minLength?: number;
   maxLength?: number;
   pattern?: RegExp;
-  custom?: (value: any) => string | null;
+  custom?: (value: unknown) => string | null;
 }
 
 export interface ValidationResult {
@@ -17,7 +17,7 @@ export interface ValidationResult {
   success?: string;
 }
 
-export function validateField(value: any, rules: ValidationRule): ValidationResult {
+export function validateField<T>(value: T, rules: ValidationRule): ValidationResult {
   // Required validation
   if (rules.required && (!value || (typeof value === 'string' && value.trim() === ''))) {
     return { isValid: false, error: 'This field is required' };
@@ -114,7 +114,7 @@ export const CommonValidationRules = {
 } as const;
 
 // Form validation hook
-export function useFormValidation<T extends Record<string, any>>(
+export function useFormValidation<T extends Record<string, unknown>>(
   initialValues: T,
   validationRules: Partial<Record<keyof T, ValidationRule>>,
 ) {
@@ -122,7 +122,7 @@ export function useFormValidation<T extends Record<string, any>>(
   const [errors, setErrors] = React.useState<Partial<Record<keyof T, string>>>({});
   const [touched, setTouched] = React.useState<Partial<Record<keyof T, boolean>>>({});
 
-  const validateField = (name: keyof T, value: any): { isValid: boolean; error?: string } => {
+  const runFieldValidation = (name: keyof T, value: unknown): { isValid: boolean; error?: string } => {
     const rules = validationRules[name];
     if (!rules) return { isValid: true };
 
@@ -136,18 +136,18 @@ export function useFormValidation<T extends Record<string, any>>(
     return result;
   };
 
-  const handleChange = (name: keyof T, value: any) => {
-    setValues((prev) => ({ ...prev, [name]: value }));
+  const handleChange = (name: keyof T, value: unknown) => {
+    setValues((prev) => ({ ...prev, [name]: value as T[keyof T] }));
 
     // Only validate if field has been touched
     if (touched[name]) {
-      validateField(name, value);
+      runFieldValidation(name, value);
     }
   };
 
   const handleBlur = (name: keyof T) => {
     setTouched((prev) => ({ ...prev, [name]: true }));
-    validateField(name, values[name]);
+    runFieldValidation(name, values[name]);
   };
 
   const validateAll = () => {
@@ -155,7 +155,7 @@ export function useFormValidation<T extends Record<string, any>>(
     let isValid = true;
 
     Object.keys(validationRules).forEach((key) => {
-      const result = validateField(key as keyof T, values[key as keyof T]);
+      const result = runFieldValidation(key as keyof T, values[key as keyof T]);
       if (!result.isValid) {
         newErrors[key as keyof T] = result.error;
         isValid = false;

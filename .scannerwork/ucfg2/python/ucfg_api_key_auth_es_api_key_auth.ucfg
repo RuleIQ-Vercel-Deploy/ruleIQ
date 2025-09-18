@@ -1,13 +1,13 @@
 
-Gapi.middleware.api_key_auth.APIKeyAuthMiddleware._requires_api_key_authD
-:/home/omar/Documents/ruleIQ/api/middleware/api_key_auth.pyK K("2*›
-2L L(@ƒ
-€
+8api_key_auth.APIKeyAuthMiddleware._requires_api_key_authD
+:/home/omar/Documents/ruleIQ/api/middleware/api_key_auth.pyK K("2*Š
+2L L(@s
+q
 M M(-
-%2"__id*h
+%2"__id*Y
 
-__unknown_file (L*J2
-0api.middleware.api_key_auth.APIKeyAuthMiddleware"
+__unknown_file (=*;#
+!api_key_auth.APIKeyAuthMiddleware"
 protected_prefixes*
 4
 6*$
@@ -36,5 +36,5 @@ startswith*
 
 True:
 K% K(.
-pathB42
-0api.middleware.api_key_auth.APIKeyAuthMiddlewareH
+pathB%#
+!api_key_auth.APIKeyAuthMiddlewareH

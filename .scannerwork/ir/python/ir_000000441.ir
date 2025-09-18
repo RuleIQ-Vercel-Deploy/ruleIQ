@@ -1,31 +1,24 @@
 
- "automation_candidates"str
-?6"Find manual controls that need technology enablement"str
-ÚË"
-        MATCH (ctrl:Control {automation_level: 'MANUAL'})
-        WHERE ctrl.implementation_status IN ['NOT_STARTED', 'IN_PROGRESS']
-        OPTIONAL MATCH (ctrl)-[:IMPLEMENTS]->(req:Requirement {mandatory: true})
-        RETURN ctrl.name AS manual_control,
-               ctrl.type AS control_type,
-               COUNT(req) AS mandatory_requirements,
-               ctrl.description AS description,
-               ctrl.frequency AS frequency
-        ORDER BY COUNT(req) DESC
+%"^[a-zA-Z_:][a-zA-Z0-9_:]*$"str
+–∆"Check if a metric name is valid according to Prometheus naming rules.
+
+        Args:
+            name: Metric name to validate
+
+        Returns:
+            True if valid, False otherwise
         "strself
-õ5 õ(9"€(
-&
-ù ù(¸query"#id#:Bstr#
-!
+⁄ ⁄(!name
+⁄# ⁄(,"ì)
+'
 
-® ®(1"#unknown-value#,
-*
+‰ ‰(.pattern"#id#:Bstr!
+
 
-® ®(1results"#unknown-value#&
-$
+Â Â(+"
+rematch:1
+/
 
-© ©(1"#new-object#Bdict"
- 
+Â Â(,"#dependent-value#*:Bbool
 
-© ©(0	"	#map-set#:
-
-© ©(1*5/home/omar/Documents/ruleIQ/services/neo4j_service.py
+Â Â(,*F/home/omar/Documents/ruleIQ/app/core/monitoring/prometheus_exporter.py

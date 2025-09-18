@@ -1,0 +1,763 @@
+'use client';
+
+import React, { useState, useCallback, useRef } from 'react';
+import { 
+  Download, 
+  FileText, 
+  FileSpreadsheet, 
+  Settings, 
+  CheckCircle, 
+  AlertCircle, 
+  Loader2,
+  Calendar,
+  Filter,
+  FileDown,
+  X
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Progress } from '@/components/ui/progress';
+import { cn } from '@/lib/utils';
+import {
+  exportAssessment,
+  createExportOptions,
+  validateExportData,
+  getEstimatedExportSize,
+  svgToPngDataUrl,
+  type ExportOptions,
+  type ExportResult
+} from '@/lib/utils/export';
+import type { AssessmentResult } from '@/lib/assessment-engine/types';
+import type { DetailedAssessmentResults } from '@/types/assessment-results';
+import type { AssessmentResultsResponse } from '@/types/freemium';
+
+// Neural Purple theme colors
+const THEME_COLORS = {
+  primary: '#6366f1',
+  secondary: '#8b5cf6',
+  accent: '#a855f7',
+  success: '#10b981',
+  warning: '#f59e0b',
+  danger: '#ef4444',
+  text: '#1e293b',
+  textLight: '#64748b',
+  background: '#f8fafc',
+  white: '#ffffff'
+};
+
+// Export format configurations
+const EXPORT_FORMATS = {
+  csv: {
+    label: 'CSV Export',
+    description: 'Simple comma-separated values for data processing',
+    icon: FileSpreadsheet,
+    color: THEME_COLORS.accent,
+    extension: '.csv',
+    mimeType: 'text/csv'
+  },
+  excel: {
+    label: 'Excel Export',
+    description: 'Spreadsheet format for data analysis',
+    icon: FileSpreadsheet,
+    color: THEME_COLORS.success,
+    extension: '.xlsx',
+    mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+  },
+  pdf: {
+    label: 'PDF Report',
+    description: 'Professional report with charts and analysis',
+    icon: FileText,
+    color: THEME_COLORS.primary,
+    extension: '.pdf',
+    mimeType: 'application/pdf'
+  }
+} as const;
+
+// Export state type
+interface ExportState {
+  isExporting: boolean;
+  progress: number;
+  currentStep: string;
+  error: string | null;
+  success: boolean;
+  result: ExportResult | null;
+}
+
+// Export options modal state
+interface ExportOptionsState {
+  isOpen: boolean;
+  format: 'csv' | 'excel' | 'pdf';
+  options: Partial<ExportOptions>;
+}
+
+// Component props
+interface ExportButtonProps {
+  results: AssessmentResult | AssessmentResultsResponse | DetailedAssessmentResults;
+  className?: string;
+  variant?: 'default' | 'outline' | 'ghost';
+  size?: 'default' | 'sm' | 'lg';
+  disabled?: boolean;
+  companyName?: string;
+  reportTitle?: string;
+  onExportStart?: () => void;
+  onExportComplete?: (result: ExportResult) => void;
+  onExportError?: (error: string) => void;
+  showAdvancedOptions?: boolean;
+  defaultFormat?: 'csv' | 'excel' | 'pdf';
+}
+
+// Toast notification function (fallback implementation)
+const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
+  // This is a simple fallback - in a real app you'd use a proper toast library
+  console.log(`[${type.toUpperCase()}] ${message}`);
+  
+  // Create a simple visual notification
+  const toast = document.createElement('div');
+  toast.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg text-white max-w-sm transition-all duration-300 ${
+    type === 'success' ? 'bg-green-600' : 
+    type === 'error' ? 'bg-red-600' : 
+    'bg-blue-600'
+  }`;
+  toast.textContent = message;
+  
+  document.body.appendChild(toast);
+  
+  // Animate in
+  setTimeout(() => toast.classList.add('translate-x-0'), 10);
+  
+  // Remove after 3 seconds
+  setTimeout(() => {
+    toast.classList.add('translate-x-full', 'opacity-0');
+    setTimeout(() => document.body.removeChild(toast), 300);
+  }, 3000);
+};
+
+// Simple modal component (since dialog.tsx doesn't exist)
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: React.ReactNode;
+  className?: string;
+}
+
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children, className }) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // Handle escape key
+  React.useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose]);
+
+  // Handle backdrop click
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) onClose();
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div 
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+      onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modal-title"
+    >
+      <div 
+        ref={modalRef}
+        className={cn(
+          "relative bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden",
+          className
+        )}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between p-6 border-b">
+          <h2 id="modal-title" className="text-xl font-semibold text-gray-900">
+            {title}
+          </h2>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+            className="h-8 w-8 p-0"
+            aria-label="Close modal"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-120px)]">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Main ExportButton component
+export const ExportButton: React.FC<ExportButtonProps> = ({
+  results,
+  className,
+  variant = 'default',
+  size = 'default',
+  disabled = false,
+  companyName,
+  reportTitle,
+  onExportStart,
+  onExportComplete,
+  onExportError,
+  showAdvancedOptions = true,
+  defaultFormat = 'pdf'
+}) => {
+  // State management
+  const [exportState, setExportState] = useState<ExportState>({
+    isExporting: false,
+    progress: 0,
+    currentStep: '',
+    error: null,
+    success: false,
+    result: null
+  });
+
+  const [optionsModal, setOptionsModal] = useState<ExportOptionsState>({
+    isOpen: false,
+    format: defaultFormat,
+    options: {}
+  });
+
+  // Progress tracking
+  const progressRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Reset export state
+  const resetExportState = useCallback(() => {
+    setExportState({
+      isExporting: false,
+      progress: 0,
+      currentStep: '',
+      error: null,
+      success: false,
+      result: null
+    });
+  }, []);
+
+  // Progress callback for export functions
+  const handleProgress = useCallback((progress: number, message: string) => {
+    setExportState(prev => ({
+      ...prev,
+      progress,
+      currentStep: message
+    }));
+  }, []);
+
+  // Capture chart images for PDF export
+  const captureChartImages = useCallback(async () => {
+    const chartImages: any = {};
+
+    try {
+      // Find gauge chart SVG
+      const gaugeSvg = document.querySelector('#compliance-gauge-chart svg') as SVGElement;
+      if (gaugeSvg) {
+        chartImages.gaugeImage = await svgToPngDataUrl(gaugeSvg, 400, 300);
+      }
+
+      // Find trend chart SVG
+      const trendSvg = document.querySelector('#trend-analysis-chart svg') as SVGElement;
+      if (trendSvg) {
+        chartImages.trendChartImage = await svgToPngDataUrl(trendSvg, 600, 300);
+      }
+
+      // Find gap analysis chart SVG
+      const gapSvg = document.querySelector('#gap-analysis-chart svg') as SVGElement;
+      if (gapSvg) {
+        chartImages.gapAnalysisImage = await svgToPngDataUrl(gapSvg, 600, 400);
+      }
+
+      // Find section scores chart SVG
+      const sectionSvg = document.querySelector('#section-scores-chart svg') as SVGElement;
+      if (sectionSvg) {
+        chartImages.sectionScoresImage = await svgToPngDataUrl(sectionSvg, 600, 400);
+      }
+    } catch (error) {
+      console.warn('Failed to capture chart images:', error);
+    }
+
+    return chartImages;
+  }, []);
+
+  // Handle export execution
+  const executeExport = useCallback(async (
+    format: 'csv' | 'excel' | 'pdf',
+    customOptions: Partial<ExportOptions> = {}
+  ) => {
+    try {
+      // Map ExportButton options to export utility options
+      const mappedOptions: any = {
+        ...customOptions,
+        includeSectionBreakdown: (customOptions as any).includeSectionDetails || customOptions.includeSectionBreakdown,
+        includeGaps: (customOptions as any).includeGapAnalysis || customOptions.includeGaps,
+      };
+      delete mappedOptions.includeSectionDetails;
+      delete mappedOptions.includeGapAnalysis;
+      delete mappedOptions.includeTrendAnalysis;
+      delete mappedOptions.includeOverview;
+      delete mappedOptions.includeCharts;
+      delete mappedOptions.includeBenchmarks;
+
+      // Capture chart images if PDF format and charts are requested
+      let chartImages = {};
+      if (format === 'pdf' && (customOptions as any).includeCharts !== false) {
+        chartImages = await captureChartImages();
+      }
+
+      // Validate data first
+      const baseOptions = createExportOptions(format, {
+        companyName,
+        reportTitle,
+        ...mappedOptions,
+        chartImages
+      });
+
+      const validation = validateExportData(results, baseOptions);
+      if (!validation.isValid) {
+        throw new Error(`Invalid export data: ${validation.errors.join(', ')}`);
+      }
+
+      // Start export
+      onExportStart?.();
+      setExportState({
+        isExporting: true,
+        progress: 0,
+        currentStep: 'Initializing export...',
+        error: null,
+        success: false,
+        result: null
+      });
+
+      // Show initial toast
+      showToast(`Starting ${format.toUpperCase()} export...`, 'info');
+
+      // Execute export with progress tracking
+      const result = await exportAssessment(results, baseOptions, handleProgress);
+
+      if (result.success) {
+        setExportState(prev => ({
+          ...prev,
+          isExporting: false,
+          progress: 100,
+          currentStep: 'Export completed successfully!',
+          success: true,
+          result
+        }));
+
+        showToast(
+          `${format.toUpperCase()} export completed successfully! File: ${result.filename}`,
+          'success'
+        );
+        onExportComplete?.(result);
+      } else {
+        throw new Error(result.error || 'Export failed');
+      }
+
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown export error';
+      
+      setExportState(prev => ({
+        ...prev,
+        isExporting: false,
+        error: errorMessage,
+        currentStep: 'Export failed'
+      }));
+
+      showToast(`Export failed: ${errorMessage}`, 'error');
+      onExportError?.(errorMessage);
+    }
+  }, [results, companyName, reportTitle, onExportStart, onExportComplete, onExportError, handleProgress, captureChartImages]);
+
+  // Handle quick export (without options modal)
+  const handleQuickExport = useCallback((format: 'csv' | 'excel' | 'pdf') => {
+    executeExport(format);
+  }, [executeExport]);
+
+  // Handle advanced export (with options modal)
+  const handleAdvancedExport = useCallback((format: 'csv' | 'excel' | 'pdf') => {
+    setOptionsModal({
+      isOpen: true,
+      format,
+      options: {
+        includeOverview: true,
+        includeSectionDetails: true,
+        includeGapAnalysis: true,
+        includeRecommendations: true,
+        includeTrendAnalysis: false,
+        includeCharts: format === 'pdf',
+        includeExecutiveSummary: format === 'pdf'
+      }
+    });
+  }, []);
+
+  // Handle options modal submit
+  const handleOptionsSubmit = useCallback(() => {
+    executeExport(optionsModal.format, optionsModal.options);
+    setOptionsModal(prev => ({ ...prev, isOpen: false }));
+  }, [executeExport, optionsModal]);
+
+  // Handle retry
+  const handleRetry = useCallback(() => {
+    resetExportState();
+    if (exportState.result) {
+      // Retry with same options
+      executeExport(optionsModal.format, optionsModal.options);
+    }
+  }, [resetExportState, executeExport, exportState.result, optionsModal]);
+
+  // Get estimated file size
+  const getFileSize = useCallback((format: 'csv' | 'excel' | 'pdf') => {
+    const options = createExportOptions(format);
+    const estimate = getEstimatedExportSize(results, options);
+    return `~${estimate.estimatedSize} ${estimate.unit}`;
+  }, [results]);
+
+  // Cleanup on unmount
+  React.useEffect(() => {
+    return () => {
+      if (progressRef.current) {
+        clearTimeout(progressRef.current);
+      }
+    };
+  }, []);
+
+  // Auto-hide success state after 5 seconds
+  React.useEffect(() => {
+    if (exportState.success) {
+      const timer = setTimeout(resetExportState, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [exportState.success, resetExportState]);
+
+  // Render export progress
+  const renderProgress = () => {
+    if (!exportState.isExporting && !exportState.error && !exportState.success) {
+      return null;
+    }
+
+    return (
+      <div className="mt-2 p-3 bg-gray-50 rounded-lg border">
+        {exportState.isExporting && (
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-gray-600">{exportState.currentStep}</span>
+              <span className="text-gray-500">{exportState.progress}%</span>
+            </div>
+            <Progress 
+              value={exportState.progress} 
+              className="h-2"
+              indicatorClassName="bg-gradient-to-r from-purple-500 to-purple-600"
+            />
+          </div>
+        )}
+
+        {exportState.error && (
+          <div className="flex items-start gap-2 text-sm text-red-600">
+            <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+            <div className="flex-1">
+              <p className="font-medium">Export Failed</p>
+              <p className="text-red-500">{exportState.error}</p>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRetry}
+                className="mt-2 text-red-600 border-red-200 hover:bg-red-50"
+              >
+                Try Again
+              </Button>
+            </div>
+          </div>
+        )}
+
+        {exportState.success && exportState.result && (
+          <div className="flex items-start gap-2 text-sm text-green-600">
+            <CheckCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+            <div className="flex-1">
+              <p className="font-medium">Export Completed</p>
+              <p className="text-green-500">
+                {exportState.result.filename} 
+                {exportState.result.size && ` (${(exportState.result.size / 1024).toFixed(1)} KB)`}
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  // Render options modal
+  const renderOptionsModal = () => {
+    const format = optionsModal.format;
+    const formatConfig = EXPORT_FORMATS[format];
+
+    return (
+      <Modal
+        isOpen={optionsModal.isOpen}
+        onClose={() => setOptionsModal(prev => ({ ...prev, isOpen: false }))}
+        title={`${formatConfig.label} Options`}
+        className="max-w-3xl"
+      >
+        <div className="space-y-6">
+          {/* Format info */}
+          <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+            <formatConfig.icon 
+              className="h-8 w-8" 
+              style={{ color: formatConfig.color }} 
+            />
+            <div>
+              <h3 className="font-medium text-gray-900">{formatConfig.label}</h3>
+              <p className="text-sm text-gray-600">{formatConfig.description}</p>
+              <p className="text-xs text-gray-500 mt-1">
+                Estimated size: {getFileSize(format)}
+              </p>
+            </div>
+          </div>
+
+          {/* Content options */}
+          <div>
+            <h4 className="font-medium text-gray-900 mb-3">Content to Include</h4>
+            <div className="grid grid-cols-2 gap-3">
+              {[
+                { key: 'includeOverview', label: 'Overview & Summary' },
+                { key: 'includeSectionDetails', label: 'Section Breakdown' },
+                { key: 'includeGapAnalysis', label: 'Gap Analysis' },
+                { key: 'includeRecommendations', label: 'Recommendations' },
+                { key: 'includeTrendAnalysis', label: 'Trend Analysis' },
+                { key: 'includeCharts', label: 'Charts & Graphs', disabled: format === 'excel' },
+                { key: 'includeExecutiveSummary', label: 'Executive Summary', disabled: format === 'excel' },
+                { key: 'includeBenchmarks', label: 'Benchmarks' }
+              ].map(({ key, label, disabled }) => (
+                <label key={key} className={cn(
+                  "flex items-center gap-2 p-2 rounded border cursor-pointer transition-colors",
+                  disabled ? "opacity-50 cursor-not-allowed bg-gray-50" : "hover:bg-gray-50",
+                  optionsModal.options[key as keyof ExportOptions] ? "border-purple-200 bg-purple-50" : "border-gray-200"
+                )}>
+                  <input
+                    type="checkbox"
+                    checked={optionsModal.options[key as keyof ExportOptions] as boolean || false}
+                    disabled={disabled}
+                    onChange={(e) => setOptionsModal(prev => ({
+                      ...prev,
+                      options: {
+                        ...prev.options,
+                        [key]: e.target.checked
+                      }
+                    }))}
+                    className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                  />
+                  <span className="text-sm text-gray-700">{label}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Custom options */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Report Title
+              </label>
+              <input
+                type="text"
+                value={optionsModal.options.reportTitle || reportTitle || 'Assessment Report'}
+                onChange={(e) => setOptionsModal(prev => ({
+                  ...prev,
+                  options: {
+                    ...prev.options,
+                    reportTitle: e.target.value
+                  }
+                }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
+                placeholder="Enter report title"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                File Name
+              </label>
+              <input
+                type="text"
+                value={optionsModal.options.fileName || ''}
+                onChange={(e) => setOptionsModal(prev => ({
+                  ...prev,
+                  options: {
+                    ...prev.options,
+                    fileName: e.target.value
+                  }
+                }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-purple-500 focus:border-purple-500"
+                placeholder="Auto-generated"
+              />
+            </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex justify-end gap-3 pt-4 border-t">
+            <Button
+              variant="outline"
+              onClick={() => setOptionsModal(prev => ({ ...prev, isOpen: false }))}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleOptionsSubmit}
+              disabled={exportState.isExporting}
+              className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800"
+            >
+              {exportState.isExporting ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  Exporting...
+                </>
+              ) : (
+                <>
+                  <FileDown className="h-4 w-4 mr-2" />
+                  Export {formatConfig.label}
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      </Modal>
+    );
+  };
+
+  return (
+    <div className={cn("relative", className)}>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant={variant}
+            size={size}
+            disabled={disabled || exportState.isExporting}
+            className={cn(
+              "gap-2",
+              exportState.success && "border-green-200 bg-green-50 text-green-700 hover:bg-green-100",
+              exportState.error && "border-red-200 bg-red-50 text-red-700 hover:bg-red-100"
+            )}
+            aria-label="Export assessment results"
+            aria-expanded="false"
+            aria-haspopup="menu"
+          >
+            {exportState.isExporting ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                Exporting...
+              </>
+            ) : exportState.success ? (
+              <>
+                <CheckCircle className="h-4 w-4" />
+                Exported
+              </>
+            ) : exportState.error ? (
+              <>
+                <AlertCircle className="h-4 w-4" />
+                Export Failed
+              </>
+            ) : (
+              <>
+                <Download className="h-4 w-4" />
+                Export
+              </>
+            )}
+          </Button>
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent 
+          align="end" 
+          className="w-64"
+          aria-label="Export options menu"
+        >
+          <DropdownMenuLabel className="flex items-center gap-2">
+            <FileDown className="h-4 w-4" />
+            Export Options
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+
+          {Object.entries(EXPORT_FORMATS).map(([format, config]) => (
+            <React.Fragment key={format}>
+              <DropdownMenuItem
+                onClick={() => handleQuickExport(format as 'csv' | 'excel' | 'pdf')}
+                disabled={exportState.isExporting}
+                className="flex items-start gap-3 p-3 cursor-pointer"
+                role="menuitem"
+              >
+                <config.icon
+                  className="h-5 w-5 mt-0.5 flex-shrink-0"
+                  style={{ color: config.color }}
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium text-gray-900">{config.label}</div>
+                  <div className="text-xs text-gray-500 mt-0.5">
+                    {config.description}
+                  </div>
+                  <div className="text-xs text-gray-400 mt-1">
+                    Quick export • {getFileSize(format as 'csv' | 'excel' | 'pdf')}
+                  </div>
+                </div>
+              </DropdownMenuItem>
+
+              {showAdvancedOptions && (
+                <DropdownMenuItem
+                  onClick={() => handleAdvancedExport(format as 'csv' | 'excel' | 'pdf')}
+                  disabled={exportState.isExporting}
+                  className="flex items-center gap-3 p-3 cursor-pointer ml-8"
+                  role="menuitem"
+                >
+                  <Settings className="h-4 w-4 text-gray-400" />
+                  <span className="text-sm text-gray-600">Advanced options...</span>
+                </DropdownMenuItem>
+              )}
+            </React.Fragment>
+          ))}
+
+          {exportState.error && (
+            <>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem
+                onClick={handleRetry}
+                className="flex items-center gap-2 p-3 text-red-600 cursor-pointer"
+                role="menuitem"
+              >
+                <AlertCircle className="h-4 w-4" />
+                Retry Export
+              </DropdownMenuItem>
+            </>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {/* Progress indicator */}
+      {renderProgress()}
+
+      {/* Options modal */}
+      {renderOptionsModal()}
+    </div>
+  );
+};
+
+export default ExportButton;

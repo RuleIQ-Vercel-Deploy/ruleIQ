@@ -1,124 +1,0 @@
-
-context_monitor.ContextMonitorR
-H/home/omar/Documents/ruleIQ/archive/migration_scripts/context_monitor.py ("2*‚
-2 ((t
-r
- ((2 
-context_monitor.ContextMonitor"
-project_root"__id*,
-
-__unknown_file (
-
-project_rootsq
- (0
-%2*,
-
-__unknown_file (
-
-project_root*$
-
-__unknown_file (
-docs2__truediv__lj
- (<
-%3*"
-
-__unknown_file (
-
-%2*'
-
-__unknown_file (	
-context2__truediv__i
-g
- (<1 
-context_monitor.ContextMonitor"
-context_dir"__id*"
-
-__unknown_file (
-
-%3i
-g
-   (+
-%4"__id*O
-
-__unknown_file (3*1 
-context_monitor.ContextMonitor"
-context_dirxv
-   (C
-%5*"
-
-__unknown_file (
-
-%4*3
-
-__unknown_file (
-monitor_config.json2__truediv__i
-g
-   (C1 
-context_monitor.ContextMonitor"
-config_file"__id*"
-
-__unknown_file (
-
-%5i
-g
-! !(*
-%6"__id*O
-
-__unknown_file (3*1 
-context_monitor.ContextMonitor"
-context_dirwu
-! !(A
-%7*"
-
-__unknown_file (
-
-%6*2
-
-__unknown_file (
-monitor_state.json2__truediv__h
-f
-! !(A0 
-context_monitor.ContextMonitor"
-
-state_file"__id*"
-
-__unknown_file (
-
-%7`^
-$ $()
-%8*>
-
-__unknown_file (" 
-context_monitor.ContextMonitor2_load_configd
-b
-$ $(), 
-context_monitor.ContextMonitor"
-config"__id*"
-
-__unknown_file (
-
-%8_]
-% %('
-%9*>
-
-__unknown_file (" 
-context_monitor.ContextMonitor2_load_statec
-a
-% %('+ 
-context_monitor.ContextMonitor"
-state"__id*"
-
-__unknown_file (
-
-%9*
-3*]
-3
-context_monitor.py0.
-' '(
-%1"context_monitor.ContextMonitor"
-' '(
-
-%1:
- (8
-project_rootB" 
-context_monitor.ContextMonitorH

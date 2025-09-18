@@ -1,5 +1,5 @@
 
-6services.iq_agent.IQComplianceAgent._estimate_timeline<
+-iq_agent.IQComplianceAgent._estimate_timeline<
 0/home/omar/Documents/ruleIQ/services/iq_agent.py† †("2*Ó	
 2
 ‡ ‡(.}{
@@ -124,5 +124,5 @@ risk_level*'
 %8:
 
 †! †(4
-gapB'%
-#services.iq_agent.IQComplianceAgentH
+gapB
+iq_agent.IQComplianceAgentH

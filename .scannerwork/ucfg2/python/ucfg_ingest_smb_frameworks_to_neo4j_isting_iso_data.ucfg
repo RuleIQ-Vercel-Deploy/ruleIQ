@@ -1,57 +1,0 @@
-
-Yscripts.ingest_smb_frameworks_to_neo4j.SMBFrameworkNeo4jIngestion.clear_existing_iso_dataO
-E/home/omar/Documents/ruleIQ/scripts/ingest_smb_frameworks_to_neo4j.py# #("2*§
-2$ $(Tà
-Ö
-% %(
-%3"__id*m
-
-__unknown_file (Q*OC
-Ascripts.ingest_smb_frameworks_to_neo4j.SMBFrameworkNeo4jIngestion"
-driver?=
-% %("
-%4*"
-
-__unknown_file (
-
-%32sessionA
-?
-% %(-	
-session"__id*"
-
-__unknown_file (
-
-%4*
-3
-4*G
-3#
-!ingest_smb_frameworks_to_neo4j.py"
-0 0(
-implicit return*Ò
-4& -(ÿ’
-& -(
-%1*'
-
-__unknown_file (
-	
-session*î
-
-__unknown_file (˜Ù
-Ò
-                MATCH (n)
-                WHERE n:ISOFramework OR n:ISOClause OR n:ISOControl OR n:ISOObligation 
-                   OR n:ISOCommonTheme OR n:FrameworkObligation OR n:SMBFramework
-                DETACH DELETE n
-            2runÅ
-. .(:
-%2*&
-
-__unknown_file (
-
-
-logger*?
-
-__unknown_file (#!
-Cleared existing framework data2info*
-3BEC
-Ascripts.ingest_smb_frameworks_to_neo4j.SMBFrameworkNeo4jIngestionH

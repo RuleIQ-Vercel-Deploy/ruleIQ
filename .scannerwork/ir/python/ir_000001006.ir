@@ -1,16 +1,205 @@
-func
-ð ð("¼#
-!
 
-ý ý("#unknown-value#*
-(
+ )"detailed_gap_analysis"str
+"formatting"str
+L"collection_schedule"str
+"name"str
+!"include_details"str
+"Executive Summary"str
+%E"Evidence Collection Report"str
+C"evidence_collection"str
+2
+"timeline"str
+"falsebool
+ e"preparation_checklist"str
+truebool
+ +"Detailed Gap Analysis"str
+"recommendations"str
 
-ò ý(%closure"#new-object#(
-&
+%5int
+"include_charts"str
+8a/"Assessment of readiness for compliance audits"str
+	"description"str
+c"readiness_scores"str
+%_"Audit Readiness Assessment"str
+4-+"Comprehensive analysis of compliance gaps"str
+"key_metrics"str
+1"remediation_plan"str
+$"max_recommendations"str
+]"audit_readiness"str
+?"group_by_severity"str
+s"highlight_critical"str
 
-ò ý("#set-field# func:-
-+
-
-ò ý("?python-partial-apply?:
-
-ý ý(*+/home/omar/Documents/ruleIQ/config/cache.py
+0int
+I"collection_summary"str
+K"outstanding_items"str
+"executive_summary"str
+"framework_status"str
+/"gap_summary"str
+Y"show_automation"str
+("Load default report templates"str
+d"critical_items"str
+#J"automation_opportunities"str
+0"gap_details"str
+5G,"Status and progress of evidence collection"str
+
+"sections"str
+f"timeline_to_audit"str
+>
+5"High-level overview for executives and stakeholders"str
+"executive_overview"strself  ($list"Î$
+"
+ O(	"#new-object#Bdict$
+"
+! !("#new-object#Bdict 
+
+ (+"	#map-set#: 
+
+ (T"	#map-set#:	
+'
+%
+ ("#unknown-value#Blist&
+$
+ ("
+#is-exact#:Bbool
+
+ ("
+#assume#:8
+6
+ ("#set-field# __collection_size:Bint&
+$
+ ("#array-add-last#:&
+$
+ ("#array-add-last#:&
+$
+ ("#array-add-last#:&
+$
+ ("#array-add-last#: 
+
+ ("	#map-set#:$
+"
+  ("#new-object#Bdict 
+
+ (* "	#map-set#: 
+
+ (,#"	#map-set#:!" 
+
+ (,&"	#map-set#:$% 
+
+  ('"	#map-set#: 
+
+ !(("	#map-set#:$
+"
+"% 0(*"#new-object#Bdict 
+
+# #(/,"	#map-set#:*+ 
+
+$ $(J."	#map-set#:*	-'
+%
+% *(3"#unknown-value#Blist&
+$
+% *(4"
+#is-exact#:3Bbool
+
+% *(5"
+#assume#:48
+6
+% *(6"#set-field# __collection_size:3Bint&
+$
+% *(7"#array-add-last#:3/&
+$
+% *(8"#array-add-last#:30&
+$
+% *(9"#array-add-last#:31&
+$
+% *(:"#array-add-last#:32 
+
+% *(;"	#map-set#:*3$
+"
++ /(<"#new-object#Bdict 
+
+, ,(*="	#map-set#:< 
+
+- -(+>"	#map-set#:<! 
+
+. .(-@"	#map-set#:<? 
+
++ /(A"	#map-set#:*< 
+
+" 0(B"	#map-set#:)*$
+"
+1# ?(D"#new-object#Bdict 
+
+2 2(4F"	#map-set#:DE 
+
+3 3(KH"	#map-set#:D	G'
+%
+4 9(M"#unknown-value#Blist&
+$
+4 9(N"
+#is-exact#:MBbool
+
+4 9(O"
+#assume#:N8
+6
+4 9(P"#set-field# __collection_size:MBint&
+$
+4 9(Q"#array-add-last#:MI&
+$
+4 9(R"#array-add-last#:MJ&
+$
+4 9(S"#array-add-last#:MK&
+$
+4 9(T"#array-add-last#:ML 
+
+4 9(U"	#map-set#:DM$
+"
+: >(V"#new-object#Bdict 
+
+; ;(*W"	#map-set#:V 
+
+< <(+X"	#map-set#:V! 
+
+= =(+Z"	#map-set#:VY 
+
+: >(["	#map-set#:DV 
+
+1 ?(\"	#map-set#:CD$
+"
+@ N(^"#new-object#Bdict 
+
+A A(4`"	#map-set#:^_ 
+
+B B(Nb"	#map-set#:^	a'
+%
+C H(g"#unknown-value#Blist&
+$
+C H(h"
+#is-exact#:gBbool
+
+C H(i"
+#assume#:h8
+6
+C H(j"#set-field# __collection_size:gBint&
+$
+C H(k"#array-add-last#:gc&
+$
+C H(l"#array-add-last#:gd&
+$
+C H(m"#array-add-last#:ge&
+$
+C H(n"#array-add-last#:gf 
+
+C H(o"	#map-set#:^g$
+"
+I M(p"#new-object#Bdict 
+
+J J(*q"	#map-set#:p 
+
+K K(+r"	#map-set#:p! 
+
+L L(.t"	#map-set#:ps 
+
+I M(u"	#map-set#:^p 
+
+@ N(v"	#map-set#:]^
+ O(	*B/home/omar/Documents/ruleIQ/services/reporting/template_manager.py

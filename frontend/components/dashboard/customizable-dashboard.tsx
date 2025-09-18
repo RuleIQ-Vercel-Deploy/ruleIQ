@@ -1,9 +1,12 @@
 'use client';
 
 import { Settings2, Plus, GripVertical, X, Save, RotateCcw } from 'lucide-react';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { Responsive, WidthProvider, type Layout } from 'react-grid-layout';
 import { toast } from 'sonner';
+import { layoutsService, getCurrentUserId } from '@/lib/api/layouts.service';
+import { debounce } from '@/lib/utils';
+import { useLayoutStore } from '@/lib/stores/layout.store';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -176,6 +179,69 @@ export function CustomizableDashboard({ data, onLayoutChange }: CustomizableDash
   const [showAddWidget, setShowAddWidget] = useState(false);
   const [selectedWidgetType, setSelectedWidgetType] = useState<WidgetType>('ai-insights');
 
+  // Get undo/redo functions from store (Comment 3 & 10 requirements)
+  const { undo, redo, history, historyIndex } = useLayoutStore();
+
+  // Keyboard shortcuts (Comment 10 requirement)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      const ctrlOrCmd = isMac ? e.metaKey : e.ctrlKey;
+
+      if (ctrlOrCmd && e.key === 'z' && !e.shiftKey) {
+        e.preventDefault();
+        if (undo()) {
+          toast.success('Action undone');
+        }
+      } else if (ctrlOrCmd && ((e.key === 'z' && e.shiftKey) || e.key === 'y')) {
+        e.preventDefault();
+        if (redo()) {
+          toast.success('Action redone');
+        }
+      } else if (e.key === 'Escape' && isEditMode) {
+        setIsEditMode(false);
+        toast.info('Edit mode disabled');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [undo, redo, isEditMode]);
+
+  // Debounced save function (Comment 2 requirement)
+  const saveLayoutDebounced = useRef(
+    debounce(async (layouts: any, widgets: WidgetConfig[]) => {
+      try {
+        const userId = getCurrentUserId();
+        const layoutData = {
+          id: `layout-${userId}`,
+          userId,
+          widgets: widgets.map(w => ({
+            id: w.id,
+            type: w.type,
+            gridX: layouts.lg?.find((l: Layout) => l.i === w.id)?.x || 0,
+            gridY: layouts.lg?.find((l: Layout) => l.i === w.id)?.y || 0,
+            width: layouts.lg?.find((l: Layout) => l.i === w.id)?.w || 2,
+            height: layouts.lg?.find((l: Layout) => l.i === w.id)?.h || 2,
+            settings: {},
+          })),
+          ruleOrder: [],
+          settings: {
+            breakpoints: layouts,
+            isEditMode,
+          },
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+
+        await layoutsService.saveLayout(userId, layoutData as any);
+      } catch (error) {
+        console.error('Failed to save layout:', error);
+        toast.error('Failed to save layout changes');
+      }
+    }, 400) // 400ms debounce as specified in Comment 2
+  ).current;
+
   // Handle layout changes
   const handleLayoutChange = useCallback(
     (_layout: Layout[], allLayouts: any) => {
@@ -183,8 +249,11 @@ export function CustomizableDashboard({ data, onLayoutChange }: CustomizableDash
       if (onLayoutChange) {
         onLayoutChange(allLayouts);
       }
+
+      // Trigger debounced save to API (Comment 2 requirement)
+      saveLayoutDebounced(allLayouts, widgets);
     },
-    [onLayoutChange],
+    [onLayoutChange, widgets, saveLayoutDebounced],
   );
 
   // Add new widget

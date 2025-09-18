@@ -6,11 +6,16 @@ import { type AssessmentProgress } from '@/lib/assessment-engine/types';
 import { type BusinessProfile } from '@/types/api';
 
 /**
+ * Assessment answers type
+ */
+export type AssessmentAnswers = Record<string, string | number | boolean | string[] | null>;
+
+/**
  * User context for AI requests - provides business and assessment context
  */
 export interface UserContext {
   business_profile?: Partial<BusinessProfile>;
-  current_answers?: Record<string, any>;
+  current_answers?: AssessmentAnswers;
   assessment_progress?: Partial<AssessmentProgress>;
 }
 
@@ -27,12 +32,23 @@ export type AIErrorType =
   | 'unknown_error';
 
 /**
+ * AI error context information
+ */
+export interface AIErrorContext {
+  endpoint?: string;
+  request_id?: string;
+  timestamp?: string;
+  user_action?: string;
+  additional_info?: Record<string, unknown>;
+}
+
+/**
  * AI service error with additional context
  */
 export interface AIError extends Error {
   type: AIErrorType;
   code?: string;
-  context?: Record<string, any>;
+  context?: AIErrorContext;
   retryable?: boolean;
 }
 
@@ -79,6 +95,17 @@ export interface AIHelpResponse extends BaseAIResponse {
 }
 
 /**
+ * Question metadata
+ */
+export interface QuestionMetadata {
+  category?: string;
+  weight?: number;
+  dependencies?: string[];
+  validation_rules?: Record<string, unknown>;
+  display_conditions?: Record<string, unknown>;
+}
+
+/**
  * AI follow-up question
  */
 export interface AIFollowUpQuestion {
@@ -92,7 +119,7 @@ export interface AIFollowUpQuestion {
   }>;
   reasoning: string;
   priority: 'high' | 'medium' | 'low';
-  metadata?: Record<string, any>;
+  metadata?: QuestionMetadata;
 }
 
 /**
@@ -195,18 +222,26 @@ export interface AIConfig {
  * Type guards for AI responses
  */
 export function isAIError(error: unknown): error is AIError {
-  return error && typeof error === 'object' && 'type' in error && 'message' in error;
-}
-
-export function isAIHelpResponse(response: any): response is AIHelpResponse {
   return (
-    response && typeof response === 'object' && 'guidance' in response && 'metadata' in response
+    error !== null &&
+    typeof error === 'object' &&
+    'type' in error &&
+    'message' in error
   );
 }
 
-export function isAIAnalysisResponse(response: any): response is AIAnalysisResponse {
+export function isAIHelpResponse(response: unknown): response is AIHelpResponse {
   return (
-    response &&
+    response !== null &&
+    typeof response === 'object' &&
+    'guidance' in response &&
+    'metadata' in response
+  );
+}
+
+export function isAIAnalysisResponse(response: unknown): response is AIAnalysisResponse {
+  return (
+    response !== null &&
     typeof response === 'object' &&
     'gaps' in response &&
     'recommendations' in response &&

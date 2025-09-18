@@ -1,5 +1,5 @@
 
-Oapi.middleware.rbac_middleware.RBACRouteProtector.require_permissions.decoratorI
+@rbac_middleware.RBACRouteProtector.require_permissions.decoratorI
 =/home/omar/Documents/ruleIQ/api/middleware/rbac_middleware.py‘ ‘("2*ç
 2
 ’ ’(4d
@@ -19,5 +19,5 @@ b
 func:
 
 ‘ ‘(
-funcB53
-1api.middleware.rbac_middleware.RBACRouteProtectorH
+funcB&$
+"rbac_middleware.RBACRouteProtectorH

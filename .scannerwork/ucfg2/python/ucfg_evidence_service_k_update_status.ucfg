@@ -1,5 +1,5 @@
 
-<services.evidence_service.EvidenceService.bulk_update_statusD
+3evidence_service.EvidenceService.bulk_update_statusD
 8/home/omar/Documents/ruleIQ/services/evidence_service.py± ±("3*;
 3
 evidence_service.py"
@@ -17,5 +17,5 @@ new_status:
 reason:
 
 ²? ²(L	
-user_idB-+
-)services.evidence_service.EvidenceServiceH
+user_idB$"
+ evidence_service.EvidenceServiceH

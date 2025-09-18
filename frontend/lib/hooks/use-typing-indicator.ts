@@ -2,8 +2,16 @@ import { useEffect, useRef, useCallback } from 'react';
 
 import { chatService } from '@/lib/api/chat.service';
 import { useChatStore } from '@/lib/stores/chat.store';
+import { getWebSocketClient } from '@/lib/websocket/client';
 
-export function useTypingIndicator() {
+interface UseTypingIndicatorProps {
+  sessionId?: string;
+  agentId?: string;
+  useWebSocketClient?: boolean;
+}
+
+export function useTypingIndicator(props?: UseTypingIndicatorProps) {
+  const { sessionId, agentId, useWebSocketClient = false } = props || {};
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isTypingRef = useRef(false);
@@ -11,22 +19,60 @@ export function useTypingIndicator() {
 
   const sendTypingIndicator = useCallback(
     (isTyping: boolean) => {
-      if (!isConnected || !activeConversationId) return;
+      // Compute canSend based on the mode
+      const canSend = useWebSocketClient
+        ? (() => {
+            try {
+              return getWebSocketClient().getConnectionState().connected;
+            } catch {
+              return false;
+            }
+          })()
+        : isConnected;
 
-      // Only send if typing state actually changed
-      if (isTypingRef.current !== isTyping) {
-        isTypingRef.current = isTyping;
+      if (!canSend) return;
 
-        chatService.sendWebSocketMessage({
-          type: 'typing',
-          data: {
-            action: isTyping ? 'start' : 'stop',
-            conversation_id: activeConversationId,
-          },
-        });
+      // For WebSocketClient mode
+      if (useWebSocketClient && sessionId && agentId) {
+        // Only send if typing state actually changed
+        if (isTypingRef.current !== isTyping) {
+          isTypingRef.current = isTyping;
+
+          try {
+            const wsClient = getWebSocketClient();
+            wsClient.sendTypingIndicator(isTyping, sessionId, agentId);
+          } catch (error) {
+            console.error('Failed to send typing indicator via WebSocketClient:', error);
+            // Fallback to chatService if WebSocketClient fails
+            if (activeConversationId) {
+              chatService.sendWebSocketMessage({
+                type: 'typing',
+                data: {
+                  action: isTyping ? 'start' : 'stop',
+                  conversation_id: activeConversationId,
+                },
+              });
+            }
+          }
+        }
+      }
+      // For chatService mode (backward compatibility)
+      else if (activeConversationId) {
+        // Only send if typing state actually changed
+        if (isTypingRef.current !== isTyping) {
+          isTypingRef.current = isTyping;
+
+          chatService.sendWebSocketMessage({
+            type: 'typing',
+            data: {
+              action: isTyping ? 'start' : 'stop',
+              conversation_id: activeConversationId,
+            },
+          });
+        }
       }
     },
-    [isConnected, activeConversationId],
+    [isConnected, activeConversationId, useWebSocketClient, sessionId, agentId],
   );
 
   const handleTypingStop = useCallback(() => {

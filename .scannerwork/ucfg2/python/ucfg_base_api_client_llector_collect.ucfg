@@ -1,5 +1,5 @@
 
-9api.clients.base_api_client.BaseEvidenceCollector.collectF
+5clients.base_api_client.BaseEvidenceCollector.collectF
 :/home/omar/Documents/ruleIQ/api/clients/base_api_client.pyÞ Þ("3*:
 3
 base_api_client.py"
@@ -7,5 +7,5 @@
 implicit return:
 
 Þ Þ($
-kwargsB53
-1api.clients.base_api_client.BaseEvidenceCollectorH
+kwargsB1/
+-clients.base_api_client.BaseEvidenceCollectorH

@@ -1,5 +1,5 @@
 
-<api.routers.integrations.GenericIntegration.collect_evidenceA
+0integrations.GenericIntegration.collect_evidenceA
 7/home/omar/Documents/ruleIQ/api/routers/integrations.py8 8("2*;
 29 9(
 9 9(
@@ -10,5 +10,5 @@
 8% 8(*
 args:
 8, 8(4
-kwargsB/-
-+api.routers.integrations.GenericIntegrationH
+kwargsB#!
+integrations.GenericIntegrationH

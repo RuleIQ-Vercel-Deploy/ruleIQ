@@ -1,54 +1,55 @@
 
-Jservices.monitoring.database_monitor.DatabaseMonitor._check_session_alertsO
-C/home/omar/Documents/ruleIQ/services/monitoring/database_monitor.pyš š("2*›
+Amonitoring.database_monitor.DatabaseMonitor._check_session_alertsO
+C/home/omar/Documents/ruleIQ/services/monitoring/database_monitor.py› ›("2*‘
 2
-› ›(H
-
+œ œ(Hx
+v
 
-œ œ(-
-%25"__id*d
+ (-
+%25"__id*[
 
-__unknown_file (H*F6
-4services.monitoring.database_monitor.DatabaseMonitor"
+__unknown_file (?*=-
++monitoring.database_monitor.DatabaseMonitor"
 
 thresholds*
 7
 8*;
 3
 database_monitor.py"
-­ ­(
-implicit return*Š
-4
-  ¤(y
-w
+® ®(
+implicit return*ä
 
-   (2
-%1"__id*]
+4
+¡ ¥(p
+n
+
+¡ ¡(2
+%1"__id*T
 
-__unknown_file (A*?1
-/services.monitoring.database_monitor.AlertLevel"
+__unknown_file (8*6(
+&monitoring.database_monitor.AlertLevel"
 
 CRITICAL^
 \
 
-¡ ¡(-
+¢ ¢(-
 %2"__id*B
 
 __unknown_file (&*$
 	
 metrics"
-long_running_sessions€
-~
+long_running_sessionsw
+u
 
-¡/ ¡(>
-%3"__id*d
+¢/ ¢(>
+%3"__id*[
 
-__unknown_file (H*F6
-4services.monitoring.database_monitor.DatabaseMonitor"
+__unknown_file (?*=-
++monitoring.database_monitor.DatabaseMonitor"
 
 thresholdsŒ
 
-¡/ ¢(0
+¢/ £(0
 %4"__mapGet*"
 
 __unknown_file (
@@ -59,23 +60,23 @@ thresholdsŒ
 long_running_session_critical2__getitem__^
 \
 
-£3 £(P
+¤3 ¤(P
 %5"__id*B
 
 __unknown_file (&*$
 	
 metrics"
-long_running_sessions€
-~
+long_running_sessionsw
+u
 
-£p £(
-%6"__id*d
+¤p ¤(
+%6"__id*[
 
-__unknown_file (H*F6
-4services.monitoring.database_monitor.DatabaseMonitor"
+__unknown_file (?*=-
++monitoring.database_monitor.DatabaseMonitor"
 
 thresholdsŒ
-£p £(Ÿ
+¤p ¤(Ÿ
 %7"__mapGet*"
 
 __unknown_file (
@@ -85,29 +86,29 @@ thresholdsŒ
 __unknown_file ( 
 long_running_session_warning2__getitem__Ê
 Ç
-£ £(¢
+¤ ¤(¢
 %8"__concat*2
 
-£ £(2$"
+¤ ¤(2$"
  Long-running sessions detected: *
 
-£3 £(P
+¤3 ¤(P
 
 %5*0
 
-£Q £(o" 
+¤Q ¤(o" 
  sessions running longer than *
-£p £(Ÿ
+¤p ¤(Ÿ
 
 %7*
-£  £(¡
-sÁ¾
+¤  ¤(¡
+s¸µ
 
-  ¤(
-%9*T
+¡ ¥(
+%9*K
 
-__unknown_file (86
-4services.monitoring.database_monitor.DatabaseMonitor*"
+__unknown_file (/-
++monitoring.database_monitor.DatabaseMonitor*"
 
 __unknown_file (
 
@@ -127,37 +128,37 @@ thresholdsŒ
 __unknown_file (
 
 %82_create_alert*
-3*µ
+3*™
 5
-§ «(y
-w
+¨ ¬(p
+n
 
-§ §(1
-%10"__id*\
+¨ ¨(1
+%10"__id*S
 
-__unknown_file (@*>1
-/services.monitoring.database_monitor.AlertLevel"	
+__unknown_file (7*5(
+&monitoring.database_monitor.AlertLevel"	
 WARNING_
 ]
 
-¨ ¨(-
+© ©(-
 %11"__id*B
 
 __unknown_file (&*$
 	
 metrics"
-long_running_sessions
-
+long_running_sessionsx
+v
 
-¨/ ¨(>
-%12"__id*d
+©/ ©(>
+%12"__id*[
 
-__unknown_file (H*F6
-4services.monitoring.database_monitor.DatabaseMonitor"
+__unknown_file (?*=-
++monitoring.database_monitor.DatabaseMonitor"
 
 thresholds
 
-¨/ ©(/
+©/ ª(/
 %13"__mapGet*#
 
 __unknown_file (
@@ -168,7 +169,7 @@ thresholds
 long_running_session_warning2__getitem__Y
 W
 
-ª+ ª(B
+«+ «(B
 %14"__id*<
 
 __unknown_file ( *
@@ -177,24 +178,24 @@ W
 active_sessions‡
 „
 
-ª ª(T
+« «(T
 %15"__concat**
 
-ª ª(*
+« «(*
 Potential session leak: *
 
-ª+ ª(B
+«+ «(B
 
 %14*"
 
-ªC ª(S
- active sessionsÆÃ
+«C «(S
+ active sessions½º
 
-§ «(
-%16*T
+¨ ¬(
+%16*K
 
-__unknown_file (86
-4services.monitoring.database_monitor.DatabaseMonitor*#
+__unknown_file (/-
++monitoring.database_monitor.DatabaseMonitor*#
 
 __unknown_file (
 
@@ -214,29 +215,29 @@ W
 __unknown_file (
 
 %152_create_alert*
-3*¡
+3*—
 6
-¥ ¦(+_
+¦ §(+_
 ]
 
-¥ ¥(*
+¦ ¦(*
 %17"__id*B
 
 __unknown_file (&*$
 	
 metrics"
-long_running_sessions
-
+long_running_sessionsx
+v
 
-¥. ¥(=
-%18"__id*d
+¦. ¦(=
+%18"__id*[
 
-__unknown_file (H*F6
-4services.monitoring.database_monitor.DatabaseMonitor"
+__unknown_file (?*=-
++monitoring.database_monitor.DatabaseMonitor"
 
 thresholds
 
-¥. ¦(+
+¦. §(+
 %19"__mapGet*#
 
 __unknown_file (
@@ -247,7 +248,7 @@ thresholds
 long_running_session_warning2__getitem__
 Œ
 
-¥ ¦(+
+¦ §(+
 %20"	__compare*"
 
 __unknown_file (
@@ -261,29 +262,29 @@ thresholds
 
 %19*
 3
-5*¢
+5*˜
 7
- Ÿ(,_
+Ÿ  (,_
 ]
 
- ((
+Ÿ Ÿ((
 %21"__id*B
 
 __unknown_file (&*$
 	
 metrics"
-long_running_sessions
-
+long_running_sessionsx
+v
 
-, (;
-%22"__id*d
+Ÿ, Ÿ(;
+%22"__id*[
 
-__unknown_file (H*F6
-4services.monitoring.database_monitor.DatabaseMonitor"
+__unknown_file (?*=-
++monitoring.database_monitor.DatabaseMonitor"
 
 thresholds‘
 
-, Ÿ(,
+Ÿ,  (,
 %23"__mapGet*#
 
 __unknown_file (
@@ -294,7 +295,7 @@ thresholds‘
 long_running_session_critical2__getitem__
 Œ
 
- Ÿ(,
+Ÿ  (,
 %24"	__compare*"
 
 __unknown_file (
@@ -310,11 +311,11 @@ thresholds‘
 4
 6*'
 8
- ("
+ ("
 
- (
+ (
 void:
 
-š$ š(;	
-metricsB86
-4services.monitoring.database_monitor.DatabaseMonitorH
+›$ ›(;	
+metricsB/-
++monitoring.database_monitor.DatabaseMonitorH

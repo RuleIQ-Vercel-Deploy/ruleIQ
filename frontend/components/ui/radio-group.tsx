@@ -28,7 +28,7 @@ const RadioGroupItem = React.forwardRef<
         // Default state with new design system
         'border-neutral-300',
         // Focus state with visible ring
-        'focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500/20 focus-visible:ring-offset-2',
+        'focus:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/20 focus-visible:ring-offset-2',
         // Checked state with teal
         'data-[state=checked]:border-primary data-[state=checked]:bg-primary data-[state=checked]:text-white',
         className,

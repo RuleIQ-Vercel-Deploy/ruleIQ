@@ -228,7 +228,7 @@ export function FreemiumAssessmentFlow({
             </div>
             <div className="flex justify-between px-3 text-xs text-gray-500">
               <span>1 (Very Low)</span>
-              <span className="font-medium text-teal-600">{currentAnswer || 1}</span>
+              <span className="font-medium text-purple-600">{currentAnswer || 1}</span>
               <span>10 (Very High)</span>
             </div>
           </div>
@@ -251,8 +251,8 @@ export function FreemiumAssessmentFlow({
     return (
       <Card className={`mx-auto w-full max-w-2xl ${className}`}>
         <CardContent className="flex flex-col items-center justify-center space-y-4 py-12">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-teal-100">
-            <Brain className="h-6 w-6 animate-pulse text-teal-600" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100">
+            <Brain className="h-6 w-6 animate-pulse text-purple-600" />
           </div>
           <div className="space-y-2 text-center">
             <h3 className="text-lg font-semibold text-gray-900">Loading Your Assessment</h3>
@@ -260,7 +260,7 @@ export function FreemiumAssessmentFlow({
               Preparing personalized questions based on your business...
             </p>
           </div>
-          <Loader2 className="h-6 w-6 animate-spin text-teal-600" />
+          <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
         </CardContent>
       </Card>
     );
@@ -280,7 +280,7 @@ export function FreemiumAssessmentFlow({
           <div className="mt-6 text-center">
             <Button
               onClick={() => window.location.reload()}
-              className="bg-teal-600 hover:bg-teal-700"
+              className="bg-purple-600 hover:bg-purple-700"
             >
               Try Again
             </Button>
@@ -310,7 +310,7 @@ export function FreemiumAssessmentFlow({
       <CardHeader className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Brain className="h-5 w-5 text-teal-600" />
+            <Brain className="h-5 w-5 text-purple-600" />
             <span className="text-sm font-medium text-gray-600">AI Compliance Assessment</span>
           </div>
           <div className="flex items-center space-x-2 text-sm text-gray-500">
@@ -322,7 +322,7 @@ export function FreemiumAssessmentFlow({
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span className="text-gray-600">Progress</span>
-            <span className="font-medium text-teal-600">
+            <span data-testid="progress-indicator" className="font-medium text-purple-600">
               {Math.round(sessionProgress?.progress_percentage || 0)}%
             </span>
           </div>
@@ -330,16 +330,16 @@ export function FreemiumAssessmentFlow({
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6" data-testid="assessment-question">
         {/* Question */}
         <div className="space-y-4">
-          <CardTitle className="text-xl font-semibold leading-7 text-gray-900">
+          <CardTitle data-testid="question-text" className="text-xl font-semibold leading-7 text-gray-900">
             {currentQuestion.question_text}
           </CardTitle>
 
           {/* Question Type Indicator */}
           <div className="flex items-center space-x-2 text-sm text-gray-500">
-            <div className="h-2 w-2 rounded-full bg-teal-500"></div>
+            <div className="h-2 w-2 rounded-full bg-purple-500"></div>
             <span>
               {currentQuestion.question_type === 'multiple_choice' && 'Select one option'}
               {currentQuestion.question_type === 'text' && 'Enter your response'}
@@ -369,7 +369,8 @@ export function FreemiumAssessmentFlow({
           <Button
             onClick={handleSubmit}
             disabled={isSubmitting || currentAnswer === ''}
-            className="bg-teal-600 px-8 text-white hover:bg-teal-700"
+            className="bg-purple-600 px-8 text-white hover:bg-purple-700"
+            data-testid="next-button"
           >
             {isSubmitting ? (
               <>
@@ -408,7 +409,7 @@ export function FreemiumAssessmentProgress({ sessionProgress }: FreemiumAssessme
     <div className="mx-auto w-full max-w-sm space-y-2">
       <div className="flex justify-between text-sm">
         <span className="text-gray-600">Assessment Progress</span>
-        <span className="font-medium text-teal-600">{Math.round(progress)}%</span>
+        <span className="font-medium text-purple-600">{Math.round(progress)}%</span>
       </div>
       <Progress value={progress} className="h-2" />
       <div className="text-center text-xs text-gray-500">

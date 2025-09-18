@@ -1,18 +1,18 @@
 
--services.ai.tools.ToolRegistry.list_all_tools<
-0/home/omar/Documents/ruleIQ/services/ai/tools.pyŠ Š("2*Ó
+$ai.tools.ToolRegistry.list_all_tools<
+0/home/omar/Documents/ruleIQ/services/ai/tools.pyŠ Š("2*Ê
 2
 ‹ ‹(.
 
 Œ Œ()
-%1"listf
-d
+%1"list]
+[
 
 Œ Œ(
-%2"__id*J
+%2"__id*A
 
-__unknown_file (.*, 
-services.ai.tools.ToolRegistry"
+__unknown_file (%*#
+ai.tools.ToolRegistry"
 _tools@>
 
 Œ Œ((
@@ -35,5 +35,5 @@ d
 
 Œ Œ()
 
-%1B" 
-services.ai.tools.ToolRegistryH
+%1B
+ai.tools.ToolRegistryH

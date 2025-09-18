@@ -1,3 +1,55 @@
 
-falseboolself2 2(""
-3 3(*7/home/omar/Documents/ruleIQ/api/routers/integrations.py
+		"DPA2018"str
+	"MLR2017"str
+
+"MIFID2"str
+"GDPR"str
+"DORA"str
+3*"Extract regulation codes from query text"str
+"BSA"str
+"6AMLD"str
+
+0intself
+ø" ø(&query
+ø( ø(2list"¨7
+5
+
+ú û( common_codes"#unknown-value#Blist(
+&
+
+ú û( "
+#is-exact#:Bbool
+
+
+ú û( "
+#assume#::
+8
+
+ú û( "#set-field# __collection_size:Bint(
+&
+
+ú û( "#array-add-last#:(
+&
+
+ú û( "#array-add-last#:(
+&
+
+ú û( "#array-add-last#:(
+&
+
+ú û( "#array-add-last#:(
+&
+
+ú û( "#array-add-last#:(
+&
+
+ú û( "#array-add-last#:	(
+&
+
+ú û( "#array-add-last#:
+.
+,
+
+ü ü(O"?python-unknown?:Blist
+
+ü ü(O*0/home/omar/Documents/ruleIQ/services/iq_agent.py

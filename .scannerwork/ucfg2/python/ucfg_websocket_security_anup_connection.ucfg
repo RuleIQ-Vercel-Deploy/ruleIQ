@@ -1,0 +1,79 @@
+
+Awebsocket_security.WebSocketSecurityMiddleware.cleanup_connectionH
+</home/omar/Documents/ruleIQ/middleware/websocket_security.pyÑ Ñ("2*j
+2
+Ò Ò(5Q
+O
+
+Ó Ó(
+%5"__id*5
+
+__unknown_file (*
+
+	websocket"
+client*
+3
+4*;
+3
+websocket_security.py"
+Ù Ù
+implicit return*Ÿ
+4
+Ô Ô(-Q
+O
+
+Ô Ô((
+%1"__id*5
+
+__unknown_file (*
+
+	websocket"
+clientH
+F
+
+Ô Ô(-
+%2"__id*,
+
+__unknown_file (*
+
+%1"
+hostE
+C
+
+Ô Ô(-
+	client_ip"__id*"
+
+__unknown_file (
+
+%2|
+z
+
+Õ Õ(
+%3"__id*`
+
+__unknown_file (D*B0
+.websocket_security.WebSocketSecurityMiddleware"
+rate_limiter¦£
+
+Õ Õ(I
+%4*"
+
+__unknown_file (
+
+%3*)
+
+__unknown_file (
+
+	client_ip*-
+
+__unknown_file (
+
+connection_id2remove_connection*
+3:
+
+Ñ! Ñ(5
+	websocket:
+
+Ñ7 Ñ(I
+connection_idB20
+.websocket_security.WebSocketSecurityMiddlewareH

@@ -1,56 +1,59 @@
 
-4+"Build cache content for business profile."str
+80int
+160int
+2)"Estimate implementation effort in hours"str
+320int
+20int
+960int
+40intself
+ô ô(
+complexity
+ô ô(.num_controls
+ô0 ô(A-)ai.automation_scorer.AutomationComplexity"Ü2
+0
 
-0int
-YP"Current Compliance Maturity: {self._get_compliance_maturity(business_profile)}"str
-¢˜"Organization Size: {self._get_employee_count_range(business_profile.get('employee_count', 0))} ({business_profile.get('employee_count', 0)} employees)"str
-RI"Organization: {business_profile.get('company_name', 'Unknown Company')}"str
-M
-D"Technology Stack: {self._get_technology_summary(business_profile)}"str
-RI"Industry Sector: {business_profile.get('industry', 'Unknown Industry')}"str
-%"Business Profile Analysis:"str
-Y	P"Data Processing Profile: {self._get_data_processing_profile(business_profile)}"str
-¸®"Geographic Scope: {business_profile.get('country', 'Unknown')} {'(International Operations)' if business_profile.get('has_international_operations') else '(Domestic Only)'}"strself
-©. ©(2 business_profile
-©4 ª(list"”)
+ø ş(	
+base_hours"#new-object#Bdict*
+(
+
+ù ù(("#get-field# TRIVIAL:"
+ 
+
+ù ù(,	"	#map-set#:)
 '
 
-¬ º("#unknown-value#Blist(
-&
+ú ú('
+"#get-field# SIMPLE:"
+ 
 
-¬ º("
-#is-exact#:Bbool
-
+ú ú(+"	#map-set#:
++
+)
 
-¬ º("
-#assume#::
-8
+û û()"#get-field# MODERATE:"
+ 
 
-¬ º("#set-field# __collection_size:Bint(
-&
+û û(."	#map-set#:*
+(
 
-¬ º("#array-add-last#:(
-&
+ü ü(("#get-field# COMPLEX:"
+ 
 
-¬ º("#array-add-last#:(
-&
+ü ü(-"	#map-set#:,
+*
 
-¬ º("#array-add-last#:(
-&
+ı ı(*"#get-field# STRATEGIC:"
+ 
 
-¬ º("#array-add-last#:(
-&
+ı ı(/"	#map-set#:6
+4
 
-¬ º("#array-add-last#:(
-&
+ ()control_hours"	#binop *#*2*:$
+"
 
-¬ º("#array-add-last#:	(
-&
+ƒ ƒ(%"#array-read#:$
+"
 
-¬ º("#array-add-last#:
-(
-&
+ƒ ƒ(5"	#binop +#2+:
 
-¬ º("#array-add-last#:
-
-¬ º(*9/home/omar/Documents/ruleIQ/services/ai/cached_content.py
+ƒ ƒ(5*</home/omar/Documents/ruleIQ/services/ai/automation_scorer.py

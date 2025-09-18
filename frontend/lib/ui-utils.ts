@@ -14,28 +14,28 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// Standardized Button Variants (ruleIQ design system)
+// Standardized Button Variants (Neural Purple design system)
 export const buttonVariants = {
-  base: 'inline-flex items-center justify-center rounded-md font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-outline-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  base: 'inline-flex items-center justify-center rounded-md font-medium transition-all duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500/20 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
 
   variants: {
     // Primary actions - most important
     primary:
-      'bg-midnight text-text-on-midnight hover:bg-midnight-dark active:bg-midnight-dark shadow-sm hover:shadow-md',
+      'bg-purple-600 text-white hover:bg-purple-700 active:bg-purple-800 shadow-sm hover:shadow-md',
 
     // Secondary actions - less emphasis
     secondary:
-      'bg-surface-secondary text-text-on-dark border-2 border-teal-500 hover:bg-teal-500 hover:text-white active:bg-teal-600',
+      'bg-transparent text-purple-600 border-2 border-silver-400 hover:bg-purple-50 hover:border-purple-600 active:bg-purple-100',
 
-    // Accent actions - teal brand accent
-    accent: 'bg-teal-500 text-white hover:bg-teal-600 active:bg-teal-700 shadow-sm hover:shadow-md',
+    // Accent actions - Neural Purple brand accent
+    accent: 'bg-purple-500 text-white hover:bg-purple-600 active:bg-purple-700 shadow-sm hover:shadow-md',
 
     // Outlined - minimal emphasis
     outline:
-      'border-2 border-teal-500 text-teal-600 bg-transparent hover:bg-teal-500/10 active:bg-teal-500/20',
+      'border-2 border-purple-600 text-purple-600 bg-transparent hover:bg-purple-50 active:bg-purple-100',
 
     // Ghost - subtle actions
-    ghost: 'text-teal-600 hover:bg-teal-500/10 active:bg-teal-500/15',
+    ghost: 'text-purple-600 hover:bg-purple-50 active:bg-purple-100',
 
     // Destructive - dangerous actions
     destructive: 'bg-error text-white hover:bg-error/90 active:bg-error/80 shadow-sm',
@@ -44,7 +44,7 @@ export const buttonVariants = {
     success: 'bg-success text-white hover:bg-success/90 active:bg-success/80 shadow-sm',
 
     // Link - text-only actions
-    link: 'text-teal-600 underline-offset-4 hover:underline focus-visible:ring-1',
+    link: 'text-purple-600 underline-offset-4 hover:underline focus-visible:ring-1',
   },
 
   sizes: {
@@ -56,13 +56,13 @@ export const buttonVariants = {
   },
 };
 
-// Professional Card Styles (Dark Theme)
+// Professional Card Styles
 export const cardStyles = {
-  base: 'bg-surface-secondary rounded-lg border border-neutral-medium shadow-sm hover:shadow-md transition-shadow duration-200',
-  header: 'px-6 py-4 border-b border-neutral-medium',
+  base: 'bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow duration-200',
+  header: 'px-6 py-4 border-b border-gray-200',
   content: 'p-6',
-  footer: 'px-6 py-4 border-t border-neutral-medium bg-neutral-light/20',
-  trust: 'border-teal-500/20 shadow-[0_0_20px_rgba(44,122,123,0.15)]', // Teal trust shadow
+  footer: 'px-6 py-4 border-t border-gray-200 bg-gray-50',
+  trust: 'border-purple-500/20 shadow-[0_0_20px_rgba(139,92,246,0.15)]', // Neural Purple trust shadow
 };
 
 // Form Styles
@@ -86,7 +86,7 @@ export const statusStyles = {
     pending: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400',
     approved: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400',
     rejected: 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400',
-    active: 'bg-teal-500/20 text-teal-600 dark:bg-teal-500/10 dark:text-teal-500',
+    active: 'bg-purple-500/20 text-purple-600 dark:bg-purple-500/10 dark:text-purple-500',
     inactive: 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-400',
   },
 };
@@ -111,8 +111,8 @@ export const widgetStyles = {
 
 // Navigation Styles
 export const navStyles = {
-  item: 'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-teal-500/10 hover:text-teal-600',
-  itemActive: 'bg-teal-500/20 text-teal-600 font-semibold', // Teal accent for active
+  item: 'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-purple-500/10 hover:text-purple-600',
+  itemActive: 'bg-purple-500/20 text-purple-600 font-semibold', // Neural Purple accent for active
   group: 'space-y-1',
   groupLabel: 'px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider',
 };
@@ -121,10 +121,10 @@ export const navStyles = {
 export const tableStyles = {
   wrapper: 'relative w-full overflow-auto',
   table: 'w-full caption-bottom text-sm',
-  header: 'border-b bg-neutral-light/30',
+  header: 'border-b bg-gray-50',
   headerCell: 'h-12 px-4 text-left align-middle font-medium text-muted-foreground',
   body: 'border-b',
-  row: 'border-b transition-colors hover:bg-neutral-light/20 data-[state=selected]:bg-teal-500/10',
+  row: 'border-b transition-colors hover:bg-gray-50 data-[state=selected]:bg-purple-50',
   cell: 'p-4 align-middle',
 };
 
@@ -136,7 +136,7 @@ export const animationClasses = {
   pulse: 'animate-pulse',
   spin: 'animate-spin',
   bounce: 'animate-bounce',
-  shimmer: 'animate-shimmer', // Teal shimmer loading effect
+  shimmer: 'animate-shimmer', // Purple shimmer loading effect
 };
 
 // Shadow Classes (Professional)
@@ -153,9 +153,9 @@ export const shadowClasses = {
   gold: 'shadow-[0_0_20px_rgba(203,150,62,0.15)]', // Gold glow effect
 };
 
-// Skeleton Loading Styles - Updated with Teal Shimmer
+// Skeleton Loading Styles - Updated with Neural Purple Shimmer
 export const skeletonStyles =
-  'animate-shimmer bg-gradient-to-r from-neutral-200 via-teal-100 to-neutral-200 bg-[length:200%_100%] rounded';
+  'animate-shimmer bg-gradient-to-r from-gray-200 via-purple-100 to-gray-200 bg-[length:200%_100%] rounded';
 
 // Trust Indicator Styles
 export const trustStyles = {

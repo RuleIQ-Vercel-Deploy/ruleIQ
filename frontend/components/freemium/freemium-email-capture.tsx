@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Checkbox } from '../ui/checkbox';
@@ -13,6 +14,7 @@ import {
   useFreemiumUtmCapture,
 } from '../../lib/tanstack-query/hooks/use-freemium';
 import { isValidEmail } from '../../lib/api/freemium.service';
+import { useFreemiumStore } from '../../lib/stores/freemium-store';
 
 interface FreemiumEmailCaptureProps {
   title?: string;
@@ -25,12 +27,16 @@ export function FreemiumEmailCapture({
   description = 'Discover your compliance gaps in under 5 minutes with our AI-powered assessment tool.',
   className = '',
 }: FreemiumEmailCaptureProps) {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [consentMarketing, setConsentMarketing] = useState(false);
+  const [consentTerms, setConsentTerms] = useState(false);
   const [emailError, setEmailError] = useState('');
+  const [termsError, setTermsError] = useState('');
 
   const emailCaptureMutation = useFreemiumEmailCapture();
   const { captureUtmParams } = useFreemiumUtmCapture();
+  const { setEmail: setStoreEmail, setToken, setConsent } = useFreemiumStore();
 
   // Capture UTM parameters on component mount
   useEffect(() => {
@@ -39,6 +45,7 @@ export function FreemiumEmailCapture({
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
+    setStoreEmail(value); // Update store
     // Clear error when user starts typing
     if (emailError) {
       setEmailError('');
@@ -47,6 +54,10 @@ export function FreemiumEmailCapture({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Clear previous errors
+    setEmailError('');
+    setTermsError('');
 
     // Validate email
     if (!email.trim()) {
@@ -59,18 +70,31 @@ export function FreemiumEmailCapture({
       return;
     }
 
+    // Validate terms consent
+    if (!consentTerms) {
+      setTermsError('You must agree to the Terms of Service');
+      return;
+    }
+
     // Extract UTM parameters from current URL
     const urlParams = new URLSearchParams(window.location.search);
     const utm_source = urlParams.get('utm_source') || undefined;
     const utm_campaign = urlParams.get('utm_campaign') || undefined;
 
     try {
-      await emailCaptureMutation.mutateAsync({
+      const response = await emailCaptureMutation.mutateAsync({
         email: email.trim(),
         utm_source,
         utm_campaign,
-        marketing_consent: consentMarketing,
+        consent_marketing: consentMarketing,
+        consent_terms: consentTerms,
       });
+      // Update store with token if returned
+      if (response?.token) {
+        setToken(response.token);
+      }
+      // Navigate to assessment on success
+      router.push('/freemium/assessment');
     } catch (error: unknown) {
       setEmailError(error instanceof Error ? error.message : 'Failed to start assessment. Please try again.');
     }
@@ -79,8 +103,8 @@ export function FreemiumEmailCapture({
   return (
     <Card className={`mx-auto w-full max-w-lg ${className}`}>
       <CardHeader className="space-y-2 text-center">
-        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-teal-100">
-          <Shield className="h-6 w-6 text-teal-600" />
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-purple-100">
+          <Shield className="h-6 w-6 text-purple-600" />
         </div>
         <CardTitle className="text-2xl font-bold text-gray-900">{title}</CardTitle>
         <CardDescription className="text-base text-gray-600">{description}</CardDescription>
@@ -90,21 +114,21 @@ export function FreemiumEmailCapture({
         {/* Benefits List */}
         <div className="space-y-3">
           <div className="flex items-center space-x-3 text-sm text-gray-600">
-            <Zap className="h-4 w-4 flex-shrink-0 text-teal-500" />
+            <Zap className="h-4 w-4 flex-shrink-0 text-purple-500" />
             <span>AI-powered assessment tailored to your business</span>
           </div>
           <div className="flex items-center space-x-3 text-sm text-gray-600">
-            <Shield className="h-4 w-4 flex-shrink-0 text-teal-500" />
+            <Shield className="h-4 w-4 flex-shrink-0 text-purple-500" />
             <span>Identify critical compliance gaps instantly</span>
           </div>
           <div className="flex items-center space-x-3 text-sm text-gray-600">
-            <Mail className="h-4 w-4 flex-shrink-0 text-teal-500" />
+            <Mail className="h-4 w-4 flex-shrink-0 text-purple-500" />
             <span>Get personalized recommendations via email</span>
           </div>
         </div>
 
         {/* Email Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4" role="form">
           <div className="space-y-2">
             <Label htmlFor="email" className="text-sm font-medium text-gray-700">
               Email Address
@@ -112,12 +136,15 @@ export function FreemiumEmailCapture({
             <Input
               id="email"
               type="email"
-              placeholder="your.email@company.com"
+              placeholder="Enter your email address"
               value={email}
               onChange={(e) => handleEmailChange(e.target.value)}
               className={`w-full ${emailError ? 'border-red-300 focus:border-red-500' : ''}`}
               disabled={emailCaptureMutation.isPending}
               autoComplete="email"
+              data-testid="email-input"
+              required
+              aria-invalid={!!emailError}
             />
             {emailError && (
               <p className="text-sm text-red-600" role="alert">
@@ -126,20 +153,51 @@ export function FreemiumEmailCapture({
             )}
           </div>
 
+          {/* Terms Consent */}
+          <div className="flex items-start space-x-3">
+            <Checkbox
+              id="terms-consent"
+              checked={consentTerms}
+              onCheckedChange={(checked) => {
+                setConsentTerms(!!checked);
+                setConsent('terms', !!checked);
+                if (checked && termsError) setTermsError('');
+              }}
+              className="mt-0.5"
+              disabled={emailCaptureMutation.isPending}
+              data-testid="terms-consent"
+            />
+            <Label
+              htmlFor="terms-consent"
+              className="cursor-pointer text-sm leading-5 text-gray-600"
+            >
+              I agree to the Terms of Service
+            </Label>
+          </div>
+          {termsError && (
+            <p className="text-sm text-red-600" role="alert">
+              {termsError}
+            </p>
+          )}
+
           {/* Marketing Consent */}
           <div className="flex items-start space-x-3">
             <Checkbox
               id="marketing-consent"
               checked={consentMarketing}
-              onCheckedChange={(checked) => setConsentMarketing(!!checked)}
+              onCheckedChange={(checked) => {
+                setConsentMarketing(!!checked);
+                setConsent('marketing', !!checked);
+              }}
               className="mt-0.5"
               disabled={emailCaptureMutation.isPending}
+              data-testid="marketing-consent"
             />
             <Label
               htmlFor="marketing-consent"
               className="cursor-pointer text-sm leading-5 text-gray-600"
             >
-              I agree to receive email updates about compliance best practices and RuleIQ product
+              I agree to receive marketing emails about compliance best practices and RuleIQ product
               news. You can unsubscribe at any time.
             </Label>
           </div>
@@ -157,13 +215,14 @@ export function FreemiumEmailCapture({
           {/* Submit Button */}
           <Button
             type="submit"
-            className="w-full bg-teal-600 py-3 font-medium text-white hover:bg-teal-700"
+            className="w-full bg-purple-600 py-3 font-medium text-white hover:bg-purple-700"
             disabled={emailCaptureMutation.isPending || !email.trim()}
+            data-testid="start-assessment-button"
           >
             {emailCaptureMutation.isPending ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Starting Assessment...
+                Starting your assessment...
               </>
             ) : (
               'Start Free Assessment'
@@ -197,12 +256,14 @@ export function FreemiumEmailCapture({
 
 // Lightweight version for embedding in other components
 export function FreemiumEmailCaptureInline({ className = '' }: { className?: string }) {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [consentMarketing, setConsentMarketing] = useState(false);
   const [emailError, setEmailError] = useState('');
 
   const emailCaptureMutation = useFreemiumEmailCapture();
   const { captureUtmParams } = useFreemiumUtmCapture();
+  const { setEmail: setStoreEmail, setToken, setConsent } = useFreemiumStore();
 
   useEffect(() => {
     captureUtmParams();
@@ -226,12 +287,19 @@ export function FreemiumEmailCaptureInline({ className = '' }: { className?: str
     const utm_campaign = urlParams.get('utm_campaign') || undefined;
 
     try {
-      await emailCaptureMutation.mutateAsync({
+      const response = await emailCaptureMutation.mutateAsync({
         email: email.trim(),
         utm_source,
         utm_campaign,
-        marketing_consent: consentMarketing,
+        consent_marketing: consentMarketing,
+        consent_terms: true, // Inline version assumes terms acceptance
       });
+      // Update store with token if returned
+      if (response?.token) {
+        setToken(response.token);
+      }
+      // Navigate on success
+      router.push('/freemium/assessment');
     } catch (error: unknown) {
       setEmailError(error instanceof Error ? error.message : 'Failed to start assessment');
     }
@@ -251,7 +319,7 @@ export function FreemiumEmailCaptureInline({ className = '' }: { className?: str
           />
           <Button
             type="submit"
-            className="bg-teal-600 px-6 text-white hover:bg-teal-700"
+            className="bg-purple-600 px-6 text-white hover:bg-purple-700"
             disabled={emailCaptureMutation.isPending || !email.trim()}
           >
             {emailCaptureMutation.isPending ? (

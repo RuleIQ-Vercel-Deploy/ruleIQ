@@ -1,18 +1,18 @@
 
 'config.base.BaseConfig.get_redis_config4
-*/home/omar/Documents/ruleIQ/config/base.pyr r("2*»
-2s s(*
-	t t(†
+*/home/omar/Documents/ruleIQ/config/base.pyq q("2*»
+2r r(*
+	s s(†
 %1"dict_
 ]
-t t(%
+s s(%
 %2"__id*E
 
 __unknown_file ()*'
 config.base.BaseConfig"
 	REDIS_URLŠ
 ‡
-t t(%
+s s(%
 %3"__mapSet*"
 
 __unknown_file (
@@ -26,14 +26,14 @@
 
 %2k
 i
-t: t(T
+s: s(T
 %4"__id*Q
 
 __unknown_file (5*3
 config.base.BaseConfig"
 REDIS_MAX_CONNECTIONS–
 “
-t' t(T
+s' s(T
 %5"__mapSet*"
 
 __unknown_file (
@@ -47,14 +47,14 @@ i
 
 %4m
 k
-	tj t(…
+	sj s(…
 %6"__id*R
 
 __unknown_file (6*4
 config.base.BaseConfig"
 REDIS_DECODE_RESPONSES˜
 •
-	tV t(…
+	sV s(…
 %7"__mapSet*"
 
 __unknown_file (
@@ -67,7 +67,7 @@ k
 __unknown_file (
 
 %6"
-	t t(†
+	s s(†
 
 %1B
 config.base.BaseConfigH

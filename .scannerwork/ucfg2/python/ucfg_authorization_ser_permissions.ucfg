@@ -1,18 +1,18 @@
 
 8authorization.AuthorizationService._get_user_permissionsH
->/home/omar/Documents/ruleIQ/services/security/authorization.py^ ^("2*√
-2_ _(>
-` `(
+>/home/omar/Documents/ruleIQ/services/security/authorization.py[ [("2*√
+2\ \(>
+] ](
 %14"setF
 D
-` `(
+] ](
 permissions"__id*#
 
 __unknown_file (
 
 %14J
 H
-a a(
+^ ^(
 %15"__id*/
 
 __unknown_file (*
@@ -21,29 +21,29 @@ H
 roles*
 4
 6**
-4h h("
-h h(
+4e e("
+e e(
 
 permissions*Ò
-6b b(Du
+6_ _(Du
 s
-b b(1
+_ _(1
 %5"__id*[
 
 __unknown_file (?*=$
 "authorization.AuthorizationService"
 DEFAULT_PERMISSIONSH
 F
-b6 b(?
+_6 _(?
 %6"__id*.
 
 __unknown_file (*
 
 role"
 name
-bA b(C
+_A _(C
 %7"listÑÅ
-b b(D
+_ _(D
 %8*"
 
 __unknown_file (
@@ -58,14 +58,14 @@ F
 
 %72getD
 B
-b b(D
+_ _(D
 
 role_perms"__id*"
 
 __unknown_file (
 
 %8}
-c c(*
+` `(*
 %9"
 set.update*+
 
@@ -78,23 +78,23 @@ set.update*+
 
 role_perms2updateq
 o
-d d(1
+a a(1
 %10"__id*V
 
 __unknown_file (:*8$
 "authorization.AuthorizationService"
 ROLE_HIERARCHYI
 G
-d6 d(?
+a6 a(?
 %11"__id*.
 
 __unknown_file (*
 
 role"
 name
-dA d(C
+aA a(C
 %12"listàÖ
-d d(D
+a a(D
 %13*#
 
 __unknown_file (
@@ -109,7 +109,7 @@ G
 
 %122getJ
 H
-d d(D
+a a(D
 inherited_roles"__id*#
 
 __unknown_file (
@@ -118,17 +118,17 @@ H
 4
 6
 8*ä
-8f f(Mu
+8c c(Mu
 s
-f" f(:
+c" c(:
 %1"__id*[
 
 __unknown_file (?*=$
 "authorization.AuthorizationService"
 DEFAULT_PERMISSIONS
-fJ f(L
+cJ c(L
 %2"listãà
-f" f(M
+c" c(M
 %3*"
 
 __unknown_file (
@@ -143,13 +143,13 @@ s
 
 %22getI
 G
-f f(M
+c c(M
 inherited_perms"__id*"
 
 __unknown_file (
 
 %3ÖÇ
-g g(3
+d d(3
 %4"
 set.update*+
 
@@ -163,6 +163,6 @@ set.update*+
 4
 6
 8:
-^$ ^(.
+[$ [(.
 userB&$
 "authorization.AuthorizationServiceH

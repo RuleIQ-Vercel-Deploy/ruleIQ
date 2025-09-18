@@ -1,20 +1,7 @@
 
-"items"str
-
-0intself6 6(list"‚$
-"
-7 7( "#new-object#Bdict'
-%
-7 7("#unknown-value#Blist&
-$
-7 7("
-#is-exact#:Bbool
-
-7 7("
-#assume#:8
-6
-7 7(	"#set-field# __collection_size:Bint 
-
-7 7(
-"	#map-set#:
-7 7( *L/home/omar/Documents/ruleIQ/api/integrations/google_workspace_integration.py
+KB"Okta API tokens don't typically expire, but we can validate them"strselfJ" J(&"V!
+
+L L(("#unknown-value#!
+
+L L(("#unknown-value#
+L L((*6/home/omar/Documents/ruleIQ/api/clients/okta_client.py

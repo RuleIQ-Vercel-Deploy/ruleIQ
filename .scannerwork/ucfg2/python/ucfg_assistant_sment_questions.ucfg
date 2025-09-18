@@ -1,6 +1,6 @@
 
-Gservices.ai.assistant.ComplianceAssistant.generate_assessment_questions@
-4/home/omar/Documents/ruleIQ/services/ai/assistant.pyÀ À(+"7*Ø 
+>ai.assistant.ComplianceAssistant.generate_assessment_questions@
+4/home/omar/Documents/ruleIQ/services/ai/assistant.pyÀ À(+"7*Æ 
 7
 Ï Ï(L¤¡
 
@@ -220,13 +220,13 @@ F
 
 __unknown_file (
 
-company_sizeş
+company_sizeøõ
 
 ü ÿ(=
-%14*I
+%14*@
 
-__unknown_file (-+
-)services.ai.assistant.ComplianceAssistant2 _generate_ai_response_with_cache:"
+__unknown_file ($"
+ ai.assistant.ComplianceAssistant2 _generate_ai_response_with_cache:"
 system_prompt
 
 system_prompt:
@@ -246,13 +246,13 @@ C
 
 __unknown_file (
 
-%14†ƒ
+%14ıú
 
 € (/
-%15*I
+%15*@
 
-__unknown_file (-+
-)services.ai.assistant.ComplianceAssistant*(
+__unknown_file ($"
+ ai.assistant.ComplianceAssistant*(
 
 __unknown_file (
 
@@ -286,5 +286,5 @@ I
 max_questions: 
 
 Á) Á(F
-difficulty_levelB-+
-)services.ai.assistant.ComplianceAssistantH
+difficulty_levelB$"
+ ai.assistant.ComplianceAssistantH

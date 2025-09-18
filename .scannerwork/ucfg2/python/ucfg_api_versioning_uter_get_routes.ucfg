@@ -1,13 +1,13 @@
 
-6api.middleware.api_versioning.VersionRouter.get_routesF
-</home/omar/Documents/ruleIQ/api/middleware/api_versioning.pyr r("2*º
-2s s(4q
-o
+'api_versioning.VersionRouter.get_routesF
+</home/omar/Documents/ruleIQ/api/middleware/api_versioning.pyr r("2*«
+2s s(4b
+`
 t t(
-%1"__id*W
+%1"__id*H
 
-__unknown_file (;*9-
-+api.middleware.api_versioning.VersionRouter"
+__unknown_file (,**
+api_versioning.VersionRouter"
 routes
 t( t(*
 %2"list‰†
@@ -29,5 +29,5 @@ o
 
 %3:
 r r(%	
-versionB/-
-+api.middleware.api_versioning.VersionRouterH
+versionB 
+api_versioning.VersionRouterH

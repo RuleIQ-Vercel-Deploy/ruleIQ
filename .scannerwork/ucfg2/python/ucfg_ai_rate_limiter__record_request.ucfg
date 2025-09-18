@@ -1,10 +1,10 @@
 
-;api.middleware.ai_rate_limiter.AIRateLimiter.record_requestG
+,ai_rate_limiter.AIRateLimiter.record_requestG
 =/home/omar/Documents/ruleIQ/api/middleware/ai_rate_limiter.pyE E("3*8
 3
 ai_rate_limiter.py"
 I I(
 implicit return:
 E# E(/	
-user_idB0.
-,api.middleware.ai_rate_limiter.AIRateLimiterH
+user_idB!
+ai_rate_limiter.AIRateLimiterH

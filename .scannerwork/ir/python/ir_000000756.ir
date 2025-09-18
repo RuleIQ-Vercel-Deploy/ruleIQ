@@ -1,21 +1,18 @@
 
+7."\A(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)\Z"str
+¾´"Check if string is valid semantic version (strict X.Y.Z format).
 
-0intself
-“ “(kwargs
-“ “($"dictlist"Ä)
-'
+    Args:
+        v: Version string to validate
 
-” ”("#unknown-value#Blist(
-&
-
-” ”("
-#is-exact#:Bbool
+    Returns:
+        True if valid semver, False otherwise
+    "strv ("‹'
+%
+ (=pattern"#id#:Bstr
 
-
-” ”("
-#assume#::
-8
-
-” ”("#set-field# __collection_size:Bint
-
-” ”(*5/home/omar/Documents/ruleIQ/api/clients/aws_client.py
+ ($"
+rematch:/
+-
+ (%"#dependent-value#*:Bbool
+ (%*P/home/omar/Documents/ruleIQ/services/ai/evaluation/golden_datasets/versioning.py

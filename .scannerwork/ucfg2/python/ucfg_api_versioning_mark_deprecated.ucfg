@@ -1,6 +1,6 @@
 
-;api.middleware.api_versioning.APIVersioning.mark_deprecatedF
-</home/omar/Documents/ruleIQ/api/middleware/api_versioning.py ("2*§
+,api_versioning.APIVersioning.mark_deprecatedF
+</home/omar/Documents/ruleIQ/api/middleware/api_versioning.py ("2*˜
 2 (-
 . (}
 %1"dict“
@@ -45,13 +45,13 @@
 
 __unknown_file (
 
-2024-01-01
-}
+2024-01-01p
+n
  (!
-%6"__id*e
+%6"__id*V
 
-__unknown_file (I*G-
-+api.middleware.api_versioning.APIVersioning"
+__unknown_file (:*8
+api_versioning.APIVersioning"
 deprecated_endpoints¤¡
  (}
 %5"dict.__setitem__*"
@@ -79,5 +79,5 @@
 - (9	
 version:
 ; (Z
-replacementB/-
-+api.middleware.api_versioning.APIVersioningH
+replacementB 
+api_versioning.APIVersioningH

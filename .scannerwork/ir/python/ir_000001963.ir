@@ -1,4 +1,9 @@
-self
-Ï Ï("
 
-Ð Ð(*:/home/omar/Documents/ruleIQ/api/clients/base_api_client.py
+"redis"str
+3*"Convert any Redis URL to test Redis URL."str
+:1"redis://{cfg['host']}:{cfg['port']}/{cfg['db']}"strself$ $(original_url$! $(2"g,
+*
+& &("#get-field# test_config:'
+%
+& &('cfg"#array-read#:
+' '(A*7/home/omar/Documents/ruleIQ/tests/mock_service_proxy.py

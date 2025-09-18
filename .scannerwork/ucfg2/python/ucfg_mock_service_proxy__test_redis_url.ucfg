@@ -1,0 +1,79 @@
+
+8tests.mock_service_proxy.ServiceProxy.get_test_redis_urlA
+7/home/omar/Documents/ruleIQ/tests/mock_service_proxy.py$ $("2*Ä
+2% %(6p
+n
+& &(
+%1"__id*V
+
+__unknown_file (:*8'
+%tests.mock_service_proxy.ServiceProxy"
+test_configtr
+& &('
+%2"__mapGet*"
+
+__unknown_file (
+
+%1*%
+
+__unknown_file (	
+redis2__getitem__=
+;
+& &('
+cfg"__id*"
+
+__unknown_file (
+
+%2tr
+' '(%
+%3"__mapGet*#
+
+__unknown_file (
+
+cfg*$
+
+__unknown_file (
+host2__getitem__tr
+'( '(3
+%4"__mapGet*#
+
+__unknown_file (
+
+cfg*$
+
+__unknown_file (
+port2__getitem__rp
+'6 '(?
+%5"__mapGet*#
+
+__unknown_file (
+
+cfg*"
+
+__unknown_file (
+db2__getitem__™
+–
+' '(A
+%6"__concat*
+' '(
+
+redis://*
+' '(%
+
+%3*
+'& '('
+:*
+'( '(3
+
+%4*
+'4 '(5
+/*
+'6 '(?
+
+%5"
+' '(A
+
+%6:
+$! $(2
+original_urlB)'
+%tests.mock_service_proxy.ServiceProxyH

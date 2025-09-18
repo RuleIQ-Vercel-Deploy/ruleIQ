@@ -1,6 +1,6 @@
 
-Dservices.neo4j_service.Neo4jGraphRAGService.calculate_residual_risksA
-5/home/omar/Documents/ruleIQ/services/neo4j_service.py– –(&"2*’	
+;neo4j_service.Neo4jGraphRAGService.calculate_residual_risksA
+5/home/omar/Documents/ruleIQ/services/neo4j_service.py– –(&"2*Ã	
 2
 — —(8í
 è
@@ -25,13 +25,13 @@ Dservices.neo4j_service.Neo4jGraphRAGService.calculate_residual_risksA
                  ELSE 'LOW'
                END AS risk_level
         ORDER BY residual_risk DESC
-        òï
+        èå
 
 „ „(1
-%1*K
+%1*B
 
-__unknown_file (/-
-+services.neo4j_service.Neo4jGraphRAGService*%
+__unknown_file (&$
+"neo4j_service.Neo4jGraphRAGService*%
 
 __unknown_file (	
 
@@ -65,5 +65,5 @@ A
 
 ‰ ‰(*
 
-%2B/-
-+services.neo4j_service.Neo4jGraphRAGServiceH
+%2B&$
+"neo4j_service.Neo4jGraphRAGServiceH

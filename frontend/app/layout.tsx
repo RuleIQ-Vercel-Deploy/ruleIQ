@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import type React from 'react';
 import './globals.css';
+import '../styles/neural-purple-theme.css';
 
 const inter = Inter({
   subsets: ['latin'],

@@ -1,4 +1,10 @@
-cls&& &()info&+ &(/scopes&1 &(7"*
-
-' '("cls:
-' '(*B/home/omar/Documents/ruleIQ/api/clients/google_workspace_client.py
+
+0'"Get safety manager with user context."strself
+À À(user_context
+À! À(="P<
+:
+
+Ã Ã(/"'
+ai.safety_managerget_safety_manager:
+
+Ã Ã(/*9/home/omar/Documents/ruleIQ/services/ai/safety_manager.py

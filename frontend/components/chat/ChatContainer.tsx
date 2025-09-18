@@ -1,15 +1,28 @@
 'use client';
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { ChatMessage, TrustLevel, Agent, Session } from '@/lib/websocket/types';
-import { getWebSocketClient } from '@/lib/websocket/client';
+import {
+  ChatMessage,
+  TrustLevel,
+  Agent,
+  Session,
+  ConnectionState,
+  StreamingMessagePayload
+} from '@/lib/websocket/types';
+import { getWebSocketClient, disconnectWebSocket } from '@/lib/websocket/client';
+import { categorizeError, getUserMessage, getRecoverySuggestion } from '@/lib/utils/websocket-error-handler';
+import { useStreamingChat } from '@/lib/hooks/use-streaming-chat';
+import { useTypingIndicator } from '@/lib/hooks/use-typing-indicator';
 import { Message } from './Message';
 import { TrustIndicator } from './TrustIndicator';
 import { ChatInput } from './ChatInput';
 import { TypingIndicator } from './TypingIndicator';
+import { ConnectionStatusIndicator } from './ConnectionStatusIndicator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { AlertCircle, WifiOff } from 'lucide-react';
 
 interface ChatContainerProps {
   agent: Agent;
@@ -18,71 +31,186 @@ interface ChatContainerProps {
 }
 
 export function ChatContainer({ agent, session, onSessionEnd }: ChatContainerProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>(session.messages || []);
-  const [isTyping, setIsTyping] = useState(false);
-  const [isConnected, setIsConnected] = useState(false);
-  const [isConnecting, setIsConnecting] = useState(false);
+  const [connectionState, setConnectionState] = useState<ConnectionState>({
+    connected: false,
+    connecting: false,
+    error: null,
+    retryCount: 0
+  });
+  const [connectionError, setConnectionError] = useState<string | null>(null);
+  const [agentTyping, setAgentTyping] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const wsClientRef = useRef<ReturnType<typeof getWebSocketClient> | null>(null);
   const { toast } = useToast();
+
+  // Initialize streaming chat hook
+  const {
+    messages,
+    isStreaming,
+    handleStreamChunk,
+    handleStreamComplete,
+    handleStreamError,
+    addMessage,
+    updateMessage,
+    clearMessages
+  } = useStreamingChat({
+    onMessageComplete: (message) => {
+      console.log('Message streaming complete:', message.id);
+    },
+    onStreamError: (error, messageId) => {
+      toast({
+        title: 'Streaming Error',
+        description: `Failed to receive message: ${error.message}`,
+        variant: 'destructive',
+      });
+    }
+  });
+
+  // Initialize typing indicator hook with WebSocket client support
+  const { handleTypingStart, handleTypingStop } = useTypingIndicator({
+    sessionId: session.id,
+    agentId: agent.id,
+    useWebSocketClient: true
+  });
 
   // Initialize WebSocket connection
   useEffect(() => {
-    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8000/ws';
-    
+    // Get auth token from the same source as chat service
+    const getAuthToken = () => {
+      try {
+        // Import useAuthStore dynamically to avoid dependency issues
+        const authStore = require('@/lib/stores/auth.store').useAuthStore;
+        return authStore.getState().getToken();
+      } catch (error) {
+        console.warn('Unable to get auth token:', error);
+        return null;
+      }
+    };
+
+    const baseWsUrl = process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8000/ws';
+    const authToken = getAuthToken();
+
+    // Append auth token to WebSocket URL if available
+    const wsUrl = authToken ? `${baseWsUrl}?token=${encodeURIComponent(authToken)}` : baseWsUrl;
+
     const wsClient = getWebSocketClient(wsUrl, {
       onOpen: () => {
-        setIsConnected(true);
-        setIsConnecting(false);
+        setConnectionState({
+          connected: true,
+          connecting: false,
+          error: null,
+          retryCount: 0,
+          lastConnectedAt: new Date()
+        });
+        setConnectionError(null);
         toast({
           title: 'Connected',
           description: 'Connected to agent service',
         });
       },
-      onClose: () => {
-        setIsConnected(false);
-        toast({
-          title: 'Disconnected',
-          description: 'Connection to agent service lost',
-          variant: 'destructive',
-        });
+      onClose: (event) => {
+        setConnectionState(prev => ({
+          ...prev,
+          connected: false,
+          connecting: false
+        }));
+
+        // Only show toast for unexpected disconnections
+        if (event.code !== 1000) {
+          const classification = categorizeError(event);
+          toast({
+            title: 'Connection Error',
+            description: `${getUserMessage(classification)} ${getRecoverySuggestion(classification)}`,
+            variant: 'destructive',
+          });
+        }
       },
       onError: (error) => {
         console.error('WebSocket error:', error);
+        const classification = categorizeError(error as any);
+        setConnectionError(classification.message);
+        setConnectionState(prev => ({
+          ...prev,
+          error,
+          connecting: false
+        }));
         toast({
           title: 'Connection Error',
-          description: 'Failed to connect to agent service',
+          description: `${getUserMessage(classification)} ${getRecoverySuggestion(classification)}`,
           variant: 'destructive',
         });
       },
+      onReconnect: (attempt) => {
+        setConnectionState(prev => ({
+          ...prev,
+          connecting: true,
+          retryCount: attempt
+        }));
+      },
+      onStreamChunk: (chunk: StreamingMessagePayload) => {
+        // Filter streaming messages by session and agent to prevent cross-session leakage
+        if (chunk.sessionId !== session.id || chunk.agentId !== agent.id) {
+          console.debug('Ignoring stream chunk from different session/agent:', chunk.sessionId, chunk.agentId);
+          return;
+        }
+
+        // Handle streaming message chunks
+        handleStreamChunk(chunk);
+
+        // Show typing indicator while streaming
+        if (!chunk.isFinal) {
+          setAgentTyping(true);
+        } else {
+          setAgentTyping(false);
+        }
+      },
       onMessage: (wsMessage) => {
-        // Convert WSMessage to ChatMessage
-        const chatMessage: ChatMessage = {
-          id: wsMessage.id,
-          content: wsMessage.payload.content || '',
-          role: wsMessage.payload.metadata?.role || 'agent',
-          timestamp: wsMessage.timestamp,
-          agentId: wsMessage.payload.metadata?.agentId,
-          sessionId: wsMessage.payload.metadata?.sessionId,
-          trustLevel: wsMessage.payload.metadata?.trustLevel,
-          status: 'delivered'
-        };
-        
-        setMessages(prev => [...prev, chatMessage]);
+        // Filter messages by session to prevent cross-session leakage
+        if (wsMessage.payload.metadata?.sessionId && wsMessage.payload.metadata.sessionId !== session.id) {
+          console.debug('Ignoring message from different session:', wsMessage.payload.metadata.sessionId);
+          return;
+        }
+
+        // Handle non-streaming messages
+        if (!wsMessage.payload.delta) {
+          const chatMessage: ChatMessage = {
+            id: wsMessage.id,
+            content: wsMessage.payload.content || '',
+            role: wsMessage.payload.metadata?.role || 'agent',
+            timestamp: new Date(wsMessage.timestamp),
+            agentId: wsMessage.payload.metadata?.agentId,
+            sessionId: wsMessage.payload.metadata?.sessionId,
+            trustLevel: wsMessage.payload.metadata?.trustLevel,
+            status: 'delivered',
+            isStreaming: false
+          };
+
+          addMessage(chatMessage);
+        }
       },
       onTyping: (indicator) => {
-        if (indicator.sessionId === session.id) {
-          setIsTyping(indicator.isTyping);
+        // Filter typing indicators by session
+        if (indicator.sessionId === session.id && indicator.agentId === agent.id) {
+          setAgentTyping(indicator.isTyping);
         }
       }
     });
 
-    setIsConnecting(true);
+    wsClientRef.current = wsClient;
+    setConnectionState(prev => ({ ...prev, connecting: true }));
     wsClient.connect();
 
+    // Load initial messages
+    if (session.messages && session.messages.length > 0) {
+      session.messages.forEach(msg => addMessage(msg));
+    }
+
     return () => {
-      wsClient.disconnect();
+      wsClientRef.current = null;
+      disconnectWebSocket();
     };
-  }, [session.id, toast]);
+  }, [session.id, agent.id, toast, handleStreamChunk, addMessage]);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -91,39 +219,54 @@ export function ChatContainer({ agent, session, onSessionEnd }: ChatContainerPro
 
   // Handle sending messages
   const handleSendMessage = useCallback((content: string, attachments?: File[]) => {
-    const wsClient = getWebSocketClient();
-    
+    if (!wsClientRef.current || !connectionState.connected) {
+      toast({
+        title: 'Not Connected',
+        description: 'Please wait for connection to be established',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    const messageId = `${Date.now()}-${Math.random()}`;
     const newMessage: ChatMessage = {
-      id: `${Date.now()}-${Math.random()}`,
+      id: messageId,
       content,
       role: 'user',
       timestamp: new Date(),
       sessionId: session.id,
-      status: 'sending'
+      status: 'sending',
+      isStreaming: false
     };
-    
+
     // Optimistically add message to UI
-    setMessages(prev => [...prev, newMessage]);
-    
-    // Send through WebSocket
-    wsClient.sendChatMessage(content, {
+    addMessage(newMessage);
+
+    // Send through WebSocket with streaming support
+    const sentMessageId = wsClientRef.current.sendChatMessageWithStreaming(content, {
       agentId: agent.id,
       sessionId: session.id,
       userId: session.userId,
       role: 'user'
     });
-    
+
     // Update message status after a delay
     setTimeout(() => {
-      setMessages(prev => 
-        prev.map(msg => 
-          msg.id === newMessage.id 
-            ? { ...msg, status: 'sent' }
-            : msg
-        )
-      );
+      updateMessage(messageId, { status: 'sent' });
     }, 500);
-  }, [agent.id, session.id, session.userId]);
+
+    // Stop typing indicator when message is sent
+    handleTypingStop();
+  }, [
+    agent.id,
+    session.id,
+    session.userId,
+    connectionState.connected,
+    toast,
+    addMessage,
+    updateMessage,
+    handleTypingStop
+  ]);
 
   return (
     <Card className="flex flex-col h-full">
@@ -140,26 +283,45 @@ export function ChatContainer({ agent, session, onSessionEnd }: ChatContainerPro
         </div>
         <div className="flex items-center gap-2">
           <TrustIndicator trustLevel={session.trustLevel} />
-          <div className="flex items-center gap-1">
-            <span
-              className={`w-2 h-2 rounded-full ${
-                isConnected ? 'bg-green-500' : 'bg-gray-400'
-              }`}
-            />
-            <span className="text-xs text-muted-foreground">
-              {isConnected ? 'Connected' : isConnecting ? 'Connecting...' : 'Disconnected'}
-            </span>
-          </div>
+          <ConnectionStatusIndicator
+            connectionState={connectionState}
+            onRetry={() => {
+              setConnectionState((s) => ({ ...s, connecting: true }));
+              wsClientRef.current?.connect();
+              toast({
+                title: 'Reconnecting...',
+                description: 'Attempting to restore connection'
+              });
+            }}
+          />
         </div>
       </div>
+
+      {/* Connection Error Alert */}
+      {connectionError && (
+        <Alert variant="destructive" className="m-4 mb-0">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{connectionError}</AlertDescription>
+        </Alert>
+      )}
 
       {/* Messages */}
       <ScrollArea className="flex-1 p-4">
         <div className="space-y-4">
+          {messages.length === 0 && (
+            <div className="text-center text-muted-foreground py-8">
+              <p>Start a conversation with {agent.name}</p>
+              <p className="text-sm mt-2">Messages will be streamed in real-time</p>
+            </div>
+          )}
           {messages.map((message) => (
-            <Message key={message.id} message={message} />
+            <Message
+              key={message.id}
+              message={message}
+              showTrustIndicator={message.role === 'agent'}
+            />
           ))}
-          {isTyping && (
+          {(agentTyping || isStreaming) && (
             <TypingIndicator agentName={agent.name} />
           )}
           <div ref={messagesEndRef} />
@@ -170,11 +332,14 @@ export function ChatContainer({ agent, session, onSessionEnd }: ChatContainerPro
       <div className="border-t p-4">
         <ChatInput
           onSendMessage={handleSendMessage}
-          disabled={!isConnected}
+          onTyping={handleTypingStart}
+          disabled={!connectionState.connected}
           placeholder={
-            isConnected
+            connectionState.connected
               ? `Message ${agent.name}...`
-              : 'Waiting for connection...'
+              : connectionState.connecting
+              ? 'Connecting...'
+              : 'Connection lost. Reconnecting...'
           }
         />
       </div>

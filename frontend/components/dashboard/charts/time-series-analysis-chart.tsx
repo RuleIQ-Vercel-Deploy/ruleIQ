@@ -13,6 +13,7 @@ import {
 } from 'recharts';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { neuralPurple, silver, semantic, chartColors, neutral } from '@/lib/theme/neural-purple-colors';
 
 interface TimeSeriesAnalysisChartProps {
   data: Array<{
@@ -56,9 +57,9 @@ export function TimeSeriesAnalysisChart({
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-            <XAxis dataKey="date" tick={{ fontSize: 12 }} tickFormatter={formatDate} />
-            <YAxis tick={{ fontSize: 12 }} domain={[0, 100]} />
+            <CartesianGrid strokeDasharray="3 3" stroke={silver.light} />
+            <XAxis dataKey="date" tick={{ fontSize: 12, fill: neutral.gray[600] }} tickFormatter={formatDate} />
+            <YAxis tick={{ fontSize: 12, fill: neutral.gray[600] }} domain={[0, 100]} />
             <Tooltip
               labelFormatter={formatTooltipDate}
               formatter={(value: number, name: string) => [
@@ -78,7 +79,7 @@ export function TimeSeriesAnalysisChart({
             {data.some((item) => item.target) && (
               <ReferenceLine
                 y={data[0]?.target || 90}
-                stroke="#CB963E"
+                stroke={silver.primary}
                 strokeDasharray="5 5"
                 label={{ value: 'Target', position: 'top' }}
               />
@@ -88,10 +89,10 @@ export function TimeSeriesAnalysisChart({
             <Line
               type="monotone"
               dataKey="score"
-              stroke="#17255A"
+              stroke={neuralPurple.primary}
               strokeWidth={3}
-              dot={{ fill: '#17255A', strokeWidth: 2, r: 4 }}
-              activeDot={{ r: 6, stroke: '#17255A', strokeWidth: 2 }}
+              dot={{ fill: neuralPurple.primary, strokeWidth: 2, r: 4 }}
+              activeDot={{ r: 6, stroke: neuralPurple.primary, strokeWidth: 2 }}
               name="Compliance Score"
             />
 
@@ -100,9 +101,9 @@ export function TimeSeriesAnalysisChart({
               <Line
                 type="monotone"
                 dataKey="incidents"
-                stroke="#DC3545"
+                stroke={semantic.error}
                 strokeWidth={2}
-                dot={{ fill: '#DC3545', strokeWidth: 1, r: 3 }}
+                dot={{ fill: semantic.error, strokeWidth: 1, r: 3 }}
                 name="Incidents"
                 yAxisId="right"
               />
@@ -112,9 +113,9 @@ export function TimeSeriesAnalysisChart({
               <Line
                 type="monotone"
                 dataKey="tasks"
-                stroke="#28A745"
+                stroke={semantic.success}
                 strokeWidth={2}
-                dot={{ fill: '#28A745', strokeWidth: 1, r: 3 }}
+                dot={{ fill: semantic.success, strokeWidth: 1, r: 3 }}
                 name="Tasks Completed"
                 yAxisId="right"
               />

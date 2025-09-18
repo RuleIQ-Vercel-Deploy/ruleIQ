@@ -1,5 +1,5 @@
 
-Fapi.clients.base_api_client.BaseAPIClient.get_supported_evidence_typesF
+Bclients.base_api_client.BaseAPIClient.get_supported_evidence_typesF
 :/home/omar/Documents/ruleIQ/api/clients/base_api_client.py³ ³($"2*A
 2
 ´ ´(D
@@ -9,5 +9,5 @@ Fapi.clients.base_api_client.BaseAPIClient.get_supported_evidence_typesF
 
 µ µ(
 
-%1B-+
-)api.clients.base_api_client.BaseAPIClientH
+%1B)'
+%clients.base_api_client.BaseAPIClientH

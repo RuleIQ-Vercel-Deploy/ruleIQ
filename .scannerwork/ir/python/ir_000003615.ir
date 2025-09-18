@@ -1,0 +1,15 @@
+
+3*"Custom from_orm to handle field mapping."strcls] ](obj] ]("„#
+!
+_ _(!"#get-field# id:&
+$
+_) _(2"#get-field# email:+
+)
+_? `("#get-field# lead_score:,
+*
+`$ `(3"#get-field# lead_status:+
+)
+`@ `(N"#get-field# created_at:
+
+_ `(O	"cls:
+_ `(O	*3/home/omar/Documents/ruleIQ/api/routers/freemium.py

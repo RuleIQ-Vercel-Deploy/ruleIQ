@@ -1,16 +1,16 @@
 
 <authorization.AuthorizationService.check_endpoint_permissionJ
->/home/omar/Documents/ruleIQ/services/security/authorization.pyí í(!"2*,
+>/home/omar/Documents/ruleIQ/services/security/authorization.pyê ê(!"2*,
 2
-î î(8"
+ë ë(8"
 
-þ þ(
+û û(
 
 	decorator:#
 
-í( í(@
+ê( ê(@
 required_permission:
 
-íB í(c
+êB ê(c
 resource_typeB&$
 "authorization.AuthorizationServiceH

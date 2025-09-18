@@ -1,6 +1,7 @@
 
-Capi.middleware.api_versioning.APIVersioning.create_version_responseF
-</home/omar/Documents/ruleIQ/api/middleware/api_versioning.py5 5("2*
+4api_versioning.APIVersioning.create_version_responseF
+</home/omar/Documents/ruleIQ/api/middleware/api_versioning.py5 5("2*â
+
 26 6(7
 	7 7(™
 %5"dict
@@ -33,13 +34,13 @@ Capi.middleware.api_versioning.APIVersioning.create_version_responseF
 
 __unknown_file (
 	
-version}
-{
+versionn
+l
 7Y 7(p
-%9"__id*c
+%9"__id*T
 
-__unknown_file (G*E-
-+api.middleware.api_versioning.APIVersioning"
+__unknown_file (8*6
+api_versioning.APIVersioning"
 SUPPORTED_VERSIONSš
 —
 7C 7(p
@@ -54,14 +55,14 @@ Capi.middleware.api_versioning.APIVersioning.create_version_responseF
 
 __unknown_file (
 
-%9|
-z
+%9m
+k
 
 7„ 7(—
-%11"__id*_
+%11"__id*P
 
-__unknown_file (C*A-
-+api.middleware.api_versioning.APIVersioning"
+__unknown_file (4*2
+api_versioning.APIVersioning"
 LATEST_VERSION˜
 •
 	7r 7(—
@@ -98,13 +99,13 @@ A
 
 __unknown_file (
 
-%5z
-x
+%5k
+i
 8 8()
-%14"__id*_
+%14"__id*P
 
-__unknown_file (C*A-
-+api.middleware.api_versioning.APIVersioning"
+__unknown_file (4*2
+api_versioning.APIVersioning"
 LATEST_VERSION‘
 Ž
 8 8()
@@ -126,14 +127,14 @@ x
 : :(
 
 
-response*Ú
-59 9(ty
-w
+response*Ë
+59 9(tj
+h
 9V 9(i
-%1"__id*_
+%1"__id*P
 
-__unknown_file (C*A-
-+api.middleware.api_versioning.APIVersioning"
+__unknown_file (4*2
+api_versioning.APIVersioning"
 LATEST_VERSION©
 ¦
 9* 9(t
@@ -177,5 +178,5 @@ w
 5& 5(2	
 version:
 54 5(=
-dataB/-
-+api.middleware.api_versioning.APIVersioningH
+dataB 
+api_versioning.APIVersioningH

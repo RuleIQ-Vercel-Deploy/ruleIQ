@@ -1,0 +1,419 @@
+/**
+ * Neural Purple Theme CSS
+ * Unified theme system replacing design-system.css
+ * Based on DESIGN_SYSTEM.md and FONT_SYSTEM.md specifications
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&display=swap');
+
+/* ==========================================================================
+   CSS Custom Properties - Neural Purple Theme
+   ========================================================================== */
+
+:root {
+  /* Neural Purple Primary Colors */
+  --color-purple-primary: #8B5CF6;
+  --color-purple-dark: #7C3AED;
+  --color-purple-light: #A78BFA;
+  --color-purple-subtle: #EDE9FE;
+  --color-purple-ultra-light: #FAF5FF;
+  --color-purple-intense: #6D28D9;
+
+  /* Purple Scale */
+  --color-purple-50: #FAF5FF;
+  --color-purple-100: #F3E8FF;
+  --color-purple-200: #E9D5FF;
+  --color-purple-300: #D8B4FE;
+  --color-purple-400: #C084FC;
+  --color-purple-500: #A855F7;
+  --color-purple-600: #8B5CF6;
+  --color-purple-700: #7C3AED;
+  --color-purple-800: #6B21A8;
+  --color-purple-900: #581C87;
+  --color-purple-950: #3B0764;
+
+  /* Silver Accent Colors */
+  --color-silver-primary: #C0C0C0;
+  --color-silver-light: #E5E5E5;
+  --color-silver-dark: #9CA3AF;
+  --color-silver-subtle: #F3F4F6;
+  --color-silver-metallic: #B8B8B8;
+
+  /* Semantic Colors */
+  --color-success: #10B981;
+  --color-success-light: #D1FAE5;
+  --color-success-dark: #047857;
+  --color-error: #EF4444;
+  --color-error-light: #FEE2E2;
+  --color-error-dark: #B91C1C;
+  --color-warning: #F59E0B;
+  --color-warning-light: #FED7AA;
+  --color-warning-dark: #D97706;
+  --color-info: #3B82F6;
+  --color-info-light: #DBEAFE;
+  --color-info-dark: #1E40AF;
+
+  /* Neutral Colors */
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+  --color-gray-950: #030712;
+
+  /* Typography - Inter Font System */
+  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, 'Cascadia Code', monospace;
+
+  /* Font Weights (Inter optimized range) */
+  --font-weight-extra-light: 200;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 450;
+  --font-weight-semibold: 500;
+
+  /* Font Sizes */
+  --font-size-xs: 0.75rem;     /* 12px */
+  --font-size-sm: 0.875rem;    /* 14px */
+  --font-size-base: 1rem;      /* 16px */
+  --font-size-lg: 1.125rem;    /* 18px */
+  --font-size-xl: 1.25rem;     /* 20px */
+  --font-size-2xl: 1.5rem;     /* 24px */
+  --font-size-3xl: 1.875rem;   /* 30px */
+  --font-size-4xl: 2.25rem;    /* 36px */
+  --font-size-5xl: 3rem;       /* 48px */
+  --font-size-6xl: 3.75rem;    /* 60px */
+
+  /* Line Heights */
+  --line-height-none: 1;
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+
+  /* Letter Spacing */
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  --letter-spacing-widest: 0.1em;
+
+  /* Spacing System (4px grid) */
+  --spacing-0: 0;
+  --spacing-px: 1px;
+  --spacing-0-5: 0.125rem;  /* 2px */
+  --spacing-1: 0.25rem;     /* 4px */
+  --spacing-2: 0.5rem;      /* 8px */
+  --spacing-3: 0.75rem;     /* 12px */
+  --spacing-4: 1rem;        /* 16px */
+  --spacing-5: 1.25rem;     /* 20px */
+  --spacing-6: 1.5rem;      /* 24px */
+  --spacing-8: 2rem;        /* 32px */
+  --spacing-10: 2.5rem;     /* 40px */
+  --spacing-12: 3rem;       /* 48px */
+  --spacing-16: 4rem;       /* 64px */
+  --spacing-20: 5rem;       /* 80px */
+  --spacing-24: 6rem;       /* 96px */
+  --spacing-32: 8rem;       /* 128px */
+
+  /* Border Radius */
+  --radius-none: 0;
+  --radius-sm: 0.125rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+  --shadow-none: 0 0 #0000;
+
+  /* Neural Purple Shadows */
+  --shadow-purple-sm: 0 1px 3px 0 rgb(139 92 246 / 0.1), 0 1px 2px -1px rgb(139 92 246 / 0.1);
+  --shadow-purple-md: 0 4px 6px -1px rgb(139 92 246 / 0.15), 0 2px 4px -2px rgb(139 92 246 / 0.15);
+  --shadow-purple-lg: 0 10px 15px -3px rgb(139 92 246 / 0.2), 0 4px 6px -4px rgb(139 92 246 / 0.2);
+
+  /* Animation Durations */
+  --duration-75: 75ms;
+  --duration-100: 100ms;
+  --duration-150: 150ms;
+  --duration-200: 200ms;
+  --duration-300: 300ms;
+  --duration-500: 500ms;
+  --duration-700: 700ms;
+  --duration-1000: 1000ms;
+
+  /* Animation Timing Functions */
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Z-Index Scale */
+  --z-0: 0;
+  --z-10: 10;
+  --z-20: 20;
+  --z-30: 30;
+  --z-40: 40;
+  --z-50: 50;
+  --z-60: 60;
+  --z-70: 70;
+  --z-80: 80;
+  --z-90: 90;
+  --z-100: 100;
+}
+
+/* ==========================================================================
+   Dark Mode Support
+   ========================================================================== */
+
+[data-theme="dark"], .dark {
+  /* Adjusted Neural Purple for dark mode */
+  --color-purple-primary: #A78BFA;
+  --color-purple-dark: #8B5CF6;
+  --color-purple-light: #C4B5FD;
+  --color-purple-subtle: #312E81;
+  --color-purple-ultra-light: #1E1B4B;
+
+  /* Inverted neutrals for dark mode */
+  --color-gray-50: #030712;
+  --color-gray-100: #111827;
+  --color-gray-200: #1F2937;
+  --color-gray-300: #374151;
+  --color-gray-400: #4B5563;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #9CA3AF;
+  --color-gray-700: #D1D5DB;
+  --color-gray-800: #E5E7EB;
+  --color-gray-900: #F3F4F6;
+  --color-gray-950: #F9FAFB;
+
+  /* Background adjustments */
+  --color-white: #0F0F0F;
+  --color-black: #FFFFFF;
+
+  /* Shadow adjustments for dark mode */
+  --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+}
+
+/* ==========================================================================
+   Utility Classes
+   ========================================================================== */
+
+/* Gradient Text Effect */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-purple-primary) 0%, var(--color-purple-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glass Morphism Effect */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Neural Network Animation */
+@keyframes neural-pulse {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+.neural-pulse {
+  animation: neural-pulse 2s ease-in-out infinite;
+}
+
+/* Purple Shimmer Effect */
+@keyframes purple-shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.purple-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--color-purple-subtle),
+    transparent
+  );
+  background-size: 1000px 100%;
+  animation: purple-shimmer 2s infinite;
+}
+
+/* Focus Styles */
+.focus-purple:focus-visible {
+  outline: 2px solid var(--color-purple-primary);
+  outline-offset: 2px;
+}
+
+.focus-ring-purple:focus-visible {
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+}
+
+/* ==========================================================================
+   Component-Specific Variables
+   ========================================================================== */
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--color-purple-primary);
+  color: var(--color-white);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-purple-dark);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-purple-primary);
+  border: 1px solid var(--color-silver-primary);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-purple-subtle);
+}
+
+/* Cards */
+.card-neural {
+  background: var(--color-white);
+  border: 1px solid var(--color-silver-light);
+  box-shadow: var(--shadow-purple-sm);
+  transition: all var(--duration-300) var(--ease-out);
+}
+
+.card-neural:hover {
+  box-shadow: var(--shadow-purple-md);
+  border-color: var(--color-purple-light);
+}
+
+/* Inputs */
+.input-neural {
+  background: var(--color-white);
+  border: 1px solid var(--color-silver-light);
+  transition: all var(--duration-200) var(--ease-out);
+}
+
+.input-neural:focus {
+  border-color: var(--color-purple-primary);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+/* Navigation */
+.nav-item-neural {
+  color: var(--color-gray-700);
+  transition: all var(--duration-200) var(--ease-out);
+}
+
+.nav-item-neural:hover {
+  background-color: var(--color-purple-subtle);
+  color: var(--color-purple-primary);
+}
+
+.nav-item-neural.active {
+  background-color: var(--color-purple-subtle);
+  color: var(--color-purple-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* ==========================================================================
+   Accessibility Utilities
+   ========================================================================== */
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+  :root {
+    --color-purple-primary: #7C3AED;
+    --color-purple-dark: #6D28D9;
+    --color-purple-light: #A78BFA;
+  }
+
+  .focus-purple:focus-visible {
+    outline-width: 3px;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Screen Reader Only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus Visible Polyfill */
+.focus-visible:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ==========================================================================
+   Print Styles
+   ========================================================================== */
+
+@media print {
+  :root {
+    --color-purple-primary: #000000;
+    --color-purple-dark: #333333;
+    --color-purple-light: #666666;
+    --color-purple-subtle: #F0F0F0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .glass-effect {
+    background: var(--color-white);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}

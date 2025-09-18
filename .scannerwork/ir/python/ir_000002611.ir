@@ -1,24 +1,106 @@
 
-:1"Prepare data for citation exactness evaluation."str
-"responses"str
-
-"extracted_citations"str
-"expected_citations"str	responses
-ú ú("expected_citations
-û û('#extracted_citations
-ü ü(("¦&
+0'"Build prompt for workflow generation."str
+"user"str
+òè"
+        Generate a {workflow_type} evidence collection workflow for {framework}{control_context}.
+
+        Organization Context:
+        - Company: {business_context.get('company_name', 'Unknown')}
+        - Industry: {business_context.get('industry', 'Unknown')}
+        - Size: {business_context.get('employee_count', 0)} employees
+        - Maturity Level: {maturity_analysis.get('maturity_level', 'Basic')}
+        - Organization Category: {maturity_analysis.get('size_category', 'small')}
+
+        Requirements:
+        - Tailor the workflow to the organization's maturity level
+        - Consider industry-specific requirements
+        - Include both manual and automated approaches where applicable
+        - Provide realistic time estimates
+        - Include quality assurance checkpoints
+        - Consider resource constraints for {maturity_analysis.get('size_category', 'small')} organizations
+
+        Generate a comprehensive workflow with 3-5 phases and 2-4 steps per phase.
+        "str
+­£"You are an expert compliance consultant specializing in {framework}.
+        Generate a detailed, step-by-step evidence collection workflow that is practical and
+        tailored to the organization's specific context and maturity level.
+
+        The workflow should include:
+        1. Clear, actionable steps in logical sequence
+        2. Specific deliverables and artifacts for each step
+        3. Role assignments and responsibilities
+        4. Time estimates and dependencies
+        5. Quality checkpoints and validation criteria
+        6. Tools and resources needed
+        7. Common pitfalls and how to avoid them
+
+        Return the workflow as JSON with this structure:
+        {{
+            "workflow_id": "unique_id",
+            "title": "Workflow Title",
+            "description": "Brief description",
+            "framework": "{framework}",
+            "control_id": "{control_id or 'general'}",
+            "phases": [
+                {{
+                    "phase_id": "phase_1",
+                    "title": "Phase Title",
+                    "description": "Phase description",
+                    "estimated_hours": 4,
+                    "steps": [
+                        {{
+                            "step_id": "step_1",
+                            "title": "Step Title",
+                            "description": "Detailed step description",
+                            "deliverables": ["Deliverable 1", "Deliverable 2"],
+                            "responsible_role": "Role",
+                            "estimated_hours": 2,
+                            "dependencies": [],
+                            "tools_needed": ["Tool 1"],
+                            "validation_criteria": ["Criteria 1"]
+                        }},
+                    ]
+                }},
+            ]
+        }}"str
+$" for control {control_id}"str
+""str
+"system"strself
+÷* ÷(.	framework
+÷0 ÷(>
+control_id
+÷@ ø( business_context
+ø ø(-!maturity_analysis
+ø/ ù(workflow_type
+ù ù( "Œ/
+-
+
+û ¤(	system_prompt"#id#:Bstr+
+)
+
+¥: ¥(D
+"
+__bool__*:BboolH,"*
+
+¥: ¥(D
+ *
+¥7 ¥(92
+¥E ¥(I"
+
+¥ ¥(L"
+
+¥ ¥(L"Ö!*control_context-
++
+
+¦ ¹(user_prompt"#id#:Bstr&
 $
 
-ÿ ƒ("#new-object#Bdict"
+º º(="#new-object#Bdict"
  
 
-€ €("	#map-set#:"
+º º('"	#map-set#:	"
  
 
- (0	"	#map-set#:"
- 
+º) º(<"	#map-set#:
 
-‚ ‚(2"	#map-set#:
-
-
-ÿ ƒ(*</home/omar/Documents/ruleIQ/langgraph_agent/evals/metrics.py
+º º(=*4/home/omar/Documents/ruleIQ/services/ai/assistant.py

@@ -39,3 +39,15 @@ next-env.d.ts
 # storybook
 /storybook-static
 /build-storybook.log
+
+# development artifacts (added explicitly for clarity)
+debug-trace.html
+manual-auth-test-script.js
+validate-auth-flow.py
+screenshot-pages.js
+fix-eslint-comprehensive.js
+verify-visual-refresh.sh
+/public/debug-trace.html
+/logs/
+/NEEDS SORTING coverage/
+/.serena/

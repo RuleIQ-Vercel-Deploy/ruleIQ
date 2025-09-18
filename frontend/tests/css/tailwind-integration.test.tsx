@@ -11,8 +11,8 @@ const fullConfig = resolveConfig(tailwindConfig as any);
 const CustomClassesComponent = () => (
   <div>
     <button className="hover:bg-primary-dark bg-primary text-white">Primary Button</button>
-    <div className="bg-gold text-primary hover:bg-gold-dark">Gold Accent</div>
-    <div className="text-primary-dark bg-teal-500">Teal Accent</div>
+    <div className="bg-silver text-primary hover:bg-silver-dark">Silver Accent</div>
+    <div className="text-primary-dark bg-purple-500">Purple Accent</div>
     <div className="bg-neutral-light border-neutral-medium">Neutral Colors</div>
   </div>
 );
@@ -20,8 +20,8 @@ const CustomClassesComponent = () => (
 const RingColorComponent = () => (
   <div>
     <button className="focus:ring-2 focus:ring-primary focus:ring-offset-2">Primary Ring</button>
-    <button className="focus:ring-2 focus:ring-gold focus:ring-offset-2">Gold Ring</button>
-    <button className="focus:ring-2 focus:ring-teal-500 focus:ring-opacity-50">Teal Ring</button>
+    <button className="focus:ring-2 focus:ring-silver focus:ring-offset-2">Silver Ring</button>
+    <button className="focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50">Purple Ring</button>
     <input className="focus:ring-2 focus:ring-primary/20" placeholder="Input with ring" />
   </div>
 );
@@ -44,7 +44,7 @@ const ComplexUtilityComponent = () => (
     <div className="rounded-lg bg-white/80 p-4 shadow-xl backdrop-blur-sm">
       Backdrop Blur Effect
     </div>
-    <div className="bg-gold/20 mix-blend-multiply">Blend Mode</div>
+    <div className="bg-silver/20 mix-blend-multiply">Blend Mode</div>
     <div className="grayscale filter transition-all hover:grayscale-0">Filter Effects</div>
   </div>
 );
@@ -63,14 +63,14 @@ const CustomConfigComponent = () => (
 const ExtendedColorComponent = () => (
   <div>
     <div className="hover:text-primary-dark text-primary">Primary Text</div>
-    <div className="border-2 border-gold hover:border-gold-dark">Gold Border</div>
+    <div className="border-2 border-silver hover:border-silver-dark">Silver Border</div>
     <div className="divide-neutral-light divide-y">
       <div className="py-2">Item 1</div>
       <div className="py-2">Item 2</div>
       <div className="py-2">Item 3</div>
     </div>
-    <div className="bg-gradient-to-br from-teal-500/20 to-teal-500/5">
-      Teal Gradient with Opacity
+    <div className="bg-gradient-to-br from-purple-500/20 to-purple-500/5">
+      Purple Gradient with Opacity
     </div>
   </div>
 );
@@ -86,16 +86,16 @@ describe('Tailwind CSS Integration Tests', () => {
       expect(primaryButton).toHaveClass('hover:bg-primary-dark');
       expect(primaryButton).toHaveClass('text-white');
 
-      // Test gold colors
-      const goldDiv = container.querySelector('.bg-gold');
-      expect(goldDiv).toBeInTheDocument();
-      expect(goldDiv).toHaveClass('hover:bg-gold-dark');
-      expect(goldDiv).toHaveClass('text-primary');
+      // Test silver colors
+      const silverDiv = container.querySelector('.bg-silver');
+      expect(silverDiv).toBeInTheDocument();
+      expect(silverDiv).toHaveClass('hover:bg-silver-dark');
+      expect(silverDiv).toHaveClass('text-primary');
 
-      // Test teal color
-      const tealDiv = container.querySelector('.bg-teal-500');
-      expect(tealDiv).toBeInTheDocument();
-      expect(tealDiv).toHaveClass('text-primary-dark');
+      // Test purple color
+      const purpleDiv = container.querySelector('.bg-purple-500');
+      expect(purpleDiv).toBeInTheDocument();
+      expect(purpleDiv).toHaveClass('text-primary-dark');
 
       // Test neutral colors
       const neutralDiv = container.querySelector('.bg-neutral-light');
@@ -164,16 +164,16 @@ describe('Tailwind CSS Integration Tests', () => {
       expect(primaryRing).toHaveClass('focus:ring-2');
       expect(primaryRing).toHaveClass('focus:ring-offset-2');
 
-      // Test gold ring
-      const goldRing = container.querySelector('.focus\\:ring-gold');
-      expect(goldRing).toBeInTheDocument();
-      expect(goldRing).toHaveClass('focus:ring-2');
-      expect(goldRing).toHaveClass('focus:ring-offset-2');
+      // Test silver ring
+      const silverRing = container.querySelector('.focus\\:ring-silver');
+      expect(silverRing).toBeInTheDocument();
+      expect(silverRing).toHaveClass('focus:ring-2');
+      expect(silverRing).toHaveClass('focus:ring-offset-2');
 
-      // Test teal ring with opacity
-      const tealRing = container.querySelector('.focus\\:ring-teal-500');
-      expect(tealRing).toBeInTheDocument();
-      expect(tealRing).toHaveClass('focus:ring-opacity-50');
+      // Test purple ring with opacity
+      const purpleRing = container.querySelector('.focus\\:ring-purple-500');
+      expect(purpleRing).toBeInTheDocument();
+      expect(purpleRing).toHaveClass('focus:ring-opacity-50');
 
       // Test ring with opacity modifier
       const inputRing = container.querySelector('.focus\\:ring-primary\\/20');
@@ -186,7 +186,7 @@ describe('Tailwind CSS Integration Tests', () => {
           <button className="focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-gray-100">
             Ring with Offset Color
           </button>
-          <button className="focus:ring-4 focus:ring-gold focus:ring-offset-4 focus:ring-offset-white">
+          <button className="focus:ring-4 focus:ring-silver focus:ring-offset-4 focus:ring-offset-white">
             Thick Ring with White Offset
           </button>
         </div>,
@@ -258,7 +258,7 @@ describe('Tailwind CSS Integration Tests', () => {
       // Blend mode utilities
       const blendDiv = container.querySelector('.mix-blend-multiply');
       expect(blendDiv).toBeInTheDocument();
-      expect(blendDiv).toHaveClass('bg-gold/20');
+      expect(blendDiv).toHaveClass('bg-silver/20');
 
       // Filter utilities
       const filterDiv = container.querySelector('.filter');
@@ -298,7 +298,7 @@ describe('Tailwind CSS Integration Tests', () => {
   describe('Utility Class Combinations', () => {
     it('should handle complex state combinations', () => {
       const { container } = render(
-        <button className="hover:bg-primary-dark active:bg-primary-light transform bg-primary text-white transition-all duration-200 ease-in-out hover:scale-105 hover:text-gold focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-95 active:text-teal-500 disabled:cursor-not-allowed disabled:opacity-50">
+        <button className="hover:bg-primary-dark active:bg-primary-light transform bg-primary text-white transition-all duration-200 ease-in-out hover:scale-105 hover:text-silver focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 active:scale-95 active:text-purple-500 disabled:cursor-not-allowed disabled:opacity-50">
           Complex Button
         </button>,
       );
@@ -312,8 +312,8 @@ describe('Tailwind CSS Integration Tests', () => {
 
       // Text states
       expect(button).toHaveClass('text-white');
-      expect(button).toHaveClass('hover:text-gold');
-      expect(button).toHaveClass('active:text-teal-500');
+      expect(button).toHaveClass('hover:text-silver');
+      expect(button).toHaveClass('active:text-purple-500');
 
       // Transform states
       expect(button).toHaveClass('transform');
@@ -342,7 +342,7 @@ describe('Tailwind CSS Integration Tests', () => {
           <div className="before:absolute before:inset-0 before:bg-primary/10 before:content-['']">
             Before Pseudo Element
           </div>
-          <div className="after:ml-2 after:text-gold after:content-['→']">After Pseudo Element</div>
+          <div className="after:ml-2 after:text-silver after:content-['→']">After Pseudo Element</div>
           <input
             className="placeholder:italic placeholder:text-gray-400"
             placeholder="Enter text..."
@@ -372,7 +372,7 @@ describe('Tailwind CSS Integration Tests', () => {
         <div>
           <div className="group hover:bg-gray-100">
             <h3 className="group-hover:text-primary">Group Hover Title</h3>
-            <p className="group-hover:text-gold">Group Hover Description</p>
+            <p className="group-hover:text-silver">Group Hover Description</p>
           </div>
 
           <div>
@@ -386,7 +386,7 @@ describe('Tailwind CSS Integration Tests', () => {
 
       expect(container.querySelector('.group')).toBeInTheDocument();
       expect(container.querySelector('.group-hover\\:text-primary')).toBeInTheDocument();
-      expect(container.querySelector('.group-hover\\:text-gold')).toBeInTheDocument();
+      expect(container.querySelector('.group-hover\\:text-silver')).toBeInTheDocument();
       expect(container.querySelector('.peer')).toBeInTheDocument();
       expect(container.querySelector('.peer-checked\\:text-primary')).toBeInTheDocument();
       expect(container.querySelector('.peer-checked\\:font-bold')).toBeInTheDocument();
@@ -431,15 +431,15 @@ describe('Tailwind CSS Integration Tests', () => {
       expect(container.querySelector('.hover\\:text-primary-dark')).toBeInTheDocument();
 
       // Border colors
-      expect(container.querySelector('.border-gold')).toBeInTheDocument();
-      expect(container.querySelector('.hover\\:border-gold-dark')).toBeInTheDocument();
+      expect(container.querySelector('.border-silver')).toBeInTheDocument();
+      expect(container.querySelector('.hover\\:border-silver-dark')).toBeInTheDocument();
 
       // Divide colors
       expect(container.querySelector('.divide-neutral-light')).toBeInTheDocument();
 
       // Gradient with opacity
-      expect(container.querySelector('.from-teal-500\\/20')).toBeInTheDocument();
-      expect(container.querySelector('.to-teal-500\\/5')).toBeInTheDocument();
+      expect(container.querySelector('.from-purple-500\\/20')).toBeInTheDocument();
+      expect(container.querySelector('.to-purple-500\\/5')).toBeInTheDocument();
     });
   });
 });

@@ -1,9 +1,204 @@
 
-D;"Check if a token is blacklisted using enhanced blacklist."strtokenH H()"ê8
-6
-J J(Pis_token_blacklisted"?python-unknown?!
-
-K K(/"#unknown-value#!
-
-K K(/"#unknown-value#
-K K(/*4/home/omar/Documents/ruleIQ/api/dependencies/auth.py
+1L("Complete DPIA for high-risk processing"str
+%
+"complete"str
+6"assessment_report"str
++25int
+K"recommendations"str
+:"required_by"str
+"2024-01-15"str
+!"training_record"str
+B
+"priority"str
+	"UK_GDPR"str
+("2024-02-01"str
+,8#"Data Protection Impact Assessment"str
+"collected"str
+"type"str
+"title"str
+'"completion_date"str
+##"Data Protection Training"str
+C"high"str
+EM<"Update privacy policy to include new processing activities"str
+;"GDPR Article 35"str
+	"policy_document"str
+"GDPR"str
+
+0int
+-N$"Document data retention procedures"str
+*"attendees"str
+"status"str
+4	"missing"str
+"frameworks"str
+	"current"str
+"last_updated"str
+"Privacy Policy"str
+6-"Collect evidence for compliance frameworks."strself
+≥ ≥(
+company_id
+≥ ≥(,
+frameworks
+≥. ≥(Clist"î0
+.
+
+µ ”(	evidence"#new-object#Bdict&
+$
+
+∑ Ω("#new-object#Bdict"
+ 
+
+∏ ∏(-
+"	#map-set#:	"
+ 
+
+π π(-"	#map-set#:"
+ 
+
+∫ ∫('"	#map-set#:"
+ 
+
+ª ª(0"	#map-set#:)
+'
+
+º" º(5"#unknown-value#Blist(
+&
+
+º" º(5"
+#is-exact#:Bbool
+
+
+º" º(5"
+#assume#::
+8
+
+º" º(5"#set-field# __collection_size:Bint(
+&
+
+º" º(5"#array-add-last#:(
+&
+
+º" º(5"#array-add-last#:"
+ 
+
+º º(5"	#map-set#:&
+$
+
+æ ƒ( "#new-object#Bdict"
+ 
+
+ø ø(-""	#map-set#: !"
+ 
+
+¿ ¿(7$"	#map-set#: #"
+ 
+
+¡ ¡((&"	#map-set#: %"
+ 
+
+¬ ¬(3)"	#map-set#: '("
+ 
+
+√ √(#,"	#map-set#: *+)
+'
+
+∂ ≈(-"#unknown-value#Blist(
+&
+
+∂ ≈(."
+#is-exact#:-Bbool
+
+
+∂ ≈(/"
+#assume#:.:
+8
+
+∂ ≈(0"#set-field# __collection_size:-Bint(
+&
+
+∂ ≈(1"#array-add-last#:-(
+&
+
+∂ ≈(2"#array-add-last#:- "
+ 
+
+∂ ≈(3"	#map-set#:-&
+$
+
+« Ã(5"#new-object#Bdict"
+ 
+
+» »(/7"	#map-set#:56"
+ 
+
+… …(@9"	#map-set#:58)
+'
+
+ #  (6<"#unknown-value#Blist(
+&
+
+ #  (6="
+#is-exact#:<Bbool
+
+
+ #  (6>"
+#assume#:=:
+8
+
+ #  (6?"#set-field# __collection_size:<Bint(
+&
+
+ #  (6@"#array-add-last#:<;"
+ 
+
+   (6A"	#map-set#:5:<"
+ 
+
+À À(&D"	#map-set#:5BC)
+'
+
+∆ Õ(E"#unknown-value#Blist(
+&
+
+∆ Õ(F"
+#is-exact#:EBbool
+
+
+∆ Õ(G"
+#assume#:F:
+8
+
+∆ Õ(H"#set-field# __collection_size:EBint(
+&
+
+∆ Õ(I"#array-add-last#:E5"
+ 
+
+∆ Õ(J"	#map-set#:4E)
+'
+
+Œ “(O"#unknown-value#Blist(
+&
+
+Œ “(P"
+#is-exact#:OBbool
+
+
+Œ “(Q"
+#assume#:P:
+8
+
+Œ “(R"#set-field# __collection_size:OBint(
+&
+
+Œ “(S"#array-add-last#:OL(
+&
+
+Œ “(T"#array-add-last#:OM(
+&
+
+Œ “(U"#array-add-last#:ON"
+ 
+
+Œ “(V"	#map-set#:KO
+
+’ ’(*B/home/omar/Documents/ruleIQ/langgraph_agent/agents/tool_manager.py

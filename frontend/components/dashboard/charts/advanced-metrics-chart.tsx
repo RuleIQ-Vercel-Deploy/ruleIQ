@@ -12,6 +12,7 @@ import {
 } from 'recharts';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { neuralPurple, silver, semantic, chartColors } from '@/lib/theme/neural-purple-colors';
 
 interface AdvancedMetricsChartProps {
   data: Array<{
@@ -68,9 +69,9 @@ export function AdvancedMetricsChart({
               }}
             />
             <Legend />
-            <Bar dataKey="value" fill="#CB963E" name="Current Value" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="value" fill={neuralPurple.primary} name="Current Value" radius={[4, 4, 0, 0]} />
             {data.some((item) => item.target) && (
-              <Bar dataKey="target" fill="#17255A" name="Target" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="target" fill={silver.primary} name="Target" radius={[4, 4, 0, 0]} />
             )}
           </BarChart>
         </ResponsiveContainer>

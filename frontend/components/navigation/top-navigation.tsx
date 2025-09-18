@@ -85,8 +85,8 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
           <div className="flex min-w-fit items-center space-x-2">
             <Link href="/" className="flex items-center space-x-1">
               <div className="flex items-center space-x-1">
-                <span className="text-xl font-bold text-neutral-700">rule</span>
-                <span className="text-xl font-bold text-teal-600">IQ</span>
+                <span className="text-xl font-extralight text-neutral-700">rule</span>
+                <span className="text-xl font-extralight text-purple-600">IQ</span>
               </div>
             </Link>
           </div>
@@ -98,7 +98,7 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
               <Input
                 type="search"
                 placeholder="Search compliance data, policies, reports..."
-                className="w-full border-neutral-200 bg-neutral-50 py-2 pl-10 pr-4 text-sm text-neutral-700 placeholder:text-neutral-500 focus-visible:ring-1 focus-visible:ring-teal-600 focus-visible:ring-offset-0"
+                className="w-full border-neutral-200 bg-neutral-50 py-2 pl-10 pr-4 text-sm text-neutral-700 placeholder:text-neutral-500 focus-visible:ring-1 focus-visible:ring-purple-600 focus-visible:ring-offset-0"
                 value={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
               />
@@ -106,8 +106,8 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
           </div>
 
           {/* Countdown Clock */}
-          <div className="hidden items-center space-x-2 rounded-lg bg-teal-50 px-3 py-1 lg:flex">
-            <Clock className="h-4 w-4 text-teal-600" />
+          <div className="hidden items-center space-x-2 rounded-lg bg-purple-50 px-3 py-1 lg:flex">
+            <Clock className="h-4 w-4 text-purple-600" />
             <div className="flex items-center space-x-1 font-mono text-sm text-neutral-700">
               <span className="text-xs text-neutral-500">Next Audit:</span>
               <span className="font-semibold">{formatTime(timeUntilAudit.days)}d</span>
@@ -124,8 +124,8 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
           <div className="flex items-center space-x-1 lg:hidden">
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="flex items-center space-x-1 rounded-lg bg-teal-50 px-2 py-1 font-mono text-xs text-neutral-700">
-                  <Clock className="h-3 w-3 text-teal-600" />
+                <div className="flex items-center space-x-1 rounded-lg bg-purple-50 px-2 py-1 font-mono text-xs text-neutral-700">
+                  <Clock className="h-3 w-3 text-purple-600" />
                   <span>
                     {timeUntilAudit.days}d {formatTime(timeUntilAudit.hours)}h
                   </span>
@@ -149,7 +149,7 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
                   <Switch
                     checked={isDarkMode}
                     onCheckedChange={handleThemeToggle}
-                    className="data-[state=checked]:bg-teal-600 data-[state=unchecked]:bg-neutral-300"
+                    className="data-[state=checked]:bg-purple-600 data-[state=unchecked]:bg-neutral-300"
                   />
                   <Moon className="h-4 w-4 text-neutral-500" />
                 </div>
@@ -232,7 +232,7 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
                   </div>
                   <div className="rounded-sm p-3 hover:bg-neutral-50">
                     <div className="flex items-start space-x-3">
-                      <Bell className="mt-0.5 h-4 w-4 text-teal-600" />
+                      <Bell className="mt-0.5 h-4 w-4 text-purple-600" />
                       <div className="flex-1 space-y-1">
                         <div className="text-sm font-medium text-neutral-900">
                           Monthly Report Generated
@@ -246,7 +246,7 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
                   </div>
                   <div className="rounded-sm p-3 hover:bg-neutral-50">
                     <div className="flex items-start space-x-3">
-                      <Bell className="mt-0.5 h-4 w-4 text-teal-600" />
+                      <Bell className="mt-0.5 h-4 w-4 text-purple-600" />
                       <div className="flex-1 space-y-1">
                         <div className="text-sm font-medium text-neutral-900">
                           Team Member Added
@@ -264,7 +264,7 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
               <div className="p-2">
                 <Button
                   variant="ghost"
-                  className="w-full text-sm text-teal-600 hover:bg-teal-50 hover:text-teal-700"
+                  className="w-full text-sm text-purple-600 hover:bg-purple-50 hover:text-purple-700"
                 >
                   View All Alerts
                 </Button>
@@ -277,9 +277,9 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="relative h-8 w-8 rounded-full bg-teal-50 hover:bg-teal-100"
+                className="relative h-8 w-8 rounded-full bg-purple-50 hover:bg-purple-100"
               >
-                <User className="h-4 w-4 text-teal-600" />
+                <User className="h-4 w-4 text-purple-600" />
                 <span className="sr-only">Open user menu</span>
               </Button>
             </DropdownMenuTrigger>
@@ -291,8 +291,8 @@ export function TopNavigation({ isDarkMode = false, onThemeToggle }: TopNavigati
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-2">
                   <div className="flex items-center space-x-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal-100">
-                      <User className="h-5 w-5 text-teal-600" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-100">
+                      <User className="h-5 w-5 text-purple-600" />
                     </div>
                     <div className="flex flex-col">
                       <p className="text-sm font-medium leading-none text-neutral-900">John Doe</p>

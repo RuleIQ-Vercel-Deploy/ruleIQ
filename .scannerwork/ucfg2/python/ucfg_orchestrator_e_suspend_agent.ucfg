@@ -1,0 +1,175 @@
+
+5agents.orchestrator.OrchestratorService.suspend_agentE
+;/home/omar/Documents/ruleIQ/services/agents/orchestrator.pyb b("13*
+13e e(.v
+t
+e e(.
+%17"__id*[
+
+__unknown_file (?*=)
+'agents.orchestrator.OrchestratorService"
+agent_registrypn
+e e(.
+%18*#
+
+__unknown_file (
+
+%17*(
+
+__unknown_file (
+
+
+agent_id2__contains__*
+7
+12*$
+7t t("
+t t(	
+
+False*³
+8n n( i
+g
+n n(
+%5"__id*O
+
+__unknown_file (3*1)
+'agents.orchestrator.OrchestratorService"
+db><
+n n( 
+%6*"
+
+__unknown_file (
+
+%52commitu
+s
+o o('
+%7"__id*[
+
+__unknown_file (?*=)
+'agents.orchestrator.OrchestratorService"
+agent_registry…
+‚
+q q(C
+%8"__concat* 
+q q(.
+Suspended agent *
+q/ q(7
+
+
+agent_id*
+q8 q(:
+: *
+q; q(A
+
+
+reasondb
+q q(D
+%9*&
+
+__unknown_file (
+
+
+logger*"
+
+__unknown_file (
+
+%82info"
+r r(
+
+True*‚
+10k k(3P
+N
+k k('
+%11"__id*5
+
+__unknown_file (*
+	
+session"
+
+agent_id’
+
+k k(3
+%12"	__compare*"
+
+__unknown_file (
+==*#
+
+__unknown_file (
+
+%11*(
+
+__unknown_file (
+
+
+agent_id*
+8
+10
+11*°
+11l l(:–“
+l l(:
+%10*G
+
+__unknown_file (+)
+'agents.orchestrator.OrchestratorService**
+
+__unknown_file (
+
+
+session_id2end_session*
+8
+10*Ù
+12f f(5v
+t
+f f(+
+%13"__id*[
+
+__unknown_file (?*=)
+'agents.orchestrator.OrchestratorService"
+agent_registryyw
+f f(5
+%14"__mapGet*#
+
+__unknown_file (
+
+%13*(
+
+__unknown_file (
+
+
+agent_id2__getitem__@
+>
+f f(5
+agent"__id*#
+
+__unknown_file (
+
+%14Q
+O
+g g('
+
+agent"
+	is_active"__id*%
+
+__unknown_file (	
+
+Falsew
+u
+j+ j(?
+%15"__id*\
+
+__unknown_file (@*>)
+'agents.orchestrator.OrchestratorService"
+active_sessions?=
+j+ j(G
+%16*#
+
+__unknown_file (
+
+%152items*
+8
+10:
+b" b(0
+
+agent_id:
+b2 b(B
+reasonB+)
+'agents.orchestrator.OrchestratorServiceH

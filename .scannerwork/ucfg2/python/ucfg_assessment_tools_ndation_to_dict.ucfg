@@ -1,15 +1,15 @@
 
-=services.ai.assessment_tools.ComplianceRecommendation.to_dictE
-;/home/omar/Documents/ruleIQ/services/ai/assessment_tools.py5 5("2*›
+4ai.assessment_tools.ComplianceRecommendation.to_dictE
+;/home/omar/Documents/ruleIQ/services/ai/assessment_tools.py5 5("2*Ä
 26 :(:
 6 :(:
-%1"dictw
-u
+%1"dictn
+l
 6 6(
-%2"__id*]
+%2"__id*T
 
-__unknown_file (A*?7
-5services.ai.assessment_tools.ComplianceRecommendation"
+__unknown_file (8*6.
+,ai.assessment_tools.ComplianceRecommendation"
 id‰
 †
 6 6(
@@ -24,13 +24,13 @@ u
 
 __unknown_file (
 
-%2z
-x
+%2q
+o
 6( 6(2
-%4"__id*`
+%4"__id*W
 
-__unknown_file (D*B7
-5services.ai.assessment_tools.ComplianceRecommendation"
+__unknown_file (;*9.
+,ai.assessment_tools.ComplianceRecommendation"
 titleŒ
 ‰
 6 6(2
@@ -45,13 +45,13 @@ x
 
 __unknown_file (
 
-%4€
-~
+%4w
+u
 6C 7(
-%6"__id*f
+%6"__id*]
 
-__unknown_file (J*H7
-5services.ai.assessment_tools.ComplianceRecommendation"
+__unknown_file (A*?.
+,ai.assessment_tools.ComplianceRecommendation"
 description’
 
 64 7(
@@ -66,13 +66,13 @@ x
 
 __unknown_file (
 
-%6}
-{
+%6t
+r
 7% 7(2
-%8"__id*c
+%8"__id*Z
 
-__unknown_file (G*E7
-5services.ai.assessment_tools.ComplianceRecommendation"
+__unknown_file (>*<.
+,ai.assessment_tools.ComplianceRecommendation"
 
 priority
 Œ
@@ -89,13 +89,13 @@ x
 
 __unknown_file (
 
-%8Œ
-‰
+%8ƒ
+€
 8 8(&
-%10"__id*p
+%10"__id*g
 
-__unknown_file (T*R7
-5services.ai.assessment_tools.ComplianceRecommendation"
+__unknown_file (K*I.
+,ai.assessment_tools.ComplianceRecommendation"
 implementation_effortž
 ›
 74 8(&
@@ -110,13 +110,13 @@ x
 
 __unknown_file (
 
-%10
-
+%10x
+v
 87 8(G
-%12"__id*f
+%12"__id*]
 
-__unknown_file (J*H7
-5services.ai.assessment_tools.ComplianceRecommendation"
+__unknown_file (A*?.
+,ai.assessment_tools.ComplianceRecommendation"
 cost_impact”
 ‘
 8( 8(G
@@ -131,13 +131,13 @@ x
 
 __unknown_file (
 
-%12~
-|
+%12u
+s
 9 9(%
-%14"__id*c
+%14"__id*Z
 
-__unknown_file (G*E7
-5services.ai.assessment_tools.ComplianceRecommendation"
+__unknown_file (>*<.
+,ai.assessment_tools.ComplianceRecommendation"
 
 timeline‘
 Ž
@@ -154,13 +154,13 @@ x
 
 __unknown_file (
 
-%14ƒ
-€
+%14y
+w
 97 9(H
-%16"__id*g
+%16"__id*^
 
-__unknown_file (K*I7
-5services.ai.assessment_tools.ComplianceRecommendation"
+__unknown_file (B*@.
+,ai.assessment_tools.ComplianceRecommendation"
 dependencies•
 ’
 9' 9(H
@@ -175,13 +175,13 @@ x
 
 __unknown_file (
 
-%16‰
-†
+%16
+}
 :" :(9
-%18"__id*m
+%18"__id*d
 
-__unknown_file (Q*O7
-5services.ai.assessment_tools.ComplianceRecommendation"
+__unknown_file (H*F.
+,ai.assessment_tools.ComplianceRecommendation"
 resources_required›
 ˜
 : :(9
@@ -199,5 +199,5 @@ x
 %18"
 6 :(:
 
-%1B97
-5services.ai.assessment_tools.ComplianceRecommendationH
+%1B0.
+,ai.assessment_tools.ComplianceRecommendationH

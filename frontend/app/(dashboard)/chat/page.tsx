@@ -4,10 +4,10 @@ import { Plus, MessageSquare } from 'lucide-react';
 import { useEffect } from 'react';
 
 import { ChatHeader } from '@/components/chat/chat-header';
-import { ChatInput } from '@/components/chat/chat-input';
+import { ChatInput } from '@/components/chat/ChatInput';
 import { ChatMessage } from '@/components/chat/chat-message';
 import { ConversationSidebar } from '@/components/chat/conversation-sidebar';
-import { TypingIndicator } from '@/components/chat/typing-indicator';
+import { TypingIndicator } from '@/components/chat/TypingIndicator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';

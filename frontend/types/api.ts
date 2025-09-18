@@ -1,5 +1,12 @@
 // Core API types based on backend schemas
 
+import type {
+  PolicyContentStructure,
+  QuestionValidationRules,
+  IntegrationConfig,
+  AlertDetails,
+} from '@/lib/validation/zod-schemas';
+
 // User and Authentication
 export interface User {
   id: string;
@@ -83,7 +90,7 @@ export interface EvidenceItem {
   tags: string[];
   status: 'pending' | 'collected' | 'approved' | 'rejected' | 'needs_review';
   quality_score?: number;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   file_url?: string;
   file_name?: string;
   file_size?: number;
@@ -102,7 +109,7 @@ export interface Policy {
   policy_type: string;
   generation_prompt?: string;
   generation_time_seconds?: number;
-  policy_content: string | Record<string, any>;
+  policy_content: string | PolicyContentStructure;
   sections?: PolicySection[];
   status: 'draft' | 'under_review' | 'approved' | 'active' | 'archived';
   version: number;
@@ -157,7 +164,7 @@ export interface AssessmentQuestion {
   section: string;
   control_reference?: string;
   options?: AssessmentQuestionOption[];
-  validation_rules?: Record<string, any>;
+  validation_rules?: QuestionValidationRules;
   help_text?: string;
   weight: number;
 }
@@ -260,7 +267,7 @@ export interface Integration {
   status: 'connected' | 'disconnected' | 'error' | 'pending';
   connection_status: 'active' | 'inactive' | 'expired' | 'revoked';
   auth_type: 'oauth2' | 'api_key' | 'basic_auth' | 'custom';
-  config: Record<string, any>;
+  config: IntegrationConfig;
   sync_settings?: {
     auto_sync: boolean;
     sync_frequency: 'realtime' | 'hourly' | 'daily' | 'weekly';
@@ -467,7 +474,7 @@ export interface SystemAlert {
   severity: 'critical' | 'warning' | 'info';
   type: string;
   message: string;
-  details: any;
+  details: AlertDetails;
   created_at: string;
   resolved: boolean;
   resolved_at?: string;
@@ -483,7 +490,7 @@ export interface PaginatedResponse<T> {
 }
 
 // API Response
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data: T;
   message?: string;
   status: number;

@@ -1,6 +1,6 @@
 
-Uservices.compliance_graph_initializer.ComplianceGraphInitializer._clear_existing_dataP
-D/home/omar/Documents/ruleIQ/services/compliance_graph_initializer.py‰ ‰(""2*å
+Lcompliance_graph_initializer.ComplianceGraphInitializer._clear_existing_dataP
+D/home/omar/Documents/ruleIQ/services/compliance_graph_initializer.py‰ ‰(""2*Ú
 2
 Š Š(7Ë
 È
@@ -16,14 +16,14 @@ D/home/omar/Documents/ruleIQ/services/compliance_graph_initializer.py‰ ‰(""
             'Control', 'Metric', 'RiskAssessment', 'EnforcementCase'
         ])
         DETACH DELETE n
-        ˆ
-…
+        ~
+|
 
 “ “(
-%1"__id*k
+%1"__id*b
 
-__unknown_file (O*MB
-@services.compliance_graph_initializer.ComplianceGraphInitializer"
+__unknown_file (F*D9
+7compliance_graph_initializer.ComplianceGraphInitializer"
 neo4jnl
 
 “ “(-
@@ -51,5 +51,5 @@ D/home/omar/Documents/ruleIQ/services/compliance_graph_initializer.py‰ ‰(""
 3!
 compliance_graph_initializer.py"
 – –(
-implicit returnBDB
-@services.compliance_graph_initializer.ComplianceGraphInitializerH
+implicit returnB;9
+7compliance_graph_initializer.ComplianceGraphInitializerH

@@ -1,26 +1,21 @@
 
-0.1float
-	0.7float
-0.2float
-.%"Calculate risk reduction percentage"strself
-í" í(&"Ç3
-1
+"evidence_dashboard"str
+5,"Cache evidence dashboard data (5 min TTL)."strself
+¢% ¢()user_id
+¢+ ¢(7framework_id
+¢9 ¢(Jdashboard_data
+£ £(&ttl
+£( £(4"ç/
+-
 
-î î(."#get-field# current_maturity:(
-&
+• ¶(/key"?python-unknown?:#
+!
 
-î î(4"#get-field# value:3
-1
+ß ß(7	"#unknown-value##
+!
 
-î î(:"#dependent-value#*:Bfloat0
-.
+ß ß(7
+"#unknown-value#
 
-î î(:"#dependent-value#:Bfloat(
-&
-
-î î(@
-"
-builtinsmin*:	
-
-î î(@
-*I/home/omar/Documents/ruleIQ/services/compliance/cco_strategic_playbook.py
+ß ß(7
+*+/home/omar/Documents/ruleIQ/config/cache.py

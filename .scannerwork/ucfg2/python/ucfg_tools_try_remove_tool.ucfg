@@ -1,15 +1,15 @@
 
-*services.ai.tools.ToolRegistry.remove_tool<
-0/home/omar/Documents/ruleIQ/services/ai/tools.py   ("2*î
+!ai.tools.ToolRegistry.remove_tool<
+0/home/omar/Documents/ruleIQ/services/ai/tools.py   ("2*å
 2
-¡ ©(f
-d
+¡ ©(]
+[
 
 ª ª(
-%9"__id*J
+%9"__id*A
 
-__unknown_file (.*, 
-services.ai.tools.ToolRegistry"
+__unknown_file (%*#
+ai.tools.ToolRegistry"
 _toolsmk
 
 ª ª(
@@ -88,16 +88,16 @@ g
 __unknown_file (
 
 tool2remove*
-5*Ö
+5*Ä
 9
-« «((f
-d
+« «((]
+[
 
 « «(
-%5"__id*J
+%5"__id*A
 
-__unknown_file (.*, 
-services.ai.tools.ToolRegistry"
+__unknown_file (%*#
+ai.tools.ToolRegistry"
 _toolsca
 
 « «((
@@ -117,14 +117,14 @@ d
 
 __unknown_file (
 
-%6m
-k
+%6d
+b
 
 ¬% ¬(7
-%7"__id*Q
+%7"__id*H
 
-__unknown_file (5*3 
-services.ai.tools.ToolRegistry"
+__unknown_file (,**
+ai.tools.ToolRegistry"
 _tool_by_type?=
 
 ¬% ¬(?
@@ -137,5 +137,5 @@ k
 7:
 
    (#
-nameB" 
-services.ai.tools.ToolRegistryH
+nameB
+ai.tools.ToolRegistryH

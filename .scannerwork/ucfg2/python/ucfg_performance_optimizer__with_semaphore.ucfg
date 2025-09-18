@@ -1,5 +1,5 @@
 
-lservices.ai.performance_optimizer.AIPerformanceOptimizer.optimize_concurrent_requests.process_with_semaphoreL
+cai.performance_optimizer.AIPerformanceOptimizer.optimize_concurrent_requests.process_with_semaphoreL
 @/home/omar/Documents/ruleIQ/services/ai/performance_optimizer.py¥ ¥(("3"4*@
 3
 performance_optimizer.py"
@@ -24,5 +24,5 @@ lservices.ai.performance_optimizer.AIPerformanceOptimizer.optimize_concurrent_re
 %1:
 
 ¥) ¥(0	
-requestB<:
-8services.ai.performance_optimizer.AIPerformanceOptimizerH
+requestB31
+/ai.performance_optimizer.AIPerformanceOptimizerH

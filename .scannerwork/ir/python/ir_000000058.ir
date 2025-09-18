@@ -1,33 +1,41 @@
 
- "Support 'in' operator"str
-"collection_time_ms"str
-truebool
+´ª"
+    Enhanced decorator for adding LangSmith tracing to async functions.
 
-
-0int
-"data"strselfU U(keyU U(list"Ä'
-%
-W W(0"#unknown-value#Blist&
-$
-W W(0"
-#is-exact#:Bbool
-
-W W(0	"
-#assume#:8
-6
-W W(0"#set-field# __collection_size:
-Bint&
-$
-W W(0"#array-add-last#:&
-$
-W W(0"#array-add-last#:*
+    Args:
+        operation: Name of the operation being traced
+        include_input: Whether to include function inputs in metadata
+        include_output: Whether to include function outputs in metadata
+        custom_name: Optional custom name for the run (overrides operation)
+
+    Returns:
+        Decorated function with LangSmith tracing
+    "str	operation
+– –()include_input
+–+ –(Cinclude_output
+— —(custom_name
+— —(>"Ù#
+!
+
+Î Î("#unknown-value#*
 (
-W W(0"
-#binop in#2in:Bbool"
-W W(0 *W W(
-"
-X X("D0
-.
-Y Y(!"
-builtinshasattr*:Bbool
-Y Y(!*@/home/omar/Documents/ruleIQ/services/evidence/orchestrator_v2.py
+
+¥ Î(%closure"#new-object#-
++
+
+¥ Î("#set-field# operation:1
+/
+
+¥ Î("#set-field# include_input:/
+-
+
+¥ Î(	"#set-field# custom_name:2
+0
+
+¥ Î(
+"#set-field# include_output:-
++
+
+¥ Î("?python-partial-apply?:
+
+Î Î(*6/home/omar/Documents/ruleIQ/config/langsmith_config.py

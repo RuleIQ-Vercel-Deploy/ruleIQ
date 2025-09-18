@@ -1,5 +1,5 @@
 
--api.clients.aws_client.AWSS3Collector.collectA
+)clients.aws_client.AWSS3Collector.collectA
 5/home/omar/Documents/ruleIQ/api/clients/aws_client.py“ “("2*A
 2
 ” ”(
@@ -12,5 +12,5 @@
 %1:
 
 “ “($
-kwargsB)'
-%api.clients.aws_client.AWSS3CollectorH
+kwargsB%#
+!clients.aws_client.AWSS3CollectorH

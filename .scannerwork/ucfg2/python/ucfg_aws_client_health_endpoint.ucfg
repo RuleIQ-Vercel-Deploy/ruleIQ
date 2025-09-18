@@ -1,7 +1,7 @@
 
-7api.clients.aws_client.AWSAPIClient.get_health_endpoint?
+3clients.aws_client.AWSAPIClient.get_health_endpoint?
 5/home/omar/Documents/ruleIQ/api/clients/aws_client.pyk k("2*&
 2l l("
 l l(	
-/healthB'%
-#api.clients.aws_client.AWSAPIClientH
+/healthB#!
+clients.aws_client.AWSAPIClientH

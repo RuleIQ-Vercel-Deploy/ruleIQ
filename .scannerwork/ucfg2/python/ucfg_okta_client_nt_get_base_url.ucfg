@@ -1,13 +1,13 @@
 
-2api.clients.okta_client.OktaAPIClient.get_base_url@
-6/home/omar/Documents/ruleIQ/api/clients/okta_client.py, ,("2*ü
-2- -(7k
-i
+.clients.okta_client.OktaAPIClient.get_base_url@
+6/home/omar/Documents/ruleIQ/api/clients/okta_client.py, ,("2*ø
+2- -(7g
+e
 - -(%
-%1"__id*Q
+%1"__id*M
 
-__unknown_file (5*3'
-%api.clients.okta_client.OktaAPIClient"
+__unknown_file (1*/#
+!clients.okta_client.OktaAPIClient"
 domainl
 j
 - -(7
@@ -22,5 +22,5 @@ j
 .okta.com/api/v1"
 - -(7
 
-%2B)'
-%api.clients.okta_client.OktaAPIClientH
+%2B%#
+!clients.okta_client.OktaAPIClientH

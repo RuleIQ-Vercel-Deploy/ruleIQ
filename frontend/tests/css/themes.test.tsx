@@ -72,13 +72,13 @@ const CustomPropertiesComponent = () => {
   React.useEffect(() => {
     // Set custom properties
     const root = document.documentElement;
-    root.style.setProperty('--primary', '#17255A');
-    root.style.setProperty('--primary-dark', '#0F1938');
-    root.style.setProperty('--primary-light', '#2B3A6A');
-    root.style.setProperty('--gold', '#CB963E');
-    root.style.setProperty('--gold-dark', '#A67A2E');
-    root.style.setProperty('--gold-light', '#E0B567');
-    root.style.setProperty('--cyan', '#34FEF7');
+    root.style.setProperty('--primary', '#8B5CF6');
+    root.style.setProperty('--primary-dark', '#7C3AED');
+    root.style.setProperty('--primary-light', '#A78BFA');
+    root.style.setProperty('--silver', '#C0C0C0');
+    root.style.setProperty('--silver-dark', '#9CA3AF');
+    root.style.setProperty('--silver-light', '#E5E5E5');
+    root.style.setProperty('--purple', '#8B5CF6');
     root.style.setProperty('--neutral-light', '#D0D5E3');
     root.style.setProperty('--neutral-medium', '#C2C2C2');
   }, []);
@@ -88,11 +88,11 @@ const CustomPropertiesComponent = () => {
       <div style={{ color: 'var(--primary)' }} data-testid="primary-var">
         Primary Color
       </div>
-      <div style={{ backgroundColor: 'var(--gold)' }} data-testid="gold-var">
-        Gold Background
+      <div style={{ backgroundColor: 'var(--silver)' }} data-testid="silver-var">
+        Silver Background
       </div>
-      <div style={{ borderColor: 'var(--cyan)' }} className="border-2" data-testid="cyan-var">
-        Cyan Border
+      <div style={{ borderColor: 'var(--purple)' }} className="border-2" data-testid="purple-var">
+        Purple Border
       </div>
     </div>
   );
@@ -132,7 +132,7 @@ const ColorSchemeComponent = ({ scheme }: { scheme: 'primary' | 'secondary' | 'a
       case 'secondary':
         return 'bg-gray-200 text-gray-800 hover:bg-gray-300';
       case 'accent':
-        return 'bg-gold text-primary hover:bg-gold-dark';
+        return 'bg-silver text-primary hover:bg-silver-dark';
     }
   };
 
@@ -174,13 +174,13 @@ const SemanticColorsComponent = () => (
     <div className="text-green-600 dark:text-green-400" data-testid="success-color">
       Success Message
     </div>
-    <div className="text-gold dark:text-yellow-400" data-testid="warning-color">
+    <div className="text-yellow-600 dark:text-yellow-400" data-testid="warning-color">
       Warning Message
     </div>
     <div className="text-red-600 dark:text-red-400" data-testid="error-color">
       Error Message
     </div>
-    <div className="text-teal dark:text-teal-400" data-testid="info-color">
+    <div className="text-blue-600 dark:text-blue-400" data-testid="info-color">
       Info Message
     </div>
   </div>
@@ -262,25 +262,25 @@ describe('Theme and Dark Mode Tests', () => {
       render(<CustomPropertiesComponent />);
 
       const primaryVar = screen.getByTestId('primary-var');
-      const goldVar = screen.getByTestId('gold-var');
-      const cyanVar = screen.getByTestId('cyan-var');
+      const silverVar = screen.getByTestId('silver-var');
+      const purpleVar = screen.getByTestId('purple-var');
 
       expect(primaryVar).toHaveStyle({ color: 'var(--primary)' });
-      expect(goldVar).toHaveStyle({ backgroundColor: 'var(--gold)' });
-      expect(cyanVar).toHaveStyle({ borderColor: 'var(--cyan)' });
+      expect(silverVar).toHaveStyle({ backgroundColor: 'var(--silver)' });
+      expect(purpleVar).toHaveStyle({ borderColor: 'var(--purple)' });
     });
 
     it('should have correct CSS variable values', () => {
       render(<CustomPropertiesComponent />);
 
       const root = document.documentElement;
-      expect(root.style.getPropertyValue('--primary')).toBe('#17255A');
-      expect(root.style.getPropertyValue('--primary-dark')).toBe('#0F1938');
-      expect(root.style.getPropertyValue('--primary-light')).toBe('#2B3A6A');
-      expect(root.style.getPropertyValue('--gold')).toBe('#CB963E');
-      expect(root.style.getPropertyValue('--gold-dark')).toBe('#A67A2E');
-      expect(root.style.getPropertyValue('--gold-light')).toBe('#E0B567');
-      expect(root.style.getPropertyValue('--cyan')).toBe('#34FEF7');
+      expect(root.style.getPropertyValue('--primary')).toBe('#8B5CF6');
+      expect(root.style.getPropertyValue('--primary-dark')).toBe('#7C3AED');
+      expect(root.style.getPropertyValue('--primary-light')).toBe('#A78BFA');
+      expect(root.style.getPropertyValue('--silver')).toBe('#C0C0C0');
+      expect(root.style.getPropertyValue('--silver-dark')).toBe('#9CA3AF');
+      expect(root.style.getPropertyValue('--silver-light')).toBe('#E5E5E5');
+      expect(root.style.getPropertyValue('--purple')).toBe('#8B5CF6');
       expect(root.style.getPropertyValue('--neutral-light')).toBe('#D0D5E3');
       expect(root.style.getPropertyValue('--neutral-medium')).toBe('#C2C2C2');
     });
@@ -304,7 +304,7 @@ describe('Theme and Dark Mode Tests', () => {
   describe('CSS Custom Properties', () => {
     it('should support dynamic CSS property updates', async () => {
       const DynamicPropertiesComponent = () => {
-        const [primaryColor, setPrimaryColor] = React.useState('#17255A');
+        const [primaryColor, setPrimaryColor] = React.useState('#8B5CF6');
 
         const updateColor = () => {
           const newColor = '#FF0000';
@@ -331,7 +331,7 @@ describe('Theme and Dark Mode Tests', () => {
       const updateButton = screen.getByTestId('update-color');
       const colorValue = screen.getByTestId('color-value');
 
-      expect(colorValue).toHaveTextContent('#17255A');
+      expect(colorValue).toHaveTextContent('#8B5CF6');
 
       await user.click(updateButton);
 
@@ -343,7 +343,7 @@ describe('Theme and Dark Mode Tests', () => {
 
     it('should handle CSS property inheritance', () => {
       const InheritanceComponent = () => (
-        <div style={{ '--parent-color': '#17255A' } as React.CSSProperties}>
+        <div style={{ '--parent-color': '#8B5CF6' } as React.CSSProperties}>
           <div style={{ color: 'var(--parent-color)' }} data-testid="child">
             Inherited Color
           </div>
@@ -381,7 +381,7 @@ describe('Theme and Dark Mode Tests', () => {
         } else if (scheme === 'secondary') {
           expect(element).toHaveClass('bg-gray-200', 'text-gray-800', 'hover:bg-gray-300');
         } else if (scheme === 'accent') {
-          expect(element).toHaveClass('bg-gold', 'text-primary', 'hover:bg-gold-dark');
+          expect(element).toHaveClass('bg-silver', 'text-primary', 'hover:bg-silver-dark');
         }
       });
     });
@@ -419,9 +419,9 @@ describe('Theme and Dark Mode Tests', () => {
 
       // Light theme
       expect(success).toHaveClass('text-green-600', 'dark:text-green-400');
-      expect(warning).toHaveClass('text-gold', 'dark:text-yellow-400');
+      expect(warning).toHaveClass('text-yellow-600', 'dark:text-yellow-400');
       expect(error).toHaveClass('text-red-600', 'dark:text-red-400');
-      expect(info).toHaveClass('text-teal', 'dark:text-teal-400');
+      expect(info).toHaveClass('text-blue-600', 'dark:text-blue-400');
 
       // Dark theme
       rerender(

@@ -14,6 +14,7 @@ import {
 } from 'recharts';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { neuralPurple, silver, semantic, chartColors, neutral } from '@/lib/theme/neural-purple-colors';
 
 interface FrameworkBreakdownChartProps {
   data: Array<{
@@ -28,12 +29,12 @@ interface FrameworkBreakdownChartProps {
 }
 
 const COLORS = {
-  'ISO 27001': '#2C7A7B', // teal-600 - primary
-  GDPR: '#319795', // teal-500 - secondary
-  'Cyber Essentials': '#4FD1C5', // teal-300 - bright accent
-  'PCI DSS': '#10B981', // emerald-600 - success
-  'SOC 2': '#F59E0B', // amber-600 - warning
-  HIPAA: '#6B7280', // neutral-500 - muted
+  'ISO 27001': chartColors.categorical[0], // neural purple primary
+  GDPR: chartColors.categorical[1], // semantic success
+  'Cyber Essentials': chartColors.categorical[2], // semantic warning
+  'PCI DSS': chartColors.categorical[3], // semantic info
+  'SOC 2': chartColors.categorical[4], // silver primary
+  HIPAA: chartColors.categorical[5], // neural purple light
 };
 
 export function FrameworkBreakdownChart({
@@ -91,13 +92,13 @@ export function FrameworkBreakdownChart({
           ) : (
             <RadarChart data={enhancedData}>
               <PolarGrid strokeDasharray="3 3" />
-              <PolarAngleAxis dataKey="framework" tick={{ fontSize: 12, fill: '#6B7280' }} />
-              <PolarRadiusAxis domain={[0, 100]} tick={{ fontSize: 10, fill: '#6B7280' }} />
+              <PolarAngleAxis dataKey="framework" tick={{ fontSize: 12, fill: neutral.gray[600] }} />
+              <PolarRadiusAxis domain={[0, 100]} tick={{ fontSize: 10, fill: neutral.gray[600] }} />
               <Radar
                 name="Score"
                 dataKey="score"
-                stroke="#17255A"
-                fill="#17255A"
+                stroke={neuralPurple.dark}
+                fill={neuralPurple.primary}
                 fillOpacity={0.6}
                 strokeWidth={2}
               />

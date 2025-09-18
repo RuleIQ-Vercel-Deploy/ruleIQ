@@ -1,6 +1,6 @@
 
-Pservices.ai.compliance_query_engine.ComplianceQueryEngine.get_suggested_controlsL
-B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.pyd d($"2*À
+Gai.compliance_query_engine.ComplianceQueryEngine.get_suggested_controlsL
+B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.pyd d($"2*·
 2e m(£
  
 n q(
@@ -10,13 +10,13 @@ B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.pyd d($"2*À
 d
         MATCH (r:Regulation {id: $reg_id})
         RETURN r.suggested_controls as controls
-        
-}
+        v
+t
 s s(
-%5"__id*e
+%5"__id*\
 
-__unknown_file (I*G;
-9services.ai.compliance_query_engine.ComplianceQueryEngine"
+__unknown_file (@*>2
+0ai.compliance_query_engine.ComplianceQueryEngine"
 driver?=
 s s((
 %6*"
@@ -96,5 +96,5 @@ d
 4
 5:
 d+ d(=
-regulation_idB=;
-9services.ai.compliance_query_engine.ComplianceQueryEngineH
+regulation_idB42
+0ai.compliance_query_engine.ComplianceQueryEngineH

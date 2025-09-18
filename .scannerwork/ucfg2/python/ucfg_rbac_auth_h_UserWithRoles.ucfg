@@ -1,34 +1,34 @@
 
-(api.dependencies.rbac_auth.UserWithRolesC
-9/home/omar/Documents/ruleIQ/api/dependencies/rbac_auth.py ("2*ú	
-2 (n
-l
- (4*
-(api.dependencies.rbac_auth.UserWithRoles"
+rbac_auth.UserWithRolesC
+9/home/omar/Documents/ruleIQ/api/dependencies/rbac_auth.py ("2*ð
+2 (]
+[
+ (#
+rbac_auth.UserWithRoles"
 user"__id*$
 
 __unknown_file (
 
-userp
-n
- (5*
-(api.dependencies.rbac_auth.UserWithRoles"
+user_
+]
+ ($
+rbac_auth.UserWithRoles"
 roles"__id*%
 
 __unknown_file (	
 
-roles|
-z
- (&;*
-(api.dependencies.rbac_auth.UserWithRoles"
+rolesk
+i
+ (&*
+rbac_auth.UserWithRoles"
 permissions"__id*+
 
 __unknown_file (
 
-permissions‘
-Ž
-   (:E*
-(api.dependencies.rbac_auth.UserWithRoles"
+permissions
+}
+   (:4
+rbac_auth.UserWithRoles"
 accessible_frameworks"__id*5
 
 __unknown_file (
@@ -41,10 +41,10 @@ D
 __unknown_file (*
 
 user"
-idj
-h
-! !(2*
-(api.dependencies.rbac_auth.UserWithRoles"
+idY
+W
+! !(!
+rbac_auth.UserWithRoles"
 id"__id*"
 
 __unknown_file (
@@ -57,10 +57,10 @@ G
 __unknown_file (*
 
 user"
-emailm
-k
-" "(5*
-(api.dependencies.rbac_auth.UserWithRoles"
+email\
+Z
+" "($
+rbac_auth.UserWithRoles"
 email"__id*"
 
 __unknown_file (
@@ -73,10 +73,10 @@ K
 __unknown_file (*
 
 user"
-	is_activeq
-o
-# #('9*
-(api.dependencies.rbac_auth.UserWithRoles"
+	is_active`
+^
+# #('(
+rbac_auth.UserWithRoles"
 	is_active"__id*"
 
 __unknown_file (
@@ -90,21 +90,21 @@ L
 
 user"
 
-created_atr
-p
-$ $():*
-(api.dependencies.rbac_auth.UserWithRoles"
+created_ata
+_
+$ $())
+rbac_auth.UserWithRoles"
 
 created_at"__id*"
 
 __unknown_file (
 
 %5*
-3*a
+3*P
 3
-rbac_auth.py:8
+rbac_auth.py)'
 & &(
-%1"(api.dependencies.rbac_auth.UserWithRoles"
+%1"rbac_auth.UserWithRoles"
 & &(
 
 %1:
@@ -115,5 +115,5 @@ created_at"__id*"
 6 (	
 permissions:#
  (,
-accessible_frameworksB,*
-(api.dependencies.rbac_auth.UserWithRolesH
+accessible_frameworksB
+rbac_auth.UserWithRolesH

@@ -1,5 +1,5 @@
 
-9services.iq_agent.IQComplianceAgent._get_iq_system_prompt:
+0iq_agent.IQComplianceAgent._get_iq_system_prompt:
 0/home/omar/Documents/ruleIQ/services/iq_agent.pyW W("2*Ì+
 2X X(="¼+
 
@@ -156,5 +156,5 @@ When asked about specific regulations:
 4. Provide practical implementation guidance
 5. Include relevant deadlines and transition periods
 
-Remember: You are the Chief Compliance Officer. Think strategically, act decisively, and always base your decisions on verifiable evidence accessed through the GraphRAG Query Agent.B'%
-#services.iq_agent.IQComplianceAgentH
+Remember: You are the Chief Compliance Officer. Think strategically, act decisively, and always base your decisions on verifiable evidence accessed through the GraphRAG Query Agent.B
+iq_agent.IQComplianceAgentH

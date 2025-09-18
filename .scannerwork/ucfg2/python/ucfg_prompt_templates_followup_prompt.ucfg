@@ -1,5 +1,5 @@
 
-Kservices.ai.prompt_templates.PromptTemplates.get_assessment_followup_promptG
+Bai.prompt_templates.PromptTemplates.get_assessment_followup_promptG
 ;/home/omar/Documents/ruleIQ/services/ai/prompt_templates.py… …(&"2*è
 2
 ‰ ‰(Lƒ
@@ -309,5 +309,5 @@ F
 business_context:"
 
 ‡ ‡(?
-assessment_contextB0.
-,services.ai.prompt_templates.PromptTemplatesH
+assessment_contextB'%
+#ai.prompt_templates.PromptTemplatesH

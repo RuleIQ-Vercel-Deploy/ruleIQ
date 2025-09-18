@@ -1,6 +1,6 @@
 
-Sservices.ai.compliance_query_engine.ComplianceQueryEngine.get_automation_statisticsL
-B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.pyz z('"2*ã
+Jai.compliance_query_engine.ComplianceQueryEngine.get_automation_statisticsL
+B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.pyz z('"2*Å
 2	{ Ä(Ê
 „
 
@@ -17,14 +17,14 @@ B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.pyz z('"2*ã
             max(r.automation_potential) as max_potential,
             count(r) as regulation_count,
             count(CASE WHEN r.automation_potential >= 0.7 THEN 1 END) as high_automation_count
-        Å
-
+        x
+v
 
 å å(
-%7"__id*e
+%7"__id*\
 
-__unknown_file (I*G;
-9services.ai.compliance_query_engine.ComplianceQueryEngine"
+__unknown_file (@*>2
+0ai.compliance_query_engine.ComplianceQueryEngine"
 driverA?
 
 å å((
@@ -132,5 +132,5 @@ m
 
 è è(1
 
-%3B=;
-9services.ai.compliance_query_engine.ComplianceQueryEngineH
+%3B42
+0ai.compliance_query_engine.ComplianceQueryEngineH

@@ -23,7 +23,7 @@ export enum TrustLevel {
 export interface WSMessage {
   id: string;
   type: MessageType;
-  timestamp: Date;
+  timestamp: string; // ISO string for JSON serialization
   payload: MessagePayload;
 }
 
@@ -32,6 +32,11 @@ export interface MessagePayload {
   context?: Record<string, any>;
   metadata?: MessageMetadata;
   error?: ErrorInfo;
+  // Streaming fields
+  delta?: string;
+  isFinal?: boolean;
+  sequence?: number;
+  messageId?: string;
 }
 
 export interface MessageMetadata {
@@ -67,6 +72,7 @@ export interface ChatMessage {
   attachments?: Attachment[];
   codeBlocks?: CodeBlock[];
   status?: 'sending' | 'sent' | 'failed' | 'delivered';
+  isStreaming?: boolean;
 }
 
 export interface Attachment {
@@ -117,4 +123,24 @@ export interface WSEventHandlers {
   onMessage?: (message: WSMessage) => void;
   onReconnect?: (attempt: number) => void;
   onTyping?: (indicator: TypingIndicator) => void;
+  onStreamChunk?: (chunk: StreamingMessagePayload) => void;
+}
+
+// Streaming-specific interfaces
+export interface StreamingMessagePayload {
+  delta: string;
+  isFinal?: boolean;
+  sequence?: number;
+  messageId: string;
+  trustLevel?: TrustLevel;
+  sessionId: string;
+  agentId: string;
+}
+
+export interface StreamingState {
+  messageId: string;
+  content: string;
+  sequence: number;
+  isComplete: boolean;
+  startTime: number;
 }

@@ -31,7 +31,7 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
         // Gradient accent line
         'relative overflow-hidden',
         'before:absolute before:inset-x-0 before:top-0 before:h-1',
-        'before:bg-gradient-to-r before:from-teal-700 before:via-teal-600 before:to-teal-400',
+        'before:bg-gradient-to-r before:from-purple-700 before:via-purple-600 before:to-purple-400',
         'before:opacity-0 hover:before:opacity-100',
         'before:transition-opacity before:duration-300',
 

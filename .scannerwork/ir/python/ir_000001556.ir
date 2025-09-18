@@ -1,32 +1,27 @@
 
-©Ÿ"
-        MATCH (ea:EnforcementAction)-[:PRECEDENT_FOR]->(ctrl:Control)
-        OPTIONAL MATCH (ctrl)-[:IMPLEMENTS]->(req:Requirement)
-        RETURN ea.target_company AS company,
-               ea.violation_type AS violation,
-               ea.penalty_amount AS fine,
-               ea.lessons_learned AS lessons,
-               ea.date AS incident_date,
-               COLLECT(DISTINCT ctrl.name) AS controls_to_strengthen,
-               COLLECT(DISTINCT req.title) AS requirements_affected
-        ORDER BY ea.penalty_amount DESC
-        "str
-3*"Extract lessons from enforcement actions"str
-"enforcement_lessons"strself
-«- «(1"Û(
-&
-­ ­(³query"#id#:Bstr#
-!
-
-¹ ¹(1"#unknown-value#,
-*
-
-¹ ¹(1results"#unknown-value#&
+"timestamp"str
+"status"str
+
+"1.0.0"str
+&"Basic health check endpoint"str
+	"healthy"str
+		"version"str"Í&
 $
 
-º º(/"#new-object#Bdict"
+³ ³(N"#new-object#Bdict"
  
 
-º º(.	"	#map-set#:
+³ ³("	#map-set#:%
+#
 
-º º(/*A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py
+³. ³(9"
+timetimeBfloat"
+ 
+
+³! ³(9"	#map-set#:"
+ 
+
+³; ³(M"	#map-set#:	
+
+
+³ ³(N*'/home/omar/Documents/ruleIQ/api/main.py

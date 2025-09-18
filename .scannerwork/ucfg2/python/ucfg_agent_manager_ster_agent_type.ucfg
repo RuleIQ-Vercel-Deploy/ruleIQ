@@ -1,0 +1,54 @@
+
+5agents.agent_manager.AgentFactory.register_agent_typeF
+</home/omar/Documents/ruleIQ/services/agents/agent_manager.py ("2*€
+2 ((m
+k
+ (
+%2"__id*S
+
+__unknown_file (7*5#
+!agents.agent_manager.AgentFactory"
+_agent_types±®
+ (4
+%1"dict.__setitem__*"
+
+__unknown_file (
+
+%2*,
+
+__unknown_file (
+
+persona_type*+
+
+__unknown_file (
+
+agent_class2__setitem__c
+a
+ (<
+%3"__concat*'
+ (-
+Registered agent type: *
+. (:
+
+persona_typedb
+ (=
+%4*&
+
+__unknown_file (
+
+
+logger*"
+
+__unknown_file (
+
+%32info*
+3*6
+3
+agent_manager.py"
+   (
+implicit return:
+! (2
+persona_type:
+4 (E
+agent_classB%#
+!agents.agent_manager.AgentFactoryH

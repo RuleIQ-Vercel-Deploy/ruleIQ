@@ -1,18 +1,46 @@
 
-µ«"
-    Increment a counter value.
+7."Get safe environment variables (no secrets)."str
+"APP_VERSION"str
+"DATABASE_POOL_SIZE"str
+ "REDIS_MAX_CONNECTIONS"str
 
-    Args:
-        existing: Current counter value
-        new: Value to add (typically 1)
+0int
+"ENVIRONMENT"str
+"LOG_LEVEL"strself
+ä ä(	list"Ð4
+2
 
-    Returns:
-        Incremented counter
-    "strexisting
-Ž Ž(#new
-Ž% Ž(-"8$
-"
+æ é(		safe_vars"#unknown-value#Blist(
+&
 
-™ ™("	#binop +#2+:
+æ é(	
+"
+#is-exact#:	Bbool
+
 
-™ ™(*C/home/omar/Documents/ruleIQ/langgraph_agent/graph/enhanced_state.py
+æ é(	"
+#assume#:
+:
+8
+
+æ é(	"#set-field# __collection_size:Bint(
+&
+
+æ é(	"#array-add-last#:(
+&
+
+æ é(	"#array-add-last#:(
+&
+
+æ é(	"#array-add-last#:(
+&
+
+æ é(	"#array-add-last#:(
+&
+
+æ é(	"#array-add-last#:-
++
+
+ê ê(<"?python-unknown?:Bdict
+
+ê ê(<*2/home/omar/Documents/ruleIQ/deployment/rollback.py

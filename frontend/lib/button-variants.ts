@@ -1,43 +1,45 @@
-// Button variant configuration for teal design system
+// Button variant configuration for Neural Purple design system
+import { neuralPurple, silver, semantic, neutral } from './theme/neural-purple-colors';
+
 export const ruleIQButtonConfig = {
   colors: {
     primary: {
-      background: '#2C7A7B', // teal-600
-      text: '#FFFFFF', // white
-      hover: '#285E61', // teal-700
+      background: neuralPurple.primary, // purple-600
+      text: neutral.white,
+      hover: neuralPurple.dark, // purple-700
     },
     secondary: {
-      background: '#FFFFFF', // white
-      text: '#2C7A7B', // teal-600
-      border: '#2C7A7B', // teal-600
+      background: neutral.white,
+      text: neuralPurple.primary,
+      border: silver.primary,
       hover: {
-        background: '#E6FFFA', // teal-50
-        text: '#285E61', // teal-700
+        background: neuralPurple.subtle, // purple-50
+        text: neuralPurple.dark,
       },
     },
     ghost: {
-      text: '#4B5563', // neutral-600
-      hover: '#F3F4F6', // neutral-100
+      text: neuralPurple.primary,
+      hover: neuralPurple.subtle,
     },
     accent: {
-      background: '#319795', // teal-500
-      text: '#FFFFFF', // white
-      hover: '#2C7A7B', // teal-600
+      background: neuralPurple.light, // purple-400
+      text: neutral.white,
+      hover: neuralPurple.primary, // purple-600
     },
     success: {
-      background: '#10B981', // emerald-600
-      text: '#FFFFFF',
-      hover: '#059669', // emerald-700
+      background: semantic.success,
+      text: neutral.white,
+      hover: semantic.successDark,
     },
     warning: {
-      background: '#F59E0B', // amber-600
-      text: '#FFFFFF',
-      hover: '#D97706', // amber-700
+      background: semantic.warning,
+      text: neutral.white,
+      hover: semantic.warningDark,
     },
     error: {
-      background: '#EF4444', // red-600
-      text: '#FFFFFF',
-      hover: '#DC2626', // red-700
+      background: semantic.error,
+      text: neutral.white,
+      hover: semantic.errorDark,
     },
   },
   sizes: {

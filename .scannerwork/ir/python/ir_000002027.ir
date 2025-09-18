@@ -1,27 +1,28 @@
 
-2)"Decorator to debug async function calls"strlogger
-‰ ‰(,include_args
-‰. ‰(Finclude_result
-Â Â("§#
-!
+‰⁄"
+        # {context.organization_name} {request.policy_type.value.replace('_', ' ').title()}
 
-ˇ ˇ(
-"#unknown-value#*
-(
+        ## 1. Policy Statement
+        {context.organization_name} is committed to maintaining the highest standards of
+        {request.policy_type.value.replace('_', ' ')} in accordance with {framework.display_name}.
 
-Ë ˇ(%closure"#new-object#0
-.
+        ## 2. Scope
+        This policy applies to all {context.organization_name} operations in {', '.join(context.geographic_operations)}.
 
-Ë ˇ("#set-field# include_args:*
-(
+        ## 3. Responsibilities
+        All employees and contractors must comply with this policy.
 
-Ë ˇ("#set-field# logger:2
-0
+        ## 4. Implementation
+        This policy will be reviewed annually and updated as necessary.
 
-Ë ˇ("#set-field# include_result:-
-+
+        Effective Date: {datetime.now().strftime('%Y-%m-%d')}
+        "str
++""Generate mock policy for testing"strself
+ú ú("request
+ú$ ú(D	framework
+ù ù(&"P<
+:
 
-Ë ˇ(	"?python-partial-apply?:
+ü ü(*context"#get-field# business_context:
 
-ˇ ˇ(
-*3/home/omar/Documents/ruleIQ/config/debug_logging.py
+† ±(*;/home/omar/Documents/ruleIQ/services/ai/policy_generator.py

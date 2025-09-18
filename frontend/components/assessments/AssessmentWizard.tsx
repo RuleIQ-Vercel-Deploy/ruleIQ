@@ -19,6 +19,7 @@ import {
 } from '@/lib/assessment-engine';
 
 import { AIErrorBoundary } from './AIErrorBoundary';
+import { freemiumService } from '@/lib/api/freemium.service';
 import { AssessmentNavigation } from './AssessmentNavigation';
 import { FollowUpQuestion } from './FollowUpQuestion';
 import { ProgressTracker } from './ProgressTracker';
@@ -151,23 +152,29 @@ export function AssessmentWizard({
 
     setIsSaving(true);
     try {
-      // Save to backend (implement API call here)
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulated API call
+      // Save progress using freemiumService
+      await freemiumService.saveProgress(assessmentId, progress);
+
+      // Also call the onSave callback if provided
+      if (onSave) {
+        onSave(progress);
+      }
 
       toast({
         title: 'Progress Saved',
         description: 'Your assessment progress has been saved.',
       });
     } catch (error) {
+      console.error('Failed to save assessment progress:', error);
       toast({
         title: 'Save Failed',
-        description: 'Failed to save progress. Please try again.',
+        description: error instanceof Error ? error.message : 'Failed to save progress. Please try again.',
         variant: 'destructive',
       });
     } finally {
       setIsSaving(false);
     }
-  }, [engine, progress, toast]);
+  }, [engine, progress, toast, assessmentId, onSave]);
 
   const handleJumpToSection = useCallback(
     (sectionIndex: number) => {

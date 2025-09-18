@@ -1,57 +1,16 @@
+func
+ñ ñ("¼#
+!
 
-"report_uri"str
-
-"nonce_enabled"str
-"csp_enabled"str
- –"
-        Get a report of current security header configuration
+ø ø("#unknown-value#*
+(
 
-        Returns:
-            Dictionary with security configuration details
-        "str
-"csp_directives"str
-"cors_enabled"str
-"cors_config"strself
-• •( "´&
-$
+ó ø(%closure"#new-object#(
+&
 
-œ £(	"#new-object#Bdict.
-,
-
- (+"#get-field# csp_enabled:"
- 
-
- (+"	#map-set#:/
--
-
- (-"#get-field# cors_enabled:"
- 
-
- (-	"	#map-set#:0
-.
-
-Ÿ Ÿ(/"#get-field# nonce_enabled:"
- 
-
-Ÿ Ÿ(/"	#map-set#:
-.
-,
-
-   (."#get-field# default_csp:"
- 
-
-   (."	#map-set#:.
-,
-
-¡ ¡(+"#get-field# cors_config:"
- 
-
-¡ ¡(+"	#map-set#:-
+ó ø("#set-field# func:-
 +
 
-¢ ¢()"#get-field# report_uri:"
- 
+ó ø("?python-partial-apply?:
 
-¢ ¢()"	#map-set#:
-
-œ £(	*:/home/omar/Documents/ruleIQ/middleware/security_headers.py
+ø ø(*;/home/omar/Documents/ruleIQ/services/performance_monitor.py

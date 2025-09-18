@@ -1,18 +1,18 @@
 
-Xservices.freemium_assessment_service.FreemiumAssessmentService._generate_recommendationsO
-C/home/omar/Documents/ruleIQ/services/freemium_assessment_service.pyå å('"9*™
+Ofreemium_assessment_service.FreemiumAssessmentService._generate_recommendationsO
+C/home/omar/Documents/ruleIQ/services/freemium_assessment_service.pyä ä('"9*
 7
-î ò(Š
-‡
+í ñ(€
+~
 
-î( î(6
-%5"__id*m
+í( í(6
+%5"__id*d
 
-__unknown_file (Q*O@
->services.freemium_assessment_service.FreemiumAssessmentService"
+__unknown_file (H*F7
+5freemium_assessment_service.FreemiumAssessmentService"
 	assistantØÕ
 
-î( ò(
+í( ñ(
 %6*"
 
 __unknown_file (
@@ -29,17 +29,17 @@ C/home/omar/Documents/ruleIQ/services/freemium_assessment_service.pyå å('"
 compliance_scoreK
 I
 
-î ò(
+í ñ(
 recommendations"__id*"
 
 __unknown_file (
 
 %6
 
-ó> ó(@
+ò> ò(@
 %7"list 
 
-ó ó(A
+ò ò(A
 %8*/
 
 __unknown_file (
@@ -53,37 +53,37 @@ I
 
 %72get"
 
-ó ó(A
+ò ò(A
 
-%8*î
+%8*å
 8
-õ õ(KÆÃ
+ô ô(K½º
 
-õ õ(K
-%9*^
+ô ô(K
+%9*U
 
-__unknown_file (B@
->services.freemium_assessment_service.FreemiumAssessmentService*0
+__unknown_file (97
+5freemium_assessment_service.FreemiumAssessmentService*0
 
 __unknown_file (
 
 compliance_score2_get_fallback_recommendations"
 
-õ õ(K
+ô ô(K
 
-%9*®
+%9*¥
 9
-í í(J‘
-Ž
+ì ì(Jˆ
+…
 
-í í(#
-%10"__id*s
+ì ì(#
+%10"__id*j
 
-__unknown_file (W*U@
->services.freemium_assessment_service.FreemiumAssessmentService"
+__unknown_file (N*L7
+5freemium_assessment_service.FreemiumAssessmentService"
 circuit_breaker€~
 
-í í(J
+ì ì(J
 %11*#
 
 __unknown_file (
@@ -95,12 +95,12 @@ I
 7
 8:"
 
-ç ç(*
+æ æ(*
 assessment_context:
 
-è è(#
+ç ç(#
 ai_analysis: 
 
-é é(
-compliance_scoreBB@
->services.freemium_assessment_service.FreemiumAssessmentServiceH
+è è(
+compliance_scoreB97
+5freemium_assessment_service.FreemiumAssessmentServiceH

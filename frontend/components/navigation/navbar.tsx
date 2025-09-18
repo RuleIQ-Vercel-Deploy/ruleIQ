@@ -40,13 +40,13 @@ export function Navbar({ className }: NavbarProps) {
             variant="ghost"
             size="icon"
             onClick={toggleSidebar}
-            className="text-neutral-600 hover:text-teal-600 lg:hidden"
+            className="text-neutral-600 hover:text-purple-600 lg:hidden"
           >
             <Menu className="h-5 w-5" />
           </Button>
 
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-teal-600">ruleIQ</span>
+            <span className="text-2xl font-extralight text-purple-600">ruleIQ</span>
           </Link>
         </div>
 
@@ -70,11 +70,11 @@ export function Navbar({ className }: NavbarProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="relative text-neutral-600 hover:text-teal-600"
+                className="relative text-neutral-600 hover:text-purple-600"
               >
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-teal-600 text-xs text-white">
+                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-purple-600 text-xs text-white">
                     {unreadCount}
                   </span>
                 )}
@@ -98,14 +98,14 @@ export function Navbar({ className }: NavbarProps) {
                       {notification.title}
                     </span>
                     {notification.unread && (
-                      <div className="ml-auto h-2 w-2 rounded-full bg-teal-600" />
+                      <div className="ml-auto h-2 w-2 rounded-full bg-purple-600" />
                     )}
                   </div>
                   <span className="text-xs text-neutral-500">{notification.time}</span>
                 </DropdownMenuItem>
               ))}
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-center text-teal-600 hover:text-teal-700">
+              <DropdownMenuItem className="text-center text-purple-600 hover:text-purple-700">
                 View all notifications
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -117,7 +117,7 @@ export function Navbar({ className }: NavbarProps) {
               <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                 <Avatar className="h-9 w-9">
                   <AvatarImage src="/placeholder-avatar.jpg" alt="User" />
-                  <AvatarFallback className="bg-teal-100 text-teal-700">JD</AvatarFallback>
+                  <AvatarFallback className="bg-purple-100 text-purple-700">JD</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
@@ -129,17 +129,17 @@ export function Navbar({ className }: NavbarProps) {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-neutral-700 hover:text-teal-600">
+              <DropdownMenuItem className="text-neutral-700 hover:text-purple-600">
                 Profile Settings
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-neutral-700 hover:text-teal-600">
+              <DropdownMenuItem className="text-neutral-700 hover:text-purple-600">
                 Billing
               </DropdownMenuItem>
-              <DropdownMenuItem className="text-neutral-700 hover:text-teal-600">
+              <DropdownMenuItem className="text-neutral-700 hover:text-purple-600">
                 Team Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-neutral-700 hover:text-teal-600">
+              <DropdownMenuItem className="text-neutral-700 hover:text-purple-600">
                 Help & Support
               </DropdownMenuItem>
               <DropdownMenuItem className="text-red-600 hover:text-red-700">

@@ -1,5 +1,5 @@
 
-Gapi.integrations.base.base_integration.BaseIntegration.collect_evidenceO
+Cintegrations.base.base_integration.BaseIntegration.collect_evidenceO
 E/home/omar/Documents/ruleIQ/api/integrations/base/base_integration.pyB B("3*9
 3
 base_integration.py"
@@ -8,5 +8,5 @@ E/home/omar/Documents/ruleIQ/api/integrations/base/base_integration.pyB B("
 B% B(7
 evidence_type:
 B9 C(
-sinceB:8
-6api.integrations.base.base_integration.BaseIntegrationH
+sinceB64
+2integrations.base.base_integration.BaseIntegrationH

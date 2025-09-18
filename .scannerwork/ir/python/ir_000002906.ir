@@ -1,205 +1,305 @@
 
-B9"Compliance framework (e.g., 'GDPR', 'ISO27001', 'SOC2')"str
-6
-"required"str
-("check_compliance_requirements"str
-"properties"str
- "employee_count"str
+/"board_reporting"str
+1"period"str
+¸
+,®
+"
+                Evaluate control effectiveness for UK regulatory compliance.
+                
+                Control: {control}
+                Requirement: {requirement}
+                Evidence: {evidence}
+                
+                Assessment Criteria:
+                
+                1. DESIGN EFFECTIVENESS
+                - Does control address the requirement?
+                - UK regulatory alignment
+                - Industry best practices
+                
+                2. OPERATIONAL EFFECTIVENESS
+                - Implementation quality
+                - Consistency of application
+                - Evidence of operation
+                
+                3. TESTING RESULTS
+                - Test methodology
+                - Sample selection
+                - Findings and exceptions
+                
+                4. MATURITY RATING
+                Level 1: Initial/Ad-hoc
+                Level 2: Developing
+                Level 3: Defined
+                Level 4: Managed
+                Level 5: Optimized
+                
+                5. IMPROVEMENT RECOMMENDATIONS
+                - Immediate fixes
+                - Enhancement opportunities
+                - Automation potential
+                
+                Rate effectiveness and provide improvement roadmap.
+                "str
+"regulation"str
+ü9ò"
+                Create executive board report for UK compliance status.
+                
+                Organization: {organization}
+                Period: {period}
+                Results: {assessment_results}
+                
+                BOARD REPORT STRUCTURE:
+                
+                1. EXECUTIVE SUMMARY
+                - Overall compliance score
+                - Key achievements
+                - Critical issues
+                - Required decisions
+                
+                2. UK REGULATORY LANDSCAPE
+                - Recent regulatory changes
+                - Upcoming requirements
+                - Enforcement trends
+                - Peer comparisons
+                
+                3. COMPLIANCE STATUS
+                - By regulation (GDPR, FCA, MLR, etc.)
+                - Traffic light status
+                - Trend analysis
+                - Benchmarking
+                
+                4. KEY RISKS & ISSUES
+                - Critical findings
+                - Potential penalties
+                - Reputational risks
+                - Remediation status
+                
+                5. STRATEGIC INITIATIVES
+                - Compliance program enhancements
+                - Technology investments
+                - Resource requirements
+                - ROI analysis
+                
+                6. RECOMMENDATIONS
+                - Board actions required
+                - Policy approvals needed
+                - Resource allocations
+                - Strategic decisions
+                
+                Format for board presentation with clear visuals and metrics.
+                "str
+3*"Load production-ready assessment prompts"str
+"risk_assessment"str
+"current_state"str
+ !"control_effectiveness"str
+"	"control"str
+"gap_analysis"str
+	"context"str
+#"requirement"str
+"organization"str
+"requirements"str
 
-;0int
-@7"Check specific compliance requirements for frameworks"str
-""number"str
-
-"industry"str
-%"data_types"str
-LC"Get the function schema for Google Generative AI function calling"str
-'"array"str
-"name"str
-A"specific_areas"str
-
-"parameters"str
-"business_context"str
-3G*"Specific areas of compliance to focus on"str
-"type"str
-"description"str
-)"items"str
-"string"str
-"object"str
-"framework"str
-."geographic_regions"strself
-¸ ¸( 8list"†&
+0int
+0"assessment_results"str
+àÖ"
+                You are an expert UK compliance officer conducting a risk assessment.
+                
+                Organization: {organization}
+                Regulation: {regulation}
+                Context: {context}
+                
+                Conduct a comprehensive risk assessment following UK regulatory standards:
+                
+                1. INHERENT RISK ANALYSIS
+                - Identify risks based on business activities
+                - Consider UK-specific regulatory requirements
+                - Evaluate sector-specific risks
+                
+                2. CONTROL EFFECTIVENESS
+                - Assess existing controls against UK standards
+                - Identify control gaps
+                - Rate control maturity (1-5 scale)
+                
+                3. RESIDUAL RISK CALCULATION
+                - Calculate post-control risk levels
+                - Use UK regulatory risk matrices
+                - Consider enforcement trends
+                
+                4. RECOMMENDATIONS
+                - Priority remediation actions
+                - Quick wins vs strategic initiatives
+                - Resource requirements
+                
+                5. UK-SPECIFIC CONSIDERATIONS
+                - ICO guidance alignment
+                - FCA expectations
+                - Recent enforcement actions
+                
+                Output as structured JSON with risk scores and actionable recommendations.
+                "str
+$
+"evidence"str
+ÌÂ"
+                Perform a detailed gap analysis for UK {regulation} compliance.
+                
+                Current State: {current_state}
+                Requirements: {requirements}
+                
+                Analysis Framework:
+                
+                1. REQUIREMENT MAPPING
+                - Map each UK regulatory requirement
+                - Identify implementation status
+                - Document evidence available
+                
+                2. GAP IDENTIFICATION
+                - Controls not implemented
+                - Partially implemented controls
+                - Documentation gaps
+                - Process gaps
+                
+                3. PRIORITIZATION
+                - Critical gaps (immediate risk)
+                - High priority (regulatory focus areas)
+                - Medium priority (best practices)
+                - Low priority (enhancements)
+                
+                4. REMEDIATION ROADMAP
+                - Quick fixes (< 1 month)
+                - Short-term (1-3 months)
+                - Medium-term (3-6 months)
+                - Long-term (6+ months)
+                
+                5. RESOURCE REQUIREMENTS
+                - People (roles, skills)
+                - Process (new/updated)
+                - Technology (tools, systems)
+                - Budget estimates
+                
+                Provide detailed gap analysis with actionable remediation plan.
+                "strself
+å! å(%	list"®&
 $
 
-º Ç(."#new-object#Bdict"
- 
-
-º º(7"	#map-set#:"
- 
-
-º9 »(C	"	#map-set#:&
-$
-
-¼ Ç(-"#new-object#Bdict"
- 
-
-¼ ¼(+"	#map-set#:&
-$
-
-¼; Æ(8"#new-object#Bdict&
-$
-
-¼I ¾(F"#new-object#Bdict"
- 
-
-½ ½("	#map-set#:"
- 
-
-½ ¾(E"	#map-set#:"
- 
-
-¼< ¾(F"	#map-set#:&
-$
-
-¿  Ä("#new-object#Bdict"
- 
-
-¿! ¿(1"	#map-set#:&
-$
-
-¿A Ã("#new-object#Bdict&
-$
-
-À À(*"#new-object#Bdict"
- 
-
-À À()"	#map-set#:"
- 
-
-À À(*"	#map-set#:&
-$
-
-À> Á(!"#new-object#Bdict"
- 
-
-À? Á(#"	#map-set#:!""
- 
-
-À, Á($"	#map-set#: !&
-$
-
-Á% Â(&"#new-object#Bdict"
- 
-
-Á& Á(5("	#map-set#:&'&
-$
-
-Á@ Â(*"#new-object#Bdict"
- 
-
-ÁA Â(+"	#map-set#:*"
- 
-
-Á7 Â(,"	#map-set#:&)*"
- 
-
-Á Â(-"	#map-set#:%&&
-$
-
-Â. Ã(/"#new-object#Bdict"
- 
-
-Â/ Â(>0"	#map-set#:/'&
-$
-
-ÂI Ã(1"#new-object#Bdict"
- 
-
-Ã Ã(2"	#map-set#:1"
- 
-
-Â@ Ã(3"	#map-set#:/)1"
- 
-
-Â Ã(4"	#map-set#:./"
- 
-
-¿3 Ã(5"	#map-set#:)
+ç ”(	"#new-object#Bdict)
 '
 
-Ã- Ã(K7"#unknown-value#Blist(
+é  é(I"#unknown-value#Blist(
 &
 
-Ã- Ã(K9"
-#is-exact#:78Bbool
+é  é(I
+"
+#is-exact#:	Bbool
 
 
-Ã- Ã(K:"
-#assume#:9:
+é  é(I"
+#assume#:
+:
 8
 
-Ã- Ã(K<"#set-field# __collection_size:7;Bint(
+é  é(I"#set-field# __collection_size:Bint(
 &
 
-Ã- Ã(K="#array-add-last#:7(
+é  é(I"#array-add-last#:(
 &
 
-Ã- Ã(K>"#array-add-last#:7 "
+é  é(I"#array-add-last#:(
+&
+
+é  é(I"#array-add-last#:'
+%
+
+è Ž("#unknown-value#:"
  
 
-Ã! Ã(K?"	#map-set#:67"
- 
-
-¿ Ä(@"	#map-set#:&
-$
-
-Ä! Æ(7B"#new-object#Bdict"
- 
-
-Ä" Ä(1C"	#map-set#:B'&
-$
-
-Ä< Å(D"#new-object#Bdict"
- 
-
-Ä= Å(E"	#map-set#:D"
- 
-
-Ä3 Å(F"	#map-set#:B)D"
- 
-
-Å Æ(6H"	#map-set#:BG"
- 
-
-Ä Æ(7I"	#map-set#:AB"
- 
-
-¼- Æ(8J"	#map-set#:)
+è Ž("	#map-set#:)
 '
 
-ÆF Ç(,K"#unknown-value#Blist(
+  (O"#unknown-value#Blist(
 &
 
-ÆF Ç(,L"
-#is-exact#:K8Bbool
+  (O"
+#is-exact#:	Bbool
 
 
-ÆF Ç(,M"
-#assume#:L:
+  (O"
+#assume#::
 8
 
-ÆF Ç(,N"#set-field# __collection_size:K;Bint(
+  (O"#set-field# __collection_size:Bint(
 &
 
-ÆF Ç(,O"#array-add-last#:K(
+  (O"#array-add-last#:(
 &
 
-ÆF Ç(,P"#array-add-last#:K"
+  (O"#array-add-last#:(
+&
+
+  (O"#array-add-last#:'
+%
+
+ ¸("#unknown-value#:"
  
 
-Æ: Ç(,Q"	#map-set#:6K"
+ ¸( "	#map-set#:)
+'
+
+º  º(F%"#unknown-value#Blist(
+&
+
+º  º(F&"
+#is-exact#:%	Bbool
+
+
+º  º(F'"
+#assume#:&:
+8
+
+º  º(F("#set-field# __collection_size:%Bint(
+&
+
+º  º(F)"#array-add-last#:%"(
+&
+
+º  º(F*"#array-add-last#:%#(
+&
+
+º  º(F+"#array-add-last#:%$'
+%
+
+¹% á(-"#unknown-value#:%,"
  
 
-¼ Ç(-R"	#map-set#:
-
+¹ á(."	#map-set#:!-)
+'
 
-º Ç(.*;/home/omar/Documents/ruleIQ/services/ai/regulation_tools.py
+ã  ã(P2"#unknown-value#Blist(
+&
+
+ã  ã(P3"
+#is-exact#:2	Bbool
+
+
+ã  ã(P4"
+#assume#:3:
+8
+
+ã  ã(P5"#set-field# __collection_size:2Bint(
+&
+
+ã  ã(P6"#array-add-last#:20(
+&
+
+ã  ã(P7"#array-add-last#:21(
+&
+
+ã  ã(P8"#array-add-last#:2'
+%
+
+â “(:"#unknown-value#:29"
+ 
+
+â “(;"	#map-set#:/:
+
+ç ”(	*G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py

@@ -13,6 +13,7 @@ import {
 } from 'recharts';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { neuralPurple, silver, neutral } from '@/lib/theme/neural-purple-colors';
 
 interface ComplianceTrendChartProps {
   data: Array<{
@@ -40,9 +41,9 @@ export function ComplianceTrendChart({
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="rounded-lg border border-gray-200 bg-white p-3 shadow-lg">
+        <div className="rounded-lg border border-purple-200 bg-white p-3 shadow-lg">
           <p className="text-sm font-semibold text-gray-900">{label}</p>
-          <p className="text-sm text-primary">
+          <p className="text-sm text-purple-600">
             Score: <span className="font-semibold">{payload[0].value}%</span>
           </p>
           {payload[1] && (
@@ -67,28 +68,28 @@ export function ComplianceTrendChart({
           <AreaChart data={formattedData}>
             <defs>
               <linearGradient id="colorScore" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#17255A" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="#17255A" stopOpacity={0} />
+                <stop offset="5%" stopColor={neuralPurple.primary} stopOpacity={0.3} />
+                <stop offset="95%" stopColor={neuralPurple.primary} stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
             <XAxis
               dataKey="date"
               className="text-xs"
-              tick={{ fill: '#6B7280' }}
-              axisLine={{ stroke: '#E5E7EB' }}
+              tick={{ fill: neutral.gray[600] }}
+              axisLine={{ stroke: silver.light }}
             />
             <YAxis
               domain={[0, 100]}
               className="text-xs"
-              tick={{ fill: '#6B7280' }}
-              axisLine={{ stroke: '#E5E7EB' }}
+              tick={{ fill: neutral.gray[600] }}
+              axisLine={{ stroke: silver.light }}
             />
             <Tooltip content={<CustomTooltip />} />
             <Area
               type="monotone"
               dataKey="score"
-              stroke="#17255A"
+              stroke={neuralPurple.primary}
               strokeWidth={2}
               fillOpacity={1}
               fill="url(#colorScore)"
@@ -96,7 +97,7 @@ export function ComplianceTrendChart({
             <Line
               type="monotone"
               dataKey="target"
-              stroke="#CB963E"
+              stroke={silver.primary}
               strokeWidth={2}
               strokeDasharray="5 5"
               dot={false}

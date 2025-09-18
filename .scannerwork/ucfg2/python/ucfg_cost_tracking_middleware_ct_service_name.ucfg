@@ -1,5 +1,5 @@
 
-Tapi.middleware.cost_tracking_middleware.CostTrackingMiddleware._extract_service_nameP
+Ecost_tracking_middleware.CostTrackingMiddleware._extract_service_nameP
 F/home/omar/Documents/ruleIQ/api/middleware/cost_tracking_middleware.pyy y("2*Î
 2z z(5J
 H
@@ -154,5 +154,5 @@ ai_general*Ž
 	
 service:
 y$ y(4	
-requestBB@
->api.middleware.cost_tracking_middleware.CostTrackingMiddlewareH
+requestB31
+/cost_tracking_middleware.CostTrackingMiddlewareH

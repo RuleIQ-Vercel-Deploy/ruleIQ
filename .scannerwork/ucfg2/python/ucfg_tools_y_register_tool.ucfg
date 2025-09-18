@@ -1,13 +1,13 @@
 
-,services.ai.tools.ToolRegistry.register_tool:
-0/home/omar/Documents/ruleIQ/services/ai/tools.pys s("2*ç
-2t z(e
-c
+#ai.tools.ToolRegistry.register_tool:
+0/home/omar/Documents/ruleIQ/services/ai/tools.pys s("2*˚
+2t z(\
+Z
 { {(
-%12"__id*J
+%12"__id*A
 
-__unknown_file (.*, 
-services.ai.tools.ToolRegistry"
+__unknown_file (%*#
+ai.tools.ToolRegistry"
 _toolsI
 G
 { {(
@@ -30,13 +30,13 @@ G
 
 __unknown_file (
 
-tool2__setitem__l
-j
+tool2__setitem__c
+a
 | |(.
-%14"__id*Q
+%14"__id*H
 
-__unknown_file (5*3 
-services.ai.tools.ToolRegistry"
+__unknown_file (,**
+ai.tools.ToolRegistry"
 _tool_by_typeqo
 | |(.
 %15*#
@@ -61,14 +61,14 @@ j
 
 tools.py"
 Ç Ç(
-implicit return*ﬁ
-4~ ~(2k
-i
+implicit return*’
+4~ ~(2b
+`
 ~ ~(
-%1"__id*Q
+%1"__id*H
 
-__unknown_file (5*3 
-services.ai.tools.ToolRegistry"
+__unknown_file (,**
+ai.tools.ToolRegistry"
 _tool_by_typexv
 ~ ~(%
 %2"__mapGet*"
@@ -130,16 +130,16 @@ x
 __unknown_file (
 
 %62info*
-3*√
+3*∫
 5} }(.
 }, }(.
-%8"listl
-j
+%8"listc
+a
 } }(
-%10"__id*Q
+%10"__id*H
 
-__unknown_file (5*3 
-services.ai.tools.ToolRegistry"
+__unknown_file (,**
+ai.tools.ToolRegistry"
 _tool_by_type¶£
 } }(.
 %9"dict.__setitem__*#
@@ -159,5 +159,5 @@ j
 s s(*
 tool:
 s, s(?
-	tool_typeB" 
-services.ai.tools.ToolRegistryH
+	tool_typeB
+ai.tools.ToolRegistryH

@@ -1,34 +1,24 @@
 
 Gmonitoring.prometheus_exporter.PrometheusMetricsExporter.update_metricsR
-F/home/omar/Documents/ruleIQ/app/core/monitoring/prometheus_exporter.pyµ µ("3"5*>
-3
-prometheus_exporter.py"
-æ æ(
-implicit return*î
-5
-º º(:˙˜
+F/home/omar/Documents/ruleIQ/app/core/monitoring/prometheus_exporter.pyò ò("2*º
+2
+ô ù(•¢
 
-º º(:
+û û(!
 %1*X
 
 __unknown_file (<:
-8monitoring.prometheus_exporter.PrometheusMetricsExporter*+
+8monitoring.prometheus_exporter.PrometheusMetricsExporter*'
 
-__unknown_file (
+__unknown_file (
+	
+metrics2bulk_update*
+3*>
+3
+prometheus_exporter.py"
+† †(
+implicit return:
 
-metric_name*%
-
-__unknown_file (	
-
-value*&
-
-__unknown_file (
-
-
-labels2update_metric*
-3
-5:
-
-µ µ(M	
-updatesB<:
+ò ò(4	
+metricsB<:
 8monitoring.prometheus_exporter.PrometheusMetricsExporterH

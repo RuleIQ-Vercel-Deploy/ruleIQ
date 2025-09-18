@@ -1,26 +1,18 @@
 
-%"Calculate innovation index"str
-0.3float
-	0.9float
-0.12floatself
-š$ š(("‚3
-1
+"framework_info"str
+4+"Cache framework information (1 hour TTL)."strself
+°! °(%framework_id
+°' °(8framework_data
+°: ±(ttl
+± ±(%"Œ.
+,
 
-œ œ(."#get-field# current_maturity:(
-&
+³ ´(key"?python-unknown?:#
+!
 
-œ œ(4"#get-field# value:3
-1
+µ µ(7"#unknown-value##
+!
 
-œ œ(;"#dependent-value#*:Bfloat0
-.
+µ µ(7	"#unknown-value#
 
-œ œ(;"#dependent-value#:Bfloat(
-&
-
-œ œ(A
-"
-builtinsmin*:	
-
-œ œ(A
-*I/home/omar/Documents/ruleIQ/services/compliance/cco_strategic_playbook.py
+µ µ(7	*+/home/omar/Documents/ruleIQ/config/cache.py

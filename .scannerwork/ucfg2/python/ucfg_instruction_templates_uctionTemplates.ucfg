@@ -1,52 +1,52 @@
 
-<services.ai.instruction_templates.SystemInstructionTemplatesJ
-@/home/omar/Documents/ruleIQ/services/ai/instruction_templates.py9 9("2*†
-2: :(E
+3ai.instruction_templates.SystemInstructionTemplatesJ
+@/home/omar/Documents/ruleIQ/services/ai/instruction_templates.py9 9("2*Ð
+2: :(E‡„
 :! :(E
-%2*\
+%2*S
 
-__unknown_file (@>
-<services.ai.instruction_templates.SystemInstructionTemplates2_initialize_base_instructionsŽ
-‹
-: :(EU>
-<services.ai.instruction_templates.SystemInstructionTemplates"
+__unknown_file (75
+3ai.instruction_templates.SystemInstructionTemplates2_initialize_base_instructions…
+‚
+: :(EL5
+3ai.instruction_templates.SystemInstructionTemplates"
 base_instructions"__id*"
 
 __unknown_file (
 
-%2’
+%2‰†
 ;# ;(I
-%3*\
+%3*S
 
-__unknown_file (@>
-<services.ai.instruction_templates.SystemInstructionTemplates2_initialize_framework_specifics
-
-; ;(IW>
-<services.ai.instruction_templates.SystemInstructionTemplates"
+__unknown_file (75
+3ai.instruction_templates.SystemInstructionTemplates2_initialize_framework_specifics‡
+„
+; ;(IN5
+3ai.instruction_templates.SystemInstructionTemplates"
 framework_specifics"__id*"
 
 __unknown_file (
 
-%3’
+%3‰†
 <# <(I
-%4*\
+%4*S
 
-__unknown_file (@>
-<services.ai.instruction_templates.SystemInstructionTemplates2_initialize_persona_adaptations
-
-< <(IW>
-<services.ai.instruction_templates.SystemInstructionTemplates"
+__unknown_file (75
+3ai.instruction_templates.SystemInstructionTemplates2_initialize_persona_adaptations‡
+„
+< <(IN5
+3ai.instruction_templates.SystemInstructionTemplates"
 persona_adaptations"__id*"
 
 __unknown_file (
 
 %4*
-3*
+3*x
 3
-instruction_templates.pyNL
+instruction_templates.pyEC
 > >(
-%1"<services.ai.instruction_templates.SystemInstructionTemplates"
+%1"3ai.instruction_templates.SystemInstructionTemplates"
 > >(
 
-%1B@>
-<services.ai.instruction_templates.SystemInstructionTemplatesH
+%1B75
+3ai.instruction_templates.SystemInstructionTemplatesH

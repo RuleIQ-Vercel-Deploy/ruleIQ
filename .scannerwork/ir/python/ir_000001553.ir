@@ -1,29 +1,32 @@
 
-!"regulatory_convergence"str
-€—"
-        MATCH (j1:Jurisdiction)-[:ENFORCES]->(r1:Regulation)-[:REQUIRES]->(req1:Requirement)
-        MATCH (j2:Jurisdiction)-[:ENFORCES]->(r2:Regulation)-[:REQUIRES]->(req2:Requirement)
-        WHERE j1.code <> j2.code 
-          AND req1.description = req2.description
-        RETURN DISTINCT req1.title AS common_requirement,
-               COLLECT(DISTINCT j1.code + ':' + r1.name) AS regulations
-        ORDER BY size(COLLECT(DISTINCT j1.code)) DESC
-        "str
-8/"Find common requirements across jurisdictions"strself
-ı* ı(."€(
-&
-˜ ˜(Âquery"#id#:Bstr#
-!
+6-"Check if IP is a TOR exit node (simplified)"str
 
-Ä Ä(1"#unknown-value#,
+	0int
+"198.96.155.3"strself
+± ±(ip
+±  ±('list"®5
+3
+
+≥ ≥(%
+tor_ranges"#unknown-value#Blist(
+&
+
+≥ ≥(%"
+#is-exact#:Bbool
+
+
+≥ ≥(%"
+#assume#::
+8
+
+≥ ≥(%
+"#set-field# __collection_size:	Bint(
+&
+
+≥ ≥(%"#array-add-last#:,
 *
 
-Ä Ä(1results"#unknown-value#&
-$
+¥ ¥("
+#binop in#2in:Bbool
 
-Å Å(2"#new-object#Bdict"
- 
-
-Å Å(1	"	#map-set#:
-
-Å Å(2*A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py
+¥ ¥(*:/home/omar/Documents/ruleIQ/services/session_management.py

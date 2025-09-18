@@ -1,5 +1,5 @@
 
-Cservices.ai.ab_testing_utils.AIModelTester.record_model_performanceE
+:ai.ab_testing_utils.AIModelTester.record_model_performanceE
 ;/home/omar/Documents/ruleIQ/services/ai/ab_testing_utils.pyC C( "2*Ø
 2F R(PN
 S0 T(
@@ -35,7 +35,7 @@ A
 
 __unknown_file (	
 control*
-6*Í
+6*Ä
 6T T(A
 ?
 S T(	
@@ -43,13 +43,13 @@ A
 
 __unknown_file (
 
-%1s
-q
+%1j
+h
 U U(
-%4"__id*Y
+%4"__id*P
 
-__unknown_file (=*;,
-*services.ai.ab_testing_utils.AIModelTester"
+__unknown_file (4*2#
+!ai.ab_testing_utils.AIModelTester"
 	framework*
 7
 8*U
@@ -108,5 +108,5 @@ model_name:
 D D()
 metric_value:
 D+ E(	
-contextB.,
-*services.ai.ab_testing_utils.AIModelTesterH
+contextB%#
+!ai.ab_testing_utils.AIModelTesterH

@@ -1,8 +1,8 @@
 
 Yuk_compliance_ingestion_pipeline.UKComplianceGraphIngestion.ingest_complete_uk_compliance]
-S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipeline.py' '(+"2*¢
-2( *(çä
-+ +(@
+S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipeline.py$ $(+"2*¢
+2% '(çä
+( ((@
 %15*&
 
 __unknown_file (
@@ -13,58 +13,58 @@ S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipelin
 __unknown_file (-+
 )Starting UK compliance graph ingestion...2info*
 7*Ì
-7- -(-ÜÉ
-- -(-
+7* *(-ÜÉ
+* *(-
 %4*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_create_graph_schemaçä
-. .(4
++ +(4
 %5*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_ingest_compliance_manifestáÑ
-/ /(.
+, ,(.
 %6*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_ingest_api_documentsçä
-0 0(4
+- -(4
 %7*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_ingest_data_protection_actòï
-1 1(?
+. .(?
 %8*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2&_create_cross_regulation_relationshipsÜÉ
-2 2(-
+/ /(-
 %9*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_generate_embeddingsàÖ
-3 3(.
+0 0(.
 %10*[
 
 __unknown_file (?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion2_create_graph_indexeså
 â
-4: 4(N
+1: 1(N
 %11"__id*p
 
 __unknown_file (T*R=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion"
 ingestion_statsa
 _
-4 4(N
+1 1(N
 %12"__concat*-
-4 4(7!
+1 1(7!
 Ingestion complete. Stats: %s*
-4: 4(N
+1: 1(N
 
 %11fd
-4 4(O
+1 1(O
 %13*&
 
 __unknown_file (
@@ -76,13 +76,13 @@ _
 
 %122infoå
 â
-5 5('
+2 2('
 %14"__id*p
 
 __unknown_file (T*R=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion"
 ingestion_stats"
-5 5('
+2 2('
 
 %14B?=
 ;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestionH

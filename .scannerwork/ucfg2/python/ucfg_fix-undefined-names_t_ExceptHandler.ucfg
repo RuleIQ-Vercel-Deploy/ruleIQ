@@ -1,68 +1,0 @@
-
-:fix-undefined-names.UndefinedNameFixer.visit_ExceptHandlerL
-@/home/omar/Documents/ruleIQ/scripts/sonar/fix-undefined-names.pyš š("2*c
-2
-› ›(0J
-H
-
-œ œ(
-%5"__id*.
-
-__unknown_file (*
-
-node"
-name*
-4
-5*<
-3
-fix-undefined-names.py"
-¡ ¡
-implicit return*©
-4
-ž ž( ’
-
-ž ž( 
-%1*F
-
-__unknown_file (*(
-&fix-undefined-names.UndefinedNameFixer*$
-
-__unknown_file (
-
-node2generic_visit*
-3*º
-5
- (-u
-s
-
- (
-%2"__id*Y
-
-__unknown_file (=*;(
-&fix-undefined-names.UndefinedNameFixer"
-defined_namesJ
-H
-
-# (,
-%3"__id*.
-
-__unknown_file (*
-
-node"
-namea_
-
- (-
-%4*"
-
-__unknown_file (
-
-%2*"
-
-__unknown_file (
-
-%32add*
-4:
-
-š" š(&
-nodeB*(
-&fix-undefined-names.UndefinedNameFixerH

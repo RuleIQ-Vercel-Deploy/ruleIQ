@@ -1,15 +1,15 @@
 
-:services.auth_service.AuthService.get_user_active_sessions@
-4/home/omar/Documents/ruleIQ/services/auth_service.pyÅ Å(&"2*≤
+1auth_service.AuthService.get_user_active_sessions@
+4/home/omar/Documents/ruleIQ/services/auth_service.pyÅ Å(&"2*©
 2
-Ç Ç(?s
-q
+Ç Ç(?j
+h
 
 É É(0
-%13"__id*V
+%13"__id*M
 
-__unknown_file (:*8#
-!services.auth_service.AuthService"
+__unknown_file (1*/
+auth_service.AuthService"
 session_managervt
 
 É É(K
@@ -50,16 +50,16 @@ C
 í í(
 
 
-sessions*œ
+sessions*∆
 6
-á á(Ms
-q
+á á(Mj
+h
 
 á! á(5
-%11"__id*V
+%11"__id*M
 
-__unknown_file (:*8#
-!services.auth_service.AuthService"
+__unknown_file (1*/
+auth_service.AuthService"
 session_managersq
 
 á! á(M
@@ -208,5 +208,5 @@ created_at*"
 6:
 
 Å- Å(:	
-user_idB%#
-!services.auth_service.AuthServiceH
+user_idB
+auth_service.AuthServiceH

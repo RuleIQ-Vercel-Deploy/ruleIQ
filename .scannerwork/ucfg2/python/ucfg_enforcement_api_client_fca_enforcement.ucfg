@@ -1,8 +1,8 @@
 
 Aenforcement_api_client.EnforcementAPIClient.fetch_fca_enforcementL
-B/home/omar/Documents/ruleIQ/services/api/enforcement_api_client.py? ?(#"2*
-2@ E(‡„
-F F(:
+B/home/omar/Documents/ruleIQ/services/api/enforcement_api_client.py> >(#"2*
+2? D(‡„
+E E(:
 %16*&
 
 __unknown_file (
@@ -15,27 +15,27 @@ B/home/omar/Documents/ruleIQ/services/api/enforcement_api_client.py? ?(#"2*
 10*?
 3
 enforcement_api_client.py"
-Q Q(
+P P(
 implicit return*›
-4O O(3xv
-O O(3
+4N N(3xv
+N N(3
 %1*K
 
 __unknown_file (/-
 +enforcement_api_client.EnforcementAPIClient2_scrape_fca_enforcement"
-O O(3
+N N(3
 
 %1*å
-5N N(Ih
+5M M(Ih
 f
-N N(H
+M M(H
 %2"__concat*7
-N N(D+)
+M M(D+)
 'FCA API failed, trying web scraping: %s*
-NG N(H
+MG M(H
 
 ege
-N N(I
+M M(I
 %3*&
 
 __unknown_file (
@@ -47,8 +47,8 @@ f
 
 %22warning*
 4*Æ
-8K K(0B@
-K! K(0
+8J J(0B@
+J! J(0
 %4*(
 
 __unknown_file (
@@ -56,13 +56,13 @@ f
 
 response2json>
 <
-K K(0
+J J(0
 data"__id*"
 
 __unknown_file (
 
 %4ž›
-L L(<
+K K(<
 %5*K
 
 __unknown_file (/-
@@ -71,12 +71,12 @@ f
 __unknown_file (
 
 data2_parse_fca_enforcement"
-L L(<
+K K(<
 
 %5*ý
-9J J(-N
+9I I(-N
 L
-J J("
+I I("
 %6"__id*4
 
 __unknown_file (*
@@ -85,7 +85,7 @@ L
 response"
 status
 Œ
-J J(-
+I I(-
 %7"	__compare*"
 
 __unknown_file (
@@ -102,22 +102,22 @@ L
 4
 5
 8*ô
-10H I(Kr
+10G H(Kr
 p
-H H(#
+G G(#
 %8"__id*X
 
 __unknown_file (<*:-
 +enforcement_api_client.EnforcementAPIClient"	
 sessiont
 r
-H( H(6
+G( G(6
 %9"__id*Z
 
 __unknown_file (>*<-
 +enforcement_api_client.EnforcementAPIClient"
 	endpointssq
-H( H(=
+G( G(=
 %10"__mapGet*"
 
 __unknown_file (
@@ -126,7 +126,7 @@ r
 
 __unknown_file (
 fca2__getitem__tr
-H( H(D
+G( G(D
 %11"__mapGet*#
 
 __unknown_file (
@@ -135,10 +135,10 @@ r
 
 __unknown_file (
 api2__getitem__
-I I(>
+H H(>
 %12"dict‘
 Ž
-I I(&
+H H(&
 %13"__mapSet*#
 
 __unknown_file (
@@ -152,7 +152,7 @@ r
 
 limit–
 “
-I( I(=
+H( H(=
 %14"__mapSet*#
 
 __unknown_file (
@@ -164,7 +164,7 @@ r
 
 __unknown_file (
 enforcementtr
-H I(?
+G H(?
 %15*"
 
 __unknown_file (
@@ -178,7 +178,7 @@ r
 
 %12C
 A
-H I(K
+G H(K
 
 response"__id*#
 
@@ -189,6 +189,6 @@ A
 4
 5
 9:
-?* ?(7
+>* >(7
 limitB/-
 +enforcement_api_client.EnforcementAPIClientH

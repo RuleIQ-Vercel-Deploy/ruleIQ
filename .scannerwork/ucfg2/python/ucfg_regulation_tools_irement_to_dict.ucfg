@@ -1,15 +1,15 @@
 
-:services.ai.regulation_tools.ComplianceRequirement.to_dictE
-;/home/omar/Documents/ruleIQ/services/ai/regulation_tools.py0 0("2*ú
+1ai.regulation_tools.ComplianceRequirement.to_dictE
+;/home/omar/Documents/ruleIQ/services/ai/regulation_tools.py0 0("2*®
 21 5(8
 1 5(8
-%1"dict€
-~
+%1"dictw
+u
 1" 1(5
-%2"__id*f
+%2"__id*]
 
-__unknown_file (J*H4
-2services.ai.regulation_tools.ComplianceRequirement"
+__unknown_file (A*?+
+)ai.regulation_tools.ComplianceRequirement"
 requirement_id•
 ’
 1 1(5
@@ -24,13 +24,13 @@
 
 __unknown_file (
 
-%2w
-u
+%2n
+l
 1@ 1(J
-%4"__id*]
+%4"__id*T
 
-__unknown_file (A*?4
-2services.ai.regulation_tools.ComplianceRequirement"
+__unknown_file (8*6+
+)ai.regulation_tools.ComplianceRequirement"
 titleŒ
 ‰
 17 1(J
@@ -45,13 +45,13 @@ u
 
 __unknown_file (
 
-%4}
-{
+%4t
+r
 2 2(+
-%6"__id*c
+%6"__id*Z
 
-__unknown_file (G*E4
-2services.ai.regulation_tools.ComplianceRequirement"
+__unknown_file (>*<+
+)ai.regulation_tools.ComplianceRequirement"
 description’
 
 2 2(+
@@ -66,13 +66,13 @@ u
 
 __unknown_file (
 
-%6{
-y
+%6r
+p
 2: 2(H
-%8"__id*a
+%8"__id*X
 
-__unknown_file (E*C4
-2services.ai.regulation_tools.ComplianceRequirement"
+__unknown_file (<*:+
+)ai.regulation_tools.ComplianceRequirement"
 	mandatory
 
 2- 2(H
@@ -87,13 +87,13 @@ y
 
 __unknown_file (
 
-%8|
-z
+%8s
+q
 3 3('
-%10"__id*a
+%10"__id*X
 
-__unknown_file (E*C4
-2services.ai.regulation_tools.ComplianceRequirement"
+__unknown_file (<*:+
+)ai.regulation_tools.ComplianceRequirement"
 	framework’
 
 3 3('
@@ -108,13 +108,13 @@ z
 
 __unknown_file (
 
-%10z
-x
+%10q
+o
 34 3(@
-%12"__id*_
+%12"__id*V
 
-__unknown_file (C*A4
-2services.ai.regulation_tools.ComplianceRequirement"	
+__unknown_file (:*8+
+)ai.regulation_tools.ComplianceRequirement"	
 section
 
 3) 3(@
@@ -129,13 +129,13 @@ x
 
 __unknown_file (
 
-%12‹
-ˆ
+%12
+
 4' 4(C
-%14"__id*o
+%14"__id*f
 
-__unknown_file (S*Q4
-2services.ai.regulation_tools.ComplianceRequirement"
+__unknown_file (J*H+
+)ai.regulation_tools.ComplianceRequirement"
 implementation_guidance 
 
 4 4(C
@@ -150,13 +150,13 @@ x
 
 __unknown_file (
 
-%14…
-‚
+%14{
+y
 5! 5(7
-%16"__id*i
+%16"__id*`
 
-__unknown_file (M*K4
-2services.ai.regulation_tools.ComplianceRequirement"
+__unknown_file (D*B+
+)ai.regulation_tools.ComplianceRequirement"
 evidence_requiredš
 —
 5 5(7
@@ -174,5 +174,5 @@ x
 %16"
 1 5(8
 
-%1B64
-2services.ai.regulation_tools.ComplianceRequirementH
+%1B-+
+)ai.regulation_tools.ComplianceRequirementH

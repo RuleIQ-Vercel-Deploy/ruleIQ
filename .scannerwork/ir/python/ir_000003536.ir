@@ -1,0 +1,12 @@
+
+8/"Check if circuit is closed (normal operation)"strselff f("±'
+%
+h h("#get-field# _state:!
+
+h h(*"#unknown-value#'
+%
+h h(1"#get-field# CLOSED:*
+(
+h h(1"
+#binop ==#2==:Bbool
+h h(1*:/home/omar/Documents/ruleIQ/services/ai/circuit_breaker.py

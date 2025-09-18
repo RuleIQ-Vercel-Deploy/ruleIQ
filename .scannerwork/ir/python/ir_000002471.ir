@@ -1,14 +1,48 @@
 
-I@"Manually retry an async function with the given configuration."strfunc
-º º(7config
-º9 Ω(args
-Ω Ω(kwargs
-Ω Ω( "dict"\#
-!
 
-ø ø(J"#unknown-value##
-!
+0int
++""Assign to first available agent."strself
+« «(task
+» »(eligible_agents
+… …(#list"[+
+)
 
-ø ø(J"#unknown-value#
+Ã& Ã(5"
+__bool__*:BboolH,"*
 
-ø ø(J*./home/omar/Documents/ruleIQ/api/utils/retry.py
+Ã& Ã(5 *
+Ã# Ã(%2
+Ã6 Ã(:"è)
+'
+
+Ã Ã(""#unknown-value#Blist$
+"
+
+Ã Ã(""#array-read#:(
+&
+
+Ã Ã("	"#array-add-last#:
+
+Ã Ã(="∆)
+'
+
+Ã; Ã(=
+"#unknown-value#Blist(
+&
+
+Ã; Ã(="
+#is-exact#:
+Bbool
+
+
+Ã; Ã(="
+#assume#::
+8
+
+Ã; Ã(="#set-field# __collection_size:
+Bint
+
+Ã Ã(="&*
+
+
+Ã Ã(=*:/home/omar/Documents/ruleIQ/services/agents/coordinator.py

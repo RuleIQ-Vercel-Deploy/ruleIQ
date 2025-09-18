@@ -1,11 +1,27 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import { chatService, type ChatWebSocketMessage } from '@/lib/api/chat.service';
+import { chatService } from '@/lib/api/chat.service';
+import { ChatWebSocketMessageSchema } from '@/lib/validation/zod-schemas';
+import type { ChatMessageMetadata } from '@/lib/validation/zod-schemas';
 
 import { useAuthStore } from './auth.store';
 
 import type { ChatConversation, ChatMessage } from '@/types/api';
+
+// Type guard for error-like objects
+function isErrorLike(e: unknown): e is { message: string } {
+  return !!e && typeof e === 'object' && 'message' in e && typeof (e as Record<string, unknown>).message === 'string';
+}
+
+// Type guard for response errors
+function hasResponseStatus(e: unknown): e is { response: { status: number } } {
+  return !!e && typeof e === 'object' && 'response' in e &&
+         typeof (e as Record<string, unknown>).response === 'object' &&
+         (e as Record<string, unknown>).response !== null &&
+         'status' in ((e as Record<string, unknown>).response as Record<string, unknown>) &&
+         typeof ((e as Record<string, unknown>).response as Record<string, unknown>).status === 'number';
+}
 
 interface ChatState {
   // Conversations
@@ -39,7 +55,7 @@ interface ChatState {
   loadConversation: (conversationId: string) => Promise<void>;
   createConversation: (title?: string, initialMessage?: string) => Promise<void>;
   setActiveConversation: (conversationId: string | null) => void;
-  sendMessage: (message: string, metadata?: Record<string, any>) => Promise<void>;
+  sendMessage: (message: string, metadata?: ChatMessageMetadata) => Promise<void>;
   deleteConversation: (conversationId: string) => Promise<void>;
 
   // Widget-specific actions
@@ -92,9 +108,13 @@ export const useChatStore = create<ChatState>()(
 
           const response = await chatService.getConversations();
           set({ conversations: response.items, isLoadingConversations: false });
-        } catch (error: any) {
+        } catch (error: unknown) {
           // Handle authentication errors gracefully
-          if (error?.response?.status === 401 || error?.response?.status === 403) {
+          const errorMessage = isErrorLike(error) ? error.message : 'Failed to load conversations';
+          const isAuthError = hasResponseStatus(error) &&
+                             (error.response.status === 401 || error.response.status === 403);
+
+          if (isAuthError) {
             // Auth error - just show empty state, don't block the UI
             set({
               conversations: [],
@@ -104,9 +124,7 @@ export const useChatStore = create<ChatState>()(
           } else {
             // Other errors - show briefly but don't block
             set({
-              error: error && typeof error === 'object' && 'message' in error
-                ? (error as any).message
-                : 'Failed to load conversations',
+              error: errorMessage,
               isLoadingConversations: false,
               conversations: [], // Still allow UI to render
             });
@@ -130,10 +148,7 @@ export const useChatStore = create<ChatState>()(
           get().connectWebSocket(conversationId);
         } catch (error: unknown) {
           set({
-            error: 
-              error && typeof error === 'object' && 'message' in error
-                ? (error as any).message
-                : 'Failed to load conversation',
+            error: isErrorLike(error) ? error.message : 'Failed to load conversation',
             isLoadingMessages: false,
           });
         }
@@ -159,9 +174,7 @@ export const useChatStore = create<ChatState>()(
           // Connect WebSocket for the new conversation
           get().connectWebSocket(response.conversation.id);
         } catch (error: unknown) {
-          set({ error: error && typeof error === 'object' && 'message' in error
-                ? (error as any).message
-                : 'Failed to create conversation' });
+          set({ error: isErrorLike(error) ? error.message : 'Failed to create conversation' });
         }
       },
 
@@ -184,7 +197,7 @@ export const useChatStore = create<ChatState>()(
         }
       },
 
-      sendMessage: async (message: string, metadata?: Record<string, any>) => {
+      sendMessage: async (message: string, metadata?: ChatMessageMetadata) => {
         const state = get();
         const conversationId =
           metadata?.source === 'widget' ? state.widgetConversationId : state.activeConversationId;
@@ -265,9 +278,7 @@ export const useChatStore = create<ChatState>()(
               [conversationId]:
                 state.messages[conversationId]?.filter((msg) => msg.id !== tempMessage.id) || [],
             },
-            error: error && typeof error === 'object' && 'message' in error
-                ? (error as any).message
-                : 'Failed to send message',
+            error: isErrorLike(error) ? error.message : 'Failed to send message',
             isSendingMessage: false,
           }));
         }
@@ -297,9 +308,7 @@ export const useChatStore = create<ChatState>()(
             return newState;
           });
         } catch (error: unknown) {
-          set({ error: error && typeof error === 'object' && 'message' in error
-                ? (error as any).message
-                : 'Failed to delete conversation' });
+          set({ error: isErrorLike(error) ? error.message : 'Failed to delete conversation' });
         }
       },
 
@@ -319,15 +328,24 @@ export const useChatStore = create<ChatState>()(
         }
 
         // Set up message handler
-        const cleanup = chatService.addMessageHandler((message: ChatWebSocketMessage) => {
+        const cleanup = chatService.addMessageHandler((rawMessage: unknown) => {
+          // Validate the incoming WebSocket message
+          const validation = ChatWebSocketMessageSchema.safeParse(rawMessage);
+          if (!validation.success) {
+            console.warn('Invalid WebSocket message received:', validation.error);
+            return;
+          }
+
+          const message = validation.data;
+
           switch (message.type) {
             case 'connection':
-              set({ 
+              set({
                 isConnected: !!(
-                  message.data && 
-                  typeof message.data === 'object' && 
+                  message.data &&
+                  typeof message.data === 'object' &&
                   'status' in message.data &&
-                  (message.data as any).status === 'connected'
+                  (message.data as Record<string, unknown>).status === 'connected'
                 )
               });
               break;
@@ -338,7 +356,7 @@ export const useChatStore = create<ChatState>()(
                 message.data &&
                 typeof message.data === 'object' &&
                 'conversation_id' in message.data &&
-                (message.data as any).conversation_id === conversationId
+                (message.data as Record<string, unknown>).conversation_id === conversationId
               ) {
                 set((state) => ({
                   messages: {
@@ -357,10 +375,10 @@ export const useChatStore = create<ChatState>()(
                 'action' in message.data &&
                 'user' in message.data
               ) {
-                const data = message.data as any;
+                const data = message.data as Record<string, unknown>;
                 if (data.action === 'start') {
                   set((state) => ({
-                    typingUsers: [...state.typingUsers, data.user],
+                    typingUsers: [...state.typingUsers, data.user as string],
                   }));
                 } else if (data.action === 'stop') {
                   set((state) => ({
@@ -371,13 +389,13 @@ export const useChatStore = create<ChatState>()(
               break;
 
             case 'error':
-              set({ 
-                error: 
-                  message.data && 
-                  typeof message.data === 'object' && 
+              set({
+                error:
+                  message.data &&
+                  typeof message.data === 'object' &&
                   'message' in message.data
-                    ? (message.data as any).message
-                    : 'WebSocket error occurred' 
+                    ? (message.data as Record<string, unknown>).message as string
+                    : 'WebSocket error occurred'
               });
               break;
           }
@@ -429,8 +447,8 @@ export const useChatStore = create<ChatState>()(
           // Connect WebSocket for the widget conversation
           get().connectWebSocket(response.conversation.id);
         } catch (error: unknown) {
-          set({ error: error && typeof error === 'object' && 'message' in error
-                ? (error as any).message
+          set({ error: isErrorLike(error)
+                ? error.message
                 : 'Failed to create widget conversation' });
         }
       },
@@ -454,8 +472,8 @@ export const useChatStore = create<ChatState>()(
           get().connectWebSocket(state.widgetConversationId);
         } catch (error: unknown) {
           set({
-            error: error && typeof error === 'object' && 'message' in error
-                ? (error as any).message
+            error: isErrorLike(error)
+                ? error.message
                 : 'Failed to load widget conversation',
             isLoadingMessages: false,
           });

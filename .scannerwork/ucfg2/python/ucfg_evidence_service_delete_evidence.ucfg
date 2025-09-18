@@ -1,5 +1,5 @@
 
-9services.evidence_service.EvidenceService.delete_evidenceD
+0evidence_service.EvidenceService.delete_evidenceD
 8/home/omar/Documents/ruleIQ/services/evidence_service.py¬ ¬("3*;
 3
 evidence_service.py"
@@ -10,5 +10,5 @@
 evidence_id:
 
 ¬+ ¬(8	
-user_idB-+
-)services.evidence_service.EvidenceServiceH
+user_idB$"
+ evidence_service.EvidenceServiceH

@@ -1,4 +1,5 @@
 import { useAuthStore } from '@/lib/stores/auth.store';
+import type { APIErrorResponse } from '@/lib/validation/zod-schemas';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
@@ -6,7 +7,7 @@ export class APIError extends Error {
   constructor(
     message: string,
     public status: number,
-    public response?: any,
+    public response?: APIErrorResponse,
   ) {
     super(message);
     this.name = 'APIError';
@@ -133,7 +134,7 @@ class APIClient {
   }
 
   // Convenience methods
-  async get<T>(endpoint: string, options?: { params?: Record<string, any> }): Promise<T> {
+  async get<T>(endpoint: string, options?: { params?: Record<string, string | number | boolean | null | undefined> }): Promise<T> {
     let url = endpoint;
 
     // Add query parameters if provided
@@ -153,22 +154,22 @@ class APIClient {
     return this.request<T>(url, { method: 'GET' });
   }
 
-  async post<T>(endpoint: string, data?: any): Promise<T> {
-    return this.request<T>(endpoint, {
+  async post<TResponse, TRequest = unknown>(endpoint: string, data?: TRequest): Promise<TResponse> {
+    return this.request<TResponse>(endpoint, {
       method: 'POST',
       body: data ? JSON.stringify(data) : undefined,
     });
   }
 
-  async put<T>(endpoint: string, data?: any): Promise<T> {
-    return this.request<T>(endpoint, {
+  async put<TResponse, TRequest = unknown>(endpoint: string, data?: TRequest): Promise<TResponse> {
+    return this.request<TResponse>(endpoint, {
       method: 'PUT',
       body: data ? JSON.stringify(data) : undefined,
     });
   }
 
-  async patch<T>(endpoint: string, data?: any): Promise<T> {
-    return this.request<T>(endpoint, {
+  async patch<TResponse, TRequest = unknown>(endpoint: string, data?: TRequest): Promise<TResponse> {
+    return this.request<TResponse>(endpoint, {
       method: 'PATCH',
       body: data ? JSON.stringify(data) : undefined,
     });
@@ -217,14 +218,14 @@ class APIClient {
     }
   }
 
-  async upload<T>(endpoint: string, file: File, additionalData?: Record<string, any>): Promise<T> {
+  async upload<T>(endpoint: string, file: File, additionalData?: Record<string, string | number | boolean | null | undefined>): Promise<T> {
     const normalizedEndpoint = endpoint.startsWith('/api') ? endpoint : `/api/v1${endpoint}`;
     const url = `${API_BASE_URL}${normalizedEndpoint}`;
 
     try {
       const headers = await this.getAuthHeaders();
       // Remove Content-Type header to let browser set it with boundary for FormData
-      delete (headers as any)['Content-Type'];
+      const { ['Content-Type']: _omit, ...rest } = headers as Record<string, string>;
 
       const formData = new FormData();
       formData.append('file', file);
@@ -232,13 +233,15 @@ class APIClient {
       // Add any additional data
       if (additionalData) {
         Object.entries(additionalData).forEach(([key, value]) => {
-          formData.append(key, String(value));
+          if (value !== null && value !== undefined) {
+            formData.append(key, String(value));
+          }
         });
       }
 
       const response = await fetch(url, {
         method: 'POST',
-        headers,
+        headers: rest,
         body: formData,
       });
 
@@ -267,7 +270,7 @@ class APIClient {
   }
 
   // Public convenience methods for unauthenticated endpoints
-  async publicGet<T>(endpoint: string, options?: { params?: Record<string, any> }): Promise<T> {
+  async publicGet<T>(endpoint: string, options?: { params?: Record<string, string | number | boolean | null | undefined> }): Promise<T> {
     let url = endpoint;
 
     // Add query parameters if provided
@@ -287,8 +290,8 @@ class APIClient {
     return this.publicRequest<T>(url, { method: 'GET' });
   }
 
-  async publicPost<T>(endpoint: string, data?: any): Promise<T> {
-    return this.publicRequest<T>(endpoint, {
+  async publicPost<TResponse, TRequest = unknown>(endpoint: string, data?: TRequest): Promise<TResponse> {
+    return this.publicRequest<TResponse>(endpoint, {
       method: 'POST',
       body: data ? JSON.stringify(data) : undefined,
     });

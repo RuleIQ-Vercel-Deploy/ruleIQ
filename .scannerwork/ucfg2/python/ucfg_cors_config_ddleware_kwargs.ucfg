@@ -1,0 +1,151 @@
+
++cors_config.CORSConfig.to_middleware_kwargsA
+5/home/omar/Documents/ruleIQ/middleware/cors_config.pyç ç("2*Ã
+2
+é ì(
+
+î õ(	
+%1"dictg
+e
+
+ï ï(1
+%2"__id*K
+
+__unknown_file (/*-
+cors_config.CORSConfig"
+allowed_originsñ
+ì
+
+ï ï(1
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*-
+
+__unknown_file (
+allow_origins*"
+
+__unknown_file (
+
+%2i
+g
+
+ñ! ñ(7
+%4"__id*M
+
+__unknown_file (1*/
+cors_config.CORSConfig"
+allow_credentialsö
+ó
+
+ñ ñ(7
+%5"__mapSet*"
+
+__unknown_file (
+
+%1*1
+
+__unknown_file (
+allow_credentials*"
+
+__unknown_file (
+
+%4g
+e
+
+ó ó(1
+%6"__id*K
+
+__unknown_file (/*-
+cors_config.CORSConfig"
+ALLOWED_METHODSñ
+ì
+
+ó ó(1
+%7"__mapSet*"
+
+__unknown_file (
+
+%1*-
+
+__unknown_file (
+allow_methods*"
+
+__unknown_file (
+
+%6g
+e
+
+ò ò(1
+%8"__id*K
+
+__unknown_file (/*-
+cors_config.CORSConfig"
+ALLOWED_HEADERSñ
+ì
+
+ò ò(1
+%9"__mapSet*"
+
+__unknown_file (
+
+%1*-
+
+__unknown_file (
+allow_headers*"
+
+__unknown_file (
+
+%8h
+f
+
+ô ô(2
+%10"__id*K
+
+__unknown_file (/*-
+cors_config.CORSConfig"
+EXPOSED_HEADERSô
+ñ
+
+ô ô(2
+%11"__mapSet*"
+
+__unknown_file (
+
+%1*.
+
+__unknown_file (
+expose_headers*#
+
+__unknown_file (
+
+%10`
+^
+
+ö ö(#
+%12"__id*C
+
+__unknown_file ('*%
+cors_config.CORSConfig"	
+max_ageí
+è
+
+ö ö(#
+%13"__mapSet*"
+
+__unknown_file (
+
+%1*'
+
+__unknown_file (	
+max_age*#
+
+__unknown_file (
+
+%12"
+
+î õ(	
+
+%1B
+cors_config.CORSConfigH

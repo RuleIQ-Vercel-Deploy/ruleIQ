@@ -1,3 +1,30 @@
 
-bY"<ChatMessage(id={self.id}, role='{self.role}', conversation_id={self.conversation_id})>"strself+ +("
-, ,(i*4/home/omar/Documents/ruleIQ/database/chat_message.py
+50int
+D;"Get AI configuration for more creative content generation"str
+"temperature"str
+"top_p"str
+"max_output_tokens"str
+2048int
+0.9float
+
+"top_k"str
+0.8floatself
+Ÿ Ÿ( "Ê&
+$
+
+¡ ¢(&"#new-object#Bdict"
+ 
+
+¡ ¡(""	#map-set#:"
+ 
+
+¡$ ¡(0	"	#map-set#:"
+ 
+
+¡2 ¡(="	#map-set#:
+"
+ 
+
+¢ ¢(%"	#map-set#:
+
+¡ ¢(&*//home/omar/Documents/ruleIQ/config/ai_config.py

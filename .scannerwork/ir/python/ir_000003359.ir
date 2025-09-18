@@ -1,0 +1,19 @@
+
+ÝÓ"
+        Decorator to require specific roles for a route.
+        
+        Usage:
+            @router.get("/moderator/content")
+            @JWTMiddleware.require_roles("moderator", "admin")
+            async def moderator_route(current_user: User = Depends(get_current_user)):
+                return {"role": current_user.role}
+        "strallowed_rolesT T()"»!
+
+n n("#unknown-value#(
+&
+^ n(%closure"#new-object#/
+-
+^ n("#set-field# allowed_roles:+
+)
+^ n("?python-partial-apply?:
+n n(*8/home/omar/Documents/ruleIQ/middleware/jwt_decorators.py

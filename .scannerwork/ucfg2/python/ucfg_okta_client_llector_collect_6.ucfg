@@ -1,5 +1,5 @@
 
-1api.clients.okta_client.OktaZoneCollector.collectB
+-clients.okta_client.OktaZoneCollector.collectB
 6/home/omar/Documents/ruleIQ/api/clients/okta_client.py– –("2*A
 2
 — —(
@@ -12,5 +12,5 @@
 %1:
 
 – –($
-kwargsB-+
-)api.clients.okta_client.OktaZoneCollectorH
+kwargsB)'
+%clients.okta_client.OktaZoneCollectorH

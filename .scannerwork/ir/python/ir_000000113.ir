@@ -1,8 +1,4 @@
 
-&"Get LangSmith project name."str
-"LANGCHAIN_PROJECT"str
-"ruleiq-assessment"str"2 
-
-? ?(B"
-osgetenv:
-? ?(B*6/home/omar/Documents/ruleIQ/config/langsmith_config.py
+{r"<ConversionEvent(type='{self.conversion_type}', stage='{self.conversion_stage}', value={self.conversion_value})>"strself
+Ä Ä("
+Å Å(Ç*8/home/omar/Documents/ruleIQ/database/conversion_event.py

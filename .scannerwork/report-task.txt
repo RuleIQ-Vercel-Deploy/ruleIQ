@@ -1,0 +1,7 @@
+organization=omara1-bakri
+projectKey=ruliq-compliance-platform
+serverUrl=https://sonarcloud.io
+serverVersion=8.0.0.67297
+dashboardUrl=https://sonarcloud.io/dashboard?id=ruliq-compliance-platform
+ceTaskId=AZlaMgF_Ge_sVke0-AI6
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AZlaMgF_Ge_sVke0-AI6

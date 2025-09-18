@@ -1,154 +1,136 @@
-import { env } from '@/config/env';
-
-export type DesignSystem = 'legacy' | 'teal';
+import { neuralPurple, silver, semantic, neutral } from './theme/neural-purple-colors';
 
 /**
- * Theme utility functions for the design system migration
+ * Theme utility functions for the Neural Purple design system
  */
 export class ThemeUtils {
   /**
-   * Get the current design system based on environment flags and localStorage
+   * Get the Neural Purple theme configuration
    */
-  static getCurrentDesignSystem(): DesignSystem {
-    // Check environment flag first
-    if (env.NEXT_PUBLIC_USE_NEW_THEME) {
-      return 'teal';
-    }
-
-    // Check localStorage if on client
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem('ruleiq-design-system');
-      if (stored === 'teal' || stored === 'legacy') {
-        return stored;
-      }
-    }
-
-    return 'legacy';
+  static getThemeConfig() {
+    return {
+      colors: {
+        primary: neuralPurple,
+        accent: silver,
+        semantic,
+        neutral,
+      },
+    };
   }
 
   /**
-   * Check if the new teal theme is active
+   * Check if dark mode is active
    */
-  static isNewTheme(): boolean {
-    return this.getCurrentDesignSystem() === 'teal';
+  static isDarkMode(): boolean {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark');
+    }
+    return false;
   }
 
   /**
    * Get theme-specific CSS class names
    */
-  static getThemeClasses(designSystem: DesignSystem = this.getCurrentDesignSystem()) {
-    const base = `design-${designSystem}`;
+  static getThemeClasses() {
+    const isDark = this.isDarkMode();
 
     return {
-      root: base,
-      // Legacy dark theme classes
-      legacy: {
-        background: 'bg-surface-base',
-        surface: 'bg-surface-primary',
-        text: 'text-text-primary',
-        primary: 'bg-brand-primary text-white',
-        secondary: 'bg-brand-secondary text-white',
-        border: 'border-neutral-700',
-      },
-      // New teal light theme classes
-      teal: {
-        background: 'bg-neutral-50',
-        surface: 'bg-white',
-        text: 'text-neutral-900',
-        primary: 'bg-brand-primary text-white',
-        secondary: 'bg-brand-secondary text-white',
-        border: 'border-neutral-200',
-      },
+      root: 'neural-purple',
+      // Common theme classes
+      background: isDark ? 'bg-gray-900' : 'bg-gray-50',
+      surface: isDark ? 'bg-gray-800' : 'bg-white',
+      text: isDark ? 'text-gray-100' : 'text-gray-900',
+      primary: 'bg-purple-600 text-white hover:bg-purple-700',
+      secondary: 'bg-silver-400 text-gray-900 hover:bg-silver-500',
+      border: isDark ? 'border-gray-700' : 'border-gray-200',
+      // Neural Purple specific
+      accent: 'bg-purple-100 text-purple-900',
+      gradient: 'bg-purple-gradient',
     };
   }
 
   /**
-   * Get conditional class names based on current theme
+   * Apply dark mode toggle
    */
-  static cn(
-    legacyClasses: string,
-    tealClasses: string,
-    designSystem: DesignSystem = this.getCurrentDesignSystem(),
-  ): string {
-    return designSystem === 'teal' ? tealClasses : legacyClasses;
-  }
-
-  /**
-   * Apply theme to document root
-   */
-  static applyTheme(designSystem: DesignSystem) {
+  static toggleDarkMode() {
     if (typeof window === 'undefined') return;
 
     const root = document.documentElement;
+    const isDark = root.classList.contains('dark');
 
-    // Remove existing theme classes
-    root.classList.remove('design-legacy', 'design-teal');
+    if (isDark) {
+      root.classList.remove('dark');
+      localStorage.setItem('ruleiq-theme-mode', 'light');
+    } else {
+      root.classList.add('dark');
+      localStorage.setItem('ruleiq-theme-mode', 'dark');
+    }
+  }
 
-    // Add new theme class
-    root.classList.add(`design-${designSystem}`);
+  /**
+   * Initialize theme from stored preference
+   */
+  static initializeTheme() {
+    if (typeof window === 'undefined') return;
 
-    // Store preference
-    localStorage.setItem('ruleiq-design-system', designSystem);
+    const stored = localStorage.getItem('ruleiq-theme-mode');
+    const root = document.documentElement;
+
+    if (stored === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
   }
 
   /**
    * Get theme-specific colors for programmatic use
    */
-  static getThemeColors(designSystem: DesignSystem = this.getCurrentDesignSystem()) {
-    const colors = {
-      legacy: {
-        primary: '#2C7A7B',
-        secondary: '#319795',
-        background: '#0A0A0B',
-        surface: '#111113',
-        text: '#FAFAFA',
-        border: '#3F3F46',
-      },
-      teal: {
-        primary: '#2C7A7B',
-        secondary: '#319795',
-        background: '#F9FAFB',
-        surface: '#FFFFFF',
-        text: '#111827',
-        border: '#E5E7EB',
-      },
-    };
-
-    return colors[designSystem];
-  }
-
-  /**
-   * Check if feature flag allows theme switching
-   */
-  static canSwitchTheme(): boolean {
-    return !env.NEXT_PUBLIC_USE_NEW_THEME; // Allow switching only when not forced by env
-  }
-
-  /**
-   * Get theme toggle button props
-   */
-  static getToggleProps(currentTheme: DesignSystem) {
+  static getThemeColors() {
     return {
-      'aria-label': `Switch to ${currentTheme === 'legacy' ? 'new teal' : 'legacy'} theme`,
-      'data-theme': currentTheme,
-      title: `Currently using ${currentTheme} theme. Click to switch.`,
+      primary: neuralPurple.primary,
+      primaryDark: neuralPurple.dark,
+      primaryLight: neuralPurple.light,
+      secondary: silver.primary,
+      secondaryLight: silver.light,
+      secondaryDark: silver.dark,
+      background: neutral.gray['50'],
+      surface: neutral.white,
+      text: neutral.gray['900'],
+      border: neutral.gray['200'],
+      success: semantic.success,
+      error: semantic.error,
+      warning: semantic.warning,
+      info: semantic.info,
+    };
+  }
+
+  /**
+   * Get gradient configurations
+   */
+  static getGradients() {
+    return {
+      purple: `linear-gradient(135deg, ${neuralPurple.dark} 0%, ${neuralPurple.primary} 50%, ${neuralPurple.light} 100%)`,
+      silver: `linear-gradient(135deg, ${silver.dark} 0%, ${silver.primary} 50%, ${silver.light} 100%)`,
+      radial: `radial-gradient(ellipse at top, ${neuralPurple.light}, ${neuralPurple.primary}, ${neuralPurple.dark})`,
     };
   }
 }
 
 /**
- * Hook-style utility for conditional classes
+ * Hook-style utility for Neural Purple theme
  */
 export function useThemeClasses() {
-  const designSystem = ThemeUtils.getCurrentDesignSystem();
-  const classes = ThemeUtils.getThemeClasses(designSystem);
+  const isDarkMode = ThemeUtils.isDarkMode();
+  const classes = ThemeUtils.getThemeClasses();
+  const colors = ThemeUtils.getThemeColors();
+  const gradients = ThemeUtils.getGradients();
 
   return {
-    designSystem,
-    isNewTheme: designSystem === 'teal',
+    isDarkMode,
     classes,
-    cn: (legacyClasses: string, tealClasses: string) =>
-      ThemeUtils.cn(legacyClasses, tealClasses, designSystem),
-    colors: ThemeUtils.getThemeColors(designSystem),
+    colors,
+    gradients,
+    toggleDarkMode: ThemeUtils.toggleDarkMode,
   };
 }

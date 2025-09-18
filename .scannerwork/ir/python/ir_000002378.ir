@@ -1,3 +1,65 @@
 
-xo"<AIQuestionBank(category='{self.category}', type='{self.question_type}', difficulty={self.difficulty_level})>"strselfo o("
-p r(*8/home/omar/Documents/ruleIQ/database/ai_question_bank.py
+
+"priority"str
++
+""{framework_id} compliance policy"str
+"type"str
+"medium"str
+	"description"str
+
+0int
+'"Staff training documentation"str
+"high"str
+"training_records"str
+"policy_document"str
+$"Suggest required evidence"strself
+Å Å(answers
+Å  Å(-framework_id
+Å/ Å(@list" &
+$
+
+Ñ à("#new-object#Bdict"
+ 
+
+Ö Ö()"	#map-set#:"
+ 
+
+Ü Ü(B"	#map-set#:	
+"
+ 
+
+á á(""	#map-set#:&
+$
+
+â ç("#new-object#Bdict"
+ 
+
+ä ä(*"	#map-set#:"
+ 
+
+ã ã(="	#map-set#:	"
+ 
+
+å å($"	#map-set#:3
+1
+
+É é(	evidence"#unknown-value#Blist(
+&
+
+É é(	"
+#is-exact#:Bbool
+
+
+É é(	"
+#assume#::
+8
+
+É é(	"#set-field# __collection_size:Bint(
+&
+
+É é(	"#array-add-last#:(
+&
+
+É é(	"#array-add-last#:
+
+è è(*;/home/omar/Documents/ruleIQ/tests/mocks/ai_service_mocks.py

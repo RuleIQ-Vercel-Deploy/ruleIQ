@@ -1,6 +1,6 @@
 
-Dservices.data_access_service.DataAccessService.can_access_assessmentE
-;/home/omar/Documents/ruleIQ/services/data_access_service.pyi i("2*è
+;data_access_service.DataAccessService.can_access_assessmentE
+;/home/omar/Documents/ruleIQ/services/data_access_service.pyi i("2*ß
 2k t(F
 D
 u7 u(>
@@ -9,12 +9,12 @@ D
 __unknown_file (*
 
 user"
-id£ 
+idš—
 u u(?
-%6*N
+%6*E
 
-__unknown_file (20
-.services.data_access_service.DataAccessService*"
+__unknown_file ()'
+%data_access_service.DataAccessService*"
 
 __unknown_file (
 
@@ -116,5 +116,5 @@ D
 i$ i(7
 user:!
 j j(!
-assessment_owner_idB20
-.services.data_access_service.DataAccessServiceH
+assessment_owner_idB)'
+%data_access_service.DataAccessServiceH

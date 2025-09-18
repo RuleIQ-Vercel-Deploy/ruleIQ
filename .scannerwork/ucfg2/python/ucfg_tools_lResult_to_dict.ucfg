@@ -1,16 +1,15 @@
 
-$services.ai.tools.ToolResult.to_dict:
-0/home/omar/Documents/ruleIQ/services/ai/tools.py* *("2*’
-
+ai.tools.ToolResult.to_dict:
+0/home/omar/Documents/ruleIQ/services/ai/tools.py* *("2*å	
 2+ +(*
 , .(
-%1"dictc
-a
+%1"dictZ
+X
 , ,('
-%2"__id*I
+%2"__id*@
 
-__unknown_file (-*+
-services.ai.tools.ToolResult"	
+__unknown_file ($*"
+ai.tools.ToolResult"	
 successŽ
 ‹
 , ,('
@@ -25,13 +24,13 @@ a
 
 __unknown_file (
 
-%2`
-^
+%2W
+U
 ,1 ,(:
-%4"__id*F
+%4"__id*=
 
-__unknown_file (**(
-services.ai.tools.ToolResult"
+__unknown_file (!*
+ai.tools.ToolResult"
 data‹
 ˆ
 ,) ,(:
@@ -46,13 +45,13 @@ a
 
 __unknown_file (
 
-%4a
-_
+%4X
+V
 ,E -(
-%6"__id*G
+%6"__id*>
 
-__unknown_file (+*)
-services.ai.tools.ToolResult"
+__unknown_file ("* 
+ai.tools.ToolResult"
 errorŒ
 ‰
 ,< -(
@@ -67,13 +66,13 @@ _
 
 __unknown_file (
 
-%6j
-h
+%6a
+_
 -% -(8
-%8"__id*P
+%8"__id*G
 
-__unknown_file (4*2
-services.ai.tools.ToolResult"
+__unknown_file (+*)
+ai.tools.ToolResult"
 execution_time•
 ’
 - -(8
@@ -88,13 +87,13 @@ h
 
 __unknown_file (
 
-%8e
-c
+%8\
+Z
 -F .(
-%10"__id*J
+%10"__id*A
 
-__unknown_file (.*,
-services.ai.tools.ToolResult"
+__unknown_file (%*#
+ai.tools.ToolResult"
 
 metadata‘
 Ž
@@ -114,5 +113,5 @@ c
 %10"
 , .(
 
-%1B 
-services.ai.tools.ToolResultH
+%1B
+ai.tools.ToolResultH

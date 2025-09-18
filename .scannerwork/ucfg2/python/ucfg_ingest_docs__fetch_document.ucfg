@@ -1,5 +1,5 @@
 
-Gservices.ai.evaluation.tools.ingest_docs.DocumentFetcher.fetch_documentQ
+>ai.evaluation.tools.ingest_docs.DocumentFetcher.fetch_documentQ
 G/home/omar/Documents/ruleIQ/services/ai/evaluation/tools/ingest_docs.pyW W("2*ö
 2X X(7z
 x
@@ -25,7 +25,7 @@ x
 __unknown_file (
 
 %112info*
-9*™
+9*
 7^ ^(?O
 M
 ^. ^(>
@@ -35,19 +35,19 @@ M
 
 
 response"	
-content¤¡
+content›˜
 ^ ^(?
-%4*X
+%4*O
 
-__unknown_file (<:
-8services.ai.evaluation.tools.ingest_docs.DocumentFetcher*"
+__unknown_file (31
+/ai.evaluation.tools.ingest_docs.DocumentFetcher*"
 
 __unknown_file (
 
 %32_extract_pdf_text"
 ^ ^(?
 
-%4*—
+%4*Ž
 8` `(=L
 J
 `/ `(<
@@ -57,26 +57,26 @@ J
 
 
 response"
-text¥¢
+textœ™
 ` `(=
-%6*X
+%6*O
 
-__unknown_file (<:
-8services.ai.evaluation.tools.ingest_docs.DocumentFetcher*"
+__unknown_file (31
+/ai.evaluation.tools.ingest_docs.DocumentFetcher*"
 
 __unknown_file (
 
 %52_extract_html_text"
 ` `(=
 
-%6*²
-9[ [(8
-}
+%6*©
+9[ [(8v
+t
 [ [(#
-%7"__id*e
+%7"__id*\
 
-__unknown_file (I*G:
-8services.ai.evaluation.tools.ingest_docs.DocumentFetcher"	
+__unknown_file (@*>1
+/ai.evaluation.tools.ingest_docs.DocumentFetcher"	
 sessionqo
 [ [(8
 %8*"
@@ -124,5 +124,5 @@ J
 url:
 W' W(;
 
-doc_typeB<:
-8services.ai.evaluation.tools.ingest_docs.DocumentFetcherH
+doc_typeB31
+/ai.evaluation.tools.ingest_docs.DocumentFetcherH

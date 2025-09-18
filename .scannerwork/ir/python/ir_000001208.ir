@@ -1,29 +1,7 @@
 
+B9"Get the global instruction performance monitor instance"str"7#
+!
 
-0int
-/&"Get the number of validation errors."strself
-Ç Ç("‘4
-2
+í í("#unknown-value#
 
-É. É(D"#get-field# validation_errors:+
-)
-
-É. É(D"
-__bool__*:BboolH,"*
-
-É. É(D *
-É+ É(-2
-ÉE É(I"x4
-2
-
-É É()"#get-field# validation_errors:,
-*
-
-É É(*"
-builtinslen*:Bint
-
-É É(K"
-
-É É(K"&*
-
-É É(K*5/home/omar/Documents/ruleIQ/services/ai/exceptions.py
+í í(*>/home/omar/Documents/ruleIQ/services/ai/instruction_monitor.py

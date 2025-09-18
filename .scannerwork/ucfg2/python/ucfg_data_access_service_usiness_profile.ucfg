@@ -1,6 +1,6 @@
 
-Jservices.data_access_service.DataAccessService.can_access_business_profileE
-;/home/omar/Documents/ruleIQ/services/data_access_service.py8 8(#"2*ò
+Adata_access_service.DataAccessService.can_access_business_profileE
+;/home/omar/Documents/ruleIQ/services/data_access_service.py8 8(#"2*é
 2: D(G
 E
 E7 E(>
@@ -9,12 +9,12 @@ E
 __unknown_file (*
 
 user"
-id¥¢
+idœ™
 E E(?
-%13*N
+%13*E
 
-__unknown_file (20
-.services.data_access_service.DataAccessService*#
+__unknown_file ()'
+%data_access_service.DataAccessService*#
 
 __unknown_file (
 
@@ -134,14 +134,14 @@ H
 10L L("
 L L(	
 
-False*å
-11I J(*p
-n
+False*Ü
+11I J(*g
+e
 I I(
-%6"__id*V
+%6"__id*M
 
-__unknown_file (:*80
-.services.data_access_service.DataAccessService"
+__unknown_file (1*/'
+%data_access_service.DataAccessService"
 dbnl
 I I(4
 %7*"
@@ -206,5 +206,5 @@ profile_idca
 
 profile_id:
 9 9()
-profile_owner_idB20
-.services.data_access_service.DataAccessServiceH
+profile_owner_idB)'
+%data_access_service.DataAccessServiceH

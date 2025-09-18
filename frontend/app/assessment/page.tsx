@@ -6,8 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ArrowLeft, Brain, Clock, CheckCircle, AlertCircle } from 'lucide-react';
-import { FreemiumAssessmentFlow } from '@/components/freemium/freemium-assessment-flow';
+import { AssessmentWizard } from '@/components/assessments/AssessmentWizard';
 import { freemiumService } from '@/lib/api/freemium.service';
+import { frameworkService } from '@/lib/api/frameworks.service';
+import type { AssessmentFramework, AssessmentResult } from '@/lib/assessment-engine/types';
 
 export default function AssessmentPage() {
   const router = useRouter();
@@ -15,39 +17,128 @@ export default function AssessmentPage() {
   const token = searchParams?.get('token') ?? null;
 
   const [sessionData, setSessionData] = useState<any>(null);
+  const [framework, setFramework] = useState<AssessmentFramework | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [uiProgress, setUiProgress] = useState<{ answered: number; total: number; percentage: number } | null>(null);
 
   useEffect(() => {
-    // TODO: Replace with proper logging
+    let mounted = true;
+
     if (!token) {
-      // TODO: Replace with proper logging
       router.push('/');
       return;
     }
-    // TODO: Replace with proper logging
-    loadSession();
+
+    const loadData = async () => {
+      if (!token || !mounted) return;
+
+      try {
+        setLoading(true);
+        setError(null);
+
+        // Load session data and framework in parallel
+        const [session, defaultFramework] = await Promise.all([
+          freemiumService.getSessionProgress(token),
+          Promise.resolve(frameworkService.getDefaultFramework())
+        ]);
+
+        // Check if component is still mounted before updating state
+        if (!mounted) return;
+
+        setSessionData(session);
+        setFramework(defaultFramework);
+
+        // Initialize UI progress from session data
+        if (session?.progress) {
+          setUiProgress({
+            answered: session.progress.current_question ?? 0,
+            total: session.progress.total_questions_estimate ?? 0,
+            percentage: session.progress.progress_percentage ?? 0
+          });
+        }
+      } catch (err) {
+        // Check if component is still mounted before updating error state
+        if (!mounted) return;
+        
+        setError(err instanceof Error ? err.message : 'Failed to load assessment session');
+      } finally {
+        // Check if component is still mounted before updating loading state
+        if (!mounted) return;
+        
+        setLoading(false);
+      }
+    };
+
+    loadData();
+
+    return () => {
+      mounted = false;
+    };
   }, [token, router]);
 
-  const loadSession = async () => {
+  const loadSessionAndFramework = async () => {
     if (!token) return;
 
     try {
       setLoading(true);
       setError(null);
-      const session = await freemiumService.getSessionProgress(token);
-      setSessionData(session);
-    } catch (err) {
-      // TODO: Replace with proper logging
 
-      // // TODO: Replace with proper logging
+      // Load session data and framework in parallel
+      const [session, defaultFramework] = await Promise.all([
+        freemiumService.getSessionProgress(token),
+        Promise.resolve(frameworkService.getDefaultFramework())
+      ]);
+
+      setSessionData(session);
+      setFramework(defaultFramework);
+
+      // Initialize UI progress from session data
+      if (session?.progress) {
+        setUiProgress({
+          answered: session.progress.current_question ?? 0,
+          total: session.progress.total_questions_estimate ?? 0,
+          percentage: session.progress.progress_percentage ?? 0
+        });
+      }
+    } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load assessment session');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleAssessmentComplete = () => {
+  const handleAssessmentComplete = async (result: AssessmentResult) => {
+    if (!token) return;
+
+    try {
+      // Persist the assessment results before redirecting
+      await freemiumService.completeAssessment(token, result);
+
+      // Also store in sessionStorage as backup
+      sessionStorage.setItem(`assessment_result_${token}`, JSON.stringify(result));
+
+      // Optionally refresh the cache if using assessment-results.service
+      // await assessmentResultsService.refreshCache(token);
+
+      router.push(`/assessment/results/${token}`);
+    } catch (error) {
+      console.error('Failed to save assessment results:', error);
+
+      // Store in sessionStorage for fallback persistence
+      sessionStorage.setItem(`assessment_result_${token}`, JSON.stringify(result));
+
+      // Show error but still redirect - results will be available from sessionStorage
+      setError('Failed to save results to server. Showing a local preview.');
+
+      // Redirect after showing error message
+      setTimeout(() => {
+        router.push(`/assessment/results/${token}`);
+      }, 2000);
+    }
+  };
+
+  const goToResults = () => {
     if (token) {
       router.push(`/assessment/results/${token}`);
     }
@@ -55,10 +146,10 @@ export default function AssessmentPage() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-teal-50 via-white to-neutral-50">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-50 via-white to-neutral-50">
         <Card className="w-full max-w-md">
           <CardContent className="p-8 text-center">
-            <Brain className="mx-auto mb-4 h-12 w-12 animate-pulse text-teal-600" />
+            <Brain className="mx-auto mb-4 h-12 w-12 animate-pulse text-purple-600" />
             <h2 className="mb-2 text-xl font-semibold">Loading Your Assessment</h2>
             <p className="text-muted-foreground">
               Preparing your personalized AI-driven assessment...
@@ -71,7 +162,7 @@ export default function AssessmentPage() {
 
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-teal-50 via-white to-neutral-50">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-50 via-white to-neutral-50">
         <Card className="w-full max-w-md">
           <CardContent className="p-8 text-center">
             <AlertCircle className="mx-auto mb-4 h-12 w-12 text-destructive" />
@@ -82,7 +173,7 @@ export default function AssessmentPage() {
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to Home
               </Button>
-              <Button onClick={loadSession}>Try Again</Button>
+              <Button onClick={loadSessionAndFramework}>Try Again</Button>
             </div>
           </CardContent>
         </Card>
@@ -90,15 +181,20 @@ export default function AssessmentPage() {
     );
   }
 
-  if (!sessionData) {
+  if (!sessionData || !framework) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-teal-50 via-white to-neutral-50">
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-purple-50 via-white to-neutral-50">
         <Card className="w-full max-w-md">
           <CardContent className="p-8 text-center">
             <AlertCircle className="mx-auto mb-4 h-12 w-12 text-amber-500" />
-            <h2 className="mb-2 text-xl font-semibold">Session Not Found</h2>
+            <h2 className="mb-2 text-xl font-semibold">
+              {!sessionData ? 'Session Not Found' : 'Framework Not Available'}
+            </h2>
             <p className="mb-6 text-muted-foreground">
-              The assessment session could not be found or has expired.
+              {!sessionData 
+                ? 'The assessment session could not be found or has expired.'
+                : 'The assessment framework could not be loaded. Please try again.'
+              }
             </p>
             <Button onClick={() => router.push('/')}>
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -111,7 +207,7 @@ export default function AssessmentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-neutral-50">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-neutral-50">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
@@ -122,7 +218,7 @@ export default function AssessmentPage() {
                 Back
               </Button>
               <div>
-                <h1 className="text-2xl font-bold text-teal-700">ruleIQ</h1>
+                <h1 className="text-2xl font-bold text-purple-700">ruleIQ</h1>
                 <p className="text-sm text-muted-foreground">AI Compliance Assessment</p>
               </div>
             </div>
@@ -152,44 +248,45 @@ export default function AssessmentPage() {
           <div className="mb-2 flex items-center justify-between">
             <span className="text-sm font-medium">Assessment Progress</span>
             <span className="text-sm text-muted-foreground">
-              {sessionData.questions_answered} of {sessionData.total_questions} questions
+              {uiProgress ? uiProgress.answered : (sessionData.progress?.current_question ?? 0)} of {uiProgress ? uiProgress.total : (sessionData.progress?.total_questions_estimate ?? 0)} questions
             </span>
           </div>
-          <Progress value={sessionData.progress_percentage} className="h-2" />
+          <Progress value={uiProgress ? uiProgress.percentage : (sessionData.progress?.progress_percentage ?? 0)} className="h-2" />
         </div>
       </div>
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <div className="mx-auto max-w-3xl">
-          {sessionData.status === 'completed' ? (
+        <div className="mx-auto max-w-4xl">
+          {(sessionData.progress?.current_question ?? 0) >= (sessionData.progress?.total_questions_estimate ?? 1) ? (
             <Card className="p-8 text-center">
-              <CheckCircle className="mx-auto mb-4 h-16 w-16 text-teal-600" />
+              <CheckCircle className="mx-auto mb-4 h-16 w-16 text-purple-600" />
               <h2 className="mb-2 text-2xl font-bold">Assessment Complete!</h2>
               <p className="mb-6 text-muted-foreground">
                 Your AI-powered compliance assessment has been completed successfully.
               </p>
-              <Button onClick={handleAssessmentComplete}>View Results</Button>
+              <Button onClick={goToResults}>
+                View Results
+              </Button>
             </Card>
           ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Brain className="h-5 w-5 text-teal-600" />
-                  AI-Powered Compliance Assessment
-                </CardTitle>
-                <p className="text-muted-foreground">
-                  Our AI will ask you personalized questions based on your responses to provide the
-                  most accurate compliance assessment for your organization.
-                </p>
-              </CardHeader>
-              <CardContent>
-                <FreemiumAssessmentFlow
-                  token={token ?? undefined}
-                  onComplete={handleAssessmentComplete}
-                />
-              </CardContent>
-            </Card>
+            <AssessmentWizard
+              framework={framework}
+              assessmentId={token}  // Pass the token as assessmentId for proper API calls
+              businessProfileId={sessionData.lead_id || 'freemium-user'}
+              onComplete={handleAssessmentComplete}
+              onSave={(progress) => {
+                // Update UI progress
+                setUiProgress({
+                  answered: progress.answeredQuestions,
+                  total: progress.totalQuestions,
+                  percentage: progress.percentComplete
+                });
+                // Optional: Save progress to freemium service
+                console.log('Assessment progress:', progress);
+              }}
+              onExit={() => router.push('/')}
+            />
           )}
         </div>
       </main>

@@ -1,13 +1,13 @@
 
-5api.middleware.api_versioning.VersionRouter.add_routeF
-</home/omar/Documents/ruleIQ/api/middleware/api_versioning.pyk k("2*ì
-2l l(+r
-p
+&api_versioning.VersionRouter.add_routeF
+</home/omar/Documents/ruleIQ/api/middleware/api_versioning.pyk k("2*Î
+2l l(+c
+a
 m m(%
-%11"__id*W
+%11"__id*H
 
-__unknown_file (;*9-
-+api.middleware.api_versioning.VersionRouter"
+__unknown_file (,**
+api_versioning.VersionRouter"
 prefixt
 r
 m m(7
@@ -29,13 +29,13 @@ E
 
 __unknown_file (
 
-%12r
-p
+%12c
+a
 n n(%
-%13"__id*W
+%13"__id*H
 
-__unknown_file (;*9-
-+api.middleware.api_versioning.VersionRouter"
+__unknown_file (,**
+api_versioning.VersionRouter"
 routesom
 n n(%
 %14*#
@@ -59,14 +59,14 @@ p
 3
 api_versioning.py"
 r r(
-implicit return*¿
-4p p(cq
-o
+implicit return*°
+4p p(cb
+`
 p p(
-%1"__id*W
+%1"__id*H
 
-__unknown_file (;*9-
-+api.middleware.api_versioning.VersionRouter"
+__unknown_file (,**
+api_versioning.VersionRouter"
 routesvt
 p p(
 %2"__mapGet*"
@@ -136,16 +136,16 @@ o
 __unknown_file (
 
 %32append*
-3*Ç
+3*¸
 5o o(%
 o# o(%
-%8"listr
-p
+%8"listc
+a
 o o(
-%10"__id*W
+%10"__id*H
 
-__unknown_file (;*9-
-+api.middleware.api_versioning.VersionRouter"
+__unknown_file (,**
+api_versioning.VersionRouter"
 routes¤¡
 o o(%
 %9"dict.__setitem__*#
@@ -170,5 +170,5 @@ p
 k2 k(>	
 version:
 k@ k(H
-kwargsB/-
-+api.middleware.api_versioning.VersionRouterH
+kwargsB 
+api_versioning.VersionRouterH

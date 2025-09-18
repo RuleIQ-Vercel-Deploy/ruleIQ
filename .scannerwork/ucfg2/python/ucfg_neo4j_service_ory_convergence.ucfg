@@ -1,6 +1,6 @@
 
-Gservices.neo4j_service.Neo4jGraphRAGService.find_regulatory_convergenceA
-5/home/omar/Documents/ruleIQ/services/neo4j_service.pyı ı()"2*ﬁ
+>neo4j_service.Neo4jGraphRAGService.find_regulatory_convergenceA
+5/home/omar/Documents/ruleIQ/services/neo4j_service.pyı ı()"2*’
 2
 ˆ ˆ(;ì
 ê
@@ -17,13 +17,13 @@ Gservices.neo4j_service.Neo4jGraphRAGService.find_regulatory_convergenceA
         RETURN DISTINCT req1.title AS common_requirement,
                COLLECT(DISTINCT j1.code + ':' + r1.name) AS regulations
         ORDER BY size(COLLECT(DISTINCT j1.code)) DESC
-        òï
+        èå
 
 Ä Ä(1
-%1*K
+%1*B
 
-__unknown_file (/-
-+services.neo4j_service.Neo4jGraphRAGService*%
+__unknown_file (&$
+"neo4j_service.Neo4jGraphRAGService*%
 
 __unknown_file (	
 
@@ -57,5 +57,5 @@ A
 
 Å Å(2
 
-%2B/-
-+services.neo4j_service.Neo4jGraphRAGServiceH
+%2B&$
+"neo4j_service.Neo4jGraphRAGServiceH

@@ -1,11 +1,11 @@
 
 ?regulation_api_client.RegulationAPIClient.fetch_fca_enforcementM
-A/home/omar/Documents/ruleIQ/services/api/regulation_api_client.pyç ç(#"2*â
+A/home/omar/Documents/ruleIQ/services/api/regulation_api_client.pyå å(#"2*â
 2
-é é()s
+ç ç()s
 q
 
-è è(F
+é é(F
 url"__id*V
 
 __unknown_file (:8
@@ -13,23 +13,23 @@ q
 9*@
 3
 regulation_api_client.py"
-ö ö(
+ô ô(
 implicit return*ï
 4
-ó ó(Bi
+ñ ñ(Bi
 g
 
-ó ó(A
+ñ ñ(A
 %1"__concat*4
 
-ó ó(=&$
+ñ ñ(=&$
 "Error fetching FCA enforcement: %s*
 
-ó@ ó(A
+ñ@ ñ(A
 
 ege
 
-ó ó(B
+ñ ñ(B
 %2*&
 
 __unknown_file (
@@ -41,17 +41,17 @@ g
 
 %12error
 
-ò ò(
+ó ó(
 %3"list"
 
-ò ò(
+ó ó(
 
 %3*s
 5
-ñ ñ(@Z
+ï ï(@Z
 X
 
-ñ ñ()
+ï ï()
 %4"__id*>
 
 __unknown_file ("* 
@@ -62,9 +62,9 @@ X
 3
 4*†
 7
-ì ì(3DB
+í í(3DB
 
-ì$ ì(3
+í$ í(3
 %5*(
 
 __unknown_file (
@@ -73,32 +73,32 @@ X
 response2textC
 A
 
-ì ì(3	
+í í(3	
 content"__id*"
 
 __unknown_file (
 
 %5
 
-î# î(%
+ì# ì(%
 %6"listH
 F
 
-î î(%
+ì ì(%
 enforcements"__id*"
 
 __unknown_file (
 
 %6"
 
-ï ï('
+î î('
 
 enforcements*Ä
 8
-í í(-P
+ë ë(-P
 N
 
-í í("
+ë ë("
 %7"__id*4
 
 __unknown_file (*
@@ -108,7 +108,7 @@ N
 statusë
 é
 
-í í(-
+ë ë(-
 %8"	__compare*"
 
 __unknown_file (
@@ -125,17 +125,17 @@ N
 5
 7*∫
 9
-ë ë(8r
+ê ê(8r
 p
 
-ë ë(#
+ê ê(#
 %9"__id*V
 
 __unknown_file (:*8+
 )regulation_api_client.RegulationAPIClient"	
 sessionca
 
-ë ë(,
+ê ê(,
 %10*"
 
 __unknown_file (
@@ -147,7 +147,7 @@ p
 url2getE
 C
 
-ë ë(8
+ê ê(8
 
 response"__id*#
 

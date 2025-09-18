@@ -1,12 +1,12 @@
 
-9pydantic_ai_framework.BaseComplianceAgent.process_requestN
-D/home/omar/Documents/ruleIQ/services/agents/pydantic_ai_framework.pyf f("7*Ò	
-7j j(MÃÀ
+@agents.pydantic_ai_framework.BaseComplianceAgent.process_requestN
+D/home/omar/Documents/ruleIQ/services/agents/pydantic_ai_framework.pyf f("7*î	
+7j j(MÊÇ
 j% j(M
-%6*I
+%6*P
 
-__unknown_file (-+
-)pydantic_ai_framework.BaseComplianceAgent*'
+__unknown_file (42
+0agents.pydantic_ai_framework.BaseComplianceAgent*'
 
 __unknown_file (
 	
@@ -21,13 +21,13 @@ H
 
 __unknown_file (
 
-%6n
-l
+%6u
+s
 k k(%
-%7"__id*T
+%7"__id*[
 
-__unknown_file (8*6+
-)pydantic_ai_framework.BaseComplianceAgent"
+__unknown_file (?*=2
+0agents.pydantic_ai_framework.BaseComplianceAgent"
 agentGE
 kA l(
 %8*'
@@ -55,12 +55,12 @@ model_dump}{
 
 __unknown_file (
 
-%9ÒÏ
+%9ÙÖ
 m n(
-%10*I
+%10*P
 
-__unknown_file (-+
-)pydantic_ai_framework.BaseComplianceAgent*&
+__unknown_file (42
+0agents.pydantic_ai_framework.BaseComplianceAgent*&
 
 __unknown_file (
 
@@ -76,12 +76,12 @@ H
 
 __unknown_file (
 
-%10ôñ
+%10ûø
 o o(J
-%11*I
+%11*P
 
-__unknown_file (-+
-)pydantic_ai_framework.BaseComplianceAgent*'
+__unknown_file (42
+0agents.pydantic_ai_framework.BaseComplianceAgent*'
 
 __unknown_file (
 	
@@ -100,5 +100,5 @@ H
 f$ f(0	
 request:
 f2 f(G	
-contextB-+
-)pydantic_ai_framework.BaseComplianceAgentH
+contextB42
+0agents.pydantic_ai_framework.BaseComplianceAgentH

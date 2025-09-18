@@ -1,15 +1,15 @@
 
-Gapi.middleware.rbac_middleware.RBACMiddleware._get_required_permissionsI
-=/home/omar/Documents/ruleIQ/api/middleware/rbac_middleware.pyÎ Î(!"2*Û
+8rbac_middleware.RBACMiddleware._get_required_permissionsI
+=/home/omar/Documents/ruleIQ/api/middleware/rbac_middleware.pyÎ Î(!"2*Ë
 2
-Ï Ø(€
-~
+Ï Ø(q
+o
 
 Ù+ Ù(A
-%5"__id*d
+%5"__id*U
 
-__unknown_file (H*F/
--api.middleware.rbac_middleware.RBACMiddleware"
+__unknown_file (9*7 
+rbac_middleware.RBACMiddleware"
 route_permissions?=
 
 Ù+ Ù(I
@@ -75,5 +75,5 @@ Gapi.middleware.rbac_middleware.RBACMiddleware._get_required_permissionsI
 path:
 
 Î3 Î(>
-methodB1/
--api.middleware.rbac_middleware.RBACMiddlewareH
+methodB" 
+rbac_middleware.RBACMiddlewareH

@@ -1,0 +1,257 @@
+
+7ai_service_mocks.MockComplianceAssistant._identify_gapsG
+;/home/omar/Documents/ruleIQ/tests/mocks/ai_service_mocks.py™ ™("2*·
+2
+´ ´(7
+
+¨ ¨(
+%17"listA
+?
+
+¨ ¨(
+gaps"__id*#
+
+__unknown_file (
+
+%17US
+
+Ø Ø(
+%18"	str.lower*,
+
+__unknown_file (
+
+framework_id2lowerê
+ç
+
+Ø Ø()
+%19"	__compare*"
+
+__unknown_file (
+==*#
+
+__unknown_file (
+
+%18*$
+
+__unknown_file (
+gdpr*
+4
+8*'
+4
+ƒ ƒ("
+
+ƒ ƒ(
+
+gaps*À
+5
+ª ¬(
+
+º ¡(
+%1"dictù
+ö
+
+Ω Ω(4
+%2"__mapSet*"
+
+__unknown_file (
+
+%1*$
+
+__unknown_file (
+type*2
+
+__unknown_file (
+missing_assessment¡
+æ
+
+æ æ(X
+%3"__mapSet*"
+
+__unknown_file (
+
+%1*+
+
+__unknown_file (
+description*O
+
+__unknown_file (31
+/Data Protection Impact Assessment not conductedï
+í
+
+ø ø(,
+%4"__mapSet*"
+
+__unknown_file (
+
+%1*(
+
+__unknown_file (
+
+priority*&
+
+__unknown_file (
+
+mediumß
+§
+
+¿ ¿(>
+%5"__mapSet*"
+
+__unknown_file (
+
+%1*1
+
+__unknown_file (
+control_reference*/
+
+__unknown_file (
+GDPR Article 35sq
+
+ª ¬(
+%6"list.append*$
+
+__unknown_file (
+
+gaps*"
+
+__unknown_file (
+
+%12append*
+4*£
+6
+∫ ∫(3{y
+
+∫ ∫(+
+%7"dict.get*'
+
+__unknown_file (
+	
+answers*-
+
+__unknown_file (
+conducts_dpia2getå
+â
+
+∫ ∫(3
+%8"	__compare*"
+
+__unknown_file (
+==*"
+
+__unknown_file (
+
+%7*"
+
+__unknown_file (
+no*
+4
+5*¬
+7
+± ∏(
+
+≤ ∑(
+%9"dictö
+ó
+
+≥ ≥(0
+%10"__mapSet*"
+
+__unknown_file (
+
+%9*$
+
+__unknown_file (
+type*.
+
+__unknown_file (
+missing_policy∫
+∑
+
+¥ ¥(P
+%11"__mapSet*"
+
+__unknown_file (
+
+%9*+
+
+__unknown_file (
+description*G
+
+__unknown_file (+)
+'Privacy policy is missing or incompleteî
+ë
+
+µ µ(*
+%12"__mapSet*"
+
+__unknown_file (
+
+%9*(
+
+__unknown_file (
+
+priority*$
+
+__unknown_file (
+high®
+•
+
+∂ ∂(>
+%13"__mapSet*"
+
+__unknown_file (
+
+%9*1
+
+__unknown_file (
+control_reference*/
+
+__unknown_file (
+GDPR Article 13tr
+
+± ∏(
+%14"list.append*$
+
+__unknown_file (
+
+gaps*"
+
+__unknown_file (
+
+%92append*
+6*¨
+8
+∞ ∞(8Å
+
+∞ ∞(0
+%15"dict.get*'
+
+__unknown_file (
+	
+answers*2
+
+__unknown_file (
+has_privacy_policy2geté
+ã
+
+∞ ∞(8
+%16"	__compare*"
+
+__unknown_file (
+==*#
+
+__unknown_file (
+
+%15*"
+
+__unknown_file (
+no*
+6
+7:
+
+™ ™(*	
+answers:
+
+™, ™(=
+framework_idB,*
+(ai_service_mocks.MockComplianceAssistantH

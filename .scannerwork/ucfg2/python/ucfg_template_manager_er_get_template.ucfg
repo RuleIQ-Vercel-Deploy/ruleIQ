@@ -1,13 +1,13 @@
 
-@services.reporting.template_manager.TemplateManager.get_templateL
-B/home/omar/Documents/ruleIQ/services/reporting/template_manager.pyQ Q("2*‹
-2R R(%|
-z
+7reporting.template_manager.TemplateManager.get_templateL
+B/home/omar/Documents/ruleIQ/services/reporting/template_manager.pyQ Q("2*‚
+2R R(%s
+q
 S S(
-%1"__id*b
+%1"__id*Y
 
-__unknown_file (F*D5
-3services.reporting.template_manager.TemplateManager"
+__unknown_file (=*;,
+*reporting.template_manager.TemplateManager"
 	templatesjh
 S S(0
 %2*"
@@ -23,5 +23,5 @@ z
 
 %2:
 Q Q(-
-template_nameB75
-3services.reporting.template_manager.TemplateManagerH
+template_nameB.,
+*reporting.template_manager.TemplateManagerH

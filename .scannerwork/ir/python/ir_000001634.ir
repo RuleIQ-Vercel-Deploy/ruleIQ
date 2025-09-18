@@ -1,5 +1,35 @@
 
-'"List all available templates"strselfU U("=+
-)
-W ^(	"?python-unknown?:Blist
-W ^(	*B/home/omar/Documents/ruleIQ/services/reporting/template_manager.py
+
+4int
+
+"***-***-"str
+""Anonymize phone number."str
+
+"***-***-****"strself
+ï ï(phone
+ï ï()"Š,
+*
+
+ñ* ñ(4"
+builtinslen*:Bint,
+*
+
+ñ* ñ(9"
+#binop >=#2>=:Bbool,"*
+
+ñ* ñ(9 *
+ñ' ñ()2
+ñ: ñ(>"_#
+!
+
+ñ ñ(&"#unknown-value#$
+"
+
+ñ ñ(&	"	#binop +#2+:
+
+ñ ñ(M"
+
+ñ ñ(M"&*	
+
+
+ñ ñ(M*B/home/omar/Documents/ruleIQ/services/compliance/gdpr_compliance.py

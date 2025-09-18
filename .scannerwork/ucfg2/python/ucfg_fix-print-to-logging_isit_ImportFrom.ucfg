@@ -1,82 +1,0 @@
-
-?fix-print-to-logging.PrintToLoggingTransformer.visit_ImportFromK
-A/home/omar/Documents/ruleIQ/scripts/sonar/fix-print-to-logging.py ("2*Û
-2 (1J
-H
- (
-%4"__id*0
-
-__unknown_file (*
-
-node"
-moduleè
-å
- (#
-%5"	__compare*"
-
-__unknown_file (
-==*"
-
-__unknown_file (
-
-%4*'
-
-__unknown_file (	
-logging*
-5
-7*#
-4! !("
-! !(
-
-node*ò
-5 (*É
-Ä
- (*H0
-.fix-print-to-logging.PrintToLoggingTransformer"
-has_logging_import"__id*$
-
-__unknown_file (
-
-True*
-4*ò
-6   (*É
-Ä
-   (*H0
-.fix-print-to-logging.PrintToLoggingTransformer"
-has_logging_import"__id*$
-
-__unknown_file (
-
-True*
-4*ú
-7 (5J
-H
- (
-%1"__id*0
-
-__unknown_file (*
-
-node"
-moduleJ
-H
-* (5
-%2"__id*0
-
-__unknown_file (*
-
-node"
-modulemk
- (5
-%3*"
-
-__unknown_file (
-
-%2*'
-
-__unknown_file (	
-logging2__contains__*
-4
-6:
- (#
-nodeB20
-.fix-print-to-logging.PrintToLoggingTransformerH

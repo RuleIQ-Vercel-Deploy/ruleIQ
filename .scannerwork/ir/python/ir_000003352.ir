@@ -1,0 +1,19 @@
+
+6-"Builds the AI prompt for policy generation."str
+
+0int
+tk"Generate a {policy_type} compliance policy for a {profile.industry} company named {profile.company_name}."strprofile& &(	framework' '("policy_type( ((!custom_requirements) )("	tuple"ã(
+&
+- 0("#unknown-value#Btuple&
+$
+- 0(	"
+#is-exact#:Bbool
+
+- 0(
+"
+#assume#:	8
+6
+- 0("#set-field# __collection_size:Bint&
+$
+- 0("#array-add-last#:
+- 0(*6/home/omar/Documents/ruleIQ/services/policy_service.py

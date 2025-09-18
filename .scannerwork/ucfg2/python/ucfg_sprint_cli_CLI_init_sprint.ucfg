@@ -1,248 +1,0 @@
-
-(scripts.sprint_cli.SprintCLI.init_sprint;
-1/home/omar/Documents/ruleIQ/scripts/sprint_cli.py ("2*Ä
-2 (%ñì
- (G
-%23*&
-
-__unknown_file (
-
-
-logger*R
-
-__unknown_file (64
-2üöÄ Initializing new sprint for ruleIQ project...2infoP
-N
- (
-%24"__id*5
-
-__unknown_file (*
-
-args"
-interactive*
-5
-6*
-4 (6c
-a
- (
-%1"__id*I
-
-__unknown_file (-*+
-scripts.sprint_cli.SprintCLI"	
-managerpn
- (6
-%2*"
-
-__unknown_file (
-
-%1*+
-
-__unknown_file (
-
-sprint_data2init_sprint@
->
- (6
-sprint"__id*"
-
-__unknown_file (
-
-%2J
-H
- @  (K
-%3"__id*0
-
-__unknown_file (*
-
-sprint"
-namek
-i
-   (K
-%4"__concat*9
-   (=-+
-)‚úÖ Sprint '%s' initialized successfully!*
- @  (K
-
-%3db
-   (L
-%5*&
-
-__unknown_file (
-
-
-logger*"
-
-__unknown_file (
-
-%42infoP
-N
-!2 !(C
-%6"__id*6
-
-__unknown_file (*
-
-sprint"
-
-start_dateN
-L
-!E "(
-%7"__id*4
-
-__unknown_file (*
-
-sprint"
-
-end_datep
-n
-! "(
-%8"__concat**
-! !(.
-   üìÖ Duration: %s to %s*
-!2 !(C
-
-%6*
-!E "(
-
-%7db
-! "(
-%9*&
-
-__unknown_file (
-
-
-logger*"
-
-__unknown_file (
-
-%82infoU
-S
-#2 #(G
-%10"__id*:
-
-__unknown_file (*
-
-sprint"
-capacity_hoursa
-_
-# #(G
-%11"__concat*-
-# #(/!
-   ‚è±Ô∏è  Capacity: %s hours*
-#2 #(G
-
-%10fd
-# #(H
-%12*&
-
-__unknown_file (
-
-
-logger*#
-
-__unknown_file (
-
-%112infoV
-T
-$? %(
-%13"__id*;
-
-__unknown_file (*
-
-sprint"
-velocity_targetl
-j
-$ %(
-%14"__concat*8
-$ $(<,*
-(   üéØ Velocity Target: %s story points*
-$? %(
-
-%13fd
-$ %(
-%15*&
-
-__unknown_file (
-
-
-logger*#
-
-__unknown_file (
-
-%142infoS
-Q
-&1 &(D
-%16"__id*8
-
-__unknown_file (*
-
-sprint"
-team_memberslj
-&' &(E
-%17"str.join*"
-
-__unknown_file (
-, *#
-
-__unknown_file (
-
-%162joinT
-R
-& &(E
-%18"__concat* 
-& &($
-   üë• Team: %s*
-&' &(E
-
-%17fd
-& &(F
-%19*&
-
-__unknown_file (
-
-
-logger*#
-
-__unknown_file (
-
-%182infoI
-G
-' '(
-%20"__id*.
-
-__unknown_file (*
-
-sprint"
-id"
-' '(
-
-%20*À
-5 (=om
- (=
-%21*<
-
-__unknown_file ( 
-scripts.sprint_cli.SprintCLI2_get_sprint_data_interactiveF
-D
- (=
-sprint_data"__id*#
-
-__unknown_file (
-
-%21*
-4*«
-6 (9ki
- (9
-%22*<
-
-__unknown_file ( 
-scripts.sprint_cli.SprintCLI2_get_default_sprint_dataF
-D
- (9
-sprint_data"__id*#
-
-__unknown_file (
-
-%22*
-4:
- (
-argsB 
-scripts.sprint_cli.SprintCLIH

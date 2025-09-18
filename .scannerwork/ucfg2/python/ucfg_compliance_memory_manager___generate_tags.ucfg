@@ -1,5 +1,5 @@
 
-Iservices.compliance_memory_manager.ComplianceMemoryManager._generate_tagsM
+@compliance_memory_manager.ComplianceMemoryManager._generate_tagsM
 A/home/omar/Documents/ruleIQ/services/compliance_memory_manager.py¸ ¸("2*ö
 2
 º º(/
@@ -25,15 +25,15 @@ A/home/omar/Documents/ruleIQ/services/compliance_memory_manager.py¸ ¸("2*
 __unknown_file (
 query_category2__contains__*
 9
-10*©
+10* 
 4
-Â Â(9±®
+Â Â(9¨¥
 
 Â Â(9
-%1*Z
+%1*Q
 
-__unknown_file (><
-:services.compliance_memory_manager.ComplianceMemoryManager**
+__unknown_file (53
+1compliance_memory_manager.ComplianceMemoryManager**
 
 __unknown_file (
 
@@ -242,5 +242,5 @@ user_query:
 agent_response:
 
 ¸C ¹(	
-contextB><
-:services.compliance_memory_manager.ComplianceMemoryManagerH
+contextB53
+1compliance_memory_manager.ComplianceMemoryManagerH

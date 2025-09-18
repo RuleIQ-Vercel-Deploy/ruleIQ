@@ -1,0 +1,29 @@
+
+"temperature"str
+"model_name"str
+6-"Return parameters for identifying this LLM."str
+truebool
+
+"mock"strself
+¾ ¾( "…&
+$
+
+À Ä(	"#new-object#Bdict-
++
+
+Á Á()"#get-field# model_name:"
+ 
+
+Á Á()"	#map-set#:.
+,
+
+Â Â(+"#get-field# temperature:"
+ 
+
+Â Â(+	"	#map-set#:"
+ 
+
+Ã Ã("	#map-set#:
+
+
+À Ä(	*6/home/omar/Documents/ruleIQ/tests/fixtures/mock_llm.py

@@ -1,14 +1,14 @@
 
-Eservices.ai.assistant.ComplianceAssistant.generate_followup_questions@
-4/home/omar/Documents/ruleIQ/services/ai/assistant.pyµ µ()"2*Î
+<ai.assistant.ComplianceAssistant.generate_followup_questions@
+4/home/omar/Documents/ruleIQ/services/ai/assistant.pyµ µ()"2*Å
 2
-¸ »(¦£
+¸ »(š
 
 ¼ ¾(H
-%1*I
+%1*@
 
-__unknown_file (-+
-)services.ai.assistant.ComplianceAssistant2generate_assessment_followup:&
+__unknown_file ($"
+ ai.assistant.ComplianceAssistant2generate_assessment_followup:&
 current_answers
 
 current_answers: 
@@ -36,5 +36,5 @@ Eservices.ai.assistant.ComplianceAssistant.generate_followup_questions@
 business_profile_id:"
 
 · ·(9
-assessment_contextB-+
-)services.ai.assistant.ComplianceAssistantH
+assessment_contextB$"
+ ai.assistant.ComplianceAssistantH

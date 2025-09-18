@@ -1,59 +1,29 @@
 
 )config.settings.Settings.log_vault_status:
-./home/omar/Documents/ruleIQ/config/settings.py‘ ‘("2*Ü
+./home/omar/Documents/ruleIQ/config/settings.pyù ù("2*€
 2
-’ ’(?ig
+ú ú(?e
+c
 
-“ “(0
-%15*8
+û û(
+%19"__id*H
 
-__unknown_file (
-config.settings.Settings2get_secrets_vault_healthC
-A
+__unknown_file (,**
+config.settings.Settings"
 
-“ “(0
-health"__id*#
-
-__unknown_file (
-
-%15|z
-
-” ”(
-%16"__mapGet*&
-
-__unknown_file (
-
-
-health*&
-
-__unknown_file (
-
-status2__getitem__“
-
-
-” ”((
-%17"	__compare*"
-
-__unknown_file (
-==*#
-
-__unknown_file (
-
-%16*'
-
-__unknown_file (	
-healthy*
-5
-10*3
+is_testing*
+11
+12*3
 3
 settings.py"
-£ £(
+ (
 implicit return*î
 4
-  ¡(>o
+‰ ‹(
+o
 m
 
- G ¡(!
+Š Š(&
 %1"__id*S
 
 __unknown_file (7*5
@@ -61,7 +31,7 @@ m
 secrets_vault_enabledn
 l
 
-¡# ¡(<
+Š( Š(A
 %2"__id*R
 
 __unknown_file (6*4
@@ -69,21 +39,22 @@ l
 secrets_vault_region
 ‹
 
-  ¡(=
+‰ ‹(	
 %3"__concat*A
 
-   (C31
+‰ ‰(C31
 /ğŸ” Vault Configuration: enabled=%s, region=%s*
 
- G ¡(!
+Š Š(&
 
 %1*
 
-¡# ¡(<
+Š( Š(A
 
 %2fd
 
-  ¡(>
+‰ ‹(
+
 %4*&
 
 __unknown_file (
@@ -96,9 +67,9 @@ l
 %32info*
 3*·
 5
-• –(L 
+ (T 
 
-• –(L
+ (T
 %5*&
 
 __unknown_file (
@@ -110,9 +81,9 @@ l
 ;âœ… SecretsVault: AWS Secrets Manager connected and healthy2info*
 4*Ù
 6
-Ÿ Ÿ(B|z
+‡ ‡(B|z
 
-Ÿ0 Ÿ(A
+‡0 ‡(A
 %6"__mapGet*&
 
 __unknown_file (
@@ -124,17 +95,17 @@ l
 message2__getitem__\
 Z
 
-Ÿ Ÿ(A
+‡ ‡(A
 %7"__concat*&
 
-Ÿ Ÿ(-
+‡ ‡(-
 âŒ SecretsVault: %s*
 
-Ÿ0 Ÿ(A
+‡0 ‡(A
 
 %6ge
 
-Ÿ Ÿ(B
+‡ ‡(B
 %8*&
 
 __unknown_file (
@@ -147,9 +118,9 @@ Z
 %72error*
 4*Â
 7
-› («¨
+… …(]«¨
 
-› (
+… …(]
 %9*&
 
 __unknown_file (
@@ -161,9 +132,9 @@ Z
 Câš ï¸ SecretsVault: Module unavailable, using environment fallback2warning*
 4*¯
 8
-š š(.|z
+„ „(.|z
 
-š š(
+„ „(
 %10"__mapGet*&
 
 __unknown_file (
@@ -176,7 +147,7 @@ Câš ï¸ SecretsVault: Module unavailable, using environment fallback2warning*
 status2__getitem__—
 ”
 
-š š(.
+„ „(.
 %11"	__compare*"
 
 __unknown_file (
@@ -191,9 +162,9 @@ Câš ï¸ SecretsVault: Module unavailable, using environment fallback2warning*
 6
 7*µ
 9
-˜ ™(›
+ƒ ƒ(Q›
 
-˜ ™(
+ƒ ƒ(Q
 %12*&
 
 __unknown_file (
@@ -205,9 +176,9 @@ Câš ï¸ SecretsVault: Module unavailable, using environment fallback2warning*
 8ğŸ” SecretsVault: Disabled, using environment variables2info*
 4*­
 10
-— —(+|z
+‚ ‚(+|z
 
-— —(
+‚ ‚(
 %13"__mapGet*&
 
 __unknown_file (
@@ -220,7 +191,7 @@ Câš ï¸ SecretsVault: Module unavailable, using environment fallback2warning*
 status2__getitem__”
 ‘
 
-— —(+
+‚ ‚(+
 %14"	__compare*"
 
 __unknown_file (
@@ -234,5 +205,65 @@ Câš ï¸ SecretsVault: Module unavailable, using environment fallback2warning*
 
 disabled*
 8
-9B
+9*İ
+11
+ÿ ÿ(0ig
+
+ÿ ÿ(0
+%15*8
+
+__unknown_file (
+config.settings.Settings2get_secrets_vault_healthC
+A
+
+ÿ ÿ(0
+health"__id*#
+
+__unknown_file (
+
+%15|z
+
+€ €(
+%16"__mapGet*&
+
+__unknown_file (
+
+
+health*&
+
+__unknown_file (
+
+status2__getitem__“
+
+
+€ €((
+%17"	__compare*"
+
+__unknown_file (
+==*#
+
+__unknown_file (
+
+%16*'
+
+__unknown_file (	
+healthy*
+5
+10*Ú
+12
+ü ü(b¯¬
+
+ü ü(b
+%18*&
+
+__unknown_file (
+
+
+logger*i
+
+__unknown_file (MK
+IğŸ§ª Testing environment: SecretsVault disabled, using test configuration2info"
+
+ı ı(
+voidB
 config.settings.SettingsH

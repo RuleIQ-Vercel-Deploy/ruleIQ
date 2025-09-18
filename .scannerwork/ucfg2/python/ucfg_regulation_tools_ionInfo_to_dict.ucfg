@@ -1,15 +1,15 @@
 
-3services.ai.regulation_tools.RegulationInfo.to_dictE
-;/home/omar/Documents/ruleIQ/services/ai/regulation_tools.py ("2*ß
+*ai.regulation_tools.RegulationInfo.to_dictE
+;/home/omar/Documents/ruleIQ/services/ai/regulation_tools.py ("2*Ë
 2 !(
  !(
-%1"dicto
-m
+%1"dictf
+d
  (!
-%2"__id*U
+%2"__id*L
 
-__unknown_file (9*7-
-+services.ai.regulation_tools.RegulationInfo"
+__unknown_file (0*.$
+"ai.regulation_tools.RegulationInfo"
 nameã
 à
  (!
@@ -24,13 +24,13 @@ m
 
 __unknown_file (
 
-%2v
-t
+%2m
+k
 2 (B
-%4"__id*\
+%4"__id*S
 
-__unknown_file (@*>-
-+services.ai.regulation_tools.RegulationInfo"
+__unknown_file (7*5$
+"ai.regulation_tools.RegulationInfo"
 descriptioní
 è
 # (B
@@ -45,13 +45,13 @@ t
 
 __unknown_file (
 
-%4x
-v
+%4o
+m
  (/
-%6"__id*^
+%6"__id*U
 
-__unknown_file (B*@-
-+services.ai.regulation_tools.RegulationInfo"
+__unknown_file (9*7$
+"ai.regulation_tools.RegulationInfo"
 applicabilityî
 ë
  (/
@@ -66,13 +66,13 @@ v
 
 __unknown_file (
 
-%6{
-y
+%6r
+p
 E (
-%8"__id*a
+%8"__id*X
 
-__unknown_file (E*C-
-+services.ai.regulation_tools.RegulationInfo"
+__unknown_file (<*:$
+"ai.regulation_tools.RegulationInfo"
 key_requirementsó
 î
 1 (
@@ -87,13 +87,13 @@ y
 
 __unknown_file (
 
-%8u
-s
+%8l
+j
 + (9
-%10"__id*Z
+%10"__id*Q
 
-__unknown_file (>*<-
-+services.ai.regulation_tools.RegulationInfo"
+__unknown_file (5*3$
+"ai.regulation_tools.RegulationInfo"
 	penaltiesí
 è
  (9
@@ -108,13 +108,13 @@ s
 
 __unknown_file (
 
-%10|
-z
+%10s
+q
     (5
-%12"__id*a
+%12"__id*X
 
-__unknown_file (E*C-
-+services.ai.regulation_tools.RegulationInfo"
+__unknown_file (<*:$
+"ai.regulation_tools.RegulationInfo"
 enforcement_bodyô
 ñ
    (5
@@ -129,13 +129,13 @@ z
 
 __unknown_file (
 
-%12x
-v
+%12o
+m
  G !(
-%14"__id*]
+%14"__id*T
 
-__unknown_file (A*?-
-+services.ai.regulation_tools.RegulationInfo"
+__unknown_file (8*6$
+"ai.regulation_tools.RegulationInfo"
 last_updatedï
 í
  7 !(
@@ -153,5 +153,5 @@ v
 %14"
  !(
 
-%1B/-
-+services.ai.regulation_tools.RegulationInfoH
+%1B&$
+"ai.regulation_tools.RegulationInfoH

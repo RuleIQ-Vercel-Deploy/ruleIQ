@@ -1,10 +1,9 @@
-funcW W("²!
-
-d d("#unknown-value#(
-&
-Y d(%closure"#new-object#&
-$
-Y d("#set-field# func:+
-)
-Y d("?python-partial-apply?:
-d d(*P/home/omar/Documents/ruleIQ/services/ai/evaluation/golden_datasets/validators.py
+
+ "Quick UUID validation"struuid_str
+‰ ‰("YE
+C
+
+‹ ‹(1"0
+input_validation.InputValidatorvalidate_uuid:
+
+‹ ‹(1*9/home/omar/Documents/ruleIQ/api/utils/input_validation.py

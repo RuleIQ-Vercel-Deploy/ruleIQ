@@ -22,7 +22,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { ChatMessage } from './chat-message';
-import { TypingIndicator } from './typing-indicator';
+import { TypingIndicator } from './TypingIndicator';
 import { useChatStore } from '@/lib/stores/chat.store';
 import { useVoiceStore } from '@/lib/stores/voice.store';
 import type { } from '@/types/voice';

@@ -1,0 +1,13 @@
+
+%"Check if mock file exists."strself
+š š(path
+š š(#"j(
+&
+
+œ œ(!"#get-field# files:,
+*
+
+œ œ(!"
+#binop in#2in:Bbool
+
+œ œ(!*8/home/omar/Documents/ruleIQ/tests/mocks/mock_services.py

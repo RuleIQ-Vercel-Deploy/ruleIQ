@@ -1,56 +1,76 @@
 
-falsebool
-íà"Check if a transition from one state to another is valid.
+"max_retries"str
+"should_continue"str
+ˆÏ"
+        Validate if a state transition is allowed.
 
         Args:
-            from_state: The state transitioning from
-            to_state: The state transitioning to
+            state: Current state
+            from_node: Source node
+            to_node: Target node
 
         Returns:
-            True if the transition is valid, False otherwise
+            True if transition is valid
         "str
-truebool
-"_valid_transitions"strself
-Ö Ö( 
-from_state
-Ö" Ö(1to_state
-Ö3 Ö(@"É2
-0
-
-è è(2"
-builtinshasattr*:Bbool+
-)
-
-è è(2"#unaryop !#2!:Bbool "
-
-è è(2 *
-è è(
-"
-
-ê ê("ë5
-3
-
-ë ë(4	" #get-field# _valid_transitions:4
-2
-
-ë ë(4
-"#binop not in#2not in:	Bbool "
-
-ë ë(4
- *
-ë ë(
-"
-
-í í("ü5
-3
-
-ì ì(2" #get-field# _valid_transitions:$
+"turn_count"str
+"error_count"str
+"max_turns"str
+truebool
+
+falseboolstate
+ã ã(&	from_node
+ã( ã(6to_node
+ã8 ã(D"ú$
 "
 
-ì ì(>"#array-read#:,
+ô ô("#array-read#:$
+"
+
+ô" ô(4"#array-read#:,
 *
 
-ì ì(>"
-#binop in#2in:Bbool
+ô ô(4	"
+#binop >=#2>=:Bbool "
 
-ì ì(>*D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py
+ô ô(4	 *
+ô ô(
+"
+
+ö ö(
+"û$
+"
+
+ú ú("#array-read#:$
+"
+
+ú# ú(7"#array-read#:,
+*
+
+ú ú(7"
+#binop >=#2>=:Bbool "
+
+ú ú(7 *
+ú ú(
+"
+
+ù ù(
+"§$
+"
+
+ü ü('"#array-read#:+
+)
+
+ü ü('"
+__bool__*:BboolH+
+)
+
+ü ü('"#unaryop !#2!:Bbool "
+
+ü ü(' *
+ü ü(
+"
+
+† †(
+"
+
+£ £(*C/home/omar/Documents/ruleIQ/langgraph_agent/graph/enhanced_state.py

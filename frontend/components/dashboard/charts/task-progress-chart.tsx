@@ -13,6 +13,7 @@ import {
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { neuralPurple, silver, semantic, chartColors, neutral } from '@/lib/theme/neural-purple-colors';
 
 interface TaskProgressChartProps {
   data: Array<{
@@ -33,9 +34,9 @@ export function TaskProgressChart({
   className,
 }: TaskProgressChartProps) {
   const COLORS = {
-    completed: '#28A745',
-    pending: '#CB963E',
-    overdue: '#DC3545',
+    completed: semantic.success,
+    pending: semantic.warning,
+    overdue: semantic.error,
   };
 
   const CustomTooltip = ({ active, payload, label }: any) => {
@@ -90,10 +91,10 @@ export function TaskProgressChart({
             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
             <XAxis
               dataKey="category"
-              tick={{ fontSize: 12, fill: '#6B7280' }}
-              axisLine={{ stroke: '#E5E7EB' }}
+              tick={{ fontSize: 12, fill: neutral.gray[600] }}
+              axisLine={{ stroke: silver.light }}
             />
-            <YAxis tick={{ fontSize: 12, fill: '#6B7280' }} axisLine={{ stroke: '#E5E7EB' }} />
+            <YAxis tick={{ fontSize: 12, fill: neutral.gray[600] }} axisLine={{ stroke: silver.light }} />
             <Tooltip content={<CustomTooltip />} />
             <Legend wrapperStyle={{ fontSize: 12 }} iconType="square" />
             <Bar dataKey="completed" stackId="a" fill={COLORS.completed} />

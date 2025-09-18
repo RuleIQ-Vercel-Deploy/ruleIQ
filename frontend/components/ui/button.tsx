@@ -6,35 +6,36 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-all duration-250 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 relative overflow-hidden',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium transition-all duration-250 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 relative overflow-hidden',
   {
     variants: {
       variant: {
         default: cn(
-          'bg-gradient-to-r from-teal-700 via-teal-600 to-teal-500',
+          'bg-gradient-to-r from-purple-700 via-purple-600 to-purple-500',
           'text-white shadow-elevation-low',
           'hover:shadow-elevation-medium hover:scale-[1.02]',
           'active:scale-[0.98]',
           'group',
         ),
         secondary: cn(
-          'bg-teal-50 text-teal-700',
-          'hover:bg-teal-100 hover:shadow-elevation-low',
+          'bg-transparent text-purple-600',
+          'border border-silver-400',
+          'hover:bg-purple-50 hover:shadow-elevation-low',
           'transition-all duration-250',
         ),
         outline: cn(
-          'border-2 border-teal-600/50 bg-transparent text-teal-700',
-          'hover:bg-teal-50 hover:border-teal-600',
+          'border-2 border-purple-600/50 bg-transparent text-purple-700',
+          'hover:bg-purple-50 hover:border-purple-600',
           'hover:shadow-elevation-low',
           'transition-all duration-250',
         ),
         ghost: cn(
-          'text-teal-700 hover:bg-teal-50',
-          'hover:text-teal-800',
+          'text-purple-700 hover:bg-purple-50',
+          'hover:text-purple-800',
           'transition-all duration-250',
         ),
         'ghost-ruleiq': 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-teal-600 underline-offset-4 hover:underline hover:text-teal-700',
+        link: 'text-purple-600 underline-offset-4 hover:underline hover:text-purple-700',
         destructive: cn(
           'bg-red-600 text-white shadow-elevation-low',
           'hover:bg-red-700 hover:shadow-elevation-medium',
@@ -45,9 +46,9 @@ const buttonVariants = cva(
           'hover:bg-green-700 hover:shadow-elevation-medium',
           'hover:scale-[1.02] active:scale-[0.98]',
         ),
-        // Brand-specific variant using enhanced teal gradient
+        // Brand-specific variant using enhanced purple gradient
         accent: cn(
-          'bg-gradient-to-r from-teal-400 to-teal-600',
+          'bg-gradient-to-r from-purple-400 to-purple-600',
           'text-white shadow-elevation-low',
           'hover:shadow-elevation-medium hover:scale-[1.02]',
           'active:scale-[0.98]',

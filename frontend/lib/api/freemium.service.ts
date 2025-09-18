@@ -3,6 +3,28 @@
  * Handles email capture, session management, and assessment flow
  */
 
+import { validateRequest, validateApiResponse } from '@/lib/api/validation';
+import {
+  LeadCaptureRequestSchema,
+  LeadResponseSchema,
+  AssessmentStartRequestSchema,
+  FreemiumAssessmentStartResponseSchema,
+  AssessmentAnswerRequestSchema,
+  AssessmentQuestionResponseSchema,
+  AssessmentResultsResponseSchema,
+  HealthStatusSchema,
+} from '@/lib/validation/zod-schemas';
+import type {
+  LeadCaptureRequest,
+  LeadResponse,
+  AssessmentStartRequest,
+  FreemiumAssessmentStartResponse,
+  AssessmentAnswerRequest,
+  AssessmentQuestionResponse,
+  AssessmentResultsResponse,
+  HealthStatus,
+} from '@/types/freemium';
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 // ============================================================================
@@ -70,61 +92,32 @@ export const extractUtmParams = () => {
 export type {
   ComplianceGap,
   AssessmentResultsResponse as FreemiumResultsResponse,
+  LeadCaptureRequest,
+  LeadResponse,
+  AssessmentStartRequest,
+  FreemiumAssessmentStartResponse,
+  AssessmentAnswerRequest,
+  AssessmentQuestionResponse,
+  AssessmentResultsResponse,
+  HealthStatus,
 } from '@/types/freemium';
 
 // Additional type aliases for backward compatibility
-export interface FreemiumEmailCaptureRequest extends LeadCaptureRequest {}
+export type FreemiumEmailCaptureRequest = LeadCaptureRequest;
 export interface FreemiumEmailCaptureResponse extends LeadResponse {
   token?: string;
 }
+export type FreemiumAnswerRequest = AssessmentAnswerRequest;
+export type FreemiumAnswerResponse = AssessmentQuestionResponse;
 
-export interface FreemiumAssessmentStartResponse {
-  session_id: string;
-  session_token: string;
-  question_id: string;
-  question_text: string;
-  question_type: 'multiple_choice' | 'yes_no' | 'text' | 'scale';
-  question_context?: string;
-  answer_options?: string[];
-  progress: {
-    current_question: number;
-    total_questions_estimate: number;
-    progress_percentage: number;
-  };
-  personalization_applied: boolean;
-  expires_at: string;
-}
-
-export interface FreemiumAnswerRequest {
-  question_id: string;
-  answer: string;
-  answer_confidence?: 'low' | 'medium' | 'high';
-  time_spent_seconds?: number;
-  skip_reason?: string;
-}
-
-export interface FreemiumAnswerResponse {
-  next_question_id?: string;
-  next_question_text?: string;
-  next_question_type?: 'multiple_choice' | 'yes_no' | 'text' | 'scale';
-  next_question_context?: string;
-  next_answer_options?: string[];
-  progress: {
-    current_question: number;
-    total_questions_estimate: number;
-    progress_percentage: number;
-  };
-  is_complete: boolean;
-  assessment_complete?: boolean;
-  redirect_to_results?: boolean;
-  session_token: string;
-  answer_recorded: boolean;
-  validation_errors?: string[];
-}
+// Legacy interfaces (for backward compatibility)
+export interface SessionStartRequest extends AssessmentStartRequest {}
+export interface SessionResponse extends FreemiumAssessmentStartResponse {}
+export interface AnswerSubmissionRequest extends AssessmentAnswerRequest {}
 
 export interface ConversionTrackingRequest {
   event_type: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export interface ConversionTrackingResponse {
@@ -145,82 +138,6 @@ export interface TrialOffer {
   valid_until?: string;
 }
 
-// Types
-export interface LeadCaptureRequest {
-  email: string;
-  first_name?: string;
-  last_name?: string;
-  company_name?: string;
-  company_size?: '1-10' | '11-50' | '51-200' | '201-500' | '500+';
-  industry?: string;
-  phone?: string;
-
-  // UTM tracking
-  utm_source?: string;
-  utm_medium?: string;
-  utm_campaign?: string;
-  utm_term?: string;
-  utm_content?: string;
-
-  // Context
-  referrer_url?: string;
-  landing_page?: string;
-  user_agent?: string;
-
-  // Consent
-  marketing_consent?: boolean;
-  newsletter_subscribed?: boolean;
-}
-
-export interface LeadResponse {
-  lead_id: string;
-  email: string;
-  lead_score: number;
-  lead_status: string;
-  created_at: string;
-}
-
-export interface SessionStartRequest {
-  lead_email: string;
-  business_type: string;
-  company_size?: '1-10' | '11-50' | '51-200' | '201-500' | '500+';
-  assessment_type?: 'general' | 'gdpr' | 'security' | 'compliance';
-  industry_focus?: string;
-  compliance_frameworks?: string[];
-  priority_areas?: string[];
-}
-
-export interface SessionResponse {
-  session_id: string;
-  session_token: string;
-  lead_id: string;
-  status: string;
-  progress_percentage: number;
-  current_question_id?: string;
-  total_questions: number;
-  questions_answered: number;
-  expires_at: string;
-  created_at: string;
-}
-
-export interface AnswerSubmissionRequest {
-  question_id: string;
-  answer: string;
-  answer_confidence?: 'low' | 'medium' | 'high';
-  time_spent_seconds?: number;
-  skip_reason?: string;
-}
-
-export interface AssessmentResultsResponse {
-  session_id: string;
-  compliance_score?: number;
-  risk_level: string;
-  completed_at?: string;
-  recommendations?: unknown[];
-  gaps?: unknown[];
-  next_steps?: unknown[];
-}
-
 class FreemiumService {
   private baseUrl = `${API_BASE}/api/v1/freemium`;
 
@@ -228,17 +145,20 @@ class FreemiumService {
    * Capture email and lead information
    */
   async captureEmail(data: LeadCaptureRequest): Promise<LeadResponse> {
+    // Validate request data
+    const validatedData = validateRequest({
+      ...data,
+      user_agent: typeof window !== 'undefined' ? navigator.userAgent : undefined,
+      referrer_url: typeof document !== 'undefined' ? document.referrer : undefined,
+      landing_page: typeof window !== 'undefined' ? window.location.href : undefined,
+    }, LeadCaptureRequestSchema);
+
     const response = await fetch(`${this.baseUrl}/leads`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        ...data,
-        user_agent: navigator.userAgent,
-        referrer_url: document.referrer,
-        landing_page: window.location.href,
-      }),
+      body: JSON.stringify(validatedData),
     });
 
     if (!response.ok) {
@@ -246,19 +166,23 @@ class FreemiumService {
       throw new Error(error.detail || 'Failed to capture email');
     }
 
-    return response.json();
+    const responseData = await response.json();
+    return validateApiResponse(responseData, LeadResponseSchema);
   }
 
   /**
    * Start a new assessment session
    */
-  async startAssessment(data: SessionStartRequest): Promise<SessionResponse> {
+  async startAssessment(data: AssessmentStartRequest): Promise<FreemiumAssessmentStartResponse> {
+    // Validate request data
+    const validatedData = validateRequest(data, AssessmentStartRequestSchema);
+
     const response = await fetch(`${this.baseUrl}/sessions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(validatedData),
     });
 
     if (!response.ok) {
@@ -266,13 +190,14 @@ class FreemiumService {
       throw new Error(error.detail || 'Failed to start assessment');
     }
 
-    return response.json();
+    const responseData = await response.json();
+    return validateApiResponse(responseData, FreemiumAssessmentStartResponseSchema);
   }
 
   /**
    * Get session progress
    */
-  async getSessionProgress(sessionToken: string): Promise<SessionResponse> {
+  async getSessionProgress(sessionToken: string): Promise<FreemiumAssessmentStartResponse> {
     const response = await fetch(`${this.baseUrl}/sessions/${sessionToken}`, {
       method: 'GET',
     });
@@ -282,19 +207,23 @@ class FreemiumService {
       throw new Error(error.detail || 'Failed to get session progress');
     }
 
-    return response.json();
+    const responseData = await response.json();
+    return validateApiResponse(responseData, FreemiumAssessmentStartResponseSchema);
   }
 
   /**
    * Submit an answer
    */
-  async submitAnswer(sessionToken: string, data: AnswerSubmissionRequest): Promise<any> {
+  async submitAnswer(sessionToken: string, data: AssessmentAnswerRequest): Promise<AssessmentQuestionResponse> {
+    // Validate request data
+    const validatedData = validateRequest(data, AssessmentAnswerRequestSchema);
+
     const response = await fetch(`${this.baseUrl}/sessions/${sessionToken}/answers`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(validatedData),
     });
 
     if (!response.ok) {
@@ -302,7 +231,8 @@ class FreemiumService {
       throw new Error(error.detail || 'Failed to submit answer');
     }
 
-    return response.json();
+    const responseData = await response.json();
+    return validateApiResponse(responseData, AssessmentQuestionResponseSchema);
   }
 
   /**
@@ -318,13 +248,14 @@ class FreemiumService {
       throw new Error(error.detail || 'Failed to get results');
     }
 
-    return response.json();
+    const json = await response.json();
+    return validateApiResponse(json, AssessmentResultsResponseSchema);
   }
 
   /**
    * Health check
    */
-  async healthCheck(): Promise<any> {
+  async healthCheck(): Promise<HealthStatus> {
     const response = await fetch(`${this.baseUrl}/health`, {
       method: 'GET',
     });
@@ -333,7 +264,75 @@ class FreemiumService {
       throw new Error('Freemium API is not available');
     }
 
-    return response.json();
+    const responseData = await response.json();
+    return validateApiResponse(responseData, HealthStatusSchema);
+  }
+
+  /**
+   * Complete assessment and persist results
+   */
+  async completeAssessment(sessionToken: string, result: any): Promise<AssessmentResultsResponse> {
+    // Convert answers Map to array if needed
+    let answers = result.answers || [];
+    if (result.answers instanceof Map) {
+      answers = Array.from(result.answers.values());
+    }
+
+    const response = await fetch(`${this.baseUrl}/sessions/${sessionToken}/complete`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        completed_at: new Date().toISOString(),
+        answers: answers,
+        section_scores: result.sectionScores || {},
+        overall_score: result.overallScore || 0,
+        risk_score: result.riskScore || null,  // Allow null if not computed client-side
+        metadata: {
+          framework_id: result.frameworkId || 'default',
+          completion_time: result.completionTime || 0,
+          user_agent: typeof window !== 'undefined' ? window.navigator.userAgent : 'unknown',
+        }
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to complete assessment: ${response.statusText}`);
+    }
+
+    const responseData = await response.json();
+    return validateApiResponse(responseData, AssessmentResultsResponseSchema);
+  }
+
+  /**
+   * Save assessment progress
+   * Note: This is a stub implementation as server persistence may be out of scope
+   */
+  async saveProgress(sessionToken: string, progress: any): Promise<void> {
+    try {
+      // Store progress in sessionStorage as a fallback
+      sessionStorage.setItem(`assessment_progress_${sessionToken}`, JSON.stringify({
+        progress,
+        savedAt: new Date().toISOString(),
+        sessionToken
+      }));
+
+      // TODO: Implement server-side persistence when API endpoint is available
+      // const response = await fetch(`${this.baseUrl}/sessions/${sessionToken}/progress`, {
+      //   method: 'PUT',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ progress }),
+      // });
+
+      // For now, just resolve successfully
+      return Promise.resolve();
+    } catch (error) {
+      console.error('Failed to save assessment progress:', error);
+      throw new Error('Failed to save progress. Please try again.');
+    }
   }
 }
 
@@ -348,12 +347,12 @@ export const captureEmail = (
 ): Promise<FreemiumEmailCaptureResponse> => freemiumService.captureEmail(data);
 
 export const startAssessment = (token: string): Promise<FreemiumAssessmentStartResponse> =>
-  freemiumService.startAssessment({ lead_email: token, business_type: 'default' }) as any;
+  freemiumService.startAssessment({ lead_email: token, business_type: 'default' });
 
 export const answerQuestion = (
   token: string,
   answerData: FreemiumAnswerRequest,
-): Promise<FreemiumAnswerResponse> => freemiumService.submitAnswer(token, answerData) as any;
+): Promise<FreemiumAnswerResponse> => freemiumService.submitAnswer(token, answerData);
 
 export const getResults = (token: string): Promise<AssessmentResultsResponse> =>
   freemiumService.getResults(token);

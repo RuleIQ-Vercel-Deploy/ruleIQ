@@ -64,6 +64,39 @@ export default [
       // Critical Hook Rules
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'off', // Allow flexible deps
+
+      // Neural Purple Theme Guardrails
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'Literal[value=/teal-/i]',
+          message: 'Use Neural Purple theme tokens from @/lib/theme/neural-purple-colors instead of Teal classes',
+        },
+        {
+          selector: 'Literal[value=/#2C7A7B/i]',
+          message: 'Use Neural Purple theme tokens instead of legacy hex #2C7A7B',
+        },
+        {
+          selector: 'Literal[value=/#319795/i]',
+          message: 'Use Neural Purple theme tokens instead of legacy hex #319795',
+        },
+        {
+          selector: 'Literal[value=/#4FD1C5/i]',
+          message: 'Use Neural Purple theme tokens instead of legacy hex #4FD1C5',
+        },
+        {
+          selector: 'Literal[value=/#17255A/i]',
+          message: 'Use neuralPurple.primary instead of legacy hex #17255A',
+        },
+        {
+          selector: 'Literal[value=/#CB963E/i]',
+          message: 'Use silver.primary or semantic tokens instead of legacy hex #CB963E',
+        },
+        {
+          selector: 'TemplateElement[value.cooked=/teal-/i]',
+          message: 'Use Neural Purple theme classes instead of Teal in template literals',
+        },
+      ],
     },
   },
   {

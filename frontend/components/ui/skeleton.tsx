@@ -7,8 +7,8 @@ function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>)
     <div
       className={cn(
         'animate-shimmer rounded-lg',
-        // Teal shimmer effect for new design system
-        'bg-gradient-to-r from-neutral-200 via-teal-100 to-neutral-200 bg-[length:200%_100%]',
+        // Purple shimmer effect for new design system
+        'bg-gradient-to-r from-neutral-200 via-purple-100 to-neutral-200 bg-[length:200%_100%]',
         className,
       )}
       {...props}

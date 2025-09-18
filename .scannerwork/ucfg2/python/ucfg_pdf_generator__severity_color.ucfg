@@ -1,5 +1,5 @@
 
-Aservices.reporting.pdf_generator.PDFGenerator._get_severity_colorK
+8reporting.pdf_generator.PDFGenerator._get_severity_colorK
 ?/home/omar/Documents/ruleIQ/services/reporting/pdf_generator.pyò ò("2*Ù
 2
 ó ó(+QO
@@ -35,16 +35,16 @@ I
 
 critical*
 4
-9*•
+9*Œ
 4
-ö ö((u
-s
+ö ö((l
+j
 
 ö ö(
-%1"__id*Y
+%1"__id*P
 
-__unknown_file (=*;/
--services.reporting.pdf_generator.PDFGenerator"
+__unknown_file (4*2&
+$reporting.pdf_generator.PDFGenerator"
 colorswu
 
 ö ö((
@@ -60,16 +60,16 @@ s
 
 ö ö((
 
-%2*•
+%2*Œ
 5
-ü ü((u
-s
+ü ü((l
+j
 
 ü ü(
-%3"__id*Y
+%3"__id*P
 
-__unknown_file (=*;/
--services.reporting.pdf_generator.PDFGenerator"
+__unknown_file (4*2&
+$reporting.pdf_generator.PDFGenerator"
 colorswu
 
 ü ü((
@@ -85,16 +85,16 @@ s
 
 ü ü((
 
-%4*š
+%4*‘
 6
-ú ú(-u
-s
+ú ú(-l
+j
 
 ú ú(
-%5"__id*Y
+%5"__id*P
 
-__unknown_file (=*;/
--services.reporting.pdf_generator.PDFGenerator"
+__unknown_file (4*2&
+$reporting.pdf_generator.PDFGenerator"
 colors|z
 
 ú ú(-
@@ -128,16 +128,16 @@ s
 
 medium*
 5
-6*–
+6*
 8
-ø ø()u
-s
+ø ø()l
+j
 
 ø ø(
-%8"__id*Y
+%8"__id*P
 
-__unknown_file (=*;/
--services.reporting.pdf_generator.PDFGenerator"
+__unknown_file (4*2&
+$reporting.pdf_generator.PDFGenerator"
 colorsxv
 
 ø ø()
@@ -174,5 +174,5 @@ s
 
 ò" ò(/
 
-severityB1/
--services.reporting.pdf_generator.PDFGeneratorH
+severityB(&
+$reporting.pdf_generator.PDFGeneratorH

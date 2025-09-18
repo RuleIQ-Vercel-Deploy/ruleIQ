@@ -1,300 +1,0 @@
-
-2fix-api-alignment.APIAlignmentFixer.generate_fixesJ
->/home/omar/Documents/ruleIQ/scripts/sonar/fix-api-alignment.pyè è("2*Ø
-2
-ê ê(*}
-
-ë ë(/
-%18*&
-
-__unknown_file (
-
-
-logger*:
-
-__unknown_file (
-\nüìù Generating Fixes...2info
-
-í ì('
-%19"dict
-
-í" í($
-%20"listô
-ñ
-
-í í($
-%21"__mapSet*#
-
-__unknown_file (
-
-%19*-
-
-__unknown_file (
-backend_fixes*#
-
-__unknown_file (
-
-%20
-
-í8 í(:
-%22"listö
-ó
-
-í& í(:
-%23"__mapSet*#
-
-__unknown_file (
-
-%19*.
-
-__unknown_file (
-frontend_fixes*#
-
-__unknown_file (
-
-%22
-
-ì$ ì(&
-%24"list†
-ù
-
-ì ì(&
-%25"__mapSet*#
-
-__unknown_file (
-
-%19*4
-
-__unknown_file (
-new_endpoints_needed*#
-
-__unknown_file (
-
-%24B
-@
-
-í ì('
-fixes"__id*#
-
-__unknown_file (
-
-%19*	
-4
-6
-9*(
-4
-ú ú("
-
-ú ú(	
-
-fixes*€
-6
-ô õ($âÜ
-
-ô ô()
-%1"__mapGet*%
-
-__unknown_file (	
-
-fixes*4
-
-__unknown_file (
-new_endpoints_needed2__getitem__
-
-ô1 õ(#
-%2"dict|z
-
-ô< ö(
-%3"__mapGet*'
-
-__unknown_file (
-	
-missing*&
-
-__unknown_file (
-
-method2__getitem__è
-å
-
-ô2 ö(
-%4"__mapSet*"
-
-__unknown_file (
-
-%2*&
-
-__unknown_file (
-
-method*"
-
-__unknown_file (
-
-%3~|
-
-ö' ö(:
-%5"__mapGet*'
-
-__unknown_file (
-	
-missing*(
-
-__unknown_file (
-
-endpoint2__getitem__ë
-é
-
-ö ö(:
-%6"__mapSet*"
-
-__unknown_file (
-
-%2*(
-
-__unknown_file (
-
-endpoint*"
-
-__unknown_file (
-
-%5}{
-
-õ õ("
-%7"__mapGet*'
-
-__unknown_file (
-	
-missing*'
-
-__unknown_file (	
-service2__getitem__ê
-ç
-
-ö< õ("
-%8"__mapSet*"
-
-__unknown_file (
-
-%2*'
-
-__unknown_file (	
-service*"
-
-__unknown_file (
-
-%7db
-
-ô õ($
-%9*"
-
-__unknown_file (
-
-%1*"
-
-__unknown_file (
-
-%22append*
-4
-6*˚
-9
-ï ó(ÉÄ
-
-ï ï("
-%10"__mapGet*%
-
-__unknown_file (	
-
-fixes*-
-
-__unknown_file (
-backend_fixes2__getitem__
-
-ï* ó(
-%11"dict¢
-ü
-
-ï+ ï(J
-%12"__mapSet*#
-
-__unknown_file (
-
-%11*$
-
-__unknown_file (
-type*5
-
-__unknown_file (
-remove_trailing_slash}
-
-ñ ñ(/
-%13"__mapGet*(
-
-__unknown_file (
-
-
-mismatch*'
-
-__unknown_file (	
-backend2__getitem__î
-ë
-
-ñ ñ(/
-%14"__mapSet*#
-
-__unknown_file (
-
-%11*(
-
-__unknown_file (
-
-endpoint*#
-
-__unknown_file (
-
-%13Ä~
-
-ñ; ó(
-%15"__mapGet*(
-
-__unknown_file (
-
-
-mismatch*(
-
-__unknown_file (
-
-frontend2__getitem__í
-è
-
-ñ1 ó(
-%16"__mapSet*#
-
-__unknown_file (
-
-%11*&
-
-__unknown_file (
-
-fix_to*#
-
-__unknown_file (
-
-%15ge
-
-ï ó(
-%17*#
-
-__unknown_file (
-
-%10*#
-
-__unknown_file (
-
-%112append*	
-4
-6
-9:
-
-è è(-
-
-mismatchesB'%
-#fix-api-alignment.APIAlignmentFixerH

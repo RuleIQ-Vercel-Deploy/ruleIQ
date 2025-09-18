@@ -1,5 +1,5 @@
 
-=services.evidence_service.EvidenceService.search_by_frameworkD
+4evidence_service.EvidenceService.search_by_frameworkD
 8/home/omar/Documents/ruleIQ/services/evidence_service.py¥ ¥("3*;
 3
 evidence_service.py"
@@ -13,5 +13,5 @@
 	framework:
 
 ¦' ¦(E
-search_filtersB-+
-)services.evidence_service.EvidenceServiceH
+search_filtersB$"
+ evidence_service.EvidenceServiceH

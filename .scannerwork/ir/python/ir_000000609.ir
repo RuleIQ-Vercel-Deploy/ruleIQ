@@ -1,51 +1,16 @@
 
-E<"Create a fallback fact-check result when AI analysis fails"str
-5,"Unable to verify - AI analysis unavailable"str
-0.5float
-@7"Fact-checking service unavailable, claim not verified"str
+#"Extract domain from URL."strself
+° °(url
+° °(&"«.
+,
 
-0int
-trueboolself
-ö$ ö((claim
-ö* ö(4	list1-services.rag_fact_checker.FactCheckConfidence"§,
-*
+² ²()urlparse"?python-unknown?<
+:
 
-ù ù()"#get-field# UNCERTAIN:)
+³ ³(parsed"
+urllib.parseurlparse:Btuple)
 '
 
-ù4 ú(9"#unknown-value#Blist(
-&
+´ ´("#get-field# netloc:
 
-ù4 ú(9
-"
-#is-exact#:	Bbool
-
-
-ù4 ú(9"
-#assume#:
-:
-8
-
-ù4 ú(9"#set-field# __collection_size:Bint(
-&
-
-ù4 ú(9"#array-add-last#:)
-'
-
-úJ û("#unknown-value#Blist(
-&
-
-úJ û("
-#is-exact#:	Bbool
-
-
-úJ û("
-#assume#::
-8
-
-úJ û("#set-field# __collection_size:BintW
-U
-
-ø ü(D"FactCheckResult:B)services.rag_fact_checker.FactCheckResult
-
-ø ü(D*8/home/omar/Documents/ruleIQ/services/rag_fact_checker.py
+´ ´(*G/home/omar/Documents/ruleIQ/services/ai/evaluation/tools/ingest_docs.py

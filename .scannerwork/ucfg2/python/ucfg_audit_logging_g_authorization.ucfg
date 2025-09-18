@@ -1,9 +1,9 @@
 
 3audit_logging.AuditLoggingService.log_authorizationH
->/home/omar/Documents/ruleIQ/services/security/audit_logging.pyq q("2*€
-2t t(&i
+>/home/omar/Documents/ruleIQ/services/security/audit_logging.pyn n("2*€
+2q q(&i
 g
-u/ u(K
+r/ r(K
 %1"__id*O
 
 __unknown_file (3*1
@@ -11,16 +11,16 @@ g
 AUTHORIZATION*
 4
 5*Å
-4v v(6p
+4s s(6p
 n
-v v(6
+s s(6
 %3"__id*V
 
 __unknown_file (:*8 
 audit_logging.AuditEventAction"
 PERMISSION_GRANTED<
 :
-v v(6
+s s(6
 %2"__id*"
 
 __unknown_file (
@@ -28,16 +28,16 @@ n
 %3*
 7
 8*Ä
-5w w(.o
+5t t(.o
 m
-w w(.
+t t(.
 %4"__id*U
 
 __unknown_file (9*7 
 audit_logging.AuditEventAction"
 PERMISSION_DENIED<
 :
-w w(.
+t t(.
 %2"__id*"
 
 __unknown_file (
@@ -45,30 +45,30 @@ m
 %4*
 7
 8*U
-7x x(&A
+7u u(&A
 ?
-x x(&
+u u(&
 %5"__id*'
 
 __unknown_file (	
 SUCCESS*
 9*T
-8x7 x(?@
+8u7 u(?@
 >
-x7 x(?
+u7 u(?
 %5"__id*&
 
 __unknown_file (
 
 DENIED*
 9*ÿ
-9x7 x(?
-xJ y(=
+9u7 u(?
+uJ v(=
 %6"dict
-y y((
+v v((
 %7"dict™
 –
-y y('
+v v('
 %8"__mapSet*"
 
 __unknown_file (
@@ -83,9 +83,9 @@ permission**
 
 
 permission
-y9 y(;
+v9 v(;
 %9"dictðí
-u y(E
+r v(E
 %10*A
 
 __unknown_file (%#
@@ -113,22 +113,22 @@ event_type
 db
 
 db"
-u y(E
+r v(E
 
 %10:
-q& q(2	
+n& n(2	
 user_id:
-q4 q(A
+n4 n(A
 
 resource:
-r r(
+o o(
 
 permission:
-r r(&	
+o o(&	
 granted:
-r( r(E
+o( o(E
 
 metadata:
-rG s(
+oG p(
 dbB%#
 !audit_logging.AuditLoggingServiceH

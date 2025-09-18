@@ -1,37 +1,32 @@
 
-"metrics_dashboard"str
-¢˜"
-        MATCH (m:Metric)
-        OPTIONAL MATCH (m)-[:MEASURES]->(ctrl:Control)
-        RETURN m.type AS metric_type,
-               m.name AS metric,
-               m.current_value AS current,
-               m.target_value AS target,
-               m.frequency AS frequency,
-               m.owner AS owner,
-               CASE 
-                 WHEN m.type = 'KPI' AND m.current_value < m.target_value THEN 'GREEN'
-                 WHEN m.type = 'KRI' AND m.current_value > m.target_value THEN 'RED'
-                 ELSE 'AMBER'
-               END AS status,
-               COLLECT(ctrl.name) AS related_controls
-        ORDER BY m.type, status DESC
-        "str
-%"Get KPI/KRI dashboard data"strself
-¼/ ¼(3"Û(
-&
-¾ ¾(¬query"#id#:Bstr#
-!
-
-Ï Ï(1"#unknown-value#,
-*
-
-Ï Ï(1results"#unknown-value#&
+'"API v1 health check endpoint"str
+"timestamp"str
+"status"str
+"api_version"str
+
+"1.0.0"str
+	"healthy"str
+"v1"str
+		"version"str"ñ&
 $
 
-Ð Ð(-"#new-object#Bdict"
+¸ ¹(%"#new-object#Bdict"
  
 
-Ð Ð(,	"	#map-set#:
+¸ ¸("	#map-set#:%
+#
 
-Ð Ð(-*A/home/omar/Documents/ruleIQ/langgraph_agent/core/neo4j_service.py
+¸. ¸(9"
+timetimeBfloat"
+ 
+
+¸! ¸(9"	#map-set#:"
+ 
+
+¸; ¹("	#map-set#:	
+"
+ 
+
+¹ ¹($"	#map-set#:
+
+¸ ¹(%*'/home/omar/Documents/ruleIQ/api/main.py

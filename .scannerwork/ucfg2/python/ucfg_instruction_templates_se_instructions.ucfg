@@ -1,15 +1,15 @@
 
-Zservices.ai.instruction_templates.SystemInstructionTemplates._initialize_base_instructionsJ
-@/home/omar/Documents/ruleIQ/services/ai/instruction_templates.py> >(%"2*≥a
+Qai.instruction_templates.SystemInstructionTemplates._initialize_base_instructionsJ
+@/home/omar/Documents/ruleIQ/services/ai/instruction_templates.py> >(%"2*Ú`
 2? ?(K
 	@ ù(
-%1"dict{
-y
+%1"dictr
+p
 @ @(*
-%2"__id*a
+%2"__id*X
 
-__unknown_file (E*C3
-1services.ai.instruction_templates.InstructionType"
+__unknown_file (<*:*
+(ai.instruction_templates.InstructionType"
 
 ASSESSMENTÕ
  
@@ -57,13 +57,13 @@ Communication Style:
 - Clear, jargon-free language suitable for non-compliance experts
 - Structured responses with clear sections and priorities
 - Actionable guidance with specific next steps
-y
-w
+p
+n
 b b(&
-%4"__id*_
+%4"__id*V
 
-__unknown_file (C*A3
-1services.ai.instruction_templates.InstructionType"
+__unknown_file (:*8*
+(ai.instruction_templates.InstructionType"
 
 EVIDENCEÜ
 É
@@ -108,14 +108,14 @@ Quality Standards:
 - Evidence mapping must reference specific regulatory requirements
 - Collection processes must be scalable and sustainable
 - Quality criteria must be measurable and objective
-y
-w
+p
+n
 
 Å Å($
-%6"__id*]
+%6"__id*T
 
-__unknown_file (A*?3
-1services.ai.instruction_templates.InstructionType"
+__unknown_file (8*6*
+(ai.instruction_templates.InstructionType"
 POLICY˚
 ¯
 
@@ -161,14 +161,14 @@ Policy Quality Criteria:
 - Clear role definitions and accountability measures
 - Comprehensive coverage of regulatory requirements
 - Professional language suitable for business documentation
-w
-u
+n
+l
 
 ° °("
-%8"__id*[
+%8"__id*R
 
-__unknown_file (?*=3
-1services.ai.instruction_templates.InstructionType"
+__unknown_file (6*4*
+(ai.instruction_templates.InstructionType"
 CHATÌ
 Í
 
@@ -213,14 +213,14 @@ Communication Standards:
 - Structured responses with logical flow and clear priorities
 - Empathetic understanding of compliance complexity and business pressures
 - Professional guidance with practical implementation focus
-|
-z
+s
+q
 
 ¿ ¿(&
-%10"__id*_
+%10"__id*V
 
-__unknown_file (C*A3
-1services.ai.instruction_templates.InstructionType"
+__unknown_file (:*8*
+(ai.instruction_templates.InstructionType"
 
 ANALYSISù
 ö
@@ -266,14 +266,14 @@ Quality Requirements:
 - Risk assessments must follow established methodologies
 - Recommendations must be prioritized by impact and feasibility
 - All analysis must consider business context and constraints
-Ñ
-Å
+z
+x
 
 ﬂ ﬂ(-
-%12"__id*f
+%12"__id*]
 
-__unknown_file (J*H3
-1services.ai.instruction_templates.InstructionType"
+__unknown_file (A*?*
+(ai.instruction_templates.InstructionType"
 RECOMMENDATIONS
 Ì
 
@@ -318,14 +318,14 @@ Implementation Focus:
 - Implementation guidance must consider organizational maturity
 - Resource requirements must be realistic and justified
 - Success metrics must be measurable and relevant
-{
-y
+r
+p
 
 ˛ ˛(%
-%14"__id*^
+%14"__id*U
 
-__unknown_file (B*@3
-1services.ai.instruction_templates.InstructionType"	
+__unknown_file (9*7*
+(ai.instruction_templates.InstructionType"	
 GENERAL´
 ®
 
@@ -373,5 +373,5 @@ Response Quality:
 "
 	@ ù(
 
-%1B@>
-<services.ai.instruction_templates.SystemInstructionTemplatesH
+%1B75
+3ai.instruction_templates.SystemInstructionTemplatesH

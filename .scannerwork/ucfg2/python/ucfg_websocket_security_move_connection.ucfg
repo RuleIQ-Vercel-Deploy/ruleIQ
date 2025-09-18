@@ -1,0 +1,78 @@
+
+9websocket_security.WebSocketRateLimiter.remove_connectionF
+</home/omar/Documents/ruleIQ/middleware/websocket_security.pyD D("2*€
+2E E(.x
+v
+F F(.
+%6"__id*^
+
+__unknown_file (B*@)
+'websocket_security.WebSocketRateLimiter"
+connections_by_ipom
+F F(.
+%7*"
+
+__unknown_file (
+
+%6*)
+
+__unknown_file (
+
+	client_ip2__contains__*
+3
+5*9
+3
+websocket_security.py"
+L L
+implicit return*Œ
+4I I(5x
+v
+I I(*
+%1"__id*^
+
+__unknown_file (B*@)
+'websocket_security.WebSocketRateLimiter"
+connections_by_ip*
+3*ó
+5G G(Dx
+v
+G G("
+%2"__id*^
+
+__unknown_file (B*@)
+'websocket_security.WebSocketRateLimiter"
+connections_by_ipxv
+G G(-
+%3"__mapGet*"
+
+__unknown_file (
+
+%2*)
+
+__unknown_file (
+
+	client_ip2__getitem__nl
+G G(D
+%4*"
+
+__unknown_file (
+
+%3*-
+
+__unknown_file (
+
+connection_id2discardx
+v
+H H()
+%5"__id*^
+
+__unknown_file (B*@)
+'websocket_security.WebSocketRateLimiter"
+connections_by_ip*
+3
+4:
+D  D(.
+	client_ip:
+D0 D(B
+connection_idB+)
+'websocket_security.WebSocketRateLimiterH

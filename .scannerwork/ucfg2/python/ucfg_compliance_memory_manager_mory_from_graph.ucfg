@@ -1,6 +1,6 @@
 
-Tservices.compliance_memory_manager.ComplianceMemoryManager._remove_memory_from_graphM
-A/home/omar/Documents/ruleIQ/services/compliance_memory_manager.pyü ü('"2* 
+Kcompliance_memory_manager.ComplianceMemoryManager._remove_memory_from_graphM
+A/home/omar/Documents/ruleIQ/services/compliance_memory_manager.pyü ü('"2*¿
 2
 † †(,i
 g
@@ -9,14 +9,14 @@ g
 query"__id*J
 
 __unknown_file (.,
-*MATCH (m:Memory {id: $id}) DETACH DELETE mÅ
-
+*MATCH (m:Memory {id: $id}) DETACH DELETE mx
+v
 
 ¢ ¢(
-%1"__id*e
+%1"__id*\
 
-__unknown_file (I*G<
-:services.compliance_memory_manager.ComplianceMemoryManager"
+__unknown_file (@*>3
+1compliance_memory_manager.ComplianceMemoryManager"
 neo4j
 
 ¢. ¢(?
@@ -58,5 +58,5 @@ g
 implicit return:
 
 ü. ü(<
-	memory_idB><
-:services.compliance_memory_manager.ComplianceMemoryManagerH
+	memory_idB53
+1compliance_memory_manager.ComplianceMemoryManagerH

@@ -1,0 +1,128 @@
+
+%agents.context_manager.ContextManagerH
+>/home/omar/Documents/ruleIQ/services/agents/context_manager.py   ("2*À
+2! !()Ñ
+Å
+" "(0='
+%agents.context_manager.ContextManager"
+max_context_size"__id*0
+
+__unknown_file (
+
+max_context_size
+#6 #(8
+%2"dictr
+p
+# #(8:'
+%agents.context_manager.ContextManager"
+context_trees"__id*"
+
+__unknown_file (
+
+%2
+$  )(	
+%3"dictu
+s
+% %(.
+%4"__id*[
+
+__unknown_file (?*='
+%agents.context_manager.ContextManager"
+_merge_overwriteê
+ç
+% %(.
+%5"__mapSet*"
+
+__unknown_file (
+
+%3*)
+
+__unknown_file (
+	overwrite*"
+
+__unknown_file (
+
+%4r
+p
+& &((
+%6"__id*X
+
+__unknown_file (<*:'
+%agents.context_manager.ContextManager"
+_merge_appendç
+ä
+& &((
+%7"__mapSet*"
+
+__unknown_file (
+
+%3*&
+
+__unknown_file (
+
+append*"
+
+__unknown_file (
+
+%6p
+n
+' '($
+%8"__id*V
+
+__unknown_file (:*8'
+%agents.context_manager.ContextManager"
+_merge_deepã
+à
+' '($
+%9"__mapSet*"
+
+__unknown_file (
+
+%3*$
+
+__unknown_file (
+deep*"
+
+__unknown_file (
+
+%8r
+p
+( ((&
+%10"__id*W
+
+__unknown_file (;*9'
+%agents.context_manager.ContextManager"
+_merge_smarté
+ã
+( ((&
+%11"__mapSet*"
+
+__unknown_file (
+
+%3*%
+
+__unknown_file (	
+smart*#
+
+__unknown_file (
+
+%10u
+s
+$ )(	='
+%agents.context_manager.ContextManager"
+merge_strategies"__id*"
+
+__unknown_file (
+
+%3*
+3*d
+3
+context_manager.py75
++ +(
+%1"%agents.context_manager.ContextManager"
++ +(
+
+%1:
+   (5
+max_context_sizeB)'
+%agents.context_manager.ContextManagerH

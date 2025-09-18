@@ -1,78 +1,4 @@
 
-	"memory_percent"str
-"cpu_percent"str
-
-0int
-"getloadavg"str
-"/"str
-"disk_percent"str
-'"Get system resource metrics."str
-"load_average"strself
-Í Í("Ü&
-$
-
-Ï Ò(1"#new-object#Bdict#
-!
-
-Ï Ï(3"#unknown-value#)
-'
-
-Ï Ï(3"#unknown-value#Bbool2
-0
-
-Ï Ï(3"
-psutilcpu_percent:Bfloat"
- 
-
-Ï Ï(3"	#map-set#:1
-/
-
-Ð Ð(#
-"
-psutilvirtual_memoryBtuple*
-(
-
-Ð Ð(+"#get-field# percent:
-"
- 
-
-Ï5 Ð(+"	#map-set#:	0
-.
-
-Ð= Ñ("
-psutil
-disk_usage:Btuple*
-(
-
-Ð= Ñ(#"#get-field# percent:"
- 
-
-Ð- Ñ(#"	#map-set#:#
-!
-
-Ò Ò("#unknown-value#2
-0
-
-Ò Ò()"
-builtinshasattr*:Bbool,"*
-
-Ò Ò() *
-ÑL Ñ(N2
-Ò* Ò(."i-
-+
-
-Ñ5 Ñ(H"
-psutil
-getloadavgBtuple$
-"
-
-Ñ5 Ñ(K"#array-read#:
-
-Ñ5 Ò(0"
-
-Ñ5 Ò(0"J*"
- 
-
-Ñ% Ò(0"	#map-set#:
-
-Ï Ò(1*;/home/omar/Documents/ruleIQ/services/performance_monitor.py
+90"Convert query to Cypher query language (Neo4j)"str
+`W"MATCH (n) WHERE n.type = '{self.filters.get('type', '')}' RETURN n LIMIT {self.limit}"strselfc c("
+e e(g*>/home/omar/Documents/ruleIQ/services/knowledge_graph/models.py

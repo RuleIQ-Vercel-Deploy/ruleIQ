@@ -1,6 +1,6 @@
 
-Vservices.ai.compliance_query_engine.ComplianceQueryEngine.find_conflicting_regulationsN
-B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.pyÁ Á(*"2*û
+Mai.compliance_query_engine.ComplianceQueryEngine.find_conflicting_regulationsN
+B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.pyÁ Á(*"2*ñ
 2
 Ä Ì(Ó
 Ð
@@ -12,14 +12,14 @@ B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.pyÁ Á(*"2
 
         MATCH (r:Regulation {id: $reg_id})-[c:CONFLICTS_WITH]-(conf:Regulation)
         RETURN conf, c.conflict_type as conflict_type
-        
-
+        x
+v
 
 Ò Ò(
-%9"__id*e
+%9"__id*\
 
-__unknown_file (I*G;
-9services.ai.compliance_query_engine.ComplianceQueryEngine"
+__unknown_file (@*>2
+0ai.compliance_query_engine.ComplianceQueryEngine"
 driverB@
 
 Ò Ò((
@@ -164,5 +164,5 @@ C
 6:
 
 Â Â( 
-regulation_idB=;
-9services.ai.compliance_query_engine.ComplianceQueryEngineH
+regulation_idB42
+0ai.compliance_query_engine.ComplianceQueryEngineH

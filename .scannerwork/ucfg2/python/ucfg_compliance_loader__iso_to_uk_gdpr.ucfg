@@ -1,0 +1,147 @@
+
+5compliance_loader.ISO27001UKMapper.map_iso_to_uk_gdprE
+9/home/omar/Documents/ruleIQ/services/compliance_loader.pyÅ Å("2*{
+2
+Ç ä(
+
+ã ã(
+%11"listE
+C
+
+ã ã(
+
+mappings"__id*#
+
+__unknown_file (
+
+%11*
+4
+6*+
+4
+ò ò("
+
+ò ò(
+
+
+mappings*Ö
+6
+ç ç(5z
+x
+
+ç ç(5
+%9"__id*^
+
+__unknown_file (B*@$
+"compliance_loader.ISO27001UKMapper"
+ISO_TO_UK_GDPR_MAPPINGpn
+
+ç ç(5
+%10*"
+
+__unknown_file (
+
+%9*'
+
+__unknown_file (
+	
+control2__contains__*
+7
+8*Ü
+7
+é é(Ez
+x
+
+é  é(;
+%1"__id*^
+
+__unknown_file (B*@$
+"compliance_loader.ISO27001UKMapper"
+ISO_TO_UK_GDPR_MAPPINGxv
+
+é  é(D
+%2"__mapGet*"
+
+__unknown_file (
+
+%1*'
+
+__unknown_file (
+	
+control2__getitem__wu
+
+é é(E
+%3"list.append*(
+
+__unknown_file (
+
+
+mappings*"
+
+__unknown_file (
+
+%22append*
+4
+6*Ñ
+8
+ë ñ(
+
+í ï(
+%4"dictu
+s
+
+ì* ì(^
+%5"__concat*:
+
+ì, ì(T,*
+(General Data Protection Requirement for *
+
+ìU ì(\
+	
+controló
+î
+
+ì ì(^
+%6"__mapSet*"
+
+__unknown_file (
+
+%4*.
+
+__unknown_file (
+uk_requirement*"
+
+__unknown_file (
+
+%5ƒ
+¡
+
+î î([
+%7"__mapSet*"
+
+__unknown_file (
+
+%4*,
+
+__unknown_file (
+ico_guidance*Q
+
+__unknown_file (53
+1Refer to ICO guidance for specific implementationwu
+
+ë ñ(
+%8"list.append*(
+
+__unknown_file (
+
+
+mappings*"
+
+__unknown_file (
+
+%42append*
+4
+6:
+
+Å! Å(8
+iso_controlsB&$
+"compliance_loader.ISO27001UKMapperH

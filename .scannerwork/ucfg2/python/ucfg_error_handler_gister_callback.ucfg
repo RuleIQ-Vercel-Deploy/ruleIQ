@@ -1,18 +1,18 @@
 
 7monitoring.error_handler.ErrorHandler.register_callbackL
-@/home/omar/Documents/ruleIQ/app/core/monitoring/error_handler.py· ·("2*ø
+@/home/omar/Documents/ruleIQ/app/core/monitoring/error_handler.pyµ µ("2*ø
 2
-¸ ¸(&v
+¶ ¶(&v
 t
 
-¹ ¹(
+· ·(
 %1"__id*Z
 
 __unknown_file (>*<'
 %monitoring.error_handler.ErrorHandler"
 error_callbacksjh
 
-¹ ¹(-
+· ·(-
 %2*"
 
 __unknown_file (
@@ -26,10 +26,10 @@ t
 3*8
 3
 error_handler.py"
-» »(
+¹ ¹(
 implicit return:
 
-·  ·(K
+µ  µ(K
 
 callbackB)'
 %monitoring.error_handler.ErrorHandlerH

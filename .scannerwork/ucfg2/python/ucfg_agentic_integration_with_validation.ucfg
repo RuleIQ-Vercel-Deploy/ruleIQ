@@ -1,5 +1,5 @@
 
-Zservices.agentic_integration.AgenticIntegrationService.query_documentation_with_validationG
+Qagentic_integration.AgenticIntegrationService.query_documentation_with_validationG
 ;/home/omar/Documents/ruleIQ/services/agentic_integration.pyı ı(1"10*-
 7
 Æ Æ("
@@ -7,7 +7,7 @@ Zservices.agentic_integration.AgenticIntegrationService.query_documentation_with
 Æ Æ(
 
 
-rag_result*Í
+rag_result*·
 8
 í ó(Ä~
 
@@ -32,13 +32,13 @@ rag_result*&
 rag_result*'
 
 __unknown_file (	
-sources2__getitem__Û
+sources2__getitem__ÍÁ
 
 í* ó(
-%21*V
+%21*M
 
-__unknown_file (:8
-6services.agentic_integration.AgenticIntegrationService2fact_check_response:
+__unknown_file (1/
+-agentic_integration.AgenticIntegrationService2fact_check_response:
 response_text
 
 %19:
@@ -250,15 +250,15 @@ rag_result*#
 __unknown_file (
 
 %292update*
-7*÷
+7*π
 10
-å é(Ÿ÷
+å é(–Õ
 
 å é(
-%38*V
+%38*M
 
-__unknown_file (:8
-6services.agentic_integration.AgenticIntegrationService2query_documentation:
+__unknown_file (1/
+-agentic_integration.AgenticIntegrationService2query_documentation:
 query	
 
 query:"
@@ -278,22 +278,22 @@ rag_result"__id*#
 
 __unknown_file (
 
-%38Ü
-É
+%38|
+z
 
 ë% ë(6
-%39"__id*h
+%39"__id*_
 
-__unknown_file (L*J8
-6services.agentic_integration.AgenticIntegrationService"
-fact_checkerç
-ä
+__unknown_file (C*A/
+-agentic_integration.AgenticIntegrationService"
+fact_checkerÑ
+Å
 
 ë; ë(S
-%40"__id*o
+%40"__id*f
 
-__unknown_file (S*Q8
-6services.agentic_integration.AgenticIntegrationService"
+__unknown_file (J*H/
+-agentic_integration.AgenticIntegrationService"
 self_critic_enabled*
 8
 9:
@@ -312,5 +312,5 @@ query_type:!
 enable_fact_check: 
 
 ˚ ˚(%
-quick_validationB:8
-6services.agentic_integration.AgenticIntegrationServiceH
+quick_validationB1/
+-agentic_integration.AgenticIntegrationServiceH

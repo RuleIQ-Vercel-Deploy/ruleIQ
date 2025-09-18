@@ -23,7 +23,7 @@ const statusConfig = {
   },
   'in-progress': {
     label: 'In Progress',
-    className: 'bg-teal-100 text-teal-700 hover:bg-teal-200',
+    className: 'bg-purple-100 text-purple-700 hover:bg-purple-200',
   },
   completed: {
     label: 'Completed',
@@ -100,9 +100,9 @@ const AssessmentCard = React.forwardRef<HTMLDivElement, AssessmentCardProps>(
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="font-medium text-neutral-700">Progress</span>
-                <span className="font-semibold text-teal-600">{progress}%</span>
+                <span className="font-semibold text-purple-600">{progress}%</span>
               </div>
-              <Progress value={progress} className="h-2" indicatorClassName="bg-teal-600" />
+              <Progress value={progress} className="h-2" indicatorClassName="bg-purple-600" />
             </div>
           )}
 
@@ -110,7 +110,7 @@ const AssessmentCard = React.forwardRef<HTMLDivElement, AssessmentCardProps>(
         </CardContent>
 
         {/* Subtle gradient overlay on hover */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-teal-50/0 to-teal-50/0 transition-all duration-300 group-hover:from-teal-50/10 group-hover:to-transparent" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-purple-50/0 to-purple-50/0 transition-all duration-300 group-hover:from-purple-50/10 group-hover:to-transparent" />
       </Card>
     );
   },

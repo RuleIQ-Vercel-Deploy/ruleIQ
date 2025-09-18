@@ -1,5 +1,5 @@
 
-4api.clients.aws_client.AWSGuardDutyCollector.collectA
+0clients.aws_client.AWSGuardDutyCollector.collectA
 5/home/omar/Documents/ruleIQ/api/clients/aws_client.pyÅ Å("2*A
 2
 Ç Ç(
@@ -12,5 +12,5 @@
 %1:
 
 Å Å($
-kwargsB0.
-,api.clients.aws_client.AWSGuardDutyCollectorH
+kwargsB,*
+(clients.aws_client.AWSGuardDutyCollectorH

@@ -1,5 +1,5 @@
 
-Pservices.neo4j_service.Neo4jGraphRAGService.execute_transaction._run_transactionA
+Gneo4j_service.Neo4jGraphRAGService.execute_transaction._run_transactionA
 5/home/omar/Documents/ruleIQ/services/neo4j_service.py’ ’("1*(
 2
 ” ”("
@@ -117,5 +117,5 @@ J
 self"
 driver*
 2
-3B/-
-+services.neo4j_service.Neo4jGraphRAGServiceH
+3B&$
+"neo4j_service.Neo4jGraphRAGServiceH

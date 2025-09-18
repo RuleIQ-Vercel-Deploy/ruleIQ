@@ -6,6 +6,34 @@
  * truncated field names via the BusinessProfileFieldMapper.
  */
 
+// Assessment data type
+export interface AssessmentData {
+  current_step?: number;
+  completed_steps?: string[];
+  answers?: Record<string, string | number | boolean | string[] | null>;
+  progress_percentage?: number;
+  last_updated?: string;
+  responses?: Record<string, string | number | boolean | string[]>;
+  scores?: Array<{
+    category: string;
+    score: number;
+    confidence: number;
+  }>;
+  completion_status?: 'not_started' | 'in_progress' | 'completed';
+}
+
+// Validation schema for form fields
+export interface ValidationSchema {
+  required?: boolean;
+  minLength?: number;
+  maxLength?: number;
+  pattern?: string;
+  min?: number;
+  max?: number;
+  enum?: string[];
+  custom?: (value: unknown) => string | null;
+}
+
 export interface BusinessProfile {
   // Basic Company Information
   id?: string;
@@ -41,7 +69,7 @@ export interface BusinessProfile {
 
   // Assessment Status
   assessment_completed: boolean;
-  assessment_data: Record<string, any>;
+  assessment_data: AssessmentData;
 
   // Metadata
   created_at?: string;
@@ -239,7 +267,7 @@ export interface WizardStep {
   title: string;
   description: string;
   component: string;
-  validation?: any;
+  validation?: ValidationSchema;
 }
 
 export const WIZARD_STEPS: WizardStep[] = [

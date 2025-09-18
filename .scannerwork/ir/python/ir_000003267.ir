@@ -1,0 +1,57 @@
+
+"Talent availability"str
+
+0int
+"mitigation"str
+"trend"str
+&"Assess strategic risk level"str
+
+	"factors"str
+"MEDIUM"str
+8/"Innovation and talent development initiatives"str
+"level"str
+"INCREASING"str
+ "Technology disruption"str
+ "Competitive landscape"strself
+· ·(#list"ú&
+$
+
+¹ ¼(<"#new-object#Bdict"
+ 
+
+¹ ¹(!"	#map-set#:"
+ 
+
+¹# ¹(8	"	#map-set#:)
+'
+
+¹E »(""#unknown-value#Blist(
+&
+
+¹E »(""
+#is-exact#:Bbool
+
+
+¹E »(""
+#assume#::
+8
+
+¹E »(""#set-field# __collection_size:Bint(
+&
+
+¹E »(""#array-add-last#:(
+&
+
+¹E »(""#array-add-last#:(
+&
+
+¹E »(""#array-add-last#:"
+ 
+
+¹: »(""	#map-set#:
+"
+ 
+
+»$ ¼(;"	#map-set#:
+
+¹ ¼(<*I/home/omar/Documents/ruleIQ/services/compliance/cco_strategic_playbook.py

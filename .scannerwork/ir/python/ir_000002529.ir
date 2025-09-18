@@ -1,26 +1,18 @@
 
-	1.0float
-0.3float
-,#"Calculate process automation rate"str
-0.15floatself
-Š# Š('"‚3
-1
+=4"Cache evidence statistics for a user (10 min TTL)."str
+"evidence_stats"strself
+•& •(*user_id
+•, •(8stats
+•: –(ttl
+– –("Œ.
+,
 
-Œ Œ(."#get-field# current_maturity:(
-&
+˜ ˜(Ikey"?python-unknown?:#
+!
 
-Œ Œ(4"#get-field# value:3
-1
+™ ™(."#unknown-value##
+!
 
-Œ Œ(;"#dependent-value#*:Bfloat0
-.
+™ ™(.	"#unknown-value#
 
-Œ Œ(;"#dependent-value#:Bfloat(
-&
-
-Œ Œ(A
-"
-builtinsmin*:	
-
-Œ Œ(A
-*I/home/omar/Documents/ruleIQ/services/compliance/cco_strategic_playbook.py
+™ ™(.	*+/home/omar/Documents/ruleIQ/config/cache.py

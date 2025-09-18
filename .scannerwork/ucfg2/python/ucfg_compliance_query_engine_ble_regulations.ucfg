@@ -1,6 +1,6 @@
 
-Tservices.ai.compliance_query_engine.ComplianceQueryEngine.get_applicable_regulationsL
-B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.py (("2*Ì
+Kai.compliance_query_engine.ComplianceQueryEngine.get_applicable_regulationsL
+B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.py (("2*Ã
 2 $(¯
 ¬
 % .(
@@ -16,13 +16,13 @@ B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.py (("2*Ì
             (r.business_triggers.country = $country OR r.business_triggers.country = 'Global' OR r.business_triggers.country IS NULL)
         RETURN r
         ORDER BY r.risk_metadata.base_risk_score DESC
-        
-}
+        v
+t
 0 0(
-%7"__id*e
+%7"__id*\
 
-__unknown_file (I*G;
-9services.ai.compliance_query_engine.ComplianceQueryEngine"
+__unknown_file (@*>2
+0ai.compliance_query_engine.ComplianceQueryEngine"
 driver?=
 0 0((
 %8*"
@@ -124,5 +124,5 @@ C
 4
 6:
  (.
-business_profileB=;
-9services.ai.compliance_query_engine.ComplianceQueryEngineH
+business_profileB42
+0ai.compliance_query_engine.ComplianceQueryEngineH

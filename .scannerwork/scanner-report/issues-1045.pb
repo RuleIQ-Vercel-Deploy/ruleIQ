@@ -1,34 +1,0 @@
-…
-pythonS5843TSimplify this regular expression to reduce its complexity from 37 to the 20 allowed. 244 :
-ï44 +1:
-ï44T U+1:
-ï44^ _+1:(
-&ï44E F+2 (incl 1 for nesting):
-ï44 +1:(
-&ï44@ A+3 (incl 2 for nesting):(
-&ï441 7+4 (incl 3 for nesting):
-ï44( )+1:
-ï447 8+1:(
-&ï44K P+2 (incl 1 for nesting):
-ï44F G+1:(
-&ï44S T+2 (incl 1 for nesting):(
-&ï44b g+2 (incl 1 for nesting):(
-&ï44m r+2 (incl 1 for nesting):(
-&ï44x }+2 (incl 1 for nesting):*
-(ï
-44É à+2 (incl 1 for nesting):
-ï
-44í ì+1:*
-(ï
-44ê ë+2 (incl 1 for nesting):
-ï
-44ò ô+1:*
-(ï
-44ó ò+2 (incl 1 for nesting):
-ï
-44ô ö+1:*
-(ï
-44† °+2 (incl 1 for nesting)H
-pythonS1172+Remove the unused function parameter "cls". 2DD H
-pythonS1172+Remove the unused function parameter "cls". 2OO H
-pythonS1172+Remove the unused function parameter "cls". 2SS 

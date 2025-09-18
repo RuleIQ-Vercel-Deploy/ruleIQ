@@ -1,6 +1,6 @@
 
-Uservices.ai.compliance_query_engine.ComplianceQueryEngine.get_regulation_dependenciesN
-B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.py‘ ‘()"2*Î
+Lai.compliance_query_engine.ComplianceQueryEngine.get_regulation_dependenciesN
+B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.py‘ ‘()"2*Ä
 2
 ” œ(¨
 ¥
@@ -12,14 +12,14 @@ B/home/omar/Documents/ruleIQ/services/ai/compliance_query_engine.py‘ ‘()"2
 g
         MATCH (r:Regulation {id: $reg_id})-[:DEPENDS_ON]->(dep:Regulation)
         RETURN dep
-        
-
+        x
+v
 
 ¢ ¢(
-%7"__id*e
+%7"__id*\
 
-__unknown_file (I*G;
-9services.ai.compliance_query_engine.ComplianceQueryEngine"
+__unknown_file (@*>2
+0ai.compliance_query_engine.ComplianceQueryEngine"
 driverA?
 
 ¢ ¢((
@@ -128,5 +128,5 @@ F
 6:
 
 ’ ’( 
-regulation_idB=;
-9services.ai.compliance_query_engine.ComplianceQueryEngineH
+regulation_idB42
+0ai.compliance_query_engine.ComplianceQueryEngineH

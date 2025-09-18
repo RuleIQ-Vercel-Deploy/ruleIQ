@@ -4,6 +4,61 @@
  */
 
 // ============================================================================
+// CORE TYPES
+// ============================================================================
+
+export interface PersonalizationData {
+  user_type?: string;
+  priority_areas?: string[];
+  current_challenges?: string[];
+  tech_stack?: string[];
+  budget_range?: string;
+  timeline?: string;
+  industry_preferences?: string[];
+  framework_focus?: string[];
+  business_size_category?: 'startup' | 'small' | 'medium' | 'large' | 'enterprise';
+  custom_settings?: Record<string, unknown>;
+}
+
+export type AssessmentAnswer =
+  | string
+  | number
+  | boolean
+  | string[]
+  | {
+      value: string | number | boolean;
+      metadata?: Record<string, unknown>;
+    };
+
+export interface UTMParameters {
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_term?: string;
+  utm_content?: string;
+}
+
+export interface TrackingMetadata {
+  timestamp: string;
+  page_url?: string;
+  referrer?: string;
+  session_id?: string;
+  user_agent?: string;
+  device_type?: string;
+  session_duration?: number;
+  utm_params?: UTMParameters;
+  custom_properties?: Record<string, unknown>;
+}
+
+export interface FreemiumBehaviorEvent {
+  event_type: string;
+  event_category?: string;
+  event_label?: string;
+  event_value?: number;
+  metadata?: TrackingMetadata;
+}
+
+// ============================================================================
 // REQUEST TYPES
 // ============================================================================
 
@@ -34,13 +89,13 @@ export interface AssessmentStartRequest {
   company_size?: string;
   industry?: string;
   compliance_frameworks?: string[];
-  personalization_data?: Record<string, any>;
+  personalization_data?: PersonalizationData;
 }
 
 export interface AssessmentAnswerRequest {
   session_token: string;
   question_id: string;
-  answer: string | number | boolean | Record<string, any>;
+  answer: AssessmentAnswer;
   time_spent_seconds?: number;
   confidence_level?: number;
 }
@@ -168,7 +223,7 @@ export interface AssessmentQuestion {
 
 export interface AssessmentResponse {
   question_id: string;
-  answer: string | number | boolean | Record<string, any>;
+  answer: AssessmentAnswer;
   answered_at: string;
   time_spent_seconds?: number;
   confidence_level?: number;
@@ -240,7 +295,7 @@ export interface FreemiumState {
   analyticsEvents: Array<{
     event_type: string;
     timestamp: string;
-    metadata?: Record<string, any>;
+    metadata?: TrackingMetadata;
   }>;
   lastActivity: number | null; // Add for test compatibility
 
@@ -292,8 +347,8 @@ export interface FreemiumActions {
   updateConsent: (marketing: boolean, newsletter: boolean) => void;
 
   // Analytics
-  trackEvent: (eventType: string, metadata?: Record<string, any>) => void;
-  recordBehavioralEvent: (eventData: any) => Promise<void>;
+  trackEvent: (eventType: string, metadata?: TrackingMetadata) => void;
+  recordBehavioralEvent: (eventData: FreemiumBehaviorEvent) => Promise<void>;
 
   // Utility methods
   isSessionExpired: () => boolean;
@@ -371,23 +426,6 @@ export type ConversionEvent =
   | 'cta_clicked'
   | 'converted_to_paid';
 
-export interface UTMParameters {
-  utm_source?: string;
-  utm_medium?: string;
-  utm_campaign?: string;
-  utm_term?: string;
-  utm_content?: string;
-}
-
-export interface TrackingMetadata {
-  page_url?: string;
-  referrer_url?: string;
-  user_agent?: string;
-  device_type?: string;
-  session_duration?: number;
-  utm_params?: UTMParameters;
-}
-
 // ============================================================================
 // ERROR TYPES
 // ============================================================================
@@ -395,7 +433,7 @@ export interface TrackingMetadata {
 export interface FreemiumError {
   code: string;
   message: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
   timestamp: string;
 }
 

@@ -101,7 +101,7 @@ const StaggeredListComponent = () => {
 
 const HoverAnimationComponent = () => (
   <motion.button
-    whileHover={{ scale: 1.05, backgroundColor: '#CB963E' }}
+    whileHover={{ scale: 1.05, backgroundColor: '#8B5CF6' }}
     whileTap={{ scale: 0.95 }}
     transition={{ type: 'spring', stiffness: 300 }}
     className="rounded bg-primary px-4 py-2 text-white"
@@ -119,7 +119,7 @@ const CSSTransitionComponent = () => (
     >
       CSS Transition Button
     </button>
-    <div className="transition-colors duration-200 hover:text-gold" data-testid="color-transition">
+    <div className="transition-colors duration-200 hover:text-purple" data-testid="color-transition">
       Color Transition
     </div>
     <div

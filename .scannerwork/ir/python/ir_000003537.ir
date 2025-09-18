@@ -1,0 +1,12 @@
+
+2)"Check if circuit is open (failing fast)"strselfk k("¯'
+%
+m m("#get-field# _state:!
+
+m m(*"#unknown-value#%
+#
+m m(/"#get-field# OPEN:*
+(
+m m(/"
+#binop ==#2==:Bbool
+m m(/*:/home/omar/Documents/ruleIQ/services/ai/circuit_breaker.py

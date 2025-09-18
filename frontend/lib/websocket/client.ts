@@ -2,14 +2,16 @@
  * WebSocket client for real-time agent communication
  */
 
-import { 
-  WSMessage, 
-  MessageType, 
-  ConnectionState, 
+import {
+  WSMessage,
+  MessageType,
+  ConnectionState,
   WSEventHandlers,
   ChatMessage,
-  TypingIndicator 
+  TypingIndicator,
+  StreamingMessagePayload
 } from './types';
+import { categorizeError, logError } from '@/lib/utils/websocket-error-handler';
 
 export class WebSocketClient {
   private ws: WebSocket | null = null;
@@ -108,7 +110,7 @@ export class WebSocketClient {
     const message: WSMessage = {
       id: this.generateMessageId(),
       type: MessageType.CHAT,
-      timestamp: new Date(),
+      timestamp: new Date().toISOString(),
       payload: {
         content,
         metadata
@@ -118,13 +120,34 @@ export class WebSocketClient {
   }
 
   /**
+   * Send a chat message with streaming support
+   */
+  sendChatMessageWithStreaming(content: string, metadata?: any): string {
+    const messageId = this.generateMessageId();
+    const message: WSMessage = {
+      id: messageId,
+      type: MessageType.CHAT,
+      timestamp: new Date().toISOString(),
+      payload: {
+        content,
+        metadata: {
+          ...metadata,
+          streaming: true
+        }
+      }
+    };
+    this.send(message);
+    return messageId;
+  }
+
+  /**
    * Send typing indicator
    */
   sendTypingIndicator(isTyping: boolean, sessionId: string, agentId: string): void {
     const message: WSMessage = {
       id: this.generateMessageId(),
       type: MessageType.TYPING,
-      timestamp: new Date(),
+      timestamp: new Date().toISOString(),
       payload: {
         metadata: {
           agentId,
@@ -183,20 +206,27 @@ export class WebSocketClient {
 
     this.ws.onclose = (event) => {
       console.log('WebSocket disconnected:', event.code, event.reason);
+      const classification = categorizeError(event);
       this.connectionState.connected = false;
       this.connectionState.connecting = false;
-      
+      this.connectionState.error = new Error(classification.message);
+      logError(classification, { phase: 'onclose', code: event.code });
+
       // Stop heartbeat
       if (this.heartbeatInterval) {
         clearInterval(this.heartbeatInterval);
         this.heartbeatInterval = null;
       }
-      
-      // Call handler
+
+      // Call handler with error information
       if (this.eventHandlers.onClose) {
         this.eventHandlers.onClose(event);
       }
-      
+
+      if (this.eventHandlers.onError) {
+        this.eventHandlers.onError(new Error(classification.message));
+      }
+
       // Auto-reconnect if not intentional disconnect
       if (event.code !== 1000 && this.reconnectAttempts < this.maxReconnectAttempts) {
         this.scheduleReconnect();
@@ -205,25 +235,44 @@ export class WebSocketClient {
 
     this.ws.onerror = (event) => {
       console.error('WebSocket error:', event);
-      const error = new Error('WebSocket connection error');
-      this.connectionState.error = error;
-      
+      const classification = categorizeError(event as Event);
+      this.connectionState.error = new Error(classification.message);
+      logError(classification, { phase: 'onerror' });
+
       if (this.eventHandlers.onError) {
-        this.eventHandlers.onError(error);
+        this.eventHandlers.onError(new Error(classification.message));
       }
     };
 
     this.ws.onmessage = (event) => {
       try {
         const message: WSMessage = JSON.parse(event.data);
-        
+
+        // Check if this is a streaming message chunk
+        if (message.payload.delta !== undefined) {
+          if (this.eventHandlers.onStreamChunk) {
+            const streamChunk: StreamingMessagePayload = {
+              delta: message.payload.delta,
+              isFinal: message.payload.isFinal,
+              sequence: message.payload.sequence,
+              messageId: message.payload.messageId || message.id,
+              trustLevel: message.payload.metadata?.trustLevel,
+              sessionId: message.payload.metadata?.sessionId || '',
+              agentId: message.payload.metadata?.agentId || ''
+            };
+            console.log('Received streaming chunk:', streamChunk);
+            this.eventHandlers.onStreamChunk(streamChunk);
+          }
+          return;
+        }
+
         // Handle different message types
         switch (message.type) {
           case MessageType.HEARTBEAT:
             // Respond to heartbeat
             this.sendHeartbeatResponse();
             break;
-            
+
           case MessageType.TYPING:
             if (this.eventHandlers.onTyping) {
               const indicator: TypingIndicator = {
@@ -234,7 +283,7 @@ export class WebSocketClient {
               this.eventHandlers.onTyping(indicator);
             }
             break;
-            
+
           default:
             if (this.eventHandlers.onMessage) {
               this.eventHandlers.onMessage(message);
@@ -300,7 +349,7 @@ export class WebSocketClient {
         const heartbeat: WSMessage = {
           id: this.generateMessageId(),
           type: MessageType.HEARTBEAT,
-          timestamp: new Date(),
+          timestamp: new Date().toISOString(),
           payload: {}
         };
         this.send(heartbeat);
@@ -315,7 +364,7 @@ export class WebSocketClient {
     const response: WSMessage = {
       id: this.generateMessageId(),
       type: MessageType.HEARTBEAT,
-      timestamp: new Date(),
+      timestamp: new Date().toISOString(),
       payload: { content: 'pong' }
     };
     this.send(response);
@@ -335,12 +384,15 @@ let wsClient: WebSocketClient | null = null;
 export function getWebSocketClient(url?: string, handlers?: WSEventHandlers): WebSocketClient {
   if (!wsClient && url) {
     wsClient = new WebSocketClient(url, handlers);
+  } else if (wsClient && handlers) {
+    // Update handlers on existing client to avoid stale closures
+    wsClient.setEventHandlers(handlers);
   }
-  
+
   if (!wsClient) {
     throw new Error('WebSocket client not initialized. Please provide URL.');
   }
-  
+
   return wsClient;
 }
 
