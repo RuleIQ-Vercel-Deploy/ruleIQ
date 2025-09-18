@@ -249,8 +249,41 @@ cd frontend && doppler run -p ruleiq -c dev -- pnpm dev
 make run-app-dev         # backend + frontend with Doppler (dev)
 make run-backend-dev     # backend only with Doppler (dev)
 make run-app-stg         # staging
-make run-app-prod        # production
+make run-app-prod     # production
 ```
+
+### Local (no environment variables)
+
+For local development without a secrets manager, everything runs with sane defaults using Docker. No .env files or environment variables are required.
+
+```bash
+# Start API + Postgres + Redis + Neo4j (migrations run automatically)
+docker-compose up -d
+
+# View logs
+docker-compose logs -f app
+docker-compose logs -f postgres
+docker-compose logs -f redis
+docker-compose logs -f neo4j
+
+# Run the test container (applies migrations before pytest)
+docker-compose run --rm test
+
+# Stop services (and optionally remove volumes)
+docker-compose down
+# or to remove volumes as well:
+docker-compose down -v
+```
+
+Defaults used by docker-compose:
+- API: http://localhost:8000 (health: /health/live, docs: /api/v1/docs when debug)
+- Postgres: localhost:5432 (db=ruleiq, user=postgres, password=postgres)
+- Redis: localhost:6379
+- Neo4j: http://localhost:7474 (user=neo4j, password=neo4jpassword)
+
+Migrations:
+- The app and test containers run `alembic upgrade head` automatically on start.
+- Alembic is configured to use the Postgres service via alembic.ini.
 
 #### Frontend Setup
 
