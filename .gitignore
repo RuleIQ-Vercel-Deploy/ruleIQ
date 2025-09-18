@@ -212,3 +212,10 @@ test_configs/docker-compose.test.yml
 *.coverage
 coverage.xml
 test-*.html
+
+# Archive and backup directories
+archive/
+backups/
+backup_*/
+*.backup
+*.bak
