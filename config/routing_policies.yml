@@ -1,0 +1,147 @@
+# ruleIQ Provider Routing Policies (skeleton)
+# Centralized policy DSL for chat/embeddings/moderation routing.
+# Enforced by ProviderFacade and circuit breaker integration.
+
+version: 1
+defaults:
+  tracing:
+    enabled: true
+    attributes: [provider, model, tokens_in, tokens_out, cost_usd, latency_ms, cache_hit, tenant, region, content_type, risk_level]
+  budgets:
+    # Soft budgets with alerts; hard-stop triggers graceful degradation
+    per_tenant_daily_usd: 50.0
+    per_tenant_monthly_usd: 1000.0
+    per_feature_caps:
+      chat_usd: 500.0
+      embeddings_usd: 200.0
+      moderation_usd: 100.0
+    hard_stop_on_exceeded: true
+    hard_stop_strategy: cached_answers # cached_answers | fallback_content
+  residency:
+    enforce: true
+    block_cross_region_export: true
+
+providers:
+  # Logical provider names used by routing rules
+  gemini:
+    chat_models:
+      - name: "gemini-1.5-flash"
+        tier: standard
+        region_allow: ["us", "eu"]
+      - name: "gemini-1.5-pro"
+        tier: premium
+        region_allow: ["us", "eu"]
+    embeddings:
+      - name: "text-embedding-004"
+        dim: 768
+  openai:
+    chat_models:
+      - name: "gpt-4o-mini"
+        tier: standard
+        region_allow: ["us"]
+      - name: "gpt-4.1"
+        tier: premium
+        region_allow: ["us"]
+    embeddings:
+      - name: "text-embedding-3-large"
+        dim: 3072
+
+routing:
+  - name: default_low_risk_chat
+    match:
+      tenant: "*"
+      regions: ["us", "eu"]
+      content_types: ["general_inquiry", "assessment_guidance"]
+      risk_levels: ["low", "medium"]
+      cost_tier: "standard"
+      feature: "chat"
+    route:
+      primary:
+        provider: gemini
+        model: gemini-1.5-flash
+      fallbacks:
+        - provider: openai
+          model: gpt-4o-mini
+    controls:
+      residency_required: true
+      moderation_check: true
+      cache:
+        enabled: true
+        ttl_seconds: 600
+      canary:
+        enabled: true
+        sample_rate: 0.05
+      circuit_breaker:
+        error_rate_threshold: 0.15
+        rolling_window_seconds: 120
+        min_requests: 50
+        cooldown_seconds: 60
+      kill_switch:
+        providers: [] # e.g., ["openai"]
+
+  - name: regulatory_or_policy_content
+    match:
+      tenant: "*"
+      regions: ["us", "eu"]
+      content_types: ["regulatory_interpretation", "policy_generation", "compliance_advice"]
+      risk_levels: ["high", "critical"]
+      feature: "chat"
+    route:
+      primary:
+        provider: gemini
+        model: gemini-1.5-pro
+      fallbacks:
+        - provider: openai
+          model: gpt-4.1
+          constraints:
+            region: "us"
+    controls:
+      residency_required: true
+      moderation_check: true
+      require_citations: true
+      cache:
+        enabled: false
+      circuit_breaker:
+        error_rate_threshold: 0.10
+        rolling_window_seconds: 180
+        min_requests: 30
+        cooldown_seconds: 90
+
+  - name: embeddings_default
+    match:
+      tenant: "*"
+      regions: ["us", "eu"]
+      feature: "embeddings"
+    route:
+      primary:
+        provider: gemini
+        model: text-embedding-004
+      fallbacks:
+        - provider: openai
+          model: text-embedding-3-large
+    controls:
+      cache:
+        enabled: true
+        ttl_seconds: 86400
+
+overrides:
+  tenants:
+    acme_corp:
+      budgets:
+        per_tenant_daily_usd: 200.0
+        per_tenant_monthly_usd: 5000.0
+      routing_preferences:
+        prefer_provider: gemini
+        disallow_providers: []
+      residency:
+        enforce: true
+        allowed_regions: ["eu"]
+
+  regions:
+    eu:
+      residency:
+        enforce: true
+        block_cross_region_export: true
+      providers:
+        openai:
+          allowed: false # EU-only tenants must not route to US-only providers
