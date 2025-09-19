@@ -24,6 +24,11 @@ load_dotenv()
 # access to the values within the .ini file in use.
 config = context.config
 
+# Allow DATABASE_URL environment variable to override alembic.ini sqlalchemy.url
+env_db_url = os.getenv("DATABASE_URL")
+if env_db_url:
+    config.set_main_option("sqlalchemy.url", env_db_url)
+
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
