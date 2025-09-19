@@ -1,100 +1,110 @@
-# Deployment Checklist (Backend API)
+# Deployment Checklist (Backend API) — Non‑Docker, Production
 
-This document outlines a minimal, reliable process to deploy the backend API using Docker Compose.
+This checklist covers a host-based, systemd-managed deployment. Two supported modes:
 
-## 1) Prepare Environment
+- Env-file mode (default): systemd loads `/etc/ruleiq/ruleiq.env`
+- Doppler mode (recommended): systemd runs the API under `doppler run`, injecting secrets from Doppler
 
-Copy the production template and fill in required secrets:
+See also: docs/doppler_setup.md
+
+## 1) Provision the host
+
+Clone the repository on your server and run:
 
 ```bash
-cp env.production.template .env.prod
+# Env-file mode (default)
+sudo ./scripts/provision_production.sh
+
+# Doppler mode (secrets injected at runtime)
+PROVISION_WITH_DOPPLER=true sudo ./scripts/provision_production.sh
 ```
 
-Required values:
-- DATABASE_URL (PostgreSQL, e.g., postgresql://user:pass@host:5432/dbname)
-- JWT_SECRET_KEY (>=32 chars)
-- REDIS_PASSWORD (strong password used by Redis in docker-compose)
-- FERNET_KEY (base64 key; generate: `python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"`)
+What this does:
+- Creates/updates `/opt/ruleiq/venv` (Python 3.11 venv)
+- Syncs code to `/opt/ruleiq/app`
+- Installs Python dependencies
+- Installs systemd unit:
+  - Env-file mode: deployment/systemd/ruleiq-api.service
+  - Doppler mode:   deployment/systemd/ruleiq-api.doppler.service (aliased to ruleiq-api.service)
 
-Optional:
-- GOOGLE_API_KEY (only if AI features are enabled)
-- SENTRY_DSN (if using Sentry)
-- REDIS_URL (leave empty to let compose default to redis://:${REDIS_PASSWORD}@redis:6379/0)
+## 2) Configure environment
 
-## 2) Smoke-test with HTTP-only Nginx (no TLS)
+- Env-file mode:
+  - Edit `/etc/ruleiq/ruleiq.env` (seeded from `env.production.template`)
+  - Set at least:
+    - DATABASE_URL=postgresql://user:pass@host:5432/dbname
+    - JWT_SECRET_KEY=your-32+-char-secret
+    - REDIS_PASSWORD=strongpassword
+    - FERNET_KEY=base64 key (generate with Fernet)
+    - ENVIRONMENT=production
+    - ALLOWED_ORIGINS=https://your-domain.com,https://www.your-domain.com
+
+- Doppler mode:
+  - Install Doppler CLI (see docs/doppler_setup.md)
+  - Edit `/etc/doppler/ruleiq.env` and set:
+    - DOPPLER_PROJECT=your-project
+    - DOPPLER_CONFIG=prd
+    - DOPPLER_TOKEN=dp.st.your_service_token
+
+## 3) Start and verify
 
 ```bash
-docker compose -f docker-compose.prod.http.yml --env-file .env.prod up -d app redis nginx
+sudo systemctl daemon-reload
+sudo systemctl restart ruleiq-api
+journalctl -u ruleiq-api -f
 ```
 
-Verify:
+Verify health:
+
 ```bash
-curl http://localhost/health
-curl http://localhost/api/v1/health
-docker compose -f docker-compose.prod.http.yml logs -f app nginx
+curl http://127.0.0.1:8000/health
+curl http://127.0.0.1:8000/api/v1/health
+```
+
+Run the smoke test (requires jq):
+
+```bash
+BASE_URL=http://127.0.0.1:8000 USER_EMAIL=you@example.com USER_PASSWORD='Passw0rd!' ./scripts/smoke_test.sh
 ```
 
 Notes:
-- The container entrypoint waits for the database, applies Alembic migrations, and then starts Uvicorn.
-- If your database is external (e.g., Neon), ensure its firewall allows the server IP.
+- The service applies Alembic migrations before startup.
+- Optional routers are safely included; startup won’t fail if some aren’t ready.
 
-## 3) Switch to TLS (HTTPS) when ready
+## 4) Put Nginx in front (HTTPS)
 
-Place TLS certs:
-- `./ssl/cert.pem`
-- `./ssl/key.pem`
-
-Start TLS stack:
-```bash
-docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
-```
-
-Verify:
-```bash
-curl -k https://localhost/health
-curl -k https://localhost/api/v1/health
-docker compose -f docker-compose.prod.yml logs -f app nginx
-```
-
-## 4) Optional: Start Celery workers (when tasks are needed)
-
-Services are under the `celery` profile so they won't start by default.
+Use the sample config and adjust `server_name` and TLS paths:
 
 ```bash
-docker compose -f docker-compose.prod.http.yml --env-file .env.prod --profile celery up -d celery_worker celery_beat
+sudo cp deployment/nginx/ruleiq.conf /etc/nginx/sites-available/ruleiq.conf
+sudo ln -s /etc/nginx/sites-available/ruleiq.conf /etc/nginx/sites-enabled/ruleiq.conf
+sudo nginx -t && sudo systemctl reload nginx
 ```
 
-Sanity check:
-```bash
-# returns "pong"
-docker compose -f docker-compose.prod.http.yml exec app python -c "from celery_app import ping; r=ping.delay(); print(r.get(timeout=10))"
-```
-
-## 5) Health and Logs
-
-- Health endpoints:
-  - `/health`
-  - `/api/v1/health`
-  - `/api/v1/health/detailed`
-- Logs:
-  - `docker compose logs -f app`
-  - `docker compose logs -f nginx`
-
-## 6) Common Issues
+## 5) Common issues
 
 - Migrations failing:
-  - Check `DATABASE_URL` and network access to database.
-  - Re-run: `docker compose exec app alembic upgrade head`
+  - Check `DATABASE_URL` and network access
+  - Re-run: `sudo -u ruleiq /opt/ruleiq/venv/bin/alembic upgrade head` (Env-file mode)
+  - Doppler: `doppler run --project=$DOPPLER_PROJECT --config=$DOPPLER_CONFIG --token=$DOPPLER_TOKEN -- /opt/ruleiq/venv/bin/alembic upgrade head`
+
+- CORS errors:
+  - Set `ALLOWED_ORIGINS` (comma-separated) in env/Doppler
 
 - Redis auth:
-  - Ensure `REDIS_PASSWORD` is set; compose defaults REDIS_URLs using that password.
+  - Ensure `REDIS_PASSWORD` is set (if you use Redis). If `REDIS_URL` is unset, the app defaults to localhost in non-Docker mode.
 
-- Router import issues:
-  - Optional routers are included via a safe loader; the API will still start. Check logs for any skipped routers.
+## 6) Optional: Celery workers (non-Docker)
 
-## 7) Production Hardening (later)
+- Start workers manually to test:
+  ```bash
+  /opt/ruleiq/venv/bin/celery -A celery_app worker -l info -Q evidence,compliance,notifications,reports
+  ```
+- You can add a systemd unit later similar to the API service (with or without Doppler).
 
-- Rotate JWT secret and DB creds regularly.
-- Move secrets to a secret manager (AWS SM or similar).
-- Enable Sentry and metrics.
-- Put Nginx behind a managed LB with automatic cert renewal.
+## 7) Production hardening
+
+- Rotate JWT secret and DB credentials regularly
+- Enable Sentry DSN
+- Set `FORCE_HTTPS=true` and `SECURE_COOKIES=true` behind TLS
+- Access logs and error logs are emitted by Gunicorn; aggregate with your log stack
