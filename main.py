@@ -1,6 +1,7 @@
 from __future__ import annotations
-from typing import Any, AsyncGenerator, Dict
+from typing import Any, AsyncGenerator, Dict, List
 from contextlib import asynccontextmanager
+import importlib
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -92,6 +93,20 @@ app.add_middleware(RBACMiddleware, enable_audit_logging=True)
 from api.middleware.rate_limiter import rate_limit_middleware
 app.middleware('http')(rate_limit_middleware)
 
+def safe_include_router(module_path: str, prefix: str, tags: List[str]) -> None:
+    """
+    Import a router module and include it if available; log a warning if not.
+    """
+    try:
+        module = importlib.import_module(module_path)
+        router = getattr(module, 'router', None)
+        if router is None:
+            logger.warning(f"Module {module_path} has no 'router' attribute; skipping")
+            return
+        app.include_router(router, prefix=prefix, tags=tags)
+    except Exception as e:
+        logger.warning(f"Skipping router {module_path}: {e}")
+
 # Add JWT Authentication Middleware v2 (SEC-001 compliance)
 # TODO: Fix JWT middleware parameter issue - temporarily disabled for testing
 # from middleware.jwt_auth_v2 import JWTAuthMiddlewareV2
@@ -117,7 +132,7 @@ async def add_rate_limit_headers_middleware(request: Request, call_next) -> Dict
             response.headers[header] = value
     return response
 app.include_router(auth.router, prefix='/api/v1/auth', tags=['Authentication'])
-app.include_router(google_auth.router, prefix='/api/v1/auth/google', tags=['Google OAuth'])
+safe_include_router('api.routers.google_auth', prefix='/api/v1/auth/google', tags=['Google OAuth'])
 app.include_router(rbac_auth.router, prefix='/api/v1/auth', tags=['RBAC Authentication'])
 app.include_router(users.router, prefix='/api/v1/users', tags=['Users'])
 app.include_router(business_profiles.router, prefix='/api/v1/business-profiles', tags=['Business Profiles'])
@@ -126,38 +141,38 @@ from api.routers import usage_dashboard, audit_export
 app.include_router(usage_dashboard.router, prefix='/api/v1', tags=['Usage Dashboard'])
 app.include_router(audit_export.router, prefix='/api/v1', tags=['Audit Export'])
 app.include_router(freemium.router, prefix='/api/v1', tags=['Freemium Assessment'])
-app.include_router(ai_assessments.router, prefix='/api/v1/ai', tags=['AI Assessment Assistant'])
-app.include_router(ai_optimization.router, prefix='/api/v1/ai/optimization', tags=['AI Optimization'])
+safe_include_router('api.routers.ai_assessments', prefix='/api/v1/ai', tags=['AI Assessment Assistant'])
+safe_include_router('api.routers.ai_optimization', prefix='/api/v1/ai/optimization', tags=['AI Optimization'])
 app.include_router(frameworks.router, prefix='/api/v1/frameworks', tags=['Compliance Frameworks'])
 app.include_router(policies.router, prefix='/api/v1/policies', tags=['Policies'])
-app.include_router(implementation.router, prefix='/api/v1/implementation', tags=['Implementation Plans'])
+safe_include_router('api.routers.implementation', prefix='/api/v1/implementation', tags=['Implementation Plans'])
 app.include_router(evidence.router, prefix='/api/v1/evidence', tags=['Evidence'])
-app.include_router(evidence_collection.router, prefix='/api/v1/evidence-collection', tags=['Evidence Collection'])
+safe_include_router('api.routers.evidence_collection', prefix='/api/v1/evidence-collection', tags=['Evidence Collection'])
 app.include_router(compliance.router, prefix='/api/v1/compliance', tags=['Compliance Status'])
 app.include_router(readiness.router, prefix='/api/v1/readiness', tags=['Readiness Assessment'])
 app.include_router(reports.router, prefix='/api/v1/reports', tags=['Reports'])
-app.include_router(integrations.router, prefix='/api/v1/integrations', tags=['Integrations'])
-app.include_router(foundation_evidence.router, prefix='/api/v1/foundation/evidence', tags=['Foundation Evidence Collection'])
-app.include_router(dashboard.router, prefix='/api/v1/dashboard', tags=['Dashboard'])
-app.include_router(payment.router, prefix='/api/v1/payments', tags=['Payments'])
-app.include_router(monitoring.router, prefix='/api/v1/monitoring', tags=['Monitoring'])
+safe_include_router('api.routers.integrations', prefix='/api/v1/integrations', tags=['Integrations'])
+safe_include_router('api.routers.foundation_evidence', prefix='/api/v1/foundation/evidence', tags=['Foundation Evidence Collection'])
+safe_include_router('api.routers.dashboard', prefix='/api/v1/dashboard', tags=['Dashboard'])
+safe_include_router('api.routers.payment', prefix='/api/v1/payments', tags=['Payments'])
+safe_include_router('api.routers.monitoring', prefix='/api/v1/monitoring', tags=['Monitoring'])
 app.include_router(security.router, prefix='/api/v1/security', tags=['Security'])
-app.include_router(api_keys.router, tags=['API Keys'])
-app.include_router(webhooks.router, tags=['Webhooks'])
-app.include_router(secrets_vault.router, tags=['🔐 Secrets Vault'])
+safe_include_router('api.routers.api_keys', prefix='', tags=['API Keys'])
+safe_include_router('api.routers.webhooks', prefix='', tags=['Webhooks'])
+safe_include_router('api.routers.secrets_vault', prefix='', tags=['🔐 Secrets Vault'])
 app.include_router(chat.router, prefix='/api/v1/chat', tags=['AI Assistant'])
-app.include_router(ai_cost_monitoring.router, prefix='/api/v1/ai/cost', tags=['AI Cost Monitoring'])
-app.include_router(feedback.router, prefix='/api/v1/feedback', tags=['Human Feedback'])
-app.include_router(ai_cost_websocket.router, prefix='/api/v1/ai/cost-websocket', tags=['AI Cost WebSocket'])
-app.include_router(ai_policy.router, prefix='/api/v1/ai/policies', tags=['AI Policy Generation'])
-app.include_router(performance_monitoring.router, prefix='/api/v1/performance', tags=['Performance Monitoring'])
+safe_include_router('api.routers.ai_cost_monitoring', prefix='/api/v1/ai/cost', tags=['AI Cost Monitoring'])
+safe_include_router('api.routers.feedback', prefix='/api/v1/feedback', tags=['Human Feedback'])
+safe_include_router('api.routers.ai_cost_websocket', prefix='/api/v1/ai/cost-websocket', tags=['AI Cost WebSocket'])
+safe_include_router('api.routers.ai_policy', prefix='/api/v1/ai/policies', tags=['AI Policy Generation'])
+safe_include_router('api.routers.performance_monitoring', prefix='/api/v1/performance', tags=['Performance Monitoring'])
 app.include_router(uk_compliance.router, prefix='/api/v1/uk-compliance', tags=['UK Compliance'])
-app.include_router(iq_agent.router, prefix='/api/v1/iq-agent', tags=['IQ Agent'])
-app.include_router(agentic_rag.router, prefix='/api/v1/agentic-rag', tags=['Agentic RAG'])
+safe_include_router('api.routers.iq_agent', prefix='/api/v1/iq-agent', tags=['IQ Agent'])
+safe_include_router('api.routers.agentic_rag', prefix='/api/v1/agentic-rag', tags=['Agentic RAG'])
 app.include_router(admin_router)
 import os
 if os.getenv('ENVIRONMENT', 'production').lower() in ['development', 'test', 'testing', 'local']:
-    app.include_router(test_utils.router, prefix='/api/test-utils', tags=['Test Utilities'])
+    safe_include_router('api.routers.test_utils', prefix='/api/test-utils', tags=['Test Utilities'])
 
 @app.get('/api/dashboard')
 async def get_dashboard(current_user: User=Depends(get_current_active_user)) -> Dict[str, Any]:
