@@ -26,7 +26,7 @@ import {
   type ExportMetadata,
   type ValidationResult
 } from '@/types/assessment-results';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 
 // ============================================================================
 // TYPES AND INTERFACES
@@ -344,9 +344,17 @@ export function useAssessmentExport(
     const suggestions: string[] = [];
 
     // Check file size
-    const { estimatedSize } = getEstimatedExportSize(results, options);
-    if (estimatedSize > MAX_FILE_SIZE / 1024) {
-      warnings.push(`Estimated file size (${estimatedSize}KB) may be large`);
+    const sizeEstimate = getEstimatedExportSize(results, options);
+    const unitMultipliers: Record<string, number> = {
+      'B': 1,
+      'KB': 1024,
+      'MB': 1024 * 1024,
+      'GB': 1024 * 1024 * 1024
+    };
+    const estimatedBytes = sizeEstimate.estimatedSize * (unitMultipliers[sizeEstimate.unit] || 1024);
+    
+    if (estimatedBytes > MAX_FILE_SIZE) {
+      warnings.push(`Estimated file size (${sizeEstimate.estimatedSize} ${sizeEstimate.unit}) exceeds limit`);
       suggestions.push('Consider reducing content inclusion options');
     }
 

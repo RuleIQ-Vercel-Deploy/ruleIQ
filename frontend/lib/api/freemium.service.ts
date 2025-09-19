@@ -278,6 +278,43 @@ class FreemiumService {
       answers = Array.from(result.answers.values());
     }
 
+    // Serialize file upload answers to prevent JSON serialization errors
+    const serializedAnswers = answers.map((answer: any) => {
+      if (answer.value instanceof File || answer.value instanceof Blob) {
+        // For file uploads, store metadata instead of the actual file
+        return {
+          ...answer,
+          value: {
+            type: 'file_upload',
+            name: (answer.value as File).name || 'uploaded_file',
+            size: answer.value.size,
+            mimeType: answer.value.type,
+            // Note: Actual file upload would need a separate endpoint
+          }
+        };
+      }
+      // Handle arrays that might contain files
+      if (Array.isArray(answer.value)) {
+        return {
+          ...answer,
+          value: answer.value.map((item: any) => {
+            if (item instanceof File || item instanceof Blob) {
+              return {
+                type: 'file_upload',
+                name: (item as File).name || 'uploaded_file',
+                size: item.size,
+                mimeType: item.type,
+              };
+            }
+            return item;
+          })
+        };
+      }
+      return answer;
+    });
+
+    // Check if backend expects 'compliance_score' instead of 'overall_score'
+    // Using both for compatibility
     const response = await fetch(`${this.baseUrl}/sessions/${sessionToken}/complete`, {
       method: 'POST',
       headers: {
@@ -285,9 +322,10 @@ class FreemiumService {
       },
       body: JSON.stringify({
         completed_at: new Date().toISOString(),
-        answers: answers,
+        answers: serializedAnswers,
         section_scores: result.sectionScores || {},
         overall_score: result.overallScore || 0,
+        compliance_score: result.overallScore || 0, // Duplicate for API compatibility
         risk_score: result.riskScore || null,  // Allow null if not computed client-side
         metadata: {
           framework_id: result.frameworkId || 'default',
@@ -333,6 +371,53 @@ class FreemiumService {
       console.error('Failed to save assessment progress:', error);
       throw new Error('Failed to save progress. Please try again.');
     }
+  }
+
+  /**
+   * Get assessment history for a business profile
+   */
+  async getAssessmentHistory(businessProfileId: string, params?: {
+    limit?: number;
+    offset?: number;
+    framework_id?: string;
+  }): Promise<AssessmentResultsResponse[]> {
+    const queryParams = new URLSearchParams();
+
+    if (params?.limit) {
+      queryParams.append('limit', params.limit.toString());
+    }
+    if (params?.offset) {
+      queryParams.append('offset', params.offset.toString());
+    }
+    if (params?.framework_id) {
+      queryParams.append('framework_id', params.framework_id);
+    }
+
+    const queryString = queryParams.toString();
+    const url = `${this.baseUrl}/history/${businessProfileId}${queryString ? `?${queryString}` : ''}`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({ detail: 'Network error' }));
+      console.error('[FreemiumService] Failed to fetch assessment history:', response.status, error);
+      throw new Error(error.detail || 'Failed to fetch assessment history');
+    }
+
+    const responseData = await response.json();
+
+    // Validate each item in the response array
+    if (Array.isArray(responseData)) {
+      return responseData.map(item => validateApiResponse(item, AssessmentResultsResponseSchema));
+    }
+
+    // If single item returned, wrap in array
+    return [validateApiResponse(responseData, AssessmentResultsResponseSchema)];
   }
 }
 

@@ -46,8 +46,8 @@ export function ComplianceGauge({ score, size = 200 }: ComplianceGaugeProps) {
       gradient.addColorStop(0, '#28A745');
       gradient.addColorStop(1, '#1F8C3B');
     } else if (score >= 60) {
-      gradient.addColorStop(0, '#CB963E');
-      gradient.addColorStop(1, '#A67A2E');
+      gradient.addColorStop(0, '#A78BFA');
+      gradient.addColorStop(1, '#8B5CF6');
     } else {
       gradient.addColorStop(0, '#DC3545');
       gradient.addColorStop(1, '#B42D3B');

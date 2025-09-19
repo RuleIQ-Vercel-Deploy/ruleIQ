@@ -186,47 +186,9 @@ export interface SectionHistoricalScore {
 // EXPORT FUNCTIONALITY TYPES
 // ============================================================================
 
-export interface ExportOptions {
-  // Format selection
-  format: 'csv' | 'pdf' | 'excel' | 'json';
-  
-  // Content inclusion
-  includeOverview: boolean;
-  includeSectionDetails: boolean;
-  includeQuestionResponses: boolean;
-  includeGapAnalysis: boolean;
-  includeRecommendations: boolean;
-  includeTrendAnalysis: boolean;
-  includeBenchmarks: boolean;
-  
-  // Date range for historical data
-  dateRange?: {
-    startDate: Date;
-    endDate: Date;
-  };
-  
-  // Filtering options
-  sectionsToInclude?: string[];
-  severityFilter?: ('low' | 'medium' | 'high' | 'critical')[];
-  
-  // Formatting options
-  includeCharts: boolean;
-  includeExecutiveSummary: boolean;
-  includeAppendices: boolean;
-  
-  // Customization
-  reportTitle?: string;
-  customBranding?: boolean;
-  logoUrl?: string;
-  
-  // Security and privacy
-  anonymizeData: boolean;
-  watermark?: string;
-  
-  // File options
-  fileName?: string;
-  compression?: boolean;
-}
+// Re-export the unified ExportOptions from export.ts
+// This ensures a single source of truth for ExportOptions type
+export type { ExportOptions } from '@/lib/utils/export';
 
 export interface ExportMetadata {
   exportId: string;

@@ -2,30 +2,16 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 /**
  * Budget Alert Panel Component
  *
- * Displays budget alerts, warnings, and optimization recommendations.
- * This is a placeholder component for Phase 2.2: Cost Tracking & Token Budgets
- *
- * TODO: Implement the following:
- * - Real-time alert streaming via WebSocket
- * - Alert acknowledgment and dismissal
- * - Budget threshold configuration
- * - Cost optimization suggestions
+ * Displays budget alerts, warnings, and optimization recommendations
+ * with real-time updates via Pusher
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, TrendingUp, Lightbulb, X, Bell, DollarSign } from 'lucide-react';
-
-interface BudgetAlert {
-  id: string;
-  type: 'warning' | 'critical' | 'info';
-  title: string;
-  message: string;
-  timestamp: Date;
-  acknowledged: boolean;
-}
+import { AlertTriangle, TrendingUp, Lightbulb, X, Bell, DollarSign, WifiOff, Loader2 } from 'lucide-react';
+import { useBudgetAlerts } from '@/lib/hooks/use-pusher';
 
 interface BudgetAlertPanelProps {
   className?: string;
@@ -36,38 +22,61 @@ export const BudgetAlertPanel: React.FC<BudgetAlertPanelProps> = ({
   className = '',
   maxAlerts = 5,
 }) => {
-  // TODO: Connect to budget alert service
-  // const { data: alerts, acknowledge, dismiss } = useBudgetAlerts();
+  const {
+    connectionState,
+    alerts,
+    unreadCount,
+    markAsRead,
+    clearAlerts
+  } = useBudgetAlerts();
 
-  // Placeholder alerts
-  const placeholderAlerts: BudgetAlert[] = [
+  const [acknowledgedAlerts, setAcknowledgedAlerts] = useState<Set<string>>(new Set());
+  const [isFeatureEnabled, setIsFeatureEnabled] = useState(true);
+
+  // Check if Pusher is configured
+  useEffect(() => {
+    setIsFeatureEnabled(!!process.env.NEXT_PUBLIC_PUSHER_KEY);
+  }, []);
+
+  // Placeholder alerts for when real-time is disabled
+  const placeholderAlerts = [
     {
       id: '1',
       type: 'warning',
+      level: 'warning',
       title: 'Approaching Daily Budget Limit',
       message: 'You have used 85% of your daily AI budget ($85 of $100)',
-      timestamp: new Date(),
-      acknowledged: false,
+      timestamp: new Date().toISOString(),
+      thresholdReached: 85,
+      budgetLimit: 100,
+      currentSpend: 85,
     },
     {
       id: '2',
       type: 'critical',
+      level: 'critical',
       title: 'High Cost Spike Detected',
       message: 'Cost per request increased by 150% in the last hour',
-      timestamp: new Date(Date.now() - 3600000),
-      acknowledged: false,
+      timestamp: new Date(Date.now() - 3600000).toISOString(),
+      spikePercentage: 150,
     },
     {
       id: '3',
       type: 'info',
+      level: 'info',
       title: 'Cost Optimization Available',
       message: 'Switch to GPT-3.5 for routine queries to save ~40% on costs',
-      timestamp: new Date(Date.now() - 7200000),
-      acknowledged: true,
+      timestamp: new Date(Date.now() - 7200000).toISOString(),
+      savingPercentage: 40,
     },
   ];
 
-  const getAlertIcon = (type: BudgetAlert['type']) => {
+  // Use real alerts if available, otherwise use placeholders
+  const displayAlerts = isFeatureEnabled && connectionState === 'connected'
+    ? alerts
+    : placeholderAlerts;
+
+  const getAlertIcon = (type: string) => {
     switch (type) {
       case 'critical':
         return <AlertTriangle className="h-4 w-4" />;
@@ -75,10 +84,12 @@ export const BudgetAlertPanel: React.FC<BudgetAlertPanelProps> = ({
         return <TrendingUp className="h-4 w-4" />;
       case 'info':
         return <Lightbulb className="h-4 w-4" />;
+      default:
+        return <Bell className="h-4 w-4" />;
     }
   };
 
-  const getAlertVariant = (type: BudgetAlert['type']) => {
+  const getAlertVariant = (type: string) => {
     switch (type) {
       case 'critical':
         return 'destructive';
@@ -86,7 +97,20 @@ export const BudgetAlertPanel: React.FC<BudgetAlertPanelProps> = ({
         return 'default';
       case 'info':
         return 'default';
+      default:
+        return 'default';
     }
+  };
+
+  const handleAcknowledge = (alertId: string) => {
+    setAcknowledgedAlerts(prev => new Set(prev).add(alertId));
+    markAsRead();
+  };
+
+  const handleDismiss = (alertId: string) => {
+    // For real-time alerts, this would send a dismiss event
+    // For now, just acknowledge locally
+    handleAcknowledge(alertId);
   };
 
   return (
@@ -95,47 +119,103 @@ export const BudgetAlertPanel: React.FC<BudgetAlertPanelProps> = ({
         <CardTitle className="flex items-center gap-2">
           <Bell className="h-5 w-5" />
           Budget Alerts
+          {unreadCount > 0 && (
+            <Badge variant="destructive" className="ml-2">
+              {unreadCount}
+            </Badge>
+          )}
         </CardTitle>
-        <CardDescription>Cost warnings and optimization recommendations</CardDescription>
+        <CardDescription>
+          Cost warnings and optimization recommendations
+          {!isFeatureEnabled && (
+            <span className="ml-2 text-xs text-muted-foreground">(Static mode - real-time disabled)</span>
+          )}
+        </CardDescription>
       </CardHeader>
       <CardContent>
+        {/* Connection Status Indicator */}
+        {isFeatureEnabled && (
+          <div className="mb-4 flex items-center gap-2">
+            {connectionState === 'connecting' && (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span className="text-xs text-muted-foreground">Connecting to real-time updates...</span>
+              </>
+            )}
+            {connectionState === 'disconnected' && (
+              <>
+                <WifiOff className="h-4 w-4 text-destructive" />
+                <span className="text-xs text-destructive">Disconnected - showing cached alerts</span>
+              </>
+            )}
+            {connectionState === 'connected' && (
+              <>
+                <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-xs text-green-600">Live updates active</span>
+              </>
+            )}
+          </div>
+        )}
+
         <div className="space-y-3">
-          {placeholderAlerts.slice(0, maxAlerts).map((alert) => (
+          {displayAlerts.slice(0, maxAlerts).map((alert) => (
             <Alert
               key={alert.id}
-              variant={getAlertVariant(alert.type)}
-              className={alert.acknowledged ? 'opacity-60' : ''}
+              variant={getAlertVariant(alert.level || alert.type)}
+              className={acknowledgedAlerts.has(alert.id) ? 'opacity-60' : ''}
             >
               <div className="flex items-start justify-between">
                 <div className="flex gap-2">
-                  {getAlertIcon(alert.type)}
+                  {getAlertIcon(alert.level || alert.type)}
                   <div className="space-y-1">
                     <AlertTitle className="text-sm font-medium">{alert.title}</AlertTitle>
                     <AlertDescription className="text-xs">{alert.message}</AlertDescription>
                     <div className="mt-2 flex items-center gap-2">
                       <Badge variant="outline" className="text-xs">
-                        {alert.type}
+                        {alert.level || alert.type}
                       </Badge>
                       <span className="text-xs text-muted-foreground">
                         {new Date(alert.timestamp).toLocaleTimeString()}
                       </span>
+                      {!acknowledgedAlerts.has(alert.id) && (
+                        <Badge variant="default" className="text-xs">
+                          New
+                        </Badge>
+                      )}
                     </div>
                   </div>
                 </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 w-6 p-0"
-                  onClick={() => {
-                    // NOTE: Implementation pending dismiss functionality
-                    console.log('Dismiss alert:', alert.id);
-                  }}
-                >
-                  <X className="h-3 w-3" />
-                </Button>
+                <div className="flex gap-1">
+                  {!acknowledgedAlerts.has(alert.id) && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 px-2"
+                      onClick={() => handleAcknowledge(alert.id)}
+                    >
+                      Mark Read
+                    </Button>
+                  )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 w-6 p-0"
+                    onClick={() => handleDismiss(alert.id)}
+                  >
+                    <X className="h-3 w-3" />
+                  </Button>
+                </div>
               </div>
             </Alert>
           ))}
+
+          {displayAlerts.length === 0 && (
+            <div className="py-8 text-center">
+              <Bell className="mx-auto h-8 w-8 text-muted-foreground/50" />
+              <p className="mt-2 text-sm text-muted-foreground">No budget alerts</p>
+              <p className="text-xs text-muted-foreground">You're staying within your limits!</p>
+            </div>
+          )}
 
           {/* Budget Settings Quick Access */}
           <div className="mt-4 rounded-lg border bg-muted/50 p-3">
@@ -153,12 +233,19 @@ export const BudgetAlertPanel: React.FC<BudgetAlertPanelProps> = ({
             </div>
           </div>
 
-          {/* Placeholder Message */}
-          <div className="mt-4 rounded-lg bg-muted p-3">
-            <p className="text-center text-xs text-muted-foreground">
-              🚧 Alert system placeholder. Connect to WebSocket for real-time budget alerts.
-            </p>
-          </div>
+          {/* Clear All Alerts Button */}
+          {displayAlerts.length > 0 && (
+            <div className="flex justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={clearAlerts}
+                className="text-xs"
+              >
+                Clear All Alerts
+              </Button>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

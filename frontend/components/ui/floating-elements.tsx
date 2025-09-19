@@ -34,7 +34,7 @@ export function FloatingElements({ className = '', density = 15 }: FloatingEleme
       {elements.map((element) => (
         <motion.div
           key={element.id}
-          className="absolute text-teal-600/20"
+          className="absolute text-purple-600/20"
           style={{
             left: `${element.x}%`,
             top: `${element.y}%`,

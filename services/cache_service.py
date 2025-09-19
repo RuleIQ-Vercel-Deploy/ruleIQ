@@ -3,14 +3,14 @@ from __future__ import annotations
 
 Cache Service for ruleIQ
 
-Provides a unified caching interface using Redis with fallback to in-memory cache.
+Provides a unified caching interface using Vercel KV or Redis with fallback to in-memory cache.
 Supports TTL, automatic serialization/deserialization, and proper error handling.
 """
 import json
 import logging
 from typing import Any, Optional, Dict, Union
 from datetime import timedelta
-import redis.asyncio as redis
+from services.kv_adapter import get_cache, CacheAdapter
 from config.settings import settings
 logger = logging.getLogger(__name__)
 
@@ -27,30 +27,30 @@ class CacheService:
     """
 
     def __init__(self):
-        self._redis_client: Optional[redis.Redis] = None
-        self._redis_available = None
+        self._cache_adapter: Optional[CacheAdapter] = None
+        self._cache_available = None
         self._memory_cache: Dict[str, Dict[str, Any]] = {}
         self._max_memory_items = 1000
 
-    async def _get_redis_client(self) ->Optional[redis.Redis]:
-        """Get or create Redis client with connection testing."""
-        if self._redis_available is False:
+    async def _get_cache_adapter(self) -> Optional[CacheAdapter]:
+        """Get or create cache adapter with connection testing."""
+        if self._cache_available is False:
             return None
-        if self._redis_client is None:
+        if self._cache_adapter is None:
             try:
-                self._redis_client = redis.from_url(settings.redis_url,
-                    decode_responses=True)
-                await self._redis_client.ping()
-                self._redis_available = True
-                logger.info('Cache service connected to Redis')
+                self._cache_adapter = await get_cache()
+                # Test connection
+                await self._cache_adapter.set('_test', '1', expire=1)
+                self._cache_available = True
+                logger.info('Cache service connected')
             except Exception as e:
                 logger.warning(
-                    'Redis unavailable, using in-memory cache fallback: %s' % e,
+                    'Cache unavailable, using in-memory cache fallback: %s' % e,
                     )
-                self._redis_available = False
-                self._redis_client = None
+                self._cache_available = False
+                self._cache_adapter = None
                 return None
-        return self._redis_client
+        return self._cache_adapter
 
     async def set(self, key: str, value: Any, ttl: Optional[Union[int,
         timedelta]]=None) ->bool:
@@ -70,12 +70,12 @@ class CacheService:
                 ttl = int(ttl.total_seconds())
             serialized_value = json.dumps(value) if not isinstance(value, str
                 ) else value
-            redis_client = await self._get_redis_client()
-            if redis_client:
+            cache_adapter = await self._get_cache_adapter()
+            if cache_adapter:
                 if ttl:
-                    await redis_client.setex(key, ttl, serialized_value)
+                    await cache_adapter.setex(key, ttl, serialized_value)
                 else:
-                    await redis_client.set(key, serialized_value)
+                    await cache_adapter.set(key, serialized_value)
                 return True
             import time
             cache_entry = {'value': serialized_value, 'expires_at': time.
@@ -101,9 +101,9 @@ class CacheService:
             Cached value or None if not found/expired
         """
         try:
-            redis_client = await self._get_redis_client()
-            if redis_client:
-                value = await redis_client.get(key)
+            cache_adapter = await self._get_cache_adapter()
+            if cache_adapter:
+                value = await cache_adapter.get(key)
                 if value:
                     try:
                         return json.loads(value)
@@ -139,9 +139,9 @@ class CacheService:
         """
         try:
             success = False
-            redis_client = await self._get_redis_client()
-            if redis_client:
-                result = await redis_client.delete(key)
+            cache_adapter = await self._get_cache_adapter()
+            if cache_adapter:
+                result = await cache_adapter.delete(key)
                 success = result > 0
             if key in self._memory_cache:
                 del self._memory_cache[key]
@@ -162,9 +162,9 @@ class CacheService:
             bool: True if key exists and not expired
         """
         try:
-            redis_client = await self._get_redis_client()
-            if redis_client:
-                return await redis_client.exists(key) > 0
+            cache_adapter = await self._get_cache_adapter()
+            if cache_adapter:
+                return await cache_adapter.exists(key) > 0
             import time
             cache_entry = self._memory_cache.get(key)
             if not cache_entry:
@@ -190,14 +190,14 @@ class CacheService:
             bool: Success status
         """
         try:
-            redis_client = await self._get_redis_client()
-            if redis_client:
+            cache_adapter = await self._get_cache_adapter()
+            if cache_adapter:
                 if pattern:
-                    keys = await redis_client.keys(pattern)
+                    keys = await cache_adapter.keys(pattern)
                     if keys:
-                        await redis_client.delete(*keys)
+                        await cache_adapter.delete(*keys)
                 else:
-                    await redis_client.flushdb()
+                    await cache_adapter.flushdb()
             if pattern:
                 keys_to_delete = [key for key in self._memory_cache.keys() if
                     pattern.replace('*', '') in key]
@@ -220,9 +220,9 @@ class CacheService:
         """
         try:
             redis_status = 'unavailable'
-            redis_client = await self._get_redis_client()
-            if redis_client:
-                await redis_client.ping()
+            cache_adapter = await self._get_cache_adapter()
+            if cache_adapter:
+                await cache_adapter.ping()
                 redis_status = 'connected'
             return {'redis_status': redis_status, 'memory_cache_entries':
                 len(self._memory_cache), 'max_memory_entries': self.

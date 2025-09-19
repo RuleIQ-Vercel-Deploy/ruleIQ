@@ -20,7 +20,7 @@ export default function TestTheme() {
                 Secondary text (muted-foreground) - Should be readable #64748B
               </p>
               <p className="text-lg font-semibold text-primary">
-                Primary brand color text - Teal #2C7A7B
+                Primary brand color text - Teal #8B5CF6
               </p>
               <p className="text-base text-secondary-foreground">Secondary color text</p>
             </div>
@@ -29,7 +29,7 @@ export default function TestTheme() {
           {/* Feature Cards Test (matching example design) */}
           <div className="grid gap-6 md:grid-cols-3">
             <div className="rounded-lg border bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-teal-600">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-purple-600">
                 <div className="h-6 w-6 rounded bg-white"></div>
               </div>
               <h3 className="mb-2 text-center text-xl font-bold">AI-Powered Assessment</h3>
@@ -39,7 +39,7 @@ export default function TestTheme() {
             </div>
 
             <div className="rounded-lg border bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-teal-600">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-purple-600">
                 <div className="h-6 w-6 rounded bg-white"></div>
               </div>
               <h3 className="mb-2 text-center text-xl font-bold">Policy Generation</h3>
@@ -49,7 +49,7 @@ export default function TestTheme() {
             </div>
 
             <div className="rounded-lg border bg-white p-6 shadow-sm transition-shadow hover:shadow-md">
-              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-teal-600">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-purple-600">
                 <div className="h-6 w-6 rounded bg-white"></div>
               </div>
               <h3 className="mb-2 text-center text-xl font-bold">Real-Time Monitoring</h3>
@@ -63,10 +63,10 @@ export default function TestTheme() {
           <div className="rounded-lg border bg-card p-6">
             <h3 className="mb-4 text-lg font-medium text-foreground">Button Contrast Test</h3>
             <div className="flex gap-4">
-              <button className="rounded-lg bg-teal-600 px-6 py-3 font-medium text-white transition-colors hover:bg-teal-700">
+              <button className="rounded-lg bg-purple-600 px-6 py-3 font-medium text-white transition-colors hover:bg-purple-700">
                 Start Free Trial
               </button>
-              <button className="rounded-lg border-2 border-teal-600 px-6 py-3 font-medium text-teal-600 transition-colors hover:bg-teal-50">
+              <button className="rounded-lg border-2 border-purple-600 px-6 py-3 font-medium text-purple-600 transition-colors hover:bg-purple-50">
                 Watch Demo
               </button>
             </div>

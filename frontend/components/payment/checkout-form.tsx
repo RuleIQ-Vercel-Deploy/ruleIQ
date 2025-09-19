@@ -216,7 +216,7 @@ export function CheckoutForm({ planId, customerEmail, onSuccess, onError }: Chec
     appearance: {
       theme: 'stripe' as const,
       variables: {
-        colorPrimary: '#CB963E', // Gold
+        colorPrimary: '#A78BFA', // Gold
         colorBackground: '#ffffff',
         colorText: '#17255A', // Navy
         colorDanger: '#DC3545',

@@ -9,10 +9,46 @@ interface PageProps {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  // Use static metadata to avoid server-side fetching latency
+  // Dynamic metadata is non-critical for this page
+  return {
+    title: 'Compliance Assessment Results | ruleIQ',
+    description: 'View your detailed compliance assessment results with personalized recommendations and improvement strategies.',
+    openGraph: {
+      title: 'Compliance Assessment Results | ruleIQ',
+      description: 'Comprehensive compliance assessment analysis with risk scoring and actionable recommendations.',
+      type: 'website',
+      url: `${process.env.NEXT_PUBLIC_BASE_URL || ''}/assessment/results/${params.token}`,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'Compliance Assessment Results | ruleIQ',
+      description: 'View your compliance assessment results and get personalized recommendations.',
+    }
+  };
+  
+  // Previous implementation preserved for reference:
+  // The following code fetched full results server-side which could cause latency/timeout issues
+  // If dynamic metadata is needed in future, implement a lightweight summary endpoint
+  /*
   try {
+    // Note: This API call runs server-side during metadata generation
+    // Consider using a lightweight summary endpoint or caching to optimize performance
     const results = await assessmentResultsService.getResults(params.token);
     const score = Math.round(results.compliance_score);
-    const riskLevel = results.risk_level;
+
+    // Derive risk level from risk_score
+    const riskScore = results.risk_score;
+    let riskLevel: string;
+    if (riskScore >= 75) {
+      riskLevel = 'critical';
+    } else if (riskScore >= 50) {
+      riskLevel = 'high';
+    } else if (riskScore >= 25) {
+      riskLevel = 'medium';
+    } else {
+      riskLevel = 'low';
+    }
 
     return {
       title: `Compliance Assessment Results - ${score}% Score | ruleIQ`,
@@ -36,6 +72,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: 'View your compliance assessment results and get personalized recommendations.',
     };
   }
+  */
 }
 
 export default function AssessmentResultsPage({ params }: PageProps) {

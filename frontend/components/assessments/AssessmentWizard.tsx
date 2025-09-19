@@ -2,13 +2,13 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Save, AlertCircle, CheckCircle, Clock } from 'lucide-react';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import {
   QuestionnaireEngine,
   type AssessmentFramework,
@@ -19,6 +19,7 @@ import {
 } from '@/lib/assessment-engine';
 
 import { AIErrorBoundary } from './AIErrorBoundary';
+import { AIGuidancePanel } from './AIGuidancePanel';
 import { freemiumService } from '@/lib/api/freemium.service';
 import { AssessmentNavigation } from './AssessmentNavigation';
 import { FollowUpQuestion } from './FollowUpQuestion';
@@ -32,6 +33,7 @@ interface AssessmentWizardProps {
   onComplete: (result: AssessmentResult) => void;
   onSave?: (progress: AssessmentProgress) => void;
   onExit?: () => void;
+  enableIncrementalSubmissions?: boolean;  // Optional prop to enable/disable incremental answer submissions
 }
 
 export function AssessmentWizard({
@@ -41,6 +43,7 @@ export function AssessmentWizard({
   onComplete,
   onSave,
   onExit,
+  enableIncrementalSubmissions = false,  // Default to false for freemium assessments
 }: AssessmentWizardProps) {
   const { toast } = useToast();
   const [engine, setEngine] = useState<QuestionnaireEngine | null>(null);
@@ -50,6 +53,25 @@ export function AssessmentWizard({
   const [isSaving, setIsSaving] = useState(false);
   const [validationError, setValidationError] = useState<string | null>(null);
   const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Helper to manage AI loading state with minimum display time
+  const setAILoadingState = useCallback((loading: boolean, minDisplayMs = 300) => {
+    if (loadingTimeoutRef.current) {
+      clearTimeout(loadingTimeoutRef.current);
+      loadingTimeoutRef.current = null;
+    }
+    
+    if (loading) {
+      setIsLoadingAI(true);
+    } else {
+      // Ensure minimum display time to avoid flicker
+      loadingTimeoutRef.current = setTimeout(() => {
+        setIsLoadingAI(false);
+        loadingTimeoutRef.current = null;
+      }, minDisplayMs);
+    }
+  }, []);
   const [answersVersion, setAnswersVersion] = useState(0);
 
   // Initialize engine
@@ -100,40 +122,144 @@ export function AssessmentWizard({
 
     return () => {
       newEngine.destroy();
+      // Clean up any pending progress submission
+      if (progressSubmissionTimeout.current) {
+        clearTimeout(progressSubmissionTimeout.current);
+      }
+      // Clean up loading timeout
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current);
+        loadingTimeoutRef.current = null;
+      }
     };
   }, [framework, assessmentId, businessProfileId, onSave, toast]);
 
+  // Ref for debouncing progress submission
+  const progressSubmissionTimeout = useRef<NodeJS.Timeout>();
+
   const handleAnswer = useCallback(
-    (value: any) => {
+    async (value: any) => {
       if (!engine || !currentQuestion) return;
 
       setValidationError(null);
       engine.answerQuestion(currentQuestion.id, value);
-      setProgress(engine.getProgress());
+      const newProgress = engine.getProgress();
+      setProgress(newProgress);
       setAnswersVersion((prev) => prev + 1); // Force re-render to update button state
+      
+      // Debounce incremental progress submission (500ms delay)
+      if (progressSubmissionTimeout.current) {
+        clearTimeout(progressSubmissionTimeout.current);
+      }
+      
+      progressSubmissionTimeout.current = setTimeout(async () => {
+        try {
+          // Guard against submitting File/Blob objects for file_upload questions
+          let answerValue = value;
+          if (currentQuestion.type === 'file_upload' && value) {
+            // For file uploads, send metadata instead of actual File objects
+            if (Array.isArray(value)) {
+              answerValue = {
+                value: 'file_placeholder',
+                metadata: {
+                  fileCount: value.length,
+                  fileNames: value.map(f => f.name || 'unknown'),
+                  fileSizes: value.map(f => f.size || 0),
+                  fileTypes: value.map(f => f.type || 'unknown')
+                }
+              };
+            } else if (value instanceof File || value instanceof Blob) {
+              answerValue = {
+                value: 'file_placeholder',
+                metadata: {
+                  fileName: value.name || 'unknown',
+                  fileSize: value.size || 0,
+                  fileType: value.type || 'unknown'
+                }
+              };
+            }
+          }
+          
+          // Submit answer to freemium API for incremental progress tracking
+          // Only submit if incremental submissions are enabled
+          if (enableIncrementalSubmissions) {
+            await freemiumService.submitAnswer(assessmentId, {
+              session_token: assessmentId,
+              question_id: currentQuestion.id,
+              answer: answerValue,
+              // Include optional timing and confidence data if available
+              ...(currentQuestion.metadata?.estimated_time && {
+                time_spent_seconds: Math.floor((Date.now() - (engine.getQuestionStartTime?.() || Date.now())) / 1000)
+              }),
+              ...(engine.getAnswerConfidence?.(currentQuestion.id) && {
+                confidence_level: engine.getAnswerConfidence(currentQuestion.id)
+              })
+            });
+          }
+        } catch (error) {
+          // Log error but don't interrupt user experience
+          console.error('Failed to submit incremental progress:', error);
+        }
+      }, 500);
     },
-    [engine, currentQuestion],
+    [engine, currentQuestion, assessmentId],
   );
 
   const handleNext = useCallback(async () => {
     if (!engine) return;
 
-    setIsLoadingAI(true);
+    // Clear any pending progress submission timer before proceeding
+    if (progressSubmissionTimeout.current) {
+      clearTimeout(progressSubmissionTimeout.current);
+      progressSubmissionTimeout.current = undefined;
+    }
+
     try {
+      // Only set loading state when we're finishing the assessment (will generate AI recommendations)
+      const progress = engine.getProgress();
+      const isLastQuestion = progress.answeredQuestions === progress.totalQuestions - 1;
+      const isInAIMode = engine.isInAIMode();
+      
+      // Only show loading for:
+      // 1. Last question (will generate AI results)
+      // 2. When exiting AI mode back to normal flow
+      if (isLastQuestion && !isInAIMode) {
+        setAILoadingState(true, 500); // Longer display for final results
+      }
+      
       const hasMore = await engine.nextQuestion();
+      
+      // Check if we just entered AI mode (after nextQuestion)
+      const justEnteredAIMode = !isInAIMode && engine.isInAIMode();
+      if (justEnteredAIMode) {
+        // Show loading state briefly for AI transition
+        setAILoadingState(true, 300);
+        // Clear loading state after transition
+        setAILoadingState(false, 300);
+      }
+      
       if (hasMore) {
         setCurrentQuestion(engine.getCurrentQuestion());
         setValidationError(null);
       } else {
         // Assessment complete - generate results with AI recommendations
+        setAILoadingState(true, 1000); // Longer for final results generation
         const result = await engine.calculateResults();
-        onComplete(result);
+        // Enrich result with answers array
+        const enrichedResult = {
+          ...result,
+          answers: Array.from(engine.getAnswers().values())
+        };
+        onComplete(enrichedResult);
       }
     } catch (error) {
       // Handle validation errors
       setValidationError(error instanceof Error ? error.message : 'An error occurred');
     } finally {
-      setIsLoadingAI(false);
+      // Only clear loading if we're not completing the assessment
+      if (engine.getCurrentQuestion()) {
+        setAILoadingState(false, 300);
+      }
     }
   }, [engine, onComplete]);
 
@@ -320,26 +446,48 @@ export function AssessmentWizard({
                       {...(currentSection?.id && { sectionId: currentSection.id })}
                       userContext={{
                         ...(businessProfileId && { business_profile: { id: businessProfileId } }),
-                        current_answers: Object.fromEntries(engine.getAnswers()),
+                        current_answers: Object.fromEntries(
+                          Array.from(engine.getAnswers().entries()).map(([qid, ans]) => [qid, ans?.value ?? null])
+                        ),
                         assessment_progress: progress,
                       }}
                       reasoning={currentAIQuestion.metadata?.['reasoning'] as string}
                     />
                   </AIErrorBoundary>
                 ) : (
-                  <QuestionRenderer
-                    question={currentQuestion}
-                    value={engine.getAnswers().get(currentQuestion.id)?.value}
-                    onChange={handleAnswer}
-                    error={validationError}
-                    frameworkId={framework.id}
-                    {...(currentSection?.id && { sectionId: currentSection.id })}
-                    userContext={{
-                      ...(businessProfileId && { business_profile: { id: businessProfileId } }),
-                      current_answers: Object.fromEntries(engine.getAnswers()),
-                      assessment_progress: progress,
-                    }}
-                  />
+                  <>
+                    <QuestionRenderer
+                      question={currentQuestion}
+                      value={engine.getAnswers().get(currentQuestion.id)?.value}
+                      onChange={handleAnswer}
+                      error={validationError}
+                      frameworkId={framework.id}
+                      {...(currentSection?.id && { sectionId: currentSection.id })}
+                      userContext={{
+                        ...(businessProfileId && { business_profile: { id: businessProfileId } }),
+                        current_answers: Object.fromEntries(
+                          Array.from(engine.getAnswers().entries()).map(([qid, ans]) => [qid, ans?.value ?? null])
+                        ),
+                        assessment_progress: progress,
+                      }}
+                    />
+
+                    {/* AI Guidance Panel - collapsed by default */}
+                    <div className="mt-4">
+                      <AIGuidancePanel
+                        question={currentQuestion}
+                        frameworkId={framework.id}
+                        sectionId={currentSection?.id}
+                        userContext={{
+                          ...(businessProfileId && { business_profile: { id: businessProfileId } }),
+                          current_answers: Object.fromEntries(
+                          Array.from(engine.getAnswers().entries()).map(([qid, ans]) => [qid, ans?.value ?? null])
+                        ),
+                          assessment_progress: progress,
+                        }}
+                      />
+                    </div>
+                  </>
                 )}
               </motion.div>
             )}

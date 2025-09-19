@@ -132,7 +132,7 @@ export default function DesignSystemPage() {
             <div className="space-y-2">
               <div className="flex items-center gap-3">
                 <div className="h-12 w-20 rounded bg-gold shadow-sm"></div>
-                <Caption>#CB963E</Caption>
+                <Caption>#A78BFA</Caption>
               </div>
               <div className="flex items-center gap-3">
                 <div className="h-12 w-20 rounded bg-gold-dark shadow-sm"></div>
@@ -193,7 +193,7 @@ export default function DesignSystemPage() {
               </div>
               <div className="flex items-center gap-3">
                 <div className="h-12 w-20 rounded bg-warning shadow-sm"></div>
-                <Caption>#CB963E (Warning)</Caption>
+                <Caption>#A78BFA (Warning)</Caption>
               </div>
               <div className="flex items-center gap-3">
                 <div className="h-12 w-20 rounded bg-error shadow-sm"></div>

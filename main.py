@@ -9,7 +9,8 @@ from config.security_settings import get_security_settings
 from api.dependencies.auth import get_current_active_user
 from api.middleware.error_handler import error_handler_middleware
 from api.request_id_middleware import RequestIDMiddleware
-from api.routers import agentic_rag, ai_assessments, ai_cost_monitoring, ai_cost_websocket, ai_optimization, ai_policy, api_keys, assessments, auth, business_profiles, chat, compliance, dashboard, evidence, evidence_collection, feedback, foundation_evidence, frameworks, freemium, google_auth, implementation, integrations, iq_agent, monitoring, payment, performance_monitoring, policies, readiness, reports, security, secrets_vault, test_utils, uk_compliance, users, webhooks
+from api.routers import assessments, auth, business_profiles, chat, compliance, evidence, frameworks, freemium, policies, readiness, reports, security, uk_compliance, users
+# Temporarily disabled due to import errors: agentic_rag, ai_assessments, ai_cost_monitoring, ai_cost_websocket, ai_optimization, ai_policy, api_keys, dashboard, evidence_collection, feedback, foundation_evidence, google_auth, implementation, integrations, iq_agent, monitoring, payment, performance_monitoring, secrets_vault, test_utils, webhooks
 from api.routers.admin import admin_router
 from api.routers import rbac_auth
 from api.schemas import APIInfoResponse, HealthCheckResponse

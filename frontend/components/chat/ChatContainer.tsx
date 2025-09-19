@@ -20,7 +20,7 @@ import { TypingIndicator } from './TypingIndicator';
 import { ConnectionStatusIndicator } from './ConnectionStatusIndicator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Card } from '@/components/ui/card';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle, WifiOff } from 'lucide-react';
 

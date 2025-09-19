@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import {
   ArrowLeft,
   ArrowRight,
@@ -20,7 +20,6 @@ import { type AssessmentResultsResponse } from '@/lib/api/freemium.service';
 import { assessmentResultsService, type TrendAnalysisData } from '@/lib/services/assessment-results.service';
 import { type AssessmentResult } from '@/lib/assessment-engine/types';
 import { DetailedResultsDashboard } from '@/components/assessments/results/DetailedResultsDashboard';
-import { ExportButton } from '@/components/assessments/results/ExportButton';
 
 interface AssessmentResultsClientProps {
   token: string;
@@ -57,8 +56,13 @@ export default function AssessmentResultsClient({ token }: AssessmentResultsClie
       const data = await assessmentResultsService.getResults(token, forceRefresh);
       setResults(data);
 
-      // Load historical data for trend analysis
-      await loadTrendData(data.lead_id || token);
+      // Load historical data for trend analysis using consistent key resolution
+      const businessKey = assessmentResultsService.getBusinessProfileKey({
+        lead_id: data.lead_id,
+        session_id: data.session_id,
+        session_token: token
+      });
+      await loadTrendData(businessKey);
 
     } catch (err) {
       console.error('Failed to load assessment results:', err);
@@ -68,6 +72,9 @@ export default function AssessmentResultsClient({ token }: AssessmentResultsClie
         const sessionData = sessionStorage.getItem(`assessment_result_${token}`);
         if (sessionData) {
           const parsedData = JSON.parse(sessionData);
+          if (!('compliance_score' in parsedData) && parsedData.completedAt) {
+            parsedData.completedAt = new Date(parsedData.completedAt);
+          }
           setResults(parsedData);
 
           // Show a banner indicating it's a local preview
@@ -77,8 +84,13 @@ export default function AssessmentResultsClient({ token }: AssessmentResultsClie
             variant: 'default',
           });
 
-          // Load historical data for trend analysis
-          await loadTrendData(parsedData.lead_id || token);
+          // Load historical data for trend analysis using consistent key resolution
+          const businessKey = assessmentResultsService.getBusinessProfileKey({
+            lead_id: parsedData.lead_id,
+            session_id: parsedData.session_id,
+            session_token: token
+          });
+          await loadTrendData(businessKey);
           return;
         }
       } catch (sessionErr) {
@@ -112,7 +124,8 @@ export default function AssessmentResultsClient({ token }: AssessmentResultsClie
       // Use business profile ID for freemium assessments
       const trends = await assessmentResultsService.generateTrendData(
         businessId,
-        'last_3_months'
+        'last_3_months',
+        'freemium_framework'
       );
 
       setTrendData(trends);
@@ -134,9 +147,14 @@ export default function AssessmentResultsClient({ token }: AssessmentResultsClie
     if (!results) return;
 
     try {
+      // Use type guard to determine which score to use
+      const score = 'compliance_score' in results
+        ? results.compliance_score
+        : results.overallScore;
+
       const shareData = {
         title: 'My Compliance Assessment Results',
-        text: `I scored ${Math.round(results.compliance_score)}% on my compliance assessment with ruleIQ`,
+        text: `I scored ${Math.round(score)}% on my compliance assessment with ruleIQ`,
         url: window.location.href,
       };
 
@@ -248,12 +266,6 @@ export default function AssessmentResultsClient({ token }: AssessmentResultsClie
               </div>
 
               <div className="flex gap-2">
-                {results && (
-                  <ExportButton
-                    results={results}
-                    className="h-9"
-                  />
-                )}
                 <Button
                   variant="outline"
                   size="sm"
@@ -275,6 +287,11 @@ export default function AssessmentResultsClient({ token }: AssessmentResultsClie
                 'compliance_score' in results
                   ? assessmentResultsService.transformToAssessmentResult(results)
                   : results
+              }
+              sectionDetails={
+                'compliance_score' in results
+                  ? assessmentResultsService.generateSectionDetails(results)
+                  : undefined
               }
               trendData={trendData?.dataPoints || []}
               className="mb-8"

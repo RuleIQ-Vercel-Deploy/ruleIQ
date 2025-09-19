@@ -75,7 +75,7 @@ export function RadarChart({ data, size = 300 }: RadarChartProps) {
     ctx.fillStyle = gradient;
     ctx.fill();
 
-    ctx.strokeStyle = '#CB963E';
+    ctx.strokeStyle = '#A78BFA';
     ctx.lineWidth = 2;
     ctx.stroke();
 
@@ -88,7 +88,7 @@ export function RadarChart({ data, size = 300 }: RadarChartProps) {
 
       ctx.beginPath();
       ctx.arc(x, y, 4, 0, 2 * Math.PI);
-      ctx.fillStyle = '#CB963E';
+      ctx.fillStyle = '#A78BFA';
       ctx.fill();
       ctx.strokeStyle = '#17255A';
       ctx.lineWidth = 2;

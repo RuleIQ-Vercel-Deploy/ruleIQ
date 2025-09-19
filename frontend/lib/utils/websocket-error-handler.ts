@@ -2,7 +2,7 @@
  * WebSocket error handling utilities
  */
 
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/hooks/use-toast';
 
 // Error categories
 export enum WebSocketErrorType {

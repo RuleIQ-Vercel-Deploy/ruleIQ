@@ -41,7 +41,7 @@ function ResultsContent() {
             </div>
             <Button
               onClick={() => router.push('/freemium')}
-              className="bg-teal-600 hover:bg-teal-700"
+              className="bg-purple-600 hover:bg-purple-700"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Take New Assessment
@@ -65,7 +65,7 @@ function ResultsContent() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
         <div className="space-y-4 text-center">
-          <Loader2 className="mx-auto h-8 w-8 animate-spin text-teal-600" />
+          <Loader2 className="mx-auto h-8 w-8 animate-spin text-purple-600" />
           <p className="text-gray-600">Redirecting to assessment...</p>
         </div>
       </div>
@@ -197,7 +197,7 @@ function ResultsContent() {
               <Button
                 onClick={() => router.push('/freemium')}
                 variant="outline"
-                className="border-teal-200 text-teal-600 hover:bg-teal-50"
+                className="border-purple-200 text-purple-600 hover:bg-purple-50"
               >
                 Start Another Assessment
               </Button>
@@ -215,7 +215,7 @@ export default function FreemiumResultsPage() {
       fallback={
         <div className="flex min-h-screen items-center justify-center bg-gray-50">
           <div className="space-y-4 text-center">
-            <Loader2 className="mx-auto h-8 w-8 animate-spin text-teal-600" />
+            <Loader2 className="mx-auto h-8 w-8 animate-spin text-purple-600" />
             <p className="text-gray-600">Loading your results...</p>
           </div>
         </div>

@@ -113,6 +113,7 @@ export interface AssessmentResult {
   recommendations: Recommendation[];
   completedAt: Date;
   certificateUrl?: string | undefined;
+  answers?: Answer[]; // Array of all answers provided during assessment
 }
 
 export interface Gap {

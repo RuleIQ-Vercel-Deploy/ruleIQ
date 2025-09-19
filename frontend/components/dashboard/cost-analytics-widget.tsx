@@ -1,20 +1,13 @@
 /**
  * Cost Analytics Widget Component
  *
- * Displays AI cost tracking metrics and analytics in the dashboard.
- * This is a placeholder component for Phase 2.2: Cost Tracking & Token Budgets
- *
- * TODO: Implement the following features:
- * - Real-time cost tracking display
- * - Token usage metrics
- * - Cost breakdown by service/node
- * - Budget alerts and warnings
- * - Historical cost trends
+ * Displays AI cost tracking metrics and analytics with real-time updates
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { DollarSign, TrendingUp, AlertCircle, Activity } from 'lucide-react';
+import { DollarSign, TrendingUp, AlertCircle, Activity, WifiOff, Loader2, Clock } from 'lucide-react';
+import { useCostDashboard } from '@/lib/hooks/use-pusher';
 
 interface CostAnalyticsWidgetProps {
   className?: string;
@@ -25,10 +18,15 @@ export const CostAnalyticsWidget: React.FC<CostAnalyticsWidgetProps> = ({
   className = '',
   timeRange = 'day',
 }) => {
-  // TODO: Connect to backend cost tracking API
-  // const { data: costData, isLoading } = useCostAnalytics(timeRange);
+  const { connectionState, costData, lastUpdate } = useCostDashboard();
+  const [isFeatureEnabled, setIsFeatureEnabled] = useState(true);
 
-  // Placeholder data
+  // Check if Pusher is configured
+  useEffect(() => {
+    setIsFeatureEnabled(!!process.env.NEXT_PUBLIC_PUSHER_KEY);
+  }, []);
+
+  // Placeholder data for when real-time is disabled or not connected
   const placeholderData = {
     totalCost: 45.67,
     totalTokens: 125000,
@@ -38,16 +36,61 @@ export const CostAnalyticsWidget: React.FC<CostAnalyticsWidgetProps> = ({
     alerts: 2,
   };
 
+  // Use real data if available, otherwise use placeholders
+  const displayData = (isFeatureEnabled && connectionState === 'connected' && costData) ? {
+    totalCost: costData.totalCost || 0,
+    totalTokens: costData.totalTokens || 0,
+    avgCostPerRequest: costData.avgCostPerRequest || 0,
+    budgetUsed: costData.budgetUsagePercentage || 0,
+    trend: costData.trend || '+0%',
+    alerts: costData.activeAlerts || 0,
+  } : placeholderData;
+
   return (
     <Card className={className}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <DollarSign className="h-5 w-5" />
           AI Cost Analytics
+          {lastUpdate && isFeatureEnabled && (
+            <span className="ml-auto flex items-center gap-1 text-xs font-normal text-muted-foreground">
+              <Clock className="h-3 w-3" />
+              {lastUpdate.toLocaleTimeString()}
+            </span>
+          )}
         </CardTitle>
-        <CardDescription>Token usage and cost tracking for {timeRange}</CardDescription>
+        <CardDescription>
+          Token usage and cost tracking for {timeRange}
+          {!isFeatureEnabled && (
+            <span className="ml-2 text-xs">(Static mode)</span>
+          )}
+        </CardDescription>
       </CardHeader>
       <CardContent>
+        {/* Connection Status */}
+        {isFeatureEnabled && (
+          <div className="mb-4 flex items-center gap-2">
+            {connectionState === 'connecting' && (
+              <>
+                <Loader2 className="h-3 w-3 animate-spin" />
+                <span className="text-xs text-muted-foreground">Connecting to live data...</span>
+              </>
+            )}
+            {connectionState === 'disconnected' && (
+              <>
+                <WifiOff className="h-3 w-3 text-destructive" />
+                <span className="text-xs text-destructive">Offline - showing cached data</span>
+              </>
+            )}
+            {connectionState === 'connected' && (
+              <>
+                <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-xs text-green-600">Live data</span>
+              </>
+            )}
+          </div>
+        )}
+
         <div className="grid gap-4">
           {/* Total Cost */}
           <div className="flex items-center justify-between">
@@ -56,10 +99,10 @@ export const CostAnalyticsWidget: React.FC<CostAnalyticsWidgetProps> = ({
               <span className="text-sm font-medium">Total Cost</span>
             </div>
             <div className="text-right">
-              <p className="text-2xl font-bold">${placeholderData.totalCost}</p>
+              <p className="text-2xl font-bold">${displayData.totalCost.toFixed(2)}</p>
               <p className="flex items-center gap-1 text-xs text-muted-foreground">
                 <TrendingUp className="h-3 w-3" />
-                {placeholderData.trend} from last {timeRange}
+                {displayData.trend} from last {timeRange}
               </p>
             </div>
           </div>
@@ -72,10 +115,10 @@ export const CostAnalyticsWidget: React.FC<CostAnalyticsWidgetProps> = ({
             </div>
             <div className="text-right">
               <p className="text-lg font-semibold">
-                {(placeholderData.totalTokens / 1000).toFixed(1)}k
+                {(displayData.totalTokens / 1000).toFixed(1)}k
               </p>
               <p className="text-xs text-muted-foreground">
-                ${placeholderData.avgCostPerRequest}/request avg
+                ${displayData.avgCostPerRequest.toFixed(2)}/request avg
               </p>
             </div>
           </div>
@@ -87,8 +130,8 @@ export const CostAnalyticsWidget: React.FC<CostAnalyticsWidgetProps> = ({
               <span className="text-sm font-medium">Budget Status</span>
             </div>
             <div className="text-right">
-              <p className="text-lg font-semibold">{placeholderData.budgetUsed}%</p>
-              <p className="text-xs text-muted-foreground">{placeholderData.alerts} alerts</p>
+              <p className="text-lg font-semibold">{displayData.budgetUsed}%</p>
+              <p className="text-xs text-muted-foreground">{displayData.alerts} alerts</p>
             </div>
           </div>
 
@@ -96,23 +139,30 @@ export const CostAnalyticsWidget: React.FC<CostAnalyticsWidgetProps> = ({
           <div className="space-y-2">
             <div className="flex justify-between text-xs text-muted-foreground">
               <span>Budget Usage</span>
-              <span>{placeholderData.budgetUsed}% of limit</span>
+              <span>{displayData.budgetUsed}% of limit</span>
             </div>
             <div className="h-2 overflow-hidden rounded-full bg-secondary">
               <div
-                className="h-full bg-primary transition-all"
-                style={{ width: `${placeholderData.budgetUsed}%` }}
+                className={`h-full transition-all ${
+                  displayData.budgetUsed > 90
+                    ? 'bg-destructive'
+                    : displayData.budgetUsed > 75
+                    ? 'bg-warning'
+                    : 'bg-primary'
+                }`}
+                style={{ width: `${Math.min(displayData.budgetUsed, 100)}%` }}
               />
             </div>
           </div>
 
-          {/* Placeholder Message */}
-          <div className="mt-4 rounded-lg bg-muted p-3">
-            <p className="text-center text-xs text-muted-foreground">
-              🚧 This is a placeholder component. Connect to the cost tracking API to display real
-              data.
-            </p>
-          </div>
+          {/* Status Message */}
+          {!isFeatureEnabled && (
+            <div className="mt-4 rounded-lg bg-muted p-3">
+              <p className="text-center text-xs text-muted-foreground">
+                Real-time updates disabled. Configure Pusher to enable live data.
+              </p>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

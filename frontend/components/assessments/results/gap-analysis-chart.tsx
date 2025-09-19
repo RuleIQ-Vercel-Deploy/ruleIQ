@@ -6,9 +6,9 @@ interface GapAnalysisChartProps {
 
 export function GapAnalysisChart({ data }: GapAnalysisChartProps) {
   const getBarColor = (score: number) => {
-    if (score >= 90) return 'bg-success';
-    if (score >= 70) return 'bg-warning';
-    return 'bg-error';
+    if (score >= 90) return 'bg-green-500';
+    if (score >= 70) return 'bg-yellow-500';
+    return 'bg-red-500';
   };
 
   return (

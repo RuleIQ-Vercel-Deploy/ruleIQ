@@ -73,8 +73,8 @@ export function FreemiumResults({ token, className = '' }: FreemiumResultsProps)
     return (
       <Card className={`mx-auto w-full max-w-4xl ${className}`}>
         <CardContent className="flex flex-col items-center justify-center space-y-4 py-12">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-teal-100">
-            <Shield className="h-6 w-6 animate-pulse text-teal-600" />
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-purple-100">
+            <Shield className="h-6 w-6 animate-pulse text-purple-600" />
           </div>
           <div className="space-y-2 text-center">
             <h3 className="text-lg font-semibold text-gray-900">Analyzing Your Results</h3>
@@ -82,7 +82,7 @@ export function FreemiumResults({ token, className = '' }: FreemiumResultsProps)
               AI is processing your responses and generating compliance insights...
             </p>
           </div>
-          <Loader2 className="h-6 w-6 animate-spin text-teal-600" />
+          <Loader2 className="h-6 w-6 animate-spin text-purple-600" />
         </CardContent>
       </Card>
     );
@@ -106,7 +106,7 @@ export function FreemiumResults({ token, className = '' }: FreemiumResultsProps)
             </Button>
             <Button
               onClick={() => (window.location.href = '/freemium')}
-              className="bg-teal-600 hover:bg-teal-700"
+              className="bg-purple-600 hover:bg-purple-700"
             >
               Start New Assessment
             </Button>
@@ -125,8 +125,8 @@ export function FreemiumResults({ token, className = '' }: FreemiumResultsProps)
       {/* Results Header */}
       <Card>
         <CardHeader className="space-y-4 text-center">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-teal-100">
-            <Shield className="h-8 w-8 text-teal-600" />
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-purple-100">
+            <Shield className="h-8 w-8 text-purple-600" />
           </div>
           <div>
             <CardTitle className="text-2xl font-bold text-gray-900">
@@ -141,7 +141,7 @@ export function FreemiumResults({ token, className = '' }: FreemiumResultsProps)
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <TrendingUp className="h-5 w-5 text-teal-600" />
+            <TrendingUp className="h-5 w-5 text-purple-600" />
             <span>Overall Risk Score</span>
           </CardTitle>
         </CardHeader>
@@ -217,8 +217,8 @@ export function FreemiumResults({ token, className = '' }: FreemiumResultsProps)
           <div className="space-y-3">
             {results.recommendations.slice(0, 4).map((recommendation, index) => (
               <div key={index} className="flex items-start space-x-3">
-                <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-teal-100">
-                  <span className="text-xs font-semibold text-teal-600">{index + 1}</span>
+                <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-purple-100">
+                  <span className="text-xs font-semibold text-purple-600">{index + 1}</span>
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm font-medium text-gray-900">{recommendation.title}</p>
@@ -289,7 +289,7 @@ function ConversionCTA({
   riskScore: _riskScore,
 }: ConversionCTAProps) {
   return (
-    <Card className="border-teal-200 bg-gradient-to-r from-teal-50 to-teal-100">
+    <Card className="border-purple-200 bg-gradient-to-r from-purple-50 to-purple-100">
       <CardContent className="py-8">
         <div className="space-y-6 text-center">
           <div className="space-y-2">
@@ -300,21 +300,21 @@ function ConversionCTA({
           {/* Features Preview */}
           <div className="mx-auto grid max-w-2xl grid-cols-1 gap-4 md:grid-cols-3">
             <div className="space-y-2 text-center">
-              <Shield className="mx-auto h-8 w-8 text-teal-600" />
+              <Shield className="mx-auto h-8 w-8 text-purple-600" />
               <div>
                 <p className="text-sm font-medium text-gray-900">Complete Analysis</p>
                 <p className="text-xs text-gray-600">Full gap analysis & remediation</p>
               </div>
             </div>
             <div className="space-y-2 text-center">
-              <Clock className="mx-auto h-8 w-8 text-teal-600" />
+              <Clock className="mx-auto h-8 w-8 text-purple-600" />
               <div>
                 <p className="text-sm font-medium text-gray-900">Live Monitoring</p>
                 <p className="text-xs text-gray-600">Real-time compliance tracking</p>
               </div>
             </div>
             <div className="space-y-2 text-center">
-              <Users className="mx-auto h-8 w-8 text-teal-600" />
+              <Users className="mx-auto h-8 w-8 text-purple-600" />
               <div>
                 <p className="text-sm font-medium text-gray-900">Expert Support</p>
                 <p className="text-xs text-gray-600">Compliance experts on-demand</p>
@@ -323,10 +323,10 @@ function ConversionCTA({
           </div>
 
           {/* Call to Action */}
-          <div className="mx-auto max-w-lg space-y-4 rounded-lg border border-teal-200 bg-white p-6">
+          <div className="mx-auto max-w-lg space-y-4 rounded-lg border border-purple-200 bg-white p-6">
             <div className="space-y-2 text-center">
               {conversionCta.urgency_indicator && (
-                <Badge className="bg-teal-600 px-3 py-1 text-sm text-white">
+                <Badge className="bg-purple-600 px-3 py-1 text-sm text-white">
                   {conversionCta.urgency_indicator}
                 </Badge>
               )}
@@ -334,7 +334,7 @@ function ConversionCTA({
 
             <Button
               onClick={onCtaClick}
-              className="w-full bg-teal-600 py-3 text-base font-semibold text-white hover:bg-teal-700"
+              className="w-full bg-purple-600 py-3 text-base font-semibold text-white hover:bg-purple-700"
               size="lg"
             >
               {conversionCta.cta_button_text}

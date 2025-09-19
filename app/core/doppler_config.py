@@ -214,7 +214,7 @@ class DopplerConfig:
     def get_neo4j_config(self) -> Dict[str, str]:
         """Get Neo4j configuration."""
         return {
-            "uri": self.get_secret("NEO4J_URI", "bolt://localhost:7687"),
+            "uri": self.get_secret("NEO4J_URI", "neo4j+s://12e71bc4.databases.neo4j.io"),
             "username": self.get_secret("NEO4J_USERNAME", "neo4j"),
             "password": self.get_secret("NEO4J_PASSWORD"),
             "database": self.get_secret("NEO4J_DATABASE", "neo4j"),

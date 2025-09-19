@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, Bell, Clock, AlertTriangle } from 'lucide-react';
+import { Search, Bell, Clock, AlertTriangle, Users, User } from 'lucide-react';
 import * as React from 'react';
 
 import { Badge } from '@/components/ui/badge';
@@ -11,12 +11,23 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuItem,
 } from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
-import { TooltipProvider } from '@/components/ui/tooltip';
+import { TooltipProvider, Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { usePresenceChannel } from '@/lib/hooks/use-pusher';
 
 export function DashboardHeader() {
   const [searchValue, setSearchValue] = React.useState('');
+  const [isFeatureEnabled, setIsFeatureEnabled] = React.useState(true);
+
+  // Presence channel for online users
+  const { connectionState, members, onlineCount } = usePresenceChannel();
+
+  // Check if Pusher is configured
+  React.useEffect(() => {
+    setIsFeatureEnabled(!!process.env.NEXT_PUBLIC_PUSHER_KEY);
+  }, []);
   const [timeUntilAudit, setTimeUntilAudit] = React.useState({
     days: 15,
     hours: 8,
@@ -87,8 +98,8 @@ export function DashboardHeader() {
 
         {/* Countdown Clock */}
         <div className="flex flex-1 justify-center">
-          <div className="flex items-center space-x-2 rounded-lg bg-teal-50 px-3 py-1">
-            <Clock className="h-4 w-4 text-teal-600" />
+          <div className="flex items-center space-x-2 rounded-lg bg-purple-50 px-3 py-1">
+            <Clock className="h-4 w-4 text-purple-600" />
             <div className="flex items-center space-x-1 font-mono text-sm text-neutral-700">
               <span className="text-xs text-neutral-500">Next Audit:</span>
               <span className="font-semibold">{formatTime(timeUntilAudit.days)}d</span>
@@ -102,10 +113,54 @@ export function DashboardHeader() {
           </div>
         </div>
 
-        {/* AI Status Indicator - Temporarily disabled */}
-        {/* <div className="flex items-center">
-          <AIStatusIndicator className="mr-4" />
-        </div> */}
+        {/* Online Presence Indicator */}
+        <div className="flex items-center gap-4">
+          {isFeatureEnabled && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="flex items-center gap-2 hover:bg-white/10"
+                >
+                  <Users className="h-4 w-4" />
+                  <span className="text-sm">
+                    {connectionState === 'connected' ? onlineCount : '--'}
+                  </span>
+                  <div className={`h-2 w-2 rounded-full ${
+                    connectionState === 'connected'
+                      ? 'bg-green-500 animate-pulse'
+                      : connectionState === 'connecting'
+                      ? 'bg-yellow-500 animate-pulse'
+                      : 'bg-gray-400'
+                  }`} />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-64">
+                <DropdownMenuLabel>Online Users</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {connectionState === 'connected' && members.length > 0 ? (
+                  <div className="max-h-60 overflow-y-auto">
+                    {members.map((member: any) => (
+                      <DropdownMenuItem key={member.id} className="flex items-center gap-2">
+                        <User className="h-3 w-3" />
+                        <span className="text-sm">{member.info?.name || `User ${member.id}`}</span>
+                      </DropdownMenuItem>
+                    ))}
+                  </div>
+                ) : connectionState === 'connecting' ? (
+                  <div className="p-4 text-center text-sm text-muted-foreground">
+                    Connecting...
+                  </div>
+                ) : (
+                  <div className="p-4 text-center text-sm text-muted-foreground">
+                    {!isFeatureEnabled ? 'Real-time disabled' : 'No users online'}
+                  </div>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </div>
 
         {/* Alerts Indicator */}
         <div className="flex flex-1 justify-end">

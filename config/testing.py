@@ -44,7 +44,7 @@ class TestingConfig(BaseConfig):
     REDIS_MAX_CONNECTIONS: int = 5
 
     # Neo4j - Allow environment override with test defaults
-    NEO4J_URI: str = Field(default="bolt://localhost:7687", env="NEO4J_URI")
+    NEO4J_URI: str = Field(default="neo4j+s://12e71bc4.databases.neo4j.io", env="NEO4J_URI")
     NEO4J_USERNAME: str = Field(default="neo4j", env="NEO4J_USERNAME")
     NEO4J_PASSWORD: str = Field(default="test", env="NEO4J_PASSWORD")
 

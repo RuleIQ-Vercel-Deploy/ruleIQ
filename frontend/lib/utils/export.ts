@@ -3,8 +3,7 @@
 import type { 
   AssessmentResult, 
   Gap, 
-  Recommendation, 
-  AssessmentFramework
+  Recommendation
 } from '../assessment-engine/types';
 import type { 
   AssessmentResultsResponse, 
@@ -44,18 +43,112 @@ function isFreemiumResponse(obj: any): obj is AssessmentResultsResponse {
   return 'compliance_score' in obj && 'compliance_gaps' in obj;
 }
 
-// Helper function to convert hex color to RGB array
-function hexToRgb(hex: string): [number, number, number] {
+// Cache for hexToRgb results to avoid repeated processing
+const hexToRgbCache: Map<string, [number, number, number]> = new Map();
+
+// Development flag for console logging
+const isDevelopment = process.env.NODE_ENV === 'development';
+
+// Lightweight logging function that only outputs in development
+function logError(message: string, ...args: any[]): void {
+  if (isDevelopment) {
+    console.error(message, ...args);
+  }
+}
+
+function logWarn(message: string, ...args: any[]): void {
+  if (isDevelopment) {
+    console.warn(message, ...args);
+  }
+}
+
+// Helper function to convert hex color to RGB array with memoization
+function hexToRgb(hex: string | null | undefined): [number, number, number] {
+  // Early validation for null, undefined, or non-string inputs
+  if (!hex || typeof hex !== 'string') {
+    return [0, 0, 0]; // Return fallback immediately
+  }
+  
+  // Check cache first
+  if (hexToRgbCache.has(hex)) {
+    return hexToRgbCache.get(hex)!;
+  }
+  
   // Remove # if present
-  hex = hex.replace(/^#/, '');
+  const cleanHex = hex.replace(/^#/, '');
+  
+  // Handle 3-digit hex codes by converting to 6-digit
+  let normalizedHex = cleanHex;
+  if (cleanHex.length === 3) {
+    normalizedHex = cleanHex.split('').map(char => char + char).join('');
+  }
+  
+  // Validate hex string length
+  if (normalizedHex.length !== 6) {
+    // In development, throw error for invalid inputs; in production, return null
+    if (isDevelopment) {
+      throw new Error(`Invalid hex color length: ${hex}`);
+    }
+    return [0, 0, 0];
+  }
+  
+  // Validate hex characters
+  if (!/^[0-9A-Fa-f]{6}$/.test(normalizedHex)) {
+    // In development, throw error for invalid inputs; in production, return null
+    if (isDevelopment) {
+      throw new Error(`Invalid hex color format: ${hex}`);
+    }
+    return [0, 0, 0];
+  }
   
   // Parse hex values
-  const bigint = parseInt(hex, 16);
+  const bigint = parseInt(normalizedHex, 16);
   const r = (bigint >> 16) & 255;
   const g = (bigint >> 8) & 255;
   const b = bigint & 255;
   
-  return [r, g, b];
+  const result: [number, number, number] = [r, g, b];
+  
+  // Store in cache
+  hexToRgbCache.set(hex, result);
+  
+  return result;
+}
+
+// Helper function to check if we're in a browser environment
+function isBrowser(): boolean {
+  return typeof window !== 'undefined' && typeof document !== 'undefined';
+}
+
+// Helper function to ensure browser environment or throw error
+function ensureBrowserEnvironment(operation: string): void {
+  if (!isBrowser()) {
+    throw new Error(
+      `Cannot perform ${operation}: DOM is not available. ` +
+      `This operation requires a browser environment and cannot run during SSR or build.`
+    );
+  }
+}
+
+// Cached xlsx module loader to avoid redundant imports
+let cachedXlsxModule: any = null;
+
+async function getXlsxModule(): Promise<any> {
+  if (cachedXlsxModule) {
+    return cachedXlsxModule;
+  }
+  
+  // Ensure browser environment before importing xlsx
+  ensureBrowserEnvironment('xlsx module loading');
+  
+  try {
+    const xlsxModule = await import('@e965/xlsx');
+    cachedXlsxModule = xlsxModule;
+    return cachedXlsxModule;
+  } catch (error) {
+    logError('Failed to load xlsx module:', error);
+    throw new Error('Failed to load Excel/CSV processing module');
+  }
 }
 
 // Helper function to sanitize filename
@@ -113,6 +206,24 @@ function normalizeAssessmentData(results: AssessmentResult | AssessmentResultsRe
   return normalized;
 }
 
+// Canonical export option keys for consistent UI-to-export mapping
+export const EXPORT_OPTION_KEYS = {
+  format: 'format',
+  includeQuestions: 'includeQuestions',
+  includeAnswers: 'includeAnswers',
+  includeGaps: 'includeGaps',
+  includeRecommendations: 'includeRecommendations',
+  includeSectionBreakdown: 'includeSectionBreakdown',
+  includeExecutiveSummary: 'includeExecutiveSummary',
+  includeCharts: 'includeCharts',
+  includeTrendAnalysis: 'includeTrendAnalysis',
+  companyName: 'companyName',
+  reportTitle: 'reportTitle',
+  dateRange: 'dateRange',
+  customFields: 'customFields',
+  chartImages: 'chartImages'
+} as const;
+
 // Export options interface
 export interface ExportOptions {
   format: 'csv' | 'excel' | 'pdf';
@@ -122,6 +233,8 @@ export interface ExportOptions {
   includeRecommendations?: boolean;
   includeSectionBreakdown?: boolean;
   includeExecutiveSummary?: boolean;
+  includeCharts?: boolean;
+  includeTrendAnalysis?: boolean;
   companyName?: string;
   reportTitle?: string;
   dateRange?: {
@@ -135,6 +248,7 @@ export interface ExportOptions {
     gapAnalysisImage?: string; // Base64 or data URL
     sectionScoresImage?: string; // Base64 or data URL
   };
+  estimatedBreakdown?: boolean; // Whether section details are generated heuristically
 }
 
 // Progress callback type
@@ -221,20 +335,24 @@ export const formatters = {
 
 /**
  * Export assessment results to Excel format (XLSX)
+ * @requires Browser environment - Will not work in SSR or Node.js contexts
  */
 export async function exportAssessmentExcel(
   results: AssessmentResult | AssessmentResultsResponse,
   options: ExportOptions = { format: 'excel' },
   onProgress?: ProgressCallback
 ): Promise<ExportResult> {
+  // Check browser environment immediately
+  ensureBrowserEnvironment('Excel export');
+  
   try {
     onProgress?.(10, 'Preparing data for Excel export...');
 
     // Normalize data for consistent handling
     const normalizedData = normalizeAssessmentData(results);
 
-    // Dynamically import xlsx for code splitting
-    const XLSX = await import('xlsx');
+    // Use cached xlsx module loader
+    const XLSX = await getXlsxModule();
 
     // Create workbook
     const wb = XLSX.utils.book_new();
@@ -281,6 +399,12 @@ export async function exportAssessmentExcel(
       ];
 
       normalizedData.gaps.forEach((gap: Gap | ComplianceGap) => {
+        // Guard against null or undefined gaps
+        if (!gap) {
+          logWarn('Skipping null/undefined gap in export');
+          return;
+        }
+        
         if ('questionText' in gap) {
           // AssessmentResult Gap
           gapsData.push([
@@ -385,6 +509,9 @@ export async function exportAssessmentExcel(
     const reportPart = options.reportTitle ? sanitizeFilename(options.reportTitle) + '-' : 'assessment-report-';
     const filename = `${companyPart}${reportPart}${timestamp}.xlsx`;
 
+    // Ensure browser environment before DOM operations
+    ensureBrowserEnvironment('Excel export download');
+
     // Trigger download
     const blob = new Blob([xlsxContent], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
     const url = URL.createObjectURL(blob);
@@ -405,23 +532,34 @@ export async function exportAssessmentExcel(
     };
 
   } catch (error) {
-    console.error('Excel export error:', error);
-    return {
-      success: false,
-      filename: '',
-      error: error instanceof Error ? error.message : 'Unknown error occurred'
-    };
+    logError('Excel export error:', error);
+    
+    // Preserve original error with context
+    const enhancedError = new Error(
+      `Excel export failed: ${error instanceof Error ? error.message : 'Unknown error'}`
+    );
+    
+    if (error instanceof Error) {
+      enhancedError.stack = error.stack;
+      (enhancedError as any).cause = error;
+    }
+    
+    throw enhancedError;
   }
 }
 
 /**
  * Export assessment results to PDF format
+ * @requires Browser environment - Will not work in SSR or Node.js contexts
  */
 export async function exportAssessmentPDF(
   results: AssessmentResult | AssessmentResultsResponse,
   options: ExportOptions = { format: 'pdf' },
   onProgress?: ProgressCallback
 ): Promise<ExportResult> {
+  // Check browser environment immediately
+  ensureBrowserEnvironment('PDF export');
+  
   try {
     onProgress?.(5, 'Initializing PDF document...');
 
@@ -557,30 +695,40 @@ export async function exportAssessmentPDF(
       }
       
       yPosition += boxHeight + 15;
+
+      // Add notice if section details are estimated
+      if (options.estimatedBreakdown) {
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'italic');
+        const warningRgb = hexToRgb(THEME_COLORS.warning);
+        doc.setTextColor(warningRgb[0], warningRgb[1], warningRgb[2]);
+        doc.text('Note: Section breakdown details are estimated based on overall results.', margin, yPosition);
+        yPosition += 10;
+      }
     }
 
     onProgress?.(35, 'Adding charts and visualizations...');
 
     // Embed chart images if provided (from chartImages or customFields)
     const chartImages = options.chartImages || options.customFields;
-    if (chartImages) {
+    if (chartImages && options.includeCharts !== false) {
       // Gauge Chart
       if (chartImages.gaugeImage) {
         checkPageBreak(80);
         try {
           doc.addImage(chartImages.gaugeImage, 'PNG', margin, yPosition, contentWidth / 2 - 5, 60);
         } catch (err) {
-          console.warn('Failed to embed gauge chart:', err);
+          logWarn('Failed to embed gauge chart:', err);
         }
       }
 
-      // Trend Chart
-      if (chartImages.trendChartImage) {
+      // Trend Chart - only include if includeTrendAnalysis is true
+      if (chartImages.trendChartImage && options.includeTrendAnalysis !== false) {
         const xPos = chartImages.gaugeImage ? margin + contentWidth / 2 + 5 : margin;
         try {
           doc.addImage(chartImages.trendChartImage, 'PNG', xPos, yPosition, contentWidth / 2 - 5, 60);
         } catch (err) {
-          console.warn('Failed to embed trend chart:', err);
+          logWarn('Failed to embed trend chart:', err);
         }
         yPosition += 70;
       } else if (chartImages.gaugeImage) {
@@ -594,7 +742,7 @@ export async function exportAssessmentPDF(
           doc.addImage(chartImages.gapAnalysisImage, 'PNG', margin, yPosition, contentWidth, 60);
           yPosition += 70;
         } catch (err) {
-          console.warn('Failed to embed gap analysis chart:', err);
+          logWarn('Failed to embed gap analysis chart:', err);
         }
       }
     }
@@ -798,7 +946,7 @@ export async function exportAssessmentPDF(
     onProgress?.(90, 'Finalizing PDF...');
 
     // Add page numbers to all pages
-    const totalPages = doc.internal.getNumberOfPages();
+    const totalPages = (doc as any).internal.getNumberOfPages();
     for (let i = 1; i <= totalPages; i++) {
       doc.setPage(i);
       addFooter(i, totalPages);
@@ -824,34 +972,53 @@ export async function exportAssessmentPDF(
     };
 
   } catch (error) {
-    console.error('PDF export error:', error);
-    return {
+    logError('PDF export error:', error);
+    
+    // Enhanced error handling with stack trace
+    const errorDetails: ExportResult = {
       success: false,
       filename: '',
       error: error instanceof Error ? error.message : 'Unknown error occurred'
     };
+    
+    // Add stack trace and raw error for debugging (ensure no sensitive data)
+    if (error instanceof Error) {
+      (errorDetails as any).stack = error.stack;
+      (errorDetails as any).rawError = {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      };
+    } else {
+      (errorDetails as any).rawError = error;
+    }
+    
+    return errorDetails;
   }
 }
 
 /**
  * Export assessment results to CSV format
+ * @requires Browser environment - Will not work in SSR or Node.js contexts
  */
 export async function exportAssessmentCSV(
   results: AssessmentResult | AssessmentResultsResponse,
   options: ExportOptions = { format: 'csv' },
   onProgress?: ProgressCallback
 ): Promise<ExportResult> {
+  // Check browser environment immediately
+  ensureBrowserEnvironment('CSV export');
+  
   try {
     onProgress?.(10, 'Preparing data for CSV export...');
 
     // Normalize data for consistent handling
     const normalizedData = normalizeAssessmentData(results);
 
-    // Dynamically import xlsx for code splitting
-    const XLSX = await import('xlsx');
+    // Use cached xlsx module loader
+    const XLSX = await getXlsxModule();
 
-    // Create workbook
-    const wb = XLSX.utils.book_new();
+    // Prepare CSV data
     const csvParts: string[] = [];
 
     // Overview CSV
@@ -866,6 +1033,12 @@ export async function exportAssessmentCSV(
       ['Completion', formatters.formatScore(normalizedData.completionPercentage)],
       ['Assessment Date', formatters.formatDate(normalizedData.assessmentDate)]
     ];
+
+    // Add note if section details are estimated
+    if (options.estimatedBreakdown) {
+      overviewData.push(['']);
+      overviewData.push(['Note', 'Section breakdown details are estimated based on overall results']);
+    }
 
     const overviewWs = XLSX.utils.aoa_to_sheet(overviewData);
     csvParts.push('=== OVERVIEW ===\n' + XLSX.utils.sheet_to_csv(overviewWs));
@@ -994,6 +1167,9 @@ export async function exportAssessmentCSV(
     const reportPart = options.reportTitle ? sanitizeFilename(options.reportTitle) + '-' : 'assessment-report-';
     const filename = `${companyPart}${reportPart}${timestamp}.csv`;
 
+    // Ensure browser environment before DOM operations
+    ensureBrowserEnvironment('CSV export download');
+
     // Trigger download
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -1014,17 +1190,34 @@ export async function exportAssessmentCSV(
     };
 
   } catch (error) {
-    console.error('CSV export error:', error);
-    return {
+    logError('CSV export error:', error);
+    
+    // Enhanced error handling with stack trace
+    const errorDetails: ExportResult = {
       success: false,
       filename: '',
       error: error instanceof Error ? error.message : 'Unknown error occurred'
     };
+    
+    // Add stack trace and raw error for debugging (ensure no sensitive data)
+    if (error instanceof Error) {
+      (errorDetails as any).stack = error.stack;
+      (errorDetails as any).rawError = {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      };
+    } else {
+      (errorDetails as any).rawError = error;
+    }
+    
+    return errorDetails;
   }
 }
 
 /**
  * Generic export function that routes to appropriate format
+ * @requires Browser environment - Will not work in SSR or Node.js contexts
  */
 export async function exportAssessment(
   results: AssessmentResult | AssessmentResultsResponse,
@@ -1044,20 +1237,39 @@ export async function exportAssessment(
       throw new Error(`Unsupported export format: ${options.format}`);
     }
   } catch (error) {
-    console.error('Export error:', error);
-    return {
+    logError('Export error:', error);
+    
+    // Enhanced error handling with stack trace
+    const errorDetails: ExportResult = {
       success: false,
       filename: '',
       error: error instanceof Error ? error.message : 'Unknown error occurred'
     };
+    
+    // Add stack trace and raw error for debugging (ensure no sensitive data)
+    if (error instanceof Error) {
+      (errorDetails as any).stack = error.stack;
+      (errorDetails as any).rawError = {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      };
+    } else {
+      (errorDetails as any).rawError = error;
+    }
+    
+    return errorDetails;
   }
 }
 
 /**
  * Utility function to trigger file download
+ * @requires Browser environment - Will not work in SSR or Node.js contexts
  */
 export function downloadFile(content: string | Blob, filename: string, mimeType: string): void {
   try {
+    // Ensure browser environment before DOM operations
+    ensureBrowserEnvironment('file download');
     const blob = typeof content === 'string' 
       ? new Blob([content], { type: mimeType })
       : content;
@@ -1075,13 +1287,14 @@ export function downloadFile(content: string | Blob, filename: string, mimeType:
     // Clean up the URL object
     setTimeout(() => URL.revokeObjectURL(url), 100);
   } catch (error) {
-    console.error('Download error:', error);
+    logError('Download error:', error);
     throw new Error('Failed to download file');
   }
 }
 
 /**
  * Validate export data before processing
+ * @requires Browser environment for full validation
  */
 export function validateExportData(
   results: AssessmentResult | AssessmentResultsResponse,
@@ -1111,7 +1324,7 @@ export function validateExportData(
   if (options.includeGaps) {
     const normalizedData = normalizeAssessmentData(results);
     if (!normalizedData.gaps || normalizedData.gaps.length === 0) {
-      console.warn('No gaps found in results, gaps section will be empty');
+      logWarn('No gaps found in results, gaps section will be empty');
     }
   }
 
@@ -1119,7 +1332,14 @@ export function validateExportData(
   if (options.includeRecommendations) {
     const normalizedData = normalizeAssessmentData(results);
     if (!normalizedData.recommendations || normalizedData.recommendations.length === 0) {
-      console.warn('No recommendations found in results, recommendations section will be empty');
+      logWarn('No recommendations found in results, recommendations section will be empty');
+    }
+  }
+
+  // Check if trend data exists when requested
+  if (options.includeTrendAnalysis) {
+    if (!options.chartImages?.trendChartImage && !options.customFields?.trendChartImage) {
+      logWarn('Trend analysis requested but no trend data available');
     }
   }
 
@@ -1181,6 +1401,8 @@ export function createExportOptions(
     includeRecommendations: true,
     includeSectionBreakdown: true,
     includeExecutiveSummary: format === 'pdf',
+    includeCharts: true,
+    includeTrendAnalysis: true,
     reportTitle: 'Assessment Results Report',
     companyName: 'Your Company'
   };
@@ -1190,6 +1412,7 @@ export function createExportOptions(
 
 /**
  * Convert SVG element to PNG data URL for embedding in PDF
+ * @requires Browser environment - Will not work in SSR or Node.js contexts
  * @param svgElement The SVG DOM element to convert
  * @param width Target width in pixels
  * @param height Target height in pixels
@@ -1200,6 +1423,9 @@ export async function svgToPngDataUrl(
   width: number = 800,
   height: number = 400
 ): Promise<string> {
+  // Ensure browser environment before DOM operations
+  ensureBrowserEnvironment('SVG to PNG conversion');
+  
   return new Promise((resolve, reject) => {
     try {
       // Clone the SVG to avoid modifying the original
@@ -1211,15 +1437,17 @@ export async function svgToPngDataUrl(
 
       // Serialize SVG to string
       const svgString = new XMLSerializer().serializeToString(clonedSvg);
-
-      // Create blob from SVG string
-      const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
-      const url = URL.createObjectURL(blob);
+      
+      // Embed SVG as data URL to avoid cross-origin issues
+      const svgDataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svgString);
 
       // Create image to convert to canvas
       const img = new Image();
       img.width = width;
       img.height = height;
+      
+      // Set crossOrigin to handle potential CORS issues
+      img.crossOrigin = 'anonymous';
 
       img.onload = () => {
         // Create canvas
@@ -1243,18 +1471,15 @@ export async function svgToPngDataUrl(
         // Convert to data URL
         const dataUrl = canvas.toDataURL('image/png');
 
-        // Clean up
-        URL.revokeObjectURL(url);
-
         resolve(dataUrl);
       };
 
       img.onerror = () => {
-        URL.revokeObjectURL(url);
         reject(new Error('Failed to load SVG image'));
       };
 
-      img.src = url;
+      // Use data URL instead of blob URL to avoid CORS issues
+      img.src = svgDataUrl;
     } catch (error) {
       reject(error);
     }
@@ -1262,7 +1487,7 @@ export async function svgToPngDataUrl(
 }
 
 // Export all utilities
-export default {
+const exportUtils = {
   exportAssessmentCSV,
   exportAssessmentExcel,
   exportAssessmentPDF,
@@ -1273,5 +1498,8 @@ export default {
   createExportOptions,
   formatters,
   svgToPngDataUrl,
-  THEME_COLORS
+  THEME_COLORS,
+  EXPORT_OPTION_KEYS
 };
+
+export default exportUtils;

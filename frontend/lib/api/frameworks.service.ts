@@ -11,6 +11,17 @@ export interface FrameworkRecommendation {
   priority: 'high' | 'medium' | 'low';
 }
 
+/**
+ * Helper to normalize section IDs for consistent comparison
+ * Converts to lowercase and replaces spaces/underscores with hyphens
+ */
+export function normalizeSectionId(id: string): string {
+  return id
+    .toLowerCase()
+    .replace(/[\s_]/g, '-')
+    .replace(/[^\w-]/g, ''); // Remove non-alphanumeric chars except hyphens
+}
+
 class FrameworkService {
   /**
    * Get all available compliance frameworks
@@ -173,8 +184,13 @@ class FrameworkService {
               text: 'Does your organization have a formal data protection policy?',
               description: 'A data protection policy outlines how personal data is collected, processed, and stored',
               section: 'data-protection',
-              weight: 1,
+              weight: 3,
               validation: { required: true },
+              metadata: {
+                ai_hint: 'Consider GDPR Article 5 principles and UK Data Protection Act requirements',
+                evidence_required: ['Policy document', 'Approval records', 'Review schedule'],
+                regulatory_references: ['GDPR Article 5', 'UK DPA 2018'],
+              },
               options: [
                 { value: 'yes', label: 'Yes, we have a comprehensive policy' },
                 { value: 'partial', label: 'Yes, but it needs updating' },
@@ -187,8 +203,13 @@ class FrameworkService {
               text: 'How do you handle data subject requests (access, deletion, portability)?',
               description: 'Data subject rights are fundamental to privacy regulations like GDPR',
               section: 'data-protection',
-              weight: 1,
+              weight: 3,
               validation: { required: true },
+              metadata: {
+                ai_hint: 'GDPR requires response within 30 days for data subject requests',
+                evidence_required: ['Process documentation', 'Request logs', 'Response templates'],
+                regulatory_references: ['GDPR Articles 15-22'],
+              },
               options: [
                 { value: 'automated', label: 'Automated system with defined processes' },
                 { value: 'manual', label: 'Manual process with documented procedures' },
@@ -202,8 +223,12 @@ class FrameworkService {
               text: 'Which data protection measures do you currently have in place?',
               description: 'Select all that apply to your current data protection practices',
               section: 'data-protection',
-              weight: 1,
-              validation: { required: true },
+              weight: 2,
+              validation: { required: true, min: 1 },
+              metadata: {
+                ai_hint: 'Multiple technical and organizational measures strengthen data protection',
+                evidence_required: ['Implementation records', 'Technical specifications'],
+              },
               options: [
                 { value: 'encryption', label: 'Data encryption at rest and in transit' },
                 { value: 'anonymization', label: 'Data anonymization/pseudonymization' },
@@ -226,8 +251,13 @@ class FrameworkService {
               text: 'What type of security framework does your organization follow?',
               description: 'Security frameworks provide structured approaches to cybersecurity',
               section: 'security-controls',
-              weight: 1,
+              weight: 3,
               validation: { required: true },
+              metadata: {
+                ai_hint: 'Established frameworks demonstrate security maturity and best practices adoption',
+                evidence_required: ['Framework documentation', 'Implementation evidence'],
+                regulatory_references: ['ISO 27001', 'NIST CSF', 'Cyber Essentials'],
+              },
               options: [
                 { value: 'iso27001', label: 'ISO 27001' },
                 { value: 'nist', label: 'NIST Cybersecurity Framework' },
@@ -241,11 +271,15 @@ class FrameworkService {
               text: 'How would you rate your organization\'s incident response capabilities?',
               description: 'Rate from 1 (no capabilities) to 5 (fully mature)',
               section: 'security-controls',
-              weight: 1,
-              validation: { required: true },
+              weight: 2,
+              validation: { required: true, min: 1, max: 5 },
               scaleMin: 1,
               scaleMax: 5,
-              scaleLabels: { min: 'No capabilities', max: 'Fully mature' }
+              scaleLabels: { min: 'No capabilities', max: 'Fully mature' },
+              metadata: {
+                ai_hint: 'Consider response time, documentation, team training, and testing frequency',
+                evidence_required: ['Incident response plan', 'Response team structure', 'Test records'],
+              }
             },
             {
               id: 'sc-003',
@@ -253,8 +287,12 @@ class FrameworkService {
               text: 'Which security controls are currently implemented?',
               description: 'Select all security controls your organization has in place',
               section: 'security-controls',
-              weight: 1,
-              validation: { required: true },
+              weight: 2,
+              validation: { required: true, min: 1 },
+              metadata: {
+                ai_hint: 'Defense in depth requires multiple layers of security controls',
+                evidence_required: ['Configuration evidence', 'Deployment records'],
+              },
               options: [
                 { value: 'firewall', label: 'Network firewalls' },
                 { value: 'antivirus', label: 'Endpoint protection/antivirus' },
@@ -278,8 +316,13 @@ class FrameworkService {
               text: 'Does your organization implement multi-factor authentication (MFA)?',
               description: 'MFA adds an extra layer of security beyond passwords',
               section: 'access-management',
-              weight: 1,
+              weight: 3,
               validation: { required: true },
+              metadata: {
+                ai_hint: 'MFA is critical for preventing unauthorized access and meeting compliance requirements',
+                evidence_required: ['MFA configuration', 'Coverage reports', 'Policy documentation'],
+                regulatory_references: ['NIST 800-63B', 'PCI DSS 8.3'],
+              },
               options: [
                 { value: 'all', label: 'Yes, for all users and systems' },
                 { value: 'critical', label: 'Yes, for critical systems only' },
@@ -293,8 +336,12 @@ class FrameworkService {
               text: 'How frequently do you review user access permissions?',
               description: 'Regular access reviews help maintain the principle of least privilege',
               section: 'access-management',
-              weight: 1,
+              weight: 2,
               validation: { required: true },
+              metadata: {
+                ai_hint: 'Regular reviews prevent privilege creep and maintain security posture',
+                evidence_required: ['Review schedule', 'Review records', 'Remediation actions'],
+              },
               options: [
                 { value: 'monthly', label: 'Monthly' },
                 { value: 'quarterly', label: 'Quarterly' },
@@ -309,8 +356,12 @@ class FrameworkService {
               text: 'Do you have a formal process for onboarding and offboarding employees?',
               description: 'Proper onboarding/offboarding ensures appropriate access provisioning and deprovisioning',
               section: 'access-management',
-              weight: 1,
+              weight: 3,
               validation: { required: true },
+              metadata: {
+                ai_hint: 'Timely access management reduces insider threat risk',
+                evidence_required: ['Process documentation', 'Checklists', 'Completion records'],
+              },
               options: [
                 { value: 'automated', label: 'Yes, fully automated process' },
                 { value: 'documented', label: 'Yes, documented manual process' },

@@ -20,9 +20,9 @@ import { } from '@/components/magicui/number-ticker';
 
 export default function MarketingPage() {
   const typewriterWords = [
-    { text: 'For UK SMBs', className: 'text-teal-600' },
-    { text: 'AI-Powered', className: 'text-teal-600' },
-    { text: 'Stay Compliant', className: 'text-teal-600' },
+    { text: 'For UK SMBs', className: 'text-purple-600' },
+    { text: 'AI-Powered', className: 'text-purple-600' },
+    { text: 'Stay Compliant', className: 'text-purple-600' },
   ];
 
   const clientLogos = [
@@ -122,7 +122,7 @@ export default function MarketingPage() {
       {/* Hero Section */}
       <section className="relative h-screen w-full overflow-hidden">
         {/* Clean background for optimal text readability */}
-        <div className="absolute inset-0 bg-gradient-to-br from-white via-teal-50/10 to-white" />
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-purple-50/10 to-white" />
 
         <div className="relative z-20 flex h-full flex-col items-center justify-center px-4">
           <div className="space-y-8 text-center">
@@ -130,7 +130,7 @@ export default function MarketingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: 'easeOut' }}
-              className="mb-4 text-sm font-semibold uppercase tracking-widest text-teal-600"
+              className="mb-4 text-sm font-semibold uppercase tracking-widest text-purple-600"
             >
               AI-Powered Compliance Platform
             </motion.div>
@@ -156,9 +156,9 @@ export default function MarketingPage() {
             <TypewriterEffect words={typewriterWords} />
             <div className="relative flex items-center justify-center space-x-4">
               <ShimmerButton
-                className="group z-10 h-auto transform rounded-xl bg-teal-600 px-8 py-4 text-lg shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
-                shimmerColor="#4FD1C5"
-                background="linear-gradient(135deg, #2C7A7B 0%, #319795 100%)"
+                className="group z-10 h-auto transform rounded-xl bg-purple-600 px-8 py-4 text-lg shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+                shimmerColor="#A78BFA"
+                background="linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)"
               >
                 <span className="flex items-center gap-2 font-semibold text-white">
                   Start Free Trial
@@ -175,7 +175,7 @@ export default function MarketingPage() {
               <Button
                 variant="outline"
                 size="lg"
-                className="z-10 h-auto rounded-xl border-2 border-teal-600 px-8 py-4 text-lg text-teal-600 transition-all duration-300 hover:border-teal-700 hover:bg-teal-50"
+                className="z-10 h-auto rounded-xl border-2 border-purple-600 px-8 py-4 text-lg text-purple-600 transition-all duration-300 hover:border-purple-700 hover:bg-purple-50"
               >
                 Watch 2-min Demo
               </Button>
@@ -204,7 +204,7 @@ export default function MarketingPage() {
                   repeatType: 'mirror',
                   ease: 'easeInOut',
                 }}
-                className="flex items-center gap-2 rounded-full border border-teal-600/30 bg-teal-50/50 px-4 py-2 text-sm"
+                className="flex items-center gap-2 rounded-full border border-purple-600/30 bg-purple-50/50 px-4 py-2 text-sm"
               >
                 <CheckCircle className="h-4 w-4 text-green-500" />
                 {badge}
@@ -227,7 +227,7 @@ export default function MarketingPage() {
       </section>
 
       {/* Metrics Section */}
-      <section className="bg-gradient-to-r from-teal-50 to-white py-20">
+      <section className="bg-gradient-to-r from-purple-50 to-white py-20">
         <div className="container mx-auto px-4">
           <div className="mb-12 text-center">
             <h2 className="mb-4 text-3xl font-bold text-neutral-900">
@@ -291,9 +291,9 @@ export default function MarketingPage() {
               transition={{ duration: 0.5, delay: i * 0.1 }}
               viewport={{ once: true }}
             >
-              <Card className="border border-teal-100 bg-white p-6 text-center transition-shadow hover:border-teal-300 hover:shadow-lg">
+              <Card className="border border-purple-100 bg-white p-6 text-center transition-shadow hover:border-purple-300 hover:shadow-lg">
                 <CardContent className="space-y-4">
-                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-teal-600">
+                  <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-lg bg-purple-600">
                     {feature.icon}
                   </div>
                   <h3 className="text-xl font-bold">{feature.title}</h3>
@@ -314,7 +314,7 @@ export default function MarketingPage() {
           <TextEffect
             per="word"
             preset="scale"
-            className="mb-12 text-4xl font-bold leading-none text-teal-600 md:text-[6rem]"
+            className="mb-12 text-4xl font-bold leading-none text-purple-600 md:text-[6rem]"
             delay={1000}
           >
             One Dashboard
@@ -359,9 +359,9 @@ export default function MarketingPage() {
                 viewport={{ once: true }}
                 className="text-center"
               >
-                <Card className="border border-teal-100 bg-white p-6 transition-shadow hover:border-teal-300 hover:shadow-lg">
+                <Card className="border border-purple-100 bg-white p-6 transition-shadow hover:border-purple-300 hover:shadow-lg">
                   <CardContent className="space-y-4">
-                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-teal-600">
+                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-purple-600">
                       {item.icon}
                     </div>
                     <h3 className="text-xl font-bold">{item.title}</h3>
@@ -412,7 +412,7 @@ export default function MarketingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-gradient-to-b from-background to-teal-50 py-20">
+      <section className="bg-gradient-to-b from-background to-purple-50 py-20">
         <div className="mx-auto max-w-3xl px-4 text-center">
           <TextEffect
             per="word"
@@ -429,12 +429,12 @@ export default function MarketingPage() {
               <Input
                 type="email"
                 placeholder="Enter your email"
-                className="border-teal-300 bg-background/50 focus:border-teal-600 focus:ring-teal-600"
+                className="border-purple-300 bg-background/50 focus:border-purple-600 focus:ring-purple-600"
               />
               <ShimmerButton
-                className="w-full bg-teal-600 hover:bg-teal-700 sm:w-auto"
-                shimmerColor="#4FD1C5"
-                background="linear-gradient(135deg, #2C7A7B 0%, #319795 100%)"
+                className="w-full bg-purple-600 hover:bg-purple-700 sm:w-auto"
+                shimmerColor="#A78BFA"
+                background="linear-gradient(135deg, #8B5CF6 0%, #7C3AED 100%)"
               >
                 <span className="font-semibold text-white">Get Started Free</span>
               </ShimmerButton>
@@ -457,22 +457,22 @@ export default function MarketingPage() {
             <h4 className="mb-4 font-semibold">Product</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#features" className="hover:text-teal-600">
+                <a href="#features" className="hover:text-purple-600">
                   Features
                 </a>
               </li>
               <li>
-                <a href="#pricing" className="hover:text-teal-600">
+                <a href="#pricing" className="hover:text-purple-600">
                   Pricing
                 </a>
               </li>
               <li>
-                <a href="#integrations" className="hover:text-teal-600">
+                <a href="#integrations" className="hover:text-purple-600">
                   Integrations
                 </a>
               </li>
               <li>
-                <a href="#demo" className="hover:text-teal-600">
+                <a href="#demo" className="hover:text-purple-600">
                   Request a Demo
                 </a>
               </li>
@@ -482,22 +482,22 @@ export default function MarketingPage() {
             <h4 className="mb-4 font-semibold">Company</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#about" className="hover:text-teal-600">
+                <a href="#about" className="hover:text-purple-600">
                   About Us
                 </a>
               </li>
               <li>
-                <a href="#blog" className="hover:text-teal-600">
+                <a href="#blog" className="hover:text-purple-600">
                   Blog
                 </a>
               </li>
               <li>
-                <a href="#careers" className="hover:text-teal-600">
+                <a href="#careers" className="hover:text-purple-600">
                   Careers
                 </a>
               </li>
               <li>
-                <a href="#contact" className="hover:text-teal-600">
+                <a href="#contact" className="hover:text-purple-600">
                   Contact
                 </a>
               </li>
@@ -507,12 +507,12 @@ export default function MarketingPage() {
             <h4 className="mb-4 font-semibold">Legal</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="#privacy" className="hover:text-teal-600">
+                <a href="#privacy" className="hover:text-purple-600">
                   Privacy Policy
                 </a>
               </li>
               <li>
-                <a href="#terms" className="hover:text-teal-600">
+                <a href="#terms" className="hover:text-purple-600">
                   Terms of Service
                 </a>
               </li>

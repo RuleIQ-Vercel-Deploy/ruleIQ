@@ -59,9 +59,9 @@ export function QuestionRenderer({
             <div className="space-y-2">
               {question.options?.map((option) => (
                 <div key={option.value} className="flex items-start space-x-2">
-                  <RadioGroupItem value={option.value} id={option.value} />
+                  <RadioGroupItem value={option.value} id={`${question.id}-${option.value}`} />
                   <div className="flex-1">
-                    <Label htmlFor={option.value} className="cursor-pointer text-sm font-normal">
+                    <Label htmlFor={`${question.id}-${option.value}`} className="cursor-pointer text-sm font-normal">
                       {option.label}
                     </Label>
                     {option.description && (
@@ -81,7 +81,7 @@ export function QuestionRenderer({
             {question.options?.map((option) => (
               <div key={option.value} className="flex items-start space-x-2">
                 <Checkbox
-                  id={option.value}
+                  id={`${question.id}-${option.value}`}
                   checked={checkedValues.includes(option.value)}
                   onCheckedChange={(checked) => {
                     const newValues = checked
@@ -92,7 +92,7 @@ export function QuestionRenderer({
                   disabled={disabled}
                 />
                 <div className="flex-1">
-                  <Label htmlFor={option.value} className="cursor-pointer text-sm font-normal">
+                  <Label htmlFor={`${question.id}-${option.value}`} className="cursor-pointer text-sm font-normal">
                     {option.label}
                   </Label>
                   {option.description && (
@@ -239,7 +239,7 @@ export function QuestionRenderer({
                           }}
                           disabled={disabled}
                         >
-                          <RadioGroupItem value={col.id} />
+                          <RadioGroupItem value={col.id} id={`${question.id}-${row.id}-${col.id}`} />
                         </RadioGroup>
                       </td>
                     ))}

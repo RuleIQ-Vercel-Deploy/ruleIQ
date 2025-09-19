@@ -1,11 +1,41 @@
 'use client';
 
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import React, { useState, useMemo, useRef, useEffect, useLayoutEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { TrendDataPoint } from '@/types/assessment-results';
 
+/**
+ * TrendAnalysisChart Component
+ * 
+ * IMPLEMENTATION CHOICE: Custom SVG Chart
+ * 
+ * This component uses a custom SVG implementation instead of Recharts for the following reasons:
+ * 
+ * 1. **Performance**: Direct SVG manipulation is more performant for simple line charts,
+ *    avoiding the overhead of a full charting library for straightforward visualizations.
+ * 
+ * 2. **Bundle Size**: Eliminates the ~150KB+ dependency of Recharts, keeping the bundle lean.
+ * 
+ * 3. **Customization**: Provides complete control over animations, interactions, and styling
+ *    without being constrained by library abstractions.
+ * 
+ * 4. **Accessibility**: Direct control over ARIA attributes, keyboard navigation, and
+ *    screen reader announcements for better accessibility compliance.
+ * 
+ * 5. **Specific Requirements**: The trend chart has specific interaction patterns (keyboard
+ *    navigation, custom tooltips, period selection) that are simpler to implement directly.
+ * 
+ * TRADE-OFFS:
+ * - More code to maintain compared to using a library
+ * - Need to implement features like responsive sizing manually
+ * - Requires more testing for edge cases
+ * 
+ * MIGRATION PATH:
+ * If migrating to Recharts is desired, the component interface remains the same.
+ * Only the internal implementation would change, keeping the API contract intact.
+ */
 export interface TrendAnalysisChartProps {
   data: TrendDataPoint[];
   className?: string;
@@ -30,7 +60,7 @@ const COLORS = {
   indigo: '#818CF8',
   lime: '#A3E635',
   danger: '#EF4444',
-  teal: '#14B8A6',
+  neuralPurple: '#8B5CF6',
   purple: '#C084FC',
 };
 
@@ -42,7 +72,7 @@ const CHART_COLORS = [
   COLORS.magenta,
   COLORS.indigo,
   COLORS.lime,
-  COLORS.teal,
+  COLORS.neuralPurple,
   COLORS.purple,
 ];
 
@@ -55,8 +85,10 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
   } | null>(null);
   const [focusedPoint, setFocusedPoint] = useState<number | null>(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 400 });
+  const [tooltipDimensions, setTooltipDimensions] = useState({ width: 250, height: 150 });
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<SVGElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
 
   // Filter data based on selected time period
   const filteredData = useMemo(() => {
@@ -84,6 +116,17 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
   const padding = { top: 20, right: 20, bottom: 60, left: 60 };
   const innerWidth = Math.max(0, chartWidth - padding.left - padding.right);
   const innerHeight = Math.max(0, chartHeight - padding.top - padding.bottom);
+
+  // Measure tooltip dimensions when it's shown
+  useLayoutEffect(() => {
+    if (hoveredPoint && tooltipRef.current) {
+      const rect = tooltipRef.current.getBoundingClientRect();
+      setTooltipDimensions({
+        width: rect.width + 20, // Add margin
+        height: rect.height + 20  // Add margin
+      });
+    }
+  }, [hoveredPoint]);
 
   // Set up ResizeObserver to make chart responsive
   useEffect(() => {
@@ -129,16 +172,32 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
   }, [innerHeight]);
 
   // Generate path data for lines
-  const generatePath = (scores: number[]) => {
+  const generatePath = (scores: (number | undefined)[]) => {
     if (scores.length === 0) return '';
-    
-    const points = scores.map((score, index) => {
-      const x = xScale.scale(new Date(filteredData[index].date).getTime());
-      const y = yScale.scale(score);
-      return `${x},${y}`;
+
+    const segments: string[] = [];
+    let currentSegment: string[] = [];
+
+    scores.forEach((score, index) => {
+      if (score !== undefined && score !== null) {
+        const x = xScale.scale(new Date(filteredData[index].date).getTime());
+        const y = yScale.scale(score);
+        currentSegment.push(`${x},${y}`);
+      } else {
+        // If we have a segment, add it and start a new one
+        if (currentSegment.length > 0) {
+          segments.push(`M ${currentSegment.join(' L ')}`);
+          currentSegment = [];
+        }
+      }
     });
-    
-    return `M ${points.join(' L ')}`;
+
+    // Add the last segment if it exists
+    if (currentSegment.length > 0) {
+      segments.push(`M ${currentSegment.join(' L ')}`);
+    }
+
+    return segments.join(' ');
   };
 
   // Calculate percentage change
@@ -160,9 +219,15 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
   const handleMouseMove = (event: React.MouseEvent<SVGElement>) => {
     if (filteredData.length === 0) return;
 
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = event.clientX - rect.left - padding.left;
-    const y = event.clientY - rect.top - padding.top;
+    const svgRect = event.currentTarget.getBoundingClientRect();
+    // Get the positioned container (the div with className="relative w-full")
+    const relativeContainer = event.currentTarget.parentElement;
+    if (!relativeContainer) return;
+    const relativeRect = relativeContainer.getBoundingClientRect();
+
+    // Calculate coordinates relative to SVG plot area for finding nearest point
+    const xInChart = event.clientX - svgRect.left - padding.left;
+    const yInChart = event.clientY - svgRect.top - padding.top;
 
     // Find closest data point
     let closestIndex = 0;
@@ -170,7 +235,7 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
 
     filteredData.forEach((point, index) => {
       const pointX = xScale.scale(new Date(point.date).getTime());
-      const distance = Math.abs(pointX - x);
+      const distance = Math.abs(pointX - xInChart);
       if (distance < minDistance) {
         minDistance = distance;
         closestIndex = index;
@@ -178,10 +243,18 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
     });
 
     if (minDistance < 50) { // Only show tooltip if close enough
+      // Calculate tooltip position relative to the positioned container
+      const tooltipX = event.clientX - relativeRect.left;
+      const tooltipY = event.clientY - relativeRect.top;
+      
+      // Clamp within the positioned container bounds with margin using dynamic dimensions
+      const clampedX = Math.min(Math.max(10, tooltipX), relativeRect.width - tooltipDimensions.width);
+      const clampedY = Math.min(Math.max(10, tooltipY), relativeRect.height - tooltipDimensions.height);
+      
       setHoveredPoint({
         dataIndex: closestIndex,
-        x: event.clientX,
-        y: event.clientY
+        x: clampedX,
+        y: clampedY
       });
     } else {
       setHoveredPoint(null);
@@ -239,13 +312,28 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
     setFocusedPoint(newFocusedPoint);
     // Show tooltip for focused point
     if (chartRef.current) {
-      const rect = chartRef.current.getBoundingClientRect();
-      const x = rect.left + padding.left + xScale.scale(new Date(filteredData[newFocusedPoint].date).getTime());
-      const y = rect.top + padding.top + yScale.scale(filteredData[newFocusedPoint].overallScore);
+      const relativeContainer = chartRef.current.parentElement;
+      if (!relativeContainer) return;
+      
+      const relativeRect = relativeContainer.getBoundingClientRect();
+      const chartRect = chartRef.current.getBoundingClientRect();
+      
+      // Calculate point position in SVG coordinate space
+      const pointX = xScale.scale(new Date(filteredData[newFocusedPoint].date).getTime());
+      const pointY = yScale.scale(filteredData[newFocusedPoint].overallScore);
+      
+      // Convert to tooltip position relative to the positioned container
+      const tooltipX = (chartRect.left - relativeRect.left) + padding.left + pointX;
+      const tooltipY = (chartRect.top - relativeRect.top) + padding.top + pointY;
+      
+      // Clamp within the positioned container bounds using dynamic dimensions
+      const clampedX = Math.min(Math.max(10, tooltipX), relativeRect.width - tooltipDimensions.width);
+      const clampedY = Math.min(Math.max(10, tooltipY), relativeRect.height - tooltipDimensions.height);
+      
       setHoveredPoint({
         dataIndex: newFocusedPoint,
-        x,
-        y
+        x: clampedX,
+        y: clampedY
       });
     }
   };
@@ -418,7 +506,7 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
                 {sectionNames.map((section, index) => (
                   <path
                     key={section}
-                    d={generatePath(filteredData.map(d => d.sectionScores[section] || 0))}
+                    d={generatePath(filteredData.map(d => d.sectionScores[section]))}
                     fill="none"
                     stroke={CHART_COLORS[index + 1] || CHART_COLORS[index % CHART_COLORS.length]}
                     strokeWidth="2"
@@ -467,11 +555,13 @@ export function TrendAnalysisChart({ data, className }: TrendAnalysisChartProps)
             {/* Tooltip */}
             {hoveredPoint && (
               <div
+                ref={tooltipRef}
                 className="pointer-events-none absolute z-10 rounded-lg border bg-white p-3 shadow-lg"
                 style={{
-                  left: hoveredPoint.x + 10,
-                  top: hoveredPoint.y - 10,
-                  transform: 'translateY(-100%)'
+                  left: `${hoveredPoint.x}px`,
+                  top: `${hoveredPoint.y}px`,
+                  transform: 'translate(-50%, -110%)',
+                  maxWidth: typeof window !== 'undefined' && window.innerWidth < 480 ? '200px' : '300px'
                 }}
               >
                 <div className="space-y-2">

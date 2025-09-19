@@ -25,12 +25,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Progress } from '@/components/ui/progress';
 import { cn } from '@/lib/utils';
+import { useToast } from '@/components/ui/use-toast';
 import {
   exportAssessment,
   createExportOptions,
   validateExportData,
   getEstimatedExportSize,
   svgToPngDataUrl,
+  EXPORT_OPTION_KEYS,
   type ExportOptions,
   type ExportResult
 } from '@/lib/utils/export';
@@ -50,6 +52,51 @@ const THEME_COLORS = {
   textLight: '#64748b',
   background: '#f8fafc',
   white: '#ffffff'
+};
+
+// Type-safe UI option interface to clearly separate UI concerns from export concerns
+interface UIExportOptions {
+  includeSectionDetails?: boolean;
+  includeGapAnalysis?: boolean;
+  includeRecommendations?: boolean;
+  includeTrendAnalysis?: boolean;
+  includeCharts?: boolean;
+  includeExecutiveSummary?: boolean;
+  reportTitle?: string;
+  fileName?: string;
+  estimatedBreakdown?: boolean;
+}
+
+// Type-safe UI to Export option key mapping using satisfies for compile-time safety
+const UI_TO_EXPORT_KEY_MAP = {
+  'includeSectionDetails': 'includeSectionBreakdown',
+  'includeGapAnalysis': 'includeGaps',
+  // Direct pass-through mappings
+  'includeRecommendations': 'includeRecommendations',
+  'includeTrendAnalysis': 'includeTrendAnalysis',
+  'includeCharts': 'includeCharts',
+  'includeExecutiveSummary': 'includeExecutiveSummary',
+  'reportTitle': 'reportTitle',
+  'fileName': 'fileName',
+  'estimatedBreakdown': 'estimatedBreakdown'
+} as const satisfies Record<keyof UIExportOptions, keyof ExportOptions | 'fileName' | 'estimatedBreakdown'>;
+
+// Helper function to map UI option names to export utility option names
+const mapUIOptionsToExportOptions = (uiOptions: Partial<UIExportOptions>): Partial<ExportOptions & { fileName?: string; estimatedBreakdown?: boolean }> => {
+  const mappedOptions: Partial<ExportOptions & { fileName?: string; estimatedBreakdown?: boolean }> = {};
+
+  // Type-safe iteration through UI options
+  (Object.keys(uiOptions) as Array<keyof UIExportOptions>).forEach((key) => {
+    const value = uiOptions[key];
+    const mappedKey = UI_TO_EXPORT_KEY_MAP[key];
+
+    if (mappedKey && value !== undefined) {
+      // Type-safe assignment without using any
+      mappedOptions[mappedKey as keyof typeof mappedOptions] = value as any;
+    }
+  });
+
+  return mappedOptions;
 };
 
 // Export format configurations
@@ -90,13 +137,6 @@ interface ExportState {
   result: ExportResult | null;
 }
 
-// Export options modal state
-interface ExportOptionsState {
-  isOpen: boolean;
-  format: 'csv' | 'excel' | 'pdf';
-  options: Partial<ExportOptions>;
-}
-
 // Component props
 interface ExportButtonProps {
   results: AssessmentResult | AssessmentResultsResponse | DetailedAssessmentResults;
@@ -111,33 +151,11 @@ interface ExportButtonProps {
   onExportError?: (error: string) => void;
   showAdvancedOptions?: boolean;
   defaultFormat?: 'csv' | 'excel' | 'pdf';
+  estimatedBreakdown?: boolean;
+  trendData?: any[];
 }
 
-// Toast notification function (fallback implementation)
-const showToast = (message: string, type: 'success' | 'error' | 'info' = 'info') => {
-  // This is a simple fallback - in a real app you'd use a proper toast library
-  console.log(`[${type.toUpperCase()}] ${message}`);
-  
-  // Create a simple visual notification
-  const toast = document.createElement('div');
-  toast.className = `fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg text-white max-w-sm transition-all duration-300 ${
-    type === 'success' ? 'bg-green-600' : 
-    type === 'error' ? 'bg-red-600' : 
-    'bg-blue-600'
-  }`;
-  toast.textContent = message;
-  
-  document.body.appendChild(toast);
-  
-  // Animate in
-  setTimeout(() => toast.classList.add('translate-x-0'), 10);
-  
-  // Remove after 3 seconds
-  setTimeout(() => {
-    toast.classList.add('translate-x-full', 'opacity-0');
-    setTimeout(() => document.body.removeChild(toast), 300);
-  }, 3000);
-};
+// Component has been updated to use the app's toast system via useToast hook
 
 // Simple modal component (since dialog.tsx doesn't exist)
 interface ModalProps {
@@ -226,8 +244,13 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
   onExportComplete,
   onExportError,
   showAdvancedOptions = true,
-  defaultFormat = 'pdf'
+  defaultFormat = 'pdf',
+  estimatedBreakdown = false,
+  trendData
 }) => {
+  // Use the app's toast system
+  const { toast } = useToast();
+
   // State management
   const [exportState, setExportState] = useState<ExportState>({
     isExporting: false,
@@ -238,7 +261,11 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
     result: null
   });
 
-  const [optionsModal, setOptionsModal] = useState<ExportOptionsState>({
+  const [optionsModal, setOptionsModal] = useState<{
+    isOpen: boolean;
+    format: 'csv' | 'excel' | 'pdf';
+    options: Partial<UIExportOptions>;
+  }>({
     isOpen: false,
     format: defaultFormat,
     options: {}
@@ -246,6 +273,8 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
 
   // Progress tracking
   const progressRef = useRef<NodeJS.Timeout | null>(null);
+  // Track last export parameters for retry
+  const lastExportRef = useRef<{format:'csv'|'excel'|'pdf', options: Partial<UIExportOptions>}>();
 
   // Reset export state
   const resetExportState = useCallback(() => {
@@ -285,17 +314,26 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
         chartImages.trendChartImage = await svgToPngDataUrl(trendSvg, 600, 300);
       }
 
-      // Find gap analysis chart SVG
-      const gapSvg = document.querySelector('#gap-analysis-chart svg') as SVGElement;
+      // Find gap analysis chart SVG - prefer visible tab content
+      // First try to find active tab panel, then fall back to overview/gaps
+      const activeTabPanel = document.querySelector('[role="tabpanel"][data-state="active"]');
+      let gapSvg: SVGElement | null = null;
+
+      if (activeTabPanel) {
+        // Look for gap analysis chart within active tab
+        gapSvg = activeTabPanel.querySelector('[id^="gap-analysis-chart"] svg:not([hidden])') as SVGElement;
+      }
+
+      // Fallback to original selectors if not found in active tab
+      if (!gapSvg) {
+        gapSvg = document.querySelector('#gap-analysis-chart-overview svg:not([hidden]), #gap-analysis-chart-gaps svg:not([hidden])') as SVGElement;
+      }
+
       if (gapSvg) {
         chartImages.gapAnalysisImage = await svgToPngDataUrl(gapSvg, 600, 400);
       }
 
-      // Find section scores chart SVG
-      const sectionSvg = document.querySelector('#section-scores-chart svg') as SVGElement;
-      if (sectionSvg) {
-        chartImages.sectionScoresImage = await svgToPngDataUrl(sectionSvg, 600, 400);
-      }
+      // Section scores chart capture removed - no matching element in DOM
     } catch (error) {
       console.warn('Failed to capture chart images:', error);
     }
@@ -306,26 +344,25 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
   // Handle export execution
   const executeExport = useCallback(async (
     format: 'csv' | 'excel' | 'pdf',
-    customOptions: Partial<ExportOptions> = {}
+    customOptions: Partial<UIExportOptions> = {}
   ) => {
+    // Store parameters for potential retry
+    lastExportRef.current = { format, options: customOptions };
+
     try {
-      // Map ExportButton options to export utility options
-      const mappedOptions: any = {
-        ...customOptions,
-        includeSectionBreakdown: (customOptions as any).includeSectionDetails || customOptions.includeSectionBreakdown,
-        includeGaps: (customOptions as any).includeGapAnalysis || customOptions.includeGaps,
-      };
-      delete mappedOptions.includeSectionDetails;
-      delete mappedOptions.includeGapAnalysis;
-      delete mappedOptions.includeTrendAnalysis;
-      delete mappedOptions.includeOverview;
-      delete mappedOptions.includeCharts;
-      delete mappedOptions.includeBenchmarks;
+      // Map UI option names to export utility option names
+      const mappedOptions = mapUIOptionsToExportOptions(customOptions);
 
       // Capture chart images if PDF format and charts are requested
       let chartImages = {};
-      if (format === 'pdf' && (customOptions as any).includeCharts !== false) {
+      if (format === 'pdf' && mappedOptions.includeCharts !== false) {
         chartImages = await captureChartImages();
+        // Don't delete includeCharts for PDF - pass it to export utility
+      }
+
+      // Remove includeCharts for non-PDF formats as it's not applicable
+      if (format !== 'pdf') {
+        delete mappedOptions.includeCharts;
       }
 
       // Validate data first
@@ -333,7 +370,8 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
         companyName,
         reportTitle,
         ...mappedOptions,
-        chartImages
+        chartImages,
+        estimatedBreakdown
       });
 
       const validation = validateExportData(results, baseOptions);
@@ -353,7 +391,10 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
       });
 
       // Show initial toast
-      showToast(`Starting ${format.toUpperCase()} export...`, 'info');
+      toast({
+        title: 'Export Started',
+        description: `Starting ${format.toUpperCase()} export...`,
+      });
 
       // Execute export with progress tracking
       const result = await exportAssessment(results, baseOptions, handleProgress);
@@ -368,10 +409,11 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
           result
         }));
 
-        showToast(
-          `${format.toUpperCase()} export completed successfully! File: ${result.filename}`,
-          'success'
-        );
+        toast({
+          title: 'Export Complete',
+          description: `${format.toUpperCase()} export completed successfully! File: ${result.filename}`,
+          variant: 'default',
+        });
         onExportComplete?.(result);
       } else {
         throw new Error(result.error || 'Export failed');
@@ -387,15 +429,24 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
         currentStep: 'Export failed'
       }));
 
-      showToast(`Export failed: ${errorMessage}`, 'error');
+      toast({
+        title: 'Export Failed',
+        description: errorMessage,
+        variant: 'destructive',
+      });
       onExportError?.(errorMessage);
     }
   }, [results, companyName, reportTitle, onExportStart, onExportComplete, onExportError, handleProgress, captureChartImages]);
 
   // Handle quick export (without options modal)
   const handleQuickExport = useCallback((format: 'csv' | 'excel' | 'pdf') => {
-    executeExport(format);
-  }, [executeExport]);
+    // Always include companyName and reportTitle even for quick exports
+    const defaultOptions = {
+      companyName,
+      reportTitle
+    };
+    executeExport(format, defaultOptions);
+  }, [executeExport, companyName, reportTitle]);
 
   // Handle advanced export (with options modal)
   const handleAdvancedExport = useCallback((format: 'csv' | 'excel' | 'pdf') => {
@@ -403,7 +454,6 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
       isOpen: true,
       format,
       options: {
-        includeOverview: true,
         includeSectionDetails: true,
         includeGapAnalysis: true,
         includeRecommendations: true,
@@ -423,11 +473,11 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
   // Handle retry
   const handleRetry = useCallback(() => {
     resetExportState();
-    if (exportState.result) {
-      // Retry with same options
-      executeExport(optionsModal.format, optionsModal.options);
+    if (lastExportRef.current) {
+      // Retry with last used options
+      executeExport(lastExportRef.current.format, lastExportRef.current.options);
     }
-  }, [resetExportState, executeExport, exportState.result, optionsModal]);
+  }, [resetExportState, executeExport]);
 
   // Get estimated file size
   const getFileSize = useCallback((format: 'csv' | 'excel' | 'pdf') => {
@@ -542,36 +592,37 @@ export const ExportButton: React.FC<ExportButtonProps> = ({
             <h4 className="font-medium text-gray-900 mb-3">Content to Include</h4>
             <div className="grid grid-cols-2 gap-3">
               {[
-                { key: 'includeOverview', label: 'Overview & Summary' },
-                { key: 'includeSectionDetails', label: 'Section Breakdown' },
-                { key: 'includeGapAnalysis', label: 'Gap Analysis' },
-                { key: 'includeRecommendations', label: 'Recommendations' },
-                { key: 'includeTrendAnalysis', label: 'Trend Analysis' },
-                { key: 'includeCharts', label: 'Charts & Graphs', disabled: format === 'excel' },
-                { key: 'includeExecutiveSummary', label: 'Executive Summary', disabled: format === 'excel' },
-                { key: 'includeBenchmarks', label: 'Benchmarks' }
-              ].map(({ key, label, disabled }) => (
-                <label key={key} className={cn(
-                  "flex items-center gap-2 p-2 rounded border cursor-pointer transition-colors",
-                  disabled ? "opacity-50 cursor-not-allowed bg-gray-50" : "hover:bg-gray-50",
-                  optionsModal.options[key as keyof ExportOptions] ? "border-purple-200 bg-purple-50" : "border-gray-200"
-                )}>
-                  <input
-                    type="checkbox"
-                    checked={optionsModal.options[key as keyof ExportOptions] as boolean || false}
-                    disabled={disabled}
-                    onChange={(e) => setOptionsModal(prev => ({
-                      ...prev,
-                      options: {
-                        ...prev.options,
-                        [key]: e.target.checked
-                      }
-                    }))}
-                    className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
-                  />
-                  <span className="text-sm text-gray-700">{label}</span>
-                </label>
-              ))}
+                { key: 'includeSectionDetails', label: 'Section Breakdown', mapTo: 'includeSectionBreakdown' },
+                { key: 'includeGapAnalysis', label: 'Gap Analysis', mapTo: 'includeGaps' },
+                { key: 'includeRecommendations', label: 'Recommendations', mapTo: 'includeRecommendations' },
+                { key: 'includeTrendAnalysis', label: 'Trend Analysis', mapTo: 'includeTrendAnalysis' },
+                { key: 'includeCharts', label: 'Charts & Graphs', mapTo: 'includeCharts', disabled: format === 'excel' },
+                { key: 'includeExecutiveSummary', label: 'Executive Summary', mapTo: 'includeExecutiveSummary', disabled: format === 'excel' }
+              ].map(({ key, label, disabled }) => {
+                const isChecked = optionsModal.options[key as keyof typeof optionsModal.options] as boolean || false;
+                return (
+                  <label key={key} className={cn(
+                    "flex items-center gap-2 p-2 rounded border cursor-pointer transition-colors",
+                    disabled ? "opacity-50 cursor-not-allowed bg-gray-50" : "hover:bg-gray-50",
+                    isChecked ? "border-purple-200 bg-purple-50" : "border-gray-200"
+                  )}>
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      disabled={disabled}
+                      onChange={(e) => setOptionsModal(prev => ({
+                        ...prev,
+                        options: {
+                          ...prev.options,
+                          [key]: e.target.checked
+                        }
+                      }))}
+                      className="rounded border-gray-300 text-purple-600 focus:ring-purple-500"
+                    />
+                    <span className="text-sm text-gray-700">{label}</span>
+                  </label>
+                );
+              })}
             </div>
           </div>
 

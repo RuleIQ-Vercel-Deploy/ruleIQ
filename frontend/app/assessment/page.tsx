@@ -2,25 +2,27 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { ArrowLeft, Brain, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Brain, Clock, AlertCircle } from 'lucide-react';
 import { AssessmentWizard } from '@/components/assessments/AssessmentWizard';
 import { freemiumService } from '@/lib/api/freemium.service';
 import { frameworkService } from '@/lib/api/frameworks.service';
-import type { AssessmentFramework, AssessmentResult } from '@/lib/assessment-engine/types';
+import type { AssessmentFramework, AssessmentResult, AssessmentProgress } from '@/lib/assessment-engine/types';
+import type { FreemiumAssessmentStartResponse } from '@/types/freemium';
 
 export default function AssessmentPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams?.get('token') ?? null;
 
-  const [sessionData, setSessionData] = useState<any>(null);
+  const [sessionData, setSessionData] = useState<FreemiumAssessmentStartResponse | null>(null);
   const [framework, setFramework] = useState<AssessmentFramework | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [uiProgress, setUiProgress] = useState<{ answered: number; total: number; percentage: number } | null>(null);
+  const [sessionExpiryMinutes, setSessionExpiryMinutes] = useState<number>(60);
 
   useEffect(() => {
     let mounted = true;
@@ -57,6 +59,12 @@ export default function AssessmentPage() {
             percentage: session.progress.progress_percentage ?? 0
           });
         }
+
+        // Calculate initial expiry
+        if (session?.expires_at) {
+          const expiryMs = new Date(session.expires_at).getTime() - Date.now();
+          setSessionExpiryMinutes(Math.max(0, Math.ceil(expiryMs / (1000 * 60))));
+        }
       } catch (err) {
         // Check if component is still mounted before updating error state
         if (!mounted) return;
@@ -76,6 +84,31 @@ export default function AssessmentPage() {
       mounted = false;
     };
   }, [token, router]);
+
+  // Update session expiry timer
+  useEffect(() => {
+    if (!sessionData?.expires_at) return;
+
+    const updateExpiry = () => {
+      const expiryMs = new Date(sessionData.expires_at).getTime() - Date.now();
+      const minutes = Math.max(0, Math.ceil(expiryMs / (1000 * 60)));
+      setSessionExpiryMinutes(minutes);
+
+      // Redirect if expired
+      if (minutes <= 0) {
+        setError('Your session has expired. Please start a new assessment.');
+        setTimeout(() => router.push('/'), 3000);
+      }
+    };
+
+    // Update immediately
+    updateExpiry();
+
+    // Update every 60 seconds
+    const interval = setInterval(updateExpiry, 60000);
+
+    return () => clearInterval(interval);
+  }, [sessionData?.expires_at, router]);
 
   const loadSessionAndFramework = async () => {
     if (!token) return;
@@ -138,11 +171,6 @@ export default function AssessmentPage() {
     }
   };
 
-  const goToResults = () => {
-    if (token) {
-      router.push(`/assessment/results/${token}`);
-    }
-  };
 
   if (loading) {
     return (
@@ -226,68 +254,49 @@ export default function AssessmentPage() {
             <div className="flex items-center gap-4">
               <div className="text-sm text-muted-foreground">
                 <Clock className="mr-1 inline h-4 w-4" />
-                Session expires in{' '}
-                {sessionData.expires_at
-                  ? Math.max(
-                      0,
-                      Math.ceil(
-                        (new Date(sessionData.expires_at).getTime() - Date.now()) / (1000 * 60),
-                      ),
-                    )
-                  : 60}{' '}
-                min
+                Session expires in {sessionExpiryMinutes} min
               </div>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Progress Bar */}
-      <div className="border-b bg-white/80 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-3">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-sm font-medium">Assessment Progress</span>
-            <span className="text-sm text-muted-foreground">
-              {uiProgress ? uiProgress.answered : (sessionData.progress?.current_question ?? 0)} of {uiProgress ? uiProgress.total : (sessionData.progress?.total_questions_estimate ?? 0)} questions
-            </span>
+      {/* Progress Bar - only show when total questions count is positive */}
+      {((uiProgress?.total || 0) > 0 || (sessionData.progress?.total_questions_estimate || 0) > 0) && (
+        <div className="border-b bg-white/80 backdrop-blur-sm">
+          <div className="container mx-auto px-4 py-3">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-sm font-medium">Assessment Progress</span>
+              <span className="text-sm text-muted-foreground">
+                {uiProgress ? uiProgress.answered : (sessionData.progress?.current_question ?? 0)} of {uiProgress ? uiProgress.total : (sessionData.progress?.total_questions_estimate ?? 0)} questions
+              </span>
+            </div>
+            <Progress value={uiProgress ? uiProgress.percentage : (sessionData.progress?.progress_percentage ?? 0)} className="h-2" />
           </div>
-          <Progress value={uiProgress ? uiProgress.percentage : (sessionData.progress?.progress_percentage ?? 0)} className="h-2" />
         </div>
-      </div>
+      )}
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         <div className="mx-auto max-w-4xl">
-          {(sessionData.progress?.current_question ?? 0) >= (sessionData.progress?.total_questions_estimate ?? 1) ? (
-            <Card className="p-8 text-center">
-              <CheckCircle className="mx-auto mb-4 h-16 w-16 text-purple-600" />
-              <h2 className="mb-2 text-2xl font-bold">Assessment Complete!</h2>
-              <p className="mb-6 text-muted-foreground">
-                Your AI-powered compliance assessment has been completed successfully.
-              </p>
-              <Button onClick={goToResults}>
-                View Results
-              </Button>
-            </Card>
-          ) : (
-            <AssessmentWizard
-              framework={framework}
-              assessmentId={token}  // Pass the token as assessmentId for proper API calls
-              businessProfileId={sessionData.lead_id || 'freemium-user'}
-              onComplete={handleAssessmentComplete}
-              onSave={(progress) => {
-                // Update UI progress
-                setUiProgress({
-                  answered: progress.answeredQuestions,
-                  total: progress.totalQuestions,
-                  percentage: progress.percentComplete
-                });
-                // Optional: Save progress to freemium service
-                console.log('Assessment progress:', progress);
-              }}
-              onExit={() => router.push('/')}
-            />
-          )}
+          <AssessmentWizard
+            framework={framework}
+            assessmentId={token}  // Pass the token as assessmentId for proper API calls
+            businessProfileId={sessionData.session_id}  // Note: freemium start response has no lead_id; trend linking uses lead_id at results time.
+            enableIncrementalSubmissions={false}  // Disable for freemium unless mapping layer is provided
+            onComplete={handleAssessmentComplete}
+            onSave={(progress: AssessmentProgress) => {
+              // Update UI progress
+              setUiProgress({
+                answered: progress.answeredQuestions,
+                total: progress.totalQuestions,
+                percentage: progress.percentComplete
+              });
+              // Optional: Save progress to freemium service
+              console.log('Assessment progress:', progress);
+            }}
+            onExit={() => router.push('/')}
+          />
         </div>
       </main>
 

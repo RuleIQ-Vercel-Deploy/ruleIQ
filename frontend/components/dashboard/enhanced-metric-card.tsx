@@ -64,7 +64,7 @@ export function EnhancedMetricCard({
       className={cn(
         'cursor-pointer flex-col items-start justify-start p-6',
         'hover-lift transition-all duration-250',
-        gradient && 'bg-gradient-to-br from-white to-teal-50/30',
+        gradient && 'bg-gradient-to-br from-white to-purple-50/30',
         className,
       )}
       glass
@@ -74,7 +74,7 @@ export function EnhancedMetricCard({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             {icon && (
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-teal-100 to-teal-200 text-teal-600 shadow-elevation-low">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-purple-100 to-purple-200 text-purple-600 shadow-elevation-low">
                 {icon}
               </div>
             )}

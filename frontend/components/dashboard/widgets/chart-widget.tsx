@@ -36,12 +36,12 @@ interface ChartWidgetProps {
 }
 
 const defaultColors = [
-  '#2C7A7B', // teal-600 - primary
-  '#319795', // teal-500 - secondary
-  '#4FD1C5', // teal-300 - bright
-  '#81E6D9', // teal-200 - light
-  '#285E61', // teal-700 - dark
-  '#234E52', // teal-800 - darker
+  '#8B5CF6', // purple-500 - primary
+  '#7C3AED', // purple-600 - secondary
+  '#C084FC', // purple-400 - bright
+  '#A78BFA', // purple-400 - light
+  '#6D28D9', // purple-700 - dark
+  '#5B21B6', // purple-800 - darker
 ];
 
 export function ChartWidget({

@@ -39,7 +39,7 @@ if settings.is_testing:
     general_limiter = RateLimiter(requests_per_minute=100)
     auth_limiter = RateLimiter(requests_per_minute=50)
 else:
-    general_limiter = RateLimiter(requests_per_minute=settings.rate_limit_requests)
+    general_limiter = RateLimiter(requests_per_minute=getattr(settings, 'rate_limit_requests', 60))
     auth_limiter = RateLimiter(requests_per_minute=10)
 strict_test_limiter = RateLimiter(requests_per_minute=4)
 

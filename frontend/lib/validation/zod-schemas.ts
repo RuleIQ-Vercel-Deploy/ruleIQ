@@ -157,6 +157,30 @@ export const AssessmentAnswerRequestSchema = z.object({
   metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
+export const CompleteAssessmentRequestSchema = z.object({
+  completed_at: z.string(),
+  answers: z.array(z.object({
+    question_id: z.string(),
+    value: z.any().refine((val) => {
+      // Ensure no File or Blob objects are in the value
+      if (val instanceof File || val instanceof Blob) return false;
+      if (Array.isArray(val)) {
+        return !val.some(item => item instanceof File || item instanceof Blob);
+      }
+      return true;
+    }, "File objects must be serialized before submission"),
+  })),
+  section_scores: z.record(z.string(), z.number().min(0).max(100)),
+  overall_score: z.number().min(0).max(100),
+  compliance_score: z.number().min(0).max(100).optional(),
+  risk_score: z.number().nullable().optional(),
+  metadata: z.object({
+    framework_id: z.string(),
+    completion_time: z.number(),
+    user_agent: z.string(),
+  }),
+});
+
 export const ProgressSchema = z.object({
   current_question: z.number(),
   total_questions_estimate: z.number(),
@@ -388,8 +412,12 @@ export const AssessmentQuestionResponseSchema = z.object({
 
 export const AssessmentResultsResponseSchema = z.object({
   session_id: z.string().uuid(),
-  overall_score: z.number().min(0).max(100),
-  risk_level: z.enum(['low', 'medium', 'high', 'critical']),
+  lead_id: z.string().optional(),
+  session_token: z.string(),
+  compliance_score: z.number().min(0).max(100),
+  risk_score: z.number().min(0).max(100),
+  completion_percentage: z.number().min(0).max(100),
+  results_summary: z.string(),
   compliance_gaps: z.array(z.object({
     area: z.string(),
     requirement: z.string(),
@@ -404,9 +432,20 @@ export const AssessmentResultsResponseSchema = z.object({
     priority: z.enum(['low', 'medium', 'high', 'critical']),
     estimated_effort: z.string().optional(),
   })),
-  strengths: z.array(z.string()),
-  weaknesses: z.array(z.string()),
-  created_at: z.string().datetime(),
+  detailed_analysis: z.object({
+    strengths: z.array(z.string()),
+    weaknesses: z.array(z.string()),
+    critical_areas: z.array(z.string()),
+    next_steps: z.array(z.string()),
+  }),
+  conversion_cta: z.object({
+    primary_message: z.string(),
+    secondary_message: z.string(),
+    cta_button_text: z.string(),
+    urgency_indicator: z.string().optional(),
+  }),
+  results_generated_at: z.string().datetime(),
+  results_expire_at: z.string().datetime(),
 });
 
 export const HealthStatusSchema = z.object({
@@ -697,6 +736,7 @@ export const createSafeParser = <T>(schema: z.ZodType<T>) => (value: unknown): T
 export type LeadCaptureRequest = z.infer<typeof LeadCaptureRequestSchema>;
 export type AssessmentStartRequest = z.infer<typeof AssessmentStartRequestSchema>;
 export type AssessmentAnswerRequest = z.infer<typeof AssessmentAnswerRequestSchema>;
+export type CompleteAssessmentRequest = z.infer<typeof CompleteAssessmentRequestSchema>;
 export type FreemiumAssessmentResponse = z.infer<typeof FreemiumAssessmentStartResponseSchema>;
 export type AssessmentQuestionResponse = z.infer<typeof AssessmentQuestionResponseSchema>;
 export type LeadResponse = z.infer<typeof LeadResponseSchema>;

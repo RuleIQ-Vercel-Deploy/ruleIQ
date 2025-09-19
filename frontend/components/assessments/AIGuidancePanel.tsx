@@ -20,8 +20,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
-import { useToast } from '@/hooks/use-toast';
-import { assessmentAIService, type AIHelpResponse } from '@/lib/api/assessments-ai.service';
+import { useToast } from '@/components/ui/use-toast';
+import type { AIHelpResponse } from '@/lib/api/assessments-ai.service';
 import { type Question } from '@/lib/assessment-engine/types';
 import { cn } from '@/lib/utils';
 import { type UserContext } from '@/types/ai';
@@ -66,8 +66,45 @@ export function AIGuidancePanel({
     setRequestId(currentRequestId);
     setLoading(true);
     setError(null);
+    
+    // Track AI guidance request attempts for monitoring
+    const startTime = Date.now();
 
     try {
+      // Dynamic import to handle missing service gracefully
+      const { assessmentAIService } = await import('@/lib/api/assessments-ai.service').catch(() => ({
+        assessmentAIService: null
+      }));
+
+      if (!assessmentAIService) {
+        // Log AI service unavailability for monitoring
+        console.warn('[AIGuidancePanel] AI service not available, using fallback', {
+          questionId: question.id,
+          frameworkId,
+          timestamp: new Date().toISOString(),
+          loadTimeMs: Date.now() - startTime
+        });
+        
+        // Fallback if service is not available
+        setRequestId((latestRequestId) => {
+          if (currentRequestId === latestRequestId) {
+            setAiResponse({
+              guidance: 'AI guidance is currently unavailable. Please ensure you provide complete and accurate information for this compliance requirement.',
+              confidence_score: 0.5,
+              related_topics: ['Compliance Requirements'],
+              follow_up_suggestions: [
+                'Review the question carefully',
+                'Consider your current compliance practices',
+                'Document your response thoroughly'
+              ]
+            });
+            setLoading(false);
+          }
+          return latestRequestId;
+        });
+        return;
+      }
+
       const helpRequest = {
         question_id: question.id,
         question_text: question.text,
@@ -83,13 +120,43 @@ export function AIGuidancePanel({
         if (currentRequestId === latestRequestId) {
           setAiResponse(response);
           setLoading(false);
+          
+          // Log successful AI guidance load for monitoring
+          console.info('[AIGuidancePanel] AI guidance loaded successfully', {
+            questionId: question.id,
+            frameworkId,
+            loadTimeMs: Date.now() - startTime,
+            confidenceScore: response.confidence_score,
+            timestamp: new Date().toISOString()
+          });
         }
         return latestRequestId;
       });
     } catch (err) {
+      // Log AI guidance error for monitoring
+      console.error('[AIGuidancePanel] Error loading AI guidance', {
+        questionId: question.id,
+        frameworkId,
+        error: err instanceof Error ? err.message : 'Unknown error',
+        loadTimeMs: Date.now() - startTime,
+        timestamp: new Date().toISOString()
+      });
+      
       setRequestId((latestRequestId) => {
         if (currentRequestId === latestRequestId) {
-          setError(err instanceof Error ? err.message : 'Failed to load AI guidance');
+          // Provide a fallback response on error
+          const fallbackResponse: AIHelpResponse = {
+            guidance: 'Unable to load AI guidance at this time. Please consider the compliance requirements carefully and provide thorough documentation of your practices.',
+            confidence_score: 0.3,
+            related_topics: ['Compliance', 'Documentation'],
+            follow_up_suggestions: [
+              'Review compliance framework requirements',
+              'Document current practices',
+              'Identify areas for improvement'
+            ]
+          };
+          setAiResponse(fallbackResponse);
+          setError('AI service temporarily unavailable');
           setLoading(false);
         }
         return latestRequestId;

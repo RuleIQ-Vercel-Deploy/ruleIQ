@@ -75,7 +75,7 @@ class DevelopmentConfig(BaseConfig):
                 "DATABASE_URL", "postgresql://localhost/ruleiq_dev",
             ),
             "REDIS_URL": kwargs.get("REDIS_URL", "redis://localhost:6379/0"),
-            "NEO4J_URI": kwargs.get("NEO4J_URI", "bolt://localhost:7688"),
+            "NEO4J_URI": kwargs.get("NEO4J_URI", "neo4j+s://12e71bc4.databases.neo4j.io"),
             "NEO4J_USERNAME": kwargs.get("NEO4J_USERNAME", "neo4j"),
             "NEO4J_PASSWORD": kwargs.get("NEO4J_PASSWORD", "ruleiq123"),
         }

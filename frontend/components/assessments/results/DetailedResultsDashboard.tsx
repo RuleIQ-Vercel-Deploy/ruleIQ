@@ -15,22 +15,25 @@ import { AssessmentResult, Gap, Recommendation } from '@/lib/assessment-engine/t
 import { AssessmentResultsResponse } from '@/types/freemium';
 import { TrendDataPoint, SectionScoreDetail } from '@/types/assessment-results';
 
-// Use SectionScoreDetail but keep a type alias for backward compatibility
-type SectionScore = {
-  id: string;
-  name: string;
-  score: number;
-  questionsAnswered: number;
-  totalQuestions: number;
-  riskLevel: 'low' | 'medium' | 'high' | 'critical';
-  status: 'complete' | 'partial' | 'not_started';
-  strengths: string[];
-  improvements: string[];
+// Helper function to format section names from IDs
+const formatSectionName = (id: string): string => {
+  // Handle kebab-case, snake_case, and camelCase
+  return id
+    // Convert kebab-case to spaces
+    .replace(/-/g, ' ')
+    // Convert snake_case to spaces
+    .replace(/_/g, ' ')
+    // Convert camelCase to spaces (but preserve existing spaces)
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    // Capitalize each word
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
 };
 
 interface DetailedResultsDashboardProps {
   results: AssessmentResult;  // Only accept AssessmentResult format
-  sectionDetails?: SectionScore[];
+  sectionDetails?: SectionScoreDetail[];
   trendData?: TrendDataPoint[];
 
   isExporting?: boolean;
@@ -48,13 +51,28 @@ export function DetailedResultsDashboard({
 }: DetailedResultsDashboardProps) {
   const [activeTab, setActiveTab] = useState('overview');
   
+  // Helper function to normalize section identifiers for consistent mapping
+  const normalizeSectionId = (id: string): string => {
+    return id
+      .toLowerCase()
+      .replace(/\s+/g, '_')
+      .replace(/-/g, '_')
+      .replace(/[^a-z0-9_]/g, '');
+  };
+  
   // Directly use results (AssessmentResult format)
   const { overallScore, gaps, recommendations, sectionScores, completedAt } = results;
-  const completionPercentage = 100; // AssessmentResult is always complete
+  const completedDate = typeof completedAt === 'string' ? new Date(completedAt) : completedAt;
+
+  // Calculate provisional completion percentage for section details generation
+  // This will be recalculated more accurately after sections are determined
+  const provisionalCompletionPercentage = sectionDetails.length > 0 
+    ? Math.round((sectionDetails.filter(s => s.completionStatus === 'complete').length / sectionDetails.length) * 100)
+    : 100; // Default to 100 if no sections provided
 
   // Generate default section details if not provided
   // Use deterministic counts based on completion percentage and section scores
-  const defaultSectionDetails: SectionScore[] = Object.entries(sectionScores).map(([id, score]) => {
+  const defaultSectionDetails: SectionScoreDetail[] = Object.entries(sectionScores).map(([id, score]) => {
     // NOTE: These are estimated values when actual section data is not available
     // In production, these should be derived from actual assessment framework data
     // Consider showing an "estimated" badge in the UI for these values
@@ -62,34 +80,50 @@ export function DetailedResultsDashboard({
     const totalQuestionsPerSection = 10; // Estimated standard questions per section
 
     // Calculate questions answered based on completion percentage and score
-    const questionsAnswered = completionPercentage < 100
-      ? Math.floor((completionPercentage / 100) * totalQuestionsPerSection)
+    const questionsAnswered = provisionalCompletionPercentage < 100
+      ? Math.floor((provisionalCompletionPercentage / 100) * totalQuestionsPerSection)
       : Math.round((score / 100) * totalQuestionsPerSection);
 
     return {
-      id,
-      name: id.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()),
+      sectionId: id,
+      sectionName: formatSectionName(id),
+      sectionDescription: `Assessment for ${formatSectionName(id)}`,
       score,
-      questionsAnswered,
+      maxScore: 100,
+      percentage: score,
       totalQuestions: totalQuestionsPerSection,
+      answeredQuestions: questionsAnswered,
+      skippedQuestions: totalQuestionsPerSection - questionsAnswered,
+      completionStatus: provisionalCompletionPercentage >= 100 ? 'complete' : provisionalCompletionPercentage > 50 ? 'partial' : 'not_started',
       riskLevel: score >= 80 ? 'low' : score >= 60 ? 'medium' : score >= 40 ? 'high' : 'critical',
-      status: completionPercentage >= 100 ? 'complete' : completionPercentage > 50 ? 'partial' : 'not_started',
       strengths: score >= 60 ? ['Good implementation practices', 'Adequate documentation'] : [],
-      improvements: score < 80 ? ['Enhanced monitoring needed', 'Regular reviews required'] : []
-    };
+      weaknesses: score < 80 ? ['Enhanced monitoring needed', 'Regular reviews required'] : [],
+      keyFindings: [],
+      questionBreakdown: [],
+      sectionRecommendations: [],
+      sectionGaps: [],
+      historicalScores: []
+    } as SectionScoreDetail;
   });
 
   const sectionsToDisplay = sectionDetails.length > 0 ? sectionDetails : defaultSectionDetails;
+  const isUsingEstimatedData = sectionDetails.length === 0;
+
+  // Calculate completion percentage from sections data
+  const completedSections = sectionsToDisplay.filter(s => s.completionStatus === 'complete').length;
+  const completionPercentage = sectionsToDisplay.length > 0
+    ? Math.round((completedSections / sectionsToDisplay.length) * 100)
+    : 100; // Default to 100 if no sections
 
   // Calculate summary statistics
   const totalQuestions = sectionsToDisplay.reduce((sum, section) => sum + section.totalQuestions, 0);
-  const answeredQuestions = sectionsToDisplay.reduce((sum, section) => sum + section.questionsAnswered, 0);
-  const nextAssessmentDate = new Date(completedAt);
+  const answeredQuestions = sectionsToDisplay.reduce((sum, section) => sum + section.answeredQuestions, 0);
+  const nextAssessmentDate = new Date(completedDate);
   nextAssessmentDate.setMonth(nextAssessmentDate.getMonth() + 6);
 
   // Prepare gap analysis data
   const gapAnalysisData = sectionsToDisplay.map(section => ({
-    name: section.name,
+    name: section.sectionName,
     score: section.score
   }));
 
@@ -109,12 +143,13 @@ export function DetailedResultsDashboard({
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Assessment Results</h1>
           <p className="text-muted-foreground">
-            Completed on {completedAt.toLocaleDateString()}
+            Completed on {completedDate.toLocaleDateString()}
           </p>
         </div>
         <ExportButton
           results={results}
           trendData={trendData}
+          estimatedBreakdown={isUsingEstimatedData}
         />
       </div>
 
@@ -123,7 +158,7 @@ export function DetailedResultsDashboard({
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-teal-600" />
+              <CheckCircle className="h-5 w-5 text-purple-600" />
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Questions Answered</p>
                 <p className="text-2xl font-bold">{answeredQuestions}/{totalQuestions}</p>
@@ -135,7 +170,7 @@ export function DetailedResultsDashboard({
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center gap-2">
-              <Target className="h-5 w-5 text-teal-600" />
+              <Target className="h-5 w-5 text-purple-600" />
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Completion</p>
                 <p className="text-2xl font-bold">{Math.round(completionPercentage)}%</p>
@@ -147,10 +182,10 @@ export function DetailedResultsDashboard({
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-teal-600" />
+              <Calendar className="h-5 w-5 text-purple-600" />
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Assessment Date</p>
-                <p className="text-sm font-bold">{completedAt.toLocaleDateString()}</p>
+                <p className="text-sm font-bold">{completedDate.toLocaleDateString()}</p>
               </div>
             </div>
           </CardContent>
@@ -159,7 +194,7 @@ export function DetailedResultsDashboard({
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center gap-2">
-              <Clock className="h-5 w-5 text-teal-600" />
+              <Clock className="h-5 w-5 text-purple-600" />
               <div>
                 <p className="text-sm font-medium text-muted-foreground">Next Assessment</p>
                 <p className="text-sm font-bold">{nextAssessmentDate.toLocaleDateString()}</p>
@@ -190,7 +225,9 @@ export function DetailedResultsDashboard({
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex justify-center">
-                <ComplianceScoreGauge score={overallScore} />
+                <div id="compliance-gauge-chart">
+                  <ComplianceScoreGauge score={overallScore} />
+                </div>
               </CardContent>
             </Card>
 
@@ -226,7 +263,7 @@ export function DetailedResultsDashboard({
                 <div className="flex justify-between">
                   <span className="text-sm font-medium">Sections Completed</span>
                   <span className="text-sm font-bold">
-                    {sectionsToDisplay.filter(s => s.status === 'complete').length}/{sectionsToDisplay.length}
+                    {sectionsToDisplay.filter(s => s.completionStatus === 'complete').length}/{sectionsToDisplay.length}
                   </span>
                 </div>
               </CardContent>
@@ -243,7 +280,9 @@ export function DetailedResultsDashboard({
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <GapAnalysisChart data={gapAnalysisData} />
+                <div id="gap-analysis-chart-overview">
+                  <GapAnalysisChart data={gapAnalysisData} />
+                </div>
               </CardContent>
             </Card>
           )}
@@ -251,34 +290,60 @@ export function DetailedResultsDashboard({
 
         {/* Section Details Tab */}
         <TabsContent value="sections" className="space-y-6">
+          {/* Show estimated badge if using heuristic data */}
+          {isUsingEstimatedData && (
+            <div className="flex items-center gap-2 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+              <span className="px-2 py-1 text-xs font-medium text-amber-800 bg-amber-100 rounded">
+                Estimated
+              </span>
+              <p className="text-sm text-amber-700">
+                Detailed breakdown is estimated based on overall scores. Complete a full assessment for precise metrics.
+              </p>
+            </div>
+          )}
           <div className="space-y-6">
             {sectionsToDisplay.map((section) => {
               // Transform section data to SectionScorecard format
               const scorecardData = {
                 section: {
-                  id: section.id,
-                  title: section.name,
-                  description: `Assessment section covering ${section.name.toLowerCase()} compliance requirements`,
+                  id: section.sectionId,
+                  title: section.sectionName,
+                  description: section.sectionDescription || `Assessment section covering ${section.sectionName.toLowerCase()} compliance requirements`,
                   questions: []
                 },
                 score: section.score,
-                maxScore: 100,
-                questionsAnswered: section.questionsAnswered,
+                maxScore: section.maxScore || 100,
+                questionsAnswered: section.answeredQuestions,
                 totalQuestions: section.totalQuestions,
-                completionStatus: section.status,
+                completionStatus: section.completionStatus,
                 riskLevel: section.riskLevel,
                 strengths: section.strengths,
-                improvements: section.improvements,
+                improvements: section.weaknesses,
                 questionDetails: [],
-                relatedGaps: gaps.filter(gap => gap.section === section.id || gap.category === section.name),
-                relatedRecommendations: recommendations.filter(rec => rec.category === section.name)
+                relatedGaps: gaps.filter(gap => {
+                  const normalizedGapSection = gap.section ? normalizeSectionId(gap.section) : '';
+                  const normalizedGapCategory = gap.category ? normalizeSectionId(gap.category) : '';
+                  const normalizedSectionId = normalizeSectionId(section.sectionId);
+                  const normalizedSectionName = normalizeSectionId(section.sectionName);
+                  return normalizedGapSection === normalizedSectionId || 
+                         normalizedGapCategory === normalizedSectionId ||
+                         normalizedGapCategory === normalizedSectionName;
+                }),
+                relatedRecommendations: recommendations.filter(rec => {
+                  const normalizedRecCategory = rec.category ? normalizeSectionId(rec.category) : '';
+                  const normalizedSectionId = normalizeSectionId(section.sectionId);
+                  const normalizedSectionName = normalizeSectionId(section.sectionName);
+                  return normalizedRecCategory === normalizedSectionId || 
+                         normalizedRecCategory === normalizedSectionName;
+                })
               };
               
               return (
                 <SectionScorecard
-                  key={section.id}
+                  key={section.sectionId}
                   scorecard={scorecardData}
                   defaultExpanded={false}
+                  isEstimated={isUsingEstimatedData}
                 />
               );
             })}
@@ -297,7 +362,9 @@ export function DetailedResultsDashboard({
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <GapAnalysisChart data={gapAnalysisData} />
+                <div id="gap-analysis-chart-gaps">
+                  <GapAnalysisChart data={gapAnalysisData} />
+                </div>
               </CardContent>
             </Card>
 
@@ -354,9 +421,11 @@ export function DetailedResultsDashboard({
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <TrendAnalysisChart
-                  data={trendData}
-                />
+                <div id="trend-analysis-chart">
+                  <TrendAnalysisChart
+                    data={trendData}
+                  />
+                </div>
               </CardContent>
             </Card>
           ) : (

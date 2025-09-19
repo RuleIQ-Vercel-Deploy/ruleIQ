@@ -175,6 +175,7 @@ export interface ComplianceRecommendation {
 
 export interface AssessmentResultsResponse {
   session_id: string;
+  lead_id?: string;
   session_token: string;
   compliance_score: number;
   risk_score: number;

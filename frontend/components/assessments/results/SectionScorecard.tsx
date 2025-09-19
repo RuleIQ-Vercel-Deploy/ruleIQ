@@ -8,8 +8,10 @@ import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { AssessmentSection, Answer, Gap, Recommendation } from '@/lib/assessment-engine/types';
+import type { SectionScoreDetail as SharedSectionScoreDetail } from '@/types/assessment-results';
 
-interface SectionScoreDetail {
+// Extend the shared type for this component's specific needs
+interface SectionQuestionDetail {
   questionId: string;
   questionText: string;
   answer: Answer | null;
@@ -19,28 +21,25 @@ interface SectionScoreDetail {
   explanation?: string;
 }
 
-interface SectionScorecard {
+interface SectionScorecardData extends Omit<SharedSectionScoreDetail, 'sectionId' | 'sectionName' | 'sectionDescription' | 'percentage'> {
   section: AssessmentSection;
-  score: number;
-  maxScore: number;
+  percentage?: number;
   questionsAnswered: number;
-  totalQuestions: number;
-  completionStatus: 'complete' | 'partial' | 'not_started';
-  riskLevel: 'low' | 'medium' | 'high' | 'critical';
   strengths: string[];
   improvements: string[];
-  questionDetails: SectionScoreDetail[];
+  questionDetails: SectionQuestionDetail[];
   relatedGaps: Gap[];
   relatedRecommendations: Recommendation[];
 }
 
 interface SectionScorecardProps {
-  scorecard: SectionScorecard;
+  scorecard: SectionScorecardData;
   className?: string;
   defaultExpanded?: boolean;
+  isEstimated?: boolean;
 }
 
-const getRiskLevelColor = (riskLevel: SectionScorecard['riskLevel']) => {
+const getRiskLevelColor = (riskLevel: SectionScorecardData['riskLevel']) => {
   switch (riskLevel) {
     case 'low':
       return 'text-green-700 bg-green-50 border-green-200';
@@ -55,7 +54,7 @@ const getRiskLevelColor = (riskLevel: SectionScorecard['riskLevel']) => {
   }
 };
 
-const getCompletionStatusColor = (status: SectionScorecard['completionStatus']) => {
+const getCompletionStatusColor = (status: SectionScorecardData['completionStatus']) => {
   switch (status) {
     case 'complete':
       return 'text-green-700 bg-green-50';
@@ -68,7 +67,7 @@ const getCompletionStatusColor = (status: SectionScorecard['completionStatus']) 
   }
 };
 
-const getCompletionStatusIcon = (status: SectionScorecard['completionStatus']) => {
+const getCompletionStatusIcon = (status: SectionScorecardData['completionStatus']) => {
   switch (status) {
     case 'complete':
       return <CheckCircle className="h-4 w-4" />;
@@ -81,7 +80,7 @@ const getCompletionStatusIcon = (status: SectionScorecard['completionStatus']) =
   }
 };
 
-const getRiskLevelIcon = (riskLevel: SectionScorecard['riskLevel']) => {
+const getRiskLevelIcon = (riskLevel: SectionScorecardData['riskLevel']) => {
   switch (riskLevel) {
     case 'low':
       return <CheckCircle className="h-4 w-4" />;
@@ -103,7 +102,7 @@ const Badge: React.FC<{
 }> = ({ children, variant = 'default', className }) => {
   const baseClasses = 'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors';
   const variantClasses = {
-    default: 'bg-teal-100 text-teal-800',
+    default: 'bg-purple-100 text-purple-800',
     secondary: 'bg-gray-100 text-gray-800',
     outline: 'border border-gray-200 bg-white text-gray-800',
   };
@@ -119,11 +118,12 @@ export const SectionScorecard: React.FC<SectionScorecardProps> = ({
   scorecard,
   className,
   defaultExpanded = false,
+  isEstimated = false,
 }) => {
   const [isExpanded, setIsExpanded] = React.useState(defaultExpanded);
   const [activeTab, setActiveTab] = React.useState<'questions' | 'findings' | 'recommendations'>('questions');
 
-  const scorePercentage = scorecard.maxScore > 0 ? Math.round((scorecard.score / scorecard.maxScore) * 100) : 0;
+  const scorePercentage = scorecard.percentage ?? (scorecard.maxScore > 0 ? Math.round((scorecard.score / scorecard.maxScore) * 100) : 0);
   const completionPercentage = scorecard.totalQuestions > 0 
     ? Math.round((scorecard.questionsAnswered / scorecard.totalQuestions) * 100) 
     : 0;
@@ -144,9 +144,16 @@ export const SectionScorecard: React.FC<SectionScorecardProps> = ({
       <CardHeader className="pb-4">
         <div className="flex items-start justify-between">
           <div className="flex-1 min-w-0">
-            <CardTitle className="text-lg font-semibold text-gray-900 mb-2">
-              {scorecard.section.title}
-            </CardTitle>
+            <div className="flex items-center gap-2 mb-2">
+              <CardTitle className="text-lg font-semibold text-gray-900">
+                {scorecard.section.title}
+              </CardTitle>
+              {isEstimated && (
+                <span className="px-2 py-0.5 text-xs font-medium text-amber-700 bg-amber-100 border border-amber-200 rounded" title="Detailed breakdown is estimated based on overall scores">
+                  Estimated
+                </span>
+              )}
+            </div>
             {scorecard.section.description && (
               <p className="text-sm text-gray-600 mb-3">
                 {scorecard.section.description}
@@ -175,7 +182,7 @@ export const SectionScorecard: React.FC<SectionScorecardProps> = ({
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-700">Score</span>
-              <span className="text-2xl font-bold text-teal-700">
+              <span className="text-2xl font-bold text-purple-700">
                 {scorePercentage}%
               </span>
             </div>
@@ -245,7 +252,7 @@ export const SectionScorecard: React.FC<SectionScorecardProps> = ({
                   className={cn(
                     'whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm transition-colors',
                     activeTab === tab.key
-                      ? 'border-teal-500 text-teal-600'
+                      ? 'border-purple-500 text-purple-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   )}
                   aria-selected={activeTab === tab.key}

@@ -255,7 +255,7 @@ export function getStatusColor(status: string): string {
     'in-progress': 'text-blue-600',
     pending: 'text-amber-600',
     overdue: 'text-red-600',
-    active: 'text-teal-600',
+    active: 'text-purple-600',
     inactive: 'text-gray-600',
   };
   return statusMap[status.toLowerCase()] || 'text-gray-600';

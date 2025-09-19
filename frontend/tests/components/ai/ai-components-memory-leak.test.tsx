@@ -21,7 +21,7 @@ vi.mock('@/lib/api/services/assessment-ai.service', () => ({
 }));
 
 // Mock the toast hook
-vi.mock('@/components/ui/use-toast', () => ({
+vi.mock('@/hooks/use-toast', () => ({
   useToast: () => ({
     toast: vi.fn(),
   }),

@@ -420,6 +420,7 @@ export class QuestionnaireEngine {
       gaps,
       recommendations,
       completedAt: new Date(),
+      answers: Array.from(this.context.answers.values()),
     };
   }
 

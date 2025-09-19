@@ -41,7 +41,7 @@ import { useKeyboardShortcuts } from '@/lib/hooks/use-keyboard-shortcuts';
 import { WidgetPosition, DragState } from '@/types/layout';
 import { generateAccessibilityAnnouncements } from '@/lib/utils/accessibility-announcements';
 import { DragPreview } from './layout/DragPreview';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/hooks/use-toast';
 
 export interface WidgetConfig {
   id: string;

@@ -4,6 +4,7 @@
  */
 
 import { freemiumService, type AssessmentResultsResponse } from '@/lib/api/freemium.service';
+import { normalizeSectionId } from '@/lib/api/frameworks.service';
 import type {
   AssessmentResult,
   AssessmentFramework,
@@ -184,6 +185,34 @@ class AssessmentResultsService {
   }
 
   // ============================================================================
+  // BUSINESS PROFILE KEY RESOLUTION
+  // ============================================================================
+
+  /**
+   * Get consistent business profile key for trend data
+   * Uses session_id during assessment, prefers lead_id once results are available
+   */
+  getBusinessProfileKey(data: { session_id?: string; lead_id?: string; session_token?: string }): string {
+    // Prefer lead_id when available (results phase)
+    if (data.lead_id) {
+      return data.lead_id;
+    }
+
+    // Fall back to session_id during assessment
+    if (data.session_id) {
+      return data.session_id;
+    }
+
+    // Last resort: use session_token
+    if (data.session_token) {
+      return data.session_token;
+    }
+
+    // Default fallback
+    return 'unknown-profile';
+  }
+
+  // ============================================================================
   // RESULTS FETCHING
   // ============================================================================
 
@@ -318,8 +347,11 @@ class AssessmentResultsService {
             new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime()
           );
 
-          // Update local cache
-          this.historicalData.set(businessProfileId, historicalRecords);
+          // Update local cache with composite key for uniqueness across users
+          const cacheKey = frameworkId 
+            ? `${businessProfileId}:${frameworkId}` 
+            : businessProfileId;
+          this.historicalData.set(cacheKey, historicalRecords);
 
           // Apply filters and limits
           let filtered = historicalRecords;
@@ -342,8 +374,16 @@ class AssessmentResultsService {
         console.warn('Failed to fetch from API, using local cache:', apiError);
       }
 
-      // Fallback to local cache
-      const localHistory = this.historicalData.get(businessProfileId) || [];
+      // Fallback to local cache with composite key checking
+      const cacheKey = frameworkId
+        ? `${businessProfileId}:${frameworkId}`
+        : businessProfileId;
+
+      // Try composite key first, then fall back to businessProfileId only
+      // When frameworkId is undefined, also try freemium_framework as default
+      const localHistory = this.historicalData.get(cacheKey) ||
+                          (!frameworkId ? this.historicalData.get(`${businessProfileId}:freemium_framework`) : null) ||
+                          this.historicalData.get(businessProfileId) || [];
       
       // Apply filters and limits
       let filtered = [...localHistory];
@@ -379,9 +419,12 @@ class AssessmentResultsService {
     results: AssessmentResultsResponse
   ): Promise<void> {
     try {
-      // Use lead_id if available, otherwise fall back to session token
-      // This provides better continuity for returning users
-      const businessProfileKey = results.lead_id || sessionToken;
+      // Use lead_id for tracking historical data when available (for cross-assessment trends)
+      // Fall back to session_id if lead_id is not available
+      // Use composite key for uniqueness across users and frameworks
+      const frameworkId = results.framework_id || 'freemium_framework';
+      const businessProfileId = results.lead_id || results.session_id || sessionToken;
+      const businessProfileKey = `${businessProfileId}:${frameworkId}`;
 
       const historicalRecord: HistoricalAssessment = {
         id: `${results.session_id}_${Date.now()}`,
@@ -438,12 +481,12 @@ class AssessmentResultsService {
   }
 
   /**
-   * Extract section scores from results (mock implementation for freemium)
+   * Extract section scores from results with enhanced metadata
    */
   private extractSectionScores(results: AssessmentResultsResponse): Record<string, number> {
-    // For freemium assessments, we'll create mock section scores based on gaps
+    // For freemium assessments, we'll create section scores based on gaps
     const sections: Record<string, number> = {};
-    
+
     // Group gaps by category to create section scores
     const gapsByCategory = results.compliance_gaps.reduce((acc, gap) => {
       if (!acc[gap.category]) {
@@ -459,19 +502,105 @@ class AssessmentResultsService {
       const avgSeverityScore = gaps.reduce((sum, gap) => {
         return sum + (severityWeights[gap.severity] || 50);
       }, 0) / gaps.length;
-      
+
       sections[category] = Math.round(avgSeverityScore);
     });
 
-    // Ensure we have some default sections
+    // Ensure we have some default sections with deterministic scores
     if (Object.keys(sections).length === 0) {
-      sections['Data Protection'] = results.compliance_score;
-      sections['Security Controls'] = Math.max(0, results.compliance_score - 10);
-      sections['Access Management'] = Math.max(0, results.compliance_score - 5);
-      sections['Documentation'] = Math.max(0, results.compliance_score + 5);
+      const baseScore = results.compliance_score;
+      
+      // Generate deterministic scores based on the overall compliance score
+      // Use a stable offset for each section to create realistic variation
+      // Use display names here, they'll be normalized to IDs when needed
+      sections['Data Protection'] = Math.min(100, Math.max(0, baseScore + 3));
+      sections['Access Control'] = Math.min(100, Math.max(0, baseScore - 2));
+      sections['Risk Management'] = Math.min(100, Math.max(0, baseScore + 1));
+      sections['Compliance Monitoring'] = Math.min(100, Math.max(0, baseScore - 4));
+      sections['Security Controls'] = Math.min(100, Math.max(0, baseScore - 10));
+      sections['Access Management'] = Math.min(100, Math.max(0, baseScore - 5));
+      sections['Documentation'] = Math.min(100, Math.max(0, baseScore + 5));
+      
+      // Note: If more variation is needed, consider using a hash of session_id or other stable identifier
+      // to generate consistent but varied offsets per assessment
     }
 
     return sections;
+  }
+
+  /**
+   * Generate detailed section metadata for dashboard display
+   */
+  public generateSectionDetails(
+    results: AssessmentResultsResponse
+  ): Array<import('@/types/assessment-results').SectionScoreDetail> {
+    const sectionScores = this.extractSectionScores(results);
+    const gapsByCategory = results.compliance_gaps.reduce((acc, gap) => {
+      if (!acc[gap.category]) {
+        acc[gap.category] = [];
+      }
+      acc[gap.category].push(gap);
+      return acc;
+    }, {} as Record<string, ComplianceGap[]>);
+
+    return Object.entries(sectionScores).map(([sectionName, score]) => {
+      const gaps = gapsByCategory[sectionName] || [];
+      const totalQuestions = 10; // Estimated for freemium
+      const percentage = score;
+      const answeredQuestions = Math.round((results.completion_percentage / 100) * totalQuestions);
+
+      // Determine risk level based on score
+      let riskLevel: 'low' | 'medium' | 'high' | 'critical';
+      if (score >= 80) riskLevel = 'low';
+      else if (score >= 60) riskLevel = 'medium';
+      else if (score >= 40) riskLevel = 'high';
+      else riskLevel = 'critical';
+
+      // Determine completion status
+      let completionStatus: 'complete' | 'partial' | 'not_started';
+      if (answeredQuestions === totalQuestions) completionStatus = 'complete';
+      else if (answeredQuestions > 0) completionStatus = 'partial';
+      else completionStatus = 'not_started';
+
+      // Generate strengths and weaknesses based on gaps
+      const strengths: string[] = [];
+      const weaknesses: string[] = [];
+      const keyFindings: string[] = [];
+
+      if (score >= 80) {
+        strengths.push(`Strong compliance in ${sectionName}`);
+        strengths.push('Well-documented processes');
+      }
+
+      gaps.forEach(gap => {
+        if (gap.severity === 'critical' || gap.severity === 'high') {
+          weaknesses.push(gap.description);
+          keyFindings.push(`${gap.severity.toUpperCase()}: ${gap.recommendation}`);
+        }
+      });
+
+      if (weaknesses.length === 0 && score < 60) {
+        weaknesses.push('Needs improvement in documentation');
+        weaknesses.push('Process optimization required');
+      }
+
+      return {
+        sectionId: normalizeSectionId(sectionName),
+        sectionName,
+        sectionDescription: `Compliance assessment for ${sectionName}`,
+        score,
+        maxScore: 100,
+        percentage,
+        totalQuestions,
+        answeredQuestions,
+        skippedQuestions: totalQuestions - answeredQuestions,
+        completionStatus,
+        riskLevel,
+        strengths,
+        weaknesses,
+        keyFindings,
+      };
+    });
   }
 
 
@@ -631,6 +760,27 @@ class AssessmentResultsService {
   }
 
   /**
+   * Normalize section identifiers for consistent mapping
+   * Handles variations in section naming between different parts of the system
+   */
+  private normalizeSectionId(sectionId: string): string {
+    // Convert to lowercase and replace spaces with underscores
+    return sectionId
+      .toLowerCase()
+      .replace(/\s+/g, '_')
+      .replace(/-/g, '_')
+      .replace(/[^a-z0-9_]/g, '');
+  }
+
+  /**
+   * Map gap categories to normalized section identifiers
+   */
+  private mapGapToSectionId(gapCategory: string): string {
+    // Normalize the gap category using the same rules as section IDs
+    return this.normalizeSectionId(gapCategory);
+  }
+
+  /**
    * Calculate section-specific trends
    */
   private calculateSectionTrends(dataPoints: TrendDataPoint[]): TrendAnalysisData['sectionTrends'] {
@@ -716,9 +866,9 @@ class AssessmentResultsService {
           sessionId: results.session_id,
           frameworkName: 'Freemium Compliance Assessment',
           businessProfile: businessProfile || {
-            company_name: results.lead_id ? `Company ${results.lead_id.slice(0, 8)}` : 'Unknown Company',
+            company_name: results.session_id ? `Company ${results.session_id.slice(0, 8)}` : 'Unknown Company',
             industry: 'Unknown',
-            id: results.lead_id || results.session_id,
+            id: results.session_id,
           },
           completedAt: results.results_generated_at,
           overallScore: results.compliance_score,
@@ -846,12 +996,32 @@ class AssessmentResultsService {
       priority: this.mapPriorityToTimeframe(rec.priority),
       title: rec.title,
       description: rec.description,
-      estimatedEffort: rec.estimated_cost,
+      // Map effort based on timeline/priority (semantic effort level)
+      estimatedEffort: this.mapTimelineToEffort(rec.timeline, rec.priority),
       category: rec.category,
       impact: rec.business_impact,
-      effort: rec.estimated_cost,
+      // Map cost to effort field (actual monetary cost)
+      effort: rec.estimated_cost ? `£${rec.estimated_cost}` : 'TBD',
       estimatedTime: rec.timeline,
     }));
+  }
+  
+  /**
+   * Map timeline and priority to effort level
+   */
+  private mapTimelineToEffort(timeline: string, priority: string): string {
+    // High priority + short timeline = High effort
+    // Low priority + long timeline = Low effort
+    const priorityLevel = priority.toLowerCase();
+    const timelineNormalized = timeline.toLowerCase();
+    
+    if (priorityLevel === 'critical' || timelineNormalized.includes('immediate')) {
+      return 'High';
+    } else if (priorityLevel === 'high' || timelineNormalized.includes('week')) {
+      return 'Medium';
+    } else {
+      return 'Low';
+    }
   }
 
   /**

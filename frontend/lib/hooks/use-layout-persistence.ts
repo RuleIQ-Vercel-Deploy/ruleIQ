@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLayoutStore } from '@/lib/stores/layout.store';
 import { layoutsService } from '@/lib/api/layouts.service';
 import { DashboardLayout, LayoutSnapshot, LayoutTemplate } from '@/types/layout';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from '@/hooks/use-toast';
 import { useAuth } from '@/lib/auth';
 
 interface UseLayoutPersistenceOptions {

@@ -44,7 +44,7 @@ export function MetricWidget({
 
     switch (change.trend) {
       case 'up':
-        return 'text-teal-600';
+        return 'text-purple-600';
       case 'down':
         return 'text-red-600';
       default:

@@ -219,3 +219,5 @@ backups/
 backup_*/
 *.backup
 *.bak
+
+.vercel

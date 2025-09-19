@@ -21,7 +21,7 @@ export function SparklesBackground({
   minSize = 0.6,
   maxSize = 1.4,
   particleDensity = 100,
-  particleColor = '#2C7A7B', // teal-600
+  particleColor = '#8B5CF6', // purple-500
 }: SparklesBackgroundProps) {
   const particles = useMemo(() => {
     return Array.from({ length: particleDensity }, (_, i) => ({
