@@ -1,0 +1,40 @@
+name: Publication License Guard
+
+on:
+  workflow_call:
+  release:
+    types: [created, published]
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  guard:
+    name: Enforce Proprietary License for Publication
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check License Approval
+        shell: bash
+        env:
+          LICENSE_APPROVED: ${{ secrets.LICENSE_APPROVED }}
+        run: |
+          echo "Verifying LICENSE approval gate..."
+          if [ "${LICENSE_APPROVED}" != "true" ]; then
+            echo "::error::Publication blocked. LICENSE_APPROVED secret not set to 'true'."
+            echo "This repository is proprietary. Public releases require legal approval."
+            echo "To proceed, set repository secret LICENSE_APPROVED=true after legal review."
+            exit 1
+          fi
+          echo "License approval detected. Publication may proceed."
+
+      - name: Confirm License File
+        run: |
+          if ! test -f LICENSE; then
+            echo "::error::LICENSE file is missing."
+            exit 1
+          fi
+          if ! grep -qiE "Proprietary|All rights reserved" LICENSE; then
+            echo "::error::LICENSE file does not appear to be proprietary."
+            exit 1
+          fi
+          echo "Proprietary license file verified."

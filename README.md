@@ -515,7 +515,8 @@ pnpm typecheck     # TypeScript
 
 This software is proprietary and provided under a restrictive license. All rights reserved.  
 You may evaluate and test internally, but production or commercial use requires a separate commercial agreement.  
-See the full terms in the [LICENSE](LICENSE) file. For licensing inquiries, contact legal@ruleiq.com.
+See the full terms in the [LICENSE](LICENSE) file. For licensing inquiries, contact legal@ruleiq.com.  
+Additional details and CI publication guard instructions: [docs/licensing.md](docs/licensing.md).
 
 ## 🙏 Acknowledgments
 
