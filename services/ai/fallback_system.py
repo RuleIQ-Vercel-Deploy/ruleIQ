@@ -18,11 +18,11 @@ from services.ai.exceptions import AIServiceException
 class FallbackLevel(Enum):
     """Levels of fallback degradation"""
 
-#     NONE = "none"  # No fallback, fail immediately  # Unused variable
-#     BASIC = "basic"  # Basic static responses  # Unused variable
-#     CACHED = "cached"  # Use cached responses  # Unused variable
-#     TEMPLATE = "template"  # Use response templates  # Unused variable
-#     COMPREHENSIVE = "comprehensive"  # Full fallback system  # Unused variable
+    NONE = "none"  # No fallback, fail immediately
+    BASIC = "basic"  # Basic static responses
+    CACHED = "cached"  # Use cached responses
+    TEMPLATE = "template"  # Use response templates
+    COMPREHENSIVE = "comprehensive"  # Full fallback system
 
 
 @dataclass
@@ -471,11 +471,13 @@ class FallbackSystem:
         """Get basic fallback response"""
         if exception:
             content = (
-                f"The {operation} service is temporarily unavailable due to: {exception!s}. Please try f
-                fagain later or contact support.f,
+                f"The {operation} service is temporarily unavailable due to: {exception!s}. Please try "
+                "again later or contact support."
             )
         else:
-            content = f"The {operation} service is temporarily unavailable. Please try again later."
+            content = (
+                f"The {operation} service is temporarily unavailable. Please try again later."
+            )
 
         return FallbackResponse(
             content=content,
