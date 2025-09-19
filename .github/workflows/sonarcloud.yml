@@ -2,10 +2,11 @@ name: SonarCloud Analysis
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop, staging, 'release/**']
   pull_request:
-    branches: [main]
+    branches: [main, develop, staging]
     types: [opened, synchronize, reopened]
+  workflow_dispatch:
 
 jobs:
   sonarcloud:
