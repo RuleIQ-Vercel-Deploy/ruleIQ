@@ -26,7 +26,7 @@ jobs:
 
       - name: Install Doppler CLI
         run: |
-          curl -Ls https://cli.doppler.com/install.sh | sh
+          curl -Ls https://cli.doppler.com/install.sh | sudo sh
 
       - name: Setup Doppler and install backend dependencies
         run: |
