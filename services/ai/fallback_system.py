@@ -262,10 +262,10 @@ We apologize for the inconvenience and are working to restore full service quick
             )
         else:
             return FallbackResponse(
-                content= (
+                content=(
                     "Recommendations are temporarily unavailable. Please contact support for personalized "
-                    "guidance."",
-                )
+                    "guidance."
+                ),
                 confidence=0.3,
                 source="default_fallback",
             )
