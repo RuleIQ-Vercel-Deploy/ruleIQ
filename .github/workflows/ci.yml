@@ -192,16 +192,77 @@ jobs:
         with:
           name: coverage-frontend
           path: frontend/coverage
+
+      - name: Load SONAR_TOKEN via Doppler (fallback to GitHub secret)
+        shell: bash
+        run: |
+          set -e
+          FALLBACK="${{ secrets.SONAR_TOKEN }}"
+          if [ -n "${{ secrets.DOPPLER_TOKEN }}" ]; then
+            echo "Attempting to load SONAR_TOKEN from Doppler..."
+            if SONAR=$(doppler secrets get SONAR_TOKEN --project "${{ secrets.DOPPLER_PROJECT }}" --config "${{ secrets.DOPPLER_CONFIG }}" --plain --token "${{ secrets.DOPPLER_TOKEN }}"); then
+              if [ -n "$SONAR" ]; then
+                echo "SONAR_TOKEN loaded from Doppler"
+                echo "SONAR_TOKEN=$SONAR" >> $GITHUB_ENV
+              fi
+            fi
+          fi
+          if [ -z "${SONAR_TOKEN:-}" ]; then
+            if [ -n "$FALLBACK" ]; then
+              echo "Falling back to SONAR_TOKEN from GitHub Secrets"
+              echo "SONAR_TOKEN=$FALLBACK" >> $GITHUB_ENV
+            else
+              echo "ERROR: SONAR_TOKEN not configured in Doppler or GitHub Secrets" >&2
+              exit 1
+            fi
+          fi
       
-      - name: SonarCloud Scan
+      - name: SonarCloud Scan (PR)
+        if: ${{ github.event_name == 'pull_request' }}
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
         with:
           args: >
             -Dsonar.projectKey=ruliq-compliance-platform
             -Dsonar.organization=omara1-bakri
+            -Dsonar.sources=.
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info
+            -Dsonar.eslint.reportPaths=frontend/eslint-report.json
+            -Dsonar.python.flake8.reportPaths=flake8-report.txt
+            -Dsonar.python.pylint.reportPaths=pylint-report.txt
+            -Dsonar.python.bandit.reportPaths=bandit-report.json
+            -Dsonar.exclusions=**/node_modules/**,**/.venv/**,**/htmlcov/**,**/coverage/**,**/.next/**,**/dist/**,**/build/**
+            -Dsonar.tests=tests/,frontend/tests/
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+            -Dsonar.pullrequest.branch=${{ github.head_ref }}
+            -Dsonar.pullrequest.base=${{ github.base_ref }}
+            -Dsonar.branch.name=${{ github.head_ref }}
+            -Dsonar.verbose=true
+
+      - name: SonarCloud Scan (Branch)
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=ruliq-compliance-platform
+            -Dsonar.organization=omara1-bakri
+            -Dsonar.sources=.
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+            -Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info
+            -Dsonar.eslint.reportPaths=frontend/eslint-report.json
+            -Dsonar.python.flake8.reportPaths=flake8-report.txt
+            -Dsonar.python.pylint.reportPaths=pylint-report.txt
+            -Dsonar.python.bandit.reportPaths=bandit-report.json
+            -Dsonar.exclusions=**/node_modules/**,**/.venv/**,**/htmlcov/**,**/coverage/**,**/.next/**,**/dist/**,**/build/**
+            -Dsonar.tests=tests/,frontend/tests/
+            -Dsonar.branch.name=${{ github.ref_name }}
+            -Dsonar.verbose=true
 
   # Docker Build
   docker-build:
