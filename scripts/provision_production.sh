@@ -19,6 +19,7 @@ VENV_DIR=${VENV_DIR:-/opt/ruleiq/venv}
 ENV_DIR=${ENV_DIR:-/etc/ruleiq}
 DOPPLER_DIR=${DOPPLER_DIR:-/etc/doppler}
 PROVISION_WITH_DOPPLER=${PROVISION_WITH_DOPPLER:-false}
+INSTALL_CELERY_UNITS=${INSTALL_CELERY_UNITS:-false}
 
 echo "[provision] Creating system user/group: ${APP_USER}"
 if ! id -u "${APP_USER}" >/dev/null 2>&1; then
@@ -69,9 +70,15 @@ EOF
     echo "IMPORTANT: Edit ${DOPPLER_DIR}/ruleiq.env and set DOPPLER_PROJECT and DOPPLER_TOKEN"
   fi
 
-  SYSTEMD_UNIT=/etc/systemd/system/ruleiq-api.service
-  echo "[provision] Installing Doppler-backed systemd unit ${SYSTEMD_UNIT}"
-  sudo cp "${APP_DIR}/deployment/systemd/ruleiq-api.doppler.service" "${SYSTEMD_UNIT}"
+  API_UNIT=/etc/systemd/system/ruleiq-api.service
+  echo "[provision] Installing Doppler-backed systemd unit ${API_UNIT}"
+  sudo cp "${APP_DIR}/deployment/systemd/ruleiq-api.doppler.service" "${API_UNIT}"
+
+  if [ "${INSTALL_CELERY_UNITS}" = "true" ]; then
+    echo "[provision] Installing Celery systemd units (Doppler-backed)"
+    sudo cp "${APP_DIR}/deployment/systemd/ruleiq-celery-worker.doppler.service" /etc/systemd/system/ruleiq-celery-worker.service
+    sudo cp "${APP_DIR}/deployment/systemd/ruleiq-celery-beat.doppler.service"   /etc/systemd/system/ruleiq-celery-beat.service
+  fi
 else
   # Env-file mode
   # Seed environment file if missing
@@ -82,16 +89,30 @@ else
     echo "IMPORTANT: Edit ${ENV_DIR}/ruleiq.env and set DATABASE_URL, JWT_SECRET_KEY, REDIS_PASSWORD, FERNET_KEY"
   fi
 
-  SYSTEMD_UNIT=/etc/systemd/system/ruleiq-api.service
-  echo "[provision] Installing systemd unit ${SYSTEMD_UNIT}"
-  sudo cp "${APP_DIR}/deployment/systemd/ruleiq-api.service" "${SYSTEMD_UNIT}"
+  API_UNIT=/etc/systemd/system/ruleiq-api.service
+  echo "[provision] Installing systemd unit ${API_UNIT}"
+  sudo cp "${APP_DIR}/deployment/systemd/ruleiq-api.service" "${API_UNIT}"
 fi
 
 sudo systemctl daemon-reload
 sudo systemctl enable ruleiq-api
 
+if [ "${PROVISION_WITH_DOPPLER}" = "true" ] && [ "${INSTALL_CELERY_UNITS}" = "true" ]; then
+  sudo systemctl enable ruleiq-celery-worker ruleiq-celery-beat
+fi
+
 echo "[provision] Starting service: ruleiq-api"
 sudo systemctl restart ruleiq-api
 sudo systemctl status --no-pager ruleiq-api || true
 
-echo "[provision] Done. Tail logs with: journalctl -u ruleiq-api -f"
+if [ "${PROVISION_WITH_DOPPLER}" = "true" ] && [ "${INSTALL_CELERY_UNITS}" = "true" ]; then
+  echo "[provision] Starting Celery services"
+  sudo systemctl restart ruleiq-celery-worker ruleiq-celery-beat
+  sudo systemctl status --no-pager ruleiq-celery-worker || true
+  sudo systemctl status --no-pager ruleiq-celery-beat   || true
+fi
+
+echo "[provision] Done. Tail logs with:"
+echo "  journalctl -u ruleiq-api -f"
+echo "  journalctl -u ruleiq-celery-worker -f"
+echo "  journalctl -u ruleiq-celery-beat -f"

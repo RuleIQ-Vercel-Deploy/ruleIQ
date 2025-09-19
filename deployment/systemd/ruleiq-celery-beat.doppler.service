@@ -1,0 +1,28 @@
+[Unit]
+Description=ruleIQ Celery Beat - Doppler-managed secrets
+After=network.target
+Wants=network-online.target
+
+[Service]
+User=ruleiq
+Group=ruleiq
+WorkingDirectory=/opt/ruleiq/app
+EnvironmentFile=/etc/doppler/ruleiq.env
+
+# Verify venv tools are available
+ExecStartPre=/bin/sh -c '/opt/ruleiq/venv/bin/pip --version'
+
+# Apply DB migrations (idempotent)
+ExecStartPre=/usr/bin/env doppler run --project=${DOPPLER_PROJECT} --config=${DOPPLER_CONFIG} --token=${DOPPLER_TOKEN} -- /opt/ruleiq/venv/bin/alembic upgrade head
+
+# Run Celery beat under Doppler environment
+ExecStart=/usr/bin/env doppler run --project=${DOPPLER_PROJECT} --config=${DOPPLER_CONFIG} --token=${DOPPLER_TOKEN} -- /bin/sh -lc '/opt/ruleiq/venv/bin/celery -A celery_app beat -l info'
+
+Restart=always
+RestartSec=5
+LimitNOFILE=65535
+Type=simple
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

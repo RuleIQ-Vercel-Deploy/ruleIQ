@@ -53,15 +53,38 @@ sudo systemctl restart ruleiq-api
 journalctl -u ruleiq-api -f
 ```
 
-## 4) How it works
+## 4) Run Celery Under Doppler (systemd)
+
+Install Celery systemd units (provisioning can install them automatically when `PROVISION_WITH_DOPPLER=true` and `INSTALL_CELERY_UNITS=true`), or copy them manually:
+
+- Worker: `deployment/systemd/ruleiq-celery-worker.doppler.service`
+- Beat:   `deployment/systemd/ruleiq-celery-beat.doppler.service`
+
+Manual install:
+```bash
+sudo cp deployment/systemd/ruleiq-celery-worker.doppler.service /etc/systemd/system/ruleiq-celery-worker.service
+sudo cp deployment/systemd/ruleiq-celery-beat.doppler.service   /etc/systemd/system/ruleiq-celery-beat.service
+sudo systemctl daemon-reload
+sudo systemctl enable ruleiq-celery-worker ruleiq-celery-beat
+sudo systemctl restart ruleiq-celery-worker ruleiq-celery-beat
+journalctl -u ruleiq-celery-worker -f
+```
+
+Notes:
+- Concurrency can be set via Doppler `CELERY_CONCURRENCY` (default 4).
+- Both units run `alembic upgrade head` via Doppler before starting to ensure schema is current.
+
+## 5) How it works
 
 The Doppler systemd unit runs:
 - `doppler run --project=$DOPPLER_PROJECT --config=$DOPPLER_CONFIG --token=$DOPPLER_TOKEN -- alembic upgrade head`
 - `doppler run --project=$DOPPLER_PROJECT --config=$DOPPLER_CONFIG --token=$DOPPLER_TOKEN -- gunicorn ... main:app`
 
+Celery units run similar doppler-run wrappers for `celery worker` and `celery beat`.
+
 All environment variables expected by the app (DATABASE_URL, JWT_SECRET_KEY, REDIS_URL, GOOGLE_API_KEY, FERNET_KEY, etc.) must be defined in Doppler.
 
-## 5) Health and Smoke Test
+## 6) Health and Smoke Test
 
 - Verify health:
   ```bash
@@ -72,13 +95,13 @@ All environment variables expected by the app (DATABASE_URL, JWT_SECRET_KEY, RED
   BASE_URL=http://127.0.0.1:8000 USER_EMAIL=you@example.com USER_PASSWORD='Passw0rd!' ./scripts/smoke_test.sh
   ```
 
-## 6) CI and GitHub Actions
+## 7) CI and GitHub Actions
 
 The repo already integrates Doppler in CI workflows as needed. For further integration:
 - Store Doppler tokens as GitHub secrets
 - Use dopplerhq/cli-action in workflows
 
-## 7) Security Notes
+## 8) Security Notes
 
 - Keep /etc/doppler/ruleiq.env readable only by the system user/group:
   ```bash
