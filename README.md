@@ -179,15 +179,23 @@ graph TB
 git clone https://github.com/yourusername/ruleiq.git
 cd ruleiq
 
+# Make the script executable (first time only)
+chmod +x ./start
+
 # Start full development environment
 ./start
 ```
 
+Prerequisites:
+- Python 3.11+ available as python3
+- Node.js 18+ with pnpm (recommended via Corepack)
+  - If pnpm is not installed, run: corepack enable && corepack prepare pnpm@latest --activate
+
 The start script will:
-- Set up Python virtual environment
-- Install backend dependencies automatically
-- Install frontend dependencies
-- Start both backend (localhost:8000) and frontend (localhost:3000)
+- Create a Python virtual environment if missing
+- Install backend dependencies on first run
+- Install frontend dependencies with pnpm using the existing lockfile
+- Start both backend (http://localhost:8000) and frontend (http://localhost:3000)
 
 ### Manual Setup
 

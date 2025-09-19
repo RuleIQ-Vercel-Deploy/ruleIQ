@@ -19,7 +19,9 @@ export default defineConfig({
     reporters: ['verbose'],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
+      // Generate LCOV for SonarCloud + keep human-friendly formats
+      reporter: ['text', 'json', 'html', 'lcov'],
+      reportsDirectory: 'coverage',
       exclude: ['node_modules/', 'tests/', '**/*.d.ts', '**/*.config.*', '**/coverage/**'],
     },
   },

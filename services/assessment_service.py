@@ -33,7 +33,7 @@ class AssessmentService:
                 select(AssessmentSession)
                 .where(AssessmentSession.user_id == user.id)
                 .where(AssessmentSession.status == "in_progress")
-                .order_by(AssessmentSession.created_at.desc()),
+                .order_by(AssessmentSession.created_at.desc())
             )
             result_existing = await db.execute(stmt_existing)
             existing_session = result_existing.scalars().first()
@@ -53,7 +53,7 @@ class AssessmentService:
             # Create new session
             new_session = AssessmentSession(
                 user_id=user.id,
-                business_profil=business_profile_id,  # Note: column name is truncated in model
+                business_profile_id=business_profile_id,
                 session_type=session_type,
                 status="in_progress",  # Ensure status is set
                 total_stages=5,  # Basic info, Industry, Data handling, Tech stack, Compliance goals
@@ -98,7 +98,7 @@ class AssessmentService:
                 select(AssessmentSession)
                 .where(AssessmentSession.user_id == user.id)
                 .where(AssessmentSession.status == "in_progress")
-                .order_by(AssessmentSession.created_at.desc()),
+                .order_by(AssessmentSession.created_at.desc())
             )
             result = await db.execute(stmt)
             session = result.scalars().first()
@@ -117,7 +117,7 @@ class AssessmentService:
             stmt = (
                 select(AssessmentSession)
                 .where(AssessmentSession.user_id == user.id)
-                .order_by(AssessmentSession.created_at.desc()),
+                .order_by(AssessmentSession.created_at.desc())
             )
             result = await db.execute(stmt)
             sessions = result.scalars().all()

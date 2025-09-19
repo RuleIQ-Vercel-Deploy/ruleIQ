@@ -1,6 +1,6 @@
-#\!/bin/bash
+#!/usr/bin/env bash
 # Start script for ruleIQ - runs backend and frontend concurrently
-set -e
+set -euo pipefail
 
 echo "Starting ruleIQ Development Environment"
 echo "========================================"
@@ -9,49 +9,69 @@ echo "========================================"
 cleanup() {
     echo ""
     echo "Shutting down services..."
-    jobs -p | xargs -r kill
+    jobs -p | xargs -r kill || true
     exit 0
 }
 
 # Trap signals to cleanup
 trap cleanup SIGINT SIGTERM
 
-# Check if virtual environment exists
-if [ \! -d ".venv" ]; then
-    echo "Virtual environment not found. Run: python -m venv .venv"
-    exit 1
+# Ensure Python virtual environment exists
+if [ ! -d ".venv" ]; then
+    echo "Creating Python virtual environment (.venv)..."
+    python3 -m venv .venv
 fi
 
 # Activate virtual environment
+# shellcheck source=/dev/null
 source .venv/bin/activate
 
-# Check if Python dependencies are installed
-if ! python -c "import uvicorn" 2>/dev/null; then
+# Install backend dependencies if uvicorn not available
+if ! python -c "import uvicorn" >/dev/null 2>&1; then
     echo "Installing backend dependencies..."
     pip install -r requirements.txt
 fi
 
-# Check if node_modules exists in frontend
-if [ \! -d "frontend/node_modules" ]; then
-    echo "Installing frontend dependencies..."
-    cd frontend && pnpm install && cd ..
+# Ensure pnpm is available (prefer Corepack if present)
+if ! command -v pnpm >/dev/null 2>&1; then
+    if command -v corepack >/dev/null 2>&1; then
+        echo "Enabling pnpm via corepack..."
+        corepack enable || true
+        corepack prepare pnpm@latest --activate || true
+    fi
 fi
 
-echo "Starting Backend (FastAPI)..."
-python main.py &
-BACKEND_PID=$\!
+if ! command -v pnpm >/dev/null 2>&1; then
+    echo "pnpm is required to install frontend dependencies."
+    echo "Install instructions: https://pnpm.io/installation"
+    echo "Alternatively with Node >=18: corepack enable && corepack prepare pnpm@latest --activate"
+    exit 1
+fi
 
-# Wait a moment for backend to start
+# Install frontend dependencies if needed
+if [ ! -d "frontend/node_modules" ]; then
+    echo "Installing frontend dependencies (pnpm install --frozen-lockfile)..."
+    (cd frontend && pnpm install --frozen-lockfile)
+fi
+
+# Start Backend (FastAPI)
+echo "Starting Backend (FastAPI)..."
+python main.py --reload &
+BACKEND_PID=$!
+
+# Give the backend a moment to start
 sleep 3
 
+# Start Frontend (Next.js)
 echo "Starting Frontend (Next.js)..."
-cd frontend
-pnpm dev &
-FRONTEND_PID=$\!
-cd ..
+(
+  cd frontend
+  pnpm dev &
+)
+FRONTEND_PID=$!
 
 echo ""
-echo "Services started successfully\!"
+echo "Services started successfully!"
 echo "Backend API:  http://localhost:8000"
 echo "Frontend:     http://localhost:3000"
 echo "API Docs:     http://localhost:8000/docs"
@@ -61,4 +81,3 @@ echo "Press Ctrl+C to stop all services"
 
 # Wait for background jobs
 wait
-EOF < /dev/null
