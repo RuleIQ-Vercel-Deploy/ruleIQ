@@ -8,6 +8,24 @@ from enum import Enum
 from pydantic import BaseModel, Field
 
 
+def _parse_env_list(value: Optional[str]) -> Optional[List[str]]:
+    """
+    Parse a comma-separated or JSON-like list from an environment variable.
+    Returns None if value is falsy.
+    """
+    if not value:
+        return None
+    v = value.strip()
+    if v.startswith("[") and v.endswith("]"):
+        try:
+            import json
+            parsed = json.loads(v)
+            return [s.strip() for s in parsed if isinstance(s, str)]
+        except Exception:
+            pass
+    return [item.strip() for item in v.split(",") if item.strip()]
+
+
 class SecurityEnvironment(str, Enum):
     """Security environment levels"""
     DEVELOPMENT = "development"
@@ -81,10 +99,12 @@ class CORSConfig(BaseModel):
     )
 
     def get_config_for_environment(self, env: SecurityEnvironment) -> Dict[str, Any]:
-        """Get environment-specific CORS configuration"""
+        """Get environment-specific CORS configuration with optional env override."""
+        override = _parse_env_list(os.getenv("ALLOWED_ORIGINS") or os.getenv("CORS_ALLOWED_ORIGINS"))
         if env == SecurityEnvironment.DEVELOPMENT:
+            allow_origins = override or ["http://localhost:3000", "http://localhost:8000", "http://127.0.0.1:3000"]
             return {
-                "allow_origins": ["http://localhost:3000", "http://localhost:8000", "http://127.0.0.1:3000"],
+                "allow_origins": allow_origins,
                 "allow_methods": self.allowed_methods,
                 "allow_headers": self.allowed_headers,
                 "expose_headers": self.exposed_headers,
@@ -92,8 +112,9 @@ class CORSConfig(BaseModel):
                 "max_age": 3600
             }
         elif env == SecurityEnvironment.TESTING:
+            allow_origins = override or ["http://localhost:3000", "http://testserver"]
             return {
-                "allow_origins": ["http://localhost:3000", "http://testserver"],
+                "allow_origins": allow_origins,
                 "allow_methods": self.allowed_methods,
                 "allow_headers": self.allowed_headers,
                 "expose_headers": self.exposed_headers,
@@ -101,8 +122,9 @@ class CORSConfig(BaseModel):
                 "max_age": 3600
             }
         else:  # Production and Staging
+            allow_origins = override or self.allowed_origins
             return {
-                "allow_origins": self.allowed_origins,
+                "allow_origins": allow_origins,
                 "allow_methods": self.allowed_methods,
                 "allow_headers": self.allowed_headers,
                 "expose_headers": self.exposed_headers,
