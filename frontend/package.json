@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Enterprise-grade frontend for ruleIQ - AI-powered compliance automation platform for UK SMBs",
   "author": "ruleIQ Team",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "private": true,
   "engines": {
     "node": ">=18.17.0",

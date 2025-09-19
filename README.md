@@ -4,7 +4,7 @@
 
 ![ruleIQ](https://img.shields.io/badge/ruleIQ-Compliance_Automation-2C7A7B)
 ![Status](https://img.shields.io/badge/Status-Production_Ready-green)
-![License](https://img.shields.io/badge/License-MIT-yellow)
+![License](https://img.shields.io/badge/License-Proprietary-lightgrey)
 ![Python](https://img.shields.io/badge/Python-3.8+-blue)
 ![Next.js](https://img.shields.io/badge/Next.js-15_+_Turbopack-black)
 ![Tests](https://img.shields.io/badge/Tests-1884+-brightgreen)
@@ -513,7 +513,9 @@ pnpm typecheck     # TypeScript
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This software is proprietary and provided under a restrictive license. All rights reserved.  
+You may evaluate and test internally, but production or commercial use requires a separate commercial agreement.  
+See the full terms in the [LICENSE](LICENSE) file. For licensing inquiries, contact legal@ruleiq.com.
 
 ## 🙏 Acknowledgments
 

@@ -1,21 +1,53 @@
-MIT License
+Proprietary Software License Agreement
+Copyright (c) 2025 ruleIQ Team. All rights reserved.
 
-Copyright (c) 2025 ruleIQ Team
+IMPORTANT: PLEASE READ THIS LICENSE CAREFULLY BEFORE USING THE SOFTWARE.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+1. Definitions
+   - "Software" means the code, binaries, documentation, and other materials provided in this repository (and any copies or derivative works thereof).
+   - "Licensee" means you and any entity you represent that accesses or uses the Software.
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+2. Grant of License
+   Subject to the terms and conditions of this Agreement, Licensor grants Licensee a limited, non-exclusive, non-transferable, non-sublicensable license to:
+   - Use the Software solely for internal evaluation, testing, and development purposes.
+   - No production use is permitted without a separate, executed commercial license agreement with Licensor.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+3. Restrictions
+   Except as expressly permitted in Section 2, Licensee shall not, and shall not permit any third party to:
+   - Copy, modify, adapt, translate, create derivative works of, or distribute the Software.
+   - Publish, disclose, sell, lease, loan, sublicense, assign, or otherwise transfer the Software or any rights thereto.
+   - Use the Software for any commercial or production purpose.
+   - Remove or alter any proprietary notices, labels, or marks on or within the Software.
+   - Benchmark, reverse engineer, decompile, or disassemble the Software except to the minimal extent allowed by law notwithstanding this restriction.
+
+4. Ownership
+   Licensor retains all right, title, and interest in and to the Software, including all intellectual property rights. No rights are granted to Licensee other than those expressly set forth herein.
+
+5. Confidentiality
+   The Software and any non-public information disclosed by Licensor constitute confidential information. Licensee shall not disclose such information to any third party and shall protect it with the same degree of care it uses to protect its own confidential information, but in no event less than reasonable care.
+
+6. Feedback
+   Any feedback, suggestions, or improvements provided by Licensee ("Feedback") may be used by Licensor without restriction and without obligation of any kind.
+
+7. Term and Termination
+   This Agreement is effective until terminated. Licensor may terminate this Agreement at any time upon notice if Licensee breaches any term of this Agreement. Upon termination, all rights granted hereunder shall immediately cease and Licensee shall promptly cease use of, and destroy, all copies of the Software.
+
+8. No Warranty; Disclaimer
+   THE SOFTWARE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON-INFRINGEMENT, AND TITLE. LICENSEE'S USE OF THE SOFTWARE IS AT LICENSEE'S SOLE RISK.
+
+9. Limitation of Liability
+   TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL LICENSOR BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, OR ANY LOSS OF PROFITS OR REVENUE, ARISING OUT OF OR RELATED TO THIS AGREEMENT OR THE USE OF THE SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. LICENSOR'S AGGREGATE LIABILITY FOR DIRECT DAMAGES SHALL NOT EXCEED ONE HUNDRED U.S. DOLLARS (US$100).
+
+10. Export Compliance
+   Licensee shall comply with all applicable export control and sanctions laws and regulations.
+
+11. Governing Law; Venue
+   This Agreement shall be governed by and construed in accordance with the laws of England and Wales, without regard to conflict of law principles. The courts located in London, United Kingdom, shall have exclusive jurisdiction.
+
+12. Entire Agreement
+   This Agreement constitutes the entire agreement between the parties regarding the Software and supersedes all prior or contemporaneous understandings.
+
+13. Commercial Licensing
+   For commercial, production, or broader rights, contact: legal@ruleiq.com.
+
+BY ACCESSING OR USING THE SOFTWARE, LICENSEE ACKNOWLEDGES THAT LICENSEE HAS READ, UNDERSTOOD, AND AGREES TO BE BOUND BY THE TERMS OF THIS AGREEMENT.
