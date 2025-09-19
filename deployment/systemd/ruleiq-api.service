@@ -1,0 +1,46 @@
+[Unit]
+Description=ruleIQ API (FastAPI via Gunicorn/Uvicorn)
+After=network.target redis-server.service postgresql.service
+Wants=network-online.target
+
+[Service]
+# Adjust to your deploy user
+User=ruleiq
+Group=ruleiq
+
+# Application paths
+WorkingDirectory=/opt/ruleiq/app
+EnvironmentFile=/etc/ruleiq/ruleiq.env
+
+# Ensure venv exists at /opt/ruleiq/venv
+ExecStartPre=/bin/sh -c '/opt/ruleiq/venv/bin/pip --version'
+# Apply DB migrations before starting the app (idempotent)
+ExecStartPre=/bin/sh -c 'cd /opt/ruleiq/app && /opt/ruleiq/venv/bin/alembic upgrade head'
+
+# Start Gunicorn with Uvicorn workers
+ExecStart=/opt/ruleiq/venv/bin/gunicorn \
+    -k uvicorn.workers.UvicornWorker \
+    --workers=${WORKERS:-4} \
+    --worker-class=uvicorn.workers.UvicornWorker \
+    --bind 127.0.0.1:8000 \
+    --timeout ${TIMEOUT:-120} \
+    --access-logfile - \
+    --error-logfile - \
+    main:app
+
+# Restart policy
+Restart=always
+RestartSec=5
+
+# Resource / security
+LimitNOFILE=65535
+KillMode=mixed
+Type=simple
+TimeoutStartSec=60
+Environment=PYTHONUNBUFFERED=1
+
+# Reload support
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target
