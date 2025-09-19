@@ -87,12 +87,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
+          projectBaseDir: .
           args: >
             -Dsonar.organization=${{ secrets.SONAR_ORG }}
             -Dsonar.projectKey=${{ secrets.SONAR_PROJECT }}
             -Dsonar.sources=.
             -Dsonar.exclusions=**/*.test.ts,**/*.test.tsx,**/*.test.js,**/*.spec.ts,**/*.spec.tsx,**/test_*.py,**/*_test.py,**/node_modules/**,**/.venv/**,**/htmlcov/**,**/coverage/**,**/.next/**,**/dist/**,**/build/**
-            -Dsonar.tests=tests/,frontend/tests/,frontend/components/**/*.test.tsx,frontend/lib/**/*.test.ts
             -Dsonar.python.coverage.reportPaths=coverage.xml
             -Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info
             -Dsonar.eslint.reportPaths=frontend/eslint-report.json
