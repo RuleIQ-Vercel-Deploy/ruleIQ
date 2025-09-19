@@ -1,15 +1,0 @@
-
-à"
-    Factory function to create JWT middleware v2 instance.
-    
-    This version includes the security fix for SEC-001.
-    "strkwargs
-ó ó(""dict"à'
-%
-
-ù ù('"#unaryop **#2**:K
-I
-
-ù ù(("JWTAuthMiddlewareV2:Bjwt_auth_v2.JWTAuthMiddlewareV2
-
-ù ù((*5/home/omar/Documents/ruleIQ/middleware/jwt_auth_v2.py

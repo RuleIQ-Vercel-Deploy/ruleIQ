@@ -1,33 +1,0 @@
-
-)redis_rate_limiter.RedisRateLimiter.closeJ
-@/home/omar/Documents/ruleIQ/api/middleware/redis_rate_limiter.pyi i("2*†
-2j j(%o
-m
-k k(
-%3"__id*U
-
-__unknown_file (9*7%
-#redis_rate_limiter.RedisRateLimiter"
-redis_client*
-3
-4*9
-3
-redis_rate_limiter.py"
-o o
-implicit return*Â
-4l l(+o
-m
-l l(#
-%1"__id*U
-
-__unknown_file (9*7%
-#redis_rate_limiter.RedisRateLimiter"
-redis_client=;
-l l(+
-%2*"
-
-__unknown_file (
-
-%12close*
-3B'%
-#redis_rate_limiter.RedisRateLimiterH

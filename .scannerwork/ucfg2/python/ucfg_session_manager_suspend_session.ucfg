@@ -1,105 +1,0 @@
-
-.session_manager.SessionManager.suspend_sessionC
-7/home/omar/Documents/ruleIQ/services/session_manager.pyÐ Ð("2*í
-2
-Ñ Ñ(3Ž‹
-
-Ò Ò(4
-%6*>
-
-__unknown_file (" 
-session_manager.SessionManager**
-
-__unknown_file (
-
-
-session_id2get_sessionC
-A
-
-Ò Ò(4	
-session"__id*"
-
-__unknown_file (
-
-%6*
-4
-5*Ï
-4
-× ×(+Œ
-
-× ×(+
-%1*>
-
-__unknown_file (" 
-session_manager.SessionManager*'
-
-__unknown_file (
-	
-session2_backup_sessiong
-e
-
-Ù Ù(.
-%2"__id*K
-
-__unknown_file (/*-
-session_manager.SessionState"
-	SUSPENDEDN
-L
-
-Ù Ù(.
-	
-session"
-state"__id*"
-
-__unknown_file (
-
-%2Ž‹
-
-Ú Ú(*
-%3*>
-
-__unknown_file (" 
-session_manager.SessionManager*'
-
-__unknown_file (
-	
-session2_store_sessionb
-`
-
-Ü Ü(5
-%4"__concat*$
-
-Ü Ü((
-Suspended session *
-
-Ü) Ü(3
-
-
-session_idfd
-
-Ü Ü(6
-%5*&
-
-__unknown_file (
-
-
-logger*"
-
-__unknown_file (
-
-%42info"
-
-Ý Ý(
-
-True*(
-5
-Ô Ô("
-
-Ô Ô(	
-
-False:
-
-Ð$ Ð(3
-
-session_idB" 
-session_manager.SessionManagerH

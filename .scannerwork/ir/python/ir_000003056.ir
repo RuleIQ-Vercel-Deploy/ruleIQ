@@ -1,15 +1,0 @@
-
-) "Check if running in production"strself
-ç ç(0,config.security_settings.SecurityEnvironment"ü.
-,
-
-è è("#get-field# environment:-
-+
-
-è# è(A"#get-field# PRODUCTION:,
-*
-
-è è(A"
-#binop ==#2==:Bbool
-
-è è(A*7/home/omar/Documents/ruleIQ/config/security_settings.py

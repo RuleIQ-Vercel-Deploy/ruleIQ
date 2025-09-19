@@ -1,20 +1,0 @@
-
-™†"Check if a workflow is currently active.
-
-        Args:
-            workflow_id: Workflow ID
-
-        Returns:
-            True if workflow is active
-        "strself
-î î(workflow_id
-î! î(1"v4
-2
-
-ù ù(4"#get-field# _active_workflows:,
-*
-
-ù ù(4"
-#binop in#2in:Bbool
-
-ù ù(4*D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py

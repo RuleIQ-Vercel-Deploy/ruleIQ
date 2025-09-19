@@ -1,76 +1,0 @@
-
-"system"str
-"user"str
-€ö"You are an expert compliance process designer specializing in {framework}.
-        Generate comprehensive, step-by-step evidence collection workflows that are:
-
-        1. Tailored to the organization's size and maturity
-        2. Practical and implementable with available resources
-        3. Include both manual and automated approaches
-        4. Provide realistic time estimates and dependencies
-        5. Include quality checkpoints and validation criteria
-        6. Consider industry-specific requirements
-        7. Include role assignments and responsibilities
-
-        Structure the workflow with clear phases, detailed steps, and practical guidance.
-        Include automation opportunities and tool recommendations where applicable.
-        "str
-$
-" for control {control_id}"str
-?6"Creates prompts for intelligent workflow generation."str
-""str
-ôê"
-        Generate a {workflow_type} evidence collection workflow for {framework}{control_context}.
-
-        Organization Context:
-        - Company: {business_context.get('company_name', 'Unknown')}
-        - Industry: {business_context.get('industry', 'Unknown')}
-        - Size: {business_context.get('employee_count', 0)} employees
-        - Organization Type: {self._categorize_org_size(business_context.get('employee_count', 0))}
-
-        Requirements:
-        - Create 3-5 logical phases with 2-4 steps each
-        - Include specific deliverables and validation criteria
-        - Provide realistic effort estimates
-        - Consider automation opportunities
-        - Include role assignments and dependencies
-        - Address potential challenges and mitigation strategies
-
-        Generate a comprehensive workflow that can be immediately implemented.
-        "strself
-à' à(+	framework
-à- à(;
-control_id
-à= á( business_context
-á á(-workflow_type
-á/ á(A"Œ/
--
-
-ä ñ(system_prompt"#id#:Bstr+
-)
-
-ò: ò(D	"
-__bool__*:BboolH,"*
-
-ò: ò(D	 *
-ò7 ò(92
-òE ò(I"
-
-ò ò(L"
-
-ò ò(L"Ö!*control_context
--
-+
-
-ó …(user_prompt"#id#:Bstr&
-$
-
-† †(="#new-object#Bdict"
- 
-
-† †('"	#map-set#:"
- 
-
-†) †(<"	#map-set#:
-
-† †(=*;/home/omar/Documents/ruleIQ/services/ai/prompt_templates.py

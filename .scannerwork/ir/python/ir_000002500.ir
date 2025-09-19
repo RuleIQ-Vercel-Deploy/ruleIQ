@@ -1,20 +1,0 @@
-
-Ÿ•"
-    Create refresh token (roles will be re-evaluated on refresh).
-
-    Args:
-        user_id: User ID
-
-    Returns:
-        JWT refresh token
-    "str
-"sub"struser_idc$ c(1"®$
-"
-m  m(5"#new-object#Bdict.
-,
-m( m(4"#dependent-value#*:Bstr 
-
-m! m(4"	#map-set#:$
-"
-m m(6"#unknown-value#:
-m m(6*9/home/omar/Documents/ruleIQ/api/dependencies/rbac_auth.py

@@ -1,17 +1,0 @@
-
-.%"Add timeout to database operations."strtimeout
-ë ë(*"¿#
-!
-
-ù ù("#unknown-value#*
-(
-
-í ù(%closure"#new-object#+
-)
-
-í ù("#set-field# timeout:-
-+
-
-í ù("?python-partial-apply?:
-
-ù ù(*4/home/omar/Documents/ruleIQ/database/optimization.py

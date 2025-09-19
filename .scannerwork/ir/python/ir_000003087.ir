@@ -1,73 +1,0 @@
-
-$	"Bulk approval is disabled"str
-—«"
-        Approve multiple requests at once
-        
-        Args:
-            request_ids: List of request IDs to approve
-            approved_by: ID of the approving user
-            approval_note: Optional approval note for all
-        
-        Returns:
-            Dictionary mapping request IDs to success status
-        "strself
-ˇ ˇ(request_ids
-Ä Ä(approved_by
-Å Å(approval_note
-Ç Ç(+"¥6
-4
-
-è è('"!#get-field# allow_bulk_approval:+
-)
-
-è è('"
-__bool__*:BboolH+
-)
-
-è è('"#unaryop !#2!:Bbool "
-
-è è(' *
-è è(
-"F0
-.
-
-ê ê(9
-"
-ValueError*:	B
-ValueError2
-
-ê ê(9
-"Ä/
--
-
-í í(results"#new-object#Bdict9
-7
-
-ì ì(%"
-builtinsiter*:Btyping.Iterator
-
-ì ì(%"w*results4
-2
-
-ì ì(%"
-builtins
-__has_next*:Bbool"" 
-
-ì ì(% *
-ì ì(H"∞4
-2
-
-î ñ(
-request_id"
-builtinsnext*:#
-!
-
-î( ñ("#unknown-value##
-!
-
-î" ñ("#unknown-value#&
-$
-
-î ñ("#array-write#:"
-
-ò ò(*@/home/omar/Documents/ruleIQ/services/agents/approval/workflow.py

@@ -1,76 +1,0 @@
-
-=reporting.template_manager.TemplateManager._build_key_metricsN
-B/home/omar/Documents/ruleIQ/services/reporting/template_manager.py¤ ¤("2*Þ
-2
-¥ ¥('
-
-¦ ª(	
-%1"dict¦
-£
-
-§ §(1
-%2"__mapSet*"
-
-__unknown_file (
-
-%1*%
-
-__unknown_file (	
-title*:
-
-__unknown_file (
-Key Performance Indicatorsª
-§
-
-¨ ¨(5
-%3"__mapSet*"
-
-__unknown_file (
-
-%1*'
-
-__unknown_file (	
-content*<
-
-__unknown_file ( 
-Performance metrics and KPIs
-
-©3 ©(5
-%4"dict˜•
-
-© ©(6
-%5*+
-
-__unknown_file (
-
-report_data*+
-
-__unknown_file (
-key_metrics*"
-
-__unknown_file (
-
-%42get
-Š
-
-© ©(6
-%6"__mapSet*"
-
-__unknown_file (
-
-%1*$
-
-__unknown_file (
-data*"
-
-__unknown_file (
-
-%5"
-
-¦ ª(	
-
-%1:
-
-¤! ¤(<
-report_dataB.,
-*reporting.template_manager.TemplateManagerH

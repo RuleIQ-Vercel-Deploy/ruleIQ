@@ -1,131 +1,0 @@
-
-""--cov-report=xml"str
-"--cov=utils"str
-u
-l"postgresql://{self.test_db_user}:{self.test_db_password}@localhost:{self.test_db_port}/{self.test_db_name}"str
-0'"\nğŸ§ª Running tests with coverage..."str
-"--cov=database"str
-5,"redis://localhost:{self.test_redis_port}/0"str
-33*"âœ… Tests passed with coverage generated"str
-"pytest"str
-?56"âš ï¸ Some tests failed, but coverage was generated"str
-#"--cov-report=html"str
-"REDIS_URL"str
- "--cov=core"str
-
-0int
-"DATABASE_URL"str
-	"testing"str
-"--cov=services"str
-'"tests/unit"str
-!"--cov=config"str
-"--cov=api"str
-("--maxfail=5"str
-,#"Run tests with coverage reporting"str
-"ENVIRONMENT"str
-$$"--cov-report=term-missing"str
-&"-v"str
-%"--tb=short"strself
-â  â($	tuple*list"è3
-1
-
-ä ä(4"
-builtinsprint*:BNoneType#
-!
-
-ç ç(
-"#unknown-value#*
-(
-
-ç ç("#get-field# environ:&
-$
-
-ç ç(-	"#array-write#:*
-(
-
-è% ë(	"#unknown-value#Btuple(
-&
-
-è% ë(	"
-#is-exact#:Bbool
-
-
-è% ë(	"
-#assume#::
-8
-
-è% ë(	"#set-field# __collection_size:Bint(
-&
-
-è% ë(	"#array-add-last#:
-#
-!
-
-è è(
-"#unknown-value#*
-(
-
-è è("#get-field# environ:&
-$
-
-è ë(	"#array-write#:#
-!
-
-ì ì(
-"#unknown-value#*
-(
-
-ì ì("#get-field# environ:&
-$
-
-ì ì(O"#array-write#:)
-'
-
-ï  ş(	)"#unknown-value#Blist(
-&
-
-ï  ş(	+"
-#is-exact#:)*Bbool
-
-
-ï  ş(	,"
-#assume#:+:
-8
-
-ï  ş(	-"#set-field# __collection_size:)Bint-
-+
-
-ï  ş(	."?python-unknown?*Blist/
--
-
-ş ş( /"#get-field# project_root:L
-J
-
-ï ş(!0result"
-
-subprocessrun:./Bsubprocess.CompletedProcess-
-+
-
-€ €(1"#get-field# returncode:0,
-*
-
-€ €(!2"
-#binop ==#2==:1Bbool,"*
-
-€ €(!2 *
-€ €(
-2
-‚ ‚("=3
-1
-
- (;4"
-builtinsprint*:3BNoneType"=3
-1
-
-ƒ ƒ(E6"
-builtinsprint*:5BNoneType"C-
-+
-
-… …( 7"#get-field# returncode:0
-
-… …( 7*;/home/omar/Documents/ruleIQ/tests/setup_test_environment.py

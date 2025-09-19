@@ -1,19 +1,0 @@
-
-$"Log configuration changes"strself
-…' …(+user_id
-…- …(9setting_name
-…; †(	old_value
-† †(	new_value
-† †(+metadata
-†- †(Jdb
-‡ ‡("\#
-!
-
-‰ Œ(J	"#unknown-value##
-!
-
-‰ Œ(J
-"#unknown-value#
-
-‰ Œ(J
-*>/home/omar/Documents/ruleIQ/services/security/audit_logging.py

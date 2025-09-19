@@ -1,24 +1,0 @@
-
-
-	0int
-""Export user audit logs."strself
-¹& ¹(*db
-¹, ¹(7user_id
-¹9 ¹(Elist"Ä)
-'
-
-¼ ¼("#unknown-value#Blist(
-&
-
-¼ ¼("
-#is-exact#:Bbool
-
-
-¼ ¼("
-#assume#::
-8
-
-¼ ¼(
-"#set-field# __collection_size:	Bint
-
-¼ ¼(*B/home/omar/Documents/ruleIQ/services/compliance/gdpr_compliance.py

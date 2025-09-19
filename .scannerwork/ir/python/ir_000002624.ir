@@ -1,161 +1,0 @@
-
-50,"Establish compliance centers of excellence"str
-'"Implement controls in phases"str
-"micro"str
-6-"Focus on automation to reduce manual effort"str
-"small"str
-7	."Use cloud-based solutions to reduce overhead"str
--%$"Implement comprehensive monitoring"str
-.$%"Establish dedicated compliance team"str
-,#"Focus on essential controls first"str
-3&*"Consider compliance management platforms"str
-//&"Implement enterprise-grade solutions"str
-=4"Consider outsourcing complex compliance activities"str
-;2"Apply organization size-specific customizations."str
-:1"Consider managed services for specialized areas"str
-"implementation_notes"str
-""medium"str
-41+"Consider advanced automation and AI tools"str
-
-0intself
-Þ# Þ('policy
-Þ) Þ(?org_size
-ÞA Þ(Nlist"\,
-*
-
-á á("
-#binop ==#2==:Bbool,"*
-
-á á( *
-á á(
-2
-æ æ("à)
-'
-
-â- å(?
-"#unknown-value#Blist(
-&
-
-â- å(?"
-#is-exact#:
-Bbool
-
-
-â- å(?"
-#assume#::
-8
-
-â- å(?"#set-field# __collection_size:
-Bint(
-&
-
-â- å(?"#array-add-last#:
-(
-&
-
-â- å(?"#array-add-last#:
-(
-&
-
-â- å(?"#array-add-last#:
-	&
-$
-
-â å(?"#array-write#:
-"^,
-*
-
-æ æ( "
-#binop ==#2==:Bbool,"*
-
-æ æ(  *
-æ æ(2
-ê ê("à)
-'
-
-ç- é(>"#unknown-value#Blist(
-&
-
-ç- é(>"
-#is-exact#:Bbool
-
-
-ç- é(>"
-#assume#::
-8
-
-ç- é(>"#set-field# __collection_size:Bint(
-&
-
-ç- é(>"#array-add-last#:(
-&
-
-ç- é(>"#array-add-last#:(
-&
-
-ç- é(> "#array-add-last#:&
-$
-
-ç é(>!"#array-write#:"^,
-*
-
-ê ê(!#"
-#binop ==#2==:"Bbool,"*
-
-ê ê(!# *
-ê ê(2
-ï ï("à)
-'
-
-ë- î(;'"#unknown-value#Blist(
-&
-
-ë- î(;("
-#is-exact#:'Bbool
-
-
-ë- î(;)"
-#assume#:(:
-8
-
-ë- î(;*"#set-field# __collection_size:'Bint(
-&
-
-ë- î(;+"#array-add-last#:'$(
-&
-
-ë- î(;,"#array-add-last#:'%(
-&
-
-ë- î(;-"#array-add-last#:'&&
-$
-
-ë î(;."#array-write#:'"à)
-'
-
-ð- ó(<2"#unknown-value#Blist(
-&
-
-ð- ó(<3"
-#is-exact#:2Bbool
-
-
-ð- ó(<4"
-#assume#:3:
-8
-
-ð- ó(<5"#set-field# __collection_size:2Bint(
-&
-
-ð- ó(<6"#array-add-last#:2/(
-&
-
-ð- ó(<7"#array-add-last#:20(
-&
-
-ð- ó(<8"#array-add-last#:21&
-$
-
-ð ó(<9"#array-write#:2"
-
-ô ô(*4/home/omar/Documents/ruleIQ/services/ai/assistant.py

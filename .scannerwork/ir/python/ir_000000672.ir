@@ -1,21 +1,0 @@
-
-
-0int
-%"Mock execute for pipeline."strself
-¼ ¼(list"Ä)
-'
-
-¾ ¾("#unknown-value#Blist(
-&
-
-¾ ¾("
-#is-exact#:Bbool
-
-
-¾ ¾("
-#assume#::
-8
-
-¾ ¾("#set-field# __collection_size:Bint
-
-¾ ¾(*5/home/omar/Documents/ruleIQ/tests/mocks/mock_redis.py

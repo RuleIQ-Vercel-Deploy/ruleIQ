@@ -1,54 +1,0 @@
-
-$"Manual review recommended"str
--$"Self-criticism service unavailable"str
-<3"Create a fallback critique when AI analysis fails"str
-0.5float
-
-0int
-7."Unable to analyze - AI criticism unavailable"strself
-Ç" Ç(&aspect
-Ç( Ç(3#rag_fact_checker.CriticSeverity	list"¼'
-%
-
-Ê Ê("#get-field# INFO:)
-'
-
-Ê( Ë(;"#unknown-value#Blist(
-&
-
-Ê( Ë(;
-"
-#is-exact#:	Bbool
-
-
-Ê( Ë(;"
-#assume#:
-:
-8
-
-Ê( Ë(;"#set-field# __collection_size:Bint(
-&
-
-Ê( Ë(;"#array-add-last#:)
-'
-
-ËI Ì(("#unknown-value#Blist(
-&
-
-ËI Ì(("
-#is-exact#:	Bbool
-
-
-ËI Ì(("
-#assume#::
-8
-
-ËI Ì(("#set-field# __collection_size:Bint(
-&
-
-ËI Ì(("#array-add-last#:G
-E
-
-É Í(1"SelfCritique:Brag_fact_checker.SelfCritique
-
-É Í(1*8/home/omar/Documents/ruleIQ/services/rag_fact_checker.py

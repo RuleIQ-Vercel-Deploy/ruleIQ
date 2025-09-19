@@ -221,3 +221,4 @@ backup_*/
 *.bak
 
 .vercel
+.scannerwork/

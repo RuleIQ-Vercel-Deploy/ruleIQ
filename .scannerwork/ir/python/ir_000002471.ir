@@ -1,48 +1,0 @@
-
-
-0int
-+""Assign to first available agent."strself
-« «(task
-» »(eligible_agents
-… …(#list"[+
-)
-
-Ã& Ã(5"
-__bool__*:BboolH,"*
-
-Ã& Ã(5 *
-Ã# Ã(%2
-Ã6 Ã(:"è)
-'
-
-Ã Ã(""#unknown-value#Blist$
-"
-
-Ã Ã(""#array-read#:(
-&
-
-Ã Ã("	"#array-add-last#:
-
-Ã Ã(="∆)
-'
-
-Ã; Ã(=
-"#unknown-value#Blist(
-&
-
-Ã; Ã(="
-#is-exact#:
-Bbool
-
-
-Ã; Ã(="
-#assume#::
-8
-
-Ã; Ã(="#set-field# __collection_size:
-Bint
-
-Ã Ã(="&*
-
-
-Ã Ã(=*:/home/omar/Documents/ruleIQ/services/agents/coordinator.py

@@ -1,22 +1,0 @@
-
-trueboolfunc^ ^($"†!
-
-m m("#unknown-value#!
-
-l l(	"#unknown-value#!
-
-k k("#unknown-value#(
-&
-_ k(%closure"#new-object#&
-$
-_ k("#set-field# func:+
-)
-_ k("?python-partial-apply?:3
-1
-k k(%"#set-field# __requires_auth__:!
-
-l) l(6"#unknown-value#4
-2
-l l(&
-" #set-field# __required_roles__:	
-m m(*8/home/omar/Documents/ruleIQ/middleware/jwt_decorators.py

@@ -1,26 +1,0 @@
-
-
-6int
-"gzip"str
-%"Compress response content."strcontent
-Á Á((encoding
-Á* Á(@"P,
-*
-
-Ã Ã("
-#binop ==#2==:Bbool "
-
-Ã Ã( *
-Ã Ã(
-"i#
-!
-
-Ä Ä(:"#unknown-value#.
-,
-
-Ä Ä(:"
-gzipcompress:Bbytes
-
-Ä Ä(:"
-
-Å Å(*;/home/omar/Documents/ruleIQ/api/optimization/performance.py

@@ -1,42 +1,0 @@
-
-
-0int
-,#"Get the size of context in bytes."strself
-ù ù(
-session_id
-ù ù(/"Š0
-.
-
-û û(/"#get-field# context_trees:4
-2
-
-û û(/"#binop not in#2not in:Bbool "
-
-û û(/ *
-û û(
-"
-
-ü ü("ž0
-.
-
-þ þ(!"#get-field# context_trees:*
-(
-
-þ þ(-root"#array-read#:(
-&
-
-ÿ ÿ((	"#get-field# value:#
-!
-
-ÿ ÿ(
-"#unknown-value#-
-+
-
-ÿ ÿ()"?python-unknown?:
-	Bstr,
-*
-
-ÿ ÿ(*"
-builtinslen*:Bint
-
-ÿ ÿ(**>/home/omar/Documents/ruleIQ/services/agents/context_manager.py

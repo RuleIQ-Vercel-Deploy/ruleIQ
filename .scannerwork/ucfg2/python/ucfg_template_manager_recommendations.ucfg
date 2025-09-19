@@ -1,76 +1,0 @@
-
-Areporting.template_manager.TemplateManager._build_recommendationsN
-B/home/omar/Documents/ruleIQ/services/reporting/template_manager.py´ ´("2*ç
-2
-µ µ(+
-
-¶ º(	
-%1"dict¤
-¡
-
-· ·(/
-%2"__mapSet*"
-
-__unknown_file (
-
-%1*%
-
-__unknown_file (	
-title*8
-
-__unknown_file (
-Priority Recommendations±
-®
-
-¸ ¸(<
-%3"__mapSet*"
-
-__unknown_file (
-
-%1*'
-
-__unknown_file (	
-content*C
-
-__unknown_file ('%
-#Recommended actions for improvement
-
-¹7 ¹(9
-%4"listœ™
-
-¹ ¹(:
-%5*+
-
-__unknown_file (
-
-report_data*/
-
-__unknown_file (
-recommendations*"
-
-__unknown_file (
-
-%42get
-Š
-
-¹ ¹(:
-%6"__mapSet*"
-
-__unknown_file (
-
-%1*$
-
-__unknown_file (
-data*"
-
-__unknown_file (
-
-%5"
-
-¶ º(	
-
-%1:
-
-´% ´(@
-report_dataB.,
-*reporting.template_manager.TemplateManagerH

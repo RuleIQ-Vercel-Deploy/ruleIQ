@@ -1,24 +1,0 @@
-
-
-	0int
-%"Export user evidence data."strself
-¯$ ¯((db
-¯* ¯(5user_id
-¯7 ¯(Clist"Ä)
-'
-
-² ²("#unknown-value#Blist(
-&
-
-² ²("
-#is-exact#:Bbool
-
-
-² ²("
-#assume#::
-8
-
-² ²(
-"#set-field# __collection_size:	Bint
-
-² ²(*B/home/omar/Documents/ruleIQ/services/compliance/gdpr_compliance.py

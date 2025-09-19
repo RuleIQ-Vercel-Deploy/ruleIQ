@@ -1,41 +1,0 @@
-
-,auth_test_utils.TestAuthManager.setup_methodD
-:/home/omar/Documents/ruleIQ/tests/utils/auth_test_utils.py ("2*«
-2 (?
- (
-%1"dicti
-g
- (1!
-auth_test_utils.TestAuthManager"
-
-test_users"__id*"
-
-__unknown_file (
-
-%1
- (
-%2"dictl
-j
- (4!
-auth_test_utils.TestAuthManager"
-active_tokens"__id*"
-
-__unknown_file (
-
-%2
-" ('
-%3"setq
-o
- ('9!
-auth_test_utils.TestAuthManager"
-blacklisted_tokens"__id*"
-
-__unknown_file (
-
-%3*
-3*8
-3
-auth_test_utils.py"
- (
-implicit returnB#!
-auth_test_utils.TestAuthManagerH

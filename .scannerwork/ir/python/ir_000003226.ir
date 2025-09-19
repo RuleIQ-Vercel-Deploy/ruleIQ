@@ -1,141 +1,0 @@
-
-
-0int
-"a"bool
- "rate_limited_requests"str
- "requests_by_operation"str
- "rate_limit_percentage"str
-"division by zero"bool
-.60int
-"uptime_seconds"str
-"S3518"bool
-##"rate_limits_by_operation"str
-100int
-	"total_requests"str
-0'"Get current rate limiting statistics."str
-'"requests_per_minute"strself
-   ("¡%
-#
-
-¢ ¢("
-timetimeBfloat-
-+
-
-¢ ¢(."#get-field# start_time:;
-9
-
-¢ ¢(.uptime"#dependent-value#*:Bfloat&
-$
-
-£ ª(>"#new-object#Bdict"
- 
-
-£ £(("	#map-set#:1
-/
-
-£< ¤(
-"#get-field# total_requests:"
- 
-
-£* ¤("	#map-set#:	
-8
-6
-
-¤5 ¥(!"#!#get-field# rate_limited_requests:"
- 
-
-¤ ¥(!"	#map-set#:1
-/
-
-¦A §("#get-field# total_requests:*
-(
-
-¦A §("	#binop >#2>:Bbool,"*
-
-¦A §( *
-¦> ¦(@2
-§ §(#"½8
-6
-
-¥< ¦(!"#!#get-field# rate_limited_requests:1
-/
-
-¦$ ¦(7"#get-field# total_requests:,
-*
-
-¥< ¦(7"
-#binop !=#2!=:Bbool"
- 
-
-¥< ¦(7"
-#assert#:3
-1
-
-¥< ¦(7"#dependent-value#*:Bfloat3
-1
-
-¥< ¦(="#dependent-value#*:Bfloat
-
-¥< §(%"
-
-¥< §(%"ß*"
- 
-
-¥# §(%"	#map-set#:8
-6
-
-§E ¨(! "#!#get-field# requests_by_operation:.
-,
-
-§@ ¨("!"
-builtinsdict*: Bdict"
- 
-
-§' ¨("""	#map-set#:!;
-9
-
-¨E ©($$"&$#get-field# rate_limits_by_operation:.
-,
-
-¨@ ©(%%"
-builtinsdict*:$Bdict"
- 
-
-¨$ ©(%&"	#map-set#:#%+
-)
-
-ª, ª(6("?python-unknown?*:+
-)
-
-ª, ª(6)"
-__bool__*:(BboolH,"*
-
-ª, ª(6) *
-ª) ª(+2
-ª7 ª(;"ƒ1
-/
-
-©> ª(*"#get-field# total_requests:,
-*
-
-©> ª(#+"
-#binop !=#2!=:Bbool"
- 
-
-©> ª(#,"
-#assert#:+3
-1
-
-©> ª(#-"#dependent-value#*:*Bfloat3
-1
-
-©> ª((/"#dependent-value#*:-.Bfloat
-
-©> ª(="
-
-©> ª(="J*0/"
- 
-
-©' ª(=1"	#map-set#:'0
-
-£ ª(>*=/home/omar/Documents/ruleIQ/api/middleware/ai_rate_limiter.py

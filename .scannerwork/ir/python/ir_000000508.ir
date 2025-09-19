@@ -1,7 +1,0 @@
-
-0'"Generate cache key for query results."str
-D;"query_cache:{hashlib.md5(query_str.encode()).hexdigest()}"strself
-× ×( 	query_str
-×" ×(0"
-
-Ú Ú(K*4/home/omar/Documents/ruleIQ/database/optimization.py

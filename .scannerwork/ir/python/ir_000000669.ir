@@ -1,13 +1,0 @@
-
-!"Mock exists operation."strself
-œ œ(key
-œ œ(#"i'
-%
-
-ž ž("#get-field# data:,
-*
-
-ž ž("
-#binop in#2in:Bbool
-
-ž ž(*5/home/omar/Documents/ruleIQ/tests/mocks/mock_redis.py

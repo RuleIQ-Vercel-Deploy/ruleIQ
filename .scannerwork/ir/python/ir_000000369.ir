@@ -1,30 +1,0 @@
-
-ne"
-    Decorator for feature flag protected functions
-    Supports both sync and async functions
-    "str	flag_name
-¢ ¢(fallback
-£ £(!raise_on_disabled
-¤ ¤(#"¦#
-!
-
-ó ó(
-"#unknown-value#*
-(
-
-ª ó(%closure"#new-object#-
-+
-
-ª ó("#set-field# flag_name:,
-*
-
-ª ó("#set-field# fallback:5
-3
-
-ª ó("#set-field# raise_on_disabled:-
-+
-
-ª ó(	"?python-partial-apply?:
-
-ó ó(
-*</home/omar/Documents/ruleIQ/services/feature_flag_service.py

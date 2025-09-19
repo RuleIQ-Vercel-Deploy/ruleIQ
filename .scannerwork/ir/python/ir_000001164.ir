@@ -1,13 +1,0 @@
-
-?6"Decorator for routes requiring specific permissions."strpermissions
-€ €($"’.
-,
-
-‚2 ‚(C"
-builtinslist*:BlistN
-L
-
-‚ ‚(D"9
-"rbac_middleware.RBACRouteProtectorrequire_permissions:
-
-‚ ‚(D*=/home/omar/Documents/ruleIQ/api/middleware/rbac_middleware.py

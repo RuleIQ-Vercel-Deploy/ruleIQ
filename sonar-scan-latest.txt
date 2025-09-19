@@ -1,0 +1,354 @@
+[INFO]  Bootstrapper: Unable to read "package.json" file
+[WARN]  Bootstrapper: Both properties "sonar.login" and "sonar.token" are set. "sonar.login" is deprecated and will be removed in a future version. Value of deprecated property "sonar.login" will be ignored.
+[INFO]  Bootstrapper: Platform: linux x64
+[INFO]  Bootstrapper: Server URL: https://sonarcloud.io
+[INFO]  Bootstrapper: Version: 4.3.0
+[INFO]  Bootstrapper: JRE provisioning is supported
+[INFO]  Bootstrapper: Using JRE from the cache
+[INFO]  ScannerEngine: Starting SonarScanner Engine...
+[INFO]  ScannerEngine: Java 17.0.11 Eclipse Adoptium (64-bit)
+[INFO]  ScannerEngine: Load global settings
+[INFO]  ScannerEngine: Load global settings (done) | time=362ms
+[INFO]  ScannerEngine: Server id: 1BD809FA-AWHW8ct9-T_TB3XqouNu
+[INFO]  ScannerEngine: Loading required plugins
+[INFO]  ScannerEngine: Load plugins index
+[INFO]  ScannerEngine: Load plugins index (done) | time=78ms
+[INFO]  ScannerEngine: Load/download plugins
+[INFO]  ScannerEngine: Load/download plugins (done) | time=66ms
+[INFO]  ScannerEngine: Load project settings for component key: 'ruliq-compliance-platform'
+[INFO]  ScannerEngine: Load project settings for component key: 'ruliq-compliance-platform' (done) | time=292ms
+[INFO]  ScannerEngine: Process project properties
+[INFO]  ScannerEngine: Execute project builders
+[INFO]  ScannerEngine: Execute project builders (done) | time=0ms
+[INFO]  ScannerEngine: Project key: ruliq-compliance-platform
+[INFO]  ScannerEngine: Base dir: /home/omar/Documents/ruleIQ
+[INFO]  ScannerEngine: Working dir: /home/omar/Documents/ruleIQ/.scannerwork
+[INFO]  ScannerEngine: Load project branches
+[INFO]  ScannerEngine: Load project branches (done) | time=226ms
+[INFO]  ScannerEngine: Check ALM binding of project 'ruliq-compliance-platform'
+[INFO]  ScannerEngine: Detected project binding: NOT_BOUND
+[INFO]  ScannerEngine: Check ALM binding of project 'ruliq-compliance-platform' (done) | time=153ms
+[INFO]  ScannerEngine: Load project pull requests
+[INFO]  ScannerEngine: Load project pull requests (done) | time=206ms
+[INFO]  ScannerEngine: Load branch configuration
+[INFO]  ScannerEngine: Load branch configuration (done) | time=2ms
+[INFO]  ScannerEngine: Load quality profiles
+[INFO]  ScannerEngine: Load quality profiles (done) | time=369ms
+[INFO]  ScannerEngine: Load active rules
+[INFO]  ScannerEngine: Load active rules (done) | time=1283ms
+[INFO]  ScannerEngine: Organization key: omara1-bakri
+[INFO]  ScannerEngine: Branch name: the-bmad-experiment, type: short-lived
+[WARN]  ScannerEngine: The property 'sonar.login' is deprecated and will be removed in the future. Please use the 'sonar.token' property instead when passing a token.
+[INFO]  ScannerEngine: Preprocessing files...
+[INFO]  ScannerEngine: 
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@emnapi/wasi-threads' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@emnapi/core' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@emnapi/runtime' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@tybys/wasm-util' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-win32-x64-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-win32-ia32-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-arm-gnueabihf' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-riscv64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-s390x-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-arm-musleabihf' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-freebsd-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-android-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-riscv64-musl' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-ppc64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-arm64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-android-arm-eabi' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-freebsd-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-loongarch64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-arm64-musl' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-win32-arm64-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@swc/core-win32-ia32-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@swc/core-darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@swc/core-win32-x64-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@swc/core-linux-arm-gnueabihf' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@swc/core-darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@swc/core-linux-arm64-musl' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@swc/core-win32-arm64-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@swc/core-linux-arm64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-linux-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-libvips-darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-linux-arm' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-libvips-linuxmusl-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-libvips-linux-ppc64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-win32-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-libvips-linux-s390x' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-wasm32' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-win32-ia32' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-linux-s390x' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-linux-ppc64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-win32-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-libvips-linux-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-libvips-darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-libvips-linux-arm' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-linuxmusl-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/frontend' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@napi-rs/wasm-runtime' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/openbsd-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/android-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/freebsd-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/android-arm' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/win32-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/android-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/linux-riscv64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/linux-loong64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/aix-ppc64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/netbsd-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/sunos-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/win32-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/linux-mips64el' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/linux-s390x' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/linux-arm' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/openharmony-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/linux-ppc64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/netbsd-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/linux-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/linux-ia32' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/freebsd-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/win32-ia32' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/openbsd-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@sentry/cli-darwin' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@sentry/cli-linux-i686' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@sentry/cli-win32-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@sentry/cli-linux-arm' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@sentry/cli-win32-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@sentry/cli-win32-i686' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@sentry/cli-linux-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/fsevents' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@unrs/resolver-binding-win32-arm64-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@unrs/resolver-binding-linux-ppc64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@unrs/resolver-binding-linux-riscv64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@unrs/resolver-binding-win32-x64-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@unrs/resolver-binding-linux-riscv64-musl' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@unrs/resolver-binding-linux-arm64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@unrs/resolver-binding-linux-arm-gnueabihf' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@unrs/resolver-binding-wasm32-wasi' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@unrs/resolver-binding-android-arm-eabi' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@unrs/resolver-binding-linux-arm64-musl' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@unrs/resolver-binding-linux-s390x-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@unrs/resolver-binding-darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@unrs/resolver-binding-linux-arm-musleabihf' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@unrs/resolver-binding-android-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@unrs/resolver-binding-win32-ia32-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@unrs/resolver-binding-freebsd-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@unrs/resolver-binding-darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/chokidar@3.6.0/node_modules/fsevents' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/@unrs/resolver-binding-win32-arm64-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/@unrs/resolver-binding-linux-ppc64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/@unrs/resolver-binding-linux-riscv64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/@unrs/resolver-binding-win32-x64-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/@unrs/resolver-binding-linux-riscv64-musl' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/@unrs/resolver-binding-linux-arm64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/@unrs/resolver-binding-linux-arm-gnueabihf' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/@unrs/resolver-binding-wasm32-wasi' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/@unrs/resolver-binding-android-arm-eabi' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/@unrs/resolver-binding-linux-arm64-musl' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/@unrs/resolver-binding-linux-s390x-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/@unrs/resolver-binding-darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/@unrs/resolver-binding-linux-arm-musleabihf' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/@unrs/resolver-binding-android-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/@unrs/resolver-binding-win32-ia32-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/@unrs/resolver-binding-freebsd-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/unrs-resolver@1.11.1/node_modules/@unrs/resolver-binding-darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/@sentry+cli@2.52.0/node_modules/@sentry/cli-darwin' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/@sentry+cli@2.52.0/node_modules/@sentry/cli-linux-i686' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/@sentry+cli@2.52.0/node_modules/@sentry/cli-win32-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/@sentry+cli@2.52.0/node_modules/@sentry/cli-linux-arm' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/@sentry+cli@2.52.0/node_modules/@sentry/cli-win32-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/@sentry+cli@2.52.0/node_modules/@sentry/cli-win32-i686' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/@sentry+cli@2.52.0/node_modules/@sentry/cli-linux-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[INFO]  ScannerEngine: 
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/@swc+core@1.13.5/node_modules/@swc/core-win32-ia32-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/@swc+core@1.13.5/node_modules/@swc/core-darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/@swc+core@1.13.5/node_modules/@swc/core-win32-x64-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/@swc+core@1.13.5/node_modules/@swc/core-linux-arm-gnueabihf' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/@swc+core@1.13.5/node_modules/@swc/core-darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/@swc+core@1.13.5/node_modules/@swc/core-linux-arm64-musl' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/@swc+core@1.13.5/node_modules/@swc/core-win32-arm64-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/@swc+core@1.13.5/node_modules/@swc/core-linux-arm64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/openbsd-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/android-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/freebsd-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/android-arm' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/win32-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/android-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/linux-riscv64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/linux-loong64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/aix-ppc64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/netbsd-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/sunos-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/win32-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/linux-mips64el' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/linux-s390x' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/linux-arm' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/openharmony-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/linux-ppc64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/netbsd-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/linux-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/linux-ia32' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/freebsd-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/win32-ia32' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/esbuild@0.25.9/node_modules/@esbuild/openbsd-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.33.5/node_modules/@img/sharp-linux-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.33.5/node_modules/@img/sharp-libvips-darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.33.5/node_modules/@img/sharp-linux-arm' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.33.5/node_modules/@img/sharp-libvips-linuxmusl-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.33.5/node_modules/@img/sharp-win32-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.33.5/node_modules/@img/sharp-darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.33.5/node_modules/@img/sharp-libvips-linux-s390x' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.33.5/node_modules/@img/sharp-wasm32' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.33.5/node_modules/@img/sharp-win32-ia32' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.33.5/node_modules/@img/sharp-linux-s390x' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.33.5/node_modules/@img/sharp-libvips-linux-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.33.5/node_modules/@img/sharp-libvips-darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.33.5/node_modules/@img/sharp-libvips-linux-arm' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.33.5/node_modules/@img/sharp-linuxmusl-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.33.5/node_modules/@img/sharp-darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-win32-x64-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-win32-ia32-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-linux-arm-gnueabihf' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-linux-riscv64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-linux-s390x-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-linux-arm-musleabihf' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-freebsd-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-android-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-linux-riscv64-musl' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-linux-ppc64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-linux-arm64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-android-arm-eabi' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-freebsd-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-linux-loongarch64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-linux-arm64-musl' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/@rollup/rollup-win32-arm64-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/rollup@4.49.0/node_modules/fsevents' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/jest-haste-map@29.7.0/node_modules/fsevents' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/jest-haste-map@30.1.0/node_modules/fsevents' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-linux-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-libvips-darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-linux-arm' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-libvips-linuxmusl-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-libvips-linux-ppc64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-win32-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-libvips-linux-s390x' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-wasm32' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-win32-ia32' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-linux-s390x' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-linux-ppc64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-win32-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-libvips-linux-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-libvips-darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-libvips-linux-arm' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-linuxmusl-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/sharp@0.34.3/node_modules/@img/sharp-darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[INFO]  ScannerEngine: 
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/playwright@1.55.0/node_modules/fsevents' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/.venv/bin/python3.11' is ignored. It is a symbolic link targeting a file not located in project basedir.
+[INFO]  ScannerEngine: 5 languages detected in 1367 preprocessed files (done) | time=39544ms
+[INFO]  ScannerEngine: 1269953 files ignored because of inclusion/exclusion patterns
+[INFO]  ScannerEngine: 64 files ignored because of scm ignore settings
+[INFO]  ScannerEngine: Loading plugins for detected languages
+[INFO]  ScannerEngine: Load/download plugins
+[INFO]  ScannerEngine: Load/download plugins (done) | time=89ms
+[INFO]  ScannerEngine: SonarJasmin relies on SonarSecurity to define the JS/TS security rule repositories.
+[INFO]  ScannerEngine: Load metrics repository
+[INFO]  ScannerEngine: Load metrics repository (done) | time=79ms
+[INFO]  ScannerEngine: Sensor cache enabled
+[INFO]  ScannerEngine: Load sensor cache
+[INFO]  ScannerEngine: Load sensor cache (17 MB) | time=1691ms
+[INFO]  ScannerEngine: Load project repositories
+[INFO]  ScannerEngine: Load project repositories (done) | time=255ms
+[INFO]  ScannerEngine: SCM collecting changed files in the branch
+[WARN]  ScannerEngine: Could not find ref: master in refs/heads, refs/remotes/upstream or refs/remotes/origin
+[INFO]  ScannerEngine: SCM collecting changed files in the branch (done) | time=13ms
+[INFO]  ScannerEngine: Indexing files...
+[INFO]  ScannerEngine: Project configuration:
+[INFO]  ScannerEngine:   Included sources: **/*.py, **/*.ts, **/*.tsx, **/*.js, **/*.jsx, **/*.css, **/*.scss, **/*.html
+[INFO]  ScannerEngine:   Excluded sources: **/node_modules/**, **/.venv/**, **/venv/**, **/env/**, **/__pycache__/**, **/*.pyc, **/dist/**, **/build/**, **/.next/**, **/out/**, **/coverage/**, **/htmlcov/**, **/.pytest_cache/**, **/test-results/**, **/*.log, **/logs/**, **/.serena/cache/**, **/.secrets/**, **/historical/**, **/backups/**, **/migration_scripts/**, **/temporary_files/**, **/*.backup*, **/*.pkl, **/celerybeat-schedule*, **/build-wrapper-dump.json, **/test_*.py, **/*_test.py, **/*.test.ts, **/*.test.tsx, **/*.test.js, **/*.test.jsx, **/*.spec.ts, **/*.spec.tsx, **/*.spec.js, **/*.spec.jsx
+[INFO]  ScannerEngine:   Included tests: **/test_*.py, **/*_test.py, **/*.test.ts, **/*.test.tsx, **/*.test.js, **/*.test.jsx, **/*.spec.ts, **/*.spec.tsx, **/*.spec.js, **/*.spec.jsx
+[INFO]  ScannerEngine:   Excluded sources for duplication: **/migrations/**, **/alembic/versions/**, **/models/**, **/types/**
+[INFO]  ScannerEngine: 1364 files indexed (done) | time=46ms
+[INFO]  ScannerEngine: Quality profile for css: Sonar way
+[INFO]  ScannerEngine: Quality profile for js: Sonar way
+[INFO]  ScannerEngine: Quality profile for py: Sonar way
+[INFO]  ScannerEngine: Quality profile for ts: Sonar way
+[INFO]  ScannerEngine: Quality profile for web: Sonar way
+[INFO]  ScannerEngine: ------------- Run sensors on module ruleIQ Compliance Platform
+[INFO]  ScannerEngine: SonarJasmin relies on SonarSecurity to define the JS/TS security rule repositories.
+[INFO]  ScannerEngine: Sensor Python Sensor [python]
+[INFO]  ScannerEngine: Starting global symbols computation
+[INFO]  ScannerEngine: 665 source files to be analyzed
+[INFO]  ScannerEngine: 665/665 source files have been analyzed
+[INFO]  ScannerEngine: Finished step global symbols computation in 6300ms
+[INFO]  ScannerEngine: Starting rules execution
+[INFO]  ScannerEngine: 665 source files to be analyzed
+[ERROR] ScannerEngine: Unable to parse file: services/ai/fallback_system.py
+[ERROR] ScannerEngine: Parse error at line 270 column 24:
+
+  259: "confidence"],
+  260:                 source="static_template",
+  261:                 metadata=template["metadata"],
+  262:             )
+  263:         else:
+  264:             return FallbackResponse(
+  265:                 content= (
+  266:                     "Recommendations are temporarily unavailable. Please contact support for personalized "
+  267:                     "guidance."",
+  268:                 )
+  269:                 confidence=0.3,
+  -->                  source="default_fallback",
+  271:             )
+  272: 
+  273:     def get_service_unavailable_fallback(self) -> FallbackResponse:
+  274:         """Get service unavailable message"""
+  275:         template = self.templates["service_unavailable"]
+  276: 
+  277:         return FallbackResponse(
+  278:             content=template["content"],
+  279:             confidence=template["confidence"],
+  280:             source="service_status",
+  281:             metadata=template["metadata"],
+  282:         )
+  283: 
+  284: 
+  285: class CacheManager:
+  286:     """Manages cached AI responses for fallback use"""
+  287: 
+  288:     def __init__(self, cache_ttl_hours: int = 24) -> None:
+  289:         self.cache: Dict[str, Dict[str, Any]] = {}
+  290:         self.cache_ttl = timedelta(hours=cache_ttl_hours)
+  291:         self.logger = logging.getLogger(__name__)
+  292: 
+  293:     def _generate_cache_key(self, operation: str, context: Dict[str, Any]) -> str:
+  294:         """Generate cache key from operation and context"""
+  295:         # Create a simple hash of the operation and key context elements
+  296:         key_elements = [operation]
+  297: 
+  298:         # Add framework if present
+  299:         if "framework" in context:
+  300:             key_elements.append(f"fw:{context['framework']}")
+  301: 
+  302:         # Add business type if present
+  303:         if "business_type" in context:
+  304:             key_elements.append(f"bt:{context['business_type']}")
+  305: 
+  306:         return "|".join(key_elements)
+  307: 
+  308:     def store_response(
+  309:         self, operation: str, context: Dict[str, Any], response: str
+  310:     ) -> None:
+  311:         """Store a successful AI response in
+

@@ -1,0 +1,342 @@
+[INFO]  Bootstrapper: Unable to read "package.json" file
+[DEBUG] Bootstrapper: Setting the log level to DEBUG due to verbose mode
+[DEBUG] Bootstrapper: Properties: {
+  'sonar.userHome': '/home/omar/.sonar',
+  'sonar.working.directory': '.scannerwork',
+  'sonar.scanner.os': 'linux',
+  'sonar.scanner.arch': 'x64',
+  'sonar.exclusions': '**/node_modules/**,**/.venv/**,**/venv/**,**/env/**,**/__pycache__/**,**/*.pyc,**/dist/**,**/build/**,**/.next/**,**/out/**,**/coverage/**,**/htmlcov/**,**/.pytest_cache/**,**/test-results/**,**/*.log,**/logs/**,**/.serena/cache/**,**/.secrets/**,**/historical/**,**/backups/**,**/migration_scripts/**,**/temporary_files/**,**/*.backup*,**/*.pkl,**/celerybeat-schedule*',
+  'sonar.projectKey': 'ruliq-compliance-platform',
+  'sonar.projectName': 'ruleIQ Compliance Platform',
+  'sonar.projectVersion': '1.0.0',
+  'sonar.host.url': 'https://sonarcloud.io',
+  'sonar.organization': 'omara1-bakri',
+  'sonar.sources': '.',
+  'sonar.sourceEncoding': 'UTF-8',
+  'sonar.python.version': '3.11',
+  'sonar.typescript.node.maxspace': '8192',
+  'sonar.inclusions': '**/*.py,**/*.ts,**/*.tsx,**/*.js,**/*.jsx,**/*.css,**/*.scss,**/*.html',
+  'sonar.tests': 'tests,frontend/tests',
+  'sonar.test.inclusions': '**/test_*.py,**/*_test.py,**/*.test.ts,**/*.test.tsx,**/*.test.js,**/*.test.jsx,**/*.spec.ts,**/*.spec.tsx,**/*.spec.js,**/*.spec.jsx',
+  'sonar.python.coverage.reportPaths': 'coverage.xml,htmlcov/coverage.xml',
+  'sonar.typescript.lcov.reportPaths': 'frontend/coverage/lcov.info',
+  'sonar.javascript.lcov.reportPaths': 'frontend/coverage/lcov.info',
+  'sonar.python.pylint.reportPaths': 'pylint-report.txt',
+  'sonar.python.flake8.reportPaths': 'flake8-report.txt',
+  'sonar.python.bandit.reportPaths': 'bandit-report.json',
+  'sonar.typescript.tsconfigPath': 'frontend/tsconfig.json',
+  'sonar.eslint.reportPaths': 'frontend/eslint-report.json',
+  'sonar.cpd.exclusions': '**/migrations/**,**/alembic/versions/**,**/models/**,**/types/**',
+  'sonar.security.hotspots.inherit': 'NONE',
+  'sonar.qualitygate.wait': 'false',
+  'sonar.analysis.mode': 'publish',
+  'sonar.verbose': 'true',
+  'sonar.token': '2807c14dba2d3e3c4c1d11b56e75b4f1da69496f',
+  'sonar.branch.name': 'the-bmad-experiment',
+  'sonar.scanner.internal.isSonarCloud': 'true',
+  'sonar.scanner.apiBaseUrl': 'https://api.sonarcloud.io',
+  'sonar.scanner.app': 'ScannerNpm',
+  'sonar.scanner.appVersion': '4.3.0',
+  'sonar.scanner.bootstrapStartTime': '1758247248137',
+  'sonar.scanner.wasJreCacheHit': 'disabled',
+  'sonar.scanner.wasEngineCacheHit': 'false',
+  'sonar.projectBaseDir': '/home/omar/Documents/ruleIQ'
+}
+[INFO]  Bootstrapper: Platform: linux x64
+[DEBUG] Bootstrapper: Detecting proxy: No proxy detected
+[INFO]  Bootstrapper: Server URL: https://sonarcloud.io
+[INFO]  Bootstrapper: Version: 4.3.0
+[DEBUG] Bootstrapper: Check if Server supports JRE provisioning
+[INFO]  Bootstrapper: JRE provisioning is supported
+[DEBUG] Bootstrapper: Detecting latest version of JRE
+[DEBUG] Bootstrapper: Downloading JRE information for linux x64 from /analysis/jres
+[DEBUG] Bootstrapper: Latest Supported JRE:  {
+  filename: 'OpenJDK17U-jre_x64_linux_hotspot_17.0.11_9.tar.gz',
+  sha256: 'bcb1b7b8ad68c93093f09b591b7cb17161d39891f7d29d33a586f5a328603707',
+  javaPath: 'jdk-17.0.11+9-jre/bin/java',
+  os: 'linux',
+  arch: 'x64',
+  downloadUrl: 'https://scanner.sonarcloud.io/jres/OpenJDK17U-jre_x64_linux_hotspot_17.0.11_9.tar.gz'
+}
+[DEBUG] Bootstrapper: Looking for Cached JRE
+[DEBUG] Bootstrapper: JRE version found in cache: OpenJDK17U-jre_x64_linux_hotspot_17.0.11_9.tar.gz
+[DEBUG] Bootstrapper: Verifying checksum bcb1b7b8ad68c93093f09b591b7cb17161d39891f7d29d33a586f5a328603707
+[DEBUG] Bootstrapper: Checksum Value: bcb1b7b8ad68c93093f09b591b7cb17161d39891f7d29d33a586f5a328603707
+[INFO]  Bootstrapper: Using JRE from the cache
+[DEBUG] Bootstrapper: Detecting latest version of SonarScanner Engine
+[DEBUG] Bootstrapper: Latest SonarScanner Engine version: sonarcloud-scanner-engine-11.20.0.915.jar
+[DEBUG] Bootstrapper: Looking for Cached SonarScanner Engine
+[DEBUG] Bootstrapper: SonarScanner Engine version found in cache: sonarcloud-scanner-engine-11.20.0.915.jar
+[DEBUG] Bootstrapper: Verifying checksum afe075b527f5b44756d4e9a7f1091b4a870123d1de78061e56a38fa3dfc731da
+[DEBUG] Bootstrapper: Checksum Value: afe075b527f5b44756d4e9a7f1091b4a870123d1de78061e56a38fa3dfc731da
+[DEBUG] Bootstrapper: Using SonarScanner Engine from the cache
+[DEBUG] Bootstrapper: Running the SonarScanner Engine
+[DEBUG] Bootstrapper: Detecting proxy: No proxy detected
+[DEBUG] Bootstrapper: Running SonarScanner Engine /home/omar/.sonar/cache/bcb1b7b8ad68c93093f09b591b7cb17161d39891f7d29d33a586f5a328603707/OpenJDK17U-jre_x64_linux_hotspot_17.0.11_9.tar.gz_unzip/jdk-17.0.11+9-jre/bin/java -jar /home/omar/.sonar/cache/afe075b527f5b44756d4e9a7f1091b4a870123d1de78061e56a38fa3dfc731da/sonarcloud-scanner-engine-11.20.0.915.jar
+[DEBUG] Bootstrapper: Writing properties to SonarScanner Engine {"scannerProperties":[{"key":"sonar.userHome","value":"/home/omar/.sonar"},{"key":"sonar.working.directory","value":".scannerwork"},{"key":"sonar.scanner.os","value":"linux"},{"key":"sonar.scanner.arch","value":"x64"},{"key":"sonar.exclusions","value":"**/node_modules/**,**/.venv/**,**/venv/**,**/env/**,**/__pycache__/**,**/*.pyc,**/dist/**,**/build/**,**/.next/**,**/out/**,**/coverage/**,**/htmlcov/**,**/.pytest_cache/**,**/test-results/**,**/*.log,**/logs/**,**/.serena/cache/**,**/.secrets/**,**/historical/**,**/backups/**,**/migration_scripts/**,**/temporary_files/**,**/*.backup*,**/*.pkl,**/celerybeat-schedule*"},{"key":"sonar.projectKey","value":"ruliq-compliance-platform"},{"key":"sonar.projectName","value":"ruleIQ Compliance Platform"},{"key":"sonar.projectVersion","value":"1.0.0"},{"key":"sonar.host.url","value":"https://sonarcloud.io"},{"key":"sonar.organization","value":"omara1-bakri"},{"key":"sonar.sources","value":"."},{"key":"sonar.sourceEncoding","value":"UTF-8"},{"key":"sonar.python.version","value":"3.11"},{"key":"sonar.typescript.node.maxspace","value":"8192"},{"key":"sonar.inclusions","value":"**/*.py,**/*.ts,**/*.tsx,**/*.js,**/*.jsx,**/*.css,**/*.scss,**/*.html"},{"key":"sonar.tests","value":"tests,frontend/tests"},{"key":"sonar.test.inclusions","value":"**/test_*.py,**/*_test.py,**/*.test.ts,**/*.test.tsx,**/*.test.js,**/*.test.jsx,**/*.spec.ts,**/*.spec.tsx,**/*.spec.js,**/*.spec.jsx"},{"key":"sonar.python.coverage.reportPaths","value":"coverage.xml,htmlcov/coverage.xml"},{"key":"sonar.typescript.lcov.reportPaths","value":"frontend/coverage/lcov.info"},{"key":"sonar.javascript.lcov.reportPaths","value":"frontend/coverage/lcov.info"},{"key":"sonar.python.pylint.reportPaths","value":"pylint-report.txt"},{"key":"sonar.python.flake8.reportPaths","value":"flake8-report.txt"},{"key":"sonar.python.bandit.reportPaths","value":"bandit-report.json"},{"key":"sonar.typescript.tsconfigPath","value":"frontend/tsconfig.json"},{"key":"sonar.eslint.reportPaths","value":"frontend/eslint-report.json"},{"key":"sonar.cpd.exclusions","value":"**/migrations/**,**/alembic/versions/**,**/models/**,**/types/**"},{"key":"sonar.security.hotspots.inherit","value":"NONE"},{"key":"sonar.qualitygate.wait","value":"false"},{"key":"sonar.analysis.mode","value":"publish"},{"key":"sonar.verbose","value":"true"},{"key":"sonar.token","value":"2807c14dba2d3e3c4c1d11b56e75b4f1da69496f"},{"key":"sonar.branch.name","value":"the-bmad-experiment"},{"key":"sonar.scanner.internal.isSonarCloud","value":"true"},{"key":"sonar.scanner.apiBaseUrl","value":"https://api.sonarcloud.io"},{"key":"sonar.scanner.app","value":"ScannerNpm"},{"key":"sonar.scanner.appVersion","value":"4.3.0"},{"key":"sonar.scanner.bootstrapStartTime","value":"1758247248137"},{"key":"sonar.scanner.wasJreCacheHit","value":"hit"},{"key":"sonar.scanner.wasEngineCacheHit","value":"true"},{"key":"sonar.projectBaseDir","value":"/home/omar/Documents/ruleIQ"}]}
+[INFO]  ScannerEngine: Starting SonarScanner Engine...
+[INFO]  ScannerEngine: Java 17.0.11 Eclipse Adoptium (64-bit)
+[DEBUG] ScannerEngine: JVM max available memory: 6 GB
+[DEBUG] ScannerEngine: Sonar User Home: /home/omar/.sonar
+[DEBUG] ScannerEngine: Initialize DefaultScannerWsClient
+[DEBUG] ScannerEngine: Loading OS trusted SSL certificates...
+[DEBUG] ScannerEngine: This operation might be slow or even get stuck. You can skip it by passing the scanner property 'sonar.scanner.skipSystemTruststore=true'
+[DEBUG] ScannerEngine: Loaded [441] system trusted certificates
+[INFO]  ScannerEngine: Load global settings
+[DEBUG] ScannerEngine: --> GET https://sonarcloud.io/api/settings/values.protobuf
+[DEBUG] ScannerEngine: <-- 200 https://sonarcloud.io/api/settings/values.protobuf (369ms, unknown-length body)
+[INFO]  ScannerEngine: Load global settings (done) | time=400ms
+[INFO]  ScannerEngine: Server id: 1BD809FA-AWHW8ct9-T_TB3XqouNu
+[DEBUG] ScannerEngine: Initialize DownloadPluginsScannerWsClient
+[DEBUG] ScannerEngine: Loading OS trusted SSL certificates...
+[DEBUG] ScannerEngine: This operation might be slow or even get stuck. You can skip it by passing the scanner property 'sonar.scanner.skipSystemTruststore=true'
+[DEBUG] ScannerEngine: Loaded [441] system trusted certificates
+[DEBUG] ScannerEngine: User cache: /home/omar/.sonar/cache
+[INFO]  ScannerEngine: Loading required plugins
+[INFO]  ScannerEngine: Load plugins index
+[DEBUG] ScannerEngine: --> GET https://sonarcloud.io/api/plugins/installed
+[DEBUG] ScannerEngine: <-- 200 https://sonarcloud.io/api/plugins/installed (33ms, unknown-length body)
+[INFO]  ScannerEngine: Load plugins index (done) | time=45ms
+[INFO]  ScannerEngine: Load/download plugins
+[INFO]  ScannerEngine: Load/download plugins (done) | time=63ms
+[DEBUG] ScannerEngine: Plugins not loaded because they are optional: [abap, sonarapex, architecture, architecturejavascriptfrontend, architecturejavafrontend, csharpenterprise, cpp, cobol, dart, dbd, dbdjavafrontend, dbdpythonfrontend, flex, go, web, jcl, javasymbolicexecution, java, javascript, kotlin, php, pli, plsql, python, rpg, ruby, rust, sonarscala, jasmin, swift, tsql, vbnetenterprise, vb, security, securitycsharpfrontend, securitygofrontend, securityjsfrontend, securityjavafrontend, securitykotlinfrontend, securityphpfrontend, securitypythonfrontend, securityvbnetfrontend, xml]
+[DEBUG] ScannerEngine: Plugins loaded:
+[DEBUG] ScannerEngine:   * Text Code Quality and Security 2.29.0.8107 (textenterprise)
+[DEBUG] ScannerEngine:   * JaCoCo 1.3.0.1538 (jacoco)
+[DEBUG] ScannerEngine:   * IaC Code Quality and Security 1.49.0.16030 (iacenterprise)
+[DEBUG] ScannerEngine:   * IaC Code Quality and Security 1.49.0.16030 (iac)
+[DEBUG] ScannerEngine: --> GET https://sonarcloud.io/api/server/version
+[DEBUG] ScannerEngine: <-- 200 https://sonarcloud.io/api/server/version (29ms, 11-byte body)
+[DEBUG] ScannerEngine: Updated analysis started with a difference of -14 milliseconds
+[DEBUG] ScannerEngine: Started at Fri Sep 19 03:00:50 BST 2025
+[DEBUG] ScannerEngine: register org.eclipse.jgit.util.FS$FileStoreAttributes$$Lambda$268/0x00007ea8e02c6af0@5e742e4 with shutdown hook
+[DEBUG] ScannerEngine: Could not detect any CI vendor
+[INFO]  ScannerEngine: Load project settings for component key: 'ruliq-compliance-platform'
+[DEBUG] ScannerEngine: --> GET https://sonarcloud.io/api/settings/values.protobuf?component=ruliq-compliance-platform
+[DEBUG] ScannerEngine: <-- 200 https://sonarcloud.io/api/settings/values.protobuf?component=ruliq-compliance-platform (188ms, unknown-length body)
+[INFO]  ScannerEngine: Load project settings for component key: 'ruliq-compliance-platform' (done) | time=191ms
+[INFO]  ScannerEngine: Process project properties
+[DEBUG] ScannerEngine: Process project properties (done) | time=7ms
+[INFO]  ScannerEngine: Execute project builders
+[DEBUG] ScannerEngine: Execute project builder: org.sonar.scanner.architecture.ArchitectureProjectBuilder
+[DEBUG] ScannerEngine: Setting sonar.architecture.preview.available to false
+[INFO]  ScannerEngine: Execute project builders (done) | time=0ms
+[INFO]  ScannerEngine: Project key: ruliq-compliance-platform
+[INFO]  ScannerEngine: Base dir: /home/omar/Documents/ruleIQ
+[INFO]  ScannerEngine: Working dir: /home/omar/Documents/ruleIQ/.scannerwork
+[DEBUG] ScannerEngine: Project global encoding: UTF-8, default locale: en_GB
+[DEBUG] ScannerEngine: Creating module hierarchy
+[DEBUG] ScannerEngine:   Init module 'ruleIQ Compliance Platform'
+[DEBUG] ScannerEngine:     Base dir: /home/omar/Documents/ruleIQ
+[DEBUG] ScannerEngine:     Working dir: /home/omar/Documents/ruleIQ/.scannerwork
+[DEBUG] ScannerEngine:     Module global encoding: UTF-8, default locale: en_GB
+[INFO]  ScannerEngine: Load project branches
+[DEBUG] ScannerEngine: --> GET https://sonarcloud.io/api/project_branches/list?project=ruliq-compliance-platform
+[DEBUG] ScannerEngine: <-- 200 https://sonarcloud.io/api/project_branches/list?project=ruliq-compliance-platform (182ms, unknown-length body)
+[INFO]  ScannerEngine: Load project branches (done) | time=192ms
+[INFO]  ScannerEngine: Check ALM binding of project 'ruliq-compliance-platform'
+[DEBUG] ScannerEngine: --> GET https://sonarcloud.io/api/alm_integration/is_project_bound?project=ruliq-compliance-platform
+[DEBUG] ScannerEngine: <-- 200 https://sonarcloud.io/api/alm_integration/is_project_bound?project=ruliq-compliance-platform (95ms, unknown-length body)
+[INFO]  ScannerEngine: Detected project binding: NOT_BOUND
+[INFO]  ScannerEngine: Check ALM binding of project 'ruliq-compliance-platform' (done) | time=100ms
+[INFO]  ScannerEngine: Load project pull requests
+[DEBUG] ScannerEngine: --> GET https://sonarcloud.io/api/project_pull_requests/list?project=ruliq-compliance-platform
+[DEBUG] ScannerEngine: <-- 200 https://sonarcloud.io/api/project_pull_requests/list?project=ruliq-compliance-platform (93ms, unknown-length body)
+[INFO]  ScannerEngine: Load project pull requests (done) | time=101ms
+[INFO]  ScannerEngine: Load branch configuration
+[DEBUG] ScannerEngine: Found manual configuration of branch/PR analysis. Skipping automatic configuration.
+[INFO]  ScannerEngine: Load branch configuration (done) | time=2ms
+[DEBUG] ScannerEngine: Initialize GenericWsClient
+[DEBUG] ScannerEngine: Loading OS trusted SSL certificates...
+[DEBUG] ScannerEngine: This operation might be slow or even get stuck. You can skip it by passing the scanner property 'sonar.scanner.skipSystemTruststore=true'
+[DEBUG] ScannerEngine: Loaded [441] system trusted certificates
+[DEBUG] ScannerEngine: ScaApiWsClient url: https://api.sonarcloud.io
+[DEBUG] ScannerEngine: Loading OS trusted SSL certificates...
+[DEBUG] ScannerEngine: This operation might be slow or even get stuck. You can skip it by passing the scanner property 'sonar.scanner.skipSystemTruststore=true'
+[DEBUG] ScannerEngine: Loaded [441] system trusted certificates
+[INFO]  ScannerEngine: Load quality profiles
+[DEBUG] ScannerEngine: --> GET https://sonarcloud.io/api/qualityprofiles/search.protobuf?projectKey=ruliq-compliance-platform&organization=omara1-bakri
+[DEBUG] ScannerEngine: <-- 200 https://sonarcloud.io/api/qualityprofiles/search.protobuf?projectKey=ruliq-compliance-platform&organization=omara1-bakri (328ms, 5273-byte body)
+[INFO]  ScannerEngine: Load quality profiles (done) | time=341ms
+[INFO]  ScannerEngine: Load active rules
+[DEBUG] ScannerEngine: --> GET https://api.sonarcloud.io/analysis/active-rules?organization=omara1-bakri&project=ruliq-compliance-platform
+[DEBUG] ScannerEngine: <-- 200 https://api.sonarcloud.io/analysis/active-rules?organization=omara1-bakri&project=ruliq-compliance-platform (1163ms, unknown-length body)
+[INFO]  ScannerEngine: Load active rules (done) | time=1353ms
+[DEBUG] ScannerEngine: --> GET https://sonarcloud.io/api/languages/list
+[DEBUG] ScannerEngine: <-- 200 https://sonarcloud.io/api/languages/list (29ms, unknown-length body)
+[INFO]  ScannerEngine: Organization key: omara1-bakri
+[INFO]  ScannerEngine: Branch name: the-bmad-experiment, type: short-lived
+[DEBUG] ScannerEngine: Declared patterns of language Kubernetes were converted to sonar.lang.patterns.kubernetes : 
+[DEBUG] ScannerEngine: Declared patterns of language CSS were converted to sonar.lang.patterns.css : **/*.css,**/*.less,**/*.scss,**/*.sass
+[DEBUG] ScannerEngine: Declared patterns of language Scala were converted to sonar.lang.patterns.scala : **/*.scala
+[DEBUG] ScannerEngine: Declared patterns of language JSP were converted to sonar.lang.patterns.jsp : **/*.jsp,**/*.jspf,**/*.jspx
+[DEBUG] ScannerEngine: Declared patterns of language JavaScript were converted to sonar.lang.patterns.js : **/*.js,**/*.jsx,**/*.cjs,**/*.mjs,**/*.vue
+[DEBUG] ScannerEngine: Declared patterns of language Python were converted to sonar.lang.patterns.py : **/*.py
+[DEBUG] ScannerEngine: Declared patterns of language Ansible were converted to sonar.lang.patterns.ansible : 
+[DEBUG] ScannerEngine: Declared patterns of language Apex were converted to sonar.lang.patterns.apex : **/*.cls,**/*.trigger
+[DEBUG] ScannerEngine: Declared patterns of language Docker were converted to sonar.lang.patterns.docker : **/Dockerfile,**/*.dockerfile
+[DEBUG] ScannerEngine: Declared patterns of language PL/SQL were converted to sonar.lang.patterns.plsql : **/*.sql,**/*.tab,**/*.pkb
+[DEBUG] ScannerEngine: Declared patterns of language Dart were converted to sonar.lang.patterns.dart : **/*.dart
+[DEBUG] ScannerEngine: Declared patterns of language Rust were converted to sonar.lang.patterns.rust : **/*.rs
+[DEBUG] ScannerEngine: Declared patterns of language JCL were converted to sonar.lang.patterns.jcl : **/*.jcl
+[DEBUG] ScannerEngine: Declared patterns of language Java were converted to sonar.lang.patterns.java : **/*.java,**/*.jav
+[DEBUG] ScannerEngine: Declared patterns of language HTML were converted to sonar.lang.patterns.web : **/*.html,**/*.xhtml,**/*.cshtml,**/*.vbhtml,**/*.aspx,**/*.ascx,**/*.rhtml,**/*.erb,**/*.shtm,**/*.shtml,**/*.cmp,**/*.twig
+[DEBUG] ScannerEngine: Declared patterns of language Flex were converted to sonar.lang.patterns.flex : **/*.as
+[DEBUG] ScannerEngine: Declared patterns of language XML were converted to sonar.lang.patterns.xml : **/*.xml,**/*.xsd,**/*.xsl,**/*.config
+[DEBUG] ScannerEngine: Declared patterns of language JSON were converted to sonar.lang.patterns.json : **/*.json
+[DEBUG] ScannerEngine: Declared patterns of language IPython Notebooks were converted to sonar.lang.patterns.ipynb : **/*.ipynb
+[DEBUG] ScannerEngine: Declared patterns of language Text were converted to sonar.lang.patterns.text : 
+[DEBUG] ScannerEngine: Declared patterns of language VB.NET were converted to sonar.lang.patterns.vbnet : **/*.vb
+[DEBUG] ScannerEngine: Declared patterns of language CloudFormation were converted to sonar.lang.patterns.cloudformation : 
+[DEBUG] ScannerEngine: Declared patterns of language Swift were converted to sonar.lang.patterns.swift : **/*.swift
+[DEBUG] ScannerEngine: Declared patterns of language YAML were converted to sonar.lang.patterns.yaml : **/*.yaml,**/*.yml
+[DEBUG] ScannerEngine: Declared patterns of language C++ were converted to sonar.lang.patterns.cpp : **/*.cc,**/*.cpp,**/*.cxx,**/*.c++,**/*.hh,**/*.hpp,**/*.hxx,**/*.h++,**/*.ipp,**/*.ixx,**/*.mxx,**/*.cppm,**/*.ccm,**/*.cxxm,**/*.c++m
+[DEBUG] ScannerEngine: Declared patterns of language C were converted to sonar.lang.patterns.c : **/*.c,**/*.h
+[DEBUG] ScannerEngine: Declared patterns of language Go were converted to sonar.lang.patterns.go : **/*.go
+[DEBUG] ScannerEngine: Declared patterns of language Kotlin were converted to sonar.lang.patterns.kotlin : **/*.kt,**/*.kts
+[DEBUG] ScannerEngine: Declared patterns of language RPG were converted to sonar.lang.patterns.rpg : **/*.rpg,**/*.rpgle,**/*.sqlrpgle,**/*.rpg,**/*.rpgle,**/*.sqlrpgle
+[DEBUG] ScannerEngine: Declared patterns of language PL/I were converted to sonar.lang.patterns.pli : **/*.pli
+[DEBUG] ScannerEngine: Declared patterns of language T-SQL were converted to sonar.lang.patterns.tsql : **/*.tsql
+[DEBUG] ScannerEngine: Declared patterns of language Vb were converted to sonar.lang.patterns.vb : **/*.bas,**/*.frm,**/*.ctl
+[DEBUG] ScannerEngine: Declared patterns of language Secrets were converted to sonar.lang.patterns.secrets : 
+[DEBUG] ScannerEngine: Declared patterns of language Ruby were converted to sonar.lang.patterns.ruby : **/*.rb
+[DEBUG] ScannerEngine: Declared patterns of language C# were converted to sonar.lang.patterns.cs : **/*.cs,**/*.razor
+[DEBUG] ScannerEngine: Declared patterns of language COBOL were converted to sonar.lang.patterns.cobol : 
+[DEBUG] ScannerEngine: Declared patterns of language PHP were converted to sonar.lang.patterns.php : **/*.php,**/*.php3,**/*.php4,**/*.php5,**/*.phtml,**/*.inc
+[DEBUG] ScannerEngine: Declared patterns of language Terraform were converted to sonar.lang.patterns.terraform : **/*.tf
+[DEBUG] ScannerEngine: Declared patterns of language Azure Resource Manager were converted to sonar.lang.patterns.azureresourcemanager : **/*.bicep
+[DEBUG] ScannerEngine: Declared patterns of language ABAP were converted to sonar.lang.patterns.abap : **/*.abap,**/*.ab4,**/*.flow,**/*.asprog
+[DEBUG] ScannerEngine: Declared patterns of language GitHub Actions were converted to sonar.lang.patterns.githubactions : 
+[DEBUG] ScannerEngine: Declared patterns of language Objective-C were converted to sonar.lang.patterns.objc : **/*.m
+[DEBUG] ScannerEngine: Declared patterns of language TypeScript were converted to sonar.lang.patterns.ts : **/*.ts,**/*.tsx,**/*.cts,**/*.mts
+[INFO]  ScannerEngine: Preprocessing files...
+[DEBUG] ScannerEngine: loading config FileBasedConfig[/home/omar/.config/jgit/config]
+[DEBUG] ScannerEngine: readpipe [/usr/bin/git, --version],/usr/bin
+[DEBUG] ScannerEngine: readpipe may return 'git version 2.43.0'
+[DEBUG] ScannerEngine: remaining output:
+
+[DEBUG] ScannerEngine: readpipe [/usr/bin/git, config, --system, --show-origin, --list, -z],/usr/bin
+[DEBUG] ScannerEngine: readpipe may return 'null'
+[DEBUG] ScannerEngine: remaining output:
+
+[DEBUG] ScannerEngine: readpipe rc=128
+[DEBUG] ScannerEngine: Exception caught during execution of command '[/usr/bin/git, config, --system, --show-origin, --list, -z]' in '/usr/bin', return code '128', error message 'fatal: unable to read config file '/etc/gitconfig': No such file or directory
+'
+[DEBUG] ScannerEngine: loading config FileBasedConfig[/home/omar/.config/git/config]
+[DEBUG] ScannerEngine: loading config UserConfigFile[/home/omar/.gitconfig]
+[DEBUG] ScannerEngine: 1782 non excluded files in this Git repository
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/.claude/refactoring-guard.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/.claude/serena-verification.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/.claude/serena-daemon.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/.claude/old-commands/mcp-control.js' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/.claude/serena-verification-silent.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/scripts/run_notification_tests.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/scripts/export_archon_data.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/scripts/migrate_archon_data.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/scripts/fix_archon_docs.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/scripts/fix_notification_tests.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/scripts/run_compliance_tests.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/scripts/import_full_documents.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/scripts/capture_test_errors.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/scripts/fix_test_suite.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/scripts/run_all_notification_tests.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/scripts/import_archon_to_supabase.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/scripts/setup_supabase_schema.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/scripts/check_schema.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/scripts/run_single_test2.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/scripts/export_archon_to_json.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/scripts/fix_tdd_tests.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/test_scripts_additional/ai_assessment_test_fixed.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/test_scripts_additional/ai_test_direct.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/test_scripts_additional/ai_test_script.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/debugging_scripts/jwt_auth_debug_suite.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/debugging_scripts/check_jwt_config.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/debugging_scripts/jwt_test_server.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/debugging_scripts/diagnose_tests.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/debugging_scripts/run_chunked_tests.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/debugging_scripts/verify_jwt_fix.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/debugging_scripts/debug_db.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/debugging_scripts/jwt_secret_explanation.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/debugging_scripts/setup_local_test_db.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/debugging_scripts/run_server_bypass.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/debugging_scripts/debug_jwt.py' is excluded by the scm ignore settings.
+[INFO]  ScannerEngine: 
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/test_configs/conftest_fixed.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/test_configs/temp_direct_importer.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/test_configs/conftest_improved.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/test_configs/conftest_hybrid.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/test_configs/conftest_ai_optimization.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/test_configs/temp_test_importer.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/test_configs/conftest_ai.py' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/test_artifacts/test_artifacts/test_pages/test-iq-chat.html' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/test_artifacts/test_artifacts/test_pages/test-simple-chat.html' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/test_artifacts/test_artifacts/test_pages/test-chat-debug.html' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/test_artifacts/test_artifacts/test_pages/test-chat.html' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/archive/test_artifacts/test_artifacts/test_pages/test-chat-direct.html' is excluded by the scm ignore settings.
+[DEBUG] ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/next-env.d.ts' is excluded by the scm ignore settings.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@emnapi/wasi-threads' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@emnapi/core' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@emnapi/runtime' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@tybys/wasm-util' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-win32-x64-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-win32-ia32-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-arm-gnueabihf' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-riscv64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-s390x-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-arm-musleabihf' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-freebsd-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-android-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-riscv64-musl' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-ppc64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-arm64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-android-arm-eabi' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-freebsd-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-loongarch64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-linux-arm64-musl' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@rollup/rollup-win32-arm64-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@swc/core-win32-ia32-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@swc/core-darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@swc/core-win32-x64-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@swc/core-linux-arm-gnueabihf' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@swc/core-darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@swc/core-linux-arm64-musl' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@swc/core-win32-arm64-msvc' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@swc/core-linux-arm64-gnu' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-linux-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-libvips-darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-linux-arm' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-libvips-linuxmusl-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-libvips-linux-ppc64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-win32-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-libvips-linux-s390x' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-wasm32' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-win32-ia32' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-linux-s390x' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-linux-ppc64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-win32-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-libvips-linux-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-libvips-darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-libvips-linux-arm' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-linuxmusl-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@img/sharp-darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/frontend' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@napi-rs/wasm-runtime' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/openbsd-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/android-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/darwin-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/freebsd-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/android-arm' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/win32-arm64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/android-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/linux-riscv64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/linux-loong64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/aix-ppc64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/darwin-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/netbsd-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/sunos-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/win32-x64' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/linux-mips64el' is ignored. It is a symbolic link targeting a file that does not exist.
+[WARN]  ScannerEngine: File '/home/omar/Documents/ruleIQ/frontend/node_modules/.pnpm/node_modules/@esbuild/linux-s390x' is ignored. It is a symbolic link targeting a file that does not exist.

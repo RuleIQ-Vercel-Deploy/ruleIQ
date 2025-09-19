@@ -1,109 +1,0 @@
-
-;tests.mock_service_proxy.ServiceProxy.get_test_postgres_urlA
-7/home/omar/Documents/ruleIQ/tests/mock_service_proxy.py ("2*	
-2   (>p
-n
-! !(
-%1"__id*V
-
-__unknown_file (:*8'
-%tests.mock_service_proxy.ServiceProxy"
-test_configwu
-! !(*
-%2"__mapGet*"
-
-__unknown_file (
-
-%1*(
-
-__unknown_file (
-
-postgres2__getitem__=
-;
-! !(*
-cfg"__id*"
-
-__unknown_file (
-
-%2tr
-" "(*
-%3"__mapGet*#
-
-__unknown_file (
-
-cfg*$
-
-__unknown_file (
-user2__getitem__xv
-"- "(<
-%4"__mapGet*#
-
-__unknown_file (
-
-cfg*(
-
-__unknown_file (
-
-password2__getitem__tr
-"? "(J
-%5"__mapGet*#
-
-__unknown_file (
-
-cfg*$
-
-__unknown_file (
-host2__getitem__tr
-"M "(X
-%6"__mapGet*#
-
-__unknown_file (
-
-cfg*$
-
-__unknown_file (
-port2__getitem__xv
-"[ "(j
-%7"__mapGet*#
-
-__unknown_file (
-
-cfg*(
-
-__unknown_file (
-
-database2__getitem__ì
-é
-" "(l
-%8"__concat*
-" "(
-postgresql://*
-" "(*
-
-%3*
-"+ "(,
-:*
-"- "(<
-
-%4*
-"= "(>
-@*
-"? "(J
-
-%5*
-"K "(L
-:*
-"M "(X
-
-%6*
-"Y "(Z
-/*
-"[ "(j
-
-%7"
-" "(l
-
-%8:
-$ (5
-original_urlB)'
-%tests.mock_service_proxy.ServiceProxyH

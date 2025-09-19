@@ -1,21 +1,0 @@
-
-/&"Decorator to trace FastAPI endpoints"strendpoint
-¡ ¡( method
-¡" ¡(3"ì#
-!
-
-¬ ¬("#unknown-value#*
-(
-
-¤ ¬(%closure"#new-object#,
-*
-
-¤ ¬("#set-field# endpoint:*
-(
-
-¤ ¬("#set-field# method:-
-+
-
-¤ ¬("?python-partial-apply?:
-
-¬ ¬(*-/home/omar/Documents/ruleIQ/config/tracing.py

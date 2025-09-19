@@ -1,40 +1,0 @@
-
-"update"str
-"export"str
-"delete"str
-!"Log data access events"str
-"read"str
-
-"create"strselfx x("user_idx$ x(0resourcex2 x(?resource_idy y(actiony y(%metadatay' y(DdbyF z("audit_logging.AuditEventAction"ƒ0
-.
-| (	
-action_map"#new-object#Bdict'
-%
-|  |(7"#get-field# CREATE: 
-
-| |(7"	#map-set#:	
-%
-#
-} }(!"#get-field# READ: 
-
-|9 }(!"	#map-set#:	'
-%
-}- }(D"#get-field# UPDATE: 
-
-}# }(D"	#map-set#:	'
-%
-~ ~(-"#get-field# DELETE: 
-
-~ ~(-"	#map-set#:	'
-%
-~9 ("#get-field# EXPORT: 
-
-~/ ("	#map-set#:	#
-!
-
-€ ƒ(%"#unknown-value##
-!
-
-€ ƒ(%"#unknown-value#
-
-€ ƒ(%*>/home/omar/Documents/ruleIQ/services/security/audit_logging.py

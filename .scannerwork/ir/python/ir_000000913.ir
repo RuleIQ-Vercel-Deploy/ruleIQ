@@ -1,155 +1,0 @@
-
-"cache_hit"str
-2000int
-%"Generate privacy policy..."str
-"response_content"str
-falsebool
-"chat"str
-2"Analysis results..."str
-!0"Assessment analysis..."str
-
-"gemini-1.5-pro"str
-;"AI request..."str
-1500int
-"gemini-1.5-flash"str
-"Privacy Policy..."str
--1200int
-$"User question..."str
-"input_prompt"str
-9300int
-)"assessments"str
-1("Generate mock token usage for testing."str
- 800int
-"input_tokens"str
-"600int
-7500int
-&"AI response..."str
-	"model_name"str
-"generate-policy"str
-"output_tokens"strself
-ğ ğ(request
-ğ  ğ(0"¹,
-*
-
-ò ò(path"#get-field# url:-
-+
-
-ò ò(path"#get-field# path:,
-*
-
-ó ó($"
-#binop in#2in:Bbool,"*
-
-ó ó($ *
-ó ó(
-2
-ø ø("”&
-$
-
-ô ÷(8"#new-object#Bdict"
- 
-
-ô ô(2"	#map-set#:	
-"
- 
-
-ô4 ô(H"	#map-set#:"
- 
-
-õ õ(%"	#map-set#:"
- 
-
-õ' ö(,"	#map-set#:"
- 
-
-ö. ÷(#"	#map-set#:"
- 
-
-÷% ÷(7"	#map-set#:
-
-ô ÷(8"^,
-*
-
-ø ø("
-#binop in#2in:Bbool,"*
-
-ø ø( *
-ø ø(2
-ü ü("”&
-$
-
-ù û(I"#new-object#Bdict"
- 
-
-ù ù(4"	#map-set#:	"
- 
-
-ù6 ù(I!"	#map-set#: "
- 
-
-ú ú($#"	#map-set#:""
- 
-
-ú& ú(H%"	#map-set#:$"
- 
-
-û û(4'"	#map-set#:&"
- 
-
-û6 û(H("	#map-set#:
-
-ù û(I"R,
-*
-
-ü ü("*"
-#binop in#2in:)Bbool "
-
-ü ü("* *
-ü ü("”&
-$
-
-ı €(:+"#new-object#Bdict"
- 
-
-ı ı(2,"	#map-set#:+	
-"
- 
-
-ı4 ı(H."	#map-set#:+-"
- 
-
-ş ş(%/"	#map-set#:+"
- 
-
-ş' ÿ((1"	#map-set#:+0"
- 
-
-ÿ* €(%3"	#map-set#:+2"
- 
-
-€' €(94"	#map-set#:+
-
-ı €(:+"”&
-$
-
- ƒ(E5"#new-object#Bdict"
- 
-
- (06"	#map-set#:5	"
- 
-
-2 (E8"	#map-set#:57"
- 
-
-‚ ‚( :"	#map-set#:59"
- 
-
-‚" ‚(A<"	#map-set#:5;"
- 
-
-ƒ ƒ(0="	#map-set#:5&"
- 
-
-ƒ2 ƒ(D>"	#map-set#:5
-
- ƒ(E5*F/home/omar/Documents/ruleIQ/api/middleware/cost_tracking_middleware.py

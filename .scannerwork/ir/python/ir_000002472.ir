@@ -1,53 +1,0 @@
-
-*!"Assign based on load balancing."str
-
-	0intself
-Ï Ï(task
-Ğ Ğ(eligible_agents
-Ñ Ñ(#list"Â#
-!
-
-× ×(D"#unknown-value#@
->
-
-Õ Ø(	sorted_agents"
-builtinssorted*:Blist+
-)
-
-Ú$ Ú(1"
-__bool__*:BboolH,"*
-
-Ú$ Ú(1 *
-Ú! Ú(#2
-Ú2 Ú(6")
-'
-
-Ú Ú( "#unknown-value#Blist$
-"
-
-Ú Ú( 
-"#array-read#:	(
-&
-
-Ú Ú( "#array-add-last#:
-
-
-Ú Ú(9"Æ)
-'
-
-Ú7 Ú(9"#unknown-value#Blist(
-&
-
-Ú7 Ú(9"
-#is-exact#:Bbool
-
-
-Ú7 Ú(9"
-#assume#::
-8
-
-Ú7 Ú(9"#set-field# __collection_size:	Bint
-
-Ú Ú(9"&*
-
-Ú Ú(9*:/home/omar/Documents/ruleIQ/services/agents/coordinator.py

@@ -1,24 +1,0 @@
-
-'"Export user assessment data."str
-
-	0intself
-ª' ª(+db
-ª- ª(8user_id
-ª: ª(Flist"Ä)
-'
-
-­ ­("#unknown-value#Blist(
-&
-
-­ ­("
-#is-exact#:Bbool
-
-
-­ ­("
-#assume#::
-8
-
-­ ­(
-"#set-field# __collection_size:	Bint
-
-­ ­(*B/home/omar/Documents/ruleIQ/services/compliance/gdpr_compliance.py

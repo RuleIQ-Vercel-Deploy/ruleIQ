@@ -1,134 +1,0 @@
-
-3audit_logging.AuditLoggingService.log_authorizationH
->/home/omar/Documents/ruleIQ/services/security/audit_logging.pyn n("2*€
-2q q(&i
-g
-r/ r(K
-%1"__id*O
-
-__unknown_file (3*1
-audit_logging.AuditEventType"
-AUTHORIZATION*
-4
-5*Å
-4s s(6p
-n
-s s(6
-%3"__id*V
-
-__unknown_file (:*8 
-audit_logging.AuditEventAction"
-PERMISSION_GRANTED<
-:
-s s(6
-%2"__id*"
-
-__unknown_file (
-
-%3*
-7
-8*Ä
-5t t(.o
-m
-t t(.
-%4"__id*U
-
-__unknown_file (9*7 
-audit_logging.AuditEventAction"
-PERMISSION_DENIED<
-:
-t t(.
-%2"__id*"
-
-__unknown_file (
-
-%4*
-7
-8*U
-7u u(&A
-?
-u u(&
-%5"__id*'
-
-__unknown_file (	
-SUCCESS*
-9*T
-8u7 u(?@
->
-u7 u(?
-%5"__id*&
-
-__unknown_file (
-
-DENIED*
-9*ÿ
-9u7 u(?
-uJ v(=
-%6"dict
-v v((
-%7"dict™
-–
-v v('
-%8"__mapSet*"
-
-__unknown_file (
-
-%7**
-
-__unknown_file (
-
-permission**
-
-__unknown_file (
-
-
-permission
-v9 v(;
-%9"dictðí
-r v(E
-%10*A
-
-__unknown_file (%#
-!audit_logging.AuditLoggingService2	log_event:
-
-event_type
-
-%1:
-action
-
-%2:
-user_id
-	
-user_id:
-resource
-
-
-resource:
-result
-
-%5:
-metadata
-
-%6:
-db
-
-db"
-r v(E
-
-%10:
-n& n(2	
-user_id:
-n4 n(A
-
-resource:
-o o(
-
-permission:
-o o(&	
-granted:
-o( o(E
-
-metadata:
-oG p(
-dbB%#
-!audit_logging.AuditLoggingServiceH

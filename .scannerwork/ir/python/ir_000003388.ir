@@ -1,66 +1,0 @@
-
-
-1int
-"page"str
-"pages"str
-$"Paginate a list of items."str
-"total"str
-"items"str
-
-"per_page"stritems
-à à(!page
-à# à(0per_page
-à2 à(E"Æ3
-1
-
-â â(total"
-builtinslen*:Bint'
-%
-
-ã ã("	#binop -#*2-:.
-,
-
-ã ã(%start"	#binop *#*2*:)
-'
-
-ä ä(	end"	#binop +#2+:&
-$
-
-æ ì(	
-"#new-object#Bdict#
-!
-
-ç ç(%"#unknown-value#"
- 
-
-ç ç(%"	#map-set#:
-"
- 
-
-è è("	#map-set#:
-"
- 
-
-é é("	#map-set#:
-"
- 
-
-ê ê( "	#map-set#:
-$
-"
-
-ë ë(&"	#binop +#2+:'
-%
-
-ë ë(*"	#binop -#*2-:)
-'
-
-ë ë(7"
-#binop //#*2//:"
- 
-
-ë ë(7"	#map-set#:
-
-
-æ ì(	
-*;/home/omar/Documents/ruleIQ/api/optimization/performance.py

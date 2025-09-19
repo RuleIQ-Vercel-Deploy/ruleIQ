@@ -1,33 +1,0 @@
-
-Mmonitoring.prometheus_exporter.PrometheusMetricsExporter.add_custom_collectorR
-F/home/omar/Documents/ruleIQ/app/core/monitoring/prometheus_exporter.pyó ó("2*‘
-2
-ô ø(
-Š
-
-ù ù(
-%1"__id*p
-
-__unknown_file (T*R:
-8monitoring.prometheus_exporter.PrometheusMetricsExporter"
-_custom_collectorski
-
-ù ù(1
-%2*"
-
-__unknown_file (
-
-%1*)
-
-__unknown_file (
-
-	collector2append*
-3*>
-3
-prometheus_exporter.py"
-û û(
-implicit return:
-
-ó# ó(6
-	collectorB<:
-8monitoring.prometheus_exporter.PrometheusMetricsExporterH

@@ -1,70 +1,0 @@
-
-;agents.communication.CommunicationProtocol.register_handlerH
-</home/omar/Documents/ruleIQ/services/agents/communication.py¢ ¢("2*Ï
-2
-§ §(4|
-z
-
-¨ ¨(
-%1"__id*`
-
-__unknown_file (D*B,
-*agents.communication.CommunicationProtocol"
-message_handlers}{
-
-¨ ¨(+
-%2"__mapGet*"
-
-__unknown_file (
-
-%1*,
-
-__unknown_file (
-
-message_type2__getitem__ig
-
-¨ ¨(;
-%3*"
-
-__unknown_file (
-
-%2*'
-
-__unknown_file (
-	
-handler2appendi
-g
-
-© ©(<
-%4"__concat*)
-
-© ©(-
-Registered handler for *
-
-©. ©(:
-
-message_typefd
-
-© ©(=
-%5*&
-
-__unknown_file (
-
-
-logger*"
-
-__unknown_file (
-
-%42info*
-3*8
-3
-communication.py"
-« «(
-implicit return:
-
-¤ ¤(!
-message_type:
-
-¥ ¥(	
-handlerB.,
-*agents.communication.CommunicationProtocolH

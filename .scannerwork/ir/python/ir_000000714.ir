@@ -1,12 +1,0 @@
-
-("Get count of active sessions."strself
-Š" Š(&"t2
-0
-
-Œ Œ('"#get-field# active_sessions:,
-*
-
-Œ Œ(("
-builtinslen*:Bint
-
-Œ Œ((*@/home/omar/Documents/ruleIQ/langgraph_agent/agents/agent_core.py

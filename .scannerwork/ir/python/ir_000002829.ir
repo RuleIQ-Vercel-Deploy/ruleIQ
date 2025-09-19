@@ -1,59 +1,0 @@
-
-80int
-160int
-2)"Estimate implementation effort in hours"str
-320int
-20int
-960int
-40intself
-ô ô(
-complexity
-ô ô(.num_controls
-ô0 ô(A-)ai.automation_scorer.AutomationComplexity"Ü2
-0
-
-ø ş(	
-base_hours"#new-object#Bdict*
-(
-
-ù ù(("#get-field# TRIVIAL:"
- 
-
-ù ù(,	"	#map-set#:)
-'
-
-ú ú('
-"#get-field# SIMPLE:"
- 
-
-ú ú(+"	#map-set#:
-+
-)
-
-û û()"#get-field# MODERATE:"
- 
-
-û û(."	#map-set#:*
-(
-
-ü ü(("#get-field# COMPLEX:"
- 
-
-ü ü(-"	#map-set#:,
-*
-
-ı ı(*"#get-field# STRATEGIC:"
- 
-
-ı ı(/"	#map-set#:6
-4
-
- ()control_hours"	#binop *#*2*:$
-"
-
-ƒ ƒ(%"#array-read#:$
-"
-
-ƒ ƒ(5"	#binop +#2+:
-
-ƒ ƒ(5*</home/omar/Documents/ruleIQ/services/ai/automation_scorer.py

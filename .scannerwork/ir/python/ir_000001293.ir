@@ -1,112 +1,0 @@
-
-("Retry-After"str
-"remaining"str
-1("Create rate limit headers for response"str
-%
-"{self.header_prefix}-Limit"str
-	"allowed"str
-
-%1int
-"reset"str
-) "{self.header_prefix}-Remaining"str
-%"{self.header_prefix}-Reset"str
-"limit"str
-"burst"str
-
-0int
-%"{self.header_prefix}-Burst"strself
-ç# ç('result
-ç) ç(?"´/
--
-
-ê ê(headers"#new-object#Bdict2
-0
-
-ì ì("#get-field# include_headers:+
-)
-
-ì ì("
-__bool__*:BboolH "
-
-ì ì( *
-ì ì(
-"Î$
-"
-
-í9 í(H"#array-read#:0
-.
-
-í5 í(I	"#dependent-value#*:Bstr&
-$
-
-í í(I"#array-write#:
-	$
-"
-
-îD î(W"#array-read#:(
-&
-
-î= î(X"
-builtinsmax*:0
-.
-
-î9 î(Y"#dependent-value#*:Bstr&
-$
-
-î î(Y"#array-write#:$
-"
-
-ï9 ï(H"#array-read#:0
-.
-
-ï5 ï(I"#dependent-value#*:Bstr&
-$
-
-ï ï(I"#array-write#:$
-"
-
-ð9 ð(H"#array-read#:0
-.
-
-ð5 ð(I"#dependent-value#*:Bstr&
-$
-
-ð ð(I"#array-write#:$
-"
-
-ó ó($"#array-read#:+
-)
-
-ó ó($"
-__bool__*:BboolH+
-)
-
-ó ó($ "#unaryop !#2!:Bbool "
-
-ó ó($  *
-ó ó("
-
-÷ ÷("Á$
-"
-
-ô ô(-!"#array-read#:%
-#
-
-ô4 ô(?""
-timetimeBfloat0
-.
-
-ô0 ô(@#"#dependent-value#*:"Bint4
-2
-
-ô ô(@$retry_after"	#binop -#*2-:!#(
-&
-
-õ- õ(@&"
-builtinsmax*:%$0
-.
-
-õ) õ(A'"#dependent-value#*:&Bstr&
-$
-
-õ õ(A)"#array-write#:('"*?/home/omar/Documents/ruleIQ/middleware/rate_limiter_enhanced.py

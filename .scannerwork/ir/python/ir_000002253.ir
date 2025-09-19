@@ -1,35 +1,0 @@
-
-falsebool
-„"Validate if a transition is allowed.
-
-        Args:
-            from_state: Current state
-            to_state: Target state
-            allowed_transitions: Dictionary of allowed transitions
-
-        Returns:
-            True if transition is valid
-        "strself
-ö ö( 
-from_state
-ö" ö(1to_state
-ö3 ö(@#allowed_transitions
-öB ö(k"X4
-2
-
- (0"#binop not in#2not in:Bbool "
-
- (0 *
- (
-"
-
-‚ ‚("h$
-"
-
-ƒ ƒ(:"#array-read#:,
-*
-
-ƒ ƒ(:	"
-#binop in#2in:Bbool
-
-ƒ ƒ(:	*D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py

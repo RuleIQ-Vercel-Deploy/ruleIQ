@@ -1,76 +1,0 @@
-
-"max_retries"str
-"should_continue"str
-ˆÏ"
-        Validate if a state transition is allowed.
-
-        Args:
-            state: Current state
-            from_node: Source node
-            to_node: Target node
-
-        Returns:
-            True if transition is valid
-        "str
-"turn_count"str
-"error_count"str
-"max_turns"str
-truebool
-
-falseboolstate
-ã ã(&	from_node
-ã( ã(6to_node
-ã8 ã(D"ú$
-"
-
-ô ô("#array-read#:$
-"
-
-ô" ô(4"#array-read#:,
-*
-
-ô ô(4	"
-#binop >=#2>=:Bbool "
-
-ô ô(4	 *
-ô ô(
-"
-
-ö ö(
-"û$
-"
-
-ú ú("#array-read#:$
-"
-
-ú# ú(7"#array-read#:,
-*
-
-ú ú(7"
-#binop >=#2>=:Bbool "
-
-ú ú(7 *
-ú ú(
-"
-
-ù ù(
-"§$
-"
-
-ü ü('"#array-read#:+
-)
-
-ü ü('"
-__bool__*:BboolH+
-)
-
-ü ü('"#unaryop !#2!:Bbool "
-
-ü ü(' *
-ü ü(
-"
-
-† †(
-"
-
-£ £(*C/home/omar/Documents/ruleIQ/langgraph_agent/graph/enhanced_state.py

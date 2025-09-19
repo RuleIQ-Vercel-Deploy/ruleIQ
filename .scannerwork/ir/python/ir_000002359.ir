@@ -1,352 +1,0 @@
-
-$"Fix Top 100 Critical Bugs"str
-(_"Setup SonarCloud Quality Gate"str
-õ1int
-G70int
-	"feature"str
-*!"Fix 16 Security Vulnerabilities"str
-#"Bug Fixes"str
-œ)≈"Review all 369 security hotspots for potential vulnerabilities.\n\nSecurity hotspots are code patterns that need manual review to determine if they're vulnerable.\n\nCommon hotspots:\n- Hardcoded credentials\n- Weak cryptography\n- File system access\n- Command injection risks\n- Unvalidated redirects\n\nProcess:\n1. Review each hotspot in SonarCloud\n2. Mark as 'Safe' or 'Fix needed'\n3. Fix all vulnerable hotspots\n4. Document security decisions"str
-+9""Remove 458 TODO Comments (S1135)"str
--ü#"‚úÖ Created: {task_data['title']}"str
-R	"Testing"str
-˜NÌ"Implement comprehensive test coverage.\nCurrent: 0%\nTarget: 80% minimum\n\nTest Strategy:\n1. Unit tests for all services (Jest/Pytest)\n2. Integration tests for APIs\n3. Component tests for React\n4. E2E tests for critical flows\n\nPriority order:\n- Authentication/Authorization\n- Payment processing\n- Core business logic\n- API endpoints\n- React components"str
-èÖ"Fix the most critical bugs from the 358 total bugs.\nCurrent Reliability Rating: E (worst)\nTarget: Reduce bugs by 50% minimum\n\nFocus on:\n- Null pointer exceptions\n- Resource leaks\n- Race conditions\n- Logic errors causing incorrect behavior\n\nApproach:\n1. Sort bugs by impact and frequency\n2. Fix in batches of 20\n3. Add unit tests for each fix\n4. Track progress in SonarCloud"str
-70."Fix Python Type Hints (845 S6903 violations)"str
-}"project_id"str
-Ç"{ARCHON_URL}/tasks"str
-	"task_order"str
-=75int
-A•7"   Response: {response.status_code} - {response.text}"str
-»;æ"Address or remove 458 TODO comments in TypeScript files.\n\nTODOs indicate incomplete implementation or technical debt.\n#2 most common issue in codebase.\n\nActions:\n1. Review each TODO comment\n2. Either implement the TODO or create a proper task\n3. Remove resolved TODOs\n4. Document decisions for deferred work"str
- "Fix 62 BLOCKER Issues"str
-
-100int
-/'&"Review and Fix 369 Security Hotspots"str
-Ëﬁ"Fix all 62 blocker-level issues identified by SonarCloud.\nThese are the most critical issues that could cause application crashes or severe security vulnerabilities.\n\nPriority: HIGHEST\nEstimated Time: 2-3 days\nImpact: Prevents critical failures and security breaches\n\nSteps:\n1. Run SonarCloud analysis to get blocker issue list\n2. Group blockers by type (bugs, vulnerabilities, security hotspots)\n3. Fix each blocker with proper testing\n4. Verify fixes with re-scan"str
-6¢,"‚ùå Failed to create: {task_data['title']}"str
-?"Technical Debt"str
-í200int
-
-"Security"str
-e"CI/CD"str
-
-l0int
-480int
-c55int
- X¿"Refactor 198 functions with excessive cognitive complexity.\n\nFunctions are too complex to understand and maintain.\nTarget: Max complexity of 15 per function.\n\nRefactoring techniques:\n- Extract methods\n- Early returns\n- Replace conditionals with polymorphism\n- Use guard clauses\n- Simplify boolean expressions"str
-3C*"Reduce Code Duplication from 5.9% to <3%"str
-"todo"str
-Ä
-"assignee"str
-Ña˙"Configure and enforce quality gates in CI/CD.\n\nQuality Gate Criteria:\n- New code coverage > 80%\n- Duplicated lines < 3%\n- Maintainability rating >= A\n- Reliability rating >= B\n- Security rating >= B\n- No new blockers or criticals\n\nImplementation:\n1. Configure quality gate in SonarCloud\n2. Add to GitHub Actions\n3. Block PRs that fail gate\n4. Setup notifications"str
-+85int
-"Development Team"str
-œ≈"Address all 16 security vulnerabilities detected by SonarCloud.\nCurrent Security Rating: E (worst)\nTarget: Achieve Security Rating B or better\n\nCategories likely include:\n- SQL injection risks\n- XSS vulnerabilities\n- Insecure cryptography\n- Authentication bypasses\n- Information disclosure\n\nSteps:\n1. Review each vulnerability in SonarCloud dashboard\n2. Implement security best practices\n3. Add security tests\n4. Re-scan to verify fixes"str
-ì201int
-◊EÕ"Current duplication: 5.9%\nTarget: <3% (SonarCloud standard)\n\nHigh duplication areas to refactor:\n- API endpoint handlers\n- Test fixtures and utilities\n- Component patterns\n- Database queries\n\nApproach:\n1. Identify duplication hotspots\n2. Extract common utilities\n3. Create shared components\n4. Implement DRY principles"str
-+L""Add Test Coverage (Currently 0%)"str
-Z60int
-6V-"Fix Cognitive Complexity Issues (198 S3776)"str
-ç2É"Add missing type hints to 845 Python functions/methods.\n\nThis is the #1 rule violation in the codebase.\nBenefits:\n- Better IDE support\n- Catch type errors early\n- Improve code documentation\n- Enable better static analysis\n\nStrategy:\n1. Start with API endpoints and core services\n2. Use mypy to validate type hints\n3. Add to CI/CD pipeline\n4. Gradually type entire codebase"str
-"description"str
-!90int
-"title"str
-P65int
-"status"str
-?6"Create new sprint tasks based on SonarCloud analysis"str
-"Code Quality"str
-95intilist"Â%
-#
-	$ $(Ë"#new-object#Bdict 
-
-$ $(8"	#map-set#:!
-
-	$: $(ß"	#map-set#:"
- 
-
-$© $(∫"	#map-set#:	
-"
- 
-
-$º $(’"	#map-set#:"
- 
-
-$◊ $(Á"	#map-set#:&
-$
-
-$Í $(ß	"#new-object#Bdict"
- 
-
-$Î $(ï"	#map-set#:"
- 
-
-$ó $(Î"	#map-set#:"
- 
-
-$Ì $(˝"	#map-set#:	"
- 
-
-$ˇ $(î	"	#map-set#:"
- 
-
-$ñ	 $(¶	"	#map-set#:&
-$
-
-$©	 $(°"#new-object#Bdict"
- 
-
-$™	 $(Œ	"	#map-set#:"
- 
-
-$–	 $(‰ "	#map-set#:"
- 
-
-$Ê $(ˆ""	#map-set#:	!"
- 
-
-$¯ $(é$"	#map-set#:#"
- 
-
-$ê $(†%"	#map-set#:&
-$
-
-$£ $(Â&"#new-object#Bdict"
- 
-
-$§ $(”("	#map-set#:&'"
- 
-
-$’ $(©*"	#map-set#:&)"
- 
-
-$´ $(ª,"	#map-set#:&	+"
- 
-
-$Ω $(“-"	#map-set#:&"
- 
-
-$‘ $(‰."	#map-set#:&&
-$
-
-$Á $(Û/"#new-object#Bdict"
- 
-
-$Ë $(ü1"	#map-set#:/0"
- 
-
-$° $(≥3"	#map-set#:/2"
- 
-
-$µ $(≈5"	#map-set#:/	4"
- 
-
-$« $(‡6"	#map-set#:/"
- 
-
-$‚ $(Ú7"	#map-set#:/&
-$
-
-$ı $(≤8"#new-object#Bdict"
- 
-
-$ˆ $(°:"	#map-set#:89"
- 
-
-$£ $(<"	#map-set#:8;"
- 
-
-$Ú $(Ç>"	#map-set#:8	="
- 
-
-$Ñ $(ü@"	#map-set#:8?"
- 
-
-$° $(±A"	#map-set#:8&
-$
-
-$¥ $(ÜB"#new-object#Bdict"
- 
-
-$µ $(ËD"	#map-set#:BC"
- 
-
-$Í $(∆F"	#map-set#:BE"
- 
-
-$» $(ÿH"	#map-set#:B	G"
- 
-
-$⁄ $(ÛI"	#map-set#:B"
- 
-
-$ı $(ÖJ"	#map-set#:B&
-$
-
-$à $(Ì K"#new-object#Bdict"
- 
-
-$â $(¥M"	#map-set#:KL"
- 
-
-$∂ $(≤ O"	#map-set#:KN"
- 
-
-$¥  $(ƒ Q"	#map-set#:K	P"
- 
-
-$∆  $(⁄ S"	#map-set#:KR"
- 
-
-$‹  $(Ï T"	#map-set#:K&
-$
-
-$Ô  $(∑$U"#new-object#Bdict"
- 
-
-$  $(¶!W"	#map-set#:UV"
- 
-
-$®! $(˜#Y"	#map-set#:UX"
- 
-
-$˘# $(â$["	#map-set#:U	Z"
- 
-
-$ã$ $(§$\"	#map-set#:U"
- 
-
-$¶$ $(∂$]"	#map-set#:U&
-$
-
-$π$ $(¶(^"#new-object#Bdict"
- 
-
-$∫$ $(‚$`"	#map-set#:^_"
- 
-
-$‰$ $(Ì'b"	#map-set#:^a"
- 
-
-$Ô' $(ˇ'd"	#map-set#:^	c"
- 
-
-$Å( $(ì(f"	#map-set#:^e"
- 
-
-$ï( $(•(g"	#map-set#:^9
-7
-	$ $(ß(htasks_to_create"#unknown-value#Blist'
-%
-	$ $(ß(j"
-#is-exact#:hiBbool
-
-	$ $(ß(k"
-#assume#:j9
-7
-	$ $(ß(m"#set-field# __collection_size:hlBint'
-%
-	$ $(ß(n"#array-add-last#:h'
-%
-	$ $(ß(o"#array-add-last#:h'
-%
-	$ $(ß(p"#array-add-last#:h'
-%
-	$ $(ß(q"#array-add-last#:h&'
-%
-	$ $(ß(r"#array-add-last#:h/'
-%
-	$ $(ß(s"#array-add-last#:h8'
-%
-	$ $(ß(t"#array-add-last#:hB'
-%
-	$ $(ß(u"#array-add-last#:hK'
-%
-	$ $(ß(v"#array-add-last#:hU'
-%
-	$ $(ß(w"#array-add-last#:h^-
-+
-% %(xcreated_count"#id#:lBint7
-5
-& &($y"
-builtinsiter*:hBtyping.Iterator
-& &($"y!*úcreated_count xß2
-0
-& &($z"
-builtins
-__has_next*:yBbool"
-& &($z *& &(H"˘1
-/
-' 0({	task_data"
-builtinsnext*:y!
-
-'" '(,|"#unknown-value#$
-"
-' '(,~"#array-write#:{}|&
-$
-( ((2Å"#array-write#:{Ä"
- 
-) )(GÉ"#unknown-value#"
- 
-) )(GÑ"#unknown-value#"
- 
-) )(GÖ"#unknown-value#"
- 
-) )(GÜ"#unknown-value#"
- 
-) )(Gá"#unknown-value#"
- 
-) )(Gà"#unknown-value#"
- 
-) )(Gâ"#unknown-value#(
-&
-) )(Gä"#unknown-value#Bbool"
- 
-) )(Gã"#unknown-value#"
- 
-) )(Gå"#unknown-value#"
- 
-) )(Gç"#unknown-value#"
- 
-) )(Gé"#unknown-value#"
- 
-) )(Gè"#unknown-value#h
-f
-) )(Gêresponse"
-requests.apipost:ÇÉ{ÑÖÜáàâäãåçéèBrequests.models.Response.
-,
-* *(ë"#get-field# status_code:ê(
-&
-*# *(-î"#unknown-value#Blist(
-&
-*# *(-ï"
-#is-exact#:îiBbool
-
-*# *(-ñ"
-#assume#:ï:
-8
-*# *(-ó"#set-field# __collection_size:îlBint)
-'
-*# *(-ò"#array-add-last#:îí)
-'
-*# *(-ô"#array-add-last#:îì-
-+
-* *(-ö"
-#binop in#2in:ëîBbool'"%
-* *(-ö ** *(
-2- -("
-0 0(ú"ä7
-5
-+ +(ùcreated_count"	#binop +#*2+:úõ"
- 
-, ,(û"#unknown-value##
-!
-, ,(;†"info* :ûüH"ö"
- 
-. .(°"#unknown-value##
-!
-. .(D£"info* :°¢H"
- 
-/ /(§"#unknown-value##
-!
-/ /(Q¶"info* :§•H","* ßcreated_countùú*=/home/omar/Documents/ruleIQ/sonarcloud/update_archon_tasks.py

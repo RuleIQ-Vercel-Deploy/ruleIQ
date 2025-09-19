@@ -1,24 +1,0 @@
-
-1("Create an agent of the specified type."str
--$"Unknown agent type: {persona_type}"strcls! !(persona_type! !(+kwargs!- !(5"dict"Å-
-+
-# #(/"#get-field# _agent_types:2
-0
-# #(/"#binop not in#2not in:Bbool"
-# #(/ *# #(
-"B.
-,
-$ $(C"
-ValueError*:B
-ValueError2
-$ $(C"ª-
-+
-& &(&	"#get-field# _agent_types:/
--
-& &(4
-agent_class"#array-read#:	%
-#
-' '(#"#unaryop **#2**: 
-
-' '($"agent_class:
-' '($*</home/omar/Documents/ruleIQ/services/agents/agent_manager.py

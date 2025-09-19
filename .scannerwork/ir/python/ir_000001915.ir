@@ -1,8 +1,0 @@
-
-) "Check if token is blacklisted."strselfB B(!tokenB# B(-"q3
-1
-D D(/" #get-field# blacklisted_tokens:*
-(
-D D(/"
-#binop in#2in:Bbool
-D D(/*:/home/omar/Documents/ruleIQ/tests/utils/auth_test_utils.py

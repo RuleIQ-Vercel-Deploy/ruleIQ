@@ -1,55 +1,0 @@
-
-) "Process a task asynchronously."strself
-’ ’( task_id
-’" ’(.	coroutine
-’0 ’(C"¸ 
-
-
-•# •(."	coroutine:#
-!
-
-• •(/"#unknown-value##
-!
-
-• •(/"#unknown-value#M
-K
-
-• •(/task"
-asyncio.taskscreate_task:Basyncio.tasks.Task-
-+
-
-– –(	"#get-field# task_queue:&
-$
-
-– –('
-"#array-write#:	*
-(
-
-™ ¨(%closure"#new-object#(
-&
-
-™ ¨("#set-field# task:(
-&
-
-™ ¨("#set-field# self:+
-)
-
-™ ¨("#set-field# task_id:-
-+
-
-™ ¨("?python-partial-apply?:#
-!
-
-¨ ¨(*"#unknown-value##
-!
-
-¨ ¨(+"#unknown-value##
-!
-
-¨ ¨(+"#unknown-value#G
-E
-
-¨ ¨(+"
-asyncio.taskscreate_task:Basyncio.tasks.Task
-
-ª ª(*;/home/omar/Documents/ruleIQ/api/optimization/performance.py

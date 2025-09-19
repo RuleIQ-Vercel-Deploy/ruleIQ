@@ -1,205 +1,0 @@
-
-B9"Compliance framework (e.g., 'GDPR', 'ISO27001', 'SOC2')"str
-6
-"required"str
-("check_compliance_requirements"str
-"properties"str
- "employee_count"str
-
-;0int
-@7"Check specific compliance requirements for frameworks"str
-""number"str
-
-"industry"str
-%"data_types"str
-LC"Get the function schema for Google Generative AI function calling"str
-'"array"str
-"name"str
-A"specific_areas"str
-
-"parameters"str
-"business_context"str
-3G*"Specific areas of compliance to focus on"str
-"type"str
-"description"str
-)"items"str
-"string"str
-"object"str
-"framework"str
-."geographic_regions"strself
-¸ ¸( 8list"†&
-$
-
-º Ç(."#new-object#Bdict"
- 
-
-º º(7"	#map-set#:"
- 
-
-º9 »(C	"	#map-set#:&
-$
-
-¼ Ç(-"#new-object#Bdict"
- 
-
-¼ ¼(+"	#map-set#:&
-$
-
-¼; Æ(8"#new-object#Bdict&
-$
-
-¼I ¾(F"#new-object#Bdict"
- 
-
-½ ½("	#map-set#:"
- 
-
-½ ¾(E"	#map-set#:"
- 
-
-¼< ¾(F"	#map-set#:&
-$
-
-¿  Ä("#new-object#Bdict"
- 
-
-¿! ¿(1"	#map-set#:&
-$
-
-¿A Ã("#new-object#Bdict&
-$
-
-À À(*"#new-object#Bdict"
- 
-
-À À()"	#map-set#:"
- 
-
-À À(*"	#map-set#:&
-$
-
-À> Á(!"#new-object#Bdict"
- 
-
-À? Á(#"	#map-set#:!""
- 
-
-À, Á($"	#map-set#: !&
-$
-
-Á% Â(&"#new-object#Bdict"
- 
-
-Á& Á(5("	#map-set#:&'&
-$
-
-Á@ Â(*"#new-object#Bdict"
- 
-
-ÁA Â(+"	#map-set#:*"
- 
-
-Á7 Â(,"	#map-set#:&)*"
- 
-
-Á Â(-"	#map-set#:%&&
-$
-
-Â. Ã(/"#new-object#Bdict"
- 
-
-Â/ Â(>0"	#map-set#:/'&
-$
-
-ÂI Ã(1"#new-object#Bdict"
- 
-
-Ã Ã(2"	#map-set#:1"
- 
-
-Â@ Ã(3"	#map-set#:/)1"
- 
-
-Â Ã(4"	#map-set#:./"
- 
-
-¿3 Ã(5"	#map-set#:)
-'
-
-Ã- Ã(K7"#unknown-value#Blist(
-&
-
-Ã- Ã(K9"
-#is-exact#:78Bbool
-
-
-Ã- Ã(K:"
-#assume#:9:
-8
-
-Ã- Ã(K<"#set-field# __collection_size:7;Bint(
-&
-
-Ã- Ã(K="#array-add-last#:7(
-&
-
-Ã- Ã(K>"#array-add-last#:7 "
- 
-
-Ã! Ã(K?"	#map-set#:67"
- 
-
-¿ Ä(@"	#map-set#:&
-$
-
-Ä! Æ(7B"#new-object#Bdict"
- 
-
-Ä" Ä(1C"	#map-set#:B'&
-$
-
-Ä< Å(D"#new-object#Bdict"
- 
-
-Ä= Å(E"	#map-set#:D"
- 
-
-Ä3 Å(F"	#map-set#:B)D"
- 
-
-Å Æ(6H"	#map-set#:BG"
- 
-
-Ä Æ(7I"	#map-set#:AB"
- 
-
-¼- Æ(8J"	#map-set#:)
-'
-
-ÆF Ç(,K"#unknown-value#Blist(
-&
-
-ÆF Ç(,L"
-#is-exact#:K8Bbool
-
-
-ÆF Ç(,M"
-#assume#:L:
-8
-
-ÆF Ç(,N"#set-field# __collection_size:K;Bint(
-&
-
-ÆF Ç(,O"#array-add-last#:K(
-&
-
-ÆF Ç(,P"#array-add-last#:K"
- 
-
-Æ: Ç(,Q"	#map-set#:6K"
- 
-
-¼ Ç(-R"	#map-set#:
-
-
-º Ç(.*;/home/omar/Documents/ruleIQ/services/ai/regulation_tools.py

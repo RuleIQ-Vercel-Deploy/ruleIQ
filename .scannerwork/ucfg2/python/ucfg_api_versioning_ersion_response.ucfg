@@ -1,182 +1,0 @@
-
-4api_versioning.APIVersioning.create_version_responseF
-</home/omar/Documents/ruleIQ/api/middleware/api_versioning.py5 5("2*â
-
-26 6(7
-	7 7(™
-%5"dict
-Š
-7 7( 
-%6"__mapSet*"
-
-__unknown_file (
-
-%5*$
-
-__unknown_file (
-data*$
-
-__unknown_file (
-
-data
-	7* 7(˜
-%7"dict—
-”
-7+ 7(A
-%8"__mapSet*"
-
-__unknown_file (
-
-%7*+
-
-__unknown_file (
-api_version*'
-
-__unknown_file (
-	
-versionn
-l
-7Y 7(p
-%9"__id*T
-
-__unknown_file (8*6
-api_versioning.APIVersioning"
-SUPPORTED_VERSIONSš
-—
-7C 7(p
-%10"__mapSet*"
-
-__unknown_file (
-
-%7*2
-
-__unknown_file (
-supported_versions*"
-
-__unknown_file (
-
-%9m
-k
-
-7„ 7(—
-%11"__id*P
-
-__unknown_file (4*2
-api_versioning.APIVersioning"
-LATEST_VERSION˜
-•
-	7r 7(—
-%12"__mapSet*"
-
-__unknown_file (
-
-%7*.
-
-__unknown_file (
-latest_version*#
-
-__unknown_file (
-
-%11
-Š
-	7" 7(˜
-%13"__mapSet*"
-
-__unknown_file (
-
-%5*$
-
-__unknown_file (
-meta*"
-
-__unknown_file (
-
-%7C
-A
-	7 7(™
-
-response"__id*"
-
-__unknown_file (
-
-%5k
-i
-8 8()
-%14"__id*P
-
-__unknown_file (4*2
-api_versioning.APIVersioning"
-LATEST_VERSION‘
-Ž
-8 8()
-%15"	__compare*"
-
-__unknown_file (
-!=*'
-
-__unknown_file (
-	
-version*#
-
-__unknown_file (
-
-%14*
-4
-5*'
-4: :("
-: :(
-
-
-response*Ë
-59 9(tj
-h
-9V 9(i
-%1"__id*P
-
-__unknown_file (4*2
-api_versioning.APIVersioning"
-LATEST_VERSION©
-¦
-9* 9(t
-%2"__concat*
-9, 9(8
-API version *
-99 9(@
-	
-version*$
-9A 9(U
- is deprecated. Use *
-9V 9(i
-
-%1*
-9j 9(s
-	 instead.yw
-9 9(
-%4"__mapGet*(
-
-__unknown_file (
-
-
-response*$
-
-__unknown_file (
-meta2__getitem__£ 
-9 9(t
-%3"dict.__setitem__*"
-
-__unknown_file (
-
-%4*'
-
-__unknown_file (	
-warning*"
-
-__unknown_file (
-
-%22__setitem__*
-4:
-5& 5(2	
-version:
-54 5(=
-dataB 
-api_versioning.APIVersioningH

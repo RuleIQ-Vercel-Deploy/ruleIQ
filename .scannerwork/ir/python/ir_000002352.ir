@@ -1,22 +1,0 @@
-
-'"Get Redis configuration dict"str
-"max_connections"str
-"url"str
-
-"decode_responses"strselfq q("½%
-#
-	s s(†"#new-object#Bdict*
-(
-s s(%"#get-field# REDIS_URL: 
-
-s s(%"	#map-set#:6
-4
-s: s(T"#!#get-field# REDIS_MAX_CONNECTIONS: 
-
-s' s(T	"	#map-set#:8
-6
-	sj s(…"$"#get-field# REDIS_DECODE_RESPONSES:!
-
-	sV s(…"	#map-set#:
-
-	s s(†**/home/omar/Documents/ruleIQ/config/base.py

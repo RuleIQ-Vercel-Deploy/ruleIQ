@@ -1,42 +1,0 @@
-
-"db_connections"str
-"ai_cost_rate"str
-10int
-0.6float
-	"response_time"str
-
-0.5float
-"auth_failures"str
-1.5float
-0.02float
-"error_rate"str
-&"Get current system metrics."strself
-¸# ¸('"õ;
-9
-
-º º(<get_metrics_collector"?python-unknown?H
-F
-
-» »(+	collector"+
-monitoring.metricsget_metrics_collector&
-$
-
-¿ Å(	"#new-object#Bdict"
- 
-
-À À("	#map-set#:"
- 
-
-Á Á( "	#map-set#:	
-"
- 
-
-Â Â(!"	#map-set#:"
- 
-
-Ã Ã("	#map-set#:"
- 
-
-Ä Ä("	#map-set#:
-
-¿ Å(	*2/home/omar/Documents/ruleIQ/deployment/rollback.py

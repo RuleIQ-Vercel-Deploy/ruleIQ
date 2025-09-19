@@ -1,18 +1,0 @@
-
-/&"Cache business profile (30 min TTL)."str
-"business_profile"strself
-½# ½('user_id
-½) ½(5profile_data
-½7 ¾(ttl
-¾ ¾( "Œ.
-,
-
-À À(Kkey"?python-unknown?:#
-!
-
-Á Á(5"#unknown-value##
-!
-
-Á Á(5	"#unknown-value#
-
-Á Á(5	*+/home/omar/Documents/ruleIQ/config/cache.py

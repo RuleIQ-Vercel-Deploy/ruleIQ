@@ -1,106 +1,0 @@
-
-	"title"str
-"obligation_id"str
-
-0int
-"score"str
-"status"str
-%"Assess a single obligation"str
-%"recommendations"str
-"gaps"str
-
-"evidence"str
-0.0float
-"controls_assessed"strself
-½ ½(organization
-½ ½(*
-obligation
-½, ½(Llist)%uk_compliance_engine.ComplianceStatus"Ú&
-$
-
-Á Ê(	"#new-object#Bdict0
-.
-
-Â Â(5"#get-field# obligation_id:"
- 
-
-Â Â(5"	#map-set#:(
-&
-
-Ã Ã(%
-"#get-field# title:"
- 
-
-Ã Ã(%"	#map-set#:	
-5
-3
-
-Ä Ä(9" #get-field# PENDING_ASSESSMENT:(
-&
-
-Ä Ä(?"#get-field# value:"
- 
-
-Ä Ä(?"	#map-set#:"
- 
-
-Å Å("	#map-set#:)
-'
-
-Æ Æ("#unknown-value#Blist(
-&
-
-Æ Æ("
-#is-exact#:Bbool
-
-
-Æ Æ("
-#assume#::
-8
-
-Æ Æ("#set-field# __collection_size:Bint"
- 
-
-Æ Æ("	#map-set#:+
-)
-
-Ç! Ç(4"#get-field# controls:"
- 
-
-Ç Ç(4"	#map-set#:)
-'
-
-È È( "#unknown-value#Blist(
-&
-
-È È(!"
-#is-exact#: Bbool
-
-
-È È(""
-#assume#:!:
-8
-
-È È(#"#set-field# __collection_size: Bint"
- 
-
-È È($"	#map-set#: )
-'
-
-É É(!&"#unknown-value#Blist(
-&
-
-É É(!'"
-#is-exact#:&Bbool
-
-
-É É(!("
-#assume#:':
-8
-
-É É(!)"#set-field# __collection_size:&Bint"
- 
-
-É É(!*"	#map-set#:%&
-
-Á Ê(	*G/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_engine.py

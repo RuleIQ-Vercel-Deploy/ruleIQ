@@ -1,69 +1,0 @@
-
-"error"str
-8/"Pytest fixture providing various test states."str
-"completed"str
-"in_progress"str
-"review"str
-	"initial"str
-"retry"strstate_fixtures.TestScenario"­&
-$
-
-Ë Ò("#new-object#Bdict*
-(
-
-Ì% Ì(9"#get-field# INITIAL:(
-&
-
-Ì Ì(:"create_test_state:"
- 
-
-Ì Ì(:"	#map-set#:.
-,
-
-Í) Í(A	"#get-field# IN_PROGRESS:(
-&
-
-Í Í(B
-"create_test_state:	"
- 
-
-Í Í(B"	#map-set#:
-.
-,
-
-Î# Î(;"#get-field# ERROR_STATE:(
-&
-
-Î Î(<"create_test_state:"
- 
-
-Î Î(<"	#map-set#:,
-*
-
-Ï' Ï(="#get-field# COMPLETED:(
-&
-
-Ï Ï(>"create_test_state:"
- 
-
-Ï Ï(>"	#map-set#:0
-.
-
-Ð$ Ð(>"#get-field# REVIEW_NEEDED:(
-&
-
-Ð Ð(?"create_test_state:"
- 
-
-Ð Ð(?"	#map-set#:1
-/
-
-Ñ# Ñ(>"#get-field# RETRY_REQUIRED:(
-&
-
-Ñ Ñ(?"create_test_state:"
- 
-
-Ñ Ñ(?"	#map-set#:
-
-Ë Ò(*</home/omar/Documents/ruleIQ/tests/fixtures/state_fixtures.py

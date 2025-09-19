@@ -1,134 +1,0 @@
-
-100int
-"level"str
-"low"str
-"medium"str
-"high"str
-"score"str
-	70int
-<3"Assess risk level based on completion and answers"str
-40int
-"Missing controls"str
-
-0int
- "Incomplete assessment"str
- %"Minor gaps identified"str
-	"factors"str
-50intself
-ã ã(
-completion
-ã! ã(2answers
-ã4 ã(Alist	-tuple"¹'
-%
-
-å å(,"	#binop -#*2-:4
-2
-
-å å(-
-risk_score"
-builtinsmax*:*
-(
-
-ç ç(
-"	#binop >#2>:	Bbool,"*
-
-ç ç(
- *
-ç ç(
-2
-é é("1'
-%
-
-è è(level"#id#:Bstr"\*
-(
-
-é é("	#binop >#2>:Bbool,"*
-
-é é( *
-é é(2
-ë ë("1'
-%
-
-ê ê(level"#id#:Bstr"1'
-%
-
-ì ì(level"#id#:Bstr"ë*level&
-$
-
-î ö(	"#new-object#Bdict"
- 
-
-ï ï("	#map-set#:"
- 
-
-ð ð("	#map-set#:*
-(
-
-ó ó(""	#binop >#2>:Bbool,"*
-
-ó ó(" *
-ó ó(2
-ô ô("š)
-'
-
-ò ò(="#unknown-value#Blist(
-&
-
-ò ò(= "
-#is-exact#:Bbool
-
-
-ò ò(=!"
-#assume#: :
-8
-
-ò ò(=""#set-field# __collection_size:Bint(
-&
-
-ò ò(=#"#array-add-last#:(
-&
-
-ò ò(=$"#array-add-last#:
-
-ò ô(."ð)
-'
-
-ô ô(.&"#unknown-value#Blist(
-&
-
-ô ô(.'"
-#is-exact#:&Bbool
-
-
-ô ô(.("
-#assume#:':
-8
-
-ô ô(.)"#set-field# __collection_size:&Bint(
-&
-
-ô ô(.*"#array-add-last#:&%
-
-ò ô(."§*+&*
-(
-
-ñ õ(,"#unknown-value#Btuple(
-&
-
-ñ õ(."
-#is-exact#:,-Bbool
-
-
-ñ õ(/"
-#assume#:.:
-8
-
-ñ õ(0"#set-field# __collection_size:,Bint(
-&
-
-ñ õ(1"#array-add-last#:,+"
- 
-
-ñ õ(2"	#map-set#:,
-
-î ö(	*;/home/omar/Documents/ruleIQ/tests/mocks/ai_service_mocks.py

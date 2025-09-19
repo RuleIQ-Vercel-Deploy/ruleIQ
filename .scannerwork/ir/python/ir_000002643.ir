@@ -1,547 +1,0 @@
-
-a"No logging"str
-n1.4float
-»1.1float
-Ç"risk_management"str
-q"q5"str
-ﬂ"fallback_used"str
-D¢:"Do you have an incident response plan for data breaches?"str
-;
-"security"str
-‡truebool
-ç"Formal agreements"str
-K
-B"Does your organization have a documented data protection policy?"str
-∂"q8"str
-""difficulty"str
-ù1.6float
-⁄"total_questions"str
-¶"Yes, documented"str
-RsI"Do you conduct regular risk assessments for data processing activities?"str
-Ö1.3float
-)"q2"str
-/"Quarterly"str
-_"Basic logging"str
-w"Yes, occasionally"str
-#"easy"str
-"Yes, comprehensive"str
-J"No process"str
- "data_protection"str
-›"assessment_context"str
- ^"Comprehensive logging"str
-@7"Generate fallback questions when AI generation fails."str
-	"options"str
-?[6"How do you monitor and log access to sensitive data?"str
-é"Basic requirements"str
-0
-"Annually"str
-Y"q4"str
-≥1.7float
-ª"As needed"str
-I"Informal process"str
-ÿ"questions"str
-"q1"str
-è"Verbal agreements"str
-H"Yes, manual"str
-?1.2float
-ê"No requirements"str
-≈"governance"str
-"multiple_choice"str
-x"Planning to"str
-H∏>"How often do you review and update your compliance policies?"str
-1"Never"str
-∞"incident_response"str
-l"hard"str
-v"Yes, regularly"str
-"question_id"str
-.	"Monthly"str
-†"q7"str
-%"compliance_weight"str
-"Yes, basic"str
-="medium"str
-•"Yes, tested"str
-"type"str
-
-0int
-	
-"question"str
-V1.8float
-"No"str
-G"Yes, automated"str
-`"Limited logging"str
-[äQ"How do you ensure third-party vendors comply with data protection requirements?"str
-B"q3"str
-&1.5float
-
-"category"str
-KDB"Do you have processes for handling data subject access requests?"str
-N+E"How often do you conduct security awareness training for employees?"str
-"In development"str
-ö"vendor_management"str
-à"q6"strself
-¥% ¥()max_questions
-¥+ ¥(=assessment_type
-µ µ(list"‚/&
-$
-
-∑ º("#new-object#Bdict"
- 
-
-∑ ∑(2"	#map-set#:"
- 
-
-∑4 ∏(N"	#map-set#:	
-"
- 
-
-π π(%"	#map-set#:)
-'
-
-π2 ∫(1"#unknown-value#Blist(
-&
-
-π2 ∫(1"
-#is-exact#:Bbool
-
-
-π2 ∫(1"
-#assume#::
-8
-
-π2 ∫(1"#set-field# __collection_size:Bint(
-&
-
-π2 ∫(1"#array-add-last#:(
-&
-
-π2 ∫(1"#array-add-last#:(
-&
-
-π2 ∫(1"#array-add-last#:(
-&
-
-π2 ∫(1"#array-add-last#:"
- 
-
-π' ∫(1"	#map-set#:"
- 
-
-∫3 ª(!"	#map-set#: "
- 
-
-ª ª(3$"	#map-set#:"#"
- 
-
-ª5 º('"	#map-set#:%&&
-$
-
-º ¿(/("#new-object#Bdict"
- 
-
-º º(&*"	#map-set#:()"
- 
-
-º( Ω(Q,"	#map-set#:(	+"
- 
-
-æ æ('-"	#map-set#:()
-'
-
-æ4 ø( 2"#unknown-value#Blist(
-&
-
-æ4 ø( 3"
-#is-exact#:2Bbool
-
-
-æ4 ø( 4"
-#assume#:3:
-8
-
-æ4 ø( 5"#set-field# __collection_size:2Bint(
-&
-
-æ4 ø( 6"#array-add-last#:2.(
-&
-
-æ4 ø( 7"#array-add-last#:2/(
-&
-
-æ4 ø( 8"#array-add-last#:20(
-&
-
-æ4 ø( 9"#array-add-last#:21"
- 
-
-æ) ø( :"	#map-set#:(2"
- 
-
-ø" ø(8<"	#map-set#:(;"
- 
-
-ø: ¿(>"	#map-set#:("="
- 
-
-¿ ¿(.@"	#map-set#:(%?&
-$
-
-¿1 ∆(A"#new-object#Bdict"
- 
-
-¿2 ¿(EC"	#map-set#:AB"
- 
-
-¡ ¬(NE"	#map-set#:A	D"
- 
-
-√ √(%F"	#map-set#:A)
-'
-
-√2 ƒ(<K"#unknown-value#Blist(
-&
-
-√2 ƒ(<L"
-#is-exact#:KBbool
-
-
-√2 ƒ(<M"
-#assume#:L:
-8
-
-√2 ƒ(<N"#set-field# __collection_size:KBint(
-&
-
-√2 ƒ(<O"#array-add-last#:KG(
-&
-
-√2 ƒ(<P"#array-add-last#:KH(
-&
-
-√2 ƒ(<Q"#array-add-last#:KI(
-&
-
-√2 ƒ(<R"#array-add-last#:KJ"
- 
-
-√' ƒ(<S"	#map-set#:AK"
- 
-
-ƒ> ≈(T"	#map-set#:A "
- 
-
-≈ ≈(5U"	#map-set#:A"="
- 
-
-≈7 ∆(W"	#map-set#:A%V&
-$
-
-∆  (GX"#new-object#Bdict"
- 
-
-∆ ∆(&Z"	#map-set#:XY"
- 
-
-∆( «(B\"	#map-set#:X	["
- 
-
-«D »(]"	#map-set#:X)
-'
-
-»* …(=b"#unknown-value#Blist(
-&
-
-»* …(=c"
-#is-exact#:bBbool
-
-
-»* …(=d"
-#assume#:c:
-8
-
-»* …(=e"#set-field# __collection_size:bBint(
-&
-
-»* …(=f"#array-add-last#:b^(
-&
-
-»* …(=g"#array-add-last#:b_(
-&
-
-»* …(=h"#array-add-last#:b`(
-&
-
-»* …(=i"#array-add-last#:ba"
- 
-
-» …(=j"	#map-set#:Xb"
- 
-
-…?  (k"	#map-set#:X;"
- 
-
-   (,m"	#map-set#:X"l"
- 
-
- .  (Fo"	#map-set#:X%n&
-$
-
- I –(p"#new-object#Bdict"
- 
-
-À À(r"	#map-set#:pq"
- 
-
-À! Ã(Ut"	#map-set#:p	s"
- 
-
-Õ Õ('u"	#map-set#:p)
-'
-
-Õ4 Œ(5y"#unknown-value#Blist(
-&
-
-Õ4 Œ(5z"
-#is-exact#:yBbool
-
-
-Õ4 Œ(5{"
-#assume#:z:
-8
-
-Õ4 Œ(5|"#set-field# __collection_size:yBint(
-&
-
-Õ4 Œ(5}"#array-add-last#:yv(
-&
-
-Õ4 Œ(5~"#array-add-last#:yw(
-&
-
-Õ4 Œ(5"#array-add-last#:yx)
-'
-
-Õ4 Œ(5Ä"#array-add-last#:y#
-!
-
-Õ) Œ(5Å"	#map-set#:py$
-"
-
-Œ7 œ(É"	#map-set#:pÇ#
-!
-
-œ œ(5Ñ"	#map-set#:p"=$
-"
-
-œ7 –(Ü"	#map-set#:p%Ö'
-%
-
-– ’(%á"#new-object#Bdict%
-#
-
-– –(&â"	#map-set#:áà%
-#
-
-–( —(]ã"	#map-set#:á	ä$
-"
-
-“ “('å"	#map-set#:á*
-(
-
-“4 ”(Ië"#unknown-value#Blist*
-(
-
-“4 ”(Ií"
-#is-exact#:ëBbool!
-
-
-“4 ”(Iì"
-#assume#:í<
-:
-
-“4 ”(Iî"#set-field# __collection_size:ëBint+
-)
-
-“4 ”(Iï"#array-add-last#:ëç+
-)
-
-“4 ”(Iñ"#array-add-last#:ëé+
-)
-
-“4 ”(Ió"#array-add-last#:ëè+
-)
-
-“4 ”(Iò"#array-add-last#:ëê%
-#
-
-“) ”(Iô"	#map-set#:áë%
-#
-
-‘ ‘(+õ"	#map-set#:áö$
-"
-
-‘- ‘(Aú"	#map-set#:á"l%
-#
-
-’ ’($û"	#map-set#:á%ù'
-%
-
-’' ⁄(%ü"#new-object#Bdict%
-#
-
-’( ’(;°"	#map-set#:ü†%
-#
-
-’= ÷(F£"	#map-set#:ü	¢$
-"
-
-◊ ◊(%§"	#map-set#:ü*
-(
-
-◊2 ÿ(6ß"#unknown-value#Blist*
-(
-
-◊2 ÿ(6®"
-#is-exact#:ßBbool!
-
-
-◊2 ÿ(6©"
-#assume#:®<
-:
-
-◊2 ÿ(6™"#set-field# __collection_size:ßBint+
-)
-
-◊2 ÿ(6´"#array-add-last#:ß•+
-)
-
-◊2 ÿ(6¨"#array-add-last#:ß¶*
-(
-
-◊2 ÿ(6≠"#array-add-last#:ß*
-(
-
-◊2 ÿ(6Æ"#array-add-last#:ß%
-#
-
-◊' ÿ(6Ø"	#map-set#:üß%
-#
-
-ÿ8 Ÿ(±"	#map-set#:ü∞$
-"
-
-Ÿ! Ÿ(7≤"	#map-set#:ü"=%
-#
-
-⁄ ⁄($¥"	#map-set#:ü%≥'
-%
-
-⁄' ﬁ(-µ"#new-object#Bdict%
-#
-
-⁄( ⁄(;∑"	#map-set#:µ∂%
-#
-
-⁄= €(Jπ"	#map-set#:µ	∏$
-"
-
-‹ ‹(%∫"	#map-set#:µ*
-(
-
-‹2 ›(!º"#unknown-value#Blist*
-(
-
-‹2 ›(!Ω"
-#is-exact#:ºBbool!
-
-
-‹2 ›(!æ"
-#assume#:Ω<
-:
-
-‹2 ›(!ø"#set-field# __collection_size:ºBint*
-(
-
-‹2 ›(!¿"#array-add-last#:º/*
-(
-
-‹2 ›(!¡"#array-add-last#:º0+
-)
-
-‹2 ›(!¬"#array-add-last#:ºª*
-(
-
-‹2 ›(!√"#array-add-last#:º1%
-#
-
-‹' ›(!ƒ"	#map-set#:µº%
-#
-
-›# ›(;∆"	#map-set#:µ≈$
-"
-
-›= ﬁ(«"	#map-set#:µ"#%
-#
-
-ﬁ ﬁ(,…"	#map-set#:µ%»>
-<
-
-∑ ﬁ(. fallback_questions"#unknown-value#Blist*
-(
-
-∑ ﬁ(.À"
-#is-exact#: Bbool!
-
-
-∑ ﬁ(.Ã"
-#assume#:À<
-:
-
-∑ ﬁ(.Õ"#set-field# __collection_size: Bint*
-(
-
-∑ ﬁ(.Œ"#array-add-last#: *
-(
-
-∑ ﬁ(.œ"#array-add-last#: (*
-(
-
-∑ ﬁ(.–"#array-add-last#: A*
-(
-
-∑ ﬁ(.—"#array-add-last#: X*
-(
-
-∑ ﬁ(.“"#array-add-last#: p+
-)
-
-∑ ﬁ(.”"#array-add-last#: á+
-)
-
-∑ ﬁ(.‘"#array-add-last#: ü+
-)
-
-∑ ﬁ(.’"#array-add-last#: µ>
-<
-
-ﬂ ﬂ(?÷selected_questions"#unknown-value#Blist'
-%
-
-‡ ‚("◊"#new-object#Bdict&
-$
-
-‡ ‡(/Ÿ"	#map-set#:◊ÿ÷.
-,
-
-‡D ·(€"
-builtinslen*:÷Bint&
-$
-
-‡1 ·(‹"	#map-set#:◊⁄€%
-#
-
-·! ·(Fﬁ"	#map-set#:◊›&
-$
-
-‚ ‚(!·"	#map-set#:◊ﬂ‡
-
-‡ ‚("◊*4/home/omar/Documents/ruleIQ/services/ai/assistant.py

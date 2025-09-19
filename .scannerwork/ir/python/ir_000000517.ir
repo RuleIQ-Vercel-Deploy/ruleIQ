@@ -1,42 +1,0 @@
-func
-Ê Ê("È#
-!
-
-çK ç(W
-"#unknown-value##
-!
-
-ç ç( 	"#unknown-value#*
-(
-
-Ë Ù(%closure"#new-object#(
-&
-
-Ë Ù("#set-field# func:-
-+
-
-Ë Ù("?python-partial-apply?:*
-(
-
-Ù ç(%closure"#new-object#(
-&
-
-Ù ç("#set-field# func:-
-+
-
-Ù ç("?python-partial-apply?:D
-B
-
-ç$ ç(E")
-asyncio.coroutinesiscoroutinefunction:Bbool,"*
-
-ç$ ç(E *
-ç! ç(#2
-çF ç(J"
-
-ç ç(W"
-
-ç ç(W"&*	
-
-
-ç ç(W*4/home/omar/Documents/ruleIQ/database/optimization.py

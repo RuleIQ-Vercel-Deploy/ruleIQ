@@ -1,63 +1,0 @@
-
-"Check equality."str
-
-0intself< <(other< <("	tuple;7ai.evaluation.golden_datasets.versioning.DatasetVersion"t)
-'
-> >(0"#is-instance#:Bbool)
-'
-> >(0"#unaryop !#2!:Bbool"
-> >(0 *> >(
-"5!
-
-? ?(!"#unknown-value#
-? ?(!"ô&
-$
-@ @("#get-field# major:&
-$
-@ @(&	"#get-field# minor:&
-$
-@( @(2
-"#get-field# patch:(
-&
-@ @(3"#unknown-value#Btuple&
-$
-@ @(3"
-#is-exact#:Bbool
-
-@ @(3"
-#assume#:8
-6
-@ @(3"#set-field# __collection_size:Bint&
-$
-@ @(3"#array-add-last#:&
-$
-@ @(3"#array-add-last#:	&
-$
-@ @(3"#array-add-last#:
-&
-$
-A A("#get-field# major:&
-$
-B B("#get-field# minor:&
-$
-C C("#get-field# patch:(
-&
-@7 D(	"#unknown-value#Btuple&
-$
-@7 D(	"
-#is-exact#:Bbool
-
-@7 D(	"
-#assume#:8
-6
-@7 D(	"#set-field# __collection_size:Bint&
-$
-@7 D(	"#array-add-last#:&
-$
-@7 D(	"#array-add-last#:&
-$
-@7 D(	"#array-add-last#:*
-(
-@ D(	"
-#binop ==#2==:Bbool
-@ D(	*P/home/omar/Documents/ruleIQ/services/ai/evaluation/golden_datasets/versioning.py

@@ -1,76 +1,0 @@
-
-¢˜"
-        Get PostgreSQL queries for monitoring connection pool health.
-        
-        Returns:
-            Dict with monitoring SQL queries
-        "str
-"active_connections"str
-ÐÆ"
-                SELECT count(*) as idle_connections 
-                FROM pg_stat_activity 
-                WHERE state = 'idle' 
-                AND application_name LIKE 'ruleiq%';
-            "str
-	"long_running_queries"str
-‚
-ø"
-                SELECT pid, age(clock_timestamp(), query_start) as duration, 
-                       state, query 
-                FROM pg_stat_activity 
-                WHERE state != 'idle' 
-                AND query_start < clock_timestamp() - interval '5 minutes' 
-                AND application_name LIKE 'ruleiq%'
-                ORDER BY duration DESC;
-            "str
-"connection_stats"str
-ÌÂ"
-                SELECT application_name, 
-                       count(*) as connections,
-                       count(*) filter (where state = 'active') as active,
-                       count(*) filter (where state = 'idle') as idle,
-                       count(*) filter (where state = 'idle in transaction') as idle_in_transaction,
-                       max(age(clock_timestamp(), state_change)) as oldest_connection_age
-                FROM pg_stat_activity 
-                WHERE application_name LIKE 'ruleiq%'
-                GROUP BY application_name;
-            "str
-"idle_connections"str
-"table_sizes"str
-‚ø"
-                SELECT schemaname, tablename, 
-                       pg_size_pretty(pg_total_relation_size(schemaname||'.'||tablename)) as size
-                FROM pg_tables 
-                WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
-                ORDER BY pg_total_relation_size(schemaname||'.'||tablename) DESC
-                LIMIT 10;
-            "str
-ÓÉ"
-                SELECT count(*) as active_connections 
-                FROM pg_stat_activity 
-                WHERE state != 'idle' 
-                AND application_name LIKE 'ruleiq%';
-            "str
-"database_size"str
-À¶"
-                SELECT pg_database_size(current_database()) as size_bytes,
-                       pg_size_pretty(pg_database_size(current_database())) as size_pretty;
-            "str"˜&
-$
-
-÷ ©(	"#new-object#Bdict#
-!
-ø ø(ï"	#map-set#:#
-!
-ÿ ÿ(ê"	#map-set#:#
-!
-† †( "	#map-set#:	
-#
-!
- (æ"	#map-set#:#
-!
-œ œ(×"	#map-set#:#
-!
-¡ ¡(—"	#map-set#:
-
-÷ ©(	*:/home/omar/Documents/ruleIQ/config/database_pool_config.py

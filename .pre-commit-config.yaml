@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: repo-secret-scan
+        name: Repository secret scan
+        entry: scripts/ci/scan_secrets.py
+        language: system
+        pass_filenames: false
+        always_run: true

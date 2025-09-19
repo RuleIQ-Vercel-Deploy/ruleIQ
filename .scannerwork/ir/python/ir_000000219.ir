@@ -1,29 +1,0 @@
-
-%"unimplemented_requirements"str
-8/"Find all unimplemented mandatory requirements"str
-äÚ"
-        MATCH (reg:Regulation)-[:REQUIRES {mandatory: true}]->(req:Requirement)
-        WHERE NOT EXISTS((req)<-[:IMPLEMENTS]-(:Control))
-        RETURN reg.name AS regulation,
-               req.title AS requirement,
-               req.deadline AS deadline,
-               req.description AS description
-        ORDER BY req.deadline
-        "strself
-Â- Â(1"Û(
-&
-Ä Ä(îquery"#id#:Bstr#
-!
-
-Í Í(1"#unknown-value#,
-*
-
-Í Í(1results"#unknown-value#&
-$
-
-Î Î(6"#new-object#Bdict"
- 
-
-Î Î(5	"	#map-set#:
-
-Î Î(6*5/home/omar/Documents/ruleIQ/services/neo4j_service.py

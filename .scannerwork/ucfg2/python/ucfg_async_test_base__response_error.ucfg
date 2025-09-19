@@ -1,56 +1,0 @@
-
-1async_test_base.APITestBase.assert_response_errorC
-9/home/omar/Documents/ruleIQ/tests/base/async_test_base.pyi i("2*¤
-2j j(*S
-Q
-l l( 
-%1"__id*9
-
-__unknown_file (*
-
-
-response"
-status_code—
-”
-l l(3
-%2"	__compare*"
-
-__unknown_file (
-==*"
-
-__unknown_file (
-
-%1*/
-
-__unknown_file (
-
-expected_statusS
-Q
-m. m(B
-%3"__id*9
-
-__unknown_file (*
-
-
-response"
-status_codeL
-J
-mF m(S
-%4"__id*2
-
-__unknown_file (*
-
-
-response"
-text*
-3*6
-3
-async_test_base.py"
-p p
-implicit return:
-i$ i(,
-
-response:
-i. i(H
-expected_statusB
-async_test_base.APITestBaseH

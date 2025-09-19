@@ -1,89 +1,0 @@
-
-"S3518"bool
-cZ"Get recovery time statistics.
-
-        Returns:
-            Recovery statistics
-        "str
-"min_recovery_seconds"str
-"avg_recovery_seconds"str
-"division by zero"bool
-"max_recovery_seconds"str
-"total_recoveries"str
-"a"bool
-
-0intself
-… …("°2
-0
-
-‹ ‹(#"#get-field# _recovery_times:+
-)
-
-‹ ‹(#"
-__bool__*:BboolH+
-)
-
-‹ ‹(#"#unaryop !#2!:Bbool "
-
-‹ ‹(# *
-‹ ‹(
-"<&
-$
-
-Œ Œ("#new-object#Bdict
-
-Œ Œ("¿'
-%
- (ó"#new-object#Bdict2
-0
-
-, (@	"#get-field# _recovery_times:'
-%
-
-( (A
-"
-builtinssum*:	2
-0
-
-H (\"#get-field# _recovery_times:,
-*
-
-D (]"
-builtinslen*:Bint,
-*
-
-( (]"
-#binop !=#2!=:Bbool"
- 
-
-( (]"
-#assert#:3
-1
-
-( (]"#dependent-value#*:
-Bfloat"
- 
-
- (]"	#map-set#:3
-1
-{ ("#get-field# _recovery_times:(
-&
-w ("
-builtinsmin*:#
-!
-_ ("	#map-set#:4
-2
-® (Â"#get-field# _recovery_times:)
-'
-ª (Ã"
-builtinsmax*:$
-"
-’ (Ã"	#map-set#:4
-2
-Ý (ñ"#get-field# _recovery_times:.
-,
-Ù (ò"
-builtinslen*:Bint$
-"
-Å (ò "	#map-set#:
- (ó*D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py

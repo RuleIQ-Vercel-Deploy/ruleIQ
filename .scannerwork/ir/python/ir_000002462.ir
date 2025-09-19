@@ -1,44 +1,0 @@
-
-"Get CORS statistics."str
-
-"allowed_origins"str
-"violation_count"str
-"environment"str
-"recent_violations"strself
-ã ã("›&
-$
-
-ç í(	"#new-object#Bdict2
-0
-
-é é(3"#get-field# violation_count:"
- 
-
-é é(3"	#map-set#:#
-!
-
-è! è(;"#unknown-value#"
- 
-
-è è(;	"	#map-set#:)
-'
-
-ê ê(*"#get-field# config:2
-0
-
-ê ê(:"#get-field# allowed_origins:"
- 
-
-ê ê(:"	#map-set#:
-)
-'
-
-ë ë(&"#get-field# config:.
-,
-
-ë ë(2"#get-field# environment:"
- 
-
-ë ë(2"	#map-set#:
-
-ç í(	*5/home/omar/Documents/ruleIQ/middleware/cors_config.py

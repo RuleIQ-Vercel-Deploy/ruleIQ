@@ -1,178 +1,0 @@
-
-Fai_service_mocks.MockComplianceAssistant._generate_contextual_guidanceG
-;/home/omar/Documents/ruleIQ/tests/mocks/ai_service_mocks.py° °(%"2*ñ
-13
-≤ ≤(,{y
-
-≤ ≤(,
-%5*.
-
-__unknown_file (
-
-question_lower*'
-
-__unknown_file (	
-control2__contains__*
-4
-12*î
-14
-∞ ∞('xv
-
-∞ ∞('
-%6*.
-
-__unknown_file (
-
-question_lower*$
-
-__unknown_file (
-risk2__contains__*
-13
-11*Ñ
-15
-Ø Ø(/TR
-
-Ø Ø(!
-%7"	str.lower*,
-
-__unknown_file (
-
-framework_id2lowerí
-è
-
-Ø Ø(/
-%8"	__compare*"
-
-__unknown_file (
-==*"
-
-__unknown_file (
-
-%7*(
-
-__unknown_file (
-
-iso27001*
-14
-4*¶
-2
-§ §(JUS
-
-• •(.
-%9"	str.lower*-
-
-__unknown_file (
-
-question_text2lowerJ
-H
-
-• •(.
-question_lower"__id*"
-
-__unknown_file (
-
-%9US
-
-ß ß(
-%10"	str.lower*,
-
-__unknown_file (
-
-framework_id2lowerê
-ç
-
-ß ß()
-%11"	__compare*"
-
-__unknown_file (
-==*#
-
-__unknown_file (
-
-%10*$
-
-__unknown_file (
-gdpr*
-15
-10*Ã
-4∂ ∂(’¢
-ü
-∂ ∂(’
-%1"__concat*+
-
-∂ ∂(*
-This question relates to *
-
-∂+ ∂(7
-
-framework_id*≤
-∂8 ∂(‘¢ü
-ú compliance requirements. Proper implementation requires understanding the specific context of your organization and the applicable regulatory requirements."
-∂ ∂(’
-
-%1*é
-5© ©(˛"˚
-© ©(˛ÎË
-ÂPersonal data under GDPR includes any information relating to an identified or identifiable natural person. This includes names, email addresses, IP addresses, and even pseudonymized data that can be linked back to an individual.*Û
-6≠ ≠(„"‡
-≠ ≠(„–Õ
- Data breaches must be reported to supervisory authorities within 72 hours of becoming aware of the breach. If the breach poses a high risk to individuals, they must also be notified without undue delay.*ì
-7
-¨ ¨(+zx
-
-¨ ¨(+
-%2*.
-
-__unknown_file (
-
-question_lower*&
-
-__unknown_file (
-
-breach2__contains__*
-4
-6*Â
-8´ ´(’"“
-´ ´(’¬ø
-ºGDPR requires that consent be freely given, specific, informed, and unambiguous. It must be as easy to withdraw consent as it is to give it, and consent cannot be bundled with other terms.*î
-9
-™ ™(,{y
-
-™ ™(,
-%3*.
-
-__unknown_file (
-
-question_lower*'
-
-__unknown_file (	
-consent2__contains__*
-7
-8*ú
-10
-® ®(0Å
-
-® ®(0
-%4*.
-
-__unknown_file (
-
-question_lower*-
-
-__unknown_file (
-personal data2__contains__*
-5
-9*˜
-11± ±(Ê"„
-± ±(Ê”–
-ÕISO 27001 requires a systematic approach to risk management. Organizations must identify information security risks, assess their likelihood and impact, and implement appropriate controls to mitigate them.*ˇ
-12≥ ≥(Ó"Î
-≥ ≥(Ó€ÿ
-’ISO 27001 controls are safeguards implemented to reduce information security risks. The standard provides 114 controls across 14 categories, but organizations should select controls based on their risk assessment.:
-
-¢ ¢( 
-question_text:
-
-¢" ¢(3
-framework_idB,*
-(ai_service_mocks.MockComplianceAssistantH

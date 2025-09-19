@@ -1,119 +1,0 @@
-
-"S3518"bool
-ÚË"Calculate throughput for a workflow type.
-
-        Args:
-            workflow_type: Type of workflow
-            time_window_seconds: Time window in seconds for calculation
-
-        Returns:
-            Throughput metrics
-        "str
-0.0float
-"division by zero"bool
-60int
-'"average_duration_ms"str
-
-	0int
-"a"bool
-  "throughput_per_minute"str
-%"workflows_per_minute"str
-#"workflows_per_second"strself
-Ç Ç(!workflow_type
-Ç# Ç(5#time_window_seconds
-Ç7 Ç(R"€%
-#
-
-å å(!"
-timetimeBfloat@
->
-
-å å(7cutoff_time"#dependent-value#*:BfloatB
-@
-ç ç(árecent_workflows"?python-unknown?:Blist<
-:
-
-é é(.workflow_count"
-builtinslen*:Bint@
->
-
-èG è(^
-workflows_per_second"	#binop >#2>:	Bbool,"*
-
-èG è(^
- *
-èD è(F2
-è_ è(c"õ,
-*
-
-è è(C"
-#binop !=#2!=:	Bbool"
- 
-
-è è(C"
-#assert#:3
-1
-
-è è(C"#dependent-value#*:Bfloat
-
-è è(e"
-
-è è(e"±&*$workflows_per_second	=
-;
-
-ê ê(8workflows_per_minute"	#binop *#*2*:B
-@
-ë ë(ªrecent_completed"?python-unknown?:Blist3
-1
-
-í í(avg_duration_ms"#id#:Bfloat+
-)
-
-ì ì("
-__bool__*:BboolH "
-
-ì ì( *
-ì ì(
-"±8
-6
-
-î î(Y	durations"?python-unknown?:Blist'
-%
-
-ï ï(,"
-builtinssum*:,
-*
-
-ï/ ï(="
-builtinslen*:Bint,
-*
-
-ï ï(="
-#binop !=#2!=:	Bbool"
- 
-
-ï ï(="
-#assert#:D
-B
-
-ï ï(=avg_duration_ms"#dependent-value#*:Bfloat"◊!*(avg_duration_ms2
-0
-
-ñ ñ($"#get-field# _workflow_stats:+
-)
-
-ñ ñ(3stats"#array-read#:&
-$
-
-ó ó(=!"#array-write#: '
-%
-ò ò(ì""#new-object#Bdict"
- 
-
-ò ò(<$"	#map-set#:"#"
- 
-
-ò> ò(j&"	#map-set#:"%#
-!
-òl ò(í)"	#map-set#:"'(
-ò ò(ì"*D/home/omar/Documents/ruleIQ/app/core/monitoring/langgraph_metrics.py

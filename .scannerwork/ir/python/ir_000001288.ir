@@ -1,23 +1,0 @@
-
-"last_refill"str
-
-"capacity"str
-#"Deserialize bucket state"str
-"refill_rate"str
-"tokens"strcls= =(data= =(+"ô"
- 
-@ @(%"#array-read#:"
- 
-A A(+"#array-read#:"
- 
-B B()	"#array-read#:#
-!
-? C(	
-bucket"cls:	"
- 
-D D(0"#array-read#:-
-+
-D D("#set-field# last_refill:
-
-E E(
-*?/home/omar/Documents/ruleIQ/middleware/rate_limiter_enhanced.py

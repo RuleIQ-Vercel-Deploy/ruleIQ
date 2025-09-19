@@ -1,115 +1,0 @@
-
-"pytest"str
-!"status"str
-	"-v"str
-!"Run memory usage tests"str
-("memory_increase"str
-."stderr"str
-!$"initial_memory_percent"str
-"-k"str
-"-m"str
-"python"str
-truebool
-"memory"str
-
-"--tb=short"str
-"tests/performance/"str
-""completed"str
-+"stdout"str
-&"final_memory_percent"str
-
-0intself~ ~(list"á
-.
-,
-
-Ä Å()cmd"#unknown-value#Blist(
-&
-
-Ä Å()"
-#is-exact#:Bbool
-
-
-Ä Å()"
-#assume#::
-8
-
-Ä Å()"#set-field# __collection_size:Bint(
-&
-
-Ä Å()"#array-add-last#:(
-&
-
-Ä Å()"#array-add-last#:(
-&
-
-Ä Å()"#array-add-last#:(
-&
-
-Ä Å()"#array-add-last#:(
-&
-
-Ä Å()"#array-add-last#:(
-&
-
-Ä Å()"#array-add-last#:(
-&
-
-Ä Å()"#array-add-last#:	(
-&
-
-Ä Å()"#array-add-last#:
-A
-?
-
-Ç Ç(0initial_memory"
-psutilvirtual_memoryBtuple:
-8
-
-Ç Ç(8initial_memory"#get-field# percent:#
-!
-
-Ñ Ñ("#unknown-value#N
-L
-
-É Ñ(result"
-
-subprocessrun:Bsubprocess.CompletedProcess?
-=
-
-Ö Ö(.final_memory"
-psutilvirtual_memoryBtuple8
-6
-
-Ö Ö(6final_memory"#get-field# percent:&
-$
-
-Ü â(3 "#new-object#Bdict"
- 
-
-Ü Ü(%#"	#map-set#: !""
- 
-
-Ü' á(%"	#map-set#: $"
- 
-
-á á(@'"	#map-set#: &'
-%
-
-à à(<)"	#binop -#*2-:"
- 
-
-à à(<*"	#map-set#: ())
-'
-
-â â(,"#get-field# stdout:"
- 
-
-à> â(-"	#map-set#: +,)
-'
-
-â% â(2/"#get-field# stderr:"
- 
-
-â â(20"	#map-set#: ./
-
-Ü â(3 *F/home/omar/Documents/ruleIQ/tests/performance/run_performance_tests.py

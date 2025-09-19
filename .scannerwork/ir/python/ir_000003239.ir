@@ -1,59 +1,0 @@
-
-"em"str
-
-0int
-"p"str
-"u"str
-truebool
-"b"str
-	"br"str
-
-"ul"str
-"strong"str
-"i"str
-%"Remove dangerous HTML tags"str
-"li"str
-"ol"strvalue ( list"ª5
-3
- (allowed_tags"#unknown-value#Blist&
-$
- ("
-#is-exact#:Bbool
-
- ("
-#assume#:8
-6
- ("#set-field# __collection_size:Bint&
-$
- ("#array-add-last#:&
-$
- ("#array-add-last#:&
-$
- ("#array-add-last#:&
-$
- ("#array-add-last#:&
-$
- ("#array-add-last#:&
-$
- ("#array-add-last#:&
-$
- ("#array-add-last#:	&
-$
- ("#array-add-last#:
-&
-$
- ("#array-add-last#:&
-$
- ("#array-add-last#:!
-
- (A"#unknown-value#2
-0
- (A"#unknown-value#Btyping.Iterable'
-%
- (A "#unknown-value#Bbool!
-
- (A!"#unknown-value#-
-+
- (A""
-bleachclean: !Bstr
- (A"*3/home/omar/Documents/ruleIQ/api/utils/validators.py

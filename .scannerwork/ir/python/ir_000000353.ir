@@ -1,17 +1,0 @@
-
-
-1int
-=4"Mock response {self.call_count} for: {prompt[:50]}"strself
-ì ì("prompt
-ì$ ì(/"š-
-+
-
-í í("#get-field# call_count:'
-%
-
-í í( "	#binop +#*2+:.
-,
-
-í í( "#set-field# call_count:
-
-î î(H*7/home/omar/Documents/ruleIQ/tests/conftest_optimized.py

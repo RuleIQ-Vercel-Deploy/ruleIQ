@@ -1,25 +1,0 @@
-
-90"Backwards compatible blacklist token function."strtoken
-Ù Ù($reason
-Ù& Ù(:ttl
-Ù< Ú(kwargs
-Ú Ú("dict"â#
-!
-
-Ü Ü(+"#unknown-value#.
-,
-
-Ü Ü(+	blacklist"#unknown-value#'
-%
-
-Ý? Ý(G"#unaryop **#2**:+
-)
-
-Ý Ý(H	"?python-unknown?:#
-!
-
-Ý Ý(H
-"#unknown-value#
-
-Ý Ý(H
-*?/home/omar/Documents/ruleIQ/api/dependencies/token_blacklist.py

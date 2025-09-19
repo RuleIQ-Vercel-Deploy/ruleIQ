@@ -1,14 +1,0 @@
-
-;2"{self.currency_code} {self.conversion_value:.2f}"str
-
-"No value"str
-8/"Get formatted conversion value with currency."strself_' _(+"|1
-/
-a a( "#get-field# conversion_value:)
-'
-a a( "
-__bool__*:BboolH"
-a a(  *a a(
-"
-b b(F"
-c c(*8/home/omar/Documents/ruleIQ/database/conversion_event.py

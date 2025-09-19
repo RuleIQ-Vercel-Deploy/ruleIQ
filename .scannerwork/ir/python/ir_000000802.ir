@@ -1,76 +1,0 @@
-
-	"--cov=."str
-"python"str
-"pytest"str
-
-0int
-$"--cov-report=term-missing"str
-60int
-"="str
-'"Run the complete test suite."str
-$truebool
-) "Running complete test suite..."str
-"-v"str
-"--tb=short"str
-"tests/"str
-#falsebool
-"-m"str
-"\n"strlist"Ï%
-#
-J J("	#binop *#*2*:"
- 
-J
- J("	#binop +#2+:1
-/
-J J("
-builtinsprint*:BNoneType1
-/
-K K(+	"
-builtinsprint*:BNoneType%
-#
-L
- L(
-"	#binop *#*2*:"
- 
-L
- L("	#binop +#2+:
-1
-/
-L L("
-builtinsprint*:BNoneType'
-%
-O X(	"#unknown-value#Blist&
-$
-O X(	"
-#is-exact#:Bbool
-
-O X(	"
-#assume#:8
-6
-O X(	"#set-field# __collection_size:Bint&
-$
-O X(	"#array-add-last#:&
-$
-O X(	"#array-add-last#:&
-$
-O X(	"#array-add-last#:&
-$
-O X(	"#array-add-last#:&
-$
-O X(	"#array-add-last#:&
-$
-O X(	 "#array-add-last#:&
-$
-O X(	!"#array-add-last#:&
-$
-O X(	""#array-add-last#:K
-I
-N [(%result"
-
-subprocessrun:#$Bsubprocess.CompletedProcess+
-)
-] ](&"#get-field# returncode:%*
-(
-] ](!'"
-#binop ==#2==:&Bbool
-] ](!'*=/home/omar/Documents/ruleIQ/archive/scripts/fix_test_suite.py

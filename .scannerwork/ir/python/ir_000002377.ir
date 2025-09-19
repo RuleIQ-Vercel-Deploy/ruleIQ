@@ -1,37 +1,0 @@
-
-'"Generate compliance insights"str
-8/"Focus on documentation and policy development"str
-
-0int
-B9"Regular training and awareness programs are recommended"str
-QH"Your organization shows good progress toward {framework_id} compliance"strself
-ø ø(answers
-ø! ø(.framework_id
-ø0 ø(A	list"Ì3
-1
-
-ú þ(	insights"#unknown-value#Blist(
-&
-
-ú þ(	
-"
-#is-exact#:	Bbool
-
-
-ú þ(	"
-#assume#:
-:
-8
-
-ú þ(	"#set-field# __collection_size:Bint(
-&
-
-ú þ(	"#array-add-last#:(
-&
-
-ú þ(	"#array-add-last#:(
-&
-
-ú þ(	"#array-add-last#:
-
-ÿ ÿ(*;/home/omar/Documents/ruleIQ/tests/mocks/ai_service_mocks.py

@@ -1,34 +1,0 @@
-
-"host"str
-
-"db"str
-"port"strargs
-´& ´(+kwargs
-´- ´(5"dict"Ù#
-!
-
-µ. µ(1"#unknown-value#$
-"
-
-µ. µ(9"#array-read#:#
-!
-
-µ@ µ(C"#unknown-value#$
-"
-
-µ@ µ(K"#array-read#:#
-!
-
-¶ ¶(	"#unknown-value#$
-"
-
-¶ ¶($"#array-read#:	
-#
-!
-
-µ µ(""#unknown-value#?
-=
-
-µ ¶(%client"?python-unknown?:Bredis.Redis
-
-· ·(!*7/home/omar/Documents/ruleIQ/tests/mock_service_proxy.py

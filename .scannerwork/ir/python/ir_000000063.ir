@@ -1,48 +1,0 @@
-
-0.0float
-"division by zero"bool
-7."Calculate approval rate from recent actions."str
-"S3518"bool
-"a"bool
-
-
-0intself
-é! é(%"¹;
-9
-
-ë î(recent_approvals"#unknown-value#Blist+
-)
-
-ð ð("
-__bool__*:BboolH+
-)
-
-ð ð("#unaryop !#2!:Bbool "
-
-ð ð( *
-ð ð(
-"
-
-ñ ñ("ò'
-%
-
-ó ó($"
-builtinssum*:,
-*
-
-ó' ó(<"
-builtinslen*:Bint,
-*
-
-ó ó(<	"
-#binop !=#2!=:
-Bbool"
- 
-
-ó ó(<"
-#assert#:	3
-1
-
-ó ó(<"#dependent-value#*:Bfloat
-
-ó ó(<*>/home/omar/Documents/ruleIQ/services/agents/trust_algorithm.py

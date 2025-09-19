@@ -1,5 +1,0 @@
-
-"Set workflow status."strself8 8(status8 8(0"C1
-/
-: :("#set-field# workflow_status:
-; ;(*</home/omar/Documents/ruleIQ/tests/fixtures/state_fixtures.py

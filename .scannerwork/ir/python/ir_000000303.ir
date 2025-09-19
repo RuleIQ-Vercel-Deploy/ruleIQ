@@ -1,8 +1,0 @@
-
-5,"Reload settings from environment variables"str"M9
-7
-
-   (!"'
-config.settings_create_new_settings
-
-   (!*./home/omar/Documents/ruleIQ/config/settings.py

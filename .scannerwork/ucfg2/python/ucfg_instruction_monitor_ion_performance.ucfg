@@ -1,55 +1,0 @@
-
-Pai.instruction_monitor.InstructionPerformanceMonitor.get_instruction_performanceJ
->/home/omar/Documents/ruleIQ/services/ai/instruction_monitor.py‰ ‰(#"4"5*Ÿ
-4
-˜ ˜(9ˆ
-…
-
-˜ ˜(%
-%1"__id*k
-
-__unknown_file (O*M6
-4ai.instruction_monitor.InstructionPerformanceMonitor"
-performance_cachemk
-
-˜ ˜(9
-%2*"
-
-__unknown_file (
-
-%1*.
-
-__unknown_file (
-
-instruction_id2get"
-
-˜ ˜(9
-
-%2*“
-5
-– —(ëè
-
-– —(
-%3*T
-
-__unknown_file (86
-4ai.instruction_monitor.InstructionPerformanceMonitor*.
-
-__unknown_file (
-
-instruction_id*+
-
-__unknown_file (
-
-time_window2!_calculate_performance_for_window"
-
-– —(
-
-%3:
-
-‰* ‰(=
-instruction_id:
-
-‰? Š( 
-time_windowB86
-4ai.instruction_monitor.InstructionPerformanceMonitorH

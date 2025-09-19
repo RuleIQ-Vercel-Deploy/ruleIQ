@@ -1,557 +1,0 @@
-
-.0.5float
- H"User session duration"str
-&]"Active database connections"str
-ç"Total cache misses"str
-.–$"ruleiq_feature_flag_cache_hit_rate"str
-&‹"ruleiq_auth_failures_total"str
-L1800int
-!D"ruleiq_active_sessions"str
-N7200int
-,0.1float
-*0.025float
-)E "Number of active user sessions"str
-(0.005float
-,Ì""ruleiq_suspicious_requests_total"str
-#É"Application information"str
-* !"ruleiq_request_duration_seconds"str
-Ô"pattern_type"str
-#"Total number of requests"str
-±"AI request duration"str
-J300int
-0Ó&"Suspicious request patterns detected"str
-$ù"Total AI tokens consumed"str
-ﬁ"reason"str
-$î"ruleiq_redis_connections"str
-1≈'"ruleiq_feature_flag_evaluations_total"str
-.∞$"ruleiq_ai_request_duration_seconds"str
-Ñ"Total cache hits"str
-%å"ruleiq_cache_misses_total"str
-(ï"Redis connection pool status"str
-O14400int
-)0.01float
-+0.05float
-*G!"ruleiq_session_duration_seconds"str
-$∆"Feature flag evaluations"str
-!Ê"JWT validation errors"str
--0.25float
-%!"Request latency in seconds"str
-o"query_type"str
-&”"ruleiq_auth_attempts_total"str
-+m""ruleiq_db_query_duration_seconds"str
-^"pool_type"str
-02.5float
-15.0float
-'˙"Service availability status"str
-"ú"ruleiq_ai_tokens_total"str
-&e"ruleiq_db_connections_total"str
-˚"service_name"str
-'\"ruleiq_db_connections_active"str
-û"model"str
-/1.0float
-K600int
- "ruleiq_requests_total"str
-!;"Total number of errors"str
-:"ruleiq_errors_total"str
- ®"Total AI cost in USD"str
-I60int
-ü"operation"str
-%f"Total database connections"str
-'—"Feature flag cache hit rate"str
-NoneNoneType
-Ö"cache_type"str
-$ß"ruleiq_ai_cost_usd_total"str
-'˘"ruleiq_service_availability"str
-∏30.0float
-"method"str
-"n"Database query duration"str
-#‘"Authentication attempts"str
-u0.001float
-#É"ruleiq_cache_hits_total"str
-.Â$"ruleiq_jwt_validation_errors_total"str
-«"flag_name"str
-&ˆ"ruleiq_system_health_score"str
-
-0int
-M3600int
-Ç"ruleiq_app"str
-ôè"
-Prometheus Metrics Collection for RuleIQ
-
-Comprehensive application metrics for monitoring user experience,
-performance, and system health.
-"str
-/˜%"Overall system health score (0-100)"str
-"status"str
-»"result"str
-<"error_type"str
-210.0float
-#›"Authentication failures"str
-
-"endpoint"strlist	4tuple"ôB-
-+
- ("annotations"?python-unknown?*
-(
- (Optional"?python-unknown?'
-%
- (wraps"?python-unknown?0
-.
- (%contextmanager"?python-unknown?)
-'
- (;Counter"?python-unknown?+
-)
- (;	Histogram"?python-unknown?'
-%
- (;Gauge"?python-unknown?&
-$
- (;	Info"?python-unknown?3
-1
- (;
-CollectorRegistry"?python-unknown?1
-/
- (;generate_latest"?python-unknown?5
-3
- (;CONTENT_TYPE_LATEST"?python-unknown?*
-(
- (Response"?python-unknown?!
-
- (#"#unknown-value#?
-=
-	 ($logger"
-logging	getLogger:Blogging.Logger+
-)
- (REGISTRY"#unknown-value#'
-%
- ($"#unknown-value#Blist&
-$
- ($"
-#is-exact#:Bbool
-
- ($"
-#assume#:8
-6
- ($"#set-field# __collection_size:Bint&
-$
- ($"#array-add-last#:&
-$
- ($"#array-add-last#:&
-$
- ($"#array-add-last#:6
-4
- !(REQUEST_COUNT"#unknown-value#:'
-%
-& &(""#unknown-value#Blist&
-$
-& &(#"
-#is-exact#:"Bbool
-
-& &($"
-#assume#:#8
-6
-& &(%"#set-field# __collection_size:"Bint&
-$
-& &(&"#array-add-last#:"&
-$
-& &('"#array-add-last#:"(
-&
-( ((K3"#unknown-value#Btuple&
-$
-( ((K5"
-#is-exact#:34Bbool
-
-( ((K6"
-#assume#:58
-6
-( ((K7"#set-field# __collection_size:3Bint,
-*
-( ((K8"?python-unknown?*Btuple9
-7
-# )(9REQUEST_LATENCY"#unknown-value#: !"8'
-%
-. .(="#unknown-value#Blist&
-$
-. .(>"
-#is-exact#:=Bbool
-
-. .(?"
-#assume#:>8
-6
-. .(@"#set-field# __collection_size:=Bint&
-$
-. .(A"#array-add-last#:=<&
-$
-. .(B"#array-add-last#:=3
-1
-+ 0(C
-ERROR_RATE"#unknown-value#::;=7
-5
-3 7(FACTIVE_SESSIONS"#unknown-value#:DE(
-&
-= =(3P"#unknown-value#Btuple&
-$
-= =(3Q"
-#is-exact#:P4Bbool
-
-= =(3R"
-#assume#:Q8
-6
-= =(3S"#set-field# __collection_size:PBint&
-$
-= =(3T"#array-add-last#:PI&
-$
-= =(3U"#array-add-last#:PJ&
-$
-= =(3V"#array-add-last#:PK&
-$
-= =(3W"#array-add-last#:PL&
-$
-= =(3X"#array-add-last#:PM&
-$
-= =(3Y"#array-add-last#:PN&
-$
-= =(3Z"#array-add-last#:PO9
-7
-9 >([SESSION_DURATION"#unknown-value#:GHP'
-%
-D D(_"#unknown-value#Blist&
-$
-D D(`"
-#is-exact#:_Bbool
-
-D D(a"
-#assume#:`8
-6
-D D(b"#set-field# __collection_size:_Bint&
-$
-D D(c"#array-add-last#:_^>
-<
-A F(dDB_CONNECTIONS_ACTIVE"#unknown-value#:\]_'
-%
-K K(g"#unknown-value#Blist&
-$
-K K(h"
-#is-exact#:gBbool
-
-K K(i"
-#assume#:h8
-6
-K K(j"#set-field# __collection_size:gBint&
-$
-K K(k"#array-add-last#:g^=
-;
-H M(lDB_CONNECTIONS_TOTAL"#unknown-value#:efg'
-%
-R R(p"#unknown-value#Blist&
-$
-R R(q"
-#is-exact#:pBbool
-
-R R(r"
-#assume#:q8
-6
-R R(s"#set-field# __collection_size:pBint&
-$
-R R(t"#array-add-last#:po(
-&
-T T(:v"#unknown-value#Btuple&
-$
-T T(:w"
-#is-exact#:v4Bbool
-
-T T(:x"
-#assume#:w8
-6
-T T(:y"#set-field# __collection_size:vBint&
-$
-T T(:z"#array-add-last#:vu&
-$
-T T(:{"#array-add-last#:v(&
-$
-T T(:|"#array-add-last#:v)&
-$
-T T(:}"#array-add-last#:v+&
-$
-T T(:~"#array-add-last#:v,&
-$
-T T(:"#array-add-last#:v.'
-%
-T T(:Ä"#array-add-last#:v/'
-%
-T T(:Å"#array-add-last#:v1<
-:
-O U(ÇDB_QUERY_DURATION"#unknown-value#:mnpv(
-&
-[ [(Ü"#unknown-value#Blist(
-&
-[ [(á"
-#is-exact#:ÜBbool
-
-[ [(à"
-#assume#:á:
-8
-[ [(â"#set-field# __collection_size:ÜBint)
-'
-[ [(ä"#array-add-last#:ÜÖ7
-5
-X ](ã
-CACHE_HITS"#unknown-value#:ÉÑÜ(
-&
-b b(é"#unknown-value#Blist(
-&
-b b(è"
-#is-exact#:éBbool
-
-b b(ê"
-#assume#:è:
-8
-b b(ë"#set-field# __collection_size:éBint)
-'
-b b(í"#array-add-last#:éÖ9
-7
-_ d(ìCACHE_MISSES"#unknown-value#:åçé(
-&
-i i(ñ"#unknown-value#Blist(
-&
-i i(ó"
-#is-exact#:ñBbool
-
-i i(ò"
-#assume#:ó:
-8
-i i(ô"#set-field# __collection_size:ñBint(
-&
-i i(ö"#array-add-last#:ñ>
-<
-f k(õREDIS_CONNECTIONS"#unknown-value#:îïñ(
-&
-q q(†"#unknown-value#Blist(
-&
-q q(°"
-#is-exact#:†Bbool
-
-q q(¢"
-#assume#:°:
-8
-q q(£"#set-field# __collection_size:†Bint)
-'
-q q(§"#array-add-last#:†û)
-'
-q q(•"#array-add-last#:†ü;
-9
-n s(¶AI_TOKEN_USAGE"#unknown-value#:úù†(
-&
-x x(©"#unknown-value#Blist(
-&
-x x(™"
-#is-exact#:©Bbool
-
-x x(´"
-#assume#:™:
-8
-x x(¨"#set-field# __collection_size:©Bint)
-'
-x x(≠"#array-add-last#:©û)
-'
-x x(Æ"#array-add-last#:©ü:
-8
-u z(ØAI_COST_TOTAL"#unknown-value#:ß®©(
-&
- (≤"#unknown-value#Blist(
-&
- (≥"
-#is-exact#:≤Bbool
-
- (¥"
-#assume#:≥:
-8
- (µ"#set-field# __collection_size:≤Bint)
-'
- (∂"#array-add-last#:≤û)
-'
- (∑"#array-add-last#:≤ü+
-)
-
-Å Å(1π"#unknown-value#Btuple*
-(
-
-Å Å(1∫"
-#is-exact#:π4Bbool!
-
-
-Å Å(1ª"
-#assume#:∫<
-:
-
-Å Å(1º"#set-field# __collection_size:πBint*
-(
-
-Å Å(1Ω"#array-add-last#:π,*
-(
-
-Å Å(1æ"#array-add-last#:π.*
-(
-
-Å Å(1ø"#array-add-last#:π/*
-(
-
-Å Å(1¿"#array-add-last#:π0*
-(
-
-Å Å(1¡"#array-add-last#:π1*
-(
-
-Å Å(1¬"#array-add-last#:π2+
-)
-
-Å Å(1√"#array-add-last#:π∏C
-A
-	| Ç(ƒAI_REQUEST_DURATION"#unknown-value#:	∞±≤π*
-(
-
-à à(…"#unknown-value#Blist*
-(
-
-à à( "
-#is-exact#:…Bbool!
-
-
-à à(À"
-#assume#: <
-:
-
-à à(Ã"#set-field# __collection_size:…Bint+
-)
-
-à à(Õ"#array-add-last#:…«+
-)
-
-à à(Œ"#array-add-last#:…»G
-E
-
-Ö ä(œFEATURE_FLAG_EVALUATIONS"#unknown-value#:≈∆…H
-F
-
-å ê(“FEATURE_FLAG_CACHE_HIT_RATE"#unknown-value#:–—*
-(
-
-ñ ñ(’"#unknown-value#Blist*
-(
-
-ñ ñ(÷"
-#is-exact#:’Bbool!
-
-
-ñ ñ(◊"
-#assume#:÷<
-:
-
-ñ ñ(ÿ"#set-field# __collection_size:’Bint+
-)
-
-ñ ñ(Ÿ"#array-add-last#:’»*
-(
-
-ñ ñ(⁄"#array-add-last#:’<
-:
-
-ì ò(€AUTH_ATTEMPTS"#unknown-value#:”‘’*
-(
-
-ù ù(ﬂ"#unknown-value#Blist*
-(
-
-ù ù(‡"
-#is-exact#:ﬂBbool!
-
-
-ù ù(·"
-#assume#:‡<
-:
-
-ù ù(‚"#set-field# __collection_size:ﬂBint+
-)
-
-ù ù(„"#array-add-last#:ﬂﬁ<
-:
-
-ö ü(‰AUTH_FAILURES"#unknown-value#:‹›ﬂ*
-(
-
-§ §(Á"#unknown-value#Blist*
-(
-
-§ §(Ë"
-#is-exact#:ÁBbool!
-
-
-§ §(È"
-#assume#:Ë<
-:
-
-§ §(Í"#set-field# __collection_size:ÁBint*
-(
-
-§ §(Î"#array-add-last#:Á<D
-B
-
-° ¶(ÏJWT_VALIDATION_ERRORS"#unknown-value#:ÂÊÁ*
-(
-
-´ ´("#unknown-value#Blist*
-(
-
-´ ´(Ò"
-#is-exact#:Bbool!
-
-
-´ ´(Ú"
-#assume#:Ò<
-:
-
-´ ´(Û"#set-field# __collection_size:Bint+
-)
-
-´ ´(Ù"#array-add-last#:ÔB
-@
-
-® ≠(ıSUSPICIOUS_REQUESTS"#unknown-value#:ÌÓ:
-8
-
-∞ ¥(¯SYSTEM_HEALTH"#unknown-value#:ˆ˜*
-(
-
-π π(¸"#unknown-value#Blist*
-(
-
-π π(˝"
-#is-exact#:¸Bbool!
-
-
-π π(˛"
-#assume#:˝<
-:
-
-π π(ˇ"#set-field# __collection_size:¸Bint+
-)
-
-π π(Ä"#array-add-last#:¸˚C
-A
-
-∂ ª(ÅSERVICE_AVAILABILITY"#unknown-value#:˘˙¸5
-3
-
-æ ¬(ÑAPP_INFO"#unknown-value#:ÇÉ8
-6
-È È(5Ö_metrics_collector"#id#: BNoneType'
-%
-Ï ÙÜ%closure"#new-object#5
-3
-Ï Ùá" #set-field# _metrics_collector:ÜÖ+
-)
-Ï Ùà"?python-partial-apply?:Ü'
-%
-É äâ%closure"#new-object#5
-3
-É ää"!#set-field# CONTENT_TYPE_LATEST:â+
-)
-É äã"?python-partial-apply?:â *1/home/omar/Documents/ruleIQ/monitoring/metrics.py

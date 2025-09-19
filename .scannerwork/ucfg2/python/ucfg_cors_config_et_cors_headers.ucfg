@@ -1,96 +1,0 @@
-
-'cors_config.CORSConfig.get_cors_headersA
-5/home/omar/Documents/ruleIQ/middleware/cors_config.pyã ã("2*ƒ
-2
-ä ì(
-
-í í(
-%5"dictC
-A
-
-í í(	
-headers"__id*"
-
-__unknown_file (
-
-%5ˆ…
-
-ï ï()
-%6*6
-
-__unknown_file (
-cors_config.CORSConfig*&
-
-__unknown_file (
-
-
-origin2is_origin_allowed*
-4
-6**
-4
-ö ö("
-
-ö ö(
-	
-headers*Ü
-5
-ô ô(DÅÂ
-
-ô ô(D
-%1"dict.__setitem__*'
-
-__unknown_file (
-	
-headers*@
-
-__unknown_file ($"
- Access-Control-Allow-Credentials*$
-
-__unknown_file (
-true2__setitem__*
-4*õ
-6
-ð ð(;Â¿
-
-ð ð(;
-%2"dict.__setitem__*'
-
-__unknown_file (
-	
-headers*;
-
-__unknown_file (
-Access-Control-Allow-Origin*&
-
-__unknown_file (
-
-
-origin2__setitem__«¨
-
-ñ ñ(&
-%3"dict.__setitem__*'
-
-__unknown_file (
-	
-headers*$
-
-__unknown_file (
-Vary*&
-
-__unknown_file (
-
-Origin2__setitem__i
-g
-
-ó ó(%
-%4"__id*M
-
-__unknown_file (1*/
-cors_config.CORSConfig"
-allow_credentials*
-4
-5:
-
-ã ã(*
-originB
-cors_config.CORSConfigH

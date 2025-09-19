@@ -1,16 +1,0 @@
-
-*agents.base_agent.BaseAgent.suggest_actionC
-9/home/omar/Documents/ruleIQ/services/agents/base_agent.py ("3*1
-3
-base_agent.py"
-" "
-implicit return:
- (
-action_type:
- (
-description:
- (
-	rationale:
- (
-kwargsB
-agents.base_agent.BaseAgentH

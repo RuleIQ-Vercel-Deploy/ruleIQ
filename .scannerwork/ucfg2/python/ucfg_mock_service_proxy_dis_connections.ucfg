@@ -1,83 +1,0 @@
-
-=tests.mock_service_proxy.ServiceProxy.patch_redis_connectionsA
-7/home/omar/Documents/ruleIQ/tests/mock_service_proxy.pyU U("2*»
-2V V(Cp
-n
-W W(
-%1"__id*V
-
-__unknown_file (:*8'
-%tests.mock_service_proxy.ServiceProxy"
-test_configtr
-W W('
-%2"__mapGet*"
-
-__unknown_file (
-
-%1*%
-
-__unknown_file (	
-redis2__getitem__=
-;
-W W('
-cfg"__id*"
-
-__unknown_file (
-
-%2S
-Q
-X X(2
-%3"__id*9
-
-__unknown_file (*
-redis.Redis"
-
-__init__M
-K
-X X(2
-original_redis_init"__id*"
-
-__unknown_file (
-
-%3M
-K
-` `(*
-%4"__id*3
-
-__unknown_file (*
-
-redis"
-
-from_urlK
-I
-` `(*
-original_from_url"__id*"
-
-__unknown_file (
-
-%4c
-a
-e e(1
-redis.Redis"
-
-__init__"__id*2
-
-__unknown_file (
-
-redis_init_wrapper[
-Y
-f f()
-
-redis"
-
-from_url"__id*0
-
-__unknown_file (
-
-from_url_wrapper*
-3*;
-3
-mock_service_proxy.py"
-h h(
-implicit returnB)'
-%tests.mock_service_proxy.ServiceProxyH

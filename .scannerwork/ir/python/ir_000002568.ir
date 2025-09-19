@@ -1,33 +1,0 @@
-
-:1"Calculate potential cost savings from batching."str
-0.7float
-24int
-0.02float
-"frequency"strself
-¢! ¢(%pattern
-¢' ¢(>"Œ3
-1
-
-¤ ¤(individual_cost"#id#:Bfloat4
-2
-
-¥ ¥(batch_efficiency"#id#:Bfloat7
-5
-
-¦ ¦(0	requests_per_hour"#array-read#:3
-1
-
-§ §(@
-"#dependent-value#*:	Bfloat3
-1
-
-§ ¨("#dependent-value#*:
-Bfloat5
-3
-
-§ ¨(potential_savings"#id#:Bfloat3
-1
-
-© ©(%"#dependent-value#*:Bfloat
-
-© ©(%*@/home/omar/Documents/ruleIQ/services/ai_performance_optimizer.py

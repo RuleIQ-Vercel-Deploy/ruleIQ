@@ -1,24 +1,0 @@
-
-truebool
-Ã¹"
-        Decorator to require JWT authentication for a route.
-        
-        Usage:
-            @router.get("/protected")
-            @JWTMiddleware.require_auth
-            async def protected_route(current_user: User = Depends(get_current_user)):
-                return {"user": current_user.email}
-        "strfunc% %(#"Š!
-
-7 7(	"#unknown-value#!
-
-6 6("#unknown-value#(
-&
-/ 6(%closure"#new-object#&
-$
-/ 6("#set-field# func:+
-)
-/ 6("?python-partial-apply?:3
-1
-6 6(!"#set-field# __requires_auth__:
-7 7(	*8/home/omar/Documents/ruleIQ/middleware/jwt_decorators.py

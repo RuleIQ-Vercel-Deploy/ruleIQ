@@ -1,32 +1,0 @@
-
-		"message"str
-'"Convert error to dictionary."str
-"error"str
-"timestamp"str
-	"details"str
-"code"strself( (("­$
-"
-* 1(	"#new-object#Bdict$
-"
-+ 0("#new-object#Bdict%
-#
-, ,(!"#get-field# code: 
-
-, ,(!"	#map-set#:(
-&
-- -('
-"#get-field# message: 
-
-- -('"	#map-set#:	
-(
-&
-. .('"#get-field# details: 
-
-. .('"	#map-set#:*
-(
-/ /(+"#get-field# timestamp: 
-
-/ /(+"	#map-set#: 
-
-+ 0("	#map-set#:
-* 1(	*@/home/omar/Documents/ruleIQ/app/core/monitoring/error_handler.py

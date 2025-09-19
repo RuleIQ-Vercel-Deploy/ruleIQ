@@ -1,21 +1,0 @@
-
-
-3int
-8/"Assign requiring consensus (multiple agents)."strself
-ô ô(task
-õ õ(eligible_agents
-ö ö(#"›,
-*
-
-ú ú(0"
-builtinslen*:Bint4
-2
-
-ú ú(1
-num_agents"
-builtinsmin*:#
-!
-
-û û(+"#unknown-value#
-
-û û(+*:/home/omar/Documents/ruleIQ/services/agents/coordinator.py

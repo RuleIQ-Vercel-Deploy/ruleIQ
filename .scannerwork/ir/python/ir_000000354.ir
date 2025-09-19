@@ -1,62 +1,0 @@
-
-"recommendations"str
-0.95float
-"confidence"str
-
-"issues"str
-%"Continue current practices"str
-"compliant"str
-truebool
-
-0intself
-ð ð(#text
-ð% ð(.list"Ø&
-$
-
-ñ ö("#new-object#Bdict"
- 
-
-ò ò(!"	#map-set#:"
- 
-
-ó ó("	"	#map-set#:)
-'
-
-ô ô("#unknown-value#Blist(
-&
-
-ô ô("
-#is-exact#:Bbool
-
-
-ô ô("
-#assume#::
-8
-
-ô ô("#set-field# __collection_size:Bint"
- 
-
-ô ô("	#map-set#:
-)
-'
-
-õ# õ(A"#unknown-value#Blist(
-&
-
-õ# õ(A"
-#is-exact#:Bbool
-
-
-õ# õ(A"
-#assume#::
-8
-
-õ# õ(A"#set-field# __collection_size:Bint(
-&
-
-õ# õ(A"#array-add-last#:"
- 
-
-õ õ(A"	#map-set#:
-
-ñ ö(*7/home/omar/Documents/ruleIQ/tests/conftest_optimized.py

@@ -1,29 +1,0 @@
-
-truebool
-³©"
-        Decorator to require admin privileges for a route.
-        
-        Usage:
-            @router.get("/admin/users")
-            @JWTMiddleware.require_admin
-            async def admin_route(current_user: User = Depends(get_current_user)):
-                return {"admin": True}
-        "strfunc: :($"ã!
-
-Q Q("#unknown-value#!
-
-P P(	"#unknown-value#!
-
-O O("#unknown-value#(
-&
-D O(%closure"#new-object#&
-$
-D O("#set-field# func:+
-)
-D O("?python-partial-apply?:3
-1
-O O(!"#set-field# __requires_auth__:4
-2
-P P("
-" #set-field# __requires_admin__:	
-Q Q(*8/home/omar/Documents/ruleIQ/middleware/jwt_decorators.py

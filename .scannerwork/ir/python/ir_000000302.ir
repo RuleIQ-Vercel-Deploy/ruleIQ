@@ -1,8 +1,0 @@
-
-#"Get application settings"str"P<
-:
-
-› ›($"*
-config.settings_get_or_create_settings
-
-› ›($*./home/omar/Documents/ruleIQ/config/settings.py

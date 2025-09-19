@@ -1,57 +1,0 @@
-
-"allow_headers"str
-
-"allow_methods"str
-"allow_credentials"str
-	"max_age"str
-"allow_origins"str
-ëá"
-        Get kwargs for FastAPI CORSMiddleware.
-        
-        Returns:
-            Dictionary of middleware configuration
-        "str
-"expose_headers"strself
-ç ç(!"ƒ&
-$
-
-î õ(	"#new-object#Bdict2
-0
-
-ï ï(1"#get-field# allowed_origins:"
- 
-
-ï ï(1"	#map-set#:4
-2
-
-ñ! ñ(7"#get-field# allow_credentials:"
- 
-
-ñ ñ(7	"	#map-set#:2
-0
-
-ó ó(1"#get-field# ALLOWED_METHODS:"
- 
-
-ó ó(1"	#map-set#:
-2
-0
-
-ò ò(1"#get-field# ALLOWED_HEADERS:"
- 
-
-ò ò(1"	#map-set#:2
-0
-
-ô ô(2"#get-field# EXPOSED_HEADERS:"
- 
-
-ô ô(2"	#map-set#:*
-(
-
-ö ö(#"#get-field# max_age:"
- 
-
-ö ö(#"	#map-set#:
-
-î õ(	*5/home/omar/Documents/ruleIQ/middleware/cors_config.py

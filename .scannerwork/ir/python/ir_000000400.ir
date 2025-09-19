@@ -1,66 +1,0 @@
-
-&"Simulated streaming failure"str
-
-1intself
-· ·(StopIteration"¨*
-(
-
-¸ ¸("#get-field# current:*
-(
-
-¸ ¸('"#get-field# fail_at:,
-*
-
-¸ ¸('"
-#binop ==#2==:Bbool "
-
-¸ ¸(' *
-¸ ¸(
-"<&
-$
-
-¹ ¹(C"#unknown-value#:2
-
-¹ ¹(C"×*
-(
-
-» »("#get-field# current:)
-'
-
-» »(*"#get-field# chunks:,
-*
-
-» »(+	"
-builtinslen*:Bint,
-*
-
-» »(+
-"
-#binop >=#2>=:	Bbool "
-
-» »(+
- *
-» »(
-"2
-
-¼ ¼("š)
-'
-
-¾ ¾("#get-field# chunks:*
-(
-
-¾ ¾(("#get-field# current:+
-)
-
-¾ ¾()chunk"#array-read#:*
-(
-
-¿ ¿("#get-field# current:'
-%
-
-¿ ¿("	#binop +#*2+:+
-)
-
-¿ ¿("#set-field# current:
-
-À À(*L/home/omar/Documents/ruleIQ/archive/test_configs/conftest_ai_optimization.py

@@ -1,248 +1,0 @@
-
-F3="Have you conducted an information security risk assessment?"str
-15("Do you have access control procedures?"str
-4S+"Do you regularly assess compliance risks?"str
-H?"Have you conducted Privacy Impact Assessments where required?"str
-8/"Initialize offline framework assessment tools"str
-"name"str
-!	"scoring"str
-	"basic_questions"str
-5R,"Are staff trained on relevant regulations?"str
-5U,"Do you have incident reporting procedures?"str
-:1"Have you reviewed your data sharing agreements?"str
-.4%"Do you maintain an asset inventory?"str
-:1"Do you have procedures for data subject rights?"str
-&"medium_risk"str
-@27"Do you have a documented information security policy?"str
-@W7"Are third-party relationships managed for compliance?"str
-<83"Is security awareness training provided to staff?"str
-<T3"Are compliance responsibilities clearly assigned?"str
-66-"Are software and systems regularly updated?"str
-
-0int
-8
-/"Do you process personal data of EU residents?"str
-A98"Do you regularly monitor and review security controls?"str
-4X+"Do you maintain compliance documentation?"str
-6Q-"Do you have documented compliance policies?"str
-M	"general"str
-)
-"low_risk"str
-(O"General Compliance Assessment"str
-F="Have you appointed a Data Protection Officer (if required)?"str
-;2"Do you have data breach notification procedures?"str
-"gdpr"str
-)0 "ISO 27001 Information Security"str
-8V/"Is compliance monitoring performed regularly?"str
-#"high_risk"str
-I@"Do you have appropriate technical and organizational measures?"str
-@7"Have you identified your lawful basis for processing?"str
-.
-"iso27001"str
-'"4-6 yes answers"str
--$"General Data Protection Regulation"str
-47+"Do you have incident response procedures?"str
-$"0-3 yes answers"str
-*"7-8 yes answers"strself
-à à(#list"¤&
-$
-
-â ƒ(?"#new-object#Bdict&
-$
-
-â í(>"#new-object#Bdict"
- 
-
-â â(E"	#map-set#:)
-'
-
-ã ë(>"#unknown-value#Blist(
-&
-
-ã ë(>"
-#is-exact#:Bbool
-
-
-ã ë(>"
-#assume#::
-8
-
-ã ë(>"#set-field# __collection_size:Bint(
-&
-
-ã ë(>"#array-add-last#:
-(
-&
-
-ã ë(>"#array-add-last#:(
-&
-
-ã ë(>"#array-add-last#:(
-&
-
-ã ë(>"#array-add-last#:(
-&
-
-ã ë(>"#array-add-last#:(
-&
-
-ã ë(>"#array-add-last#:(
-&
-
-ã ë(>"#array-add-last#:(
-&
-
-ã ë(>"#array-add-last#:"
- 
-
-ã ë(> "	#map-set#:	&
-$
-
-ì í(=""#new-object#Bdict"
- 
-
-ì ì(+%"	#map-set#:"#$"
- 
-
-ì- í(("	#map-set#:"&'"
- 
-
-í í(<+"	#map-set#:")*"
- 
-
-ë@ í(=,"	#map-set#:!""
- 
-
-â í(>-"	#map-set#:&
-$
-
-î ø(>/"#new-object#Bdict"
- 
-
-î î(51"	#map-set#:/0)
-'
-
-îJ ö(E:"#unknown-value#Blist(
-&
-
-îJ ö(E;"
-#is-exact#::Bbool
-
-
-îJ ö(E<"
-#assume#:;:
-8
-
-îJ ö(E="#set-field# __collection_size::Bint(
-&
-
-îJ ö(E>"#array-add-last#::2(
-&
-
-îJ ö(E?"#array-add-last#::3(
-&
-
-îJ ö(E@"#array-add-last#::4(
-&
-
-îJ ö(EA"#array-add-last#::5(
-&
-
-îJ ö(EB"#array-add-last#::6(
-&
-
-îJ ö(EC"#array-add-last#::7(
-&
-
-îJ ö(ED"#array-add-last#::8(
-&
-
-îJ ö(EE"#array-add-last#::9"
- 
-
-î7 ö(EF"	#map-set#:/	:&
-$
-
-÷ ø(=G"#new-object#Bdict"
- 
-
-÷ ÷(6H"	#map-set#:G#$"
- 
-
-÷8 ø(I"	#map-set#:G&'"
- 
-
-ø ø(<J"	#map-set#:G)*"
- 
-
-÷ ø(=K"	#map-set#:/!G"
- 
-
-í@ ø(>L"	#map-set#:./&
-$
-
-ù ƒ(>N"#new-object#Bdict"
- 
-
-ù ù(4P"	#map-set#:NO)
-'
-
-ùI (8Y"#unknown-value#Blist(
-&
-
-ùI (8Z"
-#is-exact#:YBbool
-
-
-ùI (8["
-#assume#:Z:
-8
-
-ùI (8\"#set-field# __collection_size:YBint(
-&
-
-ùI (8]"#array-add-last#:YQ(
-&
-
-ùI (8^"#array-add-last#:YR(
-&
-
-ùI (8_"#array-add-last#:YS(
-&
-
-ùI (8`"#array-add-last#:YT(
-&
-
-ùI (8a"#array-add-last#:YU(
-&
-
-ùI (8b"#array-add-last#:YV(
-&
-
-ùI (8c"#array-add-last#:YW(
-&
-
-ùI (8d"#array-add-last#:YX"
- 
-
-ù6 (8e"	#map-set#:N	Y&
-$
-
-E ƒ(=f"#new-object#Bdict"
- 
-
-‚ ‚(*g"	#map-set#:f#$"
- 
-
-‚, ƒ(h"	#map-set#:f&'"
- 
-
-ƒ ƒ(<i"	#map-set#:f)*"
- 
-
-: ƒ(=j"	#map-set#:N!f"
- 
-
-ø@ ƒ(>k"	#map-set#:MN
-
-â ƒ(?*7/home/omar/Documents/ruleIQ/services/ai/offline_mode.py

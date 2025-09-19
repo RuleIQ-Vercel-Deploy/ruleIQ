@@ -1,94 +1,0 @@
-
-;websocket_security.WebSocketOriginValidator.validate_originF
-</home/omar/Documents/ruleIQ/middleware/websocket_security.pys s("6"9*'
-4
- ("
-
- (
-
-True*€
-5~ ~(Rq
-o
-~ ~(Q
-%1"__concat*;
-~ ~(H/-
-+WebSocket connection rejected from origin: *
-~I ~(O
-
-
-originge
-~ ~(R
-%2*&
-
-__unknown_file (
-
-
-logger*"
-
-__unknown_file (
-
-%12warning"
- (	
-
-False*¼
-6} }(-z
-x
-} }(-
-%3"__id*`
-
-__unknown_file (D*B-
-+websocket_security.WebSocketOriginValidator"
-allowed_originslj
-} }(-
-%4*"
-
-__unknown_file (
-
-%3*&
-
-__unknown_file (
-
-
-origin2__contains__;
-9
-} }(-
-%5"not*"
-
-__unknown_file (
-
-%4*
-4
-5*#
-7z z("
-z z(
-
-True*¼
-8x x(Q•’
-x x(Q
-%6*&
-
-__unknown_file (
-
-
-logger*O
-
-__unknown_file (31
-/WebSocket connection rejected: no origin header2warning"
-y y(	
-
-False*l
-9w w(%U
-S
-w w(%
-%7"__id*;
-
-__unknown_file (*
-
-
-settings"
-is_production*
-7
-8:
-s s(3
-originB/-
-+websocket_security.WebSocketOriginValidatorH

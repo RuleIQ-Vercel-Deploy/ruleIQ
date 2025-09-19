@@ -1,6 +1,0 @@
-
-#"Generate unique event ID"str
-&"evt_{uuid.uuid4().hex[:16]}"strself
-É É("
-
-Ë Ë(-*>/home/omar/Documents/ruleIQ/services/security/audit_logging.py

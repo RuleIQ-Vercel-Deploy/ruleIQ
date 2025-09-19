@@ -1,103 +1,0 @@
-
-<ai.assistant.ComplianceAssistant._get_fallback_response_text@
-4/home/omar/Documents/ruleIQ/services/ai/assistant.pyã ã(#"2*©
-2
-å å(CNL
-
-æ æ(%
-%3"	str.lower*&
-
-__unknown_file (
-
-
-prompt2lowerH
-F
-
-æ æ(%
-prompt_lower"__id*"
-
-__unknown_file (
-
-%3vt
-
-ç ç(!
-%4*,
-
-__unknown_file (
-
-prompt_lower*$
-
-__unknown_file (
-gdpr2__contains__*
-4
-7*®
-4
-è ð(R"œ
-
-è ð(RŠ
-‡Based on GDPR requirements, here are key considerations:
-            
-â€¢ Lawful basis for processing personal data
-â€¢ Data subject rights (access, rectification, erasure)
-â€¢ Privacy by design and by default
-â€¢ Data Protection Impact Assessments for high-risk processing
-â€¢ Records of processing activities
-
-I recommend consulting with a data protection specialist for specific guidance.*–
-5
-ü „(N"„
-
-ü „(Nõò
-ïI'm currently experiencing high demand. Here's general compliance guidance:
-            
-â€¢ Identify applicable regulations for your industry
-â€¢ Conduct gap analysis against requirements
-â€¢ Develop policies and procedures
-â€¢ Implement necessary controls
-â€¢ Monitor and review regularly
-
-Please try your question again or contact support for immediate assistance.*À
-6
-ò ú(I"®
-
-ò ú(IŸœ
-™For ISO 27001 implementation:
-            
-â€¢ Risk assessment and treatment
-â€¢ Information security policies
-â€¢ Security awareness and training
-â€¢ Access control management
-â€¢ Incident response procedures
-
-Consider engaging an ISO 27001 consultant for detailed implementation.*‡
-7
-ñ ñ(>us
-
-ñ ñ("
-%1*,
-
-__unknown_file (
-
-prompt_lower*#
-
-__unknown_file (
-iso2__contains__wu
-
-ñ' ñ(>
-%2*,
-
-__unknown_file (
-
-prompt_lower*%
-
-__unknown_file (	
-270012__contains__*
-5
-6:
-
-ã* ã(5
-prompt:
-
-ã7 ã(N	
-contextB$"
- ai.assistant.ComplianceAssistantH

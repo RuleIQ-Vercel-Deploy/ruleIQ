@@ -1,28 +1,0 @@
-
-!"Serialize bucket state"str
-
-"tokens"str
-"refill_rate"str
-
-"capacity"str
-"last_refill"strself3 3("î$
-"
-5 :(	"#new-object#Bdict)
-'
-6 6(%"#get-field# capacity: 
-
-6 6(%"	#map-set#:,
-*
-7 7(+"#get-field# refill_rate: 
-
-7 7(+	"	#map-set#:'
-%
-8 8(!"#get-field# tokens: 
-
-8 8(!"	#map-set#:
-,
-*
-9 9(+"#get-field# last_refill: 
-
-9 9(+"	#map-set#:
-5 :(	*?/home/omar/Documents/ruleIQ/middleware/rate_limiter_enhanced.py

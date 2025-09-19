@@ -1,33 +1,0 @@
-
-
-1int
-
-	0intkey
-ª ª("Ÿ#
-!
-
-« «("#unknown-value#(
-&
-
-« «("#get-field# _data:,
-*
-
-« «("
-#binop in#2in:Bbool "
-
-« «( *
-« «(
-"#
-!
-
-¬ ¬("#unknown-value#(
-&
-
-¬ ¬("#get-field# _data:*
-(
-
-¬ ¬("#python-array-del#:
-
-­ ­("
-
-® ®(	*6/home/omar/Documents/ruleIQ/tests/fixtures/database.py

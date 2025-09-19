@@ -1,38 +1,0 @@
-
-truebool
-falsebool
-*!"Check if path should be cached."strselfs s(paths s(%"|0
-.
-x x('"#get-field# CACHEABLE_PATHS:*
-(
-x x('"
-#binop in#2in:Bbool"
-x x(' *x x(
-"
-y y("€3
-1
-| |(." #get-field# CACHEABLE_PATTERNS:7
-5
-| |(."
-builtinsiter*:Btyping.Iterator
-| |(."n*path2
-0
-| |(.	"
-builtins
-__has_next*:Bbool"
-| |(.	 *| |(H"ž0
-.
-	} €(
-pattern"
-builtinsnext*:
-
-} }(&"
-rematch:
-)
-'
-} }(&"
-__bool__*:BboolH"
-} }(& *} }("
-
-€ €("
-~ ~("*;/home/omar/Documents/ruleIQ/api/optimization/performance.py

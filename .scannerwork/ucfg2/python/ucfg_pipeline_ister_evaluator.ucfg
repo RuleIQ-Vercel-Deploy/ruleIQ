@@ -1,36 +1,0 @@
-
-<ai.evaluation.pipeline.EvaluationPipeline.register_evaluatorH
->/home/omar/Documents/ruleIQ/services/ai/evaluation/pipeline.pyd d("2*¶
-2e e(=s
-q
-f f(
-%2"__id*Y
-
-__unknown_file (=*;+
-)ai.evaluation.pipeline.EvaluationPipeline"
-
-evaluators¬©
-f f(.
-%1"dict.__setitem__*"
-
-__unknown_file (
-
-%2*)
-
-__unknown_file (
-
-	task_type*)
-
-__unknown_file (
-
-	evaluator2__setitem__*
-3*1
-3
-pipeline.py"
-h h(
-implicit return:
-d! d(/
-	task_type:
-d1 d(D
-	evaluatorB-+
-)ai.evaluation.pipeline.EvaluationPipelineH

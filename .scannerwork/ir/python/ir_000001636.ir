@@ -1,7 +1,0 @@
-
-"Anonymize name."str
-<3"User_{hashlib.md5(name.encode()).hexdigest()[:8]}"strself
-ú ú(name
-ú ú('"
-
-ü ü(C*B/home/omar/Documents/ruleIQ/services/compliance/gdpr_compliance.py

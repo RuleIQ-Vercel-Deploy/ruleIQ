@@ -1,10 +1,0 @@
-
-+""Decorator for admin-only routes."strfunc
-û û("YE
-C
-
-ý ý(."0
-"rbac_middleware.RBACRouteProtector
-admin_only:
-
-ý ý(.*=/home/omar/Documents/ruleIQ/api/middleware/rbac_middleware.py

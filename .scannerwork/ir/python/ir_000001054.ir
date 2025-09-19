@@ -1,17 +1,0 @@
-
-truebool
- "Delete key from cache"str
-	falseboolself7 7(key7 7("r&
-$
-9 9("#get-field# cache:*
-(
-9 9("
-#binop in#2in:Bbool"
-9 9( *9 9(
-"d&
-$
-: :("#get-field# cache:(
-&
-: :("#python-array-del#:
-; ;("
-< <(	*=/home/omar/Documents/ruleIQ/services/redis_circuit_breaker.py

@@ -1,255 +1,0 @@
-
-Muk_compliance_ingestion_pipeline.UKComplianceGraphIngestion._process_chapters_
-S/home/omar/Documents/ruleIQ/services/compliance/uk_compliance_ingestion_pipeline.pyƒ ƒ("3"5*K
-3%
-#uk_compliance_ingestion_pipeline.py"
-£ £(
-implicit return*¿
-5
-‡ ‡(<€~
-
-‡% ‡(:
-%9"__mapGet*'
-
-__unknown_file (
-	
-chapter**
-
-__unknown_file (
-
-chapter_id2__getitem__d
-b
-
-‡ ‡(<
-%10"__concat*
-
-‡ ‡("
-
-
-reg_id*
-
-‡# ‡($
-_*
-
-‡% ‡(:
-
-%9G
-E
-
-‡ ‡(<
-
-chapter_id"__id*#
-
-__unknown_file (
-
-%10|z
-
-‘/ ‘(?
-%11"__mapGet*'
-
-__unknown_file (
-	
-chapter*%
-
-__unknown_file (	
-title2__getitem__¿¼
-
-ˆ ‘(O
-%12*'
-
-__unknown_file (
-	
-session*²
-
-__unknown_file (•’
-
-                MERGE (ch:Chapter {id: $chapter_id})
-                SET ch.title = $title,
-                    ch.regulation_id = $reg_id
-                WITH ch
-                MATCH (r:Regulation {id: $reg_id})
-                MERGE (r)-[:CONTAINS]->(ch)
-            2run:
-
-chapter_id
-
-
-chapter_id:
-title
-
-%11:
-reg_id
-
-
-reg_id
-
-’3 ’(5
-%13"list“
-
-’ ’(6
-%14*'
-
-__unknown_file (
-	
-chapter*(
-
-__unknown_file (
-
-articles*#
-
-__unknown_file (
-
-%132get*	
-3
-5
-7*ñ	
-7
-“ “(D€~
-
-“- “(B
-%2"__mapGet*'
-
-__unknown_file (
-	
-article**
-
-__unknown_file (
-
-article_id2__getitem__g
-e
-
-“ “(D
-%3"__concat*
-
-“  “(*
-
-
-chapter_id*
-
-“+ “(,
-_*
-
-“- “(B
-
-%2F
-D
-
-“ “(D
-
-article_id"__id*"
-
-__unknown_file (
-
-%3{y
-
-3 (C
-%4"__mapGet*'
-
-__unknown_file (
-	
-article*%
-
-__unknown_file (	
-title2__getitem__€~
-
-ž ž(*
-%5"__mapGet*'
-
-__unknown_file (
-	
-article**
-
-__unknown_file (
-
-article_id2__getitem__êç
-
-” ž(B
-%6*'
-
-__unknown_file (
-	
-session*Å
-
-__unknown_file (¨¥
-¢
-                    MERGE (a:Article {id: $article_id})
-                    SET a.title = $title,
-                        a.number = $number
-                    WITH a
-                    MATCH (ch:Chapter {id: $chapter_id})
-                    MERGE (ch)-[:CONTAINS]->(a)
-                2run:
-
-article_id
-
-
-article_id:
-title
-
-%4:
-number
-
-%5:
-
-chapter_id
-
-
-chapter_id
-
-Ÿ= Ÿ(?
-%7"list”‘
-
-Ÿ" Ÿ(@
-%8*'
-
-__unknown_file (
-	
-article*+
-
-__unknown_file (
-obligations*"
-
-__unknown_file (
-
-%72get*
-3
-5
-7
-9*¬
-9
-  ¡(#Œ‰
-
-  ¡(#
-%1*[
-
-__unknown_file (?=
-;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestion*'
-
-__unknown_file (
-	
-session**
-
-__unknown_file (
-
-
-obligation**
-
-__unknown_file (
-
-
-article_id2_create_obligation_node*
-3
-5
-7
-9:
-
-ƒ& ƒ(-	
-session:
-
-ƒ/ ƒ(:
-reg_id:
-
-ƒ< „(
-
-chaptersB?=
-;uk_compliance_ingestion_pipeline.UKComplianceGraphIngestionH

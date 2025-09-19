@@ -1,18 +1,0 @@
-
-µ´"
-    Increment a counter value.
-
-    Args:
-        existing: Current counter value
-        new: Value to add (typically 1)
-
-    Returns:
-        Incremented counter
-    "strexisting
-ç ç(#new
-ç% ç(-"8$
-"
-
-ò ò("	#binop +#2+:
-
-ò ò(*C/home/omar/Documents/ruleIQ/langgraph_agent/graph/enhanced_state.py

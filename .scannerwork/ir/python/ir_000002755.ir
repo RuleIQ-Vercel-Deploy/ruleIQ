@@ -1,81 +1,0 @@
-
-truebool
-"AUTH_FAILED"str
-"UNAUTHORIZED_ACCESS"str
-"DELETE"str
-D;"Check if event is critical and needs immediate attention."str
-"/admin"str
-
-0int
-"event_type"str
-"PERMISSION_DENIED"str
-#falsebool
-"action"str
-"SECURITY_VIOLATION"str
-	
-"resource"strselfo o(evento o(&list"n"
- 
-r r("#array-read#:*
-(
-r r(/"
-#binop ==#2==:Bbool"
-r r(/ *r r(
-"
-s s("e"
- 
-v v(
-"#array-read#:	)
-'
-v v("
-__bool__*:
-BboolH"
-v v( "b"
- 
-v- v(>"#array-read#:	*
-(
-v! v(>"
-#binop in#2in:Bbool
-v v(>"]*
-)
-'
-v v(>"
-__bool__*:BboolH"
-v v(> *v v(
-"
-w w("p"
- 
-z z("#array-read#:*
-(
-z z(&"
-#binop ==#2==:Bbool"
-z z(& *z z(
-"
-{ {("í"
- 
-~ ~("#array-read#:'
-%
-~" ~(d"#unknown-value#Blist&
-$
-~" ~(d"
-#is-exact#:Bbool
-
-~" ~(d"
-#assume#:8
-6
-~" ~(d"#set-field# __collection_size:Bint&
-$
-~" ~(d"#array-add-last#:&
-$
-~" ~(d "#array-add-last#:&
-$
-~" ~(d!"#array-add-last#:*
-(
-~ ~(d""
-#binop in#2in:Bbool"
-~ ~(d"	 
-*~ ~(
-"	
- ("
-
-
-Å Å(#*7/home/omar/Documents/ruleIQ/middleware/audit_logging.py

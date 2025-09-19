@@ -1,261 +1,0 @@
-
-6authorization.AuthorizationService.delegate_permissionJ
->/home/omar/Documents/ruleIQ/services/security/authorization.pyﬁ ﬁ(!"2*˛
-2
-ﬂ ﬂ(:ì
-ê
-
-‡ ‡(C
-%15"__concat*
-
-‡ ‡(&
-delegation:*
-
-‡' ‡(1
-
-
-to_user_id*
-
-‡2 ‡(3
-:*
-
-‡4 ‡(A
-
-resource_typeK
-I
-
-‡ ‡(C
-delegation_key"__id*#
-
-__unknown_file (
-
-%15*
-
-7
-8
-10*8
-3
-authorization.py"
-Í Í(
-implicit return*Ï
-4
-Á Á(:f
-d
-
-Á Á(:
-%1"__concat*$
-
-Á Á()
-delegation_source:* 
-
-Á* Á(8
-
-delegation_keyF
-D
-
-Á Á(:
-
-source_key"__id*"
-
-__unknown_file (
-
-%1i
-g
-
-Ë Ë(
-%2"__id*M
-
-__unknown_file (1*/$
-"authorization.AuthorizationService"
-cache∫∑
-
-Ë Ë(Q
-%3*"
-
-__unknown_file (
-
-%2**
-
-__unknown_file (
-
-
-source_key*,
-
-__unknown_file (
-
-from_user_id2set: 
-expire_seconds
-
-
-expires_in*
-3*ª
-5
-Â Â(/zx
-
-Â Â(/
-%4*+
-
-__unknown_file (
-
-delegations*/
-
-__unknown_file (
-
-permission_type2appendi
-g
-
-Ê Ê(
-%5"__id*M
-
-__unknown_file (1*/$
-"authorization.AuthorizationService"
-cacheΩ∫
-
-Ê Ê(X
-%6*"
-
-__unknown_file (
-
-%5*.
-
-__unknown_file (
-
-delegation_key*+
-
-__unknown_file (
-
-delegations2set: 
-expire_seconds
-
-
-expires_in*
-4*Æ
-7
-„ „(:i
-g
-
-„ „(&
-%8"__id*M
-
-__unknown_file (1*/$
-"authorization.AuthorizationService"
-cachemk
-
-„ „(:
-%9*"
-
-__unknown_file (
-
-%8*.
-
-__unknown_file (
-
-delegation_key2get>
-<
-
-„ „(:
-%7"__id*"
-
-__unknown_file (
-
-%9*
-9*r
-8
-„> „(@
-
-„> „(@
-%10"list?
-=
-
-„> „(@
-%7"__id*#
-
-__unknown_file (
-
-%10*
-9*•
-9
-„? „(@G
-E
-
-„ „(@
-delegations"__id*"
-
-__unknown_file (
-
-%7Å
-
-‰ ‰(-
-%11*+
-
-__unknown_file (
-
-delegations*/
-
-__unknown_file (
-
-permission_type2__contains__?
-=
-
-‰ ‰(-
-%12"not*#
-
-__unknown_file (
-
-%11*
-4
-5*î
-10
-‚ ‚(/S
-Q
-
-‚ ‚(/
-%13"__concat*
-
-‚  ‚(!
-:*
-
-‚" ‚(-
-
-resource_idX
-V
-
-‚ ‚(/
-%14"__concat* 
-
-‚ ‚(
-
-delegation_key*
-
-‚ ‚(/
-
-%13K
-I
-
-‚ ‚(/
-delegation_key"__id*#
-
-__unknown_file (
-
-%14*
-7
-8:
-
-ﬁ( ﬁ(9
-from_user_id:
-
-ﬁ; ﬁ(J
-
-to_user_id:
-
-ﬁL ﬁ(^
-resource_type:
-
-ﬁ` ﬁ(t
-permission_type:
-ﬁv ﬁ(ï
-resource_id:
-ﬁó ﬁ(µ
-
-expires_inB&$
-"authorization.AuthorizationServiceH

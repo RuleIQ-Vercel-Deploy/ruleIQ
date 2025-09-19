@@ -1,21 +1,0 @@
-
-0'"Retry database operations on failure."strmax_attempts
-È È((delay
-È* È(<"ï#
-!
-
-è è("#unknown-value#*
-(
-
-Ê è(%closure"#new-object#0
-.
-
-Ê è("#set-field# max_attempts:)
-'
-
-Ê è("#set-field# delay:-
-+
-
-Ê è("?python-partial-apply?:
-
-è è(*4/home/omar/Documents/ruleIQ/database/optimization.py
