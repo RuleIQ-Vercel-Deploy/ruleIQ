@@ -1,0 +1,90 @@
+name: SonarCloud
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  build-and-analyze:
+    name: Build and analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # SonarCloud scanner prerequisites (per Marketplace template)
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Cache SonarCloud scanner
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/native-sonar-scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
+
+      # Optional: Generate coverage and linter reports (best-effort)
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Python deps (best-effort)
+        run: |
+          python -m pip install --upgrade pip || true
+          pip install -r requirements.txt || true
+          pip install pytest pytest-cov flake8 pylint bandit || true
+
+      - name: Python tests + coverage (best-effort)
+        env:
+          CI: true
+        run: |
+          pytest tests/ --cov=. --cov-report=xml:coverage.xml --cov-report=term-missing -q || true
+          # Lint/security reports referenced by sonar-project.properties (optional)
+          flake8 . --count --statistics --output-file=flake8-report.txt || true
+          pylint $(git ls-files '*.py') --output-format=parseable --output=pylint-report.txt || true
+          bandit -r . -f json -o bandit-report.json || true
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Frontend deps (best-effort)
+        working-directory: ./frontend
+        run: npm ci || true
+
+      - name: Frontend lint + tests + coverage (best-effort)
+        working-directory: ./frontend
+        run: |
+          npm run lint -- --output-file eslint-report.json --format json || true
+          # Ensure vitest produces lcov.info (already configured in vitest config)
+          npm run test:ci || true
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Auto-detects PR info
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}    # Create this in repo secrets
