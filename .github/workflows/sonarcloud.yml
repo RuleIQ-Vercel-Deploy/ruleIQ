@@ -5,8 +5,13 @@ on:
     branches: [main, develop]
   pull_request:
     branches: [main, develop]
-  workflow_dispatch:
     types: [opened, synchronize, reopened]
+  workflow_dispatch:
+    inputs:
+      sonar_token:
+        description: 'SonarCloud token (temporary, not persisted)'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -133,31 +138,40 @@ jobs:
         run: |
           curl -Ls https://cli.doppler.com/install.sh | sudo sh
 
-      - name: Resolve SONAR_TOKEN (Doppler if present, else GitHub Secret)
+      - name: Resolve SONAR_TOKEN (input, Doppler, or Secret; skip if missing)
         shell: bash
+        env:
+          INPUT_SONAR_TOKEN: ${{ inputs.sonar_token }}
         run: |
-          set -e
           OK=0
-          if [ -n "${{ secrets.DOPPLER_TOKEN }}" ]; then
+          if [ -n "$INPUT_SONAR_TOKEN" ]; then
+            echo "Using SONAR_TOKEN from workflow input"
+            echo "SONAR_TOKEN=$INPUT_SONAR_TOKEN" >> "$GITHUB_ENV"
+            OK=1
+          elif [ -n "${{ secrets.DOPPLER_TOKEN }}" ]; then
             SONAR="$(doppler secrets get SONAR_TOKEN --project "${{ secrets.DOPPLER_PROJECT }}" --config "${{ secrets.DOPPLER_CONFIG }}" --plain --token "${{ secrets.DOPPLER_TOKEN }}" || true)"
             if [ -n "$SONAR" ]; then
               echo "Loaded SONAR_TOKEN from Doppler"
               echo "SONAR_TOKEN=$SONAR" >> "$GITHUB_ENV"
               OK=1
             fi
-          fi
-          if [ "$OK" -eq 0 ] && [ -n "${{ secrets.SONAR_TOKEN }}" ]; then
-            echo "Falling back to SONAR_TOKEN from GitHub Secrets"
+          elif [ -n "${{ secrets.SONAR_TOKEN }}" ]; then
+            echo "Using SONAR_TOKEN from GitHub Secrets"
             echo "SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}" >> "$GITHUB_ENV"
             OK=1
           fi
           if [ "$OK" -eq 0 ]; then
-            echo "ERROR: SONAR_TOKEN not available from Doppler or GitHub Secrets." >&2
-            exit 1
+            echo "SKIP_SONAR=true" >> "$GITHUB_ENV"
+            echo "No SONAR_TOKEN available; skipping SonarCloud scan."
           fi
 
       - name: SonarCloud Scan
+        if: ${{ env.SKIP_SONAR != 'true' }}
         uses: SonarSource/sonarcloud-github-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
+
+      - name: Skip SonarCloud (no token)
+        if: ${{ env.SKIP_SONAR == 'true' }}
+        run: echo "Skipping SonarCloud scan because no token was provided via Doppler, GitHub Secrets, or workflow input."
