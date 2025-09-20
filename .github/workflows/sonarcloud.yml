@@ -127,8 +127,36 @@ jobs:
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
 
+      - name: Install Doppler CLI (if configured)
+        if: ${{ secrets.DOPPLER_TOKEN != '' }}
+        run: |
+          curl -Ls https://cli.doppler.com/install.sh | sudo sh
+
+      - name: Resolve SONAR_TOKEN (Doppler if present, else GitHub Secret)
+        shell: bash
+        run: |
+          set -e
+          OK=0
+          if [ -n "${{ secrets.DOPPLER_TOKEN }}" ]; then
+            SONAR="$(doppler secrets get SONAR_TOKEN --project "${{ secrets.DOPPLER_PROJECT }}" --config "${{ secrets.DOPPLER_CONFIG }}" --plain --token "${{ secrets.DOPPLER_TOKEN }}" || true)"
+            if [ -n "$SONAR" ]; then
+              echo "Loaded SONAR_TOKEN from Doppler"
+              echo "SONAR_TOKEN=$SONAR" >> "$GITHUB_ENV"
+              OK=1
+            fi
+          fi
+          if [ "$OK" -eq 0 ] && [ -n "${{ secrets.SONAR_TOKEN }}" ]; then
+            echo "Falling back to SONAR_TOKEN from GitHub Secrets"
+            echo "SONAR_TOKEN=${{ secrets.SONAR_TOKEN }}" >> "$GITHUB_ENV"
+            OK=1
+          fi
+          if [ "$OK" -eq 0 ]; then
+            echo "ERROR: SONAR_TOKEN not available from Doppler or GitHub Secrets." >&2
+            exit 1
+          fi
+
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
