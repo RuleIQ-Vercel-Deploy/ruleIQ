@@ -7,6 +7,11 @@ on:
     branches: [main, develop]
     types: [opened, synchronize, reopened]
   workflow_dispatch:
+    inputs:
+      sonar_token:
+        description: 'SonarCloud token (optional - will use secrets if not provided)'
+        required: false
+        type: string
 
 jobs:
   sonarcloud:
@@ -81,9 +86,20 @@ jobs:
           coverage xml -o coverage.xml || true
         continue-on-error: true
 
+      # Log token source for debugging
+      - name: Check token source
+        run: |
+          if [ -n "${{ github.event.inputs.sonar_token }}" ]; then
+            echo "Using SONAR_TOKEN from workflow input"
+          elif [ -n "${{ secrets.SONAR_TOKEN }}" ]; then
+            echo "Using SONAR_TOKEN from GitHub Secrets"
+          else
+            echo "WARNING: No SONAR_TOKEN found - analysis may fail"
+          fi
+
       # SonarCloud Scan
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN: ${{ github.event.inputs.sonar_token || secrets.SONAR_TOKEN }}
