@@ -25,14 +25,20 @@ jobs:
           python-version: '3.11'
 
       - name: Install Doppler CLI
+        if: ${{ secrets.DOPPLER_TOKEN != '' }}
         run: |
           curl -Ls https://cli.doppler.com/install.sh | sudo sh
 
       - name: Setup Doppler and install backend dependencies
         run: |
           python -m pip install --upgrade pip
-          doppler run --token ${{ secrets.DOPPLER_TOKEN }} -- pip install -r requirements.txt
-          doppler run --token ${{ secrets.DOPPLER_TOKEN }} -- pip install pytest pytest-cov flake8 pylint bandit
+          if [ -n "${{ secrets.DOPPLER_TOKEN }}" ]; then
+            doppler run --token "${{ secrets.DOPPLER_TOKEN }}" -- pip install -r requirements.txt
+            doppler run --token "${{ secrets.DOPPLER_TOKEN }}" -- pip install pytest pytest-cov flake8 pylint bandit
+          else
+            pip install -r requirements.txt
+            pip install pytest pytest-cov flake8 pylint bandit
+          fi
 
       - name: Load SONAR_TOKEN via Doppler (fallback to GitHub secret)
         shell: bash
@@ -60,10 +66,17 @@ jobs:
 
       - name: Run backend tests with coverage
         run: |
-          doppler run --token ${{ secrets.DOPPLER_TOKEN }} -- python -m pytest \
-            --cov=api --cov=services --cov=database --cov=utils --cov=config \
-            --cov-report=xml:coverage.xml --cov-report=html:htmlcov \
-            tests/ || true
+          if [ -n "${{ secrets.DOPPLER_TOKEN }}" ]; then
+            doppler run --token "${{ secrets.DOPPLER_TOKEN }}" -- python -m pytest \
+              --cov=api --cov=services --cov=database --cov=utils --cov=config \
+              --cov-report=xml:coverage.xml --cov-report=html:htmlcov \
+              tests/ || true
+          else
+            python -m pytest \
+              --cov=api --cov=services --cov=database --cov=utils --cov=config \
+              --cov-report=xml:coverage.xml --cov-report=html:htmlcov \
+              tests/ || true
+          fi
 
       # Frontend Setup
       - name: Set up Node.js
