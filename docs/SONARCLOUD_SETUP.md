@@ -1,125 +1,100 @@
-# SonarCloud Integration Guide
+# SonarCloud Setup Guide
 
-## Overview
-This document describes the complete SonarCloud setup and configuration for the ruleIQ project, including test coverage reporting for both frontend (TypeScript/React) and backend (Python) codebases.
+## Quick Start
 
-## Configuration Files
+### Step 1: Generate SonarCloud Token
 
-### 1. sonar-project.properties
-Main configuration file that defines:
-- Project identification (key, organization, name)
-- Source and test directories separation
-- Language-specific settings
-- Coverage report paths for JavaScript/TypeScript and Python
-- File exclusions
+1. Go to https://sonarcloud.io
+2. Click your profile picture → **My Account**
+3. Navigate to **Security** tab
+4. Under **Generate Tokens**, enter name: `github-actions-ci`
+5. Click **Generate**
+6. **IMPORTANT: Copy the token immediately** (you won't see it again!)
 
-### 2. GitHub Actions Workflow (.github/workflows/sonarcloud.yml)
-Automated CI/CD pipeline that:
-- Runs on push to main/develop branches and pull requests
-- Generates test coverage for frontend (using pnpm and Vitest)
-- Generates test coverage for backend (using pytest and coverage.py)
-- Uploads results to SonarCloud for analysis
+### Step 2: Choose Your Setup Method
 
-### 3. Testing Configurations
+#### Method A: Manual Run (Fastest for Testing)
+1. Go to https://github.com/OmarA1-Bakri/ruleIQ/actions
+2. Click **"SonarCloud Analysis"** workflow
+3. Click **Run workflow** button
+4. Paste your token in the `sonar_token` field
+5. Click green **Run workflow** button
 
-#### Frontend (Vitest)
-- **Config**: `frontend/vitest.config.ts`
-- **Coverage Provider**: V8
-- **Report Formats**: text, json, html, lcov
-- **Output**: `frontend/coverage/lcov.info`
+#### Method B: GitHub Secrets (Automatic for Every Run)
+1. Go to https://github.com/OmarA1-Bakri/ruleIQ/settings/secrets/actions
+2. Click **New repository secret**
+3. Name: `SONAR_TOKEN`
+4. Value: *paste your SonarCloud token*
+5. Click **Add secret**
 
-#### Backend (Pytest)
-- **Config**: `pytest.ini`
-- **Coverage Tool**: pytest-cov
-- **Report Format**: XML (Cobertura format)
-- **Output**: `coverage.xml`
+#### Method C: Doppler Integration (Optional)
+1. Store token in Doppler:
+   ```bash
+   doppler secrets set SONAR_TOKEN="your-token-here"
+   ```
+2. Ensure these GitHub Secrets exist:
+   - `DOPPLER_TOKEN`
+   - `DOPPLER_PROJECT`
+   - `DOPPLER_CONFIG`
 
-## Key Features Configured
+## Verification
 
-### Test Coverage
-- ✅ JavaScript/TypeScript coverage via Vitest with LCOV format
-- ✅ Python coverage via pytest-cov with XML format
-- ✅ Automatic coverage generation in CI/CD pipeline
-- ✅ Coverage reports uploaded to SonarCloud
+### Check Workflow Logs
+1. Go to **Actions** tab after running workflow
+2. Click on the running/completed workflow
+3. Look for one of these messages:
+   - ✅ "Using SONAR_TOKEN from workflow input"
+   - ✅ "Using SONAR_TOKEN from GitHub Secrets"
+   - ✅ "Loaded SONAR_TOKEN from Doppler"
 
-### Code Quality Analysis
-- ✅ Separate source and test directories for accurate metrics
-- ✅ Language-specific file suffix configuration
-- ✅ Comprehensive file exclusions (node_modules, venv, build artifacts)
-- ✅ Quality gate enforcement
+### Check SonarCloud Dashboard
+Visit: https://sonarcloud.io/project/overview?id=ruliq-compliance-platform
 
-### CI/CD Integration
-- ✅ GitHub Actions integration
-- ✅ Automatic analysis on push and PR
-- ✅ Support for both pnpm (frontend) and pip (backend)
-- ✅ Graceful handling of test failures
+You should see:
+- Code analysis results
+- Coverage metrics
+- Code quality ratings
+- Security hotspots
 
-## Local Testing
+## PR Decoration Requirements
 
-Use the provided script to test SonarCloud configuration locally:
+For automatic PR comments:
+1. Install SonarCloud GitHub App: https://github.com/apps/sonarcloud
+2. Bind project to repository in SonarCloud settings
+3. Ensure default branch in SonarCloud is set to `main`
 
-```bash
-# Make script executable
-chmod +x scripts/sonar-local.sh
+## Security Best Practices
 
-# Set your SonarCloud token
-export SONAR_TOKEN=your_token_here
+⚠️ **NEVER**:
+- Commit tokens to code
+- Share tokens publicly
+- Use exposed tokens (revoke immediately if exposed)
 
-# Run the script
-./scripts/sonar-local.sh
-```
-
-Options:
-1. Frontend tests only
-2. Python tests only
-3. Both tests
-4. SonarCloud analysis only
-5. Full pipeline (tests + analysis)
-
-## Required Secrets
-
-Configure these in GitHub repository settings:
-- `SONAR_TOKEN`: Your SonarCloud authentication token
-- `GITHUB_TOKEN`: Automatically provided by GitHub Actions
-
-## Verification Steps
-
-1. **Check Coverage Generation**:
-   - Frontend: `cd frontend && pnpm test:coverage`
-   - Backend: `pytest --cov=services --cov-report=xml`
-
-2. **Verify Report Files**:
-   - Frontend: `frontend/coverage/lcov.info`
-   - Backend: `coverage.xml`
-
-3. **Monitor SonarCloud Dashboard**:
-   - URL: https://sonarcloud.io/project/overview?id=OmarA1-Bakri_ruleIQ
-   - Check coverage metrics
-   - Review quality gate status
-   - Analyze code smells and vulnerabilities
+✅ **ALWAYS**:
+- Use GitHub Secrets for production
+- Rotate tokens periodically
+- Revoke unused tokens
 
 ## Troubleshooting
 
-### Issue: Coverage reports not found
-**Solution**: Ensure tests run before SonarCloud scan and reports are generated in expected locations.
+### Token Not Working
+1. Check token hasn't expired
+2. Verify organization membership
+3. Ensure token has correct permissions
 
-### Issue: Wrong files analyzed
-**Solution**: Check `sonar.sources` and `sonar.tests` paths in sonar-project.properties.
+### Analysis Not Appearing
+1. Check project key matches: `ruliq-compliance-platform`
+2. Verify organization: `omara1-bakri`
+3. Ensure workflow completed successfully
 
-### Issue: Coverage not appearing in SonarCloud
-**Solution**: Verify coverage report paths match configuration and reports are in correct format (LCOV for JS/TS, XML for Python).
+### Coverage Not Showing
+1. Verify tests are running in workflow
+2. Check coverage report paths in `sonar-project.properties`
+3. Ensure coverage files are generated before SonarCloud scan
 
-## Best Practices
+## Configuration Files
 
-1. **Always generate coverage** before SonarCloud analysis
-2. **Use continue-on-error** for test steps to ensure analysis runs even if tests fail
-3. **Separate source and test code** for accurate metrics
-4. **Exclude generated files** and dependencies from analysis
-5. **Monitor quality gates** and address issues promptly
-
-## References
-
-- [SonarCloud Documentation](https://docs.sonarsource.com/sonarqube-cloud/)
-- [GitHub Actions for SonarCloud](https://docs.sonarsource.com/sonarqube-cloud/advanced-setup/ci-based-analysis/github-actions-for-sonarcloud/)
-- [JavaScript/TypeScript Coverage](https://docs.sonarsource.com/sonarqube-cloud/enriching/test-coverage/javascript-typescript-test-coverage/)
-- [Python Coverage](https://docs.sonarsource.com/sonarqube-cloud/enriching/test-coverage/python-test-coverage/)
+- **Workflow**: `.github/workflows/sonarcloud.yml`
+- **Project Config**: `sonar-project.properties`
+- **Project Key**: `ruliq-compliance-platform`
+- **Organization**: `omara1-bakri`
