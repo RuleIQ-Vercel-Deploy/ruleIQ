@@ -42,6 +42,13 @@ class InteractionType(str, Enum):
 #     ERROR_ENCOUNTERED = "error_encountered"  # Unused variable
 
 
+    """Trust levels for user interactions"""
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    VERIFIED = "verified"
+
+
 class TrustLevel(str, Enum):
 #     UNKNOWN = "unknown"  # New user, no history  # Unused variable
 #     SKEPTICAL = "skeptical"  # User questions recommendations  # Unused variable

@@ -43,6 +43,12 @@ class ConversationState(str, Enum):
 #     PAUSED = "paused"  # Unused variable
 
 
+    """Conversation states"""
+    INITIAL = "initial"
+    GATHERING = "gathering"
+    COMPLETE = "complete"
+
+
 class QuestionType(str, Enum):
 #     BASIC_INFO = "basic_info"  # Unused variable
 #     COMPLIANCE_SPECIFIC = "compliance_specific"  # Unused variable

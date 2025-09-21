@@ -219,7 +219,7 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
                 if current_usage + estimated_cost > daily_limit:
                     raise AIServiceException(
                         message= (
-                            f"Request would exceed daily budget: ${current_usage + estimated_cost:.2f} > f
+                            f"Request would exceed daily budget: ${current_usage + estimated_cost:.2f} > "
                             f${daily_limit:.2f}"f,
                         )
                         service_name="Cost-Aware Circuit Breaker",

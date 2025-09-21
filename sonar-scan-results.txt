@@ -1,0 +1,71 @@
+INFO: Scanner configuration file: /home/omar/Documents/ruleIQ/sonar-scanner-5.0.1.3006-linux/conf/sonar-scanner.properties
+INFO: Project root configuration file: /home/omar/Documents/ruleIQ/sonar-project.properties
+INFO: SonarScanner 5.0.1.3006
+INFO: Java 17.0.7 Eclipse Adoptium (64-bit)
+INFO: Linux 6.14.0-29-generic amd64
+INFO: User cache: /home/omar/.sonar/cache
+INFO: Analyzing on SonarCloud
+INFO: Default locale: "en_GB", source code encoding: "UTF-8"
+INFO: Load global settings
+INFO: Load global settings (done) | time=229ms
+INFO: Server id: 1BD809FA-AWHW8ct9-T_TB3XqouNu
+INFO: Loading required plugins
+INFO: Load plugins index
+INFO: Load plugins index (done) | time=70ms
+INFO: Load/download plugins
+INFO: Load/download plugins (done) | time=67ms
+INFO: Load project settings for component key: 'OmarA1-Bakri_ruleIQ'
+INFO: Load project settings for component key: 'OmarA1-Bakri_ruleIQ' (done) | time=200ms
+INFO: Process project properties
+INFO: Execute project builders
+INFO: Execute project builders (done) | time=0ms
+INFO: Project key: OmarA1-Bakri_ruleIQ
+INFO: Base dir: /home/omar/Documents/ruleIQ
+INFO: Working dir: /home/omar/Documents/ruleIQ/.scannerwork
+INFO: Load project branches
+INFO: Load project branches (done) | time=148ms
+INFO: Check ALM binding of project 'OmarA1-Bakri_ruleIQ'
+INFO: Detected project binding: BOUND
+INFO: Check ALM binding of project 'OmarA1-Bakri_ruleIQ' (done) | time=34ms
+INFO: Load project pull requests
+INFO: Load project pull requests (done) | time=92ms
+INFO: Load branch configuration
+INFO: Load branch configuration (done) | time=2ms
+INFO: Inferred api base url 'https://api.sonarcloud.io' from host url 'https://sonarcloud.io'.
+INFO: Inferred api base url 'https://api.sonarcloud.io' from host url 'https://sonarcloud.io'.
+INFO: Load quality profiles
+INFO: Load quality profiles (done) | time=293ms
+INFO: Inferred api base url 'https://api.sonarcloud.io' from host url 'https://sonarcloud.io'.
+INFO: Load active rules
+INFO: Load active rules (done) | time=1171ms
+INFO: Organization key: omara1-bakri
+INFO: Preprocessing files...
+INFO: 7 languages detected in 1357 preprocessed files (done) | time=485ms
+INFO: 372 files ignored because of inclusion/exclusion patterns
+INFO: 156 files ignored because of scm ignore settings
+INFO: Loading plugins for detected languages
+INFO: Load/download plugins
+INFO: Load/download plugins (done) | time=115ms
+INFO: SonarJasmin relies on SonarSecurity to define the JS/TS security rule repositories.
+INFO: Load metrics repository
+INFO: Load metrics repository (done) | time=37ms
+INFO: Sensor cache enabled
+INFO: Inferred api base url 'https://api.sonarcloud.io' from host url 'https://sonarcloud.io'.
+INFO: Load sensor cache
+INFO: Load sensor cache (404) | time=151ms
+INFO: Inferred api base url 'https://api.sonarcloud.io' from host url 'https://sonarcloud.io'.
+INFO: Load project repositories
+INFO: Load project repositories (done) | time=144ms
+INFO: Indexing files...
+INFO: Project configuration:
+INFO:   Excluded sources: **/node_modules/**, **/.venv/**, **/venv/**, **/__pycache__/**, **/*.pyc, **/dist/**, **/build/**, **/.next/**, **/coverage/**, **/htmlcov/**, **/.pytest_cache/**, **/migrations/**, **/*.min.js, **/*.min.css, **/.git/**, **/.github/**, **/docs/**, **/scripts/**, **/.scannerwork/**, **/build-wrapper-dump.json
+INFO: ------------------------------------------------------------------------
+INFO: EXECUTION FAILURE
+INFO: ------------------------------------------------------------------------
+INFO: Total time: 6.912s
+INFO: Final Memory: 32M/160M
+INFO: ------------------------------------------------------------------------
+ERROR: Error during SonarScanner execution
+ERROR: File services/ai/evaluation/tests/test_ingestion.py can't be indexed twice. Please check that inclusion/exclusion patterns produce disjoint sets for main and test files
+ERROR: 
+ERROR: Re-run SonarScanner using the -X switch to enable full debug logging.
