@@ -1,6 +1,7 @@
 name: Aikido Full Repository Review PR
 
 on:
+  # Manual trigger from the Actions UI
   workflow_dispatch:
     inputs:
       base_branch:
@@ -20,6 +21,15 @@ on:
         type: boolean
         default: true
 
+  # Optional: trigger via an empty commit on main with a marker in the message.
+  # Example:
+  #   git commit --allow-empty -m "[aikido-review] trigger"
+  #   git push
+  push:
+    branches:
+      - main
+    # The job itself has an 'if' guard to only run when the commit message contains the marker.
+
 permissions:
   contents: write
   pull-requests: write
@@ -27,6 +37,9 @@ permissions:
 jobs:
   create-baseline-pr:
     name: Create Aikido baseline PR
+    # For push events, only run when the commit message contains the marker [aikido-review]
+    # For workflow_dispatch events, always run.
+    if: github.event_name != 'push' || contains(github.event.head_commit.message, '[aikido-review]')
     runs-on: ubuntu-latest
 
     steps:
