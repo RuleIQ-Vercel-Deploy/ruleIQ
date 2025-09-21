@@ -81,13 +81,17 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-      
+
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+
       - name: Run npm audit
         working-directory: ./frontend
         run: |
           npm audit --json > npm-audit-report.json || true
           npm audit || true
-      
+
       - name: Run Snyk security scan
         if: github.event_name != 'pull_request'
         uses: snyk/actions/node@master
