@@ -56,15 +56,11 @@ jobs:
       - name: Install frontend dependencies
         working-directory: ./frontend
         run: |
-          echo "Checking for pnpm-lock.yaml..."
-          ls -la pnpm-lock.yaml 2>/dev/null || echo "pnpm-lock.yaml not found"
-          if [ -f "pnpm-lock.yaml" ]; then
-            echo "Found pnpm-lock.yaml, using frozen-lockfile"
-            pnpm install --frozen-lockfile
-          else
-            echo "No pnpm-lock.yaml found, installing without frozen-lockfile"
-            pnpm install --no-frozen-lockfile
-          fi
+          echo "Current directory: $(pwd)"
+          echo "Files in directory:"
+          ls -la | head -20
+          echo "Attempting pnpm install..."
+          pnpm install || pnpm install --no-frozen-lockfile
 
       # Run frontend tests with coverage
       - name: Run frontend tests with coverage
