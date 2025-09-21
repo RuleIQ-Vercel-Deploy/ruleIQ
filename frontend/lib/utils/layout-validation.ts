@@ -188,6 +188,7 @@ export function validateRuleOrder(
           }))
         );
       }
+  return true;
     });
   });
 

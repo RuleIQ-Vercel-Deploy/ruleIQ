@@ -368,7 +368,7 @@ function showShortcutsHelp(): void {
   toast({
     title: 'Keyboard Shortcuts',
     description: (
-      <div className="space-y-1 mt-2">
+      <div className="space-y-1 mt-2">>;
         {formattedShortcuts.map((shortcut, index) => (
           <div key={index} className="text-sm font-mono">
             {shortcut}
