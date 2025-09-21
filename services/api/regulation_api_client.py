@@ -10,7 +10,17 @@ Uses XML APIs instead of scraping for better reliability and structure.
 """
 import asyncio
 import requests
-import xml.etree.ElementTree as ET
+try:
+    import defusedxml.ElementTree as ET
+except ImportError:
+    # Fall back to standard ET with security warnings
+    import xml.etree.ElementTree as ET
+    import warnings
+    warnings.warn(
+        "defusedxml not installed! XML parsing may be vulnerable to XXE attacks. "
+        "Install with: pip install defusedxml",
+        SecurityWarning
+    )
 from typing import Dict, Any, List
 from datetime import datetime
 import json
@@ -65,6 +75,12 @@ class RegulationAPIClient:
             api_url = base_url + '/data.xml'
         else:
             api_url = url
+
+        # Validate URL to prevent SSRF
+        if not self._validate_url(api_url):
+            logger.error(f"Invalid or non-whitelisted URL: {api_url}")
+            return {'success': False, 'error': 'URL not in whitelist'}
+
         logger.info('Fetching UK legislation from: %s' % api_url)
         url_hash = hashlib.md5(api_url.encode()).hexdigest()
         cache_file = self.cache_dir / f'uk_{url_hash}.json'
@@ -96,8 +112,9 @@ class RegulationAPIClient:
             return {'success': False, 'error': str(e)}
 
     def _parse_clml_xml(self, xml_content: str, url: str) ->Dict[str, Any]:
-        """Parse Crown Legislation Markup Language (CLML) XML."""
+        """Parse Crown Legislation Markup Language (CLML) XML securely."""
         try:
+            # Parse XML securely - defusedxml automatically prevents XXE attacks
             root = ET.fromstring(xml_content)
             namespaces = {'leg':
                 'http://www.legislation.gov.uk/namespaces/legislation',
@@ -245,6 +262,39 @@ class RegulationAPIClient:
                         'context': text[:150]})
         return dates
 
+    def _validate_url(self, url: str) -> bool:
+        """Validate URL to prevent SSRF attacks."""
+        # Whitelist of allowed domains
+        allowed_domains = [
+            'legislation.gov.uk',
+            'www.legislation.gov.uk',
+            'handbook.fca.org.uk',
+            'www.handbook.fca.org.uk',
+            'ico.org.uk',
+            'www.fca.org.uk',
+            'eur-lex.europa.eu',
+            'publications.europa.eu'
+        ]
+
+        try:
+            from urllib.parse import urlparse
+            parsed = urlparse(url)
+
+            # Check protocol
+            if parsed.scheme not in ['http', 'https']:
+                return False
+
+            # Check domain
+            domain = parsed.netloc.lower()
+            if not any(domain == allowed or domain.endswith('.' + allowed) for allowed in allowed_domains):
+                logger.warning(f"Domain not in whitelist: {domain}")
+                return False
+
+            return True
+        except Exception as e:
+            logger.error(f"URL validation error: {e}")
+            return False
+
     def _extract_controls_from_xml(self, root, namespaces) ->List[str]:
         """Extract suggested compliance controls from CLML XML."""
         controls = set()
@@ -290,6 +340,12 @@ class RegulationAPIClient:
             List of regulation updates
         """
         feed_url = 'https://www.legislation.gov.uk/new/data.feed'
+
+        # Validate URL to prevent SSRF
+        if not self._validate_url(feed_url):
+            logger.error(f"Invalid URL: {feed_url}")
+            return []
+
         updates = []
         loop = asyncio.get_event_loop()
         try:
@@ -297,6 +353,7 @@ class RegulationAPIClient:
                 requests.get(feed_url, headers=self.headers, timeout=30))
             if response.status_code == HTTP_OK:
                 content = response.text
+                # Parse XML securely - defusedxml automatically prevents XXE attacks
                 root = ET.fromstring(content)
                 namespaces = {'atom': 'http://www.w3.org/2005/Atom'}
                 entries = root.findall('.//atom:entry', namespaces)

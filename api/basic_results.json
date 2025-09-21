@@ -3,7 +3,7 @@
     "item": [
       {
         "id": "da9a7ee9-eba0-4749-ba65-eb56204682bd",
-        "name": "🔐 Authentication",
+        "name": "\ud83d\udd10 Authentication",
         "item": [
           {
             "id": "b073c3b7-cec0-4127-ab96-2490eeeead58",
@@ -55,7 +55,7 @@
                     "    const responseJson = pm.response.json();",
                     "    if (responseJson.access_token) {",
                     "        pm.environment.set('jwt_token', responseJson.access_token);",
-                    "        console.log('✅ JWT token saved to environment');",
+                    "        console.log('\u2705 JWT token saved to environment');",
                     "    }",
                     "}"
                   ],
@@ -69,7 +69,7 @@
       },
       {
         "id": "3aa58dba-c4b5-4ab6-a7b8-a532fc7e27cb",
-        "name": "🧠 AI Analysis",
+        "name": "\ud83e\udde0 AI Analysis",
         "item": [
           {
             "id": "079e42c1-fa5c-47cb-a6d7-e80ad8181d5e",
@@ -144,13 +144,13 @@
       "_postman_id": "95add72c-8591-421a-8c49-794097c4d46c",
       "name": "ruleIQ API Fixed Collection",
       "version": {
-        "raw": "2.0.1-fixed",
+        "raw": "JWT_TOKEN_REDACTED",
         "major": 2,
         "minor": 0,
         "patch": 1,
         "prerelease": "fixed",
         "build": [],
-        "string": "2.0.1-fixed"
+        "string": "JWT_TOKEN_REDACTED"
       },
       "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     }
@@ -176,12 +176,12 @@
       },
       {
         "type": "any",
-        "value": "AIzaSyAp13qdjwpFbqi85X2uK5K2exj7tX6I5eE",
+        "value": "GOOGLE_API_KEY_REDACTED",
         "key": "google_api_key"
       },
       {
         "type": "any",
-        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MWIxOTMwZC05YzI0LTQwZWItYmE3Ny02YzViNTA4YjNiNDEiLCJleHAiOjE3NTU5NDAxNDgsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTU5MzgzNDh9.iAoqj2FrDDW0-ckb6A74I_KKetm87MCH6astHxxk2aI",
+        "value": "JWT_TOKEN_REDACTED",
         "key": "jwt_token"
       }
     ]
@@ -318,7 +318,7 @@
                   "    const responseJson = pm.response.json();",
                   "    if (responseJson.access_token) {",
                   "        pm.environment.set('jwt_token', responseJson.access_token);",
-                  "        console.log('✅ JWT token saved to environment');",
+                  "        console.log('\u2705 JWT token saved to environment');",
                   "    }",
                   "}"
                 ],
@@ -1086,7 +1086,7 @@
             "bearer": [
               {
                 "type": "string",
-                "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MWIxOTMwZC05YzI0LTQwZWItYmE3Ny02YzViNTA4YjNiNDEiLCJleHAiOjE3NTU5NDAxNDgsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTU5MzgzNDh9.iAoqj2FrDDW0-ckb6A74I_KKetm87MCH6astHxxk2aI",
+                "value": "JWT_TOKEN_REDACTED",
                 "key": "token"
               }
             ]

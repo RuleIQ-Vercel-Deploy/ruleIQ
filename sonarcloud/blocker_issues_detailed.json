@@ -8,7 +8,7 @@
       "component": "ruliq-compliance-platform:frontend/tests/components/dashboard/dashboard-widgets.test.tsx",
       "project": "ruliq-compliance-platform",
       "line": 186,
-      "hash": "651a88dd618713e104679a81aa3680c8",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 186,
         "endLine": 186,
@@ -20,7 +20,7 @@
       "message": "Add at least one assertion to this test case.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "chai",
         "mocha",
@@ -84,7 +84,7 @@
       "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
       "project": "ruliq-compliance-platform",
       "line": 904,
-      "hash": "0f55fbc54349b553537dd21437219112",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 904,
         "endLine": 904,
@@ -121,7 +121,7 @@
       "message": "Remove this unexpected named argument 'recipient'.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -147,7 +147,7 @@
       "component": "ruliq-compliance-platform:services/ai/evaluation/tools/ingestion.py",
       "project": "ruliq-compliance-platform",
       "line": 31,
-      "hash": "d36da8d52e89f1ce9d9d35dd6a37afd6",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 31,
         "endLine": 31,
@@ -274,7 +274,7 @@
       "message": "Change this code to not construct the path from user-controlled data.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -300,7 +300,7 @@
       "component": "ruliq-compliance-platform:services/ai/evaluation/tools/ingestion_fixed.py",
       "project": "ruliq-compliance-platform",
       "line": 77,
-      "hash": "d36da8d52e89f1ce9d9d35dd6a37afd6",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 77,
         "endLine": 77,
@@ -427,7 +427,7 @@
       "message": "Change this code to not construct the path from user-controlled data.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -453,7 +453,7 @@
       "component": "ruliq-compliance-platform:archive/scripts/capture_test_errors.py",
       "project": "ruliq-compliance-platform",
       "line": 11,
-      "hash": "b8804bd2d4d1d719ca005b3acd30fbb2",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 11,
         "endLine": 11,
@@ -465,7 +465,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -491,7 +491,7 @@
       "component": "ruliq-compliance-platform:archive/scripts/capture_test_errors.py",
       "project": "ruliq-compliance-platform",
       "line": 34,
-      "hash": "f2f80fc9d4bfbb260112985b6a0f89a5",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 34,
         "endLine": 34,
@@ -503,7 +503,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -529,7 +529,7 @@
       "component": "ruliq-compliance-platform:archive/test_configs/conftest_fixed.py",
       "project": "ruliq-compliance-platform",
       "line": 45,
-      "hash": "e4607176923062fd27914a2aa2c3913b",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 45,
         "endLine": 45,
@@ -541,7 +541,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -567,7 +567,7 @@
       "component": "ruliq-compliance-platform:sonarcloud/fix_hardcoded_passwords.py",
       "project": "ruliq-compliance-platform",
       "line": 28,
-      "hash": "dcd38318c60f9fd250f36d1523555ffa",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 28,
         "endLine": 28,
@@ -579,7 +579,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -605,7 +605,7 @@
       "component": "ruliq-compliance-platform:sonarcloud/fix_hardcoded_passwords.py",
       "project": "ruliq-compliance-platform",
       "line": 29,
-      "hash": "7e7ca914185bff18f60c87cc066a813b",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 29,
         "endLine": 29,
@@ -617,7 +617,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -643,7 +643,7 @@
       "component": "ruliq-compliance-platform:sonarcloud/fix_hardcoded_passwords.py",
       "project": "ruliq-compliance-platform",
       "line": 31,
-      "hash": "399426dfb4e4762768fbcc6e4f39ff89",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 31,
         "endLine": 31,
@@ -655,7 +655,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -681,7 +681,7 @@
       "component": "ruliq-compliance-platform:sonarcloud/fix_hardcoded_passwords.py",
       "project": "ruliq-compliance-platform",
       "line": 32,
-      "hash": "8936cd53e244c84e08f650275f7dd3ad",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 32,
         "endLine": 32,
@@ -693,7 +693,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -719,7 +719,7 @@
       "component": "ruliq-compliance-platform:sonarcloud/fix_hardcoded_passwords.py",
       "project": "ruliq-compliance-platform",
       "line": 49,
-      "hash": "9da18997a6fbf98562785091794266b7",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 49,
         "endLine": 49,
@@ -731,7 +731,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -757,7 +757,7 @@
       "component": "ruliq-compliance-platform:sonarcloud/fix_hardcoded_passwords.py",
       "project": "ruliq-compliance-platform",
       "line": 53,
-      "hash": "9b738d5dc16dfd126e1876f52553330b",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 53,
         "endLine": 53,
@@ -769,7 +769,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -795,7 +795,7 @@
       "component": "ruliq-compliance-platform:sonarcloud/get_blocker_issues.py",
       "project": "ruliq-compliance-platform",
       "line": 11,
-      "hash": "cb0f302cd06cfbfb62d4e40e36ff3999",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 11,
         "endLine": 11,
@@ -807,7 +807,7 @@
       "message": "Make sure this SonarQube token gets revoked, changed, and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -833,7 +833,7 @@
       "component": "ruliq-compliance-platform:sonarcloud/get_detailed_blockers.py",
       "project": "ruliq-compliance-platform",
       "line": 12,
-      "hash": "cb0f302cd06cfbfb62d4e40e36ff3999",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 12,
         "endLine": 12,
@@ -845,7 +845,7 @@
       "message": "Make sure this SonarQube token gets revoked, changed, and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -871,7 +871,7 @@
       "component": "ruliq-compliance-platform:sonarcloud/check_sonar_results.py",
       "project": "ruliq-compliance-platform",
       "line": 11,
-      "hash": "cb0f302cd06cfbfb62d4e40e36ff3999",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 11,
         "endLine": 11,
@@ -883,7 +883,7 @@
       "message": "Make sure this SonarQube token gets revoked, changed, and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -909,7 +909,7 @@
       "component": "ruliq-compliance-platform:tests/conftest.py",
       "project": "ruliq-compliance-platform",
       "line": 46,
-      "hash": "0dc6b8311132c36f524b9b703662db9f",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 46,
         "endLine": 46,
@@ -921,7 +921,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -947,7 +947,7 @@
       "component": "ruliq-compliance-platform:langgraph_agent/nodes/task_scheduler_node.py",
       "project": "ruliq-compliance-platform",
       "line": 255,
-      "hash": "b0b461d4c8d0c6893932bfd55ea7a61f",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 255,
         "endLine": 255,
@@ -988,7 +988,7 @@
       "message": "Refactor this method to not always return the same value.",
       "effort": "2min",
       "debt": "2min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "confusing",
         "design"
@@ -1015,7 +1015,7 @@
       "component": "ruliq-compliance-platform:archive/scripts/capture_test_errors.py",
       "project": "ruliq-compliance-platform",
       "line": 8,
-      "hash": "b8804bd2d4d1d719ca005b3acd30fbb2",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 8,
         "endLine": 8,
@@ -1027,7 +1027,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -1053,7 +1053,7 @@
       "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
       "project": "ruliq-compliance-platform",
       "line": 897,
-      "hash": "db208d0f514a80452822c0de71e3d886",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 897,
         "endLine": 897,
@@ -1090,7 +1090,7 @@
       "message": "Add 1 missing arguments; '_send_email_notification' expects at least 3 positional arguments.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -1116,7 +1116,7 @@
       "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
       "project": "ruliq-compliance-platform",
       "line": 898,
-      "hash": "a98e98a92aca08b858ea4fc9330cbf8e",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 898,
         "endLine": 898,
@@ -1153,7 +1153,7 @@
       "message": "Remove this unexpected named argument 'recipient'.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -1179,7 +1179,7 @@
       "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
       "project": "ruliq-compliance-platform",
       "line": 903,
-      "hash": "04cb50dd791dd54abfa86786c0fec637",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 903,
         "endLine": 903,
@@ -1216,7 +1216,7 @@
       "message": "Add 1 missing arguments; '_send_sms_notification' expects 2 positional arguments.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -1242,7 +1242,7 @@
       "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
       "project": "ruliq-compliance-platform",
       "line": 907,
-      "hash": "7f18a0a09c5e9c1c5d60266f1f1237c2",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 907,
         "endLine": 907,
@@ -1279,7 +1279,7 @@
       "message": "Add 1 missing arguments; '_send_slack_notification' expects at least 2 positional arguments.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -1305,7 +1305,7 @@
       "component": "ruliq-compliance-platform:langgraph_agent/nodes/notification_nodes.py",
       "project": "ruliq-compliance-platform",
       "line": 908,
-      "hash": "28ab682cbb6eda5681512c3cb4eb7e0f",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 908,
         "endLine": 908,
@@ -1342,7 +1342,7 @@
       "message": "Remove this unexpected named argument 'channel_id'.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -1368,7 +1368,7 @@
       "component": "ruliq-compliance-platform:tests/fixtures/state_fixtures.py",
       "project": "ruliq-compliance-platform",
       "line": 131,
-      "hash": "00d8acd25450a0777a005fa7e8c4eb3b",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 131,
         "endLine": 131,
@@ -1405,7 +1405,7 @@
       "message": "Add 2 missing arguments; 'create_enhanced_initial_state' expects at least 3 positional arguments.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -1431,7 +1431,7 @@
       "component": "ruliq-compliance-platform:scripts/setup_secrets_vault.py",
       "project": "ruliq-compliance-platform",
       "line": 57,
-      "hash": "759848f9146dcaea50260869af31d873",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 57,
         "endLine": 57,
@@ -1443,7 +1443,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -1469,7 +1469,7 @@
       "component": "ruliq-compliance-platform:scripts/setup_secrets_vault.py",
       "project": "ruliq-compliance-platform",
       "line": 58,
-      "hash": "04cfb38d7dd42b5c34b331ca9abfce6d",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 58,
         "endLine": 58,
@@ -1481,7 +1481,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -1507,7 +1507,7 @@
       "component": "ruliq-compliance-platform:langgraph_agent/agents/memory_manager.py",
       "project": "ruliq-compliance-platform",
       "line": 556,
-      "hash": "2e208a44be46e15e9c184a3fcf8ad927",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 556,
         "endLine": 556,
@@ -1548,7 +1548,7 @@
       "message": "Refactor this method to not always return the same value.",
       "effort": "2min",
       "debt": "2min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "confusing",
         "design"
@@ -1575,7 +1575,7 @@
       "component": "ruliq-compliance-platform:archive/scripts/check_schema.py",
       "project": "ruliq-compliance-platform",
       "line": 12,
-      "hash": "e4607176923062fd27914a2aa2c3913b",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 12,
         "endLine": 12,
@@ -1587,7 +1587,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -1613,7 +1613,7 @@
       "component": "ruliq-compliance-platform:scripts/debug_freemium_tables.py",
       "project": "ruliq-compliance-platform",
       "line": 13,
-      "hash": "e4607176923062fd27914a2aa2c3913b",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 13,
         "endLine": 13,
@@ -1625,7 +1625,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -1651,7 +1651,7 @@
       "component": "ruliq-compliance-platform:scripts/simple_test_debug.py",
       "project": "ruliq-compliance-platform",
       "line": 14,
-      "hash": "e4607176923062fd27914a2aa2c3913b",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 14,
         "endLine": 14,
@@ -1663,7 +1663,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -1689,7 +1689,7 @@
       "component": "ruliq-compliance-platform:services/ai/safety_manager.py",
       "project": "ruliq-compliance-platform",
       "line": 962,
-      "hash": "ad176384884274b98fe60e1b840bf620",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 962,
         "endLine": 966,
@@ -1726,7 +1726,7 @@
       "message": "Remove this unexpected named argument 'metadata'.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -1752,7 +1752,7 @@
       "component": "ruliq-compliance-platform:tests/test-utility-scripts/setup_test_db.py",
       "project": "ruliq-compliance-platform",
       "line": 12,
-      "hash": "2e46f0e5c46309929149e0ec08b3ddc5",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 12,
         "endLine": 12,
@@ -1764,7 +1764,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -1790,7 +1790,7 @@
       "component": "ruliq-compliance-platform:workers/compliance_tasks.py",
       "project": "ruliq-compliance-platform",
       "line": 40,
-      "hash": "d8ceaa63ee51ece24f54509f9d338d52",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 40,
         "endLine": 40,
@@ -1827,7 +1827,7 @@
       "message": "Add 1 missing arguments; 'generate_readiness_assessment' expects at least 3 positional arguments.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -1853,7 +1853,7 @@
       "component": "ruliq-compliance-platform:workers/compliance_tasks.py",
       "project": "ruliq-compliance-platform",
       "line": 84,
-      "hash": "d8ceaa63ee51ece24f54509f9d338d52",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 84,
         "endLine": 84,
@@ -1890,7 +1890,7 @@
       "message": "Add 1 missing arguments; 'generate_readiness_assessment' expects at least 3 positional arguments.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -1916,7 +1916,7 @@
       "component": "ruliq-compliance-platform:api/dependencies/token_blacklist.py",
       "project": "ruliq-compliance-platform",
       "line": 244,
-      "hash": "1dfdcc93eb28f1acf428d73c191854db",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 244,
         "endLine": 244,
@@ -1957,7 +1957,7 @@
       "message": "Refactor this method to not always return the same value.",
       "effort": "2min",
       "debt": "2min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "confusing",
         "design"
@@ -1984,7 +1984,7 @@
       "component": "ruliq-compliance-platform:archive/test_configs/conftest_hybrid.py",
       "project": "ruliq-compliance-platform",
       "line": 29,
-      "hash": "e4607176923062fd27914a2aa2c3913b",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 29,
         "endLine": 29,
@@ -1996,7 +1996,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -2022,7 +2022,7 @@
       "component": "ruliq-compliance-platform:archive/test_configs/conftest_improved.py",
       "project": "ruliq-compliance-platform",
       "line": 29,
-      "hash": "e4607176923062fd27914a2aa2c3913b",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 29,
         "endLine": 29,
@@ -2034,7 +2034,7 @@
       "message": "Make sure this PostgreSQL database password gets changed and removed from the code.",
       "effort": "30min",
       "debt": "30min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -2060,7 +2060,7 @@
       "component": "ruliq-compliance-platform:services/ai/assistant.py",
       "project": "ruliq-compliance-platform",
       "line": 4875,
-      "hash": "c8a2f1804c9f316abf22af3168260b97",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 4875,
         "endLine": 4875,
@@ -2097,7 +2097,7 @@
       "message": "Add 4 missing arguments; '_generate_response' expects 4 positional arguments.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -2123,7 +2123,7 @@
       "component": "ruliq-compliance-platform:services/ai/assistant.py",
       "project": "ruliq-compliance-platform",
       "line": 4876,
-      "hash": "0124d31729f95f96facbba83799de8db",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 4876,
         "endLine": 4876,
@@ -2160,7 +2160,7 @@
       "message": "Remove this unexpected named argument 'question_id'.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -2186,7 +2186,7 @@
       "component": "ruliq-compliance-platform:services/ai/assistant.py",
       "project": "ruliq-compliance-platform",
       "line": 4877,
-      "hash": "272c7bf5763aa17f830b301bf0a68f66",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 4877,
         "endLine": 4877,
@@ -2223,7 +2223,7 @@
       "message": "Remove this unexpected named argument 'question_text'.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -2249,7 +2249,7 @@
       "component": "ruliq-compliance-platform:services/ai/assistant.py",
       "project": "ruliq-compliance-platform",
       "line": 4878,
-      "hash": "c567dd34bcaf9f4aaeee336ee07efb0d",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 4878,
         "endLine": 4878,
@@ -2286,7 +2286,7 @@
       "message": "Remove this unexpected named argument 'framework_id'.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -2312,7 +2312,7 @@
       "component": "ruliq-compliance-platform:services/ai/assistant.py",
       "project": "ruliq-compliance-platform",
       "line": 4879,
-      "hash": "e85c1693ac8d3c131f440b44b3387380",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 4879,
         "endLine": 4879,
@@ -2349,7 +2349,7 @@
       "message": "Remove this unexpected named argument 'business_profile_id'.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -2375,7 +2375,7 @@
       "component": "ruliq-compliance-platform:services/ai/assistant.py",
       "project": "ruliq-compliance-platform",
       "line": 4880,
-      "hash": "a7cd3d1f13cc972e300e2f45fd30c278",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 4880,
         "endLine": 4880,
@@ -2412,7 +2412,7 @@
       "message": "Remove this unexpected named argument 'section_id'.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],
@@ -2438,7 +2438,7 @@
       "component": "ruliq-compliance-platform:services/ai/assistant.py",
       "project": "ruliq-compliance-platform",
       "line": 4881,
-      "hash": "d8d50d64580a0e3aa8d90f888434f4e1",
+      "hash": "POSSIBLE_HASH_REDACTED",
       "textRange": {
         "startLine": 4881,
         "endLine": 4881,
@@ -2475,7 +2475,7 @@
       "message": "Remove this unexpected named argument 'user_context'.",
       "effort": "10min",
       "debt": "10min",
-      "author": "you@example.com",
+      "author": "REDACTED",
       "tags": [
         "cwe"
       ],

@@ -18,10 +18,10 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v5
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 
@@ -262,7 +262,7 @@ jobs:
         "
 
     - name: Upload security scan results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
       if: always()
       with:
         name: security-scan-results
@@ -278,7 +278,7 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v5
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       with:
         fetch-depth: 0  # Full history for secret scanning
 
@@ -352,7 +352,7 @@ jobs:
         "
 
     - name: Upload secrets scan results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
       if: always()
       with:
         name: secrets-scan-results
@@ -364,17 +364,17 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v5
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
     - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
+      uses: docker/setup-buildx-action@c47758b77c9736f4b2ef4073d4d51994fabfe349
 
     - name: Build Docker image for scanning
       run: |
         docker build -t compliancegpt:security-scan .
 
     - name: Run Trivy vulnerability scanner
-      uses: aquasecurity/trivy-action@master
+      uses: aquasecurity/trivy-action@18f2510ee396bbf400402c1ae107f9c51b87bcba
       with:
         image-ref: 'compliancegpt:security-scan'
         format: 'json'
@@ -431,7 +431,7 @@ jobs:
         "
 
     - name: Upload Docker security scan results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
       if: always()
       with:
         name: docker-security-results
@@ -468,10 +468,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v5
+      uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d
       with:
         python-version: ${{ env.PYTHON_VERSION }}
         cache: 'pip'
@@ -500,7 +500,7 @@ jobs:
           --cov-report=xml:security-coverage.xml
 
     - name: Upload security test results
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
       if: always()
       with:
         name: security-test-results
@@ -644,7 +644,7 @@ jobs:
         "
 
     - name: Upload comprehensive security report
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882
       with:
         name: comprehensive-security-report
         path: comprehensive_security_report.json
