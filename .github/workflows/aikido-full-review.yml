@@ -1,0 +1,116 @@
+name: Aikido Full Repository Review PR
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_branch:
+        description: "Base branch to create (empty baseline)"
+        required: true
+        default: "aikido-review-base"
+      target_branch:
+        description: "Branch to scan (compare head)"
+        required: true
+        default: "main"
+      force_recreate_base:
+        description: "Force re-create empty base branch if it already exists"
+        type: boolean
+        default: false
+      draft:
+        description: "Create PR as draft"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  create-baseline-pr:
+    name: Create Aikido baseline PR
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git author
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create/refresh empty base branch
+        id: make_base
+        shell: bash
+        env:
+          BASE: ${{ inputs.base_branch }}
+          TARGET: ${{ inputs.target_branch }}
+          FORCE: ${{ inputs.force_recreate_base }}
+        run: |
+          set -euo pipefail
+          git fetch origin
+
+          if git ls-remote --exit-code --heads origin "$BASE" >/dev/null 2>&1; then
+            echo "Base branch '$BASE' already exists on remote."
+            if [ "$FORCE" = "true" ]; then
+              echo "Force recreation enabled; recreating empty base '$BASE'."
+              git checkout --orphan "$BASE"
+              # Create an empty baseline commit (no files)
+              git commit --allow-empty -m "chore(aikido): empty base for full-repo PR scan"
+              git push --force origin "$BASE"
+            else
+              echo "Keeping existing base '$BASE'."
+            fi
+          else
+            echo "Creating empty base '$BASE'."
+            git checkout --orphan "$BASE"
+            git commit --allow-empty -m "chore(aikido): empty base for full-repo PR scan"
+            git push -u origin "$BASE"
+          fi
+
+          echo "base_branch=$BASE" >> "$GITHUB_OUTPUT"
+          echo "target_branch=$TARGET" >> "$GITHUB_OUTPUT"
+
+      - name: Create or locate draft PR
+        id: pr
+        uses: actions/github-script@v7
+        env:
+          BASE: ${{ steps.make_base.outputs.base_branch }}
+          TARGET: ${{ steps.make_base.outputs.target_branch }}
+          DRAFT: ${{ inputs.draft }}
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const base = process.env.BASE;
+            const head = `${owner}:${process.env.TARGET}`;
+            const draft = (process.env.DRAFT === 'true');
+
+            // Find any existing open PR with this base/head pair
+            const list = await github.rest.pulls.list({
+              owner, repo, state: 'open', base
+            });
+
+            let pr = list.data.find(p => p.head && `${owner}:${p.head.ref}` === head);
+
+            if (!pr) {
+              pr = (await github.rest.pulls.create({
+                owner, repo,
+                base,
+                head: process.env.TARGET,
+                title: 'Aikido: Full repository baseline review',
+                body: 'Draft PR to allow Aikido to scan the entire repository. Do not merge.',
+                draft
+              })).data;
+            }
+
+            core.setOutput('number', String(pr.number));
+            core.setOutput('url', pr.html_url);
+
+      - name: Post summary
+        run: |
+          echo "### Aikido Full Repository Review PR" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Base branch: ${{ steps.make_base.outputs.base_branch }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Head branch: ${{ steps.make_base.outputs.target_branch }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Pull Request: ${{ steps.pr.outputs.url }}" >> $GITHUB_STEP_SUMMARY
