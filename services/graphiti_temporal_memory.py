@@ -3,7 +3,8 @@ Graphiti Temporal Memory Framework for ruleIQ
 Implements time-aware knowledge graphs for regulatory tracking
 """
 
-from typing import Dict, List, Optional, Anyfrom dataclasses import dataclass, field
+from typing import Dict, List, Optional, Any
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
 import json

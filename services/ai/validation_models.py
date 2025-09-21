@@ -47,6 +47,14 @@ class RiskLevel(str, Enum):
 #     CRITICAL = "critical"  # Unused variable
 
 
+    """Maturity levels for compliance programs"""
+    INITIAL = "initial"
+    DEVELOPING = "developing"
+    DEFINED = "defined"
+    MANAGED = "managed"
+    OPTIMIZED = "optimized"
+
+
 class MaturityLevel(str, Enum):
 #     INITIAL = "initial"  # Unused variable
 #     DEVELOPING = "developing"  # Unused variable
