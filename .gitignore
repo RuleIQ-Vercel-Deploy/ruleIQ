@@ -118,7 +118,6 @@ docs/_build/
 
 package-lock.json
 yarn.lock
-pnpm-lock.yaml
 
 13. Large binary assets
 
