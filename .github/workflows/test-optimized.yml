@@ -174,18 +174,6 @@ jobs:
         coverage combine coverage-*.xml || true
         coverage xml -o combined-coverage.xml
         coverage report --skip-covered --skip-empty
-    
-    - name: Upload to SonarCloud
-      if: github.event_name != 'workflow_dispatch'
-      uses: SonarSource/sonarcloud-github-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      with:
-        args: >
-          -Dsonar.python.coverage.reportPaths=combined-coverage.xml
-          -Dsonar.python.xunit.reportPath=test-results-*.xml
-    
     - name: Performance Summary
       run: |
         echo "## Overall Test Performance" >> $GITHUB_STEP_SUMMARY

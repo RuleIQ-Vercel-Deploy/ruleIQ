@@ -231,7 +231,6 @@ jobs:
           if [ -f "README.md" ]; then
             echo "Checking for required badges in README..."
             grep -q "github.com/.*/workflows/.*/badge.svg" README.md || echo "⚠️ CI badge missing"
-            grep -q "sonarcloud.io/api/project_badges" README.md || echo "⚠️ SonarCloud badge missing"
           fi
 
   # Dependency check
