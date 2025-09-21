@@ -86,27 +86,7 @@ services:
     networks:
       - test-network
 
-  # SonarCloud scanner
-  sonar-scanner:
-    image: sonarsource/sonar-scanner-cli:latest
-    environment:
-      SONAR_HOST_URL: https://sonarcloud.io
-      SONAR_TOKEN: ${SONAR_TOKEN}  # Set in Doppler or CI/CD
-    volumes:
-      - .:/usr/src
-    command: |
-      -Dsonar.projectKey=ruleiq
-      -Dsonar.organization=your-org
-      -Dsonar.sources=.
-      -Dsonar.exclusions=**/*_test.py,**/tests/**,**/test_*.py
-      -Dsonar.tests=tests
-      -Dsonar.python.coverage.reportPaths=coverage.xml
-      -Dsonar.python.xunit.reportPath=test-results.xml
-    depends_on:
-      test-runner:
-        condition: service_completed_successfully
-    networks:
-      - test-network
+  
 
 volumes:
   test-db-data:
