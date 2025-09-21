@@ -8,16 +8,27 @@ updates:
       day: "monday"
       time: "09:00"
     open-pull-requests-limit: 10
-    reviewers:
-      - "security-team"
-    assignees:
-      - "backend-team"
     commit-message:
       prefix: "deps"
       include: "scope"
     labels:
       - "dependencies"
       - "python"
+
+  # Enable version updates for npm/pnpm dependencies
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:30"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    labels:
+      - "dependencies"
+      - "javascript"
 
   # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
@@ -27,8 +38,6 @@ updates:
       day: "monday"
       time: "10:00"
     open-pull-requests-limit: 5
-    reviewers:
-      - "devops-team"
     commit-message:
       prefix: "ci"
       include: "scope"
@@ -44,8 +53,6 @@ updates:
       day: "tuesday"
       time: "09:00"
     open-pull-requests-limit: 5
-    reviewers:
-      - "devops-team"
     commit-message:
       prefix: "docker"
       include: "scope"
