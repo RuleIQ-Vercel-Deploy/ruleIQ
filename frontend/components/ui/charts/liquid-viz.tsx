@@ -34,3 +34,4 @@ export const LiquidDataVisualization = ({ data = [] }: { data?: number[] }) => {
         life: Math.random(),
       });
     }
+}
