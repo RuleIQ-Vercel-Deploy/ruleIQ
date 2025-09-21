@@ -1,0 +1,3 @@
+Fix 3 SonarCloud issues in 2 files
+Priorities: {'P0': 3}
+Focus: missing argument
