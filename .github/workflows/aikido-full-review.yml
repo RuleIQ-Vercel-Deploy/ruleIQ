@@ -51,21 +51,29 @@ jobs:
           set -euo pipefail
           git fetch origin
 
+          ensure_empty_commit () {
+            # Start an orphan branch and ensure the index/worktree are empty
+            git checkout --orphan "$1"
+            # Remove tracked files from the index and working tree
+            git rm -rf . >/dev/null 2>&1 || true
+            # Remove untracked files/dirs
+            git clean -fdx >/dev/null 2>&1 || true
+            # Create a truly empty baseline commit
+            git commit --allow-empty -m "chore(aikido): empty base for full-repo PR scan"
+          }
+
           if git ls-remote --exit-code --heads origin "$BASE" >/dev/null 2>&1; then
             echo "Base branch '$BASE' already exists on remote."
             if [ "$FORCE" = "true" ]; then
               echo "Force recreation enabled; recreating empty base '$BASE'."
-              git checkout --orphan "$BASE"
-              # Create an empty baseline commit (no files)
-              git commit --allow-empty -m "chore(aikido): empty base for full-repo PR scan"
+              ensure_empty_commit "$BASE"
               git push --force origin "$BASE"
             else
               echo "Keeping existing base '$BASE'."
             fi
           else
             echo "Creating empty base '$BASE'."
-            git checkout --orphan "$BASE"
-            git commit --allow-empty -m "chore(aikido): empty base for full-repo PR scan"
+            ensure_empty_commit "$BASE"
             git push -u origin "$BASE"
           fi
 
