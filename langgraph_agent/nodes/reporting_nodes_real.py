@@ -606,7 +606,13 @@ async def save_report_file(content: bytes, filename: str) -> str:
         resolved_path = file_path.resolve()
         report_dir_resolved = report_dir.resolve()
 
-        if not str(resolved_path).startswith(str(report_dir_resolved)):
+        # Use os.path.commonpath to prevent path traversal attacks
+        try:
+            common_path = os.path.commonpath([str(resolved_path), str(report_dir_resolved)])
+            if common_path != str(report_dir_resolved):
+                raise ValueError(f"Invalid file path: attempted directory traversal")
+        except ValueError:
+            # os.path.commonpath raises ValueError if paths are on different drives
             raise ValueError(f"Invalid file path: attempted directory traversal")
     except (ValueError, RuntimeError) as e:
         logger.error(f"Path validation error: {e}")
@@ -722,7 +728,13 @@ async def send_on_demand_report_email(
                 report_dir_resolved = report_dir.resolve()
 
                 # Ensure the file is within the allowed report directory
-                if not str(resolved_pdf).startswith(str(report_dir_resolved)):
+                # Use os.path.commonpath to prevent path traversal attacks
+                try:
+                    common_path = os.path.commonpath([str(resolved_pdf), str(report_dir_resolved)])
+                    if common_path != str(report_dir_resolved):
+                        raise ValueError(f"Invalid PDF path: outside report directory")
+                except ValueError:
+                    # os.path.commonpath raises ValueError if paths are on different drives
                     raise ValueError(f"Invalid PDF path: outside report directory")
 
                 if not resolved_pdf.exists():

@@ -555,7 +555,13 @@ async def send_report_email(
                 report_dir_resolved = report_dir.resolve()
 
                 # Ensure the file is within the allowed report directory
-                if not str(resolved_attachment).startswith(str(report_dir_resolved)):
+                # Use os.path.commonpath to prevent path traversal attacks
+                try:
+                    common_path = os.path.commonpath([str(resolved_attachment), str(report_dir_resolved)])
+                    if common_path != str(report_dir_resolved):
+                        raise ValueError(f"Invalid attachment path: outside report directory")
+                except ValueError:
+                    # os.path.commonpath raises ValueError if paths are on different drives
                     raise ValueError(f"Invalid attachment path: outside report directory")
 
                 if not resolved_attachment.exists():
