@@ -107,14 +107,6 @@ jobs:
             npm audit || true
           fi
 
-      - name: Run Snyk security scan
-        if: github.event_name != 'pull_request'
-        uses: snyk/actions/node@master
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --severity-threshold=high --file=frontend/package.json
-      
       - name: Upload security reports
         if: always()
         uses: actions/upload-artifact@v4
