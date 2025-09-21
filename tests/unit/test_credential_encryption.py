@@ -52,7 +52,7 @@ class TestCredentialEncryption:
 
             test_credentials = {
                 "access_key_id": "MOCK_AWS_ACCESS_KEY",
-                "secret_access_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+                "secret_access_key": "MOCK_SECRET_ACCESS_KEY_FOR_TESTING",
                 "region": "us-east-1",
             }
 

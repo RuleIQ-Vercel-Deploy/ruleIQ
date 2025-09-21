@@ -7,6 +7,13 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
+# Check for required environment variable
+if [ -z "$SONAR_TOKEN" ]; then
+    echo -e "${RED}❌ Error: SONAR_TOKEN environment variable is not set${NC}"
+    echo -e "${YELLOW}Please set it using: export SONAR_TOKEN='your-token-here'${NC}"
+    exit 1
+fi
+
 echo -e "${GREEN}🚀 Starting SonarCloud Analysis for ruleIQ...${NC}"
 echo -e "${YELLOW}Project Key: ruliq-compliance-platform${NC}"
 echo -e "${YELLOW}Organization: omara1-bakri${NC}"
@@ -15,7 +22,7 @@ echo ""
 # Run analysis
 echo -e "${YELLOW}⏳ This will take a few minutes to analyze the entire codebase...${NC}"
 npx sonarqube-scanner \
-  -Dsonar.token=78c39861ad8fa298fc7b3184cfe6573012b9af49
+  -Dsonar.token=$SONAR_TOKEN
 
 echo ""
 echo -e "${GREEN}✅ Analysis complete!${NC}"

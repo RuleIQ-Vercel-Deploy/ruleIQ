@@ -31,9 +31,12 @@ class Neo4jConnectionFixed:
         """Initialize with correct Neo4j settings."""
         if self._driver is None:
             from neo4j import GraphDatabase
-            self.uri = 'bolt://localhost:7688'
-            self.user = 'neo4j'
-            self.password = 'ruleiq123'
+            import os
+            self.uri = os.getenv('NEO4J_URI', 'bolt://localhost:7688')
+            self.user = os.getenv('NEO4J_USERNAME', 'neo4j')
+            self.password = os.getenv('NEO4J_PASSWORD', '')
+            if not self.password:
+                raise ValueError("NEO4J_PASSWORD environment variable must be set")
             logger.info('[Neo4jConnectionFixed] Connecting to: %s' % self.uri)
             self._driver = GraphDatabase.driver(self.uri, auth=(self.user,
                 self.password))

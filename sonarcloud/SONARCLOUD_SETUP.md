@@ -54,7 +54,7 @@ doppler run -- sonar-scanner \
 ```bash
 sonar-scanner \
   -Dsonar.host.url=https://sonarcloud.io \
-  -Dsonar.token=78c39861ad8fa298fc7b3184cfe6573012b9af49 \
+  -Dsonar.token=${SONAR_TOKEN} \
   -Dsonar.projectKey=ruliq-compliance-platform \
   -Dsonar.organization=your-organization-key
 ```
@@ -64,7 +64,7 @@ sonar-scanner \
 # If installed via npm
 sonarqube-scanner \
   -Dsonar.host.url=https://sonarcloud.io \
-  -Dsonar.token=78c39861ad8fa298fc7b3184cfe6573012b9af49 \
+  -Dsonar.token=${SONAR_TOKEN} \
   -Dsonar.projectKey=ruliq-compliance-platform \
   -Dsonar.organization=your-organization-key
 ```
@@ -129,7 +129,7 @@ jobs:
 1. Go to your GitHub repository
 2. Settings → Secrets and variables → Actions
 3. Add these secrets:
-   - `SONAR_TOKEN`: 78c39861ad8fa298fc7b3184cfe6573012b9af49
+   - `SONAR_TOKEN`: (Your SonarCloud token - get from SonarCloud security settings)
    - `SONAR_ORGANIZATION`: your-organization-key
 
 ## Alternative: Using SonarCloud Auto-Configuration
@@ -208,7 +208,7 @@ chmod +x run-sonarcloud.sh
 Test your connection:
 ```bash
 # Test authentication
-curl -u 78c39861ad8fa298fc7b3184cfe6573012b9af49: \
+curl -u ${SONAR_TOKEN}: \
   https://sonarcloud.io/api/authentication/validate
 
 # Should return: {"valid":true}
