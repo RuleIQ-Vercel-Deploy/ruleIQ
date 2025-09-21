@@ -82,15 +82,20 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Install dependencies
         working-directory: ./frontend
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
-      - name: Run npm audit
+      - name: Run pnpm audit
         working-directory: ./frontend
         run: |
-          npm audit --json > npm-audit-report.json || true
-          npm audit || true
+          pnpm audit --json > pnpm-audit-report.json || true
+          pnpm audit || true
 
       - name: Run Snyk security scan
         if: github.event_name != 'pull_request'
@@ -105,7 +110,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: javascript-security-reports
-          path: frontend/npm-audit-report.json
+          path: frontend/pnpm-audit-report.json
 
   # Container security scanning
   container-security:
@@ -190,12 +195,20 @@ jobs:
         with:
           fetch-depth: 0
       
-      - name: TruffleHog secret scan
+      - name: TruffleHog secret scan (PR)
+        if: github.event_name == 'pull_request'
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
           base: ${{ github.event.repository.default_branch }}
           head: HEAD
+          extra_args: --debug --only-verified
+
+      - name: TruffleHog secret scan (Push)
+        if: github.event_name != 'pull_request'
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
           extra_args: --debug --only-verified
       
       - name: Gitleaks secret scan
@@ -221,6 +234,8 @@ jobs:
           args: >
             --enableRetired
             --enableExperimental
+            --exclude "**/pnpm-lock.yaml"
+            --exclude "**/node_modules/**"
       
       - name: Upload OWASP results
         uses: actions/upload-artifact@v4

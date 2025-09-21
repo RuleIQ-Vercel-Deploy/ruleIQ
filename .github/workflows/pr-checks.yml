@@ -112,12 +112,17 @@ jobs:
       - name: Python type checking
         run: mypy . --ignore-missing-imports
       
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
       - name: Frontend linting
         working-directory: ./frontend
         run: |
-          npm ci
-          npm run lint
-          npm run type-check
+          pnpm install --frozen-lockfile
+          pnpm run lint
+          pnpm run type-check
 
   # Test coverage check
   coverage-check:
