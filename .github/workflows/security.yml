@@ -137,7 +137,7 @@ jobs:
           severity: 'CRITICAL,HIGH'
       
       - name: Run Grype scanner
-        uses: anchore/scan-action@v3
+        uses: anchore/scan-action@v7
         with:
           image: 'ruleiq:security-scan'
           fail-build: false
