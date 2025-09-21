@@ -19,6 +19,12 @@ on:
           - ci
           - full
 
+
+permissions:
+  contents: read
+  pull-requests: write  # Only if needed for PR comments
+  issues: write  # Only if needed for issues
+  packages: write  # Only if pushing to registry
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -47,7 +53,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     
     - name: Cache Python dependencies
-      uses: actions/cache@v4
+      uses: actions/cache@v3
       with:
         path: |
           ~/.cache/pip
@@ -58,7 +64,7 @@ jobs:
           ${{ runner.os }}-pip-
     
     - name: Cache pytest cache
-      uses: actions/cache@v4
+      uses: actions/cache@v3
       with:
         path: .pytest_cache
         key: pytest-cache-${{ matrix.python-version }}-${{ matrix.test-group }}-${{ github.sha }}

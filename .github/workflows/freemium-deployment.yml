@@ -24,6 +24,12 @@ on:
           - staging
           - production
 
+
+permissions:
+  contents: read
+  pull-requests: write  # Only if needed for PR comments
+  issues: write  # Only if needed for issues
+  packages: write  # Only if pushing to registry
 concurrency:
   group: freemium-deployment-${{ github.ref }}
   cancel-in-progress: false  # Don't cancel production deployments
@@ -40,7 +46,7 @@ jobs:
       security-passed: ${{ steps.security-check.outputs.passed }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Run Trivy security scan
         uses: aquasecurity/trivy-action@master
@@ -97,10 +103,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
           cache: 'pip'
@@ -154,10 +160,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Set up Node.js and pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v2
         with:
           version: 8
 
@@ -194,7 +200,7 @@ jobs:
     needs: [backend-tests, frontend-tests]
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Set up test environment
         run: |
@@ -228,7 +234,7 @@ jobs:
       image-digest: ${{ steps.build.outputs.digest }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -275,7 +281,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Configure kubectl
         uses: azure/k8s-set-context@v4
@@ -317,7 +323,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Configure kubectl
         uses: azure/k8s-set-context@v4

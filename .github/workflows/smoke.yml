@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [main, develop]
 
+
+permissions:
+  contents: read
+  pull-requests: write  # Only if needed for PR comments
+  issues: write  # Only if needed for issues
+  packages: write  # Only if pushing to registry
 env:
   BACKEND_URL: http://localhost:8000
   FRONTEND_URL: http://localhost:3000
@@ -55,7 +61,7 @@ jobs:
           node-version: '20'
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v2
         with:
           version: 8
           run_install: false
@@ -67,7 +73,7 @@ jobs:
           echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
 
       - name: Setup pnpm cache
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
           key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}

@@ -9,6 +9,12 @@ on:
     - cron: '0 6 * * 1'  # Weekly on Monday at 6 AM
   workflow_dispatch:
 
+
+permissions:
+  contents: read
+  pull-requests: write  # Only if needed for PR comments
+  issues: write  # Only if needed for issues
+  packages: write  # Only if pushing to registry
 env:
   PYTHON_VERSION: '3.11'
 
@@ -18,10 +24,10 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v5
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 
@@ -278,7 +284,7 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v5
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0  # Full history for secret scanning
 
@@ -364,7 +370,7 @@ jobs:
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v5
+      uses: actions/checkout@v4
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -468,10 +474,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v5
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ env.PYTHON_VERSION }}
         cache: 'pip'
@@ -515,7 +521,7 @@ jobs:
     
     steps:
     - name: Download all security artifacts
-      uses: actions/download-artifact@v5
+      uses: actions/download-artifact@v4
       with:
         path: security-artifacts/
 

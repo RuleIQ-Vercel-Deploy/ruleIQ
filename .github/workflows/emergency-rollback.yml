@@ -18,6 +18,12 @@ on:
         description: 'Reason for rollback'
         required: true
 
+
+permissions:
+  contents: read
+  pull-requests: write  # Only if needed for PR comments
+  issues: write  # Only if needed for issues
+  packages: write  # Only if pushing to registry
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}

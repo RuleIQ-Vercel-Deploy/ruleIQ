@@ -231,19 +231,21 @@ class DatabaseOptimizer:
         # Check cache
         cached_result = self.redis_client.get(cache_key)
         if cached_result:
-            import pickle
-            return pickle.loads(cached_result)
+            import json
+            return json.loads(cached_result.decode('utf-8'))
 
         # Execute query
         result = await session.execute(query)
         data = result.scalars().all()
 
         # Cache result
-        import pickle
+        import json
+        # Convert SQLAlchemy objects to dictionaries for JSON serialization
+        serializable_data = [obj.__dict__ if hasattr(obj, '__dict__') else str(obj) for obj in data]
         self.redis_client.setex(
             cache_key,
             cache_ttl,
-            pickle.dumps(data)
+            json.dumps(serializable_data).encode('utf-8')
         )
 
         return data

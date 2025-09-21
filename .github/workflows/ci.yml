@@ -13,6 +13,12 @@ on:
       - develop
     types: [opened, synchronize, reopened]
 
+
+permissions:
+  contents: read
+  pull-requests: write  # Only if needed for PR comments
+  issues: write  # Only if needed for issues
+  packages: write  # Only if pushing to registry
 env:
   PYTHON_VERSION: '3.11'
   NODE_VERSION: '18'

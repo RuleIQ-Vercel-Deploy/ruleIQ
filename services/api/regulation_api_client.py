@@ -10,7 +10,7 @@ Uses XML APIs instead of scraping for better reliability and structure.
 """
 import asyncio
 import requests
-import xml.etree.ElementTree as ET
+import defusedxml.ElementTree as ET  # Use defusedxml to prevent XXE attacks
 from typing import Dict, Any, List
 from datetime import datetime
 import json

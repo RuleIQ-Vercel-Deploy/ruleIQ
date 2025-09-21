@@ -9,7 +9,7 @@ from datetime import datetime
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 import logging
-import pickle
+import json
 from pathlib import Path
 
 from models.agentic_models import Agent, AgentState
@@ -144,9 +144,9 @@ class AgentManager:
                 self.db.add(agent_state)
 
             # Also save to disk for backup
-            state_file = self.state_dir / f"{agent_id}.state"
-            with open(state_file, 'wb') as f:
-                pickle.dump(state_data, f)
+            state_file = self.state_dir / f"{agent_id}.json"
+            with open(state_file, 'w') as f:
+                json.dump(state_data, f, default=str)
 
             self.db.commit()
             logger.info(f"Saved state for agent {agent_id}")
@@ -170,10 +170,10 @@ class AgentManager:
                 return agent_state.state_data
 
             # Fallback to disk
-            state_file = self.state_dir / f"{agent_id}.state"
+            state_file = self.state_dir / f"{agent_id}.json"
             if state_file.exists():
-                with open(state_file, 'rb') as f:
-                    state_data = pickle.load(f)
+                with open(state_file, 'r') as f:
+                    state_data = json.load(f)
                     logger.info(f"Loaded state for agent {agent_id} from disk")
                     return state_data
 
