@@ -482,7 +482,6 @@ class SchemaValidationResult(TypedDict):
     ChatResponse,
     PolicyDocument,
     EvidenceWorkflow,
-]
 
 # Union of all structured response schemas
 # StructuredResponseSchema = Union[  # Unused variable
