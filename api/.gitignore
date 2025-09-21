@@ -1,0 +1,26 @@
+# Reports and backups - keep these out of version control
+_reports/
+_backups/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Test outputs
+*test_results*.json
+*results.json
+*report.json
+*.html
+
+# Postman/Newman collections (unless needed)
+newman-*.json
+postman-*.json
+*collection*.json
+*environment*.json
+
+# Temporary files
+*.tmp
+*.bak
+*.backup
+*.log
