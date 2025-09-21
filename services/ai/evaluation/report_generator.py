@@ -7,7 +7,7 @@ from typing import Dict, Any, List
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from jinja2 import Template
+from jinja2 import Environment, select_autoescape
 import logging
 logger = logging.getLogger(__name__)
 
@@ -18,6 +18,11 @@ class ReportGenerator:
     def __init__(self, output_dir: Path=None):
         self.output_dir = output_dir or Path('evaluation_reports')
         self.output_dir.mkdir(parents=True, exist_ok=True)
+        # Create secure Jinja2 environment with autoescape enabled
+        self.jinja_env = Environment(
+            autoescape=select_autoescape(['html', 'xml']),
+            enable_async=False
+        )
 
     def generate_report(self, evaluation_result: Dict[str, Any], format:
         str='html', include_charts: bool=True) ->Path:
@@ -38,8 +43,9 @@ class ReportGenerator:
 
     def _generate_html_report(self, result: Dict[str, Any], name: str,
         include_charts: bool) ->Path:
-        """Generate HTML report."""
-        template = Template(self._get_html_template())
+        """Generate HTML report securely with XSS protection."""
+        # Use secure template from environment with autoescape
+        template = self.jinja_env.from_string(self._get_html_template())
         charts = {}
         if include_charts and 'metrics' in result:
             charts = self._generate_charts(result['metrics'], name)
