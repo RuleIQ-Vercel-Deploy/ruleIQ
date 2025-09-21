@@ -211,13 +211,107 @@ jobs:
     name: Quality Gate Check
     runs-on: ubuntu-latest
     needs: [backend-test, frontend-test, docker-build]
-    
+    env:
+      MIN_BACKEND_COVERAGE: ${{ vars.COVERAGE_MIN_BACKEND }}
+      MIN_FRONTEND_COVERAGE: ${{ vars.COVERAGE_MIN_FRONTEND }}
     steps:
-      - name: Check Quality Gate
+      - name: Download backend coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-backend
+          path: artifacts/backend
+
+      - name: Download frontend coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-frontend
+          path: artifacts/frontend
+
+      - name: Enforce coverage thresholds and summarize
+        shell: bash
         run: |
-          echo "✅ All quality checks passed!"
-          echo "- Backend tests: Passed"
-          echo "- Frontend tests: Passed"
-          
-          echo "- Docker build: Successful"
-          echo "- Security scans: Completed"
+          set -e
+
+          MB="${MIN_BACKEND_COVERAGE:-60}"
+          MF="${MIN_FRONTEND_COVERAGE:-60}"
+
+          echo "Using coverage thresholds -> Backend: ${MB}% | Frontend: ${MF}%"
+
+          # Backend coverage from Cobertura XML
+          BACKEND_XML="artifacts/backend/coverage.xml"
+          if [ ! -f "$BACKEND_XML" ]; then
+            echo "ERROR: Backend coverage file not found at $BACKEND_XML" >&2
+            exit 1
+          fi
+
+          BACKEND_PCT=$(python3 - <<'PY'
+import xml.etree.ElementTree as ET, sys
+root = ET.parse(sys.argv[1]).getroot()
+val = root.get('line-rate')
+pct = float(val) * 100 if val is not None else None
+print(f"{pct:.2f}" if pct is not None else "NaN")
+PY
+"$BACKEND_XML")
+
+          # Frontend coverage from lcov.info
+          FRONTEND_LCOV="artifacts/frontend/lcov.info"
+          if [ ! -f "$FRONTEND_LCOV" ]; then
+            echo "ERROR: Frontend lcov file not found at $FRONTEND_LCOV" >&2
+            exit 1
+          fi
+
+          FRONTEND_PCT=$(awk '
+            BEGIN{LF=0; LH=0}
+            /^LF:/ {LF += $2}
+            /^LH:/ {LH += $2}
+            END {
+              pct = (LF > 0) ? (100.0*LH/LF) : 0;
+              printf "%.2f", pct
+            }' "$FRONTEND_LCOV")
+
+          echo "Backend coverage:  ${BACKEND_PCT}% (min ${MB}%)"
+          echo "Frontend coverage: ${FRONTEND_PCT}% (min ${MF}%)"
+
+          export BACKEND_PCT FRONTEND_PCT MB MF
+
+          python3 - <<PY
+import os, sys
+bp = float(os.environ["BACKEND_PCT"])
+fp = float(os.environ["FRONTEND_PCT"])
+mb = float(os.environ["MB"])
+mf = float(os.environ["MF"])
+fail = 0
+if bp < mb:
+    print(f"FAIL: Backend coverage {bp:.2f}% is below minimum {mb:.2f}%")
+    fail = 1
+if fp < mf:
+    print(f"FAIL: Frontend coverage {fp:.2f}% is below minimum {mf:.2f}%")
+    fail = 1
+sys.exit(fail)
+PY
+
+      - name: Write summary
+        if: always()
+        run: |
+          echo "## ✅ Quality Gate Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- Backend coverage threshold: ${MIN_BACKEND_COVERAGE:-60}%" >> $GITHUB_STEP_SUMMARY
+          echo "- Frontend coverage threshold: ${MIN_FRONTEND_COVERAGE:-60}%" >> $GITHUB_STEP_SUMMARY
+          if [ -f artifacts/backend/coverage.xml ]; then
+            BP=$(python - <<'PY'
+import xml.etree.ElementTree as ET
+root = ET.parse("artifacts/backend/coverage.xml").getroot()
+val = root.get("line-rate")
+print(f"{float(val)*100:.2f}" if val else "n/a")
+PY
+)
+            echo "- Backend coverage: ${BP}%" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- Backend coverage: n/a (file missing)" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [ -f artifacts/frontend/lcov.info ]; then
+            FP=$(awk 'BEGIN{LF=0; LH=0} /^LF:/ {LF += $2} /^LH:/ {LH += $2} END {pct = (LF > 0) ? (100.0*LH/LF) : 0; printf "%.2f", pct}' artifacts/frontend/lcov.info)
+            echo "- Frontend coverage: ${FP}%" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "- Frontend coverage: n/a (file missing)" >> $GITHUB_STEP_SUMMARY
+          fi

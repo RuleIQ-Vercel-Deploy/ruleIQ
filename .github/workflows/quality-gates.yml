@@ -45,18 +45,38 @@ jobs:
         run: pnpm test --coverage
 
       - name: Check Test Coverage
+        env:
+          MIN_FRONTEND_COVERAGE: ${{ vars.COVERAGE_MIN_FRONTEND }}
         run: |
-          # This is a placeholder for a more robust coverage check.
-          # In a real project, you would use a tool to parse the coverage report
-          # and fail the build if it's below a certain threshold.
-          echo "Coverage check placeholder. Implement a real check here."
-          # Example using a simple grep (would need adjustment for your coverage report format)
-          # pnpm test --coverage | grep "All files" | awk '{print $4}' | sed 's/%//' | while read -r val; do
-          #   if (( $(echo "$val < 80" | bc -l) )); then
-          #     echo "Error: Test coverage is below 80%."
-          #     exit 1
-          #   fi
-          # done
+          set -e
+          THRESHOLD="${MIN_FRONTEND_COVERAGE:-60}"
+
+          if [ ! -f coverage/lcov.info ]; then
+            echo "ERROR: coverage/lcov.info not found. Did tests run?" >&2
+            exit 1
+          fi
+
+          PCT=$(awk '
+            BEGIN{LF=0; LH=0}
+            /^LF:/ {LF += $2}
+            /^LH:/ {LH += $2}
+            END {
+              pct = (LF > 0) ? (100.0*LH/LF) : 0;
+              printf "%.2f", pct
+            }' coverage/lcov.info)
+
+          echo "Frontend coverage: ${PCT}% (min ${THRESHOLD}%)"
+          export PCT THRESHOLD
+
+          python3 - <<PY
+import os, sys
+pct = float(os.environ["PCT"])
+thr = float(os.environ["THRESHOLD"])
+if pct < thr:
+    print(f"FAIL: Frontend coverage {pct:.2f}% is below minimum {thr:.2f}%")
+    sys.exit(1)
+print("PASS: Frontend coverage gate satisfied.")
+PY
 
       - name: Run Build Verification
         run: pnpm build
