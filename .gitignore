@@ -222,3 +222,9 @@ backup_*/
 
 .vercel
 .scannerwork/
+
+# Security scan outputs and debug files
+sonar-scan-debug.txt
+sonar-scan-*.txt
+*-debug.txt
+*-debug.log

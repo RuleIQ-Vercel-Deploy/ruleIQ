@@ -543,17 +543,36 @@ async def send_report_email(
         # Add body
         msg.attach(MIMEText(body, "plain"))
 
-        # Add attachment if provided
-        if attachment_path and os.path.exists(attachment_path):
-            with open(attachment_path, "rb") as f:
-                part = MIMEBase("application", "octet-stream")
-                part.set_payload(f.read())
-                encoders.encode_base64(part)
-                part.add_header(
-                    "Content-Disposition",
-                    f"attachment; filename={os.path.basename(attachment_path)}",
-                )
-                msg.attach(part)
+        # Add attachment if provided with path validation
+        if attachment_path:
+            try:
+                # Validate attachment path before opening
+                attachment = Path(attachment_path)
+                report_dir = Path(getattr(settings, "REPORT_DIRECTORY", "/tmp/reports"))
+
+                # Resolve and validate the path
+                resolved_attachment = attachment.resolve()
+                report_dir_resolved = report_dir.resolve()
+
+                # Ensure the file is within the allowed report directory
+                if not str(resolved_attachment).startswith(str(report_dir_resolved)):
+                    raise ValueError(f"Invalid attachment path: outside report directory")
+
+                if not resolved_attachment.exists():
+                    raise FileNotFoundError(f"Attachment file not found: {resolved_attachment}")
+
+                with open(resolved_attachment, "rb") as f:
+                    part = MIMEBase("application", "octet-stream")
+                    part.set_payload(f.read())
+                    encoders.encode_base64(part)
+                    part.add_header(
+                        "Content-Disposition",
+                        f"attachment; filename={os.path.basename(str(resolved_attachment))}",
+                    )
+                    msg.attach(part)
+            except (ValueError, FileNotFoundError, RuntimeError) as e:
+                logger.error(f"Attachment error: {e}")
+                # Continue without attachment on error
 
         # Send email
         with smtplib.SMTP(smtp_host, smtp_port) as server:

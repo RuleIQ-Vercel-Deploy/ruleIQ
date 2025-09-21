@@ -48,28 +48,33 @@ trap 'rm -f "${tmpfile}"' EXIT
 
 cat > "${tmpfile}" <<'EOF_REPLACEMENTS'
 # Each block is original text, newline, replacement, newline.
-# Neon Database URL credentials
-postgresql+asyncpg://neondb_owner:npg_s0JhnfGNy3Ze@ep-sweet-truth-a89at3wo-pooler.eastus2.azure.neon.tech/neondb?sslmode=require&channel_binding=require
+# Neon Database URL credentials - EXAMPLE ONLY
+# Replace these with actual patterns from your git history scan
+postgresql+asyncpg://[USERNAME]:[PASSWORD]@[HOST]/[DATABASE]
 postgresql+asyncpg://<redacted-neon-url>
 
-postgresql://neondb_owner:npg_s0JhnfGNy3Ze@ep-wild-grass-a8o37wq8-pooler.eastus2.azure.neon.tech/neondb?sslmode=require
+postgresql://[USERNAME]:[PASSWORD]@[HOST]/[DATABASE]
 postgresql://<redacted-neon-url>
 
-# Stack Auth keys
-5771eac7-350a-43b0-9fe2-0ca6a0b8ea17
+# Stack Auth keys - EXAMPLE PATTERNS
+# UUID pattern for project IDs
+[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}
 <redacted-stack-project-id>
 
-pck_bga2tny5stehdhyay71bj4pmzstfar6gpvh8n63q63c00
+# Client key pattern
+pck_[a-z0-9]{40}
 <redacted-stack-client-key>
 
-ssk_0wkry6dwy3z0a8gwhjcxywwzcqzb1nbzp1gknfpn7bh60
+# Server key patterns
+ssk_[a-z0-9]{40}
 <redacted-stack-server-key>
 
-ssk_sy6z4a4h84hca9mybvf8wzn5td696wjsvydkpbnh52400
+ssk_[a-z0-9]{40}
 <redacted-stack-server-key>
 
-# JWT/Fernet secrets
-nTDlGluRj39drsQ+IczE7pFw0okljEY/tKsLa+mB3d8=
+# JWT/Fernet secrets - EXAMPLE PATTERNS
+# Base64 encoded secret pattern
+[A-Za-z0-9+/]{40,}=
 <redacted-jwt-secret>
 
 dev-secret-key-change-for-production
@@ -78,21 +83,25 @@ dev-secret-key-change-for-production
 dev-32-character-encryption-key
 <redacted-encryption-key>
 
-PiuMdniC0TBtnLTactkEi7TZSpQq_PA_tkg5olwDQbM=
+# Fernet key pattern
+[A-Za-z0-9_-]{43}=
 <redacted-fernet-key>
 
-# OpenAI / Google AI keys from env files and Postman collections
-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
+# OpenAI / Google AI keys - EXAMPLE PATTERNS
+# OpenAI API key pattern
+sk-proj-[A-Za-z0-9_-]{100,}
 <redacted-openai-key>
 
-AIzaSyAp13qdjwpFbqi85X2uK5K2exj7tX6I5eE
+# Google API key pattern
+AIzaSy[A-Za-z0-9_-]{33}
 <redacted-google-api-key>
 
-# Sample JWT tokens
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MWIxOTMwZC05YzI0LTQwZWItYmE3Ny02YzViNTA4YjNiNDEiLCJleHAiOjE3NTU5NDAxNDgsInR5cGUiOiJhY2Nlc3MiLCJpYXQiOjE3NTU5MzgzNDh9.iAoqj2FrDDW0-ckb6A74I_KKetm87MCH6astHxxk2aI
+# JWT token patterns
+# JWT pattern (header.payload.signature)
+eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+
 <redacted-jwt-token>
 
-eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0QGV4YW1wbGUuY29tIn0.signature
+eyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+
 <redacted-jwt-token>
 
 # Google API references in manifests

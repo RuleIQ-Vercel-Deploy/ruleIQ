@@ -577,7 +577,7 @@ def should_run_schedule(schedule: ReportScheduleModel) -> bool:
 
 async def save_report_file(content: bytes, filename: str) -> str:
     """
-    Save report content to file.
+    Save report content to file with path validation.
 
     Args:
         content: Report content as bytes
@@ -586,10 +586,32 @@ async def save_report_file(content: bytes, filename: str) -> str:
     Returns:
         Full path to saved file
     """
+    import re
+
+    # Sanitize filename to prevent directory traversal
+    safe_filename = re.sub(r'[/\\]|\.\.|\~', '_', filename)
+    safe_filename = safe_filename.replace('..', '_')
+
+    # Ensure filename is not empty after sanitization
+    if not safe_filename or safe_filename.strip() == '':
+        safe_filename = f"report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+
     report_dir = Path(getattr(settings, "REPORT_DIRECTORY", "/tmp/reports"))
     report_dir.mkdir(parents=True, exist_ok=True)
 
-    file_path = report_dir / filename
+    file_path = report_dir / safe_filename
+
+    # Ensure the resolved path is within the report directory
+    try:
+        resolved_path = file_path.resolve()
+        report_dir_resolved = report_dir.resolve()
+
+        if not str(resolved_path).startswith(str(report_dir_resolved)):
+            raise ValueError(f"Invalid file path: attempted directory traversal")
+    except (ValueError, RuntimeError) as e:
+        logger.error(f"Path validation error: {e}")
+        safe_filename = f"report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+        file_path = report_dir / safe_filename
 
     async with aiofiles.open(file_path, "wb") as f:
         await f.write(content)
@@ -691,8 +713,26 @@ async def send_on_demand_report_email(
         # Read PDF file if provided
         attachment_data = None
         if pdf_path and os.path.exists(pdf_path):
-            with open(pdf_path, "rb") as f:
-                attachment_data = f.read()
+            # Validate PDF path before opening
+            pdf_file = Path(pdf_path)
+            report_dir = Path(getattr(settings, "REPORT_DIRECTORY", "/tmp/reports"))
+
+            try:
+                resolved_pdf = pdf_file.resolve()
+                report_dir_resolved = report_dir.resolve()
+
+                # Ensure the file is within the allowed report directory
+                if not str(resolved_pdf).startswith(str(report_dir_resolved)):
+                    raise ValueError(f"Invalid PDF path: outside report directory")
+
+                if not resolved_pdf.exists():
+                    raise FileNotFoundError(f"PDF file not found: {resolved_pdf}")
+
+                with open(resolved_pdf, "rb") as f:
+                    attachment_data = f.read()
+            except (ValueError, FileNotFoundError, RuntimeError) as e:
+                logger.error(f"PDF read error: {e}")
+                attachment_data = None
 
         return await send_email_with_attachment(
             recipients=recipients,
