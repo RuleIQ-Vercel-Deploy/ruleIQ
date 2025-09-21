@@ -155,7 +155,12 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./frontend
-        run: pnpm install --frozen-lockfile
+        run: |
+          if [ -f "pnpm-lock.yaml" ]; then
+            pnpm install --frozen-lockfile
+          else
+            npm ci
+          fi
       
       - name: Run linting
         working-directory: ./frontend
