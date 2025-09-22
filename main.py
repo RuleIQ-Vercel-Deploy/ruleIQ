@@ -9,7 +9,8 @@ from config.security_settings import get_security_settings
 from api.dependencies.auth import get_current_active_user
 from api.middleware.error_handler import error_handler_middleware
 from api.request_id_middleware import RequestIDMiddleware
-from api.routers import assessments, auth, business_profiles, chat, compliance, evidence, frameworks, freemium, policies, readiness, reports, security, uk_compliance, users
+from api.routers import auth, chat, compliance, evidence, frameworks, freemium, policies, readiness, reports, security, uk_compliance, users
+# Temporarily disabled: assessments, business_profiles (Pydantic forward reference issue)
 # Temporarily disabled due to import errors: agentic_rag, ai_assessments, ai_cost_monitoring, ai_cost_websocket, ai_optimization, ai_policy, api_keys, dashboard, evidence_collection, feedback, foundation_evidence, google_auth, implementation, integrations, iq_agent, monitoring, payment, performance_monitoring, secrets_vault, test_utils, webhooks
 from api.routers.admin import admin_router
 from api.routers import rbac_auth
@@ -120,8 +121,8 @@ app.include_router(auth.router, prefix='/api/v1/auth', tags=['Authentication'])
 app.include_router(google_auth.router, prefix='/api/v1/auth/google', tags=['Google OAuth'])
 app.include_router(rbac_auth.router, prefix='/api/v1/auth', tags=['RBAC Authentication'])
 app.include_router(users.router, prefix='/api/v1/users', tags=['Users'])
-app.include_router(business_profiles.router, prefix='/api/v1/business-profiles', tags=['Business Profiles'])
-app.include_router(assessments.router, prefix='/api/v1/assessments', tags=['Assessments'])
+# app.include_router(business_profiles.router, prefix='/api/v1/business-profiles', tags=['Business Profiles'])  # Temporarily disabled
+# app.include_router(assessments.router, prefix='/api/v1/assessments', tags=['Assessments'])  # Temporarily disabled
 from api.routers import usage_dashboard, audit_export
 app.include_router(usage_dashboard.router, prefix='/api/v1', tags=['Usage Dashboard'])
 app.include_router(audit_export.router, prefix='/api/v1', tags=['Audit Export'])
