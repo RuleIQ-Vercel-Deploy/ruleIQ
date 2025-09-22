@@ -1,61 +1,186 @@
 version: 2
 updates:
-  # Enable version updates for Python dependencies
+  # Python dependencies - Main backend
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
-      time: "09:00"
-    open-pull-requests-limit: 10
-    commit-message:
-      prefix: "deps"
-      include: "scope"
+      time: "04:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "backend-team"
     labels:
       - "dependencies"
       - "python"
+      - "backend"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      development-dependencies:
+        patterns:
+          - "pytest*"
+          - "black"
+          - "ruff"
+          - "mypy"
+      aws-dependencies:
+        patterns:
+          - "boto3*"
+      database-dependencies:
+        patterns:
+          - "sqlalchemy*"
+          - "alembic*"
+          - "psycopg2*"
+      api-dependencies:
+        patterns:
+          - "fastapi*"
+          - "uvicorn*"
+          - "pydantic*"
 
-  # Enable version updates for npm/pnpm dependencies
+  # Python dependencies - Visualization backend
+  - package-ecosystem: "pip"
+    directory: "/visualization-backend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "04:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "backend-team"
+    labels:
+      - "dependencies"
+      - "python"
+      - "visualization"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    ignore:
+      # Ignore major version updates that might break compatibility
+      - dependency-name: "pydantic"
+        update-types: ["version-update:semver-major"]
+
+  # JavaScript/TypeScript dependencies - Frontend
   - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
       interval: "weekly"
       day: "monday"
-      time: "09:30"
-    open-pull-requests-limit: 10
-    commit-message:
-      prefix: "deps"
-      include: "scope"
+      time: "05:00"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "frontend-team"
     labels:
       - "dependencies"
       - "javascript"
+      - "frontend"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      react-dependencies:
+        patterns:
+          - "react*"
+          - "@types/react*"
+      nextjs-dependencies:
+        patterns:
+          - "next"
+          - "@next/*"
+      testing-dependencies:
+        patterns:
+          - "vitest*"
+          - "@testing-library/*"
+          - "playwright*"
+      development-dependencies:
+        patterns:
+          - "eslint*"
+          - "prettier*"
+          - "typescript"
+          - "@types/*"
+    ignore:
+      # Ignore major Next.js updates until manually reviewed
+      - dependency-name: "next"
+        update-types: ["version-update:semver-major"]
+      # Ignore React 19 until stable
+      - dependency-name: "react"
+        versions: ["19.x"]
+      - dependency-name: "react-dom"
+        versions: ["19.x"]
 
-  # Enable version updates for GitHub Actions
+  # GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "monday"
-      time: "10:00"
-    open-pull-requests-limit: 5
-    commit-message:
-      prefix: "ci"
-      include: "scope"
+      day: "sunday"
+      time: "03:00"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "devops-team"
     labels:
       - "dependencies"
       - "github-actions"
+      - "ci/cd"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
 
-  # Enable version updates for Docker
+  # Docker base images
   - package-ecosystem: "docker"
     directory: "/"
     schedule:
       interval: "weekly"
-      day: "tuesday"
-      time: "09:00"
-    open-pull-requests-limit: 5
-    commit-message:
-      prefix: "docker"
-      include: "scope"
+      day: "sunday"
+      time: "02:00"
+    open-pull-requests-limit: 2
+    reviewers:
+      - "devops-team"
     labels:
       - "dependencies"
       - "docker"
+      - "infrastructure"
+    commit-message:
+      prefix: "build"
+      include: "scope"
+    ignore:
+      # Only update patch versions for base images
+      - dependency-name: "python"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major", "version-update:semver-minor"]
+
+  # Docker base images - Frontend
+  - package-ecosystem: "docker"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "02:00"
+    open-pull-requests-limit: 2
+    reviewers:
+      - "devops-team"
+    labels:
+      - "dependencies"
+      - "docker"
+      - "frontend"
+    commit-message:
+      prefix: "build"
+      include: "scope"
+
+  # Docker base images - Visualization backend
+  - package-ecosystem: "docker"
+    directory: "/visualization-backend"
+    schedule:
+      interval: "weekly"
+      day: "sunday"
+      time: "02:00"
+    open-pull-requests-limit: 2
+    reviewers:
+      - "devops-team"
+    labels:
+      - "dependencies"
+      - "docker"
+      - "visualization"
+    commit-message:
+      prefix: "build"
+      include: "scope"

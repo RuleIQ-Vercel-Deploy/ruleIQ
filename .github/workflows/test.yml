@@ -1,0 +1,459 @@
+name: Comprehensive Testing
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    - cron: '0 2 * * *' # Daily at 2 AM UTC
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+env:
+  POSTGRES_USER: test_user
+  POSTGRES_PASSWORD: test_pass
+  POSTGRES_DB: test_db
+  DATABASE_URL: postgresql://test_user:test_pass@localhost:5432/test_db
+  REDIS_URL: redis://localhost:6379/0
+  SECRET_KEY: test-secret-key-for-testing
+  JWT_SECRET_KEY: test-jwt-secret
+  ENVIRONMENT: test
+
+jobs:
+  backend-unit-tests:
+    name: Backend Unit Tests
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-${{ matrix.python-version }}-
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-asyncio pytest-timeout pytest-xdist
+
+      - name: Setup database
+        run: |
+          python -c "from database.db_setup import create_tables; create_tables()"
+
+      - name: Run unit tests with coverage
+        run: |
+          pytest tests/unit/ \
+            -v \
+            --cov=api \
+            --cov=services \
+            --cov=database \
+            --cov-report=xml \
+            --cov-report=html \
+            --cov-report=term-missing \
+            --junit-xml=junit-unit-${{ matrix.python-version }}.xml \
+            -n auto
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-test-results-${{ matrix.python-version }}
+          path: |
+            junit-unit-${{ matrix.python-version }}.xml
+            htmlcov/
+            coverage.xml
+
+  backend-integration-tests:
+    name: Backend Integration Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+      neo4j:
+        image: neo4j:5
+        env:
+          NEO4J_AUTH: neo4j/testpassword
+        options: >-
+          --health-cmd "cypher-shell -u neo4j -p testpassword 'MATCH (n) RETURN n LIMIT 1'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 7687:7687
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-asyncio pytest-timeout
+
+      - name: Setup database
+        run: |
+          python -c "from database.db_setup import create_tables; create_tables()"
+
+      - name: Run integration tests
+        run: |
+          pytest tests/integration/ \
+            -v \
+            --timeout=120 \
+            --junit-xml=junit-integration.xml
+
+      - name: Upload integration test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: integration-test-results
+          path: junit-integration.xml
+
+  frontend-tests:
+    name: Frontend Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    strategy:
+      matrix:
+        node-version: ['18', '20']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run unit tests
+        run: |
+          pnpm run test:unit --coverage
+
+      - name: Run component tests
+        run: |
+          pnpm run test:component || true
+
+      - name: Upload frontend coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frontend-coverage-${{ matrix.node-version }}
+          path: frontend/coverage/
+
+  e2e-tests:
+    name: End-to-End Tests
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Install backend dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        working-directory: ./frontend
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Setup database
+        run: |
+          python -c "from database.db_setup import create_tables; create_tables()"
+
+      - name: Start backend server
+        run: |
+          uvicorn api.main:app --host 0.0.0.0 --port 8000 &
+          sleep 10
+
+      - name: Start frontend server
+        working-directory: ./frontend
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:8000
+        run: |
+          pnpm run build
+          pnpm run start &
+          sleep 10
+
+      - name: Run E2E tests
+        working-directory: ./frontend
+        run: |
+          pnpm run test:e2e
+
+      - name: Upload E2E test artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-test-artifacts
+          path: |
+            frontend/test-results/
+            frontend/playwright-report/
+
+  performance-tests:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    if: github.event_name != 'schedule'
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install locust
+
+      - name: Setup database
+        run: |
+          python -c "from database.db_setup import create_tables; create_tables()"
+
+      - name: Start API server
+        run: |
+          uvicorn api.main:app --host 0.0.0.0 --port 8000 &
+          sleep 10
+
+      - name: Run performance tests
+        run: |
+          locust -f tests/performance/locustfile.py \
+            --host=http://localhost:8000 \
+            --users=10 \
+            --spawn-rate=2 \
+            --run-time=60s \
+            --headless \
+            --html=performance-report.html \
+            --csv=performance-report || true
+
+      - name: Upload performance test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-test-results
+          path: |
+            performance-report.html
+            performance-report*.csv
+
+  test-coverage-report:
+    name: Test Coverage Report
+    runs-on: ubuntu-latest
+    needs: [backend-unit-tests, backend-integration-tests, frontend-tests]
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all coverage reports
+        uses: actions/download-artifact@v4
+
+      - name: Generate coverage summary
+        run: |
+          echo "## Test Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Component | Python 3.11 | Python 3.12 | Node 18 | Node 20 |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|-------------|-------------|---------|---------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Backend Unit | ✅ | ✅ | - | - |" >> $GITHUB_STEP_SUMMARY
+          echo "| Backend Integration | ✅ | - | - | - |" >> $GITHUB_STEP_SUMMARY
+          echo "| Frontend | - | - | ✅ | ✅ |" >> $GITHUB_STEP_SUMMARY
+
+      - name: Comment PR with test results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const comment = `## Test Results Summary
+            
+            - Backend Unit Tests: ${{ needs.backend-unit-tests.result }}
+            - Backend Integration Tests: ${{ needs.backend-integration-tests.result }}
+            - Frontend Tests: ${{ needs.frontend-tests.result }}
+            
+            View detailed test reports in the workflow artifacts.`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+  test-summary:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [backend-unit-tests, backend-integration-tests, frontend-tests, e2e-tests, performance-tests]
+    if: always()
+    steps:
+      - name: Test Suite Summary
+        run: |
+          echo "## Complete Test Suite Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Test Suite | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Backend Unit Tests | ${{ needs.backend-unit-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Backend Integration Tests | ${{ needs.backend-integration-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Frontend Tests | ${{ needs.frontend-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| E2E Tests | ${{ needs.e2e-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Performance Tests | ${{ needs.performance-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ needs.backend-unit-tests.result }}" != "success" || \
+                "${{ needs.backend-integration-tests.result }}" != "success" || \
+                "${{ needs.frontend-tests.result }}" != "success" || \
+                "${{ needs.e2e-tests.result }}" != "success" ]]; then
+            echo ""
+            echo "⚠️ Some tests failed. Please review the test results above."
+            exit 1
+          else
+            echo ""
+            echo "✅ All tests passed successfully!"
+          fi

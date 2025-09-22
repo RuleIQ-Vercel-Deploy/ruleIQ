@@ -1,4 +1,4 @@
-name: Security Checks
+name: Security
 
 on:
   push:
@@ -6,16 +6,68 @@ on:
   pull_request:
     branches: [main, develop]
   schedule:
-    - cron: '0 0 * * 1'  # Weekly on Monday
+    - cron: '0 0 * * 0' # Weekly scan on Sunday
 
 permissions:
+  actions: read
   contents: read
   security-events: write
+  pull-requests: read
 
 jobs:
-  python-security:
-    name: Python Security
+  codeql-analysis:
+    name: CodeQL Analysis
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ['python', 'javascript-typescript']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          queries: security-and-quality
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
+
+  python-security:
+    name: Python Security Scan
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_pass
+          POSTGRES_DB: test_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
 
     steps:
       - uses: actions/checkout@v4
@@ -25,23 +77,94 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-security-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-security-
+            ${{ runner.os }}-pip-
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install safety bandit
-
-      - name: Run Safety check
-        run: |
           pip install -r requirements.txt
-          safety check || true
+          pip install bandit[toml] safety ruff gitleaks
 
-      - name: Run Bandit
-        run: bandit -r . -ll || true
+      - name: Run Bandit security scan
+        run: |
+          bandit -r api/ services/ database/ -f json -o bandit-report.json
+          if [ -f bandit-report.json ]; then
+            echo "::notice title=Bandit Security Report::$(python -c 'import json; data = json.load(open("bandit-report.json")); print(f"Found {len(data.get(\"results\", []))} security issues")')"
+          fi
+        continue-on-error: true
+
+      - name: Run Safety dependency check
+        run: |
+          safety check --json --output safety-report.json || true
+          if [ -f safety-report.json ]; then
+            echo "::notice title=Safety Report::Dependency vulnerabilities checked"
+          fi
+        continue-on-error: true
+
+      - name: Run Ruff security checks
+        run: |
+          ruff check --select S --output-format json --output-file ruff-security.json . || true
+          echo "::notice title=Ruff Security::Security linting completed"
+        continue-on-error: true
+
+      - name: Upload security reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: python-security-reports
+          path: |
+            bandit-report.json
+            safety-report.json
+            ruff-security.json
+
+  javascript-security:
+    name: JavaScript/TypeScript Security
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run npm audit
+        run: |
+          pnpm audit --json > npm-audit.json || true
+          echo "::notice title=NPM Audit::Dependency vulnerabilities checked"
+        continue-on-error: true
+
+      - name: Upload JavaScript security reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: javascript-security-reports
+          path: frontend/npm-audit.json
 
   secret-scanning:
-    name: Secret Scanning
+    name: Secret Detection
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
         with:
@@ -52,3 +175,73 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         continue-on-error: true
+
+  dependency-check:
+    name: OWASP Dependency Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run OWASP Dependency Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: 'RuleIQ'
+          path: '.'
+          format: 'JSON'
+          args: >
+            --enableRetired
+            --enableExperimental
+            --scan '**/requirements*.txt'
+            --scan '**/package*.json'
+            --scan '**/pnpm-lock.yaml'
+        continue-on-error: true
+
+      - name: Upload OWASP reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: owasp-dependency-check
+          path: reports/dependency-check-report.json
+
+  sonarcloud:
+    name: SonarCloud Analysis
+    runs-on: ubuntu-latest
+    if: github.event_name != 'schedule'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=ruleiq
+            -Dsonar.organization=ruleiq-org
+            -Dsonar.sources=api,services,database,frontend/src
+            -Dsonar.tests=tests,frontend/__tests__
+            -Dsonar.python.version=3.11
+            -Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+        continue-on-error: true
+
+  security-summary:
+    name: Security Summary
+    runs-on: ubuntu-latest
+    needs: [codeql-analysis, python-security, javascript-security, secret-scanning, dependency-check]
+    if: always()
+    steps:
+      - name: Security scan summary
+        run: |
+          echo "## Security Scan Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Scan | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| CodeQL | ${{ needs.codeql-analysis.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Python Security | ${{ needs.python-security.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| JavaScript Security | ${{ needs.javascript-security.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Secret Scanning | ${{ needs.secret-scanning.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Dependency Check | ${{ needs.dependency-check.result }} |" >> $GITHUB_STEP_SUMMARY

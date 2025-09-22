@@ -6,14 +6,179 @@ on:
   pull_request:
     branches: [main, develop]
 
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
 env:
   PYTHON_VERSION: '3.11'
-  NODE_VERSION: '18'
+  NODE_VERSION: '20'
+  POSTGRES_USER: test_user
+  POSTGRES_PASSWORD: test_pass
+  POSTGRES_DB: test_db
+  DATABASE_URL: postgresql://test_user:test_pass@localhost:5432/test_db
+  REDIS_URL: redis://localhost:6379/0
+  SECRET_KEY: test-secret-key-for-ci
+  JWT_SECRET_KEY: test-jwt-secret-key
+  ENVIRONMENT: test
+  DEBUG: false
 
 jobs:
-  backend:
+  backend-tests:
     name: Backend Tests
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Cache pip packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-asyncio pytest-timeout
+
+      - name: Run database migrations
+        run: |
+          python -c "from database.db_setup import create_tables; create_tables()"
+
+      - name: Run unit tests
+        run: |
+          pytest tests/unit/ -v --cov=api --cov=services --cov-report=xml --cov-report=term
+
+      - name: Run integration tests
+        run: |
+          pytest tests/integration/ -v --timeout=60
+
+      - name: Validate API endpoints
+        run: |
+          python validate_endpoints.py
+
+      - name: Check database health
+        run: |
+          python database_health_check.py
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          flags: backend
+          name: backend-coverage
+
+  frontend-build:
+    name: Frontend Build & Type Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Cache pnpm store
+        uses: actions/cache@v4
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('frontend/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run type checking
+        run: pnpm run type-check
+
+      - name: Run linting
+        run: pnpm run lint
+
+      - name: Build application
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:8000
+          NEXT_PUBLIC_APP_URL: http://localhost:3000
+        run: pnpm run build
+
+      - name: Check bundle size
+        run: |
+          pnpm run analyze:bundle || true
+
+  api-validation:
+    name: API Validation
+    runs-on: ubuntu-latest
+    needs: [backend-tests]
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
 
     steps:
       - uses: actions/checkout@v4
@@ -27,66 +192,117 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest pytest-cov flake8 black
 
-      - name: Lint with flake8
+      - name: Start API server
         run: |
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          uvicorn api.main:app --host 0.0.0.0 --port 8000 &
+          sleep 10
 
-      - name: Format check with black
-        run: black --check .
-        continue-on-error: true
+      - name: Health check
+        run: |
+          curl -f http://localhost:8000/health || exit 1
+
+      - name: Validate OpenAPI schema
+        run: |
+          curl -f http://localhost:8000/openapi.json > openapi.json
+          python -c "import json; json.load(open('openapi.json'))"
+
+      - name: Test critical endpoints
+        run: |
+          # Test authentication endpoint
+          curl -X POST http://localhost:8000/auth/login \
+            -H "Content-Type: application/json" \
+            -d '{"username":"test","password":"test"}' || true
+          
+          # Test health endpoint
+          curl -f http://localhost:8000/health
+          
+          # Test readiness endpoint
+          curl -f http://localhost:8000/ready || true
+
+  docker-build:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build backend Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: ruleiq/backend:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build frontend Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: false
+          tags: ruleiq/frontend:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  visualization-backend:
+    name: Visualization Backend
+    runs-on: ubuntu-latest
+    if: ${{ hashFiles('visualization-backend/requirements.txt') != '' }}
+    defaults:
+      run:
+        working-directory: ./visualization-backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
       - name: Run tests
         run: |
-          pytest tests/ -v --tb=short || true
-        env:
-          DATABASE_URL: sqlite:///./test.db
-          SECRET_KEY: test-secret-key
+          pytest tests/ -v || true
 
-  frontend:
-    name: Frontend Build
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
-      - name: Install dependencies
-        working-directory: ./frontend
+      - name: Validate Pydantic models
         run: |
-          if [ -f "pnpm-lock.yaml" ]; then
-            pnpm install --frozen-lockfile
-          else
-            npm ci
-          fi
+          python -c "from app import models; print('Models validated')" || true
 
-      - name: Build
-        working-directory: ./frontend
-        run: |
-          if [ -f "pnpm-lock.yaml" ]; then
-            pnpm run build || true
-          else
-            npm run build || true
-          fi
-
-  docker:
-    name: Docker Build
+  ci-summary:
+    name: CI Summary
     runs-on: ubuntu-latest
-
+    needs: [backend-tests, frontend-build, api-validation, docker-build]
+    if: always()
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Build Docker image
-        run: docker build -t ruleiq:test .
-        continue-on-error: true
+      - name: CI Pipeline Summary
+        run: |
+          echo "## CI Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Job | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Backend Tests | ${{ needs.backend-tests.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Frontend Build | ${{ needs.frontend-build.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| API Validation | ${{ needs.api-validation.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Docker Build | ${{ needs.docker-build.result }} |" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ needs.backend-tests.result }}" != "success" || \
+                "${{ needs.frontend-build.result }}" != "success" || \
+                "${{ needs.api-validation.result }}" != "success" || \
+                "${{ needs.docker-build.result }}" != "success" ]]; then
+            echo ""
+            echo "⚠️ Some CI checks failed. Please review the logs above."
+            exit 1
+          else
+            echo ""
+            echo "✅ All CI checks passed successfully!"
+          fi

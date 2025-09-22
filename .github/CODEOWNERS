@@ -1,27 +1,110 @@
-# Global code owners
-* @project-maintainers
+# RuleIQ Code Owners
+# This file defines who should review code changes to different parts of the codebase
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
-# Security-related files require security team review
-/tests/security/ @security-team
-/.github/workflows/security-scan.yml @security-team
-/api/auth/ @security-team
+# Default owners for everything
+* @ruleiq/engineering
 
-# Performance testing requires performance team review
-/tests/performance/ @performance-team
-/.github/workflows/performance-tests.yml @performance-team
+# Backend - Python/FastAPI
+/api/ @ruleiq/backend-team @ruleiq/api-team
+/services/ @ruleiq/backend-team
+/database/ @ruleiq/backend-team @ruleiq/database-team
+/langgraph_agent/ @ruleiq/ai-team @ruleiq/backend-team
+/middleware/ @ruleiq/backend-team @ruleiq/security-team
+/requirements*.txt @ruleiq/backend-team @ruleiq/devops-team
+/alembic/ @ruleiq/database-team
+*.py @ruleiq/backend-team
 
-# Database changes require DBA review
-/database/ @database-team
-/migrations/ @database-team
+# Frontend - Next.js/React
+/frontend/ @ruleiq/frontend-team
+/frontend/src/components/ @ruleiq/frontend-team @ruleiq/ui-team
+/frontend/src/app/ @ruleiq/frontend-team
+/frontend/src/lib/ @ruleiq/frontend-team
+/frontend/src/hooks/ @ruleiq/frontend-team
+/frontend/src/styles/ @ruleiq/frontend-team @ruleiq/ui-team
+/frontend/public/ @ruleiq/frontend-team @ruleiq/design-team
+/frontend/package*.json @ruleiq/frontend-team @ruleiq/devops-team
+/frontend/pnpm-lock.yaml @ruleiq/frontend-team @ruleiq/devops-team
+/frontend/tsconfig.json @ruleiq/frontend-team
+/frontend/next.config.* @ruleiq/frontend-team @ruleiq/devops-team
+/frontend/.env* @ruleiq/frontend-team @ruleiq/security-team
 
-# CI/CD pipeline changes require DevOps review
-/.github/workflows/ @devops-team
+# Visualization Backend
+/visualization-backend/ @ruleiq/data-team @ruleiq/backend-team
 
-# Core API changes require backend team review
-/api/ @backend-team
-/services/ @backend-team
+# AI and ML Components
+/services/ai/ @ruleiq/ai-team
+/services/agents/ @ruleiq/ai-team @ruleiq/backend-team
+/services/compliance/ @ruleiq/compliance-team @ruleiq/ai-team
+/services/knowledge_graph/ @ruleiq/ai-team @ruleiq/data-team
 
-# Testing framework changes require QA review
-/tests/ @qa-team
-/pytest.ini @qa-team
-/conftest.py @qa-team
+# Security-sensitive files
+/api/auth.py @ruleiq/security-team @ruleiq/backend-team
+/api/dependencies/auth.py @ruleiq/security-team
+/api/dependencies/rbac_auth.py @ruleiq/security-team
+/api/middleware/security*.py @ruleiq/security-team
+/api/middleware/jwt*.py @ruleiq/security-team
+/services/auth_service.py @ruleiq/security-team
+/services/security/ @ruleiq/security-team
+/.env* @ruleiq/security-team @ruleiq/devops-team
+/config/ @ruleiq/devops-team @ruleiq/security-team
+
+# Infrastructure and DevOps
+/.github/ @ruleiq/devops-team @ruleiq/engineering-leads
+/.github/workflows/ @ruleiq/devops-team @ruleiq/engineering-leads
+/Dockerfile* @ruleiq/devops-team
+/docker-compose*.yml @ruleiq/devops-team
+/vercel.json @ruleiq/devops-team @ruleiq/frontend-team
+/.dockerignore @ruleiq/devops-team
+/scripts/ @ruleiq/devops-team @ruleiq/engineering
+
+# Testing
+/tests/ @ruleiq/qa-team @ruleiq/backend-team
+/frontend/__tests__/ @ruleiq/qa-team @ruleiq/frontend-team
+/frontend/e2e/ @ruleiq/qa-team @ruleiq/frontend-team
+/frontend/cypress/ @ruleiq/qa-team @ruleiq/frontend-team
+/frontend/playwright/ @ruleiq/qa-team @ruleiq/frontend-team
+*test*.py @ruleiq/qa-team
+*.test.ts @ruleiq/qa-team @ruleiq/frontend-team
+*.test.tsx @ruleiq/qa-team @ruleiq/frontend-team
+*.spec.ts @ruleiq/qa-team @ruleiq/frontend-team
+*.spec.tsx @ruleiq/qa-team @ruleiq/frontend-team
+
+# Documentation
+/docs/ @ruleiq/documentation-team @ruleiq/engineering
+*.md @ruleiq/documentation-team
+/README.md @ruleiq/engineering-leads @ruleiq/documentation-team
+/CONTRIBUTING.md @ruleiq/engineering-leads
+/LICENSE @ruleiq/legal @ruleiq/engineering-leads
+
+# Configuration files (require careful review)
+/.gitignore @ruleiq/engineering-leads
+/.gitattributes @ruleiq/engineering-leads
+/pyproject.toml @ruleiq/backend-team @ruleiq/engineering-leads
+/setup.py @ruleiq/backend-team @ruleiq/engineering-leads
+/setup.cfg @ruleiq/backend-team @ruleiq/engineering-leads
+/.pre-commit-config.yaml @ruleiq/engineering
+/.editorconfig @ruleiq/engineering
+
+# CI/CD and quality tools configuration
+/.bandit @ruleiq/security-team @ruleiq/backend-team
+/.codacy* @ruleiq/qa-team @ruleiq/devops-team
+/.gitleaks* @ruleiq/security-team
+/sonar-project.properties @ruleiq/qa-team @ruleiq/devops-team
+/.ruff.toml @ruleiq/backend-team
+/.flake8 @ruleiq/backend-team
+/.pylintrc @ruleiq/backend-team
+/frontend/.eslintrc* @ruleiq/frontend-team
+/frontend/.prettierrc* @ruleiq/frontend-team
+
+# Database migrations (critical changes)
+/database/migrations/ @ruleiq/database-team @ruleiq/backend-team @ruleiq/engineering-leads
+/alembic/versions/ @ruleiq/database-team @ruleiq/backend-team @ruleiq/engineering-leads
+
+# API route changes (require API team review)
+/api/routers/ @ruleiq/api-team @ruleiq/backend-team
+
+# Compliance and regulatory components
+/api/routers/uk_compliance.py @ruleiq/compliance-team @ruleiq/legal
+/services/compliance/uk_compliance*.py @ruleiq/compliance-team @ruleiq/legal
+/services/compliance/gdpr*.py @ruleiq/compliance-team @ruleiq/legal

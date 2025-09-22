@@ -1,0 +1,296 @@
+name: Dependency Management
+
+on:
+  schedule:
+    - cron: '0 3 * * 1' # Weekly on Monday at 3 AM UTC
+  push:
+    paths:
+      - 'requirements*.txt'
+      - 'frontend/package.json'
+      - 'frontend/pnpm-lock.yaml'
+      - 'visualization-backend/requirements.txt'
+      - 'pyproject.toml'
+      - '.github/workflows/dependencies.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+  security-events: write
+
+jobs:
+  python-dependencies:
+    name: Python Dependencies Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pip-audit
+        run: |
+          python -m pip install --upgrade pip
+          pip install pip-audit pip-tools
+
+      - name: Audit main requirements
+        run: |
+          echo "## Main Requirements Audit" >> $GITHUB_STEP_SUMMARY
+          pip-audit -r requirements.txt --format json > main-audit.json || true
+          python -c "
+          import json
+          with open('main-audit.json') as f:
+              data = json.load(f)
+              vulns = data.get('vulnerabilities', [])
+              print(f'Found {len(vulns)} vulnerabilities in main requirements')
+          " >> $GITHUB_STEP_SUMMARY
+
+      - name: Audit visualization backend requirements
+        if: ${{ hashFiles('visualization-backend/requirements.txt') != '' }}
+        run: |
+          echo "## Visualization Backend Audit" >> $GITHUB_STEP_SUMMARY
+          pip-audit -r visualization-backend/requirements.txt --format json > viz-audit.json || true
+          python -c "
+          import json
+          with open('viz-audit.json') as f:
+              data = json.load(f)
+              vulns = data.get('vulnerabilities', [])
+              print(f'Found {len(vulns)} vulnerabilities in visualization requirements')
+          " >> $GITHUB_STEP_SUMMARY
+
+      - name: Check for Pydantic conflicts
+        run: |
+          echo "## Pydantic Version Check" >> $GITHUB_STEP_SUMMARY
+          pip install pipdeptree
+          pipdeptree --packages pydantic --json > pydantic-deps.json || true
+          python -c "
+          import json
+          import subprocess
+          result = subprocess.run(['pip', 'list'], capture_output=True, text=True)
+          for line in result.stdout.split('\n'):
+              if 'pydantic' in line.lower():
+                  print(line)
+          " >> $GITHUB_STEP_SUMMARY
+
+      - name: Generate requirements update PR
+        if: github.event_name == 'schedule'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Create a new branch
+          branch_name="deps/python-updates-$(date +%Y%m%d)"
+          git checkout -b $branch_name
+          
+          # Update dependencies
+          pip install pip-tools
+          pip-compile requirements.in -o requirements.txt --upgrade || true
+          
+          # Check if there are changes
+          if git diff --quiet; then
+            echo "No Python dependency updates needed"
+          else
+            git add requirements.txt
+            git commit -m "chore: Update Python dependencies"
+            git push origin $branch_name
+            
+            # Create PR using GitHub CLI or API
+            gh pr create \
+              --title "chore: Update Python dependencies" \
+              --body "Automated Python dependency updates" \
+              --base main \
+              --head $branch_name || true
+          fi
+
+      - name: Upload Python audit reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-dependency-reports
+          path: |
+            *-audit.json
+            pydantic-deps.json
+
+  javascript-dependencies:
+    name: JavaScript Dependencies Analysis
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          cache-dependency-path: frontend/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Audit dependencies
+        run: |
+          echo "## JavaScript Dependencies Audit" >> $GITHUB_STEP_SUMMARY
+          pnpm audit --json > npm-audit.json || true
+          node -e "
+          const audit = require('./npm-audit.json');
+          const vulns = audit.vulnerabilities || {};
+          console.log('Found', Object.keys(vulns).length, 'vulnerabilities');
+          " >> $GITHUB_STEP_SUMMARY
+
+      - name: Check for outdated packages
+        run: |
+          echo "## Outdated Packages" >> $GITHUB_STEP_SUMMARY
+          pnpm outdated --format json > outdated.json || true
+          echo "Check artifacts for detailed outdated package list" >> $GITHUB_STEP_SUMMARY
+
+      - name: License compliance check
+        run: |
+          npx license-checker --json > licenses.json || true
+          echo "## License Summary" >> $GITHUB_STEP_SUMMARY
+          node -e "
+          const licenses = require('./licenses.json');
+          const licenseTypes = {};
+          Object.values(licenses).forEach(pkg => {
+            const license = pkg.licenses || 'Unknown';
+            licenseTypes[license] = (licenseTypes[license] || 0) + 1;
+          });
+          console.log('License distribution:');
+          Object.entries(licenseTypes).forEach(([license, count]) => {
+            console.log('  -', license + ':', count);
+          });
+          " >> $GITHUB_STEP_SUMMARY
+
+      - name: Generate JavaScript update PR
+        if: github.event_name == 'schedule'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          # Create a new branch
+          branch_name="deps/javascript-updates-$(date +%Y%m%d)"
+          git checkout -b $branch_name
+          
+          # Update dependencies
+          pnpm update --interactive false || true
+          
+          # Check if there are changes
+          if git diff --quiet; then
+            echo "No JavaScript dependency updates needed"
+          else
+            git add package.json pnpm-lock.yaml
+            git commit -m "chore: Update JavaScript dependencies"
+            git push origin $branch_name
+            
+            # Create PR
+            gh pr create \
+              --title "chore: Update JavaScript dependencies" \
+              --body "Automated JavaScript dependency updates" \
+              --base main \
+              --head $branch_name || true
+          fi
+
+      - name: Upload JavaScript audit reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: javascript-dependency-reports
+          path: |
+            frontend/npm-audit.json
+            frontend/outdated.json
+            frontend/licenses.json
+
+  cross-component-validation:
+    name: Cross-Component Validation
+    runs-on: ubuntu-latest
+    needs: [python-dependencies, javascript-dependencies]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate shared dependencies
+        run: |
+          echo "## Cross-Component Dependency Validation" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Check for conflicting versions across components
+          echo "### Component Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Backend (Python): requirements.txt" >> $GITHUB_STEP_SUMMARY
+          echo "- Frontend (JavaScript): frontend/package.json" >> $GITHUB_STEP_SUMMARY
+          if [ -f "visualization-backend/requirements.txt" ]; then
+            echo "- Visualization Backend: visualization-backend/requirements.txt" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Check Docker base image versions
+        run: |
+          echo "### Docker Base Images" >> $GITHUB_STEP_SUMMARY
+          for dockerfile in $(find . -name "Dockerfile*"); do
+            echo "#### $dockerfile" >> $GITHUB_STEP_SUMMARY
+            grep "^FROM" $dockerfile | head -1 >> $GITHUB_STEP_SUMMARY || echo "No FROM statement found" >> $GITHUB_STEP_SUMMARY
+          done
+
+  dependency-report:
+    name: Dependency Report
+    runs-on: ubuntu-latest
+    needs: [python-dependencies, javascript-dependencies, cross-component-validation]
+    if: always()
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Generate consolidated report
+        run: |
+          echo "## Dependency Management Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Component | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Python Dependencies | ${{ needs.python-dependencies.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| JavaScript Dependencies | ${{ needs.javascript-dependencies.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Cross-Component Validation | ${{ needs.cross-component-validation.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "1. Review vulnerability reports in workflow artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "2. Check for any automated PRs created for updates" >> $GITHUB_STEP_SUMMARY
+          echo "3. Validate license compliance in the reports" >> $GITHUB_STEP_SUMMARY
+
+      - name: Create issue for critical vulnerabilities
+        if: github.event_name == 'schedule'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let hasCritical = false;
+            
+            // Check Python audit
+            if (fs.existsSync('python-dependency-reports/main-audit.json')) {
+              const audit = JSON.parse(fs.readFileSync('python-dependency-reports/main-audit.json', 'utf8'));
+              const critical = (audit.vulnerabilities || []).filter(v => v.severity === 'critical');
+              if (critical.length > 0) hasCritical = true;
+            }
+            
+            // Check JavaScript audit
+            if (fs.existsSync('javascript-dependency-reports/npm-audit.json')) {
+              const audit = JSON.parse(fs.readFileSync('javascript-dependency-reports/npm-audit.json', 'utf8'));
+              const critical = Object.values(audit.vulnerabilities || {}).filter(v => v.severity === 'critical');
+              if (critical.length > 0) hasCritical = true;
+            }
+            
+            if (hasCritical) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: '🚨 Critical dependency vulnerabilities detected',
+                body: 'Critical vulnerabilities were found during the scheduled dependency scan. Please review the workflow artifacts for details.',
+                labels: ['security', 'dependencies', 'critical']
+              });
+            }
