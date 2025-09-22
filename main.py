@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import Any, AsyncGenerator, Dict
 from contextlib import asynccontextmanager
+import asyncio
+import os
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,9 +11,15 @@ from config.security_settings import get_security_settings
 from api.dependencies.auth import get_current_active_user
 from api.middleware.error_handler import error_handler_middleware
 from api.request_id_middleware import RequestIDMiddleware
-from api.routers import auth, chat, compliance, evidence, frameworks, freemium, policies, readiness, reports, security, uk_compliance, users
-# Temporarily disabled: assessments, business_profiles (Pydantic forward reference issue)
-# Temporarily disabled due to import errors: agentic_rag, ai_assessments, ai_cost_monitoring, ai_cost_websocket, ai_optimization, ai_policy, api_keys, dashboard, evidence_collection, feedback, foundation_evidence, google_auth, implementation, integrations, iq_agent, monitoring, payment, performance_monitoring, secrets_vault, test_utils, webhooks
+from api.routers import (
+    auth, assessments, business_profiles, chat, compliance, evidence,
+    frameworks, freemium, policies, readiness, reports, security,
+    uk_compliance, users, google_auth, ai_assessments, ai_optimization,
+    implementation, evidence_collection, integrations, foundation_evidence,
+    dashboard, payment, monitoring, api_keys, webhooks, secrets_vault,
+    ai_cost_monitoring, feedback, ai_cost_websocket, ai_policy,
+    performance_monitoring, iq_agent, agentic_rag, test_utils
+)
 from api.routers.admin import admin_router
 from api.routers import rbac_auth
 from api.schemas import APIInfoResponse, HealthCheckResponse
@@ -25,8 +33,20 @@ logger = get_logger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[Any, None]:
     logger.info('Starting ComplianceGPT API...')
-    init_db()
-    logger.info('Database tables created or verified.')
+
+    # Initialize database and check if successful
+    logger.info('Initializing database connection and tables...')
+    if not init_db():
+        error_msg = 'Database initialization failed. Application cannot start without database connection.'
+        logger.error(error_msg)
+        logger.error('Please check database configuration and connectivity:')
+        logger.error('  1. Verify DATABASE_URL in .env or environment variables')
+        logger.error('  2. Ensure PostgreSQL is running and accessible')
+        logger.error('  3. Check network connectivity to database host')
+        logger.error('  4. Verify database user permissions')
+        raise RuntimeError(error_msg)
+
+    logger.info('Database tables created or verified successfully.')
     from services.framework_service import initialize_default_frameworks
     try:
         async for db in get_async_db():
@@ -45,6 +65,10 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, None]:
     #     logger.info('Agentic RAG service initialized.')
     # except Exception as e:
     #     logger.warning(f'Failed to initialize agentic RAG service: {e}')
+    # Database monitoring initialization
+    # Policy controlled by settings.database_monitoring_required:
+    # - If True: Monitoring is critical, startup fails if initialization fails
+    # - If False (default): Monitoring failures are logged as warnings, startup continues
     from monitoring.database_monitor import get_database_monitor
     import asyncio
     try:
@@ -53,7 +77,11 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, None]:
         logger.info('Database monitoring service started with 30s interval')
         app.state.monitoring_task = monitoring_task
     except Exception as e:
-        logger.warning(f'Failed to start database monitoring: {e}')
+        if settings.database_monitoring_required:
+            logger.error(f'Failed to start required database monitoring: {e}')
+            raise RuntimeError(f'Database monitoring is required but failed to initialize: {e}')
+        else:
+            logger.warning(f'Failed to start database monitoring (non-critical): {e}')
     logger.info(f'Environment: {settings.environment}')
     logger.info(f'Debug mode: {settings.debug}')
     yield
@@ -117,53 +145,83 @@ async def add_rate_limit_headers_middleware(request: Request, call_next) -> Dict
         for header, value in request.state.rate_limit_headers.items():
             response.headers[header] = value
     return response
-app.include_router(auth.router, prefix='/api/v1/auth', tags=['Authentication'])
-app.include_router(google_auth.router, prefix='/api/v1/auth/google', tags=['Google OAuth'])
-app.include_router(rbac_auth.router, prefix='/api/v1/auth', tags=['RBAC Authentication'])
-app.include_router(users.router, prefix='/api/v1/users', tags=['Users'])
-# app.include_router(business_profiles.router, prefix='/api/v1/business-profiles', tags=['Business Profiles'])  # Temporarily disabled
-# app.include_router(assessments.router, prefix='/api/v1/assessments', tags=['Assessments'])  # Temporarily disabled
+
+# Diagnostic wrapper for router inclusion
+def include_router_with_diagnostics(
+    app: FastAPI,
+    router,
+    prefix: str = "",
+    tags: list[str] = None,
+    router_name: str = None
+) -> None:
+    """
+    Wrapper for include_router with diagnostic logging.
+    Helps identify router import/inclusion failures during re-enablement.
+    """
+    router_name = router_name or (tags[0] if tags else "Unknown")
+    try:
+        app.include_router(router, prefix=prefix, tags=tags or [])
+        logger.debug(f"✅ Successfully included router: {router_name} (prefix: {prefix})")
+    except AttributeError as e:
+        logger.error(f"❌ Router import failure for {router_name}: Missing attribute - {e}")
+        logger.error(f"   Check if router module exports 'router' variable")
+    except ImportError as e:
+        logger.error(f"❌ Router import failure for {router_name}: Import error - {e}")
+        logger.error(f"   Check module dependencies and imports")
+    except Exception as e:
+        logger.error(f"❌ Router inclusion failed for {router_name}: {type(e).__name__} - {e}")
+        logger.error(f"   Prefix: {prefix}, Tags: {tags}")
+        # Re-raise to maintain original behavior
+        raise
+
+# Include routers with diagnostic logging
+include_router_with_diagnostics(app, auth.router, prefix='/api/v1/auth', tags=['Authentication'])
+include_router_with_diagnostics(app, google_auth.router, prefix='/api/v1/auth/google', tags=['Google OAuth'])
+include_router_with_diagnostics(app, rbac_auth.router, prefix='/api/v1/auth', tags=['RBAC Authentication'])
+include_router_with_diagnostics(app, users.router, prefix='/api/v1/users', tags=['Users'])
+include_router_with_diagnostics(app, business_profiles.router, prefix='/api/v1/business-profiles', tags=['Business Profiles'])
+include_router_with_diagnostics(app, assessments.router, prefix='/api/v1/assessments', tags=['Assessments'])
 from api.routers import usage_dashboard, audit_export
-app.include_router(usage_dashboard.router, prefix='/api/v1', tags=['Usage Dashboard'])
-app.include_router(audit_export.router, prefix='/api/v1', tags=['Audit Export'])
-app.include_router(freemium.router, prefix='/api/v1', tags=['Freemium Assessment'])
-app.include_router(ai_assessments.router, prefix='/api/v1/ai', tags=['AI Assessment Assistant'])
-app.include_router(ai_optimization.router, prefix='/api/v1/ai/optimization', tags=['AI Optimization'])
-app.include_router(frameworks.router, prefix='/api/v1/frameworks', tags=['Compliance Frameworks'])
-app.include_router(policies.router, prefix='/api/v1/policies', tags=['Policies'])
-app.include_router(implementation.router, prefix='/api/v1/implementation', tags=['Implementation Plans'])
-app.include_router(evidence.router, prefix='/api/v1/evidence', tags=['Evidence'])
-app.include_router(evidence_collection.router, prefix='/api/v1/evidence-collection', tags=['Evidence Collection'])
-app.include_router(compliance.router, prefix='/api/v1/compliance', tags=['Compliance Status'])
-app.include_router(readiness.router, prefix='/api/v1/readiness', tags=['Readiness Assessment'])
-app.include_router(reports.router, prefix='/api/v1/reports', tags=['Reports'])
-app.include_router(integrations.router, prefix='/api/v1/integrations', tags=['Integrations'])
-app.include_router(foundation_evidence.router, prefix='/api/v1/foundation/evidence', tags=['Foundation Evidence Collection'])
-app.include_router(dashboard.router, prefix='/api/v1/dashboard', tags=['Dashboard'])
-app.include_router(payment.router, prefix='/api/v1/payments', tags=['Payments'])
-app.include_router(monitoring.router, prefix='/api/v1/monitoring', tags=['Monitoring'])
-app.include_router(security.router, prefix='/api/v1/security', tags=['Security'])
-app.include_router(api_keys.router, tags=['API Keys'])
-app.include_router(webhooks.router, tags=['Webhooks'])
-app.include_router(secrets_vault.router, tags=['🔐 Secrets Vault'])
-app.include_router(chat.router, prefix='/api/v1/chat', tags=['AI Assistant'])
-app.include_router(ai_cost_monitoring.router, prefix='/api/v1/ai/cost', tags=['AI Cost Monitoring'])
-app.include_router(feedback.router, prefix='/api/v1/feedback', tags=['Human Feedback'])
-app.include_router(ai_cost_websocket.router, prefix='/api/v1/ai/cost-websocket', tags=['AI Cost WebSocket'])
-app.include_router(ai_policy.router, prefix='/api/v1/ai/policies', tags=['AI Policy Generation'])
-app.include_router(performance_monitoring.router, prefix='/api/v1/performance', tags=['Performance Monitoring'])
-app.include_router(uk_compliance.router, prefix='/api/v1/uk-compliance', tags=['UK Compliance'])
-app.include_router(iq_agent.router, prefix='/api/v1/iq-agent', tags=['IQ Agent'])
-app.include_router(agentic_rag.router, prefix='/api/v1/agentic-rag', tags=['Agentic RAG'])
-app.include_router(admin_router)
+include_router_with_diagnostics(app, usage_dashboard.router, prefix='/api/v1', tags=['Usage Dashboard'])
+include_router_with_diagnostics(app, audit_export.router, prefix='/api/v1', tags=['Audit Export'])
+include_router_with_diagnostics(app, freemium.router, prefix='/api/v1', tags=['Freemium Assessment'])
+include_router_with_diagnostics(app, ai_assessments.router, prefix='/api/v1/ai', tags=['AI Assessment Assistant'])
+include_router_with_diagnostics(app, ai_optimization.router, prefix='/api/v1/ai/optimization', tags=['AI Optimization'])
+include_router_with_diagnostics(app, frameworks.router, prefix='/api/v1/frameworks', tags=['Compliance Frameworks'])
+include_router_with_diagnostics(app, policies.router, prefix='/api/v1/policies', tags=['Policies'])
+include_router_with_diagnostics(app, implementation.router, prefix='/api/v1/implementation', tags=['Implementation Plans'])
+include_router_with_diagnostics(app, evidence.router, prefix='/api/v1/evidence', tags=['Evidence'])
+include_router_with_diagnostics(app, evidence_collection.router, prefix='/api/v1/evidence-collection', tags=['Evidence Collection'])
+include_router_with_diagnostics(app, compliance.router, prefix='/api/v1/compliance', tags=['Compliance Status'])
+include_router_with_diagnostics(app, readiness.router, prefix='/api/v1/readiness', tags=['Readiness Assessment'])
+include_router_with_diagnostics(app, reports.router, prefix='/api/v1/reports', tags=['Reports'])
+include_router_with_diagnostics(app, integrations.router, prefix='/api/v1/integrations', tags=['Integrations'])
+include_router_with_diagnostics(app, foundation_evidence.router, prefix='/api/v1/foundation/evidence', tags=['Foundation Evidence Collection'])
+include_router_with_diagnostics(app, dashboard.router, prefix='/api/v1/dashboard', tags=['Dashboard'])
+include_router_with_diagnostics(app, payment.router, prefix='/api/v1/payments', tags=['Payments'])
+include_router_with_diagnostics(app, monitoring.router, prefix='/api/v1/monitoring', tags=['Monitoring'])
+include_router_with_diagnostics(app, security.router, prefix='/api/v1/security', tags=['Security'])
+include_router_with_diagnostics(app, api_keys.router, prefix='', tags=['API Keys'], router_name='API Keys')
+include_router_with_diagnostics(app, webhooks.router, prefix='', tags=['Webhooks'], router_name='Webhooks')
+include_router_with_diagnostics(app, secrets_vault.router, prefix='', tags=['🔐 Secrets Vault'], router_name='Secrets Vault')
+include_router_with_diagnostics(app, chat.router, prefix='/api/v1/chat', tags=['AI Assistant'])
+include_router_with_diagnostics(app, ai_cost_monitoring.router, prefix='/api/v1/ai/cost', tags=['AI Cost Monitoring'])
+include_router_with_diagnostics(app, feedback.router, prefix='/api/v1/feedback', tags=['Human Feedback'])
+include_router_with_diagnostics(app, ai_cost_websocket.router, prefix='/api/v1/ai/cost-websocket', tags=['AI Cost WebSocket'])
+include_router_with_diagnostics(app, ai_policy.router, prefix='/api/v1/ai/policies', tags=['AI Policy Generation'])
+include_router_with_diagnostics(app, performance_monitoring.router, prefix='/api/v1/performance', tags=['Performance Monitoring'])
+include_router_with_diagnostics(app, uk_compliance.router, prefix='/api/v1/uk-compliance', tags=['UK Compliance'])
+include_router_with_diagnostics(app, iq_agent.router, prefix='/api/v1/iq-agent', tags=['IQ Agent'])
+include_router_with_diagnostics(app, agentic_rag.router, prefix='/api/v1/agentic-rag', tags=['Agentic RAG'])
+include_router_with_diagnostics(app, admin_router, prefix='', tags=['Admin'], router_name='Admin Router')
 import os
 if os.getenv('ENVIRONMENT', 'production').lower() in ['development', 'test', 'testing', 'local']:
-    app.include_router(test_utils.router, prefix='/api/test-utils', tags=['Test Utilities'])
+    include_router_with_diagnostics(app, test_utils.router, prefix='/api/test-utils', tags=['Test Utilities'])
 
 @app.get('/api/dashboard')
 async def get_dashboard(current_user: User=Depends(get_current_active_user)) -> Dict[str, Any]:
     """Get user dashboard data"""
-    return {'user': {'id': current_user['id'], 'email': current_user['primaryEmail'], 'name': current_user.get('displayName', '')}, 'stats': {'assessments': 0, 'policies': 0, 'compliance_score': 0, 'recent_activities': []}}
+    return {'user': {'id': str(current_user.id), 'email': current_user.email, 'name': current_user.full_name or ''}, 'stats': {'assessments': 0, 'policies': 0, 'compliance_score': 0, 'recent_activities': []}}
 
 @app.get('/', response_model=APIInfoResponse, summary='API Information')
 async def root() -> Any:
@@ -236,6 +294,7 @@ async def api_detailed_health_check() -> Any:
     from database.db_setup import get_engine_info
     from monitoring.database_monitor import get_database_monitor
     from config.cache import get_cache_manager
+    from services.neo4j_service import get_neo4j_service
     engine_info = get_engine_info()
     cache_health = {'status': 'unknown', 'connected': False, 'message': 'Cache not available'}
     try:
@@ -245,6 +304,26 @@ async def api_detailed_health_check() -> Any:
             cache_health = {'status': 'healthy', 'connected': True, 'message': 'Redis cache operational'}
     except Exception as e:
         cache_health = {'status': 'error', 'connected': False, 'message': f'Cache error: {e!s}'}
+    
+    # Check Neo4j connectivity with timeout
+    neo4j_health = {'status': 'not_configured', 'connected': False, 'message': 'Neo4j not configured'}
+    try:
+        # Check if Neo4j is configured via environment variable
+        if os.getenv('NEO4J_URI'):
+            neo4j_service = await get_neo4j_service()
+            if neo4j_service:
+                # Apply timeout to health check to avoid hanging the endpoint
+                neo4j_health = await asyncio.wait_for(
+                    neo4j_service.health_check(), 
+                    timeout=2.0
+                )
+        else:
+            neo4j_health = {'status': 'disabled', 'connected': False, 'message': 'Neo4j not configured (NEO4J_URI not set)'}
+    except asyncio.TimeoutError:
+        neo4j_health = {'status': 'error', 'connected': False, 'message': 'Neo4j health check timeout'}
+    except Exception as e:
+        neo4j_health = {'status': 'error', 'connected': False, 'message': f'Neo4j health check failed: {e!s}'}
+    
     monitor = get_database_monitor()
     monitoring_summary = monitor.get_monitoring_summary() if monitor else {}
     current_metrics = monitoring_summary.get('current_metrics', {})
@@ -257,12 +336,29 @@ async def api_detailed_health_check() -> Any:
     elif warning_alerts > 0:
         overall_status = 'warning'
         overall_message = f'System operational with warnings: {warning_alerts} warnings'
-    elif not engine_info.get('async_engine_initialized') or cache_health['status'] != 'healthy':
-        overall_status = 'degraded'
-        overall_message = 'Some services not fully operational'
     else:
+        # Check individual service statuses
         overall_status = 'healthy'
         overall_message = 'All services operational'
+        issues = []
+        
+        if not engine_info.get('async_engine_initialized'):
+            overall_status = 'degraded'
+            issues.append('Database')
+        
+        if cache_health['status'] not in ['healthy']:
+            if overall_status == 'healthy':
+                overall_status = 'warning'
+            issues.append('Cache')
+        
+        # Neo4j: treat as warning if unhealthy (unless it's just not configured)
+        if neo4j_health['status'] not in ['healthy', 'not_configured', 'disabled']:
+            if overall_status == 'healthy':
+                overall_status = 'warning'
+            issues.append('Neo4j')
+        
+        if issues:
+            overall_message = f'Services with issues: {", ".join(issues)}'
     pool_utilization = 0
     active_sessions = 0
     for pool_type, metrics in current_metrics.items():
@@ -273,7 +369,7 @@ async def api_detailed_health_check() -> Any:
         if 'active_sessions' in key:
             active_sessions = value
             break
-    detailed_health = {'status': overall_status, 'message': overall_message, 'version': '2.0.0', 'environment': settings.environment, 'database': {'status': 'healthy' if engine_info.get('async_engine_initialized') else 'degraded', 'engine_initialized': engine_info.get('async_engine_initialized', False), 'pool_utilization': pool_utilization, 'active_sessions': active_sessions, 'recent_alerts': {'critical': critical_alerts, 'warning': warning_alerts, 'total': len(alerts)}}, 'cache': cache_health, 'monitoring': {'enabled': monitor is not None, 'last_check': monitoring_summary.get('timestamp', datetime.now(timezone.utc).isoformat()), 'metrics_available': bool(current_metrics)}, 'services': {'frameworks': {'status': 'operational', 'total': 25}, 'ai_assistant': {'status': 'operational', 'models': 6}, 'authentication': {'status': 'operational', 'method': 'JWT + RBAC'}}, 'timestamp': datetime.now(timezone.utc).isoformat()}
+    detailed_health = {'status': overall_status, 'message': overall_message, 'version': '2.0.0', 'environment': settings.environment, 'database': {'status': 'healthy' if engine_info.get('async_engine_initialized') else 'degraded', 'engine_initialized': engine_info.get('async_engine_initialized', False), 'pool_utilization': pool_utilization, 'active_sessions': active_sessions, 'recent_alerts': {'critical': critical_alerts, 'warning': warning_alerts, 'total': len(alerts)}}, 'cache': cache_health, 'neo4j': neo4j_health, 'monitoring': {'enabled': monitor is not None, 'last_check': monitoring_summary.get('timestamp', datetime.now(timezone.utc).isoformat()), 'metrics_available': bool(current_metrics)}, 'services': {'frameworks': {'status': 'operational', 'total': 25}, 'ai_assistant': {'status': 'operational', 'models': 6}, 'authentication': {'status': 'operational', 'method': 'JWT + RBAC'}}, 'timestamp': datetime.now(timezone.utc).isoformat()}
     return HealthCheckResponse(**detailed_health)
 
 @app.get('/api/v1/ping', summary='Simple Ping Endpoint')

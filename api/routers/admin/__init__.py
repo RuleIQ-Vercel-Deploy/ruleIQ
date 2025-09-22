@@ -10,9 +10,9 @@ Provides administrative interfaces for:
 
 from fastapi import APIRouter
 
-from .user_management import router as user_management_router
-from .token_management import router as token_management_router
 from .data_access import router as data_access_router
+from .token_management import router as token_management_router
+from .user_management import router as user_management_router
 
 # Create a main admin router that includes all admin sub-routers
 admin_router = APIRouter(prefix="/api/v1/api/admin", tags=["admin"])

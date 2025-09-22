@@ -1,6 +1,4 @@
-from __future__ import annotations
-
-from typing import Any, Dict, List, TYPE_CHECKING
+from typing import Any, Dict, List
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -43,41 +41,40 @@ class QuickAssessmentResponse(BaseModel):
 router = APIRouter()
 
 
-# Temporarily disabled due to Pydantic forward reference issue
-# @router.post("/quick")
-# @require_auth
-# async def quick_assessment(
-#     request: QuickAssessmentRequest,
-#     current_user: User = Depends(get_current_active_user),
-#     db: AsyncSession = Depends(get_async_db),
-# ) -> Any:
-#     """Generate quick compliance recommendations based on business profile."""
-#     recommendations = []
-#     recommendations.append(
-#         QuickRecommendation(
-#             framework=FrameworkInfo(
-#                 name="GDPR (General Data Protection Regulation)", description="EU data protection regulation"
-#             ),
-#             priority="high",
-#             description="Essential for businesses handling personal data of EU residents",
-#         )
-#     )
-#     if request.industry_standard:
-#         recommendations.append(
-#             QuickRecommendation(
-#                 framework=FrameworkInfo(name="ISO 27001", description="Information security management standard"),
-#                 priority="medium",
-#                 description="Industry standard for information security management",
-#             )
-#         )
-#         recommendations.append(
-#             QuickRecommendation(
-#                 framework=FrameworkInfo(name="SOC 2", description="Security and availability controls"),
-#                 priority="medium",
-#                 description="Important for service organizations handling customer data",
-#             )
-#         )
-#     return QuickAssessmentResponse(recommendations=recommendations)
+@router.post("/quick", response_model=QuickAssessmentResponse)
+@require_auth
+async def quick_assessment(
+    request: QuickAssessmentRequest,
+    current_user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_async_db),
+) -> Any:
+    """Generate quick compliance recommendations based on business profile."""
+    recommendations = []
+    recommendations.append(
+        QuickRecommendation(
+            framework=FrameworkInfo(
+                name="GDPR (General Data Protection Regulation)", description="EU data protection regulation"
+            ),
+            priority="high",
+            description="Essential for businesses handling personal data of EU residents",
+        )
+    )
+    if request.industry_standard:
+        recommendations.append(
+            QuickRecommendation(
+                framework=FrameworkInfo(name="ISO 27001", description="Information security management standard"),
+                priority="medium",
+                description="Industry standard for information security management",
+            )
+        )
+        recommendations.append(
+            QuickRecommendation(
+                framework=FrameworkInfo(name="SOC 2", description="Security and availability controls"),
+                priority="medium",
+                description="Important for service organizations handling customer data",
+            )
+        )
+    return QuickAssessmentResponse(recommendations=recommendations)
 
 
 @router.get("/", response_model=List[AssessmentSessionResponse])
@@ -143,14 +140,14 @@ async def get_questions(stage: int, current_user: User = Depends(get_current_act
 @router.put("/{id}/response")
 @require_auth
 async def update_response(
-    session_id: UUID,
+    id: UUID,
     response_data: AssessmentResponseUpdate,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
 ) -> Any:
     assessment_service = AssessmentService()
     session = await assessment_service.update_assessment_response(
-        db, current_user, session_id, response_data.question_id, response_data.response
+        db, current_user, id, response_data.question_id, response_data.response
     )
     return session
 
@@ -158,29 +155,27 @@ async def update_response(
 @router.post("/{id}/responses")
 @require_auth
 async def update_responses(
-    session_id: UUID,
-    response_data: dict,
+    id: UUID,
+    response_data: AssessmentResponseUpdate,
     current_user: User = Depends(get_current_active_user),
     db: AsyncSession = Depends(get_async_db),
 ) -> Any:
     """Update assessment responses - alias for compatibility"""
     assessment_service = AssessmentService()
-    question_id = response_data.get("question_id")
-    response = response_data.get("response")
-    if not question_id:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="question_id is required")
-    session = await assessment_service.update_assessment_response(db, current_user, session_id, question_id, response)
+    session = await assessment_service.update_assessment_response(
+        db, current_user, id, response_data.question_id, response_data.response
+    )
     return session
 
 
 @router.get("/{id}", response_model=AssessmentSessionResponse)
 @require_auth
 async def get_assessment_session(
-    session_id: UUID, current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
+    id: UUID, current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
 ) -> Any:
     """Get a specific assessment session by ID."""
     assessment_service = AssessmentService()
-    session = await assessment_service.get_assessment_session(db, current_user, session_id)
+    session = await assessment_service.get_assessment_session(db, current_user, id)
     if not session:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Assessment session not found")
     return session
@@ -189,7 +184,7 @@ async def get_assessment_session(
 @router.get("/{id}/recommendations")
 @require_auth
 async def get_assessment_recommendations(
-    session_id: UUID, current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
+    id: UUID, current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
 ) -> Dict[str, Any]:
     """Get recommendations for an assessment session."""
     from sqlalchemy import select
@@ -197,7 +192,7 @@ async def get_assessment_recommendations(
     from database.compliance_framework import ComplianceFramework
 
     assessment_service = AssessmentService()
-    session = await assessment_service.get_assessment_session(db, current_user, session_id)
+    session = await assessment_service.get_assessment_session(db, current_user, id)
     if not session:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Assessment session not found")
     frameworks_result = await db.execute(select(ComplianceFramework).where(ComplianceFramework.is_active))
@@ -208,7 +203,7 @@ async def get_assessment_recommendations(
         recommendations = []
         for framework in frameworks:
             if "GDPR" in framework.name or "ISO" in framework.name:
-                priority = "High" if "GDPR" in framework.name else "Medium"
+                priority = "high" if "GDPR" in framework.name else "medium"
                 recommendations.append(
                     {
                         "framework": {
@@ -226,10 +221,10 @@ async def get_assessment_recommendations(
 @router.post("/{id}/complete", response_model=AssessmentSessionResponse)
 @require_auth
 async def complete_assessment(
-    session_id: UUID, current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
+    id: UUID, current_user: User = Depends(get_current_active_user), db: AsyncSession = Depends(get_async_db)
 ) -> Any:
     assessment_service = AssessmentService()
-    session = await assessment_service.complete_assessment_session(db, current_user, session_id)
+    session = await assessment_service.complete_assessment_session(db, current_user, id)
     return session
 
 

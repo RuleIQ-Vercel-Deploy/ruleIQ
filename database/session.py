@@ -3,10 +3,11 @@ Database session management module
 Provides session factory and dependency injection for database operations
 """
 
+from typing import AsyncGenerator, Generator
+
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
-from typing import Generator, AsyncGenerator
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.orm import Session, sessionmaker
 
 from config.settings import settings
 
@@ -15,21 +16,14 @@ engine = create_engine(settings.database_url, echo=settings.debug)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Async engine and session
-async_engine = create_async_engine(
-    settings.async_database_url,
-    echo=settings.debug,
-    future=True
-)
-AsyncSessionLocal = async_sessionmaker(
-    async_engine,
-    class_=AsyncSession,
-    expire_on_commit=False
-)
+async_engine = create_async_engine(settings.async_database_url, echo=settings.debug, future=True)
+AsyncSessionLocal = async_sessionmaker(async_engine, class_=AsyncSession, expire_on_commit=False)
+
 
 def get_db() -> Generator[Session, None, None]:
     """
     Dependency to get database session.
-    
+
     Yields:
         Session: Database session
     """
@@ -39,10 +33,11 @@ def get_db() -> Generator[Session, None, None]:
     finally:
         db.close()
 
+
 async def get_async_db() -> AsyncGenerator[AsyncSession, None]:
     """
     Dependency to get async database session.
-    
+
     Yields:
         AsyncSession: Async database session
     """

@@ -2,11 +2,12 @@
 """Golden Dataset schemas package."""
 
 from typing import Any, Dict, List, Optional
+
 from .common import (
+    ExpectedOutcome,
     RegCitation,
     SourceMeta,
     TemporalValidity,
-    ExpectedOutcome,
 )
 from .compliance_scenario import ComplianceScenario
 from .evidence_case import (

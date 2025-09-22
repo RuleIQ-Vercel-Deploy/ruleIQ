@@ -16,32 +16,31 @@ Part of the ruleIQ Agentic Transformation Vision 2025
 
 import json
 import logging
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
-from typing import Dict, List, Any, Optional
-from dataclasses import dataclass, asdict
 from enum import Enum
+from typing import Any, Dict, List, Optional
 
+from services.ai import ComplianceAssistant
+from services.assessment_service import AssessmentService
 from services.context_service import (
-    get_context_service,
+    CommunicationStyle,
     InteractionType,
     TrustLevel,
-    CommunicationStyle,
+    get_context_service,
 )
-from services.assessment_service import AssessmentService
-from services.ai import ComplianceAssistant
 
 logger = logging.getLogger(__name__)
 
 
 class ConversationState(str, Enum):
-#     STARTING = "starting"  # Unused variable
-#     GATHERING_CONTEXT = "gathering_context"  # Unused variable
-#     ASKING_QUESTIONS = "asking_questions"  # Unused variable
-#     CLARIFYING = "clarifying"  # Unused variable
-#     SUMMARIZING = "summarizing"  # Unused variable
-#     COMPLETED = "completed"  # Unused variable
-#     PAUSED = "paused"  # Unused variable
-
+    #     STARTING = "starting"  # Unused variable
+    #     GATHERING_CONTEXT = "gathering_context"  # Unused variable
+    #     ASKING_QUESTIONS = "asking_questions"  # Unused variable
+    #     CLARIFYING = "clarifying"  # Unused variable
+    #     SUMMARIZING = "summarizing"  # Unused variable
+    #     COMPLETED = "completed"  # Unused variable
+    #     PAUSED = "paused"  # Unused variable
 
     """Conversation states"""
     INITIAL = "initial"
@@ -50,11 +49,11 @@ class ConversationState(str, Enum):
 
 
 class QuestionType(str, Enum):
-#     BASIC_INFO = "basic_info"  # Unused variable
-#     COMPLIANCE_SPECIFIC = "compliance_specific"  # Unused variable
-#     FOLLOW_UP = "follow_up"  # Unused variable
-#     CLARIFICATION = "clarification"  # Unused variable
-#     VERIFICATION = "verification"  # Unused variable
+    #     BASIC_INFO = "basic_info"  # Unused variable
+    #     COMPLIANCE_SPECIFIC = "compliance_specific"  # Unused variable
+    #     FOLLOW_UP = "follow_up"  # Unused variable
+    #     CLARIFICATION = "clarification"  # Unused variable
+    #     VERIFICATION = "verification"  # Unused variable
 
 
 @dataclass

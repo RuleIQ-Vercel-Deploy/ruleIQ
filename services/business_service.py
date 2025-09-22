@@ -45,9 +45,7 @@ async def create_or_update_business_profile(
         raise DatabaseException("Failed to create or update business profile.") from e
 
 
-async def get_business_profile(
-    db: AsyncSession, user: User
-) -> Optional[BusinessProfile]:
+async def get_business_profile(db: AsyncSession, user: User) -> Optional[BusinessProfile]:
     """Get the business profile for the authenticated user."""
     try:
         stmt = select(BusinessProfile).where(BusinessProfile.user_id == user.id)

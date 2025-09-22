@@ -2,12 +2,13 @@
 Security Headers Middleware for comprehensive HTTP header security
 """
 
-from typing import Optional, Dict, List, Any
-from fastapi import Request, Response
-from starlette.datastructures import MutableHeaders
-from fastapi.responses import JSONResponse
 import secrets
 from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
+from fastapi import Request, Response
+from fastapi.responses import JSONResponse
+from starlette.datastructures import MutableHeaders
 
 
 class SecurityHeadersMiddleware:
@@ -144,9 +145,7 @@ class SecurityHeadersMiddleware:
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
 
         # HSTS (HTTP Strict Transport Security)
-        response.headers["Strict-Transport-Security"] = (
-            "max-age=31536000; includeSubDomains; preload"
-        )
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains; preload"
 
         # Permissions Policy (formerly Feature Policy)
         response.headers["Permissions-Policy"] = (
@@ -198,19 +197,12 @@ class SecurityHeadersMiddleware:
         origin = request.headers.get("Origin")
 
         # Check if origin is allowed
-        if (
-            origin in self.cors_config["allowed_origins"]
-            or "*" in self.cors_config["allowed_origins"]
-        ):
+        if origin in self.cors_config["allowed_origins"] or "*" in self.cors_config["allowed_origins"]:
             response.headers["Access-Control-Allow-Origin"] = origin or "*"
 
         # Add other CORS headers
-        response.headers["Access-Control-Allow-Methods"] = ", ".join(
-            self.cors_config["allowed_methods"]
-        )
-        response.headers["Access-Control-Allow-Headers"] = ", ".join(
-            self.cors_config["allowed_headers"]
-        )
+        response.headers["Access-Control-Allow-Methods"] = ", ".join(self.cors_config["allowed_methods"])
+        response.headers["Access-Control-Allow-Headers"] = ", ".join(self.cors_config["allowed_headers"])
         response.headers["Access-Control-Max-Age"] = str(self.cors_config["max_age"])
 
         if self.cors_config["allow_credentials"]:
@@ -234,9 +226,7 @@ class SecurityHeadersMiddleware:
         # Cache control for sensitive content
         if response.status_code == 200:
             # Don't cache sensitive data
-            response.headers["Cache-Control"] = (
-                "no-store, no-cache, must-revalidate, private"
-            )
+            response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, private"
             response.headers["Pragma"] = "no-cache"
             response.headers["Expires"] = "0"
 
@@ -401,15 +391,11 @@ class CSPViolationHandler:
             "total": len(self.violations),
             "by_directive": by_directive,
             "by_blocked_uri": by_blocked,
-            "recent": (
-                self.violations[-10:] if len(self.violations) > 10 else self.violations
-            ),
+            "recent": (self.violations[-10:] if len(self.violations) > 10 else self.violations),
         }
 
 
-def create_security_headers_middleware(
-    app, config: Optional[Dict[str, Any]] = None
-) -> SecurityHeadersMiddleware:
+def create_security_headers_middleware(app, config: Optional[Dict[str, Any]] = None) -> SecurityHeadersMiddleware:
     """
     Factory function to create configured security headers middleware
 

@@ -6,6 +6,7 @@ Stores email capture, UTM tracking, and lead scoring data.
 """
 
 import uuid
+
 from sqlalchemy import (
     Boolean,
     Column,
@@ -58,15 +59,16 @@ class AssessmentLead(Base):
 
     # Newsletter and marketing consent
     newsletter_subscribed = Column(Boolean, default=True)
-    marketing_consent = Column(
-        Boolean, default=False
-    )  # Note: this is the correct column name
+    marketing_consent = Column(Boolean, default=False)  # Note: this is the correct column name
     consent_date = Column(DateTime, nullable=True)
 
     # Timestamps
     created_at = Column(DateTime, server_default=func.now(), nullable=False)
     updated_at = Column(
-        DateTime, server_default=func.now(), onupdate=func.now(), nullable=False,
+        DateTime,
+        server_default=func.now(),
+        onupdate=func.now(),
+        nullable=False,
     )
     last_activity_at = Column(DateTime, nullable=True)
 

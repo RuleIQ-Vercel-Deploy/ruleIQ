@@ -2,21 +2,25 @@
 Redis Circuit Breaker Service
 Implements circuit breaker pattern for Redis with fallback strategies
 """
+
 import asyncio
-import time
-from typing import Optional, Any, Dict
-from enum import Enum
-from collections import OrderedDict
-import redis.asyncio as redis
-from redis.exceptions import RedisError, ConnectionError, TimeoutError
 import logging
-from config.security_settings import get_security_settings, RedisFailureStrategy
+import time
+from collections import OrderedDict
+from enum import Enum
+from typing import Any, Dict, Optional
+
+import redis.asyncio as redis
+from redis.exceptions import ConnectionError, RedisError, TimeoutError
+
+from config.security_settings import RedisFailureStrategy, get_security_settings
 
 logger = logging.getLogger(__name__)
 
 
 class CircuitState(str, Enum):
     """Circuit breaker states"""
+
     CLOSED = "closed"  # Normal operation
     OPEN = "open"  # Circuit tripped, rejecting requests
     HALF_OPEN = "half_open"  # Testing if service recovered
@@ -67,7 +71,7 @@ class LocalCache:
 class RedisCircuitBreaker:
     """
     Circuit breaker for Redis operations with fallback strategies
-    
+
     Features:
     - Circuit breaker pattern to prevent cascade failures
     - Local cache fallback for degraded mode
@@ -81,7 +85,7 @@ class RedisCircuitBreaker:
         failure_strategy: Optional[RedisFailureStrategy] = None,
         failure_threshold: int = 5,
         recovery_timeout: int = 60,
-        half_open_requests: int = 3
+        half_open_requests: int = 3,
     ):
         self.settings = get_security_settings()
         self.redis_config = self.settings.redis
@@ -102,10 +106,11 @@ class RedisCircuitBreaker:
         self.half_open_success_count = 0
 
         # Local cache for degraded mode
-        self.local_cache = LocalCache(
-            max_size=self.redis_config.local_cache_max_size,
-            ttl=self.redis_config.local_cache_ttl
-        ) if self.redis_config.enable_local_cache else None
+        self.local_cache = (
+            LocalCache(max_size=self.redis_config.local_cache_max_size, ttl=self.redis_config.local_cache_ttl)
+            if self.redis_config.enable_local_cache
+            else None
+        )
 
         # Health check task
         self.health_check_task: Optional[asyncio.Task] = None
@@ -123,7 +128,7 @@ class RedisCircuitBreaker:
                     socket_timeout=self.redis_config.socket_timeout,
                     socket_connect_timeout=self.redis_config.socket_connect_timeout,
                     socket_keepalive=self.redis_config.socket_keepalive,
-                    socket_keepalive_options=self.redis_config.socket_keepalive_options
+                    socket_keepalive_options=self.redis_config.socket_keepalive_options,
                 )
                 await self.redis_client.ping()
                 logger.info("Redis connection established")
@@ -163,10 +168,7 @@ class RedisCircuitBreaker:
                 # Perform health check
                 if self.redis_client and self.state != CircuitState.OPEN:
                     try:
-                        await asyncio.wait_for(
-                            self.redis_client.ping(),
-                            timeout=self.redis_config.health_check_timeout
-                        )
+                        await asyncio.wait_for(self.redis_client.ping(), timeout=self.redis_config.health_check_timeout)
 
                         if self.state == CircuitState.HALF_OPEN:
                             self.half_open_success_count += 1
@@ -256,12 +258,7 @@ class RedisCircuitBreaker:
 
         return None
 
-    async def set(
-        self,
-        key: str,
-        value: Any,
-        ex: Optional[int] = None
-    ) -> bool:
+    async def set(self, key: str, value: Any, ex: Optional[int] = None) -> bool:
         """Set value with circuit breaker protection"""
         if not self._should_allow_request():
             if self.failure_strategy == RedisFailureStrategy.FAIL_CLOSED:
@@ -346,12 +343,13 @@ class RedisCircuitBreaker:
             "failure_count": self.failure_count,
             "failure_strategy": self.failure_strategy.value,
             "last_failure_time": self.last_failure_time,
-            "time_until_recovery": max(
-                0,
-                self.recovery_timeout - (time.time() - self.last_failure_time)
-            ) if self.state == CircuitState.OPEN else 0,
+            "time_until_recovery": (
+                max(0, self.recovery_timeout - (time.time() - self.last_failure_time))
+                if self.state == CircuitState.OPEN
+                else 0
+            ),
             "local_cache_enabled": self.local_cache is not None,
-            "local_cache_size": len(self.local_cache.cache) if self.local_cache else 0
+            "local_cache_size": len(self.local_cache.cache) if self.local_cache else 0,
         }
 
 

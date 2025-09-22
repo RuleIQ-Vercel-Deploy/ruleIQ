@@ -6,11 +6,12 @@ Only enabled in development/testing environments.
 """
 
 import os
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from database.db_setup import get_db
 from database import User
+from database.db_setup import get_db
 
 # Remove unused import
 
@@ -51,17 +52,17 @@ async def cleanup_test_users(email_pattern: str = "@example.com", db: Session = 
 
         # Clean up related data first to avoid foreign key constraints
         from database import (
-            AuditLog,
-            UserSession,
-            UserRole,
-            BusinessProfile,
             AssessmentSession,
-            GeneratedPolicy,
+            AuditLog,
+            BusinessProfile,
             ChatConversation,
-            ReportSchedule,
             EvidenceItem,
+            GeneratedPolicy,
             ImplementationPlan,
             ReadinessAssessment,
+            ReportSchedule,
+            UserRole,
+            UserSession,
         )
 
         for user in test_users:
@@ -96,9 +97,7 @@ async def cleanup_test_users(email_pattern: str = "@example.com", db: Session = 
 
 
 @router.post("/create-test-user")
-async def create_test_user(
-    email: str, password: str = "TestPassword123!", db: Session = Depends(get_db)
-):
+async def create_test_user(email: str, password: str = "TestPassword123!", db: Session = Depends(get_db)):
     """
     Create a test user for testing purposes.
     Only works in test/development environments.
@@ -125,6 +124,7 @@ async def create_test_user(
 
     # Create new test user
     from uuid import uuid4
+
     from api.auth.security import get_password_hash
 
     hashed_password = get_password_hash(password)
@@ -156,7 +156,7 @@ async def clear_rate_limits():
         )
 
     # Import rate limiters
-    from api.middleware.rate_limiter import general_limiter, auth_limiter
+    from api.middleware.rate_limiter import auth_limiter, general_limiter
 
     # Clear rate limit data
     general_limiter.requests.clear()

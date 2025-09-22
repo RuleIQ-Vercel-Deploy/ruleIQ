@@ -3,14 +3,15 @@ Graphiti Temporal Memory Framework for ruleIQ
 Implements time-aware knowledge graphs for regulatory tracking
 """
 
-from typing import Dict, List, Optional, Any
+import json
+import logging
+from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
-import json
-import logging
+from typing import Any, Dict, List, Optional
+
 from neo4j import GraphDatabase
-from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
@@ -597,7 +598,7 @@ class TemporalMemoryIntegration:
         # In production, would use NER or pattern matching
         import hashlib
 
-        return f"REG_{hashlib.md5(text.encode()).hexdigest()[:8]}"
+        return f"REG_{hashlib.md5(text.encode(), usedforsecurity=False).hexdigest()[:8]}"
 
     def _assess_compliance_risk(self, upcoming_changes: List[Dict]) -> str:
         """Assess compliance risk based on upcoming changes"""

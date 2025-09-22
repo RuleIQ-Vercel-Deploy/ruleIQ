@@ -3,12 +3,12 @@ Database services package
 """
 
 from .integration_service import (
-    IntegrationService,
     EvidenceCollectionService,
-    store_integration_config,
-    get_user_integrations,
-    get_integration_by_id,
+    IntegrationService,
     decrypt_integration_credentials,
+    get_integration_by_id,
+    get_user_integrations,
+    store_integration_config,
     update_integration_health,
 )
 

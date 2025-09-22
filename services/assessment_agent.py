@@ -15,20 +15,20 @@ LangSmith tracing is integrated for observability:
 
 import os
 import uuid
-from typing import Dict, List, Optional, Any, TypedDict, Annotated
 from enum import Enum
+from typing import Annotated, Any, Dict, List, Optional, TypedDict
 
-from langgraph.graph import StateGraph, add_messages, END
+from langchain_core.messages import AIMessage, HumanMessage
+from langchain_core.tracers.context import tracing_v2_enabled
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
-from config.settings import get_settings
-from langchain_core.messages import HumanMessage, AIMessage
-from langchain_core.tracers.context import tracing_v2_enabled
+from langgraph.graph import END, StateGraph, add_messages
 from langsmith import traceable
 
+from config.logging_config import get_logger
+from config.settings import get_settings
 from services.ai.assistant import ComplianceAssistant
 from services.ai.circuit_breaker import AICircuitBreaker
-from config.logging_config import get_logger
 
 logger = get_logger(__name__)
 
@@ -158,7 +158,8 @@ class AssessmentAgent:
                 # Convert asyncpg URL to psycopg format if needed
                 if "asyncpg" in database_url:
                     database_url = database_url.replace(
-                        "postgresql+asyncpg://", "postgresql://",
+                        "postgresql+asyncpg://",
+                        "postgresql://",
                     )
 
                 # Import psycopg for PostgreSQL connection
@@ -168,7 +169,9 @@ class AssessmentAgent:
                 # Create connection with proper parameters for AsyncPostgresSaver
                 # AsyncPostgresSaver expects a psycopg connection with autocommit and dict_row
                 conn = await psycopg.AsyncConnection.connect(
-                    database_url, autocommit=True, row_factory=dict_row,
+                    database_url,
+                    autocommit=True,
+                    row_factory=dict_row,
                 )
 
                 # Use the official AsyncPostgresSaver with the connection
@@ -270,14 +273,14 @@ class AssessmentAgent:
         """Initialize the assessment with a friendly introduction."""
         intro_message = AIMessage(
             content="""
-Hello! I'm IQ, your AI compliance assistant. I'm here to help you understand your compliance needs 
+Hello! I'm IQ, your AI compliance assistant. I'm here to help you understand your compliance needs
 and identify areas where we can strengthen your compliance posture.
 
-This assessment will be conversational - I'll ask you questions about your business and compliance 
-practices, and based on your answers, I'll tailor my follow-up questions to get a complete picture 
+This assessment will be conversational - I'll ask you questions about your business and compliance
+practices, and based on your answers, I'll tailor my follow-up questions to get a complete picture
 of your needs.
 
-Let's start with understanding your business context. What type of business do you operate, and 
+Let's start with understanding your business context. What type of business do you operate, and
 what's your primary industry?
         """,
         )
@@ -294,10 +297,7 @@ what's your primary industry?
         messages = state["messages"]
 
         # Use AI to analyze if available
-        if (
-            self.circuit_breaker.is_model_available("gemini-2.5-flash")
-            and not state["fallback_mode"]
-        ):
+        if self.circuit_breaker.is_model_available("gemini-2.5-flash") and not state["fallback_mode"]:
             try:
                 analysis = await self.assistant.analyze_conversation_context(
                     messages=messages[-10:],  # Last 10 messages for context
@@ -315,7 +315,8 @@ what's your primary industry?
 
                 # Determine expertise level from responses
                 state["expertise_level"] = analysis.get(
-                    "expertise_level", "intermediate",
+                    "expertise_level",
+                    "intermediate",
                 )
 
                 # Check if we need follow-up questions
@@ -366,10 +367,7 @@ what's your primary industry?
         questions_answered = state["questions_answered"]
 
         # Try AI-powered question generation
-        if (
-            self.circuit_breaker.is_model_available("gemini-2.5-flash")
-            and not state["fallback_mode"]
-        ):
+        if self.circuit_breaker.is_model_available("gemini-2.5-flash") and not state["fallback_mode"]:
             try:
                 # Build context for question generation
                 context = {
@@ -392,7 +390,8 @@ what's your primary industry?
                 if question_data:
                     question_text = question_data.get("question_text")
                     question_id = question_data.get(
-                        "question_id", f"dyn_{uuid.uuid4().hex[:8]}",
+                        "question_id",
+                        f"dyn_{uuid.uuid4().hex[:8]}",
                     )
 
                     # Add question to conversation
@@ -527,8 +526,8 @@ Thank you for completing the assessment! Here's what I've learned about your com
 **Top Recommendations:**
 {self._format_recommendations(state['recommendations'][:3])}
 
-Based on our conversation, I can see that your organization would benefit from a more structured 
-approach to compliance management. Our platform can help automate many of these processes and 
+Based on our conversation, I can see that your organization would benefit from a more structured
+approach to compliance management. Our platform can help automate many of these processes and
 ensure you stay compliant with minimal effort.
 
 Would you like to schedule a demo to see how we can help address your specific needs?
@@ -571,7 +570,8 @@ Would you like to schedule a demo to see how we can help address your specific n
 
         # Adjust based on expertise level
         expertise_bonus = {"beginner": -10, "intermediate": 0, "expert": 10}.get(
-            state["expertise_level"], 0,
+            state["expertise_level"],
+            0,
         )
 
         base_score += expertise_bonus
@@ -590,9 +590,7 @@ Would you like to schedule a demo to see how we can help address your specific n
         else:
             return "critical"
 
-    def _get_fallback_question(
-        self, state: AssessmentState
-    ) -> Optional[Dict[str, Any]]:
+    def _get_fallback_question(self, state: AssessmentState) -> Optional[Dict[str, Any]]:
         """Get a fallback question when AI is unavailable."""
         fallback_questions = {
             AssessmentPhase.BUSINESS_CONTEXT: [
@@ -650,11 +648,7 @@ Would you like to schedule a demo to see how we can help address your specific n
             AssessmentPhase.RISK_ASSESSMENT,
         ]
 
-        current_index = (
-            phase_order.index(state["current_phase"])
-            if state["current_phase"] in phase_order
-            else 0,
-        )
+        current_index = (phase_order.index(state["current_phase"]) if state["current_phase"] in phase_order else 0,)
 
         if current_index < len(phase_order) - 1:
             state["current_phase"] = phase_order[current_index + 1]
@@ -662,9 +656,7 @@ Would you like to schedule a demo to see how we can help address your specific n
 
         return None
 
-    def _get_fallback_recommendations(
-        self, state: AssessmentState
-    ) -> List[Dict[str, Any]]:
+    def _get_fallback_recommendations(self, state: AssessmentState) -> List[Dict[str, Any]]:
         """Get fallback recommendations when AI is unavailable."""
         score = state["compliance_score"]
 
@@ -701,8 +693,8 @@ Would you like to schedule a demo to see how we can help address your specific n
                 {
                     "priority": "low",
                     "title": "Prepare for Certification",
-                    "description": "Work towards formal compliance certification"
-                }
+                    "description": "Work towards formal compliance certification",
+                },
             ]
         else:
             return [
@@ -714,8 +706,8 @@ Would you like to schedule a demo to see how we can help address your specific n
                 {
                     "priority": "low",
                     "title": "Automate Processes",
-                    "description": "Look for opportunities to automate compliance workflows"
-                }
+                    "description": "Look for opportunities to automate compliance workflows",
+                },
             ]
 
     def _format_list(self, items: List[str]) -> str:
@@ -738,9 +730,7 @@ Would you like to schedule a demo to see how we can help address your specific n
 
         return "\n".join(formatted)
 
-    async def start_assessment(
-        self, session_id: str, lead_id: str, initial_context: Dict[str, Any]
-    ) -> AssessmentState:
+    async def start_assessment(self, session_id: str, lead_id: str, initial_context: Dict[str, Any]) -> AssessmentState:
         """
         Start a new assessment session using LangGraph.
 
@@ -916,7 +906,8 @@ Would you like to schedule a demo to see how we can help address your specific n
 
         # Add user message to state
         user_message = HumanMessage(
-            content=user_response, additional_kwargs={"confidence": confidence},
+            content=user_response,
+            additional_kwargs={"confidence": confidence},
         )
 
         # Try to get existing state from checkpointer first
@@ -953,14 +944,10 @@ Would you like to schedule a demo to see how we can help address your specific n
                 existing_state["messages"].append(user_message)
 
                 # Increment questions answered
-                existing_state["questions_answered"] = (
-                    existing_state.get("questions_answered", 0) + 1,
-                )
+                existing_state["questions_answered"] = (existing_state.get("questions_answered", 0) + 1,)
 
                 # Update fallback mode if needed
-                existing_state["fallback_mode"] = (
-                    not self.circuit_breaker.is_model_available("gemini-2.5-flash"),
-                )
+                existing_state["fallback_mode"] = (not self.circuit_breaker.is_model_available("gemini-2.5-flash"),)
 
                 # Ensure current_phase is an enum value
                 if "current_phase" in existing_state:
@@ -972,9 +959,7 @@ Would you like to schedule a demo to see how we can help address your specific n
                                 phase_value,
                             )
                         except ValueError:
-                            existing_state["current_phase"] = (
-                                AssessmentPhase.BUSINESS_CONTEXT,
-                            )
+                            existing_state["current_phase"] = (AssessmentPhase.BUSINESS_CONTEXT,)
 
                 logger.info(
                     f"Retrieved existing state for session {session_id}: phase={existing_state.get('current_phase')}, answered={existing_state.get('questions_answered')}"  # noqa: E501,

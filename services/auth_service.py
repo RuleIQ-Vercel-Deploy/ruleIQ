@@ -36,7 +36,8 @@ class SessionManager:
         if self._redis_client is None:
             try:
                 self._redis_client = redis.from_url(
-                    settings.redis_url, decode_responses=True,
+                    settings.redis_url,
+                    decode_responses=True,
                 )
                 # Test the connection
                 await self._redis_client.ping()
@@ -48,9 +49,7 @@ class SessionManager:
 
         return self._redis_client
 
-    async def create_session(
-        self, user_id: UUID, token: str, metadata: Optional[Dict] = None
-    ) -> str:
+    async def create_session(self, user_id: UUID, token: str, metadata: Optional[Dict] = None) -> str:
         """Create a new user session."""
         session_id = str(uuid4())
         session_data = {
@@ -159,11 +158,7 @@ class SessionManager:
 
         # Fallback to in-memory
         user_id_str = str(user_id)
-        return [
-            session_id
-            for session_id, data in self._memory_sessions.items()
-            if data.get("user_id") == user_id_str
-        ]
+        return [session_id for session_id, data in self._memory_sessions.items() if data.get("user_id") == user_id_str]
 
     async def invalidate_all_user_sessions(self, user_id: UUID) -> int:
         """Invalidate all sessions for a user."""
@@ -209,9 +204,7 @@ class AuthService:
     def __init__(self) -> None:
         self.session_manager = SessionManager()
 
-    async def create_user_session(
-        self, user: User, token: str, metadata: Optional[Dict] = None
-    ) -> str:
+    async def create_user_session(self, user: User, token: str, metadata: Optional[Dict] = None) -> str:
         """Create a new session for a user after successful authentication."""
         session_metadata = {
             "user_agent": metadata.get("user_agent", "") if metadata else "",
@@ -220,12 +213,12 @@ class AuthService:
         }
 
         return await self.session_manager.create_session(
-            user.id, token, session_metadata,
+            user.id,
+            token,
+            session_metadata,
         )
 
-    async def validate_session(
-        self, session_id: str, db: AsyncSession
-    ) -> Optional[User]:
+    async def validate_session(self, session_id: str, db: AsyncSession) -> Optional[User]:
         """Validate a session and return the associated user."""
         session_data = await self.session_manager.get_session(session_id)
         if not session_data:

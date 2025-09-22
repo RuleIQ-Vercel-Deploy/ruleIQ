@@ -4,7 +4,8 @@ Provides high-performance query interface for compliance data.
 """
 
 import logging
-from typing import Dict, Any, List
+from typing import Any, Dict, List
+
 from neo4j import AsyncGraphDatabase
 
 logger = logging.getLogger(__name__)
@@ -36,7 +37,7 @@ class ComplianceQueryEngine:
         """
         query = """
         MATCH (r:Regulation)
-        WHERE 
+        WHERE
             (r.business_triggers.industry = $industry OR r.business_triggers.industry IS NULL) AND
             (r.business_triggers.processes_payments = $processes_payments OR r.business_triggers.processes_payments IS NULL) AND
             (r.business_triggers.stores_customer_data = $stores_customer_data OR r.business_triggers.stores_customer_data IS NULL) AND
@@ -129,7 +130,7 @@ class ComplianceQueryEngine:
         query = """
         MATCH (r:Regulation)
         WHERE r.automation_potential IS NOT NULL
-        RETURN 
+        RETURN
             avg(r.automation_potential) as average_potential,
             min(r.automation_potential) as min_potential,
             max(r.automation_potential) as max_potential,

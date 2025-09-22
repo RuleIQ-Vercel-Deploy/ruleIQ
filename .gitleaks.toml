@@ -1,0 +1,85 @@
+# Gitleaks Configuration for RuleIQ Project
+
+title = "RuleIQ Gitleaks Config"
+
+[extend]
+# Extend the base config
+useDefault = true
+
+# Custom allowlist patterns for RuleIQ project
+[allowlist]
+description = "RuleIQ project allowlist"
+paths = [
+  '''\.git/''',
+  '''\.env\.example''',
+  '''\.env\.sample''',
+  '''test[s]?/''',
+  '''__pycache__/''',
+  '''node_modules/''',
+  '''venv/''',
+  '''\.venv/''',
+  '''dist/''',
+  '''build/''',
+  '''\.next/''',
+  '''coverage/''',
+  '''\.pytest_cache/''',
+  '''\.mypy_cache/''',
+  '''\.ruff_cache/''',
+  '''migrations/''',
+  '''\.github/workflows/''',
+]
+
+# Custom rules to ignore
+[[rules]]
+id = "generic-api-key"
+description = "Generic API Key"
+regex = '''(?i)(api[_\-\s]?key|apikey)[[:space:]]*[=:][[:space:]]*['\"]?([a-zA-Z0-9\-_]{20,})['\"]?'''
+secretGroup = 2
+[rules.allowlist]
+# Allow test/example keys
+regexes = [
+  '''test[_\-]?secret[_\-]?key''',
+  '''example[_\-]?api[_\-]?key''',
+  '''fake[_\-]?api[_\-]?key''',
+  '''dummy[_\-]?api[_\-]?key''',
+  '''sample[_\-]?api[_\-]?key''',
+  '''SECRET_KEY\s*=\s*["']test-secret-key["']''',
+]
+
+[[rules]]
+id = "jwt-token"
+description = "JWT Token"
+regex = '''eyJ[A-Za-z0-9-_=]+\.eyJ[A-Za-z0-9-_=]+\.[A-Za-z0-9-_.+/=]+'''
+[rules.allowlist]
+# Allow example JWTs
+regexes = [
+  '''example''',
+  '''test''',
+  '''sample''',
+]
+
+# Ignore certain file patterns
+[[rules]]
+id = "private-key"
+description = "Private Key"
+regex = '''-----BEGIN [A-Z ]+ PRIVATE KEY-----'''
+[rules.allowlist]
+paths = [
+  '''test''',
+  '''example''',
+  '''sample''',
+  '''mock''',
+]
+
+# Custom rule for database URLs
+[[rules]]
+id = "database-url"
+description = "Database Connection String"
+regex = '''(?i)(postgres|postgresql|mysql|mongodb|redis|sqlite):\/\/[^:]+:[^@]+@[^\/]+\/[^\s]+'''
+[rules.allowlist]
+regexes = [
+  '''sqlite:\/\/\/[.\/]*test\.db''',
+  '''localhost''',
+  '''127\.0\.0\.1''',
+  '''example\.com''',
+]

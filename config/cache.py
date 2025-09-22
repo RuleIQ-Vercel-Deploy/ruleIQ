@@ -65,7 +65,7 @@ class CacheManager:
         sorted_params = sorted(kwargs.items())
         params_str = '&'.join([f'{k}={v}' for k, v in sorted_params])
         if len(params_str) > DEFAULT_LIMIT:
-            params_hash = hashlib.md5(params_str.encode()).hexdigest()
+            params_hash = hashlib.md5(params_str.encode(), usedforsecurity=False).hexdigest()
             return f'{prefix}:{params_hash}'
         return f'{prefix}:{params_str}'
 

@@ -4,14 +4,16 @@ Token Blacklist Service for JWT Invalidation
 Story 1.1: JWT Validation - Task 3: Token Blacklisting
 Provides Redis-based token blacklisting for logout and token invalidation.
 """
+
 from __future__ import annotations
 
 import json
-from typing import Optional, Dict, Any
-from datetime import datetime, timezone
-import redis
 import logging
 from contextlib import contextmanager
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional
+
+import redis
 
 from config.settings import settings
 
@@ -21,7 +23,7 @@ logger = logging.getLogger(__name__)
 class TokenBlacklistService:
     """
     Manages JWT token blacklisting using Redis for fast lookups.
-    
+
     Features:
     - Add tokens to blacklist on logout
     - Check if token is blacklisted
@@ -47,26 +49,22 @@ class TokenBlacklistService:
             socket_connect_timeout=5,
             socket_timeout=5,
             retry_on_timeout=True,
-            health_check_interval=30
+            health_check_interval=30,
         )
         return redis.Redis(connection_pool=pool, decode_responses=True)
 
     def add_to_blacklist(
-        self,
-        token_jti: str,
-        expiry: datetime,
-        user_id: Optional[str] = None,
-        reason: str = "logout"
+        self, token_jti: str, expiry: datetime, user_id: Optional[str] = None, reason: str = "logout"
     ) -> bool:
         """
         Add a token to the blacklist.
-        
+
         Args:
             token_jti: JWT ID (jti claim) to blacklist
             expiry: Token expiry time for auto-cleanup
             user_id: Optional user ID for audit trail
             reason: Reason for blacklisting
-            
+
         Returns:
             True if successfully blacklisted
         """
@@ -83,7 +81,7 @@ class TokenBlacklistService:
                 "blacklisted_at": datetime.now(timezone.utc).isoformat(),
                 "expiry": expiry.isoformat(),
                 "user_id": user_id,
-                "reason": reason
+                "reason": reason,
             }
 
             # Use pipeline for atomic operations
@@ -120,10 +118,10 @@ class TokenBlacklistService:
     def is_blacklisted(self, token_jti: str) -> bool:
         """
         Check if a token is blacklisted.
-        
+
         Args:
             token_jti: JWT ID to check
-            
+
         Returns:
             True if token is blacklisted
         """
@@ -149,7 +147,7 @@ class TokenBlacklistService:
         except redis.RedisError as e:
             logger.error(f"Redis error checking blacklist for {token_jti}: {e}")
             # Fail open for availability (configurable)
-            return settings.BLACKLIST_FAIL_CLOSED if hasattr(settings, 'BLACKLIST_FAIL_CLOSED') else False
+            return settings.BLACKLIST_FAIL_CLOSED if hasattr(settings, "BLACKLIST_FAIL_CLOSED") else False
         except Exception as e:
             logger.error(f"Unexpected error checking blacklist for {token_jti}: {e}")
             return False
@@ -157,10 +155,10 @@ class TokenBlacklistService:
     def remove_from_blacklist(self, token_jti: str) -> bool:
         """
         Remove a token from the blacklist (admin action).
-        
+
         Args:
             token_jti: JWT ID to remove
-            
+
         Returns:
             True if successfully removed
         """
@@ -197,7 +195,7 @@ class TokenBlacklistService:
     def cleanup_expired(self) -> int:
         """
         Clean up expired entries from the active set.
-        
+
         Returns:
             Number of entries cleaned up
         """

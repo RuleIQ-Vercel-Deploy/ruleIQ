@@ -10,10 +10,10 @@ from __future__ import annotations
 import asyncio
 import logging
 from datetime import datetime, timezone
-from typing import Dict, Any, Optional, Callable, Set
 from enum import Enum
+from typing import Any, Callable, Dict, Optional, Set
 
-from fastapi import Request, HTTPException
+from fastapi import HTTPException, Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 
@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 
 class ServiceState(str, Enum):
     """Service operational state."""
+
     HEALTHY = "healthy"
     DEGRADED = "degraded"
     CIRCUIT_OPEN = "circuit_open"
@@ -30,6 +31,7 @@ class ServiceState(str, Enum):
 
 class CircuitState(str, Enum):
     """Circuit breaker state."""
+
     CLOSED = "closed"
     OPEN = "open"
     HALF_OPEN = "half_open"
@@ -41,11 +43,7 @@ class CircuitBreaker:
     """
 
     def __init__(
-        self,
-        name: str,
-        failure_threshold: int = 5,
-        recovery_timeout: int = 60,
-        expected_exception: type = Exception
+        self, name: str, failure_threshold: int = 5, recovery_timeout: int = 60, expected_exception: type = Exception
     ):
         self.name = name
         self.failure_threshold = failure_threshold
@@ -65,10 +63,7 @@ class CircuitBreaker:
                 self.state = CircuitState.HALF_OPEN
                 self._half_open_calls = 0
             else:
-                raise HTTPException(
-                    status_code=503,
-                    detail=f"Service {self.name} is temporarily unavailable"
-                )
+                raise HTTPException(status_code=503, detail=f"Service {self.name} is temporarily unavailable")
 
         try:
             result = func()
@@ -85,10 +80,7 @@ class CircuitBreaker:
                 self.state = CircuitState.HALF_OPEN
                 self._half_open_calls = 0
             else:
-                raise HTTPException(
-                    status_code=503,
-                    detail=f"Service {self.name} is temporarily unavailable"
-                )
+                raise HTTPException(status_code=503, detail=f"Service {self.name} is temporarily unavailable")
 
         try:
             result = await func()
@@ -129,6 +121,7 @@ class CircuitBreaker:
 
         # Track metrics
         from monitoring.metrics import get_metrics_collector
+
         metrics = get_metrics_collector()
         metrics.track_request_metrics
 
@@ -146,12 +139,7 @@ class ServiceHealthChecker:
         self.read_only_mode = False
         self.degraded_features: Set[str] = set()
 
-    def register_service(
-        self,
-        name: str,
-        health_check: Callable,
-        circuit_breaker: Optional[CircuitBreaker] = None
-    ):
+    def register_service(self, name: str, health_check: Callable, circuit_breaker: Optional[CircuitBreaker] = None):
         """Register a service for health monitoring."""
         self.services[name] = ServiceState.HEALTHY
         self.health_checks[name] = health_check
@@ -177,6 +165,7 @@ class ServiceHealthChecker:
 
             # Update metrics
             from monitoring.metrics import get_metrics_collector
+
             metrics = get_metrics_collector()
             metrics.update_service_availability(service_name, result)
 
@@ -188,6 +177,7 @@ class ServiceHealthChecker:
 
             # Update metrics
             from monitoring.metrics import get_metrics_collector
+
             metrics = get_metrics_collector()
             metrics.update_service_availability(service_name, False)
 
@@ -222,11 +212,7 @@ class ServiceHealthChecker:
 
     def cache_response(self, key: str, response: Dict[str, Any], ttl: int = 300):
         """Cache a response for fallback."""
-        self.cached_responses[key] = {
-            "data": response,
-            "cached_at": datetime.now(timezone.utc),
-            "ttl": ttl
-        }
+        self.cached_responses[key] = {"data": response, "cached_at": datetime.now(timezone.utc), "ttl": ttl}
 
     def get_cached_response(self, key: str) -> Optional[Dict[str, Any]]:
         """Get cached response if available and not expired."""
@@ -255,24 +241,27 @@ class GracefulDegradationMiddleware(BaseHTTPMiddleware):
 
     def _initialize_health_checks(self):
         """Initialize default health checks."""
+
         # Database health check
         async def check_database():
             try:
                 from database.db_setup import get_async_db
+
                 async for db in get_async_db():
                     await db.execute("SELECT 1")
                     return True
-            except:
+            except BaseException:
                 return False
 
         # Redis health check
         async def check_redis():
             try:
                 from config.cache import get_redis_client
+
                 redis_client = await get_redis_client()
                 await redis_client.ping()
                 return True
-            except:
+            except BaseException:
                 return False
 
         # Register services
@@ -287,8 +276,8 @@ class GracefulDegradationMiddleware(BaseHTTPMiddleware):
                 status_code=503,
                 content={
                     "error": "Service is in read-only mode",
-                    "message": "Only read operations are currently available"
-                }
+                    "message": "Only read operations are currently available",
+                },
             )
 
         # Check for degraded features
@@ -298,21 +287,14 @@ class GracefulDegradationMiddleware(BaseHTTPMiddleware):
             cache_key = f"{request.method}:{request.url.path}"
             cached = self.health_checker.get_cached_response(cache_key)
             if cached:
-                return JSONResponse(
-                    status_code=200,
-                    content={
-                        **cached,
-                        "_cached": True,
-                        "_degraded": True
-                    }
-                )
+                return JSONResponse(status_code=200, content={**cached, "_cached": True, "_degraded": True})
             else:
                 return JSONResponse(
                     status_code=503,
                     content={
                         "error": f"Feature {feature} is temporarily unavailable",
-                        "message": "Please try again later"
-                    }
+                        "message": "Please try again later",
+                    },
                 )
 
         # Process request with circuit breaker
@@ -334,14 +316,7 @@ class GracefulDegradationMiddleware(BaseHTTPMiddleware):
                 cache_key = f"{request.method}:{request.url.path}"
                 cached = self.health_checker.get_cached_response(cache_key)
                 if cached:
-                    return JSONResponse(
-                        status_code=200,
-                        content={
-                            **cached,
-                            "_cached": True,
-                            "_fallback": True
-                        }
-                    )
+                    return JSONResponse(status_code=200, content={**cached, "_cached": True, "_fallback": True})
                 raise e
 
         return await call_next(request)
@@ -362,7 +337,7 @@ class GracefulDegradationMiddleware(BaseHTTPMiddleware):
                 "auth": "authentication",
                 "users": "database",
                 "ai": "ai_service",
-                "compliance": "compliance_engine"
+                "compliance": "compliance_engine",
             }
             return service_map.get(parts[1], parts[1])
         return ""
@@ -397,7 +372,8 @@ class FeatureFlagDegradation:
 
         # Update feature flag system
         from config.feature_flags import feature_flags
-        if hasattr(feature_flags, 'disable_flag'):
+
+        if hasattr(feature_flags, "disable_flag"):
             feature_flags.disable_flag(flag_name)
 
     def enable_flag(self, flag_name: str):
@@ -407,7 +383,8 @@ class FeatureFlagDegradation:
 
         # Update feature flag system
         from config.feature_flags import feature_flags
-        if hasattr(feature_flags, 'enable_flag'):
+
+        if hasattr(feature_flags, "enable_flag"):
             feature_flags.enable_flag(flag_name)
 
     def reset_error_count(self, flag_name: str):

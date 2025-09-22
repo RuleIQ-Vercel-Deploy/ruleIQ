@@ -5,14 +5,16 @@ Rate limiting service for AI features.
 Implements per-user daily limits for SMB users.
 """
 
+import json
 from datetime import datetime, timedelta, timezone
 from typing import Dict, Optional
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, func
-from database.user import User
-from database.rbac import AuditLog
-import json
+
 from fastapi import HTTPException, status
+from sqlalchemy import and_, func, select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from database.rbac import AuditLog
+from database.user import User
 
 
 class RateLimitService:
@@ -120,9 +122,7 @@ class RateLimitService:
         }
 
     @classmethod
-    async def track_usage(
-        cls, db: AsyncSession, user: User, feature: str, metadata: Optional[Dict] = None
-    ) -> None:
+    async def track_usage(cls, db: AsyncSession, user: User, feature: str, metadata: Optional[Dict] = None) -> None:
         """
         Track usage of an AI feature for rate limiting.
 
@@ -186,11 +186,7 @@ class RateLimitService:
                 "used": usage_count,
                 "remaining": config["daily"] - usage_count,
                 "window": config["window"],
-                "percentage_used": (
-                    round((usage_count / config["daily"]) * 100, 1)
-                    if config["daily"] > 0
-                    else 0,
-                ),
+                "percentage_used": (round((usage_count / config["daily"]) * 100, 1) if config["daily"] > 0 else 0,),
             }
 
         return {
@@ -201,9 +197,7 @@ class RateLimitService:
         }
 
     @classmethod
-    async def reset_user_limits(
-        cls, db: AsyncSession, user: User, feature: Optional[str] = None
-    ) -> None:
+    async def reset_user_limits(cls, db: AsyncSession, user: User, feature: Optional[str] = None) -> None:
         """
         Reset rate limits for a user (admin function).
 

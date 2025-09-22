@@ -9,17 +9,17 @@ import asyncio
 import time
 from datetime import datetime, timedelta
 from decimal import Decimal
-from typing import Any, Callable, Dict, List, Optional
 from threading import Lock
+from typing import Any, Callable, Dict, List, Optional
 
+from config.logging_config import get_logger
 from services.ai.circuit_breaker import AICircuitBreaker, CircuitBreakerConfig
 from services.ai.cost_management import (
     AICostManager,
-    CostTrackingService,
     BudgetAlertService,
+    CostTrackingService,
 )
 from services.ai.exceptions import AIServiceException, CircuitBreakerException
-from config.logging_config import get_logger
 
 logger = get_logger(__name__)
 
@@ -218,9 +218,9 @@ class CostAwareCircuitBreaker(AICircuitBreaker):
 
                 if current_usage + estimated_cost > daily_limit:
                     raise AIServiceException(
-                        message= (
+                        message=(
                             f"Request would exceed daily budget: ${current_usage + estimated_cost:.2f} > "
-                            f${daily_limit:.2f}"f,
+                            f${daily_limit: .2f}"f,
                         )
                         service_name="Cost-Aware Circuit Breaker",
                         error_code="BUDGET_EXCEEDED",

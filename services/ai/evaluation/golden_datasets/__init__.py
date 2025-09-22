@@ -2,10 +2,11 @@
 """Golden dataset utilities."""
 
 from typing import Any, Dict, List, Optional
+
 from .loaders import (
+    DatasetRegistry,
     GoldenDatasetLoader,
     JSONLLoader,
-    DatasetRegistry,
 )
 from .versioning import (
     DatasetVersion,

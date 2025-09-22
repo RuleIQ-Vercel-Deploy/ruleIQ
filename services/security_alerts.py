@@ -3,18 +3,20 @@ Security Alert Service for SMB owners.
 Sends email notifications for security events like failed login attempts.
 """
 
-from typing import Optional
-from datetime import datetime, timedelta, timezone
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, and_, func
-from database.user import User
-from database.rbac import AuditLog
-import logging
 import asyncio
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-import aiosmtplib
+import logging
 import os
+from datetime import datetime, timedelta, timezone
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from typing import Optional
+
+import aiosmtplib
+from sqlalchemy import and_, func, select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from database.rbac import AuditLog
+from database.user import User
 
 logger = logging.getLogger(__name__)
 
@@ -27,9 +29,7 @@ class SecurityAlertService:
     FAILED_LOGIN_WINDOW = 15  # Within 15 minutes
 
     @classmethod
-    async def check_failed_logins(
-        cls, db: AsyncSession, user: User, ip_address: str
-    ) -> bool:
+    async def check_failed_logins(cls, db: AsyncSession, user: User, ip_address: str) -> bool:
         """
         Check if failed login threshold has been exceeded.
 
@@ -102,16 +102,16 @@ class SecurityAlertService:
                     <p><strong>Time:</strong> {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} UTC</p>
                     {f'<p><strong>Device:</strong> {user_agent}</p>' if user_agent else ''}
                 </div>
-                
+
                 <h3>What should you do?</h3>
                 <ul>
                     <li>If this was you, please ensure you're using the correct password</li>
                     <li>If this wasn't you, please change your password immediately</li>
                     <li>Consider enabling two-factor authentication for added security</li>
                 </ul>
-                
+
                 <p style="margin-top: 30px;">
-                    <a href="{os.getenv('FRONTEND_URL', 'https://app.ruleiq.com')}/reset-password" 
+                    <a href="{os.getenv('FRONTEND_URL', 'https://app.ruleiq.com')}/reset-password"
                        style= (
                            "background-color: #1976d2; color: white; padding: 10px 20px; text-decoration: "
                            "none; border-radius: 5px;"",
@@ -119,9 +119,9 @@ class SecurityAlertService:
                         Reset Password
                     </a>
                 </p>
-                
+
                 <p style="color: #666; font-size: 12px; margin-top: 30px;">
-                    This is an automated security alert from RuleIQ. 
+                    This is an automated security alert from RuleIQ.
                     Please do not reply to this email.
                 </p>
             </body>
@@ -266,16 +266,16 @@ This is an automated security alert from RuleIQ.
         <html>
             <body style="font-family: Arial, sans-serif;">
                 <h2>Password Changed Successfully</h2>
-                
+
                 <p>Your password was successfully changed.</p>
-                
+
                 <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 20px 0;">
                     <p><strong>Changed at:</strong> {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S')} UTC</p>
                     <p><strong>IP Address:</strong> {ip_address}</p>
                 </div>
-                
+
                 <p>If you did not make this change, please contact support immediately.</p>
-                
+
                 <p style="color: #666; font-size: 12px; margin-top: 30px;">
                     This is an automated notification from RuleIQ.
                 </p>

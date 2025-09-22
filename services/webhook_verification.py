@@ -1,21 +1,21 @@
 """
 Webhook Signature Verification Service
-
 Provides secure webhook signature verification for incoming webhooks
 from external services (Stripe, GitHub, etc.)
-import requests
 """
 
-import hmac
-import hashlib
-import time
-import json
-from typing import Optional, Dict, Any, Tuple
-from datetime import datetime, timezone
-import logging
+import requests
 
-from fastapi import HTTPException, status, Request
+import hashlib
+import hmac
+import json
+import logging
+import time
+from datetime import datetime, timezone
+from typing import Any, Dict, Optional, Tuple
+
 import redis.asyncio as redis
+from fastapi import HTTPException, Request, status
 
 from config.settings import settings
 
@@ -110,19 +110,31 @@ class WebhookVerificationService:
             # Verify based on format
             if config["format"] == "timestamp_signature":
                 return await self._verify_timestamp_signature(
-                    payload, signature_header, secret, config,
+                    payload,
+                    signature_header,
+                    secret,
+                    config,
                 )
             elif config["format"] == "sha_signature":
                 return await self._verify_sha_signature(
-                    payload, signature_header, secret, config,
+                    payload,
+                    signature_header,
+                    secret,
+                    config,
                 )
             elif config["format"] == "base64_signature":
                 return await self._verify_base64_signature(
-                    payload, signature_header, secret, config,
+                    payload,
+                    signature_header,
+                    secret,
+                    config,
                 )
             elif config["format"] == "hmac_signature":
                 return await self._verify_hmac_signature(
-                    payload, signature_header, secret, config,
+                    payload,
+                    signature_header,
+                    secret,
+                    config,
                 )
             else:
                 return False, f"Unknown signature format: {config['format']}"
@@ -381,9 +393,7 @@ class WebhookVerificationService:
 
             # Store in Redis with expiration
             log_key = f"webhook_log:{provider}:{int(time.time())}"
-            await self.redis_client.setex(
-                log_key, 86400, json.dumps(log_entry)  # 24 hours,
-            )
+            await self.redis_client.setex(log_key, 86400, json.dumps(log_entry))  # 24 hours,
 
             # Update metrics
             if is_valid:
@@ -396,9 +406,7 @@ class WebhookVerificationService:
 
 
 # Webhook verification dependency
-async def verify_webhook_signature(
-    request: Request, provider: str, secret: Optional[str] = None
-) -> bool:
+async def verify_webhook_signature(request: Request, provider: str, secret: Optional[str] = None) -> bool:
     """
     FastAPI dependency for webhook signature verification.
 
@@ -418,7 +426,9 @@ async def verify_webhook_signature(
         service = WebhookVerificationService(redis_client)
 
         is_valid, error = await service.verify_webhook(
-            request=request, provider=provider, secret=secret,
+            request=request,
+            provider=provider,
+            secret=secret,
         )
 
         # Log the attempt

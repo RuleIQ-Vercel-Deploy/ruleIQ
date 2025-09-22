@@ -7,13 +7,13 @@ preserving user sessions in Redis with automatic backup and restore.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
-from datetime import datetime, timezone
-from typing import Dict, Any, Optional, Set
-from enum import Enum
-import hashlib
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
+from enum import Enum
+from typing import Any, Dict, Optional, Set
 
 import redis.asyncio as redis
 from pydantic import BaseModel, Field
@@ -23,6 +23,7 @@ logger = logging.getLogger(__name__)
 
 class SessionState(str, Enum):
     """Session state enumeration."""
+
     ACTIVE = "active"
     SUSPENDED = "suspended"
     BACKING_UP = "backing_up"
@@ -32,6 +33,7 @@ class SessionState(str, Enum):
 
 class SessionData(BaseModel):
     """User session data model."""
+
     session_id: str
     user_id: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -65,7 +67,7 @@ class SessionManager:
     def __init__(self, redis_client: Optional[redis.Redis] = None):
         self.redis = redis_client
         self.session_ttl = 3600 * 24  # 24 hours
-        self.backup_ttl = 3600 * 72   # 72 hours for backups
+        self.backup_ttl = 3600 * 72  # 72 hours for backups
         self._active_sessions: Set[str] = set()
         self._backup_in_progress = False
         self._restore_in_progress = False
@@ -74,6 +76,7 @@ class SessionManager:
         """Initialize session manager and connect to Redis."""
         if not self.redis:
             from config.cache import get_redis_client
+
             self.redis = await get_redis_client()
 
         # Load active sessions from Redis
@@ -86,9 +89,7 @@ class SessionManager:
             pattern = "session:*"
             cursor = 0
             while True:
-                cursor, keys = await self.redis.scan(
-                    cursor, match=pattern, count=100
-                )
+                cursor, keys = await self.redis.scan(cursor, match=pattern, count=100)
                 for key in keys:
                     session_id = key.decode().replace("session:", "")
                     self._active_sessions.add(session_id)
@@ -101,14 +102,10 @@ class SessionManager:
     async def create_session(self, user_id: str, data: Dict[str, Any] = None) -> SessionData:
         """Create a new user session."""
         import uuid
+
         session_id = str(uuid.uuid4())
 
-        session = SessionData(
-            session_id=session_id,
-            user_id=user_id,
-            data=data or {},
-            state=SessionState.ACTIVE
-        )
+        session = SessionData(session_id=session_id, user_id=user_id, data=data or {}, state=SessionState.ACTIVE)
         session.checksum = session.calculate_checksum()
 
         # Store in Redis
@@ -117,6 +114,7 @@ class SessionManager:
 
         # Track metrics
         from monitoring.metrics import get_metrics_collector
+
         metrics = get_metrics_collector()
         metrics.update_session_count(len(self._active_sessions))
 
@@ -183,6 +181,7 @@ class SessionManager:
 
             # Update metrics
             from monitoring.metrics import get_metrics_collector
+
             metrics = get_metrics_collector()
             metrics.update_session_count(len(self._active_sessions))
 
@@ -257,7 +256,7 @@ class SessionManager:
             "total": len(self._active_sessions),
             "backed_up": 0,
             "failed": 0,
-            "start_time": datetime.now(timezone.utc)
+            "start_time": datetime.now(timezone.utc),
         }
 
         try:
@@ -284,12 +283,7 @@ class SessionManager:
             return {"status": "already_in_progress"}
 
         self._restore_in_progress = True
-        stats = {
-            "total": 0,
-            "restored": 0,
-            "failed": 0,
-            "start_time": datetime.now(timezone.utc)
-        }
+        stats = {"total": 0, "restored": 0, "failed": 0, "start_time": datetime.now(timezone.utc)}
 
         try:
             # Find all backup versions
@@ -298,9 +292,7 @@ class SessionManager:
             session_ids = []
 
             while True:
-                cursor, keys = await self.redis.scan(
-                    cursor, match=pattern, count=100
-                )
+                cursor, keys = await self.redis.scan(cursor, match=pattern, count=100)
                 for key in keys:
                     session_id = key.decode().replace("backup:version:", "")
                     session_ids.append(session_id)
@@ -324,6 +316,7 @@ class SessionManager:
 
             # Update metrics
             from monitoring.metrics import get_metrics_collector
+
             metrics = get_metrics_collector()
             metrics.update_session_count(len(self._active_sessions))
 
@@ -404,9 +397,7 @@ class SessionManager:
             cleaned = 0
 
             while True:
-                cursor, keys = await self.redis.scan(
-                    cursor, match=pattern, count=100
-                )
+                cursor, keys = await self.redis.scan(cursor, match=pattern, count=100)
                 for key in keys:
                     ttl = await self.redis.ttl(key)
                     # Remove backups older than 72 hours
@@ -442,7 +433,7 @@ class SessionManager:
             "active_sessions": active_count,
             "average_session_age_seconds": avg_age,
             "backup_in_progress": self._backup_in_progress,
-            "restore_in_progress": self._restore_in_progress
+            "restore_in_progress": self._restore_in_progress,
         }
 
 

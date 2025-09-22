@@ -8,16 +8,17 @@ Manages the approval process for agent suggestions, including:
 - Approval/rejection flow
 """
 
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timedelta
-from uuid import uuid4
-from enum import Enum
 import asyncio
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import Any, Dict, List, Optional
+from uuid import uuid4
 
 
 class ApprovalState(Enum):
     """States for approval requests"""
+
     PENDING = "pending"
     APPROVED = "approved"
     REJECTED = "rejected"
@@ -28,6 +29,7 @@ class ApprovalState(Enum):
 @dataclass
 class ApprovalRequest:
     """Represents an approval request"""
+
     id: str = field(default_factory=lambda: str(uuid4()))
     suggestion_id: str = ""
     user_id: str = ""
@@ -70,11 +72,11 @@ class ApprovalWorkflow:
         rationale: str,
         risk_level: str = "low",
         timeout: Optional[timedelta] = None,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
     ) -> ApprovalRequest:
         """
         Create a new approval request
-        
+
         Args:
             suggestion_id: ID of the suggestion requiring approval
             user_id: ID of the user to request approval from
@@ -84,10 +86,10 @@ class ApprovalWorkflow:
             risk_level: Risk level assessment
             timeout: Optional custom timeout
             metadata: Additional metadata
-        
+
         Returns:
             Created ApprovalRequest
-        
+
         Raises:
             ValueError: If max pending requests exceeded
         """
@@ -105,7 +107,7 @@ class ApprovalWorkflow:
             rationale=rationale,
             risk_level=risk_level,
             expires_at=datetime.utcnow() + timeout,
-            metadata=metadata or {}
+            metadata=metadata or {},
         )
 
         # Store request
@@ -115,26 +117,19 @@ class ApprovalWorkflow:
         self.approval_callbacks[request.id] = asyncio.Event()
 
         # Schedule timeout
-        self.timeout_tasks[request.id] = asyncio.create_task(
-            self._handle_timeout(request.id, timeout)
-        )
+        self.timeout_tasks[request.id] = asyncio.create_task(self._handle_timeout(request.id, timeout))
 
         return request
 
-    async def approve_request(
-        self,
-        request_id: str,
-        approved_by: str,
-        approval_note: Optional[str] = None
-    ) -> bool:
+    async def approve_request(self, request_id: str, approved_by: str, approval_note: Optional[str] = None) -> bool:
         """
         Approve a pending request
-        
+
         Args:
             request_id: ID of the request to approve
             approved_by: ID of the approving user
             approval_note: Optional approval note
-        
+
         Returns:
             True if approved successfully
         """
@@ -170,20 +165,15 @@ class ApprovalWorkflow:
 
         return True
 
-    async def reject_request(
-        self,
-        request_id: str,
-        rejected_by: str,
-        reason: Optional[str] = None
-    ) -> bool:
+    async def reject_request(self, request_id: str, rejected_by: str, reason: Optional[str] = None) -> bool:
         """
         Reject a pending request
-        
+
         Args:
             request_id: ID of the request to reject
             rejected_by: ID of the rejecting user
             reason: Optional rejection reason
-        
+
         Returns:
             True if rejected successfully
         """
@@ -218,10 +208,10 @@ class ApprovalWorkflow:
     async def cancel_request(self, request_id: str) -> bool:
         """
         Cancel a pending request
-        
+
         Args:
             request_id: ID of the request to cancel
-        
+
         Returns:
             True if cancelled successfully
         """
@@ -252,19 +242,16 @@ class ApprovalWorkflow:
         return True
 
     async def bulk_approve(
-        self,
-        request_ids: List[str],
-        approved_by: str,
-        approval_note: Optional[str] = None
+        self, request_ids: List[str], approved_by: str, approval_note: Optional[str] = None
     ) -> Dict[str, bool]:
         """
         Approve multiple requests at once
-        
+
         Args:
             request_ids: List of request IDs to approve
             approved_by: ID of the approving user
             approval_note: Optional approval note for all
-        
+
         Returns:
             Dictionary mapping request IDs to success status
         """
@@ -273,24 +260,18 @@ class ApprovalWorkflow:
 
         results = {}
         for request_id in request_ids:
-            results[request_id] = await self.approve_request(
-                request_id, approved_by, approval_note
-            )
+            results[request_id] = await self.approve_request(request_id, approved_by, approval_note)
 
         return results
 
-    async def wait_for_approval(
-        self,
-        request_id: str,
-        timeout: Optional[timedelta] = None
-    ) -> ApprovalState:
+    async def wait_for_approval(self, request_id: str, timeout: Optional[timedelta] = None) -> ApprovalState:
         """
         Wait for a request to be approved or rejected
-        
+
         Args:
             request_id: ID of the request to wait for
             timeout: Optional timeout override
-        
+
         Returns:
             Final ApprovalState
         """
@@ -348,17 +329,15 @@ class ApprovalWorkflow:
                 del self.approval_callbacks[request_id]
 
     def get_pending_requests(
-        self,
-        user_id: Optional[str] = None,
-        risk_level: Optional[str] = None
+        self, user_id: Optional[str] = None, risk_level: Optional[str] = None
     ) -> List[ApprovalRequest]:
         """
         Get pending approval requests
-        
+
         Args:
             user_id: Optional filter by user
             risk_level: Optional filter by risk level
-        
+
         Returns:
             List of pending requests
         """
@@ -373,19 +352,16 @@ class ApprovalWorkflow:
         return requests
 
     def get_request_history(
-        self,
-        user_id: Optional[str] = None,
-        state: Optional[ApprovalState] = None,
-        limit: int = 100
+        self, user_id: Optional[str] = None, state: Optional[ApprovalState] = None, limit: int = 100
     ) -> List[ApprovalRequest]:
         """
         Get historical approval requests
-        
+
         Args:
             user_id: Optional filter by user
             state: Optional filter by state
             limit: Maximum number of results
-        
+
         Returns:
             List of historical requests
         """
@@ -402,7 +378,7 @@ class ApprovalWorkflow:
     def cancel_all_pending(self) -> int:
         """
         Cancel all pending requests (emergency stop)
-        
+
         Returns:
             Number of requests cancelled
         """
@@ -427,7 +403,7 @@ class ApprovalWorkflow:
                 "rejected": 0,
                 "timeout": 0,
                 "cancelled": 0,
-                "approval_rate": 0.0
+                "approval_rate": 0.0,
             }
 
         approved = sum(1 for r in self.completed_requests if r.state == ApprovalState.APPROVED)
@@ -442,5 +418,5 @@ class ApprovalWorkflow:
             "rejected": rejected,
             "timeout": timeout,
             "cancelled": cancelled,
-            "approval_rate": approved / total_completed if total_completed > 0 else 0.0
+            "approval_rate": approved / total_completed if total_completed > 0 else 0.0,
         }

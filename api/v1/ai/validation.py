@@ -1,22 +1,18 @@
 """API endpoints for AI response validation."""
 
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks, status
-from typing import List, Optional, Dict, Any
-from datetime import datetime
 import asyncio
 import logging
+from datetime import datetime
+from typing import Any, Dict, List, Optional
 
-from services.rag_validator import RAGValidator, ValidationResult
-from models.validation import (
-    ValidationRequest,
-    BatchValidationRequest,
-    BatchValidationResult,
-    ReviewPriority
-)
-from middleware.circuit_breaker import CircuitBreaker
-from middleware.jwt_auth_v2 import jwt_required, get_current_user
-from database.connection import get_db
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status
 from sqlalchemy.orm import Session
+
+from database.connection import get_db
+from middleware.circuit_breaker import CircuitBreaker
+from middleware.jwt_auth_v2 import get_current_user, jwt_required
+from models.validation import BatchValidationRequest, BatchValidationResult, ReviewPriority, ValidationRequest
+from services.rag_validator import RAGValidator, ValidationResult
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -27,6 +23,7 @@ router = APIRouter(prefix="/api/v1/ai", tags=["AI Validation"])
 # Initialize validator (singleton)
 _validator_instance = None
 
+
 def get_validator() -> RAGValidator:
     """Get or create validator instance."""
     global _validator_instance
@@ -34,12 +31,9 @@ def get_validator() -> RAGValidator:
         _validator_instance = RAGValidator(cache_enabled=True)
     return _validator_instance
 
+
 # Initialize circuit breaker for validation service
-validation_circuit_breaker = CircuitBreaker(
-    failure_threshold=5,
-    recovery_timeout=60,
-    expected_exception=Exception
-)
+validation_circuit_breaker = CircuitBreaker(failure_threshold=5, recovery_timeout=60, expected_exception=Exception)
 
 
 @router.post("/validate", response_model=ValidationResult)
@@ -49,11 +43,11 @@ async def validate_response(
     background_tasks: BackgroundTasks,
     current_user: dict = Depends(get_current_user),
     validator: RAGValidator = Depends(get_validator),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ) -> ValidationResult:
     """
     Validate a single AI response against the knowledge base.
-    
+
     Returns confidence scores and validation status.
     """
     try:
@@ -66,36 +60,22 @@ async def validate_response(
 
             # Perform validation
             result = await validator.validate_response(
-                response=request.response_text,
-                context=context,
-                response_id=str(request.request_id)
+                response=request.response_text, context=context, response_id=str(request.request_id)
             )
 
             # Schedule audit logging in background
-            background_tasks.add_task(
-                log_validation_audit,
-                db,
-                request,
-                result,
-                current_user
-            )
+            background_tasks.add_task(log_validation_audit, db, request, result, current_user)
 
             # Schedule human review if needed
             if result.requires_human_review:
-                background_tasks.add_task(
-                    create_review_request,
-                    db,
-                    request,
-                    result
-                )
+                background_tasks.add_task(create_review_request, db, request, result)
 
             return result
 
     except Exception as e:
         logger.error(f"Validation error: {str(e)}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Validation service error: {str(e)}"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Validation service error: {str(e)}"
         )
 
 
@@ -106,20 +86,17 @@ async def validate_batch(
     background_tasks: BackgroundTasks,
     current_user: dict = Depends(get_current_user),
     validator: RAGValidator = Depends(get_validator),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ) -> BatchValidationResult:
     """
     Validate multiple AI responses in batch.
-    
+
     Maximum 10 responses per batch.
     """
     try:
         # Validate batch size
         if len(batch_request.responses) > 10:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Maximum 10 responses per batch"
-            )
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Maximum 10 responses per batch")
 
         # Prepare responses and contexts
         responses = [req.response_text for req in batch_request.responses]
@@ -135,16 +112,14 @@ async def validate_batch(
         try:
             results = await asyncio.wait_for(
                 validator.validate_batch(
-                    responses=responses,
-                    contexts=contexts,
-                    max_parallel=batch_request.max_parallel
+                    responses=responses, contexts=contexts, max_parallel=batch_request.max_parallel
                 ),
-                timeout=batch_request.timeout_seconds
+                timeout=batch_request.timeout_seconds,
             )
         except asyncio.TimeoutError:
             raise HTTPException(
                 status_code=status.HTTP_408_REQUEST_TIMEOUT,
-                detail=f"Batch validation timeout after {batch_request.timeout_seconds} seconds"
+                detail=f"Batch validation timeout after {batch_request.timeout_seconds} seconds",
             )
 
         # Calculate batch statistics
@@ -162,18 +137,11 @@ async def validate_batch(
             requiring_review=requiring_review,
             average_confidence=total_confidence / len(results) if results else 0,
             total_processing_time_ms=total_time,
-            results=[r.model_dump() for r in results]
+            results=[r.model_dump() for r in results],
         )
 
         # Schedule batch audit logging
-        background_tasks.add_task(
-            log_batch_validation_audit,
-            db,
-            batch_request,
-            batch_result,
-            results,
-            current_user
-        )
+        background_tasks.add_task(log_batch_validation_audit, db, batch_request, batch_result, results, current_user)
 
         return batch_result
 
@@ -182,32 +150,25 @@ async def validate_batch(
     except Exception as e:
         logger.error(f"Batch validation error: {str(e)}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Batch validation error: {str(e)}"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Batch validation error: {str(e)}"
         )
 
 
 @router.get("/validation-metrics")
 @jwt_required
 async def get_validation_metrics(
-    current_user: dict = Depends(get_current_user),
-    validator: RAGValidator = Depends(get_validator)
+    current_user: dict = Depends(get_current_user), validator: RAGValidator = Depends(get_validator)
 ) -> Dict[str, Any]:
     """Get current validation service metrics."""
     try:
         metrics = validator.get_metrics()
         health = await validator.health_check()
 
-        return {
-            "metrics": metrics.model_dump(),
-            "health": health,
-            "timestamp": datetime.utcnow().isoformat()
-        }
+        return {"metrics": metrics.model_dump(), "health": health, "timestamp": datetime.utcnow().isoformat()}
     except Exception as e:
         logger.error(f"Error getting metrics: {str(e)}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error retrieving metrics: {str(e)}"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Error retrieving metrics: {str(e)}"
         )
 
 
@@ -218,7 +179,7 @@ async def get_review_queue(
     status: Optional[str] = "pending",
     limit: int = 20,
     current_user: dict = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ) -> List[Dict[str, Any]]:
     """Get items from human review queue."""
     try:
@@ -233,10 +194,7 @@ async def get_review_queue(
             query = query.filter(HumanReviewQueue.status == status)
 
         # Order by priority score and creation time
-        items = query.order_by(
-            HumanReviewQueue.priority_score.desc(),
-            HumanReviewQueue.created_at
-        ).limit(limit).all()
+        items = query.order_by(HumanReviewQueue.priority_score.desc(), HumanReviewQueue.created_at).limit(limit).all()
 
         return [
             {
@@ -247,7 +205,7 @@ async def get_review_queue(
                 "failure_reasons": item.failure_reasons,
                 "status": item.status,
                 "created_at": item.created_at.isoformat(),
-                "assigned_to": item.assigned_to
+                "assigned_to": item.assigned_to,
             }
             for item in items
         ]
@@ -255,8 +213,7 @@ async def get_review_queue(
     except Exception as e:
         logger.error(f"Error getting review queue: {str(e)}")
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error retrieving review queue: {str(e)}"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Error retrieving review queue: {str(e)}"
         )
 
 
@@ -268,23 +225,19 @@ async def complete_review(
     notes: Optional[str] = None,
     corrections: Optional[List[str]] = None,
     current_user: dict = Depends(get_current_user),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
 ) -> Dict[str, Any]:
     """Complete a human review of validation."""
     try:
-        from models.validation_audit import HumanReviewQueue
         import uuid
 
+        from models.validation_audit import HumanReviewQueue
+
         # Find review item
-        review = db.query(HumanReviewQueue).filter(
-            HumanReviewQueue.review_id == uuid.UUID(review_id)
-        ).first()
+        review = db.query(HumanReviewQueue).filter(HumanReviewQueue.review_id == uuid.UUID(review_id)).first()
 
         if not review:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Review item not found"
-            )
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Review item not found")
 
         # Update review
         review.status = "completed"
@@ -300,7 +253,7 @@ async def complete_review(
             "review_id": review_id,
             "status": "completed",
             "decision": decision,
-            "completed_at": review.completed_at.isoformat()
+            "completed_at": review.completed_at.isoformat(),
         }
 
     except HTTPException:
@@ -309,22 +262,17 @@ async def complete_review(
         logger.error(f"Error completing review: {str(e)}")
         db.rollback()
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error completing review: {str(e)}"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Error completing review: {str(e)}"
         )
 
 
 # Background task functions
-async def log_validation_audit(
-    db: Session,
-    request: ValidationRequest,
-    result: ValidationResult,
-    user: dict
-):
+async def log_validation_audit(db: Session, request: ValidationRequest, result: ValidationResult, user: dict):
     """Log validation to audit table."""
     try:
-        from models.validation_audit import ValidationAudit
         import hashlib
+
+        from models.validation_audit import ValidationAudit
 
         audit_entry = ValidationAudit(
             validation_id=result.response_id,
@@ -346,7 +294,7 @@ async def log_validation_audit(
             cache_hit=result.metadata.get("cache_hit", False),
             matched_regulations=result.matched_regulations,
             regulation_count=len(result.matched_regulations),
-            metadata=result.metadata
+            metadata=result.metadata,
         )
 
         db.add(audit_entry)
@@ -357,11 +305,7 @@ async def log_validation_audit(
         db.rollback()
 
 
-async def create_review_request(
-    db: Session,
-    request: ValidationRequest,
-    result: ValidationResult
-):
+async def create_review_request(db: Session, request: ValidationRequest, result: ValidationResult):
     """Create human review request for low confidence validation."""
     try:
         from models.validation_audit import HumanReviewQueue
@@ -387,11 +331,10 @@ async def create_review_request(
             priority_score=priority_score,
             confidence_score=result.confidence_score,
             failure_reasons=[
-                {"reason": r.value, "description": f"Validation failed: {r.value}"}
-                for r in result.failure_reasons
+                {"reason": r.value, "description": f"Validation failed: {r.value}"} for r in result.failure_reasons
             ],
             response_text=request.response_text,
-            suggested_corrections=[]
+            suggested_corrections=[],
         )
 
         db.add(review_request)
@@ -407,7 +350,7 @@ async def log_batch_validation_audit(
     batch_request: BatchValidationRequest,
     batch_result: BatchValidationResult,
     results: List[ValidationResult],
-    user: dict
+    user: dict,
 ):
     """Log batch validation to audit table."""
     for i, result in enumerate(results):

@@ -1,15 +1,14 @@
 """Trust Progression Algorithm for agent autonomy management."""
 
-from datetime import datetime, timedelta, timezone
-from typing import Dict, List, Optional, Any, Tuple
-from enum import IntEnum, Enum
-import statistics
 import logging
-from dataclasses import dataclass, field
+import statistics
 from collections import deque
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta, timezone
+from enum import Enum, IntEnum
+from typing import Any, Dict, List, Optional, Tuple
 
 from pydantic import BaseModel, Field
-
 
 logger = logging.getLogger(__name__)
 
@@ -71,7 +70,7 @@ class PromotionThresholds(BaseModel):
 class TrustProgressionAlgorithm:
     """
     Algorithm for tracking and progressing user trust levels.
-    
+
     Monitors user behavior, calculates trust scores, and manages
     trust level transitions with comprehensive safety checks.
     """
@@ -79,32 +78,18 @@ class TrustProgressionAlgorithm:
     # Promotion thresholds for each level
     PROMOTION_THRESHOLDS = {
         TrustLevel.L1_ASSISTED: PromotionThresholds(
-            min_score=70.0,
-            min_actions=100,
-            min_days_active=30,
-            min_approval_rate=0.90
+            min_score=70.0, min_actions=100, min_days_active=30, min_approval_rate=0.90
         ),
         TrustLevel.L2_SUPERVISED: PromotionThresholds(
-            min_score=85.0,
-            min_actions=500,
-            min_days_active=60,
-            min_approval_rate=0.95
+            min_score=85.0, min_actions=500, min_days_active=60, min_approval_rate=0.95
         ),
         TrustLevel.L3_AUTONOMOUS: PromotionThresholds(
-            min_score=95.0,
-            min_actions=1000,
-            min_days_active=90,
-            min_approval_rate=0.98
-        )
+            min_score=95.0, min_actions=1000, min_days_active=90, min_approval_rate=0.98
+        ),
     }
 
     # Scoring weights
-    SCORE_WEIGHTS = {
-        "approval_rate": 0.40,
-        "success_rate": 0.30,
-        "consistency": 0.20,
-        "complexity": 0.10
-    }
+    SCORE_WEIGHTS = {"approval_rate": 0.40, "success_rate": 0.30, "consistency": 0.20, "complexity": 0.10}
 
     # Time decay parameters
     TIME_DECAY_WINDOW_DAYS = 90
@@ -130,11 +115,11 @@ class TrustProgressionAlgorithm:
         was_successful: Optional[bool] = None,
         complexity: float = 0.5,
         execution_time_ms: Optional[float] = None,
-        metadata: Optional[Dict[str, Any]] = None
+        metadata: Optional[Dict[str, Any]] = None,
     ) -> None:
         """
         Track a user action for trust scoring.
-        
+
         Args:
             action_type: Type of action performed
             was_approved: Whether action was approved
@@ -154,36 +139,26 @@ class TrustProgressionAlgorithm:
             "complexity": complexity,
             "execution_time_ms": execution_time_ms,
             "trust_level": self.current_trust_level,
-            "metadata": metadata or {}
+            "metadata": metadata or {},
         }
         self.action_history.append(action_record)
 
         # Update metrics
         if was_approved:
-            self.metrics_history.append(
-                BehaviorMetric(MetricType.APPROVAL_RATE, 1.0)
-            )
+            self.metrics_history.append(BehaviorMetric(MetricType.APPROVAL_RATE, 1.0))
         else:
-            self.metrics_history.append(
-                BehaviorMetric(MetricType.APPROVAL_RATE, 0.0)
-            )
+            self.metrics_history.append(BehaviorMetric(MetricType.APPROVAL_RATE, 0.0))
 
         if was_successful is not None:
             success_value = 1.0 if was_successful else 0.0
-            self.metrics_history.append(
-                BehaviorMetric(MetricType.SUCCESS_RATE, success_value)
-            )
+            self.metrics_history.append(BehaviorMetric(MetricType.SUCCESS_RATE, success_value))
 
             # Track error rate
             if not was_successful:
-                self.metrics_history.append(
-                    BehaviorMetric(MetricType.ERROR_RATE, 1.0)
-                )
+                self.metrics_history.append(BehaviorMetric(MetricType.ERROR_RATE, 1.0))
 
         # Track complexity handling
-        self.metrics_history.append(
-            BehaviorMetric(MetricType.COMPLEXITY_SCORE, complexity)
-        )
+        self.metrics_history.append(BehaviorMetric(MetricType.COMPLEXITY_SCORE, complexity))
 
         # Check for anomalies
         if await self.anomaly_detector.check_anomaly(action_record):
@@ -192,7 +167,7 @@ class TrustProgressionAlgorithm:
     def calculate_trust_score(self) -> TrustScore:
         """
         Calculate current trust score based on behavioral metrics.
-        
+
         Returns:
             TrustScore with detailed component scores
         """
@@ -203,7 +178,7 @@ class TrustProgressionAlgorithm:
                 success_rate=0.0,
                 consistency_score=0.0,
                 complexity_score=0.0,
-                time_decay_factor=1.0
+                time_decay_factor=1.0,
             )
 
         # Calculate component scores
@@ -215,11 +190,15 @@ class TrustProgressionAlgorithm:
 
         # Calculate weighted overall score
         overall_score = (
-            approval_rate * self.SCORE_WEIGHTS["approval_rate"] +
-            success_rate * self.SCORE_WEIGHTS["success_rate"] +
-            consistency_score * self.SCORE_WEIGHTS["consistency"] +
-            complexity_score * self.SCORE_WEIGHTS["complexity"]
-        ) * time_decay_factor * 100
+            (
+                approval_rate * self.SCORE_WEIGHTS["approval_rate"]
+                + success_rate * self.SCORE_WEIGHTS["success_rate"]
+                + consistency_score * self.SCORE_WEIGHTS["consistency"]
+                + complexity_score * self.SCORE_WEIGHTS["complexity"]
+            )
+            * time_decay_factor
+            * 100
+        )
 
         return TrustScore(
             overall_score=min(100.0, max(0.0, overall_score)),
@@ -227,15 +206,14 @@ class TrustProgressionAlgorithm:
             success_rate=success_rate,
             consistency_score=consistency_score,
             complexity_score=complexity_score,
-            time_decay_factor=time_decay_factor
+            time_decay_factor=time_decay_factor,
         )
 
     def _calculate_approval_rate(self) -> float:
         """Calculate approval rate from recent actions."""
-        recent_approvals = [
-            m.value for m in self.metrics_history
-            if m.metric_type == MetricType.APPROVAL_RATE
-        ][-100:]  # Last 100 actions
+        recent_approvals = [m.value for m in self.metrics_history if m.metric_type == MetricType.APPROVAL_RATE][
+            -100:
+        ]  # Last 100 actions
 
         if not recent_approvals:
             return 0.0
@@ -244,10 +222,7 @@ class TrustProgressionAlgorithm:
 
     def _calculate_success_rate(self) -> float:
         """Calculate success rate from recent actions."""
-        recent_successes = [
-            m.value for m in self.metrics_history
-            if m.metric_type == MetricType.SUCCESS_RATE
-        ][-100:]
+        recent_successes = [m.value for m in self.metrics_history if m.metric_type == MetricType.SUCCESS_RATE][-100:]
 
         if not recent_successes:
             return 1.0  # Assume success if no data
@@ -283,10 +258,9 @@ class TrustProgressionAlgorithm:
 
     def _calculate_complexity_score(self) -> float:
         """Calculate ability to handle complex tasks."""
-        complexity_metrics = [
-            m.value for m in self.metrics_history
-            if m.metric_type == MetricType.COMPLEXITY_SCORE
-        ][-50:]
+        complexity_metrics = [m.value for m in self.metrics_history if m.metric_type == MetricType.COMPLEXITY_SCORE][
+            -50:
+        ]
 
         if not complexity_metrics:
             return 0.0
@@ -295,16 +269,10 @@ class TrustProgressionAlgorithm:
         avg_complexity = statistics.mean(complexity_metrics)
 
         # Get success rate for complex tasks
-        complex_actions = [
-            a for a in self.action_history[-50:]
-            if a.get("complexity", 0) > 0.7
-        ]
+        complex_actions = [a for a in self.action_history[-50:] if a.get("complexity", 0) > 0.7]
 
         if complex_actions:
-            complex_success_rate = sum(
-                1 for a in complex_actions
-                if a.get("successful", False)
-            ) / len(complex_actions)
+            complex_success_rate = sum(1 for a in complex_actions if a.get("successful", False)) / len(complex_actions)
         else:
             complex_success_rate = 0.5
 
@@ -317,30 +285,25 @@ class TrustProgressionAlgorithm:
 
         # Find oldest relevant action
         cutoff_date = datetime.now(timezone.utc) - timedelta(days=self.TIME_DECAY_WINDOW_DAYS)
-        recent_actions = [
-            a for a in self.action_history
-            if a["timestamp"] > cutoff_date
-        ]
+        recent_actions = [a for a in self.action_history if a["timestamp"] > cutoff_date]
 
         if not recent_actions:
             return 0.5  # Heavy decay if no recent activity
 
         # Calculate activity ratio
-        days_since_first_action = (
-            datetime.now(timezone.utc) - self.account_created_date
-        ).days
+        days_since_first_action = (datetime.now(timezone.utc) - self.account_created_date).days
 
         if days_since_first_action > self.TIME_DECAY_WINDOW_DAYS:
             # Apply monthly decay
             months_inactive = (days_since_first_action - self.TIME_DECAY_WINDOW_DAYS) / 30
-            return self.TIME_DECAY_FACTOR ** months_inactive
+            return self.TIME_DECAY_FACTOR**months_inactive
 
         return 1.0
 
     async def check_promotion_eligibility(self) -> Tuple[bool, Optional[TrustLevel], List[str]]:
         """
         Check if user is eligible for trust level promotion.
-        
+
         Returns:
             Tuple of (eligible, next_level, reasons)
         """
@@ -354,33 +317,23 @@ class TrustProgressionAlgorithm:
 
         # Check cooldown period
         if self.last_promotion_date:
-            days_since_promotion = (
-                datetime.now(timezone.utc) - self.last_promotion_date
-            ).days
+            days_since_promotion = (datetime.now(timezone.utc) - self.last_promotion_date).days
             if days_since_promotion < thresholds.cooldown_days:
-                reasons.append(
-                    f"Cooldown period: {thresholds.cooldown_days - days_since_promotion} days remaining"
-                )
+                reasons.append(f"Cooldown period: {thresholds.cooldown_days - days_since_promotion} days remaining")
 
         # Check trust score
         current_score = self.calculate_trust_score()
         if current_score.overall_score < thresholds.min_score:
-            reasons.append(
-                f"Trust score too low: {current_score.overall_score:.1f} < {thresholds.min_score}"
-            )
+            reasons.append(f"Trust score too low: {current_score.overall_score:.1f} < {thresholds.min_score}")
 
         # Check total actions
         if self.total_actions < thresholds.min_actions:
-            reasons.append(
-                f"Insufficient actions: {self.total_actions} < {thresholds.min_actions}"
-            )
+            reasons.append(f"Insufficient actions: {self.total_actions} < {thresholds.min_actions}")
 
         # Check days active
         days_active = (datetime.now(timezone.utc) - self.account_created_date).days
         if days_active < thresholds.min_days_active:
-            reasons.append(
-                f"Account too new: {days_active} < {thresholds.min_days_active} days"
-            )
+            reasons.append(f"Account too new: {days_active} < {thresholds.min_days_active} days")
 
         # Check approval rate
         if current_score.approval_rate < thresholds.min_approval_rate:
@@ -390,8 +343,7 @@ class TrustProgressionAlgorithm:
 
         # Check for recent violations
         recent_violations = [
-            v for v in self.violation_history
-            if (datetime.now(timezone.utc) - v["timestamp"]).days < 30
+            v for v in self.violation_history if (datetime.now(timezone.utc) - v["timestamp"]).days < 30
         ]
         if recent_violations:
             reasons.append(f"Recent violations: {len(recent_violations)} in last 30 days")
@@ -399,20 +351,15 @@ class TrustProgressionAlgorithm:
         eligible = len(reasons) == 0
         return eligible, next_level if eligible else None, reasons
 
-    async def promote_trust_level(
-        self,
-        authorized_by: str,
-        reason: str,
-        is_override: bool = False
-    ) -> Dict[str, Any]:
+    async def promote_trust_level(self, authorized_by: str, reason: str, is_override: bool = False) -> Dict[str, Any]:
         """
         Promote user to next trust level.
-        
+
         Args:
             authorized_by: ID of authorizing user/system
             reason: Reason for promotion
             is_override: Whether this is a manual override
-            
+
         Returns:
             Promotion result details
         """
@@ -420,11 +367,7 @@ class TrustProgressionAlgorithm:
         if not is_override:
             eligible, next_level, reasons = await self.check_promotion_eligibility()
             if not eligible:
-                return {
-                    "success": False,
-                    "current_level": self.current_trust_level.name,
-                    "reasons": reasons
-                }
+                return {"success": False, "current_level": self.current_trust_level.name, "reasons": reasons}
         else:
             next_level = TrustLevel(min(self.current_trust_level + 1, TrustLevel.L3_AUTONOMOUS))
 
@@ -437,7 +380,7 @@ class TrustProgressionAlgorithm:
             "reason": reason,
             "is_override": is_override,
             "trust_score": self.calculate_trust_score().overall_score,
-            "total_actions": self.total_actions
+            "total_actions": self.total_actions,
         }
         self.promotion_history.append(promotion_record)
 
@@ -446,57 +389,45 @@ class TrustProgressionAlgorithm:
         self.current_trust_level = next_level
         self.last_promotion_date = datetime.now(timezone.utc)
 
-        logger.info(
-            f"User {self.user_id} promoted from {old_level.name} to {next_level.name}"
-        )
+        logger.info(f"User {self.user_id} promoted from {old_level.name} to {next_level.name}")
 
         return {
             "success": True,
             "previous_level": old_level.name,
             "new_level": next_level.name,
-            "promotion_record": promotion_record
+            "promotion_record": promotion_record,
         }
 
     async def demote_trust_level(
-        self,
-        reason: str,
-        severity: str = "medium",
-        authorized_by: Optional[str] = None
+        self, reason: str, severity: str = "medium", authorized_by: Optional[str] = None
     ) -> Dict[str, Any]:
         """
         Demote user trust level due to violations.
-        
+
         Args:
             reason: Reason for demotion
             severity: Violation severity (low, medium, high, critical)
             authorized_by: ID of authorizing user/system
-            
+
         Returns:
             Demotion result details
         """
         # Determine demotion amount based on severity
-        demotion_levels = {
-            "low": 0,  # Warning only
-            "medium": 1,
-            "high": 2,
-            "critical": 3  # Back to L0
-        }
+        demotion_levels = {"low": 0, "medium": 1, "high": 2, "critical": 3}  # Warning only  # Back to L0
 
         levels_to_demote = demotion_levels.get(severity, 1)
 
         if levels_to_demote == 0:
             # Just record violation
-            self.violation_history.append({
-                "timestamp": datetime.now(timezone.utc),
-                "reason": reason,
-                "severity": severity,
-                "trust_level": self.current_trust_level.name
-            })
-            return {
-                "success": True,
-                "action": "warning",
-                "current_level": self.current_trust_level.name
-            }
+            self.violation_history.append(
+                {
+                    "timestamp": datetime.now(timezone.utc),
+                    "reason": reason,
+                    "severity": severity,
+                    "trust_level": self.current_trust_level.name,
+                }
+            )
+            return {"success": True, "action": "warning", "current_level": self.current_trust_level.name}
 
         # Calculate new level
         new_level_value = max(0, self.current_trust_level - levels_to_demote)
@@ -509,7 +440,7 @@ class TrustProgressionAlgorithm:
             "to_level": new_level.name,
             "reason": reason,
             "severity": severity,
-            "authorized_by": authorized_by or "system"
+            "authorized_by": authorized_by or "system",
         }
         self.violation_history.append(violation_record)
 
@@ -517,16 +448,14 @@ class TrustProgressionAlgorithm:
         old_level = self.current_trust_level
         self.current_trust_level = new_level
 
-        logger.warning(
-            f"User {self.user_id} demoted from {old_level.name} to {new_level.name} - {reason}"
-        )
+        logger.warning(f"User {self.user_id} demoted from {old_level.name} to {new_level.name} - {reason}")
 
         return {
             "success": True,
             "action": "demotion",
             "previous_level": old_level.name,
             "new_level": new_level.name,
-            "violation_record": violation_record
+            "violation_record": violation_record,
         }
 
     async def _handle_anomaly(self, action_record: Dict[str, Any]) -> None:
@@ -534,25 +463,24 @@ class TrustProgressionAlgorithm:
         logger.warning(f"Anomaly detected for user {self.user_id}: {action_record}")
 
         # Add to violation history as potential issue
-        self.violation_history.append({
-            "timestamp": datetime.now(timezone.utc),
-            "type": "anomaly",
-            "action": action_record,
-            "trust_level": self.current_trust_level.name
-        })
+        self.violation_history.append(
+            {
+                "timestamp": datetime.now(timezone.utc),
+                "type": "anomaly",
+                "action": action_record,
+                "trust_level": self.current_trust_level.name,
+            }
+        )
 
         # Consider auto-demotion for repeated anomalies
         recent_anomalies = [
-            v for v in self.violation_history
-            if v.get("type") == "anomaly" and
-            (datetime.now(timezone.utc) - v["timestamp"]).days < 7
+            v
+            for v in self.violation_history
+            if v.get("type") == "anomaly" and (datetime.now(timezone.utc) - v["timestamp"]).days < 7
         ]
 
         if len(recent_anomalies) >= 3:
-            await self.demote_trust_level(
-                reason="Multiple anomalies detected in behavior",
-                severity="medium"
-            )
+            await self.demote_trust_level(reason="Multiple anomalies detected in behavior", severity="medium")
 
     def get_audit_trail(self) -> Dict[str, Any]:
         """Get complete audit trail for user trust progression."""
@@ -564,10 +492,9 @@ class TrustProgressionAlgorithm:
             "account_age_days": (datetime.now(timezone.utc) - self.account_created_date).days,
             "promotion_history": self.promotion_history,
             "violation_history": self.violation_history[-10:],  # Last 10 violations
-            "recent_actions": len([
-                a for a in self.action_history
-                if (datetime.now(timezone.utc) - a["timestamp"]).days < 7
-            ])
+            "recent_actions": len(
+                [a for a in self.action_history if (datetime.now(timezone.utc) - a["timestamp"]).days < 7]
+            ),
         }
 
 
@@ -583,7 +510,7 @@ class AnomalyDetector:
     async def check_anomaly(self, action: Dict[str, Any]) -> bool:
         """
         Check if action represents anomalous behavior.
-        
+
         Returns:
             True if anomaly detected
         """

@@ -5,9 +5,7 @@ from datetime import datetime
 
 from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import JSONB as PG_JSONB
-from sqlalchemy.dialects.postgresql import (
-    UUID as PG_UUID,
-)  # Using JSONB for Dict/List[Dict]
+from sqlalchemy.dialects.postgresql import UUID as PG_UUID  # Using JSONB for Dict/List[Dict]
 
 from .db_setup import Base
 
@@ -22,17 +20,19 @@ class ReadinessAssessment(Base):
     # Replace 'users.id' etc. with actual table.column names if different.
     user_id = Column(PG_UUID(as_uuid=True), ForeignKey("users.id"), nullable=False)
     business_profile_id = Column(
-        PG_UUID(as_uuid=True), ForeignKey("business_profiles.id"), nullable=False,
+        PG_UUID(as_uuid=True),
+        ForeignKey("business_profiles.id"),
+        nullable=False,
     )
     framework_id = Column(
-        PG_UUID(as_uuid=True), ForeignKey("compliance_frameworks.id"), nullable=False,
+        PG_UUID(as_uuid=True),
+        ForeignKey("compliance_frameworks.id"),
+        nullable=False,
     )
 
     # Assessment metadata
     assessment_name = Column(String, nullable=False)
-    framework_name = Column(
-        String, nullable=False
-    )  # Consider if this should be derived from framework_id
+    framework_name = Column(String, nullable=False)  # Consider if this should be derived from framework_id
     assessment_type = Column(String, default="full")  # full, quick, targeted
 
     # Overall scoring
@@ -48,9 +48,7 @@ class ReadinessAssessment(Base):
     # Gap analysis
     identified_gaps = Column(PG_JSONB, default=list)  # Gaps with details and priority
     remediation_plan = Column(PG_JSONB, default=list)  # Prioritized remediation actions
-    quick_wins = Column(
-        PG_JSONB, default=list
-    )  # Easy improvements (stored as list of strings)
+    quick_wins = Column(PG_JSONB, default=list)  # Easy improvements (stored as list of strings)
 
     # Timeline projections
     estimated_readiness_date = Column(DateTime, nullable=True)
@@ -81,7 +79,5 @@ class ReadinessAssessment(Base):
     key_findings = Column(PG_JSONB, default=list)
     next_steps = Column(PG_JSONB, default=list)
 
-    created_at = Column(
-        DateTime, default=datetime.utcnow
-    )  # Use datetime.utcnow for server-side UTC time
+    created_at = Column(DateTime, default=datetime.utcnow)  # Use datetime.utcnow for server-side UTC time
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

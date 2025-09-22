@@ -221,3 +221,7 @@ backup_*/
 
 .vercel
 .scannerwork/
+
+
+#Ignore vscode AI rules
+.github/instructions/codacy.instructions.md

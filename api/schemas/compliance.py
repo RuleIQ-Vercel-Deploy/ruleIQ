@@ -3,30 +3,38 @@ from __future__ import annotations
 
 Compliance framework schemas for API validation.
 """
-from typing import List, Optional, Dict, Any
-from pydantic import BaseModel, Field, validator
+
 from enum import Enum
+from typing import Any, Dict, List, Optional
+
+from pydantic import BaseModel, Field, field_validator, ValidationInfo
+
 
 class FrameworkCategory(str, Enum):
     """Categories of compliance frameworks"""
-    DATA_PROTECTION = 'Data Protection'
-    FINANCIAL_SERVICES = 'Financial Services'
-    HEALTHCARE = 'Healthcare'
-    CYBERSECURITY = 'Cybersecurity'
-    GENERAL = 'General'
+
+    DATA_PROTECTION = "Data Protection"
+    FINANCIAL_SERVICES = "Financial Services"
+    HEALTHCARE = "Healthcare"
+    CYBERSECURITY = "Cybersecurity"
+    GENERAL = "General"
+
 
 class GeographicRegion(str, Enum):
     """Geographic regions for frameworks"""
-    UK = 'UK'
-    ENGLAND = 'England'
-    SCOTLAND = 'Scotland'
-    WALES = 'Wales'
-    NORTHERN_IRELAND = 'Northern Ireland'
-    EU = 'EU'
-    GLOBAL = 'Global'
+
+    UK = "UK"
+    ENGLAND = "England"
+    SCOTLAND = "Scotland"
+    WALES = "Wales"
+    NORTHERN_IRELAND = "Northern Ireland"
+    EU = "EU"
+    GLOBAL = "Global"
+
 
 class UKFrameworkSchema(BaseModel):
     """Schema for UK compliance framework creation/update"""
+
     name: str = Field(..., min_length=1, max_length=100)
     display_name: str = Field(..., min_length=1, max_length=200)
     description: str = Field(..., min_length=10)
@@ -41,26 +49,35 @@ class UKFrameworkSchema(BaseModel):
     relevance_factors: Dict[str, Any] = Field(default_factory=dict)
     complexity_score: int = Field(default=1, ge=1, le=10)
     implementation_time_weeks: int = Field(default=12, ge=1, le=104)
-    estimated_cost_range: str = Field(default='£5,000-£25,000')
-    policy_template: str = Field(default='')
+    estimated_cost_range: str = Field(default="£5,000-£25,000")
+    policy_template: str = Field(default="")
     control_templates: Dict[str, Any] = Field(default_factory=dict)
     evidence_templates: Dict[str, Any] = Field(default_factory=dict)
-    version: str = Field(default='1.0', pattern='^\\d+\\.\\d+(\\.\\d+)?$')
+    version: str = Field(default="1.0", pattern="^\\d+\\.\\d+(\\.\\d+)?$")
     is_active: bool = Field(default=True)
 
-    @validator('geographic_scope')
-    def validate_uk_scope(cls, v) -> Any:
+    @field_validator("geographic_scope")
+    @classmethod
+    def validate_uk_scope(cls, v: List[GeographicRegion]) -> List[GeographicRegion]:
         """Ensure at least one UK region is included"""
-        uk_regions = {GeographicRegion.UK, GeographicRegion.ENGLAND, GeographicRegion.SCOTLAND, GeographicRegion.WALES, GeographicRegion.NORTHERN_IRELAND}
+        uk_regions = {
+            GeographicRegion.UK,
+            GeographicRegion.ENGLAND,
+            GeographicRegion.SCOTLAND,
+            GeographicRegion.WALES,
+            GeographicRegion.NORTHERN_IRELAND,
+        }
         if not set(v) & uk_regions:
-            raise ValueError('UK frameworks must include at least one UK region')
+            raise ValueError("UK frameworks must include at least one UK region")
         return v
 
     class Config:
         use_enum_values = True
 
+
 class FrameworkResponse(BaseModel):
     """Response schema for framework data"""
+
     id: str
     name: str
     display_name: str
@@ -76,27 +93,34 @@ class FrameworkResponse(BaseModel):
     class Config:
         from_attributes = True
 
+
 class FrameworkListResponse(BaseModel):
     """Response schema for framework list"""
+
     frameworks: List[FrameworkResponse]
     total_count: int
     filtered_count: int
     region: Optional[str] = None
     category: Optional[str] = None
 
+
 class FrameworkLoadRequest(BaseModel):
     """Request schema for bulk loading frameworks"""
+
     frameworks: List[UKFrameworkSchema]
     overwrite_existing: bool = Field(default=False)
 
-    @validator('frameworks')
-    def validate_frameworks_not_empty(cls, v) -> Any:
+    @field_validator("frameworks")
+    @classmethod
+    def validate_frameworks_not_empty(cls, v: List[UKFrameworkSchema]) -> List[UKFrameworkSchema]:
         if not v:
-            raise ValueError('At least one framework must be provided')
+            raise ValueError("At least one framework must be provided")
         return v
+
 
 class FrameworkLoadResponse(BaseModel):
     """Response schema for framework loading result"""
+
     success: bool
     loaded_count: int
     skipped_count: int
@@ -106,18 +130,21 @@ class FrameworkLoadResponse(BaseModel):
     errors: List[str]
     total_processed: int
 
+
 class FrameworkQueryParams(BaseModel):
     """Query parameters for framework filtering"""
-    region: Optional[str] = Field(None, description='Filter by geographic region')
-    category: Optional[str] = Field(None, description='Filter by framework category')
-    industry: Optional[str] = Field(None, description='Filter by applicable industry')
+
+    region: Optional[str] = Field(None, description="Filter by geographic region")
+    category: Optional[str] = Field(None, description="Filter by framework category")
+    industry: Optional[str] = Field(None, description="Filter by applicable industry")
     complexity_min: Optional[int] = Field(None, ge=1, le=10)
     complexity_max: Optional[int] = Field(None, ge=1, le=10)
-    active_only: bool = Field(True, description='Include only active frameworks')
+    active_only: bool = Field(True, description="Include only active frameworks")
 
-    @validator('complexity_max')
-    def validate_complexity_range(cls, v, values) -> Any:
-        if v is not None and 'complexity_min' in values and (values['complexity_min'] is not None):
-            if v < values['complexity_min']:
-                raise ValueError('complexity_max must be >= complexity_min')
+    @field_validator("complexity_max")
+    @classmethod
+    def validate_complexity_range(cls, v: Optional[int], info: ValidationInfo) -> Optional[int]:
+        if v is not None and info.data.get("complexity_min") is not None:
+            if v < info.data["complexity_min"]:
+                raise ValueError("complexity_max must be >= complexity_min")
         return v

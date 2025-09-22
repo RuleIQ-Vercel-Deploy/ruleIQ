@@ -14,13 +14,14 @@ Core Features:
 Part of the ruleIQ Agentic Transformation Vision 2025
 """
 
-import json
 import asyncio
+import json
 import logging
+from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta, timezone
-from typing import Dict, List, Any, Optional
-from dataclasses import dataclass, asdict
 from enum import Enum
+from typing import Any, Dict, List, Optional
+
 import redis.asyncio as redis
 
 from services.cache_service import CacheService
@@ -29,18 +30,17 @@ logger = logging.getLogger(__name__)
 
 
 class InteractionType(str, Enum):
-#     ASSESSMENT_START = "assessment_start"  # Unused variable
-#     ASSESSMENT_CONTINUE = "assessment_continue"  # Unused variable
-#     ASSESSMENT_COMPLETE = "assessment_complete"  # Unused variable
-#     POLICY_GENERATION = "policy_generation"  # Unused variable
-#     POLICY_APPROVAL = "policy_approval"  # Unused variable
-#     BUSINESS_PROFILE_UPDATE = "business_profile_update"  # Unused variable
-#     QUESTION_ASKED = "question_asked"  # Unused variable
-#     RECOMMENDATION_ACCEPTED = "recommendation_accepted"  # Unused variable
-#     RECOMMENDATION_REJECTED = "recommendation_rejected"  # Unused variable
-#     AUTOMATION_DELEGATED = "automation_delegated"  # Unused variable
-#     ERROR_ENCOUNTERED = "error_encountered"  # Unused variable
-
+    #     ASSESSMENT_START = "assessment_start"  # Unused variable
+    #     ASSESSMENT_CONTINUE = "assessment_continue"  # Unused variable
+    #     ASSESSMENT_COMPLETE = "assessment_complete"  # Unused variable
+    #     POLICY_GENERATION = "policy_generation"  # Unused variable
+    #     POLICY_APPROVAL = "policy_approval"  # Unused variable
+    #     BUSINESS_PROFILE_UPDATE = "business_profile_update"  # Unused variable
+    #     QUESTION_ASKED = "question_asked"  # Unused variable
+    #     RECOMMENDATION_ACCEPTED = "recommendation_accepted"  # Unused variable
+    #     RECOMMENDATION_REJECTED = "recommendation_rejected"  # Unused variable
+    #     AUTOMATION_DELEGATED = "automation_delegated"  # Unused variable
+    #     ERROR_ENCOUNTERED = "error_encountered"  # Unused variable
 
     """Trust levels for user interactions"""
     LOW = "low"
@@ -50,18 +50,18 @@ class InteractionType(str, Enum):
 
 
 class TrustLevel(str, Enum):
-#     UNKNOWN = "unknown"  # New user, no history  # Unused variable
-#     SKEPTICAL = "skeptical"  # User questions recommendations  # Unused variable
-#     CAUTIOUS = "cautious"  # User reviews before accepting  # Unused variable
-#     TRUSTING = "trusting"  # User accepts most recommendations  # Unused variable
-#     DELEGATING = "delegating"  # User delegates tasks to system  # Unused variable
+    #     UNKNOWN = "unknown"  # New user, no history  # Unused variable
+    #     SKEPTICAL = "skeptical"  # User questions recommendations  # Unused variable
+    #     CAUTIOUS = "cautious"  # User reviews before accepting  # Unused variable
+    #     TRUSTING = "trusting"  # User accepts most recommendations  # Unused variable
+    #     DELEGATING = "delegating"  # User delegates tasks to system  # Unused variable
 
 
 class CommunicationStyle(str, Enum):
-#     FORMAL = "formal"  # Business formal language  # Unused variable
-#     CASUAL = "casual"  # Friendly, conversational  # Unused variable
-#     TECHNICAL = "technical"  # Technical jargon, detailed explanations  # Unused variable
-#     CONCISE = "concise"  # Brief, to-the-point responses  # Unused variable
+    #     FORMAL = "formal"  # Business formal language  # Unused variable
+    #     CASUAL = "casual"  # Friendly, conversational  # Unused variable
+    #     TECHNICAL = "technical"  # Technical jargon, detailed explanations  # Unused variable
+    #     CONCISE = "concise"  # Brief, to-the-point responses  # Unused variable
 
 
 @dataclass

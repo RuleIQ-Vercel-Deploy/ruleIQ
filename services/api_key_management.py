@@ -8,20 +8,21 @@ for B2B partner integrations with comprehensive security features.
 """
 
 import hashlib
-import secrets
-from datetime import datetime, timedelta, timezone
-from typing import Dict, List, Optional, Tuple, Any
-from enum import Enum
-import json
-from dataclasses import dataclass, asdict
-import redis.asyncio as redis
-from sqlalchemy import select, update, and_
-from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import HTTPException, status
 import ipaddress
+import json
+import secrets
+from dataclasses import asdict, dataclass
+from datetime import datetime, timedelta, timezone
+from enum import Enum
+from typing import Any, Dict, List, Optional, Tuple
 
-from models.api_key import APIKey, APIKeyScope, APIKeyUsage
+import redis.asyncio as redis
+from fastapi import HTTPException, status
+from sqlalchemy import and_, select, update
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from config.settings import settings
+from models.api_key import APIKey, APIKeyScope, APIKeyUsage
 from services.security.audit_logging import get_audit_service
 from services.security.encryption import EncryptionService
 
@@ -149,7 +150,9 @@ class APIKeyManager:
         # Add scopes
         for scope in scopes:
             db_scope = APIKeyScope(
-                key_id=key_id, scope=scope, granted_at=datetime.now(timezone.utc),
+                key_id=key_id,
+                scope=scope,
+                granted_at=datetime.now(timezone.utc),
             )
             self.db.add(db_scope)
 
@@ -259,9 +262,7 @@ class APIKeyManager:
 
             # Check origin whitelist
             if metadata.allowed_origins and origin:
-                if not any(
-                    origin.startswith(allowed) for allowed in metadata.allowed_origins
-                ):
+                if not any(origin.startswith(allowed) for allowed in metadata.allowed_origins):
                     return False, None, "Origin not allowed"
 
             # Check scope
@@ -269,9 +270,7 @@ class APIKeyManager:
                 return False, None, f"Missing required scope: {required_scope}"
 
             # Check rate limit
-            if not await self._check_rate_limit(
-                key_id, metadata.rate_limit, metadata.rate_limit_window
-            ):
+            if not await self._check_rate_limit(key_id, metadata.rate_limit, metadata.rate_limit_window):
                 return False, None, "Rate limit exceeded"
 
             # Update usage
@@ -287,9 +286,7 @@ class APIKeyManager:
             )
             return False, None, "Internal validation error"
 
-    async def rotate_api_key(
-        self, key_id: str, expires_old_in_hours: int = 24
-    ) -> Tuple[str, str, APIKeyMetadata]:
+    async def rotate_api_key(self, key_id: str, expires_old_in_hours: int = 24) -> Tuple[str, str, APIKeyMetadata]:
         """
         Rotate an API key, creating a new one and scheduling old key expiration.
         """
@@ -409,9 +406,7 @@ class APIKeyManager:
 
         return success
 
-    async def list_organization_keys(
-        self, organization_id: str, include_revoked: bool = False
-    ) -> List[APIKeyMetadata]:
+    async def list_organization_keys(self, organization_id: str, include_revoked: bool = False) -> List[APIKeyMetadata]:
         """List all API keys for an organization."""
         query = select(APIKey).where(APIKey.organization_id == organization_id)
 
@@ -484,20 +479,14 @@ class APIKeyManager:
             "unique_ips": unique_ips,
             "endpoints": endpoint_counts,
             "daily_usage": daily_counts,
-            "last_used": (
-                usage_records[0].timestamp.isoformat() if usage_records else None,
-            ),
+            "last_used": (usage_records[0].timestamp.isoformat() if usage_records else None,),
         }
 
     # Private helper methods
 
     def _hash_key_secret(self, secret: str) -> str:
         """Hash API key secret for storage."""
-        salt = (
-            settings.API_KEY_SALT.encode()
-            if hasattr(settings, "API_KEY_SALT")
-            else b"default_salt",
-        )
+        salt = (settings.API_KEY_SALT.encode() if hasattr(settings, "API_KEY_SALT") else b"default_salt",)
         return hashlib.pbkdf2_hmac("sha256", secret.encode(), salt, 100000).hex()
 
     def _verify_key_secret(self, secret: str, stored_hash: str) -> bool:
@@ -563,9 +552,7 @@ class APIKeyManager:
         """Track API key usage."""
         # Update last used timestamp in database
         await self.db.execute(
-            update(APIKey)
-            .where(APIKey.key_id == key_id)
-            .values(last_used_at=datetime.now(timezone.utc)),
+            update(APIKey).where(APIKey.key_id == key_id).values(last_used_at=datetime.now(timezone.utc)),
         )
 
         # Record usage

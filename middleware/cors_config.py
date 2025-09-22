@@ -4,18 +4,18 @@ CORS Configuration Middleware for RuleIQ API
 Story 1.3: CORS Configuration Implementation
 Provides secure, environment-specific CORS configuration for frontend-backend communication.
 """
+
 from __future__ import annotations
 
-import os
 import json
 import logging
-from typing import List, Optional, Dict, Any
+import os
+from typing import Any, Dict, List, Optional
 from urllib.parse import urlparse
 
 from fastapi import Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response
-
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 class CORSConfig:
     """
     CORS configuration manager with environment-specific settings.
-    
+
     Features:
     - Environment-specific origin configuration
     - No wildcards in production
@@ -34,11 +34,11 @@ class CORSConfig:
 
     # Development origins
     ORIGINS_DEV = [
-        "http://localhost:3000",      # Next.js default
-        "http://localhost:3001",      # Alternative port
-        "http://127.0.0.1:3000",     # IP-based access
-        "http://localhost:5173",      # Vite default
-        "http://localhost:8080",      # Alternative dev
+        "http://localhost:3000",  # Next.js default
+        "http://localhost:3001",  # Alternative port
+        "http://127.0.0.1:3000",  # IP-based access
+        "http://localhost:5173",  # Vite default
+        "http://localhost:8080",  # Alternative dev
     ]
 
     # Staging origins
@@ -56,15 +56,7 @@ class CORSConfig:
     ]
 
     # Allowed HTTP methods
-    ALLOWED_METHODS = [
-        "GET",
-        "POST",
-        "PUT",
-        "PATCH",
-        "DELETE",
-        "OPTIONS",
-        "HEAD"
-    ]
+    ALLOWED_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"]
 
     # Allowed request headers
     ALLOWED_HEADERS = [
@@ -87,18 +79,15 @@ class CORSConfig:
         "X-Page-Count",
         "X-Current-Page",
         "X-Per-Page",
-
         # Rate limit headers (from Story 1.2)
         "X-RateLimit-Limit",
         "X-RateLimit-Remaining",
         "X-RateLimit-Reset",
         "Retry-After",
-
         # Custom application headers
         "X-Request-ID",
         "X-Response-Time",
         "X-Version",
-
         # File download headers
         "Content-Disposition",
         "Content-Length",
@@ -115,8 +104,7 @@ class CORSConfig:
         self._validate_config()
 
         logger.info(
-            f"CORS initialized for {self.environment} environment with "
-            f"{len(self.allowed_origins)} allowed origins"
+            f"CORS initialized for {self.environment} environment with " f"{len(self.allowed_origins)} allowed origins"
         )
 
     def _get_environment(self) -> str:
@@ -170,15 +158,13 @@ class CORSConfig:
             for origin in self.allowed_origins:
                 if origin == "*" or origin.startswith("http://"):
                     raise ValueError(
-                        f"Insecure origin '{origin}' not allowed in production. "
-                        "Use HTTPS and specific domains only."
+                        f"Insecure origin '{origin}' not allowed in production. " "Use HTTPS and specific domains only."
                     )
 
         # Warn about wildcards in any environment
         if "*" in self.allowed_origins:
             logger.warning(
-                "Wildcard origin (*) detected in CORS configuration. "
-                "This is a security risk and should be avoided."
+                "Wildcard origin (*) detected in CORS configuration. " "This is a security risk and should be avoided."
             )
 
         # Validate origin formats
@@ -194,10 +180,10 @@ class CORSConfig:
     def is_origin_allowed(self, origin: str) -> bool:
         """
         Check if an origin is allowed.
-        
+
         Args:
             origin: Origin header value
-            
+
         Returns:
             True if origin is allowed
         """
@@ -227,10 +213,10 @@ class CORSConfig:
     def get_cors_headers(self, origin: str) -> Dict[str, str]:
         """
         Get CORS headers for response.
-        
+
         Args:
             origin: Request origin
-            
+
         Returns:
             Dictionary of CORS headers
         """
@@ -248,10 +234,10 @@ class CORSConfig:
     def get_preflight_headers(self, origin: str) -> Dict[str, str]:
         """
         Get headers for preflight response.
-        
+
         Args:
             origin: Request origin
-            
+
         Returns:
             Dictionary of preflight headers
         """
@@ -269,7 +255,7 @@ class CORSConfig:
     def to_middleware_kwargs(self) -> Dict[str, Any]:
         """
         Get kwargs for FastAPI CORSMiddleware.
-        
+
         Returns:
             Dictionary of middleware configuration
         """
@@ -286,7 +272,7 @@ class CORSConfig:
 class EnhancedCORSMiddleware:
     """
     Enhanced CORS middleware with logging and security features.
-    
+
     Wraps FastAPI's CORSMiddleware with additional functionality:
     - CORS violation logging
     - Origin spoofing detection
@@ -343,7 +329,7 @@ class EnhancedCORSMiddleware:
                 return Response(
                     status_code=403,
                     content=f"CORS error: Origin '{origin}' not allowed. "
-                    f"Allowed origins: {self.config.allowed_origins}"
+                    f"Allowed origins: {self.config.allowed_origins}",
                 )
             else:
                 # In production, return generic error
@@ -352,17 +338,9 @@ class EnhancedCORSMiddleware:
         # Origin allowed, return preflight response
         headers = self.config.get_preflight_headers(origin)
 
-        return Response(
-            status_code=200,
-            headers=headers
-        )
+        return Response(status_code=200, headers=headers)
 
-    def _log_cors_violation(
-        self,
-        request: Request,
-        origin: str,
-        is_preflight: bool = False
-    ):
+    def _log_cors_violation(self, request: Request, origin: str, is_preflight: bool = False):
         """Log CORS violation for monitoring."""
         self.violation_count += 1
 
@@ -405,26 +383,23 @@ class EnhancedCORSMiddleware:
 def create_cors_middleware(app) -> CORSMiddleware:
     """
     Create and configure CORS middleware for FastAPI app.
-    
+
     Args:
         app: FastAPI application instance
-        
+
     Returns:
         Configured CORSMiddleware
     """
     config = CORSConfig()
 
     # Use FastAPI's built-in CORSMiddleware with our configuration
-    return CORSMiddleware(
-        app,
-        **config.to_middleware_kwargs()
-    )
+    return CORSMiddleware(app, **config.to_middleware_kwargs())
 
 
 def setup_cors(app):
     """
     Setup CORS for FastAPI application.
-    
+
     Args:
         app: FastAPI application instance
     """
@@ -440,7 +415,4 @@ def setup_cors(app):
     )
 
     # Add middleware to app
-    app.add_middleware(
-        CORSMiddleware,
-        **config.to_middleware_kwargs()
-    )
+    app.add_middleware(CORSMiddleware, **config.to_middleware_kwargs())

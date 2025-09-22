@@ -4,9 +4,11 @@ from __future__ import annotations
 Alembic environment configuration
 """
 
-from alembic import context
-from sqlalchemy import engine_from_config, pool
 from logging.config import fileConfig
+
+from sqlalchemy import engine_from_config, pool
+
+from alembic import context
 
 # Import your models here for autogenerate support
 from database.base import Base

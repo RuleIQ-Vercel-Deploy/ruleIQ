@@ -4,11 +4,11 @@ from __future__ import annotations
 Comprehensive input validation and sanitization utilities for ruleIQ backend
 """
 
-import re
 import html
+import logging
+import re
 from typing import Any, Dict, List
 from urllib.parse import urlparse
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,8 @@ class InputValidator:
     # Common patterns
     EMAIL_PATTERN = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
     UUID_PATTERN = re.compile(
-        r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$", re.IGNORECASE,
+        r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+        re.IGNORECASE,
     )
     URL_PATTERN = re.compile(
         r"^https?://"  # http:// or https://

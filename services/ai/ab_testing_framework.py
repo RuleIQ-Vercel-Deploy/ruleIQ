@@ -6,25 +6,25 @@ feature experiments, and compliance effectiveness measurements.
 Includes t-tests, chi-squared tests, and comprehensive experiment management.
 """
 
-import hashlib
 import asyncio
+import hashlib
 import threading
-import numpy as np
 from abc import ABC, abstractmethod
 from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Any, Dict, List, Optional, Tuple, Union, Callable
+from typing import Any, Callable, Dict, List, Optional, Tuple, Union
 from uuid import uuid4
+
+import numpy as np
 from scipy import stats
-from scipy.stats import ttest_ind, chi2_contingency, mannwhitneyu
+from scipy.stats import chi2_contingency, mannwhitneyu, ttest_ind
 
 from config.logging_config import get_logger
-from .analytics_monitor import (
-    MetricType as AnalyticsMetricType,
-    analytics_monitor as _analytics_monitor,
-)
+
+from .analytics_monitor import MetricType as AnalyticsMetricType
+from .analytics_monitor import analytics_monitor as _analytics_monitor
 
 logger = get_logger(__name__)
 
@@ -284,7 +284,7 @@ class ABTestingFramework:
             thread.start()
 
     def _validate_metric_value(self, value: Union[float, int, str, bool],
-                              metric_type: ExperimentMetricType) -> Union[float, int, str, bool]:
+                               metric_type: ExperimentMetricType) -> Union[float, int, str, bool]:
         """Validate and coerce metric value to match expected type.
 
         Args:
@@ -444,7 +444,7 @@ class ABTestingFramework:
             hash_input += ":" + ":".join(strata_values)
 
         # Generate hash and convert to assignment
-        hash_value = int(hashlib.md5(hash_input.encode()).hexdigest(), 16)
+        hash_value = int(hashlib.md5(hash_input.encode(), usedforsecurity=False).hexdigest(), 16)
         assignment_ratio = (hash_value % 10000) / 10000.0
 
         # Comment 4: Explicit variant mapping with deterministic ordering
@@ -829,8 +829,8 @@ class ABTestingFramework:
         return chi2, p_value, "Chi-squared test"
 
     def _compute_confidence_interval(self, test_type: StatisticalTest,
-                                    control_data: np.ndarray, treatment_data: np.ndarray,
-                                    alpha: float) -> Optional[Tuple[float, float]]:
+                                     control_data: np.ndarray, treatment_data: np.ndarray,
+                                     alpha: float) -> Optional[Tuple[float, float]]:
         """Compute confidence interval for the test.
 
         Comment 11: Add numeric stability checks for Welch df calculation.
@@ -879,7 +879,7 @@ class ABTestingFramework:
         config: ExperimentConfig,
         confidence_level: float,
     ) -> StatisticalResult:
-        """Orchestrate statistical test execution using helper methods.
+    """Orchestrate statistical test execution using helper methods.
 
         Comment 8: Refactored into smaller, focused helper methods.
 
@@ -896,22 +896,22 @@ class ABTestingFramework:
         variants = list(variant_data.keys())
 
         if len(variants) != 2:
-            raise ValueError("Currently only supports two-variant experiments")
+    raise ValueError("Currently only supports two-variant experiments")
 
         # Prepare data based on test type
         variants, control_data, treatment_data = self._prepare_data_for_test(variant_data, test_type)
 
         # Run appropriate statistical test
         if test_type == StatisticalTest.T_TEST:
-            statistic, p_value, test_name = self._run_t_test(control_data, treatment_data)
+    statistic, p_value, test_name = self._run_t_test(control_data, treatment_data)
         elif test_type == StatisticalTest.WELCH_T_TEST:
-            statistic, p_value, test_name = self._run_welch(control_data, treatment_data)
+    statistic, p_value, test_name = self._run_welch(control_data, treatment_data)
         elif test_type == StatisticalTest.MANN_WHITNEY:
-            statistic, p_value, test_name = self._run_mann_whitney(control_data, treatment_data)
+    statistic, p_value, test_name = self._run_mann_whitney(control_data, treatment_data)
         elif test_type == StatisticalTest.CHI_SQUARED:
-            statistic, p_value, test_name = self._run_chi_squared(control_data, treatment_data)
+    statistic, p_value, test_name = self._run_chi_squared(control_data, treatment_data)
         else:
-            raise ValueError(f"Unsupported test type: {test_type}")
+    raise ValueError(f"Unsupported test type: {test_type}")
 
         # Calculate effect size based on metric type
         effect_size = self._calculate_effect_size(config.metric_type, control_data, treatment_data, test_type)
@@ -921,69 +921,69 @@ class ABTestingFramework:
 
         # Calculate statistical power
         if test_type != StatisticalTest.CHI_SQUARED:
-            observed_effect_size = abs(effect_size)
+    observed_effect_size = abs(effect_size)
             power = self._calculate_power(
-                observed_effect_size, len(control_data), len(treatment_data), alpha
+               observed_effect_size, len(control_data), len(treatment_data), alpha
             )
-        else:
+            else:
             power = 0.8  # Default for categorical tests
 
-        # Determine significance
-        is_significant = p_value < alpha
-        practical_significance = abs(effect_size) >= config.min_effect_size
+            # Determine significance
+            is_significant = p_value < alpha
+            practical_significance = abs(effect_size) >= config.min_effect_size
 
-        # Generate recommendation
-        recommendation = self._generate_recommendation(
+            # Generate recommendation
+            recommendation = self._generate_recommendation(
             is_significant, practical_significance, effect_size, p_value, power
         )
 
-        # Calculate means and std devs for numeric data
-        if test_type != StatisticalTest.CHI_SQUARED:
-            control_mean = np.mean(control_data)
+            # Calculate means and std devs for numeric data
+            if test_type != StatisticalTest.CHI_SQUARED:
+        control_mean = np.mean(control_data)
             treatment_mean = np.mean(treatment_data)
             control_std = np.std(control_data, ddof=1)
             treatment_std = np.std(treatment_data, ddof=1)
-        else:
+            else:
             # For categorical data, use mode as "mean" and 0 for std
-            control_mean = 0.0
+        control_mean = 0.0
             treatment_mean = 0.0
             control_std = 0.0
             treatment_std = 0.0
 
-        return StatisticalResult(
-            test_name=test_name,
-            statistic=statistic,
-            p_value=p_value,
-            confidence_interval=confidence_interval,
-            effect_size=effect_size,
-            power=power,
-            is_significant=is_significant,
-            practical_significance=practical_significance,
-            recommendation=recommendation,
-            sample_sizes={
+            return StatisticalResult(
+            test_name = test_name,
+            statistic = statistic,
+            p_value = p_value,
+            confidence_interval = confidence_interval,
+            effect_size = effect_size,
+            power = power,
+            is_significant = is_significant,
+            practical_significance = practical_significance,
+            recommendation = recommendation,
+            sample_sizes ={
                 variants[0]: len(control_data),
                 variants[1]: len(treatment_data),
             },
-            means={variants[0]: control_mean, variants[1]: treatment_mean},
-            std_devs={variants[0]: control_std, variants[1]: treatment_std},
-            metadata={
+            means = {variants[0]: control_mean, variants[1]: treatment_mean},
+            std_devs = {variants[0]: control_std, variants[1]: treatment_std},
+            metadata ={
                 "confidence_level": confidence_level,
                 "alpha": alpha,
                 "test_type": test_type.value,
             },
         )
 
-    def _get_category_counts(self, data: List) -> Dict[str, int]:
+        def _get_category_counts(self, data: List) -> Dict[str, int]:
         """Get counts for each category in categorical data."""
         counts = defaultdict(int)
         for value in data:
-            counts[str(value)] += 1
+        counts[str(value)] += 1
         return dict(counts)
 
-    def _calculate_power(
+        def _calculate_power(
         self, effect_size: float, n1: int, n2: int, alpha: float
     ) -> float:
-        """
+    """
         Calculate statistical power for the test.
 
         Args:
@@ -1003,14 +1003,14 @@ class ABTestingFramework:
 
         # Power calculation using non-central t-distribution
         power = (
-            1
+           1
             - stats.nct.cdf(t_critical, n1 + n2 - 2, ncp)
             + stats.nct.cdf(-t_critical, n1 + n2 - 2, ncp),
         )
 
-        return max(0.0, min(1.0, power))
+            return max(0.0, min(1.0, power))
 
-    def _generate_recommendation(
+        def _generate_recommendation(
         self,
         is_significant: bool,
         practical_significance: bool,
@@ -1018,36 +1018,36 @@ class ABTestingFramework:
         p_value: float,
         power: float,
     ) -> str:
-        """Generate actionable recommendation based on statistical results."""
+    """Generate actionable recommendation based on statistical results."""
         if is_significant and practical_significance:
-            if effect_size > 0:
-                return (
-                    f"IMPLEMENT: Treatment shows significant improvement "
+    if effect_size > 0:
+    return (
+                   f"IMPLEMENT: Treatment shows significant improvement "
                     f"(p={p_value:.4f}, effect size={effect_size:.3f})"
                 )
-            else:
+                else:
                 return (
-                    f"REJECT: Treatment shows significant degradation "
+                   f"REJECT: Treatment shows significant degradation "
                     f"(p={p_value:.4f}, effect size={effect_size:.3f})"
                 )
 
-        elif is_significant and not practical_significance:
-            return f"INCONCLUSIVE: Statistically significant but effect too small (effect size={effect_size:.3f})"
+                elif is_significant and not practical_significance:
+                return f"INCONCLUSIVE: Statistically significant but effect too small (effect size={effect_size:.3f})"
 
-        elif not is_significant and power < 0.8:
-            return f"INSUFFICIENT DATA: Low power ({power:.2f}). Collect more data or increase effect size."
+                elif not is_significant and power < 0.8:
+                return f"INSUFFICIENT DATA: Low power ({power:.2f}). Collect more data or increase effect size."
 
-        elif not is_significant and power >= 0.8:
-            return f"NO EFFECT: Well-powered test shows no significant difference (power={power:.2f})"
+                elif not is_significant and power >= 0.8:
+                return f"NO EFFECT: Well-powered test shows no significant difference (power={power:.2f})"
 
-        else:
-            return f"CONTINUE MONITORING: p={p_value:.4f}, effect size={effect_size:.3f}, power={power:.2f}"
+                else:
+                return f"CONTINUE MONITORING: p={p_value:.4f}, effect size={effect_size:.3f}, power={power:.2f}"
 
-    def get_experiment_summary(self, experiment_id: str,
-                               limit: Optional[int] = None,
+                def get_experiment_summary(self, experiment_id: str,
+                              limit: Optional[int] = None,
                                offset: int = 0,
                                include_full_data: bool = False) -> Dict[str, Any]:
-        """
+                               """
         Get comprehensive summary of an experiment.
 
         Comment 13: Support pagination and limiting data for large datasets.
@@ -1061,37 +1061,37 @@ class ABTestingFramework:
         Returns:
             Experiment summary including config, data, and results
         """
-        # Comment 10: Use custom exceptions
-        if experiment_id not in self.experiments:
-            raise ExperimentNotFoundError(f"Experiment {experiment_id} not found")
+                               # Comment 10: Use custom exceptions
+                               if experiment_id not in self.experiments:
+                               raise ExperimentNotFoundError(f"Experiment {experiment_id} not found")
 
-        config = self.experiments[experiment_id]
-        # Comment 3 & 13: Use storage backend with pagination
-        if include_full_data:
-            data = self.storage_backend.query(experiment_id)
-            if limit is not None:
-                data = data[offset:offset + limit]
-        else:
+                               config = self.experiments[experiment_id]
+                               # Comment 3 & 13: Use storage backend with pagination
+                               if include_full_data:
+                               data = self.storage_backend.query(experiment_id)
+                               if limit is not None:
+                               data = data[offset:offset + limit]
+                                   else:
             # Only get count for metadata
             data = []  # Don't load full data
             total_count = self.storage_backend.count(experiment_id)
-        results = self.experiment_results[experiment_id]
-        status = self.experiment_status[experiment_id]
+                                   results = self.experiment_results[experiment_id]
+                                   status = self.experiment_status[experiment_id]
 
-        # Calculate summary statistics efficiently
-        if include_full_data and data:
+                                   # Calculate summary statistics efficiently
+                                   if include_full_data and data:
             variant_counts = defaultdict(int)
             for data_point in data:
                 variant_counts[data_point.variant] += 1
 
             start_time = min(d.timestamp for d in data) if data else None
             end_time = max(d.timestamp for d in data) if data else None
-        else:
+                                   else:
             variant_counts = {}
             start_time = None
             end_time = None
 
-        summary = {
+                                   summary = {
             "experiment_id": experiment_id,
             "config": {
                 "name": config.name,
@@ -1132,26 +1132,27 @@ class ABTestingFramework:
             ],
         }
 
-        return summary
+            return summary
 
 
-# Global instance
-_ab_testing_framework: Optional[ABTestingFramework] = None
+        # Global instance
+        _ab_testing_framework: Optional[ABTestingFramework] = None
 
 
-def get_ab_testing_framework() -> ABTestingFramework:
-    """Get global A/B testing framework instance."""
-    global _ab_testing_framework
-    if _ab_testing_framework is None:
+        def get_ab_testing_framework() -> ABTestingFramework:
+        """Get global A/B testing framework instance."""
+        global _ab_testing_framework
+        if _ab_testing_framework is None:
         _ab_testing_framework = ABTestingFramework()
-    return _ab_testing_framework
+        return _ab_testing_framework
 
 
-def create_ai_model_experiment(
+        def create_ai_model_experiment(
     model_a: str,
     model_b: str,
     metric: str = "response_quality",
     min_effect_size: float = 0.1,
+
 ) -> Dict[str, Any]:
     """
     Create an A/B experiment for comparing AI models.
@@ -1168,22 +1169,22 @@ def create_ai_model_experiment(
     framework = get_ab_testing_framework()
 
     config = ExperimentConfig(
-        name=f"AI Model Comparison: {model_a} vs {model_b}",
-        description=f"Compare performance of {model_a} (control) against {model_b} (treatment)",
-        experiment_type=ExperimentType.AI_MODEL_COMPARISON,
-        metric_type=ExperimentMetricType.CONTINUOUS,
-        primary_metric=metric,
-        secondary_metrics=["response_time", "cost_per_request"],
-        min_effect_size=min_effect_size,
-        traffic_split={"control": 0.5, "treatment": 0.5},
-        min_sample_size=200,
-        tags=["ai_model", "performance", model_a, model_b],
+        name = f"AI Model Comparison: {model_a} vs {model_b}",
+        description = f"Compare performance of {model_a} (control) against {model_b} (treatment)",
+        experiment_type = ExperimentType.AI_MODEL_COMPARISON,
+        metric_type = ExperimentMetricType.CONTINUOUS,
+        primary_metric = metric,
+        secondary_metrics = ["response_time", "cost_per_request"],
+        min_effect_size = min_effect_size,
+        traffic_split = {"control": 0.5, "treatment": 0.5},
+        min_sample_size = 200,
+        tags = ["ai_model", "performance", model_a, model_b],
     )
 
-    return framework.create_experiment(config)
+        return framework.create_experiment(config)
 
 
-def create_prompt_optimization_experiment(
+    def create_prompt_optimization_experiment(
     original_prompt: str, optimized_prompt: str, metric: str = "task_completion_rate"
 ) -> Dict[str, Any]:
     """
@@ -1200,16 +1201,16 @@ def create_prompt_optimization_experiment(
     framework = get_ab_testing_framework()
 
     config = ExperimentConfig(
-        name="Prompt Optimization Experiment",
-        description="Compare effectiveness of original vs optimized prompt",
-        experiment_type=ExperimentType.PROMPT_OPTIMIZATION,
-        metric_type=ExperimentMetricType.BINARY,
-        primary_metric=metric,
-        secondary_metrics=["user_satisfaction", "response_relevance"],
-        min_effect_size=0.05,  # 5% improvement in completion rate
-        traffic_split={"control": 0.5, "treatment": 0.5},
-        min_sample_size=500,
-        tags=["prompt", "optimization", "completion_rate"],
+        name = "Prompt Optimization Experiment",
+        description = "Compare effectiveness of original vs optimized prompt",
+        experiment_type = ExperimentType.PROMPT_OPTIMIZATION,
+        metric_type = ExperimentMetricType.BINARY,
+        primary_metric = metric,
+        secondary_metrics = ["user_satisfaction", "response_relevance"],
+        min_effect_size = 0.05,  # 5% improvement in completion rate
+        traffic_split = {"control": 0.5, "treatment": 0.5},
+        min_sample_size = 500,
+        tags = ["prompt", "optimization", "completion_rate"],
     )
 
-    return framework.create_experiment(config)
+        return framework.create_experiment(config)
