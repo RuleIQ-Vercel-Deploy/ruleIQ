@@ -89,6 +89,12 @@ class AutomaticRollbackSystem:
         self.current_version: Optional[DeploymentVersion] = None
         self.previous_version: Optional[DeploymentVersion] = None
         self.rollback_history: List[Dict[str, Any]] = []
+        
+        # Health check configuration
+        self.healthcheck_base_url = os.environ.get('HEALTHCHECK_URL', 'http://localhost:8000')
+        self.healthcheck_endpoint = os.environ.get('HEALTHCHECK_ENDPOINT', '/health')
+        self.green_healthcheck_url = os.environ.get('GREEN_HEALTHCHECK_URL', 'http://localhost:8001')
+        self.blue_healthcheck_url = os.environ.get('BLUE_HEALTHCHECK_URL', 'http://localhost:8000')
 
         # Metric thresholds
         self.thresholds = {
@@ -185,73 +191,238 @@ class AutomaticRollbackSystem:
     async def _blue_green_deploy(self, docker_image: str) -> bool:
         """Perform blue-green deployment switch."""
         try:
-            # Update docker-compose with new image
-            compose_file = "docker-compose.yml"
+            # Determine deployment mode from environment
+            deployment_mode = os.environ.get('DEPLOYMENT_MODE', 'blue-green')
+            
+            if deployment_mode == 'single-stack':
+                return await self._single_stack_deploy(docker_image)
+            
+            # Default blue-green deployment using existing compose files
+            compose_file = "docker-compose.prod.yml"
+            if not os.path.exists(compose_file):
+                compose_file = "docker-compose.yml"
+                if not os.path.exists(compose_file):
+                    logger.error("No compose file found for deployment")
+                    return False
+
             backup_file = "docker-compose.backup.yml"
+            override_file = "docker-compose.override.yml"
 
             # Backup current compose file
             subprocess.run(["cp", compose_file, backup_file], check=True)
 
-            # Update image in compose file
-            # In production, you'd use a proper YAML parser
-            subprocess.run([
-                "sed", "-i",
-                f"s|image:.*ruleiq.*|image: {docker_image}|g",
-                compose_file
-            ], check=True)
+            # Create override file with new image using labeled approach
+            override_content = f"""version: '3.8'
+services:
+  app:
+    image: {docker_image}
+    labels:
+      - "deployment=green"
+  celery_worker:
+    image: {docker_image}
+    labels:
+      - "deployment=green"
+  celery_beat:
+    image: {docker_image}
+    labels:
+      - "deployment=green"
+"""
+            with open(override_file, 'w') as f:
+                f.write(override_content)
 
-            # Deploy new version to green environment
-            subprocess.run([
-                "docker-compose",
-                "-f", "docker-compose.green.yml",
-                "up", "-d"
-            ], check=True)
-
-            # Wait for health check
-            await asyncio.sleep(10)
-
-            # Check if green is healthy
-            if await self._check_green_health():
-                # Switch traffic to green
+            try:
+                # Deploy new version using docker compose (not docker-compose)
                 subprocess.run([
-                    "docker-compose",
-                    "-f", "docker-compose.nginx.yml",
-                    "exec", "nginx",
-                    "nginx", "-s", "reload"
+                    "docker", "compose",
+                    "-f", compose_file,
+                    "-f", override_file,
+                    "up", "-d", "--no-deps",
+                    "app", "celery_worker", "celery_beat"
                 ], check=True)
 
-                # Stop blue after successful switch
-                await asyncio.sleep(5)
-                subprocess.run([
-                    "docker-compose",
-                    "-f", "docker-compose.blue.yml",
-                    "down"
-                ], check=True)
+                # Wait for health check with readiness probe
+                await self._wait_for_readiness(self.green_healthcheck_url)
 
-                return True
-            else:
-                # Green unhealthy, keep blue running
-                subprocess.run([
-                    "docker-compose",
-                    "-f", "docker-compose.green.yml",
-                    "down"
-                ], check=True)
-                return False
+                # Check if green is healthy
+                if await self._check_green_health():
+                    # Reload nginx configuration if service exists
+                    if self._service_exists_in_compose("nginx", compose_file):
+                        subprocess.run([
+                            "docker", "compose",
+                            "-f", compose_file,
+                            "exec", "-T", "nginx",
+                            "nginx", "-s", "reload"
+                        ], check=True)
+                        logger.info("NGINX configuration reloaded")
+
+                    logger.info("Blue-green deployment successful")
+                    return True
+                else:
+                    # Green unhealthy, rollback to previous state
+                    logger.warning("New deployment unhealthy, rolling back")
+                    subprocess.run([
+                        "docker", "compose",
+                        "-f", backup_file,
+                        "up", "-d", "--no-deps",
+                        "app", "celery_worker", "celery_beat"
+                    ], check=True)
+                    return False
+            finally:
+                # Clean up override file
+                if os.path.exists(override_file):
+                    os.remove(override_file)
 
         except subprocess.CalledProcessError as e:
             logger.error(f"Blue-green deployment failed: {e}")
+            # Attempt cleanup
+            if 'override_file' in locals() and os.path.exists(override_file):
+                os.remove(override_file)
+            return False
+        except Exception as e:
+            logger.error(f"Unexpected error during deployment: {e}")
+            return False
+
+    def _service_exists_in_compose(self, service_name: str, compose_file: str) -> bool:
+        """Check if a service exists in docker-compose file."""
+        try:
+            result = subprocess.run(
+                ["docker", "compose", "-f", compose_file, "config", "--services"],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            services = result.stdout.strip().split('\n')
+            return service_name in services
+        except subprocess.CalledProcessError:
+            return False
+
+    async def _single_stack_deploy(self, docker_image: str) -> bool:
+        """Perform single-stack deployment with rolling update."""
+        try:
+            compose_file = os.environ.get('COMPOSE_FILE', 'docker-compose.prod.yml')
+            if not os.path.exists(compose_file):
+                compose_file = 'docker-compose.yml'
+                if not os.path.exists(compose_file):
+                    logger.error("No compose file found for single-stack deployment")
+                    return False
+
+            # Create temporary override file instead of modifying original
+            override_file = "docker-compose.deploy.yml"
+            override_content = f"""version: '3.8'
+services:
+  app:
+    image: {docker_image}
+  celery_worker:
+    image: {docker_image}
+  celery_beat:
+    image: {docker_image}
+"""
+            with open(override_file, 'w') as f:
+                f.write(override_content)
+
+            try:
+                # Perform rolling update using docker compose
+                subprocess.run([
+                    "docker", "compose",
+                    "-f", compose_file,
+                    "-f", override_file,
+                    "up", "-d", "--no-deps", "app"
+                ], check=True)
+            finally:
+                # Clean up override file
+                if os.path.exists(override_file):
+                    os.remove(override_file)
+            
+            # Wait for readiness
+            await self._wait_for_readiness(self.healthcheck_base_url)
+            
+            # Verify health
+            return await self._check_health(self.healthcheck_base_url)
+            
+        except Exception as e:
+            logger.error(f"Single-stack deployment failed: {e}")
+            return False
+    
+    async def _wait_for_readiness(self, base_url: str, max_wait: int = 60) -> bool:
+        """Wait for service to be ready with exponential backoff."""
+        import aiohttp
+        
+        readiness_endpoint = os.environ.get('READINESS_ENDPOINT', self.healthcheck_endpoint)
+        readiness_url = f"{base_url}{readiness_endpoint}"
+        
+        logger.info(f"Waiting for service readiness at: {readiness_url}")
+        
+        wait_time = 2
+        total_waited = 0
+        
+        while total_waited < max_wait:
+            try:
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(readiness_url, timeout=aiohttp.ClientTimeout(total=5)) as response:
+                        if response.status == 200:
+                            logger.info(f"Service is ready after {total_waited} seconds")
+                            return True
+            except Exception as e:
+                logger.debug(f"Readiness check failed: {e}")
+            
+            await asyncio.sleep(wait_time)
+            total_waited += wait_time
+            wait_time = min(wait_time * 1.5, 10)  # Exponential backoff with cap
+        
+        logger.error(f"Service failed to become ready after {max_wait} seconds")
+        return False
+    
+    async def _check_health(self, base_url: str) -> bool:
+        """Generic health check for any deployment."""
+        import aiohttp
+        
+        health_url = f"{base_url}{self.healthcheck_endpoint}"
+        
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(health_url, timeout=aiohttp.ClientTimeout(total=10)) as response:
+                    return response.status == 200
+        except Exception as e:
+            logger.error(f"Health check failed at {health_url}: {e}")
             return False
 
     async def _check_green_health(self) -> bool:
         """Check health of green deployment."""
         import aiohttp
 
+        health_url = f"{self.green_healthcheck_url}{self.healthcheck_endpoint}"
+        logger.info(f"Checking green deployment health at: {health_url}")
+        
         try:
             async with aiohttp.ClientSession() as session:
-                async with session.get("http://localhost:8001/health") as response:
+                async with session.get(health_url, timeout=aiohttp.ClientTimeout(total=10)) as response:
                     return response.status == 200
-        except:
+        except Exception as e:
+            logger.error(f"Green health check failed: {e}")
             return False
+
+    async def _check_nginx_upstream_health(self, upstream_name: str = "app") -> bool:
+        """Check NGINX upstream health status."""
+        nginx_status_url = os.environ.get('NGINX_STATUS_URL')
+        
+        if not nginx_status_url:
+            return True  # Skip if not configured
+        
+        import aiohttp
+        
+        try:
+            async with aiohttp.ClientSession() as session:
+                async with session.get(f"{nginx_status_url}/upstream/{upstream_name}") as response:
+                    if response.status == 200:
+                        data = await response.json()
+                        # Check if majority of upstreams are healthy
+                        healthy = sum(1 for u in data.get('peers', []) if u.get('state') == 'up')
+                        total = len(data.get('peers', []))
+                        return healthy > total / 2
+            return True
+        except Exception as e:
+            logger.warning(f"NGINX upstream health check failed: {e}")
+            return True  # Don't block on NGINX checks
 
     async def trigger_rollback(self, reason: RollbackReason) -> bool:
         """Trigger automatic rollback to previous version."""
@@ -316,11 +487,26 @@ class AutomaticRollbackSystem:
     async def _perform_rollback(self) -> bool:
         """Perform the actual rollback."""
         try:
-            # Quick switch using blue-green
+            backup_file = "docker-compose.backup.yml"
+            compose_file = "docker-compose.prod.yml"
+
+            # Check if backup file exists
+            if not os.path.exists(backup_file):
+                logger.warning("No backup file available for rollback")
+                # Try to use the main compose file if no backup exists
+                if not os.path.exists(compose_file):
+                    compose_file = "docker-compose.yml"
+                    if not os.path.exists(compose_file):
+                        logger.error("No compose files available for rollback")
+                        return False
+                backup_file = compose_file
+
+            # Quick switch using docker compose (not docker-compose)
             subprocess.run([
-                "docker-compose",
-                "-f", "docker-compose.backup.yml",
-                "up", "-d", "--force-recreate"
+                "docker", "compose",
+                "-f", backup_file,
+                "up", "-d", "--force-recreate",
+                "app", "celery_worker", "celery_beat"
             ], check=True, timeout=60)
 
             # Restore database if needed
@@ -339,48 +525,126 @@ class AutomaticRollbackSystem:
             return False
 
     async def _needs_db_rollback(self) -> bool:
-        """Check if database rollback is needed."""
-        # Check for migration markers
+        """Check if database rollback is needed by comparing Alembic versions."""
         try:
             from database.db_setup import get_async_db
             async for db in get_async_db():
+                # Get current alembic version
                 result = await db.execute(
-                    "SELECT version FROM migrations ORDER BY applied_at DESC LIMIT 1"
+                    "SELECT version_num FROM alembic_version LIMIT 1"
                 )
-                latest = result.scalar()
-                return latest != self.previous_version.config_snapshot.get("db_version")
-        except:
+                current_version = result.scalar()
+                
+                # Compare with previous snapshot version
+                previous_version = self.previous_version.config_snapshot.get("db_version")
+                
+                # If versions differ, we need to rollback
+                if current_version and previous_version and current_version != previous_version:
+                    logger.info(f"Database rollback needed: current={current_version}, target={previous_version}")
+                    return True
+                return False
+        except Exception as e:
+            logger.warning(f"Failed to check if database rollback needed: {e}")
             return False
 
     async def _rollback_database(self):
-        """Rollback database migrations."""
+        """Rollback database migrations using Alembic."""
         try:
             target_version = self.previous_version.config_snapshot.get("db_version")
-            subprocess.run([
+            
+            if not target_version or target_version == "unknown":
+                logger.warning("No valid target version for database rollback")
+                return
+            
+            # Use alembic downgrade to target version
+            # Note: target_version should be the Alembic revision ID
+            result = subprocess.run([
                 "alembic", "downgrade", target_version
-            ], check=True, timeout=30)
+            ], check=True, capture_output=True, text=True, timeout=30)
+            
             logger.info(f"Database rolled back to version {target_version}")
-        except Exception as e:
+            if result.stdout:
+                logger.debug(f"Alembic output: {result.stdout}")
+                
+        except subprocess.TimeoutExpired:
+            logger.error("Database rollback timed out after 30 seconds")
+            raise
+        except subprocess.CalledProcessError as e:
             logger.error(f"Database rollback failed: {e}")
+            if e.stderr:
+                logger.error(f"Alembic error: {e.stderr}")
+            raise
+        except Exception as e:
+            logger.error(f"Unexpected error during database rollback: {e}")
+            raise
+
+    async def _rollback_database_with_api(self):
+        """Alternative: Rollback database using Alembic API directly."""
+        try:
+            from alembic import command
+            from alembic.config import Config
+            
+            target_version = self.previous_version.config_snapshot.get("db_version")
+            
+            if not target_version or target_version == "unknown":
+                logger.warning("No valid target version for database rollback")
+                return
+            
+            # Load Alembic configuration
+            alembic_cfg = Config("alembic.ini")
+            
+            # Set database URL from environment if needed
+            from database.db_setup import get_database_url
+            alembic_cfg.set_main_option("sqlalchemy.url", get_database_url())
+            
+            # Perform the downgrade using Alembic API
+            command.downgrade(alembic_cfg, target_version)
+            
+            logger.info(f"Database rolled back to version {target_version} using Alembic API")
+            
+        except Exception as e:
+            logger.error(f"Database rollback via API failed: {e}")
+            raise
+        except subprocess.CalledProcessError as e:
+            logger.error(f"Database rollback failed: {e}")
+            if e.stderr:
+                logger.error(f"Alembic error: {e.stderr}")
+            raise
+        except Exception as e:
+            logger.error(f"Unexpected error during database rollback: {e}")
+            raise
 
     async def _clear_caches(self):
         """Clear all caches after rollback."""
         try:
-            from config.cache import get_redis_client
-            redis_client = await get_redis_client()
-            await redis_client.flushdb()
-            logger.info("Caches cleared")
+            from config.cache import get_cache_manager
+            cache = await get_cache_manager()
+            
+            if cache.redis_client:
+                # Clear Redis cache if available
+                await cache.redis_client.flushdb()
+                logger.info("Redis cache cleared successfully")
+            else:
+                # Clear in-memory cache
+                cache.memory_cache.clear()
+                logger.info("In-memory cache cleared successfully")
+                
         except Exception as e:
             logger.error(f"Cache clear failed: {e}")
+            # Continue rollback even if cache clear fails
 
     async def _verify_rollback(self) -> bool:
         """Verify rollback was successful."""
         try:
             # Check health endpoint
             import aiohttp
+            health_url = f"{self.healthcheck_base_url}{self.healthcheck_endpoint}"
+            logger.info(f"Verifying rollback health at: {health_url}")
+            
             async with aiohttp.ClientSession() as session:
-                async with session.get("http://localhost:8000/health") as response:
+                async with session.get(health_url, timeout=aiohttp.ClientTimeout(total=10)) as response:
                     if response.status != 200:
+                        logger.error(f"Health check returned status: {response.status}")
                         return False
 
             # Check key metrics are back to normal
@@ -389,7 +653,8 @@ class AutomaticRollbackSystem:
 
             return error_rate < 0.05  # Below 5% error rate
 
-        except:
+        except Exception as e:
+            logger.error(f"Rollback verification failed: {e}")
             return False
 
     async def _monitor_deployment(self):
@@ -465,15 +730,44 @@ class AutomaticRollbackSystem:
         }
 
     async def _get_db_version(self) -> str:
-        """Get current database version."""
+        """Get current database version from Alembic."""
         try:
             from database.db_setup import get_async_db
             async for db in get_async_db():
+                # Query the alembic_version table for current migration version
                 result = await db.execute(
-                    "SELECT version FROM migrations ORDER BY applied_at DESC LIMIT 1"
+                    "SELECT version_num FROM alembic_version LIMIT 1"
                 )
                 return result.scalar() or "unknown"
-        except:
+        except Exception as e:
+            logger.warning(f"Failed to get database version: {e}")
+            return "unknown"
+
+    def _get_db_version_with_api(self) -> str:
+        """Alternative: Get current database version using Alembic API."""
+        try:
+            from alembic import command
+            from alembic.config import Config
+            from alembic.script import ScriptDirectory
+            from alembic.runtime.migration import MigrationContext
+            from sqlalchemy import create_engine
+            
+            # Load Alembic configuration
+            alembic_cfg = Config("alembic.ini")
+            
+            # Get database URL
+            from database.db_setup import get_database_url
+            database_url = get_database_url()
+            
+            # Create engine and get current revision
+            engine = create_engine(database_url)
+            with engine.connect() as connection:
+                context = MigrationContext.configure(connection)
+                current_rev = context.get_current_revision()
+                return current_rev or "unknown"
+                
+        except Exception as e:
+            logger.warning(f"Failed to get database version via API: {e}")
             return "unknown"
 
     async def _get_feature_flags(self) -> Dict[str, bool]:
