@@ -12,9 +12,6 @@
 
 [![CI Pipeline](https://github.com/yourusername/ruleiq/workflows/CI%20Pipeline/badge.svg)](https://github.com/yourusername/ruleiq/actions/workflows/ci.yml)
 [![Security Scan](https://github.com/yourusername/ruleiq/workflows/Security%20and%20Dependency%20Scanning/badge.svg)](https://github.com/yourusername/ruleiq/actions/workflows/security.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=ruliq-compliance-platform&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=ruliq-compliance-platform)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=ruliq-compliance-platform&metric=coverage)](https://sonarcloud.io/summary/new_code?id=ruliq-compliance-platform)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=ruliq-compliance-platform&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=ruliq-compliance-platform)
 
 </div>
 
